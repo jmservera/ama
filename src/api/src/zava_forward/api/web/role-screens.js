@@ -100,3 +100,69 @@ async function roleScreensView() {
       h("div", { class: "main" }, selected)),
     h("a", { href: "#/" }, "Back to my work"));
 }
+
+const assetAgeDays = (iso) => {
+  const then = iso ? Date.parse(iso) : NaN;
+  return Number.isNaN(then) ? "Unknown" : `${Math.max(0, Math.floor((Date.now() - then) / 86400000))} days old`;
+};
+const assetStatus = (c, q) => {
+  const event = (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1);
+  return event ? `${event.status} (recorded by a named person)` : "Unresolved";
+};
+const assetInputs = [
+  ["Capital budget", "Finance owner to name the budget source"],
+  ["Investment priority", "Asset owner to name the priority basis"],
+  ["Cost forecast", "Finance owner to supply a dated forecast"],
+  ["Benefit baseline", "Programme owner to supply a measured baseline"],
+  ["Phase gate evidence", "Programme manager to name the gate evidence"]
+];
+function assetCost(report) {
+  const m = report?.consumption;
+  const passed = m && m.quality_status === "Pass" && m.quality_qualified_cost && m.quality_qualified_cost !== "Unknown";
+  return screenFields([
+    ["AI cost per accepted outcome", passed ? `${m.quality_qualified_cost} ${screenValue(m.currency)}` : "Unknown"],
+    ["Quality floor", screenValue(m?.quality_status)],
+    ["Value status", m?.cash_value && m.cash_value !== "Unknown" ? m.cash_value : "Unknown. No finance-defensible value is recorded."],
+    ["Evidence class", screenValue(m?.evidence_label || m?.coverage)],
+    ["Reading", "A token count is never shown as the cost of AI. Without a recorded price source and a passed quality floor, cost stays Unknown."]
+  ]);
+}
+registerRoleScreen({
+  id: "asset-board",
+  title: "Asset and board view",
+  roles: screenManagers,
+  async load() {
+    const signal = routeController.signal;
+    const portfolio = await api("/api/cases?view=all&limit=1&offset=0", undefined, signal);
+    const report = await api("/api/ai/report", undefined, signal).catch(() => null);
+    return { portfolio, report };
+  },
+  render(c, extra) {
+    const queries = c.stock_reconciliation || [];
+    const owner = queries.find((q) => assetStatus(c, q) === "Unresolved")?.query_owner;
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only reader view. It records no investment approval and changes no record. Budgets, priorities, forecasts and eligibility are Unknown unless a constructed fixture says so, and this page cannot confirm them. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Stock conflict comparison",
+        screenTable("Stock source conflicts and source age",
+          ["Query", "Field", "First source (value, ID, age)", "Compared source (value, ID, age)", "Status", "Resolution owner"],
+          queries.map((q) => [q.id, q.field,
+            `${q.left.value}, ${q.left.source_id}, ${assetAgeDays(q.left.date)}, ${q.left.validation_state}`,
+            `${q.right.value}, ${q.right.source_id}, ${assetAgeDays(q.right.date)}, ${q.right.validation_state}`,
+            assetStatus(c, q), screenPerson(q.query_owner)]))),
+      screenPanel("Eligibility",
+        screenFields([["Eligibility", "Unknown"],
+          ["Resolution owner", owner ? screenPerson(owner) : "Unassigned. Programme manager to name an owner."],
+          ["Next action", "Obtain source-authority review. Nothing here selects a winning source."]])),
+      screenPanel("Missing investment inputs",
+        screenTable("Investment inputs", ["Input", "State", "Resolution owner and action"],
+          assetInputs.map(([name, action]) => [name, "Unknown", action]))),
+      screenPanel("Benefits and phase gate",
+        screenUnknown("No measured benefit or gate evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any gate is read as passed")),
+      screenPanel("Portfolio scope (separate from this home)",
+        screenFields([["Cases permitted to your role", extra?.portfolio?.total],
+          ["Meaning", "A role-scoped count, not a stock, budget or programme total"]])),
+      screenPanel("AI cost and value (board reader)", assetCost(extra?.report)));
+  }
+});
