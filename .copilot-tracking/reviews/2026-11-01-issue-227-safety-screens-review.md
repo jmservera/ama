@@ -11,5 +11,7 @@ Execution: executed once, self-review of diff against acceptance criteria. Outco
 | WCAG 2.2, text state, keyboard | Uses existing table-scroll region (tabindex), captions, text states. Not browser-verified locally; unproven. |
 | Design system, no role simulator | Reuses host card, dl, table classes; no simulator. |
 
+Later threads: legacy owner-only referrals now preserve the recorded owner as unverified with a named confirming role; the documented browser check expectations were updated for the new Resident Liaison registration (browser check not run locally; CI evidence).
+
 Routed follow-ups: cross-home referral queue (portfolio endpoint), browser keyboard and axe check, validation in #155.
 Closing: queue-level and accessibility criteria not proven, so the PR uses Refs.

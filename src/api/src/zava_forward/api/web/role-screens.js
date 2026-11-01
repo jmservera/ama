@@ -191,7 +191,7 @@ function hazardFollowUp(h) {
   if (h.accepted_at) return `${hazardActor(h.accepted_by || h.destination)} owns the accepted scope`;
   if (h.received_at) return `Pending acceptance. Follow-up owner: ${hazardActor(h.follow_up || h.sender)}`;
   if (h.sent_at) return `Pending receipt. Follow-up owner: ${hazardActor(h.sender)} chases until acceptance`;
-  if (h.referred) return "Legacy referral with no recorded send time. Owner to verify the external service record";
+  if (h.referred) return `Legacy referral with no recorded send time. Recorded owner (unverified): ${screenValue(h.owner)}. Retrofit Coordinator to confirm ownership and check the external service record`;
   return `No referral sent. Owner: ${screenValue(h.owner)} to send or record a manual route`;
 }
 function hazardHold(h) {

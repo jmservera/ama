@@ -119,6 +119,12 @@ class SafetyScreens(unittest.TestCase):
         self.assertIn("Legacy referral with no recorded send time", text)
         self.assertNotIn("No referral sent", text)
 
+    def test_legacy_owner_only_referral_keeps_recorded_owner_as_unverified(self) -> None:
+        legacy = hazard(sent_at=None, referred="2026-10-01", owner="Pat Owner")
+        text = json.dumps(run([legacy])["safety-lead"]["tree"])
+        self.assertIn("Recorded owner (unverified): Pat Owner", text)
+        self.assertIn("Retrofit Coordinator to confirm ownership", text)
+
     def test_every_record_is_reachable_beyond_fifty(self) -> None:
         released = hazard(hold={"scope": "Home", "case_id": "C-1", "status": "Released"})
         items = [released] * 50 + [hazard(source="Late active hazard")]
