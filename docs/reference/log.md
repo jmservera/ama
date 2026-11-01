@@ -9087,3 +9087,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Usage is under "Run the design gate" in the prototype profile review.
 * Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
   content evidence were supplied. No regulatory snapshot changed.
+
+## [2026-11-01] query | Employee chat re-verification on current main (#530)
+
+* Re-ran the focused tier on main efebfc6d: core chat (99), agents chat
+  model (7), API chat panel (41) and widget focus (6) tests, ruff, mypy and
+  the employee chat browser and pinned axe check. All passed. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-reverify-changes.md`.
+* Live employee-site verification, screen-reader and voice-control
+  acceptance and owner confirmation of agent names remain unproven; no
+  source change was made.
