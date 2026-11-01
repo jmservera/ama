@@ -167,9 +167,12 @@ def observe(
         if entry is None:
             outcome = "excluded"
         else:
-            allowed = sum(r["expected_rank_max"] <= m["expected_rank_max"] for r in retained)
-            position = 1 + sum(ranked[r["id"]]["rank"] < entry["rank"] for r in retained)
-            if position > allowed:
+            overtaken = any(
+                r["expected_rank_max"] > m["expected_rank_max"]
+                and ranked[r["id"]]["rank"] < entry["rank"]
+                for r in retained
+            )
+            if overtaken:
                 outcome = "deprioritised"
             elif "support_unknown" in entry["reason_codes"]:
                 outcome = "review"

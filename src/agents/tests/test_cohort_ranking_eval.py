@@ -158,6 +158,16 @@ class CohortRankingEvalTests(unittest.TestCase):
         self.assertEqual(outcomes["sensor-0-b"], "excluded")
         self.assertEqual(outcomes["history-2-b"], "deprioritised")
 
+    def test_combined_demotions_cannot_mask_each_other(self) -> None:
+        cases, manifest = cre.build()
+        out = [copy.deepcopy(c) for c in cases]
+        by_id = {c["id"]: c for c in out}
+        by_id["history-2-b"]["days_in_stage"] -= 15
+        by_id["sensor-0-b"]["days_in_stage"] = 1
+        by_id["sensor-1-b"]["days_in_stage"] = 1
+        outcomes = {o["id"]: o["outcome"] for o in cre.observe(out, manifest)}
+        self.assertEqual(outcomes["history-2-b"], "deprioritised")
+
     def test_main_prints_summary(self) -> None:
         with contextlib.redirect_stdout(io.StringIO()) as out:
             self.assertEqual(cre.main(["--defects"]), 0)
