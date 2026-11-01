@@ -664,12 +664,15 @@ The unchanged merged v1.2.0 baseline has 13 routed needs: two covered, eleven
 partial, none missing. This checks route shape, coverage/closure consistency
 and declaration presence, not issue existence, child delivery, owner scope
 decisions or generated-record conformity.
-The scale fixture's homes/events carry a manifest-level synthetic label,
-not per-record `is_synthetic=true`; the universal convention above is therefore
-an intended rule with an unevidenced existing-output gap, not a proven result.
+The scale fixture (v1.3.0, 2026-11-01) now sets `is_synthetic=true` on every
+home, household and event record, in addition to the manifest-level
+`source_type="SYNTHETIC"`; `test_every_scale_record_is_labelled_synthetic`
+checks all three files. v1.2.0 homes and events lacked the field, so their
+bytes and pinned goldens changed. Records in the private SN-01 register and
+other child-story outputs are not assessed here.
 No second generator, private output or owner deferral is introduced.
 
-Open items: owner confirmation of the mapping, and whether regenerating the
+Open items: owner confirmation of the mapping and deferrals, and whether regenerating the
 private SN-01 register from a committed generator sits in #168 or is deferred.
 No deferral is recorded yet.
 

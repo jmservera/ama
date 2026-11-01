@@ -3077,7 +3077,7 @@ agreed R3 limits and operational acceptance are still unproven.
 
 ### Existing reproducibility and plausibility evidence
 
-* Reproducibility and refresh (#176): scale fixture v1.2.0 and sensor backfill
+* Reproducibility and refresh (#176): scale fixture v1.3.0 and sensor backfill
   v2 record seed, version, `as_of`, dependency-aware `generator_revision` and
   SHA-256 for every payload file. Both require a new or empty output folder;
   a repeat write to an existing snapshot fails without replacing files.
@@ -3093,7 +3093,7 @@ agreed R3 limits and operational acceptance are still unproven.
 
   ```bash
   python -m zava_forward.core.synthetic.scale_fixture --seed 174 \
-    --as-of 2026-10-15 --out "$ZF_DATA/scale-fixture-2026-10-15-v1.2.0"
+    --as-of 2026-10-15 --out "$ZF_DATA/scale-fixture-2026-10-15-v1.3.0"
   python -m zava_forward.core.synthetic.sensor_backfill --seed 183 \
     --as-of 2026-10-15 --days 2 --cadence 60 --homes 12 \
     --out "$ZF_DATA/sensor-backfill-2026-10-15-v2"
