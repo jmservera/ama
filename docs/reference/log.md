@@ -9203,6 +9203,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
 
+## [2026-11-01] update | Resident authority end (#521)
+
+* Documented coordinator steps for the live resident authority extension in infra/README.md and moved the browser-check fixture to the shared authority end (Refs #521). No live apply.
 ## [2026-11-01] update | IoT publisher credential hygiene tests (#184)
 
 * Added constructed local tests (repository text scan, fake-SDK log, truth
