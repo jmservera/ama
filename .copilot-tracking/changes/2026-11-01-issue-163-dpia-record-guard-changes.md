@@ -9,3 +9,7 @@
 
 * The original entry above is retained. The decision-date guard now requires a labelled `date: YYYY-MM-DD` field so a date inside a reference ID cannot satisfy it.
 * The complete local gate (`tools/rpi-checks.py --all`) is required before publication; it is run for the final head and its receipt is kept outside the repository. CI is not a replacement.
+
+## Follow-up 2, 2026-11-01 (merge of main)
+
+* Merging main registered three role screens that `docs/reference/research/ux/atlas-screen-trace.md` still labelled unmerged, failing `test_atlas_screen_trace` in src-core. Labels corrected and a log entry appended; the atlas tests pass.
