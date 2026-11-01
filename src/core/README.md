@@ -113,7 +113,9 @@ held-out batch, reconciled Azure invoice, live authority or whole-issue acceptan
 
 ```bash
 # From src/core after pip installation:
-PYTHONPATH=src:tests python3 -m unittest test_ai_consumption -q
+PYTHONPATH=src:tests python3 -m unittest test_ai_consumption test_ai_consumption_demo -q
+# Credential-free synthetic walk-through (Unknown cost, dispatch holds, loop stop, report):
+PYTHONPATH=src python3 -m zava_forward.core.ai_consumption_demo
 # From src/api:
 PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
   python3 -m unittest test_ai_consumption_api -q
