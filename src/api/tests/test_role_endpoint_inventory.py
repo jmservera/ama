@@ -19,7 +19,7 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/facets", "/api/stats", "/api/progress", "/api/closed-cases",
                  "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing",
                  "/api/audit-check",
-                 "/api/handoffs", "/api/packages", "/api/workorders", "/api/checklists", "/api/ai/report", "/api/finance",
+                 "/api/handoffs", "/api/packages", "/api/workorders", "/api/checklists", "/api/ai/report", "/api/finance", "/api/asset/stock-queue",
                  "/api/governance", "/api/continuity", "/api/continuity/export", "/api/retention", "/api/docs/ZF-1/none",
                  "/api/time/status", "/api/time/mine", "/api/time/report", "/api/law/sources", "/api/law/search?q=x",
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",

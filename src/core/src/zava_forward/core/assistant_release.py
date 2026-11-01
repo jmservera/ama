@@ -47,7 +47,7 @@ def parse_expiry(value):
 def denial(reason, missing, task):
     return dict(reason=f"Release admission denied: {reason}. Owner: {OWNER}. Manual route: use the ordinary case controls.",
                 missing=missing, owner=OWNER, manual="Use the ordinary case controls.", task=task,
-                authority_gap=rai_release.AUTHORITY_GAP)
+                authority_gap=rai_release.AUTHORITY_GAP, authority_holders=rai_release.authority_register())
 
 
 def release_body(raw):
