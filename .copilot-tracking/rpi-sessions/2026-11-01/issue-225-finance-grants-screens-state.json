@@ -1,0 +1,5 @@
+{"task_id":"issue-225","task_slug":"issue-225-finance-grants-screens","parent_task":null,"mode":"automatic","active_phase":"Follow-up","status":"completed","session_status":"stopped",
+"artifact_paths":{"research":".copilot-tracking/research/2026-11-01-issue-225-finance-grants-screens-research.md","plan":".copilot-tracking/plans/2026-11-01-issue-225-finance-grants-screens-plan.md","details":null,"critique":null,"changes":".copilot-tracking/changes/2026-11-01-issue-225-finance-grants-screens-changes.md","review":".copilot-tracking/reviews/2026-11-01-issue-225-finance-grants-screens-review.md"},
+"confirmed_decisions":[{"decision":"critique executed once inline in plan; accepted","status":"done","evidence":"plan file"},{"decision":"review executed once; slice conformant, criteria 4 and 5 unproven","status":"done","evidence":"review file"}],
+"blockers":[],"next_action":{"phase":"Follow-up","action":"Open PR with Refs #225"},
+"prioritized_follow_ups":[{"rank":1,"task":"Browser keyboard and axe check for finance screens","rationale":"proves WCAG criterion","evidence":"review file"}]}

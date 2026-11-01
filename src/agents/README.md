@@ -135,6 +135,11 @@ entailment of generated prose or independently adjudicated legal questions.
 | Stale-source label | 1/1 deliberately overdue source labelled in actual chat retrieval | Provisional 1.0; boundary, missing/failed observations and HTTP views covered separately |
 | Paired staff comparison | Not evaluated; same-role/source-version card/provision links recorded alongside structural chat facts | No agreed benefit threshold or measured task completion, comprehension, elapsed/review time or service cost; recommend `cards_only` |
 
+`authorise_model_run` denies any model-calling evaluation unless a named owner
+authority carries finite positive call, token and budget limits and an unexpired
+timezone-aware expiry that covers the request. It is a guard only; no spend
+authority is assumed or implied and the shipped runs remain offline.
+
 All numeric targets are labelled **provisional, not owner-agreed**. Juan Manuel
 Servera is the exercise Legal, Compliance and DPO owner, not an invented real
 company approver. Rule recall has no fixed threshold: the baseline precedes

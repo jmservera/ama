@@ -13,8 +13,23 @@ param entraAdminGroupObjectId string
 param entraAdminPrincipalType string = 'Group'
 param enableLock bool
 param zoneRedundant bool = false
-@description('Serverless vCores keep a non-production demonstrator cheap; raise for production.')
+@description('serverless (GP_S_Gen5, dev) or provisioned (GP_Gen5, pilot; ADR 0002 decision 1).')
+@allowed(['serverless', 'provisioned'])
+param sqlTier string = 'serverless'
+@description('vCores: the serverless maximum, or the provisioned count.')
 param maxVCores int = 2
+@description('Serverless only. Minutes idle before auto-pause; -1 disables. Ignored for provisioned.')
+@minValue(-1)
+param autoPauseDelayMinutes int = 60
+@description('Backup storage redundancy. Empty derives Zone when zoneRedundant, otherwise Local.')
+@allowed(['', 'Local', 'Zone', 'Geo', 'GeoZone'])
+param backupStorageRedundancy string = ''
+@description('Point-in-time restore window in days. The legal retention period is a separate decision (#121).')
+@minValue(1)
+@maxValue(35)
+param backupRetentionDays int = 14
+
+var serverless = sqlTier == 'serverless'
 
 resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {
   name: name
@@ -41,26 +56,27 @@ resource database 'Microsoft.Sql/servers/databases@2024-05-01-preview' = {
   location: location
   tags: tags
   sku: {
-    name: 'GP_S_Gen5'
+    name: serverless ? 'GP_S_Gen5' : 'GP_Gen5'
     tier: 'GeneralPurpose'
     family: 'Gen5'
     capacity: maxVCores
   }
   properties: {
     collation: 'SQL_Latin1_General_CP1_CI_AS'
-    autoPauseDelay: 60
-    minCapacity: json('0.5')
     zoneRedundant: zoneRedundant
-    requestedBackupStorageRedundancy: zoneRedundant ? 'Zone' : 'Local'
+    requestedBackupStorageRedundancy: !empty(backupStorageRedundancy) ? backupStorageRedundancy : (zoneRedundant ? 'Zone' : 'Local')
     // Ledger gives tamper-evident history for transitions, approvals and audit records (NFR-004).
     isLedgerOn: true
+    // Provisioned databases reject serverless settings; null omits them.
+    autoPauseDelay: serverless ? autoPauseDelayMinutes : null
+    minCapacity: serverless ? json('0.5') : null
   }
 }
 
 resource backupRetention 'Microsoft.Sql/servers/databases/backupShortTermRetentionPolicies@2024-05-01-preview' = {
   parent: database
   name: 'default'
-  properties: { retentionDays: 14 }
+  properties: { retentionDays: backupRetentionDays }
 }
 
 resource serverAudit 'Microsoft.Sql/servers/auditingSettings@2024-05-01-preview' = {

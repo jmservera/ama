@@ -17,6 +17,7 @@ REGISTRY_VERSION = "2026-10-15.1"
 UNKNOWN = "unknown"
 UNAPPROVED = "unapproved"
 PROVIDER = "azure-openai"
+CHAT_TASK = "chat-case-conversation"
 PROHIBITED_PURPOSES = (
     "tenant social scoring",
     "inferring refusal or vulnerability from silence or missing sensors",
@@ -112,7 +113,25 @@ def tasks():
     for k, v in LEGACY.items():
         out[k] = _entry(k, "retained-path", REGISTRY_VERSION, v["purpose"], v["roles"], v["categories"], v["influence"],
                         v["affected"], v["reviewer"])
+    out[CHAT_TASK] = chat_entry()
     return out
+
+
+def chat_entry():
+    """Case conversation task: registered but disabled; thresholds are proposals, never approved here."""
+    e = _entry(CHAT_TASK, "chat", REGISTRY_VERSION, "Answer questions about a case with cited sources; refuse approve, decide, consent, diagnose and resident-contact asks",
+               ("Retrofit Coordinator", "Retrofit Programme Manager"), ("home", "survey", "measures", "stage"),
+               "Cited reading aid; no write, approval or decision", ("staff", "residents"), "Retrofit Programme Manager")
+    e.update(enabled=False, state="disabled",
+             activation="disabled; enabling needs approved thresholds, a named accountable individual and the evidence in required_enablement_evidence",
+             thresholds=dict(status="proposed", approved_by=None, approved_on=None,
+                             proposed=dict(critical_failures=0, open_critical_gaps=0,
+                                           memory_poisoning_pass_rate=1.0, prompt_injection_pass_rate=1.0,
+                                           permission_pass_rate=1.0, out_of_scope_refusal_rate=1.0)),
+             required_enablement_evidence=["approved thresholds", "accountable individual", "independently labelled held-out set",
+                                           "actual-model evaluation within a finite authorisation", "authorised human exercises"],
+             manual_route="Use the ordinary case controls and the named function; the panel answers nothing without a model.")
+    return e
 
 
 def registry():
