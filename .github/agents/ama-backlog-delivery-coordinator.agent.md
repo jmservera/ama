@@ -447,6 +447,9 @@ remains subject to the tracking retention policy.
    original RPI Review, and also review the open PRs of a wave
    together for contradictions between them. Send findings back to that
    issue's loop as commits on the same branch, up to two correction cycles.
+   After two correction cycles, new non-blocking Copilot threads become
+   follow-up issues and do not hold the PR; a blocking safety, privacy or
+   accessibility defect still stops the PR (owner decision D5, 2026-11-01).
    Do not mark review checkboxes.
 7. **Automerge through the gate.** Merge a PR only when all of these hold,
    verified by commands run now: every implementation dependency is merged

@@ -1,7 +1,7 @@
 ---
 title: Delivery Bottleneck Analysis and Seven-Day Speed-Up Plan
 description: Measured delivery bottlenecks for the AMA repository on 2026-10-31, ranked fixes with expected savings, separated owner decisions and a seven-day plan to a working resident and employee demo
-ms.date: 2026-10-31
+ms.date: 2026-11-01
 ms.topic: reference
 ---
 
@@ -142,8 +142,12 @@ inference and should be re-measured after the first two days.
 
 ## Owner Decisions Required
 
-These change policy, workflow behaviour or settings. None was applied in this
-PR and none should be assumed.
+These change policy, workflow behaviour or settings. The owner decided D1 to
+D7 on 2026-11-01 (chat input to the agent); each outcome is recorded below as
+`Decision 2026-11-01`. Workflow changes for D1 and D2 are delivered in a
+separate PR and are not applied here. D4 and D5 policy text is applied in
+`.github/copilot-instructions.md` and
+`.github/agents/ama-backlog-delivery-coordinator.agent.md`.
 
 * D1 Rubric score recording: stop the rubric bot pushing `latest.json` and
   `badge.svg` to PR branches. Options: post the score as a PR comment or
@@ -154,10 +158,17 @@ PR and none should be assumed.
   refresh lets concurrent PRs score against an outdated baseline. D1 must
   preserve a trusted full scorecard and define freshness handling. Needs a
   decision because the rubric workflow is a governance control.
+  Decision 2026-11-01: APPROVED. The rubric score is posted as a PR check or
+  comment and is not committed to PR branches. `latest.json` is refreshed on
+  main by a post-merge job with freshness handling and a trusted full scorecard
+  baseline. Workflow change: separate PR.
 * D2 Copilot Code Review trigger: make it non-cancelling and advisory, or
   trigger only on ready-for-review and on request rather than every push.
   Consequence: some review comments arrive later; branch protection must not
   treat the review run as required.
+  Decision 2026-11-01: APPROVED. Copilot Code Review is advisory and
+  non-cancelling, triggered on ready-for-review and on request, and not
+  required by branch protection. Workflow part: separate PR.
 * D3 PR size policy: set a target size. Option for the owner: allow RPI
   evidence in a separate PR from the code. This would require amending the
   coordinator check in `.github/agents/ama-backlog-delivery-coordinator.agent.md`
@@ -165,6 +176,9 @@ PR and none should be assumed.
   changes and review files in that PR's diff; until amended, RPI evidence
   stays in the code PR. Consequence: more PRs and links to maintain, but
   smaller code review surfaces.
+  Decision 2026-11-01: size target REJECTED (no PR size cap). Separate
+  RPI-evidence PR option REJECTED: evidence stays in the code PR and the
+  coordinator check is not amended.
 * D4 Gate tier default: make the focused tier the default local gate and
   reserve the complete local gate for the final merge candidate. The current
   repository instructions (`.github/copilot-instructions.md`) require the
@@ -172,15 +186,39 @@ PR and none should be assumed.
   documentation-only work, so relaxing it, including any docs-only exception,
   needs an explicit owner amendment and applies only after that approval. Consequence: lower local assurance per iteration, with
   hosted CI as the per-push evidence.
+  Decision 2026-11-01: APPROVED. The focused tier is the default local gate.
+  The complete gate applies to big features, releases, infrastructure,
+  deployment, SQL and security-sensitive changes. Independent exact-head
+  review, hosted CI and human approvals are kept.
 * D5 Two-cycle review rule: after two review correction cycles, convert new
   non-blocking threads to follow-up issues. Consequence: some edge cases ship
   and are tracked rather than fixed in place; blocking safety, privacy and
   accessibility defects still stop the PR.
+  Decision 2026-11-01: APPROVED. After two correction cycles, new
+  non-blocking Copilot threads become follow-up issues; blocking safety,
+  privacy and accessibility defects still stop the PR.
 * D6 Demo scope: confirm which resident and employee journeys are the
   minimum working version, and accept that human-gated items such as #523,
   #524, #570 and #432 are reported as pending, not accepted.
+  Decision 2026-11-01: APPROVED with change. Minimum demo journeys are
+  resident (sign in, own case status, grounded assistant, consent and
+  appointments) and employee (sign in, capacity and work orders with paging,
+  asset board, chat), plus the SENSORS LIVE VIEW. The human-gated #523, #524,
+  #570 and #432 are reported pending, not accepted. Everything else is frozen
+  outside these paths.
 * D7 Review mode: confirm that human review of the final candidate remains a
   required boundary even when tiers are relaxed. This page does not remove it.
+  Decision 2026-11-01: unchanged. Human review of the final candidate remains
+  a required boundary.
+
+### Owner-approved deferrals (2026-11-01)
+
+These are deferrals, not met criteria.
+
+* #466: scope is automated axe and keyboard checks only. Screen-reader and
+  assistive-technology passes are deferred to before the production build.
+* #163: criteria 2 and 5 (DPO and Legal) are deferred to before production.
+  The demo uses synthetic data only.
 
 ## Seven-Day Plan
 
