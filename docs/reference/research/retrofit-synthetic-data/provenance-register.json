@@ -25,30 +25,30 @@
       "id": "SRC-CENSUS-TS054",
       "name": "Census 2021 TS054 household tenure, local authority, ONS/Nomis",
       "url": "https://www.nomisweb.co.uk/datasets/c2021ts054",
-      "licence": "Open Government Licence v3.0 (expected, owner to confirm)",
+      "licence": "Open Government Licence v3.0",
       "retrieval_date": null,
-      "attribution": "Source: Office for National Statistics, Census 2021, licensed under the Open Government Licence v3.0 (wording to confirm)",
-      "verification": "open item: retrieval date and licence text not recorded in the private README; owner to confirm",
+      "attribution": "Source: Office for National Statistics, Census 2021. Contains public sector information licensed under the Open Government Licence v3.0",
+      "verification": "open item: retrieval date not recorded (git history only bounds it to on or before 2026-10-01); owner to confirm. Licence confirmed 2026-11-01 against the ONS terms page",
       "reference_date": "2021-03-21"
     },
     {
       "id": "SRC-IMD-2025",
       "name": "English Indices of Deprivation 2025, MHCLG, LSOA ranks, scores and deciles (corrected files)",
       "url": "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2025",
-      "licence": "Open Government Licence v3.0 (expected, owner to confirm)",
+      "licence": "Open Government Licence v3.0",
       "retrieval_date": null,
-      "attribution": "Source: Ministry of Housing, Communities and Local Government, licensed under the Open Government Licence v3.0 (wording to confirm)",
-      "verification": "open item: retrieval date and licence text not recorded; owner to confirm",
+      "attribution": "Source: Ministry of Housing, Communities and Local Government. Contains public sector information licensed under the Open Government Licence v3.0",
+      "verification": "open item: retrieval date not recorded (git history only bounds it to on or before 2026-10-01); owner to confirm. Licence confirmed 2026-11-01 against the gov.uk publication page",
       "reference_date": "2025-10-30"
     },
     {
       "id": "SRC-ONS-BOUNDARIES",
       "name": "ONS LSOA 2021 BGC V5 and LAD December 2021 BFC boundaries",
       "url": "https://geoportal.statistics.gov.uk/",
-      "licence": "Open Government Licence v3.0 (expected, owner to confirm)",
+      "licence": "Open Government Licence v3.0",
       "retrieval_date": null,
-      "attribution": "Contains public sector information licensed under the Open Government Licence v3.0 (wording to confirm)",
-      "verification": "open item: retrieval date and licence text not recorded; owner to confirm"
+      "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0. Contains OS data (c) Crown copyright and database right [year to confirm]",
+      "verification": "open items: retrieval date not recorded (git history only bounds it to on or before 2026-10-01); copyright year in the OS acknowledgement to confirm against the named LSOA 2021 BGC and LAD December 2021 BFC product notices. Licence and the two required statements confirmed 2026-11-01 against the ONS digital-boundaries guidance"
     },
     {
       "id": "SRC-OWNER-MODEL",
