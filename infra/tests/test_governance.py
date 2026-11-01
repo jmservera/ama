@@ -19,6 +19,18 @@ class GovernanceTests(unittest.TestCase):
         for guid in re.findall(r"definitionId: '([^']+)'", text):
             self.assertRegex(guid, r"^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$")
 
+    def test_defender_decision_record_matches_template(self) -> None:
+        record = json.loads((INFRA / "defender-decision.json").read_text())
+        text = (INFRA / "governance.bicep").read_text()
+        self.assertEqual(record["owner"], "Juan Manuel Servera")
+        plans = set(re.findall(r"^\s+'(\w+)'$", text.split("param defenderPlans")[1].split("]")[0], re.M))
+        self.assertEqual(set(record["defender"]["plans"]), plans)
+        approval = record["defender"]["costApproval"]
+        if approval["status"] != "approved":
+            self.assertFalse(record["defender"]["enableDefenderPlans"])
+            self.assertIsNone(approval["approvedOn"])
+        self.assertIn("param enableDefenderPlans bool = false", text)
+
     def test_required_tags_match_main_template(self) -> None:
         governance = (INFRA / "governance.bicep").read_text()
         main = (INFRA / "main.bicep").read_text()
