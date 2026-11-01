@@ -14,3 +14,5 @@ Review execution: executed once, self-review of the diff. Outcome: conformant fo
 ## Post-review PR feedback (2026-11-01)
 
 * Four Copilot threads on the regression test and CI trigger were valid and fixed; see the changes record. Review outcome is unchanged; no new review pass was run.
+
+* Round 2: the non-digital equivalent thread was valid and fixed; the stale workflow digest behind the `src-namespace` failure was corrected. Review outcome unchanged.

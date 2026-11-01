@@ -52,8 +52,19 @@ class ResidentJourneyDesign(unittest.TestCase):
             self.assertIn(phrase, j5)
 
     def test_each_journey_has_a_non_digital_equivalent(self) -> None:
+        phrases = {
+            "J1": "No decision or silence becomes refusal or consent",
+            "J2": "Lost confirmation remains",
+            "J3": "Do not invent appointment slots or response deadlines",
+            "J4": "Do not make a promised service time up",
+            "J5": "Asking for help or declining practice never establishes or removes consent",
+            "J6": "owner must confirm them before use",
+            "R1": "A family relationship or possession of a letter is not authority",
+        }
         for code in JOURNEYS:
-            self.assertIn("Non-digital equivalent:", section(code), code)
+            text = section(code)
+            self.assertIn("Non-digital equivalent:", text, code)
+            self.assertIn(phrases[code], text.split("Non-digital equivalent:", 1)[1], code)
 
     def test_shared_frame_forbids_incapacity_inference_and_covers_needs(self) -> None:
         text = " ".join(DOC.read_text(encoding="utf-8").split())
