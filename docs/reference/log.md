@@ -9244,3 +9244,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-recheck-changes.md`.
 * SQL, live employee-site verification, screen-reader and voice-control
   acceptance remain unproven; no source change was made.
+
+## [2026-11-01] update | Chat and memory DPIA record drift guard (Refs #163)
+
+* Added `src/core/tests/test_chat_dpia_record.py`. It fails if a `DATA_MAP` class
+  is missing from the DPIA record data map, if a decision pack row D1 to D8 is
+  filled without a date and reference, or if retention stops being Unknown.
+* No decision, lawful basis, retention period or provider acceptance was
+  recorded. Criteria 2 and 5 stay with the DPO and Legal.
