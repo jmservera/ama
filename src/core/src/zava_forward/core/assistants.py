@@ -621,6 +621,11 @@ class Assistants:
             for task, spec in ai_registry.tasks().items():
                 if user.get("role") not in spec["roles"]:
                     continue
+                if spec.get("enabled") is False:
+                    registered.append(dict(spec, binding=None,
+                                           release_denial=dict(missing=["Task is disabled and has no runtime binding or release evidence."]),
+                                           release=None, authority_gap=rai_release.AUTHORITY_GAP))
+                    continue
                 if task in REGISTRY:
                     binding = runtime_binding(task, self.store.ai)
                     selected, denied = rel.assessment(db, task, binding, self.now(db),

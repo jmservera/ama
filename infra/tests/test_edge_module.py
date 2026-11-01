@@ -1,7 +1,8 @@
 """Static guards on private-endpoint coverage and the public edge (issue 143)."""
-from pathlib import Path
+import json
 import re
 import unittest
+from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 MODULES = ROOT / "modules"
@@ -120,6 +121,16 @@ class PublicEdgeTests(unittest.TestCase):
         self.assertIn("/.auth/login/aad/callback", EDGE)
         self.assertIn("output entraRedirectUri", MAIN)
         self.assertIn("behindPublicEdge: enablePublicEdge", MAIN)
+
+    def test_entra_callback_path_and_host_are_single_sourced(self) -> None:
+        manifest = json.loads((ROOT / "entra" / "app-registration.json").read_text(encoding="utf-8"))
+        match = re.search(r"output entraRedirectUri string = 'https://\$\{([^}]+)\}(/[^']+)'", EDGE)
+        self.assertIsNotNone(match)
+        assert match is not None
+        self.assertEqual(match.group(2), manifest["callbackPath"])
+        self.assertEqual(match.group(1), "hasDomain ? customDomain : endpoint.properties.hostName")
+        self.assertIn("output entraRedirectUri string = enablePublicEdge ? edge!.outputs.entraRedirectUri : ''", MAIN)
+        self.assertIn("customDomain: edgeCustomDomain", MAIN)
 
     def test_health_and_all_path_route_do_not_cache_sessions(self) -> None:
         self.assertIn("probePath: '/healthz'", EDGE)
