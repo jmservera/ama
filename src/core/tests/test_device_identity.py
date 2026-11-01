@@ -316,8 +316,26 @@ class DeviceIdentityTests(unittest.TestCase):
         partial = di.plan("run-001", "owner-role", sensors(1))
         with self.assertRaisesRegex(di.DeviceIdentityError, "MANIFEST_INCOMPLETE"):
             di.teardown(partial, registry, store)
+        for refs in ([], [i.credential_ref for i in partial.identities]):
+            with self.assertRaisesRegex(di.DeviceIdentityError, "MANIFEST_INCOMPLETE"):
+                di.teardown(partial, registry, store, refs=refs)
         self.assertEqual(len(registry.list_run("run-001")), 5)
         self.assertEqual(len(store.run_references("run-001")), 5)
+
+    def test_teardown_inside_except_does_not_chain_caller_secret(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
+        partial = di.plan("run-001", "owner-role", sensors(1))
+        captured: list[di.DeviceIdentityError] = []
+        try:
+            raise RuntimeError(SECRET)
+        except RuntimeError:
+            try:
+                di.teardown(partial, registry, store)
+            except di.DeviceIdentityError as error:
+                captured.append(error)
+        self.assertEqual(len(captured), 1)
+        self.assertNotIn(SECRET, "".join(traceback.format_exception(captured[0])))
 
     def test_explicit_foreign_reference_is_not_revoked(self) -> None:
         registry, store = FakeRegistry(), FakeStore()

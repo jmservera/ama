@@ -147,7 +147,14 @@ def _provision_locked(manifest: Manifest, registry: Registry, store: CredentialS
             created.append(attempted)
         rollback = Manifest(manifest.run_id, manifest.credential_owner, tuple(created))
         try:
-            teardown(rollback, registry, store, refs=[i.credential_ref for i in issued])
+            with _run_lock(rollback.run_id):
+                _teardown_locked(
+                    rollback,
+                    registry,
+                    store,
+                    [i.credential_ref for i in issued],
+                    full_run=False,
+                )
             teardown_error = None
         except DeviceIdentityError as error:
             teardown_error = error
@@ -165,9 +172,19 @@ def teardown(
     store: CredentialStore,
     refs: Sequence[str] | None = None,
 ) -> None:
-    """Delete exactly the run's identities and credentials under the run lock (see below)."""
-    with _run_lock(manifest.run_id):
-        _teardown_locked(manifest, registry, store, refs)
+    """Delete exactly the run's identities and credentials under the run lock (see below).
+
+    Whole-run coverage is always enforced; partial cleanup is reserved for provisioning rollback.
+    """
+    failure: DeviceIdentityError | None = None
+    try:
+        with _run_lock(manifest.run_id):
+            _teardown_locked(manifest, registry, store, refs, full_run=True)
+    except DeviceIdentityError as error:
+        failure = error
+    if failure is not None:
+        # Raised outside the handler so a caller's secret-bearing exception is never chained.
+        raise DeviceIdentityError(str(failure)) from None
 
 
 def _teardown_locked(
@@ -175,6 +192,8 @@ def _teardown_locked(
     registry: Registry,
     store: CredentialStore,
     refs: Sequence[str] | None,
+    *,
+    full_run: bool,
 ) -> None:
     """Delete exactly the run's identities and credentials, then verify none remain.
 
@@ -183,7 +202,6 @@ def _teardown_locked(
     """
     owned = {i.device_id for i in manifest.identities}
     explicit = [r for r in (refs if refs is not None else _refs(manifest)) if r]
-    full_run = refs is None
     run_id = manifest.run_id
     try:
         foreign = any(registry.run_of(d) not in (None, run_id) for d in sorted(owned))
