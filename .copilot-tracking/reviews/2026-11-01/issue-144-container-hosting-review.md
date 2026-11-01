@@ -23,3 +23,7 @@ Review execution: executed once, self-review of the diff against the plan. Outco
 PR uses `Refs #144`.
 
 Second PR review (2026-11-01): four Copilot findings on `scale_load.py` (deadline overrun, latency from dispatch, cleanup on failure, workload claim ignoring achieved rate) were valid and fixed; see the changes record. Original review outcome unchanged.
+
+## Third review pass (2026-11-01)
+
+Three further Copilot threads on scale_load window/throughput semantics and README timing wording were valid and fixed; scale tests (7) and ruff pass.

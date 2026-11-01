@@ -77,7 +77,9 @@ class ScaleLoadReport(unittest.TestCase):
         with patch.object(scale_load, "call", slow):
             report = scale_load.run(homes=10, sessions=1, rate=4, duration=1)
         executed = report["executed_workload"]
-        self.assertLess(executed["duration_seconds"], 2.5)
+        self.assertEqual(executed["observation_window_seconds"], 1.0)
+        self.assertGreater(executed["drain_seconds"], 0)
+        self.assertLess(executed["in_window_requests_per_second"], 4)
         worst = max(r["p99_ms"] for r in report["routes"].values())
         self.assertGreater(worst, 650)
 

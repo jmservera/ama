@@ -25,6 +25,10 @@ Plan: [plan](../../plans/2026-11-01/issue-144-container-hosting-plan.md)
 
 * `scale_load.py`: sessions stop dispatching at the deadline after sleeping, latency is measured from the scheduled arrival so backlog delay is reported, server, socket and database cleanup run through an `ExitStack` on failure, and `meets_declared_workload` also requires the requested duration and the unrounded achieved request rate. `test_scale_load.py` covers cleanup on login failure and deadline and backlog behaviour. The recorded 60,000-home run is unchanged and not re-run; its latencies were measured from dispatch, so treat them as lower bounds.
 
+## Amendments after third PR review (2026-11-01)
+
+* `scale_load.py`: all sessions share one start timestamp and a fixed observation window; `meets_declared_workload` uses the configured window and in-window throughput with a 5% tolerance; drain time and in-window counts are reported separately. `infra/README.md` no longer calls the stored latencies an upper bound; they are dispatch-based lower bounds for backlog and not hosted evidence.
+
 ## Divergences and remaining work
 
 * Agents queue transport, API post-back, real orchestrator job: not built (cross-project). Hosted hardening: platform-blocked. Azure restore proof: not run.

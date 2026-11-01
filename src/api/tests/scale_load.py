@@ -44,6 +44,7 @@ THRESHOLDS_MS = {"list": 1000, "detail": 1000, "dashboard": 3000}
 # Container limits declared in infra/modules/containerapps.bicep for the API app.
 API_LIMITS = {"vcpu": 0.5, "memory_gib": 1.0, "max_replicas": 4}
 SEED = 11
+THROUGHPUT_TOLERANCE = 0.05
 PASSWORD = "zf-scale"
 MIX = (("list", 6), ("detail", 3), ("dashboard", 1))
 
@@ -132,7 +133,9 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
         lock = threading.Lock()
         failures: list[BaseException] = []
         interval = sessions / rate
-        deadline = time.perf_counter() + duration
+        run_started = time.perf_counter()
+        deadline = run_started + duration
+        in_window = [0]
 
         def session(index: int) -> None:
             try:
@@ -144,7 +147,7 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
         def session_body(index: int) -> None:
             rnd = random.Random(index)
             names = [name for name, weight in MIX for _ in range(weight)]
-            next_at = time.perf_counter() + rnd.random() * interval
+            next_at = run_started + rnd.random() * interval
             while next_at < deadline:
                 time.sleep(max(0.0, next_at - time.perf_counter()))
                 if time.perf_counter() >= deadline:
@@ -161,19 +164,21 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
                     code, _, _ = call(base, path, cookie)
                 except OSError:
                     code = 0
-                elapsed = (time.perf_counter() - next_at) * 1000
+                finished = time.perf_counter()
+                elapsed = (finished - next_at) * 1000
                 with lock:
+                    in_window[0] += finished <= deadline
                     samples[name].append(elapsed)
                     errors[name] += code != 200
                 next_at += interval
 
-        run_started = time.perf_counter()
         threads = [threading.Thread(target=session, args=(i,)) for i in range(sessions)]
         for thread in threads:
             thread.start()
         for thread in threads:
             thread.join()
         elapsed = time.perf_counter() - run_started
+        drain_seconds = max(0.0, elapsed - duration)
         if failures:
             raise RuntimeError(f"{len(failures)} load session(s) failed.") from failures[0]
         cpu_after = resource.getrusage(resource.RUSAGE_SELF)
@@ -208,7 +213,12 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
             "events_in_fixture": events,
             "sessions": sessions,
             "target_requests_per_second": rate,
-            "duration_seconds": round(elapsed, 1),
+            "duration_seconds": round(duration, 1),
+            "observation_window_seconds": round(duration, 1),
+            "drain_seconds": round(drain_seconds, 2),
+            "in_window_requests": in_window[0],
+            "in_window_requests_per_second": round(in_window[0] / duration, 2),
+            "throughput_tolerance": THROUGHPUT_TOLERANCE,
             "request_mix": dict(MIX),
             "fixture_seed": SEED,
             "inference_per_home": False,
@@ -217,16 +227,15 @@ def run(homes: int, sessions: int, rate: float, duration: float) -> dict[str, An
             and sessions >= DECLARED["sessions"]
             and rate >= DECLARED["requests_per_second"]
             and duration >= DECLARED["duration_seconds"]
-            and elapsed >= DECLARED["duration_seconds"]
-            and bool(elapsed)
-            and total / elapsed >= DECLARED["requests_per_second"],
+            and in_window[0] / duration
+            >= DECLARED["requests_per_second"] * (1 - THROUGHPUT_TOLERANCE),
         },
         "fixture_setup_seconds": round(setup_seconds, 1),
         "cold_first_request_ms": warmup_ms,
         "routes": routes,
         "cost_drivers": {
             "requests": total,
-            "achieved_requests_per_second": round(total / elapsed, 2) if elapsed else 0,
+            "achieved_requests_per_second": round(in_window[0] / duration, 2),
             "assistant_calls": 0,
             "sql_statements": sql_statements,
             "sql_statements_per_request": round(sql_statements / total, 2) if total else 0,

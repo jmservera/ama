@@ -1348,8 +1348,12 @@ body. Warm p95 was 7,076 ms list, 7,512 ms detail and 7,698 ms dashboard with no
 errors, so all three routes exceeded the NFR-002 staff thresholds (1 s, 1 s and 3 s)
 in this run; the first cold dashboard request took about 1.5 s. The dashboard
 recomputes every lifecycle under the store lock, and the single process, load
-client and dashboard share one interpreter, so the figures are a local upper bound
-that needs a hosted run before any capacity decision. The declared duration and
+client and dashboard share one interpreter, so the figures are local measurements
+that need a hosted run before any capacity decision. The stored report timed each
+request from dispatch to completion, so it omits scheduling backlog and is a lower
+bound for that metric; newer runs time from scheduled arrival, and later runs
+report the fixed observation window, in-window throughput (5% tolerance) and drain
+time separately. The declared duration and
 event volume were not run, and the run makes no production, autoscaling or
 availability claim and is not an Azure measurement. Usage and cost drivers per unit
 of load (600 requests, 3.99 SQL statements per request, 0 assistant calls,
