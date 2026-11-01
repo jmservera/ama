@@ -9,3 +9,7 @@
 ## Correction cycle 2026-11-01 (PR 690)
 
 * Changes: removed 15 tracked egg-info files (core/api/agents); infra/README.md coordinator steps 1 and 3 corrected. Nothing applied to Azure.
+
+## Correction cycle 2 (PR 690, 2026-11-01)
+
+* Merged origin/main (log.md kept both sides). Copilot thread: generated .ruff_cache, .mypy_cache and __pycache__ files were tracked; untracked them (already gitignored). ruff check, ruff format --check and the resident demo tests pass; mypy on touched files is clean (other errors are untouched, missing-stub/environment).

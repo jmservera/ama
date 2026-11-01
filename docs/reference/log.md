@@ -9197,6 +9197,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
 
 * 2026-11-01: documented coordinator steps for the live resident authority extension in infra/README.md and moved the browser-check fixture to the shared authority end (Refs #521). No live apply.
+
 ## [2026-11-01] update | Replay audit covers pack and EPC generators (#176)
 
 * Extended the one-command determinism audit in
