@@ -28,3 +28,10 @@ task_id: issue-189
 ## Divergences
 
 None from the plan.
+
+## Review amendments, second round (PR 637 Copilot threads)
+
+* `RunPlan.daily_used_units` is recorded in the plan, subtracted from quota headroom and passed to the `RunBudget`.
+* `RunPlan.replay_speed` (default and maximum 1000) is recorded, passed to the `Pacer`, and the replay span (days x 86,400 s / speed) must fit `max_seconds`.
+* Cost is based on provisioned time (whole days of `max_seconds`), not the simulated replay span.
+* `Pacer.set_max_per_second` reschedules the pending admission; `admit_send` rechecks the moved target; `scale_down` uses it. Regression added.

@@ -57,16 +57,26 @@ class RunPlan:
     records_per_home_day: int = 3
     days: int = 1
     message_bytes: int = 512
+    replay_speed: float = 1000.0
+    daily_used_units: int = 0
 
     def validate(self) -> None:
         for text in (self.owner, self.alert_reference):
             if not isinstance(text, str) or not text.strip() or len(text) > 160:
                 raise StreamError("RUN_OWNER_COST_ALERT_REQUIRED")
-        numbers = (self.max_seconds, self.max_per_second, self.budget_usd, self.alert_threshold)
+        numbers = (
+            self.max_seconds,
+            self.max_per_second,
+            self.budget_usd,
+            self.alert_threshold,
+            self.replay_speed,
+        )
         if any(type(v) not in (int, float) or not math.isfinite(v) for v in numbers):
             raise StreamError("INVALID_RUN_LIMIT")
         if not 1 <= self.max_seconds <= MAX_SECONDS or not 0 < self.max_per_second <= 100:
             raise StreamError("INVALID_RUN_LIMIT")
+        if not 0 < self.replay_speed <= 1000:
+            raise StreamError("INVALID_REPLAY_SPEED")
         if self.budget_usd <= 0 or not 0 < self.alert_threshold <= 1:
             raise StreamError("INVALID_BUDGET")
         for count, ceiling in (
@@ -77,6 +87,8 @@ class RunPlan:
         ):
             if type(count) is not int or not 1 <= count <= ceiling:
                 raise StreamError("INVALID_SCALE")
+        if type(self.daily_used_units) is not int or not 0 <= self.daily_used_units <= 10_000_000:
+            raise StreamError("INVALID_DAILY_USAGE")
 
     def estimate(self) -> Estimate:
         self.validate()
@@ -84,14 +96,19 @@ class RunPlan:
         units = per_day * math.ceil((self.message_bytes + PROPERTY_BYTES) / METER_BYTES)
         total = per_day * self.days
         # All days replay in one run of at most MAX_SECONDS, so count the whole run against a day.
-        headroom = B1_DAILY_MESSAGES * UNITS - units * self.days - RESERVED_HEADROOM
+        available = B1_DAILY_MESSAGES * UNITS - self.daily_used_units
+        headroom = available - units * self.days - RESERVED_HEADROOM
         if headroom < 0:
             raise StreamError("B1_QUOTA_HEADROOM")
         if total > MAX_RUN_MESSAGES:
             raise StreamError("RUN_MESSAGE_LIMIT")
         if total > self.max_per_second * self.max_seconds:
             raise StreamError("RUN_TIME_LIMIT_TOO_SHORT")
-        cost = round(B1_MONTHLY_USD * UNITS * self.days / 30, 2)
+        # Replay spacing is nominal time compressed by the replay speed.
+        if self.days * 86400 / self.replay_speed > self.max_seconds:
+            raise StreamError("RUN_TIME_LIMIT_TOO_SHORT")
+        # Billing follows the provisioned hub time (whole days), not the simulated replay span.
+        cost = round(B1_MONTHLY_USD * UNITS * math.ceil(self.max_seconds / 86400) / 30, 2)
         if cost > self.budget_usd:
             raise StreamError("BUDGET_CAP_EXCEEDED")
         return Estimate(
@@ -110,7 +127,7 @@ class RunPlan:
             price_basis=PRICE_BASIS,
         )
 
-    def budget(self, daily_used_units: int = 0) -> RunBudget:
+    def budget(self) -> RunBudget:
         return RunBudget(
             owner=self.owner,
             cost_reference=f"estimate:{self.estimate().estimated_cost_usd}USD",
@@ -118,7 +135,7 @@ class RunPlan:
             max_messages=self.homes * self.records_per_home_day * self.days,
             max_seconds=self.max_seconds,
             max_per_second=self.max_per_second,
-            daily_used_units=daily_used_units,
+            daily_used_units=self.daily_used_units,
         )
 
 
@@ -165,7 +182,7 @@ class RunController:
         expected = _body(self.plan)
         if claimed != _digest(body) or body != expected:
             raise StreamError("ESTIMATE_MISMATCH")
-        self.pacer = Pacer(self.plan.budget(), clock=self.clock)
+        self.pacer = Pacer(self.plan.budget(), speed=self.plan.replay_speed, clock=self.clock)
         self.state = "running"
         return self.pacer
 
@@ -181,7 +198,7 @@ class RunController:
         if type(factor) not in (int, float) or not 0 < factor < 1:
             raise StreamError("INVALID_SCALE_DOWN")
         self.active_homes = max(1, math.floor(self.active_homes * factor))
-        self.pacer.max_per_second *= factor
+        self.pacer.set_max_per_second(self.pacer.max_per_second * factor)
         return self.active_homes
 
 
@@ -191,6 +208,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--owner", required=True)
     parser.add_argument("--max-seconds", type=float, default=MAX_SECONDS)
     parser.add_argument("--max-per-second", type=float, default=100.0)
+    parser.add_argument("--replay-speed", type=float, default=1000.0)
+    parser.add_argument("--daily-used-units", type=int, default=0)
     parser.add_argument("--budget-usd", type=float, required=True)
     parser.add_argument("--alert-threshold", type=float, default=0.8)
     parser.add_argument("--alert-reference", required=True)
@@ -204,6 +223,8 @@ def main(argv: list[str] | None = None) -> int:
         budget_usd=args.budget_usd,
         alert_threshold=args.alert_threshold,
         alert_reference=args.alert_reference,
+        replay_speed=args.replay_speed,
+        daily_used_units=args.daily_used_units,
     )
     try:
         body = record(plan, args.out)

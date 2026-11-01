@@ -46,6 +46,26 @@ class EstimateTests(unittest.TestCase):
         with self.assertRaisesRegex(StreamError, "B1_QUOTA_HEADROOM"):
             plan(**kwargs).estimate()
 
+    def test_prior_daily_usage_reduces_headroom_and_reaches_budget(self) -> None:
+        big = {"max_seconds": 3600, "max_per_second": 100, "homes": 30_000}
+        self.assertEqual(plan(**big).estimate().headroom_units_per_day, 270_000)
+        used = plan(daily_used_units=300_000, **big)
+        with self.assertRaisesRegex(StreamError, "B1_QUOTA_HEADROOM"):
+            used.estimate()
+        self.assertEqual(plan(daily_used_units=5).budget().daily_used_units, 5)
+
+    def test_replay_speed_must_fit_time_limit_and_reaches_pacer(self) -> None:
+        with self.assertRaisesRegex(StreamError, "RUN_TIME_LIMIT_TOO_SHORT"):
+            plan(homes=1, days=1, replay_speed=1).estimate()
+        with self.assertRaisesRegex(StreamError, "INVALID_REPLAY_SPEED"):
+            plan(replay_speed=0).estimate()
+        self.assertEqual(plan(replay_speed=500).estimate().days, 1)
+
+    def test_cost_uses_provisioned_time_not_replay_span(self) -> None:
+        one = plan(days=1, max_seconds=3600, max_per_second=100).estimate()
+        thirty = plan(days=30, max_seconds=3600, max_per_second=100).estimate()
+        self.assertEqual(one.estimated_cost_usd, thirty.estimated_cost_usd)
+
     def test_estimate_total_fits_run_budget_validation(self) -> None:
         p = plan(homes=33_333, max_seconds=3600, max_per_second=100)
         self.assertLessEqual(p.budget().max_messages, 100_000)
@@ -60,7 +80,7 @@ class EstimateTests(unittest.TestCase):
 
     def test_refuses_cost_above_budget_cap(self) -> None:
         with self.assertRaisesRegex(StreamError, "BUDGET_CAP_EXCEEDED"):
-            plan(days=30, budget_usd=5, max_seconds=3600, max_per_second=100).estimate()
+            plan(budget_usd=0.2).estimate()
 
     def test_owner_alert_and_limits_are_required(self) -> None:
         for bad in (
@@ -150,6 +170,7 @@ class ControlTests(unittest.TestCase):
         pacer = controller.start(self.path)
         self.assertEqual(controller.scale_down(0.5), 500)
         self.assertEqual(pacer.max_per_second, 5)
+        self.assertEqual(pacer.speed, 1000)
         for bad in (1, 1.5, 0, -1):
             with self.subTest(bad=bad), self.assertRaises(StreamError):
                 controller.scale_down(bad)

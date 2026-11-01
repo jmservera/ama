@@ -440,12 +440,15 @@ for actual SDK operation bounds, credential handling and activation gates.
 
 `synthetic.run_plan` records a pre-run estimate for N homes before any run:
 messages/day (3 per home by default), 4 KiB metered units against the decided
-B1/one-unit quota (400,000/day with a 40,000 reserve), prorated hub cost and
-budget cap, plus the run owner, time limit (at most 3600 s) and budget alert
+B1/one-unit quota (400,000/day with a 40,000 reserve, less any units already
+used that day via `daily_used_units`), prorated hub cost for the provisioned time
+(whole days of `max_seconds`, not the simulated replay span) and budget cap, plus the run owner, time limit (at most 3600 s) and budget alert
 reference and threshold. It counts the whole run (all days) against the daily
 quota and refuses over-quota, over-budget, too-short or over-100,000-message
 runs (the `RunBudget` publisher limit; larger stock needs separately budgeted
-runs). `RunController` starts only against a recorded, untampered estimate whose
+runs). The plan records a `replay_speed` (default and maximum 1000) that is
+passed to the `Pacer`; the replay span (days x 86,400 s / speed) must fit
+`max_seconds`. `RunController` starts only against a recorded, untampered estimate whose
 complete body matches the current plan, estimate and alert amount, allows one run, stops it, scales homes and rate down (never up) and
 inherits the `Pacer` hard deadline. Prices are public list estimates, not a quote.
 Nothing here sends traffic or verifies the live Azure budget alert (#146).

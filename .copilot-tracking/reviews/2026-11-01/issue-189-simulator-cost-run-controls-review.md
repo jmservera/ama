@@ -27,3 +27,5 @@ Single post-implementation review, executed 2026-11-01 over the branch diff.
 Conformant with the stated scope. Human review/CI approval remain unchecked.
 
 Addendum: four Copilot PR review findings (whole-run quota, full-body estimate comparison, publisher message limit, non-object record) were valid and fixed; see the changes file.
+
+Second addendum: four further Copilot findings (prior daily usage, replay speed and spacing, billable duration versus replay span, pacer rescheduling on scale-down) were valid and fixed; see the changes file.
