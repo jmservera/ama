@@ -42,3 +42,8 @@ All #223 criteria unmet and untouched. Open: thresholds/samples/panel approvals,
 * certifi: main already carries the reviewed certifi==2026.10.19 correction; the four C01 lockfiles are now identical to origin/main (empty diff), preserving PR420's version.
 * Focused checks: lockfile diff versus origin/main empty; test_ai_eval.py 13 tests passed; added-line non-ASCII scan none. No gate, Docker, Azure or push.
 * Residual (unchanged): complete gate on the new head, independent assessment and push/PR owned by coordinator; all #223 criteria unmet; #108, OQ-017, consent/privacy/accessibility, Finance dependencies open. No second Review.
+
+## PR review follow-up 3 (2026-11-01)
+
+* `review_effectiveness.py`: `_facts` keeps the first value of a repeated label and exposes later values as `<topic> detail`; `defect_corrected` now requires the gate result.
+* `test_review_effectiveness.py`: regressions for repeated labels and an unsourced rejection.
