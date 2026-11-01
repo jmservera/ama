@@ -95,6 +95,34 @@ def tags(node: object) -> list[str]:
     return found
 
 
+def row_texts(node: object) -> list[str]:
+    rows: list[str] = []
+    if isinstance(node, dict):
+        if node.get("tag") == "tr":
+            rows.append(" | ".join(cells(node)))
+        for kid in node.get("kids", []):
+            rows += row_texts(kid)
+    return rows
+
+
+def cells(node: object) -> list[str]:
+    if isinstance(node, str):
+        return [node]
+    if not isinstance(node, dict):
+        return []
+    if node.get("tag") in ("td", "th"):
+        return ["".join(flat(node))]
+    return [c for kid in node.get("kids", []) for c in cells(kid)]
+
+
+def flat(node: object) -> list[str]:
+    if isinstance(node, str):
+        return [node]
+    if isinstance(node, dict):
+        return [t for kid in node.get("kids", []) for t in flat(kid)]
+    return []
+
+
 class PackageQueue(unittest.TestCase):
     def test_fields_draft_readiness_and_no_controls(self) -> None:
         out = run("procurement-packages")
@@ -131,7 +159,9 @@ class PackageQueue(unittest.TestCase):
         return json.dumps(out["tree"])
 
     def test_work_order_validity_governs_resident_scope_prerequisite(self) -> None:
-        self.assertIn("Met on record", self.prereq([ORDER]))
+        met = [r for r in row_texts(json.loads(self.prereq([ORDER]))) if "with resident scope" in r]
+        self.assertEqual(len(met), 1, met)
+        self.assertIn("| Met on record |", met[0] + " |")
         withdrawn = self.prereq([ORDER | {"state": "Withdrawn"}])
         self.assertIn("Every work order for this home is withdrawn", withdrawn)
         self.assertIn("WO-1 v2", withdrawn)
