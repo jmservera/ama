@@ -13,3 +13,7 @@
 ## Follow-up 2, 2026-11-01 (merge of main)
 
 * Merging main registered three role screens that `docs/reference/research/ux/atlas-screen-trace.md` still labelled unmerged, failing `test_atlas_screen_trace` in src-core. Labels corrected and a log entry appended; the atlas tests pass.
+
+## Follow-up 3, 2026-11-01 (local gate attempt)
+
+* `tools/rpi-checks.py --all` was run against a clean checkout (ignored caches removed). Unit, lint, mypy and container groups passed; the run ended BLOCKED at the browser and mssql groups (browser exact-test evidence missing, SQL authentication prerequisite unavailable in this environment). No passing receipt exists, so the gate remains outstanding and no skip or cloud fallback is claimed.
