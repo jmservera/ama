@@ -18,6 +18,9 @@ provider code.
   refused before any model call, with the human workflow route (issue #164).
 * Earlier assistant turns are never sent back to the model: citation identifiers
   alone cannot establish that their claims are still current.
+* A status word or number in an answer that no cited source contains is withheld
+  (lexical support check on listed status words and complete numeric tokens such as
+  `40.5m`; an unlisted paraphrase or synonym can still pass, so it is not semantic grounding).
 * Refusal and action-claim checks are lexical, not semantic safety guarantees.
 """
 
@@ -50,6 +53,10 @@ FALLBACK = (
 WITHHELD = (
     "That reply was withheld because it asked for an action or exposed content "
     "this role cannot see. Ask a case question instead."
+)
+UNGROUNDED = (
+    "That reply was withheld because its cited sources do not support a status or "
+    "figure it stated. Check the case card or ask the data owner."
 )
 SYSTEM = (
     "You are a read-only assistant for a UK housing association retrofit team. "
@@ -185,6 +192,11 @@ ACTION_CLAIM = re.compile(
     r"|(?:case|work|proposal)\s+(?:has\s+been|is|was)\s+(?:approved|signed[\s-]off))\b",
     re.I,
 )
+STATUS_CLAIM = re.compile(
+    r"\b(?:secur(?:ed|e)|funded|approved|complete[d]?|compliant|passed|cleared|verified"
+    r"|certified|safe|signed|consented|resolved|accepted|confirmed|guaranteed)\b|(?<![\w.])(?P<lead>[-+\u2212])?(?:(?:gbp|usd|eur)\s?|[£$€])?(?P<num>[-+\u2212]?(?:\d+(?:[.,]\d+)*|\.\d+)(?:e[+-]\d+)?[^\W_]*)",
+    re.I,
+)
 HISTORY_POLICY = "user-only; assistant claims are not current evidence"
 MAX_SOURCES = 60
 MAX_VALUE = 200
@@ -304,6 +316,28 @@ def permitted_sources(case_id: str, ctx: dict[str, Any]) -> dict[str, str]:
 
     walk("", ctx)
     return found
+
+
+def claim_tokens(text: str) -> set[str]:
+    """Status words and numbers; a sign before a currency marker stays with its amount."""
+    tokens = set()
+    spaced = re.sub(r"\.{2,}", " ", normalise_policy_text(text))
+    for m in STATUS_CLAIM.finditer(spaced):
+        num = m.group("num")
+        if num is None:
+            tokens.add(m.group(0).casefold())
+        else:
+            lead = m.group("lead") or ""
+            tokens.add((num if num[0] in "-+\u2212" else lead + num).casefold())
+    return tokens
+
+
+def unsupported_claims(answer: str, cited: list[str]) -> list[str]:
+    """Status words and numbers in the answer that no cited source contains (lexical)."""
+    support: set[str] = set()
+    for source in cited:
+        support |= claim_tokens(source)
+    return sorted(claim_tokens(answer) - support)
 
 
 def parse_reply(text: str, allowed: dict[str, str]) -> tuple[str, list[str]] | None:
@@ -602,6 +636,8 @@ class ChatPanel:
                             normalise_policy_text(parsed[0])
                         ):
                             kind, text = "withheld", WITHHELD
+                        elif unsupported_claims(parsed[0], [sources[c] for c in parsed[1]]):
+                            kind, text = "withheld", UNGROUNDED
                         else:
                             kind, (text, cites) = "answer", (redact(parsed[0])[0], parsed[1])
         elif sources:
