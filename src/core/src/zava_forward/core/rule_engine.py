@@ -422,14 +422,27 @@ class RuleEngine:
             )
         )
 
+    def _homes(self) -> dict[str, tuple[str, str]]:
+        """Map each case to the home grouping of its latest check, whatever its item."""
+        latest: dict[str, tuple[int, tuple[str, str]]] = {}
+        for row in self.sql.all("SELECT case_id, check_seq, body FROM reg_check"):
+            if row["case_id"] not in latest or row["check_seq"] > latest[row["case_id"]][0]:
+                check = json.loads(row["body"])
+                latest[row["case_id"]] = (row["check_seq"], (check["home_id"], check["home_scope"]))
+        return {case: home for case, (_, home) in latest.items()}
+
     def _publish(self, check: dict[str, Any], now: datetime) -> None:
         throttle = _hash([check["home_id"], check["card_id"], check["step"], check["item"]])
         if check["result"] == "attention":
-            for row in self.sql.all(
-                "SELECT created, body FROM reg_alert WHERE throttle=?", (throttle,)
-            ):
-                if json.loads(row["body"])["result"] == "attention" and now < (
-                    datetime.fromisoformat(row["created"]) + timedelta(hours=24)
+            homes = self._homes()
+            for row in self.sql.all("SELECT case_id, created, body FROM reg_alert"):
+                old = json.loads(row["body"])
+                if (
+                    old["result"] == "attention"
+                    and (old["card_id"], old["step"], old["item"])
+                    == (check["card_id"], check["step"], check["item"])
+                    and homes.get(row["case_id"], (old["home_id"],))[0] == check["home_id"]
+                    and now < datetime.fromisoformat(row["created"]) + timedelta(hours=24)
                 ):
                     return
         episode = _hash(
@@ -488,6 +501,7 @@ class RuleEngine:
                     snapshots[identity] = [check]
                 elif check["sequence"] == prior_checks[0]["sequence"]:
                     prior_checks.append(check)
+            homes = self._homes()
             for snapshot in snapshots.values():
                 for check in snapshot:
                     current[(check["case_id"], check["card_id"], check["item"])] = check
@@ -505,8 +519,8 @@ class RuleEngine:
                 check = current.get((a["case_id"], a["card_id"], a["item"]))
                 a["latest_result"] = check["result"] if check else "unknown"
                 a["latest_evaluated_at"] = check["at"] if check else None
-                if check:
-                    a["home_id"], a["home_scope"] = check["home_id"], check["home_scope"]
+                if a["case_id"] in homes:
+                    a["home_id"], a["home_scope"] = homes[a["case_id"]]
                 if not can_see_reason(user):
                     for event in a["events"]:
                         event["note"] = NOTE_HELD

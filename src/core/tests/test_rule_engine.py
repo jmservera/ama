@@ -548,6 +548,44 @@ class EngineTests(unittest.TestCase):
         acknowledged = [a for a in homes[0]["alerts"] if a["id"] == first["id"]][0]
         self.assertEqual([e["action"] for e in acknowledged["events"]], ["acknowledge"])
 
+    def test_upgrade_attention_throttle_uses_current_home_across_cases(self) -> None:
+        del self.facts["home_id"]
+        self.facts["hazards"] = [self.hazard(hours_ago=30)]
+        self.write("SYN-1")
+        self.write("SYN-2")
+        with patch.object(rule_engine, "ENGINE_VERSION", 2):
+            self.run_engine(case_id="SYN-1")
+        self.assertEqual(len(self.publications()), 1)
+        self.facts["home"] = dict(address="1 Test Road", postcode="TE1 1ST")
+        for case_id in ("SYN-1", "SYN-2"):
+            self.db.execute("UPDATE cases SET body=? WHERE id=?", (json.dumps(self.facts), case_id))
+        self.db.commit()
+        self.run_engine(case_id="SYN-1")
+        self.run_engine(case_id="SYN-2")
+        self.assertEqual(len(self.publications()), 1)
+
+    def test_regroup_uses_latest_check_when_card_held_or_evidence_removed(self) -> None:
+        del self.facts["home_id"]
+        self.facts["hazards"] = [self.hazard(hours_ago=60)]
+        self.write("SYN-1")
+        self.write("SYN-2")
+        with patch.object(rule_engine, "ENGINE_VERSION", 2):
+            for case_id in ("SYN-1", "SYN-2"):
+                self.run_engine(case_id=case_id)
+        self.assertEqual(len(self.engine.alerts(OWNER)["homes"]), 2)
+        self.facts["home"] = dict(address="1 Test Road", postcode="TE1 1ST")
+        self.facts["hazards"] = []
+        for case_id in ("SYN-1", "SYN-2"):
+            self.db.execute("UPDATE cases SET body=? WHERE id=?", (json.dumps(self.facts), case_id))
+        self.db.commit()
+        self.run_engine(case_id="SYN-1")
+        self.assertNotIn(
+            "hazards/0", {c["item"] for c in self.run_engine(case_id="SYN-2")["checks"]}
+        )
+        homes = self.engine.alerts(OWNER)["homes"]
+        self.assertEqual(len(homes), 1)
+        self.assertEqual({a["case_id"] for a in homes[0]["alerts"]}, {"SYN-1", "SYN-2"})
+
     def test_home_key_falls_back_to_case_only_without_recorded_home(self) -> None:
         del self.facts["home_id"]
         for home in (None, dict(address="1 Test Road"), dict(address="", postcode="TE1 1ST")):

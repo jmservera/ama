@@ -39,3 +39,14 @@ Task: 212 / issue-212-home-grouping.
   --check and mypy clean in src/core. Full src/core discovery: 1644 run; 1 failure and 2 errors are
   subprocess tests that need the package installed (`No module named 'zava_forward'`), unrelated.
 * Note: source-monitor approvals bound to engine version 2 must be re-approved by a human.
+
+## Amendment: current-home throttle and latest-check regrouping (PR #630 Copilot threads)
+
+* `rule_engine.py`: new `_homes()` maps each case to the home grouping of its latest check
+  regardless of item. `_publish()` attention cooldown now compares prior attention alerts (same
+  card, step and item) by their case's current home, so historical case-only throttles do not let a
+  second case at the same address publish within 24 hours. `alerts()` regroups from `_homes()`, so
+  held-card and removed-evidence snapshots (item `card` or `hazards`) still regroup. History is not rewritten.
+* `test_rule_engine.py`: cross-case attention upgrade regression and held/missing-evidence regrouping
+  regression; both fail without the change.
+* Validation: `test_rule_engine` 26 tests OK; ruff check and format clean.
