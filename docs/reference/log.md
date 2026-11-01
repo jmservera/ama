@@ -9235,3 +9235,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   listing the merged M1 to M6 and retirement pull requests and the current
   tree check. The migration-order criterion stays unmet pending an owner
   decision.
+
+## [2026-11-01] query | Employee chat recheck on main 51657d30 (#530)
+
+* Re-ran the focused tier: core chat (101), agents chat model (7), API chat
+  panel (41) and widget focus (6) tests, ruff, mypy and the employee chat
+  browser and pinned axe check. All passed. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-recheck-changes.md`.
+* SQL, live employee-site verification, screen-reader and voice-control
+  acceptance remain unproven; no source change was made.
