@@ -137,6 +137,16 @@
       "personal_data": "none; constructed cases"
     },
     {
+      "id": "DS-REVIEW-EFFECTIVENESS",
+      "name": "Human-review effectiveness seeded proposals (constructed case, scripted outputs)",
+      "visibility": "public",
+      "location": "src/agents/evals/review_effectiveness_golden.json",
+      "validation": {"marker_field": "description", "exemption": "Constructed scenario container; child proposals inherit the root declaration. All text remains pattern-scanned."},
+      "sources": [],
+      "data_dictionary": "data-dictionary.md#chat-and-assistant-data",
+      "personal_data": "none; constructed cases"
+    },
+    {
       "id": "DS-DOC-FORM-FIXTURES",
       "name": "Document, form-schema and seeded-defect fixtures (120 families)",
       "visibility": "public",
