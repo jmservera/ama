@@ -9090,3 +9090,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   table to `research/chat-memory-dpia.md`.
 * The policy is not decided (BRD OD-46, owner with DPO); issue #162 criterion 6
   stays open. No regulatory snapshot changed.
+
+## [2026-11-01] update | Executable design traceability gate (#156)
+
+* Added `tools/check-design-trace.py` and tests. It validates the 74-row screen
+  register and reports the design gate as blocked while designs are NOT SUPPLIED.
+  Usage is under "Run the design gate" in the prototype profile review.
+* Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
+  content evidence were supplied. No regulatory snapshot changed.
