@@ -43,6 +43,7 @@ class ChatPrivacyBehaviour:
         self.assertEqual(terms["source"], "https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy")
         self.assertRegex(terms["retrieved"], r"^\d{4}-\d{2}-\d{2}$")
         self.assertTrue(any("DPO and Legal" in i for i in cp.MODEL_PROVIDER_POSITION["open_items"]))
+
     def test_storage_refused_without_dpo_legal_references(self):
         c = self.cp(CHAT_DPIA_REF="SYNTH-DPIA-1")
         self.assertEqual(c.decision()["missing"], ["lawful_basis_ref", "notice_ref"])
