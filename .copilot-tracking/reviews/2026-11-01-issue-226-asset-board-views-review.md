@@ -9,7 +9,7 @@ Execution: executed once, self-review of diff against acceptance criteria. Outco
 | No approval; evidence boundary visible | Met; test asserts no button, form or input. |
 | WCAG 2.2, keyboard, text state | Uses existing table-scroll region (tabindex), captions, textual states. Not verified by browser check locally; unproven. |
 | Design system, no role simulator | Reuses host card, dl, table classes; no simulator. Screens limited to manager roles because no asset or executive role exists. |
-| Tokenomics: AI cost per accepted outcome beside quality floor, value status, evidence class | Met in design and render; token-only figures not shown (tested). |
+| Tokenomics: AI cost per accepted outcome beside quality floor, value status, evidence class | Met in design and render; token-only figures are shown only as a labelled component, never as overall AI cost, and the panel is labelled ledger-wide with period, as-of, denominator and coverage (tested; PR review follow-up). |
 
 Routed follow-ups: queue-level asset comparison across homes (needs a portfolio endpoint), asset/executive role definition, browser keyboard check, validation in #155.
 Verdict on closing: criteria 1 (queue level) and 4 (accessibility evidence) not proven, so the PR uses Refs.

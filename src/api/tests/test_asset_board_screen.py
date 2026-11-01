@@ -89,7 +89,7 @@ class AssetBoardScreen(unittest.TestCase):
             ]
         )
         self.assertNotIn("1.20", unknown)
-        self.assertIn("AI cost per accepted outcome", unknown)
+        self.assertIn("Overall AI cost per accepted outcome", unknown)
         shown = json.dumps(
             run(
                 {
@@ -98,12 +98,20 @@ class AssetBoardScreen(unittest.TestCase):
                         "quality_qualified_cost": "1.20",
                         "currency": "GBP",
                         "evidence_label": "synthetic",
+                        "coverage": "complete",
+                        "denominator": "accepted outputs",
+                        "period": {"start": "P1", "end": "P2", "as_of": "A1"},
                     }
                 }
             )["tree"]
         )
         self.assertIn("1.20 GBP", shown)
         self.assertIn("synthetic", shown)
+        self.assertIn("component only", shown)
+        self.assertIn("Ledger-wide", shown)
+        self.assertIn("P1 to P2, as of A1", shown)
+        self.assertIn("accepted outputs", shown)
+        self.assertIn("S-A v1", shown)
 
     def test_missing_report_and_no_conflicts_stay_unknown(self) -> None:
         out = run({})

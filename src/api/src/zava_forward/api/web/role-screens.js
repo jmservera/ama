@@ -120,10 +120,14 @@ function assetCost(report) {
   const m = report?.consumption;
   const passed = m && m.quality_status === "Pass" && m.quality_qualified_cost && m.quality_qualified_cost !== "Unknown";
   return screenFields([
-    ["AI cost per accepted outcome", passed ? `${m.quality_qualified_cost} ${screenValue(m.currency)}` : "Unknown"],
+    ["Overall AI cost per accepted outcome", "Unknown. Other cost components are not complete and quality-qualified."],
+    ["Token/API component per accepted proposal (component only)", passed ? `${m.quality_qualified_cost} ${screenValue(m.currency)}` : "Unknown"],
+    ["Report period (UTC)", m?.period ? `${screenValue(m.period.start)} to ${screenValue(m.period.end)}, as of ${screenValue(m.period.as_of)}` : "Unknown"],
+    ["Accepted-outcome denominator", screenValue(m?.denominator)],
     ["Quality floor", screenValue(m?.quality_status)],
     ["Value status", m?.cash_value && m.cash_value !== "Unknown" ? m.cash_value : "Unknown. No finance-defensible value is recorded."],
     ["Evidence class", screenValue(m?.evidence_label || m?.coverage)],
+    ["Coverage", screenValue(m?.coverage)],
     ["Reading", "A token count is never shown as the cost of AI. Without a recorded price source and a passed quality floor, cost stays Unknown."]
   ]);
 }
@@ -146,10 +150,10 @@ registerRoleScreen({
         h("p", {}, `Home scope: ${c.id} only.`)),
       screenPanel("Stock conflict comparison",
         screenTable("Stock source conflicts and source age",
-          ["Query", "Field", "First source (value, ID, age)", "Compared source (value, ID, age)", "Status", "Resolution owner"],
+          ["Query", "Field", "First source (value, ID, version, age)", "Compared source (value, ID, version, age)", "Status", "Resolution owner"],
           queries.map((q) => [q.id, q.field,
-            `${q.left.value}, ${q.left.source_id}, ${assetAgeDays(q.left.date)}, ${q.left.validation_state}`,
-            `${q.right.value}, ${q.right.source_id}, ${assetAgeDays(q.right.date)}, ${q.right.validation_state}`,
+            `${q.left.value}, ${q.left.source_id} v${q.left.version}, ${assetAgeDays(q.left.date)}, ${q.left.validation_state}`,
+            `${q.right.value}, ${q.right.source_id} v${q.right.version}, ${assetAgeDays(q.right.date)}, ${q.right.validation_state}`,
             assetStatus(c, q), screenPerson(q.query_owner)]))),
       screenPanel("Eligibility",
         screenFields([["Eligibility", "Unknown"],
@@ -163,6 +167,6 @@ registerRoleScreen({
       screenPanel("Portfolio scope (separate from this home)",
         screenFields([["Cases permitted to your role", extra?.portfolio?.total],
           ["Meaning", "A role-scoped count, not a stock, budget or programme total"]])),
-      screenPanel("AI cost and value (board reader)", assetCost(extra?.report)));
+      screenPanel("Ledger-wide AI cohort (all homes, not this home)", assetCost(extra?.report)));
   }
 });
