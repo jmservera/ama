@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T02:05:20+00:00",
-  "commit": "c2c62a1e2b9be99433ed5f55db08194ce3cd6cd6",
+  "scored_at": "2026-11-01T02:41:14+00:00",
+  "commit": "4e041dcbfad0c22c296766db23c628d84888c5a0",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41263329859",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41265341272",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "8a177fbb3822f88f19a01fe90ec953e7eceea8a58439b26735ef589b61e02904",
+    "solution-code": "96eb7574fbf23371db3e818a33408be7d0c9efdf533fa3015c455a563711f4b0",
     "infrastructure": "0172b75e258abc5d97ce173fa595146da2d6f807386ec74e992482b7524f7aad",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -48,25 +48,23 @@
         "src/core/src/zava_forward/core/ai.py:67-100",
         "src/core/src/zava_forward/core/assistants.py:884-900"
       ],
-      "rationale": "Diff is pagination for capacity workspace, not security/compliance/responsible-AI. Baseline 5 retained."
+      "rationale": "New run_plan.py adds budget/tamper guardrails for the synthetic simulator, not identity/data-protection/AI-risk controls. Baseline 5 retained."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/procurement.py:540-562",
-        "src/api/src/zava_forward/api/server.py:486-505",
-        "src/api/tests/test_workspace_paging.py:1-30"
+        "src/core/src/zava_forward/core/synthetic/run_plan.py:1-218",
+        "src/core/tests/test_run_plan.py:1-178"
       ],
-      "rationale": "Capability is implemented end to end (API, core, UI) with edge cases (invalid input, hidden-order totals, offset overrun) and dedicated passing tests. Strengthens completeness evidence; baseline 5 retained as it was already at ceiling."
+      "rationale": "New run_plan module (estimate, record, RunController start/stop/scale-down) ships end to end with a CLI and unit tests covering edge cases (tampering, malformed records, quota/time/budget limits). Already-at-ceiling completeness reinforced; baseline 5 retained."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/ai_consumption.py:360-420,920-1073",
-        "src/core/README.md:5-123",
-        "src/api/src/zava_forward/api/server.py:514-540"
+        "src/core/src/zava_forward/core/synthetic/run_plan.py:60-100",
+        "src/core/README.md:439-454"
       ],
-      "rationale": "Pagination improves reliability/scalability of list reads but adds no new observability/cost-measurement evidence. Baseline 5 retained."
+      "rationale": "Diff models per-run cost (metered units, B1 quota headroom, estimated_cost_usd) and enforces budget-cap/time-limit/single-run/never-scale-up resilience, with README documenting the estimate and controls. Reinforces evidence already at ceiling; baseline 5 retained."
     },
     "A6": {
       "score": 5,
@@ -76,10 +74,9 @@
     "A7": {
       "score": 4,
       "evidence": [
-        "src/agents/src/zava_forward/agents/dispatch.py:186-220",
-        "src/core/src/zava_forward/core/ai_consumption.py:155-185"
+        "src/core/src/zava_forward/core/synthetic/run_plan.py:150-180"
       ],
-      "rationale": "Diff is a UI/API pagination feature unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "rationale": "Diff is a synthetic-data run-planning/budget feature, not agent dispatch/orchestration. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -117,10 +114,9 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/core/README.md:5-123",
-        "src/api/README.md:9-47"
+        "src/core/README.md:439-454"
       ],
-      "rationale": "Pagination code change is engineering, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "README addition is clear engineering documentation (CLI example, parameters) but is code documentation, not capstone deck/pitch material. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
