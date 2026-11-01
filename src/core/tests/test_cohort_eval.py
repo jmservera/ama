@@ -180,6 +180,21 @@ class CohortEvalTests(unittest.TestCase):
             self.assertIn("invalid_input", codes(rec))
             self.assertFalse(rec["activation_allowed"])
 
+    def test_malformed_shapes_return_blocked_record(self) -> None:
+        ok = {"by": "Reviewer", "rationale": "reviewed", "decision": "accept"}
+        for mutate in (
+            lambda m: m["cases"][0].update(id=[]),
+            lambda m: m["cases"][0].pop("cohorts"),
+            lambda m: m["cases"][0].update(cohorts=None),
+            lambda m: m.update(thresholds=None),
+            lambda m: m.update(approval="unapproved"),
+        ):
+            m = manifest()
+            mutate(m)  # type: ignore[no-untyped-call]
+            rec = cohort_eval.evaluate(m, clean_observed(manifest()), ok)
+            self.assertFalse(rec["activation_allowed"])
+            self.assertEqual(rec["status"], "blocked")
+
     def test_null_identity_in_both_inputs_cannot_match(self) -> None:
         m = manifest()
         m["cases"][0]["id"] = None

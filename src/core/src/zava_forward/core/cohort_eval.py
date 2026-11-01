@@ -115,6 +115,7 @@ def evaluate(
     cases = list(manifest.get("cases", []))
     declared: Mapping[str, Sequence[str]] = manifest.get("cohorts", {})
     thresholds: Mapping[str, Any] = manifest.get("thresholds", {})
+    approval = manifest.get("approval")
     justified = set(manifest.get("justified_reasons", []))
     obs_ids = [o.get("id") for o in observed]
     case_ids = [c.get("id") for c in cases]
@@ -150,7 +151,7 @@ def evaluate(
 
     joined: list[dict[str, Any]] = []
     for c in cases:
-        obs = seen.get(c.get("id"), {})
+        obs = seen.get(c.get("id"), {}) if valid_id(c.get("id")) else {}
         actual = obs.get("outcome") if obs else None
         if obs and actual not in OUTCOMES:
             block("invalid_input", f"observed case {c['id']} has missing or unsupported outcome")
@@ -160,7 +161,11 @@ def evaluate(
             and actual != c.get("expected")
             and obs.get("reason") not in justified
         )
-        joined.append({**c, "actual": actual, "defect": defect})
+        cohort_map = c.get("cohorts")
+        if not isinstance(cohort_map, Mapping):
+            block("invalid_input", f"manifest case {c.get('id')} has no cohorts mapping")
+            cohort_map = {}
+        joined.append({**c, "cohorts": cohort_map, "actual": actual, "defect": defect})
 
     min_sample = int(thresholds.get("min_sample", 0)) if _thresholds_approved(manifest) else 0
     dimensions: dict[str, Any] = {}
@@ -249,8 +254,8 @@ def evaluate(
         and not any(b["code"] in MEASUREMENT_BLOCKERS for b in blockers),
         "missing_data_treatment": manifest.get("missing_data_treatment"),
         "input_digests": {"manifest": digest(manifest), "observed": digest(list(observed))},
-        "thresholds": dict(thresholds),
-        "approval": dict(manifest.get("approval") or {}),
+        "thresholds": dict(thresholds) if isinstance(thresholds, Mapping) else {},
+        "approval": dict(approval) if isinstance(approval, Mapping) else {},
         "total_cases": len(joined),
         "dimensions": dimensions,
         "seeded_defects": seeded,

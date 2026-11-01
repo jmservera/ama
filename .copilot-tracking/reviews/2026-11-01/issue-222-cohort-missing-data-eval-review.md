@@ -30,3 +30,5 @@ Eight Copilot review findings on PR 636 (threshold validation, missing-observati
 A second round of four Copilot findings (expected-outcome validation, required task and version identifiers, fairness evidence only for measured evaluations, linear duplicate-ID detection) was valid and fixed. The original review outcome is unchanged.
 
 A third round of three Copilot findings (malformed case IDs matching each other, required missing-data treatment, conservative synthetic flag) was valid and fixed. The original review outcome is unchanged.
+
+A fourth round of three Copilot findings (unhashable case IDs, missing or null cohorts mapping, non-mapping thresholds or approval) was valid and fixed. The original review outcome is unchanged.

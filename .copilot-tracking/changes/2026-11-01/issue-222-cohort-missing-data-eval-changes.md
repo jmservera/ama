@@ -34,3 +34,5 @@ None.
 * CI `rubric/score` failed with "Scoring failed" in the hosted scorer; to be re-run, not a code failure.
 * Third round: case IDs in the manifest and observations must be non-empty strings (malformed IDs raise non-disposable `invalid_input` and never join), `missing_data_treatment` is required, and only a literal `synthetic: false` is non-synthetic.
 * Tests: 23 in `test_cohort_eval.py`; `ruff check` and `ruff format --check` clean. `gh pr checks 636` showed only `rubric/score`, passing.
+* Fourth round: non-string manifest IDs no longer reach the observed lookup, a case without a cohorts mapping raises a non-disposable `invalid_input` blocker and is normalized to an empty mapping, and non-mapping `thresholds` or `approval` serialize as empty mappings so the existing unapproved-threshold blocker and input digests carry the rejection.
+* Tests: 24 in `test_cohort_eval.py` (malformed-shape regression added); `ruff check` and `ruff format --check` clean.
