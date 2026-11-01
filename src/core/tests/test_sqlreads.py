@@ -220,6 +220,17 @@ class Plans(unittest.TestCase):
             self.assertIn("ix_cases_days", plan)
 
 
+def load_sample():
+    """Host load context so a slow benchmark can be classified as query or environment."""
+    one, five, _ = os.getloadavg()
+    return f"load1={one:.2f} load5={five:.2f} cpus={os.cpu_count()}"
+
+
+def _burn(stop_at):
+    while time.time() < stop_at:
+        pass
+
+
 class Scale(unittest.TestCase):
     N = 60000
 
@@ -276,11 +287,25 @@ class Scale(unittest.TestCase):
             pam, kim = STAFF[1], STAFF[2]
             s.db.execute("ANALYZE")
 
+            timings = []
+            burners = int(os.environ.get("ZF_BENCH_CONTENTION", "0"))
+            procs = []
+            if burners:
+                import multiprocessing
+                stop_at = time.time() + 120
+                procs = [multiprocessing.Process(target=_burn, args=(stop_at,), daemon=True) for _ in range(burners)]
+                for pr in procs:
+                    pr.start()
+                self.addCleanup(lambda: [(pr.terminate(), pr.join()) for pr in procs])
+                print(f"[timing] contention: {burners} CPU burner processes", flush=True)
+
             def timed(label, **kw):
+                before = load_sample()
                 t = time.perf_counter()
                 d = s.page_cases(**kw)
                 ms = (time.perf_counter() - t) * 1000
-                print(f"[timing] SQL {label}, {self.N:,} cases: {ms:.0f} ms ({d['total']} matches)")
+                timings.append(f"{label}: {ms:.0f} ms ({before})")
+                print(f"[timing] SQL {label}, {self.N:,} cases: {ms:.0f} ms ({d['total']} matches; {before})")
                 return d, ms
 
             first, ms1 = timed("first page, default order", user=pam, view="all", limit=50)
@@ -296,8 +321,9 @@ class Scale(unittest.TestCase):
             self.assertEqual(first["ranked_total"], sum(not c["closed"] for c in s.cases.values()))
             self.assertEqual(first["items"][0]["rank"], 1)
             self.assertEqual(deep["items"][0]["rank"], 51)
+            context = "; ".join(timings) + f"; after: {load_sample()}"
             for ms in (ms1, ms2, ms3, ms4, ms5, ms6, ms7):
-                self.assertLess(ms, 1500)
+                self.assertLess(ms, 1500, f"timings: {context}")
             order = [e["id"] for e in ranking.rank([c for c in s.cases.values() if not c["closed"]])]
             self.assertEqual([r["id"] for r in first["items"]], order[:50])
             self.assertEqual([r["id"] for r in deep["items"]], order[50:100])
