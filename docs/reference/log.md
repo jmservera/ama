@@ -9071,6 +9071,16 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
 
+## [2026-11-01] update | Source licence and attribution confirmed (#175)
+
+* Replaced provisional licence and attribution wording for SRC-CENSUS-TS054,
+  SRC-IMD-2025 and SRC-ONS-BOUNDARIES in the provenance register after
+  checking the gov.uk IMD page and the ONS terms page (OGL v3.0).
+* Retrieval dates for those three sources remain unrecorded and are an owner
+  open item, so the acceptance criterion stays unmet. Evidence is in
+  `.copilot-tracking/research/2026-11-01-issue-175-source-provenance-research.md`.
+
+
 ## [2026-11-01] update | Chat and memory provider position and DPO decision pack (Refs #163)
 
 * Retrieved the Microsoft Learn Foundry data, privacy and security page
@@ -9103,6 +9113,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   call limit, cost Unknown without billing and a synthetic-labelled report.
 * No price, bill, owner approval, spend or held-out batch was added; the
   remaining evidence gaps in `docs/reference/resources/ai-tokenomics.md` stand.
+
 ## [2026-11-01] update | Operator handover verifier (#188)
 
 * Added the operator handover check to the
@@ -9133,6 +9144,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Usage is under "Run the design gate" in the prototype profile review.
 * Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
   content evidence were supplied. No regulatory snapshot changed.
+
+## 2026-11-01 - Boundaries attribution and index reconciliation (Refs #175)
+
+* Recorded both ONS-required acknowledgements for SRC-ONS-BOUNDARIES with the OS copyright year left provisional; reconciled the data dictionary criterion row and the README index row. Retrieval dates remain unrecorded.
 
 ## [2026-11-01] update | SQL pilot tier parameters and recovery runbook (#145)
 
@@ -9209,6 +9224,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   pack: five package suites, Ruff and mypy passed locally; SQL, container and
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
+
+
 
 ## [2026-11-01] update | Resident authority end (#521)
 
