@@ -132,8 +132,8 @@ def check(prd: str, atlas: str, trace: str) -> dict[str, Any]:
             {
                 i
                 for r in rows(section(trace, block_name))
-                for i in unknown_screens(r[1])
                 if len(r) > 1
+                for i in unknown_screens(r[1])
             }
         ):
             gaps.append(f"unknown screen id in {block_name}: {ident}")

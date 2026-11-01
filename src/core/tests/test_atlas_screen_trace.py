@@ -71,6 +71,11 @@ class AtlasScreenTraceTests(unittest.TestCase):
         gaps = trace.check(self.prd, self.atlas, doc)["gaps"]
         self.assertTrue(any("hypotheses" in g for g in gaps))
 
+    def test_truncated_trace_row_reports_gap_without_error(self) -> None:
+        doc = self.doc.replace("| Finance and Grants |", "| Finance and Grants |\n| Orphan |", 1)
+        result = trace.check(self.prd, self.atlas, doc)
+        self.assertIn("verdict", result)
+
     def test_cli_exit_codes(self) -> None:
         self.assertEqual(trace.main(["--root", str(ROOT)]), 0)
         self.assertEqual(trace.main(["--root", str(ROOT / "missing")]), 2)
