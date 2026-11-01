@@ -68,6 +68,24 @@ class Invalidation(unittest.TestCase):
                 ]
                 self.assertTrue(any(trigger in b.get("reason", "") for b in bodies))
 
+    def test_denial_keeps_mismatched_fields_after_revocation(self) -> None:
+        changed = dict(self.binding, policy_version="changed")
+        for _ in range(2):
+            denied = rel.admission(self.db, self.task, changed, 1.0)
+            assert denied is not None
+            self.assertEqual(denied["missing"], ["policy_version"])
+        self.assertEqual(self.status(), "revoked")
+        again = rel.admission(self.db, self.task, self.binding, 1.0)
+        assert again is not None
+        self.assertEqual(again["missing"], ["policy_version"])
+
+    def test_failed_audit_write_rolls_back_revocation_and_denies(self) -> None:
+        self.db.execute("DROP TABLE assistant_events")
+        changed = dict(self.binding, policy_version="changed")
+        denied = rel.admission(self.db, self.task, changed, 1.0)
+        self.assertIn("could not be recorded", denied["reason"])
+        self.assertEqual(self.status(), "active")
+
     def test_intended_use_change_invalidates(self) -> None:
         self.assertEqual(
             rai_release.changed_triggers(
