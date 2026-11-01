@@ -80,7 +80,7 @@ def case_facts(detail: Mapping[str, Any], *, reason_visible: bool) -> dict[str, 
         for key in ("reason", "next_action", "owner", "source", "recorded_at"):
             put(f"work.{key}", work.get(key))
         for i, row in enumerate(_rows(work.get("blockers"))[:6]):
-            for key in ("step", "reason", "owner", "next_action", "source"):
+            for key in ("step", "reason", "owner", "responsible_role", "next_action", "source"):
                 put(f"work.blockers.{i}.{key}", row.get(key))
             put(f"work.blockers.{i}.current_stop", "yes" if row.get("current_stop") else None)
     for i, line in enumerate(detail.get("gate") or []):
@@ -92,7 +92,7 @@ def case_facts(detail: Mapping[str, Any], *, reason_visible: bool) -> dict[str, 
     for i, item in enumerate(_rows(detail.get("checklist"))):
         if not item.get("present"):
             put(f"checklist.{i}.missing", item.get("kind"))
-    for i, item in enumerate((detail.get("technical_missing") or [])[:6]):
+    for i, item in enumerate(detail.get("technical_missing") or []):
         put(f"technical_missing.{i}", item if isinstance(item, str) else item.get("item"))
     kinds = sorted({str(d.get("kind")) for d in _rows(detail.get("documents")) if d.get("kind")})
     put("documents", ", ".join(kinds) if kinds else "none recorded")
@@ -138,10 +138,23 @@ def _who_to_ask(r: Reply) -> str:
     return f"Ask {owner}, who owns this case." if owner else "Ask the person who owns this case."
 
 
+def _blocker_owner(r: Reply, i: int) -> str:
+    p = f"work.blockers.{i}"
+    owner = r.fact(f"{p}.owner")
+    if owner and owner.casefold() != "unknown":
+        return owner
+    embedded = re.search(r"\bOwner:\s*(.+)$", r.facts.get(f"{p}.reason", ""))
+    if embedded and embedded.group(1).strip().casefold() != "unknown":
+        r.fact(f"{p}.reason")
+        return embedded.group(1).strip().rstrip(".")
+    role = r.fact(f"{p}.responsible_role")
+    return f"{role} (role)" if role else ""
+
+
 def _blocker_line(r: Reply, i: int) -> str:
     p = f"work.blockers.{i}"
     step, reason = r.fact(f"{p}.step"), re.split(r"\s+Owner:", r.fact(f"{p}.reason"))[0]
-    owner, nxt, src = r.fact(f"{p}.owner"), r.fact(f"{p}.next_action"), r.fact(f"{p}.source")
+    owner, nxt, src = _blocker_owner(r, i), r.fact(f"{p}.next_action"), r.fact(f"{p}.source")
     parts = [f"{step}: {reason}" if step and reason else (reason or step)]
     parts.append(f"Owner: {owner}." if owner else "No owner is recorded for this.")
     parts.append(f"Next step: {nxt}" if nxt else "No next step is recorded for it.")
@@ -273,7 +286,7 @@ def _next(r: Reply) -> None:
                 None,
             )
         if chosen is not None:
-            owner = r.fact(f"work.blockers.{chosen}.owner")
+            owner = _blocker_owner(r, chosen)
     owner = owner or r.fact("work.owner") or r.fact("owner")
     if nxt:
         r.say(f"Recorded next step: {nxt}")

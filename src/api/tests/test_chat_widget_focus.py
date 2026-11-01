@@ -362,6 +362,28 @@ ui.dispose();
 """
         )
 
+    def test_employee_panel_scrolls_obscured_outside_focus_clear(self) -> None:
+        self.run_node(
+            r"""
+const h = harness();
+const calls = [];
+h.context.window.scrollBy = arg => calls.push(arg);
+const ui = h.context.window.ChatWidget.create({
+  id: "unit", title: "Unit chat", launcher: h.launcher,
+  questionLabel: "Question", skillLabel: "Skill", resizable: true, stayOpen: true
+});
+ui.open();
+ui.root.getBoundingClientRect = () => ({top: 300, bottom: 700, left: 0, right: 400});
+const external = h.document.createElement("textarea");
+external.getBoundingClientRect = () => ({top: 400, bottom: 440, left: 10, right: 200});
+external.focus();
+assert.equal(calls.length, 1, "Obscured control must be scrolled clear of the panel");
+assert.ok(calls[0].top >= 156, "Control must end above the panel");
+assert.equal(ui.root.hidden, false);
+ui.dispose();
+"""
+        )
+
     def test_resident_resizable_panel_still_closes_on_outside_focus(self) -> None:
         self.run_node(
             r"""

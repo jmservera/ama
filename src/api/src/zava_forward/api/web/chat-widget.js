@@ -164,13 +164,29 @@ window.ChatWidget = (() => {
       if (follow) bottom();
       return item;
     }
+    if (stayOpen && typeof ResizeObserver === "function") {
+      const reserve = () => {
+        document.body.style.paddingBottom = root.hidden ? "" : `${Math.ceil(root.getBoundingClientRect().height + 96)}px`;
+      };
+      new ResizeObserver(reserve).observe(root);
+      reserve();
+    }
     launcher.onclick = () => root.hidden ? open() : hide();
     close.onclick = () => hide();
     root.addEventListener("keydown", event => {
       if (event.key === "Escape") { event.preventDefault(); hide(); }
     });
+    function revealBeside(target) {
+      const panel = root.getBoundingClientRect();
+      const box = target.getBoundingClientRect();
+      const margin = 16;
+      if (box.right < panel.left - margin || box.left > panel.right + margin || box.bottom < panel.top - margin || box.top > panel.bottom + margin) return;
+      window.scrollBy?.({ top: box.bottom + margin - panel.top, behavior: "auto" });
+    }
     function externalFocus(event) {
-      if (!stayOpen && !root.hidden && !root.contains(event.target) && !launcher.contains(event.target)) hide(false);
+      if (root.hidden || root.contains(event.target) || launcher.contains(event.target)) return;
+      if (!stayOpen) hide(false);
+      else if (typeof event.target?.getBoundingClientRect === "function") revealBeside(event.target);
     }
     document.addEventListener("focusin", externalFocus);
     input.addEventListener("keydown", event => {
@@ -196,6 +212,7 @@ window.ChatWidget = (() => {
         clearTimeout(timer);
         document.removeEventListener("focusin", externalFocus);
         root.remove();
+        if (stayOpen) document.body.style.paddingBottom = "";
         launcher.hidden = false;
         launcher.setAttribute("aria-expanded", "false");
       },
