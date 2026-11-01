@@ -71,7 +71,7 @@
    "id": "stock-scale-fixture",
    "path": "ZF_DATA/scale-fixture/ (generated, not committed, outside the repository)",
    "generator": "src/core/src/zava_forward/core/synthetic/scale_fixture.py",
-   "version": "1.2.0",
+   "version": "1.3.0",
    "seed": 174,
    "owner": "Unassigned (owner decision needed; project owner jmservera until named)",
    "purpose": "Reproducible wholly fictional 60,000-home, 60,000-household (tenancy, consent, representative states) and 600,000-event fixture for the NFR-002 scale dimension. Rebuilt from recorded seed/as-of/source revision into a new or empty directory under ZF_DATA. Not the private OSM stock register.",

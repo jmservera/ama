@@ -2,6 +2,7 @@
   "version": "152-ia-v1",
   "active_slice": "Shared IA engineering only, not complete historical Slice A or MVP acceptance",
   "widths": [320, 390, 768, 1024, 1280],
+  "supported_devices": {"status": "proposed", "decider": "owner", "proposal": "docs/reference/research/ux/supported-devices-proposal.md", "classes": [{"class": "desktop", "width": 1280}, {"class": "laptop", "width": 1024}, {"class": "tablet", "width": 768}, {"class": "reflow-only", "width": 390}, {"class": "reflow-only", "width": 320}], "field_mobile": "undecided"},
   "default_sort": "urgent",
   "default_selection": null,
   "selection_reason": "Full-screen case links, no implicit selected case; return reloads first page",

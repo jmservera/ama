@@ -9,3 +9,7 @@ ms.date: 2026-11-01
 * Routed follow-ups: AC7 live employee verification stays unmet and separate. Screen-reader and voice-control acceptance is not claimed. Hosted CI is the publication evidence.
 * PR #628 thread correction: the original review's outcome is unchanged. The guidance was qualified by review state and action availability in response to a Copilot thread; no second Review was run.
 * PR #628 second thread correction: outcome unchanged; advice qualified for cached-draft reuse. No second Review was run.
+
+## Post-review correction (2026-11-01)
+
+* Copilot thread on the design note G16 row was valid: the cited evidence covered audit boundaries, not the effect of a user action on future AI behaviour. Remapped to the assistance-mode paragraph. Documentation only.
