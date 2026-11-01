@@ -204,7 +204,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
     def ranking_snapshot(self, user, policy=None):
         """Snapshot of the open-case ranking under a policy version, stored beside the data when it changes. Managers only."""
         if user["role"] not in MANAGER_ROLES:
-            raise PermissionError("Only a manager can see the ranking snapshot.")
+            raise PermissionError("Only a manager can see the saved ranking record. Owner: your manager. Next action: ask a manager to open it.")
         pol = ranking.POLICIES.get(policy or ranking.CURRENT["version"])
         if pol is None:
             raise ValueError(f"Unknown ranking policy version. Known: {', '.join(sorted(ranking.POLICIES))}")

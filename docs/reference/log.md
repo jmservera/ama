@@ -9072,3 +9072,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   table to `research/chat-memory-dpia.md`.
 * The policy is not decided (BRD OD-46, owner with DPO); issue #162 criterion 6
   stays open. No regulatory snapshot changed.
+
+## 2026-11-01 - Core-flow copy and error contract slice (#153)
+
+* Updated `research/ux/content-standard.md` with a dated slice: phase check
+  wording in role screens, a generic error fallback that states reason, owner
+  and next action, and three more files in the lexical guard.
+* Issue #153 criteria for universal error coverage, named resident wording
+  review and comprehension testing stay open. No regulatory snapshot changed.
