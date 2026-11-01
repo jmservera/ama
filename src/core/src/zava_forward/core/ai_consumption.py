@@ -159,6 +159,48 @@ def call_context(context: CallContext) -> Iterator[None]:
         CURRENT.reset(token)
 
 
+def batch_spread(totals: list[int], batch: Mapping[str, Any] | None) -> dict[str, Any]:
+    """Spread of tokens per proposal, only under a recorded finite spend authority."""
+    label = "recorded usage; not an authorised held-out batch"
+    unknown: dict[str, Any] = dict(
+        median=UNKNOWN, standard_deviation=UNKNOWN, spend_authority=None, evidence_label=label
+    )
+    if batch is None or not totals:
+        return unknown
+    maximum = batch.get("max_proposals")
+    if (
+        set(batch) != {"authority", "evidence", "held_out", "max_proposals"}
+        or batch["held_out"] is not True
+        or not isinstance(maximum, int)
+        or isinstance(maximum, bool)
+        or not 0 < maximum <= MAX_EVENTS
+        or len(totals) > maximum
+    ):
+        return unknown
+    mean = Decimal(sum(totals)) / len(totals)
+    ordered = sorted(totals)
+    middle = len(ordered) // 2
+    median = (
+        Decimal(ordered[middle])
+        if len(ordered) % 2
+        else Decimal(ordered[middle - 1] + ordered[middle]) / 2
+    )
+    with localcontext() as ctx:
+        ctx.prec = 28
+        variance = Decimal(sum((Decimal(t) - mean) ** 2 for t in totals)) / len(totals)
+        deviation = variance.sqrt()
+    return dict(
+        median=str(median),
+        standard_deviation=format(deviation, "f"),
+        spend_authority=dict(
+            authority=reference(str(batch["authority"])),
+            evidence=reference(str(batch["evidence"])),
+            max_proposals=maximum,
+        ),
+        evidence_label="owner-authorised held-out batch as supplied; not verified by this software",
+    )
+
+
 class LedgerPort(Protocol):
     mssql: bool
     sql: bool
@@ -885,6 +927,7 @@ class Consumption:
         quality: Mapping[str, Any] | None = None,
         components: Mapping[str, str] | None = None,
         capacity_hours: str | None = None,
+        batch: Mapping[str, Any] | None = None,
     ) -> dict[str, Any]:
         begin, finish, cutoff = report_period(start, end, as_of)
         with self.port.transaction() as db:
@@ -1016,6 +1059,7 @@ class Consumption:
             attempts = [r for r in calls if r["root"] == root]
             if all(r["id"] in completions and completions[r["id"]]["tokens"] for r in attempts):
                 totals.append(sum(completions[r["id"]]["tokens"]["total_tokens"] for r in attempts))
+        spread = batch_spread(totals, batch)
         alerts = [r for r in records if r["kind"] == "alert" and begin <= r["at"] < finish]
         return dict(
             schema=SCHEMA,
@@ -1041,7 +1085,8 @@ class Consumption:
                 minimum=min(totals) if totals else UNKNOWN,
                 maximum=max(totals) if totals else UNKNOWN,
                 mean=str(Decimal(sum(totals)) / len(totals)) if totals else UNKNOWN,
-                evidence_label="recorded usage; not an authorised held-out batch",
+                evidence_label=spread.pop("evidence_label"),
+                **spread,
             ),
             unjoined_outputs=unjoined,
             unjoined_reviews=unjoined_reviews,
