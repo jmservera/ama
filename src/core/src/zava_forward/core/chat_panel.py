@@ -18,6 +18,8 @@ provider code.
   refused before any model call, with the human workflow route (issue #164).
 * Earlier assistant turns are never sent back to the model: citation identifiers
   alone cannot establish that their claims are still current.
+* A status word or number in an answer that no cited source contains is withheld
+  (claim-level support, lexical and fail-closed; paraphrases abstain).
 * Refusal and action-claim checks are lexical, not semantic safety guarantees.
 """
 
@@ -185,6 +187,11 @@ ACTION_CLAIM = re.compile(
     r"|(?:case|work|proposal)\s+(?:has\s+been|is|was)\s+(?:approved|signed[\s-]off))\b",
     re.I,
 )
+STATUS_CLAIM = re.compile(
+    r"\b(?:secur(?:ed|e)|funded|approved|complete[d]?|compliant|passed|cleared|verified"
+    r"|certified|safe|signed|consented|resolved|accepted|confirmed|guaranteed)\b|\b\d+(?:[.,]\d+)*\b",
+    re.I,
+)
 HISTORY_POLICY = "user-only; assistant claims are not current evidence"
 MAX_SOURCES = 60
 MAX_VALUE = 200
@@ -304,6 +311,19 @@ def permitted_sources(case_id: str, ctx: dict[str, Any]) -> dict[str, str]:
 
     walk("", ctx)
     return found
+
+
+def unsupported_claims(answer: str, cited: list[str]) -> list[str]:
+    """Status words and numbers in the answer that no cited source contains (lexical)."""
+    support = normalise_policy_text(" ".join(cited)).casefold()
+    seen = normalise_policy_text(answer)
+    return sorted(
+        {
+            m.group(0).casefold()
+            for m in STATUS_CLAIM.finditer(seen)
+            if m.group(0).casefold() not in support
+        }
+    )
 
 
 def parse_reply(text: str, allowed: dict[str, str]) -> tuple[str, list[str]] | None:
@@ -579,8 +599,10 @@ class ChatPanel:
                 else:
                     parsed = parse_reply(raw, sources)
                     if parsed:
-                        if iso._withheld(user, thread, parsed[0]) or ACTION_CLAIM.search(
-                            normalise_policy_text(parsed[0])
+                        if (
+                            iso._withheld(user, thread, parsed[0])
+                            or ACTION_CLAIM.search(normalise_policy_text(parsed[0]))
+                            or unsupported_claims(parsed[0], [sources[c] for c in parsed[1]])
                         ):
                             kind, text = "withheld", WITHHELD
                         else:

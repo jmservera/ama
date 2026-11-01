@@ -9244,3 +9244,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `.copilot-tracking/changes/2026-11-01/employee-chat-skills-530-recheck-changes.md`.
 * SQL, live employee-site verification, screen-reader and voice-control
   acceptance remain unproven; no source change was made.
+
+## 2026-11-01 - Chat claim-level support check (Refs #164)
+
+* Added a lexical claim-support check to the chat panel: status words and
+  numbers absent from every cited source are withheld. The scripted
+  unsupported-claim scenario now passes and the chat enablement outcome moves
+  from fail to insufficient; the task stays disabled.
+* Updated `research/chat-memory-dpia.md`. Evidence is in
+  `.copilot-tracking/changes/2026-11-01/issue-164-chat-claim-support-changes.md`.
+* Thresholds, accountable reviewer, held-out set, actual-model and human
+  evidence remain open owner decisions; no criterion is newly ticked.

@@ -189,9 +189,13 @@ effort, provider terms, lawful basis, actual notice approval and retention
 remain Unknown. No live model call, personal-data processing approval or new
 retention period is delivered.
 
-The local scripted development evaluation still exposes unsupported claims
-with valid citation IDs. Poisoning/injection regressions do not establish
-serving-model or human effectiveness. Activation remains fail/disabled.
+Since 2026-11-01 (Refs #164) the panel withholds an answer whose status words
+(for example "secured", "approved") or numbers appear in no cited source, so the
+scripted unsupported-claim scenario passes. The check is lexical and fail-closed;
+paraphrases abstain and it is not claim-level semantic grounding. Poisoning and
+injection regressions do not establish serving-model or human effectiveness.
+Activation remains disabled with outcome insufficient (thresholds, reviewer,
+held-out, actual-model and human evidence missing).
 See the [API engineering contract](../../../src/api/README.md#staff-chat-hardening-2026-10-27-157)
 and [evaluation reporting](../../../src/agents/README.md#chat-consumption-evidence-2026-10-27-164).
 
