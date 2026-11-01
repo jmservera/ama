@@ -1,4 +1,7 @@
-# Research: issue 466 resident sensors and assistant, focused re-verification (r3), 2026-11-01
+---
+title: "Research: issue 466 resident sensors and assistant, focused re-verification (r3), 2026-11-01"
+ms.date: 2026-11-01
+---
 
 * Disposition: executed (fresh local run on branch `feat/resident-sensor-assistant`, equal to origin/main 51657d30). Planning Readiness: Ready.
 * Prior evidence reused: [2026-11-01 research](2026-11-01-issue-466-resident-sensor-gauges-research.md), [decision record](../../docs/architecture/resident-assistant-prototype.md), log entries 2026-10-31 and 2026-11-01 (Refs #466).

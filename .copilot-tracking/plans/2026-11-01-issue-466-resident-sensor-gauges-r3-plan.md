@@ -1,4 +1,7 @@
-# Plan: issue 466 focused re-verification (r3), 2026-11-01
+---
+title: "Plan: issue 466 focused re-verification (r3), 2026-11-01"
+ms.date: 2026-11-01
+---
 
 * Research: [r3 research](../research/2026-11-01-issue-466-resident-sensor-gauges-r3-research.md). Scope: evidence and knowledge-base log only; no source change.
 

@@ -1,4 +1,7 @@
-# Review: issue 466 focused re-verification (r3), 2026-11-01
+---
+title: "Review: issue 466 focused re-verification (r3), 2026-11-01"
+ms.date: 2026-11-01
+---
 
 * Execution: executed once, self-review of the diff (artifacts plus one log entry). Outcome: conformant for the documented scope, with open routed work.
 * Boundary: [changes](../changes/2026-11-01-issue-466-resident-sensor-gauges-r3-changes.md), [plan](../plans/2026-11-01-issue-466-resident-sensor-gauges-r3-plan.md).

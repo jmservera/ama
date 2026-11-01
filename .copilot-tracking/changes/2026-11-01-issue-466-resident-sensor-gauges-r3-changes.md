@@ -1,4 +1,7 @@
-# Changes: issue 466 focused re-verification (r3), 2026-11-01
+---
+title: "Changes: issue 466 focused re-verification (r3), 2026-11-01"
+ms.date: 2026-11-01
+---
 
 * Added r3 research, plan, changes and review artifacts and the session state under `.copilot-tracking/`.
 * Appended a 2026-11-01 verify entry to `docs/reference/log.md`.
