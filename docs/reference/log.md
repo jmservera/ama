@@ -9015,3 +9015,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * CI figures come from a one-day sample of 300 runs; the RPI artifact share
   of PR size and the 19-24 October slowdown cause are unmeasured. No
   workflow, setting, gate or source change was made.
+
+## [2026-11-01] update | Synthetic determinism replay audit (Refs #176)
+
+* Added a one-command replay audit for the in-repo synthetic generators and a
+  `version` field in the sensor scenarios manifest; documented in the
+  [retrofit synthetic data README](./research/retrofit-synthetic-data/README.md).
+* The original private stock register generator remains absent, so the
+  byte-identical and manifest criteria stay partially met. No index change.
