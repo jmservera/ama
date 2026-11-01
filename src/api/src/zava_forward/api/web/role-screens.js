@@ -18,13 +18,13 @@ const screenPanel = (title, ...children) => h("section", { class: "card screen-r
 const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
   h("p", { class: "blocked-title" }, "Cannot confirm readiness"),
   screenFields([["Why it is blocked", reason], ["Owner", owner], ["Next action", action]]));
-function screenTable(label, headings, rows) {
+function screenTable(label, headings, rows, limit = 50) {
   return h("div", {},
-    rows.length > 50 && h("p", { role: "status" }, `Showing the first 50 of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
+    rows.length > limit && h("p", { role: "status" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
     rows.length ? h("div", { class: "table-scroll", role: "region", "aria-label": label, tabindex: 0 },
       h("table", {}, h("caption", {}, label),
         h("thead", {}, h("tr", {}, headings.map((title) => h("th", { scope: "col" }, title)))),
-        h("tbody", {}, rows.slice(0, 50).map((row) => h("tr", {}, row.map((value) => h("td", {}, screenValue(value))))))))
+        h("tbody", {}, rows.slice(0, limit).map((row) => h("tr", {}, row.map((value) => h("td", {}, screenValue(value))))))))
       : h("p", { class: "empty" }, "No records supplied. This does not establish readiness."));
 }
 function registerRoleScreen(screen) {
@@ -189,8 +189,9 @@ const hazardActor = (value) => value && (value.name || value.role)
 const hazardStep = (stamp) => stamp ? `Recorded ${screenStamp(stamp)}` : "Not recorded";
 function hazardFollowUp(h) {
   if (h.accepted_at) return `${hazardActor(h.accepted_by || h.destination)} owns the accepted scope`;
-  if (h.received_at) return `Pending acceptance. Follow-up owner: ${hazardActor(h.destination)}`;
+  if (h.received_at) return `Pending acceptance. Follow-up owner: ${hazardActor(h.follow_up || h.sender)}`;
   if (h.sent_at) return `Pending receipt. Follow-up owner: ${hazardActor(h.sender)} chases until acceptance`;
+  if (h.referred) return "Legacy referral with no recorded send time. Owner to verify the external service record";
   return `No referral sent. Owner: ${screenValue(h.owner)} to send or record a manual route`;
 }
 function hazardHold(h) {
@@ -216,11 +217,11 @@ function hazardScreen(intro) {
           items.map((x, i) => [`H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
             screenStamp(x.aware_at), x.source, hazardActor(x.destination),
             hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
-            x.state, hazardFollowUp(x)]))),
+            x.state, hazardFollowUp(x)]), Infinity)),
       screenPanel("Retrofit hold and release decision",
         screenTable("Scoped hold and release evidence",
           ["Item", "Hold and release evidence", "Service response due", "Service responded"],
-          items.map((x, i) => [`H-${i + 1}`, hazardHold(x), hazardStep(x.response_due_at), hazardStep(x.responded_at)]))),
+          items.map((x, i) => [`H-${i + 1}`, hazardHold(x), hazardStep(x.response_due_at), hazardStep(x.responded_at)]), Infinity)),
       screenPanel("Where to act",
         h("p", {}, "Referral, receipt, acceptance and release are recorded in the existing case workspace by the named authorised person. Emergency concerns follow the existing human emergency procedure now, not this screen.")));
   };

@@ -101,12 +101,32 @@ class SafetyScreens(unittest.TestCase):
 
     def test_received_is_not_accepted(self) -> None:
         text = json.dumps(
-            run([hazard(received_at="2026-10-30T11:00:00+00:00", state="Received")])["safety-lead"][
-                "tree"
-            ]
+            run(
+                [
+                    hazard(
+                        received_at="2026-10-30T11:00:00+00:00",
+                        state="Received",
+                        follow_up=SENDER,
+                    )
+                ]
+            )["safety-lead"]["tree"]
         )
-        self.assertIn("Pending acceptance. Follow-up owner: Bea Safe", text)
+        self.assertIn("Pending acceptance. Follow-up owner: Rex Coordinator", text)
         self.assertNotIn("owns the accepted scope", text)
+
+    def test_legacy_referral_without_send_time_is_not_reported_unsent(self) -> None:
+        text = json.dumps(run([hazard(sent_at=None, referred="2026-10-01")])["safety-lead"]["tree"])
+        self.assertIn("Legacy referral with no recorded send time", text)
+        self.assertNotIn("No referral sent", text)
+
+    def test_every_record_is_reachable_beyond_fifty(self) -> None:
+        released = hazard(hold={"scope": "Home", "case_id": "C-1", "status": "Released"})
+        items = [released] * 50 + [hazard(source="Late active hazard")]
+        for screen in run(items).values():
+            text = json.dumps(screen["tree"])
+            self.assertIn("Late active hazard", text)
+            self.assertIn("H-51", text)
+            self.assertNotIn("Showing the first", text)
 
     def test_release_shows_decision_evidence_and_released_stays_visible(self) -> None:
         released = hazard(
