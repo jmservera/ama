@@ -31,11 +31,14 @@ function registerRoleScreen(screen) {
   if (roleScreens.has(screen.id)) throw new Error(`Duplicate specialist screen: ${screen.id}`);
   roleScreens.set(screen.id, screen);
 }
-function screenHref(id, caseId, page = 0) {
+const screenScopeQuery = () => new URLSearchParams(typeof location === "undefined" ? "" : location.hash.split("?")[1] || "");
+function screenHref(id, caseId, page = 0, keepScope = true) {
   const query = new URLSearchParams();
   if (id) query.set("screen", id);
   if (caseId) query.set("case", caseId);
   if (page) query.set("page", String(page));
+  const scope = keepScope ? screenScopeQuery().get("scope") : null;
+  if (scope) query.set("scope", scope);
   return `#/screens${query.size ? `?${query}` : ""}`;
 }
 async function roleScreensView() {
@@ -49,7 +52,7 @@ async function roleScreensView() {
   const screen = installed.find((item) => item.id === id);
   if (!/^\d+$/.test(rawPage) || !Number.isSafeInteger(page) || page > 100000) {
     return show(h("h1", {}, "Invalid screen page"), h("p", { role: "alert" }, "Choose a page from the queue."),
-      h("a", { href: screenHref(id, caseId) }, "Reset screen view"));
+      h("a", { "data-reset": "true", href: screenHref(id, caseId, 0, false) }, "Reset screen view"));
   }
   if (id && !screen) {
     return show(h("h1", {}, "Screen unavailable"),
@@ -87,7 +90,7 @@ async function roleScreensView() {
     h("div", { class: "row" },
       page > 0 && h("a", { class: "btn alt", href: screenHref(id, caseId, page - 1) }, "Previous page"),
       (page + 1) * 20 < data.total && h("a", { class: "btn alt", href: screenHref(id, caseId, page + 1) }, "Next page"),
-      h("a", { class: "btn alt", href: screenHref(id) }, "Reset screen view")));
+      h("a", { class: "btn alt", "data-reset": "true", href: screenHref(id, null, 0, false) }, "Reset screen view")));
   const selected = c ? h("section", { class: "screen-evidence", "aria-label": `Evidence for ${c.id}` },
     h("h2", {}, `Selected home ${c.id}`),
     h("p", {}, "Recorded evidence only. Missing, stale or withheld information cannot establish readiness. No message, approval or record change is made from this screen."),
@@ -199,6 +202,21 @@ const programmeScopes = [
   ["blocked", "Blocked work"],
   ["all", "All permitted cases on this page"]
 ];
+function programmeKeepScope(scope) {
+  if (typeof location === "undefined") return;
+  const [path, rest] = location.hash.split("?");
+  const query = new URLSearchParams(rest || "");
+  if (scope === "default") query.delete("scope"); else query.set("scope", scope);
+  if (typeof history !== "undefined") history.replaceState(null, "", `${path}${query.size ? `?${query}` : ""}`);
+  if (typeof document === "undefined") return;
+  document.querySelectorAll('a[href^="#/screens"]').forEach((link) => {
+    if (link.hasAttribute("data-reset")) return;
+    const [linkPath, linkRest] = link.getAttribute("href").split("?");
+    const linkQuery = new URLSearchParams(linkRest || "");
+    if (scope === "default") linkQuery.delete("scope"); else linkQuery.set("scope", scope);
+    link.setAttribute("href", `${linkPath}${linkQuery.size ? `?${linkQuery}` : ""}`);
+  });
+}
 const programmeIn = (row, scope) => {
   const work = row.work || {};
   const queues = work.queues || [];
@@ -229,13 +247,16 @@ function programmeQueue(items, total) {
   const status = h("p", { role: "status", id: "programme-filter-status" });
   const select = h("select", { id: "programme-scope", name: "scope" },
     programmeScopes.map(([value, text]) => h("option", { value }, text)));
-  const apply = (scope) => {
+  const apply = (scope, remember = true) => {
+    if (remember) programmeKeepScope(scope);
     const rows = items.filter((row) => programmeIn(row, scope));
     status.textContent = `${rows.length} of ${items.length} records on this page shown. Scope: ${programmeScopes.find(([v]) => v === scope)[1]}. Filtering changes the view only; no record is changed.`;
     holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow)));
   };
-  if (select.value !== undefined) select.value = "default";
-  apply("default");
+  const saved = screenScopeQuery().get("scope");
+  const initial = programmeScopes.some(([v]) => v === saved) ? saved : "default";
+  select.value = initial;
+  apply(initial, false);
   return h("div", {},
     h("p", {}, `${items.length} records on this page of ${total} permitted cases. Not a portfolio total.`),
     h("form", { class: "row", "aria-label": "Scope filter",
@@ -269,16 +290,24 @@ const programmeGateRow = (name, blocked, clear, unknown) => {
   if (unknown) return [name, "Blocked: evidence missing", unknown, "Unknown", "Record the missing evidence through the permitted review"];
   return [name, "No recorded blocker", `${clear} This is not a pass; a named person decides readiness.`, "Unknown", "Unknown"];
 };
+const programmeCurrentRevisions = (c) => new Map((Array.isArray(c.measure_decisions) ? c.measure_decisions : [])
+  .map((d) => [d.measure, d.context?.revision]));
+const programmeBindingCurrent = (binding, revisions) => Boolean(binding)
+  && Number.isInteger(binding.context_revision) && revisions.get(binding.measure) === binding.context_revision;
 function programmeQualityRow(c) {
   const live = (c.quality || []).filter((r) => r.state !== "Superseded");
   const measures = Array.isArray(c.measures) ? c.measures : String(c.measures || "").split(",");
   const wanted = measures.map((m) => m.trim()).filter(Boolean);
+  const revisions = programmeCurrentRevisions(c);
+  const stale = live.filter((r) => (r.state === "Accepted" || r.state === "Handed over")
+    && !programmeBindingCurrent(r.resident_binding, revisions));
   const open = live.filter((r) => r.state !== "Accepted" && r.state !== "Handed over");
   const missing = wanted.filter((m) => !live.some((r) => r.measure === m));
   const returned = open.filter((r) => r.state === "Returned");
   const reasons = open.map((r) => r.state === "Returned"
     ? `${r.measure}: Returned${r.defect ? ` for ${screenValue(r.defect.reason)}${r.defect.description ? ` (${screenValue(r.defect.description)})` : ""}` : ""}; not accepted until the defect is fixed and reinspected.`
     : `${r.measure}: ${r.state}, not yet independently accepted.`)
+    .concat(stale.map((r) => `${r.measure}: ${r.state} evidence is not bound to the current resident scope revision.`))
     .concat(missing.map((m) => `${m}: no quality check recorded.`));
   if (!live.length && !wanted.length) reasons.push("No quality check is recorded.");
   if (reasons.length) {
@@ -286,6 +315,7 @@ function programmeQualityRow(c) {
     const actions = [];
     if (returned.length) actions.push("Fix the returned defect, then record the fix for independent reinspection");
     if (open.length > returned.length) actions.push("Complete the independent inspection or acceptance");
+    if (stale.length) actions.push("Obtain current-scope quality evidence and have it independently accepted");
     if (missing.length || (!live.length && !wanted.length)) actions.push("Record the missing quality check");
     return ["Quality", "Blocked", reasons.join(" "), programmeJoin(owners), programmeJoin(actions)];
   }
@@ -313,10 +343,16 @@ function programmeDeliveryRow(c, orders, blockers) {
   const gate = programmeGate(blockers, /Safety review|Shared building/i);
   if (!Array.isArray(orders)) return programmeGateRow("Delivery", gate, "", "Work orders could not be loaded for your role.");
   const live = orders.filter((w) => w.state !== "Withdrawn");
+  const revisions = programmeCurrentRevisions(c);
+  const stale = live.filter((w) => {
+    const bindings = (w.versions || []).at(-1)?.resident_bindings;
+    return !Array.isArray(bindings) || !bindings.length || !bindings.every((b) => programmeBindingCurrent(b, revisions));
+  }).map((w) => ({ reason: `${screenValue(w.id)}: resident scope bindings are missing or not current.`,
+    owner: "Unknown", next_action: "Reissue the work order bound to the current resident scope" }));
   const open = live.filter((w) => w.appointment_control?.status !== "Committed")
     .map((w) => ({ reason: `${screenValue(w.id)}: appointment ${screenValue(w.appointment_control?.status)}${(w.appointment_control?.missing || []).length ? ` (${w.appointment_control.missing.join("; ")})` : ""}.`,
       owner: "Unknown", next_action: "Agree and confirm the appointment" }));
-  return programmeGateRow("Delivery", gate.concat(open), `${live.length} work order(s) with a committed appointment.`,
+  return programmeGateRow("Delivery", gate.concat(stale, open), `${live.length} work order(s) with a committed appointment.`,
     live.length ? null : "No active work order is recorded.");
 }
 function programmeGates(c, orders) {
