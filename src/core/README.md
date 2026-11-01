@@ -158,7 +158,10 @@ The #222 cohort manifest in open PR #421 still needs owner approval before
 evaluator implementation. Cohorts, lawful fields, sample sufficiency and
 thresholds remain unapproved, and synthetic results cannot prove fairness.
 Actual release/residual-risk/review/restart holders remain unknown under
-OQ-017. The [incident](#operator-incidents-and-constructed-restart-221) and
+OQ-017; every denial built by `assistant_release.denial()` now carries
+`authority_holders` (the disabled-task path in `assistants.py` does not), listing the release,
+residual-risk acceptance, suspension and restart authorities each as an unset
+gap (`rai_release.authority_register`). The [incident](#operator-incidents-and-constructed-restart-221) and
 [challenge](#version-bound-affected-person-challenges-220) contracts retain
 their separate approval and coverage limits. No child or epic closure,
 human-witnessed drill, broader assistant/form challenge coverage, legal
@@ -3881,6 +3884,14 @@ provisioning is performed. Ordinary chat and memory gates are unchanged.
 
 ### Regulatory privacy and audit (#217)
 
+`regulatory_privacy.readiness_report(env)` is a reference-only live-data gate
+over the whole regulatory scope. It refuses live data unless `REG_DPIA_REF`,
+`REG_RETENTION_REF`, `REG_ENTRA_ROLES_REF` and `REG_ART22_REF` are all set and
+none starts `SYNTH-`. It lists the eight #217 criteria as automated-pass,
+partial or human-gate-unmet, never echoes reference values, and always reports
+`dpo_reviewed` false: recorded references are not verified DPO or Legal
+approval.
+
 `regulatory_privacy.retention_report` aligns own-thread review metadata with
 the existing `CHAT_RETENTION_REF` and `CHAT_RETENTION_DAYS` settings. Without
 both, periods and due status are unknown. For synthetic reporting, both must
@@ -4105,7 +4116,9 @@ non-digital route statement. `view` shows only permitted explanations. Only the 
 to `POL-1/v1` does not touch dependents of `POL-1/v2`. A `corrected` outcome marks exactly the
 transitive dependents in the injected dependency graph stale and preserves prior versions; `upheld` and `withdrawn` mark
 nothing. The register has no consent, refusal, sanction, closure or hazard-clock fields and never
-reads or writes them.
+reads or writes them. Passing `hazard_concern=True` records an immediate `hazard_referral` to the
+named owner on receipt, listed by `hazard_referrals()` until the owner records an evidenced handoff with `confirm_hazard_handoff()`, even after resolution; it neither starts nor changes
+any hazard clock, so the existing hazard process is not delayed by challenge review.
 
 Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and

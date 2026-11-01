@@ -94,3 +94,8 @@ class ReleaseContract(unittest.TestCase):
         for key, value in (("evidence", ["fixture:renewed"]), ("impact_assessment", "New impact")):
             self.assertNotEqual(original, rai.reference(dict(self.record, **{key: value})))
         self.assertEqual(set(original), {"id", "version", "digest"})
+
+    def test_authority_register_names_no_holder_for_any_oq017_authority(self) -> None:
+        register = rai.authority_register()
+        self.assertEqual([r["authority"] for r in register], list(rai.AUTHORITY_ROLES))
+        self.assertTrue(all(r["holder"] is None and r["status"] == "gap" for r in register))
