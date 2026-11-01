@@ -717,6 +717,50 @@ def test_given_clean_pr_when_computed_then_recorded_scores_not_flagged(tmp_path)
     assert state["recorded_scores_changed"] is False
 
 
+def test_given_pr_forked_before_main_only_refresh_when_computed_then_recorded_scores_not_flagged(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "switch", "-c", "feature")
+    (root / "docs" / "brds" / "a.md").write_text("# A2\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "edit")
+    git(root, "switch", "main")
+    path = root / prepare.SCORES_PATH
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["scored_at"] = "2099-01-01T00:00:00Z"
+    path.write_text(json.dumps(data), encoding="utf-8")
+    (root / prepare.BADGE_PATH).write_text("<svg/>\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "main-only refresh")
+    git(root, "update-ref", "refs/remotes/origin/main", "main")
+    git(root, "switch", "feature")
+
+    # Act
+    state = prepare.compute_state(root, "origin/main", "pull_request")
+
+    # Assert
+    assert state["recorded_scores_changed"] is False
+    assert not any("differs from the base branch" in reason for reason in state["reasons"])
+
+
+def test_given_badge_only_pr_when_computed_then_flagged_and_scored(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "switch", "-c", "feature")
+    (root / prepare.BADGE_PATH).write_text("<svg/>\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "badge")
+    git(root, "update-ref", "refs/remotes/origin/main", "main")
+
+    # Act
+    state = prepare.compute_state(root, "origin/main", "pull_request")
+
+    # Assert
+    assert state["changed_artifacts"] == []
+    assert state["recorded_scores_changed"] is True
+    assert state["should_score"] is True
+
+
 @pytest.mark.parametrize("path", prepare.INSTRUMENT_PATHS)
 def test_given_instrument_only_change_on_push_when_computed_then_scoring_triggered(tmp_path, path):
     # Arrange

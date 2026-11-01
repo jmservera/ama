@@ -318,9 +318,28 @@ case "$1 $2" in
     if [ -n "${GH_EXISTING_PR:-}" ] || [ -f "$GH_STATE/created" ]; then echo 7; fi ;;
   "pr create") touch "$GH_STATE/created" ;;
   "pr view")
+    if [ -n "${GH_MAIN_AFTER_PUBLISH:-}" ]; then echo "$GH_MAIN_AFTER_PUBLISH" > "$GH_STATE/main_commit"; fi
     if [ -n "${GH_HEAD_MOVED:-}" ]; then printf 'd%.0s' $(seq 1 40); echo
     else git --git-dir "$GH_REMOTE" rev-parse refs/heads/rubric/baseline-refresh; fi ;;
   "pr merge") if [ -n "${GH_MERGE_FAIL:-}" ]; then exit 1; fi ;;
+  "api repos/"*)
+    case "$2" in
+      */compare/*)
+        range="${2##*/compare/}"; from="${range%%...*}"; to="${range##*...}"
+        if [ "$from" = "$to" ]; then echo identical
+        elif git --git-dir "$GH_REMOTE" merge-base --is-ancestor "$from" "$to"; then echo ahead
+        elif git --git-dir "$GH_REMOTE" merge-base --is-ancestor "$to" "$from"; then echo behind
+        else echo diverged; fi ;;
+      */contents/*)
+        main_commit="${GH_MAIN_COMMIT:-}"
+        if [ -f "$GH_STATE/main_commit" ]; then main_commit="$(cat "$GH_STATE/main_commit")"; fi
+        printf '{"commit": "%s"}' "$main_commit" | base64 -w0 ;;
+      */commits/*)
+        git --git-dir "$GH_REMOTE" log -1 --format=%B "${2##*/commits/}"
+        if [ -n "${GH_BRANCH_ADVANCE:-}" ]; then
+          git --git-dir "$GH_REMOTE" update-ref refs/heads/rubric/baseline-refresh "$GH_BRANCH_ADVANCE"
+        fi ;;
+    esac ;;
 esac
 """
 
@@ -489,3 +508,58 @@ def test_canonical_and_generated_recording_code_match():
                 assert target[field] == item[field]
         for key, value in item.get("env", {}).items():
             assert target["env"][key] == value
+
+
+def newer_commit(root, remote, parent, message="newer main"):
+    commit = git(root, "commit-tree", f"{parent}^{{tree}}", "-p", parent, "-m", message)
+    git(root, "-c", "core.hooksPath=/dev/null", "push", str(remote), f"{commit}:refs/heads/newer-{commit[:8]}")
+    return commit
+
+
+def test_refresh_replaces_an_older_baseline_on_main(steps, tmp_path):
+    root, remote, out, base, scored = recording_repo(tmp_path)
+    result, calls = run_refresh(steps, tmp_path, root, remote, out, scored, GH_MAIN_COMMIT=base)
+    assert result.returncode == 0, result.stderr
+    assert remote_ref(remote, f"refs/heads/{BRANCH}") not in (None, scored)
+    assert any(call.startswith("pr merge ") for call in calls)
+
+
+def test_older_dispatch_cannot_replace_a_newer_baseline_on_main(steps, tmp_path):
+    root, remote, out, _, scored = recording_repo(tmp_path)
+    newer = newer_commit(root, remote, scored)
+    result, calls = run_refresh(steps, tmp_path, root, remote, out, scored, GH_MAIN_COMMIT=newer)
+    assert result.returncode == 0, result.stderr
+    assert remote_ref(remote, f"refs/heads/{BRANCH}") is None
+    assert not any(call.startswith(("pr create ", "pr edit ", "pr merge ")) for call in calls)
+
+
+def test_older_dispatch_cannot_replace_a_newer_pending_refresh(steps, tmp_path):
+    root, remote, out, _, scored = recording_repo(tmp_path)
+    newer = newer_commit(root, remote, scored)
+    pending = git(root, "commit-tree", f"{scored}^{{tree}}", "-p", scored, "-m", "pending", "-m", f"Scored commit: {newer}")
+    git(root, "-c", "core.hooksPath=/dev/null", "push", str(remote), f"{pending}:refs/heads/{BRANCH}")
+    result, calls = run_refresh(steps, tmp_path, root, remote, out, scored, GH_EXISTING_PR="1")
+    assert result.returncode == 0, result.stderr
+    assert remote_ref(remote, f"refs/heads/{BRANCH}") == pending
+    assert not any(call.startswith(("pr create ", "pr edit ", "pr merge ")) for call in calls)
+
+
+def test_newer_pending_refresh_pushed_after_the_check_is_not_overwritten(steps, tmp_path):
+    root, remote, out, _, scored = recording_repo(tmp_path)
+    old_pending = git(root, "commit-tree", f"{scored}^{{tree}}", "-p", scored, "-m", "pending", "-m", f"Scored commit: {scored}")
+    git(root, "-c", "core.hooksPath=/dev/null", "push", str(remote), f"{old_pending}:refs/heads/{BRANCH}")
+    newer = newer_commit(root, remote, scored)
+    raced = git(root, "commit-tree", f"{newer}^{{tree}}", "-p", newer, "-m", "pending", "-m", f"Scored commit: {newer}")
+    git(root, "-c", "core.hooksPath=/dev/null", "push", str(remote), f"{raced}:refs/heads/raced")
+    result, calls = run_refresh(steps, tmp_path, root, remote, out, scored, GH_EXISTING_PR="1", GH_BRANCH_ADVANCE=raced)
+    assert result.returncode != 0
+    assert remote_ref(remote, f"refs/heads/{BRANCH}") == raced
+    assert not any(call.startswith("pr merge ") for call in calls)
+
+
+def test_refresh_does_not_merge_when_a_newer_baseline_lands_before_the_merge(steps, tmp_path):
+    root, remote, out, base, scored = recording_repo(tmp_path)
+    newer = newer_commit(root, remote, scored)
+    result, calls = run_refresh(steps, tmp_path, root, remote, out, scored, GH_MAIN_COMMIT=base, GH_MAIN_AFTER_PUBLISH=newer)
+    assert result.returncode == 0, result.stderr
+    assert not any(call.startswith("pr merge ") for call in calls)

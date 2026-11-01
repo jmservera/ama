@@ -151,6 +151,18 @@ def differs_from_base(root: Path, base_ref: str, path: str) -> bool:
     return head_id != base_id
 
 
+def edited_by_branch(root: Path, base_ref: str, path: str) -> bool:
+    """True when this branch changed the file since it forked from the base ref.
+
+    Comparing with the current base would flag files that only changed on the base after the fork,
+    such as a main-only baseline refresh that a three-way merge preserves.
+    """
+    fork = git(root, "merge-base", base_ref, "HEAD")
+    if fork.returncode != 0 or not fork.stdout.strip():
+        return differs_from_base(root, base_ref, path)
+    return differs_from_base(root, fork.stdout.decode("utf-8").strip(), path)
+
+
 def parse_name_status(output: bytes) -> list[tuple[str, str, str | None]]:
     """Parse `git diff --name-status -z` into (status letter, path, rename or copy target)."""
     tokens = output.decode("utf-8", "surrogateescape").split("\0")
@@ -325,12 +337,17 @@ def compute_state(root: Path, base_ref: str, event: str, force: bool = False) ->
         instrument_changed = bool(ranged & set(INSTRUMENT_PATHS))
     if instrument_changed:
         reasons.append("scoring instrument changed")
-    scores_file_changed = differs_from_base(root, base_ref, SCORES_PATH)
+    if event == "pull_request":
+        scores_file_changed = edited_by_branch(root, base_ref, SCORES_PATH)
+        badge_changed = edited_by_branch(root, base_ref, BADGE_PATH)
+    else:
+        scores_file_changed = differs_from_base(root, base_ref, SCORES_PATH)
+        badge_changed = False
     if scores_file_changed:
         reasons.append("scores file differs from the base branch")
-    recorded_scores_changed = event == "pull_request" and (
-        scores_file_changed or differs_from_base(root, base_ref, BADGE_PATH)
-    )
+    if badge_changed:
+        reasons.append("badge differs from the base branch")
+    recorded_scores_changed = event == "pull_request" and (scores_file_changed or badge_changed)
     if entries is None and changed_artifacts and not (bootstrap or force):
         raise RuntimeError("cannot determine changed files relative to the baseline; refusing to score")
 
@@ -358,7 +375,7 @@ def compute_state(root: Path, base_ref: str, event: str, force: bool = False) ->
         informed = {cid for artifact_id in changed_artifacts for cid in (artifacts.get(artifact_id) or {}).get("criteria", [])}
         open_criteria = [cid for cid in all_ids if cid in informed]
 
-    should_score = force or bootstrap or instrument_changed or scores_file_changed or bool(changed_artifacts)
+    should_score = force or bootstrap or instrument_changed or scores_file_changed or badge_changed or bool(changed_artifacts)
     return {
         "event": event,
         "base_ref": base_ref,

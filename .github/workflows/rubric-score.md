@@ -336,6 +336,32 @@ safe-outputs:
               echo "::notice::The recorded baseline already matches this score."
               exit 0
             fi
+            # Publication is compare-and-swap: observe the branch head first, refuse to replace or merge a
+            # score that is not newer than the baseline on main or the pending refresh, and push with a
+            # lease on the observed head so a concurrent newer publication makes this push fail.
+            REMOTE="https://x-access-token:${GH_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git"
+            LEASE="$(git ls-remote "$REMOTE" "refs/heads/${REFRESH_BRANCH}" | cut -f1)"
+            newer_than_scored() {
+              local other="$1" relation
+              if [ -z "$other" ] || [ "$other" = "$SCORED_SHA" ]; then return 1; fi
+              relation="$(gh api "repos/${GITHUB_REPOSITORY}/compare/${SCORED_SHA}...${other}" --jq .status)"
+              [ "$relation" = "ahead" ]
+            }
+            main_baseline_commit() {
+              gh api "repos/${GITHUB_REPOSITORY}/contents/.github/rubric/scores/latest.json?ref=main" --jq .content | base64 -d | jq -r '.commit // empty'
+            }
+            MAIN_SCORED="$(main_baseline_commit)"
+            if newer_than_scored "$MAIN_SCORED"; then
+              echo "::notice::The baseline on main already records newer commit ${MAIN_SCORED}; not replacing it with the score for ${SCORED_SHA}."
+              exit 0
+            fi
+            if [ -n "$LEASE" ]; then
+              PENDING_SCORED="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${LEASE}" --jq .commit.message | sed -n 's/^Scored commit: \([0-9a-f]\{40\}\)$/\1/p;T;q')"
+              if newer_than_scored "$PENDING_SCORED"; then
+                echo "::notice::The pending baseline refresh already records newer commit ${PENDING_SCORED}; not replacing it with the score for ${SCORED_SHA}."
+                exit 0
+              fi
+            fi
             TOTAL="$(jq -r .total "$OUT/latest.json")"
             TITLE="chore(rubric): record score ${TOTAL}/100"
             BODY="Machine-generated rubric baseline refresh. Scored commit: ${SCORED_SHA}. Only latest.json and badge.svg change. Opened by the Capstone Rubric Scorer after a merge to main; the scorecard is the trusted baseline that prepare.py and gate.py read."
@@ -343,8 +369,6 @@ safe-outputs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git -c core.hooksPath=/dev/null commit -q -m "$TITLE" -m "Scored commit: ${SCORED_SHA}"
             NEW_SHA="$(git rev-parse HEAD)"
-            REMOTE="https://x-access-token:${GH_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git"
-            LEASE="$(git ls-remote "$REMOTE" "refs/heads/${REFRESH_BRANCH}" | cut -f1)"
             git -c core.hooksPath=/dev/null push --force-with-lease="refs/heads/${REFRESH_BRANCH}:${LEASE}" "$REMOTE" "HEAD:refs/heads/${REFRESH_BRANCH}"
             PR="$(gh pr list --repo "$GITHUB_REPOSITORY" --head "$REFRESH_BRANCH" --base main --state open --json number --jq '.[0].number // empty')"
             if [ -z "$PR" ]; then
@@ -357,6 +381,12 @@ safe-outputs:
             HEAD_OID="$(gh pr view "$PR" --repo "$GITHUB_REPOSITORY" --json headRefOid --jq .headRefOid)"
             if [ "$HEAD_OID" != "$NEW_SHA" ]; then
               echo "::notice::Refresh pull request #${PR} head moved to ${HEAD_OID}; a newer run owns the baseline refresh."
+              exit 0
+            fi
+            # A newer refresh may have merged while this branch was being published.
+            MAIN_SCORED="$(main_baseline_commit)"
+            if newer_than_scored "$MAIN_SCORED"; then
+              echo "::notice::The baseline on main now records newer commit ${MAIN_SCORED}; leaving refresh pull request #${PR} unmerged."
               exit 0
             fi
             for attempt in 1 2 3 4 5; do
