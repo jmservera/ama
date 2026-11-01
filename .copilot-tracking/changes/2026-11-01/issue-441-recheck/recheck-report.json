@@ -1,11 +1,9 @@
 {
   "freshness": {
-    "head": "81cf0c9e2b34affbe98cb75eb13734529700c369",
-    "origin_main": "81cf0c9e2b34affbe98cb75eb13734529700c369",
+    "head": "0662c01594e4500cf3c194d3fe0b48e83ee255b9",
+    "origin_main": "324965befda411407b7a8b601a68d40d1cc88432",
     "descends_from_origin_main": true,
-    "dirty_docs_or_src": [
-      "M docs/reference/log.md"
-    ],
+    "dirty_docs_or_src": [],
     "ok": true
   },
   "custody": {
