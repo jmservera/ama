@@ -21,3 +21,7 @@ Execution: one pass, self-review of the diff against the acceptance criteria. Ou
 ## Post-review corrections (PR 672, Copilot threads)
 
 Nine valid findings were fixed with tests (reserved/secure overrides, non-secret overrides, NIC cascade, private-registry build pool, authentication-only check with roster, `/sign-in` probe, health retries). The original outcome above is preserved; live Azure criterion 4 remains routed.
+
+## Follow-up: PR 672 review threads, round 2 (2026-11-01)
+
+Four Copilot threads were valid and fixed (registry profile resolution, build-pool existence handoff, pending roster grants, effective credential name); see the changes record. Original review outcome is unchanged. Live Azure validation and human review remain open.

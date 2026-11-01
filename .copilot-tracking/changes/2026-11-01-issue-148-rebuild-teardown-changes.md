@@ -20,6 +20,15 @@ Plan: [plan](../plans/2026-11-01-issue-148-rebuild-teardown-plan.md)
 * Probes: browser redirect uses `/sign-in`; health retries bounded transient 0/5xx (6 x 10 s); denial checks strict. Fake `health_for` is now a method (fixes the mypy CI failure).
 * CI: `activation` failure is the GitHub API quota guard of the daily scan, not repository code; rerun.
 
+## Review-thread corrections, round 2 (PR 672)
+
+* Registry network profile: `deploymentProfile` and `allowPublicNetworkAccess` are resolved independently (last file assignment, then CLI overrides, then Bicep defaults), so an override of `false` keeps the registry private.
+* Build pool: the `images` stage verifies the approved pool with `az acr agentpool show` before building and stops with an operator handoff and `--from-stage images` resume instruction, because `infra/modules/registry.bicep` provisions no pool. Pool creation stays an operator action. The fake models pool existence.
+* Authentication: pending roster grants (`Roster: N ... M missing assignment(s)`) are tolerated only before the `staff` stage; after it, `staff` verification reruns the check with zero tolerated grants. Other drift and conflicting roles stay fatal.
+* Credential: the vault checkpoint checks the effective `entraClientSecretName` (file, then overrides, then `entra-client-secret`).
+* CI: `activation` failure remains the API quota guard (not repository code); `src-api` was pending.
+* Tests: 54 rebuild tests pass; `ruff check` clean.
+
 ## Validation
 
 * Orchestrator unittest: rebuild, rebuild_azure and dependency-rule suites pass (44 tests). Full discovery with core/agents test paths: 88 run, 1 error in `test_version` because the distribution is not pip-installed locally (unrelated to this change).

@@ -43,6 +43,9 @@ class FakeAzure:
         self.deleted: list[str] = []
         self.health = 200
         self.secret_present = True
+        self.secret_name = "entra-client-secret"
+        self.pool_exists = True
+        self.after_staff: str | None = None
         self.cases = "3"
         self.entra_stdout: str | None = None
         self.health_codes: list[int] = []
@@ -91,6 +94,10 @@ class FakeAzure:
         if "private-endpoint show" in text:
             pe = args[args.index("--ids") + 1]
             return json.dumps([pe.replace("privateEndpoints", "networkInterfaces") + "-nic"])
+        if "acr agentpool show" in text:
+            if not self.pool_exists:
+                raise ScriptExit("az acr agentpool failed (3)", 3, "")
+            return "{}"
         if "resource wait" in text or "acr build" in text or "revision restart" in text:
             return ""
         if "acr list" in text:
@@ -104,7 +111,7 @@ class FakeAzure:
         if "show-tags" in text:
             return json.dumps(["t1"])
         if "keyvault secret list" in text:
-            return json.dumps(["entra-client-secret"] if self.secret_present else [])
+            return json.dumps([self.secret_name] if self.secret_present else [])
         if "containerapp list" in text and "provisioningState" in text:
             return json.dumps(["Succeeded"])
         if "containerapp list" in text:
@@ -128,6 +135,8 @@ class FakeAzure:
                 self.budgets.append(rid("Microsoft.Consumption/budgets", "b"))
             else:
                 self.resources.append(("Microsoft.App/containerApps", "api"))
+        if script == "initialize-workbench-staff.py" and "--apply" in args:
+            self.entra_stdout = self.after_staff or self.entra_stdout
         if script == "setup-entra.py" and self.entra_stdout is not None:
             raise ScriptExit("check failed", 2, self.entra_stdout)
         if script == "seed":
@@ -293,6 +302,61 @@ class RebuildTests(Fixture):
         with self.assertRaises(RebuildError):
             run_rebuild(backend, SUB)
         self.assertFalse([c for c in fake.calls if c[0] == "python3"])
+
+    def test_effective_profile_applies_overrides_last(self) -> None:
+        self.params.write_text(
+            "param deploymentProfile = 'development'\nparam allowPublicNetworkAccess = true\n"
+        )
+        self.assertFalse(self.config(overrides=()).registry_is_private())
+        override = ("allowPublicNetworkAccess=false",)
+        self.assertTrue(self.config(overrides=override).registry_is_private())
+        self.params.write_text(
+            "param allowPublicNetworkAccess = true\nparam deploymentProfile = 'development'\n"
+        )
+        self.assertFalse(self.config().registry_is_private())
+        self.assertTrue(
+            self.config(overrides=("deploymentProfile=production",)).registry_is_private()
+        )
+
+    def test_missing_build_pool_stops_with_resume_instruction(self) -> None:
+        fake = FakeAzure()
+        fake.pool_exists = False
+        with self.assertRaisesRegex(RebuildError, "--from-stage images"):
+            run_rebuild(self.backend(fake), SUB)
+        self.assertFalse([c for c in fake.calls if "build" in c and "acr" in c])
+
+    def test_custom_secret_name_is_the_checked_credential(self) -> None:
+        self.params.write_text("param entraClientSecretName = 'custom-secret'\n")
+        fake = FakeAzure()
+        with self.assertRaisesRegex(RebuildError, "custom-secret"):
+            run_rebuild(self.backend(fake), SUB)
+        fake = FakeAzure()
+        fake.secret_name = "custom-secret"
+        run_rebuild(self.backend(fake), SUB)
+
+    def test_pending_roster_grants_are_tolerated_only_before_staff(self) -> None:
+        sql = "Remaining: SQL binding and serving-replica restart are not confirmed.\n"
+        pending = (
+            "Roster: 1 principal(s); 2 missing assignment(s) planned.\n"
+            "7/7 Summary: read-only; 2 reconciliation item(s).\n" + sql
+        )
+        fake = FakeAzure()
+        fake.entra_stdout, fake.after_staff = (
+            pending,
+            "7/7 Summary: read-only; 0 reconciliation item(s).\n" + sql,
+        )
+        run_rebuild(self.backend(fake), SUB)
+        fake = FakeAzure()
+        fake.entra_stdout = pending
+        with self.assertRaisesRegex(RebuildError, "drift"):
+            run_rebuild(self.backend(fake), SUB)
+        fake = FakeAzure()
+        fake.entra_stdout = (
+            "Roster: 1 principal(s); 1 missing assignment(s) planned.\n"
+            "7/7 Summary: read-only; 2 reconciliation item(s).\n" + sql
+        )
+        with self.assertRaisesRegex(RebuildError, "drift"):
+            run_rebuild(self.backend(fake), SUB)
 
     def test_image_build_uses_the_approved_pool(self) -> None:
         fake = FakeAzure()

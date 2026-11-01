@@ -72,9 +72,8 @@ _SAFE_PARAM_LINE = re.compile(
 # Stage-controlled names and secure Bicep parameters that must never come from an override.
 RESERVED_PARAMETERS = frozenset({"deployApplications", "deployEnvironmentOnly", "apiImage"})
 SECURE_PARAMETERS = frozenset({"teamsWebhookUrl"})
-_PUBLIC_REGISTRY = re.compile(
-    r"(?s)deploymentProfile\s*[=:]\s*['\"]?development.*allowPublicNetworkAccess\s*[=:]\s*true"
-)
+_GRANTS = re.compile(r"Roster: \d+ principal\(s\); (\d+) missing assignment\(s\)")
+_ITEMS = re.compile(r"Summary: (?:read-only; )?(\d+) reconciliation item")
 _REMAINING_SQL = "Remaining: SQL binding and serving-replica restart are not confirmed."
 _EMAIL = re.compile(r"[^\s@\"']+@([^\s@\"']+)")
 _SYNTHETIC_DOMAIN = re.compile(r"(?i)(\.test|^example\.(com|org|net))$")
@@ -152,9 +151,27 @@ class AzureConfig:
         assert_synthetic(self.seed)
         assert_synthetic(self.roster)
 
+    def effective(self, name: str, default: str) -> str:
+        """Last parameter-file assignment, then command-line overrides, then the default."""
+        value = default
+        if self.parameters.is_file():
+            pattern = re.compile(rf"(?m)^\s*param\s+{re.escape(name)}\s*=\s*['\"]?([\w.-]+)")
+            for match in pattern.finditer(self.parameters.read_text(encoding="utf-8")):
+                value = match.group(1)
+        for override in self.overrides:
+            key, _, given = override.partition("=")
+            if key == name:
+                value = given.strip().strip("'\"")
+        return value
+
     def registry_is_private(self) -> bool:
-        text = self.parameters.read_text(encoding="utf-8") if self.parameters.is_file() else ""
-        return not _PUBLIC_REGISTRY.search("\n".join((text, *self.overrides)))
+        profile = self.effective("deploymentProfile", "production")
+        public = self.effective("allowPublicNetworkAccess", "false").lower()
+        return not (profile == "development" and public == "true")
+
+    @property
+    def secret_name(self) -> str:
+        return self.effective("entraClientSecretName", VAULT_SECRET)
 
     @property
     def prefix(self) -> str:
@@ -377,6 +394,14 @@ class AzureBackend:
             ).strip()
         elif name == "images":
             pool = ["--agent-pool", c.build_pool] if c.build_pool else []
+            if c.build_pool:
+                try:
+                    self._az("acr", "agentpool", "show", "-r", c.registry, "-n", c.build_pool)
+                except ScriptExit as exc:
+                    raise RebuildError(
+                        f"Build pool {c.build_pool} does not exist in {c.registry}. Operator: "
+                        "create the approved agent pool, then resume with --from-stage images"
+                    ) from exc
             self._az(
                 "acr",
                 "build",
@@ -433,8 +458,9 @@ class AzureBackend:
                 ).strip(),
             )
 
-    def _check_authentication(self) -> None:
-        """Run the Entra check; only the not-yet-reconciled SQL staff/restart item is tolerated."""
+    def _check_authentication(self, allow_grants: bool = True) -> None:
+        """Run the Entra check; tolerate only the SQL staff/restart item and, before the staff
+        stage, pending roster grants that the staff stage creates."""
         c = self.config
         args = (
             "-g", GROUP, "-n", c.container_app, "--direct-ingress", "--roster", str(c.roster),
@@ -444,7 +470,9 @@ class AzureBackend:
             self._script("setup-entra.py", *args)
         except ScriptExit as exc:
             remaining = [x.strip() for x in exc.stdout.splitlines() if x.startswith("Remaining:")]
-            clean = re.search(r"\b0 reconciliation item", exc.stdout) is not None
+            items, grants = _ITEMS.search(exc.stdout), _GRANTS.search(exc.stdout)
+            pending = int(grants.group(1)) if grants and allow_grants else 0
+            clean = items is not None and int(items.group(1)) == pending
             if exc.code != 2 or not clean or remaining != [_REMAINING_SQL]:
                 raise RebuildError("Entra authentication check reported drift or failed") from exc
 
@@ -510,8 +538,8 @@ class AzureBackend:
                 "--query",
                 "[].name",
             )
-            if VAULT_SECRET not in names:
-                raise RebuildError(f"Operator must provision {VAULT_SECRET} in the vault; stopped")
+            if c.secret_name not in names:
+                raise RebuildError(f"Operator must provision {c.secret_name} in the vault; stopped")
         elif name == "sql-users":
             pass
         elif name == "seed":
@@ -536,6 +564,7 @@ class AzureBackend:
                 str(c.roster),
                 "--check",
             )
+            self._check_authentication(allow_grants=False)
         elif name in ("health", "restart"):
             self._await_healthy()
         elif name == "api-denial":
