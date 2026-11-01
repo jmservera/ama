@@ -6,3 +6,7 @@
 4. Validate with focused tests, ruff, mypy. No Azure/SQL apply.
 
 Critique (one pass): compatible; keep AI tariff expiry unchanged per "existing owner approvals unchanged". No divergence.
+
+## Correction cycle 2026-11-01 (PR 690)
+
+* Plan: git rm tracked egg-info (gitignore covers), fix apply command, require validated post-#590 image digest. Critique not repeated.

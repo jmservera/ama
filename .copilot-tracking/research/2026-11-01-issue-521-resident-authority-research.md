@@ -5,3 +5,7 @@
 * Outage cause: live SQL check constraint/allowlist rows still end 2026-11-01; live apply is owner/coordinator only.
 * AI tariff expiry (`assistant.py` EXPIRES, `resident_ai.budget`) is a separate approval; out of scope.
 * Research disposition: executed. Planning Readiness: Ready.
+
+## Correction cycle 2026-11-01 (PR 690)
+
+* Research reused: 3 Copilot threads on PR 690 (egg-info tracked, apply needs --client-id, image must contain January policy). Planning readiness: Ready.

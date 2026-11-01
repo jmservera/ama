@@ -4147,11 +4147,16 @@ owner confirms the exact change and the cost check above passes:
 
 1. Re-render and apply the boundary so the check constraint moves to
    `2027-02-01T00:00:00` (never touches row windows or permissions):
-   `python3 infra/scripts/resident_showcase_sql.py <principal> --apply <server> <database>`.
+   `python3 infra/scripts/resident_showcase_sql.py <principal> --client-id <existing resident managed identity client id> --apply <server> <database>`
+   (without `--create-principal`; the script exits with code 2 if neither is given).
 2. Renew only individually approved synthetic rows, one reviewed statement each,
    with `valid_to` no later than `2027-02-01T00:00:00`:
    `UPDATE resident_showcase.allowed_case SET valid_to = '2027-02-01T00:00:00' WHERE case_id = '<approved id>' AND revoked = 0;`
-3. Redeploy the same image digest with the extended expiry (what-if first, then
+3. Redeploy only a validated image digest built after #590, whose packaged
+   `resident-demo.json` carries the January 2027 policy (an older image still
+   caps authority at November and the app rejects the later expiry). Rebuild
+   through the approved image path if necessary and record the digest check.
+   Use the extended expiry (what-if first, then
    `--apply`): `python3 infra/scripts/resident_demo_deploy.py --subscription <id>
    --expires 2027-01-31T23:59:59Z --image <repo>@sha256:<digest> --sql-server <fqdn>
    --sql-database <db> [--apply]`. Rotate credentials per step 2 above first.

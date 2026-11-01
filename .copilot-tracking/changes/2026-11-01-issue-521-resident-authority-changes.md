@@ -5,3 +5,7 @@
 * `infra/README.md`: coordinator steps for live SQL constraint, row renewal, redeploy.
 * Validation: api resident_demo tests (47), core resident_showcase tests (89, 27 skipped for SQL), infra resident_demo tests (32) OK; ruff check and mypy pass on touched files. `ruff format --check` flags pre-existing formatting in resident_demo_browser_check.py (untouched lines).
 * Not applied: any Azure/SQL change.
+
+## Correction cycle 2026-11-01 (PR 690)
+
+* Changes: removed 15 tracked egg-info files (core/api/agents); infra/README.md coordinator steps 1 and 3 corrected. Nothing applied to Azure.
