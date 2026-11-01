@@ -13,3 +13,5 @@ Execution: executed once, self-review of diff against acceptance criteria. Outco
 
 Routed follow-ups: queue-level asset comparison across homes (needs a portfolio endpoint), asset/executive role definition, browser keyboard check, validation in #155.
 Verdict on closing: criteria 1 (queue level) and 4 (accessibility evidence) not proven, so the PR uses Refs.
+
+Follow-up review (PR 639, ISO dates): executed once more on the thread fix only; accepted basic and week-date forms now render source age (tested). Outcome unchanged.

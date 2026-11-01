@@ -16,7 +16,7 @@ const side = (value, id, date) => ({value, source_id: id, date, version: "1",
 const owner = {name: "Query Owner", role: "Retrofit Programme Manager"};
 const c = {id: "C-1", stock_reconciliation: [
   {id: "SQ-1", field: "epc", query_owner: owner,
-    left: side("D", "S-A", "2020-01-01"), right: side("C", "S-B", "2026-01-01")}
+    left: side("D", "S-A", process.argv[3] || "2020-01-01"), right: side("C", "S-B", "2026-01-01")}
 ], stock_reconciliation_events: []};
 const context = vm.createContext({
   URLSearchParams, Intl, AbortController, Date,
@@ -36,9 +36,9 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('asset-board');", co
 """
 
 
-def run(report: dict[str, object]) -> dict[str, object]:
+def run(report: dict[str, object], left_date: str = "2020-01-01") -> dict[str, object]:
     result = subprocess.run(
-        ["node", "-e", SCRIPT, str(WEB), json.dumps(report)],
+        ["node", "-e", SCRIPT, str(WEB), json.dumps(report), left_date],
         capture_output=True,
         text=True,
         timeout=30,
@@ -81,6 +81,13 @@ class AssetBoardScreen(unittest.TestCase):
         self.assertIn("Portfolio scope", text)
         self.assertNotIn("9999", text)
         self.assertNotIn("123", text)
+
+    def test_accepted_iso_forms_show_age(self) -> None:
+        for accepted in ("20200101", "2020-W01-3", "2020W013", "2020-W01"):
+            with self.subTest(accepted=accepted):
+                text = json.dumps(run({}, accepted)["tree"])
+                self.assertIn("S-A v1, ", text)
+                self.assertRegex(text, r"S-A v1, \d+ days old")
 
     def test_cost_unknown_without_pass_and_shown_with_evidence_class(self) -> None:
         unknown = json.dumps(

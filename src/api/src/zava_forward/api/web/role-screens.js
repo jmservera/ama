@@ -101,8 +101,20 @@ async function roleScreensView() {
     h("a", { href: "#/" }, "Back to my work"));
 }
 
+const assetDate = (iso) => {
+  const text = String(iso ?? "");
+  const basic = /^(\d{4})(\d{2})(\d{2})$/.exec(text);
+  if (basic) return Date.parse(`${basic[1]}-${basic[2]}-${basic[3]}T00:00:00Z`);
+  const week = /^(\d{4})-?W(\d{2})(?:-?([1-7]))?$/.exec(text);
+  if (week) {
+    const jan4 = Date.UTC(+week[1], 0, 4);
+    const monday = jan4 - ((new Date(jan4).getUTCDay() + 6) % 7) * 86400000;
+    return monday + ((+week[2] - 1) * 7 + (+(week[3] || 1) - 1)) * 86400000;
+  }
+  return Date.parse(text);
+};
 const assetAgeDays = (iso) => {
-  const then = iso ? Date.parse(iso) : NaN;
+  const then = iso ? assetDate(iso) : NaN;
   return Number.isNaN(then) ? "Unknown" : `${Math.max(0, Math.floor((Date.now() - then) / 86400000))} days old`;
 };
 const assetStatus = (c, q) => {
