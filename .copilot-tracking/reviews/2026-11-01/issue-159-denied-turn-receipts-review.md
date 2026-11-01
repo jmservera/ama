@@ -9,8 +9,10 @@ ms.date: 2026-11-01
 
 * Execution: executed once by the implementing agent against the diff; not an independent review. Independent review remains a publication gate.
 * Outcome: Conformant for the slice; no open material findings.
-* Checks: no model call and no stored message on denial; the question text is not in the receipt; the actor falls back to `unknown` when no email; behaviour for permitted turns is unchanged (existing 99 + 42 tests pass).
+* Checks: no model call and no stored message on denial; the question text is not in the receipt; the actor falls back to `unknown` when no email; behaviour for permitted turns is unchanged (existing 99 + 43 tests pass, including foreign/missing thread receipts on both routes).
 * Residual: a request rejected by the earlier role gate (`get_kind` projection, before `_chat`) records no chat receipt; a gateway-level audit exists separately. Routed as a follow-up.
+
+* Publication: blocked until the complete local RPI gate runs with a verified external receipt; CI does not substitute.
 
 ## Criteria status
 

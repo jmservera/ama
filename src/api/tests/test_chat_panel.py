@@ -471,6 +471,27 @@ class PanelTests(roles.Matrix):
         self.assertNotIn("SECRET-QUESTION", turns[-1]["detail"])
         self.assertEqual(self.prompts, [])
 
+    def test_foreign_and_missing_thread_turns_record_one_receipt_per_route(self) -> None:
+        tid = self.thread()
+        stored = len(self.store.chat_resume(self.store.staff[self.email(ROLE)], tid)["messages"])
+        for route in ("ask", "messages"):
+            for target, role in ((tid, "Quality Inspector"), ("missing-thread", ROLE)):
+                before = len([e for e in self.store.audit_entries() if e["action"] == "chat.turn"])
+                code, _ = self.api(
+                    role, f"/api/chat/threads/{target}/{route}", {"content": "SECRET-QUESTION"}
+                )
+                self.assertEqual(code, 404, (route, target))
+                turns = [e for e in self.store.audit_entries() if e["action"] == "chat.turn"]
+                self.assertEqual(len(turns), before + 1, (route, target))
+                receipt = json.loads(turns[-1]["detail"])
+                self.assertEqual(
+                    (receipt["outcome"], receipt["model_calls"]), ("access-rejected", 0)
+                )
+                self.assertNotIn("SECRET-QUESTION", turns[-1]["detail"])
+        owner = self.store.staff[self.email(ROLE)]
+        self.assertEqual(len(self.store.chat_resume(owner, tid)["messages"]), stored)
+        self.assertEqual(self.prompts, [])
+
     def test_legacy_route_uses_citations_and_refusals(self) -> None:
         tid = self.thread()
         code, reply = self.api(ROLE, f"/api/chat/threads/{tid}/messages", {"content": "Stage?"})
