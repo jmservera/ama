@@ -86,6 +86,26 @@ class VendorAssets(unittest.TestCase):
         self.assertEqual(len(logs.output), 1)
         self.assertIn("OPTIONS /vendor/leaflet.js status=501", logs.output[0])
 
+    def raw(self, request: bytes) -> bytes:
+        import socket
+
+        with socket.create_connection(("127.0.0.1", self.httpd.server_port), timeout=5) as sock:
+            sock.sendall(request)
+            chunks = []
+            while chunk := sock.recv(4096):
+                chunks.append(chunk)
+        return b"".join(chunks)
+
+    def test_malformed_request_lines_still_get_error_responses(self) -> None:
+        cases = {
+            b"GET /" + b"a" * 70000 + b" HTTP/1.1\r\n\r\n": b" 414 ",
+            b"BAD\r\n\r\n": b" 400 ",
+            b"OPTIONS http://[ HTTP/1.1\r\n\r\n": b" 501 ",
+        }
+        for request, status in cases.items():
+            with self.subTest(status=status):
+                self.assertIn(status, self.raw(request).split(b"\r\n")[0] + b" ")
+
 
 class ExpectedDenialWording(unittest.TestCase):
     def run_node(self, script: str) -> None:

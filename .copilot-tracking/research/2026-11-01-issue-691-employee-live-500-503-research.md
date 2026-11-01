@@ -41,3 +41,7 @@ Date: 2026-11-01. Task slug: `issue-691-employee-live-500-503`. Disposition: exe
 ## Correction cycle 2026-11-01 (PR #694 review threads)
 
 Three Copilot threads read and validated: (1) inherited handler responses (e.g. `OPTIONS /vendor/leaflet.js` 501) bypass `_send`; (2) 403/503 can also mean missing configuration or unexpected failure, so role/disabled wording over-claims; (3) source-order test passes without the administrator guards. All valid.
+
+## Correction cycle 2 2026-11-01 (PR #694, thread on send_response)
+
+Thread valid: malformed or oversized request lines reach `send_response` before `self.path` exists (AttributeError) and a malformed target (`OPTIONS http://[`) makes `urlparse` raise ValueError. Fix must keep error responses working.

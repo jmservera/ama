@@ -22,3 +22,7 @@ Logging volume is limited to errors. UI skip for administrators must not hide an
 * [x] Log in an overridden `send_response` so framework and application responses are logged once.
 * [x] `unavailableNote` and the alert message use role wording only for a client-confirmed role denial (`roleDenied`); otherwise a neutral message with the server explanation and the manual route.
 * [x] Replace the source-order test with a Node VM test that runs `chatCasePanel` and `regulatoryChatPanel` with stubs: administrators request neither endpoint, staff request both. Critique not repeated (one pass rule).
+
+## Correction cycle 2 2026-11-01
+
+* [x] Read `path` and `command` defensively in `send_response`, treat a `ValueError` from `urlparse` as an empty path, and add raw-socket regression tests (414, 400, 501).

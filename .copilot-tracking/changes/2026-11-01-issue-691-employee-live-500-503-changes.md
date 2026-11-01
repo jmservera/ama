@@ -24,3 +24,9 @@ Leaflet 500 cause is outside the app process (not reproducible; Log Analytics bl
 * `chat.js`: neutral wording for unconfirmed 403/503; role wording only via `roleDenied`; alert fallback shows the server message.
 * `test_employee_live_responses.py`: wording tests updated; administrator test now executes the panels with stubs.
 * Validation: `ruff check`, `ruff format --check` clean; mypy 9 errors, identical before and after (missing stubs); `test_employee_live_responses` passes; full api discover result recorded in the PR reply.
+
+## Correction cycle 2 2026-11-01
+
+* `server.py`: `send_response` tolerates missing `self.path`/`self.command` and unparseable targets.
+* `test_employee_live_responses.py`: `test_malformed_request_lines_still_get_error_responses` sends raw 414, 400 and 501 requests.
+* Validation: `ruff check`, `ruff format --check` clean; `mypy src` clean; targeted tests pass.

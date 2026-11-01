@@ -18,3 +18,7 @@ No logging of query strings or identities was introduced.
 ## Correction cycle 2026-11-01
 
 Executed once on the three review threads; all fixed, no new findings routed. Human review remains required.
+
+## Correction cycle 2 2026-11-01
+
+Executed once on one thread; fixed, no new findings routed. Human review remains required.

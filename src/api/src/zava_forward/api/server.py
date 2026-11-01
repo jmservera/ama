@@ -202,9 +202,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             pass
 
         def send_response(self, code, message=None):
-            path = urlparse(self.path).path
+            try:
+                path = urlparse(getattr(self, "path", "")).path
+            except ValueError:
+                path = ""
             if code >= 500 or (path.startswith("/vendor/") and code not in (200, 304)):
-                logging.getLogger(__name__).warning("http-response %s %s status=%s", self.command, path, code)
+                logging.getLogger(__name__).warning("http-response %s %s status=%s", getattr(self, "command", None), path, code)
             super().send_response(code, message)
 
         def _send(self, code, body, ctype="application/json", extra=None):
