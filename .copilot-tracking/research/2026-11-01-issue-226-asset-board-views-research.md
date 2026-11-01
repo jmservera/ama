@@ -24,3 +24,7 @@ Server changes, observed validation (#155), investment approval, real budgets.
 ## Correction cycle 2 (PR 710)
 
 Evidence: `_assertion` validates but preserves the spelling of basic and extended ISO dates, so string sorting in `queue_rows` misorders them. Other research reused.
+
+## Correction cycle 3 (PR 710)
+
+Evidence: merged origin/main (only blank-line conflicts in role-screens.js, node --check clean). One unresolved Copilot thread: `/api/asset/stock-queue` missing from `GET_ENDPOINTS` in `test_role_endpoint_inventory.py`, so the route-coverage test fails.

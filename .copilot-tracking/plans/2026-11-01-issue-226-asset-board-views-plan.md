@@ -10,3 +10,7 @@ Critique (single pass, self): keep read-only; do not infer eligibility; cost sho
 ## Correction cycle 2 (PR 710)
 
 Parse dates in `queue_rows` only, normalise output, add cross-home mixed-format regression. Critique (single pass, self): compatible, applied directly.
+
+## Correction cycle 3 (PR 710)
+
+Add the route to the role inventory so every role is exercised against it. Critique (single pass, self): compatible, applied directly.
