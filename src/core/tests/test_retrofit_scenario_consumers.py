@@ -11,6 +11,7 @@ from typing import Any, ClassVar
 from zava_forward.core.synthetic import sensor_scenarios as ss
 
 MATERIAL_TEMPERATURE_C = 0.5  # exercise tolerance, not a sourced threshold
+APPROVED_NOTE = "Descriptive exercise only; not causation, blame or a savings promise"
 FORBIDDEN = ("saving", "saves", "blame", "fault of", "resident caused")
 
 
@@ -57,10 +58,8 @@ class RetrofitScenarioConsumerTests(unittest.TestCase):
                 self.assertEqual(view["status"], "SUFFICIENT")
                 text = json.dumps(view).lower()
                 for word in FORBIDDEN:
-                    self.assertNotIn(
-                        word, text.replace("not causation, blame or a savings promise", "")
-                    )
-                self.assertIn("exercise", view["note"].lower())
+                    self.assertNotIn(word, text.replace(APPROVED_NOTE.lower(), ""))
+                self.assertEqual(view["note"], APPROVED_NOTE)
                 self.assertNotIn("expected_direction", view)
 
     def test_adverse_scenario_routes_to_review_and_others_do_not(self) -> None:
