@@ -9177,3 +9177,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   pack: five package suites, Ruff and mypy passed locally; SQL, container and
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
+
+## [2026-11-01] update | Automated-decision and EU AI Act applicability pack (#224)
+
+* Added the applicability review pack under `regulatory/reviewed-updates/`: official
+  check of DUAA 2025 s.80 and S.I. 2026/82 (retrieved 2026-11-01), failed EUR-Lex
+  retrieval, a `Pending` Legal/DPO decision record, review items RI-1 to RI-7 and
+  non-inference rules.
+* Flagged that seed card `automated-decision-safeguard` cites Article 22, not
+  Articles 22A to 22C. No snapshot, card or rule changed; criteria 1 and 5 of #224
+  stay unmet pending the Legal/DPO decision.

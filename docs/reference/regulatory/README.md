@@ -90,6 +90,14 @@ Official-page retrieval failed on 2026-10-29, so unverified currentness remains
 `unknown`; earlier source snapshots and the 2026-10-23 sector report were not
 rewritten. No legal or funding interpretation is approved.
 
+## Reviewed Update: Automated-Decision and EU AI Act Applicability (2026-11-01)
+
+The [applicability review pack](./reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md)
+records the 2026-11-01 official-source check of UK GDPR Articles 22A to 22C
+(in force 2026-02-05 per S.I. 2026/82) and a failed EUR-Lex retrieval for the
+EU AI Act. The Legal and DPO decision record is `Pending`; no jurisdiction,
+risk tier or compliance is inferred.
+
 ## Managed Update Workflow
 
 The production solution should maintain a regulatory source register separate
