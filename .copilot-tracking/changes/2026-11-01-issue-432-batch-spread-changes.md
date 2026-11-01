@@ -1,4 +1,7 @@
-# Changes: #432 batch spread slice
+---
+title: "Changes: #432 batch spread slice"
+ms.date: 2026-11-01
+---
 
 * `src/core/src/zava_forward/core/ai_consumption.py`: `batch_spread` and `report(batch=)`.
 * `src/core/tests/test_ai_consumption_demo.py`: 2 tests.

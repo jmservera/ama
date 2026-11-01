@@ -1,4 +1,7 @@
-# Review: #432 batch spread slice
+---
+title: "Review: #432 batch spread slice"
+ms.date: 2026-11-01
+---
 
 Execution: complete (self-review of diff). Outcome: conformant for the slice; issue not fully proven.
 

@@ -1,4 +1,7 @@
-# Research: #432 held-out batch spread slice (2026-11-01)
+---
+title: "Research: #432 held-out batch spread slice (2026-11-01)"
+ms.date: 2026-11-01
+---
 
 * Prior PRs: #433 (requirements), #602 (merged ledger, admission, price, billing, report), #660 (merged demo walk-through). All used Refs #432.
 * Criteria marked delivered in the issue: dated price source, time-as-capacity.
