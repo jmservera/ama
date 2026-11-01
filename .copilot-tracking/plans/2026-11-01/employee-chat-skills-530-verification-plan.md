@@ -19,3 +19,7 @@
 * Risk: touching another session's SQL container. Disposition: own container `ama-530-sql` only.
 * Risk: source churn. Disposition: no source change; evidence only.
 * Verdict: proceed.
+
+## Follow-up (added after Copilot review, original plan preserved)
+
+* Run the complete local gate (`python3 tools/rpi-checks.py --all --base <reviewed-main-sha> --out <new-external-directory>`) on the committed candidate and verify the receipt with `--verify-receipt` against current `origin/main` immediately before merge. The focused checks above and hosted CI do not replace it.
