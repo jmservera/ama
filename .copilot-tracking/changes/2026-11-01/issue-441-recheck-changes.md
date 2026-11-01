@@ -1,14 +1,15 @@
 <!-- markdownlint-disable-file -->
 # Changes: issue 441 fresh-main recheck (2026-11-01)
 
-Research: [issue-441-recheck-research.md](../research/2026-11-01/issue-441-recheck-research.md). Plan: [issue-441-recheck-plan.md](../plans/2026-11-01/issue-441-recheck-plan.md). Critique: [issue-441-recheck-plan-critique.md](../reviews/plans/2026-11-01/issue-441-recheck-plan-critique.md).
+Research: [issue-441-recheck-research.md](../../research/2026-11-01/issue-441-recheck-research.md). Plan: [issue-441-recheck-plan.md](../../plans/2026-11-01/issue-441-recheck-plan.md). Critique: [issue-441-recheck-plan-critique.md](../../reviews/plans/2026-11-01/issue-441-recheck-plan-critique.md).
 
 ## Files changed
 
 | Path | Change |
 | --- | --- |
 | `docs/reference/log.md` | One appended entry (append-only, verified against `origin/main`). |
-| `.copilot-tracking/changes/2026-11-01/issue-441-recheck/verify-441-recheck.py` | Read-only verifier (ruff check and format clean). SHA-256 `208f791b9a422c0babdd5ff7e1e46faf3ec03474f01264562d3ab6e81b8392ce`. |
+| `.copilot-tracking/changes/2026-11-01/issue-441-recheck/verify-441-recheck.py` | Read-only verifier (ruff check and format clean). SHA-256 `6b96dbc8d071f5b1086abf3462a1888592f847dc7a2c37a2360299e5a7b6a09b`. |
+| `.copilot-tracking/changes/2026-11-01/issue-441-recheck/test_verify_441_recheck.py` | Seven unit tests (custody, duplicates, policy, ADR, dirty freshness); pass. Freshness now requires a clean docs, src and research tree. |
 | `.copilot-tracking/changes/2026-11-01/issue-441-recheck/recheck-report.json` | Verifier output at base `81cf0c9e`, `overall_ok: true`. |
 | `.copilot-tracking/{research,plans,details,reviews}/2026-11-01/...`, `rpi-sessions/2026-11-01/issue-441-recheck-state.json` | RPI evidence. |
 

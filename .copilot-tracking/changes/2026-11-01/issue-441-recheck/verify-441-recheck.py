@@ -198,13 +198,15 @@ def check_freshness():
     head = git("rev-parse", "HEAD").strip()
     origin = git("rev-parse", "origin/main").strip()
     ahead_of_origin = git("merge-base", "--is-ancestor", origin, "HEAD") == ""
-    dirty = git("status", "--porcelain", "--", "docs", "src").strip()
+    dirty = git(
+        "status", "--porcelain", "--", "docs", "src", ".copilot-tracking/research"
+    ).strip()
     return {
         "head": head,
         "origin_main": origin,
         "descends_from_origin_main": ahead_of_origin,
         "dirty_docs_or_src": dirty.splitlines(),
-        "ok": ahead_of_origin,
+        "ok": ahead_of_origin and not dirty,
     }
 
 

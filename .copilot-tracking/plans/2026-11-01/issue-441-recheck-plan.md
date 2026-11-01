@@ -23,4 +23,4 @@ Documentation evidence only. No BRD, PRD, ADR, addendum, memory or source change
 
 ## Validation tier
 
-Focused: verifier, ruff check, ruff format --check on the script, Markdown/link review of the log entry and `git diff`. mypy and unit tests do not apply: no `src/` project is touched. CI is the publication evidence; no heavy local gate.
+Focused: verifier, ruff check, ruff format --check on the script, Markdown/link review of the log entry and `git diff`. mypy and unit tests do not apply: no `src/` project is touched. Verifier unit tests cover custody, duplicate IDs, policy and ADR assertions. The complete local RPI gate (`tools/rpi-checks.py --all`) runs on the committed candidate and its receipt is verified before push; unavailable prerequisites block publication.
