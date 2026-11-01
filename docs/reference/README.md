@@ -150,7 +150,8 @@ proposes a backlog without creating issues. Operational approval, legal
 currentness, fairness, meaningful human oversight and direct accessibility
 acceptance remain unestablished; earlier RAI findings are not silently closed.
 
-For #531, the [design-system state inventory](./research/ux/design-system.md)
+For #531, the [dated HAX design note](./research/ux/briefing-hax-design-note.md)
+maps the HAX guidelines to the briefing and loading feedback, and the [design-system state inventory](./research/ux/design-system.md)
 and [API loading/briefing guide](../../src/api/README.md#loading-feedback-and-todays-briefing-531)
 record shared async feedback and the HAX briefing interaction: actual declared
 sources and preparation time, explicit AI/rules labels, conditional draft
