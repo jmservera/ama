@@ -32,6 +32,7 @@ EXIT_ERROR = 2
 RUBRIC_PATH = ".github/rubric/rubric.json"
 REGISTRY_PATH = ".github/rubric/artifacts.json"
 SCORES_PATH = ".github/rubric/scores/latest.json"
+BADGE_PATH = ".github/rubric/scores/badge.svg"
 WORKFLOW_PATH = ".github/workflows/rubric-score.md"
 SCRIPT_PATHS = (
     ".github/rubric/scripts/prepare.py",
@@ -150,6 +151,18 @@ def differs_from_base(root: Path, base_ref: str, path: str) -> bool:
     return head_id != base_id
 
 
+def edited_by_branch(root: Path, base_ref: str, path: str) -> bool:
+    """True when this branch changed the file since it forked from the base ref.
+
+    Comparing with the current base would flag files that only changed on the base after the fork,
+    such as a main-only baseline refresh that a three-way merge preserves.
+    """
+    fork = git(root, "merge-base", base_ref, "HEAD")
+    if fork.returncode != 0 or not fork.stdout.strip():
+        return differs_from_base(root, base_ref, path)
+    return differs_from_base(root, fork.stdout.decode("utf-8").strip(), path)
+
+
 def parse_name_status(output: bytes) -> list[tuple[str, str, str | None]]:
     """Parse `git diff --name-status -z` into (status letter, path, rename or copy target)."""
     tokens = output.decode("utf-8", "surrogateescape").split("\0")
@@ -166,14 +179,31 @@ def parse_name_status(output: bytes) -> list[tuple[str, str, str | None]]:
     return entries
 
 
-def diff_args(root: Path, base_ref: str, event: str) -> list[str] | None:
+def usable_baseline_commit(root: Path, baseline: dict[str, Any] | None) -> str:
+    """Return the baseline's recorded commit when it exists and is an ancestor of HEAD, else an empty string."""
+    commit = (baseline or {}).get("commit")
+    if not isinstance(commit, str) or not re.fullmatch(r"[0-9a-f]{40}", commit):
+        return ""
+    if git(root, "cat-file", "-e", f"{commit}^{{commit}}").returncode != 0:
+        return ""
+    if git(root, "merge-base", "--is-ancestor", commit, "HEAD").returncode != 0:
+        return ""
+    return commit
+
+
+def diff_args(root: Path, base_ref: str, event: str, baseline: dict[str, Any] | None = None) -> list[str] | None:
     """Return the git diff range that identifies changed files, or None when it cannot be resolved.
 
-    Pull requests compare with the merge base. Other events compare with the last commit that
-    wrote the scores file, so direct pushes and squash merges are still covered.
+    Pull requests compare with the merge base. Other events compare with the commit the baseline
+    was scored at when it is an ancestor of HEAD, so a lagging baseline refresh still covers every
+    merge since. Otherwise they compare with the last commit that wrote the scores file, so direct
+    pushes and squash merges are still covered.
     """
     if event == "pull_request":
         return [f"{base_ref}...HEAD"]
+    scored = usable_baseline_commit(root, baseline)
+    if scored:
+        return [scored, "HEAD"]
     result = git(root, "log", "-1", "--format=%H", base_ref, "--", SCORES_PATH)
     commit = result.stdout.decode("utf-8").strip() if result.returncode == 0 else ""
     if not commit:
@@ -183,6 +213,40 @@ def diff_args(root: Path, base_ref: str, event: str) -> list[str] | None:
     if commit == head and git(root, "rev-parse", "--verify", "--quiet", f"{commit}^1").returncode == 0:
         return [f"{commit}^1", "HEAD"]
     return [commit, "HEAD"]
+
+
+def baseline_freshness(
+    root: Path, base_ref: str, baseline: dict[str, Any] | None, artifacts: dict[str, dict[str, Any]]
+) -> dict[str, Any]:
+    """Report how far the recorded baseline lags behind the base ref for scored paths.
+
+    `pending` lists scored paths that changed on the base ref since the baseline commit and is None
+    (unknown) when that commit is missing or is not an ancestor of the base ref.
+    """
+    commit = (baseline or {}).get("commit")
+    commit = commit if isinstance(commit, str) else None
+    result: dict[str, Any] = {"commit": commit, "known": False, "pending": None}
+    if not commit or not re.fullmatch(r"[0-9a-f]{40}", commit):
+        return result
+    if git(root, "cat-file", "-e", f"{commit}^{{commit}}").returncode != 0:
+        return result
+    if git(root, "merge-base", "--is-ancestor", commit, base_ref).returncode != 0:
+        return result
+    diff = git(root, "diff", "--name-status", "-M", "-z", commit, base_ref)
+    if diff.returncode != 0:
+        return result
+    touched: set[str] = set()
+    for status, path, target in parse_name_status(diff.stdout):
+        touched.add(path)
+        if target:
+            touched.add(target)
+    pending = {
+        path
+        for path in touched
+        if any(in_scope(path, artifact["include"], artifact["exclude"]) for artifact in artifacts.values())
+    }
+    result.update(known=True, pending=sorted(pending))
+    return result
 
 
 def classify_changes(
@@ -257,14 +321,7 @@ def compute_state(root: Path, base_ref: str, event: str, force: bool = False) ->
     if changed_artifacts:
         reasons.append("changed artifacts: " + ", ".join(changed_artifacts))
 
-    instrument_changed = any(differs_from_base(root, base_ref, path) for path in INSTRUMENT_PATHS)
-    if instrument_changed:
-        reasons.append("scoring instrument changed")
-    scores_file_changed = differs_from_base(root, base_ref, SCORES_PATH)
-    if scores_file_changed:
-        reasons.append("scores file differs from the base branch")
-
-    range_args = diff_args(root, base_ref, event)
+    range_args = diff_args(root, base_ref, event, baseline)
     entries: list[tuple[str, str, str | None]] | None = None
     if range_args is not None:
         result = git(root, "diff", "--name-status", "-M", "-z", *range_args)
@@ -272,6 +329,25 @@ def compute_state(root: Path, base_ref: str, event: str, force: bool = False) ->
             entries = parse_name_status(result.stdout)
         else:
             logger.warning("git diff failed: %s", result.stderr.decode("utf-8", "replace").strip())
+
+    # Push and dispatch runs use HEAD as the base ref, so an instrument change on main shows only in the range.
+    instrument_changed = any(differs_from_base(root, base_ref, path) for path in INSTRUMENT_PATHS)
+    if not instrument_changed and event != "pull_request" and entries:
+        ranged = {path for _status, path, target in entries for path in (path, target) if path}
+        instrument_changed = bool(ranged & set(INSTRUMENT_PATHS))
+    if instrument_changed:
+        reasons.append("scoring instrument changed")
+    if event == "pull_request":
+        scores_file_changed = edited_by_branch(root, base_ref, SCORES_PATH)
+        badge_changed = edited_by_branch(root, base_ref, BADGE_PATH)
+    else:
+        scores_file_changed = differs_from_base(root, base_ref, SCORES_PATH)
+        badge_changed = False
+    if scores_file_changed:
+        reasons.append("scores file differs from the base branch")
+    if badge_changed:
+        reasons.append("badge differs from the base branch")
+    recorded_scores_changed = event == "pull_request" and (scores_file_changed or badge_changed)
     if entries is None and changed_artifacts and not (bootstrap or force):
         raise RuntimeError("cannot determine changed files relative to the baseline; refusing to score")
 
@@ -299,7 +375,7 @@ def compute_state(root: Path, base_ref: str, event: str, force: bool = False) ->
         informed = {cid for artifact_id in changed_artifacts for cid in (artifacts.get(artifact_id) or {}).get("criteria", [])}
         open_criteria = [cid for cid in all_ids if cid in informed]
 
-    should_score = force or bootstrap or instrument_changed or scores_file_changed or bool(changed_artifacts)
+    should_score = force or bootstrap or instrument_changed or scores_file_changed or badge_changed or bool(changed_artifacts)
     return {
         "event": event,
         "base_ref": base_ref,
@@ -317,6 +393,8 @@ def compute_state(root: Path, base_ref: str, event: str, force: bool = False) ->
         "changed_artifacts": changed_artifacts,
         "changed_files": sorted(changed_files),
         "open_criteria": open_criteria,
+        "recorded_scores_changed": recorded_scores_changed,
+        "baseline_freshness": baseline_freshness(root, base_ref, baseline, artifacts) if baseline else None,
     }
 
 

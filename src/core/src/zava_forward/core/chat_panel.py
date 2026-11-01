@@ -37,6 +37,7 @@ from typing import Any
 
 from zava_forward.core.ai_consumption import CallContext, call_context, reference, usage
 from zava_forward.core.assistants import REGISTRY
+from zava_forward.core.chat_case_answers import answer as grounded_answer
 from zava_forward.core.chat_isolation import CONTEXT_MESSAGES, ChatIsolation, block, neutralise
 from zava_forward.core.chat_privacy import redact
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
@@ -49,6 +50,14 @@ ABSTAIN = (
 FALLBACK = (
     "The assistant is not available right now. Continue with the ordinary case workflow; "
     "nothing is lost and nothing has been changed."
+)
+UNSTORED_NOTE = (
+    "This reply uses rules only. Nothing you typed was saved and no record was changed. "
+    "A person decides next steps. Chat storage is not approved yet."
+)
+RULES_NOTE = (
+    "This reply uses rules only because the assistant is not available. "
+    "No record was changed. A person decides next steps."
 )
 WITHHELD = (
     "That reply was withheld because it asked for an action or exposed content "
@@ -440,21 +449,23 @@ class ChatPanel:
             raise ValueError("Type a question first.")
         if len(question) > MAX_CONTENT:
             raise ValueError(f"A question needs 1 to {MAX_CONTENT} characters.")
+        facts: dict[str, str] = {}
         if case_id:
-            ctx = self.iso.case_context(user, case_id)
-            if ctx is None:
+            found = self.iso.case_facts(user, case_id)
+            if found is None:
                 raise ChatNotFound(case_id)
-        sources = skill_sources(skill, {})
-        guidance = {key: value for key, value in sources.items() if key != "workflow/visibility"}
+            facts = found
+        sources = {f"{case_id}/{path}": value for path, value in facts.items()}
         refusal = out_of_scope(question[:MAX_CONTENT])
+        cites: list[str]
         if refusal:
             kind, text, cites = "refused", REFUSED + refusal[1], []
         else:
-            kind, cites = "fallback", list(guidance)
-            text = (
-                "Chat storage is not approved yet, so this reply is rules-only and "
-                "nothing you typed was saved. " + FALLBACK
+            kind, body, cites = grounded_answer(
+                case_id, normalise_policy_text(question[:MAX_CONTENT]), facts
             )
+            text = body + "\n" + UNSTORED_NOTE
+        guidance = {key: value for key, value in sources.items() if key in cites}
         store = self.iso.store
         with store.lock:
             store.audit(
@@ -642,6 +653,13 @@ class ChatPanel:
                             kind, (text, cites) = "answer", (redact(parsed[0])[0], parsed[1])
         elif sources:
             kind, text = "fallback", FALLBACK
+        if kind == "fallback" and text == FALLBACK and case_id:
+            facts = iso.case_facts(iso.current_user(user), case_id)
+            if facts:
+                grounded = {f"{case_id}/{path}": value for path, value in facts.items()}
+                kind, body, cites = grounded_answer(case_id, normalise_policy_text(masked), facts)
+                text = redact(body)[0] + "\n" + RULES_NOTE
+                sources = {key: value for key, value in grounded.items() if key in cites}
         return finish(kind, text, cites, model_name)
 
 

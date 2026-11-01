@@ -8,6 +8,7 @@
 .chat-widget-size input{width:100%;margin:var(--spacingHorizontalS) 0;min-height:1.5rem;accent-color:var(--brand);touch-action:manipulation}
 .chat-widget-size output{font-variant-numeric:tabular-nums}
 .chat-widget-resizable{--chat-width:35vw;--chat-height:70dvh;min-height:min(28rem,calc(100dvh - 7rem - env(safe-area-inset-bottom) - env(safe-area-inset-top)));overflow:auto}
+.chat-widget-roomy{--chat-width:40vw;--chat-height:80dvh;min-width:min(26rem,var(--chat-available-width))}
 .chat-widget.chat-widget-docked{min-height:0}
 .chat-widget[hidden]{display:none}
 .chat-widget-header{display:flex;align-items:center;justify-content:space-between;gap:var(--spacingHorizontalS);flex:none}

@@ -21,6 +21,13 @@ param expiresAt string
 @description('False is the rollback: the app has no ingress and cannot be reached.')
 param externalIngress bool = true
 param location string = resourceGroup().location
+@description('Owner-recorded synthetic-data demo chat privacy references (docs/reference/research/chat-demo-storage-approval-2026-11-01.md). Not a production approval.')
+param chatDpiaRef string = 'docs/reference/research/chat-memory-dpia.md'
+param chatLawfulBasisRef string = 'docs/reference/research/chat-demo-storage-approval-2026-11-01.md#lawful-basis'
+param chatNoticeRef string = 'docs/reference/research/chat-demo-storage-approval-2026-11-01.md#notice'
+param chatRetentionRef string = 'docs/reference/research/chat-demo-storage-approval-2026-11-01.md#retention'
+@minValue(1)
+param chatRetentionDays int = 30
 
 var appName = 'ca-resident-demo'
 var identityName = 'id-resident-demo'
@@ -135,6 +142,11 @@ resource app 'Microsoft.App/containerApps@2025-07-01' = {
           { name: 'ZF_SQL_SERVER', value: sqlServerFqdn }
           { name: 'ZF_SQL_DATABASE', value: sqlDatabaseName }
           { name: 'PORT', value: '8089' }
+          { name: 'CHAT_DPIA_REF', value: chatDpiaRef }
+          { name: 'CHAT_LAWFUL_BASIS_REF', value: chatLawfulBasisRef }
+          { name: 'CHAT_NOTICE_REF', value: chatNoticeRef }
+          { name: 'CHAT_RETENTION_REF', value: chatRetentionRef }
+          { name: 'CHAT_RETENTION_DAYS', value: string(chatRetentionDays) }
         ]
       }]
       scale: { minReplicas: 0, maxReplicas: 1 }

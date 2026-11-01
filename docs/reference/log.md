@@ -9475,6 +9475,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   backlog delivery coordinator agent. Workflow changes for D1 and D2 are in a
   separate PR. No accessibility acceptance is claimed.
 
+## [2026-11-01] update | Resident chat learning record and router fixes (Refs #466)
+
+* Added `research/ux/resident-chat-learning-record.md` and its index row: the
+  bounded, synthetic-only record of chat turns, the operator summary, and the
+  note that real-resident use needs DPO and Legal approval (#163 deferred).
+* Resident chat router now handles pause, unlock and contact phrasings and
+  offers closest topics instead of a flat refusal. No accessibility acceptance
+  is claimed.
+
 ## [2026-11-01] query | Paper PR review corrections
 
 * Addressed all five inline findings in PR #692: complete conceptual-figure
@@ -9570,3 +9579,25 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Export-provenance clarification: the supplied CSV text's rows and column
   names are preserved with LF line endings. Its hash identifies the repository
   copy; unavailable original-download bytes were not independently compared.
+## [2026-11-01] ingest | Chat storage approval for the synthetic-data demo
+
+* Added `research/chat-demo-storage-approval-2026-11-01.md`, recording the
+  owner's demo-only decision ("Approve all needed to enable storage") with the
+  DPIA, lawful basis, notice and 30-day retention references that
+  `CHAT_DPIA_REF`, `CHAT_LAWFUL_BASIS_REF`, `CHAT_NOTICE_REF`,
+  `CHAT_RETENTION_REF` and `CHAT_RETENTION_DAYS` point to. Indexed in
+  `README.md`.
+* Open: production and real personal data still need separate DPO and Legal
+  approval (#163 criteria 2 and 5 deferred). The older DPIA record's "Not
+  recorded" cells describe the pre-decision state and now point to the new
+  record for the demo scope.
+
+## [2026-11-01] update | Delivery bottleneck D1 and D2 implementation status
+
+* Added an implementation status note to
+  [the delivery bottleneck analysis](./research/delivery-bottleneck-analysis-2026-10-31.md)
+  for owner-approved D1 (rubric score no longer committed to PR branches;
+  post-merge baseline refresh) and D2 (Copilot Code Review advisory; ruleset
+  change is an owner action). Measured evidence is unchanged and effects are
+  not yet measured. Evidence is under `.copilot-tracking/` (2026-11-01
+  rubric-pr-record-and-review-advisory artifacts).

@@ -17,6 +17,12 @@ The subsequent synthetic regulatory lookup is built and requires explicitly
 simulated privacy references. Neither a configuration reference nor passing
 tests completes this DPIA or authorizes actual staff/resident processing.
 
+Update 2026-11-01: the owner approved chat storage for the synthetic-data demo
+only, recorded in [the demo storage approval](./chat-demo-storage-approval-2026-11-01.md)
+(30-day demo retention). The blank decision cells below describe the state
+before that decision and are not rewritten. Production and real personal data
+remain unapproved.
+
 Limits of this change, stated plainly:
 
 * The model provider data handling position is documented from vendor terms (see Model provider and region) but not accepted by the DPO or Legal.

@@ -167,9 +167,9 @@ class PanelTests(roles.Matrix):
         for outcome in ("provider-unavailable", "timeout", "disabled"):
             self.model = lambda _p, o=outcome: envelope(None, o)
             code, d = self.ask(tid)
-            self.assertEqual(
-                (code, d["kind"], d["reply"], d["workflow_only"]), (200, "fallback", FALLBACK, True)
-            )
+            self.assertEqual((code, d["kind"], d["model"]), (200, "answer", "workflow-only"))
+            self.assertNotEqual(d["reply"], FALLBACK)
+            self.assertTrue(d["citations"])
         self.assertEqual(self.api(ROLE, "/api/cases/ZF-1")[0], 200)
 
     def test_every_turn_rechecks_role_and_case(self) -> None:
@@ -410,8 +410,17 @@ class PanelTests(roles.Matrix):
             code, reply = self.api(
                 ROLE, "/api/chat/unstored-ask", {"content": "Stage?", "case_id": "ZF-1"}
             )
-            self.assertEqual((code, reply["kind"]), (200, "fallback"))
+            self.assertEqual((code, reply["kind"]), (200, "answer"))
             self.assertEqual(reply["context"], "ZF-1")
+            self.assertIn("Stage: ", reply["reply"])
+            self.assertTrue(all(c["id"].startswith("ZF-1/") for c in reply["citations"]))
+            code, funding = self.api(
+                ROLE,
+                "/api/chat/unstored-ask",
+                {"content": "Why is funding not started yet?", "case_id": "ZF-1"},
+            )
+            self.assertEqual(code, 200)
+            self.assertIn("Recorded funding status", funding["reply"])
             self.assertEqual(self.prompts, [])
             self.assertEqual(
                 json.dumps(self.store.data.get("chat_threads"), sort_keys=True), before
@@ -448,7 +457,8 @@ class PanelTests(roles.Matrix):
                 code, reply = self.api(
                     ROLE, f"/api/chat/threads/{tid}/{route}", {"content": "Stage?"}
                 )
-                self.assertEqual((code, reply["kind"]), (200, "fallback"))
+                self.assertEqual((code, reply["kind"]), (200, "answer"))
+                self.assertEqual(reply["model"], "workflow-only")
                 self.assertEqual(reply["consumption"]["model_calls"], 0)
                 self.assertEqual(
                     reply["consumption"]["provider_outcome"], "activation-not-approved"

@@ -344,3 +344,44 @@ def test_given_scores_when_badge_rendered_then_svg_shows_total_and_escapes_text(
 
     # Assert
     assert svg.startswith("<svg") and ">34/100<" in svg and "<x>" not in svg and "#e05d44" in svg
+
+
+def test_given_known_pending_freshness_when_notes_built_then_pending_count_reported():
+    # Arrange
+    state = {"baseline_freshness": {"commit": "a" * 40, "known": True, "pending": ["x.md", "y.md"]}}
+
+    # Act
+    notes = gate.baseline_notes(state)
+
+    # Assert
+    assert len(notes) == 1 and "2 scored paths" in notes[0] and "aaaaaaa" in notes[0]
+
+
+def test_given_unknown_freshness_when_notes_built_then_unavailable_reported():
+    # Arrange
+    state = {"baseline_freshness": {"commit": None, "known": False, "pending": None}}
+
+    # Act
+    notes = gate.baseline_notes(state)
+
+    # Assert
+    assert "freshness unavailable" in notes[0]
+
+
+def test_given_pr_editing_scores_when_notes_built_then_warning_first():
+    # Arrange
+    state = {"recorded_scores_changed": True, "baseline_freshness": {"commit": "b" * 40, "known": True, "pending": []}}
+
+    # Act
+    notes = gate.baseline_notes(state)
+
+    # Assert
+    assert len(notes) == 2 and "drop those file changes" in notes[0] and "no scored path" in notes[1]
+
+
+def test_given_bootstrap_when_notes_built_then_no_freshness_line():
+    # Arrange
+    state = {"bootstrap": True, "baseline_freshness": {"commit": None, "known": False, "pending": None}}
+
+    # Act / Assert
+    assert gate.baseline_notes(state) == []

@@ -636,3 +636,145 @@ def test_given_non_utf8_path_when_fingerprinted_then_no_encoding_error(tmp_path)
 
     # Assert
     assert len(digest) == 64
+
+
+def head(root: Path) -> str:
+    return subprocess.run(["git", "rev-parse", "HEAD"], cwd=root, check=True, capture_output=True, text=True).stdout.strip()
+
+
+def set_baseline_commit(root: Path, commit: str) -> None:
+    path = root / prepare.SCORES_PATH
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["commit"] = commit
+    path.write_text(json.dumps(data), encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "baseline commit")
+
+
+def test_given_baseline_ancestor_when_scored_on_main_then_freshness_lists_pending_paths(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    recorded = head(root)
+    set_baseline_commit(root, recorded)
+    (root / "docs" / "brds" / "a.md").write_text("# A changed\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "merged pr")
+
+    # Act
+    state = prepare.compute_state(root, "HEAD", "push")
+
+    # Assert
+    assert state["baseline_freshness"] == {"commit": recorded, "known": True, "pending": ["docs/brds/a.md"]}
+    assert state["should_score"] is True
+
+
+@pytest.mark.parametrize("commit", ["deadbeef" * 5, "not-a-sha", None])
+def test_given_missing_or_unknown_baseline_commit_when_computed_then_freshness_unknown(tmp_path, commit):
+    # Arrange
+    root = make_repo(tmp_path)
+    set_baseline_commit(root, commit)
+
+    # Act
+    state = prepare.compute_state(root, "HEAD", "push")
+
+    # Assert
+    assert state["baseline_freshness"]["known"] is False
+    assert state["baseline_freshness"]["pending"] is None
+
+
+def test_given_pr_editing_recorded_scores_when_computed_then_flagged(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "switch", "-c", "feature")
+    path = root / prepare.SCORES_PATH
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["generated_at"] = "2099-01-01T00:00:00Z"
+    path.write_text(json.dumps(data), encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "bot score")
+    git(root, "update-ref", "refs/remotes/origin/main", "main")
+
+    # Act
+    state = prepare.compute_state(root, "origin/main", "pull_request")
+
+    # Assert
+    assert state["recorded_scores_changed"] is True
+
+
+def test_given_clean_pr_when_computed_then_recorded_scores_not_flagged(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "switch", "-c", "feature")
+    (root / "docs" / "brds" / "a.md").write_text("# A2\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "edit")
+    git(root, "update-ref", "refs/remotes/origin/main", "main")
+
+    # Act
+    state = prepare.compute_state(root, "origin/main", "pull_request")
+
+    # Assert
+    assert state["recorded_scores_changed"] is False
+
+
+def test_given_pr_forked_before_main_only_refresh_when_computed_then_recorded_scores_not_flagged(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "switch", "-c", "feature")
+    (root / "docs" / "brds" / "a.md").write_text("# A2\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "edit")
+    git(root, "switch", "main")
+    path = root / prepare.SCORES_PATH
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["scored_at"] = "2099-01-01T00:00:00Z"
+    path.write_text(json.dumps(data), encoding="utf-8")
+    (root / prepare.BADGE_PATH).write_text("<svg/>\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "main-only refresh")
+    git(root, "update-ref", "refs/remotes/origin/main", "main")
+    git(root, "switch", "feature")
+
+    # Act
+    state = prepare.compute_state(root, "origin/main", "pull_request")
+
+    # Assert
+    assert state["recorded_scores_changed"] is False
+    assert not any("differs from the base branch" in reason for reason in state["reasons"])
+
+
+def test_given_badge_only_pr_when_computed_then_flagged_and_scored(tmp_path):
+    # Arrange
+    root = make_repo(tmp_path)
+    git(root, "switch", "-c", "feature")
+    (root / prepare.BADGE_PATH).write_text("<svg/>\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "badge")
+    git(root, "update-ref", "refs/remotes/origin/main", "main")
+
+    # Act
+    state = prepare.compute_state(root, "origin/main", "pull_request")
+
+    # Assert
+    assert state["changed_artifacts"] == []
+    assert state["recorded_scores_changed"] is True
+    assert state["should_score"] is True
+
+
+@pytest.mark.parametrize("path", prepare.INSTRUMENT_PATHS)
+def test_given_instrument_only_change_on_push_when_computed_then_scoring_triggered(tmp_path, path):
+    # Arrange
+    root = make_repo(tmp_path)
+    set_baseline_commit(root, head(root))
+    target = root / path
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(target.read_text(encoding="utf-8") + "\n" if target.exists() else "x\n", encoding="utf-8")
+    git(root, "add", ".")
+    git(root, "commit", "-m", "instrument change")
+
+    # Act
+    state = prepare.compute_state(root, "HEAD", "push")
+
+    # Assert
+    assert state["instrument_changed"] is True
+    assert state["should_score"] is True
