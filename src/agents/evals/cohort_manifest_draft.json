@@ -15,7 +15,7 @@
       "comparison_basis": "A pair is compared by ranking the same case id twice, once with baseline inputs and once with variant inputs, inside the same fixed neighbour set, so a case-id tie-break cannot explain a difference. Invariant means the same rank position and the same reason codes."},
     "eval_registry": {"path": "src/agents/evals/registry.json", "version": "2026-10-16"},
     "golden_set": {"id": "ai-priority-golden", "version": "2026-10-09"},
-    "scale_fixture": {"id": "stock-scale-fixture", "version": "1.2.0", "seed": 174, "note": "Carries no cohort labels; not used by this draft."},
+    "scale_fixture": {"id": "stock-scale-fixture", "version": "1.3.0", "seed": 174, "note": "Carries no cohort labels; not used by this draft."},
     "model_and_prompt": "Not applicable: no model or prompt is run. Actual model, prompt and region versions are open under #108."
   },
   "held_out_split": {
