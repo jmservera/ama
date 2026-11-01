@@ -65,6 +65,17 @@ class GoldenRunTests(unittest.TestCase):
             chat_panel.unsupported_claims("It is 12 weeks.", ["It is 120 weeks."]), ["12"]
         )
 
+    def test_numeric_forms_are_tokenised_completely(self) -> None:
+        for text, token in (
+            ("It costs £40m.", "40m"),
+            ("About 12k homes.", "12k"),
+            ("Area is 12m2.", "12m2"),
+            ("It is £1e6.", "1e6"),
+            ("It is £40.5m.", "40.5m"),
+        ):
+            self.assertEqual(chat_panel.unsupported_claims(text, ["40 homes"]), [token], text)
+        self.assertEqual(chat_panel.unsupported_claims("It is 40 homes.", ["40 homes"]), [])
+
     def test_grounding_guard_changes_policy_version(self) -> None:
         raw = b"{}"
         before = chat_eval.bindings(raw)["policy_version"]

@@ -19,7 +19,8 @@ provider code.
 * Earlier assistant turns are never sent back to the model: citation identifiers
   alone cannot establish that their claims are still current.
 * A status word or number in an answer that no cited source contains is withheld
-  (claim-level support, lexical and fail-closed; paraphrases abstain).
+  (lexical support check on listed status words and complete numeric tokens such as
+  `40.5m`; an unlisted paraphrase or synonym can still pass, so it is not semantic grounding).
 * Refusal and action-claim checks are lexical, not semantic safety guarantees.
 """
 
@@ -193,7 +194,7 @@ ACTION_CLAIM = re.compile(
 )
 STATUS_CLAIM = re.compile(
     r"\b(?:secur(?:ed|e)|funded|approved|complete[d]?|compliant|passed|cleared|verified"
-    r"|certified|safe|signed|consented|resolved|accepted|confirmed|guaranteed)\b|\b\d+(?:[.,]\d+)*\b",
+    r"|certified|safe|signed|consented|resolved|accepted|confirmed|guaranteed)\b|\b\d+(?:[.,]\d+)*(?:e[+-]\d+)?[^\W_]*",
     re.I,
 )
 HISTORY_POLICY = "user-only; assistant claims are not current evidence"

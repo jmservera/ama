@@ -9294,3 +9294,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   final head) stay unmet; the per-message review exception stays OFF pending
   OD-53. Evidence is in
   `.copilot-tracking/changes/2026-11-01/issue-441-recheck-changes.md`.
+
+## 2026-11-01 - Chat grounding review corrections (Refs #164)
+
+* Numeric claims are now tokenised as complete expressions (`40.5m`, `12k`, `12m2`, `1e6`); the DPIA, chat panel docstring, agents README and index state that unlisted paraphrases can bypass the lexical check and that the golden run now passes with enablement still disabled.

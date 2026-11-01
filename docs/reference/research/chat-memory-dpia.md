@@ -191,8 +191,8 @@ retention period is delivered.
 
 Since 2026-11-01 (Refs #164) the panel withholds an answer whose status words
 (for example "secured", "approved") or numbers appear in no cited source, so the
-scripted unsupported-claim scenario passes. The check is lexical and fail-closed;
-paraphrases abstain and it is not claim-level semantic grounding. Poisoning and
+scripted unsupported-claim scenario passes. The check is lexical over listed status words and complete numeric tokens;
+an unlisted paraphrase (for example "Funding is financed.") can bypass it, so it is not claim-level semantic grounding. Poisoning and
 injection regressions do not establish serving-model or human effectiveness.
 Activation remains disabled with outcome insufficient (thresholds, reviewer,
 held-out, actual-model and human evidence missing).
