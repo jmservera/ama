@@ -8,3 +8,4 @@
 * Criterion 5 (no retaliation, inferred refusal, delayed hazard response): not proven; requires workflow and hazard-referral integration and human review.
 * Outcome: partially conformant. Open work routed to follow-ups: persist in stores (#130), API/UI, criterion 5 evidence.
 * PR wording: `Refs #220`, naming criterion 5 as unmet.
+* PR #641 Copilot review (3 threads) routed as later work and fixed: generator-backed dependencies, atomic `review` validation, atomic `resolve` validation. Original outcome unchanged.

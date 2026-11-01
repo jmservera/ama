@@ -5,3 +5,4 @@
 * Updated `src/core/README.md` with a section for #220.
 * Validation (src/core): unittest `test_challenges` 9 passed; ruff check, ruff format --check and mypy clean on touched files. No heavy local gate by owner direction; CI is the evidence.
 * Divergences: none. Store, API and UI wiring deferred (see plan scope).
+* PR #641 review fixes: dependency parents materialised at construction (generator-safe); `review` and `resolve` validate date and evidence before mutating the record; added 3 `Robustness` tests.

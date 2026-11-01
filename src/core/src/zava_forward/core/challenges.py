@@ -39,6 +39,9 @@ class ChallengeRegister:
     challenges: dict[str, Record] = field(default_factory=dict)
     stale: dict[str, Record] = field(default_factory=dict)
 
+    def __post_init__(self) -> None:
+        self.dependencies = {k: tuple(v) for k, v in self.dependencies.items()}
+
     def dependents(self, item_id: str) -> list[str]:
         out: set[str] = set()
         frontier = [item_id]
@@ -144,8 +147,9 @@ class ChallengeRegister:
             raise ValueError("A resolved challenge cannot be reopened here.")
         if _text(owner, "Reviewing owner") != rec["owner"]:
             raise PermissionError("Only the named human owner can review this challenge.")
+        due = date.fromisoformat(next_update).isoformat()
         rec["status"] = "under_review"
-        rec["next_update"] = date.fromisoformat(next_update).isoformat()
+        rec["next_update"] = due
         rec["history"].append({"status": "under_review", "note": "Owner review started."})
         return deepcopy(rec)
 
@@ -158,8 +162,9 @@ class ChallengeRegister:
             raise ValueError("This challenge is already resolved.")
         if _text(owner, "Resolving owner") != rec["owner"]:
             raise PermissionError("Only the named human owner can resolve this challenge.")
+        proof = _text(evidence, "Resolution evidence")
         rec["status"] = outcome
-        rec["resolution"] = {"outcome": outcome, "evidence": _text(evidence, "Resolution evidence")}
+        rec["resolution"] = {"outcome": outcome, "evidence": proof}
         rec["history"].append({"status": outcome, "note": "Resolved with evidence."})
         if outcome == "corrected":
             for item in self.dependents(rec["subject"]["id"]):

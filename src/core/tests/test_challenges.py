@@ -137,3 +137,28 @@ class NoInference(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class Robustness(unittest.TestCase):
+    def test_generator_parents_are_reusable(self) -> None:
+        graph = {"A": (p for p in ["SRC-1"]), "B": (p for p in ["A"])}
+        reg = ChallengeRegister(graph)
+        self.assertEqual(reg.dependents("SRC-1"), ["A", "B"])
+        self.assertEqual(reg.dependents("SRC-1"), ["A", "B"])
+
+    def test_rejected_review_leaves_record_unchanged(self) -> None:
+        reg = ChallengeRegister(GRAPH)
+        cid = digital(reg)["id"]
+        before = reg.view(cid)
+        with self.assertRaises(ValueError):
+            reg.review(cid, "Pat Owner", "soon")
+        self.assertEqual(reg.view(cid), before)
+
+    def test_rejected_resolve_allows_retry(self) -> None:
+        reg = ChallengeRegister(GRAPH)
+        cid = digital(reg)["id"]
+        with self.assertRaises(ValueError):
+            reg.resolve(cid, "Pat Owner", "corrected", "")
+        self.assertEqual(reg.view(cid)["status"], digital(reg)["status"])
+        self.assertEqual(reg.stale, {})
+        self.assertEqual(reg.resolve(cid, "Pat Owner", "corrected", "Fixed")["status"], "corrected")
