@@ -195,6 +195,7 @@ registerRoleScreen({
     const work = c.work;
     const blockers = work?.blockers || [];
     const handoff = work?.handoff;
+    const returns = c.returns || [];
     return h("div", {},
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view for data stewards, performance analysts and digital operators. It does not replay, correct, resolve or retry anything, and it keeps the original source values. Source: desk research, not observed behaviour."),
@@ -208,11 +209,17 @@ registerRoleScreen({
         screenFields([["Eligibility", "Unknown"],
           ["Original source values", queries.length ? "Preserved unchanged in the table above" : "None supplied"],
           ["Winning source", "Not selected. No latest-wins or silent correction is applied."]])),
-      screenPanel("Return and exception queue",
-        handoff ? screenFields([["Returned to", handoff.destination], ["Proposed receiver", handoff.proposed_receiver],
+      screenPanel("Returns and reopens",
+        returns.length ? screenTable("Recorded returns and reopens",
+          ["Recorded", "Type", "From", "To", "Reason", "Source", "Next action", "Receiving owner"],
+          returns.map((r) => [screenStamp(r.at), r.reopened ? "Reopened" : "Returned", r.from_stage, r.to_stage, r.reason,
+            `${screenValue(r.source)} v${screenValue(r.source_version)}`, r.next_action, screenPerson(r.receiving_owner)]))
+          : screenUnknown("No return or reopen is recorded for this home.", "Programme manager to name an owner", "Confirm whether a return is expected")),
+      screenPanel("Handoff and exception queue",
+        handoff ? screenFields([["Handoff destination", handoff.destination], ["Proposed receiver", handoff.proposed_receiver],
           ["Confirmed receiver", handoff.confirmed_receiver], ["Chase owner", handoff.chase_owner],
-          ["Return reason", work.reason], ["Next action", work.next_action]])
-          : screenUnknown("No returned work is recorded for this home.", "Programme manager to name an owner", "Confirm whether a return is expected"),
+          ["Handoff state", handoff.state], ["Work reason", work.reason], ["Next action", work.next_action]])
+          : screenUnknown("No handoff is recorded for this home.", "Programme manager to name an owner", "Confirm whether a handoff is expected"),
         screenTable("Open exceptions and prerequisites",
           ["Step", "Reason", "Owner", "Next action", "Source and version"],
           blockers.map((b) => [b.step, b.reason, b.owner, b.next_action, `${screenValue(b.source)} v${screenValue(b.version)}`]))),

@@ -25,6 +25,9 @@ const c = {id: "C-1",
       confirmed_receiver: "Unknown", chase_owner: "Chase owner"},
     blockers: [{step: "Survey", reason: "Missing reference", owner: "Owner A",
       next_action: "Supply it", source: "SYN", version: 3}]}};
+const ret = {at: "2026-10-02T09:00:00Z", reopened: false, from_stage: "Install booked",
+  to_stage: "Survey", reason: "Return reason X", source: "SRC-R", source_version: "4",
+  next_action: "Rework survey", receiving_owner: {name: "Receiver Y"}};
 const context = vm.createContext({
   URLSearchParams, Intl, AbortController, Date,
   routeController: new AbortController(), me: {user: {role: "Retrofit Programme Manager"}},
@@ -34,7 +37,11 @@ const context = vm.createContext({
 });
 vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('data-operator');", context);
 const s = context.__s;
-console.log(JSON.stringify({roles: s.roles, tree: s.render(c), empty: s.render({id: "C-2"})}));
+const noHandoff = {...c, returns: [ret], work: {...c.work, handoff: undefined}};
+const noReturn = {...c, returns: [], work: {...c.work, reason: "Handoff reason Z"}};
+const reopen = {...c, returns: [{...ret, reopened: true, reason: "Reopen reason"}]};
+console.log(JSON.stringify({roles: s.roles, tree: s.render(c), empty: s.render({id: "C-2"}),
+  noHandoff: s.render(noHandoff), noReturn: s.render(noReturn), reopen: s.render(reopen)}));
 """
 
 
@@ -78,8 +85,28 @@ class DataOperatorScreen(unittest.TestCase):
         for control in ("button", "form", "input", "select", "textarea"):
             self.assertNotIn(control, tags(out["tree"]))
         empty = json.dumps(out["empty"])
-        self.assertIn("No returned work is recorded", empty)
+        self.assertIn("No return or reopen is recorded", empty)
+        self.assertIn("No handoff is recorded", empty)
         self.assertIn("No records supplied", empty)
+
+    def test_return_without_handoff_and_handoff_without_return(self) -> None:
+        out = run()
+        returned = json.dumps(out["noHandoff"])
+        for phrase in (
+            "Return reason X",
+            "Receiver Y",
+            "SRC-R v4",
+            "Rework survey",
+            "Returned",
+            "No handoff is recorded",
+        ):
+            self.assertIn(phrase, returned)
+        self.assertNotIn("No return or reopen is recorded", returned)
+        handed = json.dumps(out["noReturn"])
+        for phrase in ("Repairs", "Chase owner", "No return or reopen is recorded"):
+            self.assertIn(phrase, handed)
+        self.assertNotIn("Returned to", handed)
+        self.assertIn("Reopened", json.dumps(out["reopen"]))
 
 
 if __name__ == "__main__":

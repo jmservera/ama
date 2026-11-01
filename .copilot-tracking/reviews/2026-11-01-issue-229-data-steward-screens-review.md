@@ -14,3 +14,7 @@ Execution: executed once, self-review against acceptance criteria. Outcome: Part
 
 1. Browser accessibility and keyboard check of `#/screens?screen=data-operator` (#151, #155).
 2. Real integration run and exception data source for the digital operator (no source exists).
+
+## PR review amendment (2026-11-01)
+
+The Copilot review finding that returns and handoffs were conflated was valid and is fixed with tests; no criterion status above changes. The review was not repeated.
