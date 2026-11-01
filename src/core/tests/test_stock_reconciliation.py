@@ -130,6 +130,31 @@ class StockReconciliation(unittest.TestCase):
             self.assertEqual(reopened.detail("ZF-3")["stock_reconciliation"], rows)
             self.assertTrue(reopened.verify_audit())
 
+    def test_queue_lists_only_unresolved_homes_for_managers_oldest_first(self) -> None:
+        for store in self.stores():
+            self.assertEqual(store.stock_queue(self.users["pam"]), [])
+            store.stock_reconcile(self.users["sam"], "ZF-3", query())
+            store.stock_reconcile(self.users["sam"], "ZF-3", query())
+            rows = store.stock_queue(self.users["pam"])
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0]["id"], "ZF-3")
+            self.assertEqual(rows[0]["open_queries"], 2)
+            self.assertEqual(rows[0]["oldest_source_date"], "2026-01-01")
+            self.assertEqual(rows[0]["fields"], ["epc"])
+            self.assertEqual(len(rows[0]["owners"]), 1)
+            self.assertEqual(
+                set(rows[0]),
+                {"id", "address", "town", "open_queries", "fields", "oldest_source_date", "owners"},
+            )
+            store.stock_query_event(
+                self.users["sam"],
+                "ZF-3",
+                dict(query_id="SQ-1", action="withdraw", reason="Synthetic"),
+            )
+            self.assertEqual(store.stock_queue(self.users["pam"])[0]["open_queries"], 1)
+            with self.assertRaises(PermissionError):
+                store.stock_queue(self.users["rc1"])
+
     def test_invalid_comparisons_are_atomic_and_cannot_bind_forged_identity(self) -> None:
         mutations: list[dict[str, Any]] = [
             {"field": "priority_support"},
