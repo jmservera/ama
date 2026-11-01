@@ -151,7 +151,7 @@ disallow_untyped_calls = false
 
 # The IoT SDK and migrated SQL fixtures expose untyped constructors.
 [[tool.mypy.overrides]]
-module = ["zava_forward.api.iot_stream", "test_iot_stream", "tests.test_iot_stream"]
+module = ["zava_forward.api.iot_stream", "test_iot_stream", "tests.test_iot_stream", "test_iot_credential_hygiene", "tests.test_iot_credential_hygiene"]
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
