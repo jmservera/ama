@@ -245,6 +245,11 @@ class RegisterLabelTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             check_register_labels(path)
 
+    def test_unterminated_quote_is_rejected(self) -> None:
+        path = self._csv('id,note,is_synthetic\nA,"open,True\nB,x,False\n')
+        with self.assertRaises(ValueError):
+            check_register_labels(path)
+
     def test_cli_reports_aggregate_only_and_fails_on_nonconforming(self) -> None:
         command = [sys.executable, "-m", "zava_forward.core.synthetic.coverage", str(INVENTORY)]
         good = self._csv("id,is_synthetic\nSECRET-A,True\n")
