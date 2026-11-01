@@ -250,6 +250,32 @@ class SensorScenarioTests(unittest.TestCase):
                     delta=0.02,
                 )
 
+    def test_retrofit_exercise_scenarios_cover_outcomes_and_label_values(self) -> None:
+        scenarios = ss.retrofit_exercise_scenarios()
+        self.assertEqual(
+            [s["expected_direction"] for s in scenarios],
+            ["IMPROVEMENT", "NO_CHANGE", "DELAYED_EFFECT", "ADVERSE_EFFECT"],
+        )
+        for scenario in scenarios:
+            with self.subTest(case=scenario["label"]):
+                self.assertEqual(scenario["value_status"], ss.EXERCISE_LABEL)
+                rows = scenario["rows"]
+                assert isinstance(rows, tuple)
+                self.assertNotIn("expected_direction", rows[0])
+                result = ss.retrofit_comparison(rows, ss.START + timedelta(days=14))
+                deltas = result["deltas"]
+                assert isinstance(deltas, dict)
+                self.assertAlmostEqual(
+                    deltas["late"]["temperature_c"],
+                    scenario["expected_temperature_delta_c"],
+                    delta=0.02,
+                )
+                self.assertAlmostEqual(
+                    deltas["late"]["humidity_points"],
+                    scenario["expected_humidity_delta_points"],
+                    delta=0.02,
+                )
+
     def test_retrofit_insufficient_week_has_null_deltas(self) -> None:
         case = self.cases[7]
         rows = case.rows[: 14 * 24] + case.rows[15 * 24 :]
