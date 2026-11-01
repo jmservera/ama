@@ -518,7 +518,7 @@ class ProcurementMixin(AppointmentMixin):
         out = dict(id=w["id"], package=w["package"], case_id=w["case_id"], address=c["home"]["address"], postcode=c["home"]["postcode"],
                    measures=", ".join(b["measure"] for b in bindings) if bindings else "Unknown (resident scope confirmation needed)",
                    needs_notice=projection.needs_notice(c), named_contact=c["owner"], state=w["state"],
-                   version=cur["version"], scope=cur["scope"],
+                   version=cur["version"], scope=cur["scope"], scope_version=cur["scope_version"],
                    appointment_control=self.appointment_summary(w, user),
                    appointments=[{k: a[k] for k in ("outcome", "date")} for a in w["appointments"]])
         if not contractor_view:

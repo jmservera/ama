@@ -13,3 +13,5 @@ Execution: executed once, self-review of the diff against acceptance criteria. O
 
 Verdict on closing: submission, correction and checklist capture are not built and accessibility is unproven, so the PR uses Refs.
 Routed follow-ups: supplier-scoped job pack submit and correct endpoints (needs OD-47), reviewer assignment data, browser and axe check, validation in #155.
+
+Post-review corrections (PR #655 Copilot threads, 2026-11-01): the three valid findings (prerequisite validity for withdrawn or rescoped orders, capacity evidence status beside recorded counts, fixed "Not supplied" and "Not started" states) were fixed with regression tests. Original outcome is unchanged and no second Review was run.

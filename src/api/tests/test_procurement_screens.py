@@ -58,6 +58,7 @@ PACKAGE = {
 ORDER = {
     "id": "WO-1",
     "version": 2,
+    "scope_version": 3,
     "package": "PKG-1",
     "contractor": "Test Ltd",
     "state": "Issued",
@@ -125,6 +126,24 @@ class PackageQueue(unittest.TestCase):
         self.assertIn("No records supplied", text)
         self.assertNotIn("Met on record", text)
 
+    def prereq(self, orders: list[dict[str, Any]]) -> str:
+        out = run("procurement-packages", orders=orders)
+        return json.dumps(out["tree"])
+
+    def test_work_order_validity_governs_resident_scope_prerequisite(self) -> None:
+        self.assertIn("Met on record", self.prereq([ORDER]))
+        withdrawn = self.prereq([ORDER | {"state": "Withdrawn"}])
+        self.assertIn("Every work order for this home is withdrawn", withdrawn)
+        self.assertIn("WO-1 v2", withdrawn)
+        self.assertIn("older package scope", self.prereq([ORDER | {"scope_version": 2}]))
+        unknown = self.prereq([{k: v for k, v in ORDER.items() if k != "scope_version"}])
+        self.assertIn("scope version not supplied", unknown)
+
+    def test_capacity_evidence_status_shown_with_recorded_counts(self) -> None:
+        text = self.prereq([ORDER])
+        self.assertIn("Recorded committed", text)
+        self.assertIn("Unknown - not confirmed: missing", text)
+
 
 class ContractorJobPack(unittest.TestCase):
     def test_contractor_view_has_checklist_and_no_reason_or_controls(self) -> None:
@@ -136,7 +155,8 @@ class ContractorJobPack(unittest.TestCase):
         self.assertIn("WO-1 v2", text)
         self.assertIn("Needs notice", text)
         self.assertIn("reason for any notice is not shared", text)
-        self.assertIn("Not supplied", text)
+        self.assertIn("Not assessed on this screen", text)
+        self.assertNotIn("Not supplied", text)
         self.assertIn("Completion photographs", text)
         self.assertIn("not a provider portal", text)
         self.assertIn("Submission and review are separate", text)
@@ -145,6 +165,11 @@ class ContractorJobPack(unittest.TestCase):
         self.assertNotIn("vulnerab", text.lower())
         for control in CONTROLS:
             self.assertNotIn(control, tags(out["tree"]))
+
+    def test_appointment_outcome_derived_from_records(self) -> None:
+        order = ORDER | {"appointments": [{"outcome": "Attended"}]}
+        out = run("contractor-job-pack", orders=[order])
+        self.assertIn("Recorded on a work order", json.dumps(out["tree"]))
 
     def test_no_notice_and_no_orders(self) -> None:
         out = run("contractor-job-pack", c={"id": "C-1", "needs_notice": False}, orders=[])
