@@ -4,7 +4,7 @@ from zava_forward.core import chat_case_answers as cca
 from zava_forward.core.chat_case_answers import answer, case_facts
 
 
-def _detail(count: int) -> dict:
+def _detail(count: int) -> dict[str, object]:
     return dict(
         stage="Survey",
         status="Blocked",
