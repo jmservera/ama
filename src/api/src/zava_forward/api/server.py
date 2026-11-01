@@ -761,8 +761,14 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         raise ChatNotFound("case")
                     return self._json(200, {"id": c.privacy.start_thread(u, body.get("case_id", ""), body.get("task", ""))})
                 if post and len(parts) == 3 and parts[0] == "threads":
-                    u, tid = c.current_user(user), parts[1]
-                    thread = s.chat_resume(u, tid)
+                    tid = parts[1]
+                    try:
+                        u = c.current_user(user)
+                        thread = s.chat_resume(u, tid)
+                    except (PermissionError, LookupError):
+                        if parts[2] in ("messages", "ask"):
+                            app.panel.record_rejected(user, tid)
+                        raise
                     if thread["title"].startswith(REGULATORY_TASK + ":"):
                         self._regulatory_access(user)
                         u, _ = app.regulatory.thread(user, tid)

@@ -455,6 +455,22 @@ class PanelTests(roles.Matrix):
                 )
         self.assertEqual(self.prompts, [])
 
+    def test_turn_refused_before_dispatch_still_records_a_receipt(self) -> None:
+        user = self.store.staff[self.email(ROLE)]
+        tid = self.thread()
+        user["disabled"] = True
+        self.addCleanup(user.pop, "disabled", None)
+        before = len([e for e in self.store.audit_entries() if e["action"] == "chat.turn"])
+        code, reply = self.ask(tid, "SECRET-QUESTION")
+        self.assertEqual(code, 403, reply)
+        turns = [e for e in self.store.audit_entries() if e["action"] == "chat.turn"]
+        self.assertEqual(len(turns), before + 1)
+        receipt = json.loads(turns[-1]["detail"])
+        self.assertEqual((receipt["outcome"], receipt["model_calls"]), ("access-rejected", 0))
+        self.assertIsNone(receipt["tokens"])
+        self.assertNotIn("SECRET-QUESTION", turns[-1]["detail"])
+        self.assertEqual(self.prompts, [])
+
     def test_legacy_route_uses_citations_and_refusals(self) -> None:
         tid = self.thread()
         code, reply = self.api(ROLE, f"/api/chat/threads/{tid}/messages", {"content": "Stage?"})
