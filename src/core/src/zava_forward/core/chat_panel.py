@@ -194,7 +194,7 @@ ACTION_CLAIM = re.compile(
 )
 STATUS_CLAIM = re.compile(
     r"\b(?:secur(?:ed|e)|funded|approved|complete[d]?|compliant|passed|cleared|verified"
-    r"|certified|safe|signed|consented|resolved|accepted|confirmed|guaranteed)\b|\b\d+(?:[.,]\d+)*(?:e[+-]\d+)?[^\W_]*",
+    r"|certified|safe|signed|consented|resolved|accepted|confirmed|guaranteed)\b|(?<![\w.])(?:[-+\u2212]?\d+(?:[.,]\d+)*|[-+\u2212]?\.\d+)(?:e[+-]\d+)?[^\W_]*",
     re.I,
 )
 HISTORY_POLICY = "user-only; assistant claims are not current evidence"

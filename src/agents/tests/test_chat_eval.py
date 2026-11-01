@@ -65,6 +65,20 @@ class GoldenRunTests(unittest.TestCase):
             chat_panel.unsupported_claims("It is 12 weeks.", ["It is 120 weeks."]), ["12"]
         )
 
+    def test_signs_and_leading_decimals_are_preserved(self) -> None:
+        self.assertEqual(
+            chat_panel.unsupported_claims("The adjustment is £-40.5m.", ["Adjustment: £40.5m."]),
+            ["-40.5m"],
+        )
+        self.assertEqual(
+            chat_panel.unsupported_claims("The grant is £.5m.", ["Grant: £5m."]), [".5m"]
+        )
+        self.assertEqual(
+            chat_panel.unsupported_claims("The adjustment is £-40.5m.", ["Adjustment: £-40.5m."]),
+            [],
+        )
+        self.assertEqual(chat_panel.unsupported_claims("The grant is £.5m.", ["Grant: £.5m."]), [])
+
     def test_numeric_forms_are_tokenised_completely(self) -> None:
         for text, token in (
             ("It costs £40m.", "40m"),
