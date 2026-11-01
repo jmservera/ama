@@ -27,7 +27,7 @@
       "url": "https://www.nomisweb.co.uk/datasets/c2021ts054",
       "licence": "Open Government Licence v3.0",
       "retrieval_date": null,
-      "attribution": "Source: Office for National Statistics, Census 2021, licensed under the Open Government Licence v3.0",
+      "attribution": "Source: Office for National Statistics, Census 2021. Contains public sector information licensed under the Open Government Licence v3.0",
       "verification": "open item: retrieval date not recorded (git history only bounds it to on or before 2026-10-01); owner to confirm. Licence confirmed 2026-11-01 against the ONS terms page",
       "reference_date": "2021-03-21"
     },
@@ -37,7 +37,7 @@
       "url": "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2025",
       "licence": "Open Government Licence v3.0",
       "retrieval_date": null,
-      "attribution": "Source: Ministry of Housing, Communities and Local Government, licensed under the Open Government Licence v3.0",
+      "attribution": "Source: Ministry of Housing, Communities and Local Government. Contains public sector information licensed under the Open Government Licence v3.0",
       "verification": "open item: retrieval date not recorded (git history only bounds it to on or before 2026-10-01); owner to confirm. Licence confirmed 2026-11-01 against the gov.uk publication page",
       "reference_date": "2025-10-30"
     },
