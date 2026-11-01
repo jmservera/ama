@@ -3582,11 +3582,44 @@ be substituted with a Graph token or forged proxy claims.
 
 ## Rebuild authoring and local rehearsal (Refs #148)
 
-The installed module below authors the ordered rebuild/check contracts and runs
-a **synthetic local SQLite control-plane simulation only**. It is not an Azure
-deployment/teardown script, does not invoke the infrastructure helpers, and
-cannot complete issue #148. There is deliberately no cloud adapter or `--apply`
-option. The historical observed rebuild below remains unchanged.
+The installed `zava_forward.orchestrator.rebuild` module authors the ordered
+rebuild/check contracts and runs a **synthetic local SQLite control-plane
+simulation only**. The historical observed rebuild below remains unchanged.
+
+### Scripted Azure rebuild and teardown (Refs #148)
+
+`python3 -m zava_forward.orchestrator.rebuild_azure {rebuild|teardown}` drives
+the same stages against the `ama` group. It is a **dry run by default** (prints
+the plan, makes no `az` or network call); `--apply` executes. Every command is
+an argv list with no shell. A guard refuses any argument that looks like a
+secret or token; the SQL token goes only in a child process environment, and
+the Key Vault credential is checked by name, never read or passed. The seed and
+roster files are scanned and rejected if they hold an email-like value outside
+`*.test` or `example.com/org/net`.
+
+```bash
+python3 -m zava_forward.orchestrator.rebuild_azure rebuild \
+  --subscription <id> --registry <acr> --image-tag <tag> \
+  --parameters <private.bicepparam> --seed <synthetic-seed.json> \
+  --roster <synthetic-roster.json> --container-app <api-app>   # dry run
+# add --apply to execute; --from-stage <name> resumes after a stop
+```
+
+Rebuild requires empty resource and budget inventories, then runs deploy
+(`deployApplications=false`), discovery, image build, credential check, SQL users,
+synthetic seed, application deploy, Entra `--check`, staff reconcile and
+`--check`, health/401/redirect probes and a revision restart with health recheck,
+verifying after each step. `workload-sql`, `model-standard` and `model-capable`
+have no scripted probe: the run stops with exit status 2 and records them as
+`operator-gated`, never as passed. Teardown reuses the dependency order
+(apps/jobs, private endpoints, environment, network, identities), waits for each
+delete, rechecks the exact inventory before and after each delete, deletes
+budgets last, and verifies both inventories are empty. A resource-group lock, a
+`retain=true` tag, an unmodeled type or inventory drift stops it before the next
+deletion; the group, locks and soft-deleted services are never touched.
+Tests (`src/orchestrator/tests/test_rebuild_azure.py`) use a stateful fake `az`
+as the disposable environment. A real disposable Azure rebuild/teardown has not
+been run or authorised, so that part of the fourth criterion remains open.
 
 After installing the [source packages](../src/README.md#commands):
 
@@ -3618,14 +3651,14 @@ unsupported inventory must stop, not be skipped. It never removes locks,
 purges soft-deleted services or weakens retention to obtain an empty result.
 Budgets are separate and last. These checks do not eliminate cloud races.
 
-Actual #148 acceptance still needs integration with the existing #138
-deployment/release helpers and SQL/auth/staff setup, authorized preservation of
+The remaining #148 acceptance needs authorized preservation of
 the continuing synthetic stock/programme lineage, private credential/tenant
 operations and a separately authorized disposable Azure rebuild/teardown.
 An owner must approve the exact deletion/preservation inventory; Legal/Compliance
 must resolve any applicable retained-data/hold disposal decision before a later
 live adapter may act. No such decision, authority, deployment or cloud test is
-inferred from this rehearsal. All four issue criteria remain partial.
+inferred from this rehearsal. The first three criteria are implemented and unit-tested
+against a fake `az`; the fourth is partial until a disposable Azure run is authorised.
 
 ## From-empty rebuild observed on 2026-10-12
 

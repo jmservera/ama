@@ -99,6 +99,7 @@ ORDER = {
     "microsoft.managedidentity/userassignedidentities": 8,
     "microsoft.consumption/budgets": 9,
 }
+OWNED_KINDS = frozenset({"microsoft.network/networkinterfaces"})
 BUDGET = "microsoft.consumption/budgets"
 LOCAL_SUBSCRIPTION = "11111111-1111-4111-8111-111111111111"
 
@@ -184,8 +185,22 @@ def teardown(backend: Backend, subscription: str) -> list[str]:
             raise RebuildError(
                 "Inventory changed before deletion; stop and review both inventories"
             )
+        if resource not in expected:
+            continue
         backend.delete(resource)
-        expected = tuple(record for record in expected if record != resource)
+        owned = {
+            rid.lower() for rid in getattr(backend, "removed_with", lambda _: frozenset())(resource)
+        }
+        owned = {
+            record.resource_id.lower()
+            for record in expected
+            if record.resource_id.lower() in owned and record.kind.lower() in OWNED_KINDS
+        }
+        expected = tuple(
+            record
+            for record in expected
+            if record != resource and record.resource_id.lower() not in owned
+        )
         if canonical(backend.inventory(), subscription) != expected:
             raise RebuildError("Deletion not confirmed or inventory changed; no further deletion")
         deleted.append(resource.kind)
