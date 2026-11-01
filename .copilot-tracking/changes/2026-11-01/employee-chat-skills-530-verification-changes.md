@@ -36,7 +36,7 @@
 
 ## Follow-up (publication gate)
 
-* Run `python3 tools/rpi-checks.py --all --base <reviewed-main-sha> --out <new-external-directory>` on the committed candidate and verify with `--verify-receipt` against current `origin/main` before merge. Not yet done; recorded in the review as an open gate.
+* Run `python3 tools/rpi-checks.py --all --base <reviewed-main-sha> --out <new-external-directory>` on the committed candidate and verify with `--verify-receipt` against current `origin/main` immediately before push and independent exact-head assessment. Not yet done; recorded in the review as an open gate.
 
 ## Not established
 

@@ -22,4 +22,4 @@
 
 ## Follow-up (added after Copilot review, original plan preserved)
 
-* Run the complete local gate (`python3 tools/rpi-checks.py --all --base <reviewed-main-sha> --out <new-external-directory>`) on the committed candidate and verify the receipt with `--verify-receipt` against current `origin/main` immediately before merge. The focused checks above and hosted CI do not replace it.
+* Run the complete local gate (`python3 tools/rpi-checks.py --all --base <reviewed-main-sha> --out <new-external-directory>`) on the committed candidate and verify the receipt with `--verify-receipt` against current `origin/main` immediately before push and independent exact-head assessment. The focused checks above and hosted CI do not replace it.
