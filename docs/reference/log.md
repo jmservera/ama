@@ -9064,6 +9064,24 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   acceptance and owner confirmation of agent names remain unproven; no
   source change was made.
 
+## [2026-11-01] update | Chat and memory provider position and DPO decision pack (Refs #163)
+
+* Retrieved the Microsoft Learn Foundry data, privacy and security page
+  (page dated 2026-06-05) and recorded the documented provider position in
+  `research/chat-memory-dpia.md` and `chat_privacy.MODEL_PROVIDER_POSITION`,
+  marked as vendor documentation, not DPO-accepted. Added a blank decision pack
+  (D1 to D8) for the DPO and Legal.
+* Unmet: lawful basis, staff notice, DPIA decision and retention (no period
+  set), provider terms acceptance, deployment type and transfer position. No
+  legal advice or approval is implied.
+
+
+## [2026-11-01] update | Scale fixture per-record is_synthetic (#167)
+
+* `scale_fixture` v1.3.0 adds `is_synthetic=true` to every home and event
+  record (households already had it); goldens re-pinned and a per-record
+  test added. Updated the retrofit synthetic data README coverage section.
+  Owner confirmation of the mapping and deferrals remains open.
 ## 2026-11-01
 
 * Added `research/ux/supported-devices-proposal.md`, a proposal for owner
@@ -9102,6 +9120,31 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Issue #156 criterion 1 stays unmet: no designs, human review, accessibility or
   content evidence were supplied. No regulatory snapshot changed.
 
+## [2026-11-01] update | SQL pilot tier parameters and recovery runbook (#145)
+
+* Added SQL tier, auto-pause, vCores, backup redundancy and retention parameters to
+  `infra/main.bicep` and `modules/sql.bicep`, and `infra/sql-recovery-runbook.md`.
+* RTO and RPO are recorded as undecided with owners; no point-in-time restore was
+  performed (no authorized disposable infrastructure). Issue #145 criteria 2 to 4
+  stay open. No regulatory snapshot changed.
+## [2026-11-01] update | Container hosting status and local scale load run (#144)
+
+* Added an API startup probe, compiled scale, probe, limit and Single-revision
+  contract tests, a restart audit persistence test and a scale load harness
+  (`src/api/tests/scale_load.py`). Recorded a 120 s local run over 60,000
+  fictional homes in `docs/architecture/scale-load-2026-11-01.json`, with cost
+  drivers per unit of load and cost Unknown.
+* Issue #144 stays open: worker queue transport, hosted hardening and Azure
+  restore proof are unmet. The run is not a production-scale claim. No regulatory
+  snapshot changed.
+
+## [2026-11-01] update | Container hosting review corrections (#144)
+
+* Corrected the scale load harness: explicitly synthetic homes with lifecycles,
+  full response body timed, small fixtures, counted transport failures. Re-recorded
+  the 60,000-home run: warm p95 above the NFR-002 thresholds on all routes.
+* Rewrote the rollback text to match the pipeline, which accepts only current-run
+  digests. Issue #144 stays open. No regulatory snapshot changed.
 ## [2026-11-01] ingest | Atlas findings traced to role screens (#233)
 
 * Added `research/ux/atlas-screen-trace.md` (eleven perspectives, five atlas
@@ -9154,3 +9197,42 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
 
 * 2026-11-01: documented coordinator steps for the live resident authority extension in infra/README.md and moved the browser-check fixture to the shared authority end (Refs #521). No live apply.
+## [2026-11-01] update | Replay audit covers pack and EPC generators (#176)
+
+* Extended the one-command determinism audit in
+  `docs/reference/research/retrofit-synthetic-data/README.md` to replay the
+  public pack and stock EPC generators and accept 16 or 64 hex revisions. The
+  original stock register generator remains absent; no criterion ticked.
+
+## [2026-11-01] verify | Post-cleanup reference audit and link check (Refs #203)
+
+* Re-ran a repository-wide search for `mvp/` and `prototype/` on main 77b55415. Both
+  directories are absent. Remaining tokens fall into dated historical records
+  (log, ADRs 0001, 0002, 0006, PRD/BRD baselines, parity and cut-over evidence,
+  rubric README history), intentional defensive checks for `mvp/data`
+  (workflows, `tools/rpi-checks.py`, tests, `.gitignore`) and generic
+  "prototype/PoC/MVP" wording. One live pointer was repaired: the law register
+  path in `regulatory/README.md` now names `src/core/src/zava_forward/core/law/`.
+* A fresh relative-link audit of all tracked Markdown found 102 unresolved links
+  that predate and are unrelated to the cleanup (capstone reorganisation, dated
+  log entries, one workflow template placeholder). They are recorded, not
+  repaired here. Criteria 1, 2, 4 and 5 of #203 stay unmet; main rubric scoring
+  was skipped by the daily AIC guardrail and no Azure check was run. Evidence is in
+  `.copilot-tracking/reviews/2026-11-01/issue-203-verify-references-review.md`.
+
+## [2026-11-01] update | Automated-decision and EU AI Act applicability pack (#224)
+
+* Added the applicability review pack under `regulatory/reviewed-updates/`: official
+  check of DUAA 2025 s.80 and S.I. 2026/82 (retrieved 2026-11-01), failed EUR-Lex
+  retrieval, a `Pending` Legal/DPO decision record, review items RI-1 to RI-7 and
+  non-inference rules.
+* Flagged that seed card `automated-decision-safeguard` cites Article 22, not
+  Articles 22A to 22C. No snapshot, card or rule changed; criteria 1 and 5 of #224
+  stay unmet pending the Legal/DPO decision.
+
+## [2026-11-01] update | Closure record for the src migration (Refs #199)
+
+* Added a closure record to `docs/architecture/mvp-to-src-parity-matrix.md`
+  listing the merged M1 to M6 and retirement pull requests and the current
+  tree check. The migration-order criterion stays unmet pending an owner
+  decision.

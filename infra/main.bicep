@@ -92,6 +92,21 @@ param edgeWafMode string = 'Prevention'
 @description('Enable zone redundancy where the region supports it.')
 param zoneRedundant bool = false
 
+@description('SQL tier: serverless for dev, provisioned general purpose for pilot (ADR 0002 decision 1).')
+@allowed(['serverless', 'provisioned'])
+param sqlTier string = 'serverless'
+@description('SQL vCores: serverless maximum or provisioned count.')
+param sqlVCores int = 2
+@description('Serverless only. Auto-pause delay in minutes: -1 disables, otherwise 15 to 10080.')
+param sqlAutoPauseDelayMinutes int = 60
+@description('SQL backup storage redundancy. Empty derives Zone when zoneRedundant, otherwise Local.')
+@allowed(['', 'Local', 'Zone', 'Geo', 'GeoZone'])
+param sqlBackupStorageRedundancy string = ''
+@description('SQL point-in-time restore window in days (1 to 35).')
+@minValue(1)
+@maxValue(35)
+param sqlBackupRetentionDays int = 14
+
 @description('Production (default) enforces isolation, quarantine and purge protection. Development permits individual explicit opt-outs; choosing development alone relaxes nothing. SQL is always private.')
 @allowed(['production', 'development'])
 param deploymentProfile string = 'production'
@@ -181,6 +196,7 @@ module guard 'modules/guard.bicep' = {
     demoRequiresBrowserAuthentication: !demoDirectIngress || !deployApplications || (!empty(entraClientId) && !entraBearerOnly) ? 'ok' : ''
     appCredentialRequiresDirectDemo: entraCredentialStore != 'app' || (demoDirectIngress && !entraBearerOnly && !empty(entraClientId)) ? 'ok' : ''
     appCredentialBlocksApplicationDeployment: entraCredentialStore != 'app' || !deployApplications ? 'ok' : ''
+    serverlessAutoPauseDelayMustBeSupported: sqlTier != 'serverless' || sqlAutoPauseDelayMinutes == -1 || (sqlAutoPauseDelayMinutes >= 15 && sqlAutoPauseDelayMinutes <= 10080) ? 'ok' : ''
   }
 }
 
@@ -292,6 +308,11 @@ module sql 'modules/sql.bicep' = {
     entraAdminPrincipalType: sqlAdminPrincipalType
     enableLock: enableLocks
     zoneRedundant: zoneRedundant
+    sqlTier: sqlTier
+    maxVCores: sqlVCores
+    autoPauseDelayMinutes: sqlAutoPauseDelayMinutes
+    backupStorageRedundancy: sqlBackupStorageRedundancy
+    backupRetentionDays: sqlBackupRetentionDays
   }
 }
 

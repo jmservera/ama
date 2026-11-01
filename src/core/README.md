@@ -2940,12 +2940,19 @@ python3 -m zava_forward.core.synthetic.sensor_scenarios \
 cd src/core
 python3 -m unittest discover -s tests -p test_sensor_scenarios.py -v
 python3 -m unittest discover -s tests -p test_sensor_retrofit_consumer_contract.py -v
+python3 -m unittest discover -s tests -p test_sensor_damp_consumer_contract.py -v
 ```
 
 `test_sensor_retrofit_consumer_contract.py` is the reusable fixture contract
 for the later #111 and #133 consumer tests: observation-only before/after
 deltas classify the four retrofit profiles using labelled exercise tolerances.
 It is not those consumers and not an operational rule.
+
+`test_sensor_damp_consumer_contract.py` does the same for the seven damp cases:
+observation-only derivation is reproducible, missing or faulty data is
+`INSUFFICIENT` and never ranks below a no-signal result, and a resident report
+always routes to human investigation whatever the sensors read (labelled
+exercise oracle, not the #111 or #133 implementation).
 
 Choose a genuinely new external path, not the literal example if unavailable.
 The CLI rejects repository/worktree destinations, symlink components, files and
@@ -3107,7 +3114,7 @@ agreed R3 limits and operational acceptance are still unproven.
 
 ### Existing reproducibility and plausibility evidence
 
-* Reproducibility and refresh (#176): scale fixture v1.2.0 and sensor backfill
+* Reproducibility and refresh (#176): scale fixture v1.3.0 and sensor backfill
   v2 record seed, version, `as_of`, dependency-aware `generator_revision` and
   SHA-256 for every payload file. Both require a new or empty output folder;
   a repeat write to an existing snapshot fails without replacing files.
@@ -3123,7 +3130,7 @@ agreed R3 limits and operational acceptance are still unproven.
 
   ```bash
   python -m zava_forward.core.synthetic.scale_fixture --seed 174 \
-    --as-of 2026-10-15 --out "$ZF_DATA/scale-fixture-2026-10-15-v1.2.0"
+    --as-of 2026-10-15 --out "$ZF_DATA/scale-fixture-2026-10-15-v1.3.0"
   python -m zava_forward.core.synthetic.sensor_backfill --seed 183 \
     --as-of 2026-10-15 --days 2 --cadence 60 --homes 12 \
     --out "$ZF_DATA/sensor-backfill-2026-10-15-v2"
@@ -4103,3 +4110,21 @@ reads or writes them.
 Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
 human review. Tests: `src/core/tests/test_challenges.py`.
+
+## Data steward and digital operator exception queue (#135)
+
+`zava_forward.core.exception_queue.ExceptionQueue` is a store-independent register (FR-012, FR-029,
+AC-040) for identity and source conflicts, failed imports, failed AI or integration runs and stranded
+tasks. A named `data_steward` owns conflicts and imports; a named `digital_operator` owns AI,
+integration and stranded-task items. `raise_conflict` needs two different values, each with source,
+date and version, and shows them with the resolution owner in `conflict_view`. `queue` is scoped to
+the caller's role and every view, denial and action is appended to the audit log shown by
+`access_report(actor)`, which limits item audit entries to the caller's role scope and includes all non-item entries (queue views, outages, denials). `request_recovery` (hold, request_rerun, resolve_by_owner) needs a reason and records
+`replayed` and `released` as False; nothing is replayed, corrected or released automatically. The
+original source is deep-copied and kept, and eligibility stays `Unknown`. Outage notes and clearance evidence are
+kept in the audit. `outage_banner` reports a missing, invalid, future or stale (over one hour) check as
+Unknown, never healthy.
+
+Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, importer and AI-run
+producers, and owner approval of the role names and runbooks (open). Tests:
+`src/core/tests/test_exception_queue.py`.
