@@ -1,23 +1,30 @@
 """Composed CSV/SDK/SQL handover; no live Hub or Azure acceptance."""
 
+import contextlib
 import csv
+import io
 import json
 import os
+import sqlite3
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
+from unittest import mock
 
 import test_sensor_consumer as consumer_tests
 import test_sensor_handover as fixture
 from azure.eventhub import EventData
 from sensor_consumer_fixture import CONTROL, POLICY, store_at
-from zava_forward.core.sensor_consumer import READING_COLUMNS, SensorConsumer
+from zava_forward.core.sensor_consumer import READING_COLUMNS, ConsumerError, SensorConsumer
 from zava_forward.core.sqlstore import CASE_COLS
 from zava_forward.core.synthetic import sensor_backfill
 from zava_forward.core.synthetic.sensor_consistency import report
 from zava_forward.core.synthetic.sensor_stream import Replay, descriptor, replay, wire
 
 from zava_forward.api.iot_stream import AUTH, DEVICE, Binding, decode
+from zava_forward.api.sensor_handover_verify import main as verify_main
+from zava_forward.api.sensor_handover_verify import open_existing_store
+from zava_forward.api.sensor_handover_verify import run as verify
 from zava_forward.api.sensor_ingestion import SensorIngestion
 
 
@@ -135,6 +142,10 @@ class SqlHandoverTests(consumer_tests.SensorConsumerTests):
             return observed
 
         observed = queried()
+        homes = ("ZF-1", "stock-home-0000000000002")
+        self.assertEqual(self.consumer.observed_series(homes), observed)
+        with self.assertRaises(ConsumerError):
+            self.consumer.observed_series([])
         result = report(observed, reference, handover=fixture.HANDOVER)
         self.assertTrue(result["passed"], result)
         before = self.counts()
@@ -152,3 +163,69 @@ class SqlHandoverTests(consumer_tests.SensorConsumerTests):
         self.assertEqual(self.counts(), before)
         self.assertEqual(queried(), observed)
         self.assertEqual(self.snapshot(), properties_before)
+        # The operator verifier gives the same verdict, and re-running writes nothing new.
+        verdict = verify(
+            reopened,
+            reference,
+            handover=fixture.HANDOVER,
+            replay_check=True,
+            received_at="2024-10-04T16:00:00Z",
+        )
+        self.assertTrue(verdict["passed"] and verdict["idempotent"], verdict)
+        self.assertEqual(self.counts(), before)
+        # A stored value that departs from its retained accepted payload is refused.
+        original = reopened.db.execute(
+            "SELECT temperature_c FROM sensor_reading WHERE home_id=? AND observed_at=?",
+            ("ZF-1", reference[-1]["observed_at"]),
+        ).fetchone()[0]
+        reopened.db.execute(
+            "UPDATE sensor_reading SET temperature_c='40' WHERE home_id=? AND observed_at=?",
+            ("ZF-1", reference[-1]["observed_at"]),
+        )
+        with self.assertRaises(ConsumerError):
+            verify(reopened, reference, handover=fixture.HANDOVER)
+        reopened.db.execute(
+            "UPDATE sensor_reading SET temperature_c=? WHERE home_id=? AND observed_at=?",
+            (original, "ZF-1", reference[-1]["observed_at"]),
+        )
+        # Readings outside the reference window are bounded away, not a coverage mismatch.
+        subset = [row for row in reference if row["observed_at"] >= reference[2]["observed_at"]]
+        homes = sorted({row["home_id"] for row in subset})
+        windows = {
+            home: (
+                min(r["observed_at"] for r in subset if r["home_id"] == home),
+                max(r["observed_at"] for r in subset if r["home_id"] == home),
+            )
+            for home in homes
+        }
+        bounded = self.consumer.observed_series(homes, windows)
+        self.assertEqual(len(bounded), len(subset))
+        with self.assertRaises(ConsumerError):
+            self.consumer.observed_series(homes, {homes[0]: windows[homes[0]]})
+        if not self.consumer.mssql:
+            readonly = open_existing_store({"ZF_STORE": "sqlite", "ZF_SQLITE": reopened.db_path})
+            db = readonly.assistant_connection()
+            self.addCleanup(db.close)
+            with self.assertRaises(sqlite3.OperationalError):
+                db.execute("DELETE FROM sensor_reading")
+            with self.assertRaises(ValueError):
+                open_existing_store(
+                    {"ZF_STORE": "sqlite", "ZF_SQLITE": str(Path(self.tmp.name) / "none.db")}
+                )
+        missing = Path(self.tmp.name) / "absent.csv"
+        self.assertEqual(
+            verify_main(["--reference", str(missing), "--handover", fixture.HANDOVER]), 2
+        )
+        truncated = Path(self.tmp.name) / "truncated.csv"
+        truncated.write_text("home_id,observed_at\nZF-1\n")
+        out = io.StringIO()
+        with (
+            mock.patch(
+                "zava_forward.api.sensor_handover_verify.open_existing_store",
+                return_value=reopened,
+            ),
+            contextlib.redirect_stdout(out),
+        ):
+            code = verify_main(["--reference", str(truncated), "--handover", fixture.HANDOVER])
+        self.assertEqual(code, 2)
+        self.assertEqual(json.loads(out.getvalue())["refused"], "REFERENCE_ROW_INCOMPLETE")
