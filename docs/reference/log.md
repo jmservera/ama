@@ -9203,6 +9203,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   browser groups not run. The PERF-440 benchmark outlier was not reproduced
   and is filed as #687. No regulatory snapshot changed; no criterion ticked.
 
+## [2026-11-01] update | IoT publisher credential hygiene tests (#184)
+
+* Added constructed local tests (repository text scan, fake-SDK log, truth
+  record, payload and failure leak checks) and updated the #184 row in the
+  IoT research plan. Criterion 1 and actual credential, Hub telemetry and
+  live evidence remain unmet and owner or Azure gated. No regulatory snapshot
+  changed.
+
 ## [2026-11-01] update | Local handover demo (#188)
 
 * Added a runnable local demo and test for the live-versus-backfill handover
@@ -9283,3 +9291,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   final head) stay unmet; the per-message review exception stays OFF pending
   OD-53. Evidence is in
   `.copilot-tracking/changes/2026-11-01/issue-441-recheck-changes.md`.
+
+## [2026-11-01] update | Third stabilization checkpoint on main b18f7f98 (Refs #440)
+
+* Appended a focused-tier checkpoint to `docs/architecture/cutover-evidence-pack.md`:
+  five package suites, ruff, format and mypy passed on the pinned head; heavy
+  groups stay implemented-unverified; recommendation continue.
+* #440 criteria 7 (open #687/#720) and 8 (host and behavior evidence) remain unmet.
+
+## [2026-11-01] update | Atlas screen trace status refresh (#233)
+
+* Refreshed `research/ux/atlas-screen-trace.md` so nine of twelve screens are
+  marked as registered on main; three remain in unmerged pull requests. Updated
+  the index row and made the checker apply each status to its own screen group.
+* Findings stay hypotheses until #155. No accessibility acceptance is claimed.
