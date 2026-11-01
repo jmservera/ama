@@ -80,7 +80,10 @@ class AccountingSqlTests(unittest.TestCase):
             conn.close()
 
     def setUp(self) -> None:
-        self.q("DELETE FROM resident_ai.attempt; UPDATE resident_ai.budget SET reserved_cents=0")
+        self.q(
+            "DELETE FROM resident_ai.attempt; "
+            "UPDATE resident_ai.budget SET reserved_cents=0, expires_at='2999-01-01T00:00:00'"
+        )
         self.accounting = SqlAccounting(self.connect)
 
     def test_exact_cap_and_concurrent_last_cent(self) -> None:
@@ -129,7 +132,23 @@ class AccountingSqlTests(unittest.TestCase):
         self.apply()
         self.assertIsNone(self.accounting.reserve(resident_key("one")))
         self.assertEqual(self.q("SELECT COUNT(*) FROM resident_ai.budget")[0][0], 0)
-        self.q("INSERT INTO resident_ai.budget VALUES (1,0)")
+        self.q("INSERT INTO resident_ai.budget (id, reserved_cents) VALUES (1,0)")
+
+    def test_expiry_is_data_refused_after_and_default_preserved(self) -> None:
+        self.q("UPDATE resident_ai.budget SET expires_at=DATEADD(SECOND,-1,SYSUTCDATETIME())")
+        self.assertIsNone(self.accounting.reserve(resident_key("one")))
+        self.assertEqual(self.q("SELECT reserved_cents FROM resident_ai.budget")[0][0], 0)
+        self.q("UPDATE resident_ai.budget SET expires_at=DATEADD(DAY,1,SYSUTCDATETIME())")
+        self.assertIsNotNone(self.accounting.reserve(resident_key("one")))
+        self.q("DELETE FROM resident_ai.budget")
+        self.q("INSERT INTO resident_ai.budget (id, reserved_cents) VALUES (1,0)")
+        default = self.q("SELECT expires_at FROM resident_ai.budget")[0][0]
+        self.assertEqual((default.year, default.month, default.day), (2026, 11, 1))
+        self.q("UPDATE resident_ai.budget SET expires_at='2999-01-01T00:00:00'")
+
+    def test_reapply_keeps_extended_expiry(self) -> None:
+        self.apply()
+        self.assertEqual(self.q("SELECT expires_at FROM resident_ai.budget")[0][0].year, 2999)
 
     def test_principal_can_execute_but_not_read_or_write_accounting(self) -> None:
         import mssql_python
