@@ -1,5 +1,5 @@
 ---
-title: Everything but the Software - source package (draft v10)
+title: Everything but the Software - source package (draft v11)
 description: Single-document paper with integrated Supplement, verified source corrections and prospective study limits
 ms.date: 2026-11-01
 ---
@@ -10,12 +10,38 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 The title is unchanged at the owner's request. The complete
 [paper](./main.pdf) and [source](./main.tex) now include a
-[Supplement section](./main.pdf#page=37) in the same document.
-Extended literature, case audits, deferred intervention rates and historical
-freeze provenance are preserved in full, with one shared bibliography.
+[Supplement section](./main.pdf#page=32) in the same document.
+The supplement is additive: source-specific qualifications, detailed
+method/rival checks, the frozen prompt, deferred rates and provenance.
+Repeated Background text, figures and case narratives are excluded from
+the current build; their earlier source versions remain in Git.
 The standalone supplement PDF/TeX/bibliography were removed at the owner's
 request after exact archive readback and restore checks; their original
 committed versions remain in Git at `80656f32`. No source evidence was discarded.
+
+The [nine-point author review disposition](./anc/revision-report.md#author-review-disposition-1-november)
+records the current revision. The case now follows agent-assisted research,
+Design Thinking challenge, prototypes, requirements, epics and stories,
+autonomous delivery and renewed participant feedback. Project counts and
+calendar dates no longer lead the argument. The supplied
+[project-insights export](./anc/project-insights-2026-11-01.csv) supports the
+backlog handoff; its provenance and missing export metadata are in the
+[evidence index](./anc/case-evidence-matrix.json).
+
+The four requested scientific skills informed the equation and design audit.
+Exact algebra and planning arithmetic check out under their stated assumptions.
+The new freeze must still reconcile replicate-block scheduling with the
+independent-trajectory variance and bootstrap scheme. This is an explicit
+pre-collection TODO; the kit and its sample allocation were not changed.
+Pending results remain author TODOs. The rebuilt paper has 37 pages, with its
+Supplement starting on page 32. Thirty-four authoring tests pass. Direct
+Tectonic/PDF checks find no unresolved references, overfull text or out-of-page
+text; one inherited `inputenc` compatibility warning remains. The old optional
+log check expects a pdfLaTeX-specific output marker, so its failure and the
+direct verification are recorded separately.
+The focused repository gate was attempted against fetched `origin/main`, but
+preflight blocked on tracked modifications and untracked inputs. No passing
+repository-gate receipt or publication readiness is claimed.
 
 The prospective candidate uses five arms and three selected models, with
 33 trajectories per arm/model: 495 total. A is feature-only, B consolidation,
@@ -142,20 +168,42 @@ notice; source hashes, lint counts, complexity and duplication are unchanged.
 
 ### Single-document Delivery
 
-The sole current deliverable is the 52-page [main.pdf](./main.pdf). Its Supplement starts
-on page 37 and contains every original standalone source body plus the earlier
-compact appendix. Heading levels and labels were reconciled, all links are
-internal, and fifteen missing cited entries were restored into the shared
-104-entry bibliography. The reusable source bibliography retains 105 entries.
-The [integration manifest](./anc/supplement-integration.json) binds preserved
-body digests to the original source revision and approved removal selection.
+The sole current deliverable is the 37-page [main.pdf](./main.pdf). Its
+Supplement starts on page 32. The owner-directed additive revision removes
+the repeated Background, three repeated figures, long case narratives and
+five repeated indicator rows. Additional source qualifications and detailed
+operational/rival checks remain, along with reproducibility definitions,
+the exact frozen prompt and deferred measures/provenance.
 
-Thirty-two focused authoring tests pass, including complete body preservation,
+There is one shared 94-entry cited bibliography; the reusable source
+bibliography retains 105 entries. The
+[integration manifest](./anc/supplement-integration.json) distinguishes the
+original full-integration hashes from the current owner-approved additive
+content. Active body hashes and the complete literal prompt are bound; it
+does not claim every earlier paragraph remains active.
+
+Thirty-four focused tests pass, including additive-content/figure guards,
 one-document delivery, all five figure-removal cases, exclusive report writes,
-comment-aware inputs and Python lint denominators. The full PDF builds with
-the selected title. The outline contains the Supplement and all its sections;
-all-page text bounds pass and no link targets the deleted standalone PDF.
-No full application gate, experiment or new approval is implied.
+comment-aware inputs, literal renderer/path binding and Python lint
+denominators. The selected title is unchanged. The actual PDF outline,
+internal navigation and all-page bounds pass.
+
+### Tectonic Warning Review and Remedy
+
+The old `fvextra` dependency loaded `lineno` 4.41, whose line 296 contains a
+Latin-1 `0xfc` byte in a TeX comment. That caused the UTF-8 diagnostic; the
+paper text was not corrupt. The literal prompt now uses `listings` wrapping
+and straight-quote handling without loading `lineno`. Its original ASCII
+file and SHA-256 are unchanged; no package cache or warning filter was edited.
+
+The short Chen/Zaharia/Zou citation uses scoped ragged-right formatting, as
+already used elsewhere in the bibliography, rather than stretching its
+justification. The other underfull paragraph belonged to the repeated compact
+appendix, which is no longer included in the additive supplement.
+`./tools/update-pdf.sh` now completes without the reported warnings, undefined
+references or overfull text. The citation, supplement opening and literal
+prompt pages were rendered and inspected. No full application gate, new
+experiment or approval is implied.
 
 | Recommendation | Applied change and evidence limit |
 | --- | --- |

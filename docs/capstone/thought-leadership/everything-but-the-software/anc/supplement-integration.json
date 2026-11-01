@@ -1,6 +1,6 @@
 {
   "source_commit": "80656f3281afe9003777f83ca793f52950f5c21b",
-  "scope": "All existing TeX supplement inputs plus the prior compact appendix; unchanged body text, retargeted heading/label/link structure.",
+  "scope": "Active additive supplement only; original integrated source hashes retained as history, not a claim all former prose remains active.",
   "parent_section": "sec:supplement",
   "current_delivery": "main.pdf",
   "owner_approved_standalone_deletions": [
@@ -11,21 +11,22 @@
   "standalone_archive_readback_and_restore_verified": true,
   "historical_inputs_retained_in_git": true,
   "files": {
-    "anc/compact-appendix.tex": {
-      "original_sha256": "f1e6a695595f587a7e82ff0eec5715d7ca5cdc23f1e140b08a43fb6eb4825951",
-      "content_sha256": "df8a76d20405cd3bd887789ebafb1f65093029fbabfaca4611dc87691849a1a4"
-    },
-    "anc/extended-background.tex": {
-      "original_sha256": "9b1991066e4bc4936ef2271667df3c58fd999fa444fd191b46843077d0c089a6",
-      "content_sha256": "6fa99155a4d6cfbdf67b4202335fa0835fd2b9bcc696d50f38b75accf3ed6d3d"
+    "anc/additional-evidence.tex": {
+      "content_sha256": "3193b1b9780098db65501b4c40c2481799bca96015c60edb58ca8c049c598a30"
     },
     "anc/case-audits.tex": {
-      "original_sha256": "e7d3aecb7f3d02c483adb98b0fab7ce6e8e5437c0a25eb76e4c941f99c38bea0",
-      "content_sha256": "e698f5cddc47897164c068a5eb993840dc05a5570396e70f97f60634c4534134"
+      "content_sha256": "4a7e3ef241d60aa7f85fbbc636e1e40dc3e17ac255f1e8ed0b05e4cf0ba79bc7"
     },
     "anc/deferred-measures.tex": {
-      "original_sha256": "af45cd843dc6795e7e9ac5ab86b26c9996577ccc76a7d9142cbb9f8b784a397d",
-      "content_sha256": "0bfd38466ffc3a2f40d54753cef2ffc2f18fd404cb478db902baf72644c6daff"
+      "content_sha256": "119f39c08246042af8a6f1fca6a849553777346f10f614a2ee405e3a5371c43b"
+    }
+  },
+  "author_review_revision": {
+    "date": "2026-11-01",
+    "scope": "Clarified complete-annotation requirements for deferred rates and the undefined zero-outcome cost ratio; removed an unnecessary case calendar date. Frozen prompt unchanged.",
+    "prior_active_content_sha256": {
+      "anc/case-audits.tex": "7851092f12e56fe9455e93ca2a512f85e12ff62509f9d5073523e5793208e1b1",
+      "anc/deferred-measures.tex": "64201296afcad342dd5ca6092e18705abdd6667070d129725fcd296fbf4d45b8"
     }
   },
   "restored_citation_keys": [
@@ -46,6 +47,139 @@
     "yan2025multiagents"
   ],
   "integrated_cited_keys": [
+    "agarwal2026sdd",
+    "agile2001manifesto",
+    "anthropic2025harness",
+    "bainbridge1983ironies",
+    "baltes2026guidelines",
+    "bavota2015quality",
+    "beamnxw2026memorytalk",
+    "beck2002tdd",
+    "beck2004xp",
+    "beck2018tcr",
+    "beck2023tidy",
+    "beck2025augmented",
+    "beck2025devslow",
+    "beck2026mathematicians",
+    "beck2026prodacity",
+    "besker2018cripples",
+    "bird2014extrinsic",
+    "boeckeler2025sdd",
+    "borg2025echoes",
+    "brooks1987silver",
+    "chatlatanagulchai2026readmes",
+    "chen2023drift",
+    "chen2026sweci",
+    "cockburn2004crystal",
+    "cohen2006review",
+    "cunningham1992wycash",
+    "delimarsky2025speckit",
+    "devanbu2016belief",
+    "eick2001decay",
+    "eldridge2016pilot",
+    "fowler2007stamina",
+    "fowler2025thoughts",
+    "gall1975",
+    "gamma1995patterns",
+    "gautam2025refactorbench",
+    "gloaguen2026agentsmd",
+    "goodhart1975",
+    "gou2024critic",
+    "herdagdelen2026judgment",
+    "herraiz2013laws",
+    "hoque2022thriftydagger",
+    "hunt1999pragmatic",
+    "hvecore",
+    "jiang2025medagentbench",
+    "jiang2026skills",
+    "kassis2026skills",
+    "kelly2019hgdagger",
+    "kim2014refactoring",
+    "kumar2025agents",
+    "laban2025lost",
+    "lee2025critical",
+    "lehman1980laws",
+    "lehman1997metrics",
+    "li2026aidev",
+    "lulla2026protocol",
+    "ma2026building",
+    "madaan2023selfrefine",
+    "martin2026productengineers",
+    "mhatre2025swesharp",
+    "microsoft2026agentrx",
+    "microsoft2026autosaddler",
+    "microsoft2026skillopt",
+    "mohsenimofidi2026context",
+    "murphyhill2026agents",
+    "naur1985theory",
+    "ng2024reflection",
+    "nigh2025agentsmd",
+    "openai2026harness",
+    "orlanski2026slopcodebench",
+    "orosz2025beck",
+    "pan2026swemaintain",
+    "parnas1994aging",
+    "pavlenko2026factory",
+    "peralta2026merged",
+    "philia2026ngmoroney",
+    "photocraft2026",
+    "rajasekaran2025context",
+    "royce1970",
+    "runeson2009guidelines",
+    "sec2013knight",
+    "servera2026ama",
+    "shinn2023reflexion",
+    "sigsoft2021standards",
+    "simkute2024ironies",
+    "sinha2025illusion",
+    "strathern1997improving",
+    "tankelevitch2024metacognitive",
+    "tornhill2022codered",
+    "waseem2025vibe",
+    "wohlin2012experimentation",
+    "yang2026crbugbench",
+    "yu2026habituation",
+    "zhang2023snowball",
+    "zhong2026impossiblebench"
+  ],
+  "historical_integration_files": {
+    "anc/compact-appendix.tex": {
+      "original_sha256": "f1e6a695595f587a7e82ff0eec5715d7ca5cdc23f1e140b08a43fb6eb4825951",
+      "content_sha256": "df8a76d20405cd3bd887789ebafb1f65093029fbabfaca4611dc87691849a1a4"
+    },
+    "anc/extended-background.tex": {
+      "original_sha256": "9b1991066e4bc4936ef2271667df3c58fd999fa444fd191b46843077d0c089a6",
+      "content_sha256": "6fa99155a4d6cfbdf67b4202335fa0835fd2b9bcc696d50f38b75accf3ed6d3d"
+    },
+    "anc/case-audits.tex": {
+      "original_sha256": "e7d3aecb7f3d02c483adb98b0fab7ce6e8e5437c0a25eb76e4c941f99c38bea0",
+      "content_sha256": "e698f5cddc47897164c068a5eb993840dc05a5570396e70f97f60634c4534134"
+    },
+    "anc/deferred-measures.tex": {
+      "original_sha256": "af45cd843dc6795e7e9ac5ab86b26c9996577ccc76a7d9142cbb9f8b784a397d",
+      "content_sha256": "0bfd38466ffc3a2f40d54753cef2ffc2f18fd404cb478db902baf72644c6daff"
+    }
+  },
+  "additive_revision": {
+    "owner_request": "Supplement should only be additive; remove Background and text/page repetition.",
+    "date": "2026-11-01",
+    "parent_commit": "d8331e2434e90642c2827bcf99f3b3ae6d560179",
+    "excluded_duplicate_inputs": [
+      "anc/extended-background.tex",
+      "anc/compact-appendix.tex"
+    ],
+    "removed_repetition": [
+      "Reprinted main Background figures",
+      "Expanded case narratives",
+      "Repeated mechanism indicator rows"
+    ],
+    "retained_detail": "Source qualifications, rival/operational tests, measurement procedures, frozen prompt, deferred rates and provenance.",
+    "rendering_change": "Literal-file renderer changes are normalized; the entire authoritative prompt remains separately SHA256-bound."
+  },
+  "literal_inputs": {
+    "anc/consolidation-frozen-v4.prompt.txt": "75f646edbe04e1e3403b092b13edd6b66615a3362e67ad49744d229cdcb94f29"
+  },
+  "historical_integrated_cited_keys": [
     "agarwal2026sdd",
     "agile2001manifesto",
     "anthropic2025harness",
@@ -150,5 +284,8 @@
     "yu2026habituation",
     "zhang2023snowball",
     "zhong2026impossiblebench"
-  ]
+  ],
+  "current_pages": 41,
+  "current_supplement_start_page": 36,
+  "literal_renderer": "Wrapped listings; original ASCII bytes, input path and SHA256 retained; no lineno dependency."
 }

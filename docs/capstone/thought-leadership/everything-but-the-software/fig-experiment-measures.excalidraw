@@ -499,14 +499,15 @@
       "y": 191,
       "width": 355,
       "height": 82,
-      "text": "Combines acquisition,\nretention and repair\nNot a pure decay rate",
+      "text": "Combines acquisition,\nretention and repair\nFinal behavioural coverage",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "center",
       "verticalAlign": "middle",
-      "containerId": "h1-interp"
+      "containerId": "h1-interp",
+      "originalText": "Combines acquisition,\nretention and repair\nFinal behavioural coverage"
     },
     {
       "id": "h1-to-meas",
@@ -1272,14 +1273,15 @@
       "y": 346,
       "width": 355,
       "height": 82,
-      "text": "Zero risk set = undefined\nUnknown evaluation != failure\nNever-passed != loss",
+      "text": "Empty observed risk: undefined\nMissing stays unobserved\nPrior pass required for loss",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "center",
       "verticalAlign": "middle",
-      "containerId": "h2-interp"
+      "containerId": "h2-interp",
+      "originalText": "Empty observed risk: undefined\nMissing stays unobserved\nPrior pass required for loss"
     },
     {
       "id": "h2-to-meas",
@@ -2520,7 +2522,7 @@
       "y": 656,
       "width": 355,
       "height": 82,
-      "text": "Targets of B's budget\nNot independent efficacy\nor comprehension",
+      "text": "Structural budget targets\nTreatment fidelity\nComprehension unmeasured",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -2528,7 +2530,7 @@
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "px-interp",
-      "originalText": "Targets of B's budget\nNot independent efficacy\nor comprehension"
+      "originalText": "Structural budget targets\nTreatment fidelity\nComprehension unmeasured"
     },
     {
       "id": "px-to-meas",
@@ -3011,14 +3013,15 @@
       "y": 811,
       "width": 355,
       "height": 82,
-      "text": "Tokens & seconds distinct\nMissing billing = unknown (!= 0)\nCheap failure != efficiency",
+      "text": "Separate tokens, time, credits\nMissing billing stays unknown\nReport cost alongside success",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
       "strokeColor": "#000000",
       "textAlign": "center",
       "verticalAlign": "middle",
-      "containerId": "cost-interp"
+      "containerId": "cost-interp",
+      "originalText": "Separate tokens, time, credits\nMissing billing stays unknown\nReport cost alongside success"
     },
     {
       "id": "cost-to-meas",

@@ -21,6 +21,63 @@
     "historical_cloud_export_status": "Owner explicitly deferred; repository evidence only.",
     "same_release_contradiction_established": false
   },
+  "author_review_context": {
+    "date": "2026-11-01",
+    "scope": "Process clarification from the participant, targeted local log/history checks and fetched PR bodies; supplements the historical observations without supplying new deployed-journey acceptance.",
+    "discovery_and_handoffs": [
+      {
+        "kind": "repository_log",
+        "path": "docs/reference/log.md",
+        "entry_topics": [
+          "What-if session on the Agent Request Challenge",
+          "What-if study extended to multiple scenarios per agent",
+          "Re-run all what-if role answers against the current proposal",
+          "Per-user agent chat and memory proposal",
+          "Approved RAI issue updates applied"
+        ],
+        "finding": "Discovery included repeated challenge and owner-directed revision. Requirements reconciliation continued after backlog generation. Role-agent answers remain exercise hypotheses."
+      },
+      {
+        "kind": "pull_request_body_and_local_history",
+        "url": "https://github.com/jmservera/ama/pull/32",
+        "commit_abbreviation": "e60adcd7",
+        "finding": "Critiques of disposable prototype PRs 19, 24 and 27 informed simplicity requirements; direct staff usability research remained absent."
+      },
+      {
+        "kind": "pull_request_body_and_local_history",
+        "url": "https://github.com/jmservera/ama/pull/71",
+        "commit_abbreviation": "9ef7e40f",
+        "finding": "The desk-research journey atlas informed revised BRD/PRD requirements and ADR 0003, with unresolved quality and approval gates."
+      },
+      {
+        "kind": "later_pull_request_body_and_local_history",
+        "url": "https://github.com/jmservera/ama/pull/461",
+        "commit_abbreviation": "d783b63a",
+        "finding": "Later source history formalised recurring stabilization and a qualified local checkpoint. This is outside the original case window and does not establish a date of restored deployed usability."
+      }
+    ],
+    "project_insights_export": {
+      "path": "project-insights-2026-11-01.csv",
+      "sha256": "dfb9fe875bda546f545b625a594d2ce4a04ca2586f7140f285fd9b76de558489",
+      "provenance": "Owner-supplied chart.csv text associated with GitHub project 7; all supplied rows and column names preserved with LF line endings. The checksum binds this repository copy, not unavailable original-download bytes.",
+      "columns": ["Category", "Open", "Completed", "Not planned"],
+      "daily_rows": 32,
+      "label_range": ["Oct 1", "Nov 1"],
+      "year": "2026 inferred from the owner discussion; absent from CSV labels",
+      "export_timestamp": null,
+      "timezone": null,
+      "filters_and_status_definitions": null,
+      "handoff_landmark": {
+        "earlier_label": "Oct 13",
+        "later_label": "Oct 14",
+        "open": [12, 143],
+        "completed": [1, 1]
+      },
+      "latest_supplied_row": {"Open": 129, "Completed": 86, "Not planned": 7},
+      "interpretation": "Supports a batch backlog expansion and later issue-state movement. It does not identify PR throughput, accepted features, issue-reopening history or deployed usability.",
+      "insights_page_retrieval": "HTTP 404; the supplied export is the available chart evidence."
+    }
+  },
   "observations": [
     {
       "id": "O1",

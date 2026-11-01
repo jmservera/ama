@@ -21,7 +21,34 @@
     "new_research_scope": "Owner explicitly authorized context-appropriate incorporation of the two named video caption checks and verified reflection/Ng research in this same branch/PR."
   },
   "execution_evidence": {
+    "additive_supplement_and_warning_remediation": {
+      "owner_request": "Supplement only additive; remove repeated Background/pages/text and review Tectonic warnings.",
+      "current_delivery": "main.pdf",
+      "current_pages": 41,
+      "current_supplement_start_page": 36,
+      "current_cited_entries": 94,
+      "reusable_entries": 105,
+      "removed_repetition": [
+        "Expanded Background input and its three reprinted main figures",
+        "Repeated compact appendix",
+        "Long expanded case narratives",
+        "Five duplicate mechanism indicator rows"
+      ],
+      "retained_additive_material": "Source-specific qualifications, detailed rival/operational checks, measurement procedures, exact prompt, deferred definitions and provenance.",
+      "encoding_root_cause": "Old fvextra loads lineno4.41; line296 has Latin1fc in a TeX comment, not manuscript corruption.",
+      "encoding_remedy": "Use verified literal listings wrapping without lineno; no global cache edit or warning suppression.",
+      "paragraph_remedy": "Scoped ragged-right bibliography alignment; duplicated compact paragraph no longer included.",
+      "literal_prompt_sha256": "75f646edbe04e1e3403b092b13edd6b66615a3362e67ad49744d229cdcb94f29",
+      "official_build_command": "./tools/update-pdf.sh",
+      "targeted_Tectonic_warnings": "Absent",
+      "focused_tests": {"passed": 34, "skipped": 0},
+      "PDF_outline_links_and_bounds": "Verified",
+      "visual_check": "Rendered citation, additive supplement opening and literal prompt pages30/36/40 inspected.",
+      "previous_full_integration": "Historical only; original hashes and source versions retained, not a current all-prose-preservation claim.",
+      "scientific_or_collection_approval": "Unchanged; not granted"
+    },
     "single_document_consolidation": {
+      "historical_stage": "Initial full integration, before the owner's later additive-only revision.",
       "owner_request": "Merge all supplement document content into a Supplement section in main; explicitly delete the old standalone TeX/PDF/bibliography.",
       "current_delivery": "main.pdf",
       "pages": 52,

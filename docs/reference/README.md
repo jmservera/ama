@@ -22,8 +22,18 @@ management: short pages that point to clusters of related material.
 ## How to Use This Knowledge Base
 
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
-the owner-selected title is preserved and all former supplement content is
-integrated in the main PDF, with reconciled labels and one bibliography. The prospective five-arm candidate has
+the owner-selected title is preserved and the supplement is part of the
+main PDF, with reconciled labels and one bibliography.
+The owner-requested additive revision removes repeated Background, figures
+and case narratives; the current 37-page paper retains only extra source
+qualifications and methodological/provenance detail in its Supplement.
+The [nine-point author review](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#author-review-disposition-1-november)
+restores the discovery-to-backlog-to-feedback account, abstracts the case and
+records the supplied project export. Four requested scientific skills support
+the equation audit; risk/annotation domains and discrete break-even are
+explicit. Scheduling-block dependence must still be resolved against the
+variance and bootstrap scheme before the new freeze and collection.
+The prospective five-arm candidate has
 33 trajectories per arm/model (495), a conditional 10-point coverage target,
 matched-resource delivery, visible repair and a blocked primary comparison.
 Three pinned static snapshots, source/access limits, lexical validation and
@@ -48,7 +58,11 @@ sentences. Twenty-seven focused authoring tests and the affected builds pass;
 the experiment, title and approval boundaries are unchanged. The later Ruff
 denominator correction uses only submitted Python lines, with regenerated
 evidence and original figures retained as superseded. Thirty-two focused
-authoring regressions cover the completed corrections and unified delivery.
+authoring regressions cover the earlier corrections and unified delivery.
+The [Tectonic warning remedy](../capstone/thought-leadership/everything-but-the-software/README.md#tectonic-warning-review-and-remedy)
+uses a literal wrapped renderer without the old Latin-1 `lineno` dependency,
+with scoped citation alignment and no diagnostic suppression. Thirty-four
+focused tests cover the current additive revision and unchanged prompt.
 
 For the [31 October live app observations](../architecture/cutover-evidence-pack.md#live-app-verification-2026-10-31-refs-523-524-570-432),
 resident sign-in and chat open/close, resize, dock/undock and narrow/wide
