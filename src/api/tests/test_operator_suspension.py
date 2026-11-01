@@ -117,6 +117,21 @@ def transaction_failures(test: Any, s: dict[str, Any], actor: dict[str, Any]) ->
     test.assertEqual(test.store.continuity_view(test.pm)["suspensions"][0]["status"], "Suspended")
 
 
+def fresh_release(test: Any, scope: str) -> None:
+    """Give the scope its own active release without replacing records other tasks retain."""
+    rec = release_support.fixture(
+        scope, assistants.runtime_binding(scope, test.store.ai), test.store.ai.model_version,
+        "constructed-fixture",
+    )
+    with test.service.transaction() as db:
+        db.execute("DELETE FROM assistant_releases WHERE id=?", ("fx-fresh-" + scope,))
+        db.execute(
+            "INSERT INTO assistant_releases (id,capability,status,body,revision) "
+            "VALUES (?,?,'active',?,1)",
+            ("fx-fresh-" + scope, scope, assistant_release.canonical(rec)),
+        )
+
+
 def retained_snapshot(test: Any, kind: str, variant: str, scope: str | None = None) -> None:
     """Exercise persisted current/retained evidence through the real incident writer."""
     legacy = kind == "legacy"
@@ -135,6 +150,7 @@ def retained_snapshot(test: Any, kind: str, variant: str, scope: str | None = No
                 )
             )
         else:
+            fresh_release(test, scope)
             queued = test.service.invoke(test.pm, scope, "ZF-1")
             ready = test.service.detail(test.pm, queued["id"])
             if ready["state"] == "pending":
