@@ -342,22 +342,26 @@ safe-outputs:
             REMOTE="https://x-access-token:${GH_TOKEN}@${GITHUB_SERVER_URL#https://}/${GITHUB_REPOSITORY}.git"
             LEASE="$(git ls-remote "$REMOTE" "refs/heads/${REFRESH_BRANCH}" | cut -f1)"
             newer_than_scored() {
+              # Sets NEWER and must be called as a plain statement so a failed lookup aborts under errexit.
               local other="$1" relation
-              if [ -z "$other" ] || [ "$other" = "$SCORED_SHA" ]; then return 1; fi
+              NEWER=no
+              if [ -z "$other" ] || [ "$other" = "$SCORED_SHA" ]; then return 0; fi
               relation="$(gh api "repos/${GITHUB_REPOSITORY}/compare/${SCORED_SHA}...${other}" --jq .status)"
-              [ "$relation" = "ahead" ]
+              if [ "$relation" = "ahead" ]; then NEWER=yes; fi
             }
             main_baseline_commit() {
               gh api "repos/${GITHUB_REPOSITORY}/contents/.github/rubric/scores/latest.json?ref=main" --jq .content | base64 -d | jq -r '.commit // empty'
             }
             MAIN_SCORED="$(main_baseline_commit)"
-            if newer_than_scored "$MAIN_SCORED"; then
+            newer_than_scored "$MAIN_SCORED"
+            if [ "$NEWER" = yes ]; then
               echo "::notice::The baseline on main already records newer commit ${MAIN_SCORED}; not replacing it with the score for ${SCORED_SHA}."
               exit 0
             fi
             if [ -n "$LEASE" ]; then
               PENDING_SCORED="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${LEASE}" --jq .commit.message | sed -n 's/^Scored commit: \([0-9a-f]\{40\}\)$/\1/p;T;q')"
-              if newer_than_scored "$PENDING_SCORED"; then
+              newer_than_scored "$PENDING_SCORED"
+              if [ "$NEWER" = yes ]; then
                 echo "::notice::The pending baseline refresh already records newer commit ${PENDING_SCORED}; not replacing it with the score for ${SCORED_SHA}."
                 exit 0
               fi
@@ -385,7 +389,8 @@ safe-outputs:
             fi
             # A newer refresh may have merged while this branch was being published.
             MAIN_SCORED="$(main_baseline_commit)"
-            if newer_than_scored "$MAIN_SCORED"; then
+            newer_than_scored "$MAIN_SCORED"
+            if [ "$NEWER" = yes ]; then
               echo "::notice::The baseline on main now records newer commit ${MAIN_SCORED}; leaving refresh pull request #${PR} unmerged."
               exit 0
             fi
