@@ -211,3 +211,18 @@ class ChecklistLoading(unittest.TestCase):
         branch = source.split('api("/api/checklists")', 1)[1].split(".catch", 1)[0]
         self.assertIn("if (measures.length) paint();", branch)
         self.assertIn("no measures to check yet", branch)
+
+
+class BriefingFeedbackGuidance(unittest.TestCase):
+    def test_briefing_says_how_to_correct_and_give_feedback(self) -> None:
+        source = (WEB / "app.js").read_text(encoding="utf-8")
+        self.assertIn("data-briefing-feedback", source)
+        self.assertIn("If review controls are shown, choose Edit this draft", source)
+        self.assertIn("is unavailable, or the review is already recorded", source)
+        self.assertIn(
+            "may reuse the cached draft for an unverified briefing with unchanged records", source
+        )
+        self.assertIn(
+            "Use rules and templates, without AI, or continue with ordinary case work", source
+        )
+        self.assertIn("kept in the audit log as feedback", source)
