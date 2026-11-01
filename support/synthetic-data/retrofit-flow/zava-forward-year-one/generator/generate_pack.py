@@ -301,7 +301,8 @@ def main():
     write_csv(os.path.join(a.key_dir, "ground-truth-segments.csv"), segs)
     write_csv(os.path.join(a.key_dir, "ground-truth-anomalies.csv"), rec.anoms)
     with open(os.path.join(a.key_dir, "ground-truth-summary.json"), "w", encoding="utf-8") as f:
-        json.dump(dict(seed=seed, parameters=P, stats=st, anomaly_counts=dict(Counter(x["anomaly_type"] for x in rec.anoms)),
+        json.dump(dict(seed=seed, version=manifest["version"], generator_revision=manifest["generator_revision"],
+                       parameters=P, stats=st, anomaly_counts=dict(Counter(x["anomaly_type"] for x in rec.anoms)),
                        is_synthetic=True), f, indent=2, default=str)
 
 

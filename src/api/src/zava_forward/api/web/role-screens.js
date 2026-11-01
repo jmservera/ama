@@ -18,13 +18,13 @@ const screenPanel = (title, ...children) => h("section", { class: "card screen-r
 const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
   h("p", { class: "blocked-title" }, "Cannot confirm readiness"),
   screenFields([["Why it is blocked", reason], ["Owner", owner], ["Next action", action]]));
-function screenTable(label, headings, rows) {
+function screenTable(label, headings, rows, limit = 50) {
   return h("div", {},
-    rows.length > 50 && h("p", { role: "status" }, `Showing the first 50 of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
+    rows.length > limit && h("p", { role: "status" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
     rows.length ? h("div", { class: "table-scroll", role: "region", "aria-label": label, tabindex: 0 },
       h("table", {}, h("caption", {}, label),
         h("thead", {}, h("tr", {}, headings.map((title) => h("th", { scope: "col" }, title)))),
-        h("tbody", {}, rows.slice(0, 50).map((row) => h("tr", {}, row.map((value) => h("td", {}, screenValue(value))))))))
+        h("tbody", {}, rows.slice(0, limit).map((row) => h("tr", {}, row.map((value) => h("td", {}, screenValue(value))))))))
       : h("p", { class: "empty" }, "No records supplied. This does not establish readiness."));
 }
 function registerRoleScreen(screen) {
@@ -183,6 +183,119 @@ registerRoleScreen({
   }
 });
 
+const choiceRoles = ["Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer"];
+const choiceStop = new Set(["Paused", "Withdrawn"]);
+const choiceLatest = (m) => (m.versions || []).at(-1);
+const choiceBinding = (v) => `scope ${screenValue(v.scope)}, revision ${screenValue(v.context_revision)}, design ${screenValue(v.design_version)}`;
+const choiceStopVersion = (m) => {
+  if (m.review?.status !== "Needs human review") return null;
+  const v = (m.versions || []).find((x) => x.version === m.review.decision_version);
+  return v && choiceStop.has(v.status) ? v : null;
+};
+const choiceStopped = (m) => choiceStop.has(m.status) || choiceStopVersion(m) !== null;
+function choiceMeasure(m) {
+  const v = choiceLatest(m);
+  const ctx = m.context ? `scope ${screenValue(m.context.scope)}, revision ${screenValue(m.context.revision)}, design ${screenValue(m.context.design_version)}` : "Current scope not recorded";
+  return [m.measure, ctx, m.status,
+    v ? `v${v.version} ${v.status} (${choiceBinding(v)}), answered by ${screenValue(v.answered_by)}, recorded ${screenStamp(v.at)}${v.note ? `: ${v.note}` : ""}` : "None recorded",
+    screenValue(m.readiness)];
+}
+registerRoleScreen({
+  id: "resident-choice",
+  title: "Resident choice and update queue",
+  roles: choiceRoles,
+  render(c) {
+    const measures = c.measure_decisions || [];
+    const stopped = measures.filter(choiceStopped);
+    const update = c.resident_update;
+    const requests = c.service_requests || [];
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Record supplied answers in the case workspace. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Choice for each measure",
+        h("p", {}, "Each answer belongs to one measure and one scope version. Not recorded means no answer is known. Contact or access is never read as a yes."),
+        screenTable("Measure choices by version",
+          ["Measure", "Scope version", "Current answer", "Latest recorded answer", "Readiness"],
+          measures.map(choiceMeasure))),
+      screenPanel("Paused or withdrawn by the resident",
+        h("p", {}, "A pause or withdrawal is the resident's decision about one measure. It is not a contact attempt, a missed visit or an access need."),
+        stopped.length ? screenTable("Measures paused or withdrawn",
+          ["Measure", "State and scope answered", "In their words", "Restart needs"],
+          stopped.map((m) => {
+            const v = choiceStopVersion(m) || choiceLatest(m);
+            const state = choiceStop.has(m.status) && v === choiceLatest(m) ? m.status : `${v.status} (current answer ${m.status})`;
+            return [m.measure, v ? `${state}, ${choiceBinding(v)}` : state, v?.note, "Human review before any restart"];
+          }))
+          : h("p", { class: "empty" }, "No measure is currently paused or withdrawn in the recorded answers.")),
+      screenPanel("Linked update commitment",
+        update ? screenFields([
+          ["Status", update.status], ["Purpose or linked issue", update.purpose],
+          ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
+          ["Basis for due date", update.basis], ["Safe route reference", update.safe_contact_ref],
+          ["Version", update.version], ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
+          : screenUnknown("No update commitment is recorded for this home.", "Case owner or resident-workflow manager", "Record a commitment in the case workspace")),
+      screenPanel("Service requests and access needs (separate from choice)",
+        screenTable("Service requests and contact needs",
+          ["Request", "Route", "Status", "Contact needs", "Next update"],
+          requests.map((r) => [r.id, r.route, r.status, (r.accessibility || ["Unknown"]).join(", "), r.next_update]))));
+  }
+});
+const hazardTriageRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "Quality Inspector"];
+const hazardActor = (value) => value && (value.name || value.role)
+  ? [value.name, value.role].filter(Boolean).join(", ") : "Unknown";
+const hazardStep = (stamp) => stamp ? `Recorded ${screenStamp(stamp)}` : "Not recorded";
+function hazardFollowUp(h) {
+  if (h.accepted_at) return `${hazardActor(h.accepted_by || h.destination)} owns the accepted scope`;
+  if (h.received_at) return `Pending acceptance. Follow-up owner: ${hazardActor(h.follow_up || h.sender)}`;
+  if (h.sent_at) return `Pending receipt. Follow-up owner: ${hazardActor(h.sender)} chases until acceptance`;
+  if (h.referred) return `Legacy referral with no recorded send time. Recorded owner (unverified): ${screenValue(h.owner)}. Retrofit Coordinator to confirm ownership and check the external service record`;
+  return `No referral sent. Owner: ${screenValue(h.owner)} to send or record a manual route`;
+}
+function hazardHold(h) {
+  const hold = h.hold || {};
+  const decision = hold.decision;
+  const scope = `${screenValue(hold.scope)} ${screenValue(hold.case_id)} only`;
+  if (hold.status !== "Released") return `${screenValue(hold.status)}. Scope: ${scope}. Release needs an authorised human decision.`;
+  return decision
+    ? `Released. Scope: ${scope}. Decided by ${hazardActor(decision.actor)} at ${screenStamp(decision.at)}. Reason: ${screenValue(decision.reason)}. Evidence: ${screenValue(decision.evidence)}`
+    : `Released. Scope: ${scope}. No authoritative decision evidence is recorded; do not rely on this release.`;
+}
+function hazardScreen(intro) {
+  return (c) => {
+    const items = c.hazards || [];
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, intro),
+        h("p", {}, "This screen does not classify hazards, set clocks, close hazards or authorise work. Categories and priorities are the recorded report, not a service categorisation. Sent, received and accepted are separate: a sent referral is not receipt, and receipt is not ownership. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only. Every recorded hazard and safeguarding item is listed, including released ones.`)),
+      screenPanel("Referral queue",
+        screenTable("Hazard referrals for this home",
+          ["Item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up"],
+          items.map((x, i) => [`H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
+            screenStamp(x.aware_at), x.source, hazardActor(x.destination),
+            hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
+            x.state, hazardFollowUp(x)]), Infinity)),
+      screenPanel("Retrofit hold and release decision",
+        screenTable("Scoped hold and release evidence",
+          ["Item", "Hold and release evidence", "Service response due", "Service responded"],
+          items.map((x, i) => [`H-${i + 1}`, hazardHold(x), hazardStep(x.response_due_at), hazardStep(x.responded_at)]), Infinity)),
+      screenPanel("Where to act",
+        h("p", {}, "Referral, receipt, acceptance and release are recorded in the existing case workspace by the named authorised person. Emergency concerns follow the existing human emergency procedure now, not this screen.")));
+  };
+}
+registerRoleScreen({
+  id: "safety-lead",
+  title: "Building safety referral queue",
+  roles: ["Building Safety Liaison", ...screenManagers],
+  render: hazardScreen("Read-only view for the Building Safety lead: where each referral stands, who must follow up and what evidence supports any hold release.")
+});
+registerRoleScreen({
+  id: "hazard-triage",
+  title: "Repairs and hazard triage",
+  roles: hazardTriageRoles,
+  render: hazardScreen("Read-only view for repairs and hazard triage: awareness time and source, referral progress and the person who chases an unanswered referral.")
+});
 const operatorSide = (a) => a ? `${screenValue(a.value)}; source ${screenValue(a.source_id)} v${screenValue(a.version)}; dated ${screenValue(a.date)}; ${screenValue(a.validation_state)}` : "Unknown";
 const operatorStatus = (c, q) => (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1)?.status || "Unresolved";
 registerRoleScreen({
@@ -230,6 +343,8 @@ registerRoleScreen({
           events.map((e) => [e.id, e.query_id, e.status, screenStamp(e.at), screenPerson(e.recorded_by), e.reason, e.evidence])),
         screenFields([["Recovery context", work ? `Next action: ${screenValue(work.next_action)}. Owner: ${screenValue(work.owner)}. Recorded as of ${screenValue(work.as_of)}.` : "Unknown. No recovery context is recorded."],
           ["Integration run and queue state", "Unknown. No interface run record is supplied to this screen."]])));
+  }
+});
 const reviewerRole = "Contracts manager, independent of the person who issued or submitted the pack";
 const wording = (value, fallback = "Unknown") => value === null || value === undefined || value === "" ? fallback : String(value);
 const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
@@ -328,6 +443,8 @@ registerRoleScreen({
           ["Acknowledgement", "Not recorded. An acknowledgement is not acceptance."],
           ["Independent review and acceptance", "Unknown. Review data is not available here. Done by someone other than you."],
           ["Next reviewer", reviewerRole]])));
+  }
+});
 const financeRoles = ["Grants and Evidence Officer", ...screenManagers];
 const financeCurrency = new Intl.NumberFormat("en-GB", { style: "currency", currency: "GBP" });
 const financeMoney = (value) => typeof value === "number" && Number.isFinite(value) ? financeCurrency.format(value) : "Unknown";
