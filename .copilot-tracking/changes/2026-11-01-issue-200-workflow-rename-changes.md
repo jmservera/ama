@@ -1,5 +1,7 @@
-# Issue 200 workflow rename changes (2026-11-01)
-
+---
+title: "Issue 200 workflow rename changes (2026-11-01)"
+ms.date: 2026-11-01
+---
 * .github/workflows/mvp-ci.yml: name `Source CI`.
 * .github/workflows/mvp-validation.yml: name `Source validation`.
 * tools/rpi-checks.py: WORKFLOW_HASHES updated for both files.

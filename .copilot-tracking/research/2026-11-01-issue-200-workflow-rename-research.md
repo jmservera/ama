@@ -1,5 +1,7 @@
-# Issue 200 remaining slice research (2026-11-01)
-
+---
+title: "Issue 200 remaining slice research (2026-11-01)"
+ms.date: 2026-11-01
+---
 Task: issue-200-workflow-rename. Research disposition: executed. Planning Readiness: Ready.
 
 ## Evidence
