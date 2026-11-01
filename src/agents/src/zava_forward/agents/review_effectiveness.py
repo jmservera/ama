@@ -70,6 +70,29 @@ def _findings(
     return found
 
 
+def _corrected(prop: Proposal, facts: dict[str, str], required: list[str]) -> str:
+    """Full replacement: every supported claim at its source value plus each required topic."""
+    topics = [c["topic"] for c in prop["claims"] if c["topic"] in facts]
+    topics += [t for t in required if t in facts and t not in topics]
+    return "; ".join(f"{t} is {facts[t]}" for t in topics)
+
+
+def replacement_effective(
+    prop: Proposal, rec: dict[str, Any], facts: dict[str, str], required: list[str]
+) -> bool:
+    """An edit corrects a defect only if the final text states source facts and drops the error."""
+    text = rec.get("override_text") or ""
+    topics = {c["topic"] for c in prop["claims"] if c["topic"] in facts} | set(required)
+    if not text or not all(f"{t} is {facts[t]}" in text for t in topics if t in facts):
+        return False
+    for c in prop["claims"]:
+        if c["topic"] not in facts and c["topic"] in text:
+            return False
+        if facts.get(c["topic"]) != c["asserted"] and f"{c['topic']} is {c['asserted']}" in text:
+            return False
+    return True
+
+
 def competent(
     prop: Proposal, facts: dict[str, str], rec: dict[str, Any], required: list[str]
 ) -> Decision:
@@ -81,8 +104,7 @@ def competent(
     reason = f"{kind}: {topic} differs from the case {SOURCE_TAG}{source}]"
     if kind == "unsupported":
         return "reject", reason, None, effort + 1
-    fixed = "; ".join(f"{t} is {facts[t]}" for _, t, _ in found if t in facts)
-    return "edit", reason, fixed, effort + 1
+    return "edit", reason, _corrected(prop, facts, required), effort + 1
 
 
 def default_accept(
@@ -107,7 +129,13 @@ PANELS: dict[str, Panel] = {
 }
 
 
-def gate_satisfied(prop: Proposal, rec: dict[str, Any], labels: list[str]) -> tuple[bool, str]:
+def gate_satisfied(
+    prop: Proposal,
+    rec: dict[str, Any],
+    labels: list[str],
+    facts: dict[str, str] | None = None,
+    required: list[str] | None = None,
+) -> tuple[bool, str]:
     """Controlled gate: only an evidenced human answer satisfies it, never over a defect."""
     ev = rec.get("review_evidence")
     if not ev or not ev.get("reviewer") or rec["status"] == "Not reviewed":
@@ -119,6 +147,8 @@ def gate_satisfied(prop: Proposal, rec: dict[str, Any], labels: list[str]) -> tu
         source = reason.partition(SOURCE_TAG)[2].rstrip("]")
         if not reason or source not in labels:
             return False, "reason does not name a source that resolves in the case"
+        if action == "edit" and not replacement_effective(prop, rec, facts or {}, required or []):
+            return False, "edit does not correct the defect or omits required facts"
         return True, "defect corrected or rejected with source and reason"
     if action == "reject":
         return False, "correct control rejected"
@@ -153,7 +183,14 @@ def run_panel(name: str, panel: Panel, spec: dict[str, Any], workdir: str) -> di
         action, reason, text, units = panel(prop, facts, rec_view, spec["required_topics"])
         store.review_ai(OWNER, rec_view["record_id"], action, reason, text)
         rec = next(r for r in store.data["recommendations"] if r["id"] == rec_view["record_id"])
-        ok, why = gate_satisfied(prop, rec, labels)
+        ok, why = gate_satisfied(prop, rec, labels, facts, spec["required_topics"])
+        effective = bool(prop["defect"]) and (
+            action == "reject"
+            or (
+                action == "edit"
+                and replacement_effective(prop, rec, facts, spec["required_topics"])
+            )
+        )
         effort += units
         rows.append(
             dict(
@@ -164,7 +201,9 @@ def run_panel(name: str, panel: Panel, spec: dict[str, Any], workdir: str) -> di
                 reviewer=rec["review_evidence"]["reviewer"],
                 reason=rec["reviewer_reason"],
                 source_case=rec["case_ids"],
-                source_hashes=bool(rec["review_evidence"]["source_hashes"]),
+                source_hashes=rec["review_evidence"]["source_hashes"],
+                replacement=rec["override_text"],
+                defect_corrected=effective,
                 gate_satisfied=ok,
                 gate_note=why,
                 effort_units=units,
@@ -172,37 +211,43 @@ def run_panel(name: str, panel: Panel, spec: dict[str, Any], workdir: str) -> di
         )
     defects = [r for r in rows if r["defect"]]
     controls = [r for r in rows if not r["defect"]]
-    detected = [r for r in defects if r["action"] != "accept"]
+    detected = [r for r in defects if r["defect_corrected"]]
     return dict(
         panel=name,
         rows=rows,
         effort_units=effort,
+        reviews=len(rows),
         defects=len(defects),
         detected=len(detected),
         detection_rate=round(len(detected) / len(defects), 3) if defects else None,
-        corrections=sum(r["action"] == "edit" for r in defects),
+        corrections=sum(r["action"] == "edit" and r["defect_corrected"] for r in defects),
         rejections=sum(r["action"] == "reject" for r in defects),
         false_rejects=sum(r["action"] == "reject" for r in controls),
         uncorrected_defects_through_gate=sum(
-            r["gate_satisfied"] and r["action"] == "accept" for r in defects
+            r["gate_satisfied"] and not r["defect_corrected"] for r in defects
         ),
+        uncorrected_defects=sum(not r["defect_corrected"] for r in defects),
         gate_passed=all(r["gate_satisfied"] for r in rows),
         audit_verified=bool(store.verify_audit()),
     )
 
 
 def workflow_only(spec: dict[str, Any], workdir: str) -> dict[str, Any]:
-    """The same case in workflow-only mode: the rules-based template."""
+    """The same case and workload in workflow-only mode, counted with the panel effort model."""
     output = [""]
     store = _store(workdir, spec, output)
-    view = store.ai_run(OWNER, spec["case"]["id"], spec["task"], mode="workflow")
-    claims = max(len(view.get("citations") or []), 1)
+    effort, verified, source, mode = 0, True, "", ""
+    for _ in spec["proposals"]:
+        view = store.ai_run(OWNER, spec["case"]["id"], spec["task"], mode="workflow")
+        effort += max(len(view.get("citations") or []), 1) + 1
+        verified, source, mode = verified and view["verified"], view["source"], view["mode"]
     return dict(
-        source=view["source"],
-        mode=view["mode"],
-        verified=view["verified"],
+        source=source,
+        mode=mode,
+        verified=verified,
         seeded_defects=0,
-        effort_units=claims + 1,
+        reviews=len(spec["proposals"]),
+        effort_units=effort,
     )
 
 
@@ -219,6 +264,7 @@ def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
     checks = dict(
         competent_detects_all_seeded_defects=comp["detection_rate"] == 1.0,
         no_uncorrected_defect_satisfies_gate=comp["uncorrected_defects_through_gate"] == 0
+        and comp["uncorrected_defects"] == 0
         and comp["gate_passed"],
         default_acceptance_cannot_pass=not panels["default_accept"]["gate_passed"],
         citation_validity_alone_cannot_pass=not panels["automation_bias"]["gate_passed"]
@@ -227,6 +273,7 @@ def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
         < panels["automation_bias"]["defects"],
         reviewer_source_reason_retained=all(
             r["reviewer"]
+            and isinstance(r["source_hashes"], dict)
             and r["source_hashes"]
             and r["source_case"]
             and (r["reason"] or not r["defect"])
@@ -240,7 +287,8 @@ def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
         workflow_only=wf,
         checks=checks,
         passed=all(checks.values()),
-        effort_note="scripted comparison units on the same case; not measured reviewer time",
+        effort_note="scripted comparison units, same case and workload (one review per "
+        "proposal on both sides); not measured reviewer time",
         evidence=dict(
             provider="scripted",
             human_effectiveness="not evaluated (no authorised competent reviewers)",

@@ -1,6 +1,6 @@
 {
   "version": "2026-11-01",
-  "description": "Seeded critical defects and correct controls for the human-review effectiveness test (AC-070). Every proposal cites a label that resolves in the case, so citation validity alone cannot detect the defect.",
+  "description": "Constructed, synthetic seeded critical defects and correct controls for the human-review effectiveness test (AC-070). Every proposal cites a label that resolves in the case, so citation validity alone cannot detect the defect.",
   "case": {"id": "T-1", "days": 12, "hazard": true, "support": true},
   "task": "summary",
   "required_topics": ["Open safety issues"],

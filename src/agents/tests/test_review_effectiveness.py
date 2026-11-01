@@ -30,7 +30,8 @@ class ReviewEffectivenessTests(unittest.TestCase):
     def test_reviewer_source_and_reason_are_retained(self) -> None:
         for r in self.report["panels"]["competent"]["rows"]:
             self.assertEqual(r["reviewer"], "owner@eval.example")
-            self.assertTrue(r["source_hashes"] and r["source_case"])
+            self.assertTrue(isinstance(r["source_hashes"], dict) and r["source_hashes"])
+            self.assertTrue(r["source_case"])
             if r["defect"]:
                 self.assertIn(re_.SOURCE_TAG, r["reason"])
 
@@ -38,7 +39,38 @@ class ReviewEffectivenessTests(unittest.TestCase):
         self.assertGreater(self.report["panels"]["competent"]["effort_units"], 0)
         wf = self.report["workflow_only"]
         self.assertEqual((wf["mode"], wf["seeded_defects"]), ("workflow-only", 0))
+        self.assertEqual(wf["reviews"], self.report["panels"]["competent"]["reviews"])
         self.assertIn("not measured reviewer time", self.report["effort_note"])
+
+    def test_edits_keep_supported_claims_and_required_topics(self) -> None:
+        rows = {r["proposal"]: r for r in self.report["panels"]["competent"]["rows"]}
+        for pid in ("D-WRONG", "D-STALE"):
+            self.assertIn("Open safety issues is 1", rows[pid]["replacement"])
+            self.assertTrue(rows[pid]["defect_corrected"])
+
+    def test_ineffective_edits_do_not_correct_or_satisfy_gate(self) -> None:
+        prop = json.loads(re_.GOLDEN.read_text())["proposals"][2]
+        facts = {"Days in stage": "12", "Open safety issues": "1"}
+        required = ["Open safety issues"]
+        reason = f"mismatch {re_.SOURCE_TAG}Days in stage: 12]"
+        labels = ["Days in stage: 12"]
+        for text in (
+            None,
+            "",
+            "Days in stage is 3; Open safety issues is 1",
+            "Days in stage is 12",
+        ):
+            rec = dict(
+                review_evidence=dict(reviewer="a@b"),
+                status="Edited",
+                reviewer_action="edit",
+                reviewer_reason=reason,
+                override_text=text,
+            )
+            self.assertFalse(re_.replacement_effective(prop, rec, facts, required), text)
+            self.assertFalse(re_.gate_satisfied(prop, rec, labels, facts, required)[0], text)
+        good = dict(rec, override_text="Days in stage is 12; Open safety issues is 1")
+        self.assertTrue(re_.gate_satisfied(prop, good, labels, facts, required)[0])
 
     def test_gate_refuses_accepted_defect_and_unresolvable_source(self) -> None:
         labels = ["Owner: Eval Owner"]
