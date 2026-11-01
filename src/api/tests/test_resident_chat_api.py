@@ -589,6 +589,15 @@ class ChatApiTests(DemoTestCase):
         self.assertIsNone(body["action"])
         self.assertIsNone(body["callback_search"])
 
+    def test_how_to_send_documents_question_is_not_refused_over_http(self) -> None:
+        question = "Where do I send my proof of income?"
+        self.assertFalse(chat.is_refusal(question))
+        self.assertTrue(chat.is_refusal("Where do I send my proof of income? Send it for me."))
+        status, body = self.ask(question=question)
+        self.assertEqual(status, 200)
+        self.assertIn("Closest topics", str(body["answer"]))
+        self.assertIn("What documents am I missing?", str(body["answer"]))
+
     def test_closest_topics_follow_the_words_used(self) -> None:
         examples = chat.suggestions("Where do I send my proof of income?")
         self.assertEqual(examples[0], "What documents am I missing?")

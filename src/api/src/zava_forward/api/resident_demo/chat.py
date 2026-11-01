@@ -479,12 +479,20 @@ def _pause_question(question: str) -> str | None:
     return "pause" if pause else "contact"
 
 
+# A resident asking how to send a document is not asking chat to send anything.
+HOW_TO_VERBS = frozenset({"send", "share", "forward"})
+DOCUMENT_HOW_TO = re.compile(
+    r"(?:where|how)\s+(?:do|can|should)\s+i\s+(?:send|share|forward|upload)\s+my\s+[a-z ]{1,40}\??"
+)
+
+
 def is_refusal(question: str) -> bool:
     """True for instruction injection and anything beyond the advisory boundary."""
     tokens = words(question)
-    if tokens & (BLOCKED_WORDS | ACTION_WORDS | BOUNDARY_WORDS) or OTHER_PERSON.search(
-        question.lower()
-    ):
+    blocked = BLOCKED_WORDS | ACTION_WORDS | BOUNDARY_WORDS
+    if DOCUMENT_HOW_TO.fullmatch(question.strip().lower()):
+        blocked -= HOW_TO_VERBS
+    if tokens & blocked or OTHER_PERSON.search(question.lower()):
         return True
     # Digits point at a case id or slot; record nouns without "my" point at someone else's record.
     if re.search(r"\d", question) or (tokens & RECORD_WORDS and not tokens & FIRST_PERSON):
