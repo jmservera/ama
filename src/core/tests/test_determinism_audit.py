@@ -3,6 +3,7 @@
 import json
 import unittest
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 
 from zava_forward.core.synthetic import determinism_audit as da
@@ -65,7 +66,8 @@ class DeterminismAuditTests(unittest.TestCase):
         self.assertEqual(da._check("fixed", fixed)["status"], "PASS")
 
     def test_scenario_reports_intrinsic_window_not_as_of(self) -> None:
-        windows = {r["generator"]: r["window"] for r in da.audit()["results"]}  # type: ignore[index, union-attr]
+        results: list[dict[str, Any]] = da.audit()["results"]  # type: ignore[assignment]
+        windows = {r["generator"]: r["window"] for r in results}
         self.assertEqual(windows["sensor-scenarios"]["basis"], "intrinsic")
         self.assertEqual(windows["sensor-scenarios"]["start"], "2024-01-01")
         self.assertNotIn("as_of", windows["sensor-scenarios"])
