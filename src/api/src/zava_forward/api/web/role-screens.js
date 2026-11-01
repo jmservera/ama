@@ -413,6 +413,8 @@ registerRoleScreen({
       blocked.length ? screenUnknown(`${blocked.length} of 5 gates are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
         blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
       screenTable("Same-home gate states", ["Gate", "State", "Meaning", "Owner", "Next action"], rows));
+  }
+});
 const technicalRoles = ["Retrofit Coordinator", "Quality Inspector", "Building Safety Liaison", ...screenManagers];
 const qualityRoles = ["Quality Inspector", ...screenManagers];
 // Competent role per sign-off, mirroring core signoffs.SIGNOFFS (a proposal for the programme to confirm).
