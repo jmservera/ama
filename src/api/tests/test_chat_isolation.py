@@ -12,6 +12,7 @@ from unittest.mock import patch
 from zava_forward.core import projection
 import chat_fixture  # src/agents/tests, on PYTHONPATH until M5
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation, neutralise
+from zava_forward.core.chatthreads import user_key
 from test_role_matrix import Matrix, PHONE, REASON, ROLES
 
 APPROVED = dict(CHAT_DPIA_REF="SYNTH-DPIA-1", CHAT_LAWFUL_BASIS_REF="SYNTH-LB-1", CHAT_NOTICE_REF="SYNTH-NOTICE-1")
@@ -252,6 +253,14 @@ class ChatIsolationTests(Matrix):
         self.assertEqual([e["action"] for e in log].count("chat.breakglass.granted"), 2)
         self.assertGreaterEqual([e["action"] for e in log].count("chat.breakglass.refused"), 4)
         self.assertIn("Investigating a reported misuse", next(e["detail"] for e in log if e["action"].endswith("granted")))
+        for e in log:
+            detail = json.loads(e["detail"])
+            self.assertIn("target", detail)
+            self.assertIn("purpose", detail, e)
+            self.assertNotIn("content", detail)
+        granted = json.loads(next(e["detail"] for e in log if e["action"].endswith("granted")))
+        self.assertEqual(granted["policy_ref"], "SYNTH-POLICY-1")
+        self.assertEqual(granted["target"], user_key(dict(email=target)))
 
     # Synthetic fixture replay: same-role, cross-role and spoofed-key probes from the 60,000-home stock fixture
     def test_fixture_isolation_cases_are_denied(self):
