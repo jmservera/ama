@@ -9,7 +9,13 @@ import { chromium } from "playwright";
 const here = dirname(fileURLToPath(import.meta.url));
 const paper = resolve(here, "..");
 const output = process.argv[2] ? resolve(process.argv[2]) : paper;
-const stems = ["fig-state-inheritance", "fig-pilot-design", "fig-contract-states"];
+const stems = [
+  "fig-state-inheritance",
+  "fig-pilot-design",
+  "fig-contract-states",
+  "fig-experiment-measures",
+  "fig-refactoring-economics",
+];
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
 const temporary = await mkdtemp(join(tmpdir(), "paper-excalidraw-"));
 let browser;

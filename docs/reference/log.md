@@ -9005,6 +9005,29 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   No deployed app defect, source fix, skip, full passing retry or gate bypass
   is inferred. Original Review and failed receipt remain preserved.
 
+## [2026-11-01] review | Reconcile paper with frozen v4 experiment
+
+* Reviewed the paper's experiment explanation against the public
+  `ama-thought-mve` v4 source, canonical protocol, contract panel, budget and
+  active model/retention/cost analysis. The attached prospective OSF packet
+  checksum matches; no private paid transcripts or runtime image were inspected.
+* Updated the [paper source package](../capstone/thought-leadership/everything-but-the-software/README.md#frozen-experiment-review-and-revision-1-november)
+  with eighteen three-model trajectories, actual endpoint scope, owner-reviewed
+  decisions, per-model uncertainty and remaining prospective collection gates.
+  The frozen kit and registration assets are unchanged.
+* Added quality/cost and assumed break-even conceptual infographics and
+  refreshed the design figure, with editable robot task-role metaphors.
+  Conditional economics are not experimental data, dollar savings or a forecast;
+  PF1-PF3 still require actual pilot results.
+* Original critiques and historical evidence remain. Separate execution is
+  operational separation, not independent scientific acceptance; no model
+  experiment, OSF update, external submission or scientific approval occurred.
+* The 51-page PDF compiles; all-page text bounds and three changed infographic
+  pages were inspected. Eleven paper/diagram tests and 593 frozen endpoint/
+  measurement/report tests pass with configured dependencies. A separate
+  assisted scoped critique found only stale status wording, now corrected;
+  this is not independent human peer review or full runtime acceptance.
+
 ## [2026-10-31] synthesis | Delivery bottleneck analysis and seven-day plan
 
 * Added the [delivery bottleneck analysis](./research/delivery-bottleneck-analysis-2026-10-31.md)
@@ -9395,6 +9418,53 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   stays unmet. Evidence is under `.copilot-tracking/` (r4 artifacts). No
   accessibility acceptance is claimed.
 
+## [2026-11-01] query | Paper critique revision and prospective five-arm design
+
+* Revised the existing paper while preserving the owner's selected title.
+  Moved extended literature, case audits, HIR/IDR definitions and historical
+  hashes to a separately compiled evidence supplement; original critiques,
+  v4 freezes and earlier data remain unchanged.
+* Added a prospective five-arm, three-model candidate with computed 33
+  trajectories per arm/model (495), an owner-selected 10-point coverage gain
+  and explicit SD25 planning assumption. Matched-resource delivery and visible
+  repair do not expose hidden evaluator output. OSF amendment, freeze,
+  affordability/deadline, privacy/readback and launch remain genuine gates.
+* Filed three static code snapshots, committed research/plan tracing, twenty
+  inspected evidence-boundary contexts and named GitHub metadata in the paper's
+  ancillary evidence. Corrected scope/attribution, source locators/metadata,
+  dated web-access limits, period normalization and cost-of-inaction semantics.
+  The 27 October retirement sign-off is not successful journey evidence.
+* The owner explicitly authorized public development PR updates, not visibility
+  changes, researcher-archive release, external scientific submission, OSF
+  mutation or collection. Historical cloud/sign-in/usage exports are explicitly
+  deferred; no tenant-wide query, private dataset or paid experiment occurred.
+* Focused authoring tests and v5 planning/privacy/large-CSV regressions pass.
+  All eighteen SDK checks pass under restored Node24, including actual startup
+  with locally rejected inference. Current-image and final publication evidence
+  remain separate; no independent human peer-review or conformance claim is made.
+
+## [2026-11-01] query | Reflection and memory sources in the paper
+
+* Incorporated the owner-selected video and Andrew Ng research in the existing
+  paper branch/PR, preserving the title, allocation, oracle and registration.
+  All available automatic English caption segments were inspected, with
+  timestamped attribution and audio/original-recording limits retained.
+* The first uploader's six-month headline is unsupported by the available
+  captions; Ng discusses changing coding tools and human-feedback iteration.
+  Laurence Moroney supplies the later code-debt/reflection examples.
+  The second upload contains an apparent Anthropic staff presentation about
+  persistent memory/dreaming, not an official channel or measured percentage
+  result. Official memory/dreaming docs corroborate mechanics, not gains.
+* Filed Ng's official reflection letter and its recommended Self-Refine,
+  Reflexion and CRITIC papers with verified authorship and mechanism locators.
+  MedAgentBench is a verified Ng-coauthored interactive-evaluation paper;
+  no Ng-coauthored LLM self-improvement experiment was verified in this bounded
+  search. No clinical data or model experiment was accessed.
+* The owner stopped full executable gates for changed documentation and
+  selected focused authoring/build/link checks. Reconciled the divergent remote
+  topic cleanly; the owner selected topic-only publication, leaving PR #692
+  open. The isolated experiment candidate is a separate draft PR; no main
+  merge, visibility mutation, OSF action or collection is authorized.
 ## [2026-11-01] update | Owner decisions D1 to D7 recorded
 
 * Recorded the owner's 2026-11-01 decisions on
@@ -9404,3 +9474,40 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Applied D4 and D5 policy text in `.github/copilot-instructions.md` and the
   backlog delivery coordinator agent. Workflow changes for D1 and D2 are in a
   separate PR. No accessibility acceptance is claimed.
+
+## [2026-11-01] query | Paper PR review corrections
+
+* Addressed all five inline findings in PR #692: complete conceptual-figure
+  integration checks, exclusive evidence output creation, comment-aware TeX
+  input expansion and two interrupted protocol sentences. Regression cases
+  cover removed figures, disabled slices, escaped percent signs, competing
+  report writes and symlinks.
+* Twenty-seven focused authoring tests, source/bibliography checks and
+  changed-Python syntax checks pass. VS Code had no test controller, so the
+  existing stdlib runner was used. The selected-title article and supplement
+  rebuild without undefined references or overfull text; original scientific
+  evidence and approval limits are unchanged.
+* The owner next requested a single delivered document with a Supplement
+  section in the main paper. That consolidation follows these fixes and
+  preserves the original standalone evidence; no experiment or registration
+  change is authorized.
+
+## [2026-11-01] restructure | One complete paper and Python lint correction
+
+* Integrated all existing supplement source bodies and the compact appendix
+  into an internal Supplement section in the main paper. Reconciled heading
+  levels, labels, links and one shared bibliography; the body-preservation
+  manifest binds the original content to source commit `80656f32`.
+* At the owner's explicit request, removed only the old standalone
+  supplement TeX, PDF and generated bibliography after exact three-file
+  backup/readback/restore checks. Original versions remain in Git.
+  The single current PDF has 52 pages; Supplement begins on page 37.
+* Addressed the late PR review finding on lint density: Ruff now receives
+  and counts only Python source. Regenerated all three pinned snapshots
+  into a new evidence file; rates are 188.22/142.30/125.83 per 1,000 Python
+  lines. Source hashes, lint counts, complexity and duplication are unchanged.
+  Original all-language density values remain as superseded evidence.
+* Thirty-two focused authoring tests and source/bibliography checks pass.
+  The actual PDF outline, internal supplement navigation and all-page text
+  bounds were checked. The title, study allocation and registration are
+  unchanged; no full application gate or new experiment was run.
