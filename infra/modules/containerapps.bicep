@@ -178,6 +178,7 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
             { name: 'ZF_ROLE_MAP', value: string(entraRoleMap) }
           ])
           probes: [
+            { type: 'Startup', httpGet: { path: '/healthz', port: 8088 }, periodSeconds: 5, failureThreshold: 24 }
             { type: 'Liveness', httpGet: { path: '/healthz', port: 8088 } }
             { type: 'Readiness', httpGet: { path: '/healthz', port: 8088 } }
           ]

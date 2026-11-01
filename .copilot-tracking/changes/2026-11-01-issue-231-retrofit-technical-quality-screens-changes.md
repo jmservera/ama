@@ -10,3 +10,10 @@
 
 * `src/core/src/zava_forward/core/quality.py`: `handover_blockers` uses `[]` instead of `None` for unbound accepted records.
 * `src/core/tests/test_quality_procurement.py`: added unbound-evidence regression.
+
+## Merge of origin/main (2026-11-01, PR #656)
+
+* Resolved `role-screens.js`: kept this PR's technical and quality screens and every role screen merged to main (resident choice, hazard triage, data operator, contractor job pack, finance, funding).
+* origin/main had unclosed `registerRoleScreen` blocks (a syntax error from earlier overlapping merges); closing `});` added so `node --check` passes.
+* `.github/rubric/scores/latest.json` kept the branch side; `docs/reference/log.md` kept both entries.
+* Validation: node --check, ruff check/format clean, API unittest 1490 run, only 2 import errors (azure.eventhub not installed locally); mypy only reports pre-existing azure.iot stub errors.
