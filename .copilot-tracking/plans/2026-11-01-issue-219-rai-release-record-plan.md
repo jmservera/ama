@@ -16,3 +16,7 @@ Compatible: keep key additive; do not alter `AUTHORITY_GAP` text (existing tests
 ## Acceptance mapping
 
 AC5 strengthened (gap itemised per authority). AC1 to AC4 unchanged and already evidenced. AC3 remains constructed-only.
+
+## Correction cycle
+
+Docs/evidence-only fixes for two Copilot review threads; no code change.

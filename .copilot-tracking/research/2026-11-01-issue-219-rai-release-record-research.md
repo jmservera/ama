@@ -22,3 +22,7 @@ Make the OQ-017 gap explicit per authority: add a pure, additive structure listi
 ## Not provable by this work
 
 * Actual approved evaluation evidence and named live holders (human decisions). The PR must use `Refs #219`.
+
+## Correction cycle evidence
+
+`assistants.py:626` builds `release_denial` with `missing` only, so the universal claim was invalid; scoped in README.

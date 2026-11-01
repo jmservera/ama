@@ -2,6 +2,10 @@
 
 Execution: executed once, self-review of the diff. Outcome: conformant for the delivered slice; AC3 and AC5 retain human-owned gaps.
 
+Independent review: PENDING. The original self-review outcome above is preserved; it does not satisfy the independent review required by `.github/copilot-instructions.md` and `src/README.md`. A separately attributed assessment is required before the requirement is treated as satisfied.
+
+Correction cycle 2026-11-01 (Copilot threads on PR #696): scoped the README `authority_holders` guarantee to denials from `assistant_release.denial()`; marked independent review pending.
+
 ## Findings
 
 * Additive key only; existing denial consumers and `AUTHORITY_GAP` text unchanged. No holder is invented (all `None`).

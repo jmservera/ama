@@ -10,3 +10,8 @@ Plan: [plan](../plans/2026-11-01-issue-219-rai-release-record-plan.md)
 Validation: core release tests (12) OK; api `test_assistant_release` and `test_assistants` 149 OK (50 skipped); ruff check, ruff format --check, mypy (core) clean; ruff clean for api. Local pip packages not installed, so PYTHONPATH src paths were used. No heavy gate run; CI is the evidence.
 
 Divergences: none.
+
+## Correction cycle (PR #696 review threads)
+
+* `src/core/README.md`: `authority_holders` scoped to `assistant_release.denial()` denials; disabled-task path excluded.
+* Review artifact: independent review marked pending; original self-review preserved.
