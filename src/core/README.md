@@ -436,6 +436,28 @@ target passes. Pause continues consuming the run time allowance, not a way to le
 simulator running unattended. See the [API runner](../api/README.md#opt-in-iot-consumer-and-synthetic-publisher-110-184)
 for actual SDK operation bounds, credential handling and activation gates.
 
+#### Cost estimate and run controls (#189)
+
+`synthetic.run_plan` records a pre-run estimate for N homes before any run:
+messages/day (3 per home by default), 4 KiB metered units against the decided
+B1/one-unit quota (400,000/day with a 40,000 reserve, less any units already
+used that day via `daily_used_units`), prorated hub cost for the provisioned time
+(whole days of `max_seconds`, not the simulated replay span) and budget cap, plus the run owner, time limit (at most 3600 s) and budget alert
+reference and threshold. It counts the whole run (all days) against the daily
+quota and refuses over-quota, over-budget, too-short or over-100,000-message
+runs (the `RunBudget` publisher limit; larger stock needs separately budgeted
+runs). The plan records a `replay_speed` (default and maximum 1000) that is
+passed to the `Pacer`; the replay span (days x 86,400 s / speed) must fit
+`max_seconds`. `RunController` starts only against a recorded, untampered estimate whose
+complete body matches the current plan, estimate and alert amount, allows one run, stops it, scales homes and rate down (never up) and
+inherits the `Pacer` hard deadline. Prices are public list estimates, not a quote.
+Nothing here sends traffic or verifies the live Azure budget alert (#146).
+
+```bash
+python3 -m zava_forward.core.synthetic.run_plan --homes 30000 --owner "<name>" \
+  --budget-usd 10 --alert-reference "<budget alert name>" --out estimate.json
+```
+
 From `src/core`, with the package installed:
 
 ```bash
@@ -3685,7 +3707,7 @@ usage summary do not load these message bodies.
   connection while leaving both staff caches unchanged; they do not establish
   SQL Server, live-model or operational acceptance.
 * The prompt holds only the caller's own thread, own unexpired memory and the projected case, each inside `UNTRUSTED` blocks with the block delimiters neutralised. The channel has no tools; replies are text only, labelled as unapproved, and a reply carrying tool-call or record-change syntax or a withheld reason is replaced by a refusal.
-* Break-glass is refused until `CHAT_BREAKGLASS_REF` (owner policy reference) is recorded and the caller role is named in `CHAT_BREAKGLASS_ROLES`. When allowed it needs a purpose, expires within 60 minutes, returns counts and ids only (never content) and writes granted and refused attempts to the audit ledger.
+* Break-glass is refused until `CHAT_BREAKGLASS_REF` (owner policy reference) is recorded and the caller role is named in `CHAT_BREAKGLASS_ROLES`. When allowed it needs a purpose, expires within 60 minutes, returns counts and ids only (never content) and writes granted and refused attempts, each with actor, target and redacted purpose, to the audit ledger. Policy options for the owner and DPO are in `docs/reference/research/chat-memory-dpia.md`.
 * Open items: the break-glass and administrator content-access policy is an owner decision (BRD OD-46) and is not decided here; whether contractors may use chat is undecided (denied); the injection set in `src/api/tests/test_chat_isolation.py` is a recorded regression set, not evidence of complete coverage; real-model behaviour was not exercised.
 
 Tests: `src/api/tests/test_chat_isolation.py` (extends the role matrix; replays the synthetic isolation fixture cases).
@@ -4062,3 +4084,20 @@ Tests: `src/core/tests/test_resident_showcase.py` (no SQL) and `test_resident_sh
 (loopback SQL Server only). The live synthetic provenance of the homes database is not established:
 cases have no per-case synthetic flag, so the allowlist table, filled only after named approval,
 is the provenance record. See the [API section](../api/README.md#synthetic-resident-showcase-462).
+
+## Affected-person challenge and correction route (#220)
+
+`zava_forward.core.challenges.ChallengeRegister` is a store-independent register for constructed
+challenges (FR-052, AC-071, FR-043). `record_digital` and `record_staff` (named staff, phone,
+in-person, paper or assisted-visit channel) record a challenge against a source, policy or proposal
+version and the human decision, with a human owner, a next-update date and a fixed accessible
+non-digital route statement. `view` shows only permitted explanations. Only the named owner can
+`review` or `resolve` with evidence. Graph nodes are `(kind, id, version)` tuples, so a correction
+to `POL-1/v1` does not touch dependents of `POL-1/v2`. A `corrected` outcome marks exactly the
+transitive dependents in the injected dependency graph stale and preserves prior versions; `upheld` and `withdrawn` mark
+nothing. The register has no consent, refusal, sanction, closure or hazard-clock fields and never
+reads or writes them.
+
+Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
+no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
+human review. Tests: `src/core/tests/test_challenges.py`.
