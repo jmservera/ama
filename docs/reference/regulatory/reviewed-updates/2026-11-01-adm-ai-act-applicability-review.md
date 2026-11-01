@@ -17,7 +17,7 @@ compliance position is inferred.
 * Decision owner: Legal and DPO. The exercise Legal, Compliance and DPO owner is
   Juan Manuel Servera (owner decision, 2026-10-15). Actual company appointees
   and professional competence are unknown.
-* Local snapshot checked: [UK GDPR consolidated text](./data-protection/uk-gdpr-current-text.md),
+* Local snapshot checked: [UK GDPR consolidated text](../data-protection/uk-gdpr-current-text.md),
   retrieved 2026-09-19.
 
 ## Official Source Check
@@ -38,7 +38,7 @@ decision.
 
 | Regime | Applicability question | Decision | Decider | Date | Official source checked by decider |
 | --- | --- | --- | --- | --- | --- |
-| UK GDPR Articles 22A to 22C | Do any Zava Forward workflows take a significant decision about a resident based solely on automated processing (no meaningful human involvement)? Which safeguards (information, representations, human intervention, contest) apply? | Pending | Pending | Pending | Pending |
+| UK GDPR Articles 22A to 22C | Do any Zava Forward workflows take a significant decision about a resident based solely on automated processing (no meaningful human involvement)? If so, do the Article 22B restrictions (special-category data, reliance on Article 6(1)(ea)) mean it is not permitted at all, and which Article 22C safeguards (information, representations, human intervention, contest) apply? | Pending | Pending | Pending | Pending |
 | EU AI Act | Do territorial conditions arise (EU placing on the market, EU-located persons or use of output in the EU)? If so, what is the Zava role (provider, deployer or other), and what classification and obligations follow? | Pending | Pending | Pending | Pending |
 
 Facts available to the decider, labelled as evidence and not as conclusions:
@@ -65,10 +65,10 @@ Each regime needs its own decision against its own provisions and facts.
 
 | ID | Affected item | Why it is affected | Proposed owner action |
 | --- | --- | --- | --- |
-| RI-1 | OQ-019 in [PRD](../../prds/zava-forward-retrofit-programme-demonstrator.md) | Open until a Legal/DPO decision is recorded | Record decisions in the table above, then update OQ-019 |
-| RI-2 | FR-034 and RULE-021 | Traced by the `automated-decision-safeguard` card | Confirm whether the requirement wording still fits Articles 22A to 22C |
+| RI-1 | OQ-019 in [PRD](../../../prds/zava-forward-retrofit-programme-demonstrator.md) | Open until a Legal/DPO decision is recorded | Record decisions in the table above, then update OQ-019 |
+| RI-2 | PRD FR-034 and BRD FR-034, RULE-021, RULE-022 and CON-003 in the [BRD](../../../brds/agentic-retrofit-programme-brd.md) | The same ID FR-034 differs between PRD (consistent queue/case views) and BRD (decision explanations); RULE-022 sets the automated-decision gate before live personal-data processing, and CON-003 sets the data protection constraint. PRD AC-072 concerns incident suspension, not Article 22 | Confirm whether each requirement's wording still fits Articles 22A to 22C, naming the document in each reference |
 | RI-3 | Seed card `automated-decision-safeguard` (`src/core/src/zava_forward/core/rulecards.py`) | Provision cites "Article 22 (illustrative)"; Articles 22A to 22C are the in-force provisions per the 2026-11-01 check. Approver is unassigned | After DPO decision, correct the citation and name the approver through the rule-card approval workflow (#211) |
-| RI-4 | Tests `src/core/tests/test_rulecards.py` and `src/agents/tests/test_ai_eval.py` | Assert the card's content and the AI evaluation | Re-run and update if the card changes; no test change before the decision |
+| RI-4 | Tests `src/core/tests/test_rulecards.py` (seed-card draft/exercise state), `src/core/tests/test_rule_engine.py` (significant-decision safeguard cases) and `src/agents/tests/test_ai_eval.py` (priority scenarios) | None asserts the seed card's provision citation | Re-run all three; when the approved card changes, add a citation assertion to `test_rulecards.py`. No test change before the decision |
 | RI-5 | AI release records (#219) | Release records bind AI activations to dependent policies | Reference this pack and the recorded decision; do not mark legal screening complete without it |
 | RI-6 | Regulatory register cadence | Local snapshot is dated 2026-09-19 | Keep monthly check cadence and recheck before release |
 | RI-7 | Related #121, #127, #209 and parent #218 | Share the legal basis for agent decisions | Cross-reference the decision when recorded |

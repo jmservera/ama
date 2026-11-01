@@ -35,3 +35,5 @@ Task: `issue-224-adm-ai-act-legal-review`. Date: 2026-11-01. Disposition: execut
 ## Planning readiness
 
 Ready: a documentation-only slice is feasible. Open limits: EU official text unretrieved; ICO guidance unchecked; Legal/DPO decision outstanding.
+
+* Correction cycle 2026-11-01: review-thread fixes recorded in the changes artifact; scope unchanged.

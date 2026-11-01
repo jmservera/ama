@@ -23,3 +23,5 @@ Documentation-only slice, no source change (rule card edit is a routed review it
 ## Success
 
 Criteria 2, 3 and 4 evidenced as prepared content; criteria 1 and 5 unmet pending Legal/DPO decision.
+
+* Correction cycle 2026-11-01: review-thread fixes recorded in the changes artifact; scope unchanged.

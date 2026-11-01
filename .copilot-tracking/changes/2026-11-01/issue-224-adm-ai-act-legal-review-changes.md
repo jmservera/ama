@@ -17,3 +17,8 @@ Plan: `.copilot-tracking/plans/2026-11-01/issue-224-adm-ai-act-legal-review-plan
 
 * No source or test change; rule card citation routed as RI-3 pending DPO decision.
 * Validation: documentation-only; relative links and Git diff reviewed. No Python touched, so no ruff or mypy run needed.
+
+## Correction cycle (PR #702 Copilot review, 2026-11-01)
+
+* Fixed five review threads in the applicability review: two broken relative links, Article 22B added to the decision question, RI-2 expanded to the BRD controls (FR-034 disambiguated, RULE-021, RULE-022, CON-003; AC-072 is a PRD incident-suspension criterion, not an Article 22 control), RI-4 test coverage corrected and `test_rule_engine.py` added.
+* Validation: links resolved; ruff, ruff format and the touched core tests rerun; no Python changed.
