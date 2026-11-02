@@ -18,7 +18,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const vm = require("node:vm");
 const source = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
-const loader = source.slice(source.indexOf("const workspaceScriptLoads"),
+const loader = source.slice(source.indexOf("const STARTUP_RETRY_DELAYS"),
   source.indexOf("function missingWorkspaceScripts"));
 (async () => {
   for (const path of ["/chat-widget.js", "/chat.js", "/vendor/leaflet.js", "/async-action.js"]) {
@@ -41,6 +41,77 @@ const loader = source.slice(source.indexOf("const workspaceScriptLoads"),
     await vm.runInContext(`retryWorkspaceScript(${JSON.stringify(path)})`, context);
     assert.equal(requests.length, 2, "Same release recovery is bounded and deduplicated");
   }
+})().catch(error => { console.error(error); process.exitCode = 1; });
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+
+    def test_first_load_reads_retry_a_cold_start_gateway_failure(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const vm = require("node:vm");
+const source = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
+const code = source.slice(source.indexOf("const STARTUP_RETRY_DELAYS"),
+  source.indexOf("const workspaceScriptLoads"));
+const reply = (status, type = "text/plain") => ({status, ok: status < 400,
+  headers: {get: () => type}});
+async function run(responses, signal) {
+  const calls = [], delays = [], status = {textContent: ""}, shown = [];
+  const context = vm.createContext({
+    workspaceStatus: status,
+    setTimeout(fn, delay) { delays.push(delay); shown.push(status.textContent); queueMicrotask(fn); return 1; },
+    fetch: async () => {
+      calls.push(1);
+      const next = responses.shift();
+      if (next instanceof Error) throw next;
+      return next;
+    },
+  });
+  vm.runInContext(code, context);
+  context.signal = signal;
+  const res = await vm.runInContext('fetchReadRetrying("/api/law/alerts", {signal})', context);
+  return {res, calls: calls.length, delays, status: status.textContent, shown};
+}
+(async () => {
+  let out = await run([reply(500), reply(503), reply(200, "application/json")]);
+  assert.equal(out.res.status, 200);
+  assert.equal(out.calls, 3);
+  assert.deepEqual(out.delays, [500, 1500]);
+  assert.ok(out.shown.every(text => /still starting/.test(text) && !/error|500|503/i.test(text)),
+    "plain-language status while waiting");
+  assert.equal(out.status, "", "status clears after recovery");
+
+  out = await run([new TypeError("network"), reply(502), reply(200)]);
+  assert.equal(out.res.status, 200);
+
+  out = await run([reply(500, "application/json")]);
+  assert.equal(out.calls, 1, "an application JSON error is never retried");
+  assert.equal(out.res.status, 500);
+
+  out = await run([reply(404)]);
+  assert.equal(out.calls, 1);
+
+  out = await run([reply(503), reply(503), reply(503), reply(503), reply(200)]);
+  assert.equal(out.calls, 4, "retries are bounded");
+  assert.equal(out.res.status, 503);
+  assert.deepEqual(out.delays, [500, 1500, 3000]);
+
+  await assert.rejects(run([new TypeError("a"), new TypeError("b"), new TypeError("c"),
+    new TypeError("d")]), /d/);
+
+  const controller = new AbortController();
+  controller.abort();
+  await assert.rejects(run([reply(503), reply(200)], controller.signal));
 })().catch(error => { console.error(error); process.exitCode = 1; });
 """,
                 str(WEB),
@@ -201,7 +272,7 @@ const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const vm = require("node:vm");
 const source = fs.readFileSync(process.argv[1] + "/app.js", "utf8");
-const loader = source.slice(source.indexOf("const workspaceScriptLoads"),
+const loader = source.slice(source.indexOf("const STARTUP_RETRY_DELAYS"),
   source.indexOf("const defaultListState"));
 const message = path => `Required workspace files did not load: ${path}. Reload this page`
   + " to try again. If this continues, ask application support to check these files.";
@@ -284,7 +355,7 @@ function harness(outcomes = []) {
     await bootstrap.run('requireWorkspaceScripts("", false)');
     assert.deepEqual(bootstrap.requests, ["/async-action.js"]);
     assert.equal(bootstrap.run("typeof AsyncAction"), "object");
-    for (const outcomes of [["error", "error"], ["load"], ["timeout"], ["unready"]]) {
+    for (const outcomes of [["error", "error", "error"], ["load"], ["timeout"], ["unready"]]) {
       bootstrap = harness([...outcomes]);
       bootstrap.context.me = null;
       delete bootstrap.context.AsyncAction;
@@ -295,7 +366,7 @@ function harness(outcomes = []) {
         "null session still checks readiness and retains terminal retry budget");
     }
   }
-  for (const outcomes of [["ready"], ["error", "ready"], ["error", "error"],
+  for (const outcomes of [["ready"], ["error", "ready"], ["error", "error", "error"],
     ["load"], ["timeout"], ["unready"], ["null"],
     ["partial-handler"], ["partial-run"], ["partial-feedback"]]) {
     const bootstrap = harness([...outcomes]);
@@ -338,11 +409,11 @@ function harness(outcomes = []) {
   assert.deepEqual(h.delays, [250, 5000, 500, 5000]);
   assert.equal(h.removed.length, 2);
 
-  h = harness(["error", "error", "ready"]);
+  h = harness(["error", "error", "error", "ready"]);
   await assert.rejects(h.run('requireWorkspaceScripts("#/overview", false)'),
     error => error.message === message("/vendor/leaflet.js") && error.reloadWorkspace);
   await assert.rejects(h.run('requireWorkspaceScripts("#/overview", false)'));
-  assert.equal(h.requests.length, 2, "exhaustion must survive route revisits");
+  assert.equal(h.requests.length, 3, "exhaustion must survive route revisits");
 
   for (const outcome of ["timeout", "load"]) {
     h = harness([outcome, "ready"]);

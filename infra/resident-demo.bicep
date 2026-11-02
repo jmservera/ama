@@ -148,6 +148,12 @@ resource app 'Microsoft.App/containerApps@2025-07-01' = {
           { name: 'CHAT_RETENTION_REF', value: chatRetentionRef }
           { name: 'CHAT_RETENTION_DAYS', value: string(chatRetentionDays) }
         ]
+        // The app answers only its allowed host, so probes must send it.
+        probes: [
+          { type: 'Startup', httpGet: { path: '/healthz', port: 8089, httpHeaders: [{ name: 'Host', value: '${appName}.${environment.properties.defaultDomain}' }] }, initialDelaySeconds: 1, periodSeconds: 3, timeoutSeconds: 3, failureThreshold: 40 }
+          { type: 'Readiness', httpGet: { path: '/healthz', port: 8089, httpHeaders: [{ name: 'Host', value: '${appName}.${environment.properties.defaultDomain}' }] }, periodSeconds: 5, timeoutSeconds: 3, successThreshold: 1, failureThreshold: 3 }
+          { type: 'Liveness', httpGet: { path: '/healthz', port: 8089, httpHeaders: [{ name: 'Host', value: '${appName}.${environment.properties.defaultDomain}' }] }, periodSeconds: 10, timeoutSeconds: 5, failureThreshold: 6 }
+        ]
       }]
       scale: { minReplicas: 0, maxReplicas: 1 }
     }

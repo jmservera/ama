@@ -62,7 +62,7 @@ async function api(path, body, signal) {
   }
   if (key) pendingMutations.add(key);
   try {
-    const res = await fetch(path, body === undefined ? { signal } : {
+    const res = body === undefined ? await fetchReadRetrying(path, { signal }) : await fetch(path, {
       method: "POST", headers: { "Content-Type": "application/json", "X-ZF-CSRF": "1" }, body: JSON.stringify(body), signal,
     });
     const data = await res.json().catch(error => {
@@ -196,15 +196,15 @@ function showAccount() {
 async function loadPhoto(account) {
   const status = document.getElementById("photo-status");
   try {
-    let res = await fetch("/api/account/photo");
+    let res = await fetchReadRetrying("/api/account/photo");
     if (res.status === 401) {
       const refresh = await fetch("/.auth/refresh");
       if (!refresh.ok) throw new Error("Microsoft photo access has expired. Sign in again.");
-      res = await fetch("/api/account/photo");
+      res = await fetchReadRetrying("/api/account/photo");
     }
     if (!res.ok) {
-      const data = await res.json();
-      throw new Error(data.error || "Microsoft profile photo is unavailable.");
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || "Microsoft profile photo is unavailable. The rest of the workspace still works.");
     }
     const blob = await res.blob();
     if (!me || me.account !== account) return;
@@ -219,13 +219,42 @@ async function loadPhoto(account) {
   }
 }
 
+const STARTUP_RETRY_DELAYS = [500, 1500, 3000];
+const SCRIPT_RETRY_DELAYS = [250, 500, 1500];
+const STARTUP_RETRY_MESSAGE = "The service is still starting. Trying again, this can take a few seconds.";
+
+// A cold start can answer the first reads with a gateway failure: 502/503/504, or a 500 that is not our JSON error.
+function startupFailure(res) {
+  if ([502, 503, 504].includes(res.status)) return true;
+  return res.status === 500 && !(res.headers.get("content-type") || "").includes("json");
+}
+
+async function fetchReadRetrying(path, options = {}) {
+  for (let attempt = 0; ; attempt++) {
+    let res = null;
+    try {
+      res = await fetch(path, options);
+    } catch (error) {
+      if (error.name === "AbortError" || attempt >= STARTUP_RETRY_DELAYS.length) throw error;
+    }
+    if (res && !startupFailure(res)) {
+      if (attempt && workspaceStatus.textContent === STARTUP_RETRY_MESSAGE) workspaceStatus.textContent = "";
+      return res;
+    }
+    if (attempt >= STARTUP_RETRY_DELAYS.length) return res;
+    workspaceStatus.textContent = STARTUP_RETRY_MESSAGE;
+    await new Promise((resolve) => setTimeout(resolve, STARTUP_RETRY_DELAYS[attempt]));
+    options.signal?.throwIfAborted();
+  }
+}
+
 const workspaceScriptLoads = new Map();
 
 function retryWorkspaceScript(path) {
   if (!workspaceScriptLoads.has(path)) {
     workspaceScriptLoads.set(path, (async () => {
-      for (let attempt = 1; attempt <= 2; attempt++) {
-        await new Promise((resolve) => setTimeout(resolve, 250 * attempt));
+      for (let attempt = 1; attempt <= SCRIPT_RETRY_DELAYS.length; attempt++) {
+        await new Promise((resolve) => setTimeout(resolve, SCRIPT_RETRY_DELAYS[attempt - 1]));
         const outcome = await new Promise((resolve) => {
           const script = document.createElement("script");
           const finish = (result) => {

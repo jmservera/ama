@@ -191,10 +191,11 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
           ], empty(entraRoleMap) ? [] : [
             { name: 'ZF_ROLE_MAP', value: string(entraRoleMap) }
           ])
+          // Startup holds traffic until the app listens, so the Easy Auth sidecar never forwards to a closed port (#691).
           probes: [
-            { type: 'Startup', httpGet: { path: '/healthz', port: 8088 }, periodSeconds: 5, failureThreshold: 24 }
-            { type: 'Liveness', httpGet: { path: '/healthz', port: 8088 } }
-            { type: 'Readiness', httpGet: { path: '/healthz', port: 8088 } }
+            { type: 'Startup', httpGet: { path: '/healthz', port: 8088 }, initialDelaySeconds: 1, periodSeconds: 3, timeoutSeconds: 3, failureThreshold: 40 }
+            { type: 'Readiness', httpGet: { path: '/healthz', port: 8088 }, periodSeconds: 5, timeoutSeconds: 3, successThreshold: 1, failureThreshold: 3 }
+            { type: 'Liveness', httpGet: { path: '/healthz', port: 8088 }, periodSeconds: 10, timeoutSeconds: 5, failureThreshold: 6 }
           ]
         }
       ]
