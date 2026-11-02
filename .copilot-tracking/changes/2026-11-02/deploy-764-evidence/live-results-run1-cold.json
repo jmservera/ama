@@ -1,0 +1,81 @@
+{
+ "employee_warm_healthz": {
+  "attempts": [
+   [
+    200,
+    25.2
+   ]
+  ],
+  "total_s": 25.2
+ },
+ "employee_redirect_origin": "login.microsoftonline.com",
+ "employee_signed_in": true,
+ "employee_n_cases_status": {
+  "restored": false,
+  "snippet": ""
+ },
+ "employee_leaflet_direct": {
+  "status": 200,
+  "bytes": 147552
+ },
+ "employee_responses_non2xx": [
+  [
+   "GET",
+   "/role-screens.js",
+   500
+  ],
+  [
+   "GET",
+   "/workspace-shell.js",
+   500
+  ],
+  [
+   "GET",
+   "/app.js",
+   500
+  ],
+  [
+   "GET",
+   "/chat-widget.js",
+   500
+  ]
+ ],
+ "employee_responses_503_or_403_or_5xx": [
+  [
+   "GET",
+   "/role-screens.js",
+   500
+  ],
+  [
+   "GET",
+   "/workspace-shell.js",
+   500
+  ],
+  [
+   "GET",
+   "/app.js",
+   500
+  ],
+  [
+   "GET",
+   "/chat-widget.js",
+   500
+  ]
+ ],
+ "employee_response_count": 21,
+ "employee_pageerrors": [],
+ "employee_ERROR": "TimeoutError: Locator.click: Timeout 90000ms exceeded.\nCall log:\n  - waiting for locator(\"#employee-chat-launcher\")\n    - locator resolved to <button hidden=\"\" type=\"button\" aria-label=\"Chat\" id=\"employee-chat-launcher\"></button>\n  - attempting click action\n    2 \u00d7 waiting for element to be visible, enabled and s",
+ "resident_warm_healthz": {
+  "attempts": [
+   [
+    200,
+    40.5
+   ]
+  ],
+  "total_s": 40.5
+ },
+ "resident_signed_in": true,
+ "resident_responses_non2xx": [],
+ "resident_responses_503_or_403_or_5xx": [],
+ "resident_response_count": 9
+}

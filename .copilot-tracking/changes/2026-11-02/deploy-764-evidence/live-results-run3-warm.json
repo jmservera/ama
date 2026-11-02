@@ -1,0 +1,105 @@
+{
+ "employee_warm_healthz": {
+  "attempts": [
+   [
+    200,
+    0.1
+   ]
+  ],
+  "total_s": 0.1
+ },
+ "employee_redirect_origin": "login.microsoftonline.com",
+ "employee_signed_in": true,
+ "employee_n_cases_status": {
+  "restored": true,
+  "snippet": "Perspective: Retrofit Programme Manager. My assigned cases. 0 cases. Workflow stage: any. Search: none. All-cases scope: off (my assigned ca"
+ },
+ "employee_leaflet_direct": {
+  "status": 200,
+  "bytes": 147552
+ },
+ "employee_responses_non2xx": [
+  [
+   "GET",
+   "/zava-logo.png",
+   500
+  ],
+  [
+   "GET",
+   "/vendor/leaflet.js",
+   500
+  ],
+  [
+   "GET",
+   "/chat-widget.js",
+   500
+  ],
+  [
+   "GET",
+   "/progress.js",
+   500
+  ],
+  [
+   "GET",
+   "/role-screens.js",
+   500
+  ],
+  [
+   "GET",
+   "/api/account/photo",
+   503
+  ]
+ ],
+ "employee_responses_503_or_403_or_5xx": [
+  [
+   "GET",
+   "/zava-logo.png",
+   500
+  ],
+  [
+   "GET",
+   "/vendor/leaflet.js",
+   500
+  ],
+  [
+   "GET",
+   "/chat-widget.js",
+   500
+  ],
+  [
+   "GET",
+   "/progress.js",
+   500
+  ],
+  [
+   "GET",
+   "/role-screens.js",
+   500
+  ],
+  [
+   "GET",
+   "/api/account/photo",
+   503
+  ]
+ ],
+ "employee_response_count": 29,
+ "employee_pageerrors": [],
+ "employee_reload_non2xx": [
+  [
+   "GET",
+   "/role-screens.js",
+   500
+  ],
+  [
+   "GET",
+   "/api/account/photo",
+   503
+  ]
+ ],
+ "employee_reload_response_count": 26,
+ "employee_chat_reply": "You\n\nWhat can chat do?\n\nAssistant\nWorkflow-only help, no record changed\n\nThe assistant is not available right now. Continue with the ordinary case workflow; nothing is lost and nothing has been changed.\n\nSkill: general. Workflow-only or unverified help. No record changed.\nSources (0)",
+ "employee_chat_outage_alert": {
+  "text": "Chat unavailable: Failed to fetch Try again or continue with the ordinary workflow.",
+  "seconds": 0.6
+ }
+}
