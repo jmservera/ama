@@ -1,0 +1,6 @@
+{"task_id":"619","task_slug":"ux-acceptance-619","parent_task":null,"mode":"automatic","active_phase":"Follow-up","status":"completed","session_status":"running",
+"artifact_paths":{"research":".copilot-tracking/research/2026-11-02-ux-acceptance-619-research.md","plan":".copilot-tracking/plans/2026-11-02-ux-acceptance-619-plan.md","details":".copilot-tracking/details/2026-11-02-ux-acceptance-619-details.md","critique":null,"changes":".copilot-tracking/changes/2026-11-02-ux-acceptance-619-changes.md","review":".copilot-tracking/reviews/2026-11-02-ux-acceptance-619-review.md"},
+"confirmed_decisions":[{"decision":"critique executed once, verdict proceed","status":"applied","evidence":"plan file"},{"decision":"PR uses Refs #619","status":"confirmed","evidence":"human criteria unproven"}],
+"blockers":[{"id":"human-runs","summary":"Screen reader, keyboard, zoom and real resident runs need named people","resolution":"Owner names testers and approves real-resident testing"}],
+"next_action":{"phase":"Follow-up","action":"Owner selects a follow-up or runs the human protocol"},
+"prioritized_follow_ups":[{"rank":1,"task":"Person-run protocol rows","rationale":"Closes the human gates","evidence":"protocol record all Not run"},{"rank":2,"task":"DPO and Legal approval for real-resident testing","rationale":"Precondition for script C","evidence":"learning record"}]}
