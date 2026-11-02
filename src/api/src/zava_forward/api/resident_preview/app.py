@@ -47,6 +47,7 @@ HEADERS = {
 
 class _Server(ThreadingHTTPServer):
     daemon_threads = True
+    request_queue_size = 128
 
     def __init__(self, address: tuple[str, int], handler: Any):
         self.address_family = socket.AF_INET6 if ":" in address[0] else socket.AF_INET

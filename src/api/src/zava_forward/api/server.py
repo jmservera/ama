@@ -1195,6 +1195,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
     return H
 
 
+class _Server(ThreadingHTTPServer):
+    # The stdlib backlog of 5 drops bursts of parallel proxy connections.
+    request_queue_size = 128
+    daemon_threads = True
+
+
 def main() -> None:
     password = os.environ.get("ZF_PASSWORD") or secrets.token_urlsafe(9)
     try:
@@ -1209,7 +1215,7 @@ def main() -> None:
         print(f"Sign in with any staff email and the password {password}")
     app.assistants.start()
     try:
-        ThreadingHTTPServer((host, port), make_handler(app)).serve_forever()
+        _Server((host, port), make_handler(app)).serve_forever()
     finally:
         app.assistants.stop()
 
