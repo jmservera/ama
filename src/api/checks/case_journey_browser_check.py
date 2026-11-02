@@ -12,7 +12,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from playwright.sync_api import Dialog, Page, Route, expect, sync_playwright
+from playwright.sync_api import Dialog, Locator, Page, Route, expect, sync_playwright
 
 from checks.asset_urls import asset_url
 from checks.design_system_browser_check import check, main
@@ -35,6 +35,12 @@ def journey_data() -> dict[str, Any]:
 
 def tab(page: Page, name: str) -> None:
     page.get_by_role("tab", name=name, exact=False).click()
+
+
+def tab_buttons(page: Page) -> list[Locator]:
+    """Index-based tab locators; labels such as 'AI assistance (loading)' change while iterating."""
+    tabs = page.get_by_role("tab")
+    return [tabs.nth(index) for index in range(tabs.count())]
 
 
 def refresh_proposals(page: Page) -> None:
@@ -1461,10 +1467,9 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                         "empty blocker wording: " + page.locator(".case-summary").inner_text(),
                         "No recorded blockers." in page.locator(".case-summary").inner_text(),
                     )
-                names = page.get_by_role("tab").all_text_contents()
-                for name in names:
-                    page.get_by_role("tab", name=name, exact=True).click()
-                    scan(page, axe, reports, f"{state}/{name}")
+                for button in tab_buttons(page):
+                    button.click()
+                    scan(page, axe, reports, f"{state}/{button.text_content()}")
                 page.unroute("**/api/cases/ZF-1", variant)
                 if state == "ai-unavailable":
                     page.unroute("**/api/assistants")
@@ -1496,10 +1501,10 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             )
             for width in (320, 390, 1280):
                 page.set_viewport_size({"width": width, "height": 800})
-                for name in page.get_by_role("tab").all_text_contents():
-                    page.get_by_role("tab", name=name, exact=True).click()
+                for button in tab_buttons(page):
+                    button.click()
                     check(
-                        f"reflow {width}/{name}",
+                        f"reflow {width}/{button.text_content()}",
                         page.evaluate("document.documentElement.scrollWidth <= innerWidth"),
                     )
                 if width == 320:
@@ -1603,8 +1608,8 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                     )
                     zoom_page.wait_for_function("innerWidth <= 640")
                     check("actual Chromium tab zoom is 200%", actual == 2)
-                    for name in zoom_page.get_by_role("tab").all_text_contents():
-                        button = zoom_page.get_by_role("tab", name=name, exact=True)
+                    for button in tab_buttons(zoom_page):
+                        name = button.text_content()
                         button.focus()
                         zoom_page.keyboard.press("Enter")
                         check(
