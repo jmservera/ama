@@ -414,6 +414,7 @@ safe-outputs:
             HEAD_OUTCOME: ${{ steps.head_check.outcome }}
             PR_NUMBER: ${{ github.event.pull_request.number }}
           with:
+            retries: 3
             script: |
               const fs = require('fs');
               const { owner, repo } = context.repo;
