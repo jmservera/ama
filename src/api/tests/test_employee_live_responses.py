@@ -109,6 +109,46 @@ class VendorAssets(unittest.TestCase):
             with urllib.request.urlopen(request) as response:
                 self.assertEqual((response.status, response.read()), (200, self.expected))
 
+    def test_real_trusted_proxy_principal_gets_the_whole_asset_even_with_store_errors(self) -> None:
+        import base64
+
+        from zava_forward.core import identity
+
+        from zava_forward.api.auth import TrustedProxyProvider
+
+        tenant = "11111111-1111-1111-1111-111111111111"
+        provider = TrustedProxyProvider(
+            self.store, {"ZF_ENTRA_TENANT_ID": tenant, "ZF_TRUSTED_PROXY": "1"}
+        )
+        claims = [
+            {"typ": "tid", "val": tenant},
+            {"typ": "oid", "val": "22222222-2222-2222-2222-222222222222"},
+            {"typ": "roles", "val": "ZavaForward.Coordinator"},
+        ]
+        principal = base64.b64encode(
+            json.dumps({"auth_typ": "aad", "claims": claims}).encode()
+        ).decode()
+        app = App(self.store, "SYN-691", provider=provider)  # type: ignore[no-untyped-call]
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        self.addCleanup(thread.join, 5)
+        self.addCleanup(httpd.server_close)
+        self.addCleanup(httpd.shutdown)
+        url = f"http://127.0.0.1:{httpd.server_port}/vendor/leaflet.js"
+        headers = {"X-MS-CLIENT-PRINCIPAL": principal}
+        for failure in (None, RuntimeError("database is locked")):
+            with self.subTest(failure=failure):
+                with patch.object(identity, "bind", wraps=identity.bind, side_effect=failure):
+                    with urllib.request.urlopen(urllib.request.Request(url, headers=headers)) as r:
+                        self.assertEqual((r.status, r.read()), (200, self.expected))
+        import http.client
+
+        conn = http.client.HTTPConnection("127.0.0.1", httpd.server_port)
+        self.addCleanup(conn.close)
+        conn.request("GET", "/vendor/leaflet.js")
+        self.assertEqual(conn.getresponse().status, 302)
+
     def raw(self, request: bytes) -> bytes:
         import socket
 
