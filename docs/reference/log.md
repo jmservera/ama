@@ -9630,3 +9630,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   [ai-tokenomics](resources/ai-tokenomics.md).
 * No live stop, statutory-clock observation, price, bill or owner approval was
   added; the remaining gaps stand.
+
+## [2026-11-02] update | Resident sensor chart text summaries (Refs #466)
+
+* Added a visible plain-language summary under each resident sensor chart (lowest, highest, latest versus first, missing readings), reused as the SVG description. Synthetic own-home data only; no dataset, AI or consent change. Evidence is under `.copilot-tracking/` (2026-11-02 issue-466-chart-text-summary artifacts).

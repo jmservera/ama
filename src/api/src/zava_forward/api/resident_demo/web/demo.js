@@ -91,13 +91,30 @@
     return node;
   }
 
+  function sensorSummary(history, metric) {
+    var values = history.filter(function (r) { return r[metric.key] !== null; });
+    var gaps = history.length - values.length;
+    var missing = gaps ? " " + gaps + (gaps === 1 ? " reading is" : " readings are") + " missing or unavailable." : "";
+    if (!values.length) return "No usable " + metric.name.toLowerCase() + " readings in this history." + missing;
+    var nums = values.map(function (r) { return r[metric.key]; });
+    var low = Math.min.apply(null, nums);
+    var high = Math.max.apply(null, nums);
+    var first = nums[0];
+    var last = nums[nums.length - 1];
+    var move = Math.abs(last - first) < (metric.max - metric.min) * 0.02 ? "about the same as" : last > first ? "higher than" : "lower than";
+    var fmt = function (n) { return sensorNumber.format(n) + "\u00a0" + metric.unit; };
+    return "Across " + values.length + " " + (values.length === 1 ? "reading" : "readings") + ": lowest " + fmt(low) + ", highest " + fmt(high) +
+      (values.length > 1 ? ". The latest value is " + move + " the first." : ".") + missing;
+  }
+
   function sensorChart(history, metric) {
     var figure = el("figure", null, "sensor-chart");
     var id = "sensor-" + metric.key;
+    var summary = sensorSummary(history, metric);
     figure.appendChild(el("h3", metric.name + " history (" + metric.unit + ")"));
     var svg = svgEl("svg", { viewBox: "0 0 480 180", role: "img", "aria-labelledby": id + "-title " + id + "-desc" });
     svg.appendChild(svgEl("title", { id: id + "-title" }, "Synthetic " + metric.name.toLowerCase() + " history"));
-    svg.appendChild(svgEl("desc", { id: id + "-desc" }, "Recorded values over time. Gaps mean readings are missing or unavailable. The table below gives every value and status."));
+    svg.appendChild(svgEl("desc", { id: id + "-desc" }, summary + " Gaps mean readings are missing or unavailable. The table below gives every value and status."));
     svg.appendChild(svgEl("path", { d: "M45 10V150H470", class: "sensor-axis" }));
     [metric.min, (metric.min + metric.max) / 2, metric.max].forEach(function (value) {
       var y = 150 - (value - metric.min) / (metric.max - metric.min) * 140;
@@ -124,6 +141,7 @@
     segment();
     figure.appendChild(svg);
     var caption = el("figcaption");
+    caption.appendChild(el("p", summary, "sensor-summary"));
     caption.appendChild(el("span", "Time (UTC): "));
     caption.appendChild(sensorTime(history[0].observed_at));
     if (history.length > 1) {

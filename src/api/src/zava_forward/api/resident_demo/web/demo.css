@@ -91,6 +91,7 @@ button[aria-disabled=true]{cursor:wait}
 .sensor-chart svg{display:block;width:100%;height:auto;color:var(--ink)}
 .sensor-chart text{fill:currentColor;font:var(--fontSizeBase400) var(--fontFamilyBase);font-variant-numeric:tabular-nums}
 .sensor-chart figcaption{color:var(--muted)}
+.sensor-summary{margin:var(--spacingHorizontalS) 0;color:var(--ink)}
 .sensor-axis{stroke:var(--muted);fill:none}
 .sensor-line{stroke:var(--brand);stroke-width:2;fill:none}
 .sensor-point{fill:var(--brand)}
