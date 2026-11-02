@@ -103,6 +103,13 @@ at 320, 390 and 1280 px and 200% text size.
 Release rule (proposed, O-3): a release that changes a screen needs the
 affected rows re-run and any new failure recorded or fixed.
 
+## Production acceptance for the chat widget and case view (#619)
+
+The production-build screen reader, keyboard, zoom and resident consent
+acceptance for the shared chat widget and the single case view has its own
+[protocol and blank record](./production-ux-acceptance-protocol.md). Every row
+is `Not run` at 2026-11-02; gap G-1 stays open.
+
 ## Proposed resident task audit (2026-10-23, #441)
 
 This prospective extension covers the six

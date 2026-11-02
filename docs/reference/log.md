@@ -9643,3 +9643,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   (expiry `2027-01-31T23:59:59Z`, same image digest, min 0 max 1). Sign-in and
   session denial checks passed; jobs stay Manual. AI tariff expiry unchanged.
   Evidence is under `.copilot-tracking/` (issue-521-live-sql-window artifacts).
+
+## [2026-11-02] add | Production UX acceptance protocol (#619)
+
+* Added the [production UX acceptance protocol](./research/ux/production-ux-acceptance-protocol.md):
+  criterion status, human scripts for the chat widget, case view and resident
+  consent journey, and blank record tables. Linked from the WCAG baseline and
+  the index. Every record row is Not run; the human gates in #619 stay open,
+  so the pull request uses Refs.
