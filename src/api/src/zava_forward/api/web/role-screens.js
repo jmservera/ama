@@ -133,6 +133,14 @@ const assetInputs = [
   ["Benefit baseline", "Programme owner to supply a measured baseline"],
   ["Phase check evidence", "Programme manager to name the evidence for the phase check"]
 ];
+const assetGates = [
+  ["Accepted handovers and quality", "Quality-accepted handover records", "Programme manager", "Board or delegated owner"],
+  ["Recurring defects and reopened work", "Dated defect and reopening records", "Programme manager", "Board or delegated owner"],
+  ["Measured benefit against baseline", "Measured baseline and later measurement, with season noted", "Programme owner", "Board or delegated owner"],
+  ["Cash and variance", "Dated finance statement", "Finance owner", "Board or delegated owner"],
+  ["Resident experience", "Resident feedback recorded with consent", "Resident engagement lead", "Board or delegated owner"],
+  ["Pause or exit choice for the next tranche", "Recommendation with the evidence it relies on", "Asset owner", "Board or delegated owner"]
+];
 function assetCost(report) {
   const m = report?.consumption;
   const passed = m && m.quality_status === "Pass" && m.quality_qualified_cost && m.quality_qualified_cost !== "Unknown";
@@ -188,7 +196,11 @@ registerRoleScreen({
         screenTable("Investment inputs", ["Input", "State", "Resolution owner and action"],
           assetInputs.map(([name, action]) => [name, "Unknown", action]))),
       screenPanel("Benefits and phase check",
-        screenUnknown("No measured benefit or phase check evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any phase check is read as passed")),
+        screenUnknown("No measured benefit or phase check evidence is supplied for this home.", "Programme manager to name an owner", "Supply dated evidence before any phase check is read as passed"),
+        h("p", {}, "Each check below stays Unknown until a named owner supplies dated evidence. This view does not pass a check, release a tranche or pause or restart work. The Board or its delegated owners decide."),
+        screenTable("Phase checks and benefits",
+          ["Check", "State", "Evidence needed", "Evidence owner", "Who decides"],
+          assetGates.map(([name, need, owner, decider]) => [name, "Unknown", need, owner, decider]))),
       screenPanel("Portfolio scope (separate from this home)",
         screenFields([["Cases permitted to your role", extra?.portfolio?.total],
           ["Meaning", "A role-scoped count, not a stock, budget or programme total"]])),
