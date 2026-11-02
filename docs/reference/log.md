@@ -9620,3 +9620,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Chat reply was workflow-only: no live AI generation claimed. No raw bundles,
   secrets or claims retained; no Azure change. #570 criterion 3 is proven;
   #523, #524 and #432 are unchanged.
+
+## [2026-11-02] update | Stopped AI request keeps the safety path (Refs #432)
+
+* Added a constructed test (`test_ai_consumption_safety`) showing that a request
+  stopped at the call limit records a workflow-only alert while hazard recording
+  and its UTC awareness time continue, and that hazard, workflow and task-queue
+  code imports no model module. Updated the criteria table in
+  [ai-tokenomics](resources/ai-tokenomics.md).
+* No live stop, statutory-clock observation, price, bill or owner approval was
+  added; the remaining gaps stand.
