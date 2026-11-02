@@ -9651,3 +9651,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   consent journey, and blank record tables. Linked from the WCAG baseline and
   the index. Every record row is Not run; the human gates in #619 stay open,
   so the pull request uses Refs.
+
+## [2026-11-02] query | Resident portal owner disposition packet and merged-head checks (Refs #441)
+
+* Re-ran the read-only resident integration verifier on main 071e132a8 with a
+  clean tree (`overall_ok` true) and recorded the hosted checks observed on the
+  merge commits of #442, #454 and #726. No open PR touches the BRD, PRD, ADR
+  registry or addendum; open PRs touching the log or index are a rebase, not a
+  dependency.
+* Added a one-question packet for the requirements owner: confirm that BRD
+  FR-044/AC-084 make per-message review normative now, with any routine
+  exception inactive pending separate OD-53 and RULE-020 approval. It is not a
+  disposition. Criterion 5 (owner disposition) and criterion 9 (independent
+  exact-head review and final-head gate conjunction) stay unmet.
+* No BRD, PRD, ADR, addendum or memory change; the ADR proposal stays
+  unregistered (registry 0001 to 0006). No approval, live acceptance,
+  conformance, deployment or spending is claimed. Evidence is in
+  `.copilot-tracking/changes/2026-11-02/issue-441-owner-disposition/`.
