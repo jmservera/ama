@@ -96,8 +96,11 @@ async function run(responses, signal) {
     "plain-language status while waiting");
   assert.equal(out.status, "", "status clears after recovery");
 
-  out = await run([new TypeError("network"), reply(502), reply(200)]);
+  await assert.rejects(run([new TypeError("network"), reply(200)]), /network/);
+  out = await run([reply(502), reply(200)]);
   assert.equal(out.res.status, 200);
+  out = await run([reply(500, "application/json; charset=utf-8")]);
+  assert.equal(out.calls, 1, "a synthetic JSON failure body is never retried");
 
   out = await run([reply(500, "application/json")]);
   assert.equal(out.calls, 1, "an application JSON error is never retried");
@@ -114,8 +117,9 @@ async function run(responses, signal) {
   assert.equal(out.res.status, 503);
   assert.deepEqual(out.delays, [500, 1500, 3000]);
 
-  await assert.rejects(run([new TypeError("a"), new TypeError("b"), new TypeError("c"),
-    new TypeError("d")]), /d/);
+  const failing = [new TypeError("a"), new TypeError("b")];
+  await assert.rejects(run(failing), /a/);
+  assert.equal(failing.length, 1, "a network failure is rejected on the first attempt");
 
   const controller = new AbortController();
   controller.abort();

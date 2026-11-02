@@ -233,14 +233,9 @@ async function fetchReadRetrying(path, options = {}) {
   let previous = null;
   try {
     for (let attempt = 0; ; attempt++) {
-      let res = null;
-      try {
-        res = await fetch(path, options);
-      } catch (error) {
-        if (error.name === "AbortError" || attempt >= STARTUP_RETRY_DELAYS.length) throw error;
-      }
-      if (res && !startupFailure(res)) return res;
-      if (attempt >= STARTUP_RETRY_DELAYS.length) return res;
+      // A network-level failure is not a cold start signal and is never retried.
+      const res = await fetch(path, options);
+      if (!startupFailure(res) || attempt >= STARTUP_RETRY_DELAYS.length) return res;
       if (previous === null && workspaceStatus.textContent !== STARTUP_RETRY_MESSAGE) previous = workspaceStatus.textContent;
       workspaceStatus.textContent = STARTUP_RETRY_MESSAGE;
       await new Promise((resolve) => setTimeout(resolve, STARTUP_RETRY_DELAYS[attempt]));
