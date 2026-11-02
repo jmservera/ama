@@ -213,8 +213,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 path = ""
             if code >= 500 or (path.startswith("/vendor/") and code not in (200, 304)):
                 logging.getLogger(__name__).warning("http-response %s %s status=%s", _printable(getattr(self, "command", None)), _printable(path), code)
-            self._response_started = True
             super().send_response(code, message)
+
+        def end_headers(self):
+            super().end_headers()
+            self._response_started = True
 
         def handle_one_request(self):
             self._response_started = False
@@ -231,7 +234,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             except ValueError:
                 path = ""
             method, name = _printable(getattr(self, "command", None)), type(exc).__name__
-            if isinstance(exc, ConnectionError) or (isinstance(exc, OSError) and exc.errno in (32, 104)):
+            if isinstance(exc, ConnectionError):
                 logging.getLogger(__name__).warning("http-error %s %s client-disconnect exc=%s", method, _printable(path), name)
                 return
             sent = self._response_started
@@ -239,6 +242,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             where = f"{Path(frame[0].filename).name}:{frame[0].lineno}:{frame[0].name}" if frame[0] else "unknown"
             logging.getLogger(__name__).error("http-error %s %s status=500 exc=%s at=%s response_started=%s", method, _printable(path), name, where, sent)
             if not sent:
+                self._headers_buffer = []
                 try:
                     self._json(500, {"error": "The service hit an unexpected error. Try again; if it continues, report the time of the failure."})
                 except Exception:

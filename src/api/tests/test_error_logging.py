@@ -3,6 +3,7 @@
 import json
 import threading
 import unittest
+from concurrent.futures import ThreadPoolExecutor
 import urllib.error
 import urllib.request
 from collections import Counter
@@ -51,6 +52,25 @@ class ErrorLoggingTests(Base):
         self.assertNotIn(SECRET, line)
         self.assertNotIn("Traceback", line)
 
+    def test_failure_between_send_response_and_end_headers_still_yields_plain_500(self) -> None:
+        from http.server import BaseHTTPRequestHandler
+
+        real, calls = BaseHTTPRequestHandler.send_header, []
+
+        def broken(self: BaseHTTPRequestHandler, *a: object, **k: object) -> None:
+            calls.append(a)
+            if len(calls) == 1:
+                raise RuntimeError(SECRET)
+            real(self, *a, **k)
+
+        with patch.object(self.store, "counts", lambda *a, **k: None), \
+                patch("zava_forward.api.server.SECURITY", {"X-Test": "1"}), \
+                patch.object(BaseHTTPRequestHandler, "send_header", broken), \
+                self.assertLogs("zava_forward.api.server", "ERROR") as logs:
+            code, body = self.get("/api/me")
+        self.assertEqual(code, 500)
+        self.assertIn("response_started=False", "\n".join(logs.output))
+
     def test_client_disconnect_is_logged_without_a_response(self) -> None:
         def gone(*_a: object, **_k: object) -> None:
             raise BrokenPipeError(SECRET)
@@ -86,11 +106,8 @@ class ErrorLoggingTests(Base):
             with lock:
                 seen[(path, result)] += 1
 
-        threads = [threading.Thread(target=hit, args=(i,)) for i in range(140)]
-        for t in threads:
-            t.start()
-        for t in threads:
-            t.join()
+        with ThreadPoolExecutor(max_workers=16) as pool:
+            list(pool.map(hit, range(140)))
         self.assertEqual({r for _, r in seen} - {200, 401, 403, 503}, set(), seen)
 
 
