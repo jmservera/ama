@@ -1194,6 +1194,17 @@ and reflow. Set `ZF_AXE_JS` to the pinned axe 4.10.3 file to add a WCAG 2.2
 A/AA scan. These are engineering checks, not assistive-technology or WCAG
 acceptance (#155).
 
+`python -m checks.procurement_screens_browser_check` (#228) builds a synthetic
+package, capacity record and issued work order through the real store, signs in
+as a Retrofit Programme Manager and as a Contractor, and opens the read-only
+Package queue and Job pack screens. It checks the package queue columns, draft
+readiness wording, separate submission, acknowledgement and review states, no
+write controls or contact links, no vulnerability reason, keyboard reach of
+every table region, 320 px reflow and no writes. Set `ZF_AXE_JS` to the pinned
+axe 4.10.3 file to add the axe scan. This is an engineering check, not
+assistive-technology or WCAG acceptance (#155, #151). Submission, correction
+and checklist capture are not built (OD-47).
+
 ## Resident chat and synthetic callback agenda (#520, building on #469)
 
 The resident showcase has one bottom-right Chat launcher on its sign-in,
