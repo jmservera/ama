@@ -69,7 +69,12 @@ async function run(responses, signal) {
   const calls = [], delays = [], status = {textContent: ""}, shown = [];
   const context = vm.createContext({
     workspaceStatus: status,
-    setTimeout(fn, delay) { delays.push(delay); shown.push(status.textContent); queueMicrotask(fn); return 1; },
+    setTimeout(fn, delay) {
+      delays.push(delay);
+      shown.push(status.textContent);
+      queueMicrotask(fn);
+      return 1;
+    },
     fetch: async () => {
       calls.push(1);
       const next = responses.shift();

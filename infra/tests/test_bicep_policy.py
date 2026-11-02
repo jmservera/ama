@@ -367,9 +367,7 @@ class BicepPolicyTests(unittest.TestCase):
                 and item["properties"].get("template", {}).get("containers")
             ]
             app = next(
-                a
-                for a in apps
-                if a["properties"]["template"]["containers"][0]["name"] == container
+                a for a in apps if a["properties"]["template"]["containers"][0]["name"] == container
             )
             body = app["properties"]["template"]["containers"][0]
             probes = {probe["type"]: probe for probe in body["probes"]}
@@ -379,7 +377,8 @@ class BicepPolicyTests(unittest.TestCase):
                 self.assertEqual(probe["httpGet"]["port"], port, name)
                 self.assertGreaterEqual(probe["timeoutSeconds"], 3, name)
             startup = probes["Startup"]
-            self.assertGreaterEqual(startup["periodSeconds"] * startup["failureThreshold"], 90, name)
+            startup_window = startup["periodSeconds"] * startup["failureThreshold"]
+            self.assertGreaterEqual(startup_window, 90, name)
             self.assertEqual(probes["Readiness"]["successThreshold"], 1, name)
             if container == "resident-demo":
                 for probe in probes.values():
