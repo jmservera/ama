@@ -174,8 +174,7 @@ class AssetBoardScreen(unittest.TestCase):
         table = next(
             n
             for n in walk(tree)
-            if n.get("tag") == "table"
-            and "Phase checks and benefits" in json.dumps(n)
+            if n.get("tag") == "table" and "Phase checks and benefits" in json.dumps(n)
         )
         rows = [n for n in walk(table) if n.get("tag") == "tr"][1:]
         self.assertEqual(len(rows), 6)
