@@ -1,0 +1,110 @@
+{
+ "employee_capacity_workorders_page": {
+  "api_status": {
+   "/api/packages": 200,
+   "/api/workorders": 200
+  },
+  "at": "2026-11-01T23:20:07.776610+00:00",
+  "next_page_status": null,
+  "pager": [
+   "Showing packages 1 to 1 of 1. Page 1 of 1. Previous packages Next packages",
+   "Showing work orders 1 to 20 of 601. Page 1 of 31. Previous work orders Next work orders"
+  ],
+  "status": "pass",
+  "stuck_loading": false,
+  "visible_alerts": 0
+ },
+ "employee_chat_grounded_and_stays_open": {
+  "answers": {
+   "case_going": {
+    "question": "How is this case going?",
+    "reply_excerpt": "You How is this case going? Assistant Summary by rules, no record changed Stage: Completed. Status: Completed. Owner: Helen Marsden. Days in this stage: 335. This reply uses rules only because the assistant is not available. No record was changed. A person decides next steps. Skill: general. Built from recorded case facts, not by an AI model. Check the sources. Sources (4)",
+    "sources": 4,
+    "status": "Answer added. Check the sources before relying on it.",
+    "still_open": true
+   },
+   "next_step": {
+    "question": "What is the next step for this case?",
+    "reply_excerpt": "You What is the next step for this case? Assistant Summary by rules, no record changed Recorded next step: Ask Helen Marsden to record the next action. Owner: Helen Marsden. Recorded source: case:ZF-2025-0025/stage. This reply uses rules only because the assistant is not available. No record was changed. A person decides next steps. Skill: general. Built from recorded case facts, not by an AI model. Check the sources",
+    "sources": 4,
+    "status": "Answer added. Check the sources before relying on it.",
+    "still_open": true
+   }
+  },
+  "at": "2026-11-01T23:20:05.178021+00:00",
+  "case_link_kind": "case route",
+  "status": "fail"
+ },
+ "employee_chat_storage_api_evidence": {
+  "at": "2026-11-01T23:20:05.306130+00:00",
+  "calls": {
+   "GET /api/chat/regulatory/status": [
+    403
+   ],
+   "GET /api/chat/skills": [
+    200
+   ],
+   "GET /api/chat/status": [
+    200,
+    200
+   ],
+   "GET /api/chat/threads": [
+    200
+   ],
+   "GET /api/chat/threads/{id}": [
+    200
+   ],
+   "POST /api/chat/threads": [
+    200
+   ],
+   "POST /api/chat/threads/{id}/ask": [
+    200,
+    200
+   ]
+  },
+  "persisted": {
+   "first_thread_http": 200,
+   "threads": 4,
+   "turns": 4
+  },
+  "status": "fail"
+ },
+ "employee_chat_storage_notice": {
+  "at": "2026-11-01T23:20:00.038681+00:00",
+  "retention_excerpt": "Do not type health, disability, safeguarding, religion, ethnicity, sexual orientation, trade union, criminal, financial hardship or other special-category details, and do not paste resident contact details. Use the case record instead. Matching text is masked before it is saved, but masking can miss things. Retention: 30 days. Synthetic data only. Model activation requires separate approval.",
+  "status": "pass",
+  "status_api": {
+   "retention": "30 days",
+   "storage_approved": true
+  },
+  "storage_not_approved_notice": false
+ },
+ "employee_chat_storage_works": {
+  "at": "2026-11-01T23:20:05.306590+00:00",
+  "matched_saved_or_stored": false,
+  "status": "fail"
+ },
+ "employee_chat_window_size": {
+  "at": "2026-11-01T23:19:59.982425+00:00",
+  "box": {
+   "height": 720,
+   "width": 512,
+   "x": 752,
+   "y": 92
+  },
+  "status": "pass",
+  "viewport": {
+   "height": 900,
+   "width": 1280
+  }
+ },
+ "employee_health": {
+  "at": "2026-11-01T23:18:23.272207+00:00",
+  "http": 200,
+  "status": "pass"
+ },
+ "employee_sign_in": {
+  "at": "2026-11-01T23:18:49.034862+00:00",
+  "status": "pass"
+ }
+}

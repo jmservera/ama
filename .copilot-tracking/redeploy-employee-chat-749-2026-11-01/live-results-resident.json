@@ -1,0 +1,43 @@
+{
+ "resident_chat_can_i_unpause_it": {
+  "at": "2026-11-01T23:21:12.453073+00:00",
+  "generic_refusal": false,
+  "label_rules_based": true,
+  "question": "Can I unpause it?",
+  "reply_excerpt": "Assistant Summary by rules - workflow only, no AI used Your record shows: Contact is paused. Chat cannot lift a pause, restart contact or change your case. Only a person can do that. Speak to your housing officer, or write to or visit your local Zava North Homes office, and ask them to lift the pause if you want contact to restart. That is your choice. This showcase has no phone numbers or addresses recorded, so use ",
+  "status": "pass"
+ },
+ "resident_chat_how_is_my_case_going": {
+  "at": "2026-11-01T23:21:07.589514+00:00",
+  "generic_refusal": false,
+  "label_rules_based": true,
+  "question": "How is my case going?",
+  "reply_excerpt": "Assistant Summary by rules - AI is not enabled Contact is paused. We will not contact you until the pause is lifted. You can ask for help below. Chat cannot lift a pause, restart contact or change your case. Only a person can do that. Speak to your housing officer, or write to or visit your local Zava North Homes office, and ask them to lift the pause if you want contact to restart. That is your choice. This showcase",
+  "status": "pass"
+ },
+ "resident_chat_what_docs_are_missing": {
+  "at": "2026-11-01T23:21:17.823160+00:00",
+  "generic_refusal": false,
+  "label_rules_based": true,
+  "question": "What docs are missing?",
+  "reply_excerpt": "Assistant Summary by rules - AI is not enabled This view does not show which documents have been requested for your case. It cannot tell you what to send. Document D1, EPC: a generated placeholder, not a presented document. The file check result is unknown in this view. Ask staff to check it. The resident-facing warning and error list is not recorded. Document D2, Survey: a generated placeholder, not a presented docu",
+  "status": "pass"
+ },
+ "resident_health": {
+  "at": "2026-11-01T23:20:57.841599+00:00",
+  "http": 200,
+  "status": "pass"
+ },
+ "resident_sensors_view": {
+  "at": "2026-11-01T23:21:02.510177+00:00",
+  "charts": 0,
+  "excerpt": "Your home sensors Synthetic sensor history for your home. These are stored demo readings, not live measurements or safety advice. No synthetic sensor readings are available for your home. You can still use the help options below.",
+  "gauges": 0,
+  "status": "pass"
+ },
+ "resident_sign_in": {
+  "at": "2026-11-01T23:21:02.501143+00:00",
+  "content_excerpt_len": 2024,
+  "status": "pass"
+ }
+}
