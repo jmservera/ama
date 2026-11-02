@@ -1198,7 +1198,6 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
 class _Server(ThreadingHTTPServer):
     # The stdlib backlog of 5 drops bursts of parallel proxy connections.
     request_queue_size = 128
-    daemon_threads = True
 
 
 def main() -> None:
