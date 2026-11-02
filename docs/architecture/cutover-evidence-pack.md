@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-10-31
+ms.date: 2026-11-02
 ms.topic: reference
 ---
 
@@ -117,6 +117,35 @@ successful retry is inferred here. Main advanced twice during publication;
 integration uses additive topic merges, not rebases, force pushes or main
 mutation. A changed base/candidate invalidates resume eligibility and requires
 a fresh full run. The original Review and failed receipt remain preserved.
+
+## Live employee acceptance (2026-11-02, Refs #570)
+
+Observed UTC time of the run: about 09:32-09:34 on 2026-11-02. The owner
+authorized live Azure checks with the supplied employee test account. One
+sign-in was made against the exact employee origin in the table above; no
+Azure configuration, replica, job or deployment change occurred. `/healthz`
+returned 200 on the first warm-up attempt. Deployed code is the main build
+recorded for #749 (`1a644d317`), not a controlled scale-from-zero test.
+
+| Observation | Result | Exact evidence and limit |
+| --- | --- | --- |
+| Independent identity | Observed pass | Directory lookup was still denied (`az ad user show`, insufficient privileges). The expected object ID came instead from an `id_token` issued by the Entra token endpoint for the test account, in tenant `bccd6ad2-b77b-461c-bbc5-5b032e7930ba` (the Azure CLI tenant), before the application was contacted. It was held only in process memory and never copied from `/api/me`. |
+| Strict admission | Observed pass | `authenticated`, `expectedIdentity`, `employeeRole`, `notViewOnly`, `providerMatches`, `schemaValid` all true. `displayEmailMatches` and `rosterBound` false, as designed: Entra identity and role bind the account, not the roster |
+| Chat | Observed pass | Skill selection, send and reply passed. The reply label was workflow-only (`workflowOnly` true, `actualAiLabel` false), so no live AI generation is claimed |
+| Map filters | Observed pass | Strict stage covering the six flags: payload, list, marker and status agreement |
+| Case view | Observed pass | Strict case stage passed |
+| Today's briefing | Observed pass | Read-only; no review action taken |
+
+Method: Chromium started headless with a loopback debugging port and a fresh
+temporary profile; sign-in through the Entra form; then
+`python3 -m checks.employee_live_acceptance --origin <employee origin>` from
+`src/api`, exit 0, `passed` true. The profile and driver were deleted. No
+credentials, tokens, identity claims, cookies, case text, screenshots, HAR,
+video or raw bundles were retained. Only fixed booleans are recorded here.
+
+Limits: one account and one session; desktop viewport only; no Azure-side
+telemetry cross-check; no real-resident data. This is the evidence for #570
+criterion 3. It does not change #523, #524 or #432, which remain open.
 
 ## Transport integration qualification (2026-10-30, Refs #360)
 

@@ -78,6 +78,12 @@ pathname, blocking SQL; [#608](https://github.com/jmservera/ama/issues/608)
 records this separate local-tooling bug. Partial group passes do not authorize
 publication or establish live employee acceptance.
 
+For the [2 November live employee acceptance](../architecture/cutover-evidence-pack.md#live-employee-acceptance-2026-11-02-refs-570),
+the test account signed in once against an object ID obtained independently
+from the Entra token endpoint, and strict admission, chat, map filters, case
+view and Today's briefing all passed (chat reply was workflow-only, so no live
+AI claim). This proves #570 criterion 3; #523, #524 and #432 are unchanged.
+
 For #432, the [dated Tokenomics engineering/gap matrix](./resources/ai-tokenomics.md#source-only-metering-extension-2026-10-31-refs-432)
 and [official price-source metadata](./resources/azure-ai-price-source-2026-10-31.json)
 record the existing-ledger extension, request/financial admission and billing-led

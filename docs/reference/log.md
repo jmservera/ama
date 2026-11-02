@@ -9610,3 +9610,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   `checks/employee_live_acceptance.py`. Evidence is under `.copilot-tracking/`
   (2026-11-02 employee-briefing-reverification-531 artifacts). No knowledge base
   page changed.
+
+## [2026-11-02] observation | Live employee acceptance passed, Refs #570
+
+* Added a [live employee acceptance record](../architecture/cutover-evidence-pack.md#live-employee-acceptance-2026-11-02-refs-570)
+  and index note. One sign-in with the owner-authorized test account, expected
+  object ID obtained independently from the Entra token endpoint; strict
+  admission, chat, map filters, case view and briefing passed (exit 0).
+* Chat reply was workflow-only: no live AI generation claimed. No raw bundles,
+  secrets or claims retained; no Azure change. #570 criterion 3 is proven;
+  #523, #524 and #432 are unchanged.

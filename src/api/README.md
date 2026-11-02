@@ -98,7 +98,8 @@ this predicate into a fresh guarded runner/manifest with capture-free boolean
 evidence. The previous two employee slots remain consumed; do not replay their
 immutable runners or reuse historical sessions. Only after strict identity
 admission should the runner exercise employee chat/skill switching, map
-filters and the case view. These live criteria remain unverified here.
+filters and the case view. These criteria were verified live on 2026-11-02; see the
+[evidence](../../docs/architecture/cutover-evidence-pack.md#live-employee-acceptance-2026-11-02-refs-570).
 
 Maintained authenticated-session integration now lives in
 `checks.employee_acceptance_check.verify_employee`. For a caller-owned,
