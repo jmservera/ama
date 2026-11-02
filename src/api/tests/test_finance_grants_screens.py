@@ -68,7 +68,11 @@ CASE: dict[str, object] = {
                     {"measure": "Cavity wall", "quantity": 2, "amount": 1950, "milestone_ref": ""}
                 ],
                 "exceptions": [
-                    {"line": 0, "code": "quantity", "message": "Quantity 2 is above the 1 authorised."},
+                    {
+                        "line": 0,
+                        "code": "quantity",
+                        "message": "Quantity 2 is above the 1 authorised.",
+                    },
                     {"line": 0, "code": "no_budget", "message": "No approved budget."},
                     {"line": 0, "code": "future_code", "message": "Something new."},
                 ],
