@@ -4,6 +4,7 @@ import json
 import subprocess
 import unittest
 from pathlib import Path
+from typing import Any
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -181,8 +182,8 @@ def tags(node: object) -> list[str]:
     return found
 
 
-def walk(node: object) -> list[dict[str, object]]:
-    found: list[dict[str, object]] = []
+def walk(node: object) -> list[dict[str, Any]]:
+    found: list[dict[str, Any]] = []
     if isinstance(node, dict):
         found.append(node)
         for kid in node.get("kids", []):
