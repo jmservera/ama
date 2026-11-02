@@ -1,0 +1,32 @@
+{
+  "task_id": "issue-441-owner-disposition",
+  "task_slug": "issue-441-owner-disposition",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-02/issue-441-owner-disposition-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-02/issue-441-owner-disposition-plan.md",
+    "details": ".copilot-tracking/details/2026-11-02/issue-441-owner-disposition-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-02/issue-441-owner-disposition-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-02/issue-441-owner-disposition-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-02/issue-441-owner-disposition-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; Ready", "status": "recorded", "evidence": "research file"},
+    {"decision": "Critique executed once; Proceed with changes; applied", "status": "recorded", "evidence": "critique file"},
+    {"decision": "Review executed once; Complete", "status": "recorded", "evidence": "review file"},
+    {"decision": "Refs #441 only; no ADR ID, no memory, no approval claim", "status": "confirmed", "evidence": "issue exclusions"}
+  ],
+  "blockers": [
+    {"id": "owner-disposition", "summary": "Requirements owner has not dispositioned FR-044/AC-084 (criterion 5)", "resolution": "Owner replies on #441"},
+    {"id": "gate-lock", "summary": "Focused gate blocked by shared heavy-resource lock on two attempts", "resolution": "Retry; status recorded in PR"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Open PR; owner disposition; exact-head gate observation"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Record owner FR-044/AC-084 disposition", "rationale": "Only human-gated unmet criterion", "evidence": "owner-disposition-packet.md"},
+    {"rank": 2, "task": "Exact-head review and gate conjunction", "rationale": "Criterion 9", "evidence": "PR checks"}
+  ]
+}
