@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-02T21:12:11+00:00",
-  "commit": "e767b35049400778bbba13d5b44a0b5d84a0482f",
+  "scored_at": "2026-11-02T22:20:54+00:00",
+  "commit": "aafc7d4b3830e85453dd81dcc9e1468d1eb0b04b",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41524472808",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41535347577",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "9eaaeb1c44a9b56ef6129ac3f2e60a6afff53f8c9fceb5cb499866d0ce4b979e",
+    "solution-code": "bb1c1e5370d2e9619e4b5c37c887506f4956d73b9f140bf14dca500998f5484a",
     "infrastructure": "5134fdeb17664e926dfc18305737f417e3bbfbb83eab746954ce283fc04217a9",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -63,7 +63,7 @@
         "infra/resident-demo.bicep:148-156",
         "src/api/src/zava_forward/api/web/app.js:219-259"
       ],
-      "rationale": "Diff retunes Startup/Readiness/Liveness probes (issue #\u200b691) and adds bounded cold-start read-retry in app.js with covering tests; reinforces resilience but adds no new cost or observability measurement. Baseline 5 retained."
+      "rationale": "Diff retunes Startup/Readiness/Liveness probes (issue 691) and adds bounded cold-start read-retry in app.js with covering tests; reinforces resilience but adds no new cost or observability measurement. Baseline 5 retained."
     },
     "A6": {
       "score": 5,
@@ -120,7 +120,7 @@
         "src/core/README.md:5-123",
         "src/api/README.md:9-47"
       ],
-      "rationale": "Diff is infra/UI engineering (probe tuning, retry logic, safety-screens browser check), not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "Diff is infra/UI engineering (probe tuning, retry logic), not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
