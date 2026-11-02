@@ -76,6 +76,10 @@ const document = {createElement: tag => new Node(tag),
 """
 
 
+# fetchReadRetrying sits after the sliced region; test_workspace_scripts covers the retry.
+READ_PASSTHROUGH = "const fetchReadRetrying = (path, options) => fetch(path, options);\n"
+
+
 def shipped_helpers() -> str:
     source = (WEB / "app.js").read_text()
     return (
@@ -83,6 +87,7 @@ def shipped_helpers() -> str:
         + source.split("function h", 1)[1].split("async function api", 1)[0]
         + "let caseSession = null;\nfunction caseFieldEntries"
         + source.split("function caseFieldEntries", 1)[1].split("function captureCaseFields", 1)[0]
+        + READ_PASSTHROUGH
     )
 
 
@@ -269,7 +274,8 @@ const api = async (path, body) => {
             'const assert = require("node:assert/strict");\n'
             "const routeController = new AbortController();\nlet response;\n"
             "const fetch = async () => response;\n"
-            "let caseSession = {id: 'SYN', pendingSubmissions: new Map()};\n"
+            + READ_PASSTHROUGH
+            + "let caseSession = {id: 'SYN', pendingSubmissions: new Map()};\n"
             "const app = {querySelector: () => ({dataset: {caseWorkspace: 'SYN'}})};\n"
             + "function mutationNeedsHistory"
             + source.split("function mutationNeedsHistory", 1)[1].split("const fmtDate", 1)[0]

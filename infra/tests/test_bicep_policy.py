@@ -353,6 +353,39 @@ class BicepPolicyTests(unittest.TestCase):
                 assignment["name"],
             )
 
+    def test_web_container_apps_gate_traffic_on_startup_and_readiness_probes(self) -> None:
+        """Issue #691: no request may reach Easy Auth before the app listens."""
+        for name, port, container in (
+            ("modules/containerapps.bicep", 8088, "api"),
+            ("resident-demo.bicep", 8089, "resident-demo"),
+        ):
+            template = compile_bicep(name)
+            apps = [
+                item
+                for item in resources(template)
+                if item["type"] == "Microsoft.App/containerApps"
+                and item["properties"].get("template", {}).get("containers")
+            ]
+            app = next(
+                a for a in apps if a["properties"]["template"]["containers"][0]["name"] == container
+            )
+            body = app["properties"]["template"]["containers"][0]
+            probes = {probe["type"]: probe for probe in body["probes"]}
+            self.assertEqual(set(probes), {"Startup", "Readiness", "Liveness"}, name)
+            for probe in probes.values():
+                self.assertEqual(probe["httpGet"]["path"], "/healthz", name)
+                self.assertEqual(probe["httpGet"]["port"], port, name)
+                self.assertGreaterEqual(probe["timeoutSeconds"], 3, name)
+            startup = probes["Startup"]
+            startup_window = startup["periodSeconds"] * startup["failureThreshold"]
+            self.assertGreaterEqual(startup_window, 90, name)
+            self.assertEqual(probes["Readiness"]["successThreshold"], 1, name)
+            if container == "resident-demo":
+                for probe in probes.values():
+                    headers = probe["httpGet"]["httpHeaders"]
+                    self.assertEqual([h["name"] for h in headers], ["Host"])
+                    self.assertIn("defaultDomain", headers[0]["value"])
+
     def test_src_workload_images_and_job_commands(self) -> None:
         template = compile_bicep("modules/containerapps.bicep")
         containers = {
@@ -716,11 +749,26 @@ class BicepPolicyTests(unittest.TestCase):
                 {
                     "type": "Startup",
                     "httpGet": {"path": "/healthz", "port": 8088},
-                    "periodSeconds": 5,
-                    "failureThreshold": 24,
+                    "initialDelaySeconds": 1,
+                    "periodSeconds": 3,
+                    "timeoutSeconds": 3,
+                    "failureThreshold": 40,
                 },
-                {"type": "Liveness", "httpGet": {"path": "/healthz", "port": 8088}},
-                {"type": "Readiness", "httpGet": {"path": "/healthz", "port": 8088}},
+                {
+                    "type": "Readiness",
+                    "httpGet": {"path": "/healthz", "port": 8088},
+                    "periodSeconds": 5,
+                    "timeoutSeconds": 3,
+                    "successThreshold": 1,
+                    "failureThreshold": 3,
+                },
+                {
+                    "type": "Liveness",
+                    "httpGet": {"path": "/healthz", "port": 8088},
+                    "periodSeconds": 10,
+                    "timeoutSeconds": 5,
+                    "failureThreshold": 6,
+                },
             ],
         )
         self.assert_hosting_limits_and_rollout(apps)
