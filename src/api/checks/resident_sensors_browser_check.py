@@ -115,6 +115,21 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
         "two named static plots",
         page.get_by_role("img", name="Synthetic", exact=False).count() == 2,
     )
+    summaries = page.locator(".sensor-summary")
+    check("two visible chart text summaries", summaries.count() == 2)
+    check(
+        "summary states count, lowest and highest",
+        all(
+            "Across 48 readings: lowest" in t and "highest" in t
+            for t in summaries.all_inner_texts()
+        ),
+    )
+    check(
+        "chart description repeats the summary",
+        page.locator("#sensor-temperature_c-desc").text_content().startswith(
+            summaries.first.inner_text()
+        ),
+    )
     summary = page.get_by_text("Show sensor history as a table", exact=True)
     summary.focus()
     check(
