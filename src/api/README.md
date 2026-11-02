@@ -1184,6 +1184,16 @@ Its browser check also installs a test-only queue to exercise actual staff
 safety projections and contractor responses without task context; this does
 not install a production role screen.
 
+`PYTHONDONTWRITEBYTECODE=1 python -m checks.safety_screens_browser_check`
+(#227) signs in as the Building Safety Liaison and the Resident Liaison Officer,
+opens the read-only referral queue and hazard triage screens on a synthetic home
+with pending receipt, pending acceptance, accepted, legacy, unsent, released
+with evidence and released without evidence hazards, and checks text-only
+states, no write controls, every hazard listed, keyboard reach of both tables
+and reflow. Set `ZF_AXE_JS` to the pinned axe 4.10.3 file to add a WCAG 2.2
+A/AA scan. These are engineering checks, not assistive-technology or WCAG
+acceptance (#155).
+
 ## Resident chat and synthetic callback agenda (#520, building on #469)
 
 The resident showcase has one bottom-right Chat launcher on its sign-in,
