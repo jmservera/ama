@@ -103,6 +103,9 @@ async function run(responses, signal) {
   assert.equal(out.calls, 1, "an application JSON error is never retried");
   assert.equal(out.res.status, 500);
 
+  out = await run([reply(503, "application/json")]);
+  assert.equal(out.calls, 1, "an application JSON 503 is never retried");
+
   out = await run([reply(404)]);
   assert.equal(out.calls, 1);
 

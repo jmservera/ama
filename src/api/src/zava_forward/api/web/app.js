@@ -223,10 +223,10 @@ const STARTUP_RETRY_DELAYS = [500, 1500, 3000];
 const SCRIPT_RETRY_DELAYS = [250, 500, 1500];
 const STARTUP_RETRY_MESSAGE = "The service is still starting. Trying again, this can take a few seconds.";
 
-// A cold start can answer the first reads with a gateway failure: 502/503/504, or a 500 that is not our JSON error.
+// A cold start can answer the first reads with a gateway failure: 500/502/503/504 that is not our JSON error.
 function startupFailure(res) {
-  if ([502, 503, 504].includes(res.status)) return true;
-  return res.status === 500 && !(res.headers.get("content-type") || "").includes("json");
+  if (![500, 502, 503, 504].includes(res.status)) return false;
+  return !(res.headers.get("content-type") || "").includes("json");
 }
 
 async function fetchReadRetrying(path, options = {}) {
