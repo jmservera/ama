@@ -69,7 +69,7 @@ class ProvenanceRegisterTests(unittest.TestCase):
     def test_all_public_payloads_pass_production_checker(self) -> None:
         self.assertEqual(privacy.public_issues(ROOT), [])
 
-    def test_source_audit_reports_exactly_the_unmet_historic_sources(self) -> None:
+    def test_source_audit_reports_only_the_provisional_ons_attribution(self) -> None:
         issues = privacy.source_issues(REGISTER["sources"])
         self.assertEqual(issues, ["SRC-ONS-BOUNDARIES:provisional_attribution"])
         for source in REGISTER["sources"]:

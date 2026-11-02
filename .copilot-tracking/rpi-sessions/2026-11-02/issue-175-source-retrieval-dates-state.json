@@ -4,7 +4,7 @@
   "parent_task": null,
   "mode": "automatic",
   "active_phase": "Follow-up",
-  "status": "completed",
+  "status": "blocked",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-02/issue-175-source-retrieval-dates-research.md",
@@ -22,7 +22,7 @@
   ],
   "blockers": [
     {"id": "B1", "summary": "OS copyright year in SRC-ONS-BOUNDARIES attribution unconfirmed", "resolution": "owner confirms against product notices"},
-    {"id": "B2", "summary": "Focused gate blocked by heavy-lock contention", "resolution": "rerun when lock is free"}
+    {"id": "B2", "summary": "Gate not passed: no receipt (heavy-lock contention; coordinator queues the gate)", "resolution": "coordinator runs the gate and records the receipt"}
   ],
   "next_action": {"phase": "Follow-up", "action": "Owner confirms OS copyright year; rerun focused gate; independent review and hosted CI"},
   "prioritized_follow_ups": [

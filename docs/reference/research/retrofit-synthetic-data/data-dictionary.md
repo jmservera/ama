@@ -579,7 +579,7 @@ Public checks open no private stock, runtime database or tenant roster. Tests
 check registry visibility, ignored working-data/answer-key paths and fresh
 snapshots; this is not an attestation of existing private data or runtime chat.
 
-### Issue 175 acceptance audit (2026-10-16)
+### Issue 175 acceptance audit (2026-11-02)
 
 | Criterion | Status | Evidence and limit |
 | --- | --- | --- |
