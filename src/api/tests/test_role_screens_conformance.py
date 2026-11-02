@@ -3,6 +3,7 @@
 Source-level checks only: no rendered, assistive-technology or user evidence. They do not
 establish WCAG 2.2 conformance (#151) or design-system acceptance (#150).
 """
+
 import re
 import unittest
 from pathlib import Path
@@ -12,6 +13,7 @@ WEB = ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web"
 SCREENS = (WEB / "role-screens.js").read_text()
 CSS = (WEB / "style.css").read_text()
 TRACE = (ROOT / "docs" / "reference" / "research" / "ux" / "atlas-screen-trace.md").read_text()
+
 
 class RoleScreenConformance(unittest.TestCase):
     def test_every_registered_screen_is_traced(self):
