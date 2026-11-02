@@ -28,7 +28,7 @@
     {
       "decision": "focused local gate (--changed, tier per D4) executed",
       "status": "passed",
-      "evidence": "receipt /tmp/gate691i1/receipt.json status passed, groups preflight/project-api/namespace/static/image-api/logo-0600; earlier attempts blocked by heavy-lock timeout and by ruff E501 and mypy no-untyped-def in tests/test_listen_backlog.py (fixed in 2 commits)"
+      "evidence": "author-reported; receipt /tmp/gate691final.AyEx/r/receipt.json status passed, scope partial, head 2fed4795ae6b, groups preflight/project-api/namespace/static/image-api/logo-0600; earlier attempts blocked by heavy-lock timeout and by ruff E501 and mypy no-untyped-def in tests/test_listen_backlog.py (fixed in 2 commits)"
     },
     {
       "decision": "src/api unit tests (pip venv, non-editable install)",
