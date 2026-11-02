@@ -69,13 +69,13 @@ class ProvenanceRegisterTests(unittest.TestCase):
     def test_all_public_payloads_pass_production_checker(self) -> None:
         self.assertEqual(privacy.public_issues(ROOT), [])
 
-    def test_source_audit_reports_exactly_the_unmet_historic_sources(self) -> None:
+    def test_source_audit_reports_only_the_provisional_ons_attribution(self) -> None:
         issues = privacy.source_issues(REGISTER["sources"])
-        expected = {
-            f"{sid}:missing_or_invalid_retrieval_date"
-            for sid in ("SRC-CENSUS-TS054", "SRC-IMD-2025", "SRC-ONS-BOUNDARIES")
-        } | {"SRC-ONS-BOUNDARIES:provisional_attribution"}
-        self.assertEqual(sorted(issues), sorted(expected))
+        self.assertEqual(issues, ["SRC-ONS-BOUNDARIES:provisional_attribution"])
+        for source in REGISTER["sources"]:
+            if source["id"] in ("SRC-CENSUS-TS054", "SRC-IMD-2025", "SRC-ONS-BOUNDARIES"):
+                self.assertEqual(source["retrieval_date"], "2026-10-01")
+                self.assertIn("owner decision", source["verification"])
         valid = [
             {
                 "id": "SYN-SOURCE",
@@ -134,7 +134,8 @@ class PrivacyMutationTests(unittest.TestCase):
         self.assertEqual(clean.returncode, 0, clean.stderr)
         blocked = self.cli("--public-root", str(ROOT), "--sources")
         self.assertEqual(blocked.returncode, 1)
-        self.assertIn("SRC-CENSUS-TS054:missing_or_invalid_retrieval_date", blocked.stdout)
+        self.assertIn("SRC-ONS-BOUNDARIES:provisional_attribution", blocked.stdout)
+        self.assertNotIn("missing_or_invalid_retrieval_date", blocked.stdout)
 
     def test_patterns_labels_and_sanitized_cli_on_rehashed_sensor_snapshots(self) -> None:
         for kind, sample in {**SAMPLES, "missing": None, "false": False}.items():
