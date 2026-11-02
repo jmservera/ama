@@ -6,8 +6,9 @@ import hashlib
 import os
 import sys
 from pathlib import Path
+from typing import Any
 
-from playwright.sync_api import Browser, Page, Route, sync_playwright
+from playwright.sync_api import Browser, Page, Request, Route, expect, sync_playwright
 
 from checks.design_system_browser_check import check, main
 from checks.role_screens_fixtures import synthetic_data, technical_quality_data
@@ -170,7 +171,7 @@ PROGRAMME_STEPS = ("Technical", "Resident", "Delivery", "Quality", "Finance")
 PROGRAMME_STATES = ("Blocked", "No recorded blocker")
 
 
-def programme_data() -> dict:
+def programme_data() -> dict[str, Any]:
     data = synthetic_data()
     case = data["cases"][0]
     # The shared fixture's return targets another stage; make it the active return for this home.
@@ -189,7 +190,7 @@ def load_axe() -> str | None:
     return raw.decode()
 
 
-def scan_main(page, axe: str | None, state: str) -> None:
+def scan_main(page: Page, axe: str | None, state: str) -> None:
     if axe is None:
         print(f"SKIP axe {state}: set ZF_AXE_JS to the pinned axe 4.10.3 file", flush=True)
         return
@@ -203,11 +204,27 @@ def scan_main(page, axe: str | None, state: str) -> None:
     check(f"axe finds no violations in {state}: {found}", not found)
 
 
-def focus_outline(page) -> bool:
+def focus_outline(page: Page) -> bool:
     return bool(page.evaluate(
         """() => { const s = getComputedStyle(document.activeElement);
           return s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) >= 2; }"""
     ))
+
+
+def watch(page: Page) -> tuple[list[str], list[str]]:
+    errors: list[str] = []
+    writes: list[str] = []
+
+    def on_error(error: Any) -> None:
+        errors.append(str(error))
+
+    def on_request(request: Request) -> None:
+        if request.method != "GET":
+            writes.append(request.url)
+
+    page.on("pageerror", on_error)
+    page.on("request", on_request)
+    return errors, writes
 
 
 def check_programme(browser: Browser, base: str, axe: str | None) -> None:
@@ -215,29 +232,27 @@ def check_programme(browser: Browser, base: str, axe: str | None) -> None:
         context = browser.new_context(viewport={"width": 1280, "height": 900})
         try:
             page = context.new_page()
-            errors: list[str] = []
-            writes: list[str] = []
-            page.on("pageerror", lambda error, sink=errors: sink.append(str(error)))
             page.goto(base + "/app")
             page.locator("#email").fill(email)
             page.locator("#pw").fill("synthetic-check")
             page.locator("button[type=submit]").click()
             page.get_by_role("link", name="Specialist screens", exact=True).wait_for()
-            page.on("request", lambda r, sink=writes: sink.append(r.url) if r.method != "GET" else None)
+            errors, writes = watch(page)
             before = page.request.get(base + "/api/cases/ZF-1").json()
             page.goto(base + "/app#/screens?screen=programme-queue")
             page.get_by_role("heading", name="Programme queue and connected home view",
                              exact=True).wait_for()
             table = page.get_by_role("table", name="Shared queue: returned and handed-off work")
             table.wait_for()
-            text = table.inner_text()
+            expect(table).to_contain_text("ZF-1")
             detail = ("SYN missing roof reference", "SYN sender") if email.startswith("pam") \
                 else ("Held for roles with a recorded need",)
             for phrase in ("ZF-1", *detail,
                            "Proposed receiver (not a confirmed owner)",
                            "Chase owner (chases the receiver)",
                            "Resident-update owner (updates the resident)"):
-                check(f"{email} queue shows {phrase}", phrase in text)
+                expect(table).to_contain_text(phrase)
+                check(f"{email} queue shows {phrase}", True)
             check(f"{email} no role simulator or switcher in the user view",
                   page.get_by_text("Simulate", exact=False).count() == 0
                   and page.get_by_role("combobox", name="Role").count() == 0)
