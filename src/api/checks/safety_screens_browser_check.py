@@ -14,6 +14,7 @@ from checks.design_system_browser_check import check, main
 from checks.role_screens_fixtures import synthetic_data
 
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
+SKIPPED: list[str] = []
 SCREENS = (
     ("safety@example.test", "Building safety referral queue"),
     ("sam@example.test", "Repairs and hazard triage"),
@@ -86,14 +87,15 @@ def check_accessibility(page: Page, story: str) -> None:
     check(f"{story} Tab reaches every table region: {reached}", len(reached) == len(expected))
     axe_path = os.environ.get("ZF_AXE_JS")
     if not axe_path:
-        print(f"SKIP {story} axe scan: set ZF_AXE_JS to the pinned axe 4.10.3 file")
+        SKIPPED.append(story)
+        print(f"SKIPPED {story} axe scan (not a pass): set ZF_AXE_JS to the pinned axe 4.10.3 file")
         return
     raw = Path(axe_path).read_bytes()
     check("axe file is the pinned 4.10.3 build", hashlib.sha256(raw).hexdigest() == AXE_SHA256)
     page.evaluate(raw.decode())
     result = page.evaluate("""async () => await axe.run(document.querySelector('main'), {
       runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}})""")
-    check(f"{story} axe finds no violations: {[v['id'] for v in result['violations']]}",
+    check(f"{story} axe (main only, 1280px) finds no violations: {[v['id'] for v in result['violations']]}",
           not result["violations"])
     print(f"INFO {story} axe incomplete: {[i['id'] for i in result['incomplete']]}")
 
@@ -114,7 +116,7 @@ def run_browser(base: str) -> None:
                     page.locator("#pw").fill("synthetic-check")
                     page.locator("button[type=submit]").click()
                     page.locator("#nav").wait_for()
-                    page.on("request", lambda r: writes.append(r.url) if r.method == "POST" else None)
+                    page.on("request", lambda r: writes.append(r.url) if r.method not in ("GET", "HEAD", "OPTIONS") else None)
                     page.get_by_role("link", name="Specialist screens", exact=True).click()
                     page.get_by_role("heading", name="Specialist screens", exact=True).wait_for()
                     page.get_by_role("link", name=screen, exact=True).click()
@@ -131,6 +133,8 @@ def run_browser(base: str) -> None:
                     context.close()
         finally:
             browser.close()
+    if SKIPPED:
+        print(f"PARTIAL: axe scan SKIPPED for {SKIPPED}; automated evidence is incomplete")
 
 
 if __name__ == "__main__":

@@ -2,7 +2,8 @@
 
 * [x] Add `src/api/checks/safety_screens_browser_check.py` with a synthetic home of seven hazard states
 * [x] Document it in `src/api/README.md`
-* [x] Run the check with pinned axe; run `rpi-checks.py --changed`
+* [x] Run the check with pinned axe
+* [ ] `rpi-checks.py --changed --base origin/main --lock-timeout 600`: BLOCKED on 2026-11-02 ("--out is required and must be a new external directory"); not passed, rerun needed with an external out directory
 
 ## Critique (one pass, inline)
 
