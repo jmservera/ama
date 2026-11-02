@@ -1208,6 +1208,17 @@ only those scans and is not a complete accessibility result. This is an engineer
 assistive-technology or WCAG acceptance (#155, #151). Submission, correction
 and checklist capture are not built (OD-47).
 
+`PYTHONDONTWRITEBYTECODE=1 python -m checks.data_operator_browser_check` (#229)
+signs in as the Retrofit Programme Manager, opens the read-only Data steward and
+operator view on a synthetic home with two source conflicts (one withdrawn),
+a return, a reopen, a forward move and a stock query event, and checks that both
+source values and provenance show, eligibility stays Unknown with no winning
+source, forward moves are not shown as returns, the event table carries the
+no-audit-trail caveat, no write controls or requests exist, Tab reaches every
+table region and the page reflows at 320px. Set `ZF_AXE_JS` to the pinned axe
+4.10.3 file to add a WCAG 2.2 A/AA scan. These are engineering checks, not
+assistive-technology or WCAG acceptance (#155).
+
 ## Resident chat and synthetic callback agenda (#520, building on #469)
 
 The resident showcase has one bottom-right Chat launcher on its sign-in,
