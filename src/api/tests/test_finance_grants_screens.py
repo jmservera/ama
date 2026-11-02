@@ -354,7 +354,10 @@ class FinanceGrantsScreens(unittest.TestCase):
                 tabindex = (node["attrs"] or {}).get("tabindex")
                 if tabindex is not None:
                     self.assertLessEqual(int(str(tabindex)), 0, node)
-                self.assertNotIn(node["tag"], ("button", "input", "select"))
+                attrs = node["attrs"] or {}
+                self.assertNotIn(node["tag"], ("button", "input", "select", "textarea", "a"))
+                self.assertNotEqual(attrs.get("role"), "button", node)
+                self.assertNotIn("onclick", attrs, node)
             for table in (n for n in nodes if n["tag"] == "table"):
                 self.assertEqual(table["kids"][0]["tag"], "caption")
 

@@ -43,7 +43,7 @@ role simulator.
 | Procurement and contract manager | `procurement-packages` (main, #655) | Offered and committed capacity separated | Unmet prerequisites and next reviewer shown | Period and call-off conventions |
 | Provider / contractor contact | `contractor-job-pack` (main, #655; Contractor role, "Your job pack") | Contractor-facing job pack, not the staff-mediated constructed intake in the PRD contract; no provider identity claim | Submission kept separate from independent acceptance | Staff-facing constructed intake is deferred until a supporting screen design exists; whether a provider portal is wanted at all |
 | Quality and assurance | `quality-queue` (main, PR 656) | Incomplete evidence blocks handover | Positive per-measure evidence, defect owner and reinspection shown | Reinspection thresholds |
-| Finance and Grants | `finance-invoices` and `finance-funding` (main, #657) | Invoice, award, claim and cash kept as separate states | Exceptions explained before any export or readiness block (per-exception plain-language table, main after the exception-explanations slice of #225) | Funding route and schema; no payment or submission control |
+| Finance and Grants | `finance-invoices` and `finance-funding` (main, #657) | Invoice, award, claim and cash kept as separate states | Exceptions explained before any export or readiness block (per-exception plain-language table, this PR (pending merge)) | Funding route and schema; no payment or submission control |
 | Digital operator and auditor | `data-operator` (main, #654) | Both source values and provenance shown, original preserved | Illustrative event metadata labelled as not an operational audit trail | Operator recovery context |
 
 ## Atlas design themes to screens
