@@ -1180,6 +1180,10 @@ Story `230` (programme queue) drives the shared queue, scope filter, Reset and
 five-gate home view by keyboard as a Retrofit Programme Manager and a Retrofit
 Coordinator, asserts textual states, no record change and no writes, and checks
 reflow at 320, 390 and 1280 px; the same `ZF_AXE_JS` adds its axe scan.
+Without `ZF_AXE_JS` the axe scan is skipped and the run prints `PARTIAL`; a
+skip is not a pass. A scan with axe 4.10.3 covers `main` only, at 1280 px, on
+the programme overview and the connected home view for both roles; it is not a
+statement about other views, widths or roles.
 Checks own a synthetic
 loopback server and do not read the normal working dataset or call Azure.
 The parent's scoped receipt covers its exact foundation head, not unmerged
