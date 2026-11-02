@@ -9677,3 +9677,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   rendered accessibility, design-system acceptance and user validation (#155)
   remain open. Original RPI evidence is under `.copilot-tracking/` (2026-11-02
   issue-233-atlas-guardrails).
+
+## [2026-11-02] update | Union merge for the knowledge-base log
+
+* Added `docs/reference/log.md merge=union` to `.gitattributes` so concurrent
+  appends keep both entries on local rebase instead of conflicting. GitHub web
+  merges ignore the attribute, so rebase locally before merging. Verified with
+  two branches appending different entries.

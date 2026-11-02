@@ -1,2 +1,4 @@
 .github/workflows/*.lock.yml linguist-generated=true
 * text=auto eol=lf
+# Append-only knowledge-base files: keep both sides on rebase to avoid recurring tail conflicts
+docs/reference/log.md merge=union
