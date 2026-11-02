@@ -117,7 +117,7 @@ class VendorAssets(unittest.TestCase):
         from zava_forward.api.auth import TrustedProxyProvider
 
         tenant = "11111111-1111-1111-1111-111111111111"
-        provider = TrustedProxyProvider(
+        provider = TrustedProxyProvider(  # type: ignore[no-untyped-call]
             self.store, {"ZF_ENTRA_TENANT_ID": tenant, "ZF_TRUSTED_PROXY": "1"}
         )
         claims = [
