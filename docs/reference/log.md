@@ -9711,3 +9711,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   content changed. Self-review only; WCAG and assistive-technology acceptance
   are not claimed. Evidence is under `.copilot-tracking/` (2026-11-02
   issue-432-owner-gate).
+## [2026-11-02] update | Issue 188 focused re-validation, Refs #188
+
+* Re-ran core (144) and api (89) sensor tests on main; all pass locally. No
+  source change. The three live Azure SQL criteria remain unmet and
+  owner-gated on #110. RPI artifacts: `.copilot-tracking/*/2026-11-02-issue-188-ingestion-consistency-*`.
