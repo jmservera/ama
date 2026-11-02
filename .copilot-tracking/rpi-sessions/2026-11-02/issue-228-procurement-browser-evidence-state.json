@@ -1,5 +1,73 @@
-{"task_id":"issue-228-browser-evidence","task_slug":"issue-228-procurement-browser-evidence","parent_task":{"task_id":"issue-228","task_slug":"issue-228-supplier-procurement-screens"},"mode":"automatic","active_phase":"Follow-up","status":"completed","session_status":"running",
-"artifact_paths":{"research":".copilot-tracking/research/2026-11-02-issue-228-procurement-browser-evidence-research.md","plan":".copilot-tracking/plans/2026-11-02-issue-228-procurement-browser-evidence-plan.md","details":null,"critique":null,"changes":".copilot-tracking/changes/2026-11-02-issue-228-procurement-browser-evidence-changes.md","review":".copilot-tracking/reviews/2026-11-02-issue-228-procurement-browser-evidence-review.md"},
-"confirmed_decisions":[{"decision":"critique executed once inline in plan; accepted","status":"done","evidence":"plan file"},{"decision":"review executed once; conformant for slice","status":"done","evidence":"review file"}],
-"blockers":[],"next_action":{"phase":"Follow-up","action":"Open PR with Refs #228; owner selects follow-up"},
-"prioritized_follow_ups":[{"rank":1,"task":"Validate screens with people and assistive technology in #155","rationale":"engineering checks are not acceptance","evidence":"review file"},{"rank":2,"task":"Job pack submit and correct endpoints (needs OD-47)","rationale":"criterion 3 partial","evidence":"review file"},{"rank":3,"task":"Check Fluent component adoption (#150)","rationale":"criterion 6 unproven","evidence":"review file"}]}
+{
+ "task_id": "issue-228-browser-evidence",
+ "task_slug": "issue-228-procurement-browser-evidence",
+ "parent_task": {
+  "task_id": "issue-228",
+  "task_slug": "issue-228-supplier-procurement-screens"
+ },
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "blocked",
+ "session_status": "running",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-02-issue-228-procurement-browser-evidence-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-02-issue-228-procurement-browser-evidence-plan.md",
+  "details": null,
+  "critique": null,
+  "changes": ".copilot-tracking/changes/2026-11-02-issue-228-procurement-browser-evidence-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-02-issue-228-procurement-browser-evidence-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "critique executed once inline in plan; accepted",
+   "status": "done",
+   "evidence": "plan file"
+  },
+  {
+   "decision": "review executed once as self-review only; not independent; engineering evidence only; no conformance claim; WCAG/AT acceptance pending",
+   "status": "done",
+   "evidence": "review file; independent review FAILED 2026-11-02, correction note added"
+  },
+  {
+   "decision": "focused gate not passed",
+   "status": "blocked",
+   "evidence": "two runs BLOCKED: Global heavy-resource lock timeout (/tmp/gate782fix, /tmp/gate782fix2); no receipt"
+  }
+ ],
+ "blockers": [
+  {
+   "id": "gate-lock-timeout",
+   "summary": "rpi-checks.py --changed blocked by global heavy-resource lock timeout; no receipt for this head",
+   "resolution": "rerun gate when lock is free, then independent exact-head review and hosted CI"
+  },
+  {
+   "id": "independent-review",
+   "summary": "Independent review FAILED; corrections await re-review",
+   "resolution": "independent exact-head review"
+  }
+ ],
+ "next_action": {
+  "phase": "Review",
+  "action": "Rerun focused gate, then independent re-review; owner decides merge"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Validate screens with people and assistive technology in #155",
+   "rationale": "engineering checks are not acceptance",
+   "evidence": "review file"
+  },
+  {
+   "rank": 2,
+   "task": "Job pack submit and correct endpoints (needs OD-47)",
+   "rationale": "criterion 3 partial",
+   "evidence": "review file"
+  },
+  {
+   "rank": 3,
+   "task": "Check Fluent component adoption (#150)",
+   "rationale": "criterion 6 unproven",
+   "evidence": "review file"
+  }
+ ]
+}

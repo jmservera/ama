@@ -1200,8 +1200,11 @@ as a Retrofit Programme Manager and as a Contractor, and opens the read-only
 Package queue and Job pack screens. It checks the package queue columns, draft
 readiness wording, separate submission, acknowledgement and review states, no
 write controls or contact links, no vulnerability reason, keyboard reach of
-every table region, 320 px reflow and no writes. Set `ZF_AXE_JS` to the pinned
-axe 4.10.3 file to add the axe scan. This is an engineering check, not
+every table region, 320 px reflow and no non-GET/HEAD/OPTIONS requests after
+sign-in. Set `ZF_AXE_JS` to the pinned axe 4.10.3 file to add the axe scan of
+the `main` region at 1280 px for each role and view; without it the run ends
+PARTIAL (or fails when `ZF_AXE_REQUIRED=1`). Zero violations in a run covers
+only those scans and is not a complete accessibility result. This is an engineering check, not
 assistive-technology or WCAG acceptance (#155, #151). Submission, correction
 and checklist capture are not built (OD-47).
 
