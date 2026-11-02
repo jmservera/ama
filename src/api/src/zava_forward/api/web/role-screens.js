@@ -884,7 +884,7 @@ function financeExplainRows(inv) {
     return [screenValue(e.message), lines.length ? `Line ${lines.join(", ")}` : "Whole invoice",
       known ? known[0] : "Unknown. This exception code has no plain-language explanation yet.",
       known ? known[1] : "Unknown",
-      `${known ? known[2] : financeDecider}. Payment is made outside this system.`];
+      `${known ? known[2] : "Unknown. Who decides is not recorded for this code"}. Payment is made outside this system.`];
   });
 }
 function financeExceptionPanel(inv) {

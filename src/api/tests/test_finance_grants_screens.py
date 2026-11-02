@@ -181,6 +181,30 @@ def tags(node: object) -> list[str]:
     return found
 
 
+def walk(node: object) -> list[dict[str, object]]:
+    found: list[dict[str, object]] = []
+    if isinstance(node, dict):
+        found.append(node)
+        for kid in node.get("kids", []):
+            found += walk(kid)
+    return found
+
+
+def node_text(node: object) -> str:
+    if isinstance(node, dict):
+        return "".join(node_text(k) for k in node.get("kids", []))
+    return node if isinstance(node, str) else ""
+
+
+def explanation_rows(tree: object, invoice: str) -> list[list[str]]:
+    caption = f"Exception explanations for {invoice}"
+    for table in (n for n in walk(tree) if n["tag"] == "table"):
+        if node_text(table["kids"][0]) == caption:
+            body = [n for n in walk(table) if n["tag"] == "tr"][1:]
+            return [[node_text(c) for c in row["kids"]] for row in body]
+    return []
+
+
 class FinanceGrantsScreens(unittest.TestCase):
     def test_roles_exclude_other_staff_and_no_controls(self) -> None:
         out = run()
@@ -271,43 +295,67 @@ class FinanceGrantsScreens(unittest.TestCase):
         self.assertIn("No field draft recorded", empty)
 
     def test_exception_explanations_name_decider_and_never_decide_payment(self) -> None:
+        rows = explanation_rows(run()["finance-invoices"]["tree"], "INV-1")
+        self.assertEqual(len(rows), 3)
+        by_message = {row[0]: row for row in rows}
+        quantity = by_message["Quantity 2 is above the 1 authorised."]
+        no_budget = by_message["No approved budget."]
+        unknown = by_message["Something new."]
+        for row in (quantity, no_budget, unknown):
+            self.assertEqual(row[1], "Line 1")
+            self.assertIn("Payment is made outside this system.", row[4])
+        self.assertEqual(quantity[2], "This line is above the quantity the commitment authorises.")
+        self.assertTrue(quantity[4].startswith("Finance approver (Retrofit Programme Manager"))
+        self.assertIn("It stays Unknown.", no_budget[3])
+        self.assertTrue(no_budget[4].startswith("Finance approver"))
+        self.assertTrue(unknown[2].startswith("Unknown."))
+        self.assertEqual(unknown[3], "Unknown")
+        self.assertTrue(unknown[4].startswith("Unknown."))
+        self.assertNotIn("Finance approver", unknown[4])
         text = json.dumps(run()["finance-invoices"]["tree"])
-        for expected in (
-            "Exception explanations for INV-1",
-            "This line is above the quantity the commitment authorises.",
-            "Finance approver",
-            "Payment is made outside this system.",
-            "Unknown. This exception code has no plain-language explanation yet.",
-            "Exception explanations are Unknown. The invoice is not checked yet.",
-        ):
-            self.assertIn(expected, text)
+        self.assertIn("Exception explanations are Unknown. The invoice is not checked yet.", text)
+
+    def test_invoice_level_exception_is_grouped_across_lines(self) -> None:
+        case = json.loads(json.dumps(CASE))
+        inv = case["finance"]["invoices"][0]
+        inv["lines"].append(
+            {"measure": "Loft insulation", "quantity": 1, "amount": 100, "milestone_ref": ""}
+        )
+        inv["exceptions"] = [
+            {"line": 0, "code": "no_budget", "message": "No approved budget."},
+            {"line": 1, "code": "no_budget", "message": "No approved budget."},
+            {"line": None, "code": "duplicate", "message": "Same reference."},
+        ]
+        rows = explanation_rows(run(case)["finance-invoices"]["tree"], "INV-1")
+        self.assertEqual(len(rows), 2)
+        self.assertEqual(rows[0][1], "Line 1, 2")
+        self.assertEqual(rows[1][1], "Whole invoice")
 
     def test_clean_match_is_not_a_payment_decision(self) -> None:
         case = json.loads(json.dumps(CASE))
         case["finance"]["invoices"][0]["exceptions"] = []
-        text = json.dumps(run(case)["finance-invoices"]["tree"])
+        tree = run(case)["finance-invoices"]["tree"]
+        self.assertEqual(explanation_rows(tree, "INV-1"), [])
+        text = json.dumps(tree)
+        self.assertNotIn("Exception explanations for INV-1", text)
+        self.assertIn("No exception found by the match. This is not a payment decision", text)
         self.assertIn("does not confirm milestone acceptance", text)
 
     def test_tables_are_keyboard_reachable_and_labelled(self) -> None:
-        def walk(node: object) -> list[dict[str, object]]:
-            found: list[dict[str, object]] = []
-            if isinstance(node, dict):
-                found.append(node)
-                for kid in node.get("kids", []):
-                    found += walk(kid)
-            return found
-
         for screen in run().values():
             nodes = walk(screen["tree"])
-            regions = [n for n in nodes if n["attrs"] and n["attrs"].get("role") == "region"]  # type: ignore[attr-defined]
+            regions = [n for n in nodes if (n["attrs"] or {}).get("role") == "region"]
             self.assertTrue(regions)
             for region in regions:
-                self.assertEqual(region["attrs"]["tabindex"], 0)  # type: ignore[index]
-                self.assertTrue(region["attrs"]["aria-label"])  # type: ignore[index]
+                self.assertEqual(region["attrs"]["tabindex"], 0)
+                self.assertTrue(region["attrs"]["aria-label"])
             for node in nodes:
-                self.assertNotIn(node["attrs"] and node["attrs"].get("tabindex"), (1, 2, 3))  # type: ignore[attr-defined]
+                tabindex = (node["attrs"] or {}).get("tabindex")
+                if tabindex is not None:
+                    self.assertLessEqual(int(str(tabindex)), 0, node)
+                self.assertNotIn(node["tag"], ("button", "input", "select"))
             for table in (n for n in nodes if n["tag"] == "table"):
-                self.assertEqual(table["kids"][0]["tag"], "caption")  # type: ignore[index]
+                self.assertEqual(table["kids"][0]["tag"], "caption")
 
 
 if __name__ == "__main__":

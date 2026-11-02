@@ -6,8 +6,8 @@ Research: .copilot-tracking/research/2026-11-02-issue-225-finance-exception-expl
 
 1. Add `financeExplain` table and `financeExceptionPanel` to `role-screens.js`; render inside each invoice block.
 2. Extend `test_finance_grants_screens.py`: grouped explanations, unknown code, unchecked invoice, structural keyboard checks.
-3. Update atlas trace row, src/api README note and knowledge-base log.
-4. Validate with `tools/rpi-checks.py --changed --lock-timeout 600`; commit, push, PR with Refs #225.
+3. Update atlas trace row and knowledge-base log (no src/api README note: behaviour is within the existing screens).
+4. Validate with `tools/rpi-checks.py --changed --base origin/main --lock-timeout 3300`; commit, push, PR with Refs #225.
 
 ## Critique (inline, one pass, executed once)
 
