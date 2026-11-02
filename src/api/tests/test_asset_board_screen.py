@@ -164,6 +164,27 @@ class AssetBoardScreen(unittest.TestCase):
         for control in ("button", "form", "input", "select", "textarea"):
             self.assertNotIn(control, tags(tree))
 
+    def test_phase_gate_table_is_unknown_with_owners_and_no_approval(self) -> None:
+        tree = run({})["tree"]
+        text = json.dumps(tree)
+        self.assertIn("Phase checks and benefits", text)
+        self.assertIn("Pause or exit choice for the next tranche", text)
+        self.assertIn("Board or delegated owner", text)
+        self.assertIn("does not pass a check", text)
+        table = next(
+            n
+            for n in walk(tree)
+            if n.get("tag") == "table"
+            and "Phase checks and benefits" in json.dumps(n)
+        )
+        rows = [n for n in walk(table) if n.get("tag") == "tr"][1:]
+        self.assertEqual(len(rows), 6)
+        for row in rows:
+            cells = [json.dumps(k) for k in row["kids"]]
+            self.assertIn("Unknown", cells[1])
+        for control in ("button", "form", "input", "select", "textarea"):
+            self.assertNotIn(control, tags(tree))
+
     def test_queue_failure_is_unknown_not_empty(self) -> None:
         text = json.dumps(run({}, queue="fail")["tree"])
         self.assertIn("The cross-home queue could not be loaded.", text)
