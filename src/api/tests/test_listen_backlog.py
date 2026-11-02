@@ -4,16 +4,16 @@ import select
 import socket
 import time
 import unittest
-from http.server import BaseHTTPRequestHandler
+from http.server import BaseHTTPRequestHandler, HTTPServer
 
 from zava_forward.api import server
 from zava_forward.api.resident_demo import app as demo
 from zava_forward.api.resident_preview import app as preview
 
 
-def _queued(cls, burst: int = 30) -> int:
+def _queued(cls: type[HTTPServer], burst: int = 30) -> int:
     httpd = cls(("127.0.0.1", 0), BaseHTTPRequestHandler)
-    socks = []
+    socks: list[socket.socket] = []
     try:
         for _ in range(burst):
             c = socket.socket()
