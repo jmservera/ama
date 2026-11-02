@@ -1202,6 +1202,20 @@ and reflow. Set `ZF_AXE_JS` to the pinned axe 4.10.3 file to add a WCAG 2.2
 A/AA scan. These are engineering checks, not assistive-technology or WCAG
 acceptance (#155).
 
+`PYTHONDONTWRITEBYTECODE=1 python -m checks.role_screens_browser_check 226`
+(#226) signs in as a Retrofit Programme Manager and opens the read-only Asset
+and board view on a synthetic home. It checks the cross-home stock conflict
+queue (portfolio scope, oldest source first, not an investment priority),
+source age, Unknown eligibility with a named resolution owner, Unknown
+investment inputs, the phase check table with the deciding owner, the
+evidence boundary stating that no investment approval is recorded, AI cost per
+accepted outcome shown Unknown beside the quality floor, value status and
+evidence class, no write controls, keyboard reach of every table region,
+reflow and no POST requests. Set `ZF_AXE_JS` to the pinned axe 4.10.3 file
+to add the WCAG 2.2 A/AA scan. This is a design and engineering check on
+constructed data, not assistive-technology or WCAG acceptance (#155, #151),
+and not a Board decision, budget, forecast or investment approval.
+
 `python -m checks.procurement_screens_browser_check` (#228) builds a synthetic
 package, capacity record and issued work order through the real store, signs in
 as a Retrofit Programme Manager and as a Contractor, and opens the read-only

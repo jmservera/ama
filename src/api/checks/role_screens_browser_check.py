@@ -41,6 +41,21 @@ SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
             "SYN photo 14",
         ),
     ),
+    "226": (
+        "pam@example.test",
+        "Asset and board view",
+        (
+            "Stock conflict queue across homes (portfolio scope, not this home)",
+            "SYN-STOCK-A v1",
+            "Eligibility",
+            "Unknown",
+            "Pause or exit choice for the next tranche",
+            "Board or delegated owner",
+            "Overall AI cost per accepted outcome",
+            "Evidence class",
+            "It records no investment approval and changes no record",
+        ),
+    ),
     "232": (
         "sam@example.test",
         "Resident choice and update queue",
@@ -58,6 +73,7 @@ SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
 
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
 STORY_231 = ("231", "231q")
+STORY_ACCESSIBLE = ("231", "231q", "226")
 
 
 def check_readonly_accessibility(page: Page, story: str) -> None:
@@ -379,11 +395,13 @@ def run_browser(base: str) -> None:
                 page.locator('a.item[href*="case=ZF-1"]').click()
                 evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
                 evidence.wait_for()
+                for panel in evidence.locator("section.screen-record").all():
+                    panel.scroll_into_view_if_needed()
                 text = evidence.inner_text()
                 for phrase in expected:
                     check(f"story {selected} exact evidence: {phrase}", phrase in text)
                 check("same home remains ZF-1", "Selected home ZF-1" in text)
-                if selected in STORY_231:
+                if selected in STORY_ACCESSIBLE:
                     check_readonly_accessibility(page, selected)
                 check("no contact actions", evidence.locator('a[href^="tel:"], a[href^="mailto:"]').count() == 0)
                 for width in (320, 390, 1280):
