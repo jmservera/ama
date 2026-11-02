@@ -2126,8 +2126,9 @@ os.fstat(3)
                 raise RuntimeError("stop after build")
             return ""
 
-        for stress in (False, True):
+        for stress, cache in ((False, "fresh"), (True, "fresh"), (False, "layer"), (True, "layer")):
             seen.clear()
+            runner.image_cache = cache
             with (
                 patch.object(runner, "command", side_effect=record),
                 patch.object(runner, "python", return_value="python3"),
@@ -2138,7 +2139,7 @@ os.fstat(3)
                     runner.image("api", stress=stress)
             builds = [a for a in seen if a[:2] == ["docker", "build"]]
             self.assertEqual(len(builds), 1)
-            self.assertEqual("--no-cache" in builds[0], not stress)
+            self.assertEqual("--no-cache" in builds[0], cache == "fresh" and not stress)
 
     def test_matrix_drift_and_unreviewed_extra_commands_refuse(self) -> None:
         self.assertEqual(len(gate.required_groups([])), 17)
@@ -2222,6 +2223,379 @@ os.fstat(3)
             self.assertNotIn("ZF_SQL_SERVER", runner.env)
             self.assertNotIn("AZURE_TOKEN", runner.env)
             self.assertNotEqual(runner.env["ZF_DATA"], "/private/data")
+
+    def commit(self, message: str, *paths: str, root: Path | None = None) -> str:
+        target = root or self.root
+        for name in paths:
+            path = target / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(f"# {message}\n")
+        subprocess.run(["git", "-C", str(target), "add", "-A"], check=True)
+        subprocess.run(
+            [
+                "git",
+                "-C",
+                str(target),
+                "-c",
+                "user.name=Fixture",
+                "-c",
+                "user.email=fixture@example.test",
+                "commit",
+                "-q",
+                "--allow-empty",
+                "-m",
+                message,
+            ],
+            check=True,
+        )
+        return self.git("rev-parse", "HEAD")
+
+    def move_main(self, *paths: str) -> str:
+        """Advance origin/main from the fixture base on a side branch, then return to the PR."""
+        pr = self.git("branch", "--show-current")
+        self.git("switch", "-qc", "side-main", self.base)
+        moved = self.commit("main moved", *paths)
+        self.git("switch", "-q", pr)
+        self.git("update-ref", "refs/remotes/origin/main", moved)
+        return moved
+
+    def test_skipped_groups_name_every_unselected_group_with_a_reason(self) -> None:
+        selected = gate.selection(self.root, self.base, "all", [])
+        self.assertNotIn("skipped", selected)
+        paths = ["src/api/src/zava_forward/api/server.py"]
+        groups = gate.changed_groups(paths, [])
+        skipped = gate.skipped_groups(groups, [])
+        self.assertEqual(set(skipped), set(gate.required_groups([])) - set(groups))
+        for group in (
+            "project-agents",
+            "project-orchestrator",
+            "project-importer",
+            "image-agents",
+            "image-orchestrator",
+            "image-importer",
+            "infra",
+            "migration",
+        ):
+            self.assertIn(group, skipped)
+            self.assertTrue(skipped[group])
+        self.assertNotIn("image-api", skipped)
+        self.assertNotIn("project-api", skipped)
+        self.commit("api change", *paths)
+        recorded = gate.selection(self.root, self.base, "changed", [])
+        self.assertEqual(recorded["skipped"], skipped)
+        self.assertEqual(gate.skipped_groups(gate.required_groups([]), []), {})
+
+    def sharded_fixture(self, names: dict[str, int], *extra: str) -> None:
+        for name, size in names.items():
+            path = self.root / "src/api/tests" / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("#" * size + "\n")
+        self.commit("tests", *extra)
+
+    def test_shard_partition_is_complete_disjoint_deterministic_and_balanced(self) -> None:
+        sizes = {f"test_m{i}.py": 100 * (i + 1) for i in range(7)}
+        self.sharded_fixture({**sizes, "scale_load.py": 50, "helper.txt": 5})
+        self.assertEqual(gate.shard_count(1), 1)
+        self.assertEqual(gate.shard_count(2), 3)
+        self.assertEqual(gate.shard_count(8), max(gate.SHARDED_PROJECTS.values()))
+        for count in (2, 3):
+            parts = gate.shard_partition(self.root, "api", count)
+            assert parts is not None
+            flat = [module for part in parts for module in part]
+            self.assertEqual(sorted(flat), sorted(name.removesuffix(".py") for name in sizes))
+            self.assertEqual(len(flat), len(set(flat)))
+            self.assertTrue(all(part == sorted(part) for part in parts))
+            self.assertEqual(parts, gate.shard_partition(self.root, "api", count))
+            loads = [sum(sizes[f"{m}.py"] for m in part) for part in parts]
+            self.assertLessEqual(max(loads) - min(loads), 700)
+        argv = gate.shard_argv("py", ["test_a", "test_b"])
+        self.assertEqual(argv[-4:], ["-k", "test_a.*", "-k", "test_b.*"])
+        self.assertEqual(argv[:7], ["py", "-m", "unittest", "discover", "-s", "tests", "-v"])
+
+    def test_shard_partition_fails_closed_for_unrepresentable_layouts(self) -> None:
+        self.sharded_fixture({"test_a.py": 10, "test_b.py": 10})
+        self.assertIsNone(gate.shard_partition(self.root, "api", 3))
+        for count in (1, 4):
+            with self.assertRaises(gate.GateError):
+                gate.shard_partition(self.root, "api", count)
+        with self.assertRaises(gate.GateError):
+            gate.shard_partition(self.root, "core", 2)
+        self.sharded_fixture({"test_c.py": 10, "pkg/test_nested.py": 10})
+        self.assertIsNone(gate.shard_partition(self.root, "api", 2))
+
+    def test_required_checks_expand_api_shards_and_reject_invalid_policy(self) -> None:
+        self.sharded_fixture({f"test_m{i}.py": 10 + i for i in range(6)})
+
+        def receipt(**fields: Any) -> dict[str, Any]:
+            return {
+                "owner": "a" * 24,
+                "sql": {},
+                "images": {},
+                "extras": [],
+                "executed_groups": ["project-api", "project-core"],
+                **fields,
+            }
+
+        def suites(value: dict[str, Any]) -> list[dict[str, Any]]:
+            return [
+                c
+                for c in gate.required_checks(self.root, value)
+                if c["suite"] and c["group"] == "project-api"
+            ]
+
+        self.assertEqual(len(suites(receipt())), 1)
+        self.assertEqual(len(suites(receipt(test_shards={}))), 1)
+        sharded = suites(receipt(test_shards={"api": 3}))
+        self.assertEqual(len(sharded), 3)
+        patterns = [a for check in sharded for a in check["argv"] if a.endswith(".*")]
+        self.assertEqual(
+            sorted(patterns), sorted(f"test_m{i}.*" for i in range(6)), "every module runs once"
+        )
+        for bad in ({"api": 4}, {"api": 0}, {"core": 2}, {"api": "3"}, ["api"]):
+            with self.subTest(bad=bad), self.assertRaises(gate.GateError):
+                gate.required_checks(self.root, receipt(test_shards=bad))
+        with self.assertRaises(gate.GateError):
+            gate.required_checks(self.root, receipt(image_cache="stale"))
+        self.git("rm", "-q", *[f"src/api/tests/test_m{i}.py" for i in range(2, 6)])
+        self.commit("drop")
+        with self.assertRaises(gate.GateError):
+            gate.required_checks(self.root, receipt(test_shards={"api": 3}))
+
+    def test_sharded_rows_keep_contract_order_when_shards_finish_out_of_order(self) -> None:
+        runner = self.runner()
+        runner.snapshot = self.root
+        runner.group = "project-api"
+        release = threading.Event()
+        started = threading.Barrier(3)
+
+        def command(argv: list[str], *args: Any, **kwargs: Any) -> str:
+            index = int(argv[-1].removeprefix("m").removesuffix(".*"))
+            entry = {"group": runner.group, "argv": argv, "index": index}
+            with runner.row_lock:
+                runner.rows.append(entry)
+            runner.local.last_entry = entry
+            started.wait(timeout=5)
+            if index == 0:
+                release.wait(timeout=5)
+            else:
+                release.set()
+            return ""
+
+        parts = [["m0"], ["m1"], ["m2"]]
+        with (
+            patch.object(runner, "command", side_effect=command),
+            patch.object(gate, "shard_argv", side_effect=lambda py, mods: [py, f"{mods[0]}.*"]),
+        ):
+            runner.sharded_tests("api", "py", "src/api", [["0"], ["1"], ["2"]])
+        self.assertEqual([row["index"] for row in runner.rows], [0, 1, 2])
+        self.assertEqual(len(parts), len(runner.rows))
+
+    def test_sharded_failure_waits_for_all_shards_and_raises(self) -> None:
+        runner = self.runner()
+        runner.snapshot = self.root
+        finished: list[str] = []
+
+        def command(argv: list[str], *args: Any, **kwargs: Any) -> str:
+            runner.local.last_entry = {"argv": argv}
+            if argv[-1] == "0.*":
+                raise gate.GateError("shard failed")
+            threading.Event().wait(0.05)
+            finished.append(argv[-1])
+            return ""
+
+        with (
+            patch.object(runner, "command", side_effect=command),
+            patch.object(gate, "shard_argv", side_effect=lambda py, mods: [py, f"{mods[0]}.*"]),
+            self.assertRaises(gate.GateError),
+        ):
+            runner.sharded_tests("api", "py", "src/api", [["0"], ["1"], ["2"]])
+        self.assertEqual(sorted(finished), ["1.*", "2.*"])
+
+    def test_plan_shards_records_only_available_partitions(self) -> None:
+        self.sharded_fixture({f"test_m{i}.py": 10 for i in range(5)})
+        runner = self.runner()
+        runner.snapshot = self.root
+        runner.jobs = 1
+        runner.plan_shards(["project-api"])
+        self.assertEqual(runner.test_shards, {})
+        runner.jobs = 2
+        runner.plan_shards(["project-core"])
+        self.assertEqual(runner.test_shards, {})
+        runner.plan_shards(["project-api"])
+        self.assertEqual(runner.test_shards, {"api": 3})
+
+    def test_layer_cache_mode_omits_no_cache_for_every_scanned_image(self) -> None:
+        receipt = {
+            "extras": [],
+            "image_cache": "layer",
+            "images": {
+                "mssql": "sha256:" + "c" * 64,
+                **{
+                    name: {
+                        "id": "sha256:" + "d" * 64,
+                        "tag": "zava-forward-"
+                        + ("api" if name == "logo-0600" else name.removeprefix("image-"))
+                        + ":rpi-"
+                        + "a" * 24
+                        + ("-logo0600" if name == "logo-0600" else ""),
+                    }
+                    for name in ("logo-0600", *[f"image-{p}" for p in gate.IMAGES])
+                },
+            },
+            "owner": "a" * 24,
+            "sql": {"container": "b" * 64, "port": "25432"},
+        }
+        builds = [
+            c["argv"]
+            for c in gate.required_checks(self.root, receipt)
+            if c["argv"][:2] == ["docker", "build"]
+        ]
+        self.assertEqual(len(builds), 5)
+        self.assertFalse(any("--no-cache" in argv for argv in builds))
+
+    def test_base_relaxation_allows_only_provably_unrelated_main_moves(self) -> None:
+        self.commit("pr", "src/api/src/zava_forward/api/server.py", "docs/pr.md")
+        cases = {
+            "docs and tracking only": (("docs/other.md", ".copilot-tracking/x.json"), True),
+            "unrelated project": (("src/importer/src/zava_forward/importer/x.py",), True),
+            "dependent project": (("src/core/src/zava_forward/core/x.py",), False),
+            "same path as candidate": (("src/api/src/zava_forward/api/server.py",), False),
+            "same group as candidate": (("src/api/tests/test_other.py",), False),
+            "unmapped path": (("src/trivy.yaml",), False),
+            "workflow": ((".github/workflows/src-ci.yml",), False),
+            "gate tool": (("tools/rpi-checks.py",), False),
+            "mixed inert and dependent": (
+                ("docs/a.md", "src/core/src/zava_forward/core/y.py"),
+                False,
+            ),
+        }
+        for label, (paths, allowed) in cases.items():
+            with self.subTest(label):
+                moved = self.move_main(*paths)
+                try:
+                    if allowed:
+                        proof = gate.base_relaxation(self.root, self.base, moved, [])
+                        self.assertEqual(proof["kind"], "disjoint-move")
+                        self.assertEqual(set(proof["moved_paths"]), set(paths))
+                    else:
+                        with self.assertRaises(gate.GateError):
+                            gate.base_relaxation(self.root, self.base, moved, [])
+                finally:
+                    self.git("branch", "-qD", "side-main")
+                    self.git("update-ref", "refs/remotes/origin/main", self.base)
+
+    def test_base_relaxation_rejects_stale_or_diverged_bases(self) -> None:
+        self.commit("pr", "docs/pr.md")
+        head = self.git("rev-parse", "HEAD")
+        moved = self.move_main("docs/other.md")
+        # The supplied base must be the live origin/main, and the receipt base an ancestor of it.
+        with self.assertRaises(gate.GateError):
+            gate.base_relaxation(self.root, self.base, self.base, [])
+        with self.assertRaises(gate.GateError):
+            gate.base_relaxation(self.root, head, moved, [])
+        with self.assertRaises(gate.GateError):
+            gate.base_relaxation(self.root, moved, moved, [])
+        self.assertEqual(gate.base_relaxation(self.root, self.base, moved, [])["to"], moved)
+
+    def test_base_relaxation_accepts_main_advanced_along_the_gated_stack(self) -> None:
+        first = self.commit("first", "src/api/src/zava_forward/api/a.py")
+        self.commit("second", "src/api/src/zava_forward/api/b.py")
+        self.git("update-ref", "refs/remotes/origin/main", first)
+        proof = gate.base_relaxation(self.root, self.base, first, [])
+        self.assertEqual(proof["kind"], "gated-ancestor")
+        identity = gate.clean_identity(self.root, first, reviewed_base=self.base)
+        self.assertEqual(identity["base"], self.base)
+        self.assertEqual(identity["merge_base"], self.base)
+
+    def test_relaxed_identity_still_fails_closed_when_main_moved_elsewhere(self) -> None:
+        self.commit("pr", "docs/pr.md")
+        moved = self.move_main("docs/other.md")
+        with self.assertRaises(gate.GateError):
+            gate.clean_identity(self.root, moved)
+        identity = gate.clean_identity(self.root, moved, reviewed_base=self.base)
+        self.assertEqual(identity["base"], self.base)
+        self.git("update-ref", "refs/remotes/origin/main", self.base)
+        with self.assertRaises(gate.GateError):
+            gate.clean_identity(self.root, moved, reviewed_base=self.base)
+
+    def relaxed_receipt(self, scope: str) -> Path:
+        folder = self.out / scope
+        folder.mkdir()
+        path = folder / "receipt.json"
+        gate.atomic_json(
+            path,
+            {
+                "schema": 4,
+                "status": "passed",
+                "scope": scope,
+                "selection": gate.selection(self.root, self.base, "changed", []),
+                "extras": [],
+                "identity": gate.clean_identity(self.root, self.base),
+                "tools": {},
+            },
+        )
+        (folder / "receipt.sha256").write_text(gate.digest(path))
+        return path
+
+    def test_full_scope_and_exact_base_option_never_relax(self) -> None:
+        self.commit("pr", "docs/pr.md")
+        full, partial = self.relaxed_receipt("full"), self.relaxed_receipt("partial")
+        moved = self.move_main("docs/other.md")
+        for path, options in ((full, {}), (partial, {"relax_base": False})):
+            with patch.object(gate, "base_relaxation") as relax:
+                with self.assertRaises(gate.GateError):
+                    gate.validate_receipt(self.root, path, moved, **options)
+                relax.assert_not_called()
+        with (
+            patch.object(gate, "tool_identity", side_effect=gate.GateError("reached identity")),
+            self.assertRaisesRegex(gate.GateError, "reached identity"),
+        ):
+            gate.validate_receipt(self.root, partial, moved)
+
+    def test_stack_heads_must_be_ordered_distinct_and_end_at_head(self) -> None:
+        first = self.commit("first", "docs/a.md")
+        second = self.commit("second", "docs/b.md")
+        third = self.commit("third", "docs/c.md")
+        self.assertEqual(
+            gate.validate_stack(self.root, self.base, [first, second, third]),
+            [first, second, third],
+        )
+        self.assertEqual(gate.validate_stack(self.root, self.base, [third]), [third])
+        for bad in ([], [first, second], [second, first, third], [first, first, third]):
+            with self.subTest(bad=bad), self.assertRaises(gate.GateError):
+                gate.validate_stack(self.root, self.base, bad)
+        with self.assertRaises(gate.GateError):
+            gate.validate_stack(self.root, first, [first, third])
+
+    def test_verify_requires_stack_member_and_reports_relaxation(self) -> None:
+        receipt = {
+            "scope": "partial",
+            "stack": ["a" * 40],
+            "identity": {"head": "h", "base": "b"},
+            "base_relaxation": {
+                "kind": "disjoint-move",
+                "from": "o",
+                "to": "n",
+                "moved_paths": ["x"],
+            },
+        }
+        path = self.out / "receipt.json"
+        gate.atomic_json(path, {"scope": "partial"})
+        out = io.StringIO()
+        with (
+            patch.object(gate, "validate_receipt", return_value=receipt),
+            patch.object(gate, "git", return_value="b" * 40),
+            redirect_stdout(out),
+            self.assertRaises(gate.GateError),
+        ):
+            gate.verify(self.root, path, self.base, required_scope="partial", stack_member="b" * 40)
+        with (
+            patch.object(gate, "validate_receipt", return_value=receipt),
+            patch.object(gate, "git", return_value="a" * 40),
+            redirect_stdout(out),
+        ):
+            gate.verify(self.root, path, self.base, required_scope="partial", stack_member="a" * 40)
+        self.assertIn("BASE RELAXED (disjoint-move)", out.getvalue())
 
 
 if __name__ == "__main__":

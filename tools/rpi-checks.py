@@ -27,6 +27,12 @@ from urllib.request import urlopen
 
 PROJECTS = ("core", "agents", "api", "orchestrator", "importer")
 IMAGES = ("api", "agents", "orchestrator", "importer")
+INERT_PREFIXES = ("docs/", ".copilot-tracking/", "support/")
+# Projects whose unit suite may be split across worker processes, with the maximum shard count.
+SHARDED_PROJECTS = {"api": 3}
+IMAGE_CACHE_MODES = ("layer", "fresh")
+# Groups every changed-path selection includes, so they never signal an interaction.
+UNIVERSAL_GROUPS = frozenset({"preflight", "namespace", "static"})
 SQL_SELECTORS = (
     "test_mssqlstore",
     "test_lawstore.MssqlStoreTests",
@@ -185,7 +191,7 @@ def git(root: Path, *args: str) -> str:
     ).strip()
 
 
-def clean_identity(root: Path, base: str) -> dict[str, str]:
+def clean_identity(root: Path, base: str, *, reviewed_base: str | None = None) -> dict[str, str]:
     if any(line and not line.startswith("H ") for line in git(root, "ls-files", "-v").splitlines()):
         raise GateError("Candidate index hides inputs with assume-unchanged/skip-worktree flags")
     if git(root, "status", "--porcelain", "--untracked-files=all"):
@@ -198,17 +204,105 @@ def clean_identity(root: Path, base: str) -> dict[str, str]:
         raise GateError(
             "Reviewed base differs from current origin/main; reconcile before validation"
         )
-    merge_base = git(root, "merge-base", head, resolved)
-    if merge_base != resolved:
+    # A relaxed identity pins the receipt's recorded base, which base_relaxation has proved safe.
+    pinned = (
+        resolved if reviewed_base is None else git(root, "rev-parse", f"{reviewed_base}^{{commit}}")
+    )
+    merge_base = git(root, "merge-base", head, pinned)
+    if merge_base != pinned:
         raise GateError("Candidate does not descend from the reviewed main base")
     return {
         "head": head,
         "tree": git(root, "rev-parse", "HEAD^{tree}"),
-        "base": resolved,
+        "base": pinned,
         "merge_base": merge_base,
         "matrix": digest(root / "tools/rpi-checks.py"),
         "helper": digest(root / "src/check-container.py"),
     }
+
+
+def is_ancestor(root: Path, ancestor: str, descendant: str) -> bool:
+    return (
+        subprocess.run(
+            ["git", "-C", str(root), "merge-base", "--is-ancestor", ancestor, descendant],
+            capture_output=True,
+        ).returncode
+        == 0
+    )
+
+
+def moved_path_blocker(
+    path: str, pr_paths: set[str], pr_groups: set[str], extras: list[str]
+) -> str:
+    """Reason a main-side path invalidates a partial receipt, or an empty string."""
+    if inert_path(path):
+        return ""
+    if path in pr_paths:
+        return "also changed by the candidate"
+    if path in ("tools/rpi-checks.py", "tools/test_rpi_checks.py"):
+        return "changes the gate matrix itself"
+    mapped = set(changed_groups([path], extras))
+    if mapped == set(required_groups(extras)):
+        return "unmapped path would force the full matrix"
+    if (mapped - UNIVERSAL_GROUPS) & (pr_groups - UNIVERSAL_GROUPS):
+        return "selects a group the candidate's receipt covers"
+    return ""
+
+
+def base_relaxation(root: Path, recorded: str, current: str, extras: list[str]) -> dict[str, Any]:
+    """Prove origin/main moved without touching the receipt's changed set or its dependents.
+
+    Fails closed unless the move is a fast-forward and either the gated head already contains
+    every moved commit (a rebased stack merged in order) or every moved path is inert or maps
+    to groups disjoint from the candidate's selection.
+    """
+    resolved = git(root, "rev-parse", f"{current}^{{commit}}")
+    if resolved != git(root, "rev-parse", "refs/remotes/origin/main"):
+        raise GateError(
+            "Reviewed base differs from current origin/main; reconcile before validation"
+        )
+    if recorded == resolved or not is_ancestor(root, recorded, resolved):
+        raise GateError("Recorded base is not an earlier ancestor of current origin/main")
+    head = git(root, "rev-parse", "HEAD")
+    if not is_ancestor(root, recorded, head):
+        raise GateError("Candidate does not descend from the recorded reviewed base")
+    moved = [
+        path
+        for path in git(
+            root, "diff", "--no-renames", "--name-only", "-z", f"{recorded}..{resolved}"
+        ).split("\0")
+        if path
+    ]
+    if is_ancestor(root, resolved, head):
+        return {"kind": "gated-ancestor", "from": recorded, "to": resolved, "moved_paths": moved}
+    pr_paths = [
+        path
+        for path in git(
+            root, "diff", "--no-renames", "--name-only", "-z", f"{recorded}..{head}"
+        ).split("\0")
+        if path
+    ]
+    pr_groups = set(changed_groups(pr_paths, extras))
+    for path in moved:
+        reason = moved_path_blocker(path, set(pr_paths), pr_groups, extras)
+        if reason:
+            raise GateError(f"Base moved on {path}: {reason}; rerun the gate on the current base")
+    return {"kind": "disjoint-move", "from": recorded, "to": resolved, "moved_paths": moved}
+
+
+def validate_stack(root: Path, base: str, heads: list[str]) -> list[str]:
+    """Ordered PR heads of a rebased stack, each an ancestor of the next and the last HEAD."""
+    resolved = [git(root, "rev-parse", f"{value}^{{commit}}") for value in heads]
+    if not resolved or len(set(resolved)) != len(resolved):
+        raise GateError("Stack heads must be distinct commits")
+    if resolved[-1] != git(root, "rev-parse", "HEAD"):
+        raise GateError("The last stack head must be the candidate HEAD")
+    previous = git(root, "rev-parse", f"{base}^{{commit}}")
+    for head in resolved:
+        if head == previous or not is_ancestor(root, previous, head):
+            raise GateError("Stack heads must be ordered by ancestry starting at the base")
+        previous = head
+    return resolved
 
 
 def tool_identity() -> dict[str, dict[str, str]]:
@@ -326,7 +420,8 @@ def environment_identity(out: Path, names: list[str] | None = None) -> dict[str,
 
 
 def image_build_argv(dockerfile: str, tag: str, context: str, *, fresh: bool) -> list[str]:
-    # Scanned images skip the layer cache so apt-get upgrade always runs.
+    # fresh skips the layer cache so apt-get upgrade always runs. The default layer mode reuses
+    # unchanged layers; the Trivy gate still scans every built image, so stale layers fail closed.
     return [
         "docker",
         "build",
@@ -357,6 +452,81 @@ def required_groups(extras: list[str]) -> list[str]:
     ]
 
 
+def inert_path(path: str) -> bool:
+    return path.endswith(".md") or path.startswith(INERT_PREFIXES)
+
+
+def shard_count(jobs: int) -> int:
+    return 1 if jobs < 2 else min(max(SHARDED_PROJECTS.values()), jobs + 1)
+
+
+def shard_partition(root: Path, project: str, count: int) -> list[list[str]] | None:
+    """Deterministic, complete split of the tracked top-level test modules, or None.
+
+    Modules are balanced greedily by blob size at HEAD. Nested test packages cannot be
+    represented by module patterns, so they disable sharding instead of dropping tests.
+    """
+    if count < 2 or count > SHARDED_PROJECTS.get(project, 1):
+        raise GateError(f"Invalid shard count for {project}: {count}")
+    prefix = f"src/{project}/tests/"
+    sizes: dict[str, int] = {}
+    listing = git(root, "ls-tree", "-r", "-l", "-z", "HEAD", "--", prefix.rstrip("/"))
+    for line in filter(None, listing.split("\0")):
+        meta, _, path = line.partition("\t")
+        size = meta.split()[3]
+        name = path.removeprefix(prefix)
+        if not path.endswith(".py"):
+            continue
+        if "/" in name:
+            if Path(name).name.startswith("test"):
+                return None
+        elif name.startswith("test"):
+            sizes[name.removesuffix(".py")] = int(size) if size.isdigit() else 0
+    if len(sizes) < count:
+        return None
+    shards: list[list[str]] = [[] for _ in range(count)]
+    loads = [0] * count
+    for module in sorted(sizes, key=lambda name: (-sizes[name], name)):
+        index = loads.index(min(loads))
+        shards[index].append(module)
+        loads[index] += sizes[module] + 1
+    return [sorted(modules) for modules in shards]
+
+
+def shard_argv(python: str, modules: list[str]) -> list[str]:
+    patterns = [item for module in modules for item in ("-k", f"{module}.*")]
+    return [python, "-m", "unittest", "discover", "-s", "tests", "-v", *patterns]
+
+
+SKIP_REASONS = {
+    "infra": "no path under infra/ or its tests changed",
+    "migration": "no path forced the full matrix",
+    "browser": "no src/api web or checks path changed",
+    "mssql": "no store, schema, SQL or SQL dependency path changed",
+    "logo-0600": "no consumer runtime, build or dependency path of the API image changed",
+}
+
+
+def skipped_groups(groups: list[str], extras: list[str]) -> dict[str, str]:
+    skipped: dict[str, str] = {}
+    for group in required_groups(extras):
+        if group in groups:
+            continue
+        if group.startswith("project-"):
+            skipped[group] = (
+                f"no path of src/{group.removeprefix('project-')} or a project it depends on "
+                "changed"
+            )
+        elif group.startswith("image-"):
+            skipped[group] = (
+                f"no runtime, Dockerfile or requirements path of src/{group.removeprefix('image-')}"
+                " or a project it depends on changed"
+            )
+        else:
+            skipped[group] = SKIP_REASONS.get(group, "no changed path selects this group")
+    return skipped
+
+
 def dependencies(group: str) -> set[str]:
     if group in ("static", "tooling", "infra", "migration", "logo-0600") or group.startswith(
         "image-"
@@ -375,7 +545,7 @@ def changed_groups(paths: list[str], extras: list[str]) -> list[str]:
         selected.add(f"extra-{value}")
     for path in paths:
         parts = Path(path).parts
-        if path.endswith(".md") or path.startswith(("docs/", ".copilot-tracking/", "support/")):
+        if inert_path(path):
             continue
         if path in ("tools/rpi-checks.py", "tools/test_rpi_checks.py"):
             selected.add("tooling")
@@ -441,7 +611,10 @@ def selection(root: Path, base: str, mode: str, extras: list[str]) -> dict[str, 
         )
         paths = [path for path in paths if path]
     groups = required_groups(extras) if mode == "all" else changed_groups(paths, extras)
-    return {"mode": mode, "paths": paths, "groups": groups}
+    result: dict[str, Any] = {"mode": mode, "paths": paths, "groups": groups}
+    if mode == "changed":
+        result["skipped"] = skipped_groups(groups, extras)
+    return result
 
 
 def selected_environments(groups: list[str]) -> list[str]:
@@ -556,6 +729,18 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         )
     ):
         raise GateError("Receipt owned resource identity is invalid")
+    cache = receipt.get("image_cache", "fresh")
+    shards = receipt.get("test_shards") or {}
+    if cache not in IMAGE_CACHE_MODES or not (
+        isinstance(shards, dict)
+        and all(
+            name in SHARDED_PROJECTS
+            and isinstance(count, int)
+            and 1 <= count <= SHARDED_PROJECTS[name]
+            for name, count in shards.items()
+        )
+    ):
+        raise GateError("Receipt image cache or test shard policy is invalid")
     result: list[dict[str, Any]] = []
     group = "preflight"
 
@@ -647,13 +832,22 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
             packages.append("agents")
         install(project, [*packages, project])
         python, cwd = py(project), f"src/{project}"
-        add(
-            [python, "-m", "unittest", "discover", "-s", "tests", "-v"],
-            cwd,
-            env={"PYTHONPATH": test_paths(project)},
-            suite=True,
-            timeout=1800,
+        parts = (
+            shard_partition(root, project, shards[project]) if shards.get(project, 1) > 1 else None
         )
+        if shards.get(project, 1) > 1 and parts is None:
+            raise GateError(f"Receipt shards {project} tests that cannot be partitioned")
+        suites = [shard_argv(python, modules) for modules in parts or []] or [
+            [python, "-m", "unittest", "discover", "-s", "tests", "-v"]
+        ]
+        for argv in suites:
+            add(
+                argv,
+                cwd,
+                env={"PYTHONPATH": test_paths(project)},
+                suite=True,
+                timeout=1800,
+            )
         add([python, "-m", "ruff", "check", "."], cwd)
         add([python, "-m", "ruff", "format", "--check", "."], cwd)
         add([python, "-m", "mypy"], cwd)
@@ -835,7 +1029,10 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
             raise GateError("Receipt image identity is invalid")
         add(
             image_build_argv(
-                f"{context}/{project}/Dockerfile", tag, context, fresh=name != "logo-0600"
+                f"{context}/{project}/Dockerfile",
+                tag,
+                context,
+                fresh=cache == "fresh" and name != "logo-0600",
             ),
             timeout=1800,
         )
@@ -1189,8 +1386,12 @@ class Runner:
         selected: dict[str, Any] | None = None,
         jobs: int = 1,
         resume: Path | None = None,
+        image_cache: str = "layer",
+        stack: list[str] | None = None,
     ) -> None:
         self.root, self.out, self.base, self.extras = root, out, base, extras
+        self.image_cache, self.stack = image_cache, stack or []
+        self.test_shards: dict[str, int] = {}
         self.selection = selected or selection(root, base, "all", extras)
         admit_browser_output(out, self.selection["groups"])
         self.jobs, self.resume = jobs, resume
@@ -1508,16 +1709,49 @@ class Runner:
                 if install:
                     self.install(project, [*packages, project])
                 py, cwd = self.python(project), f"src/{project}"
-                self.command(
-                    [py, "-m", "unittest", "discover", "-s", "tests", "-v"],
-                    cwd,
-                    env=self.tests_env(project),
-                    suite=True,
-                    timeout=1800,
+                parts = (
+                    shard_partition(self.snapshot, project, self.test_shards[project])
+                    if self.test_shards.get(project, 1) > 1
+                    else None
                 )
+                if parts:
+                    self.sharded_tests(project, py, cwd, parts)
+                else:
+                    self.command(
+                        [py, "-m", "unittest", "discover", "-s", "tests", "-v"],
+                        cwd,
+                        env=self.tests_env(project),
+                        suite=True,
+                        timeout=1800,
+                    )
                 self.command([py, "-m", "ruff", "check", "."], cwd)
                 self.command([py, "-m", "ruff", "format", "--check", "."], cwd)
                 self.command([py, "-m", "mypy"], cwd)
+
+    def sharded_tests(self, project: str, py: str, cwd: str, parts: list[list[str]]) -> None:
+        group = self.group
+
+        def run(modules: list[str]) -> dict[str, Any]:
+            self.group = group
+            self.command(
+                shard_argv(py, modules),
+                cwd,
+                env=self.tests_env(project),
+                suite=True,
+                timeout=1800,
+            )
+            entry: dict[str, Any] = self.local.last_entry
+            return entry
+
+        with ThreadPoolExecutor(max_workers=len(parts)) as pool:
+            futures = [pool.submit(run, modules) for modules in parts]
+            wait(futures)
+        entries = [future.result() for future in futures]
+        # Shards finish in any order; restore the contract order inside the group.
+        with self.row_lock:
+            slots = sorted(next(i for i, row in enumerate(self.rows) if row is e) for e in entries)
+            for slot, entry in zip(slots, entries, strict=True):
+                self.rows[slot] = entry
 
     def namespace_static_infra(self, only: str | None = None) -> None:
         py = self.python("namespace")
@@ -1872,7 +2106,10 @@ class Runner:
             tag = f"zava-forward-{project}:rpi-{self.token}" + ("-logo0600" if stress else "")
             self.command(
                 image_build_argv(
-                    str(context / project / "Dockerfile"), tag, str(context), fresh=not stress
+                    str(context / project / "Dockerfile"),
+                    tag,
+                    str(context),
+                    fresh=self.image_cache == "fresh" and not stress,
                 ),
                 timeout=1800,
             )
@@ -2021,6 +2258,13 @@ class Runner:
         else:
             raise GateError(f"Unknown execution group: {group}")
 
+    def plan_shards(self, remaining: list[str]) -> None:
+        count = shard_count(self.jobs)
+        for project in SHARDED_PROJECTS:
+            if f"project-{project}" in remaining and count > 1:
+                if shard_partition(self.snapshot, project, min(count, SHARDED_PROJECTS[project])):
+                    self.test_shards[project] = min(count, SHARDED_PROJECTS[project])
+
     def schedule(self, groups: list[str]) -> None:
         pending = set(groups)
         completed = set(self.groups) | set(self.reused)
@@ -2095,7 +2339,9 @@ class Runner:
         tools = tool_identity()
         parent = None
         if self.resume:
-            parent = validate_receipt(self.root, self.resume, self.base, passing=False)
+            parent = validate_receipt(
+                self.root, self.resume, self.base, passing=False, relax_base=False
+            )
             if parent["status"] != "failed" or parent["selection"] != self.selection:
                 raise GateError("Resume requires a failed receipt with the same selection")
             self.reused = parent["groups"]
@@ -2144,6 +2390,7 @@ class Runner:
                     self.groups.append(f"setup-{name}")
             if self.failures:
                 raise GateError("; ".join(self.failures))
+            self.plan_shards(remaining)
             self.schedule([g for g in remaining if g not in ("preflight", "namespace")])
             if self.failures:
                 raise GateError("; ".join(self.failures))
@@ -2213,6 +2460,10 @@ class Runner:
                 {"path": str(self.resume), "sha256": digest(self.resume)} if self.resume else None
             ),
             "jobs": self.jobs,
+            "image_cache": self.image_cache,
+            "test_shards": self.test_shards,
+            "stack": self.stack,
+            "skipped": self.selection.get("skipped", {}),
             "extras": self.extras,
             "commands": self.rows,
             "images": self.images,
@@ -2263,6 +2514,7 @@ def validate_receipt(
     passing: bool = True,
     depth: int = 0,
     new_output: Path | None = None,
+    relax_base: bool = True,
 ) -> dict[str, Any]:
     if depth > 16:
         raise GateError("Resume provenance depth exceeded")
@@ -2278,12 +2530,25 @@ def validate_receipt(
         raise GateError("Receipt does not establish an eligible run")
     if not passing and receipt["status"] == "failed" and not receipt["resume_eligible"]:
         raise GateError("Failed receipt lacks a safe resume checkpoint")
-    selected = selection(root, base, receipt["selection"]["mode"], receipt["extras"])
+    recorded = receipt["identity"]["base"]
+    relaxation = None
+    # Only partial receipts may survive an origin/main move, and only with explicit proof.
+    if recorded != git(root, "rev-parse", f"{base}^{{commit}}"):
+        if not relax_base or receipt["scope"] != "partial":
+            raise GateError("Reviewed base differs from current origin/main; reconcile")
+        relaxation = base_relaxation(root, recorded, base, receipt["extras"])
+    reviewed = recorded if relaxation else None
+    selected = selection(root, reviewed or base, receipt["selection"]["mode"], receipt["extras"])
     scope = "full" if selected["groups"] == required_groups(receipt["extras"]) else "partial"
     if receipt["scope"] != scope or receipt["selection"] != selected:
         raise GateError("Receipt scope/selection mismatch")
-    if receipt["identity"] != clean_identity(root, base):
+    if receipt["identity"] != clean_identity(root, base, reviewed_base=reviewed):
         raise GateError("Receipt source/base/matrix/helper identity mismatch")
+    if (
+        receipt.get("stack")
+        and validate_stack(root, recorded, receipt["stack"]) != receipt["stack"]
+    ):
+        raise GateError("Receipt stack heads mismatch")
     if new_output is not None:
         admit_browser_output(new_output, selected["groups"])
     if receipt["tools"] != tool_identity():
@@ -2304,7 +2569,9 @@ def validate_receipt(
         prior = Path(receipt["resume"]["path"])
         if digest(prior) != receipt["resume"]["sha256"]:
             raise GateError("Resume parent receipt identity mismatch")
-        parent = validate_receipt(root, prior, base, passing=False, depth=depth + 1)
+        parent = validate_receipt(
+            root, prior, base, passing=False, depth=depth + 1, relax_base=relax_base
+        )
         if parent["status"] != "failed" or parent["selection"] != selected:
             raise GateError("Resume parent is not a failed matching selection")
         inherited = parent["groups"]
@@ -2365,10 +2632,18 @@ def validate_receipt(
         ).strip()
         if current != image_id:
             raise GateError("Receipt image identity mismatch")
-    return receipt
+    return {**receipt, "base_relaxation": relaxation}
 
 
-def verify(root: Path, path: Path, base: str, *, required_scope: str = "full") -> None:
+def verify(
+    root: Path,
+    path: Path,
+    base: str,
+    *,
+    required_scope: str = "full",
+    relax_base: bool = True,
+    stack_member: str | None = None,
+) -> None:
     if required_scope not in ("full", "partial"):
         raise GateError("Invalid required receipt scope")
     # Reject partial evidence before invoking any live resource/environment probes.
@@ -2377,11 +2652,22 @@ def verify(root: Path, path: Path, base: str, *, required_scope: str = "full") -
         required_scope == "full" and receipt["scope"] != "full"
     ):
         raise GateError("Receipt scope does not satisfy required full coverage")
-    receipt = validate_receipt(root, path, base)
+    receipt = validate_receipt(root, path, base, relax_base=relax_base)
+    if stack_member is not None and git(root, "rev-parse", f"{stack_member}^{{commit}}") not in (
+        receipt.get("stack") or []
+    ):
+        raise GateError("Commit is not a head of the receipt's gated stack")
     print(
         f"VERIFIED {receipt['scope']} local gate: {receipt['identity']['head']} "
         f"base {receipt['identity']['base']}"
     )
+    relaxation = receipt.get("base_relaxation")
+    if relaxation:
+        print(
+            f"BASE RELAXED ({relaxation['kind']}): origin/main moved {relaxation['from']} -> "
+            f"{relaxation['to']} over {len(relaxation['moved_paths'])} path(s) that cannot "
+            "affect the receipt's selection"
+        )
 
 
 @contextlib.contextmanager
@@ -2434,7 +2720,30 @@ def main() -> int:
         type=int,
         help="Borrow the shared lock's inherited descriptor without releasing caller ownership",
     )
-    parser.add_argument("--jobs", type=int, default=1)
+    parser.add_argument(
+        "--jobs",
+        type=int,
+        default=0,
+        help="Parallel groups; 0 (default) derives from CPUs, memory and cgroup limits",
+    )
+    parser.add_argument(
+        "--fresh-images",
+        action="store_true",
+        help="Build scanned images with --no-cache (default reuses unchanged Docker layers)",
+    )
+    parser.add_argument(
+        "--stack",
+        action="append",
+        default=[],
+        metavar="PR_HEAD",
+        help="Ordered PR head of a rebased stack gated once; the last must be HEAD",
+    )
+    parser.add_argument("--stack-member", metavar="PR_HEAD", help="With --verify-receipt")
+    parser.add_argument(
+        "--exact-base",
+        action="store_true",
+        help="Disable base-match relaxation: require the exact current origin/main",
+    )
     parser.add_argument("--required-scope", choices=("full", "partial"), default="full")
     args = parser.parse_args()
     root = Path(git(Path.cwd(), "rev-parse", "--show-toplevel")).resolve()
@@ -2445,6 +2754,8 @@ def main() -> int:
                 args.verify_receipt.resolve(),
                 args.base,
                 required_scope=args.required_scope,
+                relax_base=not args.exact_base,
+                stack_member=args.stack_member,
             )
         else:
             for value in args.extra_test:
@@ -2457,11 +2768,15 @@ def main() -> int:
                     "--out must be a new external directory; prior receipts are immutable"
                 )
             clean_identity(root, args.base)
-            if args.jobs < 1:
-                raise GateError("--jobs must be positive")
+            if args.jobs < 0:
+                raise GateError("--jobs must not be negative")
             resume = args.resume.resolve() if args.resume else None
+            stack: list[str] = []
             if resume:
-                parent = validate_receipt(root, resume, args.base, passing=False, new_output=out)
+                parent = validate_receipt(
+                    root, resume, args.base, passing=False, new_output=out, relax_base=False
+                )
+                stack = parent.get("stack") or []
                 if parent["status"] != "failed" or args.extra_test:
                     raise GateError("--resume needs a failed receipt and no --extra-test override")
                 extras = parent["extras"]
@@ -2469,6 +2784,8 @@ def main() -> int:
             else:
                 extras = args.extra_test
                 selected = selection(root, args.base, "changed" if args.changed else "all", extras)
+                if args.stack:
+                    stack = validate_stack(root, args.base, args.stack)
             admit_browser_output(out, selected["groups"])
             tool_identity()
             out.mkdir(mode=0o700, parents=True)
@@ -2480,14 +2797,22 @@ def main() -> int:
             signal.signal(signal.SIGINT, interrupted)
             queued = datetime.now(UTC).isoformat()
             with heavy_lock(args.lock_timeout, args.heavy_lock_fd):
-                jobs = worker_limit(args.jobs)
+                jobs = worker_limit(args.jobs or len(os.sched_getaffinity(0)))
                 print(
                     f"Lock queued {queued}; acquired {datetime.now(UTC).isoformat()}; "
                     f"jobs={jobs}; groups={','.join(selected['groups'])}",
                     flush=True,
                 )
                 receipt = Runner(
-                    root, out, args.base, extras, selected=selected, jobs=jobs, resume=resume
+                    root,
+                    out,
+                    args.base,
+                    extras,
+                    selected=selected,
+                    jobs=jobs,
+                    resume=resume,
+                    image_cache="fresh" if args.fresh_images else "layer",
+                    stack=stack,
                 ).run()
                 verify(
                     root,
@@ -2496,6 +2821,7 @@ def main() -> int:
                     required_scope=(
                         "full" if selected["groups"] == required_groups(extras) else "partial"
                     ),
+                    relax_base=False,
                 )
             print(f"Receipt: {receipt}")
         return 0

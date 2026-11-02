@@ -117,6 +117,57 @@ Missing checkpoints, changed evidence or failed cleanup block resume.
 Schema-4 receipts bind their full/partial scope and recomputed path selection.
 Verification defaults to requiring full coverage; `--required-scope partial`
 explicitly accepts partial coverage and never upgrades it to a full claim.
+Measured wall-clock times for the speed controls are not yet recorded; see
+[gate speed controls](#gate-speed-controls-issue-470).
+
+#### Gate speed controls (issue #470)
+
+Owner-approved 2026-11-02. Every control keeps the gate fail-closed; the
+receipt records what ran and what was skipped.
+
+* Parallel groups: `--jobs N` runs independent groups concurrently
+  (`project-api` with `project-core`, then images). Omitting `--jobs` (or
+  `--jobs 0`) derives N from CPUs, memory and cgroup limits (2 on a 4 vCPU,
+  15 GiB box). The single heavy lock, one owned SQL container and serial image
+  builds and scans stay in force, so SQL, ports, Docker and the browser are
+  never shared between groups.
+* Sharded API tests: with N of 2 or more, `project-api` unit tests run as 3
+  worker processes, each selecting a deterministic, size-balanced subset of
+  the tracked `src/api/tests/test*.py` modules with `-k MODULE.*`. Every module
+  is assigned exactly once; a nested test package disables sharding. Shard
+  commands are part of the trusted matrix and are re-derived from the tree at
+  verification. Receipt field: `test_shards`.
+* Scoped skips: `--changed` skips project groups and image builds whose
+  paths, or whose dependencies' paths, are untouched (a `src/api`-only change
+  skips the agents, orchestrator and importer images and projects). The
+  receipt has `scope: partial` and records every skipped group with its
+  reason in `selection.skipped` and `skipped`. Unmapped paths still select
+  the full matrix.
+* Image layer cache: scanned image builds reuse unchanged Docker layers by
+  default (receipt `image_cache: layer`). Trivy still gates every built image,
+  so a stale `apt-get upgrade` layer fails the scan rather than passing. Use
+  `--fresh-images` (receipt `image_cache: fresh`) for `--no-cache` builds,
+  recommended for release candidates. The logo stress build is unchanged.
+* Base-match relaxation: a partial (`--changed`) receipt stays valid when
+  `origin/main` has moved only by a fast-forward whose changed paths either
+  are already in the gated head, or are docs/tracking/support/markdown paths,
+  or map to groups disjoint from the candidate's selected groups and are not in
+  its changed set. Moves touching an unmapped path, the gate matrix, workflows,
+  a changed path or a dependent project (for example `src/core`) fail
+  verification with the blocking path named. Full-tier receipts and
+  `--exact-base` always require the exact current base, and a gate run itself
+  always requires the exact base. Verification prints `BASE RELAXED` with the
+  evidence when it applies.
+* Batch merge: rebase the PRs into one stack on current `origin/main`, then
+  gate the tip once, listing each PR head in order:
+  `--changed --stack HEAD1 --stack HEAD2 --stack TIP` (`TIP` must be `HEAD`).
+  The receipt records `stack`. While merging in order with a fast-forward or
+  rebase-and-merge that keeps those commits, verify from the tip checkout with
+  `--verify-receipt R --base <current-origin-main-sha> --stack-member <PR head>`;
+  `origin/main` advancing along the gated stack is accepted. Independent
+  exact-head review and hosted CI remain required per PR, and a squash merge
+  or a stack member changed after gating needs a new run. Use `--all` for a
+  full-tier stack.
 
 #### Measuring full-gate scheduling
 
