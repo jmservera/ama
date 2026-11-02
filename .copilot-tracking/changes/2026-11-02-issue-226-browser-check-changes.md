@@ -3,7 +3,7 @@ title: Issue 226 browser check changes
 date: 2026-11-02
 ---
 
-* `src/api/checks/role_screens_browser_check.py`: scenario 226, STORY_ACCESSIBLE, scroll panels before reading text.
+* `src/api/checks/role_screens_browser_check.py`: scenario 226 with exact-phrase assertions, STORY_ACCESSIBLE; for 226 only, each panel is scrolled into view and its text read immediately, then joined (content-visibility auto). Other scenarios keep the original single read.
 * `src/api/README.md`: #226 check description.
 * `docs/reference/log.md`: appended entry.
 

@@ -47,8 +47,15 @@ SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
         (
             "Stock conflict queue across homes (portfolio scope, not this home)",
             "SYN-STOCK-A v1",
-            "Eligibility",
-            "Unknown",
+            "Homes with an open stock conflict, oldest source first.",
+            "It is not an investment priority, and no source is chosen as correct.",
+            "days old",
+            "Eligibility\nUnknown\nResolution owner\nResident Liaison Officer Example",
+            "Finance owner to name the budget source",
+            "Investment priority",
+            "Quality floor",
+            "Value status",
+            "Unknown. No finance-defensible value is recorded.",
             "Pause or exit choice for the next tranche",
             "Board or delegated owner",
             "Overall AI cost per accepted outcome",
@@ -395,9 +402,14 @@ def run_browser(base: str) -> None:
                 page.locator('a.item[href*="case=ZF-1"]').click()
                 evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
                 evidence.wait_for()
-                for panel in evidence.locator("section.screen-record").all():
-                    panel.scroll_into_view_if_needed()
-                text = evidence.inner_text()
+                if selected == "226":
+                    parts = [evidence.inner_text()]
+                    for panel in evidence.locator("section.screen-record").all():
+                        panel.scroll_into_view_if_needed()
+                        parts.append(panel.inner_text())
+                    text = "\n".join(parts)
+                else:
+                    text = evidence.inner_text()
                 for phrase in expected:
                     check(f"story {selected} exact evidence: {phrase}", phrase in text)
                 check("same home remains ZF-1", "Selected home ZF-1" in text)

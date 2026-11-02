@@ -13,7 +13,7 @@
   "research": ".copilot-tracking/research/2026-11-02-issue-226-browser-check-research.md",
   "plan": ".copilot-tracking/plans/2026-11-02-issue-226-browser-check-plan.md",
   "details": ".copilot-tracking/details/2026-11-02-issue-226-browser-check-details.md",
-  "critique": null,
+  "critique": ".copilot-tracking/details/2026-11-02-issue-226-browser-check-details.md",
   "changes": ".copilot-tracking/changes/2026-11-02-issue-226-browser-check-changes.md",
   "review": ".copilot-tracking/reviews/2026-11-02-issue-226-browser-check-review.md"
  },
@@ -26,7 +26,7 @@
   {
    "decision": "critique executed once inline in plan; compatible",
    "status": "done",
-   "evidence": "plan file"
+   "evidence": ".copilot-tracking/details/2026-11-02-issue-226-browser-check-details.md (inline critique)"
   },
   {
    "decision": "Review executed once; conformant for slice; criteria 4 and 5 unmet",
@@ -37,7 +37,7 @@
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Open PR with Refs #226"
+  "action": "awaiting-gate: coordinator runs gate, then independent exact-head review"
  },
  "prioritized_follow_ups": [
   {
