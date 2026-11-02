@@ -2,7 +2,8 @@
 
 * [x] Add `src/api/checks/data_operator_browser_check.py` with a synthetic home
 * [x] Document it in `src/api/README.md`
-* [x] Run the check with pinned axe; run `rpi-checks.py --changed`
+* [x] Run the check with pinned axe
+* [ ] `rpi-checks.py --changed` gate: NOT passed (BLOCKED by heavy-resource lock timeout; rerun required). Corrected 2026-11-02, see the changes note.
 
 ## Critique (one pass, inline)
 
