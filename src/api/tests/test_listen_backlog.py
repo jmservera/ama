@@ -27,7 +27,8 @@ def _queued(cls, burst: int = 30) -> int:
         return sum(
             1
             for c in socks
-            if c.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR) == 0 and select.select([], [c], [], 0)[1]
+            if c.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR) == 0
+            and select.select([], [c], [], 0)[1]
         )
     finally:
         for c in socks:
