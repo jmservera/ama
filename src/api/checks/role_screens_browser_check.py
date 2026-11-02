@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import sys
 from pathlib import Path
 from typing import Any
@@ -169,6 +170,7 @@ def check_projected_queue(browser: Browser, base: str) -> None:
 
 PROGRAMME_STEPS = ("Technical", "Resident", "Delivery", "Quality", "Finance")
 PROGRAMME_STATES = ("Blocked", "No recorded blocker")
+AXE_SKIPPED: list[str] = []
 
 
 def programme_data() -> dict[str, Any]:
@@ -192,6 +194,7 @@ def load_axe() -> str | None:
 
 def scan_main(page: Page, axe: str | None, state: str) -> None:
     if axe is None:
+        AXE_SKIPPED.append(state)
         print(f"SKIP axe {state}: set ZF_AXE_JS to the pinned axe 4.10.3 file", flush=True)
         return
     page.evaluate(axe)
@@ -219,7 +222,8 @@ def watch(page: Page) -> tuple[list[str], list[str]]:
         errors.append(str(error))
 
     def on_request(request: Request) -> None:
-        if request.method != "GET":
+        # The sign-in POST happens before watch() is attached, so it is excluded by timing.
+        if request.method not in ("GET", "HEAD", "OPTIONS"):
             writes.append(request.url)
 
     page.on("pageerror", on_error)
@@ -252,7 +256,7 @@ def check_programme(browser: Browser, base: str, axe: str | None) -> None:
                            "Chase owner (chases the receiver)",
                            "Resident-update owner (updates the resident)"):
                 expect(table).to_contain_text(phrase)
-                check(f"{email} queue shows {phrase}", True)
+                check(f"{email} queue shows {phrase}", phrase in table.inner_text())
             check(f"{email} no role simulator or switcher in the user view",
                   page.get_by_text("Simulate", exact=False).count() == 0
                   and page.get_by_role("combobox", name="Role").count() == 0)
@@ -303,8 +307,7 @@ def check_programme(browser: Browser, base: str, axe: str | None) -> None:
                 blocked += state.startswith("Blocked")
             check(f"{email} at least one gate is blocked in text", blocked > 0)
             check(f"{email} connected view makes no readiness claim",
-                  "does not confirm readiness" in region.inner_text()
-                  or "blocked" in region.inner_text())
+                  re.search(r"\bready\b", region.inner_text(), re.I) is None)
             scan_main(page, axe, f"{email} connected home view")
             for width in (320, 390, 1280):
                 page.set_viewport_size({"width": width, "height": 900})
@@ -324,6 +327,12 @@ def run_browser(base: str) -> None:
         try:
             if selected == "230":
                 check_programme(browser, base, load_axe())
+                if AXE_SKIPPED:
+                    print(f"PARTIAL: axe scan skipped for {len(AXE_SKIPPED)} views (ZF_AXE_JS unset); "
+                          "no accessibility scan result", flush=True)
+                else:
+                    print("axe 4.10.3 scan ran on main at 1280px for the programme overview and "
+                          "connected home view, both roles", flush=True)
                 print(f"Chromium {browser.version}; synthetic loopback only; selector=230")
                 return
             page = browser.new_page(viewport={"width": 1280, "height": 900})
