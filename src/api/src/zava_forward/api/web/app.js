@@ -230,21 +230,25 @@ function startupFailure(res) {
 }
 
 async function fetchReadRetrying(path, options = {}) {
-  for (let attempt = 0; ; attempt++) {
-    let res = null;
-    try {
-      res = await fetch(path, options);
-    } catch (error) {
-      if (error.name === "AbortError" || attempt >= STARTUP_RETRY_DELAYS.length) throw error;
+  let previous = null;
+  try {
+    for (let attempt = 0; ; attempt++) {
+      let res = null;
+      try {
+        res = await fetch(path, options);
+      } catch (error) {
+        if (error.name === "AbortError" || attempt >= STARTUP_RETRY_DELAYS.length) throw error;
+      }
+      if (res && !startupFailure(res)) return res;
+      if (attempt >= STARTUP_RETRY_DELAYS.length) return res;
+      if (previous === null && workspaceStatus.textContent !== STARTUP_RETRY_MESSAGE) previous = workspaceStatus.textContent;
+      workspaceStatus.textContent = STARTUP_RETRY_MESSAGE;
+      await new Promise((resolve) => setTimeout(resolve, STARTUP_RETRY_DELAYS[attempt]));
+      options.signal?.throwIfAborted();
     }
-    if (res && !startupFailure(res)) {
-      if (attempt && workspaceStatus.textContent === STARTUP_RETRY_MESSAGE) workspaceStatus.textContent = "";
-      return res;
-    }
-    if (attempt >= STARTUP_RETRY_DELAYS.length) return res;
-    workspaceStatus.textContent = STARTUP_RETRY_MESSAGE;
-    await new Promise((resolve) => setTimeout(resolve, STARTUP_RETRY_DELAYS[attempt]));
-    options.signal?.throwIfAborted();
+  } finally {
+    // Restore the status this retry replaced, whether the read succeeds, fails or is aborted.
+    if (previous !== null && workspaceStatus.textContent === STARTUP_RETRY_MESSAGE) workspaceStatus.textContent = previous;
   }
 }
 
