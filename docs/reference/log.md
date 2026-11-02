@@ -9543,3 +9543,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   change is an owner action). Measured evidence is unchanged and effects are
   not yet measured. Evidence is under `.copilot-tracking/` (2026-11-01
   rubric-pr-record-and-review-advisory artifacts).
+
+## [2026-11-02] update | Issue 531 re-verification, Refs #531
+
+* Re-ran the focused loading, briefing and axe checks against main 071e132a8:
+  all pass. Criterion 7 (live employee verification) remains the only unmet
+  criterion and needs an operator-signed-in run of
+  `checks/employee_live_acceptance.py`. Evidence is under `.copilot-tracking/`
+  (2026-11-02 employee-briefing-reverification-531 artifacts). No knowledge base
+  page changed.
