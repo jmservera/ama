@@ -5,7 +5,6 @@ from __future__ import annotations
 import copy
 import hashlib
 import os
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -135,4 +134,4 @@ def run_browser(base: str) -> None:
 
 
 if __name__ == "__main__":
-    sys.exit(main(run_browser, safety_data))
+    main(run_browser, safety_data)
