@@ -84,6 +84,89 @@ Only when the task also serves the AMA capstone, consult Section D of the
 Keep programme assessment distinct from journal criteria. Do not impose capstone
 or housing content on unrelated papers.
 
+### Conditional Recovery: Everything but the Software
+
+When the named input is the `Everything but the Software` paper package and
+the user's agreed input scope includes it, recover its current state before
+writing, revising or reviewing. Read its source-package
+[README](../../docs/capstone/thought-leadership/everything-but-the-software/README.md),
+the relevant author-review/disposition in
+[anc/revision-report.md](../../docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md),
+and the current [author review](../../docs/capstone/thought-leadership/everything-but-the-software/review.md).
+Recover unresolved author TODOs, source pins and evidence locators, the current
+manuscript and active TeX inputs, including
+[anc/experiment-protocol.tex](../../docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex).
+Read the [case evidence index](../../docs/capstone/thought-leadership/everything-but-the-software/anc/case-evidence-matrix.json)
+or the active experiment slice when the claim, review finding or edit needs it.
+
+Treat dated review records, counts, page totals, models, validation summaries
+and protocol status as history. Refresh volatile status from the current source
+before relying on it. If a required source is missing, excluded from the agreed
+input scope or insufficient for the requested claim, report that exact gap.
+Preserve the owner-selected title and one delivered PDF with its additive
+Supplement. Keep detailed case narrative, source records and prior evidence in
+their existing records rather than duplicating them in the article or creating
+a parallel supplement.
+
+For this paper, keep the reader and contribution first. When relevant, explain
+the supported sequence of agent-assisted research, Design Thinking what-if,
+persona and journey challenge, disposable prototypes, BRD/PRD/ADR revision,
+epics and stories handoff, coordinator work and renewed human product feedback.
+Retain owner steering, actor and autonomy boundaries, and migration and
+deployment rivals. PR, word and test counts may describe activity; working
+tasks and changeability support outcome claims. Abstract fictional names,
+scale and exact case-calendar timestamps unless analytically necessary, while
+keeping exact provenance in the source records. Treat any expected HVE
+speed or quality benefit as an intention until supported by evidence.
+
+Keep pending experiment results in author TODOs while the article remains
+prospective. Preserve the false results switch and the real source-bound
+protocol until checked runs support an authorized update. Do not populate
+placeholder results or amend the design, freeze or registration silently.
+Use natural affirmative prose, retaining and consolidating only qualifications
+needed for causal scope, missingness, treatment boundaries or uncertainty.
+
+For equation or design audits, load `sympy`, `statistical-analysis`,
+`scientific-critical-thinking` and `experimental-design`, or disclose an
+unavailable skill. Define symbols, units and scale; distinguish estimand from
+estimator; and specify the independent experimental unit, repeated observations,
+weights, dependence, uncertainty and missingness. Verify exact algebra and
+relevant numerical and boundary checks. Empty denominators are undefined;
+unknown observations cannot count as success, zero cost or absent help. Preserve
+prior-pass risk sets, acquisition, loss and recovery distinctions, and complete
+annotation requirements for HIR and IDR. Reconcile sample-size, variance and
+bootstrap choices with model and replicate blocks, and flag the unresolved
+scheduling-block inference decision before freeze. State power assumptions as
+conditional. Limit pooled heterogeneous binary counts, post-treatment strata
+and a fixed change request to their actual evidential roles. Matched resource
+ceilings do not establish equal spend or isolate refactoring. Cost-payback
+claims need explicit assumptions, integer thresholds, null cases, quality-matched
+costs and measured calibration; caps do not support currency or long-horizon
+savings inference.
+
+Steward package evidence by distinguishing records, participant accounts,
+metadata checks, direct execution and interpretation. Preserve original and
+adverse reviews, raw chart inputs, historical pins and hashes, uncertainty, the
+literal frozen prompt, and editable diagram-to-export bindings. Report
+owner-supplied export metadata gaps and hash scope accurately: a hash of
+retained LF text does not prove byte identity with an unavailable download.
+Reuse existing records instead of creating a moving-count ledger or duplicated
+case narrative. After authorized source changes, refresh active Supplement and
+figure digests without overwriting prior provenance.
+
+Run focused validation selected from the current package README, not frozen pass
+counts. Separate structural, test and PDF checks from independent scientific,
+human, hosted and publication approval. Inspect actual compiler logs and PDF:
+Tectonic can produce a valid PDF when an optional checker expects a pdfLaTeX
+marker. Disclose real warnings, including inherited `inputenc`, rather than
+hiding them or claiming clean success. Mark missing historical baselines as
+unavailable and check whether historical protocol checkers fit the active design.
+Before suggesting the focused repository gate, recheck its current CLI: it
+requires an explicit `--base`, external evidence and a clean committed candidate.
+Report dirty or untracked blockers without committing, stashing or excluding
+inputs. Editing this paper does not imply visibility, OSF, cloud/private-data or
+paid-experiment action.
+
 ### Evidence and Integrity
 
 Preserve the approved methods or protocol, chronology, uncertainty, null and

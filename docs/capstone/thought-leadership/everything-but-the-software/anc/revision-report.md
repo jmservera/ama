@@ -1,12 +1,130 @@
 ---
-title: Everything but the Software - Draft v3 Revision Report
-description: Phase outcomes, verified sources, reproducible numbers and remaining author checks
-ms.date: 2026-10-24
+title: Everything but the Software - Revision Record
+description: Author review dispositions, equation audit and retained historical revision evidence
+ms.date: 2026-11-01
 ---
 
-The original report below is historical evidence for the 24 October revision.
-Its word counts and TODO locations are not current-source verification. The
-dated 25 October addendum at the end identifies the later source and PR review.
+The author-review record below describes the current revision. The sections
+from Scope and Outcome through Title Assessment retain the original
+24 October report, and the 25 October addendum remains historical. Their
+earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Author Review Disposition 1 November
+
+The nine points in the [author's review](../review.md) were applied to the
+[manuscript](../main.tex), its active TeX inputs and editable figures.
+The [integrated PDF](../main.pdf) has 37 pages; its Supplement starts on
+page 32. The title is unchanged. The review document itself is unchanged.
+This is an assisted editorial and mathematical review, with no experiment
+collection, kit amendment, independent peer review or publication approval.
+
+### Review Points
+
+| Point | Disposition and remaining boundary |
+|-------|------------------------------------|
+| 1 | Replaced the merge-count-led premise with research, iterative BRD/PRD/ADR work, Design Thinking challenge, disposable prototypes, backlog generation and coordinated delivery. Renewed participant feedback and refactoring are part of the account. Preparation was intended to improve speed and quality; no human-only comparator establishes that effect. |
+| 2 | Replaced visible statements about absent experiment results with author TODOs for checked results and PF1-PF3. The results switch remains false and the design remains prospective. |
+| 3 | Removed programme-specific framing from the opening, referred readers to the evolving repository and retained the planned temporary embargo. Source pins and deposit/approval duties remain explicit. |
+| 4 | Rephrased all six quoted examples and additional repeated contrastive disclaimers. Necessary distinctions about causal identification, missing data and treatment scope remain. Figure wording was revised in the same direction. |
+| 5 | Abstracted the fictional customer into a synthetic multi-role service workflow. The methodology and handoffs now carry the case description. Actual bibliographic titles and provenance remain intact. |
+| 6 | Replaced calendar-led case narration with phases and approximate durations. Dates in source filenames, bibliography and freeze/deposit metadata retain their provenance function. |
+| 7 | Rewrote section 3.6 around workflow preservation, context transfer, completion evidence and renewed outcome feedback. Historical O1-O5 records and missing execution identifiers remain in the evidence index. |
+| 8 | Replaced the project ledger with a phase table and focused contrasts, removed the log-volume plot from the article, and removed count-based mechanism/conclusion claims. Retained chart inputs and historical measurements were not deleted. The owner-supplied export supports the handoff sequence. |
+| 9 | Used SymPy, statistical-analysis, scientific-critical-thinking and experimental-design to review all active equations and quantitative definitions. Clarified estimand/estimator, units, risk denominators, missingness, integer break-even and deferred-rate domains. Scheduling-block dependence remains a pre-freeze analysis decision. |
+
+### Evidence Refresh
+
+Targeted local history and log reads, together with fetched PR bodies,
+support the process reconstruction:
+
+* [PR #32](https://github.com/jmservera/ama/pull/32), local integration
+  `e60adcd7`, links critiques of disposable prototypes to simplicity requirements.
+* [PR #71](https://github.com/jmservera/ama/pull/71), local integration
+  `9ef7e40f`, links desk-research journeys to revised requirements and architecture.
+* [PR #461](https://github.com/jmservera/ama/pull/461), local integration
+  `d783b63a`, records later recurring stabilization with qualified local evidence.
+* The knowledge-base log records repeated what-if challenges, owner steering
+  and requirements reconciliation after some backlog scope had appeared.
+
+These are selected workflow anchors, not an exhaustive audit of every issue,
+conversation or deployed release. The participant supplies the fuller steering
+and feedback account. Initial bulk issue creation was not replayed; later PR
+history does not by itself date restored deployed usability.
+
+The [project export](./project-insights-2026-11-01.csv) preserves all supplied
+32 daily rows and the Open, Completed and Not planned columns, with LF line
+endings. The checksum identifies this repository copy; original-download
+bytes were not accessible in the remote workspace. Around the
+handoff, Open rises from 12 to 143 while Completed remains one. The final
+supplied row is 129/86/7. These describe administrative states. The CSV omits
+year, export time, timezone, filter settings and status definitions; its year
+is inferred from the owner's discussion. The insights-page retrieval returned
+HTTP 404, so the supplied export is the chart evidence used here.
+Its SHA-256 is
+`dfb9fe875bda546f545b625a594d2ce4a04ca2586f7140f285fd9b76de558489`.
+The [evidence index](./case-evidence-matrix.json) adds these sources alongside
+the unchanged historical observations and null execution links.
+
+### Equation and Design Audit
+
+Exact checks used Python 3.11.15 and SymPy 1.14.0 in an external isolated
+environment. Normal quantiles came from the standard-library NormalDist.
+The statistical and design skills guided review of the experimental unit,
+dependence, weighting, controls, missingness and interpretation. No observed
+outcomes were available for distributional diagnostics or effect estimation.
+
+| Formula or definition | Verified result and interpretation |
+|-----------------------|------------------------------------|
+| Retained-contract loss and density | The count sums failures only over observed eligible prior-pass contracts; density divides by the observed set. It is checkpoint prevalence. An empty observed set is undefined. With missing count M, the full-risk loss count is bounded by L and L+M. Acquisition, recurrence and recovery remain separate. |
+| Primary B-D contrast | The estimator equally weights the three within-model differences. For balanced independent cells with common variance, its planning variance is 2 sigma-squared / (3 n-cell). The displayed estimator is now distinguished from its estimand. |
+| Normal sample-size approximation | SD 25 points, a 10-point target, alpha .05, power .80 and three models give 33 per cell, 99 per arm and 495 total. SD 15/20/50 gives 12/21/131 per cell. These are conditional planning calculations, not guaranteed power for bounded scores or the bootstrap. |
+| Historical binary-interval illustration | The earlier lower limits -0.77639320 and -0.03650752 are reproduced by Bonferroni combination of two 97.5% Clopper-Pearson intervals for hypothetical all-success versus all-failure samples of two and six. Pooling heterogeneous model cells needs a different justification. The illustration was removed from the main protocol; per-model counts and component assumptions remain. |
+| Cost accumulation and break-even | Symbolic summation of delta(t-1)-k agrees with delta N(N-1)/2-kN. For positive k and delta, the first nonnegative difference occurs at ceil(1+2k/delta). The examples give 11 and 201 cycles; delta zero yields no payback for positive k. All nine sensitivity-table entries agree. Parameters remain unestimated. |
+| HIR and IDR | Both are cycle-incidence proportions over positive attempted-cycle denominators, with separate supplied-help and demand indicators. Complete annotation is required; incomplete records leave the full-run rate unknown. Zero attempts is undefined. These measures remain deferred. |
+| Cost per accepted outcome | Attribution, period and accepted-outcome counting must be declared. Zero accepted outcomes leaves the ratio undefined; report expenditure and count separately. |
+| Resource arithmetic | Study allowances total 8,415 sessions and 3,836.25 hours; excluded calibration adds 240 sessions, 105 hours and 81,000 credits. Combined allowances are 8,655 sessions, 3,941.25 hours and 2,902,500 nominal credits. The existing aggregate envelope is unchanged and affordability remains a gate. |
+
+The first verification probe assigned calibration an erroneous 99,000-credit
+allowance. Deriving it by arm gives 81,000; the corrected probe passes and
+confirms the manuscript's existing combined total. No expenditure was inferred.
+
+The substantive unresolved analysis point is agreement between model/replicate
+scheduling blocks and independent within-arm bootstrap resampling. The paper
+now requires source-bound review to justify independence or adopt a
+block-preserving analysis and corresponding variance before the new freeze
+and prospective registration. No companion-kit code or allocation was changed.
+The single suite, fixed change request, selected models and bundled treatment
+also limit generalisation and mechanism identification.
+
+### Current Validation
+
+* All 34 existing authoring tests pass, including the nine figure/integration tests.
+* Native sources and SVG/PNG exports remain bound by hashes and raster dimensions.
+  The original frozen prompt is unchanged. Prior supplement content hashes are retained.
+* Structural checks pass: 94 cited bibliography entries, 105 reusable entries,
+  balanced TeX, resolved labels and a false results switch. The abstract is
+  1,724 normalized source characters; approximate body count is 9,048 words.
+* Tectonic produces the 37-page PDF. Direct checks find no TeX errors,
+  unresolved references, overfull boxes, blank pages or out-of-page text.
+  One inherited inputenc compatibility warning remains explicitly reported.
+* The optional check_paper log mode fails its pdfLaTeX-specific output-marker
+  test under Tectonic. Direct compiler/PDF checks are the evidence above;
+  this failure is not relabelled as a passing command.
+* The old protocol_checks document mode targets a superseded four-run,
+  eight-feature proposal and was not used to certify the five-arm candidate.
+* The historical body-word comparison is unavailable because its baseline
+  object is absent. No verified baseline percentage reduction is asserted.
+* The focused repository gate first required its explicit base argument.
+  After fetching main, the retry against `origin/main` at `2dc91854` stopped
+  at preflight: tracked modifications or untracked inputs are present.
+  No gate test groups ran and no passing receipt was produced. A clean,
+  committed candidate is required for the later source-bound gate; no
+  commit, stash, exclusion or other bypass was used here.
+
+No historical cloud exports, private datasets, paid model calls, experiment
+trajectories, repository-visibility changes, OSF actions, commits or pushes
+were performed. Collection, independent review and publication gates remain
+separate from these local authoring checks.
 
 ## Scope and Outcome
 

@@ -9521,6 +9521,64 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   bounds were checked. The title, study allocation and registration are
   unchanged; no full application gate or new experiment was run.
 
+## [2026-11-01] query | Additive supplement and clean Tectonic build
+
+* Removed repeated Background/figures, long case narratives and duplicate
+  indicator rows from the active Supplement, as requested by the owner.
+  Retained additional source qualifications, detailed method/rival checks,
+  the frozen prompt and deferred definitions/provenance. Historical source
+  hashes and earlier versions remain distinct from active additive content.
+* Diagnosed the UTF-8 warning as a Latin-1 byte in an old `lineno` comment,
+  loaded through `fvextra`. The exact ASCII prompt now uses literal `listings`
+  wrapping; its path and SHA-256 remain bound. No package cache or warning
+  filter was modified. Scoped citation alignment removes justification
+  stretching; the repeated compact paragraph is no longer included.
+* The owner's actual PDF helper now builds without the listed warnings.
+  The single paper has 41 pages, Supplement starts on page 36, and 34 focused
+  tests pass. Actual outline/links/bounds and the citation, supplement opening
+  and prompt renders were checked. The title and experiment are unchanged.
+
+## [2026-11-01] review | Paper author feedback and equation audit
+
+* Applied the nine author-review points to the main article and its active
+  inputs: discovery, Design Thinking challenge, disposable prototypes,
+  iterative requirements/decisions, epics/stories, coordinated delivery and
+  renewed participant feedback now supply the case narrative. Project counts,
+  fictional-customer detail and calendar-led narration no longer lead it.
+* Retained the supplied project-insights CSV verbatim and bound its provenance
+  in the case evidence index. Targeted history, log and PR-body checks support
+  the process account; the original observation records and missing deployed
+  acceptance links remain. The original review document is unchanged.
+* Rephrased repeated contrastive disclaimers, focused the case tables and
+  removed the log-volume plot from the article without deleting its source
+  evidence. Updated editable figure labels and bound exports; pending
+  experiment results are author TODOs.
+* Used SymPy, statistical-analysis, scientific-critical-thinking and
+  experimental-design for the formula audit. Exact cost, sample-size and
+  resource arithmetic agree under their stated assumptions. Risk/annotation
+  domains, estimator weighting, missingness and integer break-even are
+  explicit. Scheduling-block dependence remains a pre-freeze analysis TODO;
+  no companion-kit code, sample allocation or registration changed.
+* The paper has 37 pages and its Supplement starts on page 32. Thirty-four
+  authoring tests pass. Direct Tectonic/PDF checks find no unresolved
+  references, overfull or out-of-page text; the inherited inputenc warning
+  and the old checker's pdfLaTeX output-marker mismatch are recorded.
+  See the paper package's dated review disposition for scope and commands.
+* No historical cloud export, private dataset, paid model call, experiment,
+  visibility change, OSF action, commit or push was performed. Independent
+  review, collection and publication approvals remain separate.
+
+## [2026-11-01] validation | Paper focused gate blocked at clean-candidate preflight
+
+* The focused gate required an explicit base. After fetching origin/main
+  (`2dc91854`), the retry stopped on tracked modifications and untracked
+  inputs. No gate test group ran and no passing receipt was produced.
+  The working changes were retained without commit, stash or exclusions.
+* The separate paper authoring checks remain the recorded local evidence;
+  they do not replace the required source-bound gate or human/hosted review.
+* Export-provenance clarification: the supplied CSV text's rows and column
+  names are preserved with LF line endings. Its hash identifies the repository
+  copy; unavailable original-download bytes were not independently compared.
 ## [2026-11-01] ingest | Chat storage approval for the synthetic-data demo
 
 * Added `research/chat-demo-storage-approval-2026-11-01.md`, recording the

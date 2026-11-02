@@ -15,36 +15,36 @@
     },
     {
       "stem": "fig-pilot-design",
-      "source_sha256": "dbc29b29dfb8ed0d226cc8c7c0f31c98709d17516f879c2e85faa7406adae901",
-      "svg_sha256": "146dbea209c2f486731e63f048df26f5bc31ff534a909932f571be7c861ea925",
-      "png_sha256": "8abe7f781c32e3927710f019460bba85d5a6ff40cc424a65a2e819d948ee84ec",
+      "source_sha256": "92f42d57559c1611776f6c818d2175ae9a0a7b2dbbf0409b1836638072770775",
+      "svg_sha256": "8d2bcb10617b8f106a68b559e2f3c23c998ec7be86f93ddbc37bbb2486b13fe8",
+      "png_sha256": "932818eced36ab83311b98b844b0dd649c535189ab2697906df330a6dc6c7557",
       "width": 1095,
       "height": 980,
       "elements": 58
     },
     {
       "stem": "fig-contract-states",
-      "source_sha256": "a966d9c4a9de33ebd70f8f29b22b1a97da78025559faff1a0aa9e9692fc155a7",
-      "svg_sha256": "cdb2f7d60f6f3ccaa16448dc2918d9fcbccc624d10d8a9d437937395916eed66",
-      "png_sha256": "c7bfd82830c61c553688286b744182c73622f6b85d937f91b54853962ae34d7d",
+      "source_sha256": "ddbbc5be66c011e95441e8e09c991b5bfc7b1bc4ddf3699b36ac2af0a5c9f19d",
+      "svg_sha256": "2be836a7667a68eed73f95382cad93e1a7baf869cb208905e03db03855e495f7",
+      "png_sha256": "6732c393e488de0e790918e372ab5c578add67c722e56fd13d90549d70590323",
       "width": 1120,
       "height": 627.5,
       "elements": 14
     },
     {
       "stem": "fig-experiment-measures",
-      "source_sha256": "bb151bd8e4d8a60f84648f4014920954c46db2bae6ddd8209163ab8fe48f87e8",
-      "svg_sha256": "48e25981c83048ca5539c1a4f16267f69d74ba1ca9b0c1280a5204fc9e0b3a10",
-      "png_sha256": "a5b20650c1a18693f3c31bce54ccf521914c45923124476cb83dd7645b688fef",
+      "source_sha256": "bce3fac9e909e863f84e9b406f693b4b251788c2387bbe0dbe2905d494c093a5",
+      "svg_sha256": "70829e5d934713362abc39c6ef85392ca6cfc5379ce752edf6be1e2d70da7bf6",
+      "png_sha256": "9be36abffdfff35743d63e12ffe212d4a609d2c09edeea48ca7800799a91418c",
       "width": 1240,
       "height": 960,
       "elements": 135
     },
     {
       "stem": "fig-refactoring-economics",
-      "source_sha256": "68b9b8f01bdc735558e7a18b802fd53346d4b0967c2a38cb64dea7593c80e73a",
-      "svg_sha256": "1e568be07d2f80cb4f69411b0a1c8baea252fd9d8e6ad65b5e057e71eb579d71",
-      "png_sha256": "f392cae3962945f9e12887c5ce2d410b70f49469902ca65deeb83034ccb84e14",
+      "source_sha256": "9aca1d6a7143f85ed0246f41fc8e76a946e969d16641f2d5689f86c738920758",
+      "svg_sha256": "f05285dd93f7464824fd4bb758727d437c8354ed5c8f692beed3e9088bf7280f",
+      "png_sha256": "61b16bccfbac2bb67067dffb680523c3ed02c6d8697640938431196dc4e66a21",
       "width": 1240,
       "height": 1080,
       "elements": 73
