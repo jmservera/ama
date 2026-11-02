@@ -1,7 +1,7 @@
 ---
 title: Atlas findings and role journeys traced to screens
 description: Cross-role trace of the eleven profile perspectives, five atlas design themes, two tensions and one same-home walkthrough to role screens or recorded deferrals (issue #233)
-ms.date: 2026-11-01
+ms.date: 2026-11-02
 ms.topic: reference
 ---
 
@@ -84,8 +84,21 @@ release, acceptance, handover and financial closure stay separate states.
 | 7. Handover and live with measures | `resident-choice` | Aftercare update with owner and safe route | Open remedies not closed by handover |
 | 8. Reconcile and learn | `finance-invoices` | Invoice, claim and cash as separate states | No award inferred from an invoice |
 
+## Static guardrail evidence (2026-11-02)
+
+`src/api/tests/test_role_screens_conformance.py` reads `role-screens.js` and
+`style.css` as text. It shows that every registered screen is named in this
+trace, no screen contains role-simulator wording, every CSS class used is defined
+in the design system stylesheet, controls are native elements, scrollable table
+regions are labelled and focusable, tables have captions and column scope, state
+is stated in text rather than inline colour, the screen styles add no motion, and
+each selected-home view states that no message, approval or record change is made.
+It also guards that the "Not shown for this role" disclosure rule stays labelled
+proposed while that text is absent from the screens. These are source-level
+checks only; they do not render a page, use assistive technology or involve users.
+
 ## Boundaries and unmet criteria
 
-* Accessibility to the WCAG 2.2 baseline ([#151](https://github.com/jmservera/ama/issues/151)) with textual state meaning and keyboard navigation is not evidenced here; it needs browser and assistive-technology checks in CI and human review.
-* Use of design system components ([#150](https://github.com/jmservera/ama/issues/150)) is intended for every listed screen but not verified here.
+* Accessibility to the WCAG 2.2 baseline ([#151](https://github.com/jmservera/ama/issues/151)) is only partly evidenced by the static checks above; rendered keyboard and assistive-technology checks in CI and human review remain open.
+* Use of design system components ([#150](https://github.com/jmservera/ama/issues/150)) is supported only by the static class check above; component-level verification remains open.
 * Validation with users remains in [#155](https://github.com/jmservera/ama/issues/155); owner decisions on the deferral above are open.

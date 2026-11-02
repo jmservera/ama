@@ -9668,3 +9668,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   unregistered (registry 0001 to 0006). No approval, live acceptance,
   conformance, deployment or spending is claimed. Evidence is in
   `.copilot-tracking/changes/2026-11-02/issue-441-owner-disposition/`.
+
+## [2026-11-02] update | Atlas screen trace static guardrail evidence
+
+* Added a static guardrail section to
+  [the atlas screen trace](./research/ux/atlas-screen-trace.md) and the test
+  `src/api/tests/test_role_screens_conformance.py` (#233). Source-level only;
+  rendered accessibility, design-system acceptance and user validation (#155)
+  remain open. Original RPI evidence is under `.copilot-tracking/` (2026-11-02
+  issue-233-atlas-guardrails).
