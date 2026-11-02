@@ -166,12 +166,151 @@ def check_projected_queue(browser: Browser, base: str) -> None:
         finally:
             context.close()
 
+PROGRAMME_STEPS = ("Technical", "Resident", "Delivery", "Quality", "Finance")
+PROGRAMME_STATES = ("Blocked", "No recorded blocker")
+
+
+def programme_data() -> dict:
+    data = synthetic_data()
+    case = data["cases"][0]
+    # The shared fixture's return targets another stage; make it the active return for this home.
+    case["returns"][0]["to_stage"] = case["stage"]
+    case["returns"][0]["by"] = "SYN sender"
+    return data
+
+
+def load_axe() -> str | None:
+    path = os.environ.get("ZF_AXE_JS")
+    if not path:
+        return None
+    raw = Path(path).read_bytes()
+    if hashlib.sha256(raw).hexdigest() != AXE_SHA256:
+        raise ValueError("Unexpected axe 4.10.3 bytes")
+    return raw.decode()
+
+
+def scan_main(page, axe: str | None, state: str) -> None:
+    if axe is None:
+        print(f"SKIP axe {state}: set ZF_AXE_JS to the pinned axe 4.10.3 file", flush=True)
+        return
+    page.evaluate(axe)
+    result = page.evaluate(
+        """async () => await axe.run(document.querySelector('main') || document, {
+          runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a',
+            'wcag21aa', 'wcag22aa']}})"""
+    )
+    found = [f"{v['id']}:{v['impact']}" for v in result["violations"]]
+    check(f"axe finds no violations in {state}: {found}", not found)
+
+
+def focus_outline(page) -> bool:
+    return bool(page.evaluate(
+        """() => { const s = getComputedStyle(document.activeElement);
+          return s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) >= 2; }"""
+    ))
+
+
+def check_programme(browser: Browser, base: str, axe: str | None) -> None:
+    for email in ("pam@example.test", "coordinator@example.test"):
+        context = browser.new_context(viewport={"width": 1280, "height": 900})
+        try:
+            page = context.new_page()
+            errors: list[str] = []
+            writes: list[str] = []
+            page.on("pageerror", lambda error, sink=errors: sink.append(str(error)))
+            page.goto(base + "/app")
+            page.locator("#email").fill(email)
+            page.locator("#pw").fill("synthetic-check")
+            page.locator("button[type=submit]").click()
+            page.get_by_role("link", name="Specialist screens", exact=True).wait_for()
+            page.on("request", lambda r, sink=writes: sink.append(r.url) if r.method != "GET" else None)
+            before = page.request.get(base + "/api/cases/ZF-1").json()
+            page.goto(base + "/app#/screens?screen=programme-queue")
+            page.get_by_role("heading", name="Programme queue and connected home view",
+                             exact=True).wait_for()
+            table = page.get_by_role("table", name="Shared queue: returned and handed-off work")
+            table.wait_for()
+            text = table.inner_text()
+            detail = ("SYN missing roof reference", "SYN sender") if email.startswith("pam") \
+                else ("Held for roles with a recorded need",)
+            for phrase in ("ZF-1", *detail,
+                           "Proposed receiver (not a confirmed owner)",
+                           "Chase owner (chases the receiver)",
+                           "Resident-update owner (updates the resident)"):
+                check(f"{email} queue shows {phrase}", phrase in text)
+            check(f"{email} no role simulator or switcher in the user view",
+                  page.get_by_text("Simulate", exact=False).count() == 0
+                  and page.get_by_role("combobox", name="Role").count() == 0)
+            scan_main(page, axe, f"{email} programme overview")
+
+            scope = page.locator("#programme-scope")
+            scope.focus()
+            check(f"{email} scope select shows a visible focus", focus_outline(page))
+            page.keyboard.type("Blocked")
+            page.keyboard.press("Tab")
+            apply = page.get_by_role("button", name="Apply filter", exact=True)
+            check(f"{email} Tab reaches Apply filter", apply.evaluate("el => el === document.activeElement"))
+            check(f"{email} Apply filter shows a visible focus", focus_outline(page))
+            page.keyboard.press("Enter")
+            status = page.locator("#programme-filter-status")
+            check(f"{email} keyboard Apply states the scope and no change",
+                  "Scope: Blocked work" in status.inner_text()
+                  and "no record is changed" in status.inner_text())
+            check(f"{email} scope is kept in the address", "scope=blocked" in page.url)
+            page.keyboard.press("Tab")
+            reset = page.get_by_role("button", name="Reset to default view", exact=True)
+            check(f"{email} Tab reaches Reset", reset.evaluate("el => el === document.activeElement"))
+            check(f"{email} Reset shows a visible focus", focus_outline(page))
+            page.keyboard.press("Shift+Tab")
+            check(f"{email} Shift+Tab leaves Reset (no keyboard trap)",
+                  apply.evaluate("el => el === document.activeElement"))
+            page.keyboard.press("Tab")
+            page.keyboard.press("Space")
+            check(f"{email} keyboard Reset restores the default scope",
+                  scope.input_value() == "default" and "scope=" not in page.url
+                  and "Returned and handed-off work (default)" in status.inner_text())
+            after = page.request.get(base + "/api/cases/ZF-1").json()
+            check(f"{email} filter and reset change no record", before == after and not writes)
+
+            page.goto(base + "/app#/screens?screen=programme-queue&case=ZF-1")
+            region = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
+            region.wait_for()
+            steps = region.get_by_role("table", name="Same-home step states")
+            steps.wait_for()
+            rows = steps.locator("tbody tr")
+            check(f"{email} five independent steps", rows.count() == 5)
+            blocked = 0
+            for index, step in enumerate(PROGRAMME_STEPS):
+                cells = rows.nth(index).locator("th, td")
+                state = cells.nth(1).inner_text()
+                check(f"{email} {step} step has a textual state: {state}",
+                      cells.nth(0).inner_text() == step and state.startswith(PROGRAMME_STATES))
+                blocked += state.startswith("Blocked")
+            check(f"{email} at least one gate is blocked in text", blocked > 0)
+            check(f"{email} connected view makes no readiness claim",
+                  "does not confirm readiness" in region.inner_text()
+                  or "blocked" in region.inner_text())
+            scan_main(page, axe, f"{email} connected home view")
+            for width in (320, 390, 1280):
+                page.set_viewport_size({"width": width, "height": 900})
+                check(f"{email} programme reflow {width}px",
+                      page.evaluate("() => document.documentElement.scrollWidth <= innerWidth"))
+            page.keyboard.press("Tab")
+            check(f"{email} connected view makes no writes: {writes}", not writes)
+            check(f"{email} programme screen has no JavaScript errors: {errors}", not errors)
+        finally:
+            context.close()
+
 
 def run_browser(base: str) -> None:
     selected = sys.argv[1] if len(sys.argv) > 1 else None
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         try:
+            if selected == "230":
+                check_programme(browser, base, load_axe())
+                print(f"Chromium {browser.version}; synthetic loopback only; selector=230")
+                return
             page = browser.new_page(viewport={"width": 1280, "height": 900})
             errors: list[str] = []
             writes: list[str] = []
@@ -323,4 +462,9 @@ def run_browser(base: str) -> None:
 
 
 if __name__ == "__main__":
-    main(run_browser, technical_quality_data if sys.argv[1:2] and sys.argv[1] in STORY_231 else synthetic_data)
+    story = sys.argv[1] if len(sys.argv) > 1 else None
+    main(
+        run_browser,
+        technical_quality_data if story in STORY_231
+        else programme_data if story == "230" else synthetic_data,
+    )
