@@ -54,6 +54,8 @@ SCREENS = (
     ),
 )
 # Words that would turn a read-only draft into a claim of release, approval or vulnerability detail.
+AXE_SKIPPED: list[str] = []
+SAFE_METHODS = ("GET", "HEAD", "OPTIONS")
 FORBIDDEN = ("Approved", "Accepted by", "Booked", "Release approved", "Vulnerab")
 
 
@@ -119,9 +121,13 @@ def check_accessibility(page: Page, story: str, panels: tuple[str, ...]) -> None
             reached.append(label)
         if len(reached) == len(expected):
             break
-    check(f"{story} Tab reaches every table region: {reached}", len(reached) == len(expected))
+    check(
+        f"{story} Tab reaches every table region: {reached}",
+        sorted(reached) == sorted(set(expected)),
+    )
     axe_path = os.environ.get("ZF_AXE_JS")
     if not axe_path:
+        AXE_SKIPPED.append(story)
         print(f"SKIP {story} axe scan: set ZF_AXE_JS to the pinned axe 4.10.3 file")
         return
     raw = Path(axe_path).read_bytes()
@@ -130,10 +136,13 @@ def check_accessibility(page: Page, story: str, panels: tuple[str, ...]) -> None
     result = page.evaluate("""async () => await axe.run(document.querySelector('main'), {
       runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}})""")
     check(
-        f"{story} axe finds no violations: {[v['id'] for v in result['violations']]}",
+        f"{story} axe 4.10.3 (main, 1280px) finds no violations: "
+        f"{[v['id'] for v in result['violations']]}",
         not result["violations"],
     )
-    print(f"INFO {story} axe incomplete: {[i['id'] for i in result['incomplete']]}")
+    print(
+        f"INFO {story} axe incomplete (needs manual review): {[i['id'] for i in result['incomplete']]}"
+    )
 
 
 def run_browser(base: str) -> None:
@@ -152,8 +161,15 @@ def run_browser(base: str) -> None:
                     page.locator("#pw").fill("synthetic-check")
                     page.locator("button[type=submit]").click()
                     page.locator("#nav").wait_for()
+                    # Attached after sign-in on purpose: the sign-in POST is expected.
+                    # Any later request that is not a safe read method is a write.
                     page.on(
-                        "request", lambda r: writes.append(r.url) if r.method != "GET" else None
+                        "request",
+                        lambda r: (
+                            writes.append(f"{r.method} {r.url}")
+                            if r.method not in SAFE_METHODS
+                            else None
+                        ),
                     )
                     page.get_by_role("link", name="Specialist screens", exact=True).click()
                     page.get_by_role("heading", name="Specialist screens", exact=True).wait_for()
@@ -201,12 +217,18 @@ def run_browser(base: str) -> None:
                                 "() => document.documentElement.scrollWidth <= innerWidth"
                             ),
                         )
-                    check(f"{screen} made no writes: {writes}", not writes)
+                    check(f"{screen} made no non-GET/HEAD/OPTIONS requests: {writes}", not writes)
                     check(f"{screen} has no JavaScript errors: {errors}", not errors)
                 finally:
                     context.close()
         finally:
             browser.close()
+    if AXE_SKIPPED:
+        if os.environ.get("ZF_AXE_REQUIRED") == "1":
+            raise AssertionError(f"axe scan skipped for {AXE_SKIPPED} but ZF_AXE_REQUIRED=1")
+        print(f"PARTIAL: axe scan SKIPPED for {AXE_SKIPPED}; no automated accessibility result")
+    else:
+        print("COMPLETE: all checks ran, including axe 4.10.3 (main, 1280px, both roles)")
 
 
 if __name__ == "__main__":
