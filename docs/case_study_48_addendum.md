@@ -1494,7 +1494,7 @@ release a safety hold, approve professional work, infer consent, commit capital,
 award work, submit claims, accept quality, close complaints or defects, or use
 the absence of a sensor alert to contradict a resident.
 
-The [capstone process map](./capstone/deck/agents-in-retrofit-process.svg)
+The capstone process map (working image under `.copilot-tracking/ppt/2026-10-13/zava-forward-agent-process/`)
 shows the same bounded capabilities in their process stages, distinguishes
 staff-requested help from permitted event/scheduled review, and retains the
 human owner at every approval. Its [text equivalent and value tests](./capstone/README.md#agents-in-the-retrofit-process-2026-10-13)
@@ -1911,7 +1911,7 @@ dated price source, no defined denominator and no measured accepted-outcome
 volume (ADR 0001 records this as an explicit gap). The proposals are BRD NFR-012
 and FR-052 and PRD NFR-017 and FR-061, with owner decisions in BRD OD-51. See the
 [AI Tokenomics resource note](./reference/resources/ai-tokenomics.md) and the
-[pitch brief](./capstone/pitch/tokenomics-pitch-brief.md). This is a hypothesis
+[pitch brief](./capstone/history/tokenomics-pitch-brief.md). This is a hypothesis
 about what the panel will probe, not a measured result.
 
 ### Value Hypotheses
