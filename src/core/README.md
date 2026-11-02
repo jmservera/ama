@@ -2385,11 +2385,13 @@ addresses or contextual identification. The exact fictional scale-home
 `TE[0-8] 1ST` field has a narrow exception. Runtime chat can be personal.
 
 The public-only command passes without private support files. The separate
-`--sources` command currently returns 1: Census TS054, IMD 2025 and ONS
-boundaries lack historic retrieval dates. Licences and the Census and IMD
+`--sources` command currently returns 1 for one finding,
+`SRC-ONS-BOUNDARIES:provisional_attribution`. Census TS054, IMD 2025 and ONS
+boundaries record retrieval 2026-10-01 (owner decision 2026-11-02, first commit
+date referencing each source). Licences and the Census and IMD
 attributions were confirmed on 2026-11-01; the boundaries OS copyright year
 stays provisional. This explicitly leaves issue #175's external-source
-criterion unmet. No dates are inferred from commits.
+criterion unmet until the owner confirms that year.
 Exercise Legal/Compliance/DPO owner Juan Manuel Servera owns the follow-up,
 not an automated approval. Rehashed mutation tests independently demonstrate
 pattern/label rejection, not merely an unrelated integrity failure.

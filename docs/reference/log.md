@@ -9684,3 +9684,25 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   appends keep both entries on local rebase instead of conflicting. GitHub web
   merges ignore the attribute, so rebase locally before merging. Verified with
   two branches appending different entries.
+
+## [2026-11-02] update | Source retrieval dates recorded for issue 175
+
+* Set `retrieval_date` 2026-10-01 for SRC-CENSUS-TS054, SRC-IMD-2025 and
+  SRC-ONS-BOUNDARIES in the
+  [provenance register](./research/retrofit-synthetic-data/provenance-register.json)
+  by owner decision (jmservera, #175, 2026-11-02): first commit date in this
+  repository referencing each source (068fb08ce). The strict source audit still
+  rejects the provisional OS copyright year in the ONS boundaries attribution,
+  so the #175 source criterion stays unproven. Original RPI evidence is under
+  `.copilot-tracking/` (2026-11-02 issue-175-source-retrieval-dates).
+
+## [2026-11-02] update | Source retrieval dates recorded for issue 175
+
+* Set `retrieval_date` 2026-10-01 for SRC-CENSUS-TS054, SRC-IMD-2025 and
+  SRC-ONS-BOUNDARIES in the
+  [provenance register](./research/retrofit-synthetic-data/provenance-register.json)
+  by owner decision (jmservera, #175, 2026-11-02): first commit date in this
+  repository referencing each source (068fb08ce). The strict source audit still
+  rejects the provisional OS copyright year in the ONS boundaries attribution,
+  so the #175 source criterion stays unproven. Original RPI evidence is under
+  `.copilot-tracking/` (2026-11-02 issue-175-source-retrieval-dates).

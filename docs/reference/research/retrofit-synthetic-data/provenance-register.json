@@ -9,7 +9,7 @@
     "Private datasets stay under restricted support/ or the per-user ZF_DATA folder outside the repository; src/**/data is ignored as a defensive rule, not an approved output destination (ADR 0006).",
     "Real map addresses are anchors only, not evidence about a real household. Runtime chat and tenant bindings can contain personal data and are outside the synthetic-fixture guarantee.",
     "Generated status is independent of visibility: a tested generator does not establish materialization of the full-stock dataset.",
-    "The offline source audit rejects missing retrieval dates and provisional licence/attribution wording; nulls below are unresolved evidence, not successful provenance."
+    "The offline source audit rejects missing retrieval dates and provisional licence/attribution wording; the one remaining provisional attribution (OS copyright year, SRC-ONS-BOUNDARIES) is unresolved evidence, not successful provenance."
   ],
   "sources": [
     {
@@ -26,9 +26,9 @@
       "name": "Census 2021 TS054 household tenure, local authority, ONS/Nomis",
       "url": "https://www.nomisweb.co.uk/datasets/c2021ts054",
       "licence": "Open Government Licence v3.0",
-      "retrieval_date": null,
+      "retrieval_date": "2026-10-01",
       "attribution": "Source: Office for National Statistics, Census 2021. Contains public sector information licensed under the Open Government Licence v3.0",
-      "verification": "open item: retrieval date not recorded (git history only bounds it to on or before 2026-10-01); owner to confirm. Licence confirmed 2026-11-01 against the ONS terms page",
+      "verification": "retrieval date set to 2026-10-01 by owner decision (jmservera, recorded on #175, 2026-11-02): the retrieval date is the first commit date in this repository that references the source (068fb08ce, checked with git log -S). Licence confirmed 2026-11-01 against the ONS terms page",
       "reference_date": "2021-03-21"
     },
     {
@@ -36,9 +36,9 @@
       "name": "English Indices of Deprivation 2025, MHCLG, LSOA ranks, scores and deciles (corrected files)",
       "url": "https://www.gov.uk/government/statistics/english-indices-of-deprivation-2025",
       "licence": "Open Government Licence v3.0",
-      "retrieval_date": null,
+      "retrieval_date": "2026-10-01",
       "attribution": "Source: Ministry of Housing, Communities and Local Government. Contains public sector information licensed under the Open Government Licence v3.0",
-      "verification": "open item: retrieval date not recorded (git history only bounds it to on or before 2026-10-01); owner to confirm. Licence confirmed 2026-11-01 against the gov.uk publication page",
+      "verification": "retrieval date set to 2026-10-01 by owner decision (jmservera, recorded on #175, 2026-11-02): the retrieval date is the first commit date in this repository that references the source (068fb08ce, checked with git log -S). Licence confirmed 2026-11-01 against the gov.uk publication page",
       "reference_date": "2025-10-30"
     },
     {
@@ -46,9 +46,9 @@
       "name": "ONS LSOA 2021 BGC V5 and LAD December 2021 BFC boundaries",
       "url": "https://geoportal.statistics.gov.uk/",
       "licence": "Open Government Licence v3.0",
-      "retrieval_date": null,
+      "retrieval_date": "2026-10-01",
       "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0. Contains OS data (c) Crown copyright and database right [year to confirm]",
-      "verification": "open items: retrieval date not recorded (git history only bounds it to on or before 2026-10-01); copyright year in the OS acknowledgement to confirm against the named LSOA 2021 BGC and LAD December 2021 BFC product notices. Licence and the two required statements confirmed 2026-11-01 against the ONS digital-boundaries guidance"
+      "verification": "retrieval date set to 2026-10-01 by owner decision (jmservera, recorded on #175, 2026-11-02): the retrieval date is the first commit date in this repository that references the source (068fb08ce, checked with git log -S). Open item: copyright year in the OS acknowledgement to confirm against the named LSOA 2021 BGC and LAD December 2021 BFC product notices. Licence and the two required statements confirmed 2026-11-01 against the ONS digital-boundaries guidance"
     },
     {
       "id": "SRC-OWNER-MODEL",
