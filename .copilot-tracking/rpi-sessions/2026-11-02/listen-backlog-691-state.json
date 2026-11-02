@@ -23,7 +23,7 @@
     {
       "decision": "review: self-review only; engineering evidence",
       "status": "done",
-      "evidence": "review file; independent review verdict Pass with pre-merge items, applied in follow-up commit"
+      "evidence": "review file; self-review in review file; advisory independent review (Pass with pre-merge items, applied) is informal, formal independent exact-head review pending"
     },
     {
       "decision": "focused local gate (--changed, tier per D4) executed",
