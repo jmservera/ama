@@ -239,7 +239,7 @@ The issue's nine criteria retain this boundary:
 | Criterion | Source-only position | Remaining evidence |
 | --- | --- | --- |
 | Per-call attribution | Core calls retain consumption joins and cached usage | Historical/resident joins and complete real provider usage |
-| Request calls/depth | Atomic root bounds and looping/fan-out stop are engineered | Live governed activation/acceptance |
+| Request calls/depth | Atomic root bounds and looping/fan-out stop are engineered; a constructed test shows hazard recording and its UTC awareness time continue after the stop and that hazard, workflow and task-queue code imports no model module | Live governed activation/acceptance; statutory-clock behaviour under a live stop is not observed |
 | Limits/alerts | Token/money/expiry/unknown-price/liability deny with owner reference | Named owner and approved budgets |
 | Dated price | Official source metadata/version stored; unavailable rates explicit | Applicable approved rate source |
 | Azure billing reconciliation | Exact-period, scope, allocation and tolerance mechanism | Actual attributable Azure cost records and Finance validation |
