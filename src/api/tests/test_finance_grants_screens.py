@@ -67,7 +67,11 @@ CASE: dict[str, object] = {
                 "lines": [
                     {"measure": "Cavity wall", "quantity": 2, "amount": 1950, "milestone_ref": ""}
                 ],
-                "exceptions": [{"line": 0, "message": "Quantity 2 is above the 1 authorised."}],
+                "exceptions": [
+                    {"line": 0, "code": "quantity", "message": "Quantity 2 is above the 1 authorised."},
+                    {"line": 0, "code": "no_budget", "message": "No approved budget."},
+                    {"line": 0, "code": "future_code", "message": "Something new."},
+                ],
             },
             {
                 "id": "INV-2",
@@ -261,6 +265,45 @@ class FinanceGrantsScreens(unittest.TestCase):
             run(bare, review={"drafts": [], "decision_holds": []})["finance-funding"]
         )
         self.assertIn("No field draft recorded", empty)
+
+    def test_exception_explanations_name_decider_and_never_decide_payment(self) -> None:
+        text = json.dumps(run()["finance-invoices"]["tree"])
+        for expected in (
+            "Exception explanations for INV-1",
+            "This line is above the quantity the commitment authorises.",
+            "Finance approver",
+            "Payment is made outside this system.",
+            "Unknown. This exception code has no plain-language explanation yet.",
+            "Exception explanations are Unknown. The invoice is not checked yet.",
+        ):
+            self.assertIn(expected, text)
+
+    def test_clean_match_is_not_a_payment_decision(self) -> None:
+        case = json.loads(json.dumps(CASE))
+        case["finance"]["invoices"][0]["exceptions"] = []
+        text = json.dumps(run(case)["finance-invoices"]["tree"])
+        self.assertIn("does not confirm milestone acceptance", text)
+
+    def test_tables_are_keyboard_reachable_and_labelled(self) -> None:
+        def walk(node: object) -> list[dict[str, object]]:
+            found: list[dict[str, object]] = []
+            if isinstance(node, dict):
+                found.append(node)
+                for kid in node.get("kids", []):
+                    found += walk(kid)
+            return found
+
+        for screen in run().values():
+            nodes = walk(screen["tree"])
+            regions = [n for n in nodes if n["attrs"] and n["attrs"].get("role") == "region"]  # type: ignore[attr-defined]
+            self.assertTrue(regions)
+            for region in regions:
+                self.assertEqual(region["attrs"]["tabindex"], 0)  # type: ignore[index]
+                self.assertTrue(region["attrs"]["aria-label"])  # type: ignore[index]
+            for node in nodes:
+                self.assertNotIn(node["attrs"] and node["attrs"].get("tabindex"), (1, 2, 3))  # type: ignore[attr-defined]
+            for table in (n for n in nodes if n["tag"] == "table"):
+                self.assertEqual(table["kids"][0]["tag"], "caption")  # type: ignore[index]
 
 
 if __name__ == "__main__":

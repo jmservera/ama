@@ -859,6 +859,41 @@ function financeLineRows(f, inv) {
         : found.length ? found.map((e) => e.message).join(" ") : "No exception found by the match. This is not a payment decision."];
   });
 }
+const financeDecider = "Finance approver (Retrofit Programme Manager or Programme Support Officer)";
+const financeExplain = {
+  ambiguous_commitment: ["More than one approved commitment fits this supplier and work order, so the match cannot pick one.", "Which commitment the invoice belongs to.", financeDecider],
+  no_commitment: ["No approved commitment fits this supplier and work order.", "Whether work was authorised outside the record.", financeDecider],
+  duplicate: ["Another invoice has the same supplier and reference.", "Whether it is a true duplicate or a resubmission.", financeDecider],
+  over_commitment: ["With earlier accepted invoices, the total is above the commitment.", "Whether the commitment should change.", financeDecider],
+  no_budget: ["No approved budget is recorded.", "The budget position. It stays Unknown.", financeDecider],
+  over_budget: ["Accepted invoices would pass the approved budget.", "Whether the budget should change.", financeDecider],
+  not_in_scope: ["This line is not the measure the commitment authorises.", "Whether the work was a change that was agreed elsewhere.", financeDecider],
+  quantity: ["This line is above the quantity the commitment authorises.", "Whether the extra quantity was agreed elsewhere.", financeDecider],
+  no_milestone: ["No milestone reference is supplied for this line.", "Whether the milestone was accepted. This match never verifies acceptance.", financeDecider]
+};
+function financeExplainRows(inv) {
+  const groups = new Map();
+  for (const e of inv.exceptions || []) {
+    const key = `${e.code}|${e.message}`;
+    const group = groups.get(key) || { e, lines: [] };
+    if (e.line !== null && e.line !== undefined) group.lines.push(e.line + 1);
+    groups.set(key, group);
+  }
+  return [...groups.values()].map(({ e, lines }) => {
+    const known = financeExplain[e.code];
+    return [screenValue(e.message), lines.length ? `Line ${lines.join(", ")}` : "Whole invoice",
+      known ? known[0] : "Unknown. This exception code has no plain-language explanation yet.",
+      known ? known[1] : "Unknown",
+      `${known ? known[2] : financeDecider}. Payment is made outside this system.`];
+  });
+}
+function financeExceptionPanel(inv) {
+  if (!financeChecked(inv)) return h("p", { class: "empty" }, "Exception explanations are Unknown. The invoice is not checked yet.");
+  const rows = financeExplainRows(inv);
+  return rows.length ? screenTable(`Exception explanations for ${inv.id}`,
+    ["Exception", "Where", "What it means", "What a person still has to check", "Who decides"], rows)
+    : h("p", {}, "No exception found by the match. This is not a payment decision, and it does not confirm milestone acceptance.");
+}
 function financeInvoicePanel(c) {
   const f = c.finance || {};
   const invoices = f.invoices || [];
@@ -872,7 +907,8 @@ function financeInvoicePanel(c) {
       ["Payment status (a note of what Finance did elsewhere)", `${screenValue(inv.payment_status)}. This system never makes or releases a payment.`]]),
     screenTable(`Line comparison for ${inv.id}`,
       ["Invoice line", "Quantity and line total", "Commitment", "Scope", "Quantity check", "Budget", "Supplied milestone reference", "Exception or unknown"],
-      financeLineRows(f, inv)))));
+      financeLineRows(f, inv)),
+    financeExceptionPanel(inv))));
 }
 const financeQueueRows = (queue) => queue.map((q) => [q.case_id, q.invoice, `${screenValue(q.supplier)}, ref ${screenValue(q.ref)}`,
   screenValue(q.status), financeChecked(q) ? `${q.exceptions ?? "Unknown"} exceptions` : "Unknown. Not checked yet", q.on_hold ? "Paused" : "Not paused", financeMoney(q.total)]);
