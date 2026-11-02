@@ -55,7 +55,7 @@ class CitationBoundTests(unittest.TestCase):
         self.assertIn("* ", text)
 
     def test_missing_question_keeps_a_cited_prefix(self) -> None:
-        detail = dict(
+        detail: dict[str, object] = dict(
             stage="Survey",
             gate=[f"Gate {i}" for i in range(8)],
             checklist=[dict(kind=f"Item {i}", present=False) for i in range(4)],
