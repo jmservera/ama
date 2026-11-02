@@ -2,19 +2,19 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-01T23:21:42+00:00",
-  "commit": "1a644d317f3c54a7fa4ffb6f7a3fa9cfc956be57",
+  "scored_at": "2026-11-02T13:00:46+00:00",
+  "commit": "911c6091ecf864367cc92455b3e6c558fdd01030",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41360696403",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41446999056",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "9ee8bd935baea9e7aced6459874bf3013e1f1ebf31577db3cbbfec563bbb0cb5",
+    "solution-code": "b810833eedb6ff1016cf7f1b32f6482c97ef56e153d642258318f60c8d6d3db7",
     "infrastructure": "0690e9366db022b814917069c8341fa744a82117889440bc2b13137747e492b6",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
-    "thought-leadership": "b2da6ee2e92a75182eed828e8481303a44757b7defbad48ff4fc6e93dec6dc8c"
+    "thought-leadership": "cfa6d63f21f69b0bb5fe7949954fbc0b168ba8e73e133ec9c055c828bd730196"
   },
   "total": 77,
   "sections": {
@@ -152,18 +152,18 @@
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:17-32",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:79-82"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:243-250",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/background.tex:8-14"
       ],
       "rationale": "Critique-driven revision to a five-arm/33-cell design fixes prior CR1-powering, loss-density and cost-arithmetic flaws; still a prospective protocol with no results. Score retained at 4."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1-16",
-        "docs/capstone/thought-leadership/everything-but-the-software/supplement.tex:1-30"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:191-203",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:28"
       ],
-      "rationale": "Split into 35-page main.tex plus separate supplement.tex addresses prior critique and improves structure. 13 TODO(author) items, incl. pending Microsoft publication approval, remain. Score retained at 3."
+      "rationale": "Split into 35-page main.tex plus separate supplement.tex addresses prior critique and improves structure. Tectonic warnings resolved and 34 tests pass; 16 TODO(author) items, incl. pending Microsoft publication approval, remain. Score retained at 3."
     },
     "D3": {
       "score": 2,
