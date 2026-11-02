@@ -175,6 +175,27 @@ partial timings. Record successful full timings and these qualifications in
 the delivery PR. Later evidence commits invalidate these receipts for final
 publication, but do not erase their historical benchmark observations.
 
+Benchmark attempts on 2026-11-02 (owner-authorised; 4 vCPU AMD EPYC 9V74,
+15 GiB, Python 3.12.3, `--all --jobs 1`, outer lock held by a
+`--heavy-lock-fd` wrapper) produced no passing full run, so the serial/parallel
+comparison is still unproven. These are single attempts, not a baseline:
+
+| Attempt | Result | Command time (sum of commands) |
+| --- | --- | --- |
+| 1 (base `fb6cdcd6`) | Failed after 3935 s wall: `infra` hit its 1800 s timeout | core 443 s, agents 45 s, api 761 s, orchestrator 37 s, importer 24 s, namespace 36 s, static 17 s, browser 131 s, mssql 435 s, infra 1984 s (about 1800 s was the hang); migration, images and logo never ran |
+| 2 (base `c9a4f092`) | Ended mid-run during `browser` after about 32 min; no receipt | not recorded |
+| 3 (base `1294b07e`) | Interrupted by SIGTERM after 10 min; failed receipt | core 416 s, other project groups 106 s, namespace 40 s |
+
+The `--jobs 2` arm was never run. Worker admission here is
+`min(jobs, 4 // 2, (12 GiB - 1 GiB) // 4 GiB)`, so `--jobs 3` also admits two
+workers. Attempt 1 hung because the `count=2` case of `test_setup_entra` prompts
+through `input()` when stdin is a terminal and the wrapper ran under tmux; run
+the gate with `< /dev/null`. The host was not idle: other agents' gates queued
+behind the lock and at least one unit-test run (22:56 UTC, during attempt 2) ran
+outside it (load average 1.5 to 2.7 at sampling). Attempts 2 and 3 were ended by
+an external signal of unknown origin. Fresh output directories reuse the host
+pip/Docker/Trivy caches.
+
 Use a new external output directory for every run; never overwrite a failed
 receipt. The runner tests a fresh detached exact-HEAD checkout, installs each
 project's existing dev dependencies with pip into isolated external venvs and
