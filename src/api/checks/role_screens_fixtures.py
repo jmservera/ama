@@ -67,3 +67,34 @@ def synthetic_data() -> dict[str, Any]:
     c["stock_reconciliation_events"] = []
     c["quality"] = []
     return data
+
+
+def technical_quality_data() -> dict[str, Any]:
+    """Synthetic home with returned, stale and missing technical evidence and open quality defects."""
+    data = synthetic_data()
+    c = data["cases"][0]
+    c["measures"] = "Loft insulation, Cavity wall insulation"
+    c["documents"] = [d for d in c["documents"] if d["kind"] != "EPC"]
+    c["technical"] = dict(
+        design_version=2, design_name="SYN Designer", design_at="2026-10-20T09:00:00Z",
+        versions=[dict(note="SYN loft depth changed")],
+        signoffs=dict(
+            assessment=dict(status="Signed off", version=2, by="SYN Assessor", history=[]),
+            design=dict(status="Returned", reason="SYN roof reference missing", by="SYN Reviewer",
+                        history=[dict(by="SYN Reviewer")]),
+            building=dict(status="Needs reassessment", reason="SYN design changed", history=[]),
+        ),
+    )
+    items = [dict(label="SYN depth measured", evidence="SYN photo 12"),
+             dict(label="SYN ventilation kept clear", evidence="")]
+    base = dict(checklist="SYN checklist", checklist_version=1, evidence_version=1,
+                source="SYN-QA-231", submitted_by="SYN Installer", items=items,
+                history=[], defects=[], handover=None, aftercare=[], supersedes=[])
+    defect = dict(description="SYN ventilation blocked", reason="SYN eaves covered",
+                  owner="Test Ltd", raised_by="SYN Inspector", raised_at="2026-10-21T09:00:00Z")
+    c["quality"] = [
+        dict(base, measure="Loft insulation", state="Returned", defect=defect),
+        dict(base, measure="Cavity wall insulation", state="Fixed, awaiting reinspection",
+             defect=dict(defect, fixed_by="SYN Installer", remediation_evidence="SYN photo 14")),
+    ]
+    return data

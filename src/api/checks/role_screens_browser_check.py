@@ -2,17 +2,43 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 import sys
 from pathlib import Path
 
-from playwright.sync_api import Browser, Route, sync_playwright
+from playwright.sync_api import Browser, Page, Route, sync_playwright
 
 from checks.design_system_browser_check import check, main
-from checks.role_screens_fixtures import synthetic_data
+from checks.role_screens_fixtures import synthetic_data, technical_quality_data
 
 # Independent child branches extend only their own installed-screen expectation.
 SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
+    "231": (
+        "quality@example.test",
+        "Technical queue",
+        (
+            "Cannot confirm readiness",
+            "Evidence: EPC",
+            "Current design version",
+            "Needs reassessment",
+            "Retrofit Coordinator (competent reviewer for this sign-off, not a generic approval)",
+            "Coordination sign-off (not given)",
+        ),
+    ),
+    "231q": (
+        "quality@example.test",
+        "Quality queue",
+        (
+            "Cannot confirm readiness",
+            "Loft insulation: Returned",
+            "Defect owner",
+            "Test Ltd",
+            "Awaiting independent reinspection",
+            "No evidence",
+            "SYN photo 14",
+        ),
+    ),
     "232": (
         "sam@example.test",
         "Resident choice and update queue",
@@ -26,6 +52,49 @@ SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
         ),
     ),
 }
+
+
+AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
+STORY_231 = ("231", "231q")
+
+
+def check_readonly_accessibility(page: Page, story: str) -> None:
+    """Keyboard reachability, text-only state meaning and optional pinned axe scan."""
+    evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
+    text = evidence.inner_text()
+    check(f"{story} reader view has no write controls",
+          evidence.locator("button, form, input, select, textarea").count() == 0)
+    check(f"{story} state is stated in text, not colour alone",
+          "Cannot confirm readiness" in text and evidence.locator(".blocked-title").count() == 1)
+    check(f"{story} no ready state is shown over missing evidence",
+          "Recorded evidence is complete" not in text and "Every measure has accepted evidence" not in text)
+    regions = evidence.locator('div.table-scroll[role="region"]')
+    expected = regions.evaluate_all("els => els.map(el => el.getAttribute('aria-label'))")
+    check(f"{story} every table is a labelled focusable region",
+          bool(expected) and regions.evaluate_all(
+              "els => els.every(el => el.tabIndex === 0 && el.querySelector('caption'))"))
+    page.evaluate("() => { document.activeElement.blur(); window.scrollTo(0, 0); }")
+    reached: list[str] = []
+    for _ in range(80):
+        page.keyboard.press("Tab")
+        label = page.evaluate("() => document.activeElement.getAttribute('aria-label') || ''")
+        if label in expected and label not in reached:
+            reached.append(label)
+        if len(reached) == len(expected):
+            break
+    check(f"{story} keyboard Tab reaches every table region: {reached}", len(reached) == len(expected))
+    axe_path = os.environ.get("ZF_AXE_JS")
+    if not axe_path:
+        print(f"SKIP {story} axe scan: set ZF_AXE_JS to the pinned axe 4.10.3 file")
+        return
+    raw = Path(axe_path).read_bytes()
+    check("axe file is the pinned 4.10.3 build", hashlib.sha256(raw).hexdigest() == AXE_SHA256)
+    page.evaluate(raw.decode())
+    result = page.evaluate("""async () => await axe.run(document.querySelector('main'), {
+      runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}})""")
+    check(f"{story} axe finds no violations: {[v['id'] for v in result['violations']]}",
+          not result["violations"])
+    print(f"INFO {story} axe incomplete: {[i['id'] for i in result['incomplete']]}")
 
 
 def check_projected_queue(browser: Browser, base: str) -> None:
@@ -151,6 +220,8 @@ def run_browser(base: str) -> None:
                 for phrase in expected:
                     check(f"story {selected} exact evidence: {phrase}", phrase in text)
                 check("same home remains ZF-1", "Selected home ZF-1" in text)
+                if selected in STORY_231:
+                    check_readonly_accessibility(page, selected)
                 check("no contact actions", evidence.locator('a[href^="tel:"], a[href^="mailto:"]').count() == 0)
                 for width in (320, 390, 1280):
                     page.set_viewport_size({"width": width, "height": 900})
@@ -252,4 +323,4 @@ def run_browser(base: str) -> None:
 
 
 if __name__ == "__main__":
-    main(run_browser, synthetic_data)
+    main(run_browser, technical_quality_data if sys.argv[1:2] and sys.argv[1] in STORY_231 else synthetic_data)
