@@ -9809,3 +9809,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   keeps it labelled a proposed rule; rendered behaviour, WCAG 2.2 and
   design-system acceptance, and #155 validation stay unmet. Evidence is under
   `.copilot-tracking/` (2026-11-03 issue-233 withheld panel).
+## [2026-11-02] update | Faster local gate controls (Refs #470)
+
+* Implemented the six owner-approved gate-speed recommendations in
+  `tools/rpi-checks.py`: auto `--jobs`, sharded API unit tests, recorded scoped
+  skips, Docker layer cache with `--fresh-images`, proof-based base-match
+  relaxation for partial receipts and `--stack` batch gating. Policy text is in
+  [the local gate section](../../src/README.md#gate-speed-controls-issue-470).
+  Unit-tested only; the complete gate and timings are not yet run, so #470
+  criterion 4 stays open. Original RPI evidence is under `.copilot-tracking/`
+  (2026-11-02 issue-470-gate-speedups).
