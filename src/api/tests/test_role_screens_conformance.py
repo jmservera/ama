@@ -16,21 +16,21 @@ TRACE = (ROOT / "docs" / "reference" / "research" / "ux" / "atlas-screen-trace.m
 
 
 class RoleScreenConformance(unittest.TestCase):
-    def test_every_registered_screen_is_traced(self):
+    def test_every_registered_screen_is_traced(self) -> None:
         registered = re.findall(r"registerRoleScreen\(\{\s*id: \"([a-z-]+)\"", SCREENS)
         self.assertGreaterEqual(len(registered), 12)
         for ident in registered:
             self.assertIn(f"`{ident}`", TRACE, ident)
 
-    def test_no_role_simulator_in_user_views(self):
+    def test_no_role_simulator_in_user_views(self) -> None:
         self.assertNotRegex(SCREENS, r"(?i)simulat|impersonat|act as role|switch role")
 
-    def test_every_class_used_is_defined_in_the_design_system(self):
+    def test_every_class_used_is_defined_in_the_design_system(self) -> None:
         used = {c for group in re.findall(r'class: "([^"]+)"', SCREENS) for c in group.split()}
         for name in used:
             self.assertRegex(CSS, r"\." + re.escape(name) + r"(?![\w-])", name)
 
-    def test_interactive_controls_are_native_and_keyboard_operable(self):
+    def test_interactive_controls_are_native_and_keyboard_operable(self) -> None:
         self.assertNotIn("innerHTML", SCREENS)
         self.assertNotRegex(SCREENS, r'h\("(?:div|span|li|p|td)", \{[^}]*on(?:click|keydown)')
         for handler in re.finditer(r"onclick:", SCREENS):
@@ -40,27 +40,27 @@ class RoleScreenConformance(unittest.TestCase):
             self.assertIn('"aria-label"', region)
             self.assertIn("tabindex: 0", region)
 
-    def test_tables_have_caption_and_column_scope(self):
+    def test_tables_have_caption_and_column_scope(self) -> None:
         self.assertIn('h("caption"', SCREENS)
         self.assertIn('scope: "col"', SCREENS)
 
-    def test_state_is_text_and_not_colour_or_inline_style(self):
+    def test_state_is_text_and_not_colour_or_inline_style(self) -> None:
         self.assertNotRegex(SCREENS, r'\bstyle: ["`](?!currency)|\.style\.|(?<!\w)color:')
         self.assertIn("Cannot confirm readiness", SCREENS)
         self.assertIn('role: "alert"', SCREENS)
         self.assertIn('role: "status"', SCREENS)
 
-    def test_screen_styles_add_no_motion(self):
+    def test_screen_styles_add_no_motion(self) -> None:
         rules = re.findall(r"^\.screen-[^{]*\{[^}]*\}", CSS, re.MULTILINE)
         self.assertTrue(rules)
         for rule in rules:
             self.assertNotRegex(rule, r"animation|transition")
         self.assertNotRegex(SCREENS, r"setTimeout|setInterval|requestAnimationFrame|\.animate\(")
 
-    def test_screens_state_no_action_is_taken(self):
+    def test_screens_state_no_action_is_taken(self) -> None:
         self.assertIn("No message, approval or record change is made from this screen.", SCREENS)
 
-    def test_withheld_text_rule_is_still_only_proposed(self):
+    def test_withheld_text_rule_is_still_only_proposed(self) -> None:
         if "Not shown for this role" not in SCREENS:
             self.assertIn("Proposed rule; conformance of these screens not assessed", TRACE)
 
