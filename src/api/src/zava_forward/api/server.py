@@ -7,6 +7,7 @@ import os
 import secrets
 import sys
 import threading
+import traceback
 from datetime import UTC, datetime
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -212,7 +213,36 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 path = ""
             if code >= 500 or (path.startswith("/vendor/") and code not in (200, 304)):
                 logging.getLogger(__name__).warning("http-response %s %s status=%s", _printable(getattr(self, "command", None)), _printable(path), code)
+            self._response_started = True
             super().send_response(code, message)
+
+        def handle_one_request(self):
+            self._response_started = False
+            try:
+                super().handle_one_request()
+            except Exception as exc:
+                self._unhandled(exc)
+
+        def _unhandled(self, exc):
+            """Log class, status, path and the raising frame only (never the message, query, headers or tokens) and answer with a plain 500."""
+            self.close_connection = True
+            try:
+                path = urlparse(getattr(self, "path", "")).path
+            except ValueError:
+                path = ""
+            method, name = _printable(getattr(self, "command", None)), type(exc).__name__
+            if isinstance(exc, ConnectionError) or (isinstance(exc, OSError) and exc.errno in (32, 104)):
+                logging.getLogger(__name__).warning("http-error %s %s client-disconnect exc=%s", method, _printable(path), name)
+                return
+            sent = self._response_started
+            frame = traceback.extract_tb(exc.__traceback__)[-1:] or [None]
+            where = f"{Path(frame[0].filename).name}:{frame[0].lineno}:{frame[0].name}" if frame[0] else "unknown"
+            logging.getLogger(__name__).error("http-error %s %s status=500 exc=%s at=%s response_started=%s", method, _printable(path), name, where, sent)
+            if not sent:
+                try:
+                    self._json(500, {"error": "The service hit an unexpected error. Try again; if it continues, report the time of the failure."})
+                except Exception:
+                    logging.getLogger(__name__).warning("http-error %s %s 500 response not delivered", method, _printable(path))
 
         def _send(self, code, body, ctype="application/json", extra=None):
             raw = body if isinstance(body, bytes) else body.encode()
