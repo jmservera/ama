@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-02T22:20:54+00:00",
-  "commit": "aafc7d4b3830e85453dd81dcc9e1468d1eb0b04b",
+  "scored_at": "2026-11-02T23:20:53+00:00",
+  "commit": "68a8ca753b5066066c1ec23a20faab7ea9e8731a",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41535347577",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41543636509",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "bb1c1e5370d2e9619e4b5c37c887506f4956d73b9f140bf14dca500998f5484a",
+    "solution-code": "07063324218b931dd5c806b987090b20e49b4c97f1f86344bf3efcc9e0354bdb",
     "infrastructure": "5134fdeb17664e926dfc18305737f417e3bbfbb83eab746954ce283fc04217a9",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -32,7 +32,7 @@
         "src/api/src/zava_forward/api/static_assets.py:1-58",
         "src/api/src/zava_forward/api/server.py:193-197"
       ],
-      "rationale": "Diff adds packages/work-orders pagination (limit/offset) in server.py and core/procurement.py; architecture already modular with defined API contracts. Baseline ceiling 5 retained."
+      "rationale": "Diff is a narrow source-provenance/README+test fix unrelated to architecture; baseline ceiling 5 retained."
     },
     "A2": {
       "score": 5,
@@ -44,9 +44,10 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/chat_panel.py:195-198,321-335,631-636"
+        "src/core/README.md:2385-2397",
+        "src/core/tests/test_synthetic_provenance.py:69-83"
       ],
-      "rationale": "Diff is infra probe tuning and client retry logic, no new security/AI-risk evidence. Baseline 5 retained: guard is lexical, not semantic grounding, so ceiling evidence unchanged."
+      "rationale": "Diff tightens external-source compliance recordkeeping: retrieval dates set for Census/IMD/ONS, owner-named follow-up for remaining ONS boundaries attribution, with covering test. Reinforces compliance-naming evidence but doesn't add threat-model or AI-risk mitigation detail; ceiling 5 retained."
     },
     "A4": {
       "score": 5,
@@ -54,7 +55,7 @@
         "src/agents/evals/chat_golden.json:77-82",
         "src/agents/tests/test_chat_eval.py:38-90"
       ],
-      "rationale": "Diff adds cold-start retry and probe hardening, not core capability completeness. Baseline 5 retained (already ceiling)."
+      "rationale": "Diff is a provenance/compliance test and doc fix, not capability completeness. Baseline 5 retained."
     },
     "A5": {
       "score": 5,
@@ -63,7 +64,7 @@
         "infra/resident-demo.bicep:148-156",
         "src/api/src/zava_forward/api/web/app.js:219-259"
       ],
-      "rationale": "Diff retunes Startup/Readiness/Liveness probes (issue 691) and adds bounded cold-start read-retry in app.js with covering tests; reinforces resilience but adds no new cost or observability measurement. Baseline 5 retained."
+      "rationale": "Diff unrelated to operations/observability/cost; no change to resilience or instrumentation evidence. Baseline 5 retained."
     },
     "A6": {
       "score": 5,
@@ -71,7 +72,7 @@
         "src/agents/src/zava_forward/agents/chat_eval.py:337-349",
         "src/agents/tests/test_chat_eval.py:38-100"
       ],
-      "rationale": "Diff is infra/UI resilience work, not model-choice or eval-harness related. Baseline 5 retained."
+      "rationale": "Diff is provenance/compliance documentation, unrelated to model-choice or eval-harness. Baseline 5 retained."
     },
     "A7": {
       "score": 4,
@@ -79,7 +80,7 @@
         "src/agents/src/zava_forward/agents/dispatch.py:186-220",
         "src/core/src/zava_forward/core/ai_consumption.py:155-185"
       ],
-      "rationale": "Diff is probe tuning and client retry, unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "rationale": "Diff is source-provenance recordkeeping, unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -117,10 +118,10 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/core/README.md:5-123",
+        "src/core/README.md:2385-2397",
         "src/api/README.md:9-47"
       ],
-      "rationale": "Diff is infra/UI engineering (probe tuning, retry logic), not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "Diff is src/core provenance/compliance engineering (README + test), not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
