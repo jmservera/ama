@@ -9882,3 +9882,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Design-system inventory covers role-screen classes (Refs #230)
 
 * Added layout, list and specialist-screen class rows to the [design system](./research/ux/design-system.md) component inventory and a test that every class used by the role screens is defined in CSS and listed. Fluent library adoption (#150) and assistive-technology validation (#155) remain unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-230 design-system classes).
+## [2026-11-03] update | Atlas trace: withheld-items panel on resident-choice summary (Refs #233)
+
+* The `resident-choice` page summary now renders the "Not shown for this role"
+  panel, closing the last gap in the continuity-versus-disclosure rule on the
+  two tension screens. The rule stays a proposed rule; rendered behaviour, WCAG
+  2.2 and design-system acceptance, and #155 validation stay unmet. Evidence is
+  under `.copilot-tracking/` (2026-11-03 issue-233 resident-choice summary).

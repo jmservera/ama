@@ -1,7 +1,7 @@
 ---
 title: Atlas findings and role journeys traced to screens
 description: Cross-role trace of the eleven profile perspectives, five atlas design themes, two tensions and one same-home walkthrough to role screens or recorded deferrals (issue #233)
-ms.date: 2026-11-02
+ms.date: 2026-11-03
 ms.topic: reference
 ---
 
@@ -62,7 +62,7 @@ Source: [five design themes](./customer-journeys/customer-journey-atlas.md#five-
 
 | Tension | Where resolved | Resolution | Status |
 | --- | --- | --- | --- |
-| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text under a "Not shown for this role" panel (on the per-home view of both screens, and on the `programme-queue` overview; the `resident-choice` overview and summary views do not show it yet) rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; rendered behaviour and conformance not assessed |
+| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text under a "Not shown for this role" panel (on the per-home view of both screens, on the `programme-queue` overview and on the `resident-choice` page summary) rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; rendered behaviour and conformance not assessed |
 | Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Proposed rule; rendered behaviour and conformance not assessed |
 
 ## Same-home walkthrough
