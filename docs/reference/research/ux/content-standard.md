@@ -99,7 +99,7 @@ and `signoffs.py`. Automated by `src/api/tests/test_content_standard.py`.
 
 Remaining by design, not shown as wording to a person: the internal
 identifiers `gate`, `provenance` and `hold` in code and API fields, and the
-stored finance decision value "Keep on hold" (shown to a person as "Keep payment paused" through the shared `financeDecisionLabel` display mapping in `panels.js`).
+stored finance decision value "Keep on hold" (shown to a person as "Keep payment paused" through a display mapping kept in both `panels.js` and `role-screens.js`, because the two files load on different routes).
 
 ### Chat and alert-panel audit extension (2026-10-18, #153)
 

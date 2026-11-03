@@ -129,11 +129,11 @@ class CopyAudit(unittest.TestCase):
         self.assertIn("Benefits and phase check", js)
         self.assertTrue(list(copy_violations(js.replace("phase check evidence", "gate evidence", 1))))
 
-    def test_finance_decision_sources_contain_shared_display_mapping(self):
+    def test_finance_decision_sources_contain_display_mapping(self):
         panels = (WEB / "panels.js").read_text()
         self.assertIn('{ value: "Keep on hold", label: "Keep payment paused" }', panels)
         self.assertIn("Finance decision: ${financeDecisionLabel(i.disposition)}", panels)
-        self.assertIn("financeDecisionLabel(inv.disposition)", (WEB / "role-screens.js").read_text())
+        self.assertIn("screenFinanceDecision(inv.disposition)", (WEB / "role-screens.js").read_text())
 
     def test_time_capture_copy_is_guarded(self):
         self.assertIn("timecapture.js", AUDITED_FILES)

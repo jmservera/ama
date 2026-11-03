@@ -3,6 +3,8 @@
 const roleScreens = new Map();
 const screenManagers = ["Retrofit Programme Manager", "Programme Support Officer"];
 const screenValue = (value) => value === null || value === undefined || value === "" ? "Unknown" : String(value);
+// Display label for the stored decision; panels.js has its own copy because it is lazy loaded on other routes.
+const screenFinanceDecision = (d) => (d === "Keep on hold" ? "Keep payment paused" : d);
 const screenPerson = (value) => typeof value === "string" ? screenValue(value) : screenValue(value?.name);
 const screenStamp = (value) => {
   const date = value ? new Date(value) : null;
@@ -946,7 +948,7 @@ function financeInvoicePanel(c) {
     h("h3", {}, `${inv.id}: ${screenValue(inv.kind)} ${screenValue(inv.ref)} from ${screenValue(inv.supplier)}`),
     screenFields([["Version and record", `${inv.id}, work order ${screenValue(inv.work_order)}, match status: ${screenValue(inv.status)}`],
       ["Payment pause", inv.hold ? `Paused by ${screenValue(inv.hold.name)}: ${screenValue(inv.hold.reason)}` : "No pause recorded"],
-      ["Finance decision", inv.disposition ? `${financeDecisionLabel(inv.disposition)}, recorded by ${screenValue(inv.disposition_by)}` : "No Finance decision recorded"],
+      ["Finance decision", inv.disposition ? `${screenFinanceDecision(inv.disposition)}, recorded by ${screenValue(inv.disposition_by)}` : "No Finance decision recorded"],
       ["Payment status (a note of what Finance did elsewhere)", `${screenValue(inv.payment_status)}. This system never makes or releases a payment.`]]),
     screenTable(`Line comparison for ${inv.id}`,
       ["Invoice line", "Quantity and line total", "Commitment", "Scope", "Quantity check", "Budget", "Supplied milestone reference", "Exception or unknown"],

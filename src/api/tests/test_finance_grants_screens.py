@@ -364,6 +364,14 @@ class FinanceGrantsScreens(unittest.TestCase):
         for role in FINANCE_APPROVERS:
             self.assertIn(role, decider)
 
+    def test_finance_decision_shows_plain_label_without_panels_loaded(self) -> None:
+        case = json.loads(json.dumps(CASE))
+        case["finance"]["invoices"][0]["disposition"] = "Keep on hold"
+        case["finance"]["invoices"][0]["disposition_by"] = "Finance Lead"
+        text = json.dumps(run(case)["finance-invoices"]["tree"])
+        self.assertIn("Keep payment paused, recorded by Finance Lead", text)
+        self.assertNotIn("Keep on hold", text)
+
     def test_clean_match_is_not_a_payment_decision(self) -> None:
         case = json.loads(json.dumps(CASE))
         case["finance"]["invoices"][0]["exceptions"] = []

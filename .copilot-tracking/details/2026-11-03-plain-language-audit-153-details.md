@@ -6,7 +6,7 @@ ms.date: 2026-11-03
 ## Phase 1
 
 * `src/api/src/zava_forward/api/web/panels.js`: `actForm` renders object options as value and label; `financeDecisionLabel` maps "Keep on hold" for display; submit value stays "Keep on hold".
-* `src/api/src/zava_forward/api/web/role-screens.js`: Finance decision line shows "Keep payment paused".
+* `src/api/src/zava_forward/api/web/role-screens.js`: Finance decision line shows "Keep payment paused" through a local `screenFinanceDecision` helper (no shared scope with panels.js).
 
 ## Phase 2
 
