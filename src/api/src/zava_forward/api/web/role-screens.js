@@ -150,6 +150,8 @@ function assetCost(report) {
   const m = report?.consumption;
   const passed = m && m.quality_status === "Pass" && m.quality_qualified_cost && m.quality_qualified_cost !== "Unknown";
   return screenFields([
+    ["AI report", report ? "Loaded" : "Unavailable. The AI report could not be loaded, so every AI figure below is Unknown."],
+    ["Without AI", "Nothing on this view needs AI. Ask the Programme manager or Finance owner for the dated cost and value records to read these figures by hand."],
     ["Overall AI cost per accepted outcome", "Unknown. Other cost components are not complete and quality-qualified."],
     ["Token/API component per accepted proposal (component only)", passed ? `${m.quality_qualified_cost} ${screenValue(m.currency)}` : "Unknown"],
     ["Report period (UTC)", m?.period ? `${screenValue(m.period.start)} to ${screenValue(m.period.end)}, as of ${screenValue(m.period.as_of)}` : "Unknown"],

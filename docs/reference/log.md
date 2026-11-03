@@ -9847,3 +9847,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Coordinator policy for merged gate speedups (Refs #470)
 
 * Updated `.github/agents/ama-backlog-delivery-coordinator.agent.md` to describe API test shards (`test_shards`, `shard_helpers`), fail-closed sharding, per-child shard planning, closed stdin and the stack-member limits merged in #792, and added a stdin note to the `src/README.md` gate speed controls. Documentation only; no gate code changed. The #470 criterion for recorded before/after full-run timing remains unmet.
+## [2026-11-03] update | Asset and board view states AI unavailable (Refs #226)
+
+* The `asset-board` AI cost panel now shows whether the AI report loaded and a
+  without-AI manual path; cost stays Unknown when it did not. The trace row and
+  [API README](../../src/api/README.md) note it. Unit-tested only. Criteria 4
+  and 5 (WCAG and design-system acceptance, #155, #150) stay unmet; no
+  investment, budget or eligibility claim changed. Evidence is under
+  `.copilot-tracking/` (2026-11-03 issue-226 AI unavailable).
