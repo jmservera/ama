@@ -1,12 +1,13 @@
 """Issue 691: an unhandled handler failure answers 500 and logs a diagnosable, secret-free line."""
 
+import http.client
 import json
 import threading
 import unittest
-from concurrent.futures import ThreadPoolExecutor
 import urllib.error
 import urllib.request
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 from unittest.mock import patch
 
 from test_auth import ENV, OID_SAM, Base, principal
@@ -30,7 +31,9 @@ class ErrorLoggingTests(Base):
         super().tearDown()
 
     def get(self, path: str, oid: str = OID_SAM) -> tuple[int, bytes]:
-        req = urllib.request.Request(self.base + path, headers={"X-MS-CLIENT-PRINCIPAL": principal(oid=oid)})
+        req = urllib.request.Request(
+            self.base + path, headers={"X-MS-CLIENT-PRINCIPAL": principal(oid=oid)}
+        )
         try:
             with urllib.request.urlopen(req, timeout=20) as r:
                 return r.status, r.read()
@@ -41,13 +44,20 @@ class ErrorLoggingTests(Base):
         def boom(*_a: object, **_k: object) -> None:
             raise RuntimeError(SECRET)
 
-        with patch.object(self.store, "counts", boom), self.assertLogs("zava_forward.api.server", "ERROR") as logs:
+        with (
+            patch.object(self.store, "counts", boom),
+            self.assertLogs("zava_forward.api.server", "ERROR") as logs,
+        ):
             code, body = self.get(f"/api/me?token={SECRET}")
         self.assertEqual(code, 500)
         self.assertIn("error", json.loads(body))
         self.assertNotIn(SECRET, body.decode())
         line = "\n".join(logs.output)
-        for part in ("http-error GET /api/me status=500", "exc=RuntimeError", "at=test_error_logging.py:"):
+        for part in (
+            "http-error GET /api/me status=500",
+            "exc=RuntimeError",
+            "at=test_error_logging.py:",
+        ):
             self.assertIn(part, line)
         self.assertNotIn(SECRET, line)
         self.assertNotIn("Traceback", line)
@@ -63,10 +73,12 @@ class ErrorLoggingTests(Base):
                 raise RuntimeError(SECRET)
             real(self, *a, **k)
 
-        with patch.object(self.store, "counts", lambda *a, **k: None), \
-                patch("zava_forward.api.server.SECURITY", {"X-Test": "1"}), \
-                patch.object(BaseHTTPRequestHandler, "send_header", broken), \
-                self.assertLogs("zava_forward.api.server", "ERROR") as logs:
+        with (
+            patch.object(self.store, "counts", lambda *a, **k: None),
+            patch("zava_forward.api.server.SECURITY", {"X-Test": "1"}),
+            patch.object(BaseHTTPRequestHandler, "send_header", broken),
+            self.assertLogs("zava_forward.api.server", "ERROR") as logs,
+        ):
             code, body = self.get("/api/me")
         self.assertEqual(code, 500)
         self.assertIn("response_started=False", "\n".join(logs.output))
@@ -75,8 +87,11 @@ class ErrorLoggingTests(Base):
         def gone(*_a: object, **_k: object) -> None:
             raise BrokenPipeError(SECRET)
 
-        with patch.object(self.store, "counts", gone), self.assertLogs("zava_forward.api.server", "WARNING") as logs:
-            with self.assertRaises(Exception):
+        with (
+            patch.object(self.store, "counts", gone),
+            self.assertLogs("zava_forward.api.server", "WARNING") as logs,
+        ):
+            with self.assertRaises((OSError, http.client.HTTPException)):
                 self.get("/api/me")
         text = "\n".join(logs.output)
         self.assertIn("client-disconnect exc=BrokenPipeError", text)
@@ -93,14 +108,24 @@ class ErrorLoggingTests(Base):
         self.assertEqual(self.get("/api/chat/regulatory/status")[0], 403)
 
     def test_concurrent_mixed_burst_has_no_500_or_dropped_connection(self) -> None:
-        paths = ["/panels.js", "/api/me", "/api/law/alerts", "/api/account/photo", "/api/cases", "/app", "/vendor/leaflet.js"]
+        paths = [
+            "/panels.js",
+            "/api/me",
+            "/api/law/alerts",
+            "/api/account/photo",
+            "/api/cases",
+            "/app",
+            "/vendor/leaflet.js",
+        ]
         seen: Counter[tuple[str, object]] = Counter()
         lock = threading.Lock()
 
         def hit(i: int) -> None:
             path = paths[i % len(paths)]
             try:
-                result: object = self.get(path, f"dddddddd-0000-0000-0000-{i:012d}" if i % 2 else OID_SAM)[0]
+                result: object = self.get(
+                    path, f"dddddddd-0000-0000-0000-{i:012d}" if i % 2 else OID_SAM
+                )[0]
             except Exception as exc:
                 result = type(exc).__name__
             with lock:
