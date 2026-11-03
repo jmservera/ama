@@ -241,6 +241,22 @@ class FinanceGrantsScreens(unittest.TestCase):
         self.assertIn("Overall AI cost per accepted outcome", text)
         self.assertIn("Unknown. No finance-defensible value", text)
 
+    def test_economics_section_on_both_screens_is_unknown_without_inputs(self) -> None:
+        out = run()
+        for screen_id in ("finance-invoices", "finance-funding"):
+            text = json.dumps(out[screen_id]["tree"])
+            for expected in (
+                "Usage reconciled to billing",
+                "Total Cost of AI component: Platform and hosting",
+                "Total Cost of AI component: People and process change",
+                "Booked-value status",
+                "spend avoided or capital freed",
+                "nothing here depends on AI",
+                "could not be read for your role. Cost and value stay Unknown",
+            ):
+                self.assertIn(expected, text)
+            self.assertNotIn("GBP", text)
+
     def test_queue_unreadable_stays_unknown(self) -> None:
         text = json.dumps(run(queue=None)["finance-invoices"]["tree"])
         self.assertIn("could not be read for your role", text)

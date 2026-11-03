@@ -1021,6 +1021,21 @@ function financeInvoicePanel(c) {
 }
 const financeQueueRows = (queue) => queue.map((q) => [q.case_id, q.invoice, `${screenValue(q.supplier)}, ref ${screenValue(q.ref)}`,
   screenValue(q.status), financeChecked(q) ? `${q.exceptions ?? "Unknown"} exceptions` : "Unknown. Not checked yet", q.on_hold ? "Paused" : "Not paused", financeMoney(q.total)]);
+const financeTcaComponents = ["Token and API usage", "Platform and hosting", "Software and licences", "People and process change", "Rework and review effort"];
+const financeValueDestinations = "new revenue won, revenue retained, spend removed, spend avoided or capital freed";
+function financeEconomicsPanel(report) {
+  const readable = Boolean(report?.consumption);
+  const missing = (what) => `Unknown. ${what}`;
+  return screenPanel("AI economics (ledger-wide, all homes)",
+    h("p", {}, "Design only. Usage must be reconciled to billing before any cost is read. Total Cost of AI is the sum of its components, and any missing component keeps it Unknown. Booked-value status stays Unknown until Finance records a defensible value. No price, budget or target is set here (BRD OD-51 open). This is read-only and nothing here depends on AI: Finance decisions and invoice checks work the same when AI is unavailable."),
+    screenFields([
+      ["Usage reconciled to billing", missing("No billing source is recorded, so usage cannot be reconciled.")],
+      ...financeTcaComponents.map((name) => [`Total Cost of AI component: ${name}`, missing("No priced source is recorded.")]),
+      ["Total Cost of AI components", missing("Components are missing, so no total is shown.")],
+      ["Booked-value status", missing(`No value is booked. A booked value needs one destination: ${financeValueDestinations}.`)],
+      ...(readable ? [] : [["AI report", missing("The AI usage report could not be read for your role. Cost and value stay Unknown.")]])]),
+    assetCost(report));
+}
 registerRoleScreen({
   id: "finance-invoices",
   title: "Invoice queue",
@@ -1042,10 +1057,7 @@ registerRoleScreen({
           ["Home", "Invoice", "Supplier and reference", "Status", "Exceptions", "Pause", "Invoice total"], financeQueueRows(queue))
           : h("p", { class: "empty" }, "Unknown. The queue could not be read for your role.")),
       financeInvoicePanel(c),
-      screenPanel("AI economics (ledger-wide, all homes)", h("p", {}, "Design only. Usage must be reconciled to billing before any cost is read. Total Cost of AI is the sum of components, and any missing component keeps it Unknown. Booked-value status stays Unknown until Finance records a defensible value. No price, budget or target is set here (BRD OD-51 open)."),
-        screenFields([["Usage reconciled to billing", "Unknown. No billing source is recorded."],
-          ["Total Cost of AI components", "Unknown. Platform, licence, people and rework components are not supplied."]]),
-        assetCost(extra?.report)));
+      financeEconomicsPanel(extra?.report));
   }
 });
 
@@ -1109,7 +1121,7 @@ registerRoleScreen({
         screenFields([["Claim pack readiness", !readable ? "Unknown. The field review could not be read." : drafts && drafts.some((d) => d.reviewed_ready) ? "A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "Not ready. No reviewed export exists."],
           ["Open decision pauses", !pauses ? "Unknown. The field review could not be read." : pauses.length ? `${pauses.length} recorded` : "None recorded"],
           ["Submission, award and payment", "Not recorded here. This screen never infers them."]])),
-      screenPanel("AI economics (ledger-wide, all homes)", assetCost(extra?.report)));
+      financeEconomicsPanel(extra?.report));
   }
 });
 
