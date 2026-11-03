@@ -784,6 +784,62 @@ class FormReview(unittest.TestCase):
             self.assertEqual(result["history"], history)
             self.assertFalse(result["reviewed_ready"])
 
+    def test_saved_manifests_go_stale_exactly_and_stay_preserved(self) -> None:
+        for store in self.stores:
+            draft, epc, area = self.prepare(store)
+            draft = self.review(store, draft, epc)
+            diagnose = dict(action="diagnose", draft_id=draft["draft_id"])
+            first = form_review.action(
+                store, self.actor, "ZF-1", dict(diagnose, expected_version=draft["input_version"])
+            )
+            view = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+            self.assertEqual([f["status"] for f in view["diagnostic_freshness"]], ["Current"])
+            self.assertIsNone(view["diagnostic_freshness"][0]["action"])
+            with store.lock:
+                case = store._case("ZF-1")
+                next(d for d in case["documents"] if d["id"] == epc["source"]["id"])["version"] += 1
+                store.save()
+            view = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+            entry = view["diagnostic_freshness"][0]
+            self.assertEqual(entry["status"], "Stale")
+            self.assertEqual(entry["stale_fields"], ["epc"])
+            self.assertEqual(entry["reasons"], ["A bound source changed."])
+            self.assertEqual(view["recorded_diagnostics"], [first])
+            second = form_review.action(
+                store, self.actor, "ZF-1", dict(diagnose, expected_version=view["input_version"])
+            )
+            view = form_review.view(store, self.actor, "ZF-1")["drafts"][0]
+            self.assertEqual(
+                [f["status"] for f in view["diagnostic_freshness"]], ["Stale", "Stale"]
+            )
+            self.assertEqual(view["diagnostic_freshness"][1]["stale_fields"], ["epc"])
+            self.assertEqual(view["recorded_diagnostics"], [first, second])
+
+    def test_input_and_schema_changes_stale_saved_manifests(self) -> None:
+        for store in self.stores:
+            draft, epc, area = self.prepare(store)
+            draft = self.review(store, draft, epc)
+            form_review.action(
+                store,
+                self.actor,
+                "ZF-1",
+                dict(action="diagnose", draft_id=draft["draft_id"], expected_version=2),
+            )
+            draft = self.review(store, dict(draft, input_version=3), area, "area", "correct", 12)
+            entry = form_review.view(store, self.actor, "ZF-1")["drafts"][0][
+                "diagnostic_freshness"
+            ][0]
+            self.assertEqual(entry["reasons"], ["Reviewed inputs changed after this manifest."])
+            self.assertEqual(entry["stale_fields"], [])
+            forms.register_schema(store, self.actor, dict(schema(), version=2))
+            entry = form_review.view(store, self.actor, "ZF-1")["drafts"][0][
+                "diagnostic_freshness"
+            ][0]
+            self.assertEqual(
+                entry["reasons"],
+                ["Reviewed inputs changed after this manifest.", "A newer schema version exists."],
+            )
+
     def test_types_use_no_implicit_conversion_and_type_aware_equality(self) -> None:
         examples = (
             ("string", "D", True),

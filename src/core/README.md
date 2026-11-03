@@ -307,8 +307,12 @@ and alternative checks; missing-byte results are also reused locally.
 Action preflight shares these reads with its resulting report. Later reports
 check afresh; no cross-request cache is retained. A source change marks only its
 bound working fields stale; a new schema version affects all fields bound to that schema. Historical
-reviews/values and recorded diagnostic snapshots remain intact. This is not
-full FR-043/AC-051 rule/calculation/pack-review/approval stale propagation.
+reviews/values and recorded diagnostic snapshots remain intact. `view` also
+returns `diagnostic_freshness`, one entry per saved manifest: `Stale` when
+reviewed inputs changed after it, a bound source changed (listing only those
+fields) or a newer schema version exists, with a re-run action; otherwise
+`Current`. This is not full FR-043/AC-051 rule/calculation/approval stale
+propagation: no approved rules, calculations or reviewed packs exist yet.
 Already-clean evidence is required: reads/reviews never scan or save a source.
 Missing, pending, quarantined or deleted retained evidence blocks disclosure of
 the entire affected draft/history, including recorded diagnostics. On `view`,
