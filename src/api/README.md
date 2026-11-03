@@ -3620,7 +3620,9 @@ Contractors retain their minimum-necessary projection, not staff safety data.
 The versioned [shared-IA manifest](./checks/workbench-manifest.json) declares
 eight implemented auth roles, exact synthetic own queues/navigation and all
 eleven PRD perspectives/nine workflows with partial or deferred coverage.
-It is not full AC-034/043, accepted role mapping or validated user research.
+Each implemented profile declares its default IDs, count, order, selection and,
+for an empty own queue, the reason "no representative scenario supplied";
+`tests/test_workbench.py` checks these against the role queues. It is not full AC-034/043, accepted role mapping or validated user research.
 From `src/api`, using the installed src packages and `.[dev]`:
 
 ```bash
