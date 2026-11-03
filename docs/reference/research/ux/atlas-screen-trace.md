@@ -62,8 +62,8 @@ Source: [five design themes](./customer-journeys/customer-journey-atlas.md#five-
 
 | Tension | Where resolved | Resolution | Status |
 | --- | --- | --- | --- |
-| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text "Not shown for this role" rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; conformance of these screens not assessed |
-| Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Proposed rule; conformance of these screens not assessed |
+| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text under a "Not shown for this role" panel (added to the per-home view of both screens in this slice; the queue overview and summary views do not show it yet) rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; rendered behaviour and conformance not assessed |
+| Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Proposed rule; rendered behaviour and conformance not assessed |
 
 ## Same-home walkthrough
 
@@ -94,8 +94,8 @@ in the design system stylesheet, controls are native elements, scrollable table
 regions are labelled and focusable, tables have captions and column scope, state
 is stated in text rather than inline colour, the screen styles add no motion, and
 each selected-home view states that no message, approval or record change is made.
-It also guards that the "Not shown for this role" disclosure rule stays labelled
-proposed while that text is absent from the screens. These are source-level
+It also guards that the "Not shown for this role" panel is present on
+`programme-queue` and `resident-choice` and that the rule stays labelled proposed. These are source-level
 checks only; they do not render a page, use assistive technology or involve users.
 
 ## Boundaries and unmet criteria

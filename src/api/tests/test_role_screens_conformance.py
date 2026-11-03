@@ -60,9 +60,14 @@ class RoleScreenConformance(unittest.TestCase):
     def test_screens_state_no_action_is_taken(self) -> None:
         self.assertIn("No message, approval or record change is made from this screen.", SCREENS)
 
-    def test_withheld_text_rule_is_still_only_proposed(self) -> None:
-        if "Not shown for this role" not in SCREENS:
-            self.assertIn("Proposed rule; conformance of these screens not assessed", TRACE)
+    def test_withheld_disclosure_is_on_both_tension_screens(self) -> None:
+        for ident in ("programme-queue", "resident-choice"):
+            start = SCREENS.index(f'id: "{ident}"')
+            end = SCREENS.index("registerRoleScreen({", start)
+            self.assertIn("screenWithheld(", SCREENS[start:end], ident)
+        self.assertIn('screenPanel("Not shown for this role"', SCREENS)
+        self.assertIn("is not authorisation", SCREENS)
+        self.assertIn("Proposed rule; rendered behaviour and conformance not assessed", TRACE)
 
 
 if __name__ == "__main__":

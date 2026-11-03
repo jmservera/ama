@@ -20,6 +20,9 @@ const screenPanel = (title, ...children) => h("section", { class: "card screen-r
 const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
   h("p", { class: "blocked-title" }, "Cannot confirm readiness"),
   screenFields([["Why it is blocked", reason], ["Owner", owner], ["Next action", action]]));
+const screenWithheld = (items) => screenPanel("Not shown for this role",
+  h("p", {}, "These items exist in the wider case but are not displayed on this screen. They are listed so that their absence is not read as nothing recorded. Withholding is not authorisation: your access is unchanged and no record changes."),
+  h("ul", {}, items.map((item) => h("li", {}, item))));
 function screenTable(label, headings, rows, limit = 50) {
   return h("div", {},
     rows.length > limit && h("p", { role: "status" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
@@ -426,7 +429,9 @@ registerRoleScreen({
       h("p", {}, "Technical, resident, delivery, quality and finance states are shown independently. One clear state never clears another."),
       blocked.length ? screenUnknown(`${blocked.length} of 5 steps are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
         blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
-      screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows));
+      screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows),
+      screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
+        "Household and vulnerability details beyond what a step state needs", "Funding amounts and claim values"]));
   }
 });
 const technicalRoles = ["Retrofit Coordinator", "Quality Inspector", "Building Safety Liaison", ...screenManagers];
@@ -629,7 +634,9 @@ registerRoleScreen({
       screenPanel("Service requests and access needs (separate from choice)",
         screenTable("Service requests and contact needs",
           ["Request", "Route", "Status", "Contact needs", "Next update"],
-          requests.map((r) => [r.id, r.route, r.status, (r.accessibility || ["Unknown"]).join(", "), r.next_update]))));
+          requests.map((r) => [r.id, r.route, r.status, (r.accessibility || ["Unknown"]).join(", "), r.next_update]))),
+      screenWithheld(["Resident phone, email and postal contact history (shown only as a safe route reference)",
+        "Detailed access and household history beyond the contact needs above", "Contractor capacity and offered slots"]));
   }
 });
 const hazardTriageRoles = ["Retrofit Coordinator", "Resident Liaison Officer", "Quality Inspector"];
