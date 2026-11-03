@@ -9904,3 +9904,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Versioned sensor analysis exercise slice (Refs #111)
 
 * Added a pure `sensor_analysis` module and tests in `src/core`: reproducible, versioned signals with sufficiency labels (stale, declined and missing data are INSUFFICIENT and never lower priority) and a `SENSOR_REVIEW_DUE` candidate only under a named rule approval; none is approved, so none is proposed. Exercise values only; nothing is persisted or wired to tasks. Unit-tested only; #111 criteria stay unmet (see PR). Evidence under `.copilot-tracking/` (2026-11-03 issue-111 r1).
+
+## [2026-11-03] create | Journey learning-test bundles protocol (Refs #129)
+
+* Added `research/ux/journey-learning-test-bundles.md`: protocol for the five candidate bundles with non-AI comparators, a six-component net-effort measure (NFR-009), stop rules, manual and AI-unavailable paths, and the O10/O18 to O20 exclusion. Protocol only: no experiment run, no measured result; saved minutes stay capacity until Finance validates them. Unmet: running the bundles, atlas-owner confirmation of the mapping (the O16 overlap is the open question), ADR 0003 dependencies. Evidence under `.copilot-tracking/` (2026-11-03 issue-129 r1).
