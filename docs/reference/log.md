@@ -10003,3 +10003,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Asset and board structure tests (Refs #226)
 
 * Added unit tests pinning the asset and board view structure (shared panel and table components, captions, column scope, textual blocked state) and the absence of a role simulator. Test only; criteria 4 and 5 stay unmet pending assistive-technology testing and human review (#151, #155, #150). Evidence is under `.copilot-tracking/` (2026-11-03 issue-226 structure-test).
+## [2026-11-03] update | Assistive-technology record completeness check (Refs #215)
+
+* Added `src/api/checks/regulatory_at_record_check.py` with seven unit tests, linked from the [acceptance kit](./research/ux/regulatory-ux-acceptance-protocol.md) and the API README. It checks only that per-role keyboard and screen-reader session records are complete and that failures state a barrier. No session has been run; #215 criteria 3 and 5 stay unmet and no ticks change. Evidence is under `.copilot-tracking/` (2026-11-03 issue-215 at-record-check).

@@ -52,6 +52,11 @@ success criterion it relates to (WCAG 2.2 AA numbers only where clear); and
 whether a manual workaround exists. A single failure is a finding to route, not
 a reason to ignore the passing cells.
 
+Completeness of the finished record set (all seven roles, keyboard-only and
+screen-reader, a chat-unavailable run, barrier stated for every fail) can be checked with
+`src/api/checks/regulatory_at_record_check.py`. It checks form only; it does not decide
+conformance.
+
 ### Blank record table
 
 | Session code | Role | Tool and version | Task | Result | Barrier and criterion | Workaround |
