@@ -457,6 +457,9 @@ passed to the `Pacer`; the replay span (days x 86,400 s / speed) must fit
 complete body matches the current plan, estimate and alert amount, allows one run, stops it, scales homes and rate down (never up) and
 inherits the `Pacer` hard deadline. Prices are public list estimates, not a quote.
 Nothing here sends traffic or verifies the live Azure budget alert (#146).
+A static test (`InfraAlignmentTests`) keeps the plan's tier, units, price and 80 percent alert
+threshold aligned with `infra/main.bicep` and the budget in `infra/modules/iothub.bicep`; it
+reads Bicep text only and proves nothing about the deployed budget.
 
 ```bash
 python3 -m zava_forward.core.synthetic.run_plan --homes 30000 --owner "<name>" \
