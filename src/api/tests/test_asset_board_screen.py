@@ -196,6 +196,46 @@ class AssetBoardScreen(unittest.TestCase):
         for control in ("button", "form", "input", "select", "textarea"):
             self.assertNotIn(control, tags(tree))
 
+    def test_structure_uses_shared_components_and_text_states(self) -> None:
+        reports: list[dict[str, object] | None] = [
+            None,
+            {},
+            {"consumption": {"quality_status": "Fail"}},
+        ]
+        for report in reports:
+            tree = run(report)["tree"]
+            nodes = walk(tree)
+            sections = [n for n in nodes if n.get("tag") == "section"]
+            self.assertTrue(sections)
+            for section in sections:
+                self.assertEqual(section["attrs"]["class"], "card screen-record")
+                self.assertEqual(section["kids"][0]["tag"], "h2")
+            self.assertNotIn("h1", tags(tree))
+            self.assertNotIn("h3", tags(tree))
+            tables = [n for n in nodes if n.get("tag") == "table"]
+            self.assertGreaterEqual(len(tables), 4)
+            for table in tables:
+                self.assertEqual(table["kids"][0]["tag"], "caption")
+                head = next(n for n in walk(table) if n.get("tag") == "thead")
+                for th in (n for n in walk(head) if n.get("tag") == "th"):
+                    self.assertEqual(th["attrs"]["scope"], "col")
+            blocked = [n for n in nodes if n.get("attrs", {}).get("class") == "blocked"]
+            self.assertTrue(blocked)
+            for item in blocked:
+                self.assertIn("Cannot confirm readiness", json.dumps(item))
+            for node in nodes:
+                attrs = node.get("attrs", {})
+                self.assertNotIn("onclick", attrs)
+                self.assertNotIn("role-switch", json.dumps(attrs))
+
+    def test_screen_source_has_no_role_simulator(self) -> None:
+        source = (WEB / "role-screens.js").read_text(encoding="utf-8")
+        start = source.index('id: "asset-board"')
+        block = source[start : source.index("registerRoleScreen", start)]
+        for banned in ("simulat", "impersonat", "switchRole", "viewAs", "role-switch"):
+            self.assertNotIn(banned, block.lower() if banned.islower() else block)
+        self.assertNotIn("me.user.role =", block)
+
     def test_queue_failure_is_unknown_not_empty(self) -> None:
         text = json.dumps(run({}, queue="fail")["tree"])
         self.assertIn("The cross-home queue could not be loaded.", text)

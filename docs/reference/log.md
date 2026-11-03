@@ -9999,3 +9999,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Chat break-glass demo-only disclaimer (Refs #162)
 
 * Recorded the owner's demo-only administrator and break-glass policy in [a dated record](./research/chat-demo-breakglass-disclaimer-2026-11-03.md), marked unreviewed by the DPO and Legal, and linked it from the [DPIA record](./research/chat-memory-dpia.md). The break-glass response and audit entries now carry the disclaimer and `basis` `demo-only`. DPO and Legal review, production use and real data stay unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-162 demo disclaimer).
+
+## [2026-11-03] update | Asset and board structure tests (Refs #226)
+
+* Added unit tests pinning the asset and board view structure (shared panel and table components, captions, column scope, textual blocked state) and the absence of a role simulator. Test only; criteria 4 and 5 stay unmet pending assistive-technology testing and human review (#151, #155, #150). Evidence is under `.copilot-tracking/` (2026-11-03 issue-226 structure-test).
