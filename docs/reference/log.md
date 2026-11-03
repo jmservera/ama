@@ -9716,3 +9716,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Re-ran core (144) and api (89) sensor tests on main; all pass locally. No
   source change. The three live Azure SQL criteria remain unmet and
   owner-gated on #110. RPI artifacts: `.copilot-tracking/*/2026-11-02-issue-188-ingestion-consistency-*`.
+
+## [2026-11-02] update | All-link audit and live link repairs for issue 203
+
+* Ran a fresh relative-link audit over every tracked Markdown file outside
+  `.copilot-tracking/` (230 files, 2608 links, 102 unresolved). Repaired the
+  five unresolved links in live documents: the architecture README deck link,
+  two links in the case study addendum and two links in the knowledge base
+  index (the mentor deck delivery copy is not on `main`, so the index now says
+  so instead of linking it). 97 unresolved links remain: 2 are `${runUrl}`
+  template placeholders in a workflow prompt and 95 are in the
+  append-only log, the frozen
+  [storage map snapshot](../capstone/history/storage-map-before-reorganization.md)
+  and `docs/capstone/history/` records that name pre-move paths; they stay as
+  dated history. #203 criteria 1, 4 and 5 remain unproven (literal zero-token
+  search, post-cleanup main rubric comparison, deployed and CI-green
+  conjunction). Original RPI evidence is under `.copilot-tracking/`
+  (2026-11-02 verify-refs-203).

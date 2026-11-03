@@ -56,7 +56,7 @@ are not presented as VNet-hosted applications.
 
 ## Presentation Adaptation
 
-The [24-slide capstone deck](../capstone/deck/zava-forward-executive-draft.pptx)
+The [24-slide capstone working deck](../../.copilot-tracking/ppt/2026-10-14/zava-forward-capstone-rebuild/slide-deck/zava-forward-executive-draft.pptx)
 adapts these materials into native editable PowerPoint architecture on
 slides 10, 19, 23 and 24. The executive view remains on the main route;
 runtime, operations and deferred topology use readable optional slides
