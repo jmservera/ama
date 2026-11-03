@@ -369,9 +369,99 @@ def run_review_test(golden: Path = GOLDEN) -> dict[str, Any]:
     )
 
 
+def worksheet(golden: Path = GOLDEN) -> dict[str, Any]:
+    """Blank answer sheet for a human reviewer: proposal text only, no defect hints."""
+    spec = load_spec(golden)
+    return dict(
+        version=spec["version"],
+        reviewer_code="",
+        workflow_seconds=None,
+        instructions="For each proposal answer accept, edit or reject. Name a source as "
+        f"'{SOURCE_TAG}<case label>]' in the reason for any change. Record seconds spent. "
+        "Complete the manual comparison without AI help.",
+        answers={
+            p["id"]: dict(
+                proposal=p["output"], action="", reason="", replacement=None, seconds=None
+            )
+            for p in spec["proposals"]
+        },
+    )
+
+
+def score_human_session(sheet: dict[str, Any], golden: Path = GOLDEN) -> dict[str, Any]:
+    """Score one recorded human answer sheet through the same gate and report as the panels.
+
+    Measured seconds replace scripted effort units. The tool cannot verify who the person is or
+    whether they are competent; that remains an OQ-017 owner decision.
+    """
+    if not isinstance(sheet, dict):
+        raise ValueError("answer sheet must be a JSON object")
+    spec = load_spec(golden)
+    actors = {OWNER["code"]: OWNER, OTHER["code"]: OTHER}
+    actor = actors.get(str(sheet.get("reviewer_code")))
+    if actor is None:
+        raise ValueError("reviewer_code must name an evaluation staff record")
+    answers = sheet.get("answers") or {}
+    if not isinstance(answers, dict):
+        raise ValueError("answers must be an object keyed by proposal id")
+    for prop in spec["proposals"]:
+        a = answers.get(prop["id"]) or {}
+        if not isinstance(a, dict):
+            raise ValueError(f"proposal {prop['id']} answer must be an object")
+        if a.get("action") not in ("accept", "edit", "reject"):
+            raise ValueError(f"proposal {prop['id']} has no accept, edit or reject answer")
+        seconds = a.get("seconds")
+        if isinstance(seconds, bool) or not isinstance(seconds, int | float):
+            raise ValueError(f"proposal {prop['id']} has no measured seconds")
+        if not 0 < seconds < 1e9:
+            raise ValueError(f"proposal {prop['id']} has no measured seconds")
+
+    def human(
+        prop: Proposal, facts: dict[str, str], rec: dict[str, Any], required: list[str]
+    ) -> Decision:
+        a = answers[prop["id"]]
+        return a["action"], a.get("reason") or "", a.get("replacement"), int(round(a["seconds"]))
+
+    with tempfile.TemporaryDirectory() as tmp:
+        panel = run_panel("human_session", human, spec, tmp, actor)
+    workflow = sheet.get("workflow_seconds")
+    measured = isinstance(workflow, int | float) and not isinstance(workflow, bool) and workflow > 0
+    return dict(
+        version=spec["version"],
+        panel=panel,
+        measured_seconds=panel["effort_units"],
+        workflow_only_seconds=workflow if measured else None,
+        gate_passed=panel["gate_passed"],
+        evidence=dict(
+            human_effectiveness="recorded for one session; competence and authorisation of the "
+            "person are not verified by this tool",
+            open_items=[o for o in OPEN_ITEMS if not o.startswith("effort is scripted")],
+            workflow_time_note="workflow-only seconds supplied by the reviewer"
+            if measured
+            else "workflow-only time not measured for this session",
+        ),
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
-    rep = run_review_test()
     args = sys.argv[1:] if argv is None else argv
+    if "--worksheet" in args:
+        print(json.dumps(worksheet(), indent=2))
+        return 0
+    if "--score" in args:
+        i = args.index("--score")
+        if i + 1 >= len(args):
+            print("--score needs the path of a completed answer sheet", file=sys.stderr)
+            return 2
+        try:
+            sheet = json.loads(Path(args[i + 1]).read_text(encoding="utf-8"))
+            result = score_human_session(sheet)
+        except (OSError, ValueError) as exc:
+            print(f"cannot score session: {exc}", file=sys.stderr)
+            return 2
+        print(json.dumps(result, indent=2))
+        return 0 if result["gate_passed"] else 1
+    rep = run_review_test()
     if "--json" in args:
         print(json.dumps(rep, indent=2))
         return 0 if rep["passed"] else 1

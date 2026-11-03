@@ -2,6 +2,7 @@ import json
 import os
 import tempfile
 import unittest
+from typing import Any
 from unittest import mock
 
 from zava_forward.agents import review_effectiveness as re_
@@ -252,6 +253,81 @@ class ReviewerAuthorityTests(unittest.TestCase):
         ok, why = re_.gate_satisfied({"defect": "wrong"}, rec, [], None, None, authority)
         self.assertFalse(ok)
         self.assertIn("source_reason", why)
+
+
+class HumanSessionTests(unittest.TestCase):
+    def _sheet(self, kind: str, seconds: int = 30) -> dict[str, Any]:
+        rows = re_.run_review_test()["panels"][kind]["rows"]
+        return {
+            "reviewer_code": "EV-01",
+            "workflow_seconds": 60,
+            "answers": {
+                r["proposal"]: {
+                    "action": r["action"],
+                    "reason": r["reason"],
+                    "replacement": r["replacement"],
+                    "seconds": seconds,
+                }
+                for r in rows
+            },
+        }
+
+    def test_worksheet_hides_defect_hints_and_is_blank(self) -> None:
+        sheet = re_.worksheet()
+        self.assertEqual(len(sheet["answers"]), len(re_.load_spec()["proposals"]))
+        text = str(sheet)
+        self.assertNotIn("defect", text.replace("defects", ""))
+        self.assertTrue(all(a["action"] == "" for a in sheet["answers"].values()))
+
+    def test_competent_human_answers_pass_with_measured_time(self) -> None:
+        res = re_.score_human_session(self._sheet("competent"))
+        self.assertTrue(res["gate_passed"])
+        self.assertEqual(res["measured_seconds"], 30 * len(res["panel"]["rows"]))
+        self.assertEqual(res["workflow_only_seconds"], 60)
+        self.assertEqual(res["panel"]["detected"], res["panel"]["defects"])
+
+    def test_default_acceptance_by_a_person_fails_the_gate(self) -> None:
+        res = re_.score_human_session(self._sheet("default_accept", 3))
+        self.assertFalse(res["gate_passed"])
+        self.assertLess(res["panel"]["detected"], res["panel"]["defects"])
+
+    def test_malformed_sheets_raise_value_error_not_a_traceback(self) -> None:
+        with self.assertRaises(ValueError):
+            re_.score_human_session([])  # type: ignore[arg-type]
+        sheet = self._sheet("competent")
+        sheet["answers"] = []
+        with self.assertRaises(ValueError):
+            re_.score_human_session(sheet)
+        sheet = self._sheet("competent")
+        sheet["answers"][next(iter(sheet["answers"]))] = "accept"
+        with self.assertRaises(ValueError):
+            re_.score_human_session(sheet)
+        sheet = self._sheet("competent")
+        sheet["answers"][next(iter(sheet["answers"]))]["seconds"] = float("inf")
+        with self.assertRaises(ValueError):
+            re_.score_human_session(sheet)
+
+    def test_incomplete_or_unmeasured_sheets_are_refused(self) -> None:
+        sheet = self._sheet("competent")
+        first = next(iter(sheet["answers"]))
+        sheet["answers"][first]["seconds"] = None
+        with self.assertRaises(ValueError):
+            re_.score_human_session(sheet)
+        sheet = self._sheet("competent")
+        sheet["answers"][first]["action"] = ""
+        with self.assertRaises(ValueError):
+            re_.score_human_session(sheet)
+        sheet = self._sheet("competent")
+        sheet["reviewer_code"] = "nobody"
+        with self.assertRaises(ValueError):
+            re_.score_human_session(sheet)
+
+    def test_unmeasured_workflow_time_is_reported_as_such(self) -> None:
+        sheet = self._sheet("competent")
+        sheet["workflow_seconds"] = None
+        res = re_.score_human_session(sheet)
+        self.assertIsNone(res["workflow_only_seconds"])
+        self.assertIn("not measured", res["evidence"]["workflow_time_note"])
 
 
 if __name__ == "__main__":
