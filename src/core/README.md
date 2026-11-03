@@ -4068,6 +4068,25 @@ Referrals retain receipt and decision-owner linkage, once per selected pair.
 Rollback-after-audit-insert and reopen tests cover the chain head and data.
 Metadata and linkable hashes are not anonymous; DPO retention review is still needed.
 
+### Data protection register and dispatch gate (#121)
+
+`data_protection` is a reference-only, model-free module (no SQL, no storage).
+`register_report(env)` lists eight data classes (constructed fixtures, staff and
+tenant identities, review records, raw document bytes, prompts/outputs/citations,
+audit, telemetry) with purpose, audience, storage and provider-copy position, and
+which approvals are still missing. Approvals are references read from
+`DP_<CLASS>_<GATE>_REF` (gates: `LAWFUL_BASIS`, `ART9`, `RETENTION`, `ERASURE`,
+`TRANSFER`, `NECESSITY`); `SYNTH-` references never count and values are never
+echoed. `model_dispatch(class_id, env, derivative)` permits only constructed
+fixtures by default, denies actual classes until their references exist, and
+refuses intact raw documents unless a `reviewed_redacted` derivative is named;
+every denial returns a manual path. `validate_task_payload` enforces declared
+field names, types and lengths for the three regulatory tasks and reports
+dropped names only. `rights_status` computes the one-calendar-month due date
+and state of logged requests in memory. It sets no retention period, records no
+lawful basis and verifies no DPO or Legal approval. It is not wired to any live
+model call or rights log, so the #121 acceptance criteria stay unmet.
+
 ### Offline regulatory consumption (2026-10-27, #208)
 
 `regulatory_usage` records task/schema version, UTC day, outcome and zero model

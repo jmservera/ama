@@ -10026,3 +10026,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Server-side resident choice queue (Refs #232)
 
 * Added a server-side cross-home resident choice queue endpoint and moved the Resident choice screen onto it. Authorization is limited to the four resident-choice roles and each home goes through the normal detail permission check. The queue summary now covers open homes in home ID order. Criteria 4 and 5 stay unmet pending assistive-technology testing and resident-consent evidence.
+## [2026-11-03] update | Data protection register and model-dispatch gate slice (Refs #121)
+
+* Added a pure `data_protection` module and tests in `src/core`: a register of eight data classes with missing approvals, a model-dispatch gate that denies actual data until references exist (constructed fixtures only by default; intact documents need a reviewed redacted derivative), declared task field limits and a one-month rights clock. Reference-only: no lawful basis, Article 9 condition, retention period or transfer position is set, nothing is persisted or wired to a live model call, and no DPO or Legal approval is verified. #121 criteria stay unmet (see PR). Evidence under `.copilot-tracking/` (2026-11-03 issue-121 r1).
