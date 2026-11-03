@@ -4,6 +4,7 @@ import json
 import subprocess
 import unittest
 from pathlib import Path
+from typing import Any
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -67,7 +68,15 @@ CASE: dict[str, object] = {
                 "lines": [
                     {"measure": "Cavity wall", "quantity": 2, "amount": 1950, "milestone_ref": ""}
                 ],
-                "exceptions": [{"line": 0, "message": "Quantity 2 is above the 1 authorised."}],
+                "exceptions": [
+                    {
+                        "line": 0,
+                        "code": "quantity",
+                        "message": "Quantity 2 is above the 1 authorised.",
+                    },
+                    {"line": 0, "code": "no_budget", "message": "No approved budget."},
+                    {"line": 0, "code": "future_code", "message": "Something new."},
+                ],
             },
             {
                 "id": "INV-2",
@@ -173,6 +182,30 @@ def tags(node: object) -> list[str]:
     return found
 
 
+def walk(node: object) -> list[dict[str, Any]]:
+    found: list[dict[str, Any]] = []
+    if isinstance(node, dict):
+        found.append(node)
+        for kid in node.get("kids", []):
+            found += walk(kid)
+    return found
+
+
+def node_text(node: object) -> str:
+    if isinstance(node, dict):
+        return "".join(node_text(k) for k in node.get("kids", []))
+    return node if isinstance(node, str) else ""
+
+
+def explanation_rows(tree: object, invoice: str) -> list[list[str]]:
+    caption = f"Exception explanations for {invoice}"
+    for table in (n for n in walk(tree) if n["tag"] == "table"):
+        if node_text(table["kids"][0]) == caption:
+            body = [n for n in walk(table) if n["tag"] == "tr"][1:]
+            return [[node_text(c) for c in row["kids"]] for row in body]
+    return []
+
+
 class FinanceGrantsScreens(unittest.TestCase):
     def test_roles_exclude_other_staff_and_no_controls(self) -> None:
         out = run()
@@ -261,6 +294,104 @@ class FinanceGrantsScreens(unittest.TestCase):
             run(bare, review={"drafts": [], "decision_holds": []})["finance-funding"]
         )
         self.assertIn("No field draft recorded", empty)
+
+    def test_exception_explanations_name_decider_and_never_decide_payment(self) -> None:
+        rows = explanation_rows(run()["finance-invoices"]["tree"], "INV-1")
+        self.assertEqual(len(rows), 3)
+        by_message = {row[0]: row for row in rows}
+        quantity = by_message["Quantity 2 is above the 1 authorised."]
+        no_budget = by_message["No approved budget."]
+        unknown = by_message["Something new."]
+        self.assertEqual(no_budget[1], "Whole invoice")
+        for row in (quantity, unknown):
+            self.assertEqual(row[1], "Line 1")
+        for row in (quantity, no_budget, unknown):
+            self.assertIn("Payment is made outside this system.", row[4])
+        self.assertEqual(quantity[2], "This line is above the quantity the commitment authorises.")
+        self.assertTrue(quantity[4].startswith("Finance approver (Retrofit Programme Manager"))
+        self.assertIn("It stays Unknown.", no_budget[3])
+        self.assertTrue(no_budget[4].startswith("Finance approver"))
+        self.assertTrue(unknown[2].startswith("Unknown."))
+        self.assertEqual(unknown[3], "Unknown")
+        self.assertTrue(unknown[4].startswith("Unknown."))
+        self.assertNotIn("Finance approver", unknown[4])
+        tree = json.dumps(run()["finance-invoices"]["tree"])
+        inv2 = tree[tree.index("INV-2: Invoice") :]
+        self.assertIn("Exception explanations are Unknown. The invoice is not checked yet.", inv2)
+
+    def test_invoice_level_exception_is_grouped_across_lines(self) -> None:
+        case = json.loads(json.dumps(CASE))
+        inv = case["finance"]["invoices"][0]
+        inv["lines"].append(
+            {"measure": "Loft insulation", "quantity": 1, "amount": 100, "milestone_ref": ""}
+        )
+        inv["exceptions"] = [
+            {"line": 0, "code": "no_budget", "message": "No approved budget."},
+            {"line": 1, "code": "no_budget", "message": "No approved budget."},
+            {"line": 0, "code": "duplicate", "message": "Same reference."},
+            {"line": 1, "code": "duplicate", "message": "Same reference."},
+            {"line": 1, "code": "quantity", "message": "Too many."},
+        ]
+        rows = explanation_rows(run(case)["finance-invoices"]["tree"], "INV-1")
+        self.assertEqual([row[1] for row in rows], ["Whole invoice", "Whole invoice", "Line 2"])
+
+    def test_mixed_whole_invoice_and_numbered_lines_show_both(self) -> None:
+        case = json.loads(json.dumps(CASE))
+        inv = case["finance"]["invoices"][0]
+        inv["exceptions"] = [
+            {"line": None, "code": "no_milestone", "message": "Milestone."},
+            {"line": 0, "code": "no_milestone", "message": "Milestone."},
+        ]
+        rows = explanation_rows(run(case)["finance-invoices"]["tree"], "INV-1")
+        self.assertEqual(rows[0][1], "Whole invoice and line 1")
+
+    def test_invoice_with_no_lines_is_not_checked(self) -> None:
+        case = json.loads(json.dumps(CASE))
+        inv = case["finance"]["invoices"][0]
+        inv["lines"] = []
+        inv["exceptions"] = []
+        text = json.dumps(run(case)["finance-invoices"]["tree"])
+        self.assertIn("The invoice has no lines, so it is not checked.", text)
+        self.assertNotIn("No exception found by the match", text)
+
+    def test_decider_names_match_core_finance_approvers(self) -> None:
+        from zava_forward.core.controls import FINANCE_APPROVERS
+
+        source = (WEB / "role-screens.js").read_text(encoding="utf-8")
+        decider = next(
+            line for line in source.splitlines() if line.startswith("const financeDecider")
+        )
+        for role in FINANCE_APPROVERS:
+            self.assertIn(role, decider)
+
+    def test_clean_match_is_not_a_payment_decision(self) -> None:
+        case = json.loads(json.dumps(CASE))
+        case["finance"]["invoices"][0]["exceptions"] = []
+        tree = run(case)["finance-invoices"]["tree"]
+        self.assertEqual(explanation_rows(tree, "INV-1"), [])
+        text = json.dumps(tree)
+        self.assertNotIn("Exception explanations for INV-1", text)
+        self.assertIn("No exception found by the match. This is not a payment decision", text)
+        self.assertIn("does not confirm milestone acceptance", text)
+
+    def test_tables_are_keyboard_reachable_and_labelled(self) -> None:
+        for screen in run().values():
+            nodes = walk(screen["tree"])
+            regions = [n for n in nodes if (n["attrs"] or {}).get("role") == "region"]
+            self.assertTrue(regions)
+            for region in regions:
+                self.assertEqual(region["attrs"]["tabindex"], 0)
+                self.assertTrue(region["attrs"]["aria-label"])
+            for node in nodes:
+                tabindex = (node["attrs"] or {}).get("tabindex")
+                if tabindex is not None:
+                    self.assertLessEqual(int(str(tabindex)), 0, node)
+                attrs = node["attrs"] or {}
+                self.assertNotIn(node["tag"], ("button", "input", "select", "textarea", "a"))
+                self.assertNotEqual(attrs.get("role"), "button", node)
+                self.assertNotIn("onclick", attrs, node)
+            for table in (n for n in nodes if n["tag"] == "table"):
+                self.assertEqual(table["kids"][0]["tag"], "caption")
 
 
 if __name__ == "__main__":

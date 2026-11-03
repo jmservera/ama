@@ -9743,3 +9743,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   assistive-technology testing and #155 validation remain unperformed, so
   #226 stays open. Original RPI evidence is under `.copilot-tracking/`
   (2026-11-02 issue-226-browser-check).
+
+## [2026-11-02] update | Finance exception explanations (Refs #225)
+
+* The Finance invoice screen gains a per-invoice exception explanation table
+  (meaning, what a person still checks, who decides; Unknown for unchecked
+  invoices and unrecognised codes) and structural keyboard checks. Desk
+  hypothesis, not observed behaviour; validation stays in #155. Updated the
+  [atlas screen trace](./research/ux/atlas-screen-trace.md). Evidence is under
+  `.copilot-tracking/` (2026-11-02 issue-225 exception explanations).
