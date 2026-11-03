@@ -9893,3 +9893,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | WCAG baseline target size rule check (Refs #151)
 
 * Recorded a 24 CSS px minimum height for link buttons and the map list summary in the [WCAG baseline](./research/ux/wcag-conformance-baseline.md), with a static test, and refreshed the automated-check status. Owner decisions O-1 to O-5, manual screen-reader and keyboard records and the rendered audit remain unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-151 target size).
+## [2026-11-03] update | Finance screens AI economics section (Refs #225)
+
+* Both Finance screens (`finance-invoices`, `finance-funding`) now share one design-only AI economics panel: usage reconciled to billing, five Total Cost of AI components, booked-value status with the five value destinations, and Unknown for every missing input. No price, budget or target is set (BRD OD-51 open). Unit-tested only; WCAG browser and assistive-technology proof and observed validation (#155) remain unmet. Evidence under `.copilot-tracking/` dated 2026-11-03.

@@ -1,0 +1,27 @@
+{
+ "task_id": "issue-225-ai-economics",
+ "task_slug": "issue-225-finance-ai-economics",
+ "parent_task": {"task_id": "issue-225", "task_slug": "issue-225-finance-grants-screens"},
+ "mode": "automatic",
+ "active_phase": "Follow-up",
+ "status": "completed",
+ "session_status": "stopped",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-03-issue-225-finance-ai-economics-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-03-issue-225-finance-ai-economics-plan.md",
+  "details": ".copilot-tracking/plans/2026-11-03-issue-225-finance-ai-economics-plan.md",
+  "critique": ".copilot-tracking/plans/2026-11-03-issue-225-finance-ai-economics-plan.md",
+  "changes": ".copilot-tracking/changes/2026-11-03-issue-225-finance-ai-economics-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-03-issue-225-finance-ai-economics-review.md"
+ },
+ "confirmed_decisions": [
+  {"decision": "critique executed once inline; accepted", "status": "done", "evidence": "plan"},
+  {"decision": "review executed once; self-review only; WCAG/AT acceptance pending", "status": "done", "evidence": "review"}
+ ],
+ "blockers": [],
+ "next_action": {"phase": "Follow-up", "action": "Independent review, coordinator gate decision, owner merge"},
+ "prioritized_follow_ups": [
+  {"rank": 1, "task": "Browser keyboard and axe run for finance screens", "rationale": "Unmet WCAG criterion", "evidence": "review"},
+  {"rank": 2, "task": "Observed validation in #155", "rationale": "Desk hypothesis only", "evidence": "review"}
+ ]
+}
