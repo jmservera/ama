@@ -104,6 +104,16 @@ def find_all(node: object, tag: str) -> list[dict[str, Any]]:
     return found
 
 
+def string_leaves(node: object) -> list[str]:
+    if isinstance(node, str):
+        return [node]
+    if isinstance(node, dict):
+        return string_leaves(node.get("kids", []))
+    if isinstance(node, list):
+        return [leaf for kid in node for leaf in string_leaves(kid)]
+    return [str(node)] if isinstance(node, (int, float)) and not isinstance(node, bool) else []
+
+
 class SafetyScreens(unittest.TestCase):
     def test_rendered_tables_are_labelled_focusable_and_aligned(self) -> None:
         for screen in run([hazard()]).values():
@@ -299,7 +309,8 @@ class SafetyScreens(unittest.TestCase):
                 self.assertNotRegex(text, r"(?i)simulat|impersonat|act as|switch role")
                 self.assertNotIn("<select", text)
                 for cell in find_all(view, "td"):
-                    self.assertRegex(json.dumps(cell["kids"]), r"[A-Za-z]")
+                    leaves = string_leaves(cell["kids"])
+                    self.assertTrue(any(s.strip() for s in leaves), cell)
 
 
 if __name__ == "__main__":
