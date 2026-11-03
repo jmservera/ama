@@ -13,6 +13,7 @@ from datetime import datetime
 
 from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, identity, insights, ledger, projection, ranking, stock, taskqueues
 from .finance import FinanceMixin
+from .list_export import safe_cell
 from .continuity import ContinuityMixin
 from .governance import GovernanceMixin
 from .grants import GrantMixin, grant_summary
@@ -1117,8 +1118,9 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         w.writerow(["Reference", "Resident", "Address", "Town", "Postcode", "Phone", "Stage", "Status",
                     "Owner", "Days in stage", "Last contact", "Next visit"])
         for s in rows:
-            w.writerow([s["id"], s["resident"], s["address"], s["town"], s["postcode"], s["phone"], s["stage"],
-                        s["status"], s["owner"], s["days"], s["last_contact"] or "", s["next_visit"] or ""])
+            w.writerow([safe_cell(v) for v in (
+                s["id"], s["resident"], s["address"], s["town"], s["postcode"], s["phone"], s["stage"],
+                s["status"], s["owner"], s["days"], s["last_contact"] or "", s["next_visit"] or "")])
         return buf.getvalue()
 
     def import_check(self, text):

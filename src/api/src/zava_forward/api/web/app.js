@@ -727,7 +727,7 @@ function pendingHandoffs() {
   api("/api/handoffs").then((rows) => {
     if (!rows.length) { box.hidden = true; return; }
     box.hidden = false;
-    box.replaceChildren(h("h2", {}, "Handoffs waiting for you"), h("ul", { class: "list" }, rows.map((x) => h("li", {},
+    box.replaceChildren(h("h2", {}, "Handoffs waiting for you"), h("a", { class: "btn alt", href: "/api/handoffs.csv", download: "handoffs.csv" }, "Download for Excel"), h("ul", { class: "list" }, rows.map((x) => h("li", {},
       h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, `${x.resident}, ${x.address}`),
       h("div", { class: "muted" }, `${x.status}. Current owner: ${x.accountable_owner}; proposed receiver: ${x.proposed_receiver || "Unassigned"}; confirmed receiver: ${x.confirmed_receiver || "Unconfirmed"}; destination: ${x.destination || "Unknown"}; chase: ${x.chase_owner || "Unassigned"}.`),
       h("div", { class: "muted" }, `Urgency: ${x.urgency || "Unknown"}; due: ${x.due_at || "Unknown"}; next action: ${x.next_action || "Unknown"}. Resident update: ${x.resident_update_owner || "Unassigned"}, ${x.resident_update_due_at || "Unknown"}.`),
@@ -2123,7 +2123,8 @@ async function visitsView() {
   const days = {};
   rows.forEach((v) => (days[v.date] = days[v.date] || []).push(v));
   show(h("div", { class: "row between" }, h("h1", {}, "Visits coming up"),
-    h("span", { class: "muted" }, isMgr ? "Everyone's visits" : "Your visits")),
+    h("span", { class: "muted" }, isMgr ? "Everyone's visits" : "Your visits"),
+    h("a", { class: "btn alt", href: "/api/visits.csv?view=" + (isMgr ? "all" : "mine"), download: "visits.csv" }, "Download for Excel")),
     rows.length ? Object.entries(days).map(([d, vs]) => h("section", { class: "card" }, h("h2", {}, fmtDate(d)),
       h("ul", { class: "list" }, vs.map((v) => h("li", {}, h("a", { href: `#/case/${encodeURIComponent(v.id)}` }, `${v.slot} ${v.resident}`),
         ` ${v.type}. ${v.address}. ${v.who}: ${v.person}.`, v.support && h("span", { class: "flag" }, "Extra support"), ` Call ${v.phone}`))))) : h("p", {}, "No booked visits."));
@@ -2133,6 +2134,7 @@ async function fundingView() {
   const rows = await api("/api/funding");
   show(h("h1", {}, "Funding applications"),
     h("p", { class: "muted" }, "Homes where funding is not yet confirmed. Open one to draft the application with AI, add evidence, and have it approved."),
+    h("p", {}, h("a", { class: "btn alt", href: "/api/funding.csv", download: "funding.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back."),
     h("table", {}, h("thead", {}, h("tr", {}, ["Resident", "Area", "Route", "Status", "Evidence", "Owner"].map((x) => h("th", {}, x)))),
       h("tbody", {}, rows.slice(0, 150).map((r) => h("tr", {}, h("td", {}, h("a", { href: `#/case/${encodeURIComponent(r.id)}` }, r.resident)),
         h("td", {}, r.area), h("td", {}, r.route), h("td", {}, r.status), h("td", {}, `${r.have} of ${r.need}`), h("td", {}, r.owner))))));

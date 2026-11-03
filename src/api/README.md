@@ -5203,3 +5203,19 @@ existing sensor generator, uses real demo cookies and Chromium, and closes the
 server after checking own-home values, isolation, table, missing/fault/empty
 states, keyboard focus, reduced motion and 320/390/1280 px reflow. It does not
 use the SQL-configured application entry point, Azure or private datasets.
+
+## List exports for Excel (issue 80)
+
+Staff lists offer a CSV copy for Excel: `GET /api/packages.csv`,
+`/api/workorders.csv` (optional `case`), `/api/handoffs.csv`,
+`/api/visits.csv` (`view=mine|all`) and `/api/funding.csv`, in addition to
+`/api/cases.csv`. Each calls the same store method as its JSON list, so rows
+and role limits match; contractors receive 403 on every export. Cells that
+start with `=`, `+`, `-`, `@`, tab or carriage return get a leading apostrophe
+so Excel cannot run them as formulas. The file is a values-only, one-way copy:
+nothing reads it back, and edits in Excel change nothing. No AI provider is
+involved, so exports work when AI is unavailable. Visits, funding and handoffs
+screens carry a "Download for Excel" link. Not yet exported: the finance queue,
+stock queue, checklists, governance, continuity (its own export exists) and the
+chat, resident and form-staging surfaces. The row-level history sheet and
+`.xlsx` output stay in the importer library; the API offers CSV only.
