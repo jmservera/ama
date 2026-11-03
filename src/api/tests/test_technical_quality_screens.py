@@ -320,6 +320,40 @@ class QualityQueue(unittest.TestCase):
         self.assertIn("Defect owner Owner Co to correct", text)
         self.assertIn("Not yet fixed", text)
 
+    def test_unnamed_or_non_independent_acceptance_and_ownerless_defect_block(self) -> None:
+        defect = {"description": "Gap", "reason": "Why", "raised_by": "Inspector"}
+        cases = {
+            "no accepter": (record("Accepted"), "accepted without a named inspector"),
+            "blank accepter": (
+                record("Handed over", accepted_by=" "),
+                "accepted without a named inspector",
+            ),
+            "self acceptance": (
+                record("Accepted", accepted_by="installer ltd"),
+                "not independent",
+            ),
+            "ownerless returned": (
+                record("Returned", defect=defect),
+                "the defect has no named owner",
+            ),
+            "ownerless fixed": (
+                record("Fixed, awaiting reinspection", defect=defect),
+                "the defect has no named owner",
+            ),
+        }
+        for name, (rec, expected) in cases.items():
+            with self.subTest(name):
+                case = {
+                    "id": "C",
+                    "measures": "Loft insulation",
+                    "quality": [rec],
+                    "quality_handover_blockers": [],
+                }
+                text = json.dumps(render("quality-queue", case)["tree"])
+                self.assertIn("Cannot confirm readiness", text)
+                self.assertIn(expected, text)
+                self.assertNotIn("Every measure has accepted evidence", text)
+
 
 if __name__ == "__main__":
     unittest.main()
