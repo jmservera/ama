@@ -9780,3 +9780,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Criteria 2, 3 and 5 stay open: no universal coverage, typed-error audit or
   named human wording review is claimed. Evidence is under `.copilot-tracking/`
   (2026-11-03 issue-153 plain-language audit).
+
+## [2026-11-03] update | Design traceability delta since the snapshot (Refs #156)
+
+* Added a dated delta to the
+  [prototype profile review](./research/ux/zava-forward-prototype-profile-review.md#delta-since-the-snapshot-2026-11-03-156)
+  covering the 40 issues created after the 2026-10-18 snapshot: 15 new
+  screen traces, 7 screen-related items with no new design and 18 no-screen.
+  The split reads issue titles only and awaits owner confirmation. The gate
+  register and `tools/check-design-trace.py` are unchanged (74 screen issues,
+  0 supplied designs, blocked). Criterion 1 stays unmet: no versioned design,
+  named human review, assistive-technology, content or user evidence is
+  supplied. Evidence is under `.copilot-tracking/` (2026-11-03 issue-156 delta).
