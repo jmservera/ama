@@ -10032,3 +10032,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Candidate comparison grader for AI tokenomics (Refs #108)
 
 * Added a pure `candidate_comparison` grader and tests in `src/agents`: cost per accepted proposal with a dated price source (Unknown otherwise), tokens per proposal and spread, one lever at a time on the same cases, and cheaper-but-worse candidates reported as failures. Offline and synthetic only; no live model, held-out data, price or approval. Documented in `src/agents/README.md`. Evidence is under `.copilot-tracking/` (2026-11-03 issue-108-r1).
+## [2026-11-03] update | Held draft export of working form reviews (Refs #96)
+
+* Added core `form_export.draft_export`: a read-only export of a working form review with source links, versions, stale fields and open issues, fixed as Held, not reviewed, not submitted and eligibility not assessed. [Core README](../../src/core/README.md) records the boundary. Unit-tested only; no criteria ticked. Reviewed pack assembly stays blocked on Finance and template authority. Evidence under `.copilot-tracking/` (2026-11-03 issue-96 r1 held export).
