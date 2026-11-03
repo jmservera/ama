@@ -83,6 +83,13 @@ insufficient. Synthetic poisoning/injection passes are not actual-model or
 human assurance. Held-out independent labels, approved thresholds/accountable
 reviewer and competent authorized human exercises remain unavailable.
 
+`enablement_decision` can apply owner-approved floors (`minimum_rates`,
+`maximum_critical_error_rate`) bound to the versions in `bindings`. A rate below
+its floor fails; an unmeasured rate or any changed binding (model, prompt, policy,
+source, memory, golden set) is insufficient and lists `renewal_required_for`.
+No thresholds are approved, the check is exercised only with constructed
+fixtures, and the task stays disabled whatever the result.
+
 ### Resource-specific isolation fixtures (#172, 2026-10-18)
 
 `test_chat_fixture` separates all eleven persona/memory perspectives from the
