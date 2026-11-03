@@ -300,6 +300,24 @@ a staff trial, an independently graded set or an owner-authorised live run
 remain unmet. Run `python3 -m unittest test_paired_trial` with the usual
 core/agents test paths.
 
+### Staff alert precision and acknowledgement scoring (2026-11-03)
+
+`alert_triage.evaluate_alert_triage` scores recorded staff classifications
+(`true_positive`, `false_positive`) and acknowledgement times of published
+alerts as two separate checks: `staff_alert_precision` and
+`staff_acknowledgement_time` (median and maximum seconds). Unclassified and
+unacknowledged alerts are counted, not dropped. Records with missing reviewers,
+naive times or an acknowledgement before publication are excluded and reported.
+Thresholds (named owner, agreement date, minimum alerts, minimum precision,
+maximum median acknowledgement seconds) are reported as unset until an owner
+agrees them; the result never contains an overall pass. It classifies and
+acknowledges nothing: staff keep the manual alert route.
+
+This is scoring code with synthetic unit fixtures only. No staff classification
+or acknowledgement has been recorded, so the recorded report still lists both
+checks as `not_evaluated`. Run `python3 -m unittest test_alert_triage` with the
+usual core/agents test paths.
+
 ## Offline cited-answer evaluation (#214)
 
 `regulatory_chat` renders exact server-selected source excerpts and structured
