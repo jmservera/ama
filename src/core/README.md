@@ -488,6 +488,17 @@ offline and secret-free. Retrying `rotate` after `ROTATION_REVOKE_FAILED` or
 supported recovery is `teardown(error.new_manifest, ...)` using the non-secret
 manifest carried by `DeviceIdentityError`.
 
+## Journey ownership register and human-review routing (#128)
+
+`journey_register.draft()` lists journeys J1 to J6 and R1 against the eight AC-071
+service-time measures with no owner, escalation, threshold or tested manual alternative.
+`evaluate(register)` returns a hash-bound record that is `blocked` until a person supplies
+each of them (OD-09, OD-25); it never invents one. `route_cases` sends missing source or
+sensor data, unknown support and incomplete appointments to a human review route with
+reasons and counts. The route has no score and never changes rank or service. Constructed
+data only; no usability, accessibility or fairness evidence. See the
+[test plan](../../docs/reference/research/ux/equity-journey-test-plan.md).
+
 ## Constructed offline sensor consumer (#110)
 
 `sensor_consumer.SensorConsumer` is a finite SQL-only processor, distinct from
