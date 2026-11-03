@@ -250,7 +250,11 @@ against the official pages on 2026-11-01; the boundaries entry also needs the
 OS copyright/database-right acknowledgement, whose year stays provisional. The
 strict source audit now returns nonzero only for
 `SRC-ONS-BOUNDARIES:provisional_attribution` until the owner confirms the OS
-acknowledgement year against the named product notices. Exercise Legal, Compliance and DPO owner
+acknowledgement year against the named product notices. A 2026-11-03 recheck
+found that the ONS licences page prints the statement with a literal `[year]`
+placeholder and that the ArcGIS item records for both products only link to
+that page, so the year cannot be read from any official source and was not
+invented. Exercise Legal, Compliance and DPO owner
 Juan Manuel Servera retains interpretation/approval; real owners and sources
 remain a gap before operational reliance.
 
