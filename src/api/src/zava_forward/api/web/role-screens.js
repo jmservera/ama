@@ -890,7 +890,10 @@ registerRoleScreen({
       screenPanel("Contractor submission and review",
         screenFields([["Contractor submission", "Recorded outside this screen; not shown here"],
           ["Acknowledgement", "A contractor acknowledgement is not acceptance"],
-          ["Independent review and acceptance", "Separate step by a named reviewer; not available from this screen"]])));
+          ["Independent review and acceptance", "Separate step by a named reviewer; not available from this screen"]])),
+      screenWithheld(["Resident contact details and access history (open the case workspace for the safe route reference)",
+        "Household and vulnerability details beyond what a package queue needs", "Contract rates, prices and invoice values",
+        "Contractor submissions and acknowledgements, which are recorded outside this screen"]));
   }
 });
 
@@ -931,7 +934,10 @@ registerRoleScreen({
             ? "Marked Completed on the work order by staff. This is a record, not acceptance." : "Not marked Completed"],
           ["Acknowledgement", "Not recorded. An acknowledgement is not acceptance."],
           ["Independent review and acceptance", "Unknown. Review data is not available here. Done by someone other than you."],
-          ["Next reviewer", reviewerRole]])));
+          ["Next reviewer", reviewerRole]])),
+      screenWithheld(["Resident phone, email and postal contact history (use the named contact)",
+        "Household details and any reason behind a notice or access need", "Contract rates, prices and invoice values",
+        "Other contractors' capacity and work orders"]));
   }
 });
 const financeRoles = ["Grants and Evidence Officer", ...screenManagers];
