@@ -62,7 +62,7 @@ Source: [five design themes](./customer-journeys/customer-journey-atlas.md#five-
 
 | Tension | Where resolved | Resolution | Status |
 | --- | --- | --- | --- |
-| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text under a "Not shown for this role" panel (added to the per-home view of both screens in this slice; the queue overview and summary views do not show it yet) rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; rendered behaviour and conformance not assessed |
+| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text under a "Not shown for this role" panel (on the per-home view of both screens, and on the `programme-queue` overview; the `resident-choice` overview and summary views do not show it yet) rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; rendered behaviour and conformance not assessed |
 | Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Proposed rule; rendered behaviour and conformance not assessed |
 
 ## Same-home walkthrough
@@ -103,3 +103,4 @@ checks only; they do not render a page, use assistive technology or involve user
 * Accessibility to the WCAG 2.2 baseline ([#151](https://github.com/jmservera/ama/issues/151)) is only partly evidenced by the static checks above; rendered keyboard and assistive-technology checks in CI and human review remain open.
 * Use of design system components ([#150](https://github.com/jmservera/ama/issues/150)) is supported only by the static class check above; component-level verification remains open.
 * Validation with users remains in [#155](https://github.com/jmservera/ama/issues/155); owner decisions on the deferral above are open.
+* The journey source names one "Programme Manager / planner" persona ([programme journey](./customer-journeys/programme.md)). The codebase has no separate planner role: `programme-queue` is available to Retrofit Programme Manager, Programme Support Officer and Retrofit Coordinator. Whether a distinct planner role is needed is an owner decision and stays open; no role is invented here.

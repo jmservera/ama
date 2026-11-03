@@ -9831,3 +9831,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   [the local gate section](../../src/README.md#gate-speed-controls-issue-470).
   Unit-tested only; the complete gate has not been run. Original RPI evidence
   is preserved with dated correction notes under `.copilot-tracking/`.
+
+## [2026-11-03] update | Atlas trace: withheld-items panel on the programme queue overview (Refs #230)
+
+* The `programme-queue` overview now renders the "Not shown for this role" panel,
+  as the per-home view already did. The trace records that the journey's
+  "Programme Manager / planner" persona has no separate planner role in code
+  (owner decision open). #230 criteria on WCAG 2.2 acceptance (#151), Fluent
+  component adoption (#150) and validation (#155) stay unmet. Evidence is under
+  `.copilot-tracking/` (2026-11-03 issue-230 programme overview withheld).
