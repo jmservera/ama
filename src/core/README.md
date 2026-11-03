@@ -3963,6 +3963,13 @@ field are dropped and reported by name only, never value. An unknown purpose is
 refused with a manual path to the rule card and a named human. It is not wired
 to a live Foundry call, so the criterion stays partial.
 
+`regulatory_privacy.record_human_decision(...)` builds the Art 22A to 22C record
+for a consequential decision on a system proposal. It refuses a blank or
+system-like decider, a role other than `approver`, empty or over-long reasons and
+a naive time, and always records `decided_by_system=False`. It is a pure builder,
+not wired to storage or an approval flow, and records no legal conclusion; the
+Art 22 criterion stays open until Legal and the DPO confirm it.
+
 Rule/card approvals, source reviews, checks and alerts already retain append-only
 SQL history. SQL chat turn events now include actor/role, case/thread/sequence,
 model, citation IDs and answer hash, never question/answer/excerpt/health content.

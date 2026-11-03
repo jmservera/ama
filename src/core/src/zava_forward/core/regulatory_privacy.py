@@ -174,3 +174,38 @@ def minimise_query(purpose: str, fields: dict[str, Any]) -> dict[str, Any]:
         special_category_dropped=sorted(k for k in fields if k in SPECIAL_CATEGORY),
         manual_path=MANUAL_PATH,
     )
+
+
+MAX_REASON = 1000
+PROPOSAL_KINDS = frozenset(("check_outcome", "alert_triage", "rule_card_change"))
+
+
+def record_human_decision(
+    proposal: dict[str, Any], decider: str, role: str, outcome: str, reasons: str, at: str
+) -> dict[str, Any]:
+    """Art 22A-22C: the system proposes; only a named human with reasons decides."""
+    kind = str(proposal.get("kind") or "")
+    if kind not in PROPOSAL_KINDS:
+        raise ValueError("Unsupported proposal kind; use the manual path.")
+    if outcome not in ("accepted", "rejected", "changed"):
+        raise ValueError("Decision outcome must be accepted, rejected or changed.")
+    name, why = decider.strip(), reasons.strip()
+    if not name or name.lower() in ("system", "agent", "ai", "model", "auto"):
+        raise ValueError("A named human decider is required.")
+    if role.strip() != "approver":
+        raise ValueError("Only the approver role can record a consequential decision.")
+    if not why or len(why) > MAX_REASON:
+        raise ValueError(f"Recorded reasons are required, up to {MAX_REASON} characters.")
+    if datetime.fromisoformat(at).tzinfo is None:
+        raise ValueError("Decision needs a timezone-aware recorded time.")
+    return dict(
+        proposal_kind=kind,
+        proposal_id=str(proposal.get("id") or ""),
+        proposal_version=str(proposal.get("version") or ""),
+        decider=name,
+        role="approver",
+        outcome=outcome,
+        reasons=why,
+        decided_at=at,
+        decided_by_system=False,
+    )
