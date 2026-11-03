@@ -1257,7 +1257,7 @@ source comes first and is not an investment priority, source age ("days old"),
 Eligibility shown Unknown followed by a named resolution owner, the missing
 investment inputs, the phase check owner, the evidence boundary stating that
 no investment approval is recorded, the AI cost per accepted outcome with the
-quality floor, value status and evidence class, an AI report row that says Loaded or Unavailable plus a without-AI manual path (AI-unavailable behaviour, covered by a unit test; the browser check was not re-run for it), no write controls, keyboard
+quality floor, value status and evidence class, an AI report row that says Loaded or Unavailable plus a without-AI manual path (AI-unavailable behaviour, covered by a unit test; the browser check was not re-run for it), an evidence class that reads Unknown (and hides the cost component) when the report records none instead of borrowing the coverage value, no write controls, keyboard
 reach of every table region, reflow and no POST requests. Set `ZF_AXE_JS` to
 the pinned axe 4.10.3 file to add the WCAG 2.2 A/AA scan. This is a design and
 engineering check on constructed data, not assistive-technology or WCAG

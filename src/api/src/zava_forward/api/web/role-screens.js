@@ -148,7 +148,7 @@ const assetGates = [
 ];
 function assetCost(report) {
   const m = report?.consumption;
-  const passed = m && m.quality_status === "Pass" && m.quality_qualified_cost && m.quality_qualified_cost !== "Unknown";
+  const passed = m && m.quality_status === "Pass" && m.quality_qualified_cost && m.quality_qualified_cost !== "Unknown" && m.evidence_label;
   return screenFields([
     ["AI report", report?.consumption ? "Loaded" : "Unavailable. The AI report could not be loaded, so every AI figure below is Unknown."],
     ["Without AI", "Nothing on this view needs AI. Ask the Programme manager or Finance owner for the dated cost and value records to read these figures by hand."],
@@ -158,9 +158,9 @@ function assetCost(report) {
     ["Accepted-outcome denominator", screenValue(m?.denominator)],
     ["Quality floor", screenValue(m?.quality_status)],
     ["Value status", m?.cash_value && m.cash_value !== "Unknown" ? m.cash_value : "Unknown. No finance-defensible value is recorded."],
-    ["Evidence class", screenValue(m?.evidence_label || m?.coverage)],
+    ["Evidence class", screenValue(m?.evidence_label)],
     ["Coverage", screenValue(m?.coverage)],
-    ["Reading", "A token count is never shown as the cost of AI. Without a recorded price source and a passed quality floor, cost stays Unknown."]
+    ["Reading", "A token count is never shown as the cost of AI. Without a recorded price source, a passed quality floor and a stated evidence class, cost stays Unknown."]
   ]);
 }
 const usageCount = (value) => Number.isInteger(value) ? String(value) : "Unknown";

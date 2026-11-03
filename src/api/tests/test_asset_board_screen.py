@@ -140,6 +140,24 @@ class AssetBoardScreen(unittest.TestCase):
         self.assertIn("accepted outputs", shown)
         self.assertIn("S-A v1", shown)
 
+    def test_missing_evidence_class_is_unknown_and_hides_cost(self) -> None:
+        consumption = {
+            "quality_status": "Pass",
+            "quality_qualified_cost": "1.20",
+            "currency": "GBP",
+            "coverage": "complete",
+        }
+        tree = run({"consumption": consumption})["tree"]
+        self.assertNotIn("1.20", json.dumps(tree))
+        nodes = walk(tree)
+        index = next(
+            i
+            for i, n in enumerate(nodes)
+            if n.get("tag") == "dt" and n["kids"] == ["Evidence class"]
+        )
+        after = [n for n in nodes[index + 1 :] if n.get("tag") == "dd"][0]
+        self.assertEqual(after["kids"], ["Unknown"])
+
     def test_ai_unavailable_is_stated_and_cost_stays_unknown(self) -> None:
         down = json.dumps(run(None)["tree"])
         self.assertIn("Unavailable. The AI report could not be loaded", down)
