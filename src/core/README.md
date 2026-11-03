@@ -2344,6 +2344,15 @@ timings. BG-010/OD-09 remains open: optional human-selected due dates and manual
 escalation do not prove acceptance/escalation within approved periods. EXA-008's
 24/48/72-hour fixtures are not a production SLA or statutory clock.
 
+`unaccepted_handoffs(user, as_of, max_age_hours=None)` projects the same sender,
+recipient and manager-visible unaccepted handoffs with age, chase owner and
+reasons (`handoff_ageing`). It flags `needs_escalation` when the handoff's own
+due time has passed or an explicitly supplied approved limit is exceeded; no
+limit is defaulted, and without one the row says the approved time is not set.
+`feed_unaccepted_handoffs` raises flagged rows to the exception queue as
+read-only `stranded_task` items. Neither escalates: a named manager still
+escalates or reassigns by hand. Not yet wired to an API route or screen.
+
 Semantic tests: `tests/test_handoff_lifecycle.py` runs on JSON and SQLite;
 HTTP tests and a CI-only SQL Server replay live in `../api/tests/`.
 

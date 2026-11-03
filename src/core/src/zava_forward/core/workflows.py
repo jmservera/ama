@@ -57,6 +57,33 @@ def handoff_view(c):
     return h
 
 
+def handoff_ageing(c, as_of, max_age_hours=None):
+    """Read-only ageing of one unaccepted handoff against its own due time and an approved limit.
+
+    The approved limit is an operational decision (BG-010, OD-09) and is never defaulted: without
+    one, ageing is shown but no handoff is flagged for escalation by age alone.
+    """
+    h = handoff_view(c)
+    if not h or h["state"] not in HANDOFF_PENDING:
+        return None
+    now = datetime.fromisoformat(as_of)
+    if now.tzinfo is None:
+        raise ValueError("Ageing needs an as-of time with a timezone.")
+    age = round((now - datetime.fromisoformat(h["offered_at"])).total_seconds() / 3600, 2)
+    reasons = []
+    if h["due_at"] and datetime.fromisoformat(h["due_at"]) < now:
+        reasons.append("Handoff due time has passed")
+    if max_age_hours is not None and age > max_age_hours:
+        reasons.append(f"Unaccepted for more than the approved {max_age_hours} hours")
+    return dict(case_id=c["id"], status=h["status"], age_hours=age, due_at=h["due_at"],
+                chase_owner=h["chase_owner"], chase_owner_code=h["chase_owner_code"],
+                proposed_receiver=h["proposed_receiver"], escalated=h["state"] == "Escalated",
+                needs_escalation=bool(reasons) and h["state"] != "Escalated", reasons=reasons,
+                approved_limit_hours=max_age_hours,
+                limit_note=None if max_age_hours is not None else "Approved escalation time not set (OD-09)",
+                as_of=as_of)
+
+
 def hazard_state(h):
     if h["released"]:
         return "Retrofit hold released"
@@ -305,6 +332,20 @@ class WorkflowMixin:
                     rows.append(dict(case_id=c["id"], resident=c["resident"]["name"],
                                      address=c["home"]["address"], **h))
             return rows if projection.can_see_reason(user) else projection.hold_notes(rows)
+
+    def unaccepted_handoffs(self, user, as_of=None, max_age_hours=None):
+        """Visible unaccepted handoffs with ageing; escalation stays a named manager's act."""
+        controls.require_role(user, projection.STAFF_ROLES, "authorised staff can view handoffs")
+        as_of = as_of or _now()
+        with self.lock:
+            rows = []
+            for c in self.cases.values():
+                row = handoff_ageing(c, as_of, max_age_hours)
+                h = c.get("handoff") or {}
+                if row and (user["code"] in (h.get("from_code"), h.get("to_code"))
+                            or user["role"] in MANAGER_ROLES):
+                    rows.append(row)
+            return sorted(rows, key=lambda r: -r["age_hours"])
 
     # ---- external hazard referral; only the linked home's retrofit hold is controlled here
     def _hazard(self, c, idx):

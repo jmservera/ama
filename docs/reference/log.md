@@ -9912,3 +9912,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added an epic-scoped checkpoint to the [evidence pack](../architecture/cutover-evidence-pack.md#epic-89-scoped-stabilization-checkpoint-2026-11-03) on main b855aec86: requirement-to-test reconciliation for RULE-004, 007, 008, 013 and 023, a child ledger (#90 and #91 closed; #92, #132 and #133 open with unmerged PRs) and focused test, ruff and mypy results.
 * Flagged that the PRD and BRD give FR-016 and FR-017 different meanings. #89 criterion 1 (full checkpoint before closure) and criterion 2 (children closed or deferred) stay unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-89 epic checkpoint).
+## [2026-11-03] update | Unaccepted handoff ageing and exception feed (Refs #83)
+
+* Added read-only `handoff_ageing`, `unaccepted_handoffs` and `feed_unaccepted_handoffs` in `src/core` with unit tests. No approved limit is invented: BG-010/OD-09 stays open and ageing flags only by the handoff's own due time or a caller-supplied approved limit. Not wired to API or screens; criterion 3 of #83 stays unmet. Unit-tested only. Evidence under `.copilot-tracking/` (2026-11-03 issue-83 r1).
