@@ -605,8 +605,30 @@ class RuleEngine:
                     false_positives=false,
                     unclassified=len(visible) - len(classified),
                     false_positive_rate=false / len(classified) if classified else None,
+                    by_card=self._precision_by_card(visible),
                 ),
             )
+
+    @staticmethod
+    def _precision_by_card(visible: list[dict[str, Any]]) -> list[dict[str, Any]]:
+        """Per-card counts so a staff trial can see which card raises false positives."""
+        cards: dict[str, dict[str, int]] = {}
+        for a in visible:
+            kinds = {e["action"] for e in a["events"]} & {"false_positive", "confirmed"}
+            row = cards.setdefault(a["card_id"], dict(total=0, classified=0, false_positives=0))
+            row["total"] += 1
+            row["classified"] += bool(kinds)
+            row["false_positives"] += "false_positive" in kinds
+        return [
+            dict(
+                card_id=card_id,
+                **row,
+                false_positive_rate=(
+                    row["false_positives"] / row["classified"] if row["classified"] else None
+                ),
+            )
+            for card_id, row in sorted(cards.items())
+        ]
 
     def disposition(
         self,

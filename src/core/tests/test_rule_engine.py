@@ -463,6 +463,10 @@ class EngineTests(unittest.TestCase):
         self.engine.disposition(OWNER, a["id"], "false_positive", "SYN", now=NOW)
         stats = self.engine.alerts(OWNER)["precision"]
         self.assertEqual((stats["classified"], stats["false_positive_rate"]), (1, 1.0))
+        by_card = {c["card_id"]: c for c in stats["by_card"]}
+        self.assertEqual(sum(c["total"] for c in by_card.values()), stats["total"])
+        self.assertEqual(by_card[a["card_id"]]["false_positives"], 1)
+        self.assertEqual(by_card[a["card_id"]]["false_positive_rate"], 1.0)
         self.assertTrue(self.alerts()[0]["requires_acknowledgement"])
         self.engine.disposition(OWNER, a["id"], "acknowledge", "SYN", now=NOW)
         self.engine.disposition(OWNER, a["id"], "acknowledge", "SYN", now=NOW)
