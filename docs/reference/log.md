@@ -9702,3 +9702,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   [atlas screen trace](research/ux/atlas-screen-trace.md). Desk research, not
   observed behaviour; browser, keyboard and assistive-technology validation of
   the screen is not performed. #232 stays open.
+## [2026-11-02] update | AI metering (#432) owner-gate reconciliation
+
+* Re-ran the 40 focused consumption tests (pass) and recorded, per
+  acceptance criterion, what blocks further delivery: BRD OD-51, owner spend
+  authority, attributable Azure billing, live admission and the protected
+  cost slide. No criterion is newly proven and no figure, price or deck
+  content changed. Self-review only; WCAG and assistive-technology acceptance
+  are not claimed. Evidence is under `.copilot-tracking/` (2026-11-02
+  issue-432-owner-gate).
