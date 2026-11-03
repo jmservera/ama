@@ -163,6 +163,38 @@ function assetCost(report) {
     ["Reading", "A token count is never shown as the cost of AI. Without a recorded price source and a passed quality floor, cost stays Unknown."]
   ]);
 }
+const usageCount = (value) => Number.isInteger(value) ? String(value) : "Unknown";
+const usageTotal = (t) => Number.isInteger(t?.measured) && Number.isInteger(t?.missing) ? t.measured + t.missing : null;
+function assetUsage(report) {
+  const m = report?.consumption;
+  if (!m) return screenUnknown("The AI report could not be loaded, so metered usage, alerts and breaches are Unknown. Unknown is not zero.", "Programme manager", "Reload, or ask the AI governance owner for the dated usage record");
+  const proposals = usageTotal(m.tokens_per_proposal);
+  const alerts = Array.isArray(m.owned_alerts) ? m.owned_alerts : null;
+  const components = m.other_tca_components && typeof m.other_tca_components === "object" ? Object.entries(m.other_tca_components) : [];
+  const unit = m.currency && m.currency !== "Unknown" ? ` ${m.currency}` : "";
+  return h("div", {},
+    screenFields([
+      ["Metered calls in the period (all capabilities)", usageCount(m.calls)],
+      ["Calls retried", usageCount(m.retries)],
+      ["Calls that did not return", usageCount(m.failures)],
+      ["Calls with no recorded outcome (cost Unknown)", usageCount(m.unknown_liabilities)],
+      ["Proposals with at least one call", usageCount(proposals)],
+      ["Proposals not joined to an output record", usageCount(m.unjoined_outputs)],
+      ["Reviews not joined", usageCount(m.unjoined_reviews)],
+      ["Human-accepted proposals", usageCount(m.accepted_proposals)],
+      ["Limits", "No limit, budget or price target is set on this view (BRD OD-51 is open). Held calls are listed as alerts below; only the owning team can read them against a limit."],
+      ["Reconciliation with the bill", screenValue(m.reconciliation)],
+      ["Total Cost of AI", m.total_cost_of_ai && m.total_cost_of_ai !== "Unknown" ? `${m.total_cost_of_ai}${unit}` : "Unknown. Every component below must be recorded first."]
+    ]),
+    alerts
+      ? screenTable("Held-call and limit alerts (an owner is named for each)", ["Owner", "Reason", "Route"],
+        alerts.map((a) => [screenPerson(a.owner), a.reason, a.route]), 25)
+      : screenUnknown("Alerts could not be read, so none is shown. This is not a statement that there were none.", "AI governance owner", "Ask for the alert record"),
+    components.length
+      ? screenTable("Other Total Cost of AI components (supplied, not verified here)", ["Component", "Amount"],
+        components.map(([name, value]) => [name, value === "Unknown" ? "Unknown" : `${value}${unit}`]))
+      : null);
+}
 registerRoleScreen({
   id: "asset-board",
   title: "Asset and board view",
@@ -211,7 +243,8 @@ registerRoleScreen({
       screenPanel("Portfolio scope (separate from this home)",
         screenFields([["Cases permitted to your role", extra?.portfolio?.total],
           ["Meaning", "A role-scoped count, not a stock, budget or programme total"]])),
-      screenPanel("Ledger-wide AI cohort (all homes, not this home)", assetCost(extra?.report)));
+      screenPanel("Ledger-wide AI cohort (all homes, not this home)", assetCost(extra?.report)),
+      screenPanel("Ledger-wide AI usage, alerts and cost components (all homes, not this home)", assetUsage(extra?.report)));
   }
 });
 
