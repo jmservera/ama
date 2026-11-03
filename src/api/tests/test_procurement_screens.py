@@ -175,6 +175,31 @@ class PackageQueue(unittest.TestCase):
         self.assertIn("Unknown - not confirmed: missing", text)
 
 
+class WorkOrderRecord(unittest.TestCase):
+    def test_corrections_and_completion_are_records_with_review_unknown(self) -> None:
+        order = ORDER | {
+            "state": "Completed",
+            "corrections": [{"reason": "Wrong depth", "by": "Sam", "at": "2026-05-01"}],
+            "history": [{"to_state": "Completed", "by": "Pat", "at": "2026-05-02"}],
+        }
+        out = run("procurement-packages", orders=[order])
+        rows = [r for r in row_texts(out["tree"]) if r.startswith("WO-1 v2 | Wrong depth")]
+        self.assertEqual(len(rows), 1)
+        self.assertIn("Wrong depth (Sam, 2026-05-01)", rows[0])
+        self.assertIn("Recorded by Pat on 2026-05-02", rows[0])
+        self.assertIn("not acceptance", rows[0])
+        self.assertIn("Unknown. No independent review record", rows[0])
+        for control in CONTROLS:
+            self.assertNotIn(control, tags(out["tree"]))
+
+    def test_no_records_or_missing_history_stay_unknown(self) -> None:
+        out = run("procurement-packages", orders=[ORDER | {"state": "Completed"}])
+        text = json.dumps(out["tree"])
+        self.assertIn("None recorded", text)
+        self.assertIn("Who recorded it is Unknown", text)
+        self.assertIn("Not recorded", json.dumps(run("procurement-packages")["tree"]))
+
+
 class ContractorJobPack(unittest.TestCase):
     def test_contractor_view_has_checklist_and_no_reason_or_controls(self) -> None:
         out = run(
@@ -195,6 +220,14 @@ class ContractorJobPack(unittest.TestCase):
         self.assertNotIn("vulnerab", text.lower())
         for control in CONTROLS:
             self.assertNotIn(control, tags(out["tree"]))
+
+    def test_completion_shown_as_record_not_acceptance(self) -> None:
+        done = ORDER | {"state": "Completed"}
+        text = json.dumps(run("contractor-job-pack", orders=[done])["tree"])
+        self.assertIn("Marked Completed on the work order by staff", text)
+        self.assertIn("not acceptance", text)
+        self.assertNotIn("Not marked Completed", text)
+        self.assertIn("Not marked Completed", json.dumps(run("contractor-job-pack")["tree"]))
 
     def test_appointment_outcome_derived_from_records(self) -> None:
         order = ORDER | {"appointments": [{"outcome": "Attended"}]}
