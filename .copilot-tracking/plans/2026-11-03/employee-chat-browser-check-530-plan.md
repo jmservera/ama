@@ -11,3 +11,7 @@ Task: `employee-chat-browser-check-530`. Refs #530. Research: [../../research/20
 Critique: executed once inline; verdict accepted. Risk 1: weakening checks to go green. Mitigation: only assertions that contradict the owner-approved stay-open behaviour were changed, each with a comment, and external focus visibility is still asserted. Risk 2: CSS change shrinking the composer. Mitigation: the employee 320px, 390px and 1280px Send-in-viewport and axe assertions pass. Direct disposition: no conflict with confirmed decisions; no user decision needed.
 
 Stacked follow-up slices (not in this PR): resident 320px composer layout (#520); live employee verification and agent-name confirmation (owner); remaining SQL selectors of the complete gate (coordinator).
+
+## Correction 2026-11-03 (independent review: Pass with fixes)
+
+Research: delta only, reusing the original evidence plus new measurements below. Critique: executed once inline for the correction; compatible, applied directly, no user decision needed. Corrections: (1) scope the log minimum height to `#employee-chat` and viewports at least 700px tall; (2) add a 1280x480 employee Send assertion; (3) assert the open employee panel does not overlap an in-flow note; (4) document where external focus on the stay-open chat is asserted; (5) fix the state record (critique pointer, session status). The original critique risk 2 mitigation was incomplete: it did not measure the resident chat or short viewports.

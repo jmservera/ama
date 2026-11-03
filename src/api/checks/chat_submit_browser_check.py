@@ -148,7 +148,8 @@ def render_focus(page: Page) -> None:
         page.evaluate("async () => { await route(); }")
         expect(panel).to_be_visible()
         assert page.evaluate("document.activeElement === renderFocus"), selector
-    # External focus no longer dismisses the stay-open employee chat (#568).
+    # External focus no longer dismisses the stay-open employee chat (#568); the widget
+    # check's current_reply_focus and employee_current_focus assert it stays open.
     for dismissal in ("Escape", "Close"):
         panel.locator("h2").focus()
         page.evaluate("""() => {

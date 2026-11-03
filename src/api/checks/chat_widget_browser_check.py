@@ -568,6 +568,36 @@ def shared_ui(page: Page, root: str, endpoint: str, out: Path, audience: str, ax
     )
 
 
+def employee_reserved_and_short(page: Page) -> None:
+    page.evaluate("location.hash = '#/overview'")
+    expect(page.get_by_role("heading", name="Overview", exact=True)).to_be_visible()
+    panel = page.locator("#employee-chat")
+    if not panel.is_visible():
+        page.get_by_role("button", name="Chat", exact=True).click()
+    expect(panel).to_be_visible()
+    external_note(page, in_flow=True)
+    try:
+        note = page.locator("#focus-check-note")
+        note.scroll_into_view_if_needed()
+        box, held = panel.bounding_box(), note.bounding_box()
+        assert box and held
+        # The open stay-open chat reserves page space, so in-flow content is not covered.
+        assert (
+            held["x"] + held["width"] <= box["x"] + 1
+            or box["x"] + box["width"] <= held["x"] + 1
+            or held["y"] + held["height"] <= box["y"] + 1
+            or box["y"] + box["height"] <= held["y"] + 1
+        ), (box, held)
+        send = panel.get_by_role("button", name="Send", exact=True)
+        # 320x480 and 640x360 still scroll Send inside the composer on main too (open, not asserted).
+        page.set_viewport_size({"width": 1280, "height": 480})
+        expect(panel).to_be_visible()
+        expect(send).to_be_in_viewport()
+    finally:
+        page.set_viewport_size({"width": 1280, "height": 900})
+        page.evaluate("document.getElementById('focus-check-note')?.remove()")
+
+
 def employee_current_focus(page: Page) -> None:
     external_note(page, in_flow=True)
     try:
@@ -780,6 +810,7 @@ def employee(browser: Browser, base: str, out: Path, axe: str) -> None:
         expect(page.get_by_role("button", name="Send", exact=True)).to_be_enabled()
         shared_ui(page, "#employee-chat", "**/api/chat/threads/*/ask", out, "employee", axe)
         employee_stacking(page, out)
+        employee_reserved_and_short(page)
         employee_refresh(page)
         employee_current_focus(page)
         employee_stale(page)
