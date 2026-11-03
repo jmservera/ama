@@ -153,6 +153,16 @@ class ProgrammeScreen(unittest.TestCase):
         self.assertNotIn("3 Test Street", before)
         self.assertIn("Funding check", before)
 
+    def test_overview_lists_withheld_items_as_text(self) -> None:
+        for role in ("Retrofit Programme Manager", "Retrofit Coordinator"):
+            before = str(run(role)["before"])
+            self.assertIn("Not shown for this role", before, role)
+            self.assertIn("Withholding is not authorisation", before, role)
+            self.assertIn("Funding amounts and claim values", before, role)
+        down = str(run(coordinator="down")["before"])
+        self.assertIn("Not shown for this role", down)
+        self.assertIn("Lifecycle and funnel counts are Unknown", down)
+
     def test_filter_and_reset_change_view_only(self) -> None:
         out = run()
         self.assertEqual(out["filteredRows"], 1)

@@ -416,7 +416,9 @@ registerRoleScreen({
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view of recorded work. Chase and update responsibility are shown separately. Nothing here sends, assigns or changes a record. Source: desk research, not observed behaviour; validation remains open.")),
       screenPanel("Shared queue", programmeQueue(page.items || [], page.total)),
-      screenPanel("Lifecycle and funnel", programmeFunnel(report)));
+      screenPanel("Lifecycle and funnel", programmeFunnel(report)),
+      screenWithheld(["Resident contact details and access history (open the case workspace for the safe route reference)",
+        "Household and vulnerability details beyond what a queue row needs", "Funding amounts and claim values"]));
   },
   async load(c) {
     const orders = await api(`/api/workorders?case=${encodeURIComponent(c.id)}`, undefined, routeController.signal).catch(() => null);

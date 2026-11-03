@@ -65,6 +65,9 @@ class RoleScreenConformance(unittest.TestCase):
             start = SCREENS.index(f'id: "{ident}"')
             end = SCREENS.index("registerRoleScreen({", start)
             self.assertIn("screenWithheld(", SCREENS[start:end], ident)
+        start = SCREENS.index('id: "programme-queue"')
+        overview = SCREENS[start : SCREENS.index("async load(c)", start)]
+        self.assertIn("screenWithheld(", overview)
         self.assertIn('screenPanel("Not shown for this role"', SCREENS)
         self.assertIn("is not authorisation", SCREENS)
         self.assertIn("Proposed rule; rendered behaviour and conformance not assessed", TRACE)
