@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -14,6 +15,17 @@ from checks.asset_urls import asset_url
 from checks.design_system_browser_check import main
 from checks.employee_briefing_browser_check import briefing_data
 from checks.regulatory_ux_check import AXE_SHA256
+
+
+def script_attempts() -> int:
+    """One load plus every retry delay declared by app.js, so the check cannot drift from it."""
+    source = (Path(__file__).resolve().parents[1] / "src/zava_forward/api/web/app.js").read_text(encoding="utf-8")
+    match = re.search(r"const SCRIPT_RETRY_DELAYS = \[([^\]]*)\];", source)
+    assert match, "SCRIPT_RETRY_DELAYS not found in app.js"
+    return 1 + len([part for part in match.group(1).split(",") if part.strip()])
+
+
+SCRIPT_ATTEMPTS = script_attempts()
 
 
 def sign_in(page: Page, base: str) -> None:
@@ -285,7 +297,7 @@ def companion_failure_check(browser: Browser, base: str, path: str, hash_: str) 
             expect(page.get_by_role("alert")).to_contain_text(
                 "Required workspace files did not load: " + path)
             expect(page.get_by_role("button", name="Reload workspace", exact=True)).to_be_visible()
-            assert len(requests) == 4, requests
+            assert len(requests) == SCRIPT_ATTEMPTS, requests
         expect(page.locator("#startup")).to_have_count(0)
         assert not errors, errors
         print(f"PASS failed {path}: bounded terminal recovery or explicit plain-case fallback")
@@ -393,7 +405,7 @@ def helper_bootstrap_check(
 
         page.route(asset_url("/async-action.js", base), intercept)
         page.goto(base + "/app#/case/ZF-1?tab=resident")
-        terminal = failures == 4 or missing_global or unready_helper or bool(unready_method)
+        terminal = failures == SCRIPT_ATTEMPTS or missing_global or unready_helper or bool(unready_method)
         if terminal:
             expect(page.get_by_role("heading", name="Workspace unavailable")).to_be_visible()
             expect(page.get_by_role("alert")).to_contain_text(
@@ -404,7 +416,7 @@ def helper_bootstrap_check(
             expect(page.get_by_label("Work email", exact=True)).to_have_count(0)
             expect(page.get_by_role("button", name="Try again", exact=True)).to_have_count(0)
             assert not service_reads, "do not call start before helper readiness"
-            expected_requests = 2 if missing_global or unready_helper or unready_method else 4
+            expected_requests = 2 if missing_global or unready_helper or unready_method else SCRIPT_ATTEMPTS
             assert len(requests) == expected_requests, requests
             if unready_helper:
                 assert page.evaluate(
@@ -562,7 +574,7 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             for blocked in (None, "/workspace-shell.js"):
                 for failure in ("503", "rejected"):
                     law_startup_check(browser, base, blocked, failure)
-            for failures in (1, 2, 3, 4):
+            for failures in range(1, SCRIPT_ATTEMPTS + 1):
                 helper_bootstrap_check(browser, base, failures)
             helper_bootstrap_check(browser, base, 1, missing_global=True)
             helper_bootstrap_check(browser, base, 0, unready_helper=True)

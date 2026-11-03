@@ -9855,3 +9855,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   and 5 (WCAG and design-system acceptance, #155, #150) stay unmet; no
   investment, budget or eligibility claim changed. Evidence is under
   `.copilot-tracking/` (2026-11-03 issue-226 AI unavailable).
+
+## [2026-11-03] update | Issue 531 derive script retry counts in the loading check (Refs #531)
+
+* The loading browser check now reads `SCRIPT_RETRY_DELAYS` from `app.js` instead of hard-coding the attempt count, closing the drift follow-up from the earlier retry-check review. No product change. Criterion 7 (live employee verification) stays unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-531 derive-retry-counts).
