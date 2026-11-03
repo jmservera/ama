@@ -2,7 +2,11 @@
 
 import unittest
 
-from zava_forward.core.exception_feeds import feed_failed_ai_runs, feed_stranded_tasks
+from zava_forward.core.exception_feeds import (
+    feed_failed_ai_runs,
+    feed_stranded_tasks,
+    feed_unaccepted_handoffs,
+)
 from zava_forward.core.exception_queue import OPERATOR, STEWARD, ExceptionQueue
 
 STAFF = {"Sam Steward": [STEWARD], "Olive Operator": [OPERATOR]}
@@ -95,4 +99,28 @@ class ExceptionFeedTests(unittest.TestCase):
         feed_stranded_tasks(q, overdue, "Olive Operator")
         self.assertEqual(len(raised), 1)
         self.assertEqual(raised[0]["kind"], "stranded_task")
+        self.assertEqual(len(q.queue("Olive Operator")), 1)
+
+    def test_only_flagged_unaccepted_handoffs_are_raised_once(self) -> None:
+        q = make()
+        rows = [
+            {
+                "case_id": "ZF-1",
+                "needs_escalation": True,
+                "reasons": ["Handoff due time has passed"],
+                "chase_owner": "Sam",
+                "age_hours": 30.0,
+                "due_at": None,
+                "as_of": "2026-11-03T00:00+00:00",
+            },
+            {
+                "case_id": "ZF-2",
+                "needs_escalation": False,
+                "reasons": [],
+                "as_of": "2026-11-03T00:00+00:00",
+            },
+        ]
+        first = feed_unaccepted_handoffs(q, rows, "Olive Operator")
+        feed_unaccepted_handoffs(q, rows, "Olive Operator")
+        self.assertEqual(len(first), 1)
         self.assertEqual(len(q.queue("Olive Operator")), 1)

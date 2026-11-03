@@ -307,6 +307,29 @@ class JsonHandoffLifecycle(unittest.TestCase):
                 with self.assertRaises(PermissionError):
                     method()
 
+    def test_unaccepted_ageing_needs_an_approved_limit_to_flag(self) -> None:
+        self.offer()
+        later = "2026-12-01T00:00:00+00:00"
+        (row,) = self.store.unaccepted_handoffs(self.sam, later)
+        self.assertTrue(row["needs_escalation"])
+        self.assertEqual(row["reasons"], ["Handoff due time has passed"])
+        self.assertIn("OD-09", row["limit_note"])
+        (row,) = self.store.unaccepted_handoffs(self.pam, later, max_age_hours=24)
+        self.assertEqual(len(row["reasons"]), 2)
+        self.assertEqual(row["chase_owner_code"], self.sam["code"])
+        self.store.escalate_handoff(self.sam, "ZF-1", self.pam["email"], "Chase")
+        (row,) = self.store.unaccepted_handoffs(self.rae, later, max_age_hours=24)
+        self.assertTrue(row["escalated"])
+        self.assertFalse(row["needs_escalation"])
+        self.store.accept_handoff(self.rae, "ZF-1", metadata=change_metadata(self.store, "ZF-1"))
+        self.assertEqual(self.store.unaccepted_handoffs(self.sam, later), [])
+
+    def test_ageing_rejects_naive_time_and_unrelated_staff(self) -> None:
+        self.offer()
+        with self.assertRaises(ValueError):
+            self.store.unaccepted_handoffs(self.sam, "2026-12-01T00:00:00")
+        self.assertEqual(self.store.unaccepted_handoffs(self.rex, "2026-12-01T00:00:00+00:00"), [])
+
 
 class SqlHandoffLifecycle(JsonHandoffLifecycle):
     sql = True

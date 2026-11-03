@@ -84,3 +84,35 @@ def feed_stranded_tasks(
             )
         )
     return raised
+
+
+def feed_unaccepted_handoffs(
+    queue: ExceptionQueue, ageing: Iterable[Mapping[str, Any]], owner: str
+) -> list[Record]:
+    """Raise a stranded_task item per handoff flagged needs_escalation (workflows.handoff_ageing).
+
+    Raising only makes the unaccepted handoff visible to the exception owner; a named manager
+    still escalates or reassigns it by hand.
+    """
+    raised: list[Record] = []
+    for row in ageing:
+        if not row.get("needs_escalation"):
+            continue
+        case_id = str(row.get("case_id", ""))
+        raised.append(
+            queue.raise_failure(
+                "stranded_task",
+                owner,
+                f"Handoff not accepted in time for case {case_id or UNKNOWN}.",
+                {
+                    "case_id": case_id,
+                    "chase_owner": row.get("chase_owner"),
+                    "age_hours": row.get("age_hours"),
+                    "due_at": row.get("due_at"),
+                    "as_of": row.get("as_of"),
+                },
+                "; ".join(row.get("reasons") or ["Unaccepted handoff"]),
+                ref=f"handoff:{case_id}:{row.get('as_of', '')[:10]}",
+            )
+        )
+    return raised
