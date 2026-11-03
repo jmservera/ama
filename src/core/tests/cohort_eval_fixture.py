@@ -6,6 +6,8 @@ import copy
 import itertools
 from typing import Any
 
+from zava_forward.core import cohort_eval
+
 SOURCE = ("complete", "partial")
 SUPPORT = ("none", "declared")
 HISTORY = ("regular", "missed")
@@ -26,7 +28,7 @@ def manifest() -> dict[str, Any]:
                 "expected": "review" if src == "partial" else "ranked",
             }
         )
-    return {
+    m = {
         "task_id": "ranking-v1",
         "subject_version": "ranking-policy-1",
         "synthetic": True,
@@ -35,10 +37,6 @@ def manifest() -> dict[str, Any]:
             "source_completeness": list(SOURCE),
             "support_need": list(SUPPORT),
             "appointment_history": list(HISTORY),
-        },
-        "approval": {
-            "cohorts_owner": "Data lead (fictional)",
-            "thresholds_owner": "RAI owner (fictional)",
         },
         "thresholds": {
             "min_sample": 6,
@@ -50,6 +48,18 @@ def manifest() -> dict[str, Any]:
         "cases": cases,
         "seeded_defects": [],
     }
+    return approved(m)
+
+
+def approved(m: dict[str, Any]) -> dict[str, Any]:
+    return cohort_eval.approve(
+        m,
+        {
+            "cohorts_owner": "Data lead (fictional)",
+            "lawful_fields_owner": "DPO (fictional)",
+            "thresholds_owner": "RAI owner (fictional)",
+        },
+    )
 
 
 def clean_observed(m: dict[str, Any]) -> list[dict[str, Any]]:
@@ -63,4 +73,4 @@ def seeded() -> tuple[dict[str, Any], list[dict[str, Any]]]:
     by_id["c03"]["outcome"] = "excluded"
     by_id["c10"]["outcome"] = "deprioritised"
     m["seeded_defects"] = ["c03", "c10"]
-    return m, obs
+    return approved(m), obs

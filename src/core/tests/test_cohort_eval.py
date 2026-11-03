@@ -2,7 +2,7 @@ import copy
 import unittest
 from typing import Any
 
-from cohort_eval_fixture import clean_observed, manifest, seeded
+from cohort_eval_fixture import approved, clean_observed, manifest, seeded
 from zava_forward.core import cohort_eval
 
 
@@ -86,6 +86,7 @@ class CohortEvalTests(unittest.TestCase):
         for o in obs[:3]:
             o["outcome"] = "review" if o["outcome"] == "ranked" else "ranked"
         m["thresholds"]["max_error_rate"] = 0.2
+        approved(m)
         rec = cohort_eval.evaluate(m, obs)
         overall = 3 / rec["total_cases"]
         self.assertLess(overall, 0.2)
@@ -99,6 +100,31 @@ class CohortEvalTests(unittest.TestCase):
         rec = cohort_eval.evaluate(m, clean_observed(m), disposition)
         self.assertIn("unapproved_thresholds", codes(rec))
         self.assertFalse(rec["activation_allowed"])
+
+    def test_approval_must_be_complete_and_bound_to_manifest_content(self) -> None:
+        def edits(m: dict[str, Any]) -> None:
+            m["thresholds"]["max_error_rate"] = 0.9
+
+        def drop_lawful(m: dict[str, Any]) -> None:
+            del m["approval"]["lawful_fields_owner"]
+
+        def stale_digest(m: dict[str, Any]) -> None:
+            m["approval"]["manifest_digest"] = "0" * 64
+
+        def no_digest(m: dict[str, Any]) -> None:
+            del m["approval"]["manifest_digest"]
+
+        disposition = {"by": "RAI owner", "decision": "accept", "rationale": "reviewed"}
+        for change in (edits, drop_lawful, stale_digest, no_digest):
+            m = manifest()
+            self.assertNotIn(
+                "unapproved_thresholds", codes(cohort_eval.evaluate(m, clean_observed(m)))
+            )
+            change(m)
+            rec = cohort_eval.evaluate(m, clean_observed(m), disposition)
+            self.assertIn("unapproved_thresholds", codes(rec), change.__name__)
+            self.assertFalse(rec["activation_allowed"])
+            self.assertFalse(rec["fairness_evidence"])
 
     def test_human_disposition_clears_only_exceedances(self) -> None:
         m, obs = seeded()
@@ -215,6 +241,7 @@ class CohortEvalTests(unittest.TestCase):
     def test_unmeasured_non_synthetic_run_is_not_fairness_evidence(self) -> None:
         m = manifest()
         m["synthetic"] = False
+        approved(m)
         self.assertFalse(cohort_eval.evaluate(m, [])["fairness_evidence"])
         self.assertTrue(cohort_eval.evaluate(m, clean_observed(m))["fairness_evidence"])
 
@@ -228,6 +255,7 @@ class CohortEvalTests(unittest.TestCase):
     def test_threshold_uses_unrounded_rates(self) -> None:
         m = manifest()
         m["thresholds"]["max_error_rate"] = 0.08331
+        approved(m)
         obs = clean_observed(m)
         obs[0]["outcome"] = "review" if m["cases"][0]["expected"] != "review" else "ranked"
         rec = cohort_eval.evaluate(m, obs)

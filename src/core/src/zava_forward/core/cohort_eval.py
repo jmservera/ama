@@ -48,13 +48,33 @@ def _limit(value: Any) -> bool:
     )
 
 
+def manifest_digest(manifest: Mapping[str, Any]) -> str:
+    """Digest of the manifest content an owner approves, excluding the approval block itself."""
+    return digest({k: v for k, v in manifest.items() if k != "approval"})
+
+
+def approve(manifest: dict[str, Any], approval: Mapping[str, str]) -> dict[str, Any]:
+    """Record named owner approval bound to the manifest content; a later change voids it."""
+    manifest["approval"] = {**approval, "manifest_digest": manifest_digest(manifest)}
+    return manifest
+
+
+def _approval_bound(manifest: Mapping[str, Any]) -> bool:
+    approval = manifest.get("approval")
+    return isinstance(approval, Mapping) and approval.get("manifest_digest") == manifest_digest(
+        manifest
+    )
+
+
 def _thresholds_approved(manifest: Mapping[str, Any]) -> bool:
     approval = manifest.get("approval")
     thresholds = manifest.get("thresholds")
     if not (
         isinstance(approval, Mapping)
         and named(approval.get("cohorts_owner"))
+        and named(approval.get("lawful_fields_owner"))
         and named(approval.get("thresholds_owner"))
+        and _approval_bound(manifest)
         and isinstance(thresholds, Mapping)
     ):
         return False
@@ -226,7 +246,11 @@ def evaluate(
         )
 
     if not _thresholds_approved(manifest):
-        block("unapproved_thresholds", "cohorts or thresholds lack named owner approval (OQ-018)")
+        block(
+            "unapproved_thresholds",
+            "cohorts, lawful fields or thresholds lack named owner approval bound to this "
+            "manifest digest (OQ-018)",
+        )
 
     human = bool(
         disposition

@@ -46,6 +46,7 @@ SEEDED_DROPPED = ("sensor-1-b", "sensor-4-b")
 SEEDED_DEMOTED = ("history-2-b", "history-3-b")
 MOCK_APPROVAL = {
     "cohorts_owner": "Data lead (fictional)",
+    "lawful_fields_owner": "DPO (fictional)",
     "thresholds_owner": "RAI owner (fictional)",
 }
 # Ranking-neutral fields carried so a ranker that reads them is exercised.
@@ -213,12 +214,12 @@ def _run(
     defects: bool = False, rank_fn: Ranker | None = None, approval: dict[str, str] | None = None
 ) -> dict[str, Any]:
     cases, manifest = build()
-    if approval:
-        manifest["approval"] = dict(approval)
     if defects:
         manifest["seeded_defects"] = sorted(SEEDED_DROPPED + SEEDED_DEMOTED)
         cases = _inject(cases)
     manifest["inputs"] = copy.deepcopy(cases)
+    if approval:
+        cohort_eval.approve(manifest, approval)
     return dict(cohort_eval.evaluate(manifest, observe(cases, manifest, rank_fn)))
 
 
