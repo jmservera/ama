@@ -482,6 +482,23 @@ still includes the text-task check result. These are constructed offline control
 checks, not actual-model or human effectiveness, calibrated benefit, release
 approval, provider usage or real AI/SQL/Azure acceptance.
 
+### Candidate comparison grader (#108 tokenomics, 2026-11-03)
+
+`zava_forward.agents.candidate_comparison.compare_candidates` is a pure,
+offline grader over recorded per-proposal observations (accepted, critical
+miss, unsupported claim, override, reopened, refused, latency, input and output
+tokens). Each candidate changes exactly one lever (`model`, `routing`,
+`caching` or `prompt`) and must cover the same case ids as the recorded
+baseline, otherwise it is reported as not comparable. It reports cost per
+accepted proposal and per invocation beside refusal rate, latency and tokens per
+proposal (mean, min, max, spread). Without a complete dated price source, or
+with no accepted proposals, cost is `Unknown`. A candidate that raises critical
+misses, unsupported claims, overrides or reopened cases is a `failure` even when
+cheaper. No price, budget, threshold or approval is set, and no runner supplies
+real observations yet. Tests: `tests/test_candidate_comparison.py` (synthetic
+fixtures, not model or staff evidence). Held-out data, live calls, regional
+model confirmation and Finance validation remain open.
+
 ### Meaningful human-review protocol (#223; proposed, Not run)
 
 Status: PROPOSED preparation for owner review, written 2026-10-21 under the
