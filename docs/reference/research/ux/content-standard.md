@@ -99,7 +99,7 @@ and `signoffs.py`. Automated by `src/api/tests/test_content_standard.py`.
 
 Remaining by design, not shown as wording to a person: the internal
 identifiers `gate`, `provenance` and `hold` in code and API fields, and the
-stored finance decision value "Keep on hold".
+stored finance decision value "Keep on hold" (shown to a person as "Keep payment paused" through a display mapping kept in both `panels.js` and `role-screens.js`, because the two files load on different routes).
 
 ### Chat and alert-panel audit extension (2026-10-18, #153)
 
@@ -156,7 +156,7 @@ are candidate copy, not approved communications.
 | `assistants.js`, `chat.js`: proposal, source check, review, chat and alerts | Proposed/ready/stale/failed/reviewed, exact AI warning, unknown source coverage, historical lookup | "Requested using" replaces technical "Invocation"; proposal review now explicitly excludes approval, consent and safety decisions. Quotes, source titles and user/model text remain verbatim |
 | `panels.js`: resident measure/representative, updates and complaints | Not recorded/paused/withdrawn decisions, scoped source/date checks, update owner/due/basis, separate response and remedy | Review-date label now says authority is unavailable from that date. Complaint response closure never promises remedy completion or live dispatch |
 | `ops.js`: quality, appointments and capacity | Independent acceptance/defect/reinspection/handover, offer and three separate confirmations, provider failure | Offer, consent and confirmation remain separate. Existing instructions are staff-facing, not resident-ready text; no live contact |
-| `panels.js`: finance, grants, technical and stock; `app.js`: documents/import/building | Payment pause, grant stages, sign-offs, competing sources, missing files, CSV errors, shared-work restrictions | "Keep on hold" is still a visible stored finance option/disposition; lexical allowance does not mean plain-language compliance. No data migration performed |
+| `panels.js`: finance, grants, technical and stock; `app.js`: documents/import/building | Payment pause, grant stages, sign-offs, competing sources, missing files, CSV errors, shared-work restrictions | The stored finance value "Keep on hold" is now displayed as "Keep payment paused" (2026-11-03); the stored value is unchanged and no migration was performed. Lexical allowance does not mean plain-language compliance |
 | `timecapture.js`, `role-screens.js`: supporting staff tasks | Enabling refusal, read-only evidence, invalid page/role/empty state | Ordinary "hold the same role" changed to "have the same role". Time-capture added to the lexical guard; specialist server-projected content remains manually inspected only |
 | `law.js`, `law.html`: supporting reference viewer | Sources/gaps, source status/date/caveats, failed requests, no-AI/no-legal-advice warning | "Sources held", provision metadata and raw failures remain technical supporting copy. They are outside the lexical guard, not an accepted resident explanation |
 
@@ -190,14 +190,14 @@ error would not establish real accountability.
 * `role-screens.js`: "phase gate" and "gate" became "phase check" in the asset-owner and programme panels.
 * `app.js` `api()`: the unknown-error fallback now states the reason (cause not known), owner (application support) and next action (check recorded history before repeating a change, then contact support).
 * `law.js` failure status and the manager-only ranking error in `store.py` now name an owner and next action; the ranking error no longer says "snapshot".
-* Still open: typed server errors, `signoffs.py` refusals, the stored "Keep on hold" finance value, actual named review of resident wording and comprehension/accessibility testing.
+* Still open: typed server errors, `signoffs.py` refusals, the stored "Keep on hold" finance value (display label now "Keep payment paused"), actual named review of resident wording and comprehension/accessibility testing.
 
 #### Issue #153 acceptance evidence
 
 | Criterion | Evidence and disposition |
 | --- | --- |
 | Standard and glossary | Exists in this document; previously checked issue criterion preserved |
-| Core-flow audit removes internal terms | Expanded inventory delivered; partial, because dynamic messages and visible stored finance wording above remain |
+| Core-flow audit removes internal terms | Expanded inventory delivered; partial: dynamic messages remain, and the stored value remains in API payloads; display label changed |
 | Errors/blocked steps give reason, owner, next action | Final-check reasons and the generic fallback tested; partial, residuals above prevent universal acceptance |
 | Exact AI label and reviewed-draft authority | Exact label retained; draft/proposal disclaimer strengthened. Partial, not a global certification of every reviewed/error state |
 | Named human resident wording review before use | Reviewer appointed below; actual review of exact copy Not run. No use authorized |
@@ -244,8 +244,9 @@ received/reviewed/accepted/published/confirmed states must stay distinct.
 
 * Appointed reviewer Juan Manuel Servera to record name, role, date, exact
   wording/version and outcome before resident use; owner to confirm process.
-* The finance decision value "Keep on hold" is stored data; renaming it needs
-  a migration decision.
+* The finance decision value "Keep on hold" is stored data and still
+  appears in API payloads; only its display label changed (2026-11-03).
+  Renaming the stored value needs a migration decision.
 * Reading-age targets, translation and accessible-format wording are not set.
 * No user testing of the wording has been done; results must be recorded as
   test results under epic #149, not asserted.

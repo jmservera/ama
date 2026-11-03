@@ -1,6 +1,7 @@
 "use strict";
 // Case panels for finance, grants, technical sign-offs and resident decisions. Plain words; every action is one record at a time.
 const FIN_ROLES = ["Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer"];
+const financeDecisionLabel = (d) => (d === "Keep on hold" ? "Keep payment paused" : d);
 const money = (n) => `£${Number(n).toLocaleString("en-GB", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const caseApi = (id, part, body) => api(`/api/cases/${encodeURIComponent(id)}/${part}`, body);
 
@@ -33,7 +34,7 @@ function bindCaseMutationForm(session, key, form, button, status) {
 function actForm(title, fields, run, label) {
   const inputs = fields.map(([name, text, opts]) => {
     const el = opts && opts.options
-      ? h("select", { id: `f-${title}-${name}`, name, autocomplete: "off" }, opts.options.map((o) => h("option", { value: o }, o)))
+      ? h("select", { id: `f-${title}-${name}`, name, autocomplete: "off" }, opts.options.map((o) => (typeof o === "object" ? h("option", { value: o.value }, o.label) : h("option", { value: o }, o))))
       : h("input", { id: `f-${title}-${name}`, name, autocomplete: "off", type: (opts && opts.type) || "text", maxlength: 300 });
     return [name, text, el];
   });
@@ -67,7 +68,7 @@ function financePanel(c, id, refresh) {
     fx.commitments.length ? h("ul", {}, fx.commitments.map((m) => h("li", {}, `${m.id}: ${m.supplier}, ${m.measure}, ${money(m.amount)}, work order ${m.work_order}. ${m.status}${m.approved_by ? ` by ${m.approved_by}` : ` (raised by ${m.raised_name})`}.`))) : h("p", { class: "muted" }, "No commitments yet."),
     fx.invoices.length ? fx.invoices.map((i) => h("div", { class: "card" },
       h("strong", {}, `${i.id}: ${i.kind.toLowerCase()} ${i.ref} from ${i.supplier}. ${i.status}.`),
-      h("div", { class: "muted" }, `Payment: ${i.payment_status}. ${i.disposition ? `Finance decision: ${i.disposition} (${i.disposition_by}).` : "No Finance decision yet."}${i.hold ? ` Payment paused: ${i.hold.reason}.` : ""}`),
+      h("div", { class: "muted" }, `Payment: ${i.payment_status}. ${i.disposition ? `Finance decision: ${financeDecisionLabel(i.disposition)} (${i.disposition_by}).` : "No Finance decision yet."}${i.hold ? ` Payment paused: ${i.hold.reason}.` : ""}`),
       i.exceptions.length ? h("ul", {}, i.exceptions.map((e) => h("li", {}, `${e.line == null ? "Whole invoice" : `Line ${e.line + 1}`}: ${e.message}`))) : null)) : null,
     actForm("Propose a budget", [["amount", "Amount in pounds"], ["note", "Note"]], (b, submitted) => go("budget_propose", b, submitted), "Save proposed budget"),
     fx.budget && fx.budget.status === "Proposed" ? h("p", {}, h("button", { onclick: () => go("budget_approve") }, `Approve the budget as ${me.user.name}`)) : null,
@@ -79,7 +80,7 @@ function financePanel(c, id, refresh) {
       actForm("Check an invoice against the commitment", [["id", "Invoice", pick()]], (b, submitted) => go("invoice_match", b, submitted), "Check now"),
       actForm("Pause payment on an invoice", [["id", "Invoice", pick()], ["reason", "Why"]], (b, submitted) => go("hold_place", b, submitted), "Pause payment"),
       actForm("Restart payment on an invoice", [["id", "Invoice", pick()], ["note", "Why it is restarted"]], (b, submitted) => go("hold_release", b, submitted), "Restart payment"),
-      actForm("Finance decision", [["id", "Invoice", pick()], ["decision", "Decision", { options: ["Accept for payment", "Reject and return to provider", "Keep on hold"] }], ["note", "Note"]], (b, submitted) => go("disposition", b, submitted), "Record decision"),
+      actForm("Finance decision", [["id", "Invoice", pick()], ["decision", "Decision", { options: ["Accept for payment", "Reject and return to provider", { value: "Keep on hold", label: "Keep payment paused" }] }], ["note", "Note"]], (b, submitted) => go("disposition", b, submitted), "Record decision"),
       actForm("Note the payment status", [["id", "Invoice", pick()], ["status", "Status", { options: ["Not payable yet", "Awaiting payment run", "Paid outside this system"] }]], (b, submitted) => go("payment_status", b, submitted), "Save note"),
     ] : null);
 }
