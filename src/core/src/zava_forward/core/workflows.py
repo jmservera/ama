@@ -8,7 +8,7 @@ skip a state.
 from copy import deepcopy
 from datetime import UTC, date, datetime
 
-from . import change_provenance, controls, hazard, identity, insights, projection
+from . import change_provenance, controls, gates, hazard, identity, insights, projection
 
 MANAGER_ROLES = ("Retrofit Programme Manager", "Programme Support Officer")
 HAZARD_PRIORITIES = ("Emergency", "Significant", "Routine")
@@ -486,6 +486,10 @@ class WorkflowMixin:
                 raise ValueError("This retrofit hold is already released.")
             if not h.get("repair_evidence") or not h.get("accepted_at"):
                 raise ValueError("Record receipt, acceptance and external repair evidence before hold release.")
+            if h["hold"].get("accountable_role") and not h["hold"].get("legacy"):
+                verdict = gates.safety_release_gate(h["hold"], user, [])
+                if verdict.outcome != gates.PASS:
+                    raise PermissionError(verdict.reason)
             hazard.require_independent(user, h)
             h.update(released=True, released_by=user["name"], released_at=_now(), release_note=note)
             h["hold"].update(status="Released", decision=dict(at=_now(), actor=self._hazard_actor(user),
