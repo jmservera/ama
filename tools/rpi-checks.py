@@ -2148,6 +2148,10 @@ class Runner:
                         boundary = (
                             "hosted-only PR path context; infra local changed-images contracts"
                         )
+                    elif job == "changes":
+                        boundary = (
+                            "hosted-only PR path context; tools/test_ci_affected.py selection tests"
+                        )
                     elif action.startswith("actions/upload-artifact@"):
                         boundary = (
                             "hosted-only artifact publication; equivalent external local files"
