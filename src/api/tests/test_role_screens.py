@@ -1,6 +1,7 @@
 """Specialist hosts describe navigation, never extend server authority."""
 
 import json
+import re
 import subprocess
 import unittest
 from pathlib import Path
@@ -8,6 +9,14 @@ from pathlib import Path
 from zava_forward.api.workbench import navigation
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
+DESIGN_SYSTEM = Path(__file__).resolve().parents[3] / "docs/reference/research/ux/design-system.md"
+
+
+def inventory_classes() -> set[str]:
+    """Class names the #150 component inventory documents, read from the design system."""
+    text = DESIGN_SYSTEM.read_text()
+    section = text.split("## Component inventory", 1)[1].split("### AI suggestion", 1)[0]
+    return set(re.findall(r"`\.([A-Za-z0-9_-]+)", section))
 
 
 class RoleScreens(unittest.TestCase):
@@ -223,3 +232,15 @@ vm.runInContext(`registerRoleScreen({id: "synthetic", title: "Synthetic queue",
         self.assertIn("signal.throwIfAborted()", source)
         self.assertIn('"aria-current"', source)
         self.assertIn("Reset screen view", source)
+
+    def test_screens_use_only_documented_design_system_classes_and_no_simulator(self) -> None:
+        source = (WEB / "role-screens.js").read_text()
+        used = {
+            name for literal in re.findall(r'class: "([^"]*)"', source) for name in literal.split()
+        }
+        documented = inventory_classes()
+        self.assertTrue({"card", "screen-record", "table-scroll", "empty"} <= documented)
+        self.assertTrue(used, "no class literals found; the check would pass vacuously")
+        self.assertEqual(used - documented, set())
+        for word in ("Simulate", "simulator", "switch role", "fluent-"):
+            self.assertNotIn(word.lower(), source.lower())
