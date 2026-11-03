@@ -264,6 +264,27 @@ class ProgrammeScreen(unittest.TestCase):
             for control in ("button", "form", "input", "select", "textarea"):
                 self.assertNotIn(control, tags(node))
 
+    def test_same_home_stage_map_links_by_role_and_states_deferral(self) -> None:
+        manager = json.dumps(run()["blocked"])
+        self.assertIn("Journey stages for C-9", manager)
+        self.assertIn("design hypothesis", manager)
+        for screen in (
+            "technical-queue",
+            "resident-choice",
+            "procurement-packages",
+            "quality-queue",
+            "finance-invoices",
+        ):
+            self.assertIn(f"#/screens?screen={screen}&case=C-9", manager)
+        self.assertIn("no screen yet (recorded deferral)", manager)
+        self.assertIn("is not installed for your role. Your access has not changed.", manager)
+        coordinator = json.dumps(run("Retrofit Coordinator")["blocked"])
+        self.assertIn("screen=technical-queue&case=C-9", coordinator)
+        self.assertNotIn("screen=procurement-packages", coordinator)
+        self.assertIn("is not installed for your role", coordinator)
+        for node in (run()["blocked"],):
+            self.assertNotIn("button", tags(node))
+
 
 if __name__ == "__main__":
     unittest.main()

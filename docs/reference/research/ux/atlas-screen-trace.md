@@ -74,6 +74,14 @@ examples, which are not relabelled as stages. It is a design-level walk: no
 fixture or screen for EX-HOME-901 exists in code yet, and consent, readiness,
 release, acceptance, handover and financial closure stay separate states.
 
+Since 2026-11-03 the `programme-queue` selected-home view also shows a "Journey
+stages" list for any home an operator selects. It names the eight stages, links
+each to the registered screen that shows that stage's own state for the same
+case (navigation only, no state is derived or cleared), lists stage 1 as a
+recorded deferral, and states in text when a screen is not installed for the
+signed-in role. It is static and does not render EX-HOME-901 data, so the walk
+across screens with one connected fixture home stays open.
+
 | Stage | Role screen | What the screen shows for EX-HOME-901 | Boundary |
 | --- | --- | --- | --- |
 | 1. Report or nominate | Deferred: no screen in #652 (merged) shows a source account or recipient-scoped link; proposed addition to `resident-choice` | Source account and recipient-scoped link, design not yet supported | Urgent safety intake runs independently |
@@ -100,6 +108,7 @@ checks only; they do not render a page, use assistive technology or involve user
 
 ## Boundaries and unmet criteria
 
+* Stage map limits: it proves navigation to the same case, not that every stage shows consistent data for that home; a fixture home for EX-HOME-901 and the stage 1 source-account screen remain open.
 * Accessibility to the WCAG 2.2 baseline ([#151](https://github.com/jmservera/ama/issues/151)) is only partly evidenced by the static checks above; rendered keyboard and assistive-technology checks in CI and human review remain open.
 * Use of design system components ([#150](https://github.com/jmservera/ama/issues/150)) is supported only by the static class check above; component-level verification remains open.
 * Validation with users remains in [#155](https://github.com/jmservera/ama/issues/155); owner decisions on the deferral above are open.

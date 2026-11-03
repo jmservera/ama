@@ -440,6 +440,28 @@ function programmeGates(c, orders) {
       budget ? null : "No confirmed funding or budget is visible to your role.")
   ];
 }
+// Design-level hypothesis from the customer journey atlas, not observed behaviour (validation in #155).
+const journeyStages = [
+  ["1. Report or nominate", null, "No screen shows a source account yet. Urgent safety intake runs independently."],
+  ["2. Understand home and household", "technical-queue", "Unknown stays unknown; the hazard route runs in parallel."],
+  ["3. Decide scope and feasibility", "resident-choice", "Generic consent is not accepted."],
+  ["4. Coordinate ready work", "procurement-packages", "An offer is not a booking."],
+  ["5. Deliver and capture", "contractor-job-pack", "Submission is not acceptance."],
+  ["6. Inspect and remedy", "quality-queue", "Independent acceptance stays separate."],
+  ["7. Handover and live with measures", "resident-choice", "Open remedies are not closed by handover."],
+  ["8. Reconcile and learn", "finance-invoices", "No award is inferred from an invoice."]
+];
+function journeyStageMap(c) {
+  const open = (id) => roleScreens.has(id) && roleScreens.get(id).roles.includes(me.user.role);
+  return screenPanel(`Journey stages for ${c.id}`,
+    h("p", {}, "One home, eight stages. Each stage opens the screen that shows its own state for this same home. Stages are separate states: no stage clears another, and a link is navigation only. This map is a design hypothesis, not observed behaviour."),
+    h("ol", {}, journeyStages.map(([stage, id, boundary]) => h("li", {},
+      `${stage}: `,
+      id === null ? "no screen yet (recorded deferral)."
+        : open(id) ? h("a", { href: screenHref(id, c.id) }, roleScreens.get(id).title)
+          : `${roleScreens.get(id)?.title || id} is not installed for your role. Your access has not changed.`,
+      ` ${boundary}`))));
+}
 registerRoleScreen({
   id: "programme-queue",
   title: "Programme queue and connected home view",
@@ -467,6 +489,7 @@ registerRoleScreen({
       blocked.length ? screenUnknown(`${blocked.length} of 5 steps are blocked: ${blocked.map((r) => r[0]).join(", ")}.`,
         blocked[0][3], blocked[0][4]) : h("p", {}, "No blocker is recorded, which does not confirm readiness."),
       screenTable("Same-home step states", ["Step", "State", "Meaning", "Owner", "Next action"], rows),
+      journeyStageMap(c),
       screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
         "Household and vulnerability details beyond what a step state needs", "Funding amounts and claim values"]));
   }
