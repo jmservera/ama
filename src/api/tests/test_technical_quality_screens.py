@@ -6,6 +6,8 @@ import unittest
 from pathlib import Path
 from typing import Any
 
+from test_role_screens import inventory_classes
+
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
 SCRIPT = r"""
@@ -357,3 +359,54 @@ class QualityQueue(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+def rendered_classes(node: object) -> set[str]:
+    found: set[str] = set()
+    if isinstance(node, dict):
+        found |= set(str((node.get("attrs") or {}).get("class", "")).split())
+        for kid in node.get("kids", []):
+            found |= rendered_classes(kid)
+    return found
+
+
+class RenderedStructure(unittest.TestCase):
+    """Rendered-tree checks; not assistive-technology, user or design-system acceptance."""
+
+    def trees(self) -> list[dict[str, Any]]:
+        blocked_tech = tech_case(
+            technical_missing=[
+                {"item": "Evidence: EPC", "assigned_to": "Grants and Evidence Officer"}
+            ]
+        )
+        quality_ready = {
+            "id": "C-1",
+            "measures": "Loft insulation",
+            "quality": [record("Accepted", accepted_by="Inspector")],
+            "quality_handover_blockers": [],
+        }
+        quality_open = {"id": "C-2", "measures": "Loft insulation", "quality": []}
+        return [
+            render("technical-queue", tech_case())["tree"],
+            render("technical-queue", blocked_tech)["tree"],
+            render("technical-queue", {"id": "C-3"})["tree"],
+            render("quality-queue", quality_ready)["tree"],
+            render("quality-queue", quality_open)["tree"],
+        ]
+
+    def test_rendered_classes_are_documented_design_system_classes(self) -> None:
+        documented = inventory_classes()
+        for tree in self.trees():
+            used = rendered_classes(tree)
+            self.assertTrue(used, "no classes rendered; the check would pass vacuously")
+            self.assertEqual(used - documented, set())
+
+    def test_rendered_views_have_no_role_simulator_and_read_as_text(self) -> None:
+        for tree in self.trees():
+            text = json.dumps(tree).lower()
+            for banned in ("simulat", "impersonat", "switch role", "act as"):
+                self.assertNotIn(banned, text)
+            self.assertTrue({"h2", "section"} <= set(tags(tree)))
+            if "table" in tags(tree):
+                self.assertIn("caption", tags(tree))
+                self.assertIn("th", tags(tree))
