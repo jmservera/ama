@@ -148,6 +148,9 @@ class QueueDefinitions(unittest.TestCase):
         self.case["hazards"] = [hazard]
         work = evaluate(self.case)
         self.assertEqual(work["hazard_clocks"][0]["owner"], "Bea Safe")
+        self.assertTrue(work["hazard_clocks"][0]["owner_named"])
+        self.assertEqual(work["hazard_clocks"][0]["response_state"], "Completed")
+        self.assertEqual(work["hazard_clocks"][0]["resident_update_state"], "Overdue")
         self.assertEqual(work["hazard_clocks"][0]["aware_at"], "Unknown")
         self.assertIsNone(work["hazard_clocks"][0]["elapsed_hours"])
         self.assertEqual(
@@ -161,6 +164,20 @@ class QueueDefinitions(unittest.TestCase):
         work = evaluate(self.case)
         self.assertEqual(work["hazard_clocks"], [])
         self.assertIn("overdue", work["queues"])
+
+    def test_unnamed_clock_owner_is_stated_plainly_and_never_invented(self) -> None:
+        hazard = copy.deepcopy(DATA["cases"][3]["hazards"][0])
+        for key in ("accepted_by", "sender", "owner"):
+            hazard.pop(key, None)
+        hazard.update(response_due_at="2026-10-20", resident_update_due_at=None)
+        self.case["hazards"] = [hazard]
+        clock = evaluate(self.case)["hazard_clocks"][0]
+        self.assertEqual(clock["owner"], "Unknown")
+        self.assertFalse(clock["owner_named"])
+        self.assertIn("No named follow-up owner is recorded", clock["owner_status"])
+        self.assertIn(self.case["owner"], clock["owner_status"])
+        self.assertEqual(clock["response_state"], "Open")
+        self.assertEqual(clock["resident_update_state"], "Unknown")
 
     def test_structured_blockers_never_invent_person_from_role(self) -> None:
         work = evaluate(
