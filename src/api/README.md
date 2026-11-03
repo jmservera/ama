@@ -1250,8 +1250,9 @@ no-audit-trail caveat, no write controls or requests exist, Tab reaches every
 table region and the page reflows at 320px. Any request other than GET, HEAD or
 OPTIONS after sign-in fails the check. Set `ZF_AXE_JS` to the pinned axe 4.10.3
 file to add an automated WCAG 2.2 A/AA scan of `main` at 1280px for that one
-view and role; without it the run ends `RESULT PARTIAL` and axe is not
-evidenced. These are engineering checks, not assistive-technology or WCAG
+view and role; without it the run ends `RESULT PARTIAL` (exit code 0, axe not
+evidenced) unless `ZF_AXE_REQUIRED=1` makes the skip a failure. The final
+`RESULT` line, not the exit code alone, is authoritative. These are engineering checks, not assistive-technology or WCAG
 acceptance (#155).
 
 ## Resident chat and synthetic callback agenda (#520, building on #469)
