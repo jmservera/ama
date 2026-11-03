@@ -133,14 +133,31 @@ class ExceptionQueue:
         return self._add(kind, owner, summary, original_source, {"values": shown})
 
     def raise_failure(
-        self, kind: str, owner: str, summary: str, original_source: object, error: str
+        self,
+        kind: str,
+        owner: str,
+        summary: str,
+        original_source: object,
+        error: str,
+        ref: str | None = None,
     ) -> Record:
-        """Record a failed import, failed AI or integration run, or stranded task."""
+        """Record a failed import, failed AI or integration run, or stranded task.
+
+        A repeated ref for the same kind returns the existing item, so a feed can be re-read safely.
+        """
         if kind not in FAILURE_KINDS:
             raise ValueError(
                 "Kind must be a failed_import, failed_ai_run, failed_integration or stranded_task."
             )
-        return self._add(kind, owner, summary, original_source, {"error": _text(error, "Error")})
+        key = _text(ref, "Ref") if ref is not None else None
+        if key is not None:
+            for item in self._items.values():
+                if item["kind"] == kind and item.get("ref") == key:
+                    return deepcopy(item)
+        extra: Record = {"error": _text(error, "Error")}
+        if key is not None:
+            extra["ref"] = key
+        return self._add(kind, owner, summary, original_source, extra)
 
     def queue(self, actor: str) -> list[Record]:
         """Items in the actor's role scope. Viewing is audited."""
