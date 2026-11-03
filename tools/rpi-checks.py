@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import fcntl
+import fnmatch
 import hashlib
 import json
 import os
@@ -33,6 +34,8 @@ SHARDED_PROJECTS = {"api": 3}
 IMAGE_CACHE_MODES = ("layer", "fresh")
 # Groups every changed-path selection includes, so they never signal an interaction.
 UNIVERSAL_GROUPS = frozenset({"preflight", "namespace", "static"})
+# Projects whose src tree the static group byte-compiles.
+STATIC_COMPILED = frozenset({"core", "agents", "api", "orchestrator"})
 SQL_SELECTORS = (
     "test_mssqlstore",
     "test_lawstore.MssqlStoreTests",
@@ -44,7 +47,11 @@ SQL_SELECTORS = (
     "test_resident_aoai_sql.AccountingSqlTests",
 )
 RUFF_GROUPS = (
-    ("infra/tests/test_bicep_policy.py", "infra/tests/test_deploy.py", "infra/scripts/deploy.py"),
+    (
+        "infra/tests/test_bicep_policy.py",
+        "infra/tests/test_deploy.py",
+        "infra/scripts/deploy.py",
+    ),
     ("infra/scripts/pipeline.py", "infra/tests/test_pipeline.py"),
     (
         "infra/scripts/staff_azure.py",
@@ -56,7 +63,13 @@ RUFF_GROUPS = (
     ("src/check-container.py", "infra/tests/test_container_contract.py"),
     ("tools/rpi-checks.py", "tools/test_rpi_checks.py"),
 )
-WORKFLOWS = ("src-ci.yml", "mvp-ci.yml", "mvp-validation.yml", "src-deploy.yml", "infra-plan.yml")
+WORKFLOWS = (
+    "src-ci.yml",
+    "mvp-ci.yml",
+    "mvp-validation.yml",
+    "src-deploy.yml",
+    "infra-plan.yml",
+)
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
     "src-ci.yml": "bf0f84ecaac005c61943da8fd4e49180fb46904491ffce2e7934892373b0c87b",
@@ -66,7 +79,16 @@ WORKFLOW_HASHES = {
     "infra-plan.yml": "4240d803e33e68e63e03d201f241fa21101e2e260848c276b32817624cca6056",
 }
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
-TOOLS = ("python3", "node", "docker", "az", "bicep", "actionlint", "shellcheck", "trivy")
+TOOLS = (
+    "python3",
+    "node",
+    "docker",
+    "az",
+    "bicep",
+    "actionlint",
+    "shellcheck",
+    "trivy",
+)
 HEAVY_LOCK_PATH = Path("/tmp/ama-rpi-heavy.lock")
 # Linux sun_path[108] includes NUL; Chromium adds this mkdtemp/socket suffix to TMPDIR.
 CHROMIUM_SOCKET_PATH_BYTES = 107
@@ -224,11 +246,37 @@ def clean_identity(root: Path, base: str, *, reviewed_base: str | None = None) -
 def is_ancestor(root: Path, ancestor: str, descendant: str) -> bool:
     return (
         subprocess.run(
-            ["git", "-C", str(root), "merge-base", "--is-ancestor", ancestor, descendant],
+            [
+                "git",
+                "-C",
+                str(root),
+                "merge-base",
+                "--is-ancestor",
+                ancestor,
+                descendant,
+            ],
             capture_output=True,
         ).returncode
         == 0
     )
+
+
+def universal_consumed(path: str) -> bool:
+    """True when the always-selected preflight, namespace or static groups read this path.
+
+    Only per-project test trees and runtime code of projects that static does not compile are
+    outside those groups; every other path (workflows, infra, tools, root files, dependency
+    manifests, compiled sources) can change what they check.
+    """
+    parts = Path(path).parts
+    if len(parts) < 3 or parts[0] != "src" or parts[1] not in PROJECTS:
+        return True
+    name = Path(path).name.lower()
+    if name == "pyproject.toml" or "requirements" in name or "dockerfile" in name:
+        return True
+    if parts[2] == "src":
+        return parts[1] in STATIC_COMPILED or path.endswith(".js")
+    return False
 
 
 def moved_path_blocker(
@@ -236,7 +284,8 @@ def moved_path_blocker(
 ) -> str:
     """Reason a main-side path invalidates a partial receipt, or an empty string."""
     if inert_path(path):
-        return ""
+        # Tests read markdown under src/, so only other inert paths are provably irrelevant.
+        return "markdown under src/ may be read by tests" if path.startswith("src/") else ""
     if path in pr_paths:
         return "also changed by the candidate"
     if path in ("tools/rpi-checks.py", "tools/test_rpi_checks.py"):
@@ -244,6 +293,12 @@ def moved_path_blocker(
     mapped = set(changed_groups([path], extras))
     if mapped == set(required_groups(extras)):
         return "unmapped path would force the full matrix"
+    if "tooling" in mapped or any(group.startswith("extra-") for group in mapped):
+        return "selects tooling or extra checks the candidate may not have run"
+    if universal_consumed(path):
+        return "is read by the preflight, namespace or static groups"
+    if not pr_groups - UNIVERSAL_GROUPS:
+        return "candidate ran no project group, so it never exercised this path"
     if (mapped - UNIVERSAL_GROUPS) & (pr_groups - UNIVERSAL_GROUPS):
         return "selects a group the candidate's receipt covers"
     return ""
@@ -274,7 +329,12 @@ def base_relaxation(root: Path, recorded: str, current: str, extras: list[str]) 
         if path
     ]
     if is_ancestor(root, resolved, head):
-        return {"kind": "gated-ancestor", "from": recorded, "to": resolved, "moved_paths": moved}
+        return {
+            "kind": "gated-ancestor",
+            "from": recorded,
+            "to": resolved,
+            "moved_paths": moved,
+        }
     pr_paths = [
         path
         for path in git(
@@ -287,7 +347,12 @@ def base_relaxation(root: Path, recorded: str, current: str, extras: list[str]) 
         reason = moved_path_blocker(path, set(pr_paths), pr_groups, extras)
         if reason:
             raise GateError(f"Base moved on {path}: {reason}; rerun the gate on the current base")
-    return {"kind": "disjoint-move", "from": recorded, "to": resolved, "moved_paths": moved}
+    return {
+        "kind": "disjoint-move",
+        "from": recorded,
+        "to": resolved,
+        "moved_paths": moved,
+    }
 
 
 def validate_stack(root: Path, base: str, heads: list[str]) -> list[str]:
@@ -493,6 +558,28 @@ def shard_partition(root: Path, project: str, count: int) -> list[list[str]] | N
     return [sorted(modules) for modules in shards]
 
 
+DISCOVER_IDS = (
+    "import sys, unittest\n"
+    "def walk(suite):\n"
+    "    for item in suite:\n"
+    "        if isinstance(item, unittest.TestSuite):\n"
+    "            yield from walk(item)\n"
+    "        else:\n"
+    "            yield item.id()\n"
+    "print('\\n'.join(walk(unittest.TestLoader().discover('tests'))))\n"
+)
+
+
+def unsharded_test_ids(ids: list[str], parts: list[list[str]]) -> list[str]:
+    """Discovered test ids that no shard's -k pattern selects, so sharding would drop them."""
+    patterns = [f"{module}.*" for modules in parts for module in modules]
+    return [
+        test_id
+        for test_id in ids
+        if not any(fnmatch.fnmatchcase(test_id, pattern) for pattern in patterns)
+    ]
+
+
 def shard_argv(python: str, modules: list[str]) -> list[str]:
     patterns = [item for module in modules for item in ("-k", f"{module}.*")]
     return [python, "-m", "unittest", "discover", "-s", "tests", "-v", *patterns]
@@ -528,9 +615,13 @@ def skipped_groups(groups: list[str], extras: list[str]) -> dict[str, str]:
 
 
 def dependencies(group: str) -> set[str]:
-    if group in ("static", "tooling", "infra", "migration", "logo-0600") or group.startswith(
-        "image-"
-    ):
+    if group in (
+        "static",
+        "tooling",
+        "infra",
+        "migration",
+        "logo-0600",
+    ) or group.startswith("image-"):
         return {"namespace"}
     if group in ("browser", "mssql"):
         return {"project-api"}
@@ -663,7 +754,10 @@ def cgroup_directories() -> list[Path]:
     _, mount, directory = max(mounts, key=lambda value: value[0])
     if not directory.is_dir():
         raise GateError("Effective cgroup directory is unavailable")
-    return [directory, *[parent for parent in directory.parents if parent.is_relative_to(mount)]]
+    return [
+        directory,
+        *[parent for parent in directory.parents if parent.is_relative_to(mount)],
+    ]
 
 
 def worker_limit(requested: int) -> int:
@@ -778,7 +872,10 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         add([py(name), "-c", "import zava_forward"], probe=True)
         args = [py(name), "-m", "pip", "install"]
         for project in packages:
-            args += ["-e", f"src/{project}" + ("[dev]" if dev and project == name else "")]
+            args += [
+                "-e",
+                f"src/{project}" + ("[dev]" if dev and project == name else ""),
+            ]
         add(args, timeout=1200)
         add([py(name), "-m", "pip", "check"])
 
@@ -856,7 +953,13 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
     python = py("namespace")
     for project in ("core", "agents", "orchestrator", "importer"):
         add([python, "-m", f"zava_forward.{project}"])
-    add([python, "-c", "from zava_forward.api.version import __version__; print(__version__)"])
+    add(
+        [
+            python,
+            "-c",
+            "from zava_forward.api.version import __version__; print(__version__)",
+        ]
+    )
     add(
         [
             python,
@@ -877,7 +980,16 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
     )
     for name in ("app", "assistants"):
         add(["node", "--check", f"src/api/src/zava_forward/api/web/{name}.js"])
-    add(["git", "ls-files", "--", "*/.assistant-test-*", "mvp/data", ":(glob)src/**/data/**"])
+    add(
+        [
+            "git",
+            "ls-files",
+            "--",
+            "*/.assistant-test-*",
+            "mvp/data",
+            ":(glob)src/**/data/**",
+        ]
+    )
     add(
         [
             "actionlint",
@@ -887,13 +999,33 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         ]
     )
     add(
-        [python, "-m", "unittest", "discover", "-s", "tools", "-p", "test_rpi_checks.py", "-v"],
+        [
+            python,
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "tools",
+            "-p",
+            "test_rpi_checks.py",
+            "-v",
+        ],
         suite=True,
     )
     group = "infra"
     add([python, "-c", "import yaml, mssql_python"], probe=True)
     add([python, "-m", "pip", "install", "PyYAML==6.0.3", "ruff==0.17.1", "mypy==2.4.0"])
-    add([python, "-m", "pip", "install", "--require-hashes", "-r", "src/api/requirements.txt"])
+    add(
+        [
+            python,
+            "-m",
+            "pip",
+            "install",
+            "--require-hashes",
+            "-r",
+            "src/api/requirements.txt",
+        ]
+    )
     add([python, "-c", WORKFLOW_INVENTORY, *WORKFLOWS])
     for file in sorted([*root.glob("infra/*.bicep"), *root.glob("infra/modules/*.bicep")]):
         relative = str(file.relative_to(root))
@@ -972,7 +1104,17 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
     add([python, "-c", REGULATORY_ASSERT, "<output>/regulatory-ux-results.json"])
     group = "mssql"
     sql = sql if "mssql" in groups else {"container": "", "port": ""}
-    add([python, "-m", "pip", "install", "--require-hashes", "-r", "src/api/requirements.txt"])
+    add(
+        [
+            python,
+            "-m",
+            "pip",
+            "install",
+            "--require-hashes",
+            "-r",
+            "src/api/requirements.txt",
+        ]
+    )
     add([python, "-c", SQL_DRIVER])
     add(["docker", "pull", "mcr.microsoft.com/mssql/server:2022-latest"])
     add(
@@ -1037,7 +1179,10 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
             timeout=1800,
         )
         add(["docker", "image", "inspect", tag])
-        add([py("namespace"), "src/check-container.py", project, image["id"]], timeout=300)
+        add(
+            [py("namespace"), "src/check-container.py", project, image["id"]],
+            timeout=300,
+        )
         if name == "logo-0600":
             continue
         args = [
@@ -1269,7 +1414,10 @@ def _single_test_passed(text: str, expected_test: str) -> bool:
     headers = [i for i, line in enumerate(lines) if re.match(r"(.+?) \.\.\. ", line)]
     if len(headers) != 1 or not lines[headers[0]].startswith(f"{expected_test} ... "):
         return False
-    end = next((i for i, line in enumerate(lines) if re.match(r"Ran \d+ tests? in ", line)), None)
+    end = next(
+        (i for i, line in enumerate(lines) if re.match(r"Ran \d+ tests? in ", line)),
+        None,
+    )
     if end is None or end < headers[0]:
         return False
     region = [lines[headers[0]].split(" ... ", 1)[1], *lines[headers[0] + 1 : end]]
@@ -1329,7 +1477,11 @@ def check_skips(
         raise GateError(
             f"Required exact test execution evidence missing/mismatched: {expected_test}"
         )
-    return {"tests": int(counts[-1]), "executed": int(counts[-1]) - len(skips), "skips": skips}
+    return {
+        "tests": int(counts[-1]),
+        "executed": int(counts[-1]) - len(skips),
+        "skips": skips,
+    }
 
 
 def scan_database(path: Path) -> dict[str, Any]:
@@ -1603,7 +1755,12 @@ class Runner:
             for path in (self.snapshot / "src" / project / "src").glob("*.egg-info"):
                 if path.is_symlink() or not path.is_dir():
                     raise GateError("Unexpected editable-build metadata path")
-                if git(self.snapshot, "ls-files", "--", str(path.relative_to(self.snapshot))):
+                if git(
+                    self.snapshot,
+                    "ls-files",
+                    "--",
+                    str(path.relative_to(self.snapshot)),
+                ):
                     raise GateError("Refusing to remove tracked build metadata")
                 shutil.rmtree(path)
 
@@ -1619,7 +1776,10 @@ class Runner:
         self.command([self.python(name), "-c", "import zava_forward"], retry=True)
         args = [*pip, "install"]
         for project in packages:
-            args += ["-e", f"src/{project}" + ("[dev]" if dev and project == name else "")]
+            args += [
+                "-e",
+                f"src/{project}" + ("[dev]" if dev and project == name else ""),
+            ]
         self.command(args, timeout=1200)
         self.metadata_cleanup()
         self.command([*pip, "check"])
@@ -1728,7 +1888,30 @@ class Runner:
                 self.command([py, "-m", "ruff", "format", "--check", "."], cwd)
                 self.command([py, "-m", "mypy"], cwd)
 
+    def discover_test_ids(self, project: str, py: str, cwd: str) -> list[str]:
+        env = {**self.env, **self.tests_env(project)}
+        env["PYTHONPATH"] = str(self.safety) + ":" + env["PYTHONPATH"]
+        result = subprocess.run(
+            [py, "-c", DISCOVER_IDS],
+            cwd=self.snapshot / cwd,
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=600,
+        )
+        if result.returncode:
+            raise GateError(f"Test discovery for {project} failed before sharding")
+        return [line for line in result.stdout.splitlines() if line]
+
     def sharded_tests(self, project: str, py: str, cwd: str, parts: list[list[str]]) -> None:
+        # Fail closed: a TestCase imported from a helper module matches no module pattern.
+        ids = self.discover_test_ids(project, py, cwd)
+        missed = unsharded_test_ids(ids, parts)
+        if not ids or missed:
+            raise GateError(
+                f"Sharding would drop {len(missed)} of {len(ids)} discovered {project} tests "
+                f"(for example {missed[:3]}); define them in test*.py modules"
+            )
         group = self.group
 
         def run(modules: list[str]) -> dict[str, Any]:
@@ -1776,7 +1959,11 @@ class Runner:
             for project in ("core", "agents", "orchestrator", "importer"):
                 self.command([py, "-m", f"zava_forward.{project}"])
             self.command(
-                [py, "-c", "from zava_forward.api.version import __version__; print(__version__)"]
+                [
+                    py,
+                    "-c",
+                    "from zava_forward.api.version import __version__; print(__version__)",
+                ]
             )
             self.command(
                 [
@@ -1822,7 +2009,17 @@ class Runner:
                 ]
             )
             self.command(
-                [py, "-m", "unittest", "discover", "-s", "tools", "-p", "test_rpi_checks.py", "-v"],
+                [
+                    py,
+                    "-m",
+                    "unittest",
+                    "discover",
+                    "-s",
+                    "tools",
+                    "-p",
+                    "test_rpi_checks.py",
+                    "-v",
+                ],
                 suite=True,
             )
 
@@ -1831,14 +2028,33 @@ class Runner:
         with self.gate("infra"):
             self.command([py, "-c", "import yaml, mssql_python"], retry=True)
             self.command(
-                [py, "-m", "pip", "install", "PyYAML==6.0.3", "ruff==0.17.1", "mypy==2.4.0"]
+                [
+                    py,
+                    "-m",
+                    "pip",
+                    "install",
+                    "PyYAML==6.0.3",
+                    "ruff==0.17.1",
+                    "mypy==2.4.0",
+                ]
             )
             self.command(
-                [py, "-m", "pip", "install", "--require-hashes", "-r", "src/api/requirements.txt"]
+                [
+                    py,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--require-hashes",
+                    "-r",
+                    "src/api/requirements.txt",
+                ]
             )
             self.workflow_coverage(py)
             for file in sorted(
-                [*self.snapshot.glob("infra/*.bicep"), *self.snapshot.glob("infra/modules/*.bicep")]
+                [
+                    *self.snapshot.glob("infra/*.bicep"),
+                    *self.snapshot.glob("infra/modules/*.bicep"),
+                ]
             ):
                 relative = str(file.relative_to(self.snapshot))
                 self.command(["az", "bicep", "build", "--file", relative, "--stdout"])
@@ -1950,7 +2166,8 @@ class Runner:
             )
             axe = self.out / "axe-4.10.3.min.js"
             with urlopen(
-                "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js", timeout=60
+                "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.3/axe.min.js",
+                timeout=60,
             ) as response:
                 axe.write_bytes(response.read())
             if digest(axe) != AXE_SHA256:
@@ -2022,7 +2239,15 @@ class Runner:
         with self.gate("mssql"):
             py = self.python("api")
             self.command(
-                [py, "-m", "pip", "install", "--require-hashes", "-r", "src/api/requirements.txt"]
+                [
+                    py,
+                    "-m",
+                    "pip",
+                    "install",
+                    "--require-hashes",
+                    "-r",
+                    "src/api/requirements.txt",
+                ]
             )
             self.command(
                 [
@@ -2034,7 +2259,8 @@ class Runner:
             password = "Aa1!" + secrets.token_hex(24)
             self.secrets.append(password)
             self.command(
-                ["docker", "pull", "mcr.microsoft.com/mssql/server:2022-latest"], timeout=900
+                ["docker", "pull", "mcr.microsoft.com/mssql/server:2022-latest"],
+                timeout=900,
             )
             container = self.command(
                 [
@@ -2115,9 +2341,14 @@ class Runner:
             )
             metadata = json.loads(self.command(["docker", "image", "inspect", tag]))[0]
             image_id = metadata["Id"]
-            self.images[name] = {"id": image_id, "digests": metadata["RepoDigests"], "tag": tag}
+            self.images[name] = {
+                "id": image_id,
+                "digests": metadata["RepoDigests"],
+                "tag": tag,
+            }
             self.command(
-                [self.python("namespace"), "src/check-container.py", project, image_id], timeout=300
+                [self.python("namespace"), "src/check-container.py", project, image_id],
+                timeout=300,
             )
             if stress:
                 return
@@ -2194,7 +2425,10 @@ class Runner:
     def cleanup_containers(self) -> None:
         for container in list(self.containers):
             result = subprocess.run(
-                ["docker", "inspect", container], capture_output=True, text=True, env=self.env
+                ["docker", "inspect", container],
+                capture_output=True,
+                text=True,
+                env=self.env,
             )
             if result.returncode == 0:
                 metadata = json.loads(result.stdout)[0]
@@ -2204,7 +2438,10 @@ class Runner:
                 ):
                     raise GateError("Cleanup ownership mismatch")
                 subprocess.run(
-                    ["docker", "rm", "-f", container], check=True, capture_output=True, env=self.env
+                    ["docker", "rm", "-f", container],
+                    check=True,
+                    capture_output=True,
+                    env=self.env,
                 )
             self.containers.remove(container)
 
@@ -2398,7 +2635,13 @@ class Runner:
                 raise GateError("Required matrix group coverage is incomplete")
             (self.out / "snapshot-inputs.log").write_text(
                 git(self.snapshot, "status", "--porcelain", "--untracked-files=all")
-                + git(self.snapshot, "ls-files", "--others", "--ignored", "--exclude-standard")
+                + git(
+                    self.snapshot,
+                    "ls-files",
+                    "--others",
+                    "--ignored",
+                    "--exclude-standard",
+                )
             )
             if (
                 clean_identity(self.snapshot, self.base) != identity
@@ -2420,7 +2663,13 @@ class Runner:
             if self.snapshot.exists():
                 (self.out / "snapshot-inputs.log").write_text(
                     git(self.snapshot, "status", "--porcelain", "--untracked-files=all")
-                    + git(self.snapshot, "ls-files", "--others", "--ignored", "--exclude-standard")
+                    + git(
+                        self.snapshot,
+                        "ls-files",
+                        "--others",
+                        "--ignored",
+                        "--exclude-standard",
+                    )
                 )
             try:
                 self.cleanup()
@@ -2554,7 +2803,10 @@ def validate_receipt(
     if receipt["tools"] != tool_identity():
         raise GateError("Receipt tool identity mismatch")
     executed = receipt["executed_groups"]
-    allowed = {*selected["groups"], *[f"setup-{name}" for name in (*PROJECTS, "namespace")]}
+    allowed = {
+        *selected["groups"],
+        *[f"setup-{name}" for name in (*PROJECTS, "namespace")],
+    }
     if len(executed) != len(set(executed)) or not set(executed) <= allowed:
         raise GateError("Receipt executed group selection mismatch")
     if receipt["environments"] != environment_identity(
@@ -2584,7 +2836,8 @@ def validate_receipt(
         if Path(name).name != name or digest(path.parent / name) != expected:
             raise GateError("Receipt evidence file hash mismatch")
     evidence = dict(
-        receipt, commands=[row for row in receipt["commands"] if row["group"] in executed]
+        receipt,
+        commands=[row for row in receipt["commands"] if row["group"] in executed],
     )
     if passing and len(evidence["commands"]) != len(receipt["commands"]):
         raise GateError("Passing receipt contains failed or unselected commands")
@@ -2635,6 +2888,35 @@ def validate_receipt(
     return {**receipt, "base_relaxation": relaxation}
 
 
+def check_stack_member(root: Path, receipt: dict[str, Any], member: str) -> None:
+    """The member must be a gated stack head and an ancestor of the verified HEAD.
+
+    Only the tip HEAD is bound by the receipt; earlier members are not individually gated.
+    """
+    commit = git(root, "rev-parse", f"{member}^{{commit}}")
+    if commit not in (receipt.get("stack") or []):
+        raise GateError("Commit is not a head of the receipt's gated stack")
+    if not is_ancestor(root, commit, receipt["identity"]["head"]):
+        raise GateError("Stack member is not an ancestor of the verified HEAD")
+
+
+def require_fresh_images(path: Path) -> None:
+    """Full-tier evidence must have built every scanned image with --no-cache.
+
+    Walks the resume chain, because a resumed child inherits groups its parent built.
+    """
+    seen = 0
+    while True:
+        receipt = json.loads(path.read_text())
+        if receipt.get("image_cache", "fresh") != "fresh":
+            raise GateError("Full-scope receipts require --fresh-images (image_cache=fresh)")
+        if not receipt.get("resume"):
+            return
+        path, seen = Path(receipt["resume"]["path"]), seen + 1
+        if seen > 16:
+            raise GateError("Resume provenance depth exceeded")
+
+
 def verify(
     root: Path,
     path: Path,
@@ -2653,10 +2935,10 @@ def verify(
     ):
         raise GateError("Receipt scope does not satisfy required full coverage")
     receipt = validate_receipt(root, path, base, relax_base=relax_base)
-    if stack_member is not None and git(root, "rev-parse", f"{stack_member}^{{commit}}") not in (
-        receipt.get("stack") or []
-    ):
-        raise GateError("Commit is not a head of the receipt's gated stack")
+    if stack_member is not None:
+        check_stack_member(root, receipt, stack_member)
+    if receipt["scope"] == "full":
+        require_fresh_images(path)
     print(
         f"VERIFIED {receipt['scope']} local gate: {receipt['identity']['head']} "
         f"base {receipt['identity']['base']}"
@@ -2729,7 +3011,7 @@ def main() -> int:
     parser.add_argument(
         "--fresh-images",
         action="store_true",
-        help="Build scanned images with --no-cache (default reuses unchanged Docker layers)",
+        help="Build scanned images with --no-cache; implied for full scope, which verify requires",
     )
     parser.add_argument(
         "--stack",
@@ -2774,7 +3056,12 @@ def main() -> int:
             stack: list[str] = []
             if resume:
                 parent = validate_receipt(
-                    root, resume, args.base, passing=False, new_output=out, relax_base=False
+                    root,
+                    resume,
+                    args.base,
+                    passing=False,
+                    new_output=out,
+                    relax_base=False,
                 )
                 stack = parent.get("stack") or []
                 if parent["status"] != "failed" or args.extra_test:
@@ -2798,6 +3085,7 @@ def main() -> int:
             queued = datetime.now(UTC).isoformat()
             with heavy_lock(args.lock_timeout, args.heavy_lock_fd):
                 jobs = worker_limit(args.jobs or len(os.sched_getaffinity(0)))
+                full = selected["groups"] == required_groups(extras)
                 print(
                     f"Lock queued {queued}; acquired {datetime.now(UTC).isoformat()}; "
                     f"jobs={jobs}; groups={','.join(selected['groups'])}",
@@ -2811,21 +3099,25 @@ def main() -> int:
                     selected=selected,
                     jobs=jobs,
                     resume=resume,
-                    image_cache="fresh" if args.fresh_images else "layer",
+                    image_cache="fresh" if args.fresh_images or full else "layer",
                     stack=stack,
                 ).run()
                 verify(
                     root,
                     receipt,
                     args.base,
-                    required_scope=(
-                        "full" if selected["groups"] == required_groups(extras) else "partial"
-                    ),
+                    required_scope="full" if full else "partial",
                     relax_base=False,
                 )
             print(f"Receipt: {receipt}")
         return 0
-    except (GateError, OSError, ValueError, KeyError, subprocess.SubprocessError) as error:
+    except (
+        GateError,
+        OSError,
+        ValueError,
+        KeyError,
+        subprocess.SubprocessError,
+    ) as error:
         print(f"BLOCKED: {error}", file=sys.stderr)
         return 1
 

@@ -278,9 +278,9 @@ bounded parallelism; select N for available resources. When a focused run
 produces a partial receipt, verify it with `--required-scope partial` and
 check the recorded scope against the planned unit and focused tests. That
 option does not downgrade a full-tier requirement or replace omitted tests.
-Omit `--jobs` to derive N from the host, and use `--fresh-images` for release
-candidates. A `--changed` receipt records skipped groups and reasons and stays
-valid after `origin/main` moves only when `--verify-receipt` proves the move
+Omit `--jobs` to derive N from the host; full-scope runs build fresh images
+automatically and verify rejects layer-cache full receipts. A `--changed`
+receipt records skipped groups and reasons and stays valid after `origin/main` moves only when `--verify-receipt` proves the move
 touched no path of the candidate's changed set or its dependents (it prints
 `BASE RELAXED`); otherwise rerun on the current base. Full-tier receipts always
 need the exact current base. To merge several PRs in a row, rebase them into one

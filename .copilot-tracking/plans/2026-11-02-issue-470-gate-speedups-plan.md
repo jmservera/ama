@@ -16,3 +16,7 @@ Plan (one pass, owner-approved scope):
 Validation: `python3 -m unittest discover -s tools -p test_rpi_checks.py`, ruff and mypy on the two tool files, and a `--changed` selection dry run. The complete gate is not run (owner instruction).
 
 Critique executed once against the final candidate plan: verdict accept. Findings applied directly: keep schema 4 with defaulted optional fields so old fixtures and fail-closed defaults (`fresh`, no shards) hold; block gate-matrix moves from relaxation; keep SQL and image builds serial. No conflict with a confirmed owner decision; no user decision required.
+
+## Correction plan (2026-11-03)
+
+Author-run critique note: the critique above was performed by the plan's author and is not independent. Independent review of PR #792 returned Pass with fixes; this correction pass (one pass, no further critique) plans: (1) block relaxation for moves read by universal groups, tooling, extras, markdown under `src/`, and for docs-only candidates; (2) fail-closed shard completeness guard from unittest discovery; (3) ancestor check in `--stack-member` and plain stack documentation; (4) stronger ordering and relaxed-path tests; (5) document resume, receipt format and image-cache policy, enforcing fresh images for full scope in verify; (6) correction notes in these artifacts. Validation: unit tests, ruff and `mypy --strict` only; the coordinator runs the complete gate.

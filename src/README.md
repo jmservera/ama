@@ -134,7 +134,10 @@ receipt records what ran and what was skipped.
 * Sharded API tests: with N of 2 or more, `project-api` unit tests run as 3
   worker processes, each selecting a deterministic, size-balanced subset of
   the tracked `src/api/tests/test*.py` modules with `-k MODULE.*`. Every module
-  is assigned exactly once; a nested test package disables sharding. Shard
+  is assigned exactly once; a nested test package disables sharding. Before
+  the shards run, unittest discovery lists every test id in the snapshot and the
+  run fails closed if any id matches no shard pattern (for example a TestCase
+  defined in a non-`test*.py` helper and imported into a test module). Shard
   commands are part of the trusted matrix and are re-derived from the tree at
   verification. Receipt field: `test_shards`.
 * Scoped skips: `--changed` skips project groups and image builds whose
@@ -146,8 +149,12 @@ receipt records what ran and what was skipped.
 * Image layer cache: scanned image builds reuse unchanged Docker layers by
   default (receipt `image_cache: layer`). Trivy still gates every built image,
   so a stale `apt-get upgrade` layer fails the scan rather than passing. Use
-  `--fresh-images` (receipt `image_cache: fresh`) for `--no-cache` builds,
-  recommended for release candidates. The logo stress build is unchanged.
+  `--fresh-images` (receipt `image_cache: fresh`) for `--no-cache` builds.
+  Policy: a full-scope receipt must use fresh images. Full-scope runs build
+  fresh automatically, and `--verify-receipt` rejects a full-scope receipt (or
+  any receipt in its resume chain) whose `image_cache` is not `fresh`. Layer
+  mode is for partial (`--changed`) receipts only. The logo stress build is
+  unchanged.
 * Base-match relaxation: a partial (`--changed`) receipt stays valid when
   `origin/main` has moved only by a fast-forward whose changed paths either
   are already in the gated head, or are docs/tracking/support/markdown paths,
@@ -167,7 +174,28 @@ receipt records what ran and what was skipped.
   `origin/main` advancing along the gated stack is accepted. Independent
   exact-head review and hosted CI remain required per PR, and a squash merge
   or a stack member changed after gating needs a new run. Use `--all` for a
-  full-tier stack.
+  full-tier stack. The receipt binds only the tip `HEAD`: intermediate stack
+  member heads are not individually gated, and each relies on its own hosted CI
+  run. `--stack-member` checks that the commit is a recorded stack head and an
+  ancestor of the verified `HEAD`; it does not prove that member was tested on
+  its own.
+* Resume: `--resume FAILED_RECEIPT` takes the extras, selection and `stack`
+  from the failed parent, so `--stack` is ignored on resume. The child reruns
+  only the groups the parent did not pass. `--fresh-images` (implied for full
+  scope) applies to the groups the child reruns, and groups inherited from the
+  parent keep the parent's cache mode, which is why full-scope verification
+  walks the whole chain. The child plans its own shards from its `--jobs`
+  value and records them in its own `test_shards`; verification re-derives
+  commands only for groups the child executed, so a parent that ran
+  `project-api` sharded and a child that reruns it unsharded (or the reverse)
+  are each checked against their own receipt.
+* Receipt format: `selection` now carries `skipped`, so partial receipts
+  produced before this change fail verification with a selection mismatch and
+  must be regenerated. Base relaxation also refuses any moved path read by the
+  preflight, namespace or static groups (workflows, infra, tools, root files,
+  dependency manifests, compiled `src/*/src` code), markdown under `src/`,
+  tooling or extra checks, and every non-inert move when the candidate selected
+  no project group (for example a docs-only candidate).
 
 #### Measuring full-gate scheduling
 
