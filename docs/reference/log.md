@@ -9792,3 +9792,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   0 supplied designs, blocked). Criterion 1 stays unmet: no versioned design,
   named human review, assistive-technology, content or user evidence is
   supplied. Evidence is under `.copilot-tracking/` (2026-11-03 issue-156 delta).
+## [2026-11-03] update | Loading browser check follows the three-retry script budget (Refs #531)
+
+* `checks/loading_briefing_browser_check.py` still asserted the old two-retry
+  script budget and failed on main; it now expects one load plus three retries.
+  The API README retry paragraph matches. No product behaviour changed.
+  Criterion 7 (live employee-site verification) stays unmet and owner-run;
+  screen-reader and voice-control acceptance is not claimed. Evidence is under
+  `.copilot-tracking/` (2026-11-03 issue-531 retry-check drift).
