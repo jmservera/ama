@@ -9980,3 +9980,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added a proposed design contract to [suppliers.md](research/ux/customer-journeys/suppliers.md#design-contract-for-contractor-submission-correction-and-acknowledgement-proposed-2026-11-03): preconditions, seven plain-language states, separation of submission, acknowledgement and independent acceptance, withheld items, manual path and accessibility requirements for the later build slice.
 * Desk-research hypothesis only. Nothing is built; #228 criteria 3, 5 and 6 stay unmet (OD-47, supplier-scoped access, #155, #150). Evidence is under `.copilot-tracking/` (2026-11-03 issue-228 submission design contract).
+## [2026-11-03] add | Easy Auth intermittent 500s investigation (Refs #810)
+
+* Added [the investigation note](./research/easy-auth-intermittent-500-2026-11-03.md) from a read-only Azure review and a 4 x 30 burst on the demo API. About 1 to 3 percent of forwarded requests return an empty-body 500 that the application does not produce; authentication-excluded paths are affected equally, and a no-auth app was clean. Platform logs were not readable (network perimeter), so the precise fault is unproven. Criteria 2 and 3 stay unmet pending an owner decision; no Azure resource was changed. Evidence under `.copilot-tracking/` (2026-11-03 issue-810).
