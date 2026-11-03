@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-03T00:39:23+00:00",
-  "commit": "c24d529d73056d96c88afcfc6fcbb7a683180b87",
+  "scored_at": "2026-11-03T00:51:18+00:00",
+  "commit": "56e31bc70cbca0ce41ffe47a79cc05223cad5038",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41553653854",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41554949833",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "06fe68dcf6424b43306be4cd7767b7a776a37faa61b0361b9245e56445cb749a",
+    "solution-code": "c5fc9ddf85bc791de68ca6a5a40d3ca66db7d834badd82069e8a2819bc81d034",
     "infrastructure": "5134fdeb17664e926dfc18305737f417e3bbfbb83eab746954ce283fc04217a9",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -44,10 +44,10 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/README.md:2385-2397",
-        "src/core/tests/test_synthetic_provenance.py:69-83"
+        "src/api/checks/data_operator_browser_check.py:1-20",
+        "src/api/README.md:1216-1230"
       ],
-      "rationale": "Diff tightens external-source compliance recordkeeping: retrieval dates set for Census/IMD/ONS, owner-named follow-up for remaining ONS boundaries attribution, with covering test. Reinforces compliance-naming evidence but doesn't add threat-model or AI-risk mitigation detail; ceiling 5 retained."
+      "rationale": "Diff adds a read-only enforcement browser check (no write controls, rejects any non-GET/HEAD/OPTIONS request) and optional axe 4.10.3 WCAG scan for an existing screen. Reinforces existing engineering-check evidence incrementally; ceiling 5 retained."
     },
     "A4": {
       "score": 5,
@@ -80,7 +80,7 @@
         "src/agents/src/zava_forward/agents/dispatch.py:186-220",
         "src/core/src/zava_forward/core/ai_consumption.py:155-185"
       ],
-      "rationale": "Diff is source-provenance recordkeeping, unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "rationale": "Diff is a browser accessibility check, unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -118,10 +118,9 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/core/README.md:2385-2397",
-        "src/api/README.md:9-47"
+        "src/api/README.md:1216-1230"
       ],
-      "rationale": "Diff is src/core provenance/compliance engineering (README + test), not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "Diff is src/api engineering-check README addition, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
