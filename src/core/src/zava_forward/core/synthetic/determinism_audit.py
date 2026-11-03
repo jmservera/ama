@@ -24,6 +24,7 @@ from zava_forward.core.synthetic import (
     sensor_backfill,
     sensor_scenarios,
     stock_fabric,
+    stock_register,
 )
 
 SEED = 7
@@ -54,7 +55,8 @@ SUPPORT_GENERATOR = locate_support()
 UNAVAILABLE = {
     "stock-register": (
         "Original private stock register generator and pinned OSM inputs are not in the "
-        "repository; no receipt can be produced."
+        "repository; no receipt can be produced. The fictional stock-register generator "
+        "replaces its shape only, not its content."
     )
 }
 
@@ -175,11 +177,17 @@ def _stock_fabric(out: Path) -> Path:
     return out / "summary.json"
 
 
+def _stock_register(out: Path) -> Path:
+    stock_register.write(out, n=12, seed=SEED, as_of=AS_OF)
+    return out / "manifest.json"
+
+
 GENERATORS: dict[str, Callable[[Path], Path]] = {
     "scale-fixture": _scale,
     "sensor-backfill": _sensor_backfill,
     "sensor-scenarios": _sensor_scenarios,
     "stock-fabric": _stock_fabric,
+    "stock-register-fictional": _stock_register,
 }
 SUPPORT_GENERATORS = tuple(REPLAYS)
 

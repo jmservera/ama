@@ -9863,3 +9863,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added [the acceptance kit](./research/ux/regulatory-ux-acceptance-protocol.md): per-role keyboard and screen-reader scripts, a frozen answer key for the five comprehension tasks and blank record tables, plus `src/api/checks/regulatory_comprehension_score.py` for the predeclared thresholds. Unit-tested only.
 * Nothing was run with people. Criteria 3 (manual assistive-technology assessment) and 5 (repairs, housing and grants comprehension) stay unmet; no ticks changed. Evidence is under `.copilot-tracking/` (2026-11-03 issue-215 acceptance kit).
+
+## [2026-11-03] update | Fictional stock register generator (Refs #176)
+
+* Added `zava_forward.core.synthetic.stock_register`, a seeded fictional register generator with a manifest, and replayed it in the determinism audit; documented in [the synthetic pack README](./research/retrofit-synthetic-data/README.md). It does not recreate the original private register, so criteria 1 and 2 stay unmet and unticked. Unit-tested only. Evidence is under `.copilot-tracking/` (2026-11-03 issue-176 stock register).

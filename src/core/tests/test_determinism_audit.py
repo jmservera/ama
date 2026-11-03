@@ -21,6 +21,7 @@ class DeterminismAuditTests(unittest.TestCase):
                 "sensor-backfill",
                 "sensor-scenarios",
                 "stock-fabric",
+                "stock-register-fictional",
                 "public-pack",
                 "stock-epc",
             },

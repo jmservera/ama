@@ -264,6 +264,21 @@ fictional eight-home register in a temporary directory. Their manifests carry
 unavailable rather than passed. The original stock register generator is still
 absent, so criteria 1 and 2 remain unmet overall.
 
+### Fictional stock register generator (2026-11-03, Refs #176)
+
+`python3 -m zava_forward.core.synthetic.stock_register --out DIR` (from an
+installed `src/core`) writes a seeded, wholly fictional register
+(`SYN-nnnnn` identifiers, three made-up locality themes, fictional building
+forms) in the shape `stock_fabric` and the EPC generator read, plus a
+`manifest.json` with `seed`, `as_of`, `version`, a `sha256:` `generator_revision`
+and the payload hash. It refuses a non-empty output folder. The determinism
+audit now replays it as `stock-register-fictional`. Tests:
+`src/core/tests/test_stock_register.py`.
+
+This is not the original private 60,000-home register: it has no OSM anchors
+and cannot reproduce that register's bytes. The original generator and pinned
+inputs remain absent, so criteria 1 and 2 stay unmet overall and unticked.
+
 ### Offline acceptance audit (2026-10-16, Refs #176)
 
 | Acceptance criterion | Result | Evidence and remaining boundary |
