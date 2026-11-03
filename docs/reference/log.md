@@ -10038,3 +10038,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Phase 0 discovery register slice (Refs #124)
 
 * Added a pure `discovery_register` module and tests in `src/core`: owner nomination with accepted-handover endpoint status, a ten-event lifecycle dictionary gap check, and a constraint register that stays a candidate until a named owner other than the proposer decides, with supporting and contradicting evidence recorded. Synthetic fixtures only; no persistence or screens. Criteria 1 and 2 stay unmet (human nomination and validation); 3 and 4 are partly met in code only. Evidence under `.copilot-tracking/` (2026-11-03 issue-124 r1).
+## [2026-11-03] update | Chat retention is age-based (Refs #163)
+
+* Owner decision 2026-11-03: `ChatPrivacy.purge_retention` now expires threads and messages a fixed period after creation instead of after idleness. Tests and the demo storage approval record are updated, with a demo-only disclaimer that DPO and Legal review is outstanding.
+* Criteria 2 and 5 stay unmet (DPO and Legal decisions). Touches the SQL repository, so the complete gate is for the coordinator.

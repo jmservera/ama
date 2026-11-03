@@ -165,7 +165,7 @@ class MemoryRepo:
         return n
 
     def purge_threads(self, cutoff):
-        old = [tid for tid, t in self.doc.items() if t["updated_at"] < cutoff]
+        old = [tid for tid, t in self.doc.items() if t["created_at"] < cutoff]
         messages = sum(len(self.doc[tid]["messages"]) for tid in old)
         for tid in old:
             del self.doc[tid]
@@ -269,8 +269,8 @@ class SqlRepo:
 
     def purge_threads(self, cutoff):
         db = self.store.db
-        messages = db.execute("DELETE FROM chat_message WHERE thread_id IN (SELECT id FROM chat_thread WHERE updated_at < ?)", (cutoff,)).rowcount
-        return db.execute("DELETE FROM chat_thread WHERE updated_at < ?", (cutoff,)).rowcount, messages
+        messages = db.execute("DELETE FROM chat_message WHERE thread_id IN (SELECT id FROM chat_thread WHERE created_at < ?)", (cutoff,)).rowcount
+        return db.execute("DELETE FROM chat_thread WHERE created_at < ?", (cutoff,)).rowcount, messages
 
     def commit(self):
         """The surrounding transaction commits."""

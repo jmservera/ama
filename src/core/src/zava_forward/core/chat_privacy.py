@@ -353,7 +353,7 @@ class ChatPrivacy:
         return n
 
     def purge_retention(self, now=None):
-        """Apply the recorded retention period: delete threads idle longer than it, and expired memory. Does nothing while no period is recorded."""
+        """Apply the recorded retention period: delete threads created longer ago than it (age-based, owner decision 2026-11-03; later activity does not extend it), and expired memory. Does nothing while no period is recorded."""
         days = self.decision()["retention_days"]
         if not days:
             return dict(threads=0, messages=0, memory=0, applied=False)
