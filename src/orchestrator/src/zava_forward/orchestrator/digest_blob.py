@@ -22,6 +22,8 @@ from zava_forward.core.documents import AzureBlobDocumentStore, DocumentStoreErr
 
 ALERT_MARKER = "LEDGER_DIGEST_ALERT"
 OK_MARKER = "LEDGER_DIGEST_OK"
+RECONCILE_OK_MARKER = "LEDGER_DIGEST_RECONCILE_OK"
+RECONCILE_ALERT_MARKER = "LEDGER_DIGEST_RECONCILE_ALERT"
 
 
 class InvalidDigestError(DocumentStoreError):
@@ -162,9 +164,70 @@ def verify(store, blob):
     return dict(intact=not problems, digests=len(heads), year_digests=len(years), entries=rep["entries"], problems=problems)
 
 
+def reconcile(blob, record):
+    """Compare the remote anchors with an independent record: a JSON object of anchor blob name to head SHA-256.
+
+    Read-only. This is the second-person check of an initial publication; it does not replace that
+    person's judgement about where the record came from.
+    """
+    if (not isinstance(record, dict) or not record
+            or any(not _valid_anchor_name(k) or not isinstance(v, str) or re.fullmatch(r"[0-9a-f]{64}", v) is None
+                   for k, v in record.items())):
+        raise InvalidDigestError("the independent record must map canonical anchor names to SHA-256 heads")
+    remote, problems = {}, []
+    for name in blob.list_digests():
+        if not name.startswith(("digest-", "year-")):
+            continue
+        try:
+            digest = blob.read_digest(name) if _valid_anchor_name(name) else None
+        except InvalidDigestError:
+            digest = None
+        if digest is None or not _valid_anchor(name, digest):
+            problems.append(dict(check="remote", problem="invalid remote digest anchor"))
+        else:
+            remote[name] = digest["head"]
+    for name in sorted(set(record) - set(remote)):
+        problems.append(dict(check="record", name=name, problem="recorded anchor is absent from the container"))
+    for name in sorted(set(remote) - set(record)):
+        problems.append(dict(check="remote", name=name, problem="remote anchor is not in the independent record"))
+    for name in sorted(set(record) & set(remote)):
+        if record[name] != remote[name]:
+            problems.append(dict(check="head", name=name, problem="remote head differs from the independent record"))
+    return dict(intact=not problems, compared=len(set(record) & set(remote)), problems=problems)
+
+
+def _reconcile_main(path, env, blob, out):
+    blob = blob or open_digest_store(env)
+    if blob is None:
+        out("ZF_DIGEST_ACCOUNT_URL is not set")
+        return 2
+    try:
+        with open(path, encoding="utf-8") as f:
+            record = json.load(f)
+        rep = reconcile(blob, record)
+    except (OSError, ValueError, DocumentStoreError) as e:
+        out(f"{RECONCILE_ALERT_MARKER} cannot reconcile: {type(e).__name__}")
+        return 1
+    out(json.dumps(rep, indent=2))
+    if not rep["intact"]:
+        out(f"{RECONCILE_ALERT_MARKER} remote anchors do not match the independent record")
+        return 1
+    out(f"{RECONCILE_OK_MARKER} remote anchors match the independent record")
+    return 0
+
+
 def main(argv=None, env=None, store=None, blob=None, out=print):
-    """python -m zava_forward.orchestrator.digest_blob [--publish] : publish then verify; exit 1 and alert on mismatch."""
+    """python -m zava_forward.orchestrator.digest_blob [--publish | --reconcile RECORD.json]
+
+Publish then verify, or (read-only) reconcile remote anchors with a second person's independent
+record. Exit 1 and alert on mismatch."""
     argv = sys.argv[1:] if argv is None else argv
+    if "--reconcile" in argv:
+        i = argv.index("--reconcile")
+        if i + 1 >= len(argv):
+            out("--reconcile needs the path of the independent record")
+            return 2
+        return _reconcile_main(argv[i + 1], env, blob, out)
     if store is None:
         from zava_forward.core.factory import open_store
         store = open_store(env)
