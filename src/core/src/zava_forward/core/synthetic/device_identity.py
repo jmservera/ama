@@ -26,7 +26,15 @@ def _run_lock(run_id: str) -> threading.RLock:
 
 
 class DeviceIdentityError(RuntimeError):
-    pass
+    """Fixed-code error; `new_manifest` carries non-secret references after a partial rotation.
+
+    After ROTATION_REVOKE_FAILED or ROTATION_INCOMPLETE the supported recovery is
+    `teardown(error.new_manifest, ...)`. Retrying `rotate` is unsupported.
+    """
+
+    def __init__(self, message: str, new_manifest: "Manifest | None" = None) -> None:
+        super().__init__(message)
+        self.new_manifest = new_manifest
 
 
 class Registry(Protocol):
@@ -134,7 +142,8 @@ def provision(manifest: Manifest, registry: Registry, store: CredentialStore) ->
     if failure is not None:
         # Raised outside the handler so a caller's secret-bearing exception is never chained.
         raise DeviceIdentityError(str(failure)) from None
-    assert result is not None
+    if result is None:
+        raise DeviceIdentityError("PROVISION_FAILED")
     return result
 
 
@@ -188,6 +197,97 @@ def _provision_locked(manifest: Manifest, registry: Registry, store: CredentialS
             raise DeviceIdentityError("PROVISION_ROLLBACK_INCOMPLETE") from None
         raise DeviceIdentityError("PROVISION_FAILED_ROLLED_BACK")
     return Manifest(manifest.run_id, manifest.credential_owner, tuple(issued))
+
+
+def rotate(manifest: Manifest, registry: Registry, store: CredentialStore) -> Manifest:
+    """Issue a new credential per identity, then revoke the old ones (no downtime overlap).
+
+    Old credentials stay valid until every new one is stored. Returns references only.
+
+    Retry after ROTATION_REVOKE_FAILED or ROTATION_INCOMPLETE is unsupported: `rotate` on
+    either manifest fails with ROTATION_STATE_MISMATCH. Recover by tearing down
+    `DeviceIdentityError.new_manifest`.
+    """
+    failure: DeviceIdentityError | None = None
+    result: Manifest | None = None
+    try:
+        manifest.validate()
+        with _run_lock(manifest.run_id):
+            result = _rotate_locked(manifest, registry, store)
+    except DeviceIdentityError as error:
+        failure = error
+    if failure is not None:
+        # Raised outside the handler so a caller's secret-bearing exception is never chained.
+        raise DeviceIdentityError(str(failure), failure.new_manifest) from None
+    if result is None:
+        raise DeviceIdentityError("ROTATION_FAILED")
+    return result
+
+
+def _rotate_locked(manifest: Manifest, registry: Registry, store: CredentialStore) -> Manifest:
+    run_id = manifest.run_id
+    old = [i.credential_ref for i in manifest.identities]
+    if not all(old) or len(set(old)) != len(old):
+        raise DeviceIdentityError("ROTATION_REFERENCES_MISSING")
+    try:
+        owned = {i.device_id for i in manifest.identities}
+        stored = set(store.run_references(run_id))
+        precheck = (
+            set(registry.list_run(run_id)) == owned
+            and all(registry.run_of(d) == run_id for d in owned)
+            and set(old) == stored
+        )
+    except Exception:
+        raise DeviceIdentityError("ROTATION_CHECK_FAILED") from None
+    if not precheck:
+        raise DeviceIdentityError("ROTATION_STATE_MISMATCH")
+    issued: list[DeviceIdentity] = []
+    failed = False
+    try:
+        for identity in manifest.identities:
+            reference = store.issue(identity.device_id, run_id)
+            issued.append(
+                DeviceIdentity(identity.device_id, identity.sensor_id, identity.home_id, reference)
+            )
+    except Exception:
+        failed = True
+    if failed:
+        # Anything stored beyond the old set, including an uncertain write, is revoked.
+        undo_errors = _revoke_all(store, run_id, keep=set(old))
+        if undo_errors:
+            raise DeviceIdentityError("ROTATION_ROLLBACK_INCOMPLETE") from None
+        raise DeviceIdentityError("ROTATION_FAILED_OLD_KEPT") from None
+    errors = 0
+    for reference in old:
+        try:
+            store.revoke(reference)
+        except Exception:
+            errors += 1
+    try:
+        leftover = set(store.run_references(run_id)) != {i.credential_ref for i in issued}
+    except Exception:
+        errors += 1
+        leftover = False
+    new_manifest = Manifest(run_id, manifest.credential_owner, tuple(issued))
+    if errors:
+        raise DeviceIdentityError(f"ROTATION_REVOKE_FAILED:{errors}", new_manifest)
+    if leftover:
+        raise DeviceIdentityError("ROTATION_INCOMPLETE", new_manifest)
+    return new_manifest
+
+
+def _revoke_all(store: CredentialStore, run_id: str, keep: set[str]) -> int:
+    errors = 0
+    try:
+        extra = [r for r in store.run_references(run_id) if r not in keep]
+    except Exception:
+        return 1
+    for reference in extra:
+        try:
+            store.revoke(reference)
+        except Exception:
+            errors += 1
+    return errors
 
 
 def teardown(
