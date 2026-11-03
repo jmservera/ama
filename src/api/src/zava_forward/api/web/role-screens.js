@@ -967,3 +967,71 @@ registerRoleScreen({
       screenPanel("AI economics (ledger-wide, all homes)", assetCost(extra?.report)));
   }
 });
+
+const serviceMeaning = {
+  "Open": "Opened and waiting for the named owner to act.",
+  "In progress": "The named owner is dealing with it.",
+  "Resolved": "The owner says it is dealt with. It is not closed until the outcome is recorded.",
+  "Closed": "Closed with an outcome recorded for the resident."
+};
+const serviceStatus = (r) => `${screenValue(r.status)}. ${serviceMeaning[r.status] || "Meaning not recorded."}`;
+const serviceNeeds = (r) => Array.isArray(r.accessibility) && r.accessibility.length ? r.accessibility.join(", ") : "Unknown";
+const serviceOwner = (r) => `Service: ${screenPerson(r.service_identity || r.service_owner)}. Redress: ${screenPerson(r.redress_identity || r.redress_owner)}`;
+const serviceReview = (r) => r.route === "Independent review"
+  ? `Independent review of ${screenValue(r.review_reference)}; ${screenValue(r.review_measure)} v${screenValue(r.review_decision_version)}`
+  : "Not an independent review";
+function serviceQueueRow([row, c]) {
+  if (!c) return [row.id, "Unavailable. Open the home to check.", "Unavailable", "Unavailable"];
+  const open = (c.service_requests || []).filter((r) => r.status !== "Closed");
+  const u = c.resident_update;
+  return [row.id,
+    open.length ? open.map((r) => `${r.id} ${screenValue(r.route)}: ${screenValue(r.status)}, next update ${screenStamp(r.next_update)}`).join("; ") : "No open request recorded",
+    open.length ? [...new Set(open.map(serviceNeeds))].join("; ") : "None recorded",
+    u ? `${screenValue(u.status)}, owner ${screenPerson(u.owner_identity || u.owner)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
+}
+registerRoleScreen({
+  id: "resident-service-issues",
+  title: "Resident service issue queue",
+  roles: choiceRoles,
+  async summarise(rows, signal) {
+    const entries = await Promise.all(rows.map((row) =>
+      api(`/api/cases/${encodeURIComponent(row.id)}`, undefined, signal).then((c) => [row, c], (e) => {
+        signal.throwIfAborted();
+        return [row, null];
+      })));
+    return this.summary(entries);
+  },
+  summary(entries) {
+    return screenPanel("Open service issues across this page of homes",
+      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Contact needs are shown with each issue. Open a home for the full record."),
+      screenTable("Open service issues by home",
+        ["Home", "Open issues and next update", "Contact needs", "Update commitment"],
+        entries.map(serviceQueueRow), Infinity));
+  },
+  render(c) {
+    const requests = c.service_requests || [];
+    const update = c.resident_update;
+    return h("div", {},
+      screenPanel("Evidence boundary",
+        h("p", {}, "Read-only view. No message, call or letter is sent and no record changes here. Resident-facing screens are designed separately. Source: desk research, not observed behaviour."),
+        h("p", {}, `Home scope: ${c.id} only.`)),
+      screenPanel("Service issues",
+        h("p", {}, "Each issue shows the route, the named owners, the contact needs the resident gave and the next update date. A complaint or independent review has a different service owner and redress owner. A pause or withdrawal of a measure is shown on the resident choice screen, not here."),
+        requests.length ? screenTable("Service issues and contact needs",
+          ["Issue", "Route", "Summary and outcome wanted", "State and meaning", "Owners", "Contact needs", "Representative reference", "Next update", "Review link"],
+          requests.map((r) => [r.id, r.route, `${screenValue(r.summary)}. Wanted: ${screenValue(r.desired_outcome)}`, serviceStatus(r), serviceOwner(r),
+            serviceNeeds(r), r.representative_ref, screenStamp(r.next_update), serviceReview(r)]))
+          : h("p", { class: "empty" }, "No service issue recorded. This does not establish that the resident has none.")),
+      requests.some((r) => (r.history || []).length) ? screenPanel("Response history",
+        screenTable("Recorded response steps",
+          ["Issue", "State", "Recorded by", "Recorded", "Note"],
+          requests.flatMap((r) => (r.history || []).map((x) => [r.id, x.status, x.by, screenStamp(x.at), x.note])))) : null,
+      screenPanel("Linked update commitment",
+        update ? screenFields([
+          ["Status", update.status], ["Purpose or linked issue", update.purpose],
+          ["Owner", screenPerson(update.owner_identity || update.owner)], ["Due", screenStamp(update.due_at)],
+          ["Safe route reference", update.safe_contact_ref],
+          ["Meaning", "A commitment is not a message. Nothing is sent or marked received here."]])
+          : screenUnknown("No update commitment is recorded for this home.", "Case owner or resident-workflow manager", "Record a commitment in the case workspace")));
+  }
+});

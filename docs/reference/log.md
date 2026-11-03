@@ -9695,3 +9695,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   rejects the provisional OS copyright year in the ONS boundaries attribution,
   so the #175 source criterion stays unproven. Original RPI evidence is under
   `.copilot-tracking/` (2026-11-02 issue-175-source-retrieval-dates).
+## [2026-11-02] update | Resident service issue screen added to atlas trace, Refs #232
+
+* Added a `resident-service-issues` read-only role screen (accessible service
+  issue, owners, contact needs, linked update commitment) and one row in the
+  [atlas screen trace](research/ux/atlas-screen-trace.md). Desk research, not
+  observed behaviour; browser, keyboard and assistive-technology validation of
+  the screen is not performed. #232 stays open.

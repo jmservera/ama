@@ -30,6 +30,7 @@ KNOWN_SCREENS = frozenset(
         "programme-queue",
         "technical-queue",
         "resident-choice",
+        "resident-service-issues",
         "safety-lead",
         "hazard-triage",
         "procurement-packages",
