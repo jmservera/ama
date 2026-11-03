@@ -21,8 +21,6 @@ EXPECTED = (
     "Eligibility",
     "Not selected. No latest-wins or silent correction is applied.",
     "Preserved unchanged in the table above",
-    "Returned",
-    "Reopened",
     "SYN missing roof reference",
     "SYN-EVENT-229",
     "not an operational audit trail",
@@ -58,6 +56,15 @@ def check_accessibility(page: Page) -> bool:
     for phrase in EXPECTED:
         check(f"shows: {phrase}", phrase in text)
     check("forward moves are not shown as returns", "SYN forward move" not in text)
+    returns = evidence.get_by_role("region", name="Recorded returns and reopens", exact=True)
+    returns_text = returns.text_content() or ""
+    for phrase in ("Returned", "Reopened", "SYN missing roof reference", "SYN reopened for evidence"):
+        check(f"returns table shows: {phrase}", phrase in returns_text)
+    conflicts = evidence.get_by_role(
+        "region", name="Source conflicts with both values and source details", exact=True)
+    conflicts_text = conflicts.text_content() or ""
+    for phrase in ("SYN-STOCK-A", "SYN-STOCK-B", "Unresolved"):
+        check(f"conflict table shows: {phrase}", phrase in conflicts_text)
     check("source A is shown for both queries (SQ-1, SQ-2)", text.count("SYN-STOCK-A") >= 2)
     check("source B is shown for both queries (SQ-1, SQ-2)", text.count("SYN-STOCK-B") >= 2)
     check("withdrawn query is shown as withdrawn, not removed", "Withdrawn" in text)
@@ -80,6 +87,8 @@ def check_accessibility(page: Page) -> bool:
     axe_path = os.environ.get("ZF_AXE_JS")
     if not axe_path:
         print("SKIP axe scan: set ZF_AXE_JS to the pinned axe 4.10.3 file")
+        if os.environ.get("ZF_AXE_REQUIRED") == "1":
+            raise AssertionError("axe scan skipped but ZF_AXE_REQUIRED=1")
         return False
     raw = Path(axe_path).read_bytes()
     check("axe file is the pinned 4.10.3 build", hashlib.sha256(raw).hexdigest() == AXE_SHA256)
