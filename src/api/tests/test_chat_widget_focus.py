@@ -303,6 +303,48 @@ ui.dispose();
 """
         )
 
+    def test_panel_states_limits_and_per_turn_consumption(self) -> None:
+        self.run_node(
+            r"""
+(async () => {
+  const h = harness();
+  h.employee.install();
+  const opening = h.launcher.onclick();
+  h.resolve("/api/chat/skills", {skills: []});
+  h.resolve("/api/chat/status", {warning: "Synthetic only.", retention: "Local.",
+    storage_approved: true, limits: {calls_per_turn: 1, retries: 0, output_tokens: 600,
+      context_chars: 16000, history_chars: 4000}});
+  await turn();
+  await opening;
+  const ui = h.nodes();
+  const limits = h.document.getElementById("chat-limits");
+  assert.match(limits.textContent, /1 model call, 0 retries/);
+  assert.match(limits.textContent, /16000 characters of context and 4000 characters/);
+  assert.match(limits.textContent, /not spend authorization/);
+  assert.match(limits.textContent, /workflow-only help/);
+  const texts = el => [el.textContent || "", ...el.children.flatMap(texts)];
+  const sendTurn = async (consumption) => {
+    ui.input.value = "Question";
+    const task = ui.form.onsubmit({preventDefault() {}});
+    await turn();
+    if (!h.pendingPaths().includes("/api/chat/threads/t1/ask")) {
+      h.resolve("/api/chat/threads", {id: "t1"});
+      await turn();
+    }
+    h.resolve("/api/chat/threads/t1/ask", {reply: "Reply", skill: "general", kind: "fallback",
+      label: "Workflow-only", workflow_only: true, citations: [], consumption});
+    await task;
+  };
+  await sendTurn({model_calls: 1, tokens: {total_tokens: 120}, outcome: "answer", cost: "Unknown"});
+  await sendTurn({model_calls: 0, tokens: null, outcome: "fallback", cost: "Unknown"});
+  const all = texts(ui.log).join(" | ");
+  assert.match(all, /Model calls: 1\. Tokens: 120\. Outcome: answer\. Cost: Unknown\./);
+  assert.match(all, /Model calls: 0\. Tokens: Unknown\. Outcome: fallback\. Cost: Unknown\./);
+  h.employee.reset();
+})().catch(error => { console.error(error); process.exitCode = 1; });
+"""
+        )
+
     def test_external_focus_hides_without_redirect_or_disposal(self) -> None:
         self.run_node(
             r"""
