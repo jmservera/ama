@@ -26,7 +26,11 @@ def _run_lock(run_id: str) -> threading.RLock:
 
 
 class DeviceIdentityError(RuntimeError):
-    pass
+    """Fixed-code error; `new_manifest` carries non-secret references after a partial rotation."""
+
+    def __init__(self, message: str, new_manifest: "Manifest | None" = None) -> None:
+        super().__init__(message)
+        self.new_manifest = new_manifest
 
 
 class Registry(Protocol):
@@ -134,7 +138,8 @@ def provision(manifest: Manifest, registry: Registry, store: CredentialStore) ->
     if failure is not None:
         # Raised outside the handler so a caller's secret-bearing exception is never chained.
         raise DeviceIdentityError(str(failure)) from None
-    assert result is not None
+    if result is None:
+        raise DeviceIdentityError("PROVISION_FAILED")
     return result
 
 
@@ -205,8 +210,9 @@ def rotate(manifest: Manifest, registry: Registry, store: CredentialStore) -> Ma
         failure = error
     if failure is not None:
         # Raised outside the handler so a caller's secret-bearing exception is never chained.
-        raise DeviceIdentityError(str(failure)) from None
-    assert result is not None
+        raise DeviceIdentityError(str(failure), failure.new_manifest) from None
+    if result is None:
+        raise DeviceIdentityError("ROTATION_FAILED")
     return result
 
 
@@ -254,11 +260,12 @@ def _rotate_locked(manifest: Manifest, registry: Registry, store: CredentialStor
     except Exception:
         errors += 1
         leftover = False
+    new_manifest = Manifest(run_id, manifest.credential_owner, tuple(issued))
     if errors:
-        raise DeviceIdentityError(f"ROTATION_REVOKE_FAILED:{errors}")
+        raise DeviceIdentityError(f"ROTATION_REVOKE_FAILED:{errors}", new_manifest)
     if leftover:
-        raise DeviceIdentityError("ROTATION_INCOMPLETE")
-    return Manifest(run_id, manifest.credential_owner, tuple(issued))
+        raise DeviceIdentityError("ROTATION_INCOMPLETE", new_manifest)
+    return new_manifest
 
 
 def _revoke_all(store: CredentialStore, run_id: str, keep: set[str]) -> int:

@@ -525,6 +525,31 @@ class RotationTests(unittest.TestCase):
             di.rotate(manifest, registry, store)
         self.assertNotIn(SECRET, str(ctx.exception))
 
+    def test_revoke_failure_exposes_recoverable_manifest_and_teardown_clears(self) -> None:
+        registry, store, manifest = self.provisioned()
+        original = store.revoke
+        failing = {"on": True}
+
+        def flaky(reference: str) -> None:
+            if failing["on"]:
+                raise RuntimeError(SECRET)
+            original(reference)
+
+        store.revoke = flaky  # type: ignore[method-assign]
+        with self.assertRaisesRegex(di.DeviceIdentityError, "ROTATION_REVOKE_FAILED:3") as ctx:
+            di.rotate(manifest, registry, store)
+        recovered = ctx.exception.new_manifest
+        self.assertIsNotNone(recovered)
+        assert recovered is not None
+        self.assertNotIn(SECRET, "".join(traceback.format_exception(ctx.exception)))
+        self.assertNotIn(SECRET, repr(recovered))
+        new = {i.credential_ref for i in recovered.identities}
+        self.assertTrue(new <= set(store.references()))
+        failing["on"] = False
+        di.teardown(recovered, registry, store)
+        self.assertEqual(store.references(), [])
+        self.assertEqual(registry.list_run("run-001"), [])
+
     def test_stale_or_missing_references_are_refused_before_issuing(self) -> None:
         registry, store, manifest = self.provisioned()
         rotated = di.rotate(manifest, registry, store)
