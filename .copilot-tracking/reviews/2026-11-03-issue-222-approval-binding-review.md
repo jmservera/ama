@@ -7,7 +7,7 @@ ms.date: 2026-11-03
 
 Executed once. Outcome: conformant for the bounded slice; no material findings open.
 
-* Approval is fail closed and tamper evident; a human disposition cannot clear it (tested).
+* Approval is fail closed and edit evident (not authenticated); a human disposition cannot clear it (tested).
 * Synthetic results remain not fairness evidence; the runner still never supplies approval.
 * No change to ranking, API or UI; human approval and consent boundaries unchanged.
 
