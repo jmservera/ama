@@ -326,7 +326,7 @@ class FormApi(unittest.TestCase):
                         "Ask the document owner to recover its source."
                     ),
                 ),
-                dict(readable, recorded_diagnostics=[]),
+                dict(readable, recorded_diagnostics=[], diagnostic_freshness=[]),
             ],
         )
 
