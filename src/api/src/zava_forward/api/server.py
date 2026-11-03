@@ -144,7 +144,8 @@ def get_kind(path):
 
 GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": "protocol_approve", "benefits-record": "benefits_record",
                       "benefits-approve": "benefits_approve", "release": "release_record", "breach": "breach_record", "restart": "breach_restart",
-                      "evidence-record": "rai_evidence_record"}
+                      "evidence-record": "rai_evidence_record", "value-claim-record": "value_claim_record",
+                      "value-claim-confirm": "value_claim_confirm"}
 CONTINUITY_ACTIONS = {"restart-propose": "restart_propose", "restart-decide": "restart_decide", "change": "change_record",
                       "change-reverse": "change_reverse"}
 QUALITY_ACTIONS = {

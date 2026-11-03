@@ -46,6 +46,9 @@ BG011_FIELDS = (
     ("pause_rules", "the rules for pauses, incomplete cases, withdrawals and exclusions"),
     ("effort_roles_tasks", "the coordination-hour roles and tasks, including shifted effort and recording cost"),
 )
+AI_DENOMINATORS = ("per assistant run", "per accepted proposal", "per accepted handover")
+BOOKED_DESTINATIONS = ("new revenue won", "revenue retained", "spend removed", "spend avoided", "capital freed")
+CAPACITY_KINDS = ("capacity gain", "augmentation", "automation")
 BG011_TARGETS = dict(cycle_time=20.0, coordination_hours=25.0)
 PHASES = ("Phase 0 capture", "Shadow testing", "Live pilot")
 DECISIONS = ("Release", "Withhold")
@@ -364,12 +367,20 @@ class GovernanceMixin:
         defs = {key: k.text(body.get(key), label, 600) for key, label in BG011_FIELDS}
         mde = dict(cycle_time=_pct(body.get("mde_cycle_time_pct"), "the cycle-time MDE"),
                    coordination_hours=_pct(body.get("mde_coordination_hours_pct"), "the coordination-hours MDE"))
+        denominator = body.get("ai_denominator")
+        if denominator not in AI_DENOMINATORS:
+            raise ValueError("Choose the AI cost denominator: " + ", ".join(AI_DENOMINATORS) + ".")
+        price = k.text(body.get("ai_price_source"), "the dated price source", 300, required=False)
+        ai_cost = dict(denominator=denominator, quality_floor=k.text(body.get("ai_quality_floor"), "the quality floor the outcome must clear", 600),
+                       cost_components=k.text(body.get("ai_cost_components"), "the Total Cost of AI components beyond token cost", 600),
+                       price_source=price or None,
+                       cost_status="Priced from the named source" if price else "Unknown: no dated price source is recorded")
         with self.lock:
             g = self._gov()
-            entry = dict(goal="BG-011", definitions=defs, mde_pct=mde, targets_pct=dict(BG011_TARGETS), recorded_by=user["email"],
+            entry = dict(goal="BG-011", definitions=defs, ai_running_cost=ai_cost, mde_pct=mde, targets_pct=dict(BG011_TARGETS), recorded_by=user["email"],
                          recorded_at=k.now(), status="Recorded, awaiting approval", approved_by=None, synthetic=bool(body.get("synthetic")))
             g["benefits"]["BG-011"] = entry
-            self.audit(user["email"], "benefits_record", "-", "BG-011 definitions and MDE recorded")
+            self.audit(user["email"], "benefits_record", "-", "BG-011 definitions, MDE and AI running-cost line recorded")
             self.save()
             return entry
 
@@ -393,6 +404,43 @@ class GovernanceMixin:
         observed = observed or {}
         return {name: target_verdict(t, e["mde_pct"][name], observed.get(name)) for name, t in BG011_TARGETS.items()}
 
+    def value_claim_record(self, user, body):
+        """A value claim is capacity until Finance confirms one booked destination; recording never books value."""
+        k.refuse_bulk(body)
+        _need_manager(user, "record a value claim")
+        kind = body.get("capacity_kind")
+        if kind not in CAPACITY_KINDS:
+            raise ValueError("Choose capacity gain, augmentation or automation.")
+        claim = dict(claim=k.text(body.get("claim"), "the value claim", 400), capacity_kind=kind,
+                     baseline=k.text(body.get("baseline"), "the baseline for this claim", 400), status="Capacity only, not booked",
+                     destination=None, budget_owner_ref=None, recorded_by=user["email"], recorded_at=k.now(), synthetic=bool(body.get("synthetic")))
+        with self.lock:
+            claims = self._gov().setdefault("value_claims", [])
+            claim["id"] = self._next_id("VC", claims)
+            claims.append(claim)
+            self.audit(user["email"], "value_claim_record", "-", f"{claim['id']} recorded as capacity")
+            self.save()
+            return claim
+
+    def value_claim_confirm(self, user, body):
+        """Records the reference to the budget owner's confirmation; it does not sign for the owner."""
+        k.refuse_bulk(body)
+        _need_manager(user, "record a booked destination")
+        destination = body.get("destination")
+        if destination not in BOOKED_DESTINATIONS:
+            raise ValueError("Choose one booked destination: " + ", ".join(BOOKED_DESTINATIONS) + ".")
+        ref = k.text(body.get("budget_owner_ref"), "the budget owner's confirmation reference", 200)
+        with self.lock:
+            claims = self._gov().setdefault("value_claims", [])
+            claim = next((c for c in claims if c["id"] == body.get("id")), None)
+            if not claim:
+                raise ValueError("Choose a recorded value claim.")
+            k.different_person(user, claim["recorded_by"], "record the booked destination")
+            claim.update(destination=destination, budget_owner_ref=ref, status="Booked", confirmed_by=user["email"], confirmed_at=k.now())
+            self.audit(user["email"], "value_claim_confirm", "-", f"{claim['id']} booked as {destination}")
+            self.save()
+            return claim
+
     def capture_gate(self):
         """Reasons Phase 0 capture is closed; empty only when protocol, DPIA, lawful basis and benefits register are approved."""
         g = self._gov()
@@ -405,6 +453,8 @@ class GovernanceMixin:
         e = g["benefits"].get("BG-011")
         if not e or e["status"] != "Approved":
             why.append("The benefits register (BG-011 definitions and MDE) is not approved. Owner: programme manager.")
+        elif not e.get("ai_running_cost"):
+            why.append("The benefits register has no AI running-cost line (denominator and quality floor). Owner: programme manager.")
         return why
 
     def require_capture_open(self):
@@ -525,7 +575,7 @@ class GovernanceMixin:
             detached = copy(self)
             detached.data = dict(self.data, governance=deepcopy(self.data.get("governance", {})))
             g = detached._gov()
-            return dict(protocol=g["protocol_versions"], benefits=g["benefits"], verdicts=detached.benefit_verdicts(), releases=g["releases"],
+            return dict(protocol=g["protocol_versions"], benefits=g["benefits"], verdicts=detached.benefit_verdicts(), value_claims=g.get("value_claims", []), releases=g["releases"],
                         release_gaps=detached.release_gaps(), breaches=g["breaches"], paused=detached.paused_scopes(),
                         capture_open=not detached.capture_gate(), capture_blockers=detached.capture_gate(), note=EMERGENCY_NOTE,
                         rai_evidence=_rai_view(g, assessment))
