@@ -422,9 +422,14 @@ class JsonResidentDecisions(unittest.TestCase):
         first = self.verification(verified_tenure="Leaseholder")
         self.store.resident_action(self.sam, "ZF-1", first)
         self.store.resident_action(
-            self.sam, "ZF-1",
-            self.verification(expected_version=1, outcome="Not verified",
-                              verified_tenure="Unknown", identity_confirmed=False),
+            self.sam,
+            "ZF-1",
+            self.verification(
+                expected_version=1,
+                outcome="Not verified",
+                verified_tenure="Unknown",
+                identity_confirmed=False,
+            ),
         )
         report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
         self.assertEqual(report["decision_route"], "Unknown")

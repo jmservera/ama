@@ -219,15 +219,28 @@ class ResidentApi(unittest.TestCase):
 
     def test_http_tenure_verification_sets_route_and_stays_hidden(self) -> None:
         legal = dict(
-            action="tenure_legal_position", case_id="ZF-1", report_version=1, expected_version=0,
-            reviewer_name="Lee Legal", reviewer_role="Legal adviser", position_ref="SYN-LEGAL-REF",
-            position_version="v1", reviewed_on="2026-01-01",
+            action="tenure_legal_position",
+            case_id="ZF-1",
+            report_version=1,
+            expected_version=0,
+            reviewer_name="Lee Legal",
+            reviewer_role="Legal adviser",
+            position_ref="SYN-LEGAL-REF",
+            position_version="v1",
+            reviewed_on="2026-01-01",
         )
         verify = dict(
-            action="tenure_verify", case_id="ZF-1", report_version=1, expected_version=0,
-            outcome="Verified", verified_tenure="Leaseholder", identity_confirmed=True,
-            verifier_name="Dana Owner", verifier_role="Home Ownership data owner",
-            evidence_ref="SYN-OWNER-CANARY", verified_on="2026-01-02",
+            action="tenure_verify",
+            case_id="ZF-1",
+            report_version=1,
+            expected_version=0,
+            outcome="Verified",
+            verified_tenure="Leaseholder",
+            identity_confirmed=True,
+            verifier_name="Dana Owner",
+            verifier_role="Home Ownership data owner",
+            evidence_ref="SYN-OWNER-CANARY",
+            verified_on="2026-01-02",
         )
         self.assertEqual(
             self.call("/api/cases/ZF-1/resident", "sam", self.intake_payload(tenure=True))[0], 200
