@@ -673,12 +673,11 @@ function choiceStoppedSummary(m) {
   const review = m.review?.status === "Needs human review" ? ", needs human review before any restart" : "";
   return `${m.measure}: ${state}${v ? ` (v${v.version}, ${choiceBinding(v)})` : ""}${review}`;
 }
-function choiceQueueRow([row, c]) {
-  if (!c) return [row.id, "Unavailable. Open the home to check.", "Unavailable", "Unavailable"];
+function choiceQueueRow(c) {
   const measures = c.measure_decisions || [];
   const stopped = measures.filter(choiceStopped).map(choiceStoppedSummary);
   const u = c.resident_update;
-  return [row.id,
+  return [`${c.id}, ${screenValue(c.address)}, ${screenValue(c.town)}`,
     measures.length ? measures.map((m) => { const v = choiceLatest(m); return `${m.measure}: current ${m.status}${v ? `; latest recorded v${v.version} ${v.status} (${choiceBinding(v)})` : ""}`; }).join("; ") : "No measure choices recorded",
     stopped.length ? stopped.join("; ") : "None recorded",
     u ? `${screenValue(u.status)}: ${screenValue(u.purpose)}. Owner ${screenPerson(u.owner_identity || u.owner)}, due ${screenStamp(u.due_at)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
@@ -687,21 +686,24 @@ registerRoleScreen({
   id: "resident-choice",
   title: "Resident choice and update queue",
   roles: choiceRoles,
-  async summarise(rows, signal) {
-    const entries = await Promise.all(rows.map((row) =>
-      api(`/api/cases/${encodeURIComponent(row.id)}`, undefined, signal).then((c) => [row, c], (e) => {
-        signal.throwIfAborted();
-        return [row, null];
-      })));
-    return this.summary(entries);
+  async overview(signal) {
+    const queue = await api("/api/resident/choice-queue?limit=100&offset=0", undefined, signal).catch((e) => {
+      signal.throwIfAborted();
+      return null;
+    });
+    return this.summary(queue);
   },
-  summary(entries) {
+  summary(queue) {
+    const items = queue && Array.isArray(queue.items) ? queue.items : null;
     return h("div", {},
-      screenPanel("Choice and update commitments across this page of homes",
-        h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. A paused or withdrawn measure is listed separately from contact and access. Open a home for the full version history."),
-        screenTable("Choice and update commitments by home",
-          ["Home", "Measure choices (latest version)", "Paused or withdrawn", "Update commitment"],
-          entries.map(choiceQueueRow), Infinity)),
+      screenPanel("Choice and update commitments across open homes (portfolio scope, not this home)",
+        items
+          ? h("div", {},
+            h("p", {}, `Read-only. Shows ${items.length} of ${screenValue(queue.total)} open homes, in home ID order, as your role may see them. A paused or withdrawn measure is listed separately from contact and access. Open a home for the full version history.`),
+            screenTable("Choice and update commitments by home",
+              ["Home", "Measure choices (latest version)", "Paused or withdrawn", "Update commitment"],
+              items.map(choiceQueueRow), Infinity))
+          : screenUnknown("The cross-home queue could not be loaded.", "Resident liaison officer or programme manager", "Reload, or open each home from the case queue")),
       screenWithheld(["Resident phone, email and postal contact history (shown only as a safe route reference)",
         "Detailed access and household history beyond the update commitment", "Contractor capacity and offered slots"]));
   },

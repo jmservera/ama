@@ -438,6 +438,23 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         with self.lock:
             return stock.queue_rows(self.cases.values())
 
+    RESIDENT_CHOICE_QUEUE_ROLES = ("Resident Liaison Officer", "Retrofit Coordinator", "Retrofit Programme Manager", "Programme Support Officer")
+
+    def resident_choice_queue(self, user, limit=50, offset=0):
+        """Measure choices and update commitments across open homes, role-projected. Read-only, no resident contact."""
+        if user.get("role") not in self.RESIDENT_CHOICE_QUEUE_ROLES:
+            raise PermissionError("Your role does not include the resident choice queue.")
+        with self.lock:
+            ids = sorted(cid for cid, c in self.cases.items() if not c["closed"])
+            items = []
+            for cid in ids[offset:offset + limit]:
+                d = self.detail(cid, user)
+                if d is None:
+                    continue
+                items.append(dict(id=cid, address=d["home"]["address"], town=d["home"]["town"],
+                                  measure_decisions=d.get("measure_decisions", []), resident_update=d.get("resident_update")))
+            return dict(items=items, total=len(ids), limit=limit, offset=offset)
+
     def stock_reconcile(self, user, case_id, body):
         from . import controls
         controls.refuse_bulk(body)

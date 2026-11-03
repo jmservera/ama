@@ -83,33 +83,40 @@ QUEUE_SCRIPT = r"""
 const fs = require("node:fs");
 const vm = require("node:vm");
 const host = fs.readFileSync(process.argv[1] + "/role-screens.js", "utf8");
-const cases = JSON.parse(process.argv[2]);
+const queue = JSON.parse(process.argv[2]);
+const urls = [];
 const context = vm.createContext({
   URLSearchParams, Intl, AbortController, Date,
   routeController: new AbortController(), me: {user: {role: "Resident Liaison Officer"}},
   api: async (url) => {
-    const id = decodeURIComponent(url.split("/").pop());
-    if (!cases[id]) throw new Error("denied");
-    return cases[id];
+    urls.push(url);
+    if (queue === null) throw new Error("denied");
+    return queue;
   },
   h: (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat(Infinity).filter(
     kid => kid !== false && kid !== null && kid !== undefined)})
 });
 vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('resident-choice');", context);
-context.__s.summarise([{id: "C-1"}, {id: "C-X"}], new AbortController().signal)
-  .then(tree => console.log(JSON.stringify(tree)));
+context.__s.overview(new AbortController().signal)
+  .then(tree => console.log(JSON.stringify({tree, urls})));
 """
 
 
-def run_queue(cases: Mapping[str, object]) -> object:
+def run_queue(queue: object) -> dict[str, object]:
     result = subprocess.run(
-        ["node", "-e", QUEUE_SCRIPT, str(WEB), json.dumps(cases)],
+        ["node", "-e", QUEUE_SCRIPT, str(WEB), json.dumps(queue)],
         capture_output=True,
         text=True,
         timeout=30,
     )
     assert result.returncode == 0, result.stderr
-    return json.loads(result.stdout)
+    parsed: dict[str, object] = json.loads(result.stdout)
+    return parsed
+
+
+def page(*items: object, total: int | None = None) -> dict[str, object]:
+    rows = [{"address": "1 Test Road", "town": "Testville", **dict(i)} for i in items]  # type: ignore[call-overload]
+    return {"items": rows, "total": len(items) if total is None else total}
 
 
 def run(case: Mapping[str, object]) -> dict[str, object]:
@@ -274,8 +281,8 @@ class ResidentChoiceScreen(unittest.TestCase):
                 }
             ],
         }
-        stale_text = json.dumps(run_queue({"C-1": stale}))
-        waiting_text = json.dumps(run_queue({"C-1": waiting}))
+        stale_text = json.dumps(run_queue(page(stale))["tree"])
+        waiting_text = json.dumps(run_queue(page(waiting))["tree"])
         self.assertIn(
             "Solar PV: current Not recorded; latest recorded v1 Withdrawn (scope S-9", stale_text
         )
@@ -302,23 +309,32 @@ class ResidentChoiceScreen(unittest.TestCase):
         self.assertIn("No measure is currently paused or withdrawn", text)
         self.assertIn("No update commitment is recorded", text)
 
-    def test_queue_summary_is_read_only_and_marks_unavailable_homes(self) -> None:
-        tree = run_queue({"C-1": CASE})
+    def test_queue_summary_is_read_only_and_names_scope(self) -> None:
+        result = run_queue(page(CASE, {"id": "C-2"}, total=7))
+        tree = result["tree"]
         text = json.dumps(tree)
+        self.assertEqual(result["urls"], ["/api/resident/choice-queue?limit=100&offset=0"])
         for expected in (
-            "Choice and update commitments across this page of homes",
+            "Choice and update commitments across open homes (portfolio scope, not this home)",
+            "C-1, 1 Test Road, Testville",
+            "Shows 2 of 7 open homes",
             "Loft insulation: current Paused; latest recorded v2 Paused "
             "(scope S-9, revision 2, design 3)",
             "Solar PV: current Not recorded",
             "Explain damp query",
             "Owner One",
             "SC-77",
-            "Unavailable. Open the home to check.",
-            "not a portfolio total",
+            "No measure choices recorded",
+            "No commitment recorded",
         ):
             self.assertIn(expected, text)
         for control in ("button", "form", "input", "select", "textarea", "a"):
             self.assertNotIn(control, tags(tree))
+
+    def test_queue_failure_is_unknown_not_empty(self) -> None:
+        text = json.dumps(run_queue(None)["tree"])
+        self.assertIn("The cross-home queue could not be loaded.", text)
+        self.assertNotIn("No measure choices recorded", text)
 
 
 if __name__ == "__main__":

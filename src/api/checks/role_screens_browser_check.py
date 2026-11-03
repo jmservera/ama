@@ -585,7 +585,7 @@ def run_browser(base: str) -> None:
                 page.locator('a.item[href*="case=ZF-1"]').click()
                 evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
                 evidence.wait_for()
-                if selected in ("226", "231", "231q"):
+                if selected in ("226", "231", "231q", "232", "232s"):
                     parts = [evidence.inner_text()]
                     for panel in evidence.locator("section.screen-record").all():
                         panel.scroll_into_view_if_needed()
