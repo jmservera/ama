@@ -1203,7 +1203,9 @@ opens the read-only referral queue and hazard triage screens on a synthetic home
 with pending receipt, pending acceptance, accepted, legacy, unsent, released
 with evidence and released without evidence hazards, and checks text-only
 states, no write controls, every hazard listed, keyboard reach of both tables
-and reflow. Set `ZF_AXE_JS` to the pinned axe 4.10.3 file to add a WCAG 2.2
+and reflow. It also opens the cross-home referral table (before a home is
+chosen) and checks its sent, received and accepted columns, every hazard listed,
+no write controls, no role simulator text and keyboard reach. Set `ZF_AXE_JS` to the pinned axe 4.10.3 file to add a WCAG 2.2
 A/AA scan. These are engineering checks, not assistive-technology or WCAG
 acceptance (#155).
 With no home selected, both safety screens also list every hazard referral on

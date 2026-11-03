@@ -60,6 +60,22 @@ def safety_data() -> dict[str, Any]:
     return data
 
 
+def scan_axe(page: Page, story: str) -> None:
+    axe_path = os.environ.get("ZF_AXE_JS")
+    if not axe_path:
+        SKIPPED.append(story)
+        print(f"SKIPPED {story} axe scan (not a pass): set ZF_AXE_JS to the pinned axe 4.10.3 file")
+        return
+    raw = Path(axe_path).read_bytes()
+    check("axe file is the pinned 4.10.3 build", hashlib.sha256(raw).hexdigest() == AXE_SHA256)
+    page.evaluate(raw.decode())
+    result = page.evaluate("""async () => await axe.run(document.querySelector('main'), {
+      runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}})""")
+    check(f"{story} axe (main only, 1280px) finds no violations: {[v['id'] for v in result['violations']]}",
+          not result["violations"])
+    print(f"INFO {story} axe incomplete: {[i['id'] for i in result['incomplete']]}")
+
+
 def check_accessibility(page: Page, story: str) -> None:
     evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
     text = evidence.inner_text()
@@ -85,19 +101,44 @@ def check_accessibility(page: Page, story: str) -> None:
         if len(reached) == len(expected):
             break
     check(f"{story} Tab reaches every table region: {reached}", len(reached) == len(expected))
-    axe_path = os.environ.get("ZF_AXE_JS")
-    if not axe_path:
-        SKIPPED.append(story)
-        print(f"SKIPPED {story} axe scan (not a pass): set ZF_AXE_JS to the pinned axe 4.10.3 file")
-        return
-    raw = Path(axe_path).read_bytes()
-    check("axe file is the pinned 4.10.3 build", hashlib.sha256(raw).hexdigest() == AXE_SHA256)
-    page.evaluate(raw.decode())
-    result = page.evaluate("""async () => await axe.run(document.querySelector('main'), {
-      runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}})""")
-    check(f"{story} axe (main only, 1280px) finds no violations: {[v['id'] for v in result['violations']]}",
-          not result["violations"])
-    print(f"INFO {story} axe incomplete: {[i['id'] for i in result['incomplete']]}")
+    scan_axe(page, story)
+
+
+QUEUE_HEADINGS = ("Home and item", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted",
+                  "State", "Follow-up", "Pause status")
+QUEUE_EXPECTED = ("Pending receipt. Follow-up owner:", "Pending acceptance. Follow-up owner:",
+                  "No referral sent.", "SYN-SOURCE-5", "Released")
+SIMULATOR = ("simulat", "impersonat", "view as", "switch role", "act as")
+
+
+def check_queue(page: Page, story: str) -> None:
+    panel = page.locator("section.screen-record", has=page.get_by_role("heading", name="Hazard referrals across this page of homes"))
+    panel.wait_for()
+    table = panel.get_by_role("table", name="Hazard referrals by home", exact=True)
+    text = panel.inner_text()
+    head = table.locator("thead th").all_inner_texts()
+    check(f"{story} queue has awareness, source, destination and separate sent, received, accepted columns",
+          all(name in head for name in QUEUE_HEADINGS))
+    check(f"{story} queue lists every hazard of the home (SA-007)", all(f"ZF-1 H-{n}" in text for n in range(1, 7)))
+    for phrase in QUEUE_EXPECTED:
+        check(f"{story} queue shows: {phrase}", phrase in text)
+    check(f"{story} queue says it is not a portfolio total", "not a portfolio total" in text)
+    check(f"{story} queue has no write controls",
+          panel.locator("button, form, input, select, textarea").count() == 0)
+    main_text = page.locator("main").inner_text().lower()
+    check(f"{story} no role simulator in the view", not any(term in main_text for term in SIMULATOR))
+    region = panel.locator('div.table-scroll[role="region"]')
+    check(f"{story} queue table is a labelled focusable region",
+          region.get_attribute("aria-label") == "Hazard referrals by home" and region.evaluate("el => el.tabIndex === 0"))
+    page.evaluate("() => { document.activeElement.blur(); window.scrollTo(0, 0); }")
+    reached = False
+    for _ in range(80):
+        page.keyboard.press("Tab")
+        if page.evaluate("() => document.activeElement.getAttribute('aria-label') || ''") == "Hazard referrals by home":
+            reached = True
+            break
+    check(f"{story} Tab reaches the queue table", reached)
+    scan_axe(page, f"{story} cross-home table")
 
 
 def run_browser(base: str) -> None:
@@ -120,6 +161,7 @@ def run_browser(base: str) -> None:
                     page.get_by_role("link", name="Specialist screens", exact=True).click()
                     page.get_by_role("heading", name="Specialist screens", exact=True).wait_for()
                     page.get_by_role("link", name=screen, exact=True).click()
+                    check_queue(page, screen)
                     page.locator('a.item[href*="case=ZF-1"]').click()
                     page.get_by_role("region", name="Evidence for ZF-1", exact=True).wait_for()
                     check_accessibility(page, screen)
