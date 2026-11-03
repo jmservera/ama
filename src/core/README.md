@@ -4396,3 +4396,30 @@ the existing case and building screens carry the same facts if this view is unav
 Not delivered: API route and web screen for the version history, scheme register authoring and
 import, versioning of building-level records themselves, and automatic version capture on every
 case change. Tests: `src/core/tests/test_home_case.py`.
+
+## Contractor job pack and field evidence receipts (#132, slice 1)
+
+`zava_forward.core.job_pack` holds pure, read-only rules for a staff-mediated contractor intake. The
+PRD has no provider portal, so this is a design proposal until the owner decides, and the contractor
+identity model in #116 is still open. Nothing here writes a record, grants contractor access or
+accepts work.
+
+* `build_job_pack(order, case)` returns scope, scope version, design version, a notice-needed flag
+  and one named contact from a closed allow-list. It never reads resident notes or vulnerability
+  reasons (PR-002). A missing scope, design version or confirmed appointment gives `ready` False
+  with "do not start work". A digest ties the pack to its scope and design.
+* `worker_receipt` keeps the worker's notes verbatim against the versioned checklist, needs an
+  explicit worker confirmation, and always returns `accepted` False and "Not reviewed".
+  `acknowledge_receipt` confirms receipt only. `review_blocker` refuses review by the worker, the
+  person who keyed it in or whoever acknowledged it. Acceptance stays with `accept_quality`.
+* `merge_offline` is idempotent on the capture reference, keeps originals and holds receipts whose
+  pack digest no longer matches for worker re-confirmation.
+* `visit_recovery` maps a provider no-show or cancellation to "Rebooking needed" with
+  `resident_refusal` False and no change to resident choices.
+* `escalation` routes a variation or concern to a named manager or the building safety liaison and
+  sets `contract_instruction` False; only a new issued work order version changes the contract.
+
+Manual path: staff print or read the pack and key the worker's notes through the existing
+`submit_quality` form; no AI is involved. Not delivered: persistence, API and screens, the provider
+identity decision (#116), the owner decision on staff-mediated intake versus a provider portal, and
+accessibility proof. Tests: `src/core/tests/test_job_pack.py`.

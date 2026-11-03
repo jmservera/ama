@@ -10042,3 +10042,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Owner decision 2026-11-03: `ChatPrivacy.purge_retention` now expires threads and messages a fixed period after creation instead of after idleness. Tests and the demo storage approval record are updated, with a demo-only disclaimer that DPO and Legal review is outstanding.
 * Criteria 2 and 5 stay unmet (DPO and Legal decisions). Touches the SQL repository, so the complete gate is for the coordinator.
+## [2026-11-03] update | Contractor job pack and field evidence rules, staff-mediated proposal (Refs #132)
+
+* Added `job_pack` rules to core (pure, unit-tested, no persistence or API): job pack allow-list, worker-confirmed evidence receipts with original notes kept, acknowledgement separate from independent review, offline merge, provider no-show recovery that is never a resident refusal, and escalations that are never contract instructions. Staff-mediated intake is proposed over a provider portal; the owner decision and the #116 provider identity model remain open. See the [core README](../../src/core/README.md#contractor-job-pack-and-field-evidence-receipts-132-slice-1) and the dated evidence under `.copilot-tracking/` (2026-11-03 issue-132).
