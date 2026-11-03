@@ -1518,6 +1518,14 @@ unchanged. Branch protection on `main` was absent when checked (2026-11-01), so
 no required check was dropped; add any future required checks under the new names.
 The retired prototype workflow is already absent; do not recreate it.
 
+### Demo-only employee chat activation (2026-11-03, Refs #891)
+
+Owner decision 2026-11-03 (jmservera): for the demonstrator only, a visible disclaimer supersedes DPO and Legal review so the employee chat may call the model. No Legal, DPO or RAI approval is recorded or implied. The code side is `ZF_CHAT_DEMO_ACTIVATION` plus `ZF_DEPLOYMENT_PROFILE=demo` (`ai_registry.demo_activation_honoured`; default denied).
+
+* Bicep: `chatDemoActivation` (`main.bicep`, `modules/containerapps.bicep`, default empty). Only the exact value `approved-2026-11-03` on the direct-ingress demo API (`demoDirectIngress`) emits both settings. The resident app (`resident-demo.bicep`) and the non-demo API never receive them. Rollback: remove the parameter or `az containerapp update --remove-env-vars ZF_CHAT_DEMO_ACTIVATION ZF_DEPLOYMENT_PROFILE`.
+* Live apply 2026-11-03 on `ca-cutover-test-demo-api` in resource group `ama`: image rebuilt from main `9ca9ccb88` (the running image predated #892), pushed by digest `sha256:bf8d321379b98eaa62c20e1f5a5e268f64a49a2ec02e81e65fa05dc0471ec9de` inside a short registry window (export policy, public access and one IP rule on, then the rule removed by bare IP, public disabled and exports disabled; readback Disabled, Deny, no rules, exports disabled), then one `az containerapp update` set the image and both env vars. Revision `--0000010` took 100 percent of traffic.
+* Live result: `/api/chat/status` reports `activation: demo-only`, `demo_activation: true` and the disclaimer, but the employee reply to "What's the problem with funding?" was still workflow-only (model calls 0). `chat_admission` also calls `store.ai.gate`; `SqlStore.release_block` denies any task not in `ai_registry.LEGACY` ("task is not registered") when AI is configured, and `chat-case-conversation` is not in it. The switch alone therefore does not enable a model answer on the SQL-backed demo; a code change is needed and #891 stays open.
+
 ### Historical deployment recipe
 
 Observed 2026-10-11 in resource group `ama` (`uksouth`, `environmentName=test`, `deploymentProfile=development`):

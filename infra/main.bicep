@@ -152,6 +152,8 @@ param chatNoticeRef string = ''
 param chatRetentionRef string = ''
 @minValue(0)
 param chatRetentionDays int = 0
+@description('Demo-only chat model activation (Refs #891). Effective only with demoDirectIngress; the exact value approved-2026-11-03 enables it.')
+param chatDemoActivation string = ''
 param tags object = {}
 @description('Owner tag value required by the tagging standard (infra/README.md, Governance controls).')
 param ownerTag string = 'Juan Manuel Servera'
@@ -409,6 +411,7 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     chatNoticeRef: chatNoticeRef
     chatRetentionRef: chatRetentionRef
     chatRetentionDays: chatRetentionDays
+    chatDemoActivation: chatDemoActivation
     zoneRedundant: zoneRedundant
     evidenceStore: evidenceStore
     sharePointSiteId: sharePointSiteId

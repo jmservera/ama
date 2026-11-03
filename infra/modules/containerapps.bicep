@@ -62,6 +62,8 @@ param chatNoticeRef string = ''
 param chatRetentionRef string = ''
 @minValue(0)
 param chatRetentionDays int = 0
+@description('Demo-only chat model activation (owner decision 2026-11-03, Refs #891). Only the exact value approved-2026-11-03 on the direct-ingress demo API sets ZF_CHAT_DEMO_ACTIVATION and ZF_DEPLOYMENT_PROFILE=demo; anything else, and every other app, sends neither.')
+param chatDemoActivation string = ''
 
 var externalEnvironment = demoDirectIngress || allowPublicNetworkAccess
 
@@ -106,6 +108,7 @@ module dns 'envDns.bicep' = if (!externalEnvironment) {
 }
 
 var authEnabled = !empty(entraClientId)
+var chatDemoActive = demoDirectIngress && chatDemoActivation == 'approved-2026-11-03'
 var chatEnabled = !empty(trim(chatDpiaRef)) && !empty(trim(chatLawfulBasisRef)) && !empty(trim(chatNoticeRef)) && !empty(trim(chatRetentionRef)) && chatRetentionDays > 0
 
 var commonEnv = [
@@ -188,6 +191,9 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
             { name: 'CHAT_NOTICE_REF', value: chatNoticeRef }
             { name: 'CHAT_RETENTION_REF', value: chatRetentionRef }
             { name: 'CHAT_RETENTION_DAYS', value: string(chatRetentionDays) }
+          ], !chatDemoActive ? [] : [
+            { name: 'ZF_CHAT_DEMO_ACTIVATION', value: chatDemoActivation }
+            { name: 'ZF_DEPLOYMENT_PROFILE', value: 'demo' }
           ], empty(entraRoleMap) ? [] : [
             { name: 'ZF_ROLE_MAP', value: string(entraRoleMap) }
           ])
