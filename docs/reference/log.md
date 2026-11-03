@@ -9918,3 +9918,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Discovery assistant readiness gate and read-only boundary (Refs #125)
 
 * Added a pure `discovery_assistant_boundary` module and tests in `src/core`: the brief's ten readiness items need named human evidence before the design hypothesis can reach "ready for owner decision" (never a connection or approval), and a default-deny read-only tool allowlist refuses every action the brief's authority boundary lists. No company data, model, store or write path is involved. Unit-tested only; all three #125 criteria stay unmet (see PR). Evidence under `.copilot-tracking/` (2026-11-03 issue-125 r1).
+## [2026-11-03] update | AI running-cost line and booked-destination value claims (Refs #126)
+
+* The governance benefits register now requires an AI cost denominator, quality floor and Total Cost of AI components before the capture gate opens; a missing dated price source is recorded as Unknown. Value claims stay capacity until a different person records one booked destination and the budget owner's confirmation reference. Documented in `src/core/README.md`. Unit-tested with synthetic values only; no price, budget or target is set (BRD OD-51 open).
+* #126 criteria still unmet: real protocol/DPIA/lawful-basis approval, RAI closure items, and AI economics in release decisions. Evidence under `.copilot-tracking/` (2026-11-03 frozen-protocol 126 r1).

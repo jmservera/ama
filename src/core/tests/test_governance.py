@@ -14,6 +14,9 @@ from zava_forward.core.store import Store
 
 PROTOCOL = {key: f"Synthetic demonstration {key}" for key, _ in g.PROTOCOL_FIELDS}
 BENEFITS = {key: f"Synthetic demonstration {key}" for key, _ in g.BG011_FIELDS}
+BENEFITS.update(ai_denominator="per accepted handover", ai_quality_floor="Synthetic floor: no critical misses",
+                ai_cost_components="Synthetic platform, review and assurance effort")
+CLAIM = dict(claim="Synthetic coordinator time released", capacity_kind="capacity gain", baseline="Synthetic baseline", synthetic=True)
 RELEASE = dict(scope_kind="phase", requirements="RULE-020", evidence="Synthetic evidence", unresolved="None", envelope_ref="ENV-DEMO",
                approvers=["Synthetic sponsor"], decision="Release")
 BREACH = dict(scope_kind="archetype", scope="Solid wall", owner="Synthetic owner", evidence="e", containment="c", resident_impact="r",
@@ -49,6 +52,43 @@ class Gov:
         s.benefits_approve(self.pm2, {})
         self.assertEqual(s.capture_gate(), [])
         s.require_capture_open()
+
+    def test_ai_running_cost_line_is_required_before_capture(self):
+        s = self.store
+        s.protocol_freeze(self.pm1, PROTOCOL)
+        s.protocol_approve(self.pm2, dict(dpia_ref="d", lawful_basis_ref="l"))
+        base = dict(BENEFITS, mde_cycle_time_pct=10, mde_coordination_hours_pct=10)
+        for missing in ("ai_denominator", "ai_quality_floor", "ai_cost_components"):
+            with self.assertRaises(ValueError):
+                s.benefits_record(self.pm1, {k: v for k, v in base.items() if k != missing})
+        with self.assertRaises(ValueError):
+            s.benefits_record(self.pm1, dict(base, ai_denominator="per token"))
+        entry = s.benefits_record(self.pm1, base)
+        self.assertTrue(entry["ai_running_cost"]["cost_status"].startswith("Unknown"))
+        s.benefits_approve(self.pm2, {})
+        s.require_capture_open()
+        del s._gov()["benefits"]["BG-011"]["ai_running_cost"]
+        self.assertIn("AI running-cost line", " ".join(s.capture_gate()))
+        priced = s.benefits_record(self.pm1, dict(base, ai_price_source="Synthetic price list 2026-11-01"))
+        self.assertEqual(priced["ai_running_cost"]["cost_status"], "Priced from the named source")
+
+    def test_value_claim_is_capacity_until_destination_confirmed(self):
+        s = self.store
+        with self.assertRaises(PermissionError):
+            s.value_claim_record(tf.U["RLO-1"], CLAIM)
+        with self.assertRaises(ValueError):
+            s.value_claim_record(self.pm1, dict(CLAIM, capacity_kind="cash"))
+        claim = s.value_claim_record(self.pm1, CLAIM)
+        self.assertEqual((claim["status"], claim["destination"]), ("Capacity only, not booked", None))
+        confirm = dict(id=claim["id"], destination="spend avoided", budget_owner_ref="Synthetic owner ref")
+        with self.assertRaises(PermissionError):
+            s.value_claim_confirm(self.pm1, confirm)
+        with self.assertRaises(ValueError):
+            s.value_claim_confirm(self.pm2, dict(confirm, destination="time saved"))
+        with self.assertRaises(ValueError):
+            s.value_claim_confirm(self.pm2, dict(confirm, budget_owner_ref=""))
+        self.assertEqual(s.value_claim_confirm(self.pm2, confirm)["status"], "Booked")
+        self.assertEqual(s.governance_view(self.pm1)["value_claims"][0]["destination"], "spend avoided")
 
     def test_changed_protocol_needs_reason_and_new_approval(self):
         self.approve_all()
