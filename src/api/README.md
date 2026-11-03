@@ -1273,6 +1273,15 @@ Officer for Funding route and claim pack. It asserts exact reader-view phrases
 missing milestone, commitment and eligibility), the AI economics section with
 Unknown inputs, no write controls, no simulator text, keyboard reach of every
 table region, 320 px reflow and no non-GET/HEAD/OPTIONS requests after sign-in.
+
+A fourth story signs in as the Grants and Evidence Officer and routes the
+field review request to a constructed response (`DRAFT_REVIEW`, in the shape of
+the review view, not a server-built draft). It asserts the draft panel in a real
+browser: one unreviewed conflict with "Nothing here picks a winning source",
+a stale field bound to reviewed evidence, a field with no evidence shown as
+Unknown, "Not ready" readiness, no submission, award or payment wording, Tab
+reach of the fields table, reflow and axe. The same constructed fixture is not
+observed behaviour.
 Set `ZF_AXE_JS` to the pinned axe 4.10.3 file for the axe scan of `main` at
 1280 px; without it the run ends PARTIAL (or fails when `ZF_AXE_REQUIRED=1`).
 This is an engineering check on constructed data, not assistive-technology or
