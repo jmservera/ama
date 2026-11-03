@@ -656,13 +656,17 @@ class Assistants:
                         {k: getattr(self.limits, k) for k in Limits.DEFAULTS},
                         manual="Use the ordinary case controls; proposals never approve or change the case.")
 
+    def _task_id(self, db, capability, c, signature):
+        return digest([capability, VERSION, c["id"], signature, proposal_identity(capability),
+                       self.release_reference(db, capability), self.continuity(db)["epoch"]])
+
     def _enqueue(self, db, capability, c, mode, actor):
         snapshot = self.snapshot(db, capability, c)
         signature = digest(snapshot)
         identity = proposal_identity(capability)
         release = self.release_reference(db, capability)
         epoch = self.continuity(db)["epoch"]
-        tid = digest([capability, VERSION, c["id"], signature, identity, release, epoch])
+        tid = self._task_id(db, capability, c, signature)
         row = db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()
         if row is None:
             reason = self.disabled(db, capability)
@@ -791,6 +795,52 @@ class Assistants:
                         continue
             return dict(proposals=results, disabled=self.disabled(db), manual="Open the case for ordinary human work.",
                         next_after=rows[-1][0] if len(rows) == 50 else None)
+
+    def forecast(self, user, period_seconds=86400):
+        """Read-only per-period call forecast for each proactive predicate; enqueues nothing and holds no case content."""
+        if not isinstance(period_seconds, int) or not 60 <= period_seconds <= 2592000:
+            raise ValueError("Choose a period between 60 seconds and 30 days.")
+        if not self.sql:
+            raise ValueError(self.disabled())
+        bounds = model_bounds(self.limits)
+        cycles = period_seconds // self.limits.scan_interval
+        with self.transaction() as db:
+            allowed = [k for k, v in REGISTRY.items() if user.get("role") in v["roles"]]
+            if not allowed:
+                raise PermissionError("Staff assistance only.")
+            current = {cap: self.authorize(db, user, cap) for cap in allowed}
+            today = datetime.fromtimestamp(self.now(db), timezone.utc).date().isoformat()
+            rows = db.execute("SELECT id,body FROM cases WHERE closed=0 ORDER BY id").fetchall()
+            cases = [json.loads(raw) for _, raw in rows]
+            result = []
+            for cap in allowed:
+                staff = current[cap]
+                ids, areas = staff.get("case_ids"), staff.get("areas")
+                scoped = [c for c in cases if (ids is None or c["id"] in ids)
+                          and (areas is None or c.get("home", {}).get("area") in areas)]
+                held = self.suspended(db, cap)
+                eligible_now = new = 0
+                for c in scoped:
+                    s = self.snapshot(db, cap, c)
+                    signatures = {r[0] for r in db.execute(
+                        "SELECT signature FROM assistant_tasks WHERE capability=? AND case_id=?", (cap, c["id"])).fetchall()}
+                    if eligible(cap, s, today, bool(signatures) and digest(s) not in signatures):
+                        eligible_now += 1
+                        if db.execute("SELECT 1 FROM assistant_tasks WHERE id=?",
+                                      (self._task_id(db, cap, c, digest(s)),)).fetchone() is None:
+                            new += 1
+                result.append(dict(id=cap, rule=RULES[cap], open_cases_in_scope=len(scoped), eligible_cases=eligible_now,
+                                   new_proposals=new, max_calls_per_request=bounds["max_calls_per_request"],
+                                   max_calls_this_period=new * bounds["max_calls_per_request"], held=held))
+        reach = self.limits.scan_size * cycles
+        return dict(period_seconds=period_seconds, proactive=self.limits.proactive, rule=RULE_VERSION,
+                    scan_interval=self.limits.scan_interval, scan_size=self.limits.scan_size,
+                    cases_reachable_per_period=reach, call_allowance=self.limits.calls if self.limits.valid else 0,
+                    assistants=result,
+                    max_calls_this_period=sum(r["max_calls_this_period"] for r in result),
+                    cost="Unknown: no price source is set (BRD OD-51).",
+                    basis="Upper bound from current case state; routine case edits can add proposals later. Read-only.",
+                    manual="Proactive scans stay off unless an operator enables them; use the ordinary case controls.")
 
     def scan(self):
         if not self.sql or not self.limits.proactive:

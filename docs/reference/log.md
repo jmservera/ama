@@ -9959,3 +9959,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added `exposure_limits` in `src/core`: records an envelope and RULE-012 tolerances only with a human approval record, and returns a "Pause for human decision" signal on breach or unknown exposure. No company figures; not wired to store, API or UI.
 * Criterion 1 stays unmet (no Board-approved inputs); criterion 2 is proven in logic only on synthetic values. No ticks changed. Evidence is under `.copilot-tracking/` (2026-11-03 issue-99 exposure limits).
+## [2026-11-03] update | Proactive predicate call forecast (Refs #107)
+
+* Documented `GET /api/assistants/forecast` in `src/agents/README.md`: a read-only per-assistant, per-period upper bound of model calls a proactive predicate would trigger, reported before proactive scans are enabled. Cost stays Unknown (no price source, BRD OD-51). Tokenomics criterion 3 is advanced in code and tests only; no issue ticks changed; criteria 2 (attribution) and the RAI items 1, 3, 5 and 8 remain unmet.
