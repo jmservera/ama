@@ -4216,3 +4216,24 @@ Nothing is re-run or re-sent.
 Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, importer,
 integration and conflict producers, and owner approval of the role names and runbooks (open). Tests:
 `src/core/tests/test_exception_queue.py`, `src/core/tests/test_exception_feeds.py`.
+
+## Versioned home case (#74)
+
+`home_case.record_version` (via `Store.home_case_record_version`) appends the next immutable version
+to the case's `home_case_versions` history through `change_provenance.operation`, so the actor, time,
+source reference, source version and reason are recorded and audited. The caller supplies the
+`expected_version` it read; a stale value is refused with a conflict. Each version freezes explicit
+links only: building ID, scheme ID (from the optional `schemes` register, otherwise Unknown), work
+packages and work orders issued for that home, hazard, document, quality, resident-service and
+finance references, and the provider name. Nothing is inferred. Prior versions are never edited and
+a closed case is not versioned further. `home_case.view` (`Store.home_case_view`, staff roles only)
+returns the per-home facts, the shared building context from `buildings.view` (without other homes'
+rows) and the retained versions as separate sections, and flags when live links differ from the
+latest version. A shared building ID never copies one home's evidence, decision or approval to
+another. Recording a version is not an approval, safety release, works instruction or payment, and
+the existing case and building screens carry the same facts if this view is unavailable. The
+`schemes` register is stored with the other checked documents in the SQL store.
+
+Not delivered: API route and web screen for the version history, scheme register authoring and
+import, versioning of building-level records themselves, and automatic version capture on every
+case change. Tests: `src/core/tests/test_home_case.py`.
