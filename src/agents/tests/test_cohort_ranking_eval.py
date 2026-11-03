@@ -65,12 +65,12 @@ class CohortRankingEvalTests(unittest.TestCase):
 
     def test_small_sample_stays_insufficient(self) -> None:
         cases, manifest = cre.build()
-        manifest["approval"] = {"cohorts_owner": "Owner", "thresholds_owner": "Owner"}
         manifest["cases"] = [
             c
             for c in manifest["cases"]
             if not (c["cohorts"]["sensor_completeness"] == "partial" and c["id"].endswith("-4-b"))
         ]
+        cohort_eval.approve(manifest, cre.MOCK_APPROVAL)
         kept = {c["id"] for c in manifest["cases"]}
         observed = [o for o in cre.observe(cases, manifest) if o["id"] in kept]
         rec = cohort_eval.evaluate(manifest, observed)
@@ -139,7 +139,7 @@ class CohortRankingEvalTests(unittest.TestCase):
 
     def _manifest_and_observed(self, fn: Any) -> tuple[dict[str, Any], list[dict[str, Any]]]:
         cases, manifest = cre.build()
-        manifest["approval"] = dict(cre.MOCK_APPROVAL)
+        cohort_eval.approve(manifest, cre.MOCK_APPROVAL)
         return manifest, cre.observe(cases, manifest, fn)
 
     def test_accessibility_pairs_share_waiting_days(self) -> None:
@@ -245,7 +245,7 @@ class CohortRankingEvalTests(unittest.TestCase):
 
     def test_demoted_unknown_support_case_keeps_review_burden(self) -> None:
         cases, manifest = cre.build()
-        manifest["approval"] = dict(cre.MOCK_APPROVAL)
+        cohort_eval.approve(manifest, cre.MOCK_APPROVAL)
         base = cohort_eval.evaluate(manifest, cre.observe(cases, manifest))
         out = [copy.deepcopy(c) for c in cases]
         next(c for c in out if c["id"] == "source-0-b")["days_in_stage"] = 1
