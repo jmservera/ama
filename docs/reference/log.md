@@ -9915,3 +9915,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Unaccepted handoff ageing and exception feed (Refs #83)
 
 * Added read-only `handoff_ageing`, `unaccepted_handoffs` and `feed_unaccepted_handoffs` in `src/core` with unit tests. No approved limit is invented: BG-010/OD-09 stays open and ageing flags only by the handoff's own due time or a caller-supplied approved limit. Not wired to API or screens; criterion 3 of #83 stays unmet. Unit-tested only. Evidence under `.copilot-tracking/` (2026-11-03 issue-83 r1).
+## [2026-11-03] update | Discovery assistant readiness gate and read-only boundary (Refs #125)
+
+* Added a pure `discovery_assistant_boundary` module and tests in `src/core`: the brief's ten readiness items need named human evidence before the design hypothesis can reach "ready for owner decision" (never a connection or approval), and a default-deny read-only tool allowlist refuses every action the brief's authority boundary lists. No company data, model, store or write path is involved. Unit-tested only; all three #125 criteria stay unmet (see PR). Evidence under `.copilot-tracking/` (2026-11-03 issue-125 r1).

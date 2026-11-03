@@ -612,6 +612,27 @@ method sign-off and R3 limits that gate any measure beyond an exercise rule.
 python -m unittest discover -s tests -p 'test_sensor_analysis.py' -q
 ```
 
+## Discovery assistant readiness and read-only boundary (#125)
+
+`discovery_assistant_boundary` is a pure design-hypothesis guard for the optional
+Retrofit Flow Evidence Assistant described in
+`docs/brds/retrofit-flow-discovery-brief.md`. `assess_readiness` takes one
+human-supplied evidence pointer per readiness item (ten items) and returns
+`NOT_READY` until all are present and usable, then only
+`READY_FOR_OWNER_DECISION`; it never permits a connection to company data and
+never calls the assistant an approved solution. `authorise_tool` is default
+deny: only read-only tools named in the brief pass, and every action the
+authority boundary forbids (source writes, resident contact, scheduling,
+payment, grant decisions and so on) is refused. `ReadOnlyToolbox` registers
+allowlisted callables only and only after a ready report. Manual analysis and
+export stay available and nothing needs a model. Not built: any company-data
+connection, the assistant itself, or the comparison against manual analysis and
+conventional reporting.
+
+```bash
+python -m unittest discover -s tests -p 'test_discovery_assistant_boundary.py' -q
+```
+
 ## Appointment agreements and visit evidence (#87)
 
 `appointment_control(user, work_order_id, body)` records explicit offers, separate
