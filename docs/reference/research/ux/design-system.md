@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Design System Foundations
 description: Design tokens, component inventory with states, non-colour signal rules and the extend-versus-adopt decision for the workbench UI (issue #150)
-ms.date: 2026-10-28
+ms.date: 2026-11-03
 ms.topic: reference
 ---
 
@@ -113,6 +113,8 @@ States: default, focus, disabled, error, loading, empty, blocked.
 | Empty state | `.empty` | Dashed border, plain sentence saying what is absent and what to do next. |
 | Loading state | `.loading`, `.async-feedback` or `aria-busy` | Immediate progress text; decorative spinner after 200ms, static with reduced motion. No spinner-only signal. |
 | Blocked step | `.blocked` | See below. |
+| Layout and list helpers | `.layout`, `.side`, `.main`, `.list`, `.row` | Layout helpers only; they carry no state. `.layout` is a two-column grid that collapses to one column under 900px; `.side` holds the queue; `.row` groups buttons and links. |
+| Specialist screen | `.screen-record`, `.screen-links`, `.screen-evidence` | Read-only role screens. `.screen-record` is a `.card` panel; `.screen-links` is the screen menu, with the current screen marked by `aria-current="page"` and bold text; `.screen-evidence` holds the selected home. State words stay in text. |
 | AI suggestion | `.ai-suggestion` | See below (SA-004). |
 | Map key and markers | `.key`, `.map-symbol`, `.map-marker`, `.cluster` | Circle/O = Normal; square/W = Waiting 60+ days; triangle/! = Safety issue open. Same symbols in key. Clusters show total homes and "Safety: N", including zero. Marker title/tooltip and list use status words. Explicit Enter/Space handlers activate Leaflet marker buttons; list links/buttons remain available. |
 

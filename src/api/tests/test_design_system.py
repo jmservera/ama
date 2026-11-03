@@ -65,6 +65,17 @@ class DesignSystem(unittest.TestCase):
             self.assertIn("var(--sp-", rule)
         self.assertIn("84abdb5fd25a10c627a08465ae82a96e17927270", DOC)
 
+    def test_role_screen_classes_are_defined_and_documented(self):
+        js = (
+            ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web" / "role-screens.js"
+        ).read_text()
+        classes = {c for m in re.finditer(r'class:\s*"([^"]+)"', js) for c in m.group(1).split()}
+        self.assertTrue(classes)
+        for name in sorted(classes):
+            self.assertRegex(CSS, r"\." + re.escape(name) + r"(?![\w-])", name)
+            self.assertRegex(DOC, r"`[^`\n]*\." + re.escape(name) + r"(?![\w-])[^`\n]*`", name)
+        self.assertNotRegex(js, r"style:\s*\{|\.style\.|innerHTML|#[0-9a-fA-F]{6}\b")
+
     def test_map_and_filter_signals_have_visible_non_colour_cues(self):
         self.assertNotIn("L.circleMarker", APP)
         self.assertIn('svg("circle"', APP)
