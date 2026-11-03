@@ -9968,3 +9968,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Automated axe and keyboard checks on the production configuration (Refs #619)
 
 * The [acceptance protocol](./research/ux/production-ux-acceptance-protocol.md) records a new automated check (`checks.production_config_a11y_browser_check`) that runs the employee case view and chat widget under `ZF_ENV=production` with the trusted-proxy provider. Per owner decision 2026-11-03 the screen reader, zoom and real resident consent criteria stay open until a production build exists; every record row is still `Not run`. Evidence is under `.copilot-tracking/` (2026-11-03 automated-a11y-619).
+## [2026-11-03] update | DRAFT Tokenomics placement and rehearsal outline (Refs #435)
+
+* Added a [draft for owner review](../capstone/pitch/tokenomics-placement-draft.md): current-deck placement (S18 and B25 already carry Tokenomics), a flagged conflict between the S18 modelled per-home figure and the no-price criterion, draft segment wording and an unperformed rehearsal outline. All six issue criteria stay unmet; no decision, rehearsal, rebuild or assessment is recorded. Evidence is under `.copilot-tracking/` (2026-11-03 issue-435 tokenomics).
