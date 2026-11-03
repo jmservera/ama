@@ -68,6 +68,16 @@ class Wcag22Baseline(unittest.TestCase):
         self.assertIn('scope: "col"', APP)
         self.assertIn("Show the map areas as a list", APP)
 
+    def test_pointer_targets_have_a_24px_minimum_height(self):
+        # WCAG 2.5.8: rule-level static check; rendered measurement is a manual or browser check.
+        rem = 16
+        for selector in (r"button,\.btn", r"\.linkbtn", r"\.maplist summary", r"\.regulatory summary"):
+            rule = re.search(r"(?:^|\})" + selector + r"\{([^}]*)\}", CSS, re.M)
+            self.assertIsNotNone(rule, selector)
+            height = re.search(r"min-height:([\d.]+)rem", rule.group(1))
+            self.assertIsNotNone(height, selector)
+            self.assertGreaterEqual(float(height.group(1)) * rem, 24, selector)
+
     def test_status_regions_exist(self):
         self.assertIn('role="status"', (WEB / "index.html").read_text())
         self.assertIn('role="alert"', (WEB / "index.html").read_text())
