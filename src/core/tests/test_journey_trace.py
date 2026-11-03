@@ -18,9 +18,9 @@ SIBLING = "ZF-1"
 
 
 def entry(who: str, action: str, case: str, detail: str, at: str | None) -> dict[str, Any]:
-    result = ledger.make_entry(who, action, case, detail, ledger.GENESIS, at="x")
+    result = ledger.make_entry(who, action, case, detail, ledger.GENESIS, at="x")  # type: ignore[no-untyped-call]
     result["at"] = at
-    return result
+    return result  # type: ignore[no-any-return]
 
 
 class JourneyTrace(unittest.TestCase):
@@ -29,19 +29,19 @@ class JourneyTrace(unittest.TestCase):
         self.addCleanup(tmp.cleanup)
         path = Path(tmp.name) / "synthetic.json"
         path.write_text(json.dumps(copy.deepcopy(dataset.DATA)))
-        return Store(str(path))
+        return Store(str(path))  # type: ignore[no-untyped-call]
 
     def recorded(self) -> list[dict[str, Any]]:
         store = self.open_store()
         users = {p["email"].split("@")[0]: p for p in store.data["staff"]}
         for case in (HOME, SIBLING):
-            store.stock_reconcile(users["sam"], case, query())
-        store.stock_query_event(
+            store.stock_reconcile(users["sam"], case, query())  # type: ignore[no-untyped-call]
+        store.stock_query_event(  # type: ignore[no-untyped-call]
             users["pam"],
             HOME,
             dict(query_id="SQ-1", action="resolve", reason="Constructed", evidence="SYN-REVIEW-1"),
         )
-        return list(store.audit_entries())
+        return list(store.audit_entries())  # type: ignore[no-untyped-call]
 
     def later(self, case: str, spacing: bool = True) -> list[dict[str, Any]]:
         at = (lambda n: f"2026-03-0{n}T09:00:00") if spacing else (lambda n: None)
