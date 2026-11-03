@@ -1,6 +1,7 @@
 """Building safety and hazard triage screens show referral states and offer no controls."""
 
 import json
+import re
 import subprocess
 import unittest
 from pathlib import Path
@@ -270,6 +271,21 @@ class SafetyScreens(unittest.TestCase):
             )
             self.assertIn("including released ones", text)
             self.assertIn("No records supplied", json.dumps(screen["empty"]))
+
+    def test_rendered_classes_are_documented_design_system_components(self) -> None:
+        root = Path(__file__).resolve().parents[3]
+        css = (WEB / "style.css").read_text()
+        doc = (root / "docs/reference/research/ux/design-system.md").read_text()
+        seen: set[str] = set()
+        for screen in run([hazard()]).values():
+            for view in (screen["tree"], screen["empty"], screen["summary"]):
+                for name in re.findall(r'"class": "([^"]+)"', json.dumps(view)):
+                    seen.update(name.split())
+                self.assertNotIn('"style"', json.dumps(view))
+        self.assertLessEqual({"table-scroll", "empty", "card", "screen-record"}, seen)
+        for cls in seen:
+            self.assertRegex(css, r"\." + re.escape(cls) + r"(?![\w-])", cls)
+            self.assertIn(cls, doc, cls)
 
 
 if __name__ == "__main__":
