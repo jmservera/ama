@@ -136,10 +136,11 @@ receipt records what ran and what was skipped.
   the tracked `src/api/tests/test*.py` modules with `-k MODULE.*`. Every module
   is assigned exactly once; a nested test package disables sharding. Before
   the shards run, unittest discovery lists every test id in the snapshot and the
-  run fails closed if any id matches no shard pattern (for example a TestCase
-  defined in a non-`test*.py` helper and imported into a test module). Shard
-  commands are part of the trusted matrix and are re-derived from the tree at
-  verification. Receipt field: `test_shards`.
+  run fails closed if any id matches no shard pattern. Test cases defined in a
+  helper module and imported into a test module (for example `dataset`) run in
+  the last shard, and the helper names are recorded. Shard commands are part of
+  the trusted matrix and are re-derived from the tree and the recorded helpers
+  at verification. Receipt fields: `test_shards`, `shard_helpers`.
 * Scoped skips: `--changed` skips project groups and image builds whose
   paths, or whose dependencies' paths, are untouched (a `src/api`-only change
   skips the agents, orchestrator and importer images and projects). The

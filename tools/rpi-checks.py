@@ -580,6 +580,14 @@ def unsharded_test_ids(ids: list[str], parts: list[list[str]]) -> list[str]:
     ]
 
 
+HELPER_MODULE = re.compile(r"[A-Za-z_][A-Za-z0-9_]*")
+
+
+def with_helpers(parts: list[list[str]], helpers: list[str]) -> list[list[str]]:
+    """Helper-imported test classes run in the last shard; the receipt records which."""
+    return [*parts[:-1], [*parts[-1], *helpers]] if helpers else parts
+
+
 def shard_argv(python: str, modules: list[str]) -> list[str]:
     patterns = [item for module in modules for item in ("-k", f"{module}.*")]
     return [python, "-m", "unittest", "discover", "-s", "tests", "-v", *patterns]
@@ -835,6 +843,17 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         )
     ):
         raise GateError("Receipt image cache or test shard policy is invalid")
+    helpers = receipt.get("shard_helpers") or {}
+    if not (
+        isinstance(helpers, dict)
+        and all(
+            name in shards
+            and isinstance(mods, list)
+            and all(isinstance(m, str) and HELPER_MODULE.fullmatch(m) for m in mods)
+            for name, mods in helpers.items()
+        )
+    ):
+        raise GateError("Receipt shard helper modules are invalid")
     result: list[dict[str, Any]] = []
     group = "preflight"
 
@@ -934,6 +953,8 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         )
         if shards.get(project, 1) > 1 and parts is None:
             raise GateError(f"Receipt shards {project} tests that cannot be partitioned")
+        if parts:
+            parts = with_helpers(parts, helpers.get(project, []))
         suites = [shard_argv(python, modules) for modules in parts or []] or [
             [python, "-m", "unittest", "discover", "-s", "tests", "-v"]
         ]
@@ -1544,6 +1565,7 @@ class Runner:
         self.root, self.out, self.base, self.extras = root, out, base, extras
         self.image_cache, self.stack = image_cache, stack or []
         self.test_shards: dict[str, int] = {}
+        self.shard_helpers: dict[str, list[str]] = {}
         self.selection = selected or selection(root, base, "all", extras)
         admit_browser_output(out, self.selection["groups"])
         self.jobs, self.resume = jobs, resume
@@ -1914,7 +1936,8 @@ class Runner:
         if missed:
             # Tests imported from helper modules (e.g. dataset.ImproveTests) run in the last shard.
             extra = sorted({test_id.split(".")[0] for test_id in missed})
-            parts = [*parts[:-1], [*parts[-1], *extra]]
+            self.shard_helpers[project] = extra
+            parts = with_helpers(parts, extra)
             missed = unsharded_test_ids(ids, parts)
         if not ids or missed:
             raise GateError(
@@ -2720,6 +2743,7 @@ class Runner:
             "jobs": self.jobs,
             "image_cache": self.image_cache,
             "test_shards": self.test_shards,
+            "shard_helpers": self.shard_helpers,
             "stack": self.stack,
             "skipped": self.selection.get("skipped", {}),
             "extras": self.extras,
