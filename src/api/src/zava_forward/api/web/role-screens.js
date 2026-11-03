@@ -672,14 +672,39 @@ function hazardScreen(intro) {
         h("p", {}, "Referral, receipt, acceptance and release are recorded in the existing case workspace by the named authorised person. Emergency concerns follow the existing human emergency procedure now, not this screen.")));
   };
 }
+const hazardQueue = {
+  async summarise(rows, signal) {
+    const entries = await Promise.all(rows.map((row) =>
+      api(`/api/cases/${encodeURIComponent(row.id)}`, undefined, signal).then((c) => [row, c], (e) => {
+        signal.throwIfAborted();
+        return [row, null];
+      })));
+    return this.summary(entries);
+  },
+  summary(entries) {
+    const rows = entries.flatMap(([row, c]) => c
+      ? (c.hazards || []).map((x, i) => [`${row.id} H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
+        screenStamp(x.aware_at), x.source, hazardActor(x.destination),
+        `Sent: ${hazardStep(x.sent_at)}. Received: ${hazardStep(x.received_at)}. Accepted: ${hazardStep(x.accepted_at)}`,
+        x.state, hazardFollowUp(x), (x.hold || {}).status || "Unknown"])
+      : [[`${row.id}`, "Unavailable. Open the home to check.", "Unavailable", "Unavailable", "Unavailable", "Unavailable", "Unavailable", "Unavailable", "Unavailable"]]);
+    return screenPanel("Hazard referrals across this page of homes",
+      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Every recorded hazard and safeguarding item is listed, including released ones. A home with no row has no recorded hazard; this does not establish that none exists. Open a home for pause and release decision evidence."),
+      screenTable("Hazard referrals by home",
+        ["Home and item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent, received and accepted", "State", "Follow-up", "Pause status"],
+        rows, Infinity));
+  }
+};
 registerRoleScreen({
   id: "safety-lead",
+  ...hazardQueue,
   title: "Building safety referral queue",
   roles: ["Building Safety Liaison", ...screenManagers],
   render: hazardScreen("Read-only view for the Building Safety lead: where each referral stands, who must follow up and what evidence supports any pause release.")
 });
 registerRoleScreen({
   id: "hazard-triage",
+  ...hazardQueue,
   title: "Repairs and hazard triage",
   roles: hazardTriageRoles,
   render: hazardScreen("Read-only view for repairs and hazard triage: awareness time and source, referral progress and the person who chases an unanswered referral.")

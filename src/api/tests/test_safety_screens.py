@@ -25,7 +25,8 @@ vm.runInContext(host + "\n;globalThis.__r = roleScreens;", context);
   const out = {};
   for (const id of ["safety-lead", "hazard-triage"]) {
     const s = context.__r.get(id);
-    out[id] = {roles: s.roles, tree: await s.render(c), empty: await s.render({id: "C-2"})};
+    out[id] = {roles: s.roles, tree: await s.render(c), empty: await s.render({id: "C-2"}),
+      summary: s.summary([[{id: "C-1"}, c], [{id: "C-9"}, null], [{id: "C-3"}, {id: "C-3"}]])};
   }
   console.log(JSON.stringify(out));
 })().catch(e => {console.error(e); process.exitCode = 1;});
@@ -161,6 +162,22 @@ class SafetyScreens(unittest.TestCase):
         self.assertIn("External job J-9 sign-off", text)
         self.assertIn("H-2", text)
         self.assertIn("No authoritative decision evidence is recorded", text)
+
+    def test_cross_home_summary_lists_every_hazard_and_unavailable_homes(self) -> None:
+        released = hazard(source="Released source", hold={"status": "Released"})
+        out = run([hazard(), released])
+        for screen in out.values():
+            text = json.dumps(screen["summary"])
+            self.assertIn("across this page of homes", text)
+            self.assertIn("not a portfolio total", text)
+            self.assertIn("C-1 H-1", text)
+            self.assertIn("C-1 H-2", text)
+            self.assertIn("Resident phone call", text)
+            self.assertIn("Pending receipt. Follow-up owner: Rex Coordinator", text)
+            self.assertIn("Unavailable. Open the home to check.", text)
+            self.assertIn("does not establish that none exists", text)
+            for control in ("button", "form", "input", "select", "textarea"):
+                self.assertNotIn(control, tags(screen["summary"]))
 
     def test_no_controls_and_boundary_text(self) -> None:
         out = run([hazard()])
