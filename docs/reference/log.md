@@ -10022,3 +10022,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Data operator structure tests (Refs #229)
 
 * Added unit tests pinning the data steward and operator view structure (shared panel and table components, captions, column scope, textual Unresolved state) and the absence of a role simulator. Test only; criteria 4 and 5 stay unmet pending assistive-technology testing and human review (#151, #155, #150). Evidence is under `.copilot-tracking/` (2026-11-03 issue-229 structure-test).
+
+## [2026-11-03] update | Server-side resident choice queue (Refs #232)
+
+* Added a server-side cross-home resident choice queue endpoint and moved the Resident choice screen onto it. Authorization is limited to the four resident-choice roles and each home goes through the normal detail permission check. The queue summary now covers open homes in home ID order. Criteria 4 and 5 stay unmet pending assistive-technology testing and resident-consent evidence.
