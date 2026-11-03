@@ -325,6 +325,23 @@ or acknowledgement has been recorded, so the recorded report still lists both
 checks as `not_evaluated`. Run `python3 -m unittest test_alert_triage` with the
 usual core/agents test paths.
 
+### Owner threshold agreement for citation and refusal gates (2026-11-03)
+
+`gate_agreement.apply_owner_agreement` applies an owner-supplied agreement to
+the recorded `citation_validity` and `refusal_accuracy` results. The agreement
+needs a named owner, a named independent grader who is not the owner, an ISO
+agreement date, the SHA-256 of the exact case set, minimum graded and
+adversarial case counts and a minimum rate per gate. Anything missing, or bound
+to a different case set, leaves each gate `unset_pending_owner_agreement` with
+the gaps named; otherwise each gate is `owner_threshold_met` or
+`owner_threshold_not_met` with reasons. There is no overall pass and nothing is
+approved. Run `python3 -m unittest test_gate_agreement` with the usual
+core/agents test paths.
+
+This is scoring code with synthetic unit fixtures only. No owner agreement or
+independently graded set exists, so the recorded report is unchanged and the
+owner-set gates criterion remains unmet.
+
 ## Offline cited-answer evaluation (#214)
 
 `regulatory_chat` renders exact server-selected source excerpts and structured
