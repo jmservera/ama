@@ -9952,3 +9952,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Quality queue blocks handover on unnamed acceptance or ownerless defect (Refs #231)
 
 * The quality queue no longer shows handover readiness when an accepted record has no named or independent inspector, or an open defect has no named owner. Criteria 4 and 5 stay unmet (#151, #155, #150); no ticks changed. Evidence is under `.copilot-tracking/` (2026-11-03 issue-231 quality-acceptance-evidence).
+## [2026-11-03] update | Retained ranking snapshot publication slice (Refs #79)
+
+* Added a pure `ranking_publication` module and tests in `src/core`: immutable dated archive of ranking snapshots, hash and registry verification, overdue check, and a stated schedule contract. Unit-tested only. #79 criteria 3 (named owner signs rule order) and 4 (scheduled publication, retention) stay unmet: no owner named, no scheduler wired, retention period not set. Evidence under `.copilot-tracking/` (2026-11-03 issue-79 r1).
