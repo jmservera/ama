@@ -9766,8 +9766,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * The Technical queue no longer shows "Recorded evidence is complete" while a
   source-fact conflict has no recorded resolution; the reason names the query
-  owner. Browser stories `231`, `231q` and `226` now read scrolled panels in
-  full. Desk hypothesis, not observed behaviour; no age-based staleness rule
+  owner. Browser stories `231` and `231q` were added to the scroll-into-view
+  condition so they read scrolled panels in full; `226` already had it. Desk hypothesis, not observed behaviour; no age-based staleness rule
   exists so none is claimed. Assistive-technology testing (#155) and Fluent
   component adoption (#150) remain unproven, so #231 stays open. Evidence is
   under `.copilot-tracking/` (2026-11-03 issue-231 source-conflict readiness).

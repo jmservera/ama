@@ -72,7 +72,7 @@ def tech_case(**changes: Any) -> dict[str, Any]:
                 "query_owner": {"name": "Query Owner"},
             }
         ],
-        "stock_reconciliation_events": [{"query_id": "SQ-1", "status": "Resolved"}],
+        "stock_reconciliation_events": [{"query_id": "SQ-1", "status": "Reconciled"}],
         "technical": {
             "design_version": 2,
             "design_name": "Designer",
@@ -118,6 +118,14 @@ class TechnicalQueue(unittest.TestCase):
         self.assertNotIn("Recorded evidence is complete", text)
         self.assertIn("Cannot confirm readiness", text)
         self.assertIn("Source conflict SQ-1 (epc) is unresolved. Owner: Query Owner.", text)
+
+    def test_non_terminal_event_status_does_not_clear_conflict(self) -> None:
+        events = [{"query_id": "SQ-1", "status": "Escalated"}]
+        text = json.dumps(
+            render("technical-queue", tech_case(stock_reconciliation_events=events))["tree"]
+        )
+        self.assertNotIn("Recorded evidence is complete", text)
+        self.assertIn("Source conflict SQ-1 (epc) is unresolved.", text)
 
     def test_unaffected_older_signoffs_and_no_conflicts_stay_ready(self) -> None:
         case = tech_case(stock_reconciliation=[])

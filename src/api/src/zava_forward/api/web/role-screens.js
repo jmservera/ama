@@ -124,7 +124,7 @@ const assetAgeDays = (iso) => {
 };
 const assetStatus = (c, q) => {
   const event = (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1);
-  return event ? `${event.status} (recorded by a named person)` : "Unresolved";
+  return event && (event.status === "Reconciled" || event.status === "Withdrawn") ? `${event.status} (recorded by a named person)` : "Unresolved";
 };
 const assetInputs = [
   ["Capital budget", "Finance owner to name the budget source"],

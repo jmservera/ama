@@ -23,6 +23,7 @@
  "next_action": {"phase": "Follow-up", "action": "Open PR; human review and hosted CI"},
  "prioritized_follow_ups": [
   {"rank": 1, "task": "Assistive-technology and user validation (#155)", "rationale": "Criterion 4 needs human evidence", "evidence": "review file"},
-  {"rank": 2, "task": "Fluent component adoption (#150)", "rationale": "Criterion 5 unproven", "evidence": "docs/reference/research/ux/design-system.md"}
+  {"rank": 2, "task": "Fluent component adoption (#150)", "rationale": "Criterion 5 unproven", "evidence": "docs/reference/research/ux/design-system.md"},
+  {"rank": 3, "task": "Cross-home technical queue ordering (no issue exists yet; raise one before starting)", "rationale": "Routed by review; ordering across homes is not specified", "evidence": "review file"}
  ]
 }
