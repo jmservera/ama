@@ -161,7 +161,8 @@ class Flows:
         self.store.record_repair(self.bo, "ZF-3", i, "Synthetic repair report")
         with self.assertRaises(PermissionError):
             self.store.release_hazard(self.bea, "ZF-3", i, "Reason", "Synthetic clearance")
-        self.store.release_hazard(self.pam, "ZF-3", i, "Reason", "Synthetic clearance")
+        with self.assertRaises(PermissionError):
+            self.store.release_hazard(self.pam, "ZF-3", i, "Reason", "Synthetic clearance")
 
     def test_hazard_inputs_validated(self):
         with self.assertRaises(ValueError):

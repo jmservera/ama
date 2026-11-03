@@ -190,6 +190,18 @@ class JsonHazardReferral(unittest.TestCase):
         )
         self.accept()
 
+    def test_release_needs_the_named_accountable_role(self) -> None:
+        self.ready_for_release()
+        self.assertEqual(
+            self.store.detail("ZF-3")["hazards"][0]["hold"]["accountable_role"], self.bea["role"]
+        )
+        for actor in (self.pam, self.sam):
+            with self.subTest(role=actor["role"]):
+                self.unchanged_failure(
+                    partial(self.store.release_hazard, actor, "ZF-3", 0, "Reason", "SYN-CLEAR")
+                )
+        self.store.release_hazard(self.bo, "ZF-3", 0, "Reason", "SYN-CLEAR")
+
     def test_release_independence_uses_recorded_email_code_and_oid(self) -> None:
         self.register(dict(self.bea, oid="SYN-REPAIRER"))
         self.bea = dict(self.bea, oid="SYN-REPAIRER")
