@@ -1217,7 +1217,10 @@ not Fluent component adoption (#150) or design-system acceptance.
 Story `230` (programme queue) drives the shared queue, scope filter, Reset and
 five-gate home view by keyboard as a Retrofit Programme Manager and a Retrofit
 Coordinator, asserts textual states, no record change and no writes, and checks
-reflow at 320, 390 and 1280 px; the same `ZF_AXE_JS` adds its axe scan.
+horizontal overflow at 320, 390 and 1280 px (not a full WCAG 1.4.10 test),
+that the coordinator view withholds the sender and reason detail, and that the
+record is unchanged after the connected view. Its Reset check corroborates the
+installed programme screen (#662); the same `ZF_AXE_JS` adds its axe scan.
 Without `ZF_AXE_JS` the axe scan is skipped and the run prints `PARTIAL`; a
 skip is not a pass. A scan with axe 4.10.3 covers `main` only, at 1280 px, on
 the programme overview and the connected home view for both roles; it is not a
