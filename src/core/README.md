@@ -739,6 +739,25 @@ Test paths named `tests/...` are in `src/core/tests/` unless they name another p
 `python3 -m unittest discover -s tests`. Data fixtures and generated datasets are written to the
 per-user `ZF_DATA` folder, never under `src/`.
 
+## Same-home journey trace (#134, slice 1)
+
+`journey_trace.journey_trace(audit_entries, case_id)` is a read-only function over audit
+entries. It orders one home's EPC conflict (`stock_comparison` on `epc`), correction (a human
+`stock_query_resolve` of that same query), independent decisions (resident, technical,
+quality, Finance), handover (`quality_handover`) and financial closure
+(`finance_payment_status`, a record only). Intervals between stages are `Unknown` when a
+stage or timestamp is missing or contradicts the recorded order. Decisions count as
+independent only when two or more domains were recorded by disjoint actors. Entries of
+sibling homes and building records never create or complete a stage. The result is
+constructed-fixture evidence, not user validation, and approves nothing.
+
+```bash
+python3 -m unittest tests.test_journey_trace -q
+```
+
+It is not yet wired to an API route or screen, and no end-to-end store journey through
+handover and financial closure is tested (the later stages use ledger-shaped entries).
+
 ## Bounded pending-document rescans (#117)
 
 `document_rescan.run(store, limit=100, after=None)` consumes one SQL-only
