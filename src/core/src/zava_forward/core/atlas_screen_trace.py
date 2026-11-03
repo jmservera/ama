@@ -66,6 +66,32 @@ def status_drift(trace: str, registered: set[str]) -> list[str]:
     return sorted(set(drift))
 
 
+STAGE_RE = re.compile(r'^\s*\["(\d+\. [^"]+)",\s*(null|"[a-z][a-z0-9-]*"),', re.MULTILINE)
+
+
+def stage_map_drift(trace: str, role_screens_js: str) -> list[str]:
+    """Report differences between the walkthrough table and the on-screen stage map."""
+    start = role_screens_js.find("const journeyStages")
+    end = role_screens_js.find("];", start)
+    block = role_screens_js[start:end] if start >= 0 and end > start else ""
+    mapped = [(m.group(1), m.group(2).strip('"')) for m in STAGE_RE.finditer(block)]
+    walk: list[tuple[str, str]] = []
+    for r in rows(section(trace, "Same-home walkthrough")):
+        if len(r) < 2:
+            continue
+        found = None if r[1].startswith("Deferred:") else SCREEN_RE.search(r[1])
+        walk.append((r[0], found.group(0).strip("`") if found else "null"))
+    if not mapped:
+        return ["stage map not found in role screens"]
+    drift: list[str] = []
+    if [m[0] for m in mapped] != [w[0] for w in walk]:
+        drift.append("stage map names differ from the walkthrough stages")
+    for (name, screen), (_, planned) in zip(mapped, walk, strict=False):
+        if screen != planned:
+            drift.append(f"stage map screen differs from walkthrough: {name}")
+    return drift
+
+
 def section(text: str, heading: str) -> str:
     match = re.search(rf"^#{{2,3}} {re.escape(heading)}\s*$", text, re.MULTILINE)
     if not match:
@@ -111,6 +137,7 @@ def check(prd: str, atlas: str, trace: str, role_screens_js: str | None = None) 
     gaps: list[str] = []
     if role_screens_js is not None:
         gaps.extend(status_drift(trace, registered_screens(role_screens_js)))
+        gaps.extend(stage_map_drift(trace, role_screens_js))
     perspectives = first_column(section(prd, "Profile Journey Contract for the Next Prototype"))
     themes = first_column(section(atlas, "Five design themes and tensions"))
     if len(perspectives) != 11:

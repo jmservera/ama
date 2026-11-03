@@ -100,6 +100,26 @@ class AtlasScreenTraceTests(unittest.TestCase):
         registered = trace.registered_screens(js) - {"finance-funding"} | {"finance-invoices"}
         self.assertEqual(trace.status_drift(doc, registered), [])
 
+    def test_stage_map_matches_walkthrough(self) -> None:
+        js = read(trace.ROLE_SCREENS)
+        self.assertEqual(trace.stage_map_drift(self.doc, js), [])
+
+    def test_stage_map_drift_is_reported(self) -> None:
+        js = read(trace.ROLE_SCREENS)
+        changed = js.replace('"quality-queue", "Independent', '"finance-funding", "Independent')
+        self.assertIn(
+            "stage map screen differs from walkthrough: 6. Inspect and remedy",
+            trace.stage_map_drift(self.doc, changed),
+        )
+        renamed = js.replace('"8. Reconcile and learn"', '"8. Reconcile"')
+        self.assertIn(
+            "stage map names differ from the walkthrough stages",
+            trace.stage_map_drift(self.doc, renamed),
+        )
+        self.assertEqual(
+            trace.stage_map_drift(self.doc, ""), ["stage map not found in role screens"]
+        )
+
     def test_cli_exit_codes(self) -> None:
         self.assertEqual(trace.main(["--root", str(ROOT)]), 0)
         self.assertEqual(trace.main(["--root", str(ROOT / "missing")]), 2)

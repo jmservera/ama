@@ -1,0 +1,1 @@
+Details: parse the `journeyStages` array (name and screen id or null) and compare with walkthrough rows (stage name; first screen id, or null for a `Deferred:` row). Report name mismatches and per-stage screen mismatches; report a missing map.

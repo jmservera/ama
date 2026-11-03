@@ -10055,3 +10055,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] create | Operator suspension drill protocol (Refs #221)
 
 * Added `method/operator-suspension-drill-protocol.md`: witnessed drill steps and a blank record for restart authority and manual fallback evidence. Protocol only: no drill run, no OD-35 authority appointed, no corrective test accepted; #221 criteria 5 and 6 stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-221 r1 drill protocol).
+## [2026-11-03] update | Stage map and walkthrough drift check (Refs #233)
+
+* The atlas trace checker in `src/core` now compares the on-screen "Journey stages" list in `role-screens.js` with the same-home walkthrough table and reports differing stage names or screens. Offline check only; no screen, record, approval or AI behaviour changes. Criteria 1, 2, 4, 5 and 6 stay unmet (deferred theme, rendered tensions, no EX-HOME-901 fixture or stage 1 screen, #151, #150); only the hypothesis label is met. Evidence under `.copilot-tracking/` (2026-11-03 issue-233 stage-map drift).
