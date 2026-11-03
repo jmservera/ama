@@ -9780,6 +9780,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Criteria 2, 3 and 5 stay open: no universal coverage, typed-error audit or
   named human wording review is claimed. Evidence is under `.copilot-tracking/`
   (2026-11-03 issue-153 plain-language audit).
+
 ## [2026-11-03] update | Design traceability delta since the snapshot (Refs #156)
 
 * Added a dated delta to the

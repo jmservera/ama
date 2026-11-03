@@ -12,7 +12,7 @@ ms.date: 2026-11-03
 ## Validation
 
 * Run: `python3 tools/check-design-trace.py` (blocked, 0 of 74), `python3 -m unittest tools.test_check_design_trace` (11 pass), ASCII check, 40 = 15 + 7 + 18.
-* Not run: ruff and mypy (no Python changed), the gate, benchmarks, full suites, browser or accessibility checks.
+* Not run: ruff and mypy (no Python changed), the local RPI gate (hosted CI still applies), benchmarks, full suites, browser or accessibility checks.
 
 ## Divergences
 

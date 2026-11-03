@@ -490,7 +490,7 @@ No-screen items (18): #413, #430, #432, #434, #435, #440, #441, #462, #470,
 gates, CI, metering, documents, deployment, authority dates and sign-in checks.
 
 Counts: 15 new screen traces, 7 screen-related items without a new design and
-18 no-screen, 40 in all. Of the 15 trace rows, two have a partial design note
+18 no-screen, 40 in all. Of the 15 screen issues, two have a partial design note
 and none has a supplied versioned design. The new screen issues leave
 acceptance criterion 1 unmet: designs, detailed flows, a named human design
 review, assistive-technology and content evidence and user research are all
