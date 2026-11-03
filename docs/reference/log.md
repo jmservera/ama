@@ -9752,3 +9752,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   hypothesis, not observed behaviour; validation stays in #155. Updated the
   [atlas screen trace](./research/ux/atlas-screen-trace.md). Evidence is under
   `.copilot-tracking/` (2026-11-02 issue-225 exception explanations).
+
+## [2026-11-03] update | Cross-home hazard referral queue (Refs #227)
+
+* The Building Safety and hazard triage screens now also list every hazard
+  referral across the current page of homes when no home is selected
+  (read-only, not a portfolio total, released and unavailable homes kept
+  visible). Desk hypothesis, not observed behaviour; people and assistive
+  technology validation stays in #155 and the design-system proof in #150, so
+  #227 stays open. Evidence is under `.copilot-tracking/` (2026-11-03
+  issue-227 cross-home hazard queue).

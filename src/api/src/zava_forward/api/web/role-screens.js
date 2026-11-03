@@ -672,14 +672,48 @@ function hazardScreen(intro) {
         h("p", {}, "Referral, receipt, acceptance and release are recorded in the existing case workspace by the named authorised person. Emergency concerns follow the existing human emergency procedure now, not this screen.")));
   };
 }
+const hazardQueue = {
+  async summarise(rows, signal) {
+    const entries = await Promise.all(rows.map((row) =>
+      api(`/api/cases/${encodeURIComponent(row.id)}`, undefined, signal).then((c) => [row, c], (e) => {
+        signal.throwIfAborted();
+        return [row, null];
+      })));
+    return this.summary(entries);
+  },
+  summary(entries) {
+    const pause = (x) => {
+      const status = (x.hold || {}).status || "Unknown";
+      return status === "Released" && !(x.hold || {}).decision
+        ? "Released. Release decision evidence: open the home" : status;
+    };
+    const flag = (cells) => [...cells, ...Array(9).fill("Unavailable")];
+    const rows = entries.flatMap(([row, c]) => {
+      if (!c) return [flag([row.id, "Unavailable. Open the home to check."])];
+      if (!Array.isArray(c.hazards)) return [flag([row.id, "Unknown. Hazard list not supplied. Open the home to check."])];
+      if (!c.hazards.length && row.hazard) return [flag([row.id, "Mismatch. The list flags a hazard but the case returns none. Open the home to check."])];
+      return c.hazards.map((x, i) => [`${row.id} H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
+        screenStamp(x.aware_at), x.source, hazardActor(x.destination),
+        hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
+        x.state, hazardFollowUp(x), pause(x)]);
+    });
+    return screenPanel("Hazard referrals across this page of homes",
+      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Every recorded hazard and safeguarding item is listed, including released ones. A home with no row has no hazard list entry on this page; this does not establish that no hazard exists. Unavailable, unknown and mismatched homes are listed so they are not read as clear. Open a home for pause and release decision evidence."),
+      screenTable("Hazard referrals by home",
+        ["Home and item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up", "Pause status"],
+        rows, Infinity));
+  }
+};
 registerRoleScreen({
   id: "safety-lead",
+  ...hazardQueue,
   title: "Building safety referral queue",
   roles: ["Building Safety Liaison", ...screenManagers],
   render: hazardScreen("Read-only view for the Building Safety lead: where each referral stands, who must follow up and what evidence supports any pause release.")
 });
 registerRoleScreen({
   id: "hazard-triage",
+  ...hazardQueue,
   title: "Repairs and hazard triage",
   roles: hazardTriageRoles,
   render: hazardScreen("Read-only view for repairs and hazard triage: awareness time and source, referral progress and the person who chases an unanswered referral.")

@@ -1201,6 +1201,10 @@ states, no write controls, every hazard listed, keyboard reach of both tables
 and reflow. Set `ZF_AXE_JS` to the pinned axe 4.10.3 file to add a WCAG 2.2
 A/AA scan. These are engineering checks, not assistive-technology or WCAG
 acceptance (#155).
+With no home selected, both safety screens also list every hazard referral on
+the current page of homes (awareness time, source, destination, sent, received
+and accepted, owned follow-up, pause status), read-only and not a portfolio
+total. Pause and release decision evidence stays in the per-home view.
 
 `PYTHONDONTWRITEBYTECODE=1 python -m checks.role_screens_browser_check 226`
 (#226) signs in as a Retrofit Programme Manager and opens the read-only Asset
