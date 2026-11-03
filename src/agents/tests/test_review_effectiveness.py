@@ -259,6 +259,7 @@ class HumanSessionTests(unittest.TestCase):
     def _sheet(self, kind: str, seconds: int = 30) -> dict[str, Any]:
         rows = re_.run_review_test()["panels"][kind]["rows"]
         return {
+            "version": re_.load_spec()["version"],
             "reviewer_code": "EV-01",
             "workflow_seconds": 60,
             "answers": {
@@ -336,6 +337,25 @@ class HumanSessionTests(unittest.TestCase):
             re_.score_human_session(sheet)
         sheet = self._sheet("competent")
         sheet["reviewer_code"] = "nobody"
+        with self.assertRaises(ValueError):
+            re_.score_human_session(sheet)
+
+    def test_stale_or_foreign_sheets_are_refused(self) -> None:
+        sheet = self._sheet("competent")
+        sheet["version"] = "2000-01-01"
+        with self.assertRaisesRegex(ValueError, "fresh worksheet"):
+            re_.score_human_session(sheet)
+        del sheet["version"]
+        with self.assertRaises(ValueError):
+            re_.score_human_session(sheet)
+        sheet = self._sheet("competent")
+        sheet["answers"]["not-a-proposal"] = dict(action="accept", seconds=1)
+        with self.assertRaisesRegex(ValueError, "outside the scenario"):
+            re_.score_human_session(sheet)
+
+    def test_worksheet_round_trips_to_scoring_once_completed(self) -> None:
+        sheet = re_.worksheet()
+        self.assertEqual(sheet["version"], re_.load_spec()["version"])
         with self.assertRaises(ValueError):
             re_.score_human_session(sheet)
 

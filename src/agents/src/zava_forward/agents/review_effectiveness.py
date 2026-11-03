@@ -397,6 +397,11 @@ def score_human_session(sheet: dict[str, Any], golden: Path = GOLDEN) -> dict[st
     if not isinstance(sheet, dict):
         raise ValueError("answer sheet must be a JSON object")
     spec = load_spec(golden)
+    if sheet.get("version") != spec["version"]:
+        raise ValueError(
+            f"answer sheet is for scenario version {sheet.get('version')!r}, "
+            f"not the current {spec['version']!r}; print a fresh worksheet"
+        )
     actors = {OWNER["code"]: OWNER, OTHER["code"]: OTHER}
     actor = actors.get(str(sheet.get("reviewer_code")))
     if actor is None:
@@ -404,6 +409,9 @@ def score_human_session(sheet: dict[str, Any], golden: Path = GOLDEN) -> dict[st
     answers = sheet.get("answers") or {}
     if not isinstance(answers, dict):
         raise ValueError("answers must be an object keyed by proposal id")
+    unknown = sorted(set(answers) - {p["id"] for p in spec["proposals"]})
+    if unknown:
+        raise ValueError(f"answers name proposals outside the scenario: {', '.join(unknown)}")
     for prop in spec["proposals"]:
         a = answers.get(prop["id"]) or {}
         if not isinstance(a, dict):
