@@ -9996,3 +9996,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Aftercare concern register and evaluator view (Refs #133)
 
 * Added `zava_forward.core.aftercare.AftercareRegister`: digital and staff-recorded (non-digital) concern intake, named owner, human-evidenced investigation outcome, separate remedy status, closure that cannot erase a concern, and an evaluator view with denominators and unknowns. Documented in the [core README](../../src/core/README.md). Unit-tested only; no store, API, UI or AI pack. Evidence is under `.copilot-tracking/` (2026-11-03 issue-133 aftercare).
+## [2026-11-03] update | Chat break-glass demo-only disclaimer (Refs #162)
+
+* Recorded the owner's demo-only administrator and break-glass policy in [a dated record](./research/chat-demo-breakglass-disclaimer-2026-11-03.md), marked unreviewed by the DPO and Legal, and linked it from the [DPIA record](./research/chat-memory-dpia.md). The break-glass response and audit entries now carry the disclaimer and `basis` `demo-only`. DPO and Legal review, production use and real data stay unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-162 demo disclaimer).

@@ -245,6 +245,7 @@ class ChatIsolationTests(Matrix):
             code, d = self.api(admin, "/api/chat/breakglass", body)
             self.assertEqual((code, d["threads"]), (200, 1))
             self.assertIn("expires", d)
+            self.assertIn("not been reviewed by the DPO or Legal", d["disclaimer"])
             self.assertNotIn("messages_text", d)
             self.assertEqual(self.api(admin, "/api/chat/breakglass", dict(body, minutes=9999))[0], 200)
         finally:
@@ -266,6 +267,7 @@ class ChatIsolationTests(Matrix):
             self.assertIn("target", detail)
             self.assertTrue(detail["purpose"].strip(), e)
             self.assertNotIn("content", detail)
+            self.assertEqual(detail["basis"], "demo-only")
         granted = json.loads(next(e["detail"] for e in log if e["action"].endswith("granted")))
         self.assertEqual(granted["policy_ref"], "SYNTH-POLICY-1")
         self.assertEqual(granted["target"], user_key(dict(email=target)))

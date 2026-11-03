@@ -143,7 +143,12 @@ none, and sets no retention period. Options are not legal advice.
 
 ## Proposed administrator and break-glass policy (BRD OD-46, not decided)
 
-Status: proposal for the owner and DPO to accept, amend or reject. Nothing here is approved, and no control reads it as
+Update 2026-11-03: the owner approved option A for the synthetic-data demo only, as a disclaimer in place of the DPO and
+Legal decision. It is recorded as unreviewed by the DPO and Legal; see
+[the demo-only record](./chat-demo-breakglass-disclaimer-2026-11-03.md). The DPO and Legal decision remains open for any
+real-data or production use.
+
+Status of the original proposal: for the owner and DPO to accept, amend or reject. Nothing here is approved, and no control reads it as
 approved. Retrieved 2026-11-01 from the implemented behaviour in `chat_isolation.py`.
 
 | Option | Administrator can see | Evidence needed | Assessment |
