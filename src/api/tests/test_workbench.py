@@ -41,6 +41,29 @@ class WorkbenchNavigation(unittest.TestCase):
             else:
                 self.assertTrue(item["reason"])
 
+    def test_profile_defaults_match_own_queues_and_declare_empty_reason(self) -> None:
+        manifest = json.loads(MANIFEST.read_text())
+        roles = {item["email"]: item for item in manifest["roles"]}
+        with_default = 0
+        for item in manifest["profiles"]:
+            if "default" not in item:
+                self.assertEqual(item["status"], "deferred", item["perspective"])
+                continue
+            with_default += 1
+            default = item["default"]
+            with self.subTest(profile=item["perspective"]):
+                self.assertEqual(default["ids"], roles[item["identity"]]["ids"])
+                self.assertEqual(default["count"], len(default["ids"]))
+                self.assertEqual(default["order"], manifest["default_sort"])
+                self.assertEqual(default["selection"], manifest["default_selection"])
+                self.assertEqual(
+                    default.get("empty_reason"),
+                    None if default["ids"] else "no representative scenario supplied",
+                )
+                self.assertTrue(set(default["ids"]) <= set(manifest["all_case_ids"]))
+                self.assertTrue(set(default["ids"]) <= set(item["fixture"]) or not default["ids"])
+        self.assertEqual(with_default, 8)
+
     def test_supported_devices_stay_proposed_and_match_checked_widths(self) -> None:
         manifest = json.loads(MANIFEST.read_text())
         devices = manifest["supported_devices"]
