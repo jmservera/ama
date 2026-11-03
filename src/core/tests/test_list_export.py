@@ -17,7 +17,10 @@ class ListExportTests(unittest.TestCase):
         self.assertEqual(list_export.safe_cell(7), "7")
 
     def test_columns_are_union_in_first_seen_order_and_nested_values_are_text(self) -> None:
-        rows = [{"id": "A", "tags": ["x", "y"]}, {"id": "=B", "extra": {"k": 1}}]
+        rows: list[dict[str, object]] = [
+            {"id": "A", "tags": ["x", "y"]},
+            {"id": "=B", "extra": {"k": 1}},
+        ]
         out = list(csv.reader(io.StringIO(list_export.to_csv(rows))))
         self.assertEqual(out[0], ["id", "tags", "extra"])
         self.assertEqual(out[1], ["A", '["x","y"]', ""])

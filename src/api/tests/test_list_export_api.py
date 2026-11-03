@@ -39,9 +39,8 @@ class ListExportApi(unittest.TestCase):
         path.write_text(json.dumps(data))
         self.store = SqlStore(str(path), str(path.with_suffix(".sqlite")))
         self.addCleanup(self.store.db.close)
-        httpd = ThreadingHTTPServer(
-            ("127.0.0.1", 0), make_handler(App(self.store, "synthetic-check"))
-        )
+        app = App(self.store, "synthetic-check")  # type: ignore[no-untyped-call]
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
         thread = threading.Thread(target=httpd.serve_forever, daemon=True)
         thread.start()
         self.addCleanup(thread.join, 5)
