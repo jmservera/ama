@@ -1,10 +1,11 @@
 import copy
 import unittest
+from typing import Any
 
 from zava_forward.core import journey_register as jr
 
 
-def complete() -> dict:
+def complete() -> dict[str, Any]:
     reg = jr.draft()
     for j in reg["journeys"]:
         j["owner"] = "Journey owner (fictional)"
@@ -95,7 +96,7 @@ class JourneyRegisterTests(unittest.TestCase):
         self.assertEqual(out["reason_counts"]["sensor_missing"], 1)
 
     def test_routing_does_not_depend_on_other_cases_or_order(self) -> None:
-        cases = [
+        cases: list[dict[str, Any]] = [
             {"id": "x", "source_record": "missing"},
             {
                 "id": "y",
