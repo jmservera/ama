@@ -9936,3 +9936,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Journey ownership register and equity test plan (Refs #128)
 
 * Added the [equity, journey ownership and user research test plan](./research/ux/equity-journey-test-plan.md) and a pure `journey_register` module in `src/core` (blocked-by-default register of J1 to J6 and R1, plus a human-review route for missing data and incomplete appointments with no rank effect). Unit-tested only. No screen reader run, user research, owner assignment or protocol agreement exists; all three #128 criteria and the AI, geography and archetype cohort criteria stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-128 r1).
+
+## [2026-11-03] update | Same-home journey stage map on programme queue (Refs #233)
+
+* Added a "Journey stages" list to the `programme-queue` selected-home view: eight atlas stages, each linked to the screen that shows its own state for the same case, stage 1 as a recorded deferral and role-unavailable screens stated in text. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md). Navigation only, design hypothesis; the EX-HOME-901 fixture, stage 1 screen, rendered accessibility checks (#151), component verification (#150) and validation (#155) stay open. Evidence under `.copilot-tracking/` (2026-11-03 issue-233 stage-map).
