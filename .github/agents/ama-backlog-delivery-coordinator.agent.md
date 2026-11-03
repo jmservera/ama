@@ -171,6 +171,23 @@ Apply the update at the same moment as the matching issue action, and confirm
 by reading the item back. A failed update is reported, not retried silently or
 treated as delivery failure.
 
+## CI economy and PR backlog cap (owner rules, 2026-11-03)
+
+Hosted-runner capacity, not code, is the delivery bottleneck: every push
+restarts that PR's Source CI and Scorer runs (`cancel-in-progress`).
+
+* Automatic Copilot Code Review is disabled. The local `code-review-*` verdict,
+  recorded in `.copilot-tracking/reviews/`, is the review gate.
+* Push less. Batch fixes into one push, stack small PRs under a parent branch,
+  and rebase a run-owned PR only when it conflicts and is otherwise ready to
+  merge. Never rebase a PR just to refresh a green or pending head.
+* After a rebase of an append-only docs conflict whose previous head was green,
+  merge at once instead of waiting for a fresh run; check main CI afterwards.
+  Validate any resolved config file (for example parse TOML) before pushing.
+* With more than 20 open PRs, take no new issues. Use the tmux sessions to
+  repair, rebase and merge existing PRs until 10 to 15 remain, then resume new
+  work while continuing to close PRs.
+
 ## Stabilization checkpoints
 
 Child merges are delivery inputs, not integrated acceptance. Before closing an
