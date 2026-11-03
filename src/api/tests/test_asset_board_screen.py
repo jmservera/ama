@@ -46,7 +46,7 @@ vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('asset-board');", co
 
 
 def run(
-    report: dict[str, object], left_date: str = "2020-01-01", queue: str = "ok"
+    report: dict[str, object] | None, left_date: str = "2020-01-01", queue: str = "ok"
 ) -> dict[str, object]:
     result = subprocess.run(
         ["node", "-e", SCRIPT, str(WEB), json.dumps(report), left_date, queue],
@@ -139,6 +139,18 @@ class AssetBoardScreen(unittest.TestCase):
         self.assertIn("P1 to P2, as of A1", shown)
         self.assertIn("accepted outputs", shown)
         self.assertIn("S-A v1", shown)
+
+    def test_ai_unavailable_is_stated_and_cost_stays_unknown(self) -> None:
+        down = json.dumps(run(None)["tree"])
+        self.assertIn("Unavailable. The AI report could not be loaded", down)
+        self.assertIn("Nothing on this view needs AI", down)
+        self.assertIn("S-A v1", down)
+        up = json.dumps(run({"consumption": {"quality_status": "Fail"}})["tree"])
+        self.assertIn('"Loaded"', up)
+        self.assertNotIn("could not be loaded", up)
+        empty = json.dumps(run({})["tree"])
+        self.assertNotIn('"Loaded"', empty)
+        self.assertIn("could not be loaded", empty)
 
     def test_missing_report_and_no_conflicts_stay_unknown(self) -> None:
         out = run({})
