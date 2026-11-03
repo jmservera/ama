@@ -209,6 +209,16 @@ class AiEvalTests(unittest.TestCase):
         self.assertTrue(any("quota" in o for o in ev["open_items"]))
         self.assertTrue(rep["prompt_version"] and "latency_ms" in rep["summary"] and rep["summary"]["reviewer"])
 
+    def test_report_carries_per_cohort_record_that_stays_blocked_and_synthetic(self):
+        co = ai_eval.run_eval()["cohorts"]
+        self.assertEqual((co["status"], co["activation_allowed"]), ("blocked", False))
+        self.assertTrue(co["synthetic"] and not co["fairness_evidence"])
+        self.assertIn("unapproved_thresholds", co["blockers"])
+        self.assertEqual(set(co["dimensions"]), {"sensor_completeness", "support_need", "source_completeness", "appointment_history"})
+        for labels in co["dimensions"].values():
+            self.assertEqual(sum(row["n"] for row in labels.values()), co["total_cases"])
+        self.assertTrue(co["ai_task_cohorts"].startswith("not evaluated"))
+
     def test_a_critical_miss_fails_the_run(self):
         real = ai_eval.summarise
 

@@ -32,6 +32,7 @@ import tempfile
 import time
 from pathlib import Path
 
+from zava_forward.agents import cohort_ranking_eval
 from zava_forward.core import ai_tasks, ai_registry
 from zava_forward.core.store import Store
 
@@ -358,6 +359,19 @@ def evidence_gate(raw, summary, scripted=True):
         critical_misses=summary["critical_misses"], open_items=list(OPEN_ITEMS))
 
 
+def cohort_report():
+    """Per-cohort record for the deterministic ranking; AI-task cohorts are not yet evaluated."""
+    rec = cohort_ranking_eval.run()
+    dims = {d: {label: dict(n=row["n"], errors=row["errors"], review_burden=row["review_burden"],
+                            sufficient=row["sufficient"]) for label, row in body["cohorts"].items()}
+            for d, body in rec["dimensions"].items()}
+    return dict(task_id=rec["task_id"], status=rec["status"], activation_allowed=rec["activation_allowed"],
+                synthetic=rec["synthetic"], fairness_evidence=rec["fairness_evidence"], total_cases=rec["total_cases"],
+                dimensions=dims, blockers=sorted({b["code"] for b in rec["blockers"]}), record_hash=rec["record_hash"],
+                ai_task_cohorts="not evaluated (no approved AI-task cohort manifest)",
+                note="synthetic, unapproved developer fixture (OQ-018); not fairness evidence and never averaged across cohorts")
+
+
 def run_eval(golden=GOLDEN):
     with open(golden, "rb") as f:
         raw = f.read()
@@ -374,7 +388,7 @@ def run_eval(golden=GOLDEN):
     summary = summarise(results)
     return dict(version=spec["version"], prompt_version=ai_tasks.PROMPT_VERSION, scenarios=len(results),
                 passed=all(r["passed"] for r in results) and summary["critical_misses"] == 0,
-                results=results, summary=summary, evidence=evidence_gate(raw, summary))
+                results=results, summary=summary, evidence=evidence_gate(raw, summary), cohorts=cohort_report())
 
 
 def main(argv=None):
@@ -401,6 +415,8 @@ def main(argv=None):
     ev = rep["evidence"]
     print(f"golden sha256 {ev['golden_sha256'][:12]}; actual model: {ev['actual_model_evaluation']}; calibration: {ev['calibration']}")
     print(f"benefit claim: {ev['benefit_claim']}")
+    co = rep["cohorts"]
+    print(f"cohorts (ranking, synthetic): status {co['status']}, activation allowed {co['activation_allowed']}, fairness evidence {co['fairness_evidence']}; AI-task cohorts {co['ai_task_cohorts']}")
     for o in ev["open_items"]:
         print("open: " + o)
     return 0 if rep["passed"] else 1
