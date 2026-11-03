@@ -682,16 +682,25 @@ const hazardQueue = {
     return this.summary(entries);
   },
   summary(entries) {
-    const rows = entries.flatMap(([row, c]) => c
-      ? (c.hazards || []).map((x, i) => [`${row.id} H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
+    const pause = (x) => {
+      const status = (x.hold || {}).status || "Unknown";
+      return status === "Released" && !(x.hold || {}).decision
+        ? "Released. Release decision evidence: open the home" : status;
+    };
+    const flag = (cells) => [...cells, ...Array(9).fill("Unavailable")];
+    const rows = entries.flatMap(([row, c]) => {
+      if (!c) return [flag([row.id, "Unavailable. Open the home to check."])];
+      if (!Array.isArray(c.hazards)) return [flag([row.id, "Unknown. Hazard list not supplied. Open the home to check."])];
+      if (!c.hazards.length && row.hazard) return [flag([row.id, "Mismatch. The list flags a hazard but the case returns none. Open the home to check."])];
+      return c.hazards.map((x, i) => [`${row.id} H-${i + 1}`, `${screenValue(x.category)}, ${screenValue(x.priority)}`,
         screenStamp(x.aware_at), x.source, hazardActor(x.destination),
-        `Sent: ${hazardStep(x.sent_at)}. Received: ${hazardStep(x.received_at)}. Accepted: ${hazardStep(x.accepted_at)}`,
-        x.state, hazardFollowUp(x), (x.hold || {}).status || "Unknown"])
-      : [[`${row.id}`, "Unavailable. Open the home to check.", "Unavailable", "Unavailable", "Unavailable", "Unavailable", "Unavailable", "Unavailable", "Unavailable"]]);
+        hazardStep(x.sent_at), hazardStep(x.received_at), hazardStep(x.accepted_at),
+        x.state, hazardFollowUp(x), pause(x)]);
+    });
     return screenPanel("Hazard referrals across this page of homes",
-      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Every recorded hazard and safeguarding item is listed, including released ones. A home with no row has no recorded hazard; this does not establish that none exists. Open a home for pause and release decision evidence."),
+      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Every recorded hazard and safeguarding item is listed, including released ones. A home with no row has no hazard list entry on this page; this does not establish that no hazard exists. Unavailable, unknown and mismatched homes are listed so they are not read as clear. Open a home for pause and release decision evidence."),
       screenTable("Hazard referrals by home",
-        ["Home and item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent, received and accepted", "State", "Follow-up", "Pause status"],
+        ["Home and item", "Reported observation and urgency", "Aware at", "Source", "Destination", "Sent", "Received", "Accepted", "State", "Follow-up", "Pause status"],
         rows, Infinity));
   }
 };

@@ -26,11 +26,28 @@ vm.runInContext(host + "\n;globalThis.__r = roleScreens;", context);
   for (const id of ["safety-lead", "hazard-triage"]) {
     const s = context.__r.get(id);
     out[id] = {roles: s.roles, tree: await s.render(c), empty: await s.render({id: "C-2"}),
-      summary: s.summary([[{id: "C-1"}, c], [{id: "C-9"}, null], [{id: "C-3"}, {id: "C-3"}]])};
+      summary: s.summary([[{id: "C-1"}, c], [{id: "C-9"}, null], [{id: "C-3"}, {id: "C-3"}],
+        [{id: "C-4", hazard: true}, {id: "C-4", hazards: []}],
+        [{id: "C-5", hazard: false}, {id: "C-5", hazards: []}]])};
   }
   console.log(JSON.stringify(out));
 })().catch(e => {console.error(e); process.exitCode = 1;});
 """
+VIEW_SCRIPT = (
+    SCRIPT.split("(async () => {")[0].replace(
+        "api: async () => ({}),",
+        """location: {hash: "#/screens?screen=safety-lead"}, shown: [],
+  show: (...n) => context.shown.push(n), workspaceStatus: () => null,
+  api: async (u) => u.startsWith("/api/cases?") ? {items: [{id: "C-1"}], total: 1}
+    : {id: "C-1", hazards: [{category: "Damp", priority: "Urgent", source: "Call"}]},""",
+    )
+    + """
+(async () => {
+  await context.roleScreensView();
+  console.log(JSON.stringify(context.shown));
+})().catch(e => {console.error(e); process.exitCode = 1;});
+"""
+)
 
 SENDER = {"name": "Rex Coordinator", "role": "Retrofit Coordinator"}
 SAFE = {"name": "Bea Safe", "role": "Building Safety Liaison"}
@@ -175,9 +192,37 @@ class SafetyScreens(unittest.TestCase):
             self.assertIn("Resident phone call", text)
             self.assertIn("Pending receipt. Follow-up owner: Rex Coordinator", text)
             self.assertIn("Unavailable. Open the home to check.", text)
-            self.assertIn("does not establish that none exists", text)
+            self.assertIn("does not establish that no hazard exists", text)
+            self.assertIn("Unknown. Hazard list not supplied", text)
+            self.assertIn("C-3", text)
+            self.assertIn("Mismatch. The list flags a hazard", text)
+            self.assertIn("C-4", text)
+            self.assertNotIn("C-5", text)
+            for part in (
+                "Aware at",
+                "2026",
+                "Destination",
+                "Bea Safe",
+                "Sent",
+                "Received",
+                "Accepted",
+                "Recorded",
+                "Not recorded",
+                "Pause status",
+                "Active",
+            ):
+                self.assertIn(part, text)
+            self.assertIn("Released. Release decision evidence: open the home", text)
             for control in ("button", "form", "input", "select", "textarea"):
                 self.assertNotIn(control, tags(screen["summary"]))
+
+    def test_view_summarises_when_no_home_selected(self) -> None:
+        result = subprocess.run(
+            ["node", "-e", VIEW_SCRIPT, str(WEB)], capture_output=True, text=True, check=True
+        )
+        text = result.stdout
+        self.assertIn("Hazard referrals across this page of homes", text)
+        self.assertIn("C-1 H-1", text)
 
     def test_no_controls_and_boundary_text(self) -> None:
         out = run([hazard()])
