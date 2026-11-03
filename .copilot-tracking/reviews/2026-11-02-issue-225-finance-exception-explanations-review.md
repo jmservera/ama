@@ -14,3 +14,7 @@ Execution: once, post-implementation, self-review of the diff. Outcome: self-rev
 1. Browser keyboard and axe run for the finance screens (needs a browser scenario registry entry).
 2. Separate approver, preparer and payment officer entry points only if #155 shows need.
 3. Observed validation in #155; no real prices or budgets.
+
+## Correction addendum (2026-11-03)
+
+* Post-review reviewer findings were corrected in a follow-up commit. The original review outcome above is unchanged.

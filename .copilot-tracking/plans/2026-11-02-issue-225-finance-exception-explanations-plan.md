@@ -15,3 +15,7 @@ Research: .copilot-tracking/research/2026-11-02-issue-225-finance-exception-expl
 * Risk: invoice-level exceptions duplicated per line. Mitigation: group by code and message, list lines. Accepted.
 * Risk: unknown future codes. Mitigation: Unknown fallback text. Accepted.
 * Risk: over-claiming WCAG. Mitigation: structural check only; criterion 4 stays Refs. Accepted.
+
+## Correction pass (2026-11-03, PR #785)
+
+* Reviewer findings applied: whole-invoice display for invoice-level codes covering every line (core expands per line), mixed whole/numbered lines shown together, zero-line invoices show Unknown, FINANCE_APPROVERS test, INV-2 scoped assertion, log spacing and trace row link.

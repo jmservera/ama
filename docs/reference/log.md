@@ -9743,6 +9743,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   assistive-technology testing and #155 validation remain unperformed, so
   #226 stays open. Original RPI evidence is under `.copilot-tracking/`
   (2026-11-02 issue-226-browser-check).
+
 ## [2026-11-02] update | Finance exception explanations (Refs #225)
 
 * The Finance invoice screen gains a per-invoice exception explanation table

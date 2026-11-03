@@ -302,8 +302,10 @@ class FinanceGrantsScreens(unittest.TestCase):
         quantity = by_message["Quantity 2 is above the 1 authorised."]
         no_budget = by_message["No approved budget."]
         unknown = by_message["Something new."]
-        for row in (quantity, no_budget, unknown):
+        self.assertEqual(no_budget[1], "Whole invoice")
+        for row in (quantity, unknown):
             self.assertEqual(row[1], "Line 1")
+        for row in (quantity, no_budget, unknown):
             self.assertIn("Payment is made outside this system.", row[4])
         self.assertEqual(quantity[2], "This line is above the quantity the commitment authorises.")
         self.assertTrue(quantity[4].startswith("Finance approver (Retrofit Programme Manager"))
@@ -313,8 +315,9 @@ class FinanceGrantsScreens(unittest.TestCase):
         self.assertEqual(unknown[3], "Unknown")
         self.assertTrue(unknown[4].startswith("Unknown."))
         self.assertNotIn("Finance approver", unknown[4])
-        text = json.dumps(run()["finance-invoices"]["tree"])
-        self.assertIn("Exception explanations are Unknown. The invoice is not checked yet.", text)
+        tree = json.dumps(run()["finance-invoices"]["tree"])
+        inv2 = tree[tree.index("INV-2: Invoice") :]
+        self.assertIn("Exception explanations are Unknown. The invoice is not checked yet.", inv2)
 
     def test_invoice_level_exception_is_grouped_across_lines(self) -> None:
         case = json.loads(json.dumps(CASE))
@@ -325,12 +328,41 @@ class FinanceGrantsScreens(unittest.TestCase):
         inv["exceptions"] = [
             {"line": 0, "code": "no_budget", "message": "No approved budget."},
             {"line": 1, "code": "no_budget", "message": "No approved budget."},
-            {"line": None, "code": "duplicate", "message": "Same reference."},
+            {"line": 0, "code": "duplicate", "message": "Same reference."},
+            {"line": 1, "code": "duplicate", "message": "Same reference."},
+            {"line": 1, "code": "quantity", "message": "Too many."},
         ]
         rows = explanation_rows(run(case)["finance-invoices"]["tree"], "INV-1")
-        self.assertEqual(len(rows), 2)
-        self.assertEqual(rows[0][1], "Line 1, 2")
-        self.assertEqual(rows[1][1], "Whole invoice")
+        self.assertEqual([row[1] for row in rows], ["Whole invoice", "Whole invoice", "Line 2"])
+
+    def test_mixed_whole_invoice_and_numbered_lines_show_both(self) -> None:
+        case = json.loads(json.dumps(CASE))
+        inv = case["finance"]["invoices"][0]
+        inv["exceptions"] = [
+            {"line": None, "code": "no_milestone", "message": "Milestone."},
+            {"line": 0, "code": "no_milestone", "message": "Milestone."},
+        ]
+        rows = explanation_rows(run(case)["finance-invoices"]["tree"], "INV-1")
+        self.assertEqual(rows[0][1], "Whole invoice and line 1")
+
+    def test_invoice_with_no_lines_is_not_checked(self) -> None:
+        case = json.loads(json.dumps(CASE))
+        inv = case["finance"]["invoices"][0]
+        inv["lines"] = []
+        inv["exceptions"] = []
+        text = json.dumps(run(case)["finance-invoices"]["tree"])
+        self.assertIn("The invoice has no lines, so it is not checked.", text)
+        self.assertNotIn("No exception found by the match", text)
+
+    def test_decider_names_match_core_finance_approvers(self) -> None:
+        from zava_forward.core.controls import FINANCE_APPROVERS
+
+        source = (WEB / "role-screens.js").read_text(encoding="utf-8")
+        decider = next(
+            line for line in source.splitlines() if line.startswith("const financeDecider")
+        )
+        for role in FINANCE_APPROVERS:
+            self.assertIn(role, decider)
 
     def test_clean_match_is_not_a_payment_decision(self) -> None:
         case = json.loads(json.dumps(CASE))

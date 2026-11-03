@@ -871,17 +871,24 @@ const financeExplain = {
   quantity: ["This line is above the quantity the commitment authorises.", "Whether the extra quantity was agreed elsewhere.", financeDecider],
   no_milestone: ["No milestone reference is supplied for this line.", "Whether the milestone was accepted. This match never verifies acceptance.", financeDecider]
 };
+const financeInvoiceLevel = new Set(["over_commitment", "over_budget", "duplicate", "no_commitment", "ambiguous_commitment", "no_budget"]);
 function financeExplainRows(inv) {
   const groups = new Map();
   for (const e of inv.exceptions || []) {
     const key = `${e.code}|${e.message}`;
-    const group = groups.get(key) || { e, lines: [] };
-    if (e.line !== null && e.line !== undefined) group.lines.push(e.line + 1);
+    const group = groups.get(key) || { e, lines: [], whole: false };
+    if (e.line !== null && e.line !== undefined) {
+      if (!group.lines.includes(e.line + 1)) group.lines.push(e.line + 1);
+    } else group.whole = true;
     groups.set(key, group);
   }
-  return [...groups.values()].map(({ e, lines }) => {
+  const lineCount = (inv.lines || []).length;
+  return [...groups.values()].map(({ e, lines, whole }) => {
     const known = financeExplain[e.code];
-    return [screenValue(e.message), lines.length ? `Line ${lines.join(", ")}` : "Whole invoice",
+    const coversAll = lineCount > 0 && lines.length >= lineCount && financeInvoiceLevel.has(e.code);
+    const where = coversAll || (whole && !lines.length) ? "Whole invoice"
+      : whole ? `Whole invoice and line ${lines.join(", ")}` : `Line ${lines.join(", ")}`;
+    return [screenValue(e.message), where,
       known ? known[0] : "Unknown. This exception code has no plain-language explanation yet.",
       known ? known[1] : "Unknown",
       `${known ? known[2] : "Unknown. Who decides is not recorded for this code"}. Payment is made outside this system.`];
@@ -889,6 +896,7 @@ function financeExplainRows(inv) {
 }
 function financeExceptionPanel(inv) {
   if (!financeChecked(inv)) return h("p", { class: "empty" }, "Exception explanations are Unknown. The invoice is not checked yet.");
+  if (!(inv.lines || []).length) return h("p", { class: "empty" }, "Exception explanations are Unknown. The invoice has no lines, so it is not checked.");
   const rows = financeExplainRows(inv);
   return rows.length ? screenTable(`Exception explanations for ${inv.id}`,
     ["Exception", "Where", "What it means", "What a person still has to check", "Who decides"], rows)
