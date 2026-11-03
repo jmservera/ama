@@ -31,6 +31,19 @@ EXPECTED = (
 )
 
 
+PAGE_EXPECTED = (
+    "not a portfolio total",
+    "no winning source is selected",
+    "does not establish that none exists",
+    "SYN-STOCK-A v1",
+    "SYN-STOCK-B v2",
+    "Unresolved",
+    "Withdrawn",
+    "Returned",
+    "SYN missing roof reference",
+)
+
+
 def operator_data() -> dict[str, Any]:
     data = synthetic_data()
     case = data["cases"][0]
@@ -74,6 +87,11 @@ def check_accessibility(page: Page) -> bool:
     check("every table region has a label", all(expected))
     check("every table region is focusable and has a caption", regions.evaluate_all(
         "els => els.every(el => el.tabIndex === 0 && el.querySelector('caption'))"))
+    tab_to_regions(page, expected)
+    return scan_axe(page, "per-home view")
+
+
+def tab_to_regions(page: Page, expected: list[str]) -> None:
     page.evaluate("() => { document.activeElement.blur(); window.scrollTo(0, 0); }")
     reached: list[str] = []
     for _ in range(120):
@@ -84,6 +102,9 @@ def check_accessibility(page: Page) -> bool:
         if len(reached) == len(set(expected)):
             break
     check(f"Tab reaches every table region: {reached}", len(reached) == len(set(expected)))
+
+
+def scan_axe(page: Page, view: str) -> bool:
     axe_path = os.environ.get("ZF_AXE_JS")
     if not axe_path:
         print("SKIP axe scan: set ZF_AXE_JS to the pinned axe 4.10.3 file")
@@ -95,10 +116,31 @@ def check_accessibility(page: Page) -> bool:
     page.evaluate(raw.decode())
     result = page.evaluate("""async () => await axe.run(document.querySelector('main'), {
       runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']}})""")
-    check(f"axe 4.10.3 finds no violations in main at 1280px: {[v['id'] for v in result['violations']]}",
+    check(f"axe 4.10.3 finds no violations in main at 1280px, {view}: {[v['id'] for v in result['violations']]}",
           not result["violations"])
     print(f"INFO axe incomplete: {[i['id'] for i in result['incomplete']]}")
     return True
+
+
+def check_page_queue(page: Page) -> bool:
+    """Page-level queue shown before any home is selected."""
+    page.get_by_role("heading", name="Conflict and return queue across this page of homes", exact=True).wait_for()
+    main = page.locator("section.screen-record").filter(
+        has=page.get_by_role("heading", name="Conflict and return queue across this page of homes", exact=True))
+    text = main.text_content() or ""
+    check("page queue has no write controls", main.locator("button, form, input, select, textarea").count() == 0)
+    for phrase in PAGE_EXPECTED:
+        check(f"page queue shows: {phrase}", phrase in text)
+    check("page queue shows both sources for both queries",
+          text.count("SYN-STOCK-A") >= 2 and text.count("SYN-STOCK-B") >= 2)
+    check("page queue lists the reopen with its reason", "Reopened" in text and "SYN reopened for evidence" in text)
+    check("forward moves are not shown as returns in the page queue", "SYN forward move" not in text)
+    labels = main.locator('div.table-scroll[role="region"]').evaluate_all(
+        "els => els.map(el => el.getAttribute('aria-label'))")
+    check(f"page queue has both labelled table regions: {labels}",
+          "Source conflicts by home with both values" in labels and "Returns and reopens by home" in labels)
+    tab_to_regions(page, labels)
+    return scan_axe(page, "page-level queue")
 
 
 def run_browser(base: str) -> None:
@@ -123,9 +165,14 @@ def run_browser(base: str) -> None:
                 page.get_by_role("link", name="Specialist screens", exact=True).click()
                 page.get_by_role("heading", name="Specialist screens", exact=True).wait_for()
                 page.get_by_role("link", name=SCREEN, exact=True).click()
+                page_axe = check_page_queue(page)
+                for width in (320, 1280):
+                    page.set_viewport_size({"width": width, "height": 900})
+                    check(f"page queue reflow {width}px",
+                          page.evaluate("() => document.documentElement.scrollWidth <= innerWidth"))
                 page.locator('a.item[href*="case=ZF-1"]').click()
                 page.get_by_role("region", name="Evidence for ZF-1", exact=True).wait_for()
-                axe_ran = check_accessibility(page)
+                axe_ran = check_accessibility(page) and page_axe
                 for width in (320, 1280):
                     page.set_viewport_size({"width": width, "height": 900})
                     check(f"reflow {width}px",
