@@ -259,6 +259,7 @@ def run_scenario(sc: dict[str, Any], workdir: str) -> dict[str, Any]:
     fails: list[dict[str, Any]] = []
     comparison: list[dict[str, Any]] = []
     consumption: list[dict[str, Any]] = []
+    outcomes: list[dict[str, Any]] = []
     try:
         run = Run(sc, workdir)
         for n, turn in enumerate(sc["turns"], 1):
@@ -272,7 +273,16 @@ def run_scenario(sc: dict[str, Any], workdir: str) -> dict[str, Any]:
                 for e in list(run.store.audit_entries())[receipts_before:]
                 if e["action"] == "chat.turn"
             )
+            failed_before = len(fails)
             _check_turn(run, n, turn, reply, error, before, state, fails)
+            if turn.get("expect", {}).get("kind"):
+                outcomes.append(
+                    dict(
+                        expected=turn["expect"]["kind"],
+                        actual=reply["kind"] if reply else None,
+                        ok=len(fails) == failed_before,
+                    )
+                )
             if turn.get("expect", {}).get("kind") == "answer":
                 comparison.append(_comparison(run, turn, reply))
         run.model.script = None
@@ -319,6 +329,7 @@ def run_scenario(sc: dict[str, Any], workdir: str) -> dict[str, Any]:
             for f in fails
         ],
         comparison=comparison,
+        outcomes=outcomes,
         consumption=consumption,
         economics=consumption_summary(consumption),
         non_ai_panel_kind=non_ai_kind,
@@ -385,8 +396,33 @@ def summarise(results: Sequence[dict[str, Any]]) -> dict[str, Any]:
         ai_answered=sum(c["ai_kind"] == "answer" for c in rows),
         card_could_answer=sum(c["card_has_cited_facts"] for c in rows),
         non_ai_panel_answers=sum(r["non_ai_panel_kind"] == "answer" for r in results),
+        rates=outcome_rates(results),
         economics=consumption_summary([c for r in results for c in r["consumption"]]),
     )
+
+
+OUTCOME_RATES = (
+    ("grounded_answer", "answer"),
+    ("abstention", "abstain"),
+    ("unsupported_claim_withheld", "withheld"),
+    ("out_of_scope_refusal", "refused"),
+)
+
+
+def outcome_rates(results: Sequence[dict[str, Any]]) -> dict[str, Any]:
+    """Scripted per-turn rates by expected outcome; zero denominators give None, not 100%."""
+    rows = [o for r in results for o in r["outcomes"]]
+    rates: dict[str, Any] = {}
+    for name, kind in OUTCOME_RATES:
+        subset = [o for o in rows if o["expected"] == kind]
+        ok = sum(o["ok"] for o in subset)
+        rates[name] = dict(turns=len(subset), correct=ok, rate=ok / len(subset) if subset else None)
+    turns = sum(r["turns"] for r in results)
+    critical = sum(len(r["failures"]) for r in results if r["critical"])
+    rates["critical_error"] = dict(
+        turns=turns, errors=critical, rate=critical / turns if turns else None
+    )
+    return rates
 
 
 def consumption_summary(receipts: Sequence[dict[str, Any]]) -> dict[str, Any]:
@@ -533,6 +569,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         f"vs non-AI: card could answer {s['card_could_answer']} of {s['answer_turns']} answer "
         f"turns; AI answered {s['ai_answered']}; workflow-only panel answered "
         f"{s['non_ai_panel_answers']}"
+    )
+    for name, rate in s["rates"].items():
+        value = "n/a" if rate["rate"] is None else f"{rate['rate']:.0%}"
+        print(f"rate {name}: {value} of {rate['turns']} turns (scripted, development set)")
+    e = s["economics"]
+    print(
+        f"consumption: {e['scripted_calls']} scripted calls, tokens {e['tokens_status']}, "
+        f"cost {e['cost']} (missing: {', '.join(e['missing_cost_inputs'])})"
     )
     print(f"enablement: {report['enablement']['outcome']} (task {report['enablement']['state']})")
     for item in report["evidence"]["open_items"]:

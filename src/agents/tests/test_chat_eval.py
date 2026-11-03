@@ -249,6 +249,24 @@ class GoldenRunTests(unittest.TestCase):
         self.assertGreater(summary["calls_per_runtime_accepted_answer"], 0)
         self.assertIsNone(summary["human_accepted_answers"])
 
+    def test_outcome_rates_sit_beside_consumption(self) -> None:
+        rates = self.report["summary"]["rates"]
+        for name in ("grounded_answer", "abstention", "unsupported_claim_withheld"):
+            self.assertGreater(rates[name]["turns"], 0)
+            self.assertEqual(rates[name]["rate"], 1.0)
+        self.assertEqual(rates["critical_error"]["errors"], 0)
+        self.assertEqual(rates["critical_error"]["turns"], self.report["turns"])
+
+    def test_rates_count_failed_turns_and_avoid_empty_denominators(self) -> None:
+        rows = [
+            dict(
+                turns=2, critical=False, failures=[], outcomes=[dict(expected="abstain", ok=False)]
+            )
+        ]
+        rates = chat_eval.outcome_rates(rows)
+        self.assertEqual(rates["abstention"]["rate"], 0.0)
+        self.assertIsNone(rates["grounded_answer"]["rate"])
+
 
 class NegativeControlTests(unittest.TestCase):
     """Break one property at a time and expect the harness to notice."""
