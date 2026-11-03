@@ -6,6 +6,20 @@ ms.date: 2026-10-31
 ms.topic: reference
 ---
 
+## Ranking snapshot publication (Refs #79)
+
+`ranking_publication.publish(snapshot, archive_dir, published_on)` archives a
+`ranking.snapshot` as one immutable, dated file per policy version, as-of date
+and snapshot hash. It is idempotent, never overwrites and never deletes.
+`verify` re-hashes every record and checks its policy hash against the verified
+registry; `overdue` reports a missing or stale publication. No clock is read:
+dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
+
+Not delivered: no scheduler is configured, the retention period is not set (a
+Legal decision, so the archive keeps everything), and nothing calls `publish`
+yet. The named policy owner and sign-off of the first rule order remain open and
+`ranking-v1.json` is unchanged. No AI, resident, approval or ranking behaviour changes.
+
 ## AI consumption ledger (#432)
 
 `ai_consumption.Consumption` extends the existing immutable `assistant_events`

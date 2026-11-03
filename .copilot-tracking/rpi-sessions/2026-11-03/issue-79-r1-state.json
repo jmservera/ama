@@ -1,0 +1,6 @@
+{"task_id":"issue-79-r1","task_slug":"issue-79-r1","parent_task":null,"mode":"automatic","active_phase":"Follow-up","status":"completed","session_status":"running",
+"artifact_paths":{"research":".copilot-tracking/research/2026-11-03/issue-79-r1-research.md","plan":".copilot-tracking/plans/2026-11-03/issue-79-r1-plan.md","details":".copilot-tracking/details/2026-11-03/issue-79-r1-details.md","critique":null,"changes":".copilot-tracking/changes/2026-11-03/issue-79-r1-changes.md","review":".copilot-tracking/reviews/2026-11-03/issue-79-r1-review.md"},
+"confirmed_decisions":[{"decision":"critique executed once, no significant issue","status":"applied","evidence":"plan file"},{"decision":"review executed once, conformant for slice, criteria 3 and 4 unmet","status":"recorded","evidence":"review file"}],
+"blockers":[{"id":"owner","summary":"Policy owner not named","resolution":"human decision"}],
+"next_action":{"phase":"Follow-up","action":"open PR with Refs #79"},
+"prioritized_follow_ups":[{"rank":1,"task":"Name owner and sign rule order","rationale":"unblocks criterion 3","evidence":"ranking-v1.json owner"},{"rank":2,"task":"Wire scheduled publish","rationale":"criterion 4","evidence":"ranking_publication.SCHEDULE"}]}
