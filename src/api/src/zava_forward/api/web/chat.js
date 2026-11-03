@@ -209,7 +209,7 @@ function chatCasePanel(id) {
     } catch (e) { say(`Proposal not requested: ${e.message}`); }
   };
   const manualNote = "Continue ordinary case work manually.";
-  if (me.user.role === chatAdministratorRole) {
+  if (me.user.role === chatAdministratorRole || me.user.contractor) {
     say(`Proposal requests are not available for your role. ${manualNote}`);
   } else {
     api("/api/assistants").then((registry) => {
@@ -281,6 +281,12 @@ function regulatoryAlertsPanel(caseId) {
   async function load() {
     refresh.disabled = true;
     status.textContent = "Loading role-scoped alerts. Coverage is unknown.";
+    if (me.services?.law_alerts === false) {
+      list.replaceChildren();
+      status.textContent = "Alert coverage unknown: the law store is not loaded, so no rule checks have run. Use the existing human emergency or hazard service; do not wait for checks.";
+      refresh.disabled = false;
+      return;
+    }
     try {
       const data = await api(`/api/law/alerts?case=${encodeURIComponent(caseId)}`);
       const alerts = (data.homes || []).flatMap((home) => home.alerts);
@@ -417,7 +423,9 @@ function regulatoryChatPanel(caseId) {
         status.textContent = `${here.length} synthetic-demo referrals for this home. No decision recorded.`;
       } catch (e) { status.textContent = `Exercise inbox unavailable: ${e.message}`; }
     } }, "Open my exercise doubt inbox (named owner only)"), status);
-  const admissionRequest = me.user.role === chatAdministratorRole
+  const regulatoryRoleMissing = me.user.auth_provider === "trusted-proxy"
+    && !(me.user.rule_roles || []).includes("regulatory_chat");
+  const admissionRequest = me.user.role === chatAdministratorRole || regulatoryRoleMissing
     ? Promise.reject(Object.assign(new Error("Not available for your role."), { status: 403, roleDenied: true }))
     : api("/api/chat/regulatory/status");
   admissionRequest.then(async (admission) => {
