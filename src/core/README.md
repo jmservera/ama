@@ -677,6 +677,24 @@ conventional reporting.
 
 ```bash
 python -m unittest discover -s tests -p 'test_discovery_assistant_boundary.py' -q
+
+### Phase 0 discovery register slice (124)
+
+`discovery_register` is a pure, in-memory rule layer for the retrofit-flow
+discovery brief. It reads no company data, calls no model and writes no store,
+so discovery stays manual and works when AI is unavailable. `DiscoveryOwner`
+reports `NOT_NOMINATED`, `ENDPOINT_NOT_AGREED` or `ENDPOINT_AGREED` (accepted
+handover). `dictionary_gaps` lists each of ten separate lifecycle events that is
+undefined or not validated by its owner role. A `Constraint` is a candidate until
+a named owner other than the proposing analyst decides it, and acceptance needs
+supporting evidence plus contradicting evidence or a searched-and-not-found
+note. A dispute stays visible and `register_rows` labels every undecided or
+disputed row as not a company finding. The five candidates are the brief's
+hypotheses with no evidence. Not built: persistence, screens, import of
+extracts, and any real nomination or validation, which need named company people.
+
+```bash
+python -m unittest discover -s tests -p 'test_discovery_register.py' -q
 ```
 
 ## Appointment agreements and visit evidence (#87)
