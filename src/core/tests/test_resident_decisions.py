@@ -1645,6 +1645,27 @@ class JsonResidentDecisions(unittest.TestCase):
         )
         self.assertTrue(self.store.cases["ZF-1"]["closed"])
 
+    def test_complaint_and_independent_review_stay_open_under_every_hold(self) -> None:
+        self.scope()
+        self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")
+        self.authority()
+        self.answer(answered_by="Their representative", representative_ref="SYN-REP-A")
+        self.answer(status="Withdrawn", note="SYN in their words")
+        self.authority(status="Disputed")
+        c = self.store.cases["ZF-1"]
+        self.assertTrue(resident_gate(c, self.bind(MEASURES[0])))
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        with patch.object(controls, "today", return_value="2099-01-01"):
+            self.assertTrue(resident_decisions._resident_decision_gate(self.store.cases["ZF-1"]))
+            self.assertTrue(resident_gate(self.store.cases["ZF-1"]))
+            self.request("Complaint")
+            self.store.resident_action(self.sam, "ZF-1", self.review_body())
+        routes = [r["route"] for r in self.store.cases["ZF-1"]["service_requests"]]
+        self.assertEqual(routes, ["Complaint", "Independent review"])
+        self.assertEqual(
+            self.store.cases["ZF-1"]["measure_decisions"][MEASURES[0]][-1]["status"], "Withdrawn"
+        )
+
     def commitment(self, **kw: Any) -> None:
         body = dict(
             expected_version=0,
