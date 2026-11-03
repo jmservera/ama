@@ -9933,3 +9933,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added a dated before-and-after score record to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#rubric-before-and-after-score-record-2026-11-03-refs-198-203): 47 baseline, 77 pre-cut-over, 77 after cleanup, no dip, with criteria effect for #198 and #203.
 * Unmet: #198 per-PR dual-window records and registry-PR ordering; #203 literal reference search, and deployed app plus CI proof. Evidence is under `.copilot-tracking/` (2026-11-03 score record).
+## [2026-11-03] update | Journey ownership register and equity test plan (Refs #128)
+
+* Added the [equity, journey ownership and user research test plan](./research/ux/equity-journey-test-plan.md) and a pure `journey_register` module in `src/core` (blocked-by-default register of J1 to J6 and R1, plus a human-review route for missing data and incomplete appointments with no rank effect). Unit-tested only. No screen reader run, user research, owner assignment or protocol agreement exists; all three #128 criteria and the AI, geography and archetype cohort criteria stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-128 r1).
