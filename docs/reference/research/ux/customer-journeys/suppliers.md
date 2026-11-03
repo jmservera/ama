@@ -4,7 +4,7 @@ date: 2026-10-14
 perspective: "Housing Procurement and Contracts Lead"
 status: "Research synthesis and proxy hypotheses; not validated user testimony"
 scope: "Procurement manager; contractor scheduler/supervisor; installer/subcontractor"
-ms.date: 2026-10-14
+ms.date: 2026-11-03
 ms.topic: reference
 ---
 
@@ -92,6 +92,81 @@ Three validation questions, to ask sequentially:
 1. Which actual contract and delegation records govern scope changes, supplier instructions and payment?
 2. How do scheduler and subcontractor teams confirm capacity and recover from failed visits today?
 3. Can field workers demonstrate evidence submission and rejection recovery without connectivity or confident app use?
+
+## Design contract for contractor submission, correction and acknowledgement (proposed, 2026-11-03)
+
+Status: design proposal for issue #228 criterion 3. It is a desk-research
+hypothesis, not observed behaviour, and not an approved build. Nothing here
+is implemented. Today the Package queue and Job pack screens are read-only
+(`src/api/src/zava_forward/api/web/role-screens.js`, delivered by #655, #820
+and #867) and state that submission is recorded outside the screen.
+
+Preconditions before any build (all unmet on 2026-11-03):
+
+* BRD OD-47 decision on whether providers may use any digital channel, with
+  consent, accessibility, identity and authority evidence.
+* Supplier-scoped access design and security review. No provider identity
+  claim, provider portal, booking or self-approval is assumed.
+* Named reviewer assignment data, so the next reviewer is a person and not
+  only a role.
+* Validation with real supplier staff in #155; until then every state label
+  below is a hypothesis.
+
+Interim manual path (the only path until the preconditions clear): the
+contractor sends evidence to the named contact, who records it. The Job pack
+keeps saying so. No AI step is involved, so no AI-unavailable behaviour is
+needed; any future AI draft of an evidence summary must stay optional and
+the manual route must work without it.
+
+States, each shown as text and never by colour alone:
+
+| State | Meaning in plain words | Who sets it | Next reviewer |
+| --- | --- | --- | --- |
+| Not submitted | No evidence for this item is on record | System, from the checklist | Contractor, then named staff contact |
+| Submitted | Contractor sent evidence; it is not checked | Contractor or staff on their behalf | Contracts manager, independent of the submitter |
+| Acknowledged | Zava North Homes received it; this is not acceptance | Staff | Contracts manager, independent of the submitter |
+| Correction requested | Reviewer found a gap and said what to fix | Reviewer | Contractor |
+| Resubmitted | Contractor sent a correction; the earlier version stays on record | Contractor or staff | Reviewer |
+| Accepted | A reviewer other than the submitter accepted it | Reviewer | None |
+| Unknown | The record is not supplied to this screen | System | Named staff contact |
+
+Rules the screens must keep:
+
+* Submission and acknowledgement are separate rows from review and
+  acceptance, with a different actor. The submitter cannot accept. A
+  contractor view never offers an accept control and says "Done by someone
+  other than you".
+* Draft readiness stays draft: unmet prerequisites and the next reviewer
+  are listed, and the screen records no release, approval or booking.
+* The contractor view shows no vulnerability reason, household detail,
+  resident contact history, rates, prices or other contractors' capacity.
+  The "Not shown for this role" panel names what is withheld without a reason.
+* Each checklist item shows its version and keeps earlier submissions;
+  a correction adds a record and never overwrites one.
+* Every state change is a human action by a named person, with date and
+  actor recorded. No agent submits, acknowledges, accepts or chases.
+
+Interaction and accessibility requirements, tested against the
+[WCAG 2.2 baseline](../wcag-conformance-baseline.md), the
+[Fluent 2 design system](../design-system.md) and the
+[plain-language standard](../content-standard.md):
+
+* Native table, form, fieldset, label, button and heading elements; one
+  checklist item per row with a text state and a labelled next action.
+* Full keyboard operation in reading order, visible focus, no keyboard
+  trap, and errors named in text beside the field and in a summary that
+  receives focus on failed submission.
+* File upload has a labelled alternative: describe the evidence in text,
+  or send it to the named contact. A printable pack stays available.
+* Status changes are announced through a polite live region; no timeouts
+  and no state carried only in colour, icon or position.
+
+Acceptance for a later build slice (all unmet today): independent review of
+the supplier-scoped access design; keyboard, axe and assistive-technology
+checks on the new controls; a negative test that a contractor session cannot
+accept its own submission or see a vulnerability reason; and #155 validation
+with supplier staff. Passing engineering checks would not establish
+accessibility acceptance.
 
 ## Sources: local dated evidence, not refreshed law
 
