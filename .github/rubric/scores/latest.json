@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-03T02:00:08+00:00",
-  "commit": "46f9649f9d5334ec174b9d903e75b2129ff7496b",
+  "scored_at": "2026-11-03T02:15:41+00:00",
+  "commit": "b6242b900327d90639b1cfe17fe70d1dfd392a7e",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41562560376",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41564191951",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "7f2f22d10fcbf1c3ea3451a57ac7e5dc9d5c909bae1ebee0463ad05c03d3154c",
+    "solution-code": "8378eae0aff4847001946662b6f3f7186638e850a9ebd7ab8c4ca09a6c641004",
     "infrastructure": "5134fdeb17664e926dfc18305737f417e3bbfbb83eab746954ce283fc04217a9",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
@@ -29,10 +29,9 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/static_assets.py:1-58",
-        "src/api/src/zava_forward/api/server.py:193-197"
+        "src/api/src/zava_forward/api/server.py:218-247"
       ],
-      "rationale": "Diff adds finance invoice exception-explanation UI/tests and a story-226 accessibility browser check; unrelated to architecture. Baseline ceiling 5 retained."
+      "rationale": "Diff adds a generic unhandled-exception handler (secret-free 500) to the HTTP server; incremental hardening, not an architectural change. Ceiling 5 retained."
     },
     "A2": {
       "score": 5,
@@ -44,43 +43,39 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/checks/data_operator_browser_check.py:1-20",
-        "src/api/README.md:1216-1230"
+        "src/api/src/zava_forward/api/server.py:229-247",
+        "src/api/tests/test_error_logging.py:48-67"
       ],
-      "rationale": "Diff adds a read-only story-226 accessibility browser check (no write controls, no POST, axe 4.10.3 scan, keyboard-reachable tables) reinforcing existing responsible-AI/compliance evidence incrementally; ceiling 5 retained."
+      "rationale": "Diff ensures unhandled-handler failures never leak secrets, tokens or tracebacks in the 500 response or log line, and tests assert this explicitly. Reinforces existing responsible-engineering/security evidence incrementally; ceiling 5 retained."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/agents/evals/chat_golden.json:77-82",
-        "src/agents/tests/test_chat_eval.py:38-90"
+        "src/api/tests/test_error_logging.py:115-144"
       ],
-      "rationale": "Diff is finance invoice exception UI plus browser check, not capability completeness. Baseline 5 retained."
+      "rationale": "New concurrent-burst test confirms no dropped connections or stray 500s across mixed endpoints, adding completeness evidence for existing capability; baseline 5 retained since core capability set is unchanged."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "infra/modules/containerapps.bicep:191-197",
-        "infra/resident-demo.bicep:148-156",
-        "src/api/src/zava_forward/api/web/app.js:219-259"
+        "src/api/src/zava_forward/api/server.py:218-247",
+        "src/api/tests/test_error_logging.py:48-69"
       ],
-      "rationale": "Diff unrelated to operations/observability/cost; no change to resilience or instrumentation evidence. Baseline 5 retained."
+      "rationale": "Diff adds structured, diagnosable error logging (method, path, exception class, raising frame, response-started flag) and a secret-free 500 fallback distinguishing client disconnects, reinforcing existing operations evidence. Already at ceiling 5; retained."
     },
     "A6": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/chat_eval.py:337-349",
-        "src/agents/tests/test_chat_eval.py:38-100"
+        "src/agents/src/zava_forward/agents/chat_eval.py:337-349"
       ],
-      "rationale": "Diff is finance UI/accessibility-check work, unrelated to model-choice or eval-harness. Baseline 5 retained."
+      "rationale": "Diff is HTTP server error-handling hardening, unrelated to model-choice or eval-harness. Baseline 5 retained."
     },
     "A7": {
       "score": 4,
       "evidence": [
-        "src/agents/src/zava_forward/agents/dispatch.py:186-220",
-        "src/core/src/zava_forward/core/ai_consumption.py:155-185"
+        "src/agents/src/zava_forward/agents/dispatch.py:186-220"
       ],
-      "rationale": "Diff is a browser accessibility check and finance UI, unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "rationale": "Diff is server-level error handling, unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -118,9 +113,9 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:1216-1230"
+        "src/api/tests/test_error_logging.py:1-2"
       ],
-      "rationale": "Diff is src/api engineering-check README addition, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "Diff is backend error-logging engineering work with inline docstring comment, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
