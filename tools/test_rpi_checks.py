@@ -2570,15 +2570,26 @@ os.fstat(3)
     ) -> None:
         runner = self.runner()
         runner.snapshot = self.root
-        for ids in (["0.a", "helper.Shared.test_z"], []):
-            with (
-                self.subTest(ids=ids),
-                patch.object(runner, "command") as command,
-                patch.object(runner, "discover_test_ids", return_value=ids),
-                self.assertRaisesRegex(gate.GateError, "Sharding would drop"),
-            ):
-                runner.sharded_tests("api", "py", "src/api", [["0"], ["1"], ["2"]])
-            command.assert_not_called()
+        with (
+            patch.object(runner, "command") as command,
+            patch.object(runner, "discover_test_ids", return_value=[]),
+            self.assertRaisesRegex(gate.GateError, "Sharding would drop"),
+        ):
+            runner.sharded_tests("api", "py", "src/api", [["0"], ["1"], ["2"]])
+        command.assert_not_called()
+
+    def test_helper_defined_tests_run_in_the_last_shard(self) -> None:
+        runner = self.runner()
+        runner.snapshot = self.root
+        with (
+            patch.object(runner, "command", side_effect=RuntimeError("stop")) as command,
+            patch.object(runner, "discover_test_ids", return_value=["0.a", "helper.Shared.t"]),
+            self.assertRaises(RuntimeError),
+        ):
+            runner.sharded_tests("api", "py", "src/api", [["0"], ["1"], ["2"]])
+        argvs = [call.args[0] for call in command.call_args_list]
+        self.assertEqual(sum("helper.*" in argv for argv in argvs), 1)
+        self.assertIn("helper.*", next(a for a in argvs if "2.*" in a))
 
     def test_discovery_lists_real_ids_including_helper_defined_cases(self) -> None:
         tests = self.out / "disc/tests"

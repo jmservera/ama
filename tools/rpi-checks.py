@@ -1679,6 +1679,7 @@ class Runner:
                 argv,
                 cwd=self.snapshot / cwd,
                 env=child_env,
+                stdin=subprocess.DEVNULL,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
@@ -1910,6 +1911,11 @@ class Runner:
         # Fail closed: a TestCase imported from a helper module matches no module pattern.
         ids = self.discover_test_ids(project, py, cwd)
         missed = unsharded_test_ids(ids, parts)
+        if missed:
+            # Tests imported from helper modules (for example dataset.ImproveTests) run in the last shard.
+            extra = sorted({test_id.split(".")[0] for test_id in missed})
+            parts = [*parts[:-1], [*parts[-1], *extra]]
+            missed = unsharded_test_ids(ids, parts)
         if not ids or missed:
             raise GateError(
                 f"Sharding would drop {len(missed)} of {len(ids)} discovered {project} tests "
