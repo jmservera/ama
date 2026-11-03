@@ -55,6 +55,9 @@ def verify_entries(entries, digests=(), start=GENESIS):
                 head=prev, problem=problem, digests_checked=checked, digest_mismatches=bad)
 
 
+DIGEST_KEYS = ("year", "count", "head", "first_prev")
+
+
 def _year(e):
     return str(e.get("at", ""))[:4]
 
@@ -80,7 +83,12 @@ def verify_years(entries, digests=()):
     by = {}
     for e in entries:
         by.setdefault(_year(e), []).append(e)
-    sealed = {d["year"]: d for d in digests}
+    sealed, bad_digests = {}, []
+    for d in digests:
+        if isinstance(d, dict) and all(k in d for k in DIGEST_KEYS) and str(d["year"]) not in sealed:
+            sealed[str(d["year"])] = d
+        else:
+            bad_digests.append(d.get("unreadable", d.get("year")) if isinstance(d, dict) else None)
     years, prev_head, ok = {}, GENESIS, True
     for y, es in sorted(by.items()):
         rep = verify_entries(es, start=es[0].get("prev"))
@@ -96,7 +104,8 @@ def verify_years(entries, digests=()):
         ok &= not problems
         prev_head = es[-1].get("hash")
     missing = sorted(y for y in sealed if y not in by)
-    return dict(intact=ok and not missing, years=years, missing_years=missing)
+    return dict(intact=ok and not missing and not bad_digests, years=years, missing_years=missing,
+                sealed_years=sorted(sealed), bad_digests=bad_digests)
 
 
 def make_digest(count, head, chain="main"):
@@ -128,8 +137,11 @@ def read_year_digests(directory):
     if directory and os.path.isdir(directory):
         for name in sorted(os.listdir(directory)):
             if name.startswith("year-") and name.endswith(".json"):
-                with open(os.path.join(directory, name), encoding="utf-8") as f:
-                    out.append(json.load(f))
+                try:
+                    with open(os.path.join(directory, name), encoding="utf-8") as f:
+                        out.append(json.load(f))
+                except (OSError, ValueError):
+                    out.append(dict(unreadable=name))
     return out
 
 

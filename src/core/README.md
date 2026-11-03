@@ -3689,7 +3689,9 @@ witnessed restore, real-model, qualified human or application acceptance.
   digest per completed year (entries, first link, head); `--by-year` verifies every
   year on its own, the links between years and each sealed digest, and reports a
   dropped sealed year. A self-consistent rewrite of a sealed year is caught only by
-  its digest, so those files belong in the immutable Blob container. Proven in
+  its digest, so those files belong in the immutable Blob container. A malformed,
+  duplicate or unreadable year digest file fails `--by-year` closed (`bad_digests`), and
+  the report lists `sealed_years`, so an empty digest folder is visible. Proven in
   `src/core/tests/test_recovery.py`; run the scheduled `--by-year` check before relying on the ledger.
 * `python -m zava_forward.core.synthetic.loadcheck --data zavaforward.json --homes 60000` runs the
   NFR-002 mix (five sessions, two writers) against the configured store and prints
