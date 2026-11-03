@@ -148,6 +148,9 @@ class AssetBoardScreen(unittest.TestCase):
         up = json.dumps(run({"consumption": {"quality_status": "Fail"}})["tree"])
         self.assertIn('"Loaded"', up)
         self.assertNotIn("could not be loaded", up)
+        empty = json.dumps(run({})["tree"])
+        self.assertNotIn('"Loaded"', empty)
+        self.assertIn("could not be loaded", empty)
 
     def test_missing_report_and_no_conflicts_stay_unknown(self) -> None:
         out = run({})
