@@ -9908,3 +9908,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] create | Journey learning-test bundles protocol (Refs #129)
 
 * Added `research/ux/journey-learning-test-bundles.md`: protocol for the five candidate bundles with non-AI comparators, a six-component net-effort measure (NFR-009), stop rules, manual and AI-unavailable paths, and the O10/O18 to O20 exclusion. Protocol only: no experiment run, no measured result; saved minutes stay capacity until Finance validates them. Unmet: running the bundles, atlas-owner confirmation of the mapping (the O16 overlap is the open question), ADR 0003 dependencies. Evidence under `.copilot-tracking/` (2026-11-03 issue-129 r1).
+## [2026-11-03] update | Epic #89 scoped stabilization checkpoint (Refs #89)
+
+* Added an epic-scoped checkpoint to the [evidence pack](../architecture/cutover-evidence-pack.md#epic-89-scoped-stabilization-checkpoint-2026-11-03) on main b855aec86: requirement-to-test reconciliation for RULE-004, 007, 008, 013 and 023, a child ledger (#90 and #91 closed; #92, #132 and #133 open with unmerged PRs) and focused test, ruff and mypy results.
+* Flagged that the PRD and BRD give FR-016 and FR-017 different meanings. #89 criterion 1 (full checkpoint before closure) and criterion 2 (children closed or deferred) stay unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-89 epic checkpoint).

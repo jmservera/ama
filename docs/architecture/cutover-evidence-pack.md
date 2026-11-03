@@ -2474,6 +2474,76 @@ claims citing a complete passing benchmark receipt. Criteria 7 (until #687 is
 resolved) and 8 stay unmet. A pivot, requirement relaxation or deliberate
 deferral is neither approved nor proposed.
 
+## Epic #89 scoped stabilization checkpoint (2026-11-03)
+
+Refs #89, applying the #440 checkpoint to the provider capacity, work order and
+quality acceptance surface only. Focused tier, documentation and evidence only;
+no source, Azure, private-data or threshold change. This is a bounded
+engineering checkpoint, not product acceptance and not epic closure.
+
+### Source and scope
+
+| Item | Value |
+| --- | --- |
+| Pinned `origin/main` | `b855aec86b47939ed4cafd38bc17b9318f2284c7`, tree `4109880ddc5bdde26b6ff405ab742e60bb8b6daf` |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) | 0.21.0, blob `34d88395de861e9799eb9e24121a21c92c7a5adc`, unchanged since the third checkpoint |
+| [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) | 0.21.0, blob `c788b917bafaede215f326f0efc71e071a687f1c`, unchanged |
+| Covered issues | Children #90 and #91 (closed), #92, #132, #133 (open); parent #89 |
+| Merged PRs on the surface | #389 (consultation evidence and scoped holds, Refs #92); earlier #90 and #91 delivery in `core/procurement.py` and `core/quality.py` after the M2 move (#199) |
+| Open, unmerged, not counted | #900 (#92 read-only letting and renewal gate), #873 (#132 job pack), #869 (#133 aftercare register) |
+
+Draft and in-review documents are not approved by this record.
+
+### Actual local commands and outcomes
+
+Environment: `/tmp/venv-89` (pip only; `src/core`, `src/agents` and `src/api`
+editable, plus `ruff`, `mypy` and the `playwright` package without browsers).
+`PYTHONDONTWRITEBYTECODE=1`; mypy used `--cache-dir=/tmp/mypy-89`.
+
+| Check | Actual result |
+| --- | --- |
+| `cd src/core/tests && python -m unittest test_quality_procurement test_consultation_controls -q` | 146 tests, 84.0s, OK, 13 skipped (SQL Server variants), exit 0 |
+| `cd src/api && PYTHONPATH=../core/tests:../agents/tests python -m unittest tests.test_procurement_api tests.test_procurement_screens tests.test_technical_quality_screens -q` | 59 tests, 36.6s, OK, exit 0 |
+| `ruff check` and `ruff format --check` in `src/core` | Passed (153 files formatted) |
+| `ruff check` in `src/api` | Passed |
+| `mypy` in `src/core` and `src/api` | Clean (206 and 156 source files); the first API run failed only for the missing `playwright` stub package, fixed by installing it |
+
+Skipped tests are not passes. Not run: full package suites, disposable SQL
+Server parity, Docker, Chromium harnesses, benchmarks and the complete gate
+(coordinator-owned). Those paths stay `implemented-unverified` for this head.
+No `Azure observed` row exists.
+
+### Reconciliation of requirements with code and tests
+
+| Requirement | Local evidence on this head | Class |
+| --- | --- | --- |
+| RULE-007 (no scheduling or confirmation beyond committed capacity), AC-026 | `test_committed_capacity_needs_evidence_and_limits_work_orders`, `test_imported_numeric_capacity_is_not_evidenced`, `test_capacity_dates_scope_source_and_deficit_invalidate_progression`, `test_advance_without_evidenced_booked_order_is_refused` | local observed (scripted fixtures); real contracts unknown |
+| RULE-008 (only a named authorised contract manager instructs; drafts are not instructions), AC-030 | `test_named_authority_is_not_a_role_or_caller_claim`, `test_drafts_and_draft_review_never_issue_instructions`, `test_every_order_change_has_a_version`, `test_contractor_sees_only_own_work_orders_without_reason` | local observed; real contract-manager identities blocked (#349, #350) |
+| RULE-004 (contractors submit evidence, never approve quality) and RULE-013 (independent re-verification before defect closure), AC-013, AC-044 | `test_never_auto_accepts_and_accepter_must_be_independent`, `test_installer_name_blocks_acceptance`, `test_quality_remediation_and_reinspection`, `test_quality_replacement_dependencies` | local observed |
+| RULE-023 (Legal records consultation status before let or renewal), AC-073 | `test_consultation_controls` (four-state supplied record, authority stays Unverified, effective status unknown, dependent actions held). No contract let or renewal transition exists; #900 is open | partly implemented; criteria of #92 unmet |
+| FR-016 and FR-017 as numbered in the PRD (versioned provider-package record; quality acceptance) | Covered by the tests above; BRD FR-016/FR-017 are handoff requirements (AC-022, AC-023), a numbering difference between the two documents | contradiction flagged, not resolved here |
+| BG-002 and BG-006 outcomes (accepted handovers, right-first-time) | No measured outcome; thresholds are planning assumptions | unknown |
+
+Child ledger: #90 and #91 are closed with their ticked criteria supported by
+the tests above. #92 is open: both criteria unmet (verified Legal status and a
+real let or renew transition do not exist). #132 and #133 are open and
+not-started on main; their PRs are unmerged. Child scope that is neither
+delivered nor deferred by an owner decision remains open.
+
+### Findings, triage and recommendation
+
+| Priority / severity | Finding | Owner |
+| --- | --- | --- |
+| 1 / Medium | PRD and BRD both define FR-016 and FR-017 with different meanings; the epic cites both | Requirements owner; to be reconciled in a document PR, not silently |
+| 2 / Medium delivery | Three children (#92, #132, #133) have open unmerged PRs; criterion 2 of #89 needs each closed or owner-deferred | Existing PRs |
+| 3 / Low | Procurement is held as one document rather than per-row tables (#90 note) | Backlog, no bug reproduced |
+
+No behavior bug was reproduced and no refactoring need confirmed, so no
+regression test was added. Recommendation: **continue**. Epic #89 criterion 1
+is not met: this checkpoint is partial evidence only, because children are open
+and no pivot or deferral decision has been recorded. Rerun the checkpoint after
+the child PRs resolve and before epic closure.
+
 ## Rubric src counting reconciliation (2026-10-27)
 
 Refs #198. This additive reconciliation preserves the original UNMET rubric
