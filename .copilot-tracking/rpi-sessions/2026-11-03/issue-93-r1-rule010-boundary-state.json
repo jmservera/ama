@@ -1,0 +1,31 @@
+{
+  "task_id": "issue-93-r1-rule010-boundary",
+  "task_slug": "issue-93-r1-rule010-boundary",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-03/issue-93-r1-rule010-boundary-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-03/issue-93-r1-rule010-boundary-plan.md",
+    "details": ".copilot-tracking/details/2026-11-03/issue-93-r1-rule010-boundary-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-03/issue-93-r1-rule010-boundary-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-03/issue-93-r1-rule010-boundary-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-03/issue-93-r1-rule010-boundary-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed", "status": "recorded", "evidence": "research artifact, Ready"},
+    {"decision": "Critique executed once, applied directly", "status": "recorded", "evidence": "critique artifact"},
+    {"decision": "Review executed once, Pass for scope", "status": "recorded", "evidence": "review artifact"},
+    {"decision": "Validation tier focused; no gate", "status": "confirmed", "evidence": "test-only change, no security, infrastructure, SQL or deployment code"}
+  ],
+  "blockers": [
+    {"id": "children-open", "summary": "#96, #98, #99 open; #440 checkpoint unmet", "resolution": "their own RPI loops and owner decisions"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Independent exact-head review, hosted CI, owner merge decision"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Re-run RULE-010 scan scope after #96 export and #99 limits merge", "rationale": "Keeps the boundary proof current", "evidence": "review artifact"},
+    {"rank": 2, "task": "Complete #440 triage criteria", "rationale": "Epic criterion 1", "evidence": "issue #440"}
+  ]
+}
