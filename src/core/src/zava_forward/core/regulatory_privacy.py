@@ -209,3 +209,47 @@ def record_human_decision(
         decided_at=at,
         decided_by_system=False,
     )
+
+
+METERING_FIELDS = {
+    "surface": "id",
+    "record_id": "id",
+    "model_id": "id",
+    "prompt_version": "id",
+    "rule_card_version": "id",
+    "input_tokens": "count",
+    "output_tokens": "count",
+    "cached_tokens": "count",
+    "retry_count": "count",
+    "occurred_at": "time",
+}
+METERING_SURFACES = frozenset(("chat", "check"))
+_ID_CHARS = frozenset("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._:-")
+
+
+def metering_record(raw: dict[str, Any]) -> dict[str, Any]:
+    """Closed schema: identifiers, counts and versions only; never free text or cost."""
+    unknown = sorted(set(raw) - set(METERING_FIELDS))
+    if unknown:
+        raise ValueError(f"Metering refuses fields outside the closed schema: {unknown}")
+    missing = sorted(k for k in ("surface", "record_id", "occurred_at") if k not in raw)
+    if missing:
+        raise ValueError(f"Metering needs: {missing}")
+    if raw["surface"] not in METERING_SURFACES:
+        raise ValueError("Metering surface must be chat or check.")
+    out: dict[str, Any] = {}
+    for key, value in raw.items():
+        kind = METERING_FIELDS[key]
+        if kind == "count":
+            if type(value) is not int or not 0 <= value <= 10**12:
+                raise ValueError(f"{key} must be a bounded non-negative integer.")
+        elif kind == "time":
+            if not isinstance(value, str) or datetime.fromisoformat(value).tzinfo is None:
+                raise ValueError("occurred_at must be a timezone-aware ISO time.")
+        elif key != "surface" and (
+            not isinstance(value, str) or not 1 <= len(value) <= 64 or not set(value) <= _ID_CHARS
+        ):
+            raise ValueError(f"{key} must be a short identifier, not free text.")
+        out[key] = value
+    out["retention_class"] = "usage"
+    return out
