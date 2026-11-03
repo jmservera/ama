@@ -9915,3 +9915,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Unaccepted handoff ageing and exception feed (Refs #83)
 
 * Added read-only `handoff_ageing`, `unaccepted_handoffs` and `feed_unaccepted_handoffs` in `src/core` with unit tests. No approved limit is invented: BG-010/OD-09 stays open and ageing flags only by the handoff's own due time or a caller-supplied approved limit. Not wired to API or screens; criterion 3 of #83 stays unmet. Unit-tested only. Evidence under `.copilot-tracking/` (2026-11-03 issue-83 r1).
+
+## [2026-11-03] create | Operator suspension drill protocol (Refs #221)
+
+* Added `method/operator-suspension-drill-protocol.md`: witnessed drill steps and a blank record for restart authority and manual fallback evidence. Protocol only: no drill run, no OD-35 authority appointed, no corrective test accepted; #221 criteria 5 and 6 stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-221 r1 drill protocol).
