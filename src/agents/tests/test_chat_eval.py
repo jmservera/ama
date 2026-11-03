@@ -184,6 +184,37 @@ class GoldenRunTests(unittest.TestCase):
         self.assertEqual((approved["outcome"], approved["state"]), ("insufficient", "disabled"))
         self.assertEqual(e["blocking_gaps"], [])
 
+    def test_constructed_thresholds_fail_below_floor_and_never_enable(self) -> None:
+        rates = self.report["summary"]["rates"]
+        ok = dict(
+            approved_by="constructed-fixture",
+            bindings=self.report["bindings"],
+            minimum_rates=dict(grounded_answer=rates["grounded_answer"]["rate"]),
+            maximum_critical_error_rate=0.0,
+        )
+        e = chat_eval.enablement_decision(self.report, ok)
+        self.assertEqual({c["outcome"] for c in e["threshold_checks"]}, {"pass"})
+        self.assertEqual((e["outcome"], e["state"]), ("insufficient", "disabled"))
+        strict = dict(ok, minimum_rates=dict(abstention=1.01))
+        e = chat_eval.enablement_decision(self.report, strict)
+        self.assertEqual((e["outcome"], e["threshold_checks"][0]["outcome"]), ("fail", "fail"))
+
+    def test_changed_versions_require_renewed_threshold_evidence(self) -> None:
+        stale = dict(
+            approved_by="constructed-fixture",
+            bindings=dict(self.report["bindings"], model="other-model"),
+            minimum_rates=dict(abstention=0.0),
+        )
+        e = chat_eval.enablement_decision(self.report, stale)
+        self.assertEqual(e["renewal_required_for"], ["model"])
+        self.assertEqual(e["threshold_checks"][0]["outcome"], "insufficient")
+        self.assertEqual(e["outcome"], "insufficient")
+        bare = chat_eval.enablement_decision(self.report, dict(approved_by="x"))
+        self.assertEqual(bare["threshold_checks"][0]["outcome"], "insufficient")
+
+    def test_unapproved_thresholds_are_not_applied(self) -> None:
+        self.assertEqual(self.report["enablement"]["threshold_checks"], [])
+
     def test_chat_task_is_registered_disabled_with_reviewer_and_unapproved_thresholds(self) -> None:
         from zava_forward.core import ai_registry
 

@@ -473,6 +473,36 @@ def gate_results(report: dict[str, Any]) -> list[dict[str, Any]]:
     return out
 
 
+def threshold_checks(report: dict[str, Any], thresholds: dict[str, Any]) -> dict[str, Any]:
+    """Apply approved floors to scripted rates; stale bindings or no rate are insufficient."""
+    approved = thresholds["bindings"] if "bindings" in thresholds else None
+    changed = sorted(
+        k for k in report["bindings"] if (approved or {}).get(k) != report["bindings"][k]
+    )
+    rates = report["summary"]["rates"]
+    checks = []
+    for name, floor in thresholds.get("minimum_rates", {}).items():
+        rate = rates.get(name, {}).get("rate")
+        if changed or rate is None:
+            outcome = "insufficient"
+        else:
+            outcome = "pass" if rate >= floor else "fail"
+        checks.append(dict(check=name, required=floor, observed=rate, outcome=outcome))
+    ceiling = thresholds.get("maximum_critical_error_rate")
+    if ceiling is not None:
+        rate = rates["critical_error"]["rate"]
+        if changed or rate is None:
+            outcome = "insufficient"
+        else:
+            outcome = "pass" if rate <= ceiling else "fail"
+        checks.append(
+            dict(check="critical_error", required=ceiling, observed=rate, outcome=outcome)
+        )
+    if not checks:
+        checks.append(dict(check="no thresholds defined", outcome="insufficient"))
+    return dict(checks=checks, renewal_required_for=changed)
+
+
 def enablement_decision(
     report: dict[str, Any], thresholds: dict[str, Any] | None = None
 ) -> dict[str, Any]:
@@ -497,6 +527,11 @@ def enablement_decision(
         outcome = "fail"
     else:
         outcome = "insufficient"
+    checks: dict[str, Any] = dict(checks=[], renewal_required_for=[])
+    if thresholds and thresholds.get("approved_by"):
+        checks = threshold_checks(report, thresholds)
+        if any(c["outcome"] == "fail" for c in checks["checks"]):
+            outcome = "fail"
     entry = ai_registry.get(TASK) or {}
     return dict(
         task=TASK,
@@ -509,6 +544,8 @@ def enablement_decision(
         thresholds="approved" if thresholds and thresholds.get("approved_by") else "not approved",
         missing_evidence=missing,
         blocking_gaps=gaps,
+        threshold_checks=checks["checks"],
+        renewal_required_for=checks["renewal_required_for"],
     )
 
 
