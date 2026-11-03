@@ -455,6 +455,51 @@ malformed register). The gate reports state only. It records no human design
 review, accessibility or content acceptance, so criterion 1 stays unmet until
 the design owner supplies versions and a named reviewer records results.
 
+### Delta since the snapshot (2026-11-03, #156)
+
+The snapshot says new issues need a dated delta. This delta covers the 40
+public issues created after 2026-10-18 04:13:45 UTC and listed on
+2026-11-03 (224 issues in total, 184 plus 40). It was read from the GitHub issue
+list (title, state and creation time only). Issue bodies were not re-read, so
+the screen and no-screen split below is a title-level classification for the
+design owner to confirm. It is not a design review, and the executable gate
+register above is unchanged (still 74 screen issues, 0 supplied designs).
+
+Screen issues. Each row gives the issue and state at 2026-11-03 (O open, C
+closed), the journey it relates to (a hypothesis), the task flow status and the
+design artefact. "Not supplied" follows the gate rule: a design counts only
+when it has a version number and the owner supplies it.
+
+| Issue | Journey (hypothesis) | Task flow | Design artefact |
+| --- | --- | --- | --- |
+| #444 C resident feedback preview | [Rented household][bc-household] | Gap: no detailed flow | Not supplied; the [API note](../../../../src/api/README.md#synthetic-resident-feedback-preview-444) records an invented-data, read-only preview, not an approved resident design |
+| #466 C, #467 C, #468 C, #469 C resident account control, sensor gauges, advisory assistant | [Rented household][bc-household] | Gap: no detailed flow | Not supplied; the [learning record](./resident-chat-learning-record.md) covers only what chat saves |
+| #520 C, #563 C resident chat launcher, appointment finder, AI label | [Rented household][bc-household] | Gap: no detailed flow; manual path is the existing contact route | Not supplied |
+| #526 C case workspace stepper, strip and tabs | [One connected service journey][bc-connected] | Partial: job statement and six steps in the design note | Not supplied (no version); [design note](./employee-case-workspace-redesign.md) |
+| #531 O briefing loading feedback and redesign | [One connected service journey][bc-connected] | Partial: guideline mapping only | Not supplied (no version); [HAX design note](./briefing-hax-design-note.md) |
+| #530 O, #550 C, #552 C employee chat, shared chat widget, single case view | [One connected service journey][bc-connected] | Gap: no detailed flow | Not supplied; [case workspace note](./employee-case-workspace-redesign.md) is the nearest evidence |
+| #532 C, #533 C, #551 C map, progress dashboard, map filters | [One connected service journey][bc-connected] | Gap: no detailed flow | Not supplied |
+
+Screen-related items that add no new design: fixes to existing screens (#523,
+#524, #616, #617, #691, #749) and the acceptance gate for the chat widget and
+case view (#619, with the [protocol](./production-ux-acceptance-protocol.md)
+whose rows are all Not run). Fixes need the existing design, not a new one.
+
+No-screen items (18): #413, #430, #432, #434, #435, #440, #441, #462, #470,
+#521, #522, #570, #571, #572, #608, #624, #687 and #810. They concern
+gates, CI, metering, documents, deployment, authority dates and sign-in checks.
+
+Counts: 15 new screen traces, 7 screen-related items without a new design and
+18 no-screen, 40 in all. Of the 15 trace rows, two have a partial design note
+and none has a supplied versioned design. The new screen issues leave
+acceptance criterion 1 unmet: designs, detailed flows, a named human design
+review, assistive-technology and content evidence and user research are all
+still missing for them. Assumptions: the classification reads titles only, and
+resident and employee wording stays under the [content
+standard](./content-standard.md). The Fluent 2 design system, the WCAG baseline,
+resident consent and the manual and non-digital paths are unchanged. AI chat
+features keep their manual route and human approval boundaries.
+
 [bc-prd]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md
 [bc-connected]: ./customer-journeys/customer-journey-atlas.md#one-connected-service-journey
 [bc-programme]: ./customer-journeys/programme.md#1-programme-manager--planner
