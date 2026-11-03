@@ -9771,3 +9771,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   exists so none is claimed. Assistive-technology testing (#155) and Fluent
   component adoption (#150) remain unproven, so #231 stays open. Evidence is
   under `.copilot-tracking/` (2026-11-03 issue-231 source-conflict readiness).
+## [2026-11-03] update | Finance decision display wording (Refs #153)
+
+* The Finance decision option and recorded decision now display "Keep
+  payment paused" instead of the stored value "Keep on hold" in the finance
+  panel and the Finance role screen. The stored value, API and store logic are
+  unchanged. Updated the [content standard](./research/ux/content-standard.md).
+  Criteria 2, 3 and 5 stay open: no universal coverage, typed-error audit or
+  named human wording review is claimed. Evidence is under `.copilot-tracking/`
+  (2026-11-03 issue-153 plain-language audit).
