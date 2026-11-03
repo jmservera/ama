@@ -291,6 +291,22 @@ class HumanSessionTests(unittest.TestCase):
         self.assertFalse(res["gate_passed"])
         self.assertLess(res["panel"]["detected"], res["panel"]["defects"])
 
+    def test_malformed_sheets_raise_value_error_not_a_traceback(self) -> None:
+        with self.assertRaises(ValueError):
+            re_.score_human_session([])  # type: ignore[arg-type]
+        sheet = self._sheet("competent")
+        sheet["answers"] = []
+        with self.assertRaises(ValueError):
+            re_.score_human_session(sheet)
+        sheet = self._sheet("competent")
+        sheet["answers"][next(iter(sheet["answers"]))] = "accept"
+        with self.assertRaises(ValueError):
+            re_.score_human_session(sheet)
+        sheet = self._sheet("competent")
+        sheet["answers"][next(iter(sheet["answers"]))]["seconds"] = float("inf")
+        with self.assertRaises(ValueError):
+            re_.score_human_session(sheet)
+
     def test_incomplete_or_unmeasured_sheets_are_refused(self) -> None:
         sheet = self._sheet("competent")
         first = next(iter(sheet["answers"]))

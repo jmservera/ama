@@ -394,18 +394,26 @@ def score_human_session(sheet: dict[str, Any], golden: Path = GOLDEN) -> dict[st
     Measured seconds replace scripted effort units. The tool cannot verify who the person is or
     whether they are competent; that remains an OQ-017 owner decision.
     """
+    if not isinstance(sheet, dict):
+        raise ValueError("answer sheet must be a JSON object")
     spec = load_spec(golden)
     actors = {OWNER["code"]: OWNER, OTHER["code"]: OTHER}
     actor = actors.get(str(sheet.get("reviewer_code")))
     if actor is None:
         raise ValueError("reviewer_code must name an evaluation staff record")
     answers = sheet.get("answers") or {}
+    if not isinstance(answers, dict):
+        raise ValueError("answers must be an object keyed by proposal id")
     for prop in spec["proposals"]:
         a = answers.get(prop["id"]) or {}
+        if not isinstance(a, dict):
+            raise ValueError(f"proposal {prop['id']} answer must be an object")
         if a.get("action") not in ("accept", "edit", "reject"):
             raise ValueError(f"proposal {prop['id']} has no accept, edit or reject answer")
         seconds = a.get("seconds")
-        if isinstance(seconds, bool) or not isinstance(seconds, int | float) or seconds <= 0:
+        if isinstance(seconds, bool) or not isinstance(seconds, int | float):
+            raise ValueError(f"proposal {prop['id']} has no measured seconds")
+        if not 0 < seconds < 1e9:
             raise ValueError(f"proposal {prop['id']} has no measured seconds")
 
     def human(
