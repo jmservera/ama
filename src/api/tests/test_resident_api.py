@@ -190,6 +190,33 @@ class ResidentApi(unittest.TestCase):
         )
         self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", payload)[0], 409)
 
+    def test_http_legal_position_reference_hidden_from_restricted_roles(self) -> None:
+        legal = dict(
+            action="tenure_legal_position",
+            case_id="ZF-1",
+            report_version=1,
+            expected_version=0,
+            reviewer_name="Lee Legal",
+            reviewer_role="Legal adviser",
+            position_ref="SYN-LEGAL-CANARY",
+            position_version="v1",
+            reviewed_on="2026-01-01",
+        )
+        self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", legal)[0], 400)
+        self.assertEqual(
+            self.call("/api/cases/ZF-1/resident", "sam", self.intake_payload(tenure=True))[0], 200
+        )
+        self.assertEqual(self.call("/api/cases/ZF-1/resident", "rex", legal)[0], 403)
+        code, detail = self.call("/api/cases/ZF-1/resident", "sam", legal)
+        self.assertEqual(code, 200, detail)
+        report = detail["tenure_reports"][0]
+        self.assertEqual(report["legal_positions"][0]["position_ref"], "SYN-LEGAL-CANARY")
+        self.assertEqual(report["verification"], "Unknown")
+        self.assertTrue(any("Tenure and lease identity" in item for item in detail["gate"]))
+        for actor in ("rex", "kim", "bea"):
+            code, other = self.call("/api/cases/ZF-1", actor)
+            self.assertNotIn("SYN-LEGAL-CANARY", json.dumps(other))
+
     def test_http_intake_projection_current_registry_and_export_canaries(self) -> None:
         for tenure in (False, True):
             payload = self.intake_payload(tenure=tenure)

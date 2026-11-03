@@ -1052,11 +1052,16 @@ including after a cached session's staff registration changes.
 | `nomination_record` | `case_id`, `kind` (`Officer nomination`/`Self-referral`), `reported_subject_ref`, `account`, `source`, `channel`, `owner` (staff email), `acknowledgement_ref`, `next_update` (YYYY-MM-DD), `non_digital_route`, `hazard_concern` (explicit false) |
 | `nomination_correct` | `case_id`, `id`, `expected_version`, `reported_subject_ref`, `account`, `source`, `channel`, `next_update`, `challenge_id` (same-case existing challenge ID or null) |
 | `tenure_intake` | `case_id`, `household_ref`, `expected_version` (0 initially, latest case tenure revision thereafter), `reported_tenure`, `reported_lease_interest`, `identity_state` (`Unknown`/`Ambiguous`), `source`, `owner`, `next_update` |
+| `tenure_legal_position` | `case_id`, `report_version` (existing tenure report), `expected_version` (0 initially, latest position version for that report thereafter), `reviewer_name` (named Legal reviewer, not the recorder), `reviewer_role` (must name a Legal role), `position_ref`, `position_version`, `reviewed_on` (YYYY-MM-DD, not future) |
 
 Channels: `Digital`, `Phone`, `Letter`, `In person`, `Trusted intermediary`.
 Reported tenure: `Tenant`, `Shared owner`, `Right to buy leaseholder`,
 `Preserved right to buy leaseholder`, `Leaseholder`, `Mixed block`, `Unknown`.
 Missing lease-interest information must be supplied as `Unknown`, not guessed.
+`tenure_legal_position` attaches only an opaque reference to a position that a
+named Legal reviewer produced outside this system. No lease terms are read or
+interpreted, and the tenure hold, verification, decision route and Finance cost
+stay unchanged.
 Both identity and tenure verification remain unknown regardless of reported
 values. Original text is preserved, bounded and never silently truncated.
 

@@ -30,7 +30,8 @@ RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_recor
                     "decision_record", "service_open", "service_update", "service_close",
                     "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update",
                     "challenge_open", "challenge_resolve",
-                    "nomination_record", "nomination_correct", "tenure_intake")
+                    "nomination_record", "nomination_correct", "tenure_intake",
+                    "tenure_legal_position")
 NOT_RECORDED = "Not recorded"
 AUTHORITY_TASKS = ("Receive information", "Communicate", "Attend", "Works decision")
 AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
@@ -39,7 +40,7 @@ RESIDENT_RETENTION_ID = "resident-decisions"
 RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_authorities",
                    "resident_safe_contact", "resident_contact_history", "resident_reviews",
                    "nomination_records", "tenure_reports")
-INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "tenure_intake")
+INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "tenure_intake", "tenure_legal_position")
 INTAKE_FIELDS = ("nomination_records", "tenure_reports")
 INTAKE_CHANNELS = ("Digital", "Phone", "Letter", "In person", "Trusted intermediary")
 TENURE_HOLD = (
@@ -777,6 +778,40 @@ class ResidentDecisionMixin:
         c.setdefault("tenure_reports", []).append(report)
         c["tenure_review_required"] = True
         return f"tenure intake version {report['version']} recorded; case-wide hold remains"
+
+    def _res_tenure_legal_position(self, user, c, body):
+        _intake_fields(user, c, body, {
+            "case_id", "report_version", "expected_version", "reviewer_name", "reviewer_role",
+            "position_ref", "position_version", "reviewed_on",
+        })
+        reports = c.get("tenure_reports", [])
+        number = body["report_version"]
+        if type(number) is not int or not 1 <= number <= len(reports):
+            raise ValueError("Choose an existing tenure report version for this case.")
+        report = reports[number - 1]
+        positions = report.setdefault("legal_positions", [])
+        _version(body, positions[-1] if positions else None)
+        reviewer = _intake_text(body["reviewer_name"], "the named Legal reviewer", 100)
+        role = _intake_text(body["reviewer_role"], "the Legal reviewer's role", 100)
+        if "legal" not in role.casefold():
+            raise ValueError("The reviewer's role must be a Legal role. Name the Legal reviewer; staff cannot approve a position here.")
+        if reviewer.strip().casefold() in {_identity_value(user, "name"), _identity_value(user, "email")}:
+            raise ValueError("Choose a Legal reviewer other than the person recording this reference.")
+        reviewed_on = _day(body["reviewed_on"])
+        if reviewed_on > k.today():
+            raise ValueError("The Legal review date cannot be in the future.")
+        position = dict(
+            version=len(positions) + 1, report_version=number,
+            reviewer_name=reviewer, reviewer_role=role,
+            position_ref=_intake_text(body["position_ref"], "the Legal position document reference", 300),
+            position_version=_intake_text(body["position_version"], "the Legal position version", 50),
+            reviewed_on=reviewed_on, recorded_by=_identity(user), at=_time(),
+            interpretation="None: reference only; lease terms are not read or interpreted here",
+            status="Attached; verification, decision route and Finance cost remain open",
+        )
+        positions.append(position)
+        report["legal_position"] = f"Reference attached (version {position['version']}); not verified or interpreted here"
+        return f"tenure report {number} Legal position reference {position['version']} attached; case-wide hold remains"
 
     def _res_challenge_open(self, user, c, body):
         from . import projection
