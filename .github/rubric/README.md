@@ -86,7 +86,7 @@ python -m pytest .github/rubric/scripts/test_gate.py -q -k 'evidence_reference o
 ```
 
 The wider gate/prepare/adapter suites had 19 confirmed pre-existing failures
-coupled to the historical 66-point seed and retired prototype registry; see
+(17 at the 2026-11-01 reassessment) coupled to the historical 66-point seed and retired prototype registry; see
 the 2026-11-01 reassessment in [Zava Forward MVP](#zava-forward-mvp).
 This repair does not change those fixtures, rubric defaults or `latest.json`.
 The recorded PR score was 35; replaying its saved assessment with the repaired
@@ -448,8 +448,13 @@ it is not scored.
 
 On 2026-11-01 (#198) the registry state was re-checked. `artifacts.json` has no
 `mvp/` include glob and no `prototype/` or `prototype/deploy/**/*.bicep` glob;
-only the defensive `mvp/data/**` and `mvp/web/vendor/**` excludes remain, and
-`rubric_version` is still 2. The migration baseline was 47 of 100 (commit
+`rubric_version` is still 2. On 2026-11-03 (#198) the dead `mvp/data/**` and
+`mvp/web/vendor/**` excludes were also removed in a registry-only pull request,
+because neither directory exists and `src/**/data/**` and `src/**/web/vendor/**`
+cover the equivalent paths. The edit reopens every criterion once it merges, adds
+no scored input and is expected to leave the 77 total unchanged (recovery
+expectation: none needed; any dip would be a scoring variance, not lost
+evidence). The migration baseline was 47 of 100 (commit
 9261c5c); `scores/latest.json` now records 77 (A34, B23, C11, D9) at commit
 051f6a3. The recovery came through later per-criterion re-evidencing from
 `src/**/*`, not through a registry or version change. The historical per-pull-
@@ -467,10 +472,9 @@ work.
 ### Solution code and infrastructure
 
 The `solution-code` entry covers `src/**/*` and the registered synthetic-data
-generator scripts. There are no legacy-directory include globs. Archive
-`v0.21.0` marks the owner-approved 2026-10-27 pointer retirement; the dated
-migration notes above remain historical. Legacy data/vendor exclusions remain
-defensive and do not add scored inputs.
+generator scripts. There are no legacy-directory include or exclude globs.
+Archive `v0.21.0` marks the owner-approved 2026-10-27 pointer retirement; the
+dated migration notes above remain historical.
 It informs A1, A3, A4, A5, A6 and A7, plus B6: the README is capstone
 documentation, whose completeness and navigability are explicitly assessed by
 B6 in the [assessment guide](../../docs/reference/method/ama-capstone-assessment-guide.md).
