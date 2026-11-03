@@ -76,12 +76,26 @@ SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
             "Large print",
         ),
     ),
+    "232s": (
+        "sam@example.test",
+        "Resident service issue queue",
+        (
+            "SYN-REQUEST-232",
+            "SYN large-print explanation",
+            "Accessible explanation before a decision",
+            "Large print",
+            "SYN-SAFE-232",
+            "A commitment is not a message. Nothing is sent or marked received here.",
+            "is shown on the resident choice screen, not here",
+        ),
+    ),
 }
 
 
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
 STORY_231 = ("231", "231q")
-STORY_ACCESSIBLE = ("231", "231q", "226")
+STORY_ACCESSIBLE = ("231", "231q", "226", "232", "232s")
+STORY_RESIDENT = ("232", "232s")
 
 
 def check_readonly_accessibility(page: Page, story: str) -> None:
@@ -92,15 +106,30 @@ def check_readonly_accessibility(page: Page, story: str) -> None:
         f"{story} reader view has no write controls",
         evidence.locator("button, form, input, select, textarea").count() == 0,
     )
-    check(
-        f"{story} state is stated in text, not colour alone",
-        "Cannot confirm readiness" in text and evidence.locator(".blocked-title").count() == 1,
-    )
-    check(
-        f"{story} no ready state is shown over missing evidence",
-        "Recorded evidence is complete" not in text
-        and "Every measure has accepted evidence" not in text,
-    )
+    if story in STORY_RESIDENT:
+        state_words = ("Paused or withdrawn by the resident", "Linked update commitment")
+        if story == "232s":
+            state_words = ("State and meaning", "Linked update commitment")
+        check(
+            f"{story} choice, issue and commitment state is stated in text",
+            all(word in text for word in state_words),
+        )
+        check(
+            f"{story} states that nothing is sent and the screen is read-only",
+            "No message, call or letter is sent" in text
+            or "No resident contact" in text
+            or "nothing is sent" in text.lower(),
+        )
+    else:
+        check(
+            f"{story} state is stated in text, not colour alone",
+            "Cannot confirm readiness" in text and evidence.locator(".blocked-title").count() == 1,
+        )
+        check(
+            f"{story} no ready state is shown over missing evidence",
+            "Recorded evidence is complete" not in text
+            and "Every measure has accepted evidence" not in text,
+        )
     regions = evidence.locator('div.table-scroll[role="region"]')
     expected = regions.evaluate_all("els => els.map(el => el.getAttribute('aria-label'))")
     check(
@@ -502,6 +531,23 @@ def run_browser(base: str) -> None:
                     check(
                         "232 queue summary has no contact links",
                         summary.locator('a[href^="tel:"], a[href^="mailto:"], button').count() == 0,
+                    )
+                if selected == "232s":
+                    queue = page.get_by_role(
+                        "region", name="Open service issues by home", exact=True
+                    )
+                    queue.wait_for()
+                    queue_text = queue.inner_text()
+                    check(
+                        "232s queue lists ZF-1 issue, contact needs and safe route",
+                        "ZF-1" in queue_text
+                        and "SYN-REQUEST-232" in queue_text
+                        and "Large print" in queue_text
+                        and "SYN-SAFE-232" in queue_text,
+                    )
+                    check(
+                        "232s queue has no contact links or controls",
+                        queue.locator('a[href^="tel:"], a[href^="mailto:"], button').count() == 0,
                     )
                 page.locator('a.item[href*="case=ZF-1"]').click()
                 evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)

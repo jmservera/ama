@@ -1181,6 +1181,12 @@ reach of every table region and no readiness over missing evidence. Story `231`
 also checks that no readiness shows over an unresolved source conflict. Set
 `ZF_AXE_JS` to the pinned axe 4.10.3 file to add an axe WCAG 2.2 A/AA scan.
 These are engineering checks, not assistive-technology or WCAG acceptance (#155).
+Stories `232` (Resident choice and update queue) and `232s` (Resident service
+issue queue) sign in as a Resident Liaison Officer on the same synthetic home
+and add the same keyboard, text-only state, no-controls and optional axe checks
+for the resident-staff screens, with exact phrases for the safe route reference,
+the contact needs and the statement that a commitment is not a message. They
+make no resident contact and are not assistive-technology acceptance (#155).
 Story `230` (programme queue) drives the shared queue, scope filter, Reset and
 five-gate home view by keyboard as a Retrofit Programme Manager and a Retrofit
 Coordinator, asserts textual states, no record change and no writes, and checks
