@@ -229,6 +229,7 @@ def main(
     data_factory: Callable[[], dict[str, Any]] = synthetic_data,
     *,
     synthetic_chat_privacy: bool = False,
+    env_overrides: dict[str, str] | None = None,
 ) -> None:
     (ROOT / ".venv").mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix="zf-browser-", dir=ROOT / ".venv") as scratch:
@@ -254,6 +255,7 @@ def main(
             ZF_ENV="development",
             ZF_AUTH="password",
         )
+        env.update(env_overrides or {})
         if synthetic_chat_privacy:
             env.update(
                 CHAT_DPIA_REF="SYNTH-BROWSER-DPIA",

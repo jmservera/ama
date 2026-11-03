@@ -33,6 +33,28 @@ replace a person. The existing known gaps G-1 to G-4 in the
 [WCAG baseline](./wcag-conformance-baseline.md#accessibility-statement-draft)
 stay open until the rows below are complete.
 
+## Automated checks on the production configuration (2026-11-03)
+
+Owner decision 2026-11-03: deliver the automated axe-core and keyboard checks now
+and keep the person-run criteria open until the production build exists. No
+deployed production build exists yet, so `checks.production_config_a11y_browser_check`
+runs the employee site from the repository with `ZF_ENV=production`,
+`ZF_AUTH=trusted-proxy` and a synthetic ingress principal header. It checks, on
+synthetic data and with pinned axe-core 4.10.3 (WCAG 2.0 to 2.2 A and AA tags):
+
+* the case view tab list and tab panel have no axe violations, arrow keys move
+  between tabs, and every Tab stop shows a focus indicator;
+* the chat launcher has a name and visible focus, Enter opens the chat and moves
+  focus into it, the open chat has no axe violations, Tab never lands behind the
+  chat or off screen, and Escape closes it and returns focus to the launcher.
+
+Observed 2026-11-03 (local run, Chromium 156.0.8078.4 with Playwright 1.64.1,
+not a deployed build): all assertions passed. This is an
+engineering result. It does not show what a screen reader announces, it does not
+cover zoom to 400 percent, the resident site or the consent journey, and it is not
+a conformance claim. Every record row above stays `Not run`. When a production
+build exists, re-run the check against it and record the build commit.
+
 ## Test set-up
 
 * Build under test: record the exact commit and the deployed or local build.

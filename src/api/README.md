@@ -410,6 +410,21 @@ export PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/te
   --axe /path/to/axe-4.10.3.min.js --out /new/external/chat-widget-results
 ```
 
+Issue 619 production-configuration check (automated only; the person-run
+assistive-technology and resident-consent criteria stay open): from `src/api`,
+with the pinned axe-core 4.10.3 asset, run
+
+```bash
+PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
+  /tmp/mv/bin/python -m checks.production_config_a11y_browser_check \
+  --axe /path/to/axe-4.10.3.min.js --out /new/external/production-a11y-results
+```
+
+It starts the employee site on loopback with `ZF_ENV=production` and the
+trusted-proxy provider, then runs axe and keyboard checks on the case view and
+the employee chat widget. Synthetic data only; see the
+[acceptance protocol](../../docs/reference/research/ux/production-ux-acceptance-protocol.md).
+
 The shared browser check starts actual local applications with constructed data,
 checks identical asset bytes, multi-turn layout, 199/200ms loading, Enter/IME/
 Shift+Enter, unobscured external keyboard focus (including 320px sign-in and
