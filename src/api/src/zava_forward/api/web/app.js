@@ -1667,6 +1667,7 @@ function mapPanel(coordinator = null, filters = null) {
   const signal = routeController.signal;
   const el = h("div", { id: "leaflet", class: "leafmap", role: "region", tabindex: "0", "aria-label": "Map of open cases. Zoom with the buttons, mouse wheel or pinch." });
   const info = h("p", { class: "muted", role: "status", "aria-live": "polite" });
+  const tileNote = h("p", { class: "muted", role: "status", "aria-live": "polite" });
   const open = coordinator
     ? h("button", { type: "button", class: "alt", onclick: () => {
       collapse(false);
@@ -1716,7 +1717,7 @@ function mapPanel(coordinator = null, filters = null) {
   const sidebar = h("aside", { class: "map-info", "aria-label": "Map information and home summary" },
     h("p", {}, "Select a home for a summary, then choose Open home. Escape closes the summary first."),
     h("p", {}, Object.entries(MAP_SIGNALS).map(([kind, signal]) => h("span", { class: `key ${kind}` }, mapSymbol(kind), signal.label))),
-    info, listBox, open);
+    info, tileNote, listBox, open);
   const mapStage = h("div", { class: "map-stage" }, el, homeCard);
   const filterSlot = filters ? h("div", { class: "map-filter-slot" }, filters) : null;
   const dialog = h("dialog", { class: "map-dialog", "aria-labelledby": "map-title",
@@ -1810,7 +1811,10 @@ function mapPanel(coordinator = null, filters = null) {
         event.preventDefault();
       });
       if (me.map && me.map.tiles) {
-        L.tileLayer(me.map.tiles, { maxZoom: 19, referrerPolicy: "strict-origin-when-cross-origin", attribution: me.map.attribution || "" }).addTo(map);
+        const tileLayer = L.tileLayer(me.map.tiles, { maxZoom: 19, referrerPolicy: "strict-origin-when-cross-origin", attribution: me.map.attribution || "" }).addTo(map);
+        tileLayer.on("tileerror", () => {
+          tileNote.textContent = "The map background could not load. The homes and the list of map areas still work. Use the list, or reload the page to try the background again.";
+        });
       }
       layer = L.layerGroup().addTo(map);
       map.on("moveend", () => { if (!fitting) draw(false); });

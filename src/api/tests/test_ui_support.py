@@ -214,6 +214,12 @@ class MapListAndTiles(Base):
         for needle in ("maplist", "me.map.tiles", "aria-live", "Show the map areas as a list"):
             self.assertIn(needle, js)
 
+    def test_tile_load_failure_is_announced_and_points_to_the_list(self):
+        js = (WEB / "app.js").read_text()
+        self.assertIn('tileLayer.on("tileerror"', js)
+        self.assertIn("The map background could not load.", js)
+        self.assertIn("info, tileNote, listBox, open", js)
+
 
 class ProductionTiles(Base):
     ENV = {"ZF_ENV": "production", "ZF_TILE_URL": ""}
