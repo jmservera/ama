@@ -202,10 +202,6 @@ class HumanDecision(unittest.TestCase):
                 self.call(**kw)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class MeteringRecordTests(unittest.TestCase):
     OK: dict[str, Any] = dict(
         surface="chat",
@@ -245,3 +241,7 @@ class MeteringRecordTests(unittest.TestCase):
         src = dict(self.OK)
         metering_record(src)
         self.assertEqual(src, self.OK)
+
+
+if __name__ == "__main__":
+    unittest.main()
