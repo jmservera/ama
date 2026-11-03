@@ -11,7 +11,16 @@ ms.date: 2026-11-03
 
 ## Divergences
 
-None. `ruff format --check` reports the existing test file as unformatted before and after this change; not reformatted to avoid unrelated churn. mypy was not run (no Python source changed).
+None.
+
+## Known gaps
+
+* `ruff format --check` reports the existing test file as unformatted before and after this change; not reformatted to avoid unrelated churn.
+* mypy was skipped in the original pass.
+
+## Correction note (2026-11-03)
+
+Reviewer findings addressed: criterion 2 wording, display-mapping note, test renamed to source-contains wording, `role-screens.js` now uses the shared `financeDecisionLabel` from `panels.js`, and gaps moved here. Original review outcome unchanged.
 
 ## Validation
 

@@ -946,7 +946,7 @@ function financeInvoicePanel(c) {
     h("h3", {}, `${inv.id}: ${screenValue(inv.kind)} ${screenValue(inv.ref)} from ${screenValue(inv.supplier)}`),
     screenFields([["Version and record", `${inv.id}, work order ${screenValue(inv.work_order)}, match status: ${screenValue(inv.status)}`],
       ["Payment pause", inv.hold ? `Paused by ${screenValue(inv.hold.name)}: ${screenValue(inv.hold.reason)}` : "No pause recorded"],
-      ["Finance decision", inv.disposition ? `${inv.disposition === "Keep on hold" ? "Keep payment paused" : inv.disposition}, recorded by ${screenValue(inv.disposition_by)}` : "No Finance decision recorded"],
+      ["Finance decision", inv.disposition ? `${financeDecisionLabel(inv.disposition)}, recorded by ${screenValue(inv.disposition_by)}` : "No Finance decision recorded"],
       ["Payment status (a note of what Finance did elsewhere)", `${screenValue(inv.payment_status)}. This system never makes or releases a payment.`]]),
     screenTable(`Line comparison for ${inv.id}`,
       ["Invoice line", "Quantity and line total", "Commitment", "Scope", "Quantity check", "Budget", "Supplied milestone reference", "Exception or unknown"],

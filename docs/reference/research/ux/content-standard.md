@@ -99,7 +99,7 @@ and `signoffs.py`. Automated by `src/api/tests/test_content_standard.py`.
 
 Remaining by design, not shown as wording to a person: the internal
 identifiers `gate`, `provenance` and `hold` in code and API fields, and the
-stored finance decision value "Keep on hold".
+stored finance decision value "Keep on hold" (shown to a person as "Keep payment paused" through the shared `financeDecisionLabel` display mapping in `panels.js`).
 
 ### Chat and alert-panel audit extension (2026-10-18, #153)
 
@@ -197,7 +197,7 @@ error would not establish real accountability.
 | Criterion | Evidence and disposition |
 | --- | --- |
 | Standard and glossary | Exists in this document; previously checked issue criterion preserved |
-| Core-flow audit removes internal terms | Expanded inventory delivered; partial, because dynamic messages and visible stored finance wording above remain |
+| Core-flow audit removes internal terms | Expanded inventory delivered; partial: dynamic messages remain, and the stored value remains in API payloads; display label changed |
 | Errors/blocked steps give reason, owner, next action | Final-check reasons and the generic fallback tested; partial, residuals above prevent universal acceptance |
 | Exact AI label and reviewed-draft authority | Exact label retained; draft/proposal disclaimer strengthened. Partial, not a global certification of every reviewed/error state |
 | Named human resident wording review before use | Reviewer appointed below; actual review of exact copy Not run. No use authorized |

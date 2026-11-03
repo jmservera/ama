@@ -13,4 +13,4 @@ Details: [details](../details/2026-11-03-plain-language-audit-153-details.md).
 
 ## Critique (one pass)
 
-Executed. Verdict: proceed. Findings applied directly: keep stored value and the lexical allowance for it; do not claim criteria 2, 3 or 5; use Refs #153.
+One pass recorded in this plan; no separate critique artifact exists. Verdict: proceed. Findings applied directly: keep stored value and the lexical allowance for it; do not claim criteria 2, 3 or 5; use Refs #153.
