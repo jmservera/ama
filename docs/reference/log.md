@@ -9762,3 +9762,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   technology validation stays in #155 and the design-system proof in #150, so
   #227 stays open. Evidence is under `.copilot-tracking/` (2026-11-03
   issue-227 cross-home hazard queue).
+## [2026-11-03] update | Technical queue blocks readiness on unresolved source conflicts (Refs #231)
+
+* The Technical queue no longer shows "Recorded evidence is complete" while a
+  source-fact conflict has no recorded resolution; the reason names the query
+  owner. Browser stories `231`, `231q` and `226` now read scrolled panels in
+  full. Desk hypothesis, not observed behaviour; no age-based staleness rule
+  exists so none is claimed. Assistive-technology testing (#155) and Fluent
+  component adoption (#150) remain unproven, so #231 stays open. Evidence is
+  under `.copilot-tracking/` (2026-11-03 issue-231 source-conflict readiness).

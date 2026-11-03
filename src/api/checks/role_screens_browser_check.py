@@ -26,6 +26,7 @@ SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
             "Needs reassessment",
             "Retrofit Coordinator (competent reviewer for this sign-off, not a generic approval)",
             "Coordination sign-off (not given)",
+            "is unresolved. Owner:",
         ),
     ),
     "231q": (
@@ -402,7 +403,7 @@ def run_browser(base: str) -> None:
                 page.locator('a.item[href*="case=ZF-1"]').click()
                 evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
                 evidence.wait_for()
-                if selected == "226":
+                if selected in ("226", "231", "231q"):
                     parts = [evidence.inner_text()]
                     for panel in evidence.locator("section.screen-record").all():
                         panel.scroll_into_view_if_needed()
