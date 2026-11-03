@@ -10035,3 +10035,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Held draft export of working form reviews (Refs #96)
 
 * Added core `form_export.draft_export`: a read-only export of a working form review with source links, versions, stale fields and open issues, fixed as Held, not reviewed, not submitted and eligibility not assessed. [Core README](../../src/core/README.md) records the boundary. Unit-tested only; no criteria ticked. Reviewed pack assembly stays blocked on Finance and template authority. Evidence under `.copilot-tracking/` (2026-11-03 issue-96 r1 held export).
+## [2026-11-03] update | Phase 0 discovery register slice (Refs #124)
+
+* Added a pure `discovery_register` module and tests in `src/core`: owner nomination with accepted-handover endpoint status, a ten-event lifecycle dictionary gap check, and a constraint register that stays a candidate until a named owner other than the proposer decides, with supporting and contradicting evidence recorded. Synthetic fixtures only; no persistence or screens. Criteria 1 and 2 stay unmet (human nomination and validation); 3 and 4 are partly met in code only. Evidence under `.copilot-tracking/` (2026-11-03 issue-124 r1).
