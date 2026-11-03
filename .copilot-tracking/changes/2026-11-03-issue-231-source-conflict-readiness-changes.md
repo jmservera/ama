@@ -7,9 +7,10 @@
 
 ## Validation (focused tier)
 
-* `python3 -m unittest tests.test_technical_quality_screens tests.test_role_screens_conformance tests.test_role_screens tests.test_content_standard`: pass (with `../core/src:../agents/src:src` on PYTHONPATH because the distributions are not pip-installed in this worktree).
-* `ruff check`, `ruff format --check` on the changed test file, `mypy` on the test file: pass. `ruff format --check` on the browser check reports reformatting; this file was not formatted before this change and was not reformatted here to keep the diff small.
-* `python -m checks.role_screens_browser_check 231` and `231q`: pass; axe scan skipped (no `ZF_AXE_JS`), reported as a skip, not a pass.
+* `python3 -m unittest tests.test_technical_quality_screens tests.test_role_screens_conformance tests.test_role_screens tests.test_content_standard` (from `src/api`, `PYTHONPATH=../core/src:../agents/src:src`): 40 tests, pass.
+* `ruff check` and `ruff format --check` on `checks/role_screens_browser_check.py` and `tests/test_technical_quality_screens.py`: pass. The browser check file is now reformatted, which adds about 400 lines of formatting churn to its diff (279 added, 127 removed against main).
+* `python3 -m mypy --cache-dir=/tmp/mypy-807b tests/test_technical_quality_screens.py`: pass.
+* `python3 -m checks.role_screens_browser_check 231` and `231q`: re-run, all PASS lines shown; axe scan skipped (no `ZF_AXE_JS`), not a pass.
 * No gate, benchmark or full suite run.
 
 ## Correction note (post-review)
