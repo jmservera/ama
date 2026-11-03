@@ -2514,15 +2514,15 @@ addresses or contextual identification. The exact fictional scale-home
 `TE[0-8] 1ST` field has a narrow exception. Runtime chat can be personal.
 
 The public-only command passes without private support files. The separate
-`--sources` command currently returns 1 for one finding,
-`SRC-ONS-BOUNDARIES:provisional_attribution`. Census TS054, IMD 2025 and ONS
+`--sources` command now returns 0. Census TS054, IMD 2025 and ONS
 boundaries record retrieval 2026-10-01 (owner decision 2026-11-02, first commit
 date referencing each source). Licences and the Census and IMD
-attributions were confirmed on 2026-11-01; the boundaries OS copyright year
-stays provisional. This explicitly leaves issue #175's external-source
-criterion unmet until the owner confirms that year.
-Exercise Legal/Compliance/DPO owner Juan Manuel Servera owns the follow-up,
-not an automated approval. Rehashed mutation tests independently demonstrate
+attributions were confirmed on 2026-11-01; the boundaries OS copyright year is
+2026 by owner decision (2026-11-03), recorded as "to confirm before external
+use" in `external_use_status`. It is not verified against an official notice,
+so the year must be confirmed before external use.
+Exercise Legal/Compliance/DPO owner Juan Manuel Servera owns that
+confirmation, not an automated approval. Rehashed mutation tests independently demonstrate
 pattern/label rejection, not merely an unrelated integrity failure.
 
 The [synthetic needs inventory](../../docs/reference/research/retrofit-synthetic-data/needs-inventory.json)

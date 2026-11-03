@@ -9990,3 +9990,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Resident demo authority extended to 31 December 2027 (Refs #521)
 
 * Owner decision 2026-11-03: the shared exclusive authority end in `resident-demo.json` moves to 2028-01-01T00:00:00Z (through 31 December 2027 UTC). Updated the infra and API READMEs, added a rotation and USD177 added-cost estimate note (USD700 cap unchanged), and moved the tests to the new instant with the earlier cutoffs proven accepted and the new limit refused. No Azure resource, SQL row or secret changed; live apply stays pending owner confirmation. Evidence is under `.copilot-tracking/` (2026-11-03 issue-521 demo authority).
+## [2026-11-03] update | OS attribution year recorded for ONS boundaries (Refs #175)
+
+* The register now gives 2026 as the OS copyright and database-right year for SRC-ONS-BOUNDARIES, by owner decision (2026-11-03), flagged "to confirm before external use". The strict source audit passes; the year is not verified against an official notice. Evidence is under `.copilot-tracking/` (2026-11-03 issue-175 os-attribution-year).

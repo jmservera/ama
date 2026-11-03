@@ -1,7 +1,7 @@
 ---
 title: Data Dictionary - Retrofit Synthetic Evidence Pack
 description: Field definitions, keys, allowed values and record-keeping notes for the Zava Forward year-one synthetic evidence pack
-ms.date: 2026-10-30
+ms.date: 2026-11-03
 ms.topic: reference
 ---
 
@@ -247,14 +247,13 @@ Census 2021 TS054, IMD 2025 and ONS boundaries record retrieval 2026-10-01,
 set by owner decision (2026-11-02) as the first commit date in this repository
 that references each source (068fb08ce). Their licences and the Census and IMD attributions were confirmed
 against the official pages on 2026-11-01; the boundaries entry also needs the
-OS copyright/database-right acknowledgement, whose year stays provisional. The
-strict source audit now returns nonzero only for
-`SRC-ONS-BOUNDARIES:provisional_attribution` until the owner confirms the OS
-acknowledgement year against the named product notices. A 2026-11-03 recheck
-found that the ONS licences page prints the statement with a literal `[year]`
-placeholder and that the ArcGIS item records for both products only link to
-that page, so the year cannot be read from any official source and was not
-invented. Exercise Legal, Compliance and DPO owner
+OS copyright/database-right acknowledgement. By owner decision (2026-11-03)
+its year is 2026, marked "to confirm before external use" in the register
+field external_use_status. The strict source audit now returns no finding.
+A 2026-11-03 recheck found that the ONS licences page prints the statement
+with a literal [year] placeholder and that the ArcGIS item records for both
+products only link to that page, so no official source names the year; 2026 is
+the owner's choice, not a verified fact. Exercise Legal, Compliance and DPO owner
 Juan Manuel Servera retains interpretation/approval; real owners and sources
 remain a gap before operational reliance.
 
@@ -588,7 +587,7 @@ snapshots; this is not an attestation of existing private data or runtime chat.
 | Criterion | Status | Evidence and limit |
 | --- | --- | --- |
 | Dictionary covers every dataset including sensor/chat | Met for known dataset families | Register covers public CSV/manifests/evals, private seed/geography, scale/fabric, sensor and generated/runtime chat. Core coverage test checks IDs/anchors and every public JSON/CSV payload |
-| Every external source has licence, retrieval date and attribution | Unmet (partly resolved 2026-11-01) | Licences for the three historic ONS/MHCLG sources are confirmed against the official pages, and the Census and IMD attributions are confirmed. The boundaries source needs both the ONS source statement and the OS copyright/database-right acknowledgement; its OS copyright year stays provisional until checked against the named product notices. Retrieval dates are recorded as 2026-10-01 for all three (owner decision 2026-11-02, first-commit basis), but the strict `--sources` audit still rejects the provisional OS copyright year in the boundaries attribution; the owner must confirm that year, which cannot be invented |
+| Every external source has licence, retrieval date and attribution | Met for the register, with one external-use caveat (2026-11-03) | Licences for the three historic ONS/MHCLG sources are confirmed against the official pages, and the Census and IMD attributions are confirmed. The boundaries source needs both the ONS source statement and the OS copyright/database-right acknowledgement; the OS copyright year is 2026 by owner decision (2026-11-03), recorded as "to confirm before external use" against the named product notices. Retrieval dates are 2026-10-01 for all three (owner decision 2026-11-02, first-commit basis). The strict `--sources` audit now passes; the year is not verified against an official notice, so it must be confirmed before any external use |
 | Automated check rejects real-person patterns or unlabelled records | Met for specified bounded contract | Production checker/CLI mutation tests cover four patterns, required labels, inherited/exempt content and independently rehashed fixtures; not universal PII certification |
 | Private/public separation is tested | Met locally | Public-only inventory/scan, ignored-path checks and fresh scale/sensor/chat fixtures; no private corpus read or publish approval |
 
