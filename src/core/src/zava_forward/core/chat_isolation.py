@@ -9,7 +9,8 @@ Builds on the chat repository (chatthreads.py, #160) and the privacy rules (chat
   is untrusted data inside delimiters. The channel has no tools: the model reply is text, never executed, and a reply
   that carries tool-call or record-change syntax or a withheld value is withheld.
 * Break-glass access is refused until an owner decision reference is recorded. When allowed it returns metadata only,
-  needs a purpose, is time-limited and is written to the audit ledger, including refusals.
+  needs a purpose, is time-limited and is written to the audit ledger, including refusals. The policy is the owner's
+  demo-only decision (2026-11-03), unreviewed by the DPO or Legal; the response and every audit entry say so.
 """
 import json
 import os
@@ -21,6 +22,9 @@ from zava_forward.core.chat_privacy import ChatPrivacy, redact
 from zava_forward.core import identity
 from zava_forward.core.chatthreads import MAX_CONTENT, ChatNotFound, user_key
 
+DEMO_BASIS = "demo-only"
+DEMO_DISCLAIMER = ("Demo-only policy for synthetic data, approved by the owner on 2026-11-03. It has not been reviewed by the "
+                   "DPO or Legal and is not approval for real personal data or production use.")
 MAX_PURPOSE = 200
 MIN_PURPOSE = 10
 MAX_MINUTES = 60
@@ -166,14 +170,14 @@ class ChatIsolation:
         elif who == owner:
             reason = "not for your own data"
         if reason:
-            self.store.audit(who, "chat.breakglass.refused", "-", json.dumps(dict(target=owner, reason=reason, purpose=purpose), sort_keys=True))
+            self.store.audit(who, "chat.breakglass.refused", "-", json.dumps(dict(target=owner, reason=reason, purpose=purpose, basis=DEMO_BASIS), sort_keys=True))
             raise ChatForbidden("Break-glass access is refused: " + reason + ".")
         minutes = max(1, min(int(minutes), MAX_MINUTES))
         expires = (self.clock() + timedelta(minutes=minutes)).isoformat(timespec="seconds")
         held = self.privacy.locate(dict(email=owner))
         self.store.audit(who, "chat.breakglass.granted", "-", json.dumps(
-            dict(target=owner, purpose=purpose, policy_ref=ref, expires=expires, threads=len(held["threads"]), memory=len(held["memory"])), sort_keys=True))
-        return dict(target=owner, expires=expires, threads=len(held["threads"]), messages=held["messages"], memory=len(held["memory"]),
+            dict(target=owner, purpose=purpose, policy_ref=ref, basis=DEMO_BASIS, expires=expires, threads=len(held["threads"]), memory=len(held["memory"])), sort_keys=True))
+        return dict(target=owner, expires=expires, disclaimer=DEMO_DISCLAIMER, threads=len(held["threads"]), messages=held["messages"], memory=len(held["memory"]),
                     content="Not available: content access needs an owner policy decision (BRD OD-46)")
 
     def erase_memory(self, user):
