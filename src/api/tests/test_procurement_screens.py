@@ -254,6 +254,33 @@ class ContractorJobPack(unittest.TestCase):
         self.assertIn("No records supplied", text)
         self.assertIn("Unknown", text)
 
+    def test_vulnerability_canaries_never_reach_contractor_view(self) -> None:
+        case = {
+            "id": "C-1",
+            "needs_notice": True,
+            "named_contact": "Named Contact",
+            "vulnerability_reason": "CANARY-REASON",
+            "vulnerability_notes": "CANARY-NOTES",
+            "household": "CANARY-HOUSEHOLD",
+        }
+        order = ORDER | {"vulnerability_reason": "CANARY-ORDER-REASON"}
+        text = json.dumps(run("contractor-job-pack", c=case, orders=[order])["tree"])
+        self.assertNotIn("CANARY", text)
+        self.assertIn("Needs notice", text)
+
+
+class NoRoleSimulator(unittest.TestCase):
+    def test_screen_sources_have_no_role_simulator_or_self_approval(self) -> None:
+        source = (WEB / "role-screens.js").read_text(encoding="utf-8")
+        for screen in ("procurement-packages", "contractor-job-pack"):
+            start = source.index(f'id: "{screen}"')
+            block = source[start : source.index("registerRoleScreen", start)].lower()
+            for banned in ("simulat", "impersonat", "switchrole", "viewas", "role-switch"):
+                self.assertNotIn(banned, block)
+            self.assertNotIn("me.user.role =", block)
+            for banned in ("approve(", "accept(", 'method: "post"', 'method: "put"'):
+                self.assertNotIn(banned, block)
+
 
 if __name__ == "__main__":
     unittest.main()
