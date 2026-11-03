@@ -1024,7 +1024,6 @@ const financeQueueRows = (queue) => queue.map((q) => [q.case_id, q.invoice, `${s
 const financeTcaComponents = ["Token and API usage", "Platform and hosting", "Software and licences", "People and process change", "Rework and review effort"];
 const financeValueDestinations = "new revenue won, revenue retained, spend removed, spend avoided or capital freed";
 function financeEconomicsPanel(report) {
-  const readable = Boolean(report?.consumption);
   const missing = (what) => `Unknown. ${what}`;
   return screenPanel("AI economics (ledger-wide, all homes)",
     h("p", {}, "Design only. Usage must be reconciled to billing before any cost is read. Total Cost of AI is the sum of its components, and any missing component keeps it Unknown. Booked-value status stays Unknown until Finance records a defensible value. No price, budget or target is set here (BRD OD-51 open). This is read-only and nothing here depends on AI: Finance decisions and invoice checks work the same when AI is unavailable."),
@@ -1032,8 +1031,7 @@ function financeEconomicsPanel(report) {
       ["Usage reconciled to billing", missing("No billing source is recorded, so usage cannot be reconciled.")],
       ...financeTcaComponents.map((name) => [`Total Cost of AI component: ${name}`, missing("No priced source is recorded.")]),
       ["Total Cost of AI components", missing("Components are missing, so no total is shown.")],
-      ["Booked-value status", missing(`No value is booked. A booked value needs one destination: ${financeValueDestinations}.`)],
-      ...(readable ? [] : [["AI report", missing("The AI usage report could not be read for your role. Cost and value stay Unknown.")]])]),
+      ["Booked-value status", missing(`No value is booked. A booked value needs one destination: ${financeValueDestinations}.`)]]),
     assetCost(report));
 }
 registerRoleScreen({

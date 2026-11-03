@@ -252,7 +252,7 @@ class FinanceGrantsScreens(unittest.TestCase):
                 "Booked-value status",
                 "spend avoided or capital freed",
                 "nothing here depends on AI",
-                "could not be read for your role. Cost and value stay Unknown",
+                "The AI report could not be loaded, so every AI figure below is Unknown",
             ):
                 self.assertIn(expected, text)
             self.assertNotIn("GBP", text)
