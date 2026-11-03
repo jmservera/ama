@@ -4,6 +4,7 @@ import json
 import subprocess
 import unittest
 from pathlib import Path
+from typing import Any
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -66,6 +67,15 @@ def tags(node: object) -> list[str]:
         found.append(node.get("tag", ""))
         for kid in node.get("kids", []):
             found += tags(kid)
+    return found
+
+
+def walk(node: object) -> list[dict[str, Any]]:
+    found: list[dict[str, Any]] = []
+    if isinstance(node, dict):
+        found.append(node)
+        for kid in node.get("kids", []):
+            found += walk(kid)
     return found
 
 
@@ -143,6 +153,33 @@ class DataOperatorScreen(unittest.TestCase):
         self.assertNotIn("C-3", text)
         for control in ("button", "form", "input", "select", "textarea", "a"):
             self.assertNotIn(control, tags(page))
+
+    def test_structure_uses_shared_components_and_text_states(self) -> None:
+        out = run()
+        for key in ("tree", "empty", "reopen", "noHandoff", "noReturn"):
+            nodes = walk(out[key])
+            for section in (n for n in nodes if n.get("tag") == "section"):
+                self.assertEqual(section["attrs"]["class"], "card screen-record")
+                self.assertEqual(section["kids"][0]["tag"], "h2")
+            self.assertNotIn("h1", tags(out[key]))
+            for table in (n for n in nodes if n.get("tag") == "table"):
+                self.assertEqual(table["kids"][0]["tag"], "caption")
+                head = next(n for n in walk(table) if n.get("tag") == "thead")
+                for th in (n for n in walk(head) if n.get("tag") == "th"):
+                    self.assertEqual(th["attrs"]["scope"], "col")
+            for node in nodes:
+                attrs = node.get("attrs") or {}
+                self.assertNotIn("onclick", attrs)
+                self.assertNotIn("role-switch", json.dumps(attrs))
+        self.assertIn("Unresolved", json.dumps(out["tree"]))
+
+    def test_screen_source_has_no_role_simulator(self) -> None:
+        source = (WEB / "role-screens.js").read_text(encoding="utf-8")
+        start = source.index('id: "data-operator"')
+        block = source[start : source.index("registerRoleScreen", start)]
+        for banned in ("simulat", "impersonat", "switchrole", "viewas", "role-switch"):
+            self.assertNotIn(banned, block.lower())
+        self.assertNotIn("me.user.role =", block)
 
 
 if __name__ == "__main__":
