@@ -1264,6 +1264,20 @@ engineering check on constructed data, not assistive-technology or WCAG
 acceptance (#155, #151), and not a Board decision, budget, forecast or
 investment approval.
 
+`PYTHONDONTWRITEBYTECODE=1 python -m checks.finance_screens_browser_check` (#225)
+reuses the shared synthetic home (one unchecked invoice, one grant stage with no
+approved evidence) and signs in as a Retrofit Programme Manager and a Programme
+Support Officer for the read-only Invoice queue, and as a Grants and Evidence
+Officer for Funding route and claim pack. It asserts exact reader-view phrases
+(no payment, approval, submission or award made or inferred; Unknown for
+missing milestone, commitment and eligibility), the AI economics section with
+Unknown inputs, no write controls, no simulator text, keyboard reach of every
+table region, 320 px reflow and no non-GET/HEAD/OPTIONS requests after sign-in.
+Set `ZF_AXE_JS` to the pinned axe 4.10.3 file for the axe scan of `main` at
+1280 px; without it the run ends PARTIAL (or fails when `ZF_AXE_REQUIRED=1`).
+This is an engineering check on constructed data, not assistive-technology or
+WCAG acceptance (#155, #151) and not Fluent 2 conformance (#150).
+
 `python -m checks.procurement_screens_browser_check` (#228) builds a synthetic
 package, capacity record and issued work order through the real store, signs in
 as a Retrofit Programme Manager and as a Contractor, and opens the read-only

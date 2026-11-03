@@ -9971,3 +9971,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | DRAFT Tokenomics placement and rehearsal outline (Refs #435)
 
 * Added a [draft for owner review](../capstone/pitch/tokenomics-placement-draft.md): current-deck placement (S18 and B25 already carry Tokenomics), a flagged conflict between the S18 modelled per-home figure and the no-price criterion, draft segment wording and an unperformed rehearsal outline. All six issue criteria stay unmet; no decision, rehearsal, rebuild or assessment is recorded. Evidence is under `.copilot-tracking/` (2026-11-03 issue-435 tokenomics).
+
+## [2026-11-03] update | Finance screens browser check (Refs #225)
+
+* Added `src/api/checks/finance_screens_browser_check.py` and a README paragraph: Chromium run of the read-only Invoice queue (approver and payment officer roles) and Funding route and claim pack (preparer) on constructed data, with keyboard reach, reflow, no-write and pinned axe 4.10.3 results. Engineering evidence only; WCAG/AT acceptance (#151, #155) and Fluent 2 conformance (#150) stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-225 r1).
