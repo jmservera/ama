@@ -882,6 +882,7 @@ official links for every snapshot. Check it before relying on any file below.
 | [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) | Complete FY27 participant rubric for technical excellence, communication and executive presence, consultative and stakeholder skills, and the thought leadership artifact |
 | [Scientific Paper Writing and Review](./method/scientific-paper-writing-and-review.md) | Genre-sensitive writing techniques, evidence and venue-policy qualifications, and a dated four-source register |
 | [Loop Goal Designer Prompt](./method/loop-goal-designer-prompt.md) | Coaching prompt that turns a recurring task into a Goal Card for an agent working in an assess, act, check and adjust loop |
+| [Operator Suspension Drill Protocol](./method/operator-suspension-drill-protocol.md) | Witnessed suspension and manual fallback drill steps and blank record; no drill run or authority appointed (Refs #221) |
 | [Knowledge Base Log](./log.md) | Chronological record of knowledge base changes |
 
 ### Agents
