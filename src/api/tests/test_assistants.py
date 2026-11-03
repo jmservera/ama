@@ -169,6 +169,34 @@ class ContractTests(Base):
         self.assertTrue(all(a["version"] == VERSION for a in r["assistants"]))
         self.assertEqual(r["principal"], PURPOSE)
 
+    def test_each_assistant_states_model_call_and_depth_bounds(self):
+        for user_cfg in (None, dict(attempts=3)):
+            service = self.service if user_cfg is None else self.other(**user_cfg)
+            for a in service.registry(self.pm)["assistants"]:
+                b = a["model_bounds"]
+                self.assertEqual(b["calls_per_attempt"], 1)
+                self.assertEqual(b["max_agent_depth"], 1)
+                self.assertEqual(b["tools"], 0)
+                self.assertEqual(b["max_attempts"], service.limits.attempts)
+                self.assertEqual(b["max_calls_per_request"], service.limits.attempts)
+                self.assertLessEqual(b["max_calls_per_request"], b["attempt_ceiling"])
+        self.assertEqual(len(self.service.registry(self.pm)["assistants"]), 5)
+
+    def test_attempt_ceiling_rejects_a_larger_configuration(self):
+        self.assertFalse(self.other(attempts=4).limits.valid)
+
+    def test_attempts_never_exceed_the_stated_bound_for_any_assistant(self):
+        for cap in REGISTRY:
+            p = self.service.invoke(self.pm, cap, "ZF-1")
+            bound = self.service.registry(self.pm)["assistants"][0]["model_bounds"]["max_calls_per_request"]
+            claims = 0
+            for n in range(bound + 2):
+                if self.other().claim(p["id"], f"owner-{n}"):
+                    claims += 1
+                self.expire(p["id"])
+            self.assertEqual(claims, bound, cap)
+            self.assertEqual(self.service.detail(self.pm, p["id"])["state"], "failed")
+
     def test_rule_registry_schema_hashes_and_capability_only_invalidation(self):
         c = test_mvp.case("ZF-1")
         stock = capture("stock-prioritisation", c)

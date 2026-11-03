@@ -55,6 +55,11 @@ RULES = {
     "works-resident-coordination": "handoff.state=Offered/Received/Escalated; past appointment.date with missing/Booked/Planned/No access/Missed outcome; past open service_request.next_update.",
     "quality-evidence": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes.",
 }
+# One provider call per attempt, one agent, no tools or sub-agents (#107, #432). Attempts per request
+# are the configured ZF_ASSIST_ATTEMPTS, never above ATTEMPT_CEILING.
+MODEL_CALLS_PER_ATTEMPT = 1
+AGENT_DEPTH = 1
+ATTEMPT_CEILING = 3
 OUTPUT_SCHEMA = dict(required=("summary", "findings", "unknowns"), summary_chars=1200,
                      findings_count=12, finding_chars=800, citations_per_finding=8,
                      unknowns_count=80, unknown_chars=240, absolute_output_chars=16000,
@@ -248,6 +253,14 @@ def validate_output(value, snapshot, max_chars):
     return value
 
 
+def model_bounds(limits=None):
+    """Stated per-request model-call and agent-depth bounds shared by the five assistants."""
+    attempts = Limits.DEFAULTS["attempts"] if limits is None or not limits.valid else limits.attempts
+    return dict(calls_per_attempt=MODEL_CALLS_PER_ATTEMPT, max_attempts=attempts,
+                max_calls_per_request=MODEL_CALLS_PER_ATTEMPT * attempts, max_agent_depth=AGENT_DEPTH,
+                tools=0, attempt_ceiling=ATTEMPT_CEILING)
+
+
 class Limits:
     DEFAULTS = dict(scan_interval=60, scan_size=20, input_chars=12000, output_chars=8000,
                     output_tokens=600, timeout=20, active_calls=2, attempts=2, backoff=30, lease=60)
@@ -270,7 +283,7 @@ class Limits:
             self.expiry = expiry.timestamp()
             bounds = dict(scan_interval=(5, 3600), scan_size=(1, 100), input_chars=(1000, 24000),
                           output_chars=(1000, 16000), output_tokens=(100, 2000), timeout=(1, 40),
-                          active_calls=(1, 4), attempts=(1, 3), backoff=(1, 3600), lease=(10, 120))
+                          active_calls=(1, 4), attempts=(1, ATTEMPT_CEILING), backoff=(1, 3600), lease=(10, 120))
             self.valid = (1 <= len(self.authority) <= 120 and 1 <= self.calls <= 1000000
                           and self.reservation <= self.tokens <= 1000000000000
                           and all(lo <= getattr(self, k) <= hi for k, (lo, hi) in bounds.items())
@@ -605,8 +618,8 @@ class Assistants:
         if user.get("role") not in projection.STAFF_ROLES:
             raise PermissionError("Staff assistance only.")
         if not self.sql:
-            return dict(assistants=[dict(id=k, version=VERSION, **v) for k, v in REGISTRY.items()
-                                    if user.get("role") in v["roles"]], disabled=self.disabled(),
+            return dict(assistants=[dict(id=k, version=VERSION, model_bounds=model_bounds(), **v)
+                                    for k, v in REGISTRY.items() if user.get("role") in v["roles"]], disabled=self.disabled(),
                         proactive=False, manual="Use the ordinary case controls.")
         with self.transaction() as db:
             from . import ai_registry
@@ -616,7 +629,8 @@ class Assistants:
                     self.authorize(db, user, k)
                     denied = self.admission(db, k)
                     result.append(dict(id=k, version=VERSION, release="in force" if not denied else denied,
-                                       binding=runtime_binding(k, self.store.ai), **v))
+                                       binding=runtime_binding(k, self.store.ai),
+                                       model_bounds=model_bounds(self.limits), **v))
             registered = []
             for task, spec in ai_registry.tasks().items():
                 if user.get("role") not in spec["roles"]:

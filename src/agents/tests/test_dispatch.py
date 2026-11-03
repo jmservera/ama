@@ -5,6 +5,7 @@ import unittest
 from typing import Any
 
 from zava_forward.core import assistants
+from zava_forward.core.ai_consumption import CURRENT
 
 from zava_forward.agents.dispatch import (
     AgentWorker,
@@ -172,6 +173,23 @@ class WorkerTests(unittest.TestCase):
         self.assertEqual(calls, [])
         self.assertEqual(r.envelope["outcome"], "input-too-large")
         self.assertIsNone(r.output)
+
+    def test_each_assistant_makes_one_depth_one_provider_call_per_attempt(self) -> None:
+        bound = assistants.model_bounds()
+        seen: list[Any] = []
+
+        def provider(*_args: Any) -> dict[str, Any]:
+            seen.append(CURRENT.get())
+            return returned(good_text())
+
+        for capability in assistants.REGISTRY:
+            seen.clear()
+            task = dict(make_task(), capability=capability)
+            result = self.handle(provider, task)
+            self.assertEqual(len(seen), bound["calls_per_attempt"], capability)
+            self.assertEqual(seen[0].depth, bound["max_agent_depth"], capability)
+            self.assertEqual(seen[0].capability, capability)
+            self.assertIsNone(result.failure, capability)
 
     def test_slot_is_released_after_each_call(self) -> None:
         worker = AgentWorker(lambda *a: returned(good_text()), active_calls=1)

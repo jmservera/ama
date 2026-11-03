@@ -813,6 +813,18 @@ the release. [Issue #219's extended core contract](../core/README.md#task-bound-
 binds each activation to an exact release ID/version/digest and adds use,
 stakeholder, owner, impact, evaluation and material-change evidence.
 
+### Stated model-call and depth bounds (#107, #432, 2026-11-03)
+
+Each of the five assistants states `model_bounds` in `GET /api/assistants`
+(`assistants.model_bounds`): one provider call per attempt, agent depth 1, no
+tools or sub-agents, and at most `ZF_ASSIST_ATTEMPTS` attempts per request
+(never above the ceiling of 3), so `max_calls_per_request` is that count. The
+worker tests assert one depth-1 call per task for every capability and the API
+tests assert claims stop at the stated bound. These are code bounds, not price,
+budget, target or observed consumption; cost stays Unknown without a price
+source. Per-proposal usage attribution and the proactive-predicate forecast
+remain unmet.
+
 Open items for #107: authoritative serving-version attestation; Azure SQL race
 evidence; delivered-build
 acceptance; release approvers are unset (`ZF_ASSIST_RELEASE_APPROVERS`).
