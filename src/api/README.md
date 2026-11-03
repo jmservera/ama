@@ -420,6 +420,10 @@ sources, consent, stale results and dependency recovery. Existing employee and
 resident browser checks retain their session/access/manual-callback assertions.
 These are engineering checks, not human screen-reader, voice-control, live-model,
 live-site, full Fluent adoption or WCAG-conformance acceptance.
+The employee chat stays open when focus moves to the page (#568), so the shared
+check asserts that the open panel does not hide external focus, while the
+resident chat still closes. The resident leg at 320px wide is a known open
+finding (Send scrolls out of the viewport inside the consent composer).
 
 The focused submit check exercises real Enter and mouse Send with and without
 a case, delayed replies during actual route/session refreshes, exact focus,

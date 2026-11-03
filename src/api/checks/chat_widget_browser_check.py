@@ -31,14 +31,15 @@ def focused_control_visible(page: Page) -> None:
     }"""), "Focused control is obscured or outside the viewport"
 
 
-def external_note(page: Page) -> None:
-    page.evaluate("""() => {
+def external_note(page: Page, in_flow: bool = False) -> None:
+    page.evaluate("""inFlow => {
       const note = document.createElement('textarea');
       note.id = 'focus-check-note';
       note.setAttribute('aria-label', 'Synthetic external work note');
-      note.style.cssText = 'position:fixed;right:24px;top:120px;width:120px;height:60px';
+      note.style.cssText = inFlow ? 'display:block;width:120px;height:60px'
+        : 'position:fixed;right:24px;top:120px;width:120px;height:60px';
       document.body.append(note);
-    }""")
+    }""", in_flow)
 
 
 def short_window_launcher(page: Page, root: str) -> None:
@@ -57,12 +58,13 @@ def short_window_launcher(page: Page, root: str) -> None:
     page.set_viewport_size({"width": 1280, "height": 900})
 
 
-def current_reply_focus(page: Page, root: str, endpoint: str) -> None:
+def current_reply_focus(page: Page, root: str, endpoint: str, closes: bool) -> None:
     panel = page.locator(root)
     launcher = page.get_by_role("button", name="Chat", exact=True)
     question = panel.locator("textarea")
     send = panel.get_by_role("button", name="Send", exact=True)
-    external_note(page)
+    # The stay-open employee chat reserves page space, so its external control is in flow.
+    external_note(page, in_flow=not closes)
     try:
         for outcome in ("success", "error"):
             for target in ("external", "launcher", "internal"):
@@ -84,9 +86,10 @@ def current_reply_focus(page: Page, root: str, endpoint: str) -> None:
                     else panel.locator("h2")
                 )
                 chosen.focus()
-                expect(panel).to_be_hidden() if target == "external" else expect(
-                    panel
-                ).to_be_visible()
+                if target == "external" and closes:
+                    expect(panel).to_be_hidden()
+                else:
+                    expect(panel).to_be_visible()
                 assert len(held) == 1
                 if outcome == "success":
                     held[0].fulfill(
@@ -116,7 +119,7 @@ def current_reply_focus(page: Page, root: str, endpoint: str) -> None:
                         "Current focus-safe failure"
                     )
                     expect(question).to_have_value(f"Current {outcome} {target}")
-                if target == "external":
+                if target == "external" and closes:
                     expect(panel).to_be_hidden()
                     launcher.click()
                     expect(panel).to_be_visible()
@@ -494,9 +497,14 @@ def shared_ui(page: Page, root: str, endpoint: str, out: Path, audience: str, ax
                 left = True
                 break
         assert left, "Nonmodal chat trapped keyboard traversal"
-        expect(panel).to_be_hidden()
-        focused_control_visible(page)
-        page.get_by_role("button", name="Chat", exact=True).click()
+        if audience == "resident":
+            expect(panel).to_be_hidden()
+            focused_control_visible(page)
+            page.get_by_role("button", name="Chat", exact=True).click()
+        else:
+            # The employee chat stays open beside the work (#568).
+            expect(panel).to_be_visible()
+            focused_control_visible(page)
         expect(question).to_have_value("Draft survives closing")
         expect(log).to_contain_text("answer 4.")
     page.clock.pause_at(page.evaluate("Date.now() + 1000"))
@@ -537,6 +545,7 @@ def shared_ui(page: Page, root: str, endpoint: str, out: Path, audience: str, ax
         animation = loading.evaluate("el => getComputedStyle(el, '::before').animationName")
         assert (animation == "none") == (motion == "reduce"), animation
     assert len(held) == 1
+    panel.locator("h2").focus()
     page.keyboard.press("Escape")
     expect(panel).to_be_hidden()
     page.get_by_role("button", name="Chat", exact=True).focus()
@@ -551,7 +560,7 @@ def shared_ui(page: Page, root: str, endpoint: str, out: Path, audience: str, ax
     page.clock.resume()
     scan(page, axe, root)
     page.unroute(endpoint)
-    current_reply_focus(page, root, endpoint)
+    current_reply_focus(page, root, endpoint, audience == "resident")
     print(
         f"PASS {audience}: thread, pinned input, keyboard, labels, controls; "
         "200ms loading, errors, unobscured external focus, "
@@ -560,7 +569,7 @@ def shared_ui(page: Page, root: str, endpoint: str, out: Path, audience: str, ax
 
 
 def employee_current_focus(page: Page) -> None:
-    external_note(page)
+    external_note(page, in_flow=True)
     try:
         for stage in ("skills", "status", "thread", "ask"):
             for outcome in ("success", "error", "403", "404"):
@@ -629,10 +638,7 @@ def employee_current_focus(page: Page) -> None:
                         ).to_be_focused()
                     else:
                         expect(chosen).to_be_focused()
-                        if target == "external":
-                            expect(panel).to_be_hidden()
-                        else:
-                            expect(panel).to_be_visible()
+                        expect(panel).to_be_visible()
                         expect(panel.locator("form")).to_have_attribute("aria-busy", "false")
                         if outcome == "error":
                             expect(panel.locator('[role="alert"]')).to_have_attribute(
@@ -929,11 +935,11 @@ def recovery_case(browser: Browser, base: str, failures: int) -> None:
             expect(page.get_by_role("button", name="Chat", exact=True)).to_be_visible()
         else:
             expect(page.locator("#workspace-status")).to_contain_text("Chat could not load")
-            assert len(attempts) == 3
+            assert len(attempts) == 4
             page.evaluate("location.hash = '#/progress'")
             expect(page.locator("#app h1").first).to_be_visible()
             expect(page.locator("#workspace-status")).to_contain_text("Chat could not load")
-            assert len(attempts) == 3
+            assert len(attempts) == 4
         assert not errors, errors
     finally:
         context.close()
