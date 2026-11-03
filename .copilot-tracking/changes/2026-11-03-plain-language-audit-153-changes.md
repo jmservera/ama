@@ -6,7 +6,7 @@ ms.date: 2026-11-03
 ## Changes
 
 * Modified panels.js, role-screens.js (display label only).
-* Modified tests/test_content_standard.py (one new test).
+* Modified tests/test_content_standard.py (one source-contains test) and tests/test_finance_grants_screens.py (one behavioural test).
 * Modified content-standard.md and log.md.
 
 ## Divergences
@@ -24,4 +24,4 @@ Reviewer findings addressed: criterion 2 wording, display-mapping note, test ren
 
 ## Validation
 
-40 tests in the three focused modules passed; `ruff check` passed. No gate, benchmark or full suite run.
+Original pass: 40 tests in the three focused modules and `ruff check`. After the second correction: 35 tests across test_content_standard, test_finance_grants_screens and test_workspace_scripts passed, ruff check and format checks passed, and mypy ran with 4 errors in an untouched test file (see the PR body). No gate, benchmark or full suite run.

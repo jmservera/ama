@@ -10,9 +10,9 @@ ms.date: 2026-11-03
 
 ## Phase 2
 
-* `src/api/tests/test_content_standard.py`: `test_finance_decision_shows_pause_wording_but_stores_value`.
+* `src/api/tests/test_content_standard.py`: `test_finance_decision_sources_contain_display_mapping` (source-contains check); `src/api/tests/test_finance_grants_screens.py`: `test_finance_decision_shows_plain_label_without_panels_loaded` (behavioural, no panels.js).
 * `docs/reference/research/ux/content-standard.md`, `docs/reference/log.md`.
 
 ## Phase 3
 
-Validation (focused tier): unittest for test_content_standard, test_programme_screen, test_finance_grants_screens; ruff check on the test file.
+Validation (focused tier): unittest for test_content_standard, test_finance_grants_screens, test_workspace_scripts; ruff check and ruff format --check on touched files; mypy on the touched tests (4 errors remain in an untouched file).
