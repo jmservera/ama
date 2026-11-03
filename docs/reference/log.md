@@ -9975,3 +9975,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Finance screens browser check (Refs #225)
 
 * Added `src/api/checks/finance_screens_browser_check.py` and a README paragraph: Chromium run of the read-only Invoice queue (approver and payment officer roles) and Funding route and claim pack (preparer) on constructed data, with keyboard reach, reflow, no-write and pinned axe 4.10.3 results. Engineering evidence only; WCAG/AT acceptance (#151, #155) and Fluent 2 conformance (#150) stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-225 r1).
+
+## [2026-11-03] update | Contractor submission, correction and acknowledgement design contract (Refs #228)
+
+* Added a proposed design contract to [suppliers.md](research/ux/customer-journeys/suppliers.md#design-contract-for-contractor-submission-correction-and-acknowledgement-proposed-2026-11-03): preconditions, seven plain-language states, separation of submission, acknowledgement and independent acceptance, withheld items, manual path and accessibility requirements for the later build slice.
+* Desk-research hypothesis only. Nothing is built; #228 criteria 3, 5 and 6 stay unmet (OD-47, supplier-scoped access, #155, #150). Evidence is under `.copilot-tracking/` (2026-11-03 issue-228 submission design contract).
