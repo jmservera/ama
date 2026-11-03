@@ -278,14 +278,23 @@ bounded parallelism; select N for available resources. When a focused run
 produces a partial receipt, verify it with `--required-scope partial` and
 check the recorded scope against the planned unit and focused tests. That
 option does not downgrade a full-tier requirement or replace omitted tests.
-Omit `--jobs` to derive N from the host; full-scope runs build fresh images
+Omit `--jobs` to derive N from the host; with N of 2 or more `project-api`
+unit tests run as up to 3 deterministic shards, and the receipt records
+`test_shards` and `shard_helpers` (helper-imported test classes run in the last
+shard). Sharding fails closed when a discovered test matches no shard, and
+verification re-derives shard commands from the tree. A resumed child plans its
+own shards from its own `--jobs`. Gate commands run with stdin redirected from /dev/null; run the
+runner with `< /dev/null` so a test that prompts cannot hang a terminal-attached
+run. Full-scope runs build fresh images
 automatically and verify rejects layer-cache full receipts. A `--changed`
 receipt records skipped groups and reasons and stays valid after `origin/main` moves only when `--verify-receipt` proves the move
 touched no path of the candidate's changed set or its dependents (it prints
 `BASE RELAXED`); otherwise rerun on the current base. Full-tier receipts always
 need the exact current base. To merge several PRs in a row, rebase them into one
 stack, gate the tip once with `--stack PR_HEAD` per PR in order, and verify each
-PR with `--stack-member PR_HEAD` before merging it (see the
+PR with `--stack-member PR_HEAD` before merging it. The receipt binds only the
+tip, so each member still needs its own exact-head review and hosted CI, and a
+squash merge or a member changed after gating needs a new run (see the
 [gate speed controls](../../src/README.md#gate-speed-controls-issue-470)).
 To resume a failed run, use `--resume FAILED_RECEIPT` with a new `--out`
 directory; preserve the immutable parent receipt and adverse evidence.

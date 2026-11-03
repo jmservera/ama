@@ -9844,3 +9844,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Issue 572 post-#757 verification (Refs #572)
 
 * Re-verified criteria 1 to 3 on main with focused tests and recorded that #757 resolved the core typing blocker. Criterion 4 (fresh complete exact-head gate with browser and MSSQL) stays unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-572 post-757 verification).
+## [2026-11-03] update | Coordinator policy for merged gate speedups (Refs #470)
+
+* Updated `.github/agents/ama-backlog-delivery-coordinator.agent.md` to describe API test shards (`test_shards`, `shard_helpers`), fail-closed sharding, per-child shard planning, closed stdin and the stack-member limits merged in #792, and added a stdin note to the `src/README.md` gate speed controls. Documentation only; no gate code changed. The #470 criterion for recorded before/after full-run timing remains unmet.
