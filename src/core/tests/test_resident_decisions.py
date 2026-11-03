@@ -178,9 +178,7 @@ class JsonResidentDecisions(unittest.TestCase):
         record.pop("non_digital_route")
         legacy = resident_decisions.nomination_follow_up(record, date(2026, 1, 1))
         self.assertFalse(legacy["route_ready"])
-        self.assertEqual(
-            legacy["missing"], ["named owner", "staffed non-digital route"]
-        )
+        self.assertEqual(legacy["missing"], ["named owner", "staffed non-digital route"])
         self.assertIs(legacy["next_update_overdue"], True)
         self.assertTrue(legacy["re_review_pending"])
         record["next_update"] = None
