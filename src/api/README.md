@@ -5132,7 +5132,7 @@ Live criteria still blocked (not proven here): remaining budget headroom, live e
 equality in the homes database, the private job that creates the view and principal, the Key Vault
 secret retrieval role and client, and any deployment. The page is not WCAG conformance evidence.
 
-The #521 source renewal covers January 31, 2027 UTC, but does not deploy an
+The #521 source renewal covers December 31, 2027 UTC (owner decision 2026-11-03; supersedes the January 2027 limit), but does not deploy an
 image, renew configured app/secret expiries or extend existing SQL row windows.
 The [rotation, conditional cost estimate and pending live-apply plan](../../infra/README.md#january-authority-source-renewal-2026-10-28-refs-521)
 requires separate exact owner confirmation and a fresh USD700 all-in headroom
