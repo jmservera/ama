@@ -3986,8 +3986,8 @@ script never resets it. No extension is made by the code. The Python `EXPIRES` c
 
 [`sql/resident-showcase.sql`](sql/resident-showcase.sql) is the database side of the synthetic
 resident showcase: schema `resident_showcase` (owned by `dbo`), an empty `allowed_case` table whose
-window cannot end after the shared 2027-02-01T00:00:00Z cutoff (exclusive
-serving end, through January 31 UTC), the view `v_resident_case` and the grants for one dedicated
+window cannot end after the shared 2028-01-01T00:00:00Z cutoff (exclusive
+serving end, through December 31, 2027 UTC), the view `v_resident_case` and the grants for one dedicated
 read-only principal. The principal gets SELECT on the view only, no role membership, and explicit
 DENY on `dbo.cases` and on writes, DDL and execute in the schema. SELECT is deliberately not denied at
 schema scope because that would override the view grant.
@@ -4017,7 +4017,7 @@ validation plus vault metadata only, no value sent); a dry run is not what-if pr
 what-if runs only under `--apply`. `--apply` writes exactly
 `resident-demo-password-verifier` and `resident-demo-session-key` to `kv-cutovertest-rzsrg` in one
 secure ARM deployment, only after a what-if proves two new secrets there, with an expiry no later
-than the resident policy cap (2027-02-01T00:00:00Z; equality permitted for
+than the resident policy cap (2028-01-01T00:00:00Z; equality permitted for
 configuration, serving ends exclusively then). The verifier comes from a hidden prompt or an owner-only 0600 file outside
 the repository; the session key is generated at apply time and never printed. It is not an
 authority: it needs a separate exact write approval, cleared budget and a proven private write
@@ -4158,7 +4158,8 @@ demonstration-readiness claim. Never delete resource group `ama`.
 
 The owner requested resident demo access through January 31, 2027 UTC.
 The shared [`resident-demo.json`](../src/core/src/zava_forward/core/resident-demo.json)
-now sets `maximum_expiry_utc` to `2027-02-01T00:00:00Z`.
+now sets `maximum_expiry_utc` to `2028-01-01T00:00:00Z` (the owner's 2026-11-03
+decision extended it from `2027-02-01T00:00:00Z`; see the December 2027 section below).
 `resident_showcase.AUTHORITY_END`, the secret/deploy helpers and Bicep use
 that policy. A configured expiry may equal it; startup, requests, sessions
 and row admission refuse at or after the instant. Earlier configured expiries,
@@ -4237,25 +4238,52 @@ start once the live allowlist view admits no row, because rows and the live
 owner confirms the exact change and the cost check above passes:
 
 1. Re-render and apply the boundary so the check constraint moves to
-   `2027-02-01T00:00:00` (leaves row windows unchanged, but the script executes every rendered batch, so it also recreates the view and reapplies the existing narrow GRANT/DENY statements in `infra/sql/resident-showcase.sql`; this is a live permission-touching operation needing owner approval, and a permission-free change needs a separately reviewed constraint-only migration):
+   `2028-01-01T00:00:00` (leaves row windows unchanged, but the script executes every rendered batch, so it also recreates the view and reapplies the existing narrow GRANT/DENY statements in `infra/sql/resident-showcase.sql`; this is a live permission-touching operation needing owner approval, and a permission-free change needs a separately reviewed constraint-only migration):
    `python3 infra/scripts/resident_showcase_sql.py <principal> --client-id <existing resident managed identity client id> --apply <server> <database>`
    (without `--create-principal`; the script exits with code 2 if neither is given).
 2. Renew only individually approved synthetic rows, one reviewed statement each,
-   with `valid_to` no later than `2027-02-01T00:00:00`:
-   `UPDATE resident_showcase.allowed_case SET valid_to = '2027-02-01T00:00:00' WHERE case_id = '<approved id>' AND revoked = 0;`
+   with `valid_to` no later than `2028-01-01T00:00:00`:
+   `UPDATE resident_showcase.allowed_case SET valid_to = '2028-01-01T00:00:00' WHERE case_id = '<approved id>' AND revoked = 0;`
 3. Redeploy only a validated image digest built after #590, whose packaged
-   `resident-demo.json` carries the January 2027 policy (an older image still
-   caps authority at November and the app rejects the later expiry). Rebuild
+   `resident-demo.json` carries the 2028-01-01 policy (an older image still
+   caps authority at the earlier date and the app rejects the later expiry). Rebuild
    through the approved image path if necessary and record the digest check.
    Use the extended expiry (what-if first, then
    `--apply`): `python3 infra/scripts/resident_demo_deploy.py --subscription <id>
-   --expires 2027-01-31T23:59:59Z --image <repo>@sha256:<digest> --sql-server <fqdn>
+   --expires 2027-12-31T23:59:59Z --image <repo>@sha256:<digest> --sql-server <fqdn>
    --sql-database <db> [--apply]`. Rotate credentials per step 2 above first.
 4. Verify startup, sign-in, cross-case denial and min replicas 0; record
    metadata only, no secret values.
 
 The AI tariff/budget expiry (`assistant.py` `EXPIRES`, `resident_ai.budget`)
 is a separate owner approval and is deliberately unchanged here.
+
+### Extension to 31 December 2027 (owner decision 2026-11-03, Refs #521)
+
+The owner's 2026-11-03 decision extends the resident demo authority to
+31 December 2027 UTC, replacing the end of January 2027. The exclusive serving
+end is `2028-01-01T00:00:00Z`, set once in `resident-demo.json`; the core
+constant, SQL template, secret and deploy helpers and Bicep read that value.
+The earlier live SQL window renewal to `2027-02-01T00:00:00` (#742) is superseded
+by this source change but the live constraint is not moved until the separate
+live apply below. Guards are unchanged: min 0 replicas, synthetic data,
+resident-only scope, no new network path or RBAC, and existing owner approvals
+and row windows. The AI tariff/budget expiry stays 2026-11-01 and needs its own
+owner approval; no Azure resource was changed.
+
+Rotation for the longer window: the plan above applies, with credential
+rotation at least every 30 days (about 11 rotations to 31 December 2027) and
+every row renewal individually approved. Longer exposure raises the value of
+the seven-day expiry alerts and the monthly metadata check; no secret is
+printed or stored.
+
+Cost planning uses the same USD0.50/day proxy (assumption, not a tariff). The
+extra 334 days from 2027-02-01 to 2027-12-31 model **USD167**, plus the USD10
+reserve **USD177**; against the original 2026-11-01 cutoff the extra 426 days
+model **USD213**. These overlap and must not be added. The USD700 all-in `ama`
+cap is unchanged; USD177 leaves other liabilities <= USD523, not known to be
+available. The owner must record actual headroom before any paid action. The
+January figures below are retained as history.
 
 #### Added-cost estimate and USD700 cap
 

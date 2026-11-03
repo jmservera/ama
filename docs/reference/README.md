@@ -281,7 +281,7 @@ remain acceptance gaps; no migration-attributed gain or whole-issue closure
 is inferred.
 
 For #521, the [January resident authority source renewal](../../infra/README.md#january-authority-source-renewal-2026-10-28-refs-521)
-sets the shared exclusive serving end to 2027-02-01T00:00:00Z and documents
+sets the shared exclusive serving end to 2028-01-01T00:00:00Z (extended to 31 December 2027 by the owner's 2026-11-03 decision) and documents
 conditional credential/SQL rotation and added-cost assumptions within USD700.
 Live apply, January funding/headroom and owner verification remain pending;
 the separate paid-inference cutoff is unchanged. The guide records fresh

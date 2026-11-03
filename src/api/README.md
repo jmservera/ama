@@ -5059,8 +5059,8 @@ establish that a newly failed revision started.
 * Configuration (environment only; the server refuses to start on any missing, expired, mixed or
   unsafe value, and never echoes a value):
   `ZF_DEMO_EXPIRES_AT` (explicit UTC, in the future, no later than the packaged
-  `resident-demo.json` cap, currently 2027-02-01T00:00:00Z (configuration may
-  equal the cap, serving ends exclusively at that instant, after January 31 UTC);
+  `resident-demo.json` cap, currently 2028-01-01T00:00:00Z (configuration may
+  equal the cap, serving ends exclusively at that instant, after December 31, 2027 UTC);
   startup and requests refuse at/after the configured expiry),
   `ZF_DEMO_ALLOWED_HOSTS` (exact host names), `ZF_DEMO_PASSWORD_VERIFIER` (a scrypt verifier, never
   the password), `ZF_DEMO_SESSION_KEY` (base64url, 32 bytes or more), `ZF_SQL_SERVER`,
@@ -5105,7 +5105,7 @@ establish that a newly failed revision started.
   unavailable). Anything else is hidden until it is mapped.
 * SQL boundary: [`infra/sql/resident-showcase.sql`](../../infra/sql/resident-showcase.sql) creates
   the schema, an EMPTY allowlist table (rows need named human approval, provenance and a window ending
-  by the shared 2027-02-01T00:00:00Z exclusive cutoff), the view and a read-only
+  by the shared 2028-01-01T00:00:00Z exclusive cutoff), the view and a read-only
   principal that has SELECT on that view only. The
   [`resident_showcase_sql.py`](../../infra/scripts/resident_showcase_sql.py) script renders it and
   only dry-runs unless `--apply` is used from an approved private job.
