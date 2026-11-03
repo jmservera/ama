@@ -1,0 +1,28 @@
+{
+  "task_id": "issue-572-r1",
+  "task_slug": "issue-572-r1-reverification",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-03/issue-572-r1-reverification-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-03/issue-572-r1-reverification-plan.md",
+    "details": ".copilot-tracking/details/2026-11-03/issue-572-r1-reverification-phase-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-03/issue-572-r1-reverification-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-03/issue-572-r1-reverification-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Critique executed once (self-review), verdict proceed", "status": "done", "evidence": "plan file"},
+    {"decision": "Review executed once, AC1-AC3 conformant, AC4 open", "status": "done", "evidence": "review file"}
+  ],
+  "blockers": [
+    {"id": "ac4-gate", "summary": "Complete exact-head gate needs coordinator with Docker, MSSQL, Chromium", "resolution": "Coordinator runs tools/rpi-checks.py --all and verifies receipt"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator runs the complete gate; PR uses Refs #572"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Run and verify the complete exact-head gate for #572 AC4", "rationale": "Only unmet criterion", "evidence": "review file"}
+  ]
+}
