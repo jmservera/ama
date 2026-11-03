@@ -23,6 +23,10 @@ ACCESSIBLE_ROUTE = (
     "You can also challenge this by phone, in person or on paper, and a member of staff will "
     "record it for you. No digital access is needed."
 )
+PROTECTION = (
+    "Challenging this will not change your tenancy, repairs, services or any other decision about "
+    "you. If you have a safety concern, tell us and a named person will pick it up straight away."
+)
 NOT_INFERRED = ("consent", "refusal", "sanction", "unrelated_closure", "hazard_clock")
 
 
@@ -219,9 +223,19 @@ class ChallengeRegister:
             if r.get("hazard_referral", {}).get("status") == "referred_on_receipt"
         ]
 
+    def overdue(self, today: str) -> list[Record]:
+        """Unresolved challenges past their promised next update, for the human owner."""
+        cutoff = date.fromisoformat(today).isoformat()
+        return [
+            deepcopy(r)
+            for r in self.challenges.values()
+            if r["status"] not in RESOLVED and r["next_update"] < cutoff
+        ]
+
     def view(self, cid: str) -> Record:
         """Person-facing view: only permitted explanations, plus owner, next update, resolution."""
         rec = deepcopy(self._get(cid))
         rec["explanations"] = [e for e in rec["explanations"] if e["permitted"]]
         rec["not_inferred"] = list(NOT_INFERRED)
+        rec["protection"] = PROTECTION
         return rec

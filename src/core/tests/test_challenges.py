@@ -4,7 +4,12 @@ import unittest
 from copy import deepcopy
 from typing import Any
 
-from zava_forward.core.challenges import ACCESSIBLE_ROUTE, NOT_INFERRED, ChallengeRegister
+from zava_forward.core.challenges import (
+    ACCESSIBLE_ROUTE,
+    NOT_INFERRED,
+    PROTECTION,
+    ChallengeRegister,
+)
 
 
 def n(kind: str, item: str, version: str = "v1") -> tuple[str, str, str]:
@@ -212,6 +217,25 @@ class HazardConcern(unittest.TestCase):
         after = reg.view(rec["id"])
         self.assertEqual(after["hazard_referral"]["handoff_evidence"], "Engineer called out 09:10.")
         self.assertEqual(after["history"], before["history"])
+
+
+class ResponseProtection(unittest.TestCase):
+    def test_view_states_plain_language_protection_and_adds_no_adverse_fields(self) -> None:
+        reg = ChallengeRegister(GRAPH)
+        view = reg.view(digital(reg)["id"])
+        self.assertEqual(view["protection"], PROTECTION)
+        for key in ("sanction", "refusal", "consent", "hazard_clock", "adverse_action"):
+            self.assertNotIn(key, view)
+
+    def test_overdue_lists_only_unresolved_past_due_challenges_without_changing_them(self) -> None:
+        reg = ChallengeRegister(GRAPH)
+        late = digital(reg)
+        done = staff(reg)
+        reg.resolve(done["id"], "Pat Owner", "upheld", "Checked.")
+        before = deepcopy(reg.challenges)
+        self.assertEqual(reg.overdue("2026-11-10"), [])
+        self.assertEqual([r["id"] for r in reg.overdue("2026-11-11")], [late["id"]])
+        self.assertEqual(reg.challenges, before)
 
 
 if __name__ == "__main__":

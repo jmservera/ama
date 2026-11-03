@@ -4126,7 +4126,10 @@ transitive dependents in the injected dependency graph stale and preserves prior
 nothing. The register has no consent, refusal, sanction, closure or hazard-clock fields and never
 reads or writes them. Passing `hazard_concern=True` records an immediate `hazard_referral` to the
 named owner on receipt, listed by `hazard_referrals()` until the owner records an evidenced handoff with `confirm_hazard_handoff()`, even after resolution; it neither starts nor changes
-any hazard clock, so the existing hazard process is not delayed by challenge review.
+any hazard clock, so the existing hazard process is not delayed by challenge review. `view()` adds a
+plain-language `protection` statement (a challenge does not change tenancy, repairs or services), and
+`overdue(today)` lists unresolved challenges past their promised next update for the human owner;
+neither changes any record.
 
 Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
