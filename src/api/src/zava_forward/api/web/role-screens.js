@@ -569,6 +569,13 @@ function qualityMeasures(c) {
   const m = c.measures;
   return (Array.isArray(m) ? m : String(m ?? "").split(",")).map((x) => String(x).trim()).filter(Boolean);
 }
+const qualityName = (v) => typeof v === "string" && v.trim() !== "";
+// Acceptance is a named person independent of the work; a record without that is incomplete evidence.
+function qualityAcceptanceGap(r) {
+  if (!qualityName(r.accepted_by)) return "accepted without a named inspector";
+  if (qualityName(r.submitted_by) && r.accepted_by.trim().toLowerCase() === r.submitted_by.trim().toLowerCase()) return "accepted by the person who submitted the work, so not independent";
+  return "";
+}
 function qualityNext(r) {
   if (r.state === "Returned") return `Defect owner ${screenValue(r.defect?.owner)} to correct, then record the fix`;
   if (r.state === "Fixed, awaiting reinspection") return "Independent reinspection by a Quality Inspector not involved in the work or fix";
@@ -588,6 +595,8 @@ registerRoleScreen({
       const rs = records.filter((r) => r.measure === measure);
       if (!rs.length) return [`${measure}: no quality evidence recorded.`];
       return rs.filter((r) => r.state !== "Accepted" && r.state !== "Handed over").map((r) => `${measure}: ${r.state}.`)
+        .concat(rs.filter((r) => (r.state === "Accepted" || r.state === "Handed over") && qualityAcceptanceGap(r)).map((r) => `${measure}: ${qualityAcceptanceGap(r)}.`))
+        .concat(rs.filter((r) => (r.state === "Returned" || r.state === "Fixed, awaiting reinspection") && !qualityName(r.defect?.owner)).map(() => `${measure}: the defect has no named owner.`))
         .concat(rs.filter((r) => (r.items || []).some((i) => !String(i.evidence || "").trim())).map(() => `${measure}: a check has no evidence note.`));
     });
     if (!measures.length) blockers.push("No measures are recorded for this home.");

@@ -9949,3 +9949,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Issue #531 re-verification on main 61a4ac543 (Refs #531)
 
 * Recorded a fresh local re-verification of loading feedback and the HAX briefing (focused tests and the loading and briefing browser check with axe-core 4.10.3 all pass). No product or knowledge-base content changed. Criterion 7 (live employee-site verification) stays unmet and owner-run; screen-reader and voice-control acceptance is not claimed. Evidence is under `.copilot-tracking/` (2026-11-03 issue-531 reverify).
+## [2026-11-03] update | Quality queue blocks handover on unnamed acceptance or ownerless defect (Refs #231)
+
+* The quality queue no longer shows handover readiness when an accepted record has no named or independent inspector, or an open defect has no named owner. Criteria 4 and 5 stay unmet (#151, #155, #150); no ticks changed. Evidence is under `.copilot-tracking/` (2026-11-03 issue-231 quality-acceptance-evidence).
