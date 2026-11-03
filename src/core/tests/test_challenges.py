@@ -237,6 +237,35 @@ class ResponseProtection(unittest.TestCase):
         self.assertEqual([r["id"] for r in reg.overdue("2026-11-11")], [late["id"]])
         self.assertEqual(reg.challenges, before)
 
+    def test_hazard_referrals_overdue_flags_old_or_unknown_age_without_changes(self) -> None:
+        reg = ChallengeRegister(GRAPH)
+        args = (SUBJECT, "DEC-1", "Mould.", "Pat Owner", "2026-11-10")
+        old = reg.record_digital(*args, hazard_concern=True, received_on="2026-11-01")
+        fresh = reg.record_digital(*args, hazard_concern=True, received_on="2026-11-03")
+        unknown = reg.record_digital(*args, hazard_concern=True)
+        done = reg.record_digital(*args, hazard_concern=True, received_on="2026-10-01")
+        reg.confirm_hazard_handoff(done["id"], "Pat Owner", "Phoned the repairs duty officer.")
+        before = deepcopy(reg.challenges)
+        flagged = {
+            r["id"]: r["referral_age_days"] for r in reg.hazard_referrals_overdue("2026-11-04")
+        }
+        self.assertEqual(flagged, {old["id"]: 3, unknown["id"]: None})
+        self.assertNotIn(fresh["id"], flagged)
+        self.assertEqual(reg.challenges, before)
+
+    def test_hazard_referral_received_on_must_be_a_date(self) -> None:
+        reg = ChallengeRegister(GRAPH)
+        with self.assertRaises(ValueError):
+            reg.record_digital(
+                SUBJECT,
+                "DEC-1",
+                "Mould.",
+                "Pat Owner",
+                "2026-11-10",
+                hazard_concern=True,
+                received_on="yesterday",
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
