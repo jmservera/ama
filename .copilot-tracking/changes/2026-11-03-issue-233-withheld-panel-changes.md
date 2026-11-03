@@ -9,8 +9,8 @@ No amendments or divergences from the plan.
 
 ## Validation
 
-* Passed: all 13 api test modules that reference role screens except one that
-  cannot import (`test_browser_asset_urls`, missing `test_resident_demo_api` on
+* Passed: all api test modules that reference role screens (13 run, 12 pass; the
+  one that fails) (`test_browser_asset_urls`, missing `test_resident_demo_api` on
   the path; identical failure without my change); core `test_atlas_screen_trace`;
   atlas trace checker; ruff check and format check; mypy; `node --check`.
 * Not run: local gate, benchmarks, full suites, rendered browser or AT checks.

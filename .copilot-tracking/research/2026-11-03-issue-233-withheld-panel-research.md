@@ -7,7 +7,7 @@ Date: 2026-11-03. Disposition: executed. Planning Readiness: Ready.
 * 671 trace doc and checker; 713 status refresh and drift check; 767 static
   role-screen guardrails; 496 workbench foundation; 785 and 777 added finance
   and resident service issue screens to the trace.
-* Twelve role screens are registered in `role-screens.js` and traced.
+* Thirteen role screens are registered in `role-screens.js`; twelve are traced in the atlas trace.
 
 ## Acceptance criteria status before this slice
 

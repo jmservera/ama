@@ -9804,7 +9804,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 ## [2026-11-03] update | Atlas trace: withheld-items panel on the tension screens (Refs #233)
 
-* `programme-queue` and `resident-choice` now render a "Not shown for this role"
+* The per-home views of `programme-queue` and `resident-choice` now render a "Not shown for this role"
   panel, so the continuity-versus-disclosure rule is on the screens. The trace
   keeps it labelled a proposed rule; rendered behaviour, WCAG 2.2 and
   design-system acceptance, and #155 validation stay unmet. Evidence is under
