@@ -8,6 +8,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
+from zava_forward.core.ai_consumption import usage as valid_usage
 from zava_forward.core.resident_assistant import AssistantUnavailable, Topic
 
 EXPIRES = datetime(2026, 11, 1, tzinfo=UTC).timestamp()
@@ -70,6 +71,7 @@ class AzureTopicProvider:
         enabled: bool = False,
         token: Callable[[], str] | None = None,
         reserve: Callable[[RequestEnvelope], bool] | None = None,
+        record_usage: Callable[[dict[str, int | None] | None], None] | None = None,
         transport: Callable[[str, bytes, str], bytes] = _post,
         clock: Callable[[], float] = time.time,
     ) -> None:
@@ -81,6 +83,7 @@ class AzureTopicProvider:
             f"{endpoint}/openai/deployments/{deployment}/chat/completions?api-version=2024-10-21"
         )
         self.enabled, self.token, self.reserve = enabled, token, reserve
+        self.record_usage = record_usage
         self.transport, self.clock = transport, clock
 
     def select(self, topic: Topic) -> Topic:
@@ -118,6 +121,7 @@ class AzureTopicProvider:
             if len(raw) > MAX_REPLY:
                 raise AssistantUnavailable("reply_limit")
             body = json.loads(raw)
+            self._record(body)
             choices = body["choices"]
             if (
                 len(choices) != 1
@@ -136,3 +140,14 @@ class AzureTopicProvider:
         ):
             raise AssistantUnavailable("provider_failed") from None
         return topic
+
+    def _record(self, body: object) -> None:
+        # Counts only; absent or invalid usage is recorded as unknown (None), and a
+        # sink failure never changes the resident outcome or discards the topic.
+        if self.record_usage is None:
+            return
+        counts = valid_usage(body.get("usage")) if isinstance(body, dict) else None
+        try:
+            self.record_usage(counts)
+        except Exception:
+            return
