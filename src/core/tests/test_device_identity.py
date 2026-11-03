@@ -460,5 +460,89 @@ class DeviceIdentityTests(unittest.TestCase):
             di.provision(di.plan("run-001", "owner-role", sensors()), registry, store)
 
 
+class RotationTests(unittest.TestCase):
+    def provisioned(self) -> tuple[FakeRegistry, FakeStore, di.Manifest]:
+        registry, store = FakeRegistry(), FakeStore()
+        manifest = di.provision(di.plan("run-001", "owner-role", sensors(3)), registry, store)
+        return registry, store, manifest
+
+    def test_rotation_replaces_every_reference_and_keeps_devices(self) -> None:
+        registry, store, manifest = self.provisioned()
+        old = {i.credential_ref for i in manifest.identities}
+        rotated = di.rotate(manifest, registry, store)
+        new = {i.credential_ref for i in rotated.identities}
+        self.assertFalse(old & new)
+        self.assertEqual(set(store.references()), new)
+        self.assertEqual(len(registry.list_run("run-001")), 3)
+        self.assertNotIn(SECRET, repr(rotated))
+        di.teardown(rotated, registry, store)
+        self.assertEqual(store.references(), [])
+
+    def test_failed_issue_keeps_old_credentials_and_leaves_no_extra(self) -> None:
+        registry, store, manifest = self.provisioned()
+        old = {i.credential_ref for i in manifest.identities}
+        original = store.issue
+        calls = {"n": 0}
+
+        def flaky(device_id: str, run_id: str) -> str:
+            calls["n"] += 1
+            reference = original(device_id, run_id)
+            if calls["n"] == 2:
+                raise RuntimeError(SECRET)
+            return reference
+
+        store.issue = flaky  # type: ignore[method-assign]
+        with self.assertRaisesRegex(di.DeviceIdentityError, "ROTATION_FAILED_OLD_KEPT") as ctx:
+            di.rotate(manifest, registry, store)
+        self.assertIsNone(ctx.exception.__cause__)
+        self.assertNotIn(SECRET, "".join(traceback.format_exception(ctx.exception)))
+        self.assertEqual(set(store.references()), old)
+
+    def test_rollback_failure_is_reported(self) -> None:
+        registry, store, manifest = self.provisioned()
+        original = store.issue
+
+        def failing(device_id: str, run_id: str) -> str:
+            original(device_id, run_id)
+            raise RuntimeError(SECRET)
+
+        def no_revoke(reference: str) -> None:
+            raise RuntimeError(SECRET)
+
+        store.issue = failing  # type: ignore[method-assign]
+        store.revoke = no_revoke  # type: ignore[method-assign]
+        with self.assertRaisesRegex(di.DeviceIdentityError, "ROTATION_ROLLBACK_INCOMPLETE"):
+            di.rotate(manifest, registry, store)
+
+    def test_old_revoke_failure_is_secret_free(self) -> None:
+        registry, store, manifest = self.provisioned()
+
+        def no_revoke(reference: str) -> None:
+            raise RuntimeError(SECRET)
+
+        store.revoke = no_revoke  # type: ignore[method-assign]
+        with self.assertRaisesRegex(di.DeviceIdentityError, "ROTATION_REVOKE_FAILED:3") as ctx:
+            di.rotate(manifest, registry, store)
+        self.assertNotIn(SECRET, str(ctx.exception))
+
+    def test_stale_or_missing_references_are_refused_before_issuing(self) -> None:
+        registry, store, manifest = self.provisioned()
+        rotated = di.rotate(manifest, registry, store)
+        issued = store.counter
+        with self.assertRaisesRegex(di.DeviceIdentityError, "ROTATION_STATE_MISMATCH"):
+            di.rotate(manifest, registry, store)
+        bare = di.plan("run-001", "owner-role", sensors(3))
+        with self.assertRaisesRegex(di.DeviceIdentityError, "ROTATION_REFERENCES_MISSING"):
+            di.rotate(bare, registry, store)
+        self.assertEqual(store.counter, issued)
+        di.teardown(rotated, registry, store)
+
+    def test_foreign_device_owner_is_refused(self) -> None:
+        registry, store, manifest = self.provisioned()
+        registry.devices[manifest.identities[0].device_id] = "other-run"
+        with self.assertRaisesRegex(di.DeviceIdentityError, "ROTATION_STATE_MISMATCH"):
+            di.rotate(manifest, registry, store)
+
+
 if __name__ == "__main__":
     unittest.main()
