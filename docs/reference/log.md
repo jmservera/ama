@@ -9945,3 +9945,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added an epic-scoped checkpoint to the [evidence pack](../architecture/cutover-evidence-pack.md#epic-123-scoped-stabilization-checkpoint-2026-11-03) on main 61a4ac54: requirement-to-test reconciliation for RULE-017, 019, 020, 021 and 024, a child ledger (#127 and #166 closed; #124, #125, #126, #128 and #129 open, four with unmerged PRs) and focused test, ruff and mypy results.
 * RULE-016 and the BG-011 baseline remain owner-dependent; NFR-008 and NFR-009 are only specified. #123 criterion 1 (full checkpoint before closure) and criterion 2 (children closed or deferred) stay unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-123 epic checkpoint).
+
+## [2026-11-03] update | Issue #531 re-verification on main 61a4ac543 (Refs #531)
+
+* Recorded a fresh local re-verification of loading feedback and the HAX briefing (focused tests and the loading and briefing browser check with axe-core 4.10.3 all pass). No product or knowledge-base content changed. Criterion 7 (live employee-site verification) stays unmet and owner-run; screen-reader and voice-control acceptance is not claimed. Evidence is under `.copilot-tracking/` (2026-11-03 issue-531 reverify).
