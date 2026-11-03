@@ -44,7 +44,8 @@ const adv = {...ret, event_type: "advance", reason: "Forward reason",
   receiving_owner: {name: "Forward Owner"}};
 const forwardOnly = {...c, returns: [adv]};
 const mixed = {...c, returns: [adv, ret]};
-console.log(JSON.stringify({forwardOnly: s.render(forwardOnly), mixed: s.render(mixed),
+const page = s.summary([[{id: "C-1"}, mixed], [{id: "C-9"}, null], [{id: "C-3"}, {id: "C-3"}]]);
+console.log(JSON.stringify({page, forwardOnly: s.render(forwardOnly), mixed: s.render(mixed),
   roles: s.roles, tree: s.render(c), empty: s.render({id: "C-2"}),
   noHandoff: s.render(noHandoff), noReturn: s.render(noReturn), reopen: s.render(reopen)}));
 """
@@ -122,6 +123,26 @@ class DataOperatorScreen(unittest.TestCase):
         self.assertIn("Receiver Y", mixed)
         self.assertNotIn("Forward Owner", mixed)
         self.assertNotIn("Recorded returns and reopens", forward)
+
+    def test_page_queue_lists_both_values_and_unavailable_homes(self) -> None:
+        page = run()["page"]
+        text = json.dumps(page)
+        for phrase in (
+            "Conflict and return queue across this page of homes",
+            "D; source S-A v1",
+            "C; source S-B v2",
+            "Return reason X",
+            "SRC-R v4",
+            "Unavailable",
+            "Open the home to check",
+            "not a portfolio total",
+            "no winning source is selected",
+        ):
+            self.assertIn(phrase, text)
+        self.assertNotIn("Forward Owner", text)
+        self.assertNotIn("C-3", text)
+        for control in ("button", "form", "input", "select", "textarea", "a"):
+            self.assertNotIn(control, tags(page))
 
 
 if __name__ == "__main__":

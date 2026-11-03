@@ -744,6 +744,33 @@ registerRoleScreen({
   id: "data-operator",
   title: "Data steward and operator view",
   roles: screenManagers,
+  async summarise(rows, signal) {
+    const entries = await Promise.all(rows.map((row) =>
+      api(`/api/cases/${encodeURIComponent(row.id)}`, undefined, signal).then((c) => [row, c], (e) => {
+        signal.throwIfAborted();
+        return [row, null];
+      })));
+    return this.summary(entries);
+  },
+  summary(entries) {
+    const conflicts = entries.flatMap(([row, c]) => {
+      if (!c) return [[row.id, "Unavailable", "Open the home to check.", "Unavailable", "Unavailable", "Unavailable"]];
+      return (c.stock_reconciliation || []).map((q) => [c.id, q.id, q.field, operatorSide(q.left), operatorSide(q.right), operatorStatus(c, q)]);
+    });
+    const returns = entries.flatMap(([row, c]) => {
+      if (!c) return [[row.id, "Unavailable", "Unavailable", "Unavailable", "Unavailable", "Open the home to check."]];
+      return (c.returns || []).filter((r) => r.event_type !== "advance").map((r) => [c.id, r.reopened ? "Reopened" : "Returned",
+        `${screenValue(r.from_stage)} to ${screenValue(r.to_stage)}`, `${screenValue(r.source)} v${screenValue(r.source_version)}`, r.reason, r.next_action]);
+    });
+    return screenPanel("Conflict and return queue across this page of homes",
+      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. Both source values stay as recorded; no winning source is selected and nothing is replayed, corrected or retried. A home with no row has no conflict or return recorded on this page; this does not establish that none exists. Unavailable homes are listed so they are not read as clear. Open a home for events and recovery context."),
+      screenTable("Source conflicts by home with both values",
+        ["Home", "Query", "Field", "First source (value, source, version, date, validation)", "Compared source (value, source, version, date, validation)", "State"],
+        conflicts, Infinity),
+      screenTable("Returns and reopens by home",
+        ["Home", "Type", "Stage change", "Source", "Reason", "Next action"],
+        returns, Infinity));
+  },
   render(c) {
     const queries = c.stock_reconciliation || [];
     const events = c.stock_reconciliation_events || [];
