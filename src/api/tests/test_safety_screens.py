@@ -93,7 +93,42 @@ def tags(node: object) -> list[str]:
     return found
 
 
+def find_all(node: object, tag: str) -> list[dict[str, Any]]:
+    found: list[dict[str, Any]] = []
+    if isinstance(node, dict):
+        if node.get("tag") == tag:
+            found.append(node)
+        for kid in node.get("kids", []):
+            found += find_all(kid, tag)
+    return found
+
+
 class SafetyScreens(unittest.TestCase):
+    def test_rendered_tables_are_labelled_focusable_and_aligned(self) -> None:
+        for screen in run([hazard()]).values():
+            for view in (screen["tree"], screen["summary"]):
+                regions = [r for r in find_all(view, "div") if r["attrs"].get("role") == "region"]
+                self.assertTrue(regions)
+                for region in regions:
+                    self.assertTrue(region["attrs"]["aria-label"])
+                    self.assertEqual(region["attrs"]["tabindex"], 0)
+                    (table,) = find_all(region, "table")
+                    (caption,) = find_all(table, "caption")
+                    self.assertEqual(caption["kids"], [region["attrs"]["aria-label"]])
+                    heads = find_all(table, "th")
+                    self.assertTrue(all(t["attrs"] == {"scope": "col"} for t in heads))
+                    for row in find_all(find_all(table, "tbody")[0], "tr"):
+                        self.assertEqual(len(find_all(row, "td")), len(heads))
+
+    def test_cross_home_summary_is_not_truncated_beyond_fifty(self) -> None:
+        released = hazard(hold={"scope": "Home", "case_id": "C-1", "status": "Released"})
+        items = [released] * 50 + [hazard(source="Late active hazard")]
+        for screen in run(items).values():
+            text = json.dumps(screen["summary"])
+            self.assertIn("C-1 H-51", text)
+            self.assertIn("Late active hazard", text)
+            self.assertNotIn("Showing the first", text)
+
     def test_roles_are_scoped(self) -> None:
         out = run([])
         self.assertEqual(
