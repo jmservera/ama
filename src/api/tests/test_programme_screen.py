@@ -121,6 +121,72 @@ def run(
     return parsed
 
 
+PAGING_SCRIPT = r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const host = fs.readFileSync(process.argv[1] + "/role-screens.js", "utf8");
+const mode = process.argv[2];
+const calls = [];
+const row = (n) => ({id: "C-" + n, address: n + " Test Street", work: {owner: "Owen", queues: [],
+  returned: {reason: "Reason " + n, sender: "Sender"}, handoff: null}});
+const context = vm.createContext({
+  location: {hash: "#/screens?screen=programme-queue"}, history: {replaceState() {}},
+  URLSearchParams, Intl, AbortController, Date,
+  routeController: new AbortController(), me: {user: {role: "Retrofit Programme Manager"}},
+  api: async (path) => {
+    calls.push(path);
+    if (path.startsWith("/api/coordinator")) return {as_of: "x", audit_integrity: "Intact", funnel: []};
+    const offset = Number(new URL(path, "http://x").searchParams.get("offset"));
+    if (mode === "fail" && offset > 0) throw new Error("down");
+    const total = 120;
+    const n = Math.min(50, total - offset);
+    return {total, items: Array.from({length: n}, (_, i) => row(offset + i + 1))};
+  },
+  h: (tag, attrs, ...kids) => {
+    const node = {tag, attrs, kids: kids.flat(Infinity).filter(k => k !== false && k !== null && k !== undefined)};
+    Object.defineProperty(node, "replaceChildren", {value: (...k) => { node.kids = k; }});
+    Object.defineProperty(node, "textContent", {set: (v) => { node.kids = [v]; }});
+    return node;
+  }
+});
+vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('programme-queue');", context);
+(async () => {
+  const overview = await context.__s.overview(new AbortController().signal);
+  const find = (n, pred, out = []) => { if (n && typeof n === "object") { if (pred(n)) out.push(n); (n.kids || []).forEach(k => find(k, pred, out)); } return out; };
+  const text = (n) => JSON.stringify(n);
+  const btn = (id) => find(overview, n => n.attrs && n.attrs.id === id)[0];
+  const rows = () => find(overview, n => n.tag === "tbody")[0].kids.length;
+  const pageStatus = () => text(find(overview, n => n.attrs && n.attrs.id === "programme-page-status")[0]);
+  const out = {first: pageStatus(), firstRows: rows()};
+  const calls0 = calls.length;
+  btn("programme-prev").attrs.onclick();
+  out.prevAtStartCalls = calls.length - calls0;
+  btn("programme-next").attrs.onclick();
+  await new Promise(r => setTimeout(r, 0));
+  out.second = pageStatus();
+  out.secondRows = rows();
+  out.secondHasRow51 = text(overview).includes("Reason 51");
+  btn("programme-prev").attrs.onclick();
+  await new Promise(r => setTimeout(r, 0));
+  out.backHasRow1 = text(overview).includes("Reason 1\"");
+  out.paths = calls.filter(c => c.startsWith("/api/cases"));
+  console.log(JSON.stringify(out));
+})().catch(e => {console.error(e); process.exitCode = 1;});
+"""  # noqa: E501
+
+
+def run_paging(mode: str = "ok") -> dict[str, object]:
+    result = subprocess.run(
+        ["node", "-e", PAGING_SCRIPT, str(WEB), mode],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    parsed: dict[str, object] = json.loads(result.stdout)
+    return parsed
+
+
 def tags(node: object) -> list[str]:
     found: list[str] = []
     if isinstance(node, dict):
@@ -263,6 +329,28 @@ class ProgrammeScreen(unittest.TestCase):
         for node in (out["blocked"], out["clear"]):
             for control in ("button", "form", "input", "select", "textarea"):
                 self.assertNotIn(control, tags(node))
+
+    def test_queue_pages_reach_all_permitted_cases_with_get_only(self) -> None:
+        out = run_paging()
+        self.assertIn("cases 1 to 50 of 120", str(out["first"]))
+        self.assertIn("scope filter applies to this page only", str(out["first"]))
+        self.assertEqual(out["firstRows"], 50)
+        self.assertEqual(out["prevAtStartCalls"], 0)
+        self.assertIn("cases 51 to 100 of 120", str(out["second"]))
+        self.assertTrue(out["secondHasRow51"])
+        self.assertTrue(out["backHasRow1"])
+        paths = [str(p) for p in out["paths"]]  # type: ignore[attr-defined]
+        self.assertEqual(
+            paths,
+            [f"/api/cases?view=all&limit=50&offset={o}" for o in (0, 50, 0)],
+        )
+
+    def test_queue_page_failure_keeps_rows_and_says_so(self) -> None:
+        out = run_paging("fail")
+        self.assertIn("could not be loaded", str(out["second"]))
+        self.assertIn("rows shown are unchanged", str(out["second"]))
+        self.assertEqual(out["secondRows"], 50)
+        self.assertFalse(out["secondHasRow51"])
 
     def test_same_home_stage_map_links_by_role_and_states_deferral(self) -> None:
         manager = json.dumps(run()["blocked"])
