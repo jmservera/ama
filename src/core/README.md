@@ -4282,6 +4282,27 @@ Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring,
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
 human review. Tests: `src/core/tests/test_challenges.py`.
 
+## Aftercare concern route and evaluator view (#133)
+
+`zava_forward.core.aftercare.AftercareRegister` is a store-independent register for constructed
+aftercare concerns (FR-049, AC-063). `raise_concern` records a discomfort, higher-bill, control-use
+or other concern from a household or a representative (a stated basis is required) by a `digital`
+route or a `staff_recorded` route (phone, in-person, paper or assisted-visit channel) with a named
+human owner, a next-update date and a fixed non-digital route statement. Only the owner records an
+investigation outcome, and the basis must be a human one (home visit, household conversation,
+specialist review or records review); a sensor reading is stored as context, is never a basis and
+never dismisses the report. The remedy status is separate and completion needs evidence.
+`record_closure` records handover or financial closure separately and changes no concern or remedy;
+`unresolved()` keeps open concerns visible after closure. `evaluator_view(handed_over_homes,
+baseline_homes)` returns counts with stated denominators, unknown baseline coverage, outcomes
+including "no outcome yet", unresolved concerns and concerns outside the stated scope, with a
+fixed notice that it shows no causation, fault or savings. `neutral_text` rejects causation, blame
+or savings wording in templated text.
+
+Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), evaluator role access
+and the DPO position on outcome data (both open), and the optional AI concern pack (criterion 6).
+Tests: `src/core/tests/test_aftercare.py`.
+
 ## Data steward and digital operator exception queue (#135)
 
 `zava_forward.core.exception_queue.ExceptionQueue` is a store-independent register (FR-012, FR-029,
