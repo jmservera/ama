@@ -1891,14 +1891,17 @@ class Runner:
     def discover_test_ids(self, project: str, py: str, cwd: str) -> list[str]:
         env = {**self.env, **self.tests_env(project)}
         env["PYTHONPATH"] = str(self.safety) + ":" + env["PYTHONPATH"]
-        result = subprocess.run(
-            [py, "-c", DISCOVER_IDS],
-            cwd=self.snapshot / cwd,
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=600,
-        )
+        try:
+            result = subprocess.run(
+                [py, "-c", DISCOVER_IDS],
+                cwd=self.snapshot / cwd,
+                env=env,
+                capture_output=True,
+                text=True,
+                timeout=600,
+            )
+        except subprocess.TimeoutExpired as exc:
+            raise GateError(f"Test discovery for {project} timed out before sharding") from exc
         if result.returncode:
             raise GateError(f"Test discovery for {project} failed before sharding")
         return [line for line in result.stdout.splitlines() if line]

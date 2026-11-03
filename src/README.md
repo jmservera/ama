@@ -157,7 +157,8 @@ receipt records what ran and what was skipped.
   unchanged.
 * Base-match relaxation: a partial (`--changed`) receipt stays valid when
   `origin/main` has moved only by a fast-forward whose changed paths either
-  are already in the gated head, or are docs/tracking/support/markdown paths,
+  are already in the gated head, or are docs/tracking/support paths or markdown
+  outside `src/`,
   or map to groups disjoint from the candidate's selected groups and are not in
   its changed set. Moves touching an unmapped path, the gate matrix, workflows,
   a changed path or a dependent project (for example `src/core`) fail
