@@ -69,9 +69,18 @@ def _hash(value: object) -> str:
 
 
 def _home_key(facts: dict[str, Any], case_id: str) -> tuple[str, str]:
-    """Return a home grouping key; an address key is derived, not a registered home identifier."""
+    """Return a home grouping key and its scope.
+
+    A stock register link is a unique register reference, not verified dwelling identity, and an
+    address key is derived; only ``recorded_home`` is a recorded home identifier.
+    """
     if facts.get("home_id"):
         return str(facts["home_id"]), "recorded_home"
+    link = facts.get("stock_link")
+    if isinstance(link, dict) and link.get("status") == "linked":
+        stock_id = link.get("stock_home_id")
+        if isinstance(stock_id, str) and stock_id.strip() and stock_id == stock_id.strip():
+            return "stock-" + stock_id, "stock_register"
     home = facts.get("home")
     if isinstance(home, dict):
         postcode = re.sub(r"[^a-z0-9]+", "", str(home.get("postcode") or "").lower())

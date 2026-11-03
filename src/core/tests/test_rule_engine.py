@@ -613,6 +613,43 @@ class EngineTests(unittest.TestCase):
                 check = self.checks(now=NOW + timedelta(minutes=len(str(home))))[0]
                 self.assertEqual((check["home_scope"], check["home_id"]), ("case_only", "SYN-1"))
 
+    def test_stock_register_link_groups_cases_and_outranks_address(self) -> None:
+        del self.facts["home_id"]
+        self.facts["hazards"] = [self.hazard(hours_ago=60)]
+        link = dict(status="linked", stock_home_id="STOCK-7", shared_anchor=True)
+        for case_id, address in (("SYN-1", "1 Test Road"), ("SYN-2", "Flat 1, 1 Test Rd")):
+            self.facts["home"] = dict(address=address, postcode="TE1 1ST")
+            self.facts["stock_link"] = link
+            self.write(case_id)
+            check = self.checks(case_id=case_id)[0]
+            self.assertEqual(
+                (check["home_scope"], check["home_id"]), ("stock_register", "stock-STOCK-7")
+            )
+        homes = self.engine.alerts(OWNER)["homes"]
+        self.assertEqual(len(homes), 1)
+        self.assertEqual({a["case_id"] for a in homes[0]["alerts"]}, {"SYN-1", "SYN-2"})
+
+    def test_unusable_stock_link_is_ignored(self) -> None:
+        del self.facts["home_id"]
+        bad_links: list[object] = [
+            dict(status="unlinked", stock_home_id="STOCK-7"),
+            dict(status="linked", stock_home_id=None),
+            dict(status="linked", stock_home_id=" STOCK-7"),
+            dict(status="linked", stock_home_id=7),
+            "linked",
+        ]
+        for i, link in enumerate(bad_links):
+            with self.subTest(link=link):
+                self.facts["stock_link"] = link
+                self.write()
+                check = self.checks(now=NOW + timedelta(minutes=i + 1))[0]
+                self.assertEqual((check["home_scope"], check["home_id"]), ("case_only", "SYN-1"))
+
+    def test_recorded_home_id_wins_over_stock_link(self) -> None:
+        self.facts["stock_link"] = dict(status="linked", stock_home_id="STOCK-7")
+        self.write()
+        self.assertEqual(self.checks()[0]["home_scope"], "recorded_home")
+
     def test_recorded_home_id_wins_over_address(self) -> None:
         self.facts["home"] = dict(address="1 Test Road", postcode="TE1 1ST")
         self.write()
