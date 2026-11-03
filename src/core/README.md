@@ -3435,7 +3435,7 @@ install a timer or change a deployment. A failed page exits unsuccessfully;
 retry from the previous page token. Already committed home checkpoints replay,
 and a later sweep advances the clocks.
 
-Alerts group by explicit home ID (case ID when no separate home ID is held),
+Alerts group by explicit home ID, else a linked stock register reference, else a derived address key (case ID when none is held),
 then rank by due time, harm, and stable IDs. Home groups rank by their first
 alert. Attention publication is limited to once per 24 elapsed hours for a
 home/card/step/evidence item; it never suppresses evaluations or breach
@@ -3485,7 +3485,7 @@ inventory are in api/tests. No row grants operational or legal approval.
 | Model never sets awareness or suppresses checks | Met locally: no model dependency/write interface; unsupported spec/body fields denied; SQL facts unchanged by checks | No real-model safety evaluation is claimed |
 | Safe action, owner, clock; breach acknowledgement/outcome | Met locally: payload assertions, exact-owner/capability and acknowledgement-before-outcome HTTP tests | Real decision-owner delegation and tenant assignment not evidenced |
 | No alert sends a resident message | Met locally: no send interface or messaging side effect; HTTP lifecycle preserves contact records and holds | Human communication stays in its separate existing workflow |
-| Home grouping, clock/harm ranking, attention limits, false positives | Partial end-to-end: local grouping/ranking, 24-hour publication and retained-classification tests pass; cases without `home_id` group by a derived `address_key` (normalised postcode and address, `home_scope` shows it) | The address key is not a registered home identifier; cases lacking address or postcode stay `case_only`; no real staff precision/false-positive trial |
+| Home grouping, clock/harm ranking, attention limits, false positives | Partial end-to-end: local grouping/ranking, 24-hour publication and retained-classification tests pass; grouping uses `home_id` (`recorded_home`), else a linked `stock_link` register reference (`stock_register`), else a derived `address_key` (normalised postcode and address); `home_scope` shows which | No case source writes a verified dwelling `home_id`: the stock reference is a unique register reference and the address key is derived; cases lacking address or postcode stay `case_only`; no real staff precision/false-positive trial |
 | Safety routes work with engine down | Met locally: absent/evaluation/persistence failure HTTP tests preserve emergency intake/referral and show unknown/manual route | No Azure outage exercise |
 | Idempotent and checkpointed | Met locally: exact retries, later-time retry, restart, concurrent adapters, atomic rollback and scheduled catch-up/page tests | No deployed timer or live SQL Server recovery evidence; unevaluated intermediate revisions are not reconstructed |
 
