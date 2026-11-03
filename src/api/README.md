@@ -4716,6 +4716,12 @@ approved round. The human owner reviews results before any staff-use decision.
 No participants were tested here; no comprehension result or chat-value pass is
 claimed.
 
+The [acceptance kit](../../docs/reference/research/ux/regulatory-ux-acceptance-protocol.md)
+(2026-11-03) adds per-role assistive-technology scripts, the frozen answer key and
+blank record tables. `python3 src/api/checks/regulatory_comprehension_score.py records.json`
+applies only the thresholds above to anonymous scored records (six unit tests). It is
+preparation: nothing has been run with people and both criteria stay unmet.
+
 ### Issue criterion audit
 
 | #215 criterion | Local disposition | Evidence and remaining gap |

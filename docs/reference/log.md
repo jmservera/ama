@@ -9859,3 +9859,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Issue 531 derive script retry counts in the loading check (Refs #531)
 
 * The loading browser check now reads `SCRIPT_RETRY_DELAYS` from `app.js` instead of hard-coding the attempt count, closing the drift follow-up from the earlier retry-check review. No product change. Criterion 7 (live employee verification) stays unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-531 derive-retry-counts).
+## [2026-11-03] update | Regulatory alert and chat acceptance kit (Refs #215)
+
+* Added [the acceptance kit](./research/ux/regulatory-ux-acceptance-protocol.md): per-role keyboard and screen-reader scripts, a frozen answer key for the five comprehension tasks and blank record tables, plus `src/api/checks/regulatory_comprehension_score.py` for the predeclared thresholds. Unit-tested only.
+* Nothing was run with people. Criteria 3 (manual assistive-technology assessment) and 5 (repairs, housing and grants comprehension) stay unmet; no ticks changed. Evidence is under `.copilot-tracking/` (2026-11-03 issue-215 acceptance kit).
