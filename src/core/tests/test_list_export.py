@@ -24,7 +24,7 @@ class ListExportTests(unittest.TestCase):
         self.assertEqual(out[2], ["'=B", "", '{"k":1}'])
 
     def test_empty_list_gives_empty_file_not_an_error(self) -> None:
-        self.assertEqual(list_export.to_csv([]), '\r\n')
+        self.assertEqual(list_export.to_csv([]), "\r\n")
 
 
 if __name__ == "__main__":

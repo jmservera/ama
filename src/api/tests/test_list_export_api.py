@@ -34,7 +34,7 @@ class ListExportApi(unittest.TestCase):
                 contractor="Test Ltd",
             )
         )
-        data["cases"][0]["resident"]["name"] = "=HYPERLINK(\"x\")"
+        data["cases"][0]["resident"]["name"] = '=HYPERLINK("x")'
         path = Path(tmp.name) / "seed.json"
         path.write_text(json.dumps(data))
         self.store = SqlStore(str(path), str(path.with_suffix(".sqlite")))
@@ -68,7 +68,7 @@ class ListExportApi(unittest.TestCase):
             return error.code, error.read().decode(), dict(error.headers)
 
     def test_registry_matches_lists(self) -> None:
-        self.assertEqual({p[len("/api/"):-4] for p in LIST_EXPORTS}, set(LISTS))
+        self.assertEqual({p[len("/api/") : -4] for p in LIST_EXPORTS}, set(LISTS))
 
     def test_staff_get_csv_matching_json_rows(self) -> None:
         for name in LISTS:
