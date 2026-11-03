@@ -74,13 +74,23 @@ run acceptance checks, short enough that nothing synthetic lingers, and a round
 period that the owner can shorten. The approved period is the policy. Implemented
 expiry is narrower: `CHAT_RETENTION_DAYS` assigns an expiry only to memory
 items, and no application caller yet schedules the memory purge. Update
-2026-11-03: `ChatPrivacy.purge_retention` now deletes threads and messages idle
-longer than the recorded period and expired memory, and does nothing while no
+2026-11-03: `ChatPrivacy.purge_retention` now deletes threads and messages
+whose creation date is older than the recorded period (age-based, owner
+decision 2026-11-03, replacing the merged idle-based rule, so later activity
+does not extend a thread's life) and expired memory, and does nothing while no
 period is recorded. It is unit-tested only. No scheduler calls it, so a
 scheduled run (infrastructure, needs its own review) remains outstanding.
 Ledger metadata follows the ledger policy. This
 is a demo period, not a legal retention schedule, and it does not set one for
 real data.
+
+## Demo-only disclaimer
+
+Owner-approved 2026-11-03. This retention rule and the demo storage approval are
+for constructed demonstrator data only. DPO and Legal review of the lawful
+basis, staff notice, DPIA decision and model provider position is outstanding
+and is not claimed here. Nothing in this record permits real staff or resident
+data.
 
 ## Prohibited use
 

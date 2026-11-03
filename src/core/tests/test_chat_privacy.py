@@ -123,7 +123,7 @@ class ChatPrivacyBehaviour:
         self.assertEqual(c.purge_retention("9999-01-01T00:00:00+00:00"), dict(threads=0, messages=0, memory=0, applied=False))
         self.assertEqual(len(c.locate(U1)["threads"]), 1)
 
-    def test_retention_purge_removes_only_threads_idle_past_the_period(self):
+    def test_retention_purge_is_age_based_and_ignores_later_activity(self):
         c = self.cp(**APPROVED, CHAT_RETENTION_REF="SYNTH-RET-1", CHAT_RETENTION_DAYS="30")
         old = c.start_thread(U1, "ZF-1", TASK)
         c.add_message(U1, old, "user", "synthetic question")
@@ -133,7 +133,8 @@ class ChatPrivacyBehaviour:
         later = (datetime.now(timezone.utc) + timedelta(days=31)).isoformat(timespec="milliseconds")
         keep = c.start_thread(U1, "ZF-3", TASK)
         with c.store.chat_repo.txn():
-            c.store.chat_repo.update(keep, cp.user_key(U1), 1, updated_at=(datetime.now(timezone.utc) + timedelta(days=40)).isoformat(timespec="milliseconds"))
+            c.store.chat_repo.update(old, cp.user_key(U1), 3, updated_at=(datetime.now(timezone.utc) + timedelta(days=40)).isoformat(timespec="milliseconds"))
+            c.store.chat_repo.update(keep, cp.user_key(U1), 1, created_at=(datetime.now(timezone.utc) + timedelta(days=40)).isoformat(timespec="milliseconds"))
             c.store.chat_repo.commit()
         result = c.purge_retention(later)
         self.assertEqual((result["threads"], result["messages"]), (2, 2))
