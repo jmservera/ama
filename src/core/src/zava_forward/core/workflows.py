@@ -337,6 +337,8 @@ class WorkflowMixin:
         """Visible unaccepted handoffs with ageing; escalation stays a named manager's act."""
         controls.require_role(user, projection.STAFF_ROLES, "authorised staff can view handoffs")
         as_of = as_of or _now()
+        if datetime.fromisoformat(as_of).tzinfo is None:
+            raise ValueError("Ageing needs an as-of time with a timezone.")
         with self.lock:
             rows = []
             for c in self.cases.values():
