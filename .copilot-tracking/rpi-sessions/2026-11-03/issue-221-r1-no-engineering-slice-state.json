@@ -1,0 +1,27 @@
+{
+  "task_id": "issue-221-r1",
+  "task_slug": "issue-221-r1-no-engineering-slice",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-03-issue-221-r1-no-engineering-slice-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-03-issue-221-r1-no-engineering-slice-plan.md",
+    "details": ".copilot-tracking/details/2026-11-03-issue-221-r1-no-engineering-slice-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-03-issue-221-r1-no-engineering-slice-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-03-issue-221-r1-no-engineering-slice-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Critique executed once, direct, applied: no code slice", "status": "done", "evidence": "plan file"},
+    {"decision": "Review executed once, conformant for evidence-only slice", "status": "done", "evidence": "review file"}
+  ],
+  "blockers": [
+    {"id": "criterion-5", "summary": "Actual RULE-024 restart authority appointment needs human decision", "resolution": null},
+    {"id": "criterion-6", "summary": "Human-witnessed drill and corrective-test acceptance need human action", "resolution": null}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Human appointment and witnessed drill; no engineering work"},
+  "prioritized_follow_ups": []
+}
