@@ -4196,7 +4196,9 @@ named owner on receipt, listed by `hazard_referrals()` until the owner records a
 any hazard clock, so the existing hazard process is not delayed by challenge review. `view()` adds a
 plain-language `protection` statement (a challenge does not change tenancy, repairs or services), and
 `overdue(today)` lists unresolved challenges past their promised next update for the human owner;
-neither changes any record.
+neither changes any record. A hazard concern may carry `received_on`; the read-only
+`hazard_referrals_overdue(today, max_days=1)` lists unhanded referrals older than the limit or of
+unknown age so the owner can follow up. It is a flag for human action, not a hazard clock.
 
 Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
