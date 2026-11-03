@@ -465,6 +465,73 @@ class PanelTests(roles.Matrix):
                 )
         self.assertEqual(self.prompts, [])
 
+    DEMO_ON = {"ZF_CHAT_DEMO_ACTIVATION": "approved-2026-11-03", "ZF_DEPLOYMENT_PROFILE": "demo"}
+
+    def test_demo_activation_default_denies_and_rejects_wrong_values(self) -> None:
+        from zava_forward.core import ai_registry
+
+        task = ai_registry.CHAT_TASK
+        self.assertFalse(ai_registry.authorizes_live(task, {}))
+        for env in (
+            {"ZF_CHAT_DEMO_ACTIVATION": "approved-2026-11-03"},
+            {"ZF_DEPLOYMENT_PROFILE": "demo"},
+            {**self.DEMO_ON, "ZF_CHAT_DEMO_ACTIVATION": "approved"},
+            {**self.DEMO_ON, "ZF_CHAT_DEMO_ACTIVATION": " approved-2026-11-03"},
+            {**self.DEMO_ON, "ZF_DEPLOYMENT_PROFILE": "pilot"},
+            {**self.DEMO_ON, "ZF_DEPLOYMENT_PROFILE": "production"},
+        ):
+            self.assertFalse(ai_registry.authorizes_live(task, env), env)
+        self.assertTrue(ai_registry.authorizes_live(task, self.DEMO_ON))
+        # The switch authorizes only the chat task, and the registry record stays disabled and unapproved.
+        self.assertFalse(ai_registry.authorizes_live("briefing", self.DEMO_ON))
+        entry = ai_registry.get(task)
+        self.assertEqual(entry["accountable_individual"], ai_registry.UNKNOWN)
+        self.assertFalse(entry["enabled"])
+        rec = entry["demo_activation"]
+        self.assertEqual((rec["accountable_owner"], rec["decision_date"]), ("jmservera", "2026-11-03"))
+        self.assertIn("DPO and Legal review outstanding", rec["outstanding"])
+
+    def test_demo_switch_lets_the_model_answer_with_gates_in_force(self) -> None:
+        with patch("zava_forward.api.server.chat_admission", wraps=chat_admission), patch.dict(os.environ, self.DEMO_ON):
+            code, status = self.api(ROLE, "/api/chat/status")
+            self.assertEqual((code, status["activation"], status["demo_activation"]), (200, "demo-only", True))
+            self.assertIn("No DPO, Legal or RAI approval", status["demo_disclaimer"])
+            d = self.ask(self.thread())[1]
+            self.assertEqual((d["kind"], d["model"]), ("answer", "azure-openai"))
+            self.assertEqual(d["consumption"]["model_calls"], 1)
+            self.assertEqual(len(self.prompts), 1)
+            # Refusals still happen before any model call.
+            before = len(self.prompts)
+            refused = self.ask(self.thread(), "Please approve the consent for this resident.")[1]
+            self.assertEqual(refused["kind"], "refused")
+            self.assertEqual(len(self.prompts), before)
+
+    def test_demo_switch_off_or_wrong_keeps_rules_only_status_and_no_call(self) -> None:
+        wrong = {**self.DEMO_ON, "ZF_CHAT_DEMO_ACTIVATION": "yes"}
+        for env in ({}, wrong):
+            with patch("zava_forward.api.server.chat_admission", wraps=chat_admission), patch.dict(os.environ, env):
+                status = self.api(ROLE, "/api/chat/status")[1]
+                self.assertEqual((status["demo_activation"], status["demo_disclaimer"]), (False, None))
+                self.assertNotEqual(status["activation"], "demo-only")
+                d = self.ask(self.thread())[1]
+                self.assertEqual(d["model"], "workflow-only")
+                self.assertEqual(d["consumption"]["provider_outcome"], "activation-not-approved")
+        self.assertEqual(self.prompts, [])
+
+    def test_demo_switch_provider_failure_falls_back_to_workflow_only(self) -> None:
+        with patch("zava_forward.api.server.chat_admission", wraps=chat_admission), patch.dict(os.environ, self.DEMO_ON):
+            tid = self.thread()
+            for outcome in ("provider-unavailable", "timeout", "disabled"):
+                self.model = lambda _p, o=outcome: envelope(None, o)
+                d = self.ask(tid)[1]
+                self.assertEqual((d["kind"], d["model"]), ("answer", "workflow-only"))
+                self.assertTrue(d["citations"])
+
+    def test_web_panel_shows_demo_disclaimer_and_model_generated_label(self) -> None:
+        js = (WEB / "chat.js").read_text()
+        for needle in ("admission.demo_disclaimer", "chat-demo-disclaimer", "Model-generated, not approved. Demo only."):
+            self.assertIn(needle, js)
+
     def test_turn_refused_before_dispatch_still_records_a_receipt(self) -> None:
         user = self.store.staff[self.email(ROLE)]
         tid = self.thread()

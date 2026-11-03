@@ -752,10 +752,13 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, {"skills": chat_skills()})
                 if not post and parts == ["status"]:
                     c.current_user(user)
+                    demo = ai_registry.demo_activation_honoured(CHAT_TASK)
                     return self._json(200, {
                         "warning": CHAT_WARNING, "retention": c.privacy.decision()["retention"],
                         "storage_approved": c.privacy.decision()["approved"],
-                        "activation": "disabled; approval evidence required",
+                        "activation": "demo-only" if demo else "disabled; approval evidence required",
+                        "demo_activation": demo,
+                        "demo_disclaimer": ai_registry.DEMO_ACTIVATION["disclaimer"] if demo else None,
                         "limits": {"calls_per_turn": 1, "retries": 0, "output_tokens": 600,
                                    "context_chars": MAX_INPUT_CHARS, "history_chars": MAX_HISTORY_CHARS,
                                    "memory_used": False, "authority": "engineering caps, not spend authorization"}})
