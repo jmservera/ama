@@ -604,11 +604,14 @@ registerRoleScreen({
     return this.summary(entries);
   },
   summary(entries) {
-    return screenPanel("Choice and update commitments across this page of homes",
-      h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. A paused or withdrawn measure is listed separately from contact and access. Open a home for the full version history."),
-      screenTable("Choice and update commitments by home",
-        ["Home", "Measure choices (latest version)", "Paused or withdrawn", "Update commitment"],
-        entries.map(choiceQueueRow), Infinity));
+    return h("div", {},
+      screenPanel("Choice and update commitments across this page of homes",
+        h("p", {}, "Read-only summary of the homes on this page, not a portfolio total. A paused or withdrawn measure is listed separately from contact and access. Open a home for the full version history."),
+        screenTable("Choice and update commitments by home",
+          ["Home", "Measure choices (latest version)", "Paused or withdrawn", "Update commitment"],
+          entries.map(choiceQueueRow), Infinity)),
+      screenWithheld(["Resident phone, email and postal contact history (shown only as a safe route reference)",
+        "Detailed access and household history beyond the update commitment", "Contractor capacity and offered slots"]));
   },
   render(c) {
     const measures = c.measure_decisions || [];
