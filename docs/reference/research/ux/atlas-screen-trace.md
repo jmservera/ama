@@ -63,7 +63,7 @@ Source: [five design themes](./customer-journeys/customer-journey-atlas.md#five-
 | Tension | Where resolved | Resolution | Status |
 | --- | --- | --- | --- |
 | Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text under a "Not shown for this role" panel (on the per-home view of both screens, on the `programme-queue` overview and on the `resident-choice` page summary) rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; rendered behaviour and conformance not assessed |
-| Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Proposed rule; rendered behaviour and conformance not assessed |
+| Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Rule stated in text on `procurement-packages` since 2026-11-03 (offer is not a booking or promise, resident choice takes precedence, packages in reference order not ranked by utilisation); rendered behaviour, resident-first ordering across screens and conformance not assessed |
 
 ## Same-home walkthrough
 
@@ -102,7 +102,7 @@ in the design system stylesheet, controls are native elements, scrollable table
 regions are labelled and focusable, tables have captions and column scope, state
 is stated in text rather than inline colour, the screen styles add no motion, and
 each selected-home view states that no message, approval or record change is made.
-It also guards that the "Not shown for this role" panel is present on
+It also guards that the "Offered capacity and resident choice" panel is on `procurement-packages` with packages sorted by reference, and that the "Not shown for this role" panel is present on
 `programme-queue` and `resident-choice` and that the rule stays labelled proposed. These are source-level
 checks only; they do not render a page, use assistive technology or involve users.
 

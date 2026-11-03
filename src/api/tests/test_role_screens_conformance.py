@@ -75,6 +75,14 @@ class RoleScreenConformance(unittest.TestCase):
         self.assertIn("is not authorisation", SCREENS)
         self.assertIn("Proposed rule; rendered behaviour and conformance not assessed", TRACE)
 
+    def test_utilisation_versus_choice_is_stated_on_package_screen(self) -> None:
+        start = SCREENS.index('id: "procurement-packages"')
+        block = SCREENS[start : SCREENS.index("registerRoleScreen({", start)]
+        self.assertIn('screenPanel("Offered capacity and resident choice"', block)
+        self.assertIn("not a booking and not a promise", block)
+        self.assertIn("never ranked by utilisation or headroom", block)
+        self.assertIn(".sort((x, y) => String(x.id).localeCompare(String(y.id)))", block)
+
 
 if __name__ == "__main__":
     unittest.main()

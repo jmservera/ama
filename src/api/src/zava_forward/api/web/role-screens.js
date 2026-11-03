@@ -932,10 +932,12 @@ registerRoleScreen({
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only reader view. It records no approval, issues no work order and books no visit. Readiness here is a draft only. Contract terms, capacity and delegations are Unknown unless a fixture or recorded evidence says so. Source: desk research, not observed behaviour."),
         h("p", {}, `Work orders shown are for home ${c.id} only.`)),
+      screenPanel("Offered capacity and resident choice",
+        h("p", {}, "Offered capacity is not a booking and not a promise to any resident. A resident's measure-specific choice, pause or withdrawal is recorded and shown on the Resident choice screen, and it takes precedence over any offered slot. Packages are listed in reference order, never ranked by utilisation or headroom.")),
       screenPanel("Package queue",
         screenTable("Packages with period, scope, version and capacity",
           ["Package", "Period", "Scope and version", "Contract or call-off reference", "Contractor", "Offered", "Recorded committed", "In use", "Recorded headroom", "Capacity evidence status"],
-          packages.flatMap((p) => (p.capacity?.length ? p.capacity : [{}]).map((cap) => [
+          [...packages].sort((x, y) => String(x.id).localeCompare(String(y.id))).flatMap((p) => (p.capacity?.length ? p.capacity : [{}]).map((cap) => [
             `${wording(p.id)}: ${wording(p.name)}`, `${wording(p.period_from)} to ${wording(p.period_to)}`,
             `${wording(p.scope)} (v${wording(p.scope_version)})`, `${wording(p.contract_ref)} v${wording(p.contract_version)}`,
             cap.contractor, cap.offered, cap.committed, cap.in_use, cap.headroom, wording(cap.evidence_status)])))),
