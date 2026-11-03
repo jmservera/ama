@@ -292,6 +292,14 @@ An unknown field, stale version, foreign candidate or extra server-owned key
 is refused. JSON supports one Store/writer with in-instance version checks;
 SQLite additionally protects independent writers with database rowversions.
 
+`form_export.draft_export(store, user, case_id, draft_id)` is a read-only,
+held export of one working review: field values with source ID, version,
+document hash and locator, template/schema/input versions, attachments, stale
+fields and open issues, plus a content hash. It is always `Held`, `reviewed`
+false, `Not submitted` and eligibility `Not assessed`; it writes nothing and a
+reviewed pack stays blocked on Finance and template authority. The manual path
+is the working review itself, and unavailable evidence returns `Unavailable`.
+
 `view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
 diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
 valid, current values only, combine predicates with OR and compare types
