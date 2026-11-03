@@ -283,7 +283,7 @@ unit tests run as up to 3 deterministic shards, and the receipt records
 `test_shards` and `shard_helpers` (helper-imported test classes run in the last
 shard). Sharding fails closed when a discovered test matches no shard, and
 verification re-derives shard commands from the tree. A resumed child plans its
-own shards from its own `--jobs`. Gate commands run with stdin closed; run the
+own shards from its own `--jobs`. Gate commands run with stdin redirected from /dev/null; run the
 runner with `< /dev/null` so a test that prompts cannot hang a terminal-attached
 run. Full-scope runs build fresh images
 automatically and verify rejects layer-cache full receipts. A `--changed`

@@ -141,8 +141,8 @@ receipt records what ran and what was skipped.
   the last shard, and the helper names are recorded. Shard commands are part of
   the trusted matrix and are re-derived from the tree and the recorded helpers
   at verification. Receipt fields: `test_shards`, `shard_helpers`.
-* Stdin: every gate command runs with stdin closed (`subprocess.DEVNULL`), but
-  run the wrapper with `< /dev/null` as well so a prompting test cannot hang it.
+* Stdin: every gate command runs with stdin redirected from `/dev/null` (`subprocess.DEVNULL`); the
+  wrapper itself still needs `< /dev/null` so a terminal prompt cannot hang it.
 * Scoped skips: `--changed` skips project groups and image builds whose
   paths, or whose dependencies' paths, are untouched (a `src/api`-only change
   skips the agents, orchestrator and importer images and projects). The
