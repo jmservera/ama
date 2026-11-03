@@ -9983,3 +9983,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] add | Easy Auth intermittent 500s investigation (Refs #810)
 
 * Added [the investigation note](./research/easy-auth-intermittent-500-2026-11-03.md) from a read-only Azure review and a 4 x 30 burst on the demo API. About 1 to 3 percent of forwarded requests return an empty-body 500 that the application does not produce; authentication-excluded paths are affected equally, and a no-auth app was clean. Platform logs were not readable (network perimeter), so the precise fault is unproven. Criteria 2 and 3 stay unmet pending an owner decision; no Azure resource was changed. Evidence under `.copilot-tracking/` (2026-11-03 issue-810).
+## [2026-11-03] update | Resident pages demonstration-only Legal/DPO disclaimer (Refs #441)
+
+* Both synthetic resident pages (showcase and #444 preview) now state that Legal and DPO review is outstanding and the pages are demonstration only. This records the owner decision of 2026-11-03 (same basis as #766) and the [API README](../../src/api/README.md) notes it.
+* No Legal or DPO approval, consent, retention or data change is implied. #441 criteria 5 (FR-044/AC-084 owner disposition) and 9 (exact-head review and gates) stay unmet; no ticks changed. Unit-tested only; WCAG browser and assistive-technology proof stay unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-441 demo disclaimer).

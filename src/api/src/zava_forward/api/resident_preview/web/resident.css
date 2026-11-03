@@ -21,6 +21,7 @@ body{margin:0;font:var(--fontSizeBase400)/1.5 var(--fontFamilyBase);color:var(--
 .skip{position:absolute;left:.5rem;top:-4rem;background:var(--surface);color:var(--ink);padding:.5rem 1rem;z-index:3;border:2px solid var(--ink)}
 .skip:focus{top:.5rem}
 :focus-visible{outline:var(--focus-w) solid var(--focus-ink);outline-offset:var(--focus-off);box-shadow:0 0 0 var(--focus-off) var(--focus)}
+.synthetic .review-note{display:block;margin-top:.25rem;font-weight:600}
 .synthetic{background:var(--caution-bg);border-bottom:3px solid var(--caution);padding:.6rem var(--spacingHorizontalL);color:var(--ink)}
 .top{display:flex;gap:.75rem;align-items:center;background:var(--brand);color:#fff;padding:.6rem var(--spacingHorizontalL)}
 .brand{margin:0;font-weight:600;font-size:1.15rem}
