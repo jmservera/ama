@@ -12,6 +12,7 @@ from typing import Any
 from zava_forward.core.regulatory_privacy import (
     CLASSES,
     QUERY_FIELDS,
+    metering_record,
     minimise_query,
     readiness_report,
     record_human_decision,
@@ -203,3 +204,44 @@ class HumanDecision(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class MeteringRecordTests(unittest.TestCase):
+    OK: dict[str, Any] = dict(
+        surface="chat",
+        record_id="turn-0001",
+        model_id="model-a",
+        prompt_version="p1",
+        input_tokens=10,
+        output_tokens=5,
+        occurred_at="2026-11-03T12:00:00+00:00",
+    )
+
+    def test_identifiers_counts_and_versions_pass_into_usage_class(self) -> None:
+        r = metering_record(dict(self.OK))
+        self.assertEqual(r["retention_class"], "usage")
+        self.assertEqual(r["input_tokens"], 10)
+
+    def test_content_and_cost_fields_are_refused(self) -> None:
+        for extra in ("prompt", "message", "retrieved_text", "case_notes", "cost", "price"):
+            with self.assertRaises(ValueError, msg=extra):
+                metering_record({**self.OK, extra: "x"})
+
+    def test_free_text_in_identifier_and_bad_counts_are_refused(self) -> None:
+        for kw in (
+            dict(model_id="what is the tenant's health issue"),
+            dict(prompt_version="x" * 65),
+            dict(input_tokens=-1),
+            dict(input_tokens=True),
+            dict(surface="alert"),
+            dict(occurred_at="2026-11-03T12:00:00"),
+        ):
+            with self.assertRaises(ValueError, msg=str(kw)):
+                metering_record({**self.OK, **kw})
+
+    def test_required_fields_and_input_are_not_mutated(self) -> None:
+        with self.assertRaises(ValueError):
+            metering_record(dict(surface="chat"))
+        src = dict(self.OK)
+        metering_record(src)
+        self.assertEqual(src, self.OK)
