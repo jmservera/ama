@@ -1,4 +1,5 @@
 """Retained ranking snapshot publication (Refs #79)."""
+
 import json
 import tempfile
 import unittest
