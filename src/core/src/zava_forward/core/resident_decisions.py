@@ -163,8 +163,36 @@ def _owner_rights(store, actor, identity, email=None):
         raise PermissionError("Only the named current owner or a resident-workflow manager can record this step.")
 
 
+def nomination_follow_up(record, today=None):
+    """Read-only readiness view: never a decision, priority, consent or hazard change."""
+    owner = record.get("owner")
+    ack = record.get("acknowledgement")
+    route = record.get("non_digital_route")
+    missing = [label for label, value in (
+        ("named owner", owner and owner.get("name")),
+        ("staff-recorded acknowledgement", ack and ack.get("reference")),
+        ("staffed non-digital route", route),
+    ) if not value]
+    due = record.get("next_update")
+    try:
+        overdue = date.fromisoformat(due) < (today or datetime.now(UTC).date()) if due else "Unknown"
+    except (TypeError, ValueError):
+        overdue = "Unknown"
+    return dict(
+        route_ready=not missing,
+        missing=missing or [],
+        next_update_overdue=overdue,
+        re_review_pending=bool(record.get("corrections")),
+        review_owner="Human identity and eligibility review; policy owner not yet appointed (OD-41/42)",
+        not_inferred=["priority change", "consent or refusal", "vulnerability", "sanction",
+                      "hazard clock change", "eligibility"],
+    )
+
+
 def followup_view(case):
     """Expose missing legacy provenance without mutating or inventing it."""
+    for record in case.get("nomination_records", []):
+        record["follow_up"] = nomination_follow_up(record)
     for req in case.get("service_requests", []):
         if req.get("route") == "Independent review":
             req["reviewed_identity_status"] = _identity_status(req.get("reviewed_identity"))

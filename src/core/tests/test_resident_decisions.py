@@ -164,6 +164,31 @@ class JsonResidentDecisions(unittest.TestCase):
             **changes,
         )
 
+    def test_nomination_follow_up_is_read_only_and_shows_gaps_as_unknown(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        stored = copy.deepcopy(self.store.cases["ZF-1"])
+        view = self.open_store().detail("ZF-1", self.sam)["nomination_records"][0]["follow_up"]
+        self.assertTrue(view["route_ready"])
+        self.assertEqual(view["missing"], [])
+        self.assertIs(view["next_update_overdue"], False)
+        self.assertFalse(view["re_review_pending"])
+        self.assertIn("eligibility", view["not_inferred"])
+        record = copy.deepcopy(self.store.cases["ZF-1"]["nomination_records"][0])
+        record.update(owner=None, next_update="2000-01-01", corrections=[{}])
+        record.pop("non_digital_route")
+        legacy = resident_decisions.nomination_follow_up(record, date(2026, 1, 1))
+        self.assertFalse(legacy["route_ready"])
+        self.assertEqual(
+            legacy["missing"], ["named owner", "staffed non-digital route"]
+        )
+        self.assertIs(legacy["next_update_overdue"], True)
+        self.assertTrue(legacy["re_review_pending"])
+        record["next_update"] = None
+        self.assertEqual(
+            resident_decisions.nomination_follow_up(record)["next_update_overdue"], "Unknown"
+        )
+        self.assertEqual(self.store.cases["ZF-1"], stored)
+
     def test_intake_original_subject_correction_and_manual_history(self) -> None:
         proposal = self.priority_fixture()
         self.store.resident_action(self.sam, "ZF-1", self.challenge_body(proposal))

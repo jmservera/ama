@@ -198,6 +198,14 @@ reuse a deleted record's identity or accept a stale correction for another
 subject. Existing sequential identifiers remain valid for retained records.
 Corrections must use the recorded identifier and its current version.
 
+Case detail adds a computed, read-only `follow_up` view to each nomination
+record for users who may see intake: whether the named owner, staff-recorded
+acknowledgement and staffed non-digital route are all present (missing items
+are listed, never assumed), whether the promised next update date has passed
+(`Unknown` when absent), and whether a correction awaits human re-review. It is
+not stored, ranks nothing and infers no eligibility, consent, vulnerability,
+sanction or hazard-clock change.
+
 Tenure reports retain each supplied household reference, reported tenure and
 lease interest, source, unresolved identity state, follow-up owner and update
 date. A report is not verified household membership. Verification, decision
