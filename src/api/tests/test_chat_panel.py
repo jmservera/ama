@@ -502,6 +502,34 @@ class PanelTests(roles.Matrix):
         self.assertEqual(len(self.store.chat_resume(owner, tid)["messages"]), stored)
         self.assertEqual(self.prompts, [])
 
+    def test_role_gate_denials_record_one_receipt_per_turn_route(self) -> None:
+        tid = self.thread()
+        for role in (projection.CONTRACTOR,):
+            for route in ("ask", "messages"):
+                before = len([e for e in self.store.audit_entries() if e["action"] == "chat.turn"])
+                code, _ = self.api(
+                    role, f"/api/chat/threads/{tid}/{route}", {"content": "SECRET-QUESTION"}
+                )
+                self.assertEqual(code, 403, (role, route))
+                turns = [e for e in self.store.audit_entries() if e["action"] == "chat.turn"]
+                self.assertEqual(len(turns), before + 1, (role, route))
+                receipt = json.loads(turns[-1]["detail"])
+                self.assertEqual(
+                    (receipt["outcome"], receipt["model_calls"]), ("access-rejected", 0)
+                )
+                self.assertIsNone(receipt["tokens"])
+                self.assertNotIn("SECRET-QUESTION", turns[-1]["detail"])
+        self.assertEqual(self.prompts, [])
+
+    def test_role_gate_denial_of_other_chat_routes_records_no_turn_receipt(self) -> None:
+        tid = self.thread()
+        before = len([e for e in self.store.audit_entries() if e["action"] == "chat.turn"])
+        code, _ = self.api(projection.CONTRACTOR, f"/api/chat/threads/{tid}/archive", {})
+        self.assertEqual(code, 403)
+        self.assertEqual(
+            len([e for e in self.store.audit_entries() if e["action"] == "chat.turn"]), before
+        )
+
     def test_legacy_route_uses_citations_and_refusals(self) -> None:
         tid = self.thread()
         code, reply = self.api(ROLE, f"/api/chat/threads/{tid}/messages", {"content": "Stage?"})

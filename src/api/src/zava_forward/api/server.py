@@ -980,6 +980,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(200, app.provider.logout_response(switch=body.get("switchAccount") is True), {"Set-Cookie": "zf_session=; Max-Age=0; Path=/"})
             s = app.store
             if not projection.allowed(u, "post", "POST"):
+                turn = url.path.strip("/").split("/")
+                if len(turn) == 5 and turn[:3] == ["api", "chat", "threads"] and turn[4] in ("messages", "ask"):
+                    app.panel.record_rejected(u, turn[3])
                 if url.path in ("/api/bulk-edits/preview", "/api/bulk-edits/apply"):
                     s.audit(u["email"], "bulk_edit_rejected", "-", "Role cannot use administrative bulk edits.")
                 return self._json(403, {"error": "Your role does not include this."})
