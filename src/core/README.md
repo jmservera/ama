@@ -3914,6 +3914,13 @@ not a complete retention or rights implementation; the
 [draft DPIA](../../docs/reference/research/chat-memory-dpia.md#regulatory-assistant-dpia-draft-for-dpo-review-2026-10-16-refs-217)
 requires DPO review and remains unapproved.
 
+`regulatory_privacy.minimise_query(purpose, fields)` is a model-free guard for
+any future Foundry query. Each purpose (`rule_lookup`, `check_explain`,
+`alert_triage`) has a field allowlist; other fields and every special-category
+field are dropped and reported by name only, never value. An unknown purpose is
+refused with a manual path to the rule card and a named human. It is not wired
+to a live Foundry call, so the criterion stays partial.
+
 Rule/card approvals, source reviews, checks and alerts already retain append-only
 SQL history. SQL chat turn events now include actor/role, case/thread/sequence,
 model, citation IDs and answer hash, never question/answer/excerpt/health content.
