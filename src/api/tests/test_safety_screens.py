@@ -287,6 +287,20 @@ class SafetyScreens(unittest.TestCase):
             self.assertRegex(css, r"\." + re.escape(cls) + r"(?![\w-])", cls)
             self.assertIn(cls, doc, cls)
 
+    def test_rendered_views_have_no_role_simulator_and_states_are_text(self) -> None:
+        states = hazard(
+            received_at="2026-10-30T11:00:00+00:00",
+            accepted_at="2026-10-30T12:00:00+00:00",
+            state="Accepted",
+        )
+        for screen in run([hazard(), states]).values():
+            for view in (screen["tree"], screen["empty"], screen["summary"]):
+                text = json.dumps(view)
+                self.assertNotRegex(text, r"(?i)simulat|impersonat|act as|switch role")
+                self.assertNotIn("<select", text)
+                for cell in find_all(view, "td"):
+                    self.assertRegex(json.dumps(cell["kids"]), r"[A-Za-z]")
+
 
 if __name__ == "__main__":
     unittest.main()
