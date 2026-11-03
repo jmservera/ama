@@ -278,6 +278,15 @@ bounded parallelism; select N for available resources. When a focused run
 produces a partial receipt, verify it with `--required-scope partial` and
 check the recorded scope against the planned unit and focused tests. That
 option does not downgrade a full-tier requirement or replace omitted tests.
+Omit `--jobs` to derive N from the host; full-scope runs build fresh images
+automatically and verify rejects layer-cache full receipts. A `--changed`
+receipt records skipped groups and reasons and stays valid after `origin/main` moves only when `--verify-receipt` proves the move
+touched no path of the candidate's changed set or its dependents (it prints
+`BASE RELAXED`); otherwise rerun on the current base. Full-tier receipts always
+need the exact current base. To merge several PRs in a row, rebase them into one
+stack, gate the tip once with `--stack PR_HEAD` per PR in order, and verify each
+PR with `--stack-member PR_HEAD` before merging it (see the
+[gate speed controls](../../src/README.md#gate-speed-controls-issue-470)).
 To resume a failed run, use `--resume FAILED_RECEIPT` with a new `--out`
 directory; preserve the immutable parent receipt and adverse evidence.
 Retain verification images until `--verify-receipt` succeeds; do not remove

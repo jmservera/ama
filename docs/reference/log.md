@@ -9809,3 +9809,25 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   keeps it labelled a proposed rule; rendered behaviour, WCAG 2.2 and
   design-system acceptance, and #155 validation stay unmet. Evidence is under
   `.copilot-tracking/` (2026-11-03 issue-233 withheld panel).
+## [2026-11-02] update | Faster local gate controls (Refs #470)
+
+* Implemented the six owner-approved gate-speed recommendations in
+  `tools/rpi-checks.py`: auto `--jobs`, sharded API unit tests, recorded scoped
+  skips, Docker layer cache with `--fresh-images`, proof-based base-match
+  relaxation for partial receipts and `--stack` batch gating. Policy text is in
+  [the local gate section](../../src/README.md#gate-speed-controls-issue-470).
+  Unit-tested only; the complete gate and timings are not yet run, so #470
+  criterion 4 stays open. Original RPI evidence is under `.copilot-tracking/`
+  (2026-11-02 issue-470-gate-speedups).
+
+## [2026-11-03] update | Correction of gate speed controls (Refs #470)
+
+* Corrected PR #792 after independent review (Pass with fixes): base relaxation
+  now refuses moves read by the preflight, namespace or static groups, tooling,
+  extras and markdown under `src/`; API test sharding fails closed when a
+  discovered test matches no shard; `--stack-member` requires ancestry of the
+  verified head; full-scope receipts must use fresh images. Stack, resume and
+  receipt-format limits are documented in
+  [the local gate section](../../src/README.md#gate-speed-controls-issue-470).
+  Unit-tested only; the complete gate has not been run. Original RPI evidence
+  is preserved with dated correction notes under `.copilot-tracking/`.
