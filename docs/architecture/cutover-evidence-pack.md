@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-11-02
+ms.date: 2026-11-03
 ms.topic: reference
 ---
 
@@ -2742,3 +2742,60 @@ Keep Refs #198. Recovering any missing historic scorecards or accepting a
 historical sequencing/scoring deviation belongs to the owner; no such
 decision is guessed here. This does not block the bounded documentation correction
 or authorize issue closure, merge, release or live use.
+
+## Rubric before-and-after score record (2026-11-03, Refs #198 #203)
+
+Refs #198, Refs #203. Owner decision 2026-11-03: record the pre-cut-over
+total against the after-cleanup total, with the dip cause and recovery
+expectation. Source: the Git history of `.github/rubric/scores/latest.json`
+read on 2026-11-03 at main `9a9f9dada`. No model scoring was dispatched, no
+score edited and no workflow or registry changed. Earlier sections of this pack
+are preserved; this record adds to them.
+
+| Point | Date (UTC) | Scored commit | Total | A / B / C / D | Source |
+| --- | --- | --- | --- | --- | --- |
+| Pre-migration baseline | 2026-10-14 | `80660e95` | 47 | not restated | [run 38590975162](https://github.com/jmservera/ama/actions/runs/38590975162) |
+| Pre-cut-over (pre-deletion of the pointer, #499) | 2026-10-27 17:18 | `89c52cba` | 77 | 34 / 23 / 11 / 9 | [run 40548249080](https://github.com/jmservera/ama/actions/runs/40548249080) |
+| After cleanup, current main | 2026-11-03 13:58 | `949f9346` | 77 | 34 / 23 / 11 / 9 | [run 41647768785](https://github.com/jmservera/ama/actions/runs/41647768785) |
+
+Result: pre-cut-over 77, after cleanup 77, delta 0, floors met, outcome Pass,
+`rubric_version` 2 throughout. All 118 distinct scoring points recorded between
+2026-10-27 17:18 and 2026-11-03 are 77. The solution-code criteria are
+unchanged between the two points: A1=5, A3=5, A4=5, A5=5, A6=5, A7=4, B6=5.
+The 47 baseline to 77 delta (+30) is not attributable to the migration: the
+intervening scores also include feature, deck and portfolio changes (see the
+2026-10-27 reconciliation above).
+
+Dip cause: no dip occurred across the cut-over window. The totals rose from 64
+(2026-10-24) to 75 and then 77 (2026-10-27), before the pointer deletion, and
+stayed at 77 after it. There is therefore no moved-out-of-glob or
+deleted-evidence loss to assign. Totals below 47 in the history (for example
+22 on 2026-10-07 and 45 to 54 on 2026-10-13 and 2026-10-14) precede the first
+migration PR and are not cut-over effects. They are kept as scorer variance
+and earlier portfolio changes, not explained further here.
+
+Recovery expectation: none needed, because nothing was lost. If a later
+registry or deletion PR does cause a dip, the owner-accepted rule of
+2026-10-14 applies: record the removed path and criterion, then recover through
+changed `src/` evidence using the route table above, never by changing the
+version or treating an unchanged file as new.
+
+Registry state: `.github/rubric/artifacts.json` contains no `mvp/` or
+`prototype/` glob; `src/**/*` covers package code, tests, `pyproject.toml`,
+Dockerfiles and READMEs.
+
+### Acceptance effect
+
+| Criterion | Effect of this record and repository evidence |
+| --- | --- |
+| #198 before-and-after comparison with recovery expectation in the sign-off record | Evidenced here (47 baseline, 77 pre-cut-over, 77 after cleanup, recovery stated). The owner confirms this pack section is the sign-off record |
+| #198 baseline, src coverage, README, lock file | Already ticked or not applicable (#292, #705, #851); unchanged |
+| #198 per-PR dual-window records | Still unmet: merge snapshots are carried scores, not contemporaneous per-PR records. Not provable retroactively |
+| #198 dedicated cut-over registry PR and ordering | Still unmet as written: removal was spread across #295, #300, #302 and #851. The glob removal is proven; the owner decides whether to accept the sequence |
+| #203 rubric run on main after cleanup compared with pre-cut-over, dip explained | Proven for the local record: 77 against 77, no dip. Based on workflow scores recorded in Git, not a new run |
+| #203 literal `mvp/` and `prototype/` search | Still unmet: 51 tracked files still match the literal pattern, many outside dated historical records |
+| #203 relative links in changed docs | Not re-evidenced here; see the earlier link audits and the test of #850 |
+| #203 deployed app and CI green from `src/` | Still unmet: needs live deployed-app and hosted CI evidence, not produced here |
+
+No issue is closed by this record. Ticking is for the owner after merge, using
+this PR as evidence.
