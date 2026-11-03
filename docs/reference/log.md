@@ -9889,3 +9889,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   two tension screens. The rule stays a proposed rule; rendered behaviour, WCAG
   2.2 and design-system acceptance, and #155 validation stay unmet. Evidence is
   under `.copilot-tracking/` (2026-11-03 issue-233 resident-choice summary).
+
+## [2026-11-03] update | WCAG baseline target size rule check (Refs #151)
+
+* Recorded a 24 CSS px minimum height for link buttons and the map list summary in the [WCAG baseline](./research/ux/wcag-conformance-baseline.md), with a static test, and refreshed the automated-check status. Owner decisions O-1 to O-5, manual screen-reader and keyboard records and the rendered audit remain unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-151 target size).

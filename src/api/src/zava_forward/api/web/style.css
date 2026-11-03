@@ -268,10 +268,10 @@ th,td{text-align:left;padding:.45rem .6rem;border-bottom:1px solid var(--line);f
 .cluster-safety{display:block}
 @media(forced-colors:active){.map-symbol{color:CanvasText}.map-symbol svg{fill:Canvas;stroke:CanvasText}.map-symbol.hazard{color:CanvasText}.map-symbol.hazard svg,.map-symbol.long svg{stroke:CanvasText}.cluster,.cluster.hazard{color:CanvasText;background:Canvas;border-color:CanvasText}.tile[aria-pressed=true]{border:3px double Highlight}}
 .maplist{margin:.6rem 0}
-.maplist summary{cursor:pointer;font-weight:600}
+.maplist summary{cursor:pointer;font-weight:600;min-height:1.5rem}
 .plainlist{list-style:none;padding:0;margin:.4rem 0;max-height:16rem;overflow:auto}
 .plainlist li{margin:.2rem 0}
-.linkbtn{background:none;border:0;padding:var(--sp-1) 0;color:var(--link,#0b5d6b);text-decoration:underline;cursor:pointer;font:inherit;text-align:left}
+.linkbtn{background:none;border:0;min-height:1.5rem;padding:var(--sp-1) 0;color:var(--link,#0b5d6b);text-decoration:underline;cursor:pointer;font:inherit;text-align:left}
 .linkbtn:focus-visible,.maplist summary:focus-visible{outline:var(--focus-w) solid var(--focus-ink);outline-offset:var(--focus-off);box-shadow:0 0 0 var(--focus-off) var(--focus)}
 
 .zava-logo{width:114px;height:40px;object-fit:contain;flex-shrink:0;background:var(--surface);border-radius:4px;padding:4px}

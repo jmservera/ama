@@ -47,7 +47,7 @@ change), Gap (known, not fixed), Not tested.
 | Status messages | 4.1.3 | Pass, partial | `role="status"`, `role="alert"` and `aria-live="polite"` regions exist; announcement behaviour in a screen reader is not tested (AC-034) |
 | Contrast, text | 1.4.3 | Pass | Computed for the token pairs in the table below. Disabled controls are exempt (1.4.3 inactive components) |
 | Contrast, non-text | 1.4.11 | Fixed, gap | Form field border was 2.51:1 and is now 3.77:1. The caution marker colour is 2.61:1 on its tint and the map marker shapes remain colour-only differences (design-system open item); recorded as gap G-2 |
-| Target size | 2.5.8 | Not tested | Buttons are padded about 2.5rem tall. Inline `linkbtn` rows and map controls are not measured |
+| Target size | 2.5.8 | Fixed, partial | Buttons are padded about 2.5rem tall. `.linkbtn` and the map list summary now set a 1.5rem (24 CSS px) minimum height, guarded by a static rule check (2026-11-03, #151). Rendered measurement of every generated control, including map controls, is not run |
 | Error identification | 3.3.1, 3.3.3 | Pass, partial | `.field-error` and `aria-invalid` exist in CSS; every form error path is not audited |
 | Charts | 1.1.1, 1.3.1 | Fixed | Charts were `role="img"` with a title only. Each now offers "Show this chart as a table" with the same values (#119) |
 | Map | 1.1.1, 2.1.1 | Pass, partial | Region label plus "Show the map areas as a list" keyboard alternative (#119). Tile imagery is third-party |
@@ -79,7 +79,10 @@ viewport, the contrast ratios above, the focus indicator, the chart table
 equivalent, the map list alternative and live regions, and that this record
 exists. These are static checks, not a rendered-page scan.
 
-Rendered-page scanning against key screens (axe-core through the existing
+Status at 2026-11-03: rendered axe-core 4.10.3 scans now run in the opt-in
+role-screen browser checks and in `.github/workflows/src-ci.yml` for the regulatory and case journey screens
+(see the per-screen PRs under #226 to #233); they do not cover every screen or
+WCAG criterion. Original note: rendered-page scanning against key screens (axe-core through the existing
 Playwright `src/api/checks/browser_check.py`) is not added: the browser check is a
 manual script and the dependency choice needs the owner (O-2).
 
