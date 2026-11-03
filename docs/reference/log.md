@@ -10019,3 +10019,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Demo-only activation record for the employee chat model (Refs #891)
 
 * Added a demo-only activation record and an explicit env switch for `chat-case-conversation` (default denied; needs the switch value and the demo profile). [The demo storage approval](./research/chat-demo-storage-approval-2026-11-01.md) now states the boundaries. No Legal, DPO or RAI approval is claimed; deploy wiring and the live check remain outstanding. Evidence under `.copilot-tracking/` (2026-11-03 issue-891 r1).
+## [2026-11-03] update | Data operator structure tests (Refs #229)
+
+* Added unit tests pinning the data steward and operator view structure (shared panel and table components, captions, column scope, textual Unresolved state) and the absence of a role simulator. Test only; criteria 4 and 5 stay unmet pending assistive-technology testing and human review (#151, #155, #150). Evidence is under `.copilot-tracking/` (2026-11-03 issue-229 structure-test).
