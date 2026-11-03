@@ -11,7 +11,7 @@ from typing import Any
 
 from playwright.sync_api import Browser, Page, Request, Route, expect, sync_playwright
 
-from checks.design_system_browser_check import check, main
+from checks.design_system_browser_check import ROOT, check, main
 from checks.role_screens_fixtures import synthetic_data, technical_quality_data
 
 # Independent child branches extend only their own installed-screen expectation.
@@ -96,6 +96,33 @@ AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
 STORY_231 = ("231", "231q")
 STORY_ACCESSIBLE = ("231", "231q", "226", "232", "232s")
 STORY_RESIDENT = ("232", "232s")
+DESIGN_SYSTEM = ROOT / "docs/reference/research/ux/design-system.md"
+
+
+def check_design_system_use(page: Page, story: str) -> None:
+    """Rendered classes come from the #150 inventory; no simulator or foreign components."""
+    text = DESIGN_SYSTEM.read_text()
+    section = text.split("## Component inventory", 1)[1].split("### AI suggestion", 1)[0]
+    documented = set(re.findall(r"`\.([A-Za-z0-9_-]+)", section))
+    # The shared work-context panel is shell-owned and outside this screen's markup.
+    used = set(
+        page.evaluate(
+            "() => [...document.querySelectorAll('main *')]"
+            ".filter(el => !el.closest('.work-context'))"
+            ".flatMap(el => [...el.classList])"
+        )
+    )
+    check(f"{story} renders some design-system classes: {sorted(used)}", bool(used))
+    check(
+        f"{story} uses only documented design-system classes: {sorted(used - documented)}",
+        not used - documented,
+    )
+    check(
+        f"{story} has no custom elements or role simulator in the user view",
+        page.evaluate("() => [...document.querySelectorAll('main *')].every(e => !e.localName.includes('-'))")
+        and page.get_by_text("Simulate", exact=False).count() == 0
+        and page.get_by_role("combobox", name="Role").count() == 0,
+    )
 
 
 def check_readonly_accessibility(page: Page, story: str) -> None:
@@ -107,6 +134,7 @@ def check_readonly_accessibility(page: Page, story: str) -> None:
         evidence.locator("button, form, input, select, textarea").count() == 0,
     )
     if story in STORY_RESIDENT:
+        check_design_system_use(page, story)
         state_words = ("Paused or withdrawn by the resident", "Linked update commitment")
         if story == "232s":
             state_words = ("State and meaning", "Linked update commitment")

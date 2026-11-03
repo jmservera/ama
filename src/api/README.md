@@ -1192,6 +1192,12 @@ and add the same keyboard, text-only state, no-controls and optional axe checks
 for the resident-staff screens, with exact phrases for the safe route reference,
 the contact needs and the statement that a commitment is not a message. They
 make no resident contact and are not assistive-technology acceptance (#155).
+They also check that the rendered screen classes (outside the shell-owned work
+context panel) are all in the #150 component inventory in
+`docs/reference/research/ux/design-system.md`, with no custom elements and no
+role simulator or role selector; `tests/test_role_screens.py` applies the same
+inventory check to the host source. This shows native extension of the inventory,
+not Fluent component adoption (#150) or design-system acceptance.
 Story `230` (programme queue) drives the shared queue, scope filter, Reset and
 five-gate home view by keyboard as a Retrofit Programme Manager and a Retrofit
 Coordinator, asserts textual states, no record change and no writes, and checks
