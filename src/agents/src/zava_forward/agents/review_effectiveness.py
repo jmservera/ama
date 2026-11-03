@@ -479,6 +479,67 @@ def score_human_session(sheet: dict[str, Any], golden: Path = GOLDEN) -> dict[st
     )
 
 
+def pool_human_sessions(sheets: list[dict[str, Any]], golden: Path = GOLDEN) -> dict[str, Any]:
+    """Score several completed sheets and pool detection and total review effort.
+
+    Each sheet runs through the same gate on its own. The pool never hides a failed session, and a
+    repeat reviewer code is not an independent reviewer. No sample size or threshold is approved.
+    """
+    if not isinstance(sheets, list) or not sheets:
+        raise ValueError("at least one completed answer sheet is required")
+    results = [score_human_session(sh, golden) for sh in sheets]
+    by_class: dict[str, dict[str, int]] = {}
+    for res in results:
+        for name, c in res["by_defect_class"].items():
+            t = by_class.setdefault(name, dict(seeded=0, detected=0))
+            t["seeded"] += c["seeded"]
+            t["detected"] += c["detected"]
+    workflow = [r["workflow_only_seconds"] for r in results]
+    complete = all(w is not None for w in workflow)
+    human = sum(r["measured_seconds"] for r in results)
+    codes = [str(sh["reviewer_code"]) for sh in sheets]
+    return dict(
+        sessions=[
+            dict(
+                reviewer_code=code,
+                gate_passed=r["gate_passed"],
+                detected=r["panel"]["detected"],
+                defects=r["panel"]["defects"],
+                human_review_seconds=r["measured_seconds"],
+                workflow_only_seconds=r["workflow_only_seconds"],
+                confident_cited_defects_accepted=r["automation_bias"][
+                    "confident_cited_defects_accepted"
+                ],
+            )
+            for code, r in zip(codes, results, strict=True)
+        ],
+        session_count=len(results),
+        distinct_reviewers=len(set(codes)),
+        sessions_passed=sum(r["gate_passed"] for r in results),
+        all_sessions_passed=all(r["gate_passed"] for r in results),
+        by_defect_class=by_class,
+        sessions_with_automation_bias_exposure=sum(
+            bool(r["automation_bias"]["confident_cited_defects_accepted"]) for r in results
+        ),
+        effort_comparison=dict(
+            human_review_seconds=human,
+            workflow_only_seconds=sum(workflow) if complete else None,
+            difference_seconds=round(human - sum(workflow), 1) if complete else None,
+            note="workflow-only seconds supplied by every reviewer"
+            if complete
+            else "workflow-only time missing for at least one session; no pooled comparison",
+        ),
+        evidence=dict(
+            human_effectiveness="recorded for the sessions supplied; identity, competence and "
+            "authorisation of each person are not verified by this tool",
+            open_items=[
+                "no sample size or pass threshold is approved; a pooled result is not conformance",
+                *[o for o in OPEN_ITEMS if o.startswith("reviewer authority")],
+            ],
+        ),
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     args = sys.argv[1:] if argv is None else argv
     if "--worksheet" in args:
@@ -486,12 +547,17 @@ def main(argv: list[str] | None = None) -> int:
         return 0
     if "--score" in args:
         i = args.index("--score")
-        if i + 1 >= len(args):
+        if not [a for a in args[i + 1 :] if not a.startswith("--")]:
             print("--score needs the path of a completed answer sheet", file=sys.stderr)
             return 2
+        paths = [a for a in args[i + 1 :] if not a.startswith("--")]
         try:
-            sheet = json.loads(Path(args[i + 1]).read_text(encoding="utf-8"))
-            result = score_human_session(sheet)
+            sheets = [json.loads(Path(x).read_text(encoding="utf-8")) for x in paths]
+            if len(sheets) > 1:
+                pooled = pool_human_sessions(sheets)
+                print(json.dumps(pooled, indent=2))
+                return 0 if pooled["all_sessions_passed"] else 1
+            result = score_human_session(sheets[0])
         except (OSError, ValueError) as exc:
             print(f"cannot score session: {exc}", file=sys.stderr)
             return 2

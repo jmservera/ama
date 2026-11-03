@@ -1,7 +1,10 @@
+import contextlib
+import io
 import json
 import os
 import tempfile
 import unittest
+from pathlib import Path
 from typing import Any
 from unittest import mock
 
@@ -365,6 +368,54 @@ class HumanSessionTests(unittest.TestCase):
         res = re_.score_human_session(sheet)
         self.assertIsNone(res["workflow_only_seconds"])
         self.assertIn("not measured", res["evidence"]["workflow_time_note"])
+
+    def test_pooled_sessions_report_each_session_and_total_effort(self) -> None:
+        other = self._sheet("competent", 20)
+        other["workflow_seconds"] = 40
+        pooled = re_.pool_human_sessions([self._sheet("competent"), other])
+        self.assertEqual((pooled["session_count"], pooled["distinct_reviewers"]), (2, 1))
+        self.assertTrue(pooled["all_sessions_passed"])
+        n = len(re_.load_spec()["proposals"])
+        eff = pooled["effort_comparison"]
+        self.assertEqual(eff["human_review_seconds"], 50 * n)
+        self.assertEqual(
+            (eff["workflow_only_seconds"], eff["difference_seconds"]), (100, 50 * n - 100)
+        )
+        self.assertTrue(
+            all(c["seeded"] == c["detected"] for c in pooled["by_defect_class"].values())
+        )
+
+    def test_pool_does_not_hide_a_failed_session_or_a_repeat_reviewer(self) -> None:
+        bad = self._sheet("automation_bias", 5)
+        bad["workflow_seconds"] = None
+        pooled = re_.pool_human_sessions([self._sheet("competent"), bad])
+        self.assertFalse(pooled["all_sessions_passed"])
+        self.assertEqual((pooled["sessions_passed"], pooled["distinct_reviewers"]), (1, 1))
+        self.assertEqual(pooled["sessions_with_automation_bias_exposure"], 1)
+        self.assertIsNone(pooled["effort_comparison"]["difference_seconds"])
+        self.assertIn("not conformance", " ".join(pooled["evidence"]["open_items"]))
+        with self.assertRaises(ValueError):
+            re_.pool_human_sessions([])
+
+    def test_pool_fails_a_session_from_a_reviewer_without_defined_authority(self) -> None:
+        other = self._sheet("competent")
+        other["reviewer_code"] = "EV-02"
+        pooled = re_.pool_human_sessions([self._sheet("competent"), other])
+        self.assertEqual((pooled["sessions_passed"], pooled["distinct_reviewers"]), (1, 2))
+        self.assertFalse(pooled["all_sessions_passed"])
+
+    def test_cli_pools_several_sheets_and_fails_on_a_failed_session(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            paths = []
+            for k, kind in enumerate(("competent", "default_accept")):
+                path = f"{d}/s{k}.json"
+                Path(path).write_text(json.dumps(self._sheet(kind, 9)), encoding="utf-8")
+                paths.append(path)
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = re_.main(["--score", *paths])
+            self.assertEqual(code, 1)
+            self.assertEqual(json.loads(out.getvalue())["session_count"], 2)
 
 
 if __name__ == "__main__":
