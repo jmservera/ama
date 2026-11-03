@@ -22,6 +22,7 @@ audited by identifier, kind and approver, never by file name or content.
 
 Choose the scanner with ZF_SCANNER=local (default) or defender.
 """
+import logging
 import os
 import re
 import urllib.parse
@@ -31,6 +32,7 @@ from datetime import date, datetime, timedelta
 from .documents import AzureBlobDocumentStore, DocumentStoreError
 
 SYNTHETIC = "synthetic-demo"
+LOG = logging.getLogger(__name__)
 TEST_MARKER = b"ZF-SYNTHETIC-MALWARE-TEST-MARKER"
 MANAGER_ROLES = ("Retrofit Programme Manager",)
 MAGIC = {"pdf": (b"%PDF",), "png": (b"\x89PNG\r\n\x1a\n",), "jpg": (b"\xff\xd8\xff",), "jpeg": (b"\xff\xd8\xff",),
@@ -95,6 +97,9 @@ def open_scanner(docstore, env=None):
     env = os.environ if env is None else env
     kind = (env.get("ZF_SCANNER") or "local").lower()
     if kind == "local":
+        if isinstance(docstore, AzureBlobDocumentStore):
+            LOG.warning("Synthetic local scanner is guarding an Azure Blob store; it gives no malware assurance. "
+                        "Enable Defender for Storage and set ZF_SCANNER=defender (issue #117).")
         return LocalSignatureScanner()
     if kind == "defender":
         return DefenderForStorageScanner(docstore)

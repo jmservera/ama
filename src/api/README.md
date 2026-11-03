@@ -4191,7 +4191,7 @@ parent stabilization #440.
 | `ZF_TILE_URL`, `ZF_TILE_ATTRIBUTION` | map tile provider |
 | `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_NOTICE_APPROVED`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
 | `ZF_DOC_STORE`, `ZF_DOC_DIR`, `ZF_BLOB_ACCOUNT_URL`, `ZF_BLOB_CONTAINER`, `ZF_BLOB_SAS`, `ZF_BLOB_CLIENT_ID` | document store |
-| `ZF_SCANNER` | `local` (default) or `defender` content scanner |
+| `ZF_SCANNER` | `local` (default) or `defender` content scanner; `local` on an Azure Blob store logs a warning because it gives no malware assurance |
 
 ### Employee briefing and Azure OpenAI settings
 
