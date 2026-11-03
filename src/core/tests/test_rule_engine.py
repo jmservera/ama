@@ -467,6 +467,9 @@ class EngineTests(unittest.TestCase):
         self.assertEqual(sum(c["total"] for c in by_card.values()), stats["total"])
         self.assertEqual(by_card[a["card_id"]]["false_positives"], 1)
         self.assertEqual(by_card[a["card_id"]]["false_positive_rate"], 1.0)
+        by_scope = {c["home_scope"]: c for c in stats["by_home_scope"]}
+        self.assertEqual(sum(c["total"] for c in by_scope.values()), stats["total"])
+        self.assertEqual(sum(c["false_positives"] for c in by_scope.values()), 1)
         self.assertTrue(self.alerts()[0]["requires_acknowledgement"])
         self.engine.disposition(OWNER, a["id"], "acknowledge", "SYN", now=NOW)
         self.engine.disposition(OWNER, a["id"], "acknowledge", "SYN", now=NOW)
