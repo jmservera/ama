@@ -782,6 +782,17 @@ registerRoleScreen({
 const reviewerRole = "Contracts manager, independent of the person who issued or submitted the pack";
 const wording = (value, fallback = "Unknown") => value === null || value === undefined || value === "" ? fallback : String(value);
 const reference = (order) => `${wording(order.id)} v${wording(order.version)}`;
+const completionMove = (order) => (order.history || []).filter((step) => step.to_state === "Completed").pop();
+function workOrderRecordRows(orders) {
+  return orders.map((o) => {
+    const done = completionMove(o);
+    return [reference(o), (o.corrections || []).length
+      ? (o.corrections || []).map((k) => `${wording(k.reason)} (${wording(k.by)}, ${wording(k.at)})`).join("; ") : "None recorded",
+    o.state === "Completed" && done ? `Recorded by ${wording(done.by)} on ${wording(done.at)}. A recorded completion is not acceptance.`
+      : o.state === "Completed" ? "Completed on record. Who recorded it is Unknown." : "Not recorded",
+    "Unknown. No independent review record is supplied to this screen."];
+  });
+}
 function packagePrerequisites(pkg, orders) {
   const capacity = pkg.capacity || [];
   const evidenced = capacity.length && capacity.every((row) => String(row.evidence_status || "").startsWith("Evidenced"));
@@ -829,6 +840,10 @@ registerRoleScreen({
         screenTable("Work-order references for the selected home",
           ["Work order", "Package", "Contractor", "State", "Scope"],
           orders.map((o) => [reference(o), o.package, o.contractor, o.state, o.scope]))),
+      screenPanel("Corrections and completion on record",
+        screenTable("Work-order corrections, recorded completion and review for the selected home",
+          ["Work order", "Corrections recorded", "Completion recorded", "Independent review and acceptance"],
+          workOrderRecordRows(orders))),
       ...packages.map((p) => screenPanel(`Draft readiness: ${wording(p.id)}`,
         h("p", { role: "status" }, "Draft readiness only. This is not a release or approval."),
         screenTable(`Unmet prerequisites for ${wording(p.id)}`, ["Prerequisite", "State", "Next reviewer (role)"],
@@ -874,6 +889,8 @@ registerRoleScreen({
             ? "Recorded on a work order" : "Unknown. Not assessed on this screen."]))),
       screenPanel("Submission and review are separate",
         screenFields([["Your submission", "Not recorded on this screen"],
+          ["Completion on the work order", orders.some((o) => o.state === "Completed")
+            ? "Marked Completed on the work order by staff. This is a record, not acceptance." : "Not marked Completed"],
           ["Acknowledgement", "Not recorded. An acknowledgement is not acceptance."],
           ["Independent review and acceptance", "Unknown. Review data is not available here. Done by someone other than you."],
           ["Next reviewer", reviewerRole]])));
