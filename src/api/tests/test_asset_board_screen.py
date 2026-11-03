@@ -201,6 +201,61 @@ class AssetBoardScreen(unittest.TestCase):
         self.assertIn("The cross-home queue could not be loaded.", text)
         self.assertIn("Cannot confirm readiness", text)
 
+    def test_usage_panel_shows_counts_alerts_and_unknown_not_zero(self) -> None:
+        report: dict[str, object] = {
+            "consumption": {
+                "calls": 12,
+                "retries": 0,
+                "failures": 2,
+                "unknown_liabilities": 1,
+                "accepted_proposals": 3,
+                "tokens_per_proposal": {"measured": 4, "missing": 1, "mean": "7777"},
+                "token_cost": "555",
+                "owned_alerts": [
+                    {"owner": "Finance owner", "reason": "token-budget-limit", "route": "finance"}
+                ],
+                "other_tca_components": {"review_time": "Unknown", "licences": "2.50"},
+                "currency": "GBP",
+                "reconciliation": "unreconciled",
+                "total_cost_of_ai": "Unknown",
+            }
+        }
+        tree = run(report)["tree"]
+        text = json.dumps(tree)
+        self.assertIn("Ledger-wide AI usage, alerts and cost components", text)
+        self.assertIn("Finance owner", text)
+        self.assertIn("token-budget-limit", text)
+        self.assertIn("2.50 GBP", text)
+        self.assertIn("OD-51 is open", text)
+        self.assertIn("Total Cost of AI", text)
+        self.assertNotIn("7777", text)
+        self.assertNotIn("555", text)
+        cells = [n["kids"][0] for n in walk(tree) if n.get("tag") in ("dt", "dd")]
+        pairs = dict(zip(cells[0::2], cells[1::2], strict=False))
+        self.assertEqual(pairs["Proposals with at least one call"], "5")
+        self.assertEqual(pairs["Human-accepted proposals"], "3")
+        self.assertEqual(pairs["Metered calls in the period (all capabilities)"], "12")
+        for control in ("button", "form", "input", "select", "textarea"):
+            self.assertNotIn(control, tags(tree))
+
+    def test_usage_panel_missing_figures_are_unknown_not_zero(self) -> None:
+        text = json.dumps(run({"consumption": {"quality_status": "Fail"}})["tree"])
+        cells = [
+            n["kids"][0]
+            for n in walk(run({"consumption": {}})["tree"])
+            if n.get("tag") in ("dt", "dd")
+        ]
+        pairs = dict(zip(cells[0::2], cells[1::2], strict=False))
+        for label in (
+            "Metered calls in the period (all capabilities)",
+            "Human-accepted proposals",
+            "Proposals with at least one call",
+        ):
+            self.assertEqual(pairs[label], "Unknown")
+        self.assertIn("Alerts could not be read", text)
+        down = json.dumps(run(None)["tree"])
+        self.assertIn("Unknown is not zero", down)
+
 
 if __name__ == "__main__":
     unittest.main()

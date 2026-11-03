@@ -33,7 +33,7 @@ role simulator.
 
 | Perspective | Screen and status | Confirms | Changes | Remains hypothesis |
 | --- | --- | --- | --- | --- |
-| Asset and investment | `asset-board` (main, #226) | Conflict, source age and unknown investment inputs shown with a resolution owner | Portfolio scope shown separately from stock total | Which inputs asset staff need; no asset role exists in fixtures; AI report Loaded or Unavailable with a without-AI manual path (unit-tested only) |
+| Asset and investment | `asset-board` (main, #226) | Conflict, source age and unknown investment inputs shown with a resolution owner | Portfolio scope shown separately from stock total | Which inputs asset staff need; no asset role exists in fixtures; AI report Loaded or Unavailable with a without-AI manual path; a second panel lists metered calls, held-call alerts with owners and other cost components, with Unknown (never zero) for any missing figure (unit-tested only, Refs #100) |
 | Programme coordinator | `programme-queue` (main, PR 662) | Returned work, sender, current owner and receiver shown | Chase and update responsibility kept apart from return reason | Whether visible reset suffices as recovery |
 | Retrofit case team | `programme-queue` connected home view (main, PR 662) | Independent technical, resident, delivery, quality and finance states per home | One linked fixture home first, separate homes never merged | Whether a read-only lifecycle is enough for case teams |
 | Retrofit Assessor, designer and Coordinator | `technical-queue` (main, PR 656) | Missing design reference blocks readiness | Return routed to a named competent reviewer, not a generic approval | Separate sign-off wording |
