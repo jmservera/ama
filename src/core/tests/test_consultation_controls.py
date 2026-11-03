@@ -354,6 +354,22 @@ class JsonConsultation(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Consultation status is unknown"):
             self.store.require_consultation_clear(self.store._package(self.pid))
 
+    def test_letting_and_renewal_gate_stays_blocked_while_unknown(self) -> None:
+        for event in ("let", "renew"):
+            gate = self.store.contract_event_gate(self.manager, self.pid, event)
+            self.assertTrue(gate["blocked"])
+            self.assertEqual(gate["effective_status"], "unknown")
+            self.assertIsNone(gate["supplied_status"])
+        self.store.record_consultation(self.manager, self.pid, self.payload("complete"))
+        before = self.snapshot()
+        gate = self.store.contract_event_gate(self.manager, self.pid, "let")
+        self.assertTrue(gate["blocked"])
+        self.assertEqual(gate["supplied_status"], "complete")
+        self.assertEqual(gate["authority_status"], "Unverified")
+        self.assertEqual(self.snapshot(), before)
+        with self.assertRaisesRegex(ValueError, "let or renew"):
+            self.store.contract_event_gate(self.manager, self.pid, "award")
+
     def test_nonbinding_historical_recording_remains_available(self) -> None:
         self.historical("Appointed")
         self.store.record_wo_appointment(self.manager, "WO-HIST", "No access")

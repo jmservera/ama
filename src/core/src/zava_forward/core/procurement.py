@@ -339,6 +339,19 @@ class ProcurementMixin(AppointmentMixin):
         # No verified contract-consultation Legal capability exists in the current registry.
         raise ValueError(f"Consultation status is unknown for {p['id']}. A named authorized Legal adviser must verify the decision before a consultation-dependent action can proceed. Legal consultation authority and contract letting or renewal are not configured; supplied records cannot release this hold.")
 
+    def contract_event_gate(self, user, pid, event):
+        """Read-only check that a letting or renewal is held while consultation is unknown."""
+        if event not in ("let", "renew"):
+            raise ValueError("Choose let or renew.")
+        with self.lock:
+            _actor(self, user)
+            p = self._package(pid)
+            supplied = (p.get("consultation_history") or [{}])[-1].get("status")
+            return dict(package=p["id"], event=event, blocked=True, effective_status="unknown",
+                        supplied_status=supplied, authority_status="Unverified",
+                        reason=f"Consultation status is unknown for {p['id']}. Legal must verify it before this contract is let or renewed. A supplied record does not release the hold.",
+                        manual_path="Ask Legal and the contract owner to confirm consultation outside this service. No letting or renewal happens here.")
+
     def rescope_package(self, user, pid, scope, reason):
         self._need_manager(user, "change a package scope")
         scope, reason = _clean(scope, 400), _clean(reason)
