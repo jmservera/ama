@@ -69,6 +69,7 @@ class ChallengeRegister:
         explanations: Iterable[Mapping[str, Any]],
         extra: Mapping[str, Any],
         hazard_concern: bool = False,
+        received_on: str | None = None,
     ) -> Record:
         kind = subject.get("kind")
         if kind not in SUBJECT_KINDS:
@@ -106,7 +107,11 @@ class ChallengeRegister:
         }
         if hazard_concern:
             # Immediate human referral; the existing hazard process and its clock stay untouched.
-            rec["hazard_referral"] = {"to": rec["owner"], "status": "referred_on_receipt"}
+            rec["hazard_referral"] = {
+                "to": rec["owner"],
+                "status": "referred_on_receipt",
+                "received_on": date.fromisoformat(received_on).isoformat() if received_on else None,
+            }
         self.challenges[cid] = rec
         return deepcopy(rec)
 
@@ -119,6 +124,7 @@ class ChallengeRegister:
         next_update: str,
         explanations: Iterable[Mapping[str, Any]] = (),
         hazard_concern: bool = False,
+        received_on: str | None = None,
     ) -> Record:
         return self._record(
             "digital",
@@ -130,6 +136,7 @@ class ChallengeRegister:
             explanations,
             {},
             hazard_concern,
+            received_on,
         )
 
     def record_staff(
@@ -143,6 +150,7 @@ class ChallengeRegister:
         next_update: str,
         explanations: Iterable[Mapping[str, Any]] = (),
         hazard_concern: bool = False,
+        received_on: str | None = None,
     ) -> Record:
         if channel not in NON_DIGITAL_CHANNELS:
             raise ValueError("Channel must be phone, in_person, paper or assisted_visit.")
@@ -157,6 +165,7 @@ class ChallengeRegister:
             explanations,
             extra,
             hazard_concern,
+            received_on,
         )
 
     def _get(self, cid: str) -> Record:
@@ -222,6 +231,21 @@ class ChallengeRegister:
             for r in self.challenges.values()
             if r.get("hazard_referral", {}).get("status") == "referred_on_receipt"
         ]
+
+    def hazard_referrals_overdue(self, today: str, max_days: int = 1) -> list[Record]:
+        """Unhanded hazard referrals older than `max_days`, or of unknown age, for the owner.
+
+        Read-only: it flags a possible delay for human follow-up and never starts, stops or
+        changes any hazard clock or record.
+        """
+        now = date.fromisoformat(today)
+        out: list[Record] = []
+        for rec in self.hazard_referrals():
+            received = rec["hazard_referral"].get("received_on")
+            age = (now - date.fromisoformat(received)).days if received else None
+            if age is None or age > max_days:
+                out.append({**rec, "referral_age_days": age})
+        return out
 
     def overdue(self, today: str) -> list[Record]:
         """Unresolved challenges past their promised next update, for the human owner."""
