@@ -163,6 +163,47 @@ class AzureTopicProviderTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 AzureTopicProvider(ENDPOINT, deployment)
 
+    def test_usage_is_recorded_as_counts_only_or_unknown(self) -> None:
+        seen: list[object] = []
+        usage = {"prompt_tokens": 20, "completion_tokens": 1, "total_tokens": 21}
+        cases = [
+            (usage, {**usage, "cached_tokens": None}),
+            (
+                {**usage, "prompt_tokens_details": {"cached_tokens": 0}},
+                {**usage, "cached_tokens": 0},
+            ),
+            ({**usage, "total_tokens": 99}, None),
+            (None, None),
+        ]
+        for provided, expected in cases:
+            body: dict[str, object] = {
+                "choices": [{"message": {"content": "status"}, "finish_reason": "stop"}]
+            }
+            if provided is not None:
+                body["usage"] = provided
+            self.transport.side_effect = None
+            self.transport.return_value = json.dumps(body).encode()
+            provider = self.provider(True)
+            provider.record_usage = seen.append
+            self.assertEqual(provider.select(Topic.STATUS), Topic.STATUS)
+            self.assertEqual(seen[-1], expected)
+        self.assertNotIn("status", json.dumps(seen))
+
+    def test_usage_is_recorded_for_an_invalid_reply_and_sink_failure_is_contained(self) -> None:
+        seen: list[object] = []
+        usage = {"prompt_tokens": 20, "completion_tokens": 2, "total_tokens": 22}
+        body = {"choices": [{"message": {"content": "other"}, "finish_reason": "stop"}]}
+        self.transport.side_effect = None
+        self.transport.return_value = json.dumps({**body, "usage": usage}).encode()
+        provider = self.provider(True)
+        provider.record_usage = seen.append
+        with self.assertRaisesRegex(AssistantUnavailable, "^provider_failed$|^invalid_reply$"):
+            provider.select(Topic.STATUS)
+        self.assertEqual(len(seen), 1)
+        self.transport.return_value = reply()
+        provider.record_usage = Mock(side_effect=RuntimeError("SYNTHETIC-SINK"))
+        self.assertEqual(provider.select(Topic.STATUS), Topic.STATUS)
+
     def test_http_transport_is_bounded_and_redirects_refused_without_network(self) -> None:
         with patch("urllib.request.build_opener") as build:
             response = build.return_value.open.return_value.__enter__.return_value
