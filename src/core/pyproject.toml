@@ -57,7 +57,7 @@ module = [
   "dataset", "release_support", "test_chat_memory", "test_chat_privacy", "test_chatthreads", "test_documents", "test_finance_signoffs", "test_generated_dataset", "test_governance", "test_profile", "test_quality_procurement", "test_recovery", "test_rulecards", "test_sqlreads", "test_sqlstore",
   "test_rai_release_invalidation", "tests.test_rai_release_invalidation", "test_needs_inventory", "test_sensor_backfill", "test_sensor_plausibility", "test_synthetic_provenance",
   "tests.dataset", "tests.release_support", "tests.test_chat_memory", "tests.test_chat_privacy", "tests.test_chatthreads", "tests.test_documents", "tests.test_finance_signoffs", "tests.test_generated_dataset", "tests.test_governance", "tests.test_profile", "tests.test_quality_procurement", "tests.test_recovery", "tests.test_rulecards", "tests.test_sqlreads", "tests.test_sqlstore",
-  "tests.test_needs_inventory", "tests.test_sensor_backfill", "tests.test_sensor_plausibility", "tests.test_synthetic_provenance",
+  "test_ranking_publication", "tests.test_ranking_publication", "tests.test_needs_inventory", "tests.test_sensor_backfill", "tests.test_sensor_plausibility", "tests.test_synthetic_provenance",
 ]
 ignore_errors = true
 
