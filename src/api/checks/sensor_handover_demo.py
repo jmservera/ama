@@ -4,9 +4,10 @@ Builds a throwaway store, writes the composed backfill, admits its prefix throug
 the #110 consumer, decodes the streamed suffix from actual SDK events, then runs
 the operator verifier with a window replay. Constructed climate only: this is not
 a live Hub run, Azure SQL proof or sensor accuracy approval. Needs the test
-fixtures on PYTHONPATH (see src/api/README.md).
+fixtures, which the script locates under src/core/tests itself.
 """
 
+# ruff: noqa: E402
 import argparse
 import csv
 import json
@@ -17,6 +18,10 @@ import tempfile
 from collections.abc import Sequence
 from dataclasses import replace
 from pathlib import Path
+
+CORE_TESTS = str(Path(__file__).resolve().parents[2] / "core" / "tests")
+if CORE_TESTS not in sys.path:
+    sys.path.append(CORE_TESTS)
 
 import test_sensor_handover as fixture
 from azure.eventhub import EventData
