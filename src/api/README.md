@@ -1257,6 +1257,14 @@ evidenced) unless `ZF_AXE_REQUIRED=1` makes the skip a failure. The final
 `RESULT` line, not the exit code alone, is authoritative. These are engineering checks, not assistive-technology or WCAG
 acceptance (#155).
 
+With no home selected, the same view also shows a read-only "Conflict and
+return queue across this page of homes" built from the case records of the
+homes on the current page (not a portfolio total). It lists both source values
+with provenance and each return or reopen, shows homes whose record could not be
+loaded as Unavailable, selects no winning source and has no controls. It is
+covered by `tests/test_data_operator_screen.py`; the browser check does not yet
+visit this page-level view.
+
 ## Resident chat and synthetic callback agenda (#520, building on #469)
 
 The resident showcase has one bottom-right Chat launcher on its sign-in,
