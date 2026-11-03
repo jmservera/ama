@@ -50,7 +50,17 @@ NAMESPACE_ONLY = (
     "tools/rename-zava",
 )
 
-DOC_SUFFIXES = (".md", ".mdx", ".txt")
+DOC_SUFFIXES = (".md", ".mdx")
+
+
+def is_dependency_manifest(path: str) -> bool:
+    """Packaging and pinned requirement files affect every project, so never filter them."""
+    name = path.rsplit("/", 1)[-1]
+    return (
+        name == "pyproject.toml"
+        or name == "build-requirements.txt"
+        or (name.startswith("requirements") and name.endswith(".txt"))
+    )
 
 
 def select(files: list[str] | None) -> dict[str, object]:
@@ -66,6 +76,8 @@ def select(files: list[str] | None) -> dict[str, object]:
     namespace = False
     for path in files:
         if path.startswith("src/"):
+            if is_dependency_manifest(path):
+                return everything
             parts = path.split("/")
             if path.endswith(DOC_SUFFIXES) and (len(parts) == 2 or parts[1] in PROJECTS):
                 continue

@@ -35,6 +35,7 @@ jobs:
 
   image-paths:
     needs: changes
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -54,12 +55,13 @@ jobs:
 
   project:
     needs: [changes, image-paths]
+    if: ${{ !cancelled() && needs.image-paths.result == 'success' }}
     name: src-${{ matrix.project }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.changes.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.changes.result == 'success' && needs.changes.outputs.matrix || '{"include":[{"project":"core","dist":"zava-forward-core","deps":"","image":false,"run":true},{"project":"api","dist":"zava-forward-api","deps":"-e ../core -e ../agents","image":true,"run":true},{"project":"agents","dist":"zava-forward-agents","deps":"-e ../core","image":true,"run":true},{"project":"orchestrator","dist":"zava-forward-orchestrator","deps":"-e ../core","image":true,"run":true},{"project":"importer","dist":"zava-forward-import","deps":"-e ../core","image":true,"run":true}]}') }}
     defaults:
       run:
         working-directory: src/${{ matrix.project }}
@@ -201,7 +203,7 @@ jobs:
   namespace:
     name: src-namespace
     needs: changes
-    if: needs.changes.outputs.namespace == 'true'
+    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.namespace == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -286,7 +288,7 @@ jobs:
 
   mssql:
     needs: changes
-    if: needs.changes.outputs.mssql == 'true'
+    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.mssql == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     services:

@@ -119,5 +119,67 @@ class MainTests(unittest.TestCase):
         self.assertEqual(names, list(ci.PROJECTS))
 
 
+class RiskTests(unittest.TestCase):
+    def test_txt_is_not_documentation(self) -> None:
+        for path in [
+            "src/api/requirements.txt",
+            "src/core/notes.txt",
+            "src/build-requirements.txt",
+        ]:
+            with self.subTest(path=path):
+                sel = ci.select([path])
+                self.assertTrue(sel["namespace"])
+                self.assertTrue(sel["projects"])
+
+    def test_markdown_under_src_is_still_skipped(self) -> None:
+        sel = ci.select(["src/api/README.md", "src/README.md"])
+        self.assertEqual(sel["projects"], set())
+        self.assertFalse(sel["namespace"])
+
+    def test_dependency_manifests_run_everything(self) -> None:
+        for path in [
+            "src/core/pyproject.toml",
+            "src/importer/pyproject.toml",
+            "src/api/requirements.txt",
+            "src/api/requirements-dev.txt",
+            "src/agents/build-requirements.txt",
+        ]:
+            with self.subTest(path=path):
+                sel = ci.select([path])
+                self.assertEqual(sel["projects"], set(ci.PROJECTS))
+                self.assertTrue(sel["namespace"])
+                self.assertTrue(sel["mssql"])
+
+
+class WorkflowTests(unittest.TestCase):
+    def setUp(self) -> None:
+        import pathlib
+
+        import yaml
+
+        path = pathlib.Path(__file__).resolve().parents[1] / ".github/workflows/src-ci.yml"
+        self.jobs = yaml.safe_load(path.read_text(encoding="utf-8"))["jobs"]
+
+    def test_dependents_run_when_changes_job_fails(self) -> None:
+        for name in ["image-paths", "project", "namespace", "mssql"]:
+            with self.subTest(job=name):
+                condition = str(self.jobs[name]["if"])
+                self.assertIn("!cancelled()", condition)
+        for name in ["namespace", "mssql"]:
+            self.assertIn("needs.changes.result != 'success'", self.jobs[name]["if"])
+
+    def test_fallback_matrix_runs_everything(self) -> None:
+        expression = self.jobs["project"]["strategy"]["matrix"]
+        literal = expression.split("|| '", 1)[1].rsplit("') }}", 1)[0]
+        matrix = json.loads(literal)
+        self.assertEqual([e["project"] for e in matrix["include"]], list(ci.PROJECTS))
+        self.assertTrue(all(e["run"] for e in matrix["include"]))
+
+    def test_required_job_names_unchanged(self) -> None:
+        self.assertEqual(self.jobs["namespace"]["name"], "src-namespace")
+        self.assertEqual(self.jobs["no-working-data"]["name"], "src-no-working-data")
+        self.assertEqual(self.jobs["project"]["name"], "src-${{ matrix.project }}")
+
+
 if __name__ == "__main__":
     unittest.main()
