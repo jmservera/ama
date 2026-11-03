@@ -285,7 +285,7 @@ def companion_failure_check(browser: Browser, base: str, path: str, hash_: str) 
             expect(page.get_by_role("alert")).to_contain_text(
                 "Required workspace files did not load: " + path)
             expect(page.get_by_role("button", name="Reload workspace", exact=True)).to_be_visible()
-            assert len(requests) == 3, requests
+            assert len(requests) == 4, requests
         expect(page.locator("#startup")).to_have_count(0)
         assert not errors, errors
         print(f"PASS failed {path}: bounded terminal recovery or explicit plain-case fallback")
@@ -393,7 +393,7 @@ def helper_bootstrap_check(
 
         page.route(asset_url("/async-action.js", base), intercept)
         page.goto(base + "/app#/case/ZF-1?tab=resident")
-        terminal = failures == 3 or missing_global or unready_helper or bool(unready_method)
+        terminal = failures == 4 or missing_global or unready_helper or bool(unready_method)
         if terminal:
             expect(page.get_by_role("heading", name="Workspace unavailable")).to_be_visible()
             expect(page.get_by_role("alert")).to_contain_text(
@@ -404,7 +404,7 @@ def helper_bootstrap_check(
             expect(page.get_by_label("Work email", exact=True)).to_have_count(0)
             expect(page.get_by_role("button", name="Try again", exact=True)).to_have_count(0)
             assert not service_reads, "do not call start before helper readiness"
-            expected_requests = 2 if missing_global or unready_helper or unready_method else 3
+            expected_requests = 2 if missing_global or unready_helper or unready_method else 4
             assert len(requests) == expected_requests, requests
             if unready_helper:
                 assert page.evaluate(
@@ -562,7 +562,7 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             for blocked in (None, "/workspace-shell.js"):
                 for failure in ("503", "rejected"):
                     law_startup_check(browser, base, blocked, failure)
-            for failures in (1, 2, 3):
+            for failures in (1, 2, 3, 4):
                 helper_bootstrap_check(browser, base, failures)
             helper_bootstrap_check(browser, base, 1, missing_global=True)
             helper_bootstrap_check(browser, base, 0, unready_helper=True)
