@@ -9940,3 +9940,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Same-home journey stage map on programme queue (Refs #233)
 
 * Added a "Journey stages" list to the `programme-queue` selected-home view: eight atlas stages, each linked to the screen that shows its own state for the same case, stage 1 as a recorded deferral and role-unavailable screens stated in text. Updated [atlas-screen-trace.md](research/ux/atlas-screen-trace.md). Navigation only, design hypothesis; the EX-HOME-901 fixture, stage 1 screen, rendered accessibility checks (#151), component verification (#150) and validation (#155) stay open. Evidence under `.copilot-tracking/` (2026-11-03 issue-233 stage-map).
+
+## [2026-11-03] update | Epic #123 scoped stabilization checkpoint (Refs #123)
+
+* Added an epic-scoped checkpoint to the [evidence pack](../architecture/cutover-evidence-pack.md#epic-123-scoped-stabilization-checkpoint-2026-11-03) on main 61a4ac54: requirement-to-test reconciliation for RULE-017, 019, 020, 021 and 024, a child ledger (#127 and #166 closed; #124, #125, #126, #128 and #129 open, four with unmerged PRs) and focused test, ruff and mypy results.
+* RULE-016 and the BG-011 baseline remain owner-dependent; NFR-008 and NFR-009 are only specified. #123 criterion 1 (full checkpoint before closure) and criterion 2 (children closed or deferred) stay unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-123 epic checkpoint).
