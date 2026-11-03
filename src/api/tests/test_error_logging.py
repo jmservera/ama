@@ -8,6 +8,7 @@ import urllib.error
 import urllib.request
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
+from typing import Any
 from unittest.mock import patch
 
 from test_auth import ENV, OID_SAM, Base, principal
@@ -19,8 +20,11 @@ SECRET = "tok-SECRET-value"
 
 class ErrorLoggingTests(Base):
     def setUp(self) -> None:
-        super().setUp()
-        self.app = App(self.store, provider=auth.TrustedProxyProvider(self.store, ENV))
+        super().setUp()  # type: ignore[no-untyped-call]
+        self.app = App(  # type: ignore[no-untyped-call]
+            self.store,
+            provider=auth.TrustedProxyProvider(self.store, ENV),  # type: ignore[no-untyped-call]
+        )
         self.httpd = _Server(("127.0.0.1", 0), make_handler(self.app))
         threading.Thread(target=self.httpd.serve_forever, daemon=True).start()
         self.base = f"http://127.0.0.1:{self.httpd.server_address[1]}"
@@ -28,11 +32,12 @@ class ErrorLoggingTests(Base):
     def tearDown(self) -> None:
         self.httpd.shutdown()
         self.httpd.server_close()
-        super().tearDown()
+        super().tearDown()  # type: ignore[no-untyped-call]
 
     def get(self, path: str, oid: str = OID_SAM) -> tuple[int, bytes]:
         req = urllib.request.Request(
-            self.base + path, headers={"X-MS-CLIENT-PRINCIPAL": principal(oid=oid)}
+            self.base + path,
+            headers={"X-MS-CLIENT-PRINCIPAL": principal(oid=oid)},  # type: ignore[no-untyped-call]
         )
         try:
             with urllib.request.urlopen(req, timeout=20) as r:
@@ -67,7 +72,7 @@ class ErrorLoggingTests(Base):
 
         real, calls = BaseHTTPRequestHandler.send_header, []
 
-        def broken(self: BaseHTTPRequestHandler, *a: object, **k: object) -> None:
+        def broken(self: BaseHTTPRequestHandler, *a: Any, **k: Any) -> None:
             calls.append(a)
             if len(calls) == 1:
                 raise RuntimeError(SECRET)
