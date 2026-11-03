@@ -610,6 +610,15 @@ class Endpoints(unittest.TestCase):
         self.assertEqual(body["total"], len(body["items"]))
         self.assertEqual(self.call("pam@example.test", "/api/asset/stock-queue", {})[0], 404)
 
+    def test_resident_choice_queue_route_is_role_gated_and_read_only(self):
+        code, body = self.call("sam@example.test", "/api/resident/choice-queue?limit=1")
+        self.assertEqual(code, 200)
+        self.assertEqual(len(body["items"]), 1)
+        self.assertGreaterEqual(body["total"], 1)
+        self.assertEqual(self.call("pam@example.test", "/api/resident/choice-queue")[0], 200)
+        self.assertEqual(self.call("sam@example.test", "/api/resident/choice-queue?limit=x")[0], 400)
+        self.assertEqual(self.call("sam@example.test", "/api/resident/choice-queue", {})[0], 404)
+
     def test_report_is_manager_only(self):
         self.assertEqual(self.call("sam@example.test", "/api/ai/report")[0], 403)
         code, body = self.call("pam@example.test", "/api/ai/report")
