@@ -80,6 +80,26 @@ class YearLedgerTests(unittest.TestCase):
             self.assertFalse(s.verify_ledger_by_year()["intact"])
 
 
+    def test_corrupt_or_malformed_digests_fail_closed_and_sealed_years_are_listed(self):
+        es = chain([2024, 2025])
+        sealed = ledger.year_digests(es, before=2026)
+        rep = ledger.verify_years(es, sealed)
+        self.assertEqual(rep["sealed_years"], ["2024", "2025"])
+        for bad in ({"unreadable": "year-2024.json"}, {"year": "2024"}, None):
+            rep = ledger.verify_years(es, [bad, sealed[1]])
+            self.assertFalse(rep["intact"])
+            self.assertEqual(len(rep["bad_digests"]), 1)
+        rep = ledger.verify_years(es, [sealed[0], dict(sealed[0], head="0" * 64)])
+        self.assertFalse(rep["intact"])
+
+    def test_unreadable_digest_file_is_reported_not_raised(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            Path(tmp, "year-2024.json").write_text("{not json")
+            got = ledger.read_year_digests(tmp)
+            self.assertEqual(got, [{"unreadable": "year-2024.json"}])
+            self.assertFalse(ledger.verify_years(chain([2024]), got)["intact"])
+
+
 class FakeRegisterBlob:
     def __init__(self):
         self.blobs, self.fail_put, self.fail_list = {}, False, False
