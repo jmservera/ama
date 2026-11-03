@@ -180,10 +180,12 @@ versions, and result in the table above or an attached record):
   label and opens the case.
 * Check the polite status line announces results after a filter or pan, and
   the alert is announced when the map-data request fails (for example, block
-  the map-data endpoint). Blocking tile images separately is a different
-  scenario: `mapPanel()` has no tile-error handler, so no alert is expected;
-  record whether the list stays usable and treat any missing announcement as a
-  finding.
+  the map-data endpoint). Also block the tile images: since 2026-11-03 the map
+  panel shows a polite status note ("The map background could not load. The
+  homes and the list of map areas still work...") when a tile fails. Record
+  whether the note is announced, once, and whether the list stays usable. The
+  note is engineering-tested as present in the script only; what a screen
+  reader announces is not established.
 * Record anything unclear, such as focus loss after the list refreshes, as a
   finding, and do not treat a pass as WCAG conformance.
 

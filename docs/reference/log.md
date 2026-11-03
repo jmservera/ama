@@ -9925,3 +9925,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | AI usage and alerts panel on the asset and board view (Refs #100)
 
 * The asset-board screen now shows a ledger-wide panel of metered calls, retries, failures, calls with no recorded outcome, proposals and human-accepted proposals, held-call alerts with named owners and other Total Cost of AI components. Missing figures show Unknown, never zero; token counts are not shown as cost. Updated the atlas screen trace row. Unit-tested only; #100 criteria stay unmet (stabilization checkpoint, child closure, per-capability and limit views, live evidence). Evidence under `.copilot-tracking/` (2026-11-03 issue-100 r1).
+## [2026-11-03] update | Map tile failure announcement (Refs #119)
+
+* The map panel now shows a polite status note when background tiles fail to load, pointing to the list alternative; the [screen-reader protocol](./research/ux/wcag-conformance-baseline.md#map-list-alternative-screen-reader-check-119) now includes the tile-block scenario. Unit-tested as present in the script only.
+* Both #119 criteria stay unmet: no licensed provider chosen (needs owner, procurement, DPO and legal decisions) and no screen-reader run. Evidence is under `.copilot-tracking/` (2026-11-03 issue-119 r1).
