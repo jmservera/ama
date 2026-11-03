@@ -14,6 +14,7 @@ from zava_forward.core.regulatory_privacy import (
     QUERY_FIELDS,
     minimise_query,
     readiness_report,
+    record_human_decision,
     retention_report,
 )
 
@@ -161,6 +162,43 @@ class QueryMinimisation(unittest.TestCase):
 
         for allowed in QUERY_FIELDS.values():
             self.assertFalse(SPECIAL_CATEGORY & set(allowed))
+
+
+class HumanDecision(unittest.TestCase):
+    P = dict(kind="check_outcome", id="chk-1", version="v1")
+    AT = "2026-11-03T12:00:00+00:00"
+
+    def call(self, **kw: Any) -> dict[str, Any]:
+        a: dict[str, Any] = dict(
+            proposal=self.P,
+            decider="A. Approver",
+            role="approver",
+            outcome="accepted",
+            reasons="Checked source link.",
+            at=self.AT,
+        )
+        a.update(kw)
+        return record_human_decision(**a)
+
+    def test_named_human_with_reasons_is_recorded(self) -> None:
+        r = self.call()
+        self.assertEqual(r["decider"], "A. Approver")
+        self.assertFalse(r["decided_by_system"])
+
+    def test_refuses_system_decider_blank_reasons_wrong_role_and_naive_time(self) -> None:
+        for kw in (
+            dict(decider="System"),
+            dict(decider=" "),
+            dict(reasons=" "),
+            dict(reasons="x" * 1001),
+            dict(role="chat user"),
+            dict(role="author"),
+            dict(outcome="auto-approved"),
+            dict(at="2026-11-03T12:00:00"),
+            dict(proposal=dict(kind="other")),
+        ):
+            with self.assertRaises(ValueError, msg=str(kw)):
+                self.call(**kw)
 
 
 if __name__ == "__main__":
