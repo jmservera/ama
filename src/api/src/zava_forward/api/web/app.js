@@ -195,6 +195,10 @@ function showAccount() {
 
 async function loadPhoto(account) {
   const status = document.getElementById("photo-status");
+  if (me?.services?.photo === false) {
+    status.textContent = "Microsoft profile photo is not available until token-store setup is complete. Your initials are shown instead and the rest of the workspace still works.";
+    return;
+  }
   try {
     let res = await fetchReadRetrying("/api/account/photo");
     if (res.status === 401) {
