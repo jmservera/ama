@@ -401,6 +401,54 @@ class MetadataTests(unittest.TestCase):
             Binding("installed-real-device", "SENS-SYN-1", "ZF-1").validate()
 
 
+class FleetIdentityTests(unittest.TestCase):
+    """Offline evidence for criterion 1 only; no Hub identity is issued here."""
+
+    @staticmethod
+    def _frames() -> tuple[Frame, ...]:
+        selected = sensor_stock.select(
+            [
+                {
+                    "synthetic_home_id": f"ZF-{n}",
+                    "is_synthetic": "true",
+                    "monitoring_consent": "granted",
+                }
+                for n in (1, 2, 3)
+            ],
+            3,
+        )
+        return tuple(replay(selected, Replay(fault="burst", end_slot=3)))
+
+    def test_each_device_is_distinct_with_schema_version_and_stable_reading_ids(self) -> None:
+        frames = self._frames()
+        devices = {frame.device_id for frame in frames}
+        self.assertEqual(len(devices), 3)
+        by_device: dict[str, list[Frame]] = {}
+        for frame in frames:
+            by_device.setdefault(frame.device_id, []).append(frame)
+            self.assertEqual(frame.device_id, "SYN-" + str(frame.row["sensor_id"]))
+            self.assertTrue(frame.row["schema_version"])
+            self.assertTrue(frame.row["reading_id"])
+        self.assertEqual(len({f.row["sensor_id"] for f in frames}), 3)
+        keys = [(f.row["sensor_id"], f.row["reading_id"]) for f in frames]
+        self.assertEqual(len(keys), len(set(keys)))
+        self.assertEqual(keys, [(f.row["sensor_id"], f.row["reading_id"]) for f in self._frames()])
+        self.assertEqual([wire(f.row) for f in frames], [wire(f.row) for f in self._frames()])
+        self.assertTrue(all(len(rows) > 1 for rows in by_device.values()))
+
+    def test_receiver_accepts_each_device_only_under_its_own_binding(self) -> None:
+        frames = self._frames()
+        bindings = {
+            f.device_id: Binding(f.device_id, str(f.row["sensor_id"]), str(f.row["home_id"]))
+            for f in frames
+        }
+        for frame in frames:
+            self.assertEqual(decode(event(frame.row, frame.device_id), bindings), frame.row)
+        first, other = frames[0], next(f for f in frames if f.device_id != frames[0].device_id)
+        with self.assertRaisesRegex(StreamError, "IOT_DEVICE_BINDING_MISMATCH"):
+            decode(event(first.row, other.device_id), bindings)
+
+
 class PublisherTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self) -> None:
         selected = sensor_stock.select(
