@@ -1,0 +1,28 @@
+{
+  "task_id": "issue-98-r1",
+  "task_slug": "issue-98-r1-manifest-freshness",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-03/issue-98-r1-manifest-freshness-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-03/issue-98-r1-manifest-freshness-plan.md",
+    "details": ".copilot-tracking/details/2026-11-03/issue-98-r1-manifest-freshness-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-03/issue-98-r1-manifest-freshness-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-03/issue-98-r1-manifest-freshness-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-03/issue-98-r1-manifest-freshness-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Critique executed once, verdict Proceed", "status": "complete", "evidence": "critique path"},
+    {"decision": "Review executed once, outcome conformant for slice", "status": "complete", "evidence": "review path"}
+  ],
+  "blockers": [
+    {"id": "FU-FINANCE", "summary": "No approved rules or template authority for criteria 2 and 3", "resolution": "Finance/template owner supplies approved inputs"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Open PR with Refs #98; coordinator runs gates if required"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "S2 approved-rule validation", "rationale": "Unmet criterion 2", "evidence": "research file"}
+  ]
+}

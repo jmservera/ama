@@ -9962,3 +9962,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Proactive predicate call forecast (Refs #107)
 
 * Documented `GET /api/assistants/forecast` in `src/agents/README.md`: a read-only per-assistant, per-period upper bound of model calls a proactive predicate would trigger, reported before proactive scans are enabled. Cost stays Unknown (no price source, BRD OD-51). Tokenomics criterion 3 is advanced in code and tests only; no issue ticks changed; criteria 2 (attribution) and the RAI items 1, 3, 5 and 8 remain unmet.
+## [2026-11-03] update | Saved form manifests flagged stale (Refs #98)
+
+* The core form review `view` now reports `diagnostic_freshness` for each saved diagnostic manifest, marking it Stale when reviewed inputs, a bound source or the schema version changed. Snapshots are not altered. [Core README](../../src/core/README.md) records the boundary: approved-rule validation and reviewed pack assembly stay blocked on Finance and template authority; no issue criteria ticked. Unit-tested only. Evidence under `.copilot-tracking/` (2026-11-03 issue-98 manifest freshness).

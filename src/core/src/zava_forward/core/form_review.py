@@ -329,6 +329,51 @@ def _report(store: Any, case: Record, draft: Record, digests: Digests | None = N
     )
 
 
+def _freshness(store: Any, case: Record, draft: Record, digests: Digests) -> list[Record]:
+    """Flag saved manifests whose inputs changed; the frozen snapshots stay untouched."""
+    schema = draft["schema"]
+    versions = [
+        r["definition"]["version"]
+        for r in store.data.get("form_schemas", [])
+        if r["definition"]["id"] == schema["id"]
+    ]
+    newer_schema = max(versions, default=0) != schema["version"]
+    seen: dict[tuple[str, int, str, str], bool] = {}
+    result = []
+    for index, snapshot in enumerate(draft["diagnostics"]):
+        reasons = []
+        stale: list[str] = []
+        if snapshot["input_version"] != draft["version"]:
+            reasons.append("Reviewed inputs changed after this manifest.")
+        if newer_schema:
+            reasons.append("A newer schema version exists.")
+        for fid, row in snapshot["fields"].items():
+            evidence = row["evidence"]
+            if evidence is None:
+                continue
+            source = evidence["source"]
+            key = (source["id"], source["version"], source["content_sha256"], source["kind"])
+            if key not in seen:
+                seen[key] = _current(store, case, evidence, digests)
+            if not seen[key]:
+                stale.append(fid)
+        if stale:
+            reasons.append("A bound source changed.")
+        result.append(
+            dict(
+                index=index,
+                input_version=snapshot["input_version"],
+                status="Stale" if reasons else "Current",
+                reasons=reasons,
+                stale_fields=sorted(stale),
+                action="Re-run the diagnostic after re-reviewing the affected fields."
+                if reasons
+                else None,
+            )
+        )
+    return result
+
+
 def view(store: Any, user: Record, case_id: str) -> Record:
     with store.lock:
         forms._actor(store, user)
@@ -336,9 +381,11 @@ def view(store: Any, user: Record, case_id: str) -> Record:
         drafts = []
         for draft in case.get("form_reviews", []):
             try:
+                digests: Digests = {}
                 report = dict(
-                    _report(store, case, draft),
+                    _report(store, case, draft, digests),
                     recorded_diagnostics=deepcopy(draft["diagnostics"]),
+                    diagnostic_freshness=_freshness(store, case, draft, digests),
                 )
             except DocumentUnavailable:
                 report = dict(
