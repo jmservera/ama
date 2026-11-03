@@ -589,6 +589,29 @@ Issue 110 cannot be considered
 complete from this slice; analysis issue 111 and infrastructure issue 140 remain
 separate, with 140 depending on the consumer, not the reverse.
 
+### Versioned sensor analysis slice (111)
+
+`sensor_analysis` is a pure, read-only exercise layer over canonical retained
+rows (the `SensorConsumer.observed_series` shape). `derive_signal` takes a
+supplied `as_of` time, a consent state and an `AnalysisPolicy`, and returns a
+versioned signal with an input digest, a sufficiency label (`SUFFICIENT`,
+`INSUFFICIENT`, `STALE`, `DECLINED`) and reasons. Missing, stale, unconfirmed or
+declined data is `INSUFFICIENT` with priority effect `NONE`. It reuses the
+labelled exercise comparator and its values (`EXERCISE VALUE: fictional, not
+sourced`).
+
+`review_task_candidate` proposes a `SENSOR_REVIEW_DUE` condition-review task
+only for a sufficient review signal under a named `RuleApproval` for the
+current policy version. The default policy has no approval, so no task is
+proposed. It creates nothing: no store, task, ranking, hazard, clock, hold,
+resident-report or AI write, and no raw reading or sensor identifier in its
+output. Not yet built: store or scheduler wiring, an approved rule, and the R2
+method sign-off and R3 limits that gate any measure beyond an exercise rule.
+
+```bash
+python -m unittest discover -s tests -p 'test_sensor_analysis.py' -q
+```
+
 ## Appointment agreements and visit evidence (#87)
 
 `appointment_control(user, work_order_id, body)` records explicit offers, separate
