@@ -942,8 +942,7 @@ assistive-technology, staff usability or full WCAG acceptance.
 When a required employee-workspace script is missing, the current screen retries
 that file automatically after 250ms and, after a load error, again after 500ms
 and 1500ms. Each attempt waits at most five seconds. The three-retry budget is
-shared across
-navigation for that page; already-present scripts are not reloaded.
+shared across navigation for that page; already-present scripts are not reloaded.
 Timeouts and scripts that finish loading without the expected workspace function
 stop recovery instead of risking duplicate script execution. A late response
 cannot render an obsolete screen or restore its role/scope status after the
