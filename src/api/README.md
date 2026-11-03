@@ -3622,7 +3622,10 @@ eight implemented auth roles, exact synthetic own queues/navigation and all
 eleven PRD perspectives/nine workflows with partial or deferred coverage.
 Each implemented profile declares its default IDs, count, order, selection and,
 for an empty own queue, the reason "no representative scenario supplied";
-`tests/test_workbench.py` checks these against the role queues. It is not full AC-034/043, accepted role mapping or validated user research.
+`tests/test_workbench.py` checks these against the manifest's own role queues
+(a consistency check inside the manifest; the browser check asserts the real
+screens). It is not full AC-034/043, accepted role mapping or validated user
+research.
 From `src/api`, using the installed src packages and `.[dev]`:
 
 ```bash
