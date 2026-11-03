@@ -4175,6 +4175,14 @@ original source is deep-copied and kept, and eligibility stays `Unknown`. Outage
 kept in the audit. `outage_banner` reports a missing, invalid, future or stale (over one hour) check as
 Unknown, never healthy.
 
-Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, importer and AI-run
-producers, and owner approval of the role names and runbooks (open). Tests:
-`src/core/tests/test_exception_queue.py`.
+`zava_forward.core.exception_feeds` reads existing records and raises items without changing them:
+`feed_failed_ai_runs` raises a `failed_ai_run` item for each AI task record that fell back from the
+model or was quarantined (a deliberate workflow-only choice is not a failure; only record ids and the
+stated reason are kept, not the AI or workflow text), and `feed_stranded_tasks` raises a
+`stranded_task` item for each overdue task from `taskqueues.overdue_tasks` that has no named owner.
+`raise_failure` takes an optional `ref`, so reading the same feed again does not duplicate an item.
+Nothing is re-run or re-sent.
+
+Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, importer,
+integration and conflict producers, and owner approval of the role names and runbooks (open). Tests:
+`src/core/tests/test_exception_queue.py`, `src/core/tests/test_exception_feeds.py`.
