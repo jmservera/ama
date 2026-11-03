@@ -311,6 +311,56 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertTrue(c["tenure_review_required"])
         self.assertEqual(resident_gate(c), [resident_decisions.TENURE_HOLD])
 
+    def legal_position(self, **changes: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="tenure_legal_position",
+                case_id="ZF-1",
+                report_version=1,
+                expected_version=0,
+                reviewer_name="Lee Legal",
+                reviewer_role="Legal adviser",
+                position_ref="SYN-LEGAL-REF",
+                position_version="v1",
+                reviewed_on="2026-01-01",
+            ),
+            **changes,
+        )
+
+    def test_legal_position_reference_attaches_without_releasing_hold(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        self.store.resident_action(self.sam, "ZF-1", self.legal_position())
+        self.store.resident_action(
+            self.sam, "ZF-1", self.legal_position(expected_version=1, position_version="v2")
+        )
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        self.assertEqual([p["position_version"] for p in report["legal_positions"]], ["v1", "v2"])
+        self.assertEqual(report["verification"], "Unknown")
+        self.assertEqual(report["decision_route"], "Unknown")
+        self.assertEqual(report["cost_position"], "Unknown")
+        self.assertIn("not read or interpreted", report["legal_positions"][0]["interpretation"])
+        self.assertEqual(resident_gate(self.store.cases["ZF-1"]), [resident_decisions.TENURE_HOLD])
+
+    def test_legal_position_refuses_unsafe_input_unchanged(self) -> None:
+        with self.assertRaises(ValueError):
+            self.store.resident_action(self.sam, "ZF-1", self.legal_position())
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        for changes in (
+            dict(report_version=2),
+            dict(reviewer_role="Resident Liaison Officer"),
+            dict(reviewer_name="Sam Example"),
+            dict(reviewed_on="2999-01-01"),
+            dict(position_ref=" "),
+            dict(verification="Verified"),
+        ):
+            with self.subTest(changes=changes):
+                body = self.legal_position(**changes)
+                self.unchanged_failure(partial(self.store.resident_action, self.sam, "ZF-1", body))
+        self.store.resident_action(self.sam, "ZF-1", self.legal_position())
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.legal_position())
+        )
+
     def test_tenure_intake_preserves_accepted_status_and_heuristic_priority(self) -> None:
         for measure in MEASURES:
             self.scope(measure)

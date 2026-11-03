@@ -170,7 +170,7 @@ screening or #440 stabilization is inferred.
 ## Unverified nomination and tenure intake (#130, #131)
 
 The existing `resident_action` ledger accepts `nomination_record`,
-`nomination_correct` and `tenure_intake`. These are constructed staff-recorded
+`nomination_correct`, `tenure_intake` and `tenure_legal_position`. These are constructed staff-recorded
 intake, not nomination eligibility, verified identity, consent, Legal approval
 or an offer. Current registered staff need both resident-workflow and
 recorded-reason rights. Owners are named follow-up staff, not appointed Legal
