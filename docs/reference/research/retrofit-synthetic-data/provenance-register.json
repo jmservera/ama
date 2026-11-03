@@ -48,7 +48,7 @@
       "licence": "Open Government Licence v3.0",
       "retrieval_date": "2026-10-01",
       "attribution": "Source: Office for National Statistics licensed under the Open Government Licence v3.0. Contains OS data (c) Crown copyright and database right [year to confirm]",
-      "verification": "retrieval date set to 2026-10-01 by owner decision (jmservera, recorded on #175, 2026-11-02): the retrieval date is the first commit date in this repository that references the source (068fb08ce, checked with git log -S). Open item: copyright year in the OS acknowledgement to confirm against the named LSOA 2021 BGC and LAD December 2021 BFC product notices. Licence and the two required statements confirmed 2026-11-01 against the ONS digital-boundaries guidance"
+      "verification": "retrieval date set to 2026-10-01 by owner decision (jmservera, recorded on #175, 2026-11-02): the retrieval date is the first commit date in this repository that references the source (068fb08ce, checked with git log -S). Open item: copyright year in the OS acknowledgement to confirm against the named LSOA 2021 BGC and LAD December 2021 BFC product notices. 2026-11-03 recheck: the ONS licences page (https://www.ons.gov.uk/methodology/geography/licences) gives the statement with a literal [year] placeholder and the ArcGIS item records for both products (LSOA 2021 BGC V5, LAD December 2021 BFC) only link to that page, so no official source names the year; it was not invented. Licence and the two required statements confirmed 2026-11-01 against the ONS digital-boundaries guidance"
     },
     {
       "id": "SRC-OWNER-MODEL",

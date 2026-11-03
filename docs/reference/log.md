@@ -9871,3 +9871,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Sensor simulation child status refresh (Refs #190)
 
 * Refreshed the [sensor analytics research plan](./research/iot-sensor-analytics-research-plan.md) child table: #191, #192 and #194 are closed on GitHub, #193 stays open on its consumer-test criterion. No story was closed or deferred. Parent criterion 1 stays unmet and unticked; criterion 2 is unchanged. Documentation only. Evidence is under `.copilot-tracking/` (2026-11-03 issue-190 child status refresh).
+## [2026-11-03] update | Boundaries attribution year recheck (Refs #175)
+
+* Rechecked the OS copyright year for `SRC-ONS-BOUNDARIES` against the ONS licences page and the ArcGIS item records for both boundary products. The official statement uses a literal `[year]` placeholder and no product notice names a year, so the year stays unconfirmed and unticked; the owner must decide it. Criterion 2 stays unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-175 attribution year).
