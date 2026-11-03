@@ -9987,3 +9987,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Both synthetic resident pages (showcase and #444 preview) now state that Legal and DPO review is outstanding and the pages are demonstration only. This records the owner decision of 2026-11-03 (same basis as #766) and the [API README](../../src/api/README.md) notes it.
 * No Legal or DPO approval, consent, retention or data change is implied. #441 criteria 5 (FR-044/AC-084 owner disposition) and 9 (exact-head review and gates) stay unmet; no ticks changed. Unit-tested only; WCAG browser and assistive-technology proof stay unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-441 demo disclaimer).
+## [2026-11-03] update | Resident demo authority extended to 31 December 2027 (Refs #521)
+
+* Owner decision 2026-11-03: the shared exclusive authority end in `resident-demo.json` moves to 2028-01-01T00:00:00Z (through 31 December 2027 UTC). Updated the infra and API READMEs, added a rotation and USD177 added-cost estimate note (USD700 cap unchanged), and moved the tests to the new instant with the earlier cutoffs proven accepted and the new limit refused. No Azure resource, SQL row or secret changed; live apply stays pending owner confirmation. Evidence is under `.copilot-tracking/` (2026-11-03 issue-521 demo authority).

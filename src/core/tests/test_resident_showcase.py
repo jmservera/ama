@@ -391,7 +391,7 @@ class ViewTests(unittest.TestCase):
 class ConfigTests(unittest.TestCase):
     def env(self, **over: Any) -> dict[str, str]:
         base = {
-            "ZF_DEMO_EXPIRES_AT": "2027-02-01T00:00:00Z",
+            "ZF_DEMO_EXPIRES_AT": "2028-01-01T00:00:00Z",
             "ZF_DEMO_ALLOWED_HOSTS": "demo.example.invalid",
             "ZF_DEMO_PASSWORD_VERIFIER": rs.make_verifier(FAKE_PASSWORD, n=2**14),
             "ZF_DEMO_SESSION_KEY": FAKE_KEY,
@@ -431,12 +431,14 @@ class ConfigTests(unittest.TestCase):
             self.refuse(**{name: None})
 
     def test_config_accepts_inclusive_cap_but_stops_serving_at_expiry(self) -> None:
-        self.assertEqual(rs.AUTHORITY_END, datetime(2027, 2, 1, tzinfo=UTC))
+        self.assertEqual(rs.AUTHORITY_END, datetime(2028, 1, 1, tzinfo=UTC))
         for expires in (
             "2026-11-01T00:00:00Z",
             "2026-12-31T23:59:59Z",
             "2027-01-31T23:59:59Z",
             "2027-02-01T00:00:00Z",
+            "2027-12-31T23:59:59Z",
+            "2028-01-01T00:00:00Z",
         ):
             cfg = rs.config_from_env(self.env(ZF_DEMO_EXPIRES_AT=expires), NOW)
             self.assertEqual(cfg.expires_at.isoformat().replace("+00:00", "Z"), expires)
@@ -450,8 +452,8 @@ class ConfigTests(unittest.TestCase):
         self.assertIsNotNone(rs.exclusion(far, rs.AUTHORITY_END))
 
     def test_expiry_rules(self) -> None:
-        self.refuse(ZF_DEMO_EXPIRES_AT="2027-02-01T00:00:01Z")
-        self.refuse(ZF_DEMO_EXPIRES_AT="2027-02-01T00:00:00.001Z")
+        self.refuse(ZF_DEMO_EXPIRES_AT="2028-01-01T00:00:01Z")
+        self.refuse(ZF_DEMO_EXPIRES_AT="2028-01-01T00:00:00.001Z")
         self.refuse(ZF_DEMO_EXPIRES_AT="2026-10-25T11:59:59Z")
         self.refuse(ZF_DEMO_EXPIRES_AT="2026-10-26T11:00:00")
         self.refuse(ZF_DEMO_EXPIRES_AT="2026-10-26T13:00:00+01:00")

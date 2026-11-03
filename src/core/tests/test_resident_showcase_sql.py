@@ -201,7 +201,7 @@ class RenderTests(unittest.TestCase):
         batches = script.render(USER)
         text = "\n".join(batches)
         end = rs.AUTHORITY_END.strftime("%Y-%m-%dT%H:%M:%S")
-        self.assertEqual(end, "2027-02-01T00:00:00")
+        self.assertEqual(end, "2028-01-01T00:00:00")
         self.assertEqual(text.count(f"valid_to <= '{end}'"), 2)
         self.assertNotIn("{{", text)
         self.assertNotIn("2026-11-01", text)
@@ -636,10 +636,11 @@ class SqlBoundaryTests(unittest.TestCase):
         with self.assertRaises(mssql_python.Error):
             self.allow("C-1", provenance="   ")
         with self.assertRaises(mssql_python.Error):
-            self.allow("C-1", end="2027-02-01T00:00:01")
+            self.allow("C-1", end="2028-01-01T00:00:01")
         with self.assertRaises(mssql_python.Error):
             self.allow("C-1", end="2026-10-01T00:00:00")
         self.allow("C-1", end="2027-02-01T00:00:00")
+        self.allow("C-2", end="2028-01-01T00:00:00")
 
     def test_existing_november_constraint_migrates_and_reapply_preserves_rows_and_rights(
         self,
@@ -662,7 +663,7 @@ class SqlBoundaryTests(unittest.TestCase):
                 "WHERE parent_object_id = OBJECT_ID(N'resident_showcase.allowed_case') "
                 "AND name = N'ck_allowed_case_window'"
             )[0]
-            self.assertIn("2027-02-01T00:00:00", definition)
+            self.assertIn("2028-01-01T00:00:00", definition)
             self.assertEqual((disabled, untrusted), (False, False))
             self.assertEqual(len(self.as_user(rsql.LIST_SQL)), 1)
             with self.assertRaises(mssql_python.Error):
