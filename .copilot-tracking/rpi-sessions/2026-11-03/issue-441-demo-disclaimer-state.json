@@ -1,0 +1,32 @@
+{
+  "task_id": "issue-441-demo-disclaimer",
+  "task_slug": "issue-441-demo-disclaimer",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-03/issue-441-demo-disclaimer-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-03/issue-441-demo-disclaimer-plan.md",
+    "details": ".copilot-tracking/details/2026-11-03/issue-441-demo-disclaimer-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-03/issue-441-demo-disclaimer-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-03/issue-441-demo-disclaimer-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-03/issue-441-demo-disclaimer-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Owner 2026-11-03: ship demo with Legal/DPO-outstanding disclaimer", "status": "confirmed", "evidence": "task instruction"},
+    {"decision": "Critique executed once; Proceed", "status": "recorded", "evidence": "critique file"},
+    {"decision": "Review executed once; Complete (self-review)", "status": "recorded", "evidence": "review file"},
+    {"decision": "Refs #441 only", "status": "confirmed", "evidence": "criteria 5 and 9 unmet"}
+  ],
+  "blockers": [
+    {"id": "owner-disposition", "summary": "FR-044/AC-084 not dispositioned (criterion 5)", "resolution": "Owner replies on #441"},
+    {"id": "gate", "summary": "Gate and independent exact-head review not run here (criterion 9)", "resolution": "Coordinator runs gate"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Open PR; coordinator gate and independent review"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Record owner FR-044/AC-084 disposition", "rationale": "Only human-gated unmet criterion", "evidence": "#766 packet"},
+    {"rank": 2, "task": "Exact-head review and gates", "rationale": "Criterion 9", "evidence": "PR checks"}
+  ]
+}

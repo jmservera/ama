@@ -630,6 +630,7 @@ class AbuseAndHardeningTests(DemoTestCase):
         self.assertNotIn("onclick", text)
         self.assertNotIn("<script>", text)
         self.assertIn("Synthetic showcase", text)
+        self.assertIn("Legal and Data Protection Officer review is still outstanding", text)
         self.assertIn('autocomplete="username"', text)
         self.assertIn('autocomplete="current-password"', text)
 

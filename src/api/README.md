@@ -5003,6 +5003,12 @@ homes SQL database. It is a temporary owner showcase, not resident enrolment, no
 identity and not production authentication. It is a different composition from the loopback-only
 #444 preview above: that preview and its fixture guard are unchanged and are not imported.
 
+Both resident pages (this showcase and the #444 preview) show a demonstration-only notice that
+Legal and Data Protection Officer review is still outstanding (owner decision 2026-11-03, same
+basis as #766). The notice is static page text. It is not a Legal or DPO approval, it does not
+change consent, retention or the no-real-resident-data boundary, and phone, email and visits stay
+the routes for any real resident need (#441).
+
 ### Startup compatibility after resident chat (#525)
 
 An image-only update does not update the SQL view. The resident reader now

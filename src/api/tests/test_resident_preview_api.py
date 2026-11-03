@@ -106,6 +106,7 @@ class ResidentHttp(unittest.TestCase):
             self.assertNotIn(CANARY.encode(), content)
         page = live.call("GET", "/")[2].decode()
         self.assertIn("Synthetic preview - not a live resident service", page)
+        self.assertIn("Legal and Data Protection Officer review is still outstanding", page)
         self.assertNotIn("<script>", page.replace('<script src="/resident.js"></script>', ""))
 
     def test_page_focus_and_announcement_contract(self) -> None:
