@@ -10013,3 +10013,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Technical and quality screens rendered structure test (Refs #231)
 
 * Added unit tests pinning the rendered technical and quality queue trees (documented design-system classes only, no role simulator, headings and table captions). Test only; criteria 4 and 5 stay unmet pending #155 validation and #150 Fluent adoption.
+## [2026-11-03] update | Programme queue paging in screen trace (Refs #230)
+
+* Updated [the atlas screen trace](./research/ux/atlas-screen-trace.md) programme coordinator row: Previous page and Next page controls reach every permitted case; scope filter still applies to the loaded page only; unit-tested only.

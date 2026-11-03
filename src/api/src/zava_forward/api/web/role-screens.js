@@ -295,9 +295,13 @@ const programmeRow = (row) => {
 const programmeHeadings = ["Home", "Return reason", "Sender", "Current owner",
   "Proposed receiver (not a confirmed owner)", "Chase owner (chases the receiver)",
   "Resident-update owner (updates the resident)"];
-function programmeQueue(items, total) {
+const programmePageSize = 50;
+function programmeQueue(first, total, loadPage) {
+  let items = first;
+  let offset = 0;
   const holder = h("div", {});
   const status = h("p", { role: "status", id: "programme-filter-status" });
+  const paging = h("p", { class: "empty", role: "status", id: "programme-page-status" });
   const select = h("select", { id: "programme-scope", name: "scope" },
     programmeScopes.map(([value, text]) => h("option", { value }, text)));
   const apply = (scope, remember = true) => {
@@ -306,12 +310,34 @@ function programmeQueue(items, total) {
     status.textContent = `${rows.length} of ${items.length} records on this page shown. Scope: ${programmeScopes.find(([v]) => v === scope)[1]}. Filtering changes the view only; no record is changed.`;
     holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow)));
   };
+  const pageText = () => `Showing cases ${total ? offset + 1 : 0} to ${offset + items.length} of ${total} permitted cases. The scope filter applies to this page only; open the other pages to see the rest. Not a portfolio total.`;
+  const go = async (next) => {
+    paging.textContent = "Loading page. The current rows stay until it arrives.";
+    try {
+      const page = await loadPage(next);
+      items = page.items || [];
+      offset = next;
+      apply(select.value || "default", false);
+      paging.textContent = pageText();
+    } catch (error) {
+      paging.textContent = "That page could not be loaded. The rows shown are unchanged. Try again, or open a case from the case list.";
+    }
+  };
   const saved = screenScopeQuery().get("scope");
   const initial = programmeScopes.some(([v]) => v === saved) ? saved : "default";
   select.value = initial;
   apply(initial, false);
+  paging.textContent = pageText();
+  const pager = total > first.length
+    ? h("div", { class: "row", role: "group", "aria-label": "Queue pages" },
+      h("button", { class: "btn alt", type: "button", id: "programme-prev",
+        onclick: () => { if (offset > 0) go(Math.max(0, offset - programmePageSize)); } }, "Previous page"),
+      h("button", { class: "btn alt", type: "button", id: "programme-next",
+        onclick: () => { if (offset + items.length < total) go(offset + programmePageSize); } }, "Next page"))
+    : null;
   return h("div", {},
-    h("p", {}, `${items.length} records on this page of ${total} permitted cases. Not a portfolio total.`),
+    paging,
+    pager,
     h("form", { class: "row", "aria-label": "Scope filter",
       onsubmit: (event) => { event?.preventDefault?.(); apply(select.value || "default"); } },
       h("label", { for: "programme-scope" }, "Scope"), select,
@@ -467,12 +493,13 @@ registerRoleScreen({
   title: "Programme queue and connected home view",
   roles: [...screenManagers, "Retrofit Coordinator"],
   async overview(signal) {
-    const page = await api("/api/cases?view=all&limit=50&offset=0", undefined, signal);
+    const loadPage = (offset) => api(`/api/cases?view=all&limit=${programmePageSize}&offset=${offset}`, undefined, signal);
+    const page = await loadPage(0);
     const report = await api("/api/coordinator?view=all", undefined, signal).catch(() => null);
     return h("div", {},
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view of recorded work. Chase and update responsibility are shown separately. Nothing here sends, assigns or changes a record. Source: desk research, not observed behaviour; validation remains open.")),
-      screenPanel("Shared queue", programmeQueue(page.items || [], page.total)),
+      screenPanel("Shared queue", programmeQueue(page.items || [], page.total, loadPage)),
       screenPanel("Lifecycle and funnel", programmeFunnel(report)),
       screenWithheld(["Resident contact details and access history (open the case workspace for the safe route reference)",
         "Household and vulnerability details beyond what a queue row needs", "Funding amounts and claim values"]));
