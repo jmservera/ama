@@ -96,6 +96,16 @@ def instant(value: object) -> datetime | None:
     return parsed.astimezone(UTC) if parsed.tzinfo is not None else None
 
 
+def timing(due: object, done: object, now: datetime) -> str:
+    """Plain state of one recorded external deadline; never a statutory calculation."""
+    end, finished = instant(due), instant(done)
+    if finished is not None and finished <= now:
+        return "Completed"
+    if end is None:
+        return UNKNOWN
+    return "Overdue" if end < now else "Open"
+
+
 def overdue_tasks(
     case: dict[str, Any], *, as_of: str, handoff: dict[str, Any] | None
 ) -> list[dict[str, Any]]:
@@ -230,6 +240,21 @@ def context(
             clocks.append(
                 dict(
                     owner=named,
+                    owner_named=named != UNKNOWN,
+                    owner_status=(
+                        "Named follow-up owner recorded."
+                        if named != UNKNOWN
+                        else f"No named follow-up owner is recorded. Ask {owner} to record "
+                        "one through the existing hazard service."
+                    ),
+                    response_state=timing(
+                        hazard.get("response_due_at"), hazard.get("responded_at"), now
+                    ),
+                    resident_update_state=timing(
+                        hazard.get("resident_update_due_at"),
+                        hazard.get("resident_updated_at"),
+                        now,
+                    ),
                     aware_at=hazard.get("aware_at") if awareness and awareness <= now else UNKNOWN,
                     elapsed_hours=int((now - awareness).total_seconds() // 3600)
                     if awareness and awareness <= now

@@ -91,10 +91,14 @@ const work = {
   hazard_clocks: [
     {owner: "Safety follow-up owner", elapsed_hours: 24,
       aware_at: "2026-10-26T09:00:00Z", response_due_at: "2026-10-27T09:00:00Z",
-      resident_update_due_at: "2026-10-27T10:00:00Z", authority: "External service"},
+      resident_update_due_at: "2026-10-27T10:00:00Z", authority: "External service",
+      owner_named: true, owner_status: "Named follow-up owner recorded.",
+      response_state: "Open", resident_update_state: "Open"},
     {owner: "Second follow-up owner", elapsed_hours: null, aware_at: "Unknown",
       response_due_at: "Unknown", resident_update_due_at: "Unknown",
-      authority: "External service"}
+      authority: "External service", owner_named: false,
+      owner_status: "No named follow-up owner is recorded. Ask Task owner to record one.",
+      response_state: "Unknown", resident_update_state: "Unknown"}
   ]
 };
 const rows = [
@@ -167,6 +171,9 @@ vm.runInContext(`registerRoleScreen({id: "synthetic", title: "Synthetic queue",
             "service response due: Unknown",
             "resident update due: Unknown",
             "External service owns timing.",
+            "No named follow-up owner is recorded. Ask Task owner to record one.",
+            "Service response: Open; resident update: Open.",
+            "Service response: Unknown; resident update: Unknown.",
         ):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, safety)
