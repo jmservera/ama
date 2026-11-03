@@ -9900,3 +9900,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added `ChatPrivacy.purge_retention` over the chat repository: deletes threads and messages idle longer than the recorded demo period and expired memory, and does nothing while no period is recorded. [The demo storage approval](./research/chat-demo-storage-approval-2026-11-01.md) now states this. Unit-tested only; no scheduler runs it.
 * Criteria 2 and 5 stay unmet (DPO and Legal decisions); no ticks changed. Touches the SQL repository, so the complete gate is for the coordinator. Evidence is under `.copilot-tracking/` (2026-11-03 issue-163 retention purge).
+
+## [2026-11-03] update | Versioned sensor analysis exercise slice (Refs #111)
+
+* Added a pure `sensor_analysis` module and tests in `src/core`: reproducible, versioned signals with sufficiency labels (stale, declined and missing data are INSUFFICIENT and never lower priority) and a `SENSOR_REVIEW_DUE` candidate only under a named rule approval; none is approved, so none is proposed. Exercise values only; nothing is persisted or wired to tasks. Unit-tested only; #111 criteria stay unmet (see PR). Evidence under `.copilot-tracking/` (2026-11-03 issue-111 r1).
