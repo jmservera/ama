@@ -278,6 +278,15 @@ schedule, Legal/DPO or owner approval acceptance.
   verifies only the chain, so a ledger already tampered with before the first
   publish is anchored as genuine. Review the first publish by a second person
   against an independent record before relying on the digests.
+  `python -m zava_forward.orchestrator.digest_blob --reconcile RECORD.json` is the
+  read-only aid for that check. `RECORD.json` is a JSON object of canonical anchor
+  blob name (for example `digest-0000000003.json`) to lowercase SHA-256 head,
+  compiled by the second person from a source independent of the ledger host. It
+  prints `LEDGER_DIGEST_RECONCILE_ALERT` and exits 1 on a missing, unlisted,
+  differing or malformed anchor, a malformed record or an unreachable container,
+  and `LEDGER_DIGEST_RECONCILE_OK` only when both sets match exactly. It writes
+  nothing, is not scheduled, and does not record the second person's approval,
+  which remains a human step.
 * The retention period must be chosen by the owner (no shorter than the legal
   audit retention period) before the policy is locked; locking is irreversible.
 * Open items, not invented here: the Log Analytics table names

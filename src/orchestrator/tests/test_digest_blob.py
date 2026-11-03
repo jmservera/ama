@@ -244,6 +244,43 @@ class BlobDigestTests(unittest.TestCase):
         self.store.audit_entries = lambda: iter([forged, e2])
         self.assertFalse(digest_blob.verify(self.store, self.blob)["intact"])
 
+    def record_file(self, record):
+        path = Path(self.tmp.name) / "record.json"
+        path.write_text(json.dumps(record))
+        return str(path)
+
+    def test_reconcile_matches_independent_record_read_only(self):
+        self.run_job("--publish")
+        record = {n: json.loads(b)["head"] for n, b in self.container.blobs.items()}
+        before, seen = dict(self.container.blobs), len(self.container.calls)
+        self.out.clear()
+        self.assertEqual(self.run_job("--reconcile", self.record_file(record)), 0)
+        self.assertIn(digest_blob.RECONCILE_OK_MARKER, self.out[-1])
+        self.assertEqual(self.container.blobs, before)
+        self.assertTrue(all(c[0] == "GET" or "token" in c[1] for c in self.container.calls[seen:]))
+
+    def test_reconcile_flags_tampered_missing_and_unlisted_anchors(self):
+        self.run_job("--publish")
+        name = "digest-0000000003.json"
+        for record in ({name: "0" * 64}, {name: json.loads(self.container.blobs[name])["head"],
+                                          "digest-0000000009.json": "1" * 64}, {"year-2099.json": "2" * 64}):
+            self.out.clear()
+            self.assertEqual(self.run_job("--reconcile", self.record_file(record)), 1)
+            self.assertIn(digest_blob.RECONCILE_ALERT_MARKER, self.out[-1])
+            self.assertNotIn(digest_blob.RECONCILE_OK_MARKER, "".join(self.out))
+
+    def test_reconcile_fails_closed_on_bad_record_or_empty_container(self):
+        for record in ([], {}, {"digest-3.json": "a" * 64}, {"digest-0000000003.json": "short"}):
+            self.out.clear()
+            self.assertEqual(self.run_job("--reconcile", self.record_file(record)), 1)
+        self.out.clear()
+        self.assertEqual(self.run_job("--reconcile", str(Path(self.tmp.name) / "none.json")), 1)
+        self.assertEqual(self.run_job("--reconcile"), 2)
+        self.out.clear()
+        ok_shape = {"digest-0000000003.json": "a" * 64}
+        self.assertEqual(self.run_job("--reconcile", self.record_file(ok_shape)), 1)
+        self.assertNotIn(digest_blob.RECONCILE_OK_MARKER, "".join(self.out))
+
     def test_not_configured(self):
         self.assertIsNone(digest_blob.open_digest_store({}))
         self.assertEqual(digest_blob.main([], store=self.store, env={}, out=self.out.append), 2)
