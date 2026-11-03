@@ -488,13 +488,20 @@ class PanelTests(roles.Matrix):
         self.assertEqual(entry["accountable_individual"], ai_registry.UNKNOWN)
         self.assertFalse(entry["enabled"])
         rec = entry["demo_activation"]
-        self.assertEqual((rec["accountable_owner"], rec["decision_date"]), ("jmservera", "2026-11-03"))
+        self.assertEqual(
+            (rec["accountable_owner"], rec["decision_date"]), ("jmservera", "2026-11-03")
+        )
         self.assertIn("DPO and Legal review outstanding", rec["outstanding"])
 
     def test_demo_switch_lets_the_model_answer_with_gates_in_force(self) -> None:
-        with patch("zava_forward.api.server.chat_admission", wraps=chat_admission), patch.dict(os.environ, self.DEMO_ON):
+        with (
+            patch("zava_forward.api.server.chat_admission", wraps=chat_admission),
+            patch.dict(os.environ, self.DEMO_ON),
+        ):
             code, status = self.api(ROLE, "/api/chat/status")
-            self.assertEqual((code, status["activation"], status["demo_activation"]), (200, "demo-only", True))
+            self.assertEqual(
+                (code, status["activation"], status["demo_activation"]), (200, "demo-only", True)
+            )
             self.assertIn("No DPO, Legal or RAI approval", status["demo_disclaimer"])
             d = self.ask(self.thread())[1]
             self.assertEqual((d["kind"], d["model"]), ("answer", "azure-openai"))
@@ -509,9 +516,14 @@ class PanelTests(roles.Matrix):
     def test_demo_switch_off_or_wrong_keeps_rules_only_status_and_no_call(self) -> None:
         wrong = {**self.DEMO_ON, "ZF_CHAT_DEMO_ACTIVATION": "yes"}
         for env in ({}, wrong):
-            with patch("zava_forward.api.server.chat_admission", wraps=chat_admission), patch.dict(os.environ, env):
+            with (
+                patch("zava_forward.api.server.chat_admission", wraps=chat_admission),
+                patch.dict(os.environ, env),
+            ):
                 status = self.api(ROLE, "/api/chat/status")[1]
-                self.assertEqual((status["demo_activation"], status["demo_disclaimer"]), (False, None))
+                self.assertEqual(
+                    (status["demo_activation"], status["demo_disclaimer"]), (False, None)
+                )
                 self.assertNotEqual(status["activation"], "demo-only")
                 d = self.ask(self.thread())[1]
                 self.assertEqual(d["model"], "workflow-only")
@@ -519,7 +531,10 @@ class PanelTests(roles.Matrix):
         self.assertEqual(self.prompts, [])
 
     def test_demo_switch_provider_failure_falls_back_to_workflow_only(self) -> None:
-        with patch("zava_forward.api.server.chat_admission", wraps=chat_admission), patch.dict(os.environ, self.DEMO_ON):
+        with (
+            patch("zava_forward.api.server.chat_admission", wraps=chat_admission),
+            patch.dict(os.environ, self.DEMO_ON),
+        ):
             tid = self.thread()
             for outcome in ("provider-unavailable", "timeout", "disabled"):
                 self.model = lambda _p, o=outcome: envelope(None, o)
@@ -529,7 +544,11 @@ class PanelTests(roles.Matrix):
 
     def test_web_panel_shows_demo_disclaimer_and_model_generated_label(self) -> None:
         js = (WEB / "chat.js").read_text()
-        for needle in ("admission.demo_disclaimer", "chat-demo-disclaimer", "Model-generated, not approved. Demo only."):
+        for needle in (
+            "admission.demo_disclaimer",
+            "chat-demo-disclaimer",
+            "Model-generated, not approved. Demo only.",
+        ):
             self.assertIn(needle, js)
 
     def test_turn_refused_before_dispatch_still_records_a_receipt(self) -> None:
