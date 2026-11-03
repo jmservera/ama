@@ -9929,3 +9929,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * The map panel now shows a polite status note when background tiles fail to load, pointing to the list alternative; the [screen-reader protocol](./research/ux/wcag-conformance-baseline.md#map-list-alternative-screen-reader-check-119) now includes the tile-block scenario. Unit-tested as present in the script only.
 * Both #119 criteria stay unmet: no licensed provider chosen (needs owner, procurement, DPO and legal decisions) and no screen-reader run. Evidence is under `.copilot-tracking/` (2026-11-03 issue-119 r1).
+## [2026-11-03] update | Rubric before-and-after score record (Refs #198 #203)
+
+* Added a dated before-and-after score record to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#rubric-before-and-after-score-record-2026-11-03-refs-198-203): 47 baseline, 77 pre-cut-over, 77 after cleanup, no dip, with criteria effect for #198 and #203.
+* Unmet: #198 per-PR dual-window records and registry-PR ordering; #203 literal reference search, and deployed app plus CI proof. Evidence is under `.copilot-tracking/` (2026-11-03 score record).

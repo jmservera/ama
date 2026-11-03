@@ -257,6 +257,9 @@ operator registry data permission and the unapproved custom receive adapter
 block live-to-SQL and resident-gauge acceptance; actual local SQL evidence is
 not live transport. The following source-only production model remains separate.
 
+The [2026-11-03 before-and-after score record](../architecture/cutover-evidence-pack.md#rubric-before-and-after-score-record-2026-11-03-refs-198-203)
+records 77 before cut-over and 77 after cleanup (no dip) for #198 and #203.
+
 For #198, the [rubric src counting reconciliation](../architecture/cutover-evidence-pack.md#rubric-src-counting-reconciliation-2026-10-27)
 records the 47/100 pre-migration baseline, carried migration snapshots and
 actual #499 retirement score of 77/100 against 77/100. Registry removals
