@@ -152,6 +152,28 @@ retention, threshold or human-review decision is made here. Synthetic tests
 cannot close those gates. Required hosted checks, independent exact-head
 assessment, owner merge and applicable publication gates remain separate.
 
+### Child status and parent criteria (2026-11-03, Refs #184)
+
+GitHub read on 2026-11-03. This is a records update; no story was closed,
+ticked or deferred by it, and it adds no capability.
+
+| Child | GitHub state (2026-11-03) | Remaining acceptance |
+| --- | --- | --- |
+| #185 | Open | Owner confirmation of the 2026-11-01 proposed approach; actual credential issue, Key Vault storage and live teardown (local `device_identity` tests use in-memory fakes only, merged in #647) |
+| #186 | Closed 2026-10-18 | None recorded |
+| #187 | Closed 2026-10-31 (closure audit batch 2) | Live Hub replay stays with the #184 live exercise |
+| #188 | Open | Actual Azure SQL query, restart and live handover run |
+| #189 | Open | Actual pre-run headroom, currency and active alert verification by the named owner |
+
+Parent criteria: "all child stories closed or deferred" is unmet (#185, #188
+and #189 are open and no owner-accepted deferral exists). "Simulator never
+connects to, discovers or represents installed real devices" stays ticked and
+unchanged. "No device key or connection string in source, logs or telemetry"
+stays unmet and unticked: the constructed scan and fake-SDK leak tests
+(#704) do not cover Hub-side or Azure telemetry, and no credential was issued.
+Live work needs the approved Hub, registry data permission and owner
+credential issue, none of which an agent may supply.
+
 ## Composed local handover evidence (2026-10-30, Refs #188)
 
 The earlier #188 deferral above describes the 2026-10-27 baseline. The additive
