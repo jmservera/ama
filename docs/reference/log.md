@@ -9867,3 +9867,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Fictional stock register generator (Refs #176)
 
 * Added `zava_forward.core.synthetic.stock_register`, a seeded fictional register generator with a manifest, and replayed it in the determinism audit; documented in [the synthetic pack README](./research/retrofit-synthetic-data/README.md). It does not recreate the original private register, so criteria 1 and 2 stay unmet and unticked. Unit-tested only. Evidence is under `.copilot-tracking/` (2026-11-03 issue-176 stock register).
+
+## [2026-11-03] update | Sensor simulation child status refresh (Refs #190)
+
+* Refreshed the [sensor analytics research plan](./research/iot-sensor-analytics-research-plan.md) child table: #191, #192 and #194 are closed on GitHub, #193 stays open on its consumer-test criterion. No story was closed or deferred. Parent criterion 1 stays unmet and unticked; criterion 2 is unchanged. Documentation only. Evidence is under `.copilot-tracking/` (2026-11-03 issue-190 child status refresh).
