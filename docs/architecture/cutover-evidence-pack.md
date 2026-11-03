@@ -2544,6 +2544,79 @@ is not met: this checkpoint is partial evidence only, because children are open
 and no pivot or deferral decision has been recorded. Rerun the checkpoint after
 the child PRs resolve and before epic closure.
 
+## Epic #123 scoped stabilization checkpoint (2026-11-03)
+
+Refs #123, applying the #440 checkpoint to the discovery, evaluation and
+release governance surface only. Focused tier, documentation and evidence
+only; no source, Azure, private-data or threshold change. This is a bounded
+engineering checkpoint, not product acceptance and not epic closure.
+
+### Source and scope
+
+| Item | Value |
+| --- | --- |
+| Pinned `origin/main` | `61a4ac54329b5362109ec63fd85490d03b98f486`, tree `accfed0a94abf6e1ac5f9485aea6dab2b65fa5f4` |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) | 0.21.0, blob `34d88395de861e9799eb9e24121a21c92c7a5adc`, unchanged |
+| [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) | 0.21.0, blob `c788b917bafaede215f326f0efc71e071a687f1c`, unchanged |
+| Covered issues | Children #124, #125, #126, #128, #129 (open); #127 and #166 (closed); parent #123; checkpoint rule #440 |
+| Merged PRs on the surface | #899 (journey learning-test bundles protocol, Refs #129); #651 (`is_synthetic` on scale fixtures, Refs #167); earlier #126, #127 and #166 delivery in `core/governance.py`, `core/rulecards.py` and the synthetic-data modules |
+| Open, unmerged, not counted | #895 (#124 register rules), #894 (#125 readiness gate), #905 (#126 AI running-cost line), #901 (#128 journey ownership register) |
+
+Draft and in-review documents are not approved by this record.
+
+### Actual local commands and outcomes
+
+Environment: `/tmp/venv-123` (pip only; `src/core`, `src/agents` and `src/api`
+editable, plus `ruff`, `mypy` and the `playwright` package without browsers).
+`PYTHONDONTWRITEBYTECODE=1`; mypy used `--cache-dir=/tmp/mypy-123`.
+
+| Check | Actual result |
+| --- | --- |
+| `cd src/core/tests && python -m unittest test_governance test_rulecards test_change_provenance -q` | 95 tests, 23.3s, OK, 16 skipped (SQL Server variants), exit 0 |
+| `cd src/api && PYTHONPATH=../core/tests:../agents/tests python -m unittest tests.test_governance_evidence_api -q` | 10 tests, 8.2s, OK, exit 0 |
+| `ruff check` and `ruff format --check` in `src/core` | Passed (153 files formatted) |
+| `ruff check` in `src/api` | Passed |
+| `mypy` in `src/core` and `src/api` | Clean (206 and 156 source files) |
+
+Skipped tests are not passes. Not run: full package suites, disposable SQL
+Server parity, Docker, Chromium harnesses, benchmarks and the complete gate
+(coordinator-owned). Those paths stay `implemented-unverified` for this head.
+No `Azure observed` row exists.
+
+### Reconciliation of requirements with code and tests
+
+| Requirement | Local evidence on this head | Class |
+| --- | --- | --- |
+| RULE-019 (frozen protocol, DPIA and register before capture; BG-011 never pass or fail when the MDE exceeds the target), AC-062, AC-077 | `test_capture_closed_until_protocol_dpia_and_register_approved`, `test_changed_protocol_needs_reason_and_new_approval`, `test_bg011_never_pass_or_fail_when_mde_exceeds_target`, `test_shadow_and_live_need_phase_0_released`, `test_pilot_case_events_need_open_capture_gate` | local observed (synthetic fixtures); real protocol, DPIA and register approvals unknown (company owners) |
+| RULE-020 (evidence-based release decision per phase and tranche), AC-063 | `test_phase_release_decisions_are_recorded_and_gated`, `test_view_is_manager_only` | local observed; no real release decision exists |
+| RULE-024 (guardrail breach pauses scope until authorised restart), AC-078 | `test_breach_record_needs_an_authorised_role`, `test_breach_pauses_scope_until_authorised_restart`, `test_paused_scope_blocks_case_workflows_but_not_hazards`; SQL restart variant skipped | local observed (JSON store); SQL variant implemented-unverified |
+| RULE-021 (regulatory change enters a human-owned workflow before activation), AC-068 | `test_review_item_lists_affected_requirements_rules_tests_and_versions`, `test_assessment_needs_named_owner_and_complete_record`, `test_assessment_never_activates_a_rule` | local observed; no live source monitoring or named Legal owner |
+| RULE-017 (professional ownership and evidence versions), AC-054 | `test_change_provenance` upload and handoff metadata tests; evidence register tests in `test_governance` | local observed |
+| RULE-016 (appraisal of options before solution), AC-053 | No code path; readiness decision record is a company document | unknown (owner evidence needed) |
+| NFR-008, NFR-009 (equity and accessibility testing; journey ownership and manual alternatives), AC-064, AC-071 | #899 protocol only; #901 (journey ownership register) is open and unmerged; no equity test has been run | partly specified; unmet |
+| BG-011 and BG-012 outcomes | Targets are proposals; no measured baseline, no AI economics line merged (#905 open) | unknown |
+
+Child ledger: #127 and #166 are closed with ticked criteria supported by the
+tests above. #124, #125, #126, #128 and #129 are open: each has criteria that
+need company owners or data (discovery owner, DPIA, budget-owner booked
+destinations, direct user research, atlas-owner mapping) and four have
+unmerged PRs. Child scope that is neither delivered nor deferred by an owner
+decision remains open.
+
+### Findings, triage and recommendation
+
+| Priority / severity | Finding | Owner |
+| --- | --- | --- |
+| 1 / Medium delivery | Four children have open unmerged PRs (#895, #894, #905, #901); criterion 2 needs each closed or owner-deferred | Existing PRs |
+| 2 / Medium | RULE-016 and the BG-011 baseline depend on company data and approvals that no code can supply | Company owners, programme board |
+| 3 / Low | SQL Server variants of the governance tests were skipped here; parity is unverified for this head | Coordinator gate |
+
+No behavior bug was reproduced and no refactoring need confirmed, so no
+regression test was added. Recommendation: **continue**. Epic #123 criterion 1
+is not met: this checkpoint is partial evidence only, because children are open
+and no pivot or deferral decision has been recorded. Criterion 2 is unmet.
+Rerun the checkpoint after the child PRs resolve and before epic closure.
+
 ## Rubric src counting reconciliation (2026-10-27)
 
 Refs #198. This additive reconciliation preserves the original UNMET rubric
