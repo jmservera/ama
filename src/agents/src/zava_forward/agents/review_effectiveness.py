@@ -426,9 +426,37 @@ def score_human_session(sheet: dict[str, Any], golden: Path = GOLDEN) -> dict[st
         panel = run_panel("human_session", human, spec, tmp, actor)
     workflow = sheet.get("workflow_seconds")
     measured = isinstance(workflow, int | float) and not isinstance(workflow, bool) and workflow > 0
+    confident = {p["id"]: p["confident"] for p in spec["proposals"]}
+    by_class: dict[str, dict[str, int]] = {}
+    for r in panel["rows"]:
+        if r["defect"]:
+            c = by_class.setdefault(str(r["defect"]), dict(seeded=0, detected=0))
+            c["seeded"] += 1
+            c["detected"] += bool(r["defect_corrected"])
+    trusted = [
+        r["proposal"]
+        for r in panel["rows"]
+        if r["defect"]
+        and r["citation_valid"]
+        and confident[r["proposal"]]
+        and r["action"] == "accept"
+    ]
     return dict(
         version=spec["version"],
         panel=panel,
+        by_defect_class=by_class,
+        automation_bias=dict(
+            confident_cited_defects_accepted=trusted,
+            note="a defect that carried valid citations and confident wording was accepted"
+            if trusted
+            else "no confident, cited defect was accepted",
+        ),
+        effort_comparison=dict(
+            same_scenario_reviews=panel["reviews"],
+            human_review_seconds=panel["effort_units"],
+            workflow_only_seconds=workflow if measured else None,
+            difference_seconds=round(panel["effort_units"] - workflow, 1) if measured else None,
+        ),
         measured_seconds=panel["effort_units"],
         workflow_only_seconds=workflow if measured else None,
         gate_passed=panel["gate_passed"],

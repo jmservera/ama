@@ -291,6 +291,23 @@ class HumanSessionTests(unittest.TestCase):
         self.assertFalse(res["gate_passed"])
         self.assertLess(res["panel"]["detected"], res["panel"]["defects"])
 
+    def test_session_reports_classes_automation_bias_and_effort_comparison(self) -> None:
+        good = re_.score_human_session(self._sheet("competent"))
+        self.assertEqual(
+            {k: v["detected"] == v["seeded"] for k, v in good["by_defect_class"].items()},
+            dict(wrong=True, stale=True, unsupported=True, incomplete=True),
+        )
+        self.assertEqual(good["automation_bias"]["confident_cited_defects_accepted"], [])
+        eff = good["effort_comparison"]
+        self.assertEqual(eff["difference_seconds"], eff["human_review_seconds"] - 60)
+        self.assertEqual(eff["same_scenario_reviews"], len(good["panel"]["rows"]))
+        bad = re_.score_human_session(self._sheet("automation_bias", 5))
+        self.assertTrue(bad["automation_bias"]["confident_cited_defects_accepted"])
+        self.assertFalse(bad["gate_passed"])
+        sheet = self._sheet("competent")
+        sheet["workflow_seconds"] = None
+        self.assertIsNone(re_.score_human_session(sheet)["effort_comparison"]["difference_seconds"])
+
     def test_malformed_sheets_raise_value_error_not_a_traceback(self) -> None:
         with self.assertRaises(ValueError):
             re_.score_human_session([])  # type: ignore[arg-type]
