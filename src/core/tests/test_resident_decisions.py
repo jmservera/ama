@@ -384,6 +384,82 @@ class JsonResidentDecisions(unittest.TestCase):
             partial(self.store.resident_action, self.sam, "ZF-1", self.legal_position())
         )
 
+    def verification(self, **changes: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="tenure_verify",
+                case_id="ZF-1",
+                report_version=1,
+                expected_version=0,
+                outcome="Verified",
+                verified_tenure="Shared owner",
+                identity_confirmed=True,
+                verifier_name="Dana Owner",
+                verifier_role="Home Ownership data owner",
+                evidence_ref="SYN-DATA-OWNER-REF",
+                verified_on="2026-01-02",
+            ),
+            **changes,
+        )
+
+    def test_verification_sets_route_only_after_legal_reference_and_keeps_hold(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.verification())
+        )
+        self.store.resident_action(self.sam, "ZF-1", self.legal_position())
+        self.store.resident_action(self.sam, "ZF-1", self.verification())
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        self.assertEqual(report["decision_route"], "Shared owner")
+        self.assertIn("Verified by data owner", report["verification"])
+        self.assertEqual(report["cost_position"], "Unknown")
+        self.assertIn("not decided here", report["verifications"][0]["interpretation"])
+        self.assertEqual(resident_gate(self.store.cases["ZF-1"]), [resident_decisions.TENURE_HOLD])
+
+    def test_not_verified_outcome_returns_route_to_unknown(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        self.store.resident_action(self.sam, "ZF-1", self.legal_position())
+        first = self.verification(verified_tenure="Leaseholder")
+        self.store.resident_action(self.sam, "ZF-1", first)
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.verification(
+                expected_version=1,
+                outcome="Not verified",
+                verified_tenure="Unknown",
+                identity_confirmed=False,
+            ),
+        )
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        self.assertEqual(report["decision_route"], "Unknown")
+        self.assertEqual(report["verification"], "Unknown")
+        routes = [v["decision_route"] for v in report["verifications"]]
+        self.assertEqual(routes, ["Leaseholder", "Unknown"])
+
+    def test_verification_refuses_unsafe_input_unchanged(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        self.store.resident_action(self.sam, "ZF-1", self.legal_position())
+        for changes in (
+            dict(report_version=2),
+            dict(verifier_role="Resident Liaison Officer"),
+            dict(verifier_name="Sam Example"),
+            dict(verified_on="2999-01-01"),
+            dict(verified_tenure="Unknown"),
+            dict(identity_confirmed=False),
+            dict(identity_confirmed="yes"),
+            dict(outcome="Not verified"),
+            dict(evidence_ref=" "),
+            dict(decision_route="Tenant"),
+        ):
+            with self.subTest(changes=changes):
+                body = self.verification(**changes)
+                self.unchanged_failure(partial(self.store.resident_action, self.sam, "ZF-1", body))
+        self.store.resident_action(self.sam, "ZF-1", self.verification())
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.verification())
+        )
+
     def test_tenure_intake_preserves_accepted_status_and_heuristic_priority(self) -> None:
         for measure in MEASURES:
             self.scope(measure)
