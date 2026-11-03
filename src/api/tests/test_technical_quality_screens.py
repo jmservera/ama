@@ -111,6 +111,22 @@ class TechnicalQueue(unittest.TestCase):
         self.assertNotIn("Recorded evidence is complete", text)
         self.assertIn("Cannot confirm readiness", text)
 
+    def test_incomplete_signoff_record_cannot_show_readiness(self) -> None:
+        for broken, expected in (
+            ({"status": "Signed off", "version": 2, "history": []}, "no named person"),
+            ({"status": "Signed off", "by": "Person", "history": []}, "no design version"),
+            (
+                {"status": "Signed off", "by": " ", "history": []},
+                "no named person and no design version",
+            ),
+        ):
+            case = tech_case()
+            case["technical"]["signoffs"]["design"] = broken
+            text = json.dumps(render("technical-queue", case)["tree"])
+            self.assertNotIn("Recorded evidence is complete", text)
+            self.assertIn("Cannot confirm readiness", text)
+            self.assertIn(expected, text)
+
     def test_unresolved_source_conflict_blocks_readiness(self) -> None:
         text = json.dumps(
             render("technical-queue", tech_case(stock_reconciliation_events=[]))["tree"]
