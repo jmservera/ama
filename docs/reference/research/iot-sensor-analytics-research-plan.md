@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-10-30
+ms.date: 2026-11-03
 ms.topic: reference
 ---
 
@@ -739,6 +739,25 @@ a local disposition record, not a GitHub update or authority to close stories.
 The per-check reporting criterion is supported by existing report objects and
 individual CI-discovered tests. No result dismisses a resident report, changes
 consent, resolves a hazard or grants clinical, legal or operational approval.
+
+### Child status refresh (2026-11-03, Refs #190)
+
+GitHub read on 2026-11-03 supersedes the 2026-10-30 "open" readings above for
+#192 and #194. This is a records update; no story was closed, ticked or
+deferred by this change.
+
+| Child | GitHub state (2026-11-03) | Remaining acceptance |
+| --- | --- | --- |
+| #191 | Closed 2026-10-27 | None recorded |
+| #192 | Closed 2026-10-31 (closure audit batch 2, evidence #505, #588) | Agreed miss and false-alert limits and R2 reviewer sign-off stay open under R3, not under this story |
+| #193 | Open | Criterion 3 (scenarios used by #133 and #111 tests) is unmet. Only the standalone contract tests in `src/core/tests/test_sensor_retrofit_consumer_contract.py` and `test_sensor_damp_consumer_contract.py` model the consumers; production #111 signal derivation and the #133 evaluator view do not exist |
+| #194 | Closed 2026-10-31 (closure audit batch 2, evidence #505, #588) | Verified live run stays blocked by #184 prerequisites |
+
+Parent criterion 1 ("all child stories closed or deferred") remains unmet:
+#193 is open and no owner-accepted deferral exists. Closing it needs either
+production #111 and #133 consumers or an explicit owner deferral, neither of
+which an agent may supply. Criterion 2 (results reported per check) is
+unchanged and stays supported by the per-check report objects and tests.
 
 ## Constraints
 
