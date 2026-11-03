@@ -299,9 +299,10 @@ def scan_main(page: Page, axe: str | None, state: str) -> None:
         AXE_SKIPPED.append(state)
         print(f"SKIP axe {state}: set ZF_AXE_JS to the pinned axe 4.10.3 file", flush=True)
         return
+    check(f"{state} has a main landmark to scan", page.locator("main").count() == 1)
     page.evaluate(axe)
     result = page.evaluate(
-        """async () => await axe.run(document.querySelector('main') || document, {
+        """async () => await axe.run(document.querySelector('main'), {
           runOnly: {type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a',
             'wcag21aa', 'wcag22aa']}})"""
     )
@@ -359,6 +360,12 @@ def check_programme(browser: Browser, base: str, axe: str | None) -> None:
                 if email.startswith("pam")
                 else ("Held for roles with a recorded need",)
             )
+            if not email.startswith("pam"):
+                for hidden in ("SYN missing roof reference", "SYN sender"):
+                    check(
+                        f"{email} queue withholds {hidden}",
+                        hidden not in table.inner_text(),
+                    )
             for phrase in (
                 "ZF-1",
                 *detail,
@@ -388,11 +395,8 @@ def check_programme(browser: Browser, base: str, axe: str | None) -> None:
             check(f"{email} Apply filter shows a visible focus", focus_outline(page))
             page.keyboard.press("Enter")
             status = page.locator("#programme-filter-status")
-            check(
-                f"{email} keyboard Apply states the scope and no change",
-                "Scope: Blocked work" in status.inner_text()
-                and "no record is changed" in status.inner_text(),
-            )
+            expect(status).to_contain_text("Scope: Blocked work")
+            expect(status).to_contain_text("no record is changed")
             check(f"{email} scope is kept in the address", "scope=blocked" in page.url)
             page.keyboard.press("Tab")
             reset = page.get_by_role("button", name="Reset to default view", exact=True)
@@ -407,11 +411,10 @@ def check_programme(browser: Browser, base: str, axe: str | None) -> None:
             )
             page.keyboard.press("Tab")
             page.keyboard.press("Space")
+            expect(status).to_contain_text("Returned and handed-off work (default)")
             check(
                 f"{email} keyboard Reset restores the default scope",
-                scope.input_value() == "default"
-                and "scope=" not in page.url
-                and "Returned and handed-off work (default)" in status.inner_text(),
+                scope.input_value() == "default" and "scope=" not in page.url,
             )
             after = page.request.get(base + "/api/cases/ZF-1").json()
             check(f"{email} filter and reset change no record", before == after and not writes)
@@ -441,10 +444,12 @@ def check_programme(browser: Browser, base: str, axe: str | None) -> None:
             for width in (320, 390, 1280):
                 page.set_viewport_size({"width": width, "height": 900})
                 check(
-                    f"{email} programme reflow {width}px",
+                    f"{email} page has no horizontal scroll at {width}px (not a full 1.4.10 test)",
                     page.evaluate("() => document.documentElement.scrollWidth <= innerWidth"),
                 )
             page.keyboard.press("Tab")
+            final = page.request.get(base + "/api/cases/ZF-1").json()
+            check(f"{email} connected view leaves the case record unchanged", before == final)
             check(f"{email} connected view makes no writes: {writes}", not writes)
             check(f"{email} programme screen has no JavaScript errors: {errors}", not errors)
         finally:
