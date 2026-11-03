@@ -10048,3 +10048,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Asset and board evidence class never borrows coverage (Refs #226)
 
 * The shared AI cost panel (asset-board and finance screens) showed the coverage value as the evidence class when no evidence label was recorded, and could show the cost component without one. It now reads Unknown and hides the component until an evidence label is recorded. Unit-tested only; criteria 4 and 5 (WCAG acceptance, #150 adoption) and observed validation (#155) remain unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-226 evidence class).
+
+## [2026-11-03] update | Finance browser check covers a constructed field draft (Refs #225)
+
+* Extended `src/api/checks/finance_screens_browser_check.py` with a fourth story: the Funding route and claim pack screen rendered in Chromium with a constructed field draft (routed response in the review view shape) showing a conflicting source candidate, a stale field with reviewed evidence, an Unknown field and Not ready readiness, with keyboard reach, reflow and pinned axe 4.10.3 results. Updated the `src/api/README.md` paragraph. Engineering evidence only; the draft is not server-built, and WCAG/AT acceptance (#151, #155), Fluent 2 conformance (#150) and observed validation stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-225 r2).

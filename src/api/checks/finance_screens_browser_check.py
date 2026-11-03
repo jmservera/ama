@@ -7,6 +7,7 @@ python -m checks.finance_screens_browser_check
 from __future__ import annotations
 
 import hashlib
+import json
 import os
 from pathlib import Path
 from typing import Any
@@ -25,6 +26,57 @@ ECONOMICS = (
     "Booked-value status",
     "No value is booked.",
 )
+# Constructed response in the shape of the field review view (not a server-built draft):
+# one unreviewed conflict, one stale reviewed field and one field with no evidence.
+DRAFT_REVIEW: dict[str, Any] = {
+    "drafts": [
+        {
+            "draft_id": "SYN-FD-225",
+            "schema_id": "SYN-TECH",
+            "schema_version": 1,
+            "template": {"id": "SYN-TEMPLATE-225"},
+            "funding": {"route": "SYN grant route"},
+            "rule_refs": [],
+            "stale_fields": ["area"],
+            "reviewed_ready": False,
+            "approved_rule_validation": "Not evaluated",
+            "unit_currency_verification": "Not evaluated",
+            "notice": "Unapproved working notes only.",
+            "fields": {
+                "epc": {"state": "Unknown", "value": None, "evidence": None},
+                "area": {
+                    "state": "Accepted",
+                    "effective_state": "Stale",
+                    "value": 12,
+                    "evidence": {"source": {"id": "SYN-DOC-225", "version": 2, "kind": "Survey"}},
+                },
+            },
+            "issues": [
+                {
+                    "field_id": "epc",
+                    "status": "Conflict",
+                    "reason": "Unreviewed source alternatives.",
+                }
+            ],
+        }
+    ],
+    "decision_holds": [],
+}
+DRAFT_PHRASES = (
+    "Constructed field draft SYN-FD-225",
+    "Conflicting source candidates",
+    "1 field: epc. A person must review them. Nothing here picks a winning source.",
+    "Conflict: Unreviewed source alternatives.",
+    "Stale fields",
+    "SYN-DOC-225 v2 (Survey)",
+    "Unknown. No reviewed evidence bound.",
+    "Unknown. No confirmed value.",
+    "No. Held until a person reviews the evidence.",
+    "Not ready. No reviewed export exists.",
+    "Fields and reviewed evidence for SYN-FD-225",
+)
+
+
 # Role, screen and exact phrases. The invoice screen is read by the approver and the
 # payment officer roles; the funding screen by the preparer role and the approver.
 SCREENS = (
@@ -43,6 +95,7 @@ SCREENS = (
             *ECONOMICS,
         ),
         ("Invoice line comparison", "Line comparison for SYN-INV-225"),
+        None,
     ),
     (
         "support@example.test",
@@ -54,6 +107,7 @@ SCREENS = (
             *ECONOMICS,
         ),
         ("Invoice line comparison", "Line comparison for SYN-INV-225"),
+        None,
     ),
     (
         "grants@example.test",
@@ -70,6 +124,19 @@ SCREENS = (
             *ECONOMICS,
         ),
         ("Funding route", "Grant stages", "Readiness export"),
+        None,
+    ),
+    (
+        "grants@example.test",
+        "Funding route and claim pack",
+        (
+            *DRAFT_PHRASES,
+            "No submission, award, eligibility decision or payment is made or inferred.",
+            "Not recorded here. This screen never infers them.",
+            *ECONOMICS,
+        ),
+        ("Funding route", "Constructed field draft", "Readiness export"),
+        DRAFT_REVIEW,
     ),
 )
 AXE_SKIPPED: list[str] = []
@@ -157,11 +224,20 @@ def run_browser(base: str) -> None:
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         try:
-            for email, screen, expected, panels in SCREENS:
-                story = f"{email.split('@')[0]} {screen}"
+            for email, screen, expected, panels, review in SCREENS:
+                story = f"{email.split('@')[0]} {screen}" + (" with draft" if review else "")
                 context = browser.new_context(viewport={"width": 1280, "height": 900})
                 try:
                     page = context.new_page()
+                    if review is not None:
+                        page.route(
+                            "**/form-review",
+                            lambda route: route.fulfill(
+                                status=200,
+                                content_type="application/json",
+                                body=json.dumps(review),
+                            ),
+                        )
                     errors: list[str] = []
                     writes: list[str] = []
                     page.on("pageerror", lambda error: errors.append(str(error)))
