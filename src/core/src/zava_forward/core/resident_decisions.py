@@ -31,7 +31,7 @@ RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_recor
                     "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update",
                     "challenge_open", "challenge_resolve",
                     "nomination_record", "nomination_correct", "tenure_intake",
-                    "tenure_legal_position")
+                    "tenure_legal_position", "tenure_verify")
 NOT_RECORDED = "Not recorded"
 AUTHORITY_TASKS = ("Receive information", "Communicate", "Attend", "Works decision")
 AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
@@ -40,7 +40,16 @@ RESIDENT_RETENTION_ID = "resident-decisions"
 RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_authorities",
                    "resident_safe_contact", "resident_contact_history", "resident_reviews",
                    "nomination_records", "tenure_reports")
-INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "tenure_intake", "tenure_legal_position")
+INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "tenure_intake", "tenure_legal_position",
+                  "tenure_verify")
+TENURE_ROUTES = {
+    "Tenant": "Tenant",
+    "Shared owner": "Shared owner",
+    "Right to buy leaseholder": "Right to buy",
+    "Preserved right to buy leaseholder": "Right to buy",
+    "Leaseholder": "Leaseholder",
+    "Mixed block": "Mixed block: set a route per household",
+}
 INTAKE_FIELDS = ("nomination_records", "tenure_reports")
 INTAKE_CHANNELS = ("Digital", "Phone", "Letter", "In person", "Trusted intermediary")
 TENURE_HOLD = (
@@ -812,6 +821,59 @@ class ResidentDecisionMixin:
         positions.append(position)
         report["legal_position"] = f"Reference attached (version {position['version']}); not verified or interpreted here"
         return f"tenure report {number} Legal position reference {position['version']} attached; case-wide hold remains"
+
+    def _res_tenure_verify(self, user, c, body):
+        _intake_fields(user, c, body, {
+            "case_id", "report_version", "expected_version", "outcome", "verified_tenure",
+            "identity_confirmed", "verifier_name", "verifier_role", "evidence_ref", "verified_on",
+        })
+        reports = c.get("tenure_reports", [])
+        number = body["report_version"]
+        if type(number) is not int or not 1 <= number <= len(reports):
+            raise ValueError("Choose an existing tenure report version for this case.")
+        report = reports[number - 1]
+        verifications = report.setdefault("verifications", [])
+        _version(body, verifications[-1] if verifications else None)
+        outcome = k.choice(body["outcome"], ("Verified", "Not verified"), "the data-owner outcome")
+        tenure = k.choice(body["verified_tenure"], (*TENURE_ROUTES, "Unknown"), "the verified tenure")
+        confirmed = body["identity_confirmed"]
+        if type(confirmed) is not bool:
+            raise ValueError("State whether the data owner confirmed home, household and lease identity.")
+        verifier = _intake_text(body["verifier_name"], "the named data owner", 100)
+        role = _intake_text(body["verifier_role"], "the data owner's role", 100)
+        if not any(word in role.casefold() for word in ("data owner", "home ownership")):
+            raise ValueError("The verifier must be the Home Ownership data owner. Staff cannot verify tenure here.")
+        if verifier.strip().casefold() in {_identity_value(user, "name"), _identity_value(user, "email")}:
+            raise ValueError("Choose a data owner other than the person recording this verification.")
+        verified_on = _day(body["verified_on"])
+        if verified_on > k.today():
+            raise ValueError("The verification date cannot be in the future.")
+        if outcome == "Verified":
+            if tenure == "Unknown" or not confirmed:
+                raise ValueError("A verified outcome needs a known tenure and confirmed identity. Otherwise record Not verified.")
+            if not report.get("legal_positions"):
+                raise ValueError("Attach the Legal position reference before a decision route is set. Owner: Legal.")
+            route = TENURE_ROUTES[tenure]
+        elif tenure != "Unknown" or confirmed:
+            raise ValueError("A Not verified outcome keeps tenure Unknown and identity unconfirmed.")
+        else:
+            route = "Unknown"
+        record = dict(
+            version=len(verifications) + 1, report_version=number, outcome=outcome,
+            verified_tenure=tenure, identity_confirmed=confirmed, decision_route=route,
+            verifier_name=verifier, verifier_role=role,
+            evidence_ref=_intake_text(body["evidence_ref"], "the data-owner evidence reference", 300),
+            verified_on=verified_on, recorded_by=_identity(user), at=_time(),
+            interpretation="None: route label only; lease terms, payer and landlord permission are not decided here",
+        )
+        verifications.append(record)
+        if outcome == "Verified":
+            report["verification"] = f"Verified by data owner (version {record['version']}); Legal and Finance positions remain separate"
+        else:
+            report["verification"] = "Unknown"
+        report["decision_route"] = route
+        return (f"tenure report {number} verification {record['version']} {outcome.lower()}; "
+                f"decision route {route}; case-wide hold remains")
 
     def _res_challenge_open(self, user, c, body):
         from . import projection

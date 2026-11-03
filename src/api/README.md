@@ -1053,6 +1053,7 @@ including after a cached session's staff registration changes.
 | `nomination_correct` | `case_id`, `id`, `expected_version`, `reported_subject_ref`, `account`, `source`, `channel`, `next_update`, `challenge_id` (same-case existing challenge ID or null) |
 | `tenure_intake` | `case_id`, `household_ref`, `expected_version` (0 initially, latest case tenure revision thereafter), `reported_tenure`, `reported_lease_interest`, `identity_state` (`Unknown`/`Ambiguous`), `source`, `owner`, `next_update` |
 | `tenure_legal_position` | `case_id`, `report_version` (existing tenure report), `expected_version` (0 initially, latest position version for that report thereafter), `reviewer_name` (named Legal reviewer, not the recorder), `reviewer_role` (must name a Legal role), `position_ref`, `position_version`, `reviewed_on` (YYYY-MM-DD, not future) |
+| `tenure_verify` | `case_id`, `report_version`, `expected_version` (0 initially, latest verification version for that report thereafter), `outcome` (`Verified`/`Not verified`), `verified_tenure` (`Unknown` when not verified), `identity_confirmed` (boolean), `verifier_name` (named data owner, not the recorder), `verifier_role` (must name the Home Ownership data owner), `evidence_ref`, `verified_on` (YYYY-MM-DD, not future). `Verified` needs an attached Legal position reference and sets a route label only; the case hold remains |
 
 Channels: `Digital`, `Phone`, `Letter`, `In person`, `Trusted intermediary`.
 Reported tenure: `Tenant`, `Shared owner`, `Right to buy leaseholder`,

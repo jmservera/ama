@@ -217,6 +217,33 @@ class ResidentApi(unittest.TestCase):
             code, other = self.call("/api/cases/ZF-1", actor)
             self.assertNotIn("SYN-LEGAL-CANARY", json.dumps(other))
 
+    def test_http_tenure_verification_sets_route_and_stays_hidden(self) -> None:
+        legal = dict(
+            action="tenure_legal_position", case_id="ZF-1", report_version=1, expected_version=0,
+            reviewer_name="Lee Legal", reviewer_role="Legal adviser", position_ref="SYN-LEGAL-REF",
+            position_version="v1", reviewed_on="2026-01-01",
+        )
+        verify = dict(
+            action="tenure_verify", case_id="ZF-1", report_version=1, expected_version=0,
+            outcome="Verified", verified_tenure="Leaseholder", identity_confirmed=True,
+            verifier_name="Dana Owner", verifier_role="Home Ownership data owner",
+            evidence_ref="SYN-OWNER-CANARY", verified_on="2026-01-02",
+        )
+        self.assertEqual(
+            self.call("/api/cases/ZF-1/resident", "sam", self.intake_payload(tenure=True))[0], 200
+        )
+        self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", verify)[0], 400)
+        self.assertEqual(self.call("/api/cases/ZF-1/resident", "rex", verify)[0], 403)
+        self.assertEqual(self.call("/api/cases/ZF-1/resident", "sam", legal)[0], 200)
+        code, detail = self.call("/api/cases/ZF-1/resident", "sam", verify)
+        self.assertEqual(code, 200, detail)
+        self.assertEqual(detail["tenure_reports"][0]["decision_route"], "Leaseholder")
+        self.assertTrue(any("Tenure and lease identity" in item for item in detail["gate"]))
+        for actor in ("rex", "kim", "bea"):
+            code, other = self.call("/api/cases/ZF-1", actor)
+            self.assertNotIn("SYN-OWNER-CANARY", json.dumps(other))
+            self.assertNotIn("Leaseholder", json.dumps(other.get("tenure_reports", "")))
+
     def test_http_intake_projection_current_registry_and_export_canaries(self) -> None:
         for tenure in (False, True):
             payload = self.intake_payload(tenure=tenure)

@@ -170,7 +170,7 @@ screening or #440 stabilization is inferred.
 ## Unverified nomination and tenure intake (#130, #131)
 
 The existing `resident_action` ledger accepts `nomination_record`,
-`nomination_correct`, `tenure_intake` and `tenure_legal_position`. These are constructed staff-recorded
+`nomination_correct`, `tenure_intake`, `tenure_legal_position` and `tenure_verify`. These are constructed staff-recorded
 intake, not nomination eligibility, verified identity, consent, Legal approval
 or an offer. Current registered staff need both resident-workflow and
 recorded-reason rights. Owners are named follow-up staff, not appointed Legal
@@ -213,7 +213,16 @@ route, Legal responsibility and Finance cost remain `Unknown`. Every report
 sets a case-wide hold on resident work gates and new measure-scope recording,
 including ambiguous/unknown households and otherwise accepted measures.
 Revisions and other households' agreements cannot release it. There is no
-release or verification action. A static responsibility-question checklist
+release action.
+
+`tenure_verify` records a named Home Ownership data owner's outcome for one
+report, append-only and separate from the staff recorder. `Verified` needs a
+known tenure, confirmed identity, evidence reference and an attached Legal
+position reference; it sets the report's decision route label (Tenant, Shared
+owner, Right to buy, Leaseholder, or Mixed block with a route per household).
+`Not verified` returns verification and route to `Unknown`. The route is a
+label only: no lease term, payer, landlord permission or Finance cost is
+decided, and the case-wide hold is unchanged, so no measure is offered. A static responsibility-question checklist
 identifies missing evidence; it is not a pack derived from reviewed leases.
 Prior homes without intake are unchanged: this does not prove complete tenure
 coverage or an all-offer gate across the programme.
