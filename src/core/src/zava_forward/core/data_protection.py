@@ -94,7 +94,7 @@ DATA_CLASSES = (
         "actual",
         "Tamper-evident record of actions",
         "Auditors",
-        "Append-only SQL ledger, digests in locked Blob",
+        "Append-only SQL ledger, digests in Blob with an unlocked immutability policy",
     ),
     DataClass(
         "telemetry",
@@ -284,7 +284,11 @@ def rights_status(requests: list[dict[str, Any]], now: datetime) -> dict[str, An
     for r in requests:
         due = due_date(datetime.fromisoformat(r["received_at"]))
         answered = r.get("answered_at")
-        late = datetime.fromisoformat(answered) > due if answered else now > due
+        late = (
+            datetime.fromisoformat(answered).date() > due.date()
+            if answered
+            else now.date() > due.date()
+        )
         state = (
             "answered_late"
             if answered and late
