@@ -49,6 +49,17 @@ const employeeChat = (() => {
       window.ChatWidget.decorateLauncher(button);
     }
   }
+  function limitsNote(limits) {
+    return `Limits for each question: ${limits.calls_per_turn} model call, ${limits.retries} retries, `
+      + `up to ${limits.context_chars} characters of context and ${limits.history_chars} characters of your earlier questions. `
+      + "Earlier assistant replies are not sent back. These are engineering caps, not spend authorization. "
+      + "A question over a cap gets workflow-only help; continue with the ordinary case workflow.";
+  }
+  function usageNote(receipt) {
+    if (!receipt) return "";
+    const tokens = receipt.tokens && Number.isInteger(receipt.tokens.total_tokens) ? receipt.tokens.total_tokens : "Unknown";
+    return `Model calls: ${receipt.model_calls}. Tokens: ${tokens}. Outcome: ${receipt.outcome}. Cost: ${receipt.cost}. `;
+  }
   async function open() {
     if (widget) { widget.open(); return; }
     if (typeof window.ChatWidget?.create !== "function") { install(); return; }
@@ -117,7 +128,7 @@ const employeeChat = (() => {
         const byRules = answer.model === "workflow-only" && answer.kind === "answer";
         ui.message("assistant", answer.reply, {
           label: byRules ? "Summary by rules, no record changed" : answer.workflow_only ? "Workflow-only help, no record changed" : answer.label,
-          detail: `Skill: ${answer.skill}. ${byRules ? "Built from recorded case facts, not by an AI model. Check the sources." : answer.kind === "answer" ? "AI-generated content may be incorrect. Check the sources." : "Workflow-only or unverified help. No record changed."}`,
+          detail: `Skill: ${answer.skill}. ${usageNote(answer.consumption)}${byRules ? "Built from recorded case facts, not by an AI model. Check the sources." : answer.kind === "answer" ? "AI-generated content may be incorrect. Check the sources." : "Workflow-only or unverified help. No record changed."}`,
           sources: (answer.citations || []).map(source => `${source.id}: ${source.text}`),
         });
         if (input.value === draft) {
@@ -148,6 +159,7 @@ const employeeChat = (() => {
       }
       ui.intro.append(h("p", { id: "chat-privacy" },
         `${admission.warning} Retention: ${admission.retention}. Synthetic data only. Model activation requires separate approval.`));
+      if (admission.limits) ui.intro.append(h("p", { id: "chat-limits" }, limitsNote(admission.limits)));
       input.setAttribute("aria-describedby", "employee-chat-entry-warning chat-privacy employee-chat-error");
       stored = admission.storage_approved !== false;
       if (!stored) ui.intro.append(h("p", { id: "chat-unstored" },
