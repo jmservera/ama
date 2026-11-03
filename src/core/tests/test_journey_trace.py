@@ -50,7 +50,13 @@ class JourneyTrace(unittest.TestCase):
             entry("qi@example.test", "technical_signoff_give", case, "design", at(2)),
             entry("insp@example.test", "quality_accepted", case, "Loft QC v1", at(3)),
             entry("insp@example.test", "quality_handover", case, "Loft handed over", at(4)),
-            entry("fin@example.test", "finance_payment_status", case, "Paid (record only)", at(5)),
+            entry(
+                "fin@example.test",
+                "finance_payment_status",
+                case,
+                "INV-1 payment noted as Paid outside this system",
+                at(5),
+            ),
         ]
 
     def test_real_audit_entries_map_to_conflict_and_correction(self) -> None:
@@ -97,6 +103,28 @@ class JourneyTrace(unittest.TestCase):
         self.assertEqual(trace["shared_decision_actors"], ["resident@example.test"])
         self.assertFalse(trace["independent_decisions"])
         self.assertFalse(trace["complete"])
+
+    def test_unpaid_payment_statuses_are_not_financial_closure(self) -> None:
+        for status in ("Not payable yet", "Awaiting payment run"):
+            entries = self.recorded() + self.later(HOME)
+            entries[-1]["detail"] = f"INV-1 payment noted as {status}"
+            trace = journey_trace.journey_trace(entries, HOME)
+            self.assertEqual(trace["stages"][-1]["status"], "Not recorded")
+            self.assertFalse(trace["complete"])
+
+    def test_only_accepted_finance_disposition_is_an_independent_decision(self) -> None:
+        for decision in ("Reject and return to provider", "Keep on hold"):
+            entries = self.recorded() + [
+                entry("resident@example.test", "resident_decision", HOME, "x", None),
+                entry("fin@example.test", "finance_disposition", HOME, f"INV-1 {decision}", None),
+            ]
+            trace = journey_trace.journey_trace(entries, HOME)
+            self.assertEqual(list(trace["decision_domains"]), ["resident"])
+            self.assertFalse(trace["independent_decisions"])
+        entries[-1]["detail"] = "INV-1 Accept for payment"
+        trace = journey_trace.journey_trace(entries, HOME)
+        self.assertEqual(list(trace["decision_domains"]), ["finance", "resident"])
+        self.assertTrue(trace["independent_decisions"])
 
     def test_contradicting_order_is_reported(self) -> None:
         entries = self.later(HOME) + self.recorded()

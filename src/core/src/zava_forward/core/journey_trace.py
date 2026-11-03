@@ -25,6 +25,8 @@ DECISION_DOMAINS = {
     "quality_accepted": "quality",
     "finance_disposition": "finance",
 }
+ACCEPT_DECISION = "Accept for payment"
+PAID_STATUS = "Paid outside this system"
 NOTICE = (
     "Constructed-fixture evidence, not user validation. Reading this trace approves nothing, "
     "contacts no resident, and makes or releases no payment."
@@ -78,11 +80,16 @@ def journey_trace(entries: Iterable[Mapping[str, Any]], case_id: str) -> dict[st
                 stages.append("epc_conflict")
         elif action == "stock_query_resolve" and _query_id(entry.get("detail")) in open_epc:
             stages.append("correction")
-        if action in DECISION_DOMAINS:
+        if action in DECISION_DOMAINS and (
+            action != "finance_disposition"
+            or str(entry.get("detail", "")).endswith(ACCEPT_DECISION)
+        ):
             stages.append("independent_decisions")
         if action == "quality_handover":
             stages.append("handover")
-        if action == "finance_payment_status":
+        if action == "finance_payment_status" and str(entry.get("detail", "")).endswith(
+            f"payment noted as {PAID_STATUS}"
+        ):
             stages.append("financial_closure")
         for stage in stages:
             events.append(

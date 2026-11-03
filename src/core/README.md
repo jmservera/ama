@@ -744,10 +744,10 @@ per-user `ZF_DATA` folder, never under `src/`.
 `journey_trace.journey_trace(audit_entries, case_id)` is a read-only function over audit
 entries. It orders one home's EPC conflict (`stock_comparison` on `epc`), correction (a human
 `stock_query_resolve` of that same query), independent decisions (resident, technical,
-quality, Finance), handover (`quality_handover`) and financial closure
-(`finance_payment_status`, a record only). Intervals between stages are `Unknown` when a
+quality, and Finance only when it accepts an invoice for payment), handover (`quality_handover`) and financial closure
+(`finance_payment_status` noting `Paid outside this system`, a record only; `Not payable yet` and `Awaiting payment run` do not close). Intervals between stages are `Unknown` when a
 stage or timestamp is missing or contradicts the recorded order. Decisions count as
-independent only when two or more domains were recorded by disjoint actors. Entries of
+independent only when at least two domains are recorded and no actor appears in more than one domain. Entries of
 sibling homes and building records never create or complete a stage. The result is
 constructed-fixture evidence, not user validation, and approves nothing.
 

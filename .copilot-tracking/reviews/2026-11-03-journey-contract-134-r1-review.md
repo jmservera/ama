@@ -11,6 +11,10 @@ Execution: complete (author self-review; independent exact-head review remains r
 * Textual state, keyboard operation, announcements: UNMET (no screen in this slice).
 * Constructed-fixture labelling: MET for the trace output.
 
+## Correction cycle
+
+Independent PR review found two defects, both fixed on the same branch with regression tests: (1) any payment status counted as financial closure; (2) any Finance disposition counted as an independent decision. Details in the changes artifact. The single Review is not repeated; independent exact-head review remains required.
+
 ## Findings (routed later)
 
 * RV-001 Medium: add end-to-end store journey test through handover and finance (slice 2).
