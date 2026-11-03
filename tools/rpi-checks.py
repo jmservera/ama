@@ -1912,7 +1912,7 @@ class Runner:
         ids = self.discover_test_ids(project, py, cwd)
         missed = unsharded_test_ids(ids, parts)
         if missed:
-            # Tests imported from helper modules (for example dataset.ImproveTests) run in the last shard.
+            # Tests imported from helper modules (e.g. dataset.ImproveTests) run in the last shard.
             extra = sorted({test_id.split(".")[0] for test_id in missed})
             parts = [*parts[:-1], [*parts[-1], *extra]]
             missed = unsharded_test_ids(ids, parts)
