@@ -10006,3 +10006,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Assistive-technology record completeness check (Refs #215)
 
 * Added `src/api/checks/regulatory_at_record_check.py` with seven unit tests, linked from the [acceptance kit](./research/ux/regulatory-ux-acceptance-protocol.md) and the API README. It checks only that per-role keyboard and screen-reader session records are complete and that failures state a barrier. No session has been run; #215 criteria 3 and 5 stay unmet and no ticks change. Evidence is under `.copilot-tracking/` (2026-11-03 issue-215 at-record-check).
+
+## [2026-11-03] update | Utilisation versus choice rule on package screen (Refs #233)
+
+* Stated on `procurement-packages` that offered capacity is not a booking or promise, that resident choice takes precedence and that packages are listed in reference order, not ranked by utilisation; updated the [atlas screen trace](./research/ux/atlas-screen-trace.md) tension status. Hypothesis, static evidence only; #233 criteria other than the hypothesis label stay unmet.
