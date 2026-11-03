@@ -153,6 +153,15 @@ class ScanTests(Base):
         self.assertEqual(st.detail("ZF-1")["documents"], [])
         self.assertEqual(blob.blobs, {})
 
+    def test_synthetic_scanner_on_blob_store_warns_but_stays_fail_closed(self):
+        blob = AzureBlobDocumentStore("https://acct.blob.core.windows.net", "case-docs", sas="s=1", transport=DefenderBlob())
+        with self.assertLogs("zava_forward.core.doc_controls", "WARNING") as logs:
+            self.assertIsInstance(open_scanner(blob, {}), LocalSignatureScanner)
+        self.assertIn("no malware assurance", logs.output[0])
+        with self.assertNoLogs("zava_forward.core.doc_controls", "WARNING"):
+            open_scanner(None, {})
+            open_scanner(blob, {"ZF_SCANNER": "defender"})
+
     def test_scanner_config(self):
         self.assertIsInstance(open_scanner(None, {}), LocalSignatureScanner)
         with self.assertRaises(ValueError):
