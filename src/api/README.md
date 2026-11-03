@@ -1273,8 +1273,10 @@ return queue across this page of homes" built from the case records of the
 homes on the current page (not a portfolio total). It lists both source values
 with provenance and each return or reopen, shows homes whose record could not be
 loaded as Unavailable, selects no winning source and has no controls. It is
-covered by `tests/test_data_operator_screen.py`; the browser check does not yet
-visit this page-level view.
+covered by `tests/test_data_operator_screen.py`. The browser check also visits
+this page-level view before opening a home: it asserts both sources, the
+reopen reason, the not-a-total caveat, no write controls, Tab reach of both
+table regions, reflow at 320px and the axe scan of `main`.
 
 ## Resident chat and synthetic callback agenda (#520, building on #469)
 
