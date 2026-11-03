@@ -9955,3 +9955,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Retained ranking snapshot publication slice (Refs #79)
 
 * Added a pure `ranking_publication` module and tests in `src/core`: immutable dated archive of ranking snapshots, hash and registry verification, overdue check, and a stated schedule contract. Unit-tested only. #79 criteria 3 (named owner signs rule order) and 4 (scheduled publication, retention) stay unmet: no owner named, no scheduler wired, retention period not set. Evidence under `.copilot-tracking/` (2026-11-03 issue-79 r1).
+## [2026-11-03] update | Investment envelope and downside limits pause signal (Refs #99)
+
+* Added `exposure_limits` in `src/core`: records an envelope and RULE-012 tolerances only with a human approval record, and returns a "Pause for human decision" signal on breach or unknown exposure. No company figures; not wired to store, API or UI.
+* Criterion 1 stays unmet (no Board-approved inputs); criterion 2 is proven in logic only on synthetic values. No ticks changed. Evidence is under `.copilot-tracking/` (2026-11-03 issue-99 exposure limits).
