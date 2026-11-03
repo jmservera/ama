@@ -217,8 +217,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             super().send_response(code, message)
 
         def end_headers(self):
+            self._response_started = True  # set before the flush so a socket-write failure counts as started
             super().end_headers()
-            self._response_started = True
 
         def handle_one_request(self):
             self._response_started = False
@@ -235,10 +235,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             except ValueError:
                 path = ""
             method, name = _printable(getattr(self, "command", None)), type(exc).__name__
-            if isinstance(exc, ConnectionError):
+            sent = self._response_started
+            if isinstance(exc, ConnectionError) and sent:
                 logging.getLogger(__name__).warning("http-error %s %s client-disconnect exc=%s", method, _printable(path), name)
                 return
-            sent = self._response_started
             frame = traceback.extract_tb(exc.__traceback__)[-1:] or [None]
             where = f"{Path(frame[0].filename).name}:{frame[0].lineno}:{frame[0].name}" if frame[0] else "unknown"
             logging.getLogger(__name__).error("http-error %s %s status=500 exc=%s at=%s response_started=%s", method, _printable(path), name, where, sent)

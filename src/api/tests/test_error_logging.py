@@ -88,18 +88,38 @@ class ErrorLoggingTests(Base):
         self.assertEqual(code, 500)
         self.assertIn("response_started=False", "\n".join(logs.output))
 
-    def test_client_disconnect_is_logged_without_a_response(self) -> None:
-        def gone(*_a: object, **_k: object) -> None:
+    def test_backend_connection_error_before_response_returns_500_and_is_logged(self) -> None:
+        def reset(*_a: object, **_k: object) -> None:
+            raise ConnectionResetError(SECRET)
+
+        with (
+            patch.object(self.store, "counts", reset),
+            self.assertLogs("zava_forward.api.server", "ERROR") as logs,
+        ):
+            code, body = self.get("/api/me")
+        self.assertEqual(code, 500)
+        self.assertNotIn(SECRET, body.decode())
+        text = "\n".join(logs.output)
+        self.assertIn("exc=ConnectionResetError", text)
+        self.assertIn("response_started=False", text)
+        self.assertNotIn(SECRET, text)
+
+    def test_socket_write_error_after_response_started_stays_silent(self) -> None:
+        from http.server import BaseHTTPRequestHandler
+
+        def gone(self: BaseHTTPRequestHandler) -> None:
             raise BrokenPipeError(SECRET)
 
         with (
-            patch.object(self.store, "counts", gone),
+            patch.object(self.store, "counts", lambda *a, **k: None),
+            patch.object(BaseHTTPRequestHandler, "end_headers", gone),
             self.assertLogs("zava_forward.api.server", "WARNING") as logs,
         ):
             with self.assertRaises((OSError, http.client.HTTPException)):
                 self.get("/api/me")
         text = "\n".join(logs.output)
         self.assertIn("client-disconnect exc=BrokenPipeError", text)
+        self.assertNotIn("status=500", text)
         self.assertNotIn(SECRET, text)
 
     def test_optional_provider_gaps_stay_clear_503s_and_denials_stay_403s(self) -> None:
