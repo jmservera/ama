@@ -2496,9 +2496,11 @@ os.fstat(3)
                 gate.required_checks(self.root, receipt(test_shards=bad))
         helped = suites(receipt(test_shards={"api": 3}, shard_helpers={"api": ["dataset"]}))
         self.assertEqual(sum("dataset.*" in check["argv"] for check in helped), 1)
-        for bad in ({"api": ["bad name"]}, {"core": ["x"]}, {"api": "dataset"}):
-            with self.subTest(helpers=bad), self.assertRaises(gate.GateError):
-                gate.required_checks(self.root, receipt(test_shards={"api": 3}, shard_helpers=bad))
+        for bad_helpers in ({"api": ["bad name"]}, {"core": ["x"]}, {"api": "dataset"}):
+            with self.subTest(helpers=bad_helpers), self.assertRaises(gate.GateError):
+                gate.required_checks(
+                    self.root, receipt(test_shards={"api": 3}, shard_helpers=bad_helpers)
+                )
         with self.assertRaises(gate.GateError):
             gate.required_checks(self.root, receipt(image_cache="stale"))
         self.git("rm", "-q", *[f"src/api/tests/test_m{i}.py" for i in range(2, 6)])
