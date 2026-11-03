@@ -124,7 +124,7 @@ const assetAgeDays = (iso) => {
 };
 const assetStatus = (c, q) => {
   const event = (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1);
-  return event ? `${event.status} (recorded by a named person)` : "Unresolved";
+  return event && (event.status === "Reconciled" || event.status === "Withdrawn") ? `${event.status} (recorded by a named person)` : "Unresolved";
 };
 const assetInputs = [
   ["Capital budget", "Finance owner to name the budget source"],
@@ -455,6 +455,7 @@ registerRoleScreen({
     if (!t) reasons.push("No design is recorded.");
     if (missing === null) reasons.push("Missing references are not supplied.");
     for (const m of missing || []) reasons.push(`${m.item}. Owner: ${m.assigned_to}.`);
+    for (const q of queries) if (assetStatus(c, q) === "Unresolved") reasons.push(`Source conflict ${q.id} (${screenValue(q.field)}) is unresolved. Owner: ${screenPerson(q.query_owner)}.`);
     for (const x of states) if (t && !x.ok && !(missing || []).some((m) => m.item.startsWith(x.label))) reasons.push(`${x.label}: ${x.text}.`);
     const returned = states.filter((x) => x.s?.status === "Returned" || x.s?.status === "Needs reassessment");
     return h("div", {},

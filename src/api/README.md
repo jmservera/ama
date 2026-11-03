@@ -1173,7 +1173,8 @@ An installed child's check adds its story number, for example
 queue) and `231q` (Quality queue) sign in as a Quality Inspector, open the
 read-only screens on a synthetic home with returned, stale and missing
 evidence, and check text-only blocked state, no write controls, keyboard
-reach of every table region and no readiness over missing evidence. Set
+reach of every table region and no readiness over missing evidence. Story `231`
+also checks that no readiness shows over an unresolved source conflict. Set
 `ZF_AXE_JS` to the pinned axe 4.10.3 file to add an axe WCAG 2.2 A/AA scan.
 These are engineering checks, not assistive-technology or WCAG acceptance (#155).
 Story `230` (programme queue) drives the shared queue, scope filter, Reset and
