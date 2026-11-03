@@ -4803,6 +4803,12 @@ blank record tables. `python3 src/api/checks/regulatory_comprehension_score.py r
 applies only the thresholds above to anonymous scored records (six unit tests). It is
 preparation: nothing has been run with people and both criteria stay unmet.
 
+`python3 src/api/checks/regulatory_at_record_check.py sessions.json` (added 2026-11-03,
+seven unit tests) checks that keyboard-only and screen-reader session records exist for
+all seven roles, that screen-reader records name the tool and version, that every
+fail or blocked result states its barrier, and that each chat-bearing role has a
+chat-unavailable run. It judges nothing: complete records are not WCAG acceptance.
+
 ### Issue criterion audit
 
 | #215 criterion | Local disposition | Evidence and remaining gap |
