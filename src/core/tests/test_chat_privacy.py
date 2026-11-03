@@ -3,6 +3,7 @@ import json
 import re
 import tempfile
 import unittest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import dataset
@@ -115,6 +116,29 @@ class ChatPrivacyBehaviour:
         self.assertEqual(c.purge_expired("0000"), 0)
         self.assertEqual(c.purge_expired("9999"), 1)
         self.assertEqual(c.locate(U1)["memory"], [])
+
+    def test_retention_purge_does_nothing_without_a_recorded_period(self):
+        c = self.cp(**APPROVED)
+        c.add_message(U1, c.start_thread(U1, "ZF-1", TASK), "user", "synthetic question")
+        self.assertEqual(c.purge_retention("9999-01-01T00:00:00+00:00"), dict(threads=0, messages=0, memory=0, applied=False))
+        self.assertEqual(len(c.locate(U1)["threads"]), 1)
+
+    def test_retention_purge_removes_only_threads_idle_past_the_period(self):
+        c = self.cp(**APPROVED, CHAT_RETENTION_REF="SYNTH-RET-1", CHAT_RETENTION_DAYS="30")
+        old = c.start_thread(U1, "ZF-1", TASK)
+        c.add_message(U1, old, "user", "synthetic question")
+        c.add_message(U1, old, "assistant", "synthetic answer")
+        c.start_thread(U2, "ZF-2", TASK)
+        self.assertEqual(c.purge_retention(), dict(threads=0, messages=0, memory=0, applied=True))
+        later = (datetime.now(timezone.utc) + timedelta(days=31)).isoformat(timespec="milliseconds")
+        keep = c.start_thread(U1, "ZF-3", TASK)
+        with c.store.chat_repo.txn():
+            c.store.chat_repo.update(keep, cp.user_key(U1), 1, updated_at=(datetime.now(timezone.utc) + timedelta(days=40)).isoformat(timespec="milliseconds"))
+            c.store.chat_repo.commit()
+        result = c.purge_retention(later)
+        self.assertEqual((result["threads"], result["messages"]), (2, 2))
+        self.assertEqual(c.locate(U1)["threads"], [keep])
+        self.assertEqual(c.locate(U2)["threads"], [])
 
 
 class MemoryStoreChatPrivacy(ChatPrivacyBehaviour, unittest.TestCase):

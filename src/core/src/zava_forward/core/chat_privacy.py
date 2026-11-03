@@ -351,3 +351,17 @@ class ChatPrivacy:
             n = repo.purge_memory(now or self._now())
             repo.commit()
         return n
+
+    def purge_retention(self, now=None):
+        """Apply the recorded retention period: delete threads idle longer than it, and expired memory. Does nothing while no period is recorded."""
+        days = self.decision()["retention_days"]
+        if not days:
+            return dict(threads=0, messages=0, memory=0, applied=False)
+        stamp = now or self._now()
+        cutoff = (datetime.fromisoformat(stamp) - timedelta(days=days)).isoformat(timespec="milliseconds")
+        repo = self.store.chat_repo
+        with repo.txn():
+            threads, messages = repo.purge_threads(cutoff)
+            memory = repo.purge_memory(stamp)
+            repo.commit()
+        return dict(threads=threads, messages=messages, memory=memory, applied=True)

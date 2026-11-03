@@ -9896,3 +9896,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Finance screens AI economics section (Refs #225)
 
 * Both Finance screens (`finance-invoices`, `finance-funding`) now share one design-only AI economics panel: usage reconciled to billing, five Total Cost of AI components, booked-value status with the five value destinations, and Unknown for every missing input. No price, budget or target is set (BRD OD-51 open). Unit-tested only; WCAG browser and assistive-technology proof and observed validation (#155) remain unmet. Evidence under `.copilot-tracking/` dated 2026-11-03.
+## [2026-11-03] update | Chat retention purge for threads and messages (Refs #163)
+
+* Added `ChatPrivacy.purge_retention` over the chat repository: deletes threads and messages idle longer than the recorded demo period and expired memory, and does nothing while no period is recorded. [The demo storage approval](./research/chat-demo-storage-approval-2026-11-01.md) now states this. Unit-tested only; no scheduler runs it.
+* Criteria 2 and 5 stay unmet (DPO and Legal decisions); no ticks changed. Touches the SQL repository, so the complete gate is for the coordinator. Evidence is under `.copilot-tracking/` (2026-11-03 issue-163 retention purge).
