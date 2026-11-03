@@ -1851,6 +1851,25 @@ python -m zava_forward.api.sensor_handover_verify --reference history/readings-0
 The check is ready-to-run tooling; running it against Azure SQL after a live
 Hub stream is the remaining owner-gated evidence for #188.
 
+#### Owner run sheet for the live check
+
+Run only after the owner has decided the #110 and #140 items (tier, sizing,
+cost, exposure, credential owner) and a bounded live stream (#184) has landed.
+
+1. Use a named owner identity with managed identity or Entra token access
+   (`ZF_SQL_AUTH`, `ZF_SQL_CLIENT_ID`). Do not put a password, token or
+   connection string in a command line, file, log or the evidence record.
+2. Run without `--replay-check` first, with SELECT-only access and
+   `ZF_STORE=mssql`. Record the exit code and the JSON report.
+3. Only with a separate, owner-approved write permission, repeat with
+   `--replay-check` to test window re-run idempotence.
+4. Record in the PR or issue: run date, store (name only), home count, window,
+   declared tolerances, exit code and report. Tick a criterion only when the
+   recorded run supports it: exit 0 for the first two, and a passing replay
+   for the third.
+5. A pass reports numbers; it does not approve sensor accuracy. A non-zero
+   exit leaves the criteria unticked and is routed as a finding.
+
 ### Local handover demo (#188)
 
 `checks/sensor_handover_demo.py` runs the whole flow on a throwaway SQLite store
