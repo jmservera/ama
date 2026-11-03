@@ -146,6 +146,12 @@ class PackageQueue(unittest.TestCase):
         for control in CONTROLS:
             self.assertNotIn(control, tags(out["tree"]))
 
+    def test_withheld_items_listed_as_text(self) -> None:
+        text = json.dumps(run("procurement-packages")["tree"])
+        self.assertIn("Not shown for this role", text)
+        self.assertIn("Contract rates, prices and invoice values", text)
+        self.assertIn("Withholding is not authorisation", text)
+
     def test_submission_is_separate_from_review_and_empty_is_unknown(self) -> None:
         out = run("procurement-packages", packages=[], orders=[])
         text = json.dumps(out["empty"])
@@ -220,6 +226,13 @@ class ContractorJobPack(unittest.TestCase):
         self.assertNotIn("vulnerab", text.lower())
         for control in CONTROLS:
             self.assertNotIn(control, tags(out["tree"]))
+
+    def test_withheld_items_listed_without_reason(self) -> None:
+        text = json.dumps(run("contractor-job-pack")["tree"])
+        self.assertIn("Not shown for this role", text)
+        self.assertIn("Other contractors' capacity and work orders", text)
+        self.assertIn("Contract rates, prices and invoice values", text)
+        self.assertNotIn("vulnerab", text.lower())
 
     def test_completion_shown_as_record_not_acceptance(self) -> None:
         done = ORDER | {"state": "Completed"}
