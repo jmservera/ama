@@ -22,19 +22,28 @@ PRD AC-072 and NFR-014 or BRD RULE-024 and RULE-020 (OD-35).
 * Manual case work and emergency and statutory hazard response stay open for
   the whole drill. If either is blocked, stop the drill and record it as a
   failure.
+* The system steps need the SQL store; the JSON store leaves restart manual.
+  The restart approver signs in through the trusted proxy with an OID and the
+  `ai_restart` role.
 * If the AI task or its service is unavailable, the drill proceeds on the
   manual path; AI availability is not a precondition.
 
 ## Steps
 
 1. Seed a synthetic critical incident or threshold breach for one AI task.
-2. A different authorised operator suspends the affected task.
+2. A different authorised operator suspends the affected task and enters the
+   appointed restart authority reference. If it is left at its default
+   ("Unavailable: OD-35 authority unappointed"), restart proposal and decision
+   are refused, and the reference must match at restart.
 3. Check that new dispatch and reliance on pending or ready proposals are
    blocked, and that a manual case and a hazard response can still be started.
 4. Check the incident record names the impacted version set, scope, owner,
    evidence, containment, resident impact, remediation and restart authority.
 5. Attempt restart before corrective tests exist. It must be denied.
-6. Record corrective tests, accepted by a competent human reviewer.
+6. Record corrective tests, accepted by a competent human reviewer. The
+   system accepts only a `constructed-fixture` evidence class with result
+   `Pass` and states that actual restart stays blocked. Real acceptance is the
+   human record in this page, outside the system.
 7. A distinct authorised human, not the proposer or the operator who
    suspended, approves restart. A second attempt by the proposer must fail.
 8. Confirm the affected scope stays paused until step 7 completes.
@@ -48,7 +57,7 @@ PRD AC-072 and NFR-014 or BRD RULE-024 and RULE-020 (OD-35).
 | Operator who suspended | |
 | Witness (programme and safety professional) | |
 | Manual case work stayed available (yes or no, evidence) | |
-| Hazard response stayed available (yes or no, evidence) |  |
+| Hazard response stayed available (yes or no, evidence) | |
 | Restart denied before corrective tests (yes or no, evidence) | |
 | Corrective tests accepted by (name, date) | |
 | Distinct restart approver (name, date) | |
