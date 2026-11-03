@@ -1,6 +1,7 @@
 """Pre-run estimate, quota headroom and run-control contracts."""
 
 import json
+import re
 import tempfile
 import unittest
 from dataclasses import asdict, replace
@@ -199,6 +200,45 @@ class ControlTests(unittest.TestCase):
         self.assertEqual(run_plan.main(["--homes", "1000", *args]), 0)
         self.assertTrue(self.path.exists())
         self.assertEqual(run_plan.main(["--homes", "200000", *args]), 2)
+
+
+INFRA = Path(__file__).resolve().parents[3] / "infra"
+
+
+def _param_default(text: str, name: str) -> str:
+    match = re.search(rf"^param {name} \w+ = (.+)$", text, re.MULTILINE)
+    assert match, name
+    return match.group(1).strip().strip("'")
+
+
+class InfraAlignmentTests(unittest.TestCase):
+    """The estimate must describe the hub the Bicep defines and its budget alert."""
+
+    def setUp(self) -> None:
+        self.main = (INFRA / "main.bicep").read_text(encoding="utf-8")
+        self.hub = (INFRA / "modules" / "iothub.bicep").read_text(encoding="utf-8")
+
+    def test_tier_and_units_match_the_declared_hub(self) -> None:
+        self.assertEqual(_param_default(self.main, "iotHubSku"), run_plan.TIER)
+        self.assertEqual(int(_param_default(self.main, "iotHubUnits")), run_plan.UNITS)
+        self.assertIn("@allowed(['B1'])", self.main)
+
+    def test_hub_cost_allocation_covers_the_listed_hub_price(self) -> None:
+        allocation = int(_param_default(self.main, "iotHubMonthlyCost"))
+        self.assertGreaterEqual(allocation, run_plan.B1_MONTHLY_USD * run_plan.UNITS)
+
+    def test_budget_alert_threshold_matches_the_declared_notification(self) -> None:
+        match = re.search(
+            r"actual80: \{.*?threshold: (\d+)\s+thresholdType: 'Actual'", self.hub, re.DOTALL
+        )
+        assert match
+        self.assertEqual(int(match.group(1)) / 100, plan().alert_threshold)
+        self.assertIn("forecast100", self.hub)
+        self.assertIn("contactEmails: [alertEmail]", self.hub)
+
+    def test_budget_scopes_the_hub_resources_not_the_whole_subscription(self) -> None:
+        self.assertRegex(self.hub, r"resource budget 'Microsoft\.Consumption/budgets@[\w-]+'")
+        self.assertIn("name: 'ResourceId'", self.hub)
 
 
 if __name__ == "__main__":
