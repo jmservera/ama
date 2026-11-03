@@ -472,6 +472,14 @@ From `src/core`, with the package installed:
 python -m unittest discover -s tests -p test_sensor_stream.py -q
 ```
 
+## Simulated device identity rotation (#185)
+
+`synthetic.device_identity.rotate` issues new credentials, then revokes the old ones,
+offline and secret-free. Retrying `rotate` after `ROTATION_REVOKE_FAILED` or
+`ROTATION_INCOMPLETE` is unsupported and fails with `ROTATION_STATE_MISMATCH`. The
+supported recovery is `teardown(error.new_manifest, ...)` using the non-secret
+manifest carried by `DeviceIdentityError`.
+
 ## Constructed offline sensor consumer (#110)
 
 `sensor_consumer.SensorConsumer` is a finite SQL-only processor, distinct from

@@ -546,6 +546,9 @@ class RotationTests(unittest.TestCase):
         new = {i.credential_ref for i in recovered.identities}
         self.assertTrue(new <= set(store.references()))
         failing["on"] = False
+        with self.assertRaisesRegex(di.DeviceIdentityError, "ROTATION_STATE_MISMATCH") as retry:
+            di.rotate(recovered, registry, store)
+        self.assertNotIn(SECRET, "".join(traceback.format_exception(retry.exception)))
         di.teardown(recovered, registry, store)
         self.assertEqual(store.references(), [])
         self.assertEqual(registry.list_run("run-001"), [])

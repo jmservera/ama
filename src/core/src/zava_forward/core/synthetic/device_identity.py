@@ -26,7 +26,11 @@ def _run_lock(run_id: str) -> threading.RLock:
 
 
 class DeviceIdentityError(RuntimeError):
-    """Fixed-code error; `new_manifest` carries non-secret references after a partial rotation."""
+    """Fixed-code error; `new_manifest` carries non-secret references after a partial rotation.
+
+    After ROTATION_REVOKE_FAILED or ROTATION_INCOMPLETE the supported recovery is
+    `teardown(error.new_manifest, ...)`. Retrying `rotate` is unsupported.
+    """
 
     def __init__(self, message: str, new_manifest: "Manifest | None" = None) -> None:
         super().__init__(message)
@@ -199,6 +203,10 @@ def rotate(manifest: Manifest, registry: Registry, store: CredentialStore) -> Ma
     """Issue a new credential per identity, then revoke the old ones (no downtime overlap).
 
     Old credentials stay valid until every new one is stored. Returns references only.
+
+    Retry after ROTATION_REVOKE_FAILED or ROTATION_INCOMPLETE is unsupported: `rotate` on
+    either manifest fails with ROTATION_STATE_MISMATCH. Recover by tearing down
+    `DeviceIdentityError.new_manifest`.
     """
     failure: DeviceIdentityError | None = None
     result: Manifest | None = None
