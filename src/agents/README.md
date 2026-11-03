@@ -274,6 +274,32 @@ Still unmet: owner agreement and independently graded or held-out sets, a staff
 paired trial, alert precision and acknowledgement time, and a continuing-stock
 baseline. Cards alone remain the recommendation.
 
+### Paired staff trial scoring (2026-11-03)
+
+`paired_trial.evaluate_paired_trial` scores recorded staff observations of the
+same participant and task on cards (with provision links) and on chat, per role
+(repairs, housing, grants): completion and comprehension gain, elapsed ratio,
+review time and a separate chat hazard-miss check (critical). It reports per
+check, never an overall pass. Invalid, unpaired or missing-role observations are
+excluded and reported, and block a chat recommendation.
+
+Outcomes: without owner-agreed thresholds (named owner, agreement date, minimum
+pairs per role, minimum gains, maximum elapsed ratio) or without measured value,
+the result is `cards_only`. Even with measured value the result is only
+`chat_value_measured_owner_decision_required`; shipment, spend and source
+approval stay with the named owners. AI cost per accepted check is computed only
+from a dated price source, an accepted-check definition, an allocation basis,
+recorded usage and an owner authority that covers that usage through
+`authorise_model_run`; otherwise it is `Unknown` and each missing input is named.
+Staff can always use the card and provision-link path; chat being unavailable
+changes nothing for them.
+
+This is scoring code with synthetic unit fixtures only. No staff trial has run,
+the recorded report is unchanged, and the criteria that need owner thresholds,
+a staff trial, an independently graded set or an owner-authorised live run
+remain unmet. Run `python3 -m unittest test_paired_trial` with the usual
+core/agents test paths.
+
 ## Offline cited-answer evaluation (#214)
 
 `regulatory_chat` renders exact server-selected source excerpts and structured
