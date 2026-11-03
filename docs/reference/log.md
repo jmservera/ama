@@ -9840,3 +9840,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   (owner decision open). #230 criteria on WCAG 2.2 acceptance (#151), Fluent
   component adoption (#150) and validation (#155) stay unmet. Evidence is under
   `.copilot-tracking/` (2026-11-03 issue-230 programme overview withheld).
+
+## [2026-11-03] update | Issue 572 post-#757 verification (Refs #572)
+
+* Re-verified criteria 1 to 3 on main with focused tests and recorded that #757 resolved the core typing blocker. Criterion 4 (fresh complete exact-head gate with browser and MSSQL) stays unmet. Evidence is under `.copilot-tracking/` (2026-11-03 issue-572 post-757 verification).
