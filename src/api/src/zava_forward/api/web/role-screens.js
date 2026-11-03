@@ -450,7 +450,13 @@ const signoffTypes = [
 // A scoped design change invalidates only the sign-offs it names, by moving them to "Needs reassessment".
 function signoffState(s) {
   if (!s) return { text: "Not given", ok: false };
-  if (s.status === "Signed off") return { text: `Signed off on design version ${screenValue(s.version)}`, ok: true };
+  if (s.status === "Signed off") {
+    // A sign-off is a named human decision on a stated design version; without both it is incomplete evidence.
+    const named = typeof s.by === "string" && s.by.trim() !== "";
+    const versioned = s.version !== null && s.version !== undefined && s.version !== "";
+    if (!named || !versioned) return { text: `Signed off record is incomplete: ${named ? "" : "no named person"}${!named && !versioned ? " and " : ""}${versioned ? "" : "no design version"}`, ok: false };
+    return { text: `Signed off on design version ${screenValue(s.version)}`, ok: true };
+  }
   return { text: s.status === "Returned" ? "Returned" : s.status === "Needs reassessment" ? "Needs reassessment" : screenValue(s.status), ok: false };
 }
 registerRoleScreen({
