@@ -182,6 +182,47 @@ class ContractTests(Base):
                 self.assertLessEqual(b["max_calls_per_request"], b["attempt_ceiling"])
         self.assertEqual(len(self.service.registry(self.pm)["assistants"]), 5)
 
+    def count_tasks(self):
+        with self.service.transaction() as db:
+            return db.execute("SELECT COUNT(*) FROM assistant_tasks").fetchone()[0]
+
+    def test_forecast_reports_calls_per_predicate_before_proactive_is_enabled(self):
+        off = self.other(proactive=0)
+        self.assertFalse(off.limits.proactive)
+        before = self.count_tasks()
+        f = off.forecast(self.pm)
+        self.assertEqual(self.count_tasks(), before)
+        self.assertFalse(f["proactive"])
+        self.assertEqual(off.scan()["enqueued"], [])
+        self.assertEqual({a["id"] for a in f["assistants"]}, set(REGISTRY))
+        bound = self.service.registry(self.pm)["assistants"][0]["model_bounds"]["max_calls_per_request"]
+        for a in f["assistants"]:
+            self.assertLessEqual(a["new_proposals"], a["eligible_cases"])
+            self.assertEqual(a["max_calls_this_period"], a["new_proposals"] * bound)
+        by = {a["id"]: a for a in f["assistants"]}
+        self.assertGreater(by["works-resident-coordination"]["new_proposals"], 0)
+        self.assertEqual(f["max_calls_this_period"], sum(a["max_calls_this_period"] for a in f["assistants"]))
+        self.assertEqual(f["cases_reachable_per_period"], self.service.limits.scan_size * (86400 // self.service.limits.scan_interval))
+        self.assertTrue(f["cost"].startswith("Unknown"))
+        self.assertNotIn("PRIVATE", json.dumps(f))
+
+    def test_forecast_excludes_proposals_that_already_exist(self):
+        cap = "works-resident-coordination"
+        first = {a["id"]: a for a in self.service.forecast(self.pm)["assistants"]}[cap]["new_proposals"]
+        self.service.invoke(self.pm, cap, "ZF-1")
+        after = {a["id"]: a for a in self.service.forecast(self.pm)["assistants"]}[cap]["new_proposals"]
+        self.assertEqual(after, first - 1)
+
+    def test_forecast_is_staff_only_and_bounded(self):
+        for role in ("Contractor", "Unknown"):
+            with self.assertRaises(PermissionError):
+                self.service.forecast(self.people[role])
+        for period in (59, 2592001, "day"):
+            with self.assertRaises(ValueError):
+                self.service.forecast(self.pm, period)
+        rc = self.service.forecast(self.people["Retrofit Coordinator"])
+        self.assertNotIn("funding-evidence", {a["id"] for a in rc["assistants"]})
+
     def test_attempt_ceiling_rejects_a_larger_configuration(self):
         self.assertFalse(self.other(attempts=4).limits.valid)
 
@@ -1185,6 +1226,16 @@ class ApiTests(Base):
                 return response.status, json.load(response)
         except urllib.error.HTTPError as error:
             return error.code, json.load(error)
+
+    def test_forecast_http_is_read_only_and_bounded(self):
+        before = self.domain()
+        status, f = self.request("/api/assistants/forecast?period_seconds=3600")
+        self.assertEqual((status, f["period_seconds"]), (200, 3600))
+        self.assertEqual(self.request("/api/assistants/forecast?period_seconds=5")[1]["period_seconds"], 60)
+        self.user = self.people["Contractor"]
+        self.assertEqual(self.request("/api/assistants/forecast")[0], 403)
+        self.assertEqual(self.provider.calls, 0)
+        self.assertEqual(before, self.domain())
 
     def test_release_record_local_http(self):
         cap = "stock-prioritisation"

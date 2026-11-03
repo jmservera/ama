@@ -840,8 +840,22 @@ tools or sub-agents, and at most `ZF_ASSIST_ATTEMPTS` attempts per request
 worker tests assert one depth-1 call per task for every capability and the API
 tests assert claims stop at the stated bound. These are code bounds, not price,
 budget, target or observed consumption; cost stays Unknown without a price
-source. Per-proposal usage attribution and the proactive-predicate forecast
-remain unmet.
+source. Per-proposal usage attribution remains unmet.
+
+### Proactive predicate forecast (#107, #432, 2026-11-03)
+
+`GET /api/assistants/forecast?period_seconds=N` (default 86400, clamped to 60
+seconds to 30 days; staff roles only, never contractors or unknown roles)
+reports, for each assistant the caller may use and within their current case
+scope: open cases, eligible cases, new proposals (eligible cases with no
+existing proposal, so SQL deduplication is respected), the stated
+`max_calls_per_request`, and `max_calls_this_period` (new proposals times that
+bound). It also reports the scan reach per period (`scan_size` cases per
+`scan_interval`) and the call allowance. It works while proactive scans are
+off, enqueues nothing, calls no provider, writes nothing and returns no case
+content. It is an upper bound from current case state; later routine case edits
+can add proposals. Cost is reported as Unknown because no price source is set
+(BRD OD-51). This is a forecast, not an enablement decision or approval.
 
 Open items for #107: authoritative serving-version attestation; Azure SQL race
 evidence; delivered-build

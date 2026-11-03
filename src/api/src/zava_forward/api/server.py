@@ -442,6 +442,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 try:
                     if url.path == "/api/assistants":
                         return self._json(200, app.assistants.registry(u))
+                    if url.path == "/api/assistants/forecast":
+                        return self._json(200, app.assistants.forecast(u, num(q, "period_seconds", 86400, 60, 2592000)))
                     if url.path == "/api/assistants/proposals":
                         return self._json(200, app.assistants.listing(u, q.get("case_id", [None])[0], q.get("after", [""])[0]))
                     parts = url.path.strip("/").split("/")
