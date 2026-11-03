@@ -1,4 +1,4 @@
-"""Human-approved envelope and downside limits with a pause signal, never a decision.
+"""Person-approved envelope and downside limits with a pause signal, never a decision.
 
 The module holds no company figures. Limits exist only when a person supplies them with an
 approval record, and a breach only raises a signal for a named human decision.
@@ -59,7 +59,7 @@ def _approval(value: object) -> Record:
 
 
 def record_limits(approval: object, envelope: object, tolerances: object) -> Record:
-    """Return a limits record from supplied, human-approved inputs.
+    """Return a limits record from supplied, person-approved inputs.
 
     Authority of the approver is recorded as supplied; it is not verified here.
     """
@@ -97,7 +97,7 @@ def assess(limits: Record | None, exposure: Record | None) -> Record:
         return dict(
             status="Held",
             signal=UNAPPROVED,
-            reason="No human-approved envelope or tolerances are recorded.",
+            reason="No person-approved envelope or tolerances are recorded.",
             findings=[],
             notice=NOTICE,
         )
