@@ -9733,3 +9733,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   search, post-cleanup main rubric comparison, deployed and CI-green
   conjunction). Original RPI evidence is under `.copilot-tracking/`
   (2026-11-02 verify-refs-203).
+## [2026-11-02] update | Asset and board screen browser check for issue 226
+
+* Added the `226` scenario to `src/api/checks/role_screens_browser_check.py`
+  and documented it in the [API README](../../src/api/README.md). It exercises
+  the already merged read-only asset-board screen (#639, #710, #771) in a real
+  browser: keyboard reach, text-only state, no write controls, reflow and no
+  POSTs. The pinned axe 4.10.3 scan found no violations in an earlier run;
+  assistive-technology testing and #155 validation remain unperformed, so
+  #226 stays open. Original RPI evidence is under `.copilot-tracking/`
+  (2026-11-02 issue-226-browser-check).
