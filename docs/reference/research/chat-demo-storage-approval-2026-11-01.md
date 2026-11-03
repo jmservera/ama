@@ -96,6 +96,27 @@ Chat and memory content stays excluded from performance measurement
 * The resident demo app does not read these settings today. It stores no chat
   thread, so its behaviour does not change.
 
+## Demo-only model activation (owner decision 2026-11-03, Refs #891)
+
+The owner (jmservera) decided on 2026-11-03 that, for the demonstrator only, DPO and Legal
+review is superseded by a visible disclaimer so the employee chat can use the AI model.
+This is a demo-only record in the AI registry (`demo_activation` on `chat-case-conversation`),
+not an approval of the task.
+
+* Default is denied. `authorizes_live` returns true for the chat task only when
+  `ZF_CHAT_DEMO_ACTIVATION=approved-2026-11-03` and `ZF_DEPLOYMENT_PROFILE=demo` are both set.
+  Any other value, a missing profile, `pilot` or `production` stays denied.
+* The registry entry itself is unchanged: accountable individual, delegation, approval and
+  authorities stay `unknown`, `enabled` stays false. No Legal, DPO or RAI approval is recorded or claimed.
+* Still in force: the per-call gate and token and cost admission, the three privacy references
+  and retention above (storage must be approved for a model turn; without it the panel answers by
+  rules only), citation and refusal behaviour, and the fallback to workflow-only on any provider failure.
+* The chat panel shows the demo disclaimer from `/api/chat/status` and labels a model answer
+  "Model-generated, not approved. Demo only." Manual route: the ordinary case controls.
+* Deployment note: the deployed demo app sets `ZF_ENV=production` when sign-in is on, so the
+  profile marker is a separate setting. The two settings are not wired in `infra/` by this change;
+  the owner-authorised deploy must set them, then the live check (#891 criterion 6) can run.
+
 ## Not approved
 
 * Production use or any real personal data (#163 criteria 2 and 5).

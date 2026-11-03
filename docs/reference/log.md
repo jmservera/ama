@@ -10016,3 +10016,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Programme queue paging in screen trace (Refs #230)
 
 * Updated [the atlas screen trace](./research/ux/atlas-screen-trace.md) programme coordinator row: Previous page and Next page controls reach every permitted case; scope filter still applies to the loaded page only; unit-tested only.
+## [2026-11-03] update | Demo-only activation record for the employee chat model (Refs #891)
+
+* Added a demo-only activation record and an explicit env switch for `chat-case-conversation` (default denied; needs the switch value and the demo profile). [The demo storage approval](./research/chat-demo-storage-approval-2026-11-01.md) now states the boundaries. No Legal, DPO or RAI approval is claimed; deploy wiring and the live check remain outstanding. Evidence under `.copilot-tracking/` (2026-11-03 issue-891 r1).

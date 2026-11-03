@@ -126,10 +126,10 @@ const employeeChat = (() => {
         }
         if (!current()) return;
         const byRules = answer.model === "workflow-only" && answer.kind === "answer";
+        const byModel = answer.kind === "answer" && !!answer.model && answer.model !== "workflow-only";
         ui.message("assistant", answer.reply, {
-          label: byRules ? "Summary by rules, no record changed" : answer.workflow_only ? "Workflow-only help, no record changed" : answer.label,
-          detail: `Skill: ${answer.skill}. ${usageNote(answer.consumption)}${byRules ? "Built from recorded case facts, not by an AI model. Check the sources." : answer.kind === "answer" ? "AI-generated content may be incorrect. Check the sources." : "Workflow-only or unverified help. No record changed."}`,
-          sources: (answer.citations || []).map(source => `${source.id}: ${source.text}`),
+          label: byRules ? "Summary by rules, no record changed" : byModel ? "Model-generated, not approved. Demo only." : answer.workflow_only ? "Workflow-only help, no record changed" : answer.label,
+          detail: `Skill: ${answer.skill}. ${usageNote(answer.consumption)}${byRules ? "Built from recorded case facts, not by an AI model. Check the sources." : answer.kind === "answer" ? "AI-generated content may be incorrect. Check the sources." : "Workflow-only or unverified help. No record changed."}`,          sources: (answer.citations || []).map(source => `${source.id}: ${source.text}`),
         });
         if (input.value === draft) {
           input.value = "";
@@ -158,10 +158,12 @@ const employeeChat = (() => {
         throw new Error("The privacy warning is missing.");
       }
       ui.intro.append(h("p", { id: "chat-privacy" },
-        `${admission.warning} Retention: ${admission.retention}. Synthetic data only. Model activation requires separate approval.`));
+        `${admission.warning} Retention: ${admission.retention}. Synthetic data only. ${admission.demo_activation ? "" : "Model activation requires separate approval."}`));
       if (admission.limits) ui.intro.append(h("p", { id: "chat-limits" }, limitsNote(admission.limits)));
-      input.setAttribute("aria-describedby", "employee-chat-entry-warning chat-privacy employee-chat-error");
-      stored = admission.storage_approved !== false;
+      if (admission.demo_activation && typeof admission.demo_disclaimer === "string") {
+        ui.intro.append(h("p", { id: "chat-demo-disclaimer", role: "note" }, admission.demo_disclaimer));
+      }
+      input.setAttribute("aria-describedby", "employee-chat-entry-warning chat-privacy employee-chat-error" + (admission.demo_activation ? " chat-demo-disclaimer" : ""));      stored = admission.storage_approved !== false;
       if (!stored) ui.intro.append(h("p", { id: "chat-unstored" },
         "Chat storage is not approved yet. Replies use rules only on the case you have open, nothing you type is saved and no AI model is used."));
       for (const skill of data.skills) select.append(h("option", { value: skill.id }, `${skill.id}: ${skill.purpose}`));
