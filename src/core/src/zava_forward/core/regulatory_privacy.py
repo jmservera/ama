@@ -148,3 +148,29 @@ def readiness_report(env: Any) -> dict[str, Any]:
             for cid, text, status, ref in CRITERIA
         ],
     )
+
+
+QUERY_FIELDS = {
+    "rule_lookup": ("card_id", "card_version", "provision_id", "source_id", "version", "as_of"),
+    "check_explain": ("card_id", "card_version", "check_kind", "outcome", "as_of", "case_id"),
+    "alert_triage": ("alert_id", "source_id", "version", "status", "as_of"),
+}
+SPECIAL_CATEGORY = frozenset(
+    ("health", "disability", "ethnicity", "religion", "safeguarding", "vulnerability", "notes")
+)
+MANUAL_PATH = "Use the rule card and source links directly; a named human decides."
+
+
+def minimise_query(purpose: str, fields: dict[str, Any]) -> dict[str, Any]:
+    """Keep only fields the purpose needs; report dropped names, never values."""
+    allowed = QUERY_FIELDS.get(purpose)
+    if allowed is None:
+        return dict(permitted=False, fields={}, dropped=[], manual_path=MANUAL_PATH)
+    kept = {k: v for k, v in fields.items() if k in allowed and k not in SPECIAL_CATEGORY}
+    return dict(
+        permitted=True,
+        fields=kept,
+        dropped=sorted(k for k in fields if k not in kept),
+        special_category_dropped=sorted(k for k in fields if k in SPECIAL_CATEGORY),
+        manual_path=MANUAL_PATH,
+    )

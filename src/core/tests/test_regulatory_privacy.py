@@ -9,7 +9,13 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from zava_forward.core.regulatory_privacy import CLASSES, readiness_report, retention_report
+from zava_forward.core.regulatory_privacy import (
+    CLASSES,
+    QUERY_FIELDS,
+    minimise_query,
+    readiness_report,
+    retention_report,
+)
 
 NOW = datetime(2026, 10, 16, 12, tzinfo=UTC)
 DPIA = Path(__file__).resolve().parents[3] / "docs/reference/research/chat-memory-dpia.md"
@@ -131,6 +137,30 @@ class Readiness(unittest.TestCase):
         text = json.dumps(readiness_report({**self.REAL, "OTHER": "PRIVATE-CANARY"}))
         self.assertNotIn("PRIVATE-CANARY", text)
         self.assertNotIn("REAL-A", text)
+
+
+class QueryMinimisation(unittest.TestCase):
+    def test_only_needed_fields_pass_and_values_are_not_echoed(self) -> None:
+        out = minimise_query(
+            "check_explain",
+            dict(card_id="c1", outcome="clear", resident_name="PRIVATE-CANARY", health="x"),
+        )
+        self.assertEqual(out["fields"], dict(card_id="c1", outcome="clear"))
+        self.assertEqual(out["dropped"], ["health", "resident_name"])
+        self.assertEqual(out["special_category_dropped"], ["health"])
+        self.assertNotIn("PRIVATE-CANARY", json.dumps(out))
+
+    def test_unknown_purpose_is_refused_with_manual_path(self) -> None:
+        out = minimise_query("summarise_everything", dict(card_id="c1"))
+        self.assertFalse(out["permitted"])
+        self.assertEqual(out["fields"], {})
+        self.assertIn("named human", out["manual_path"])
+
+    def test_no_purpose_allows_special_category_fields(self) -> None:
+        from zava_forward.core.regulatory_privacy import SPECIAL_CATEGORY
+
+        for allowed in QUERY_FIELDS.values():
+            self.assertFalse(SPECIAL_CATEGORY & set(allowed))
 
 
 if __name__ == "__main__":
