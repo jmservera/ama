@@ -415,6 +415,14 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         with self.lock:
             return buildings.view(self.data, self.cases, building_id, user)
 
+    def home_case_view(self, user, case_id):
+        from . import home_case
+        return home_case.view(self, user, case_id)
+
+    def home_case_record_version(self, user, case_id, metadata):
+        from . import home_case
+        return home_case.record_version(self, user, case_id, metadata)
+
     def bulk_edit_preview(self, user, body):
         from . import bulk_edits
         return bulk_edits.preview(self, user, body)
