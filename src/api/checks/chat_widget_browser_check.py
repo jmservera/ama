@@ -787,6 +787,23 @@ def employee_stale(page: Page) -> None:
     )
 
 
+def employee_layout(browser: Browser, base: str) -> None:
+    """Gate the employee composer layout alone, independent of the resident leg."""
+    context = browser.new_context()
+    try:
+        page = context.new_page()
+        page.goto(base + "/app")
+        page.get_by_label("Work email", exact=True).fill("sam@example.test")
+        page.get_by_label("Password", exact=True).fill("synthetic-check")
+        page.get_by_role("button", name="Sign in", exact=True).click()
+        expect(page.get_by_role("heading", name="My cases today", exact=True)).to_be_visible()
+        page.get_by_role("button", name="Chat", exact=True).click()
+        expect(page.locator("#employee-chat select option")).to_have_count(6)
+        employee_reserved_and_short(page)
+    finally:
+        context.close()
+
+
 def employee(browser: Browser, base: str, out: Path, axe: str) -> None:
     context = browser.new_context()
     context.route(
@@ -851,12 +868,8 @@ def resident(browser: Browser, out: Path, axe: str) -> None:
     fixture.app.allowed_hosts = ("127.0.0.1",)
     base = f"http://127.0.0.1:{fixture.app.port}"
     context = browser.new_context()
-    context.route(
-        "**/*",
-        lambda route: (
-            route.continue_() if route.request.url.startswith(base + "/") else route.abort()
-        ),
-    )
+    context.route("**/*", lambda route: route.continue_()
+                  if route.request.url.startswith(base + "/") else route.abort())
     try:
         page = context.new_page()
         errors: list[str] = []
@@ -984,9 +997,25 @@ def recovery_case(browser: Browser, base: str, failures: int) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--axe", type=Path, required=True)
-    parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--axe", type=Path)
+    parser.add_argument("--out", type=Path)
+    parser.add_argument("--employee-layout", action="store_true")
     args = parser.parse_args()
+    if args.employee_layout:
+        with sync_playwright() as playwright:
+            browser = playwright.chromium.launch()
+            try:
+                employee_server(
+                    lambda base: employee_layout(browser, base),
+                    synthetic_data,
+                    synthetic_chat_privacy=True,
+                )
+            finally:
+                browser.close()
+        print("PASS employee layout: Send inside panel at 1280x480, 320x480, 640x360")
+        return
+    if args.axe is None or args.out is None:
+        parser.error("--axe and --out are required unless --employee-layout is set")
     raw = args.axe.read_bytes()
     if hashlib.sha256(raw).hexdigest() != AXE_SHA256:
         raise ValueError("Expected pinned axe-core 4.10.3")
