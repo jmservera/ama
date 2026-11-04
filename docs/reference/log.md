@@ -10318,6 +10318,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 945 remaining criterion needs human browser check (Refs #945)
 
 * Rechecked merged PR 985: the tile note is written once per failure burst, clears after a clean load, and keeps the list pointer, in code and string tests. Only real-browser and screen reader observation remains, a human step. Nothing ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-945 record).
+
 ## [2026-11-04] update | Issue 225 finance screens status (Refs #225)
 
 * Rechecked merged PRs 657, 785, 862, 937 and 978: the invoice, funding, field draft and AI economics criteria are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-225 r1).
