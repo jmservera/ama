@@ -34,7 +34,7 @@ shape that clears the quality floor, and say plainly what is unmeasured.
 | Step shape | Example in Zava Forward | Tool | Evidence label |
 | --- | --- | --- | --- |
 | Exact answer from fixed rules | Gates, holds, thresholds, arithmetic, ranking | Rules or a parser; no model call | Observed (historical prototype, PR #19), see figures below |
-| Understand an input and pick a concrete answer | Choose a source-bound candidate, classify a document, flag whether evidence supports a claim | Typed decision model (Microsoft Decision 1, optional, under evaluation) | Vendor documentation plus one feasibility observation; benefit unproved |
+| Understand an input and pick a concrete answer | Choose a source-bound candidate, classify a document, flag whether evidence supports a claim | Typed decision model (Microsoft Decision 1, see the [reassessment of 2026-10-10](../../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10); optional, under evaluation) | Vendor documentation plus one feasibility observation; benefit unproved |
 | Write text a person will read | A cited handover draft or catch-up summary | Generative model (gpt-4.1-mini in the QA exercise) | Observation of five runs; no human acceptance |
 
 The five original responsibilities (stock prioritisation, assessment drafting,
@@ -56,7 +56,7 @@ Every figure that may appear on the slide, in the notes or on the card.
 | Decision model latency target | p95 at most 10 s warm; generative narrative at most 30 s | [PRD](../../prds/zava-forward-retrofit-programme-demonstrator.md) NFR-009 | Requirement. Not measured |
 | Generative tokens in the QA exercise | 6,884 tokens over five runs; mean 1,376.8 per run | [AI Tokenomics note](../../reference/resources/ai-tokenomics.md), infra README record | Observation on `gpt-4.1-mini-2025-04-14`. No human acceptance, so not tokens per accepted proposal and not a cost |
 | Price per call, cost per accepted proposal, saving, payback | Unknown | Same note; BRD OD-51, FR-052, NFR-012 | Stated gap. No dated price source, no accepted-outcome count, no authorised held-out batch. No figure is shown |
-| Decision model price and speed | Not stated | Vendor announcement (October 2026) | Advertised, not a subscription quote. Keep out |
+| Decision model price and speed | Not stated | [Microsoft announcement](https://commandline.microsoft.com/microsoft-decision-1-model-foundry/), October 2026, as recorded in the [typed decision model research](../../ideas/typesafe-system-one-agent-fit.md#microsoft-decision-1-reassessment-2026-10-10) | Advertised, not a subscription quote. Keep out |
 
 Kept out of every surface: the modelled USD 0.44 per home and USD 6,873
 across 15,600 homes now on S18 and B25. That calculation multiplies one
@@ -68,7 +68,7 @@ keeps it; see the
 
 ## Draft Slide (Replaces the S18 Body, Same 50-Second Slot)
 
-Title (58 characters): Right-size the AI: most steps need an answer, not text
+Title (54 characters): Right-size the AI: most steps need an answer, not text
 
 | Block | Draft copy |
 | --- | --- |
@@ -87,7 +87,7 @@ deck, a type size the deck already uses for body text, and plain language
 (short sentences, no unexplained term). Spoken text and notes carry the same
 claims as the slide, no more.
 
-## Draft Spoken Text (About 20 Seconds Inside the S18 Slot)
+## Draft Spoken Text (About 40 Seconds Inside the S18 Slot)
 
 "Most agent steps do not need a model to write anything. They need to
 understand an input and give a concrete answer. So I use rules for exact
