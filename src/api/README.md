@@ -4170,9 +4170,11 @@ missing deployment/data/model/photo/law prerequisites are tracked by #350.
   Changing to a different valid reference still requires a new request and
   activation. This checks reference presence only, not authenticity or legal
   approval. `ZF_TIME_NOTICE_VERSION` must also equal the current notice version
-  (`draft-1` in the code) so the approval reference covers the wording shown to
-  staff; rewording the notice turns capture off until the approver confirms the
-  new version. Actual DPIA review, staff consultation, notice approval and
+  (`draft-1` in the code) so the approval reference is tied to the wording shown to
+  staff. The notice version is bound to each request and activation: rewording
+  the notice turns capture off until the approver confirms the new version and a
+  new request and a different-role activation are made, even if the approval
+  reference is unchanged. Actual DPIA review, staff consultation, notice approval and
   administrator ratification remain human prerequisites, not results of this
   string check.
 * Download any list for Excel, and check a spreadsheet: columns are matched

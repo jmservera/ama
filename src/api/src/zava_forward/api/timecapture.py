@@ -50,9 +50,9 @@ SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS time_entry (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, user_code TEXT NOT NULL, case_id TEXT NOT NULL, "
     "minutes INTEGER NOT NULL, activity TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS time_request (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, by_role TEXT NOT NULL, "
-    "dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)",
+    "dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL, notice_version TEXT NOT NULL DEFAULT '')",
     "CREATE TABLE IF NOT EXISTS time_enabled (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, by_role TEXT NOT NULL, "
-    "requested_by TEXT NOT NULL, requested_role TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)",
+    "requested_by TEXT NOT NULL, requested_role TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL, notice_version TEXT NOT NULL DEFAULT '')",
     "CREATE TABLE IF NOT EXISTS notice_ack (user_code TEXT NOT NULL, version TEXT NOT NULL, at TEXT NOT NULL, PRIMARY KEY (user_code, version))",
     "CREATE INDEX IF NOT EXISTS ix_time_user ON time_entry (user_code, id)",
 )
@@ -60,10 +60,11 @@ MSSQL_DDL = (
     "CREATE TABLE time_entry (id BIGINT IDENTITY(1,1) PRIMARY KEY, at NVARCHAR(40) NOT NULL, user_code NVARCHAR(50) NOT NULL, case_id NVARCHAR(64) NOT NULL, "
     "minutes INT NOT NULL, activity NVARCHAR(100) NOT NULL, dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL)",
     "CREATE TABLE time_request (id BIGINT IDENTITY(1,1) PRIMARY KEY, at NVARCHAR(40) NOT NULL, by_user NVARCHAR(200) NOT NULL, by_role NVARCHAR(100) NOT NULL, "
-    "dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL, notice_ref NVARCHAR(200) NOT NULL)",
+    "dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL, notice_ref NVARCHAR(200) NOT NULL, "
+    "notice_version NVARCHAR(50) NOT NULL DEFAULT N'')",
     "CREATE TABLE time_enabled (id BIGINT IDENTITY(1,1) PRIMARY KEY, at NVARCHAR(40) NOT NULL, by_user NVARCHAR(200) NOT NULL, by_role NVARCHAR(100) NOT NULL, "
     "requested_by NVARCHAR(200) NOT NULL, requested_role NVARCHAR(100) NOT NULL, dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL, "
-    "notice_ref NVARCHAR(200) NOT NULL)",
+    "notice_ref NVARCHAR(200) NOT NULL, notice_version NVARCHAR(50) NOT NULL DEFAULT N'')",
     "CREATE TABLE notice_ack (user_code NVARCHAR(50) NOT NULL, version NVARCHAR(50) NOT NULL, at NVARCHAR(40) NOT NULL, PRIMARY KEY (user_code, version))",
 )
 MSSQL_INDEX = ("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_time_user' AND object_id = OBJECT_ID(N'time_entry')) "
@@ -178,7 +179,7 @@ class TimeCapture:
             return 5
 
     def _refs(self):
-        return tuple((self.env.get(k) or "").strip() for k in ("DPIA_APPROVED", "ZF_TIME_CONSULTATION", "ZF_TIME_NOTICE_APPROVED"))
+        return tuple((self.env.get(k) or "").strip() for k in ("DPIA_APPROVED", "ZF_TIME_CONSULTATION", "ZF_TIME_NOTICE_APPROVED")) + (NOTICE_VERSION,)
 
     def _latest(self, sql):
         if not self._exists():
@@ -189,14 +190,14 @@ class TimeCapture:
 
     def request(self):
         """The enabling request, if it was made against the references currently configured."""
-        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref FROM time_request ORDER BY id DESC")
+        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, notice_version FROM time_request ORDER BY id DESC")
         if not r or tuple(r[3:]) != self._refs():
             return None
         return dict(at=r[0], by=r[1], role=r[2])
 
     def activation(self):
         """The enabling record, if it was taken against the references currently configured."""
-        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref FROM time_enabled ORDER BY id DESC")
+        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, notice_version FROM time_enabled ORDER BY id DESC")
         if not r or tuple(r[3:]) != self._refs():
             return None
         return dict(at=r[0], by=r[1], role=r[2])
@@ -209,11 +210,11 @@ class TimeCapture:
     def request_enable(self, user):
         """A manager asks for capture to be enabled against the configured references. It enables nothing by itself. The caller audits it."""
         self._ready_to_enable()
-        dpia, consult, notice = self._refs()
+        dpia, consult, notice, version = self._refs()
         with self._conn() as db:
-            db.execute("INSERT INTO time_request (at, by_user, by_role, dpia_ref, consultation_ref, notice_ref) VALUES (?,?,?,?,?,?)",
-                       (self._now(), user["email"], user["role"], dpia, consult, notice))
-        return dict(dpia_ref=dpia, consultation_ref=consult, notice_ref=notice)
+            db.execute("INSERT INTO time_request (at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, notice_version) VALUES (?,?,?,?,?,?,?)",
+                       (self._now(), user["email"], user["role"], dpia, consult, notice, version))
+        return dict(dpia_ref=dpia, consultation_ref=consult, notice_ref=notice, notice_version=version)
 
     def activate(self, user):
         """The enabling action. Needs the flag, the three references and a request by a manager in a different role: the
@@ -224,11 +225,11 @@ class TimeCapture:
             raise SeparationOfDuties("Enabling needs a request first, made by a manager in a different role from the one who enables.")
         if req["by"] == user["email"] or req["role"] == user["role"]:
             raise SeparationOfDuties(f"The enabling request was made by {req['role']}. A manager in a different role must enable it.")
-        dpia, consult, notice = self._refs()
+        dpia, consult, notice, version = self._refs()
         with self._conn() as db:
-            db.execute("INSERT INTO time_enabled (at, by_user, by_role, requested_by, requested_role, dpia_ref, consultation_ref, notice_ref) "
-                       "VALUES (?,?,?,?,?,?,?,?)", (self._now(), user["email"], user["role"], req["by"], req["role"], dpia, consult, notice))
-        return dict(dpia_ref=dpia, consultation_ref=consult, notice_ref=notice, requested_by=req["by"], requested_role=req["role"])
+            db.execute("INSERT INTO time_enabled (at, by_user, by_role, requested_by, requested_role, dpia_ref, consultation_ref, notice_ref, notice_version) "
+                       "VALUES (?,?,?,?,?,?,?,?,?)", (self._now(), user["email"], user["role"], req["by"], req["role"], dpia, consult, notice, version))
+        return dict(dpia_ref=dpia, consultation_ref=consult, notice_ref=notice, notice_version=version, requested_by=req["by"], requested_role=req["role"])
 
     def _require(self):
         st = self.status()

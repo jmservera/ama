@@ -36,10 +36,10 @@ def assert_invalid_history(test, store, db_path):
             env["DPIA_APPROVED"] = f" {dpia.upper()} "
             t = TimeCapture(store, env, db_path)
             with t._conn() as db:
-                db.execute("INSERT INTO time_request (at, by_user, by_role, dpia_ref, consultation_ref, notice_ref) VALUES (?,?,?,?,?,?)",
-                           ("2026-10-01T10:00", MGR["email"], MGR["role"], dpia.upper(), "C1", "N1"))
-                db.execute("INSERT INTO time_enabled (at, by_user, by_role, requested_by, requested_role, dpia_ref, consultation_ref, notice_ref) VALUES (?,?,?,?,?,?,?,?)",
-                           ("2026-10-01T10:01", MGR2["email"], MGR2["role"], MGR["email"], MGR["role"], dpia.upper(), "C1", "N1"))
+                db.execute("INSERT INTO time_request (at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, notice_version) VALUES (?,?,?,?,?,?,?)",
+                           ("2026-10-01T10:00", MGR["email"], MGR["role"], dpia.upper(), "C1", "N1", NOTICE_VERSION))
+                db.execute("INSERT INTO time_enabled (at, by_user, by_role, requested_by, requested_role, dpia_ref, consultation_ref, notice_ref, notice_version) VALUES (?,?,?,?,?,?,?,?,?)",
+                           ("2026-10-01T10:01", MGR2["email"], MGR2["role"], MGR["email"], MGR["role"], dpia.upper(), "C1", "N1", NOTICE_VERSION))
                 db.execute("INSERT INTO notice_ack (user_code, version, at) SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM notice_ack WHERE user_code=? AND version=?)",
                            (SAM["code"], NOTICE_VERSION, "2026-10-01T10:02", SAM["code"], NOTICE_VERSION))
                 db.execute("INSERT INTO time_entry (at, user_code, case_id, minutes, activity, dpia_ref, consultation_ref) VALUES (?,?,?,?,?,?,?)",
@@ -265,6 +265,34 @@ class TimeTests(unittest.TestCase):
             with self.assertRaises(TimeCaptureOff):
                 t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
             t.env["ZF_TIME_NOTICE_VERSION"] = "draft-2"
+            with self.assertRaises(TimeCaptureOff):
+                t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
+            enable(t)
+            with self.assertRaises(NoticeNotAcknowledged):
+                t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
+        finally:
+            timecapture.NOTICE_VERSION = old
+
+    def test_changed_notice_version_with_same_refs_needs_new_request_and_activation(self):
+        from zava_forward.api import timecapture
+        t = self.on(SAM)
+        ref = t.env["ZF_TIME_NOTICE_APPROVED"]
+        old = timecapture.NOTICE_VERSION
+        try:
+            timecapture.NOTICE_VERSION = "draft-2"
+            t.env["ZF_TIME_NOTICE_VERSION"] = "draft-2"
+            self.assertEqual(t.env["ZF_TIME_NOTICE_APPROVED"], ref)
+            self.assertIsNone(t.request())
+            self.assertIsNone(t.activation())
+            with self.assertRaises(TimeCaptureOff):
+                t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
+            with self.assertRaises(SeparationOfDuties):
+                t.activate(MGR2)
+            t.request_enable(MGR)
+            with self.assertRaises(SeparationOfDuties):
+                t.activate(MGR)
+            t.activate(MGR2)
+            self.assertEqual(t.activation()["by"], MGR2["email"])
             with self.assertRaises(NoticeNotAcknowledged):
                 t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
         finally:
