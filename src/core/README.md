@@ -325,6 +325,14 @@ false, `Not submitted` and eligibility `Not assessed`; it writes nothing and a
 reviewed pack stays blocked on Finance and template authority. The manual path
 is the working review itself, and unavailable evidence returns `Unavailable`.
 
+`form_export.export_freshness(store, user, case_id, saved_export)` compares a
+saved held export with the current working review, read-only. It returns
+`Current`, `Stale` (naming only the fields whose value, state or bound source
+changed or are now stale, and the unaffected fields), `Invalid` (the copy is
+incomplete or its content hash no longer matches) or `Unavailable`. A changed
+schema or rule reference changes the schema digest and stales every
+schema-bound field. It never marks anything reviewed.
+
 `view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
 diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
 valid, current values only, combine predicates with OR and compare types
@@ -690,8 +698,15 @@ than all-granted is unknown). If the store cannot be read, the result is
 `NONE`; the manual review route is unchanged. It writes nothing and creates no
 task.
 
+`sensor_status_text.status_text(signal)` gives the plain-language status for a
+signal, and `map_and_list(signals)` returns the map statuses and the accessible
+list built from the same entries, so the list mirrors the map text and never
+relies on colour alone (AC-067). The text has no readings, identifiers,
+diagnosis or priority change, and every state names the manual route. Anything
+not clearly sufficient reads as unknown.
+
 ```bash
-python -m unittest discover -s tests -p 'test_sensor_analysis*.py' -q
+python -m unittest discover -s tests -p 'test_sensor_*.py' -q
 ```
 
 ## Discovery assistant readiness and read-only boundary (#125)
@@ -4449,6 +4464,13 @@ human action, not a hazard clock.
 Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
 human review. Tests: `src/core/tests/test_challenges.py`.
+
+Status record, 2026-11-04 (issue #220 stays open): criteria 1 to 4 were delivered by #418, #641 and
+#693, with the ageing and protection helpers in #826 and #966. Criterion 5 (no retaliation, inferred
+refusal or delayed hazard response) is unmet. The remaining work is human: representative resident
+and staff acceptance, a measured hazard-response comparison on live workflow data, and owner approval
+of the hazard follow-up age limit. The register itself cannot prove it. A further code slice would
+only wire these read-only helpers into a staff view, which needs owner direction first.
 
 ## Aftercare concern route and evaluator view (#133)
 
