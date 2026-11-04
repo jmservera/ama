@@ -10293,3 +10293,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Sensor status text mirror (Refs #111)
 
 * Added pure `sensor_status_text` in `src/core`: one plain-language status per signal, with the map and accessible list built from the same entries (AC-067 text mirror). No readings, identifiers, diagnosis or priority change; each state names the manual route. Unit-tested only. Unmet: task-queue wiring, rule approval, R1 to R3, SQL Server run. Evidence under `.copilot-tracking/` (2026-11-04 issue-111 r3).
+## [2026-11-04] update | Live deploy of resident redesign and demo end date (Refs #462, Refs #521)
+
+* Deployed main `8b9553d8b` to `ca-cutover-test-demo-api` (`--0000025`) and `ca-resident-demo` (`--0000010`) through the short registry window; set `ZF_DEMO_EXPIRES_AT` to `2028-01-01T00:00:00Z` (was `2027-01-31T23:59:00Z`). Recorded in `infra/README.md` and the prototype profile review. Sensors section showed the fail-closed message only, filed as #1072. No issue is closed.

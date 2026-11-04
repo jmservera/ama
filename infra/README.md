@@ -1574,6 +1574,15 @@ requests gave 0 empty-body 500s. The pipelined GET-with-body connection close
 is covered by `test_keepalive.py`; it could not be observed through the Easy
 Auth proxy.
 
+### Live deploy of main `8b9553d8b` and demo end date (2026-11-04, Refs #462, Refs #521)
+
+Owner-approved, resource group `ama` only. Local `docker build`, then push inside a short registry window (`az acr update --allow-exports true`, public access on, one IP rule; a trap removed the rule by bare IP, disabled public access and exports; readback Disabled, Deny, no rules, exports disabled). Images: `zava-forward-api:8b9553d8b` (`sha256:61db1d5af32773fbcbfcb2187d4e5e2dabe740ed6b1b00dc5536b698239728c4`) and `zava-resident-demo:8b9553d8b` (`sha256:24a9cbe34593ca297976aea4b78c8f445ef261898e5d4329bc3eee0db23ab28b`).
+
+* Demo API `--0000024` to `--0000025` and resident demo `--0000009` to `--0000010`, each 100 percent and Healthy; `/healthz` 200 after scale-from-zero. A sanitized env diff of the demo API showed no change, so `AI_MODEL_VERSION` and `AI_MODEL_VERSION_STRONG` (both `gpt-4.1-nano-2025-04-14`) were kept.
+* End date (owner decision on #521): `ZF_DEMO_EXPIRES_AT` on `ca-resident-demo` changed from `2027-01-31T23:59:00Z` to `2028-01-01T00:00:00Z` (the packaged maximum, which the service refuses at or after). The demo API has no expiry setting. Rollback: set the earlier value.
+* Signed-in walkthrough: see the [dated review note](../docs/reference/research/ux/zava-forward-prototype-profile-review.md#live-redesign-deploy-and-signed-in-walkthrough-2026-11-04-refs-462-refs-521). The sensors section showed its fail-closed message only (#1072).
+* This is a manual out-of-band deploy; no Bicep deployment or complete local gate was run.
+
 ### Historical deployment recipe
 
 Observed 2026-10-11 in resource group `ama` (`uksouth`, `environmentName=test`, `deploymentProfile=development`):
