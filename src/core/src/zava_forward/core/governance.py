@@ -47,6 +47,7 @@ BG011_FIELDS = (
     ("effort_roles_tasks", "the coordination-hour roles and tasks, including shifted effort and recording cost"),
 )
 AI_DENOMINATORS = ("per assistant run", "per accepted proposal", "per accepted handover")
+CAPACITY_ONLY = "Capacity only, not booked"
 BOOKED_DESTINATIONS = ("new revenue won", "revenue retained", "spend removed", "spend avoided", "capital freed")
 CAPACITY_KINDS = ("capacity gain", "augmentation", "automation")
 BG011_TARGETS = dict(cycle_time=20.0, coordination_hours=25.0)
@@ -412,7 +413,7 @@ class GovernanceMixin:
         if kind not in CAPACITY_KINDS:
             raise ValueError("Choose capacity gain, augmentation or automation.")
         claim = dict(claim=k.text(body.get("claim"), "the value claim", 400), capacity_kind=kind,
-                     baseline=k.text(body.get("baseline"), "the baseline for this claim", 400), status="Capacity only, not booked",
+                     baseline=k.text(body.get("baseline"), "the baseline for this claim", 400), status=CAPACITY_ONLY,
                      destination=None, budget_owner_ref=None, recorded_by=user["email"], recorded_at=k.now(), synthetic=bool(body.get("synthetic")))
         with self.lock:
             claims = self._gov().setdefault("value_claims", [])
@@ -435,6 +436,8 @@ class GovernanceMixin:
             claim = next((c for c in claims if c["id"] == body.get("id")), None)
             if not claim:
                 raise ValueError("Choose a recorded value claim.")
+            if claim["status"] != CAPACITY_ONLY:
+                raise ValueError(f"{claim['id']} is already {claim['status']}; only a claim that is capacity only can be confirmed.")
             k.different_person(user, claim["recorded_by"], "record the booked destination")
             claim.update(destination=destination, budget_owner_ref=ref, status="Booked", confirmed_by=user["email"], confirmed_at=k.now())
             self.audit(user["email"], "value_claim_confirm", "-", f"{claim['id']} booked as {destination}")

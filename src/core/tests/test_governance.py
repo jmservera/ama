@@ -88,6 +88,10 @@ class Gov:
         with self.assertRaises(ValueError):
             s.value_claim_confirm(self.pm2, dict(confirm, budget_owner_ref=""))
         self.assertEqual(s.value_claim_confirm(self.pm2, confirm)["status"], "Booked")
+        booked = dict(s._gov()["value_claims"][0])
+        with self.assertRaisesRegex(ValueError, "already Booked"):
+            s.value_claim_confirm(self.pm2, dict(confirm, destination="capital freed", budget_owner_ref="Other ref"))
+        self.assertEqual(s._gov()["value_claims"][0], booked)
         self.assertEqual(s.governance_view(self.pm1)["value_claims"][0]["destination"], "spend avoided")
 
     def test_changed_protocol_needs_reason_and_new_approval(self):
