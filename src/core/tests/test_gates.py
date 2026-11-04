@@ -1,7 +1,14 @@
+import copy
+import json
+import tempfile
 import unittest
+from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
+from dataset import DATA
 from zava_forward.core import gates
+from zava_forward.core.store import READY_STAGE, GateError, Store
 
 RULE = gates.GateRule("resident", "BRD RULE-002", "2026-01-01", "1", "Reviewer A")
 
@@ -87,6 +94,75 @@ class GateTests(unittest.TestCase):
         self.assertEqual(len(gates.unmet(results)), 3)
         malformed = out({"funding_ok": True, "hazards": [{}]}, [])
         self.assertEqual(malformed["safety"], gates.FAIL)
+
+
+class AdvanceBookingGateTests(unittest.TestCase):
+    """Store.advance must call require_booking_gates and fail closed."""
+
+    def setUp(self) -> None:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        path = Path(tmp.name) / "synthetic.json"
+        data = copy.deepcopy(DATA)
+        self.user = data["staff"][0]
+        path.write_text(json.dumps(data))
+        self.store: Any = Store(str(path))  # type: ignore[no-untyped-call]
+        for name in ("gate_reasons", "require_safety_clear", "require_resident_clear"):
+            patcher = patch.object(
+                self.store, name, return_value=[] if name == "gate_reasons" else None
+            )
+            patcher.start()
+            self.addCleanup(patcher.stop)
+        patcher = patch("zava_forward.core.store.buildings.blockers", return_value=[])
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        patcher = patch("zava_forward.core.store.resident_gate", return_value=[])
+        patcher.start()
+        self.addCleanup(patcher.stop)
+        with self.store.lock:
+            case = self.store._case("ZF-3")  # type: ignore[no-untyped-call]
+            case["stage"] = READY_STAGE
+            case["funding_ok"] = True
+            case["hazards"] = []
+
+    def mutate(self, **fields: Any) -> None:
+        with self.store.lock:
+            case = self.store._case("ZF-3")
+            for key, value in fields.items():
+                if value is KeyError:
+                    case.pop(key, None)
+                else:
+                    case[key] = value
+
+    def assert_blocked(self) -> None:
+        with self.assertRaises(GateError) as ctx:
+            self.store.advance(self.user, "ZF-3")
+        reason = str(ctx.exception)
+        self.assertIn("Owner:", reason)
+        self.assertIn("Next action:", reason)
+        self.assertEqual(self.store._case("ZF-3")["stage"], READY_STAGE)
+
+    def test_funding_missing_none_or_non_bool_blocks(self) -> None:
+        for value in (KeyError, None, "yes", 1, False):
+            with self.subTest(funding=value):
+                self.mutate(funding_ok=value)
+                self.assert_blocked()
+
+    def test_malformed_hazards_block(self) -> None:
+        values: list[Any] = ["none", None, {}, KeyError, [{}], ["x"]]
+        for value in values:
+            with self.subTest(hazards=value):
+                self.mutate(hazards=value)
+                self.assert_blocked()
+
+    def test_advance_without_booking_gate_call_is_detected(self) -> None:
+        self.mutate(funding_ok=None)
+        with patch.object(self.store, "require_booking_gates") as spy:
+            try:
+                self.store.advance(self.user, "ZF-3")
+            except Exception:
+                pass
+        spy.assert_called_once()
 
 
 if __name__ == "__main__":
