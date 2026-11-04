@@ -296,6 +296,35 @@ class AssetBoardScreen(unittest.TestCase):
         for control in ("button", "form", "input", "select", "textarea"):
             self.assertNotIn(control, tags(tree))
 
+    def test_capability_table_shows_counts_and_unknown_cost(self) -> None:
+        rows = [
+            {
+                "capability": "assessment",
+                "calls": 4,
+                "retries": 1,
+                "failures": 0,
+                "unknown_liabilities": 0,
+                "proposals": 3,
+                "accepted_proposals": 2,
+                "cost_per_accepted_proposal": "9.99",
+            },
+            {"capability": "drafting", "calls": 1},
+        ]
+        tree = run({"consumption": {"by_capability": rows}})["tree"]
+        text = json.dumps(tree)
+        self.assertIn("Metered usage by AI capability", text)
+        self.assertIn("assessment", text)
+        self.assertNotIn("9.99", text)
+        cells = [n["kids"][0] for n in walk(tree) if n.get("tag") == "td"]
+        self.assertIn("Unknown", cells)
+        self.assertEqual(cells.count("Unknown") >= 7, True)
+        for control in ("button", "form", "input", "select", "textarea"):
+            self.assertNotIn(control, tags(tree))
+
+    def test_capability_breakdown_missing_is_unknown_not_empty(self) -> None:
+        text = json.dumps(run({"consumption": {}})["tree"])
+        self.assertIn("per-capability breakdown could not be read", text)
+
     def test_usage_panel_missing_figures_are_unknown_not_zero(self) -> None:
         text = json.dumps(run({"consumption": {"quality_status": "Fail"}})["tree"])
         cells = [

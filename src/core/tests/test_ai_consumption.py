@@ -404,6 +404,16 @@ class ConsumptionTests(unittest.TestCase):
             restarted.reserve(self.context("retry", retry=1), MODEL, 1000, 100)
         self.assertEqual(self.report()["unknown_liabilities"], 1)
 
+    def test_report_breaks_usage_down_by_capability_without_cost(self) -> None:
+        self.authorize()
+        ticket = self.ledger.reserve(self.context(), MODEL, 1000, 100)
+        self.complete(ticket)
+        rows = self.report()["by_capability"]
+        self.assertEqual([r["capability"] for r in rows], ["assessment"])
+        self.assertEqual(rows[0]["calls"], 1)
+        self.assertEqual(rows[0]["accepted_proposals"], 0)
+        self.assertEqual(rows[0]["cost_per_accepted_proposal"], "Unknown")
+
     def test_timeout_late_completion_preserves_hold_and_no_refund(self) -> None:
         self.authorize()
         ticket = self.ledger.reserve(self.context(), MODEL, 1000, 100)

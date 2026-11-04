@@ -10417,3 +10417,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 138 status record (Refs #138)
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
+
+## [2026-11-04] update | Issue 100 per-capability AI usage view (Refs #100)
+
+* Rechecked merged PR 911. Added a per-capability usage breakdown (counts only) to the consumption report and the asset and board view; cost per capability stays Unknown. Criteria stay unmet: #440 checkpoint, #134 open, per-capability cost, quality floor, limits (OD-51) and live evidence. Evidence under `.copilot-tracking/` (2026-11-04 issue-100 r2).

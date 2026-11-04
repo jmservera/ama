@@ -954,13 +954,35 @@ class Consumption:
             for r in records
             if r["kind"] == "review-unresolved" and r["at"] <= cutoff and r["root"] in roots
         }
-        accepted = sum(
-            root in outputs
+        accepted_roots = {
+            root
+            for root in roots
+            if root in outputs
             and outputs[root]["eligible"]
             and outputs[root]["output"] not in unresolved
             and reviews.get(outputs[root]["output"], {}).get("action") in ("accept", "edit-accept")
-            for root in roots
-        )
+        }
+        accepted = len(accepted_roots)
+        by_capability = []
+        for capability in sorted({r["capability"] for r in calls}):
+            own = [r for r in calls if r["capability"] == capability]
+            own_roots = {r["root"] for r in own}
+            by_capability.append(
+                dict(
+                    capability=capability,
+                    calls=len(own),
+                    retries=sum(r["retry"] > 0 for r in own),
+                    failures=sum(
+                        completions.get(r["id"], {}).get("outcome") != "returned" for r in own
+                    ),
+                    unknown_liabilities=sum(
+                        r["id"] not in completions or completions[r["id"]]["held"] for r in own
+                    ),
+                    proposals=len(own_roots),
+                    accepted_proposals=len(own_roots & accepted_roots),
+                    cost_per_accepted_proposal=UNKNOWN,
+                )
+            )
         unknown = sum(r["id"] not in completions or completions[r["id"]]["held"] for r in calls)
         unjoined = len(roots - outputs.keys())
         cohort_outputs = {o["output"] for o in outputs.values() if o["root"] in roots}
@@ -1097,6 +1119,7 @@ class Consumption:
             unjoined_outputs=unjoined,
             unjoined_reviews=unjoined_reviews,
             accepted_proposals=accepted,
+            by_capability=by_capability,
             denominator="human-accepted eligible proposal outputs in call-time cohort",
             token_cost=cost,
             projected_token_charge=format(projected, "f") if projected is not None else UNKNOWN,
