@@ -106,6 +106,17 @@ class Frame:
         return hashlib.sha256(wire(self.row)).hexdigest()
 
 
+_PLACEHOLDERS = frozenset({"tbd", "todo", "n/a", "na", "none", "unknown", "nobody", "unassigned"})
+
+
+def accountable_text(value: object) -> bool:
+    """True for a real owner or alert name: non-blank, bounded, not a template or placeholder."""
+    if not isinstance(value, str) or not value.strip() or len(value) > 160:
+        return False
+    text = value.strip()
+    return text.casefold() not in _PLACEHOLDERS and not (text[0] == "<" and text[-1] == ">")
+
+
 @dataclass(frozen=True)
 class RunBudget:
     owner: str
@@ -118,13 +129,8 @@ class RunBudget:
     reserved_headroom_units: int = 40000
 
     def validate(self, frames: tuple[Frame, ...]) -> int:
-        if any(
-            not isinstance(s, str) or not s.strip() or len(s) > 160
-            for s in (
-                self.owner,
-                self.cost_reference,
-                self.alert_reference,
-            )
+        if not all(
+            accountable_text(s) for s in (self.owner, self.cost_reference, self.alert_reference)
         ):
             raise StreamError("RUN_OWNER_COST_ALERT_REQUIRED")
         for value in (self.max_seconds, self.max_per_second):
