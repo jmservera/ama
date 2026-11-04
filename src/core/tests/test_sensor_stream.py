@@ -271,6 +271,8 @@ class ReplayTests(unittest.TestCase):
         for bad in (
             replace(budget, owner=""),
             replace(budget, alert_reference=""),
+            replace(budget, owner="TBD"),
+            replace(budget, alert_reference="<budget alert name>"),
             replace(budget, max_messages=11),
             replace(budget, max_messages=True),
             replace(budget, max_seconds=float("inf")),
