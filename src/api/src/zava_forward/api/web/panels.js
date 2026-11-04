@@ -130,7 +130,7 @@ function technicalPanel(c, id, refresh) {
     !t ? h("p", { class: "muted" }, "No design recorded yet.") : [
       h("p", {}, `Design version ${t.design_version}, recorded by ${t.design_name}. The person who recorded the design cannot sign it off.`),
       h("p", {}, "Technical sign-off is a named human professional decision, never an AI approval. Role membership alone does not attest competence."),
-      h("table", {}, h("thead", {}, h("tr", {}, ["Sign-off", "State", "Design version", "By", "Note"].map((x) => h("th", { scope: "col" }, x)))),
+      h("table", {}, h("caption", { class: "sr-only" }, "Technical sign-offs"), h("thead", {}, h("tr", {}, ["Sign-off", "State", "Design version", "By", "Note"].map((x) => h("th", { scope: "col" }, x)))),
         h("tbody", {}, TYPES.map(([k, label]) => { const s = t.signoffs[k]; return h("tr", {}, h("td", {}, label), h("td", {}, s ? s.status : "Not given"), h("td", {}, s && s.version ? String(s.version) : "Not given"), h("td", {}, s && s.by ? s.by : ""), h("td", {}, s ? (s.reason || s.note || "") : "")); }))),
       c.technical_missing.length ? [h("p", {}, "Still needed before this stage can pass:"), h("ul", {}, c.technical_missing.map((m) => h("li", {}, `${m.item}. For the ${m.assigned_to}.`)))] : h("p", {}, "Every sign-off and piece of evidence is in place."),
     ],
@@ -219,7 +219,7 @@ function residentPanel(c, id, refresh) {
   return h("section", { class: "card" }, h("h2", {}, "Decision for each measure"),
     h("p", { class: "muted" }, "These start as not recorded. Only write what the resident told you. Contact or access is never treated as a yes."),
     !c.can_record_resident ? h("p", {}, "Read-only resident decisions. Neighbourhood, Resident Engagement and Retrofit coordination staff record supplied answers.") : null,
-    h("table", {}, h("thead", {}, h("tr", {}, ["Measure", "Their answer", "Versions"].map((x) => h("th", {}, x)))),
+    h("table", {}, h("caption", { class: "sr-only" }, "Resident decisions by measure"), h("thead", {}, h("tr", {}, ["Measure", "Their answer", "Versions"].map((x) => h("th", { scope: "col" }, x)))),
       h("tbody", {}, measures.map((m) => h("tr", {}, h("td", {}, `${m.measure}: ${m.context ? `scope ${m.context.scope}, revision ${m.context.revision}, design ${m.context.design_version}` : "Current scope not recorded"}`), h("td", {}, `${m.status}. ${m.readiness}`),
         h("td", {}, m.versions.map((v) => `v${v.version} ${v.status} (${v.answered_by}, recorded by ${v.recorded_by}${v.note ? `: ${v.note}` : ""})`).join("; ") || "None"))))),
     recordForm("Record the measure scope", [["measure", "Measure", { options: ["", ...measures.map((m) => m.measure)] }], ["scope", "Exact scope reference"], ["design_version", "Current technical design version", { type: "number" }], ["source", "Supplied scope source reference"]], (b, submitted) => go("scope_record", b, submitted), "Record scope"),
@@ -472,7 +472,7 @@ async function financeQueueView() {
   try { rows = await api("/api/finance"); } catch (e) { if (e.name === "AbortError" || !me) return; return show(h("h1", {}, "Finance queue"), h("p", {}, e.message)); }
   show(h("h1", {}, "Finance queue"),
     h("p", { class: "muted" }, "Invoices with exceptions, paused payments or no check yet. A person decides each one. Nothing is paid from here."),
-    rows.length ? h("table", {}, h("thead", {}, h("tr", {}, ["Home", "Invoice", "Supplier", "Status", "Exceptions", "Total"].map((x) => h("th", {}, x)))),
+    rows.length ? h("table", {}, h("caption", { class: "sr-only" }, "Invoices waiting for a decision"), h("thead", {}, h("tr", {}, ["Home", "Invoice", "Supplier", "Status", "Exceptions", "Total"].map((x) => h("th", { scope: "col" }, x)))),
       h("tbody", {}, rows.map((r) => h("tr", {}, h("td", {}, h("a", { href: `#/case/${encodeURIComponent(r.case_id)}` }, r.address)), h("td", {}, `${r.invoice} ${r.ref}`),
         h("td", {}, r.supplier), h("td", {}, r.on_hold ? `${r.status}, payment paused` : r.status), h("td", {}, r.exceptions), h("td", {}, money(r.total)))))) : h("p", {}, "Nothing is waiting."));
 }
