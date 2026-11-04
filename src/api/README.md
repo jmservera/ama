@@ -1950,6 +1950,62 @@ PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
 This is constructed local evidence, not a live Hub run, Azure SQL proof or
 sensor accuracy approval.
 
+## Live simulator container (#184, owner requirement 2026-11-04)
+
+`python -m zava_forward.api.live_simulator` sends one **synthetic** reading per home per
+5-minute UTC slot. It builds on [`DeviceActivation`](./src/zava_forward/api/iot_stream.py), the
+per-home `SYN-<sensor key>` device identity from #185 and the pure generator
+`zava_forward.core.synthetic.live_readings`. It uses no AI, so there is nothing to fall back
+from; a manual path (`--sink stdout`) shows exactly what would be sent. It never connects to,
+discovers or represents installed real devices and has no resident-facing action.
+
+* Generator: input is only daily averages of temperature (degC), relative humidity (%) and
+  sunlight (W/m2, global horizontal irradiance, 24-hour mean). They become 24 hourly anchors
+  (mean preserved), then values are eased (smoothstep) between hour anchors, so a reading at
+  10:30 sits between the 10:00 and 11:00 anchors; hour 23 blends toward the next day's 00:00.
+  Bounded noise is added: temperature +/-0.4 degC, humidity +/-2 points, sunlight +/-5 % of the
+  value (night stays 0), smoothed by easing between seeded 30-minute knots. Each home also has a
+  constant offset: +/-1.0 degC, +/-3 points, sunlight x 0.9..1.1. Everything is a pure function of
+  (seed, home, slot), default seed 184, so a run is reproducible. The default averages are an
+  illustrative UK-like monthly table, a synthetic assumption and not measured data.
+* Message `live-sim-reading-v1` (under 1 KiB): `sensor_id`, `reading_id`
+  (`LIVE-<sensor>-<UTC slot>`, unique per home and slot, used as the IoT message id), `home_id`,
+  `observed_at` (UTC slot start), `temperature_c`, `humidity_pct`, `sunlight_wm2`, units,
+  `source_type=SYNTHETIC`, `scenario`, `seed`, `injected_fault=none` and a plain `label`. It adds
+  `sunlight_wm2`, which the current #110 consumer schema does not accept; teaching the consumer
+  this version is a #110 decision and is not done here.
+* Homes: every open case id, re-read hourly; a failed read reuses the last list. With
+  `ZF_STORE=mssql` (the job) it issues exactly one parameter-free
+  `SELECT id FROM cases WHERE closed = 0 ORDER BY id` over a connection built with the existing
+  `ZF_SQL_*` settings (`connection_string`); it never builds `MssqlStore`, so there is no DDL,
+  migration, seeding, meta write, case load or `/state` write, and no `/data` is needed. The exact
+  minimal grant is `GRANT SELECT ON OBJECT::dbo.cases TO [<job identity>]` (no other table, no
+  write). With `ZF_STORE=json` or `sqlite` (local and dev) the same abstraction as the API is
+  used. Tests use fakes and an authorizer-guarded SQLite; no dataset is read.
+* Exit codes (stderr carries a fixed code only, never a traceback, driver text or connection
+  detail): 0 ok, 2 refused or invalid configuration, 3 `HOME_LIST_UNAVAILABLE`, 4 `SIM_FAILED`.
+* Sinks: `stdout` (default, dry run), `MemorySink` (tests) and `iothub` (per-device X.509 from
+  `ZF_SIM_CERT_DIR/<device>.pem` and `.key`, mounted from a secret store; never in the repo). The
+  hub sink needs `ZF_SIM_HUB_HOSTNAME` and an owner approval reference `ZF_SIM_APPROVAL`; a missing
+  certificate is a non-retryable failure and nothing is sent for that home. Errors carry fixed
+  codes only; SDK text is never logged.
+* Controls: batches (`--batch-size`, default 50), a shared throttle (`--max-per-second`, default
+  10), up to 4 attempts with jittered exponential backoff (1 s base, 30 s cap), at most 100 open
+  device connections. A fleet is refused before any send if `homes x 288` exceeds the B1 budget
+  (400,000 per day less 40,000 headroom, so at most 1,250 homes) or cannot finish within 80 % of
+  one slot at the chosen rate. The 10 per second default is a conservative setting, not a verified
+  IoT Hub throttle figure. `--once` sends the current slot and exits (the container job mode);
+  without it the process loops on slot boundaries. Missed slots are skipped, not replayed.
+* Image: `docker build -f src/api/live-simulator.Dockerfile src` (context `src/`). The default
+  command is a stdout dry run. No dataset or certificate is baked in.
+
+Local run: `python -m zava_forward.api.live_simulator --once --max-homes 3` against a constructed
+dataset prints three labelled messages and sends nothing. Tests:
+`PYTHONPATH=../core/tests:../agents/tests python3 -m unittest tests.test_live_simulator -q` from
+`src/api` and `python3 -m unittest tests.test_live_readings -q` from `src/core`. Not proved: any
+live send, device registration, Hub-side receipt, #110 acceptance of the new schema, or the
+throttle and tier limits against the real hub.
+
 ## Finite offline sensor ingestion (#110)
 
 `sensor_ingestion.SensorIngestion(store).consume(observations, received_at=...)`

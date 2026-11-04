@@ -10309,12 +10309,22 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Deployed main `8b9553d8b` to `ca-cutover-test-demo-api` (`--0000025`) and `ca-resident-demo` (`--0000010`) through the short registry window; set `ZF_DEMO_EXPIRES_AT` to `2028-01-01T00:00:00Z` (was `2027-01-31T23:59:00Z`). Recorded in `infra/README.md` and the prototype profile review. Sensors section showed the fail-closed message only, filed as #1072. No issue is closed.
 
+## [2026-11-04] update | Live simulator container slice authored (Refs #184)
+
+* Added the pure `live_readings` generator, the `live_simulator` runner with stdout and in-memory sinks, `src/api/live-simulator.Dockerfile` and an authored, not deployed `infra/live-simulator-job.bicep`, documented with a cost estimate in `src/api/README.md`, `infra/README.md` and a short section in the IoT sensor research plan. Nothing was deployed or sent; devices, certificates, live approval and #110 acceptance of the new message version remain owner or sibling work. No issue is closed.
+## [2026-11-04] update | Retrofit scenarios through the retained sensor store (Refs #190, Refs #193)
+
+* Added `src/core/tests/test_retrofit_scenarios_retained_store.py`, which ingests the four labelled retrofit exercise scenarios through `SensorConsumer` and reads them back with `analyse_retained` (#111). Test-only, exercise values, focused tests only. #190 criterion 1 and #193 criterion 3 stay unticked pending independent review. RPI evidence is under `.copilot-tracking/*/2026-11-04-issue-190-retained-store-*`.
+
 ## [2026-11-04] update | Receipts for validation-refused unstored chat asks (Refs #159)
 
 * `ChatPanel.ask_unstored` now records one `chat.turn.unstored` receipt (0 model calls, no question text) when validation or the case lookup refuses a turn. Still unmet on #159: the named screen-reader test (criterion 6) and the 401 and route-validation receipts (tokenomics criterion). Evidence: `.copilot-tracking/*/2026-11-04/issue-159-validation-receipts-*`.
 ## [2026-11-04] update | WCAG 2.4.11 and 2.5.7 slice recorded (Refs #151)
 
 * Added `scroll-padding-block-end` so the fixed chat launcher cannot hide a focused control, two static tests, and a baseline audit row for 2.4.11 and 2.5.7. Rendered, screen-reader and owner-decision criteria remain unmet; no conformance claim.
+## [2026-11-04] update | Per-assistant usage attribution in the consumption report (Refs #107)
+
+* Added `by_capability` to `Consumption.report` and a note in `src/core/README.md`. Tokenomics criterion 2 of #107 stays unmet: constructed ledger evidence only, no real accepted-output usage. No knowledge-base page changed.
 ## [2026-11-04] update | Saved held form export freshness check (Refs #96)
 
 * Added `form_export.export_freshness` in `src/core` (documented in `src/core/README.md`): a read-only check that a saved held export is Current, Stale for only the dependent fields, Invalid or Unavailable. Criteria 1, 5 and 6 of #96 remain unmet (approved template and rules, reviewed export, rule and approval propagation). Evidence: `.copilot-tracking/*/2026-11-04/issue-96-r2-export-freshness-*`.
@@ -10362,6 +10372,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 657, 785, 862, 937 and 978: the invoice, funding, field draft and AI economics criteria are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-225 r1).
 
+## [2026-11-04] update | Admin-only case-data routes stay quiet (Refs #920)
+
+* The employee client now shows the plain-language "No case work for this account" page on all case-data routes for accounts without case access, instead of requesting data that returns 403. Chromium check covers 11 routes with no case-data requests, 4xx responses or console errors. Server authorisation unchanged. Evidence under `.copilot-tracking/` (2026-11-04 admin-routes-denial-920).
 ## [2026-11-04] update | Issue 217 status record, only human steps remain (Refs #217)
 
 * Merged PRs already deliver every code-level slice for #217. The DPIA draft now lists the remaining criteria with the person who must act (DPO, Entra administrator, Legal). Nothing is ticked and no approval is implied. Docs-only; no tests run. Evidence under `.copilot-tracking/` (2026-11-04 issue-217 r1).
@@ -10399,6 +10412,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 144 queue adapter slice (Refs #144)
 
 * Added a stdlib Azure Queue adapter for the agents `TaskQueue` port with poison-queue handling, tested with a scripted transport only. Criteria 1 to 5 stay unmet or partial; `serve` still refuses to start until the API post-back and token source exist. Evidence under `.copilot-tracking/` (2026-11-04 issue-144 queue adapter).
+## [2026-11-04] update | Issue 146 monitoring declaration check (Refs #146)
+
+* Added an offline `check_monitoring_declaration` to the monitoring coverage module and noted it in `infra/monitoring-runbooks.md`. It reports Blocked or Declared per task release, never green, and shows owners and manual-route status for disabled tasks. All four issue criteria and the unmet RAI and tokenomics criteria stay unmet; nothing was ticked. Evidence under `.copilot-tracking/` (2026-11-04 monitoring-declaration-146).
 ## [2026-11-04] update | Issue 126 release decisions carry AI economics (Refs #126)
 
 * Phase and tranche release decisions now require the AI economics report reference and any AI limit breach; a Release with a breach needs the approvers' decision. Tokenomics criterion 3 is engineering-delivered with synthetic fixtures only. Nothing was ticked or closed; protocol, DPIA, lawful basis, OD-51 and RAI closure criteria remain unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-126 r2).
@@ -10477,6 +10493,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
 
+## [2026-11-04] update | Issue 107 status record (Refs #107)
+
+* Rechecked merged PRs 287, 293, 301, 863, 913 and 915 and open PR 1095. Quarantine and suspension on an unexpected serving model and independent-connection revocation are already tested locally. Unmet: RAI release record approvals (OQ-017), authoritative serving-version attestation, Azure SQL race evidence and delivered-build evidence, plus Tokenomics usage attribution until PR 1095 merges. These need human, Azure or legal steps; no code change.
 ## [2026-11-04] update | Finance queue shows the exposure pause signal (Refs #99)
 
 * The Finance queue now shows the read-only `GET /api/finance/exposure` signal with a manual-check message when it is unavailable; it offers no approve, resume or accelerate control. Criteria 1 and 2 of issue 99 stay unmet: no Board-approved envelope or tolerances exist (human step) and no actual breach control is evidenced. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-99 exposure screen).
