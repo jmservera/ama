@@ -184,7 +184,8 @@ screening or #440 stabilization is inferred.
 ## Unverified nomination and tenure intake (#130, #131)
 
 The existing `resident_action` ledger accepts `nomination_record`,
-`nomination_correct`, `tenure_intake`, `tenure_legal_position` and `tenure_verify`. These are constructed staff-recorded
+`nomination_correct`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack` and
+`tenure_question_pack_review`. These are constructed staff-recorded
 intake, not nomination eligibility, verified identity, consent, Legal approval
 or an offer. Current registered staff need both resident-workflow and
 recorded-reason rights. Owners are named follow-up staff, not appointed Legal
@@ -237,7 +238,18 @@ owner, Right to buy, Leaseholder, or Mixed block with a route per household).
 `Not verified` returns verification and route to `Unknown`. The route is a
 label only: no lease term, payer, landlord permission or Finance cost is
 decided, and the case-wide hold is unchanged, so no measure is offered. A static responsibility-question checklist
-identifies missing evidence; it is not a pack derived from reviewed leases.
+identifies missing evidence.
+
+`tenure_question_pack` drafts a responsibility-question pack for one report, only
+from its latest data-owner `Verified` outcome and latest attached Legal position
+reference. It is a fixed template that cites those references and assigns each
+question to the Home Ownership data owner, Legal, Finance or the home ownership
+and leasehold team; no AI is used, no lease term is read, and Legal keeps
+interpretation and Finance keeps cost. `tenure_question_pack_review` records a
+named human outcome (`Approved` as questions only, or `Returned`) by a home
+ownership and leasehold team member other than the drafter or recorder. A pack
+becomes stale when the verification or Legal position changes and then cannot
+be approved; draft a new one. Neither action changes the hold, route or cost.
 Prior homes without intake are unchanged: this does not prove complete tenure
 coverage or an all-offer gate across the programme.
 

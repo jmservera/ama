@@ -10228,3 +10228,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Resident authority live state check (Refs #521)
 
 * PR 690, 742 and 877 already delivered the source extension and the live 2027-02-01 window. Added a read-only live state record to `infra/README.md`: app Healthy, expiry 2027-01-31T23:59:00Z, no Azure change made. Source cap 2028-01-01 differs from the live window; moving live to it needs a separate owner confirmation.
+
+## [2026-11-04] update | Tenure responsibility-question pack, #131 slice R3 (Refs #131)
+
+* Slices R1 (#858) and R2 (#903) delivered the Legal reference and data-owner verification. This slice adds `tenure_question_pack` and `tenure_question_pack_review`: a template pack drafted only from a verified report with a Legal reference, approved or returned by a named other human; no AI, no lease interpretation, hold unchanged. Unmet: C1 enumeration, C2 offer gate, C3 appointed Legal owner, C5 review-open triggers, C6 ambiguous-identity routing. Evidence: `.copilot-tracking/*/2026-11-04-tenure-question-pack-131-r3-*`.
