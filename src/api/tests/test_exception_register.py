@@ -10,10 +10,12 @@ from zava_forward.core import exception_register
 from zava_forward.core.exception_register import staff_from_env
 from zava_forward.core.workflows import MANAGER_ROLES
 
+import test_role_matrix
 from test_assistants import Base
-from test_role_matrix import ROLES, Matrix
 
-MatrixHarness: Any = Matrix
+ROLES = test_role_matrix.ROLES
+
+MatrixHarness: Any = test_role_matrix.Matrix
 
 STAFF = {
     "human0@example.test": ("data_steward",),
