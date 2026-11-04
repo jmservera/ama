@@ -83,6 +83,22 @@ class Wcag22Baseline(unittest.TestCase):
         self.assertIn('role="alert"', (WEB / "index.html").read_text())
         self.assertIn("aria-live", APP)
 
+    def test_every_invalid_field_is_tied_to_a_message(self):
+        # WCAG 3.3.1: each script site that marks a field invalid sits near an aria-describedby
+        # link to its message, or its file builds the field with a describedby attribute.
+        sites = 0
+        for path in sorted(WEB.glob("*.js")):
+            text = path.read_text()
+            lines = text.splitlines()
+            for number, line in enumerate(lines, 1):
+                if 'setAttribute("aria-invalid", "true")' not in line:
+                    continue
+                sites += 1
+                window = "\n".join(lines[max(number - 4, 0):number + 3])
+                built_with_describedby = re.search(r'"aria-describedby":|setAttribute\("aria-describedby"', text)
+                self.assertTrue("aria-describedby" in window or built_with_describedby, f"{path.name}:{number}")
+        self.assertEqual(sites, 7, "new aria-invalid site: audit it and update this check and the record")
+
     def test_audit_record_names_target_gaps_and_makes_no_conformance_claim(self):
         self.assertIn("WCAG 2.2", DOC)
         self.assertIn("pending owner confirmation", DOC)

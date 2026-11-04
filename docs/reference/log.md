@@ -10149,3 +10149,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Chat evaluation blocks actual calls without a finite authorisation (Refs #164)
 
 * `chat_eval.call_authorization` blocks actual-model calls unless a named owner authorisation sets finite call, token and budget limits and an unexpired date; it implies no spend authority. `enablement_decision` reports `actual_calls: blocked`. Offline, constructed fixtures only; no actual call, thresholds, reviewer, held-out set or human exercise exists, so #164 stays open. Evidence under `.copilot-tracking/` (2026-11-04 issue-164-call-authorization).
+## [2026-11-04] update | WCAG baseline: form error identification inventory (Refs #151)
+
+* `wcag-conformance-baseline.md` records a static inventory of the seven `aria-invalid` sites (WCAG 3.3.1, 3.3.3) and narrows gap G-4; `test_accessibility_baseline.py` now fails if a new invalid-field site has no `aria-describedby` message link. Static inspection only: no screen reader, rendered or owner-decision evidence. Target level (O-1), full audit, manual role checks and map/table equivalents (#119) remain unmet.
