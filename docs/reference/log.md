@@ -10167,3 +10167,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Assistants denial skipped for roles without staff access (Refs #920)
 
 * `/api/me` now reports `services.assistants`; the employee client skips `/api/assistants` for an admin-only account and shows plain words with the ordinary case controls as the manual path. Server 403 unchanged. Chromium check covers the new case; the admin-only landing still logs 403 on `/api/facets` (follow-up). No axe or live re-check. Evidence under `.copilot-tracking/` (2026-11-04 assistants-denial-920).
+## [2026-11-03] feat | CSV exports for staff lists (Refs #80)
+
+* Added CSV exports for staff lists.
