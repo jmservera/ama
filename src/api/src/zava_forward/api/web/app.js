@@ -1816,8 +1816,15 @@ function mapPanel(coordinator = null, filters = null) {
       });
       if (me.map && me.map.tiles) {
         const tileLayer = L.tileLayer(me.map.tiles, { maxZoom: 19, referrerPolicy: "strict-origin-when-cross-origin", attribution: me.map.attribution || "" }).addTo(map);
+        const tileMessage = "The map background could not load. The homes and the list of map areas still work. Use the list, or reload the page to try the background again.";
+        let tileErrors = 0;
+        tileLayer.on("loading", () => { tileErrors = 0; });
         tileLayer.on("tileerror", () => {
-          tileNote.textContent = "The map background could not load. The homes and the list of map areas still work. Use the list, or reload the page to try the background again.";
+          tileErrors += 1;
+          if (tileNote.textContent !== tileMessage) tileNote.textContent = tileMessage;
+        });
+        tileLayer.on("load", () => {
+          if (!tileErrors) tileNote.textContent = "";
         });
       }
       layer = L.layerGroup().addTo(map);

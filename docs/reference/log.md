@@ -10066,3 +10066,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Forecast refuses a zero or negative scan interval (Closes #944)
 
 * `Assistants.forecast` now raises a plain-language error when the scan interval is zero or negative instead of ZeroDivisionError. Read-only; no change to proactive scanning, approvals or manual case work. Unit-tested; MSSQL variant skipped without a disposable SQL Server. Evidence under `.copilot-tracking/` (2026-11-04 scan-interval-zero-944).
+
+## [2026-11-04] update | Map tile failure note is announced once (Refs #945)
+
+* The map background failure note is now written once per failure burst and cleared after a clean tile load; the list-alternative pointer is unchanged. Unit-tested at string level and simulated in node only; no browser or assistive-technology observation, so #945 stays open for that evidence. Evidence under `.copilot-tracking/` (2026-11-04 tile-note-once-945).

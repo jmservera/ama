@@ -220,6 +220,14 @@ class MapListAndTiles(Base):
         self.assertIn("The map background could not load.", js)
         self.assertIn("info, tileNote, listBox, open", js)
 
+    def test_tile_failure_note_is_written_once_and_clears_after_a_clean_load(self):
+        js = (WEB / "app.js").read_text()
+        self.assertIn("if (tileNote.textContent !== tileMessage) tileNote.textContent = tileMessage;", js)
+        self.assertIn('tileLayer.on("loading", () => { tileErrors = 0; });', js)
+        self.assertIn('tileLayer.on("load", () => {\n          if (!tileErrors) tileNote.textContent = "";', js)
+        self.assertEqual(js.count("tileNote.textContent ="), 2)
+        self.assertIn("Use the list, or reload the page to try the background again.", js)
+
 
 class ProductionTiles(Base):
     ENV = {"ZF_ENV": "production", "ZF_TILE_URL": ""}
