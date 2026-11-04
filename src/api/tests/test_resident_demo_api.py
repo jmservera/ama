@@ -621,6 +621,17 @@ class AbuseAndHardeningTests(DemoTestCase):
         self.assertIn("You have signed out.", script)
         self.assertIn('getElementById("signin-title").focus()', script)
 
+    def test_sign_in_page_has_a_lede_for_signed_out_copy(self) -> None:
+        html = (demo.WEB / "index.html").read_text()
+        self.assertIn('id="lede"', html)
+
+    def test_sensor_times_use_uk_time_not_utc_jargon(self) -> None:
+        script = (demo.WEB / "demo.js").read_text()
+        self.assertIn('"Europe/London"', script)
+        self.assertNotIn('timeZone: "UTC"', script)
+        self.assertNotIn("(UTC)", script)
+        self.assertIn("dateTime = stamp", script)
+
     def test_assets_are_scriptless_inline_free_and_synthetic_labelled(self) -> None:
         c = self.client()
         _, _, page = c.call("GET", "/")

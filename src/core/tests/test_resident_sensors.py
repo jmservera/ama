@@ -75,11 +75,11 @@ class SensorProjectionTests(unittest.TestCase):
 
     def test_null_and_invalid_channels_keep_latest_timestamp_and_sibling(self) -> None:
         for temperature, status in (
-            (None, "Not recorded"),
-            (float("nan"), "Outside demo range"),
-            (float("inf"), "Outside demo range"),
-            (-11, "Outside demo range"),
-            (46, "Outside demo range"),
+            (None, "No reading recorded"),
+            (float("nan"), "Not shown: this value cannot be displayed"),
+            (float("inf"), "Not shown: this value cannot be displayed"),
+            (-11, "Not shown: this value cannot be displayed"),
+            (46, "Not shown: this value cannot be displayed"),
         ):
             [item] = rs.parse_sensors([reading(temperature_c=temperature)], "HOME-A")
             self.assertIsNone(item.temperature_c)
@@ -102,7 +102,7 @@ class SensorProjectionTests(unittest.TestCase):
             latest = history[-1]
             self.assertIsNone(latest.temperature_c)
             self.assertIsNone(latest.humidity_pct)
-            self.assertTrue(latest.temperature_status.startswith("Demo fault:"))
+            self.assertTrue(latest.temperature_status.startswith("Not shown:"))
 
     def test_empty_and_plot_bounds_are_supported(self) -> None:
         self.assertEqual(rs.parse_sensors([], None), ())

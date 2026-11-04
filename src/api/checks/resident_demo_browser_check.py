@@ -251,7 +251,7 @@ def check_unauthenticated(browser: Any, base: str) -> None:
     check(
         "synthetic banner and shared-sign-in warning visible",
         "Synthetic showcase - not a live resident service" in text
-        and "not proof of who you are" in text,
+        and "does not prove who you are" in text,
     )
     check(
         "no resident data before sign in", "Alder Close" not in text and "Birch Close" not in text
@@ -442,8 +442,8 @@ def check_logout_failure(browser: Any, base: str) -> None:
             page.locator("#content").is_hidden(),
         )
         check(
-            f"failed sign-out ({label}) says it is not confirmed and may still be active",
-            "not confirm" in text.lower() and "still be active" in text.lower(),
+            f"failed sign-out ({label}) says it is not confirmed and you may still be signed in",
+            "not confirm" in text.lower() and "still be signed in" in text.lower(),
         )
         check(
             f"failed sign-out ({label}) makes no false page-close claim",
