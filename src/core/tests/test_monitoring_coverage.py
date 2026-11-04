@@ -2,6 +2,7 @@
 
 import unittest
 from pathlib import Path
+from typing import Any
 
 from zava_forward.core import monitoring_coverage as mc
 
@@ -107,6 +108,103 @@ class IndicatorTests(unittest.TestCase):
         ownerless = _evaluate(events=10, owner="unknown")
         self.assertIsNone(ownerless["incident_owner"])
         self.assertEqual(ownerless["reason"], "breach without owner")
+
+
+LIMITS = {"calls": 100, "tokens": 5000, "cost": 2000}
+USAGE = {"calls": 10, "tokens": 400, "cost": 50}
+AS_OF = "2026-11-04T00:00:00Z"
+EXPIRY = "2026-12-01T00:00:00Z"
+
+
+def _ai(**over: object) -> dict[str, Any]:
+    args: dict[str, Any] = {
+        "usage": USAGE,
+        "limits": LIMITS,
+        "expires_at": EXPIRY,
+        "as_of": AS_OF,
+        "constructed": True,
+        "price_source": "constructed-price-list",
+        "owner": "Competent task owner",
+    }
+    args.update(over)
+    return mc.evaluate_ai_limits(**args)
+
+
+class AiLimitTests(unittest.TestCase):
+    def test_within_is_offline_and_not_green(self) -> None:
+        result = _ai()
+        self.assertEqual(result["status"], mc.WITHIN)
+        self.assertTrue(result["offline_only"])
+        self.assertEqual(result["runbook"], "ai-limits")
+
+    def test_live_limits_need_named_approval(self) -> None:
+        self.assertEqual(_ai(constructed=False)["status"], mc.BLOCKED)
+        self.assertEqual(_ai(constructed=False, approved_by="unknown")["status"], mc.BLOCKED)
+        live = _ai(constructed=False, approved_by="Finance budget owner")
+        self.assertEqual(live["status"], mc.WITHIN)
+        self.assertFalse(live["offline_only"])
+
+    def test_each_dimension_breach_names_owner_and_runbook(self) -> None:
+        for dim, used in (("calls", 101), ("tokens", 5001), ("cost", 2001)):
+            result = _ai(usage={**USAGE, dim: used})
+            self.assertEqual(result["status"], mc.BREACH, dim)
+            self.assertEqual(result["dimensions"][dim], mc.BREACH)
+            self.assertTrue(result["incident_required"])
+            self.assertEqual(result["owner"], "Competent task owner")
+            self.assertEqual(result["runbook"], "ai-limits")
+        self.assertEqual(_ai(usage={**USAGE, "calls": 100})["status"], mc.WITHIN)
+
+    def test_expiry_breach_and_ownerless_breach(self) -> None:
+        result = _ai(as_of=EXPIRY)
+        self.assertEqual(result["dimensions"]["expiry"], mc.BREACH)
+        self.assertEqual(result["status"], mc.BREACH)
+        ownerless = _ai(as_of=EXPIRY, owner=None)
+        self.assertIsNone(ownerless["owner"])
+        self.assertEqual(ownerless["reason"], "breach without owner")
+
+    def test_missing_price_or_usage_is_never_zero_or_green(self) -> None:
+        no_price = _ai(price_source=None)
+        self.assertEqual(no_price["status"], mc.INSUFFICIENT)
+        self.assertEqual(no_price["dimensions"]["cost"], mc.UNKNOWN)
+        no_usage = _ai(usage={"calls": 1})
+        self.assertEqual(no_usage["status"], mc.INSUFFICIENT)
+        self.assertEqual(_ai(usage={})["status"], mc.INSUFFICIENT)
+
+    def test_missing_or_invalid_limits_and_time_are_blocked(self) -> None:
+        self.assertEqual(_ai(limits=None)["status"], mc.BLOCKED)
+        self.assertEqual(_ai(limits={**LIMITS, "tokens": 0})["status"], mc.BLOCKED)
+        self.assertEqual(_ai(limits={"calls": 100})["status"], mc.BLOCKED)
+        self.assertEqual(_ai(expires_at=None)["status"], mc.BLOCKED)
+        self.assertEqual(_ai(as_of="2026-11-04T00:00:00")["status"], mc.BLOCKED)
+        self.assertEqual(_ai(usage={**USAGE, "calls": True})["status"], mc.INSUFFICIENT)
+
+
+class ReconcileTests(unittest.TestCase):
+    START, END = "2026-11-04T00:00:00Z", "2026-11-04T01:00:00Z"
+
+    def _run(self, events: list[dict[str, str]]) -> dict[str, Any]:
+        return mc.reconcile_events(events, window_start=self.START, window_end=self.END)
+
+    def test_replayed_events_after_restart_count_once(self) -> None:
+        event = {"event_id": "e1", "observed_at": "2026-11-04T00:10:00Z"}
+        result = self._run([event, dict(event), {"event_id": "e2", "observed_at": self.START}])
+        self.assertEqual(result["count"], 2)
+        self.assertEqual(result["duplicates"], 1)
+        self.assertEqual(result["status"], mc.COUNTED)
+
+    def test_window_is_half_open(self) -> None:
+        result = self._run([{"event_id": "e1", "observed_at": self.END}])
+        self.assertEqual(result["outside_window"], 1)
+        self.assertEqual(result["count"], 0)
+        self.assertEqual(result["status"], mc.INSUFFICIENT)
+
+    def test_invalid_events_and_window_are_blocked(self) -> None:
+        bad = self._run([{"event_id": "a b", "observed_at": self.START}, {"event_id": "x"}])
+        self.assertEqual(bad["invalid"], 2)
+        self.assertEqual(bad["status"], mc.BLOCKED)
+        swapped = mc.reconcile_events([], window_start=self.END, window_end=self.START)
+        self.assertIsNone(swapped["count"])
+        self.assertEqual(swapped["status"], mc.BLOCKED)
 
 
 class SanitiserTests(unittest.TestCase):
