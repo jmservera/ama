@@ -619,6 +619,15 @@ class Endpoints(unittest.TestCase):
         self.assertEqual(self.call("sam@example.test", "/api/resident/choice-queue?limit=x")[0], 400)
         self.assertEqual(self.call("sam@example.test", "/api/resident/choice-queue", {})[0], 404)
 
+    def test_data_protection_register_route_is_read_only_and_never_echoes_references(self):
+        with mock.patch.dict(os.environ, {"DP_STAFF_IDENTITY_LAWFUL_BASIS_REF": "PRIVATE-REF-1"}):
+            code, body = self.call("sam@example.test", "/api/data-protection")
+        self.assertEqual(code, 200)
+        self.assertFalse(body["dpo_reviewed"])
+        self.assertNotIn("PRIVATE-REF-1", json.dumps(body))
+        self.assertTrue(any(c["kind"] == "actual" for c in body["classes"]))
+        self.assertEqual(self.call("sam@example.test", "/api/data-protection", {})[0], 404)
+
     def test_report_is_manager_only(self):
         self.assertEqual(self.call("sam@example.test", "/api/ai/report")[0], 403)
         code, body = self.call("pam@example.test", "/api/ai/report")
