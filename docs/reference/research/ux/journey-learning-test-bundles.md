@@ -1,7 +1,7 @@
 ---
 title: Journey learning-test bundles with non-AI comparators
 description: Experiment protocol for the five candidate journey learning-test bundles, with comparators, net-effort measures, stop rules, boundaries and scope exclusions (issue #129, first slice)
-ms.date: 2026-11-03
+ms.date: 2026-11-04
 ms.topic: reference
 ---
 
@@ -105,7 +105,7 @@ bundle and is reported, not averaged away.
 
 | Criterion | Status after this slice |
 | --- | --- |
-| Bundles: story once, pre-visit pack, change impact and evidence reuse, accessible handover and aftercare, review-ready funding evidence | Unmet. All five are specified as a protocol only; none has been run as an experiment, and no measured comparison exists |
+| Bundles: story once, pre-visit pack, change impact and evidence reuse, accessible handover and aftercare, review-ready funding evidence | Unmet. All five are specified as a protocol and a net-effort helper exists; none has been run as an experiment, and no measured comparison exists |
 | Opportunities O10 and O18 to O20 stay out of scope | Met for this protocol (see Out of scope). Not a delivered-build property, so it is not independent evidence for the experiments |
 | Atlas owner confirms bundle to opportunity mapping | Unmet. Needs the atlas owner; the O16 overlap is the specific question |
 
@@ -116,7 +116,11 @@ decided here.
 ## Next slices (proposed)
 
 * Atlas-owner confirmation of the mapping, including O16.
-* A deterministic, non-AI comparator harness on constructed cases that records
-  the six effort components, in `src/core`, once the owner confirms the
-  mapping and the DPO decision on representative data retention allows it.
+* Delivered (second slice, 2026-11-04): `learning_test_bundles.py` in
+  `src/core` sums the six effort components per arm, reports median and range,
+  applies each bundle's "target zero" stop rule, rejects out-of-scope
+  opportunities and labels saved minutes as capacity. It is a pure helper
+  tested on synthetic numbers only; it holds no representative data, calls no
+  AI and records no run. Wiring it to a screen or storing run records waits for
+  the owner mapping and the DPO retention decision.
 * A first bundle run with its stop rule checked, then the other four.

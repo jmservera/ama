@@ -10161,3 +10161,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Manifest default queues checked against the real API (Refs #152)
 
 * Added `src/api/tests/test_workbench_live_defaults.py`: for each profile with a default, the real own-queue IDs, count and order, the all-cases scope and declared case endpoints must match `workbench-manifest.json`. Test-only, constructed fixtures. Criterion 1 (owner device decision) and full AC-034/043 stay unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-152-live-defaults).
+## [2026-11-04] update | Learning-test net-effort comparison helper (Refs #129)
+
+* New `src/core` helper `learning_test_bundles.py` with unit tests: sums the six NFR-009 effort components per arm, reports median and range, applies each bundle's target-zero stop rule, excludes O10 and O18 to O20 and labels saved minutes as capacity. The [protocol](research/ux/journey-learning-test-bundles.md) and the index row now record it. No experiment has run; bundle runs and the atlas-owner mapping stay unmet.
