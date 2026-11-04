@@ -9,6 +9,7 @@ when loaded and old versions stay in POLICIES so their output can be reproduced.
 import hashlib
 import json
 import os
+import re
 
 from .stock import support_status
 
@@ -163,6 +164,41 @@ def snapshot(cases, policy, as_of):
                 as_of=as_of, total=len(rows), entries=rows)
     snap["snapshot_hash"] = hashlib.sha256(canonical(snap).encode("utf-8")).hexdigest()
     return snap
+
+
+PLACEHOLDER_OWNER = "to be named"
+
+
+def rule_order_hash(policy):
+    """SHA-256 of the rule order and stage order, the content an owner signs."""
+    body = {"rules": policy["rules"], "stage_order": policy["stage_order"]}
+    return hashlib.sha256(json.dumps(body, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def signoff_problems(policy):
+    """Reasons the policy is not signed off; empty only for a recorded, named, dated sign-off bound to this rule order.
+
+    This reads a human's recorded sign-off. It cannot prove the person approved it: that stays a human step,
+    and a signed policy is a new version file whose content hash covers the sign-off.
+    """
+    owner = str(policy.get("owner") or "").strip()
+    if not owner or owner.lower() == PLACEHOLDER_OWNER:
+        return ["No named policy owner."]
+    rec = policy.get("signoff")
+    if not isinstance(rec, dict):
+        return ["No recorded sign-off of the rule order."]
+    out = []
+    if str(rec.get("signed_by") or "").strip() != owner:
+        out.append("Sign-off is not by the named policy owner.")
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", str(rec.get("signed_on") or "")):
+        out.append("Sign-off has no ISO date.")
+    if rec.get("rule_order_hash") != rule_order_hash(policy):
+        out.append("Sign-off does not match this rule order.")
+    return out
+
+
+def is_signed(policy):
+    return not signoff_problems(policy)
 
 
 def describe(policy=CURRENT):
