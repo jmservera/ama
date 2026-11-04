@@ -840,8 +840,19 @@ constructed-fixture evidence, not user validation, and approves nothing.
 python3 -m unittest tests.test_journey_trace -q
 ```
 
-It is not yet wired to an API route or screen, and no end-to-end store journey through
-handover and financial closure is tested (the later stages use ledger-shaped entries).
+`tests/test_journey_store.py` (slice 3) drives the real JSON store from an EPC query through
+correction, technical sign-offs, a per-measure resident decision, quality acceptance by a
+second inspector, handover, invoice acceptance and a payment-status note, and traces the audit
+chain. It also covers a sibling home staying `Not recorded`, a sibling query not entering this
+home's trace, an open query blocking technical sign-off, and a paused resident answer not
+counting as a decision (`resident_decision_record` is now recognised, accepted answers only).
+Both entry points of the trace remain read-only and approve nothing.
+
+```bash
+python3 -m unittest tests.test_journey_store -q
+```
+
+It is not yet wired to an API route or screen, and the SQL store path is not exercised.
 
 ### Acceptance register for AC-034 to AC-043 (#134, slice 2)
 
