@@ -132,9 +132,17 @@ function assistantProposal(p, reload, recoverable = new Map(), session = caseSes
   return card;
 }
 
+const ASSISTANTS_NOT_FOR_ROLE = "AI assistance is not available for your role. Use the ordinary case controls; no one is waiting on a suggestion.";
+
 function assistantCasePanel(id, session) {
   const status = h("p", { role: "status" }, "Loading assistance. Ordinary case controls remain available.");
   const panel = h("section", { class: "card" }, h("h2", {}, "Retrofit assistants"), status);
+  if (me?.services?.assistants === false) {
+    status.textContent = ASSISTANTS_NOT_FOR_ROLE;
+    panel.dataset.assistance = "AI assistance unavailable. Work continues manually.";
+    panel.dataset.waiting = "0";
+    return panel;
+  }
   const routeHash = location.hash.split("?")[0];
   const controller = new AbortController();
   const deadline = setTimeout(() => controller.abort(), 10000);
@@ -225,6 +233,11 @@ function assistantCasePanel(id, session) {
 
 async function assistantQueueView(after = "", append = false) {
   const owner = me;
+  if (owner.services?.assistants === false) {
+    show(h("div", { "data-assistant-queue": "" }, h("h1", {}, "Role-owned assistant proposals"),
+      h("p", { role: "status" }, ASSISTANTS_NOT_FOR_ROLE)));
+    return;
+  }
   const session = owner.assistantQueueDrafts ||= { pendingFields: new Map() };
   const signal = routeController.signal;
   const recoverable = new Map(proposalReviewStates);
