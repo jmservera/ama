@@ -382,3 +382,17 @@ pending; authoritative lifecycle exclusions are still Unknown.
 ## Next steps
 
 No user action required. Return to cross-role synthesis; preserve unknowns.
+
+## Technical and quality screens delivery status (2026-11-04, #231)
+
+Merged engineering evidence covers the technical queue and quality queue role
+screens (#656), browser keyboard and axe checks (#769), source-conflict readiness
+blocking (#807), incomplete sign-off blocking (#828), unnamed acceptance and
+ownerless defect handover blocking (#886) and rendered-structure tests (#971).
+Criteria 1 to 3 and 5 are ticked on that evidence. The research remains
+desk-based hypothesis, not observed behaviour.
+
+Unmet: the WCAG 2.2 baseline criterion (#151). Conformance needs assistive
+technology testing and human review under #151 and #155, which are open.
+Engineering checks do not establish accessibility acceptance. Assessor, designer
+and inspector professional sign-off stays with named humans.

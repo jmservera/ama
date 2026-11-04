@@ -100,6 +100,21 @@ Across concepts, test on constructed, clearly labelled records first. No company
 2. Can each scoped user identify the next owner, caveat and manual route in a keyboard-accessible conflict/outage/privacy scenario without mistaking a draft or receipt for approval?
 3. Which future concept beats its non-AI comparator after correction, assurance, support, resident burden and whole-life cost, without worsening rights, equity or financial resilience?
 
+## Data screens delivery status (2026-11-04, #229)
+
+Merged engineering evidence covers the data steward and operator screen (#654),
+the page-level conflict and return queue showing both source values with
+provenance (#853), keyboard and axe browser checks (#779, #819, #932) and a
+structure test that pins no role simulator in user views (#968). The screens
+are read-only: unresolved eligibility and the original source are preserved,
+with no replay or silent correction, and event metadata is not presented as an
+operational audit trail. The research remains desk-based hypothesis, not
+observed behaviour.
+
+Unmet: the WCAG 2.2 baseline criterion (#151). Conformance needs assistive
+technology testing and human review under #151 and #155, which are open.
+Engineering checks do not establish accessibility acceptance.
+
 ## Repository evidence register
 
 Paths below are repository-relative; citations identify sections rather than new research.

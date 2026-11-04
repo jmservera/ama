@@ -10336,3 +10336,24 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 227 status record (Refs #227)
 
 * Added a dated status record to the safety journey page. Merged PRs 653, 776, 806, 831, 866, 934 and 962 cover criteria 1 to 4 and 6; criterion 5 (WCAG 2.2 baseline, assistive-technology and user testing under #151 and #155) stays unmet and needs human steps. Nothing ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-227 r5).
+## [2026-11-04] update | Issue 230 programme screens status (Refs #230)
+
+* Rechecked merged PRs 662, 781, 818, 854, 931 and 969: criteria 1, 2, 3 and 5 are delivered as engineering evidence. Criterion 4 (WCAG 2.2, assistive-technology testing) stays unmet pending human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-230 r1).
+## [2026-11-04] update | Issue 228 status record (Refs #228)
+
+* Added a dated delivery status record to the suppliers customer journey page. Merged PRs 655, 782, 820, 867, 930 and 967 cover criteria 1, 2, 4 and 6 as engineering evidence. Criterion 3 (OD-47 and supplier-scoped access) and criterion 5 (human and assistive-technology WCAG acceptance) stay unmet. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-228 r5).
+## [2026-11-04] update | Issue 143 private networking and edge status (Refs #143)
+
+* Rechecked merged PRs 278, 352, 614 and 675: private-endpoint and DNS coverage, the Front Door Premium and WAF module and the production-profile public-access guard are delivered as engineering evidence. Criterion 3 (custom domain, TLS and Entra callbacks managed consistently) stays unmet pending the owner decision on the pilot domain and edge go/no-go, and live Entra reconciliation. Criterion 5 (production-profile deployment evidence) stays unmet and needs an owner with live Azure access. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-143 r2).
+## [2026-11-04] update | Issue 231 technical and quality screens status (Refs #231)
+
+* Rechecked merged PRs 656, 769, 807, 828, 886 and 971: criteria 1-3 and 5 are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-231 r1).
+## [2026-11-04] update | Issue 140 IoT Hub module status (Refs #140)
+
+* Rechecked merged PRs 273, 498, 557, 910 and the README IoT Hub section: the module, tier/retention/cost, keyless receiver role, private network and diagnostics criteria are delivered as engineering evidence. Device provisioning approach (individual identities, DPS deferred) and an exercise owner are recorded; the operational credential-owner appointment and issue/rotate evidence (#185) remain unmet and need the owner. ADR 0003 and OD-43 stay open. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-140 r1).
+## [2026-11-04] update | Issue 229 data screens status (Refs #229)
+
+* Rechecked merged PRs 654, 779, 819, 853, 932 and 968: criteria 1, 2, 3 and 5 are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-229 r1).
+## [2026-11-04] update | Issue 193 status record (Refs #193)
+
+* Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
