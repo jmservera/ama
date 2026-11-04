@@ -123,4 +123,11 @@ decided here.
   tested on synthetic numbers only; it holds no representative data, calls no
   AI and records no run. Wiring it to a screen or storing run records waits for
   the owner mapping and the DPO retention decision.
+* Delivered (third slice, 2026-11-04): the helper now validates a recorded run
+  before comparing it. A run must state that no representative data is
+  retained, a run of a bundle that includes O16 must name the single bundle
+  that counts O16, and runs naming different owners are rejected. A plain-text
+  report states any stop before the effort figures and repeats the capacity
+  and constructed-case labels. Still no run has happened and no run record is
+  stored.
 * A first bundle run with its stop rule checked, then the other four.
