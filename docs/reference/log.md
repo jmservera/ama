@@ -10290,6 +10290,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Implemented phase 2 of `docs/reference/research/ux/resident-demo-redesign-2026-11-04.md`: the sensors section below the help sections with a clearly labelled deterministic 24-hour synthetic forecast, a stale state, and a fix so `infra/sql/resident-showcase.sql` also reads the dataset's `synthetic_stock_anchor_id` stock link (source text only; T-SQL not compiled, live view not applied). Documented in `src/api/README.md`. The live demo still needs the sensor tables and a re-applied view, and the backfill ends 2026-09-30; both are owner-gated and not done.
 
+## [2026-11-04] update | Aftercare intake form definition and register snapshot (Refs #133)
+
+* Documented in `src/core/README.md` the plain-language household intake definition and a checked JSON snapshot restore for the aftercare register. No store, API or UI is wired; criteria 1, 2, 4, 5 and 6 remain unmet or partial, and 3 is proven only at register level. Evidence under `.copilot-tracking/*/2026-11-04-issue-133-intake-snapshot-*.md`.
 ## [2026-11-04] update | Sensor status text mirror (Refs #111)
 
 * Added pure `sensor_status_text` in `src/core`: one plain-language status per signal, with the map and accessible list built from the same entries (AC-067 text mirror). No readings, identifiers, diagnosis or priority change; each state names the manual route. Unit-tested only. Unmet: task-queue wiring, rule approval, R1 to R3, SQL Server run. Evidence under `.copilot-tracking/` (2026-11-04 issue-111 r3).
@@ -10437,6 +10440,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
 
+## [2026-11-04] update | Issue 125 drafting guard slice (Refs #125)
+
+* Added `discovery_assistant_drafting` to `src/core` (deterministic stage durations, draft-only narrative checked against calculated figures, deterministic fallback when no model is available) and a README section. Criteria 1 to 3 stay unmet and need human or deployment evidence. Evidence under `.copilot-tracking/` (issue-125-r6).
 ## [2026-11-04] update | Epic 136 resource coverage register (Refs #136)
 
 * Added a resource coverage register to infra/README.md: each architecture resource is in Bicep or recorded as manual or deferred with the owner. Criterion 2 is recorded but not machine-checked; criteria 1, 3, 4 and 5 stay unmet (stabilization checkpoint #440, nine open children, no from-empty rerun since 2026-10-12, epic status not refreshed).
@@ -10468,6 +10474,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Finance queue shows the exposure pause signal (Refs #99)
 
 * The Finance queue now shows the read-only `GET /api/finance/exposure` signal with a manual-check message when it is unavailable; it offers no approve, resume or accelerate control. Criteria 1 and 2 of issue 99 stay unmet: no Board-approved envelope or tolerances exist (human step) and no actual breach control is evidenced. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-99 exposure screen).
+## [2026-11-04] update | Candidate comparison bound to the held-out freeze (Refs #108)
+
+* `compare_candidates` accepts an optional freeze manifest, reports `held_out.status`, and compares only on the frozen held-out case ids. Offline grader and synthetic tests only; no held-out data, live calls, regional model/quota confirmation or Finance validation. Criteria for model/quota confirmation, held-out freeze evidence and human/Azure evidence stay unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-108-r2).
+
 ## [2026-11-04] update | Issue 96 status record (Refs #96)
 
 * Rechecked merged PRs 377, 510, 888, 902 and 1083 and open PR 1093. Criteria 2, 3 and 4 stay met. The inherited review defects RV-001 and RV-002 are fixed in current code and covered by tests (original review left unchanged). Criteria 1, 5 and 6 stay unmet: they need an approved template, rules and reviewer authority from the Finance/template owner, so no reviewed export or rule/approval stale propagation can be built. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-96 r3).
@@ -10494,6 +10504,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 411, 508 and 910. Criteria 2 to 5 stay ticked. Criterion 1 stays unmet: offline per-device identity, schema version and stable reading ID code and tests exist, but no real distinct Hub identities were issued and no live stream was observed (tier, sizing, cost, network and device credential owner decisions; #140; human/Azure steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-110 r2).
 
+## [2026-11-04] update | Plain-language consultation and restart check wording, slice 3 (Refs #153)
+
+* Reworded the procurement consultation refusal and check reason and the gates.py restart checks from "release this hold" to "clear this stop" or "restart this stopped work", with a next action for Legal; added a lexical test and a dated paragraph in the [content standard](./research/ux/content-standard.md). Consultation status stays unknown; no approval or authority rule changed. Criteria 2, 3 and 5 remain unmet; named human review not run. Evidence under `.copilot-tracking/` (2026-11-04 issue-153 consultation gate wording).
 ## [2026-11-04] update | Issue 121 status record (Refs #121)
 
 * Rechecked merged PRs 919 and 1013 and open PR 1106. The register, dispatch gate, rights clock and read-only route are delivered offline, but all criteria except the constructed-fixture tick stay unmet: each needs a DPO or Legal decision, an approved transfer position, or a persisted rights log (SQL-sensitive, stacked after 1106). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-121 r4).

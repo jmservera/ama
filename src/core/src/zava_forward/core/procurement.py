@@ -337,7 +337,7 @@ class ProcurementMixin(AppointmentMixin):
 
     def require_consultation_clear(self, p):
         # No verified contract-consultation Legal capability exists in the current registry.
-        raise ValueError(f"Consultation status is unknown for {p['id']}. A named authorized Legal adviser must verify the decision before a consultation-dependent action can proceed. Legal consultation authority and contract letting or renewal are not configured; supplied records cannot release this hold.")
+        raise ValueError(f"Consultation status is unknown for {p['id']}. A named authorized Legal adviser must verify the decision before a consultation-dependent action can proceed. Legal consultation authority and contract letting or renewal are not configured; supplied records cannot clear this stop. Next action: ask Legal to verify the decision.")
 
     def contract_event_gate(self, user, pid, event):
         """Read-only check that a letting or renewal is held while consultation is unknown."""
@@ -349,7 +349,7 @@ class ProcurementMixin(AppointmentMixin):
             supplied = (p.get("consultation_history") or [{}])[-1].get("status")
             return dict(package=p["id"], event=event, blocked=True, effective_status="unknown",
                         supplied_status=supplied, authority_status="Unverified",
-                        reason=f"Consultation status is unknown for {p['id']}. Legal must verify it before this contract is let or renewed. A supplied record does not release the hold.",
+                        reason=f"Consultation status is unknown for {p['id']}. Legal must verify it before this contract is let or renewed. A supplied record does not clear this stop.",
                         manual_path="Ask Legal and the contract owner to confirm consultation outside this service. No letting or renewal happens here.")
 
     def request_contract_event(self, user, pid, event):
