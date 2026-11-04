@@ -95,6 +95,12 @@ class _Server(ThreadingHTTPServer):
         super().__init__(address, handler)
 
 
+CALLBACKS_OFF = (
+    "Synthetic callback booking is not connected in this showcase, so I cannot find "
+    "or book callback times. Nobody will call you."
+)
+
+
 class ResidentDemo:
     """Everything the handler needs. Holds no password, no staff store and no row cache."""
 
@@ -170,6 +176,7 @@ class ResidentDemo:
             return None
         view: dict[str, Any] = rs.showcase_view(row)
         view["account"] = {"email": self.identity.email_for(row.case_id)}
+        view["callbacks_available"] = self.agenda is not None
         return view
 
     def row_for(self, token: str | None) -> rs.ShowcaseRow | None:
@@ -485,6 +492,13 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     ):
                         advice = replace(advice, label="Summary by rules - AI is not enabled")
                 advice = chat.with_pause_note(advice, topic, view)
+                callbacks = topic == "appointments" and app.agenda is not None
+                if topic == "appointments" and not callbacks:
+                    advice = replace(
+                        advice,
+                        answer=CALLBACKS_OFF + " " + MANUAL,
+                        sources=("Showcase limit: synthetic callback booking is not connected",),
+                    )
             except AssistantUnavailable:
                 print("resident assistant unavailable", file=sys.stderr)
                 self._json(
@@ -516,7 +530,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                     label=advice.label,
                     notice=advice.notice,
                     help=advice.help,
-                    action="appointments" if topic == "appointments" else None,
+                    action="appointments" if callbacks else None,
                     callback_search=(
                         {
                             "earliest": app.now().astimezone(ZONE).date().isoformat(),
@@ -528,7 +542,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
                                 else "any"
                             ),
                         }
-                        if topic == "appointments"
+                        if callbacks
                         else None
                     ),
                 ),

@@ -1061,6 +1061,19 @@ class ChatApiTests(DemoTestCase):
             [],
         )
 
+    def test_view_reports_callbacks_connected_when_agenda_is_configured(self) -> None:
+        self.assertTrue(self.client_one.call("GET", "/demo/view")[1]["callbacks_available"])
+
+    def test_unconfigured_agenda_is_reported_and_chat_offers_no_callback_search(self) -> None:
+        self.app.agenda = None
+        self.assertFalse(self.client_one.call("GET", "/demo/view")[1]["callbacks_available"])
+        status, body = self.ask(question="appointments morning")
+        self.assertEqual(status, 200)
+        self.assertIsNone(body["action"])
+        self.assertIsNone(body["callback_search"])
+        self.assertIn("not connected", str(body["answer"]))
+        self.assertIn("phone your housing officer", str(body["answer"]))
+
     def test_punctuated_time_preferences_offer_only_requested_period(self) -> None:
         self.app.agenda = Agenda.create(
             self.path.parent / "periods.sqlite",
