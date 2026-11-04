@@ -135,5 +135,65 @@ class EvaluatorTests(unittest.TestCase):
         self.assertEqual(view["notice"], af.EVALUATOR_NOTICE)
 
 
+class ConcernPackTests(unittest.TestCase):
+    def test_pack_exists_without_ai_and_is_unreviewed(self) -> None:
+        reg = AftercareRegister()
+        cid = raised(reg, sensor_context={"signal": "normal"})
+        pack = reg.propose_pack(cid)
+        self.assertEqual(pack["source"], "template")
+        self.assertIsNone(pack["ai_summary"])
+        self.assertEqual(pack["approval"], af.PACK_NOT_REVIEWED)
+        self.assertFalse(pack["approved"])
+        self.assertEqual(pack["household_statement"], reg.concerns[cid]["statement"])
+        self.assertNotIn("normal", " ".join(pack["recorded_facts"]))
+        for text in [*pack["recorded_facts"], *pack["questions_for_investigator"]]:
+            af.neutral_text(text)
+
+    def test_ai_summary_is_guarded_and_proposal_only(self) -> None:
+        reg = AftercareRegister()
+        cid = raised(reg)
+        with self.assertRaises(ValueError):
+            reg.propose_pack(cid, "The higher use was caused by the household.")
+        with self.assertRaises(ValueError):
+            reg.propose_pack(cid, "You will save money after the fix.")
+        pack = reg.propose_pack(cid, "Household reports a cold living room in the evening.")
+        self.assertEqual(pack["source"], "ai")
+        self.assertFalse(pack["approved"])
+
+    def test_review_by_named_owner_never_changes_the_concern(self) -> None:
+        reg = AftercareRegister()
+        cid = raised(reg)
+        before = reg.view(cid)
+        pid = str(reg.propose_pack(cid)["id"])
+        before = reg.view(cid) | {"history": before["history"]}
+        with self.assertRaises(PermissionError):
+            reg.review_pack(pid, "Someone Else", "accept", "Looks fine")
+        with self.assertRaises(ValueError):
+            reg.review_pack(pid, OWNER, "approve", "x")
+        with self.assertRaises(ValueError):
+            reg.review_pack(pid, OWNER, "accept", " ")
+        done = reg.review_pack(pid, OWNER, "reject", "Not needed for this concern")
+        self.assertEqual(done["approval"], "Rejected")
+        self.assertFalse(done["approved"])
+        with self.assertRaises(ValueError):
+            reg.review_pack(pid, OWNER, "accept", "Changed mind")
+        after = reg.view(cid)
+        self.assertEqual(after["investigation"], "received")
+        self.assertIsNone(after["outcome"])
+        self.assertEqual(after["remedy"], before["remedy"])
+        self.assertIn(cid, [r["id"] for r in reg.unresolved()])
+
+    def test_pack_is_a_registered_unapproved_task(self) -> None:
+        from zava_forward.core import ai_registry
+
+        task = ai_registry.get(af.PACK_TASK)  # type: ignore[no-untyped-call]
+        assert task is not None
+        self.assertEqual(task["approval_state"], ai_registry.UNAPPROVED)
+        self.assertEqual(task["kind"], "proposal-pack")
+        live = ai_registry.authorizes_live(af.PACK_TASK)  # type: ignore[no-untyped-call]
+        self.assertFalse(live)
+        self.assertIn("no model call", task["manual_route"])
+
+
 if __name__ == "__main__":
     unittest.main()

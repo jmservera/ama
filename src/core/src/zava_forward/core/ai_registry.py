@@ -19,6 +19,7 @@ UNKNOWN = "unknown"
 UNAPPROVED = "unapproved"
 PROVIDER = "azure-openai"
 CHAT_TASK = "chat-case-conversation"
+CONCERN_PACK_TASK = "aftercare-concern-pack"
 DEMO_SWITCH = "ZF_CHAT_DEMO_ACTIVATION"
 DEMO_PROFILE = "ZF_DEPLOYMENT_PROFILE"
 DEMO_PROFILE_VALUE = "demo"
@@ -128,6 +129,16 @@ def tasks():
         out[k] = _entry(k, "retained-path", REGISTRY_VERSION, v["purpose"], v["roles"], v["categories"], v["influence"],
                         v["affected"], v["reviewer"])
     out[CHAT_TASK] = chat_entry()
+    pack = _entry(
+        CONCERN_PACK_TASK, "proposal-pack", REGISTRY_VERSION,
+        "Draft an optional aftercare concern pack for the named owner to review; no outcome, remedy or dismissal",
+        ("Retrofit Coordinator", "Retrofit Programme Manager"), ("home", "requests", "history"),
+        "Proposal only; the named owner accepts or rejects; a sensor reading is never a basis",
+        ("residents", "staff"), "Retrofit Programme Manager")
+    pack.update(enabled=False, state="disabled",
+                activation="disabled; no model route is bound, the pack is a template and an optional model summary needs registration, release and the owner's review",
+                manual_route="Use the concern record and the named owner; no model call.")
+    out[CONCERN_PACK_TASK] = pack
     return out
 
 

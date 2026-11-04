@@ -23,6 +23,12 @@ OUTCOMES = ("remedy_needed", "no_remedy_needed", "advice_given", "cannot_determi
 HUMAN_BASES = ("home_visit", "household_conversation", "specialist_review", "records_review")
 REMEDY_STATUSES = ("not_assessed", "open", "in_progress", "completed", "not_needed")
 CLOSURE_KINDS = ("handover", "financial")
+PACK_TASK = "aftercare-concern-pack"
+PACK_ACTIONS = ("accept", "reject")
+PACK_NOT_REVIEWED = "Not reviewed"
+PACK_MANUAL_ROUTE = (
+    "Use the concern record and the named owner; the pack is optional and no model is needed."
+)
 ACCESSIBLE_ROUTE = (
     "You can also raise this by phone, in person or on paper, and a member of staff will "
     "record it for you. No digital access is needed."
@@ -75,6 +81,7 @@ class AftercareRegister:
     def __init__(self) -> None:
         self.concerns: dict[str, Record] = {}
         self.closures: list[Record] = []
+        self.packs: dict[str, Record] = {}
 
     def _get(self, cid: str) -> Record:
         if cid not in self.concerns:
@@ -269,3 +276,62 @@ class AftercareRegister:
             "unknowns": unknowns,
             "notice": neutral_text(EVALUATOR_NOTICE),
         }
+
+    def propose_pack(self, cid: str, ai_summary: str | None = None) -> Record:
+        """Draft an unreviewed concern pack for the named owner; it changes nothing on the concern.
+
+        The pack is always built from the record by template, so it exists when AI is unavailable.
+        An optional AI summary is attached only after the neutral-text guard and is a proposal.
+        """
+        rec = self._get(cid)
+        facts = [
+            f"Raised by: {rec['raised_by']} by the {rec['route']} route.",
+            f"Concern kind: {rec['kind']}.",
+            f"Named owner: {rec['owner']}. Next update: {rec['next_update']}.",
+            f"Investigation: {rec['investigation']}.",
+            f"Remedy status: {rec['remedy']['status']}.",
+        ]
+        questions = [
+            "What did the household describe, in their own words?",
+            "What does a visit or conversation with the household show?",
+            "What remedy, if any, does the household need, and who owns it?",
+        ]
+        summary = None if ai_summary is None else neutral_text(_text(ai_summary, "AI summary"))
+        pack: Record = {
+            "id": f"PK-{len(self.packs) + 1:03d}",
+            "task": PACK_TASK,
+            "concern_id": cid,
+            "household_statement": rec["statement"],
+            "recorded_facts": [neutral_text(f) for f in facts],
+            "questions_for_investigator": [neutral_text(q) for q in questions],
+            "ai_summary": summary,
+            "source": "ai" if summary else "template",
+            "approval": PACK_NOT_REVIEWED,
+            "approved": False,
+            "reviewer_function": rec["owner"],
+            "review": None,
+            "manual_route": PACK_MANUAL_ROUTE,
+            "notice": neutral_text(EVALUATOR_NOTICE),
+        }
+        self.packs[pack["id"]] = pack
+        rec["history"].append({"event": f"pack_proposed_{pack['id']}"})
+        return deepcopy(pack)
+
+    def review_pack(self, pack_id: str, reviewer: str, action: str, reason: str) -> Record:
+        """Only the named owner accepts or rejects a pack; neither action alters the concern."""
+        if pack_id not in self.packs:
+            raise KeyError(pack_id)
+        pack = self.packs[pack_id]
+        self._own(self._get(pack["concern_id"]), reviewer)
+        if action not in PACK_ACTIONS:
+            raise ValueError("Action must be accept or reject.")
+        if pack["review"] is not None:
+            raise ValueError("This pack has already been reviewed.")
+        pack["review"] = {
+            "by": reviewer.strip(),
+            "action": action,
+            "reason": _text(reason, "Reason"),
+        }
+        pack["approval"] = "Accepted for reference" if action == "accept" else "Rejected"
+        pack["approved"] = action == "accept"
+        return deepcopy(pack)
