@@ -10,6 +10,7 @@ import threading
 import uuid
 from copy import deepcopy
 from datetime import datetime
+from typing import Any
 
 from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_publication, stock, taskqueues
 from .finance import FinanceMixin
@@ -546,7 +547,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             raise GateError(reasons)
 
     @staticmethod
-    def _evidence_missing(c):
+    def _evidence_missing(c: dict[str, Any]) -> list[str] | None:
         try:
             return [x["kind"] for x in Store.checklist(c) if not x["present"]]
         except (KeyError, TypeError):
