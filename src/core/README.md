@@ -697,6 +697,23 @@ extracts, and any real nomination or validation, which need named company people
 python -m unittest discover -s tests -p 'test_discovery_register.py' -q
 ```
 
+### Phase 0 baseline and wait analysis slice (124)
+
+`discovery_flow` is pure arithmetic over synthetic records for the brief's
+population and time attribution method. `baseline_summary` reports candidates in
+the window, events before or after it, exclusions by reason, open cases with
+unknown outcomes and duplicate identifiers. `leg_days` gives the three
+handover legs and returns `None` rather than a guess when an event is missing or
+out of order. `waits_by_party` totals calendar days per named party, keeps
+unattributed time and unknown or disputed causes visible, and `loop_counts`
+counts returns, rejections, repeat visits and reopens. Output is labelled a
+candidate until the named owner validates it. Not built: extract import,
+active-time and primary delay code rules, persistence and screens.
+
+```bash
+python -m unittest discover -s tests -p 'test_discovery_flow.py' -q
+```
+
 ## Appointment agreements and visit evidence (#87)
 
 `appointment_control(user, work_order_id, body)` records explicit offers, separate
