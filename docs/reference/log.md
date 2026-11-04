@@ -10214,3 +10214,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Discovery assistant comparison record, #125 slice 2 (Refs #125)
 
 * PR 894 already delivers the readiness gate and read-only boundary. This slice adds `discovery_assistant_evaluation`: the ten evaluation measures against the assistant, manual analysis, conventional BI and workflow reporting, from human-supplied result pointers, plus a repeatability check. No observed results exist; no comparison criterion is proven. Dated RPI artifacts: issue-125-r5.
+
+## [2026-11-04] update | Unaccepted handoff ageing API route, #83 slice 2 (Refs #83)
+
+* PR 893 delivered core ageing and the exception feed. This slice adds the read-only `GET /api/handoffs/unaccepted` route (staff roles, role-scoped, optional caller-supplied `max_age_hours`, never defaulted) with HTTP tests for scope, bad input, no state change and the role inventory. Unmet: criterion 3 (approved times and out-of-hours routes under OD-09, a screen, automatic escalation, human acceptance). Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-83 r5).
