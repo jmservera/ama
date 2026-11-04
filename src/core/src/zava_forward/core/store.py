@@ -11,7 +11,7 @@ import uuid
 from copy import deepcopy
 from datetime import datetime
 
-from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, identity, insights, ledger, projection, ranking, stock, taskqueues
+from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, stock, taskqueues
 from .finance import FinanceMixin
 from .list_export import safe_cell
 from .continuity import ContinuityMixin
@@ -516,6 +516,12 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         if reasons:
             raise GateError(reasons)
 
+    def require_booking_gates(self, c):
+        """Fail closed: only an explicit pass on every booking gate lets the case advance."""
+        results = gates.booking_gates(c, resident_gate(c))
+        if not gates.transition_allowed(results):
+            raise GateError([f"{r.reason} Owner: {r.owner}. Next action: {r.correction}" for r in gates.unmet(results)])
+
     def log_call(self, user, case_id, outcome, note, channel="Phone"):
         outcome = (outcome or "").strip()[:80]
         if not outcome:
@@ -556,6 +562,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 raise GateError(why)
             self.require_safety_clear(c)
             self.require_resident_clear(c)
+            self.require_booking_gates(c)
             self.require_booked_capacity(c)
             was = c["stage"]
             c.update(stage=BOOKED_STAGE, reason="to book the installation", waiting_on=c["contractor"]["contact"])
