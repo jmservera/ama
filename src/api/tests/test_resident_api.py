@@ -276,6 +276,29 @@ class ResidentApi(unittest.TestCase):
             self.assertNotIn("SYN-OWNER-PACK", json.dumps(other))
             self.assertNotIn("question_packs", json.dumps(other))
 
+    def test_http_review_trigger_reopens_review_and_stays_hidden(self) -> None:
+        url = "/api/cases/ZF-1/resident"
+        trigger = dict(
+            action="tenure_review_trigger",
+            case_id="ZF-1",
+            report_version=1,
+            expected_version=0,
+            trigger="Ambiguous lease identity",
+            source="SYN-TRIGGER-CANARY",
+            owner="sam@example.test",
+            next_update="2099-01-01",
+        )
+        self.assertEqual(self.call(url, "sam", self.intake_payload(tenure=True))[0], 200)
+        self.assertEqual(self.call(url, "rex", trigger)[0], 403)
+        code, detail = self.call(url, "sam", trigger)
+        self.assertEqual(code, 200, detail)
+        self.assertTrue(detail["tenure_reports"][0]["reuse_blocked"])
+        self.assertTrue(any("Tenure and lease identity" in item for item in detail["gate"]))
+        for actor in ("rex", "kim", "bea"):
+            code, other = self.call("/api/cases/ZF-1", actor)
+            self.assertNotIn("SYN-TRIGGER-CANARY", json.dumps(other))
+            self.assertNotIn("review_triggers", json.dumps(other))
+
     def test_http_tenure_verification_sets_route_and_stays_hidden(self) -> None:
         legal = dict(
             action="tenure_legal_position",

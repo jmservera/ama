@@ -197,8 +197,8 @@ screening or #440 stabilization is inferred.
 ## Unverified nomination and tenure intake (#130, #131)
 
 The existing `resident_action` ledger accepts `nomination_record`,
-`nomination_correct`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack` and
-`tenure_question_pack_review`. These are constructed staff-recorded
+`nomination_correct`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack`,
+`tenure_question_pack_review`, `tenure_review_trigger` and `tenure_trigger_resolve`. These are constructed staff-recorded
 intake, not nomination eligibility, verified identity, consent, Legal approval
 or an offer. Current registered staff need both resident-workflow and
 recorded-reason rights. Owners are named follow-up staff, not appointed Legal
@@ -263,6 +263,15 @@ named human outcome (`Approved` as questions only, or `Returned`) by a home
 ownership and leasehold team member other than the drafter or recorder. A pack
 becomes stale when the verification or Legal position changes and then cannot
 be approved; draft a new one. Neither action changes the hold, route or cost.
+`tenure_review_trigger` records a changed scope, dispute, defect, charge query or
+ambiguous lease identity against a report. While any trigger is open the report
+review stays open, its question pack is stale and cannot be approved or
+redrafted, and no new `Verified` outcome can be recorded. An ambiguous lease
+identity also returns verification and route to Unknown, sets `reuse_blocked`
+and routes to the Home Ownership data owner (appointment still required).
+`tenure_trigger_resolve` is recorded by a named person other than the recorder
+(the data owner for ambiguous identity); the route stays Unknown until the data
+owner verifies again. Triggers are per report, so the case-wide hold remains.
 Prior homes without intake are unchanged: this does not prove complete tenure
 coverage or an all-offer gate across the programme.
 

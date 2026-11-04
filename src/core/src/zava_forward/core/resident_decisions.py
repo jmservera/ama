@@ -32,7 +32,8 @@ RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_recor
                     "challenge_open", "challenge_resolve",
                     "nomination_record", "nomination_correct", "tenure_intake",
                     "tenure_legal_position", "tenure_verify", "tenure_question_pack",
-                    "tenure_question_pack_review")
+                    "tenure_question_pack_review",
+                    "tenure_review_trigger", "tenure_trigger_resolve")
 NOT_RECORDED = "Not recorded"
 AUTHORITY_TASKS = ("Receive information", "Communicate", "Attend", "Works decision")
 AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
@@ -42,7 +43,9 @@ RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_autho
                    "resident_safe_contact", "resident_contact_history", "resident_reviews",
                    "nomination_records", "tenure_reports")
 INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "tenure_intake", "tenure_legal_position",
-                  "tenure_verify", "tenure_question_pack", "tenure_question_pack_review")
+                  "tenure_verify", "tenure_question_pack", "tenure_question_pack_review",
+                  "tenure_review_trigger", "tenure_trigger_resolve")
+REVIEW_TRIGGERS = ("Changed scope", "Dispute", "Defect", "Charge query", "Ambiguous lease identity")
 TENURE_ROUTES = {
     "Tenant": "Tenant",
     "Shared owner": "Shared owner",
@@ -136,7 +139,13 @@ def _tenure_report(c, body):
     return reports[number - 1]
 
 
+def _open_triggers(report):
+    return [t for t in report.get("review_triggers", []) if t["resolution"] is None]
+
+
 def _pack_is_current(report, pack):
+    if _open_triggers(report):
+        return False
     verifications = report.get("verifications", [])
     positions = report.get("legal_positions", [])
     return bool(verifications and positions
@@ -867,6 +876,8 @@ class ResidentDecisionMixin:
         if verified_on > k.today():
             raise ValueError("The verification date cannot be in the future.")
         if outcome == "Verified":
+            if _open_triggers(report):
+                raise ValueError("Resolve the open review trigger first. Owner: Home Ownership data owner.")
             if tenure == "Unknown" or not confirmed:
                 raise ValueError("A verified outcome needs a known tenure and confirmed identity. Otherwise record Not verified.")
             if not report.get("legal_positions"):
@@ -902,6 +913,8 @@ class ResidentDecisionMixin:
         positions = report.get("legal_positions", [])
         if not verifications or verifications[-1]["outcome"] != "Verified" or not positions:
             raise ValueError("Draft a question pack only from a data-owner-verified report with an attached Legal position reference.")
+        if _open_triggers(report):
+            raise ValueError("A review trigger is open on this report. Resolve it before drafting a question pack.")
         verified, position = verifications[-1], positions[-1]
         if packs and _pack_is_current(report, packs[-1]) and packs[-1]["review"] is None:
             raise ValueError("The current question pack is awaiting human approval. Review it first.")
@@ -959,6 +972,69 @@ class ResidentDecisionMixin:
         pack["status"] = ("Approved as questions only; Legal keeps interpretation and Finance keeps cost"
                           if outcome == "Approved" else "Returned; draft a new pack")
         return f"tenure report {body['report_version']} question pack {pack['version']} {outcome.lower()}; case-wide hold remains"
+
+    def _res_tenure_review_trigger(self, user, c, body):
+        _intake_fields(user, c, body, {
+            "case_id", "report_version", "expected_version", "trigger", "source", "owner", "next_update",
+        })
+        report = _tenure_report(c, body)
+        triggers = report.setdefault("review_triggers", [])
+        _version(body, triggers[-1] if triggers else None)
+        kind = k.choice(body["trigger"], REVIEW_TRIGGERS, "the review trigger")
+        ambiguous = kind == "Ambiguous lease identity"
+        record = dict(
+            version=len(triggers) + 1, report_version=body["report_version"], trigger=kind,
+            source=_intake_text(body["source"], "the trigger source reference"),
+            owner=_intake_owner(self, body["owner"]), next_update=_day(body["next_update"]),
+            route_to=("Home Ownership data owner (appointment required); do not reuse this lease record"
+                      if ambiguous else "Home Ownership team and Legal (appointment required)"),
+            recorded_by=_identity(user), at=_time(), resolution=None,
+        )
+        triggers.append(record)
+        report["review_status"] = f"Open; review reopened by {kind.lower()}"
+        c["tenure_review_required"] = True
+        if ambiguous:
+            report.update(identity_state="Ambiguous", verification="Unknown", decision_route="Unknown",
+                          reuse_blocked=True)
+        return (f"tenure report {body['report_version']} review trigger {record['version']} recorded; "
+                "package review stays open; case-wide hold remains")
+
+    def _res_tenure_trigger_resolve(self, user, c, body):
+        _intake_fields(user, c, body, {
+            "case_id", "report_version", "expected_version", "trigger_version", "resolver_name",
+            "resolver_role", "resolved_on", "note",
+        })
+        report = _tenure_report(c, body)
+        triggers = report.get("review_triggers", [])
+        _version(body, triggers[-1] if triggers else None)
+        number = body["trigger_version"]
+        if type(number) is not int or not 1 <= number <= len(triggers):
+            raise ValueError("Choose an existing review trigger version for this report.")
+        trigger = triggers[number - 1]
+        if trigger["resolution"] is not None:
+            raise ValueError("This review trigger is already resolved.")
+        resolver = _intake_text(body["resolver_name"], "the named resolver", 100)
+        role = _intake_text(body["resolver_role"], "the resolver's role", 100)
+        words = ("data owner", "home ownership", "leasehold")
+        if trigger["trigger"] == "Ambiguous lease identity":
+            words = ("data owner",)
+        if not any(word in role.casefold() for word in words):
+            raise ValueError("The resolver must be in the home ownership and leasehold team; ambiguous lease identity needs the data owner.")
+        if resolver.strip().casefold() in {_identity_value(user, "name"), _identity_value(user, "email")}:
+            raise ValueError("Choose a resolver other than the person recording this step.")
+        resolved_on = _day(body["resolved_on"])
+        if resolved_on > k.today():
+            raise ValueError("The resolution date cannot be in the future.")
+        trigger["resolution"] = dict(
+            resolver_name=resolver, resolver_role=role, resolved_on=resolved_on,
+            note=_intake_text(body["note"], "the resolution note", 300),
+            recorded_by=_identity(user), at=_time(),
+        )
+        if not _open_triggers(report):
+            report["review_status"] = "Open; human data-owner and Legal review required"
+            report.pop("reuse_blocked", None)
+        return (f"tenure report {body['report_version']} review trigger {number} resolved; "
+                "re-verify and redraft any question pack; case-wide hold remains")
 
     def _res_challenge_open(self, user, c, body):
         from . import projection

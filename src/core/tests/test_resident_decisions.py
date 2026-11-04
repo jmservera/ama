@@ -546,6 +546,127 @@ class JsonResidentDecisions(unittest.TestCase):
             partial(self.store.resident_action, self.sam, "ZF-1", self.pack_review())
         )
 
+    def trigger(self, **changes: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="tenure_review_trigger",
+                case_id="ZF-1",
+                report_version=1,
+                expected_version=0,
+                trigger="Charge query",
+                source="SYN-TRIGGER-SOURCE",
+                owner=self.sam["email"],
+                next_update="2099-01-01",
+            ),
+            **changes,
+        )
+
+    def resolve(self, **changes: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="tenure_trigger_resolve",
+                case_id="ZF-1",
+                report_version=1,
+                expected_version=1,
+                trigger_version=1,
+                resolver_name="Hana Home",
+                resolver_role="Home Ownership team",
+                resolved_on="2026-01-04",
+                note="Query answered",
+            ),
+            **changes,
+        )
+
+    def test_each_trigger_keeps_review_open_and_makes_pack_stale(self) -> None:
+        kinds = ("Changed scope", "Dispute", "Defect", "Charge query")
+        for kind in kinds:
+            with self.subTest(kind=kind):
+                self.setUp()
+                self.verified_report()
+                self.store.resident_action(self.sam, "ZF-1", self.pack())
+                self.store.resident_action(self.sam, "ZF-1", self.trigger(trigger=kind))
+                report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+                self.assertIn(kind.lower(), report["review_status"])
+                self.assertEqual(report["decision_route"], "Shared owner")
+                self.unchanged_failure(
+                    partial(self.store.resident_action, self.sam, "ZF-1", self.pack_review())
+                )
+                self.unchanged_failure(
+                    partial(
+                        self.store.resident_action,
+                        self.sam,
+                        "ZF-1",
+                        self.pack(expected_version=1),
+                    )
+                )
+                self.store.resident_action(self.sam, "ZF-1", self.resolve())
+                self.assertIn(
+                    "Open;", self.open_store().cases["ZF-1"]["tenure_reports"][0]["review_status"]
+                )
+                self.assertEqual(
+                    resident_gate(self.store.cases["ZF-1"]), [resident_decisions.TENURE_HOLD]
+                )
+
+    def test_ambiguous_identity_stops_reuse_and_routes_to_data_owner(self) -> None:
+        self.verified_report()
+        self.store.resident_action(
+            self.sam, "ZF-1", self.trigger(trigger="Ambiguous lease identity")
+        )
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        self.assertTrue(report["reuse_blocked"])
+        self.assertEqual(report["decision_route"], "Unknown")
+        self.assertEqual(report["verification"], "Unknown")
+        self.assertIn("Home Ownership data owner", report["review_triggers"][0]["route_to"])
+        self.unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.sam,
+                "ZF-1",
+                self.verification(expected_version=1),
+            )
+        )
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.resolve())
+        )
+        self.store.resident_action(
+            self.sam, "ZF-1", self.resolve(resolver_role="Home Ownership data owner")
+        )
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        self.assertNotIn("reuse_blocked", report)
+        self.assertEqual(report["decision_route"], "Unknown")
+
+    def test_trigger_refuses_unsafe_input_unchanged(self) -> None:
+        self.verified_report()
+        for changes in (
+            dict(trigger="Other"),
+            dict(report_version=2),
+            dict(case_id="ZF-2"),
+            dict(source=" "),
+            dict(next_update="soon"),
+            dict(expected_version=1),
+            dict(verification="Verified"),
+        ):
+            with self.subTest(changes=changes):
+                self.unchanged_failure(
+                    partial(self.store.resident_action, self.sam, "ZF-1", self.trigger(**changes))
+                )
+        self.store.resident_action(self.sam, "ZF-1", self.trigger())
+        for changes in (
+            dict(trigger_version=2),
+            dict(resolver_role="Resident Liaison Officer"),
+            dict(resolver_name="Sam Example"),
+            dict(resolved_on="2999-01-01"),
+            dict(note=" "),
+        ):
+            with self.subTest(changes=changes):
+                self.unchanged_failure(
+                    partial(self.store.resident_action, self.sam, "ZF-1", self.resolve(**changes))
+                )
+        self.store.resident_action(self.sam, "ZF-1", self.resolve())
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.resolve())
+        )
+
     def test_changed_verification_makes_pack_stale_and_returned_pack_can_be_redrafted(self) -> None:
         self.verified_report()
         self.store.resident_action(self.sam, "ZF-1", self.pack())
