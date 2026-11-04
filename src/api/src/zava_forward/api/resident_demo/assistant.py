@@ -72,6 +72,7 @@ class AzureTopicProvider:
         token: Callable[[], str] | None = None,
         reserve: Callable[[RequestEnvelope], bool] | None = None,
         record_usage: Callable[[dict[str, int | None] | None], None] | None = None,
+        record_call: Callable[[str, dict[str, int | None] | None, object], None] | None = None,
         transport: Callable[[str, bytes, str], bytes] = _post,
         clock: Callable[[], float] = time.time,
     ) -> None:
@@ -83,7 +84,7 @@ class AzureTopicProvider:
             f"{endpoint}/openai/deployments/{deployment}/chat/completions?api-version=2024-10-21"
         )
         self.enabled, self.token, self.reserve = enabled, token, reserve
-        self.record_usage = record_usage
+        self.record_usage, self.record_call = record_usage, record_call
         self.transport, self.clock = transport, clock
 
     def select(self, topic: Topic) -> Topic:
@@ -117,11 +118,23 @@ class AzureTopicProvider:
                     "stream": False,
                 }
             ).encode("ascii")
-            raw = self.transport(self.url, payload, token)
+            try:
+                raw = self.transport(self.url, payload, token)
+            except OSError as error:
+                self._close(
+                    "timeout" if isinstance(error, TimeoutError) else "provider-unavailable"
+                )
+                raise
             if len(raw) > MAX_REPLY:
+                self._close("returned")
                 raise AssistantUnavailable("reply_limit")
-            body = json.loads(raw)
+            try:
+                body = json.loads(raw)
+            except ValueError:
+                self._close("returned")
+                raise
             self._record(body)
+            self._close("returned", body)
             choices = body["choices"]
             if (
                 len(choices) != 1
@@ -140,6 +153,16 @@ class AzureTopicProvider:
         ):
             raise AssistantUnavailable("provider_failed") from None
         return topic
+
+    def _close(self, outcome: str, body: object = None) -> None:
+        # Counts and the returned model name only; a hook failure never changes the outcome.
+        if self.record_call is None:
+            return
+        reply = body if isinstance(body, dict) else {}
+        try:
+            self.record_call(outcome, valid_usage(reply.get("usage")), reply.get("model"))
+        except Exception:
+            return
 
     def _record(self, body: object) -> None:
         # Counts only; absent or invalid usage is recorded as unknown (None), and a
