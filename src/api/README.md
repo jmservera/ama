@@ -437,8 +437,15 @@ These are engineering checks, not human screen-reader, voice-control, live-model
 live-site, full Fluent adoption or WCAG-conformance acceptance.
 The employee chat stays open when focus moves to the page (#568), so the shared
 check asserts that the open panel does not hide external focus, while the
-resident chat still closes. The resident leg at 320px wide is a known open
-finding (Send scrolls out of the viewport inside the consent composer).
+resident chat still closes. The known open finding (#520) applies to the
+resident chat only: at 320px wide, Send scrolls out of the viewport inside the
+resident consent composer. The employee chat is not affected.
+The employee chat keeps the question tools row (agent skill and Send) pinned
+at the bottom of the composer, and the check asserts Send stays inside the
+panel at 320x480 and 640x360 as well as 1280x480. The sticky rule is scoped
+to `#employee-chat`, so the resident consent checkbox and textarea are
+unchanged. `python3 checks/chat_widget_browser_check.py --employee-layout`
+runs that employee leg alone, and `tests/test_chat_widget_layout.py` gates it.
 
 The focused submit check exercises real Enter and mouse Send with and without
 a case, delayed replies during actual route/session refreshes, exact focus,

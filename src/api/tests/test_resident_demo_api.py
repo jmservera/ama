@@ -680,7 +680,11 @@ class AbuseAndHardeningTests(DemoTestCase):
         held = [self.app.slots.acquire(blocking=False) for _ in range(demo.MAX_CONCURRENT)]
         self.assertTrue(all(held))
         try:
-            self.assertEqual(self.client().call("GET", "/healthz")[0], 503)
+            status, body, response = self.client().call("GET", "/healthz")
+            self.assertEqual(status, 503)
+            self.assertEqual(body["error"], demo.BUSY)
+            self.assertIn("Try again in a few seconds", body["error"])
+            self.assertEqual(response.getheader("Retry-After"), str(demo.RETRY_AFTER_SECONDS))
         finally:
             for _ in held:
                 self.app.slots.release()

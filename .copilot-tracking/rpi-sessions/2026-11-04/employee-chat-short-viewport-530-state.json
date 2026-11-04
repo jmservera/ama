@@ -1,0 +1,31 @@
+{
+  "task_id": "employee-chat-short-viewport-530",
+  "task_slug": "employee-chat-short-viewport-530",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-04/employee-chat-short-viewport-530-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-04/employee-chat-short-viewport-530-plan.md",
+    "details": ".copilot-tracking/details/2026-11-04/employee-chat-short-viewport-530-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-04/employee-chat-short-viewport-530-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-04/employee-chat-short-viewport-530-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-04/employee-chat-short-viewport-530-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed (delta)", "status": "recorded", "evidence": "research artifact, Ready"},
+    {"decision": "Critique executed once inline, compatible, applied", "status": "recorded", "evidence": "plan artifact"},
+    {"decision": "Review executed once inline, conformant for scope", "status": "recorded", "evidence": "review artifact"},
+    {"decision": "Validation tier focused; no gate", "status": "confirmed", "evidence": "no security, infrastructure, SQL or deployment change"},
+    {"decision": "Owner 2026-11-04: first slice of skills chat; already merged, so remaining open item taken", "status": "confirmed", "evidence": "research artifact"}
+  ],
+  "blockers": [
+    {"id": "criterion-8-live", "summary": "Live employee verification, owner confirmation of agent names and SQL selectors of the gate not done", "resolution": "owner and coordinator action"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Await independent review, hosted CI and owner merge"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Fix resident chat composer at 320px (#520)", "rationale": "Last failing leg of the shared browser check", "evidence": "changes artifact validation"}
+  ]
+}
