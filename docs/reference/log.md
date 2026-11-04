@@ -10058,3 +10058,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Stage map and walkthrough drift check (Refs #233)
 
 * The atlas trace checker in `src/core` now compares the on-screen "Journey stages" list in `role-screens.js` with the same-home walkthrough table and reports differing stage names or screens. Offline check only; no screen, record, approval or AI behaviour changes. Criteria 1, 2, 4, 5 and 6 stay unmet (deferred theme, rendered tensions, no EX-HOME-901 fixture or stage 1 screen, #151, #150); only the hypothesis label is met. Evidence under `.copilot-tracking/` (2026-11-03 issue-233 stage-map drift).
+
+## [2026-11-04] update | Booked value claim cannot be confirmed again (Closes #943)
+
+* `value_claim_confirm` now refuses a claim that is not in the pre-booked "Capacity only, not booked" state, so a Booked claim keeps its destination, budget owner reference and confirmer. Unit-tested in core; human approval (a different manager) is unchanged. Evidence under `.copilot-tracking/` (2026-11-04 value-claim-reconfirm-943).
