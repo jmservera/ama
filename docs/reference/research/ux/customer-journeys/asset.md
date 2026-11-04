@@ -112,6 +112,23 @@ two five-stage maps, four opportunities, ASCII, no observed metrics or validatio
 3. In observed paper/cohort preparation, which errors and effort survive the
    non-AI comparator, and can bounded assistance reduce them after review?
 
+## Asset and board screen delivery status (2026-11-04, #226)
+
+Merged engineering evidence covers the read-only asset and board screen (#639),
+the cross-home stock conflict queue (#710), the phase check and benefits table
+(#771), a browser check (#800), the AI-unavailable statement (#823), the
+evidence class on the AI cost panel (#870) and a structure test that pins the
+view and the absence of a role simulator (#960). The screen shows no investment
+approval, keeps eligibility, budgets, priorities and forecasts Unknown unless
+constructed fixtures, and shows AI cost beside the quality floor and value
+status with its evidence class. The research remains desk-based hypothesis, not
+observed behaviour.
+
+Unmet: the WCAG 2.2 baseline criterion (#151). Conformance needs assistive
+technology testing and human review under #151 and #155, which are open.
+Engineering checks do not establish accessibility acceptance. No price, budget
+or target for AI economics is set (BRD OD-51 is open).
+
 ## Next Steps
 
 Parent synthesis only, retaining labels and later-only boundaries. No further execution.
