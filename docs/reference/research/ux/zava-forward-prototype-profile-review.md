@@ -1169,3 +1169,19 @@ Owner-approved deploy of main `8b9553d8b` (redesign phases 1 and 2 #1069 and #10
 | Callback form | Pass: no form rendered; the page says callback booking is not connected |
 
 Limits: one resident, one viewport, no screen reader, no keyboard-only or reduced-motion pass, no booking attempt. This is engineering evidence, not accessibility or human acceptance. #462 and #521 stay `Refs`.
+
+## Live sensors seed and signed-in re-walk (2026-11-04, Refs #1072, Refs #462)
+
+Owner-approved one-off in-VNet Container Apps job execution (the job-override precedent in `infra/README.md`) seeded synthetic sensor readings for the test resident's home and re-applied `infra/sql/resident-showcase.sql`. SQL public network access stayed Disabled, no firewall rule was added and the job spec read back unchanged. Method and tool: [infra/README.md](../../../../infra/README.md#live-sensors-seed-for-the-test-resident-2026-11-04-refs-1072-refs-462).
+
+| Check | Result |
+| --- | --- |
+| Readings | 713 hourly synthetic readings, 2026-10-06 to 2026-11-04 16:00 UTC, one home id, source type SYNTHETIC |
+| Isolation | EXECUTE AS the resident principal: exactly 1 of 522 view rows has sensors (the test resident's case), 0 foreign or non-synthetic readings |
+| Temperature | Pass at 390 px: 20.5 C latest, history chart and text alternative |
+| Humidity | Pass at 390 px: 42.96 % latest, history chart and text alternative |
+| 24-hour forecast | Pass: dashed forecast line labelled as an estimate, with range text (18.1 to 20.3 C, 39.4 to 44.8 %) |
+| Page | No horizontal overflow; fail-closed message absent; sign-in, session and view requests 200 |
+
+Limits: one resident, one viewport, no screen reader, keyboard-only or reduced-motion pass. The forecast turns stale 24 hours after the last stored reading (the demo data are not refreshed automatically), so a later walk shows the stale state until a new window is seeded. The scenario label is the generator's `BACKFILL_2Y` although the window is 30 days. Screenshots: `.copilot-tracking/walkthrough-evidence/2026-11-04/sensors-live-seed-1072b/`. Engineering evidence only, not accessibility or human acceptance. #462 stays `Refs`; every #1072 criterion is proven live for the one test resident.
+
