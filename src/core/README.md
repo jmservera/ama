@@ -4371,11 +4371,13 @@ Unknown, never healthy.
 model or was quarantined (a deliberate workflow-only choice is not a failure; only record ids and the
 stated reason are kept, not the AI or workflow text), and `feed_stranded_tasks` raises a
 `stranded_task` item for each overdue task from `taskqueues.overdue_tasks` that has no named owner.
-`raise_failure` takes an optional `ref`, so reading the same feed again does not duplicate an item.
+`feed_failed_imports` raises a `failed_import` item for each rejected importer batch (status
+`rejected`) and each refused import file (source name, hash and reason); it keeps source identity,
+version and the stated reason, never row values. `raise_failure` takes an optional `ref`, so reading the same feed again does not duplicate an item.
 Nothing is re-run or re-sent.
 
-Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, importer,
-integration and conflict producers, and owner approval of the role names and runbooks (open). Tests:
+Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, importer
+wiring of the feed (the feed reads batch records; nothing calls it yet), integration and conflict producers, and owner approval of the role names and runbooks (open). Tests:
 `src/core/tests/test_exception_queue.py`, `src/core/tests/test_exception_feeds.py`.
 
 ## Versioned home case (#74)

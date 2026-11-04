@@ -4,6 +4,7 @@ import unittest
 
 from zava_forward.core.exception_feeds import (
     feed_failed_ai_runs,
+    feed_failed_imports,
     feed_stranded_tasks,
     feed_unaccepted_handoffs,
 )
@@ -32,7 +33,46 @@ def rec(rid: str, **fields: object) -> dict[str, object]:
     return {**base, **fields}
 
 
+def batch(bid: str, status: str, **fields: object) -> dict[str, object]:
+    base: dict[str, object] = {
+        "batch_id": bid,
+        "structure": "stock",
+        "version": 3,
+        "source_name": "stock.xlsx",
+        "source_sha256": "ab" * 32,
+        "status": status,
+        "staged_by": "Sam Steward",
+        "staged_at": "2026-11-03T08:00:00Z",
+        "decided_by": "Sam Steward",
+        "decision_note": "wrong year",
+        "row_value": "personal text",
+    }
+    return {**base, **fields}
+
+
 class ExceptionFeedTests(unittest.TestCase):
+    def test_failed_imports_keep_source_not_rows_and_dedupe(self) -> None:
+        q = make()
+        batches = [batch("b1", "rejected"), batch("b2", "approved"), batch("b3", "staged")]
+        refusals = [
+            {"source_name": "bad.xlsx", "source_sha256": "cd" * 32, "reason": "content scan failed"}
+        ]
+        raised = feed_failed_imports(q, batches, "Sam Steward", refusals)
+        self.assertEqual(len(raised), 2)
+        self.assertEqual({r["kind"] for r in raised}, {"failed_import"})
+        again = feed_failed_imports(q, batches, "Sam Steward", refusals)
+        self.assertEqual([r["id"] for r in again], [r["id"] for r in raised])
+        self.assertEqual(len(q.queue("Sam Steward")), 2)
+        text = str(q.queue("Sam Steward"))
+        self.assertNotIn("personal text", text)
+        self.assertIn("content scan failed", text)
+        self.assertIn("wrong year", text)
+        self.assertIn("stock.xlsx", text)
+
+    def test_no_failed_imports_raises_nothing(self) -> None:
+        q = make()
+        self.assertEqual(feed_failed_imports(q, [batch("b2", "approved")], "Sam Steward"), [])
+
     def test_fallback_and_quarantine_are_raised_others_are_not(self) -> None:
         q = make()
         records: list[dict[str, object]] = [
