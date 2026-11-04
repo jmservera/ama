@@ -342,6 +342,11 @@ Insufficient, a breach names the owner and the `ai-limits` runbook entry, and it
 holds no suspension authority. `reconcile_events` counts distinct event IDs in a
 half-open window so replays after a restart do not double count. Both are pure
 offline checks with constructed fixtures; no producer, alert or live limit exists.
+`check_monitoring_declaration` checks one task or serving release declaration for
+the six harm indicators, denominators, windows, thresholds, named monitoring and
+incident owners and a response. It reports Blocked with the missing items, or
+Declared (never approved or green), and it exposes ownership and manual-route status
+for a disabled task. No declaration is recorded for any real task.
 It also provides
 an allowlist sanitiser for diagnostic events so prompts, readings, chat content,
 tokens and identities are dropped. It is not wired into platform log collection,
