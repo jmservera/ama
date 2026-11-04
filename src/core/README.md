@@ -4466,6 +4466,10 @@ changes the concern, its outcome or its remedy, and a sensor reading never appea
 task `aftercare-concern-pack` is registered in `ai_registry` as an unapproved, disabled proposal
 task with a manual route and no model binding (FR-036).
 
+`add_sensor_context` attaches a later sensor signal to a concern as context only: it changes no
+investigation state, outcome or remedy, never marks the concern dismissed, and the text (also at
+`raise_concern`) passes the neutral-text guard. The household view still omits sensor context.
+
 Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), evaluator role access
 and the DPO position on outcome data (both open), a model route for the pack summary (needs
 release evidence and owner approval), and a pack screen. Tests: `src/core/tests/test_aftercare.py`.

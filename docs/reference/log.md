@@ -10386,3 +10386,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 155 usability programme status (Refs #155)
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
+
+## [2026-11-04] update | Aftercare sensor context guard (Refs #133)
+
+* Added `add_sensor_context` and a neutral-text guard on sensor context to the aftercare register; README note updated. Criteria 1, 2, 4 and 6 stay unmet in full, 3 and 5 only partly evidenced (register level). Evidence under `.copilot-tracking/` (2026-11-04 issue-133 sensor-context).
