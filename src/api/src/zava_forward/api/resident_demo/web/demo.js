@@ -187,7 +187,7 @@
       gauges.appendChild(group);
     });
     section.appendChild(gauges);
-    section.appendChild(el("p", "Demo display ranges are not safe or unsafe limits. Missing values and demo faults appear as gaps, not zero."));
+    section.appendChild(el("p", "Demo display ranges are not safe or unsafe limits. Readings that are missing or look wrong appear as gaps, not zero."));
     sensorMetrics.forEach(function (metric) { section.appendChild(sensorChart(history, metric)); });
     var details = el("details");
     details.appendChild(el("summary", "Show sensor history as a table"));
@@ -366,8 +366,14 @@
     signin.hidden = true;
     errorEl.hidden = true;
     statusEl.textContent = "Loading\u2026";
+    var slow = setTimeout(function () {
+      if (current === transition && statusEl.textContent === "Loading\u2026") {
+        statusEl.textContent = "Still loading. The showcase may be waking up, which can take up to 30 seconds. Please wait.";
+      }
+    }, 4000);
     api("/demo/session")
       .then(function (res) {
+        clearTimeout(slow);
         if (current !== transition) return;
         if (!res.ok) { fail(res.body.error || "The showcase is not available right now."); return; }
         csrf = res.body.csrf;
@@ -384,6 +390,7 @@
         }
       })
       .catch(function () {
+        clearTimeout(slow);
         if (current === transition) fail("We could not reach the showcase. Check your connection, then try again.");
       });
   }

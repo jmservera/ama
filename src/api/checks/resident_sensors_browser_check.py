@@ -192,10 +192,10 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
     bob.close()
 
     original = reader.rows["CASE-A"]
-    missing = replace(latest, temperature_c=None, temperature_status="Not recorded")
+    missing = replace(latest, temperature_c=None, temperature_status="No reading recorded")
     reader.rows["CASE-A"] = replace(original, sensors=(missing,))
     page.reload()
-    page.get_by_text("Not recorded", exact=True).first.wait_for()
+    page.get_by_text("No reading recorded", exact=True).first.wait_for()
     check(
         "missing channel has no fake zero gauge",
         page.get_by_role("meter").count() == 1
@@ -204,7 +204,7 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
     check(
         "singleton has a visible humidity point", page.locator(".sensor-chart circle").count() == 1
     )
-    for fault in ("Demo fault: outlier", "Demo fault: stuck reading"):
+    for fault in ("Not shown: this reading looked wrong", "Not shown: the sensor seemed stuck"):
         reader.rows["CASE-A"] = replace(
             original,
             sensors=(
