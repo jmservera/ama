@@ -170,3 +170,65 @@ def safety_release_gate(
         label="Accountable role and independent person",
         on=on,
     )
+
+
+_UNREVIEWED = "Unreviewed exercise rule: named reviewer required before live use"
+_BRD = "docs/brds/agentic-retrofit-programme-brd.md"
+
+
+def _booking_rule(gate: str, source: str) -> GateRule:
+    return GateRule(gate, source, "2026-11-04", "1", _UNREVIEWED)
+
+
+BOOKING_RULES = {
+    "funding": _booking_rule("funding", f"{_BRD} RULE-001; PRD FR-008 (exercise fixture)"),
+    "safety": _booking_rule("safety", f"{_BRD} RULE-001; PRD FR-008 (exercise fixture)"),
+    "resident": _booking_rule("resident", f"{_BRD} RULE-002; PRD FR-008 (exercise fixture)"),
+}
+
+
+def booking_gates(
+    case: dict[str, Any], resident_reasons: Iterable[str] | None, on: str | None = None
+) -> list[GateResult]:
+    """Funding, safety and resident gates for 'Ready to book'; missing evidence is unknown.
+
+    resident_reasons is the resident gate's list of unmet conditions, or None when it could
+    not be worked out.
+    """
+    funding = case.get("funding_ok")
+    results = [
+        check(
+            BOOKING_RULES["funding"],
+            funding if isinstance(funding, bool) else None,
+            owner=str(case.get("owner") or "Case owner"),
+            correction="Check the funding and record it.",
+            label="Funding confirmed",
+            on=on,
+        )
+    ]
+    hazards = case.get("hazards")
+    safe: bool | None = None
+    if isinstance(hazards, list):
+        safe = all(isinstance(h, dict) and h.get("released") is True for h in hazards)
+    results.append(
+        check(
+            BOOKING_RULES["safety"],
+            safe,
+            owner="Building Safety Liaison",
+            correction="Obtain the independent safety decision to restart retrofit work.",
+            label="No open safety issue",
+            on=on,
+        )
+    )
+    reasons = None if resident_reasons is None else list(resident_reasons)
+    results.append(
+        check(
+            BOOKING_RULES["resident"],
+            None if reasons is None else not reasons,
+            owner="Resident Liaison Officer",
+            correction="Review the resident's current decision and authority.",
+            label="Resident decision current",
+            on=on,
+        )
+    )
+    return results
