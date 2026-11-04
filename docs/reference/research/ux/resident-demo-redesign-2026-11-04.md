@@ -877,3 +877,23 @@ Per the UX research escalation criteria and `wcag-conformance-baseline.md`:
 * **Screen-reader walkthrough (`Not run`):** Test with NVDA + Firefox on Windows and VoiceOver + Safari on macOS at 1280px, 320px, and 200% text zoom across sign-in loading/error recovery, icon-only Account menu, sticky section nav, AI summary consent/fallback, and sensor chart/table equivalents.
 * **Named human review of resident-facing copy (`Not run`):** Submit all candidate microcopy in this specification to appointed reviewer Juan Manuel Servera (#153) for recorded review (name, role, date, exact wording, outcome) before any use beyond the synthetic showcase.
 * **Real resident usability testing (`Not run`):** Validate the `[Assumed]` comprehension hypotheses (timeline stepper clarity, AI vs rules summary distinction, and non-judgemental sensor forecast interpretation) under the `#155` moderated usability test programme plan before any live resident portal decision.
+
+## Live sensors walk and blocked seed (2026-11-04, Refs #1072, Refs #462)
+
+A signed-in 390 px walk of `ca-resident-demo--0000010` (image digest as recorded in the deploy note in `infra/README.md`) with the synthetic test resident observed only the fail-closed message "No synthetic sensor readings are available for your home." There were no `#gauge-temperature_c` or `#gauge-humidity_pct` meters, no 24-hour forecast and no horizontal overflow. Temperature, humidity and forecast rendering therefore remain unobserved live (unit and local browser checks only).
+
+### Root cause evidence
+
+* Live SQL could not be read: `sql-cutover-test-rzsrg` has public access Disabled, no firewall rules and the Entra administrator is the managed identity `id-cutover-test-init`; the Azure CLI login is a user.
+* Sensor tables were last evidenced absent (zero rows) on 2026-10-29 to 2026-10-31 and no later live creation or load is recorded. The view binds them only when present at apply time, and the PR 1071 `synthetic_stock_anchor_id` fallback was never applied live. Either is enough to produce the message; the stock mapping for the test home is unverified.
+* The committed backfill ends 2026-09-30. Readings older than 24 hours are stale and suppress the forecast, so loading it unchanged would still not show gauges or a forecast.
+
+### Owner decision needed
+
+The documented apply (`resident_showcase_sql.py ... --apply`) needs the SQL Entra administrator on a privately routed host, and `infra/README.md` forbids a temporary SQL firewall rule or public access. No Azure resource was changed. To proceed, the owner decides:
+
+1. Approve a one-off in-VNet run through `job-cutover-test-init` (identity `id-cutover-test-init`) with a temporary job template override, exactly restored and verified afterwards, that creates `dbo.sensor_register` and `dbo.sensor_reading`, loads one synthetic home and reapplies the view with its GRANT and DENY batches.
+2. Choose the synthetic window: a reviewed generator or loader change that ends within 24 hours of each walk, or a labelled static demo window that the page shows as stale without a forecast.
+3. Name the demo resident's home, or approve reading the test case's stock link inside SQL.
+
+The alternative of adding an operator as SQL administrator or opening public access is not recommended. Evidence: `.copilot-tracking/research/2026-11-04/resident-sensors-live-seed-1072-research.md`. Issue #1072 stays open.
