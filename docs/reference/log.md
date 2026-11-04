@@ -10309,12 +10309,19 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Deployed main `8b9553d8b` to `ca-cutover-test-demo-api` (`--0000025`) and `ca-resident-demo` (`--0000010`) through the short registry window; set `ZF_DEMO_EXPIRES_AT` to `2028-01-01T00:00:00Z` (was `2027-01-31T23:59:00Z`). Recorded in `infra/README.md` and the prototype profile review. Sensors section showed the fail-closed message only, filed as #1072. No issue is closed.
 
+## [2026-11-04] update | Retrofit scenarios through the retained sensor store (Refs #190, Refs #193)
+
+* Added `src/core/tests/test_retrofit_scenarios_retained_store.py`, which ingests the four labelled retrofit exercise scenarios through `SensorConsumer` and reads them back with `analyse_retained` (#111). Test-only, exercise values, focused tests only. #190 criterion 1 and #193 criterion 3 stay unticked pending independent review. RPI evidence is under `.copilot-tracking/*/2026-11-04-issue-190-retained-store-*`.
+
 ## [2026-11-04] update | Receipts for validation-refused unstored chat asks (Refs #159)
 
 * `ChatPanel.ask_unstored` now records one `chat.turn.unstored` receipt (0 model calls, no question text) when validation or the case lookup refuses a turn. Still unmet on #159: the named screen-reader test (criterion 6) and the 401 and route-validation receipts (tokenomics criterion). Evidence: `.copilot-tracking/*/2026-11-04/issue-159-validation-receipts-*`.
 ## [2026-11-04] update | WCAG 2.4.11 and 2.5.7 slice recorded (Refs #151)
 
 * Added `scroll-padding-block-end` so the fixed chat launcher cannot hide a focused control, two static tests, and a baseline audit row for 2.4.11 and 2.5.7. Rendered, screen-reader and owner-decision criteria remain unmet; no conformance claim.
+## [2026-11-04] update | Per-assistant usage attribution in the consumption report (Refs #107)
+
+* Added `by_capability` to `Consumption.report` and a note in `src/core/README.md`. Tokenomics criterion 2 of #107 stays unmet: constructed ledger evidence only, no real accepted-output usage. No knowledge-base page changed.
 ## [2026-11-04] update | Saved held form export freshness check (Refs #96)
 
 * Added `form_export.export_freshness` in `src/core` (documented in `src/core/README.md`): a read-only check that a saved held export is Current, Stale for only the dependent fields, Invalid or Unavailable. Criteria 1, 5 and 6 of #96 remain unmet (approved template and rules, reviewed export, rule and approval propagation). Evidence: `.copilot-tracking/*/2026-11-04/issue-96-r2-export-freshness-*`.
@@ -10396,6 +10403,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
 
+## [2026-11-04] update | Issue 126 release decisions carry AI economics (Refs #126)
+
+* Phase and tranche release decisions now require the AI economics report reference and any AI limit breach; a Release with a breach needs the approvers' decision. Tokenomics criterion 3 is engineering-delivered with synthetic fixtures only. Nothing was ticked or closed; protocol, DPIA, lawful basis, OD-51 and RAI closure criteria remain unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-126 r2).
 ## [2026-11-04] update | Issue 233 choice before offered capacity (Refs #233)
 
 * Added a "Choice comes before offered capacity" text panel to the per-home `resident-choice` screen and recorded it in `research/ux/atlas-screen-trace.md`. Tested by a node render of the per-home screen (panel order within that screen, native paragraph, no capacity wording before the choice panels) plus source-level checks; browser rendering, same-home walk, WCAG 2.2 rendered evidence and user validation stay unmet.
@@ -10474,6 +10484,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 100 per-capability AI usage view (Refs #100)
 
 * Rechecked merged PR 911. Added a per-capability usage breakdown (counts only) to the consumption report and the asset and board view; cost per capability stays Unknown. Criteria stay unmet: #440 checkpoint, #134 open, per-capability cost, quality floor, limits (OD-51) and live evidence. Evidence under `.copilot-tracking/` (2026-11-04 issue-100 r2).
+## [2026-11-04] update | Issue 107 status record (Refs #107)
+
+* Rechecked merged PRs 287, 293, 301, 863, 913 and 915 and open PR 1095. Quarantine and suspension on an unexpected serving model and independent-connection revocation are already tested locally. Unmet: RAI release record approvals (OQ-017), authoritative serving-version attestation, Azure SQL race evidence and delivered-build evidence, plus Tokenomics usage attribution until PR 1095 merges. These need human, Azure or legal steps; no code change.
 ## [2026-11-04] update | Finance queue shows the exposure pause signal (Refs #99)
 
 * The Finance queue now shows the read-only `GET /api/finance/exposure` signal with a manual-check message when it is unavailable; it offers no approve, resume or accelerate control. Criteria 1 and 2 of issue 99 stay unmet: no Board-approved envelope or tolerances exist (human step) and no actual breach control is evidenced. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-99 exposure screen).
