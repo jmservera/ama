@@ -10312,6 +10312,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | WCAG 2.4.11 and 2.5.7 slice recorded (Refs #151)
 
 * Added `scroll-padding-block-end` so the fixed chat launcher cannot hide a focused control, two static tests, and a baseline audit row for 2.4.11 and 2.5.7. Rendered, screen-reader and owner-decision criteria remain unmet; no conformance claim.
+## [2026-11-04] update | Saved held form export freshness check (Refs #96)
+
+* Added `form_export.export_freshness` in `src/core` (documented in `src/core/README.md`): a read-only check that a saved held export is Current, Stale for only the dependent fields, Invalid or Unavailable. Criteria 1, 5 and 6 of #96 remain unmet (approved template and rules, reviewed export, rule and approval propagation). Evidence: `.copilot-tracking/*/2026-11-04/issue-96-r2-export-freshness-*`.
 ## [2026-11-04] update | Held-out gate fails closed on an empty set (Refs #164)
 
 * `chat_heldout.run_heldout` and `freeze_problems` now report "no scenarios in the held-out set" and return `insufficient` instead of `pass` for a digest-matching empty set; `_shingles` treats texts shorter than six words as one shingle. Offline, scripted harness only; no held-out set, reviewer or actual-model evidence exists, so #164 stays open.
@@ -10452,6 +10455,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
 
+## [2026-11-04] update | Issue 96 status record (Refs #96)
+
+* Rechecked merged PRs 377, 510, 888, 902 and 1083 and open PR 1093. Criteria 2, 3 and 4 stay met. The inherited review defects RV-001 and RV-002 are fixed in current code and covered by tests (original review left unchanged). Criteria 1, 5 and 6 stay unmet: they need an approved template, rules and reviewer authority from the Finance/template owner, so no reviewed export or rule/approval stale propagation can be built. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-96 r3).
 ## [2026-11-04] update | Epic 93 status record (Refs #93)
 
 * Rechecked merged PRs for #93 and its children. Code-level slices are delivered; the Finance journey page now lists unmet criteria (stabilization checkpoint #440, open children #96 and #99) and the human owners. Nothing is ticked. Docs-only; no tests run. Evidence under `.copilot-tracking/` (2026-11-04 issue-93 r1).
