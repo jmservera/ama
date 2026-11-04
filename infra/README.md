@@ -4341,3 +4341,16 @@ scope, private SQL/vault paths, narrow identity rights and all existing
 approvals. No resource/role/network addition or Azure command is part of this
 source-only change. Record the eventual approved apply and live verification
 as separate evidence; do not close #521 based on source tests alone.
+
+#### Live state check (2026-11-04, Refs #521)
+
+The 2026-11-04 owner confirmation named the exclusive end `2027-02-01T00:00Z`.
+That value was already applied live on 2026-11-01 (#742) and is unchanged, so
+no Azure command that mutates state was run. Read-only metadata check at
+2026-11-04: `ca-resident-demo` revision `0000008` Running and Healthy, min 0 /
+max 1, `ZF_DEMO_EXPIRES_AT` `2027-01-31T23:59:00Z`, all eight jobs Manual. The
+source cap stays `2028-01-01T00:00:00Z` (owner decision 2026-11-03); the live
+window is the earlier, narrower value. Moving the live SQL constraint, rows and
+app expiry to 2028-01-01 remains **Pending** a separate owner confirmation of
+that exact value. The live SQL constraint was not re-probed, and no external
+HTTP sign-in check was run.

@@ -10225,3 +10225,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Exposure signal fails closed on stale or malformed limits (Refs #99)
 
 * Review fixes: limits approved over 366 days ago or dated in the future are Held with a plain reason (`stale_reason`, `MAX_AGE_DAYS`, based on `approved_on`; the file schema records no expiry). Non-UTF-8 files and non-numeric commitment amounts now return Held instead of raising. Tests added; staleness horizon is an engineering default pending owner confirmation.
+## [2026-11-04] update | Resident authority live state check (Refs #521)
+
+* PR 690, 742 and 877 already delivered the source extension and the live 2027-02-01 window. Added a read-only live state record to `infra/README.md`: app Healthy, expiry 2027-01-31T23:59:00Z, no Azure change made. Source cap 2028-01-01 differs from the live window; moving live to it needs a separate owner confirmation.
