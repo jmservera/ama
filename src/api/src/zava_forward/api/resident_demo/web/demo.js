@@ -750,16 +750,23 @@
       .then(function (r) {
         return r.json().then(function (body) {
           if (current === transition && body.session_changed) showSignin(body.error);
-          return { ok: r.ok, status: r.status, body: body };
+          return { ok: r.ok, status: r.status, body: body, retryAfter: Number(r.headers && r.headers.get && r.headers.get("Retry-After")) };
         });
       });
   }
 
-  function loadView(announce) {
+  function loadView(announce, retried) {
     var current = transition;
     if (!loading) statusEl.textContent = "Loading your progress\u2026";
     return api("/demo/view").then(function (res) {
       if (current !== transition) return;
+      if (res.status === 503 && !retried) {
+        var wait = res.retryAfter > 0 && res.retryAfter <= 10 ? res.retryAfter : 3;
+        statusEl.textContent = "The showcase is busy. Trying again in a few seconds\u2026";
+        return new Promise(function (resolve) { setTimeout(resolve, wait * 1000); }).then(function () {
+          if (current === transition) return loadView(announce, true);
+        });
+      }
       if (res.ok) render(res.body, announce);
       else if (res.status === 401) showSignin("Please sign in again.");
       else fail(res.body.error || "Something went wrong.");

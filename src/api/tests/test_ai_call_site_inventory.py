@@ -31,7 +31,7 @@ INVENTORY = {
     ),
     "api/src/zava_forward/api/resident_demo/assistant.py": (
         "counts-only-sink",
-        "optional validated counts; no ledger, price or context; adapter disabled by default",
+        "optional counts; ledger join only via ledger_meter.py when wired; disabled by default",
     ),
 }
 
