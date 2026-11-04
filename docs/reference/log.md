@@ -10183,3 +10183,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Demo chat meter seeded with synthetic authority and price (Refs #891)
 
 * Cause confirmed from code: the cost and token meter held the chat call as `authority-unknown` because no authority or price record existed for the chat configuration, and a synthetic price would also have been held as a live call. Under `ZF_CHAT_DEMO_ACTIVATION` with the demo profile only, `chat_demo_meter.ensure` now records a labelled synthetic one-day authority (1 call per request, 20 calls, 100000 tokens) and price; without the switch nothing is recorded and the call is refused. Real-store regression tests cover both paths. No SQL schema change, no approval or finance decision is implied, and the live model answer (criterion 6) is unproven until redeploy and the owner live check. Evidence under `.copilot-tracking/` (2026-11-04 issue-891 demo meter).
+
+## [2026-11-04] update | Request-read disconnect body-read test (Refs #953)
+
+* PRs 924 and 990 already deliver the 500/ERROR backend path and the request-read WARNING. This slice adds the missing regression test for a client reset during the POST body read. Unmet: the related #921 was not assessed. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-953 body-read test).

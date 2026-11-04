@@ -122,6 +122,28 @@ class ErrorLoggingTests(Base):
         self.assertNotIn("status=500", text)
         self.assertNotIn(SECRET, text)
 
+    def test_client_reset_during_post_body_read_logs_warning_not_error(self) -> None:
+        import socket
+        import struct
+        import time
+
+        with self.assertLogs("zava_forward.api.server", "WARNING") as logs:
+            sock = socket.create_connection(("127.0.0.1", self.httpd.server_address[1]), timeout=5)
+            hdr = principal(oid=OID_SAM)  # type: ignore[no-untyped-call]
+            lines = ["POST /api/bulk-edits/preview HTTP/1.1", "Host: x", "Content-Length: 500"]
+            head = "\r\n".join([*lines, f"X-MS-CLIENT-PRINCIPAL: {hdr}", "", ""])
+            sock.sendall(head.encode() + b"{")
+            time.sleep(0.2)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_LINGER, struct.pack("ii", 1, 0))
+            sock.close()
+            deadline = time.monotonic() + 5
+            while not logs.records and time.monotonic() < deadline:
+                time.sleep(0.05)
+        self.assertEqual([r.levelname for r in logs.records], ["WARNING"])
+        text = "\n".join(logs.output)
+        self.assertIn("client-disconnect exc=ConnectionResetError phase=request-read", text)
+        self.assertNotIn("status=500", text)
+
     def test_socket_write_error_after_response_started_stays_silent(self) -> None:
         from http.server import BaseHTTPRequestHandler
 
