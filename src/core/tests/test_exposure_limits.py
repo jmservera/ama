@@ -6,6 +6,7 @@ import threading
 import unittest
 from pathlib import Path
 from types import SimpleNamespace
+from typing import Any
 
 from zava_forward.core import exposure_limits as limits
 from zava_forward.core.finance import FinanceMixin
@@ -83,12 +84,12 @@ class LiveSignal(unittest.TestCase):
 
     def signal(
         self, amounts: tuple[float, ...], content: object, user: dict[str, str] | None = None
-    ):
+    ) -> Any:
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "approved-limits.json"
             if content is not None:
                 path.write_text(content if isinstance(content, str) else json.dumps(content))
-            return FinanceMixin.exposure_signal(self.store(*amounts), user or self.USER, path)  # type: ignore[arg-type]
+            return FinanceMixin.exposure_signal(self.store(*amounts), user or self.USER, path)  # type: ignore[arg-type,no-untyped-call]
 
     def test_no_file_holds_and_pauses(self) -> None:
         result = self.signal((1,), None)
