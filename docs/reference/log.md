@@ -10301,6 +10301,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Deployed main `8b9553d8b` to `ca-cutover-test-demo-api` (`--0000025`) and `ca-resident-demo` (`--0000010`) through the short registry window; set `ZF_DEMO_EXPIRES_AT` to `2028-01-01T00:00:00Z` (was `2027-01-31T23:59:00Z`). Recorded in `infra/README.md` and the prototype profile review. Sensors section showed the fail-closed message only, filed as #1072. No issue is closed.
 
+## [2026-11-04] update | Held-out gate fails closed on an empty set (Refs #164)
+
+* `chat_heldout.run_heldout` and `freeze_problems` now report "no scenarios in the held-out set" and return `insufficient` instead of `pass` for a digest-matching empty set; `_shingles` treats texts shorter than six words as one shingle. Offline, scripted harness only; no held-out set, reviewer or actual-model evidence exists, so #164 stays open.
 ## [2026-11-04] update | Name the changed fields on stale form manifests (Refs #98)
 
 * `form_review.view` `diagnostic_freshness` now lists `changed_fields`, the fields whose reviewed value or state differ from each saved manifest, so only those need re-review. Documented in `src/core/README.md`. Core only; criteria 2 (approved rules) and 3 (reviewed pack) remain unmet and need Finance/template owner authority. No issue is closed.
