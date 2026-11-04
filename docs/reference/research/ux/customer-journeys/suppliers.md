@@ -168,6 +168,22 @@ accept its own submission or see a vulnerability reason; and #155 validation
 with supplier staff. Passing engineering checks would not establish
 accessibility acceptance.
 
+### Delivery status record for issue 228 (2026-11-04)
+
+* Delivered on main as engineering evidence: PRs 655 (package queue and job
+  pack screens), 782 (browser keyboard and axe checks), 820 (corrections and
+  completion shown as records), 867 (withheld-items panels), 930 (this
+  design contract) and 967 (no role simulator and no vulnerability data).
+  Criteria 1, 2, 4 and 6 are ticked on the issue.
+* Unmet criterion 3: no capture function exists for submissions and
+  acknowledgements. It needs BRD OD-47 and supplier-scoped access, both
+  human decisions. Review and acceptance stay read-only and separate.
+* Unmet criterion 5: WCAG 2.2 acceptance needs human and assistive-technology
+  testing (#151, #155).
+* Flag: criterion 6 is ticked, but the 2026-11-03 audit comment still lists
+  full Fluent 2 adoption (#150) as unproven. The owner should reconcile it.
+* Nothing was ticked or closed by this record.
+
 ## Sources: local dated evidence, not refreshed law
 
 Paths are repository-relative; research paths below start `docs/reference/research/`.
