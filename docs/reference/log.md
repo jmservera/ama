@@ -10102,3 +10102,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Hazard referral age flag requires its limit and flags future dates (Closes #951)
 
 * `hazard_referrals_overdue` no longer assumes an unapproved 1-day default: `max_days` is required. A `received_on` in the future is now returned with a data-quality note. Read-only, still not a hazard clock; the owner-approved limit remains undecided. Evidence under `.copilot-tracking/` (2026-11-04 issue-951).
+
+## [2026-11-04] update | Employee console re-checks photo availability without reload (Refs #954)
+
+* `app.js` now re-reads `/api/me` services on return to the tab (at most once a minute) and loads the profile photo when the flag turns true; a 503 or 403 from the photo endpoint turns the flag off without an error or repeat request. Initials remain the fallback. Node-harness test only; no real-browser console check, axe or web-design-guidelines review was run. Evidence under `.copilot-tracking/` (2026-11-04 fu-954).
