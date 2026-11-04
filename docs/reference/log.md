@@ -10304,3 +10304,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 121 model dispatch gate wired into the AI transport (Refs #121)
 
 * Wired `data_protection.dispatch_hold` into `ai.Ai.run`, `look_at` and `_request`, driven by `ZF_DATA_PROCESSING` (constructed by default; anything else fails closed). Documented in `src/core/README.md`; behavioural tests in `test_data_protection.py`. No approval, retention period or legal conclusion is recorded and no criterion is ticked. Rights log still unpersisted.
+## [2026-11-04] update | Issue 119 status record (Refs #119)
+
+* Added a dated status record to the map tile provider options page. Both acceptance criteria remain unmet and need human, legal and procurement steps. Nothing ticked or closed.
+## [2026-11-04] update | Issue 83 remaining criterion blocked on OD-09 (Refs #83)
+
+* Rechecked merged PRs 311, 893 and 1036: criteria 1 and 2 are delivered, and core ageing plus the read-only unaccepted-handoff route exist. Criterion 3 stays unmet because the Housing and repairs leads have not approved response times and out-of-hours routes (OD-09). No limit was defaulted and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-83 r6).
