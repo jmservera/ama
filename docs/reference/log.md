@@ -10424,3 +10424,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 110 status record (Refs #110)
 
 * Rechecked merged PRs 411, 508 and 910. Criteria 2 to 5 stay ticked. Criterion 1 stays unmet: offline per-device identity, schema version and stable reading ID code and tests exist, but no real distinct Hub identities were issued and no live stream was observed (tier, sizing, cost, network and device credential owner decisions; #140; human/Azure steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-110 r2).
+
+## [2026-11-04] update | Plain-language consultation and restart check wording, slice 3 (Refs #153)
+
+* Reworded the procurement consultation refusal and check reason and the gates.py restart checks from "release this hold" to "clear this stop" or "restart this stopped work", with a next action for Legal; added a lexical test and a dated paragraph in the [content standard](./research/ux/content-standard.md). Consultation status stays unknown; no approval or authority rule changed. Criteria 2, 3 and 5 remain unmet; named human review not run. Evidence under `.copilot-tracking/` (2026-11-04 issue-153 consultation gate wording).
+

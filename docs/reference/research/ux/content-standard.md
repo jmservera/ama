@@ -129,6 +129,15 @@ are not yet audited. Field-label messages from `controls.text` now name
 the restart"; other `controls.text` labels are not yet audited. Behaviour tests
 in `test_hazard_referral.py` trigger the changed refusals.
 
+Slice 3 (2026-11-04) applies the same glossary to the consultation refusal and
+check reason in `procurement.py` and to the restart check messages in `gates.py`:
+"release this hold" now reads "restart this stopped work" or "clear this stop",
+and the consultation refusal adds the next action (ask Legal to verify the
+decision). Consultation status stays unknown and no Legal or approval rule
+changed. `signoffs.py` messages already state reason, owner and next action.
+Other typed errors (`gates.py` configuration errors, `ai_consumption.py` metering
+hold, `doc_controls.py` legal hold, `resident_decisions.py`) remain unaudited.
+
 The safety alternatives come from the existing stopped-work/restart glossary.
 They do not close a hazard-service case, establish safety, give the panel new
 authority or permit a restart without the existing human decision process.
