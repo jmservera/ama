@@ -77,6 +77,7 @@ REGISTER: dict[str, dict[str, Any]] = {
             "docs/reference/research/retrofit-synthetic-data/scenario-manifest.json",
             "src/core/tests/test_scenario_manifest.py",
             CORE + "journey_trace.py",
+            "src/core/tests/test_journey_store.py",
         ],
     ),
 }
