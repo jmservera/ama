@@ -553,8 +553,10 @@ class JsonResidentDecisions(unittest.TestCase):
             self.sam,
             "ZF-1",
             self.verification(
-                expected_version=1, outcome="Not verified",
-                verified_tenure="Unknown", identity_confirmed=False,
+                expected_version=1,
+                outcome="Not verified",
+                verified_tenure="Unknown",
+                identity_confirmed=False,
             ),
         )
         self.unchanged_failure(

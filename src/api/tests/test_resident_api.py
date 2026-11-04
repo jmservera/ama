@@ -221,24 +221,43 @@ class ResidentApi(unittest.TestCase):
         url = "/api/cases/ZF-1/resident"
         steps = [
             dict(
-                action="tenure_legal_position", case_id="ZF-1", report_version=1,
-                expected_version=0, reviewer_name="Lee Legal", reviewer_role="Legal adviser",
-                position_ref="SYN-LEGAL-PACK", position_version="v1", reviewed_on="2026-01-01",
+                action="tenure_legal_position",
+                case_id="ZF-1",
+                report_version=1,
+                expected_version=0,
+                reviewer_name="Lee Legal",
+                reviewer_role="Legal adviser",
+                position_ref="SYN-LEGAL-PACK",
+                position_version="v1",
+                reviewed_on="2026-01-01",
             ),
             dict(
-                action="tenure_verify", case_id="ZF-1", report_version=1, expected_version=0,
-                outcome="Verified", verified_tenure="Leaseholder", identity_confirmed=True,
-                verifier_name="Dana Owner", verifier_role="Home Ownership data owner",
-                evidence_ref="SYN-OWNER-PACK", verified_on="2026-01-02",
+                action="tenure_verify",
+                case_id="ZF-1",
+                report_version=1,
+                expected_version=0,
+                outcome="Verified",
+                verified_tenure="Leaseholder",
+                identity_confirmed=True,
+                verifier_name="Dana Owner",
+                verifier_role="Home Ownership data owner",
+                evidence_ref="SYN-OWNER-PACK",
+                verified_on="2026-01-02",
             ),
         ]
         draft = dict(
             action="tenure_question_pack", case_id="ZF-1", report_version=1, expected_version=0
         )
         review = dict(
-            action="tenure_question_pack_review", case_id="ZF-1", report_version=1,
-            expected_version=1, outcome="Approved", reviewer_name="Hana Home",
-            reviewer_role="Home Ownership team", reviewed_on="2026-01-03", note="Checked",
+            action="tenure_question_pack_review",
+            case_id="ZF-1",
+            report_version=1,
+            expected_version=1,
+            outcome="Approved",
+            reviewer_name="Hana Home",
+            reviewer_role="Home Ownership team",
+            reviewed_on="2026-01-03",
+            note="Checked",
         )
         self.assertEqual(self.call(url, "sam", self.intake_payload(tenure=True))[0], 200)
         self.assertEqual(self.call(url, "sam", draft)[0], 400)
