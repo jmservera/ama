@@ -852,7 +852,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                             app.panel.record_rejected(user, tid)
                         raise
                     if thread["title"].startswith(REGULATORY_TASK + ":"):
-                        self._regulatory_access(user)
+                        try:
+                            self._regulatory_access(user)
+                        except ChatForbidden:
+                            if parts[2] in ("messages", "ask"):
+                                app.panel.record_rejected(user, tid)
+                            raise
                         u, _ = app.regulatory.thread(user, tid)
                         if parts[2] not in ("archive", "delete"):
                             raise ValueError("Use the bounded regulatory endpoint for this thread.")
@@ -1012,6 +1017,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 turn = url.path.strip("/").split("/")
                 if len(turn) == 5 and turn[:3] == ["api", "chat", "threads"] and turn[4] in ("messages", "ask"):
                     app.panel.record_rejected(u, turn[3])
+                if turn == ["api", "chat", "unstored-ask"]:
+                    app.panel.record_rejected_unstored(u)
                 if url.path in ("/api/bulk-edits/preview", "/api/bulk-edits/apply"):
                     s.audit(u["email"], "bulk_edit_rejected", "-", "Role cannot use administrative bulk edits.")
                 return self._json(403, {"error": "Your role does not include this."})

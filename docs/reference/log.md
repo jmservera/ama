@@ -10117,3 +10117,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] add | Usability testing programme plan (Refs #155)
 
 * New [usability test programme plan](research/ux/usability-test-programme-plan.md): hypotheses from SA-009, roles and participants, accessibility support, consent and aggregate-only data handling, task scripts derived from UX-01 to UX-08, J1 to J6 and the bundle protocol, findings log and results templates. Draft only: no participant, session, staff agreement or result exists; synthetic walkthroughs are labelled not user validation. Indexed in the reference README.
+## [2026-11-04] update | Refused unstored and regulatory-thread chat turns leave a receipt (Refs #159)
+
+* An unstored assistant ask refused by the role gate or the current-user check, and a regulatory-thread turn refused for the missing RegulatoryChat capability, now each record one access-rejected audit receipt (0 model calls, tokens unknown, no question text). Responses and permissions are unchanged. Criterion 6 (named screen-reader run) and the tokenomics criterion stay unmet: 401 and validation-refused turns record nothing. Focused tests only; no gate, browser or assistive-technology run. Evidence under `.copilot-tracking/` (2026-11-04 issue-159-refusal-receipts).

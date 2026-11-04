@@ -413,6 +413,16 @@ class ChatPanel:
         with self.iso.store.lock:
             self.iso.store.audit(actor, "chat.turn", "", json.dumps(receipt, sort_keys=True))
 
+    def record_rejected_unstored(self, user: dict[str, Any]) -> None:
+        """Receipt for an unstored ask refused before any rules or model work."""
+        try:
+            actor = user_key(user)
+        except ValueError:
+            actor = "unknown"
+        detail = json.dumps(dict(outcome="access-rejected", model_calls=0), sort_keys=True)
+        with self.iso.store.lock:
+            self.iso.store.audit(actor, "chat.turn.unstored", "", detail)
+
     def ask(
         self, user: dict[str, Any], tid: str, question: object, *, skill: object = None
     ) -> dict[str, Any]:
@@ -440,7 +450,11 @@ class ChatPanel:
         self, user: dict[str, Any], case_id: str, question: object, *, skill: object = None
     ) -> dict[str, Any]:
         """Rules-only reply while chat storage is unapproved; stores nothing, calls no model."""
-        user = self.iso.current_user(user)
+        try:
+            user = self.iso.current_user(user)
+        except (PermissionError, LookupError):
+            self.record_rejected_unstored(user)
+            raise
         if skill is None:
             skill = GENERAL
         if not isinstance(skill, str) or skill not in (GENERAL, *REGISTRY):

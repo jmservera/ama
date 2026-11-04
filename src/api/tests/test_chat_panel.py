@@ -8,18 +8,21 @@ import json
 import os
 import re
 import unittest
+import urllib.request
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
 import test_role_matrix as roles
+from zava_forward.api import auth
 from zava_forward.api.server import chat_admission
 from zava_forward.core.chat_panel import ABSTAIN, FALLBACK, LABEL
 from zava_forward.core.assistants import REGISTRY
 from zava_forward.core import projection
 from zava_forward.core.chat_privacy import redact
 from zava_forward.core.chatthreads import MAX_CONTENT
+from zava_forward.core.regulatory_chat import TASK as REGULATORY_TASK
 
 APPROVED = dict(
     CHAT_DPIA_REF="SYNTH-DPIA-1",
@@ -605,6 +608,49 @@ class PanelTests(roles.Matrix):
                 )
                 self.assertIsNone(receipt["tokens"])
                 self.assertNotIn("SECRET-QUESTION", turns[-1]["detail"])
+        self.assertEqual(self.prompts, [])
+
+    def test_unstored_ask_role_gate_refusal_records_one_receipt_without_the_question(self) -> None:
+        path = "/api/chat/unstored-ask"
+
+        def count() -> int:
+            entries = self.store.audit_entries()
+            return len([e for e in entries if e["action"] == "chat.turn.unstored"])
+
+        with patch.dict(os.environ, {k: "" for k in APPROVED}):
+            before = count()
+            code, _ = self.api(projection.CONTRACTOR, path, {"content": "SECRET-QUESTION"})
+            self.assertEqual(code, 403)
+            turns = [e for e in self.store.audit_entries() if e["action"] == "chat.turn.unstored"]
+            self.assertEqual(len(turns), before + 1)
+            for turn in turns[-1:]:
+                detail = json.loads(turn["detail"])
+                self.assertEqual((detail["outcome"], detail["model_calls"]), ("access-rejected", 0))
+                self.assertNotIn("SECRET-QUESTION", turn["detail"])
+        self.assertEqual(self.prompts, [])
+
+    def test_regulatory_capability_refusal_records_one_receipt_per_turn_route(self) -> None:
+        owner = self.store.staff[self.email(ROLE)]
+        title = REGULATORY_TASK + ": synthetic-demo"
+        tid = str(self.store.chat_create_thread(owner, case_id="ZF-1", title=title)["id"])
+        request = urllib.request.Request
+
+        def csrf(url: str, data: bytes | None = None, headers: dict[str, str] | None = None) -> Any:
+            return request(url, data=data, headers={**(headers or {}), "X-ZF-CSRF": "1"})
+
+        for route in ("ask", "messages"):
+            before = len([e for e in self.store.audit_entries() if e["action"] == "chat.turn"])
+            with patch.object(auth.PasswordProvider, "name", "trusted-proxy"), patch(
+                "urllib.request.Request", side_effect=csrf
+            ):
+                path = f"/api/chat/threads/{tid}/{route}"
+                code, _ = self.api(ROLE, path, {"content": "SECRET-QUESTION"})
+            self.assertEqual(code, 403, (route, _))
+            turns = [e for e in self.store.audit_entries() if e["action"] == "chat.turn"]
+            self.assertEqual(len(turns), before + 1, route)
+            receipt = json.loads(turns[-1]["detail"])
+            self.assertEqual((receipt["outcome"], receipt["model_calls"]), ("access-rejected", 0))
+            self.assertNotIn("SECRET-QUESTION", turns[-1]["detail"])
         self.assertEqual(self.prompts, [])
 
     def test_role_gate_denial_of_other_chat_routes_records_no_turn_receipt(self) -> None:
