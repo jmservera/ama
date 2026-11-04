@@ -1,0 +1,5 @@
+# Issue 142 changes (2026-11-04, r2)
+
+* Added r2 research, plan, details, changes and review artifacts.
+* Appended a log.md entry. No source, test, SQL, infrastructure, workflow or web change.
+* Validation: git diff review only. Not run: tests, ruff, mypy, gate, benchmarks, full suites, Azure, hosted CI.
