@@ -18,7 +18,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
 
-from . import controls, projection
+from . import controls, job_pack, projection
 from .appointments import AppointmentCommittedError, AppointmentMixin
 from .change_provenance import _actor
 from .documents import DocumentStoreError
@@ -130,7 +130,7 @@ class ProcurementMixin(AppointmentMixin):
                 if w:
                     case_before = (w["case_id"], deepcopy(self._case(w["case_id"])))
                 p = self._package(w["package"] if w else pid) if pid or w else None
-                authority = self._contract_authority(actor, p, action, w["contractor"] if w else None) if p and action not in ("capacity", "consultation") else None
+                authority = self._contract_authority(actor, p, action, w["contractor"] if w else None) if p and action not in ("capacity", "consultation", "contract_event") else None
                 context = dict(user=deepcopy(user), actor=actor, authority=authority, cases={},
                                snapshot=self._proc_snap.get("procurement") if hasattr(self, "db") else None,
                                authorities=[], persisted=False)
@@ -351,6 +351,15 @@ class ProcurementMixin(AppointmentMixin):
                         supplied_status=supplied, authority_status="Unverified",
                         reason=f"Consultation status is unknown for {p['id']}. Legal must verify it before this contract is let or renewed. A supplied record does not release the hold.",
                         manual_path="Ask Legal and the contract owner to confirm consultation outside this service. No letting or renewal happens here.")
+
+    def request_contract_event(self, user, pid, event):
+        """Workflow entry for letting or renewing a contract. It never lets or renews: while consultation is unknown it records the held attempt in the audit log and returns the blocked outcome."""
+        if event not in ("let", "renew"):
+            raise ValueError("Choose let or renew.")
+        with self._proc_operation(user, "contract_event", pid=pid) as actor:
+            gate = self.contract_event_gate(user, pid, event)
+            self._proc_save(actor, "contract_event_held", "-", f"{pid} {event} request held; consultation status unknown; Legal authority unverified; no letting or renewal happened")
+            return gate
 
     def rescope_package(self, user, pid, scope, reason):
         self._need_manager(user, "change a package scope")
@@ -573,6 +582,18 @@ class ProcurementMixin(AppointmentMixin):
             offset = max(0, offset)
             return dict(items=[self._wo_view(w, c, user) for w, c in visible[offset:offset + limit]],
                         total=len(visible), offset=offset, limit=limit)
+
+    def work_order_job_pack(self, user, work_order_id):
+        """Read-only job pack for staff to carry to a worker (#132). No contractor access, no writes."""
+        with self.lock:
+            if projection.is_contractor(user):
+                raise PermissionError("Job packs are issued by staff. Ask the contract manager.")
+            self._work_order_reader(user)
+            w = self._work_order(work_order_id)
+            c = self.cases.get(w["case_id"])
+            if not c:
+                raise ValueError("Choose one of the work orders.")
+            return job_pack.build_job_pack(self._wo_view(w, c, user), c)
 
     def list_packages(self, user, limit=None, offset=0):
         with self.lock:

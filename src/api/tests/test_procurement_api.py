@@ -283,6 +283,33 @@ class ProcurementApi(ProcurementApiFixture):
             with self.assertRaises(PermissionError):
                 self.store.list_packages(self.store.staff[f"{actor}@example.test"])
 
+    def test_job_pack_is_staff_read_only_and_leaks_no_resident_reason(self) -> None:
+        self.assertEqual(self.call(f"/api/packages/{self.pid}/capacity", self.capacity())[0], 200)
+        self.assertEqual(self.call("/api/workorders", self.issue("ZF-1"))[0], 200)
+        route = "/api/workorders/WO-0001/job-pack"
+        before = json.dumps(self.call("/api/workorders")[1], sort_keys=True)
+        code, pack = self.call(route)
+        self.assertEqual(code, 200)
+        self.assertEqual(pack["order"], "WO-0001")
+        self.assertFalse(pack["ready"], "not appointed yet")
+        self.assertIn("do not start work", pack["not_ready_reason"])
+        self.assertTrue(pack["checklists"])
+        self.assertIn(
+            pack["access"], ("Notice needed before the visit", "No special notice recorded")
+        )
+        resident = self.store.cases["ZF-1"]["resident"]
+        text = json.dumps(pack).lower()
+        for key in ("reason", "health", "vulnerab", "notes"):
+            self.assertNotIn(f'"{key}"', text)
+        for value in (v for v in resident.values() if isinstance(v, str) and len(v) > 8):
+            self.assertNotIn(value.lower(), text)
+        self.assertEqual(json.dumps(self.call("/api/workorders")[1], sort_keys=True), before)
+        self.assertEqual(self.call("/api/workorders/WO-9999/job-pack")[0], 404)
+        for actor in ("kim", "kai"):
+            self.assertEqual(self.call(route, actor=actor)[0], 403, actor)
+        with self.assertRaises(PermissionError):
+            self.store.work_order_job_pack(self.store.staff["kim@example.test"], "WO-0001")
+
     def test_lifecycle_http_has_issuer_for_every_change(self) -> None:
         self.assertEqual(self.call(f"/api/packages/{self.pid}/capacity", self.capacity())[0], 200)
         self.assertEqual(self.call("/api/workorders", self.issue("ZF-3"))[0], 200)

@@ -506,6 +506,22 @@ real observations yet. Tests: `tests/test_candidate_comparison.py` (synthetic
 fixtures, not model or staff evidence). Held-out data, live calls, regional
 model confirmation and Finance validation remain open.
 
+### Held-out freeze check (#108, 2026-11-04)
+
+`zava_forward.agents.heldout_freeze.check_freeze` is a pure, offline check run
+before any evaluation. It returns `frozen` or `insufficient` with every gap
+listed, plus a manifest digest. It requires recorded task, model, prompt,
+policy and source versions; a held-out split with seed, denominator equal to
+the case count, expected outcome per case, defined critical errors and a
+labeller who differs from the prompt author; explicitly recorded prompt and
+tuning case ids that do not overlap the held-out cases; cohorts that are
+subsets of the split and meet the minimum sample; and thresholds with named
+approval bound to the manifest digest (any later change voids the approval).
+`frozen` only permits an evaluation to start. It is not an evaluation, a model
+or threshold approval, or authority for actual calls, and constructed fixtures
+are not held-out evidence. No runner supplies a real manifest yet. Tests:
+`tests/test_heldout_freeze.py` (synthetic fixtures).
+
 ### Meaningful human-review protocol (#223; proposed, Not run)
 
 Status: PROPOSED preparation for owner review, written 2026-10-21 under the
