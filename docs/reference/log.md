@@ -10382,6 +10382,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   designs, blocked). Criterion 1 stays unmet: only human steps remain (supplied
   versioned designs, named design review, assistive-technology, content and user
   evidence). Evidence is under `.copilot-tracking/` (2026-11-04 issue-156 delta).
+## [2026-11-04] update | Issue 145 status record (Refs #145)
+
+* Rechecked merged PR 673: criteria 1 (SQL tier, auto-pause and redundancy parameters, pilot recorded) and 3 (RTO and RPO undecided with owners) are delivered. Criterion 2 (PITR and ledger result) stays unmet: no authorised disposable Azure database. Criterion 4 stays unmet pending the approved #121 retention decisions. All RAI restore and erasure criteria stay unmet: they need the authorised drill, DPO and record-owner approval and independent witnesses; SQLite regressions are lower-tier evidence. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-145 record).
 ## [2026-11-04] update | Issue 154 status record (Refs #154)
 
 * Rechecked merged PRs 501, 652, 664 and 712 and the resident preview tests. Criteria 1 and 4 are delivered. Criteria 2, 3 and 5 stay unmet: actual service availability and assistive-technology acceptance, resident-session enforcement of representative views, and usability validation (#155 scripts not run). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-154 r1).
@@ -10394,6 +10397,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 189 status record (Refs #189)
 
 * Rechecked merged PRs 508, 637, 707, 845 and 1092. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: owner, time limit and alert reference are enforced offline, but a live Azure budget alert and notification are not verified (#146, human/Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-189 r2).
+
 ## [2026-11-04] update | Issue 155 usability programme status (Refs #155)
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
