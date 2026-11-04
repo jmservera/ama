@@ -10352,6 +10352,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 311, 893 and 1036: criteria 1 and 2 are delivered, and core ageing plus the read-only unaccepted-handoff route exist. Criterion 3 stays unmet because the Housing and repairs leads have not approved response times and out-of-hours routes (OD-09). No limit was defaulted and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-83 r6).
 
+## [2026-11-04] update | Issue 163 status record (Refs #163)
+
+* Rechecked merged PRs for chat and memory privacy: criteria 1, 3, 4 and 6 stay evidenced. Criteria 2 and 5 stay unmet and need the DPO and Legal decisions D1 to D8 and provider terms acceptance. No period or decision was set and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-163 status).
+
 ## [2026-11-04] update | Issue 220 criterion 5 status record (Refs #220)
 
 * Recorded in `src/core/README.md` which #220 criteria are delivered (1 to 4) and that criterion 5 awaits human acceptance, live hazard-response measurement and an owner-approved follow-up age limit. Nothing ticked or closed.
