@@ -10133,3 +10133,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Agents worker run loop, criterion 1 still unmet (Refs #144)
 
 * Added a tested cooperative run loop and a fail-closed `serve` command for the agents worker (`src/agents`), and updated the hosting status row in `infra/README.md`. `serve` refuses to start because the queue adapter and API post-back do not exist. Criteria 1, 3 and 4 and the Azure restore proof stay unmet. Focused tests only; no gate, image build or Azure run. Evidence under `.copilot-tracking/` (2026-11-04 issue-144-worker-run-loop).
+## [2026-11-04] add | Acceptance register for AC-034 to AC-043 (Refs #134)
+
+* New `journey_acceptance` register in `src/core` records each of AC-034 to AC-043 as partial (named constructed-fixture evidence) or deferred (with reason); none is recorded as passing, and the check blocks missing criteria, reasons or evidence files. Eleven perspective walkthroughs, the store journey test and screen/accessibility evidence stay unmet. Focused tests only; no gate, browser or assistive-technology run. Evidence under `.copilot-tracking/` (2026-11-04 journey-contract-134-r6).
