@@ -7,7 +7,7 @@ import unittest
 from datetime import UTC, datetime
 from typing import Any
 
-from test_heldout_freeze import manifest
+from heldout_freeze_fixture import manifest
 from zava_forward.agents.candidate_comparison import compare_candidates
 
 NOW = datetime(2026, 11, 3, 9, tzinfo=UTC)
