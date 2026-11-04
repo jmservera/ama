@@ -10423,3 +10423,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 138 status record (Refs #138)
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
+
+## [2026-11-04] update | Issue 96 status record (Refs #96)
+
+* Rechecked merged PRs 377, 510, 888, 902 and 1083 and open PR 1093. Criteria 2, 3 and 4 stay met. The inherited review defects RV-001 and RV-002 are fixed in current code and covered by tests (original review left unchanged). Criteria 1, 5 and 6 stay unmet: they need an approved template, rules and reviewer authority from the Finance/template owner, so no reviewed export or rule/approval stale propagation can be built. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-96 r3).
