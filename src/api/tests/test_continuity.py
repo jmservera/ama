@@ -7,9 +7,13 @@ import unittest
 from unittest import mock
 
 import test_mvp
-from test_assistants import Base, Provider, canonical, proposal
+from test_assistants import Base, Provider, canonical, config, proposal
 from zava_forward.api.server import CHAT_TASK, chat_admission
-from zava_forward.core import continuity
+from zava_forward.agents.chat import ChatModel
+from zava_forward.agents.dispatch import AgentWorker
+from zava_forward.core import chat_demo_meter, continuity
+from zava_forward.core.ai_consumption import CallContext, call_context, reference
+from zava_forward.core.chat_panel import ModelUnavailable
 from zava_forward.core.ai import Ai
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.store import Store
@@ -298,3 +302,90 @@ class ChatAdmissionOnSqlStore(Base):
             store = self.open_store()
             self.addCleanup(store.db.close)
             self.assertIn("task is not registered", chat_admission(store))
+
+
+class ChatDemoMeterOnSqlStore(Base):
+    """The financial meter on the real SqlStore and ledger: the demo path admits one chat call; without the switch it is held (#891)."""
+    ENV = {"AI_ENDPOINT": "https://ai.invalid", "ZF_DEPLOYMENT_PROFILE": "demo"}
+    DEMO_ON = dict(ENV, ZF_CHAT_DEMO_ACTIVATION="approved-2026-11-03")
+
+    class Response:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *exc):
+            return False
+
+        def read(self, n=-1):
+            return json.dumps(dict(model="unattested", choices=[dict(message=dict(content="ok"))],
+                                   usage=dict(prompt_tokens=10, completion_tokens=2, total_tokens=12,
+                                              prompt_tokens_details=dict(cached_tokens=0)))).encode()
+
+    def chat_model(self, env):
+        with mock.patch.dict(os.environ, env):
+            store = self.open_store()
+        self.addCleanup(store.db.close)
+        service = Assistants(store, config())
+        self.addCleanup(service.stop)
+        self.assertIsInstance(store.ai, Ai)
+        store.ai.token, store.ai.expires = "synthetic-token", 4e9
+        self.assertIs(store.ai.consumption, service.consumption)
+        model = ChatModel(AgentWorker(lambda *args: store.ai.evidence(*args)), admission=lambda: chat_admission(store))
+        return store, service, model
+
+    def ask(self, env):
+        store, service, model = self.chat_model(env)
+        with mock.patch.dict(os.environ, env), \
+                mock.patch("urllib.request.urlopen", return_value=self.Response()) as opened:
+            root = reference("question")
+            context = CallContext(root, root, CHAT_TASK, "retrofit-case", reference(CHAT_TASK), reference("system"))
+            try:
+                with call_context(context):
+                    reply = model("system", "Question: status?")
+            except ModelUnavailable as error:
+                reply = error
+        return service, reply, opened.call_count
+
+    def kinds(self, service):
+        with service.transaction() as db:
+            return [json.loads(row[0])["kind"] for row in db.execute("SELECT body FROM assistant_events")]
+
+    def test_demo_path_seeds_synthetic_records_and_admits_exactly_one_call(self):
+        service, reply, sent = self.ask(self.DEMO_ON)
+        self.assertEqual((reply.text, sent, reply.calls), ("ok", 1, 1))
+        with service.transaction() as db:
+            records = [json.loads(row[0]) for row in db.execute("SELECT body FROM assistant_events")]
+        self.assertEqual([r["kind"] for r in records], ["price", "authority", "reserved", "completed"])
+        price, authority = records[0], records[1]
+        self.assertTrue(price["synthetic"])
+        self.assertEqual((authority["max_calls"], authority["budgets"][0]["calls"]), (1, chat_demo_meter.CALLS))
+        self.assertGreater(authority["end"], authority["start"])
+
+    def test_demo_path_holds_a_second_call_in_the_same_request(self):
+        store, service, _ = self.chat_model(self.DEMO_ON)
+        root = reference("one-question")
+        with mock.patch.dict(os.environ, self.DEMO_ON), \
+                mock.patch("urllib.request.urlopen", return_value=self.Response()):
+            chat_admission(store)
+            outcomes = []
+            for attempt in ("first", "second"):
+                context = CallContext(root, reference(attempt), CHAT_TASK, "retrofit-case", reference(CHAT_TASK), reference("s"))
+                with call_context(context):
+                    outcomes.append(store.ai.evidence("system", "q", 600)["outcome"])
+        self.assertEqual(outcomes, ["returned", "financial-held"])
+        self.assertEqual(self.kinds(service).count("reserved"), 1)
+
+    def test_without_the_switch_nothing_is_seeded_and_the_call_is_refused(self):
+        service, reply, sent = self.ask(self.ENV)
+        self.assertIsInstance(reply, ModelUnavailable)
+        self.assertEqual((sent, self.kinds(service)), (0, []))
+
+    def test_synthetic_price_still_holds_a_live_call_outside_the_demo(self):
+        store, service, _ = self.chat_model(self.ENV)
+        with mock.patch.dict(os.environ, self.DEMO_ON):
+            chat_demo_meter.ensure(store, 600)
+        store.ai.synthetic_price_capabilities = frozenset()
+        context = CallContext(reference("r"), reference("a"), CHAT_TASK, "retrofit-case", reference(CHAT_TASK), reference("s"))
+        with mock.patch("urllib.request.urlopen", return_value=self.Response()) as opened, call_context(context):
+            envelope = store.ai.evidence("system", "q", 600)
+        self.assertEqual((envelope["outcome"], envelope["reason"], opened.call_count), ("financial-held", "price-unknown", 0))
