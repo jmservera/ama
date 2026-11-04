@@ -69,6 +69,7 @@ MSSQL_DDL = (
 )
 MSSQL_INDEX = ("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_time_user' AND object_id = OBJECT_ID(N'time_entry')) "
                "CREATE INDEX ix_time_user ON time_entry (user_code, id)")
+VERSIONED_TABLES = ("time_request", "time_enabled")
 TABLES = ("time_entry", "time_request", "time_enabled", "notice_ack")
 
 
@@ -119,9 +120,16 @@ class TimeCapture:
                 for ddl in MSSQL_DDL:
                     db.execute(f"IF OBJECT_ID(N'{ddl.split()[2]}', N'U') IS NULL {ddl}")
                 db.execute(MSSQL_INDEX)
+                for table in VERSIONED_TABLES:
+                    db.execute(f"IF COL_LENGTH(N'{table}', N'notice_version') IS NULL "
+                               f"ALTER TABLE {table} ADD notice_version NVARCHAR(50) NOT NULL DEFAULT N''")
             else:
                 for ddl in SQLITE_DDL:
                     db.execute(ddl)
+                for table in VERSIONED_TABLES:
+                    cols = [r[1] for r in db.execute(f"PRAGMA table_info({table})").fetchall()]
+                    if "notice_version" not in cols:
+                        db.execute(f"ALTER TABLE {table} ADD COLUMN notice_version TEXT NOT NULL DEFAULT ''")
             self.ready = True
 
     def _top(self, n):

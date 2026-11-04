@@ -81,6 +81,22 @@ class TimeTests(unittest.TestCase):
             t.acknowledge(u)
         return t
 
+    def test_existing_database_without_notice_version_is_upgraded(self):
+        old = sqlite3.connect(self.db)
+        old.execute("CREATE TABLE time_request (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, by_role TEXT NOT NULL, "
+                    "dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)")
+        old.execute("CREATE TABLE time_enabled (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, by_role TEXT NOT NULL, "
+                    "requested_by TEXT NOT NULL, requested_role TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)")
+        old.commit()
+        old.close()
+        t = self.on(SAM)
+        self.assertTrue(t.status(SAM)["enabled"])
+        for _ in range(2):
+            with t._conn() as db:
+                for table in ("time_request", "time_enabled"):
+                    cols = [r[1] for r in db.execute(f"PRAGMA table_info({table})").fetchall()]
+                    self.assertEqual(cols.count("notice_version"), 1)
+
     def test_off_by_default_and_nothing_is_written(self):
         t = self.tc()
         self.assertFalse(t.status()["enabled"])
