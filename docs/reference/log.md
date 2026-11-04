@@ -10256,3 +10256,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Deployed HTTP/1.1 keep-alive image, override removed (Refs #810)
 
 * Built `zava-forward-api:4d56cf609` from main `4d56cf609` and pushed it to the private registry through the owner-allowed short public window (restored and read back: Deny, public disabled, exports disabled, no IP rules). `ca-cutover-test-demo-api` revision `--0000024` runs it with no command/args override. Burst tests through Easy Auth (2,140 requests including 200 unauthenticated 401s) gave 0 empty-body 500s. See `infra/README.md`.
+
+## [2026-11-04] update | Fourth stabilization checkpoint on main fab02307 (Refs #440)
+
+* Added a bounded local checkpoint to `docs/architecture/cutover-evidence-pack.md` (323 commits since b18f7f98; ruff, format, mypy in five projects, ADR 0006 and focused API auth, keep-alive, AI-boundary tests passed). Full suites, benchmarks, SQL Server, Docker, browsers and the gate were not run.
+* #440 criterion 8 (Major HVE behavior and host validation) remains unmet. No issue is closed.
