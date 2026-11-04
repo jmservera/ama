@@ -1,7 +1,7 @@
 ---
 title: Equity, journey ownership and user research test plan (issue 128)
 description: Test plan, status and blank human records for accessibility, unfair-exclusion and journey-ownership checks, with the aggregate-only user research protocol draft
-ms.date: 2026-11-03
+ms.date: 2026-11-04
 ms.topic: reference
 ---
 
@@ -35,6 +35,14 @@ Related evidence that already exists:
   support or an incomplete appointment to a human review route with reasons.
   The route carries no score and has no effect on rank or service. It counts
   review burden per reason, in aggregate.
+* `zava_forward.core.paired_equity` (second slice) checks constructed pairs that
+  differ in one attribute only: sensor completeness, support or contact need, or
+  appointment history. A pair passes when the subject is ranked no lower than the
+  reference under the deterministic policy and its review route has no rank
+  effect. Results are per dimension, never averaged; a dimension with no pairs or
+  any failure blocks, and a seeded defect that is not detected blocks. It covers
+  the deterministic policy only, takes the ranker as input so a non-AI comparison
+  stays transparent, approves nothing and is not fairness evidence.
 
 ## Test plan
 
@@ -83,3 +91,6 @@ Agreement record:
 * User research protocol agreed, aggregate only: unmet, draft only.
 * RAI cohort criteria: ranking cohorts delivered earlier (#222); AI task
   cohorts, geography and archetype, and approved thresholds remain unmet.
+  Paired-cohort checks for the deterministic policy now exist
+  (`paired_equity`); expected pair labels still need independent human
+  approval, so no cohort criterion is met.
