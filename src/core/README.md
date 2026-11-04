@@ -38,6 +38,11 @@ owned workflow-only alerts. It does not copy historical proposal text into the
 consumption stream. Historical calls and the separate resident SQL accounting
 remain explicitly unjoined.
 
+`report(...)["by_capability"]` attributes, per assistant capability, calls,
+proposals, measured total tokens, human-accepted proposals and mean tokens per
+accepted proposal. Any value without complete measured tokens or an accepted
+proposal is `Unknown`; it carries no case content and no price or cost.
+
 An operator can supply `price(...)`, `authorize(...)` and `billing(...)` evidence
 through this Python interface on a constructed/local or separately authorised
 store. These methods do not retrieve prices, grant spend, verify an invoice,
