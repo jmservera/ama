@@ -120,8 +120,12 @@ class ExceptionQueue:
         summary: str,
         values: Iterable[Mapping[str, str]],
         original_source: object,
+        ref: str | None = None,
     ) -> Record:
-        """Record two or more different values, each with its source, date and version."""
+        """Record two or more different values, each with its source, date and version.
+
+        A repeated ref for the same kind returns the existing item, so a feed can be re-read safely.
+        """
         if kind not in CONFLICT_KINDS:
             raise ValueError("Kind must be identity_conflict or source_conflict.")
         shown = [
@@ -130,7 +134,15 @@ class ExceptionQueue:
         ]
         if len({v["value"] for v in shown}) < 2:
             raise ValueError("A conflict needs at least two different values.")
-        return self._add(kind, owner, summary, original_source, {"values": shown})
+        key = _text(ref, "Ref") if ref is not None else None
+        if key is not None:
+            for item in self._items.values():
+                if item["kind"] == kind and item.get("ref") == key:
+                    return deepcopy(item)
+        extra: Record = {"values": shown}
+        if key is not None:
+            extra["ref"] = key
+        return self._add(kind, owner, summary, original_source, extra)
 
     def raise_failure(
         self,

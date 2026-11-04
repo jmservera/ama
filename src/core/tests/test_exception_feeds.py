@@ -5,6 +5,7 @@ import unittest
 from zava_forward.core.exception_feeds import (
     feed_failed_ai_runs,
     feed_failed_imports,
+    feed_stock_conflicts,
     feed_stranded_tasks,
     feed_unaccepted_handoffs,
 )
@@ -50,7 +51,53 @@ def batch(bid: str, status: str, **fields: object) -> dict[str, object]:
     return {**base, **fields}
 
 
+def side(value: object, source: str, version: str) -> dict[str, object]:
+    return {
+        "value": value,
+        "source_id": source,
+        "date": "2026-10-01",
+        "version": version,
+        "validation_state": "Unvalidated",
+    }
+
+
+def stock_case(cid: str, **fields: object) -> dict[str, object]:
+    query = {
+        "id": "SQ-1",
+        "field": "built",
+        "left": side(1950, "survey", "2"),
+        "right": side(1965, "register", "7"),
+        "query_owner": {"name": "Pat Owner"},
+    }
+    return {"id": cid, "closed": False, "stock_reconciliation": [query], **fields}
+
+
 class ExceptionFeedTests(unittest.TestCase):
+    def test_stock_conflicts_show_both_values_and_dedupe(self) -> None:
+        q = make()
+        cases = [
+            stock_case("C1"),
+            stock_case("C2", closed=True),
+            stock_case(
+                "C3", stock_reconciliation_events=[{"query_id": "SQ-1", "status": "Reconciled"}]
+            ),
+            {"id": "C4", "closed": False},
+        ]
+        raised = feed_stock_conflicts(q, cases, "Sam Steward")
+        self.assertEqual(len(raised), 1)
+        self.assertEqual(raised[0]["kind"], "source_conflict")
+        again = feed_stock_conflicts(q, cases, "Sam Steward")
+        self.assertEqual(again[0]["id"], raised[0]["id"])
+        view = q.conflict_view("Sam Steward", raised[0]["id"])
+        self.assertEqual(view["resolution_owner"], "Sam Steward")
+        self.assertEqual(view["eligibility"], "Unknown")
+        self.assertEqual(
+            [(v["value"], v["source"], v["date"], v["version"]) for v in view["values"]],
+            [("1950", "survey", "2026-10-01", "2"), ("1965", "register", "2026-10-01", "7")],
+        )
+        self.assertEqual(view["original_source"]["query_owner"], "Pat Owner")
+        self.assertEqual(q.queue("Olive Operator"), [])
+
     def test_failed_imports_keep_source_not_rows_and_dedupe(self) -> None:
         q = make()
         batches = [batch("b1", "rejected"), batch("b2", "approved"), batch("b3", "staged")]

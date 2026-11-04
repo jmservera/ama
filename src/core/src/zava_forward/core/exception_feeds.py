@@ -173,3 +173,52 @@ def feed_failed_imports(
             )
         )
     return raised
+
+
+def feed_stock_conflicts(
+    queue: ExceptionQueue, cases: Iterable[Mapping[str, Any]], owner: str
+) -> list[Record]:
+    """Raise a source_conflict item per unresolved stock query on an open home (stock.py, #84).
+
+    Both competing values keep their source, date and version. The queue picks no winner and
+    changes nothing on the case; the named steward owns the resolution and the case keeps the
+    original query. Eligibility stays Unknown.
+    """
+    from .stock import query_status
+
+    raised: list[Record] = []
+    for case in cases:
+        if case.get("closed"):
+            continue
+        case_id = str(case.get("id", ""))
+        for query in case.get("stock_reconciliation", []):
+            if query_status(case, query["id"]) != "Unresolved":
+                continue
+            sides = [query["left"], query["right"]]
+            raised.append(
+                queue.raise_conflict(
+                    "source_conflict",
+                    owner,
+                    f"Stock {query['field']} differs between sources "
+                    f"for case {case_id or UNKNOWN}.",
+                    [
+                        {
+                            "value": str(s["value"]),
+                            "source": str(s["source_id"]),
+                            "date": str(s["date"]),
+                            "version": str(s["version"]),
+                        }
+                        for s in sides
+                    ],
+                    {
+                        "case_id": case_id,
+                        "query_id": query["id"],
+                        "field": query["field"],
+                        "query_owner": (query.get("query_owner") or {}).get("name"),
+                        "left": dict(query["left"]),
+                        "right": dict(query["right"]),
+                    },
+                    ref=f"stock:{case_id}:{query['id']}",
+                )
+            )
+    return raised
