@@ -10336,3 +10336,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 193 status record (Refs #193)
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
+
+## [2026-11-04] update | Issue 188 status record (Refs #188)
+
+* Rechecked merged PRs 587, 645, 698, 791, 847 and 889. Local handover model, operator verifier and demo are delivered, but all three criteria stay unmet: each needs a live Hub to Azure SQL run, blocked on the #110 owner decisions and Azure access. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-188 r8).
