@@ -255,6 +255,20 @@ Original adverse verdict remains; coordinator final independent closure is
 pending, not inferred from local checks. No private roster/stock, continuing
 data, original case, live-model or Azure action was used for this audit.
 
+## Finance screens delivery status (2026-11-04, #225)
+
+Merged engineering evidence covers the invoice and funding claim pack reader
+screens (#657), invoice exception explanations (#785), the AI economics section
+(#862), keyboard and axe 4.10.3 browser checks (#937) and a constructed field
+draft on the funding screen (#978). The screens are read-only; no submission,
+award or payment is inferred, and AI economics shows Unknown when inputs are
+missing. The research remains desk-based hypothesis, not observed behaviour.
+
+Unmet: the WCAG 2.2 baseline criterion (#151). Conformance needs assistive
+technology testing and human review under #151 and #155, which are open. Engineering
+checks do not establish accessibility acceptance. No price, budget or target
+for AI economics is set (BRD OD-51 is open).
+
 ## Local source keys
 
 * S1: [docs/case_study_48_original.md](../../../../case_study_48_original.md), 2026-09-10, Business Challenge,
