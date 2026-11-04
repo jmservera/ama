@@ -17,6 +17,7 @@ and authorised participants remain open, and the report says so.
 Run: python3 -m zava_forward.agents.review_effectiveness [--json]
 """
 
+import hashlib
 import json
 import os
 import sys
@@ -483,10 +484,34 @@ def pool_human_sessions(sheets: list[dict[str, Any]], golden: Path = GOLDEN) -> 
     """Score several completed sheets and pool detection and total review effort.
 
     Each sheet runs through the same gate on its own. The pool never hides a failed session, and a
-    repeat reviewer code is not an independent reviewer. No sample size or threshold is approved.
+    repeat reviewer code is not an independent reviewer. A sheet whose content is identical to an
+    earlier one is flagged under duplicate_sheets and left out of every total, so effort and
+    detection are not double-counted. No sample size or threshold is approved.
     """
     if not isinstance(sheets, list) or not sheets:
         raise ValueError("at least one completed answer sheet is required")
+    seen: dict[str, int] = {}
+    unique: list[dict[str, Any]] = []
+    duplicates: list[dict[str, Any]] = []
+    for pos, sh in enumerate(sheets):
+        try:
+            canon = json.dumps(sh, sort_keys=True, separators=(",", ":"), default=str)
+        except (TypeError, ValueError):
+            canon = repr(sh)
+        digest = hashlib.sha256(canon.encode("utf-8")).hexdigest()
+        if digest in seen:
+            duplicates.append(
+                dict(
+                    position=pos,
+                    duplicate_of=seen[digest],
+                    reviewer_code=str(sh.get("reviewer_code")) if isinstance(sh, dict) else None,
+                    fingerprint=digest[:12],
+                )
+            )
+            continue
+        seen[digest] = pos
+        unique.append(sh)
+    sheets = unique
     results = [score_human_session(sh, golden) for sh in sheets]
     by_class: dict[str, dict[str, int]] = {}
     for res in results:
@@ -514,6 +539,10 @@ def pool_human_sessions(sheets: list[dict[str, Any]], golden: Path = GOLDEN) -> 
             for code, r in zip(codes, results, strict=True)
         ],
         session_count=len(results),
+        duplicate_sheets=duplicates,
+        duplicate_note=f"{len(duplicates)} identical sheet(s) flagged and excluded from totals"
+        if duplicates
+        else "no duplicate sheets detected",
         distinct_reviewers=len(set(codes)),
         sessions_passed=sum(r["gate_passed"] for r in results),
         all_sessions_passed=all(r["gate_passed"] for r in results),

@@ -397,6 +397,17 @@ class HumanSessionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             re_.pool_human_sessions([])
 
+    def test_pool_flags_a_duplicate_sheet_and_does_not_double_count_it(self) -> None:
+        once = re_.pool_human_sessions([self._sheet("competent")])
+        twice = re_.pool_human_sessions([self._sheet("competent"), self._sheet("competent")])
+        self.assertEqual(twice["session_count"], 1)
+        self.assertEqual(len(twice["duplicate_sheets"]), 1)
+        self.assertEqual(twice["duplicate_sheets"][0]["position"], 1)
+        self.assertEqual(twice["duplicate_sheets"][0]["duplicate_of"], 0)
+        self.assertEqual(twice["effort_comparison"], once["effort_comparison"])
+        self.assertEqual(twice["by_defect_class"], once["by_defect_class"])
+        self.assertEqual(once["duplicate_sheets"], [])
+
     def test_pool_fails_a_session_from_a_reviewer_without_defined_authority(self) -> None:
         other = self._sheet("competent")
         other["reviewer_code"] = "EV-02"
