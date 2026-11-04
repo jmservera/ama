@@ -10355,6 +10355,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 311, 893 and 1036: criteria 1 and 2 are delivered, and core ageing plus the read-only unaccepted-handoff route exist. Criterion 3 stays unmet because the Housing and repairs leads have not approved response times and out-of-hours routes (OD-09). No limit was defaulted and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-83 r6).
 
+## [2026-11-04] update | Issue 163 status record (Refs #163)
+
+* Rechecked merged PRs for chat and memory privacy: criteria 1, 3, 4 and 6 stay evidenced. Criteria 2 and 5 stay unmet and need the DPO and Legal decisions D1 to D8 and provider terms acceptance. No period or decision was set and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-163 status).
+
 ## [2026-11-04] update | Issue 220 criterion 5 status record (Refs #220)
 
 * Recorded in `src/core/README.md` which #220 criteria are delivered (1 to 4) and that criterion 5 awaits human acceptance, live hazard-response measurement and an owner-approved follow-up age limit. Nothing ticked or closed.
@@ -10466,6 +10470,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
 
+## [2026-11-04] update | Aftercare sensor context guard (Refs #133)
+
+* Added `add_sensor_context` and a neutral-text guard on sensor context to the aftercare register; README note updated. Criteria 1, 2, 4 and 6 stay unmet in full, 3 and 5 only partly evidenced (register level). Evidence under `.copilot-tracking/` (2026-11-04 issue-133 sensor-context).
 ## [2026-11-04] update | Issue 125 drafting guard slice (Refs #125)
 
 * Added `discovery_assistant_drafting` to `src/core` (deterministic stage durations, draft-only narrative checked against calculated figures, deterministic fallback when no model is available) and a README section. Criteria 1 to 3 stay unmet and need human or deployment evidence. Evidence under `.copilot-tracking/` (issue-125-r6).
@@ -10540,6 +10547,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 411, 508 and 910. Criteria 2 to 5 stay ticked. Criterion 1 stays unmet: offline per-device identity, schema version and stable reading ID code and tests exist, but no real distinct Hub identities were issued and no live stream was observed (tier, sizing, cost, network and device credential owner decisions; #140; human/Azure steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-110 r2).
 
+## [2026-11-04] update | Issue 151 table headers and captions (Refs #151)
+
+* Audited every script-built workbench table in `src/api`: added captions and `scope="col"` to the funding queue, resident decisions, finance queue, contractors, team workload and sign-off tables, guarded by a static test, and updated the Tables row of `docs/reference/research/ux/wcag-conformance-baseline.md`. Criteria 1, 2, 4 and 5 stay unmet (owner level decision, full audit, human assistive-technology checks); nothing ticked or closed. Evidence under `.copilot-tracking/` (2026-11-04 issue-151 table-headers).
 ## [2026-11-04] update | Plain-language consultation and restart check wording, slice 3 (Refs #153)
 
 * Reworded the procurement consultation refusal and check reason and the gates.py restart checks from "release this hold" to "clear this stop" or "restart this stopped work", with a next action for Legal; added a lexical test and a dated paragraph in the [content standard](./research/ux/content-standard.md). Consultation status stays unknown; no approval or authority rule changed. Criteria 2, 3 and 5 remain unmet; named human review not run. Evidence under `.copilot-tracking/` (2026-11-04 issue-153 consultation gate wording).
