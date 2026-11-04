@@ -121,7 +121,13 @@ def export_freshness(store: Any, user: Record, case_id: str, saved: Record) -> R
                 action="Create a new held export from the working review.",
                 reviewed=False,
             )
-        current = draft_export(store, user, case_id, body["draft_id"])
+        try:
+            current = draft_export(store, user, case_id, body["draft_id"])
+        except KeyError:
+            current = dict(
+                status="Unavailable",
+                notice="The working review for this export is missing or belongs to another case.",
+            )
         if current["status"] == "Unavailable":
             return dict(
                 status="Unavailable",

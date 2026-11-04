@@ -4,6 +4,7 @@ import unittest
 from typing import Any
 
 import test_form_review
+from test_form_staging import schema
 from zava_forward.core import form_export, forms
 
 
@@ -97,7 +98,7 @@ class FormExport(unittest.TestCase):
         self.assertEqual(changed["stale_fields"], ["area"])
         self.assertEqual(changed["reasons"], ["Reviewed field inputs changed after this export."])
         saved = self.export(store, draft)
-        forms.register_schema(store, self.actor, dict(test_form_review.schema(), version=2))
+        forms.register_schema(store, self.actor, dict(schema(), version=2))
         newer = form_export.export_freshness(store, self.actor, "ZF-1", saved)
         self.assertEqual(newer["status"], "Stale")
         self.assertEqual(newer["stale_fields"], ["area", "epc"])
@@ -115,6 +116,20 @@ class FormExport(unittest.TestCase):
         self.assertEqual(
             form_export.export_freshness(store, self.actor, "ZF-1", tampered)["status"], "Invalid"
         )
+
+    def test_missing_or_other_case_draft_is_unavailable_not_keyerror(self) -> None:
+        store = self.stores[0]
+        draft, epc, _area = self.prepare(store)
+        saved = self.export(store, self.review(store, draft, epc))
+        other = dict(saved, draft_id="FR-missing")
+        body = {key: other[key] for key in form_export.BODY_KEYS}
+        other["content_sha256"] = form_export._digest(body)
+        for case_id, candidate in (("ZF-1", other), ("ZF-404", saved)):
+            with self.subTest(case_id=case_id):
+                out = form_export.export_freshness(store, self.actor, case_id, candidate)
+                self.assertEqual(out["status"], "Unavailable")
+                self.assertEqual(out["stale_fields"], [])
+                self.assertIs(out["reviewed"], False)
 
 
 if __name__ == "__main__":
