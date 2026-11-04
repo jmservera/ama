@@ -10374,6 +10374,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 126 release decisions carry AI economics (Refs #126)
 
 * Phase and tranche release decisions now require the AI economics report reference and any AI limit breach; a Release with a breach needs the approvers' decision. Tokenomics criterion 3 is engineering-delivered with synthetic fixtures only. Nothing was ticked or closed; protocol, DPIA, lawful basis, OD-51 and RAI closure criteria remain unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-126 r2).
+
 ## [2026-11-04] update | Issue 154 status record (Refs #154)
 
 * Rechecked merged PRs 501, 652, 664 and 712 and the resident preview tests. Criteria 1 and 4 are delivered. Criteria 2, 3 and 5 stay unmet: actual service availability and assistive-technology acceptance, resident-session enforcement of representative views, and usability validation (#155 scripts not run). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-154 r1).
