@@ -80,7 +80,7 @@ each to the registered screen that shows that stage's own state for the same
 case (navigation only, no state is derived or cleared), lists stage 1 as a
 recorded deferral, and states in text when a screen is not installed for the
 signed-in role. It is static and does not render EX-HOME-901 data, so the walk
-across screens with one connected fixture home stays open.
+across screens with one connected fixture home stays open. The offline checker (`src/core`) now also fails when the on-screen stage map and the table below name different stages or screens, so the two cannot drift apart silently.
 
 | Stage | Role screen | What the screen shows for EX-HOME-901 | Boundary |
 | --- | --- | --- | --- |
