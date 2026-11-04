@@ -10052,3 +10052,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Finance browser check covers a constructed field draft (Refs #225)
 
 * Extended `src/api/checks/finance_screens_browser_check.py` with a fourth story: the Funding route and claim pack screen rendered in Chromium with a constructed field draft (routed response in the review view shape) showing a conflicting source candidate, a stale field with reviewed evidence, an Unknown field and Not ready readiness, with keyboard reach, reflow and pinned axe 4.10.3 results. Updated the `src/api/README.md` paragraph. Engineering evidence only; the draft is not server-built, and WCAG/AT acceptance (#151, #155), Fluent 2 conformance (#150) and observed validation stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-225 r2).
+## [2026-11-03] create | Operator suspension drill protocol (Refs #221)
+
+* Added `method/operator-suspension-drill-protocol.md`: witnessed drill steps and a blank record for restart authority and manual fallback evidence. Protocol only: no drill run, no OD-35 authority appointed, no corrective test accepted; #221 criteria 5 and 6 stay unmet. Evidence under `.copilot-tracking/` (2026-11-03 issue-221 r1 drill protocol).
