@@ -589,10 +589,16 @@ def employee_reserved_and_short(page: Page) -> None:
             or box["y"] + box["height"] <= held["y"] + 1
         ), (box, held)
         send = panel.get_by_role("button", name="Send", exact=True)
-        # 320x480 and 640x360 still scroll Send inside the composer on main too (open, not asserted).
         page.set_viewport_size({"width": 1280, "height": 480})
         expect(panel).to_be_visible()
         expect(send).to_be_in_viewport()
+        for width, height in ((320, 480), (640, 360)):
+            page.set_viewport_size({"width": width, "height": height})
+            expect(send).to_be_in_viewport()
+            box, held = panel.bounding_box(), send.bounding_box()
+            assert box and held
+            # Send stays inside the panel, not scrolled out of the composer.
+            assert held["y"] >= box["y"] and held["y"] + held["height"] <= box["y"] + box["height"]
     finally:
         page.set_viewport_size({"width": 1280, "height": 900})
         page.evaluate("document.getElementById('focus-check-note')?.remove()")

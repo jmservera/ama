@@ -439,6 +439,9 @@ The employee chat stays open when focus moves to the page (#568), so the shared
 check asserts that the open panel does not hide external focus, while the
 resident chat still closes. The resident leg at 320px wide is a known open
 finding (Send scrolls out of the viewport inside the consent composer).
+The employee chat keeps the question tools row (agent skill and Send) pinned
+at the bottom of the composer, and the check asserts Send stays inside the
+panel at 320x480 and 640x360 as well as 1280x480.
 
 The focused submit check exercises real Enter and mouse Send with and without
 a case, delayed replies during actual route/session refreshes, exact focus,

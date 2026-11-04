@@ -31,6 +31,7 @@
 .chat-widget textarea{width:100%;min-height:3rem;resize:vertical;max-height:7rem}
 .chat-widget-tools{display:flex;align-items:center;gap:var(--spacingHorizontalS);flex-wrap:wrap}
 .chat-widget-tools select{flex:1 1 9rem;width:0;min-height:2.5rem}
+.chat-widget-composer .chat-widget-tools{position:sticky;bottom:0;background:var(--surface);padding-top:var(--spacingHorizontalS)}
 .chat-widget-tools button{padding:var(--spacingHorizontalS);min-height:2.5rem}
 .chat-widget-status{font-size:.85rem;color:var(--muted);margin:0;flex:none}
 .chat-widget-status:empty{display:none}
