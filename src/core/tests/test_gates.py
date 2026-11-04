@@ -1,7 +1,13 @@
+import copy
+import json
+import tempfile
 import unittest
+from pathlib import Path
 from typing import Any
 
+from dataset import DATA
 from zava_forward.core import gates
+from zava_forward.core.store import GateError, Store
 
 RULE = gates.GateRule("resident", "BRD RULE-002", "2026-01-01", "1", "Reviewer A")
 
@@ -87,6 +93,43 @@ class GateTests(unittest.TestCase):
         self.assertEqual(len(gates.unmet(results)), 3)
         malformed = out({"funding_ok": True, "hazards": [{}]}, [])
         self.assertEqual(malformed["safety"], gates.FAIL)
+
+    def test_evidence_gate(self) -> None:
+        ok = gates.evidence_gate([], "Grants Officer", on="2026-11-04")
+        self.assertEqual(ok.outcome, gates.PASS)
+        bad = gates.evidence_gate(["EPC", "Survey"], "Grants Officer", on="2026-11-04")
+        self.assertEqual(bad.outcome, gates.FAIL)
+        self.assertIn("EPC, Survey", bad.reason)
+        unknown = gates.evidence_gate(None, "Grants Officer", on="2026-11-04")
+        self.assertEqual(unknown.outcome, gates.UNKNOWN)
+        self.assertFalse(gates.transition_allowed([ok, unknown]))
+        self.assertIsNotNone(bad.rule)
+
+    def test_store_evidence_missing_is_unknown_when_malformed(self) -> None:
+        self.assertIsNone(Store._evidence_missing({}))
+        self.assertEqual(
+            Store._evidence_missing({"documents": [{"kind": "EPC"}]}),
+            ["Survey", "Design", "Consent"],
+        )
+
+    def test_booking_refused_when_evidence_missing_or_malformed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "zavaforward.json"
+            path.write_text(json.dumps(DATA))
+            store: Any = Store(str(path))  # type: ignore[no-untyped-call]
+            for documents, expected in (
+                ([], "EPC, Survey, Design, Consent"),
+                ([{"kind": "EPC"}], "Survey, Design, Consent"),
+                ([{}], None),
+            ):
+                case = copy.deepcopy(store._case("ZF-3"))
+                case["documents"] = documents
+                with self.assertRaises(GateError) as ctx:
+                    store.require_booking_gates(case)
+                reasons = str(ctx.exception)
+                self.assertIn("Grants and Evidence Officer", reasons)
+                if expected:
+                    self.assertIn(expected, reasons)
 
 
 if __name__ == "__main__":

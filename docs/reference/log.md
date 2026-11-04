@@ -10297,10 +10297,14 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Plain-language safety restart refusals, slice 2 (Refs #153)
 
 * Reworded raised refusals in `workflows.py` and `hazard.py` from "retrofit hold" to "stopped retrofit work" and "restart", with next action; added a lexical test in `test_content_standard.py`; recorded in `content-standard.md`. Stored values unchanged. Criteria 2, 3 and 5 remain unmet; named human wording review not run.
+
 ## [2026-11-04] update | Live deploy of resident redesign and demo end date (Refs #462, Refs #521)
 
 * Deployed main `8b9553d8b` to `ca-cutover-test-demo-api` (`--0000025`) and `ca-resident-demo` (`--0000010`) through the short registry window; set `ZF_DEMO_EXPIRES_AT` to `2028-01-01T00:00:00Z` (was `2027-01-31T23:59:00Z`). Recorded in `infra/README.md` and the prototype profile review. Sensors section showed the fail-closed message only, filed as #1072. No issue is closed.
 
+## [2026-11-04] update | Held-out gate fails closed on an empty set (Refs #164)
+
+* `chat_heldout.run_heldout` and `freeze_problems` now report "no scenarios in the held-out set" and return `insufficient` instead of `pass` for a digest-matching empty set; `_shingles` treats texts shorter than six words as one shingle. Offline, scripted harness only; no held-out set, reviewer or actual-model evidence exists, so #164 stays open.
 ## [2026-11-04] update | Name the changed fields on stale form manifests (Refs #98)
 
 * `form_review.view` `diagnostic_freshness` now lists `changed_fields`, the fields whose reviewed value or state differ from each saved manifest, so only those need re-review. Documented in `src/core/README.md`. Core only; criteria 2 (approved rules) and 3 (reviewed pack) remain unmet and need Finance/template owner authority. No issue is closed.
@@ -10308,6 +10312,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Corrected the IoT sensor research plan: production #111 and #133 modules exist and #996/#1032 tests drive the retrofit exercise scenarios through them, so the 2026-11-03 "do not exist" note is superseded. Criterion 3 is evidenced for test use only; the residual gap is no before and after delta consumption. Nothing ticked or closed.
 
+## [2026-11-04] update | Booking evidence gate CI fix and refusal test (Refs #82)
+
+* Typed `Store._evidence_missing` to clear the mypy `no-untyped-call` failures in `test_gates.py`, and added a behavioural test that `require_booking_gates` refuses booking when evidence is missing or malformed. Documented in `src/core/README.md`. No behaviour change; no issue criteria ticked or closed.
 ## [2026-11-04] update | Issue 119 status record (Refs #119)
 
 * Added a dated status record to the map tile provider options page. Both acceptance criteria remain unmet and need human, legal and procurement steps. Nothing ticked or closed.
@@ -10367,6 +10374,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 176 status record (Refs #176)
 
 * Rechecked merged PRs 237, 257, 309, 368, 633, 703, 843 and 1052. All available generators replay byte for byte; criteria 1 and 2 stay unmet only because the original private stock register generator and pinned inputs are absent. Added a status record to the retrofit synthetic data README.
+## [2026-11-04] update | Second design traceability delta (Refs #156)
+
+* Added a second dated delta to the
+  [prototype profile review](./research/ux/zava-forward-prototype-profile-review.md#second-delta-2026-11-04-156)
+  covering 22 issues above #810: 4 new screen traces (#891, #1053, #1054,
+  #1072), 4 fixes to existing screens and 14 no-screen items. The split reads
+  titles, labels and state only and awaits owner confirmation. The gate register
+  and `tools/check-design-trace.py` are unchanged (74 screen issues, 0 supplied
+  designs, blocked). Criterion 1 stays unmet: only human steps remain (supplied
+  versioned designs, named design review, assistive-technology, content and user
+  evidence). Evidence is under `.copilot-tracking/` (2026-11-04 issue-156 delta).
+## [2026-11-04] update | Issue 145 status record (Refs #145)
+
+* Rechecked merged PR 673: criteria 1 (SQL tier, auto-pause and redundancy parameters, pilot recorded) and 3 (RTO and RPO undecided with owners) are delivered. Criterion 2 (PITR and ledger result) stays unmet: no authorised disposable Azure database. Criterion 4 stays unmet pending the approved #121 retention decisions. All RAI restore and erasure criteria stay unmet: they need the authorised drill, DPO and record-owner approval and independent witnesses; SQLite regressions are lower-tier evidence. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-145 record).
 ## [2026-11-04] update | Issue 154 status record (Refs #154)
 
 * Rechecked merged PRs 501, 652, 664 and 712 and the resident preview tests. Criteria 1 and 4 are delivered. Criteria 2, 3 and 5 stay unmet: actual service availability and assistive-technology acceptance, resident-session enforcement of representative views, and usability validation (#155 scripts not run). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-154 r1).
@@ -10379,3 +10400,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 189 status record (Refs #189)
 
 * Rechecked merged PRs 508, 637, 707, 845 and 1092. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: owner, time limit and alert reference are enforced offline, but a live Azure budget alert and notification are not verified (#146, human/Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-189 r2).
+
+## [2026-11-04] update | Issue 155 usability programme status (Refs #155)
+
+* Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
