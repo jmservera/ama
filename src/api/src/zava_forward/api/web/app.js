@@ -438,6 +438,10 @@ async function route() {
   if (hash === "#/visits") return await visitsView();
   if (hash === "#/funding") return await fundingView();
   if (hash === "#/finance") return await financeQueueView();
+  if (me.services?.cases === false) {
+    return show(h("h1", {}, "No case work for this account"),
+      h("p", { role: "status" }, "This account manages the application and has no case access. Case lists are not shown and nothing is waiting on you here. Ask a programme owner if you need case access."));
+  }
   return await listView(hash === "#/all" ? "all" : "mine");
   } catch (error) {
     if (signal.aborted || me !== session) return;

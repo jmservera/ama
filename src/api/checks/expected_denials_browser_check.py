@@ -103,8 +103,16 @@ def main() -> None:
                     admin.on(
                         "response", lambda r: admin_denied.append(r.url) if r.status >= 400 else None
                     )
+                    admin_errors: list[str] = []
+                    admin.on(
+                        "console", lambda m: admin_errors.append(m.text) if m.type == "error" else None
+                    )
                     admin.goto(base + "/app")
-                    admin.locator("#workspace-status").wait_for()
+                    admin.get_by_role("heading", name="No case work for this account").wait_for()
+                    check(
+                        "admin-only landing is worded plainly",
+                        "no case access" in (admin.locator("body").text_content() or ""),
+                    )
                     for route in ("#/assistants",):
                         admin.evaluate(f"location.hash = '{route}'")
                         admin.wait_for_timeout(1500)
@@ -116,11 +124,8 @@ def main() -> None:
                         "no assistants request was sent for an admin-only account",
                         not [u for u in admin_requested if ASSISTANTS_PATH in u],
                     )
-                    # The admin-only landing list still gets 403 on /api/facets (follow-up of #920).
-                    check(
-                        f"no assistants 403 reached the console for admin-only ({admin_denied})",
-                        not [u for u in admin_denied if ASSISTANTS_PATH in u],
-                    )
+                    check(f"no admin-only 4xx response ({admin_denied})", not admin_denied)
+                    check(f"no admin-only console errors ({admin_errors})", not admin_errors)
                 finally:
                     browser.close()
         finally:

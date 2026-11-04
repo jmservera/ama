@@ -2872,3 +2872,88 @@ Dockerfiles and READMEs.
 
 No issue is closed by this record. Ticking is for the owner after merge, using
 this PR as evidence.
+
+## Fourth local stabilization checkpoint (2026-11-04)
+
+Refs #440. Bounded engineering checkpoint on current `origin/main` per the
+owner decision of 2026-11-04, not broad product acceptance. Focused tier,
+documentation and evidence only; no source, coordinator, threshold, Azure or
+private-data change. The coordinator owns any full gate; none was run.
+
+### Source and document identities
+
+| Item | Value |
+| --- | --- |
+| Pinned `origin/main` (freshly fetched) | `fab02307eb14e4c01af25092a7192b771dc1f491`, tree `19d7956b4b883db680863eeefa07fc70d474ee4a` |
+| Range since third checkpoint | `b18f7f98..fab02307` (323 commits; `src/` 258 files: core 123, api 106, agents 25, orchestrator 3; includes the #810 HTTP/1.1 keep-alive fix) |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) | 0.21.0, draft, blob `34d88395de861e9799eb9e24121a21c92c7a5adc`, unchanged |
+| [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) | 0.21.0, in-review, blob `c788b917bafaede215f326f0efc71e071a687f1c`, unchanged |
+| ADR 0001 to 0006 | Unchanged since the third checkpoint |
+| Coordinator agent | Blob `7f8bf9ce842177c59992f3f38a2701bb999f6716`; changed since the third checkpoint by other merged PRs (D5 review-thread rule, CI economy and PR cap, gate shard text), not by this record |
+
+Draft and in-review documents are not approved by this record. Merged-PR
+coverage is bounded to the range above and was not re-traced requirement by
+requirement. Previously delivered and not repeated: PRs #461, #688, #729,
+#689, #720 and #733.
+
+### Actual local commands and outcomes
+
+Environment `/tmp/venv-440` (pip only, five `src/` distributions editable,
+`ruff`, `mypy`, `playwright` package without browsers), `PYTHONDONTWRITEBYTECODE=1`,
+mypy `--cache-dir=/tmp/mypy-440`.
+
+| Check | Actual result |
+| --- | --- |
+| `ruff check .` per project | Passed in core, agents, api, orchestrator and importer |
+| `ruff format --check . --no-cache` per project | Passed (core 194, agents 36, api 102, orchestrator 13, importer 11 files) |
+| `mypy` per project | Clean: core 247, agents 40, api 171, orchestrator 16, importer 10 source files |
+| ADR 0006 `tests.test_dependency_rule` | core 2, agents 4, orchestrator 2, importer 2 tests, OK |
+| API focused: `tests.test_dependency_rule tests.test_keepalive tests.test_auth tests.test_entra_authoritative tests.test_ai_boundary tests.test_design_system` with `PYTHONPATH=tests:../core/tests:../agents/tests` | 96 tests, 36.3s, OK, exit 0 |
+
+An earlier API invocation without `tests` on `PYTHONPATH` failed with
+`ModuleNotFoundError` for sibling test modules; that was an invocation error,
+not a product failure, and the corrected command above passed.
+
+Not run: full package suites, the PERF-440 benchmark selector, disposable SQL
+Server parity, Docker and non-root contracts, Chromium harnesses and the
+complete gate. Those paths stay `implemented-unverified` for this head. Raw
+logs stay in `/tmp` and are not retained.
+
+### Reconciliation delta
+
+Classification is unchanged. `local observed`: scripted AI failure and manual
+paths (`test_ai_boundary`), auth and Entra-authoritative role boundaries,
+HTTP/1.1 keep-alive handler behavior and ADR 0006 dependency direction, all at
+package level. `blocked` or `unknown`: real Entra sessions (#349), deployed
+parity (#350), real AI (#360), actual resident consent, named professional
+approval and OD-35 thresholds. #810 live Easy Auth empty-body 500s were
+reported 0 in 2,140 requests after deploy of main 4d56cf609 (infra README
+evidence, owner-approved); that is Azure evidence recorded elsewhere and is not
+re-observed here. Feedback-first issues #344, #349, #350 and #360 remain open.
+The resident and employee demo web slices merged in the range are covered only
+by their per-PR tests and by `test_design_system` here; accessibility
+acceptance, assistive-technology testing and resident consent are not
+established. No behavior bug was reproduced and no refactoring need was
+confirmed, so no regression test was added.
+
+### Findings, triage and recommendation
+
+| Priority / severity | Finding | Owner |
+| --- | --- | --- |
+| 1 / Medium validation | Coordinator text changed after the first checkpoint through other PRs; no Major HVE static, behavior or host validation for those edits is recorded under #440 | Owner-supplied host evidence; criterion 8 |
+| 2 / Low | PERF-440 (#687) is closed after #689, #720 and #733: diagnostics and a contention reproduction (59,647 ms under 16 fsync writers) attribute the outlier to the environment; threshold unchanged. Not re-run here | None open |
+| Existing gates | #349, #350, #360, #432 | Existing owners; no duplicates filed |
+
+Recommendation: **continue**. No blocking finding gates epic closure or
+dependent expansion. No pivot, requirement change or deliberate deferral is
+proposed or approved.
+
+### Criteria after this checkpoint
+
+Unmet, stated plainly: criterion 8 (Major HVE behavior and host validation of
+the coordinator is not established; native discovery was a one-time
+coordinator-attested owner check and the seven scenarios are simulated).
+Criterion 7 has supporting evidence (the only confirmed finding was triaged to
+#687 and delivered by #689, #720 and #733, with no further confirmed finding),
+but this PR uses `Refs`, so the owner decides the ticks. Criteria 1 to 6 are
+supported by PR #461 and checkpoints 2 to 4. No issue is closed by this record.

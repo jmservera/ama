@@ -10256,3 +10256,24 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Deployed HTTP/1.1 keep-alive image, override removed (Refs #810)
 
 * Built `zava-forward-api:4d56cf609` from main `4d56cf609` and pushed it to the private registry through the owner-allowed short public window (restored and read back: Deny, public disabled, exports disabled, no IP rules). `ca-cutover-test-demo-api` revision `--0000024` runs it with no command/args override. Burst tests through Easy Auth (2,140 requests including 200 unauthenticated 401s) gave 0 empty-body 500s. See `infra/README.md`.
+
+## [2026-11-04] update | Fourth stabilization checkpoint on main fab02307 (Refs #440)
+
+* Added a bounded local checkpoint to `docs/architecture/cutover-evidence-pack.md` (323 commits since b18f7f98; ruff, format, mypy in five projects, ADR 0006 and focused API auth, keep-alive, AI-boundary tests passed). Full suites, benchmarks, SQL Server, Docker, browsers and the gate were not run.
+* #440 criterion 8 (Major HVE behavior and host validation) remains unmet. No issue is closed.
+
+## [2026-11-04] update | Admin-only landing skips case requests (Refs #920)
+
+* Added `services.cases` to `/api/me`; an account without case access sees a plain-language page instead of 403s on `/api/facets` and `/api/cases`. Chromium check asserts no console errors. Issue stays open: other admin-only routes and live evidence are unproven. See `.copilot-tracking/*/2026-11-04-admin-landing-denial-920-*`.
+## [2026-11-04] update | Legal briefing and capstone slide for #224
+
+* Added a briefing for the Legal contact under `research/rai/` with main points, ten recommendations and gaps, plus a one-slide deck in `docs/presentations/`. Read S.I. 2026/82 reg. 5 on 2026-11-04; EUR-Lex retrieval failed again, so the EU position stays unknown.
+* No decision, snapshot, card or rule changed. Criteria 1 and 5 of #224 stay unmet pending the Legal/DPO decision.
+## [2026-11-04] update | Signed-in resident walkthrough and authenticated burst (Refs #462, Refs #810)
+
+* Signed in to `ca-resident-demo` as the synthetic resident test user with Playwright and walked the journey; recorded what works (generic login errors, secure cookies, synthetic labelling, 320px, sign-out) and what is broken or confusing (callback agenda returns 503 although the page invites booking, jargon, unexplained "Contact is paused", empty sensors) in the [prototype profile review](./research/ux/zava-forward-prototype-profile-review.md#signed-in-live-walkthrough-of-the-resident-showcase-2026-11-04-462). Bugs filed as #1053 and #1054.
+* Ran 30 concurrent x 4 round bursts on the keep-alive API image and signed-in resident traffic: 0 empty-body 500s in about 1,300 requests ([note](./research/easy-auth-intermittent-500-2026-11-03.md)). Limit: no Entra staff token, so no request carried a valid Easy Auth token. No Azure resource changed; no credential, cookie or token recorded. Both issues stay `Refs`. Evidence under `.copilot-tracking/` (2026-11-04 walkthrough-462-810).
+
+## [2026-11-04] update | Sensor stream joins the determinism audit (Refs #176)
+
+* Added `generator_revision` to the sensor stream descriptor and a `sensor-stream` replay to the audit. See the retrofit synthetic data README. Issue 176 criteria 1 and 2 stay unmet because the original stock register generator is absent.

@@ -279,6 +279,26 @@ This is not the original private 60,000-home register: it has no OSM anchors
 and cannot reproduce that register's bytes. The original generator and pinned
 inputs remain absent, so criteria 1 and 2 stay unmet overall and unticked.
 
+### Register-backed sensor stream in the replay audit (2026-11-04, Refs #176)
+
+The register-backed sensor stream (`sensor_stream.replay` and `descriptor`)
+was tested for repeatability but its descriptor had no generator revision and
+the audit did not replay it. The descriptor now records the full `sha256:`
+`generator_revision` of the stream, backfill, stock, fault and projection
+sources (plus the climate and retrofit model sources when composed), and the
+determinism audit replays a fictional six-home stock (from the fictional
+register generator, with mixed monitoring consent) for one day through the
+composed path (constructed climate and one dated measure, no injected faults)
+as `sensor-stream`, comparing the wire frames and the descriptor byte for byte.
+The revision depends on whether a climate is supplied, and the audit fails if
+an expected source is missing from it. Tests:
+`src/core/tests/test_determinism_audit.py` and
+`src/core/tests/test_sensor_stream.py`.
+
+Criteria 1 and 2 remain unmet overall: the original private stock register
+generator and pinned inputs are still absent, historical manifests are
+untouched, and no resident, tenant or live record was read or changed.
+
 ### Offline acceptance audit (2026-10-16, Refs #176)
 
 | Acceptance criterion | Result | Evidence and remaining boundary |

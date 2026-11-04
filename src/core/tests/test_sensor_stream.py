@@ -34,6 +34,50 @@ def selection() -> sensor_stock.Selection:
 
 
 class ReplayTests(unittest.TestCase):
+    def test_descriptor_records_seed_version_and_full_generator_revision(self) -> None:
+        first = descriptor(selection(), Replay(seed=5))
+        self.assertEqual(first["seed"], 5)
+        self.assertEqual(first["version"], "synthetic-stream-v2")
+        revision = first["generator_revision"]
+        assert isinstance(revision, str)
+        self.assertRegex(revision, r"^sha256:[0-9a-f]{64}$")
+        self.assertEqual(revision, descriptor(selection(), Replay(seed=9))["generator_revision"])
+
+    def test_generator_revision_changes_with_each_source_and_composition(self) -> None:
+        import tempfile
+        from pathlib import Path
+
+        from zava_forward.core.synthetic import sensor_stream as module
+
+        class Climate:
+            def series(self, start: datetime, days: int, cadence: int) -> list[tuple[float, float]]:
+                return [(2.0, 70.0)] * (days * 1440 // cadence)
+
+            def manifest(self) -> dict[str, object]:
+                return {"source": "CONSTRUCTED UNIT TEST ONLY", "sha256": "a" * 64}
+
+        plain = descriptor(selection(), Replay())["generator_revision"]
+        composed = descriptor(selection(), Replay(), climate=Climate())["generator_revision"]
+        self.assertNotEqual(plain, composed)
+        self.assertEqual(
+            {path.name for path in module.revision_sources(composed=True)}
+            - {path.name for path in module.revision_sources(composed=False)},
+            {"climate_history.py", "household_conditions.py", "retrofit_effects.py"},
+        )
+        for climate in (None, Climate()):
+            baseline = descriptor(selection(), Replay(), climate=climate)["generator_revision"]
+            for source in module.revision_sources(composed=climate is not None):
+                with tempfile.TemporaryDirectory() as tmp:
+                    copy = Path(tmp) / source.name
+                    copy.write_bytes(source.read_bytes() + b"\n# changed\n")
+                    sources = tuple(
+                        copy if path == source else path
+                        for path in module.revision_sources(composed=climate is not None)
+                    )
+                    with patch.object(module, "revision_sources", return_value=sources):
+                        changed = descriptor(selection(), Replay(), climate=climate)
+                self.assertNotEqual(baseline, changed["generator_revision"], source.name)
+
     def test_selected_subset_and_fabric_consent_mutations_bind_frame_provenance(self) -> None:
         selected, spec = selection(), Replay()
         subset = sensor_stock.select(selected.rows, 1)

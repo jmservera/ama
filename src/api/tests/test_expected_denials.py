@@ -46,7 +46,10 @@ class ExpectedDenialTests(Base):
     def test_me_reports_stores_off_and_denials_stay_expected(self) -> None:
         code, me = self.get("/api/me")
         self.assertEqual(code, 200)
-        self.assertEqual(me["services"], {"photo": False, "law_alerts": False, "assistants": True})
+        self.assertEqual(
+            me["services"],
+            {"photo": False, "law_alerts": False, "assistants": True, "cases": True},
+        )
         self.assertEqual(self.get("/api/account/photo")[0], 503)
         self.assertEqual(self.get("/api/law/alerts")[0], 503)
         self.assertEqual(self.get("/api/chat/regulatory/status")[0], 403)
@@ -55,6 +58,8 @@ class ExpectedDenialTests(Base):
         admin = ("ZavaForward.ApplicationAdmin",)
         _, me = self.get_as("/api/me", admin)
         self.assertFalse(me["services"]["assistants"])
+        self.assertFalse(me["services"]["cases"])
+        self.assertEqual(self.get_as("/api/facets", admin)[0], 403)
         self.assertEqual(self.get_as("/api/assistants", admin)[0], 403)
 
     def test_me_reports_photo_token_present(self) -> None:

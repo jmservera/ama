@@ -9,11 +9,13 @@ import time
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import Protocol
 
 from . import (
     household_conditions,
     indoor_projection,
+    provenance,
     retrofit_effects,
     sensor_backfill,
     sensor_faults,
@@ -234,6 +236,11 @@ def replay(
     return tuple(sorted(frames, key=lambda frame: frame.slot))
 
 
+def revision_sources(*, composed: bool) -> tuple[Path, ...]:
+    """Sources in generator_revision; composed is true when a climate is supplied."""
+    return (*sensor_backfill.revision_sources(faults=True, composed=composed), Path(__file__))
+
+
 def descriptor(
     selection: sensor_stock.Selection,
     spec: Replay,
@@ -256,6 +263,9 @@ def descriptor(
         "selected_homes": len(checked.rows),
         "monitored_homes": len(sensors),
         "seed": spec.seed,
+        "generator_revision": provenance.source_revision(
+            revision_sources(composed=climate is not None)
+        ),
         "origin": spec.origin.isoformat(),
         "days": spec.days,
         "cadence_minutes": spec.cadence_minutes,

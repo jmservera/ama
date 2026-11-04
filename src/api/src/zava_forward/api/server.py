@@ -533,6 +533,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     photo=bool(token),
                     law_alerts=app.law is not None,
                     assistants=u.get("role") in projection.STAFF_ROLES,
+                    cases=projection.allowed(u, "cases"),
                 )
                 out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
                 out["navigation"] = navigation(u)
