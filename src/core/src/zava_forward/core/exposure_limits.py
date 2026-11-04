@@ -4,10 +4,13 @@ The module holds no company figures. Limits exist only when a person supplies th
 approval record, and a breach only raises a signal for a named human decision.
 """
 
+import json
 import math
 import re
+from collections.abc import Iterable
 from copy import deepcopy
 from datetime import date
+from pathlib import Path
 from typing import Any
 
 type Record = dict[str, Any]
@@ -159,3 +162,30 @@ def assess(limits: Record | None, exposure: Record | None) -> Record:
         action=BREACH_ACTION if status != "Within limits" else None,
         notice=NOTICE,
     )
+
+
+def load_limits(path: Path) -> Record | None:
+    """Read limits a person supplied as a JSON file; a missing file means none are recorded."""
+    try:
+        text = path.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        return None
+    except OSError as exc:
+        raise LimitsError("The approved limits file cannot be read.") from exc
+    try:
+        data = json.loads(text)
+    except ValueError as exc:
+        raise LimitsError("The approved limits file is not valid JSON.") from exc
+    if not isinstance(data, dict):
+        raise LimitsError("The approved limits file must hold one object.")
+    return record_limits(data.get("approval"), data.get("envelope"), data.get("tolerances"))
+
+
+def committed_exposure(cases: Iterable[Record], currency: str = "GBP") -> Record:
+    """Sum non-cancelled commitments as recorded; downside tolerances are not observed here."""
+    committed = 0.0
+    for case in cases:
+        for commitment in (case.get("finance") or {}).get("commitments", []):
+            if commitment.get("status") != "Cancelled":
+                committed += float(commitment.get("amount") or 0)
+    return dict(committed=round(committed, 2), currency=currency, tolerances={})

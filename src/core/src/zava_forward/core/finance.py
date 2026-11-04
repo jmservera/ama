@@ -9,6 +9,7 @@ import json
 import logging
 import os
 from copy import deepcopy
+from pathlib import Path
 from contextlib import contextmanager
 
 from . import controls as k
@@ -318,3 +319,21 @@ class FinanceMixin:
                                         ref=inv["ref"], status=inv["status"], exceptions=len(inv["exceptions"]), on_hold=bool(inv["hold"]),
                                         total=round(sum(ln["amount"] for ln in inv["lines"]), 2)))
         return out
+
+    def exposure_signal(self, user, limits_path=None):
+        """Read-only pause signal comparing recorded commitments with person-approved limits.
+
+        Limits come only from a person-supplied file; none recorded means Held. This never
+        approves, resumes or contains activity.
+        """
+        from . import exposure_limits as el
+        from .data_paths import data_file
+        k.require_role(user, k.FINANCE_ROLES, "the Grants and Evidence Officer or a manager")
+        path = limits_path or os.environ.get("ZF_APPROVED_LIMITS") or data_file().parent / "approved-limits.json"
+        try:
+            limits = el.load_limits(Path(path))
+        except el.LimitsError as exc:
+            return dict(status="Held", signal=el.UNAPPROVED, reason=str(exc), findings=[], notice=el.NOTICE)
+        with self.lock:
+            exposure = el.committed_exposure(deepcopy(list(self.cases.values())))
+        return el.assess(limits, exposure)
