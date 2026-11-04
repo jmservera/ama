@@ -10445,6 +10445,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
 
+## [2026-11-04] update | Issue 159 status record (Refs #159)
+
+* Rechecked merged PRs 305, 307, 556, 661, 840, 1003 and 927 and open PR 1085 (validation-refused unstored asks; its rubric activation check failed and it needs review). Criteria 1 to 5 stay ticked. Criterion 6 stays unmet: no named human screen-reader and announcement run. The tokenomics criterion stays unmet: 401 without an actor and route-level key validation record no receipt, and cost is Unknown while OD-51 is open. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-159 status record).
 ## [2026-11-04] update | Issue 142 status record (Refs #142)
 
 * Rechecked merged PRs 265 and 681. The inventory, expiry windows, rotation ordering model, access review generator and status check are delivered and tested offline. Criteria 1 to 3 stay unmet: they need named owners, a live no-downtime rotation exercise, an executed signed access review with a schedule, and alert evaluation confirmed in Azure Monitor (human/Azure steps owned by the owner). Criterion 4 was already ticked. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-142 r2).
