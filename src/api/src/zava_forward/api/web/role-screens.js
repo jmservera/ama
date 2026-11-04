@@ -215,6 +215,7 @@ registerRoleScreen({
         h("p", {}, `Home scope: ${c.id} only.`)),
       screenPanel("Stock conflict queue across homes (portfolio scope, not this home)",
         h("p", {}, "Homes with an open stock conflict, oldest source first. The order is source age only. It is not an investment priority, and no source is chosen as correct."),
+        extra?.queue ? h("p", {}, h("a", { class: "btn alt", href: "/api/asset/stock-queue.csv", download: "stock-queue.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back.") : null,
         extra?.queue
           ? screenTable("Open stock conflicts by home", ["Home", "Open conflicts", "Fields in conflict", "Oldest source date", "Resolution owners", "Investment inputs"],
             extra.queue.items.map((r) => [`${r.id}, ${r.address}, ${r.town}`, r.open_queries, (r.fields || []).join(", "), `${r.oldest_source_date}, ${assetAgeDays(r.oldest_source_date)}`,
@@ -742,6 +743,8 @@ registerRoleScreen({
         screenTable("Service requests and contact needs",
           ["Request", "Route", "Status", "Contact needs", "Next update"],
           requests.map((r) => [r.id, r.route, r.status, (r.accessibility || ["Unknown"]).join(", "), r.next_update]))),
+      screenPanel("Choice comes before offered capacity",
+        h("p", {}, "A recorded choice, pause or withdrawal takes precedence over any offered contractor slot. An offered slot is not a booking and not a promise to the resident. Offered capacity is shown on the Package queue screen, not here.")),
       screenWithheld(["Resident phone, email and postal contact history (shown only as a safe route reference)",
         "Detailed access and household history beyond the contact needs above", "Contractor capacity and offered slots"]));
   }

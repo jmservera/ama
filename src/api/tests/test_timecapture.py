@@ -30,16 +30,16 @@ def time_rows(t):
 
 
 def assert_invalid_history(test, store, db_path):
-    env = dict(ZF_TIME_CAPTURE="on", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+    env = dict(ZF_TIME_CAPTURE="on", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1", ZF_TIME_NOTICE_VERSION=NOTICE_VERSION)
     for dpia in ("yes", "true", "on", "1"):
         with test.subTest(historical_dpia=dpia):
             env["DPIA_APPROVED"] = f" {dpia.upper()} "
             t = TimeCapture(store, env, db_path)
             with t._conn() as db:
-                db.execute("INSERT INTO time_request (at, by_user, by_role, dpia_ref, consultation_ref, notice_ref) VALUES (?,?,?,?,?,?)",
-                           ("2026-10-01T10:00", MGR["email"], MGR["role"], dpia.upper(), "C1", "N1"))
-                db.execute("INSERT INTO time_enabled (at, by_user, by_role, requested_by, requested_role, dpia_ref, consultation_ref, notice_ref) VALUES (?,?,?,?,?,?,?,?)",
-                           ("2026-10-01T10:01", MGR2["email"], MGR2["role"], MGR["email"], MGR["role"], dpia.upper(), "C1", "N1"))
+                db.execute("INSERT INTO time_request (at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, notice_version) VALUES (?,?,?,?,?,?,?)",
+                           ("2026-10-01T10:00", MGR["email"], MGR["role"], dpia.upper(), "C1", "N1", NOTICE_VERSION))
+                db.execute("INSERT INTO time_enabled (at, by_user, by_role, requested_by, requested_role, dpia_ref, consultation_ref, notice_ref, notice_version) VALUES (?,?,?,?,?,?,?,?,?)",
+                           ("2026-10-01T10:01", MGR2["email"], MGR2["role"], MGR["email"], MGR["role"], dpia.upper(), "C1", "N1", NOTICE_VERSION))
                 db.execute("INSERT INTO notice_ack (user_code, version, at) SELECT ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM notice_ack WHERE user_code=? AND version=?)",
                            (SAM["code"], NOTICE_VERSION, "2026-10-01T10:02", SAM["code"], NOTICE_VERSION))
                 db.execute("INSERT INTO time_entry (at, user_code, case_id, minutes, activity, dpia_ref, consultation_ref) VALUES (?,?,?,?,?,?,?)",
@@ -74,11 +74,28 @@ class TimeTests(unittest.TestCase):
 
     def on(self, *users, dpia="DPIA-2026-007"):
         """Capture fully enabled (flag, DPIA, consultation) with the given users having acknowledged the notice."""
-        t = self.tc(ZF_TIME_CAPTURE="on", DPIA_APPROVED=dpia, ZF_TIME_CONSULTATION="CONS-2026-02", ZF_TIME_NOTICE_APPROVED="NOTICE-2026-01")
+        t = self.tc(ZF_TIME_CAPTURE="on", DPIA_APPROVED=dpia, ZF_TIME_CONSULTATION="CONS-2026-02", ZF_TIME_NOTICE_APPROVED="NOTICE-2026-01",
+                    ZF_TIME_NOTICE_VERSION=NOTICE_VERSION)
         enable(t)
         for u in users:
             t.acknowledge(u)
         return t
+
+    def test_existing_database_without_notice_version_is_upgraded(self):
+        old = sqlite3.connect(self.db)
+        old.execute("CREATE TABLE time_request (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, by_role TEXT NOT NULL, "
+                    "dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)")
+        old.execute("CREATE TABLE time_enabled (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, by_role TEXT NOT NULL, "
+                    "requested_by TEXT NOT NULL, requested_role TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)")
+        old.commit()
+        old.close()
+        t = self.on(SAM)
+        self.assertTrue(t.status(SAM)["enabled"])
+        for _ in range(2):
+            with t._conn() as db:
+                for table in ("time_request", "time_enabled"):
+                    cols = [r[1] for r in db.execute(f"PRAGMA table_info({table})").fetchall()]
+                    self.assertEqual(cols.count("notice_version"), 1)
 
     def test_off_by_default_and_nothing_is_written(self):
         t = self.tc()
@@ -102,7 +119,7 @@ class TimeTests(unittest.TestCase):
         for dpia in (None, "", " \t\n ", "yes", " YeS ", "true", "\tTrUe\n", "on", " ON ", "1", " 1 "):
             with self.subTest(dpia=dpia):
                 path = os.path.join(self.tmp.name, "unused", "time.sqlite")
-                env = dict(ZF_TIME_CAPTURE="on", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+                env = dict(ZF_TIME_CAPTURE="on", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1", ZF_TIME_NOTICE_VERSION=NOTICE_VERSION)
                 if dpia is not None:
                     env["DPIA_APPROVED"] = dpia
                 t = TimeCapture(env=env, db_path=path)
@@ -165,7 +182,8 @@ class TimeTests(unittest.TestCase):
         data["staff"].append(support)
         p.write_text(json.dumps(data))
         store = Store(str(p))
-        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED=" YeS ", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED=" YeS ", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1",
+                   ZF_TIME_NOTICE_VERSION=NOTICE_VERSION)
         t = TimeCapture(env=env, db_path=self.db)
         httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(store, "zf-test", t)))
         worker = threading.Thread(target=httpd.serve_forever, daemon=True)
@@ -260,6 +278,37 @@ class TimeTests(unittest.TestCase):
         old = timecapture.NOTICE_VERSION
         try:
             timecapture.NOTICE_VERSION = "draft-2"
+            with self.assertRaises(TimeCaptureOff):
+                t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
+            t.env["ZF_TIME_NOTICE_VERSION"] = "draft-2"
+            with self.assertRaises(TimeCaptureOff):
+                t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
+            enable(t)
+            with self.assertRaises(NoticeNotAcknowledged):
+                t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
+        finally:
+            timecapture.NOTICE_VERSION = old
+
+    def test_changed_notice_version_with_same_refs_needs_new_request_and_activation(self):
+        from zava_forward.api import timecapture
+        t = self.on(SAM)
+        ref = t.env["ZF_TIME_NOTICE_APPROVED"]
+        old = timecapture.NOTICE_VERSION
+        try:
+            timecapture.NOTICE_VERSION = "draft-2"
+            t.env["ZF_TIME_NOTICE_VERSION"] = "draft-2"
+            self.assertEqual(t.env["ZF_TIME_NOTICE_APPROVED"], ref)
+            self.assertIsNone(t.request())
+            self.assertIsNone(t.activation())
+            with self.assertRaises(TimeCaptureOff):
+                t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
+            with self.assertRaises(SeparationOfDuties):
+                t.activate(MGR2)
+            t.request_enable(MGR)
+            with self.assertRaises(SeparationOfDuties):
+                t.activate(MGR)
+            t.activate(MGR2)
+            self.assertEqual(t.activation()["by"], MGR2["email"])
             with self.assertRaises(NoticeNotAcknowledged):
                 t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
         finally:
@@ -269,7 +318,7 @@ class TimeTests(unittest.TestCase):
         p = Path(self.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(test_mvp.DATA))
         store = Store(str(p))
-        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1", ZF_TIME_NOTICE_VERSION=NOTICE_VERSION)
         enable(TimeCapture(env=env, db_path=self.db))
         httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(store, "zf-test", TimeCapture(env=env, db_path=self.db))))
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
@@ -290,6 +339,9 @@ class TimeTests(unittest.TestCase):
             t.request_enable(MGR)
         env["ZF_TIME_NOTICE_APPROVED"] = "N1"
         t = self.tc(**env)
+        self.assertIn("ZF_TIME_NOTICE_VERSION", t.status()["reason"])
+        env["ZF_TIME_NOTICE_VERSION"] = NOTICE_VERSION
+        t = self.tc(**env)
         self.assertIn("enabling request", t.status()["reason"])
         with self.assertRaises(TimeCaptureOff):
             t.record(SAM, "ZF-1", 5, ACTIVITIES[0])
@@ -298,6 +350,25 @@ class TimeTests(unittest.TestCase):
         env["DPIA_APPROVED"] = "D2"
         self.assertFalse(self.tc(**env).status()["enabled"])
 
+    def test_approval_must_cover_the_current_notice_version(self):
+        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+        for version in (None, "", "draft-0", " " + NOTICE_VERSION + "x"):
+            with self.subTest(version=version):
+                e = dict(env) if version is None else dict(env, ZF_TIME_NOTICE_VERSION=version)
+                t = self.tc(**e)
+                st = t.status()
+                self.assertFalse(st["notice_approved"])
+                self.assertFalse(st["enabled"])
+                self.assertIn("ZF_TIME_NOTICE_VERSION", st["reason"])
+                for action in (lambda: t.request_enable(MGR), lambda: t.activate(MGR2), lambda: t.record(SAM, "ZF-1", 5, ACTIVITIES[0])):
+                    with self.assertRaises(TimeCaptureOff):
+                        action()
+        good = dict(env, ZF_TIME_NOTICE_VERSION=" " + NOTICE_VERSION + " ")
+        enable(self.tc(**good))
+        self.assertTrue(self.tc(**good).status()["enabled"])
+        self.assertFalse(self.tc(**dict(good, ZF_TIME_NOTICE_VERSION="draft-2")).status()["enabled"])
+        self.assertTrue(self.tc(**good).status()["enabled"])
+
     def test_enabling_is_manager_only_and_audited_through_the_api(self):
         p = Path(self.tmp.name) / "zavaforward.json"
         data = json.loads(json.dumps(test_mvp.DATA))
@@ -305,7 +376,7 @@ class TimeTests(unittest.TestCase):
         data["staff"].append(dict(first, code="SUP", name="Support Officer", email="support-officer@example.test", role="Programme Support Officer"))
         p.write_text(json.dumps(data))
         store = Store(str(p))
-        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1", ZF_TIME_NOTICE_VERSION=NOTICE_VERSION)
         httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(store, "zf-test", TimeCapture(env=env, db_path=self.db))))
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
         try:
@@ -356,8 +427,9 @@ class TimeTests(unittest.TestCase):
     def test_api_disabled_then_enabled(self):
         p = Path(self.tmp.name) / "zavaforward.json"
         p.write_text(json.dumps(test_mvp.DATA))
-        enable(TimeCapture(env=dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1"), db_path=self.db))
-        for env, expect in (({}, 403), (dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1"), 200)):
+        on = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1", ZF_TIME_NOTICE_VERSION=NOTICE_VERSION)
+        enable(TimeCapture(env=on, db_path=self.db))
+        for env, expect in (({}, 403), (on, 200)):
             httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(Store(str(p)), "zf-test", TimeCapture(env=env, db_path=self.db))))
             threading.Thread(target=httpd.serve_forever, daemon=True).start()
             base = f"http://127.0.0.1:{httpd.server_address[1]}"
@@ -384,7 +456,8 @@ class TimeTests(unittest.TestCase):
                 httpd.server_close()
 
     def test_requester_cannot_enable_and_same_role_cannot_enable(self):
-        t = self.tc(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+        t = self.tc(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1",
+                    ZF_TIME_NOTICE_VERSION=NOTICE_VERSION)
         with self.assertRaises(SeparationOfDuties):
             t.activate(MGR2)
         t.request_enable(MGR)
@@ -399,7 +472,7 @@ class TimeTests(unittest.TestCase):
         self.assertEqual((st["requested_role"], st["activated_role"]), (MGR["role"], MGR2["role"]))
 
     def test_changed_references_need_a_new_request(self):
-        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+        env = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1", ZF_TIME_NOTICE_VERSION=NOTICE_VERSION)
         enable(self.tc(**env))
         env["ZF_TIME_NOTICE_APPROVED"] = "N2"
         t = self.tc(**env)
@@ -416,7 +489,7 @@ class SharedStoreTests(unittest.TestCase):
         from zava_forward.core.sqlstore import SqlStore
         return SqlStore(data, db)
 
-    ENV = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1")
+    ENV = dict(ZF_TIME_CAPTURE="on", DPIA_APPROVED="D1", ZF_TIME_CONSULTATION="C1", ZF_TIME_NOTICE_APPROVED="N1", ZF_TIME_NOTICE_VERSION=NOTICE_VERSION)
 
     def test_invalid_dpia_flags_cannot_write_to_shared_store(self):
         with tempfile.TemporaryDirectory() as tmp:
