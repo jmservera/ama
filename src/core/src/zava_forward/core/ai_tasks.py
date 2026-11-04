@@ -382,7 +382,7 @@ def review(store, user, rec_id, action, reason="", text=None):
             rec["status"] = HOLD
             store.audit(user["email"], "ai_review_hold", "-", f"{rec['task']} {rec_id}")
             store.save()
-            raise ValueError("The source changed since this proposal; it is on hold for a fresh review.")
+            raise ValueError("The source changed since this proposal. Nothing was accepted; the owner needs to request a fresh review.")
         metered = bool(rec.get("envelope", {}).get("meter_root"))
         disposition = "edit-accept" if action == "edit" else action
         intent = store.ai.consumption.review_intent(

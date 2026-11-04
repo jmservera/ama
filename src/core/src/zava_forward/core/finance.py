@@ -258,16 +258,16 @@ class FinanceMixin:
     def _fin_hold_place(self, user, c, f, body):
         inv = k.find(f["invoices"], body.get("id"), "invoice")
         if inv["hold"]:
-            raise ValueError("This is already on hold.")
-        inv["hold"] = dict(by=user["email"], name=user["name"], at=k.now(), reason=k.text(body.get("reason"), "why it is on hold"), identity=_identity(user))
+            raise ValueError("Payment is already paused for this invoice. Ask Finance if it needs to be restarted.")
+        inv["hold"] = dict(by=user["email"], name=user["name"], at=k.now(), reason=k.text(body.get("reason"), "why payment is paused"), identity=_identity(user))
         return f"{inv['id']} hold placed"
 
     def _fin_hold_release(self, user, c, f, body):
         inv = k.find(f["invoices"], body.get("id"), "invoice")
         if not inv["hold"]:
-            raise ValueError("This is not on hold.")
-        self._fin_independent(user, inv["hold"]["by"], inv["hold"].get("identity"), "release the hold")
-        k.text(body.get("note"), "a note on why the hold is released", 200)
+            raise ValueError("Payment is not paused for this invoice, so there is nothing to restart.")
+        self._fin_independent(user, inv["hold"]["by"], inv["hold"].get("identity"), "restart payment")
+        k.text(body.get("note"), "a note on why payment is restarted", 200)
         inv["hold"] = None
         return f"{inv['id']} hold released"
 
@@ -283,7 +283,7 @@ class FinanceMixin:
             if inv["status"] != "Matched":
                 raise ValueError("Run the match first. It can only be accepted when every line matches.")
             if inv["hold"]:
-                raise ValueError("Release the hold first.")
+                raise ValueError("Payment is paused. A different Finance user must restart payment first, then try again.")
             if match_invoice(c, inv):
                 raise ValueError("The match inputs changed or are unknown. Run the match again and resolve every line exception.")
         inv.update(disposition=decision, disposition_by=user["name"], disposition_email=user["email"], disposition_note=note,
@@ -297,7 +297,7 @@ class FinanceMixin:
             if inv["disposition"] != "Accept for payment":
                 raise ValueError("Finance must accept the invoice for payment first.")
             if inv["hold"]:
-                raise ValueError("Release the hold first.")
+                raise ValueError("Payment is paused. A different Finance user must restart payment first, then try again.")
         if status == "Paid outside this system":
             self._fin_independent(user, inv.get("disposition_email"), inv.get("disposition_identity"), "record the payment")
         inv["payment_status"] = status

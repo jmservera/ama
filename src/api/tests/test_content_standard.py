@@ -135,6 +135,17 @@ class CopyAudit(unittest.TestCase):
         self.assertIn("Finance decision: ${financeDecisionLabel(i.disposition)}", panels)
         self.assertIn("screenFinanceDecision(inv.disposition)", (WEB / "role-screens.js").read_text())
 
+    def test_finance_and_ai_review_refusals_use_plain_wording(self):
+        core = ROOT / "src" / "core" / "src" / "zava_forward" / "core"
+        pattern = re.compile(r'raise (?:ValueError|PermissionError)\((f?"[^"\n]*")')
+        for name in ("finance.py", "ai_tasks.py"):
+            for literal in pattern.findall((core / name).read_text()):
+                with self.subTest(name=name, literal=literal):
+                    self.assertFalse(re.search(r"\bon hold\b|\bthe hold\b", literal), literal)
+        text = (core / "finance.py").read_text()
+        self.assertIn("A different Finance user must restart payment first", text)
+        self.assertTrue(re.search(r"\bon hold\b", 'raise ValueError("This is already on hold.")'))
+
     def test_time_capture_copy_is_guarded(self):
         self.assertIn("timecapture.js", AUDITED_FILES)
         js = (WEB / "timecapture.js").read_text()

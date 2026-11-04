@@ -10152,3 +10152,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | WCAG baseline: form error identification inventory (Refs #151)
 
 * `wcag-conformance-baseline.md` records a static inventory of the seven `aria-invalid` sites (WCAG 3.3.1, 3.3.3) and narrows gap G-4; `test_accessibility_baseline.py` now fails if a new invalid-field site has no `aria-describedby` message link. Static inspection only: no screen reader, rendered or owner-decision evidence. Target level (O-1), full audit, manual role checks and map/table equivalents (#119) remain unmet.
+## [2026-11-04] update | Plain-language finance and AI review refusals (Refs #153)
+
+* Finance refusals ("already on hold", "Release the hold first") and the AI review changed-source refusal now say "payment paused/restart payment" and state the next step. Stored values, audit names and approval logic are unchanged. Added a lexical test and a dated slice in the [content standard](./research/ux/content-standard.md). Criteria 2, 3 and 5 stay open: other typed server errors, `signoffs.py`, named human wording review and comprehension testing are unclaimed. Evidence is under `.copilot-tracking/` (2026-11-04 issue-153 refusals).
