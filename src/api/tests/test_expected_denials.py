@@ -61,6 +61,8 @@ class ExpectedDenialTests(Base):
         self.assertFalse(me["services"]["cases"])
         self.assertEqual(self.get_as("/api/facets", admin)[0], 403)
         self.assertEqual(self.get_as("/api/assistants", admin)[0], 403)
+        for path in ("/api/stats", "/api/visits?view=mine", "/api/funding", "/api/finance"):
+            self.assertEqual(self.get_as(path, admin)[0], 403, path)
 
     def test_me_reports_photo_token_present(self) -> None:
         _, me = self.get("/api/me", **{"X-MS-TOKEN-AAD-ACCESS-TOKEN": "synthetic"})

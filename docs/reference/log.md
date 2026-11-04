@@ -10309,6 +10309,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Deployed main `8b9553d8b` to `ca-cutover-test-demo-api` (`--0000025`) and `ca-resident-demo` (`--0000010`) through the short registry window; set `ZF_DEMO_EXPIRES_AT` to `2028-01-01T00:00:00Z` (was `2027-01-31T23:59:00Z`). Recorded in `infra/README.md` and the prototype profile review. Sensors section showed the fail-closed message only, filed as #1072. No issue is closed.
 
+## [2026-11-04] update | Live simulator container slice authored (Refs #184)
+
+* Added the pure `live_readings` generator, the `live_simulator` runner with stdout and in-memory sinks, `src/api/live-simulator.Dockerfile` and an authored, not deployed `infra/live-simulator-job.bicep`, documented with a cost estimate in `src/api/README.md`, `infra/README.md` and a short section in the IoT sensor research plan. Nothing was deployed or sent; devices, certificates, live approval and #110 acceptance of the new message version remain owner or sibling work. No issue is closed.
 ## [2026-11-04] update | Retrofit scenarios through the retained sensor store (Refs #190, Refs #193)
 
 * Added `src/core/tests/test_retrofit_scenarios_retained_store.py`, which ingests the four labelled retrofit exercise scenarios through `SensorConsumer` and reads them back with `analyse_retained` (#111). Test-only, exercise values, focused tests only. #190 criterion 1 and #193 criterion 3 stay unticked pending independent review. RPI evidence is under `.copilot-tracking/*/2026-11-04-issue-190-retained-store-*`.
@@ -10369,6 +10372,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 657, 785, 862, 937 and 978: the invoice, funding, field draft and AI economics criteria are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-225 r1).
 
+## [2026-11-04] update | Admin-only case-data routes stay quiet (Refs #920)
+
+* The employee client now shows the plain-language "No case work for this account" page on all case-data routes for accounts without case access, instead of requesting data that returns 403. Chromium check covers 11 routes with no case-data requests, 4xx responses or console errors. Server authorisation unchanged. Evidence under `.copilot-tracking/` (2026-11-04 admin-routes-denial-920).
 ## [2026-11-04] update | Issue 217 status record, only human steps remain (Refs #217)
 
 * Merged PRs already deliver every code-level slice for #217. The DPIA draft now lists the remaining criteria with the person who must act (DPO, Entra administrator, Legal). Nothing is ticked and no approval is implied. Docs-only; no tests run. Evidence under `.copilot-tracking/` (2026-11-04 issue-217 r1).
@@ -10403,6 +10409,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
 
+## [2026-11-04] update | Issue 146 monitoring declaration check (Refs #146)
+
+* Added an offline `check_monitoring_declaration` to the monitoring coverage module and noted it in `infra/monitoring-runbooks.md`. It reports Blocked or Declared per task release, never green, and shows owners and manual-route status for disabled tasks. All four issue criteria and the unmet RAI and tokenomics criteria stay unmet; nothing was ticked. Evidence under `.copilot-tracking/` (2026-11-04 monitoring-declaration-146).
 ## [2026-11-04] update | Issue 126 release decisions carry AI economics (Refs #126)
 
 * Phase and tranche release decisions now require the AI economics report reference and any AI limit breach; a Release with a breach needs the approvers' decision. Tokenomics criterion 3 is engineering-delivered with synthetic fixtures only. Nothing was ticked or closed; protocol, DPIA, lawful basis, OD-51 and RAI closure criteria remain unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-126 r2).
@@ -10484,6 +10493,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 100 per-capability AI usage view (Refs #100)
 
 * Rechecked merged PR 911. Added a per-capability usage breakdown (counts only) to the consumption report and the asset and board view; cost per capability stays Unknown. Criteria stay unmet: #440 checkpoint, #134 open, per-capability cost, quality floor, limits (OD-51) and live evidence. Evidence under `.copilot-tracking/` (2026-11-04 issue-100 r2).
+## [2026-11-04] update | Issue 128 paired-cohort priority check (Refs #128)
+
+* Rechecked merged PR 901 (register and routing) and the ranking cohort work. Added `paired_equity` in `src/core`: constructed pairs differing in sensor completeness, support or contact need, or appointment history must not rank lower or change rank through review routing; per-dimension counts, seeded-defect detection, no averaging. Deterministic policy only; not fairness evidence. All #128 criteria stay unmet (no keyboard or screen reader run, no staffed review, no agreed protocol, no independently approved pair labels, no AI task cohorts). Updated the test plan page and index; evidence under `.copilot-tracking/` (2026-11-04 issue-128 r2).
 ## [2026-11-04] update | Issue 107 status record (Refs #107)
 
 * Rechecked merged PRs 287, 293, 301, 863, 913 and 915 and open PR 1095. Quarantine and suspension on an unexpected serving model and independent-connection revocation are already tested locally. Unmet: RAI release record approvals (OQ-017), authoritative serving-version attestation, Azure SQL race evidence and delivered-build evidence, plus Tokenomics usage attribution until PR 1095 merges. These need human, Azure or legal steps; no code change.

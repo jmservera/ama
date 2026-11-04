@@ -574,6 +574,17 @@ reasons and counts. The route has no score and never changes rank or service. Co
 data only; no usability, accessibility or fairness evidence. See the
 [test plan](../../docs/reference/research/ux/equity-journey-test-plan.md).
 
+`paired_equity.evaluate(pairs, anchors, seeded_defects, rank)` checks constructed pairs that
+differ in one attribute (sensor completeness, support or contact need, appointment history) and
+requires the subject to rank no lower than the reference and its review route to have no rank
+effect. It reports tested and failed counts per dimension, never averages a failing dimension
+away, and blocks on a missing dimension or an undetected seeded defect. It uses the deterministic
+policy by default, approves nothing and is not fairness evidence; AI task cohorts are not covered.
+
+```bash
+python -m unittest discover -s tests -p test_paired_equity.py -q
+```
+
 ## Constructed offline sensor consumer (#110)
 
 `sensor_consumer.SensorConsumer` is a finite SQL-only processor, distinct from
