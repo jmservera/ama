@@ -3814,6 +3814,40 @@ all Bicep entry points, compiled controls, mutation regressions and scoped ruff.
 
 ## IoT Hub (issue 140, ADR 0003 decision 6)
 
+### Live simulator job (issue 184, 2026-11-04)
+
+`live-simulator-job.bicep` defines a Container Apps **job** (Consumption, 0.25 vCPU, 0.5 GiB,
+cron `*/5 * * * *`, one run per slot, scale to zero between runs) that runs
+`python -m zava_forward.api.live_simulator --sink iothub --once` from the image built with
+`docker build -f src/api/live-simulator.Dockerfile src`. It reuses the existing B1 hub, the
+existing environment and a pre-existing identity, creates no hub, role assignment, secret or key,
+and refuses any scope outside `ama`, a tag-only image or a missing approval reference. It was
+compiled and linted only (`az bicep build`, `az bicep lint`). **It is not deployed**: no what-if,
+no deployment, no image push and no device registration was run. The device certificates are
+mounted read-only from an Azure Files share registered as environment storage; nothing secret is
+in the template or the image. Behaviour is documented in the
+[API README](../src/api/README.md#live-simulator-container-184-owner-requirement-2026-11-04).
+
+Planning cost, not a billing quote or enforced cap (list prices not re-retrieved this session; the
+hub figure is the 2026-10-27 `run_plan` basis):
+
+| Item | Basis | USD per month |
+| --- | --- | --- |
+| IoT Hub B1, one unit (existing) | 400,000 messages per day; `homes x 288` per day, so 100 homes use 7 % and 1,250 homes the whole budget after headroom | 10 |
+| Job, 100 homes | about 25 s per run x 8,640 runs = 216,000 s at 0.25 vCPU and 0.5 GiB; inside the monthly free grant unless other jobs use it; worst case about 2 | 0 to 2 |
+| Job, 1,000 homes | about 120 s per run at 10 messages per second; worst case about 8 | 0 to 8 |
+| Azure Files share for certificates, logs | small share and a few GiB of logs | under 2 |
+| Total, 100 to 1,000 homes | | about 10 to 20 |
+
+That is well inside the USD700 cap. The IoT Hub Free tier (8,000 messages per day) carries only
+27 homes at one message per five minutes, so it does not fit "every home"; B1 stays. More than
+1,250 homes needs a second unit or a lower cadence, which is an owner decision. Remaining owner
+steps before any send: approve live sending and name the approval reference; Registry
+Contributor for the operator and registration of one `SYN-` device per home with its X.509
+certificate (#185 manifest, 100 device cap in `device_identity`); a certificate file share;
+a read-only SQL grant for the job identity; AcrPull; image push by digest; a hub-side route and
+consumer that accept `live-sim-reading-v1` (#110, #140).
+
 ### Bounded existing-hub exercise (2026-10-29, Refs #140 #184 #137)
 
 The owner approved paid B1/one unit after the UK South USD10/month cost check,
