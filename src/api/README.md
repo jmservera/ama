@@ -2527,7 +2527,8 @@ result is `Held` with `Pause for human decision`; an over-limit or unknown
 observation also pauses. It needs the same Finance roles as the queue, changes
 no record and never approves, resumes or accelerates delivery. The repository
 holds no Board figures: the envelope and tolerances remain unmet human inputs.
-No endpoint pays, submits banking instructions or grants authority.
+The Finance queue screen shows this signal under Investment limits, and a manual-check
+message when it cannot be read. No endpoint pays, submits banking instructions or grants authority.
 External-payment statuses are notes only. Budget/commitment and grant/cash
 records are unchanged by those notes.
 
