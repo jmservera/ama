@@ -10363,3 +10363,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 193 status record (Refs #193)
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
+
+## [2026-11-04] update | Issue 146 monitoring declaration check (Refs #146)
+
+* Added an offline `check_monitoring_declaration` to the monitoring coverage module and noted it in `infra/monitoring-runbooks.md`. It reports Blocked or Declared per task release, never green, and shows owners and manual-route status for disabled tasks. All four issue criteria and the unmet RAI and tokenomics criteria stay unmet; nothing was ticked. Evidence under `.copilot-tracking/` (2026-11-04 monitoring-declaration-146).
