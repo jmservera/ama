@@ -192,6 +192,13 @@ error would not establish real accountability.
 * `law.js` failure status and the manager-only ranking error in `store.py` now name an owner and next action; the ranking error no longer says "snapshot".
 * Still open: typed server errors, `signoffs.py` refusals, the stored "Keep on hold" finance value (display label now "Keep payment paused"), actual named review of resident wording and comprehension/accessibility testing.
 
+#### Finance and AI review refusal wording slice (2026-11-04, #153)
+
+* `finance.py` refusals no longer say "hold": "Payment is already paused for this invoice. Ask Finance if it needs to be restarted.", "Payment is not paused for this invoice, so there is nothing to restart.", and "Payment is paused. A different Finance user must restart payment first, then try again." The independent-approver and field labels now read "restart payment" and "why payment is paused".
+* `ai_tasks.py`: a changed source now says "Nothing was accepted; the owner needs to request a fresh review." instead of "on hold for a fresh review". The stored hold record, audit action names and approval logic are unchanged.
+* Guard: `test_finance_and_ai_review_refusals_use_plain_wording` scans raised-error literals in the two files. It is lexical only.
+* Still open: other typed server errors (for example `workflows.py`, `hazard.py`, `doc_controls.py`, `gates.py`, synthetic-data modules), `signoffs.py` refusals, a named human review of resident wording and comprehension/accessibility testing.
+
 #### Issue #153 acceptance evidence
 
 | Criterion | Evidence and disposition |
