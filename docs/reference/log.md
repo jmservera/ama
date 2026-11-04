@@ -10445,6 +10445,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
 
+## [2026-11-04] update | Epic 93 status record (Refs #93)
+
+* Rechecked merged PRs for #93 and its children. Code-level slices are delivered; the Finance journey page now lists unmet criteria (stabilization checkpoint #440, open children #96 and #99) and the human owners. Nothing is ticked. Docs-only; no tests run. Evidence under `.copilot-tracking/` (2026-11-04 issue-93 r1).
+
 ## [2026-11-04] update | Issue 159 status record (Refs #159)
 
 * Rechecked merged PRs 305, 307, 556, 661, 840, 1003 and 927 and open PR 1085 (validation-refused unstored asks; its rubric activation check failed and it needs review). Criteria 1 to 5 stay ticked. Criterion 6 stays unmet: no named human screen-reader and announcement run. The tokenomics criterion stays unmet: 401 without an actor and route-level key validation record no receipt, and cost is Unknown while OD-51 is open. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-159 status record).
