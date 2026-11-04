@@ -5,13 +5,14 @@ The script is executed unchanged against a small fake DOM; the view comes from t
 """
 
 import json
+import re
 import shutil
 import subprocess
 import unittest
 from pathlib import Path
 from typing import Any
 
-from test_resident_demo_api import DemoTestCase
+from resident_demo_fixture import DemoTestCase
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/resident_demo/web"
 
@@ -48,7 +49,7 @@ const ids = {};
 ["status", "error", "error-title", "error-text", "content", "signin", "signin-form", "signin-error",
   "signin-button", "account", "account-email", "lede", "email", "password", "main", "retry"]
   .forEach(id => { ids[id] = new Node_("x"); ids[id].id = id; });
-ids.lede.textContent = "Your home and works records are read-only.";
+ids.lede.textContent = process.argv[3];
 const document = {
   getElementById: id => ids[id] || (ids[id] = new Node_("x")),
   createElement: tag => new Node_(tag),
@@ -94,8 +95,13 @@ class CallbacksPageTests(DemoTestCase):
         self.assertEqual(status, 200)
         self.assertFalse(view["callbacks_available"])
         view["callbacks_available"] = callbacks_available
+        html = (WEB / "index.html").read_text(encoding="utf-8")
+        match = re.search(r'<p id="lede"[^>]*>(.*?)</p>', html, re.S)
+        self.assertIsNotNone(match)
+        assert match is not None
+        lede = match.group(1).strip()
         done = subprocess.run(
-            ["node", "-e", HARNESS, str(WEB / "demo.js"), json.dumps(view)],
+            ["node", "-e", HARNESS, str(WEB / "demo.js"), json.dumps(view), lede],
             capture_output=True,
             text=True,
             timeout=60,
@@ -120,6 +126,7 @@ class CallbacksPageTests(DemoTestCase):
         self.assertIn("synthetic callback booking", page["lede"])
         self.assertEqual(page["mounts"], 1)
         self.assertEqual(page["callbackSections"], 1)
+        self.assertGreaterEqual(page["bookingLinks"], 1)
         self.assertNotIn("is not connected", page["text"])
 
 
