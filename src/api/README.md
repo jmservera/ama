@@ -2518,6 +2518,15 @@ quality lifecycle. They are not represented as identical requirement numbers.
 contract; `GET /api/finance` retains the human exception/hold queue.
 The [core finance guide](../core/README.md#record-only-finance-controls-94)
 describes current identity, line matching and persistence controls.
+
+`GET /api/finance/exposure` (#99) returns the read-only pause signal from
+`finance.exposure_signal`: recorded commitments compared with limits a person
+supplied in `ZF_APPROVED_LIMITS` (default `approved-limits.json` beside the
+data file). Without that file, or when it is unreadable or out of date, the
+result is `Held` with `Pause for human decision`; an over-limit or unknown
+observation also pauses. It needs the same Finance roles as the queue, changes
+no record and never approves, resumes or accelerates delivery. The repository
+holds no Board figures: the envelope and tolerances remain unmet human inputs.
 No endpoint pays, submits banking instructions or grants authority.
 External-payment statuses are notes only. Budget/commitment and grant/cash
 records are unchanged by those notes.

@@ -80,6 +80,20 @@ Proposed **Sector-informed hypotheses** for synthetic/shadow tests only; no oper
 2. Can staff trace one conflicting resident/inspection case through competent action, verification and safe resident communication?
 3. Which building-linked design changes require specialist review, and where are incomplete safety records and remediation funding conflicts escalated?
 
+## Safety screens delivery status (2026-11-04, #227)
+
+Merged engineering evidence covers the building safety and hazard triage
+screens (#653), keyboard and axe browser checks (#776), the cross-home hazard
+referral queue (#806) with browser evidence (#831), rendered table and SA-007
+checks (#866), design-system class evidence (#934) and rendered no-simulator
+and text-state evidence (#962). The screens do not classify hazards, set
+clocks, close hazards or authorise work. The research remains desk-based
+hypothesis, not observed behaviour.
+
+Unmet: the WCAG 2.2 baseline criterion (#151). Conformance needs assistive
+technology testing and human review under #151 and #155, which are open.
+Engineering checks do not establish accessibility acceptance.
+
 
 * S1: [docs/case_study_48_original.md](../../../../case_study_48_original.md), "Business Challenge", 2026-09-10.
 * S2: [docs/case_study_48_addendum.md](../../../../case_study_48_addendum.md), complete read; EXA-004/006/008, "Where Agents Fit and Where They Do Not", "Implementation Options", "Why Now", 2026-10-11.
