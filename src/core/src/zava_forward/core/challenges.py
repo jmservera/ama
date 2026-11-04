@@ -232,8 +232,11 @@ class ChallengeRegister:
             if r.get("hazard_referral", {}).get("status") == "referred_on_receipt"
         ]
 
-    def hazard_referrals_overdue(self, today: str, max_days: int = 1) -> list[Record]:
+    def hazard_referrals_overdue(self, today: str, max_days: int) -> list[Record]:
         """Unhanded hazard referrals older than `max_days`, or of unknown age, for the owner.
+
+        `max_days` is required: no limit has been approved by the owner, so the caller must
+        state it. A `received_on` after `today` is flagged with `data_quality`.
 
         Read-only: it flags a possible delay for human follow-up and never starts, stops or
         changes any hazard clock or record.
@@ -243,8 +246,12 @@ class ChallengeRegister:
         for rec in self.hazard_referrals():
             received = rec["hazard_referral"].get("received_on")
             age = (now - date.fromisoformat(received)).days if received else None
-            if age is None or age > max_days:
-                out.append({**rec, "referral_age_days": age})
+            future = age is not None and age < 0
+            if age is None or age > max_days or future:
+                flagged: Record = {**rec, "referral_age_days": age}
+                if future:
+                    flagged["data_quality"] = "received_on is in the future"
+                out.append(flagged)
         return out
 
     def overdue(self, today: str) -> list[Record]:
