@@ -146,6 +146,8 @@ def _open_triggers(report):
 def _pack_is_current(report, pack):
     if _open_triggers(report):
         return False
+    if pack.get("trigger_version", 0) != len(report.get("review_triggers", [])):
+        return False
     verifications = report.get("verifications", [])
     positions = report.get("legal_positions", [])
     return bool(verifications and positions
@@ -924,6 +926,7 @@ class ResidentDecisionMixin:
         pack = dict(
             version=len(packs) + 1, report_version=body["report_version"],
             verification_version=verified["version"], legal_position_version=position["version"],
+            trigger_version=len(report.get("review_triggers", [])),
             route=route, source="Template from reviewed record references; no AI used and no lease terms read",
             questions=[
                 dict(owner="Home Ownership data owner",

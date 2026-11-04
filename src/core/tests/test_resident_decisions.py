@@ -579,33 +579,79 @@ class JsonResidentDecisions(unittest.TestCase):
 
     def test_each_trigger_keeps_review_open_and_makes_pack_stale(self) -> None:
         kinds = ("Changed scope", "Dispute", "Defect", "Charge query")
-        for kind in kinds:
+        self.verified_report()
+        self.store.resident_action(self.sam, "ZF-1", self.pack())
+        for index, kind in enumerate(kinds):
             with self.subTest(kind=kind):
-                self.setUp()
-                self.verified_report()
-                self.store.resident_action(self.sam, "ZF-1", self.pack())
-                self.store.resident_action(self.sam, "ZF-1", self.trigger(trigger=kind))
+                packs = index + 1
+                self.store.resident_action(
+                    self.sam,
+                    "ZF-1",
+                    self.trigger(trigger=kind, expected_version=index),
+                )
                 report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
                 self.assertIn(kind.lower(), report["review_status"])
                 self.assertEqual(report["decision_route"], "Shared owner")
                 self.unchanged_failure(
-                    partial(self.store.resident_action, self.sam, "ZF-1", self.pack_review())
+                    partial(
+                        self.store.resident_action,
+                        self.sam,
+                        "ZF-1",
+                        self.pack_review(expected_version=packs),
+                    )
                 )
                 self.unchanged_failure(
                     partial(
                         self.store.resident_action,
                         self.sam,
                         "ZF-1",
-                        self.pack(expected_version=1),
+                        self.pack(expected_version=packs),
                     )
                 )
-                self.store.resident_action(self.sam, "ZF-1", self.resolve())
+                self.store.resident_action(
+                    self.sam,
+                    "ZF-1",
+                    self.resolve(expected_version=index + 1, trigger_version=index + 1),
+                )
                 self.assertIn(
                     "Open;", self.open_store().cases["ZF-1"]["tenure_reports"][0]["review_status"]
                 )
                 self.assertEqual(
                     resident_gate(self.store.cases["ZF-1"]), [resident_decisions.TENURE_HOLD]
                 )
+                # Resolved trigger: the older pack stays stale until redrafted.
+                self.unchanged_failure(
+                    partial(
+                        self.store.resident_action,
+                        self.sam,
+                        "ZF-1",
+                        self.pack_review(expected_version=packs),
+                    )
+                )
+                self.store.resident_action(self.sam, "ZF-1", self.pack(expected_version=packs))
+                report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+                self.assertEqual(report["question_packs"][-1]["version"], packs + 1)
+                self.assertTrue(
+                    resident_decisions._pack_is_current(report, report["question_packs"][-1])
+                )
+                self.assertFalse(
+                    resident_decisions._pack_is_current(report, report["question_packs"][-2])
+                )
+
+    def test_approved_pack_stays_stale_after_trigger_resolves(self) -> None:
+        self.verified_report()
+        self.store.resident_action(self.sam, "ZF-1", self.pack())
+        self.store.resident_action(self.sam, "ZF-1", self.pack_review())
+        self.store.resident_action(self.sam, "ZF-1", self.trigger(trigger="Dispute"))
+        self.store.resident_action(self.sam, "ZF-1", self.resolve())
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        self.assertFalse(resident_decisions._pack_is_current(report, report["question_packs"][0]))
+        self.store.resident_action(self.sam, "ZF-1", self.pack(expected_version=1))
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        self.assertTrue(resident_decisions._pack_is_current(report, report["question_packs"][1]))
+        self.store.resident_action(self.sam, "ZF-1", self.pack_review(expected_version=2))
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        self.assertIn("Approved", report["question_packs"][1]["status"])
 
     def test_ambiguous_identity_stops_reuse_and_routes_to_data_owner(self) -> None:
         self.verified_report()
