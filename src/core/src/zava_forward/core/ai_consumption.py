@@ -113,6 +113,50 @@ def usage(value: object) -> dict[str, int | None] | None:
     return {**{k: value[k] for k in keys}, "cached_tokens": cached}
 
 
+def capability_usage(
+    calls: list[dict[str, Any]],
+    completions: Mapping[str, Any],
+    outputs: Mapping[str, Any],
+    reviews: Mapping[str, Any],
+    unresolved: set[str],
+) -> dict[str, dict[str, Any]]:
+    """Per-assistant call, token and accepted-proposal attribution; opaque fields only."""
+    groups: dict[str, dict[str, list[dict[str, Any]]]] = {}
+    for call in calls:
+        groups.setdefault(call["capability"], {}).setdefault(call["root"], []).append(call)
+    result: dict[str, dict[str, Any]] = {}
+    for capability in sorted(groups):
+        roots = groups[capability]
+        measured: dict[str, int] = {}
+        for root, attempts in roots.items():
+            if all(a["id"] in completions and completions[a["id"]]["tokens"] for a in attempts):
+                measured[root] = sum(
+                    completions[a["id"]]["tokens"]["total_tokens"] for a in attempts
+                )
+        accepted = [
+            root
+            for root in roots
+            if root in outputs
+            and outputs[root]["eligible"]
+            and outputs[root]["output"] not in unresolved
+            and reviews.get(outputs[root]["output"], {}).get("action") in ("accept", "edit-accept")
+        ]
+        known = bool(accepted) and all(root in measured for root in accepted)
+        result[capability] = dict(
+            calls=sum(len(v) for v in roots.values()),
+            proposals=len(roots),
+            proposals_with_known_tokens=len(measured),
+            total_tokens=sum(measured.values()) if measured else UNKNOWN,
+            accepted_proposals=len(accepted),
+            tokens_per_accepted_proposal=(
+                format(Decimal(sum(measured[r] for r in accepted)) / len(accepted), "f")
+                if known
+                else UNKNOWN
+            ),
+        )
+    return result
+
+
 @dataclass(frozen=True)
 class CallContext:
     root: str
@@ -1066,6 +1110,7 @@ class Consumption:
             if all(r["id"] in completions and completions[r["id"]]["tokens"] for r in attempts):
                 totals.append(sum(completions[r["id"]]["tokens"]["total_tokens"] for r in attempts))
         spread = batch_spread(totals, batch, len(roots))
+        by_capability = capability_usage(calls, completions, outputs, reviews, unresolved)
         alerts = [r for r in records if r["kind"] == "alert" and begin <= r["at"] < finish]
         return dict(
             schema=SCHEMA,
@@ -1094,6 +1139,7 @@ class Consumption:
                 evidence_label=spread.pop("evidence_label"),
                 **spread,
             ),
+            by_capability=by_capability,
             unjoined_outputs=unjoined,
             unjoined_reviews=unjoined_reviews,
             accepted_proposals=accepted,

@@ -284,5 +284,69 @@ class SanitiserTests(unittest.TestCase):
         self.assertNotIn("offline_only", mc.sanitize_diagnostic({"offline_only": "yes"}))
 
 
+def _declaration(**changes: Any) -> dict[str, Any]:
+    entry: dict[str, Any] = {"denominator": 40, "window": "28 days", "threshold": dict(CONSTRUCTED)}
+    record: dict[str, Any] = {
+        "monitoring_owner": "Safety and Assurance appointee",
+        "incident_owner": "Digital service owner",
+        "response": "Suspend the task and use the manual route",
+        "manual_route_status": "manual route available",
+        "indicators": {name: dict(entry) for name in mc.HARM_INDICATORS},
+    }
+    record.update(changes)
+    return record
+
+
+class DeclarationTests(unittest.TestCase):
+    def test_complete_constructed_declaration_is_declared_offline_only(self) -> None:
+        result = mc.check_monitoring_declaration(_declaration(), task_enabled=True)
+        self.assertEqual(result["status"], mc.DECLARED)
+        self.assertEqual(result["missing"], [])
+        self.assertIs(result["offline_only"], True)
+
+    def test_missing_declaration_is_blocked_not_green(self) -> None:
+        result = mc.check_monitoring_declaration(None, task_enabled=True)
+        self.assertEqual(result["status"], mc.BLOCKED)
+        self.assertIn("monitoring_owner", result["missing"])
+        self.assertIn("indicator:cohort_errors", result["missing"])
+
+    def test_unapproved_live_threshold_and_missing_denominator_block(self) -> None:
+        record = _declaration()
+        record["indicators"]["challenges"]["threshold"] = {"limit": 0.1, "min_sample": 5}
+        record["indicators"]["review_effort"]["denominator"] = 0
+        result = mc.check_monitoring_declaration(record, task_enabled=True)
+        self.assertEqual(result["status"], mc.BLOCKED)
+        self.assertIn("indicator:challenges:threshold", result["missing"])
+        self.assertIn("indicator:review_effort:denominator", result["missing"])
+
+    def test_not_applicable_needs_a_reason(self) -> None:
+        record = _declaration()
+        record["indicators"]["cohort_errors"] = {"applicable": False}
+        blocked = mc.check_monitoring_declaration(record, task_enabled=True)
+        self.assertIn("indicator:cohort_errors:reason", blocked["missing"])
+        record["indicators"]["cohort_errors"] = {"applicable": False, "reason": "no cohorts"}
+        ok = mc.check_monitoring_declaration(record, task_enabled=True)
+        self.assertEqual(ok["status"], mc.DECLARED)
+
+    def test_disabled_task_still_exposes_owner_and_manual_route(self) -> None:
+        result = mc.check_monitoring_declaration(_declaration(), task_enabled=False)
+        self.assertEqual(result["status"], mc.DECLARED)
+        self.assertEqual(result["monitoring_owner"], "Safety and Assurance appointee")
+        self.assertEqual(result["manual_route_status"], "manual route available")
+        partial = mc.check_monitoring_declaration(
+            _declaration(manual_route_status=None), task_enabled=False
+        )
+        self.assertEqual(partial["status"], mc.BLOCKED)
+        self.assertIn("manual_route_status", partial["missing"])
+        self.assertEqual(partial["incident_owner"], "Digital service owner")
+
+    def test_placeholder_owner_is_not_named(self) -> None:
+        result = mc.check_monitoring_declaration(
+            _declaration(monitoring_owner="unknown"), task_enabled=True
+        )
+        self.assertIsNone(result["monitoring_owner"])
+        self.assertIn("monitoring_owner", result["missing"])
+
+
 if __name__ == "__main__":
     unittest.main()

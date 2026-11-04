@@ -7,6 +7,7 @@ import unittest
 from datetime import UTC, datetime
 from typing import Any
 
+from heldout_freeze_fixture import manifest
 from zava_forward.agents.candidate_comparison import compare_candidates
 
 NOW = datetime(2026, 11, 3, 9, tzinfo=UTC)
@@ -165,6 +166,54 @@ class CandidateComparisonTest(unittest.TestCase):
         rep = compare_candidates(cand("base", []), [cand("x", [row("c1")], changes=["model"])], NOW)
         self.assertEqual(rep["candidates"], [])
         self.assertIn("baseline invalid", rep["not_comparable"][0]["reason"])
+
+    def held(self, cases: list[str]) -> tuple[dict[str, Any], dict[str, Any]]:
+        frozen = manifest()
+        base = cand("base", [row(c) for c in cases])
+        alt = cand("alt", [row(c) for c in cases], changes=["model"])
+        return frozen, dict(base=base, alt=alt)
+
+    def test_without_freeze_is_same_case_only(self) -> None:
+        rep = compare_candidates(
+            baseline(), [cand("a", [row(c) for c in CASES], changes=["model"])], NOW
+        )
+        self.assertEqual(rep["held_out"]["status"], "not frozen")
+        self.assertFalse(rep["candidates"][0]["held_out_basis"])
+
+    def test_frozen_held_out_cases_are_the_basis(self) -> None:
+        frozen, c = self.held(["h1", "h2", "h3", "h4"])
+        rep = compare_candidates(c["base"], [c["alt"]], NOW, freeze=frozen)
+        self.assertEqual(rep["held_out"]["status"], "frozen")
+        self.assertEqual(rep["held_out"]["held_out_cases"], 4)
+        self.assertTrue(rep["candidates"][0]["held_out_basis"])
+
+    def test_cheaper_but_worse_on_frozen_cases_is_a_failure(self) -> None:
+        frozen, c = self.held(["h1", "h2", "h3", "h4"])
+        worse = cand(
+            "cheap",
+            [row(x, input_tokens=100, critical_miss=x == "h2") for x in ["h1", "h2", "h3", "h4"]],
+            changes=["model"],
+        )
+        rep = compare_candidates(c["base"], [worse], NOW, freeze=frozen)
+        self.assertEqual(rep["candidates"][0]["verdict"]["outcome"], "failure")
+
+    def test_cases_outside_the_freeze_are_not_comparable(self) -> None:
+        frozen, c = self.held(["c1", "c2", "c3", "c4"])
+        rep = compare_candidates(c["base"], [c["alt"]], NOW, freeze=frozen)
+        self.assertEqual(rep["candidates"], [])
+        self.assertIn("baseline not measured", rep["not_comparable"][0]["reason"])
+        frozen, c = self.held(["h1", "h2", "h3", "h4"])
+        short = cand("short", [row(x) for x in ["h1", "h2", "h3"]], changes=["model"])
+        rep = compare_candidates(c["base"], [short], NOW, freeze=frozen)
+        self.assertIn("same cases", rep["not_comparable"][0]["reason"])
+
+    def test_insufficient_freeze_is_reported_not_held_out(self) -> None:
+        frozen, c = self.held(["h1", "h2", "h3", "h4"])
+        del frozen["versions"]["model"]
+        rep = compare_candidates(c["base"], [c["alt"]], NOW, freeze=frozen)
+        self.assertEqual(rep["held_out"]["status"], "insufficient")
+        self.assertTrue(rep["held_out"]["gaps"])
+        self.assertFalse(rep["candidates"][0]["held_out_basis"])
 
 
 if __name__ == "__main__":

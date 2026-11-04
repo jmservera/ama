@@ -13,7 +13,10 @@ person supplies. Fixtures that use it are labelled synthetic demonstration data.
 * Benefits register: BG-011 event definitions and the minimum detectable effect
   (MDE). A target is never reported pass or fail when the MDE exceeds it.
 * Release decisions: every phase and tranche has a recorded decision with
-  requirements, evidence, unresolved issues and named approvers.
+  requirements, evidence, unresolved issues, named approvers, the AI economics
+  report reference and any AI limit breach. A Release that carries a breach
+  needs the approvers' decision on it. The report is a reference; no price,
+  budget or target is set here and a missing report stays Unknown.
 * Guardrail breach: pauses its scope until restart is authorised under the OD-35
   authority and a release decision for that scope. Emergency and statutory
   hazard response continues outside the pause.
@@ -494,6 +497,20 @@ class GovernanceMixin:
                    evidence=k.text(body.get("evidence"), "the acceptance evidence", 600), unresolved=k.text(body.get("unresolved"), "the unresolved issues (or none)", 400),
                    envelope_ref=k.text(body.get("envelope_ref"), "the approved cost and risk envelope reference", 200), approvers=approvers,
                    recorded_by=user["email"], recorded_at=k.now(), synthetic=bool(body.get("synthetic")))
+        breach = k.text(body.get("economics_limit_breach"), "the AI economics limit breach (or None)", 400)
+        rec.update(economics_report_ref=k.text(body.get("economics_report_ref"), "the AI economics report reference (or Unknown: no report)", 200),
+                   economics_limit_breach=breach)
+        if decision == "Release" and rec["economics_report_ref"].strip().lower() in ("unknown", "none", "n/a"):
+            raise ValueError("Release needs an AI economics report reference. With no report, record Withhold.")
+        if decision == "Release" and breach.strip().lower() not in ("none", "no", "n/a"):
+            rec["economics_breach_decision"] = k.text(body.get("economics_breach_decision"), "the approvers' decision on the AI economics limit breach", 400)
+            approver = k.text(body.get("economics_breach_approver"), "the approver who decides the AI economics limit breach", 120)
+            proposer = {str(user.get("email", "")).strip().lower(), str(user.get("name", "")).strip().lower()} - {""}
+            if approver not in approvers:
+                raise ValueError("The breach decision must be made by one of the named approvers.")
+            if approver.lower() in proposer:
+                raise ValueError("The breach decision needs an approver other than the person recording the release.")
+            rec["economics_breach_approver"] = approver
         if decision == "Release" and scope == "Phase 0 capture":
             self.require_capture_open()
         if decision == "Release" and scope in ("Shadow testing", "Live pilot") and not self.is_released("Phase 0 capture"):

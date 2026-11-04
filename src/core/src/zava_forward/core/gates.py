@@ -143,12 +143,12 @@ def safety_release_gate(
         return _result(
             rule,
             UNKNOWN,
-            "No accountable safety role is recorded for this hold, so release cannot pass.",
+            "No accountable safety role is recorded for this stop, so work cannot restart.",
             owner,
             "Record the accountable role by referring the issue to the safety service.",
         )
     if _norm(actor.get("role")) != _norm(role):
-        return _result(rule, FAIL, f"Only the {role} can release this hold.", owner, fix)
+        return _result(rule, FAIL, f"Only the {role} can restart this stopped work.", owner, fix)
     me = {_norm(actor.get(k)) for k in ("email", "code", "oid")} - {""}
     if not me:
         return _result(
@@ -158,7 +158,8 @@ def safety_release_gate(
         return _result(
             rule,
             FAIL,
-            "A different person must release this hold. You raised it or recorded the repair.",
+            "A different person must restart this stopped work. "
+            "You raised it or recorded the repair.",
             owner,
             fix,
         )

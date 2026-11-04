@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-04T13:05:42+00:00",
-  "commit": "a4a6a193dd9144c261a713d9d5001176f587e9da",
+  "scored_at": "2026-11-04T23:11:00+00:00",
+  "commit": "da6d5405dd7f4d4f5332edc11e7533ddb345c54b",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41833735399",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41930691871",
   "fingerprints": {
-    "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
+    "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
-    "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "0c97a727f4e2277aef2a7891f30488ec4b70beb20d7ebc96cbdde9b35b9991d2",
-    "infrastructure": "9daf6fb06c55f70bb7324a0a60a533bb9dc6f588a46a0060fc2b41557f38cc17",
+    "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
+    "solution-code": "02fdd0140ae17bd0c0035296f0886dbc0e5b2be6fc397ebdfe53a81d86e7bf40",
+    "infrastructure": "57c108c714928a668aab0e544d9804517f83f9e0d09ecada1ef5669b6fa6daa4",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "0c212fc27c0b4f5347cb28912b69d7a718b59c375ed1551f367a435636328c1e",
     "thought-leadership": "cfa6d63f21f69b0bb5fe7949954fbc0b168ba8e73e133ec9c055c828bd730196"
@@ -55,28 +55,31 @@
         "src/api/src/zava_forward/api/web/app.js:1223-1265",
         "src/api/tests/test_home_case_api.py:1-119"
       ],
-      "rationale": "Versioned home-case capability (issue #\u200b74) delivered end to end: API routes, store methods, a wired UI screen and passing tests, plus the ageing handoff route. Complete vertical slice; baseline 5 retained at ceiling."
+      "rationale": "Versioned home-case capability delivered end to end: API routes, store methods, a wired UI screen and passing tests, plus the ageing handoff route. Complete vertical slice; baseline 5 retained at ceiling."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "src/api/tests/test_error_logging.py:1-2"
+        "src/core/src/zava_forward/core/monitoring_coverage.py:240-311",
+        "infra/monitoring-runbooks.md:342-349"
       ],
-      "rationale": "Diff is mostly new domain capability (home case, discovery analysis, exception feeds) with no new instrumentation, metrics or cost modelling; operations evidence unchanged. Ceiling 5 retained."
+      "rationale": "New check_monitoring_declaration checks six harm indicators for denominators, windows, thresholds and named owners; strengthens ops evidence, still offline/no live metrics. Ceiling 5 retained."
     },
     "A6": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/discovery_assistant_evaluation.py:1-140"
+        "src/agents/src/zava_forward/agents/heldout_freeze.py:1-136",
+        "src/agents/src/zava_forward/agents/candidate_comparison.py:170-243",
+        "src/agents/tests/test_heldout_freeze.py:1-92"
       ],
-      "rationale": "New discovery_assistant_evaluation module adds a measures/comparator evaluation harness (vs manual, BI, deterministic workflow) with repeatability checks, but is non-agent scaffolding with no observed results yet; does not address model-choice justification. Ceiling 5 retained unchanged."
+      "rationale": "New heldout_freeze.check_freeze is a genuine pre-evaluation freeze/leak gate (digest, independent labeller, versioned bindings, cohort minimums, digest-bound approval), wired into compare_candidates via freeze=. Strengthens evaluation rigor; no real manifest/results yet. Ceiling 5 retained."
     },
     "A7": {
       "score": 4,
       "evidence": [
-        "src/agents/src/zava_forward/agents/dispatch.py:186-220"
+        "src/agents/src/zava_forward/agents/candidate_comparison.py:170-200"
       ],
-      "rationale": "No files under src/agents were touched in this diff; change set is API/core domain logic (home case, gates, discovery, aftercare), unrelated to agent dispatch/orchestration patterns. Baseline 4 (Good) retained."
+      "rationale": "Agents-directory changes in this diff (candidate_comparison.py, chat_heldout.py, heldout_freeze.py) are evaluation/freeze-gate scaffolding, not autonomous agent dispatch or orchestration; no handoff, reflection or state-graph pattern added. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -114,10 +117,10 @@
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:3928-3943",
-        "src/core/README.md:4417-4433"
+        "src/api/README.md:502-522",
+        "infra/README.md:1577-1611"
       ],
-      "rationale": "Diff updates component technical README documentation (API/core), not the capstone deck or pitch documentation. Immaterial to B6 deck/capstone-documentation scoring; baseline retained."
+      "rationale": "Diff updates component technical README documentation (agents/API/infra) and new ADR 0007, not the capstone deck itself (deck file unchanged). Immaterial to B6 deck/capstone-documentation scoring; baseline retained."
     },
     "B7": {
       "score": 5,
@@ -130,7 +133,7 @@
     "C1": {
       "score": 5,
       "evidence": [],
-      "rationale": "No new BRD/stakeholder-framing change in this PR; unrelated to pitch/deck reorg. Baseline ceiling unchanged."
+      "rationale": "No new BRD/stakeholder-framing change relevant to pitch/business framing; the discovery-brief status update records delivery gaps, not stakeholder discovery. Baseline ceiling unchanged."
     },
     "C2": {
       "score": 2,
