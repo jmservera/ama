@@ -154,6 +154,8 @@ def get_kind(path):
         return "case"
     if path.startswith("/api/docs/"):
         return "doc"
+    if path.startswith("/api/workorders/") and path.endswith("/job-pack"):
+        return "job_pack"
     if path.startswith("/api/time/"):
         return "time"
     if path in LIST_EXPORTS:
@@ -650,6 +652,16 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, rows)
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
+            if get_kind(url.path) == "job_pack":
+                parts = url.path.strip("/").split("/")
+                try:
+                    if len(parts) != 4:
+                        raise ValueError("Choose one of the work orders.")
+                    return self._json(200, s.work_order_job_pack(u, parts[2]))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except ValueError as e:
+                    return self._json(404, {"error": str(e)})
             if url.path == "/api/checklists":
                 return self._json(200, quality.CHECKLISTS)
             if url.path == "/api/facets":
