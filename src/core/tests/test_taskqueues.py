@@ -254,6 +254,36 @@ class QueueDefinitions(unittest.TestCase):
         )
         self.assertEqual(evaluate(self.case, handoff=handoff)["overdue"], expected)
 
+    def test_overdue_nomination_next_update_is_a_staff_task_only(self) -> None:
+        self.case["nomination_records"] = [
+            dict(owner={"name": "Named officer"}, next_update="2026-10-15"),
+            dict(owner={"name": "Future owner"}, next_update="2026-10-16"),
+            dict(owner=None, next_update="2026-10-01"),
+            dict(owner={"name": "No date"}, next_update=None),
+            dict(owner={"name": "Bad date"}, next_update="soon"),
+        ]
+        before = copy.deepcopy(self.case)
+        work = evaluate(self.case)
+        self.assertEqual(
+            [(x["task"], x["owner"], x["source"]) for x in work["overdue"]],
+            [
+                (
+                    "Nomination or self-referral next update",
+                    "Named officer",
+                    f"case:{self.case['id']}/nomination_records/0",
+                ),
+                (
+                    "Nomination or self-referral next update",
+                    "Unknown",
+                    f"case:{self.case['id']}/nomination_records/2",
+                ),
+            ],
+        )
+        self.assertIn("overdue", work["queues"])
+        self.assertEqual(self.case, before)
+        self.case["closed"] = True
+        self.assertNotIn("overdue", evaluate(self.case)["queues"])
+
     def test_clock_only_overdue_keeps_snapshot_and_completion_boundaries(self) -> None:
         for due, completed, count in (
             ("2026-10-15T23:59:59Z", None, 1),

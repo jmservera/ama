@@ -34,8 +34,9 @@ DEFINITIONS = (
     (
         "overdue",
         "Overdue tasks",
-        "A recorded pending handoff, resident update or external safety-service deadline "
-        "is before the snapshot and completion is not evidenced. Not a statutory calculation.",
+        "A recorded pending handoff, resident update, nomination or self-referral next update, "
+        "or external safety-service deadline is before the snapshot and completion is not "
+        "evidenced. Not a statutory calculation, and never a priority or eligibility change.",
     ),
     (
         "unowned",
@@ -166,6 +167,14 @@ def overdue_tasks(
             "Handoff acceptance",
             handoff.get("chase_owner") or UNKNOWN,
             "handoff",
+        )
+    for index, nomination in enumerate(case.get("nomination_records") or []):
+        deadline(
+            nomination.get("next_update"),
+            None,
+            "Nomination or self-referral next update",
+            (nomination.get("owner") or {}).get("name") or UNKNOWN,
+            f"nomination_records/{index}",
         )
     return overdue
 

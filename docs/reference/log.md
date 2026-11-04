@@ -10232,3 +10232,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Tenure responsibility-question pack, #131 slice R3 (Refs #131)
 
 * Slices R1 (#858) and R2 (#903) delivered the Legal reference and data-owner verification. This slice adds `tenure_question_pack` and `tenure_question_pack_review`: a template pack drafted only from a verified report with a Legal reference, approved or returned by a named other human; no AI, no lease interpretation, hold unchanged. Unmet: C1 enumeration, C2 offer gate, C3 appointed Legal owner, C5 review-open triggers, C6 ambiguous-identity routing. Evidence: `.copilot-tracking/*/2026-11-04-tenure-question-pack-131-r3-*`.
+
+## [2026-11-04] update | Overdue nomination next updates surface in the work queue (Refs #130)
+
+* This slice makes overdue nomination next updates appear in the work queue (`taskqueues.py`, focused tests). It is Refs #130 only: no acceptance criterion is newly proven, and OD-41 and OD-42 remain open. Focused tier only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 nomination-queue-130).
