@@ -21,6 +21,11 @@ list a 23:45 narration route inside a 30-minute slot, and the issue text still
 refers to slide 16 and a 15-minute route. The owner should confirm which
 format applies to the capstone before timing is judged.
 
+The owner directed on 2026-11-04 that the slide and Q&A card be drafted from
+existing evidence, focused on AI used in the solution. See the
+[slide and Q&A card draft](./tokenomics-slide-and-qa-card-draft.md); it does
+not settle the placement decision below.
+
 ## What the Current Deck Already Does
 
 | Where | Content | Source |

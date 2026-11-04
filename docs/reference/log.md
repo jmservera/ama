@@ -10265,3 +10265,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Admin-only landing skips case requests (Refs #920)
 
 * Added `services.cases` to `/api/me`; an account without case access sees a plain-language page instead of 403s on `/api/facets` and `/api/cases`. Chromium check asserts no console errors. Issue stays open: other admin-only routes and live evidence are unproven. See `.copilot-tracking/*/2026-11-04-admin-landing-denial-920-*`.
+## [2026-11-04] update | Tokenomics slide and Q&A card drafted, AI inside the solution (Refs #435)
+
+* Added `docs/capstone/pitch/tokenomics-slide-and-qa-card-draft.md` from existing evidence, per the owner direction of 2026-11-04: right-size the AI used in the solution (rules, typed decision model, generative) and claim no cost advantage until measured. Every figure carries a source and evidence label; the modelled USD 0.44 per home is kept out and flagged against #435 criterion 6.
+* Linked it from the pitch README, the placement draft and the reference index. The deck, generated notes and question bank are unchanged; no price, rehearsal, mentor answer, spend authority or assessment is recorded.
