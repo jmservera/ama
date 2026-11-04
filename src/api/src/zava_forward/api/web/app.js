@@ -2160,11 +2160,11 @@ async function overviewView() {
     h("div", { class: "grid" }, bars("Funding status", st.funding),
       h("section", { class: "card" }, h("h2", {}, "Contractors"),
         h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Contractors table" },
-          h("table", {}, h("thead", {}, h("tr", {}, ["Contractor", "Open", "On site or booked", "Stuck 60+ days"].map((x) => h("th", { scope: "col" }, x)))),
+          h("table", {}, h("caption", { class: "sr-only" }, "Contractors and their open work"), h("thead", {}, h("tr", {}, ["Contractor", "Open", "On site or booked", "Stuck 60+ days"].map((x) => h("th", { scope: "col" }, x)))),
             h("tbody", {}, st.contractors.map((c) => h("tr", {}, h("td", {}, c.name), h("td", {}, c.open), h("td", {}, c.booked), h("td", {}, c.long)))))))),
     h("section", { class: "card" }, h("h2", {}, "Team workload"),
       h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Team workload table" },
-        h("table", {}, h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", { scope: "col" }, x)))),
+        h("table", {}, h("caption", { class: "sr-only" }, "Team workload by person"), h("thead", {}, h("tr", {}, ["Name", "Role", "Open cases", "With a safety issue"].map((x) => h("th", { scope: "col" }, x)))),
           h("tbody", {}, st.team.map((t) => h("tr", {}, h("td", {}, t.name), h("td", {}, t.role), h("td", {}, t.open), h("td", {}, t.hazards))))))));
   mp.size();
   await mp.draw(true);
@@ -2188,7 +2188,7 @@ async function fundingView() {
   show(h("h1", {}, "Funding applications"),
     h("p", { class: "muted" }, "Homes where funding is not yet confirmed. Open one to draft the application with AI, add evidence, and have it approved."),
     h("p", {}, h("a", { class: "btn alt", href: "/api/funding.csv", download: "funding.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back."),
-    h("table", {}, h("thead", {}, h("tr", {}, ["Resident", "Area", "Route", "Status", "Evidence", "Owner"].map((x) => h("th", {}, x)))),
+    h("table", {}, h("caption", { class: "sr-only" }, "Homes where funding is not yet confirmed"), h("thead", {}, h("tr", {}, ["Resident", "Area", "Route", "Status", "Evidence", "Owner"].map((x) => h("th", { scope: "col" }, x)))),
       h("tbody", {}, rows.slice(0, 150).map((r) => h("tr", {}, h("td", {}, h("a", { href: `#/case/${encodeURIComponent(r.id)}` }, r.resident)),
         h("td", {}, r.area), h("td", {}, r.route), h("td", {}, r.status), h("td", {}, `${r.have} of ${r.need}`), h("td", {}, r.owner))))));
 }
