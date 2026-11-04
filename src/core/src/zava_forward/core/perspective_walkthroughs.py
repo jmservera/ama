@@ -44,7 +44,11 @@ EVIDENCE: dict[str, dict[str, list[str]]] = {
     },
     "retrofit-case-team": {
         "entry": [CORE + "home_case.py", TESTS + "test_home_case.py"],
-        "evidence": [CORE + "buildings.py", CORE + "journey_trace.py"],
+        "evidence": [
+            CORE + "buildings.py",
+            CORE + "journey_trace.py",
+            TESTS + "test_journey_building.py",
+        ],
         "safe_endpoint": [CORE + "gates.py"],
         "recovery": [],
         "handoff": [CORE + "signoffs.py"],
