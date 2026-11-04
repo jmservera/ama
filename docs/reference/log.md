@@ -10127,3 +10127,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Browser-style anonymous API requests pinned to 401 (Refs #350)
 
 * A new executed test shows the src app answers anonymous `/api/*` requests with 401 JSON, including a browser User-Agent with Accept: application/json, while pages still redirect to sign-in. This is the app half of acceptance criterion 1 only: the platform EasyAuth redirect that returns 302 for browser API calls is unchanged and unverified (needs an infrastructure/security change and live Azure proof). All ten #350 criteria stay unmet. Focused tests, ruff and mypy only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-350-anon-api-401).
+## [2026-11-04] update | Failed import feed for the exception queue (Refs #135)
+
+* Added a read-only `feed_failed_imports` in core that raises `failed_import` items for rejected importer batches and refused import files, keeping source identity, version and reason but no row values, without retrying or approving anything. Not wired to a live importer, store, API or UI; criteria 1, 5 and the owner-approved roles and runbooks stay unmet. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-135-r2-import-feed).

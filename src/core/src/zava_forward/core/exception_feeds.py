@@ -116,3 +116,60 @@ def feed_unaccepted_handoffs(
             )
         )
     return raised
+
+
+def feed_failed_imports(
+    queue: ExceptionQueue,
+    batches: Iterable[Mapping[str, Any]],
+    owner: str,
+    refusals: Iterable[Mapping[str, Any]] = (),
+) -> list[Record]:
+    """Raise a failed_import item for each rejected batch and each refused import file.
+
+    Batches are importer batch records (status rejected means the data never went live).
+    Refusals are files the importer would not preview or stage: source_name, source_sha256,
+    reason and optional at. Only source identity, version and the stated reason are kept, never
+    row or cell values. The original file stays where it was; nothing is retried or approved.
+    """
+    raised: list[Record] = []
+    for batch in batches:
+        if batch.get("status") != "rejected":
+            continue
+        batch_id = str(batch.get("batch_id", ""))
+        raised.append(
+            queue.raise_failure(
+                "failed_import",
+                owner,
+                f"Import batch {batch_id or UNKNOWN} was rejected and did not go live.",
+                {
+                    "batch_id": batch_id,
+                    "structure": batch.get("structure"),
+                    "version": batch.get("version"),
+                    "source_name": batch.get("source_name"),
+                    "source_sha256": batch.get("source_sha256"),
+                    "staged_by": batch.get("staged_by"),
+                    "staged_at": batch.get("staged_at"),
+                },
+                f"Rejected by {batch.get('decided_by') or UNKNOWN}: "
+                f"{batch.get('decision_note') or 'no note recorded'}.",
+                ref=f"batch:{batch_id}",
+            )
+        )
+    for refusal in refusals:
+        digest = str(refusal.get("source_sha256", ""))
+        name = refusal.get("source_name")
+        raised.append(
+            queue.raise_failure(
+                "failed_import",
+                owner,
+                f"Import file {name or UNKNOWN} was refused.",
+                {
+                    "source_name": name,
+                    "source_sha256": digest or None,
+                    "at": refusal.get("at"),
+                },
+                str(refusal.get("reason") or "No reason recorded."),
+                ref=f"file:{digest or name}",
+            )
+        )
+    return raised
