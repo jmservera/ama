@@ -8,6 +8,7 @@ from typing import Any
 from unittest.mock import patch
 
 from zava_forward.core.synthetic import determinism_audit as da
+from zava_forward.core.synthetic import sensor_backfill, sensor_stream
 
 
 class DeterminismAuditTests(unittest.TestCase):
@@ -35,21 +36,21 @@ class DeterminismAuditTests(unittest.TestCase):
         self.assertTrue(report["all_available_pass"])
 
     def test_sensor_stream_audit_replays_the_composed_path(self) -> None:
-        names = {path.name for path in da.sensor_stream.revision_sources(composed=True)}
+        names = {path.name for path in sensor_stream.revision_sources(composed=True)}
         self.assertLessEqual(da.STREAM_EXPECTED_SOURCES, names)
         with tempfile.TemporaryDirectory() as tmp:
             manifest = json.loads(da._sensor_stream(Path(tmp) / "s").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["model"], da.sensor_backfill.COMPOSED_VERSION)
+        self.assertEqual(manifest["model"], sensor_backfill.COMPOSED_VERSION)
         self.assertEqual(manifest["climate"], da._AuditClimate().manifest())
         self.assertEqual(len(manifest["retrofit_history"]), 1)
 
     def test_sensor_stream_audit_fails_when_an_expected_source_is_missing(self) -> None:
         kept = tuple(
             path
-            for path in da.sensor_stream.revision_sources(composed=True)
+            for path in sensor_stream.revision_sources(composed=True)
             if path.name != "retrofit_effects.py"
         )
-        with patch.object(da.sensor_stream, "revision_sources", return_value=kept):
+        with patch.object(sensor_stream, "revision_sources", return_value=kept):
             result = da._check("sensor-stream", da.GENERATORS["sensor-stream"])
         self.assertEqual(result["status"], "FAIL")
         self.assertIn("retrofit_effects.py", str(result["error"]))
