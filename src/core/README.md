@@ -4428,6 +4428,13 @@ Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring,
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
 human review. Tests: `src/core/tests/test_challenges.py`.
 
+Status record, 2026-11-04 (issue #220 stays open): criteria 1 to 4 were delivered by #418, #641 and
+#693, with the ageing and protection helpers in #826 and #966. Criterion 5 (no retaliation, inferred
+refusal or delayed hazard response) is unmet. The remaining work is human: representative resident
+and staff acceptance, a measured hazard-response comparison on live workflow data, and owner approval
+of the hazard follow-up age limit. The register itself cannot prove it. A further code slice would
+only wire these read-only helpers into a staff view, which needs owner direction first.
+
 ## Aftercare concern route and evaluator view (#133)
 
 `zava_forward.core.aftercare.AftercareRegister` is a store-independent register for constructed
