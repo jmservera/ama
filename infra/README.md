@@ -1580,8 +1580,19 @@ Owner-approved, resource group `ama` only. Local `docker build`, then push insid
 
 * Demo API `--0000024` to `--0000025` and resident demo `--0000009` to `--0000010`, each 100 percent and Healthy; `/healthz` 200 after scale-from-zero. A sanitized env diff of the demo API showed no change, so `AI_MODEL_VERSION` and `AI_MODEL_VERSION_STRONG` (both `gpt-4.1-nano-2025-04-14`) were kept.
 * End date (owner decision on #521): `ZF_DEMO_EXPIRES_AT` on `ca-resident-demo` changed from `2027-01-31T23:59:00Z` to `2028-01-01T00:00:00Z` (the packaged maximum, which the service refuses at or after). The demo API has no expiry setting. Rollback: set the earlier value.
-* Signed-in walkthrough: see the [dated review note](../docs/reference/research/ux/zava-forward-prototype-profile-review.md#live-redesign-deploy-and-signed-in-walkthrough-2026-11-04-refs-462-refs-521). The sensors section showed its fail-closed message only (#1072).
+* Signed-in walkthrough: see the [dated review note](../docs/reference/research/ux/zava-forward-prototype-profile-review.md#live-redesign-deploy-and-signed-in-walkthrough-2026-11-04-refs-462-refs-521). The sensors section showed its fail-closed message only (#1072). Resolved for the test resident by the [live sensors seed](#live-sensors-seed-for-the-test-resident-2026-11-04-refs-1072-refs-462).
 * This is a manual out-of-band deploy; no Bicep deployment or complete local gate was run.
+
+### Live sensors seed for the test resident (2026-11-04, Refs #1072, Refs #462)
+
+Owner-approved until the end of November 2026: one-off in-VNet job runs to the private demo SQL database, public network access kept Disabled, no firewall rule, spec restored with readback.
+
+* Tool: `infra/scripts/resident_sensor_seed.py` with `infra/resident-sensor-seed.Dockerfile` (based on the demo API image, build context `infra/`). Positional modes: `inspect`, `seed home_id as_of days`, `map`, `unmap`, `view`, `verify`, `whoami`, `unseed`. It reuses `sensor_backfill` unchanged (seed 183, 30 days, hourly, ending the day before `as_of`) because the committed backfill ends 2026-09-30.
+* Run: `az containerapp job start` on `job-cutover-test-init` with per-execution overrides (container name, image, cpu, memory, env, args). A per-execution override never changes the job spec; template, configuration and identity read back identical. The image was built locally and pushed in a short registry window with the bare-IP rule removed afterwards (readback Disabled, Deny, no rules). Digests are in the registry, not restated here.
+* Data: 713 synthetic readings under the unique home id `SYN-NE-001458-FLAT1`, and `$.home.stock_id` set on the test resident's case only. The shared building anchor has 13 flats, so binding the anchor would have shown the readings to the neighbours. The `map` step bumps the case rowversion by one; `unmap` reverses it, `unseed` removes the readings.
+* Mistake corrected: a first seed under the wrong building anchor exposed seven other residents and was removed with `unseed` (713 readings, one register row) before the view was re-applied.
+* View: `infra/sql/resident-showcase.sql` re-applied with the `COALESCE(home.stock_id, synthetic_stock_anchor_id)` binding. EXECUTE AS the resident principal: 1 of 522 rows has sensors, 0 foreign readings.
+* The forecast is stale 24 hours after the last stored reading; re-run `seed` with a new `as_of` to refresh. Signed-in 390 px re-walk: see the [dated review note](../docs/reference/research/ux/zava-forward-prototype-profile-review.md#live-sensors-seed-and-signed-in-re-walk-2026-11-04-refs-1072-refs-462).
 
 ### Historical deployment recipe
 

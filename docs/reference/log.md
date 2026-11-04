@@ -10341,6 +10341,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 121 model dispatch gate wired into the AI transport (Refs #121)
 
 * Wired `data_protection.dispatch_hold` into `ai.Ai.run`, `look_at` and `_request`, driven by `ZF_DATA_PROCESSING` (constructed by default; anything else fails closed). Documented in `src/core/README.md`; behavioural tests in `test_data_protection.py`. No approval, retention period or legal conclusion is recorded and no criterion is ticked. Rights log still unpersisted.
+## [2026-11-04] update | Live sensors seed and signed-in re-walk (Refs #1072, Refs #462)
+
+* Owner-approved one-off in-VNet job seeded 713 synthetic sensor readings for the test resident's home only (per-case `home.stock_id`), and re-applied the resident view with the `COALESCE` binding. Signed-in 390 px re-walk shows temperature, humidity and the 24-hour forecast. Method in `infra/README.md`, result in the prototype profile review. SQL stayed private, spec restored.
+
 ## [2026-11-04] update | Booking evidence gate CI fix and refusal test (Refs #82)
 
 * Typed `Store._evidence_missing` to clear the mypy `no-untyped-call` failures in `test_gates.py`, and added a behavioural test that `require_booking_gates` refuses booking when evidence is missing or malformed. Documented in `src/core/README.md`. No behaviour change; no issue criteria ticked or closed.
@@ -10492,6 +10496,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 138 status record (Refs #138)
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
+
+## [2026-11-04] update | Issue 100 per-capability AI usage view (Refs #100)
+
+* Rechecked merged PR 911. Added a per-capability usage table (counts and tokens for known proposals) to the asset and board view, reading main's existing report field; cost per capability stays Unknown. Criteria stay unmet: #440 checkpoint, #134 open, per-capability cost, quality floor, limits (OD-51) and live evidence. Evidence under `.copilot-tracking/` (2026-11-04 issue-100 r2).
 
 ## [2026-11-04] update | Issue 128 paired-cohort priority check (Refs #128)
 
