@@ -449,6 +449,47 @@ def consumption_summary(receipts: Sequence[dict[str, Any]]) -> dict[str, Any]:
     )
 
 
+def call_authorization(
+    auth: dict[str, Any] | None,
+    calls: int,
+    tokens: int,
+    *,
+    now: str,
+    used_calls: int = 0,
+    used_tokens: int = 0,
+) -> dict[str, Any]:
+    """Allow an actual-model call only inside a finite, named, unexpired owner authorisation.
+
+    Nothing here grants spend authority: an allowed result only says the request fits limits an
+    owner already set. Any missing, non-finite, exhausted or expired limit blocks the call.
+    """
+    a = auth or {}
+    reasons = []
+    if not str(a.get("authorised_by", "")).strip():
+        reasons.append("no named owner authorisation")
+    for key, need, used in (("max_calls", calls, used_calls), ("max_tokens", tokens, used_tokens)):
+        limit = a.get(key)
+        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+            reasons.append(f"{key} is not a finite positive limit")
+        elif used + need > limit:
+            reasons.append(f"{key} would be exceeded ({used + need} > {limit})")
+    budget = a.get("max_budget")
+    if isinstance(budget, bool) or not isinstance(budget, (int, float)) or budget <= 0:
+        reasons.append("max_budget is not a finite positive limit")
+    elif not str(a.get("budget_currency", "")).strip():
+        reasons.append("budget currency is not named")
+    expiry = str(a.get("expires_at", ""))
+    if not expiry:
+        reasons.append("no expiry")
+    elif expiry <= now:
+        reasons.append("authorisation has expired")
+    return dict(
+        outcome="blocked" if reasons else "within-limit",
+        reasons=reasons,
+        spend_authority="not implied; this check only compares a request with owner-set limits",
+    )
+
+
 GATE_CATEGORIES = ("prompt-injection", "memory-poisoning", "permission", "out-of-scope")
 
 
@@ -535,6 +576,7 @@ def enablement_decision(
     entry = ai_registry.get(TASK) or {}
     return dict(
         task=TASK,
+        actual_calls=call_authorization(None, 1, 1, now="")["outcome"],
         outcome=outcome,
         state="disabled",
         registered=bool(entry),

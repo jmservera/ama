@@ -90,6 +90,12 @@ source, memory, golden set) is insufficient and lists `renewal_required_for`.
 No thresholds are approved, the check is exercised only with constructed
 fixtures, and the task stays disabled whatever the result.
 
+`call_authorization` gates any future actual-model call: it blocks unless a named
+owner authorisation gives finite positive call, token and budget limits (with a
+currency) and an unexpired date, and the request plus prior use fits them. An
+allowed result implies no spend authority. No such authorisation exists, no
+actual call is made, and `enablement_decision` reports `actual_calls: blocked`.
+
 ### Resource-specific isolation fixtures (#172, 2026-10-18)
 
 `test_chat_fixture` separates all eleven persona/memory perspectives from the
