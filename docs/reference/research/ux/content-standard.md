@@ -117,6 +117,18 @@ not a JavaScript/HTML visibility parser or a universal audit of dynamic messages
 | "historical snapshots" | Restored cited-lookup status | Historical records; ask again for a fresh lookup |
 | "snapshot" time labels | Existing case task summary, safety clock and task sources | Recorded as of / Safety clock in this recorded view |
 
+Slice 2 (2026-11-04) applies the same glossary to raised refusals in
+`workflows.py` and `hazard.py`: "retrofit hold", "release a hold" and "hold
+release" now read "stopped retrofit work" and "restart", and each refusal names
+who can act or what to do next. Stored state values such as "Retrofit hold
+released" and audit event names are unchanged, and no authority or approval rule
+changed. Remaining typed errors (`gates.py` configuration errors, `signoffs.py`,
+`doc_controls.py` legal-hold wording, `procurement.py`, `resident_decisions.py`)
+are not yet audited. Field-label messages from `controls.text` now name
+"the reason for restarting retrofit work" and "the external evidence supporting
+the restart"; other `controls.text` labels are not yet audited. Behaviour tests
+in `test_hazard_referral.py` trigger the changed refusals.
+
 The safety alternatives come from the existing stopped-work/restart glossary.
 They do not close a hazard-service case, establish safety, give the panel new
 authority or permit a restart without the existing human decision process.
