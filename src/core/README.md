@@ -4366,9 +4366,17 @@ including "no outcome yet", unresolved concerns and concerns outside the stated 
 fixed notice that it shows no causation, fault or savings. `neutral_text` rejects causation, blame
 or savings wording in templated text.
 
+`propose_pack(concern_id, ai_summary=None)` drafts an optional concern pack for the named owner. The
+pack is built from the record by template, so it exists when AI is unavailable; an optional AI
+summary is attached only after the neutral-text guard. It is `Not reviewed` and `approved` false
+until the named owner calls `review_pack` with `accept` or `reject` and a reason; neither action
+changes the concern, its outcome or its remedy, and a sensor reading never appears in the pack. The
+task `aftercare-concern-pack` is registered in `ai_registry` as an unapproved, disabled proposal
+task with a manual route and no model binding (FR-036).
+
 Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), evaluator role access
-and the DPO position on outcome data (both open), and the optional AI concern pack (criterion 6).
-Tests: `src/core/tests/test_aftercare.py`.
+and the DPO position on outcome data (both open), a model route for the pack summary (needs
+release evidence and owner approval), and a pack screen. Tests: `src/core/tests/test_aftercare.py`.
 
 ## Data steward and digital operator exception queue (#135)
 
