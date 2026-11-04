@@ -10218,3 +10218,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Unaccepted handoff ageing API route, #83 slice 2 (Refs #83)
 
 * PR 893 delivered core ageing and the exception feed. This slice adds the read-only `GET /api/handoffs/unaccepted` route (staff roles, role-scoped, optional caller-supplied `max_age_hours`, never defaulted) with HTTP tests for scope, bad input, no state change and the role inventory. Unmet: criterion 3 (approved times and out-of-hours routes under OD-09, a screen, automatic escalation, human acceptance). Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-83 r5).
+## [2026-11-04] update | Exposure pause signal read from approved limits file (Refs #99)
+
+* `FinanceMixin.exposure_signal` compares recorded commitments with person-supplied limits (`approved-limits.json` or `ZF_APPROVED_LIMITS`); absent or malformed input is Held. Read-only; no figures invented. AC1 and AC2 of issue 99 remain unmet or partial; store persistence, API and UI are later slices.
+
+## [2026-11-04] update | Exposure signal fails closed on stale or malformed limits (Refs #99)
+
+* Review fixes: limits approved over 366 days ago or dated in the future are Held with a plain reason (`stale_reason`, `MAX_AGE_DAYS`, based on `approved_on`; the file schema records no expiry). Non-UTF-8 files and non-numeric commitment amounts now return Held instead of raising. Tests added; staleness horizon is an engineering default pending owner confirmation.
