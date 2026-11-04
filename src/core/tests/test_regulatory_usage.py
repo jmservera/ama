@@ -5,7 +5,9 @@ from __future__ import annotations
 import json
 import unittest
 from typing import Any
+from unittest import mock
 
+from zava_forward.core import regulatory_usage
 from zava_forward.core.regulatory_usage import economics, offline_usage, summarize, usage_metering
 
 AT = "2026-10-16T12:00:00+00:00"
@@ -57,6 +59,19 @@ class RegulatoryUsage(unittest.TestCase):
         message = str(ctx.exception)
         self.assertEqual(message, "Stored regulatory usage is invalid; audit review required.")
         self.assertNotIn("task_version", message)
+
+    def test_summary_wraps_metering_schema_errors_in_plain_language(self) -> None:
+        good = offline_usage("regulatory-home-chat", "regulatory-chat-v1", "answer", AT)
+        internal = ValueError("prompt_version: not in closed schema")
+        with mock.patch.object(regulatory_usage, "usage_metering", side_effect=internal):
+            with self.assertRaises(ValueError) as ctx:
+                summarize(
+                    [json.dumps(dict(role=ROLE, usage=good))], ROLE, "2026-10-16", truncated=False
+                )
+        self.assertEqual(
+            str(ctx.exception), "Stored regulatory usage is invalid; audit review required."
+        )
+        self.assertNotIn("prompt_version", str(ctx.exception))
         self.assertIsNone(ctx.exception.__cause__)
         self.assertTrue(ctx.exception.__suppress_context__)
 
