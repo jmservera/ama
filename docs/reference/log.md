@@ -10417,3 +10417,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 138 status record (Refs #138)
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
+
+## [2026-11-04] update | Candidate comparison bound to the held-out freeze (Refs #108)
+
+* `compare_candidates` accepts an optional freeze manifest, reports `held_out.status`, and compares only on the frozen held-out case ids. Offline grader and synthetic tests only; no held-out data, live calls, regional model/quota confirmation or Finance validation. Criteria for model/quota confirmation, held-out freeze evidence and human/Azure evidence stay unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-108-r2).
