@@ -241,7 +241,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         out = ranking_publication.verify(archive)
         out["overdue"] = ranking_publication.overdue(archive, controls.today())
         out["schedule"] = ranking_publication.SCHEDULE
-        out["policy_signed"] = False
+        out["policy_signed"] = ranking.is_signed(ranking.CURRENT)
+        out["signoff_problems"] = ranking.signoff_problems(ranking.CURRENT)
         return out
 
     def publish_ranking_snapshot(self, user):

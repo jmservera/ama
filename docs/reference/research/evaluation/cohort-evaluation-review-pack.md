@@ -220,3 +220,9 @@ ranking-bound expectations (the sensor, source and appointment fields are carrie
 `rank()`, the sample arithmetic and review-burden fractions are consistent, all
 held-out roles stay UNFILLED and each AC is Not met. It is not an
 evaluation and does not read this page.
+
+## Status record (2026-11-04, Refs #222)
+
+* Merged evidence since this pack was written: PR 636 (core cohort record), 697 (ranking policy run), 821 (approval bound to manifest content), 939 (per-cohort record in the AI evaluation report) and 975 (AI priority task cohort evaluation). Behavioural tests for acceptance criteria 1 to 5 now exist on main and the issue ticks them.
+* Criterion 6 remains unmet. Owner and DPO approval of cohorts, lawful analysis fields and thresholds (OQ-018) is absent, the independent reviewer, adjudicator and custodian roles are unfilled, and synthetic results are not fairness evidence.
+* No threshold, approval or live use is inferred. This record changes no code. The issue stays open.
