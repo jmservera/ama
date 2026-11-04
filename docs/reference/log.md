@@ -10293,6 +10293,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Aftercare intake form definition and register snapshot (Refs #133)
 
 * Documented in `src/core/README.md` the plain-language household intake definition and a checked JSON snapshot restore for the aftercare register. No store, API or UI is wired; criteria 1, 2, 4, 5 and 6 remain unmet or partial, and 3 is proven only at register level. Evidence under `.copilot-tracking/*/2026-11-04-issue-133-intake-snapshot-*.md`.
+
 ## [2026-11-04] update | Live resident sensors walk and blocked seed (Refs #1072, Refs #462)
 
 * Added a dated section to `docs/reference/research/ux/resident-demo-redesign-2026-11-04.md`: the signed-in 390 px walk of the live resident demo shows only the fail-closed no-sensor-readings message, so live temperature, humidity and forecast rendering remain unobserved. Root cause evidence is that the sensor tables were last evidenced absent, the PR 1071 stock-link view change was never applied live, and the committed backfill ends 2026-09-30 so it would be stale. SQL is private with the managed identity as administrator, so the live apply and seed were not performed and nothing in Azure changed; the owner decision needed is recorded there and in the issue. Evidence lives under `.copilot-tracking/*/2026-11-04/resident-sensors-live-seed-1072-*`.
