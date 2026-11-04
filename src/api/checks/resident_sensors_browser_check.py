@@ -81,7 +81,10 @@ def sign_in(page: Page, base: str, email: str) -> None:
     page.get_by_label("Email address").press("Tab")
     page.keyboard.type(FAKE_PASSWORD)
     page.keyboard.press("Enter")
-    page.get_by_role("heading", name="Your home sensors", exact=True).wait_for()
+    page.get_by_role("heading", name="Your home sensors and forecast", exact=True).wait_for()
+
+
+stale_state = {"now": NOW}
 
 
 def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
@@ -130,7 +133,20 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
             summaries.first.inner_text()
         ),
     )
-    summary = page.get_by_text("Show sensor history as a table", exact=True)
+    check(
+        "forecast is labelled as a synthetic estimate",
+        "Simple 24-hour synthetic forecast (estimate)" in page.inner_text("#sec-sensors")
+        and page.locator(".sensor-chart .sensor-forecast-point").count() == 12
+        and page.locator(".sensor-chart .sensor-divider").count() == 2,
+    )
+    check(
+        "forecast uses shape and dash, not colour alone",
+        page.locator(".sensor-forecast-line").first.evaluate(
+            "(el) => getComputedStyle(el).strokeDasharray"
+        )
+        != "none",
+    )
+    summary = page.get_by_text("Show sensor history and forecast as a table", exact=True)
     summary.focus()
     check(
         "keyboard focus visible",
@@ -138,12 +154,14 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
     )
     summary.press("Enter")
     check(
-        "table matches all 48 source observations",
-        page.locator(".sensor-table tbody tr").count() == 48,
+        "table matches all 48 source observations plus 6 forecast rows",
+        page.locator(".sensor-table tbody tr").count() == 54
+        and page.locator(".sensor-table tbody tr.forecast-row").count() == 6
+        and "Forecast (estimate)" in page.locator(".forecast-row").first.inner_text(),
     )
     check(
         "table includes latest value",
-        page.locator(".sensor-table tbody tr").last.locator("td").first.inner_text()
+        page.locator(".sensor-table tbody tr").nth(47).locator("td").first.inner_text()
         == page.locator("#gauge-temperature_c").get_attribute("aria-valuetext").split(",")[0],
     )
     check(
@@ -152,7 +170,7 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
     )
     check(
         "table date has exact UTC alternative",
-        page.locator(".sensor-table tbody time").last.get_attribute("datetime")
+        page.locator(".sensor-table tbody tr").nth(47).locator("time").get_attribute("datetime")
         == latest.observed_at.isoformat().replace("+00:00", "Z"),
     )
     forged = page.evaluate("""async () => {
@@ -208,6 +226,11 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
     check(
         "singleton has a visible humidity point", page.locator(".sensor-chart circle").count() == 1
     )
+    check(
+        "few readings suppress the forecast with a plain note",
+        page.locator(".sensor-forecast-point").count() == 0
+        and "needs at least 6 stored readings" in page.inner_text("#sec-sensors"),
+    )
     for fault in ("Not shown: this reading looked wrong", "Not shown: the sensor seemed stuck"):
         reader.rows["CASE-A"] = replace(
             original,
@@ -230,6 +253,17 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
             and page.locator(".sensor-chart circle").count() == 0
             and fault in page.locator(".sensor-table").inner_text(),
         )
+    reader.rows["CASE-A"] = original
+    stale_state["now"] = NOW + timedelta(hours=30)
+    page.reload()
+    page.get_by_text("Stored history is not recent", exact=False).first.wait_for()
+    check(
+        "stale history is flagged and has no forecast",
+        page.locator(".sensor-forecast-point").count() == 0
+        and "more than 24 hours old" in page.inner_text("#sec-sensors")
+        and page.locator(".sensor-chart circle").count() > 0,
+    )
+    stale_state["now"] = NOW
     reader.rows["CASE-A"] = replace(original, sensors=())
     page.reload()
     page.get_by_text("No synthetic sensor readings", exact=False).wait_for()
@@ -255,7 +289,7 @@ def main() -> None:
         ("127.0.0.1",),
         rs.AUTHORITY_END,
         port=0,
-        clock=lambda: NOW.timestamp(),
+        clock=lambda: stale_state["now"].timestamp(),
     )
     server = demo.serve(app)
     thread = threading.Thread(target=server.serve_forever, daemon=True)

@@ -30,6 +30,7 @@ from typing import Any
 from . import resident_preview as _preview
 from .insights import STAGE_ORDER
 from .resident_documents import DocumentFacts
+from .resident_forecast import forecast, is_stale
 from .resident_summary import (
     STAGE_STEP,
     documents_view,
@@ -523,7 +524,7 @@ def _bounded(value: str, limit: int = 120) -> str:
     return value.strip()[:limit]
 
 
-def showcase_view(row: ShowcaseRow) -> dict[str, Any]:
+def showcase_view(row: ShowcaseRow, now: datetime | None = None) -> dict[str, Any]:
     """Positive allowlist, built field by field. Nothing outside these keys can reach a resident."""
     stage = row.stage
     if stage in STAGE_ORDER and stage in _preview.STAGE_TEXT:
@@ -540,6 +541,17 @@ def showcase_view(row: ShowcaseRow) -> dict[str, Any]:
     documents = documents_view(row.documents)
     needed = needed_from_you(stage, row.closed, documents)
     where = ", ".join(v for v in home.values() if v)
+    history = [
+        {
+            "observed_at": r.observed_at.astimezone(UTC).isoformat().replace("+00:00", "Z"),
+            "temperature_c": r.temperature_c,
+            "humidity_pct": r.humidity_pct,
+            "temperature_status": r.temperature_status,
+            "humidity_status": r.humidity_status,
+        }
+        for r in row.sensors
+    ]
+    reference = now or datetime.now(UTC)
     out: dict[str, Any] = dict(
         banner=BANNER,
         viewer=dict(kind="demo resident"),
@@ -553,16 +565,9 @@ def showcase_view(row: ShowcaseRow) -> dict[str, Any]:
                 "Synthetic sensor history for your home. These are stored demo readings, "
                 "not live measurements or safety advice."
             ),
-            "history": [
-                {
-                    "observed_at": r.observed_at.astimezone(UTC).isoformat().replace("+00:00", "Z"),
-                    "temperature_c": r.temperature_c,
-                    "humidity_pct": r.humidity_pct,
-                    "temperature_status": r.temperature_status,
-                    "humidity_status": r.humidity_status,
-                }
-                for r in row.sensors
-            ],
+            "stale": is_stale(history, reference),
+            "history": history,
+            "forecast": forecast(history, reference),
         },
         progress=progress,
         next_step=next_step,

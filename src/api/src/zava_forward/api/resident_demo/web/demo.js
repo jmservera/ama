@@ -189,13 +189,25 @@
       (values.length > 1 ? ". The latest value is " + move + " the first." : ".") + missing;
   }
 
-  function sensorChart(history, metric) {
+  function forecastValues(forecast, metric) {
+    return ((forecast && forecast.points) || []).filter(function (p) { return p[metric.key] !== null && p[metric.key] !== undefined; });
+  }
+
+  function forecastSummary(future, metric) {
+    if (!future.length) return "";
+    var nums = future.map(function (p) { return p[metric.key]; });
+    var fmt = function (n) { return sensorNumber.format(n) + "\u00a0" + metric.unit; };
+    return " Simple 24-hour forecast (estimate): " + fmt(Math.min.apply(null, nums)) + " to " + fmt(Math.max.apply(null, nums)) + ".";
+  }
+
+  function sensorChart(history, metric, forecast) {
+    var future = forecastValues(forecast, metric);
     var figure = el("figure", null, "sensor-chart");
     var id = "sensor-" + metric.key;
-    var summary = sensorSummary(history, metric);
-    figure.appendChild(el("h3", metric.name + " history (" + metric.unit + ")"));
+    var summary = sensorSummary(history, metric) + forecastSummary(future, metric);
+    figure.appendChild(el("h3", metric.name + " history" + (future.length ? " and 24-hour forecast" : "") + " (" + metric.unit + ")"));
     var svg = svgEl("svg", { viewBox: "0 0 480 180", role: "img", "aria-labelledby": id + "-title " + id + "-desc" });
-    svg.appendChild(svgEl("title", { id: id + "-title" }, "Synthetic " + metric.name.toLowerCase() + " history"));
+    svg.appendChild(svgEl("title", { id: id + "-title" }, "Synthetic " + metric.name.toLowerCase() + " history" + (future.length ? " with a 24-hour estimate" : "")));
     svg.appendChild(svgEl("desc", { id: id + "-desc" }, summary + " Gaps mean readings are missing or unavailable. The table below gives every value and status."));
     svg.appendChild(svgEl("path", { d: "M56 10V150H470", class: "sensor-axis" }));
     [metric.min, (metric.min + metric.max) / 2, metric.max].forEach(function (value) {
@@ -203,7 +215,8 @@
       svg.appendChild(svgEl("text", { x: 50, y: y + 6, "text-anchor": "end" }, sensorNumber.format(value)));
     });
     var start = Date.parse(history[0].observed_at);
-    var end = Date.parse(history[history.length - 1].observed_at);
+    var latestAt = Date.parse(history[history.length - 1].observed_at);
+    var end = future.length ? Date.parse(future[future.length - 1].forecast_at) : latestAt;
     var points = [];
     var previous = null;
     function segment() {
@@ -221,6 +234,24 @@
       previous = stamp;
     });
     segment();
+    if (future.length) {
+      var lastValue = null;
+      for (var i = history.length - 1; i >= 0 && lastValue === null; i--) if (history[i][metric.key] !== null) lastValue = history[i];
+      var anchorX = 56 + (latestAt - start) / (end - start) * 414;
+      svg.appendChild(svgEl("line", { x1: anchorX, y1: 10, x2: anchorX, y2: 150, class: "sensor-divider" }));
+      svg.appendChild(svgEl("text", { x: anchorX - 4, y: 26, "text-anchor": "end" }, "Latest stored"));
+      var line = [];
+      if (lastValue && history[history.length - 1][metric.key] !== null) {
+        line.push(anchorX + "," + (150 - (lastValue[metric.key] - metric.min) / (metric.max - metric.min) * 140));
+      }
+      future.forEach(function (point) {
+        var fx = 56 + (Date.parse(point.forecast_at) - start) / (end - start) * 414;
+        var fy = 150 - (point[metric.key] - metric.min) / (metric.max - metric.min) * 140;
+        line.push(fx + "," + fy);
+        svg.appendChild(svgEl("rect", { x: fx - 3.5, y: fy - 3.5, width: 7, height: 7, class: "sensor-forecast-point" }));
+      });
+      svg.appendChild(svgEl("polyline", { points: line.join(" "), class: "sensor-forecast-line" }));
+    }
     figure.appendChild(svg);
     var caption = el("figcaption");
     caption.appendChild(el("p", summary, "sensor-summary"));
@@ -230,12 +261,15 @@
       caption.appendChild(el("span", " to "));
       caption.appendChild(sensorTime(history[history.length - 1].observed_at));
     }
+    if (future.length) {
+      caption.appendChild(el("p", "Solid line with circles: stored readings. Dashed line with hollow squares: forecast (estimate).", "sensor-key"));
+    }
     figure.appendChild(caption);
     return figure;
   }
 
   function renderSensors(sensors) {
-    var section = card("Your home sensors");
+    var section = sectionCard("sec-sensors", "Your home sensors and forecast", "", "sensors");
     section.appendChild(el("p", sensors.note));
     var history = sensors.history;
     if (!history.length) {
@@ -246,6 +280,9 @@
     var recorded = el("p", "Latest stored reading: ");
     recorded.appendChild(sensorTime(latest.observed_at, " (UK time)"));
     section.appendChild(recorded);
+    if (sensors.stale) {
+      section.appendChild(el("p")).appendChild(badge("alert", "Stored history is not recent. Last reading: " + sensorDate.format(new Date(latest.observed_at)) + " (UK time).", "caution"));
+    }
     var gauges = el("div", null, "sensor-gauges");
     sensorMetrics.forEach(function (metric) {
       var group = el("div", null, "sensor-gauge");
@@ -270,15 +307,23 @@
     });
     section.appendChild(gauges);
     section.appendChild(el("p", "Demo display ranges are not safe or unsafe limits. Readings that are missing or look wrong appear as gaps, not zero."));
-    sensorMetrics.forEach(function (metric) { section.appendChild(sensorChart(history, metric)); });
+    var forecast = sensors.forecast;
+    var hasForecast = !!(forecast && forecast.points && forecast.points.length);
+    if (hasForecast) {
+      section.appendChild(el("h3", "Simple 24-hour synthetic forecast (estimate)", "forecast-heading"));
+      section.appendChild(el("p", forecast.note + " Demo display ranges (-10 to 45\u00a0\u00b0C and 0 to 100\u00a0%) are chart limits, not safe or unsafe household limits."));
+    } else if (forecast && forecast.reason) {
+      section.appendChild(el("p", forecast.reason, "forecast-reason"));
+    }
+    sensorMetrics.forEach(function (metric) { section.appendChild(sensorChart(history, metric, forecast)); });
     var details = el("details");
-    details.appendChild(el("summary", "Show sensor history as a table"));
+    details.appendChild(el("summary", hasForecast ? "Show sensor history and forecast as a table" : "Show sensor history as a table"));
     var scroll = el("div", null, "sensor-table");
     scroll.tabIndex = 0;
     scroll.setAttribute("role", "region");
     scroll.setAttribute("aria-label", "Synthetic sensor history table");
     var table = el("table");
-    table.appendChild(el("caption", "Synthetic stored readings for your home, oldest first"));
+    table.appendChild(el("caption", hasForecast ? "Synthetic stored readings for your home, oldest first, then the forecast (estimate)" : "Synthetic stored readings for your home, oldest first"));
     var head = el("thead");
     var headings = el("tr");
     ["Recorded time (UK time)", "Temperature (\u00b0C)", "Humidity (%)"].forEach(function (text) {
@@ -298,6 +343,21 @@
       sensorMetrics.forEach(function (metric) { tr.appendChild(el("td", sensorValue(reading, metric))); });
       body.appendChild(tr);
     });
+    if (hasForecast) {
+      forecast.points.forEach(function (point) {
+        var tr = el("tr", null, "forecast-row");
+        var timeCell = el("th");
+        timeCell.scope = "row";
+        timeCell.appendChild(sensorTime(point.forecast_at));
+        timeCell.appendChild(el("span", " Forecast (estimate)"));
+        tr.appendChild(timeCell);
+        sensorMetrics.forEach(function (metric) {
+          var value = point[metric.key];
+          tr.appendChild(el("td", value === null || value === undefined ? "No forecast for this channel" : sensorNumber.format(value) + " " + metric.unit + " (estimate)"));
+        });
+        body.appendChild(tr);
+      });
+    }
     table.appendChild(body);
     scroll.appendChild(table);
     details.appendChild(scroll);
@@ -600,9 +660,7 @@
     content.appendChild(callbacks);
     callbackController = window.mountResidentAppointments(callbacks, api, showSignin);
     if (view.sensors) {
-      var sensors = renderSensors(view.sensors);
-      sensors.id = "sec-sensors";
-      content.appendChild(sensors);
+      content.appendChild(renderSensors(view.sensors));
     }
 
     var unavailable = sectionCard("sec-unavailable", "Not available in this showcase", "", "ban");

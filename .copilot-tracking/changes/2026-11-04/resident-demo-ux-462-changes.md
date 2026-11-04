@@ -27,3 +27,14 @@ Plan: [plan](../../plans/2026-11-04/resident-demo-ux-462-plan.md). Phase 1 only;
 * ruff check, ruff format --check, mypy --cache-dir=/tmp/mypy-462ux: pass.
 * Node script tests, resident API tests, core summary tests: pass.
 * Browser checks pass: account, assistant, generated-answer, sensors, summary.
+
+## Phase 2: sensors, forecast and stock link (branch feat/resident-demo-sensors-forecast)
+
+* Added `resident_forecast.py` (deterministic 24-hour estimate, `is_stale`) and `test_resident_forecast.py`.
+* `resident_showcase.py`: `showcase_view(row, now)` adds `sensors.stale` and `sensors.forecast`; `app.py` passes the app clock.
+* `demo.js`/`demo.css`: section `Your home sensors and forecast`, stale badge, dashed forecast line with hollow squares, `Latest stored` divider, forecast table rows.
+* `infra/sql/resident-showcase.sql`: one `@stock` expression, `COALESCE(home.stock_id, synthetic_stock_anchor_id)`, replacing five repeated uses. Source-text tests updated; T-SQL not compiled locally.
+* `resident_sensors_browser_check.py`: forecast, stale, few-readings and 54-row table assertions.
+* Docs: `src/api/README.md`, index and log.
+
+Divergences: `resident_demo_browser_check.py` has no sensor seed and needs SQL, so it is unchanged. Live view apply, sensor tables and extending the backfill (ends 2026-09-30) are not done (Azure, owner-gated).

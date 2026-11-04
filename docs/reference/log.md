@@ -10284,3 +10284,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Resident demo UX redesign phase 1 implemented (Refs #462)
 
 * Implemented phase 1 of `docs/reference/research/ux/resident-demo-redesign-2026-11-04.md` in the resident showcase page: loading-only sign-in, icon-only `Account` button, sticky section navigation, reorganised hierarchy and a rules-based case summary with an optional consented AI summary and fallback. Documented in `src/api/README.md`. Local candidate only; copy review (#153), resident usability (#155) and screen-reader checks remain outstanding.
+
+## [2026-11-04] update | Resident demo UX redesign phase 2 implemented (Refs #462)
+
+* Implemented phase 2 of `docs/reference/research/ux/resident-demo-redesign-2026-11-04.md`: the sensors section below the help sections with a clearly labelled deterministic 24-hour synthetic forecast, a stale state, and a fix so `infra/sql/resident-showcase.sql` also reads the dataset's `synthetic_stock_anchor_id` stock link (source text only; T-SQL not compiled, live view not applied). Documented in `src/api/README.md`. The live demo still needs the sensor tables and a re-applied view, and the backfill ends 2026-09-30; both are owner-gated and not done.
