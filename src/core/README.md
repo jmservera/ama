@@ -197,7 +197,7 @@ screening or #440 stabilization is inferred.
 ## Unverified nomination and tenure intake (#130, #131)
 
 The existing `resident_action` ledger accepts `nomination_record`,
-`nomination_correct`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack` and
+`nomination_correct`, `nomination_review`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack` and
 `tenure_question_pack_review`. These are constructed staff-recorded
 intake, not nomination eligibility, verified identity, consent, Legal approval
 or an offer. Current registered staff need both resident-workflow and
@@ -690,8 +690,15 @@ than all-granted is unknown). If the store cannot be read, the result is
 `NONE`; the manual review route is unchanged. It writes nothing and creates no
 task.
 
+`sensor_status_text.status_text(signal)` gives the plain-language status for a
+signal, and `map_and_list(signals)` returns the map statuses and the accessible
+list built from the same entries, so the list mirrors the map text and never
+relies on colour alone (AC-067). The text has no readings, identifiers,
+diagnosis or priority change, and every state names the manual route. Anything
+not clearly sufficient reads as unknown.
+
 ```bash
-python -m unittest discover -s tests -p 'test_sensor_analysis*.py' -q
+python -m unittest discover -s tests -p 'test_sensor_*.py' -q
 ```
 
 ## Discovery assistant readiness and read-only boundary (#125)
@@ -775,6 +782,12 @@ Unknown/Offer/Committed on the server; withdrawing an agreed order derives Ended
 with its confirmations retained as history. Historical Booked does not confer agreement.
 Direct booking, completion and case advance require the current agreement as well
 as existing capacity, works consent, safety and building gates.
+
+`Store.require_booking_gates` also fails closed on evidence: missing documents
+(EPC, Survey, Design, Consent) or a malformed document list give a refused,
+UNKNOWN or failed gate with an owner and next action, never a pass. The helper
+`Store._evidence_missing` is typed and covered by an end-to-end refusal test in
+`tests/test_gates.py` (Refs #82).
 
 Offers bind the actual home, work-order scope, resident scope revisions, contract,
 package period, date and visit period. Replacement requires the current offer ID.

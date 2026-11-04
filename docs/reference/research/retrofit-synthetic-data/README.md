@@ -299,6 +299,17 @@ Criteria 1 and 2 remain unmet overall: the original private stock register
 generator and pinned inputs are still absent, historical manifests are
 untouched, and no resident, tenant or live record was read or changed.
 
+### Status record (2026-11-04, Refs #176)
+
+Rechecked merged PRs #237, #257, #309, #368, #633, #703, #843 and #1052. Every
+generator in `src/` that records a generator revision is replayed byte for
+byte by the determinism audit, and criterion 3 (refresh policy) is met as
+documentation. Criteria 1 and 2 remain unmet and unticked: only the original
+private stock register generator and its pinned inputs are missing, and no
+engineering change can recreate them. The owner must either supply them
+under the private-input rules or decide that the fictional register replaces
+them and amend the criteria. No code, data or live record was changed.
+
 ### Offline acceptance audit (2026-10-16, Refs #176)
 
 | Acceptance criterion | Result | Evidence and remaining boundary |

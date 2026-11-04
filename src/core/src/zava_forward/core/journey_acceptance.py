@@ -78,6 +78,7 @@ REGISTER: dict[str, dict[str, Any]] = {
             "src/core/tests/test_scenario_manifest.py",
             CORE + "journey_trace.py",
             "src/core/tests/test_journey_store.py",
+            "src/core/tests/test_journey_building.py",
         ],
     ),
 }

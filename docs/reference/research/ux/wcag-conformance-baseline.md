@@ -52,6 +52,7 @@ change), Gap (known, not fixed), Not tested.
 | Charts | 1.1.1, 1.3.1 | Fixed | Charts were `role="img"` with a title only. Each now offers "Show this chart as a table" with the same values (#119) |
 | Map | 1.1.1, 2.1.1 | Pass, partial | Region label plus "Show the map areas as a list" keyboard alternative (#119). Tile imagery is third-party |
 | Tables | 1.3.1 | Pass, partial | Chart tables use `th scope`; other tables not audited |
+| Focus not obscured, dragging movements | 2.4.11, 2.5.7 | Fixed, partial | The fixed chat launcher and widget could cover a control that receives focus near the bottom edge. `html` now sets `scroll-padding-block-end: 6rem` (launcher 3.5rem plus inset), and a static test lists every fixed-position rule and fails on a new one (2026-11-04, #151). No script binds drag or touch handlers (static test); the map pans with Leaflet keyboard controls and has a list alternative. Not tested: rendered overlap with the chat widget open, the sticky sidebar at 400% zoom, Leaflet pointer panning without dragging |
 | Redundant entry, consistent help, accessible authentication | 3.2.6, 3.3.7, 3.3.8 | Not tested | Sign-in uses Entra ID or a shared password in the demonstrator; not assessed |
 
 ### Contrast results
@@ -213,6 +214,19 @@ To ask for another format or report a problem, contact: owner to supply (O-4).
 ## Programme screens status (2026-11-04, #230)
 
 Criteria 1, 2, 3 and 5 of #230 are ticked on merged PRs #662, #781, #818, #854, #931 and #969. Criterion 4 (WCAG 2.2 baseline, textual state meaning, keyboard navigation) stays unmet: the automated keyboard and axe checks are merged, but manual WCAG 2.2 review and assistive-technology testing by named people are not done (#151, #155). Automated checks are not conformance evidence. No code slice can supply this.
+
+## UX epic status (2026-11-04, #149)
+
+Delivered as engineering evidence: #150 is closed; #496 added the scoped specialist screen foundation; #152, #153, #154, #155 and #156 have merged slices (for example #813, #1016, #1002, #1079, #712, #1004, #811) and tick the criteria those slices prove. #151 has merged CI axe checks, a target-size fix (#857) and a form error guard (#1000).
+
+Unmet epic criteria:
+
+* Stabilization checkpoint (#440): its triage and artifact criteria are still open, and merged children do not satisfy it.
+* Child features are accepted: 15 of 16 children are open; #151 to #156 and #225 to #233 each keep unmet criteria.
+* Accessibility, content and usability evidence recorded as test results: manual screen-reader and keyboard checks, a named-human copy review and tests with representative users are not done. Synthetic walkthroughs are not user validation.
+* Design artefacts traceable to journeys and requirements: partly met; #156 still lacks per-feature links for every screen.
+
+Remaining steps need owner decisions (supported devices, WCAG level, release rule) and named human testers, so no code slice is possible. Nothing was ticked or closed.
 
 ## Open items
 
