@@ -3,10 +3,10 @@
 Scores recorded per-proposal observations only. It reports cost per accepted
 proposal beside quality, latency, refusal rate and token spread. A cheaper
 candidate that raises critical misses, unsupported claims, overrides or
-reopened cases is a failure, not a saving. Without a dated price source cost is
-Unknown. No price, budget or target is set here and no outcome approves a model
-change or spend; scripted or synthetic observations are not actual-model or
-human evidence.
+reopened cases, or drops a proposal the baseline had accepted, is a failure,
+not a saving. Without a dated price source cost is Unknown. No price, budget or
+target is set here and no outcome approves a model change or spend; scripted or
+synthetic observations are not actual-model or human evidence.
 """
 
 from __future__ import annotations
@@ -21,7 +21,13 @@ PRICE_KEYS = ("id", "as_of", "currency", "input_per_million", "output_per_millio
 BOOLS = ("accepted", "critical_miss", "unsupported_claim", "overridden", "reopened", "refused")
 NUMBERS = ("latency_ms", "input_tokens", "output_tokens")
 LEVERS = ("model", "routing", "caching", "prompt")
-REGRESSIONS = ("critical_misses", "unsupported_claims", "overrides", "reopened_cases")
+REGRESSIONS = (
+    "critical_misses",
+    "unsupported_claims",
+    "overrides",
+    "reopened_cases",
+    "dropped_accepted_proposals",
+)
 
 
 def _number(value: Any) -> bool:
@@ -115,6 +121,7 @@ def _measure(candidate: Mapping[str, Any], now: datetime) -> dict[str, Any]:
         latency_ms=dict(mean=mean(latencies), max=max(latencies)),
         tokens=_tokens(rows),
         economics=_cost(rows, candidate.get("price_source"), now),
+        dropped_accepted_proposals=0,
     )
 
 
@@ -185,6 +192,7 @@ def compare_candidates(
     base = _measure(baseline, now)
     report["baseline"] = base
     base_cases = {row["case_id"] for row in baseline["observations"]}
+    base_accepted = {row["case_id"] for row in baseline["observations"] if row["accepted"]}
     for candidate in candidates:
         reason = _screen(candidate)
         changes = candidate.get("changes")
@@ -198,6 +206,11 @@ def compare_candidates(
             report["not_comparable"].append(dict(id=str(candidate.get("id")), reason=reason))
             continue
         measure = _measure(candidate, now)
+        measure["dropped_accepted_proposals"] = sum(
+            1
+            for row in candidate["observations"]
+            if row["case_id"] in base_accepted and not row["accepted"]
+        )
         measure["lever"] = candidate["changes"][0]
         measure["verdict"] = _verdict(measure, base)
         report["candidates"].append(measure)
