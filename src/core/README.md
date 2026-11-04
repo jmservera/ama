@@ -686,6 +686,20 @@ conventional reporting.
 
 ```bash
 python -m unittest discover -s tests -p 'test_discovery_assistant_boundary.py' -q
+```
+
+Slice 2 adds `discovery_assistant_evaluation`: the brief's ten evaluation
+measures against the assistant and three non-agent comparators (manual
+analysis, conventional BI, deterministic workflow reporting). `compare_methods`
+takes human-supplied result pointers and lists which measures have a pointer
+for every method; it never scores, prefers the assistant or approves anything,
+and `criterion_met` stays false because the judgement is human.
+`check_repeatability` re-runs a deterministic calculation and compares output
+digests. No observed results exist yet.
+
+```bash
+python -m unittest discover -s tests -p 'test_discovery_assistant_*.py' -q
+```
 
 ### Phase 0 discovery register slice (124)
 
