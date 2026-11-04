@@ -46,6 +46,7 @@ button:hover,.btn:hover{background:var(--brand-d)}
 button.alt,.btn.alt{background:var(--surface);color:var(--brand)}
 button.link{background:none;border:0;color:#fff;text-decoration:underline;padding:0}
 :focus-visible{outline:var(--focus-w) solid var(--focus-ink);outline-offset:var(--focus-off);box-shadow:0 0 0 var(--focus-off) var(--focus)}
+html{scroll-padding-block-end:6rem}
 .top{gap:1rem;flex-wrap:wrap}
 .top nav{flex-wrap:wrap;justify-content:flex-end;flex:1}
 .account{position:relative}

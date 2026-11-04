@@ -312,3 +312,23 @@ DPO review date, decision reference and sign-off: not recorded. These checkboxes
 are deliberately unchecked. Local test evidence is documented in the
 [API acceptance audit](../../../src/api/README.md#regulatory-security-privacy-and-audit-217);
 it is not legal advice or a current-law assessment.
+
+### Issue 217 delivery status (2026-11-04, Refs #217)
+
+Merged PRs 353, 642, 695, 839, 884, 964, 1021 and 506 deliver the offline
+audit log, injection and cross-role tests, the live-data readiness gate, the
+purpose-scoped Foundry field guard, the Art 22A to 22C decision record builder
+and the closed metering schema with read-path validation. No code criterion is
+unmet. Criteria 1, 2, 4, 7 and the metering conjunction stay unmet because they
+need a named person:
+
+| Criterion | Needed from | Evidence still missing |
+| --- | --- | --- |
+| DPIA completed with the DPO | DPO | Signed DPIA and live-data permission |
+| Retention periods for chat, check and usage records | DPO | Reviewed periods, disposal, holds and backups |
+| Foundry minimisation on live calls | DPO, platform owner | Live provider wiring evidence |
+| Separate Entra roles | Entra administrator | Tenant role assignments and revocation test |
+| Art 22A to 22C named human and reasons | Legal, DPO | Legal assessment and contestability route |
+| Metering follows DPIA scope | DPO | DPIA scope sign-off |
+
+This record ticks nothing and implies no approval.
