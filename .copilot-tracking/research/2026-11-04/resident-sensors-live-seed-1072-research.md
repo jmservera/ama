@@ -6,7 +6,7 @@ Planning Readiness: `Ready` for a plan that records the live check and an owner 
 
 ## Observed live (read-only)
 
-* Live app `ca-resident-demo--0000010`, image digest `sha256:24bc9d1293e1...`, min replicas 0.
+* Live app `ca-resident-demo--0000010`, min replicas 0.
 * Signed-in 390 px Playwright walk (test user, credentials read from the owner file, never printed) at 2026-11-04 15:4x UTC: `#sec-sensors` shows only "No synthetic sensor readings are available for your home."; `#gauge-temperature_c` count 0, `#gauge-humidity_pct` count 0, no forecast text, no horizontal overflow.
 * SQL server `sql-cutover-test-rzsrg`, database `retrofit` (Standard): `publicNetworkAccess` Disabled, zero firewall rules, Entra administrator is the managed identity `id-cutover-test-init`. The current Azure CLI login is a user, not that administrator.
 * Existing in-VNet job `job-cutover-test-init` (Manual, args `initialize`, user identity `id-cutover-test-init`, image `zava-forward-cutover-proof`) is the only SQL-capable compute. Its image holds `private-cutover-proof.py` and the API/core packages, not `infra/sql/resident-showcase.sql`, `resident_showcase_sql.py` or any sensor loader.
