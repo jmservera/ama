@@ -10445,6 +10445,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
 
+## [2026-11-04] update | Issue 142 status record (Refs #142)
+
+* Rechecked merged PRs 265 and 681. The inventory, expiry windows, rotation ordering model, access review generator and status check are delivered and tested offline. Criteria 1 to 3 stay unmet: they need named owners, a live no-downtime rotation exercise, an executed signed access review with a schedule, and alert evaluation confirmed in Azure Monitor (human/Azure steps owned by the owner). Criterion 4 was already ticked. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-142 r2).
 ## [2026-11-04] update | Issue 79 status record (Refs #79)
 
 * Rechecked merged PRs 896, 1039, 1047 and 1096. Archive, manager publish and verify endpoints and sign-off status derivation exist, but criteria 3 and 4 stay unmet: no owner named and the rule order is an unsigned draft (human decision); no scheduler configured, no retention period set (Azure and Legal steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-79 r3).
