@@ -516,6 +516,22 @@ class PanelTests(roles.Matrix):
             self.assertEqual(refused["kind"], "refused")
             self.assertEqual(len(self.prompts), before)
 
+    def test_admission_ignores_legacy_release_denial_but_honours_suspension(self) -> None:
+        # The SQL store denies every task outside LEGACY ("task is not registered"), which blocked the chat task live (#891).
+        class Store:
+            ai = type("Ai", (), {"gate": staticmethod(lambda task, dep=None: "Release admission denied")})()
+            suspended = None
+
+            def continuity_block(self, task):
+                return self.suspended
+
+        store = Store()
+        with patch.dict(os.environ, self.DEMO_ON):
+            self.assertIsNone(chat_admission(store))
+            store.suspended = "AI work suspended"
+            self.assertEqual(chat_admission(store), "AI work suspended")
+        self.assertEqual(chat_admission(Store()), "activation-not-approved")
+
     def test_demo_switch_off_or_wrong_keeps_rules_only_status_and_no_call(self) -> None:
         wrong = {**self.DEMO_ON, "ZF_CHAT_DEMO_ACTIVATION": "yes"}
         for env in ({}, wrong):
