@@ -223,6 +223,12 @@ class ContractTests(Base):
         rc = self.service.forecast(self.people["Retrofit Coordinator"])
         self.assertNotIn("funding-evidence", {a["id"] for a in rc["assistants"]})
 
+    def test_forecast_refuses_a_zero_or_negative_scan_interval(self):
+        for interval in (0, -5):
+            service = self.other(scan_interval=interval)
+            with self.assertRaisesRegex(ValueError, "greater than zero"):
+                service.forecast(self.pm)
+
     def test_attempt_ceiling_rejects_a_larger_configuration(self):
         self.assertFalse(self.other(attempts=4).limits.valid)
 

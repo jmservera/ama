@@ -10062,3 +10062,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Booked value claim cannot be confirmed again (Closes #943)
 
 * `value_claim_confirm` now refuses a claim that is not in the pre-booked "Capacity only, not booked" state, so a Booked claim keeps its destination, budget owner reference and confirmer. Unit-tested in core; human approval (a different manager) is unchanged. Evidence under `.copilot-tracking/` (2026-11-04 value-claim-reconfirm-943).
+
+## [2026-11-04] update | Forecast refuses a zero or negative scan interval (Closes #944)
+
+* `Assistants.forecast` now raises a plain-language error when the scan interval is zero or negative instead of ZeroDivisionError. Read-only; no change to proactive scanning, approvals or manual case work. Unit-tested; MSSQL variant skipped without a disposable SQL Server. Evidence under `.copilot-tracking/` (2026-11-04 scan-interval-zero-944).
