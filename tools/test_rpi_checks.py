@@ -8,6 +8,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 import socket
 import subprocess
 import sys
@@ -2272,14 +2273,28 @@ os.fstat(3)
             self.assertEqual("--no-cache" in builds[0], cache == "fresh" and not stress)
 
     def test_real_src_ci_jobs_are_pinned_and_every_step_classified(self) -> None:
-        try:
-            import yaml  # type: ignore[import-untyped]
-        except ImportError:
-            self.skipTest("PyYAML is not installed in the isolated gate environment")
-
         root = Path(__file__).resolve().parents[1]
         text = (root / ".github/workflows/src-ci.yml").read_text()
-        jobs = yaml.load(text, Loader=yaml.BaseLoader)["jobs"]
+        jobs: dict[str, Any] = {}
+        job = ""
+        in_steps = False
+        for line in text.split("\njobs:\n", 1)[1].splitlines():
+            if match := re.fullmatch(r"  ([\w-]+):", line):
+                job = match[1]
+                jobs[job] = {"steps": []}
+                in_steps = False
+            elif line == "    steps:":
+                in_steps = True
+            elif re.fullmatch(r"    [\w-]+:.*", line):
+                in_steps = False
+            elif in_steps and line.startswith("      - "):
+                step = {}
+                key, _, value = line[8:].partition(":")
+                if key in ("name", "id", "uses"):
+                    step[key] = value.strip()
+                jobs[job]["steps"].append(step)
+            elif in_steps and (match := re.fullmatch(r"        (uses|name|id): (.+)", line)):
+                jobs[job]["steps"][-1][match[1]] = match[2].strip()
         self.assertIn("changes", jobs)
         self.assertEqual(
             gate.digest(root / ".github/workflows/src-ci.yml"), gate.WORKFLOW_HASHES["src-ci.yml"]
