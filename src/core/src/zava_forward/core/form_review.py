@@ -343,6 +343,15 @@ def _freshness(store: Any, case: Record, draft: Record, digests: Digests) -> lis
     for index, snapshot in enumerate(draft["diagnostics"]):
         reasons = []
         stale: list[str] = []
+        changed = sorted(
+            fid
+            for fid, row in draft["fields"].items()
+            if fid in snapshot["fields"]
+            and (
+                row["state"] != snapshot["fields"][fid]["state"]
+                or not _equal(row["value"], snapshot["fields"][fid]["value"])
+            )
+        )
         if snapshot["input_version"] != draft["version"]:
             reasons.append("Reviewed inputs changed after this manifest.")
         if newer_schema:
@@ -365,6 +374,7 @@ def _freshness(store: Any, case: Record, draft: Record, digests: Digests) -> lis
                 input_version=snapshot["input_version"],
                 status="Stale" if reasons else "Current",
                 reasons=reasons,
+                changed_fields=changed,
                 stale_fields=sorted(stale),
                 action="Re-run the diagnostic after re-reviewing the affected fields."
                 if reasons
