@@ -3807,6 +3807,45 @@ recorded in the current handover above. Live user photo/consent, changed-account
 acceptance, map acceptance and tenant naming/role transition remain distinct
 checks, not established by CLI authentication.
 
+## Resource coverage register (issue 136, 2026-11-04)
+
+Refs #136 criterion 2: every resource in the ADR 0001, 0002 and 0003
+architecture is in Bicep, or is recorded here as intentionally manual or
+deferred with a named owner. Owner is the repository owner (@jmservera) unless
+a human role is named; no other named person is recorded. This is a
+documentation record, not machine-checked and not live Azure evidence.
+
+| Resource or step | Where | Status |
+| --- | --- | --- |
+| Managed identities, role assignments, role definitions | `modules/identity.bicep`, `role-assignments.json` | In Bicep |
+| VNet, subnets, NSGs, private DNS, private endpoints | `modules/network.bicep`, `envDns.bicep`, `privateEndpoint.bicep` | In Bicep |
+| Log Analytics, Application Insights, private link scope, action group, alerts, workbook | `modules/monitoring.bicep`, `operationalMonitoring.bicep` | In Bicep |
+| Key Vault and secret definitions | `modules/keyvault.bicep` | In Bicep; secret values are set outside the repository (see `secret-inventory.json`) |
+| Storage (blob, immutable audit container, queues, lifecycle) | `modules/storage.bicep` | In Bicep |
+| Container Registry | `modules/registry.bicep` | In Bicep; image builds use `az acr build` or the release workflow |
+| Azure SQL server, database, auditing, threat protection, PITR | `modules/sql.bicep` | In Bicep |
+| SQL database users and grants | `scripts/create-sql-users.*` | Scripted, run by the in-VNet initializer; owner runs it |
+| Foundry account, project, model deployments | `modules/foundry.bicep` | In Bicep |
+| Container Apps environment, API, jobs | `modules/containerapps.bicep` | In Bicep |
+| Azure IoT Hub and Event Hubs consumer path | `modules/iothub.bicep`, `iot-hub-live.bicep` | In Bicep; live apply is an owner-gated Azure step (#140) |
+| Budget | `main.bicep` | In Bicep |
+| Policy assignment, locks | `governance.bicep` | In Bicep; policy is audit only |
+| Defender for Cloud plans | `governance.bicep`, `defender-decision.json` | Deferred: owner-approved cost is required before activation |
+| Front Door Premium, WAF, custom domain | `modules/edge*.bicep` | In Bicep, optional; deferred for the synthetic demo (ADR 0001 direct-entry decision, #143) |
+| Entra app registration, app roles, role assignment to staff | `entra/app-registration.json`, `scripts/setup-entra.py` | Intentionally manual in the tenant; owner runs the scripts |
+| Contractor B2B guest policy and cross-tenant settings | Entra tenant | Intentionally manual; tenant owner confirmation is open |
+| Microsoft 365 and SharePoint permission grants | `scripts/grant-sharepoint-access.sh` | Intentionally manual; admin consent by a tenant administrator |
+| GitHub environments, reviewers, OIDC federation, branch protection | GitHub and Entra settings | Intentionally manual; platform owner; unverified in this repository |
+| Azure subscription and `ama` resource group | Azure | Existing; no teardown (see Deploy) |
+| Azure AI Search, Service Bus, Content Understanding | none | Not in scope; deferred by ADR 0001 |
+| Ledger digest upload and scheduled verification | none | Not built; open item in ADR 0001 |
+
+Unmet for #136: criteria 1 (the #440 stabilization checkpoint), 3 (children
+open: #137, #138, #140, #142, #143, #144, #145, #146, #148), 4 (from-empty
+deployment observed on 2026-10-12 but not reproven since) and 5 (status kept
+current in the epic). Criterion 2 is recorded here but its manual rows still
+need owner confirmation.
+
 ## Validate locally
 
 Use the complete offline commands in [Quality gates](#quality-gates), including
