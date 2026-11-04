@@ -183,3 +183,10 @@ is still missing. See the
 [manual check record](./wcag-conformance-baseline.md#map-list-alternative-screen-reader-check-119)
 for the protocol, the tools found on the 2026-10-20 host, and the unmet gate.
 No UI file was changed.
+
+## Status at 2026-11-04
+
+* Merged engineering evidence: #426 (options), #458 (demo OSM configuration), #917 (tile-failure note pointing to the list alternative).
+* Criterion 1 (licence, cost, coverage and processor terms recorded) is unmet. Binding terms need owner, DPO, procurement and legal approval.
+* Criterion 2 (screen-reader test of the list alternative) is unmet. It needs a human run with assistive technology using the protocol above.
+* No agent action remains. No provider is selected and no spend is authorised.

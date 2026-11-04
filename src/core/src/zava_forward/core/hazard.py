@@ -132,9 +132,12 @@ def require_independent(actor: Record, report: Record) -> None:
                 if old.strip().casefold() == current.strip().casefold():
                     raise PermissionError(
                         "Someone other than the reporter and repair recorder must "
-                        "release the retrofit hold."
+                        "restart the stopped retrofit work. Ask another authorised person."
                     )
         if not any(historical.get(key) for key in ("email", "code", "oid")):
             old_name = historical.get("name")
             if old_name and old_name.strip().casefold() == actor["name"].strip().casefold():
-                raise PermissionError("A different person must release this legacy retrofit hold.")
+                raise PermissionError(
+                    "A different person must restart this stopped retrofit work. "
+                    "Ask another authorised person."
+                )
