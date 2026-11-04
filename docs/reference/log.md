@@ -10293,6 +10293,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Sensor status text mirror (Refs #111)
 
 * Added pure `sensor_status_text` in `src/core`: one plain-language status per signal, with the map and accessible list built from the same entries (AC-067 text mirror). No readings, identifiers, diagnosis or priority change; each state names the manual route. Unit-tested only. Unmet: task-queue wiring, rule approval, R1 to R3, SQL Server run. Evidence under `.copilot-tracking/` (2026-11-04 issue-111 r3).
+
 ## [2026-11-04] update | Live resident sensors walk and blocked seed (Refs #1072, Refs #462)
 
 * Added a dated section to `docs/reference/research/ux/resident-demo-redesign-2026-11-04.md`: the signed-in 390 px walk of the live resident demo shows only the fail-closed no-sensor-readings message, so live temperature, humidity and forecast rendering remain unobserved. Root cause evidence is that the sensor tables were last evidenced absent, the PR 1071 stock-link view change was never applied live, and the committed backfill ends 2026-09-30 so it would be stale. SQL is private with the managed identity as administrator, so the live apply and seed were not performed and nothing in Azure changed; the owner decision needed is recorded there and in the issue. Evidence lives under `.copilot-tracking/*/2026-11-04/resident-sensors-live-seed-1072-*`.
