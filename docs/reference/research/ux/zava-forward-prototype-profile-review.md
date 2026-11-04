@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Prototype Profile Review
 description: Company-role critique, dated owner usability feedback and proposed next-prototype acceptance checks
-ms.date: 2026-10-23
+ms.date: 2026-11-04
 ms.topic: reference
 ---
 
@@ -1120,3 +1120,36 @@ Both exact issue criteria remain partial. Actual Legal authority, genuine
 let/renew enforcement, human/live acceptance and coordinator final-head
 independent review remain unmet. No issue, board, merge or deployment action
 is authorized by these engineering results.
+
+## Signed-in live walkthrough of the resident showcase (2026-11-04, #462)
+
+Evidence class: observed live behaviour of `ca-resident-demo` (resource group
+`ama`) on 2026-11-04, one Playwright Chromium client (Europe/London), signed in
+as the owner-held synthetic resident test user. No Azure resource was changed.
+No username, password, cookie value or token is recorded; email fields are
+masked in the screenshots. Masked screenshots and scripts are under
+`.copilot-tracking/walkthrough-evidence/2026-11-04/walkthrough-462-810/`.
+This is engineering observation, not accessibility acceptance or owner
+usability sign-off.
+
+### What works
+
+* Cold start: `/healthz` warmed the app; the sign-in page was ready in under a second once warm.
+* Sign-in: an empty submit names the missing fields ("Enter your email address and the password."); a wrong password gives the generic "We could not sign you in with those details."; the correct sign-in reached the content in about 6 seconds including the first view load.
+* Session cookies are `__Host-` prefixed, `Secure` and `SameSite=Strict`; the session cookie is `HttpOnly`. After sign-out `/demo/view` returns 401.
+* Content shown: synthetic banner and Legal/Data Protection Officer outstanding note on every state, "About this showcase" shared-password wording, the home address, planned improvements, "Where things are", "What happens next", help routes without phone numbers, and disabled "Not available in this showcase" buttons (messages, uploads, downloads, operational appointments, consent). Nothing writes to a live record.
+* 320px: no horizontal overflow. Keyboard order is skip link, Account, consent checkbox, date, time, the two callback buttons, then the chat launcher. The chat panel opens with the synthetic-demo and "not consent to works" wording and no message was sent.
+
+### What is broken or confusing
+
+* The page invites "You can try synthetic callback booking below", but "Find callback times" and "Check my callbacks" both return `503` from `POST /demo/agenda` ("The local callback agenda is not connected."). The message is honest and gives the manual route, but the form is a dead end. Filed as #1053.
+* Under 30 concurrent signed-in views the app sheds about 72 percent with a JSON 503 and no retry guidance (bulkhead of 8). Filed as #1054.
+* "Your home sensors" shows "No synthetic sensor readings are available" for this resident, so the sensor journey (#891) could not be seen signed in. This depends on the data, not on a defect.
+* "Where things are: Contact is paused." and "What happens next: We will not contact you until the pause is lifted" give no reason, date or stage. For a resident this may read as unexplained. The text may be correct for the synthetic case; an owner decision on wording is needed.
+* "dMEV ventilation" in Planned improvements is jargon under the plain-language standard.
+* The "Find callback times" button without a date shows the browser's native "Please fill out this field" bubble, not the app's inline error pattern used at sign-in; the date label does not say it is required.
+* The browser console records one `401` resource error from the deliberate wrong-password attempt.
+
+### Limits
+
+One client, one resident, one time. Not tested: session expiry, login attempt limiting (not probed, to avoid locking the shared account), screen reader, other residents, booking (no booking was submitted). Issue #462 stays `Refs`: criteria for Legal review, human acceptance and independent review are unmet.

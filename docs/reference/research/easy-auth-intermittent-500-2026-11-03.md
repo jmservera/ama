@@ -183,6 +183,40 @@ sequential `/healthz`: all 200. That is 0 empty-body 500s in 2,180 requests.
 Authenticated requests were not made (no credentials). Not proven: behaviour of
 the new image (not deployed) and a sustained service level.
 
+## Follow-up 2026-11-04 (third): authenticated burst on the keep-alive image (issue 810)
+
+The live demo API was running image `zava-forward-api:4d56cf609` (revision
+`ca-cutover-test-demo-api--0000024`, ingress `Http`), which includes the
+HTTP/1.1 keep-alive fix. Both apps were warmed with `/healthz`. No Azure
+resource was changed and no credential, cookie or token is recorded. Evidence:
+`.copilot-tracking/walkthrough-evidence/2026-11-04/walkthrough-462-810/burst-results.json`.
+
+Each row is 4 rounds of 30 concurrent requests, one connection per request.
+
+| Target | Traffic | Result | Empty-body 500s |
+| --- | --- | --- | --- |
+| demo-api `/healthz` | Easy Auth, excluded path | 120 x 200 | 0 |
+| demo-api `/welcome.html` | Easy Auth, excluded path | 120 x 200 | 0 |
+| demo-api `/workspace-shell.js` | Easy Auth, anonymous | 120 x 401 | 0 |
+| demo-api `/api/whoami` | Easy Auth, anonymous | 120 x 401 | 0 |
+| demo-api `/readyz` | excluded path | 120 x 404 (no such route) | 0 |
+| demo-api `/healthz` and `/welcome.html` | curl HTTP/2 parallel | 240 x 200 | 0 |
+| resident-demo `/demo/session`, `/demo.js` | signed in as the resident test user | 240 x 200 | 0 |
+| resident-demo `/demo/view` | signed in | 33 x 200, 87 x 503 JSON | 0 |
+
+Reading: no empty-body 500 in about 1,300 requests, against 2 to 3.5 percent
+before the image was deployed, so the keep-alive fix holds on the deployed
+API. The resident-demo 503s are the app's own bounded-concurrency answer, not
+the Easy Auth fault (filed separately as #1054). Limits: the resident test user
+is a demo-app account with no Entra identity, so no request carried a valid
+Easy Auth token; the "authenticated" API traffic is anonymous through the
+sidecar plus signed-in traffic to the resident app, which has no Easy Auth. A
+staff-token burst remains open. `/readyz` is an Easy Auth excluded path but the
+API has no such route (404); harmless, listed for tidy-up. One client, one
+time: a point observation, not a service level. Issue 810 stays `Refs`: owner
+acceptance, independent review, hosted CI and a staff-authenticated burst
+remain.
+
 ## Acceptance status for issue 810
 
 * Cause identified with evidence: met for the setting (controlled A/B on the

@@ -1,0 +1,214 @@
+[
+ {
+  "target": "resident (signed in)",
+  "path": "/demo/view",
+  "requests": 120,
+  "status_counts": {
+   "200": 33,
+   "503": 87
+  },
+  "empty_body_500": 0,
+  "per_round": [
+   {
+    "200": 9,
+    "503": 21
+   },
+   {
+    "503": 22,
+    "200": 8
+   },
+   {
+    "503": 22,
+    "200": 8
+   },
+   {
+    "503": 22,
+    "200": 8
+   }
+  ]
+ },
+ {
+  "target": "resident (signed in)",
+  "path": "/demo/session",
+  "requests": 120,
+  "status_counts": {
+   "200": 120
+  },
+  "empty_body_500": 0,
+  "per_round": [
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   }
+  ]
+ },
+ {
+  "target": "resident (signed in)",
+  "path": "/demo.js",
+  "requests": 120,
+  "status_counts": {
+   "200": 120
+  },
+  "empty_body_500": 0,
+  "per_round": [
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   }
+  ]
+ },
+ {
+  "target": "resident (anon)",
+  "path": "/healthz",
+  "requests": 120,
+  "status_counts": {
+   "200": 120
+  },
+  "empty_body_500": 0,
+  "per_round": [
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   }
+  ]
+ },
+ {
+  "target": "api (Easy Auth, anon)",
+  "path": "/healthz",
+  "requests": 120,
+  "status_counts": {
+   "200": 120
+  },
+  "empty_body_500": 0,
+  "per_round": [
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   }
+  ]
+ },
+ {
+  "target": "api (Easy Auth, anon)",
+  "path": "/readyz",
+  "requests": 120,
+  "status_counts": {
+   "404": 120
+  },
+  "empty_body_500": 0,
+  "per_round": [
+   {
+    "404": 30
+   },
+   {
+    "404": 30
+   },
+   {
+    "404": 30
+   },
+   {
+    "404": 30
+   }
+  ]
+ },
+ {
+  "target": "api (Easy Auth, anon)",
+  "path": "/welcome.html",
+  "requests": 120,
+  "status_counts": {
+   "200": 120
+  },
+  "empty_body_500": 0,
+  "per_round": [
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   },
+   {
+    "200": 30
+   }
+  ]
+ },
+ {
+  "target": "api (Easy Auth, anon)",
+  "path": "/workspace-shell.js",
+  "requests": 120,
+  "status_counts": {
+   "401": 120
+  },
+  "empty_body_500": 0,
+  "per_round": [
+   {
+    "401": 30
+   },
+   {
+    "401": 30
+   },
+   {
+    "401": 30
+   },
+   {
+    "401": 30
+   }
+  ]
+ },
+ {
+  "target": "api (Easy Auth, anon)",
+  "path": "/api/whoami",
+  "requests": 120,
+  "status_counts": {
+   "401": 120
+  },
+  "empty_body_500": 0,
+  "per_round": [
+   {
+    "401": 30
+   },
+   {
+    "401": 30
+   },
+   {
+    "401": 30
+   },
+   {
+    "401": 30
+   }
+  ]
+ }
+]
