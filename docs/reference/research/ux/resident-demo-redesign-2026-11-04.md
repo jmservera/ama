@@ -880,7 +880,7 @@ Per the UX research escalation criteria and `wcag-conformance-baseline.md`:
 
 ## Live sensors walk and blocked seed (2026-11-04, Refs #1072, Refs #462)
 
-A signed-in 390 px walk of `ca-resident-demo--0000010` (image digest `sha256:24bc9d1293e1...`) with the synthetic test resident observed only the fail-closed message "No synthetic sensor readings are available for your home." There were no `#gauge-temperature_c` or `#gauge-humidity_pct` meters, no 24-hour forecast and no horizontal overflow. Temperature, humidity and forecast rendering therefore remain unobserved live (unit and local browser checks only).
+A signed-in 390 px walk of `ca-resident-demo--0000010` (image digest as recorded in the deploy note in `infra/README.md`) with the synthetic test resident observed only the fail-closed message "No synthetic sensor readings are available for your home." There were no `#gauge-temperature_c` or `#gauge-humidity_pct` meters, no 24-hour forecast and no horizontal overflow. Temperature, humidity and forecast rendering therefore remain unobserved live (unit and local browser checks only).
 
 ### Root cause evidence
 
