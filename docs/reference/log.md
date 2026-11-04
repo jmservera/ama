@@ -10082,3 +10082,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Hazard receiver error names the failing condition (Refs #946)
 
 * `_hazard_receiver` in core workflows now reports a released retrofit hold separately from a missing referral instead of one combined message. Text-only change with a regression test; the issue line reference (437) is ambiguous so the owner should confirm the target. Evidence under `.copilot-tracking/` (2026-11-04 issue-946).
+
+## [2026-11-04] update | Hold route test derives review decision version (Closes #949)
+
+* The core resident decisions test helper now reads the current measure decision version instead of hardcoding 1, and the hold route test asserts the stored version matches. Test-only; the older-version binding test keeps an explicit pin. Evidence under `.copilot-tracking/` (2026-11-04 issue-949).
