@@ -10243,3 +10243,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Easy Auth empty-body 500s traced to ingress transport (Refs #810)
 
 * PR 883 only localised the fault. With owner approval 2026-11-04 a live A/B on `ca-cutover-test-demo-api` showed ingress transport `Auto` gives about 1 to 3 percent empty-body 500s under concurrency, the app serves 120 of 120 in-container requests, HTTP/1.1 keep-alive on the app does not help, and `Http` gave 0 x 500 in 600 requests across four paths. Live setting changed to `Http`; Bicep pins it. Unmet: internal mechanism (logs unreadable), Bicep deployment, independent review and hosted CI. Updated the research note and index row.
+## [2026-11-04] update | Ranking publication wired to store and API, #79 slice 2 (Refs #79)
+
+* Slice 1 (#896) delivered the pure archive module. This slice adds manager-only `POST /api/ranking/publish` and `GET /api/ranking/publication` (audited, idempotent, read-back verification, overdue flag). Unmet: named policy owner and signed first rule order (human decision), a configured scheduler and a set retention period (deployment and Legal). Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-79-r2).

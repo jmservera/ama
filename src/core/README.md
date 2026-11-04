@@ -15,9 +15,16 @@ and snapshot hash. It is idempotent, never overwrites and never deletes.
 registry; `overdue` reports a missing or stale publication. No clock is read:
 dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
 
-Not delivered: no scheduler is configured, the retention period is not set (a
-Legal decision, so the archive keeps everything), and nothing calls `publish`
-yet. The named policy owner and sign-off of the first rule order remain open and
+Wiring (slice 2): `Store.publish_ranking_snapshot` (API `POST /api/ranking/publish`)
+archives today's snapshot under the current policy into `ranking-archive/` beside
+the data, audited and idempotent, and `Store.ranking_publication_status` (API
+`GET /api/ranking/publication`) returns the verification result, overdue flag
+and stated schedule. Both are manager-only. The manual path is the same
+endpoint, run by a manager; no AI is involved.
+
+Not delivered: no scheduler is configured or deployed (a scheduled job would call
+the publish endpoint daily), the retention period is not set (a Legal decision,
+so the archive keeps everything), and no SQL table holds the archive. The named policy owner and sign-off of the first rule order remain open and
 `ranking-v1.json` is unchanged. No AI, resident, approval or ranking behaviour changes.
 
 ## AI consumption ledger (#432)

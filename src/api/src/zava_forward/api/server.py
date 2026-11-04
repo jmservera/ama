@@ -158,7 +158,7 @@ def get_kind(path):
         return "time"
     if path in LIST_EXPORTS:
         return path[len("/api/"):]
-    return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
+    return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ranking/publication": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/handoffs/unaccepted": "handoffs", "/api/packages": "packages",
             "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
@@ -551,6 +551,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(403, {"error": str(e)})
                 except ValueError as e:
                     return self._json(400, {"error": str(e)})
+            if url.path == "/api/ranking/publication":
+                try:
+                    return self._json(200, s.ranking_publication_status(u))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
             if url.path == "/api/ai/priority":
                 return self._json(200, {"recommendation": s.latest_priority(u)})
             if url.path == "/api/time/status":
@@ -1091,6 +1096,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     and parts[3] in ("form-candidates", "form-review")):
                 return self._forms(u, url.path, body)
             try:
+                if url.path == "/api/ranking/publish":
+                    return self._json(200, s.publish_ranking_snapshot(u))
                 if url.path == "/api/bulk-edits/preview":
                     return self._json(200, s.bulk_edit_preview(u, body))
                 if url.path == "/api/bulk-edits/apply":

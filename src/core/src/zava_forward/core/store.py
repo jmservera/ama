@@ -11,7 +11,7 @@ import uuid
 from copy import deepcopy
 from datetime import datetime
 
-from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, stock, taskqueues
+from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_publication, stock, taskqueues
 from .finance import FinanceMixin
 from .list_export import safe_cell
 from .continuity import ContinuityMixin
@@ -229,6 +229,35 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                     f.write(text)
                 os.replace(path + ".tmp", path)
             return snap
+
+    def _ranking_archive(self):
+        return os.path.join(os.path.dirname(getattr(self, "live_path", None) or self.db_path) or ".", "ranking-archive")
+
+    def ranking_publication_status(self, user):
+        """Retained-snapshot check for managers: count, problems, latest date, overdue flag and the stated schedule."""
+        if user["role"] not in MANAGER_ROLES:
+            raise PermissionError("Only a manager can see the ranking publication record. Owner: your manager. Next action: ask a manager to open it.")
+        archive = self._ranking_archive()
+        out = ranking_publication.verify(archive)
+        out["overdue"] = ranking_publication.overdue(archive, controls.today())
+        out["schedule"] = ranking_publication.SCHEDULE
+        out["policy_signed"] = False
+        return out
+
+    def publish_ranking_snapshot(self, user):
+        """Archive today's snapshot under the current policy; a manager action, idempotent, audited, never rewrites an archived file."""
+        if user["role"] not in MANAGER_ROLES:
+            raise PermissionError("Only a manager can publish the ranking record. Owner: your manager. Next action: ask a manager to publish it.")
+        with self.lock:
+            snap = self.ranking_snapshot(user)
+            try:
+                res = ranking_publication.publish(snap, self._ranking_archive(), controls.today())
+            except ranking_publication.PublicationError as e:
+                raise ValueError(str(e)) from e
+            self.audit(user["email"], "ranking_snapshot_published" if res["written"] else "ranking_snapshot_already_published", "-",
+                       f"policy {snap['policy_version']}; as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}")
+            return {"written": res["written"], "published_on": res["published_on"], "policy_version": snap["policy_version"],
+                    "as_of": snap["as_of"], "snapshot_hash": snap["snapshot_hash"]}
 
     def _queue_candidates(self, queue):
         """Index IDs, never viewer-projected context; called under the store lock."""
