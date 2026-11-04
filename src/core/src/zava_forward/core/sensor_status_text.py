@@ -8,9 +8,10 @@ diagnosis or priority change; every state names the manual route that stays avai
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from .sensor_analysis import DECLINED, INSUFFICIENT, REVIEW, STALE, SUFFICIENT, Signal
+from .sensor_analysis import DECLINED, INSUFFICIENT, NO_SIGNAL, REVIEW, STALE, SUFFICIENT, Signal
 
-MANUAL_ROUTE = "You can still ask for a home check in the usual way."
+_ASK = "You can still ask your housing officer for a home check,"
+MANUAL_ROUTE = f"{_ASK} or write to or visit your local office."
 _NO_EFFECT = "This does not change your repairs or your place in any queue."
 
 _TEXT = {
@@ -46,7 +47,7 @@ class StatusText:
 
 
 def status_text(signal: Signal) -> StatusText:
-    """Map a signal to its status text; anything not clearly sufficient reads as unknown."""
+    """Map a signal to its text; only a clear no-signal reads normal, all else fails closed."""
     if signal.sufficiency == DECLINED:
         key = "declined"
     elif signal.sufficiency == STALE:
@@ -55,8 +56,10 @@ def status_text(signal: Signal) -> StatusText:
         key = "insufficient"
     elif signal.outcome == REVIEW:
         key = "review"
-    else:
+    elif signal.outcome == NO_SIGNAL:
         key = "normal"
+    else:
+        key = "insufficient"
     label, body = _TEXT[key]
     return StatusText(signal.home_id, key, label, f"{body} {_NO_EFFECT} {MANUAL_ROUTE}")
 
