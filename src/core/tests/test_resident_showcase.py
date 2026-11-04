@@ -348,6 +348,11 @@ class ViewTests(unittest.TestCase):
                 "progress",
                 "next_step",
                 "unavailable",
+                "stage",
+                "timeline",
+                "documents",
+                "needed",
+                "summary",
                 "help",
             },
         )
