@@ -659,6 +659,16 @@ or NOT RUN. All five #223 criteria stay unmet. No benefit, human-effectiveness o
 from this text. Whole #223 acceptance, the approved thresholds and the
 actual evaluation remain open.
 
+Status record (2026-11-04, Refs #223): merged PRs 638, 701, 817, 855, 941 and
+974 deliver the offline scripted gate, enforced provisional reviewer authority
+and the manual human-session intake and pooling. The focused test file (34
+tests), ruff and mypy pass on main. Criteria 1 to 5 remain unmet as human
+evidence: no authorised competent reviewer has run the test, OQ-017 holders
+are UNFILLED, measured effort and approved thresholds do not exist. Remaining
+steps are human (owner appoints reviewers and authority, approved participant,
+privacy and accessibility arrangements, a measured session); no code slice
+advances them without that input.
+
 ## Validation record
 
 ### Five retrofit assistants (2026-10-13 implementation)
