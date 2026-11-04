@@ -255,6 +255,49 @@ Original adverse verdict remains; coordinator final independent closure is
 pending, not inferred from local checks. No private roster/stock, continuing
 data, original case, live-model or Azure action was used for this audit.
 
+## Finance screens delivery status (2026-11-04, #225)
+
+Merged engineering evidence covers the invoice and funding claim pack reader
+screens (#657), invoice exception explanations (#785), the AI economics section
+(#862), keyboard and axe 4.10.3 browser checks (#937) and a constructed field
+draft on the funding screen (#978). The screens are read-only; no submission,
+award or payment is inferred, and AI economics shows Unknown when inputs are
+missing. The research remains desk-based hypothesis, not observed behaviour.
+
+Unmet: the WCAG 2.2 baseline criterion (#151). Conformance needs assistive
+technology testing and human review under #151 and #155, which are open. Engineering
+checks do not establish accessibility acceptance. No price, budget or target
+for AI economics is set (BRD OD-51 is open).
+
+## Epic #93 delivery status (2026-11-04)
+
+Checked on main 844346329. Children #94 and #95 are closed. #96 and #99 stay
+open, and #440 is the stabilization checkpoint the epic names.
+
+Delivered by merged PRs (record-only): finance matching and
+independent approval (#383, #386), held working reviews (#510), held draft
+export (#902), stale marking of saved form manifests (#888, #1083), the
+exposure pause signal (#885, #1028, #1078) and a test of the boundary for bid,
+claim and cash paths (#912). PR #1093 (stale check for saved exports) is open
+and not counted here.
+
+Unmet epic criteria:
+
+* Stabilization checkpoint (#440): its triage and review criteria are still
+  open, so merged children alone do not satisfy it. Needs the owner.
+* All child features closed or deferred: #96 and #99 are open. #96 lacks an
+  approved versioned schema (Finance and template authority), a reviewed export
+  and full rule dependency stale marking. #99 lacks the Board investment
+  envelope and tolerances, which are human inputs.
+* No automated path submits a bid, approves match funding, certifies a claim or
+  records cash: tests exist (#912), but the criterion stays unticked until the
+  children and the checkpoint close.
+
+Nothing is ticked and no approval, eligibility or submission is implied. Human
+inputs (Finance and template authority, the Board envelope, owner triage of
+#440) are blockers. Some #96 code work also remains open: reviewed export and
+rule stale marking, tracked in #1093 and gated on the approved schema.
+
 ## Local source keys
 
 * S1: [docs/case_study_48_original.md](../../../../case_study_48_original.md), 2026-09-10, Business Challenge,
