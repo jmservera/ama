@@ -868,8 +868,12 @@ def resident(browser: Browser, out: Path, axe: str) -> None:
     fixture.app.allowed_hosts = ("127.0.0.1",)
     base = f"http://127.0.0.1:{fixture.app.port}"
     context = browser.new_context()
-    context.route("**/*", lambda route: route.continue_()
-                  if route.request.url.startswith(base + "/") else route.abort())
+    context.route(
+        "**/*",
+        lambda route: (
+            route.continue_() if route.request.url.startswith(base + "/") else route.abort()
+        ),
+    )
     try:
         page = context.new_page()
         errors: list[str] = []
@@ -963,8 +967,12 @@ def recovery(browser: Browser, base: str) -> None:
 
 def recovery_case(browser: Browser, base: str, failures: int) -> None:
     context = browser.new_context()
-    context.route("**/*", lambda route: route.continue_()
-                  if route.request.url.startswith(base + "/") else route.abort())
+    context.route(
+        "**/*",
+        lambda route: (
+            route.continue_() if route.request.url.startswith(base + "/") else route.abort()
+        ),
+    )
     try:
         page = context.new_page()
         errors: list[str] = []
