@@ -56,6 +56,14 @@ SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS notice_ack (user_code TEXT NOT NULL, version TEXT NOT NULL, at TEXT NOT NULL, PRIMARY KEY (user_code, version))",
     "CREATE INDEX IF NOT EXISTS ix_time_user ON time_entry (user_code, id)",
 )
+def _sqlite_add_notice_version(db, tables):
+    """SQLite-only upgrade of databases created before notice_version existed."""
+    for table in tables:
+        cols = [r[1] for r in db.execute(f"PRAGMA table_info({table})").fetchall()]
+        if "notice_version" not in cols:
+            db.execute(f"ALTER TABLE {table} ADD COLUMN notice_version TEXT NOT NULL DEFAULT ''")
+
+
 MSSQL_DDL = (
     "CREATE TABLE time_entry (id BIGINT IDENTITY(1,1) PRIMARY KEY, at NVARCHAR(40) NOT NULL, user_code NVARCHAR(50) NOT NULL, case_id NVARCHAR(64) NOT NULL, "
     "minutes INT NOT NULL, activity NVARCHAR(100) NOT NULL, dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL)",
@@ -126,10 +134,7 @@ class TimeCapture:
             else:
                 for ddl in SQLITE_DDL:
                     db.execute(ddl)
-                for table in VERSIONED_TABLES:
-                    cols = [r[1] for r in db.execute(f"PRAGMA table_info({table})").fetchall()]
-                    if "notice_version" not in cols:
-                        db.execute(f"ALTER TABLE {table} ADD COLUMN notice_version TEXT NOT NULL DEFAULT ''")
+                _sqlite_add_notice_version(db, VERSIONED_TABLES)
             self.ready = True
 
     def _top(self, n):
