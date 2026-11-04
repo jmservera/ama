@@ -9,7 +9,7 @@ Modes (positional arguments):
   inspect   counts-only: sensor tables, resident view principals, and the cases at an address.
   seed      create the stock-shaped sensor tables if absent, then load a deterministic synthetic
             window for one home from the existing sensor_backfill generator (idempotent).
-  map       set `synthetic_stock_anchor_id` on exactly one named case that has no stock link.
+  map       set `home.stock_id` on exactly one named case (its own home id); unmap reverses it.
   view      reapply infra/sql/resident-showcase.sql through resident_showcase_sql.render.
   whoami    locate the case for a SHA-256 of the canonical e-mail (no address is sent or printed).
   unseed    delete this tool's synthetic rows for one home id.
@@ -190,18 +190,21 @@ def inspect(db, address_like):
 
 
 def map_case(db, case_id, home_id):
+    """Give exactly one case its own `home.stock_id` (read before the building anchor by the view)."""
     selection(home_id)
     if not re.fullmatch(r"[A-Za-z0-9._-]{1,64}", case_id):
         raise ValueError("invalid case id")
     row = db.execute(
-        "SELECT COALESCE(JSON_VALUE(body, '$.home.stock_id'), JSON_VALUE(body, '$.synthetic_stock_anchor_id')), "
-        "ISJSON(body) FROM dbo.cases WHERE id = ?",
+        "SELECT JSON_VALUE(body, '$.home.stock_id'), ISJSON(body), "
+        "JSON_VALUE(body, '$.synthetic_stock_anchor_id') FROM dbo.cases WHERE id = ?",
         (case_id,),
     ).fetchone()
     if row is None or row[1] != 1:
         raise SystemExit("Case not found or not JSON; refusing.")
     if row[0]:
-        raise SystemExit("Case already has a stock link; refusing to overwrite.")
+        raise SystemExit("Case already has home.stock_id; refusing to overwrite.")
+    if home_id == row[2]:
+        raise SystemExit("Use a home id distinct from the shared building anchor; refusing.")
     taken = db.execute(
         "SELECT COUNT(*) FROM dbo.cases WHERE COALESCE(JSON_VALUE(body, '$.home.stock_id'), "
         "JSON_VALUE(body, '$.synthetic_stock_anchor_id')) = ?",
@@ -210,10 +213,21 @@ def map_case(db, case_id, home_id):
     if taken:
         raise SystemExit("Home id already linked to a case; refusing.")
     changed = db.execute(
-        "UPDATE dbo.cases SET body = JSON_MODIFY(body, '$.synthetic_stock_anchor_id', ?) WHERE id = ?",
+        "UPDATE dbo.cases SET body = JSON_MODIFY(body, '$.home.stock_id', ?), rowversion = rowversion + 1 "
+        "WHERE id = ?",
         (home_id, case_id),
     ).rowcount
     emit(mode="map", case_id=case_id, home_id=home_id, rows_changed=changed)
+
+
+def unmap_case(db, case_id, home_id):
+    """Reverse map_case: remove home.stock_id only when it still equals the mapped home id."""
+    changed = db.execute(
+        "UPDATE dbo.cases SET body = JSON_MODIFY(body, '$.home.stock_id', NULL), rowversion = rowversion + 1 "
+        "WHERE id = ? AND JSON_VALUE(body, '$.home.stock_id') = ?",
+        (case_id, home_id),
+    ).rowcount
+    emit(mode="unmap", case_id=case_id, home_id=home_id, rows_changed=changed)
 
 
 def whoami(db, email_sha256):
@@ -299,13 +313,13 @@ def main(argv=None):
     """Positional arguments only: `az containerapp job start --args` cannot carry option flags."""
     argv = sys.argv[1:] if argv is None else argv
     usage = (
-        "usage: inspect [address_like] | seed home_id as_of_YYYY-MM-DD [days] | map case_id home_id | "
+        "usage: inspect [address_like] | seed home_id as_of_YYYY-MM-DD [days] | map case_id home_id | unmap case_id home_id | "
         "view principal client_id | verify principal case_id | whoami email_sha256 | unseed home_id"
     )
     if not argv:
         raise SystemExit(usage)
     mode, rest = argv[0], argv[1:]
-    shapes = {"inspect": (0, 1), "seed": (2, 3), "map": (2, 2), "view": (2, 2), "verify": (2, 2), "whoami": (1, 1), "unseed": (1, 1)}
+    shapes = {"inspect": (0, 1), "seed": (2, 3), "map": (2, 2), "unmap": (2, 2), "view": (2, 2), "verify": (2, 2), "whoami": (1, 1), "unseed": (1, 1)}
     if mode not in shapes or not shapes[mode][0] <= len(rest) <= shapes[mode][1]:
         raise SystemExit(usage)
     db = connect()
@@ -316,6 +330,8 @@ def main(argv=None):
             seed(db, rest[0], rest[1], int(rest[2]) if len(rest) > 2 else 30)
         elif mode == "map":
             map_case(db, *rest)
+        elif mode == "unmap":
+            unmap_case(db, *rest)
         elif mode == "view":
             apply_view(db, *rest)
         elif mode == "whoami":
