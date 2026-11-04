@@ -10411,6 +10411,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
 
+## [2026-11-04] update | Issue 123 epic status record (Refs #123)
+
+* Rechecked merged PRs 894, 895, 899, 901, 905, 1015 and the 928 checkpoint. The 928 record listed 894, 895, 901 and 905 as open; they are now merged, delivering offline readiness, register, ownership-routing and AI cost-line code for #125, #124, #128 and #126. Both epic criteria stay unmet: #440 is still open (finding triage and independent review artifacts unchecked) and children 124, 125, 126, 128, 129 remain open, needing owner nominations, DPIA and lawful basis, human accessibility and research sessions, and Atlas owner confirmation. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-123 status record).
 ## [2026-11-04] update | Issue 132 intake decision proposal (Refs #132)
 
 * Rechecked merged PRs 873 and 1080: core rules and a staff-only read-only job-pack route are delivered. Added proposed ADR 0007 recommending staff-mediated intake over a provider portal, with the identity approach. It is not accepted, so criterion 6 stays unmet, and criteria 2 to 5 stay unmet (no persistence, write routes or screen). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-132 r3).
@@ -10421,3 +10424,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Candidate comparison bound to the held-out freeze (Refs #108)
 
 * `compare_candidates` accepts an optional freeze manifest, reports `held_out.status`, and compares only on the frozen held-out case ids. Offline grader and synthetic tests only; no held-out data, live calls, regional model/quota confirmation or Finance validation. Criteria for model/quota confirmation, held-out freeze evidence and human/Azure evidence stay unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-108-r2).
+## [2026-11-04] update | Issue 110 status record (Refs #110)
+
+* Rechecked merged PRs 411, 508 and 910. Criteria 2 to 5 stay ticked. Criterion 1 stays unmet: offline per-device identity, schema version and stable reading ID code and tests exist, but no real distinct Hub identities were issued and no live stream was observed (tier, sizing, cost, network and device credential owner decisions; #140; human/Azure steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-110 r2).
