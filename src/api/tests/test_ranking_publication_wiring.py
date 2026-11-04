@@ -5,6 +5,7 @@ status endpoint. Nothing here changes a ranking, the unsigned policy or any case
 """
 import copy
 import os
+import threading
 import unittest
 from unittest.mock import patch
 
@@ -49,6 +50,31 @@ class PublicationWiring(QualityMatrix):
         self.assertEqual(actions, ["ranking_snapshot_published",
                                    "ranking_snapshot_already_published"])
         self.assertEqual(ranking.CURRENT["owner"], "to be named")
+
+    def test_concurrent_publish_is_serialised_and_audit_chain_intact(self):
+        manager = {"email": PM_EMAIL, "role": "Retrofit Programme Manager"}
+        barrier = threading.Barrier(2)
+        results, errors = [], []
+
+        def run():
+            try:
+                barrier.wait()
+                results.append(self.store.publish_ranking_snapshot(manager)["written"])
+            except Exception as e:  # noqa: BLE001 - surfaced by the assertion below
+                errors.append(e)
+
+        threads = [threading.Thread(target=run) for _ in range(2)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join(timeout=30)
+        self.assertEqual(errors, [])
+        self.assertEqual(sorted(results), [False, True])
+        actions = sorted(e["action"] for e in self.store.audit_entries())
+        self.assertEqual(actions, ["ranking_snapshot_already_published",
+                                   "ranking_snapshot_published"])
+        self.assertTrue(self.store.verify_audit())
+        self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
 
     def test_edited_archive_is_reported_not_hidden(self):
         self.call(PM_EMAIL, "/api/ranking/publish", {})
