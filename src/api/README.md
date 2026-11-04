@@ -4186,7 +4186,12 @@ missing deployment/data/model/photo/law prerequisites are tracked by #350.
   and time entries, even with matching historical controls; history is retained.
   Changing to a different valid reference still requires a new request and
   activation. This checks reference presence only, not authenticity or legal
-  approval. Actual DPIA review, staff consultation, notice approval and
+  approval. `ZF_TIME_NOTICE_VERSION` must also equal the current notice version
+  (`draft-1` in the code) so the approval reference is tied to the wording shown to
+  staff. The notice version is bound to each request and activation: rewording
+  the notice turns capture off until the approver confirms the new version and a
+  new request and a different-role activation are made, even if the approval
+  reference is unchanged. Actual DPIA review, staff consultation, notice approval and
   administrator ratification remain human prerequisites, not results of this
   string check.
 * Download any list for Excel, and check a spreadsheet: columns are matched
@@ -4308,7 +4313,7 @@ parent stabilization #440.
 | `ZF_ENTRA_TENANT_ID`, `ZF_TRUSTED_PROXY`, `ZF_ROLE_MAP`, `ZF_AUTH_EMAIL_FALLBACK` | Entra provider |
 | `ZF_REASON_ROLES` | roles that may see a vulnerability reason |
 | `ZF_TILE_URL`, `ZF_TILE_ATTRIBUTION` | map tile provider |
-| `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_NOTICE_APPROVED`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
+| `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_NOTICE_APPROVED`, `ZF_TIME_NOTICE_VERSION`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
 | `ZF_DOC_STORE`, `ZF_DOC_DIR`, `ZF_BLOB_ACCOUNT_URL`, `ZF_BLOB_CONTAINER`, `ZF_BLOB_SAS`, `ZF_BLOB_CLIENT_ID` | document store |
 | `ZF_SCANNER` | `local` (default) or `defender` content scanner; `local` on an Azure Blob store logs a warning because it gives no malware assurance |
 
