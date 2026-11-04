@@ -10302,6 +10302,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Deployed main `8b9553d8b` to `ca-cutover-test-demo-api` (`--0000025`) and `ca-resident-demo` (`--0000010`) through the short registry window; set `ZF_DEMO_EXPIRES_AT` to `2028-01-01T00:00:00Z` (was `2027-01-31T23:59:00Z`). Recorded in `infra/README.md` and the prototype profile review. Sensors section showed the fail-closed message only, filed as #1072. No issue is closed.
 
+## [2026-11-04] update | WCAG 2.4.11 and 2.5.7 slice recorded (Refs #151)
+
+* Added `scroll-padding-block-end` so the fixed chat launcher cannot hide a focused control, two static tests, and a baseline audit row for 2.4.11 and 2.5.7. Rendered, screen-reader and owner-decision criteria remain unmet; no conformance claim.
 ## [2026-11-04] update | Held-out gate fails closed on an empty set (Refs #164)
 
 * `chat_heldout.run_heldout` and `freeze_problems` now report "no scenarios in the held-out set" and return `insufficient` instead of `pass` for a digest-matching empty set; `_shingles` treats texts shorter than six words as one shingle. Offline, scripted harness only; no held-out set, reviewer or actual-model evidence exists, so #164 stays open.
@@ -10322,6 +10325,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 311, 893 and 1036: criteria 1 and 2 are delivered, and core ageing plus the read-only unaccepted-handoff route exist. Criterion 3 stays unmet because the Housing and repairs leads have not approved response times and out-of-hours routes (OD-09). No limit was defaulted and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-83 r6).
 
+## [2026-11-04] update | Issue 223 status record (Refs #223)
+
+* Rechecked merged PRs 428, 638, 701, 817, 855, 941 and 974: the scripted gate, reviewer-authority enforcement and manual human-session intake exist and their focused tests, ruff and mypy pass. All five criteria stay unmet as human evidence because OQ-017 holders are unappointed and no competent reviewer has run the test. Docs-only record in `src/agents/README.md`; nothing ticked or closed.
 ## [2026-11-04] update | Issue 954 photo flag refresh: only the browser check remains (Refs #954)
 
 * Rechecked merged PRs 929 and 993: the flag re-check without reload is delivered and tested. The quiet 503/403 criterion is proven only in the node harness. A real-browser console check on an Entra-signed-in session remains a human step. Nothing ticked or closed.
@@ -10340,6 +10346,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 657, 785, 862, 937 and 978: the invoice, funding, field draft and AI economics criteria are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-225 r1).
 
+## [2026-11-04] update | Issue 217 status record, only human steps remain (Refs #217)
+
+* Merged PRs already deliver every code-level slice for #217. The DPIA draft now lists the remaining criteria with the person who must act (DPO, Entra administrator, Legal). Nothing is ticked and no approval is implied. Docs-only; no tests run. Evidence under `.copilot-tracking/` (2026-11-04 issue-217 r1).
 ## [2026-11-04] update | Issue 216 regulatory evaluation gates status (Refs #216)
 
 * Rechecked merged PRs 355, 506, 632, 684, 834, 890 and 963 and re-ran the focused gate tests (18 OK). Nothing was ticked or closed. Unmet and needing owner decisions: criterion 1 (owner thresholds, independent grader), criterion 4 (staff paired trial), AI cost per accepted check (Unknown) and any owner-authorised live run. Cards ship alone until then. Docs-only record; no source change.
@@ -10371,6 +10380,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
 
+## [2026-11-04] update | Second design traceability delta (Refs #156)
+
+* Added a second dated delta to the
+  [prototype profile review](./research/ux/zava-forward-prototype-profile-review.md#second-delta-2026-11-04-156)
+  covering 22 issues above #810: 4 new screen traces (#891, #1053, #1054,
+  #1072), 4 fixes to existing screens and 14 no-screen items. The split reads
+  titles, labels and state only and awaits owner confirmation. The gate register
+  and `tools/check-design-trace.py` are unchanged (74 screen issues, 0 supplied
+  designs, blocked). Criterion 1 stays unmet: only human steps remain (supplied
+  versioned designs, named design review, assistive-technology, content and user
+  evidence). Evidence is under `.copilot-tracking/` (2026-11-04 issue-156 delta).
+## [2026-11-04] update | Issue 145 status record (Refs #145)
+
+* Rechecked merged PR 673: criteria 1 (SQL tier, auto-pause and redundancy parameters, pilot recorded) and 3 (RTO and RPO undecided with owners) are delivered. Criterion 2 (PITR and ledger result) stays unmet: no authorised disposable Azure database. Criterion 4 stays unmet pending the approved #121 retention decisions. All RAI restore and erasure criteria stay unmet: they need the authorised drill, DPO and record-owner approval and independent witnesses; SQLite regressions are lower-tier evidence. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-145 record).
 ## [2026-11-04] update | Issue 154 status record (Refs #154)
 
 * Rechecked merged PRs 501, 652, 664 and 712 and the resident preview tests. Criteria 1 and 4 are delivered. Criteria 2, 3 and 5 stay unmet: actual service availability and assistive-technology acceptance, resident-session enforcement of representative views, and usability validation (#155 scripts not run). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-154 r1).
@@ -10383,6 +10406,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 189 status record (Refs #189)
 
 * Rechecked merged PRs 508, 637, 707, 845 and 1092. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: owner, time limit and alert reference are enforced offline, but a live Azure budget alert and notification are not verified (#146, human/Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-189 r2).
+
 ## [2026-11-04] update | Issue 155 usability programme status (Refs #155)
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
@@ -10390,3 +10414,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Aftercare sensor context guard (Refs #133)
 
 * Added `add_sensor_context` and a neutral-text guard on sensor context to the aftercare register; README note updated. Criteria 1, 2, 4 and 6 stay unmet in full, 3 and 5 only partly evidenced (register level). Evidence under `.copilot-tracking/` (2026-11-04 issue-133 sensor-context).
+## [2026-11-04] update | Issue 138 status record (Refs #138)
+
+* Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
