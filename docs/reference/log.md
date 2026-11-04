@@ -10293,3 +10293,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Aftercare intake form definition and register snapshot (Refs #133)
 
 * Documented in `src/core/README.md` the plain-language household intake definition and a checked JSON snapshot restore for the aftercare register. No store, API or UI is wired; criteria 1, 2, 4, 5 and 6 remain unmet or partial, and 3 is proven only at register level. Evidence under `.copilot-tracking/*/2026-11-04-issue-133-intake-snapshot-*.md`.
+## [2026-11-04] update | Live deploy of resident redesign and demo end date (Refs #462, Refs #521)
+
+* Deployed main `8b9553d8b` to `ca-cutover-test-demo-api` (`--0000025`) and `ca-resident-demo` (`--0000010`) through the short registry window; set `ZF_DEMO_EXPIRES_AT` to `2028-01-01T00:00:00Z` (was `2027-01-31T23:59:00Z`). Recorded in `infra/README.md` and the prototype profile review. Sensors section showed the fail-closed message only, filed as #1072. No issue is closed.

@@ -1154,3 +1154,18 @@ usability sign-off.
 ### Limits
 
 One client, one resident, one time. Not tested: session expiry, login attempt limiting (not probed, to avoid locking the shared account), screen reader, other residents, booking (no booking was submitted). Issue #462 stays `Refs`: criteria for Legal review, human acceptance and independent review are unmet.
+
+## Live redesign deploy and signed-in walkthrough (2026-11-04, Refs #462, Refs #521)
+
+Owner-approved deploy of main `8b9553d8b` (redesign phases 1 and 2 #1069 and #1071, `callbacks_available` fix #1070, Retry-After #1067) to resource group `ama`. Walkthrough: Playwright Chromium at 390 px width as the synthetic test resident, one session, credentials never printed or stored.
+
+| Check | Result |
+| --- | --- |
+| Sign-in shows loading only | Pass: the status region is empty and only the sign-in card shows after load |
+| Account control | Pass: icon-only control, accessible name `Account`, no visible text |
+| Section navigation | Pass: nine anchors from Summary to Showcase limits, each with a matching section |
+| Case summary | Pass: rules summary for the home, stage Contact paused, planned improvements listed |
+| Sensors section | Fail-closed message only: "No synthetic sensor readings are available for your home." Temperature, humidity and forecast were not observed live; logged as #1072 |
+| Callback form | Pass: no form rendered; the page says callback booking is not connected |
+
+Limits: one resident, one viewport, no screen reader, no keyboard-only or reduced-motion pass, no booking attempt. This is engineering evidence, not accessibility or human acceptance. #462 and #521 stay `Refs`.
