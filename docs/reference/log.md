@@ -10253,3 +10253,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Easy Auth 500 root cause: API HTTP/1.0 close-per-response (Refs #810)
 
 * Sidecar logs showed `ResponseEnded` forwarding to the app; stub A/B and an in-container probe isolated the API's HTTP/1.0 connection close. The handler now speaks HTTP/1.1 keep-alive. The live demo API was verified with 0 empty-body 500s in 2,180 requests through a temporary command override. See the research note and `infra/README.md`. Issue 810 stays `Refs`: the new image is not yet deployed.
+## [2026-11-04] update | Deployed HTTP/1.1 keep-alive image, override removed (Refs #810)
+
+* Built `zava-forward-api:4d56cf609` from main `4d56cf609` and pushed it to the private registry through the owner-allowed short public window (restored and read back: Deny, public disabled, exports disabled, no IP rules). `ca-cutover-test-demo-api` revision `--0000024` runs it with no command/args override. Burst tests through Easy Auth (2,140 requests including 200 unauthenticated 401s) gave 0 empty-body 500s. See `infra/README.md`.
