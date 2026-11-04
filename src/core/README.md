@@ -843,6 +843,18 @@ python3 -m unittest tests.test_journey_trace -q
 It is not yet wired to an API route or screen, and no end-to-end store journey through
 handover and financial closure is tested (the later stages use ledger-shaped entries).
 
+### Acceptance register for AC-034 to AC-043 (#134, slice 2)
+
+`journey_acceptance.REGISTER` records each criterion as `partial` (named constructed-fixture
+evidence, full criterion unproven) or `deferred` (with a reason); none is recorded as passing.
+`journey_acceptance.check(root)` blocks a missing or unknown criterion, an invalid status, a
+missing reason, and evidence files that do not exist. It changes nothing and is not user
+validation or owner approval.
+
+```bash
+python3 -m unittest tests.test_journey_acceptance -q
+```
+
 ## Bounded pending-document rescans (#117)
 
 `document_rescan.run(store, limit=100, after=None)` consumes one SQL-only
