@@ -502,7 +502,12 @@ with no accepted proposals, cost is `Unknown`. A candidate that raises critical
 misses, unsupported claims, overrides or reopened cases, or that drops a case
 the baseline had accepted (`dropped_accepted_proposals`), is a `failure` even
 when cheaper. No price, budget, threshold or approval is set, and no runner supplies
-real observations yet. Tests: `tests/test_candidate_comparison.py` (synthetic
+real observations yet. An optional `freeze=` manifest runs the held-out freeze
+check first: the report records `held_out.status` (`frozen`, `insufficient` with
+gaps, or `not frozen` when omitted), and a frozen manifest makes the baseline and
+every candidate comparable only on exactly the frozen case ids. Without a
+frozen manifest the result is a same-case comparison, not a held-out one.
+Tests: `tests/test_candidate_comparison.py` (synthetic
 fixtures, not model or staff evidence). Held-out data, live calls, regional
 model confirmation and Finance validation remain open.
 

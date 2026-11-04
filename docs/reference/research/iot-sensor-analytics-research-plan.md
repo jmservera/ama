@@ -174,6 +174,20 @@ stays unmet and unticked: the constructed scan and fake-SDK leak tests
 Live work needs the approved Hub, registry data permission and owner
 credential issue, none of which an agent may supply.
 
+## Live simulator container slice (2026-11-04, Refs #184)
+
+The owner requirement of 2026-11-04 asks for a container that sends a synthetic reading for
+every home every five minutes. The first slice adds the pure generator
+(`zava_forward.core.synthetic.live_readings`), the runner with fake and stdout sinks
+(`zava_forward.api.live_simulator`), `src/api/live-simulator.Dockerfile` and an authored, not
+deployed `infra/live-simulator-job.bicep`. See the
+[API README](../../../src/api/README.md#live-simulator-container-184-owner-requirement-2026-11-04)
+and the [infra cost estimate](../../../infra/README.md#live-simulator-job-issue-184-2026-11-04).
+No child story changed state, so "all child stories closed or deferred" stays unmet, and "no
+device key or connection string in source, logs or telemetry" stays unmet because no live or
+Hub-side evidence exists. Hub provisioning of devices, certificate storage, the live approval
+and #110 acceptance of the new `sunlight_wm2` message version remain owner or sibling work.
+
 ## Composed local handover evidence (2026-10-30, Refs #188)
 
 The earlier #188 deferral above describes the 2026-10-27 baseline. The additive

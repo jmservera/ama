@@ -237,6 +237,80 @@ def evaluate_indicator(
     return result
 
 
+HARM_INDICATORS = (
+    "unsupported_claims",
+    "critical_misses",
+    "stale_review_attempts",
+    "challenges",
+    "cohort_errors",
+    "review_effort",
+)
+DECLARED = "declared"
+
+
+def check_monitoring_declaration(
+    declaration: Mapping[str, Any] | None, *, task_enabled: bool
+) -> dict[str, Any]:
+    """Check one task or serving release declaration; it never reports a green or approved state.
+
+    Each indicator in `HARM_INDICATORS` needs either `applicable: False` with a `reason`, or a
+    `denominator`, `window` and a threshold that is constructed (offline only) or approved by a
+    named human. The release needs named monitoring and incident owners and a response. Ownership
+    and the manual-route status are exposed even when the task is disabled or the declaration is
+    blocked, so a switched-off task still shows who monitors it.
+    """
+    record: Mapping[str, Any] = declaration or {}
+    manual = record.get("manual_route_status")
+    result: dict[str, Any] = {
+        "status": BLOCKED,
+        "task_enabled": task_enabled,
+        "monitoring_owner": record.get("monitoring_owner")
+        if named(record.get("monitoring_owner"))
+        else None,
+        "incident_owner": record.get("incident_owner")
+        if named(record.get("incident_owner"))
+        else None,
+        "manual_route_status": manual if named(manual) else None,
+        "missing": [],
+        "offline_only": False,
+    }
+    missing: list[str] = result["missing"]
+    for key in ("monitoring_owner", "incident_owner", "response"):
+        if not named(record.get(key)):
+            missing.append(key)
+    if not task_enabled and result["manual_route_status"] is None:
+        missing.append("manual_route_status")
+    indicators = record.get("indicators")
+    entries: Mapping[str, Any] = indicators if isinstance(indicators, Mapping) else {}
+    for name in HARM_INDICATORS:
+        entry = entries.get(name)
+        if not isinstance(entry, Mapping):
+            missing.append(f"indicator:{name}")
+        elif entry.get("applicable") is False:
+            if not named(entry.get("reason")):
+                missing.append(f"indicator:{name}:reason")
+        elif not _count(entry.get("denominator")) or not entry.get("denominator"):
+            missing.append(f"indicator:{name}:denominator")
+        elif not named(entry.get("window")):
+            missing.append(f"indicator:{name}:window")
+        else:
+            threshold = entry.get("threshold")
+            check = evaluate_indicator(
+                events=0,
+                denominator=entry["denominator"],
+                window_complete=True,
+                threshold=threshold if isinstance(threshold, Mapping) else None,
+                incident_owner=None,
+            )
+            if check["status"] == BLOCKED:
+                missing.append(f"indicator:{name}:threshold")
+            elif check["offline_only"]:
+                result["offline_only"] = True
+    if not missing:
+        result["status"] = DECLARED
+    return result
+
+
 AI_DIMENSIONS = ("calls", "tokens", "cost")
 UNKNOWN = "unknown"
 COUNTED = "counted"
