@@ -776,6 +776,12 @@ with its confirmations retained as history. Historical Booked does not confer ag
 Direct booking, completion and case advance require the current agreement as well
 as existing capacity, works consent, safety and building gates.
 
+`Store.require_booking_gates` also fails closed on evidence: missing documents
+(EPC, Survey, Design, Consent) or a malformed document list give a refused,
+UNKNOWN or failed gate with an owner and next action, never a pass. The helper
+`Store._evidence_missing` is typed and covered by an end-to-end refusal test in
+`tests/test_gates.py` (Refs #82).
+
 Offers bind the actual home, work-order scope, resident scope revisions, contract,
 package period, date and visit period. Replacement requires the current offer ID.
 Capacity/authority changes invalidate dependent evidence without clearing unrelated
