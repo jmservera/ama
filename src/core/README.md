@@ -654,8 +654,17 @@ resident-report or AI write, and no raw reading or sensor identifier in its
 output. Not yet built: store or scheduler wiring, an approved rule, and the R2
 method sign-off and R3 limits that gate any measure beyond an exercise rule.
 
+`sensor_analysis_store.analyse_retained(consumer, home_id, window, as_of)` runs
+the derivation over readings retained in the SQL store. It uses only read-only
+`SensorConsumer` methods: `observed_series` for the window and `home_consent`
+for trusted consent (any declined control declines the home; anything other
+than all-granted is unknown). If the store cannot be read, the result is
+`INSUFFICIENT` with reason `RETAINED_READINGS_UNAVAILABLE` and priority effect
+`NONE`; the manual review route is unchanged. It writes nothing and creates no
+task.
+
 ```bash
-python -m unittest discover -s tests -p 'test_sensor_analysis.py' -q
+python -m unittest discover -s tests -p 'test_sensor_analysis*.py' -q
 ```
 
 ## Discovery assistant readiness and read-only boundary (#125)

@@ -753,6 +753,26 @@ class SensorConsumer:
         finally:
             db.close()
 
+    def home_consent(self, home_id: str) -> str:
+        """Read-only trusted consent for a home; fails closed to unknown, never infers grant."""
+        if not home_key(home_id):
+            raise ConsumerError("INVALID_HOME_SELECTION")
+        db = self._connect()
+        try:
+            bodies = db.execute("SELECT body FROM sensor_consumer_control").fetchall()
+            states = set()
+            for (body,) in bodies:
+                control = json.loads(str(body))
+                if control.get("home_id") == home_id:
+                    states.add(control.get("consent"))
+        except (self.store.dberror, ValueError, TypeError, AttributeError):
+            raise ConsumerError("SENSOR_SQL_UNAVAILABLE") from None
+        finally:
+            db.close()
+        if "declined" in states:
+            return "declined"
+        return "granted" if states == {"granted"} else "unknown"
+
     def acknowledge(self, receipt: Receipt) -> None:
         """Post-COMMIT seam: a caller must reconcile any lost acknowledgement."""
 
