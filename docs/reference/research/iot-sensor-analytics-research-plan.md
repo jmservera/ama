@@ -795,6 +795,23 @@ production #111 and #133 consumers or an explicit owner deferral, neither of
 which an agent may supply. Criterion 2 (results reported per check) is
 unchanged and stays supported by the per-check report objects and tests.
 
+### Issue 193 consumer evidence correction (2026-11-04, Refs #193)
+
+The 2026-11-03 row above is superseded on one point. Production #111
+(`sensor_analysis`) and #133 (`AftercareRegister`) modules now exist on main
+and `src/core/tests/test_retrofit_scenarios_production_consumers.py` (merged in
+#996, with #1032) drives the retrofit exercise scenarios through both. A local
+run on 2026-11-04 of that module with `test_retrofit_scenario_consumers` and
+`test_sensor_retrofit_consumer_contract` passed (12 tests).
+
+| Item | Status |
+| --- | --- |
+| Literal criterion 3 (scenarios used by #133 and #111 tests) | Test use is evidenced; the owner decides whether to tick it |
+| Residual gap | Neither production module consumes retrofit deltas (improvement, delayed, adverse) as a before and after comparison; tests assert only that scenarios never change ranking, dismissal or hazard status |
+| Values | Exercise values only, not sourced; no live Azure, R2 sign-off or agreed R3 limits |
+
+No issue was ticked or closed by this note.
+
 ## Constraints
 
 * Derived signals only create a human condition-review task. They never
