@@ -124,7 +124,7 @@ def publish(store, blob):
         if blob.put_digest(name, d):
             uploaded.append(name)
     for d in ledger.read_year_digests(store.digest_dir):
-        if "year" not in d:
+        if not isinstance(d, dict) or "year" not in d:
             continue  # unreadable local file: never anchor it
         name = f"year-{d['year']}.json"
         if blob.put_digest(name, d):

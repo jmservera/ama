@@ -99,6 +99,16 @@ class YearLedgerTests(unittest.TestCase):
             self.assertEqual(got, [{"unreadable": "year-2024.json"}])
             self.assertFalse(ledger.verify_years(chain([2024]), got)["intact"])
 
+    def test_non_object_digest_file_is_unreadable_and_fails_closed(self):
+        for text in ("null", "[]", "[1, 2]", "7", '"x"', "true"):
+            with self.subTest(text=text), tempfile.TemporaryDirectory() as tmp:
+                Path(tmp, "year-2024.json").write_text(text)
+                got = ledger.read_year_digests(tmp)
+                self.assertEqual(got, [{"unreadable": "year-2024.json"}])
+                rep = ledger.verify_years(chain([2024]), got)
+                self.assertFalse(rep["intact"])
+                self.assertEqual(rep["bad_digests"], ["year-2024.json"])
+
 
 class FakeRegisterBlob:
     def __init__(self):
