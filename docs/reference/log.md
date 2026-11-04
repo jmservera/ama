@@ -10074,3 +10074,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Non-object year digest files fail closed (Refs #947)
 
 * `ledger.read_year_digests` now reports JSON null, lists and scalars as unreadable digests, and `digest_blob.publish` guards non-dict digests, so a null year digest no longer raises TypeError. Regression tests added. Head digest files (`digest-*.json`) are untouched. Evidence under `.copilot-tracking/` (2026-11-04 issue-947).
+
+## [2026-11-03] update | Demo chat activation wired into infra and applied live (Refs #891)
+
+* Added the `chatDemoActivation` Bicep parameter (demo API only, never the resident app) and applied `ZF_CHAT_DEMO_ACTIVATION` and `ZF_DEPLOYMENT_PROFILE=demo` live with a rebuilt main image. Status reports demo activation, but the live employee reply stayed workflow-only because the SQL release gate still denies the chat task. See [the infra README](../../infra/README.md#demo-only-employee-chat-activation-2026-11-03-refs-891). No Legal, DPO or RAI approval is claimed.
