@@ -423,6 +423,8 @@ async function route() {
   if (hash.split("?")[0] === "#/screens") return await roleScreensView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
   if (m) return await caseView(decodeURIComponent(m[1]));
+  const homeCase = location.hash.match(/^#\/case-home\/(.+)$/);
+  if (homeCase) return await homeCaseView(decodeURIComponent(homeCase[1]));
   const building = location.hash.match(/^#\/building\/(.+)$/);
   if (building) return await buildingView(decodeURIComponent(building[1]));
   if (hash === "#/assistants") return await assistantQueueView();
@@ -1069,6 +1071,7 @@ async function caseView(id) {
     }
   } else top.push(h("p", { role: "status" }, "Tab navigation unavailable. Case sections are listed below; ordinary work continues."));
   show(h("a", { class: "back", href: queueHref() }, "Back to the list"),
+    h("a", { class: "back", href: `#/case-home/${encodeURIComponent(c.id)}` }, "Versioned home case: links, shared building items and retained versions"),
     c.building_id ? h("a", { class: "back", href: `#/building/${encodeURIComponent(c.building_id)}` }, `Shared building context: ${c.building_id}`) : h("p", { class: "muted" }, "Building link not recorded; shared context is unknown."),
     h("div", { class: "row between" }, h("h1", {}, r.name,
       openHaz.length && h("span", { class: "flag danger" }, "Safety issue open")),
@@ -1216,6 +1219,52 @@ app.addEventListener("input", event => {
       && !event.target.hasAttribute("data-case-navigation")
       && !event.target.closest("[data-challenge-case]")) event.target.dataset.caseDirty = "true";
 });
+
+async function homeCaseView(id) {
+  const back = h("a", { class: "back", href: `#/case/${encodeURIComponent(id)}` }, "Back to the case");
+  try {
+    const v = await api(`/api/cases/${encodeURIComponent(id)}/home-case`);
+    const l = v.links, home = v.home, b = v.building;
+    const list = (items, render, none) => items == null ? h("p", {}, "Unknown: no source-backed records supplied.") :
+      items.length === 0 ? h("p", {}, none) : h("ul", {}, items.map(render));
+    const shared = (key, title) => h("section", {}, h("h3", {}, title),
+      !b || b[key] === undefined ? h("p", {}, "Unknown: no shared building record is linked.") :
+        list(b[key], (x) => h("li", {}, `${x.id}: ${x.label}`, x.status ? `. Recorded status: ${x.status}.` : "", ` Source: ${x.source}`), "Source records explicitly list none."));
+    show(back,
+      h("h1", {}, `Home case ${v.case_id}`),
+      h("p", { role: "status" }, `${v.version_status}.${v.changed_since_version ? " Linked records have changed since the last version." : ""}`),
+      h("p", {}, v.notice),
+      h("section", { class: "card", "aria-labelledby": "hc-links" }, h("h2", { id: "hc-links" }, "Links"),
+        h("dl", {},
+          h("dt", {}, "Building"), h("dd", {}, l.building_id || "Not recorded"),
+          h("dt", {}, "Scheme"), h("dd", {}, l.scheme_id ? `${l.scheme_id}: ${v.scheme.name || ""}` : "Unknown: not recorded"),
+          h("dt", {}, "Work packages"), h("dd", {}, (l.work_packages || []).map((w) => `${w.package_id} (work order ${w.work_order_id})`).join(", ") || "None recorded"))),
+      h("section", { class: "card", "aria-labelledby": "hc-home" }, h("h2", { id: "hc-home" }, "This home only: evidence, decision, cost allocation and outcome"),
+        h("p", {}, `Stage: ${home.stage}. ${home.closed ? "Closed" : "Open"}. Funding confirmed: ${home.funding_confirmed ? "yes" : "no"}.`),
+        h("p", {}, `Decision: ${typeof home.decision === "object" && home.decision ? (home.decision.status || "None recorded") : String(home.decision)}`),
+        h("h3", {}, "Evidence documents"),
+        list(home.documents, (d) => h("li", {}, `${d.name} (${d.kind})`), "None recorded."),
+        h("h3", {}, "Quality outcomes"),
+        list(home.quality, (q) => h("li", {}, `${q.measure}: ${q.state}`), "None recorded."),
+        h("h3", {}, "Cost allocation"),
+        home.cost_allocation_restricted ? h("p", {}, "Restricted to authorised Finance roles.") :
+          list(home.cost_allocation, (x) => h("li", {}, JSON.stringify(x)), "None recorded.")),
+      h("section", { class: "card", "aria-labelledby": "hc-building" }, h("h2", { id: "hc-building" }, "Shared at building level, not this home's evidence"),
+        b ? h("p", {}, `${b.name || b.id}${b.version ? `, version ${b.version}` : ""}. `, h("a", { href: `#/building/${encodeURIComponent(b.id)}` }, "Open full building context")) : h("p", {}, "Building link not recorded; shared context is unknown."),
+        shared("systems", "Shared systems"), shared("dependencies", "Dependencies"),
+        shared("holds", "Work stopped pending review"), shared("works", "Shared works"),
+        h("h3", {}, "Shared building costs"),
+        !b || b.costs_restricted ? h("p", {}, "Restricted to authorised Finance roles, or unknown.") :
+          list(b.costs, (x) => h("li", {}, `${x.id}: GBP ${x.amount_gbp}. Source: ${x.source}`), "No shared costs recorded.")),
+      h("section", { class: "card", "aria-labelledby": "hc-versions" }, h("h2", { id: "hc-versions" }, "Retained versions"),
+        list(v.versions, (x) => h("li", {}, `Version ${x.version}: ${x.at || ""} ${x.reason || ""}`), "No version recorded yet.")),
+      h("p", { class: "muted" }, "Recording a new version is a staff action through the API; the existing case and building screens remain the manual path."));
+  } catch (e) {
+    if (e.name === "AbortError" || !me) return;
+    show(back, h("h1", {}, "Home case view unavailable"),
+      h("p", { class: "err", role: "alert" }, `${e.message} Use the case and building screens instead.`));
+  }
+}
 
 async function buildingView(id) {
   try {

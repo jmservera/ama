@@ -687,6 +687,16 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(502, {"error": "The document store is not available. Try again shortly."})
                 safe = "".join(ch for ch in name if ch.isalnum() or ch in " ._-")
                 return self._send(200, raw, mime, {"Content-Disposition": f'attachment; filename="{safe}"'})
+            if url.path.startswith("/api/cases/") and url.path.endswith("/home-case"):
+                parts = url.path.strip("/").split("/")
+                if len(parts) != 4:
+                    return self._json(404, {"error": "Home case not found."})
+                try:
+                    return self._json(200, s.home_case_view(u, unquote(parts[2])))
+                except KeyError:
+                    return self._json(404, {"error": "Home case not found."})
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
             if url.path.startswith("/api/cases/"):
                 d = s.detail(url.path.rsplit("/", 1)[1], u)
                 return self._json(200, d) if d else self._json(404, {"error": "Case not found."})
@@ -1206,6 +1216,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         s.decline_handoff(u, cid, body.get("reason"))
                     elif act == "withdraw-handoff":
                         s.withdraw_handoff(u, cid)
+                    elif act == "home-case-version":
+                        s.home_case_record_version(u, cid, body)
+                        return self._json(200, s.home_case_view(u, cid))
                     elif act == "hazard-raise":
                         s.raise_hazard(u, cid, body.get("category"), body.get("priority"), body.get("note", ""), metadata=body)
                     elif act == "hazard-refer":
