@@ -10440,6 +10440,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
 
+## [2026-11-04] update | Issue 125 drafting guard slice (Refs #125)
+
+* Added `discovery_assistant_drafting` to `src/core` (deterministic stage durations, draft-only narrative checked against calculated figures, deterministic fallback when no model is available) and a README section. Criteria 1 to 3 stay unmet and need human or deployment evidence. Evidence under `.copilot-tracking/` (issue-125-r6).
 ## [2026-11-04] update | Epic 136 resource coverage register (Refs #136)
 
 * Added a resource coverage register to infra/README.md: each architecture resource is in Bicep or recorded as manual or deferred with the owner. Criterion 2 is recorded but not machine-checked; criteria 1, 3, 4 and 5 stay unmet (stabilization checkpoint #440, nine open children, no from-empty rerun since 2026-10-12, epic status not refreshed).
