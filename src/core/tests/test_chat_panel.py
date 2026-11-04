@@ -510,6 +510,25 @@ class UnstoredAskTests(unittest.TestCase):
         with self.assertRaises(ChatNotFound):
             self.panel.ask_unstored(self.user, "ZF-MISSING", "status?")
 
+    def test_unstored_validation_and_missing_case_refusals_record_receipts(self) -> None:
+        cases = (
+            ("", None, "", "rejected"),
+            ("SECRET-Q", "nope", "", "rejected"),
+            ("x" * (MAX_CONTENT + 1), None, "", "rejected"),
+            ("SECRET-Q status?", None, "ZF-MISSING", "access-rejected"),
+        )
+        for question, skill, case_id, outcome in cases:
+            with self.subTest(outcome=outcome, case_id=case_id):
+                action = "chat.turn.unstored"
+                before = len([e for e in self.store.audit_entries() if e["action"] == action])
+                with self.assertRaises((ValueError, ChatNotFound)):
+                    self.panel.ask_unstored(self.user, case_id, question, skill=skill)
+                turns = [e for e in self.store.audit_entries() if e["action"] == action]
+                self.assertEqual(len(turns), before + 1)
+                detail = json.loads(turns[-1]["detail"])
+                self.assertEqual((detail["outcome"], detail["model_calls"]), (outcome, 0))
+                self.assertNotIn("SECRET-Q", turns[-1]["detail"])
+
 
 class GroundedUnstoredTests(unittest.TestCase):
     BANNED = ("gate", "hold", "provenance", "trace", "snapshot", "envelope")

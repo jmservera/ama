@@ -422,6 +422,10 @@ async function route() {
   workspaceStatus.textContent = routeStatus;
   if (hash.split("?")[0] === "#/screens") return await roleScreensView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
+  if (me.services?.cases === false && hash !== "#/assistants" && hash !== "#/import") {
+    return show(h("h1", {}, "No case work for this account"),
+      h("p", { role: "status" }, "This account manages the application and has no case access. Case lists are not shown and nothing is waiting on you here. Ask a programme owner if you need case access."));
+  }
   if (m) return await caseView(decodeURIComponent(m[1]));
   const homeCase = location.hash.match(/^#\/case-home\/(.+)$/);
   if (homeCase) return await homeCaseView(decodeURIComponent(homeCase[1]));
@@ -438,10 +442,6 @@ async function route() {
   if (hash === "#/visits") return await visitsView();
   if (hash === "#/funding") return await fundingView();
   if (hash === "#/finance") return await financeQueueView();
-  if (me.services?.cases === false) {
-    return show(h("h1", {}, "No case work for this account"),
-      h("p", { role: "status" }, "This account manages the application and has no case access. Case lists are not shown and nothing is waiting on you here. Ask a programme owner if you need case access."));
-  }
   return await listView(hash === "#/all" ? "all" : "mine");
   } catch (error) {
     if (signal.aborted || me !== session) return;
@@ -1252,7 +1252,7 @@ async function homeCaseView(id) {
         list(home.quality, (q) => h("li", {}, `${q.measure}: ${q.state}`), "None recorded."),
         h("h3", {}, "Cost allocation"),
         home.cost_allocation_restricted ? h("p", {}, "Restricted to authorised Finance roles.") :
-          list(home.cost_allocation, (x) => h("li", {}, JSON.stringify(x)), "None recorded.")),
+          list(home.cost_allocation, (x) => h("li", {}, `This home's share of shared cost ${x.shared_cost_id}: GBP ${x.amount_gbp}. Source: ${x.source}`), "None recorded.")),
       h("section", { class: "card", "aria-labelledby": "hc-building" }, h("h2", { id: "hc-building" }, "Shared at building level, not this home's evidence"),
         b ? h("p", {}, `${b.name || b.id}${b.version ? `, version ${b.version}` : ""}. `, h("a", { href: `#/building/${encodeURIComponent(b.id)}` }, "Open full building context")) : h("p", {}, "Building link not recorded; shared context is unknown."),
         shared("systems", "Shared systems"), shared("dependencies", "Dependencies"),

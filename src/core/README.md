@@ -44,6 +44,11 @@ owned workflow-only alerts. It does not copy historical proposal text into the
 consumption stream. Historical calls and the separate resident SQL accounting
 remain explicitly unjoined.
 
+`report(...)["by_capability"]` attributes, per assistant capability, calls,
+proposals, measured total tokens, human-accepted proposals and mean tokens per
+accepted proposal. Any value without complete measured tokens or an accepted
+proposal is `Unknown`; it carries no case content and no price or cost.
+
 An operator can supply `price(...)`, `authorize(...)` and `billing(...)` evidence
 through this Python interface on a constructed/local or separately authorised
 store. These methods do not retrieve prices, grant spend, verify an invoice,
@@ -197,7 +202,7 @@ screening or #440 stabilization is inferred.
 ## Unverified nomination and tenure intake (#130, #131)
 
 The existing `resident_action` ledger accepts `nomination_record`,
-`nomination_correct`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack` and
+`nomination_correct`, `nomination_review`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack` and
 `tenure_question_pack_review`. These are constructed staff-recorded
 intake, not nomination eligibility, verified identity, consent, Legal approval
 or an offer. Current registered staff need both resident-workflow and
@@ -324,6 +329,14 @@ fields and open issues, plus a content hash. It is always `Held`, `reviewed`
 false, `Not submitted` and eligibility `Not assessed`; it writes nothing and a
 reviewed pack stays blocked on Finance and template authority. The manual path
 is the working review itself, and unavailable evidence returns `Unavailable`.
+
+`form_export.export_freshness(store, user, case_id, saved_export)` compares a
+saved held export with the current working review, read-only. It returns
+`Current`, `Stale` (naming only the fields whose value, state or bound source
+changed or are now stale, and the unaffected fields), `Invalid` (the copy is
+incomplete or its content hash no longer matches) or `Unavailable`. A changed
+schema or rule reference changes the schema digest and stales every
+schema-bound field. It never marks anything reviewed.
 
 `view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
 diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
@@ -561,6 +574,17 @@ reasons and counts. The route has no score and never changes rank or service. Co
 data only; no usability, accessibility or fairness evidence. See the
 [test plan](../../docs/reference/research/ux/equity-journey-test-plan.md).
 
+`paired_equity.evaluate(pairs, anchors, seeded_defects, rank)` checks constructed pairs that
+differ in one attribute (sensor completeness, support or contact need, appointment history) and
+requires the subject to rank no lower than the reference and its review route to have no rank
+effect. It reports tested and failed counts per dimension, never averages a failing dimension
+away, and blocks on a missing dimension or an undetected seeded defect. It uses the deterministic
+policy by default, approves nothing and is not fairness evidence; AI task cohorts are not covered.
+
+```bash
+python -m unittest discover -s tests -p test_paired_equity.py -q
+```
+
 ## Constructed offline sensor consumer (#110)
 
 `sensor_consumer.SensorConsumer` is a finite SQL-only processor, distinct from
@@ -690,8 +714,15 @@ than all-granted is unknown). If the store cannot be read, the result is
 `NONE`; the manual review route is unchanged. It writes nothing and creates no
 task.
 
+`sensor_status_text.status_text(signal)` gives the plain-language status for a
+signal, and `map_and_list(signals)` returns the map statuses and the accessible
+list built from the same entries, so the list mirrors the map text and never
+relies on colour alone (AC-067). The text has no readings, identifiers,
+diagnosis or priority change, and every state names the manual route. Anything
+not clearly sufficient reads as unknown.
+
 ```bash
-python -m unittest discover -s tests -p 'test_sensor_analysis*.py' -q
+python -m unittest discover -s tests -p 'test_sensor_*.py' -q
 ```
 
 ## Discovery assistant readiness and read-only boundary (#125)
@@ -727,6 +758,15 @@ digests. No observed results exist yet.
 ```bash
 python -m unittest discover -s tests -p 'test_discovery_assistant_*.py' -q
 ```
+
+Slice 3 adds `discovery_assistant_drafting`: deterministic stage durations from
+timestamped, source-referenced events (`calculate_stage_durations`, with gaps
+reported rather than guessed) and `draft_evidence`, where an optional drafter
+callable may only phrase the result. A draft is accepted only if every number
+it quotes was calculated and it cites a source reference; otherwise, or if the
+drafter is absent or fails, a plain deterministic sentence is used. Output is
+always `DRAFT_FOR_HUMAN_REVIEW` and never a validated finding. No model is
+bundled and nothing needs one.
 
 ### Phase 0 discovery register slice (124)
 
@@ -3847,7 +3887,7 @@ repository. Tests: `tests/test_seed_merge.py`, and `MssqlLedgerMigration` in
 * Release decisions (RULE-020, AC-063): each phase (Phase 0 capture, Shadow testing, Live pilot) and tranche has a Release or Withhold record with requirements, evidence, unresolved issues, cost and risk envelope reference and named approvers. Releasing Phase 0 capture needs the capture gate; Shadow testing needs entry evidence, and Shadow testing and Live pilot need Phase 0 capture released first.
 * Guardrail breach (RULE-024, AC-078): `breach_record` (managers, quality inspectors and building safety liaisons, so a hazard-aware role can raise a breach without waiting for a manager) pauses the home, work package, archetype or workstream. `breach_restart` needs a different person, the OD-35 authority reference, accepted remediation evidence and a Release decision recorded after the breach. `guard_case_event` calls `require_not_paused` (home by case id or address, archetype by home type) and, for cases flagged `pilot`, `require_capture_open` in `log_call`, `set_decision`, `advance` and `return_case`; emergency and statutory hazard response continues outside any pause.
 
-* AI running-cost line and value claims (Tokenomics delta, BRD NFR-012 and FR-052): `benefits_record` also requires an AI cost denominator (per assistant run, per accepted proposal or per accepted handover), the quality floor and the Total Cost of AI components beyond token cost. A missing dated price source records the cost as Unknown; no price, budget or target is set (BRD OD-51 open). `capture_gate()` stays closed without that line. `value_claim_record` stores a claim as capacity only (capacity gain, augmentation or automation, with a baseline); `value_claim_confirm` (a different person) records one of the five booked destinations and the budget owner's confirmation reference, and never signs for the owner. API actions `value-claim-record` and `value-claim-confirm`. Not yet done: including the AI economics report and limit breaches in phase and tranche release decisions.
+* AI running-cost line and value claims (Tokenomics delta, BRD NFR-012 and FR-052): `benefits_record` also requires an AI cost denominator (per assistant run, per accepted proposal or per accepted handover), the quality floor and the Total Cost of AI components beyond token cost. A missing dated price source records the cost as Unknown; no price, budget or target is set (BRD OD-51 open). `capture_gate()` stays closed without that line. `value_claim_record` stores a claim as capacity only (capacity gain, augmentation or automation, with a baseline); `value_claim_confirm` (a different person) records one of the five booked destinations and the budget owner's confirmation reference, and never signs for the owner. API actions `value-claim-record` and `value-claim-confirm`. `release_record` now also requires the AI economics report reference (or an explicit Unknown) and the AI limit breach (or None); a Release with an Unknown or missing report reference is refused (record Withhold); a Release that carries a breach needs the decision text and `economics_breach_approver`, who must be one of the named `approvers` and not the person recording, otherwise it is refused, and a Withhold needs neither. The report is a reference, not computed here, and no price, budget or target is set. Still missing: a budget owner and the real OD-51 decisions.
 
 Tests: `tests/test_governance.py` (JSON and SQL stores, labelled synthetic demonstration values). Open items, not invented here: the real OD-18 definitions and MDE, the OD-36 DPIA and lawful basis, the OD-35 named authority, actual approvers, how cases are enrolled in the pilot cohort (the `pilot` flag), pause scopes for work package and workstream, and extending the guard to the remaining case workflows. The original protocol work did not deliver the RAI finding registers. The bounded claim register below now records their evidence inventory, not a fresh qualified assessment or owner acceptance; live use stays blocked.
 
@@ -4452,6 +4492,13 @@ Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring,
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
 human review. Tests: `src/core/tests/test_challenges.py`.
 
+Status record, 2026-11-04 (issue #220 stays open): criteria 1 to 4 were delivered by #418, #641 and
+#693, with the ageing and protection helpers in #826 and #966. Criterion 5 (no retaliation, inferred
+refusal or delayed hazard response) is unmet. The remaining work is human: representative resident
+and staff acceptance, a measured hazard-response comparison on live workflow data, and owner approval
+of the hazard follow-up age limit. The register itself cannot prove it. A further code slice would
+only wire these read-only helpers into a staff view, which needs owner direction first.
+
 ## Aftercare concern route and evaluator view (#133)
 
 `zava_forward.core.aftercare.AftercareRegister` is a store-independent register for constructed
@@ -4476,6 +4523,13 @@ until the named owner calls `review_pack` with `accept` or `reject` and a reason
 changes the concern, its outcome or its remedy, and a sensor reading never appears in the pack. The
 task `aftercare-concern-pack` is registered in `ai_registry` as an unapproved, disabled proposal
 task with a manual route and no model binding (FR-036).
+
+`intake_form()` returns the plain-language household route (who is raising it, representative
+basis, concern kind, own-words statement, and the phone, in-person, paper and assisted-visit
+channels) for a screen or paper form to follow, and `intake_errors(values)` returns plain,
+per-field problems. `to_state()` and `AftercareRegister.from_state()` give a JSON-safe snapshot for
+a later store; a restore is refused if it would mark a concern sensor-dismissed, give an outcome a
+non-human basis, or orphan a pack.
 
 Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), evaluator role access
 and the DPO position on outcome data (both open), a model route for the pack summary (needs
@@ -4508,9 +4562,24 @@ version, the query owner and the original query; it picks no winner and eligibil
 `raise_failure` and `raise_conflict` take an optional `ref`, so reading the same feed again does not duplicate an item.
 Nothing is re-run or re-sent.
 
-Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, wiring of the
-feeds (they read records; nothing calls them yet), integration and identity-conflict producers, and owner approval of the role names and runbooks (open). Tests:
-`src/core/tests/test_exception_queue.py`, `src/core/tests/test_exception_feeds.py`.
+`zava_forward.core.exception_register.ExceptionRegisterMixin.exception_register(user, staff)` (on `Store`,
+served read-only at `GET /api/exceptions`) rebuilds the queue from live records: unresolved stock conflicts
+go to the first named `data_steward`; AI tasks that fell back or were quarantined, overdue tasks with no
+named owner and unaccepted handoffs flagged by `handoff_ageing` go to the first named `digital_operator`.
+Named staff come from `ZF_EXCEPTION_STAFF`, a JSON object of staff email to roles; the owner has not named
+the roles, so with none configured only a programme manager or support officer sees an empty
+`roles_not_named` result and nothing is assigned by default. Anyone not named is refused (403) and the
+refusal is audited in the store ledger, as is each view (including the empty-staff view and refusal). The reply carries each item's owner, values with
+source, date and version, original source and `Unknown` eligibility, the caller's own role entry (not other staff emails) and scope, the
+outage banner (always `unknown` here: no health check feeds it) and a list of sources not connected (failed
+imports) and case or stock records that could not be read (reported per case, never failing the register), so absence is never shown as health. Recovery is not exposed and
+nothing is stored: the queue is rebuilt on each read.
+
+Not delivered: persistence of the queue and of recovery requests in the JSON, SQL and MSSQL stores, a recovery
+endpoint, a staff screen on `/api/exceptions`, the importer producer for failed imports, integration and
+identity-conflict producers, a health check for the outage banner, and owner approval of the role names and
+runbooks (open). Tests: `src/core/tests/test_exception_queue.py`, `src/core/tests/test_exception_feeds.py`,
+`src/api/tests/test_exception_register.py`.
 
 ## Versioned home case (#74)
 

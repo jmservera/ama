@@ -290,6 +290,53 @@ class ConsumptionTests(unittest.TestCase):
         self.assertIn("not an authorised", over["evidence_label"])
         self.assertIn("not an authorised", self.report()["tokens_per_proposal"]["evidence_label"])
 
+    def test_report_attributes_usage_per_assistant_and_accepted_proposal(self) -> None:
+        self.authorize()
+        self.authorize(
+            authority="funding-authority",
+            capability="funding-evidence",
+            configuration=reference("funding-config"),
+        )
+        self.accepted()
+        other = self.context(
+            "funding",
+            root=reference("funding-root"),
+            capability="funding-evidence",
+            configuration=reference("funding-config"),
+        )
+        self.complete(
+            self.ledger.reserve(other, MODEL, 1000, 100),
+            prompt_tokens=200,
+            completion_tokens=40,
+            total_tokens=240,
+        )
+        self.ledger.output(reference("funding-root"), "output-two", eligible=True)
+        self.ledger.review("output-two", "reject")
+        usage = self.report()["by_capability"]
+        self.assertEqual(list(usage), ["assessment", "funding-evidence"])
+        self.assertEqual(
+            usage["assessment"],
+            dict(
+                calls=1,
+                proposals=1,
+                proposals_with_known_tokens=1,
+                total_tokens=120,
+                accepted_proposals=1,
+                tokens_per_accepted_proposal="120",
+            ),
+        )
+        self.assertEqual(usage["funding-evidence"]["total_tokens"], 240)
+        self.assertEqual(usage["funding-evidence"]["accepted_proposals"], 0)
+        self.assertEqual(usage["funding-evidence"]["tokens_per_accepted_proposal"], UNKNOWN)
+        self.assertNotIn("output-one", json.dumps(usage))
+
+    def test_report_attribution_unknown_without_measured_tokens(self) -> None:
+        self.authorize()
+        self.ledger.reserve(self.context(), MODEL, 1000, 100)
+        row = self.report()["by_capability"]["assessment"]
+        self.assertEqual((row["calls"], row["total_tokens"]), (1, UNKNOWN))
+        self.assertEqual(row["tokens_per_accepted_proposal"], UNKNOWN)
+
     def test_token_and_money_limits_exact_boundary(self) -> None:
         self.authorize(
             budgets=[dict(id=reference("period"), calls=10, tokens=1100, amount="0.0012")]
