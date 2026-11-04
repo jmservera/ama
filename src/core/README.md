@@ -197,7 +197,7 @@ screening or #440 stabilization is inferred.
 ## Unverified nomination and tenure intake (#130, #131)
 
 The existing `resident_action` ledger accepts `nomination_record`,
-`nomination_correct`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack` and
+`nomination_correct`, `nomination_review`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack` and
 `tenure_question_pack_review`. These are constructed staff-recorded
 intake, not nomination eligibility, verified identity, consent, Legal approval
 or an offer. Current registered staff need both resident-workflow and
@@ -775,6 +775,12 @@ Unknown/Offer/Committed on the server; withdrawing an agreed order derives Ended
 with its confirmations retained as history. Historical Booked does not confer agreement.
 Direct booking, completion and case advance require the current agreement as well
 as existing capacity, works consent, safety and building gates.
+
+`Store.require_booking_gates` also fails closed on evidence: missing documents
+(EPC, Survey, Design, Consent) or a malformed document list give a refused,
+UNKNOWN or failed gate with an owner and next action, never a pass. The helper
+`Store._evidence_missing` is typed and covered by an end-to-end refusal test in
+`tests/test_gates.py` (Refs #82).
 
 Offers bind the actual home, work-order scope, resident scope revisions, contract,
 package period, date and visit period. Replacement requires the current offer ID.
