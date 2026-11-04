@@ -75,6 +75,14 @@ class RoleScreenConformance(unittest.TestCase):
         self.assertIn("is not authorisation", SCREENS)
         self.assertIn("Proposed rule; rendered behaviour and conformance not assessed", TRACE)
 
+    def test_withheld_disclosure_is_on_evidence_screens(self) -> None:
+        for ident in ("technical-queue", "quality-queue"):
+            start = SCREENS.index(f'id: "{ident}"')
+            end = SCREENS.index("registerRoleScreen({", start)
+            block = SCREENS[start:end]
+            self.assertIn("screenWithheld([", block, ident)
+            self.assertIn("Funding amounts and claim values", block, ident)
+
     def test_utilisation_versus_choice_is_stated_on_package_screen(self) -> None:
         start = SCREENS.index('id: "procurement-packages"')
         block = SCREENS[start : SCREENS.index("registerRoleScreen({", start)]

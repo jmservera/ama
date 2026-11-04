@@ -596,7 +596,9 @@ registerRoleScreen({
           : h("p", { class: "empty" }, "No returned sign-offs recorded. This does not establish readiness.")),
       screenPanel("Missing references",
         missing === null ? screenUnknown("Missing references are not supplied for this home.", "Grants and Evidence Officer", "Reload; do not treat as complete")
-          : screenTable("Missing references", ["Missing item", "Owner"], missing.map((m) => [m.item, m.assigned_to]))));
+          : screenTable("Missing references", ["Missing item", "Owner"], missing.map((m) => [m.item, m.assigned_to]))),
+      screenWithheld(["Resident choices, consent wording and contact history (see resident-choice for the measure-specific choice)",
+        "Household and vulnerability details beyond what a design check needs", "Funding amounts and claim values"]));
   }
 });
 
@@ -654,7 +656,9 @@ registerRoleScreen({
           ["Reinspection", r.state === "Fixed, awaiting reinspection" ? "Awaiting independent reinspection" : r.state === "Accepted" || r.state === "Handed over" ? "Passed" : "Not yet possible"]])
           : h("p", { class: "empty" }, "No defect recorded."),
         r.handover ? screenFields([["Handed over by", r.handover.by], ["Handed over at", screenStamp(r.handover.at)]]) : null))
-        : [screenPanel("Quality evidence", h("p", { class: "empty" }, "No quality records supplied. This does not establish readiness."))]));
+        : [screenPanel("Quality evidence", h("p", { class: "empty" }, "No quality records supplied. This does not establish readiness."))]),
+      screenWithheld(["Resident contact details and access history (use the safe route reference in the case workspace)",
+        "Household and vulnerability details beyond what an inspection needs", "Funding amounts and claim values"]));
   }
 });
 
