@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench WCAG 2.2 Conformance Baseline
 description: Proposed target level and scope, first audit, automated check coverage, manual check record template and accessibility statement draft for the workbench (issue #151)
-ms.date: 2026-10-23
+ms.date: 2026-11-04
 ms.topic: reference
 ---
 
@@ -48,7 +48,7 @@ change), Gap (known, not fixed), Not tested.
 | Contrast, text | 1.4.3 | Pass | Computed for the token pairs in the table below. Disabled controls are exempt (1.4.3 inactive components) |
 | Contrast, non-text | 1.4.11 | Fixed, gap | Form field border was 2.51:1 and is now 3.77:1. The caution marker colour is 2.61:1 on its tint and the map marker shapes remain colour-only differences (design-system open item); recorded as gap G-2 |
 | Target size | 2.5.8 | Fixed, partial | Buttons are padded about 2.5rem tall. `.linkbtn` and the map list summary now set a 1.5rem (24 CSS px) minimum height, guarded by a static rule check (2026-11-03, #151). Rendered measurement of every generated control, including map controls, is not run |
-| Error identification | 3.3.1, 3.3.3 | Pass, partial | `.field-error` and `aria-invalid` exist in CSS; every form error path is not audited |
+| Error identification | 3.3.1, 3.3.3 | Pass, partial | `.field-error` and `aria-invalid` exist in CSS. Static inventory 2026-11-04 (#151): all seven script sites that set `aria-invalid` (`app.js`, `assistants.js`, `ops.js` x3, `panels.js`, `progress.js`) link the field to a visible text message through `aria-describedby`, and a test fails when a new site is added without one. The messages are role status or alert text, so the error is not colour-only (the field also gets a border and a warning glyph). Not tested: what a screen reader announces, whether every server-side rejection reaches a field-level message, and correction suggestions (3.3.3) beyond the message text |
 | Charts | 1.1.1, 1.3.1 | Fixed | Charts were `role="img"` with a title only. Each now offers "Show this chart as a table" with the same values (#119) |
 | Map | 1.1.1, 2.1.1 | Pass, partial | Region label plus "Show the map areas as a list" keyboard alternative (#119). Tile imagery is third-party |
 | Tables | 1.3.1 | Pass, partial | Chart tables use `th scope`; other tables not audited |
@@ -205,8 +205,8 @@ Known gaps at 2026-10-15:
 * G-2: The caution map marker and the map marker shapes depend on colour; the
   key text and list alternative are the equivalent.
 * G-3: Map tiles and the Leaflet library are third party and not assessed.
-* G-4: Form errors, tables other than chart tables and sign-in were not fully
-  audited.
+* G-4: Tables other than chart tables and sign-in were not fully audited; form
+  error markup was inventoried by script inspection only, not with a screen reader.
 
 To ask for another format or report a problem, contact: owner to supply (O-4).
 
