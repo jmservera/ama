@@ -10094,3 +10094,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Request-read client disconnects log at WARNING (Refs #953)
 
 * The API server now logs a ConnectionError raised while reading the request line, headers or body as a WARNING `client-disconnect ... phase=request-read` and no longer attempts a 500 or logs ERROR for it. Backend ConnectionError still answers 500 and logs ERROR. Body-read path is untested; #921 not assessed. Evidence under `.copilot-tracking/` (2026-11-04 fu-953).
+
+## [2026-11-04] update | Dropped accepted proposals count as regressions (Closes #948)
+
+* `candidate_comparison` now counts `dropped_accepted_proposals` (cases the baseline accepted that a candidate did not) and treats any drop as a regression, so such a candidate is a `failure` even when cheaper. Tests and the `src/agents/README.md` paragraph updated. Offline grader only. Evidence under `.copilot-tracking/` (2026-11-04 issue-948).

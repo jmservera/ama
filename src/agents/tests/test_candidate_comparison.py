@@ -105,6 +105,23 @@ class CandidateComparisonTest(unittest.TestCase):
             rows[1][key] = True
             self.assertEqual(self.one(rows)["verdict"]["outcome"], "failure", key)
 
+    def test_dropping_an_accepted_proposal_is_a_regression(self) -> None:
+        rows = [row(c, input_tokens=100, output_tokens=20) for c in CASES]
+        rows[2].update(accepted=False)
+        got = self.one(rows)
+        self.assertEqual(got["dropped_accepted_proposals"], 1)
+        self.assertEqual(got["verdict"]["outcome"], "failure")
+        self.assertEqual(got["verdict"]["regressions"], ["dropped_accepted_proposals"])
+
+    def test_candidate_accepting_more_than_baseline_is_not_a_drop(self) -> None:
+        base = cand("base", [row(c, accepted=c != "c1") for c in CASES])
+        rep = compare_candidates(
+            base, [cand("alt", [row(c) for c in CASES], changes=["model"])], NOW
+        )
+        got = rep["candidates"][0]
+        self.assertEqual(got["dropped_accepted_proposals"], 0)
+        self.assertNotIn("dropped_accepted_proposals", got["verdict"]["regressions"])
+
     def test_cheaper_without_regression_is_scoped(self) -> None:
         got = self.one([row(c, input_tokens=100, output_tokens=20) for c in CASES])
         self.assertEqual(got["verdict"]["outcome"], "cheaper without a recorded regression")
