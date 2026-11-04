@@ -38,11 +38,12 @@ stages are `simulated-not-live`, SQL fixture checks are `local-sql-verified`.
 Neither classification proves Azure SQL, application-store parity, workload
 identity, model access, staff delegation, resident consent or live acceptance.
 
-There is **no Azure adapter, deployment or apply mode**. Existing infrastructure,
-release, credential and staff helpers are integration contracts, not invoked by
-this module. See the [infra runbook and residual gates](../../infra/README.md#rebuild-authoring-and-local-rehearsal-refs-148).
-All issue #148 acceptance criteria remain partial; local simulation cannot
-establish a disposable Azure rebuild. Unknown/locked/retained resource types
+This module has no Azure adapter. The separate `rebuild_azure` module (dry run
+by default, `--apply` to execute, tested only against a fake `az`) drives the
+same stages; see the infra runbook below. Existing release, credential and staff
+helpers are integration contracts, not invoked by this module. See the [infra runbook and residual gates](../../infra/README.md#rebuild-authoring-and-local-rehearsal-refs-148).
+Local simulation and the fake `az` cannot establish a disposable Azure rebuild;
+that run (criterion 4) is the only unmet item. Unknown/locked/retained resource types
 fail closed rather than authorizing destruction. Teardown removes Front Door
 profiles before their target managed environments, releasing the modeled
 managed Private Link origin dependency first; profiles also precede their WAF
