@@ -10146,3 +10146,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Read-only data protection register route (Refs #121)
 
 * `GET /api/data-protection` exposes the existing register (missing approvals per data class, no reference values, `dpo_reviewed` false) to signed-in staff. No lawful basis, retention period, Article 17(3) position or transfer approval is recorded or invented; the dispatch gate is not wired to model calls and rights requests are not persisted. All four issue criteria stay unmet. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-121-r6).
+## [2026-11-04] update | Chat evaluation blocks actual calls without a finite authorisation (Refs #164)
+
+* `chat_eval.call_authorization` blocks actual-model calls unless a named owner authorisation sets finite call, token and budget limits and an unexpired date; it implies no spend authority. `enablement_decision` reports `actual_calls: blocked`. Offline, constructed fixtures only; no actual call, thresholds, reviewer, held-out set or human exercise exists, so #164 stays open. Evidence under `.copilot-tracking/` (2026-11-04 issue-164-call-authorization).

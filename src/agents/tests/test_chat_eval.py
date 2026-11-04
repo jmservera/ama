@@ -264,6 +264,40 @@ class GoldenRunTests(unittest.TestCase):
         self.assertEqual(report["enablement"]["outcome"], "insufficient")
         self.assertEqual(report["enablement"]["blocking_gaps"], [])
 
+    def test_actual_calls_are_blocked_without_finite_unexpired_authorisation(self) -> None:
+        ok = dict(
+            authorised_by="constructed-fixture",
+            max_calls=10,
+            max_tokens=1000,
+            max_budget=5,
+            budget_currency="GBP",
+            expires_at="2026-12-01",
+        )
+        now = "2026-11-04"
+        allowed = chat_eval.call_authorization(ok, 2, 200, now=now)
+        self.assertEqual((allowed["outcome"], allowed["reasons"]), ("within-limit", []))
+        self.assertIn("not implied", allowed["spend_authority"])
+        self.assertEqual(self.report["enablement"]["actual_calls"], "blocked")
+        cases = [
+            (None, 1, 1, now),
+            (dict(ok, authorised_by=" "), 1, 1, now),
+            (dict(ok, max_calls=None), 1, 1, now),
+            (dict(ok, max_tokens=True), 1, 1, now),
+            (dict(ok, max_budget=0), 1, 1, now),
+            (dict(ok, budget_currency=""), 1, 1, now),
+            (dict(ok, expires_at=""), 1, 1, now),
+            (ok, 1, 1, "2026-12-01"),
+            (ok, 11, 1, now),
+            (ok, 1, 1001, now),
+        ]
+        for auth, calls, tokens, when in cases:
+            with self.subTest(auth=auth, calls=calls, tokens=tokens):
+                r = chat_eval.call_authorization(auth, calls, tokens, now=when)
+                self.assertEqual(r["outcome"], "blocked")
+                self.assertTrue(r["reasons"])
+        used = chat_eval.call_authorization(ok, 1, 1, now=now, used_calls=10)
+        self.assertEqual(used["outcome"], "blocked")
+
     def test_consumption_is_reported_per_turn_scenario_and_runtime_answer(self) -> None:
         summary = self.report["summary"]["economics"]
         self.assertEqual(summary["actual_model_calls"], 0)
