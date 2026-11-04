@@ -4,6 +4,7 @@ import json
 import tempfile
 import threading
 import unittest
+from datetime import date, timedelta
 from pathlib import Path
 from types import SimpleNamespace
 from typing import Any
@@ -14,7 +15,7 @@ from zava_forward.core.finance import FinanceMixin
 APPROVAL = dict(
     approver="Test approver",
     role="Test Board role",
-    approved_on="2026-01-01",
+    approved_on=(date.today() - timedelta(days=30)).isoformat(),
     evidence_ref="synthetic-minute-1",
     restart_owner="Test control owner",
 )
@@ -98,6 +99,35 @@ class LiveSignal(unittest.TestCase):
     def test_malformed_file_holds_not_within(self) -> None:
         for content in ("{", "[]", dict(approval=APPROVAL)):
             self.assertEqual(self.signal((1,), content)["status"], "Held")
+
+    def test_stale_file_holds(self) -> None:
+        old = dict(APPROVAL, approved_on=(date.today() - timedelta(days=400)).isoformat())
+        result = self.signal((1,), dict(approval=old, envelope=ENVELOPE, tolerances=TOLERANCES))
+        self.assertEqual(result["status"], "Held")
+        self.assertIn("out of date", result["reason"])
+        future = dict(APPROVAL, approved_on=(date.today() + timedelta(days=5)).isoformat())
+        result = self.signal((1,), dict(approval=future, envelope=ENVELOPE, tolerances=TOLERANCES))
+        self.assertEqual(result["status"], "Held")
+
+    def test_non_utf8_file_holds(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "approved-limits.json"
+            path.write_bytes(b"\xff\xfe{")
+            with self.assertRaises(limits.LimitsError):
+                limits.load_limits(path)
+            result = FinanceMixin.exposure_signal(self.store(1), self.USER, path)  # type: ignore[arg-type,no-untyped-call]
+        self.assertEqual(result["status"], "Held")
+
+    def test_non_numeric_commitment_amount_holds(self) -> None:
+        content = dict(approval=APPROVAL, envelope=ENVELOPE, tolerances=TOLERANCES)
+        for bad in ("12k", True, float("nan"), [1]):
+            store = self.store(1)
+            store.cases["c1"]["finance"]["commitments"].append(dict(amount=bad, status="Raised"))
+            with tempfile.TemporaryDirectory() as tmp:
+                path = Path(tmp) / "approved-limits.json"
+                path.write_text(json.dumps(content))
+                result = FinanceMixin.exposure_signal(store, self.USER, path)  # type: ignore[arg-type,no-untyped-call]
+            self.assertEqual(result["status"], "Held", bad)
 
     def test_envelope_breach_from_recorded_commitments(self) -> None:
         content = dict(approval=APPROVAL, envelope=ENVELOPE, tolerances=TOLERANCES)

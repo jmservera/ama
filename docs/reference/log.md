@@ -10221,3 +10221,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Exposure pause signal read from approved limits file (Refs #99)
 
 * `FinanceMixin.exposure_signal` compares recorded commitments with person-supplied limits (`approved-limits.json` or `ZF_APPROVED_LIMITS`); absent or malformed input is Held. Read-only; no figures invented. AC1 and AC2 of issue 99 remain unmet or partial; store persistence, API and UI are later slices.
+
+## [2026-11-04] update | Exposure signal fails closed on stale or malformed limits (Refs #99)
+
+* Review fixes: limits approved over 366 days ago or dated in the future are Held with a plain reason (`stale_reason`, `MAX_AGE_DAYS`, based on `approved_on`; the file schema records no expiry). Non-UTF-8 files and non-numeric commitment amounts now return Held instead of raising. Tests added; staleness horizon is an engineering default pending owner confirmation.

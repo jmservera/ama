@@ -21,6 +21,7 @@ NOTICE = (
     "delivery, and it does not contain or release live activity."
 )
 UNAPPROVED = "Pause for human decision"
+MAX_AGE_DAYS = 366
 BREACH_ACTION = "Escalate to the Board and control owners; restart needs their recorded approval."
 
 
@@ -90,7 +91,25 @@ def record_limits(approval: object, envelope: object, tolerances: object) -> Rec
     )
 
 
-def assess(limits: Record | None, exposure: Record | None) -> Record:
+def _held(reason: str) -> Record:
+    return dict(status="Held", signal=UNAPPROVED, reason=reason, findings=[], notice=NOTICE)
+
+
+def stale_reason(limits: Record, today: date | None = None) -> str | None:
+    """Return a plain reason when approved limits are older than one year or dated in the future."""
+    today = today or date.today()
+    approved = date.fromisoformat(limits["approval"]["approved_on"])
+    if approved > today:
+        return "The approved limits are dated in the future, so they cannot be relied on."
+    if (today - approved).days > MAX_AGE_DAYS:
+        return (
+            f"The approved limits were approved on {approved.isoformat()}, more than "
+            f"{MAX_AGE_DAYS} days ago, so they are out of date and need re-approval."
+        )
+    return None
+
+
+def assess(limits: Record | None, exposure: Record | None, today: date | None = None) -> Record:
     """Compare observed exposure with approved limits and return a pause signal.
 
     Without approved limits the result is held and nothing is evaluated. A missing or
@@ -104,6 +123,12 @@ def assess(limits: Record | None, exposure: Record | None) -> Record:
             findings=[],
             notice=NOTICE,
         )
+    try:
+        stale = stale_reason(limits, today)
+    except (KeyError, TypeError, ValueError):
+        stale = "The approved limits record is not readable, so it cannot be relied on."
+    if stale:
+        return _held(stale)
     exposure = exposure or {}
     findings: list[Record] = []
     committed = exposure.get("committed")
@@ -170,7 +195,7 @@ def load_limits(path: Path) -> Record | None:
         text = path.read_text(encoding="utf-8")
     except FileNotFoundError:
         return None
-    except OSError as exc:
+    except (OSError, ValueError) as exc:
         raise LimitsError("The approved limits file cannot be read.") from exc
     try:
         data = json.loads(text)
@@ -182,10 +207,20 @@ def load_limits(path: Path) -> Record | None:
 
 
 def committed_exposure(cases: Iterable[Record], currency: str = "GBP") -> Record:
-    """Sum non-cancelled commitments as recorded; downside tolerances are not observed here."""
+    """Sum non-cancelled commitments as recorded ; raises LimitsError on a non-numeric amount.
+
+    Downside tolerances are not observed here.
+    """
     committed = 0.0
     for case in cases:
         for commitment in (case.get("finance") or {}).get("commitments", []):
             if commitment.get("status") != "Cancelled":
-                committed += float(commitment.get("amount") or 0)
+                amount = commitment.get("amount")
+                if amount is None:
+                    continue
+                if not isinstance(amount, int | float) or isinstance(amount, bool):
+                    raise LimitsError("A recorded commitment amount is not a number.")
+                if not math.isfinite(amount):
+                    raise LimitsError("A recorded commitment amount is not a number.")
+                committed += float(amount)
     return dict(committed=round(committed, 2), currency=currency, tolerances={})

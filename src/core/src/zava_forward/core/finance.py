@@ -334,6 +334,10 @@ class FinanceMixin:
             limits = el.load_limits(Path(path))
         except el.LimitsError as exc:
             return dict(status="Held", signal=el.UNAPPROVED, reason=str(exc), findings=[], notice=el.NOTICE)
-        with self.lock:
-            exposure = el.committed_exposure(deepcopy(list(self.cases.values())))
-        return el.assess(limits, exposure)
+        try:
+            with self.lock:
+                exposure = el.committed_exposure(deepcopy(list(self.cases.values())))
+            return el.assess(limits, exposure)
+        except (el.LimitsError, ArithmeticError, AttributeError, TypeError, ValueError) as exc:
+            reason = str(exc) if isinstance(exc, el.LimitsError) else "Recorded commitments cannot be read."
+            return dict(status="Held", signal=el.UNAPPROVED, reason=reason, findings=[], notice=el.NOTICE)
