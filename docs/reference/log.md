@@ -10124,3 +10124,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | src-api strict mypy passes for the expected-denials test and browser check (Refs #920)
 
 * `src/api/pyproject.toml` adds the expected-denials test and browser check to the existing `disallow_untyped_calls = false` override for untyped App, provider and fixture calls, and the unused `type: ignore` is removed from `test_expected_denials.py`. No runtime change. `mypy` no longer reports these files; `ruff check` and the module tests pass. Focused tier only; the complete gate was not run.
+## [2026-11-04] update | Browser-style anonymous API requests pinned to 401 (Refs #350)
+
+* A new executed test shows the src app answers anonymous `/api/*` requests with 401 JSON, including a browser User-Agent with Accept: application/json, while pages still redirect to sign-in. This is the app half of acceptance criterion 1 only: the platform EasyAuth redirect that returns 302 for browser API calls is unchanged and unverified (needs an infrastructure/security change and live Azure proof). All ten #350 criteria stay unmet. Focused tests, ruff and mypy only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-350-anon-api-401).
