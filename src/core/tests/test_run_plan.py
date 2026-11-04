@@ -100,6 +100,15 @@ class EstimateTests(unittest.TestCase):
             with self.subTest(bad=bad), self.assertRaises(StreamError):
                 plan(**bad).estimate()
 
+    def test_placeholder_owner_or_alert_names_are_refused(self) -> None:
+        for field in ("owner", "alert_reference"):
+            for bad in ("TBD", " none ", "N/A", "<name>", "<budget alert name>", "x" * 161):
+                with self.subTest(field=field, bad=bad):
+                    with self.assertRaises(StreamError) as caught:
+                        plan(**{field: bad}).budget()
+                    self.assertEqual(str(caught.exception), "RUN_OWNER_COST_ALERT_REQUIRED")
+        self.assertEqual(plan(owner="Platform on-call").estimate().tier, "B1")
+
     def test_run_budget_derived_from_plan_carries_owner_and_alert(self) -> None:
         budget = plan().budget()
         self.assertEqual(
