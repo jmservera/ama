@@ -2271,6 +2271,27 @@ os.fstat(3)
             self.assertEqual(len(builds), 1)
             self.assertEqual("--no-cache" in builds[0], cache == "fresh" and not stress)
 
+    def test_real_src_ci_jobs_are_pinned_and_every_step_classified(self) -> None:
+        import yaml  # type: ignore[import-untyped]
+
+        root = Path(__file__).resolve().parents[1]
+        text = (root / ".github/workflows/src-ci.yml").read_text()
+        jobs = yaml.load(text, Loader=yaml.BaseLoader)["jobs"]
+        self.assertIn("changes", jobs)
+        self.assertEqual(
+            gate.digest(root / ".github/workflows/src-ci.yml"), gate.WORKFLOW_HASHES["src-ci.yml"]
+        )
+        rows = gate.Runner.coverage_rows({"src-ci.yml": jobs})
+        self.assertEqual(
+            {r["job"] for r in rows},
+            set(jobs),
+        )
+        self.assertEqual(sum(len(j["steps"]) for j in jobs.values()), len(rows))
+        self.assertTrue(all(r["coverage"] for r in rows))
+        self.assertTrue(
+            all(r["workflow_sha256"] == gate.WORKFLOW_HASHES["src-ci.yml"] for r in rows)
+        )
+
     def test_matrix_drift_and_unreviewed_extra_commands_refuse(self) -> None:
         self.assertEqual(len(gate.required_groups([])), 17)
         self.assertEqual(gate.SQL_SELECTORS[0], "test_mssqlstore")

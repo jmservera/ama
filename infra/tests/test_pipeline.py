@@ -364,7 +364,11 @@ class WorkflowTests(unittest.TestCase):
         }
         self.assertEqual(mssql, workflow("mvp-ci.yml")["jobs"]["mssql"])
         self.assertEqual(document["jobs"]["mssql"]["needs"], "changes")
-        self.assertEqual(document["jobs"]["mssql"]["if"], "needs.changes.outputs.mssql == 'true'")
+        self.assertEqual(
+            document["jobs"]["mssql"]["if"],
+            "${{ !cancelled() && (needs.changes.result != 'success' "
+            "|| needs.changes.outputs.mssql == 'true') }}",
+        )
         for path in ("tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/rename-zava*"):
             self.assertIn(path, document["on"]["pull_request"]["paths"])
         for command in (
