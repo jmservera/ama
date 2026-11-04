@@ -480,14 +480,16 @@ class WorkflowMixin:
     def release_hazard(self, user, case_id, idx, note="", evidence=None):
         if user["role"] not in SAFETY_ROLES:
             raise PermissionError("Only the Building Safety Liaison or a manager can restart stopped retrofit work. Ask one of them to record the restart.")
-        note = controls.text(note, "the retrofit hold release reason")
-        evidence = controls.text(evidence, "the external evidence supporting hold release")
+        note = controls.text(note, "the reason for restarting retrofit work")
+        evidence = controls.text(evidence, "the external evidence supporting the restart")
         with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard(c, idx)
             if h["released"]:
                 raise ValueError("Retrofit work on this safety issue has already been restarted. Nothing more to do.")
             if not h.get("repair_evidence") or not h.get("accepted_at"):
-                raise ValueError("Retrofit work cannot restart yet. The designated safety receiver must record receipt, acceptance and external repair evidence first.")
+                raise ValueError(
+                    "Retrofit work cannot restart yet. Receipt, acceptance and external repair "
+                    "evidence must be recorded first.")
             if h["hold"].get("accountable_role") and not h["hold"].get("legacy"):
                 verdict = gates.safety_release_gate(h["hold"], user, [])
                 if verdict.outcome != gates.PASS:

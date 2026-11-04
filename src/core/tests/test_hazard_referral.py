@@ -226,6 +226,64 @@ class JsonHazardReferral(unittest.TestCase):
         self.assertEqual(h["hold"]["case_id"], "ZF-3")
         self.assertEqual(h["hold"]["decision"]["actor"]["code"], self.bo["code"])
 
+    def assert_refusal(
+        self, error: type[Exception], operation: Callable[[], object], *parts: str
+    ) -> None:
+        with self.assertRaises(error) as ctx:
+            operation()
+        message = str(ctx.exception)
+        for part in parts:
+            self.assertIn(part, message)
+        self.assertNotRegex(message.lower(), r"retrofit hold|hold release|\bthe hold\b|\bgate")
+
+    def test_restart_refusals_name_the_next_action_in_plain_words(self) -> None:
+        self.raise_report()
+        self.refer()
+        release = partial(self.store.release_hazard, self.bo, "ZF-3", 0, "Reason", "SYN-CLEAR")
+        self.assert_refusal(ValueError, release, "cannot restart yet", "must be recorded first")
+        self.assert_refusal(
+            PermissionError,
+            partial(self.store.release_hazard, self.sam, "ZF-3", 0, "Reason", "SYN-CLEAR"),
+            "Only the Building Safety Liaison or a manager",
+            "Ask one of them",
+        )
+        for note, evidence, label in (
+            ("", "SYN-CLEAR", "reason for restarting retrofit work"),
+            ("Reason", "", "external evidence supporting the restart"),
+        ):
+            with self.subTest(label=label):
+                self.assert_refusal(
+                    ValueError,
+                    partial(self.store.release_hazard, self.bo, "ZF-3", 0, note, evidence),
+                    label,
+                )
+        self.accept()
+        self.store.record_repair(self.bea, "ZF-3", 0, "SYN-REPAIR")
+        self.store.release_hazard(self.bo, "ZF-3", 0, "Reason", "SYN-CLEAR")
+        self.assert_refusal(ValueError, release, "already been restarted", "Nothing more to do")
+        self.assert_refusal(
+            ValueError,
+            partial(self.store.record_repair, self.bea, "ZF-3", 0, "SYN-REPAIR"),
+            "already been restarted",
+        )
+
+    def test_same_person_restart_refusals_name_who_to_ask(self) -> None:
+        self.ready_for_release()
+        self.assert_refusal(
+            PermissionError,
+            partial(self.store.release_hazard, self.bea, "ZF-3", 0, "Reason", "SYN-CLEAR"),
+            "Ask another authorised person",
+        )
+        h = self.store._case("ZF-3")["hazards"][0]
+        h["repaired_identity"] = dict(name=self.bo["name"])
+        h["repaired_by_email"] = None
+        self.assert_refusal(
+            PermissionError,
+            partial(self.store.release_hazard, self.bo, "ZF-3", 0, "Reason", "SYN-CLEAR"),
+            "A different person must restart",
+            "Ask another authorised person",
+        )
+
     def test_failed_save_has_no_success_audit_or_ghost_hazard(self) -> None:
         before = self.store.detail("ZF-3")
         audit = list(self.store.audit_entries())

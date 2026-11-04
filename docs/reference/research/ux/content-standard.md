@@ -124,7 +124,10 @@ who can act or what to do next. Stored state values such as "Retrofit hold
 released" and audit event names are unchanged, and no authority or approval rule
 changed. Remaining typed errors (`gates.py` configuration errors, `signoffs.py`,
 `doc_controls.py` legal-hold wording, `procurement.py`, `resident_decisions.py`)
-are not yet audited.
+are not yet audited. Field-label messages from `controls.text` now name
+"the reason for restarting retrofit work" and "the external evidence supporting
+the restart"; other `controls.text` labels are not yet audited. Behaviour tests
+in `test_hazard_referral.py` trigger the changed refusals.
 
 The safety alternatives come from the existing stopped-work/restart glossary.
 They do not close a hazard-service case, establish safety, give the panel new
