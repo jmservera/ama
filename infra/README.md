@@ -1529,6 +1529,18 @@ Owner decision 2026-11-03 (jmservera): for the demonstrator only, a visible disc
 * Live apply 2026-11-03 on `ca-cutover-test-demo-api` in resource group `ama`: image rebuilt from main `9ca9ccb88` (the running image predated #892), pushed by digest `sha256:bf8d321379b98eaa62c20e1f5a5e268f64a49a2ec02e81e65fa05dc0471ec9de` inside a short registry window (export policy, public access and one IP rule on, then the rule removed by bare IP, public disabled and exports disabled; readback Disabled, Deny, no rules, exports disabled), then one `az containerapp update` set the image and both env vars. Revision `--0000010` took 100 percent of traffic.
 * Live result: `/api/chat/status` reports `activation: demo-only`, `demo_activation: true` and the disclaimer, but the employee reply to "What's the problem with funding?" was still workflow-only (model calls 0). `chat_admission` also calls `store.ai.gate`; `SqlStore.release_block` denies any task not in `ai_registry.LEGACY` ("task is not registered") when AI is configured, and `chat-case-conversation` is not in it. The switch alone therefore does not enable a model answer on the SQL-backed demo; a code change is needed and #891 stays open.
 
+### API ingress transport pinned to HTTP/1.1 (2026-11-04, Refs #810)
+
+Owner approval 2026-11-04 (issue 810 only). Ingress transport `auto` on the API
+gave about 1 to 3 percent empty-body 500s under concurrent requests, including
+on auth-excluded paths. Live on `ca-cutover-test-demo-api`: `az containerapp
+ingress update --transport http`; 4 rounds of 30 concurrent requests then gave 0
+x 500 on `/healthz`, `/welcome.html` and `/style.css`. `modules/containerapps.bicep`
+now pins `transport: 'http'` for the API (`tests/test_api_ingress_transport.py`).
+Rollback: `--transport auto`. This is an infrastructure change: the complete
+local gate and a Bicep deployment from main were not run here. Evidence and
+limits: [research note](../docs/reference/research/easy-auth-intermittent-500-2026-11-03.md).
+
 ### Historical deployment recipe
 
 Observed 2026-10-11 in resource group `ama` (`uksouth`, `environmentName=test`, `deploymentProfile=development`):
