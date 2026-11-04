@@ -10333,6 +10333,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 657, 785, 862, 937 and 978: the invoice, funding, field draft and AI economics criteria are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-225 r1).
 
+## [2026-11-04] update | Issue 231 technical and quality screens status (Refs #231)
+
+* Rechecked merged PRs 656, 769, 807, 828, 886 and 971: criteria 1-3 and 5 are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-231 r1).
 ## [2026-11-04] update | Issue 140 IoT Hub module status (Refs #140)
 
 * Rechecked merged PRs 273, 498, 557, 910 and the README IoT Hub section: the module, tier/retention/cost, keyless receiver role, private network and diagnostics criteria are delivered as engineering evidence. Device provisioning approach (individual identities, DPS deferred) and an exercise owner are recorded; the operational credential-owner appointment and issue/rotate evidence (#185) remain unmet and need the owner. ADR 0003 and OD-43 stay open. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-140 r1).
