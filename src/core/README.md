@@ -754,6 +754,15 @@ digests. No observed results exist yet.
 python -m unittest discover -s tests -p 'test_discovery_assistant_*.py' -q
 ```
 
+Slice 3 adds `discovery_assistant_drafting`: deterministic stage durations from
+timestamped, source-referenced events (`calculate_stage_durations`, with gaps
+reported rather than guessed) and `draft_evidence`, where an optional drafter
+callable may only phrase the result. A draft is accepted only if every number
+it quotes was calculated and it cites a source reference; otherwise, or if the
+drafter is absent or fails, a plain deterministic sentence is used. Output is
+always `DRAFT_FOR_HUMAN_REVIEW` and never a validated finding. No model is
+bundled and nothing needs one.
+
 ### Phase 0 discovery register slice (124)
 
 `discovery_register` is a pure, in-memory rule layer for the retrofit-flow
@@ -4498,6 +4507,13 @@ until the named owner calls `review_pack` with `accept` or `reject` and a reason
 changes the concern, its outcome or its remedy, and a sensor reading never appears in the pack. The
 task `aftercare-concern-pack` is registered in `ai_registry` as an unapproved, disabled proposal
 task with a manual route and no model binding (FR-036).
+
+`intake_form()` returns the plain-language household route (who is raising it, representative
+basis, concern kind, own-words statement, and the phone, in-person, paper and assisted-visit
+channels) for a screen or paper form to follow, and `intake_errors(values)` returns plain,
+per-field problems. `to_state()` and `AftercareRegister.from_state()` give a JSON-safe snapshot for
+a later store; a restore is refused if it would mark a concern sensor-dismissed, give an outcome a
+non-human basis, or orphan a pack.
 
 Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), evaluator role access
 and the DPO position on outcome data (both open), a model route for the pack summary (needs

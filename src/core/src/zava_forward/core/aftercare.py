@@ -71,6 +71,92 @@ def neutral_text(text: str) -> str:
     return text
 
 
+def _labelled(pairs: Iterable[tuple[str, str]]) -> list[dict[str, str]]:
+    return [{"value": v, "label": neutral_text(label)} for v, label in pairs]
+
+
+def intake_form() -> Record:
+    """Plain-language household route definition for any screen or paper form to follow."""
+    form: Record = {
+        "title": "Raise a concern about your home",
+        "intro": "Tell us if your home feels uncomfortable, your bills are higher than you "
+        "expected, or you are unsure how to use your controls.",
+        "accessible_route": ACCESSIBLE_ROUTE,
+        "protection": PROTECTION,
+        "fields": [
+            {
+                "name": "raised_by",
+                "label": "Who is raising this?",
+                "required": True,
+                "options": _labelled(
+                    [
+                        ("household", "Someone who lives in the home"),
+                        ("representative", "A person acting for the household"),
+                    ]
+                ),
+            },
+            {
+                "name": "representative_basis",
+                "required": False,
+                "label": "If you are acting for the household, how are you authorised?",
+                "required_when": "raised_by is representative",
+            },
+            {
+                "name": "home_ref",
+                "label": "Home reference from your handover pack",
+                "required": True,
+            },
+            {
+                "name": "kind",
+                "label": "What is your concern about?",
+                "required": True,
+                "options": _labelled(
+                    [
+                        ("discomfort", "The home is too cold, too warm or damp"),
+                        ("higher_bill", "My energy bill is higher than I expected"),
+                        ("control_use", "I am not sure how to use my controls"),
+                        ("other", "Something else"),
+                    ]
+                ),
+            },
+            {"name": "statement", "label": "Tell us in your own words", "required": True},
+        ],
+        "non_digital_channels": _labelled(
+            [
+                ("phone", "By phone"),
+                ("in_person", "In person"),
+                ("paper", "On paper"),
+                ("assisted_visit", "With help at a visit"),
+            ]
+        ),
+    }
+    for field in form["fields"]:
+        neutral_text(field["label"])
+    neutral_text(form["intro"])
+    return form
+
+
+def intake_errors(values: Mapping[str, object]) -> dict[str, str]:
+    """Plain-language problems per field, so a screen or staff member can help fix them."""
+    errors: dict[str, str] = {}
+    raised_by = values.get("raised_by")
+    if raised_by not in RAISED_BY:
+        errors["raised_by"] = "Say whether you live in the home or act for the household."
+    if raised_by == "representative" and not _present(values.get("representative_basis")):
+        errors["representative_basis"] = "Say how you are authorised to act for the household."
+    if not _present(values.get("home_ref")):
+        errors["home_ref"] = "Enter the home reference from your handover pack."
+    if values.get("kind") not in CONCERN_KINDS:
+        errors["kind"] = "Choose what your concern is about."
+    if not _present(values.get("statement")):
+        errors["statement"] = "Tell us your concern in your own words."
+    return errors
+
+
+def _present(value: object) -> bool:
+    return isinstance(value, str) and bool(value.strip())
+
+
 def _fraction(count: int, denominator: int | None) -> dict[str, Any]:
     return {"count": count, "denominator": denominator}
 
@@ -82,6 +168,39 @@ class AftercareRegister:
         self.concerns: dict[str, Record] = {}
         self.closures: list[Record] = []
         self.packs: dict[str, Record] = {}
+
+    def to_state(self) -> Record:
+        """JSON-safe snapshot for any store; a restore is checked by `from_state`."""
+        return deepcopy({"concerns": self.concerns, "closures": self.closures, "packs": self.packs})
+
+    @classmethod
+    def from_state(cls, state: Mapping[str, Any]) -> "AftercareRegister":
+        """Restore a snapshot, refusing one that would lose or weaken a recorded concern."""
+        reg = cls()
+        reg.concerns = deepcopy(dict(state.get("concerns", {})))
+        reg.closures = deepcopy(list(state.get("closures", [])))
+        reg.packs = deepcopy(dict(state.get("packs", {})))
+        for n, (cid, rec) in enumerate(reg.concerns.items(), start=1):
+            outcome = rec.get("outcome")
+            if (
+                cid != f"AC-{n:03d}"
+                or rec.get("id") != cid
+                or rec.get("route") not in ROUTES
+                or rec.get("raised_by") not in RAISED_BY
+                or rec.get("kind") not in CONCERN_KINDS
+                or rec.get("investigation") not in INVESTIGATION
+                or rec.get("dismissed_by_sensor") is not False
+                or not _present(rec.get("owner"))
+                or rec.get("remedy", {}).get("status") not in REMEDY_STATUSES
+                or (rec["investigation"] == "outcome_recorded") != (outcome is not None)
+                or (outcome is not None and outcome.get("basis") not in HUMAN_BASES)
+            ):
+                raise ValueError(f"Snapshot concern {cid} is not valid.")
+        if any(i.get("kind") not in CLOSURE_KINDS for i in reg.closures):
+            raise ValueError("Snapshot closure is not valid.")
+        if any(p.get("concern_id") not in reg.concerns for p in reg.packs.values()):
+            raise ValueError("Snapshot pack has no concern.")
+        return reg
 
     def _get(self, cid: str) -> Record:
         if cid not in self.concerns:
