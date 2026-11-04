@@ -10420,6 +10420,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
 
+## [2026-11-04] update | Issue 137 environment strategy status (Refs #137)
+
+* Rechecked merged PRs 306, 346 and 415. Criteria 1, 2, 3 and 5 are delivered. Criterion 4 stays unmet: region and capacity are parameters with fail-closed guards, but no authenticated live region and quota check exists (SQL and model usage, IoT quota, ACA zone evidence and subscription binding are unknown; owner and Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-137 r1).
 ## [2026-11-04] update | Issue 124 Phase 0 discovery status (Refs #124)
 
 * Rechecked merged PRs 895 and 1030: they delivered synthetic rules and analysis only. All four criteria stay unmet or label-only and need human steps (sponsor nomination, owner validation, approved extract). Nothing was ticked or closed. Added a status section to the [discovery brief](../brds/retrofit-flow-discovery-brief.md). Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-124 r3).
