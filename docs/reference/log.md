@@ -10336,3 +10336,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 193 status record (Refs #193)
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
+
+## [2026-11-04] update | Issue 185 status record (Refs #185)
+
+* Rechecked merged PRs 647 and 849 and the transport PRs 498 and 508. Criterion 2 is delivered. Criteria 1, 3 and 4 stay unmet: owner confirmation of credential ownership is not recorded, and live Key Vault issuance and live teardown are proven only against fakes. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-185 r3).
