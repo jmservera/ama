@@ -236,6 +236,11 @@ def replay(
     return tuple(sorted(frames, key=lambda frame: frame.slot))
 
 
+def revision_sources(*, composed: bool) -> tuple[Path, ...]:
+    """Sources in generator_revision; composed is true when a climate is supplied."""
+    return (*sensor_backfill.revision_sources(faults=True, composed=composed), Path(__file__))
+
+
 def descriptor(
     selection: sensor_stock.Selection,
     spec: Replay,
@@ -259,10 +264,7 @@ def descriptor(
         "monitored_homes": len(sensors),
         "seed": spec.seed,
         "generator_revision": provenance.source_revision(
-            (
-                *sensor_backfill.revision_sources(faults=True, composed=climate is not None),
-                Path(__file__),
-            )
+            revision_sources(composed=climate is not None)
         ),
         "origin": spec.origin.isoformat(),
         "days": spec.days,

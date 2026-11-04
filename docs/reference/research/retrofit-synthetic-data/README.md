@@ -287,8 +287,11 @@ the audit did not replay it. The descriptor now records the full `sha256:`
 `generator_revision` of the stream, backfill, stock, fault and projection
 sources (plus the climate and retrofit model sources when composed), and the
 determinism audit replays a fictional six-home stock (from the fictional
-register generator, with mixed monitoring consent) as `sensor-stream`,
-comparing the wire frames and the descriptor byte for byte. Tests:
+register generator, with mixed monitoring consent) for one day through the
+composed path (constructed climate and one dated measure, no injected faults)
+as `sensor-stream`, comparing the wire frames and the descriptor byte for byte.
+The revision depends on whether a climate is supplied, and the audit fails if
+an expected source is missing from it. Tests:
 `src/core/tests/test_determinism_audit.py` and
 `src/core/tests/test_sensor_stream.py`.
 

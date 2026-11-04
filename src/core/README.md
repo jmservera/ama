@@ -3389,6 +3389,14 @@ agreed R3 limits and operational acceptance are still unproven.
   payloads and refused refreshes. This wholly fictional stock-scale fixture
   is not the private OSM-anchored stock register. That generator remains absent;
   neither these tests nor the sensor sample establishes full-stock feasibility.
+  The register-backed sensor stream descriptor records the same kind of
+  `generator_revision`, but the set of fingerprinted sources depends on the
+  call: the climate, household and retrofit model sources are included only
+  when a climate is supplied, so a plain and a composed descriptor for the
+  same stock have different revisions. The determinism audit replays the
+  composed path (constructed climate, one dated measure, six fictional homes,
+  one day, no injected faults) and fails if an expected source is missing from
+  the revision; it does not cover the fault rates or full-scale runs.
   The [refresh cadence and approval policy](../../docs/reference/research/retrofit-synthetic-data/README.md#determinism-manifests-and-refresh-policy-2026-10-15)
   is still proposed. These tools confer no approval, resident consent,
   live SQL reset authority or permission to replace private tenant bindings.
