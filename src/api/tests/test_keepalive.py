@@ -1,6 +1,7 @@
 """Issue 810: the API answers HTTP/1.1 and keeps connections alive for the Easy Auth sidecar."""
 
 import http.client
+import socket
 import threading
 import unittest
 
@@ -41,6 +42,31 @@ class KeepAliveTests(Base):
         self.assertEqual(r.status, 400)
         r.read()
         self.assertTrue(r.will_close)
+
+    def _pipelined(self, first: bytes) -> bytes:
+        second = b"GET /healthz HTTP/1.1\r\nHost: x\r\n\r\n"
+        with socket.create_connection(("127.0.0.1", self.httpd.server_address[1]), timeout=10) as s:
+            s.sendall(first + second)
+            data = b""
+            while chunk := s.recv(65536):
+                data += chunk
+        return data
+
+    def test_non_post_body_closes_without_second_response(self) -> None:
+        body = b"GET /healthz HTTP/1.1\r\nHost: x\r\n\r\n"  # smuggled request inside the body
+        for method in ("GET", "HEAD", "PUT", "DELETE", "OPTIONS"):
+            with self.subTest(method=method):
+                line = f"{method} /healthz HTTP/1.1\r\nHost: x\r\n"
+                head = f"{line}Content-Length: {len(body)}\r\n\r\n".encode()
+                data = self._pipelined(head + body)
+                self.assertEqual(data.count(b"HTTP/1.1 "), 1, data)
+                self.assertIn(b"Connection: close", data)
+
+    def test_transfer_encoding_closes_without_second_response(self) -> None:
+        head = b"GET /healthz HTTP/1.1\r\nHost: x\r\nTransfer-Encoding: chunked\r\n\r\n0\r\n\r\n"
+        data = self._pipelined(head)
+        self.assertEqual(data.count(b"HTTP/1.1 "), 1, data)
+        self.assertIn(b"Connection: close", data)
 
 
 if __name__ == "__main__":

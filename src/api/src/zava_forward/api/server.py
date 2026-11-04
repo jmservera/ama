@@ -248,7 +248,19 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
         def parse_request(self):
             ok = super().parse_request()
             self._request_parsed = ok
+            self._close_if_body_read = self.close_connection
+            if ok and self._has_body():
+                # Assume the body stays unread (every method) so it can never be parsed as the next pipelined request; _body() lifts this once it has read it.
+                self.close_connection = True
             return ok
+
+        def _has_body(self):
+            if self.headers.get("Transfer-Encoding") is not None:
+                return True
+            try:
+                return int(self.headers.get("Content-Length") or 0) != 0
+            except ValueError:
+                return True
 
         def handle_one_request(self):
             self._response_started = False
@@ -326,6 +338,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             except ConnectionError:
                 self._body_read_failed = True
                 raise
+            self.close_connection = self._close_if_body_read
             return json.loads(raw or b"{}")
 
         def do_HEAD(self):

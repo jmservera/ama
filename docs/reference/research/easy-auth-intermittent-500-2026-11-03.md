@@ -162,10 +162,12 @@ Hypotheses tested live and reverted, or ruled out:
 
 Fix: the handler in `src/api/src/zava_forward/api/server.py` sets
 `protocol_version = "HTTP/1.1"` and an idle `timeout` of 300 s, and closes the
-connection (with `Connection: close`) when a request body was not read. Test:
-`src/api/tests/test_keepalive.py`. The full `src/api` suite ran 1793 tests with
-5 import errors from browser tooling missing in this environment (unrelated
-modules).
+connection (with `Connection: close`) when a request body was not read. This
+applies to every method: any request with a non-zero or invalid `Content-Length`
+or any `Transfer-Encoding` closes the connection unless the handler read the
+body, so an unread body is never parsed as a pipelined request (desync, review
+finding; the app trusts `X-MS-CLIENT-PRINCIPAL`). Test:
+`src/api/tests/test_keepalive.py`. The full `src/api` suite after the desync fix ran 1818 tests, OK (335 skipped).
 
 Live state: the demo API runs revision `--0000022`, a temporary command override
 that applies the same `protocol_version` change to the existing image (no image
