@@ -10367,6 +10367,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 233 choice before offered capacity (Refs #233)
 
 * Added a "Choice comes before offered capacity" text panel to the per-home `resident-choice` screen and recorded it in `research/ux/atlas-screen-trace.md`. Tested by a node render of the per-home screen (panel order within that screen, native paragraph, no capacity wording before the choice panels) plus source-level checks; browser rendering, same-home walk, WCAG 2.2 rendered evidence and user validation stay unmet.
+
 ## [2026-11-04] update | Issue 189 status record (Refs #189)
 
 * Rechecked merged PRs 508, 637, 707, 845 and 1092. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: owner, time limit and alert reference are enforced offline, but a live Azure budget alert and notification are not verified (#146, human/Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-189 r2).
