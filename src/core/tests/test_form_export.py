@@ -4,7 +4,7 @@ import unittest
 from typing import Any
 
 import test_form_review
-from zava_forward.core import form_export
+from zava_forward.core import form_export, forms
 
 
 class FormExport(unittest.TestCase):
@@ -65,6 +65,56 @@ class FormExport(unittest.TestCase):
         self.assertEqual(self.export(store, draft)["stale_fields"], [])
         with self.assertRaises(KeyError):
             form_export.draft_export(store, self.actor, "ZF-1", "missing")
+
+    def test_saved_export_goes_stale_only_for_dependent_fields(self) -> None:
+        for store in self.stores:
+            draft, epc, area = self.prepare(store)
+            draft = self.review(store, draft, epc)
+            saved = self.export(store, draft)
+            with self.subTest(store=type(store).__name__):
+                fresh = form_export.export_freshness(store, self.actor, "ZF-1", saved)
+                self.assertEqual(fresh["status"], "Current")
+                self.assertEqual(fresh["stale_fields"], [])
+                self.assertFalse(fresh["reviewed"])
+                with store.lock:
+                    case = store._case("ZF-1")
+                    doc = next(d for d in case["documents"] if d["id"] == epc["source"]["id"])
+                    doc["version"] += 1
+                    store.save()
+                stale = form_export.export_freshness(store, self.actor, "ZF-1", saved)
+                self.assertEqual(stale["status"], "Stale")
+                self.assertEqual(stale["stale_fields"], ["epc"])
+                self.assertIn("area", stale["unaffected_fields"])
+
+    def test_input_and_schema_changes_stale_saved_export(self) -> None:
+        store = self.stores[0]
+        draft, epc, area = self.prepare(store)
+        draft = self.review(store, draft, epc)
+        saved = self.export(store, draft)
+        draft = self.review(store, dict(draft, input_version=2), area, "area", "correct", 12)
+        changed = form_export.export_freshness(store, self.actor, "ZF-1", saved)
+        self.assertEqual(changed["status"], "Stale")
+        self.assertEqual(changed["stale_fields"], ["area"])
+        self.assertEqual(changed["reasons"], ["Reviewed field inputs changed after this export."])
+        saved = self.export(store, draft)
+        forms.register_schema(store, self.actor, dict(test_form_review.schema(), version=2))
+        newer = form_export.export_freshness(store, self.actor, "ZF-1", saved)
+        self.assertEqual(newer["status"], "Stale")
+        self.assertEqual(newer["stale_fields"], ["area", "epc"])
+
+    def test_edited_or_incomplete_saved_export_is_invalid_not_trusted(self) -> None:
+        store = self.stores[0]
+        draft, epc, _area = self.prepare(store)
+        saved = self.export(store, self.review(store, draft, epc))
+        edited = dict(saved, content_sha256="0" * 64)
+        for bad in (edited, {k: v for k, v in saved.items() if k != "fields"}, {}):
+            out = form_export.export_freshness(store, self.actor, "ZF-1", bad)
+            self.assertEqual(out["status"], "Invalid")
+            self.assertEqual(out["stale_fields"], [])
+        tampered = dict(saved, fields=[])
+        self.assertEqual(
+            form_export.export_freshness(store, self.actor, "ZF-1", tampered)["status"], "Invalid"
+        )
 
 
 if __name__ == "__main__":

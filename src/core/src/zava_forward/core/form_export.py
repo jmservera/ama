@@ -18,6 +18,21 @@ EXPORT_NOTICE = (
 )
 
 
+BODY_KEYS = (
+    "draft_id",
+    "input_version",
+    "schema_id",
+    "schema_version",
+    "schema_digest",
+    "template",
+    "rule_refs",
+    "fields",
+    "attachments",
+    "stale_fields",
+    "open_issues",
+)
+
+
 def _digest(body: Record) -> str:
     text = json.dumps(body, sort_keys=True, separators=(",", ":"), allow_nan=False)
     return hashlib.sha256(text.encode()).hexdigest()
@@ -81,4 +96,56 @@ def draft_export(store: Any, user: Record, case_id: str, draft_id: str) -> Recor
             eligibility="Not assessed",
             notice=EXPORT_NOTICE,
             working_notice=NOTICE,
+        )
+
+
+def export_freshness(store: Any, user: Record, case_id: str, saved: Record) -> Record:
+    """Compare a previously saved held export with the current working review.
+
+    Only fields whose value, state or bound source changed, or that are stale
+    now, are named. Nothing is written and a saved copy is never edited.
+    """
+    with store.lock:
+        forms._actor(store, user)
+        try:
+            body = {key: saved[key] for key in BODY_KEYS}
+            intact = saved["content_sha256"] == _digest(body)
+            saved_rows = {row["field_id"]: row for row in body["fields"]}
+        except (KeyError, TypeError, ValueError):
+            intact = False
+        if not intact:
+            return dict(
+                status="Invalid",
+                stale_fields=[],
+                reasons=["The saved export is incomplete or was edited after export."],
+                action="Create a new held export from the working review.",
+                reviewed=False,
+            )
+        current = draft_export(store, user, case_id, body["draft_id"])
+        if current["status"] == "Unavailable":
+            return dict(
+                status="Unavailable",
+                stale_fields=[],
+                reasons=[current["notice"]],
+                action="Ask the document owner to recover the evidence.",
+                reviewed=False,
+            )
+        reasons = []
+        if body["schema_digest"] != current["schema_digest"]:
+            reasons.append("The form schema or its rule references changed.")
+        if body["input_version"] != current["input_version"]:
+            reasons.append("Reviewed field inputs changed after this export.")
+        changed = {
+            row["field_id"] for row in current["fields"] if saved_rows.get(row["field_id"]) != row
+        }
+        stale = sorted(changed | set(current["stale_fields"]))
+        if stale and not reasons:
+            reasons.append("A bound source or field state changed.")
+        return dict(
+            status="Stale" if reasons else "Current",
+            stale_fields=stale,
+            unaffected_fields=sorted(set(saved_rows) - set(stale)),
+            reasons=reasons,
+            action="Re-review the named fields and create a new held export." if reasons else None,
+            reviewed=False,
         )
