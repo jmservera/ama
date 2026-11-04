@@ -14,7 +14,7 @@ from collections.abc import Callable
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from .sensor_stream import Pacer, RunBudget, StreamError
+from .sensor_stream import Pacer, RunBudget, StreamError, accountable_text
 
 TIER = "B1"
 UNITS = 1
@@ -63,7 +63,7 @@ class RunPlan:
 
     def validate(self) -> None:
         for text in (self.owner, self.alert_reference):
-            if not isinstance(text, str) or not text.strip() or len(text) > 160:
+            if not accountable_text(text):
                 raise StreamError("RUN_OWNER_COST_ALERT_REQUIRED")
         numbers = (
             self.max_seconds,
