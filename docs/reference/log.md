@@ -10490,6 +10490,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
 
+## [2026-11-04] update | Issue 100 per-capability AI usage view (Refs #100)
+
+* Rechecked merged PR 911. Added a per-capability usage table (counts and tokens for known proposals) to the asset and board view, reading main's existing report field; cost per capability stays Unknown. Criteria stay unmet: #440 checkpoint, #134 open, per-capability cost, quality floor, limits (OD-51) and live evidence. Evidence under `.copilot-tracking/` (2026-11-04 issue-100 r2).
+
 ## [2026-11-04] update | Issue 128 paired-cohort priority check (Refs #128)
 
 * Rechecked merged PR 901 (register and routing) and the ranking cohort work. Added `paired_equity` in `src/core`: constructed pairs differing in sensor completeness, support or contact need, or appointment history must not rank lower or change rank through review routing; per-dimension counts, seeded-defect detection, no averaging. Deterministic policy only; not fairness evidence. All #128 criteria stay unmet (no keyboard or screen reader run, no staffed review, no agreed protocol, no independently approved pair labels, no AI task cohorts). Updated the test plan page and index; evidence under `.copilot-tracking/` (2026-11-04 issue-128 r2).
