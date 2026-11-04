@@ -640,8 +640,9 @@ class PanelTests(roles.Matrix):
 
         for route in ("ask", "messages"):
             before = len([e for e in self.store.audit_entries() if e["action"] == "chat.turn"])
-            with patch.object(auth.PasswordProvider, "name", "trusted-proxy"), patch(
-                "urllib.request.Request", side_effect=csrf
+            with (
+                patch.object(auth.PasswordProvider, "name", "trusted-proxy"),
+                patch("urllib.request.Request", side_effect=csrf),
             ):
                 path = f"/api/chat/threads/{tid}/{route}"
                 code, _ = self.api(ROLE, path, {"content": "SECRET-QUESTION"})
