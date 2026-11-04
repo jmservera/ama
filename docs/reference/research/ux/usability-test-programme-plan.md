@@ -223,3 +223,21 @@ agreement are still needed before any session.
 * DPO and ethics decision on lawful basis, recording and retention.
 * A pilot with 2 to 3 proxy participants to test the scripts themselves,
   labelled as a pilot and not as validation.
+
+## Delivery status record (2026-11-04, #155)
+
+Merged engineering evidence is limited to this plan (#1004): drafted tasks,
+participants per role, accessibility support, consent and data handling,
+aggregate-only measures, findings and results templates. No participant,
+session, staff agreement, finding or result exists, and the plan is not
+reviewed by the owner.
+
+All five acceptance criteria remain unmet: the plan is not agreed, the scripts
+are unreviewed and unrun, the audit-use statement has no staff agreement
+(SA-010), no findings are logged, and no results (including negative and
+inconclusive outcomes) exist. What remains is human work: owner review, a
+DPO and ethics decision, staff representative agreement, recruitment of real
+or proxy participants, a labelled pilot, and moderated sessions with
+assistive-technology users. No code slice can advance these. Dependencies #150
+and #151 stay open for the WCAG and assistive-technology evidence. Nothing was
+ticked or closed.
