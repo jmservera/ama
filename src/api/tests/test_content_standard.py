@@ -144,7 +144,14 @@ class CopyAudit(unittest.TestCase):
                     self.assertFalse(re.search(r"\bon hold\b|\bthe hold\b", literal), literal)
         text = (core / "finance.py").read_text()
         self.assertIn("A different Finance user must restart payment first", text)
-        self.assertTrue(re.search(r"\bon hold\b", 'raise ValueError("This is already on hold.")'))
+
+    def test_safety_restart_refusals_use_plain_wording(self):
+        core = ROOT / "src" / "core" / "src" / "zava_forward" / "core"
+        pattern = re.compile(r'raise (?:ValueError|PermissionError)\(\s*((?:f?"[^"\n]*"\s*)+)')
+        for name in ("workflows.py", "hazard.py"):
+            for literal in pattern.findall((core / name).read_text()):
+                with self.subTest(name=name, literal=literal):
+                    self.assertFalse(re.search(r"retrofit hold|hold release|release (?:a|the|this)\b[^\"]*hold", literal), literal)
 
     def test_time_capture_copy_is_guarded(self):
         self.assertIn("timecapture.js", AUDITED_FILES)
