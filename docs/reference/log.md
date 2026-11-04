@@ -10424,6 +10424,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Candidate comparison bound to the held-out freeze (Refs #108)
 
 * `compare_candidates` accepts an optional freeze manifest, reports `held_out.status`, and compares only on the frozen held-out case ids. Offline grader and synthetic tests only; no held-out data, live calls, regional model/quota confirmation or Finance validation. Criteria for model/quota confirmation, held-out freeze evidence and human/Azure evidence stay unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-108-r2).
+
 ## [2026-11-04] update | Issue 110 status record (Refs #110)
 
 * Rechecked merged PRs 411, 508 and 910. Criteria 2 to 5 stay ticked. Criterion 1 stays unmet: offline per-device identity, schema version and stable reading ID code and tests exist, but no real distinct Hub identities were issued and no live stream was observed (tier, sizing, cost, network and device credential owner decisions; #140; human/Azure steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-110 r2).
