@@ -5224,7 +5224,7 @@ have no authority.
 The source view definition optionally reads the existing generated
 `dbo.sensor_register` and `dbo.sensor_reading` tables from
 [`sensor_backfill`](../core/src/zava_forward/core/synthetic/sensor_backfill.py).
-Both register and reading home IDs must exactly match the case's `home.stock_id`,
+Both register and reading home IDs must exactly match the case's stock link: `home.stock_id`, or, when absent (as in the generated dataset), the top-level `synthetic_stock_anchor_id` (#462, phase 2),
 and both source labels must be `SYNTHETIC`, using binary comparisons plus
 length checks after common Unicode conversion (no trimming or SQL space-padding
 equivalence). The
@@ -5245,6 +5245,24 @@ gauges. The fictional generator ranges (-10 to 45 degrees C and 0 to 100 percent
 are display bounds, not health limits. Two static SVG histories have unit labels
 and an equivalent keyboard-accessible data table. No animation or chart library
 is added. This is not safety advice or a WCAG conformance claim.
+
+#### Sensors section and 24-hour synthetic forecast (#462, phase 2)
+
+The section is titled `Your home sensors and forecast` and sits below the help and callback
+sections. `sensors` also carries `stale` (latest stored reading older than 24 hours) and
+`forecast` (`resident_forecast.py` in core): six estimates at 4-hour steps from the stored
+history, labelled `Simple 24-hour synthetic forecast (estimate)`. The rule is deterministic:
+the latest value moves toward the trailing 24-hour mean, plus a clamped drift and the
+generator's daily pattern, within the display bounds. It is suppressed with a plain reason when
+there are fewer than 6 readings, the latest reading is missing or faulted, or the history is
+stale. Charts use a dashed line with hollow squares and a `Latest stored` divider, and the data
+table lists forecast rows as `Forecast (estimate)`. The wording is descriptive, not diagnostic.
+
+The view applied to the live database still reports no sensors until it is re-applied after
+`sensor_register` and `sensor_reading` exist (see `infra/README.md`), and the generated
+backfill ends 2026-09-30, so a live demo will show the stale state until the backfill is
+extended. Neither is performed here. Check:
+`PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.resident_sensors_browser_check`.
 
 With editable core/agents/API and API development dependencies installed, run
 the SQL-free constructed-reader browser exercise from `src/api`:

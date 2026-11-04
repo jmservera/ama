@@ -174,7 +174,7 @@ class ResidentDemo:
         row = self.row_for(token)
         if row is None:
             return None
-        view: dict[str, Any] = rs.showcase_view(row)
+        view: dict[str, Any] = rs.showcase_view(row, self.now())
         view["account"] = {"email": self.identity.email_for(row.case_id)}
         view["callbacks_available"] = self.agenda is not None
         return view
@@ -433,7 +433,7 @@ def make_handler(app: ResidentDemo) -> type[BaseHTTPRequestHandler]:
             if row is None:
                 self._json(401, dict(error="Please sign in again."))
                 return
-            view = rs.showcase_view(row)
+            view = rs.showcase_view(row, app.now())
             value = body.get("topic", body.get("question"))
             if not isinstance(value, str) or not 1 <= len(value.strip()) <= 500:
                 self._json(400, dict(error="Choose one of the listed questions."))

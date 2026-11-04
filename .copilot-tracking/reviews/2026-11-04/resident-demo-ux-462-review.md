@@ -22,3 +22,16 @@ Screen-reader testing, copy review (#153), resident usability (#155), live deplo
 ## Routing
 
 Later work: Phase 2 (sensors); human reviews above.
+
+## Phase 2 review
+
+Execution: executed once for phase 2 (self-review). Guidelines source refetched 2026-11-04 from the same URL. Changed web files: `demo.js`, `demo.css`.
+
+* Forecast is distinguished by dash, marker shape and text, not colour alone. Pass.
+* Accessible data table lists forecast rows with `Forecast (estimate)` text. Pass.
+* Dates use `Intl.DateTimeFormat`; numbers use `Intl.NumberFormat`. Pass.
+* Wording is descriptive, not diagnostic; ranges stated as display limits. Pass.
+
+Not verified: T-SQL compile and live sensor data, Azure view apply, screen readers, visual review by a person (no screenshot reviewed), copy review (#153), usability (#155), hosted CI, human approvals.
+
+Routing: owner-gated live view apply and sensor tables; extend sensor backfill past 2026-09-30.

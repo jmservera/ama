@@ -160,10 +160,21 @@ class SensorProjectionTests(unittest.TestCase):
         self.assertEqual(text.count("GRANT "), 1)
         self.assertNotIn("GRANT SELECT ON OBJECT::dbo.sensor", text)
 
+    def test_sql_stock_link_accepts_the_dataset_anchor_once(self) -> None:
+        text = (Path(__file__).resolve().parents[3] / "infra/sql/resident-showcase.sql").read_text()
+        compact = " ".join(text.split())
+        self.assertIn(
+            "DECLARE @stock NVARCHAR(MAX) = N'COALESCE(JSON_VALUE(k.body, ''$.home.stock_id''), "
+            "JSON_VALUE(k.body, ''$.synthetic_stock_anchor_id''))';",
+            compact,
+        )
+        self.assertEqual(compact.count("$.home.stock_id"), 1)
+        self.assertIn("N'{STOCK}', @stock);", compact)
+
     def test_sql_identity_guards_are_length_sensitive_after_common_conversion(self) -> None:
         text = (Path(__file__).resolve().parents[3] / "infra/sql/resident-showcase.sql").read_text()
         compact = " ".join(text.split())
-        stock_length = "DATALENGTH(JSON_VALUE(k.body, ''$.home.stock_id''))"
+        stock_length = "DATALENGTH({STOCK})"
         for left, right in (
             ("s.sensor_id", "DATALENGTH(CONVERT(NVARCHAR(MAX), r.sensor_id))"),
             ("s.home_id", stock_length),

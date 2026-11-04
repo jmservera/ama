@@ -147,3 +147,8 @@ details summary:hover{background:var(--soft)}
 .needed .icon{margin-top:.2rem}
 .summary-ai-actions{display:flex;flex-wrap:wrap;gap:var(--spacingHorizontalM);align-items:center}
 .card li>a{display:inline-block;min-height:1.75rem;padding:.2rem 0}
+.sensor-divider{stroke:var(--ink);stroke-width:1.5;stroke-dasharray:2 3}
+.sensor-forecast-line{stroke:var(--ink);stroke-width:2;stroke-dasharray:6 4;fill:none}
+.sensor-forecast-point{fill:var(--surface);stroke:var(--ink);stroke-width:2}
+.sensor-key,.forecast-reason{color:var(--ink)}
+.forecast-row th,.forecast-row td{background:var(--soft)}

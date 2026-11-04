@@ -45,11 +45,14 @@ GO
 -- Optional tables are bound only when present at the separately authorised view apply.
 -- No sensor table is created and the resident principal receives no additional grant.
 -- BIN2 equality still pads spaces; common Unicode byte lengths make each match exact.
+-- The stock link is home.stock_id when present, else the dataset's top-level synthetic_stock_anchor_id.
+DECLARE @stock NVARCHAR(MAX) = N'COALESCE(JSON_VALUE(k.body, ''$.home.stock_id''),
+  JSON_VALUE(k.body, ''$.synthetic_stock_anchor_id''))';
 DECLARE @history NVARCHAR(MAX) = N'CAST(NULL AS NVARCHAR(128)) AS sensor_home_id,
   N''[]'' AS sensors_json';
 IF OBJECT_ID(N'dbo.sensor_register', N'U') IS NOT NULL
    AND OBJECT_ID(N'dbo.sensor_reading', N'U') IS NOT NULL
-SET @history = N'JSON_VALUE(k.body, ''$.home.stock_id'') AS sensor_home_id,
+SET @history = REPLACE(CAST(N'{STOCK} AS sensor_home_id,
   COALESCE((SELECT TOP (48) r.home_id, CONVERT(VARCHAR(19), r.observed_at, 126) + ''Z'' AS observed_at,
           r.temperature_c, r.humidity_pct, r.source_type, r.injected_fault
    FROM dbo.sensor_reading AS r
@@ -58,19 +61,19 @@ SET @history = N'JSON_VALUE(k.body, ''$.home.stock_id'') AS sensor_home_id,
     AND DATALENGTH(CONVERT(NVARCHAR(MAX), s.sensor_id)) =
           DATALENGTH(CONVERT(NVARCHAR(MAX), r.sensor_id))
    WHERE s.home_id COLLATE Latin1_General_100_BIN2 =
-           JSON_VALUE(k.body, ''$.home.stock_id'') COLLATE Latin1_General_100_BIN2
+           {STOCK} COLLATE Latin1_General_100_BIN2
      AND DATALENGTH(CONVERT(NVARCHAR(MAX), s.home_id)) =
-           DATALENGTH(JSON_VALUE(k.body, ''$.home.stock_id''))
+           DATALENGTH({STOCK})
      AND r.home_id COLLATE Latin1_General_100_BIN2 =
-           JSON_VALUE(k.body, ''$.home.stock_id'') COLLATE Latin1_General_100_BIN2
+           {STOCK} COLLATE Latin1_General_100_BIN2
      AND DATALENGTH(CONVERT(NVARCHAR(MAX), r.home_id)) =
-           DATALENGTH(JSON_VALUE(k.body, ''$.home.stock_id''))
+           DATALENGTH({STOCK})
      AND s.source_type COLLATE Latin1_General_100_BIN2 = ''SYNTHETIC''
      AND DATALENGTH(CONVERT(NVARCHAR(MAX), s.source_type)) = DATALENGTH(N''SYNTHETIC'')
      AND r.source_type COLLATE Latin1_General_100_BIN2 = ''SYNTHETIC''
      AND DATALENGTH(CONVERT(NVARCHAR(MAX), r.source_type)) = DATALENGTH(N''SYNTHETIC'')
    ORDER BY r.observed_at DESC, r.sensor_id, r.reading_id
-   FOR JSON PATH, INCLUDE_NULL_VALUES), N''[]'') AS sensors_json';
+   FOR JSON PATH, INCLUDE_NULL_VALUES), N''[]'') AS sensors_json' AS NVARCHAR(MAX)), N'{STOCK}', @stock);
 DECLARE @view NVARCHAR(MAX) = N'CREATE OR ALTER VIEW resident_showcase.v_resident_case AS
 WITH canon AS (
   SELECT c.id, c.stage, c.closed, c.body,
