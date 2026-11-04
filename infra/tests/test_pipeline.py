@@ -715,6 +715,74 @@ class PipelineTests(unittest.TestCase):
                 json.loads((directory / "summary.json").read_text())["status"], "Failed"
             )
 
+    def test_run_summary_is_sanitized_and_absent_when_what_if_fails(self):
+        plan = {
+            "status": "Succeeded",
+            "changes": [
+                {"resourceId": RESOURCE, "changeType": "Modify", "delta": ["CANARY_PRIVATE_VALUE"]},
+                {"resourceId": RESOURCE, "changeType": "NoChange"},
+            ],
+        }
+        with TemporaryDirectory() as temporary:
+            directory = Path(temporary)
+            target = directory / "step-summary.md"
+            env = {**ENV, "GITHUB_STEP_SUMMARY": str(target)}
+            with patch.dict(os.environ, env):
+                with (
+                    patch.object(
+                        pipeline,
+                        "parameters",
+                        return_value={"parameters": {"entraBearerOnly": {"value": True}}},
+                    ),
+                    patch.object(pipeline, "release_images", return_value={}),
+                    patch.object(pipeline, "registry", return_value="example.azurecr.io"),
+                    patch.object(pipeline, "check_sql"),
+                    patch.object(pipeline, "smoke"),
+                    patch.object(
+                        pipeline,
+                        "az",
+                        side_effect=[
+                            [],
+                            plan,
+                            {
+                                "properties": {
+                                    "provisioningState": "Succeeded",
+                                    "outputs": {
+                                        "apiInternalFqdn": {
+                                            "value": "api.example.azurecontainerapps.io"
+                                        }
+                                    },
+                                }
+                            },
+                        ],
+                    ),
+                ):
+                    pipeline.deployment(ROOT / "infra", "dev", directory / "s.json", directory)
+                text = target.read_text()
+                self.assertIn("### What-if result", text)
+                self.assertIn("* Modify: 1", text)
+                self.assertIn("* NoChange: 1", text)
+                self.assertIn("### Deployment result", text)
+                self.assertIn("* Check passed: anonymous-401", text)
+                for private in ("CANARY_PRIVATE_VALUE", SUBSCRIPTION, "azurecontainerapps"):
+                    self.assertNotIn(private, text)
+                target.unlink()
+                with (
+                    patch.object(pipeline, "parameters", return_value={"parameters": {}}),
+                    patch.object(pipeline, "release_images", return_value={}),
+                    patch.object(pipeline, "registry", return_value="example.azurecr.io"),
+                    patch.object(pipeline, "check_sql"),
+                    patch.object(
+                        pipeline, "az", side_effect=[[], {"status": "Failed", "changes": []}]
+                    ),
+                ):
+                    with self.assertRaises(pipeline.PipelineError):
+                        pipeline.deployment(ROOT / "infra", "dev", directory / "s.json", directory)
+                self.assertFalse(target.exists())
+            with patch.dict(os.environ, {k: v for k, v in ENV.items()}):
+                os.environ.pop("GITHUB_STEP_SUMMARY", None)
+                pipeline.publish_step_summary("Title", ["* x"])
+
     def test_auth_lock_or_app_local_store_blocks_pipeline_before_plan_or_apply(self):
         for tags in (
             {"zava-forward-auth-lock": "other-session"},

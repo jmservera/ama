@@ -256,6 +256,25 @@ def summarize_plan(plan: Any, subscription: str, sha: str) -> dict[str, Any]:
     return {"source_sha": sha, "status": "Succeeded", "change_counts": dict(counts)}
 
 
+def publish_step_summary(title: str, lines: list[str]) -> None:
+    """Attach a sanitized result to the workflow run summary shown on the PR checks."""
+    target = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not target:
+        return
+    with open(target, "a", encoding="utf-8") as handle:
+        handle.write("\n".join([f"### {title}", "", *lines, ""]) + "\n")
+
+
+def what_if_lines(summary: dict[str, Any], environment: str) -> list[str]:
+    counts = summary.get("change_counts", {})
+    return [
+        f"* Environment: {environment}",
+        f"* Source revision: {summary['source_sha']}",
+        *(f"* {kind}: {counts.get(kind, 0)}" for kind in ("Create", "Modify", "NoChange")),
+        "* Deletions, resource names, deltas and parameters are never listed.",
+    ]
+
+
 class NoRedirect(urllib.request.HTTPRedirectHandler):
     def redirect_request(
         self,
@@ -376,6 +395,7 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
         if images_directory is not None:
             summary["deployment_status"] = "Failed"
         output.write_text(json.dumps(summary, indent=2) + "\n")
+        publish_step_summary("What-if result", what_if_lines(summary, environment))
         if images_directory is not None:
             result = az(
                 "deployment",
@@ -403,6 +423,11 @@ def deployment(infra: Path, environment: str, output: Path, images_directory: Pa
                 "sql-private",
             ]
             output.write_text(json.dumps(summary, indent=2) + "\n")
+            publish_step_summary(
+                "Deployment result",
+                [f"* Environment: {environment}", "* Status: Succeeded"]
+                + [f"* Check passed: {name}" for name in summary["checks"]],
+            )
 
 
 def main() -> int:

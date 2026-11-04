@@ -284,6 +284,9 @@ code, checks the candidate paths without executing them, then inspects candidate
 Bicep as data. Fork PRs are deliberately excluded: maintainers must review and
 adopt their changes onto a trusted branch first. The result is attached as a
 seven-day Actions artifact, keyed by environment and exact candidate SHA.
+The same sanitized change counts are also written to the run's job summary,
+reachable from the PR checks; the release deployment adds its status and the
+names of the post-deployment checks that passed.
 There is no privileged `pull_request_target` checkout or PR comment token.
 Only status, change counts, source SHA and a parameter hash are published;
 raw what-if output, parameters, resource IDs and Azure errors are withheld.
