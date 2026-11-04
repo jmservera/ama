@@ -132,7 +132,8 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
       ingress: {
         external: true
         targetPort: 8088
-        transport: 'auto'
+        // Pinned: 'auto' produced about 1 to 3 percent empty-body 500s under concurrent requests (issue 810).
+        transport: 'http'
         allowInsecure: false
       }
       registries: [{ server: registryServer, identity: identityIds.api }]
