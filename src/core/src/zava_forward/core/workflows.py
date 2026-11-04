@@ -420,7 +420,7 @@ class WorkflowMixin:
         controls.require_role(user, SAFETY_ROLES, "the designated safety receiver")
         h = self._hazard(c, idx)
         if h["released"] and not allow_released:
-            raise ValueError("This safety issue's retrofit hold has already been released.")
+            raise ValueError("Retrofit work on this safety issue has already been restarted. Nothing more to do.")
         if not h.get("referral_version"):
             raise ValueError("Record a prospective evidenced referral before continuing.")
         if hazard.identity(h["destination"]) != self._hazard_actor(user):
@@ -479,15 +479,15 @@ class WorkflowMixin:
 
     def release_hazard(self, user, case_id, idx, note="", evidence=None):
         if user["role"] not in SAFETY_ROLES:
-            raise PermissionError("Only the Building Safety Liaison or a manager can release a retrofit hold.")
+            raise PermissionError("Only the Building Safety Liaison or a manager can restart stopped retrofit work. Ask one of them to record the restart.")
         note = controls.text(note, "the retrofit hold release reason")
         evidence = controls.text(evidence, "the external evidence supporting hold release")
         with hazard.decision_scope(self, user, case_id) as (c, user):
             h = self._hazard(c, idx)
             if h["released"]:
-                raise ValueError("This retrofit hold is already released.")
+                raise ValueError("Retrofit work on this safety issue has already been restarted. Nothing more to do.")
             if not h.get("repair_evidence") or not h.get("accepted_at"):
-                raise ValueError("Record receipt, acceptance and external repair evidence before hold release.")
+                raise ValueError("Retrofit work cannot restart yet. The designated safety receiver must record receipt, acceptance and external repair evidence first.")
             if h["hold"].get("accountable_role") and not h["hold"].get("legacy"):
                 verdict = gates.safety_release_gate(h["hold"], user, [])
                 if verdict.outcome != gates.PASS:

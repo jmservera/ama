@@ -10289,3 +10289,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Resident demo UX redesign phase 2 implemented (Refs #462)
 
 * Implemented phase 2 of `docs/reference/research/ux/resident-demo-redesign-2026-11-04.md`: the sensors section below the help sections with a clearly labelled deterministic 24-hour synthetic forecast, a stale state, and a fix so `infra/sql/resident-showcase.sql` also reads the dataset's `synthetic_stock_anchor_id` stock link (source text only; T-SQL not compiled, live view not applied). Documented in `src/api/README.md`. The live demo still needs the sensor tables and a re-applied view, and the backfill ends 2026-09-30; both are owner-gated and not done.
+
+## [2026-11-04] update | Plain-language safety restart refusals, slice 2 (Refs #153)
+
+* Reworded raised refusals in `workflows.py` and `hazard.py` from "retrofit hold" to "stopped retrofit work" and "restart", with next action; added a lexical test in `test_content_standard.py`; recorded in `content-standard.md`. Stored values unchanged. Criteria 2, 3 and 5 remain unmet; named human wording review not run.

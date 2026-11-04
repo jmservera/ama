@@ -446,7 +446,8 @@ class JsonHazardReferral(unittest.TestCase):
         with self.assertRaises(ValueError) as ctx:
             self.store.receive_hazard(self.bea, "ZF-3", 0, "SYN-RECEIPT")
         self.assertEqual(
-            str(ctx.exception), "This safety issue's retrofit hold has already been released."
+            str(ctx.exception),
+            "Retrofit work on this safety issue has already been restarted. Nothing more to do.",
         )
 
     def test_legacy_states_have_prospective_path_without_inventing_history(self) -> None:
