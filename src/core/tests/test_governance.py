@@ -18,7 +18,7 @@ BENEFITS.update(ai_denominator="per accepted handover", ai_quality_floor="Synthe
                 ai_cost_components="Synthetic platform, review and assurance effort")
 CLAIM = dict(claim="Synthetic coordinator time released", capacity_kind="capacity gain", baseline="Synthetic baseline", synthetic=True)
 RELEASE = dict(scope_kind="phase", requirements="RULE-020", evidence="Synthetic evidence", unresolved="None", envelope_ref="ENV-DEMO",
-               approvers=["Synthetic sponsor"], decision="Release")
+               economics_report_ref="Synthetic AI economics report", economics_limit_breach="None", approvers=["Synthetic sponsor"], decision="Release")
 BREACH = dict(scope_kind="archetype", scope="Solid wall", owner="Synthetic owner", evidence="e", containment="c", resident_impact="r",
               remediation="m", restart_authority="OD-35 demo")
 
@@ -167,6 +167,26 @@ class Gov:
         with self.assertRaises(PermissionError):
             self.store.breach_record(tf.U["RLO-1"], BREACH)
         self.assertEqual(self.store.breach_record(tf.U["BSL-1"], BREACH)["status"], "Paused")
+
+    def test_release_decision_needs_economics_report_and_breach_handling(self) -> None:
+        s = self.store
+        self.approve_all()
+        for missing in ("economics_report_ref", "economics_limit_breach"):
+            with self.assertRaises(ValueError):
+                s.release_record(self.pm1, {k: v for k, v in RELEASE.items() if k != missing} | dict(scope="Phase 0 capture"))
+        breached = dict(RELEASE, scope="Phase 0 capture", economics_limit_breach="Synthetic spend limit exceeded")
+        with self.assertRaises(ValueError):
+            s.release_record(self.pm1, breached)
+        self.assertEqual(s.release_gaps(), list(g.PHASES))
+        withheld = s.release_record(self.pm1, dict(breached, decision="Withhold"))
+        self.assertNotIn("economics_breach_decision", withheld)
+        rec = s.release_record(self.pm1, dict(breached, economics_breach_decision="Synthetic: limit raised by the budget owner"))
+        self.assertEqual(rec["economics_limit_breach"], "Synthetic spend limit exceeded")
+        self.assertEqual(rec["economics_report_ref"], "Synthetic AI economics report")
+        self.assertIn("economics_breach_decision", rec)
+        clean = s.release_record(self.pm1, dict(RELEASE, scope="Phase 0 capture"))
+        self.assertEqual(clean["economics_limit_breach"], "None")
+        self.assertNotIn("economics_breach_decision", clean)
 
     def test_phase_release_decisions_are_recorded_and_gated(self):
         s = self.store
