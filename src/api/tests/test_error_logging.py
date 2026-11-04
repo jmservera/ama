@@ -104,6 +104,24 @@ class ErrorLoggingTests(Base):
         self.assertIn("response_started=False", text)
         self.assertNotIn(SECRET, text)
 
+    def test_client_disconnect_during_request_read_logs_warning_not_error(self) -> None:
+        from http.server import BaseHTTPRequestHandler
+
+        def gone(self: BaseHTTPRequestHandler) -> bool:
+            raise ConnectionResetError(SECRET)
+
+        with (
+            patch.object(BaseHTTPRequestHandler, "parse_request", gone),
+            self.assertLogs("zava_forward.api.server", "WARNING") as logs,
+        ):
+            with self.assertRaises((OSError, http.client.HTTPException)):
+                self.get("/api/me")
+        self.assertEqual([r.levelname for r in logs.records], ["WARNING"])
+        text = "\n".join(logs.output)
+        self.assertIn("client-disconnect exc=ConnectionResetError phase=request-read", text)
+        self.assertNotIn("status=500", text)
+        self.assertNotIn(SECRET, text)
+
     def test_socket_write_error_after_response_started_stays_silent(self) -> None:
         from http.server import BaseHTTPRequestHandler
 

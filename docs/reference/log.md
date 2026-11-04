@@ -10090,3 +10090,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Seed constraints name their proposer (Closes #950)
 
 * Phase 0 discovery register seed constraints now carry a named proposer (the seed list) so the owner-not-proposer decision rule applies to them; a test asserts it. Seeds remain proposals, not findings. Evidence under `.copilot-tracking/` (2026-11-04 issue-950).
+
+## [2026-11-04] update | Request-read client disconnects log at WARNING (Refs #953)
+
+* The API server now logs a ConnectionError raised while reading the request line, headers or body as a WARNING `client-disconnect ... phase=request-read` and no longer attempts a 500 or logs ERROR for it. Backend ConnectionError still answers 500 and logs ERROR. Body-read path is untested; #921 not assessed. Evidence under `.copilot-tracking/` (2026-11-04 fu-953).

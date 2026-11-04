@@ -220,8 +220,15 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             self._response_started = True  # set before the flush so a socket-write failure counts as started
             super().end_headers()
 
+        def parse_request(self):
+            ok = super().parse_request()
+            self._request_parsed = ok
+            return ok
+
         def handle_one_request(self):
             self._response_started = False
+            self._request_parsed = False
+            self._body_read_failed = False
             try:
                 super().handle_one_request()
             except Exception as exc:
@@ -236,8 +243,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 path = ""
             method, name = _printable(getattr(self, "command", None)), type(exc).__name__
             sent = self._response_started
-            if isinstance(exc, ConnectionError) and sent:
-                logging.getLogger(__name__).warning("http-error %s %s client-disconnect exc=%s", method, _printable(path), name)
+            if isinstance(exc, ConnectionError) and (sent or self._body_read_failed or not self._request_parsed):
+                # The client left while the request or response was in flight; nobody is left to answer.
+                phase = "request-read" if not sent else "response-write"
+                logging.getLogger(__name__).warning("http-error %s %s client-disconnect exc=%s phase=%s", method, _printable(path), name, phase)
                 return
             frame = traceback.extract_tb(exc.__traceback__)[-1:] or [None]
             where = f"{Path(frame[0].filename).name}:{frame[0].lineno}:{frame[0].name}" if frame[0] else "unknown"
@@ -281,7 +290,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             n = int(self.headers.get("Content-Length") or 0)
             if n > 8_000_000:
                 raise ValueError("Too large")
-            return json.loads(self.rfile.read(n) or b"{}")
+            try:
+                raw = self.rfile.read(n)
+            except ConnectionError:
+                self._body_read_failed = True
+                raise
+            return json.loads(raw or b"{}")
 
         def do_HEAD(self):
             self.do_GET()
