@@ -10200,3 +10200,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Phase 0 baseline population and wait analysis (Refs #124)
 
 * PR 895 already delivers owner, dictionary and constraint register rules. This slice adds `discovery_flow`: baseline population summary, handover-leg days, waits by named party with unknown or disputed causes kept visible, and return, rejection, repeat-visit and reopen counts. Unmet: a real nominated owner and agreed endpoint, owner-validated dictionary, constraint register with real evidence, and any company finding. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 phase0-flow-124).
+## [2026-11-04] update | Sensor analysis over retained SQL readings, #111 slice 2 (Refs #111)
+
+* Slice 1 (#871) delivered the pure exercise analysis. This slice adds `sensor_analysis_store.analyse_retained` and a read-only `SensorConsumer.home_consent`, so signals derive from retained store rows with trusted consent; an unreadable store gives INSUFFICIENT with no priority effect. No writes, no task creation, no approved rule. Unmet: scheduler or task-queue wiring, rule approval, AC-067 text mirror, R1 to R3 completion. SQLite unit tests only; no SQL Server run, no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-111 r2).
