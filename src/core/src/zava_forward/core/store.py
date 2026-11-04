@@ -10,6 +10,7 @@ import threading
 import uuid
 from copy import deepcopy
 from datetime import datetime
+from typing import Any
 
 from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_publication, stock, taskqueues
 from .finance import FinanceMixin
@@ -22,6 +23,7 @@ from .signoffs import SignoffMixin, missing_items, technical_gate
 from zava_forward.core.ai import Ai
 from .chatthreads import ChatMixin
 from .doc_controls import DocControlsMixin, open_scanner
+from .exception_register import ExceptionRegisterMixin
 from .documents import ACCEPTED, MAX_BYTES, open_document_store
 from .procurement import ProcurementMixin
 from .quality import QualityMixin, handover_blockers
@@ -42,7 +44,7 @@ class ConflictError(Exception):
     """Another writer changed the same record first, so this write was refused."""
 
 
-class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin, GovernanceMixin, ContinuityMixin, DocControlsMixin):
+class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin, GovernanceMixin, ContinuityMixin, DocControlsMixin, ExceptionRegisterMixin):
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)
@@ -546,9 +548,17 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         if reasons:
             raise GateError(reasons)
 
+    @staticmethod
+    def _evidence_missing(c: dict[str, Any]) -> list[str] | None:
+        try:
+            return [x["kind"] for x in Store.checklist(c) if not x["present"]]
+        except (KeyError, TypeError):
+            return None
+
     def require_booking_gates(self, c):
         """Fail closed: only an explicit pass on every booking gate lets the case advance."""
         results = gates.booking_gates(c, resident_gate(c))
+        results.append(gates.evidence_gate(self._evidence_missing(c), "Grants and Evidence Officer"))
         if not gates.transition_allowed(results):
             raise GateError([f"{r.reason} Owner: {r.owner}. Next action: {r.correction}" for r in gates.unmet(results)])
 

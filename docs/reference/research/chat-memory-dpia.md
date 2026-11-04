@@ -322,3 +322,23 @@ provider terms acceptance is recorded, because the DPO and Legal owner has not
 given them. Decisions D1 to D8 above remain "Not recorded". No retention period
 is set and nothing in this update approves one. The staff notice and warning
 UI are not changed here. Nothing is ticked or closed.
+
+### Issue 217 delivery status (2026-11-04, Refs #217)
+
+Merged PRs 353, 642, 695, 839, 884, 964, 1021 and 506 deliver the offline
+audit log, injection and cross-role tests, the live-data readiness gate, the
+purpose-scoped Foundry field guard, the Art 22A to 22C decision record builder
+and the closed metering schema with read-path validation. No code criterion is
+unmet. Criteria 1, 2, 4, 7 and the metering conjunction stay unmet because they
+need a named person:
+
+| Criterion | Needed from | Evidence still missing |
+| --- | --- | --- |
+| DPIA completed with the DPO | DPO | Signed DPIA and live-data permission |
+| Retention periods for chat, check and usage records | DPO | Reviewed periods, disposal, holds and backups |
+| Foundry minimisation on live calls | DPO, platform owner | Live provider wiring evidence |
+| Separate Entra roles | Entra administrator | Tenant role assignments and revocation test |
+| Art 22A to 22C named human and reasons | Legal, DPO | Legal assessment and contestability route |
+| Metering follows DPIA scope | DPO | DPIA scope sign-off |
+
+This record ticks nothing and implies no approval.

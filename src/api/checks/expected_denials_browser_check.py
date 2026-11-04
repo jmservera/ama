@@ -11,6 +11,7 @@ import tempfile
 import threading
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from typing import Any
 
 import test_mvp
 from playwright.sync_api import sync_playwright
@@ -22,7 +23,38 @@ from zava_forward.core.store import Store
 
 DENIED_PATHS = ("/api/account/photo", "/api/law/alerts", "/api/chat/regulatory/status")
 ASSISTANTS_PATH = "/api/assistants"
+CASE_ROUTES = (
+    "#/overview",
+    "#/visits",
+    "#/funding",
+    "#/coordinator",
+    "#/finance",
+    "#/capacity",
+    "#/progress",
+    "#/closed",
+    "#/time",
+    "#/all",
+    "#/case/ZF-1",
+)
+CASE_API = (
+    "/api/stats",
+    "/api/visits",
+    "/api/funding",
+    "/api/coordinator",
+    "/api/finance",
+    "/api/facets",
+)
 OID_ADMIN = OID_NEW
+OID_CONTRACTOR = "aaaaaaaa-0000-0000-0000-000000000009"
+STAFF_ROLES = (
+    "Coordinator",
+    "LiaisonOfficer",
+    "SafetyLiaison",
+    "GrantsOfficer",
+    "QualityInspector",
+    "ProgrammeManager",
+    "SupportOfficer",
+)
 ADMIN_ONLY = ("ZavaForward.ApplicationAdmin",)
 
 
@@ -31,11 +63,44 @@ def check(label: str, ok: bool) -> None:
     assert ok, label
 
 
+def survey_role(browser: Any, base: str, role: str, oid: str, extra: tuple[str, ...]) -> None:
+    """Open every navigation route plus the extra routes; expect no 4xx and no console error."""
+    page = browser.new_context(
+        extra_http_headers={
+            "X-MS-CLIENT-PRINCIPAL": principal(roles=(f"ZavaForward.{role}",), oid=oid)
+        }
+    ).new_page()
+    denied: list[str] = []
+    errors: list[str] = []
+    page.on("response", lambda r: denied.append(f"{r.status} {r.url}") if r.status >= 400 else None)
+    page.on("console", lambda m: errors.append(m.text) if m.type == "error" else None)
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    page.goto(base + "/app")
+    page.wait_for_function("() => typeof me !== 'undefined' && me && me.navigation")
+    routes = [*page.evaluate("me.navigation.map((n) => n.href)"), *extra]
+    for route in routes:
+        page.evaluate(f"location.hash = '{route}'")
+        page.wait_for_timeout(1500)
+    check(f"{role}: {len(routes)} routes without 4xx ({denied})", not denied)
+    check(f"{role}: no console errors ({errors})", not errors)
+    page.context.close()
+
+
 def main() -> None:
     with tempfile.TemporaryDirectory(prefix="zf-920-") as scratch:
         data = json.loads(json.dumps(test_mvp.DATA))
         data["staff"][0]["oid"] = OID_SAM
         data[identity.LEGACY_TENANT_KEY] = TENANT
+        data["staff"].append(
+            dict(
+                code="CON-1",
+                name="Kim Builder",
+                email="kim@example.test",
+                role="Contractor",
+                contractor="Test Ltd",
+                oid=OID_CONTRACTOR,
+            )
+        )
         path = Path(scratch) / "zavaforward.json"
         path.write_text(json.dumps(data), encoding="utf-8")
         store = Store(str(path))
@@ -101,11 +166,13 @@ def main() -> None:
                     admin.on("request", lambda r: admin_requested.append(r.url))
                     admin_denied: list[str] = []
                     admin.on(
-                        "response", lambda r: admin_denied.append(r.url) if r.status >= 400 else None
+                        "response",
+                        lambda r: admin_denied.append(r.url) if r.status >= 400 else None,
                     )
                     admin_errors: list[str] = []
                     admin.on(
-                        "console", lambda m: admin_errors.append(m.text) if m.type == "error" else None
+                        "console",
+                        lambda m: admin_errors.append(m.text) if m.type == "error" else None,
                     )
                     admin.goto(base + "/app")
                     admin.get_by_role("heading", name="No case work for this account").wait_for()
@@ -113,12 +180,26 @@ def main() -> None:
                         "admin-only landing is worded plainly",
                         "no case access" in (admin.locator("body").text_content() or ""),
                     )
-                    for route in ("#/assistants",):
-                        admin.evaluate(f"location.hash = '{route}'")
-                        admin.wait_for_timeout(1500)
+                    admin.evaluate("location.hash = '#/assistants'")
+                    admin.wait_for_timeout(1500)
                     check(
                         "assistants denial is worded plainly",
-                        "not available for your role" in (admin.locator("body").text_content() or ""),
+                        "not available for your role"
+                        in (admin.locator("body").text_content() or ""),
+                    )
+                    for route in CASE_ROUTES:
+                        admin.evaluate(f"location.hash = '{route}'")
+                        admin.get_by_role(
+                            "heading", name="No case work for this account"
+                        ).wait_for()
+                        admin.wait_for_timeout(300)
+                    check(
+                        f"{len(CASE_ROUTES)} case-data routes show plain words for an admin-only account",
+                        "no case access" in (admin.locator("body").text_content() or ""),
+                    )
+                    check(
+                        "no case-data request was sent for an admin-only account",
+                        not [u for u in admin_requested if any(p in u for p in CASE_API)],
                     )
                     check(
                         "no assistants request was sent for an admin-only account",
@@ -126,6 +207,9 @@ def main() -> None:
                     )
                     check(f"no admin-only 4xx response ({admin_denied})", not admin_denied)
                     check(f"no admin-only console errors ({admin_errors})", not admin_errors)
+                    for role in STAFF_ROLES:
+                        survey_role(browser, base, role, OID_SAM, ("#/case/ZF-1", "#/assistants"))
+                    survey_role(browser, base, "Contractor", OID_CONTRACTOR, ("#/case/ZF-1",))
                 finally:
                     browser.close()
         finally:

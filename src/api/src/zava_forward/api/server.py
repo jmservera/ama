@@ -18,7 +18,7 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
-from zava_forward.core import data_protection, lawstore, rulecards, rule_engine
+from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine
 from zava_forward.api import auth
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
@@ -109,7 +109,9 @@ class App:
                     "safe_route": rule_engine.SAFE_ROUTE}
 
 
-LIST_EXPORTS = frozenset({"/api/packages.csv", "/api/workorders.csv", "/api/handoffs.csv", "/api/visits.csv", "/api/funding.csv"})
+LIST_EXPORTS = frozenset({"/api/packages.csv", "/api/workorders.csv", "/api/handoffs.csv", "/api/visits.csv", "/api/funding.csv",
+                          "/api/finance.csv", "/api/asset/stock-queue.csv"})
+EXPORT_KINDS = {"/api/finance.csv": "finance_queue", "/api/asset/stock-queue.csv": "stock_queue"}
 
 
 def list_rows(s, u, path, q):
@@ -122,6 +124,10 @@ def list_rows(s, u, path, q):
         return s.pending_handoffs(u)
     if path == "/api/visits.csv":
         return s.visits(u, q.get("view", ["mine"])[0])
+    if path == "/api/finance.csv":
+        return s.finance_queue(u)
+    if path == "/api/asset/stock-queue.csv":
+        return s.stock_queue(u)
     return s.funding_list(u)
 
 
@@ -158,12 +164,14 @@ def get_kind(path):
         return "job_pack"
     if path.startswith("/api/time/"):
         return "time"
+    if path in EXPORT_KINDS:
+        return EXPORT_KINDS[path]
     if path in LIST_EXPORTS:
         return path[len("/api/"):]
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ranking/publication": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/handoffs/unaccepted": "handoffs", "/api/packages": "packages",
-            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/finance/exposure": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/exceptions": "exceptions", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
 
 
 GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": "protocol_approve", "benefits-record": "benefits_record",
@@ -601,6 +609,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, s.continuity_export(u, app.assistants.export()))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
+            if url.path == "/api/exceptions":
+                try:
+                    return self._json(200, s.exception_register(u, exception_register.staff_from_env(os.environ)))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
             if url.path == "/api/data-protection":
                 return self._json(200, data_protection.register_report(os.environ))
             if url.path == "/api/retention":
@@ -611,6 +624,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             if url.path == "/api/finance":
                 try:
                     return self._json(200, s.finance_queue(u))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+            if url.path == "/api/finance/exposure":
+                try:
+                    return self._json(200, s.exposure_signal(u))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
             if url.path == "/api/handoffs":

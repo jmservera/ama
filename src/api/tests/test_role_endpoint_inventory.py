@@ -19,8 +19,8 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/facets", "/api/stats", "/api/progress", "/api/closed-cases",
                  "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing",
                  "/api/audit-check",
-                 "/api/handoffs", "/api/handoffs/unaccepted", "/api/packages", "/api/workorders", "/api/workorders/WO-0001/job-pack", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/checklists", "/api/ai/report", "/api/finance", "/api/asset/stock-queue", "/api/resident/choice-queue",
-                 "/api/governance", "/api/continuity", "/api/continuity/export", "/api/retention", "/api/data-protection", "/api/docs/ZF-1/none",
+                 "/api/handoffs", "/api/handoffs/unaccepted", "/api/packages", "/api/workorders", "/api/workorders/WO-0001/job-pack", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists", "/api/ai/report", "/api/finance", "/api/finance/exposure", "/api/asset/stock-queue", "/api/resident/choice-queue",
+                 "/api/governance", "/api/continuity", "/api/continuity/export", "/api/exceptions", "/api/retention", "/api/data-protection", "/api/docs/ZF-1/none",
                  "/api/time/status", "/api/time/mine", "/api/time/report", "/api/law/sources", "/api/law/search?q=x",
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",
                  "/api/assistants", "/api/assistants/forecast", "/api/assistants/proposals", "/api/chat/status", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
@@ -139,6 +139,24 @@ class RoleEndpointInventory(Matrix):
                         self.assertNotIn(canary, text, (role, path, canary))
                 if role not in projection.DEFAULT_REASON_ROLES and path.startswith("/api/cases/ZF-1"):
                     self.assertNotIn(NOTE_CANARY, text, (role, path))
+
+    def test_exceptions_route_outcome_is_specific_to_role_and_naming(self):
+        import os
+        from unittest import mock
+        from zava_forward.core import exception_register
+        managers = ("Retrofit Programme Manager", "Programme Support Officer")
+        with mock.patch.dict("os.environ", {}):
+            os.environ.pop(exception_register.STAFF_ENV, None)
+            for role in ROLES:
+                code, text = self.call(self.session(self.email(role)), "/api/exceptions")
+                if role in managers:
+                    self.assertEqual((code, json.loads(text)["state"]), (200, "roles_not_named"), role)
+                else:
+                    self.assertEqual(code, 403, role)
+        named = json.dumps({self.email("Quality Inspector"): ["digital_operator"]})
+        with mock.patch.dict("os.environ", {exception_register.STAFF_ENV: named}):
+            self.assertEqual(self.call(self.session(self.email("Quality Inspector")), "/api/exceptions")[0], 200)
+            self.assertEqual(self.call(self.session(self.email("Retrofit Programme Manager")), "/api/exceptions")[0], 403)
 
     def test_contractor_audit_view_and_export_are_denied(self):
         ck = self.session("u7@example.test")

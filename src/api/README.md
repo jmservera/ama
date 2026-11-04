@@ -1073,6 +1073,7 @@ including after a cached session's staff registration changes.
 | --- | --- |
 | `nomination_record` | `case_id`, `kind` (`Officer nomination`/`Self-referral`), `reported_subject_ref`, `account`, `source`, `channel`, `owner` (staff email), `acknowledgement_ref`, `next_update` (YYYY-MM-DD), `non_digital_route`, `hazard_concern` (explicit false) |
 | `nomination_correct` | `case_id`, `id`, `expected_version`, `reported_subject_ref`, `account`, `source`, `channel`, `next_update`, `challenge_id` (same-case existing challenge ID or null) |
+| `nomination_review` | `case_id`, `id`, `expected_version` (current nomination version), `outcome` (`Accepted for human eligibility review`/`More evidence needed`/`Not progressed; resident may challenge`), `rationale`, `evidence_ref`, `next_update`. The acting staff member is the human reviewer and must not be the person who recorded the version under review. A later correction marks the review stale (kept, not deleted); no priority, consent, sanction or hazard change |
 | `tenure_intake` | `case_id`, `household_ref`, `expected_version` (0 initially, latest case tenure revision thereafter), `reported_tenure`, `reported_lease_interest`, `identity_state` (`Unknown`/`Ambiguous`), `source`, `owner`, `next_update` |
 | `tenure_legal_position` | `case_id`, `report_version` (existing tenure report), `expected_version` (0 initially, latest position version for that report thereafter), `reviewer_name` (named Legal reviewer, not the recorder), `reviewer_role` (must name a Legal role), `position_ref`, `position_version`, `reviewed_on` (YYYY-MM-DD, not future) |
 | `tenure_verify` | `case_id`, `report_version`, `expected_version` (0 initially, latest verification version for that report thereafter), `outcome` (`Verified`/`Not verified`), `verified_tenure` (`Unknown` when not verified), `identity_confirmed` (boolean), `verifier_name` (named data owner, not the recorder), `verifier_role` (must name the Home Ownership data owner), `evidence_ref`, `verified_on` (YYYY-MM-DD, not future). `Verified` needs an attached Legal position reference and sets a route label only; the case hold remains |
@@ -1949,6 +1950,62 @@ PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
 This is constructed local evidence, not a live Hub run, Azure SQL proof or
 sensor accuracy approval.
 
+## Live simulator container (#184, owner requirement 2026-11-04)
+
+`python -m zava_forward.api.live_simulator` sends one **synthetic** reading per home per
+5-minute UTC slot. It builds on [`DeviceActivation`](./src/zava_forward/api/iot_stream.py), the
+per-home `SYN-<sensor key>` device identity from #185 and the pure generator
+`zava_forward.core.synthetic.live_readings`. It uses no AI, so there is nothing to fall back
+from; a manual path (`--sink stdout`) shows exactly what would be sent. It never connects to,
+discovers or represents installed real devices and has no resident-facing action.
+
+* Generator: input is only daily averages of temperature (degC), relative humidity (%) and
+  sunlight (W/m2, global horizontal irradiance, 24-hour mean). They become 24 hourly anchors
+  (mean preserved), then values are eased (smoothstep) between hour anchors, so a reading at
+  10:30 sits between the 10:00 and 11:00 anchors; hour 23 blends toward the next day's 00:00.
+  Bounded noise is added: temperature +/-0.4 degC, humidity +/-2 points, sunlight +/-5 % of the
+  value (night stays 0), smoothed by easing between seeded 30-minute knots. Each home also has a
+  constant offset: +/-1.0 degC, +/-3 points, sunlight x 0.9..1.1. Everything is a pure function of
+  (seed, home, slot), default seed 184, so a run is reproducible. The default averages are an
+  illustrative UK-like monthly table, a synthetic assumption and not measured data.
+* Message `live-sim-reading-v1` (under 1 KiB): `sensor_id`, `reading_id`
+  (`LIVE-<sensor>-<UTC slot>`, unique per home and slot, used as the IoT message id), `home_id`,
+  `observed_at` (UTC slot start), `temperature_c`, `humidity_pct`, `sunlight_wm2`, units,
+  `source_type=SYNTHETIC`, `scenario`, `seed`, `injected_fault=none` and a plain `label`. It adds
+  `sunlight_wm2`, which the current #110 consumer schema does not accept; teaching the consumer
+  this version is a #110 decision and is not done here.
+* Homes: every open case id, re-read hourly; a failed read reuses the last list. With
+  `ZF_STORE=mssql` (the job) it issues exactly one parameter-free
+  `SELECT id FROM cases WHERE closed = 0 ORDER BY id` over a connection built with the existing
+  `ZF_SQL_*` settings (`connection_string`); it never builds `MssqlStore`, so there is no DDL,
+  migration, seeding, meta write, case load or `/state` write, and no `/data` is needed. The exact
+  minimal grant is `GRANT SELECT ON OBJECT::dbo.cases TO [<job identity>]` (no other table, no
+  write). With `ZF_STORE=json` or `sqlite` (local and dev) the same abstraction as the API is
+  used. Tests use fakes and an authorizer-guarded SQLite; no dataset is read.
+* Exit codes (stderr carries a fixed code only, never a traceback, driver text or connection
+  detail): 0 ok, 2 refused or invalid configuration, 3 `HOME_LIST_UNAVAILABLE`, 4 `SIM_FAILED`.
+* Sinks: `stdout` (default, dry run), `MemorySink` (tests) and `iothub` (per-device X.509 from
+  `ZF_SIM_CERT_DIR/<device>.pem` and `.key`, mounted from a secret store; never in the repo). The
+  hub sink needs `ZF_SIM_HUB_HOSTNAME` and an owner approval reference `ZF_SIM_APPROVAL`; a missing
+  certificate is a non-retryable failure and nothing is sent for that home. Errors carry fixed
+  codes only; SDK text is never logged.
+* Controls: batches (`--batch-size`, default 50), a shared throttle (`--max-per-second`, default
+  10), up to 4 attempts with jittered exponential backoff (1 s base, 30 s cap), at most 100 open
+  device connections. A fleet is refused before any send if `homes x 288` exceeds the B1 budget
+  (400,000 per day less 40,000 headroom, so at most 1,250 homes) or cannot finish within 80 % of
+  one slot at the chosen rate. The 10 per second default is a conservative setting, not a verified
+  IoT Hub throttle figure. `--once` sends the current slot and exits (the container job mode);
+  without it the process loops on slot boundaries. Missed slots are skipped, not replayed.
+* Image: `docker build -f src/api/live-simulator.Dockerfile src` (context `src/`). The default
+  command is a stdout dry run. No dataset or certificate is baked in.
+
+Local run: `python -m zava_forward.api.live_simulator --once --max-homes 3` against a constructed
+dataset prints three labelled messages and sends nothing. Tests:
+`PYTHONPATH=../core/tests:../agents/tests python3 -m unittest tests.test_live_simulator -q` from
+`src/api` and `python3 -m unittest tests.test_live_readings -q` from `src/core`. Not proved: any
+live send, device registration, Hub-side receipt, #110 acceptance of the new schema, or the
+throttle and tier limits against the real hub.
+
 ## Finite offline sensor ingestion (#110)
 
 `sensor_ingestion.SensorIngestion(store).consume(observations, received_at=...)`
@@ -2518,7 +2575,17 @@ quality lifecycle. They are not represented as identical requirement numbers.
 contract; `GET /api/finance` retains the human exception/hold queue.
 The [core finance guide](../core/README.md#record-only-finance-controls-94)
 describes current identity, line matching and persistence controls.
-No endpoint pays, submits banking instructions or grants authority.
+
+`GET /api/finance/exposure` (#99) returns the read-only pause signal from
+`finance.exposure_signal`: recorded commitments compared with limits a person
+supplied in `ZF_APPROVED_LIMITS` (default `approved-limits.json` beside the
+data file). Without that file, or when it is unreadable or out of date, the
+result is `Held` with `Pause for human decision`; an over-limit or unknown
+observation also pauses. It needs the same Finance roles as the queue, changes
+no record and never approves, resumes or accelerates delivery. The repository
+holds no Board figures: the envelope and tolerances remain unmet human inputs.
+The Finance queue screen shows this signal under Investment limits, and a manual-check
+message when it cannot be read. No endpoint pays, submits banking instructions or grants authority.
 External-payment statuses are notes only. Budget/commitment and grant/cash
 records are unchanged by those notes.
 
@@ -3951,6 +4018,13 @@ instruction or payment; a shared building ID never transfers a home's evidence.
 Home AI assistance remains available through its existing proposal-only and
 human-review paths; shared free text and costs are not added to prompts.
 
+`python -m checks.home_case_browser_check` (from `src/api`) opens the screen on
+synthetic data and checks that building dependencies, holds, works and costs
+appear only in the building panel, a sibling home's evidence never appears,
+the screen is read-only, reflows at 320 px and, with `ZF_AXE_JS` set to the
+pinned axe 4.10.3 file, has no automated WCAG 2.2 AA violations. Automated
+checks do not replace manual accessibility review.
+
 `tests/test_buildings.py` starts the real application on loopback with a
 wholly fictional two-home SQLite fixture. It checks health/static serving,
 authenticated navigation, role/amount isolation, scoped blocked advancement,
@@ -4169,7 +4243,12 @@ missing deployment/data/model/photo/law prerequisites are tracked by #350.
   and time entries, even with matching historical controls; history is retained.
   Changing to a different valid reference still requires a new request and
   activation. This checks reference presence only, not authenticity or legal
-  approval. Actual DPIA review, staff consultation, notice approval and
+  approval. `ZF_TIME_NOTICE_VERSION` must also equal the current notice version
+  (`draft-1` in the code) so the approval reference is tied to the wording shown to
+  staff. The notice version is bound to each request and activation: rewording
+  the notice turns capture off until the approver confirms the new version and a
+  new request and a different-role activation are made, even if the approval
+  reference is unchanged. Actual DPIA review, staff consultation, notice approval and
   administrator ratification remain human prerequisites, not results of this
   string check.
 * Download any list for Excel, and check a spreadsheet: columns are matched
@@ -4291,7 +4370,7 @@ parent stabilization #440.
 | `ZF_ENTRA_TENANT_ID`, `ZF_TRUSTED_PROXY`, `ZF_ROLE_MAP`, `ZF_AUTH_EMAIL_FALLBACK` | Entra provider |
 | `ZF_REASON_ROLES` | roles that may see a vulnerability reason |
 | `ZF_TILE_URL`, `ZF_TILE_ATTRIBUTION` | map tile provider |
-| `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_NOTICE_APPROVED`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
+| `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_NOTICE_APPROVED`, `ZF_TIME_NOTICE_VERSION`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
 | `ZF_DOC_STORE`, `ZF_DOC_DIR`, `ZF_BLOB_ACCOUNT_URL`, `ZF_BLOB_CONTAINER`, `ZF_BLOB_SAS`, `ZF_BLOB_CLIENT_ID` | document store |
 | `ZF_SCANNER` | `local` (default) or `defender` content scanner; `local` on an Azure Blob store logs a warning because it gives no malware assurance |
 
@@ -5281,15 +5360,17 @@ use the SQL-configured application entry point, Azure or private datasets.
 
 Staff lists offer a CSV copy for Excel: `GET /api/packages.csv`,
 `/api/workorders.csv` (optional `case`), `/api/handoffs.csv`,
-`/api/visits.csv` (`view=mine|all`) and `/api/funding.csv`, in addition to
+`/api/visits.csv` (`view=mine|all`), `/api/funding.csv`, `/api/finance.csv`
+(finance queue; finance roles and managers) and `/api/asset/stock-queue.csv`
+(stock conflict queue; managers), in addition to
 `/api/cases.csv`. Each calls the same store method as its JSON list, so rows
 and role limits match; contractors receive 403 on every export. Cells that
 start with `=`, `+`, `-`, `@`, tab or carriage return get a leading apostrophe
 so Excel cannot run them as formulas. The file is a values-only, one-way copy:
 nothing reads it back, and edits in Excel change nothing. No AI provider is
 involved, so exports work when AI is unavailable. Visits, funding and handoffs
-screens carry a "Download for Excel" link. Not yet exported: the finance queue,
-stock queue, checklists, governance, continuity (its own export exists) and the
+screens, the finance queue and the asset board carry a "Download for Excel"
+link. Not yet exported: checklists, governance, continuity (its own export exists) and the
 chat, resident and form-staging surfaces. The row-level history sheet and
 `.xlsx` output stay in the importer library; the API offers CSV only.
 
