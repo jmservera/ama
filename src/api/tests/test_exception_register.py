@@ -10,12 +10,7 @@ from zava_forward.core import exception_register
 from zava_forward.core.exception_register import staff_from_env
 from zava_forward.core.workflows import MANAGER_ROLES
 
-import test_role_matrix
-from test_assistants import Base
-
-ROLES = test_role_matrix.ROLES
-
-MatrixHarness: Any = test_role_matrix.Matrix
+from role_matrix_fixture import ROLES, MatrixServer, SqlStoreCase
 
 STAFF = {
     "human0@example.test": ("data_steward",),
@@ -27,7 +22,7 @@ def side(value: str, source: str, version: str) -> dict[str, str]:
     return {"value": value, "source_id": source, "date": "2026-01-01", "version": version}
 
 
-class Register(Base):
+class Register(SqlStoreCase):
     reg_case: dict[str, Any]
 
     def setUp(self) -> None:
@@ -175,24 +170,7 @@ class Config(unittest.TestCase):
             self.assertEqual(staff_from_env({exception_register.STAFF_ENV: raw}), {}, raw)
 
 
-class Endpoint(unittest.TestCase):
-    store: Any
-
-    @classmethod
-    def setUpClass(cls) -> None:
-        MatrixHarness.setUpClass.__func__(cls)
-
-    @classmethod
-    def tearDownClass(cls) -> None:
-        MatrixHarness.tearDownClass.__func__(cls)
-
-    def session(self, email: str) -> str:
-        return str(MatrixHarness.session(self, email))
-
-    def call(self, ck: str, path: str, body: Any = None) -> tuple[int, str]:
-        code, text = MatrixHarness.call(self, ck, path, body)
-        return int(code), str(text)
-
+class Endpoint(MatrixServer):
     def staff_env(self, mapping: dict[str, list[str]]) -> Any:
         return mock.patch.dict("os.environ", {exception_register.STAFF_ENV: json.dumps(mapping)})
 
