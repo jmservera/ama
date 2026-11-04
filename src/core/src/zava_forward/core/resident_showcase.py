@@ -114,11 +114,15 @@ def _sensor_channel(value: Any, fault: Any, low: float, high: float) -> tuple[fl
     if value is not None and type(value) not in (int, float):
         raise ShowcaseDenied("sensor_number")
     if fault:
-        return None, "Demo fault: " + ("outlier" if fault == "OUTLIER" else "stuck reading")
+        return None, (
+            "Not shown: this reading looked wrong"
+            if fault == "OUTLIER"
+            else "Not shown: the sensor seemed stuck"
+        )
     if value is None:
-        return None, "Not recorded"
+        return None, "No reading recorded"
     if not low <= value <= high or not math.isfinite(value):
-        return None, "Outside demo range"
+        return None, "Not shown: outside the expected range"
     return float(value), "Recorded"
 
 

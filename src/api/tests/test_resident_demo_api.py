@@ -621,6 +621,12 @@ class AbuseAndHardeningTests(DemoTestCase):
         self.assertIn("You have signed out.", script)
         self.assertIn('getElementById("signin-title").focus()', script)
 
+    def test_slow_start_is_explained_and_timer_is_cleared(self) -> None:
+        script = (demo.WEB / "demo.js").read_text()
+        self.assertIn("The showcase may be waking up", script)
+        self.assertEqual(script.count("clearTimeout(slow)"), 2)
+        self.assertNotIn("demo faults", script)
+
     def test_assets_are_scriptless_inline_free_and_synthetic_labelled(self) -> None:
         c = self.client()
         _, _, page = c.call("GET", "/")
