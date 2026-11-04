@@ -17,6 +17,8 @@ from math import isfinite
 from statistics import mean, pstdev
 from typing import Any
 
+from zava_forward.agents.heldout_freeze import check_freeze
+
 PRICE_KEYS = ("id", "as_of", "currency", "input_per_million", "output_per_million")
 BOOLS = ("accepted", "critical_miss", "unsupported_claim", "overridden", "reopened", "refused")
 NUMBERS = ("latency_ms", "input_tokens", "output_tokens")
@@ -168,11 +170,16 @@ def compare_candidates(
     baseline: Mapping[str, Any],
     candidates: Sequence[Mapping[str, Any]],
     now: datetime | None = None,
+    freeze: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Compare each candidate with the recorded baseline on the same case ids.
 
     A candidate states the single lever it changes (model, routing, caching or
-    prompt) in ``changes``; any other shape is not comparable.
+    prompt) in ``changes``; any other shape is not comparable. With a ``freeze``
+    manifest the report records whether the held-out freeze check passed, and a
+    baseline and candidates are comparable only on exactly the frozen held-out cases.
+    A missing or insufficient freeze leaves the result a same-case comparison,
+    not a held-out one.
     """
     now = now or datetime.now(UTC)
     report: dict[str, Any] = dict(
@@ -181,7 +188,24 @@ def compare_candidates(
         not_comparable=[],
         note="Offline accounting over recorded observations; "
         "no price, budget, target or approval is set or implied.",
+        held_out=dict(
+            status="not frozen",
+            note="No freeze manifest supplied; same-case comparison only, not a held-out result.",
+        ),
     )
+    frozen_cases: set[str] | None = None
+    if freeze is not None:
+        check = check_freeze(freeze)
+        report["held_out"] = dict(
+            status=check["outcome"],
+            gaps=check["gaps"],
+            manifest_digest=check["manifest_digest"],
+            held_out_cases=check["held_out_cases"],
+            note="A frozen manifest permits a held-out comparison; it is not an evaluation, "
+            "model approval or authority for actual calls.",
+        )
+        if check["outcome"] == "frozen":
+            frozen_cases = set(freeze["held_out"]["case_ids"])
     reason = _screen(baseline)
     if reason:
         report["not_comparable"] = [
@@ -192,6 +216,19 @@ def compare_candidates(
     base = _measure(baseline, now)
     report["baseline"] = base
     base_cases = {row["case_id"] for row in baseline["observations"]}
+    if frozen_cases is not None and base_cases != frozen_cases:
+        report["baseline"] = dict(
+            id=str(baseline.get("id")),
+            invalid="baseline not measured on exactly the frozen held-out cases",
+        )
+        report["not_comparable"] = [
+            dict(
+                id=str(c.get("id")),
+                reason="baseline not measured on exactly the frozen held-out cases",
+            )
+            for c in candidates
+        ]
+        return report
     base_accepted = {row["case_id"] for row in baseline["observations"] if row["accepted"]}
     for candidate in candidates:
         reason = _screen(candidate)
@@ -206,6 +243,7 @@ def compare_candidates(
             report["not_comparable"].append(dict(id=str(candidate.get("id")), reason=reason))
             continue
         measure = _measure(candidate, now)
+        measure["held_out_basis"] = frozen_cases is not None
         measure["dropped_accepted_proposals"] = sum(
             1
             for row in candidate["observations"]
