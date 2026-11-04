@@ -34,24 +34,28 @@ stated date), `Repository` (a design fact in this repository), `Unknown`
 
 * Official, retrieved 2026-11-04 (S.I. 2026/82, reg. 2(j), read that day):
   the commencement regulations bring Data (Use and Access) Act 2025 s.80 into
-  force on 2026-02-05. Carried over from the 2026-11-01 pack s.80 retrieval,
-  not re-read on 2026-11-04: s.80 replaced the old Article 22 with Articles
-  22A to 22D, and the Article 22A to 22D descriptions below.
+  force on 2026-02-05.
+* Carried over from the 2026-11-01 pack s.80 retrieval, not re-read on
+  2026-11-04: s.80 replaced the old Article 22 with Articles 22A to 22D, and
+  the Article 22A to 22D descriptions below rest on that retrieval.
 * Official, retrieved 2026-11-04: reg. 5 says the s.80 amendments do not apply
   to a decision taken before 2026-02-05 that was subject to the old Article
   22(3). This addresses the transitional point left unread on 2026-11-01.
   Whether it affects Zava Forward is for named Legal to decide.
-* Carried over from the 2026-11-01 pack s.80 retrieval: Article 22A(1): a decision is "solely automated" when there is no
+* Carried over from the 2026-11-01 pack s.80 retrieval, not re-read on
+  2026-11-04: Article 22A(1): a decision is "solely automated" when there is no
   meaningful human involvement, and is "significant" when it has a legal or
   similarly significant effect on the person. Article 22A(2) says profiling
   counts when judging human involvement.
-* Article 22B: a significant solely-automated decision using special-category
-  data is barred unless explicit consent, or a contract or legal
+* Carried over from the 2026-11-01 pack s.80 retrieval, not re-read on
+  2026-11-04: Article 22B: a significant solely-automated decision using
+  special-category data is barred unless explicit consent, or a contract or legal
   authorisation plus the Article 9(2)(g) substantial public interest
   condition, applies. A solely-automated significant decision that relies on
   recognised legitimate interests (Article 6(1)(ea)) is barred outright.
-* Article 22C: where a significant decision is solely automated and based on
-  personal data, the controller must provide safeguards that give the
+* Carried over from the 2026-11-01 pack s.80 retrieval, not re-read on
+  2026-11-04: Article 22C: where a significant decision is solely automated
+  and based on personal data, the controller must provide safeguards that give the
   person information, let them make representations, let them obtain human
   intervention, and let them contest the decision. Article 22D lets the
   Secretary of State add detail by regulations; none were checked.
