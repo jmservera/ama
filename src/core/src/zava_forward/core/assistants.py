@@ -802,6 +802,8 @@ class Assistants:
             raise ValueError("Choose a period between 60 seconds and 30 days.")
         if not self.sql:
             raise ValueError(self.disabled())
+        if self.limits.scan_interval <= 0:
+            raise ValueError("The scan interval must be greater than zero seconds, so no forecast can be given. Set a valid interval or continue ordinary case work manually.")
         bounds = model_bounds(self.limits)
         cycles = period_seconds // self.limits.scan_interval
         with self.transaction() as db:
