@@ -3719,7 +3719,10 @@ Each implemented profile declares its default IDs, count, order, selection and,
 for an empty own queue, the reason "no representative scenario supplied";
 `tests/test_workbench.py` checks these against the manifest's own role queues
 (a consistency check inside the manifest; the browser check asserts the real
-screens). It is not full AC-034/043, accepted role mapping or validated user
+screens). `tests/test_workbench_live_defaults.py` also compares each default's
+IDs, count and order with the real `/api/cases?view=mine` result for that login
+on the constructed fixtures, the all-cases scope with the declared fixture set,
+and the declared case endpoints. It is not full AC-034/043, accepted role mapping or validated user
 research.
 From `src/api`, using the installed src packages and `.[dev]`:
 
