@@ -3,6 +3,10 @@ const app = document.getElementById("app");
 let me = null;
 const microsoftSignIn = document.body.dataset.authProvider === "trusted-proxy";
 let photoUrl = null;
+let photoFailed = false;
+let photoServiceCheckedAt = 0;
+const PHOTO_RECHECK_MS = 60000;
+const PHOTO_UNAVAILABLE = "Microsoft profile photo is not available until token-store setup is complete. Your initials are shown instead and the rest of the workspace still works.";
 let routeController = new AbortController();
 let searchTimer = 0;
 let queueOrigin = "mine";
@@ -196,15 +200,25 @@ function showAccount() {
 async function loadPhoto(account) {
   const status = document.getElementById("photo-status");
   if (me?.services?.photo === false) {
-    status.textContent = "Microsoft profile photo is not available until token-store setup is complete. Your initials are shown instead and the rest of the workspace still works.";
+    status.textContent = PHOTO_UNAVAILABLE;
     return;
   }
+  photoFailed = false;
   try {
     let res = await fetchReadRetrying("/api/account/photo");
     if (res.status === 401) {
       const refresh = await fetch("/.auth/refresh");
       if (!refresh.ok) throw new Error("Microsoft photo access has expired. Sign in again.");
       res = await fetchReadRetrying("/api/account/photo");
+    }
+    if (res.status === 503 || res.status === 403) {
+      // A predictable denial: stop asking until the next availability re-check says otherwise.
+      if (me && me.account === account) {
+        me.services = { ...me.services, photo: false };
+        photoFailed = true;
+        status.textContent = PHOTO_UNAVAILABLE;
+      }
+      return;
     }
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
@@ -219,9 +233,41 @@ async function loadPhoto(account) {
     document.getElementById("account-initials").hidden = true;
     status.textContent = "Microsoft profile photo";
   } catch (e) {
-    if (me && me.account === account) status.textContent = e.message;
+    if (me && me.account === account) {
+      photoFailed = true;
+      status.textContent = e.message;
+    }
   }
 }
+
+// Re-evaluate photo availability on return to the tab, at most once a minute and without a reload.
+async function recheckPhotoService() {
+  if (!microsoftSignIn || !me?.account || photoUrl) return;
+  if (Date.now() - photoServiceCheckedAt < PHOTO_RECHECK_MS) return;
+  photoServiceCheckedAt = Date.now();
+  const session = me;
+  let fresh;
+  try {
+    const res = await fetch("/api/me");
+    if (!res.ok) return;
+    fresh = await res.json();
+  } catch (e) {
+    return;
+  }
+  if (me !== session || photoUrl) return;
+  const was = session.services?.photo;
+  session.services = { ...session.services, ...fresh.services };
+  if (session.services.photo === true && (was !== true || photoFailed)) {
+    document.getElementById("photo-status").textContent = "Loading Microsoft profile photo...";
+    loadPhoto(session.account);
+  } else if (session.services.photo === false) {
+    document.getElementById("photo-status").textContent = PHOTO_UNAVAILABLE;
+  }
+}
+
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") recheckPhotoService();
+});
 
 const STARTUP_RETRY_DELAYS = [500, 1500, 3000];
 const SCRIPT_RETRY_DELAYS = [250, 500, 1500];
