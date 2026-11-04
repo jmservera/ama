@@ -10369,6 +10369,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 657, 785, 862, 937 and 978: the invoice, funding, field draft and AI economics criteria are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-225 r1).
 
+## [2026-11-04] update | Admin-only case-data routes stay quiet (Refs #920)
+
+* The employee client now shows the plain-language "No case work for this account" page on all case-data routes for accounts without case access, instead of requesting data that returns 403. Chromium check covers 11 routes with no case-data requests, 4xx responses or console errors. Server authorisation unchanged. Evidence under `.copilot-tracking/` (2026-11-04 admin-routes-denial-920).
 ## [2026-11-04] update | Issue 217 status record, only human steps remain (Refs #217)
 
 * Merged PRs already deliver every code-level slice for #217. The DPIA draft now lists the remaining criteria with the person who must act (DPO, Entra administrator, Legal). Nothing is ticked and no approval is implied. Docs-only; no tests run. Evidence under `.copilot-tracking/` (2026-11-04 issue-217 r1).
