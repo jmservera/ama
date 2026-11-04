@@ -160,7 +160,18 @@ def run_report(run: dict[str, Any]) -> dict[str, Any]:
 
 def reconcile_o16(runs: list[dict[str, Any]]) -> str | None:
     """Return the single bundle that counts O16 across runs; reject conflicting claims."""
-    owners = {r["o16_counted_under"] for r in runs if r.get("o16_counted_under")}
+    owners: set[str] = set()
+    for r in runs:
+        bundle = BUNDLES.get(str(r.get("bundle")))
+        if bundle is None:
+            raise ValueError(f"Unknown bundle {r.get('bundle')!r}.")
+        owner = r.get("o16_counted_under")
+        if "O16" in bundle.atlas_ids:
+            if owner not in O16_BUNDLES:
+                raise ValueError(f"State which bundle counts O16: {', '.join(O16_BUNDLES)}.")
+            owners.add(owner)
+        elif owner is not None:
+            raise ValueError("o16_counted_under applies only to bundles that include O16.")
     if len(owners) > 1:
         raise ValueError(
             "Runs disagree on which bundle counts O16; effort would be double counted."

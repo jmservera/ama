@@ -110,12 +110,23 @@ class RunReports(unittest.TestCase):
             ltb.run_report(bad)
 
     def test_reconcile_o16_rejects_conflict(self) -> None:
-        a = {"o16_counted_under": "change-impact"}
-        b = {"o16_counted_under": "funding-evidence"}
-        self.assertEqual(ltb.reconcile_o16([a, {}, a]), "change-impact")
-        self.assertIsNone(ltb.reconcile_o16([{}]))
+        a = {"bundle": "change-impact", "o16_counted_under": "change-impact"}
+        b = {"bundle": "funding-evidence", "o16_counted_under": "funding-evidence"}
+        c = {"bundle": "funding-evidence", "o16_counted_under": "change-impact"}
+        self.assertEqual(ltb.reconcile_o16([a, c]), "change-impact")
+        self.assertIsNone(ltb.reconcile_o16([{"bundle": "pre-visit-pack"}]))
         with self.assertRaises(ValueError):
             ltb.reconcile_o16([a, b])
+        with self.assertRaises(ValueError):
+            ltb.reconcile_o16([a, {"bundle": "funding-evidence"}, a])
+        with self.assertRaises(ValueError):
+            ltb.reconcile_o16([{"bundle": "change-impact"}])
+        with self.assertRaises(ValueError):
+            ltb.reconcile_o16([{"bundle": "change-impact", "o16_counted_under": "bogus"}])
+        with self.assertRaises(ValueError):
+            ltb.reconcile_o16([{"bundle": "pre-visit-pack", "o16_counted_under": "change-impact"}])
+        with self.assertRaises(ValueError):
+            ltb.reconcile_o16([{"bundle": "nope"}])
 
     def test_render_states_stop_first_and_capacity(self) -> None:
         report = ltb.run_report(
