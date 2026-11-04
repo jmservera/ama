@@ -704,6 +704,21 @@ class SqlRosterTests(unittest.TestCase):
                 self.assertIsNone(receipt["tokens"])
                 self.assertNotIn("What stage is it?", turns[-1]["detail"])
 
+    def test_sql_revocation_before_unstored_ask_records_a_rejected_receipt(self) -> None:
+        for changes in self.REVOKED:
+            with self.subTest(changes=changes):
+                self.change_roster(changes)
+                action = "chat.turn.unstored"
+                before = len([e for e in self.store.audit_entries() if e["action"] == action])
+                with self.assertRaises(ChatForbidden):
+                    self.panel.ask_unstored(self.user, "", "SECRET-QUESTION", skill="general")
+                turns = [e for e in self.store.audit_entries() if e["action"] == action]
+                self.assertEqual(len(turns), before + 1)
+                detail = json.loads(turns[-1]["detail"])
+                self.assertEqual((detail["outcome"], detail["model_calls"]), ("access-rejected", 0))
+                self.assertNotIn("SECRET-QUESTION", turns[-1]["detail"])
+        self.assertEqual(self.calls, 0)
+
     def test_sql_revocation_during_inference_denies_without_storing_answer(self) -> None:
         for changes in self.REVOKED:
             with self.subTest(changes=changes):
