@@ -10265,3 +10265,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Admin-only landing skips case requests (Refs #920)
 
 * Added `services.cases` to `/api/me`; an account without case access sees a plain-language page instead of 403s on `/api/facets` and `/api/cases`. Chromium check asserts no console errors. Issue stays open: other admin-only routes and live evidence are unproven. See `.copilot-tracking/*/2026-11-04-admin-landing-denial-920-*`.
+## [2026-11-04] update | Legal briefing and capstone slide for #224
+
+* Added a briefing for the Legal contact under `research/rai/` with main points, ten recommendations and gaps, plus a one-slide deck in `docs/presentations/`. Read S.I. 2026/82 reg. 5 on 2026-11-04; EUR-Lex retrieval failed again, so the EU position stays unknown.
+* No decision, snapshot, card or rule changed. Criteria 1 and 5 of #224 stay unmet pending the Legal/DPO decision.
