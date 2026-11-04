@@ -1,0 +1,13 @@
+---
+title: Issue 225 r1 changes
+ms.date: 2026-11-04
+---
+
+## Changes
+
+* docs/reference/research/ux/customer-journeys/finance.md: status section.
+* docs/reference/log.md: entry.
+
+## Validation
+
+* Markdown and diff review only. No code changed, so no tests, ruff or mypy applied. Gate, suites, browser and screen-reader runs not run.
