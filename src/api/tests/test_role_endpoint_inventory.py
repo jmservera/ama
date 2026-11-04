@@ -100,6 +100,24 @@ class RoleEndpointInventory(Matrix):
                 if role not in projection.DEFAULT_REASON_ROLES and path.startswith("/api/cases/ZF-1"):
                     self.assertNotIn(NOTE_CANARY, text, (role, path))
 
+    def test_exceptions_route_outcome_is_specific_to_role_and_naming(self):
+        import os
+        from unittest import mock
+        from zava_forward.core import exception_register
+        managers = ("Retrofit Programme Manager", "Programme Support Officer")
+        with mock.patch.dict("os.environ", {}):
+            os.environ.pop(exception_register.STAFF_ENV, None)
+            for role in ROLES:
+                code, text = self.call(self.session(self.email(role)), "/api/exceptions")
+                if role in managers:
+                    self.assertEqual((code, json.loads(text)["state"]), (200, "roles_not_named"), role)
+                else:
+                    self.assertEqual(code, 403, role)
+        named = json.dumps({self.email("Quality Inspector"): ["digital_operator"]})
+        with mock.patch.dict("os.environ", {exception_register.STAFF_ENV: named}):
+            self.assertEqual(self.call(self.session(self.email("Quality Inspector")), "/api/exceptions")[0], 200)
+            self.assertEqual(self.call(self.session(self.email("Retrofit Programme Manager")), "/api/exceptions")[0], 403)
+
     def test_contractor_audit_view_and_export_are_denied(self):
         ck = self.session("u7@example.test")
         for path in ("/api/audit-check", "/api/cases.csv?view=all", "/api/continuity/export", "/api/ai/report", "/api/assistants/proposals"):

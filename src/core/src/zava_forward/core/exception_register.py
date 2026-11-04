@@ -78,7 +78,11 @@ class ExceptionRegisterMixin:
         email = str(user.get("email", "")).lower()
         if not staff:
             if user.get("role") not in MANAGER_ROLES:
+                self._audit_register(
+                    email, "denied", "Exception register: no steward or operator named."
+                )
                 raise PermissionError("Only a named data steward or digital operator can see this.")
+            self._audit_register(email, "viewed_exception_register", "state=roles_not_named")
             return {
                 "state": "roles_not_named",
                 "items": [],
@@ -89,7 +93,9 @@ class ExceptionRegisterMixin:
                 "note": NOTE,
             }
         if email not in staff:
-            self.audit(email, "denied", "-", "Exception register: not a named steward or operator.")  # type: ignore[attr-defined]
+            self._audit_register(
+                email, "denied", "Exception register: not a named steward or operator."
+            )
             raise PermissionError("Only a named data steward or digital operator can see this.")
 
         as_of = as_of or datetime.now(UTC).isoformat(timespec="seconds")
@@ -99,11 +105,25 @@ class ExceptionRegisterMixin:
         with self.lock:
             cases = list(self.cases.values())
             if steward:
-                feed_stock_conflicts(queue, cases, steward)
+                for case in cases:
+                    try:
+                        feed_stock_conflicts(queue, [case], steward)
+                    except (KeyError, TypeError, ValueError, AttributeError):
+                        unrouted.append(
+                            f"Case {self._case_label(case)}: stock query could not be read, so "
+                            "its conflicts are not routed. Open the case."
+                        )
             else:
                 unrouted.append("No named data steward: conflicts are not routed.")
             if operator:
-                feed_failed_ai_runs(queue, self.data.get("recommendations", []), operator)
+                for rec in self.data.get("recommendations", []):
+                    try:
+                        feed_failed_ai_runs(queue, [rec], operator)
+                    except (KeyError, TypeError, ValueError, AttributeError):
+                        unrouted.append(
+                            f"Recommendation {self._case_label(rec)}: record could not be read, "
+                            "so a failed AI run is not routed."
+                        )
                 for case in cases:
                     if case.get("closed"):
                         continue
@@ -116,7 +136,7 @@ class ExceptionRegisterMixin:
                         row = handoff_ageing(case, as_of)  # type: ignore[no-untyped-call]
                     except (KeyError, TypeError, ValueError):
                         unrouted.append(
-                            f"Case {case.get('id', 'Unknown')}: task or handoff record could "
+                            f"Case {self._case_label(case)}: task or handoff record could "
                             "not be read, so stranded work is not checked. Open the case."
                         )
                         continue
@@ -127,16 +147,26 @@ class ExceptionRegisterMixin:
                 unrouted.append("No named digital operator: failed runs and tasks are not routed.")
         items = queue.queue(email)
         report = queue.access_report(email)
-        self.audit(email, "viewed_exception_register", "-", f"items={len(items)}")  # type: ignore[attr-defined]
+        self._audit_register(email, "viewed_exception_register", f"items={len(items)}")
         return {
             "state": "ok",
             "items": items,
             "unrouted": unrouted,
             "sources": self._exception_sources(),
             "banner": queue.outage_banner(None),
-            "access": {"roles": report["roles"], "scope": report["scope"]},
+            "access": {
+                "roles": {email: list(report["roles"].get(email, []))},
+                "scope": report["scope"],
+            },
             "note": NOTE,
         }
+
+    def _audit_register(self, email: str, action: str, detail: str) -> None:
+        self.audit(email, action, "-", detail)  # type: ignore[attr-defined]
+
+    @staticmethod
+    def _case_label(record: Any) -> str:
+        return str(record.get("id", "Unknown")) if isinstance(record, Mapping) else "Unknown"
 
     @staticmethod
     def _exception_sources() -> list[str]:

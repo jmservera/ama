@@ -4490,10 +4490,10 @@ named owner and unaccepted handoffs flagged by `handoff_ageing` go to the first 
 Named staff come from `ZF_EXCEPTION_STAFF`, a JSON object of staff email to roles; the owner has not named
 the roles, so with none configured only a programme manager or support officer sees an empty
 `roles_not_named` result and nothing is assigned by default. Anyone not named is refused (403) and the
-refusal is audited in the store ledger, as is each view. The reply carries each item's owner, values with
-source, date and version, original source and `Unknown` eligibility, the visible roles and scope, the
+refusal is audited in the store ledger, as is each view (including the empty-staff view and refusal). The reply carries each item's owner, values with
+source, date and version, original source and `Unknown` eligibility, the caller's own role entry (not other staff emails) and scope, the
 outage banner (always `unknown` here: no health check feeds it) and a list of sources not connected (failed
-imports) and unreadable case records, so absence is never shown as health. Recovery is not exposed and
+imports) and case or stock records that could not be read (reported per case, never failing the register), so absence is never shown as health. Recovery is not exposed and
 nothing is stored: the queue is rebuilt on each read.
 
 Not delivered: persistence of the queue and of recovery requests in the JSON, SQL and MSSQL stores, a recovery

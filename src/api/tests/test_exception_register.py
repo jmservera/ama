@@ -1,13 +1,16 @@
 """Exception register: scoped to named staff, read-only, honest about what it cannot see (#135)."""
 
 import json
+import os
 import unittest
 from unittest import mock
 
 from zava_forward.core import exception_register
 from zava_forward.core.exception_register import staff_from_env
+from zava_forward.core.workflows import MANAGER_ROLES
 
 from test_assistants import Base
+from test_role_matrix import ROLES, Matrix
 
 STAFF = {
     "human0@example.test": ("data_steward",),
@@ -107,6 +110,47 @@ class Register(Base):
         with self.assertRaises(PermissionError):
             self.store.exception_register(self.people["Resident Liaison Officer"], {})
 
+    def test_malformed_stock_query_is_reported_and_other_cases_still_route(self):
+        self.case["stock_reconciliation"].append({"id": "SQ-BAD"})
+        view = self.store.exception_register(self.steward, STAFF)
+        self.assertTrue(
+            any(
+                self.case["id"] in u and "stock query could not be read" in u
+                for u in view["unrouted"]
+            )
+        )
+        other = next(
+            c for c in self.store.cases.values() if c is not self.case and not c.get("closed")
+        )
+        other["stock_reconciliation"] = [
+            {
+                "id": "SQ-2",
+                "field": "tenure",
+                "left": side("A", "S-A", "1"),
+                "right": side("B", "S-B", "2"),
+            }
+        ]
+        view = self.store.exception_register(self.steward, STAFF)
+        self.assertTrue(any(i["original_source"]["case_id"] == other["id"] for i in view["items"]))
+
+    def test_malformed_recommendation_does_not_break_the_operator_view(self):
+        self.store.data["recommendations"].append(None)
+        view = self.store.exception_register(self.operator, STAFF)
+        self.assertIn("failed_ai_run", {i["kind"] for i in view["items"]})
+        self.assertTrue(any("could not be read" in u for u in view["unrouted"]))
+
+    def test_access_roles_show_only_the_callers_own_entry(self):
+        view = self.store.exception_register(self.steward, STAFF)
+        self.assertEqual(view["access"]["roles"], {"human0@example.test": ["data_steward"]})
+
+    def test_empty_staff_paths_are_audited(self):
+        self.store.exception_register(self.pm, {})
+        with self.assertRaises(PermissionError):
+            self.store.exception_register(self.people["Resident Liaison Officer"], {})
+        actions = [e["action"] for e in self.store.audit_entries()]
+        self.assertIn("viewed_exception_register", actions)
+        self.assertIn("denied", actions)
+
     def test_missing_role_holder_is_reported_not_defaulted(self):
         view = self.store.exception_register(
             self.steward, {"human0@example.test": ("data_steward",)}
@@ -125,14 +169,61 @@ class Config(unittest.TestCase):
 
 
 class Endpoint(unittest.TestCase):
-    def test_route_is_registered_in_server(self):
-        from pathlib import Path
+    setUpClass = classmethod(Matrix.setUpClass.__func__)
+    tearDownClass = classmethod(Matrix.tearDownClass.__func__)
+    session = Matrix.session
+    call = Matrix.call
 
-        import zava_forward.api.server as server
+    def staff_env(self, mapping):
+        return mock.patch.dict("os.environ", {exception_register.STAFF_ENV: json.dumps(mapping)})
 
-        text = Path(server.__file__).read_text()
-        self.assertIn('"/api/exceptions"', text)
-        self.assertIn("exception_register.staff_from_env", text)
+    def test_named_steward_gets_scoped_content_and_others_are_refused_and_audited(self):
+        steward, other = self.session("u1@example.test"), self.session("u2@example.test")
+        self.store.cases["ZF-1"]["closed"] = False
+        self.store.cases["ZF-1"]["stock_reconciliation"] = [
+            {
+                "id": "SQ-1",
+                "field": "epc",
+                "left": side("D", "S-A", "1"),
+                "right": side("C", "S-B", "2"),
+            }
+        ]
+        with self.staff_env({"u1@example.test": ["data_steward"]}):
+            code, text = self.call(steward, "/api/exceptions")
+            self.assertEqual(code, 200)
+            body = json.loads(text)
+            self.assertEqual({i["kind"] for i in body["items"]}, {"source_conflict"})
+            self.assertEqual(body["access"]["roles"], {"u1@example.test": ["data_steward"]})
+            self.assertEqual(self.call(other, "/api/exceptions")[0], 403)
+        entries = list(self.store.audit_entries())
+        self.assertTrue(
+            any(e["action"] == "denied" and e["who"] == "u2@example.test" for e in entries)
+        )
+        self.assertTrue(any(e["action"] == "viewed_exception_register" for e in entries))
+
+    def test_other_staff_emails_are_not_exposed_to_a_named_operator(self):
+        with self.staff_env(
+            {"u1@example.test": ["data_steward"], "u2@example.test": ["digital_operator"]}
+        ):
+            code, text = self.call(self.session("u2@example.test"), "/api/exceptions")
+        self.assertEqual(code, 200)
+        self.assertNotIn("u1@example.test", text)
+
+    def test_with_nobody_named_only_managers_see_the_empty_state(self):
+        with mock.patch.dict("os.environ", {}, clear=False):
+            os.environ.pop(exception_register.STAFF_ENV, None)
+            for role in ROLES:
+                email = next(s["email"] for s in self.store.data["staff"] if s["role"] == role)
+                code, text = self.call(self.session(email), "/api/exceptions")
+                if role in MANAGER_ROLES:
+                    self.assertEqual(
+                        (code, json.loads(text)["state"]), (200, "roles_not_named"), role
+                    )
+                else:
+                    self.assertEqual(code, 403, role)
+
+    def test_unauthenticated_is_refused(self):
+        self.assertIn(self.call("", "/api/exceptions")[0], (401, 403))
 
 
 if __name__ == "__main__":
