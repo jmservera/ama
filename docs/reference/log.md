@@ -10098,3 +10098,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Dropped accepted proposals count as regressions (Closes #948)
 
 * `candidate_comparison` now counts `dropped_accepted_proposals` (cases the baseline accepted that a candidate did not) and treats any drop as a regression, so such a candidate is a `failure` even when cheaper. Tests and the `src/agents/README.md` paragraph updated. Offline grader only. Evidence under `.copilot-tracking/` (2026-11-04 issue-948).
+
+## [2026-11-04] update | Hazard referral age flag requires its limit and flags future dates (Closes #951)
+
+* `hazard_referrals_overdue` no longer assumes an unapproved 1-day default: `max_days` is required. A `received_on` in the future is now returned with a data-quality note. Read-only, still not a hazard clock; the owner-approved limit remains undecided. Evidence under `.copilot-tracking/` (2026-11-04 issue-951).

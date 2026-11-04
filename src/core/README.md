@@ -4322,8 +4322,10 @@ any hazard clock, so the existing hazard process is not delayed by challenge rev
 plain-language `protection` statement (a challenge does not change tenancy, repairs or services), and
 `overdue(today)` lists unresolved challenges past their promised next update for the human owner;
 neither changes any record. A hazard concern may carry `received_on`; the read-only
-`hazard_referrals_overdue(today, max_days=1)` lists unhanded referrals older than the limit or of
-unknown age so the owner can follow up. It is a flag for human action, not a hazard clock.
+`hazard_referrals_overdue(today, max_days)` lists unhanded referrals older than the limit, of
+unknown age, or with a `received_on` in the future (flagged as a data-quality issue) so the owner
+can follow up. `max_days` is required because no limit has been owner-approved. It is a flag for
+human action, not a hazard clock.
 
 Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, and the
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
