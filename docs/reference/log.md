@@ -10130,3 +10130,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Failed import feed for the exception queue (Refs #135)
 
 * Added a read-only `feed_failed_imports` in core that raises `failed_import` items for rejected importer batches and refused import files, keeping source identity, version and reason but no row values, without retrying or approving anything. Not wired to a live importer, store, API or UI; criteria 1, 5 and the owner-approved roles and runbooks stay unmet. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-135-r2-import-feed).
+## [2026-11-04] update | Agents worker run loop, criterion 1 still unmet (Refs #144)
+
+* Added a tested cooperative run loop and a fail-closed `serve` command for the agents worker (`src/agents`), and updated the hosting status row in `infra/README.md`. `serve` refuses to start because the queue adapter and API post-back do not exist. Criteria 1, 3 and 4 and the Azure restore proof stay unmet. Focused tests only; no gate, image build or Azure run. Evidence under `.copilot-tracking/` (2026-11-04 issue-144-worker-run-loop).

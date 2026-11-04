@@ -1323,7 +1323,7 @@ or deployment approval is inferred.
 
 | Criterion | Status | Evidence |
 | --- | --- | --- |
-| Worker and job images real, versioned, deployed through the pipeline | Unmet | Images and the `src-deploy.yml` digest pipeline are real. The agents and orchestrator entrypoints still only print a version; queue transport and API post-back are not built |
+| Worker and job images real, versioned, deployed through the pipeline | Unmet | Images and the `src-deploy.yml` digest pipeline are real. The agents entrypoint now has a tested run loop (`zava_forward.agents.worker`, 2026-11-04) but `serve` refuses to start: the queue adapter and API post-back are not built, and the orchestrator entrypoint still only prints a version |
 | Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. No live rollout was run |
 | Hardening enforced in the deployed app | Partial, platform-blocked | See the hosted hardening note above; CI Docker checks only |
 | Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json) |

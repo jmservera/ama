@@ -1,3 +1,5 @@
-from zava_forward.agents.version import __version__
+import sys
 
-print(f"zava-forward-agents {__version__}")
+from zava_forward.agents.worker import main
+
+sys.exit(main())
