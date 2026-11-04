@@ -23,6 +23,8 @@ from zava_forward.core.synthetic import (
     scale_fixture,
     sensor_backfill,
     sensor_scenarios,
+    sensor_stock,
+    sensor_stream,
     stock_fabric,
     stock_register,
 )
@@ -74,6 +76,32 @@ def _sensor_backfill(out: Path) -> Path:
 def _sensor_scenarios(out: Path) -> Path:
     sensor_scenarios.write(out, seed=SEED)
     return out / "truth" / "manifest.json"
+
+
+def _sensor_stream(out: Path) -> Path:
+    stock_register.write(out.parent / (out.name + "-stream-stock"), n=6, seed=SEED, as_of=AS_OF)
+    source = out.parent / (out.name + "-stream-stock") / stock_register.FILE_NAME
+    consent = ("granted", "declined", "unknown")
+    with source.open(encoding="utf-8", newline="") as stream:
+        rows = [
+            {**row, "is_synthetic": "true", "monitoring_consent": consent[i % 3]}
+            for i, row in enumerate(csv.DictReader(stream))
+        ]
+    selection = sensor_stock.select(rows, len(rows))
+    spec = sensor_stream.Replay(seed=SEED, days=1)
+    out.mkdir(parents=True)
+    lines = [
+        sensor_stream.wire(frame.row).decode("ascii")
+        for frame in sensor_stream.replay(selection, spec)
+    ]
+    (out / "frames.jsonl").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    manifest = out / "manifest.json"
+    manifest.write_text(
+        json.dumps(sensor_stream.descriptor(selection, spec), indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    return manifest
 
 
 def _register(out: Path) -> Path:
@@ -186,6 +214,7 @@ GENERATORS: dict[str, Callable[[Path], Path]] = {
     "scale-fixture": _scale,
     "sensor-backfill": _sensor_backfill,
     "sensor-scenarios": _sensor_scenarios,
+    "sensor-stream": _sensor_stream,
     "stock-fabric": _stock_fabric,
     "stock-register-fictional": _stock_register,
 }

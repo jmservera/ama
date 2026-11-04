@@ -34,6 +34,15 @@ def selection() -> sensor_stock.Selection:
 
 
 class ReplayTests(unittest.TestCase):
+    def test_descriptor_records_seed_version_and_full_generator_revision(self) -> None:
+        first = descriptor(selection(), Replay(seed=5))
+        self.assertEqual(first["seed"], 5)
+        self.assertEqual(first["version"], "synthetic-stream-v2")
+        revision = first["generator_revision"]
+        assert isinstance(revision, str)
+        self.assertRegex(revision, r"^sha256:[0-9a-f]{64}$")
+        self.assertEqual(revision, descriptor(selection(), Replay(seed=9))["generator_revision"])
+
     def test_selected_subset_and_fabric_consent_mutations_bind_frame_provenance(self) -> None:
         selected, spec = selection(), Replay()
         subset = sensor_stock.select(selected.rows, 1)

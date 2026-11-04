@@ -20,6 +20,7 @@ class DeterminismAuditTests(unittest.TestCase):
                 "scale-fixture",
                 "sensor-backfill",
                 "sensor-scenarios",
+                "sensor-stream",
                 "stock-fabric",
                 "stock-register-fictional",
                 "public-pack",

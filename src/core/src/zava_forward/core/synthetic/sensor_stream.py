@@ -9,11 +9,13 @@ import time
 from collections.abc import Callable, Mapping
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
+from pathlib import Path
 from typing import Protocol
 
 from . import (
     household_conditions,
     indoor_projection,
+    provenance,
     retrofit_effects,
     sensor_backfill,
     sensor_faults,
@@ -256,6 +258,12 @@ def descriptor(
         "selected_homes": len(checked.rows),
         "monitored_homes": len(sensors),
         "seed": spec.seed,
+        "generator_revision": provenance.source_revision(
+            (
+                *sensor_backfill.revision_sources(faults=True, composed=climate is not None),
+                Path(__file__),
+            )
+        ),
         "origin": spec.origin.isoformat(),
         "days": spec.days,
         "cadence_minutes": spec.cadence_minutes,
