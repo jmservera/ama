@@ -18,7 +18,8 @@ class KeepAliveTests(Base):
         )
         self.httpd = _Server(("127.0.0.1", 0), make_handler(self.app))
         threading.Thread(target=self.httpd.serve_forever, daemon=True).start()
-        self.conn = http.client.HTTPConnection("127.0.0.1", self.httpd.server_address[1], timeout=10)
+        port = self.httpd.server_address[1]
+        self.conn = http.client.HTTPConnection("127.0.0.1", port, timeout=10)
 
     def tearDown(self) -> None:
         self.conn.close()
