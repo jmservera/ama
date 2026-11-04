@@ -10290,6 +10290,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Implemented phase 2 of `docs/reference/research/ux/resident-demo-redesign-2026-11-04.md`: the sensors section below the help sections with a clearly labelled deterministic 24-hour synthetic forecast, a stale state, and a fix so `infra/sql/resident-showcase.sql` also reads the dataset's `synthetic_stock_anchor_id` stock link (source text only; T-SQL not compiled, live view not applied). Documented in `src/api/README.md`. The live demo still needs the sensor tables and a re-applied view, and the backfill ends 2026-09-30; both are owner-gated and not done.
 
+## [2026-11-04] update | Aftercare intake form definition and register snapshot (Refs #133)
+
+* Documented in `src/core/README.md` the plain-language household intake definition and a checked JSON snapshot restore for the aftercare register. No store, API or UI is wired; criteria 1, 2, 4, 5 and 6 remain unmet or partial, and 3 is proven only at register level. Evidence under `.copilot-tracking/*/2026-11-04-issue-133-intake-snapshot-*.md`.
 ## [2026-11-04] update | Sensor status text mirror (Refs #111)
 
 * Added pure `sensor_status_text` in `src/core`: one plain-language status per signal, with the map and accessible list built from the same entries (AC-067 text mirror). No readings, identifiers, diagnosis or priority change; each state names the manual route. Unit-tested only. Unmet: task-queue wiring, rule approval, R1 to R3, SQL Server run. Evidence under `.copilot-tracking/` (2026-11-04 issue-111 r3).
@@ -10310,9 +10313,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added `src/core/tests/test_retrofit_scenarios_retained_store.py`, which ingests the four labelled retrofit exercise scenarios through `SensorConsumer` and reads them back with `analyse_retained` (#111). Test-only, exercise values, focused tests only. #190 criterion 1 and #193 criterion 3 stay unticked pending independent review. RPI evidence is under `.copilot-tracking/*/2026-11-04-issue-190-retained-store-*`.
 
+## [2026-11-04] update | Receipts for validation-refused unstored chat asks (Refs #159)
+
+* `ChatPanel.ask_unstored` now records one `chat.turn.unstored` receipt (0 model calls, no question text) when validation or the case lookup refuses a turn. Still unmet on #159: the named screen-reader test (criterion 6) and the 401 and route-validation receipts (tokenomics criterion). Evidence: `.copilot-tracking/*/2026-11-04/issue-159-validation-receipts-*`.
 ## [2026-11-04] update | WCAG 2.4.11 and 2.5.7 slice recorded (Refs #151)
 
 * Added `scroll-padding-block-end` so the fixed chat launcher cannot hide a focused control, two static tests, and a baseline audit row for 2.4.11 and 2.5.7. Rendered, screen-reader and owner-decision criteria remain unmet; no conformance claim.
+## [2026-11-04] update | Saved held form export freshness check (Refs #96)
+
+* Added `form_export.export_freshness` in `src/core` (documented in `src/core/README.md`): a read-only check that a saved held export is Current, Stale for only the dependent fields, Invalid or Unavailable. Criteria 1, 5 and 6 of #96 remain unmet (approved template and rules, reviewed export, rule and approval propagation). Evidence: `.copilot-tracking/*/2026-11-04/issue-96-r2-export-freshness-*`.
 ## [2026-11-04] update | Held-out gate fails closed on an empty set (Refs #164)
 
 * `chat_heldout.run_heldout` and `freeze_problems` now report "no scenarios in the held-out set" and return `insufficient` instead of `pass` for a digest-matching empty set; `_shingles` treats texts shorter than six words as one shingle. Offline, scripted harness only; no held-out set, reviewer or actual-model evidence exists, so #164 stays open.
@@ -10333,6 +10342,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 311, 893 and 1036: criteria 1 and 2 are delivered, and core ageing plus the read-only unaccepted-handoff route exist. Criterion 3 stays unmet because the Housing and repairs leads have not approved response times and out-of-hours routes (OD-09). No limit was defaulted and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-83 r6).
 
+## [2026-11-04] update | Issue 220 criterion 5 status record (Refs #220)
+
+* Recorded in `src/core/README.md` which #220 criteria are delivered (1 to 4) and that criterion 5 awaits human acceptance, live hazard-response measurement and an owner-approved follow-up age limit. Nothing ticked or closed.
 ## [2026-11-04] update | Issue 223 status record (Refs #223)
 
 * Rechecked merged PRs 428, 638, 701, 817, 855, 941 and 974: the scripted gate, reviewer-authority enforcement and manual human-session intake exist and their focused tests, ruff and mypy pass. All five criteria stay unmet as human evidence because OQ-017 holders are unappointed and no competent reviewer has run the test. Docs-only record in `src/agents/README.md`; nothing ticked or closed.
@@ -10388,6 +10400,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
 
+## [2026-11-04] update | Issue 233 choice before offered capacity (Refs #233)
+
+* Added a "Choice comes before offered capacity" text panel to the per-home `resident-choice` screen and recorded it in `research/ux/atlas-screen-trace.md`. Tested by a node render of the per-home screen (panel order within that screen, native paragraph, no capacity wording before the choice panels) plus source-level checks; browser rendering, same-home walk, WCAG 2.2 rendered evidence and user validation stay unmet.
+
 ## [2026-11-04] update | Issue 176 status record (Refs #176)
 
 * Rechecked merged PRs 237, 257, 309, 368, 633, 703, 843 and 1052. All available generators replay byte for byte; criteria 1 and 2 stay unmet only because the original private stock register generator and pinned inputs are absent. Added a status record to the retrofit synthetic data README.
@@ -10428,6 +10444,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
 
+## [2026-11-04] update | Epic 136 resource coverage register (Refs #136)
+
+* Added a resource coverage register to infra/README.md: each architecture resource is in Bicep or recorded as manual or deferred with the owner. Criterion 2 is recorded but not machine-checked; criteria 1, 3, 4 and 5 stay unmet (stabilization checkpoint #440, nine open children, no from-empty rerun since 2026-10-12, epic status not refreshed).
 ## [2026-11-04] update | Issue 137 environment strategy status (Refs #137)
 
 * Rechecked merged PRs 306, 346 and 415. Criteria 1, 2, 3 and 5 are delivered. Criterion 4 stays unmet: region and capacity are parameters with fail-closed guards, but no authenticated live region and quota check exists (SQL and model usage, IoT quota, ACA zone evidence and subscription binding are unknown; owner and Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-137 r1).
@@ -10453,6 +10472,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
 
+## [2026-11-04] update | Issue 96 status record (Refs #96)
+
+* Rechecked merged PRs 377, 510, 888, 902 and 1083 and open PR 1093. Criteria 2, 3 and 4 stay met. The inherited review defects RV-001 and RV-002 are fixed in current code and covered by tests (original review left unchanged). Criteria 1, 5 and 6 stay unmet: they need an approved template, rules and reviewer authority from the Finance/template owner, so no reviewed export or rule/approval stale propagation can be built. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-96 r3).
 ## [2026-11-04] update | Epic 93 status record (Refs #93)
 
 * Rechecked merged PRs for #93 and its children. Code-level slices are delivered; the Finance journey page now lists unmet criteria (stabilization checkpoint #440, open children #96 and #99) and the human owners. Nothing is ticked. Docs-only; no tests run. Evidence under `.copilot-tracking/` (2026-11-04 issue-93 r1).

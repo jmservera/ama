@@ -325,6 +325,14 @@ false, `Not submitted` and eligibility `Not assessed`; it writes nothing and a
 reviewed pack stays blocked on Finance and template authority. The manual path
 is the working review itself, and unavailable evidence returns `Unavailable`.
 
+`form_export.export_freshness(store, user, case_id, saved_export)` compares a
+saved held export with the current working review, read-only. It returns
+`Current`, `Stale` (naming only the fields whose value, state or bound source
+changed or are now stale, and the unaffected fields), `Invalid` (the copy is
+incomplete or its content hash no longer matches) or `Unavailable`. A changed
+schema or rule reference changes the schema digest and stales every
+schema-bound field. It never marks anything reviewed.
+
 `view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
 diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
 valid, current values only, combine predicates with OR and compare types
@@ -4448,6 +4456,13 @@ Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring,
 no-retaliation and no-delayed-hazard-response criterion, which needs live workflow evidence and
 human review. Tests: `src/core/tests/test_challenges.py`.
 
+Status record, 2026-11-04 (issue #220 stays open): criteria 1 to 4 were delivered by #418, #641 and
+#693, with the ageing and protection helpers in #826 and #966. Criterion 5 (no retaliation, inferred
+refusal or delayed hazard response) is unmet. The remaining work is human: representative resident
+and staff acceptance, a measured hazard-response comparison on live workflow data, and owner approval
+of the hazard follow-up age limit. The register itself cannot prove it. A further code slice would
+only wire these read-only helpers into a staff view, which needs owner direction first.
+
 ## Aftercare concern route and evaluator view (#133)
 
 `zava_forward.core.aftercare.AftercareRegister` is a store-independent register for constructed
@@ -4472,6 +4487,13 @@ until the named owner calls `review_pack` with `accept` or `reject` and a reason
 changes the concern, its outcome or its remedy, and a sensor reading never appears in the pack. The
 task `aftercare-concern-pack` is registered in `ai_registry` as an unapproved, disabled proposal
 task with a manual route and no model binding (FR-036).
+
+`intake_form()` returns the plain-language household route (who is raising it, representative
+basis, concern kind, own-words statement, and the phone, in-person, paper and assisted-visit
+channels) for a screen or paper form to follow, and `intake_errors(values)` returns plain,
+per-field problems. `to_state()` and `AftercareRegister.from_state()` give a JSON-safe snapshot for
+a later store; a restore is refused if it would mark a concern sensor-dismissed, give an outcome a
+non-human basis, or orphan a pack.
 
 Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), evaluator role access
 and the DPO position on outcome data (both open), a model route for the pack summary (needs

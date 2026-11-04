@@ -1,6 +1,8 @@
 """Aftercare concern route and evaluator view on constructed records (FR-049, AC-063, #133)."""
 
+import json
 import unittest
+from copy import deepcopy
 
 from zava_forward.core import aftercare as af
 from zava_forward.core.aftercare import AftercareRegister
@@ -193,6 +195,76 @@ class ConcernPackTests(unittest.TestCase):
         live = ai_registry.authorizes_live(af.PACK_TASK)  # type: ignore[no-untyped-call]
         self.assertFalse(live)
         self.assertIn("no model call", task["manual_route"])
+
+
+class IntakeFormTests(unittest.TestCase):
+    def test_form_offers_non_digital_route_and_neutral_plain_text(self) -> None:
+        form = af.intake_form()
+        self.assertEqual(form["accessible_route"], af.ACCESSIBLE_ROUTE)
+        self.assertEqual(
+            [c["value"] for c in form["non_digital_channels"]], list(af.NON_DIGITAL_CHANNELS)
+        )
+        kinds = next(f for f in form["fields"] if f["name"] == "kind")["options"]
+        self.assertEqual([k["value"] for k in kinds], list(af.CONCERN_KINDS))
+        texts = [form["title"], form["intro"], form["protection"]]
+        texts += [f["label"] for f in form["fields"]]
+        for text in texts:
+            self.assertEqual(af.neutral_text(text), text)
+        self.assertNotIn("sensor", form["intro"].lower())
+
+    def test_errors_are_plain_and_per_field(self) -> None:
+        self.assertEqual(
+            set(af.intake_errors({})),
+            {"raised_by", "home_ref", "kind", "statement"},
+        )
+        ok = dict(raised_by="household", home_ref="H1", kind="other", statement="Too cold")
+        self.assertEqual(af.intake_errors(ok), {})
+        rep = dict(ok, raised_by="representative")
+        self.assertEqual(set(af.intake_errors(rep)), {"representative_basis"})
+        self.assertEqual(af.intake_errors(dict(rep, representative_basis="Power of attorney")), {})
+
+
+class SnapshotTests(unittest.TestCase):
+    def _populated(self) -> AftercareRegister:
+        reg = AftercareRegister()
+        cid = raised(reg, sensor_context={"signal": "normal"})
+        reg.start_investigation(cid, OWNER, "2026-12-05")
+        reg.record_outcome(cid, OWNER, "remedy_needed", "home_visit", "Visit found draughts")
+        reg.record_closure("H1", "handover", "2026-12-10", "Handover Lead")
+        reg.propose_pack(cid)
+        return reg
+
+    def test_round_trip_through_json_keeps_everything(self) -> None:
+        reg = self._populated()
+        restored = AftercareRegister.from_state(json.loads(json.dumps(reg.to_state())))
+        self.assertEqual(restored.to_state(), reg.to_state())
+        self.assertEqual([r["id"] for r in restored.unresolved()], ["AC-001"])
+        self.assertEqual(restored.concerns["AC-001"]["remedy"]["status"], "open")
+        self.assertEqual(raised(restored, home="H2"), "AC-002")
+
+    def test_snapshot_is_a_copy(self) -> None:
+        reg = self._populated()
+        reg.to_state()["concerns"]["AC-001"]["owner"] = "Someone Else"
+        self.assertEqual(reg.concerns["AC-001"]["owner"], OWNER)
+
+    def test_restore_refuses_a_snapshot_that_weakens_a_concern(self) -> None:
+        state = self._populated().to_state()
+        bad = deepcopy(state)
+        bad["concerns"]["AC-001"]["dismissed_by_sensor"] = True
+        with self.assertRaises(ValueError):
+            AftercareRegister.from_state(bad)
+        bad = deepcopy(state)
+        bad["concerns"]["AC-001"]["outcome"]["basis"] = "sensor_reading"
+        with self.assertRaises(ValueError):
+            AftercareRegister.from_state(bad)
+        bad = deepcopy(state)
+        bad["concerns"]["AC-001"]["outcome"] = None
+        with self.assertRaises(ValueError):
+            AftercareRegister.from_state(bad)
+        bad = deepcopy(state)
+        bad["packs"]["PK-001"]["concern_id"] = "AC-009"
+        with self.assertRaises(ValueError):
+            AftercareRegister.from_state(bad)
 
 
 if __name__ == "__main__":
