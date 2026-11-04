@@ -10196,3 +10196,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Real-store same-home journey test, #134 slice 3 (Refs #134)
 
 * Merged slices (#872 trace, #1010 AC-034 to AC-043 register) already deliver the trace and register. This slice adds a JSON-store journey test from EPC query to payment-status note with sibling and open-query negative controls, and fixes the trace to count the real `resident_decision_record` action (accepted answers only). Still unmet: eleven perspective walkthrough screens, keyboard and announcement evidence, SQL-store journey, any pass of AC-034 to AC-043. Constructed-fixture evidence, not user validation. Focused tier only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 journey-contract-134-r7).
+
+## [2026-11-04] update | Phase 0 baseline population and wait analysis (Refs #124)
+
+* PR 895 already delivers owner, dictionary and constraint register rules. This slice adds `discovery_flow`: baseline population summary, handover-leg days, waits by named party with unknown or disputed causes kept visible, and return, rejection, repeat-visit and reopen counts. Unmet: a real nominated owner and agreed endpoint, owner-validated dictionary, constraint register with real evidence, and any company finding. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 phase0-flow-124).
