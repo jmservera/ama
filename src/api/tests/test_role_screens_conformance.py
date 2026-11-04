@@ -83,6 +83,18 @@ class RoleScreenConformance(unittest.TestCase):
         self.assertIn("never ranked by utilisation or headroom", block)
         self.assertIn(".sort((x, y) => String(x.id).localeCompare(String(y.id)))", block)
 
+    def test_choice_screen_states_precedence_over_offered_capacity(self) -> None:
+        start = SCREENS.index('id: "resident-choice"')
+        block = SCREENS[start : SCREENS.index("registerRoleScreen({", start)]
+        render = block[block.index("render(c) {") :]
+        panel = render.index('screenPanel("Choice comes before offered capacity"')
+        self.assertLess(render.index('screenPanel("Choice for each measure"'), panel)
+        self.assertLess(render.index('screenPanel("Paused or withdrawn by the resident"'), panel)
+        self.assertIn("takes precedence over any offered contractor slot", render)
+        self.assertIn("not a booking and not a promise to the resident", render)
+        self.assertNotIn("headroom", render)
+        self.assertNotIn("utilisation", render)
+
 
 if __name__ == "__main__":
     unittest.main()

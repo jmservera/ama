@@ -742,6 +742,8 @@ registerRoleScreen({
         screenTable("Service requests and contact needs",
           ["Request", "Route", "Status", "Contact needs", "Next update"],
           requests.map((r) => [r.id, r.route, r.status, (r.accessibility || ["Unknown"]).join(", "), r.next_update]))),
+      screenPanel("Choice comes before offered capacity",
+        h("p", {}, "A recorded choice, pause or withdrawal takes precedence over any offered contractor slot. An offered slot is not a booking and not a promise to the resident. Offered capacity is shown on the Package queue screen, not here.")),
       screenWithheld(["Resident phone, email and postal contact history (shown only as a safe route reference)",
         "Detailed access and household history beyond the contact needs above", "Contractor capacity and offered slots"]));
   }
