@@ -2,7 +2,7 @@
 title: Retrofit Flow and Constraint Discovery Brief
 description: Proposed evidence, team and bounded assistant requirements for identifying retrofit delivery constraints
 author: AMA Research Team
-ms.date: 2026-09-19
+ms.date: 2026-11-04
 ms.topic: concept
 ---
 
@@ -344,3 +344,23 @@ accepted-handover status.
 
 If the evidence cannot be assembled, the first investment is data ownership
 and workflow instrumentation rather than an agent.
+
+## Delivery Status (2026-11-04, issue 124)
+
+Merged PRs 895 and 1030 delivered the synthetic rule layer only: owner and
+accepted-handover endpoint status, ten-event dictionary gap check, a constraint
+register that stays a candidate until a named owner other than the proposer
+decides it, and baseline population and wait analysis. Source:
+`src/core/src/zava_forward/core/discovery_register.py` and `discovery_flow.py`.
+
+| Acceptance criterion | Status |
+| --- | --- |
+| Discovery owner nominated and endpoint agreed | Unmet. Needs a sponsor decision |
+| Lifecycle and event dictionary validated | Unmet. Needs validation by each event's operational owner |
+| Constraint register with supporting and contradicting evidence | Unmet in substance. Rules exist; no real evidence, which needs the approved twelve-month extract |
+| Findings are not company findings until owners validate | Enforced as a rule and label in code; no findings exist yet |
+
+Only human steps remain: sponsor nomination, owner validation and an approved
+data extract. Persistence, a screen and extract import are not built and should
+wait for the nominated owner and approved data. Discovery stays fully manual
+when AI is unavailable.
