@@ -200,11 +200,12 @@ Each row is 4 rounds of 30 concurrent requests, one connection per request.
 | demo-api `/workspace-shell.js` | Easy Auth, anonymous | 120 x 401 | 0 |
 | demo-api `/api/whoami` | Easy Auth, anonymous | 120 x 401 | 0 |
 | demo-api `/readyz` | excluded path | 120 x 404 (no such route) | 0 |
-| demo-api `/healthz` and `/welcome.html` | curl HTTP/2 parallel | 240 x 200 | 0 |
+| demo-api `/healthz` and `/welcome.html` | curl HTTP/2 parallel | 240 x 200 (observed in session, not preserved in the JSON) | 0 |
 | resident-demo `/demo/session`, `/demo.js` | signed in as the resident test user | 240 x 200 | 0 |
 | resident-demo `/demo/view` | signed in | 33 x 200, 87 x 503 JSON | 0 |
+| resident-demo `/healthz` | anonymous | 120 x 200 | 0 |
 
-Reading: no empty-body 500 in about 1,300 requests, against 2 to 3.5 percent
+Reading: no empty-body 500 in 1,320 requests (1,080 recorded in `burst-results.json`, 240 curl HTTP/2 observed in session and not preserved), against 2 to 3.5 percent
 before the image was deployed, so the keep-alive fix holds on the deployed
 API. The resident-demo 503s are the app's own bounded-concurrency answer, not
 the Easy Auth fault (filed separately as #1054). Limits: the resident test user

@@ -1129,6 +1129,7 @@ as the owner-held synthetic resident test user. No Azure resource was changed.
 No username, password, cookie value or token is recorded; email fields are
 masked in the screenshots. Masked screenshots and scripts are under
 `.copilot-tracking/walkthrough-evidence/2026-11-04/walkthrough-462-810/`.
+Results marked "observed in session, not preserved" below have no committed log; the screenshots and burst results are the only preserved evidence.
 This is engineering observation, not accessibility acceptance or owner
 usability sign-off.
 
@@ -1136,9 +1137,9 @@ usability sign-off.
 
 * Cold start: `/healthz` warmed the app; the sign-in page was ready in under a second once warm.
 * Sign-in: an empty submit names the missing fields ("Enter your email address and the password."); a wrong password gives the generic "We could not sign you in with those details."; the correct sign-in reached the content in about 6 seconds including the first view load.
-* Session cookies are `__Host-` prefixed, `Secure` and `SameSite=Strict`; the session cookie is `HttpOnly`. After sign-out `/demo/view` returns 401.
+* Session cookies are `__Host-` prefixed, `Secure` and `SameSite=Strict`; the session cookie is `HttpOnly`. After sign-out `/demo/view` returns 401. (Cookie flags and the 401: observed in session, not preserved; the signed-out screen is `08-signed-out.png`.)
 * Content shown: synthetic banner and Legal/Data Protection Officer outstanding note on every state, "About this showcase" shared-password wording, the home address, planned improvements, "Where things are", "What happens next", help routes without phone numbers, and disabled "Not available in this showcase" buttons (messages, uploads, downloads, operational appointments, consent). Nothing writes to a live record.
-* 320px: no horizontal overflow. Keyboard order is skip link, Account, consent checkbox, date, time, the two callback buttons, then the chat launcher. The chat panel opens with the synthetic-demo and "not consent to works" wording and no message was sent.
+* 320px: no horizontal overflow (observed in session, not preserved; `07-mobile-320.png` is a screenshot only). Keyboard order is skip link, Account, consent checkbox, date, time, the two callback buttons, then the chat launcher. The chat panel opens with the synthetic-demo and "not consent to works" wording and no message was sent. (Keyboard order: observed in session, not preserved.)
 
 ### What is broken or confusing
 
@@ -1148,7 +1149,7 @@ usability sign-off.
 * "Where things are: Contact is paused." and "What happens next: We will not contact you until the pause is lifted" give no reason, date or stage. For a resident this may read as unexplained. The text may be correct for the synthetic case; an owner decision on wording is needed.
 * "dMEV ventilation" in Planned improvements is jargon under the plain-language standard.
 * The "Find callback times" button without a date shows the browser's native "Please fill out this field" bubble, not the app's inline error pattern used at sign-in; the date label does not say it is required.
-* The browser console records one `401` resource error from the deliberate wrong-password attempt.
+* The browser console records one `401` resource error from the deliberate wrong-password attempt (observed in session, not preserved).
 
 ### Limits
 
