@@ -10300,3 +10300,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 193 consumer evidence correction (Refs #193)
 
 * Corrected the IoT sensor research plan: production #111 and #133 modules exist and #996/#1032 tests drive the retrofit exercise scenarios through them, so the 2026-11-03 "do not exist" note is superseded. Criterion 3 is evidenced for test use only; the residual gap is no before and after delta consumption. Nothing ticked or closed.
+
+## [2026-11-04] update | Issue 121 model dispatch gate wired into the AI transport (Refs #121)
+
+* Wired `data_protection.dispatch_hold` into `ai.Ai.run`, `look_at` and `_request`, driven by `ZF_DATA_PROCESSING` (constructed by default; anything else fails closed). Documented in `src/core/README.md`; behavioural tests in `test_data_protection.py`. No approval, retention period or legal conclusion is recorded and no criterion is ticked. Rights log still unpersisted.

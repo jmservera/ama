@@ -241,6 +241,22 @@ def model_dispatch(class_id: str, env: Any, derivative: str | None = None) -> di
     )
 
 
+MODE_ENV = "ZF_DATA_PROCESSING"
+
+
+def dispatch_hold(class_id: str, env: Any, derivative: str | None = None) -> str | None:
+    """Reason a model call must not happen, or None. Unset or "constructed" means constructed only.
+
+    Any other value is treated as actual processing, so a typo fails closed.
+    """
+    if str(env.get(MODE_ENV) or "constructed").strip().lower() == "constructed":
+        return None
+    d = model_dispatch(class_id, env, derivative)
+    if d["permitted"]:
+        return None
+    return f"{d['reason']}. {d['manual_path']}"
+
+
 def validate_task_payload(task: str, payload: dict[str, Any]) -> dict[str, Any]:
     """Keep only declared fields of the declared type and length; report names, never values."""
     spec = TASKS.get(task)
