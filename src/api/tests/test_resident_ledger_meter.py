@@ -12,12 +12,19 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Any
+from unittest.mock import Mock
 
 from zava_forward.core.ai_consumption import Consumption, reference, timestamp
-from zava_forward.core.resident_assistant import AssistantUnavailable, Topic
+from zava_forward.core.resident_assistant import AssistantUnavailable, CaseProgress, Topic
 
+from zava_forward.api.resident_demo.aoai import AzureAdvisor, resident_key
 from zava_forward.api.resident_demo.assistant import EXPIRES, AzureTopicProvider
-from zava_forward.api.resident_demo.ledger_meter import CAPABILITY, LedgerTopicMeter
+from zava_forward.api.resident_demo.ledger_meter import (
+    ADVISOR_CAPABILITIES,
+    CAPABILITY,
+    LedgerTopicMeter,
+    advisor_meters,
+)
 
 START = "2026-10-31T00:00:00Z"
 END = "2026-11-01T00:00:00Z"
@@ -223,6 +230,149 @@ class ResidentLedgerJoinTests(unittest.TestCase):
             provider.select(Topic.STATUS)
         reasons = [r["reason"] for r in self.kinds() if r["kind"] == "alert"]
         self.assertEqual(reasons, ["authority-expired"])
+
+
+CASE = CaseProgress("Your survey is being arranged.", "Your officer will contact you.")
+
+
+def advisor_reply(usage: dict[str, Any] | None, model: str = MODEL) -> bytes:
+    body: dict[str, Any] = {
+        "model": model,
+        "choices": [
+            {"finish_reason": "stop", "message": {"content": json.dumps({"guidance": ["contact"]})}}
+        ],
+    }
+    if usage is not None:
+        body["usage"] = usage
+    return json.dumps(body).encode()
+
+
+class ResidentAdvisorLedgerJoinTests(unittest.TestCase):
+    def setUp(self) -> None:
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        self.port = Port(Path(temp.name) / "constructed.sqlite")
+        self.ledger = Consumption(self.port)
+        self.response: bytes | Exception = advisor_reply(dict(COUNTS, **CACHED))
+        self.sent = 0
+        self.accounting = Mock()
+        self.accounting.reserve.return_value = "ticket"
+
+    def authorize(self, capability: str) -> None:
+        price = self.ledger.price(
+            source="https://prices.azure.com/api/retail/prices",
+            source_hash=reference("constructed-price-response"),
+            retrieved=START,
+            version="constructed-v1",
+            model=MODEL,
+            currency="USD",
+            start=START,
+            end=END,
+            input_rate="1",
+            output_rate="2",
+            cached_rate="0.5",
+            synthetic=False,
+        )
+        self.ledger.authorize(
+            authority="constructed-" + capability,
+            owner="constructed-finance-owner",
+            evidence="constructed-no-paid-spend",
+            price=price,
+            capability=capability,
+            configuration=CONFIG,
+            start=START,
+            end=END,
+            max_calls=5,
+            max_depth=1,
+            budgets=[dict(id=reference(capability), calls=10, tokens=100000, amount="100")],
+        )
+
+    def advisor(
+        self, metered: bool = True, kinds: tuple[str, ...] = ("guidance", "question")
+    ) -> AzureAdvisor:
+        meters = advisor_meters(
+            self.ledger,
+            model=MODEL,
+            configuration=CONFIG,
+            prompts={kind: PROMPT for kind in ADVISOR_CAPABILITIES},
+        )
+
+        def transport(url: str, payload: bytes, token: str) -> bytes:
+            self.sent += 1
+            if isinstance(self.response, Exception):
+                raise self.response
+            return self.response
+
+        return AzureAdvisor(
+            ENDPOINT,
+            self.accounting,
+            lambda: "FAKE-TOKEN",
+            transport=transport,
+            clock=lambda: EXPIRES - 10,
+            meters={k: m for k, m in meters.items() if k in kinds} if metered else None,
+        )
+
+    def records(self, kind: str) -> list[dict[str, Any]]:
+        with self.port.transaction() as db:
+            rows: list[dict[str, Any]] = self.ledger._read(db)
+        return [r for r in rows if r["kind"] == kind]
+
+    def test_admitted_guidance_call_is_closed_with_its_own_capability(self) -> None:
+        self.authorize("resident-guidance")
+        advice = self.advisor().answer(Topic.STATUS, CASE, resident_key("C-1"))
+        self.assertEqual(advice.label, "AI suggestion, not approved")
+        reserved, completed = self.records("reserved"), self.records("completed")
+        self.assertEqual(reserved[0]["capability"], "resident-guidance")
+        self.assertEqual(reserved[0]["prompt"], PROMPT)
+        self.assertEqual(completed[0]["outcome"], "returned")
+        self.assertEqual(completed[0]["tokens"]["total_tokens"], 42)
+        self.assertFalse(completed[0]["held"])
+        self.assertNotIn("survey", json.dumps(self.records("reserved") + completed))
+
+    def test_unauthorised_capability_stops_before_the_network_with_rules_fallback(self) -> None:
+        self.authorize("resident-question")
+        advice = self.advisor().answer(Topic.STATUS, CASE, resident_key("C-1"))
+        self.assertTrue(advice.label.startswith("Summary by rules - AI unavailable"))
+        self.assertEqual(self.sent, 0)
+        alert = self.records("alert")[0]
+        self.assertEqual(alert["reason"], "authority-unknown")
+        self.assertEqual(alert["route"], "workflow-only")
+
+    def test_kind_without_a_meter_is_refused_not_sent_unmetered(self) -> None:
+        self.authorize("resident-guidance")
+        advice = self.advisor(kinds=("question",)).answer(Topic.STATUS, CASE, resident_key("C-1"))
+        self.assertTrue(advice.label.startswith("Summary by rules - AI unavailable"))
+        self.assertEqual(self.sent, 0)
+        self.assertEqual(self.records("reserved"), [])
+
+    def test_transport_failure_is_held_as_unknown_liability(self) -> None:
+        self.authorize("resident-guidance")
+        self.response = TimeoutError("synthetic")
+        advice = self.advisor().answer(Topic.STATUS, CASE, resident_key("C-1"))
+        self.assertTrue(advice.label.startswith("Summary by rules - AI unavailable"))
+        completed = self.records("completed")
+        self.assertEqual(completed[0]["outcome"], "timeout")
+        self.assertTrue(completed[0]["held"])
+        self.assertEqual([r["reason"] for r in self.records("alert")], ["liability-unknown"])
+
+    def test_missing_usage_is_held_not_estimated(self) -> None:
+        self.authorize("resident-guidance")
+        self.response = advisor_reply(None)
+        self.advisor().answer(Topic.STATUS, CASE, resident_key("C-1"))
+        completed = self.records("completed")
+        self.assertTrue(completed[0]["held"])
+        self.assertIsNone(completed[0]["charge"])
+
+    def test_without_meters_the_advisor_behaves_as_before(self) -> None:
+        advice = self.advisor(metered=False).answer(Topic.STATUS, CASE, resident_key("C-1"))
+        self.assertEqual(advice.label, "AI suggestion, not approved")
+        self.assertEqual(self.records("reserved"), [])
+
+    def test_each_request_kind_needs_a_prompt_version(self) -> None:
+        with self.assertRaises(ValueError):
+            advisor_meters(
+                self.ledger, model=MODEL, configuration=CONFIG, prompts={"guidance": PROMPT}
+            )
 
 
 if __name__ == "__main__":
