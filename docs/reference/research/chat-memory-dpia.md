@@ -312,3 +312,13 @@ DPO review date, decision reference and sign-off: not recorded. These checkboxes
 are deliberately unchecked. Local test evidence is documented in the
 [API acceptance audit](../../../src/api/README.md#regulatory-security-privacy-and-audit-217);
 it is not legal advice or a current-law assessment.
+
+## Status record 2026-11-04 (Refs #163)
+
+Rechecked merged work (#281, #503, #649, #727, #735, #745, #844, #874, #919).
+Acceptance criteria 1, 3, 4 and 6 stay evidenced by those PRs. Criteria 2 and 5
+stay unmet: no lawful basis, staff notice, DPIA decision, retention approval or
+provider terms acceptance is recorded, because the DPO and Legal owner has not
+given them. Decisions D1 to D8 above remain "Not recorded". No retention period
+is set and nothing in this update approves one. The staff notice and warning
+UI are not changed here. Nothing is ticked or closed.
