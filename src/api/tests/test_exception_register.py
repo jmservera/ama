@@ -3,6 +3,7 @@
 import json
 import os
 import unittest
+from typing import Any
 from unittest import mock
 
 from zava_forward.core import exception_register
@@ -12,22 +13,26 @@ from zava_forward.core.workflows import MANAGER_ROLES
 from test_assistants import Base
 from test_role_matrix import ROLES, Matrix
 
+MatrixHarness: Any = Matrix
+
 STAFF = {
     "human0@example.test": ("data_steward",),
     "human1@example.test": ("digital_operator",),
 }
 
 
-def side(value, source, version):
+def side(value: str, source: str, version: str) -> dict[str, str]:
     return {"value": value, "source_id": source, "date": "2026-01-01", "version": version}
 
 
 class Register(Base):
-    def setUp(self):
+    reg_case: dict[str, Any]
+
+    def setUp(self) -> None:
         super().setUp()
-        self.case = next(iter(self.store.cases.values()))
-        self.case["closed"] = False
-        self.case["stock_reconciliation"] = [
+        self.reg_case = next(iter(self.store.cases.values()))
+        self.reg_case["closed"] = False
+        self.reg_case["stock_reconciliation"] = [
             {
                 "id": "SQ-1",
                 "field": "epc",
@@ -51,7 +56,7 @@ class Register(Base):
         self.steward = dict(self.steward, email="human0@example.test")
         self.operator = dict(self.steward, email="human1@example.test", name="Operator")
 
-    def test_steward_sees_only_conflict_with_both_values_and_owner(self):
+    def test_steward_sees_only_conflict_with_both_values_and_owner(self) -> None:
         view = self.store.exception_register(self.steward, STAFF)
         self.assertEqual(view["state"], "ok")
         kinds = {i["kind"] for i in view["items"]}
@@ -60,67 +65,67 @@ class Register(Base):
         self.assertEqual({v["value"] for v in item["values"]}, {"D", "C"})
         self.assertEqual(item["owner"], "human0@example.test")
         self.assertEqual(item["eligibility"], "Unknown")
-        self.assertEqual(item["original_source"]["case_id"], self.case["id"])
+        self.assertEqual(item["original_source"]["case_id"], self.reg_case["id"])
 
-    def test_operator_sees_failed_ai_run_not_conflicts(self):
+    def test_operator_sees_failed_ai_run_not_conflicts(self) -> None:
         view = self.store.exception_register(self.operator, STAFF)
         kinds = {i["kind"] for i in view["items"]}
         self.assertIn("failed_ai_run", kinds)
         self.assertNotIn("source_conflict", kinds)
 
-    def test_unreadable_case_record_is_reported_not_hidden(self):
-        self.case["handoff"] = {"state": "Offered"}
+    def test_unreadable_case_record_is_reported_not_hidden(self) -> None:
+        self.reg_case["handoff"] = {"state": "Offered"}
         view = self.store.exception_register(self.operator, STAFF)
         self.assertTrue(
-            any(self.case["id"] in u and "could not be read" in u for u in view["unrouted"])
+            any(self.reg_case["id"] in u and "could not be read" in u for u in view["unrouted"])
         )
 
-    def test_reading_changes_nothing(self):
+    def test_reading_changes_nothing(self) -> None:
         before = json.dumps(self.store.data["recommendations"], sort_keys=True) + json.dumps(
-            self.case.get("stock_reconciliation"), sort_keys=True
+            self.reg_case.get("stock_reconciliation"), sort_keys=True
         )
         self.store.exception_register(self.steward, STAFF)
         self.store.exception_register(self.steward, STAFF)
         after = json.dumps(self.store.data["recommendations"], sort_keys=True) + json.dumps(
-            self.case.get("stock_reconciliation"), sort_keys=True
+            self.reg_case.get("stock_reconciliation"), sort_keys=True
         )
         self.assertEqual(before, after)
 
-    def test_unnamed_staff_are_refused_and_the_refusal_is_audited(self):
+    def test_unnamed_staff_are_refused_and_the_refusal_is_audited(self) -> None:
         stranger = dict(self.steward, email="other@example.test")
         with self.assertRaises(PermissionError):
             self.store.exception_register(stranger, STAFF)
         self.assertTrue(any(e["action"] == "denied" for e in self.store.audit_entries()))
 
-    def test_view_is_audited(self):
+    def test_view_is_audited(self) -> None:
         self.store.exception_register(self.steward, STAFF)
         self.assertTrue(
             any(e["action"] == "viewed_exception_register" for e in self.store.audit_entries())
         )
 
-    def test_banner_is_unknown_and_unconnected_sources_are_stated(self):
+    def test_banner_is_unknown_and_unconnected_sources_are_stated(self) -> None:
         view = self.store.exception_register(self.steward, STAFF)
         self.assertEqual(view["banner"]["state"], "unknown")
         self.assertIn("Do not assume it is healthy", view["banner"]["text"])
         self.assertTrue(any("Failed imports are not connected" in s for s in view["sources"]))
 
-    def test_no_named_roles_gives_empty_queue_for_managers_only(self):
+    def test_no_named_roles_gives_empty_queue_for_managers_only(self) -> None:
         view = self.store.exception_register(self.pm, {})
         self.assertEqual((view["state"], view["items"]), ("roles_not_named", []))
         with self.assertRaises(PermissionError):
             self.store.exception_register(self.people["Resident Liaison Officer"], {})
 
-    def test_malformed_stock_query_is_reported_and_other_cases_still_route(self):
-        self.case["stock_reconciliation"].append({"id": "SQ-BAD"})
+    def test_malformed_stock_query_is_reported_and_other_cases_still_route(self) -> None:
+        self.reg_case["stock_reconciliation"].append({"id": "SQ-BAD"})
         view = self.store.exception_register(self.steward, STAFF)
         self.assertTrue(
             any(
-                self.case["id"] in u and "stock query could not be read" in u
+                self.reg_case["id"] in u and "stock query could not be read" in u
                 for u in view["unrouted"]
             )
         )
         other = next(
-            c for c in self.store.cases.values() if c is not self.case and not c.get("closed")
+            c for c in self.store.cases.values() if c is not self.reg_case and not c.get("closed")
         )
         other["stock_reconciliation"] = [
             {
@@ -133,17 +138,17 @@ class Register(Base):
         view = self.store.exception_register(self.steward, STAFF)
         self.assertTrue(any(i["original_source"]["case_id"] == other["id"] for i in view["items"]))
 
-    def test_malformed_recommendation_does_not_break_the_operator_view(self):
+    def test_malformed_recommendation_does_not_break_the_operator_view(self) -> None:
         self.store.data["recommendations"].append(None)
         view = self.store.exception_register(self.operator, STAFF)
         self.assertIn("failed_ai_run", {i["kind"] for i in view["items"]})
         self.assertTrue(any("could not be read" in u for u in view["unrouted"]))
 
-    def test_access_roles_show_only_the_callers_own_entry(self):
+    def test_access_roles_show_only_the_callers_own_entry(self) -> None:
         view = self.store.exception_register(self.steward, STAFF)
         self.assertEqual(view["access"]["roles"], {"human0@example.test": ["data_steward"]})
 
-    def test_empty_staff_paths_are_audited(self):
+    def test_empty_staff_paths_are_audited(self) -> None:
         self.store.exception_register(self.pm, {})
         with self.assertRaises(PermissionError):
             self.store.exception_register(self.people["Resident Liaison Officer"], {})
@@ -151,7 +156,7 @@ class Register(Base):
         self.assertIn("viewed_exception_register", actions)
         self.assertIn("denied", actions)
 
-    def test_missing_role_holder_is_reported_not_defaulted(self):
+    def test_missing_role_holder_is_reported_not_defaulted(self) -> None:
         view = self.store.exception_register(
             self.steward, {"human0@example.test": ("data_steward",)}
         )
@@ -159,25 +164,37 @@ class Register(Base):
 
 
 class Config(unittest.TestCase):
-    def test_parses_valid_staff(self):
+    def test_parses_valid_staff(self) -> None:
         env = {exception_register.STAFF_ENV: json.dumps({"A@x.test": ["data_steward"]})}
         self.assertEqual(staff_from_env(env), {"a@x.test": ("data_steward",)})
 
-    def test_bad_input_names_nobody(self):
+    def test_bad_input_names_nobody(self) -> None:
         for raw in ("", "{", "[]", json.dumps({"a": ["admin"]}), json.dumps({"a": []})):
             self.assertEqual(staff_from_env({exception_register.STAFF_ENV: raw}), {}, raw)
 
 
 class Endpoint(unittest.TestCase):
-    setUpClass = classmethod(Matrix.setUpClass.__func__)
-    tearDownClass = classmethod(Matrix.tearDownClass.__func__)
-    session = Matrix.session
-    call = Matrix.call
+    store: Any
 
-    def staff_env(self, mapping):
+    @classmethod
+    def setUpClass(cls) -> None:
+        MatrixHarness.setUpClass.__func__(cls)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        MatrixHarness.tearDownClass.__func__(cls)
+
+    def session(self, email: str) -> str:
+        return str(MatrixHarness.session(self, email))
+
+    def call(self, ck: str, path: str, body: Any = None) -> tuple[int, str]:
+        code, text = MatrixHarness.call(self, ck, path, body)
+        return int(code), str(text)
+
+    def staff_env(self, mapping: dict[str, list[str]]) -> Any:
         return mock.patch.dict("os.environ", {exception_register.STAFF_ENV: json.dumps(mapping)})
 
-    def test_named_steward_gets_scoped_content_and_others_are_refused_and_audited(self):
+    def test_named_steward_gets_scoped_content_and_others_are_refused_and_audited(self) -> None:
         steward, other = self.session("u1@example.test"), self.session("u2@example.test")
         self.store.cases["ZF-1"]["closed"] = False
         self.store.cases["ZF-1"]["stock_reconciliation"] = [
@@ -201,7 +218,7 @@ class Endpoint(unittest.TestCase):
         )
         self.assertTrue(any(e["action"] == "viewed_exception_register" for e in entries))
 
-    def test_other_staff_emails_are_not_exposed_to_a_named_operator(self):
+    def test_other_staff_emails_are_not_exposed_to_a_named_operator(self) -> None:
         with self.staff_env(
             {"u1@example.test": ["data_steward"], "u2@example.test": ["digital_operator"]}
         ):
@@ -209,7 +226,7 @@ class Endpoint(unittest.TestCase):
         self.assertEqual(code, 200)
         self.assertNotIn("u1@example.test", text)
 
-    def test_with_nobody_named_only_managers_see_the_empty_state(self):
+    def test_with_nobody_named_only_managers_see_the_empty_state(self) -> None:
         with mock.patch.dict("os.environ", {}, clear=False):
             os.environ.pop(exception_register.STAFF_ENV, None)
             for role in ROLES:
@@ -222,7 +239,7 @@ class Endpoint(unittest.TestCase):
                 else:
                     self.assertEqual(code, 403, role)
 
-    def test_unauthenticated_is_refused(self):
+    def test_unauthenticated_is_refused(self) -> None:
         self.assertIn(self.call("", "/api/exceptions")[0], (401, 403))
 
 

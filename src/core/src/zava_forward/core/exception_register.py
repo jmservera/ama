@@ -134,20 +134,20 @@ class ExceptionRegisterMixin:
                             handoff=handoff_view(case),  # type: ignore[no-untyped-call]
                         )
                         row = handoff_ageing(case, as_of)  # type: ignore[no-untyped-call]
-                    except (KeyError, TypeError, ValueError):
+                        feed_stranded_tasks(queue, overdue, operator)
+                        if row:
+                            feed_unaccepted_handoffs(queue, [row], operator)
+                    except (KeyError, TypeError, ValueError, AttributeError):
                         unrouted.append(
                             f"Case {self._case_label(case)}: task or handoff record could "
                             "not be read, so stranded work is not checked. Open the case."
                         )
-                        continue
-                    feed_stranded_tasks(queue, overdue, operator)
-                    if row:
-                        feed_unaccepted_handoffs(queue, [row], operator)
             else:
                 unrouted.append("No named digital operator: failed runs and tasks are not routed.")
         items = queue.queue(email)
         report = queue.access_report(email)
-        self._audit_register(email, "viewed_exception_register", f"items={len(items)}")
+        with self.lock:
+            self._audit_register(email, "viewed_exception_register", f"items={len(items)}")
         return {
             "state": "ok",
             "items": items,
