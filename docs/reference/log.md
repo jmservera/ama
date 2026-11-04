@@ -10290,6 +10290,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Implemented phase 2 of `docs/reference/research/ux/resident-demo-redesign-2026-11-04.md`: the sensors section below the help sections with a clearly labelled deterministic 24-hour synthetic forecast, a stale state, and a fix so `infra/sql/resident-showcase.sql` also reads the dataset's `synthetic_stock_anchor_id` stock link (source text only; T-SQL not compiled, live view not applied). Documented in `src/api/README.md`. The live demo still needs the sensor tables and a re-applied view, and the backfill ends 2026-09-30; both are owner-gated and not done.
 
+## [2026-11-04] update | Aftercare intake form definition and register snapshot (Refs #133)
+
+* Documented in `src/core/README.md` the plain-language household intake definition and a checked JSON snapshot restore for the aftercare register. No store, API or UI is wired; criteria 1, 2, 4, 5 and 6 remain unmet or partial, and 3 is proven only at register level. Evidence under `.copilot-tracking/*/2026-11-04-issue-133-intake-snapshot-*.md`.
 ## [2026-11-04] update | Sensor status text mirror (Refs #111)
 
 * Added pure `sensor_status_text` in `src/core`: one plain-language status per signal, with the map and accessible list built from the same entries (AC-067 text mirror). No readings, identifiers, diagnosis or priority change; each state names the manual route. Unit-tested only. Unmet: task-queue wiring, rule approval, R1 to R3, SQL Server run. Evidence under `.copilot-tracking/` (2026-11-04 issue-111 r3).

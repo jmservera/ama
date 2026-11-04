@@ -4488,6 +4488,13 @@ changes the concern, its outcome or its remedy, and a sensor reading never appea
 task `aftercare-concern-pack` is registered in `ai_registry` as an unapproved, disabled proposal
 task with a manual route and no model binding (FR-036).
 
+`intake_form()` returns the plain-language household route (who is raising it, representative
+basis, concern kind, own-words statement, and the phone, in-person, paper and assisted-visit
+channels) for a screen or paper form to follow, and `intake_errors(values)` returns plain,
+per-field problems. `to_state()` and `AftercareRegister.from_state()` give a JSON-safe snapshot for
+a later store; a restore is refused if it would mark a concern sensor-dismissed, give an outcome a
+non-human basis, or orphan a pack.
+
 Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), evaluator role access
 and the DPO position on outcome data (both open), a model route for the pack summary (needs
 release evidence and owner approval), and a pack screen. Tests: `src/core/tests/test_aftercare.py`.
