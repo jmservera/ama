@@ -1741,6 +1741,9 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(
             self.store.cases["ZF-1"]["measure_decisions"][MEASURES[0]][-1]["status"], "Withdrawn"
         )
+        review = self.store.cases["ZF-1"]["service_requests"][-1]
+        self.assertEqual(review["review_decision_version"], self.current_decision_version())
+        self.assertEqual(self.current_decision_version(), 2)
 
     def commitment(self, **kw: Any) -> None:
         body = dict(
@@ -1779,13 +1782,16 @@ class JsonResidentDecisions(unittest.TestCase):
                     self.store.data["staff"][index] = copy.deepcopy(actor)
             self.store.save()
 
+    def current_decision_version(self, measure: str = MEASURES[0]) -> int:
+        return len(self.store.cases["ZF-1"]["measure_decisions"][measure])
+
     def review_body(self, **kw: Any) -> dict[str, Any]:
         return dict(
             dict(
                 action="service_open",
                 route="Independent review",
                 review_measure=MEASURES[0],
-                review_decision_version=1,
+                review_decision_version=self.current_decision_version(),
                 review_reference="SYN recorded decision",
                 summary="SYN review",
                 desired_outcome="SYN independent person",
@@ -1943,7 +1949,7 @@ class JsonResidentDecisions(unittest.TestCase):
                 source="SYN newer version by different recorder",
             ),
         )
-        self.store.resident_action(self.pam, "ZF-1", self.review_body())
+        self.store.resident_action(self.pam, "ZF-1", self.review_body(review_decision_version=1))
         self.assertEqual(
             self.store.cases["ZF-1"]["service_requests"][2]["reviewed_identity"],
             original["recorder_identity"],
