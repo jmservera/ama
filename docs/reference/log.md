@@ -10380,6 +10380,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
 
+## [2026-11-04] update | Issue 176 status record (Refs #176)
+
+* Rechecked merged PRs 237, 257, 309, 368, 633, 703, 843 and 1052. All available generators replay byte for byte; criteria 1 and 2 stay unmet only because the original private stock register generator and pinned inputs are absent. Added a status record to the retrofit synthetic data README.
 ## [2026-11-04] update | Second design traceability delta (Refs #156)
 
 * Added a second dated delta to the
@@ -10407,10 +10410,31 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 508, 637, 707, 845 and 1092. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: owner, time limit and alert reference are enforced offline, but a live Azure budget alert and notification are not verified (#146, human/Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-189 r2).
 
+## [2026-11-04] update | Issue 149 UX epic status (Refs #149)
+
+* Rechecked merged child PRs: only #150 is closed (1/16). All four epic criteria stay unmet: #440 stabilization triage, child acceptance, recorded human accessibility/content/usability results, and full design traceability. Remaining steps need owner decisions and named human testers. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-149 r1).
+## [2026-11-04] update | Issue 148 status record (Refs #148)
+
+* Rechecked merged PRs 511 and 672: criteria 1 to 3 are delivered against a fake az. Criterion 4 stays unmet: dry-run exists but no disposable Azure rebuild or teardown run has been done or authorised; workload-sql and model stages remain operator-gated. Corrected a stale "no Azure adapter" line in the orchestrator README. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-148 r1).
 ## [2026-11-04] update | Issue 155 usability programme status (Refs #155)
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
 
+## [2026-11-04] update | Issue 137 environment strategy status (Refs #137)
+
+* Rechecked merged PRs 306, 346 and 415. Criteria 1, 2, 3 and 5 are delivered. Criterion 4 stays unmet: region and capacity are parameters with fail-closed guards, but no authenticated live region and quota check exists (SQL and model usage, IoT quota, ACA zone evidence and subscription binding are unknown; owner and Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-137 r1).
+## [2026-11-04] update | Issue 124 Phase 0 discovery status (Refs #124)
+
+* Rechecked merged PRs 895 and 1030: they delivered synthetic rules and analysis only. All four criteria stay unmet or label-only and need human steps (sponsor nomination, owner validation, approved extract). Nothing was ticked or closed. Added a status section to the [discovery brief](../brds/retrofit-flow-discovery-brief.md). Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-124 r3).
+## [2026-11-04] update | Issue 114 Azure SQL store status (Refs #114)
+
+* Rechecked merged PRs 262, 403 and 908. They delivered offline per-year digests, a hardened load-check evidence contract and fail-closed digest verification, proven on SQLite only. All three criteria stay unmet: annual ledger reliance on Azure SQL, measured Azure load, latency and cost, and a witnessed DH-005 restore and deletion drill all need Azure or human steps. Nothing was ticked or closed. Docs-only record in the parity matrix; evidence under `.copilot-tracking/` (2026-11-04 issue-114 r1).
+## [2026-11-04] update | Issue 115 status record (Refs #115)
+
+* Rechecked merged PRs 268, 404 and 916. Offline publication, verification, anchor checks and the read-only reconcile are delivered, but both criteria stay unmet: no owner-approved irreversible retention lock (exercise stays unlocked by the 2026-10-15 decision) and no hosted scheduled verification, alert delivery or recovery evidence (human/Azure steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-115 r2).
+## [2026-11-04] update | Issue 118 hardened deployment status (Refs #118)
+
+* Rechecked merged PRs 347 and 614. Criteria 1 to 4 are delivered. Criterion 5 stays unmet: Policy is audit-only and Defender plans are defined but not activated; cost approval is pending in `infra/defender-decision.json` (owner decision, no Azure or code step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-118 r1).
 ## [2026-11-04] update | Issue 123 epic status record (Refs #123)
 
 * Rechecked merged PRs 894, 895, 899, 901, 905, 1015 and the 928 checkpoint. The 928 record listed 894, 895, 901 and 905 as open; they are now merged, delivering offline readiness, register, ownership-routing and AI cost-line code for #125, #124, #128 and #126. Both epic criteria stay unmet: #440 is still open (finding triage and independent review artifacts unchecked) and children 124, 125, 126, 128, 129 remain open, needing owner nominations, DPIA and lawful basis, human accessibility and research sessions, and Atlas owner confirmation. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-123 status record).
@@ -10424,3 +10448,21 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Finance queue shows the exposure pause signal (Refs #99)
 
 * The Finance queue now shows the read-only `GET /api/finance/exposure` signal with a manual-check message when it is unavailable; it offers no approve, resume or accelerate control. Criteria 1 and 2 of issue 99 stay unmet: no Board-approved envelope or tolerances exist (human step) and no actual breach control is evidenced. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-99 exposure screen).
+## [2026-11-04] update | Issue 159 status record (Refs #159)
+
+* Rechecked merged PRs 305, 307, 556, 661, 840, 1003 and 927 and open PR 1085 (validation-refused unstored asks; its rubric activation check failed and it needs review). Criteria 1 to 5 stay ticked. Criterion 6 stays unmet: no named human screen-reader and announcement run. The tokenomics criterion stays unmet: 401 without an actor and route-level key validation record no receipt, and cost is Unknown while OD-51 is open. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-159 status record).
+## [2026-11-04] update | Issue 142 status record (Refs #142)
+
+* Rechecked merged PRs 265 and 681. The inventory, expiry windows, rotation ordering model, access review generator and status check are delivered and tested offline. Criteria 1 to 3 stay unmet: they need named owners, a live no-downtime rotation exercise, an executed signed access review with a schedule, and alert evaluation confirmed in Azure Monitor (human/Azure steps owned by the owner). Criterion 4 was already ticked. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-142 r2).
+## [2026-11-04] update | Issue 79 status record (Refs #79)
+
+* Rechecked merged PRs 896, 1039, 1047 and 1096. Archive, manager publish and verify endpoints and sign-off status derivation exist, but criteria 3 and 4 stay unmet: no owner named and the rule order is an unsigned draft (human decision); no scheduler configured, no retention period set (Azure and Legal steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-79 r3).
+## [2026-11-04] update | Issue 107 status record (Refs #107)
+
+* Rechecked merged PRs 287, 293, 301, 863, 913 and 915 and open PR 1095. Quarantine and suspension on an unexpected serving model and independent-connection revocation are already tested locally. Unmet: RAI release record approvals (OQ-017), authoritative serving-version attestation, Azure SQL race evidence and delivered-build evidence, plus Tokenomics usage attribution until PR 1095 merges. These need human, Azure or legal steps; no code change.
+## [2026-11-04] update | Issue 98 status record (Refs #98)
+
+* Rechecked merged PRs 377, 424, 510, 888 and 1083. Criteria 1 and 4 stay ticked. Criteria 2 and 3 stay unmet: validation is structural and draft-only, and only Held diagnostic exports exist, because approved rules and an approved template need human Finance authority (FD-01 to FD-14; #96, #97). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-98 r2).
+## [2026-11-04] update | Issue 110 status record (Refs #110)
+
+* Rechecked merged PRs 411, 508 and 910. Criteria 2 to 5 stay ticked. Criterion 1 stays unmet: offline per-device identity, schema version and stable reading ID code and tests exist, but no real distinct Hub identities were issued and no live stream was observed (tier, sizing, cost, network and device credential owner decisions; #140; human/Azure steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-110 r2).
