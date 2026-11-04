@@ -152,7 +152,7 @@ def shared_session_checks(
         second.get_by_label("Email address").fill("one@example.com")
         second.get_by_label("Password", exact=True).fill(FAKE_PASSWORD)
         second.get_by_role("button", name="Sign in", exact=True).click()
-        expect(second.locator("#status")).to_have_text("Loading your progress\u2026")
+        expect(second.locator("#status")).to_contain_text("Signing you in")
         expect(first.locator("#signin")).to_be_visible()
         sign_in(first, "two@example.com")
         expect(second.locator("#signin")).to_be_visible()

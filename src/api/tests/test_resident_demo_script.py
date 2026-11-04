@@ -62,6 +62,8 @@ const out = () => ({
   signinErrorHidden: get("signin-error").hidden, email: {...get("email").attrs},
   password: {...get("password").attrs}, lede: get("lede").textContent,
   errorText: get("error-text").textContent, signinHidden: get("signin").hidden,
+  busy: get("main").attrs["aria-busy"] ?? null, statusClass: get("status").className,
+  emailValue: get("email").value, passwordValue: get("password").value,
 });
 (async () => {
   if (scenario === "slow") {
@@ -91,6 +93,20 @@ const out = () => ({
     get("password").fire("input");
     const cleared = out();
     console.log(JSON.stringify({both, passwordOnly, cleared}));
+  } else if (scenario === "loading" || scenario === "badlogin") {
+    pending[0].resolve(respond(200, {authenticated: false, csrf: "c"}));
+    await tick();
+    get("email").value = "a@example.com";
+    get("password").value = "secret";
+    get("signin-form").fire("submit", {preventDefault() {}});
+    const loading = out();
+    const slowTimer = timers.filter(t => t.live && t.ms === 4000).at(-1);
+    slowTimer.f();
+    const slow = out();
+    pending.at(-1).resolve(respond(401, {error: "Email or password not recognised."}));
+    await tick();
+    await tick();
+    console.log(JSON.stringify({loading, slow, after: out()}));
   } else if (scenario === "signout") {
     pending[0].resolve(respond(200, {authenticated: false, csrf: "c"}));
     await tick();
@@ -143,6 +159,22 @@ class ResidentDemoScriptTests(unittest.TestCase):
         self.assertEqual(only["password"]["aria-invalid"], "true")
         self.assertEqual(only["focus"], ["password"])
         self.assertEqual(got["cleared"]["password"], {})
+
+    def test_sign_in_shows_only_the_loading_state_then_restores_form(self) -> None:
+        got = run("loading")
+        loading = got["loading"]
+        self.assertTrue(loading["signinHidden"])
+        self.assertEqual(loading["busy"], "true")
+        self.assertIn("loading-card", loading["statusClass"])
+        self.assertIn("Signing you in", loading["status"])
+        self.assertIn("can take up to 30 seconds", got["slow"]["status"])
+        after = got["after"]
+        self.assertFalse(after["signinHidden"])
+        self.assertIsNone(after["busy"])
+        self.assertEqual(after["emailValue"], "a@example.com")
+        self.assertEqual(after["passwordValue"], "")
+        self.assertEqual(after["signinError"], "Email or password not recognised.")
+        self.assertEqual(after["focus"][-1], "signin-error")
 
     def test_failed_sign_out_keeps_the_30_minute_fact_in_short_copy(self) -> None:
         text = run("signout")["failed"]["errorText"]

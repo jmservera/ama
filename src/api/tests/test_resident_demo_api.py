@@ -198,14 +198,22 @@ class SignInTests(DemoTestCase):
                 "account",
                 "read_only",
                 "home",
+                "stage",
                 "measures",
                 "sensors",
                 "progress",
                 "next_step",
+                "timeline",
+                "documents",
+                "needed",
+                "summary",
                 "unavailable",
                 "help",
             },
         )
+        self.assertEqual(view["summary"]["label"], "Summary by rules. Not an instruction.")
+        self.assertIn("C-1 Test Street", view["summary"]["text"])
+        self.assertEqual(len(view["timeline"]), 6)
         text = json.dumps(view)
         self.assertEqual(view["account"], {"email": "one@example.com"})
         for hidden in ("two@example.com", "case_id", "C-2", "provenance"):

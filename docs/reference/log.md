@@ -10277,3 +10277,11 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Sensor stream joins the determinism audit (Refs #176)
 
 * Added `generator_revision` to the sensor stream descriptor and a `sensor-stream` replay to the audit. See the retrofit synthetic data README. Issue 176 criteria 1 and 2 stay unmet because the original stock register generator is absent.
+
+## [2026-11-04] update | Resident demo UX redesign specification (Refs #462)
+
+* Added `docs/reference/research/ux/resident-demo-redesign-2026-11-04.md` and indexed it in `docs/reference/README.md` for the 2026-11-04 owner live-demo feedback on `src/api/src/zava_forward/api/resident_demo/web/`: hide `#signin` during login submission with an accessible loading state and restore the form with the typed email preserved on error; change `#account > summary` to an icon-only button (`aria-label="Account"`, `title="Account"`, 44px target); reorganise the page with sticky section navigation, a top case summary (deterministic rules summary by default, optional resident-consented AI summary with source links and deterministic fallback, no decision authority), status/actions/timeline/documents/funding hierarchy with inline SVG icons paired with text, and relocated home sensors (`temperature_c`, `humidity_pct`) with a 24-hour synthetic forecast, accessible table/summary equivalents, and non-diagnostic framing. Design specification only; no application code modified and no human/AT acceptance claimed.
+
+## [2026-11-04] update | Resident demo UX redesign phase 1 implemented (Refs #462)
+
+* Implemented phase 1 of `docs/reference/research/ux/resident-demo-redesign-2026-11-04.md` in the resident showcase page: loading-only sign-in, icon-only `Account` button, sticky section navigation, reorganised hierarchy and a rules-based case summary with an optional consented AI summary and fallback. Documented in `src/api/README.md`. Local candidate only; copy review (#153), resident usability (#155) and screen-reader checks remain outstanding.

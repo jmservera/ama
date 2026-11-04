@@ -14,7 +14,11 @@
   var lede = document.getElementById("lede");
   var emailField = document.getElementById("email");
   var passwordField = document.getElementById("password");
+  var mainEl = document.getElementById("main");
   var csrf = "";
+  var loading = false;
+  var loadingTimer = null;
+  var pendingNotice = "";
   var sessionId = "";
   var transition = 0;
   var sessionChannel = new BroadcastChannel("resident-demo-session");
@@ -39,6 +43,29 @@
   }
   emailField.addEventListener("input", clearInvalid);
   passwordField.addEventListener("input", clearInvalid);
+
+  var SLOW_COPY = "Still signing you in. The showcase may be waking up, which can take up to 30 seconds. Please wait.";
+
+  function beginLoading(text) {
+    endLoading();
+    loading = true;
+    signin.hidden = true;
+    errorEl.hidden = true;
+    mainEl.setAttribute("aria-busy", "true");
+    statusEl.className = "status loading-card";
+    statusEl.textContent = text;
+    loadingTimer = setTimeout(function () {
+      if (loading) statusEl.textContent = SLOW_COPY;
+    }, 4000);
+  }
+
+  function endLoading() {
+    loading = false;
+    if (loadingTimer !== null) clearTimeout(loadingTimer);
+    loadingTimer = null;
+    mainEl.removeAttribute("aria-busy");
+    statusEl.className = "status";
+  }
 
   function clearPersonal() {
     transition += 1;
@@ -78,6 +105,46 @@
     section.setAttribute("aria-labelledby", heading.id);
     section.appendChild(heading);
     return section;
+  }
+
+  var ICONS = {
+    list: [["path", { d: "M7 5h9M7 10h9M7 15h9" }], ["circle", { cx: 3.5, cy: 5, r: 1 }], ["circle", { cx: 3.5, cy: 10, r: 1 }], ["circle", { cx: 3.5, cy: 15, r: 1 }]],
+    sparkle: [["path", { d: "M9 2l1.7 4.8L15.5 8.5l-4.8 1.7L9 15l-1.7-4.8L2.5 8.5l4.8-1.7z" }], ["path", { d: "M16 12.5l.7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7z" }]],
+    check: [["circle", { cx: 10, cy: 10, r: 7.5 }], ["path", { d: "M6.5 10.5l2.2 2.2 4.8-5" }]],
+    clock: [["circle", { cx: 10, cy: 10, r: 7.5 }], ["path", { d: "M10 6v4.5l3 1.5" }]],
+    alert: [["path", { d: "M10 3L2 17h16L10 3z" }], ["path", { d: "M10 8v4M10 14.5v.5" }]],
+    ban: [["circle", { cx: 10, cy: 10, r: 7.5 }], ["path", { d: "M4.7 4.7l10.6 10.6" }]],
+    home: [["path", { d: "M3 9.5L10 3l7 6.5V17H3V9.5z" }]],
+    document: [["path", { d: "M5 2.5h7l3 3v12H5z" }], ["path", { d: "M12 2.5v3h3" }]],
+    info: [["circle", { cx: 10, cy: 10, r: 7.5 }], ["path", { d: "M10 9v5M10 6v.5" }]],
+    phone: [["path", { d: "M5 3h3l1.5 4-2 1.2a9 9 0 004.3 4.3L13 10.5l4 1.5v3a2 2 0 01-2 2A12 12 0 013 5a2 2 0 012-2z" }]],
+    summary: [["path", { d: "M4 4h12v12H4z" }], ["path", { d: "M7 8h6M7 12h4" }]],
+    funding: [["circle", { cx: 10, cy: 10, r: 7.5 }], ["path", { d: "M12 7.5c-.5-.7-1.3-1-2-1-1.2 0-2 .6-2 1.5s.8 1.3 2 1.6 2 .7 2 1.6-.8 1.5-2 1.5c-.8 0-1.6-.3-2-1M10 5v10" }]],
+    timeline: [["path", { d: "M3 10h14" }], ["circle", { cx: 5, cy: 10, r: 2 }], ["circle", { cx: 10, cy: 10, r: 2 }], ["circle", { cx: 15, cy: 10, r: 2 }]],
+    sensors: [["path", { d: "M10 3v8.5a3 3 0 11-2 0V3a1 1 0 012 0z" }]]
+  };
+
+  function icon(name) {
+    var svg = svgEl("svg", { viewBox: "0 0 20 20", width: 20, height: 20, "class": "icon", "aria-hidden": "true", focusable: "false" });
+    (ICONS[name] || []).forEach(function (part) { svg.appendChild(svgEl(part[0], part[1])); });
+    return svg;
+  }
+
+  function withIcon(parent, name, text) {
+    parent.appendChild(icon(name));
+    parent.appendChild(document.createTextNode(" " + text));
+    return parent;
+  }
+
+  function badge(name, text, tone) {
+    return withIcon(el("span", null, "status-badge" + (tone ? " " + tone : "")), name, text);
+  }
+
+  function sectionCard(id, title, cls, iconName) {
+    var node = card(title, cls);
+    node.id = id;
+    if (iconName) node.querySelector("h2").insertBefore(icon(iconName), node.querySelector("h2").firstChild);
+    return node;
   }
 
   var sensorMetrics = [
@@ -238,40 +305,290 @@
     return section;
   }
 
+  var NAV = [
+    ["sec-summary", "Summary", "summary"], ["sec-status", "Status", "clock"], ["sec-actions", "Needed from you", "alert"],
+    ["sec-timeline", "Timeline", "timeline"], ["sec-documents", "Documents", "document"], ["sec-funding", "Funding", "funding"],
+    ["sec-help", "Help and callbacks", "phone"], ["sec-sensors", "Sensors", "sensors"], ["sec-unavailable", "Showcase limits", "ban"]
+  ];
+  var STATE_TEXT = { completed: "Completed", current: "Current stage", upcoming: "Not started", unknown: "Not shown" };
+  var STATE_ICON = { completed: "check", current: "clock", upcoming: "ban", unknown: "info" };
+
+  function sectionNav() {
+    var nav = el("nav", null, "section-nav");
+    nav.id = "page-nav";
+    nav.setAttribute("aria-label", "Page sections");
+    var list = el("ul");
+    NAV.forEach(function (item, index) {
+      var li = el("li");
+      var a = withIcon(el("a"), item[2], item[1]);
+      a.href = "#" + item[0];
+      if (index === 0) a.setAttribute("aria-current", "location");
+      a.addEventListener("click", function () {
+        list.querySelectorAll("a").forEach(function (other) { other.removeAttribute("aria-current"); });
+        a.setAttribute("aria-current", "location");
+      });
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+    nav.appendChild(list);
+    return nav;
+  }
+
+  function linkList(sources) {
+    var ul = el("ul");
+    sources.forEach(function (source) {
+      var li = el("li");
+      var a = el("a", source.label);
+      a.href = source.href;
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    return ul;
+  }
+
+  function summarySection(view) {
+    var box = sectionCard("sec-summary", "Case summary", "summary-card", "summary");
+    var rules = view.summary;
+    var generation = 0;
+    box.appendChild(el("p", "Based only on the recorded facts shown on this page for your home. Neither rules nor AI can make decisions, approve documents, book works, or give consent.", "scope"));
+    var badgeRow = el("p");
+    var body = el("p");
+    var disclaimer = el("p", null, "scope");
+    var sourceHead = el("p", "Sources in your record:");
+    var links = linkList(rules.sources);
+    var aiSources = el("div");
+    var consentLabel = el("label", null, "check");
+    var consent = el("input");
+    consent.type = "checkbox";
+    consent.id = "summary-ai-consent";
+    consent.name = "summary-ai-consent";
+    consent.setAttribute("aria-describedby", "summary-status");
+    consentLabel.appendChild(consent);
+    consentLabel.appendChild(el("span", "Use my own case record to generate an AI summary (optional). This is not consent to works."));
+    var actions = el("div", null, "summary-ai-actions");
+    var generate = el("button", "Generate AI summary");
+    generate.type = "button";
+    generate.id = "summary-ai-button";
+    var back = el("button", "Show rules summary instead", "secondary");
+    back.type = "button";
+    back.hidden = true;
+    actions.appendChild(generate);
+    actions.appendChild(back);
+    var status = el("p");
+    status.id = "summary-status";
+    status.setAttribute("role", "status");
+    status.setAttribute("aria-live", "polite");
+
+    function showRules(note) {
+      generation += 1;
+      box.className = "card summary-card";
+      badgeRow.textContent = "";
+      badgeRow.appendChild(badge("list", rules.label));
+      body.textContent = rules.text;
+      disclaimer.textContent = "";
+      aiSources.textContent = "";
+      back.hidden = true;
+      generate.disabled = false;
+      box.removeAttribute("aria-busy");
+      status.textContent = note || "";
+    }
+
+    function showAi(result) {
+      box.className = "card summary-card ai";
+      badgeRow.textContent = "";
+      badgeRow.appendChild(badge("sparkle", "AI suggestion, not approved. Not an instruction.", "caution"));
+      body.textContent = result.answer;
+      disclaimer.textContent = "AI-generated content may be incorrect. Check the linked sections below. AI cannot make decisions, approve documents, or change your case.";
+      aiSources.textContent = "";
+      if (result.sources && result.sources.length) {
+        aiSources.appendChild(el("p", "Record facts the AI used:"));
+        var ul = el("ul");
+        result.sources.forEach(function (text) { ul.appendChild(el("li", text)); });
+        aiSources.appendChild(ul);
+      }
+      back.hidden = false;
+      status.textContent = "AI summary ready. It is a suggestion, not approved.";
+    }
+
+    function reason(label) {
+      var marker = "AI unavailable: ";
+      var at = label ? label.indexOf(marker) : -1;
+      if (at >= 0) return label.slice(at + marker.length);
+      return label && label.indexOf("not enabled") >= 0 ? "AI is not enabled" : "the assistant could not be reached";
+    }
+
+    function fallback(why) {
+      showRules("AI summary is not available right now (" + why + "). Showing the rules-based summary from your recorded case facts instead.");
+    }
+
+    generate.addEventListener("click", function () {
+      if (generate.disabled) return;
+      if (!consent.checked) {
+        consent.setAttribute("aria-invalid", "true");
+        status.textContent = "Agree to use your own case record before requesting an AI summary.";
+        consent.focus();
+        return;
+      }
+      consent.removeAttribute("aria-invalid");
+      var current = ++generation;
+      var held = transition;
+      generate.disabled = true;
+      box.setAttribute("aria-busy", "true");
+      status.textContent = "Generating AI case summary\u2026";
+      api("/demo/assistant", { method: "POST", body: JSON.stringify({ topic: "status", use_record: true }) }).then(function (res) {
+        if (current !== generation || held !== transition) return;
+        if (res.status === 401) { showSignin("Please sign in again."); return; }
+        if (res.ok && res.body.label && res.body.label.indexOf("AI") === 0) { generate.disabled = false; box.removeAttribute("aria-busy"); showAi(res.body); return; }
+        fallback(res.ok ? reason(res.body.label) : "the assistant could not be reached");
+      }).catch(function () {
+        if (current === generation && held === transition) fallback("the assistant could not be reached");
+      });
+    });
+    consent.addEventListener("change", function () {
+      if (consent.checked) { consent.removeAttribute("aria-invalid"); return; }
+      showRules("Record use for AI summary stopped. Showing the rules-based summary.");
+    });
+    back.addEventListener("click", function () {
+      showRules("Showing the rules-based summary.");
+      generate.focus();
+    });
+
+    box.appendChild(badgeRow);
+    box.appendChild(body);
+    box.appendChild(disclaimer);
+    box.appendChild(sourceHead);
+    box.appendChild(links);
+    box.appendChild(aiSources);
+    box.appendChild(consentLabel);
+    box.appendChild(actions);
+    box.appendChild(status);
+    showRules("");
+    return box;
+  }
+
+  function statusSection(view) {
+    var box = sectionCard("sec-status", "Current status and next step", "", "clock");
+    if (view.stage) box.appendChild(el("p")).appendChild(badge("clock", "Stage: " + view.stage));
+    if (view.progress) {
+      box.appendChild(el("h3", "Where things are"));
+      box.appendChild(el("p", view.progress));
+    }
+    if (view.closed) box.appendChild(el("p")).appendChild(badge("check", view.closed, "ok"));
+    if (view.next_step) {
+      box.appendChild(el("h3", "What happens next"));
+      box.appendChild(el("p", view.next_step));
+    }
+    return box;
+  }
+
+  function actionsSection(view) {
+    var box = sectionCard("sec-actions", "What is needed from you", "", "alert");
+    var needed = view.needed || [];
+    if (!needed.length) {
+      box.appendChild(el("p")).appendChild(badge("check", "No action needed", "ok"));
+      box.appendChild(el("p", "Nothing is needed from you right now. Zava North Homes is working on the current step. We will contact you if we need anything."));
+    } else {
+      box.appendChild(el("p")).appendChild(badge("alert", needed.length + (needed.length === 1 ? " item needs" : " items need") + " your attention", "caution"));
+      var ul = el("ul", null, "needed");
+      needed.forEach(function (item) { withIcon(ul.appendChild(el("li")), "alert", ""); ul.lastChild.lastChild.textContent = ""; ul.lastChild.appendChild(el("span", item.text)); });
+      box.appendChild(ul);
+    }
+    var optional = el("p", "Optional: ");
+    var link = el("a", "Book a synthetic callback");
+    link.href = "#sec-help";
+    optional.appendChild(link);
+    box.appendChild(optional);
+    return box;
+  }
+
+  function timelineSection(view) {
+    var box = sectionCard("sec-timeline", "Case timeline and planned improvements", "", "timeline");
+    var steps = el("ol", null, "stepper");
+    (view.timeline || []).forEach(function (step, index) {
+      var li = el("li", null, "step " + step.state);
+      if (step.state === "current") li.setAttribute("aria-current", "step");
+      li.appendChild(el("span", (index + 1) + ". " + step.name));
+      withIcon(li.appendChild(el("span", null, "state")), STATE_ICON[step.state], STATE_TEXT[step.state]);
+      steps.appendChild(li);
+    });
+    box.appendChild(steps);
+    box.appendChild(el("h3", "Planned improvements"));
+    if (view.measures && view.measures.length) {
+      var ul = el("ul", null, "doc-list");
+      view.measures.forEach(function (m) { withIcon(ul.appendChild(el("li", null, "doc-item")), "home", m); });
+      box.appendChild(ul);
+    } else {
+      box.appendChild(el("p", "No planned improvements are recorded for your home in this view."));
+    }
+    return box;
+  }
+
+  function documentsSection(view) {
+    var box = sectionCard("sec-documents", "Documents and checks", "", "document");
+    box.appendChild(el("p", "These are recorded facts from your case file, not a decision that any document is approved. A clean file check only means the file was scanned; a person still needs to review it. Uploading or downloading files is not available in this showcase."));
+    var docs = view.documents || {};
+    box.appendChild(el("h3", "Requested documents"));
+    if (docs.requests === null || docs.requests === undefined) {
+      box.appendChild(el("p", "This view does not show which documents have been requested for your case."));
+    } else if (!docs.requests.length) {
+      box.appendChild(el("p", "No document requests are recorded for your case."));
+    } else {
+      var rl = el("ul", null, "doc-list");
+      docs.requests.forEach(function (r) {
+        var li = rl.appendChild(el("li", null, "doc-item"));
+        li.appendChild(el("strong", r.kind + " (" + r.id + ") "));
+        li.appendChild(badge(r.state === "missing" ? "alert" : r.state === "provided" ? "check" : "info", r.state_label, r.state === "missing" ? "caution" : ""));
+        li.appendChild(el("p", "How to provide it: " + r.how_to_provide));
+      });
+      box.appendChild(rl);
+    }
+    box.appendChild(el("h3", "Presented documents on file"));
+    if (docs.presented === null || docs.presented === undefined) {
+      box.appendChild(el("p", "Presented documents and their file checks are not shown in this view."));
+    } else if (!docs.presented.length) {
+      box.appendChild(el("p", "No presented documents are recorded in this view."));
+    } else {
+      var pl = el("ul", null, "doc-list");
+      docs.presented.forEach(function (d) {
+        var li = pl.appendChild(el("li", null, "doc-item"));
+        li.appendChild(el("strong", d.kind + " (" + d.id + ") "));
+        li.appendChild(badge("document", d.status_label));
+        var bad = d.scan_status === "pending" || d.scan_status === "infected" || d.scan_status === "mismatch";
+        li.appendChild(el("p")).appendChild(badge(bad ? "alert" : d.scan_status === "clean" ? "check" : "info", d.scan_label, bad ? "warn" : ""));
+        (d.issues || []).forEach(function (issue) { li.appendChild(el("p", issue.severity.charAt(0).toUpperCase() + issue.severity.slice(1) + ": " + issue.message)); });
+      });
+      box.appendChild(pl);
+    }
+    return box;
+  }
+
+  function fundingSection() {
+    var box = sectionCard("sec-funding", "Funding and household costs", "", "funding");
+    box.appendChild(el("p", "Programme funding and grant checks are handled by Zava North Homes staff. You are not asked to pay anything or approve funding on this page. If you are a leaseholder or shared owner, we will explain your reviewed lease position in writing before asking you for any decision. Speak to your housing officer if you have questions."));
+    return box;
+  }
+
   function render(view, announce) {
     removeAppointments();
+    endLoading();
     assistant.setSession(true);
     content.textContent = "";
-    if (view.banner) {
-      var note = card("About this showcase");
-      note.appendChild(el("p", view.banner));
-      content.appendChild(note);
-    }
     if (view.home) {
-      var home = card("Your home");
-      home.appendChild(el("p", [view.home.address, view.home.town, view.home.postcode].filter(Boolean).join(", ")));
-      content.appendChild(home);
+      var strip = el("div", null, "home-strip");
+      withIcon(strip.appendChild(el("span", null, "addr")), "home", [view.home.address, view.home.town, view.home.postcode].filter(Boolean).join(", "));
+      strip.appendChild(badge("info", "Synthetic showcase record - read-only"));
+      content.appendChild(strip);
     }
-    if (view.sensors) content.appendChild(renderSensors(view.sensors));
-    if (view.measures && view.measures.length) {
-      var measures = card("Planned improvements");
-      var ml = el("ul");
-      view.measures.forEach(function (m) { ml.appendChild(el("li", m)); });
-      measures.appendChild(ml);
-      content.appendChild(measures);
-    }
-    if (view.progress) {
-      var progress = card("Where things are");
-      progress.appendChild(el("p", view.progress));
-      if (view.closed) progress.appendChild(el("p", view.closed));
-      content.appendChild(progress);
-    }
-    if (view.next_step) {
-      var next = card("What happens next");
-      next.appendChild(el("p", view.next_step));
-      content.appendChild(next);
-    }
-    var help = card("Help and other ways to reach us");
+    content.appendChild(sectionNav());
+    content.appendChild(summarySection(view));
+    var grid = el("div", null, "status-grid");
+    grid.appendChild(statusSection(view));
+    grid.appendChild(actionsSection(view));
+    content.appendChild(grid);
+    content.appendChild(timelineSection(view));
+    content.appendChild(documentsSection(view));
+    content.appendChild(fundingSection());
+    var help = sectionCard("sec-help", "Help and other ways to reach us", "", "phone");
     help.appendChild(el("p", view.help.summary));
     var hl = el("ul");
     view.help.routes.forEach(function (r) { hl.appendChild(el("li", r)); });
@@ -282,8 +599,14 @@
     callbacks.setAttribute("aria-labelledby", "callback-title");
     content.appendChild(callbacks);
     callbackController = window.mountResidentAppointments(callbacks, api, showSignin);
+    if (view.sensors) {
+      var sensors = renderSensors(view.sensors);
+      sensors.id = "sec-sensors";
+      content.appendChild(sensors);
+    }
 
-    var unavailable = card("Not available in this showcase");
+    var unavailable = sectionCard("sec-unavailable", "Not available in this showcase", "", "ban");
+    if (view.banner) unavailable.appendChild(el("p", view.banner));
     var ul = el("ul", null, "unavail");
     view.unavailable.filter(function (u) { return u.feature !== "Automated answers"; }).forEach(function (u) {
       var li = el("li");
@@ -323,6 +646,7 @@
 
   function showSignin(message) {
     clearPersonal();
+    endLoading();
     signinButton.disabled = false;
     lede.textContent = signedOutLede;
     clearInvalid();
@@ -340,6 +664,7 @@
 
   function fail(message) {
     clearPersonal();
+    endLoading();
     signin.hidden = true;
     statusEl.textContent = "";
     errorText.textContent = message;
@@ -367,7 +692,7 @@
 
   function loadView(announce) {
     var current = transition;
-    statusEl.textContent = "Loading your progress\u2026";
+    if (!loading) statusEl.textContent = "Loading your progress\u2026";
     return api("/demo/view").then(function (res) {
       if (current !== transition) return;
       if (res.ok) render(res.body, announce);
@@ -399,7 +724,8 @@
           sessionId = res.body.session_id;
           return loadView();
         }
-        showSignin();
+        showSignin(pendingNotice || undefined);
+        pendingNotice = "";
         if (signedOut) {
           signedOut = false;
           statusEl.textContent = "You have signed out.";
@@ -435,6 +761,7 @@
     signinButton.disabled = true;
     signinError.hidden = true;
     var current = ++transition;
+    beginLoading("Signing you in and loading your home progress\u2026");
     api("/demo/login", { method: "POST", body: JSON.stringify({ email: email, password: password }) })
       .then(function (res) {
         if (current !== transition) return;
@@ -445,11 +772,15 @@
           sessionChannel.postMessage("changed");
           return loadView("You are signed in. Your progress is shown below.");
         }
-        if (res.status === 403) { start(); return; }
+        if (res.status === 403) {
+          pendingNotice = "Your page session was refreshed. Enter the password and try signing in again.";
+          start();
+          return;
+        }
         showSignin(res.body.error || "We could not sign you in.");
       })
       .catch(function () {
-        if (current === transition) showSignin("We could not reach the showcase. Try again.");
+        if (current === transition) showSignin("We could not reach the showcase. Check your connection, then select Sign in to try again.");
       })
       .then(function () { if (current === transition) signinButton.disabled = false; });
   });
