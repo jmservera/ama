@@ -10428,4 +10428,3 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 121 status record (Refs #121)
 
 * Rechecked merged PRs 919 and 1013 and open PR 1106. The register, dispatch gate, rights clock and read-only route are delivered offline, but all criteria except the constructed-fixture tick stay unmet: each needs a DPO or Legal decision, an approved transfer position, or a persisted rights log (SQL-sensitive, stacked after 1106). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-121 r4).
-
