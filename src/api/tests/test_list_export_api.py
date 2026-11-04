@@ -18,6 +18,10 @@ from zava_forward.core.sqlstore import SqlStore
 from zava_forward.api.server import LIST_EXPORTS, App, make_handler
 
 LISTS = ("packages", "workorders", "handoffs", "visits", "funding")
+QUEUES = {
+    "/api/finance": "/api/finance.csv",
+    "/api/asset/stock-queue": "/api/asset/stock-queue.csv",
+}
 
 
 class ListExportApi(unittest.TestCase):
@@ -67,7 +71,29 @@ class ListExportApi(unittest.TestCase):
             return error.code, error.read().decode(), dict(error.headers)
 
     def test_registry_matches_lists(self) -> None:
-        self.assertEqual({p[len("/api/") : -4] for p in LIST_EXPORTS}, set(LISTS))
+        self.assertEqual(
+            set(LIST_EXPORTS),
+            {f"/api/{name}.csv" for name in LISTS} | set(QUEUES.values()),
+        )
+
+    def test_queue_csv_matches_json_for_permitted_roles(self) -> None:
+        for json_path, csv_path in QUEUES.items():
+            with self.subTest(path=csv_path):
+                code, text, headers = self.call("pam", csv_path)
+                _, body, _ = self.call("pam", json_path)
+                self.assertEqual(code, 200)
+                self.assertTrue(headers["Content-Type"].startswith("text/csv"))
+                rows = json.loads(body)
+                rows = rows["items"] if isinstance(rows, dict) else rows
+                self.assertEqual(len(list(csv.reader(io.StringIO(text)))) - 1, len(rows))
+
+    def test_queue_csv_follows_the_json_role_limits(self) -> None:
+        for json_path, csv_path in QUEUES.items():
+            for actor in ("kim", "sam", "pam"):
+                with self.subTest(path=csv_path, actor=actor):
+                    self.assertEqual(self.call(actor, csv_path)[0], self.call(actor, json_path)[0])
+        self.assertEqual(self.call("sam", "/api/finance.csv")[0], 403)
+        self.assertEqual(self.call("pam", "/api/finance.csv")[0], 200)
 
     def test_staff_get_csv_matching_json_rows(self) -> None:
         for name in LISTS:
