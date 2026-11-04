@@ -4125,6 +4125,12 @@ and state of logged requests in memory. It sets no retention period, records no
 lawful basis and verifies no DPO or Legal approval. It is not wired to any live
 model call or rights log, so the #121 acceptance criteria stay unmet.
 
+`GET /api/data-protection` (any signed-in staff role, read-only, no body
+accepted) returns `register_report(os.environ)` so owners and auditors can see
+which approvals are missing; reference values are never echoed and
+`dpo_reviewed` stays false. This route is the only wiring: no model call site
+consults `model_dispatch` yet and no rights log is persisted.
+
 ### Offline regulatory consumption (2026-10-27, #208)
 
 `regulatory_usage` records task/schema version, UTC day, outcome and zero model

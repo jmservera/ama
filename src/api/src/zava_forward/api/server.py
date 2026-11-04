@@ -18,7 +18,7 @@ from zava_forward.core import ai_consumption, ai_registry, controls, form_review
 
 from zava_forward.core import identity, projection, quality, ranking, taskqueues
 
-from zava_forward.core import lawstore, rulecards, rule_engine
+from zava_forward.core import data_protection, lawstore, rulecards, rule_engine
 from zava_forward.api import auth
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import ChatModel
@@ -142,7 +142,7 @@ def get_kind(path):
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/packages": "packages",
-            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/continuity/export": "continuity_export", "/api/retention": "retention"}.get(path, "unknown")
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
 
 
 GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": "protocol_approve", "benefits-record": "benefits_record",
@@ -541,6 +541,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, s.continuity_export(u, app.assistants.export()))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
+            if url.path == "/api/data-protection":
+                return self._json(200, data_protection.register_report(os.environ))
             if url.path == "/api/retention":
                 try:
                     return self._json(200, s.retention_due(u))
