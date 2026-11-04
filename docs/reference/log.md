@@ -10333,6 +10333,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 657, 785, 862, 937 and 978: the invoice, funding, field draft and AI economics criteria are delivered as engineering evidence. The WCAG 2.2 criterion stays unmet pending assistive-technology testing and human review (#151, #155). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-225 r1).
 
+## [2026-11-04] update | Issue 228 status record (Refs #228)
+
+* Added a dated delivery status record to the suppliers customer journey page. Merged PRs 655, 782, 820, 867, 930 and 967 cover criteria 1, 2, 4 and 6 as engineering evidence. Criterion 3 (OD-47 and supplier-scoped access) and criterion 5 (human and assistive-technology WCAG acceptance) stay unmet. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-228 r5).
 ## [2026-11-04] update | Issue 143 private networking and edge status (Refs #143)
 
 * Rechecked merged PRs 278, 352, 614 and 675: private-endpoint and DNS coverage, the Front Door Premium and WAF module and the production-profile public-access guard are delivered as engineering evidence. Criterion 3 (custom domain, TLS and Entra callbacks managed consistently) stays unmet pending the owner decision on the pilot domain and edge go/no-go, and live Entra reconciliation. Criterion 5 (production-profile deployment evidence) stays unmet and needs an owner with live Azure access. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-143 r2).
