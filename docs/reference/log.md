@@ -10374,6 +10374,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 144 queue adapter slice (Refs #144)
 
 * Added a stdlib Azure Queue adapter for the agents `TaskQueue` port with poison-queue handling, tested with a scripted transport only. Criteria 1 to 5 stay unmet or partial; `serve` still refuses to start until the API post-back and token source exist. Evidence under `.copilot-tracking/` (2026-11-04 issue-144 queue adapter).
+
 ## [2026-11-04] update | Issue 154 status record (Refs #154)
 
 * Rechecked merged PRs 501, 652, 664 and 712 and the resident preview tests. Criteria 1 and 4 are delivered. Criteria 2, 3 and 5 stay unmet: actual service availability and assistive-technology acceptance, resident-session enforcement of representative views, and usability validation (#155 scripts not run). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-154 r1).
