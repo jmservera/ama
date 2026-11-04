@@ -10315,6 +10315,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 311, 893 and 1036: criteria 1 and 2 are delivered, and core ageing plus the read-only unaccepted-handoff route exist. Criterion 3 stays unmet because the Housing and repairs leads have not approved response times and out-of-hours routes (OD-09). No limit was defaulted and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-83 r6).
 
+## [2026-11-04] update | Issue 954 photo flag refresh: only the browser check remains (Refs #954)
+
+* Rechecked merged PRs 929 and 993: the flag re-check without reload is delivered and tested. The quiet 503/403 criterion is proven only in the node harness. A real-browser console check on an Entra-signed-in session remains a human step. Nothing ticked or closed.
+
 ## [2026-11-04] update | Issue 945 remaining criterion needs human browser check (Refs #945)
 
 * Rechecked merged PR 985: the tile note is written once per failure burst, clears after a clean load, and keeps the list pointer, in code and string tests. Only real-browser and screen reader observation remains, a human step. Nothing ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-945 record).
