@@ -10338,6 +10338,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Corrected the IoT sensor research plan: production #111 and #133 modules exist and #996/#1032 tests drive the retrofit exercise scenarios through them, so the 2026-11-03 "do not exist" note is superseded. Criterion 3 is evidenced for test use only; the residual gap is no before and after delta consumption. Nothing ticked or closed.
 
+## [2026-11-04] update | Live sensors seed and signed-in re-walk (Refs #1072, Refs #462)
+
+* Owner-approved one-off in-VNet job seeded 713 synthetic sensor readings for the test resident's home only (per-case `home.stock_id`), and re-applied the resident view with the `COALESCE` binding. Signed-in 390 px re-walk shows temperature, humidity and the 24-hour forecast. Method in `infra/README.md`, result in the prototype profile review. SQL stayed private, spec restored.
+
 ## [2026-11-04] update | Booking evidence gate CI fix and refusal test (Refs #82)
 
 * Typed `Store._evidence_missing` to clear the mypy `no-untyped-call` failures in `test_gates.py`, and added a behavioural test that `require_booking_gates` refuses booking when evidence is missing or malformed. Documented in `src/core/README.md`. No behaviour change; no issue criteria ticked or closed.
@@ -10347,6 +10351,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 83 remaining criterion blocked on OD-09 (Refs #83)
 
 * Rechecked merged PRs 311, 893 and 1036: criteria 1 and 2 are delivered, and core ageing plus the read-only unaccepted-handoff route exist. Criterion 3 stays unmet because the Housing and repairs leads have not approved response times and out-of-hours routes (OD-09). No limit was defaulted and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-83 r6).
+
+## [2026-11-04] update | Issue 163 status record (Refs #163)
+
+* Rechecked merged PRs for chat and memory privacy: criteria 1, 3, 4 and 6 stay evidenced. Criteria 2 and 5 stay unmet and need the DPO and Legal decisions D1 to D8 and provider terms acceptance. No period or decision was set and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-163 status).
 
 ## [2026-11-04] update | Issue 220 criterion 5 status record (Refs #220)
 
@@ -10463,6 +10471,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added `tenure_review_trigger` and `tenure_trigger_resolve` to the resident action ledger and documented them in the core and API READMEs. Changed scope, disputes, defects and charge queries keep the report review open; ambiguous lease identity blocks reuse and routes to the data owner. Staff-entered constructed records only; no appointed data owner or Legal reviewer exists. Criteria 5 and 6 are advanced, not ticked; nothing was closed. Evidence under `.copilot-tracking/` (2026-11-04 tenure-review-triggers 131 r4).
 
+## [2026-11-04] update | Aftercare sensor context guard (Refs #133)
+
+* Added `add_sensor_context` and a neutral-text guard on sensor context to the aftercare register; README note updated. Criteria 1, 2, 4 and 6 stay unmet in full, 3 and 5 only partly evidenced (register level). Evidence under `.copilot-tracking/` (2026-11-04 issue-133 sensor-context).
 ## [2026-11-04] update | Issue 125 drafting guard slice (Refs #125)
 
 * Added `discovery_assistant_drafting` to `src/core` (deterministic stage durations, draft-only narrative checked against calculated figures, deterministic fallback when no model is available) and a README section. Criteria 1 to 3 stay unmet and need human or deployment evidence. Evidence under `.copilot-tracking/` (issue-125-r6).
@@ -10493,6 +10504,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 138 status record (Refs #138)
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
+
+## [2026-11-04] update | Issue 100 per-capability AI usage view (Refs #100)
+
+* Rechecked merged PR 911. Added a per-capability usage table (counts and tokens for known proposals) to the asset and board view, reading main's existing report field; cost per capability stays Unknown. Criteria stay unmet: #440 checkpoint, #134 open, per-capability cost, quality floor, limits (OD-51) and live evidence. Evidence under `.copilot-tracking/` (2026-11-04 issue-100 r2).
 
 ## [2026-11-04] update | Issue 128 paired-cohort priority check (Refs #128)
 
@@ -10533,6 +10548,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 411, 508 and 910. Criteria 2 to 5 stay ticked. Criterion 1 stays unmet: offline per-device identity, schema version and stable reading ID code and tests exist, but no real distinct Hub identities were issued and no live stream was observed (tier, sizing, cost, network and device credential owner decisions; #140; human/Azure steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-110 r2).
 
+## [2026-11-04] update | Issue 151 table headers and captions (Refs #151)
+
+* Audited every script-built workbench table in `src/api`: added captions and `scope="col"` to the funding queue, resident decisions, finance queue, contractors, team workload and sign-off tables, guarded by a static test, and updated the Tables row of `docs/reference/research/ux/wcag-conformance-baseline.md`. Criteria 1, 2, 4 and 5 stay unmet (owner level decision, full audit, human assistive-technology checks); nothing ticked or closed. Evidence under `.copilot-tracking/` (2026-11-04 issue-151 table-headers).
 ## [2026-11-04] update | Plain-language consultation and restart check wording, slice 3 (Refs #153)
 
 * Reworded the procurement consultation refusal and check reason and the gates.py restart checks from "release this hold" to "clear this stop" or "restart this stopped work", with a next action for Legal; added a lexical test and a dated paragraph in the [content standard](./research/ux/content-standard.md). Consultation status stays unknown; no approval or authority rule changed. Criteria 2, 3 and 5 remain unmet; named human review not run. Evidence under `.copilot-tracking/` (2026-11-04 issue-153 consultation gate wording).
