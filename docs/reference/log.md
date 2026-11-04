@@ -10170,3 +10170,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] feat | CSV exports for staff lists (Refs #80)
 
 * Added CSV exports for staff lists.
+## [2026-11-04] update | Pooled human review sheets flag duplicates (Refs #952)
+## [2026-11-04] update | Pooled human review sheets flag duplicates (Closes #952)
+
+* `pool_human_sessions` now fingerprints each answer sheet, flags identical repeats under `duplicate_sheets` and leaves them out of effort and detection totals. Exact duplicates only; near-duplicates and reviewer authority stay open. Evidence under `.copilot-tracking/` (2026-11-04 fu-952).
