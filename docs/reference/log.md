@@ -10380,6 +10380,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
 
+## [2026-11-04] update | Issue 176 status record (Refs #176)
+
+* Rechecked merged PRs 237, 257, 309, 368, 633, 703, 843 and 1052. All available generators replay byte for byte; criteria 1 and 2 stay unmet only because the original private stock register generator and pinned inputs are absent. Added a status record to the retrofit synthetic data README.
 ## [2026-11-04] update | Second design traceability delta (Refs #156)
 
 * Added a second dated delta to the
@@ -10407,6 +10410,12 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 508, 637, 707, 845 and 1092. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: owner, time limit and alert reference are enforced offline, but a live Azure budget alert and notification are not verified (#146, human/Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-189 r2).
 
+## [2026-11-04] update | Issue 149 UX epic status (Refs #149)
+
+* Rechecked merged child PRs: only #150 is closed (1/16). All four epic criteria stay unmet: #440 stabilization triage, child acceptance, recorded human accessibility/content/usability results, and full design traceability. Remaining steps need owner decisions and named human testers. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-149 r1).
+## [2026-11-04] update | Issue 148 status record (Refs #148)
+
+* Rechecked merged PRs 511 and 672: criteria 1 to 3 are delivered against a fake az. Criterion 4 stays unmet: dry-run exists but no disposable Azure rebuild or teardown run has been done or authorised; workload-sql and model stages remain operator-gated. Corrected a stale "no Azure adapter" line in the orchestrator README. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-148 r1).
 ## [2026-11-04] update | Issue 155 usability programme status (Refs #155)
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
@@ -10414,9 +10423,16 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 118 hardened deployment status (Refs #118)
 
 * Rechecked merged PRs 347 and 614. Criteria 1 to 4 are delivered. Criterion 5 stays unmet: Policy is audit-only and Defender plans are defined but not activated; cost approval is pending in `infra/defender-decision.json` (owner decision, no Azure or code step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-118 r1).
+## [2026-11-04] update | Issue 123 epic status record (Refs #123)
+
+* Rechecked merged PRs 894, 895, 899, 901, 905, 1015 and the 928 checkpoint. The 928 record listed 894, 895, 901 and 905 as open; they are now merged, delivering offline readiness, register, ownership-routing and AI cost-line code for #125, #124, #128 and #126. Both epic criteria stay unmet: #440 is still open (finding triage and independent review artifacts unchecked) and children 124, 125, 126, 128, 129 remain open, needing owner nominations, DPIA and lawful basis, human accessibility and research sessions, and Atlas owner confirmation. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-123 status record).
 ## [2026-11-04] update | Issue 132 intake decision proposal (Refs #132)
 
 * Rechecked merged PRs 873 and 1080: core rules and a staff-only read-only job-pack route are delivered. Added proposed ADR 0007 recommending staff-mediated intake over a provider portal, with the identity approach. It is not accepted, so criterion 6 stays unmet, and criteria 2 to 5 stay unmet (no persistence, write routes or screen). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-132 r3).
 ## [2026-11-04] update | Issue 138 status record (Refs #138)
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
+
+## [2026-11-04] update | Issue 110 status record (Refs #110)
+
+* Rechecked merged PRs 411, 508 and 910. Criteria 2 to 5 stay ticked. Criterion 1 stays unmet: offline per-device identity, schema version and stable reading ID code and tests exist, but no real distinct Hub identities were issued and no live stream was observed (tier, sizing, cost, network and device credential owner decisions; #140; human/Azure steps). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-110 r2).
