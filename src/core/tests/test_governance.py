@@ -180,7 +180,18 @@ class Gov:
         self.assertEqual(s.release_gaps(), list(g.PHASES))
         withheld = s.release_record(self.pm1, dict(breached, decision="Withhold"))
         self.assertNotIn("economics_breach_decision", withheld)
-        rec = s.release_record(self.pm1, dict(breached, economics_breach_decision="Synthetic: limit raised by the budget owner"))
+        decided = dict(breached, economics_breach_decision="Synthetic: limit raised by the budget owner")
+        for bad in (None, "Someone else", self.pm1["email"]):
+            with self.assertRaises(ValueError):
+                s.release_record(self.pm1, dict(decided, economics_breach_approver=bad) if bad else decided)
+        rec = s.release_record(self.pm1, dict(decided, economics_breach_approver="Synthetic sponsor"))
+        self.assertEqual(rec["economics_breach_approver"], "Synthetic sponsor")
+        with self.assertRaises(ValueError):
+            s.release_record(self.pm1, dict(RELEASE, scope="Phase 0 capture", economics_report_ref="Unknown"))
+        self.assertEqual(s.release_record(self.pm1, dict(RELEASE, scope="Phase 0 capture", economics_report_ref="Unknown", decision="Withhold"))["decision"], "Withhold")
+        proposer_listed = dict(decided, approvers=["Synthetic sponsor", self.pm1["email"]], economics_breach_approver=self.pm1["email"])
+        with self.assertRaises(ValueError):
+            s.release_record(self.pm1, proposer_listed)
         self.assertEqual(rec["economics_limit_breach"], "Synthetic spend limit exceeded")
         self.assertEqual(rec["economics_report_ref"], "Synthetic AI economics report")
         self.assertIn("economics_breach_decision", rec)

@@ -500,8 +500,17 @@ class GovernanceMixin:
         breach = k.text(body.get("economics_limit_breach"), "the AI economics limit breach (or None)", 400)
         rec.update(economics_report_ref=k.text(body.get("economics_report_ref"), "the AI economics report reference (or Unknown: no report)", 200),
                    economics_limit_breach=breach)
+        if decision == "Release" and rec["economics_report_ref"].strip().lower() in ("unknown", "none", "n/a"):
+            raise ValueError("Release needs an AI economics report reference. With no report, record Withhold.")
         if decision == "Release" and breach.strip().lower() not in ("none", "no", "n/a"):
             rec["economics_breach_decision"] = k.text(body.get("economics_breach_decision"), "the approvers' decision on the AI economics limit breach", 400)
+            approver = k.text(body.get("economics_breach_approver"), "the approver who decides the AI economics limit breach", 120)
+            proposer = {str(user.get("email", "")).strip().lower(), str(user.get("name", "")).strip().lower()} - {""}
+            if approver not in approvers:
+                raise ValueError("The breach decision must be made by one of the named approvers.")
+            if approver.lower() in proposer:
+                raise ValueError("The breach decision needs an approver other than the person recording the release.")
+            rec["economics_breach_approver"] = approver
         if decision == "Release" and scope == "Phase 0 capture":
             self.require_capture_open()
         if decision == "Release" and scope in ("Shadow testing", "Live pilot") and not self.is_released("Phase 0 capture"):
