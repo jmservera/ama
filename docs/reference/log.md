@@ -10414,3 +10414,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 114 Azure SQL store status (Refs #114)
 
 * Rechecked merged PRs 262, 403 and 908. They delivered offline per-year digests, a hardened load-check evidence contract and fail-closed digest verification, proven on SQLite only. All three criteria stay unmet: annual ledger reliance on Azure SQL, measured Azure load, latency and cost, and a witnessed DH-005 restore and deletion drill all need Azure or human steps. Nothing was ticked or closed. Docs-only record in the parity matrix; evidence under `.copilot-tracking/` (2026-11-04 issue-114 r1).
+## [2026-11-04] update | Issue 132 intake decision proposal (Refs #132)
+
+* Rechecked merged PRs 873 and 1080: core rules and a staff-only read-only job-pack route are delivered. Added proposed ADR 0007 recommending staff-mediated intake over a provider portal, with the identity approach. It is not accepted, so criterion 6 stays unmet, and criteria 2 to 5 stay unmet (no persistence, write routes or screen). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-132 r3).
+## [2026-11-04] update | Issue 138 status record (Refs #138)
+
+* Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
