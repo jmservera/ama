@@ -11,6 +11,8 @@ Modes (positional arguments):
             window for one home from the existing sensor_backfill generator (idempotent).
   map       set `synthetic_stock_anchor_id` on exactly one named case that has no stock link.
   view      reapply infra/sql/resident-showcase.sql through resident_showcase_sql.render.
+  whoami    locate the case for a SHA-256 of the canonical e-mail (no address is sent or printed).
+  unseed    delete this tool's synthetic rows for one home id.
   verify    read the resident view as the resident principal (EXECUTE AS) and report counts only.
 """
 
@@ -214,6 +216,38 @@ def map_case(db, case_id, home_id):
     emit(mode="map", case_id=case_id, home_id=home_id, rows_changed=changed)
 
 
+def whoami(db, email_sha256):
+    """Locate a case by the SHA-256 of its canonical e-mail so no e-mail address is ever sent or printed."""
+    if not re.fullmatch(r"[0-9a-f]{64}", email_sha256):
+        raise ValueError("expected a lowercase SHA-256 hex digest")
+    rows = db.execute(
+        "SELECT c.id, JSON_VALUE(c.body, '$.home.address'), JSON_VALUE(c.body, '$.home.stock_id'), "
+        "JSON_VALUE(c.body, '$.synthetic_stock_anchor_id'), a.case_id, a.revoked, "
+        "CONVERT(VARCHAR(19), a.valid_from, 126), CONVERT(VARCHAR(19), a.valid_to, 126) "
+        "FROM dbo.cases AS c LEFT JOIN resident_showcase.allowed_case AS a ON a.case_id = c.id "
+        "WHERE ISJSON(c.body) = 1 AND CONVERT(VARCHAR(64), HASHBYTES('SHA2_256', "
+        "CAST(LOWER(LTRIM(RTRIM(JSON_VALUE(c.body, '$.resident.email')))) AS VARCHAR(400))), 2) = ?",
+        (email_sha256.upper(),),
+    ).fetchall()
+    for cid, address, stock_id, anchor, allowed, revoked, valid_from, valid_to in rows:
+        emit(mode="whoami", case_id=cid, address=address, stock_id=stock_id, anchor=anchor,
+             allowed=allowed is not None, revoked=revoked, valid_from=valid_from, valid_to=valid_to)
+    emit(mode="whoami_totals", matches=len(rows))
+
+
+def unseed(db, home_id):
+    """Delete only this tool's synthetic BACKFILL_2Y rows for one home id."""
+    selection(home_id)
+    readings = db.execute(
+        "DELETE FROM sensor_reading WHERE home_id = ? AND source_type = 'SYNTHETIC' AND scenario = 'BACKFILL_2Y'",
+        (home_id,),
+    ).rowcount
+    register = db.execute(
+        "DELETE FROM sensor_register WHERE home_id = ? AND source_type = 'SYNTHETIC'", (home_id,)
+    ).rowcount
+    emit(mode="unseed", home_id=home_id, readings_deleted=readings, register_deleted=register)
+
+
 def apply_view(db, principal, client_id):
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import resident_showcase_sql as showcase
@@ -266,12 +300,12 @@ def main(argv=None):
     argv = sys.argv[1:] if argv is None else argv
     usage = (
         "usage: inspect [address_like] | seed home_id as_of_YYYY-MM-DD [days] | map case_id home_id | "
-        "view principal client_id | verify principal case_id"
+        "view principal client_id | verify principal case_id | whoami email_sha256 | unseed home_id"
     )
     if not argv:
         raise SystemExit(usage)
     mode, rest = argv[0], argv[1:]
-    shapes = {"inspect": (0, 1), "seed": (2, 3), "map": (2, 2), "view": (2, 2), "verify": (2, 2)}
+    shapes = {"inspect": (0, 1), "seed": (2, 3), "map": (2, 2), "view": (2, 2), "verify": (2, 2), "whoami": (1, 1), "unseed": (1, 1)}
     if mode not in shapes or not shapes[mode][0] <= len(rest) <= shapes[mode][1]:
         raise SystemExit(usage)
     db = connect()
@@ -284,6 +318,10 @@ def main(argv=None):
             map_case(db, *rest)
         elif mode == "view":
             apply_view(db, *rest)
+        elif mode == "whoami":
+            whoami(db, *rest)
+        elif mode == "unseed":
+            unseed(db, *rest)
         else:
             verify(db, *rest)
     finally:
