@@ -10396,6 +10396,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
 
+## [2026-11-04] update | Issue 126 release decisions carry AI economics (Refs #126)
+
+* Phase and tranche release decisions now require the AI economics report reference and any AI limit breach; a Release with a breach needs the approvers' decision. Tokenomics criterion 3 is engineering-delivered with synthetic fixtures only. Nothing was ticked or closed; protocol, DPIA, lawful basis, OD-51 and RAI closure criteria remain unmet. Evidence under `.copilot-tracking/` (2026-11-04 issue-126 r2).
 ## [2026-11-04] update | Issue 233 choice before offered capacity (Refs #233)
 
 * Added a "Choice comes before offered capacity" text panel to the per-home `resident-choice` screen and recorded it in `research/ux/atlas-screen-trace.md`. Tested by a node render of the per-home screen (panel order within that screen, native paragraph, no capacity wording before the choice panels) plus source-level checks; browser rendering, same-home walk, WCAG 2.2 rendered evidence and user validation stay unmet.
