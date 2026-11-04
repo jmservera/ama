@@ -30,7 +30,7 @@ RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_recor
                     "decision_record", "service_open", "service_update", "service_close",
                     "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update",
                     "challenge_open", "challenge_resolve",
-                    "nomination_record", "nomination_correct", "tenure_intake",
+                    "nomination_record", "nomination_correct", "nomination_review", "tenure_intake",
                     "tenure_legal_position", "tenure_verify", "tenure_question_pack",
                     "tenure_question_pack_review")
 NOT_RECORDED = "Not recorded"
@@ -41,7 +41,7 @@ RESIDENT_RETENTION_ID = "resident-decisions"
 RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_authorities",
                    "resident_safe_contact", "resident_contact_history", "resident_reviews",
                    "nomination_records", "tenure_reports")
-INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "tenure_intake", "tenure_legal_position",
+INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "nomination_review", "tenure_intake", "tenure_legal_position",
                   "tenure_verify", "tenure_question_pack", "tenure_question_pack_review")
 TENURE_ROUTES = {
     "Tenant": "Tenant",
@@ -51,6 +51,8 @@ TENURE_ROUTES = {
     "Leaseholder": "Leaseholder",
     "Mixed block": "Mixed block: set a route per household",
 }
+NOMINATION_OUTCOMES = ("Accepted for human eligibility review", "More evidence needed",
+                       "Not progressed; resident may challenge")
 INTAKE_FIELDS = ("nomination_records", "tenure_reports")
 INTAKE_CHANNELS = ("Digital", "Phone", "Letter", "In person", "Trusted intermediary")
 TENURE_HOLD = (
@@ -191,6 +193,11 @@ def _owner_rights(store, actor, identity, email=None):
         raise PermissionError("Only the named current owner or a resident-workflow manager can record this step.")
 
 
+def _review_current(record):
+    reviews = record.get("reviews") or []
+    return bool(reviews) and reviews[-1].get("record_version") == record.get("version")
+
+
 def nomination_follow_up(record, today=None):
     """Read-only readiness view: never a decision, priority, consent or hazard change."""
     owner = record.get("owner")
@@ -210,7 +217,8 @@ def nomination_follow_up(record, today=None):
         route_ready=not missing,
         missing=missing or [],
         next_update_overdue=overdue,
-        re_review_pending=bool(record.get("corrections")),
+        re_review_pending=bool(record.get("corrections")) and not _review_current(record),
+        review_current=_review_current(record),
         review_owner="Human identity and eligibility review; policy owner not yet appointed (OD-41/42)",
         not_inferred=["priority change", "consent or refusal", "vulnerability", "sanction",
                       "hazard clock change", "eligibility"],
@@ -767,9 +775,34 @@ class ResidentDecisionMixin:
         )
         next_update = _day(body["next_update"])
         record["corrections"].append(correction)
+        for review in record.get("reviews", []):
+            review.setdefault("stale_from_version", correction["version"])
         record.update(version=correction["version"], next_update=next_update,
                       review_status="Re-review required; no priority or consent change")
         return f"{record['id']} correction version {record['version']} recorded"
+
+    def _res_nomination_review(self, user, c, body):
+        _intake_fields(user, c, body, {
+            "case_id", "id", "expected_version", "outcome", "rationale", "evidence_ref", "next_update",
+        })
+        record = k.find(c.get("nomination_records", []), body["id"], "nomination")
+        _version(body, record)
+        reviews = record.setdefault("reviews", [])
+        if reviews and reviews[-1]["record_version"] == record["version"]:
+            raise ValueError("This version already has its human review. Record a correction to request another.")
+        latest = record["corrections"][-1] if record.get("corrections") else record["original"]
+        _require_independent_reviewer(user, latest.get("recorded_by"))
+        outcome = k.choice(body["outcome"], NOMINATION_OUTCOMES, "the human review outcome")
+        reviews.append(dict(
+            record_version=record["version"], outcome=outcome,
+            rationale=_intake_text(body["rationale"], "the reviewer's plain-language reasons", 1000),
+            evidence_ref=_intake_text(body["evidence_ref"], "the evidence the reviewer considered"),
+            competing_evidence_versions=[c_["version"] for c_ in record.get("corrections", [])],
+            reviewer=_identity(user), at=_time(),
+        ))
+        record.update(next_update=_day(body["next_update"]),
+                      review_status=f"Human review recorded: {outcome}; no priority, consent or sanction change")
+        return f"{record['id']} version {record['version']} human review recorded"
 
     def _res_tenure_intake(self, user, c, body):
         _intake_fields(user, c, body, {
