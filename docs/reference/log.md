@@ -10410,3 +10410,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 155 usability programme status (Refs #155)
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
+
+## [2026-11-04] update | Issue 114 Azure SQL store status (Refs #114)
+
+* Rechecked merged PRs 262, 403 and 908. They delivered offline per-year digests, a hardened load-check evidence contract and fail-closed digest verification, proven on SQLite only. All three criteria stay unmet: annual ledger reliance on Azure SQL, measured Azure load, latency and cost, and a witnessed DH-005 restore and deletion drill all need Azure or human steps. Nothing was ticked or closed. Docs-only record in the parity matrix; evidence under `.copilot-tracking/` (2026-11-04 issue-114 r1).
