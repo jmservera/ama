@@ -325,6 +325,14 @@ false, `Not submitted` and eligibility `Not assessed`; it writes nothing and a
 reviewed pack stays blocked on Finance and template authority. The manual path
 is the working review itself, and unavailable evidence returns `Unavailable`.
 
+`form_export.export_freshness(store, user, case_id, saved_export)` compares a
+saved held export with the current working review, read-only. It returns
+`Current`, `Stale` (naming only the fields whose value, state or bound source
+changed or are now stale, and the unaffected fields), `Invalid` (the copy is
+incomplete or its content hash no longer matches) or `Unavailable`. A changed
+schema or rule reference changes the schema digest and stales every
+schema-bound field. It never marks anything reviewed.
+
 `view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
 diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
 valid, current values only, combine predicates with OR and compare types

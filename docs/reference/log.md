@@ -10305,6 +10305,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | WCAG 2.4.11 and 2.5.7 slice recorded (Refs #151)
 
 * Added `scroll-padding-block-end` so the fixed chat launcher cannot hide a focused control, two static tests, and a baseline audit row for 2.4.11 and 2.5.7. Rendered, screen-reader and owner-decision criteria remain unmet; no conformance claim.
+## [2026-11-04] update | Saved held form export freshness check (Refs #96)
+
+* Added `form_export.export_freshness` in `src/core` (documented in `src/core/README.md`): a read-only check that a saved held export is Current, Stale for only the dependent fields, Invalid or Unavailable. Criteria 1, 5 and 6 of #96 remain unmet (approved template and rules, reviewed export, rule and approval propagation). Evidence: `.copilot-tracking/*/2026-11-04/issue-96-r2-export-freshness-*`.
 ## [2026-11-04] update | Held-out gate fails closed on an empty set (Refs #164)
 
 * `chat_heldout.run_heldout` and `freeze_problems` now report "no scenarios in the held-out set" and return `insufficient` instead of `pass` for a digest-matching empty set; `_shingles` treats texts shorter than six words as one shingle. Offline, scripted harness only; no held-out set, reviewer or actual-model evidence exists, so #164 stays open.
