@@ -19,7 +19,7 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/facets", "/api/stats", "/api/progress", "/api/closed-cases",
                  "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing",
                  "/api/audit-check",
-                 "/api/handoffs", "/api/handoffs/unaccepted", "/api/packages", "/api/workorders", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/checklists", "/api/ai/report", "/api/finance", "/api/asset/stock-queue", "/api/resident/choice-queue",
+                 "/api/handoffs", "/api/handoffs/unaccepted", "/api/packages", "/api/workorders", "/api/workorders/WO-0001/job-pack", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/checklists", "/api/ai/report", "/api/finance", "/api/asset/stock-queue", "/api/resident/choice-queue",
                  "/api/governance", "/api/continuity", "/api/continuity/export", "/api/retention", "/api/data-protection", "/api/docs/ZF-1/none",
                  "/api/time/status", "/api/time/mine", "/api/time/report", "/api/law/sources", "/api/law/search?q=x",
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",
@@ -69,6 +69,46 @@ class RoleEndpointInventory(Matrix):
         tested = {u.split("?")[0].rstrip("/") for u in GET_ENDPOINTS} | {p for p, _ in POST_ENDPOINTS}
         missing = sorted(r for r in routes if not any(t == r or t.startswith(r + "/") for t in tested))
         self.assertEqual(missing, [], "add these routes to the role inventory")
+
+    def test_inventory_covers_dynamic_workorder_job_pack_route(self):
+        self.assertIn("/api/workorders/WO-0001/job-pack", GET_ENDPOINTS)
+        self.assertIn('endswith("/job-pack")', SERVER_SRC)
+
+    def test_job_pack_per_role_with_an_existing_work_order(self):
+        import copy
+        from dataset import RESIDENT_BINDINGS, supplied_contract_fixture, supplied_resident_fixture
+        proc = self.store._proc()
+        snapshot = copy.deepcopy(proc)
+        self.addCleanup(lambda: (proc.clear(), proc.update(snapshot)))
+        self.addCleanup(self.store.cases.pop, "ZF-ROLE-ORDER", None)
+        mgr = {s["role"]: s for s in self.store.data["staff"]}["Retrofit Programme Manager"]
+        pid = self.store.create_package(mgr, "Wave", "2026-01-01", "2099-12-31", "Loft", "CALL-1", "SYN-1")
+        order_case = copy.deepcopy(self.store.cases["ZF-1"])
+        order_case.update(id="ZF-ROLE-ORDER", hazards=[])
+        self.store.cases[order_case["id"]] = order_case
+        supplied_resident_fixture(order_case)
+        for contractor in ("Test Ltd", "Other Ltd"):
+            details = supplied_contract_fixture(self.store, pid, mgr, contractor)
+            self.store.set_capacity(mgr, pid, contractor, 2, 2, "SYN signed commitment", details)
+        wid = self.store.issue_work_order(mgr, pid, order_case["id"], resident_bindings=RESIDENT_BINDINGS)
+        self.assertEqual(wid, "WO-0001")
+        path = f"/api/workorders/{wid}/job-pack"
+        for role in ROLES + ["Mystery"]:
+            if role == "Mystery":
+                self.store.staff["u0@example.test"]["role"] = "Mystery"
+                ck = self.session("u0@example.test")
+            else:
+                ck = self.session(self.email(role))
+            try:
+                code, text = self.call(ck, path)
+            finally:
+                self.store.staff["u0@example.test"]["role"] = ROLES[0]
+            if role in ("Mystery", projection.CONTRACTOR):
+                self.assertIn(code, (403, 404), role)
+            else:
+                self.assertEqual(code, 200, role)
+            for canary in (REASON, PHONE, RESIDENT, "health", "vulnerab"):
+                self.assertNotIn(canary, text.lower() if canary.islower() else text, (role, canary))
 
     def test_inventory_covers_dynamic_case_actions_added_by_integration(self):
         tested = {path.rsplit("/", 1)[-1] for path, _ in POST_ENDPOINTS}

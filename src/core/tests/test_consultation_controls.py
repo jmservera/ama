@@ -370,6 +370,31 @@ class JsonConsultation(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "let or renew"):
             self.store.contract_event_gate(self.manager, self.pid, "award")
 
+    def test_letting_and_renewal_request_is_held_and_audited(self) -> None:
+        self.store.record_consultation(self.manager, self.pid, self.payload("complete"))
+        for event in ("let", "renew"):
+            audit_before = len(list(self.store.audit_entries()))
+            package_before = copy.deepcopy(self.store.data["procurement"]["packages"])
+            outcome = self.store.request_contract_event(self.manager, self.pid, event)
+            self.assertTrue(outcome["blocked"])
+            self.assertEqual(outcome["supplied_status"], "complete")
+            self.assertEqual(outcome["effective_status"], "unknown")
+            self.assertIn("Legal", outcome["manual_path"])
+            self.assertEqual(self.store.data["procurement"]["packages"], package_before)
+            entries = list(self.store.audit_entries())
+            self.assertEqual(len(entries), audit_before + 1)
+            self.assertEqual(entries[-1]["action"], "contract_event_held")
+            self.assertIn("no letting or renewal happened", entries[-1]["detail"])
+        self.assertTrue(self.store.verify_audit())
+
+    def test_letting_request_rejects_bad_event_and_non_manager(self) -> None:
+        before = self.snapshot()
+        with self.assertRaisesRegex(ValueError, "let or renew"):
+            self.store.request_contract_event(self.manager, self.pid, "award")
+        with self.assertRaises(PermissionError):
+            self.store.request_contract_event(self.recorder, self.pid, "let")
+        self.assertEqual(self.snapshot(), before)
+
     def test_nonbinding_historical_recording_remains_available(self) -> None:
         self.historical("Appointed")
         self.store.record_wo_appointment(self.manager, "WO-HIST", "No access")
