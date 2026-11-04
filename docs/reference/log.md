@@ -10174,3 +10174,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Pooled human review sheets flag duplicates (Closes #952)
 
 * `pool_human_sessions` now fingerprints each answer sheet, flags identical repeats under `duplicate_sheets` and leaves them out of effort and detection totals. Exact duplicates only; near-duplicates and reviewer authority stay open. Evidence under `.copilot-tracking/` (2026-11-04 fu-952).
+
+
+## [2026-11-04] update | Regulatory usage validated against the closed metering schema (Refs #217)
+
+* Merged work (PRs 353, 642, 695, 839, 884, 964) already delivers audit, injection and cross-role tests, the readiness gate, the Foundry field guard, the Art 22 record builder and the metering schema. This slice makes the stored chat and check usage read path validate every record through that schema (identifiers, counts and versions only, `usage` retention class). Unmet and unchanged: DPIA with the DPO, DPO retention periods, live Foundry wiring, separate Entra roles, Art 22A to 22C approval wiring and Legal/DPO confirmation, and the tokenomics criterion (no DPIA scope sign-off). Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-217 metering wiring).

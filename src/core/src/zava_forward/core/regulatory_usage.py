@@ -8,6 +8,8 @@ from collections.abc import Iterable
 from datetime import UTC, datetime
 from typing import Any
 
+from zava_forward.core.regulatory_privacy import metering_record
+
 SCHEMA = "regulatory-usage-v1"
 MAX_POSITIONS = 1000
 MAX_BYTES = 256 * 1024
@@ -38,6 +40,26 @@ def offline_usage(task: str, version: str, outcome: str, at: str) -> dict[str, A
         retries=0,
         model_call_limit_per_role_period=0,
         limit_basis="Inference disabled for every role; not a paid budget approval.",
+    )
+
+
+SURFACES = {"regulatory-home-chat": "chat", "regulatory-check": "check"}
+
+
+def usage_metering(usage: dict[str, Any], record_id: str) -> dict[str, Any]:
+    """Project offline usage onto the closed metering schema: ids, counts and versions only."""
+    return metering_record(
+        dict(
+            surface=SURFACES[usage["task"]],
+            record_id=record_id,
+            model_id=usage["model"],
+            prompt_version=usage["task_version"],
+            input_tokens=usage["input_tokens"],
+            output_tokens=usage["output_tokens"],
+            cached_tokens=usage["cached_tokens"],
+            retry_count=usage["retries"],
+            occurred_at=usage["period"] + "T00:00:00+00:00",
+        )
     )
 
 
@@ -86,6 +108,7 @@ def summarize(details: Iterable[str], role: str, day: str, *, truncated: bool) -
             type(usage[key]) is not type(value) for key, value in expected.items()
         ):
             raise ValueError("Stored regulatory usage is invalid; audit review required.")
+        usage_metering(usage, "audit-event")
         if usage["period"] == day:
             outcomes[usage["outcome"]] += 1
     return dict(
