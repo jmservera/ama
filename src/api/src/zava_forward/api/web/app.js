@@ -422,6 +422,10 @@ async function route() {
   workspaceStatus.textContent = routeStatus;
   if (hash.split("?")[0] === "#/screens") return await roleScreensView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
+  if (me.services?.cases === false && hash !== "#/assistants" && hash !== "#/import") {
+    return show(h("h1", {}, "No case work for this account"),
+      h("p", { role: "status" }, "This account manages the application and has no case access. Case lists are not shown and nothing is waiting on you here. Ask a programme owner if you need case access."));
+  }
   if (m) return await caseView(decodeURIComponent(m[1]));
   const homeCase = location.hash.match(/^#\/case-home\/(.+)$/);
   if (homeCase) return await homeCaseView(decodeURIComponent(homeCase[1]));
@@ -438,10 +442,6 @@ async function route() {
   if (hash === "#/visits") return await visitsView();
   if (hash === "#/funding") return await fundingView();
   if (hash === "#/finance") return await financeQueueView();
-  if (me.services?.cases === false) {
-    return show(h("h1", {}, "No case work for this account"),
-      h("p", { role: "status" }, "This account manages the application and has no case access. Case lists are not shown and nothing is waiting on you here. Ask a programme owner if you need case access."));
-  }
   return await listView(hash === "#/all" ? "all" : "mine");
   } catch (error) {
     if (signal.aborted || me !== session) return;
