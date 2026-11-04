@@ -10371,6 +10371,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
 
+## [2026-11-04] update | Second design traceability delta (Refs #156)
+
+* Added a second dated delta to the
+  [prototype profile review](./research/ux/zava-forward-prototype-profile-review.md#second-delta-2026-11-04-156)
+  covering 22 issues above #810: 4 new screen traces (#891, #1053, #1054,
+  #1072), 4 fixes to existing screens and 14 no-screen items. The split reads
+  titles, labels and state only and awaits owner confirmation. The gate register
+  and `tools/check-design-trace.py` are unchanged (74 screen issues, 0 supplied
+  designs, blocked). Criterion 1 stays unmet: only human steps remain (supplied
+  versioned designs, named design review, assistive-technology, content and user
+  evidence). Evidence is under `.copilot-tracking/` (2026-11-04 issue-156 delta).
 ## [2026-11-04] update | Issue 145 status record (Refs #145)
 
 * Rechecked merged PR 673: criteria 1 (SQL tier, auto-pause and redundancy parameters, pilot recorded) and 3 (RTO and RPO undecided with owners) are delivered. Criterion 2 (PITR and ledger result) stays unmet: no authorised disposable Azure database. Criterion 4 stays unmet pending the approved #121 retention decisions. All RAI restore and erasure criteria stay unmet: they need the authorised drill, DPO and record-owner approval and independent witnesses; SQLite regressions are lower-tier evidence. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-145 record).
