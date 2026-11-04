@@ -10335,6 +10335,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 311, 893 and 1036: criteria 1 and 2 are delivered, and core ageing plus the read-only unaccepted-handoff route exist. Criterion 3 stays unmet because the Housing and repairs leads have not approved response times and out-of-hours routes (OD-09). No limit was defaulted and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-83 r6).
 
+## [2026-11-04] update | Issue 220 criterion 5 status record (Refs #220)
+
+* Recorded in `src/core/README.md` which #220 criteria are delivered (1 to 4) and that criterion 5 awaits human acceptance, live hazard-response measurement and an owner-approved follow-up age limit. Nothing ticked or closed.
 ## [2026-11-04] update | Issue 223 status record (Refs #223)
 
 * Rechecked merged PRs 428, 638, 701, 817, 855, 941 and 974: the scripted gate, reviewer-authority enforcement and manual human-session intake exist and their focused tests, ruff and mypy pass. All five criteria stay unmet as human evidence because OQ-017 holders are unappointed and no competent reviewer has run the test. Docs-only record in `src/agents/README.md`; nothing ticked or closed.
