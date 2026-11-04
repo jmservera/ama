@@ -10338,6 +10338,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Corrected the IoT sensor research plan: production #111 and #133 modules exist and #996/#1032 tests drive the retrofit exercise scenarios through them, so the 2026-11-03 "do not exist" note is superseded. Criterion 3 is evidenced for test use only; the residual gap is no before and after delta consumption. Nothing ticked or closed.
 
+## [2026-11-04] update | Live sensors seed and signed-in re-walk (Refs #1072, Refs #462)
+
+* Owner-approved one-off in-VNet job seeded 713 synthetic sensor readings for the test resident's home only (per-case `home.stock_id`), and re-applied the resident view with the `COALESCE` binding. Signed-in 390 px re-walk shows temperature, humidity and the 24-hour forecast. Method in `infra/README.md`, result in the prototype profile review. SQL stayed private, spec restored.
+
 ## [2026-11-04] update | Booking evidence gate CI fix and refusal test (Refs #82)
 
 * Typed `Store._evidence_missing` to clear the mypy `no-untyped-call` failures in `test_gates.py`, and added a behavioural test that `require_booking_gates` refuses booking when evidence is missing or malformed. Documented in `src/core/README.md`. No behaviour change; no issue criteria ticked or closed.
