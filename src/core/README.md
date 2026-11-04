@@ -197,7 +197,7 @@ screening or #440 stabilization is inferred.
 ## Unverified nomination and tenure intake (#130, #131)
 
 The existing `resident_action` ledger accepts `nomination_record`,
-`nomination_correct`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack` and
+`nomination_correct`, `nomination_review`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack` and
 `tenure_question_pack_review`. These are constructed staff-recorded
 intake, not nomination eligibility, verified identity, consent, Legal approval
 or an offer. Current registered staff need both resident-workflow and
@@ -351,8 +351,9 @@ check afresh; no cross-request cache is retained. A source change marks only its
 bound working fields stale; a new schema version affects all fields bound to that schema. Historical
 reviews/values and recorded diagnostic snapshots remain intact. `view` also
 returns `diagnostic_freshness`, one entry per saved manifest: `Stale` when
-reviewed inputs changed after it, a bound source changed (listing only those
-fields) or a newer schema version exists, with a re-run action; otherwise
+reviewed inputs changed after it (`changed_fields` lists only the fields whose
+reviewed value or state differ from the manifest), a bound source changed
+(`stale_fields` lists only those fields) or a newer schema version exists, with a re-run action; otherwise
 `Current`. This is not full FR-043/AC-051 rule/calculation/approval stale
 propagation: no approved rules, calculations or reviewed packs exist yet.
 Already-clean evidence is required: reads/reviews never scan or save a source.
@@ -689,8 +690,15 @@ than all-granted is unknown). If the store cannot be read, the result is
 `NONE`; the manual review route is unchanged. It writes nothing and creates no
 task.
 
+`sensor_status_text.status_text(signal)` gives the plain-language status for a
+signal, and `map_and_list(signals)` returns the map statuses and the accessible
+list built from the same entries, so the list mirrors the map text and never
+relies on colour alone (AC-067). The text has no readings, identifiers,
+diagnosis or priority change, and every state names the manual route. Anything
+not clearly sufficient reads as unknown.
+
 ```bash
-python -m unittest discover -s tests -p 'test_sensor_analysis*.py' -q
+python -m unittest discover -s tests -p 'test_sensor_*.py' -q
 ```
 
 ## Discovery assistant readiness and read-only boundary (#125)
@@ -774,6 +782,12 @@ Unknown/Offer/Committed on the server; withdrawing an agreed order derives Ended
 with its confirmations retained as history. Historical Booked does not confer agreement.
 Direct booking, completion and case advance require the current agreement as well
 as existing capacity, works consent, safety and building gates.
+
+`Store.require_booking_gates` also fails closed on evidence: missing documents
+(EPC, Survey, Design, Consent) or a malformed document list give a refused,
+UNKNOWN or failed gate with an owner and next action, never a pass. The helper
+`Store._evidence_missing` is typed and covered by an end-to-end refusal test in
+`tests/test_gates.py` (Refs #82).
 
 Offers bind the actual home, work-order scope, resident scope revisions, contract,
 package period, date and visit period. Replacement requires the current offer ID.

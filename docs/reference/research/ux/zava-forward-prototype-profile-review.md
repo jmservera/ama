@@ -500,6 +500,33 @@ standard](./content-standard.md). The Fluent 2 design system, the WCAG baseline,
 resident consent and the manual and non-digital paths are unchanged. AI chat
 features keep their manual route and human approval boundaries.
 
+### Second delta (2026-11-04, #156)
+
+This delta covers public issues numbered above #810 (the last item of the first
+delta) and listed on 2026-11-04. It reads titles, labels and state only, so the
+split is a title-level classification for the design owner to confirm. It is not
+a design review. The executable gate register is unchanged (74 screen issues, 0
+supplied designs, blocked).
+
+| Issue | Journey (hypothesis) | Task flow | Design artefact |
+| --- | --- | --- | --- |
+| #891 O employee AI chat in the demo | [One connected service journey][bc-connected] | Gap: no detailed flow; the manual path is the existing case workspace | Not supplied; [case workspace note](./employee-case-workspace-redesign.md) is the nearest evidence |
+| #1053 O, #1054 O, #1072 O resident demo sign-in, booking, load handling and sensor view | [Rented household][bc-household] | Gap: no detailed flow; the manual path is the existing contact route | Not supplied; [resident demo redesign](./resident-demo-redesign-2026-11-04.md) is the nearest evidence |
+
+Screen-related fixes that add no new design: #920, #945, #954 and #955 change
+existing screens, so they need the existing design. #891 and #1053 keep the
+human approval and resident consent boundaries and need an AI-unavailable
+manual path.
+
+No-screen items (14): #921, #942, #943, #944, #946 to #953, #1065 and #1086. They
+concern backend errors, governance rules, import checks and workflow alerts.
+
+Counts: 4 new screen traces, 4 screen-related items without a new design and 14
+no-screen (22 in all, with #810 not repeated). Criterion 1 stays unmet: no
+versioned design, detailed flow, named human design review, assistive-technology,
+content or user evidence is supplied. Fluent 2, the WCAG baseline and the
+[content standard](./content-standard.md) are unchanged.
+
 [bc-prd]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md
 [bc-connected]: ./customer-journeys/customer-journey-atlas.md#one-connected-service-journey
 [bc-programme]: ./customer-journeys/programme.md#1-programme-manager--planner

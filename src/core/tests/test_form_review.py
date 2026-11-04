@@ -803,6 +803,7 @@ class FormReview(unittest.TestCase):
             entry = view["diagnostic_freshness"][0]
             self.assertEqual(entry["status"], "Stale")
             self.assertEqual(entry["stale_fields"], ["epc"])
+            self.assertEqual(entry["changed_fields"], [])
             self.assertEqual(entry["reasons"], ["A bound source changed."])
             self.assertEqual(view["recorded_diagnostics"], [first])
             second = form_review.action(
@@ -831,6 +832,7 @@ class FormReview(unittest.TestCase):
             ][0]
             self.assertEqual(entry["reasons"], ["Reviewed inputs changed after this manifest."])
             self.assertEqual(entry["stale_fields"], [])
+            self.assertEqual(entry["changed_fields"], ["area"])
             forms.register_schema(store, self.actor, dict(schema(), version=2))
             entry = form_review.view(store, self.actor, "ZF-1")["drafts"][0][
                 "diagnostic_freshness"

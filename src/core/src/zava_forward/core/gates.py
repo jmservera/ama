@@ -184,6 +184,7 @@ BOOKING_RULES = {
     "funding": _booking_rule("funding", f"{_BRD} RULE-001; PRD FR-008 (exercise fixture)"),
     "safety": _booking_rule("safety", f"{_BRD} RULE-001; PRD FR-008 (exercise fixture)"),
     "resident": _booking_rule("resident", f"{_BRD} RULE-002; PRD FR-008 (exercise fixture)"),
+    "evidence": _booking_rule("evidence", f"{_BRD} RULE-001; PRD FR-008 (exercise fixture)"),
 }
 
 
@@ -232,3 +233,20 @@ def booking_gates(
         )
     )
     return results
+
+
+def evidence_gate(missing: Iterable[str] | None, owner: str, on: str | None = None) -> GateResult:
+    """Pass only when the required evidence kinds are all on file; None means not worked out."""
+    kinds = None if missing is None else list(missing)
+    result = check(
+        BOOKING_RULES["evidence"],
+        None if kinds is None else not kinds,
+        owner=owner,
+        correction="Upload or request the missing evidence and record it.",
+        label="Required evidence on file",
+        on=on,
+    )
+    if result.outcome == FAIL and kinds:
+        reason = f"Required evidence missing: {', '.join(kinds)}."
+        return GateResult(result.gate, FAIL, reason, owner, result.correction, result.rule)
+    return result
