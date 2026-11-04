@@ -3925,6 +3925,20 @@ building data 400. Building costs and home `cost_allocation` are returned only
 to the existing `FINANCE_VIEW` roles. Other staff see a restricted-cost notice,
 with amounts omitted server-side. The building screen is read-only and cannot
 approve, instruct works, release safety restrictions, contact residents or pay.
+
+## Versioned home case (issue #74)
+
+`GET /api/cases/{case_id}/home-case` returns the
+[core home case view](../core/README.md): links, this home's own evidence,
+decision, quality and cost allocation, shared building items and retained
+versions, kept in separate sections. `POST /api/cases/{case_id}/home-case-version`
+records the next version (body: `expected_version`, `source`, `source_version`,
+`reason`, optional `scheme_id`) and returns the view. Staff roles only
+(contractors 403, anonymous 401, unknown case 404, invalid body 400, stale
+version 409). The `#/case-home/{case_id}` screen is read-only, linked from the
+case page, and falls back to the existing case and building screens when the
+view is unavailable. A version is not an approval, safety release, works
+instruction or payment; a shared building ID never transfers a home's evidence.
 Home AI assistance remains available through its existing proposal-only and
 human-review paths; shared free text and costs are not added to prompts.
 
