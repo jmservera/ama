@@ -1541,6 +1541,24 @@ Rollback: `--transport auto`. This is an infrastructure change: the complete
 local gate and a Bicep deployment from main were not run here. Evidence and
 limits: [research note](../docs/reference/research/easy-auth-intermittent-500-2026-11-03.md).
 
+### Live deploy of main `b0080d4e1` (2026-11-04, Refs #810, Refs #462)
+
+Owner-approved, resource group `ama` only. Images built locally from `src/` and pushed
+inside a short registry window as `zava-forward-api:main-b0080d4e1` (digest
+`sha256:15cf2f3d0b2a34c6a9b5e1b64bc7063c88173153ccbdba722a1b033e575e3ad6`) and
+`zava-resident-demo:main-b0080d4e1` (`sha256:ca80afe69aaaa484a334b3ae9197912896d1cf703e329eb3d5a9945ce6ef2cab`).
+`az acr build` does not work in the window: hosted build agents get 403 at registry login
+(runs `dbm`, `dbn`), so use local `docker build` and `docker push`. The window was closed with the
+bare-IP rule removal, public access Disabled and exports disabled (readback Disabled, Deny, no rules).
+Revisions: demo API `--0000014`, resident demo `--0000009`, both 100 percent and Healthy.
+
+* #810 is not resolved. With transport `Http`, unauthenticated Easy Auth requests still returned
+  empty-body 500s under concurrency (3/160, 5/144 and 3/80 on `/healthz`, about 2 to 3.5 percent);
+  sequential 60/60 were 200 and the resident app, which has no Easy Auth, gave 80/80 200. The 500s carry
+  `x-ms-middleware-request-id`. Authenticated calls were not possible without a new role.
+* #462: 320px sign-in verified live; the live `demo.js` is byte-identical to main (UK-time and sign-out
+  wording present). The signed-in walk-through needs the owner-held shared password and is outstanding.
+
 ### Historical deployment recipe
 
 Observed 2026-10-11 in resource group `ama` (`uksouth`, `environmentName=test`, `deploymentProfile=development`):
