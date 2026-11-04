@@ -309,9 +309,23 @@ class AssetBoardScreen(unittest.TestCase):
         for control in ("button", "form", "input", "select", "textarea"):
             self.assertNotIn(control, tags(tree))
 
-    def test_capability_breakdown_missing_is_unknown_not_empty(self) -> None:
-        text = json.dumps(run({"consumption": {}})["tree"])
-        self.assertIn("per-capability breakdown could not be read", text)
+    def test_capability_rows_show_values_and_unknown_for_gaps(self) -> None:
+        rows = {
+            "assessment": {"calls": 4, "proposals": 3, "proposals_with_known_tokens": 2, "accepted_proposals": 2,
+                           "total_tokens": 900, "tokens_per_accepted_proposal": "450"},
+            "drafting": {"calls": 1},
+        }
+        tree = run({"consumption": {"by_capability": rows}})["tree"]
+        body = [n for n in walk(tree) if n.get("tag") == "tr"][-2:]
+        first = [json.dumps(k) for k in body[0]["kids"]]
+        sparse = [json.dumps(k) for k in body[1]["kids"]]
+        self.assertTrue(first[1].find("4") >= 0 and first[3].find("2") >= 0 and first[5].find("900") >= 0 and first[6].find("450") >= 0)
+        self.assertEqual(sum("Unknown" in c for c in sparse), 5)
+
+    def test_capability_breakdown_missing_or_wrong_shape_is_unknown(self) -> None:
+        for value in ({}, {"by_capability": [{"capability": "x"}]}, {"by_capability": None}):
+            text = json.dumps(run({"consumption": value})["tree"])
+            self.assertIn("per-capability breakdown could not be read", text)
 
     def test_usage_panel_missing_figures_are_unknown_not_zero(self) -> None:
         text = json.dumps(run({"consumption": {"quality_status": "Fail"}})["tree"])

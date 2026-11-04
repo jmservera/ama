@@ -1,6 +1,6 @@
 # Changes: issue 100 r2
 
-* src/core/src/zava_forward/core/ai_consumption.py: `by_capability` in the report.
+* Core unchanged: main already reports `by_capability` as a dict (after merging main, the duplicate list was dropped).
 * src/core/tests/test_ai_consumption.py: breakdown test.
 * src/api/src/zava_forward/api/web/role-screens.js: capability table on the asset and board view.
 * src/api/tests/test_asset_board_screen.py: two screen tests.

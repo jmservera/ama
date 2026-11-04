@@ -193,8 +193,8 @@ function assetUsage(report) {
       : screenUnknown("Alerts could not be read, so none is shown. This is not a statement that there were none.", "AI governance owner", "Ask for the alert record"),
     capabilities
       ? screenTable("Metered usage by AI capability (counts and tokens only; cost per capability is Unknown until Finance records a price source and denominator)",
-        ["Capability", "Calls", "Proposals with a call", "Human-accepted", "Total tokens", "Tokens per accepted proposal"],
-        capabilities.map(([name, k]) => [name, usageCount(k.calls), usageCount(k.proposals), usageCount(k.accepted_proposals),
+        ["Capability", "Calls", "Proposals with a call", "With known tokens", "Human-accepted", "Tokens, known proposals only", "Tokens per accepted proposal"],
+        capabilities.map(([name, k]) => [name, usageCount(k.calls), usageCount(k.proposals), usageCount(k.proposals_with_known_tokens), usageCount(k.accepted_proposals),
           usageCount(k.total_tokens), typeof k.tokens_per_accepted_proposal === "string" ? k.tokens_per_accepted_proposal : "Unknown"]), 25)
       : screenUnknown("The per-capability breakdown could not be read, so it is Unknown. Unknown is not zero.", "AI governance owner", "Ask for the dated usage record by capability"),
     components.length
