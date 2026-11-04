@@ -4551,9 +4551,24 @@ version, the query owner and the original query; it picks no winner and eligibil
 `raise_failure` and `raise_conflict` take an optional `ref`, so reading the same feed again does not duplicate an item.
 Nothing is re-run or re-sent.
 
-Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, wiring of the
-feeds (they read records; nothing calls them yet), integration and identity-conflict producers, and owner approval of the role names and runbooks (open). Tests:
-`src/core/tests/test_exception_queue.py`, `src/core/tests/test_exception_feeds.py`.
+`zava_forward.core.exception_register.ExceptionRegisterMixin.exception_register(user, staff)` (on `Store`,
+served read-only at `GET /api/exceptions`) rebuilds the queue from live records: unresolved stock conflicts
+go to the first named `data_steward`; AI tasks that fell back or were quarantined, overdue tasks with no
+named owner and unaccepted handoffs flagged by `handoff_ageing` go to the first named `digital_operator`.
+Named staff come from `ZF_EXCEPTION_STAFF`, a JSON object of staff email to roles; the owner has not named
+the roles, so with none configured only a programme manager or support officer sees an empty
+`roles_not_named` result and nothing is assigned by default. Anyone not named is refused (403) and the
+refusal is audited in the store ledger, as is each view (including the empty-staff view and refusal). The reply carries each item's owner, values with
+source, date and version, original source and `Unknown` eligibility, the caller's own role entry (not other staff emails) and scope, the
+outage banner (always `unknown` here: no health check feeds it) and a list of sources not connected (failed
+imports) and case or stock records that could not be read (reported per case, never failing the register), so absence is never shown as health. Recovery is not exposed and
+nothing is stored: the queue is rebuilt on each read.
+
+Not delivered: persistence of the queue and of recovery requests in the JSON, SQL and MSSQL stores, a recovery
+endpoint, a staff screen on `/api/exceptions`, the importer producer for failed imports, integration and
+identity-conflict producers, a health check for the outage banner, and owner approval of the role names and
+runbooks (open). Tests: `src/core/tests/test_exception_queue.py`, `src/core/tests/test_exception_feeds.py`,
+`src/api/tests/test_exception_register.py`.
 
 ## Versioned home case (#74)
 
