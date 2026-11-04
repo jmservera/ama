@@ -10261,3 +10261,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added a bounded local checkpoint to `docs/architecture/cutover-evidence-pack.md` (323 commits since b18f7f98; ruff, format, mypy in five projects, ADR 0006 and focused API auth, keep-alive, AI-boundary tests passed). Full suites, benchmarks, SQL Server, Docker, browsers and the gate were not run.
 * #440 criterion 8 (Major HVE behavior and host validation) remains unmet. No issue is closed.
+
+## [2026-11-04] update | Admin-only landing skips case requests (Refs #920)
+
+* Added `services.cases` to `/api/me`; an account without case access sees a plain-language page instead of 403s on `/api/facets` and `/api/cases`. Chromium check asserts no console errors. Issue stays open: other admin-only routes and live evidence are unproven. See `.copilot-tracking/*/2026-11-04-admin-landing-denial-920-*`.
