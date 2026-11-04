@@ -147,6 +147,10 @@ def exercise(browser: Any, base: str, reader: FixtureReader) -> None:
         == page.locator("#gauge-temperature_c").get_attribute("aria-valuetext").split(",")[0],
     )
     check(
+        "times are shown as UK time without UTC wording",
+        "UK time" in page.inner_text("#content") and "UTC" not in page.inner_text("#content"),
+    )
+    check(
         "table date has exact UTC alternative",
         page.locator(".sensor-table tbody time").last.get_attribute("datetime")
         == latest.observed_at.isoformat().replace("+00:00", "Z"),

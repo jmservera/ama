@@ -11,6 +11,9 @@
   var signinButton = document.getElementById("signin-button");
   var account = document.getElementById("account");
   var accountEmail = document.getElementById("account-email");
+  var lede = document.getElementById("lede");
+  var emailField = document.getElementById("email");
+  var passwordField = document.getElementById("password");
   var csrf = "";
   var sessionId = "";
   var transition = 0;
@@ -24,6 +27,9 @@
     if (callbackController) callbackController.dispose();
     callbackController = null;
   }
+
+  var signedInLede = lede.textContent;
+  var signedOutLede = "Sign in to see how your home improvement is going. Everything here is read-only apart from synthetic callbacks.";
 
   function clearPersonal() {
     transition += 1;
@@ -70,7 +76,7 @@
     { key: "humidity_pct", status: "humidity_status", name: "Humidity", unit: "%", min: 0, max: 100 }
   ];
   var sensorNumber = new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 });
-  var sensorDate = new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" });
+  var sensorDate = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Europe/London" });
 
   function sensorValue(reading, metric) {
     return reading[metric.key] === null
@@ -78,8 +84,8 @@
       : sensorNumber.format(reading[metric.key]) + " " + metric.unit;
   }
 
-  function sensorTime(stamp) {
-    var time = el("time", sensorDate.format(new Date(stamp)) + " UTC");
+  function sensorTime(stamp, suffix) {
+    var time = el("time", sensorDate.format(new Date(stamp)) + (suffix || ""));
     time.dateTime = stamp;
     return time;
   }
@@ -115,10 +121,10 @@
     var svg = svgEl("svg", { viewBox: "0 0 480 180", role: "img", "aria-labelledby": id + "-title " + id + "-desc" });
     svg.appendChild(svgEl("title", { id: id + "-title" }, "Synthetic " + metric.name.toLowerCase() + " history"));
     svg.appendChild(svgEl("desc", { id: id + "-desc" }, summary + " Gaps mean readings are missing or unavailable. The table below gives every value and status."));
-    svg.appendChild(svgEl("path", { d: "M45 10V150H470", class: "sensor-axis" }));
+    svg.appendChild(svgEl("path", { d: "M56 10V150H470", class: "sensor-axis" }));
     [metric.min, (metric.min + metric.max) / 2, metric.max].forEach(function (value) {
       var y = 150 - (value - metric.min) / (metric.max - metric.min) * 140;
-      svg.appendChild(svgEl("text", { x: 38, y: y + 4, "text-anchor": "end" }, sensorNumber.format(value)));
+      svg.appendChild(svgEl("text", { x: 50, y: y + 6, "text-anchor": "end" }, sensorNumber.format(value)));
     });
     var start = Date.parse(history[0].observed_at);
     var end = Date.parse(history[history.length - 1].observed_at);
@@ -132,7 +138,7 @@
       var stamp = Date.parse(reading.observed_at);
       if (reading[metric.key] === null) { segment(); previous = null; return; }
       if (previous !== null && stamp - previous > 90 * 60 * 1000) segment();
-      var x = end === start ? 255 : 45 + (stamp - start) / (end - start) * 425;
+      var x = end === start ? 263 : 56 + (stamp - start) / (end - start) * 414;
       var y = 150 - (reading[metric.key] - metric.min) / (metric.max - metric.min) * 140;
       points.push(x + "," + y);
       svg.appendChild(svgEl("circle", { cx: x, cy: y, r: 3, class: "sensor-point" }));
@@ -142,7 +148,7 @@
     figure.appendChild(svg);
     var caption = el("figcaption");
     caption.appendChild(el("p", summary, "sensor-summary"));
-    caption.appendChild(el("span", "Time (UTC): "));
+    caption.appendChild(el("span", "Time (UK time): "));
     caption.appendChild(sensorTime(history[0].observed_at));
     if (history.length > 1) {
       caption.appendChild(el("span", " to "));
@@ -162,7 +168,7 @@
     }
     var latest = history[history.length - 1];
     var recorded = el("p", "Latest stored reading: ");
-    recorded.appendChild(sensorTime(latest.observed_at));
+    recorded.appendChild(sensorTime(latest.observed_at, " (UK time)"));
     section.appendChild(recorded);
     var gauges = el("div", null, "sensor-gauges");
     sensorMetrics.forEach(function (metric) {
@@ -199,7 +205,7 @@
     table.appendChild(el("caption", "Synthetic stored readings for your home, oldest first"));
     var head = el("thead");
     var headings = el("tr");
-    ["Recorded time (UTC)", "Temperature (\u00b0C)", "Humidity (%)"].forEach(function (text) {
+    ["Recorded time (UK time)", "Temperature (\u00b0C)", "Humidity (%)"].forEach(function (text) {
       var th = el("th", text);
       th.scope = "col";
       headings.appendChild(th);
@@ -286,6 +292,7 @@
 
     errorEl.hidden = true;
     signin.hidden = true;
+    lede.textContent = signedInLede;
     content.hidden = false;
     accountEmail.textContent = view.account.email;
     account.hidden = false;
@@ -308,6 +315,9 @@
   function showSignin(message) {
     clearPersonal();
     signinButton.disabled = false;
+    lede.textContent = signedOutLede;
+    emailField.removeAttribute("aria-invalid");
+    passwordField.removeAttribute("aria-invalid");
     errorEl.hidden = true;
     statusEl.textContent = "";
     signin.hidden = false;
@@ -397,10 +407,17 @@
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
-    if (!email.trim() || !password) {
-      signinError.textContent = "Enter your email address and the password.";
+    var email = emailField.value;
+    var password = passwordField.value;
+    var noEmail = !email.trim();
+    var noPassword = !password;
+    emailField.removeAttribute("aria-invalid");
+    passwordField.removeAttribute("aria-invalid");
+    if (noEmail || noPassword) {
+      if (noEmail) emailField.setAttribute("aria-invalid", "true");
+      if (noPassword) passwordField.setAttribute("aria-invalid", "true");
+      signinError.textContent = noEmail && noPassword ? "Enter your email address and the password."
+        : noEmail ? "Enter your email address." : "Enter the password.";
       signinError.hidden = false;
       signinError.focus();
       return;
@@ -411,7 +428,7 @@
     api("/demo/login", { method: "POST", body: JSON.stringify({ email: email, password: password }) })
       .then(function (res) {
         if (current !== transition) return;
-        document.getElementById("password").value = "";
+        passwordField.value = "";
         if (res.ok) {
           csrf = res.body.csrf || csrf;
           sessionId = res.body.session_id;
@@ -432,7 +449,7 @@
     clearPersonal();
     var current = transition;
     function notConfirmed() {
-      if (current === transition) fail("We could not confirm that you were signed out. Your session may still be active on this device and ends by itself within 30 minutes. Select Try again to check, then sign out again.");
+      if (current === transition) fail("We could not confirm that you signed out. You may still be signed in on this device. You will be signed out by itself within 30 minutes. Select Try again to check, then sign out again.");
     }
     fetch("/demo/logout", { method: "POST", headers: { "X-CSRF-Token": csrf, "X-Resident-Session": held, "Content-Type": "application/json" }, body: "{}", cache: "no-store", credentials: "same-origin" })
       .then(function (r) {

@@ -90,7 +90,7 @@ button[aria-disabled=true]{cursor:wait}
 .sensor-chart{margin:var(--spacingHorizontalXXL) 0}
 .sensor-chart h3{font-size:var(--fontSizeBase400);margin:0}
 .sensor-chart svg{display:block;width:100%;height:auto;color:var(--ink)}
-.sensor-chart text{fill:currentColor;font:var(--fontSizeBase400) var(--fontFamilyBase);font-variant-numeric:tabular-nums}
+.sensor-chart text{fill:currentColor;font:1.25rem var(--fontFamilyBase);font-variant-numeric:tabular-nums}
 .sensor-chart figcaption{color:var(--muted)}
 .sensor-summary{margin:var(--spacingHorizontalS) 0;color:var(--ink)}
 .sensor-axis{stroke:var(--muted);fill:none}
