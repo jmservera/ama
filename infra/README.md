@@ -3824,20 +3824,23 @@ existing environment and a pre-existing identity, creates no hub, role assignmen
 and refuses any scope outside `ama`, a tag-only image or a missing approval reference. It was
 compiled and linted only (`az bicep build`, `az bicep lint`). **It is not deployed**: no what-if,
 no deployment, no image push and no device registration was run. The device certificates are
-mounted read-only from an Azure Files share registered as environment storage; nothing secret is
+mounted from an Azure Files share registered as environment storage. `mountOptions: 'ro'` sits on the job volume (`template.volumes[]`), which is its documented placement for `AzureFile`; the environment storage definition (outside this template) should also use `accessMode: ReadOnly`. The mount is used: it holds the `<device>.pem` and `.key` files; nothing secret is
 in the template or the image. Behaviour is documented in the
 [API README](../src/api/README.md#live-simulator-container-184-owner-requirement-2026-11-04).
 
-Planning cost, not a billing quote or enforced cap (list prices not re-retrieved this session; the
-hub figure is the 2026-10-27 `run_plan` basis):
+Planning cost, not a billing quote or enforced cap. Unit prices are recalled list prices that were
+not re-retrieved this session and must be confirmed in the Azure pricing calculator: IoT Hub B1 about
+USD25 per unit per month; Container Apps Consumption about USD0.000024 per vCPU-second and
+USD0.000003 per GiB-second after a monthly free grant of 180,000 vCPU-seconds and 360,000
+GiB-seconds per subscription. The hub message budget is the 2026-10-27 `run_plan` basis.
 
 | Item | Basis | USD per month |
 | --- | --- | --- |
-| IoT Hub B1, one unit (existing) | 400,000 messages per day; `homes x 288` per day, so 100 homes use 7 % and 1,250 homes the whole budget after headroom | 10 |
-| Job, 100 homes | about 25 s per run x 8,640 runs = 216,000 s at 0.25 vCPU and 0.5 GiB; inside the monthly free grant unless other jobs use it; worst case about 2 | 0 to 2 |
-| Job, 1,000 homes | about 120 s per run at 10 messages per second; worst case about 8 | 0 to 8 |
-| Azure Files share for certificates, logs | small share and a few GiB of logs | under 2 |
-| Total, 100 to 1,000 homes | | about 10 to 20 |
+| IoT Hub B1, one unit (existing) | 400,000 messages per day; `homes x 288` per day, so 100 homes use 7 % and 1,250 homes the whole budget after headroom | about 25 |
+| Job, 100 homes | about 25 s per run x 8,640 runs = 216,000 s, so 54,000 vCPU-s and 108,000 GiB-s, inside the free grant unless other jobs use it | 0 |
+| Job, 1,000 homes | about 120 s per run = 1,036,800 s, so 259,200 vCPU-s and 518,400 GiB-s; billable 79,200 vCPU-s and 158,400 GiB-s; the 240 s replica timeout caps the worst case at about 10 | about 2.5 (at most about 10) |
+| Azure Files share for certificates | a few KiB of certificates; transactions are negligible | under 1 |
+| Total, 100 to 1,000 homes | | about 25 to 40 |
 
 That is well inside the USD700 cap. The IoT Hub Free tier (8,000 messages per day) carries only
 27 homes at one message per five minutes, so it does not fit "every home"; B1 stays. More than
@@ -3845,7 +3848,7 @@ That is well inside the USD700 cap. The IoT Hub Free tier (8,000 messages per da
 steps before any send: approve live sending and name the approval reference; Registry
 Contributor for the operator and registration of one `SYN-` device per home with its X.509
 certificate (#185 manifest, 100 device cap in `device_identity`); a certificate file share;
-a read-only SQL grant for the job identity; AcrPull; image push by digest; a hub-side route and
+the minimal SQL grant for the job identity, `GRANT SELECT ON OBJECT::dbo.cases TO [<job identity>]` and nothing else (the job runs only `SELECT id FROM cases WHERE closed = 0 ORDER BY id`, with no DDL, seeding, migration, write or other table, and mounts no `/data`); AcrPull; image push by digest; a hub-side route and
 consumer that accept `live-sim-reading-v1` (#110, #140).
 
 ### Bounded existing-hub exercise (2026-10-29, Refs #140 #184 #137)

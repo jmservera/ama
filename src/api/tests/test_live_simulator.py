@@ -375,7 +375,88 @@ class StoreHomesTests(unittest.TestCase):
             self.assertEqual(ls.store_home_ids({}), Sql.ids)
 
 
+class MssqlHomesTests(unittest.TestCase):
+    def test_only_one_parameter_free_select_is_issued(self) -> None:
+        import sqlite3
+
+        seen: list[str] = []
+
+        def guard(action: int, *_: Any) -> int:
+            seen.append(str(action))
+            read_only = (sqlite3.SQLITE_SELECT, sqlite3.SQLITE_READ, sqlite3.SQLITE_FUNCTION)
+            return sqlite3.SQLITE_OK if action in read_only else sqlite3.SQLITE_DENY
+
+        db = sqlite3.connect(":memory:")
+        db.execute("CREATE TABLE cases (id TEXT PRIMARY KEY, closed INT NOT NULL, body TEXT)")
+        db.executemany("INSERT INTO cases VALUES (?, ?, 'x')", [("B", 0), ("A", 0), ("C", 1)])
+        statements: list[str] = []
+        db.set_trace_callback(statements.append)
+        db.set_authorizer(guard)
+        self.assertEqual(ls.mssql_home_ids({}, connect=lambda: db), ["A", "B"])
+        self.assertEqual(statements, [ls.HOME_IDS_SQL])
+        self.assertNotIn(str(sqlite3.SQLITE_INSERT), seen)
+
+    def test_fake_connection_records_no_ddl_or_write(self) -> None:
+        class Cur:
+            def fetchall(self) -> list[tuple[str]]:
+                return [("H1",)]
+
+        class Conn:
+            sql: list[str] = []
+            closed = False
+
+            def execute(self, sql: str, args: tuple[Any, ...] = ()) -> Cur:
+                self.sql.append(sql)
+                return Cur()
+
+            def close(self) -> None:
+                self.closed = True
+
+        conn = Conn()
+        self.assertEqual(ls.mssql_home_ids({}, connect=lambda: conn), ["H1"])
+        self.assertEqual(conn.sql, [ls.HOME_IDS_SQL])
+        self.assertTrue(conn.closed)
+        words = ls.HOME_IDS_SQL.upper()
+        for banned in ("CREATE", "ALTER", "INSERT", "UPDATE", "DELETE", "DROP", "?"):
+            self.assertNotIn(banned, words)
+
+    def test_mssql_never_opens_the_store(self) -> None:
+        from unittest.mock import patch
+
+        with (
+            patch("zava_forward.core.factory.open_store", side_effect=AssertionError),
+            patch.object(ls, "mssql_home_ids", return_value=["Z"]),
+        ):
+            self.assertEqual(ls.store_home_ids({"ZF_STORE": "mssql"}), ["Z"])
+
+    def test_failure_is_a_fixed_code_without_detail(self) -> None:
+        def boom() -> Any:
+            raise RuntimeError("Server=secret.database.windows.net;UID=abc")
+
+        with self.assertRaises(ls.HomeListError) as ctx:
+            ls.mssql_home_ids({}, connect=boom)
+        self.assertEqual(str(ctx.exception), "HOME_LIST_UNAVAILABLE")
+        self.assertIsNone(ctx.exception.__cause__)
+        self.assertTrue(ctx.exception.__suppress_context__)
+
+    def test_missing_sql_settings_are_a_fixed_code(self) -> None:
+        with self.assertRaises(ls.HomeListError):
+            ls.store_home_ids({"ZF_STORE": "mssql"})
+
+
 class CliTests(unittest.TestCase):
+    def test_bad_seed_and_store_failure_exit_with_fixed_codes(self) -> None:
+        from contextlib import redirect_stderr
+
+        err = io.StringIO()
+        with redirect_stderr(err):
+            self.assertEqual(ls.main(["--once"], env={"ZF_SIM_SEED": "x"}), 2)
+            self.assertEqual(ls.main(["--once"], env={"ZF_STORE": "mssql"}), 3)
+        text = err.getvalue()
+        self.assertIn("SIM_CONFIG_INVALID", text)
+        self.assertIn("HOME_LIST_UNAVAILABLE", text)
+        self.assertNotIn("Traceback", text)
+
     def test_dry_run_prints_labelled_messages_and_sends_nothing(self) -> None:
         original = ls.store_home_ids
         ls.store_home_ids = lambda env=None: HOMES[:3]

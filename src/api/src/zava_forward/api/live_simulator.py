@@ -283,11 +283,48 @@ async def send_slot(
     return summary
 
 
+class HomeListError(Exception):
+    """Fixed-text failure reading the home list; the cause and connection details are never kept."""
+
+
+HOME_IDS_SQL = "SELECT id FROM cases WHERE closed = 0 ORDER BY id"
+
+
+def mssql_home_ids(env: Mapping[str, str], connect: Callable[[], Any] | None = None) -> list[str]:
+    """Read open case ids with one parameter-free SELECT; no DDL, seeding, migration or write."""
+    conn = None
+    try:
+        if connect is None:
+            from zava_forward.core.mssqlstore import _Conn, connection_string
+
+            conn_str, token = connection_string(env), env.get("ZF_SQL_TOKEN")
+
+            def connect() -> Any:
+                return _Conn(conn_str, token)
+
+        conn = connect()
+        return [str(row[0]) for row in conn.execute(HOME_IDS_SQL).fetchall()]
+    except (Exception, SystemExit):  # noqa: BLE001 - no driver text or traceback gets out
+        raise HomeListError("HOME_LIST_UNAVAILABLE") from None
+    finally:
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:  # noqa: BLE001
+                pass
+
+
 def store_home_ids(env: Mapping[str, str] | None = None) -> list[str]:
-    """Open home (case) ids from the configured store (ZF_STORE, ZF_DATA); ids only are kept."""
+    """Open home (case) ids. mssql uses a read-only SELECT of ids; json and sqlite are local/dev."""
+    env = os.environ if env is None else env
+    if (env.get("ZF_STORE") or "json").lower() == "mssql":
+        return mssql_home_ids(env)
     from zava_forward.core.factory import open_store
 
-    store = open_store(env)
+    try:
+        store = open_store(env)
+    except (Exception, SystemExit):  # noqa: BLE001
+        raise HomeListError("HOME_LIST_UNAVAILABLE") from None
     if hasattr(store, "query_case_ids"):
         ids: list[str] = []
         after: str | None = None
@@ -370,7 +407,12 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="zava_forward.api.live_simulator")
     parser.add_argument("--sink", choices=("stdout", "iothub"), default="stdout")
     parser.add_argument("--once", action="store_true", help="send the current slot and exit")
-    parser.add_argument("--seed", type=int, default=int(env.get("ZF_SIM_SEED", "184")))
+    try:
+        default_seed = int(env.get("ZF_SIM_SEED", "184"))
+    except ValueError:
+        print("Cannot run: SIM_CONFIG_INVALID", file=sys.stderr)
+        return 2
+    parser.add_argument("--seed", type=int, default=default_seed)
     parser.add_argument("--max-homes", type=int, default=0, help="0 means every home")
     parser.add_argument("--max-per-second", type=float, default=Limits.max_per_second)
     parser.add_argument("--batch-size", type=int, default=Limits.batch_size)
@@ -388,9 +430,15 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
         first = homes()
         LOG.info("capacity %s", check_capacity(len(first), limits))
         asyncio.run(run(lambda: homes(), generator, sink, limits, once=args.once, report=_report))
+    except HomeListError as error:
+        print(f"Cannot run: {error}", file=sys.stderr)
+        return 3
     except (StreamError, lr.LiveReadingError, SystemExit) as error:
         print(f"Cannot run: {error}", file=sys.stderr)
         return 2
+    except Exception:  # noqa: BLE001 - fixed code only, never a traceback or connection detail
+        print("Cannot run: SIM_FAILED", file=sys.stderr)
+        return 4
     return 0
 
 

@@ -1973,9 +1973,16 @@ discovers or represents installed real devices and has no resident-facing action
   `source_type=SYNTHETIC`, `scenario`, `seed`, `injected_fault=none` and a plain `label`. It adds
   `sunlight_wm2`, which the current #110 consumer schema does not accept; teaching the consumer
   this version is a #110 decision and is not done here.
-* Homes: every open case from the configured store (`ZF_STORE`, `ZF_DATA`, same abstraction as the
-  API), ids only, re-read hourly; a failed read reuses the last list. Tests use fakes only and no
-  dataset is read.
+* Homes: every open case id, re-read hourly; a failed read reuses the last list. With
+  `ZF_STORE=mssql` (the job) it issues exactly one parameter-free
+  `SELECT id FROM cases WHERE closed = 0 ORDER BY id` over a connection built with the existing
+  `ZF_SQL_*` settings (`connection_string`); it never builds `MssqlStore`, so there is no DDL,
+  migration, seeding, meta write, case load or `/state` write, and no `/data` is needed. The exact
+  minimal grant is `GRANT SELECT ON OBJECT::dbo.cases TO [<job identity>]` (no other table, no
+  write). With `ZF_STORE=json` or `sqlite` (local and dev) the same abstraction as the API is
+  used. Tests use fakes and an authorizer-guarded SQLite; no dataset is read.
+* Exit codes (stderr carries a fixed code only, never a traceback, driver text or connection
+  detail): 0 ok, 2 refused or invalid configuration, 3 `HOME_LIST_UNAVAILABLE`, 4 `SIM_FAILED`.
 * Sinks: `stdout` (default, dry run), `MemorySink` (tests) and `iothub` (per-device X.509 from
   `ZF_SIM_CERT_DIR/<device>.pem` and `.key`, mounted from a secret store; never in the repo). The
   hub sink needs `ZF_SIM_HUB_HOSTNAME` and an owner approval reference `ZF_SIM_APPROVAL`; a missing
