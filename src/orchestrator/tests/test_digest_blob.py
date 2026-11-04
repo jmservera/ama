@@ -65,6 +65,14 @@ class BlobDigestTests(unittest.TestCase):
         self.assertEqual(put[2]["If-None-Match"], "*")
         self.assertEqual(digest_blob.publish(self.store, self.blob), [])
 
+    def test_non_object_year_digest_file_is_skipped_not_raised(self):
+        Path(self.store.digest_dir).mkdir(parents=True, exist_ok=True)
+        for text in ("null", "[]", "7", '"x"'):
+            with self.subTest(text=text):
+                Path(self.store.digest_dir, "year-2024.json").write_text(text)
+                self.assertNotIn("year-2024.json", digest_blob.publish(self.store, self.blob))
+                self.assertNotIn("year-2024.json", self.container.blobs)
+
     def test_clean_ledger_verifies_against_container(self):
         self.run_job("--publish")
         self.store.log_call(self.sam, "ZF-1", "Call 3", "")

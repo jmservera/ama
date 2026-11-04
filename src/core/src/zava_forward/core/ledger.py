@@ -139,9 +139,10 @@ def read_year_digests(directory):
             if name.startswith("year-") and name.endswith(".json"):
                 try:
                     with open(os.path.join(directory, name), encoding="utf-8") as f:
-                        out.append(json.load(f))
+                        digest = json.load(f)
                 except (OSError, ValueError):
-                    out.append(dict(unreadable=name))
+                    digest = None
+                out.append(digest if isinstance(digest, dict) else dict(unreadable=name))
     return out
 
 
