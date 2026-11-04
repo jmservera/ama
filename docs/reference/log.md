@@ -10437,6 +10437,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
 
+## [2026-11-04] update | Epic 136 resource coverage register (Refs #136)
+
+* Added a resource coverage register to infra/README.md: each architecture resource is in Bicep or recorded as manual or deferred with the owner. Criterion 2 is recorded but not machine-checked; criteria 1, 3, 4 and 5 stay unmet (stabilization checkpoint #440, nine open children, no from-empty rerun since 2026-10-12, epic status not refreshed).
 ## [2026-11-04] update | Issue 137 environment strategy status (Refs #137)
 
 * Rechecked merged PRs 306, 346 and 415. Criteria 1, 2, 3 and 5 are delivered. Criterion 4 stays unmet: region and capacity are parameters with fail-closed guards, but no authenticated live region and quota check exists (SQL and model usage, IoT quota, ACA zone evidence and subscription binding are unknown; owner and Azure step). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-137 r1).
