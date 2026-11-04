@@ -10293,6 +10293,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Live resident sensors walk and blocked seed (Refs #1072, Refs #462)
 
 * Added a dated section to `docs/reference/research/ux/resident-demo-redesign-2026-11-04.md`: the signed-in 390 px walk of the live resident demo shows only the fail-closed no-sensor-readings message, so live temperature, humidity and forecast rendering remain unobserved. Root cause evidence is that the sensor tables were last evidenced absent, the PR 1071 stock-link view change was never applied live, and the committed backfill ends 2026-09-30 so it would be stale. SQL is private with the managed identity as administrator, so the live apply and seed were not performed and nothing in Azure changed; the owner decision needed is recorded there and in the issue. Evidence lives under `.copilot-tracking/*/2026-11-04/resident-sensors-live-seed-1072-*`.
+
 ## [2026-11-04] update | Live deploy of resident redesign and demo end date (Refs #462, Refs #521)
 
 * Deployed main `8b9553d8b` to `ca-cutover-test-demo-api` (`--0000025`) and `ca-resident-demo` (`--0000010`) through the short registry window; set `ZF_DEMO_EXPIRES_AT` to `2028-01-01T00:00:00Z` (was `2027-01-31T23:59:00Z`). Recorded in `infra/README.md` and the prototype profile review. Sensors section showed the fail-closed message only, filed as #1072. No issue is closed.
