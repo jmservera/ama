@@ -10305,3 +10305,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Booking evidence gate CI fix and refusal test (Refs #82)
 
 * Typed `Store._evidence_missing` to clear the mypy `no-untyped-call` failures in `test_gates.py`, and added a behavioural test that `require_booking_gates` refuses booking when evidence is missing or malformed. Documented in `src/core/README.md`. No behaviour change; no issue criteria ticked or closed.
+## [2026-11-04] update | Issue 119 status record (Refs #119)
+
+* Added a dated status record to the map tile provider options page. Both acceptance criteria remain unmet and need human, legal and procurement steps. Nothing ticked or closed.
+## [2026-11-04] update | Issue 83 remaining criterion blocked on OD-09 (Refs #83)
+
+* Rechecked merged PRs 311, 893 and 1036: criteria 1 and 2 are delivered, and core ageing plus the read-only unaccepted-handoff route exist. Criterion 3 stays unmet because the Housing and repairs leads have not approved response times and out-of-hours routes (OD-09). No limit was defaulted and nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-83 r6).
