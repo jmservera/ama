@@ -690,8 +690,15 @@ than all-granted is unknown). If the store cannot be read, the result is
 `NONE`; the manual review route is unchanged. It writes nothing and creates no
 task.
 
+`sensor_status_text.status_text(signal)` gives the plain-language status for a
+signal, and `map_and_list(signals)` returns the map statuses and the accessible
+list built from the same entries, so the list mirrors the map text and never
+relies on colour alone (AC-067). The text has no readings, identifiers,
+diagnosis or priority change, and every state names the manual route. Anything
+not clearly sufficient reads as unknown.
+
 ```bash
-python -m unittest discover -s tests -p 'test_sensor_analysis*.py' -q
+python -m unittest discover -s tests -p 'test_sensor_*.py' -q
 ```
 
 ## Discovery assistant readiness and read-only boundary (#125)
