@@ -18,7 +18,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
 
-from . import controls, projection
+from . import controls, job_pack, projection
 from .appointments import AppointmentCommittedError, AppointmentMixin
 from .change_provenance import _actor
 from .documents import DocumentStoreError
@@ -573,6 +573,18 @@ class ProcurementMixin(AppointmentMixin):
             offset = max(0, offset)
             return dict(items=[self._wo_view(w, c, user) for w, c in visible[offset:offset + limit]],
                         total=len(visible), offset=offset, limit=limit)
+
+    def work_order_job_pack(self, user, work_order_id):
+        """Read-only job pack for staff to carry to a worker (#132). No contractor access, no writes."""
+        with self.lock:
+            if projection.is_contractor(user):
+                raise PermissionError("Job packs are issued by staff. Ask the contract manager.")
+            self._work_order_reader(user)
+            w = self._work_order(work_order_id)
+            c = self.cases.get(w["case_id"])
+            if not c:
+                raise ValueError("Choose one of the work orders.")
+            return job_pack.build_job_pack(self._wo_view(w, c, user), c)
 
     def list_packages(self, user, limit=None, offset=0):
         with self.lock:
