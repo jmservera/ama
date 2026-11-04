@@ -80,3 +80,45 @@ class PublicationTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SignoffTests(unittest.TestCase):
+    def signed(self):
+        p = json.loads(json.dumps(ranking.POLICY_V1))
+        p["owner"] = "Dana Example"
+        p["signoff"] = dict(
+            signed_by="Dana Example",
+            signed_on="2026-11-05",
+            rule_order_hash=ranking.rule_order_hash(p),
+        )
+        return p
+
+    def test_draft_policy_is_not_signed_and_says_why(self):
+        self.assertFalse(ranking.is_signed(ranking.POLICY_V1))
+        self.assertEqual(ranking.signoff_problems(ranking.POLICY_V1), ["No named policy owner."])
+
+    def test_named_owner_without_record_is_not_signed(self):
+        p = self.signed()
+        del p["signoff"]
+        self.assertEqual(ranking.signoff_problems(p), ["No recorded sign-off of the rule order."])
+
+    def test_complete_signoff_is_signed(self):
+        self.assertTrue(ranking.is_signed(self.signed()))
+
+    def test_signoff_by_someone_else_or_undated_is_refused(self):
+        p = self.signed()
+        p["signoff"].update(signed_by="Someone Else", signed_on="soon")
+        self.assertEqual(len(ranking.signoff_problems(p)), 2)
+
+    def test_changing_rule_order_voids_signoff(self):
+        p = self.signed()
+        p["rules"] = list(reversed(p["rules"]))
+        self.assertEqual(ranking.signoff_problems(p), ["Sign-off does not match this rule order."])
+        q = self.signed()
+        q["stage_order"] = list(reversed(q["stage_order"]))
+        self.assertFalse(ranking.is_signed(q))
+
+    def test_status_reports_unsigned_reasons_without_changing_ranking(self):
+        before = ranking.canonical(ranking.rank([case("ZF-A")]))
+        self.assertFalse(ranking.is_signed(ranking.CURRENT))
+        self.assertEqual(ranking.canonical(ranking.rank([case("ZF-A")])), before)
