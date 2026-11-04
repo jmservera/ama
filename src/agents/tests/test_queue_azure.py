@@ -3,10 +3,34 @@ import unittest
 import urllib.parse
 from xml.sax.saxutils import escape
 
-from test_dispatch import message
+from zava_forward.core import assistants
+
+from zava_forward.agents.dispatch import TaskMessage
 from zava_forward.agents.queue_azure import AzureTaskQueue, QueueError, checked_endpoint
 
 ENDPOINT = "https://zfstore.queue.core.windows.net"
+
+
+def message() -> TaskMessage:
+    limits = assistants.Limits(
+        dict(
+            ZF_ASSIST_AUTHORITY="op",
+            ZF_ASSIST_CALL_ALLOWANCE="10",
+            ZF_ASSIST_TOKEN_ALLOWANCE="1000000",
+            ZF_ASSIST_EXPIRES="2999-01-01T00:00:00Z",
+        )
+    )
+    task = dict(
+        id="t1",
+        capability="stock-prioritisation",
+        case_id="ZF-1",
+        version=assistants.VERSION,
+        source_signature="sig",
+        fence=3,
+        owner="own",
+        snapshot={"citations": ["home.epc"], "unknowns": []},
+    )
+    return TaskMessage.from_task(task, limits)
 
 
 def entry(text: str, count: int = 1, message_id: str = "m1", pop: str = "p1==") -> bytes:
@@ -34,7 +58,7 @@ class Recorder:
 
 def queue(recorder: Recorder, **kwargs: int) -> AzureTaskQueue:
     return AzureTaskQueue(
-        ENDPOINT, "agent-tasks", "agent-tasks-poison", lambda: "tok", recorder, **kwargs
+        ENDPOINT, "agent-tasks", "agent-tasks-poison", lambda: "fake-token", recorder, **kwargs
     )
 
 
@@ -52,7 +76,7 @@ class ReceiveTests(unittest.TestCase):
         query = urllib.parse.parse_qs(urllib.parse.urlsplit(url).query)
         self.assertEqual(query["numofmessages"], ["1"])
         self.assertEqual(query["visibilitytimeout"], ["60"])
-        self.assertEqual(headers["Authorization"], "Bearer tok")
+        self.assertEqual(headers["Authorization"], "Bearer fake-token")
 
     def test_plain_json_text_is_accepted(self) -> None:
         rec = Recorder((200, entry(message().to_json())))
@@ -61,6 +85,15 @@ class ReceiveTests(unittest.TestCase):
     def test_empty_queue_returns_none(self) -> None:
         rec = Recorder((200, b"<QueueMessagesList />"))
         self.assertIsNone(queue(rec).receive())
+
+    def test_malformed_xml_is_a_queue_error(self) -> None:
+        with self.assertRaises(QueueError):
+            queue(Recorder((200, b"<not-xml"))).receive()
+
+    def test_non_numeric_dequeue_count_is_a_queue_error(self) -> None:
+        rec = Recorder((200, entry("x").replace(b"<DequeueCount>1", b"<DequeueCount>abc")))
+        with self.assertRaises(QueueError):
+            queue(rec).receive()
 
     def test_service_error_raises_for_the_loop_to_retry(self) -> None:
         with self.assertRaises(QueueError):

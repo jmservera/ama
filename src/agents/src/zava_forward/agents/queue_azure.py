@@ -125,14 +125,20 @@ class AzureTaskQueue:
         )
         if status != 200:
             raise QueueError(f"Queue receive failed with status {status}.")
-        entries = ET.fromstring(body).findall("QueueMessage")  # noqa: S314
+        try:
+            entries = ET.fromstring(body).findall("QueueMessage")  # noqa: S314
+        except ET.ParseError as error:
+            raise QueueError("Queue receive returned malformed XML.") from error
         if not entries:
             return None
         entry = entries[0]
         message_id = entry.findtext("MessageId") or ""
         pop_receipt = entry.findtext("PopReceipt") or ""
         text = entry.findtext("MessageText") or ""
-        deliveries = int(entry.findtext("DequeueCount") or "1")
+        try:
+            deliveries = int(entry.findtext("DequeueCount") or "1")
+        except ValueError as error:
+            raise QueueError("Queue message has an invalid DequeueCount.") from error
         if not message_id or not pop_receipt:
             raise QueueError("Queue message is missing its identity.")
         receipt = f"{message_id}\n{pop_receipt}"
