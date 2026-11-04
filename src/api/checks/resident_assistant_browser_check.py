@@ -508,9 +508,7 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     button.click()
     expect(button).to_be_enabled()
     expect(panel).to_be_visible()
-    page.get_by_role(
-        "button", name="Find callback times in the manual form", exact=True
-    ).last.click()
+    page.get_by_role("button", name="Find callback times in the manual form", exact=True).last.click()
     expect(panel).to_be_hidden()
     expect(page.locator("#callback-proposals .callback-item")).to_have_count(3)
     expect(page.locator("#callback-title")).to_be_focused()
@@ -522,9 +520,7 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
         button.click()
         expect(button).to_be_enabled()
         expect(panel).to_be_visible()
-        page.get_by_role(
-            "button", name="Find callback times in the manual form", exact=True
-        ).last.click()
+        page.get_by_role("button", name="Find callback times in the manual form", exact=True).last.click()
         expect(panel).to_be_hidden()
         expect(page.locator("#callback-period")).to_have_value(period)
         expect(page.locator("#callback-proposals .callback-item")).to_have_count(2)
