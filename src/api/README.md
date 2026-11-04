@@ -5050,6 +5050,31 @@ basis as #766). The notice is static page text. It is not a Legal or DPO approva
 change consent, retention or the no-real-resident-data boundary, and phone, email and visits stay
 the routes for any real resident need (#441).
 
+### Resident demo page redesign, phase 1 (#462)
+
+Phase 1 of the 2026-11-04 UX redesign
+([specification](../../docs/reference/research/ux/resident-demo-redesign-2026-11-04.md)) changes
+the page only; no route, endpoint or SQL is added.
+
+* Sign-in shows only a loading status while the request runs (form hidden, `aria-busy` on
+  `main`, slow-start text after 4 seconds). On an error the form returns with the email kept and
+  the password cleared.
+* The Account control is icon-only with the accessible name `Account` and a tooltip.
+* A sticky `Page sections` navigation with icon-plus-text links, and the order: case summary,
+  status and what is needed from you, timeline, documents, funding, help and callbacks, sensors,
+  then what this showcase cannot do.
+* The case summary is rules-based by default (`resident_summary.py` in core, from recorded case
+  facts only). An optional AI summary needs its own consent tick, reuses `POST /demo/assistant`
+  (`topic: status`, `use_record: true`), is labelled as an unapproved suggestion with sources,
+  and falls back to the rules summary when AI is unavailable. Neither summary decides,
+  approves, books or gives consent.
+* Browser checks (local only, synthetic rows):
+  `PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.resident_summary_browser_check`
+  and the updated `checks.resident_account_check`.
+
+Not verified: named copy review (#153), resident usability (#155), screen-reader testing, the live
+deployment. Phase 2 (sensors, forecast and the sensor link fix) is a separate change.
+
 ### Startup compatibility after resident chat (#525)
 
 An image-only update does not update the SQL view. The resident reader now

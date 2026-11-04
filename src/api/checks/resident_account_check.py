@@ -55,7 +55,12 @@ def check_browser(browser: Browser, base: str, clock: Clock) -> None:
         expect(page.locator("#content")).to_contain_text("C-1 Test Street")
         expect(page.locator("#content")).not_to_contain_text("C-2")
         summary = page.locator("#account > summary")
-        expect(summary).to_have_accessible_name("Your account")
+        expect(summary).to_have_accessible_name("Account")
+        expect(summary.locator("svg.icon")).to_have_count(1)
+        box = summary.bounding_box()
+        assert box is not None and box["width"] >= 44 and box["height"] >= 44, box
+        summary.hover()
+        expect(summary.locator(".account-tooltip")).to_be_visible()
         summary.focus()
         summary.press("Enter")
         expect(page.get_by_role("button", name="Sign out", exact=True)).to_be_visible()

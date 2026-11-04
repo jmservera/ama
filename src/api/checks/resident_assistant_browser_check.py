@@ -152,7 +152,7 @@ def shared_session_checks(
         second.get_by_label("Email address").fill("one@example.com")
         second.get_by_label("Password", exact=True).fill(FAKE_PASSWORD)
         second.get_by_role("button", name="Sign in", exact=True).click()
-        expect(second.locator("#status")).to_have_text("Loading your progress\u2026")
+        expect(second.locator("#status")).to_contain_text("Signing you in")
         expect(first.locator("#signin")).to_be_visible()
         sign_in(first, "two@example.com")
         expect(second.locator("#signin")).to_be_visible()
@@ -508,7 +508,9 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
     button.click()
     expect(button).to_be_enabled()
     expect(panel).to_be_visible()
-    page.get_by_role("button", name="Find callback times in the manual form", exact=True).last.click()
+    page.get_by_role(
+        "button", name="Find callback times in the manual form", exact=True
+    ).last.click()
     expect(panel).to_be_hidden()
     expect(page.locator("#callback-proposals .callback-item")).to_have_count(3)
     expect(page.locator("#callback-title")).to_be_focused()
@@ -520,7 +522,9 @@ def run(browser: Browser, base: str, axe: str | None, out: Path) -> dict[str, An
         button.click()
         expect(button).to_be_enabled()
         expect(panel).to_be_visible()
-        page.get_by_role("button", name="Find callback times in the manual form", exact=True).last.click()
+        page.get_by_role(
+            "button", name="Find callback times in the manual form", exact=True
+        ).last.click()
         expect(panel).to_be_hidden()
         expect(page.locator("#callback-period")).to_have_value(period)
         expect(page.locator("#callback-proposals .callback-item")).to_have_count(2)

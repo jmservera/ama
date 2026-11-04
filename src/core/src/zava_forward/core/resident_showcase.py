@@ -30,6 +30,13 @@ from typing import Any
 from . import resident_preview as _preview
 from .insights import STAGE_ORDER
 from .resident_documents import DocumentFacts
+from .resident_summary import (
+    STAGE_STEP,
+    documents_view,
+    needed_from_you,
+    rules_summary,
+    timeline,
+)
 
 AUTHORITY_END = datetime.fromisoformat(
     json.loads(files(__package__).joinpath("resident-demo.json").read_text())[
@@ -523,17 +530,23 @@ def showcase_view(row: ShowcaseRow) -> dict[str, Any]:
         progress, next_step = _preview.STAGE_TEXT[stage]
     else:
         progress, next_step = _preview.UNKNOWN_PROGRESS, _preview.UNKNOWN_NEXT
-    names = [_bounded(m) for m in row.measures]
+    names = [m for m in (_bounded(m) for m in row.measures) if m][:20]
+    home = {
+        "address": _bounded(row.address),
+        "town": _bounded(row.town),
+        "postcode": _bounded(row.postcode),
+    }
+    known = stage if stage in STAGE_STEP else ""
+    documents = documents_view(row.documents)
+    needed = needed_from_you(stage, row.closed, documents)
+    where = ", ".join(v for v in home.values() if v)
     out: dict[str, Any] = dict(
         banner=BANNER,
         viewer=dict(kind="demo resident"),
         read_only=True,
-        home={
-            "address": _bounded(row.address),
-            "town": _bounded(row.town),
-            "postcode": _bounded(row.postcode),
-        },
-        measures=[m for m in names if m][:20],
+        home=home,
+        stage=known,
+        measures=names,
         sensors={
             "synthetic": True,
             "note": (
@@ -553,6 +566,12 @@ def showcase_view(row: ShowcaseRow) -> dict[str, Any]:
         },
         progress=progress,
         next_step=next_step,
+        timeline=timeline(stage, row.closed),
+        documents=documents,
+        needed=needed,
+        summary=rules_summary(
+            where, known, progress, next_step, row.closed, names, documents, needed
+        ),
         unavailable=[dict(feature=f, reason=r) for f, r in _preview.UNAVAILABLE],
         help=_preview.HELP,
     )
