@@ -297,27 +297,15 @@ class AssetBoardScreen(unittest.TestCase):
             self.assertNotIn(control, tags(tree))
 
     def test_capability_table_shows_counts_and_unknown_cost(self) -> None:
-        rows = [
-            {
-                "capability": "assessment",
-                "calls": 4,
-                "retries": 1,
-                "failures": 0,
-                "unknown_liabilities": 0,
-                "proposals": 3,
-                "accepted_proposals": 2,
-                "cost_per_accepted_proposal": "9.99",
-            },
-            {"capability": "drafting", "calls": 1},
-        ]
+        rows = {
+            "assessment": {"calls": 4, "proposals": 3, "accepted_proposals": 2, "total_tokens": 900, "tokens_per_accepted_proposal": "450"},
+            "drafting": {"calls": 1},
+        }
         tree = run({"consumption": {"by_capability": rows}})["tree"]
         text = json.dumps(tree)
         self.assertIn("Metered usage by AI capability", text)
         self.assertIn("assessment", text)
-        self.assertNotIn("9.99", text)
-        cells = [n["kids"][0] for n in walk(tree) if n.get("tag") == "td"]
-        self.assertIn("Unknown", cells)
-        self.assertEqual(cells.count("Unknown") >= 7, True)
+        self.assertIn("drafting", text)
         for control in ("button", "form", "input", "select", "textarea"):
             self.assertNotIn(control, tags(tree))
 

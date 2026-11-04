@@ -170,7 +170,7 @@ function assetUsage(report) {
   if (!m) return screenUnknown("The AI report could not be loaded, so metered usage, alerts and breaches are Unknown. Unknown is not zero.", "Programme manager", "Reload, or ask the AI governance owner for the dated usage record");
   const proposals = usageTotal(m.tokens_per_proposal);
   const alerts = Array.isArray(m.owned_alerts) ? m.owned_alerts : null;
-  const capabilities = Array.isArray(m.by_capability) ? m.by_capability : null;
+  const capabilities = m.by_capability && typeof m.by_capability === "object" && !Array.isArray(m.by_capability) ? Object.entries(m.by_capability) : null;
   const components = m.other_tca_components && typeof m.other_tca_components === "object" ? Object.entries(m.other_tca_components) : [];
   const unit = m.currency && m.currency !== "Unknown" ? ` ${m.currency}` : "";
   return h("div", {},
@@ -192,10 +192,10 @@ function assetUsage(report) {
         alerts.map((a) => [screenPerson(a.owner), a.reason, a.route]), 25)
       : screenUnknown("Alerts could not be read, so none is shown. This is not a statement that there were none.", "AI governance owner", "Ask for the alert record"),
     capabilities
-      ? screenTable("Metered usage by AI capability (counts only; cost per capability is Unknown until Finance records a price source and denominator)",
-        ["Capability", "Calls", "Retried", "Did not return", "No recorded outcome", "Proposals with a call", "Human-accepted", "Cost per accepted proposal"],
-        capabilities.map((k) => [k.capability, usageCount(k.calls), usageCount(k.retries), usageCount(k.failures), usageCount(k.unknown_liabilities),
-          usageCount(k.proposals), usageCount(k.accepted_proposals), "Unknown"]), 25)
+      ? screenTable("Metered usage by AI capability (counts and tokens only; cost per capability is Unknown until Finance records a price source and denominator)",
+        ["Capability", "Calls", "Proposals with a call", "Human-accepted", "Total tokens", "Tokens per accepted proposal"],
+        capabilities.map(([name, k]) => [name, usageCount(k.calls), usageCount(k.proposals), usageCount(k.accepted_proposals),
+          usageCount(k.total_tokens), usageCount(k.tokens_per_accepted_proposal)]), 25)
       : screenUnknown("The per-capability breakdown could not be read, so it is Unknown. Unknown is not zero.", "AI governance owner", "Ask for the dated usage record by capability"),
     components.length
       ? screenTable("Other Total Cost of AI components (supplied, not verified here)", ["Component", "Amount"],
