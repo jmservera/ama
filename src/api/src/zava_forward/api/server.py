@@ -14,14 +14,14 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-from zava_forward.core import ai_consumption, ai_registry, controls, form_review, forms, profile
+from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, controls, form_review, forms, profile
 
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, lawstore, rulecards, rule_engine
 from zava_forward.api import auth
 from zava_forward.api.workbench import navigation
-from zava_forward.agents.chat import ChatModel
+from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
@@ -51,6 +51,7 @@ def chat_admission(store):
         return "activation-not-approved"
     if ai_registry.demo_activation_honoured(CHAT_TASK):
         # Demo-only: the SQL release record covers retained legacy tasks and always denies the chat task; suspension still applies.
+        chat_demo_meter.ensure(store, CHAT_MAX_TOKENS)
         return store.continuity_block(CHAT_TASK)
     return store.release_block(CHAT_TASK, store.ai.fast) or store.continuity_block(CHAT_TASK)
 

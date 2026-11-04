@@ -38,6 +38,7 @@ class Ai:
         self.gate = None  # (task, deployment) -> reason the task is suspended, or None
         self.release = None  # Per-invocation selected record; never mutable shared request state.
         self.consumption = None
+        self.synthetic_price_capabilities = frozenset()  # demo-only: capabilities whose synthetic price may admit a live call
 
     @property
     def configured(self):
@@ -88,7 +89,7 @@ class Ai:
         bound = len(body) if isinstance(user, str) else None
         parsed_endpoint = urllib.parse.urlparse(self.endpoint)
         nonbillable_loopback = parsed_endpoint.scheme == "http" and parsed_endpoint.hostname in ("127.0.0.1", "localhost", "::1")
-        rid = self.consumption.reserve(context, model, bound, max_tokens, live=not nonbillable_loopback)
+        rid = self.consumption.reserve(context, model, bound, max_tokens, live=not nonbillable_loopback and context.capability not in self.synthetic_price_capabilities)
         receipt.update(meter_id=rid, meter_root=context.root,
                        configuration=context.configuration, prompt_hash=context.prompt, usage=None)
         try:
