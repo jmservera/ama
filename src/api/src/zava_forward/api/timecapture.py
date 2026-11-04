@@ -10,7 +10,9 @@ It records nothing unless all of these hold:
 * ZF_TIME_CONSULTATION=<reference of the completed staff consultation>, also
   stored with every entry;
 * ZF_TIME_NOTICE_APPROVED=<reference of the approval of the staff notice
-  wording>, stored with the enabling record;
+  wording>, stored with the enabling record, and ZF_TIME_NOTICE_VERSION equal to
+  the NOTICE_VERSION of the wording the approver saw, so a reworded notice is
+  never enabled on an approval of different wording;
 * a manager has requested enabling (request_enable) and a manager in a different
   role has taken the audited enabling action (activate); the record stores the
   three references, who asked, who enabled and both roles;
@@ -48,24 +50,34 @@ SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS time_entry (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, user_code TEXT NOT NULL, case_id TEXT NOT NULL, "
     "minutes INTEGER NOT NULL, activity TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS time_request (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, by_role TEXT NOT NULL, "
-    "dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)",
+    "dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL, notice_version TEXT NOT NULL DEFAULT '')",
     "CREATE TABLE IF NOT EXISTS time_enabled (id INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, by_user TEXT NOT NULL, by_role TEXT NOT NULL, "
-    "requested_by TEXT NOT NULL, requested_role TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL)",
+    "requested_by TEXT NOT NULL, requested_role TEXT NOT NULL, dpia_ref TEXT NOT NULL, consultation_ref TEXT NOT NULL, notice_ref TEXT NOT NULL, notice_version TEXT NOT NULL DEFAULT '')",
     "CREATE TABLE IF NOT EXISTS notice_ack (user_code TEXT NOT NULL, version TEXT NOT NULL, at TEXT NOT NULL, PRIMARY KEY (user_code, version))",
     "CREATE INDEX IF NOT EXISTS ix_time_user ON time_entry (user_code, id)",
 )
+def _sqlite_add_notice_version(db, tables):
+    """SQLite-only upgrade of databases created before notice_version existed."""
+    for table in tables:
+        cols = [r[1] for r in db.execute(f"PRAGMA table_info({table})").fetchall()]
+        if "notice_version" not in cols:
+            db.execute(f"ALTER TABLE {table} ADD COLUMN notice_version TEXT NOT NULL DEFAULT ''")
+
+
 MSSQL_DDL = (
     "CREATE TABLE time_entry (id BIGINT IDENTITY(1,1) PRIMARY KEY, at NVARCHAR(40) NOT NULL, user_code NVARCHAR(50) NOT NULL, case_id NVARCHAR(64) NOT NULL, "
     "minutes INT NOT NULL, activity NVARCHAR(100) NOT NULL, dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL)",
     "CREATE TABLE time_request (id BIGINT IDENTITY(1,1) PRIMARY KEY, at NVARCHAR(40) NOT NULL, by_user NVARCHAR(200) NOT NULL, by_role NVARCHAR(100) NOT NULL, "
-    "dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL, notice_ref NVARCHAR(200) NOT NULL)",
+    "dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL, notice_ref NVARCHAR(200) NOT NULL, "
+    "notice_version NVARCHAR(50) NOT NULL DEFAULT N'')",
     "CREATE TABLE time_enabled (id BIGINT IDENTITY(1,1) PRIMARY KEY, at NVARCHAR(40) NOT NULL, by_user NVARCHAR(200) NOT NULL, by_role NVARCHAR(100) NOT NULL, "
     "requested_by NVARCHAR(200) NOT NULL, requested_role NVARCHAR(100) NOT NULL, dpia_ref NVARCHAR(200) NOT NULL, consultation_ref NVARCHAR(200) NOT NULL, "
-    "notice_ref NVARCHAR(200) NOT NULL)",
+    "notice_ref NVARCHAR(200) NOT NULL, notice_version NVARCHAR(50) NOT NULL DEFAULT N'')",
     "CREATE TABLE notice_ack (user_code NVARCHAR(50) NOT NULL, version NVARCHAR(50) NOT NULL, at NVARCHAR(40) NOT NULL, PRIMARY KEY (user_code, version))",
 )
 MSSQL_INDEX = ("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_time_user' AND object_id = OBJECT_ID(N'time_entry')) "
                "CREATE INDEX ix_time_user ON time_entry (user_code, id)")
+VERSIONED_TABLES = ("time_request", "time_enabled")
 TABLES = ("time_entry", "time_request", "time_enabled", "notice_ack")
 
 
@@ -116,9 +128,13 @@ class TimeCapture:
                 for ddl in MSSQL_DDL:
                     db.execute(f"IF OBJECT_ID(N'{ddl.split()[2]}', N'U') IS NULL {ddl}")
                 db.execute(MSSQL_INDEX)
+                for table in VERSIONED_TABLES:
+                    db.execute(f"IF COL_LENGTH(N'{table}', N'notice_version') IS NULL "
+                               f"ALTER TABLE {table} ADD notice_version NVARCHAR(50) NOT NULL DEFAULT N''")
             else:
                 for ddl in SQLITE_DDL:
                     db.execute(ddl)
+                _sqlite_add_notice_version(db, VERSIONED_TABLES)
             self.ready = True
 
     def _top(self, n):
@@ -137,7 +153,9 @@ class TimeCapture:
         dpia = (self.env.get("DPIA_APPROVED") or "").strip()
         dpia_recorded = bool(dpia) and dpia.casefold() not in ("yes", "true", "on", "1")
         consult = (self.env.get("ZF_TIME_CONSULTATION") or "").strip()
-        notice = (self.env.get("ZF_TIME_NOTICE_APPROVED") or "").strip()
+        notice_ref = (self.env.get("ZF_TIME_NOTICE_APPROVED") or "").strip()
+        notice_for = (self.env.get("ZF_TIME_NOTICE_VERSION") or "").strip()
+        notice = bool(notice_ref) and notice_for == NOTICE_VERSION
         req = self.request()
         act = self.activation()
         if not flag:
@@ -146,8 +164,11 @@ class TimeCapture:
             why = "Time capture cannot be switched on until a DPIA reference is recorded (DPIA_APPROVED), not a boolean flag such as yes, true, on or 1."
         elif not consult:
             why = "Time capture cannot be switched on until the staff consultation is recorded (ZF_TIME_CONSULTATION)."
-        elif not notice:
+        elif not notice_ref:
             why = "Time capture cannot be switched on until the staff notice is approved (ZF_TIME_NOTICE_APPROVED)."
+        elif not notice:
+            why = (f"Time capture cannot be switched on until the approval covers the current staff notice wording: "
+                   f"ZF_TIME_NOTICE_VERSION must be {NOTICE_VERSION}.")
         elif not req:
             why = "Time capture is ready but needs an enabling request from a manager, then enabling by a manager in a different role."
         elif not act:
@@ -155,7 +176,7 @@ class TimeCapture:
         else:
             why = ""
         out = dict(enabled=not why, flag_on=flag, dpia_recorded=dpia_recorded, consultation_recorded=bool(consult),
-                   notice_approved=bool(notice), requested=bool(req), requested_by=req and req["by"], requested_role=req and req["role"],
+                   notice_approved=notice, requested=bool(req), requested_by=req and req["by"], requested_role=req and req["role"],
                    activated=bool(act), activated_by=act and act["by"], activated_at=act and act["at"], activated_role=act and act["role"],
                    reason=why, activities=list(ACTIVITIES), min_group=self.min_group(), notice_version=NOTICE_VERSION, storage=self.where)
         if out["enabled"]:
@@ -171,7 +192,7 @@ class TimeCapture:
             return 5
 
     def _refs(self):
-        return tuple((self.env.get(k) or "").strip() for k in ("DPIA_APPROVED", "ZF_TIME_CONSULTATION", "ZF_TIME_NOTICE_APPROVED"))
+        return tuple((self.env.get(k) or "").strip() for k in ("DPIA_APPROVED", "ZF_TIME_CONSULTATION", "ZF_TIME_NOTICE_APPROVED")) + (NOTICE_VERSION,)
 
     def _latest(self, sql):
         if not self._exists():
@@ -182,14 +203,14 @@ class TimeCapture:
 
     def request(self):
         """The enabling request, if it was made against the references currently configured."""
-        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref FROM time_request ORDER BY id DESC")
+        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, notice_version FROM time_request ORDER BY id DESC")
         if not r or tuple(r[3:]) != self._refs():
             return None
         return dict(at=r[0], by=r[1], role=r[2])
 
     def activation(self):
         """The enabling record, if it was taken against the references currently configured."""
-        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref FROM time_enabled ORDER BY id DESC")
+        r = self._latest("SELECT at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, notice_version FROM time_enabled ORDER BY id DESC")
         if not r or tuple(r[3:]) != self._refs():
             return None
         return dict(at=r[0], by=r[1], role=r[2])
@@ -202,11 +223,11 @@ class TimeCapture:
     def request_enable(self, user):
         """A manager asks for capture to be enabled against the configured references. It enables nothing by itself. The caller audits it."""
         self._ready_to_enable()
-        dpia, consult, notice = self._refs()
+        dpia, consult, notice, version = self._refs()
         with self._conn() as db:
-            db.execute("INSERT INTO time_request (at, by_user, by_role, dpia_ref, consultation_ref, notice_ref) VALUES (?,?,?,?,?,?)",
-                       (self._now(), user["email"], user["role"], dpia, consult, notice))
-        return dict(dpia_ref=dpia, consultation_ref=consult, notice_ref=notice)
+            db.execute("INSERT INTO time_request (at, by_user, by_role, dpia_ref, consultation_ref, notice_ref, notice_version) VALUES (?,?,?,?,?,?,?)",
+                       (self._now(), user["email"], user["role"], dpia, consult, notice, version))
+        return dict(dpia_ref=dpia, consultation_ref=consult, notice_ref=notice, notice_version=version)
 
     def activate(self, user):
         """The enabling action. Needs the flag, the three references and a request by a manager in a different role: the
@@ -217,11 +238,11 @@ class TimeCapture:
             raise SeparationOfDuties("Enabling needs a request first, made by a manager in a different role from the one who enables.")
         if req["by"] == user["email"] or req["role"] == user["role"]:
             raise SeparationOfDuties(f"The enabling request was made by {req['role']}. A manager in a different role must enable it.")
-        dpia, consult, notice = self._refs()
+        dpia, consult, notice, version = self._refs()
         with self._conn() as db:
-            db.execute("INSERT INTO time_enabled (at, by_user, by_role, requested_by, requested_role, dpia_ref, consultation_ref, notice_ref) "
-                       "VALUES (?,?,?,?,?,?,?,?)", (self._now(), user["email"], user["role"], req["by"], req["role"], dpia, consult, notice))
-        return dict(dpia_ref=dpia, consultation_ref=consult, notice_ref=notice, requested_by=req["by"], requested_role=req["role"])
+            db.execute("INSERT INTO time_enabled (at, by_user, by_role, requested_by, requested_role, dpia_ref, consultation_ref, notice_ref, notice_version) "
+                       "VALUES (?,?,?,?,?,?,?,?,?)", (self._now(), user["email"], user["role"], req["by"], req["role"], dpia, consult, notice, version))
+        return dict(dpia_ref=dpia, consultation_ref=consult, notice_ref=notice, notice_version=version, requested_by=req["by"], requested_role=req["role"])
 
     def _require(self):
         st = self.status()

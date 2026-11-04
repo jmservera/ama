@@ -13,6 +13,7 @@ import unittest
 from pathlib import Path
 
 import release_support
+from dataset import change_metadata
 from zava_forward.core.store import Store
 
 import test_mvp
@@ -98,6 +99,25 @@ class AiBoundaryTests(unittest.TestCase):
         ):
             self.store.review_ai(self.sam, rec_id, action, reason, text)
         self.assertEqual(before, self.controlled())
+
+    def test_document_reading_files_a_note_and_changes_nothing_else(self):
+        doc = self.store.add_document(
+            self.sam,
+            "ZF-1",
+            "note.txt",
+            "Other",
+            b"plain note",
+            metadata=change_metadata(self.store, "ZF-1"),
+        )
+        before = self.controlled()
+        stored = {k: v for k, v in doc.items() if k != "summary"}
+        for mode in (None, "off"):
+            r = self.store.read_document(self.sam, "ZF-1", doc["id"], mode)
+            self.assertTrue(r["text"])
+            saved = next(d for d in self.store.cases["ZF-1"]["documents"] if d["id"] == doc["id"])
+            self.assertEqual(stored, {k: v for k, v in saved.items() if k != "summary"})
+            self.assertEqual(before, self.controlled())
+        self.assertTrue(self.store.verify_audit())
 
     def test_priority_accept_records_a_decision_but_does_not_rank(self):
         before = self.controlled()
