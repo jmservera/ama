@@ -132,3 +132,62 @@ def compare_bundle(bundle_key: str, cases: list[dict[str, Any]]) -> dict[str, An
         "capacity_note": CAPACITY_NOTE,
         "assistance_note": "Assistance not available is a valid arm; manual path stays complete.",
     }
+
+
+O16_BUNDLES = tuple(b.key for b in BUNDLES.values() if "O16" in b.atlas_ids)
+
+
+def run_report(run: dict[str, Any]) -> dict[str, Any]:
+    """Validate a recorded run's metadata, then compare its arms.
+
+    A run is ``{"bundle", "o16_counted_under", "representative_data_retained", "cases"}``.
+    ``o16_counted_under`` is required for bundles that share O16 so effort is counted once.
+    """
+    bundle = BUNDLES.get(str(run.get("bundle")))
+    if bundle is None:
+        raise ValueError(f"Unknown bundle {run.get('bundle')!r}.")
+    if run.get("representative_data_retained") is not False:
+        raise ValueError("State representative_data_retained as false; retention awaits the DPO.")
+    owner = run.get("o16_counted_under")
+    if "O16" in bundle.atlas_ids and owner not in O16_BUNDLES:
+        raise ValueError(f"State which bundle counts O16: {', '.join(O16_BUNDLES)}.")
+    if "O16" not in bundle.atlas_ids and owner is not None:
+        raise ValueError("o16_counted_under applies only to bundles that include O16.")
+    report = compare_bundle(bundle.key, run.get("cases", []))
+    report["o16_counted_under"] = owner
+    return report
+
+
+def reconcile_o16(runs: list[dict[str, Any]]) -> str | None:
+    """Return the single bundle that counts O16 across runs; reject conflicting claims."""
+    owners = {r["o16_counted_under"] for r in runs if r.get("o16_counted_under")}
+    if len(owners) > 1:
+        raise ValueError(
+            "Runs disagree on which bundle counts O16; effort would be double counted."
+        )
+    return next(iter(owners), None)
+
+
+def render_report(report: dict[str, Any]) -> str:
+    """Plain-language text for a facilitator; a stop is stated before any effort figure."""
+    lines = [f"Bundle: {report['bundle']} (comparator: {report['comparator_description']})"]
+    if report["stop"]:
+        lines.append("STOP: " + ", ".join(report["breaches"]) + " (target zero).")
+    else:
+        lines.append("Stop rule: no breach recorded.")
+    for arm in ARMS:
+        s = report[arm]
+        lines.append(
+            f"{arm}: {s['cases']} cases, median {s['median_minutes']:g} min, "
+            f"range {s['min_minutes']:g} to {s['max_minutes']:g} min"
+        )
+    lines += [
+        "Median difference (workflow minus comparator): "
+        f"{report['median_difference_minutes']:g} min ({report['direction']}).",
+        f"Evidence: {report['evidence_label']}.",
+        report["capacity_note"],
+        report["assistance_note"],
+    ]
+    if report.get("o16_counted_under"):
+        lines.append(f"O16 counted under: {report['o16_counted_under']}.")
+    return "\n".join(lines)

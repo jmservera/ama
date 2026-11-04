@@ -75,5 +75,67 @@ class LearningTestBundles(unittest.TestCase):
             ltb.compare_bundle("pre-visit-pack", [one_arm])
 
 
+def run(bundle: str, counts: dict[str, int], **extra: Any) -> dict[str, Any]:
+    return {
+        "bundle": bundle,
+        "representative_data_retained": False,
+        "cases": [case("a", 2, 1, counts)],
+        **extra,
+    }
+
+
+class RunReports(unittest.TestCase):
+    def test_o16_bundle_must_name_owner(self) -> None:
+        zero = {"inferred_submissions": 0}
+        with self.assertRaises(ValueError):
+            ltb.run_report(run("funding-evidence", zero))
+        with self.assertRaises(ValueError):
+            ltb.run_report(run("funding-evidence", zero, o16_counted_under="other"))
+        out = ltb.run_report(run("funding-evidence", zero, o16_counted_under="change-impact"))
+        self.assertEqual(out["o16_counted_under"], "change-impact")
+
+    def test_owner_rejected_for_bundle_without_o16(self) -> None:
+        zero = {"offers_misread_as_commitments": 0}
+        with self.assertRaises(ValueError):
+            ltb.run_report(run("pre-visit-pack", zero, o16_counted_under="change-impact"))
+        self.assertIsNone(ltb.run_report(run("pre-visit-pack", zero))["o16_counted_under"])
+
+    def test_retention_must_be_stated_false(self) -> None:
+        bad = run("pre-visit-pack", {"offers_misread_as_commitments": 0})
+        bad["representative_data_retained"] = True
+        with self.assertRaises(ValueError):
+            ltb.run_report(bad)
+        del bad["representative_data_retained"]
+        with self.assertRaises(ValueError):
+            ltb.run_report(bad)
+
+    def test_reconcile_o16_rejects_conflict(self) -> None:
+        a = {"o16_counted_under": "change-impact"}
+        b = {"o16_counted_under": "funding-evidence"}
+        self.assertEqual(ltb.reconcile_o16([a, {}, a]), "change-impact")
+        self.assertIsNone(ltb.reconcile_o16([{}]))
+        with self.assertRaises(ValueError):
+            ltb.reconcile_o16([a, b])
+
+    def test_render_states_stop_first_and_capacity(self) -> None:
+        report = ltb.run_report(
+            run(
+                "change-impact",
+                {"approvals_wrongly_carried_over": 1},
+                o16_counted_under="change-impact",
+            )
+        )
+        lines = ltb.render_report(report).splitlines()
+        self.assertTrue(lines[1].startswith("STOP:"))
+        text = "\n".join(lines)
+        self.assertIn("capacity", text)
+        self.assertIn("constructed-case evidence", text)
+        self.assertIn("O16 counted under: change-impact", text)
+        ok = ltb.render_report(
+            ltb.run_report(run("pre-visit-pack", {"offers_misread_as_commitments": 0}))
+        )
+        self.assertIn("no breach recorded", ok)
+
+
 if __name__ == "__main__":
     unittest.main()

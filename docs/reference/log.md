@@ -10203,3 +10203,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Sensor analysis over retained SQL readings, #111 slice 2 (Refs #111)
 
 * Slice 1 (#871) delivered the pure exercise analysis. This slice adds `sensor_analysis_store.analyse_retained` and a read-only `SensorConsumer.home_consent`, so signals derive from retained store rows with trusted consent; an unreadable store gives INSUFFICIENT with no priority effect. No writes, no task creation, no approved rule. Unmet: scheduler or task-queue wiring, rule approval, AC-067 text mirror, R1 to R3 completion. SQLite unit tests only; no SQL Server run, no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-111 r2).
+## [2026-11-04] update | Learning-test run validation and report (Refs #129)
+
+* Extended the net-effort helper in `src/core` with run validation (representative data retention stated false, single O16 owner per run and across runs) and a plain-text report that states a stop before effort figures. Protocol page next-slices updated. Unmet and unchanged: no bundle has been run as an experiment, atlas-owner confirmation of the mapping (O16), DPO retention decision. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-129 slice 3).
