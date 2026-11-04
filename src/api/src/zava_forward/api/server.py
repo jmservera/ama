@@ -109,7 +109,9 @@ class App:
                     "safe_route": rule_engine.SAFE_ROUTE}
 
 
-LIST_EXPORTS = frozenset({"/api/packages.csv", "/api/workorders.csv", "/api/handoffs.csv", "/api/visits.csv", "/api/funding.csv"})
+LIST_EXPORTS = frozenset({"/api/packages.csv", "/api/workorders.csv", "/api/handoffs.csv", "/api/visits.csv", "/api/funding.csv",
+                          "/api/finance.csv", "/api/asset/stock-queue.csv"})
+EXPORT_KINDS = {"/api/finance.csv": "finance_queue", "/api/asset/stock-queue.csv": "stock_queue"}
 
 
 def list_rows(s, u, path, q):
@@ -122,6 +124,10 @@ def list_rows(s, u, path, q):
         return s.pending_handoffs(u)
     if path == "/api/visits.csv":
         return s.visits(u, q.get("view", ["mine"])[0])
+    if path == "/api/finance.csv":
+        return s.finance_queue(u)
+    if path == "/api/asset/stock-queue.csv":
+        return s.stock_queue(u)
     return s.funding_list(u)
 
 
@@ -158,6 +164,8 @@ def get_kind(path):
         return "job_pack"
     if path.startswith("/api/time/"):
         return "time"
+    if path in EXPORT_KINDS:
+        return EXPORT_KINDS[path]
     if path in LIST_EXPORTS:
         return path[len("/api/"):]
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ranking/publication": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
