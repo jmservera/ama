@@ -15,7 +15,7 @@ OUTCOME_CANARY = "OUTCOME-CANARY-reason"
 SERVER_SRC = (Path(server.__file__)).read_text()
 
 GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api/account/photo", "/api/cases?view=all", "/api/cases?view=all&q=Quentin", "/api/cases?view=all&q=" + REASON,
-                 "/api/cases.csv?view=all", "/api/cases/ZF-1", "/api/ranking/policy", "/api/ranking/snapshot", "/api/ai/priority",
+                 "/api/cases.csv?view=all", "/api/cases/ZF-1", "/api/ranking/policy", "/api/ranking/snapshot", "/api/ranking/publication", "/api/ai/priority",
                  "/api/facets", "/api/stats", "/api/progress", "/api/closed-cases",
                  "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing",
                  "/api/audit-check",
@@ -25,7 +25,7 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",
                  "/api/assistants", "/api/assistants/forecast", "/api/assistants/proposals", "/api/chat/status", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
                  "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/nothing"]
-POST_ENDPOINTS = [("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}),
+POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}),
                   ("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
                   ("/api/form-schemas", {}), ("/api/cases/ZF-1/form-candidates", {}), ("/api/cases/ZF-1/form-review", {}),
                   ("/api/cases/ZF-1/resident", {"action": "decision_record"}),
