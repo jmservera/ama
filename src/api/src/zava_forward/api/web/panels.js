@@ -484,6 +484,7 @@ async function financeQueueView() {
   show(h("h1", {}, "Finance queue"),
     exposureNotice(exposure),
     h("p", { class: "muted" }, "Invoices with exceptions, paused payments or no check yet. A person decides each one. Nothing is paid from here."),
+    h("p", {}, h("a", { class: "btn alt", href: "/api/finance.csv", download: "finance-queue.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back."),
     rows.length ? h("table", {}, h("thead", {}, h("tr", {}, ["Home", "Invoice", "Supplier", "Status", "Exceptions", "Total"].map((x) => h("th", {}, x)))),
       h("tbody", {}, rows.map((r) => h("tr", {}, h("td", {}, h("a", { href: `#/case/${encodeURIComponent(r.case_id)}` }, r.address)), h("td", {}, `${r.invoice} ${r.ref}`),
         h("td", {}, r.supplier), h("td", {}, r.on_hold ? `${r.status}, payment paused` : r.status), h("td", {}, r.exceptions), h("td", {}, money(r.total)))))) : h("p", {}, "Nothing is waiting."));
