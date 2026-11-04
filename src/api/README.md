@@ -3960,6 +3960,13 @@ instruction or payment; a shared building ID never transfers a home's evidence.
 Home AI assistance remains available through its existing proposal-only and
 human-review paths; shared free text and costs are not added to prompts.
 
+`python -m checks.home_case_browser_check` (from `src/api`) opens the screen on
+synthetic data and checks that building dependencies, holds, works and costs
+appear only in the building panel, a sibling home's evidence never appears,
+the screen is read-only, reflows at 320 px and, with `ZF_AXE_JS` set to the
+pinned axe 4.10.3 file, has no automated WCAG 2.2 AA violations. Automated
+checks do not replace manual accessibility review.
+
 `tests/test_buildings.py` starts the real application on loopback with a
 wholly fictional two-home SQLite fixture. It checks health/static serving,
 authenticated navigation, role/amount isolation, scoped blocked advancement,
