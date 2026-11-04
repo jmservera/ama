@@ -12,7 +12,7 @@ from zava_forward.api import auth
 from zava_forward.api.server import App, _Server, make_handler
 
 
-class ExpectedDenialTests(Base):  # type: ignore[misc]
+class ExpectedDenialTests(Base):
     def setUp(self) -> None:
         super().setUp()
         self.app = App(

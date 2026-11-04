@@ -10120,3 +10120,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Refused unstored and regulatory-thread chat turns leave a receipt (Refs #159)
 
 * An unstored assistant ask refused by the role gate or the current-user check, and a regulatory-thread turn refused for the missing RegulatoryChat capability, now each record one access-rejected audit receipt (0 model calls, tokens unknown, no question text). Responses and permissions are unchanged. Criterion 6 (named screen-reader run) and the tokenomics criterion stay unmet: 401 and validation-refused turns record nothing. Focused tests only; no gate, browser or assistive-technology run. Evidence under `.copilot-tracking/` (2026-11-04 issue-159-refusal-receipts).
+
+## [2026-11-04] update | src-api strict mypy passes for the expected-denials test and browser check (Refs #920)
+
+* `src/api/pyproject.toml` adds the expected-denials test and browser check to the existing `disallow_untyped_calls = false` override for untyped App, provider and fixture calls, and the unused `type: ignore` is removed from `test_expected_denials.py`. No runtime change. `mypy` no longer reports these files; `ruff check` and the module tests pass. Focused tier only; the complete gate was not run.
