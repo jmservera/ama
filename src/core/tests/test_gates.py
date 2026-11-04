@@ -64,6 +64,30 @@ class GateTests(unittest.TestCase):
             gates.UNKNOWN,
         )
 
+    def test_booking_gates(self) -> None:
+        good = {"funding_ok": True, "hazards": [{"released": True}], "owner": "Sam"}
+        by = {r.gate: r for r in gates.booking_gates(good, [], on="2026-11-04")}
+        self.assertEqual({r.outcome for r in by.values()}, {gates.PASS})
+        self.assertTrue(gates.transition_allowed(by.values()))
+        for r in by.values():
+            self.assertIsNotNone(r.rule)
+
+    def test_booking_gates_fail_and_unknown(self) -> None:
+        def out(case: dict[str, Any], reasons: list[str] | None) -> dict[str, str]:
+            return {r.gate: r.outcome for r in gates.booking_gates(case, reasons, on="2026-11-04")}
+
+        open_hold = {"funding_ok": False, "hazards": [{"released": False}]}
+        self.assertEqual(
+            out(open_hold, ["x"]), {"funding": "fail", "safety": "fail", "resident": "fail"}
+        )
+        missing = out({"funding_ok": "yes"}, None)
+        self.assertEqual(set(missing.values()), {gates.UNKNOWN})
+        results = gates.booking_gates({}, None, on="2026-11-04")
+        self.assertFalse(gates.transition_allowed(results))
+        self.assertEqual(len(gates.unmet(results)), 3)
+        malformed = out({"funding_ok": True, "hazards": [{}]}, [])
+        self.assertEqual(malformed["safety"], gates.FAIL)
+
 
 if __name__ == "__main__":
     unittest.main()
