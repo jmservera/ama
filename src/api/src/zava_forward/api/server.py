@@ -49,7 +49,10 @@ def chat_admission(store):
     """Synthetic privacy references cannot authorize a conversational model call."""
     if not ai_registry.authorizes_live(CHAT_TASK) or store.ai.gate is None:
         return "activation-not-approved"
-    return store.ai.gate(CHAT_TASK, store.ai.fast)
+    if ai_registry.demo_activation_honoured(CHAT_TASK):
+        # Demo-only: the SQL release record covers retained legacy tasks and always denies the chat task; suspension still applies.
+        return store.continuity_block(CHAT_TASK)
+    return store.release_block(CHAT_TASK, store.ai.fast) or store.continuity_block(CHAT_TASK)
 
 
 def tile_config(env=None):

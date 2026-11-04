@@ -2,10 +2,13 @@
 Synthetic demonstration data only; no billable provider calls."""
 import copy
 import json
+import os
 import unittest
+from unittest import mock
 
 import test_mvp
 from test_assistants import Base, Provider, canonical, proposal
+from zava_forward.api.server import CHAT_TASK, chat_admission
 from zava_forward.core import continuity
 from zava_forward.core.ai import Ai
 from zava_forward.core.assistants import Assistants
@@ -270,3 +273,28 @@ class JsonStore(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ChatAdmissionOnSqlStore(Base):
+    """The chat gate against the real SqlStore, whose release record denies every task outside the legacy set (#891)."""
+    DEMO_ON = {"ZF_CHAT_DEMO_ACTIVATION": "approved-2026-11-03", "ZF_DEPLOYMENT_PROFILE": "demo",
+               "AI_ENDPOINT": "https://ai.invalid/"}
+
+    def test_demo_activation_skips_release_denial_but_honours_suspension(self):
+        with mock.patch.dict(os.environ, self.DEMO_ON):
+            store = self.open_store()
+            self.addCleanup(store.db.close)
+            self.assertIn("task is not registered", store.release_block(CHAT_TASK))
+            self.assertIsNone(chat_admission(store))
+            qi = self.people["Quality Inspector"]
+            store.suspend(qi, dict(SUSPEND, scope=CHAT_TASK), self.service.affected(CHAT_TASK))
+            self.assertEqual(chat_admission(store), continuity.reason_text(store.continuity_suspension(CHAT_TASK)))
+            self.assertTrue(chat_admission(store))
+
+    def test_registry_authorization_without_demo_switch_keeps_release_gate(self):
+        env = {"AI_ENDPOINT": "https://ai.invalid/"}
+        with mock.patch.dict(os.environ, env), \
+                mock.patch("zava_forward.core.ai_registry.authorizes_live", return_value=True):
+            store = self.open_store()
+            self.addCleanup(store.db.close)
+            self.assertIn("task is not registered", chat_admission(store))
