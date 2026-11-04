@@ -14,13 +14,16 @@ from pathlib import Path
 
 import test_mvp
 from playwright.sync_api import sync_playwright
-from test_auth import ENV, OID_SAM, TENANT, principal
+from test_auth import ENV, OID_NEW, OID_SAM, TENANT, principal
 from zava_forward.api import auth
 from zava_forward.api.server import App, make_handler
 from zava_forward.core import identity
 from zava_forward.core.store import Store
 
 DENIED_PATHS = ("/api/account/photo", "/api/law/alerts", "/api/chat/regulatory/status")
+ASSISTANTS_PATH = "/api/assistants"
+OID_ADMIN = OID_NEW
+ADMIN_ONLY = ("ZavaForward.ApplicationAdmin",)
 
 
 def check(label: str, ok: bool) -> None:
@@ -89,6 +92,35 @@ def main() -> None:
                         not [u for u in requested if any(p in u for p in DENIED_PATHS)],
                     )
                     check(f"no console errors ({errors})", not errors)
+                    admin = browser.new_context(
+                        extra_http_headers={
+                            "X-MS-CLIENT-PRINCIPAL": principal(roles=ADMIN_ONLY, oid=OID_ADMIN)
+                        }
+                    ).new_page()
+                    admin_requested: list[str] = []
+                    admin.on("request", lambda r: admin_requested.append(r.url))
+                    admin_denied: list[str] = []
+                    admin.on(
+                        "response", lambda r: admin_denied.append(r.url) if r.status >= 400 else None
+                    )
+                    admin.goto(base + "/app")
+                    admin.locator("#workspace-status").wait_for()
+                    for route in ("#/assistants",):
+                        admin.evaluate(f"location.hash = '{route}'")
+                        admin.wait_for_timeout(1500)
+                    check(
+                        "assistants denial is worded plainly",
+                        "not available for your role" in (admin.locator("body").text_content() or ""),
+                    )
+                    check(
+                        "no assistants request was sent for an admin-only account",
+                        not [u for u in admin_requested if ASSISTANTS_PATH in u],
+                    )
+                    # The admin-only landing list still gets 403 on /api/facets (follow-up of #920).
+                    check(
+                        f"no assistants 403 reached the console for admin-only ({admin_denied})",
+                        not [u for u in admin_denied if ASSISTANTS_PATH in u],
+                    )
                 finally:
                     browser.close()
         finally:

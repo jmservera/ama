@@ -7,7 +7,7 @@ import urllib.error
 import urllib.request
 from typing import Any
 
-from test_auth import ENV, OID_SAM, Base, principal
+from test_auth import ENV, OID_NEW, OID_SAM, Base, principal
 from zava_forward.api import auth
 from zava_forward.api.server import App, _Server, make_handler
 
@@ -30,6 +30,12 @@ class ExpectedDenialTests(Base):
 
     def get(self, path: str, **headers: str) -> tuple[int, Any]:
         headers["X-MS-CLIENT-PRINCIPAL"] = principal(oid=OID_SAM)
+        return self.fetch(path, headers)
+
+    def get_as(self, path: str, roles: tuple[str, ...]) -> tuple[int, Any]:
+        return self.fetch(path, {"X-MS-CLIENT-PRINCIPAL": principal(roles=roles, oid=OID_NEW)})
+
+    def fetch(self, path: str, headers: dict[str, str]) -> tuple[int, Any]:
         req = urllib.request.Request(self.base + path, headers=headers)
         try:
             with urllib.request.urlopen(req, timeout=20) as r:
@@ -40,10 +46,16 @@ class ExpectedDenialTests(Base):
     def test_me_reports_stores_off_and_denials_stay_expected(self) -> None:
         code, me = self.get("/api/me")
         self.assertEqual(code, 200)
-        self.assertEqual(me["services"], {"photo": False, "law_alerts": False})
+        self.assertEqual(me["services"], {"photo": False, "law_alerts": False, "assistants": True})
         self.assertEqual(self.get("/api/account/photo")[0], 503)
         self.assertEqual(self.get("/api/law/alerts")[0], 503)
         self.assertEqual(self.get("/api/chat/regulatory/status")[0], 403)
+
+    def test_me_reports_assistants_off_for_admin_only_and_denial_stays_403(self) -> None:
+        admin = ("ZavaForward.ApplicationAdmin",)
+        _, me = self.get_as("/api/me", admin)
+        self.assertFalse(me["services"]["assistants"])
+        self.assertEqual(self.get_as("/api/assistants", admin)[0], 403)
 
     def test_me_reports_photo_token_present(self) -> None:
         _, me = self.get("/api/me", **{"X-MS-TOKEN-AAD-ACCESS-TOKEN": "synthetic"})

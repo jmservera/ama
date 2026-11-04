@@ -10164,3 +10164,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Learning-test net-effort comparison helper (Refs #129)
 
 * New `src/core` helper `learning_test_bundles.py` with unit tests: sums the six NFR-009 effort components per arm, reports median and range, applies each bundle's target-zero stop rule, excludes O10 and O18 to O20 and labels saved minutes as capacity. The [protocol](research/ux/journey-learning-test-bundles.md) and the index row now record it. No experiment has run; bundle runs and the atlas-owner mapping stay unmet.
+## [2026-11-04] update | Assistants denial skipped for roles without staff access (Refs #920)
+
+* `/api/me` now reports `services.assistants`; the employee client skips `/api/assistants` for an admin-only account and shows plain words with the ordinary case controls as the manual path. Server 403 unchanged. Chromium check covers the new case; the admin-only landing still logs 403 on `/api/facets` (follow-up). No axe or live re-check. Evidence under `.copilot-tracking/` (2026-11-04 assistants-denial-920).

@@ -481,7 +481,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 out = projection.me_payload(u, {} if admin_only else s.counts(u), list(s.staff.values()) + recipients)
                 out["account"] = app.provider.account(self.headers, u)
                 token = self.headers.get("X-MS-TOKEN-AAD-ACCESS-TOKEN") if app.provider.name == "trusted-proxy" else None
-                out["services"] = dict(photo=bool(token), law_alerts=app.law is not None)
+                out["services"] = dict(
+                    photo=bool(token),
+                    law_alerts=app.law is not None,
+                    assistants=u.get("role") in projection.STAFF_ROLES,
+                )
                 out["map"] = dict(tiles=app.tiles["url"], attribution=app.tiles["attribution"])
                 out["navigation"] = navigation(u)
                 if not projection.is_contractor(u):
