@@ -1169,4 +1169,3 @@ Owner-approved deploy of main `8b9553d8b` (redesign phases 1 and 2 #1069 and #10
 | Callback form | Pass: no form rendered; the page says callback booking is not connected |
 
 Limits: one resident, one viewport, no screen reader, no keyboard-only or reduced-motion pass, no booking attempt. This is engineering evidence, not accessibility or human acceptance. #462 and #521 stay `Refs`.
-
