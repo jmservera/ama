@@ -1,12 +1,14 @@
 """The determinism audit passes for in-repo generators and never hides the absent register."""
 
 import json
+import tempfile
 import unittest
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
 from zava_forward.core.synthetic import determinism_audit as da
+from zava_forward.core.synthetic import sensor_backfill, sensor_stream
 
 
 class DeterminismAuditTests(unittest.TestCase):
@@ -20,6 +22,7 @@ class DeterminismAuditTests(unittest.TestCase):
                 "scale-fixture",
                 "sensor-backfill",
                 "sensor-scenarios",
+                "sensor-stream",
                 "stock-fabric",
                 "stock-register-fictional",
                 "public-pack",
@@ -31,6 +34,26 @@ class DeterminismAuditTests(unittest.TestCase):
             self.assertTrue(r["byte_identical"])
             self.assertEqual(r["manifest_missing"], [])
         self.assertTrue(report["all_available_pass"])
+
+    def test_sensor_stream_audit_replays_the_composed_path(self) -> None:
+        names = {path.name for path in sensor_stream.revision_sources(composed=True)}
+        self.assertLessEqual(da.STREAM_EXPECTED_SOURCES, names)
+        with tempfile.TemporaryDirectory() as tmp:
+            manifest = json.loads(da._sensor_stream(Path(tmp) / "s").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["model"], sensor_backfill.COMPOSED_VERSION)
+        self.assertEqual(manifest["climate"], da._AuditClimate().manifest())
+        self.assertEqual(len(manifest["retrofit_history"]), 1)
+
+    def test_sensor_stream_audit_fails_when_an_expected_source_is_missing(self) -> None:
+        kept = tuple(
+            path
+            for path in sensor_stream.revision_sources(composed=True)
+            if path.name != "retrofit_effects.py"
+        )
+        with patch.object(sensor_stream, "revision_sources", return_value=kept):
+            result = da._check("sensor-stream", da.GENERATORS["sensor-stream"])
+        self.assertEqual(result["status"], "FAIL")
+        self.assertIn("retrofit_effects.py", str(result["error"]))
 
     def test_original_stock_register_is_reported_unavailable(self) -> None:
         report = da.audit()

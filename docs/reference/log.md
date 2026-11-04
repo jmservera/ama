@@ -10273,3 +10273,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Signed in to `ca-resident-demo` as the synthetic resident test user with Playwright and walked the journey; recorded what works (generic login errors, secure cookies, synthetic labelling, 320px, sign-out) and what is broken or confusing (callback agenda returns 503 although the page invites booking, jargon, unexplained "Contact is paused", empty sensors) in the [prototype profile review](./research/ux/zava-forward-prototype-profile-review.md#signed-in-live-walkthrough-of-the-resident-showcase-2026-11-04-462). Bugs filed as #1053 and #1054.
 * Ran 30 concurrent x 4 round bursts on the keep-alive API image and signed-in resident traffic: 0 empty-body 500s in about 1,300 requests ([note](./research/easy-auth-intermittent-500-2026-11-03.md)). Limit: no Entra staff token, so no request carried a valid Easy Auth token. No Azure resource changed; no credential, cookie or token recorded. Both issues stay `Refs`. Evidence under `.copilot-tracking/` (2026-11-04 walkthrough-462-810).
+
+## [2026-11-04] update | Sensor stream joins the determinism audit (Refs #176)
+
+* Added `generator_revision` to the sensor stream descriptor and a `sensor-stream` replay to the audit. See the retrofit synthetic data README. Issue 176 criteria 1 and 2 stay unmet because the original stock register generator is absent.

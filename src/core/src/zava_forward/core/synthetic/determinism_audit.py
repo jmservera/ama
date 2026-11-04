@@ -16,13 +16,16 @@ import subprocess
 import sys
 import tempfile
 from collections.abc import Callable, Sequence
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from zava_forward.core.synthetic import (
+    retrofit_effects,
     scale_fixture,
     sensor_backfill,
     sensor_scenarios,
+    sensor_stock,
+    sensor_stream,
     stock_fabric,
     stock_register,
 )
@@ -74,6 +77,72 @@ def _sensor_backfill(out: Path) -> Path:
 def _sensor_scenarios(out: Path) -> Path:
     sensor_scenarios.write(out, seed=SEED)
     return out / "truth" / "manifest.json"
+
+
+class _AuditClimate:
+    """Constructed outdoor series; deterministic and never read from a data source."""
+
+    def series(self, start: datetime, days: int, cadence: int) -> list[tuple[float, float]]:
+        return [(2.0 + (i % 5), 70.0) for i in range(days * 1440 // cadence)]
+
+    def manifest(self) -> dict[str, object]:
+        return {"source": "CONSTRUCTED AUDIT CLIMATE ONLY", "sha256": "a" * 64}
+
+
+# Every one of these must be fingerprinted by the composed stream revision.
+STREAM_EXPECTED_SOURCES = frozenset(
+    {
+        "sensor_stream.py",
+        "sensor_backfill.py",
+        "sensor_stock.py",
+        "sensor_faults.py",
+        "indoor_projection.py",
+        "climate_history.py",
+        "household_conditions.py",
+        "retrofit_effects.py",
+    }
+)
+
+
+def _sensor_stream(out: Path) -> Path:
+    stock_register.write(out.parent / (out.name + "-stream-stock"), n=6, seed=SEED, as_of=AS_OF)
+    source = out.parent / (out.name + "-stream-stock") / stock_register.FILE_NAME
+    consent = ("granted", "declined", "unknown")
+    with source.open(encoding="utf-8", newline="") as stream:
+        rows = [
+            {**row, "is_synthetic": "true", "monitoring_consent": consent[i % 3]}
+            for i, row in enumerate(csv.DictReader(stream))
+        ]
+    selection = sensor_stock.select(rows, len(rows))
+    spec = sensor_stream.Replay(seed=SEED, days=1)
+    names = {path.name for path in sensor_stream.revision_sources(composed=True)}
+    if absent := sorted(STREAM_EXPECTED_SOURCES - names):
+        raise RuntimeError(f"stream revision omits expected sources: {absent}")
+    climate = _AuditClimate()
+    home = str(selection.sensors(SEED)[0]["home_id"])
+    measures = (
+        retrofit_effects.Measure(
+            "AUDIT-M1", home, "Loft insulation", spec.origin + timedelta(hours=1), True
+        ),
+    )
+    out.mkdir(parents=True)
+    lines = [
+        sensor_stream.wire(frame.row).decode("ascii")
+        for frame in sensor_stream.replay(selection, spec, climate=climate, measures=measures)
+    ]
+    (out / "frames.jsonl").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    manifest = out / "manifest.json"
+    manifest.write_text(
+        json.dumps(
+            sensor_stream.descriptor(selection, spec, climate=climate, measures=measures),
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+        newline="\n",
+    )
+    return manifest
 
 
 def _register(out: Path) -> Path:
@@ -186,6 +255,7 @@ GENERATORS: dict[str, Callable[[Path], Path]] = {
     "scale-fixture": _scale,
     "sensor-backfill": _sensor_backfill,
     "sensor-scenarios": _sensor_scenarios,
+    "sensor-stream": _sensor_stream,
     "stock-fabric": _stock_fabric,
     "stock-register-fictional": _stock_register,
 }
