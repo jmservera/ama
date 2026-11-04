@@ -10269,3 +10269,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added a briefing for the Legal contact under `research/rai/` with main points, ten recommendations and gaps, plus a one-slide deck in `docs/presentations/`. Read S.I. 2026/82 reg. 5 on 2026-11-04; EUR-Lex retrieval failed again, so the EU position stays unknown.
 * No decision, snapshot, card or rule changed. Criteria 1 and 5 of #224 stay unmet pending the Legal/DPO decision.
+## [2026-11-04] update | Signed-in resident walkthrough and authenticated burst (Refs #462, Refs #810)
+
+* Signed in to `ca-resident-demo` as the synthetic resident test user with Playwright and walked the journey; recorded what works (generic login errors, secure cookies, synthetic labelling, 320px, sign-out) and what is broken or confusing (callback agenda returns 503 although the page invites booking, jargon, unexplained "Contact is paused", empty sensors) in the [prototype profile review](./research/ux/zava-forward-prototype-profile-review.md#signed-in-live-walkthrough-of-the-resident-showcase-2026-11-04-462). Bugs filed as #1053 and #1054.
+* Ran 30 concurrent x 4 round bursts on the keep-alive API image and signed-in resident traffic: 0 empty-body 500s in about 1,300 requests ([note](./research/easy-auth-intermittent-500-2026-11-03.md)). Limit: no Entra staff token, so no request carried a valid Easy Auth token. No Azure resource changed; no credential, cookie or token recorded. Both issues stay `Refs`. Evidence under `.copilot-tracking/` (2026-11-04 walkthrough-462-810).
