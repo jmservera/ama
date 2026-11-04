@@ -1564,10 +1564,15 @@ not fix them (about 5 percent at 20 parallel). The Easy Auth sidecar log
 response ended prematurely` forwarding to `127.0.0.1:8088`: the API answered
 HTTP/1.0 and closed the connection after every response, which the sidecar's
 pooled HTTP client races against. The API handler now sets `protocol_version =
-"HTTP/1.1"` (keep-alive; `src/api/tests/test_keepalive.py`). The live demo API
-runs the same change through a temporary command override until an image built
-from this source is deployed; a deployment of the new image should drop the
-override (see the research note).
+"HTTP/1.1"` (keep-alive; `src/api/tests/test_keepalive.py`). On 2026-11-04 the
+image built from `4d56cf609` (`zava-forward-api:4d56cf609`) was deployed to the
+live demo API as revision `--0000024` and the temporary command/args override
+is removed, so the app runs the image's own entrypoint. Verification through
+Easy Auth: 9 x 160 parallel (40) on `/healthz`, `/welcome.html` and
+`/style.css`, 200 at 40 parallel, 300 sequential and 200 unauthenticated 401
+requests gave 0 empty-body 500s. The pipelined GET-with-body connection close
+is covered by `test_keepalive.py`; it could not be observed through the Easy
+Auth proxy.
 
 ### Historical deployment recipe
 
