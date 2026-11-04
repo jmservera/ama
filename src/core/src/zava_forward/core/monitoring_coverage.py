@@ -237,6 +237,113 @@ def evaluate_indicator(
     return result
 
 
+AI_DIMENSIONS = ("calls", "tokens", "cost")
+UNKNOWN = "unknown"
+COUNTED = "counted"
+
+
+def _aware(value: Any) -> datetime | None:
+    if not isinstance(value, str):
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo else None
+
+
+def evaluate_ai_limits(
+    *,
+    usage: Mapping[str, Any],
+    limits: Mapping[str, Any] | None,
+    expires_at: Any,
+    as_of: Any,
+    approved_by: Any = None,
+    constructed: bool = False,
+    price_source: Any = None,
+    owner: Any = None,
+) -> dict[str, Any]:
+    """Classify one capability/period against finite call, token, cost and expiry limits.
+
+    There is no green state and no invented price: cost without a named `price_source` is
+    unknown, and absent usage is insufficient, never zero. Live limits need a named approver;
+    `constructed` limits are offline tests only. A breach names the alert owner and the
+    `ai-limits` runbook anchor, and carries no suspension authority.
+    """
+    result: dict[str, Any] = {
+        "status": BLOCKED,
+        "reason": "",
+        "offline_only": constructed,
+        "dimensions": {},
+        "runbook": "ai-limits",
+        "owner": owner if named(owner) else None,
+    }
+    if not constructed and not named(approved_by):
+        result["reason"] = "live limits need named human approval"
+        return result
+    expiry, now = _aware(expires_at), _aware(as_of)
+    if now is None or not limits:
+        result["reason"] = "limits or as-of time missing or invalid"
+        return result
+    dims: dict[str, str] = {}
+    for name in AI_DIMENSIONS:
+        limit, used = limits.get(name), usage.get(name)
+        if not isinstance(limit, int) or isinstance(limit, bool) or limit <= 0:
+            dims[name] = BLOCKED
+        elif name == "cost" and not named(price_source):
+            dims[name] = UNKNOWN
+        elif not isinstance(used, int) or isinstance(used, bool) or used < 0:
+            dims[name] = INSUFFICIENT
+        else:
+            dims[name] = BREACH if used > limit else WITHIN
+    if expiry is None:
+        dims["expiry"] = BLOCKED
+    else:
+        dims["expiry"] = BREACH if now >= expiry else WITHIN
+    result["dimensions"] = dims
+    states = set(dims.values())
+    if BREACH in states:
+        result["status"] = BREACH
+        result["incident_required"] = True
+        result["reason"] = "limit breached" if result["owner"] else "breach without owner"
+    elif BLOCKED in states:
+        result["reason"] = "limit or expiry missing or invalid"
+    elif states & {INSUFFICIENT, UNKNOWN}:
+        result.update(status=INSUFFICIENT, reason="usage or price source missing")
+    else:
+        result.update(status=WITHIN, reason="not proof of value or safety")
+    return result
+
+
+def reconcile_events(
+    events: Sequence[Mapping[str, Any]], *, window_start: Any, window_end: Any
+) -> dict[str, Any]:
+    """Count distinct events in a half-open window so replays after a restart do not double count.
+
+    Events need a bounded `event_id` token and an aware ISO `observed_at`; others are counted as
+    invalid, and an invalid window yields no count.
+    """
+    start, end = _aware(window_start), _aware(window_end)
+    out: dict[str, Any] = {"count": None, "duplicates": 0, "outside_window": 0, "invalid": 0}
+    if start is None or end is None or end <= start:
+        out["status"] = BLOCKED
+        return out
+    seen: set[str] = set()
+    for event in events:
+        event_id, at = event.get("event_id"), _aware(event.get("observed_at"))
+        if not isinstance(event_id, str) or _TOKEN.fullmatch(event_id) is None or at is None:
+            out["invalid"] += 1
+        elif event_id in seen:
+            out["duplicates"] += 1
+        elif not start <= at < end:
+            out["outside_window"] += 1
+        else:
+            seen.add(event_id)
+    out["count"] = len(seen)
+    out["status"] = BLOCKED if out["invalid"] else COUNTED if seen else INSUFFICIENT
+    return out
+
+
 ALLOWED_FIELDS = frozenset(
     {
         "alert",

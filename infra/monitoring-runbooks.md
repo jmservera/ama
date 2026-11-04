@@ -335,7 +335,14 @@ file or its Bicep marker, or when poison queue, AI limit and harm gaps are
 presented as installed. The same module evaluates harm and AI-limit indicators as
 Insufficient, Blocked, within threshold or breach, never green; constructed
 thresholds are offline only and a live threshold needs a named human approver.
-A breach reports an incident owner but does not suspend a task. It also provides
+A breach reports an incident owner but does not suspend a task. `evaluate_ai_limits`
+applies the same rule to one capability/period against finite call, token, cost and
+expiry limits: cost without a named price source is Unknown, absent usage is
+Insufficient, a breach names the owner and the `ai-limits` runbook entry, and it
+holds no suspension authority. `reconcile_events` counts distinct event IDs in a
+half-open window so replays after a restart do not double count. Both are pure
+offline checks with constructed fixtures; no producer, alert or live limit exists.
+It also provides
 an allowlist sanitiser for diagnostic events so prompts, readings, chat content,
 tokens and identities are dropped. It is not wired into platform log collection,
 so the diagnostic-exclusion criterion stays unmet as described below.
@@ -386,11 +393,11 @@ B/R/T IDs below label the issue's criteria positionally, not new requirements.
 | R2 unsupported claims/critical misses/stale review/challenges/cohort errors/effort | Explicit indicator list in RAI procedure | Applicable producer coverage and complete review-effort evidence |
 | R3 missing samples/usage/approvals/thresholds not green | Typed empty query sources, null measurements, static Blocked/Unknown panels | Actual query/error/serving behavior; approved sufficiency and threshold evidence |
 | R4 seeded harm/breach creates incident and suspension | Existing authorized incident path documented | Owned signal-to-incident integration and actual accepted drill; no suspension from metric alert |
-| R5 restart reconciliation and disabled-task ownership/manual routes | Required response/recovery and blocked panel | Durable windows/denominators/repeated-event runtime coverage and appointment evidence |
+| R5 restart reconciliation and disabled-task ownership/manual routes | Required response/recovery, blocked panel and an offline replay-safe window counter | Durable windows/denominators/repeated-event runtime coverage and appointment evidence |
 | R6 no raw prompts/source/sensitive reasons/tokens/identities | No new content logging; protected audit separation documented | Source-level exclusion/retention/access tests on existing telemetry |
 | R7 offline constructed vs named-human live thresholds | Disabled candidates labelled proposed, approval-reference boundary | Named actual human approvals, not a nonempty string or fixture |
 | R8 existing audit/report/UI, no new platform/future-IoT dependency | Reuse existing Azure Monitor and SQL audit/continuity paths; IoT rules independent | Actual runtime/report integration without adding a separate platform |
-| T1 calls/tokens/budget/expiry breach alerts owned/runbook | AI-limit gap procedure, no invented producer | OD-51 owners/limits, complete metering, durable breach notification and test |
+| T1 calls/tokens/budget/expiry breach alerts owned/runbook | AI-limit gap procedure, no invented producer; offline limit evaluator with owner and runbook link | OD-51 owners/limits, complete metering, durable breach notification and test |
 | T2 capability/period usage beside Azure cost/variance | Explicit missing usage, Azure actual cost Unknown and unreconciled variance panel | Complete same-period usage/billing/dated-price feed and approved tolerance |
 | T3 budget80 actual/100 forecast notification not cap | Budget runbooks, workbook and corrected parameter description | Source semantics documented; delivery/receipt not tested |
 
