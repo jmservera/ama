@@ -10304,6 +10304,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Live sensors seed and signed-in re-walk (Refs #1072, Refs #462)
 
 * Owner-approved one-off in-VNet job seeded 713 synthetic sensor readings for the test resident's home only (per-case `home.stock_id`), and re-applied the resident view with the `COALESCE` binding. Signed-in 390 px re-walk shows temperature, humidity and the 24-hour forecast. Method in `infra/README.md`, result in the prototype profile review. SQL stayed private, spec restored.
+
 ## [2026-11-04] update | Issue 119 status record (Refs #119)
 
 * Added a dated status record to the map tile provider options page. Both acceptance criteria remain unmet and need human, legal and procurement steps. Nothing ticked or closed.
