@@ -10306,6 +10306,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Deployed main `8b9553d8b` to `ca-cutover-test-demo-api` (`--0000025`) and `ca-resident-demo` (`--0000010`) through the short registry window; set `ZF_DEMO_EXPIRES_AT` to `2028-01-01T00:00:00Z` (was `2027-01-31T23:59:00Z`). Recorded in `infra/README.md` and the prototype profile review. Sensors section showed the fail-closed message only, filed as #1072. No issue is closed.
 
+## [2026-11-04] update | Receipts for validation-refused unstored chat asks (Refs #159)
+
+* `ChatPanel.ask_unstored` now records one `chat.turn.unstored` receipt (0 model calls, no question text) when validation or the case lookup refuses a turn. Still unmet on #159: the named screen-reader test (criterion 6) and the 401 and route-validation receipts (tokenomics criterion). Evidence: `.copilot-tracking/*/2026-11-04/issue-159-validation-receipts-*`.
 ## [2026-11-04] update | WCAG 2.4.11 and 2.5.7 slice recorded (Refs #151)
 
 * Added `scroll-padding-block-end` so the fixed chat launcher cannot hide a focused control, two static tests, and a baseline audit row for 2.4.11 and 2.5.7. Rendered, screen-reader and owner-decision criteria remain unmet; no conformance claim.
