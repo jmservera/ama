@@ -107,6 +107,23 @@ class HeldOutGateTests(unittest.TestCase):
         got = run(leaked)
         self.assertFalse(got["scored"])
 
+    def test_empty_frozen_set_is_not_scored(self) -> None:
+        got = run(dict(version="synthetic-heldout", scenarios=[]))
+        self.assertFalse(got["scored"])
+        self.assertEqual(got["outcome"], "insufficient")
+        self.assertTrue(any("no scenarios" in p for p in got["problems"]))
+
+    def test_short_text_is_one_shingle(self) -> None:
+        self.assertEqual(
+            chat_heldout._shingles("Confirm consent now"), {("confirm", "consent", "now")}
+        )
+        self.assertEqual(chat_heldout._shingles(""), set())
+        leaked = copy.deepcopy(SET)
+        leaked["scenarios"][0]["turns"][0]["say"] = "Short words"
+        dev = copy.deepcopy(DEV)
+        dev["scenarios"][0]["turns"][0]["say"] = "short words"
+        self.assertTrue(chat_heldout.leaks(leaked, dev))
+
 
 if __name__ == "__main__":
     unittest.main()

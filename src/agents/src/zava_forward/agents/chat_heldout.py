@@ -44,6 +44,8 @@ def _strings(node: Any, keys: tuple[str, ...]) -> Iterator[str]:
 
 def _shingles(text: str) -> set[tuple[str, ...]]:
     w = _words(text)
+    if len(w) < MIN_SHARED_WORDS:
+        return {tuple(w)} if w else set()
     return {tuple(w[i : i + MIN_SHARED_WORDS]) for i in range(len(w) - MIN_SHARED_WORDS + 1)}
 
 
@@ -89,8 +91,14 @@ def freeze_problems(
     if stale:
         problems.append("bindings changed since freeze: " + ", ".join(stale))
     spec = json.loads(raw.decode("utf-8"))
+    if not spec.get("scenarios"):
+        problems.append("no scenarios in the held-out set")
     problems += leaks(spec, development)
     return problems
+
+
+def results_input(raw: bytes) -> list[Any]:
+    return json.loads(raw.decode("utf-8")).get("scenarios") or []
 
 
 def run_heldout(
@@ -106,12 +114,16 @@ def run_heldout(
     problems = freeze_problems(raw, manifest, implementer=implementer, development=dev)
     if problems:
         return dict(outcome="insufficient", scored=False, problems=problems)
+    if not results_input(raw):
+        return dict(
+            outcome="insufficient", scored=False, problems=["no scenarios in the held-out set"]
+        )
     results = []
     for sc in json.loads(raw.decode("utf-8"))["scenarios"]:
         with tempfile.TemporaryDirectory() as tmp:
             results.append(chat_eval.run_scenario(copy.deepcopy(sc), tmp))
     summary = chat_eval.summarise(results)
-    ok = all(r["passed"] for r in results)
+    ok = bool(results) and all(r["passed"] for r in results)
     return dict(
         outcome="pass" if ok else "fail",
         scored=True,
