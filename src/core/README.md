@@ -728,6 +728,15 @@ digests. No observed results exist yet.
 python -m unittest discover -s tests -p 'test_discovery_assistant_*.py' -q
 ```
 
+Slice 3 adds `discovery_assistant_drafting`: deterministic stage durations from
+timestamped, source-referenced events (`calculate_stage_durations`, with gaps
+reported rather than guessed) and `draft_evidence`, where an optional drafter
+callable may only phrase the result. A draft is accepted only if every number
+it quotes was calculated and it cites a source reference; otherwise, or if the
+drafter is absent or fails, a plain deterministic sentence is used. Output is
+always `DRAFT_FOR_HUMAN_REVIEW` and never a validated finding. No model is
+bundled and nothing needs one.
+
 ### Phase 0 discovery register slice (124)
 
 `discovery_register` is a pure, in-memory rule layer for the retrofit-flow
