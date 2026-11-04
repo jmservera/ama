@@ -3,6 +3,7 @@
 Publishing is a manager action, idempotent, audited and read back by a verifying
 status endpoint. Nothing here changes a ranking, the unsigned policy or any case.
 """
+
 import copy
 import os
 import threading
@@ -47,8 +48,9 @@ class PublicationWiring(QualityMatrix):
         self.assertEqual((status["count"], status["problems"], status["overdue"]), (1, [], False))
         self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
         actions = [e["action"] for e in self.store.audit_entries()]
-        self.assertEqual(actions, ["ranking_snapshot_published",
-                                   "ranking_snapshot_already_published"])
+        self.assertEqual(
+            actions, ["ranking_snapshot_published", "ranking_snapshot_already_published"]
+        )
         self.assertEqual(ranking.CURRENT["owner"], "to be named")
 
     def test_concurrent_publish_is_serialised_and_audit_chain_intact(self):
@@ -71,8 +73,9 @@ class PublicationWiring(QualityMatrix):
         self.assertEqual(errors, [])
         self.assertEqual(sorted(results), [False, True])
         actions = sorted(e["action"] for e in self.store.audit_entries())
-        self.assertEqual(actions, ["ranking_snapshot_already_published",
-                                   "ranking_snapshot_published"])
+        self.assertEqual(
+            actions, ["ranking_snapshot_already_published", "ranking_snapshot_published"]
+        )
         self.assertTrue(self.store.verify_audit())
         self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
 
