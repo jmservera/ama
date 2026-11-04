@@ -8,6 +8,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 import socket
 import subprocess
 import sys
@@ -2270,6 +2271,44 @@ os.fstat(3)
             builds = [a for a in seen if a[:2] == ["docker", "build"]]
             self.assertEqual(len(builds), 1)
             self.assertEqual("--no-cache" in builds[0], cache == "fresh" and not stress)
+
+    def test_real_src_ci_jobs_are_pinned_and_every_step_classified(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        text = (root / ".github/workflows/src-ci.yml").read_text()
+        jobs: dict[str, Any] = {}
+        job = ""
+        in_steps = False
+        for line in text.split("\njobs:\n", 1)[1].splitlines():
+            if match := re.fullmatch(r"  ([\w-]+):", line):
+                job = match[1]
+                jobs[job] = {"steps": []}
+                in_steps = False
+            elif line == "    steps:":
+                in_steps = True
+            elif re.fullmatch(r"    [\w-]+:.*", line):
+                in_steps = False
+            elif in_steps and line.startswith("      - "):
+                step = {}
+                key, _, value = line[8:].partition(":")
+                if key in ("name", "id", "uses"):
+                    step[key] = value.strip()
+                jobs[job]["steps"].append(step)
+            elif in_steps and (match := re.fullmatch(r"        (uses|name|id): (.+)", line)):
+                jobs[job]["steps"][-1][match[1]] = match[2].strip()
+        self.assertIn("changes", jobs)
+        self.assertEqual(
+            gate.digest(root / ".github/workflows/src-ci.yml"), gate.WORKFLOW_HASHES["src-ci.yml"]
+        )
+        rows = gate.Runner.coverage_rows({"src-ci.yml": jobs})
+        self.assertEqual(
+            {r["job"] for r in rows},
+            set(jobs),
+        )
+        self.assertEqual(sum(len(j["steps"]) for j in jobs.values()), len(rows))
+        self.assertTrue(all(r["coverage"] for r in rows))
+        self.assertTrue(
+            all(r["workflow_sha256"] == gate.WORKFLOW_HASHES["src-ci.yml"] for r in rows)
+        )
 
     def test_matrix_drift_and_unreviewed_extra_commands_refuse(self) -> None:
         self.assertEqual(len(gate.required_groups([])), 17)

@@ -10110,3 +10110,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Same-home journey stage links have distinct text (Closes #955)
 
 * Each stage link on the programme queue journey map now reads `<stage>: <screen title>`, so stages 3 and 7 no longer share link text in a screen-reader link list (WCAG 2.4.4 hygiene, visible text matches the accessible name). Covered by an executed test; no screen-reader or axe run, and WCAG/AT acceptance (#151, #155) stays unmet. Evidence under `.copilot-tracking/` (2026-11-04 fu-955).
+
+## [2026-11-04] update | Gate workflow pin matches the current src-ci.yml (Refs #608, Refs #572)
+
+* `tools/rpi-checks.py` re-pins `src-ci.yml` after the last #979 edit left the preflight reporting "Workflow matrix drift"; the exact-digest check is unchanged. A new test classifies every job and step of the real workflow. Focused tier only; the complete gate was not run. Evidence under `.copilot-tracking/` (2026-11-04 gate-matrix-drift).
