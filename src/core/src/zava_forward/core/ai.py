@@ -20,6 +20,15 @@ SCOPE = "https://cognitiveservices.azure.com"
 FORBIDDEN = re.compile(r"\b(i have sent|has been sent|we have sent|i've sent|email sent|message sent)\b", re.I)
 
 
+MAX_TEXT_BYTES = 128 * 1024
+MAX_IMAGE_BYTES = 4 * 1024 * 1024
+IMAGE_TYPES = ("image/png", "image/jpeg")
+
+
+class InputRefused(ValueError):
+    """The request is outside the approved input bounds; no provider call is made."""
+
+
 class ModelMismatch(ValueError):
     def __init__(self, model):
         super().__init__("Returned model differs from the released model version.")
@@ -75,6 +84,8 @@ class Ai:
     def _request(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
         body = json.dumps({"messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
                            "max_tokens": max_tokens, "temperature": temperature}, ensure_ascii=True).encode("ascii")
+        if isinstance(user, str) and len(body) > MAX_TEXT_BYTES:
+            raise InputRefused("input-too-large")
         if self.consumption is None:
             raise ai_consumption.DispatchHeld("financial-meter-unavailable")
         model = self.model_version_strong if deployment == self.strong else self.model_version
@@ -126,6 +137,8 @@ class Ai:
             result = self._request(self.fast, system, user, max_tokens, timeout, 0, envelope)
             envelope.update(model=result.get("model"), outcome="returned", source="ai",
                             text=result["choices"][0]["message"]["content"])
+        except InputRefused as error:
+            envelope.update(outcome="input-refused", reason=str(error))
         except ModelMismatch as error:
             envelope.update(model=error.model, outcome="model-mismatch")
         except ai_consumption.DispatchHeld as error:
@@ -191,6 +204,10 @@ class Ai:
         export_fields.scalars(dict(name=name, mime=mime), ("name", "mime"))
         system, instruction = ai_prompts.render("read_document", name=name)
         if mime.startswith("image/"):
+            if mime not in IMAGE_TYPES or len(data) > MAX_IMAGE_BYTES:
+                return dict(text="The file is stored but too large or not a type that AI reads. Add a short note about what it is.",
+                            source="template", model=None, validated=True, task="read_document",
+                            reason="input outside approved bounds; use the manual route")
             content = [{"type": "text", "text": instruction},
                        {"type": "image_url", "image_url": {"url": f"data:{mime};base64,{base64.b64encode(data).decode()}"}}]
         elif mime.startswith("text/") or mime in ("application/json", "text/csv"):

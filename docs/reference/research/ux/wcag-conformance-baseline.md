@@ -215,6 +215,19 @@ To ask for another format or report a problem, contact: owner to supply (O-4).
 
 Criteria 1, 2, 3 and 5 of #230 are ticked on merged PRs #662, #781, #818, #854, #931 and #969. Criterion 4 (WCAG 2.2 baseline, textual state meaning, keyboard navigation) stays unmet: the automated keyboard and axe checks are merged, but manual WCAG 2.2 review and assistive-technology testing by named people are not done (#151, #155). Automated checks are not conformance evidence. No code slice can supply this.
 
+## UX epic status (2026-11-04, #149)
+
+Delivered as engineering evidence: #150 is closed; #496 added the scoped specialist screen foundation; #152, #153, #154, #155 and #156 have merged slices (for example #813, #1016, #1002, #1079, #712, #1004, #811) and tick the criteria those slices prove. #151 has merged CI axe checks, a target-size fix (#857) and a form error guard (#1000).
+
+Unmet epic criteria:
+
+* Stabilization checkpoint (#440): its triage and artifact criteria are still open, and merged children do not satisfy it.
+* Child features are accepted: 15 of 16 children are open; #151 to #156 and #225 to #233 each keep unmet criteria.
+* Accessibility, content and usability evidence recorded as test results: manual screen-reader and keyboard checks, a named-human copy review and tests with representative users are not done. Synthetic walkthroughs are not user validation.
+* Design artefacts traceable to journeys and requirements: partly met; #156 still lacks per-feature links for every screen.
+
+Remaining steps need owner decisions (supported devices, WCAG level, release rule) and named human testers, so no code slice is possible. Nothing was ticked or closed.
+
 ## Open items
 
 * O-1: Owner confirms the target level and scope.
