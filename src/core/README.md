@@ -4513,6 +4513,10 @@ changes the concern, its outcome or its remedy, and a sensor reading never appea
 task `aftercare-concern-pack` is registered in `ai_registry` as an unapproved, disabled proposal
 task with a manual route and no model binding (FR-036).
 
+`add_sensor_context` attaches a later sensor signal to a concern as context only: it changes no
+investigation state, outcome or remedy, never marks the concern dismissed, and the text (also at
+`raise_concern`) passes the neutral-text guard. The household view still omits sensor context.
+
 `intake_form()` returns the plain-language household route (who is raising it, representative
 basis, concern kind, own-words statement, and the phone, in-person, paper and assisted-visit
 channels) for a screen or paper form to follow, and `intake_errors(values)` returns plain,
