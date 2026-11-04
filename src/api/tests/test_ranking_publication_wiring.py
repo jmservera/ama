@@ -33,6 +33,7 @@ class PublicationWiring(QualityMatrix):
         self.assertEqual(code, 200)
         self.assertEqual((status["count"], status["latest"], status["overdue"]), (0, None, True))
         self.assertFalse(status["policy_signed"])
+        self.assertEqual(status["signoff_problems"], ["No named policy owner."])
         self.assertEqual(status["schedule"]["owner"], "to be named")
 
         before = copy.deepcopy(self.store.cases)
