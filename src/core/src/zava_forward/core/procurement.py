@@ -130,7 +130,7 @@ class ProcurementMixin(AppointmentMixin):
                 if w:
                     case_before = (w["case_id"], deepcopy(self._case(w["case_id"])))
                 p = self._package(w["package"] if w else pid) if pid or w else None
-                authority = self._contract_authority(actor, p, action, w["contractor"] if w else None) if p and action not in ("capacity", "consultation") else None
+                authority = self._contract_authority(actor, p, action, w["contractor"] if w else None) if p and action not in ("capacity", "consultation", "contract_event") else None
                 context = dict(user=deepcopy(user), actor=actor, authority=authority, cases={},
                                snapshot=self._proc_snap.get("procurement") if hasattr(self, "db") else None,
                                authorities=[], persisted=False)
@@ -351,6 +351,15 @@ class ProcurementMixin(AppointmentMixin):
                         supplied_status=supplied, authority_status="Unverified",
                         reason=f"Consultation status is unknown for {p['id']}. Legal must verify it before this contract is let or renewed. A supplied record does not release the hold.",
                         manual_path="Ask Legal and the contract owner to confirm consultation outside this service. No letting or renewal happens here.")
+
+    def request_contract_event(self, user, pid, event):
+        """Workflow entry for letting or renewing a contract. It never lets or renews: while consultation is unknown it records the held attempt in the audit log and returns the blocked outcome."""
+        if event not in ("let", "renew"):
+            raise ValueError("Choose let or renew.")
+        with self._proc_operation(user, "contract_event", pid=pid) as actor:
+            gate = self.contract_event_gate(user, pid, event)
+            self._proc_save(actor, "contract_event_held", "-", f"{pid} {event} request held; consultation status unknown; Legal authority unverified; no letting or renewal happened")
+            return gate
 
     def rescope_package(self, user, pid, scope, reason):
         self._need_manager(user, "change a package scope")
