@@ -10236,3 +10236,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Overdue nomination next updates surface in the work queue (Refs #130)
 
 * This slice makes overdue nomination next updates appear in the work queue (`taskqueues.py`, focused tests). It is Refs #130 only: no acceptance criterion is newly proven, and OD-41 and OD-42 remain open. Focused tier only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 nomination-queue-130).
+
+## [2026-11-04] update | Resident demo plain-language and sign-in fixes (Refs #462)
+
+* Resident showcase copy and sign-in behaviour: plain-language sensor statuses (the out-of-range status now reads "Not shown: this value cannot be displayed" so it does not imply an unsafe value), a slow-start notice after 4 seconds, UK-time sensor history, clearer 320px sign-in, shorter sign-out failure copy, and sign-in validation that names the missing field, links it to the error with `aria-describedby`, moves focus to the first invalid field and clears `aria-invalid` on input. Behavioural Node tests (`src/api/tests/test_resident_demo_script.py`) replace source-text checks. Local focused tier only: sensors and demo browser checks passed against a loopback SQL Server; no gate, no deployment. PR 1044 supersedes PR 1042. The README index entry for #462 is unchanged. Evidence under `.copilot-tracking/` (2026-11-04 resident-demo-journey-462).

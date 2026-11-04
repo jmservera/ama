@@ -31,6 +31,15 @@
   var signedInLede = lede.textContent;
   var signedOutLede = "Sign in to see how your home improvement is going. Everything here is read-only apart from synthetic callbacks.";
 
+  function clearInvalid() {
+    [emailField, passwordField].forEach(function (field) {
+      field.removeAttribute("aria-invalid");
+      field.removeAttribute("aria-describedby");
+    });
+  }
+  emailField.addEventListener("input", clearInvalid);
+  passwordField.addEventListener("input", clearInvalid);
+
   function clearPersonal() {
     transition += 1;
     sessionId = "";
@@ -316,8 +325,7 @@
     clearPersonal();
     signinButton.disabled = false;
     lede.textContent = signedOutLede;
-    emailField.removeAttribute("aria-invalid");
-    passwordField.removeAttribute("aria-invalid");
+    clearInvalid();
     errorEl.hidden = true;
     statusEl.textContent = "";
     signin.hidden = false;
@@ -411,15 +419,17 @@
     var password = passwordField.value;
     var noEmail = !email.trim();
     var noPassword = !password;
-    emailField.removeAttribute("aria-invalid");
-    passwordField.removeAttribute("aria-invalid");
+    clearInvalid();
     if (noEmail || noPassword) {
-      if (noEmail) emailField.setAttribute("aria-invalid", "true");
-      if (noPassword) passwordField.setAttribute("aria-invalid", "true");
+      [[noEmail, emailField], [noPassword, passwordField]].forEach(function (pair) {
+        if (!pair[0]) return;
+        pair[1].setAttribute("aria-invalid", "true");
+        pair[1].setAttribute("aria-describedby", "signin-error");
+      });
       signinError.textContent = noEmail && noPassword ? "Enter your email address and the password."
         : noEmail ? "Enter your email address." : "Enter the password.";
       signinError.hidden = false;
-      signinError.focus();
+      (noEmail ? emailField : passwordField).focus();
       return;
     }
     signinButton.disabled = true;

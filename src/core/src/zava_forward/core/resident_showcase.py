@@ -122,7 +122,7 @@ def _sensor_channel(value: Any, fault: Any, low: float, high: float) -> tuple[fl
     if value is None:
         return None, "No reading recorded"
     if not low <= value <= high or not math.isfinite(value):
-        return None, "Not shown: outside the expected range"
+        return None, "Not shown: this value cannot be displayed"
     return float(value), "Recorded"
 
 

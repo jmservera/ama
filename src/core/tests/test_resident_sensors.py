@@ -76,10 +76,10 @@ class SensorProjectionTests(unittest.TestCase):
     def test_null_and_invalid_channels_keep_latest_timestamp_and_sibling(self) -> None:
         for temperature, status in (
             (None, "No reading recorded"),
-            (float("nan"), "Not shown: outside the expected range"),
-            (float("inf"), "Not shown: outside the expected range"),
-            (-11, "Not shown: outside the expected range"),
-            (46, "Not shown: outside the expected range"),
+            (float("nan"), "Not shown: this value cannot be displayed"),
+            (float("inf"), "Not shown: this value cannot be displayed"),
+            (-11, "Not shown: this value cannot be displayed"),
+            (46, "Not shown: this value cannot be displayed"),
         ):
             [item] = rs.parse_sensors([reading(temperature_c=temperature)], "HOME-A")
             self.assertIsNone(item.temperature_c)

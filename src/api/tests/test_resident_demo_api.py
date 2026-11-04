@@ -621,27 +621,9 @@ class AbuseAndHardeningTests(DemoTestCase):
         self.assertIn("You have signed out.", script)
         self.assertIn('getElementById("signin-title").focus()', script)
 
-    def test_slow_start_is_explained_and_timer_is_cleared(self) -> None:
-        script = (demo.WEB / "demo.js").read_text()
-        self.assertIn("The showcase may be waking up", script)
-        self.assertEqual(script.count("clearTimeout(slow)"), 2)
-        self.assertNotIn("demo faults", script)
-
-    def test_sign_in_page_copy_names_the_missing_field_and_is_not_signed_in_text(self) -> None:
-        script = (demo.WEB / "demo.js").read_text()
+    def test_sign_in_page_has_a_lede_for_signed_out_copy(self) -> None:
         html = (demo.WEB / "index.html").read_text()
         self.assertIn('id="lede"', html)
-        self.assertIn("Sign in to see how your home improvement is going.", script)
-        self.assertIn("lede.textContent = signedOutLede", script)
-        self.assertIn('"Enter your email address."', script)
-        self.assertIn('"Enter the password."', script)
-        self.assertEqual(script.count('setAttribute("aria-invalid", "true")'), 2)
-
-    def test_sign_out_failure_copy_is_short_and_keeps_the_30_minute_fact(self) -> None:
-        script = (demo.WEB / "demo.js").read_text()
-        self.assertIn("We could not confirm that you signed out.", script)
-        self.assertIn("within 30 minutes", script)
-        self.assertNotIn("Your session may still be active", script)
 
     def test_sensor_times_use_uk_time_not_utc_jargon(self) -> None:
         script = (demo.WEB / "demo.js").read_text()
