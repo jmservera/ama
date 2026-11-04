@@ -14,6 +14,8 @@ ms.date: 2026-11-04
 * #96: approved versioned schemas (Finance and template authority), reviewed export, full rule dependency stale marking.
 * #99: Board envelope and tolerances (human inputs).
 * #440: triage and review criteria open (owner).
-* Epic criteria depend on those; none is an agent-only code slice.
+* Human inputs (Finance and template authority, Board envelope, owner triage) are blockers.
+* Some #96 code work remains open (reviewed export, rule stale marking), tracked in #1093 and gated on the approved schema.
+* Epic criteria depend on those.
 
 Planning readiness: Ready for a docs-only status record. Owner note applies.

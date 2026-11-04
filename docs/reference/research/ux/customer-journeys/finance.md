@@ -274,7 +274,7 @@ for AI economics is set (BRD OD-51 is open).
 Checked on main 844346329. Children #94 and #95 are closed. #96 and #99 stay
 open, and #440 is the stabilization checkpoint the epic names.
 
-Delivered by merged PRs (record-only, human-approved): finance matching and
+Delivered by merged PRs (record-only): finance matching and
 independent approval (#383, #386), held working reviews (#510), held draft
 export (#902), stale marking of saved form manifests (#888, #1083), the
 exposure pause signal (#885, #1028, #1078) and a test of the boundary for bid,
@@ -293,8 +293,10 @@ Unmet epic criteria:
   records cash: tests exist (#912), but the criterion stays unticked until the
   children and the checkpoint close.
 
-Nothing is ticked and no approval, eligibility or submission is implied. Only
-human steps (Finance authority, Board inputs, owner checkpoint) remain.
+Nothing is ticked and no approval, eligibility or submission is implied. Human
+inputs (Finance and template authority, the Board envelope, owner triage of
+#440) are blockers. Some #96 code work also remains open: reviewed export and
+rule stale marking, tracked in #1093 and gated on the approved schema.
 
 ## Local source keys
 
