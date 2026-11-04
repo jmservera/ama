@@ -10078,3 +10078,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-03] update | Demo chat activation wired into infra and applied live (Refs #891)
 
 * Added the `chatDemoActivation` Bicep parameter (demo API only, never the resident app) and applied `ZF_CHAT_DEMO_ACTIVATION` and `ZF_DEPLOYMENT_PROFILE=demo` live with a rebuilt main image. Status reports demo activation, but the live employee reply stayed workflow-only because the SQL release gate still denies the chat task. See [the infra README](../../infra/README.md#demo-only-employee-chat-activation-2026-11-03-refs-891). No Legal, DPO or RAI approval is claimed.
+
+## [2026-11-04] update | Hazard receiver error names the failing condition (Refs #946)
+
+* `_hazard_receiver` in core workflows now reports a released retrofit hold separately from a missing referral instead of one combined message. Text-only change with a regression test; the issue line reference (437) is ambiguous so the owner should confirm the target. Evidence under `.copilot-tracking/` (2026-11-04 issue-946).

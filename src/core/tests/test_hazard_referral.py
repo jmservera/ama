@@ -435,6 +435,20 @@ class JsonHazardReferral(unittest.TestCase):
         self.assertIsNone(h["response_due_at"])
         self.assertEqual(h["history"][-1]["action"], "safety_times_observed")
 
+    def test_receiver_error_names_the_failing_condition(self) -> None:
+        self.raise_report()
+        with self.assertRaisesRegex(ValueError, "^Record a prospective evidenced referral"):
+            self.store.receive_hazard(self.bea, "ZF-3", 0, "SYN-RECEIPT")
+        self.refer()
+        self.accept()
+        self.store.record_repair(self.bea, "ZF-3", 0, "SYN-REPAIR")
+        self.store.release_hazard(self.bo, "ZF-3", 0, "Reason", "SYN-CLEAR")
+        with self.assertRaises(ValueError) as ctx:
+            self.store.receive_hazard(self.bea, "ZF-3", 0, "SYN-RECEIPT")
+        self.assertEqual(
+            str(ctx.exception), "This safety issue's retrofit hold has already been released."
+        )
+
     def test_legacy_states_have_prospective_path_without_inventing_history(self) -> None:
         for state in ("raised", "referred", "repaired", "released"):
             with self.subTest(state=state):

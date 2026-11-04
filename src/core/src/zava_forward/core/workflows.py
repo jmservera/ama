@@ -419,7 +419,9 @@ class WorkflowMixin:
     def _hazard_receiver(self, c, idx, user, allow_released=False):
         controls.require_role(user, SAFETY_ROLES, "the designated safety receiver")
         h = self._hazard(c, idx)
-        if (h["released"] and not allow_released) or not h.get("referral_version"):
+        if h["released"] and not allow_released:
+            raise ValueError("This safety issue's retrofit hold has already been released.")
+        if not h.get("referral_version"):
             raise ValueError("Record a prospective evidenced referral before continuing.")
         if hazard.identity(h["destination"]) != self._hazard_actor(user):
             raise PermissionError("Only the designated safety receiver can record this event.")
