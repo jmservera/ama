@@ -10210,3 +10210,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Retrofit scenarios in production #111 and #133 tests (Refs #193)
 
 * #700 already added oracle-based consumer tests. This slice adds `test_retrofit_scenarios_production_consumers.py`, driving the labelled retrofit scenarios through `derive_signal` (#111) and `AftercareRegister` (#133): exercise labels, no priority effect, no task without an approved rule, sensor context never dismissing a concern. Unmet: store-backed scenario ingestion and independent review before ticking criterion 3. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-193 r6).
+
+## [2026-11-04] update | Discovery assistant comparison record, #125 slice 2 (Refs #125)
+
+* PR 894 already delivers the readiness gate and read-only boundary. This slice adds `discovery_assistant_evaluation`: the ten evaluation measures against the assistant, manual analysis, conventional BI and workflow reporting, from human-supplied result pointers, plus a repeatability check. No observed results exist; no comparison criterion is proven. Dated RPI artifacts: issue-125-r5.
