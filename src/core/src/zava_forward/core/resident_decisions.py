@@ -999,6 +999,16 @@ class ResidentDecisionMixin:
         if ambiguous:
             report.update(identity_state="Ambiguous", verification="Unknown", decision_route="Unknown",
                           reuse_blocked=True)
+            verifications = report.setdefault("verifications", [])
+            verifications.append(dict(
+                version=len(verifications) + 1, report_version=body["report_version"],
+                outcome="Not verified", verified_tenure="Unknown", identity_confirmed=False,
+                decision_route="Unknown", verifier_name="Not applicable: system-recorded",
+                verifier_role="Superseded by ambiguous lease identity trigger",
+                evidence_ref=f"review trigger {record['version']}", verified_on=k.today(),
+                recorded_by=_identity(user), at=_time(),
+                interpretation="None: earlier verification withdrawn until the data owner re-verifies",
+            ))
         return (f"tenure report {body['report_version']} review trigger {record['version']} recorded; "
                 "package review stays open; case-wide hold remains")
 

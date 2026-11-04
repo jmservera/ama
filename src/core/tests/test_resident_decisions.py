@@ -681,6 +681,34 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertNotIn("reuse_blocked", report)
         self.assertEqual(report["decision_route"], "Unknown")
 
+    def test_ambiguous_identity_needs_reverification_before_pack_draft_or_approval(self) -> None:
+        self.verified_report()
+        self.store.resident_action(self.sam, "ZF-1", self.pack())
+        self.store.resident_action(
+            self.sam, "ZF-1", self.trigger(trigger="Ambiguous lease identity", expected_version=0)
+        )
+        self.store.resident_action(
+            self.sam, "ZF-1", self.resolve(resolver_role="Home Ownership data owner")
+        )
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        self.assertEqual(report["verifications"][-1]["outcome"], "Not verified")
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.pack(expected_version=1))
+        )
+        self.unchanged_failure(
+            partial(
+                self.store.resident_action, self.sam, "ZF-1", self.pack_review(expected_version=1)
+            )
+        )
+        self.store.resident_action(
+            self.sam, "ZF-1", self.verification(expected_version=2, verified_on="2026-01-05")
+        )
+        self.store.resident_action(self.sam, "ZF-1", self.pack(expected_version=1))
+        self.store.resident_action(self.sam, "ZF-1", self.pack_review(expected_version=2))
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        self.assertIn("Approved", report["question_packs"][1]["status"])
+        self.assertEqual(report["question_packs"][1]["verification_version"], 3)
+
     def test_trigger_refuses_unsafe_input_unchanged(self) -> None:
         self.verified_report()
         for changes in (
