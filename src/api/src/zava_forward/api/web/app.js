@@ -1252,7 +1252,7 @@ async function homeCaseView(id) {
         list(home.quality, (q) => h("li", {}, `${q.measure}: ${q.state}`), "None recorded."),
         h("h3", {}, "Cost allocation"),
         home.cost_allocation_restricted ? h("p", {}, "Restricted to authorised Finance roles.") :
-          list(home.cost_allocation, (x) => h("li", {}, JSON.stringify(x)), "None recorded.")),
+          list(home.cost_allocation, (x) => h("li", {}, `This home's share of shared cost ${x.shared_cost_id}: GBP ${x.amount_gbp}. Source: ${x.source}`), "None recorded.")),
       h("section", { class: "card", "aria-labelledby": "hc-building" }, h("h2", { id: "hc-building" }, "Shared at building level, not this home's evidence"),
         b ? h("p", {}, `${b.name || b.id}${b.version ? `, version ${b.version}` : ""}. `, h("a", { href: `#/building/${encodeURIComponent(b.id)}` }, "Open full building context")) : h("p", {}, "Building link not recorded; shared context is unknown."),
         shared("systems", "Shared systems"), shared("dependencies", "Dependencies"),

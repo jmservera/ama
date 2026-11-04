@@ -1107,8 +1107,10 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.route("**/api/checklists", lambda route: pending_checklists.append(route))
             tab(page, "Resident")
             page.locator("#outcome").fill("Call with pending checklist evidence")
+            workspace = page.locator("[data-case-workspace]").element_handle()
             page.get_by_role("button", name="Save", exact=True).click()
             expect(page.locator("#outcome")).to_have_value("")
+            page.wait_for_function("old => !old.isConnected", arg=workspace)
             tab(page, "Quality and handover")
             check(
                 "checklist restoration waits for construction", page.locator("#q-i0").count() == 0

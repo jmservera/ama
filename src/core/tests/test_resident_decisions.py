@@ -237,6 +237,95 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(self.store._ranking(), ranking)
         self.assertTrue(self.open_store().verify_audit())
 
+    def review(self, record_id: str, version: int, **changes: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="nomination_review",
+                case_id="ZF-1",
+                id=record_id,
+                expected_version=version,
+                outcome="More evidence needed",
+                rationale="SYN plain-language reasons",
+                evidence_ref="SYN-REVIEW-EVIDENCE",
+                next_update="2099-02-01",
+            ),
+            **changes,
+        )
+
+    def test_nomination_review_retains_reviewer_and_correction_stales_it(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.nomination())
+        record = self.store.cases["ZF-1"]["nomination_records"][0]
+        ranking = self.store._ranking()
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.review(record["id"], 1))
+        )
+        self.unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.rae,
+                "ZF-1",
+                self.review(record["id"], 1, outcome="Approved"),
+            )
+        )
+        self.unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.rae,
+                "ZF-1",
+                self.review(record["id"], 1, verification="Approved"),
+            )
+        )
+        self.store.resident_action(self.rae, "ZF-1", self.review(record["id"], 1))
+        record = self.store.cases["ZF-1"]["nomination_records"][0]
+        review = record["reviews"][0]
+        self.assertEqual(review["reviewer"]["code"], self.rae["code"])
+        self.assertEqual(review["record_version"], 1)
+        self.assertEqual(review["outcome"], "More evidence needed")
+        self.assertEqual(record["original"]["reported_subject_ref"], "SYN-WRONG-PERSON")
+        self.assertEqual(record["identity_status"], "Unknown")
+        self.assertEqual(record["risk_flags"], "Unknown")
+        self.assertEqual(self.store._ranking(), ranking)
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.rae, "ZF-1", self.review(record["id"], 1))
+        )
+        view = self.open_store().detail("ZF-1", self.sam)["nomination_records"][0]["follow_up"]
+        self.assertTrue(view["review_current"])
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            dict(
+                action="nomination_correct",
+                case_id="ZF-1",
+                id=record["id"],
+                expected_version=1,
+                reported_subject_ref="SYN-CORRECTED",
+                account="SYN competing evidence",
+                source="SYN correction evidence",
+                channel="Letter",
+                next_update="2099-01-02",
+                challenge_id=None,
+            ),
+        )
+        record = self.open_store().detail("ZF-1", self.sam)["nomination_records"][0]
+        self.assertEqual(record["reviews"][0]["outcome"], "More evidence needed")
+        self.assertEqual(record["reviews"][0]["stale_from_version"], 2)
+        self.assertFalse(record["follow_up"]["review_current"])
+        self.assertTrue(record["follow_up"]["re_review_pending"])
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.review(record["id"], 2))
+        )
+        self.store.resident_action(
+            self.rae,
+            "ZF-1",
+            self.review(record["id"], 2, outcome="Accepted for human eligibility review"),
+        )
+        record = self.store.cases["ZF-1"]["nomination_records"][0]
+        self.assertEqual([r["record_version"] for r in record["reviews"]], [1, 2])
+        self.assertEqual(record["reviews"][1]["competing_evidence_versions"], [2])
+        self.assertNotIn("stale_from_version", record["reviews"][1])
+        self.assertEqual(self.store._ranking(), ranking)
+        self.assertTrue(self.open_store().verify_audit())
+
     def test_intake_wrong_identity_hazard_and_closed_input_no_mutation(self) -> None:
         for invalid in (
             self.nomination(case_id="ZF-2"),

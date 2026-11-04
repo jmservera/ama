@@ -423,6 +423,11 @@ class ChatPanel:
         with self.iso.store.lock:
             self.iso.store.audit(actor, "chat.turn.unstored", "", detail)
 
+    def _record_unstored_refusal(self, user: dict[str, Any], case_id: str, outcome: str) -> None:
+        detail = json.dumps(dict(outcome=outcome, model_calls=0), sort_keys=True)
+        with self.iso.store.lock:
+            self.iso.store.audit(user_key(user), "chat.turn.unstored", case_id, detail)
+
     def ask(
         self, user: dict[str, Any], tid: str, question: object, *, skill: object = None
     ) -> dict[str, Any]:
@@ -455,20 +460,26 @@ class ChatPanel:
         except (PermissionError, LookupError):
             self.record_rejected_unstored(user)
             raise
-        if skill is None:
-            skill = GENERAL
-        if not isinstance(skill, str) or skill not in (GENERAL, *REGISTRY):
-            raise ValueError("Choose general help or one of the five listed skills.")
-        if not isinstance(question, str) or not question.strip():
-            raise ValueError("Type a question first.")
-        if len(question) > MAX_CONTENT:
-            raise ValueError(f"A question needs 1 to {MAX_CONTENT} characters.")
-        facts: dict[str, str] = {}
-        if case_id:
-            found = self.iso.case_facts(user, case_id)
-            if found is None:
-                raise ChatNotFound(case_id)
-            facts = found
+        try:
+            if skill is None:
+                skill = GENERAL
+            if not isinstance(skill, str) or skill not in (GENERAL, *REGISTRY):
+                raise ValueError("Choose general help or one of the five listed skills.")
+            if not isinstance(question, str) or not question.strip():
+                raise ValueError("Type a question first.")
+            if len(question) > MAX_CONTENT:
+                raise ValueError(f"A question needs 1 to {MAX_CONTENT} characters.")
+            facts: dict[str, str] = {}
+            if case_id:
+                found = self.iso.case_facts(user, case_id)
+                if found is None:
+                    raise ChatNotFound(case_id)
+                facts = found
+        except (ValueError, PermissionError, LookupError) as error:
+            self._record_unstored_refusal(
+                user, case_id, "rejected" if isinstance(error, ValueError) else "access-rejected"
+            )
+            raise
         sources = {f"{case_id}/{path}": value for path, value in facts.items()}
         refusal = out_of_scope(question[:MAX_CONTENT])
         cites: list[str]

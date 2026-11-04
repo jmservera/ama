@@ -143,12 +143,12 @@ def safety_release_gate(
         return _result(
             rule,
             UNKNOWN,
-            "No accountable safety role is recorded for this hold, so release cannot pass.",
+            "No accountable safety role is recorded for this stop, so work cannot restart.",
             owner,
             "Record the accountable role by referring the issue to the safety service.",
         )
     if _norm(actor.get("role")) != _norm(role):
-        return _result(rule, FAIL, f"Only the {role} can release this hold.", owner, fix)
+        return _result(rule, FAIL, f"Only the {role} can restart this stopped work.", owner, fix)
     me = {_norm(actor.get(k)) for k in ("email", "code", "oid")} - {""}
     if not me:
         return _result(
@@ -158,7 +158,8 @@ def safety_release_gate(
         return _result(
             rule,
             FAIL,
-            "A different person must release this hold. You raised it or recorded the repair.",
+            "A different person must restart this stopped work. "
+            "You raised it or recorded the repair.",
             owner,
             fix,
         )
@@ -184,6 +185,7 @@ BOOKING_RULES = {
     "funding": _booking_rule("funding", f"{_BRD} RULE-001; PRD FR-008 (exercise fixture)"),
     "safety": _booking_rule("safety", f"{_BRD} RULE-001; PRD FR-008 (exercise fixture)"),
     "resident": _booking_rule("resident", f"{_BRD} RULE-002; PRD FR-008 (exercise fixture)"),
+    "evidence": _booking_rule("evidence", f"{_BRD} RULE-001; PRD FR-008 (exercise fixture)"),
 }
 
 
@@ -232,3 +234,20 @@ def booking_gates(
         )
     )
     return results
+
+
+def evidence_gate(missing: Iterable[str] | None, owner: str, on: str | None = None) -> GateResult:
+    """Pass only when the required evidence kinds are all on file; None means not worked out."""
+    kinds = None if missing is None else list(missing)
+    result = check(
+        BOOKING_RULES["evidence"],
+        None if kinds is None else not kinds,
+        owner=owner,
+        correction="Upload or request the missing evidence and record it.",
+        label="Required evidence on file",
+        on=on,
+    )
+    if result.outcome == FAIL and kinds:
+        reason = f"Required evidence missing: {', '.join(kinds)}."
+        return GateResult(result.gate, FAIL, reason, owner, result.correction, result.rule)
+    return result

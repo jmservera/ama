@@ -502,7 +502,12 @@ with no accepted proposals, cost is `Unknown`. A candidate that raises critical
 misses, unsupported claims, overrides or reopened cases, or that drops a case
 the baseline had accepted (`dropped_accepted_proposals`), is a `failure` even
 when cheaper. No price, budget, threshold or approval is set, and no runner supplies
-real observations yet. Tests: `tests/test_candidate_comparison.py` (synthetic
+real observations yet. An optional `freeze=` manifest runs the held-out freeze
+check first: the report records `held_out.status` (`frozen`, `insufficient` with
+gaps, or `not frozen` when omitted), and a frozen manifest makes the baseline and
+every candidate comparable only on exactly the frozen case ids. Without a
+frozen manifest the result is a same-case comparison, not a held-out one.
+Tests: `tests/test_candidate_comparison.py` (synthetic
 fixtures, not model or staff evidence). Held-out data, live calls, regional
 model confirmation and Finance validation remain open.
 
@@ -658,6 +663,16 @@ and evidenced for the class and task; otherwise the outcome is Insufficient
 or NOT RUN. All five #223 criteria stay unmet. No benefit, human-effectiveness or release claim follows
 from this text. Whole #223 acceptance, the approved thresholds and the
 actual evaluation remain open.
+
+Status record (2026-11-04, Refs #223): merged PRs 638, 701, 817, 855, 941 and
+974 deliver the offline scripted gate, enforced provisional reviewer authority
+and the manual human-session intake and pooling. The focused test file (34
+tests), ruff and mypy pass on main. Criteria 1 to 5 remain unmet as human
+evidence: no authorised competent reviewer has run the test, OQ-017 holders
+are UNFILLED, measured effort and approved thresholds do not exist. Remaining
+steps are human (owner appoints reviewers and authority, approved participant,
+privacy and accessibility arrangements, a measured session); no code slice
+advances them without that input.
 
 ## Validation record
 

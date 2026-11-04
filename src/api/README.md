@@ -1073,6 +1073,7 @@ including after a cached session's staff registration changes.
 | --- | --- |
 | `nomination_record` | `case_id`, `kind` (`Officer nomination`/`Self-referral`), `reported_subject_ref`, `account`, `source`, `channel`, `owner` (staff email), `acknowledgement_ref`, `next_update` (YYYY-MM-DD), `non_digital_route`, `hazard_concern` (explicit false) |
 | `nomination_correct` | `case_id`, `id`, `expected_version`, `reported_subject_ref`, `account`, `source`, `channel`, `next_update`, `challenge_id` (same-case existing challenge ID or null) |
+| `nomination_review` | `case_id`, `id`, `expected_version` (current nomination version), `outcome` (`Accepted for human eligibility review`/`More evidence needed`/`Not progressed; resident may challenge`), `rationale`, `evidence_ref`, `next_update`. The acting staff member is the human reviewer and must not be the person who recorded the version under review. A later correction marks the review stale (kept, not deleted); no priority, consent, sanction or hazard change |
 | `tenure_intake` | `case_id`, `household_ref`, `expected_version` (0 initially, latest case tenure revision thereafter), `reported_tenure`, `reported_lease_interest`, `identity_state` (`Unknown`/`Ambiguous`), `source`, `owner`, `next_update` |
 | `tenure_legal_position` | `case_id`, `report_version` (existing tenure report), `expected_version` (0 initially, latest position version for that report thereafter), `reviewer_name` (named Legal reviewer, not the recorder), `reviewer_role` (must name a Legal role), `position_ref`, `position_version`, `reviewed_on` (YYYY-MM-DD, not future) |
 | `tenure_verify` | `case_id`, `report_version`, `expected_version` (0 initially, latest verification version for that report thereafter), `outcome` (`Verified`/`Not verified`), `verified_tenure` (`Unknown` when not verified), `identity_confirmed` (boolean), `verifier_name` (named data owner, not the recorder), `verifier_role` (must name the Home Ownership data owner), `evidence_ref`, `verified_on` (YYYY-MM-DD, not future). `Verified` needs an attached Legal position reference and sets a route label only; the case hold remains |
@@ -2518,7 +2519,17 @@ quality lifecycle. They are not represented as identical requirement numbers.
 contract; `GET /api/finance` retains the human exception/hold queue.
 The [core finance guide](../core/README.md#record-only-finance-controls-94)
 describes current identity, line matching and persistence controls.
-No endpoint pays, submits banking instructions or grants authority.
+
+`GET /api/finance/exposure` (#99) returns the read-only pause signal from
+`finance.exposure_signal`: recorded commitments compared with limits a person
+supplied in `ZF_APPROVED_LIMITS` (default `approved-limits.json` beside the
+data file). Without that file, or when it is unreadable or out of date, the
+result is `Held` with `Pause for human decision`; an over-limit or unknown
+observation also pauses. It needs the same Finance roles as the queue, changes
+no record and never approves, resumes or accelerates delivery. The repository
+holds no Board figures: the envelope and tolerances remain unmet human inputs.
+The Finance queue screen shows this signal under Investment limits, and a manual-check
+message when it cannot be read. No endpoint pays, submits banking instructions or grants authority.
 External-payment statuses are notes only. Budget/commitment and grant/cash
 records are unchanged by those notes.
 
@@ -3951,6 +3962,13 @@ instruction or payment; a shared building ID never transfers a home's evidence.
 Home AI assistance remains available through its existing proposal-only and
 human-review paths; shared free text and costs are not added to prompts.
 
+`python -m checks.home_case_browser_check` (from `src/api`) opens the screen on
+synthetic data and checks that building dependencies, holds, works and costs
+appear only in the building panel, a sibling home's evidence never appears,
+the screen is read-only, reflows at 320 px and, with `ZF_AXE_JS` set to the
+pinned axe 4.10.3 file, has no automated WCAG 2.2 AA violations. Automated
+checks do not replace manual accessibility review.
+
 `tests/test_buildings.py` starts the real application on loopback with a
 wholly fictional two-home SQLite fixture. It checks health/static serving,
 authenticated navigation, role/amount isolation, scoped blocked advancement,
@@ -4169,7 +4187,12 @@ missing deployment/data/model/photo/law prerequisites are tracked by #350.
   and time entries, even with matching historical controls; history is retained.
   Changing to a different valid reference still requires a new request and
   activation. This checks reference presence only, not authenticity or legal
-  approval. Actual DPIA review, staff consultation, notice approval and
+  approval. `ZF_TIME_NOTICE_VERSION` must also equal the current notice version
+  (`draft-1` in the code) so the approval reference is tied to the wording shown to
+  staff. The notice version is bound to each request and activation: rewording
+  the notice turns capture off until the approver confirms the new version and a
+  new request and a different-role activation are made, even if the approval
+  reference is unchanged. Actual DPIA review, staff consultation, notice approval and
   administrator ratification remain human prerequisites, not results of this
   string check.
 * Download any list for Excel, and check a spreadsheet: columns are matched
@@ -4291,7 +4314,7 @@ parent stabilization #440.
 | `ZF_ENTRA_TENANT_ID`, `ZF_TRUSTED_PROXY`, `ZF_ROLE_MAP`, `ZF_AUTH_EMAIL_FALLBACK` | Entra provider |
 | `ZF_REASON_ROLES` | roles that may see a vulnerability reason |
 | `ZF_TILE_URL`, `ZF_TILE_ATTRIBUTION` | map tile provider |
-| `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_NOTICE_APPROVED`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
+| `ZF_TIME_CAPTURE`, `DPIA_APPROVED`, `ZF_TIME_CONSULTATION`, `ZF_TIME_NOTICE_APPROVED`, `ZF_TIME_NOTICE_VERSION`, `ZF_TIME_DB`, `ZF_TIME_MIN_GROUP` | time capture |
 | `ZF_DOC_STORE`, `ZF_DOC_DIR`, `ZF_BLOB_ACCOUNT_URL`, `ZF_BLOB_CONTAINER`, `ZF_BLOB_SAS`, `ZF_BLOB_CLIENT_ID` | document store |
 | `ZF_SCANNER` | `local` (default) or `defender` content scanner; `local` on an Azure Blob store logs a warning because it gives no malware assurance |
 
@@ -5281,15 +5304,17 @@ use the SQL-configured application entry point, Azure or private datasets.
 
 Staff lists offer a CSV copy for Excel: `GET /api/packages.csv`,
 `/api/workorders.csv` (optional `case`), `/api/handoffs.csv`,
-`/api/visits.csv` (`view=mine|all`) and `/api/funding.csv`, in addition to
+`/api/visits.csv` (`view=mine|all`), `/api/funding.csv`, `/api/finance.csv`
+(finance queue; finance roles and managers) and `/api/asset/stock-queue.csv`
+(stock conflict queue; managers), in addition to
 `/api/cases.csv`. Each calls the same store method as its JSON list, so rows
 and role limits match; contractors receive 403 on every export. Cells that
 start with `=`, `+`, `-`, `@`, tab or carriage return get a leading apostrophe
 so Excel cannot run them as formulas. The file is a values-only, one-way copy:
 nothing reads it back, and edits in Excel change nothing. No AI provider is
 involved, so exports work when AI is unavailable. Visits, funding and handoffs
-screens carry a "Download for Excel" link. Not yet exported: the finance queue,
-stock queue, checklists, governance, continuity (its own export exists) and the
+screens, the finance queue and the asset board carry a "Download for Excel"
+link. Not yet exported: checklists, governance, continuity (its own export exists) and the
 chat, resident and form-staging surfaces. The row-level history sheet and
 `.xlsx` output stay in the importer library; the API offers CSV only.
 
