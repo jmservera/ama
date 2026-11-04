@@ -1110,6 +1110,10 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             page.get_by_role("button", name="Save", exact=True).click()
             expect(page.locator("#outcome")).to_have_value("")
             tab(page, "Quality and handover")
+            page.wait_for_function("() => !document.querySelector('#q-i0')")
+            expect(page.locator("#q-i0")).to_have_count(0)
+            while not pending_checklists:
+                page.wait_for_timeout(50)
             check(
                 "checklist restoration waits for construction", page.locator("#q-i0").count() == 0
             )
