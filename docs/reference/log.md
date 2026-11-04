@@ -10187,3 +10187,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Request-read disconnect body-read test (Refs #953)
 
 * PRs 924 and 990 already deliver the 500/ERROR backend path and the request-read WARNING. This slice adds the missing regression test for a client reset during the POST body read. Unmet: the related #921 was not assessed. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-953 body-read test).
+## [2026-11-04] update | Unresolved stock conflicts feed the exception queue (Refs #135)
+
+* `feed_stock_conflicts` raises a steward-owned `source_conflict` item per unresolved stock query on an open home, with both values, source, date, version, query owner and the original query kept; no winner is picked and eligibility stays Unknown. `raise_conflict` gained an optional `ref` for safe re-reads. Unmet and unchanged: store, API and UI, live wiring, integration and identity-conflict producers, owner-approved roles and runbooks. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-135 r7).
