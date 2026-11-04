@@ -3895,6 +3895,13 @@ versioned `returns` and `handoff_history`. Unauthorized or replayed transitions
 return an explicit error without a transition. New return/reopen requests
 without source/next action now fail with HTTP 400.
 
+`GET /api/handoffs/unaccepted` is a read-only ageing view of the same visible
+handoffs (sender, receiver and managers; staff roles only, 403 otherwise). It
+returns age, due time, chase owner and reasons for escalation. It never applies a
+default time limit: pass `max_age_hours` (a positive number) only for an approved
+limit, otherwise the row says the approved time is not set (OD-09). It changes no
+owner, state or approval; escalation stays the manual `escalate-handoff` act.
+
 BG-010's approved-time escalation criterion stays unmet: due dates are
 human-selected and escalation is manual; OD-09 policy and operational acceptance
 are not available. No timer, automatic resident contact, live model effectiveness,

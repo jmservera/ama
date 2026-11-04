@@ -160,7 +160,7 @@ def get_kind(path):
         return path[len("/api/"):]
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
-            "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/packages": "packages",
+            "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/handoffs/unaccepted": "handoffs", "/api/packages": "packages",
             "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
 
 
@@ -585,6 +585,18 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(403, {"error": str(e)})
             if url.path == "/api/handoffs":
                 return self._json(200, s.pending_handoffs(u))
+            if url.path == "/api/handoffs/unaccepted":
+                raw = parse_qs(url.query, keep_blank_values=True).get("max_age_hours", [None])[0]
+                try:
+                    limit = float(raw) if raw not in (None, "") else None
+                    if limit is not None and not 0 < limit < 1e6:
+                        raise ValueError
+                except ValueError:
+                    return self._json(400, {"error": "max_age_hours must be a positive number of hours."})
+                try:
+                    return self._json(200, s.unaccepted_handoffs(u, max_age_hours=limit))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
             if url.path in ("/api/packages", "/api/workorders"):
                 try:
                     limit = offset = None

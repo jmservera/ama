@@ -137,6 +137,37 @@ class HandoffApi(unittest.TestCase):
         self.assertEqual(case["owner_code"], "RLO-02")
         self.assertTrue(reopened.verify_audit())
 
+    def test_unaccepted_handoff_ageing_route_is_scoped_read_only_and_never_defaults_a_limit(
+        self,
+    ) -> None:
+        self.assertEqual(self.call("sam", "/api/handoffs/unaccepted"), (200, []))
+        self.assertEqual(
+            self.post(
+                "sam", "offer-handoff", dict(to="rae@example.test", due_at="2020-01-01T00:00:00Z")
+            )[0],
+            200,
+        )
+        owner_before = self.store.cases["ZF-1"]["owner_code"]
+        for actor in ("sam", "rae", "pam"):
+            code, rows = self.call(actor, "/api/handoffs/unaccepted")
+            self.assertEqual(code, 200, rows)
+            self.assertEqual(rows[0]["case_id"], "ZF-1")
+            self.assertTrue(rows[0]["needs_escalation"])
+            self.assertIsNone(rows[0]["approved_limit_hours"])
+            self.assertIn("OD-09", rows[0]["limit_note"])
+        self.assertEqual(self.call("rex", "/api/handoffs/unaccepted"), (200, []))
+        code, rows = self.call("sam", "/api/handoffs/unaccepted?max_age_hours=1000000")
+        self.assertEqual(code, 400, rows)
+        for bad in ("abc", "0", "-3", "nan"):
+            code, rows = self.call("sam", f"/api/handoffs/unaccepted?max_age_hours={bad}")
+            self.assertEqual(code, 400, bad)
+        code, rows = self.call("sam", "/api/handoffs/unaccepted?max_age_hours=2")
+        self.assertEqual((code, rows[0]["approved_limit_hours"]), (200, 2.0))
+        self.assertEqual(self.call("kim", "/api/handoffs/unaccepted")[0], 403)
+        self.assertEqual(self.call("sam", "/api/handoffs/unaccepted", {})[0], 404)
+        self.assertEqual(self.store.cases["ZF-1"]["owner_code"], owner_before)
+        self.assertEqual(self.store.cases["ZF-1"]["handoff"]["state"], "Offered")
+
     def test_synthetic_app_states_sender_receiver_manager_views(self) -> None:
         with urllib.request.urlopen(self.base + "/") as response:
             self.assertEqual(response.status, 200)
