@@ -357,8 +357,14 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(set(document["on"]), {"pull_request", "workflow_dispatch"})
         for name in ("mvp-ci.yml", "mvp-validation.yml"):
             self.assertEqual(set(workflow(name)["on"]), {"workflow_dispatch"})
-        self.assertEqual(document["jobs"]["mssql"], workflow("mvp-ci.yml")["jobs"]["mssql"])
-        self.assertNotIn("if", document["jobs"]["mssql"])
+        mssql = {
+            key: value
+            for key, value in document["jobs"]["mssql"].items()
+            if key not in ("needs", "if")
+        }
+        self.assertEqual(mssql, workflow("mvp-ci.yml")["jobs"]["mssql"])
+        self.assertEqual(document["jobs"]["mssql"]["needs"], "changes")
+        self.assertEqual(document["jobs"]["mssql"]["if"], "needs.changes.outputs.mssql == 'true'")
         for path in ("tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/rename-zava*"):
             self.assertIn(path, document["on"]["pull_request"]["paths"])
         for command in (

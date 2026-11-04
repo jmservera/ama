@@ -2,7 +2,7 @@ name: Source projects CI
 
 on:
   pull_request:
-    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/rename-zava*", "docs/reference/research/retrofit-synthetic-data/**", "docs/reference/research/chat-memory-dpia.md", "docs/reference/research/ux/customer-journeys/residents.md", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/mvp-ci.yml", ".github/workflows/mvp-validation.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
+    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/ci-affected.py", "tools/test_ci_affected.py", "tools/rename-zava*", "docs/reference/research/retrofit-synthetic-data/**", "docs/reference/research/chat-memory-dpia.md", "docs/reference/research/ux/customer-journeys/residents.md", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/mvp-ci.yml", ".github/workflows/mvp-validation.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
   workflow_dispatch:
 
 permissions:
@@ -13,7 +13,29 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: src-changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      matrix: ${{ steps.select.outputs.matrix }}
+      namespace: ${{ steps.select.outputs.namespace }}
+      mssql: ${{ steps.select.outputs.mssql }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - id: select
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: python3 tools/ci-affected.py
+
   image-paths:
+    needs: changes
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     outputs:
@@ -32,67 +54,53 @@ jobs:
           echo "images=$images" >> "$GITHUB_OUTPUT"
 
   project:
-    needs: image-paths
+    needs: [changes, image-paths]
+    if: ${{ !cancelled() && needs.image-paths.result == 'success' }}
     name: src-${{ matrix.project }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - project: core
-            dist: zava-forward-core
-            deps: ""
-            image: false
-          - project: api
-            dist: zava-forward-api
-            deps: "-e ../core -e ../agents"
-            image: true
-          - project: agents
-            dist: zava-forward-agents
-            deps: "-e ../core"
-            image: true
-          - project: orchestrator
-            dist: zava-forward-orchestrator
-            deps: "-e ../core"
-            image: true
-          - project: importer
-            dist: zava-forward-import
-            deps: "-e ../core"
-            image: true
+      matrix: ${{ fromJSON(needs.changes.result == 'success' && needs.changes.outputs.matrix || '{"include":[{"project":"core","dist":"zava-forward-core","deps":"","image":false,"run":true},{"project":"api","dist":"zava-forward-api","deps":"-e ../core -e ../agents","image":true,"run":true},{"project":"agents","dist":"zava-forward-agents","deps":"-e ../core","image":true,"run":true},{"project":"orchestrator","dist":"zava-forward-orchestrator","deps":"-e ../core","image":true,"run":true},{"project":"importer","dist":"zava-forward-import","deps":"-e ../core","image":true,"run":true}]}') }}
     defaults:
       run:
         working-directory: src/${{ matrix.project }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        if: matrix.run
         with:
           persist-credentials: false
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        if: matrix.run
         with:
           python-version: "3.12"
       - name: Install the project editable with its development tools
+        if: matrix.run
         env:
           DEPS: ${{ matrix.deps }}
         run: |
           read -r -a dependencies <<< "$DEPS"
           pip install "${dependencies[@]}" -e ".[dev]"
       - name: Unit tests and dependency-rule test
+        if: matrix.run
         env:
           PYTHONPATH: ${{ matrix.project == 'api' && format('{0}/src/core/tests:{0}/src/agents/tests', github.workspace) || (matrix.project == 'orchestrator' || matrix.project == 'agents') && format('{0}/src/core/tests', github.workspace) || '' }}
         run: python -m unittest discover -s tests -v
       - name: Lint
+        if: matrix.run
         run: ruff check . && ruff format --check .
       - name: Type check
+        if: matrix.run
         run: mypy
       - name: Check design-system browser harness without migration exemptions
-        if: matrix.project == 'api'
+        if: matrix.run && matrix.project == 'api'
         run: |
           ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 checks/design_system_browser_check.py
           ruff format --isolated --line-length 100 --check checks/design_system_browser_check.py
           ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 checks/regulatory_ux_check.py
           ruff format --isolated --line-length 100 --check checks/regulatory_ux_check.py
       - name: Synthetic design-system browser checks
-        if: matrix.project == 'api'
+        if: matrix.run && matrix.project == 'api'
         run: |
           python -m playwright install --with-deps chromium
           PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests \
@@ -109,13 +117,13 @@ jobs:
           PYTHONPATH="$GITHUB_WORKSPACE/src/api/tests:$GITHUB_WORKSPACE/src/core/tests:$GITHUB_WORKSPACE/src/agents/tests" \
             ZF_BROWSER_TESTS=1 python -m unittest -v test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log
       - name: Retain case journey UX evidence
-        if: always() && matrix.project == 'api'
+        if: always() && matrix.run && matrix.project == 'api'
         uses: actions/upload-artifact@v4
         with:
           name: case-journey-results
           path: ${{ runner.temp }}/case-journey-results
       - name: Retain regulatory UX evidence
-        if: always() && matrix.project == 'api'
+        if: always() && matrix.run && matrix.project == 'api'
         uses: actions/upload-artifact@v4
         with:
           name: regulatory-ux-results
@@ -123,15 +131,15 @@ jobs:
           if-no-files-found: warn
       - name: Build image
         id: build
-        if: matrix.image && contains(fromJSON(needs.image-paths.outputs.images), matrix.project)
+        if: matrix.run && matrix.image && contains(fromJSON(needs.image-paths.outputs.images), matrix.project)
         working-directory: .
         run: docker build -f src/${{ matrix.project }}/Dockerfile -t zava-forward-${{ matrix.project }}:ci src
       - name: Docker security contract and hardened/plain application startup
-        if: matrix.image && contains(fromJSON(needs.image-paths.outputs.images), matrix.project)
+        if: matrix.run && matrix.image && contains(fromJSON(needs.image-paths.outputs.images), matrix.project)
         working-directory: .
         run: python src/check-container.py ${{ matrix.project }} zava-forward-${{ matrix.project }}:ci
       - name: API unreadable-logo build and unchanged startup contract
-        if: matrix.project == 'api' && contains(fromJSON(needs.image-paths.outputs.images), 'api')
+        if: matrix.run && matrix.project == 'api' && contains(fromJSON(needs.image-paths.outputs.images), 'api')
         working-directory: .
         run: |
           mkdir -p "$RUNNER_TEMP/logo0600"
@@ -194,6 +202,8 @@ jobs:
 
   namespace:
     name: src-namespace
+    needs: changes
+    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.namespace == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -247,8 +257,9 @@ jobs:
       - name: Local gate orchestration contracts and strict checks
         run: |
           python -m unittest discover -s tools -p test_rpi_checks.py -v
-          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 tools/rpi-checks.py tools/test_rpi_checks.py
-          ruff format --isolated --line-length 100 --check tools/rpi-checks.py tools/test_rpi_checks.py
+          python -m unittest discover -s tools -p test_ci_affected.py -v
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 tools/rpi-checks.py tools/test_rpi_checks.py tools/ci-affected.py tools/test_ci_affected.py
+          ruff format --isolated --line-length 100 --check tools/rpi-checks.py tools/test_rpi_checks.py tools/ci-affected.py tools/test_ci_affected.py
           mypy --strict tools/rpi-checks.py tools/test_rpi_checks.py
       - name: Branding migration regressions
         run: |
@@ -276,6 +287,8 @@ jobs:
         run: test -z "$(git ls-files -- '*/.assistant-test-*' mvp/data ':(glob)src/**/data/**')"
 
   mssql:
+    needs: changes
+    if: ${{ !cancelled() && (needs.changes.result != 'success' || needs.changes.outputs.mssql == 'true') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     services:

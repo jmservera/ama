@@ -72,7 +72,7 @@ WORKFLOWS = (
 )
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "bf0f84ecaac005c61943da8fd4e49180fb46904491ffce2e7934892373b0c87b",
+    "src-ci.yml": "06ac403c0bc99a0fdce508a301aca130af2872b769464dd1281e2b70056feaf8",
     "mvp-ci.yml": "a0f227717e1d6f675898e2ff6d45f493ce88851ad236c578f2dbcb7921bd0179",
     "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
     "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
@@ -2147,6 +2147,10 @@ class Runner:
                     elif job == "image-paths":
                         boundary = (
                             "hosted-only PR path context; infra local changed-images contracts"
+                        )
+                    elif job == "changes":
+                        boundary = (
+                            "hosted-only PR path context; tools/test_ci_affected.py selection tests"
                         )
                     elif action.startswith("actions/upload-artifact@"):
                         boundary = (
