@@ -88,6 +88,26 @@ class GateTests(unittest.TestCase):
         malformed = out({"funding_ok": True, "hazards": [{}]}, [])
         self.assertEqual(malformed["safety"], gates.FAIL)
 
+    def test_evidence_gate(self) -> None:
+        ok = gates.evidence_gate([], "Grants Officer", on="2026-11-04")
+        self.assertEqual(ok.outcome, gates.PASS)
+        bad = gates.evidence_gate(["EPC", "Survey"], "Grants Officer", on="2026-11-04")
+        self.assertEqual(bad.outcome, gates.FAIL)
+        self.assertIn("EPC, Survey", bad.reason)
+        unknown = gates.evidence_gate(None, "Grants Officer", on="2026-11-04")
+        self.assertEqual(unknown.outcome, gates.UNKNOWN)
+        self.assertFalse(gates.transition_allowed([ok, unknown]))
+        self.assertIsNotNone(bad.rule)
+
+    def test_store_evidence_missing_is_unknown_when_malformed(self) -> None:
+        from zava_forward.core.store import Store
+
+        self.assertIsNone(Store._evidence_missing({}))
+        self.assertEqual(
+            Store._evidence_missing({"documents": [{"kind": "EPC"}]}),
+            ["Survey", "Design", "Consent"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
