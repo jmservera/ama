@@ -467,10 +467,22 @@ function affectedChallengePanel(c, id, refresh) {
     ), "No challenges recorded."));
 }
 
+function exposureNotice(x) {
+  if (!x) return h("section", { "aria-labelledby": "exposure-h" }, h("h2", { id: "exposure-h" }, "Investment limits"),
+    h("p", { role: "status" }, "Limit check unavailable. Treat acceleration as paused until a person checks the Board limits by hand."));
+  const rows = (x.findings || []).map((f) => h("li", {}, f.state === "Unknown" ? `${f.limit}: not known` : `${f.limit}: ${f.state}, ${f.observed} of ${f.maximum}${f.unit ? " " + f.unit : ""}`));
+  return h("section", { "aria-labelledby": "exposure-h" }, h("h2", { id: "exposure-h" }, "Investment limits"),
+    h("p", { role: "status" }, `${x.signal}. ${x.status}. ${x.reason || ""}`), rows.length ? h("ul", {}, rows) : null,
+    x.action ? h("p", {}, x.action) : null, h("p", { class: "muted" }, x.notice || ""));
+}
+
 async function financeQueueView() {
   let rows;
   try { rows = await api("/api/finance"); } catch (e) { if (e.name === "AbortError" || !me) return; return show(h("h1", {}, "Finance queue"), h("p", {}, e.message)); }
+  let exposure = null;
+  try { exposure = await api("/api/finance/exposure"); } catch (e) { if (e.name === "AbortError" || !me) return; }
   show(h("h1", {}, "Finance queue"),
+    exposureNotice(exposure),
     h("p", { class: "muted" }, "Invoices with exceptions, paused payments or no check yet. A person decides each one. Nothing is paid from here."),
     h("p", {}, h("a", { class: "btn alt", href: "/api/finance.csv", download: "finance-queue.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back."),
     rows.length ? h("table", {}, h("thead", {}, h("tr", {}, ["Home", "Invoice", "Supplier", "Status", "Exceptions", "Total"].map((x) => h("th", {}, x)))),
