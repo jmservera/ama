@@ -2518,6 +2518,15 @@ quality lifecycle. They are not represented as identical requirement numbers.
 contract; `GET /api/finance` retains the human exception/hold queue.
 The [core finance guide](../core/README.md#record-only-finance-controls-94)
 describes current identity, line matching and persistence controls.
+
+`GET /api/finance/exposure` (#99) returns the read-only pause signal from
+`finance.exposure_signal`: recorded commitments compared with limits a person
+supplied in `ZF_APPROVED_LIMITS` (default `approved-limits.json` beside the
+data file). Without that file, or when it is unreadable or out of date, the
+result is `Held` with `Pause for human decision`; an over-limit or unknown
+observation also pauses. It needs the same Finance roles as the queue, changes
+no record and never approves, resumes or accelerates delivery. The repository
+holds no Board figures: the envelope and tolerances remain unmet human inputs.
 No endpoint pays, submits banking instructions or grants authority.
 External-payment statuses are notes only. Budget/commitment and grant/cash
 records are unchanged by those notes.
@@ -3951,6 +3960,13 @@ instruction or payment; a shared building ID never transfers a home's evidence.
 Home AI assistance remains available through its existing proposal-only and
 human-review paths; shared free text and costs are not added to prompts.
 
+`python -m checks.home_case_browser_check` (from `src/api`) opens the screen on
+synthetic data and checks that building dependencies, holds, works and costs
+appear only in the building panel, a sibling home's evidence never appears,
+the screen is read-only, reflows at 320 px and, with `ZF_AXE_JS` set to the
+pinned axe 4.10.3 file, has no automated WCAG 2.2 AA violations. Automated
+checks do not replace manual accessibility review.
+
 `tests/test_buildings.py` starts the real application on loopback with a
 wholly fictional two-home SQLite fixture. It checks health/static serving,
 authenticated navigation, role/amount isolation, scoped blocked advancement,
@@ -5281,15 +5297,17 @@ use the SQL-configured application entry point, Azure or private datasets.
 
 Staff lists offer a CSV copy for Excel: `GET /api/packages.csv`,
 `/api/workorders.csv` (optional `case`), `/api/handoffs.csv`,
-`/api/visits.csv` (`view=mine|all`) and `/api/funding.csv`, in addition to
+`/api/visits.csv` (`view=mine|all`), `/api/funding.csv`, `/api/finance.csv`
+(finance queue; finance roles and managers) and `/api/asset/stock-queue.csv`
+(stock conflict queue; managers), in addition to
 `/api/cases.csv`. Each calls the same store method as its JSON list, so rows
 and role limits match; contractors receive 403 on every export. Cells that
 start with `=`, `+`, `-`, `@`, tab or carriage return get a leading apostrophe
 so Excel cannot run them as formulas. The file is a values-only, one-way copy:
 nothing reads it back, and edits in Excel change nothing. No AI provider is
 involved, so exports work when AI is unavailable. Visits, funding and handoffs
-screens carry a "Download for Excel" link. Not yet exported: the finance queue,
-stock queue, checklists, governance, continuity (its own export exists) and the
+screens, the finance queue and the asset board carry a "Download for Excel"
+link. Not yet exported: checklists, governance, continuity (its own export exists) and the
 chat, resident and form-staging surfaces. The row-level history sheet and
 `.xlsx` output stay in the importer library; the API offers CSV only.
 
