@@ -10309,6 +10309,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Deployed main `8b9553d8b` to `ca-cutover-test-demo-api` (`--0000025`) and `ca-resident-demo` (`--0000010`) through the short registry window; set `ZF_DEMO_EXPIRES_AT` to `2028-01-01T00:00:00Z` (was `2027-01-31T23:59:00Z`). Recorded in `infra/README.md` and the prototype profile review. Sensors section showed the fail-closed message only, filed as #1072. No issue is closed.
 
+## [2026-11-04] update | Live simulator container slice authored (Refs #184)
+
+* Added the pure `live_readings` generator, the `live_simulator` runner with stdout and in-memory sinks, `src/api/live-simulator.Dockerfile` and an authored, not deployed `infra/live-simulator-job.bicep`, documented with a cost estimate in `src/api/README.md`, `infra/README.md` and a short section in the IoT sensor research plan. Nothing was deployed or sent; devices, certificates, live approval and #110 acceptance of the new message version remain owner or sibling work. No issue is closed.
 ## [2026-11-04] update | Retrofit scenarios through the retained sensor store (Refs #190, Refs #193)
 
 * Added `src/core/tests/test_retrofit_scenarios_retained_store.py`, which ingests the four labelled retrofit exercise scenarios through `SensorConsumer` and reads them back with `analyse_retained` (#111). Test-only, exercise values, focused tests only. #190 criterion 1 and #193 criterion 3 stay unticked pending independent review. RPI evidence is under `.copilot-tracking/*/2026-11-04-issue-190-retained-store-*`.
