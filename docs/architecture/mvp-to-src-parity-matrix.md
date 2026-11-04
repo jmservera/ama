@@ -494,7 +494,7 @@ on 2026-10-15.
 | 258 | #108 open | AI eval harness evidence gate | Move as is (M4) | Live model runs and model selection open |
 | 260, 263 | #105 closed, #106 closed | Task registry, proposal envelope, provenance, hold, review evidence | Move as is (M2) | Met in code. Accountable individuals and priority path envelope are owner and later items |
 | 261 | #126 open | Frozen protocol, benefits register, phase gates | Move as is (M2) | Gates not wired into every workflow; HTTP route tests missing |
-| 262 | #114 open | Per-year ledger digests, load check, restore re-application | Move as is (M2, M3, M4) | Azure SQL load run, restore drill and DPO decision open |
+| 262 | #114 open | Per-year ledger digests, load check, restore re-application | Move as is (M2, M3, M4) | Azure SQL load run, restore drill and DPO decision open. Status 2026-11-04: PRs 403 and 908 later hardened the offline load-check evidence and made year-digest verification fail closed (SQLite only). All three #114 criteria stay unmet; they need an Azure load run with cost, annual ledger reliance on Azure SQL and a witnessed DH-005 restore drill |
 | 265, 273, 274, 276, 277, 278 | #142, #140, #147, #139, #141, #143 open | Bicep and scripts under `infra/` | None; stay in `infra/`; PR 276 edits `mvp-validation.yml` and PR 278 edits `containerapps.bicep` (repoint in #200) | Live Azure evidence not produced for any |
 | 266 | none | Portable meta upsert on SQL Server | Move as is (M2) | Fix to `sqlstore.py`; keep |
 | 267 | #120 open | Time capture gated on DPIA | Move as is (M5) | Real DPIA references, final notice text, browser test |

@@ -117,3 +117,5 @@ class HomeCaseApiTests(unittest.TestCase):
         self.assertIn("This home only", script)
         self.assertIn("Shared at building level", script)
         self.assertIn("Use the case and building screens instead", script)
+        self.assertIn("This home's share of shared cost", script)
+        self.assertNotIn("JSON.stringify(x)", script)
