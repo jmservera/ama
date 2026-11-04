@@ -18,7 +18,7 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
-from zava_forward.core import data_protection, lawstore, rulecards, rule_engine
+from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine
 from zava_forward.api import auth
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
@@ -161,7 +161,7 @@ def get_kind(path):
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ranking/publication": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/handoffs/unaccepted": "handoffs", "/api/packages": "packages",
-            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
+            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/exceptions": "exceptions", "/api/continuity/export": "continuity_export", "/api/retention": "retention", "/api/data-protection": "data_protection"}.get(path, "unknown")
 
 
 GOVERNANCE_ACTIONS = {"protocol-freeze": "protocol_freeze", "protocol-approve": "protocol_approve", "benefits-record": "benefits_record",
@@ -597,6 +597,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     if url.path == "/api/continuity":
                         return self._json(200, s.continuity_view(u))
                     return self._json(200, s.continuity_export(u, app.assistants.export()))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+            if url.path == "/api/exceptions":
+                try:
+                    return self._json(200, s.exception_register(u, exception_register.staff_from_env(os.environ)))
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
             if url.path == "/api/data-protection":
