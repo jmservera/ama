@@ -108,7 +108,10 @@ def summarize(details: Iterable[str], role: str, day: str, *, truncated: bool) -
             type(usage[key]) is not type(value) for key, value in expected.items()
         ):
             raise ValueError("Stored regulatory usage is invalid; audit review required.")
-        usage_metering(usage, "audit-event")
+        try:
+            usage_metering(usage, "audit-event")
+        except ValueError:
+            raise ValueError("Stored regulatory usage is invalid; audit review required.") from None
         if usage["period"] == day:
             outcomes[usage["outcome"]] += 1
     return dict(

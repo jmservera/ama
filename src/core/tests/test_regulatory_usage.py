@@ -52,8 +52,13 @@ class RegulatoryUsage(unittest.TestCase):
     def test_summary_rejects_usage_that_leaves_the_metering_schema(self) -> None:
         bad = offline_usage("regulatory-home-chat", "regulatory-chat-v1", "answer", AT)
         bad["task_version"] = "regulatory chat v1"
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as ctx:
             summarize([json.dumps(dict(role=ROLE, usage=bad))], ROLE, "2026-10-16", truncated=False)
+        message = str(ctx.exception)
+        self.assertEqual(message, "Stored regulatory usage is invalid; audit review required.")
+        self.assertNotIn("task_version", message)
+        self.assertIsNone(ctx.exception.__cause__)
+        self.assertTrue(ctx.exception.__suppress_context__)
 
     def test_role_day_outcomes_legacy_and_partial_are_explicit(self) -> None:
         data = [
