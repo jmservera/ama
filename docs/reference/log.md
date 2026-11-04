@@ -10265,3 +10265,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Admin-only landing skips case requests (Refs #920)
 
 * Added `services.cases` to `/api/me`; an account without case access sees a plain-language page instead of 403s on `/api/facets` and `/api/cases`. Chromium check asserts no console errors. Issue stays open: other admin-only routes and live evidence are unproven. See `.copilot-tracking/*/2026-11-04-admin-landing-denial-920-*`.
+## [2026-11-04] update | Resident portal ADR accepted as ADR 0007 (Refs #441)
+
+* Owner decision 2026-11-04: the proposed resident service architecture (Option B) is accepted for the exercise as `docs/adrs/0007-optional-resident-service-over-shared-case-authority.md`, the next number in the native registry. The diagram assets are copied byte-identically to `docs/architecture/resident-service-boundary.*`. BRD, PRD, architecture README and the reference index now point to the ADR; the original unregistered proposal stays as history. Earlier ADRs are unchanged.
+* Not changed: OD-52 to OD-55 remain open; per-message human review stays normative and routine automation OFF; no production, Legal or DPO approval; resident criteria stay Not run. Issue 441 criteria 5 (FR-044/AC-084 disposition) and 9 (publication gates) stay unmet, so this is `Refs`.
+

@@ -53,9 +53,11 @@ automation; human review for consequential, sensitive or uncertain messages;
 activation separately gated." FR-044 and AC-084 are reconciled prospectively
 below; OD-53 concerns operational authority/evidence, not an unresolved
 exercise choice. No exception is activated by this document. The
-[unregistered architecture proposal](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)
-records selected Option B, its alternatives and assets. Its ID is null;
-registration acceptance remains UNMET. Original BRD FAIL/Define BLOCKED and
+[ADR 0007](../adrs/0007-optional-resident-service-over-shared-case-authority.md),
+accepted by the owner 2026-11-04 for the exercise only, records selected
+Option B, its alternatives and assets; the
+[original proposal](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md) is history.
+OD-52 to OD-55 and every approval gate remain open. Original BRD FAIL/Define BLOCKED and
 Govern NOT_EVALUATED history and unsigned status are not replaced by proposal
 publication or a later limited proposal-readiness review.
 

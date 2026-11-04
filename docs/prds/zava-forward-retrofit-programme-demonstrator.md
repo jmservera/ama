@@ -118,9 +118,10 @@ Add a contained synthetic resident increment on the continuing generated
 60,000-home stock/980-case lineage. Do not delay independent staff landing/auth
 unless a verified dependency is recorded. Staff ADR 0004 acceptance and
 regulatory assistant no-send authority do not extend to this service. ADR
-selection is recorded in the [unregistered architecture proposal](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md):
-Option B, portal/workflow first with separately gated answer task. Its ID is
-null and full registration acceptance remains UNMET. Managed external identity
+selection is recorded in the [ADR 0007](../adrs/0007-optional-resident-service-over-shared-case-authority.md),
+accepted 2026-11-04 for the exercise only:
+Option B, portal/workflow first with separately gated answer task. Original
+working [proposal](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md) is history. Full production approval remains UNMET. Managed external identity
 is the selected provider-neutral proposal shape, not a vendor or new send
 authority. Original PRD FAIL/Validate BLOCKED and Finalize NOT_EVALUATED
 history remain; this amendment is unsigned, not a lifecycle-approved handoff.
@@ -1355,7 +1356,7 @@ legal basis, DPIA, retention, enrolment or recovery approval is fabricated.
 | BRD-2026-AMA48-001::OD-54 / PRD OQ-030 | Digital accountable for design; Housing, Engagement, DPO/Legal review within authority | Supported identity provider/terms, person/case/document/representative grant proof, enrolment/session/abuse/recovery, file safety, lawful basis/DPIA/notice, retention/rights before real accounts/data |
 | BRD-2026-AMA48-001::OD-55 / PRD OQ-031 | Data responsible; Programme accountable; Engagement/Housing/Finance validate relevant outcomes | Frozen measurement plan, milestone acceptance, feasibility/load/recovery/support/limits and benefit evidence before production capacity or savings claims; coordinate OD-18/25/51 |
 | Legal and operational governance | Actual company/control owners not appointed here | OD-14/19/20/35/36/41/42/47/49/51 as applicable, competent human research/review, processing and incident/restart authority, formal upstream and product acceptance; synthetic proposals do not close them |
-| Architecture registration | Owner deferred; Digital/tooling owner to reconcile supported registry bootstrap/import | Existing proposal stays `id: null`, unregistered, registration UNMET; no numbered ADR, allocator/configuration or registry is invented |
+| Architecture registration | Owner deferred; Digital/tooling owner to reconcile supported registry bootstrap/import | Resolved 2026-11-04: owner accepted the proposal as ADR 0007 in the native `docs/adrs/` registry; no allocator, configuration or second registry is created |
 | Requirements lifecycle | Product/requirements/engineering and relevant human approvers | Fresh exact-byte independent quality evidence and actual approval before any later gate claim; historical BRD Define BLOCKED / Govern NOT_EVALUATED and PRD FAIL / Validate BLOCKED / Finalize NOT_EVALUATED are not overwritten |
 
 This refinement has no signatures, waivers, completed acceptance criteria or
