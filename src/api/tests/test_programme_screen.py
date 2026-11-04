@@ -196,6 +196,16 @@ def tags(node: object) -> list[str]:
     return found
 
 
+def link_texts(node: object) -> list[tuple[str, str]]:
+    found: list[tuple[str, str]] = []
+    if isinstance(node, dict):
+        if node.get("tag") == "a":
+            found.append((str(node["attrs"]["href"]), "".join(map(str, node["kids"]))))
+        for kid in node.get("kids", []):
+            found += link_texts(kid)
+    return found
+
+
 class ProgrammeScreen(unittest.TestCase):
     def test_roles_exclude_other_roles(self) -> None:
         roles = list(run()["roles"])  # type: ignore[call-overload]
@@ -372,6 +382,15 @@ class ProgrammeScreen(unittest.TestCase):
         self.assertIn("is not installed for your role", coordinator)
         for node in (run()["blocked"],):
             self.assertNotIn("button", tags(node))
+
+    def test_every_stage_link_has_distinct_accessible_text(self) -> None:
+        for role in ("Retrofit Programme Manager", "Retrofit Coordinator"):
+            texts = [t for h, t in link_texts(run(role)["blocked"]) if "case=C-9" in h]
+            self.assertTrue(texts)
+            self.assertEqual(len(texts), len(set(texts)), texts)
+        shared = [t for h, t in link_texts(run()["blocked"]) if "screen=resident-choice" in h]
+        self.assertEqual(len(shared), 2)
+        self.assertTrue(shared[0].startswith("3. ") and shared[1].startswith("7. "))
 
 
 if __name__ == "__main__":

@@ -10106,3 +10106,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Employee console re-checks photo availability without reload (Refs #954)
 
 * `app.js` now re-reads `/api/me` services on return to the tab (at most once a minute) and loads the profile photo when the flag turns true; a 503 or 403 from the photo endpoint turns the flag off without an error or repeat request. Initials remain the fallback. Node-harness test only; no real-browser console check, axe or web-design-guidelines review was run. Evidence under `.copilot-tracking/` (2026-11-04 fu-954).
+
+## [2026-11-04] update | Same-home journey stage links have distinct text (Closes #955)
+
+* Each stage link on the programme queue journey map now reads `<stage>: <screen title>`, so stages 3 and 7 no longer share link text in a screen-reader link list (WCAG 2.4.4 hygiene, visible text matches the accessible name). Covered by an executed test; no screen-reader or axe run, and WCAG/AT acceptance (#151, #155) stays unmet. Evidence under `.copilot-tracking/` (2026-11-04 fu-955).

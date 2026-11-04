@@ -482,10 +482,10 @@ function journeyStageMap(c) {
   return screenPanel(`Journey stages for ${c.id}`,
     h("p", {}, "One home, eight stages. Each stage opens the screen that shows its own state for this same home. Stages are separate states: no stage clears another, and a link is navigation only. This map is a design hypothesis, not observed behaviour."),
     h("ol", {}, journeyStages.map(([stage, id, boundary]) => h("li", {},
-      `${stage}: `,
-      id === null ? "no screen yet (recorded deferral)."
-        : open(id) ? h("a", { href: screenHref(id, c.id) }, roleScreens.get(id).title)
-          : `${roleScreens.get(id)?.title || id} is not installed for your role. Your access has not changed.`,
+      // Link text carries the stage name so stages sharing a screen stay distinct in link lists (WCAG 2.4.4).
+      id !== null && open(id) ? h("a", { href: screenHref(id, c.id) }, `${stage}: ${roleScreens.get(id).title}`)
+        : `${stage}: ${id === null ? "no screen yet (recorded deferral)."
+          : `${roleScreens.get(id)?.title || id} is not installed for your role. Your access has not changed.`}`,
       ` ${boundary}`))));
 }
 registerRoleScreen({
