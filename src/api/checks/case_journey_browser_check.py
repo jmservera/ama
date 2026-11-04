@@ -1112,8 +1112,13 @@ def run_browser(base: str, axe: str, out: Path) -> None:
             tab(page, "Quality and handover")
             page.wait_for_function("() => !document.querySelector('#q-i0')")
             expect(page.locator("#q-i0")).to_have_count(0)
-            while not pending_checklists:
+            for _ in range(200):
+                if pending_checklists:
+                    break
                 page.wait_for_timeout(50)
+            check("checklist request was held", bool(pending_checklists))
+            if not pending_checklists:
+                raise AssertionError("checklist request was never issued")
             check(
                 "checklist restoration waits for construction", page.locator("#q-i0").count() == 0
             )
