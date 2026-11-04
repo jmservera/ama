@@ -345,8 +345,9 @@ check afresh; no cross-request cache is retained. A source change marks only its
 bound working fields stale; a new schema version affects all fields bound to that schema. Historical
 reviews/values and recorded diagnostic snapshots remain intact. `view` also
 returns `diagnostic_freshness`, one entry per saved manifest: `Stale` when
-reviewed inputs changed after it, a bound source changed (listing only those
-fields) or a newer schema version exists, with a re-run action; otherwise
+reviewed inputs changed after it (`changed_fields` lists only the fields whose
+reviewed value or state differ from the manifest), a bound source changed
+(`stale_fields` lists only those fields) or a newer schema version exists, with a re-run action; otherwise
 `Current`. This is not full FR-043/AC-051 rule/calculation/approval stale
 propagation: no approved rules, calculations or reviewed packs exist yet.
 Already-clean evidence is required: reads/reviews never scan or save a source.
