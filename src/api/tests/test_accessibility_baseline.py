@@ -99,6 +99,24 @@ class Wcag22Baseline(unittest.TestCase):
                 self.assertTrue("aria-describedby" in window or built_with_describedby, f"{path.name}:{number}")
         self.assertEqual(sites, 7, "new aria-invalid site: audit it and update this check and the record")
 
+    def test_fixed_launcher_cannot_hide_the_focused_control(self):
+        # WCAG 2.4.11: the fixed chat launcher is 3.5rem tall plus its inset, so the page keeps
+        # scroll padding at least that deep; a new fixed element must be audited and added here.
+        padding = re.search(r"html\{scroll-padding-block-end:([\d.]+)rem\}", CSS)
+        self.assertIsNotNone(padding)
+        self.assertGreaterEqual(float(padding.group(1)), 3.5 + 1.0)
+        fixed = []
+        for path in sorted(WEB.glob("*.css")):
+            fixed += [f"{path.name}:{rule}" for rule in re.findall(r"([^{}]+)\{[^{}]*position:fixed", path.read_text())]
+        self.assertEqual(len(fixed), 2, fixed)
+        self.assertTrue(all(item.startswith("chat-widget.css:") for item in fixed), fixed)
+
+    def test_pages_offer_no_drag_only_interaction(self):
+        # WCAG 2.5.7: no script binds drag or touch handlers directly; the map pans with Leaflet
+        # keyboard and zoom controls and has a list alternative.
+        for path in sorted(WEB.glob("*.js")):
+            self.assertNotRegex(path.read_text(), r"draggable|dragstart|mousedown|touchstart", path.name)
+
     def test_audit_record_names_target_gaps_and_makes_no_conformance_claim(self):
         self.assertIn("WCAG 2.2", DOC)
         self.assertIn("pending owner confirmation", DOC)
