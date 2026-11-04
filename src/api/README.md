@@ -5292,3 +5292,15 @@ screens carry a "Download for Excel" link. Not yet exported: the finance queue,
 stock queue, checklists, governance, continuity (its own export exists) and the
 chat, resident and form-staging surfaces. The row-level history sheet and
 `.xlsx` output stay in the importer library; the API offers CSV only.
+
+## Contractor job pack read (#132, slice 2)
+
+`GET /api/workorders/{id}/job-pack` returns the staff-mediated job pack built by
+`zava_forward.core.job_pack.build_job_pack` from an existing work order and its
+case: scope, design version, a notice flag, one named contact, versioned
+checklists and a `ready` flag with a plain reason when work must not start. It
+carries no resident reason, health or vulnerability detail (PR-002). It is a
+read for signed-in staff only: contractor identities get 403, an unknown order
+gets 404, and nothing is written, so it grants no contractor access and is not
+a provider portal. Worker evidence capture, acknowledgement, no-show recovery
+and escalation are still pure rules in the core with no route or persistence.

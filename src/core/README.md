@@ -22,6 +22,12 @@ the data, audited and idempotent, and `Store.ranking_publication_status` (API
 and stated schedule. Both are manager-only. The manual path is the same
 endpoint, run by a manager; no AI is involved.
 
+Sign-off check (slice 3): `ranking.is_signed` and `ranking.signoff_problems` read a recorded sign-off
+(`signoff` with `signed_by` equal to the named `owner`, an ISO `signed_on` and a `rule_order_hash` of the rules and
+stage order). A change to the rule order voids it. The publication status reports `policy_signed` and
+`signoff_problems` from it, so it stays false while the owner is "to be named". The check records a
+human's sign-off; it cannot prove the owner approved, and no policy file is signed here.
+
 Not delivered: no scheduler is configured or deployed (a scheduled job would call
 the publish endpoint daily), the retention period is not set (a Legal decision,
 so the archive keeps everything), and no SQL table holds the archive. The named policy owner and sign-off of the first rule order remain open and
@@ -518,6 +524,7 @@ passed to the `Pacer`; the replay span (days x 86,400 s / speed) must fit
 `max_seconds`. `RunController` starts only against a recorded, untampered estimate whose
 complete body matches the current plan, estimate and alert amount, allows one run, stops it, scales homes and rate down (never up) and
 inherits the `Pacer` hard deadline. Prices are public list estimates, not a quote.
+Owner and alert names must be real: blank, `TBD`/`none`/`n/a` style placeholders and `<template>` values are refused.
 Nothing here sends traffic or verifies the live Azure budget alert (#146).
 A static test (`InfraAlignmentTests`) keeps the plan's tier, units, price and 80 percent alert
 threshold aligned with `infra/main.bicep` and the budget in `infra/modules/iothub.bicep`; it
