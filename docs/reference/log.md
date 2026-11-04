@@ -10417,3 +10417,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 138 status record (Refs #138)
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
+
+## [2026-11-04] update | Issue 107 status record (Refs #107)
+
+* Rechecked merged PRs 287, 293, 301, 863, 913 and 915 and open PR 1095. Quarantine and suspension on an unexpected serving model and independent-connection revocation are already tested locally. Unmet: RAI release record approvals (OQ-017), authoritative serving-version attestation, Azure SQL race evidence and delivered-build evidence, plus Tokenomics usage attribution until PR 1095 merges. These need human, Azure or legal steps; no code change.
