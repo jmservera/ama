@@ -393,6 +393,21 @@ class ProxyHttpTests(Base):
         self.assertEqual(self.call("/api/login", {}, {"email": "sam@example.test", "password": "x"})[0], 404)
         self.assertEqual(self.call("/api/cases", {"Cookie": "zf_session=anything"})[0], 401)
 
+    def test_anonymous_api_is_401_for_browser_style_requests_and_pages_still_redirect(self):
+        class NoRedirect(urllib.request.HTTPRedirectHandler):
+            def redirect_request(self, *args, **kwargs):
+                return None
+        browser = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126 Safari/537.36",
+                   "Accept": "application/json", "Sec-Fetch-Mode": "cors", "X-Requested-With": "fetch"}
+        for path in ("/api/me", "/api/cases", "/api/account/photo"):
+            self.assertEqual(self.call(path, browser)[0], 401, path)
+        self.assertEqual(self.call("/api/me", {**browser, "X-MS-CLIENT-PRINCIPAL": "not-base64"})[0], 401)
+        self.assertEqual(self.call("/api/logout", {**browser, "X-ZF-CSRF": "1"}, {})[0], 401)
+        opener = urllib.request.build_opener(NoRedirect())
+        with self.assertRaises(urllib.error.HTTPError) as error:
+            opener.open(urllib.request.Request(self.base + "/app", headers={**browser, "Accept": "text/html"}))
+        self.assertEqual((error.exception.code, error.exception.headers["Location"]), (302, "/sign-in"))
+
     def test_employee_scripts_remain_protected_and_load_for_valid_principal(self):
         class NoRedirect(urllib.request.HTTPRedirectHandler):
             def redirect_request(self, *args, **kwargs):
