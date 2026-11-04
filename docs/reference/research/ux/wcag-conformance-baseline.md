@@ -210,6 +210,10 @@ Known gaps at 2026-10-15:
 
 To ask for another format or report a problem, contact: owner to supply (O-4).
 
+## Programme screens status (2026-11-04, #230)
+
+Criteria 1, 2, 3 and 5 of #230 are ticked on merged PRs #662, #781, #818, #854, #931 and #969. Criterion 4 (WCAG 2.2 baseline, textual state meaning, keyboard navigation) stays unmet: the automated keyboard and axe checks are merged, but manual WCAG 2.2 review and assistive-technology testing by named people are not done (#151, #155). Automated checks are not conformance evidence. No code slice can supply this.
+
 ## Open items
 
 * O-1: Owner confirms the target level and scope.
