@@ -10086,3 +10086,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Hold route test derives review decision version (Closes #949)
 
 * The core resident decisions test helper now reads the current measure decision version instead of hardcoding 1, and the hold route test asserts the stored version matches. Test-only; the older-version binding test keeps an explicit pin. Evidence under `.copilot-tracking/` (2026-11-04 issue-949).
+
+## [2026-11-04] update | Seed constraints name their proposer (Closes #950)
+
+* Phase 0 discovery register seed constraints now carry a named proposer (the seed list) so the owner-not-proposer decision rule applies to them; a test asserts it. Seeds remain proposals, not findings. Evidence under `.copilot-tracking/` (2026-11-04 issue-950).

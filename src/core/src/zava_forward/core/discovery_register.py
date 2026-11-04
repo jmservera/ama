@@ -182,24 +182,38 @@ def register_rows(constraints: list[Constraint]) -> list[dict[str, object]]:
     ]
 
 
+SEED_PROPOSER = "Phase 0 discovery seed list"
+
+
 CANDIDATE_CONSTRAINTS = (
-    Constraint("CAP", "Supplier or professional capacity", ("Procurement and Contracts",)),
     Constraint(
-        "HANDOFF", "Unaccepted handoffs and approval queues", ("Retrofit Programme Manager",)
+        "CAP",
+        "Supplier or professional capacity",
+        ("Procurement and Contracts",),
+        proposed_by=SEED_PROPOSER,
+    ),
+    Constraint(
+        "HANDOFF",
+        "Unaccepted handoffs and approval queues",
+        ("Retrofit Programme Manager",),
+        proposed_by=SEED_PROPOSER,
     ),
     Constraint(
         "RESIDENT",
         "Resident access, adjustment and decision readiness",
         ("Resident Engagement and Housing",),
+        proposed_by=SEED_PROPOSER,
     ),
     Constraint(
         "DEPEND",
         "Property, building-safety or maintenance dependencies",
         ("Building Safety, Repairs and Assets",),
+        proposed_by=SEED_PROPOSER,
     ),
     Constraint(
         "QUALITY",
         "Physical or documentary quality failure",
         ("Programme and independent quality owner",),
+        proposed_by=SEED_PROPOSER,
     ),
 )

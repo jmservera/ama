@@ -72,6 +72,16 @@ class ConstraintTests(unittest.TestCase):
             all(r["notice"] == d.NOT_FINDING and r["status"] == d.PROPOSED for r in rows)
         )
 
+    def test_seed_constraints_name_a_proposer(self) -> None:
+        for c in d.CANDIDATE_CONSTRAINTS:
+            self.assertTrue(c.proposed_by.strip(), c.code)
+        owner = "Named owner"
+        c = d.CANDIDATE_CONSTRAINTS[0]
+        c = d.add_evidence(d.add_evidence(c, self.sup), self.con)
+        with self.assertRaises(ValueError):
+            d.decide(c, d.SEED_PROPOSER, c.owner_roles[0], True, "ok")
+        self.assertTrue(d.decide(c, owner, c.owner_roles[0], True, "ok").is_company_finding)
+
     def test_evidence_validation(self) -> None:
         for bad in (
             d.Evidence("x", "s", "neutral"),
