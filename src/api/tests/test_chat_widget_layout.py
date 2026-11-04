@@ -1,5 +1,6 @@
 """Gate the employee chat composer layout without the resident leg (#520)."""
 
+import importlib.util
 import os
 import subprocess
 import sys
@@ -16,6 +17,8 @@ class ChatWidgetLayout(unittest.TestCase):
         self.assertNotIn("\n.chat-widget-composer .chat-widget-tools{position:sticky", CSS)
 
     def test_employee_send_stays_in_panel_at_short_viewports(self) -> None:
+        if importlib.util.find_spec("playwright") is None:
+            self.skipTest("Playwright is installed by the later browser-check step")
         result = subprocess.run(
             [sys.executable, "checks/chat_widget_browser_check.py", "--employee-layout"],
             cwd=API,
