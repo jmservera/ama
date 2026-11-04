@@ -110,7 +110,8 @@ disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
 module = ["test_form_staging_api", "tests.test_form_staging_api",
-          "test_finance_match_api", "tests.test_finance_match_api"]
+          "test_finance_match_api", "tests.test_finance_match_api",
+          "test_finance_exposure_api", "tests.test_finance_exposure_api"]
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
