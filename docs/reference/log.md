@@ -10411,6 +10411,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
 
+## [2026-11-04] update | Issue 132 intake decision proposal (Refs #132)
+
+* Rechecked merged PRs 873 and 1080: core rules and a staff-only read-only job-pack route are delivered. Added proposed ADR 0007 recommending staff-mediated intake over a provider portal, with the identity approach. It is not accepted, so criterion 6 stays unmet, and criteria 2 to 5 stay unmet (no persistence, write routes or screen). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-132 r3).
 ## [2026-11-04] update | Issue 138 status record (Refs #138)
 
 * Rechecked merged PRs 333, 357, 500, 511, 672 and 1012. The OIDC jobs, PR what-if, environment-gated deployment, versioned image release, post-deployment checks and run summary are authored and tested offline, but all six criteria stay unmet: each needs live evidence (protected environments, per-environment OIDC identities, an observed what-if, approved deployment, image push and post-deployment run; human/Azure steps owned by the owner; #137 and #118 open). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-138 r2).
