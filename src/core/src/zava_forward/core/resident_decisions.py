@@ -31,7 +31,8 @@ RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_recor
                     "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update",
                     "challenge_open", "challenge_resolve",
                     "nomination_record", "nomination_correct", "tenure_intake",
-                    "tenure_legal_position", "tenure_verify")
+                    "tenure_legal_position", "tenure_verify", "tenure_question_pack",
+                    "tenure_question_pack_review")
 NOT_RECORDED = "Not recorded"
 AUTHORITY_TASKS = ("Receive information", "Communicate", "Attend", "Works decision")
 AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
@@ -41,7 +42,7 @@ RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_autho
                    "resident_safe_contact", "resident_contact_history", "resident_reviews",
                    "nomination_records", "tenure_reports")
 INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "tenure_intake", "tenure_legal_position",
-                  "tenure_verify")
+                  "tenure_verify", "tenure_question_pack", "tenure_question_pack_review")
 TENURE_ROUTES = {
     "Tenant": "Tenant",
     "Shared owner": "Shared owner",
@@ -125,6 +126,23 @@ def _intake_fields(user, c, body, fields):
         raise ValueError("Supply only the intake fields. Verification and approvals cannot be supplied here.")
     if body["case_id"] != c["id"]:
         raise ValueError("The reported home does not match this case. Ask the data owner to reconcile identity; do not transfer the account.")
+
+
+def _tenure_report(c, body):
+    reports = c.get("tenure_reports", [])
+    number = body["report_version"]
+    if type(number) is not int or not 1 <= number <= len(reports):
+        raise ValueError("Choose an existing tenure report version for this case.")
+    return reports[number - 1]
+
+
+def _pack_is_current(report, pack):
+    verifications = report.get("verifications", [])
+    positions = report.get("legal_positions", [])
+    return bool(verifications and positions
+                and verifications[-1]["version"] == pack["verification_version"]
+                and verifications[-1]["outcome"] == "Verified"
+                and positions[-1]["version"] == pack["legal_position_version"])
 
 
 def _intake_owner(store, email):
@@ -874,6 +892,73 @@ class ResidentDecisionMixin:
         report["decision_route"] = route
         return (f"tenure report {number} verification {record['version']} {outcome.lower()}; "
                 f"decision route {route}; case-wide hold remains")
+
+    def _res_tenure_question_pack(self, user, c, body):
+        _intake_fields(user, c, body, {"case_id", "report_version", "expected_version"})
+        report = _tenure_report(c, body)
+        packs = report.setdefault("question_packs", [])
+        _version(body, packs[-1] if packs else None)
+        verifications = report.get("verifications", [])
+        positions = report.get("legal_positions", [])
+        if not verifications or verifications[-1]["outcome"] != "Verified" or not positions:
+            raise ValueError("Draft a question pack only from a data-owner-verified report with an attached Legal position reference.")
+        verified, position = verifications[-1], positions[-1]
+        if packs and _pack_is_current(report, packs[-1]) and packs[-1]["review"] is None:
+            raise ValueError("The current question pack is awaiting human approval. Review it first.")
+        route = verified["decision_route"]
+        refs = (f"verification {verified['version']} (evidence {verified['evidence_ref']}); "
+                f"Legal position {position['position_ref']} {position['position_version']}")
+        pack = dict(
+            version=len(packs) + 1, report_version=body["report_version"],
+            verification_version=verified["version"], legal_position_version=position["version"],
+            route=route, source="Template from reviewed record references; no AI used and no lease terms read",
+            questions=[
+                dict(owner="Home Ownership data owner",
+                     question=f"Confirm home, household and lease identity for route {route}, using {refs}."),
+                dict(owner="Legal", question="What is the responsibility position for each proposed measure, and is landlord permission needed? Legal interprets the lease; this pack does not."),
+                dict(owner="Legal", question="What consultation requirement and status apply, and where is it recorded?"),
+                dict(owner="Finance", question="Who bears the cost, and what cost position does Finance approve? Finance retains cost."),
+                dict(owner="Home Ownership team", question="Which disputes, defects or charge queries are open and affect this package?"),
+            ],
+            status="Draft; awaiting human approval", review=None,
+            drafted_by=_identity(user), at=_time(),
+        )
+        packs.append(pack)
+        return f"tenure report {body['report_version']} question pack {pack['version']} drafted; awaiting human approval; case-wide hold remains"
+
+    def _res_tenure_question_pack_review(self, user, c, body):
+        _intake_fields(user, c, body, {
+            "case_id", "report_version", "expected_version", "outcome", "reviewer_name",
+            "reviewer_role", "reviewed_on", "note",
+        })
+        report = _tenure_report(c, body)
+        packs = report.get("question_packs", [])
+        if not packs:
+            raise ValueError("Draft a question pack before reviewing it.")
+        pack = packs[-1]
+        _version(body, pack)
+        if pack["review"] is not None:
+            raise ValueError("This question pack already has its human review. Draft a new pack to change it.")
+        if not _pack_is_current(report, pack):
+            raise ValueError("The verification or Legal position changed. Draft a new question pack.")
+        outcome = k.choice(body["outcome"], ("Approved", "Returned"), "the human review outcome")
+        reviewer = _intake_text(body["reviewer_name"], "the named human reviewer", 100)
+        role = _intake_text(body["reviewer_role"], "the reviewer's role", 100)
+        if not any(word in role.casefold() for word in ("home ownership", "leasehold", "data owner")):
+            raise ValueError("The reviewer must be in the home ownership and leasehold team. Name the person; no agent approves a pack.")
+        own = {_identity_value(pack["drafted_by"], key) for key in ("name", "email")} - {""}
+        if reviewer.strip().casefold() in {_identity_value(user, "name"), _identity_value(user, "email"), *own}:
+            raise ValueError("Choose a reviewer other than the person who drafted or records this pack.")
+        reviewed_on = _day(body["reviewed_on"])
+        if reviewed_on > k.today():
+            raise ValueError("The review date cannot be in the future.")
+        pack["review"] = dict(
+            outcome=outcome, reviewer_name=reviewer, reviewer_role=role, reviewed_on=reviewed_on,
+            note=_intake_text(body["note"], "the review note", 300), recorded_by=_identity(user), at=_time(),
+        )
+        pack["status"] = ("Approved as questions only; Legal keeps interpretation and Finance keeps cost"
+                          if outcome == "Approved" else "Returned; draft a new pack")
+        return f"tenure report {body['report_version']} question pack {pack['version']} {outcome.lower()}; case-wide hold remains"
 
     def _res_challenge_open(self, user, c, body):
         from . import projection

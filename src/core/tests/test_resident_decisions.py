@@ -460,6 +460,120 @@ class JsonResidentDecisions(unittest.TestCase):
             partial(self.store.resident_action, self.sam, "ZF-1", self.verification())
         )
 
+    def pack(self, **changes: Any) -> dict[str, Any]:
+        base = dict(action="tenure_question_pack", case_id="ZF-1", report_version=1)
+        base["expected_version"] = 0
+        return dict(base, **changes)
+
+    def pack_review(self, **changes: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="tenure_question_pack_review",
+                case_id="ZF-1",
+                report_version=1,
+                expected_version=1,
+                outcome="Approved",
+                reviewer_name="Hana Home",
+                reviewer_role="Home Ownership team",
+                reviewed_on="2026-01-03",
+                note="Wording checked",
+            ),
+            **changes,
+        )
+
+    def verified_report(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        self.store.resident_action(self.sam, "ZF-1", self.legal_position())
+        self.store.resident_action(self.sam, "ZF-1", self.verification())
+
+    def test_question_pack_drafts_only_from_reviewed_records_and_keeps_hold(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        self.unchanged_failure(partial(self.store.resident_action, self.sam, "ZF-1", self.pack()))
+        self.store.resident_action(self.sam, "ZF-1", self.legal_position())
+        self.unchanged_failure(partial(self.store.resident_action, self.sam, "ZF-1", self.pack()))
+        self.store.resident_action(self.sam, "ZF-1", self.verification())
+        self.store.resident_action(self.sam, "ZF-1", self.pack())
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        pack = report["question_packs"][0]
+        self.assertEqual(pack["status"], "Draft; awaiting human approval")
+        self.assertIsNone(pack["review"])
+        owners = {q["owner"] for q in pack["questions"]}
+        expected = {"Home Ownership data owner", "Legal", "Finance", "Home Ownership team"}
+        self.assertEqual(owners, expected)
+        self.assertIn("no AI used", pack["source"])
+        self.assertEqual(report["cost_position"], "Unknown")
+        self.assertEqual(resident_gate(self.store.cases["ZF-1"]), [resident_decisions.TENURE_HOLD])
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.pack(expected_version=1))
+        )
+
+    def test_question_pack_refuses_unsafe_draft_input(self) -> None:
+        self.verified_report()
+        for changes in (
+            dict(report_version=2),
+            dict(case_id="ZF-2"),
+            dict(questions=["x"]),
+            dict(expected_version=3),
+        ):
+            with self.subTest(changes=changes):
+                self.unchanged_failure(
+                    partial(self.store.resident_action, self.sam, "ZF-1", self.pack(**changes))
+                )
+
+    def test_question_pack_review_needs_named_other_human_and_current_sources(self) -> None:
+        self.verified_report()
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.pack_review())
+        )
+        self.store.resident_action(self.sam, "ZF-1", self.pack())
+        for changes in (
+            dict(reviewer_role="Resident Liaison Officer"),
+            dict(reviewer_name="Sam Example"),
+            dict(reviewed_on="2999-01-01"),
+            dict(outcome="Auto"),
+            dict(note=" "),
+            dict(expected_version=0),
+            dict(status="Approved"),
+        ):
+            with self.subTest(changes=changes):
+                body = self.pack_review(**changes)
+                self.unchanged_failure(partial(self.store.resident_action, self.sam, "ZF-1", body))
+        self.store.resident_action(self.sam, "ZF-1", self.pack_review())
+        report = self.open_store().cases["ZF-1"]["tenure_reports"][0]
+        self.assertIn("Legal keeps interpretation", report["question_packs"][0]["status"])
+        self.assertEqual(resident_gate(self.store.cases["ZF-1"]), [resident_decisions.TENURE_HOLD])
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.pack_review())
+        )
+
+    def test_changed_verification_makes_pack_stale_and_returned_pack_can_be_redrafted(self) -> None:
+        self.verified_report()
+        self.store.resident_action(self.sam, "ZF-1", self.pack())
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.verification(
+                expected_version=1, outcome="Not verified",
+                verified_tenure="Unknown", identity_confirmed=False,
+            ),
+        )
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.pack_review())
+        )
+        self.unchanged_failure(
+            partial(self.store.resident_action, self.sam, "ZF-1", self.pack(expected_version=1))
+        )
+        self.store.resident_action(
+            self.sam, "ZF-1", self.verification(expected_version=2, verified_tenure="Leaseholder")
+        )
+        self.store.resident_action(self.sam, "ZF-1", self.pack(expected_version=1))
+        returned = self.pack_review(expected_version=2, outcome="Returned")
+        self.store.resident_action(self.sam, "ZF-1", returned)
+        self.store.resident_action(self.sam, "ZF-1", self.pack(expected_version=2))
+        packs = self.open_store().cases["ZF-1"]["tenure_reports"][0]["question_packs"]
+        self.assertEqual([p["version"] for p in packs], [1, 2, 3])
+        self.assertEqual(packs[2]["route"], "Leaseholder")
+
     def test_tenure_intake_preserves_accepted_status_and_heuristic_priority(self) -> None:
         for measure in MEASURES:
             self.scope(measure)

@@ -217,6 +217,46 @@ class ResidentApi(unittest.TestCase):
             code, other = self.call("/api/cases/ZF-1", actor)
             self.assertNotIn("SYN-LEGAL-CANARY", json.dumps(other))
 
+    def test_http_question_pack_drafts_reviews_and_stays_hidden(self) -> None:
+        url = "/api/cases/ZF-1/resident"
+        steps = [
+            dict(
+                action="tenure_legal_position", case_id="ZF-1", report_version=1,
+                expected_version=0, reviewer_name="Lee Legal", reviewer_role="Legal adviser",
+                position_ref="SYN-LEGAL-PACK", position_version="v1", reviewed_on="2026-01-01",
+            ),
+            dict(
+                action="tenure_verify", case_id="ZF-1", report_version=1, expected_version=0,
+                outcome="Verified", verified_tenure="Leaseholder", identity_confirmed=True,
+                verifier_name="Dana Owner", verifier_role="Home Ownership data owner",
+                evidence_ref="SYN-OWNER-PACK", verified_on="2026-01-02",
+            ),
+        ]
+        draft = dict(
+            action="tenure_question_pack", case_id="ZF-1", report_version=1, expected_version=0
+        )
+        review = dict(
+            action="tenure_question_pack_review", case_id="ZF-1", report_version=1,
+            expected_version=1, outcome="Approved", reviewer_name="Hana Home",
+            reviewer_role="Home Ownership team", reviewed_on="2026-01-03", note="Checked",
+        )
+        self.assertEqual(self.call(url, "sam", self.intake_payload(tenure=True))[0], 200)
+        self.assertEqual(self.call(url, "sam", draft)[0], 400)
+        for step in steps:
+            self.assertEqual(self.call(url, "sam", step)[0], 200)
+        self.assertEqual(self.call(url, "rex", draft)[0], 403)
+        code, detail = self.call(url, "sam", draft)
+        self.assertEqual(code, 200, detail)
+        self.assertEqual(detail["tenure_reports"][0]["question_packs"][0]["review"], None)
+        self.assertEqual(self.call(url, "rex", review)[0], 403)
+        code, detail = self.call(url, "sam", review)
+        self.assertEqual(code, 200, detail)
+        self.assertTrue(any("Tenure and lease identity" in item for item in detail["gate"]))
+        for actor in ("rex", "kim", "bea"):
+            code, other = self.call("/api/cases/ZF-1", actor)
+            self.assertNotIn("SYN-OWNER-PACK", json.dumps(other))
+            self.assertNotIn("question_packs", json.dumps(other))
+
     def test_http_tenure_verification_sets_route_and_stays_hidden(self) -> None:
         legal = dict(
             action="tenure_legal_position",
