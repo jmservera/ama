@@ -43,7 +43,10 @@ const document = {
   body: new El("body"),
   addEventListener: (t, f) => (docListeners[t] ||= []).push(f),
 };
-const respond = (status, body) => ({ok: status < 400, status, json: async () => body});
+const respond = (status, body, headers = {}) => ({
+  ok: status < 400, status, json: async () => body,
+  headers: {get: k => headers[k] ?? null},
+});
 const fetchStub = (path) => new Promise((resolve, reject) => pending.push({path, resolve, reject}));
 const context = {
   document, window: {mountResidentAssistant: () => ({setSession() {}})},
@@ -107,6 +110,26 @@ const out = () => ({
     await tick();
     await tick();
     console.log(JSON.stringify({loading, slow, after: out()}));
+  } else if (scenario === "busy") {
+    const busy = () => respond(
+      503, {error: "The showcase is busy right now. Try again in a few seconds."},
+      {"Retry-After": "3"});
+    pending[0].resolve(respond(200, {signed_in: true, session_id: "s", csrf: "c"}));
+    await tick();
+    const first = pending.at(-1);
+    first.resolve(busy());
+    await tick();
+    await tick();
+    const waiting = out();
+    const retry = timers.filter(t => t.live && t.ms === 3000).length;
+    const before = pending.length;
+    timers.filter(t => t.live && t.ms === 3000)[0].f();
+    await tick();
+    const retried = pending.length === before + 1 && pending.at(-1).path === "/demo/view";
+    pending.at(-1).resolve(busy());
+    await tick();
+    await tick();
+    console.log(JSON.stringify({waiting, retry, retried, after: out(), fetches: pending.length}));
   } else if (scenario === "signout") {
     pending[0].resolve(respond(200, {authenticated: false, csrf: "c"}));
     await tick();
@@ -181,6 +204,14 @@ class ResidentDemoScriptTests(unittest.TestCase):
         self.assertTrue(text.startswith("We could not confirm that you signed out."))
         self.assertIn("within 30 minutes", text)
         self.assertNotIn("Your session may still be active", text)
+
+    def test_busy_view_retries_once_after_retry_after_then_shows_the_error(self) -> None:
+        got = run("busy")
+        self.assertIn("busy", got["waiting"]["status"])
+        self.assertEqual(got["retry"], 1)
+        self.assertTrue(got["retried"])
+        self.assertIn("Try again in a few seconds", got["after"]["errorText"])
+        self.assertEqual(got["fetches"], 3)
 
 
 if __name__ == "__main__":
