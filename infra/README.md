@@ -1558,6 +1558,16 @@ Revisions: demo API `--0000014`, resident demo `--0000009`, both 100 percent and
   `x-ms-middleware-request-id`. Authenticated calls were not possible without a new role.
 * #462: 320px sign-in verified live; the live `demo.js` is byte-identical to main (UK-time and sign-out
   wording present). The signed-in walk-through needs the owner-held shared password and is outstanding.
+Residual 500s and root cause (2026-11-04, Refs #810): transport `Http` alone did
+not fix them (about 5 percent at 20 parallel). The Easy Auth sidecar log
+(`az containerapp logs show --container http-auth`) showed `HttpIOException: The
+response ended prematurely` forwarding to `127.0.0.1:8088`: the API answered
+HTTP/1.0 and closed the connection after every response, which the sidecar's
+pooled HTTP client races against. The API handler now sets `protocol_version =
+"HTTP/1.1"` (keep-alive; `src/api/tests/test_keepalive.py`). The live demo API
+runs the same change through a temporary command override until an image built
+from this source is deployed; a deployment of the new image should drop the
+override (see the research note).
 
 ### Historical deployment recipe
 

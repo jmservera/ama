@@ -225,6 +225,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
     })
     class H(BaseHTTPRequestHandler):
         server_version = "ZavaForward"
+        # The Easy Auth sidecar pools upstream connections; HTTP/1.0 close-per-response made it fail with empty-body 500s (issue 810).
+        protocol_version = "HTTP/1.1"
+        timeout = 300  # idle keep-alive connections are reaped well after the sidecar's own idle limit
 
         def log_message(self, *a):
             pass
@@ -286,6 +289,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             self.send_header("Content-Type", ctype)
             if code != 304:
                 self.send_header("Content-Length", str(len(raw)))
+            if self.close_connection:
+                self.send_header("Connection", "close")
             for k, v in {**SECURITY, "Content-Security-Policy": app.csp, **(extra or {})}.items():
                 self.send_header(k, v)
             self.end_headers()
@@ -309,9 +314,13 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             return user
 
         def _body(self):
-            n = int(self.headers.get("Content-Length") or 0)
-            if n > 8_000_000:
-                raise ValueError("Too large")
+            try:
+                n = int(self.headers.get("Content-Length") or 0)
+                if n < 0 or n > 8_000_000 or self.headers.get("Transfer-Encoding"):
+                    raise ValueError("Too large")
+            except ValueError:
+                self.close_connection = True  # the body stays unread, so the connection cannot be reused
+                raise
             try:
                 raw = self.rfile.read(n)
             except ConnectionError:

@@ -10250,3 +10250,6 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Deployed main to the demo apps; #810 still reproduces (Refs #810, Refs #462)
 
 * Deployed `b0080d4e1` to `ca-cutover-test-demo-api` and `ca-resident-demo` (resource group `ama`, owner-approved); registry restored to private. With transport `Http`, empty-body 500s under concurrency persist at about 2 to 3.5 percent, so #810 stays open. #462 320px sign-in verified; signed-in checks outstanding (shared password is owner-held). See `infra/README.md` and `.copilot-tracking/*/2026-11-04/deploy-main-810-462-*`.
+## [2026-11-04] update | Easy Auth 500 root cause: API HTTP/1.0 close-per-response (Refs #810)
+
+* Sidecar logs showed `ResponseEnded` forwarding to the app; stub A/B and an in-container probe isolated the API's HTTP/1.0 connection close. The handler now speaks HTTP/1.1 keep-alive. The live demo API was verified with 0 empty-body 500s in 2,180 requests through a temporary command override. See the research note and `infra/README.md`. Issue 810 stays `Refs`: the new image is not yet deployed.

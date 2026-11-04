@@ -126,6 +126,61 @@ the API, with `infra/tests/test_api_ingress_transport.py`; it has not been
 deployed from Bicep. Until it merges, a deployment from the old template
 (`auto`) would restore the fault.
 
+## Follow-up 2026-11-04 (second): root cause is the API's HTTP/1.0 close-per-response
+
+Owner approval 2026-11-04 (live changes to `ca-cutover-test-demo-api`, resource
+group `ama`; no new roles, network paths or SQL changes). Revision `--0000014`
+with ingress `Http` still returned empty-body 500s: 8, 10 and 12 of 160 at 20
+parallel (5 to 7 percent) on `/healthz`.
+
+Evidence:
+
+* The Easy Auth sidecar log (`http-auth` container) records, for each 500,
+  `Failed to forward request to http://127.0.0.1:8088` with `HttpRequestException`
+  after 0.5 to 3 ms and inner `HttpIOException: The response ended prematurely
+  (ResponseEnded)`. The application log shows nothing for those requests.
+* In-container probe: 1600 of 1600 new-connection requests to the app on
+  `127.0.0.1:8088` at 20 threads returned 200. The app is not dropping them.
+* Stub backend A/B (command override, same ingress, 20 parallel x 160): a raw
+  socket stub answering HTTP/1.1 keep-alive gave 0 x 500 in 640 requests; a stub
+  answering HTTP/1.0 and closing after each response gave 14 to 25 of 160 (the
+  real app's behaviour).
+* Real app with `protocol_version = "HTTP/1.1"` (command override launcher):
+  0 x 500 in 640 concurrent requests. Python `BaseHTTPRequestHandler` defaults
+  to HTTP/1.0, so the API closed every connection. This supersedes the earlier
+  keep-alive negative result, whose override did not give a working keep-alive
+  handler.
+
+Hypotheses tested live and reverted, or ruled out:
+
+| Hypothesis | Change | Result |
+| --- | --- | --- |
+| CPU starvation of the shared replica | 1.0 vCPU, 2 GiB (`--0000015`) | Still 5 to 11 of 160; reverted to 0.5 vCPU, 1 GiB |
+| Application server or backlog | stub servers (`--0000017` to `--0000020`) | Fault follows connection close behaviour, not the app code |
+| Excluded paths, token store, unauthenticated action | read only | Token store off; `/healthz` excluded; failures occur on excluded paths, so not a policy decision |
+| Scale rules, probes | read only | min 0, max 4, one replica in every test; probes pass and are not involved |
+
+Fix: the handler in `src/api/src/zava_forward/api/server.py` sets
+`protocol_version = "HTTP/1.1"` and an idle `timeout` of 300 s, and closes the
+connection (with `Connection: close`) when a request body was not read. Test:
+`src/api/tests/test_keepalive.py`. The full `src/api` suite ran 1793 tests with
+5 import errors from browser tooling missing in this environment (unrelated
+modules).
+
+Live state: the demo API runs revision `--0000022`, a temporary command override
+that applies the same `protocol_version` change to the existing image (no image
+could be built or pushed from the CLI host). Ingress `Http`, 0.5 vCPU, 1 GiB,
+min 0 and max 4 replicas are as before. Rollback: update the app with the
+original template (no `command` or `args`). Deploying an image built from this
+source makes the override unnecessary; remove it then.
+
+Verification on `--0000022` (one client, 2026-11-04): `/healthz`,
+`/welcome.html` and `/style.css` 3 x 160 each at 20 parallel, plus 200 at 40
+parallel: all 200; `/workspace-shell.js` unauthenticated 3 x 160: all 401; 300
+sequential `/healthz`: all 200. That is 0 empty-body 500s in 2,180 requests.
+Authenticated requests were not made (no credentials). Not proven: behaviour of
+the new image (not deployed) and a sustained service level.
+
 ## Acceptance status for issue 810
 
 * Cause identified with evidence: met for the setting (controlled A/B on the
