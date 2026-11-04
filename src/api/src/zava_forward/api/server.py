@@ -16,7 +16,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 from zava_forward.core import ai_consumption, ai_registry, controls, form_review, forms, profile
 
-from zava_forward.core import identity, projection, quality, ranking, taskqueues
+from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, lawstore, rulecards, rule_engine
 from zava_forward.api import auth
@@ -108,6 +108,22 @@ class App:
                     "safe_route": rule_engine.SAFE_ROUTE}
 
 
+LIST_EXPORTS = frozenset({"/api/packages.csv", "/api/workorders.csv", "/api/handoffs.csv", "/api/visits.csv", "/api/funding.csv"})
+
+
+def list_rows(s, u, path, q):
+    """Rows of a list for CSV: the same store call, and so the same role limits, as its JSON endpoint."""
+    if path == "/api/packages.csv":
+        return s.list_packages(u)
+    if path == "/api/workorders.csv":
+        return s.list_work_orders(u, q.get("case", [None])[0])
+    if path == "/api/handoffs.csv":
+        return s.pending_handoffs(u)
+    if path == "/api/visits.csv":
+        return s.visits(u, q.get("view", ["mine"])[0])
+    return s.funding_list(u)
+
+
 def get_kind(path):
     if path == "/api/progress":
         return "stats"
@@ -139,6 +155,8 @@ def get_kind(path):
         return "doc"
     if path.startswith("/api/time/"):
         return "time"
+    if path in LIST_EXPORTS:
+        return path[len("/api/"):]
     return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",
             "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",
             "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/packages": "packages",
@@ -362,6 +380,13 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(400, {"error": str(e)})
             if not projection.allowed(u, get_kind(url.path)):
                 return self._json(403, {"error": "Your role does not include this."})
+            if url.path in LIST_EXPORTS:
+                try:
+                    rows = list_rows(s, u, url.path, q)
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                return self._send(200, list_export.to_csv(rows), "text/csv; charset=utf-8",
+                                  {"Content-Disposition": f'attachment; filename="{url.path.rsplit("/", 1)[-1]}"'})
             if url.path in ("/api/progress", "/api/closed-cases"):
                 from zava_forward.api import progress
                 try:
