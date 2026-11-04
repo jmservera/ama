@@ -22,6 +22,27 @@ from zava_forward.core.store import Store
 
 DENIED_PATHS = ("/api/account/photo", "/api/law/alerts", "/api/chat/regulatory/status")
 ASSISTANTS_PATH = "/api/assistants"
+CASE_ROUTES = (
+    "#/overview",
+    "#/visits",
+    "#/funding",
+    "#/coordinator",
+    "#/finance",
+    "#/capacity",
+    "#/progress",
+    "#/closed",
+    "#/time",
+    "#/all",
+    "#/case/ZF-1",
+)
+CASE_API = (
+    "/api/stats",
+    "/api/visits",
+    "/api/funding",
+    "/api/coordinator",
+    "/api/finance",
+    "/api/facets",
+)
 OID_ADMIN = OID_NEW
 ADMIN_ONLY = ("ZavaForward.ApplicationAdmin",)
 
@@ -101,11 +122,13 @@ def main() -> None:
                     admin.on("request", lambda r: admin_requested.append(r.url))
                     admin_denied: list[str] = []
                     admin.on(
-                        "response", lambda r: admin_denied.append(r.url) if r.status >= 400 else None
+                        "response",
+                        lambda r: admin_denied.append(r.url) if r.status >= 400 else None,
                     )
                     admin_errors: list[str] = []
                     admin.on(
-                        "console", lambda m: admin_errors.append(m.text) if m.type == "error" else None
+                        "console",
+                        lambda m: admin_errors.append(m.text) if m.type == "error" else None,
                     )
                     admin.goto(base + "/app")
                     admin.get_by_role("heading", name="No case work for this account").wait_for()
@@ -113,12 +136,26 @@ def main() -> None:
                         "admin-only landing is worded plainly",
                         "no case access" in (admin.locator("body").text_content() or ""),
                     )
-                    for route in ("#/assistants",):
-                        admin.evaluate(f"location.hash = '{route}'")
-                        admin.wait_for_timeout(1500)
+                    admin.evaluate("location.hash = '#/assistants'")
+                    admin.wait_for_timeout(1500)
                     check(
                         "assistants denial is worded plainly",
-                        "not available for your role" in (admin.locator("body").text_content() or ""),
+                        "not available for your role"
+                        in (admin.locator("body").text_content() or ""),
+                    )
+                    for route in CASE_ROUTES:
+                        admin.evaluate(f"location.hash = '{route}'")
+                        admin.get_by_role(
+                            "heading", name="No case work for this account"
+                        ).wait_for()
+                        admin.wait_for_timeout(300)
+                    check(
+                        f"{len(CASE_ROUTES)} case-data routes show plain words for an admin-only account",
+                        "no case access" in (admin.locator("body").text_content() or ""),
+                    )
+                    check(
+                        "no case-data request was sent for an admin-only account",
+                        not [u for u in admin_requested if any(p in u for p in CASE_API)],
                     )
                     check(
                         "no assistants request was sent for an admin-only account",

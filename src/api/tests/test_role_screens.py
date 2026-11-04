@@ -204,6 +204,71 @@ vm.runInContext(`registerRoleScreen({id: "synthetic", title: "Synthetic queue",
         )
         self.assertEqual(text(marker), "Safety issue open")
 
+    def test_resident_choice_states_choice_precedence_after_choice_panels(self) -> None:
+        result = subprocess.run(
+            [
+                "node",
+                "-e",
+                r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const host = fs.readFileSync(process.argv[1] + "/role-screens.js", "utf8");
+const context = vm.createContext({
+  URLSearchParams, Intl, AbortController,
+  me: {user: {role: "Resident Liaison Officer"}}, workspaceStatus: {},
+  h: (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat().filter(
+    kid => kid !== false && kid !== null && kid !== undefined)})
+});
+vm.runInContext(host, context);
+const homes = [
+  {id: "HOME-STOPPED", measure_decisions: [{measure: "Loft insulation", status: "Withdrawn",
+    versions: [{version: 1, status: "Withdrawn", scope: "S1", context_revision: 1,
+      design_version: 1, answered_by: "Resident", at: "2026-10-26T08:00:00Z", note: "No"}]}]},
+  {id: "HOME-OPEN", measure_decisions: [{measure: "Windows", status: "Agreed",
+    versions: [{version: 1, status: "Agreed", scope: "S1", context_revision: 1,
+      design_version: 1, answered_by: "Resident", at: "2026-10-26T08:00:00Z"}]}]},
+  {id: "HOME-EMPTY"}
+];
+function text(node) {
+  if (!node || typeof node !== "object") return String(node);
+  return (node.kids || []).map(text).join(" ");
+}
+const screen = vm.runInContext(`roleScreens.get("resident-choice")`, context);
+console.log(JSON.stringify(homes.map(home => {
+  const panels = screen.render(home).kids;
+  return panels.map(panel => ({
+    tag: panel.tag, title: text(panel.kids[0]), text: text(panel),
+    paragraphs: panel.kids.slice(1).filter(kid => kid.tag === "p").map(text)
+  }));
+})));
+""",
+                str(WEB),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        self.assertEqual(result.returncode, 0, result.stderr)
+        homes = json.loads(result.stdout)
+        self.assertEqual(len(homes), 3)
+        for home in homes:
+            titles = [panel["title"] for panel in home]
+            for earlier in ("Choice for each measure", "Paused or withdrawn by the resident"):
+                self.assertLess(
+                    titles.index(earlier), titles.index("Choice comes before offered capacity")
+                )
+            index = titles.index("Choice comes before offered capacity")
+            panel = home[index]
+            self.assertEqual(panel["tag"], "section")
+            self.assertEqual(len(panel["paragraphs"]), 1)
+            self.assertIn(
+                "takes precedence over any offered contractor slot", panel["paragraphs"][0]
+            )
+            self.assertIn("not a booking and not a promise to the resident", panel["paragraphs"][0])
+            before = " ".join(p["text"] for p in home[:index]).lower()
+            for word in ("capacity", "utilisation", "headroom"):
+                self.assertNotIn(word, before)
+
     def test_staff_and_contractor_navigation_retains_scoped_screen_link(self) -> None:
         for role in ("Resident Liaison Officer", "Retrofit Programme Manager", "Contractor"):
             links = navigation({"role": role})

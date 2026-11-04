@@ -3807,12 +3807,88 @@ recorded in the current handover above. Live user photo/consent, changed-account
 acceptance, map acceptance and tenant naming/role transition remain distinct
 checks, not established by CLI authentication.
 
+## Resource coverage register (issue 136, 2026-11-04)
+
+Refs #136 criterion 2: every resource in the ADR 0001, 0002 and 0003
+architecture is in Bicep, or is recorded here as intentionally manual or
+deferred with a named owner. Owner is the repository owner (@jmservera) unless
+a human role is named; no other named person is recorded. This is a
+documentation record, not machine-checked and not live Azure evidence.
+
+| Resource or step | Where | Status |
+| --- | --- | --- |
+| Managed identities, role assignments, role definitions | `modules/identity.bicep`, `role-assignments.json` | In Bicep |
+| VNet, subnets, NSGs, private DNS, private endpoints | `modules/network.bicep`, `envDns.bicep`, `privateEndpoint.bicep` | In Bicep |
+| Log Analytics, Application Insights, private link scope, action group, alerts, workbook | `modules/monitoring.bicep`, `operationalMonitoring.bicep` | In Bicep |
+| Key Vault and secret definitions | `modules/keyvault.bicep` | In Bicep; secret values are set outside the repository (see `secret-inventory.json`) |
+| Storage (blob, immutable audit container, queues, lifecycle) | `modules/storage.bicep` | In Bicep |
+| Container Registry | `modules/registry.bicep` | In Bicep; image builds use `az acr build` or the release workflow |
+| Azure SQL server, database, auditing, threat protection, PITR | `modules/sql.bicep` | In Bicep |
+| SQL database users and grants | `scripts/create-sql-users.*` | Scripted, run by the in-VNet initializer; owner runs it |
+| Foundry account, project, model deployments | `modules/foundry.bicep` | In Bicep |
+| Container Apps environment, API, jobs | `modules/containerapps.bicep` | In Bicep |
+| Azure IoT Hub and Event Hubs consumer path | `modules/iothub.bicep`, `iot-hub-live.bicep` | In Bicep; live apply is an owner-gated Azure step (#140) |
+| Budget | `main.bicep` | In Bicep |
+| Policy assignment, locks | `governance.bicep` | In Bicep; policy is audit only |
+| Defender for Cloud plans | `governance.bicep`, `defender-decision.json` | Deferred: owner-approved cost is required before activation |
+| Front Door Premium, WAF, custom domain | `modules/edge*.bicep` | In Bicep, optional; deferred for the synthetic demo (ADR 0001 direct-entry decision, #143) |
+| Entra app registration, app roles, role assignment to staff | `entra/app-registration.json`, `scripts/setup-entra.py` | Intentionally manual in the tenant; owner runs the scripts |
+| Contractor B2B guest policy and cross-tenant settings | Entra tenant | Intentionally manual; tenant owner confirmation is open |
+| Microsoft 365 and SharePoint permission grants | `scripts/grant-sharepoint-access.sh` | Intentionally manual; admin consent by a tenant administrator |
+| GitHub environments, reviewers, OIDC federation, branch protection | GitHub and Entra settings | Intentionally manual; platform owner; unverified in this repository |
+| Azure subscription and `ama` resource group | Azure | Existing; no teardown (see Deploy) |
+| Azure AI Search, Service Bus, Content Understanding | none | Not in scope; deferred by ADR 0001 |
+| Ledger digest upload and scheduled verification | none | Not built; open item in ADR 0001 |
+
+Unmet for #136: criteria 1 (the #440 stabilization checkpoint), 3 (children
+open: #137, #138, #140, #142, #143, #144, #145, #146, #148), 4 (from-empty
+deployment observed on 2026-10-12 but not reproven since) and 5 (status kept
+current in the epic). Criterion 2 is recorded here but its manual rows still
+need owner confirmation.
+
 ## Validate locally
 
 Use the complete offline commands in [Quality gates](#quality-gates), including
 all Bicep entry points, compiled controls, mutation regressions and scoped ruff.
 
 ## IoT Hub (issue 140, ADR 0003 decision 6)
+
+### Live simulator job (issue 184, 2026-11-04)
+
+`live-simulator-job.bicep` defines a Container Apps **job** (Consumption, 0.25 vCPU, 0.5 GiB,
+cron `*/5 * * * *`, one run per slot, scale to zero between runs) that runs
+`python -m zava_forward.api.live_simulator --sink iothub --once` from the image built with
+`docker build -f src/api/live-simulator.Dockerfile src`. It reuses the existing B1 hub, the
+existing environment and a pre-existing identity, creates no hub, role assignment, secret or key,
+and refuses any scope outside `ama`, a tag-only image or a missing approval reference. It was
+compiled and linted only (`az bicep build`, `az bicep lint`). **It is not deployed**: no what-if,
+no deployment, no image push and no device registration was run. The device certificates are
+mounted from an Azure Files share registered as environment storage. `mountOptions: 'ro'` sits on the job volume (`template.volumes[]`), which is its documented placement for `AzureFile`; the environment storage definition (outside this template) should also use `accessMode: ReadOnly`. The mount is used: it holds the `<device>.pem` and `.key` files; nothing secret is
+in the template or the image. Behaviour is documented in the
+[API README](../src/api/README.md#live-simulator-container-184-owner-requirement-2026-11-04).
+
+Planning cost, not a billing quote or enforced cap. Unit prices are recalled list prices that were
+not re-retrieved this session and must be confirmed in the Azure pricing calculator: IoT Hub B1 about
+USD25 per unit per month; Container Apps Consumption about USD0.000024 per vCPU-second and
+USD0.000003 per GiB-second after a monthly free grant of 180,000 vCPU-seconds and 360,000
+GiB-seconds per subscription. The hub message budget is the 2026-10-27 `run_plan` basis.
+
+| Item | Basis | USD per month |
+| --- | --- | --- |
+| IoT Hub B1, one unit (existing) | 400,000 messages per day; `homes x 288` per day, so 100 homes use 7 % and 1,250 homes the whole budget after headroom | about 25 |
+| Job, 100 homes | about 25 s per run x 8,640 runs = 216,000 s, so 54,000 vCPU-s and 108,000 GiB-s, inside the free grant unless other jobs use it | 0 |
+| Job, 1,000 homes | about 120 s per run = 1,036,800 s, so 259,200 vCPU-s and 518,400 GiB-s; billable 79,200 vCPU-s and 158,400 GiB-s; the 240 s replica timeout caps the worst case at about 10 | about 2.5 (at most about 10) |
+| Azure Files share for certificates | a few KiB of certificates; transactions are negligible | under 1 |
+| Total, 100 to 1,000 homes | | about 25 to 40 |
+
+That is well inside the USD700 cap. The IoT Hub Free tier (8,000 messages per day) carries only
+27 homes at one message per five minutes, so it does not fit "every home"; B1 stays. More than
+1,250 homes needs a second unit or a lower cadence, which is an owner decision. Remaining owner
+steps before any send: approve live sending and name the approval reference; Registry
+Contributor for the operator and registration of one `SYN-` device per home with its X.509
+certificate (#185 manifest, 100 device cap in `device_identity`); a certificate file share;
+the minimal SQL grant for the job identity, `GRANT SELECT ON OBJECT::dbo.cases TO [<job identity>]` and nothing else (the job runs only `SELECT id FROM cases WHERE closed = 0 ORDER BY id`, with no DDL, seeding, migration, write or other table, and mounts no `/data`); AcrPull; image push by digest; a hub-side route and
+consumer that accept `live-sim-reading-v1` (#110, #140).
 
 ### Bounded existing-hub exercise (2026-10-29, Refs #140 #184 #137)
 

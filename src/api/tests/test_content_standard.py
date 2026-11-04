@@ -153,6 +153,15 @@ class CopyAudit(unittest.TestCase):
                 with self.subTest(name=name, literal=literal):
                     self.assertFalse(re.search(r"retrofit hold|hold release|release (?:a|the|this)\b[^\"]*hold", literal), literal)
 
+    def test_consultation_and_restart_gate_refusals_use_plain_wording(self):
+        core = ROOT / "src" / "core" / "src" / "zava_forward" / "core"
+        for name in ("procurement.py", "gates.py"):
+            text = (core / name).read_text()
+            for literal in re.findall(r'"[^"\n]*"', text):
+                with self.subTest(name=name, literal=literal):
+                    self.assertFalse(re.search(r"(?:release|releases|released) (?:this|the) hold", literal), literal)
+        self.assertIn("Next action: ask Legal to verify the decision.", (core / "procurement.py").read_text())
+
     def test_time_capture_copy_is_guarded(self):
         self.assertIn("timecapture.js", AUDITED_FILES)
         js = (WEB / "timecapture.js").read_text()
