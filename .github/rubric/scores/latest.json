@@ -2,18 +2,18 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-03T13:58:49+00:00",
-  "commit": "949f9346fc37a9fb2a14d7f90451479ef04c20f5",
+  "scored_at": "2026-11-04T01:21:52+00:00",
+  "commit": "038d7c16f92d955a9175292d5457a1eeeac907cd",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/41647768785",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/41751148016",
   "fingerprints": {
     "brd": "7b47dd3298f1881d5f259bdfda34d52852869d56e45c841a50b885a6cf0691b3",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "feb8ca02e9273d878e3f64625966b609bfbce838605dc3b12a44db997d192635",
-    "solution-code": "c948b9b43dc7f4b4242cfbc227f52540d419351bb4fea80ec8787dc6238242d9",
-    "infrastructure": "5134fdeb17664e926dfc18305737f417e3bbfbb83eab746954ce283fc04217a9",
+    "solution-code": "a49988d5ccf558743871c04739e2379001f9589b37fb21a4fa3ed6bfc266e869",
+    "infrastructure": "88e964dd683e82d59417bd1a18adf26c84f62ae6b28c936d6cf7c8b94308bd82",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
-    "pitch": "abbb55f269cb8e548e31cc85c5e728c8b78544b94e0553a7f52cc99bc2473c4b",
+    "pitch": "0c212fc27c0b4f5347cb28912b69d7a718b59c375ed1551f367a435636328c1e",
     "thought-leadership": "cfa6d63f21f69b0bb5fe7949954fbc0b168ba8e73e133ec9c055c828bd730196"
   },
   "total": 77,
@@ -68,14 +68,14 @@
       "evidence": [
         "src/agents/src/zava_forward/agents/chat_eval.py:337-349"
       ],
-      "rationale": "Diff is HTTP server error-handling hardening, unrelated to model-choice or eval-harness. Baseline 5 retained."
+      "rationale": "Diff is HTTP server error-handling hardening plus eval-harness threshold checks, unrelated to model-choice. Baseline 5 retained."
     },
     "A7": {
       "score": 4,
       "evidence": [
         "src/agents/src/zava_forward/agents/dispatch.py:186-220"
       ],
-      "rationale": "Diff is server-level error handling, unrelated to agent dispatch/orchestration. Baseline 4 (Good) retained."
+      "rationale": "Diff is server-level error handling and new eval-gating modules, unrelated to agent dispatch/orchestration patterns. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
@@ -87,35 +87,35 @@
       "evidence": [
         "docs/capstone/pitch/README.md:27-33"
       ],
-      "rationale": "New README's archetype table (Sergeant/Therapist/Scientist/Evangelist) replaces the deleted audience-and-delivery.md role map with equivalent register-calibration guidance, though more condensed. Still unrehearsed, so readiness score retained."
+      "rationale": "New README's archetype table replaces the deleted audience-and-delivery.md role map with equivalent register-calibration guidance. Still unrehearsed, so readiness score retained."
     },
     "B3": {
       "score": 2,
       "evidence": [
         "docs/capstone/pitch/README.md:41-45"
       ],
-      "rationale": "Demo hook/timing guidance persists (now summarized in pitch README; the untouched docs/capstone/demo/runbook.md still carries the full hook/recovery script). No rehearsal or delivered-session evidence exists. Needs Improvement retained."
+      "rationale": "Demo hook/timing guidance persists; the new tokenomics-placement-draft.md explicitly states nothing is rehearsed or decided. No rehearsal or delivered-session evidence exists. Needs Improvement retained."
     },
     "B4": {
       "score": 2,
       "evidence": [
         "docs/capstone/pitch/questions-and-answers.md:17-38"
       ],
-      "rationale": "The deleted bridge-stem file is replaced by a 26-entry appendix Q&A bank (answer+evidence+limit per entry), comparable prepared depth. No transcript/rehearsal of composure under live challenge, readiness stays Needs Improvement."
+      "rationale": "26-entry appendix Q&A bank provides comparable prepared depth. No transcript/rehearsal of composure under live challenge, readiness stays Needs Improvement."
     },
     "B5": {
       "score": 2,
       "evidence": [
         "docs/capstone/pitch/speaker-script.md:24-34"
       ],
-      "rationale": "New speaker-script.md carries precise per-slide second-level timing (replacing the deleted audience-and-delivery.md timing contract) but this is still a written plan, not an observed, paced delivery. Unrehearsed pacing retained."
+      "rationale": "Speaker-script.md carries per-slide timing but remains a written plan, not an observed, paced delivery. Unrehearsed pacing retained."
     },
     "B6": {
       "score": 5,
       "evidence": [
         "src/api/tests/test_error_logging.py:1-2"
       ],
-      "rationale": "Diff is backend error-logging engineering work with inline docstring comment, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
+      "rationale": "Diff is backend error-logging engineering work, not capstone deck/pitch documentation. Immaterial to B6 deck scoring; baseline retained."
     },
     "B7": {
       "score": 5,
@@ -123,7 +123,7 @@
         "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide22",
         "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide40"
       ],
-      "rationale": "Updated deck confirms slides 22/40 still interpret retrospective activity counts (183 merged PRs, 36,755 log words) as output volume rather than value/causation, preserving the prior Excellent-level storytelling discipline."
+      "rationale": "Deck unchanged in this diff; prior Excellent-level storytelling discipline preserved."
     },
     "C1": {
       "score": 5,
@@ -135,14 +135,14 @@
       "evidence": [
         "docs/capstone/pitch/README.md:79-83"
       ],
-      "rationale": "Deleted Interruption Protocol's bridge phrases are gone, but the new README retains the core restate-before-answering instruction; untouched docs/capstone/demo/runbook.md also has a restate-first line. No transcript/live exchange exists, readiness unchanged."
+      "rationale": "Core restate-before-answering instruction persists in new README; no transcript/live exchange exists, readiness unchanged."
     },
     "C3": {
       "score": 4,
       "evidence": [
-        "docs/capstone/pitch/questions-and-answers.md:817"
+        "docs/capstone/pitch/tokenomics-placement-draft.md:33-45"
       ],
-      "rationale": "Deleted ai-cost-evidence.md's unprompted risk disclosure is replaced by equivalent unprompted-limit framing in the new Q&A bank (e.g. 'Zero/unknown denominator = not measurable'). Written honesty evidence persists at same strength; score retained."
+      "rationale": "New draft explicitly surfaces an unresolved tension (modelled figure vs. no-price-claim criterion) and recommends disclosure, consistent with existing honesty evidence; written disclosure persists at same strength, score retained."
     },
     "D1": {
       "score": 4,
