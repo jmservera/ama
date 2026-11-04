@@ -33,7 +33,8 @@
   }
 
   var signedInLede = lede.textContent;
-  var signedOutLede = "Sign in to see how your home improvement is going. Everything here is read-only apart from synthetic callbacks.";
+  var callbackLede = " You can try synthetic callback booking below. Nobody will call you.";
+  var signedOutLede = "Sign in to see how your home improvement is going. Your home and works records are read-only.";
 
   function clearInvalid() {
     [emailField, passwordField].forEach(function (field) {
@@ -373,14 +374,14 @@
   var STATE_TEXT = { completed: "Completed", current: "Current stage", upcoming: "Not started", unknown: "Not shown" };
   var STATE_ICON = { completed: "check", current: "clock", upcoming: "ban", unknown: "info" };
 
-  function sectionNav() {
+  function sectionNav(callbacks) {
     var nav = el("nav", null, "section-nav");
     nav.id = "page-nav";
     nav.setAttribute("aria-label", "Page sections");
     var list = el("ul");
     NAV.forEach(function (item, index) {
       var li = el("li");
-      var a = withIcon(el("a"), item[2], item[1]);
+      var a = withIcon(el("a"), item[2], item[0] === "sec-help" && !callbacks ? "Help" : item[1]);
       a.href = "#" + item[0];
       if (index === 0) a.setAttribute("aria-current", "location");
       a.addEventListener("click", function () {
@@ -553,11 +554,13 @@
       needed.forEach(function (item) { withIcon(ul.appendChild(el("li")), "alert", ""); ul.lastChild.lastChild.textContent = ""; ul.lastChild.appendChild(el("span", item.text)); });
       box.appendChild(ul);
     }
-    var optional = el("p", "Optional: ");
-    var link = el("a", "Book a synthetic callback");
-    link.href = "#sec-help";
-    optional.appendChild(link);
-    box.appendChild(optional);
+    if (view.callbacks_available) {
+      var optional = el("p", "Optional: ");
+      var link = el("a", "Book a synthetic callback");
+      link.href = "#sec-help";
+      optional.appendChild(link);
+      box.appendChild(optional);
+    }
     return box;
   }
 
@@ -639,7 +642,7 @@
       strip.appendChild(badge("info", "Synthetic showcase record - read-only"));
       content.appendChild(strip);
     }
-    content.appendChild(sectionNav());
+    content.appendChild(sectionNav(view.callbacks_available));
     content.appendChild(summarySection(view));
     var grid = el("div", null, "status-grid");
     grid.appendChild(statusSection(view));
@@ -655,10 +658,14 @@
     help.appendChild(hl);
     help.appendChild(el("p", view.help.note));
     content.appendChild(help);
-    var callbacks = el("section", null, "card callbacks");
-    callbacks.setAttribute("aria-labelledby", "callback-title");
-    content.appendChild(callbacks);
-    callbackController = window.mountResidentAppointments(callbacks, api, showSignin);
+    if (view.callbacks_available) {
+      var callbacks = el("section", null, "card callbacks");
+      callbacks.setAttribute("aria-labelledby", "callback-title");
+      content.appendChild(callbacks);
+      callbackController = window.mountResidentAppointments(callbacks, api, showSignin);
+    } else {
+      help.appendChild(el("p", "Synthetic callback booking is not connected in this showcase. Use the contact routes above."));
+    }
     if (view.sensors) {
       content.appendChild(renderSensors(view.sensors));
     }
@@ -674,7 +681,7 @@
       b.disabled = true;
       b.setAttribute("aria-disabled", "true");
       li.appendChild(b);
-      li.appendChild(el("span", appointment ? "You cannot change live works appointments here. Use the form above for local synthetic callbacks only." : u.reason, "why"));
+      li.appendChild(el("span", appointment ? "You cannot change live works appointments here." + (view.callbacks_available ? " Use the form above for local synthetic callbacks only." : "") : u.reason, "why"));
       ul.appendChild(li);
     });
     unavailable.appendChild(ul);
@@ -682,7 +689,7 @@
 
     errorEl.hidden = true;
     signin.hidden = true;
-    lede.textContent = signedInLede;
+    lede.textContent = signedInLede + (view.callbacks_available ? callbackLede : "");
     content.hidden = false;
     accountEmail.textContent = view.account.email;
     account.hidden = false;
