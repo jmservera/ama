@@ -10,7 +10,9 @@ It records nothing unless all of these hold:
 * ZF_TIME_CONSULTATION=<reference of the completed staff consultation>, also
   stored with every entry;
 * ZF_TIME_NOTICE_APPROVED=<reference of the approval of the staff notice
-  wording>, stored with the enabling record;
+  wording>, stored with the enabling record, and ZF_TIME_NOTICE_VERSION equal to
+  the NOTICE_VERSION of the wording the approver saw, so a reworded notice is
+  never enabled on an approval of different wording;
 * a manager has requested enabling (request_enable) and a manager in a different
   role has taken the audited enabling action (activate); the record stores the
   three references, who asked, who enabled and both roles;
@@ -137,7 +139,9 @@ class TimeCapture:
         dpia = (self.env.get("DPIA_APPROVED") or "").strip()
         dpia_recorded = bool(dpia) and dpia.casefold() not in ("yes", "true", "on", "1")
         consult = (self.env.get("ZF_TIME_CONSULTATION") or "").strip()
-        notice = (self.env.get("ZF_TIME_NOTICE_APPROVED") or "").strip()
+        notice_ref = (self.env.get("ZF_TIME_NOTICE_APPROVED") or "").strip()
+        notice_for = (self.env.get("ZF_TIME_NOTICE_VERSION") or "").strip()
+        notice = bool(notice_ref) and notice_for == NOTICE_VERSION
         req = self.request()
         act = self.activation()
         if not flag:
@@ -146,8 +150,11 @@ class TimeCapture:
             why = "Time capture cannot be switched on until a DPIA reference is recorded (DPIA_APPROVED), not a boolean flag such as yes, true, on or 1."
         elif not consult:
             why = "Time capture cannot be switched on until the staff consultation is recorded (ZF_TIME_CONSULTATION)."
-        elif not notice:
+        elif not notice_ref:
             why = "Time capture cannot be switched on until the staff notice is approved (ZF_TIME_NOTICE_APPROVED)."
+        elif not notice:
+            why = (f"Time capture cannot be switched on until the approval covers the current staff notice wording: "
+                   f"ZF_TIME_NOTICE_VERSION must be {NOTICE_VERSION}.")
         elif not req:
             why = "Time capture is ready but needs an enabling request from a manager, then enabling by a manager in a different role."
         elif not act:
@@ -155,7 +162,7 @@ class TimeCapture:
         else:
             why = ""
         out = dict(enabled=not why, flag_on=flag, dpia_recorded=dpia_recorded, consultation_recorded=bool(consult),
-                   notice_approved=bool(notice), requested=bool(req), requested_by=req and req["by"], requested_role=req and req["role"],
+                   notice_approved=notice, requested=bool(req), requested_by=req and req["by"], requested_role=req and req["role"],
                    activated=bool(act), activated_by=act and act["by"], activated_at=act and act["at"], activated_role=act and act["role"],
                    reason=why, activities=list(ACTIVITIES), min_group=self.min_group(), notice_version=NOTICE_VERSION, storage=self.where)
         if out["enabled"]:
