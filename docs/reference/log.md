@@ -10206,3 +10206,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Learning-test run validation and report (Refs #129)
 
 * Extended the net-effort helper in `src/core` with run validation (representative data retention stated false, single O16 owner per run and across runs, with every run in a cross-run check validated and ownerless or invalid O16 claims rejected) and a plain-text report that states a stop before effort figures. Protocol page next-slices updated. Unmet and unchanged: no bundle has been run as an experiment, atlas-owner confirmation of the mapping (O16), DPO retention decision. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-129 slice 3).
+
+## [2026-11-04] update | Retrofit scenarios in production #111 and #133 tests (Refs #193)
+
+* #700 already added oracle-based consumer tests. This slice adds `test_retrofit_scenarios_production_consumers.py`, driving the labelled retrofit scenarios through `derive_signal` (#111) and `AftercareRegister` (#133): exercise labels, no priority effect, no task without an approved rule, sensor context never dismissing a concern. Unmet: store-backed scenario ingestion and independent review before ticking criterion 3. Focused tests only; no gate. Evidence under `.copilot-tracking/` (2026-11-04 issue-193 r6).
