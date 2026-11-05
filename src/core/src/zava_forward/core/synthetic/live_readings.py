@@ -19,6 +19,8 @@ from . import sensor_identity
 
 VERSION = "live-sim-generator-v1"
 SCHEMA_VERSION = "live-sim-reading-v1"
+SCENARIO = "live-simulator"
+WEATHER_REFERENCE_SCENARIO = "weather-backfill-v1"  # synthetic like-for-like history
 SLOT_SECONDS = 300
 SLOTS_PER_DAY = 86400 // SLOT_SECONDS
 SUNLIGHT_UNIT = "W/m2"  # global horizontal irradiance, watts per square metre
@@ -168,6 +170,7 @@ class Reading:
     humidity_pct: float
     sunlight_wm2: float
     seed: int
+    scenario: str = SCENARIO
 
     @property
     def reading_id(self) -> str:
@@ -186,7 +189,7 @@ class Reading:
             "humidity_unit": "percent",
             "sunlight_unit": SUNLIGHT_UNIT,
             "source_type": "SYNTHETIC",
-            "scenario": "live-simulator",
+            "scenario": self.scenario,
             "seed": str(self.seed),
             "schema_version": SCHEMA_VERSION,
             "injected_fault": "none",
@@ -202,10 +205,15 @@ class Reading:
 
 
 class Generator:
-    def __init__(self, seed: int = 184, anchors: AnchorSource = seasonal_anchors) -> None:
+    def __init__(
+        self, seed: int = 184, anchors: AnchorSource = seasonal_anchors, scenario: str = SCENARIO
+    ) -> None:
         if type(seed) is not int or abs(seed) > 2**63 - 1:
             raise LiveReadingError("INVALID_SEED")
+        if scenario not in (SCENARIO, WEATHER_REFERENCE_SCENARIO):
+            raise LiveReadingError("INVALID_SCENARIO")
         self.seed = seed
+        self.scenario = scenario
         self._anchors = anchors
         self._cache: dict[date, HourlyAnchors] = {}
 
@@ -284,4 +292,5 @@ class Generator:
             min(100.0, max(0.0, humidity)),
             max(0.0, sunlight),
             self.seed,
+            self.scenario,
         )

@@ -9,7 +9,7 @@ import sqlite3
 import tempfile
 import unittest
 from dataclasses import replace
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from unittest import mock
 
@@ -21,7 +21,8 @@ from test_sensor_consumer_live import live
 from zava_forward.core.sensor_consumer import READING_COLUMNS, ConsumerError, SensorConsumer
 from zava_forward.core.sqlstore import CASE_COLS
 from zava_forward.core.synthetic import sensor_backfill, sensor_faults
-from zava_forward.core.synthetic.sensor_consistency import report
+from zava_forward.core.synthetic.live_readings import WEATHER_REFERENCE_SCENARIO, Generator
+from zava_forward.core.synthetic.sensor_consistency import WEATHER_TOLERANCES, Tolerance, report
 from zava_forward.core.synthetic.sensor_stream import Replay, descriptor, replay, wire
 
 from zava_forward.api.iot_stream import AUTH, DEVICE, Binding, decode
@@ -323,3 +324,114 @@ class LiveEnvelopeReplayTests(unittest.TestCase):
         store, _, reference = self.seeded(with_live=False)
         verdict = verify(store, reference, handover="2024-10-01T12:00:00Z", cadence_minutes=60)
         self.assertTrue(verdict["passed"], verdict)
+
+
+START = datetime(2024, 10, 1, 0, 0, tzinfo=UTC)
+SLOTS = [START + timedelta(minutes=5 * i) for i in range(36)]
+HANDOVER = "2024-10-01T01:30:00Z"
+
+
+def weather_rows(seed: int, scenario: str | None = None) -> list[dict[str, str]]:
+    generator = Generator(seed) if scenario is None else Generator(seed, scenario=scenario)
+    return [generator.reading("ZF-1", slot).row() for slot in SLOTS]
+
+
+class WeatherContinuityTests(unittest.TestCase):
+    received = "2024-10-02T00:00:00Z"
+
+    def seeded(
+        self, changes: dict[int, dict[str, str]] | None = None
+    ) -> tuple[object, SensorConsumer]:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        store = store_at(tmp.name, reset=True)
+        self.addCleanup(store.db.close)
+        consumer = SensorConsumer(store)
+        consumer.configure(
+            replace(POLICY, max_past_seconds=86400),
+            [replace(CONTROL, sensor_id=weather_rows(184)[0]["sensor_id"])],
+        )
+        for index, row in enumerate(weather_rows(184)):
+            row = {**row, **(changes or {}).get(index, {})}
+            self.assertEqual(consumer.process(row, self.received).status, "accepted")
+        return store, consumer
+
+    def reference(self) -> list[dict[str, str]]:
+        return weather_rows(901, WEATHER_REFERENCE_SCENARIO)
+
+    def check(self, store: object, reference: list[dict[str, str]], **options: object) -> dict:
+        return verify(store, reference, handover=HANDOVER, cadence_minutes=5, **options)
+
+    def test_valid_weather_continuity_is_labelled_constructed_and_unapproved(self) -> None:
+        store, _ = self.seeded()
+        verdict = self.check(store, self.reference())
+        self.assertTrue(verdict["passed"], verdict)
+        self.assertEqual(verdict["version"], "synthetic-weather-continuity-v1")
+        self.assertEqual(verdict["evidence"], "constructed-distribution-check")
+        self.assertIn("not an approved operational tolerance", str(verdict["tolerance_status"]))
+        self.assertEqual(verdict["generator"]["version"], "live-sim-generator-v1")
+        self.assertEqual(verdict["tolerances"]["sunlight_wm2"]["unit"], "W/m2")
+        self.assertEqual(
+            verdict["tolerances"]["temperature_c"]["point"],
+            WEATHER_TOLERANCES["temperature_c"].point,
+        )
+        self.assertEqual(len(verdict["series"]), 1)
+        self.assertEqual(set(verdict["series"][0]["metrics"]), set(WEATHER_TOLERANCES))
+
+    def test_gross_discontinuity_fails_numerically_not_by_refusal(self) -> None:
+        shifted = {
+            i: {"temperature_c": f"{float(row['temperature_c']) + 15:.2f}"}
+            for i, row in enumerate(weather_rows(184))
+            if i >= 18
+        }
+        store, _ = self.seeded(shifted)
+        verdict = self.check(store, self.reference())
+        self.assertFalse(verdict["passed"])
+        self.assertFalse(verdict["series"][0]["metrics"]["temperature_c"]["checks"]["point"])
+
+    def test_idempotent_rerun_leaves_store_and_report_unchanged(self) -> None:
+        store, consumer = self.seeded()
+        before = consumer.retained_envelopes(["ZF-1"])
+        first = self.check(store, self.reference(), replay_check=True, received_at=self.received)
+        second = self.check(store, self.reference(), replay_check=True, received_at=self.received)
+        self.assertTrue(first["passed"] and first["idempotent"], first)
+        self.assertEqual(first, second)
+        self.assertEqual(consumer.retained_envelopes(["ZF-1"]), before)
+        duplicate = consumer.process(dict(weather_rows(184)[0]), self.received)
+        self.assertTrue(duplicate.replay)
+
+    def test_mismatched_or_mixed_inputs_are_rejected_not_dropped(self) -> None:
+        store, consumer = self.seeded()
+        before = consumer.retained_envelopes(["ZF-1"])
+        base = self.reference()
+        cases = [
+            ("INVALID_HANDOVER_OBSERVATION", [{**base[0], "sunlight_unit": "kW/m2"}, *base[1:]]),
+            ("INVALID_HANDOVER_OBSERVATION", weather_rows(901)),
+            ("HANDOVER_METADATA_MISMATCH", [{**base[0], "label": "other label"}, *base[1:]]),
+            ("HANDOVER_COVERAGE_MISMATCH", [*base[:10], *base[11:]]),
+            (
+                "HANDOVER_SCHEMA_UNSUPPORTED",
+                [*base[:-1], {**base[-1], "schema_version": "reading-v2"}],
+            ),
+        ]
+        for code, rows in cases:
+            with self.subTest(code), self.assertRaisesRegex(ValueError, code):
+                self.check(store, rows, replay_check=True, received_at=self.received)
+        with self.assertRaisesRegex(ValueError, "HANDOVER_TOLERANCE_NOT_APPLICABLE"):
+            self.check(store, base, temperature=Tolerance(point=1.0))
+        self.assertEqual(consumer.retained_envelopes(["ZF-1"]), before)
+
+    def test_weather_reference_against_indoor_or_mixed_window_is_refused(self) -> None:
+        indoor = LiveEnvelopeReplayTests()
+        indoor.received = self.received
+        indoor.addCleanup = self.addCleanup  # type: ignore[method-assign]
+        indoor.assertEqual = self.assertEqual  # type: ignore[method-assign]
+        store, consumer, backfill = indoor.seeded()
+        before = consumer.retained_envelopes(["ZF-1"])
+        for replay_check in (False, True):
+            with self.assertRaisesRegex(ValueError, "HANDOVER_SCHEMA_UNSUPPORTED"):
+                self.check(store, self.reference(), replay_check=replay_check)
+        self.assertEqual(consumer.retained_envelopes(["ZF-1"]), before)
+        store, _ = self.seeded()
+        with self.assertRaisesRegex(ValueError, "HANDOVER_SCHEMA_UNSUPPORTED"):
+            verify(store, backfill, handover="2024-10-01T12:00:00Z", cadence_minutes=60)

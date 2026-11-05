@@ -23,7 +23,12 @@ from pathlib import Path
 from zava_forward.core.mssqlstore import MssqlStore
 from zava_forward.core.sensor_consumer import LIVE_SCHEMA_VERSION, ConsumerError, SensorConsumer
 from zava_forward.core.sqlstore import SqlStore
-from zava_forward.core.synthetic.sensor_consistency import ZERO_TOLERANCE, Tolerance, report
+from zava_forward.core.synthetic.sensor_consistency import (
+    ZERO_TOLERANCE,
+    Tolerance,
+    report,
+    weather_report,
+)
 
 from zava_forward.api.sensor_ingestion import BatchStopped, SensorIngestion
 
@@ -93,16 +98,28 @@ def run(
     windows = _windows(reference)
     homes = sorted(windows)
     observed = consumer.retained_envelopes(homes, windows)
-    if any(row["schema_version"] == LIVE_SCHEMA_VERSION for row in observed):
+
+    def kinds(rows: Sequence[Mapping[str, str]]) -> set[bool]:
+        return {row.get("schema_version") == LIVE_SCHEMA_VERSION for row in rows}
+
+    seen, wanted = kinds(observed), kinds(reference)
+    if seen | wanted == {False}:
+        result: dict[str, object] = report(
+            observed,
+            reference,
+            handover=handover,
+            cadence_minutes=cadence_minutes,
+            temperature=temperature,
+            humidity=humidity,
+        )
+    elif seen == wanted == {True}:
+        if temperature != ZERO_TOLERANCE or humidity != ZERO_TOLERANCE:
+            raise ValueError("HANDOVER_TOLERANCE_NOT_APPLICABLE")
+        result = weather_report(
+            observed, reference, handover=handover, cadence_minutes=cadence_minutes
+        )
+    else:
         raise ValueError("HANDOVER_SCHEMA_UNSUPPORTED")
-    result: dict[str, object] = report(
-        observed,
-        reference,
-        handover=handover,
-        cadence_minutes=cadence_minutes,
-        temperature=temperature,
-        humidity=humidity,
-    )
     if replay_check:
         before = consumer.retained_envelopes(homes, windows)
         stamp = received_at or datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")

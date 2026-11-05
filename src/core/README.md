@@ -477,6 +477,14 @@ duplicate, incomplete or irregular series raise explicit errors, not a pass.
 Use explicit SQL observation queries plus trusted persisted control units, not
 relabelled incoming units, when constructing the observed input.
 
+`weather_report(observed, reference, handover=..., cadence_minutes=5)` is the separate
+`synthetic-weather-continuity-v1` check for `live-sim-reading-v1` rows: live simulated
+weather against synthetic weather history from `live_readings.Generator` with another seed
+and scenario `weather-backfill-v1` (same homes, slots, units and three channels, no
+`calibrated` field). Tolerances are engineering bounds from the declared generator constants,
+not an approved operational tolerance, and the output is a constructed distribution check, not
+witnessed Azure continuity, physical accuracy or calibration. It never accepts indoor rows.
+
 The JSON-compatible result includes `passed`, declared tolerances and per-home
 before/after counts, channel means and population standard deviations.
 `Tolerance(point=0, mean_step=0, stddev=0)` is the default for each of the

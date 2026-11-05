@@ -1902,12 +1902,20 @@ writes (SQLite read-only), so SELECT-only credentials suffice. Tolerances defaul
 to zero and are declared per channel and metric. `--replay-check` needs write
 access: it re-feeds the retained stored payloads for the window, in batches of
 100, through the #110 consumer and requires replay receipts and an unchanged
-series. The statistics compare indoor-schema rows only. If the requested home and
-window hold any `live-sim-reading-v1` row, the check is refused before any
-replay write with `HANDOVER_SCHEMA_UNSUPPORTED` (exit 2, never `passed=true`):
-weather rows are not indoor measurements and no calibration or weather-to-indoor
-reference is assumed. Live-to-backfill statistical handover needs a separate,
-versioned weather-to-weather reference contract (future research, not approved).
+series. A window and reference of indoor-schema rows use the strict indoor statistics. A window
+and reference that are both `live-sim-reading-v1` use `weather_report`
+(`synthetic-weather-continuity-v1`): live simulated weather (scenario `live-simulator`)
+against synthetic weather history from the same generator with another seed and scenario
+`weather-backfill-v1`, same homes, slots, units (degC, percent, W/m2) and channels
+(temperature, humidity, sunlight), with `--cadence-minutes 5`. Its tolerances are engineering
+bounds derived from the declared generator constants, deliberately wide, labelled in the
+report as not an approved operational tolerance; explicit tolerance flags are refused there
+(`HANDOVER_TOLERANCE_NOT_APPLICABLE`). The result is a constructed distribution check, not
+witnessed Azure continuity, physical accuracy, indoor evidence or calibration. Any other mix
+(a window holding both schemas, a mixed reference, or a weather reference against indoor rows
+or the reverse) is refused before statistics or any replay write with
+`HANDOVER_SCHEMA_UNSUPPORTED` (exit 2, never `passed=true`); wrong scenario or units are
+`INVALID_HANDOVER_OBSERVATION`. Weather is never reshaped into the indoor schema.
 Exit codes: 0 pass, 1 numeric failure, 2 refusal.
 
 ```bash

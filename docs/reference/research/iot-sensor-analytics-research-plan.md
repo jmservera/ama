@@ -224,6 +224,10 @@ applies the same report and a window re-run to any SQL store selected by
 refusal. It does not supply the actual Hub, Azure SQL or live-handover run,
 which remain unproven. No issue checkbox changes.
 
+## Synthetic weather continuity check (2026-11-05, Refs #188)
+
+The owner approved comparing live simulated weather with a separately versioned synthetic weather backfill, like for like, keeping the indoor series, damp and safety calibration separate. The local check is `weather_report` (`synthetic-weather-continuity-v1`) behind the existing verifier. Its tolerances are engineering bounds from the declared generator constants, not an approved operational tolerance. It is a constructed distribution check: witnessed Azure continuity, physical calibration, consent, live acceptance and the #188 criteria stay unmet and unticked.
+
 ## Shared observation contract and volume (2026-10-18, Refs #186)
 
 This documents the unchanged finite consumer merged in
