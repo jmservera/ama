@@ -9,11 +9,13 @@ import io
 import json
 import os
 import re
+import shutil
 import socket
 import subprocess
 import sys
 import tempfile
 import threading
+import types
 import unittest
 import venv
 from contextlib import redirect_stderr, redirect_stdout
@@ -2097,6 +2099,110 @@ os.fstat(3)
             (self.out / receipt["commands"][0]["log"]).write_text("tampered")
             with self.assertRaises(gate.GateError):
                 gate.verify(self.root, path, self.base, required_scope="partial")
+
+    def test_project_api_contract_installs_isolated_chromium_before_suite(self) -> None:
+        install = ["<output>/venvs/api/bin/python", "-m", "playwright", "install", "chromium"]
+        receipt = {
+            "owner": "a" * 24,
+            "sql": {},
+            "images": {},
+            "extras": [],
+            "executed_groups": ["project-api"],
+        }
+        checks = gate.required_checks(self.root, receipt)
+        installs = [i for i, row in enumerate(checks) if row["argv"] == install]
+        suites = [i for i, row in enumerate(checks) if row["suite"]]
+        self.assertEqual(len(installs), 1)
+        self.assertEqual(checks[installs[0]]["group"], "project-api")
+        self.assertLess(installs[0], suites[0])
+        self.assertTrue(all(row["group"] == "project-api" for row in checks))
+
+    def test_project_api_receipt_without_chromium_install_is_rejected(self) -> None:
+        receipt = self.scoped_receipt(["project-api"])
+        install = next(
+            row
+            for row in receipt["commands"]
+            if row["argv"][1:] == ["-m", "playwright", "install", "chromium"]
+        )
+        receipt["commands"].remove(install)
+        with self.assertRaises(gate.GateError):
+            gate.verify_commands(self.root, self.out, receipt)
+
+    def test_runner_installs_isolated_chromium_before_project_api_tests(self) -> None:
+        runner = gate.Runner(
+            self.root, self.out, self.base, [], selected={"groups": ["project-api"]}
+        )
+        events: list[tuple[str, Any]] = []
+
+        def command(argv: list[str], cwd: str = ".", **kwargs: Any) -> str:
+            events.append(("command", argv))
+            return ""
+
+        with (
+            patch.object(gate, "tool_identity", return_value={}),
+            patch.object(runner, "install", side_effect=lambda *a, **k: events.append(("pip", a))),
+            patch.object(runner, "command", side_effect=command),
+            patch.object(runner, "schedule", side_effect=lambda g: events.append(("schedule", g))),
+            self.assertRaisesRegex(gate.GateError, "group coverage is incomplete"),
+        ):
+            runner.run()
+        python = runner.python("api")
+        install = ("command", [python, "-m", "playwright", "install", "chromium"])
+        self.assertEqual(events.count(install), 1)
+        self.assertLess([e[0] for e in events].index("pip"), events.index(install))
+        self.assertLess(events.index(install), [e[0] for e in events].index("schedule"))
+        self.assertEqual(runner.env["PLAYWRIGHT_BROWSERS_PATH"], str(self.out / "chromium"))
+
+    def test_api_install_prevents_scrubbed_server_child_writing_source_bytecode(self) -> None:
+        # The real api install step plus the real design-system harness server launch, whose
+        # allowlisted child environment drops the Runner's no-bytecode flags (#1215).
+        repo = Path(__file__).resolve().parents[1]
+        scratch = Path(self.temp.name) / "snapshot"
+        for project in ("core", "agents", "api"):
+            shutil.copytree(
+                repo / "src" / project / "src",
+                scratch / "src" / project / "src",
+                ignore=shutil.ignore_patterns("__pycache__"),
+            )
+        runner = gate.Runner(self.root, self.out, self.base, [], selected={"groups": []})
+
+        def command(argv: list[str], cwd: str = ".", **kwargs: Any) -> str:
+            if argv[1:3] == ["-m", "venv"]:
+                subprocess.run([*argv, "--without-pip"], check=True)
+            return ""
+
+        with patch.object(runner, "command", side_effect=command):
+            runner._install("api", ["core", "agents", "api"])
+        interpreter = runner.python("api")
+        self.assertTrue(Path(interpreter).is_file())
+
+        playwright = types.ModuleType("playwright")
+        sync_api = types.ModuleType("playwright.sync_api")
+        sync_api.sync_playwright = Mock()  # type: ignore[attr-defined]
+        checks = repo / "src/api/checks/design_system_browser_check.py"
+        spec = importlib.util.spec_from_file_location("design_system_under_test", checks)
+        assert spec is not None and spec.loader is not None
+        harness = importlib.util.module_from_spec(spec)
+        stdout = io.StringIO()
+        original = sys.dont_write_bytecode
+        sys.dont_write_bytecode = True
+        try:
+            with patch.dict(
+                sys.modules, {"playwright": playwright, "playwright.sync_api": sync_api}
+            ):
+                spec.loader.exec_module(harness)
+            with (
+                patch.object(harness, "ROOT", scratch),
+                patch.object(sys, "executable", interpreter),
+                redirect_stdout(stdout),
+            ):
+                harness.main(lambda base: None, lambda: {"cases": [], "staff": []})
+        finally:
+            sys.dont_write_bytecode = original
+        self.assertIn("PASS owned server is running and responsive on loopback", stdout.getvalue())
+        self.assertEqual(sorted(scratch.rglob("__pycache__")), [])
+        self.assertEqual(sorted(scratch.rglob("*.pyc")), [])
+        self.assertTrue((self.out / "browser-bytecode-policy.pth").is_file())
 
     def test_resume_reuses_successes_without_replaying_commands(self) -> None:
         parent = self.scoped_receipt(["preflight", "namespace"])
