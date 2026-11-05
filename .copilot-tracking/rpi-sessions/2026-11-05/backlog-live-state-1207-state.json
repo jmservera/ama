@@ -7,7 +7,7 @@
  "status": "completed",
  "session_status": "running",
  "artifact_paths": {
-  "research": ".copilot-tracking/research/2026-11-05-backlog-live-state-1207-research.md",
+  "research": ".copilot-tracking/research/2026-11-05-backlog-live-state-1207-r3-research.md",
   "plan": ".copilot-tracking/plans/2026-11-05-backlog-live-state-1207-plan.md",
   "details": ".copilot-tracking/details/2026-11-05-backlog-live-state-1207-details.md",
   "critique": null,
@@ -15,7 +15,10 @@
   "review": ".copilot-tracking/reviews/2026-11-05-backlog-live-state-1207-review.md",
   "plan_r2": ".copilot-tracking/plans/2026-11-05-backlog-live-state-1207-r2-plan.md",
   "changes_r2": ".copilot-tracking/changes/2026-11-05-backlog-live-state-1207-r2-changes.md",
-  "review_r2": ".copilot-tracking/reviews/2026-11-05-backlog-live-state-1207-r2-review.md"
+  "review_r2": ".copilot-tracking/reviews/2026-11-05-backlog-live-state-1207-r2-review.md",
+  "plan_r3": ".copilot-tracking/plans/2026-11-05-backlog-live-state-1207-r3-plan.md",
+  "changes_r3": ".copilot-tracking/changes/2026-11-05-backlog-live-state-1207-r3-changes.md",
+  "review_r3": ".copilot-tracking/reviews/2026-11-05-backlog-live-state-1207-r3-review.md"
  },
  "confirmed_decisions": [
   {
@@ -37,12 +40,17 @@
    "decision": "Independent review F1 HIGH and F2 MEDIUM corrected; review r2 executed once",
    "status": "done",
    "evidence": ".copilot-tracking/reviews/2026-11-05-backlog-live-state-1207-r2-review.md"
+  },
+  {
+   "decision": "r3: src-ci.yml pin updated; dependent suites validated; review executed once; no push",
+   "status": "done",
+   "evidence": ".copilot-tracking/reviews/2026-11-05-backlog-live-state-1207-r3-review.md"
   }
  ],
  "blockers": [],
  "next_action": {
   "phase": "Follow-up",
-  "action": "Independent exact-head reassessment; apply #1204 prompt wording"
+  "action": "Coordinator exact-head reassessment, one batched push, hosted CI re-run; #1209 before #1208"
  },
  "prioritized_follow_ups": [
   {
