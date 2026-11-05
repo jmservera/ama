@@ -43,6 +43,25 @@ def chat_case(value: Mapping[str, object]) -> dict[str, object]:
     ):
         if field in value:
             result[field] = scalars(value[field], keys)
+    funding = value.get("funding")
+    if funding is not None:
+        if not isinstance(funding, Mapping):
+            raise ValueError("External context has malformed funding; use the manual record.")
+        result["funding"] = scalars(funding, ("route", "status"))
+    if "funding_ok" in value:
+        result["funding_ok"] = scalars(value, ("funding_ok",))["funding_ok"]
+    work = value.get("work")
+    if work is not None:
+        if not isinstance(work, Mapping):
+            raise ValueError("External context has malformed work; use the manual record.")
+        blockers = work.get("blockers", [])
+        if not isinstance(blockers, list) or not all(isinstance(b, Mapping) for b in blockers):
+            raise ValueError("External context has malformed blockers; use the manual record.")
+        if blockers:
+            result["blockers"] = [
+                scalars(b, ("step", "reason", "owner", "next_action")) for b in blockers[:6]
+            ]
+            result["blockers_total"] = len(blockers)
     contacts = value.get("contacts", [])
     if not isinstance(contacts, list):
         raise ValueError("External context has malformed contacts; use the manual record.")
