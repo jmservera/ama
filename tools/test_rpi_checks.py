@@ -2098,6 +2098,59 @@ os.fstat(3)
             with self.assertRaises(gate.GateError):
                 gate.verify(self.root, path, self.base, required_scope="partial")
 
+    def test_project_api_contract_installs_isolated_chromium_before_suite(self) -> None:
+        install = ["<output>/venvs/api/bin/python", "-m", "playwright", "install", "chromium"]
+        receipt = {
+            "owner": "a" * 24,
+            "sql": {},
+            "images": {},
+            "extras": [],
+            "executed_groups": ["project-api"],
+        }
+        checks = gate.required_checks(self.root, receipt)
+        installs = [i for i, row in enumerate(checks) if row["argv"] == install]
+        suites = [i for i, row in enumerate(checks) if row["suite"]]
+        self.assertEqual(len(installs), 1)
+        self.assertEqual(checks[installs[0]]["group"], "project-api")
+        self.assertLess(installs[0], suites[0])
+        self.assertTrue(all(row["group"] == "project-api" for row in checks))
+
+    def test_project_api_receipt_without_chromium_install_is_rejected(self) -> None:
+        receipt = self.scoped_receipt(["project-api"])
+        install = next(
+            row
+            for row in receipt["commands"]
+            if row["argv"][1:] == ["-m", "playwright", "install", "chromium"]
+        )
+        receipt["commands"].remove(install)
+        with self.assertRaises(gate.GateError):
+            gate.verify_commands(self.root, self.out, receipt)
+
+    def test_runner_installs_isolated_chromium_before_project_api_tests(self) -> None:
+        runner = gate.Runner(
+            self.root, self.out, self.base, [], selected={"groups": ["project-api"]}
+        )
+        events: list[tuple[str, Any]] = []
+
+        def command(argv: list[str], cwd: str = ".", **kwargs: Any) -> str:
+            events.append(("command", argv))
+            return ""
+
+        with (
+            patch.object(gate, "tool_identity", return_value={}),
+            patch.object(runner, "install", side_effect=lambda *a, **k: events.append(("pip", a))),
+            patch.object(runner, "command", side_effect=command),
+            patch.object(runner, "schedule", side_effect=lambda g: events.append(("schedule", g))),
+            self.assertRaisesRegex(gate.GateError, "group coverage is incomplete"),
+        ):
+            runner.run()
+        python = runner.python("api")
+        install = ("command", [python, "-m", "playwright", "install", "chromium"])
+        self.assertEqual(events.count(install), 1)
+        self.assertLess([e[0] for e in events].index("pip"), events.index(install))
+        self.assertLess(events.index(install), [e[0] for e in events].index("schedule"))
+        self.assertEqual(runner.env["PLAYWRIGHT_BROWSERS_PATH"], str(self.out / "chromium"))
+
     def test_resume_reuses_successes_without_replaying_commands(self) -> None:
         parent = self.scoped_receipt(["preflight", "namespace"])
         parent_path = self.out / "receipt.json"
