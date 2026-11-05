@@ -9,11 +9,13 @@ import io
 import json
 import os
 import re
+import shutil
 import socket
 import subprocess
 import sys
 import tempfile
 import threading
+import types
 import unittest
 import venv
 from contextlib import redirect_stderr, redirect_stdout
@@ -2150,6 +2152,57 @@ os.fstat(3)
         self.assertLess([e[0] for e in events].index("pip"), events.index(install))
         self.assertLess(events.index(install), [e[0] for e in events].index("schedule"))
         self.assertEqual(runner.env["PLAYWRIGHT_BROWSERS_PATH"], str(self.out / "chromium"))
+
+    def test_api_install_prevents_scrubbed_server_child_writing_source_bytecode(self) -> None:
+        # The real api install step plus the real design-system harness server launch, whose
+        # allowlisted child environment drops the Runner's no-bytecode flags (#1215).
+        repo = Path(__file__).resolve().parents[1]
+        scratch = Path(self.temp.name) / "snapshot"
+        for project in ("core", "agents", "api"):
+            shutil.copytree(
+                repo / "src" / project / "src",
+                scratch / "src" / project / "src",
+                ignore=shutil.ignore_patterns("__pycache__"),
+            )
+        runner = gate.Runner(self.root, self.out, self.base, [], selected={"groups": []})
+
+        def command(argv: list[str], cwd: str = ".", **kwargs: Any) -> str:
+            if argv[1:3] == ["-m", "venv"]:
+                subprocess.run([*argv, "--without-pip"], check=True)
+            return ""
+
+        with patch.object(runner, "command", side_effect=command):
+            runner._install("api", ["core", "agents", "api"])
+        interpreter = runner.python("api")
+        self.assertTrue(Path(interpreter).is_file())
+
+        playwright = types.ModuleType("playwright")
+        sync_api = types.ModuleType("playwright.sync_api")
+        sync_api.sync_playwright = Mock()  # type: ignore[attr-defined]
+        checks = repo / "src/api/checks/design_system_browser_check.py"
+        spec = importlib.util.spec_from_file_location("design_system_under_test", checks)
+        assert spec is not None and spec.loader is not None
+        harness = importlib.util.module_from_spec(spec)
+        stdout = io.StringIO()
+        original = sys.dont_write_bytecode
+        sys.dont_write_bytecode = True
+        try:
+            with patch.dict(
+                sys.modules, {"playwright": playwright, "playwright.sync_api": sync_api}
+            ):
+                spec.loader.exec_module(harness)
+            with (
+                patch.object(harness, "ROOT", scratch),
+                patch.object(sys, "executable", interpreter),
+                redirect_stdout(stdout),
+            ):
+                harness.main(lambda base: None, lambda: {"cases": [], "staff": []})
+        finally:
+            sys.dont_write_bytecode = original
+        self.assertIn("PASS owned server is running and responsive on loopback", stdout.getvalue())
+        self.assertEqual(sorted(scratch.rglob("__pycache__")), [])
+        self.assertEqual(sorted(scratch.rglob("*.pyc")), [])
+        self.assertTrue((self.out / "browser-bytecode-policy.pth").is_file())
 
     def test_resume_reuses_successes_without_replaying_commands(self) -> None:
         parent = self.scoped_receipt(["preflight", "namespace"])
