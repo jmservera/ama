@@ -36,3 +36,11 @@ ms.topic: reference
 
 * One edit to the research artifact (blob ID placeholders) used a local script instead of the edit tool; content only replaced placeholders.
 * No scope divergence. The final commit identity is recorded externally and in the final response because a committed file cannot hold its own hash.
+
+## Parent-base refresh (2026-11-05, appended; original sections above unchanged)
+
+* Verified clean old head `3082206618ca484aab6d35531e89248773fc3295`; fetched main `c6d5a8f3` (unchanged) and declared parent `e546bf23e491c49de56eaa08d4e68eab48517660` (moved from `3d7ad2fea` by #1211, `src/core` paired-equity plus #128 tracking only).
+* `git rebase origin/feat/discovery-assurance-integration-123` on this run-owned branch: clean, 2 commits replayed, no conflicts. Original hashes `2316fd81d` and `3082206` are superseded by rebased commits; content is preserved. No other worktree, main checkout or PR target touched.
+* Appended "Parent-base refresh qualification" to the same evidence-pack section. Sensor, API, BRD, PRD and ADR 0003 blobs compared equal between `c6d5a8f3` and the refreshed head.
+* Process limitation: the earlier `rm -rf /tmp/s440` had no archive/readback/restore proof; nothing is restored or recreated. No file or directory was removed in this refresh.
+* Not run: `rpi-checks.py`, unit suites, SQL, images, browser, cloud, model calls. Final-head check outputs are in the final response.

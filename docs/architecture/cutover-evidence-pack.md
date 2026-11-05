@@ -3104,3 +3104,30 @@ hub), #189 (run controls), named human owners for OD-43 decisions.
 Final independent exact-head assessment remains coordinator-owned. A
 pivot or deliberate deferral needs explicit owner approval. This record uses
 `Refs` only; no issue is closed or ticked.
+
+### Parent-base refresh qualification (2026-11-05, local, Refs #440 #184 #110)
+
+The record above is preserved unchanged at its original observation: base
+`3d7ad2feaa9c4cba5fe917edd2fbc40e40a5c246`, main `c6d5a8f3c3a35892322300be27b9747f7b11362d`,
+original published head `3082206618ca484aab6d35531e89248773fc3295` (PR #1212).
+This qualification only records a documentation branch refresh.
+
+| Item | Value |
+| --- | --- |
+| Refreshed declared parent (`feat/discovery-assurance-integration-123`) | `e546bf23e491c49de56eaa08d4e68eab48517660`, tree `adcdf2db7a29cbb5664d522e1741401c95c021f3`, after the guarded child #1211 merge |
+| Parent-only delta from original base | One commit (#1211, constructed paired-cohort comparability): `src/core/.../paired_equity.py`, its test, `src/core/README.md` and #128 tracking records. No sensor, IoT, `docs/` or `infra/` path changed |
+| Current main | Unchanged at `c6d5a8f3`. The parent-only #1211 and cohort #128 source are not main and are not sensor or acceptance evidence |
+| Sensor source identity | Blobs for `live_readings.py` (`289051ee`), `sensor_consumer.py` (`8125b88b`), `sensor_faults.py`, `sensor_identity.py`, `sensor_backfill.py`, `iot_stream.py`, the API README, BRD, PRD and ADR 0003 are identical at `c6d5a8f3` and at the refreshed branch base (observed with `git rev-parse` on both) |
+
+Every classification, exclusion and gate above stays as recorded. The
+original partial review is a documentation-scope review of the original head
+and is not promoted to current-main acceptance. #440 criteria 7 and 8 and the
+#184, #110 and #188 gates stay open; no approval, pivot or deferral is
+inferred. Source inspection does not establish SQL, browser, IoT or human
+acceptance.
+
+Process disclosure: the earlier run removed its own scratch directory
+`/tmp/s440` with `rm -rf` without a retained finite selection, archive,
+readback or restore proof. The committed RPI records and session log survived;
+no backup or restoration of that scratch exists or is claimed. Checks in this
+refresh are new observations, not recovery.
