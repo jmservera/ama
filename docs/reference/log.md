@@ -10470,6 +10470,10 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PR 1004: it delivered the draft plan, scripts and blank templates only. All five criteria stay unmet and need human steps (owner review, DPO decision, staff agreement, participants, sessions; #150, #151). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-155 r1).
 
+## [2026-11-04] update | Tenure review triggers and ambiguous identity (Refs #131)
+
+* Added `tenure_review_trigger` and `tenure_trigger_resolve` to the resident action ledger and documented them in the core and API READMEs. Changed scope, disputes, defects and charge queries keep the report review open; ambiguous lease identity blocks reuse and routes to the data owner. Staff-entered constructed records only; no appointed data owner or Legal reviewer exists. Criteria 5 and 6 are advanced, not ticked; nothing was closed. Evidence under `.copilot-tracking/` (2026-11-04 tenure-review-triggers 131 r4).
+
 ## [2026-11-04] update | Aftercare sensor context guard (Refs #133)
 
 * Added `add_sensor_context` and a neutral-text guard on sensor context to the aftercare register; README note updated. Criteria 1, 2, 4 and 6 stay unmet in full, 3 and 5 only partly evidenced (register level). Evidence under `.copilot-tracking/` (2026-11-04 issue-133 sensor-context).
