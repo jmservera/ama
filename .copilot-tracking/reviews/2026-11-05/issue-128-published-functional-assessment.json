@@ -1,0 +1,96 @@
+{
+  "summary": "Independent bounded functional assessment of published jmservera/ama#1211, head 7f51d25a0edcfb55809d04b4432928256f5c2967 against declared parent feat/discovery-assurance-integration-123 at 3d7ad2feaa9c4cba5fe917edd2fbc40e40a5c246. Read the supplied 1211-exact.diff in full once: every hunk across all nine files, including all six tracking artifacts, README, implementation and tests. Also read the complete candidate paired_equity implementation and its 17 tests, ranking and journey_register implementations, journey_register tests, adjacent diagnostic documentation and retained coordinator evidence. Local worktree HEAD and parent branch ref files name the requested commits. No diff-state.json was found; the explicit complete diff and user-declared scope supplied the review inputs, with standard depth. No meaningful remaining functional, accounting or regression defect was identified in this constructed diagnostic scope. This new exact-head verdict does not replace or rewrite the original NOT CLEAN review with two Medium findings.",
+  "verdict": "approve",
+  "severity_counts": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "changed_files": [
+    {
+      "file": ".copilot-tracking/changes/2026-11-05/issue-128-paired-cohort-comparability-changes.md",
+      "lines_changed": "Entire new file, lines 1-25",
+      "risk": "Low",
+      "issue_count": 0
+    },
+    {
+      "file": ".copilot-tracking/details/2026-11-05/issue-128-paired-cohort-comparability-details.md",
+      "lines_changed": "Entire new file, lines 1-14",
+      "risk": "Low",
+      "issue_count": 0
+    },
+    {
+      "file": ".copilot-tracking/plans/2026-11-05/issue-128-paired-cohort-comparability-plan.md",
+      "lines_changed": "Entire new file, lines 1-21",
+      "risk": "Low",
+      "issue_count": 0
+    },
+    {
+      "file": ".copilot-tracking/research/2026-11-05/issue-128-paired-cohort-comparability-research.md",
+      "lines_changed": "Entire new file, lines 1-27",
+      "risk": "Low",
+      "issue_count": 0
+    },
+    {
+      "file": ".copilot-tracking/reviews/2026-11-05/issue-128-paired-cohort-comparability-review.md",
+      "lines_changed": "Entire new file, lines 1-23",
+      "risk": "Low",
+      "issue_count": 0
+    },
+    {
+      "file": ".copilot-tracking/rpi-sessions/2026-11-05/issue-128-paired-cohort-comparability-state.json",
+      "lines_changed": "Entire new file, lines 1-28",
+      "risk": "Low",
+      "issue_count": 0
+    },
+    {
+      "file": "src/core/README.md",
+      "lines_changed": "Paired-equity documentation hunk, lines 586-594",
+      "risk": "Low",
+      "issue_count": 0
+    },
+    {
+      "file": "src/core/src/zava_forward/core/paired_equity.py",
+      "lines_changed": "All six hunks: module contract, contrasts, comparison helpers, invalid collection, rejection path and record field",
+      "risk": "Medium",
+      "issue_count": 0
+    },
+    {
+      "file": "src/core/tests/test_paired_equity.py",
+      "lines_changed": "Nine added regression tests, lines 116-185; complete surrounding tests also read",
+      "risk": "Low",
+      "issue_count": 0
+    }
+  ],
+  "findings": [],
+  "positive_changes": [
+    "Predeclared fixture contrasts reject no contrast, incorrect direction or values, partial support bundles, mislabeled dimensions and extra changed facts before ranking or comparative accounting.",
+    "Exact type checks reject numeric/boolean substitution; empty mappings remain leaves; recursive sequence comparison distinguishes [1] from [True]; tuple paths separate a literal dotted key from a nested leaf. The four historical holes are addressed in the final source and represented in regression tests.",
+    "Invalid comparisons produce explicit blockers and invalid_pairs entries without incrementing tested or failed. Missing valid dimensions still block, and invalid seeded pairs cannot become detected defects through the new rejection path.",
+    "Default ranking, injected rankers, per-dimension failure accounting, input immutability and the false activation/fairness flags remain intact.",
+    "Historical detail/state fields are read as pre-correction records qualified by appended evidence, not freshly fabricated review results."
+  ],
+  "testing_recommendations": [
+    "Optional focused regression: mark a confounded rejected pair as a seeded defect and assert it remains undetected, does not invoke its ranker and does not increment tested or failed.",
+    "Execution attribution: this reviewer executed no test, lint, formatting, typing or git commands. The retained coordinator log 128-final-head-focused.log shows the candidate module path, 74 passing directly coupled tests, Ruff success, 213 files already formatted and mypy success over 266 files. Frozen-head and ignored-inclusive clean before/after status are coordinator observations retained in 128-independent-assessment.json and the task statement; they are not independent executions by this reviewer. Worker checks predated commit. The stopped broad core discovery remains unclaimed."
+  ],
+  "recommended_actions": [
+    "No functional correction requested for this exact child diff. Preserve the original review and appended correction evidence.",
+    "Keep issue #128 and epic #123 open; this scoped code-review approval is not production acceptance, human approval or parent/main integration."
+  ],
+  "out_of_scope_observations": [],
+  "risk_assessment": "Low residual risk within the isolated constructed diagnostic; Medium file-level risk for the comparison and accounting logic. No production mapping, threshold, population fairness, AI cohort, resident or human-approval conclusion is made. Unrelated main tooling from #1208 is excluded. Parent branch setup alone is not parent RPI or acceptance. This assessment is based on static reads and attributed coordinator validation, not independent command execution.",
+  "acceptance_criteria_coverage": [
+    {
+      "ac": "Reject confounded, no-contrast and mislabeled fixture pairs before counting comparative evidence, while preserving supported contrasts and accounting.",
+      "status": "Implemented",
+      "notes": "Checked against all changed hunks, complete candidate implementation and original plus added tests. No remaining meaningful defect found."
+    },
+    {
+      "ac": "Full issue #128 and parent #123 acceptance.",
+      "status": "Partial",
+      "notes": "Only fixture-local comparability is assessed. Actual AI cohorts, independently approved expectations and thresholds, lawful-field decisions, keyboard/screen-reader testing, user research, named human acceptance and integrated parent validation remain outside this verdict."
+    }
+  ]
+}
