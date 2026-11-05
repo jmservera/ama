@@ -10567,3 +10567,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 233 withheld panels on evidence screens (Refs #233)
 
 * Added the "Not shown for this role" text panel to the per-home technical-queue and quality-queue screens and recorded it in the atlas trace. Source-level test only; criteria 2, 4 and 5 stay unmet and nothing was ticked. Evidence under `.copilot-tracking/` (2026-11-04 issue-233 withheld-evidence-screens).
+
+## [2026-11-05] update | Backlog sync preserves confirmed active delivery (Refs #1207)
+
+* `tools/backlog-sync.py` gained `--active N,N|none`, a validated list of open issues with a coordinator-confirmed live RPI session or frozen unpublished candidate; they are kept or proposed In Progress even when earlier merged PRs exist and no PR is open.
+* Without `--active`, an open In Progress issue with no open PR is kept and reported as activity unverified instead of being demoted to Todo. A worktree is no longer treated as activity. Malformed, unknown or closed issue numbers stop the run before any write.
+* Offline regression in `tools/test_backlog_sync.py`. Closed-issue, open-PR and review-needed handling is unchanged. Mock evidence only; live board behaviour is not claimed. The coordinator command change is owned by #1204 and recorded in the #1207 changes artifact.
