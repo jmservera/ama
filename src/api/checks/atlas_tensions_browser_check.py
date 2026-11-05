@@ -151,6 +151,7 @@ def check_regions_and_keys(page: Page, evidence: Any, where: str) -> None:
     check(
         f"{where}: every table is a labelled focusable region with a caption",
         bool(labels)
+        and all(isinstance(label, str) and label.strip() for label in labels)
         and regions.evaluate_all(
             "els => els.every(el => el.tabIndex === 0 && el.querySelector('caption'))"
         ),
