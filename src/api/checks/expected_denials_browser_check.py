@@ -77,10 +77,16 @@ def survey_role(browser: Any, base: str, role: str, oid: str, extra: tuple[str, 
     page.on("pageerror", lambda e: errors.append(str(e)))
     page.goto(base + "/app")
     page.wait_for_function("() => typeof me !== 'undefined' && me && me.navigation")
-    routes = [*page.evaluate("me.navigation.map((n) => n.href)"), *extra]
+    expected = auth.DEFAULT_ROLE_MAP[f"ZavaForward.{role}"]
+    check(f"{role}: session role is {expected}", page.evaluate("me.user.role") == expected)
+    navigation = page.evaluate("me.navigation.map((n) => n.href)")
+    check(f"{role}: navigation is not empty", bool(navigation))
+    routes = [*navigation, *extra]
     for route in routes:
         page.evaluate(f"location.hash = '{route}'")
         page.wait_for_timeout(1500)
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(500)
     check(f"{role}: {len(routes)} routes without 4xx ({denied})", not denied)
     check(f"{role}: no console errors ({errors})", not errors)
     page.context.close()
