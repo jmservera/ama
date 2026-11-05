@@ -4260,8 +4260,19 @@ model call or rights log, so the #121 acceptance criteria stay unmet.
 `GET /api/data-protection` (any signed-in staff role, read-only, no body
 accepted) returns `register_report(os.environ)` so owners and auditors can see
 which approvals are missing; reference values are never echoed and
-`dpo_reviewed` stays false. This route is the only wiring: no model call site
-consults `model_dispatch` yet and no rights log is persisted.
+`dpo_reviewed` stays false.
+
+Slice 3 wires the gate into the model transport (`ai.Ai`). `dispatch_hold`
+reads `ZF_DATA_PROCESSING`: unset or `constructed` (the development path)
+changes nothing; any other value, including a typo, means actual processing,
+so `Ai.run` (class `prompt_output`), `Ai.look_at` (class `raw_document`, intact
+bytes, no derivative path yet) and a backstop in `Ai._request` refuse the call
+until the class has its non-synthetic references. The user sees the template or
+"file is stored" text plus the manual path. The default is constructed-only, so
+the control depends on operators setting the mode before any actual data is
+processed; it is not proof that none is. `Ai.evidence` and the chat model in
+`src/agents` are covered only by the `_request` backstop where they use it.
+No rights log is persisted.
 
 ### Offline regulatory consumption (2026-10-27, #208)
 

@@ -14,10 +14,14 @@ import urllib.parse
 import urllib.request
 import uuid
 from dataclasses import replace
-from . import ai_consumption, ai_prompts, export_fields
+from . import ai_consumption, ai_prompts, data_protection, export_fields
 
 SCOPE = "https://cognitiveservices.azure.com"
 FORBIDDEN = re.compile(r"\b(i have sent|has been sent|we have sent|i've sent|email sent|message sent)\b", re.I)
+
+
+class DispatchDenied(RuntimeError):
+    pass
 
 
 MAX_TEXT_BYTES = 128 * 1024
@@ -84,6 +88,9 @@ class Ai:
     def _request(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
         body = json.dumps({"messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
                            "max_tokens": max_tokens, "temperature": temperature}, ensure_ascii=True).encode("ascii")
+        protected = data_protection.dispatch_hold("prompt_output", os.environ)
+        if protected:
+            raise DispatchDenied(protected)
         if isinstance(user, str) and len(body) > MAX_TEXT_BYTES:
             raise InputRefused("input-too-large")
         if self.consumption is None:
@@ -168,6 +175,9 @@ class Ai:
         held = self.gate(task, dep) if self.gate else None
         if held:
             return out(text=template, source="template", model=None, validated=True, reason=held)
+        protected = data_protection.dispatch_hold("prompt_output", os.environ)
+        if protected:
+            return out(text=template, source="template", model=None, validated=True, reason=protected)
         if not self.configured:
             return out(text=template, source="template", model=None, validated=True, reason="AI is not configured")
         selected = self.release(task, dep) if self.release else None
@@ -219,6 +229,10 @@ class Ai:
         if held:
             return dict(text="The file is stored. AI reading is suspended; add a short note about what it is.", source="template",
                         model=None, validated=True, task="read_document", reason=held)
+        protected = data_protection.dispatch_hold("raw_document", os.environ)
+        if protected:
+            return dict(text="The file is stored. It is not sent to AI; add a short note about what it is.", source="template",
+                        model=None, validated=True, task="read_document", reason=protected)
         if off or not self.configured:
             return dict(text="AI reading is not switched on here. The file is stored.", source="template", model=None,
                         validated=True, task="read_document",

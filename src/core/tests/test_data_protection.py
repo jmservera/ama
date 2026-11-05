@@ -2,13 +2,19 @@
 
 from __future__ import annotations
 
+import importlib
+import os
 import unittest
 from datetime import UTC, datetime
+from typing import Any
+from unittest import mock
 
 from zava_forward.core.data_protection import (
     BY_ID,
     DATA_CLASSES,
+    MODE_ENV,
     TASKS,
+    dispatch_hold,
     due_date,
     model_dispatch,
     register_report,
@@ -16,6 +22,9 @@ from zava_forward.core.data_protection import (
     rights_status,
     validate_task_payload,
 )
+
+# The legacy ai module is exempt from strict typing, so reach it dynamically.
+ai_module: Any = importlib.import_module("zava_forward.core.ai")
 
 
 def refs(class_id: str, value: str = "REF-1") -> dict[str, str]:
@@ -81,6 +90,75 @@ class Dispatch(unittest.TestCase):
         )
         self.assertFalse(model_dispatch("staff_identity", refs("staff_identity"))["permitted"])
         self.assertFalse(model_dispatch("nope", {})["permitted"])
+
+
+class DispatchWiring(unittest.TestCase):
+    """The gate stops the real model call in actual mode and leaves constructed use unchanged."""
+
+    def configured(self) -> Any:
+        with mock.patch.dict(os.environ, {"AI_ENDPOINT": "https://x.openai.azure.com"}):
+            return ai_module.Ai()
+
+    def test_hold_is_off_for_constructed_default_and_on_otherwise(self) -> None:
+        self.assertIsNone(dispatch_hold("raw_document", {}))
+        self.assertIsNone(dispatch_hold("raw_document", {MODE_ENV: "Constructed"}))
+        for mode in ("actual", "live", "typo"):
+            reason = dispatch_hold("raw_document", {MODE_ENV: mode})
+            self.assertIsNotNone(reason, mode)
+            self.assertIn("manually", reason or "")
+
+    def test_reviewed_derivative_and_references_lift_the_hold(self) -> None:
+        env = {MODE_ENV: "actual", **refs("raw_document")}
+        self.assertIsNotNone(dispatch_hold("raw_document", env))
+        self.assertIsNone(dispatch_hold("raw_document", env, "reviewed_redacted"))
+
+    def test_document_is_not_sent_in_actual_mode(self) -> None:
+        ai = self.configured()
+        with (
+            mock.patch.dict(os.environ, {MODE_ENV: "actual"}),
+            mock.patch("urllib.request.urlopen") as sent,
+        ):
+            out = ai.look_at("a.txt", b"resident name", "text/plain")
+        sent.assert_not_called()
+        self.assertEqual(out["source"], "template")
+        self.assertIn("Approvals not recorded", out["reason"])
+        self.assertIn("add a short note", out["text"])
+
+    def test_text_task_is_not_sent_in_actual_mode(self) -> None:
+        ai = self.configured()
+        with (
+            mock.patch.dict(os.environ, {MODE_ENV: "actual"}),
+            mock.patch("urllib.request.urlopen") as sent,
+        ):
+            out = ai.run("summarise", "sys", "prompt", "template text")
+        sent.assert_not_called()
+        self.assertEqual(out["text"], "template text")
+        self.assertEqual(out["source"], "template")
+        self.assertIn("Approvals not recorded", out["reason"])
+
+    def test_transport_backstop_refuses_direct_calls(self) -> None:
+        ai = self.configured()
+        receipt: dict[str, Any] = {}
+        with (
+            mock.patch.dict(os.environ, {MODE_ENV: "actual"}),
+            mock.patch("urllib.request.urlopen") as sent,
+            self.assertRaises(ai_module.DispatchDenied),
+        ):
+            ai._request("standard", "sys", "user", 10, 5, 0, receipt)
+        sent.assert_not_called()
+        with mock.patch.dict(os.environ, {MODE_ENV: "actual"}):
+            self.assertEqual(ai.evidence("sys", "user")["outcome"], "provider-unavailable")
+
+    def test_constructed_default_still_reaches_the_gate_chain(self) -> None:
+        ai = self.configured()
+        with (
+            mock.patch.dict(os.environ, {}, clear=False),
+            mock.patch.object(ai_module.Ai, "_chat", return_value="drafted") as chat,
+        ):
+            os.environ.pop(MODE_ENV, None)
+            out = ai.run("summarise", "sys", "prompt", "template text")
+        chat.assert_called_once()
+        self.assertEqual(out["source"], "ai")
 
 
 class TaskPayload(unittest.TestCase):
