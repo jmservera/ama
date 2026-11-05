@@ -27,7 +27,7 @@
       "y": 50,
       "width": 1200,
       "height": 60,
-      "text": "Primary: equal-model-weight B-D coverage; 33 trajectories per arm/model\nOther outcomes and per-model contrasts are secondary; no family-wide coverage claim",
+      "text": "Primary: equal-model-weight B-D coverage; 12 (default), 21 or 33 trajectories per model per arm\nOther outcomes and per-model contrasts are secondary; no family-wide coverage claim",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -35,7 +35,7 @@
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "Primary: equal-model-weight B-D coverage; 33 trajectories per arm/model\nOther outcomes and per-model contrasts are secondary; no family-wide coverage claim"
+      "originalText": "Primary: equal-model-weight B-D coverage; 12 (default), 21 or 33 trajectories per model per arm\nOther outcomes and per-model contrasts are secondary; no family-wide coverage claim"
     },
     {
       "id": "col-endpoint",
@@ -1228,7 +1228,7 @@
       "y": 346,
       "width": 365,
       "height": 82,
-      "text": "Losses / observed risk\nFull risk + missing counts\nRecovery keeps episode",
+      "text": "Planned loss / risk\nMissing counts + bounds\nRecovery keeps episode",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -1236,7 +1236,7 @@
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "h2-measure",
-      "originalText": "Losses / observed risk\nFull risk + missing counts\nRecovery keeps episode"
+      "originalText": "Planned loss / risk\nMissing counts + bounds\nRecovery keeps episode"
     },
     {
       "id": "h2-interp",
@@ -1808,7 +1808,7 @@
       "y": 501,
       "width": 266,
       "height": 82,
-      "text": "CR1 adaptation\nWithheld after P_10\n33 runs/arm/model",
+      "text": "CR1 adaptation\nWithheld after P_10\nSame selected n",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -1816,7 +1816,7 @@
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "h6-target",
-      "originalText": "CR1 adaptation\nWithheld after P_10\n33 runs/arm/model"
+      "originalText": "CR1 adaptation\nWithheld after P_10\nSame selected n"
     },
     {
       "id": "h6-measure",
@@ -1857,7 +1857,7 @@
       "y": 501,
       "width": 365,
       "height": 82,
-      "text": "Strict: CR1 + retention\nGraded: passes / 15; losses\nF9/F10 acquisition strata",
+      "text": "Strict: CR1 + retention\nPlanned: graded / 15; loss\nF9/F10 strata (planned)",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -1865,7 +1865,7 @@
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "h6-measure",
-      "originalText": "Strict: CR1 + retention\nGraded: passes / 15; losses\nF9/F10 acquisition strata"
+      "originalText": "Strict: CR1 + retention\nPlanned: graded / 15; loss\nF9/F10 strata (planned)"
     },
     {
       "id": "h6-interp",

@@ -10578,3 +10578,77 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Corrects the entry above: `--active none` is removed and omission from `--active` never demotes. Demotion of an In Progress issue with no open PR needs per-issue negative evidence through a separate validated `--inactive N,N`; everything else stays In Progress and is listed as activity unverified. Overlapping, unknown, closed or malformed input stops the run before any write, and error text does not echo the rejected value.
 * `tools/test_backlog_sync.py` now runs in the existing Source CI "Local gate orchestration contracts and strict checks" step. Mock evidence only; no live board claim.
+
+## [2026-11-02] query | Prospective whitepaper replication choices
+
+* Revised the [paper protocol](../capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex)
+  from fixed 33/cell to researcher-selected 12 (default), 21 or 33 independent
+  repository trajectories per model per arm. Choice and rationale precede
+  study collection; outcomes cannot resize the sample and resume cannot
+  change the saved allocation. Three models and all five proposed arms remain.
+* Verified the ten-point B-D normal planning calculation: assumed within-cell
+  SDs of 15/20/25 points give 12/21/33. These are conditional assumptions;
+  default 12 does not retain 80% power at SD 25. Scheduling-block dependence
+  remains a pre-freeze analysis gap.
+* Derived every resource scenario from the arm schedules and CR1. Default 12
+  gives 180 study trajectories, 3,060 study sessions, 3,300 sessions including
+  excluded calibration, 1,500 combined maximum hours and 1,107,000 nominal
+  credits. Summed allowances do not enlarge the actual 300,000-credit envelope
+  or 270,000 admission ceiling. Prior spending, unknown-usage holds and
+  full-selected-allocation affordability/deadline gates remain.
+* Disclosed the owner-reported MVE selector's immutable 12/21/33 selection
+  and A/B/C-only implementation. D/E and a source-bound selector pin remain
+  gaps; inspected older snapshots do not certify the newer update. Historical
+  five-arm implementation wording, fixed-33 records, original critiques,
+  prompt and published v4 freeze remain historical, not silently rewritten.
+* The [dated revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#prospective-allocation-revision-2-november)
+  records 34 passing authoring tests, structural checks, all 39 numerical
+  resource cells, three planning rows and the compiled 38-page PDF. The
+  Supplement starts on page 33; pages 19/20 render without clipping, and
+  all-page text bounds pass. One inherited inputenc warning remains.
+* The focused repository gate against fetched `origin/main` at `a56df549`
+  stopped at its clean-candidate preflight. No passing receipt, independent
+  scientific approval or publication readiness is claimed. No MVE source or
+  study state was changed, experiment launched, OSF record modified, commit
+  created or remote write performed.
+* The final consistency check also corrected fixed-33 labels in the two
+  active allocation figures and their authoring script. Regenerated native
+  SVG/PNG exports, refreshed source/export hashes, overflow checks and all
+  nine figure/integration tests pass. The rebuilt integrated PDF and all
+  34 authoring tests pass; the original prompt and Supplement hashes remain
+  unchanged. The separate MVE checkout remains clean and unmodified.
+
+## [2026-11-05] update | Whitepaper recovery and source-bound scientific review
+
+* Closed PR #1206 at the owner's request, retaining its branch. Verified that
+  merged PR #746 already preserves the scientific skills, reviewer and earlier
+  paper package. Replayed only amendment `3ef395b8` on fresh current-main topic
+  `docs/paper-scientific-reconciliation`; the actual replay was conflict-free
+  and preserved the existing log as a prefix.
+* The [fresh review and disposition](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#recovery-and-scientific-alignment-5-november)
+  identify current public MVE source `5ab24be4` and v6 execution `7de2f0d4`.
+  All five arms and the immutable selector exist in source. Corrected active
+  A/B/C-only claims and the design figure, preserving the dated stale-local
+  inspection and historical v4 records.
+* Retained the original three-major/one-minor assisted review. Clarified
+  conservative unavailable retention summaries versus proposed observed-
+  subset bounds and graded CR1 reporting, unknown prior acquisition,
+  independent-arm resampling versus unresolved block inference, primary-frame
+  availability and matched-ceiling B-D framing. Reporting/analysis choices
+  require author-approved source-bound reconciliation before collection.
+* Added stdlib planning regressions and independently checked symbolic
+  variance, cost accumulation and conditional power. The 12/21/33 choices
+  remain prospective; no allocation or scientific analysis was silently
+  selected. Nominal allowances do not enlarge the actual aggregate envelope.
+* Full-allocation affordability/deadline acceptance, qualified source binding,
+  prospective OSF recording and collection permission remain gates. The
+  inspected v6 manifest has no registration date, no recorded prospective
+  update and no collection authorization. No kit, saved study, original review,
+  freeze, registration, private dataset, Azure or paid model action was changed.
+* Final local checks pass all 44 authoring tests and the structural checker.
+  Native source/export hashes pass, and the 38-page single PDF retains its
+  Supplement on page 33. All-page text bounds/internal destinations and the
+  rendered revised figures/power/resource pages pass scoped checks; one
+  inherited inputenc compatibility warning remains. Exact-head assessment,
+  focused repository gate and hosted checks follow the committed candidate
+  and are reported separately with the replacement PR.
