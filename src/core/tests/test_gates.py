@@ -5,8 +5,10 @@ import unittest
 from pathlib import Path
 from typing import Any
 
-from dataset import DATA
+from dataset import DATA, supplied_resident_fixture
+from test_quality_procurement import EVIDENCE, QUIL, QUIN, SAM, STAFF
 from zava_forward.core import gates
+from zava_forward.core.quality import CHECKLISTS, evidence_gaps, handover_blockers
 from zava_forward.core.store import GateError, Store
 
 RULE = gates.GateRule("resident", "BRD RULE-002", "2026-01-01", "1", "Reviewer A")
@@ -22,6 +24,10 @@ def run(state: Any, **kw: Any) -> gates.GateResult:
         on="2026-11-03",
         **kw,
     )
+
+
+def full_labels() -> list[str]:
+    return list(CHECKLISTS["Loft insulation"]["items"])
 
 
 class GateTests(unittest.TestCase):
@@ -130,6 +136,116 @@ class GateTests(unittest.TestCase):
                 self.assertIn("Grants and Evidence Officer", reasons)
                 if expected:
                     self.assertIn(expected, reasons)
+
+
+class QualityGateTests(unittest.TestCase):
+    def test_quality_gate_outcomes_and_rule(self) -> None:
+        ok = gates.quality_gate([], "Quality Inspector", on="2026-11-05")
+        self.assertEqual(ok.outcome, gates.PASS)
+        bad = gates.quality_gate(
+            ["Guarantee issued", "Photos"], "Quality Inspector", on="2026-11-05"
+        )
+        self.assertEqual(bad.outcome, gates.FAIL)
+        self.assertIn("Guarantee issued; Photos", bad.reason)
+        unknown = gates.quality_gate(None, "Quality Inspector", on="2026-11-05")
+        self.assertEqual(unknown.outcome, gates.UNKNOWN)
+        early = gates.quality_gate([], "Quality Inspector", on="2026-11-04")
+        self.assertEqual(early.outcome, gates.UNKNOWN)
+        self.assertFalse(gates.transition_allowed([ok, unknown]))
+        record = bad.as_record()["rule"]
+        self.assertEqual(record["gate"], "quality")
+        self.assertEqual(record["effective_date"], "2026-11-05")
+        self.assertIn("Unreviewed", record["reviewer"])
+
+    def test_evidence_gaps_unreadable_is_none(self) -> None:
+        full = [dict(label=x, evidence="seen") for x in CHECKLISTS["Loft insulation"]["items"]]
+        base: dict[str, Any] = dict(measure="Loft insulation", checklist="Loft insulation")
+        self.assertEqual(evidence_gaps(dict(base, items=full)), [])  # type: ignore[no-untyped-call]
+        self.assertEqual(evidence_gaps(dict(base, items=full[:3])), full_labels()[3:])  # type: ignore[no-untyped-call]
+        for items in (None, "text", [None], [dict(label="x")] + ["y"]):
+            self.assertIsNone(evidence_gaps(dict(base, items=items)))  # type: ignore[no-untyped-call]
+        blank = [dict(full[0], evidence="  ")] + full[1:]
+        self.assertEqual(evidence_gaps(dict(base, items=blank)), full_labels()[:1])  # type: ignore[no-untyped-call]
+        non_text = [dict(full[0], evidence=7)] + full[1:]
+        self.assertEqual(evidence_gaps(dict(base, items=non_text)), full_labels()[:1])  # type: ignore[no-untyped-call]
+
+    def make(self) -> Any:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        data = copy.deepcopy(DATA)
+        data["staff"] = STAFF
+        for c in data["cases"][:2]:
+            supplied_resident_fixture(c)
+        path = Path(tmp.name) / "zavaforward.json"
+        path.write_text(json.dumps(data))
+        return Store(str(path))  # type: ignore[no-untyped-call]
+
+    def submit(self, store: Any) -> dict[str, Any]:
+        store.submit_quality(
+            SAM,
+            "ZF-1",
+            "Loft insulation",
+            "Install Team",
+            "Installer",
+            EVIDENCE,
+            context_revision=1,
+        )
+        rec: dict[str, Any] = store.cases["ZF-1"]["quality"][0]
+        return rec
+
+    def test_accept_refused_for_missing_or_unreadable_evidence(self) -> None:
+        for damage in (
+            lambda r: r["items"][0].update(evidence=""),
+            lambda r: r["items"].pop(),
+            lambda r: r.update(items=[]),
+            lambda r: r.update(items=None),
+            lambda r: r.update(items="unreadable"),
+            lambda r: r["items"][1].update(evidence=7),
+        ):
+            store = self.make()
+            rec = self.submit(store)
+            damage(rec)  # type: ignore[no-untyped-call]
+            before = copy.deepcopy(rec)
+            with self.assertRaises(GateError) as ctx:
+                store.accept_quality(QUIL, "ZF-1", 0)
+            self.assertIn("Quality Inspector", str(ctx.exception))
+            self.assertEqual(store.cases["ZF-1"]["quality"][0], before)
+            self.assertEqual(before["state"], "Submitted")
+
+    def test_handover_refused_when_accepted_evidence_is_missing(self) -> None:
+        store = self.make()
+        rec = self.submit(store)
+        store.accept_quality(QUIL, "ZF-1", 0)
+        rec["items"][0]["evidence"] = ""
+        with self.assertRaises(GateError):
+            store.hand_over_quality(SAM, "ZF-1", 0, "Guarantee given", True)
+        rec = store.cases["ZF-1"]["quality"][0]
+        self.assertEqual(rec["state"], "Accepted")
+        rec["items"][0]["evidence"] = "seen again"
+        store.hand_over_quality(SAM, "ZF-1", 0, "Guarantee given", True)
+        self.assertEqual(store.cases["ZF-1"]["quality"][0]["state"], "Handed over")
+
+    def test_complete_evidence_still_accepts_and_wrong_state_error_is_unchanged(self) -> None:
+        store = self.make()
+        rec = self.submit(store)
+        rec["items"][0]["evidence"] = ""
+        store.return_quality(QUIN, "ZF-1", 0, "Gap", "Missing check", "Test Ltd")
+        with self.assertRaises(ValueError):
+            store.accept_quality(QUIL, "ZF-1", 0)
+        with self.assertRaises(ValueError):
+            store.hand_over_quality(SAM, "ZF-1", 0, "x", True)
+        clean = self.make()
+        self.submit(clean)
+        clean.accept_quality(QUIL, "ZF-1", 0)
+        self.assertEqual(clean.cases["ZF-1"]["quality"][0]["state"], "Accepted")
+
+    def test_handover_blockers_agree_with_the_gate(self) -> None:
+        store = self.make()
+        rec = self.submit(store)
+        store.accept_quality(QUIL, "ZF-1", 0)
+        rec["items"] = None
+        reasons = [b["reason"] for b in handover_blockers(store.cases["ZF-1"])]  # type: ignore[no-untyped-call]
+        self.assertTrue(any("no evidence recorded" in r for r in reasons), reasons)
 
 
 if __name__ == "__main__":
