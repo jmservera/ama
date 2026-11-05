@@ -251,3 +251,29 @@ def evidence_gate(missing: Iterable[str] | None, owner: str, on: str | None = No
         reason = f"Required evidence missing: {', '.join(kinds)}."
         return GateResult(result.gate, FAIL, reason, owner, result.correction, result.rule)
     return result
+
+
+QUALITY_RULE = GateRule(
+    gate="quality",
+    source=f"{_BRD} FR-008; versioned quality checklist in quality.CHECKLISTS (exercise fixture)",
+    effective_date="2026-11-05",
+    version="1",
+    reviewer=_UNREVIEWED,
+)
+
+
+def quality_gate(gaps: Iterable[str] | None, owner: str, on: str | None = None) -> GateResult:
+    """Pass only when every checklist item has evidence; None means the record is unreadable."""
+    items = None if gaps is None else list(gaps)
+    result = check(
+        QUALITY_RULE,
+        None if items is None else not items,
+        owner=owner,
+        correction="Ask the quality owner to record evidence for every check before this step.",
+        label="Quality evidence on file",
+        on=on,
+    )
+    if result.outcome == FAIL and items:
+        reason = f"Checks without evidence: {'; '.join(items)}."
+        return GateResult(result.gate, FAIL, reason, owner, result.correction, result.rule)
+    return result

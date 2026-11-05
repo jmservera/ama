@@ -26,7 +26,7 @@ from .doc_controls import DocControlsMixin, open_scanner
 from .exception_register import ExceptionRegisterMixin
 from .documents import ACCEPTED, MAX_BYTES, open_document_store
 from .procurement import ProcurementMixin
-from .quality import QualityMixin, handover_blockers
+from .quality import QualityMixin, handover_blockers, quality_evidence_gate
 from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view, hazard_view
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
@@ -561,6 +561,12 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         results.append(gates.evidence_gate(self._evidence_missing(c), "Grants and Evidence Officer"))
         if not gates.transition_allowed(results):
             raise GateError([f"{r.reason} Owner: {r.owner}. Next action: {r.correction}" for r in gates.unmet(results)])
+
+    def require_quality_evidence(self, rec):
+        """Fail closed: acceptance and handover need an explicit pass on the stored checklist evidence."""
+        result = quality_evidence_gate(rec)
+        if not result.passed:
+            raise GateError([f"{result.reason} Owner: {result.owner}. Next action: {result.correction}"])
 
     def log_call(self, user, case_id, outcome, note, channel="Phone"):
         outcome = (outcome or "").strip()[:80]
