@@ -3695,9 +3695,14 @@ Disposition, as a scoped engineering recommendation and not an approval:
 | `python -m unittest tests.test_form_export tests.test_form_review tests.test_form_dependencies` from `/tmp/f440fin/src/src/core` with the #440-owned venv `/tmp/ama-main-440-ui-cache-wave3-venv`, scrubbed environment, `PYTHONDONTWRITEBYTECODE=1`, external `TMPDIR`, explicit `PYTHONPATH` to the pinned export | 0 | `Ran 40 tests`, OK in 21.4 s; `form_export.__file__` resolved to `/tmp/f440fin/src/src/core/src/...`; no `__pycache__`; JSON and SQLite fixtures only, no SQL Server |
 
 The c738 checkout `/tmp/g96-r14-review1-1105/checkout` no longer exists, so it
-was not used. An initial archive-root attempt failed before the repaired
-command above (the pinned source is nested at `/tmp/f440fin/src/src/...`); its
-output was not preserved, so only the repaired exit 0 is evidenced. No heavy lock was taken, and no gate runner, SQL Server, browser,
+was not used. The first attempt failed on the shell `cd` into
+`/tmp/f440fin/src/core` (the pinned source is nested at
+`/tmp/f440fin/src/src/...`) with exit 1, before any Python import or test
+command, so no test ran in that attempt. No dedicated per-test output file was
+created for it, but its wrapper error (`cd: /tmp/f440fin/src/core: No such file
+or directory`) and exit 1 are preserved in the native session log
+`/tmp/rpi-440-finance-export-checkpoint-20261105.log`. The repaired run's exit 0
+and 40 tests OK remain historical, not rerun or upgraded. No heavy lock was taken, and no gate runner, SQL Server, browser,
 Docker, cloud or private data was used. Nothing was installed.
 
 ### Findings, triage and recommendation
