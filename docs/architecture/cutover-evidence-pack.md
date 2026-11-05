@@ -3776,7 +3776,8 @@ no named professional reviewer.
   resident, funding, capacity, quality and finance gates before a controlled
   state transition (mapped criteria AC-010, AC-011, AC-067 and AC-144). BRD
   FR-008 is a different requirement (a material change invalidates downstream
-  approvals) and is not the source of the gate. PRD FR-007 forbids bulk quality
+  approvals) and is not the governing source of the gate; `QUALITY_RULE`
+  nevertheless cites BRD FR-008 in its source field (see Findings). PRD FR-007 forbids bulk quality
   acceptance. The acceptance rows are not run; passing light tests do not
   tick them.
 * `gates.quality_gate` passes only with no gaps, returns Unknown for an
@@ -3843,8 +3844,12 @@ no named professional reviewer.
 
 ### Findings, triage and recommendation
 
-* No new defect was confirmed, so no issue is proposed and no refactoring is
-  suggested. The open owners were compared: #82 (gates and named rule review),
+* No confirmed runtime defect, so no issue is proposed and no refactoring is
+  suggested. One provenance ambiguity is recorded for #82 ownership (not fixed
+  here): `QUALITY_RULE.source` at `cd271cfa` cites BRD FR-008, while the
+  governing requirement for controlled-transition gates is PRD FR-008. Whether
+  the citation is corrected is for #82's owner under its rule source
+  criterion. The open owners were compared: #82 (gates and named rule review),
   #81 (epic), #80 (unmerged Excel work), #144 (heavy owner) and #440 (this
   series).
 * #82 stays OPEN with three criteria incomplete (each gate with a pass, fail

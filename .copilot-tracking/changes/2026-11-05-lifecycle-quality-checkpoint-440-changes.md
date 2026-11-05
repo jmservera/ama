@@ -16,4 +16,4 @@ Status: implementation complete for P01 to P04 (first commit); one Review record
 
 * Files: `docs/architecture/cutover-evidence-pack.md`, `docs/reference/README.md`, `docs/reference/log.md` (additions only), plus the RPI evidence files.
 * Light observation (research phase): exit 0, 183 tests, 1 skip; log sha256 `3b43f8b16bb79baf1e4298ee649e666a67ba8c2587bb69c13f8c1706342b88e0`.
-* Follow-up routed by Review: RV-001 wording fix, applied in a further commit (the first commit is preserved).
+* The first candidate commit `fba51d88d2f86bef12b6b83d7cd5f7b2d81236a3` and its Review outcome (Defects found, RV-001) are preserved. RV-001 was applied as a further wording-only commit: the pack now discloses that `QUALITY_RULE.source` cites BRD FR-008 while PRD FR-008 governs, as an observation for #82's owner; no source change.
