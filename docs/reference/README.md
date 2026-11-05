@@ -399,6 +399,11 @@ focused main checks were blocked by a held heavy lock and are unrun, not
 passed, and no defect or acceptance is implied. A dated continuation records
 that both focused checks later passed on exact current main `bb3a3b03`
 (focused only; not a full receipt or any acceptance).
+For the finance parent held-export manifest contract (#96), the
+[eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-finance-parent-held-export-manifest-contract-2026-11-05-refs-440-96)
+assesses `feat/finance-integration-93` `0472fd5d` separately from main and
+dispositions the proposed required-history key (finance-parent source only;
+no approval, defect or acceptance is implied).
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope

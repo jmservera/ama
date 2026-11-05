@@ -3588,3 +3588,117 @@ coordinator admits the selected-tier parent validation, independent exact-head
 review and hosted checks; the recorded gaps remain open. No issue, board or
 criterion was changed and no closing keyword is used. Nothing was deleted,
 moved, archived, reset or cleaned.
+
+## Eighth stabilization checkpoint: finance parent held-export manifest contract (2026-11-05, Refs #440 #96)
+
+Refs #440 and #96. Bounded, documentation-only, local-only record of the
+finance parent integration and of one proposed material contract change: adding
+required per-field review history to the Held draft export integrity manifest.
+It is separate from main and from the governance parent, adds no source, test,
+tool, workflow, coordinator, ADR, requirement or policy change, and approves
+nothing. It does not complete whole #440 (criteria 7 and 8), HVE behaviour
+testing, parent #123 acceptance, #96 schemas, reviewed packs or dependency
+graph, Finance or Legal approval, or any main, Azure or human acceptance.
+Original RPI evidence is under
+`.copilot-tracking/*/2026-11-05-finance-export-checkpoint-440-*`.
+
+### Identities and exclusions
+
+| Item | Value |
+| --- | --- |
+| Documentation child | Branch `docs/finance-export-checkpoint-440`, started clean at the governance-parent head `dec700c7af46778140bf5c46d4df932832a31f11` (declared target `feat/discovery-assurance-integration-123`); parent not moved |
+| Finance parent (source observed) | `feat/finance-integration-93` at `0472fd5d5625bb610b5ac65ad177026953802830`, tree `268ead3a098f2320c0fba1a16aed14dd68a7fbe2`; it is main plus exactly one commit |
+| Main (re-fetched 2026-11-05) | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`, tree `5c2988b71aec609b007b41f408685d54e2c28e0d`; latest run on main completed (rubric scorer path), no newer commit |
+| Covered PR | #1223 (`c738fde9b27b5c88af6453c0ababfd84eeca5850` squash-merged into the finance parent only, 2026-11-05T21:53:46Z, merge commit `0472fd5d`); main does not contain it. #96 is open |
+| Excluded | Governance-parent runtime and its differently scoped inherited implementation; unmerged siblings; the paused #96 successor with only prospective research, plan and details; any code not on `0472fd5d` |
+
+| Document | Status, version | Blob (equal at main and finance parent) |
+| --- | --- | --- |
+| BRD-2026-AMA48-001 | draft, 0.21.0 | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD-2026-AMA48-001 | in-review, 0.21.0 | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 | Accepted with owner amendment | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 | Accepted | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Draft and in-review documents are not approvals. Actual AI registry
+prerequisite #105 is closed and in main; it supplies no personal, Legal or
+Finance authority.
+
+### Traceability (document-qualified)
+
+BRD FR-038 to FR-041 (regulatory source register, monitoring, decision
+traceability, role-appropriate evidence views) are different requirements from
+PRD FR-038 to FR-043 (assisted forms). This record concerns the PRD forms
+group, with BRD FR-040 and FR-041 as related context only.
+
+| Requirement | Finance-parent source and tests (`0472fd5d`) | Limit |
+| --- | --- | --- |
+| PRD FR-040, AC-048 (accept, correct, reject; prior value, reviewer, evidence or reason, state) | `form_review._review` appends a history event with `field_id`, `input_version`, `prior`, `new`, `decision`, `reviewer` (actor email), `reason` (at most 500 characters) and `at`; authority-bearing categories are refused (`forms.HUMAN_ONLY`) | Working draft only; no source record changes |
+| PRD FR-042 (reviewable pack with template and input versions and Finance review history), AC-050, AC-054 | `form_export.draft_export` is read-only, status `Held`, `reviewed` false, `Not submitted`, eligibility `Not assessed`; it hashes `BODY_KEYS` (11 keys, no history) with SHA-256 over canonical JSON. `form_review._report` already returns `history` | Review history is not in the export body today. A reviewed pack, AC-050 and AC-054 stay "Not run" in the PRD |
+| PRD FR-043, AC-051 (exact dependent stale sets) | `form_export.export_freshness` and `test_form_dependencies.py` | Constructed fixtures; reviewed re-export blocking is not implemented |
+| Access, persistence, manual and AI-unavailable paths | `forms._actor` requires a verified or registered Finance-view actor with reason visibility; `form_review._visible` already checks that cited evidence in history is readable and unreadable evidence returns `Unavailable`; the working review is the manual path; no AI dispatch; JSON and SQLite stores hold the working review, and the export persists nothing | Callers hold saved copies; the store stores none |
+| PRD FR-038, FR-039, FR-041 | Schema binding, staged candidates and diagnostics in `form_review` and `forms` | #96 C1, C5 and C6 stay unchecked; approved schema, rule and authority are not supplied |
+
+### Compatibility disposition of the proposed required history key
+
+Source-visible fact: `export_freshness` rebuilds `body` from `BODY_KEYS` and
+treats a missing key as `Invalid` with the action "Create a new held export from
+the working review." Adding `history` to `BODY_KEYS` therefore makes every
+existing history-less saved copy `Invalid`, with no backfill or rewrite and the
+established regenerate-Held recovery. A git search of the finance parent found
+no consumer of `form_export` outside its own tests and `src/core/README.md`
+(no API, web or store caller), so no in-repository consumer is broken. Actual
+saved copies held by users were not read and are unknown.
+
+Disposition, as a scoped engineering recommendation and not an approval:
+
+* Compatible with PRD FR-042 intent, which names review history in the pack, and it keeps the integrity manifest covering provenance. An optional history key is rejected because incomplete manifests would read as `Current`.
+* Material contract change: the meaning of "valid saved export" changes. The README must state that copies without history are `Invalid` and must be regenerated.
+* Privacy: history carries reviewer email and free-text reason, and superseded prior values. Access stays limited by the existing Finance-view actor gate and visibility check. Reviewer identity and reason in a held copy that callers store is a data-protection point for the named DPO or data owner, not decided here.
+* Integrity is a SHA-256 over content, not a signature or delegation, and proves neither author nor approval.
+* No expansion into reviewed-pack, eligibility, submission, award or payment authority; the export stays `Held`, unreviewed and `Not submitted`.
+
+### Evidence classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Identities, blobs, covered PR state | local observed (git and `gh`) | 2026-11-05 |
+| Source and consumer inspection above | local observed (source read at `0472fd5d`) | Static reading, not execution |
+| 40 form tests pass on the pinned finance source | local observed (light, finance parent) | Below |
+| #1223 hosted checks, published functional approval, default-FULL receipt `07ae` | historical (at `c738`, reported by the coordinator) | Receipt is not a test at `0472fd5d` or main; tree equality is an identity fact, not a new run |
+| Behaviour at `0472fd5d` beyond the 40 tests | implemented-unverified | No full gate was run |
+| Required-history export | proposed, not implemented | Waits for this record's consumption |
+| SQL Server, browser, Docker, Azure, actual AI, user research | none or blocked | Not run; heavy resources were not admitted |
+| Finance, Legal, DPO and human acceptance; whole #96 | blocked or deferred | Named humans; nothing approved |
+
+### Actual commands and limits
+
+| Command | Exit | Result |
+| --- | --- | --- |
+| `git archive origin/feat/finance-integration-93 src/core src/agents` into the new external path `/tmp/f440fin/src` | 0 | Pinned source extracted, not a checkout |
+| `python -m unittest tests.test_form_export tests.test_form_review tests.test_form_dependencies` from `/tmp/f440fin/src/src/core` with the #440-owned venv `/tmp/ama-main-440-ui-cache-wave3-venv`, scrubbed environment, `PYTHONDONTWRITEBYTECODE=1`, external `TMPDIR`, explicit `PYTHONPATH` to the pinned export | 0 | `Ran 40 tests`, OK in 21.4 s; `form_export.__file__` resolved to `/tmp/f440fin/src/src/core/src/...`; no `__pycache__`; JSON and SQLite fixtures only, no SQL Server |
+
+The c738 checkout `/tmp/g96-r14-review1-1105/checkout` no longer exists, so it
+was not used. No heavy lock was taken, and no gate runner, SQL Server, browser,
+Docker, cloud or private data was used. Nothing was installed.
+
+### Findings, triage and recommendation
+
+No defect was confirmed and no new issue or refactor is proposed. Recommendation:
+**continue**. This record permits the coordinator to release the paused #96
+export-history slice for implementation under its own FULL tier, with these
+conditions: the manifest change and the legacy `Invalid` and regenerate
+behaviour are documented, a regression test covers a history-less copy being
+`Invalid` and a tampered history failing the hash, and the slice adds no
+authority, endpoint or reviewed-pack state. **Fix**: none. **Pivot**: none.
+Requirement relaxation, deliberate deferral, the reviewer-history privacy
+position and any Finance or Legal approval need named human owners.
+
+| Gate | Effect |
+| --- | --- |
+| #96 resume | Coordinator consumes this record, then runs the retained slice through its own FULL tier, independent review and hosted checks |
+| #96 closure | C1, C5 and C6 stay unchecked; approved schemas, reviewed packs, dependency graph and human acceptance remain |
+| Parent #123 and whole #440 | Unchanged; criteria 7 and 8 untouched |
+| Publication of this child | Coordinator independent exact-head assessment, hosted checks and human approval |
+
+Process disclosure: nothing was deleted, moved or cleaned; `/tmp/f440fin`
+is retained.
