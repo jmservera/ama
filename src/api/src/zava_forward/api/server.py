@@ -110,8 +110,12 @@ class App:
 
 
 LIST_EXPORTS = frozenset({"/api/packages.csv", "/api/workorders.csv", "/api/handoffs.csv", "/api/visits.csv", "/api/funding.csv",
-                          "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv"})
-EXPORT_KINDS = {"/api/finance.csv": "finance_queue", "/api/asset/stock-queue.csv": "stock_queue"}
+                          "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv", "/api/form-schemas.csv"})
+EXPORT_KINDS = {"/api/finance.csv": "finance_queue", "/api/asset/stock-queue.csv": "stock_queue",
+                "/api/form-schemas.csv": "forms"}
+
+
+SCHEMA_EXPORT_FIELDS = ("definition", "digest", "approval", "approval_evidence", "source_policy_status", "recorded_by", "recorded_at")
 
 
 def list_rows(s, u, path, q):
@@ -130,6 +134,8 @@ def list_rows(s, u, path, q):
         return s.stock_queue(u)
     if path == "/api/checklists.csv":
         return quality.checklist_rows()
+    if path == "/api/form-schemas.csv":
+        return [{k: row.get(k) for k in SCHEMA_EXPORT_FIELDS} for row in forms.list_schemas(s, u)]
     return s.funding_list(u)
 
 

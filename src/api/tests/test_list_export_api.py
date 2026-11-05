@@ -19,6 +19,7 @@ from zava_forward.api.server import LIST_EXPORTS, App, make_handler
 
 LISTS = ("packages", "workorders", "handoffs", "visits", "funding")
 REFERENCE = "/api/checklists.csv"
+SCHEMAS = "/api/form-schemas.csv"  # wrapper catalogue, not an items queue
 QUEUES = {
     "/api/finance": "/api/finance.csv",
     "/api/asset/stock-queue": "/api/asset/stock-queue.csv",
@@ -74,7 +75,7 @@ class ListExportApi(unittest.TestCase):
     def test_registry_matches_lists(self) -> None:
         self.assertEqual(
             set(LIST_EXPORTS),
-            {f"/api/{name}.csv" for name in LISTS} | set(QUEUES.values()) | {REFERENCE},
+            {f"/api/{name}.csv" for name in LISTS} | set(QUEUES.values()) | {REFERENCE, SCHEMAS},
         )
 
     def test_queue_csv_matches_json_for_permitted_roles(self) -> None:

@@ -1,6 +1,8 @@
 """Ephemeral authenticated HTTP exercise; no inference or remote data."""
 
 import copy
+import csv
+import io
 import json
 import tempfile
 import threading
@@ -341,6 +343,104 @@ class FormApi(unittest.TestCase):
         code, saved = self.call("pam", path)
         self.assertEqual(code, 200, saved)
         self.assertEqual(saved["drafts"][0]["history"], [])
+        self.assertTrue(self.store.verify_audit())
+
+    def raw(self, actor: str, path: str) -> tuple[int, str, dict[str, str]]:
+        self.call(actor, "/api/me")
+        request = urllib.request.Request(self.base + path, headers={"Cookie": self.cookies[actor]})
+        try:
+            with urllib.request.urlopen(request) as response:
+                return response.status, response.read().decode(), dict(response.headers)
+        except urllib.error.HTTPError as error:
+            return error.code, error.read().decode(), dict(error.headers)
+
+    def two_versions(self) -> None:
+        first = schema()
+        first["fields"][0]["options"] = ["A", "B", "=SUM(1,2)", 'Zoë, "x"\nline']
+        second = dict(schema(), version=2)
+        self.assertEqual(self.call("pam", "/api/form-schemas", first)[0], 201)
+        self.assertEqual(self.call("pam", "/api/form-schemas", second)[0], 201)
+
+    def test_schema_csv_has_one_row_per_version_matching_json(self) -> None:
+        self.two_versions()
+        with patch.object(self.store.ai, "_chat", side_effect=AssertionError("No inference")):
+            code, text, headers = self.raw("pam", "/api/form-schemas.csv")
+        self.assertEqual(code, 200, text)
+        self.assertTrue(headers["Content-Type"].startswith("text/csv"))
+        self.assertIn('filename="form-schemas.csv"', headers["Content-Disposition"])
+        rows = list(csv.reader(io.StringIO(text)))
+        self.assertEqual(
+            rows[0],
+            [
+                "definition",
+                "digest",
+                "approval",
+                "approval_evidence",
+                "source_policy_status",
+                "recorded_by",
+                "recorded_at",
+            ],
+        )
+        authoritative = self.call("pam", "/api/form-schemas")[1]["schemas"]
+        self.assertEqual(len(rows) - 1, 2)
+        for row, source in zip(rows[1:], authoritative, strict=True):
+            self.assertEqual(json.loads(row[0]), source["definition"])
+            self.assertEqual(row[1], source["digest"])
+            self.assertEqual(row[2:4], ["Unapproved", ""])
+            self.assertEqual(row[4], "Unapproved")
+            self.assertEqual(row[5], "pam@example.test")
+            self.assertEqual(row[6], source["recorded_at"])
+        self.assertEqual([json.loads(r[0])["version"] for r in rows[1:]], [1, 2])
+        options = json.loads(rows[1][0])["fields"][0]["options"]
+        self.assertEqual(options[2:], ["=SUM(1,2)", 'Zoë, "x"\nline'])
+
+    def test_schema_csv_formula_text_in_a_metadata_cell_is_neutralised(self) -> None:
+        self.two_versions()
+        self.store.data["form_schemas"][0]["approval_evidence"] = "=cmd|' /C calc'!A0"
+        _, text, _ = self.raw("pam", "/api/form-schemas.csv")
+        self.assertIn("'=cmd", text)
+        self.assertNotIn(",=cmd", text)
+
+    def test_empty_schema_csv_follows_the_list_convention(self) -> None:
+        code, text, _ = self.raw("pam", "/api/form-schemas.csv")
+        self.assertEqual((code, text), (200, "\r\n"))
+
+    def test_schema_csv_denies_everyone_without_the_full_rights(self) -> None:
+        self.two_versions()
+        with self.assertRaises(urllib.error.HTTPError) as caught:
+            urllib.request.urlopen(self.base + "/api/form-schemas.csv")
+        self.assertEqual(caught.exception.code, 401)
+        for actor in ("kim", "sam"):
+            code, text, _ = self.raw(actor, "/api/form-schemas.csv")
+            self.assertEqual(code, 403, actor)
+            self.assertNotIn("SYN-TECH", text)
+
+    def test_schema_csv_follows_revocation_and_reason_view_changes(self) -> None:
+        self.two_versions()
+        self.assertEqual(self.raw("pam", "/api/form-schemas.csv")[0], 200)
+        with patch.dict("os.environ", {"ZF_REASON_ROLES": "Building Safety Liaison"}):
+            code, text, _ = self.raw("pam", "/api/form-schemas.csv")
+        self.assertEqual(code, 403)
+        self.assertNotIn("SYN-TECH", text)
+        revoked = dict(self.store.staff["pam@example.test"], role="Programme Support Officer")
+        self.store.db.execute(
+            "UPDATE staff SET body=? WHERE email=?", (json.dumps(revoked), "pam@example.test")
+        )
+        code, text, _ = self.raw("pam", "/api/form-schemas.csv")
+        self.assertEqual(code, 403)
+        self.assertNotIn("SYN-TECH", text)
+
+    def test_schema_csv_has_no_case_data_and_changes_nothing(self) -> None:
+        self.two_versions()
+        before = copy.deepcopy(self.store.data["form_schemas"])
+        cases = copy.deepcopy(self.store.cases)
+        _, text, _ = self.raw("pam", "/api/form-schemas.csv?case=ZF-1&q=x")
+        self.assertEqual(text, self.raw("pam", "/api/form-schemas.csv")[1])
+        for case in cases.values():
+            self.assertNotIn(case["resident"]["name"], text)
+            self.assertNotIn(case["id"] + ",", text)
+        self.assertEqual(self.store.data["form_schemas"], before)
+        self.assertEqual(self.store.cases, cases)
         self.assertTrue(self.store.verify_audit())
 
 
