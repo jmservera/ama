@@ -3296,3 +3296,119 @@ scratch and logs, created no backup or archive, and its new observations are
 not a restoration. No human approval, gate receipt or review approval is
 invented; the one independent review of this documentation diff is recorded
 in the tracking review artifact with its original outcome.
+
+## Seventh stabilization checkpoint: current-main UI and cache recovery (2026-11-05, Refs #440 #96)
+
+Refs #440 and #96. Bounded, documentation-only, local-only record of the
+recovery after the two merged main fixes for #1215 (API discovery bytecode) and
+#1214 (320px case-summary header spacing). It is separate from the
+[sixth checkpoint](#sixth-stabilization-checkpoint-parent-topic-paired-comparability-integration-2026-11-05-refs-440-128-123),
+whose parent-topic observation, original NOT CLEAN review and #1213 records
+stay parent-only, immutable and are not regraded. It adds no runtime,
+coordinator, workflow, threshold, requirement or ADR change and no approval.
+Its original RPI evidence is under
+`.copilot-tracking/*/2026-11-05-ui-cache-checkpoint-wave3-440-*`.
+
+**The planned focused observation of current main was NOT performed.** The
+exclusive heavy lock was held by another session, and this task did not queue,
+wait or retry. Both focused checks are blocked and unrun, not passed.
+
+### Source and document identities
+
+| Item | Value |
+| --- | --- |
+| Current main, pinned after scorer run 42036086584 completed `success` and two fetches agreed (2026-11-05, about 13:36Z) | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`, tree `5c2988b71aec609b007b41f408685d54e2c28e0d`. It is the bot commit `chore(rubric): record score 77/100` (13:34:38Z); its only change from `2edba50b7` (#1219) is `.github/rubric/scores/latest.json`, 4 lines |
+| Merged fixes under checkpoint | #1217 `180dcf3e2` (#1215, `Runner.install_bytecode_policy()` called from `Runner._install("api")`); #1219 `2edba50b7739b83b88ba491648717a9750777a0c` (#1214, merged 13:28:35Z). #1214 and #1215 are closed |
+| Parent topic `feat/discovery-assurance-integration-123` (child base, unchanged) | `23cdae38b1fe47a47ba5f3f356ed18253aad9c46`, tree `263475b0e4d01203186b42b5311f4c85c0d4f5dd`. It is 3 ahead of and 4 behind the pre-rubric main, is not current main and lacks the #1215 and #1219 fixes |
+| Documentation child | Branch `docs/parent123-ui-cache-checkpoint-wave3` based on the parent `23cdae38`; no merge, rebase, reset, retarget or flattening to main |
+| This evidence pack blob at the parent before this section | `3aec3dd44b24d4bf039faadced830ae25b9deba5` (main: `2566e8efd7084346421fffb101d5b171100dfd63`; they differ because the parent carries the sixth checkpoint) |
+
+| Document | Status, version | Blob (main and parent equal, verified with `git rev-parse`) |
+| --- | --- | --- |
+| BRD-2026-AMA48-001 | draft, 0.21.0 | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD-2026-AMA48-001 | in-review, 0.21.0 | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 | Accepted with amendment by the owner (2026-10-15, reconciled 2026-10-18) | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 | Accepted (owner, 2026-10-15) | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Draft and in-review documents are not approvals. Excluded, unmerged: the #96
+feature, schema and Finance acceptance (#96 is open) and every other parent
+or sibling branch change not on main. Parent-only source was never run or
+labelled as main.
+
+### Traceability to source and tests
+
+Requirement IDs are document-qualified; reads are of main blobs.
+
+| Requirement or decision | Implementing source and tests on main | Limit |
+| --- | --- | --- |
+| BRD NFR-008 and AC-064 (accessibility, unfair-exclusion testing, digital and non-digital journeys) | `src/api/checks/case_journey_browser_check.py`: reflow over 320, 390 and 1280 CSS px at height 800 asserting `scrollWidth <= innerWidth`; 320x800 `.case-summary` bottom `<= 1600`; reduced-motion and forced-colour states; stacked fallback when the enhancement script is missing | Synthetic fixture and engineering checks, not live-contact or user-research acceptance |
+| BRD NFR-009 and AC-071 (owned journeys, tested manual alternative) | Same check: manual-route fixture, keyboard Enter, Home, End, Space and Escape paths | Owner-set thresholds (OD-09, OD-25) are not approved here |
+| PRD NFR-001, NFR-018, AC-093 and AC-134 (keyboard, focus, reflow at 320, 390, 1280) | Same check | PRD acceptance status cells read "Not run"; six-script, zoom and screen-reader results are not provided here |
+| ADR 0003 decision 2 (authority enforced in the API, not a view) | The check drives the real server and moves no authority into a view | ADR 0003 has no reflow or keyboard text; the trace is indirect |
+| ADR 0006 (src layout and cut-over gate) | `tools/rpi-checks.py` `Runner._install("api")` then `install_bytecode_policy()`; scrubbed harness server launch; `tools.test_rpi_checks.GateTests.test_api_install_prevents_scrubbed_server_child_writing_source_bytecode` | ADR 0006 has no bytecode clause; the trace is through its gate and layout rules |
+| #96 full gate versus #96 feature | Full-gate dependency is the fixed Runner install and the 320px contract | A focused main pass would not be a #96 full receipt; the earlier #96 full receipt failed, is non-resumable and is preserved |
+
+### Evidence classification
+
+| Finding | Classification | Source, date and limit |
+| --- | --- | --- |
+| Main, parent and document identities above | local observed (git only) | `git fetch`, `rev-parse`, `diff --stat`, 2026-11-05 |
+| Auxiliary main environment: detached clean worktree at `bb3a3b03`, own venv, editable installs of `src/core`, `src/agents`, `src/api[dev]`, `pip check` clean, `zava_forward.*` and `playwright 1.64.0` resolve inside the worktree | local observed (environment only) | Not a check result; ignored `*.egg-info` directories exist in that worktree |
+| Pinned axe 4.10.3 copy | local observed | SHA-256 `880970c0...a68bb` equals `AXE_SHA256` in `tools/rpi-checks.py`; copied from existing evidence, none modified |
+| Bytecode isolation regression on main | blocked (not run) | Lock held, below |
+| Case-journey browser check on main (320x800 bound 1600, wider and keyboard states, reduced motion, manual controls) | blocked (not run) | Lock held, below |
+| #1219 reported 19 checks pass, independent published functional and readiness Pass, premerge partial receipt verified; #1215 merged with the real-producer test | implemented, reported by the merged issue and PR records; not re-observed by this record | Premerge partial receipt is not a main or full receipt |
+| Azure observation of this surface | none | Local synthetic checks only |
+| Actual AI, user research, assistive-technology and human acceptance | deferred or blocked | Named owners and approved plans |
+| Hosted CI on this documentation child | unknown | Nothing published |
+
+### Actual commands, exits and the lock
+
+| Step | Result |
+| --- | --- |
+| `git worktree add --detach /tmp/ama-main-440-ui-cache-wave3 bb3a3b03...` (path absent first) | Exit 0, clean |
+| New venv `/tmp/ama-main-440-ui-cache-wave3-venv`, editable installs, bytecode policy `.pth` written, `pip check` | Exit 0 |
+| `flock -n -x /tmp/ama-rpi-heavy.lock -c <both focused checks>` at about 13:37:15Z | Exit 1 immediately; neither check ran; no check output exists |
+| Passive `lsof` of the lock at 13:37:29Z | Held by `python3 tools/rpi-checks.py --changed --base bb3a3b03... --out /tmp/r233f --lock-timeout 0` (pid 1560051) from `/tmp/ama-wt-233-gate-final`, an issue #233 session |
+
+No queue, wait, retry, interruption, or change to the holder's worktree,
+images or environment occurred. The browser, SQL, Docker, cloud and model
+paths were not exercised.
+
+Resume point, for a later session that can take the lock without queueing:
+`flock -n -x /tmp/ama-rpi-heavy.lock` around (1) from the auxiliary worktree
+root `python3 -m unittest tools.test_rpi_checks.GateTests.test_api_install_prevents_scrubbed_server_child_writing_source_bytecode`
+and (2) from `src/api`, the auxiliary venv's
+`checks.case_journey_browser_check --axe /tmp/ama-main-440-wave3-out/axe-4.10.3.min.js --out /tmp/ama-main-440-wave3-out/journey`
+with a scrubbed environment, `TMPDIR` external and module identities asserted.
+Re-fetch and re-pin `origin/main` first; a different pin needs its own worktree.
+The prepared external paths `/tmp/ama-main-440-ui-cache-wave3`,
+`/tmp/ama-main-440-ui-cache-wave3-venv` and `/tmp/ama-main-440-wave3-out` are
+retained, not deleted.
+
+### Findings, triage and recommendation
+
+No new defect was reproduced or confirmed, because the observation did not run.
+Nothing differs from #1214 or #1215, so no new issue is proposed and no
+refactor or package-card correction is proposed.
+
+Recommendation: **continue**. **Fix**: none confirmed. **Pivot**: none.
+The #1214 and #1215 recoveries rest on the merged owners' evidence until the
+focused main observation above is taken. A blocked observation is not a pass.
+
+| Gate | Effect |
+| --- | --- |
+| Publication of this child | Needs coordinator independent exact-head assessment, hosted checks and human approval; none is claimed |
+| Parent #123 closure | Still needs the parent refreshed against main with its own exact-head gate, plus the conditions in the sixth checkpoint |
+| #96 full-gate receipt | A new native full receipt by its own session; this record supplies none |
+| #440 (stays open) | Criterion 7 whole triage and criterion 8 Major HVE Builder behaviour-testing and host validation are not covered; no coordinator behaviour changed |
+
+Independent lanes continue. This record uses `Refs` only; no issue is
+closed or ticked.
+
+### Process disclosure
+
+No existing record, cache, snapshot, image or evidence was deleted, moved or
+modified. New external paths were created, not overwritten, and retained
+without archive or backup. The one axe file was copied from existing
+evidence. No human approval, receipt or review approval is invented.
