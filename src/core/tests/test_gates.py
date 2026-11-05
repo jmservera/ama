@@ -225,6 +225,18 @@ class QualityGateTests(unittest.TestCase):
         store.hand_over_quality(SAM, "ZF-1", 0, "Guarantee given", True)
         self.assertEqual(store.cases["ZF-1"]["quality"][0]["state"], "Handed over")
 
+    def test_accepted_record_with_missing_evidence_recovers_by_supersession(self) -> None:
+        store = self.make()
+        self.submit(store)
+        store.accept_quality(QUIL, "ZF-1", 0)
+        store.cases["ZF-1"]["quality"][0]["items"][0]["evidence"] = ""
+        with self.assertRaises(GateError):
+            store.hand_over_quality(SAM, "ZF-1", 0, "Guarantee given", True)
+        self.submit(store)
+        states = [q["state"] for q in store.cases["ZF-1"]["quality"]]
+        self.assertEqual(states, ["Superseded", "Submitted"])
+        store.accept_quality(QUIN, "ZF-1", 1)
+
     def test_complete_evidence_still_accepts_and_wrong_state_error_is_unchanged(self) -> None:
         store = self.make()
         rec = self.submit(store)
