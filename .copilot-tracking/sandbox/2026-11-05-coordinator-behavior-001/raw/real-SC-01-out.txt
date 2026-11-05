@@ -1,0 +1,39 @@
+**This is a no-progress recovery check, not an idle check.** The 38 unassessed issues are executable review work—not human-blocked because the owner is away. Two consecutive “nothing changed” checks trigger a bounded recovery action: assess the next five closure items now. Do not stop delivery or declare completion.
+
+Nothing is executed in this read-only session. I would take these actions, in order:
+
+1. **Refresh the evidence.**
+   ```bash
+   git status --short
+   git branch --show-current
+   gh pr list --state open
+   tmux ls
+   python3 tools/backlog-sync.py --help
+   python3 tools/backlog-sync.py
+   ```
+   Read the existing session ledger and closure cursor, including any retained unpublished candidates. No sessions and no open PRs do **not** prove there is no unpublished work.
+
+2. **Classify and persist the scope.** Based on the supplied report, all 38 queue entries are `unknown` pending assessment, with “compare acceptance criteria against merged evidence” as their next action. No human blocker is established. Verify merged items’ disposition rather than counting them as remaining delivery work. Record the two no-progress ticks and the bottleneck: **unassessed closure work**.
+
+3. **Perform the recovery action: assess the next five unassessed issues**, following the persisted rotating cursor. For each actual issue number `N` and candidate merged PR number `P`:
+   ```bash
+   gh issue view N --json number,title,body,state,closedAt,comments
+   gh pr view P --json number,body,state,mergedAt,mergeCommit,baseRefName,closingIssuesReferences,files
+   gh pr diff P
+   gh pr checks P
+   ```
+   Resolve candidate PRs from the audit output; inspect referenced implementation, tests and review evidence as needed. A merged PR or green checks alone do not prove an acceptance criterion.
+
+   Persist each criterion’s evidence, exact remaining gap, responsible owner, assessment date and disposition in `closure_review`; advance the cursor. This completed assessment—not printing the queue—is the concrete recovery action.
+
+4. **Apply only proven dispositions.**
+   - All criteria proven: tick exactly those criteria, comment with supporting PRs, close the issue and set its board Status to Done.
+   - Implementation gaps: keep open, record exact gaps and route refinement/RPI work.
+   - Genuine human approval needed: leave the criterion unticked, comment once naming the decision-maker and what it unblocks, and ledger that scoped blocker. Continue independent work.
+
+   Before board writes, resolve authentication, project and field IDs under the coordinator rules. Use backlog-sync `--apply` only when its advertised activity flags and confirmed activity evidence make it safe; otherwise update individually with readback. Do not infer inactivity from absent sessions alone.
+
+5. **Record and continue.** Write the fresh classifications, five assessment outcomes, evidence and next actions into session SQL `tick_log`. Verify the live delivery and cleanup schedules; preserve existing valid recurrences without creating duplicates.
+
+**Decision:** keep the run active. After five completed assessments, **33 queue entries remain unassessed**, plus any actionable gaps found. The next check resumes at the saved cursor; newly identified independent implementation work enters its own RPI loop under the admission rules. No issue closure, blocker, schedule state or successful action can be claimed from this hypothetical check alone.
+

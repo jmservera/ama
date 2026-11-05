@@ -1,0 +1,44 @@
+| Candidate | Decision | Evidence |
+|---|---|---|
+| **#990** | **Hold publication; schedule evidence collection.** | Agent/prompt changes require applicable canonical HVE **static and behavior evidence**. Passing focused tests, exact-head review and hosted checks do not replace it. Publication permission does not waive validation. |
+| **#991** | **Proceed through the publication gate independently.** | Passing focused tests and Pass review support publication. HVE evidence is non-applicable to an ordinary backend bug fix; record that rationale. Verify the remaining routine prerequisites rather than assume them. |
+
+**Actions I would take, in order — none executed:**
+
+1. Read repository conventions and establish current state:
+   ```sh
+   git status --short
+   git branch --show-current
+   gh pr list --state open
+   gh api repos/{owner}/{repo} --jq .allow_auto_merge
+   ```
+   Read `.github/copilot-instructions.md` in the full repository; it is absent from this contained snapshot.
+
+2. Classify **#990 as ready evidence-collection work**, not human-blocked. Preserve its existing review and test evidence. Resolve the canonical HVE validators and run the applicable static and behavior assessments against its exact source identity. Record execution status, verdict, fidelity and executor/profile limitations. Do not treat simulated results as native-host acceptance.
+
+   The snapshot does not contain those validators, so I cannot responsibly invent their command lines. If collection requires a worker continuation, first check:
+   ```sh
+   command -v tmux
+   ```
+   Then use the mandated RPI continuation route with a fresh brief and `--model claude-sonnet-5.5`, subject to assignment capacity. **No push or PR for #990 until its required evidence passes.**
+
+3. Assess **#991 now**, without waiting for #990. In its worktree:
+   ```sh
+   git status --short
+   git rev-parse HEAD
+   git fetch origin main
+   git diff --name-only <target-base-sha> HEAD -- .copilot-tracking/
+   git diff <target-base-sha> HEAD
+   ```
+   Confirm a clean frozen candidate; issue-specific research, plan, changes and review artifacts; session-log evidence of the RPI phases; and focused results and independent assessment bound to this head and target base. Confirm the fix does not require full-tier validation because it touches security, SQL or another full-tier category.
+
+4. Once those checks pass, publish #991:
+   ```sh
+   git push -u origin <991-branch>
+   gh pr create --base <declared-target> --head <991-branch> \
+     --title "<reviewed-title>" --body-file <reviewed-pr-body>
+   ```
+   Use `Closes #991` only if all remaining criteria are proven and the target is the default branch; otherwise use `Refs #991`. Update its board status to In review and read it back.
+
+Publication is not merge authorization: #991 still needs published-PR review and the complete fresh merge gate. #990 remains queued for its missing evidence, not waived or abandoned.
+

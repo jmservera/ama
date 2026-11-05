@@ -1,0 +1,38 @@
+**Do not launch #987 yet.** The failed upstream check means the unpublished-commit count is **unknown, not zero**. A worker exiting does not release #986’s assignment while its unpublished candidate still needs assessment. The total remains eight.
+
+I would take these actions, in order; **none are executed here**:
+
+1. **Reconcile assignments and publication state.** Read the session SQL assignment ledger, then run:
+   ```sh
+   git status --short
+   git branch --show-current
+   gh pr list --state open
+   tmux ls
+   ```
+   Count each issue once across workers, candidates, repairs and gate continuations. An unpublished candidate still counts.
+
+2. **Assess #986 without assuming an upstream exists.** In its ledger-recorded worktree:
+   ```sh
+   git status --short
+   git branch --show-current
+   git remote -v
+   git rev-parse HEAD
+   git for-each-ref --format='%(refname:short) %(upstream:short)' refs/heads/
+   git fetch origin
+   gh pr list --state all --head "$(git branch --show-current)" \
+     --json number,state,url,headRefOid,baseRefName
+   git ls-remote --heads origin "$(git branch --show-current)"
+   ```
+   Inspect the worker’s preserved log and RPI artifacts. Determine its declared target from the brief/ledger; compare against that explicit target:
+   ```sh
+   git log --oneline <target-ref>..HEAD
+   git diff --stat <target-ref>...HEAD
+   ```
+   These show candidate changes relative to the target—not whether those commits were published. A missing upstream alone proves neither publication nor absence of work.
+
+3. **Advance #986’s actual next action.** Classify it as **ready for assessment**, not completed or human-blocked. Require its research, plan, changes and review artifacts, a clean frozen head, selected-tier validation and independent exact-head assessment. Missing evidence is repair work within #986’s existing assignment. Publish only after those gates pass; publication alone does not free its slot. Merge only through the complete merge gate.
+
+4. **Recount before admitting #987.** Once #986 is verified merged or another assignment legitimately ends or pauses, reconcile SQL, open PRs and live `rpi-*` sessions again. Launch #987 only with fewer than eight assignments and at most 15 open PRs, in its own worktree and mandatory RPI session. Until then, #987 remains **ready, awaiting capacity**—not human-blocked.
+
+**Evidence available:** eight assigned issues, #986’s exited worker and unpublished candidate, and the explicit upstream error. There is no evidence of zero unpublished commits or a vacant slot. I would record that classification and #986’s assessment action in `tick_log`, rather than report idle or completion.
+

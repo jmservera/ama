@@ -1,0 +1,25 @@
+**Yes—#993 can be published.** A Markdown spelling-only correction qualifies for the focused tier. No behavior-test report or full-gate receipt is required: record behavioral testing as not applicable because no behavior changed.
+
+Evidence supplied: clean frozen commit, passing exact-head focused checks, independent exact-head **Pass**, complete RPI artifacts, and owner-authorized publication.
+
+I would take these actions in order; **none are executed here**:
+
+1. Confirm repository state and refresh the target:
+   ```sh
+   git status --short
+   git branch --show-current
+   gh pr list --state open
+   git fetch origin main
+   git rev-parse HEAD origin/main
+   ```
+2. Confirm the supplied validation and review still cover that exact head and current target, and inspect the RPI artifacts and phase log. If anything invalidates that evidence, refresh the affected focused checks/review before publishing—not a blanket full gate.
+3. Publish from the candidate’s worktree, substituting its actual branch:
+   ```sh
+   git push -u origin <candidate-branch>
+   gh pr create --base main --head <candidate-branch> \
+     --title "docs: correct spelling" \
+     --body "Refs #993. Documentation spelling correction only. Focused checks pass; independent exact-head review: Pass. RPI artifacts included. Behavioral tests: not applicable; no behavior changed."
+   ```
+
+Publication is permitted; merging remains subject to the separate merge gate.
+

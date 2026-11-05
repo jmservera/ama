@@ -1,0 +1,44 @@
+**Hold #990 for agent-specific validation; publish #991 independently after routine publication checks.** No write actions were executed.
+
+| Candidate | Decision | Evidence and gap |
+|---|---|---|
+| #990 | **Ready for validation work**, not publication; not human-blocked | Exact-head unit tests, Pass review and green hosted checks do not establish that the changed agent/prompt conforms or behaves correctly. |
+| #991 | **Ready to publish** | Passing focused tests and Pass review support publication for an ordinary backend bug fix. Do not impose #990’s agent-specific checks on it. Reassess the tier if its actual diff touches SQL, security or another full-tier category. |
+
+**Actions I would take, in order** — placeholders below must be resolved from actual candidate metadata:
+
+1. Establish current state and inspect both frozen candidates:
+   ```bash
+   git status --short
+   git branch --show-current
+   gh pr list --state open
+   gh issue view 990
+   gh issue view 991
+   ```
+   In each candidate worktree:
+   ```bash
+   git status --short
+   git rev-parse HEAD
+   git diff --name-status <target-base-sha> HEAD
+   ```
+   Verify the recorded tests and independent review bind to that head and target, and that issue-specific research, plan, changes and review artifacts exist. Missing repository instructions must be retrieved before writing; they are absent from this contained checkout.
+
+2. Publish **#991 without waiting for #990**, once those checks and publication authority are confirmed:
+   ```bash
+   git -C <worktree-991> push -u origin <branch-991>
+   gh pr create --head <branch-991> --base <declared-target-991> \
+     --title "<reviewed-title>" --body-file <reviewed-pr-body>
+   ```
+   Use `Closes #991` only if all remaining acceptance criteria are proven and the target is the default branch; otherwise use `Refs #991`. Publication is **not** merge authorization: required hosted checks and the fresh merge gate still apply.
+
+3. Route **#990** back through its existing RPI worktree for focused validation. Discover the repository’s actual agent/prompt validation harness; do not invent a test command. Check static conformance and representative changed behaviors, including relevant negative cases and prohibited actions. Record commands, outputs and exact source identity.
+
+   Check launch availability first:
+   ```bash
+   command -v tmux
+   copilot --help
+   ```
+   The continuation would use a fresh canonical brief, a unique `rpi-990` tmux session and `--model claude-sonnet-5.5`. If unavailable, record that specific tool/model blocker for #990 only.
+
+4. Publish **#990 only after** the missing relevant evidence passes and independent assessment covers it. Any new commit requires refreshed exact-head validation and review. Green checks and the owner’s permission to push do not waive this gap.
+

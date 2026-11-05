@@ -1,0 +1,43 @@
+**Continue existing-PR work; do not start #1003.** At 18 open PRs, the 16–20 admission band prohibits new issues. The three unused assignment slots do not override that restriction.
+
+| Item | Classification | Decision | Evidence supplied |
+| --- | --- | --- | --- |
+| #1003 | Ready, admission-deferred | Keep queued; launch only when open PRs fall to 15 or fewer and assignment capacity remains. | Independent, refined; 18 open PRs. |
+| PR #1004 | Ready correction | Continue its existing RPI loop with a correction brief. | An actionable review finding remains. |
+| PR #1005 | Ready review | Launch independent review now; do not classify it as dependency-blocked. | Review is its only wait and can start now. |
+
+**Actions I would take, in order**—none are executed here:
+
+1. **Verify current state before any write:**
+   ```sh
+   git status --short &&
+   git branch --show-current &&
+   gh pr list --state open --limit 100 --json number,headRefName,headRefOid,baseRefName
+
+   command -v tmux && tmux ls
+   gh pr view 1004 --json body,headRefName,headRefOid,baseRefName,reviews
+   gh pr view 1005 --json body,headRefName,headRefOid,baseRefName,reviews
+   gh pr checks 1004
+   gh pr checks 1005
+   ```
+   Reconcile these results with the session SQL assignment ledger. Count each issue once across correction, review and validation continuations. If both PR issues are already among the five assignments, the total stays five; if neither is, admitting both yields seven—not nine.
+
+2. **Advance #1004 and #1005 concurrently after those checks.** Read repository instructions and original RPI evidence first. For #1004, generate a fresh correction brief, record its path and SHA-256, and use the prescribed launch route:
+   ```sh
+   tmux new-session -d -s rpi-1004 -c "$WORKTREE_1004" \
+     "echo --- launch $STAMP >> /tmp/rpi-1004.log; copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat '$BRIEF_1004')\" 2>&1 | tee -a /tmp/rpi-1004.log; echo exit=\$? >> /tmp/rpi-1004.log"
+   ```
+   Resolve these variables from verified state; reuse a live issue session rather than launching a duplicate. The worker returns a clean, frozen correction with refreshed selected-tier evidence and preserved original review findings; it does not push.
+
+   For #1005, verify its exact-head selected-tier and RPI evidence, then launch the applicable installed `hve-core-all:code-review-*` agent against that head. The concrete reviewer identifier and worktree must be discovered, not invented. Record the review assignment and verify the session starts.
+
+3. **Publish corrections and merge only through the gate.** Independently assess #1004’s corrected exact head before a batched push. For either PR, require current selected-tier evidence, complete RPI artifacts, passing exact-head review, satisfied dependencies, mergeability and acceptable hosted checks. Then, according to the verified repository setting:
+   ```sh
+   gh pr merge NUMBER --auto --squash
+   # Or, when auto-merge is disabled and checks are green:
+   gh pr merge NUMBER --squash --delete-branch
+   ```
+   Confirm each merge and recount before the next admission. Auto-merge queued is still open.
+
+Record the classifications and concrete actions in `tick_log`. **No idle or completion decision is justified:** correction and independent review are executable work.
+

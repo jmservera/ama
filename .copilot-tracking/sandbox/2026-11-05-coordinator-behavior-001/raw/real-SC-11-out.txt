@@ -1,0 +1,41 @@
+**Keep #983 assigned; do not start #985.** All eight slots remain occupied. An exited worker does not release an assignment, and #983 cannot enter a published-only dependency pause: local `c9d2e10` contains two unreviewed implementation commits beyond published `5a77f03`. Preserved artifacts do not satisfy that missing review.
+
+Nothing below would be executed in this session. I would proceed in this order:
+
+1. **Verify and recount**, using the existing ledger’s worktree path as `$WT`:
+   ```bash
+   git status --short
+   git branch --show-current
+   gh pr list --state open
+   tmux ls
+   gh pr view 984 --json state,headRefOid,headRefName,baseRefName,statusCheckRollup
+   gh pr view 979 --json state,headRefOid,baseRefName
+   git -C "$WT" status --short
+   git -C "$WT" rev-parse HEAD
+   git -C "$WT" log --oneline 5a77f03..c9d2e10
+   git -C "$WT" diff --stat 5a77f03..c9d2e10
+   ```
+   Reconcile these results with the SQL assignment ledger. Missing Git evidence would mean **unknown**, not permission to free a slot.
+
+2. **Advance #983 within its existing assignment.** Classify its unpublished candidate assessment as **ready**, its eventual integration as dependent on #979, and #985 as **ready but capacity-held**, not human-blocked. Inspect the unpublished diff, existing RPI artifacts and worker log. Determine the validation tier from the actual change; do not assume focused validation. Preserve the two commits and all original review evidence.
+
+   If worker correction or validation is needed, generate a fresh canonical brief and launch a continuation in #983’s existing worktree—not a ninth assignment:
+   ```bash
+   command -v tmux
+   tmux has-session -t rpi-983
+   ```
+   After confirming no existing worker, launch with the fresh brief:
+   ```bash
+   tmux new-session -d -s rpi-983 -c "$WT" \
+     "copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat "$BRIEF")\" >> /tmp/rpi-983.log 2>&1"
+   tmux has-session -t rpi-983
+   tmux capture-pane -p -t rpi-983
+   ```
+   `$BRIEF` would name a newly generated, timestamped brief recorded with its hash. The continuation must retain #984’s declared parent target and must not publish.
+
+3. **Publish only after the gate.** Require a clean frozen candidate, complete issue-specific RPI artifacts, current selected-tier validation and independent exact-head assessment. Only then push the reviewed branch normally to update #984; do not rebase merely because its parent is unmerged. Publication alone would not authorize merging.
+
+4. **Reconsider admission only after a legitimate release.** Once #983’s local and published heads match, no worker or unpublished implementation remains, and artifacts, ledger and disposition are preserved, record an approved published-only dependency pause and continue monitoring #984/#979. Recount assignments, open PRs and live workers. Start #985 only with a free assignment **and no more than 15 open PRs**.
+
+The immediate next action is therefore **assess and validate #983’s unpublished changes**, not launch #985 or discard those changes.
+

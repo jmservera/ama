@@ -1,0 +1,31 @@
+**Admit one issue, #1018; leave #1019 ready.** The supplied evidence shows **7 active assignments**: six for #1010–#1015 plus one repair assignment for #1016. Its open PR #1017 is not another assignment. The **9 open PRs** are counted separately and permit admission because they are below the 16-PR admission cutoff. The tally double-counts the repair and incorrectly combines two separate limits.
+
+No actions would execute here. I would proceed in this order:
+
+1. **Verify admission evidence**, including retained unpublished candidates in the session SQL ledger—not just live workers:
+   ```bash
+   git status --short &&
+   git branch --show-current &&
+   gh pr list --state open --limit 100 \
+     --json number,headRefName,baseRefName &&
+   tmux ls
+   ```
+   Reconcile those results with the ledger, counting each issue assignment once. **If that reveals an eighth retained assignment, admit neither issue.** Otherwise the count is seven.
+
+2. **Continue #1016’s existing repair**, without assigning another slot:
+   ```bash
+   gh pr checks 1017
+   tmux capture-pane -p -t rpi-1016
+   ```
+   Read its preserved log and identify the failing check’s cause. Its failure blocks that PR’s merge, not independent #1018.
+
+3. **Admit #1018 through the required RPI route**: read its issue and repository instructions, confirm dependencies, select its validation tier, record the assignment, and prepare a fresh canonical brief. Then:
+   ```bash
+   git fetch origin main &&
+   git worktree add ../ama-wt/issue-1018 \
+     -b chore/issue-1018 origin/main
+   ```
+   Launch its dedicated `rpi-1018` tmux session using `hve-core-all:rpi-agent`, `--model claude-sonnet-5.5`, and the fresh timestamped brief. Require the complete RPI artifacts and frozen local candidate; prohibit worker publication.
+
+Immediately verify the launch and recount the ledger, open PRs and live sessions. The expected result is **8 assignments, 9 open PRs**. Keep #1019 ready until an assignment is legitimately released; a worker merely exiting does not release its slot.
+

@@ -1,0 +1,57 @@
+**Prepare #941 as a stacked child of #940—not as a PR to `main`.** Discard #905’s saved brief. Generate a fresh brief from the current canonical instructions and #941’s current scope. The worker must return a frozen local candidate; it must not push, open a PR or merge.
+
+**Evidence:** You supplied parent branch `feat/epic-940-intake`, pinned commit `9f3c2a1`, and the parent’s draft PR targeting `main`. These are supplied facts, not freshly verified Git evidence. The read-only lookup also found no `.github/copilot-instructions.md` at this checkout’s expected path; resolving the canonical instructions is preflight work, not permission to reuse the old template.
+
+### Ordered actions I would take
+
+1. **Verify instructions, scope, dependencies and admission before any write:**
+   ```bash
+   git status --short
+   git branch --show-current
+   gh pr list --state open
+   command -v tmux
+   gh issue view 941 --json title,body,state,url
+   gh issue view 940 --json title,body,state,url
+   gh pr list --state open --head feat/epic-940-intake \
+     --json number,baseRefName,headRefName,headRefOid,isDraft
+   tmux ls
+   ```
+   Locate the current repository instructions, review/refine #941 through the backlog manager, and reconcile assignments from the session ledger, open PRs and live sessions. Admit only with an available assignment slot within eight and no more than 15 open PRs. Verify implementation dependencies separately: the parent-child relationship alone does not serialize siblings.
+
+2. **Verify and pin the stack base:**
+   ```bash
+   git fetch origin main feat/epic-940-intake
+   git rev-parse origin/main
+   git rev-parse origin/feat/epic-940-intake
+   git rev-parse '9f3c2a1^{commit}'
+   ```
+   Require the parent ref to match the supplied pinned commit. Resolve any discrepancy before launch; never silently substitute `main`.
+
+3. **Create #941’s isolated branch/worktree after admission:**
+   ```bash
+   git worktree add ../ama-wt/issue-941 \
+     -b feat/issue-941-intake <verified-full-parent-sha>
+   ```
+   Record the assignment, parent target and pinned SHA. Select and record the validation tier from the actual issue scope—full for security, SQL, infrastructure, deployment or big features; focused only when eligible.
+
+4. **Write a unique fresh `/tmp/brief-941-<timestamp>.md`, record its SHA-256, and include this mandatory opening and boundary:**
+
+   > Run the full RPI loop in order: research, plan, implement, review. Write and commit dated issue-941 artifacts under `.copilot-tracking/research/`, `plans/`, `changes/` and `reviews/`.
+   >
+   > Work on `feat/issue-941-intake` in the assigned worktree. Your declared target is `feat/epic-940-intake` at `<verified-full-parent-sha>`, not `main`. Include #941’s current issue text, acceptance criteria, dependencies, repository conventions, selected validation tier and test plan.
+   >
+   > Return a clean, frozen local commit with complete selected-tier evidence. Preserve adverse evidence. Do not push, open/update a PR, merge or change the target. Publication belongs to the coordinator.
+
+5. **Launch through the required native route**, using that fresh brief:
+   ```bash
+   tmux new-session -d -s rpi-941 -c ../ama-wt/issue-941 \
+     "echo --- launch <timestamp> >> /tmp/rpi-941.log; copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat /tmp/brief-941-<timestamp>.md)\" 2>&1 | tee -a /tmp/rpi-941.log"
+   tmux has-session -t rpi-941
+   tmux capture-pane -p -t rpi-941
+   ```
+   Recount assignments, record launch evidence and update/read back #941’s board status as In progress. Verify existing delivery/cleanup recurrences rather than creating duplicates.
+
+**Later publication:** Only after selected-tier verification and independent exact-head assessment would I push and open #941’s PR with `--base feat/epic-940-intake` and `Refs #941`. Green CI alone does not authorize merging. Child integration does not close #941 before its criteria are proven on `main`; the parent’s integration gates still apply.
+
+No launch or write was performed.
+

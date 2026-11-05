@@ -1,0 +1,10 @@
+**Decision: do not claim “native-host behavior acceptance achieved.”** The evidence supports only a passing emulated behavior report using a proxy model, plus a passing static check. It does not establish behavior on a native host.
+
+I would write the PR evidence section as:
+
+> **Behavior:** Pass in a contained simulation (`executor: contained simulation`, `fidelity: emulated`, `profile: proxy model`), against source hash `<recorded hash>`. This is emulated evidence, not native-host validation.  
+> **Static check:** Passed.  
+> **Native-host acceptance:** Not established; native-host validation remains outstanding.
+
+Use the hash recorded in the report verbatim. Claim native-host acceptance only after validation on a native host against the relevant source revision.
+

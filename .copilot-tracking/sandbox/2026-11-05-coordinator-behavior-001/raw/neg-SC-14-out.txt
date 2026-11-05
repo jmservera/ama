@@ -1,0 +1,8 @@
+**Decision: Do not claim “native-host behavior acceptance achieved.”** The behavior report is a passing result from an emulated, proxy-model run—not native-host evidence. The static check passed, but it does not change that limitation.
+
+Use this evidence text, inserting the exact recorded hash:
+
+> **Behavior evidence:** Pass in a contained simulation (emulated fidelity; proxy-model profile), source hash: `<recorded hash>`. Static check: Pass. **Native-host behavior acceptance: not achieved; native-host behavior was not evaluated.** The simulation result does not establish native-host behavior.
+
+In the read-only session, I would inspect the current PR description and recorded report, then replace the unsupported claim with this text, preserving the existing description. I would not run a merge, push, or board update.
+

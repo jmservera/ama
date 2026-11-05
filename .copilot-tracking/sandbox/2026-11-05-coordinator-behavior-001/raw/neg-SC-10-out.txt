@@ -1,0 +1,41 @@
+**Release #980’s active assignment and admit #982 after recounting capacity.** Keep PR #981 open and dependency-blocked on #979; a published, inactive PR does not reserve a worker slot.
+
+1. **Record #980 as inactive, preserving its evidence.** The local and published heads both equal `b41c7e0`; the worktree is clean, no unpublished commits or live sessions exist, and its RPI artifacts and disposition are retained. Update its ledger classification without deleting its history. Do **not** merge, rebase, relaunch or remove its worktree. Keep its board status **In review** because its PR remains open.
+
+2. **Recount before admission**, using the ledger and fresh reads:
+   ```sh
+   git status --short &&
+   git branch --show-current &&
+   gh pr list --state open --limit 1000 \
+     --json number,headRefName,headRefOid,baseRefName &&
+   (tmux list-sessions 2>/dev/null || true)
+   ```
+   Reconcile live workers and retained unpublished candidates once per issue. If the other seven assignments remain active, the corrected count is **seven**, not eight. PR #981 still counts toward the separate open-PR threshold. Admit #982 only with **15 or fewer open PRs**; otherwise advance existing-PR work instead.
+
+3. **Start #982’s isolated RPI loop**, assuming that admission check passes. Read repository instructions and #982’s current criteria/dependencies, then:
+   ```sh
+   gh issue view 982 --json title,body,url &&
+   git fetch origin main &&
+   git rev-parse origin/main
+   git worktree add ../ama-wt/issue-982 \
+     -b feat/issue-982 origin/main
+   ```
+   Select the branch type and validation tier from the actual scope. Generate a fresh timestamped brief containing the mandatory research → plan → implement → review phases, committed tracking artifacts, selected-tier checks, and **no worker publication**. Record its path/hash and launch:
+   ```sh
+   tmux new-session -d -s rpi-982 -c ../ama-wt/issue-982 \
+     "copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 \
+     --allow-all-tools --allow-all-paths \
+     --deny-tool 'shell(git push --force)' \
+     -p \"\$(cat '$BRIEF')\" 2>&1 | tee -a /tmp/rpi-982.log"
+   ```
+   `$BRIEF` denotes the newly generated, recorded brief—not an existing template.
+
+4. **Verify and recount after launch:**
+   ```sh
+   tmux has-session -t rpi-982 &&
+   tmux capture-pane -p -t rpi-982
+   ```
+   Confirm actual startup from the log, record #982 as running, and update/read back its board status as **In progress**. With the seven other assignments confirmed, this restores eight active assignments.
+
+**Evidence boundary:** the supplied facts establish #980’s released slot. The current open-PR count and the other assignments’ activity still require verification. #980’s dependency does not justify stopping independent delivery. **No actions have been executed.**
+

@@ -1,0 +1,40 @@
+**Do not launch #987. All eight assignment slots remain occupied.** For #986, `fatal: no upstream configured for branch` is failed Git evidence—not a count of zero. Its exited worker and unpublished PR do not release its assignment.
+
+I would proceed in this order; **none of these commands has been executed**:
+
+1. **Refresh the assignment evidence**, beginning with the required preconditions:
+   ```bash
+   git status --short
+   git branch --show-current
+   gh pr list --state open
+   tmux ls
+   ```
+   Read the session SQL assignment ledger and reconcile it against open PRs and live `rpi-*` sessions, counting each issue once. Record #986’s unpublished state as `unknown`, with assessment as its next action; record #987 as `ready`, admission deferred by the eight-assignment cap. Freshly classify the other seven assignments rather than assuming their states.
+
+2. **Inspect #986 without altering or discarding its work**:
+   ```bash
+   git worktree list --porcelain
+   ```
+   Using the worktree path and branch identified by that output:
+   ```bash
+   git -C <986-worktree> status --short
+   git -C <986-worktree> rev-parse HEAD
+   git -C <986-worktree> branch -vv
+   git -C <986-worktree> remote -v
+   git -C <986-worktree> log -5 --oneline
+   gh pr list --state all --head <986-branch> \
+     --json number,state,headRefOid,baseRefName,mergedAt,url
+   ```
+   Read `/tmp/rpi-986.log` and the issue’s RPI artifacts. If a matching remote branch exists, query its actual head:
+   ```bash
+   git -C <986-worktree> ls-remote --heads origin \
+     refs/heads/<986-branch>
+   ```
+   A missing remote branch still does **not** make the local candidate disposable or release its slot.
+
+3. **Advance #986 within its existing assignment.** Assess its candidate, required research/plan/changes/review artifacts, selected validation tier, and current exact-head evidence. Missing review or validation is executable assessment/repair work, not automatically a human blocker. Complete the applicable verification and independent assessment before any publication; publication remains the coordinator’s action.
+
+4. **Recount after each disposition.** Admit #987 only when an assignment is legitimately released **and** the open-PR admission threshold permits it. An approved published-only dependency pause requires publication/head proof, no live worker, no unpublished implementation, and preserved evidence and disposition; #986 currently fails that test.
+
+**Evidence relied on:** eight assigned issues, an exited #986 worker, an unpublished PR, and the explicit upstream error. Record those facts and the concrete assessment action in `tick_log`. Keep the delivery loop active; neither “zero unpublished commits” nor “no work remains” is supported.
+

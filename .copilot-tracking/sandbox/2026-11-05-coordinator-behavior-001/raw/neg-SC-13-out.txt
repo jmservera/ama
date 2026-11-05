@@ -1,0 +1,57 @@
+**Hold #990 for agent-specific validation; publish #991 independently after normal publication checks.** No write actions would run in this session.
+
+| Candidate | Decision | Evidence and gap |
+|---|---|---|
+| #990 | **Ready for validation, not publication** | Supplied exact-head unit results, independent review and hosted checks pass, but none establishes the changed agent/prompt’s conformance or behavior. Publication permission does not waive validation. This is executable work, not a human blocker. |
+| #991 | **Proceed to publication** | Supplied focused tests and Pass review support an ordinary backend bug fix. Do not impose agent-specific validation on it or make it wait for #990. Confirm the focused tier remains appropriate. |
+
+### Actions I would take, in order
+
+Commands below use verified candidate worktree, branch and base values—not assumed names.
+
+1. **Check repository state and both candidates without modifying them:**
+   ```bash
+   git status --short
+   git branch --show-current
+   gh pr list --state open
+   gh api repos/{owner}/{repo} --jq .allow_auto_merge
+   gh issue view 990 --json body,state,url
+   gh issue view 991 --json body,state,url
+   git fetch origin main
+   ```
+
+   In each candidate worktree:
+   ```bash
+   git status --short --untracked-files=all
+   git rev-parse HEAD
+   git diff "$TARGET_BASE_SHA"...HEAD --name-only
+   ```
+
+   Verify clean frozen heads, research/plan/changes/review artifacts, original RPI logs, acceptance coverage, and current selected-tier evidence. Confirm #991’s review covers its exact head independently. If it touches security, SQL or another full-tier category, require that tier instead.
+
+2. **Publish #991 once those gates pass**, without waiting for #990:
+   ```bash
+   git -C "$WT991" push -u origin "$BRANCH991"
+   gh pr create --base "$TARGET991" --head "$BRANCH991" \
+     --title "$TITLE991" --body-file "$BODY991"
+   ```
+   Use `Closes #991` only if all remaining criteria are proven and the target is the default branch; otherwise use `Refs #991`. Update its board status to In review and read it back. Publication is not merge authorization.
+
+3. **Route #990 to a validation continuation in its own existing worktree.** Recount assignments, check capacity and `command -v tmux`, then prepare a fresh canonical brief requiring:
+   - Static conformance checks for the changed agent definition and prompt.
+   - Behavioral scenarios exercising the changed instructions, including relevant failure/boundary cases.
+   - Recorded commands, expected versus observed results, source/head identities and limitations.
+   - Corrections and refreshed exact-head evidence if necessary; no worker publication.
+
+   Launch through the required route:
+   ```bash
+   tmux new-session -d -s rpi-990 -c "$WT990" \
+     "set -o pipefail; echo '--- launch $STAMP990' >> /tmp/rpi-990.log; copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat '$BRIEF990')\" 2>&1 | tee -a /tmp/rpi-990.log; echo exit=\$? >> /tmp/rpi-990.log"
+   tmux has-session -t rpi-990
+   tmux capture-pane -p -t rpi-990
+   ```
+
+   The supplied checkout exposes no validation harness, so I would not invent a conformance/test command or count ordinary unit tests as a substitute.
+
+4. **Reassess #990 only after that evidence exists.** Require independent assessment of the complete evidence and final exact head before pushing. For either PR, merge only after the separate current merge gate passes; green hosted checks alone are insufficient.
+

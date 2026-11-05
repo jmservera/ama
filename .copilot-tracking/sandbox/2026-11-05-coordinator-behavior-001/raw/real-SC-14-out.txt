@@ -1,0 +1,6 @@
+**Decision: do not claim “native-host behavior acceptance achieved.”** The evidence supports only an emulated, proxy-model result; it does not establish native-host acceptance.
+
+Evidence section: “Static check: Pass. Behavior report: Pass; executor: contained simulation; fidelity: emulated; profile: proxy model; source hash: [recorded hash]. Native-host behavior acceptance: Not demonstrated.”
+
+Keep the report and its source hash. Native-host behavior evidence for the exact source is still required before this behavior-bearing agent change can pass its publication/merge gate. Since this session is read-only, I made no PR edit or command call.
+
