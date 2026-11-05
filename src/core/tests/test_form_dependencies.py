@@ -280,9 +280,60 @@ class FormDependencies(unittest.TestCase):
             )
             changed = approvals()[1]
             self.assertEqual(changed["state"], "Review required")
-            self.assertEqual(changed["causes"], ["field-reviewed-after-approval"])
+            self.assertEqual(
+                changed["causes"], ["field-issue-open", "field-reviewed-after-approval"]
+            )
             self.assertEqual(changed["fields"], ["epc"])
             self.assertEqual(self.view(store)["status"], "Held")
+
+    def test_current_reference_to_a_field_with_an_open_issue_needs_review(self) -> None:
+        for store in self.stores:
+            draft, _ = self.setup_reviewed(store)
+            other = form_review.action(
+                store,
+                self.actor,
+                "ZF-1",
+                dict(action="open", schema_id="SYN-TECH", schema_version=1),
+            )
+
+            def ref(d: Any, ids: list[str], name: str, digest: str = draft["schema_digest"]) -> Any:
+                bound = dict(schema_digest=digest, input_version=d["input_version"], field_ids=ids)
+                return dict(self.hold(d["draft_id"], bound), decision_id=name)
+
+            with store.lock:
+                case = store._case("ZF-1")
+                case["finance_decision_holds"].extend(
+                    [
+                        ref(draft, ["notes"], "R-NOTES"),
+                        ref(draft, ["area"], "R-AREA"),
+                        ref(other, ["epc"], "R-EPC"),
+                    ]
+                )
+                form_reviews = {d["id"]: d for d in case["form_reviews"]}
+                form_reviews[draft["draft_id"]]["fields"]["area"]["value"] = "twelve"
+                store.save()
+                snapshot = copy.deepcopy(store._case("ZF-1"))
+            drafts = form_review.view(store, self.actor, "ZF-1")["drafts"]
+            with store.lock:
+                self.assertEqual(snapshot, store._case("ZF-1"))
+            by_id = {
+                a["decision_id"]: a for d in drafts for a in d["dependency_impact"]["approvals"]
+            }
+            self.assertEqual(
+                (by_id["R-NOTES"]["state"], by_id["R-NOTES"]["causes"]), ("Current", [])
+            )
+            self.assertEqual(by_id["R-AREA"]["state"], "Review required")
+            self.assertEqual(by_id["R-AREA"]["causes"], ["field-issue-open"])
+            self.assertEqual(by_id["R-AREA"]["fields"], ["area"])
+            self.assertEqual(by_id["R-EPC"]["state"], "Review required")
+            self.assertEqual(by_id["R-EPC"]["causes"], ["field-issue-open"])
+            self.assertTrue(
+                any(
+                    a["state"] == "Held"
+                    for d in drafts
+                    for a in d["dependency_impact"]["approvals"]
+                )
+            )
 
     def test_new_schema_field_needs_review_even_when_no_field_is_stale(self) -> None:
         for store in self.stores:

@@ -273,7 +273,9 @@ def _proposals(store: Any, case: Record, draft: Record, impact: Record) -> list[
     return result
 
 
-def _bound_causes(bound: object, draft: Record, impact: Record, stale: set[str]) -> Record:
+def _bound_causes(
+    bound: object, draft: Record, impact: Record, stale: set[str], open_issues: set[str]
+) -> Record:
     keys = {"schema_digest", "input_version", "field_ids"}
     if not isinstance(bound, dict) or set(bound) != keys:
         return dict(causes=["approval-lineage-malformed"], fields=[])
@@ -300,6 +302,7 @@ def _bound_causes(bound: object, draft: Record, impact: Record, stale: set[str])
         for flag, code in (
             (fid not in known, "field-not-in-schema"),
             (fid in stale, "field-stale"),
+            (fid in open_issues and fid not in stale, "field-issue-open"),
             (fid in changed, "field-reviewed-after-approval"),
         ):
             if flag:
@@ -308,7 +311,9 @@ def _bound_causes(bound: object, draft: Record, impact: Record, stale: set[str])
     return dict(causes=sorted(causes), fields=sorted(affected))
 
 
-def _approvals(case: Record, draft: Record, impact: Record, stale: set[str]) -> list[Record]:
+def _approvals(
+    case: Record, draft: Record, impact: Record, stale: set[str], open_issues: set[str]
+) -> list[Record]:
     """Read-only review-required evaluation of approval references; nothing is approved."""
     malformed = dict(
         decision_id=None,
@@ -336,7 +341,7 @@ def _approvals(case: Record, draft: Record, impact: Record, stale: set[str]) -> 
         if held:
             result.append(dict(base, state="Held", causes=[], fields=[]))
             continue
-        found = _bound_causes(hold.get("bound"), draft, impact, stale)
+        found = _bound_causes(hold.get("bound"), draft, impact, stale, open_issues)
         state = "Review required" if found["causes"] else "Current"
         result.append(dict(base, state=state, **found))
     return result
@@ -455,7 +460,7 @@ def _report(store: Any, case: Record, draft: Record, digests: Digests | None = N
         issues=issues,
         dependency_impact=dict(
             schema=impact,
-            approvals=_approvals(case, draft, impact, set(stale)),
+            approvals=_approvals(case, draft, impact, set(stale), {i["field_id"] for i in issues}),
         ),
         approved_rule_validation="Not evaluated",
         unit_currency_verification="Not evaluated",
