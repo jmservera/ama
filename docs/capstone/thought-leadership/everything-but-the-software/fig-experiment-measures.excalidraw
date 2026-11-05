@@ -27,7 +27,7 @@
       "y": 50,
       "width": 1200,
       "height": 60,
-      "text": "Primary: equal-model-weight B-D coverage; 33 trajectories per arm/model\nOther outcomes and per-model contrasts are secondary; no family-wide coverage claim",
+      "text": "Primary: equal-model-weight B-D coverage; 12 (default), 21 or 33 trajectories per model per arm\nOther outcomes and per-model contrasts are secondary; no family-wide coverage claim",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -35,7 +35,7 @@
       "textAlign": "left",
       "verticalAlign": "top",
       "containerId": null,
-      "originalText": "Primary: equal-model-weight B-D coverage; 33 trajectories per arm/model\nOther outcomes and per-model contrasts are secondary; no family-wide coverage claim"
+      "originalText": "Primary: equal-model-weight B-D coverage; 12 (default), 21 or 33 trajectories per model per arm\nOther outcomes and per-model contrasts are secondary; no family-wide coverage claim"
     },
     {
       "id": "col-endpoint",
@@ -1808,7 +1808,7 @@
       "y": 501,
       "width": 266,
       "height": 82,
-      "text": "CR1 adaptation\nWithheld after P_10\n33 runs/arm/model",
+      "text": "CR1 adaptation\nWithheld after P_10\nSame selected n",
       "fontSize": 22,
       "fontFamily": 2,
       "lineHeight": 1.25,
@@ -1816,7 +1816,7 @@
       "textAlign": "center",
       "verticalAlign": "middle",
       "containerId": "h6-target",
-      "originalText": "CR1 adaptation\nWithheld after P_10\n33 runs/arm/model"
+      "originalText": "CR1 adaptation\nWithheld after P_10\nSame selected n"
     },
     {
       "id": "h6-measure",

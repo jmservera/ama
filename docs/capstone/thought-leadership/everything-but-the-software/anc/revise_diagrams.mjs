@@ -47,10 +47,10 @@ function connect(id, source, target) {
   target.boundElements.push({ type: "arrow", id });
 }
 
-text("title", "PROSPECTIVE STUDY DESIGN\n495 trajectories across five arms",
+text("title", "PROSPECTIVE STUDY DESIGN\nDefault: 180 trajectories across five arms",
   0, 0, 1120, 95, 36);
 text("scope", "Each model runs every arm: GPT 6.1 Sol, Sonnet 5.5, Gemini 4 Argon.\n"
-  + "33 trajectories per arm/model; seed 2027; fresh sessions inherit repository state.",
+  + "12 (default), 21 or 33 trajectories per model per arm; seed 2027.",
   0, 110, 1120, 70);
 
 const arms = [
@@ -72,7 +72,7 @@ for (const [index, [arm, feature, post, colour]] of arms.entries()) {
 }
 text("footer", "CR1: withheld change request, 45 min / 300 nominal credits.\n"
   + "Primary B-D: matched time/credit ceilings; session structure, tests and handovers differ.\n"
-  + "15 excluded calibration trajectories. New freeze, OSF amendment and launch approval pending.",
+  + "15 calibration trajectories, no CR1. MVE: A/B/C only; D/E proposed.",
   0, 850, 1120, 105);
 await writeFile(resolve(paper, "fig-pilot-design.excalidraw"), JSON.stringify({
   type: "excalidraw", version: 2, source: "https://excalidraw.com", elements,
@@ -111,7 +111,7 @@ await replaceLabels("fig-experiment-measures", {
   "MEASUREMENT | Pilot endpoints, cost counterbalance & interpretation":
     "MEASUREMENT | Coverage, retention, adaptation and cost",
   "Primary B-A and B-C contrasts reported separately per model (2 runs/arm/model)\nExploratory uncertainty only; no pass/fail hypothesis verdicts":
-    "Primary: equal-model-weight B-D coverage; 33 trajectories per arm/model\n"
+    "Primary: equal-model-weight B-D coverage; 12 (default), 21 or 33 trajectories per model per arm\n"
     + "Other outcomes and per-model contrasts are secondary; no family-wide coverage claim",
   "H1: Final coverage\nCheckpoint P_10\nAll 127 feature tests":
     "Final coverage\nCheckpoint P_10\n127 feature contracts",
@@ -120,7 +120,7 @@ await replaceLabels("fig-experiment-measures", {
   "Open losses & density\non unchanged prior-P passes\nRecovery keeps episode":
     "Losses / observed risk\nFull risk + missing counts\nRecovery keeps episode",
   "H6: Changeability\nWithheld CR1 after P_10\n2 runs/arm/model denom.":
-    "CR1 adaptation\nWithheld after P_10\n33 runs/arm/model",
+    "CR1 adaptation\nWithheld after P_10\nSame selected n",
   "All 15 CR1 tests pass\nAND all P_10 passing\nfeature contracts retained":
     "Strict: CR1 + retention\nGraded: passes / 15; losses\nF9/F10 acquisition strata",
   "Single regional scope probe\nUnobserved stays missing\nwith explicit bounds":

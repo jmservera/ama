@@ -4,6 +4,8 @@ The experiment asks whether scheduled correction improves the repository
 inherited by later feature work. RQ3 is addressed by the prospective design
 specified below.
 The 1 November amendment supersedes v4's two runs per arm/model.
+The 2 November revision replaces that amendment's fixed 33-per-cell
+allocation with a prospective researcher choice of 12, 21 or 33, default 12.
 Historical freezes, diagnostics and the original owner-reported OSF
 registration are retained; none approves this new design. The researcher
 kit requires a new source-bound freeze and prospective OSF amendment
@@ -18,7 +20,9 @@ ten ordered features and a final held-out change request, CR1.
 Every selected model, GPT~6.1 Sol, Sonnet~5.5 and Gemini~4 Argon,
 runs every arm. Randomised interleaving within model/replicate blocks
 uses seed 2027. Feature steps, tests and checkpoints are repeated
-observations within a trajectory, not independent replicates.
+observations within a trajectory, not independent replicates; agent
+sessions are not independent units either. The selected number $n$ applies
+\emph{per model per arm}, equally across all fifteen cells.
 
 \begin{table}[!htbp]
 \centering\small
@@ -41,6 +45,16 @@ specifications and examples & 30 + 15 min; 300 + 300 credits \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+The MVE accepts \texttt{--replicates} values 12, 21 or 33 (default 12)
+and keeps its saved selection immutable, but implements only A/B/C.
+D/E are proposed arms, not executable treatments in that implementation.
+Its selector does not establish a five-arm study: the allocation and
+resource calculations below describe the paper's unchanged three-model,
+five-arm proposal. D/E implementation and new source-bound qualification
+are collection gates. Running only A/B/C would require separate design
+authorization. Neither this allocation revision nor the MVE update is
+part of the published v4 freeze.
 
 B--D is the primary practical comparison: consolidation versus giving
 the builder the same total time and nominal credits. Equal ceilings do
@@ -144,6 +158,16 @@ is not zero.
 
 \subsection{Replication and uncertainty}\label{sec:protocollimits}
 
+The researcher prospectively selects $n\in\{12,21,33\}$ independent
+repository trajectories per model per arm, with \textbf{12 as the default}.
+Before study collection, record the choice, rationale, planning SD,
+power/precision trade-off, date and source-bound configuration in the saved
+study record and prospective protocol. Selecting a sample size does not
+establish that its associated SD assumption is true.
+The saved allocation is immutable on resume. Outcome-driven sample-size
+changes, additions and replacements are prohibited; interim coverage,
+loss, CR1 success or other outcomes cannot determine $n$.
+
 The author selected a minimum useful absolute coverage gain of ten
 percentage points, approximately thirteen test-weighted contracts.
 Coverage scores $Y$ are expressed on the 0--100 scale. Let
@@ -157,22 +181,44 @@ over the $M=3$ selected models. Its estimator is
 \end{equation}
 For balanced cells of $n_{\mathrm{cell}}$ independent trajectories and a
 common within-cell variance $\sigma^2$, its planning variance is
-$2\sigma^2/(M n_{\mathrm{cell}})$. The assumed SD is 25 percentage points.
+$2\sigma^2/(M n_{\mathrm{cell}})$, with $n_{\mathrm{cell}}=n$.
 For one two-sided comparison with $\alpha=0.05$, target power
 $1-\beta=0.80$ and target difference $\Delta_*=10$ points, the normal
-planning approximation is
+planning minimum, conditional on the assumed SD, is
 \begin{equation}
-n_{\mathrm{cell}}=
+n_{\mathrm{plan}}(\sigma)=
 \left\lceil\frac{2(z_{1-\alpha/2}+z_{1-\beta})^2\sigma^2}
-{M\Delta_*^2}\right\rceil=33.
+{M\Delta_*^2}\right\rceil.
 \label{eq:samplesize}
 \end{equation}
-This gives 99 trajectories per arm, 495 overall. The target power is
-conditional on independent trajectories, the assumed variance and the
-blocked estimand; it is not guaranteed. SD assumptions of 15, 20 and
-50 points require 12, 21 and 131 per cell respectively. The bounded
-score's worst-case SD is 50; the 25-point assumption needs explicit
-author and prospective registration approval.
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Conditional normal planning for the ten-point B--D contrast,
+three equally weighted models, $\alpha=0.05$ and target power 0.80.
+The SDs are assumptions, not measured variances or interchangeable power
+guarantees.}
+\label{tab:replicationchoices}
+\begin{tabular}{@{}rr@{}}
+\toprule
+Assumed within-cell SD (points) & Planning minimum per model per arm \\
+\midrule
+15 & \textbf{12 (default allocation)} \\
+20 & 21 \\
+25 & 33 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These are conditional planning assumptions, not estimates of actual
+within-cell variability. Target power depends on independent trajectories,
+the common variance, normal approximation and equal-model estimand; it is
+not guaranteed by any offered choice. In particular, default $n=12$ is
+\emph{not} an 80\%-power design under the existing SD of 25 points.
+The bounded score's worst-case SD is 50, requiring 131 per cell under
+the same approximation; that is outside the offered allocation choices.
+The variance assumption and selected allocation require explicit author
+review and prospective registration before collection.
 
 Resample whole trajectories within model and arm, with
 10,000 draws and pointwise 95\% percentile intervals; disclose missing
@@ -196,38 +242,73 @@ strata. The coverage calculation supplies no power guarantee for CR1.
 
 \subsection{Resources, feasibility and collection gates}\label{sec:prerun}
 
-The unchanged envelope is 300,000 nominal credits, with 270,000 local
-admission, prior spending and unknown historical provisions retained.
+The actual aggregate envelope remains 300,000 AI credits, with a
+270,000-credit local admission ceiling. Prior spending and provisions for
+unknown historical usage remain charged or held against remaining
+admission; unknown usage is never zero or free headroom.
 Original 300-credit sessions use a 270-credit soft limit; D's
 600-credit feature uses 540. A retry shares the original allowance.
 In-flight responses can overshoot; these are not provider billing caps.
 No verified dollar conversion is available.
 
+Each study trajectory contains ten feature cycles and one CR1 session,
+the latter capped at 45 minutes and 300 nominal credits in every arm.
+A/D therefore have eleven sessions per trajectory; B/C/E have twenty-one.
+A allows at most 5.75 agent-hours and 3,300 nominal credits per study
+trajectory; B/C/D/E each allow 8.25 hours and 6,300 credits.
+Across three models and five arms, the study has $15n$ trajectories,
+$3n[2(11)+3(21)]=255n$ sessions,
+$3n[5.75+4(8.25)]=116.25n$ maximum agent-hours and
+$3n[3300+4(6300)]=85500n$ nominal session credits.
+
+Excluded cost-only calibration retains one trajectory per model per arm:
+15 trajectories, ten features each and no CR1. A/D have ten sessions and
+B/C/E twenty; A allows five hours and 3,000 credits, and B/C/D/E each
+allow 7.5 hours and 6,000 credits. Thus calibration adds 240 sessions,
+105 maximum agent-hours and 81,000 nominal credits, independent of $n$.
+
 \begin{table}[!htbp]
 \centering\small
-\caption{Planned resources, not expenditure. Worst-case allowances
-exceed the aggregate envelope; affordability is a real launch gate.}
+\caption{Five-arm resources for every prospective choice of $n$ per
+model per arm; the default column is bold. These are summed nominal
+session allowances and time ceilings, not expenditure or enlarged budgets.
+Every choice exceeds the aggregate envelope at nominal session caps.}
 \label{tab:pilotresources}
-\begin{tabular}{@{}lrrr@{}}
+\begin{tabularx}{\textwidth}{@{}Y>{\bfseries}rrr@{}}
 \toprule
-Arm & Trajectories & Sessions & Maximum agent-hours \\
+Quantity & $n=12$ (default) & $n=21$ & $n=33$ \\
 \midrule
-A & 99 & 1,089 & 569.25 \\
-B & 99 & 2,079 & 816.75 \\
-C & 99 & 2,079 & 816.75 \\
-D & 99 & 1,089 & 816.75 \\
-E & 99 & 2,079 & 816.75 \\
-Study total & 495 & 8,415 & 3,836.25 \\
-Excluded calibration, no CR1 & 15 & 240 & 105.00 \\
+Study trajectories per arm, all models & 36 & 63 & 99 \\
+Study trajectories, all arms & 180 & 315 & 495 \\
+Study sessions, including CR1 & 3,060 & 5,355 & 8,415 \\
+Study maximum agent-hours & 1,395.00 & 2,441.25 & 3,836.25 \\
+Study nominal session credits & 1,026,000 & 1,795,500 & 2,821,500 \\
+Excluded calibration trajectories, no CR1 & 15 & 15 & 15 \\
+Excluded calibration sessions & 240 & 240 & 240 \\
+Calibration maximum agent-hours & 105.00 & 105.00 & 105.00 \\
+Calibration nominal session credits & 81,000 & 81,000 & 81,000 \\
+Combined trajectories & 195 & 330 & 510 \\
+Combined sessions & 3,300 & 5,595 & 8,655 \\
+Combined maximum agent-hours & 1,500.00 & 2,546.25 & 3,941.25 \\
+Combined nominal session credits & 1,107,000 & 1,876,500 & 2,902,500 \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
-At nominal caps the combined allowance is 2,902,500 credits, not a
-permitted expenditure. Cost-only excluded calibration must show that
-the entire fixed allocation fits remaining admission and the deadline;
-otherwise halt and amend before collection, never quietly reduce the
-sample. Proposed progression criteria are infrastructure failures at
+Combined nominal allowances are $85500n+81000$ credits and maximum
+agent-hours are $116.25n+105$. At default $n=12$, 1,107,000 nominal credits
+and 3,300 sessions including calibration do not authorize spending beyond
+the unchanged 300,000-credit envelope or 270,000-credit admission ceiling.
+Excluded calibration informs cost and time feasibility only, not outcome-
+or variance-driven sample resizing. Its cost forecast must show that the
+entire selected allocation, including CR1 and all-attempt liabilities, fits
+remaining admission and the deadline after prior spend and unknown-usage
+holds. Otherwise halt before study collection. A different allocation
+requires a separately authorized prospective amendment and a new saved
+study, never a changed allocation on resume or a silent reduction to fit
+the budget. An interrupted or unaffordable study retains its selected
+allocation and is reported incomplete.
+Proposed progression criteria are infrastructure failures at
 most 5\%, no missing primary observations, complete billing/model/help
 records, zero oracle contradictions in triplicate reference checks,
 and no information-boundary failure. Hidden-test mutation assessment

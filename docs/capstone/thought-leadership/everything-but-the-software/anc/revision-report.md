@@ -1,13 +1,138 @@
 ---
 title: Everything but the Software - Revision Record
 description: Author review dispositions, equation audit and retained historical revision evidence
-ms.date: 2026-11-01
+ms.date: 2026-11-02
 ---
 
-The author-review record below describes the current revision. The sections
+The 2 November entry describes the current allocation revision. The
+1 November disposition and its fixed-33 tables remain historical. The sections
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Prospective Allocation Revision 2 November
+
+Work execution is complete for the requested manuscript allocation revision
+and compiled PDF. Assessment consists of scoped assisted numerical, structural
+and rendering checks, not independent scientific review or collection approval.
+The title, three selected models, A/B/C/D/E proposal, false results switch,
+original v4 prompt and historical disclosures remain unchanged.
+
+### Selection and Power
+
+The [protocol](./experiment-protocol.tex) now offers 12 (default), 21 or 33
+independent repository trajectories per model per arm. The researcher records
+the choice and rationale, assumed SD, power/precision trade-off, date and
+source-bound saved configuration before study collection. The selected
+allocation is immutable on resume. Outcome-driven resizing, additions,
+replacements and automatic budget-driven sample reductions are prohibited.
+Features, tests and agent sessions are not independent replicates.
+
+Python's standard-library NormalDist reproduces the existing approximation
+for three equally weighted models, a ten-percentage-point B-D contrast,
+two-sided alpha .05 and target power .80:
+
+| Assumed within-cell SD, percentage points | Unrounded planning minimum | Ceiling per model per arm |
+| ----------------------------------------: | --------------------------: | -------------------------: |
+|                                       15 |                11.77331960 |                        12 |
+|                                       20 |                20.93034596 |                        21 |
+|                                       25 |                32.70366556 |                        33 |
+
+These are conditional planning assumptions, not measured variances or
+interchangeable guarantees. With SD 25 and n=12, the same normal model gives
+approximately 0.396438 power, not .80. This is a hypothetical sensitivity
+calculation, not observed power. Worst-case bounded-score SD 50 requires 131
+per cell under that approximation, outside the offered choices. Scheduling
+blocks still need reconciliation with the independent-trajectory planning
+variance and within-model/arm bootstrap before the new freeze.
+
+### Schedules and Resource Audit
+
+Read-only inspection of the earlier
+[candidate protocol](https://github.com/jmservera/ama-thought-mve/blob/7c3802d1f010bb03e9005e89b51abf730c15b776/protocol/pilot-estimation.json)
+and its README confirms the proposed arm schedules, 45-minute/300-credit
+CR1 in every arm, excluded calibration without CR1, and aggregate controls.
+Its fixed-33 allocation is an earlier proposal, not the selection adopted here.
+
+For each study trajectory, A/D have eleven sessions and B/C/E twenty-one.
+A has 5.75 maximum hours and 3,300 nominal credits; B/C/D/E have 8.25 hours
+and 6,300 credits. Multiplying each arm by three models and selected n gives
+`15*n` trajectories, `255*n` sessions, `116.25*n` maximum hours and
+`85500*n` nominal session credits. Exact Fraction arithmetic independently
+reproduces these coefficients.
+
+Calibration retains one ten-feature trajectory per model per arm, no CR1:
+15 trajectories, 240 sessions, 105 hours and 81,000 nominal credits.
+The protocol table now presents all three choices, with the default column
+bold. All 39 numerical cells match the independent calculation. Default 12
+gives 180 study trajectories, 3,060 study sessions, 3,300 sessions including
+calibration, 1,500 maximum hours including calibration and 1,107,000 summed
+nominal credits. The package README presents all three summary scenarios too.
+The two allocation-bearing figures and their authoring script now show the
+selectable allocation, default 180 study trajectories, shared CR1 selection
+and A/B/C-only implementation boundary. Native SVG/PNG exports and their
+source/export hashes were refreshed; historical figures remain in Git.
+
+Nominal session sums do not enlarge the actual 300,000-credit aggregate
+envelope or 270,000-credit local admission ceiling. The inspected older
+candidate records 21.79019 known prior credits and a distinct 1,200-credit
+unknown-usage hold; those are historical ledger entries, not newly reconciled
+billing or free headroom. The manuscript preserves prior spending,
+unknown-usage holds, all-attempt accounting and full-selected-allocation
+affordability/deadline gates. Infeasibility halts collection; it does not
+silently change n. A different allocation needs a separately authorized
+prospective amendment and new saved study. An interrupted or unaffordable
+study remains incomplete at its original selected allocation.
+
+### Implementation and Evidence Limits
+
+The owner supplies the current MVE capability: `--replicates` accepts
+12/21/33, defaults to 12 and preserves an immutable saved selection, but
+only A/B/C are implemented. The paper retains all five arms, so D/E
+implementation and qualification remain required before its primary B-D
+study can run. This revision corrects the earlier five-arm implementation
+wording without deleting its dated record.
+
+Read-only inspection found the public default at `03c50856`, the earlier
+five-arm proposal at `7c3802d1`, and the local default checkout at `1fee4535`.
+These inspected versions do not source-bind the newer selector update;
+its capability remains owner-supplied, not independently exercised or
+certified by this paper revision. The earlier candidate's runtime claims
+are not treated as evidence that the owner's current A/B/C implementation
+includes D/E. No MVE source, saved study or dataset was modified or used.
+No study, smoke, calibration, model session, OSF action or freeze change
+was launched. These changes are not part of the published v4 freeze.
+
+### Focused Validation
+
+* All 34 existing paper-authoring tests pass. Active Supplement hashes and
+  the literal frozen prompt remain unchanged. The two revised native figures
+  pass overflow checks and all nine figure/integration tests; their refreshed
+  SVG/PNG bindings pass, and both exports were visually inspected.
+* The structural checker passes with 94 cited entries, 105 reusable entries,
+  a 1,707-character normalized abstract and a false results switch. The
+  historical body-word baseline is unavailable, not reconstructed.
+* Independent arithmetic checks pass for every resource-table cell and the
+  three sample-size rows. No measured variance or study result is inferred.
+* Tectonic compiles the 38-page PDF; the Supplement starts on page 33.
+  Direct log/PDF checks find no TeX errors, unresolved references, overfull
+  boxes, blank extracted pages or out-of-page words. The power and resource
+  table pages 19 and 20 were rendered and visually inspected. One inherited
+  inputenc compatibility warning remains. No pdfLaTeX-specific output-marker
+  check is represented as passing under Tectonic.
+* The required focused repository gate was attempted with `--changed`, an
+  explicit base and external output after fetching `origin/main` at
+  `a56df549`. It stopped with `Candidate has tracked modifications or
+  untracked inputs`. No gate test groups ran or passing receipt was produced.
+  No commit, stash, exclusion, branch change or remote write bypassed that
+  precondition.
+
+Remaining alignment gates are a source-bound selector update and D/E
+implementation, resolution of scheduling-block dependence, a new exact-source
+review/freeze and prospective OSF amendment, full-allocation affordability
+and deadline evidence, collection authorization, and the clean-candidate
+repository gate. No independent review, hosted approval or publication
+readiness is claimed.
 
 ## Author Review Disposition 1 November
 

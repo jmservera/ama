@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-01
+ms.date: 2026-11-02
 ms.topic: overview
 ---
 
@@ -25,7 +25,7 @@ For the paper's [single-document delivery](../capstone/thought-leadership/everyt
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
 The owner-requested additive revision removes repeated Background, figures
-and case narratives; the current 37-page paper retains only extra source
+and case narratives; the current 38-page paper retains only extra source
 qualifications and methodological/provenance detail in its Supplement.
 The [nine-point author review](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#author-review-disposition-1-november)
 restores the discovery-to-backlog-to-feedback account, abstracts the case and
@@ -33,9 +33,20 @@ records the supplied project export. Four requested scientific skills support
 the equation audit; risk/annotation domains and discrete break-even are
 explicit. Scheduling-block dependence must still be resolved against the
 variance and bootstrap scheme before the new freeze and collection.
-The prospective five-arm candidate has
-33 trajectories per arm/model (495), a conditional 10-point coverage target,
-matched-resource delivery, visible repair and a blocked primary comparison.
+The [2 November allocation revision](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#prospective-allocation-revision-2-november)
+retains three models and five proposed arms, with 12 (default), 21 or 33
+independent repository trajectories per model per arm: 180/315/495 study
+trajectories. The researcher records the choice and rationale before study
+collection; saved selection is immutable on resume and outcome-driven
+resizing is prohibited. The ten-point B-D normal planning minima correspond
+to assumed SDs of 15/20/25 points, not measured variances or interchangeable
+80%-power guarantees; default 12 is not an 80%-power design at SD 25.
+Combined nominal allowances of 1,107,000/1,876,500/2,902,500 credits do not
+enlarge the actual 300,000 aggregate envelope or 270,000 admission ceiling.
+Prior spend, unknown-usage holds and full-allocation affordability remain
+gates. The owner-reported MVE selector supports those choices but only A/B/C
+are implemented; D/E and a source-bound selector update remain alignment
+gaps. None of these changes is included in the published v4 freeze.
 Three pinned static snapshots, source/access limits, lexical validation and
 corrected zero/undefined and break-even figures are retained. Source metadata
 and code tests do not establish scientific acceptance or historical deployed

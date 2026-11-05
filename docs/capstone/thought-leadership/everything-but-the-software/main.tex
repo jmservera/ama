@@ -54,7 +54,7 @@ An Exploratory Case Study and an Experiment Protocol}
 author's own and do not necessarily reflect those of Microsoft.}\\[4pt]
 \small Senior Partner Solution Architect, Microsoft Schweiz, Zurich}
 
-\date{Draft of 1 November 2026}
+\date{Draft of 2 November 2026}
 % TODO(author): replace with the submission date.
 
 \begin{document}
@@ -75,14 +75,14 @@ and prompted renewed feedback and refactoring. Five candidate mechanisms
 organise this transition: specification inflation, proxy capture, learning
 evaporation, process-gate inflation and feedback starvation. Migration and
 deployment dependencies remain central to the observed failure.
-A prospective protocol specifies 495 trajectories across three selected
-models and five arms: feature-only delivery, scheduled consolidation,
-read-only review, matched-resource delivery and visible regression repair.
+A prospective three-model, five-arm protocol compares feature-only delivery,
+scheduled consolidation, read-only review, matched-resource delivery and
+visible regression repair. The researcher selects 12 (default), 21 or 33
+independent repository trajectories per model per arm before collection.
 The outcomes are final behavioural coverage, retained-contract loss,
-an unforeseen change request and resource cost. The design targets a
-ten-percentage-point coverage gain under an explicit variance assumption;
-consolidation combines structural work, additional tests and a revised
-handover. Source freeze, prospective registration, affordability and collection
+an unforeseen change request and resource cost. Planning power for a
+ten-percentage-point gain depends on the assumed variance.
+Source freeze, prospective registration, affordability and collection
 authorization remain gates. The study asks whether consolidation improves
 the system inherited by later feature work.
 \end{abstract}
@@ -1020,7 +1020,9 @@ AI-generated conceptual graphics and assumed economics are explicitly
 separate from experimental data; human author approval remains required.
 The later v9 revision used Copilot-assisted source comparison, static
 measurements, five-arm kit implementation and local native diagram
-authoring. It added no experimental trajectories or independent human
+authoring, as reported in its dated record. The 2 November allocation
+revision corrects that implementation claim: the MVE implements only
+A/B/C; D/E remain proposed. The v9 revision added no experimental trajectories or independent human
 peer review, and made no new Gemini design-session claim.
 
 The author supplied the observations, selected the case and made the analytical
@@ -1070,6 +1072,12 @@ proposals, not the tagged study record. The separate researcher kit is at
 \href{https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v4}
 {historical frozen v4 release}. The revised design requires a new exact-source
 packet and prospective OSF amendment before collection; v4 does not approve it.
+The MVE's \texttt{--replicates} selector now accepts 12, 21 or 33
+per model per arm (default 12), with an immutable saved selection, but
+only A/B/C are implemented. The paper retains all three models and five
+proposed arms; D/E and their source-bound validation remain an explicit
+implementation gap. These changes are not included in the published v4
+freeze, and this paper revision changes neither that kit nor OSF records.
 The author plans to make both repositories private before the experiment,
 give the independent researcher a protected kit without access to the
 original repositories or manuscript, and release the approved kit and

@@ -15,9 +15,9 @@
     },
     {
       "stem": "fig-pilot-design",
-      "source_sha256": "92f42d57559c1611776f6c818d2175ae9a0a7b2dbbf0409b1836638072770775",
-      "svg_sha256": "8d2bcb10617b8f106a68b559e2f3c23c998ec7be86f93ddbc37bbb2486b13fe8",
-      "png_sha256": "932818eced36ab83311b98b844b0dd649c535189ab2697906df330a6dc6c7557",
+      "source_sha256": "bad183c8789c5d45a5c69a1c04045b4dd0ede041cb727e4c0342993bd08f9357",
+      "svg_sha256": "449d1ace0f34ea5a8697e528b0070b283ebbc6184eb3aff9e6c5310b7190017a",
+      "png_sha256": "a8c422fc900867ffe470f135d1f5ec48fc9fa5ceb50dea865b972d98c9952120",
       "width": 1095,
       "height": 980,
       "elements": 58
@@ -33,9 +33,9 @@
     },
     {
       "stem": "fig-experiment-measures",
-      "source_sha256": "bce3fac9e909e863f84e9b406f693b4b251788c2387bbe0dbe2905d494c093a5",
-      "svg_sha256": "70829e5d934713362abc39c6ef85392ca6cfc5379ce752edf6be1e2d70da7bf6",
-      "png_sha256": "9be36abffdfff35743d63e12ffe212d4a609d2c09edeea48ca7800799a91418c",
+      "source_sha256": "3ed4ab23f3951adae6e1872f24128cf2b1475a6754b187fd2193bd1914fab8b5",
+      "svg_sha256": "8d2320f9913c4e72fe3ffcf0bf5a1631700c0f07b02b164dccaaffed4ddd3019",
+      "png_sha256": "3d32f3b5f6d562ce6e4bd254870adde5913b9e5e8b298415184811a6be15b36b",
       "width": 1240,
       "height": 960,
       "elements": 135
