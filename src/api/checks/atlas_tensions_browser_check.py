@@ -157,17 +157,20 @@ def check_regions_and_keys(page: Page, evidence: Any, where: str) -> None:
         ),
     )
     page.evaluate("() => { document.activeElement.blur(); window.scrollTo(0, 0); }")
-    reached: list[str] = []
+    reached: set[int] = set()
     for _ in range(120):
         page.keyboard.press("Tab")
-        label = page.evaluate("() => document.activeElement.getAttribute('aria-label') || ''")
-        if label in labels and label not in reached:
-            reached.append(label)
-        if len(reached) == len(set(labels)):
+        index = evidence.evaluate(
+            "root => [...root.querySelectorAll('div.table-scroll[role=\"region\"]')]"
+            ".indexOf(document.activeElement)"
+        )
+        if index >= 0:
+            reached.add(index)
+        if len(reached) == len(labels):
             break
     check(
-        f"{where}: Tab reaches every table region: {reached}",
-        sorted(reached) == sorted(set(labels)),
+        f"{where}: Tab reaches every table region: {len(reached)} of {len(labels)}",
+        reached == set(range(len(labels))),
     )
 
 
