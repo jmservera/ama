@@ -396,7 +396,9 @@ For the UI and cache recovery after #1214 and #1215, the
 [seventh stabilization checkpoint](../architecture/cutover-evidence-pack.md#seventh-stabilization-checkpoint-current-main-ui-and-cache-recovery-2026-11-05-refs-440-96)
 pins main `bb3a3b03` and records document identities and traceability; the
 focused main checks were blocked by a held heavy lock and are unrun, not
-passed, and no defect or acceptance is implied.
+passed, and no defect or acceptance is implied. A dated continuation records
+that both focused checks later passed on exact current main `bb3a3b03`
+(focused only; not a full receipt or any acceptance).
 For issue #119, the [map tile provider options review](./research/ux/map-tile-provider-options.md)
 records dated licence, attribution, coverage, cost, processor and privacy
 evidence for the public OSM server, Azure Maps, OS Maps API, MapTiler and

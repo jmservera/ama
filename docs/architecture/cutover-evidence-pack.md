@@ -3412,3 +3412,66 @@ No existing record, cache, snapshot, image or evidence was deleted, moved or
 modified. New external paths were created, not overwritten, and retained
 without archive or backup. The one axe file was copied from existing
 evidence. No human approval, receipt or review approval is invented.
+
+### Required-observations continuation: actual results (2026-11-05, Refs #440 #96)
+
+This continuation is separate and dated after the record above. The unrun
+statements above stay as the historical record at that time; they are not
+rewritten. Both required focused checks have now run on current main, in a
+documentation child that stays based on parent `23cdae38`. This is focused
+stabilization evidence only: not a full or `--changed` gate, not a #96 full
+receipt, and not #440 C7 whole triage, C8 HVE Builder host validation, legal
+or human approval, Azure or #96 feature acceptance. Original RPI evidence is
+under `.copilot-tracking/*/2026-11-05-ui-cache-required-observations-followup-440-*`.
+
+| Item | Value |
+| --- | --- |
+| Child head and tree at start | `66c81b2893f00442813220d322d254927e68f9eb`, tree `650251ad26ca0af27c3c5bb5ef633341e5f337ad`, clean |
+| Main re-resolved at admission (2026-11-05, 15:02Z) | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`, tree `5c2988b71aec609b007b41f408685d54e2c28e0d`, unchanged from the earlier pin; latest scorer run 42036086584 `completed` `success`; no newer commit |
+| Parent (unchanged, not moved) | `23cdae38b1fe47a47ba5f3f356ed18253aad9c46`, tree `263475b0e4d01203186b42b5311f4c85c0d4f5dd` |
+| Document blobs and status | Unchanged and re-read equal at main: BRD `34d88395...` draft 0.21.0, PRD `c788b917...` in-review 0.21.0, ADR 0003 `d6064539...` accepted with owner amendment, ADR 0006 `956da1a3...` accepted. Draft and in-review are not approvals |
+| Clean observed source | New detached exact-main auxiliary `/tmp/m440b` at `bb3a3b03`, 0 tracked, untracked or ignored entries before and after the observations; no `__pycache__` or `*.pyc` under it |
+| Environment | The existing #440-owned venv `/tmp/ama-main-440-ui-cache-wave3-venv` was reused without any install (Python 3.12.3, playwright 1.64.0, `src/api/pyproject.toml` identical in both auxiliaries). Explicit `PYTHONPATH` placed `/tmp/m440b/src/{core,agents,api}/src` and the tests ahead of the editable installs; `zava_forward.core.store` and `zava_forward.api.server` resolved to `/tmp/m440b/...`, and the checker `__file__` is `/tmp/m440b/src/api/checks/case_journey_browser_check.py`. Scrubbed environment (`env` cleared), `PYTHONDONTWRITEBYTECODE=1`, `TMPDIR` external, stdin from `/dev/null` |
+| Lock | One non-blocking exclusive `fcntl` hold of `/tmp/ama-rpi-heavy.lock` across both checks, acquired 15:03:36Z, released 15:05:14Z. It was free on probe (no holder, no runner process), so no queue, retry or wait occurred |
+| Axe | The copied pin `/tmp/o440c/axe-4.10.3.min.js`, SHA-256 `880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb`, equal to `AXE_SHA256` in main `tools/rpi-checks.py`; copied from the #440 wave3 output copy, nothing downloaded |
+| Browser | Chromium `156.0.8078.4` (Playwright cache `chromium-1248`), axe 4.10.3 as reported in `results.json` |
+
+| Check | Command (from) | Exit | Result |
+| --- | --- | --- | --- |
+| 1. Real-producer bytecode isolation | `python -m unittest -v tools.test_rpi_checks.GateTests.test_api_install_prevents_scrubbed_server_child_writing_source_bytecode` (`/tmp/m440b`) | 0 | `Ran 1 test in 0.722s`, OK, no skips. The test itself asserts the owned loopback server responded and no `__pycache__` or `*.pyc` appeared under its scratch source roots |
+| 2. Case-journey browser check | Runner `BROWSER_ENTRY` equivalent around `checks.case_journey_browser_check --axe /tmp/o440c/axe-4.10.3.min.js --out /tmp/o440c/journey` (`/tmp/m440b/src/api`) | 0 | 407 `PASS` lines and no `FAIL` line (the 17 other lines are printed page text); `results.json`: 87 axe scans, 0 page errors, zoom `chrome.tabs.setZoom=2; innerWidth<=640`. `320x800 summary within one viewport scroll (1592.40625)` against the unchanged bound 1600; 320, 390 and 1280 reflow, reduced-motion and forced-colour, missing-enhancement fallback, keyboard focus and 200% zoom all pass. Screenshots `mobile-320.png`, `desktop-1280.png`, `forced-colours.png`, `browser-zoom-200.png` retained |
+
+The 320px margin is 7.6 CSS px under the 1600 bound; it passes and is stated
+as a thin margin, not a defect. No skip, threshold, test or harness change was
+made. Preserved outputs: `/tmp/o440c` (accepted observation) and `/tmp/o440b`
+(a first attempt whose check 1 also passed, exit 0; its check 2 exited 1
+because the runner script had pre-created the `journey` output directory
+and pre-imported the module, a harness mistake before any browser step, so
+it is not a product result). Nothing was deleted.
+
+| Finding | Classification |
+| --- | --- |
+| Bytecode isolation regression passes on exact current main source | local observed (main, focused) |
+| Case-journey browser check passes on exact current main source at the unchanged 320x800 bound and wider, keyboard, reduced-motion and manual-fallback states | local observed (main, focused, synthetic fixture) |
+| Together with the merged #1215 and #1219 records, the two recoveries are reproduced on main | local observed; they are not a full or `--changed` gate, not a #96 full receipt and not a sealed receipt |
+| Resident, assistive-technology, screen-reader and user-research acceptance, six-script PRD AC-134 | blocked or deferred, as before |
+| Azure observation, actual AI | none |
+| #96 feature, schema and Finance acceptance | excluded, unmerged |
+| Hosted CI and independent exact-head assessment of this documentation child | unknown (coordinator work) |
+
+No new defect was reproduced, so there is nothing to compare with #1214 or
+#1215 and no new issue, fix or refactor is proposed.
+
+Recommendation: **continue**. **Fix**: none confirmed. **Pivot**: none.
+Gates: publication of this child still needs the coordinator independent
+exact-head assessment, hosted checks and human approval; parent #123 closure
+still needs the parent refreshed against main and requalified (the parent
+lacks the #1215 and #1219 fixes); a #96 full receipt must come from its own
+native full run; #440 stays open for criteria 7 and 8. Issues are not closed or
+ticked.
+
+Process disclosure: the old auxiliary `/tmp/ama-main-440-ui-cache-wave3`
+(known ignored `*.egg-info`) and the venv were reused read-only or left
+unchanged and are not the observed clean source. The runner scripts
+`/tmp/o440b-run.py` and `/tmp/o440c-run.py` are retained outside the
+repository. Nothing was deleted, moved, archived or cleaned.

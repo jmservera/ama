@@ -10593,3 +10593,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Appended a seventh stabilization checkpoint to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#seventh-stabilization-checkpoint-current-main-ui-and-cache-recovery-2026-11-05-refs-440-96) pinning `origin/main` `bb3a3b03` (rubric commit after #1219 `2edba50b7`), the parent `23cdae38` and BRD/PRD/ADR blob and status identities, with document-qualified traceability for the #1214 320px reflow and #1215 bytecode fixes. Documentation only; no code, coordinator, workflow or issue change.
 * The planned focused main observation (bytecode regression and the case-journey browser check) was not run because the exclusive heavy lock was held by an issue #233 gate session; it is recorded as blocked with a resume point, not as passed. No defect confirmed; #440 stays open.
+
+## [2026-11-05] update | Required focused main observations completed (Refs #440 #96)
+
+* Appended a dated continuation under the seventh checkpoint in the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#seventh-stabilization-checkpoint-current-main-ui-and-cache-recovery-2026-11-05-refs-440-96). On a clean detached exact-main auxiliary at `bb3a3b03`, the real-producer bytecode regression passed (exit 0) and the unchanged case-journey browser check passed (exit 0; 407 PASS, 0 FAIL, 320x800 summary bottom 1592.4 against the unchanged 1600 bound), both under one non-blocking hold of the heavy lock. The earlier unrun record is unchanged.
+* Focused observation only: not a full receipt, not #96 feature acceptance, not C7 or C8. No defect confirmed; no issue closed or ticked.
