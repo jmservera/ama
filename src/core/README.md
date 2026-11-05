@@ -334,7 +334,13 @@ SQLite additionally protects independent writers with database rowversions.
 `form_export.draft_export(store, user, case_id, draft_id)` is a read-only,
 held export of one working review: field values with source ID, version,
 document hash and locator, template/schema/input versions, attachments, stale
-fields and open issues, plus a content hash. It is always `Held`, `reviewed`
+fields, open issues and the recorded per-field working-review history (ordered
+detached copy with reviewer email, prior and new values and evidence, decision,
+reason, time and input version), plus a content hash covering all of them. The
+history is exercised only with synthetic data for now; it is field review, not
+Finance pack approval, and the hash is not a signature. Saved copies without
+`history` are `Invalid` and must be regenerated as a new Held export; they are
+never backfilled. It is always `Held`, `reviewed`
 false, `Not submitted` and eligibility `Not assessed`; it writes nothing and a
 reviewed pack stays blocked on Finance and template authority. The manual path
 is the working review itself, and unavailable evidence returns `Unavailable`.

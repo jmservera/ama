@@ -58,6 +58,60 @@ class FormExport(unittest.TestCase):
             second = self.export(store, changed)
             self.assertNotEqual(first["content_sha256"], second["content_sha256"])
 
+    def test_export_carries_ordered_detached_review_history(self) -> None:
+        for store in self.stores:
+            draft, epc, area = self.prepare(store)
+            with self.subTest(store=type(store).__name__):
+                empty = self.export(store, draft)
+                self.assertEqual(empty["history"], [])
+                draft = self.review(store, draft, epc)
+                draft = self.review(store, draft, epc, "epc", "correct", "C")
+                draft = self.review(store, draft, epc, "epc", "reject")
+                draft = self.review(store, draft, area, "area")
+                saved = self.export(store, draft)
+                with store.lock:
+                    stored = store._case("ZF-1")["form_reviews"][0]["history"]
+                    self.assertEqual(saved["history"], stored)
+                self.assertEqual(
+                    [(e["field_id"], e["decision"]) for e in saved["history"]],
+                    [("epc", "accept"), ("epc", "correct"), ("epc", "reject"), ("area", "accept")],
+                )
+                self.assertIsNotNone(saved["history"][2]["prior"]["evidence"])
+                saved["history"][0]["reason"] = "changed"
+                with store.lock:
+                    self.assertNotEqual(
+                        store._case("ZF-1")["form_reviews"][0]["history"][0]["reason"], "changed"
+                    )
+                saved = self.export(store, draft)
+                self.assertEqual(saved, self.export(store, draft))
+                newer = self.review(store, draft, area, "area")
+                again = self.export(store, newer)
+                self.assertNotEqual(again["content_sha256"], saved["content_sha256"])
+                self.assertEqual(len(saved["history"]), 4)
+                self.assertEqual(
+                    form_export.export_freshness(store, self.actor, "ZF-1", saved)["status"],
+                    "Stale",
+                )
+
+    def test_history_is_integrity_covered_and_legacy_copy_is_invalid(self) -> None:
+        for store in self.stores:
+            draft, epc, area = self.prepare(store)
+            draft = self.review(store, self.review(store, draft, epc), area, "area")
+            saved = self.export(store, draft)
+            legacy = {k: v for k, v in saved.items() if k != "history"}
+            legacy["content_sha256"] = form_export._digest(
+                {k: legacy[k] for k in form_export.BODY_KEYS if k != "history"}
+            )
+            reordered = dict(saved, history=list(reversed(saved["history"])))
+            removed = dict(saved, history=saved["history"][:1])
+            for name, bad in (("legacy", legacy), ("reordered", reordered), ("removed", removed)):
+                with self.subTest(store=type(store).__name__, case=name):
+                    out = form_export.export_freshness(store, self.actor, "ZF-1", bad)
+                    self.assertEqual(out["status"], "Invalid")
+                    self.assertIn("Create a new held export", out["action"])
+            ok = form_export.export_freshness(store, self.actor, "ZF-1", saved)
+            self.assertEqual(ok["status"], "Current")
+
     def test_unknown_draft_is_refused_and_fresh_export_has_no_stale_fields(self) -> None:
         store = self.stores[0]
         draft, epc, _area = self.prepare(store)
