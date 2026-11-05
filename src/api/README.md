@@ -5364,15 +5364,17 @@ Staff lists offer a CSV copy for Excel: `GET /api/packages.csv`,
 `/api/workorders.csv` (optional `case`), `/api/handoffs.csv`,
 `/api/visits.csv` (`view=mine|all`), `/api/funding.csv`, `/api/finance.csv`
 (finance queue; finance roles and managers) and `/api/asset/stock-queue.csv`
-(stock conflict queue; managers), in addition to
+(stock conflict queue; managers) and `/api/checklists.csv` (the quality
+checklists, one row per check with measure, version, step and check; staff roles;
+fixed reference text, so no query selector changes it), in addition to
 `/api/cases.csv`. Each calls the same store method as its JSON list, so rows
 and role limits match; contractors receive 403 on every export. Cells that
 start with `=`, `+`, `-`, `@`, tab or carriage return get a leading apostrophe
 so Excel cannot run them as formulas. The file is a values-only, one-way copy:
 nothing reads it back, and edits in Excel change nothing. No AI provider is
 involved, so exports work when AI is unavailable. Visits, funding and handoffs
-screens, the finance queue and the asset board carry a "Download for Excel"
-link. Not yet exported: checklists, governance, continuity (its own export exists) and the
+screens, the finance queue, the asset board and the quality checklist form carry a "Download for Excel"
+link. Not yet exported: governance, continuity (its own export exists) and the
 chat, resident and form-staging surfaces. The row-level history sheet and
 `.xlsx` output stay in the importer library; the API offers CSV only.
 

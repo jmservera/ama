@@ -110,7 +110,7 @@ class App:
 
 
 LIST_EXPORTS = frozenset({"/api/packages.csv", "/api/workorders.csv", "/api/handoffs.csv", "/api/visits.csv", "/api/funding.csv",
-                          "/api/finance.csv", "/api/asset/stock-queue.csv"})
+                          "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv"})
 EXPORT_KINDS = {"/api/finance.csv": "finance_queue", "/api/asset/stock-queue.csv": "stock_queue"}
 
 
@@ -128,6 +128,8 @@ def list_rows(s, u, path, q):
         return s.finance_queue(u)
     if path == "/api/asset/stock-queue.csv":
         return s.stock_queue(u)
+    if path == "/api/checklists.csv":
+        return quality.checklist_rows()
     return s.funding_list(u)
 
 

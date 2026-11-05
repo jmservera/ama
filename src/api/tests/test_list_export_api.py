@@ -18,6 +18,7 @@ from zava_forward.core.sqlstore import SqlStore
 from zava_forward.api.server import LIST_EXPORTS, App, make_handler
 
 LISTS = ("packages", "workorders", "handoffs", "visits", "funding")
+REFERENCE = "/api/checklists.csv"
 QUEUES = {
     "/api/finance": "/api/finance.csv",
     "/api/asset/stock-queue": "/api/asset/stock-queue.csv",
@@ -73,7 +74,7 @@ class ListExportApi(unittest.TestCase):
     def test_registry_matches_lists(self) -> None:
         self.assertEqual(
             set(LIST_EXPORTS),
-            {f"/api/{name}.csv" for name in LISTS} | set(QUEUES.values()),
+            {f"/api/{name}.csv" for name in LISTS} | set(QUEUES.values()) | {REFERENCE},
         )
 
     def test_queue_csv_matches_json_for_permitted_roles(self) -> None:
@@ -94,6 +95,43 @@ class ListExportApi(unittest.TestCase):
                     self.assertEqual(self.call(actor, csv_path)[0], self.call(actor, json_path)[0])
         self.assertEqual(self.call("sam", "/api/finance.csv")[0], 403)
         self.assertEqual(self.call("pam", "/api/finance.csv")[0], 200)
+
+    def test_checklist_csv_has_every_check_of_the_json_lists(self) -> None:
+        for actor in ("sam", "pam"):
+            with self.subTest(actor=actor):
+                code, text, headers = self.call(actor, REFERENCE)
+                self.assertEqual(code, 200)
+                self.assertTrue(headers["Content-Type"].startswith("text/csv"))
+                self.assertIn('filename="checklists.csv"', headers["Content-Disposition"])
+                rows = list(csv.reader(io.StringIO(text)))
+                self.assertEqual(rows[0], ["measure", "version", "step", "check"])
+                _, body, _ = self.call(actor, "/api/checklists")
+                expected = [
+                    [name, lst["version"], str(n), label]
+                    for name, lst in json.loads(body).items()
+                    for n, label in enumerate(lst["items"], 1)
+                ]
+                self.assertEqual(rows[1:], expected)
+                self.assertGreater(len(expected), 5)
+
+    def test_checklist_csv_is_denied_like_the_json_list(self) -> None:
+        self.assertEqual(self.call("kim", REFERENCE)[0], 403)
+        self.assertEqual(self.call("kim", "/api/checklists")[0], 403)
+        with self.assertRaises(urllib.error.HTTPError) as ctx:
+            urllib.request.urlopen(self.base + REFERENCE)
+        self.assertEqual(ctx.exception.code, 401)
+
+    def test_checklist_csv_carries_no_case_resident_or_user_data(self) -> None:
+        _, text, _ = self.call("sam", REFERENCE)
+        for private in ("=HYPERLINK", "example.test", "Kim", "ZF-"):
+            self.assertNotIn(private, text)
+
+    def test_checklist_csv_ignores_query_selectors_and_changes_nothing(self) -> None:
+        before = copy.deepcopy(self.store.cases)
+        _, plain, _ = self.call("sam", REFERENCE)
+        _, selected, _ = self.call("sam", REFERENCE + "?case=ZF-1&view=all&q=x")
+        self.assertEqual(plain, selected)
+        self.assertEqual(self.store.cases, before)
 
     def test_staff_get_csv_matching_json_rows(self) -> None:
         for name in LISTS:

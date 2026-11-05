@@ -13,6 +13,7 @@ import os
 import re
 from contextlib import contextmanager
 from copy import deepcopy
+from typing import Any
 
 from . import change_provenance, rai_release
 from .stock import decision_scope
@@ -46,6 +47,12 @@ _KEYWORDS = (("loft", "Loft insulation"), ("wall", "Wall insulation"), ("heat pu
 
 def policy_fingerprint() -> str:
     return rai_release.digest([CHECKLISTS, _KEYWORDS])
+
+
+def checklist_rows() -> list[dict[str, Any]]:
+    """One row per check, in the order the quality form shows them; the same lists as the checklists endpoint."""
+    return [dict(measure=name, version=lst["version"], step=n, check=label)
+            for name, lst in CHECKLISTS.items() for n, label in enumerate(lst["items"], 1)]
 
 
 def checklist_for(measure):

@@ -4,7 +4,7 @@ import csv
 import io
 import unittest
 
-from zava_forward.core import list_export
+from zava_forward.core import list_export, quality
 
 
 class ListExportTests(unittest.TestCase):
@@ -28,6 +28,14 @@ class ListExportTests(unittest.TestCase):
 
     def test_empty_list_gives_empty_file_not_an_error(self) -> None:
         self.assertEqual(list_export.to_csv([]), "\r\n")
+
+    def test_checklist_rows_are_stable_fields_over_every_check(self) -> None:
+        rows = quality.checklist_rows()
+        self.assertEqual(sum(len(v["items"]) for v in quality.CHECKLISTS.values()), len(rows))
+        for row in rows:
+            self.assertEqual(list(row), ["measure", "version", "step", "check"])
+        self.assertEqual(rows[0]["step"], 1)
+        self.assertEqual(rows[0]["version"], quality.CHECKLISTS[rows[0]["measure"]]["version"])
 
 
 if __name__ == "__main__":
