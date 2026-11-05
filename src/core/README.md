@@ -22,6 +22,21 @@ the data, audited and idempotent, and `Store.ranking_publication_status` (API
 and stated schedule. Both are manager-only. The manual path is the same
 endpoint, run by a manager; no AI is involved.
 
+Local runner (slice 5): `python3 -m zava_forward.core.ranking_publication_runner
+{schedule,publish,verify} --archive DIR --today YYYY-MM-DD [--cases FILE]
+[--policy VERSION] [--exercise]` is the invocation a scheduler or a person calls.
+The date, archive and store-shaped case file are explicit; no clock, environment
+variable or default data folder is read, and no random seed is consumed (the run
+key is a hash of policy, as-of date and window start). `schedule` reports the
+one-day window, whether it is due and the next window; `verify` exits 1 when a
+record fails or the latest publication is stale; `publish` is idempotent and
+exits 2 with a reason code and next action when the policy has no recorded
+sign-off (`approval_missing`), the case source is missing or unusable, the
+archive does not verify or there is no room to write. `--exercise` ranks and
+reports what would be archived, writes nothing and never counts as approval.
+The daily schedule is reported as proposed, not an approved rule; the draft
+policy stays a draft and retention stays a separate Legal decision.
+
 Sign-off check (slice 3): `ranking.is_signed` and `ranking.signoff_problems` read a recorded sign-off
 (`signoff` with `signed_by` equal to the named `owner`, an ISO `signed_on` and a `rule_order_hash` of the rules and
 stage order). A change to the rule order voids it. The publication status reports `policy_signed` and
