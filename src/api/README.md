@@ -1974,8 +1974,14 @@ discovers or represents installed real devices and has no resident-facing action
   (`LIVE-<sensor>-<UTC slot>`, unique per home and slot, used as the IoT message id), `home_id`,
   `observed_at` (UTC slot start), `temperature_c`, `humidity_pct`, `sunlight_wm2`, units,
   `source_type=SYNTHETIC`, `scenario`, `seed`, `injected_fault=none` and a plain `label`. It adds
-  `sunlight_wm2`, which the current #110 consumer schema does not accept; teaching the consumer
-  this version is a #110 decision and is not done here.
+  `sunlight_wm2`. Since issue 188 slice 1 the SQL sensor consumer admits this version (closed
+  16-field shape, slot-aligned `reading_id`, `sunlight_unit` `W/m2`, 0..1400 range, the same
+  control, consent, window, calibration-interval and clock checks as the backfill). The reading
+  row keeps temperature and humidity; sunlight is kept in the retained accepted-delivery witness
+  and returned by `observed_series` with `calibrated` derived from the confirmed control. A replay
+  returns the prior receipt, a same-slot change is an `IDENTITY_CONFLICT` data-quality exception,
+  and an older slot is `OUT_OF_ORDER`. No `sensor_reading` column was added (that is a SQL change
+  left to the owner) and nothing was run against Azure.
 * Homes: every open case id, re-read hourly; a failed read reuses the last list. With
   `ZF_STORE=mssql` (the job) it issues exactly one parameter-free
   `SELECT id FROM cases WHERE closed = 0 ORDER BY id` over a connection built with the existing
