@@ -96,7 +96,10 @@ without inventing, duplicating or no-op issues to look busy:
   worktree. Admission rule (single source; other sections cross-reference it):
   eight (owner, 2026-10-31; overrides the Inputs default of three) is the
   TOTAL number of live issue sessions, including repair, correction,
-  validation and gate continuations, never eight new plus repairs. Before
+  validation and gate continuations and every frozen unpublished candidate
+  awaiting coordinator validation, publication or correction (one unit per
+  issue, never eight new plus repairs). A candidate keeps its slot until it is
+  published and merged or the owner releases it. Before
   admitting any new issue and after each launch, publication or merge, recount
   open PRs (`gh pr list --state open`) and live `rpi-*` tmux sessions; a PR
   queued for auto-merge stays open until the merge is confirmed. Respect the
@@ -188,9 +191,10 @@ runs hourly and applies the Cleanup contract. Neither is a status-only poll.
   or superseded recurrence under the replacement rule is also allowed, after the
   replacement is verified. With two active, keep the one carrying the intended
   prompt version (the newest id if equal), stop the other, then read back.
-* Provenance (as of 2026-11-05): the final active schedules are delivery #9
-  (every 10 minutes) and cleanup #8 (hourly); original #6 and #2 and
-  intermediate #7 are stopped and kept as historical ids. Live prompts are
+* Provenance (as of 2026-11-05): the live schedule list read-back is
+  authoritative. Operator-supplied evidence shows delivery #15 (every 10
+  minutes) and cleanup #8 (hourly) active; delivery #9, #7, #6 and cleanup #2
+  are stopped and kept as historical ids. Live prompts are
   condensed semantic equivalents of the approved snapshots, not byte-identical.
   Schedules are an advisory workflow, not technical enforcement.
 
@@ -315,10 +319,10 @@ check: run `python3 tools/backlog-sync.py` (read-only audit), then `--apply`
 to fix board statuses, add missing items and tick the criteria of closed
 issues. Hand the tool the activity you have confirmed. Before executing, run
 `python3 tools/backlog-sync.py --help` and use `--active` and `--inactive`
-only if that output lists them. Until the activity-handoff tool change (#1207)
-is accepted and published, the legacy `--apply` demotes In Progress issues that
-have no open PR even when a live session or frozen unpublished candidate exists,
-so do not run it. Use the read-only audit, set board statuses by hand with
+only if that output lists them (main carries them since #1209). When it does
+not list them, the legacy `--apply` demotes In Progress issues that have no
+open PR even when a live session or frozen unpublished candidate exists, so do
+not run it. Use the read-only audit, set board statuses by hand with
 readback, and report the limitation. When the flags exist, pass `--active` with
 the open issues you individually confirmed to have a live session or a frozen
 unpublished candidate; this is positive evidence only and its omissions are not
