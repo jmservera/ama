@@ -36,12 +36,14 @@ GAP = (
 )
 
 
-def _flatten(value: Any, prefix: str = "") -> dict[str, Any]:
-    if not isinstance(value, Mapping):
-        return {prefix: value}
-    flat: dict[str, Any] = {}
+Path = tuple[Any, ...]
+
+
+def _flatten(value: Any, prefix: Path = ()) -> dict[Path, Any]:
+    """Map each leaf to its tuple path, so a literal dotted key cannot shadow a nested one."""
+    flat: dict[Path, Any] = {}
     for key, item in value.items():
-        path = f"{prefix}.{key}" if prefix else str(key)
+        path = (*prefix, key)
         if isinstance(item, Mapping) and item:
             flat.update(_flatten(item, path))
         else:
@@ -50,7 +52,14 @@ def _flatten(value: Any, prefix: str = "") -> dict[str, Any]:
 
 
 def _same(a: Any, b: Any) -> bool:
-    return type(a) is type(b) and a == b
+    """Type-aware deep equality, so 1 is not True at any depth."""
+    if type(a) is not type(b):
+        return False
+    if isinstance(a, Mapping):
+        return a.keys() == b.keys() and all(_same(a[k], b[k]) for k in a)
+    if isinstance(a, list | tuple):
+        return len(a) == len(b) and all(_same(x, y) for x, y in zip(a, b, strict=True))
+    return bool(a == b)
 
 
 def _comparability(dimension: str, pair: Mapping[str, Any]) -> str | None:
@@ -60,19 +69,16 @@ def _comparability(dimension: str, pair: Mapping[str, Any]) -> str | None:
     changed = {
         k: (ref.get(k, missing), sub.get(k, missing))
         for k in ref.keys() | sub.keys()
-        if k != "id" and not _same(ref.get(k, missing), sub.get(k, missing))
+        if k != ("id",) and not _same(ref.get(k, missing), sub.get(k, missing))
     }
-    expected = CONTRASTS[dimension]
+    expected = {tuple(k.split(".")): v for k, v in CONTRASTS[dimension].items()}
     if not changed:
         return "no_contrast"
-    if changed.keys() == expected.keys() and all(
+    declared = expected.keys() <= changed.keys() and all(
         _same(changed[k][0], v[0]) and _same(changed[k][1], v[1]) for k, v in expected.items()
-    ):
-        return None
-    if expected.keys() <= changed.keys() and all(
-        _same(changed[k][0], v[0]) and _same(changed[k][1], v[1]) for k, v in expected.items()
-    ):
-        return "confounded"
+    )
+    if declared:
+        return None if changed.keys() == expected.keys() else "confounded"
     return "wrong_contrast"
 
 

@@ -17,3 +17,7 @@ Both findings are tightly coupled to this change and were fixed before freeze (`
 ## Routed, not closed
 
 Actual-model run, independent expected-pair and threshold approval (OQ-018), keyboard and screen-reader testing, user research, lawful-field decision, named human acceptance, hosted CI and human approval. Partial issue acceptance only: the comparability-validation criterion for the existing constructed fixtures. #128 and #123 are not closed or approved. No population fairness or activation claim.
+
+## Correction 2 review evidence (2026-11-05, appended)
+
+The original NOT CLEAN verdict above stands unchanged. The two earlier fixes (type-aware equality, empty mapping) were never independently re-reviewed, and this correction did not review them either. The coordinator's adverse findings (nested type masking, dotted-key shadowing) are recorded in the changes artifact and fixed with tests. No review approval is claimed; the independent exact-head assessment remains coordinator-owned. Self-check by tests only.

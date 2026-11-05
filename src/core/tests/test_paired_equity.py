@@ -162,6 +162,22 @@ class PairedEquityTests(unittest.TestCase):
         self.assertIn("n1:invalid_comparison:wrong_contrast", rec["blockers"])
         self.assertIn("s1:invalid_comparison:confounded", rec["blockers"])
 
+    def test_nested_type_change_is_rejected(self) -> None:
+        p = pairs()
+        p[0]["reference"]["resident"]["extra"] = [1]
+        p[0]["subject"]["resident"]["extra"] = [True]
+        rec = paired_equity.evaluate(p, ANCHORS)
+        self.assertIn("s1:invalid_comparison:confounded", rec["blockers"])
+        self.assertEqual(rec["tested"], 2)
+
+    def test_dotted_key_cannot_shadow_nested_change(self) -> None:
+        p = pairs()
+        p[0]["reference"]["resident"].update({"extra": {"x": 1}, "extra.x": 1})
+        p[0]["subject"]["resident"].update({"extra": {"x": 2}, "extra.x": 1})
+        rec = paired_equity.evaluate(p, ANCHORS)
+        self.assertIn("s1:invalid_comparison:confounded", rec["blockers"])
+        self.assertEqual(rec["invalid_pairs"][0]["reason"], "confounded")
+
     def test_supported_support_and_adjustment_bundle_is_valid(self) -> None:
         rec = paired_equity.evaluate(pairs(), ANCHORS)
         self.assertEqual(rec["invalid_pairs"], [])
