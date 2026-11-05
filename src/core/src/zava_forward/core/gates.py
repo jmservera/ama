@@ -255,7 +255,10 @@ def evidence_gate(missing: Iterable[str] | None, owner: str, on: str | None = No
 
 QUALITY_RULE = GateRule(
     gate="quality",
-    source=f"{_BRD} FR-008; versioned quality checklist in quality.CHECKLISTS (exercise fixture)",
+    source=(
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-008 (governing) and FR-017; "
+        "versioned quality checklist in quality.CHECKLISTS (exercise fixture)"
+    ),
     effective_date="2026-11-05",
     version="1",
     reviewer=_UNREVIEWED,
