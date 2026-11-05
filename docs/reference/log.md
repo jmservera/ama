@@ -10567,3 +10567,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 233 withheld panels on evidence screens (Refs #233)
 
 * Added the "Not shown for this role" text panel to the per-home technical-queue and quality-queue screens and recorded it in the atlas trace. Source-level test only; criteria 2, 4 and 5 stay unmet and nothing was ticked. Evidence under `.copilot-tracking/` (2026-11-04 issue-233 withheld-evidence-screens).
+
+## [2026-11-05] update | Ranking publication local runner (Refs #79)
+
+* Added `ranking_publication_runner` in `src/core`: an explicit-input schedule, publish and verify invocation with a one-day window, idempotent run key, fail-closed approval, source, archive and capacity checks, and an exercise mode that writes nothing. The daily schedule is reported as proposed, not approved. Criteria 3 (named owner sign-off) and 4 (scheduled and retained) stay unmet: no owner is named, no scheduler is deployed and no retention period is set. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r4).
