@@ -30,3 +30,8 @@ ms.topic: reference
 * [ ] Existing orchestration regressions and lint/type checks pass: met locally.
 * The issue stays open; no closing keyword is justified until native evidence exists.
 
+
+## Native verification update (2026-11-05 continuation; criteria text above unchanged)
+
+* Criterion 2 now met at c2cca6b3f078a2f15078587c60265811459b0e06: test_resident_summary_ai_ui ran 1 test, OK, 0 skips, with isolated native Chromium; tools.test_rpi_checks ran 85 tests OK. Evidence: changes record and /tmp/ama-1208-native-20261105T0910. Two earlier harness path failures are preserved there.
+* No full receipt, SQL or live acceptance claimed. Keep Refs until independent exact-head review, hosted CI and human approval.

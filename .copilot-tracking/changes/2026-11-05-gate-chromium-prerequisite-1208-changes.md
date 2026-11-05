@@ -35,3 +35,14 @@ ms.topic: reference
 * Historical disclosure retained: an earlier artifact was authored through a bash printf redirect, contrary to the file-creation rule; it is not rewritten here.
 * Native browser evidence remains pending: heavy lock held by #96 (PID 1232396). No browser, SQL, build or full-gate run. Not all acceptance criteria are proven; Refs, not Closes.
 * Later probes use PYTHONDONTWRITEBYTECODE=1 and external Ruff/mypy cache directories.
+
+## Native verification (appended 2026-11-05 continuation; originals above unchanged)
+
+* Admission: no holder of /tmp/ama-rpi-heavy.lock found (fuser, lsof); each step ran under nonqueued `flock -n` held for that step only and released on exit. No other owner contested.
+* Source: HEAD c2cca6b3f078a2f15078587c60265811459b0e06, base ead177ef90d24666557708ea344848a1be43bdf8, extracted with git archive into an external snapshot. Python 3.12.3, playwright 1.64.0, Chromium build chromium-1248 under the isolated PLAYWRIGHT_BROWSERS_PATH (out/chromium), same semantics as Runner.install_chromium. Environment mirrored the Runner (empty env, isolated HOME/TMPDIR/caches, PYTHONDONTWRITEBYTECODE=1, external Ruff/mypy caches, ZF_STORE=json).
+* Evidence root (external): /tmp/ama-1208-native-20261105T0910 (commands.txt, results.txt, logs/).
+* Exit 0: venv create; `pip install -e src/core -e src/agents -e src/api[dev]` (log SHA256 7be99475...); `python -m playwright install chromium` (41cf0faa...).
+* Adverse harness attempts preserved: two runs of the resident-summary test failed with ModuleNotFoundError for test_resident_demo_api (missing test path, no browser involved; log SHA256 ab6516fe..., attempts 1 and 2, exit 1). Cause: PYTHONPATH lacked the api/core/agents tests directories used by test_paths("api", True).
+* Pass: `unittest -v test_resident_summary_ai_ui` from src/api with PYTHONPATH of src/api/tests, src/core/tests and src/agents/tests: Ran 1 test, OK, exit 0, 0 skips, real native Chromium (log SHA256 4eb08afb...).
+* Pass: `unittest -v tools.test_rpi_checks`: Ran 85 tests, OK, exit 0 (log SHA256 c4f0f890...); the 11 "skip" lines are test names, not skipped tests.
+* Not claimed: full gate, SQL, physical or live Azure acceptance, receipt for this head. Independent exact-head review, hosted CI and human approval remain required.
