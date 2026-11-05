@@ -3728,3 +3728,144 @@ position and any Finance or Legal approval need named human owners.
 
 Process disclosure: nothing was deleted, moved or cleaned; `/tmp/f440fin`
 is retained.
+
+<a id="tenth-stabilization-checkpoint-lifecycle-parent-quality-evidence-gate-2026-11-05-refs-440-82-81"></a>
+
+## Tenth stabilization checkpoint: lifecycle parent quality evidence gate (2026-11-05, Refs #440 #82 #81)
+
+Refs #440, #82 and #81. This is the tenth checkpoint: the baseline eighth is
+the integrated parent topic preparation and the ninth is the finance parent
+record. It is a new bounded lifecycle integration checkpoint, not a correction
+of either. Local DRAFT, not consumed by the coordinator and not approved for
+publication. It assesses one merged increment, PR 1226, and accepts nothing.
+
+Process: Research, Plan, details and one critique were written before any pack,
+index or log edit (verified with `git status`). A read-only light observation
+on an immutable export was made during research, before the plan, and is
+recorded as research-phase evidence.
+
+### Three separate pins
+
+| Pin | Identity | Role |
+| --- | --- | --- |
+| Governance documentation target | `feat/discovery-assurance-integration-123` `1faadaa3e75d3b4003319fde0491473fa1a87dee`, tree `678085a22e982a438fd275701f1e686bb212f258` | Base of this docs child; contains the reviewed finance record, unchanged |
+| Lifecycle implementation SOURCE | `feat/controlled-lifecycle-integration-81` `cd271cfa54216fbc2ae7d59a63ac8068f372d697`, tree `6bc669420643d524402b3b26ef325aae3a65b53a` | Contains PR 1226 merged 2026-11-05T23:01:10Z; tree equals reviewed child `10161ecbcf879e44f64d6e3ad97e481ae8e2d81d` |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` | Unchanged at the last fetch; hosted status of main is not asserted |
+
+Identities were fetched on 2026-11-05. Source is one commit over main (28
+files, +682/-10): `gates.py`, `quality.py`, `store.py`, three test files and
+issue 82 tracking. Governance runtime and the unmerged #144, #79, #80, #96,
+#185, #188 and #1204 work are excluded from lifecycle and main acceptance.
+Fetched identity is not hosted completion, approval or runtime acceptance.
+
+### Document identities (verified at the lifecycle parent, equal to main)
+
+| Document | Version and status | Blob |
+| --- | --- | --- |
+| BRD `agentic-retrofit-programme-brd.md` | 0.21.0 draft | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD `zava-forward-retrofit-programme-demonstrator.md` | 0.21.0 in-review | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 | accepted with owner amendment | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 | accepted | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Draft and in-review documents are not approval, and the quality rule below has
+no named professional reviewer.
+
+### Traceability of the quality transition
+
+* PRD FR-008 requires deterministic evidence, eligibility, authority, safety,
+  resident, funding, capacity, quality and finance gates before a controlled
+  state transition (mapped criteria AC-010, AC-011, AC-067 and AC-144). BRD
+  FR-008 is a different requirement (a material change invalidates downstream
+  approvals) and is not the governing source of the gate; `QUALITY_RULE`
+  nevertheless cites BRD FR-008 in its source field (see Findings). PRD FR-007 forbids bulk quality
+  acceptance. The acceptance rows are not run; passing light tests do not
+  tick them.
+* `gates.quality_gate` passes only with no gaps, returns Unknown for an
+  unreadable record and Fails with the reason "Checks without evidence".
+  `quality.evidence_gaps` returns `None` for malformed stored items, checklist
+  name or measure, so malformed labels, checklist or measure inference return
+  Unknown and never pass. `store.require_quality_evidence` refuses accept and
+  handover with the reason, owner and next action.
+* Corrupted in-progress evidence: a replacement is the owner's approved narrow
+  recovery (decision of 2026-11-05) and is limited to a quality role
+  (Quality Inspector or a manager); originals are kept. It does not reassign
+  identity and does not accept anything.
+* Independence: `_independent` still bars anyone who submitted, recorded or
+  fixed the work from accepting it; an unresolved contributor identity blocks
+  acceptance. Resident clear and safety clear are retained. Bulk acceptance
+  stays forbidden.
+* Store boundary: the JSON store and the SQLite-backed `SqlStore` path share the
+  gate; SQL Server is a different boundary and was not run at the parent.
+* Evidence visibility: a refusal surfaces the gate reason, owner and next
+  action to the user rather than a silent pass; manual paths are unchanged.
+* Rule provenance: `QUALITY_RULE` cites BRD FR-008 and the quality checklist as
+  an exercise fixture (effective 2026-11-05, version 1) with the reviewer set
+  to the unreviewed marker. This is unreviewed exercise-rule provenance, not
+  named professional approval.
+
+### Evidence classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Pins, blobs, PR 1226 merge, issue states (82, 81, 440, 144, 80 open) | local observed (git and `gh`) | 2026-11-05 |
+| Source read of the gate, quality and store changes | local observed | Static reading at `cd271cfa` |
+| 183 core tests pass on the export of `cd271cfa` | local observed (light, lifecycle parent) | Below; includes SQLite-backed `SqlStore` variants, not SQL Server |
+| Child `10161` full receipt (17 groups, 205 commands, 192 exit 0, 13 probe exit 1 individually inspected) | coordinator-supplied, historical for source `10161` | Receipt sha256 `ba37e035fe06e0dddb63d2ed5971fe0989387a917c10ed850e2b049bca987f57` matched the file at `/tmp/g82-measure1-1105/receipt.json`; contents not re-adjudicated |
+| SQL Server log (291 total, 290 executed, 1 JSON-only ordering skip; three new measure fallback and three earlier metadata cases ok) | coordinator-supplied, historical for source `10161` | `/tmp/g82-measure1-1105/0176-mssql.log`; not read or rerun here |
+| Root default-FULL before merge, local and published functional approval (0 findings, 28 sections), 10 hosted checks success | coordinator-supplied | Not re-checked here; published diff sha256 `408ce2bf...`, local raw diff differs, no byte identity claim |
+| Behaviour at `cd271cfa` under SQL Server, browser, full or partial gate | implemented-unverified | Tree equality with `10161` is an identity fact, never a new run at the parent or main |
+| Other capacity, authority, finance and eligibility gate families | deferred | #82 owns them |
+| Named review of `QUALITY_RULE` and the other exercise rules | unknown | No named reviewer recorded |
+| Heavy gate, SQL Server, browser, Docker, scanner, Azure, AI | blocked (not admitted) | #144 owns exclusive heavy resources; nothing was queued |
+
+### Actual commands and limits
+
+* Export: `git archive` of `origin/feat/controlled-lifecycle-integration-81`
+  (`cd271cfa`) paths `src/core` and `src/agents` into the new external path
+  `/tmp/l440cd271/src` (refused an existing path; nothing was overwritten).
+* Environment: the existing 440-owned venv
+  `/tmp/ama-main-440-ui-cache-wave3-venv`, `env -i`, bytecode off, external
+  `TMPDIR`. No installation. Import proof: `store`, `quality` and `gates`
+  resolve under `/tmp/l440cd271/src/src/core/src/zava_forward/core/` and
+  `evidence_gaps` exists.
+* Command: `python -m unittest tests.test_gates tests.test_quality_procurement
+  tests.test_hazard_referral` from `/tmp/l440cd271/src/src/core`. Exit 0
+  captured directly from the subprocess; Ran 183 tests in 80.2 s, OK with 1
+  skip. The skip is attributed by source reading, not by the non-verbose log,
+  to the single `skipTest` ("JSON-only separate-file audit ordering") in
+  `test_hazard_referral.py`. The logged traceback is an injected-fault test's
+  expected error output. No `__pycache__` was created. Output
+  `/tmp/l440cd271/out/run.log`, sha256
+  `3b43f8b16bb79baf1e4298ee649e666a67ba8c2587bb69c13f8c1706342b88e0`
+  (identified by hash only; `/tmp` is outside the repository).
+* No failed attempt occurred. No lock, service, SQL Server, browser, Docker,
+  scanner or cloud use. This is a focused light run, not a full or partial
+  gate and not a receipt.
+
+### Findings, triage and recommendation
+
+* No confirmed runtime defect, so no issue is proposed and no refactoring is
+  suggested. One provenance ambiguity is recorded for #82 ownership (not fixed
+  here): `QUALITY_RULE.source` at `cd271cfa` cites BRD FR-008, while the
+  governing requirement for controlled-transition gates is PRD FR-008. Whether
+  the citation is corrected is for #82's owner under its rule source
+  criterion. The open owners were compared: #82 (gates and named rule review),
+  #81 (epic), #80 (unmerged Excel work), #144 (heavy owner) and #440 (this
+  series).
+* #82 stays OPEN with three criteria incomplete (each gate with a pass, fail
+  or unknown result and reason; unknown never passes across all families; each
+  controlled rule with source, effective date, version and reviewer). The
+  quality gate is one family with an unreviewed rule; no tick is made.
+* Recommendation: continue. No fix or pivot is indicated by this evidence.
+  Pivots, requirement relaxation, deferral and named approvals belong to the
+  owner and named humans, not to this record.
+
+| Gate | Effect |
+| --- | --- |
+| This record | Draft until coordinator independent assessment, publication, published-head and hosted gates, and explicit consumption |
+| Remaining #82 family implementation and affected expansion | Wait for this checkpoint's consumption; independent lanes may continue; a heavy or SQL gate waits for coordinator admission after #144 releases heavy resources |
+| #81, #82 and whole #440 | Unchanged; no closure or criterion tick; #440 criteria 7 and 8 untouched |
+| #80 | Unmerged Excel work is excluded and unaffected |
+
+Process disclosure: nothing was deleted, moved or cleaned; `/tmp/l440cd271`
+is retained as read-only test setup and is not authority to delete it.
