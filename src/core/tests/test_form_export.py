@@ -4,7 +4,6 @@ import unittest
 from typing import Any
 
 import test_form_review
-from test_form_staging import schema
 from zava_forward.core import form_export, forms
 
 
@@ -98,7 +97,7 @@ class FormExport(unittest.TestCase):
         self.assertEqual(changed["stale_fields"], ["area"])
         self.assertEqual(changed["reasons"], ["Reviewed field inputs changed after this export."])
         saved = self.export(store, draft)
-        forms.register_schema(store, self.actor, dict(schema(), version=2))
+        forms.register_schema(store, self.actor, test_form_review.rule_successor())
         newer = form_export.export_freshness(store, self.actor, "ZF-1", saved)
         self.assertEqual(newer["status"], "Stale")
         self.assertEqual(newer["stale_fields"], ["area", "epc"])
