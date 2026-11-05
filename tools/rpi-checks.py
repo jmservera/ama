@@ -72,7 +72,7 @@ WORKFLOWS = (
 )
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "99a20cf09e31e080ad2e35d2ef063dcb52e1f6578a4631e27350f7803c62055c",
+    "src-ci.yml": "197606992ba38bc5f705770a30d2ed0a5d7be5ded2166e441abb110ffd744476",
     "mvp-ci.yml": "a0f227717e1d6f675898e2ff6d45f493ce88851ad236c578f2dbcb7921bd0179",
     "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
     "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
@@ -948,6 +948,8 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
             packages.append("agents")
         install(project, [*packages, project])
         python, cwd = py(project), f"src/{project}"
+        if project == "api":
+            add([python, "-m", "playwright", "install", "chromium"])
         parts = (
             shard_partition(root, project, shards[project]) if shards.get(project, 1) > 1 else None
         )
@@ -1805,7 +1807,21 @@ class Runner:
             ]
         self.command(args, timeout=1200)
         self.metadata_cleanup()
+        if name == "api":
+            self.install_bytecode_policy()
         self.command([*pip, "check"])
+
+    def install_bytecode_policy(self) -> None:
+        # Unchanged harness servers scrub their environment, including bytecode settings, and
+        # first run during API test discovery, so the policy must exist from venv creation.
+        bytecode_policy = "import sys; sys.dont_write_bytecode = True\n"
+        (self.out / "browser-bytecode-policy.pth").write_text(bytecode_policy)
+        (self.envs / "api/lib/python3.12/site-packages/00-rpi-bytecode.pth").write_text(
+            bytecode_policy
+        )
+
+    def install_chromium(self) -> None:
+        self.command([self.python("api"), "-m", "playwright", "install", "chromium"], timeout=900)
 
     @contextlib.contextmanager
     def gate(self, name: str) -> Iterator[None]:
@@ -2185,7 +2201,7 @@ class Runner:
                 "case_journey_browser_check",
             ):
                 self.lint(py, (f"checks/{name}.py",), "src/api")
-            self.command([py, "-m", "playwright", "install", "chromium"], timeout=900)
+            self.install_chromium()
             self.command(
                 [py, "-m", EMPLOYEE_ACCEPTANCE_BROWSER_MODULE],
                 "src/api",
@@ -2208,12 +2224,6 @@ class Runner:
                 axe.write_bytes(response.read())
             if digest(axe) != AXE_SHA256:
                 raise GateError("Pinned axe integrity check failed")
-            # The unchanged harness scrubs its server environment, including bytecode settings.
-            bytecode_policy = "import sys; sys.dont_write_bytecode = True\n"
-            (self.out / "browser-bytecode-policy.pth").write_text(bytecode_policy)
-            (self.envs / "api/lib/python3.12/site-packages/00-rpi-bytecode.pth").write_text(
-                bytecode_policy
-            )
             try:
                 self.command(
                     [py, "-c", BROWSER_ENTRY, "checks.design_system_browser_check"],
@@ -2659,6 +2669,8 @@ class Runner:
                     list(PROJECTS) if name == "namespace" else [*packages, name],
                     dev=name != "namespace",
                 )
+                if name == "api" and group in remaining:
+                    self.install_chromium()
                 if group not in remaining:
                     self.groups.append(f"setup-{name}")
             if self.failures:

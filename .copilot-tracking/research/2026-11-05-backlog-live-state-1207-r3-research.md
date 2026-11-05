@@ -1,0 +1,10 @@
+# Research r3: hosted src-namespace failure on the CI wiring change (Refs #1207, PR #1209)
+
+* Original and r2 artifacts, the earlier static Pass and the hosted failure stay as distinct evidence; none is edited.
+* Hosted failure: `test_real_src_ci_jobs_are_pinned_and_every_step_classified` and `test_matrix_drift_and_unreviewed_extra_commands_refuse` failed because `WORKFLOW_HASHES["src-ci.yml"]` in `tools/rpi-checks.py` still pinned the pre-change file. The sanitized log `1209-namespace-sanitized.log` was not present in the session files folder of this worker; the failure was reproduced locally instead (82 tests, 2 failures, old pin `99a20c...`, actual `197606...`).
+* Digest: `sha256sum .github/workflows/src-ci.yml` on head 6a1326ad gives `197606992ba38bc5f705770a30d2ed0a5d7be5ded2166e441abb110ffd744476`. Base ead177ef gives `99a20cf09e31e080ad2e35d2ef063dcb52e1f6578a4631e27350f7803c62055c`, the old pin.
+* Reviewed `src-ci.yml` diff (base to head): the paths filter gains `tools/backlog-sync.py` and `tools/test_backlog_sync.py`; the `namespace` job's existing tools step gains one unittest line, `tools/test_backlog_sync.py` in the ruff check and format file lists, and one mypy line. No job, check name, permission, step count or action changed.
+* Coverage classification: `Runner.coverage_rows` classifies per job (`namespace` maps to `namespace; static; infra; migration`) and per action type, not per command. Step count is unchanged, so every step stays classified and no matrix change is needed. Per-step commands are not enumerated, so no ignored-step entry is appropriate.
+* Validation gap in the first plan: r2 validated only `test_backlog_sync`. The directly dependent gate-orchestration suite (`test_rpi_checks`, which pins the workflow and runs `test_ci_affected` alongside) was omitted, so the hash drift reached hosted CI.
+* Integration ordering: #1209 (this reviewed CI/pin correction) reaches main before #1208 publication or integrated assessment. #1208 changes the browser helper in the same runner file in its own branch; no sibling code is copied, rebased or cherry-picked.
+* Planning readiness: Ready.
