@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-01
+ms.date: 2026-11-05
 ms.topic: overview
 ---
 
@@ -25,22 +25,41 @@ For the paper's [single-document delivery](../capstone/thought-leadership/everyt
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
 The owner-requested additive revision removes repeated Background, figures
-and case narratives; the current 37-page paper retains only extra source
+and case narratives; the current 38-page paper retains only extra source
 qualifications and methodological/provenance detail in its Supplement.
 The [nine-point author review](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#author-review-disposition-1-november)
 restores the discovery-to-backlog-to-feedback account, abstracts the case and
 records the supplied project export. Four requested scientific skills support
 the equation audit; risk/annotation domains and discrete break-even are
 explicit. Scheduling-block dependence must still be resolved against the
-variance and bootstrap scheme before the new freeze and collection.
-The prospective five-arm candidate has
-33 trajectories per arm/model (495), a conditional 10-point coverage target,
-matched-resource delivery, visible repair and a blocked primary comparison.
+variance and bootstrap scheme before approved source binding and collection.
+The [2 November allocation revision](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#prospective-allocation-revision-2-november)
+retains three models and five proposed arms, with 12 (default), 21 or 33
+independent repository trajectories per model per arm: 180/315/495 study
+trajectories. The researcher records the choice and rationale before study
+collection; saved selection is immutable on resume and outcome-driven
+resizing is prohibited. The ten-point B-D normal planning minima correspond
+to assumed SDs of 15/20/25 points, not measured variances or interchangeable
+80%-power guarantees; default 12 is not an 80%-power design at SD 25.
+Combined nominal allowances of 1,107,000/1,876,500/2,902,500 credits do not
+enlarge the actual 300,000 aggregate envelope or 270,000 admission ceiling.
+Prior spend, unknown-usage holds and full-allocation affordability remain
+gates. The [5 November recovery and scientific review](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#recovery-and-scientific-alignment-5-november)
+verified current public MVE source `5ab24be4`, published v6 execution source
+`7de2f0d4`, all five arms and the immutable selector, superseding the earlier
+A/B/C-only assessment from stale local snapshots. Observed-subset retention
+bounds and graded/prerequisite CR1 reports remain prospective reporting
+requirements not established in the inspected analyzer/export.
+Independent-arm resampling is implemented, but scheduling-block inference
+and the primary availability rule still need an explicit source-bound
+scientific decision before collection. The v6 manifest records no prospective
+OSF completion or collection authorization; release existence is not approval.
+The original review, historical v4 assets and dated inspections are retained.
 Three pinned static snapshots, source/access limits, lexical validation and
 corrected zero/undefined and break-even figures are retained. Source metadata
 and code tests do not establish scientific acceptance or historical deployed
-usability. Public development PRs are owner-authorized; future privacy, new
-review/freeze, proper prospective OSF recording, affordability and collection
+usability. Public development PRs are owner-authorized; future privacy,
+approved source alignment, proper prospective OSF recording, affordability and collection
 gates remain. Historical cloud exports are explicitly deferred.
 Original v4 assets, adverse critiques and prior data remain unchanged.
 The [new reflection/memory source check](../capstone/thought-leadership/everything-but-the-software/anc/supplementary-context.md#reflection-memory-and-self-improvement-1-november-source-check)
@@ -62,7 +81,10 @@ authoring regressions cover the earlier corrections and unified delivery.
 The [Tectonic warning remedy](../capstone/thought-leadership/everything-but-the-software/README.md#tectonic-warning-review-and-remedy)
 uses a literal wrapped renderer without the old Latin-1 `lineno` dependency,
 with scoped citation alignment and no diagnostic suppression. Thirty-four
-focused tests cover the current additive revision and unchanged prompt.
+focused tests cover the original additive revision and unchanged prompt.
+The recovered, source-aligned candidate adds ten regressions; all 44 pass.
+Its rebuilt 38-page PDF retains the Supplement on page 33, with checked
+text bounds/internal links and one inherited `inputenc` compatibility warning.
 
 For the [31 October live app observations](../architecture/cutover-evidence-pack.md#live-app-verification-2026-10-31-refs-523-524-570-432),
 resident sign-in and chat open/close, resize, dock/undock and narrow/wide

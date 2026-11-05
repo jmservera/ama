@@ -1,0 +1,537 @@
+{
+  "schema_version": "bounded-scientific-review/v1",
+  "review_id": "EBTS-SCI-2026-11-05",
+  "reviewed_at_utc": "2026-11-05T11:33:21Z",
+  "mode": "Review",
+  "work_execution": {
+    "status": "Complete",
+    "authorized_output": "/home/jmservera/.copilot/session-state/4142a9e8-f165-49f2-b5f2-ea774614ecaf/files/paper-scientific-review.json",
+    "manuscript_or_repository_edits_applied": false,
+    "kit_checkout_or_saved_study_modified": false,
+    "agents_launched": false,
+    "dependencies_installed": false,
+    "parent_owned_environment_or_audit_files_used": false
+  },
+  "assessment_status": {
+    "status": "Requires source reconciliation and resolution of prospective analysis choices",
+    "summary": "The recovered allocation and conditional-power language is substantially clearer and the live kit now contains all five arms. The active paper nevertheless misstates that implementation, promises partial-observation retention outputs absent from the inspected analyzer, and correctly leaves an important block-dependence decision unresolved. A minor introductory description also retains extra-resource wording inconsistent with the primary matched-ceiling comparison.",
+    "finding_counts": {
+      "major": 3,
+      "minor": 1
+    },
+    "scientific_or_statistical_certification": false,
+    "independent_human_peer_review": false,
+    "venue_compliance_assessed": false,
+    "collection_permission": false,
+    "verdict": "Scoped assisted review complete. Reconcile findings EBTS-SCI-01 and EBTS-SCI-02 and obtain an explicit source-bound decision for EBTS-SCI-03 before treating the paper and executable protocol as aligned for prospective recording or collection. Neither a published source freeze nor these source-body probes establishes qualified study execution, affordability, independent scientific approval, or launch authorization."
+  },
+  "reviewed_input_identity": {
+    "paper_repository": "jmservera/ama",
+    "worktree": "/home/jmservera/source/ama",
+    "branch": "docs/paper-scientific-reconciliation",
+    "head": "c6d5a8f3c3a35892322300be27b9747f7b11362d",
+    "owner_supplied_recovery_provenance": {
+      "allocation_amendment": "3ef395b82eb0c11f5a122a6be6f403be0349dd20",
+      "application": "Replayed with --no-commit, as reported by the owner/parent.",
+      "earlier_scientific_work": "Merged PR #746 and closed stale PR #1206 are supplied context, not independently reviewed PR histories."
+    },
+    "candidate_caveat": "This review binds the active working-tree bytes below, not a final committed recovery head or a byte-for-byte replay attestation. The recovered staged changes were already present. The parent subsequently added the untracked anc/test_protocol_planning.py; that file was not opened, executed, or edited by this reviewer.",
+    "paper_directory": "docs/capstone/thought-leadership/everything-but-the-software",
+    "genre": "Exploratory participant-observer case study, focused narrative synthesis, and prospective five-arm pilot/estimation protocol.",
+    "scope": [
+      "Independent trajectory unit; offered per-model/per-arm allocations; conditional power and primary equal-model B-D contrast.",
+      "Scheduling blocks, variance assumptions, resampling, missingness, retained-contract definitions, and CR1 interpretation.",
+      "Treatment/resource controls, actual selector persistence, affordability/admission, source freeze and registration boundaries.",
+      "Consistency of abstract, disclosure, data availability, current package status and active allocation-figure labels."
+    ],
+    "coverage_limit": "The nonbibliographic article body and all discovered active TeX inputs were inspected. Bibliography entries and cited studies were not systematically verified. The case records were not re-investigated beyond the named package context. SVG text was inspected, not the rendered PDF or PNGs.",
+    "inputs": [
+      {
+        "file": "main.tex",
+        "sha256": "b9e2e029ea2fc6b99cfb3495ca40eb60ac4411fc154e7f10a20047e3493753b2",
+        "coverage": "Nonbibliographic body, abstract, results switch, disclosure, data availability and active-input directives."
+      },
+      {
+        "file": "anc/experiment-protocol.tex",
+        "sha256": "001b2f61c6e4f1ffff75bc673be7f9072fa75b73d955f554879804885dd6ae97",
+        "coverage": "Entire active 349-line protocol."
+      },
+      {
+        "file": "anc/background.tex",
+        "sha256": "29b43c5938f57b8b78a477308158bd220c82fad7caf5bbaeb232e02ee09b79df",
+        "coverage": "Entire active input; external literature claims not independently audited."
+      },
+      {
+        "file": "anc/supplement-section.tex",
+        "sha256": "d08b42b0d517dcbea2d3afd515134a6bf48028dffe66a0548cb795cadf90a837",
+        "coverage": "Entire active Supplement wrapper and nested inputs."
+      },
+      {
+        "file": "anc/additional-evidence.tex",
+        "sha256": "2ea0cf8412446b0e86627f174c8446399b631b12e288356c94c795c71a7c2430",
+        "coverage": "Entire active input; source qualifications read as manuscript text."
+      },
+      {
+        "file": "anc/case-audits.tex",
+        "sha256": "ac757003390b7fcc5896c0d479ba72f973cfd6279d78ec85b9c0cc18e1c155a5",
+        "coverage": "Entire active input, including rival explanations, measurement domains and historical prompt provenance."
+      },
+      {
+        "file": "anc/deferred-measures.tex",
+        "sha256": "b7432058713c17655c2c0c8df77c596232b4fdb094733fff4eede26da2df37ac",
+        "coverage": "Entire active input, including HIR/IDR missing-annotation limits and historical freeze provenance."
+      },
+      {
+        "file": "anc/consolidation-frozen-v4.prompt.txt",
+        "sha256": "75f646edbe04e1e3403b092b13edd6b66615a3362e67ad49744d229cdcb94f29",
+        "coverage": "Active verbatim listing; checksum compared with the historical kit source."
+      },
+      {
+        "file": "README.md",
+        "sha256": "c739decd5a35a202f337860f47bb998a6d3000a43ca55abda868c3d30b1cf230",
+        "coverage": "Current status and allocation section, plus relevant top 1 November dispositions. Older records were treated as history, not fresh validation."
+      },
+      {
+        "file": "anc/revision-report.md",
+        "sha256": "e5b916525b8690288a0a21935e41cf91d29de5e49cd142c6032a7390cf703a0d",
+        "coverage": "Top 2 November allocation disposition and relevant 1 November author-review/equation-audit disposition."
+      },
+      {
+        "file": "review.md",
+        "sha256": "23d547779d6db09f1501971747395ed9c803df410a7f606cab84fb3ae474a5ed",
+        "coverage": "All nine current author comments; not treated as instructions to widen this review."
+      },
+      {
+        "file": "fig-pilot-design.svg",
+        "sha256": "449d1ace0f34ea5a8697e528b0070b283ebbc6184eb3aff9e6c5310b7190017a",
+        "coverage": "Text labels only, including the stale A/B/C-only label."
+      },
+      {
+        "file": "fig-experiment-measures.svg",
+        "sha256": "8d2320f9913c4e72fe3ffcf0bf5a1631700c0f07b02b164dccaaffed4ddd3019",
+        "coverage": "Text labels only: equal-model B-D, selectable n and 127-contract denominator."
+      }
+    ],
+    "stability_check": "The listed article/protocol and package-text digests remained unchanged between initial inspection and the final pre-report identity check."
+  },
+  "kit_source_identity": {
+    "repository": "jmservera/ama-thought-mve",
+    "retrieval": "Read-only gh REST/API requests pinned to full SHAs; no fetch, checkout, switch, index, ref, saved-study or remote mutation.",
+    "current_default": {
+      "branch": "main",
+      "sha": "5ab24be4556876500a40e56201f6efc3930cc8b8",
+      "commit_time_utc": "2026-11-02T11:19:45Z",
+      "public_repository_metadata": true,
+      "reconfirmed_at_utc": "2026-11-05T11:33:21Z",
+      "parent": "7de2f0d42955c62b52906747de480df2b3f1e0ca",
+      "files_changed_in_default_head_commit": [
+        "protocol/freeze.json"
+      ],
+      "source_url_template": "https://github.com/jmservera/ama-thought-mve/blob/5ab24be4556876500a40e56201f6efc3930cc8b8/{file}#L{start}-L{end}"
+    },
+    "current_release": {
+      "tag": "protocol-frozen-v6",
+      "tag_object": "d97f804e0bcf1f95084452ee3aab91631131bd4f",
+      "execution_source_commit": "7de2f0d42955c62b52906747de480df2b3f1e0ca",
+      "manifest_commit": "5ab24be4556876500a40e56201f6efc3930cc8b8",
+      "release_url": "https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v6",
+      "published_at_utc": "2026-11-02T11:20:38Z",
+      "draft": false,
+      "manifest_declared_inputs_sha256": "39e95fb3d35859c4f273fd427b95909abde1d06110825f974a2e60d47ced4125",
+      "manifest_declared_runtime_image": "sha256:090220b0b172ec205f1ea473d7c3a223eec5d7d619eb21acdcf15c9289287fa3",
+      "registration_date": null,
+      "prospective_osf_update_recorded": false,
+      "collection_authorized": false,
+      "verification_limit": "Release existence, tag target and manifest text were inspected. The complete input fingerprint, release attachments, image bytes, containment receipts and reported 840 harness/17 SDK/25 canary passes were not independently reproduced. These remain source-declared qualification records, not this review's test results or paid five-arm execution evidence."
+    },
+    "local_checkouts": [
+      {
+        "path": "/home/jmservera/source/ama-thought-mve",
+        "branch": "main",
+        "head": "1fee4535dd65ccedcee9638ef3a77ff3f9ce12a2",
+        "local_origin_main": "03c50856838b539780d57216af2a4cf6744187d7",
+        "tracked_worktree_status": "No tracked modifications at initial or final inspection.",
+        "caveat": "Both the checked-out main and its local remote-tracking ref are stale relative to the live default. No untracked/private contents were inspected. This checkout was not used as current implementation evidence."
+      },
+      {
+        "path": "/home/jmservera/source/ama-thought-mve-critique-20261101",
+        "branch": "feat/fair-study-v5",
+        "head": "7c3802d1f010bb03e9005e89b51abf730c15b776",
+        "commit_time": "2026-11-01T17:04:30+01:00",
+        "tracked_worktree_status": "No tracked modifications at initial or final inspection.",
+        "caveat": "Existing earlier candidate identified through Git metadata. Its branch name and older proposal do not identify the current default or the v6 frozen source; it was not treated as current implementation/runtime evidence."
+      }
+    ],
+    "other_snapshot_limit": "Git worktree metadata also identified a detached 03c50856 snapshot. Its contents were not opened, and it was not substituted for current source.",
+    "historical_v4": {
+      "execution_source_commit": "e8707ecc8965d3f81f5142a2603042bfca1aab15",
+      "manifest_commit": "03c50856838b539780d57216af2a4cf6744187d7",
+      "tag_object": "8850d3effd85553dc89eb838409ef3a8d6a24f0d",
+      "retained_prompt_sha256": "75f646edbe04e1e3403b092b13edd6b66615a3362e67ad49744d229cdcb94f29",
+      "verification": "The retained article prompt exactly matched git-show output from this historical execution source by SHA-256. No historical tag, source, attachment or prompt was changed."
+    },
+    "bounded_source_material": [
+      "README.md: current release, allocation, accounting and collection declarations.",
+      "protocol/pilot-estimation.json: study, resource, analysis, registration and owner-decision fields.",
+      "protocol/pilot-estimation.md: targeted allocation, endpoint, missingness and resampling sections.",
+      "protocol/five-arm-amendment-2026-11-02.json and protocol/freeze.json.",
+      "protocol/contract-panel.json: role counts only, confirming 127 feature and 15 CR1 contracts.",
+      "harness/study-config.json and run-experiment.sh.",
+      "harness/study.py: selector, schedule, identity/resume, admission, allowances, freeze/preflight and planned-resource functions.",
+      "harness/runner.py: arm mapping, fresh setup, D budget, feature/post-step, accepted-test and E correction paths.",
+      "harness/isolated_runtime.py: bounded run_agent forwarding of assigned model, effort, remaining time and credit allowance.",
+      "harness/pilot_analysis.py: retention, final coverage/CR1, frame eligibility and model-stratified primary.",
+      "harness/analyze.py: numeric/measurement, complete-sum and bootstrap helpers.",
+      "harness/study_report.py: targeted retention export fields and reporting declarations.",
+      "harness/tests/test_study.py and harness/tests/test_pilot_analysis.py: relevant selector, identity, D/E, missingness and five-arm regression source; tests inspected, not run.",
+      "protocol/osf-preregistration.md: targeted text search only; no OSF service access."
+    ],
+    "source_text_digests": {
+      "harness/study.py": "a918aa4af0cb39c758734793fcf8090f64bce324cfb66b27b54e3346549b1b39",
+      "harness/pilot_analysis.py": "d69429ae445a616eb51fdfa2d08e4da382a7ca3b998520d9970cd07c9ad584b8",
+      "harness/runner.py": "d8e5ea776b246c9f8cd1c866fa6e1d08446af9dfa49e992cf84da694f07edc95"
+    }
+  },
+  "findings": [
+    {
+      "id": "EBTS-SCI-01",
+      "severity": "major",
+      "category": "Current implementation and reproducibility identity",
+      "file": "anc/experiment-protocol.tex",
+      "lines": [49, 57],
+      "related_manuscript_locations": [
+        {"file": "main.tex", "lines": [1021, 1026], "section": "Use of generative AI"},
+        {"file": "main.tex", "lines": [1070, 1080], "section": "Data availability"},
+        {"file": "README.md", "lines": [72, 85], "section": "Prospective Allocation 2 November"},
+        {"file": "fig-pilot-design.svg", "lines": [2, 2], "locator": "Text: 15 calibration trajectories, no CR1. MVE: A/B/C only; D/E proposed."},
+        {"file": "anc/revision-report.md", "lines": [89, 110], "section": "Historical 2 November implementation/evidence-limit disposition; preserve its chronology rather than rewriting the old inspection."}
+      ],
+      "source_locator": [
+        {
+          "file": "harness/study.py",
+          "lines": [175, 223],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8",
+          "url": "https://github.com/jmservera/ama-thought-mve/blob/5ab24be4556876500a40e56201f6efc3930cc8b8/harness/study.py#L175-L223"
+        },
+        {
+          "file": "harness/runner.py",
+          "lines": [387, 434],
+          "additional_lines": [[28, 28], [130, 133]],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8"
+        },
+        {
+          "file": "protocol/freeze.json",
+          "lines": [3, 10],
+          "additional_lines": [[35, 40], [74, 82]],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8",
+          "url": "https://github.com/jmservera/ama-thought-mve/blob/5ab24be4556876500a40e56201f6efc3930cc8b8/protocol/freeze.json#L3-L10"
+        },
+        {
+          "resource": "Published v6 release and annotated-tag API metadata",
+          "url": "https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v6"
+        }
+      ],
+      "observation": "The unqualified current A/B/C-only assertions are contradicted by the live default. It contains selectable 12/21/33 allocation, D's extended feature session with no post-step, E's repair post-step and test-correction policy, and a five-arm B-D analyzer. The v6 tag targets 7de2f0d4; current default 5ab24be4 is its manifest-only child. The paper's historical v4 statements remain valid history, but v4 is no longer the sole available frozen release. The stale local checkout/tracking ref explains why an old inspection cannot establish today's capability.",
+      "scientific_consequence": "Readers are given an incorrect executable-treatment boundary and an incomplete current reproducibility pointer. The disclosure also presents a capability assessment as a correction although current source now contradicts it. Conversely, replacing this with an unqualified claim of a fully qualified or registered five-arm study would overstate the evidence.",
+      "evidence_state": "Conflict",
+      "confidence": "High for source presence and release identity; runtime qualification remains unverified in this review.",
+      "minimal_proposed_manuscript_remedy": "Replace the active current-capability assertions and diagram label with a dated, full-SHA-bound account: inspected source 5ab24be4556876500a40e56201f6efc3930cc8b8 contains A/B/C/D/E and the immutable selector; v6 tags execution source 7de2f0d42955c62b52906747de480df2b3f1e0ca. Add v6 beside, not instead of, historical v4 provenance. Distinguish implemented code and source-declared offline qualification from executed/qualified study trajectories, scientific acceptance, prospective OSF completion, affordability and collection permission. Add a fresh dated disposition without rewriting what earlier reviewers actually inspected or claiming new historical AI assistance."
+    },
+    {
+      "id": "EBTS-SCI-02",
+      "severity": "major",
+      "category": "Retained-contract estimand/reporting versus executable analyzer",
+      "file": "anc/experiment-protocol.tex",
+      "lines": [98, 120],
+      "source_locator": [
+        {
+          "file": "harness/pilot_analysis.py",
+          "lines": [53, 146],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8",
+          "url": "https://github.com/jmservera/ama-thought-mve/blob/5ab24be4556876500a40e56201f6efc3930cc8b8/harness/pilot_analysis.py#L53-L146"
+        },
+        {
+          "file": "harness/analyze.py",
+          "lines": [129, 141],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8"
+        },
+        {
+          "file": "harness/study_report.py",
+          "lines": [331, 346],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8"
+        },
+        {
+          "file": "harness/tests/test_pilot_analysis.py",
+          "lines": [105, 122],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8",
+          "qualification": "Regression source inspected, not executed."
+        }
+      ],
+      "observation": "The article defines L over observed prior-pass contracts, divides by their observed count, and requires the observed subset, missing count M and full-risk loss bounds [L,L+M]. The current retention function instead requires binary observations for every eligible contract and complete acquisition membership before returning open_losses or density. Its standard export contains risk_set/risk_complete/observation_complete flags, not the promised observed-subset/missing-count/bounds fields. An isolated source-body probe with two previously passing contracts followed by one failure and one error returned risk_set=2, open_losses=null and density=null. The article's definitions for that same synthetic checkpoint give L=1, observed denominator=1, M=1, density=1 and loss-count bounds [1,2].",
+      "scientific_consequence": "The equations are coherent for a known risk set, but the inspected executable summary is a more conservative, different missingness/reporting rule. Running it would not automatically deliver the paper's declared partial-observation retention summaries. Missing earlier P observations can additionally leave acquisition/risk membership uncertain; a risk-set count with risk_complete=false is not a known full risk set. This is a prospective alignment gap, not evidence that missing observations are being counted as passes or that results were fabricated.",
+      "evidence_state": "Conflict",
+      "confidence": "High for the inspected analyzer and export; independent implementation elsewhere was not established.",
+      "minimal_proposed_manuscript_remedy": "Explicitly label the observed-subset summaries and bounds as reporting requirements not yet emitted by the inspected v6 analyzer. Require an author-approved source-bound reconciliation before collection: either separately authorize implementation of those outputs or prospectively amend the stated reporting rule. Do not silently choose between them, replace unknowns with zero/pass, or equate uncertain prior acquisition with a known full risk set. Preserve loss/recovery/recurrence uncertainty and the existing retained-state versus rejected-attempt distinction."
+    },
+    {
+      "id": "EBTS-SCI-03",
+      "severity": "major",
+      "category": "Unresolved design-to-inference decision",
+      "file": "anc/experiment-protocol.tex",
+      "lines": [223, 232],
+      "related_manuscript_locations": [
+        {"file": "anc/experiment-protocol.tex", "lines": [18, 25], "section": "Trajectory unit and model/replicate blocks"},
+        {"file": "anc/experiment-protocol.tex", "lines": [173, 192], "section": "Equal-model estimator and independent-cell planning variance"},
+        {"file": "README.md", "lines": [82, 85], "section": "Acknowledged pre-freeze reconciliation"}
+      ],
+      "source_locator": [
+        {
+          "file": "harness/study.py",
+          "lines": [189, 223],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8"
+        },
+        {
+          "file": "harness/analyze.py",
+          "lines": [285, 345],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8",
+          "url": "https://github.com/jmservera/ama-thought-mve/blob/5ab24be4556876500a40e56201f6efc3930cc8b8/harness/analyze.py#L285-L345"
+        },
+        {
+          "file": "harness/pilot_analysis.py",
+          "lines": [483, 500],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8"
+        },
+        {
+          "file": "protocol/pilot-estimation.md",
+          "lines": [314, 329],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8"
+        }
+      ],
+      "observation": "The paper appropriately retains an unresolved dependence TODO. Current source randomizes arm order inside model/replicate scheduling blocks, while boot_effects samples each arm/model list independently; replicate/block identity is not used to preserve joint draws. V6 has already frozen that independent-arm procedure, but its existence supplies no scientific resolution of the paper's TODO. A perfectly paired synthetic B=D toy yielded a nondegenerate independent-arm bootstrap interval, confirming the algorithm does not preserve pairing; that toy is not evidence that actual trajectories are correlated.",
+      "scientific_consequence": "Fresh repository trajectories remain the experimental units; repeated features/tests/sessions do not increase n. A scheduling label alone also does not prove a paired or cluster design. Nevertheless shared block/service/time effects, if material, change uncertainty and the conditional power calculation. Under independent blocks, no across-model covariance, and within-model paired covariance c_m, the variance would be sum_m(var(Y_mB)+var(Y_mD)-2*c_m)/(M^2*n), rather than automatically 2*sigma^2/(M*n). Other dependence structures require their own treatment. Neither independence nor nonzero covariance was established by this source inspection.",
+      "evidence_state": "Full-text support",
+      "confidence": "High that the decision remains unresolved and the implemented resampling is independent-arm; actual residual dependence is unknown.",
+      "minimal_proposed_manuscript_remedy": "Retain this as an explicit pre-collection/pre-registration author decision, not a completed consequence of the new release. State whether blocks are scheduling-only with a justified independent-trajectory analysis, or adopt a separately authorized block-aware design/analysis with aligned variance and planning. Bind that decision to the exact source and prospective record. Do not silently declare the observations paired, change n, or retain an 80%-power implication under an incompatible dependence assumption."
+    },
+    {
+      "id": "EBTS-SCI-04",
+      "severity": "minor",
+      "category": "Internal framing consistency",
+      "file": "main.tex",
+      "lines": [209, 214],
+      "source_locator": [
+        {
+          "file": "anc/experiment-protocol.tex",
+          "lines": [59, 65],
+          "repository": "jmservera/ama",
+          "identity": "Reviewed working-tree protocol digest recorded above."
+        },
+        {
+          "file": "harness/runner.py",
+          "lines": [130, 133],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8"
+        },
+        {
+          "file": "harness/study.py",
+          "lines": [542, 567],
+          "commit": "5ab24be4556876500a40e56201f6efc3930cc8b8"
+        }
+      ],
+      "observation": "The Introduction describes the planned pilot generically as an extra-resource package comparison. The protocol instead makes B-D primary, matching total time and nominal-credit ceilings; the extra-allowance B-A comparison is secondary. B-D still differs in session structure and intervention content and does not guarantee equal realized spend.",
+      "scientific_consequence": "The opening understates the purpose of the new D control and can leave readers with the superseded B-A interpretation of the primary study.",
+      "evidence_state": "Conflict",
+      "confidence": "High.",
+      "minimal_proposed_manuscript_remedy": "Describe the primary comparison as a multi-component consolidation package versus matched resource ceilings, with extra-resource B-A and the other package contrasts secondary. Retain the qualification that equal ceilings are not equal spend and do not isolate refactoring."
+    }
+  ],
+  "positive_changes": [
+    {
+      "topic": "Independent unit and allocation",
+      "locations": ["anc/experiment-protocol.tex:18-25", "anc/experiment-protocol.tex:160-169"],
+      "assessment": "The unit is correctly the fresh ten-feature-plus-CR1 repository trajectory, not its features, tests, checkpoints or agent sessions. All three models and five arms receive the same prospectively selected per-cell n.",
+      "source_support": "harness/study.py:175-223 and runner.py:139-146 at current default. Source-body schedule probes returned 180/315/495 distinct trajectories for n=12/21/33, with all fifteen balanced cells and reproducible schedules.",
+      "evidence_state": "Full-text support"
+    },
+    {
+      "topic": "Conditional power rather than an allocation guarantee",
+      "locations": ["anc/experiment-protocol.tex:171-221", "README.md:44-49"],
+      "assessment": "The article distinguishes estimand from estimator, uses the 0-100 coverage scale, identifies equal weights over the fixed three-model roster, and labels common-variance/normal/independence assumptions. It explicitly denies 80% power for n=12 under SD 25 and does not let interim outcomes choose n.",
+      "check": "Standard-library NormalDist reproduced unrounded per-cell planning minima 11.77331960152363, 20.93034595826423 and 32.70366555978785 for SD 15/20/25; their ceilings are 12/21/33. SD 50 gives ceiling 131. The hypothetical two-sided normal power at n=12 and SD 25 is 0.3964384390227179. These are assumption-conditional calculations, not observed power, a measured variance, bootstrap-coverage validation or a design-specific power simulation.",
+      "evidence_state": "Full-text support"
+    },
+    {
+      "topic": "Selector persistence is now source-supported",
+      "locations": ["anc/experiment-protocol.tex:49-50", "anc/experiment-protocol.tex:160-169"],
+      "assessment": "The selector/default claim is no longer merely owner-supplied. Actual code validates 12/21/33, persists n in study identity and trajectory metadata, checks the immutable proposed schedule on resume, rejects changed inputs/config/commit, and rejects mismatched raw metadata.",
+      "source_support": "harness/study.py:688-766 and 940-977; tests/test_study.py:271-319 inspected. An in-memory launch_replicates probe reused saved n=21 and rejected an explicit change to 33. No actual saved study was read or created; Controller persistence was assessed statically, not exercised.",
+      "evidence_state": "Full-text support"
+    },
+    {
+      "topic": "Primary B-D implementation and missing-frame safeguards",
+      "locations": ["anc/experiment-protocol.tex:173-188", "anc/experiment-protocol.tex:223-227"],
+      "assessment": "The current five-arm analyzer computes equal-model B-D differences in percentage points, keeps historical ABC/v1 frames separate, and does not substitute an observed-model pooled primary when the allocated unassisted frame is incomplete. Missing contributing B/D endpoint values make the contrast unavailable.",
+      "source_support": "harness/pilot_analysis.py:272-300, 374-407 and 483-528; analyze.py:285-345. A pure boot_diff probe produced a 50-point equal-model difference with a [50,50] interval for deterministic strata and returned unavailable after a contributing value became None. These synthetic mechanics checks do not validate inferential coverage.",
+      "evidence_state": "Full-text support"
+    },
+    {
+      "topic": "Control interpretation and test integrity",
+      "locations": ["anc/experiment-protocol.tex:29-46", "anc/experiment-protocol.tex:59-77"],
+      "assessment": "The detailed protocol correctly limits B-D to a practical package comparison at matched ceilings, retains the fewer-session difference, and does not equate B-C with pure refactoring or E-B with hidden-test feedback. Accepted Python files are protected as whole files; examples remain protected.",
+      "source_support": "runner.py:28, 130-133, 300-349 and 387-434; study.py:542-567; isolated_runtime.py:250-310. E's source checks provenance/quoted visible text and restricts changes to literal equality-assertion expectations; it explicitly does not supply independent semantic adjudication.",
+      "evidence_state": "Full-text support"
+    },
+    {
+      "topic": "Retention, adaptation and missingness are conceptually separated",
+      "locations": ["anc/experiment-protocol.tex:90-138", "anc/deferred-measures.tex:1-32"],
+      "assessment": "Acquisition failure is distinguished from loss of previously acquired behavior; empty denominators are undefined; episodes survive recovery; CR1 requires all 15 CR1 contracts plus pre-CR1 passing contracts rather than repair of every prior failure. Prerequisite strata are explicitly post-treatment and one fixed CR1 is task-specific. HIR/IDR remain deferred with complete-annotation requirements.",
+      "source_support": "pilot_analysis.py:53-146 and 157-207; the public panel has 127 feature contracts and 15 CR1 contracts. The conservative executable partial-observation difference is separately reported in EBTS-SCI-02.",
+      "evidence_state": "Full-text support"
+    },
+    {
+      "topic": "Resources, admission and affordability are not conflated",
+      "locations": ["anc/experiment-protocol.tex:245-313"],
+      "assessment": "Nominal session sums do not enlarge the 300,000-credit envelope or 270,000 local admission ceiling. The paper preserves prior spending, unknown-usage holds, all-attempt costs, shared retry allowances, full-allocation affordability/deadline acceptance and halt-rather-than-resize language.",
+      "source_support": "study.py:226-267, 342-361, 542-567 and 925-937; study-config.json:1-52. Pure source-body probes confirmed schedule/resource totals, fixed calibration without CR1, aggregate admission rejection and future-unknown-usage blocking. This does not establish actual affordability or a billing hard cap.",
+      "evidence_state": "Full-text support"
+    },
+    {
+      "topic": "Prospective status, disclosure and historical evidence",
+      "locations": ["main.tex:45-47", "main.tex:63-89", "main.tex:993-1043", "main.tex:1046-1095", "anc/case-audits.tex:227-239", "anc/deferred-measures.tex:34-57"],
+      "assessment": "The false results switch, author result TODOs and abstract remain prospective. The article does not turn the case into a causal test of consolidation; migration/deployment rivals and intended rather than measured HVE benefit remain visible. AI assistance is not called independent empirical coding or human verification. Original OSF approval, public exposure, private exclusions and later authorized deposits remain distinct. The frozen v4 prompt is preserved and its inspected historical checksum matches. The current-capability error in disclosure/data availability is isolated in EBTS-SCI-01.",
+      "evidence_state": "Full-text support",
+      "limit": "Historical human/organizational approvals, cited-study findings, exposure chronology and OSF records were not independently verified."
+    },
+    {
+      "topic": "Economic interpretation",
+      "locations": ["main.tex:784-862"],
+      "assessment": "The cost scenario is explicitly hypothetical, quality-matched and unestimated; it states assumptions, integer payback, the no-payback positive-investment/zero-premium case, and the inability of capped ten-feature work to identify long-run currency savings. No outcome or monetary claim is inferred from allowances.",
+      "evidence_state": "Full-text support",
+      "limit": "A comprehensive fresh symbolic/table audit is the parent's separate task; no SymPy engine execution was performed by this reviewer."
+    }
+  ],
+  "unresolved_author_choices_and_collection_boundaries": [
+    {
+      "id": "U-ALLOCATION",
+      "decision": "Choose and justify n=12, 21 or 33 before study collection and prospective recording; default 12 is an offered software default, not scientific or financial approval.",
+      "required_record": "Selected n, rationale, assumed SD, conditional power/precision trade-off, date and exact source/configuration. Source persists n and start time, but the inspected identity does not itself capture all scientific rationale fields or verify agreement with an external registration.",
+      "constraint": "No outcome-driven resizing, added/replacement trajectories or budget-driven reduction on resume. A different allocation needs separately authorized prospective amendment and a new saved study."
+    },
+    {
+      "id": "U-BLOCKING",
+      "decision": "Resolve EBTS-SCI-03 without inferring actual dependence merely from a shared replicate label.",
+      "constraint": "The v6 source freeze does not resolve or supersede the paper's scientific dependence TODO."
+    },
+    {
+      "id": "U-RETENTION",
+      "decision": "Resolve EBTS-SCI-02 and specify how uncertain prior acquisition affects risk membership and which observed/missing summaries are deliverable.",
+      "constraint": "Do not replace an unavailable H2 history with zero loss, never-acquired status, or a complete-case primary."
+    },
+    {
+      "id": "U-PRIMARY-ELIGIBILITY",
+      "decision": "Make the analyzer's primary-availability rule explicit in the prospective record: a complete scheduled five-arm/model metadata frame with known unassisted status and complete contributing B/D final coverage, rather than silently dropping assisted/incomplete trajectories.",
+      "source_locator": "pilot_analysis.py:402-407 and 483-493; protocol/pilot-estimation.md:256-258 and 314-329.",
+      "constraint": "Valid final H1/CR1 observations can remain informative after an earlier missing H2 measurement. Preserve allocated frames and costs; secondary model-specific outputs cannot replace a missing global primary."
+    },
+    {
+      "id": "U-CR1-REPORTING",
+      "decision": "Source-bind the additional CR1 reporting promised at experiment-protocol.tex:130-137, including contracts passed out of 15, pre-CR1 passing contracts lost, observed/missing denominators and F9/F10 acquisition strata.",
+      "source_limit": "The inspected summary code directly computes composite CR1 success and allocated success/missing bounds; dedicated F9/F10-stratified reporting was not established in the inspected analyzer/export. Retained raw vectors may permit later derivation, but that is not a verified existing reporting pipeline.",
+      "constraint": "Strata are post-treatment descriptions, not randomized subgroups or a remedy for unequal prerequisite acquisition; one fixed change request does not establish general adaptability."
+    },
+    {
+      "id": "U-E-ADJUDICATION",
+      "decision": "Specify treatment fidelity and external review of E's alleged specification contradictions.",
+      "source_locator": "runner.py:70-96 and 315-348; five-arm-amendment-2026-11-02.json:23-24.",
+      "constraint": "The executable exception is narrower than a generic test-expectation edit: literal values on the right of equality assertions in agent-authored accepted tests, exact old/new blobs, already-visible specification quote and explanation, with other bytes/examples/skeleton tests protected. A valid quote and explanation do not independently establish a genuine semantic contradiction."
+    },
+    {
+      "id": "U-AFFORDABILITY",
+      "decision": "Obtain excluded cost-only calibration and a documented forecast for the entire chosen allocation, CR1, all-attempt liabilities, prior spend/holds and deadline before study collection.",
+      "source_limit": "Actual per-attempt admission/unknown-usage/deadline guards are implemented. The inspected launcher does not compute a full-selected-allocation cost/time forecast or validate a structured affordability certificate: freeze_errors checks evidence strings, while the current budget_calibration text itself says calibration/acceptance remain mandatory. Manual documented acceptance must not be inferred from that nonempty string.",
+      "current_public_config_declarations": {
+        "aggregate_envelope_credits": 300000,
+        "local_admission_ceiling_credits": 270000,
+        "known_prior_credits": 49.74337,
+        "historical_unknown_usage_holds_credits": 1500,
+        "remaining_local_room_from_declared_prior_and_holds_credits": 268450.25663,
+        "study_timeout_seconds": 1209600
+      },
+      "evidence_state": "Full-text support",
+      "billing_verification_limit": "These are inspected public configuration/manifest declarations, not newly reconciled bills or a guaranteed bound on unknown actual spending. No private diagnostic output or cost calibration was opened or executed."
+    },
+    {
+      "id": "U-FREEZE-REGISTRATION",
+      "decision": "Identify the exact approved scientific design/source and selected allocation in a real prospective record, and renew source qualification/freeze if authorized changes require it.",
+      "source_locator": "protocol/freeze.json:3-10, 35-40 and 74-82; study.py:270-299.",
+      "constraint": "V6 release/tag existence was verified; current registration_date is null and prospective_osf_update_recorded is false. Static inspection shows the native freeze gate would reject the missing date; the launcher was not run. Original owner-reported OSF approval does not register v4/v6 or this recovered manuscript. A date/string gate does not independently verify actual external registration or selected-n agreement. Collection_authorized remains false in the manifest. No OSF action or permission is supplied by this review."
+    },
+    {
+      "id": "U-TELEMETRY-DISCLOSURE",
+      "decision": "Keep complete AI-credit, model/effort and intervention evidence separate from unavailable token/provider-active-time/currency claims and preserve actual assistance chronology in any corrected disclosure.",
+      "source_limit": "Current amendment/freeze expressly reports incomplete input/output/cache-token telemetry in the isolated bridge. No token comparison, equal spend, exchange rate, human approval or independent scientific review can be inferred from the source release or its test-count declarations.",
+      "constraint": "Actual venue requirements and final human approval remain unassessed; do not invent declarations or approvals."
+    }
+  ],
+  "checks_actually_performed": [
+    {
+      "check": "Read-only paper and kit Git/source identity inspection",
+      "result": "Paper HEAD/branch and dirty candidate state recorded; live MVE main pinned and rechecked. Stale local main/tracking ref, earlier candidate and historical v4 tag/source distinguished. Neither local kit checkout had tracked changes at initial/final checks. No fetch, switch, ref/index update or remote write."
+    },
+    {
+      "check": "Current kit source and release inspection",
+      "result": "Read relevant current source directly through pinned gh API requests; verified v6 release existence, annotated tag target, and that default-head changes only the freeze manifest. Did not infer execution success from declarations."
+    },
+    {
+      "check": "Pure in-memory source-body probes, Python 3.12.3",
+      "result": "Compiled only inspected selected functions from fetched source, not kit modules or entry points. Used synthetic dictionaries and a MemoryPath/read_json shim with no filesystem access; never instantiated Controller, opened a saved study, invoked a provider or created run state.",
+      "probes": [
+        "Validated default 12 and rejection of 0, 13, True, string 12 and float 12.0.",
+        "Verified deterministic balanced 15*n schedules for n=12/21/33, unique run IDs, and source planned-resource totals: 255*n sessions, 116.25*n maximum hours, 85500*n nominal credits.",
+        "Verified fixed 15-trajectory calibration with 240 sessions, 105 maximum hours, 81000 nominal credits and no CR1.",
+        "Verified in-memory saved n=21 reuse and explicit n=33 resume rejection.",
+        "Verified aggregate admission rejection and future-unknown-usage blocking on synthetic ledgers.",
+        "Reproduced conservative null retention outputs for one failed plus one unobserved previously passing contract.",
+        "Verified equal-model bootstrap point calculation, missing-contributor unavailability and lack of block-pair preservation using explicitly synthetic examples."
+      ],
+      "verification_limit": "These are focused mechanics/unit probes, not the repository's test suite, qualified runtime, statistical certification, observed study data or inferential coverage tests."
+    },
+    {
+      "check": "Conditional normal planning sensitivity",
+      "result": "Used standard-library NormalDist/math for the four stated planning SD cases and hypothetical n=12/SD25 power. Confirmed the independent-common-variance formula's scope; did not certify independence, actual variance or bootstrap power."
+    },
+    {
+      "check": "Active input and historical prompt identity",
+      "result": "Discovered main -> background/protocol/Supplement -> additional-evidence/case-audits/deferred-measures and the literal frozen-prompt listing. Recorded SHA-256 identities. The retained prompt checksum exactly matches historical e8707ecc source."
+    },
+    {
+      "check": "Abstract/disclosure/data-availability and SVG text consistency",
+      "result": "Confirmed prospective abstract and false results switch/TODOs; identified stale implementation wording in the active protocol, disclosure, availability, README and pilot-diagram label. Inspected SVG text only; did not claim visual/export/PDF validation."
+    },
+    {
+      "check": "Methodology assistance",
+      "result": "Read the repository Scientific Paper Writing and Review reference and loaded scientific-critical-thinking, experimental-design, statistical-analysis and sympy skills. The system Python has no SymPy or SciPy package. No environment or package was created or installed, no uv was used, and no SymPy engine result is claimed.",
+      "assistance_disclosure": "This JSON is AI-assisted scientific critique/source inspection and narrowly bounded synthetic mechanics checking, not independent human review."
+    }
+  ],
+  "not_run_or_not_verified": [
+    "No study, model-calling smoke, paid check, inference, calibration, Azure, OSF, collection, visibility, submission or publication action.",
+    "No private datasets, private paid diagnostic code/results/transcripts, credentials, author-context caches or cloud data were read.",
+    "No full harness, SDK, container/canary, reference-oracle, mutation or runtime-image qualification was executed; manifest test counts and qualification claims were not reproduced.",
+    "No real saved study was read, resumed, altered or created; persistence checks beyond the in-memory selector shim were static source/test inspection.",
+    "No execution of run-experiment.sh, study.py CLI, preflight or a repository gate; static gate inspection is not an observed successful/failed launcher run.",
+    "No manuscript compilation, PDF rendering, PNG inspection, figure export, hash-binding gate or authoring suite was run by this reviewer. Historical page/test/rendering counts were not refreshed.",
+    "No systematic citation, bibliographic metadata, external-study result or motivating-case evidence audit.",
+    "No full input-fingerprint recomputation, release-asset download, actual billing reconciliation, operator access/contamination verification or actual OSF record verification.",
+    "No measured variance, actual dependence, power simulation, new analysis of study data, statistical acceptance, ethics certification or human/co-author approval.",
+    "The parent's report of 34 passing existing authoring tests and 9 passing new numerical/table regressions is user-supplied unchecked evidence in this review. Parent-owned paper-science-venv and paper-numerical-audit files were not accessed."
+  ],
+  "follow_up_boundary": {
+    "status": "Awaiting same-task follow-up if requested.",
+    "recheck_targets": [
+      "Source-bound corrections for EBTS-SCI-01 through EBTS-SCI-04 against the exact revised manuscript/protocol bytes.",
+      "Any authorized author decision resolving retention reporting or scheduling-block inference; no silent design choice.",
+      "Final committed paper head and any changed live/default/frozen MVE SHA, retaining historical source and verification limits."
+    ],
+    "authority": "No manuscript edit, kit change, freeze amendment, registration, collection, commit or push is authorized by this report."
+  }
+}
