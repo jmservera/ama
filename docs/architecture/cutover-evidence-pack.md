@@ -3475,3 +3475,116 @@ Process disclosure: the old auxiliary `/tmp/ama-main-440-ui-cache-wave3`
 unchanged and are not the observed clean source. The runner scripts
 `/tmp/o440b-run.py` and `/tmp/o440c-run.py` are retained outside the
 repository. Nothing was deleted, moved, archived or cleaned.
+
+## Eighth stabilization checkpoint: integrated parent topic preparation (2026-11-05, Refs #123 #440 #128)
+
+Refs #123, #440 and #128. Local, light-only preparation of the parent topic
+`feat/discovery-assurance-integration-123` for an eventual main integration.
+It is not documentation only: the integrated surface carries the constructed
+#128 diagnostic `paired_equity.py` and its tests. It adds no runtime behaviour,
+threshold, approval or requirement change. Epic #123 acceptance criteria 1 and
+2 stay unchecked and unproven; #440 criteria 7 and 8, the whole-#440 HVE
+residuals, company-owner and data prerequisites, actual-model, threshold and
+lawful-field approvals, resident and accessibility research and authorized
+Azure-only residuals stay outstanding. Holds on weather and indoor series
+(#82, #188) and the #1204 HVE item stay scoped as before. Original RPI
+evidence is under `.copilot-tracking/*/2026-11-05/parent-integration-preparation-123-*`.
+
+### Source, intake and merge identities
+
+| Item | Value |
+| --- | --- |
+| Old local placeholder (strict ancestor, kept) | `3d7ad2feaa9c4cba5fe917edd2fbc40e40a5c246` |
+| Remote parent intake (fetched 2026-11-05) | `63dd5798ee474ea3137018749b604c1f78774801`, tree `73c8eda8f49891aea173623f79e1fd8f95c7ec1b` |
+| Fresh main baseline (fetched 2026-11-05) | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`, tree `5c2988b71aec609b007b41f408685d54e2c28e0d` |
+| Remote-parent merge (ordinary, fast-forward eligible) | local head became `63dd5798`, tree `73c8eda8` |
+| Main merge commit (ordinary, no reset, rebase or force) | `6703b0b1a9e44844fc64446c8a311d28f36dec81`, tree `e23d35e72b480ba0c650e57f754871a23353a14f`; parents `63dd5798` and `bb3a3b03` |
+| Final frozen local head | the commit that adds this section; reported in the task hand-off, not self-referenced here |
+
+Both tips are ancestors of the merge commit (`git merge-base --is-ancestor`
+exit 0 for each). `docs/reference/log.md` auto-merged with no conflict;
+afterwards no line of either side's log was removed (zero deleted lines
+against each parent). The prior compound command that reported exit 1 after
+the merge ended in `grep -v` over an empty tracked-change list, which exits 1
+by design; the merge itself succeeded and was rechecked separately. No parent
+pull request existed (open: #1216, #1205, #1203, #1141). Nothing was pushed.
+
+### Covered children and surface
+
+Covered #128 and #440 children already on the remote parent: #1211
+`e546bf23e` (constructed paired-cohort comparability), #1212 `ad1ee0264`
+(qualified sensor documentation), #1213 `23cdae38b` (parent comparability
+checkpoint, sixth) and #1221 `63dd5798e` (UI and cache checkpoint, seventh).
+Their original NOT CLEAN reviews, failed receipts, first harness mistakes and
+later qualified successes are unchanged.
+
+Final fresh-main-relative scope (`git diff bb3a3b03 HEAD` before this
+checkpoint): 39 files, 1710 additions, 2 deletions. Source and tests:
+`src/core/src/zava_forward/core/paired_equity.py` (`5aedcd7b`),
+`src/core/tests/test_paired_equity.py` (`f9b07cb6`) and `src/core/README.md`
+(`bb709453`). Documentation: this pack, the KB index and the log. The remaining
+33 files are dated `.copilot-tracking` RPI records. Main-only gate tooling
+(`tools/rpi-checks.py`, `src/README.md`, API `style.css`) is identical to main
+and not part of the diff. Tier: FOCUSED is recommended only while this stays
+bounded metric tooling, tests and documentation; it is a recommendation for
+coordinator admission, not an admission. Any mixed infrastructure, security,
+SQL, finance, deployment or large-feature change needs reclassification to
+FULL.
+
+### Document identities and traceability
+
+Identical on main and the parent. Statuses are not approvals by this record.
+
+| Document | Status, version, date | Blob |
+| --- | --- | --- |
+| BRD-2026-AMA48-001 | draft, 0.21.0, 2026-10-24 | `34d88395` |
+| PRD-2026-AMA48-001 | in-review, 0.21.0, 2026-10-25 | `c788b917` |
+| ADR 0002 | Proposed | `cbe21530` |
+| ADR 0003 | Accepted with amendment | `d6064539` |
+
+Traceability stays document-qualified: PRD FR-054 and AC-073 (constructed
+paired cohorts; status cell "Not run"), PRD OQ-018 (open), BRD NFR-008 and
+NFR-009. `paired_equity.py` keeps `fairness_evidence=False` and
+`activation_allowed=False`; its fixture contrasts are not a production mapping
+or an approved threshold. Main still holds the unfixed blobs `d29768d5` and
+`432aef3e` for the diagnostic and its tests; the parent holds the fix.
+
+### Evidence classification
+
+| Finding | Classification | Limit |
+| --- | --- | --- |
+| Six coupled core test modules pass on the integrated working tree | local observed (parent topic, integrated head `6703b0b1` content) | 74 tests; light only; not a gate, not a main observation |
+| Ruff check and format check of the two changed Python files pass | local observed (parent topic) | Two files only; mypy not run |
+| `git diff --check bb3a3b03 HEAD` clean | local observed (parent topic) | Whitespace only |
+| Main observations of this surface | none | Main holds the unfixed diagnostic |
+| Complete parent validation (relevant core tests as a gate, core Ruff and mypy including tests, offline requirement and design traces, link and anchor checks, final identity record) | pending coordinator admission | Not run here; historical child receipts and the earlier 74-test observation are context, not parent results |
+| Independent exact-head review, hosted checks, guarded merge | deferred to coordinator | None exist for this head |
+| Actual-model evaluation, thresholds, lawful fields, population fairness, human approval | blocked or unknown | Nothing inferred |
+
+### Actual commands, exits and skips
+
+Python 3.12.3 from the existing external `/tmp/ama-96-venv`, with
+`PYTHONDONTWRITEBYTECODE=1`, external `XDG_CACHE_HOME`, `RUFF_CACHE_DIR` and
+`MYPY_CACHE_DIR` under `/tmp`, and an explicit
+`PYTHONPATH=<worktree>/src/core/src:<worktree>/src/core/tests`.
+
+| Command | Exit | Result |
+| --- | --- | --- |
+| Import `paired_equity`, `journey_register`, `ranking`, `rai_release`; assert `__file__` under this worktree | 0 | Current-source paths confirmed |
+| `python -m unittest` over `test_paired_equity`, `test_journey_register`, `test_rai_release`, `test_rai_release_invalidation`, `test_ranking_publication`, `test_cohort_eval` | 0 | 74 tests OK in 0.062 s |
+| `ruff check --no-cache` and `ruff format --check --no-cache` on `paired_equity.py` and `test_paired_equity.py` | 0, 0 | Passed |
+| `git diff --check bb3a3b03 HEAD` | 0 | Clean |
+| Ignored-inclusive status | 0 | No ignored files |
+
+Not run: `tools/rpi-checks.py` in any mode, mypy, browser, SQL, Docker,
+scanners, cloud, provider or model calls, private datasets, broad suites and
+offline traces. The heavy lock and the #144 runner were not touched.
+
+### Findings, triage and recommendation
+
+No new defect was confirmed and no correction beyond the merge was needed.
+Earlier unreproduced observations stay observations. Recommendation: the
+coordinator admits the selected-tier parent validation, independent exact-head
+review and hosted checks; the recorded gaps remain open. No issue, board or
+criterion was changed and no closing keyword is used. Nothing was deleted,
+moved, archived, reset or cleaned.

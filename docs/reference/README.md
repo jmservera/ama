@@ -399,6 +399,11 @@ focused main checks were blocked by a held heavy lock and are unrun, not
 passed, and no defect or acceptance is implied. A dated continuation records
 that both focused checks later passed on exact current main `bb3a3b03`
 (focused only; not a full receipt or any acceptance).
+For the parent topic prepared against main `bb3a3b03`, the
+[eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
+records merge identities, the covered #128 and #440 children, the final scope
+and tier recommendation and light local observations; complete parent
+validation is pending and no acceptance is implied.
 For issue #119, the [map tile provider options review](./research/ux/map-tile-provider-options.md)
 records dated licence, attribution, coverage, cost, processor and privacy
 evidence for the public OSM server, Azure Maps, OS Maps API, MapTiler and
