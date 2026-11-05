@@ -735,8 +735,25 @@ class SensorConsumer:
         home_ids: Sequence[str],
         windows: Mapping[str, tuple[str, str]] | None = None,
     ) -> list[dict[str, str]]:
-        """Read stored readings per home as canonical rows with trusted control units.
+        """Indoor-contract rows (reading-v2) for comparison and indoor analysis.
 
+        Live-sim rows are a different, climate-shaped schema with no calibration flag. They are
+        excluded here, never reshaped; use retained_envelopes for their exact retained form.
+        """
+        return [
+            row
+            for row in self.retained_envelopes(home_ids, windows)
+            if row["schema_version"] != LIVE_SCHEMA_VERSION
+        ]
+
+    def retained_envelopes(
+        self,
+        home_ids: Sequence[str],
+        windows: Mapping[str, tuple[str, str]] | None = None,
+    ) -> list[dict[str, str]]:
+        """Read stored readings per home as exact retained wire envelopes with trusted units.
+
+        Live-sim rows are returned as the original accepted witness; nothing is added or dropped.
         windows optionally bounds each home to an inclusive (first, last) UTC slot range.
         """
         if (
@@ -796,13 +813,7 @@ class SensorConsumer:
                         raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
                     self._retained_reading(record, witness)
                     if witness["schema_version"] == LIVE_SCHEMA_VERSION:
-                        canonical = {
-                            k: str(witness[k]) for k in READING_FIELDS if k != "calibrated"
-                        }
-                        canonical["calibrated"] = "true"
-                        canonical["sunlight_wm2"] = str(witness["sunlight_wm2"])
-                        canonical["sunlight_unit"] = str(witness["sunlight_unit"])
-                        rows.append(canonical)
+                        rows.append({k: str(witness[k]) for k in LIVE_FIELDS})
                         continue
                     rows.append({key: str(witness[key]) for key in READING_FIELDS})
                     continue

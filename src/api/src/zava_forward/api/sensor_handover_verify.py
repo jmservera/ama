@@ -99,7 +99,7 @@ def run(
         humidity=humidity,
     )
     if replay_check:
-        before = consumer.observed_series(homes, windows)
+        before = consumer.retained_envelopes(homes, windows)
         stamp = received_at or datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
         ingestion = SensorIngestion(store)
         receipts = [
@@ -110,7 +110,7 @@ def run(
         result["idempotent"] = (
             len(receipts) == len(before)
             and all(item.reason == "ACCEPTED" and item.replay for item in receipts)
-            and consumer.observed_series(homes, windows) == before
+            and consumer.retained_envelopes(homes, windows) == before
         )
         result["passed"] = bool(result["passed"]) and result["idempotent"]
     return result

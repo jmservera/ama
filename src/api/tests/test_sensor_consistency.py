@@ -6,6 +6,8 @@ import io
 import json
 import os
 import sqlite3
+import tempfile
+import unittest
 from dataclasses import replace
 from datetime import UTC, datetime
 from pathlib import Path
@@ -15,9 +17,10 @@ import test_sensor_consumer as consumer_tests
 import test_sensor_handover as fixture
 from azure.eventhub import EventData
 from sensor_consumer_fixture import CONTROL, POLICY, store_at
+from test_sensor_consumer_live import live
 from zava_forward.core.sensor_consumer import READING_COLUMNS, ConsumerError, SensorConsumer
 from zava_forward.core.sqlstore import CASE_COLS
-from zava_forward.core.synthetic import sensor_backfill
+from zava_forward.core.synthetic import sensor_backfill, sensor_faults
 from zava_forward.core.synthetic.sensor_consistency import report
 from zava_forward.core.synthetic.sensor_stream import Replay, descriptor, replay, wire
 
@@ -229,3 +232,46 @@ class SqlHandoverTests(consumer_tests.SensorConsumerTests):
             code = verify_main(["--reference", str(truncated), "--handover", fixture.HANDOVER])
         self.assertEqual(code, 2)
         self.assertEqual(json.loads(out.getvalue())["refused"], "REFERENCE_ROW_INCOMPLETE")
+
+
+class LiveEnvelopeReplayTests(unittest.TestCase):
+    def test_verifier_replays_live_envelope_exactly_beside_backfill(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            store = store_at(tmp, reset=True)
+            self.addCleanup(store.db.close)
+            consumer = SensorConsumer(store)
+            received = "2024-10-02T00:00:00Z"
+            consumer.configure(
+                replace(POLICY, max_past_seconds=86400),
+                [CONTROL, replace(CONTROL, sensor_id="SENS-SYN-2")],
+            )
+            sensor = sensor_backfill.sensor_for({"id": "ZF-1"})
+            sensor["fault_profile"] = "none"
+            source = sensor_backfill.readings(
+                sensor, outdoor=[(10.0 + i / 10, 70.0) for i in range(24)], days=1, cadence=60
+            )
+            reference = [
+                dict(row)
+                for packet in sensor_faults.packets(
+                    source, sensor_faults.configure({}), 183, "SENS-SYN-1"
+                )
+                for row in packet.rows
+            ]
+            for row in reference:
+                self.assertEqual(consumer.process(row, received).status, "accepted")
+            row = live(sensor_id="SENS-SYN-2", reading_id="LIVE-SENS-SYN-2-20241001T0100Z")
+            self.assertEqual(consumer.process(row, received).status, "accepted")
+            before = consumer.retained_envelopes(["ZF-1"])
+            verdict = verify(
+                store,
+                reference,
+                handover="2024-10-01T12:00:00Z",
+                cadence_minutes=60,
+                replay_check=True,
+                received_at=received,
+            )
+            self.assertTrue(verdict["passed"] and verdict["idempotent"], verdict)
+            self.assertEqual(consumer.retained_envelopes(["ZF-1"]), before)
+            self.assertEqual(
+                len([row for row in before if row["schema_version"] == "live-sim-reading-v1"]), 1
+            )

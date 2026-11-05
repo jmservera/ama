@@ -716,8 +716,12 @@ method sign-off and R3 limits that gate any measure beyond an exercise rule.
 
 `sensor_analysis_store.analyse_retained(consumer, home_id, window, as_of)` runs
 the derivation over readings retained in the SQL store. It uses only read-only
-`SensorConsumer` methods: `observed_series` for the window and `home_consent`
-for trusted consent (any declined control declines the home; anything other
+`SensorConsumer` methods: `retained_envelopes` for the window and `home_consent`
+for trusted consent. `live-sim-reading-v1` rows are climate-shaped outdoor
+readings, not indoor measurements: they are never passed to the indoor
+derivation, and a window holding only such rows is `INSUFFICIENT` with reason
+`WEATHER_INPUT_NOT_INDOOR_MEASUREMENT`. A weather-to-indoor model is separate,
+versioned and approved scope (any declined control declines the home; anything other
 than all-granted is unknown). If the store cannot be read, the result is
 `INSUFFICIENT` with reason `RETAINED_READINGS_UNAVAILABLE` and priority effect
 `NONE`; the manual review route is unchanged. It writes nothing and creates no

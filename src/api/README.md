@@ -1978,7 +1978,9 @@ discovers or represents installed real devices and has no resident-facing action
   16-field shape, slot-aligned `reading_id`, `sunlight_unit` `W/m2`, 0..1400 range, the same
   control, consent, window, calibration-interval and clock checks as the backfill). The reading
   row keeps temperature and humidity; sunlight is kept in the retained accepted-delivery witness
-  and returned by `observed_series` with `calibrated` derived from the confirmed control. A replay
+  and returned unchanged (original 16 fields, no `calibrated`) by
+  `SensorConsumer.retained_envelopes`, which the verifier replay check uses. `observed_series`
+  keeps the indoor `reading-v2` contract and excludes live rows instead of reshaping them. A replay
   returns the prior receipt, a same-slot change is an `IDENTITY_CONFLICT` data-quality exception,
   and an older slot is `OUT_OF_ORDER`. No `sensor_reading` column was added (that is a SQL change
   left to the owner) and nothing was run against Azure.
