@@ -246,8 +246,13 @@ class QualityMixin:
             if measure not in self._measures(c):
                 raise ValueError("Choose one of this case's measures.")
             previous = [(i, r) for i, r in enumerate(self._quality(c)) if r["measure"] == measure]
-            if any(r["state"] not in (ACCEPTED, HANDED, SUPERSEDED) for _, r in previous):
-                raise ValueError("This measure already has a quality record in progress.")
+            in_progress = [r for _, r in previous if r["state"] not in (ACCEPTED, HANDED, SUPERSEDED)]
+            if in_progress:
+                # Owner decision 2026-11-05: only corrupted stored evidence may be replaced, by a quality role.
+                corrupted = all(evidence_gaps(r) != [] for r in in_progress)
+                if not corrupted:
+                    raise ValueError("This measure already has a quality record in progress.")
+                self._need_quality_role(user, "replace corrupted quality evidence")
             cl = checklist_for(measure)
             items = items if isinstance(items, dict) else {}
             missing = [lab for lab in cl["items"] if not _clean(items.get(lab), 200)]

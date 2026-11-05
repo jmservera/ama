@@ -237,6 +237,65 @@ class QualityGateTests(unittest.TestCase):
         self.assertEqual(states, ["Superseded", "Submitted"])
         store.accept_quality(QUIN, "ZF-1", 1)
 
+    def corrupted(self, state: str) -> tuple[Any, dict[str, Any]]:
+        store = self.make()
+        rec = self.submit(store)
+        if state != "Submitted":
+            store.return_quality(QUIN, "ZF-1", 0, "Gap", "Missing check", "Test Ltd")
+        if state == "Fixed, awaiting reinspection":
+            store.record_fix(QUIN, "ZF-1", 0, "Install Team", "Corrected, ref 1")
+        rec["items"][0]["evidence"] = ""
+        return store, rec
+
+    def replace(self, store: Any, user: Any = QUIN, items: Any = EVIDENCE) -> None:
+        store.submit_quality(
+            user, "ZF-1", "Loft insulation", "Install Team", "Installer", items, context_revision=1
+        )
+
+    def test_corrupted_in_progress_record_is_replaced_with_originals_kept(self) -> None:
+        for state in ("Submitted", "Returned", "Fixed, awaiting reinspection"):
+            store, rec = self.corrupted(state)
+            original = copy.deepcopy(store.cases["ZF-1"]["quality"][0])
+            if state != "Returned":
+                with self.assertRaises(GateError):
+                    store.accept_quality(QUIL, "ZF-1", 0)
+            self.replace(store)
+            rows = store.cases["ZF-1"]["quality"]
+            self.assertEqual([r["state"] for r in rows], ["Superseded", "Submitted"], state)
+            self.assertEqual(rows[0]["items"], original["items"])
+            self.assertEqual(rows[0]["defects"], original["defects"])
+            self.assertEqual(rows[1]["supersedes"], [0])
+            self.assertEqual(rows[0]["history"][-1]["to_state"], "Superseded")
+            self.assertEqual(rows[0]["history"][: len(original["history"])], original["history"])
+            self.assertNotIn("accepted_by", rows[1])
+            with self.assertRaises(PermissionError):
+                store.accept_quality(QUIN, "ZF-1", 1)
+            store.accept_quality(QUIL, "ZF-1", 1)
+            self.assertEqual(store.cases["ZF-1"]["quality"][1]["state"], "Accepted")
+
+    def test_unreadable_in_progress_items_are_replaceable(self) -> None:
+        store, rec = self.corrupted("Submitted")
+        rec["items"] = "unreadable"
+        self.replace(store)
+        self.assertEqual(store.cases["ZF-1"]["quality"][0]["items"], "unreadable")
+        self.assertEqual(store.cases["ZF-1"]["quality"][1]["state"], "Submitted")
+
+    def test_replacement_boundaries_hold(self) -> None:
+        store, _ = self.corrupted("Submitted")
+        with self.assertRaises(PermissionError):
+            self.replace(store, user=SAM)
+        partial = dict(EVIDENCE)
+        partial.pop(next(iter(partial)))
+        with self.assertRaises(ValueError):
+            self.replace(store, items=partial)
+        self.assertEqual(len(store.cases["ZF-1"]["quality"]), 1)
+        self.assertEqual(store.cases["ZF-1"]["quality"][0]["state"], "Submitted")
+        valid = self.make()
+        self.submit(valid)
+        with self.assertRaises(ValueError):
+            self.replace(valid)
+        self.assertEqual(len(valid.cases["ZF-1"]["quality"]), 1)
+
     def test_complete_evidence_still_accepts_and_wrong_state_error_is_unchanged(self) -> None:
         store = self.make()
         rec = self.submit(store)
