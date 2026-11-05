@@ -21,6 +21,7 @@ from dataset import (
     supplied_resident_fixture,
 )
 from zava_forward.core import ai_tasks, projection
+from zava_forward.core.quality import CHECKLISTS
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, GateError, Store
 
@@ -893,6 +894,10 @@ class SqlHazardReferral(JsonHazardReferral):
                             )
                         else:
                             c["quality"] = copy.deepcopy(fixture()["cases"][1]["quality"])
+                            c["quality"][0]["items"] = [
+                                dict(label=x, evidence="SYN-EVIDENCE")
+                                for x in CHECKLISTS["Loft insulation"]["items"]
+                            ]
                             if transition == "accept":
                                 c["quality"][0].update(
                                     state="Submitted",
