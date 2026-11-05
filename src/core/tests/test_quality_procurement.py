@@ -151,6 +151,30 @@ class Flows:
         self.store.accept_quality(QUIL, "ZF-1", 0)
         self.assertEqual(self.rec()["state"], "Accepted")
 
+    def test_non_string_measure_with_unrecognised_checklist_is_unknown(self):
+        self.submit()
+        self.corrupt_stored(
+            lambda r: r.update(checklist="Unlisted", measure=["Loft insulation"])
+        )
+        original = copy.deepcopy(self.store.cases["ZF-1"]["quality"][0])
+        with self.assertRaises(GateError) as ctx:
+            self.store.accept_quality(QUIL, "ZF-1", 0)
+        self.assertIn("no evidence recorded", str(ctx.exception))
+        self.assertEqual(self.store.cases["ZF-1"]["quality"][0], original)
+
+    def test_non_string_measure_is_not_needed_for_a_known_checklist(self):
+        self.submit()
+        self.corrupt_stored(lambda r: r.update(measure=["Loft insulation"]))
+        self.store.accept_quality(QUIL, "ZF-1", 0)
+        self.assertEqual(self.rec()["state"], "Accepted")
+
+    def test_absent_measure_keeps_legacy_general_fallback(self):
+        self.submit()
+        self.corrupt_stored(lambda r: r.update(checklist="Unlisted", measure=None))
+        with self.assertRaises(GateError) as ctx:
+            self.store.accept_quality(QUIL, "ZF-1", 0)
+        self.assertIn("Checks without evidence", str(ctx.exception))
+
     def test_return_fix_reinspect_handover_aftercare(self):
         self.submit()
         with self.assertRaises(ValueError):

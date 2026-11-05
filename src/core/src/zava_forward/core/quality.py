@@ -65,6 +65,8 @@ def evidence_gaps(rec):
     name = rec.get("checklist")
     if name is not None and not isinstance(name, str):
         return None
+    if name not in CHECKLISTS and rec.get("measure") is not None and not isinstance(rec["measure"], str):
+        return None
     have = {i["label"]: isinstance(i.get("evidence"), str) and bool(i["evidence"].strip()) for i in items}
     required = CHECKLISTS.get(name) or checklist_for(rec.get("measure"))
     return [lab for lab in required["items"] if not have.get(lab)]
