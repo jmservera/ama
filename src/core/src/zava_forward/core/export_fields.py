@@ -57,12 +57,11 @@ def chat_case(value: Mapping[str, object]) -> dict[str, object]:
         blockers = work.get("blockers", [])
         if not isinstance(blockers, list) or not all(isinstance(b, Mapping) for b in blockers):
             raise ValueError("External context has malformed blockers; use the manual record.")
-        if len(blockers) > 6:
-            raise ValueError("External context has too many blockers; use the manual record.")
         if blockers:
             result["blockers"] = [
-                scalars(b, ("step", "reason", "owner", "next_action")) for b in blockers
+                scalars(b, ("step", "reason", "owner", "next_action")) for b in blockers[:6]
             ]
+            result["blockers_total"] = len(blockers)
     contacts = value.get("contacts", [])
     if not isinstance(contacts, list):
         raise ValueError("External context has malformed contacts; use the manual record.")
