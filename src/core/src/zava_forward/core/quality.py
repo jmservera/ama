@@ -60,10 +60,13 @@ QUALITY_OWNER = "Quality Inspector"
 def evidence_gaps(rec):
     """Checklist items without evidence, or None when the stored items cannot be read."""
     items = rec.get("items")
-    if not isinstance(items, list) or not all(isinstance(i, dict) for i in items):
+    if not isinstance(items, list) or not all(isinstance(i, dict) and isinstance(i.get("label"), str) for i in items):
         return None
-    have = {i.get("label"): isinstance(i.get("evidence"), str) and bool(i["evidence"].strip()) for i in items}
-    required = CHECKLISTS.get(rec.get("checklist")) or checklist_for(rec.get("measure"))
+    name = rec.get("checklist")
+    if name is not None and not isinstance(name, str):
+        return None
+    have = {i["label"]: isinstance(i.get("evidence"), str) and bool(i["evidence"].strip()) for i in items}
+    required = CHECKLISTS.get(name) or checklist_for(rec.get("measure"))
     return [lab for lab in required["items"] if not have.get(lab)]
 
 
