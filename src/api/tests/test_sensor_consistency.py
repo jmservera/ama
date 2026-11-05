@@ -235,43 +235,91 @@ class SqlHandoverTests(consumer_tests.SensorConsumerTests):
 
 
 class LiveEnvelopeReplayTests(unittest.TestCase):
-    def test_verifier_replays_live_envelope_exactly_beside_backfill(self) -> None:
-        with tempfile.TemporaryDirectory() as tmp:
-            store = store_at(tmp, reset=True)
-            self.addCleanup(store.db.close)
-            consumer = SensorConsumer(store)
-            received = "2024-10-02T00:00:00Z"
-            consumer.configure(
-                replace(POLICY, max_past_seconds=86400),
-                [CONTROL, replace(CONTROL, sensor_id="SENS-SYN-2")],
+    received = "2024-10-02T00:00:00Z"
+
+    def seeded(self, with_live: bool = True) -> tuple[object, SensorConsumer, list[dict[str, str]]]:
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        store = store_at(tmp.name, reset=True)
+        self.addCleanup(store.db.close)
+        consumer = SensorConsumer(store)
+        consumer.configure(
+            replace(POLICY, max_past_seconds=86400),
+            [CONTROL, replace(CONTROL, sensor_id="SENS-SYN-2")],
+        )
+        sensor = sensor_backfill.sensor_for({"id": "ZF-1"})
+        sensor["fault_profile"] = "none"
+        source = sensor_backfill.readings(
+            sensor, outdoor=[(10.0 + i / 10, 70.0) for i in range(24)], days=1, cadence=60
+        )
+        reference = [
+            dict(row)
+            for packet in sensor_faults.packets(
+                source, sensor_faults.configure({}), 183, "SENS-SYN-1"
             )
-            sensor = sensor_backfill.sensor_for({"id": "ZF-1"})
-            sensor["fault_profile"] = "none"
-            source = sensor_backfill.readings(
-                sensor, outdoor=[(10.0 + i / 10, 70.0) for i in range(24)], days=1, cadence=60
-            )
-            reference = [
-                dict(row)
-                for packet in sensor_faults.packets(
-                    source, sensor_faults.configure({}), 183, "SENS-SYN-1"
+            for row in packet.rows
+        ]
+        for row in reference:
+            self.assertEqual(consumer.process(row, self.received).status, "accepted")
+        if with_live:
+            live_row = live(sensor_id="SENS-SYN-2", reading_id="LIVE-SENS-SYN-2-20241001T0100Z")
+            self.assertEqual(consumer.process(live_row, self.received).status, "accepted")
+        return store, consumer, reference
+
+    def test_raw_replay_keeps_live_envelope_exact_beside_backfill(self) -> None:
+        store, consumer, _ = self.seeded()
+        before = consumer.retained_envelopes(["ZF-1"])
+        receipts = SensorIngestion(store).consume(before, received_at=self.received)
+        self.assertEqual(len(receipts), len(before))
+        self.assertTrue(all(item.reason == "ACCEPTED" and item.replay for item in receipts))
+        self.assertEqual(consumer.retained_envelopes(["ZF-1"]), before)
+        self.assertEqual(
+            len([row for row in before if row["schema_version"] == "live-sim-reading-v1"]), 1
+        )
+
+    def test_handover_refuses_window_with_live_rows_instead_of_passing(self) -> None:
+        store, consumer, reference = self.seeded()
+        before = consumer.retained_envelopes(["ZF-1"])
+        for replay_check in (False, True):
+            with self.assertRaisesRegex(ValueError, "HANDOVER_SCHEMA_UNSUPPORTED"):
+                verify(
+                    store,
+                    reference,
+                    handover="2024-10-01T12:00:00Z",
+                    cadence_minutes=60,
+                    replay_check=replay_check,
+                    received_at=self.received,
                 )
-                for row in packet.rows
-            ]
-            for row in reference:
-                self.assertEqual(consumer.process(row, received).status, "accepted")
-            row = live(sensor_id="SENS-SYN-2", reading_id="LIVE-SENS-SYN-2-20241001T0100Z")
-            self.assertEqual(consumer.process(row, received).status, "accepted")
-            before = consumer.retained_envelopes(["ZF-1"])
-            verdict = verify(
-                store,
-                reference,
-                handover="2024-10-01T12:00:00Z",
-                cadence_minutes=60,
-                replay_check=True,
-                received_at=received,
+        self.assertEqual(consumer.retained_envelopes(["ZF-1"]), before)
+        csv_path = Path(store.db_path).parent / "reference.csv"
+        with csv_path.open("w", newline="") as stream:
+            writer = csv.DictWriter(stream, fieldnames=list(reference[0]))
+            writer.writeheader()
+            writer.writerows(reference)
+        out = io.StringIO()
+        with (
+            mock.patch(
+                "zava_forward.api.sensor_handover_verify.open_existing_store", return_value=store
+            ),
+            contextlib.redirect_stdout(out),
+        ):
+            code = verify_main(
+                [
+                    "--reference",
+                    str(csv_path),
+                    "--handover",
+                    "2024-10-01T12:00:00Z",
+                    "--cadence-minutes",
+                    "60",
+                ]
             )
-            self.assertTrue(verdict["passed"] and verdict["idempotent"], verdict)
-            self.assertEqual(consumer.retained_envelopes(["ZF-1"]), before)
-            self.assertEqual(
-                len([row for row in before if row["schema_version"] == "live-sim-reading-v1"]), 1
-            )
+        self.assertEqual(code, 2)
+        self.assertEqual(
+            json.loads(out.getvalue()),
+            {"passed": False, "refused": "HANDOVER_SCHEMA_UNSUPPORTED"},
+        )
+
+    def test_handover_still_passes_for_legacy_only_window(self) -> None:
+        store, _, reference = self.seeded(with_live=False)
+        verdict = verify(store, reference, handover="2024-10-01T12:00:00Z", cadence_minutes=60)
+        self.assertTrue(verdict["passed"], verdict)

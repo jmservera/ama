@@ -5,7 +5,9 @@ migration or other initialization writes. ZF_STORE (sqlite or mssql) selects the
 store, so the same command works on a local store and on Azure SQL. Readings are
 bounded to the reference window per home. --replay-check re-feeds the retained
 stored payloads for that window, in batches of 100, and needs write access.
-It reports numbers; it does not approve sensor accuracy.
+It reports numbers; it does not approve sensor accuracy. A requested home/window that
+contains live-sim rows is refused (HANDOVER_SCHEMA_UNSUPPORTED): the statistics compare
+indoor-schema rows only, so live weather rows are never dropped into a passing result.
 """
 
 import argparse
@@ -19,7 +21,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from zava_forward.core.mssqlstore import MssqlStore
-from zava_forward.core.sensor_consumer import ConsumerError, SensorConsumer
+from zava_forward.core.sensor_consumer import LIVE_SCHEMA_VERSION, ConsumerError, SensorConsumer
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.synthetic.sensor_consistency import ZERO_TOLERANCE, Tolerance, report
 
@@ -90,8 +92,11 @@ def run(
     consumer = SensorConsumer(store)
     windows = _windows(reference)
     homes = sorted(windows)
+    observed = consumer.retained_envelopes(homes, windows)
+    if any(row["schema_version"] == LIVE_SCHEMA_VERSION for row in observed):
+        raise ValueError("HANDOVER_SCHEMA_UNSUPPORTED")
     result: dict[str, object] = report(
-        consumer.observed_series(homes, windows),
+        observed,
         reference,
         handover=handover,
         cadence_minutes=cadence_minutes,
