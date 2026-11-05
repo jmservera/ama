@@ -10591,3 +10591,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-05] update | Issue 79 clean frozen candidate and typing report (Refs #79)
 
 * Removed 333 own generated, git-ignored files (bytecode, egg-info, mypy and ruff caches) from this worktree under a verified per-file manifest with hash-archive backing kept outside the checkout, so the candidate is clean including ignored files. No source or policy change. The new runner module is strictly type-checked; its mypy override relaxes only untyped-call checking. The FULL gate is still pending and no criterion changed. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r5).
+
+## [2026-11-05] update | Issue 79 current-main preparation (Refs #79)
+
+* Merged main `bb3a3b03` into the publisher candidate with a plain merge (no conflicts) and ran light, cache-external checks (30 runner tests, Ruff, strict mypy). FULL gate, independent exact-head review and hosted CI remain pending and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r6).
