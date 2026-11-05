@@ -103,10 +103,12 @@ without inventing, duplicating or no-op issues to look busy:
   caps by counting each unit once: the open-PR thresholds apply to open PRs
   and the total-of-eight applies to live sessions, checked separately. An open
   PR with a live repair session is one open PR and one live session, never
-  extra open work; never sum sessions and PRs against each other. Admit new issues only at 15 or fewer open PRs;
-  from 16 to 20 keep merging and repairing and launch nothing; above 20 launch
-  nothing new and repair, review and merge existing PRs one at a time
-  (rebasing only under step 8) until 10 to 15 remain. Idle slots with
+  extra open work; never sum sessions and PRs against each other. Admit new
+  issues only at 15 or fewer open PRs; from 16 to 20 admit no new issues; above
+  20 admit no new issues and drain to 10 to 15 by repairing, reviewing and
+  merging existing PRs one at a time (rebasing only under step 8). Existing-PR
+  repair, correction and review continuations stay permitted at every count
+  within the eight-total-live-session cap. Idle slots with
   independent `ready` issues are a defect.
 * Closure review: take a rotating batch of up to five `unassessed` items from
   the `python3 tools/backlog-sync.py` queue, compare each issue's criteria with
@@ -328,9 +330,11 @@ restarts that PR's Source CI and Scorer runs (`cancel-in-progress`).
 * Push less. Batch fixes into one push, stack small PRs under a parent branch,
   and rebase a run-owned PR only under the step 8 conditions. Never rebase a
   PR just to refresh a green or pending head.
-* After a rebase of an append-only docs conflict whose previous head was green,
-  merge at once instead of waiting for a fresh run; check main CI afterwards.
-  Validate any resolved config file (for example parse TOML) before pushing.
+* Even an append-only docs conflict rebase creates a new head and invalidates
+  head-bound evidence; the new head needs step 7/8 final exact-head
+  selected-tier evidence, independent exact-head assessment and hosted checks
+  before merge. Check main CI afterwards. Validate any resolved config file
+  (for example parse TOML) before pushing.
 * The PR backlog cap and session total are the admission rule in Liveness and
   stop decision; apply it from there. Repair and merge existing PRs first when
   it bars new issues.
@@ -625,8 +629,9 @@ remains subject to the tracking retention policy.
    research, plan, changes and review artifacts
    (`gh pr diff {n} --name-only | grep .copilot-tracking`), and the session
    log must show the research, plan and review phases ran. A PR without them
-   goes back to its loop once to run the missing phases and push the artifacts;
-   if it still lacks them, record it as a ledgered blocker. Do not fabricate
+   goes back to its loop once to produce a frozen local correction with the
+   missing phases and artifacts; the coordinator alone verifies, assesses and
+   publishes it and workers never push. If it still lacks them, record it as a ledgered blocker. Do not fabricate
    artifacts after the fact to satisfy the check.
 6. **Review each candidate independently before publishing.** Preserve the
    issue loop's original RPI Review, including adverse findings. Fetch main
@@ -660,7 +665,7 @@ remains subject to the tracking retention policy.
    the selected-tier validation is current for the exact PR head and target
    base (including a verifying full receipt when full tier applies),
    the independent assessment is current, the latest review verdict is
-   Pass with no open blocking finding, the PR links its issue, it touches no
+   Pass for that exact head with no open blocking finding, the PR links its issue, it touches no
    human blocker, and the RPI evidence check below passes. RPI evidence check:
    `gh pr diff {n} --name-only` lists, for this issue, at least one file under
    each of `.copilot-tracking/research/`, `.copilot-tracking/plans/`,
@@ -717,11 +722,12 @@ remains subject to the tracking retention policy.
    new target base (`origin/main`, or the declared parent topic for a stacked
    child) in its own worktree, resolve conflicts preserving both
    changes' intent (append-only files such as the knowledge-base log keep both
-   entries), rerun the validation, and push with `--force-with-lease`. If
+   entries), rerun the validation, assess the resulting exact HEAD, and only
+   then push with `--force-with-lease`. If
    intent cannot be reconciled, treat it as a human blocker for that PR.
    A correction or rebase invalidates validation evidence and independent
    assessment: rerun selected-tier checks and assess the resulting exact
-   HEAD before any further push. Full tier requires a new full receipt and
+   HEAD before any push of it. Full tier requires a new full receipt and
    successful verification; focused tier requires refreshed unit/focused
    evidence, not an unconditional full receipt. Reassess tier if scope
    changes. Do not silently retarget a stacked child to `main`; after parent
