@@ -1,0 +1,79 @@
+{
+"task_id": "sensor-checkpoint-recovery-440-2026-11-05",
+"task_slug": "sensor-checkpoint-recovery",
+"parent_task": null,
+"mode": "automatic",
+"active_phase": "Follow-up",
+"status": "completed",
+"session_status": "stopped",
+"artifact_paths": {
+"research": ".copilot-tracking/research/2026-11-05-sensor-checkpoint-recovery-440-research.md",
+"plan": ".copilot-tracking/plans/2026-11-05-sensor-checkpoint-recovery-440-plan.md",
+"details": ".copilot-tracking/details/2026-11-05-sensor-checkpoint-recovery-440-details.md",
+"critique": ".copilot-tracking/plans/2026-11-05-sensor-checkpoint-recovery-440-critique.md",
+"changes": ".copilot-tracking/changes/2026-11-05-sensor-checkpoint-recovery-440-changes.md",
+"review": ".copilot-tracking/reviews/2026-11-05-sensor-checkpoint-recovery-440-review.md"
+},
+"confirmed_decisions": [
+{
+"decision": "Documentation-only, local-only, focused tier; Refs #440 #184 #110, no closing keyword",
+"status": "owner-directed",
+"evidence": "task statement 2026-11-05"
+},
+{
+"decision": "Current-main acceptance assessed against c6d5a8f3c3a35892322300be27b9747f7b11362d by git show blob identities",
+"status": "owner-directed",
+"evidence": "task statement 2026-11-05"
+},
+{
+"decision": "No heavy SQL, image, browser or FULL gate; native rpi96 FULL gate owns /tmp/ama-rpi-heavy.lock",
+"status": "owner-directed",
+"evidence": "task statement; lock holder PID 1361642 observed alive"
+},
+{
+"decision": "Research disposition executed; Planning Readiness Ready",
+"status": "recorded",
+"evidence": ".copilot-tracking/research/2026-11-05-sensor-checkpoint-recovery-440-research.md"
+},
+{
+"decision": "Critique executed once; verdict proceed; five compatible findings applied; no user decision needed",
+"status": "recorded",
+"evidence": ".copilot-tracking/plans/2026-11-05-sensor-checkpoint-recovery-440-critique.md"
+},
+{
+"decision": "Implement complete: 3 docs changed, 155 insertions 0 deletions; focused checks passed; heavy tiers unperformed",
+"status": "recorded",
+"evidence": ".copilot-tracking/changes/2026-11-05-sensor-checkpoint-recovery-440-changes.md"
+},
+{
+"decision": "Review executed once on commit 2316fd81; outcome no significant issues; not repeated",
+"status": "recorded",
+"evidence": ".copilot-tracking/reviews/2026-11-05-sensor-checkpoint-recovery-440-review.md"
+}
+],
+"blockers": [],
+"next_action": {
+"phase": "Follow-up",
+"action": "Coordinator selects follow-up; local only, no push/PR"
+},
+"prioritized_follow_ups": [
+{
+"rank": 1,
+"task": "Coordinator exact-head assessment and later Refs-only publication of this record",
+"rationale": "Smallest step; value is closing the due checkpoint",
+"evidence": "review artifact"
+},
+{
+"rank": 2,
+"task": "Fix live-sim-reading-v1 admission in #188 lane after #1203 FULL receipt",
+"rationale": "Highest engineering leverage for the seam",
+"evidence": "research F1"
+},
+{
+"rank": 3,
+"task": "#440 criterion 8 Major HVE host evidence and criterion 7 triage by owner",
+"rationale": "Whole-issue gates remain open",
+"evidence": "issue #440 body"
+}
+]
+}

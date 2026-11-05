@@ -2957,3 +2957,177 @@ Criterion 7 has supporting evidence (the only confirmed finding was triaged to
 #687 and delivered by #689, #720 and #733, with no further confirmed finding),
 but this PR uses `Refs`, so the owner decides the ticks. Criteria 1 to 6 are
 supported by PR #461 and checkpoints 2 to 4. No issue is closed by this record.
+
+## Fifth stabilization checkpoint: current-main sensor contract, retention and handover (2026-11-05, Refs #440 #184 #110)
+
+Refs #440, #184 and #110. Bounded, documentation-only, local-only record on
+current `origin/main` for the already-due #184/#110 sensor contract,
+retention and handover gaps. It adds no source, schema, threshold,
+coordinator, workflow, infrastructure or requirement change and no
+acceptance. Original RPI evidence is under
+`.copilot-tracking/*/2026-11-05-sensor-checkpoint-recovery-440-*`.
+
+### Trigger, identities and coverage
+
+The trigger is the due sensor checkpoint named on #184 after the merged live
+simulator generator and container slice (2026-11-04) and the merged delivery
+tooling PRs #1209 and #1210. The existing owner is #440 (open, parent #123);
+no duplicate checkpoint issue was created.
+
+| Item | Value |
+| --- | --- |
+| Current `origin/main` (fetched 2026-11-05) | `c6d5a8f3c3a35892322300be27b9747f7b11362d`, tree `876679c32ff8f8a3d35822d9e46d8b377ce15428` |
+| Working base (parent topic pin) | `3d7ad2feaa9c4cba5fe917edd2fbc40e40a5c246`, tree `b35f4e4808a4eb74bfee55f098bb101369358d98` |
+| Base to main delta | One commit (#1210). `git diff --stat` over `src`, `docs` and `infra` is empty; only `tools/rpi-checks.py`, `tools/test_rpi_checks.py` and tracking records differ |
+| Covered merged PRs | #1209 (`3d7ad2fea`, 2026-11-05T09:31:21Z, backlog-sync active-delivery state) and #1210 (`c6d5a8f3`, 2026-11-05T10:01:58Z, isolated Chromium before API discovery). Both are delivery tooling; neither changes sensor behaviour and neither is sensor acceptance |
+| Excluded, unmerged | #1203 (open; public head `c9a14573d76a128c028ca2371ed9612b41461b8a`; a user-reported unpublished local head `834e2bec` was neither read nor validated), #1205 (open; public head `dbacb32f8713c5c1acf088f8d8b536193f3269be`) and the unmerged sibling code128 work. Their source is not main and is not accepted here |
+| This record's evidence pack blob at main | `2566e8efd7084346421fffb101d5b171100dfd63` (before this section) |
+
+Document identities at `c6d5a8f3`. Draft, in-review and proposed documents
+are not approvals by this record.
+
+| Document | Status, version, date | Blob |
+| --- | --- | --- |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) BRD-2026-AMA48-001 | draft, 0.21.0, 2026-10-24 | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) PRD-2026-AMA48-001 | in-review, 0.21.0, 2026-10-25 | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) | Proposed, no version field, 2026-10-24; its "no IoT Hub" sensor position is amended by ADR 0003 decision 6 | `cbe21530043ff15432cc6dce1086d080f5eb15b4` |
+| [ADR 0003](../adrs/0003-journey-derived-capabilities-runtime-fit.md) | Accepted with amendment by the owner (2026-10-15, reconciled 2026-10-18), no version field, 2026-10-29; Basic hub exercise only, live gates separate | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+
+Requirement IDs are used only document-qualified because numbers collide:
+BRD FR-048 (in-use monitoring capture), AC-090, RULE-014 and OD-43 (real
+inventory, blocks operational use with real data, not the simulator
+exercise); PRD FR-050 (simulated monitoring through IoT Hub), AC-066,
+AC-067 and AC-068. BRD FR-050 is opt-in working memory and PRD FR-048 is
+appointment commitment; neither is sensor work. The #184, #110 and #188
+bodies cite BRD FR-048/OD-43 and PRD FR-050/AC-066 and are read that way.
+
+### Planned feature to code, tests, journeys and backlog
+
+Source inspection only; no code or test was executed for this record.
+
+| Approved planned feature | Main code and tests (blob at `c6d5a8f3`) | Observed journey or execution | Remaining backlog |
+| --- | --- | --- | --- |
+| PRD FR-050 / AC-066 idempotent append, DQ, no public endpoint (ADR 0003 decision 6) | `src/core/src/zava_forward/core/sensor_consumer.py` (`8125b88b`), `src/api/src/zava_forward/api/sensor_ingestion.py`, `test_sensor_consumer.py`, `test_sensor_ingestion.py` | Local observed only as dated historical constructed SQLite/SQL Server runs (45 ingestion tests 2026-10-29); not re-executed here | #110: distinct Hub identities (criterion 1 unmet), Azure SQL, restart |
+| PRD FR-050 live generation every home every five minutes (owner requirement 2026-11-04) | `src/core/src/zava_forward/core/synthetic/live_readings.py` (`289051ee`), `src/api/src/zava_forward/api/live_simulator.py`, `test_live_readings.py`, `test_live_simulator.py` | Implemented-unverified; stdout dry run and fakes documented, no live send | #184 parent criteria; #185 identity; #189 run controls; #140 hub |
+| PRD FR-050 / AC-066 per-device Hub identity | `src/api/src/zava_forward/api/iot_stream.py` (`8eeaccbb`), `test_iot_stream.py`, `test_iot_credential_hygiene.py` | Fake-SDK only; no device issued, no stream sent (2026-10-29 B1 exercise was metrics only) | #185 (PR #1205 excluded), #110 |
+| Handover consistency, ADR 0003 and PRD FR-050 | `synthetic/sensor_consistency.py`, `sensor_handover_verify.py`, `test_sensor_handover.py`, `test_sensor_consistency.py` | Local observed, historical (2026-10-30 and 2026-11-01 constructed witnesses, zero default tolerance) | #188: live and backfill queryable together, statistical handover, window rerun (all unmet) |
+| BRD FR-048 / AC-090 retained raw observations, owned DQ | `sensor_consumer.py` retained witnesses, `sensor_reading` columns | Implemented-unverified; real data blocked by BRD OD-43 | OD-43 owners |
+| PRD AC-067 / AC-068 review-signal authority and method evidence | `sensor_analysis.py`, `sensor_analysis_store.py`, research plan | Out of this record's refreshed scope; unchanged | Existing research gates |
+
+### Raw weather and wire versus indoor observed series
+
+* The live generator emits a wire message `live-sim-reading-v1` at 300-second UTC slots: `temperature_c` (`degC`), `humidity_pct` (`percent`) and `sunlight_wm2` (`W/m2`, global horizontal irradiance), `source_type=SYNTHETIC`, `scenario`, `seed`, `injected_fault=none` and a `label`. Its daily averages are an illustrative UK-like monthly table, a synthetic assumption, not retrieved weather and not an observed indoor series.
+* The consumer admits only `sensor-fault-input-v1` rows with exactly the 13 closed fields of `READING_FIELDS` (including `calibrated` and unit fields, all strings). `sensor_reading` stores 11 columns: temperature and humidity only, no sunlight and no unit columns. Units and calibration claims come from trusted per-sensor controls.
+* Therefore live-sim wire messages are not admissible by the main consumer and the main API README already says so. The sunlight value has no stored indoor representation: retained raw weather or wire provenance, an indoor projection and a continuous sunlight series are three different things, and nothing here promotes an outdoor or sunlight input to indoor risk evidence or claims indoor and weather equivalence. Classification: implemented-unverified (source and README), with the gap owned by #188 and its open, excluded PR #1203.
+* Identifiers and timestamps: backfill `reading-v1` and composed rows use reading IDs of the form `<sensor>-<epoch seconds>` at three observations per day by default; live rows use `LIVE-<sensor>-<YYYYMMDDTHHMM>Z` at 288 per day. Idempotency is on `(sensor_id, reading_id)` within a producer. Cross-producer continuity at the handover instant is not observed on main. `sensor_key` is `S` plus ten base32 characters of the SHA-256 of the UTF-8 stock home ID; `home_key` accepts non-empty, untrimmed, control-free IDs up to 128 UTF-16 units. Export accepts 128 units but consumer availability and `observed_series` are bounded to 64 UTF-16 units and return `HOME_UNAVAILABLE` beyond it; that is a documented, deliberate boundary, not a new defect.
+* Calibration: no physical calibration evidence exists. Legacy fixture calibration claims and managed envelope identity are not physical sensor calibration. Indoor-risk thresholds, lawful basis, retention basis and real resident consent are unknown and unapproved (BRD OD-43); exercise values stay exercise values.
+
+### Retention, restart and handover limits
+
+Historical, source-documented behaviour, not re-observed here: fresh receivers
+replay the retained beginning (`starting_position="-1"`, non-inclusive) and
+use SQL outcomes as durable state with no checkpoint store; retention expiry
+is a recovery limit; concurrent receivers are not coordinated; database
+commit uncertainty is explicit and cancellation does not prove rollback; a
+poisoned envelope stops for investigation. A device ID must equal
+`SYN-<sensor key>` and map to one stock home. An unsupported or missing
+window is blocked or unknown and never a pass by omission. Legacy indoor
+model continuity (constructed SQLite and SQL Server witnesses with zero
+default tolerance, negative controls and reopened-window replay) is separate
+from a versioned weather-to-weather continuity, which is proposed research
+only and not an approved pivot.
+
+### Evidence classification
+
+| Finding | Classification | Source, date, limit |
+| --- | --- | --- |
+| Constructed backfill and suffix handover and 45 ingestion tests | local observed (historical) | Research plan entries 2026-10-29 to 2026-11-01 at their original heads; not re-run against `c6d5a8f3` |
+| Bounded B1 hub exercise, metrics-only diagnostics | Azure observed (historical) | 2026-10-29 infra README; no device issued, no stream sent, no identity, SQL or retention acceptance |
+| Generator schema and consumer admission mismatch | implemented-unverified | `c6d5a8f3` blobs above and API README; no execution |
+| Sunlight wire field with no stored indoor column | implemented-unverified | Source inspection; no equivalence claimed |
+| Retention, restart and commit-uncertainty behaviour | implemented-unverified | Source and README; Azure behaviour not observed |
+| Joint Azure SQL query, restart and live handover | deferred | #188; not an owner-approved deferral of acceptance |
+| Distinct Hub identities, credential issue and teardown | blocked | #110, #185; need approved credential owner action, not agent supply |
+| Candidate FULL validation of #1203 and #1205 | blocked | Heavy lock owned by native rpi96 FULL gate (PID 1361642 observed alive at 2026-11-05, running `tools/rpi-checks.py --all --jobs 1 --lock-timeout 0 --base c6d5a8f3`); observation only, no authority to stop it |
+| Physical calibration, thresholds, lawful retention, real consent | unknown | BRD OD-43; no fixture or agent can supply them |
+
+No native gate receipt, IoT send, indoor and weather equivalence, threshold,
+calibrated acceptance or approved pivot is recorded or invented.
+
+### Actual commands, exits and limitations
+
+Recorded in the changes artifact after the final validation run. Not run:
+`tools/rpi-checks.py` (acquires the shared heavy lock), package suites, SQL
+Server, Docker and images, Chromium, FULL gate, cloud, provider and model
+calls, billing and private datasets. Those paths are unperformed, not
+passed. The change is documentation only; no source, schema, coordinator
+or workflow file was edited.
+
+### Existing authorizations
+
+The owner comments on #184 (2026-11-04 live every-home five-minute and
+smoothed-climate requirement; 2026-11-05 authorization within the existing
+USD700 cap, scoped simulator job permissions and admin-only controls; 2026-11-05
+retained scoped approvals) are existing direction, are not requested again and
+do not waive exact-head validation, capacity or secret controls. No physical
+calibration or indoor-risk approval exists.
+
+### Findings, triage and recommendation
+
+No new confirmed defect or refactor need was found. The findings above are
+owned by existing open issues, so none was filed: contract and seam
+continuity #188 (PR #1203 excluded), ingestion and Hub identity #110 and
+#185 (PR #1205 excluded), run controls #189, hub #140 and the checkpoint #440.
+The 64 versus 128 unit boundary is documented by the core README.
+
+Recommendation: **continue** this bounded record, **fix** the admission,
+sensor-schema and handover gaps in the existing #188 and #185 lanes after
+their candidates pass their own independent FULL receipts, and treat versioned
+weather-to-weather continuity as a **proposed pivot** that awaits owner
+approval; none is approved here and no new permission is requested.
+
+| Gate | Condition to close or expand |
+| --- | --- |
+| #184 (keep open) | #185, #188 and #189 closed or owner-deferred; actual credential, log and telemetry evidence on a Hub |
+| #110 (keep open) | Actual distinct Hub identity with schema version and stable reading ID; Azure SQL and restart evidence |
+| #188 (keep open) | Live and backfill series queryable per home, statistical handover within declared tolerance and idempotent window rerun on a validated head |
+| #440 (keep open) | Criterion 7 triage and criterion 8 Major HVE Builder host evidence for the coordinator remain open; this record does not satisfy either |
+| Dependent expansion | Gate only work that relies on unvalidated sensor ingestion, live handover, indoor interpretation or scale; independent documentation and unrelated engineering continue |
+
+Resume conditions: the native FULL gate releases `/tmp/ama-rpi-heavy.lock`;
+#1203 and #1205 obtain current exact-head FULL receipts and independent
+assessment by the coordinator; the validated integration candidate is
+requalified against its actual main base; an authorized credential owner
+completes any live issuance. Independent lanes: coordinator (gates,
+integration), #188 owner lane (handover), #185 and #140 owners (identity and
+hub), #189 (run controls), named human owners for OD-43 decisions.
+Final independent exact-head assessment remains coordinator-owned. A
+pivot or deliberate deferral needs explicit owner approval. This record uses
+`Refs` only; no issue is closed or ticked.
+
+### Parent-base refresh qualification (2026-11-05, local, Refs #440 #184 #110)
+
+The record above is preserved unchanged at its original observation: base
+`3d7ad2feaa9c4cba5fe917edd2fbc40e40a5c246`, main `c6d5a8f3c3a35892322300be27b9747f7b11362d`,
+original published head `3082206618ca484aab6d35531e89248773fc3295` (PR #1212).
+This qualification only records a documentation branch refresh.
+
+| Item | Value |
+| --- | --- |
+| Refreshed declared parent (`feat/discovery-assurance-integration-123`) | `e546bf23e491c49de56eaa08d4e68eab48517660`, tree `adcdf2db7a29cbb5664d522e1741401c95c021f3`, after the guarded child #1211 merge |
+| Parent-only delta from original base | One commit (#1211, constructed paired-cohort comparability): `src/core/.../paired_equity.py`, its test, `src/core/README.md` and #128 tracking records. No sensor, IoT, `docs/` or `infra/` path changed |
+| Current main | Unchanged at `c6d5a8f3`. The parent-only #1211 and cohort #128 source are not main and are not sensor or acceptance evidence |
+| Sensor source identity | Blobs for `live_readings.py` (`289051ee`), `sensor_consumer.py` (`8125b88b`), `sensor_faults.py`, `sensor_identity.py`, `sensor_backfill.py`, `iot_stream.py`, the API README, BRD, PRD and ADR 0003 are identical at `c6d5a8f3` and at the refreshed branch base (observed with `git rev-parse` on both) |
+
+Every classification, exclusion and gate above stays as recorded. The
+original partial review is a documentation-scope review of the original head
+and is not promoted to current-main acceptance. #440 criteria 7 and 8 and the
+#184, #110 and #188 gates stay open; no approval, pivot or deferral is
+inferred. Source inspection does not establish SQL, browser, IoT or human
+acceptance.
+
+Process disclosure: the earlier run removed its own scratch directory
+`/tmp/s440` with `rm -rf` without a retained finite selection, archive,
+readback or restore proof. The committed RPI records and session log survived;
+no backup or restoration of that scratch exists or is claimed. Checks in this
+refresh are new observations, not recovery.
