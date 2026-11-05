@@ -53,12 +53,12 @@ The 320x800 summary bound fails because the shell header above the summary is 52
 ### [x] P01 Apply nav row-gap correction
 
 * [x] P01-T01 Add one rule inside the existing `@media(max-width:600px)` block (style.css:317) setting `.top nav` row-gap only.
-* [ ] P01-T02 (completed in Review phase with refreshed guidelines) Review changed lines against fetched web-interface guidelines and the Fluent 2, WCAG and content standards.
+* [x] P01-T02 (reconciled in correction cycle 1: complete guidelines refresh and changed-line review recorded in the correction review; the original Review's partial refresh is preserved in its record) Review changed lines against fetched web-interface guidelines and the Fluent 2, WCAG and content standards.
 
-### [ ] P02 (open: P02-T02 runner portion, P01-T02) Focused validation
+### [ ] P02 (open: P02-T02 maintained-runner portion only) Focused validation
 
 * [x] P02-T01 Run the existing browser check under the heavy lock; record process exit and geometry at 320, 390, 1280.
-* [ ] P02-T02 Run existing API static and layout tests (done, 72 tests OK) and `python3 tools/rpi-checks.py --changed` (NOT run: blocked by constraints, see changes record).
+* [ ] P02-T02 Run existing API static and layout tests (done, 72 tests OK) and `python3 tools/rpi-checks.py --changed` (NOT run, see correction cycle 1 in the changes record: the actual changed selection includes image-api and logo-0600, which the brief excludes).
 * [x] P02-T03 Record durable finding in the changes record and the KB log if a knowledge-base page is changed (decision in details).
 
 ## Critique Disposition
@@ -76,4 +76,8 @@ Critique executed once (fresh worker, read-only, verdict Revise, no user decisio
 ## Follow-Up Items
 
 * Separate tooling investigation: source bytecode created during API discovery (issue-owned, out of scope).
-* Header/account row packing at 320 (about 58px more headroom) if a later change needs it.
+* Header/account row packing at 320 (an unmeasured possibility, not current headroom; the actual remaining margin is 7.59375px) only if a later change needs it and is separately authorised.
+
+## Correction Cycle 1 Note
+
+Markers reconciled on 2026-11-05 as part of correction cycle 1 of this task (not a new task). The original critique and the original Residual work review are preserved unchanged.

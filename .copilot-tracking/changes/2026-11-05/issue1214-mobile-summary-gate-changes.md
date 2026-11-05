@@ -46,3 +46,41 @@ P01-T01, P02-T01 and P02-T03 done. P01-T02 (web-guidelines review of changed lin
 
 * Source-bytecode creation during API discovery (separate tooling investigation).
 * Header account control row packing at 320 (about 58px headroom) if later changes need it.
+
+## Correction Cycle 1 (2026-11-05, same task; original sections above preserved)
+
+Reconciliation of the original record without rewriting it:
+
+* Actual remaining margin against the unchanged 1600 bound is 1600 - 1592.40625 = 7.59375px. The "about 58px" header account-row packing figure above is an unmeasured possibility, not current headroom, and is not authorisation for further layout change.
+* The original statement that P01-T02 "is completed in the Review phase" was inaccurate: that Review's guidelines refresh was truncated. P01-T02 is now completed by the complete refresh in the correction review (two contiguous fetches of the full source, 2026-11-05). Plan markers are reconciled; P02 stays open for the maintained runner only.
+* Original RV-001 to RV-003 and the Residual work outcome stay as recorded; the correction review records dispositions without regrading.
+
+### Maintained focused runner (P02-T02 runner portion)
+
+* Inspected, not executed. `python3 tools/rpi-checks.py --changed --base c6d5a8f3c3a35892322300be27b9747f7b11362d` selection for the committed diff (computed by importing `changed_groups` from tools/rpi-checks.py with bytecode disabled, no execution of any group) is: preflight, project-api, namespace, static, browser, image-api, logo-0600. `.copilot-tracking/` paths are inert; the single CSS path under `src/api/.../web/` selects them because the README states runtime/build inputs select consumer images, and the code adds `logo-0600` for API runtime paths (tools/rpi-checks.py `changed_groups`).
+* image-api and logo-0600 build Docker images and use Trivy; the correction brief authorises no images or scanners. The runner has no group-exclusion option, and substituting a homemade subset would not be the maintained command. Therefore the runner is NOT run and no partial receipt exists or is claimed. No missing-dependency failure was provoked or required, so no installation occurred. This is a scope-fit blocker, not a source-bytecode finding (the runner was never started, so the separate bytecode issue was not reached).
+* Next action for the coordinator: run the README focused command (`--changed --jobs 3 --base <current origin/main> --out <new path of at most 58 bytes>`) where image and scanner work is authorised, then `--verify-receipt <receipt.json> --required-scope partial --base <current origin/main>`; the expected scope is the seven groups listed above.
+
+### Reproducible browser and unit invocation
+
+Maintained check: `python -m checks.case_journey_browser_check --axe <axe-4.10.3.min.js> --out <dir>` from `src/api`, unmodified. Environment reuse is read-only: gate venv `/tmp/g96-c6-1105a/venvs/api`, Chromium `/tmp/g96-c6-1105a/chromium`, axe `/tmp/g96-c6-1105a/axe-4.10.3.min.js`. Its editable installs point at the failed checkout, so the first `PYTHONPATH` entries must be the candidate and the first-source assertion below must pass before the check starts. The heavy lock is held nonblocking for the whole run.
+
+```bash
+S=$(git rev-parse --show-toplevel); G=/tmp/g96-c6-1105a; O=/tmp/g1214-corr1-OUT
+mkdir -p $O/home $O/tmp $O/cache $O/bytecode
+exec 9>>/tmp/ama-rpi-heavy.lock; flock -n 9 || { echo BUSY; exit 75; }
+PP="$G/safety:$S/src/api/src:$S/src/core/src:$S/src/agents/src:$S/src/api:$S/src/api/tests:$S/src/core/tests:$S/src/agents/tests"
+run() { env -i PATH="$PATH" HOME=$O/home TMPDIR=$O/tmp LANG=C.UTF-8 XDG_CACHE_HOME=$O/cache \
+  PYTHONDONTWRITEBYTECODE=1 PYTHONPYCACHEPREFIX=$O/bytecode PYTHONNOUSERSITE=1 \
+  PLAYWRIGHT_BROWSERS_PATH=$G/chromium ZF_STORE=json ZF_DATA=$O/unused.json PYTHONPATH="$PP" \
+  $G/venvs/api/bin/python -B "$@"; }
+cd $S/src/api
+run -c 'import sys,zava_forward.core as c,zava_forward.api as a,zava_forward.agents as g
+for m in (c,a,g): assert m.__path__[0].startswith(sys.argv[1]),m.__path__
+' "$S"
+run -m checks.case_journey_browser_check --axe $G/axe-4.10.3.min.js --out $O/case-journey; echo "BROWSER_EXIT $?"
+run -m unittest -q tests.test_design_system tests.test_static_assets tests.test_case_journey \
+  tests.test_accessibility_baseline tests.test_content_standard; echo "UNIT_EXIT $?"
+```
+
+Notes: no session wrapper, patching or instrumentation is used; the earlier wrapper's `TemporaryDirectory` patch was redundant with `TMPDIR`. The earlier geometry numbers came from instrumented diagnostic runs and are labelled as such above; only this invocation counts as pass evidence. Results for the frozen head are recorded in the next section.
