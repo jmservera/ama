@@ -3589,7 +3589,22 @@ review and hosted checks; the recorded gaps remain open. No issue, board or
 criterion was changed and no closing keyword is used. Nothing was deleted,
 moved, archived, reset or cleaned.
 
-## Eighth stabilization checkpoint: finance parent held-export manifest contract (2026-11-05, Refs #440 #96)
+<a id="eighth-stabilization-checkpoint-finance-parent-held-export-manifest-contract-2026-11-05-refs-440-96"></a>
+
+## Ninth stabilization checkpoint: finance parent held-export manifest contract (2026-11-05, Refs #440 #96)
+
+Refs #440 and #96. This is the ninth checkpoint. The previous record of the
+same name that labelled it eighth is superseded by this label; the baseline
+eighth checkpoint is the integrated parent topic preparation. Local DRAFT,
+not consumed by the coordinator and not approved for publication.
+
+Process qualification: the original local commit `d26791065f21f45ab42cae34e4efbcfddc8f419f`
+created its Research, Plan, details and Review files after the pack, index and
+log edits, so its phase artifacts were post-implementation and its process is
+not claimed compliant or repaired. The coordinator held publication and
+consumption. A separate corrective loop (r2) started prospectively from that
+commit; its research, plan, details and critique were written before any
+corrective edit, and the original records are preserved unchanged.
 
 Refs #440 and #96. Bounded, documentation-only, local-only record of the
 finance parent integration and of one proposed material contract change: adding
@@ -3600,7 +3615,9 @@ nothing. It does not complete whole #440 (criteria 7 and 8), HVE behaviour
 testing, parent #123 acceptance, #96 schemas, reviewed packs or dependency
 graph, Finance or Legal approval, or any main, Azure or human acceptance.
 Original RPI evidence is under
-`.copilot-tracking/*/2026-11-05-finance-export-checkpoint-440-*`.
+`.copilot-tracking/*/2026-11-05-finance-export-checkpoint-440-*` (original,
+post-implementation phase files) and the prospective correction under
+`.copilot-tracking/*/2026-11-05-finance-export-checkpoint-440-r2-*`.
 
 ### Identities and exclusions
 
@@ -3608,7 +3625,7 @@ Original RPI evidence is under
 | --- | --- |
 | Documentation child | Branch `docs/finance-export-checkpoint-440`, started clean at the governance-parent head `dec700c7af46778140bf5c46d4df932832a31f11` (declared target `feat/discovery-assurance-integration-123`); parent not moved |
 | Finance parent (source observed) | `feat/finance-integration-93` at `0472fd5d5625bb610b5ac65ad177026953802830`, tree `268ead3a098f2320c0fba1a16aed14dd68a7fbe2`; it is main plus exactly one commit |
-| Main (re-fetched 2026-11-05) | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`, tree `5c2988b71aec609b007b41f408685d54e2c28e0d`; latest run on main completed (rubric scorer path), no newer commit |
+| Main (re-fetched 2026-11-05) | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`, tree `5c2988b71aec609b007b41f408685d54e2c28e0d`; fetched commit and tree identity only. Hosted run status, scorer completion and acceptance were not verified by this record |
 | Covered PR | #1223 (`c738fde9b27b5c88af6453c0ababfd84eeca5850` squash-merged into the finance parent only, 2026-11-05T21:53:46Z, merge commit `0472fd5d`); main does not contain it. #96 is open |
 | Excluded | Governance-parent runtime and its differently scoped inherited implementation; unmerged siblings; the paused #96 successor with only prospective research, plan and details; any code not on `0472fd5d` |
 
@@ -3663,8 +3680,8 @@ Disposition, as a scoped engineering recommendation and not an approval:
 | --- | --- | --- |
 | Identities, blobs, covered PR state | local observed (git and `gh`) | 2026-11-05 |
 | Source and consumer inspection above | local observed (source read at `0472fd5d`) | Static reading, not execution |
-| 40 form tests pass on the pinned finance source | local observed (light, finance parent) | Below |
-| #1223 hosted checks, published functional approval, default-FULL receipt `07ae` | historical (at `c738`, reported by the coordinator) | Receipt is not a test at `0472fd5d` or main; tree equality is an identity fact, not a new run |
+| 40 form tests pass on the pinned finance source | local observed (light, finance parent); historical to the r2 correction, not rerun | Below; log `/tmp/f440fin/run.log` dated 22:05:10Z |
+| #1223 hosted checks, published functional approval, default-FULL receipt `07ae` | coordinator-supplied, unverified by this child | Supplied at `c738`; not re-checked here. A receipt is not a test at `0472fd5d` or main; tree equality is an identity fact, not a new run |
 | Behaviour at `0472fd5d` beyond the 40 tests | implemented-unverified | No full gate was run |
 | Required-history export | proposed, not implemented | Waits for this record's consumption |
 | SQL Server, browser, Docker, Azure, actual AI, user research | none or blocked | Not run; heavy resources were not admitted |
@@ -3678,18 +3695,22 @@ Disposition, as a scoped engineering recommendation and not an approval:
 | `python -m unittest tests.test_form_export tests.test_form_review tests.test_form_dependencies` from `/tmp/f440fin/src/src/core` with the #440-owned venv `/tmp/ama-main-440-ui-cache-wave3-venv`, scrubbed environment, `PYTHONDONTWRITEBYTECODE=1`, external `TMPDIR`, explicit `PYTHONPATH` to the pinned export | 0 | `Ran 40 tests`, OK in 21.4 s; `form_export.__file__` resolved to `/tmp/f440fin/src/src/core/src/...`; no `__pycache__`; JSON and SQLite fixtures only, no SQL Server |
 
 The c738 checkout `/tmp/g96-r14-review1-1105/checkout` no longer exists, so it
-was not used. No heavy lock was taken, and no gate runner, SQL Server, browser,
+was not used. An initial archive-root attempt failed before the repaired
+command above (the pinned source is nested at `/tmp/f440fin/src/src/...`); its
+output was not preserved, so only the repaired exit 0 is evidenced. No heavy lock was taken, and no gate runner, SQL Server, browser,
 Docker, cloud or private data was used. Nothing was installed.
 
 ### Findings, triage and recommendation
 
-No defect was confirmed and no new issue or refactor is proposed. Recommendation:
-**continue**. This record permits the coordinator to release the paused #96
-export-history slice for implementation under its own FULL tier, with these
-conditions: the manifest change and the legacy `Invalid` and regenerate
+No defect was confirmed and no new issue or refactor is proposed. Engineering
+recommendation (not an approval, and not yet consumed by the coordinator):
+**continue**. If the coordinator accepts a valid checkpoint, this record
+supports resuming the paused #96 export-history slice under its own FULL tier,
+with these conditions. #96 stays PAUSED and is not released by this draft. Conditions: the manifest change and the legacy `Invalid` and regenerate
 behaviour are documented, a regression test covers a history-less copy being
 `Invalid` and a tampered history failing the hash, and the slice adds no
 authority, endpoint or reviewed-pack state. **Fix**: none. **Pivot**: none.
+The required-history compatibility decision is proposed, not approved by a named human.
 Requirement relaxation, deliberate deferral, the reviewer-history privacy
 position and any Finance or Legal approval need named human owners.
 
