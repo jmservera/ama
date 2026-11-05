@@ -10575,3 +10575,19 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-05] update | Issue 79 clean frozen candidate and typing report (Refs #79)
 
 * Removed 333 own generated, git-ignored files (bytecode, egg-info, mypy and ruff caches) from this worktree under a verified per-file manifest with hash-archive backing kept outside the checkout, so the candidate is clean including ignored files. No source or policy change. The new runner module is strictly type-checked; its mypy override relaxes only untyped-call checking. The FULL gate is still pending and no criterion changed. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r5).
+## [2026-11-05] update | Backlog sync preserves confirmed active delivery (Refs #1207)
+
+* `tools/backlog-sync.py` gained `--active N,N|none`, a validated list of open issues with a coordinator-confirmed live RPI session or frozen unpublished candidate; they are kept or proposed In Progress even when earlier merged PRs exist and no PR is open.
+* Without `--active`, an open In Progress issue with no open PR is kept and reported as activity unverified instead of being demoted to Todo. A worktree is no longer treated as activity. Malformed, unknown or closed issue numbers stop the run before any write.
+* Offline regression in `tools/test_backlog_sync.py`. Closed-issue, open-PR and review-needed handling is unchanged. Mock evidence only; live board behaviour is not claimed. The coordinator command change is owned by #1204 and recorded in the #1207 changes artifact.
+
+## [2026-11-05] update | Backlog sync treats --active as positive evidence only (Refs #1207)
+
+* Corrects the entry above: `--active none` is removed and omission from `--active` never demotes. Demotion of an In Progress issue with no open PR needs per-issue negative evidence through a separate validated `--inactive N,N`; everything else stays In Progress and is listed as activity unverified. Overlapping, unknown, closed or malformed input stops the run before any write, and error text does not echo the rejected value.
+* `tools/test_backlog_sync.py` now runs in the existing Source CI "Local gate orchestration contracts and strict checks" step. Mock evidence only; no live board claim.
+
+## [2026-11-05] update | Local gate installs the API bytecode policy before API discovery (Refs #1215)
+
+* Diagnosis of the retained failed full receipt for issue 96 (head 38dc133f, base c6d5a8f3): the 68 core, agents and api `*.pyc` files in its snapshot were written within 0.34 s at 10:23:53Z during the project-api `unittest discover` run. The producer is the design-system harness server (`checks/design_system_browser_check.py`, reached from `test_chat_widget_layout`), whose child environment keeps only `PATH`, `HOME`, `LANG` and `PYTHONPATH` and so drops the runner's no-bytecode flags. The API-venv `.pth` bytecode policy was written only later, in the browser group. The logo-0600 snapshot held copies of the same files and is not a second producer. Which exact server process wrote the files is inferred from code, ordering and timing; the failed run kept no process trace.
+* `tools/rpi-checks.py` now writes the existing policy files from `Runner._install` for the api venv (both `project-api` and `setup-api`), and the later browser-group copy is removed. Environment scrubbing, the harness, the dirty-snapshot guard, cleanup and receipt acceptance are unchanged.
+* `tools/test_rpi_checks.py` adds a regression that runs the real api install step and the real harness server launch from a scratch source copy; it failed before (core, agents and api `__pycache__` created) and passes after. Focused tier only; the complete gate and a fresh full receipt were not run. Evidence under `.copilot-tracking/` (2026-11-05 api-discovery-bytecode-1215).

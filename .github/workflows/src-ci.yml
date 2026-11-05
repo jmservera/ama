@@ -2,7 +2,7 @@ name: Source projects CI
 
 on:
   pull_request:
-    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/ci-affected.py", "tools/test_ci_affected.py", "tools/rename-zava*", "docs/reference/research/retrofit-synthetic-data/**", "docs/reference/research/chat-memory-dpia.md", "docs/reference/research/ux/customer-journeys/residents.md", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/mvp-ci.yml", ".github/workflows/mvp-validation.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
+    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/ci-affected.py", "tools/test_ci_affected.py", "tools/backlog-sync.py", "tools/test_backlog_sync.py", "tools/rename-zava*", "docs/reference/research/retrofit-synthetic-data/**", "docs/reference/research/chat-memory-dpia.md", "docs/reference/research/ux/customer-journeys/residents.md", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/mvp-ci.yml", ".github/workflows/mvp-validation.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
   workflow_dispatch:
 
 permissions:
@@ -258,9 +258,11 @@ jobs:
         run: |
           python -m unittest discover -s tools -p test_rpi_checks.py -v
           python -m unittest discover -s tools -p test_ci_affected.py -v
-          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 tools/rpi-checks.py tools/test_rpi_checks.py tools/ci-affected.py tools/test_ci_affected.py
-          ruff format --isolated --line-length 100 --check tools/rpi-checks.py tools/test_rpi_checks.py tools/ci-affected.py tools/test_ci_affected.py
+          python -m unittest discover -s tools -p test_backlog_sync.py -v
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 tools/rpi-checks.py tools/test_rpi_checks.py tools/ci-affected.py tools/test_ci_affected.py tools/test_backlog_sync.py
+          ruff format --isolated --line-length 100 --check tools/rpi-checks.py tools/test_rpi_checks.py tools/ci-affected.py tools/test_ci_affected.py tools/test_backlog_sync.py
           mypy --strict tools/rpi-checks.py tools/test_rpi_checks.py
+          mypy --ignore-missing-imports tools/test_backlog_sync.py tools/backlog-sync.py
       - name: Branding migration regressions
         run: |
           pip install -r tools/rename-zava-requirements.txt
