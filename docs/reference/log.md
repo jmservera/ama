@@ -10563,3 +10563,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 92 status record (Refs #92)
 
 * Rechecked merged PRs 389, 900 and 1090: supplied four-state consultation records, a read-only letting and renewal gate and a held workflow entry are delivered. Both criteria stay unmet: no Legal-verified consultation status exists (authority stays Unverified), and no genuine let or renew transition exists for an unknown status to block (owner, Legal and Procurement decisions; provider package record dependency). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-92 r3).
+
+## [2026-11-04] update | Issue 233 withheld panels on evidence screens (Refs #233)
+
+* Added the "Not shown for this role" text panel to the per-home technical-queue and quality-queue screens and recorded it in the atlas trace. Source-level test only; criteria 2, 4 and 5 stay unmet and nothing was ticked. Evidence under `.copilot-tracking/` (2026-11-04 issue-233 withheld-evidence-screens).
