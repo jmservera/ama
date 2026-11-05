@@ -1807,7 +1807,18 @@ class Runner:
             ]
         self.command(args, timeout=1200)
         self.metadata_cleanup()
+        if name == "api":
+            self.install_bytecode_policy()
         self.command([*pip, "check"])
+
+    def install_bytecode_policy(self) -> None:
+        # Unchanged harness servers scrub their environment, including bytecode settings, and
+        # first run during API test discovery, so the policy must exist from venv creation.
+        bytecode_policy = "import sys; sys.dont_write_bytecode = True\n"
+        (self.out / "browser-bytecode-policy.pth").write_text(bytecode_policy)
+        (self.envs / "api/lib/python3.12/site-packages/00-rpi-bytecode.pth").write_text(
+            bytecode_policy
+        )
 
     def install_chromium(self) -> None:
         self.command([self.python("api"), "-m", "playwright", "install", "chromium"], timeout=900)
@@ -2213,12 +2224,6 @@ class Runner:
                 axe.write_bytes(response.read())
             if digest(axe) != AXE_SHA256:
                 raise GateError("Pinned axe integrity check failed")
-            # The unchanged harness scrubs its server environment, including bytecode settings.
-            bytecode_policy = "import sys; sys.dont_write_bytecode = True\n"
-            (self.out / "browser-bytecode-policy.pth").write_text(bytecode_policy)
-            (self.envs / "api/lib/python3.12/site-packages/00-rpi-bytecode.pth").write_text(
-                bytecode_policy
-            )
             try:
                 self.command(
                     [py, "-c", BROWSER_ENTRY, "checks.design_system_browser_check"],
