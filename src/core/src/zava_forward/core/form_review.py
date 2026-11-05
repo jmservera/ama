@@ -201,19 +201,140 @@ def _holds(case: Record, draft: Record, actor: Record) -> None:
         )
 
 
+def _proposals(store: Any, case: Record, draft: Record, impact: Record) -> list[Record]:
+    """Read-only freshness of this draft's staged proposals; staging is never changed."""
+    schema = draft["schema"]
+    digests: Digests = {}
+    freshness: dict[tuple[str, int, str, str], bool] = {}
+
+    def current(evidence: Record) -> bool:
+        source = evidence["source"]
+        key = (source["id"], source["version"], source["content_sha256"], source["kind"])
+        if key not in freshness:
+            freshness[key] = _current(store, case, evidence, digests)
+        return freshness[key]
+
+    fields = {f["id"]: f for f in schema["fields"]}
+    result: list[Record] = []
+    for batch in case.get("form_staging", []):
+        try:
+            mine = (
+                batch["case_id"] == case["id"]
+                and batch["schema_id"] == schema["id"]
+                and batch["schema_version"] == schema["version"]
+                and batch["schema_digest"] == draft["schema_digest"]
+            )
+        except (KeyError, TypeError):
+            continue
+        if not mine:
+            continue
+        try:
+            batch_id, source = batch["id"], batch["source"]
+            candidates = [(c["id"], c["field_id"]) for c in batch["candidates"]]
+        except (KeyError, TypeError):
+            result.append(
+                dict(
+                    batch_id=batch.get("id") if isinstance(batch, dict) else None,
+                    candidate_id=None,
+                    field_id=None,
+                    state="Unknown",
+                    causes=["proposal-record-malformed"],
+                )
+            )
+            continue
+        for cid, fid in candidates:
+            state, causes = "Unknown", ["field-not-in-schema"]
+            try:
+                if fid in fields:
+                    _source_document(store, case, fields[fid], source)
+                    causes = (["source-changed"] if not current(batch) else []) + impact[
+                        "causes"
+                    ].get(fid, [])
+                    state = "Stale" if causes else "Current"
+            except DocumentUnavailable:
+                state, causes = "Unavailable", ["evidence-unavailable"]
+            except (KeyError, TypeError):
+                state, causes = "Unknown", ["proposal-record-malformed"]
+            result.append(
+                dict(batch_id=batch_id, candidate_id=cid, field_id=fid, state=state, causes=causes)
+            )
+    return result
+
+
+def _bound_causes(bound: object, draft: Record, impact: Record, stale: set[str]) -> Record:
+    keys = {"schema_digest", "input_version", "field_ids"}
+    if not isinstance(bound, dict) or set(bound) != keys:
+        return dict(causes=["approval-lineage-malformed"], fields=[])
+    ids, version = bound["field_ids"], bound["input_version"]
+    if (
+        not isinstance(bound["schema_digest"], str)
+        or type(version) is not int
+        or not 1 <= version <= draft["version"]
+        or not isinstance(ids, list)
+        or not ids
+        or any(not isinstance(i, str) for i in ids)
+        or len(set(ids)) != len(ids)
+    ):
+        return dict(causes=["approval-lineage-malformed"], fields=[])
+    known = {f["id"] for f in draft["schema"]["fields"]}
+    changed = {e["field_id"] for e in draft["history"] if e["input_version"] > version}
+    causes: set[str] = set()
+    affected: set[str] = set()
+    if bound["schema_digest"] != draft["schema_digest"]:
+        causes.add("schema-digest-changed")
+    if impact["form_wide"]:
+        causes.add("form-wide-schema-change")
+    for fid in ids:
+        for flag, code in (
+            (fid not in known, "field-not-in-schema"),
+            (fid in stale, "field-stale"),
+            (fid in changed, "field-reviewed-after-approval"),
+        ):
+            if flag:
+                causes.add(code)
+                affected.add(fid)
+    return dict(causes=sorted(causes), fields=sorted(affected))
+
+
+def _approvals(case: Record, draft: Record, impact: Record, stale: set[str]) -> list[Record]:
+    """Read-only review-required evaluation of approval references; nothing is approved."""
+    malformed = dict(
+        decision_id=None,
+        state="Review required",
+        causes=["approval-ledger-malformed"],
+        fields=[],
+    )
+    ledger = case.get("finance_decision_holds", [])
+    if not isinstance(ledger, list):
+        return [malformed]
+    result: list[Record] = []
+    for hold in ledger:
+        if not isinstance(hold, dict) or "draft_id" not in hold:
+            if malformed not in result:
+                result.append(dict(malformed))
+            continue
+        if hold["draft_id"] != draft["id"]:
+            continue
+        held = (
+            hold.get("status") == "Held"
+            and hold.get("approved_input") is None
+            and hold.get("approval_evidence") is None
+        )
+        base = dict(decision_id=hold.get("decision_id"))
+        if held:
+            result.append(dict(base, state="Held", causes=[], fields=[]))
+            continue
+        found = _bound_causes(hold.get("bound"), draft, impact, stale)
+        state = "Review required" if found["causes"] else "Current"
+        result.append(dict(base, state=state, **found))
+    return result
+
+
 def _report(store: Any, case: Record, draft: Record, digests: Digests | None = None) -> Record:
     hashes = {} if digests is None else digests
     _visible(store, case, draft, hashes)
     schema = draft["schema"]
-    latest = max(
-        (
-            r["definition"]["version"]
-            for r in store.data.get("form_schemas", [])
-            if r["definition"]["id"] == schema["id"]
-        ),
-        default=0,
-    )
-    schema_current = latest == schema["version"]
+    impact = forms.schema_impact(store.data.get("form_schemas", []), schema, draft["schema_digest"])
     fields = deepcopy(draft["fields"])
     issues: list[Record] = []
     confirmed: Record = {}
@@ -231,10 +352,8 @@ def _report(store: Any, case: Record, draft: Record, digests: Digests | None = N
         fid = field["id"]
         row = fields[fid]
         evidence = row["evidence"]
-        source_current = True
-        if schema_current and evidence is not None:
-            source_current = current(evidence)
-        if not schema_current or not source_current:
+        source_current = evidence is None or current(evidence)
+        if fid in impact["causes"] or not source_current:
             row["effective_state"] = "Stale"
             stale.append(fid)
         else:
@@ -292,6 +411,14 @@ def _report(store: Any, case: Record, draft: Record, digests: Digests | None = N
             issues.append(
                 dict(field_id=fid, status="Unknown", reason="Approved calculation is unavailable.")
             )
+    for fid in impact["new_fields"]:
+        issues.append(
+            dict(
+                field_id=fid,
+                status="Unknown",
+                reason="A newer schema adds this field; review it on that version.",
+            )
+        )
     attachments = {
         (
             event["new"]["evidence"]["source"]["id"],
@@ -314,6 +441,10 @@ def _report(store: Any, case: Record, draft: Record, digests: Digests | None = N
         attachments=list(attachments.values()),
         stale_fields=sorted(stale),
         issues=issues,
+        dependency_impact=dict(
+            schema=impact,
+            approvals=_approvals(case, draft, impact, set(stale)),
+        ),
         approved_rule_validation="Not evaluated",
         unit_currency_verification="Not evaluated",
         reviewed_ready=False,
@@ -332,12 +463,7 @@ def _report(store: Any, case: Record, draft: Record, digests: Digests | None = N
 def _freshness(store: Any, case: Record, draft: Record, digests: Digests) -> list[Record]:
     """Flag saved manifests whose inputs changed; the frozen snapshots stay untouched."""
     schema = draft["schema"]
-    versions = [
-        r["definition"]["version"]
-        for r in store.data.get("form_schemas", [])
-        if r["definition"]["id"] == schema["id"]
-    ]
-    newer_schema = max(versions, default=0) != schema["version"]
+    impact = forms.schema_impact(store.data.get("form_schemas", []), schema, draft["schema_digest"])
     seen: dict[tuple[str, int, str, str], bool] = {}
     result = []
     for index, snapshot in enumerate(draft["diagnostics"]):
@@ -354,7 +480,9 @@ def _freshness(store: Any, case: Record, draft: Record, digests: Digests) -> lis
         )
         if snapshot["input_version"] != draft["version"]:
             reasons.append("Reviewed inputs changed after this manifest.")
-        if newer_schema:
+        if impact["status"] == "Unknown":
+            reasons.append("Schema lineage is missing or malformed.")
+        elif impact["affects_draft"]:
             reasons.append("A newer schema version exists.")
         for fid, row in snapshot["fields"].items():
             evidence = row["evidence"]
@@ -376,6 +504,7 @@ def _freshness(store: Any, case: Record, draft: Record, digests: Digests) -> lis
                 reasons=reasons,
                 changed_fields=changed,
                 stale_fields=sorted(stale),
+                schema_dependent_fields=sorted(impact["causes"]),
                 action="Re-run the diagnostic after re-reviewing the affected fields."
                 if reasons
                 else None,
@@ -411,6 +540,30 @@ def view(store: Any, user: Record, case_id: str) -> Record:
             drafts=drafts,
             decision_holds=deepcopy(case.get("finance_decision_holds", [])),
             notice=NOTICE,
+        )
+
+
+def proposal_freshness(store: Any, user: Record, case_id: str, draft_id: str) -> Record:
+    """Per-candidate freshness of the staged proposals bound to one working review.
+
+    Read-only: a changed source or dependent field definition marks only its own
+    candidates; unreadable or malformed linkage stays Unavailable or Unknown.
+    """
+    with store.lock:
+        forms._actor(store, user)
+        case = store._case(case_id)
+        draft = _draft(case, draft_id)
+        try:
+            _visible(store, case, draft, {})
+        except DocumentUnavailable:
+            return dict(draft_id=draft_id, status="Unavailable", proposals=[])
+        impact = forms.schema_impact(
+            store.data.get("form_schemas", []), draft["schema"], draft["schema_digest"]
+        )
+        return dict(
+            draft_id=draft_id,
+            status="Evaluated",
+            proposals=_proposals(store, case, draft, impact),
         )
 
 

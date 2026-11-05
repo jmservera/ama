@@ -10567,3 +10567,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 233 withheld panels on evidence screens (Refs #233)
 
 * Added the "Not shown for this role" text panel to the per-home technical-queue and quality-queue screens and recorded it in the atlas trace. Source-level test only; criteria 2, 4 and 5 stay unmet and nothing was ticked. Evidence under `.copilot-tracking/` (2026-11-04 issue-233 withheld-evidence-screens).
+
+## [2026-11-05] update | Issue 96 dependency stale propagation (Refs #96)
+
+* Core `forms.schema_impact`, `form_review.proposal_freshness`, `dependency_impact` and export/manifest freshness now stale only the fields, staged proposals and approval references that depend on a source or schema change, and report malformed or missing lineage as Unknown or Review required. Read-only; no approval, schema approval, reviewed export or AI use. The 2026-11-04 r5 "no slice" record is kept as dated evidence and rejected for this sub-criterion only. Criteria 1 and 5 and whole-issue completion stay unmet. Evidence under `.copilot-tracking/` (2026-11-05 issue-96-r6-dependency-invalidation).

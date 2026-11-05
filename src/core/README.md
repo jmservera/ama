@@ -344,8 +344,9 @@ saved held export with the current working review, read-only. It returns
 `Current`, `Stale` (naming only the fields whose value, state or bound source
 changed or are now stale, and the unaffected fields), `Invalid` (the copy is
 incomplete or its content hash no longer matches) or `Unavailable`. A changed
-schema or rule reference changes the schema digest and stales every
-schema-bound field. It never marks anything reviewed.
+rule reference in a newer schema version stales every field; other schema
+changes stale only dependent fields (see dependency propagation below). It
+never marks anything reviewed.
 
 `view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
 diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
@@ -370,14 +371,39 @@ at most once per distinct document across current fields, history, snapshots
 and alternative checks; missing-byte results are also reused locally.
 Action preflight shares these reads with its resulting report. Later reports
 check afresh; no cross-request cache is retained. A source change marks only its
-bound working fields stale; a new schema version affects all fields bound to that schema. Historical
+bound working fields stale; a newer schema version stales only the fields it affects (below). Historical
 reviews/values and recorded diagnostic snapshots remain intact. `view` also
 returns `diagnostic_freshness`, one entry per saved manifest: `Stale` when
 reviewed inputs changed after it (`changed_fields` lists only the fields whose
 reviewed value or state differ from the manifest), a bound source changed
 (`stale_fields` lists only those fields) or a newer schema version exists, with a re-run action; otherwise
-`Current`. This is not full FR-043/AC-051 rule/calculation/approval stale
-propagation: no approved rules, calculations or reviewed packs exist yet.
+`Current`. Approved rules, calculations and reviewed packs still do not exist.
+
+Dependency propagation (#96, FR-043 part) is derived on read from the immutable
+schema registry; nothing is written and history is kept. `forms.schema_impact`
+compares the bound version with the latest registered one. Staleness narrows only
+when the registry lineage verifies (contiguous versions, matching digests, bound
+digest present). A changed `template`, `rule_refs`, `funding`, `reviewer` or
+`form_type` stales every field (rule-to-field links are undeclared). Otherwise
+only a field whose definition changed or was removed is stale, plus fields whose
+`required_when` names an affected field (transitively) and fields with a
+`calculation_ref` (their inputs are undeclared) while any other field is
+affected. Fields added by the newer version raise Unknown issues and are
+reported as `new_fields`. Missing or malformed lineage reports `Unknown` and
+stales every field. A byte-identical successor (`Superseded`) affects nothing.
+Reports carry `dependency_impact` (`schema`, `approvals`); manifests carry
+`schema_dependent_fields`; held exports return `schema_impact` outside the hashed
+body and `export_freshness` reports a changed form even when no field is stale.
+`form_review.proposal_freshness(store, user, case_id, draft_id)` is read-only and
+reports each staged candidate as `Current`, `Stale` (source or dependent schema
+change), `Unavailable` or `Unknown` (unknown field, malformed record). Approvals
+are never created here: a draft-scoped hold that carries approval fields is
+`Current` only with a well-formed `bound` (`schema_digest`, `input_version`,
+`field_ids`) whose listed fields are not stale, removed, unknown or reviewed
+after that input version; otherwise `Review required`. A plain Held record stays
+`Held`, other drafts' records are ignored and a malformed ledger entry is
+`Review required`. Approved schemas, rules, Finance review and reviewed exports
+remain unmet.
 Already-clean evidence is required: reads/reviews never scan or save a source.
 Missing, pending, quarantined or deleted retained evidence blocks disclosure of
 the entire affected draft/history, including recorded diagnostics. On `view`,
@@ -408,7 +434,7 @@ figures, approved thresholds or restart authority are invented.
 From `src/core`, after pip editable installation:
 
 ```bash
-PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging -q
+PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging test_form_dependencies -q
 ```
 
 Tests use the public tiny synthetic fixture with temporary JSON/SQLite storage.
