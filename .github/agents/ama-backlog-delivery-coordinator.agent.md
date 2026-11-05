@@ -175,7 +175,9 @@ runs hourly and applies the Cleanup contract. Neither is a status-only poll.
 * Keep each approved prompt as a versioned snapshot in the run's approved
   evidence and record its version, schedule id, interval and creation time in
   session SQL (`schedule_versions`). Prompts derive from this file; they do
-  not restate or loosen its rules.
+  not restate or loosen its rules. A delivery prompt that runs backlog
+  reconciliation carries the activity handoff in Reconcile the whole backlog,
+  and never the legacy `--apply` before the accepted tool publication.
 * Replace a schedule reliably: create the new one, verify it is active and
   carries the intended prompt, then stop the old one, then read the schedule
   list back and confirm exactly one active delivery and one active cleanup
@@ -311,7 +313,22 @@ open-issue count). Decide linking per PR before it merges, not afterwards:
 Reconcile the whole backlog at the start of every run and at every scheduled
 check: run `python3 tools/backlog-sync.py` (read-only audit), then `--apply`
 to fix board statuses, add missing items and tick the criteria of closed
-issues. Work the "review needed" list it prints through the rotating
+issues. Hand the tool the activity you have confirmed. Before executing, run
+`python3 tools/backlog-sync.py --help` and use `--active` and `--inactive`
+only if that output lists them. Until the activity-handoff tool change (#1207)
+is accepted and published, the legacy `--apply` demotes In Progress issues that
+have no open PR even when a live session or frozen unpublished candidate exists,
+so do not run it. Use the read-only audit, set board statuses by hand with
+readback, and report the limitation. When the flags exist, pass `--active` with
+the open issues you individually confirmed to have a live session or a frozen
+unpublished candidate; this is positive evidence only and its omissions are not
+proof that other issues are inactive. Pass `--inactive` only with open issues
+individually confirmed to have no session and no frozen candidate. Activity
+left unknown stays In Progress and is reported as unverified; it is not a
+reason to stop the loop. A worktree, missing upstream or unknown session is
+neither activity nor proof of completion. Review the audit output and confirm
+each board status by readback; this keeps the closure and human gates
+unchanged. Work the "review needed" list it prints through the rotating
 closure-review batches in Liveness and stop decision: each listed issue has merged
 PRs referencing it but unticked criteria, so tick the proven ones or record the
 exact unmet criteria and their owners. The printed list alone is not an audit.
