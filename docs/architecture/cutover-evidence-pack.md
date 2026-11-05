@@ -3131,3 +3131,168 @@ Process disclosure: the earlier run removed its own scratch directory
 readback or restore proof. The committed RPI records and session log survived;
 no backup or restoration of that scratch exists or is claimed. Checks in this
 refresh are new observations, not recovery.
+
+## Sixth stabilization checkpoint: parent-topic paired comparability integration (2026-11-05, Refs #440 #128 #123)
+
+Refs #440, #128 and #123. Bounded, documentation-only, local-only record of
+the affected surface after the completed parent-topic child wave #1211
+(constructed paired-cohort comparability) and #1212 (qualified sensor
+documentation). It is separate from, and does not restate, the
+[fifth checkpoint](#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110):
+that earlier record was sensor-only and did not cover the comparability
+integration. It adds no source, schema, threshold, coordinator, workflow or
+requirement change, no approval and no pivot, and it is independent of sensor
+acceptance and of any actual AI or human approval. Original RPI evidence is
+under `.copilot-tracking/*/2026-11-05/parent-comparability-checkpoint-440-*`.
+
+### Trigger, identities and observation scope
+
+The existing owner is #440 (open, parent #123); no duplicate checkpoint issue
+was created. Parent #123 closure and dependent cohort expansion wait for this
+scoped record, which is a precondition and not an acceptance.
+
+| Item | Value |
+| --- | --- |
+| Declared parent topic `feat/discovery-assurance-integration-123` (remote head read with `git ls-remote`, 2026-11-05) | `ad1ee0264a381fb76de100417c535a4e194e2460`, tree `8052fa5d3248c9dc3a4f9cb8558ccfbfa65e360e`; the local ref of that name was stale at `3d7ad2fe` and was not used |
+| Observed documentation head (branch `docs/parent123-checkpoint-wave2`) | Started at the same `ad1ee026`; this section is added on top |
+| Current `origin/main` (fetched 2026-11-05) | `c6d5a8f3c3a35892322300be27b9747f7b11362d`, tree `876679c32ff8f8a3d35822d9e46d8b377ce15428` |
+| Merge base of parent and main | `3d7ad2feaa9c4cba5fe917edd2fbc40e40a5c246`. Parent is two commits ahead (#1211 `e546bf23e`, #1212 `ad1ee0264`); main is one commit ahead (#1210, delivery tooling only) |
+| Merge state | #1211 and #1212 are merged into the parent topic only. They are not on main. Parent-only source is not merged-main acceptance |
+| Excluded, unmerged | #1203, #1205, #1141 and #1206 (all open when checked, 2026-11-05). Their source was neither read nor adopted; no private dataset was read |
+| This evidence pack blob before this section (parent head) | `9e7ffed7a571f4381d5ddb743f3ac84688818efa` (main: `2566e8efd7084346421fffb101d5b171100dfd63`) |
+
+Actual observation scope: parent-topic source at `ad1ee026` only. Nothing was
+run against main, so main behaviour is known by blob identity alone. Main
+still holds the unfixed `paired_equity.py` blob `d29768d5`, the blob on which
+the original #128 reproduction (a confounded pair returning `pass`) was
+recorded; the fix is `5aedcd7b` on the parent topic only.
+
+Document identities, identical at parent and main. Draft, in-review and
+proposed documents are not approvals by this record.
+
+| Document | Status, version, date | Blob |
+| --- | --- | --- |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) BRD-2026-AMA48-001 | draft, 0.21.0, 2026-10-24 | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) PRD-2026-AMA48-001 | in-review, 0.21.0, 2026-10-25 | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) | Proposed, no version field, 2026-10-24 (decision 4 is cited by `ranking_publication.py`) | `cbe21530043ff15432cc6dce1086d080f5eb15b4` |
+| [ADR 0003](../adrs/0003-journey-derived-capabilities-runtime-fit.md) | Accepted with amendment by the owner, no version field, 2026-10-29 | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+
+Requirement IDs are document-qualified because numbers collide: PRD FR-054
+(versioned cohort and missing-data evaluation record), PRD AC-073 (paired
+constructed cohorts, seeded defects detected, thresholds block activation
+pending human disposition; its status cell reads "Not run"), PRD FR-012,
+PRD PR-006 (deterministic ranking, versioned policy), PRD OQ-018 (which
+cohorts, lawful fields, thresholds and windows apply; open), BRD NFR-008
+(accessibility and unfair-exclusion testing with human review of missing
+data), BRD NFR-009 (journey ownership, service times, tested manual
+alternatives) and BRD AC-064 and AC-071. The #128 body also cites BRD
+RULE-005 and PRD SA-009, SA-010 and AC-055; those were not re-reconciled here.
+
+### Paired diagnostic to boundaries
+
+Source inspection of blobs at `ad1ee026`, plus the one observation below.
+`paired_equity.evaluate` is a pure, constructed-fixture check. It imports
+only `journey_register`, `ranking` and `rai_release.digest`.
+
+| Boundary | Source and tests (blob at parent, unchanged from main unless stated) | Relationship to the paired diagnostic | Limit |
+| --- | --- | --- | --- |
+| Paired diagnostic | `paired_equity.py` (`5aedcd7b`, changed from main), `test_paired_equity.py` (`f9b07cb6`, changed), `src/core/README.md` (`bb709453`, changed) | Predeclared fixture-local contrasts reject confounded, no-contrast and mislabeled pairs as `invalid_comparison` blockers and `invalid_pairs`; an invalid pair counts as neither tested nor failed; `activation_allowed` and `fairness_evidence` stay false | The contrast table is not a production field mapping or an approved policy; seeded-defect accounting on a rejected pair is not separately tested |
+| `journey_register` | `journey_register.py` (`92f75403`), `test_journey_register.py` (`12c114aa`) | `human_review_route` supplies the rank-effect-none check used per pair; the register evaluation of owners, measures and tested manual alternatives (BRD NFR-009) is not called by the diagnostic | A supplied register is checked, never invented; no owner, threshold or manual-alternative test result is approved |
+| `ranking` and `ranking_publication` | `ranking.py` (`052bc6b9`), `ranking_publication.py` (`934ef16d`), `test_ranking_publication.py` (`6b66f232`) | `ranking.rank` is the default ranker for position comparison; an injected ranker is allowed. Publication (immutable dated snapshots, `verify`, `overdue`) is a separate retained-archive boundary the diagnostic does not call | Retention period is a Legal decision and the schedule belongs to the deployment; ADR 0002 is Proposed. Store and API wiring (`store.py`, `api/server.py`) was inspected by reference only |
+| `rai_release` and invalidation | `rai_release.py` (`970678ca`), `test_rai_release.py` (`d8a346cb`), `test_rai_release_invalidation.py` (`1ca9d5e7`) | Only `digest` is shared. The diagnostic does not select, admit or invalidate any release record, so a comparability result cannot revoke or activate anything | Exercise release records and invalidation tests are constructed; no actual release authorization exists |
+| `cohort_eval` | `cohort_eval.py` (`60907194`), `test_cohort_eval.py` (`47e0c7f3`), `cohort_eval_fixture.py` (`f5bb1cfc`); agent consumers in `src/agents` were not run | Not imported by the diagnostic. `cohort_eval` holds the approved expected-outcome manifest, approval binding and thresholds (PRD AC-073); the paired diagnostic predeclares only fixture contrasts | Mocked or fixture approvals and thresholds are not actual approvals. Threshold approval stays open (PRD OQ-018) |
+
+No integration seam between `paired_equity` and `cohort_eval` or the release
+invalidation path exists in source, and none is required by this record; the
+absence is stated, not raised as a defect, because the owning criteria (#128
+cohort and release acceptance) are open and unclaimed.
+
+### Evidence classification
+
+| Finding | Classification | Source, date and limit |
+| --- | --- | --- |
+| 74 coupled core tests pass on the parent-topic candidate | local observed (parent-topic only) | Observation below, 2026-11-05; no run on main, no full core, API or agents suite |
+| Comparability fix and the four historical confound fixes present in `paired_equity.py` | local observed (parent-topic only, tests) and implemented-unverified beyond constructed fixtures | Source blob `5aedcd7b`; constructed pairs only |
+| Original NOT CLEAN review of #1211 work (two Medium) | historical adverse outcome, preserved | `.copilot-tracking/reviews/2026-11-05/issue-128-paired-cohort-comparability-review.md`; two pre-freeze fixes were verified by tests and never independently re-reviewed in that record |
+| Correction-2 adverse findings (nested sequence type masking, dotted-key shadowing) | historical adverse outcome, preserved | Same review and changes records; self-check by tests only, no review approval claimed |
+| Published exact-head functional assessment of #1211 (verdict approve, no findings) | separate later outcome, helper-only | `issue-128-published-functional-assessment.json`; reading only, constructed diagnostic scope; it does not supersede, approve or regrade the original review |
+| Independent published readiness approval of the #1212 sensor documentation (0 findings) | separate outcome for sensor documentation only | Reported in the #440 comment of 2026-11-05 (read only); not a comparability review |
+| Azure observation of the comparability, cohort or release surface | none (no Azure observation exists for this surface) | Historical Azure records elsewhere in this pack concern other surfaces |
+| Paired diagnostic with `cohort_eval` manifest, release invalidation and ranking publication integration | implemented-unverified (components) and unknown (integration) | No seam exercised; not run end to end |
+| Actual-model or AI task evaluation of paired cohorts | deferred | Needs an approved task, manifest and thresholds |
+| Independent expected-pair manifest, thresholds, representative cohorts, lawful fields (PRD OQ-018) | blocked | Named human approval; no agent or fixture can supply it |
+| Keyboard and screen-reader testing, user research, assistive-technology acceptance | blocked | #128 criteria; no results exist |
+| Population fairness, lawful protected-characteristic fields, activation of any task | unknown | Constructed pairs are not population evidence; nothing is approved or activated |
+| Hosted CI on the parent topic | unknown | No hosted green run is claimed for these documents |
+
+An accepted helper implementation is not actual AI, cohort, population
+fairness, threshold, lawful-field, user-research, assistive-technology or
+human acceptance, and none of those exists. Fixtures, mocked approvals, false
+activation flags and fairness flags are not approvals.
+
+### Actual commands, exits and limitations
+
+All commands ran from `src/core` of the documentation worktree, Python 3.12.3,
+with `PYTHONDONTWRITEBYTECODE=1` and an explicit
+`PYTHONPATH=<worktree>/src/core/src:<worktree>/src/core/tests`. The existing
+external environment `/tmp/rpi128-venv` was used read-only. Its editable
+installs resolve through other trees first (a sibling worktree and the primary
+checkout), so the explicit path was required and the loaded paths were
+asserted; no installation or shared-environment change was made.
+
+| Command | Exit | Result |
+| --- | --- | --- |
+| Import `paired_equity` and assert `__file__` is under this worktree's `src/core/src/` | 0 | Candidate path confirmed |
+| `python -m unittest tests.test_paired_equity tests.test_journey_register tests.test_rai_release tests.test_rai_release_invalidation tests.test_ranking_publication tests.test_cohort_eval` | 0 | 74 tests OK in 0.062 s |
+| Assert `__file__` under this worktree for the six modules and six test modules | 0 | All twelve confirmed |
+| `git status --short --ignored` after the runs | 0 | Empty (no bytecode written) |
+
+The log is outside the repository at
+`/tmp/parent123-comparability-440/core74.log`; it is a command summary, not a
+gate receipt. Not run: `tools/rpi-checks.py`, SQL Server, Docker and images,
+browser, cloud, provider and model calls, billing, private datasets, the full
+core, API or agents suites, Ruff or mypy. Those paths are unperformed, not
+passed. The native FULL gate lock, its receipt and images were not touched.
+
+### Findings, triage and recommendation
+
+No defect was confirmed. No finding was compared against a new owner, no
+issue was filed and no refactor is proposed. Unreproduced observations, left
+with existing owners (#128 and its coordinator lane) and not raised as
+defects: the optional seeded-defect-on-rejected-pair regression named by the
+published assessment, strict type equality separating mapping subclasses, and
+the absence of an integration seam with `cohort_eval`.
+
+Recommendation: **continue** the parent-topic integration under #123 with
+this record as the affected-surface stabilization precondition. **Fix**: none
+required; no defect is confirmed. **Proposed pivot**: none new. The earlier
+versioned weather-to-weather continuity proposal remains proposed research
+only; the #188 weather interpretation remains unanswered by the owner and is
+not assumed. No requirement is relaxed and no pivot is approved.
+
+| Gate | Condition to close or expand |
+| --- | --- |
+| Parent #123 closure | The parent-topic work is integrated into main through an independent exact-head local gate and a requalification against the actual main base; #128 is closed or owner-deferred; the sensor lane (#184, #110, #188) is closed or owner-deferred; #440 criteria 7 and 8 are met; human approvals recorded by named owners |
+| #128 closure (keep open) | Keyboard and screen-reader testing, human review of missing data and incomplete appointments, agreed user-research protocol, independent expected-pair and threshold approval (PRD OQ-018), lawful-field decision, actual-model run where relevant and named human acceptance |
+| Dependent cohort expansion | Gate only work that relies on the comparability fix being on main, on approved cohort thresholds or manifests, or on a fairness or population claim. Independent documentation and unrelated engineering continue |
+| #440 (keep open) | Criterion 7 triage and criterion 8 Major HVE Builder host evidence for the coordinator remain open; this record satisfies neither |
+| Sensor gates | #184, #110 and #188 stay open as recorded in the fifth checkpoint; nothing here changes them |
+
+Resume conditions: the parent topic is refreshed against current main and
+requalified with its own exact-head gate by the coordinator; the native FULL
+gate releases the shared heavy lock before any heavy validation; named human
+owners decide the open OQ-018 items. Independent lanes: coordinator (gates and
+integration), #128 owner lane (accessibility, user research, approvals),
+#188 and #185 owners (sensor lanes), named human owners for approvals. A pivot
+or deliberate deferral needs explicit owner approval. This record uses `Refs`
+only; no issue is closed or ticked.
+
+### Process disclosure
+
+The earlier #440 run removed its own scratch directory `/tmp/s440` with
+`rm -rf` without a retained finite selection, archive, readback or restore
+proof. That disclosure survives. This task deleted nothing, including its own
+scratch and logs, created no backup or archive, and its new observations are
+not a restoration. No human approval, gate receipt or review approval is
+invented; the one independent review of this documentation diff is recorded
+in the tracking review artifact with its original outcome.

@@ -387,6 +387,11 @@ benchmark at17383ms; three focused repeats passed but do not repair its failed
 receipt. Native policy-host discovery remains Deferred. No total-product pass,
 new confirmed code defect, acceptance tick, cloud/real-AI approval, final
 publication receipt or PR is implied. Independent local lanes can continue.
+For the 2026-11-05 parent-topic paired comparability integration, the
+[sixth stabilization checkpoint](../architecture/cutover-evidence-pack.md#sixth-stabilization-checkpoint-parent-topic-paired-comparability-integration-2026-11-05-refs-440-128-123)
+maps the diagnostic to the journey, ranking, release and cohort boundaries
+(parent-topic observation only, not merged main; no defect confirmed and no
+fairness, threshold or human acceptance is implied).
 For issue #119, the [map tile provider options review](./research/ux/map-tile-provider-options.md)
 records dated licence, attribution, coverage, cost, processor and privacy
 evidence for the public OSM server, Azure Maps, OS Maps API, MapTiler and
