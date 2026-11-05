@@ -47,7 +47,8 @@ VIEWPORTS = (1280, 320)
 STEP_NAMES = ("Technical", "Resident", "Delivery", "Quality", "Finance")
 WITHHELD_ITEMS = {
     PROGRAMME: (
-        "Resident contact details and access history (use the safe route reference in the case workspace)",
+        "Resident contact details and access history "
+        "(use the safe route reference in the case workspace)",
         "Household and vulnerability details beyond what a step state needs",
         "Funding amounts and claim values",
     ),
@@ -57,7 +58,8 @@ WITHHELD_ITEMS = {
         "Contractor capacity and offered slots",
     ),
     PACKAGES: (
-        "Resident contact details and access history (open the case workspace for the safe route reference)",
+        "Resident contact details and access history "
+        "(open the case workspace for the safe route reference)",
         "Contract rates, prices and invoice values",
         "Contractor submissions and acknowledgements, which are recorded outside this screen",
     ),
@@ -65,7 +67,10 @@ WITHHELD_ITEMS = {
 
 
 def tension_data() -> dict[str, Any]:
-    """The shared synthetic home plus three packages whose headroom and use conflict with reference order."""
+    """The shared synthetic home plus three packages.
+
+    Headroom and use conflict with reference order.
+    """
     data = synthetic_data()
     dataset = runpy.run_path(str(ROOT / "src/core/tests/dataset.py"))
     # Another contractor's home with no safety stop lets one real work order raise utilisation.
@@ -122,7 +127,8 @@ def panels(evidence: Any, prefix: str | None) -> tuple[list[str], dict[str, str]
         check(f"panel '{title}' is visible", bool(title) and section.is_visible())
         titles.append(title)
         if prefix:
-            # Full-page screenshots show skipped panels blank, so each panel is also captured on its own.
+            # Full-page screenshots show skipped panels blank,
+            # so each panel is also captured on its own.
             section.screenshot(path=f"{prefix}-panel-{len(titles):02}.png")
         texts[title] = section.inner_text()
         tops[title] = section.evaluate("el => el.getBoundingClientRect().top + window.scrollY")
@@ -349,7 +355,8 @@ def check_packages(
         rank_by(expected, 7, True),
     )
     check(
-        f"{where}: reference order differs from every headroom, offered and use ranking: {rankings}",
+        f"{where}: reference order differs from every headroom, offered and use "
+        f"ranking: {rankings}",
         all(reference != ranking for ranking in rankings),
     )
     check_readonly(page, evidence, detail, where)
@@ -503,7 +510,8 @@ def run_browser(base: str) -> None:
             check(f"no non-GET/HEAD/OPTIONS requests after sign-in: {writes}", not writes)
             check(f"no JavaScript errors: {errors}", not errors)
             print(
-                f"Chromium {browser.version}; synthetic loopback only; one shared synthetic home {HOME}"
+                f"Chromium {browser.version}; synthetic loopback only; "
+                f"one shared synthetic home {HOME}"
             )
             print(
                 "COMPLETE: rendered tension sequence on three screens at 1280px and 320px; "
