@@ -95,23 +95,30 @@ without inventing, duplicating or no-op issues to look busy:
 * Start independent `ready` issues, each as its own RPI session in its own
   worktree. Admission rule (single source; other sections cross-reference it):
   eight (owner, 2026-10-31; overrides the Inputs default of three) is the
-  TOTAL number of live issue sessions, including repair, correction,
-  validation and gate continuations and every frozen unpublished candidate
-  awaiting coordinator validation, publication or correction (one unit per
-  issue, never eight new plus repairs). A candidate keeps its slot until it is
-  published and merged or the owner releases it. Before
-  admitting any new issue and after each launch, publication or merge, recount
-  open PRs (`gh pr list --state open`) and live `rpi-*` tmux sessions; a PR
+  TOTAL number of active issue assignments, counted once per issue across its
+  workers, repair, correction, validation and gate continuations and any
+  retained unpublished candidate (never eight new plus repairs). An exited
+  worker is not a free slot: its slot is released only when the issue is
+  published and merged, the owner releases it, or it is in an approved
+  published-only dependency-gated pause. That pause needs all of: local head
+  equal to the published head, or reviewed squash-tree or GitHub merge proof;
+  no live native worker; no outstanding unpublished implementation; and
+  preserved artifacts, ledger and disposition. Keep monitoring the published
+  PR and its parent. A missing upstream or failed Git evidence is Unknown,
+  never zero unpublished work, and keeps the slot. Before
+  admitting any new issue and after each launch, publication, pause or merge,
+  recount assignments from the SQL ledger, `gh pr list --state open` and live
+  `rpi-*` tmux sessions; a PR
   queued for auto-merge stays open until the merge is confirmed. Respect the
   caps by counting each unit once: the open-PR thresholds apply to open PRs
-  and the total-of-eight applies to live sessions, checked separately. An open
-  PR with a live repair session is one open PR and one live session, never
-  extra open work; never sum sessions and PRs against each other. Admit new
+  and the total-of-eight applies to assignments, checked separately. An open
+  PR with a live repair session is one open PR and one assignment, never
+  extra open work; never sum assignments and PRs against each other. Admit new
   issues only at 15 or fewer open PRs; from 16 to 20 admit no new issues; above
   20 admit no new issues and drain to 10 to 15 by repairing, reviewing and
   merging existing PRs one at a time (rebasing only under step 8). Existing-PR
   repair, correction and review continuations stay permitted at every count
-  within the eight-total-live-session cap. Idle slots with
+  within the eight-assignment cap. Idle slots with
   independent `ready` issues are a defect.
 * Closure review: take a rotating batch of up to five `unassessed` items from
   the `python3 tools/backlog-sync.py` queue, compare each issue's criteria with
@@ -568,8 +575,8 @@ remains subject to the tracking retention policy.
    `tmux has-session -t rpi-{number}` and `tmux capture-pane -p -t rpi-{number}`
    and read its log; stop a hung one with `tmux kill-session -t rpi-{number}`.
    Session names are unique per issue and a retry reuses the name only after
-   the old session is gone. Each launch counts toward the session total in the
-   Liveness admission rule.
+   the old session is gone. Each launch is one assignment under the Liveness
+   admission rule, which alone defines counting, release and pause.
    The brief carries the issue text, acceptance criteria, branch, worktree path,
    repository conventions, selected validation tier and rationale, test plan,
    target branch and dependency (a child of a parent stack names the parent
@@ -577,7 +584,9 @@ remains subject to the tracking retention policy.
    to commit with the
    Conventional Commit trailer rules and return a clean frozen local
    candidate with its tier-specific evidence (including an external full
-   receipt when full tier applies). The brief forbids the worker to push, open
+   receipt when full tier applies). For a behavior-bearing instruction change
+   it also returns the applicable canonical HVE static and behavior evidence,
+   or a justified non-applicability (step 6 sets the gate). The brief forbids the worker to push, open
    or update a PR, merge or change the target: publication belongs to the
    coordinator after selected-tier verification and independent exact-head
    assessment in step 6, in batched pushes. The eventual PR links the issue (`Closes #{number}` only when all
@@ -664,6 +673,15 @@ remains subject to the tracking retention policy.
    candidate and current planned unit/focused results against the actual head
    and target base; verify any partial receipt under the focused-scope rule.
    Missing or failing selected-tier evidence blocks publication.
+   A behavior-bearing instruction change (agent, prompt or skill) also needs
+   the applicable canonical HVE static and behavior evidence, each carrying
+   exact source identity, execution status, verdict, fidelity and executor or
+   profile limits; record a justified non-applicability for other changes and
+   do not force HVE on unrelated backend or documentation work. Simulation,
+   emulation or proxy evidence is never native-host or stronger-profile
+   acceptance. Missing required evidence blocks only the affected
+   publication; original adverse evidence, independent exact-head and
+   published reviews, hosted checks and human approvals still apply.
    Independently assess the actual diff
    and complete execution evidence, not only the loop's summary. Push/open or
    update the PR only after this gate and the owner's publication boundary
