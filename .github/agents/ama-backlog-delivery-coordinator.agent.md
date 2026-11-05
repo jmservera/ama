@@ -29,8 +29,8 @@ exception to the repository rule that the owner decides merges.
 * Rebase a run-owned branch onto its target base (`main`, or the declared
   parent topic for a stacked child) and push it with `--force-with-lease`,
   only under the conditions in step 8.
-* Remove the worktrees and local branches the run created, only under the
-  Cleanup contract.
+* Remove run-created worktrees and local branches of merged run-owned PRs,
+  only through a finite per-run path manifest under the Cleanup contract.
 * Set the Status field of run-owned issues on the owner's project board (see
   Project board status).
 
@@ -57,18 +57,19 @@ it. Independent issues continue. Blockers are:
 * An issue that stays unclear after one backlog-manager refinement. An issue
   never refined or assessed is refinement work, not a blocker.
 
-A missing local gate, receipt or review, an unassessed closure item and an
-unknown state are work for the run, not human blockers. For each blocker, comment once on the issue with the decision needed, who can
-decide and what it unblocks, then add it to the blocker ledger and set the board status. Do not guess,
-invent approvals or mark a decision as made.
+A missing local gate, receipt or review, a failed receipt verification, an
+unassessed closure item and an unknown state are work for the run, not human
+blockers.
+
+For each blocker, comment once on the issue with the decision needed, who can
+decide and what it unblocks, then add it to the blocker ledger and set the
+board status. Do not guess, invent approvals or mark a decision as made.
 
 ## Liveness and stop decision (owner rule, 2026-10-31; repaired 2026-11-05, issue #1204)
 
 A blocked PR or issue never ends a turn or a scheduled tick. The owner is often
-away and cannot unblock, so the run keeps advancing independent work. On
-5 November ticks that only counted PRs, tmux sessions and disk space claimed
-every issue was human-blocked while 99 closure reviews were unassessed and two
-issues could start; a count is not a classification.
+away and cannot unblock, so the run keeps advancing independent work. A count
+of PRs, sessions or disk space is not a classification.
 
 Before any tick or turn reports idle, stops a schedule or claims completion,
 freshly classify every in-scope open issue, PR, unpublished candidate,
@@ -91,12 +92,22 @@ next action. Rules for the classes:
 Each tick then advances at least one real next action when capacity allows,
 without inventing, duplicating or no-op issues to look busy:
 
-* Start independent `ready` issues up to the owner's session limit (8 as of
-  2026-10-31, overriding the Inputs default of three and never exceeded), each
-  as its own RPI session in its own worktree, subject to the PR cap below. Admit new issues only at 15 or fewer open PRs. Above 20
-  open PRs launch nothing new and repair, review and merge existing PRs one at
-  a time (rebasing only under step 8) until 10 to 15 remain; from 16 to 20 keep merging and repairing and
-  launch nothing. Idle slots with independent `ready` issues are a defect.
+* Start independent `ready` issues, each as its own RPI session in its own
+  worktree. Admission rule (single source; other sections cross-reference it):
+  eight (owner, 2026-10-31; overrides the Inputs default of three) is the
+  TOTAL number of live issue sessions, including repair, correction,
+  validation and gate continuations, never eight new plus repairs. Before
+  admitting any new issue and after each launch, publication or merge, recount
+  open PRs (`gh pr list --state open`) and live `rpi-*` tmux sessions; a PR
+  queued for auto-merge stays open until the merge is confirmed. Respect the
+  caps by counting each unit once: the open-PR thresholds apply to open PRs
+  and the total-of-eight applies to live sessions, checked separately. An open
+  PR with a live repair session is one open PR and one live session, never
+  extra open work; never sum sessions and PRs against each other. Admit new issues only at 15 or fewer open PRs;
+  from 16 to 20 keep merging and repairing and launch nothing; above 20 launch
+  nothing new and repair, review and merge existing PRs one at a time
+  (rebasing only under step 8) until 10 to 15 remain. Idle slots with
+  independent `ready` issues are a defect.
 * Closure review: take a rotating batch of up to five `unassessed` items from
   the `python3 tools/backlog-sync.py` queue, compare each issue's criteria with
   merged PR evidence, tick and close only what is proven, and record exact
@@ -106,6 +117,9 @@ without inventing, duplicating or no-op issues to look busy:
   not an audit; an audit is complete only when every row is assessed. When the
   session limit is full, keep this review and reconciliation going without
   extra launches.
+* A PR waiting only for an independent review that can be launched now is
+  `ready` (launch the review, counting the session); only a review that needs
+  an unfinished `running` predecessor is dependent on it.
 * Record each tick in session SQL (`tick_log`): the classification counts, the
   action taken and its evidence. A tick with no concrete action is no-progress.
 
@@ -120,8 +134,16 @@ End of a scheduled tick is not the end of the run. Never call `task_complete`
 or stop the delivery schedule while `ready`, `running` or `unknown` in-scope
 work remains. "Nothing changed" and an idle tick are permitted only when the
 fresh classification shows every remaining item `running`, `human-blocked` or
-dependent on a human-blocked item and no reconciliation or closure review is
-unassessed. Stop the schedule only when the approved scope is delivered, a stated
+dependent on one of those and no reconciliation or closure review is
+unassessed. A dependency on an identified `running` predecessor (named,
+evidenced, with no executable reconciliation or closure work left) permits
+ending THIS TICK with a named resume action, never stopping the schedule or
+completing the run; while other items remain, a dependency on a human-blocked
+item likewise ends only the tick. Ready, unknown, unassessed or executable reconciliation work excludes an
+idle tick. Stop the schedule only when the approved scope is delivered, the
+fresh classification shows every remaining item merged or human-blocked (or
+dependent only on a human-blocked item) with nothing ready, unknown,
+unassessed or executable (report it with the blocker ledger), a stated
 Inputs limit is reached (a pause, not completion) or the owner explicitly
 pauses the run; report the evidence either way. An explicit
 owner pause and a real scoped human gate stay legitimate stops for their scope.
@@ -158,7 +180,15 @@ runs hourly and applies the Cleanup contract. Neither is a status-only poll.
   recurrence. If the read-back shows zero or two, repair that tick and record
   it. Stopping an old schedule before its replacement is verified is a defect.
 * Stop a schedule only under the stop rule above, name its id in the report,
-  and keep a stopped schedule's id as historical evidence.
+  and keep a stopped schedule's id as historical evidence. Stopping a duplicate
+  or superseded recurrence under the replacement rule is also allowed, after the
+  replacement is verified. With two active, keep the one carrying the intended
+  prompt version (the newest id if equal), stop the other, then read back.
+* Provenance (as of 2026-11-05): the final active schedules are delivery #9
+  (every 10 minutes) and cleanup #8 (hourly); original #6 and #2 and
+  intermediate #7 are stopped and kept as historical ids. Live prompts are
+  condensed semantic equivalents of the approved snapshots, not byte-identical.
+  Schedules are an advisory workflow, not technical enforcement.
 
 ## Cleanup contract
 
@@ -168,9 +198,18 @@ work. Follow the
 
 * Discovery patterns (worktrees under the run's worktree root, scratch paths
   such as `/tmp/rpi*-out` or `/tmp/ama-gate-*`) only list candidates and grant
-  no deletion authority. Resolve each candidate, then act on an approved finite
-  per-run path manifest. Remove only individually verified paths, never with
+  no deletion authority. Resolve each candidate, then act on a finite per-run
+  path manifest; every worktree or scratch removal, including workflow step 10,
+  goes through it. Remove only individually verified paths, never with
   wildcards, a broad parent directory or `--force` worktree removal.
+* Authority: the owner delegation covers run-created worktrees and local
+  branches of merged run-owned PRs, and the coordinator may select and record
+  those paths in the manifest. It cannot self-approve broader historical,
+  evidence, scratch-of-unknown-origin or other deletion; that needs the owner's
+  explicit selection and is a scoped cleanup-lane question, not a delivery
+  blocker. Unknown eligibility (unknown upstream, unverified squash merge,
+  unknown ownership) or a missing required archival selection approval defers
+  that removal.
 * Where evidence is present, require the policy's archive, readback and
   restore checks before removal. Preserve original and adverse RPI and gate
   records, untracked or ignored evidence, active sessions, dirty worktrees,
@@ -287,15 +326,14 @@ restarts that PR's Source CI and Scorer runs (`cancel-in-progress`).
 * Automatic Copilot Code Review is disabled. The local `code-review-*` verdict,
   recorded in `.copilot-tracking/reviews/`, is the review gate.
 * Push less. Batch fixes into one push, stack small PRs under a parent branch,
-  and rebase a run-owned PR only when it conflicts and is otherwise ready to
-  merge. Never rebase a PR just to refresh a green or pending head.
+  and rebase a run-owned PR only under the step 8 conditions. Never rebase a
+  PR just to refresh a green or pending head.
 * After a rebase of an append-only docs conflict whose previous head was green,
   merge at once instead of waiting for a fresh run; check main CI afterwards.
   Validate any resolved config file (for example parse TOML) before pushing.
-* With more than 20 open PRs, take no new issues. Use the tmux sessions to
-  repair, rebase and merge existing PRs until 10 to 15 remain, then resume new
-  work while continuing to close PRs. The admission rule in Liveness and stop
-  decision applies this cap (new issues only at 15 or fewer).
+* The PR backlog cap and session total are the admission rule in Liveness and
+  stop decision; apply it from there. Repair and merge existing PRs first when
+  it bars new issues.
 
 ## Stabilization checkpoints
 
@@ -305,8 +343,8 @@ BRD/PRD, architecture or contract change or significant regression is detected,
 record a checkpoint for the affected integration surface. A wave is complete
 when its selected issues have merged or reached an explicit blocked/paused
 disposition; waiting for blocked children does not suppress its checkpoint.
-Keep at most eight active issues in a wave (owner direction, issue #440), not
-a target to fill; the parallel-loop limit still applies.
+Wave size follows the session total in the Liveness admission rule (issue
+#440), not a target to fill; the parallel-loop limit still applies.
 
 The coordinator selects the checkpoint scope and consumes its results; execute
 checkpoint work through the existing issue RPI route in step 5, not by
@@ -413,10 +451,11 @@ own shards from its own `--jobs`. Gate commands run with stdin redirected from /
 runner with `< /dev/null` so a test that prompts cannot hang a terminal-attached
 run. Full-scope runs build fresh images
 automatically and verify rejects layer-cache full receipts. A `--changed`
-receipt records skipped groups and reasons and stays valid after `origin/main` moves only when `--verify-receipt` proves the move
-touched no path of the candidate's changed set or its dependents (it prints
-`BASE RELAXED`); otherwise rerun on the current base. Full-tier receipts always
-need the exact current base. To merge several PRs in a row, rebase them into one
+receipt records skipped groups and reasons and stays valid after `origin/main`
+moves only when `--verify-receipt` prints `BASE RELAXED` (the tool decides; the
+coordinator does not assert it); otherwise refresh per step 8. A full-tier
+receipt always needs the actual current origin/main base. Integrating a stack is a named reason under step 8 and applies
+only to PRs whose evidence needs it, not routinely: rebase those PRs into one
 stack, gate the tip once with `--stack PR_HEAD` per PR in order, and verify each
 PR with `--stack-member PR_HEAD` before merging it. The receipt binds only the
 tip, so each member still needs its own exact-head review and hosted CI, and a
@@ -464,8 +503,8 @@ remains subject to the tracking retention policy.
    dependencies. Each later wave holds issues whose dependencies are merged
    into their intended target and whose affected stabilization blockers are
    resolved. Before selection, reconcile due checkpoints and their scoped
-   decisions above. Select no more than eight active issues without filling
-   spare slots for their own sake. A stacked child may start once its parent
+   decisions above. Select within the session total in the Liveness admission
+   rule, without filling spare slots for their own sake. A stacked child may start once its parent
    topic exists and its implementation dependencies are satisfied; the
    declared parent dependency does not require the parent to merge to `main`
    first. Run a wave in parallel up to the parallel limit; sequence the rest.
@@ -486,7 +525,9 @@ remains subject to the tracking retention policy.
    or a stale `/tmp` template. Write it to a unique
    `/tmp/brief-{number}-{timestamp}.md`, record its path and sha256 in
    session SQL, then run:
-   `tmux new-session -d -s rpi-{number} -c ../ama-wt/issue-{number} "copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat /tmp/brief-{number}-{timestamp}.md)\" 2>&1 | tee /tmp/rpi-{number}.log; echo exit=\$? >> /tmp/rpi-{number}.log"`.
+   `tmux new-session -d -s rpi-{number} -c ../ama-wt/issue-{number} "echo --- launch {timestamp} >> /tmp/rpi-{number}.log; copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat /tmp/brief-{number}-{timestamp}.md)\" 2>&1 | tee -a /tmp/rpi-{number}.log; echo exit=\$? >> /tmp/rpi-{number}.log"`.
+   Logs are preserved across retries: each launch appends a
+   `--- launch {timestamp}` line and never truncates or deletes an earlier log.
    Use Sonnet 5.5 for all coordinator-launched RPI issue sessions, including
    retries, corrections and validation continuations, by passing
    `--model claude-sonnet-5.5` on every launch. The coordinator's own session
@@ -502,7 +543,8 @@ remains subject to the tracking retention policy.
    `tmux has-session -t rpi-{number}` and `tmux capture-pane -p -t rpi-{number}`
    and read its log; stop a hung one with `tmux kill-session -t rpi-{number}`.
    Session names are unique per issue and a retry reuses the name only after
-   the old session is gone.
+   the old session is gone. Each launch counts toward the session total in the
+   Liveness admission rule.
    The brief carries the issue text, acceptance criteria, branch, worktree path,
    repository conventions, selected validation tier and rationale, test plan,
    target branch and dependency (a child of a parent stack names the parent
@@ -630,8 +672,8 @@ remains subject to the tracking retention policy.
    `gh pr merge {n} --squash --delete-branch`. Green hosted checks and
    `MERGEABLE` never satisfy missing selected-tier evidence (see Liveness and
    stop decision); do not merge on CI alone. Merge in dependency order, one at a time, and
-   fetch the affected target and re-run the selected-tier gate after each
-   merge because its base moved. Keep a parent topic while child PRs still
+   fetch the affected target and refresh each remaining PR per step 8 after
+   each merge (existing exact head first; rebase only for a named reason). Keep a parent topic while child PRs still
    depend on it. Recheck the integrated parent candidate and its own tier
    before merging it to `main`; child validation does not substitute for
    parent integration validation. After a merge,
@@ -647,11 +689,32 @@ remains subject to the tracking retention policy.
    closure, consume its current stabilization checkpoint. If integrated
    criteria or approvals remain unmet, omit the closing keyword and keep the
    epic open; child merges alone do not authorize closure.
-8. **Rebase overlapping PRs.** After each merge, check every remaining open
-   run-owned PR for conflicts or a stale base, and rebase only a PR that
-   conflicts or whose base move invalidates its required evidence under the
-   receipt rules; never rebase a valid green head just because main moved. Rebase the branch onto the new
-   target base (`origin/main`, or the declared parent topic for a stacked
+8. **Refresh or rebase overlapping PRs.** After each merge, check every
+   remaining open run-owned PR for conflicts or a stale base. Receipt refresh
+   rule (single source): a full-tier receipt always needs the actual current
+   origin/main base, so first refresh selected-tier validation at the EXISTING
+   exact head (run `python3 tools/rpi-checks.py` with
+   the new base, or `--verify-receipt` for a partial receipt; if the tool cannot
+   refresh there, record that evidence and the named rebase reason before any
+   rebase); a partial
+   `--changed` receipt stays valid only when `--verify-receipt` prints
+   `BASE RELAXED`. After a failed partial verification, produce a new receipt with
+   `python3 tools/rpi-checks.py --changed --base <current-origin-main-sha> --out
+   <new-external-directory>` at the existing head and verify it with
+   `--verify-receipt ... --required-scope partial`; `--resume FAILED_RECEIPT`
+   applies only to a failed gate run. The coordinator may run this itself or
+   route the gate run to a continuation session (fresh brief; counts toward the
+   session total) and always runs the final verification. If the shared
+   heavy-resource lock is held, defer to the next tick, never a blocking wait.
+   A refresh at the unchanged head does not by itself invalidate the independent
+   exact-head assessment; a new commit or rebase does. Rebase only for a conflict, or for a required integration
+   that prevents valid selected-tier evidence, and record a named reason; never
+   rebase merely to make a still-valid green head look fresh. A failed
+   verification blocks publication and merge of that head, stays on record as
+   evidence (never deleted or overwritten) and is ready repair or refresh work,
+   not an owner gate unless its actual cause needs owner authority (for example
+   an unmapped protection rule). When a rebase is justified, rebase onto the
+   new target base (`origin/main`, or the declared parent topic for a stacked
    child) in its own worktree, resolve conflicts preserving both
    changes' intent (append-only files such as the knowledge-base log keep both
    entries), rerun the validation, and push with `--force-with-lease`. If
@@ -673,10 +736,12 @@ remains subject to the tracking retention policy.
    stop decision allows it: all issues and
    due checkpoints are delivered or explicitly blocked/paused with a fresh
    classification, or a limit is reached; report unfinished checkpoint scope and resume conditions.
-10. **Clean up.** After a PR merges, remove its worktree and local branch
-    under the Cleanup contract: `tmux kill-session -t rpi-{number}` if it still
-    exists, then `git worktree remove` (never `--force`) once its upstream and merge
-    lifecycle are verified. Delete the remote branch only
+10. **Clean up.** Cleanup acts through the finite per-run path manifest in the
+    Cleanup contract, not automatically after a merge. For a merged run-owned PR
+    whose paths are in the manifest: `tmux kill-session -t rpi-{number}` only if
+    it exists and has exited or its PR's loop is complete (never one holding an
+    active gate, receipt or running phase; defer instead), then `git worktree remove` (never `--force`) once its
+    upstream and merge lifecycle are verified; otherwise defer. Delete the remote branch only
     when the PR is merged, run-owned and still present (`--delete-branch`
     does this); report any leftover. Delete no other branches.
 
