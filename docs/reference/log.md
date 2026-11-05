@@ -10939,3 +10939,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-08] update | Issue 440 visible-demo checkpoint correction 2 (Refs #440, #149, #229, #891)
 
 * Made the stored-route model-call sentence in the visible-demo section of the cut-over evidence pack conditional and at most once (`chat_panel.py` 583-591), qualified the BRD and PRD trace row to distinguish the one observed generic model answer from unproven case-grounded provider behavior and human acceptance, and added a compact note that the C1 research wall-clock claim conflicts with Git commit times (cause unknown, record preserved). Documentation only; no approval, closure or new evidence.
+* Prospective continuation of the 2026-11-04 slice: merged current main locally (ordinary merge) for the maintained gate fixes, kept the adapter unchanged, and ran only lightweight unit, ruff and mypy checks. The tier is full (bearer-token transport); the complete gate is unrun and pending the heavy lock. Criteria 1 to 5 stay unmet. Nothing pushed, ticked or closed. Evidence under `.copilot-tracking/` (2026-11-05 issue-144 queue recovery).
+
+## [2026-11-05] update | Issue 144 poison-copy size correction (Refs #144)
+
+* Bounded the queue adapter poison copy by encoded bytes with an explicit truncation marker after an independent review found it could exceed the 64 KiB queue limit. Light unit, ruff and mypy checks only; the full gate and independent assessment are pending for the new head. Criteria 1 to 5 stay unmet. Evidence under `.copilot-tracking/` (2026-11-05 issue-144 poison size correction).

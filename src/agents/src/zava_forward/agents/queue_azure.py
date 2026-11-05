@@ -27,6 +27,7 @@ MAX_DELIVERIES = 5
 LEASE_SECONDS = 60
 HTTP_TIMEOUT_SECONDS = 10
 MAX_RESPONSE_BYTES = 256 * 1024
+POISON_TEXT_BYTES = 45000
 
 Transport = Callable[[str, str, dict[str, str], bytes | None], tuple[int, bytes]]
 """(method, url, headers, body) -> (status, response body)."""
@@ -75,6 +76,16 @@ def decode_text(text: str) -> str:
         return base64.b64decode(text, validate=True).decode("utf-8")
     except (binascii.Error, UnicodeDecodeError):
         return text
+
+
+def poison_text(text: str) -> bytes:
+    """UTF-8 diagnostic copy within the poison size budget, marked when truncated."""
+    raw = text.encode("utf-8")
+    if len(raw) <= POISON_TEXT_BYTES:
+        return raw
+    marker = f"[truncated original_bytes={len(raw)}]\n".encode("ascii")
+    prefix = raw[: POISON_TEXT_BYTES - len(marker)]
+    return marker + prefix.decode("utf-8", errors="ignore").encode("utf-8")
 
 
 class AzureTaskQueue:
@@ -154,9 +165,9 @@ class AzureTaskQueue:
 
     def _poison(self, receipt: str, text: str) -> None:
         """Move an unusable message aside. Delete only after the poison copy is stored."""
-        # The raw text is kept for diagnosis; it contains only the inert task snapshot.
+        # Azure caps an encoded message at 64 KiB, so a long original keeps a marked prefix.
         envelope = "<QueueMessage><MessageText>{}</MessageText></QueueMessage>".format(
-            base64.b64encode(text[: MAX_MESSAGE_CHARS * 2].encode("utf-8")).decode("ascii")
+            base64.b64encode(poison_text(text)).decode("ascii")
         )
         status, _ = self._call(
             "POST", self._messages(self.poison_queue), {}, envelope.encode("ascii")

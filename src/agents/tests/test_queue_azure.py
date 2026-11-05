@@ -117,6 +117,42 @@ class ReceiveTests(unittest.TestCase):
             queue(rec).receive()
         self.assertEqual([c[0] for c in rec.calls], ["GET", "POST"])
 
+    def poisoned_body(self, text: str, count: int = 1) -> bytes:
+        rec = Recorder((200, entry(text, count=count)), (201, b""), (204, b""))
+        self.assertIsNone(queue(rec).receive())
+        self.assertEqual([c[0] for c in rec.calls], ["GET", "POST", "DELETE"])
+        body = rec.calls[1][3]
+        assert body is not None
+        self.assertLess(len(body), 65536)
+        return body
+
+    def stored(self, body: bytes) -> bytes:
+        text = body.decode("ascii").split("<MessageText>")[1].split("</MessageText>")[0]
+        return base64.b64decode(text)
+
+    def test_large_ascii_poison_copy_is_bounded_and_marked(self) -> None:
+        stored = self.stored(self.poisoned_body("x" * 60000))
+        self.assertTrue(stored.startswith(b"[truncated original_bytes=60000]\n"))
+        self.assertIn(b"xxxx", stored)
+
+    def test_multibyte_poison_copy_is_bounded_and_valid_utf8(self) -> None:
+        stored = self.stored(self.poisoned_body("\u00e9" * 30001))
+        stored.decode("utf-8")
+        self.assertTrue(stored.startswith(b"[truncated original_bytes=60002]\n"))
+
+    def test_oversized_valid_task_over_delivery_limit_is_bounded(self) -> None:
+        text = message().to_json() + " " * 60000
+        self.stored(self.poisoned_body(text, count=6))
+
+    def test_small_poison_copy_is_kept_whole(self) -> None:
+        self.assertEqual(self.stored(self.poisoned_body("not json")), b"not json")
+
+    def test_large_message_failed_poison_write_keeps_the_message(self) -> None:
+        rec = Recorder((200, entry("y" * 60000)), (400, b""))
+        with self.assertRaises(QueueError):
+            queue(rec).receive()
+        self.assertEqual([c[0] for c in rec.calls], ["GET", "POST"])
+
 
 class AckReleaseTests(unittest.TestCase):
     def test_ack_deletes_with_pop_receipt(self) -> None:
