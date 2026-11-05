@@ -9,7 +9,16 @@ class ChatCaseFundingSourcesTests(unittest.TestCase):
         "id": "ZF-1",
         "funding": {"route": "ECO4", "status": "not started", "internal": "drop"},
         "funding_ok": False,
-        "work": {"blockers": [{"step": "Funding", "reason": "Grant not claimed", "owner": "finance", "email": "a@b.c"}]},
+        "work": {
+            "blockers": [
+                {
+                    "step": "Funding",
+                    "reason": "Grant not claimed",
+                    "owner": "finance",
+                    "email": "a@b.c",
+                }
+            ]
+        },
     }
 
     def test_funding_and_blockers_are_citable_and_closed(self):
@@ -23,6 +32,17 @@ class ChatCaseFundingSourcesTests(unittest.TestCase):
         bad = {"id": "ZF-1", "work": {"blockers": [{"step": {"x": 1}}]}}
         with self.assertRaises(ValueError):
             chat_case(bad)
+
+    def test_malformed_shapes_refuse_instead_of_dropping(self):
+        for bad in (
+            {"id": "ZF-1", "funding": "ECO4"},
+            {"id": "ZF-1", "work": []},
+            {"id": "ZF-1", "work": {"blockers": "none"}},
+            {"id": "ZF-1", "work": {"blockers": ["x"]}},
+            {"id": "ZF-1", "work": {"blockers": [{"step": "s"}] * 7}},
+        ):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                chat_case(bad)
 
 
 if __name__ == "__main__":
