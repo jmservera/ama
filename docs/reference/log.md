@@ -10590,3 +10590,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Adds `src/api/checks/atlas_tensions_browser_check.py` and documents it in `src/api/README.md`. One synthetic home is opened on Programme queue, Resident choice and Package queue through the real `/app`; the check asserts rendered "Not shown for this role" panels with same-home context, choice and withdrawal panels before "Choice comes before offered capacity", the explanation before the capacity table and package rows in reference order against a different delivered order and conflicting headroom, offered and use. No application, CSS, policy or data change.
 * `docs/reference/research/ux/atlas-screen-trace.md` now records the tensions as rendered on one synthetic home (engineering evidence only). Issue criteria are unchanged: C2 engineering advanced, C4 and C5 unmet; no human, assistive-technology, user, legal, privacy or design approval is claimed.
 
+
+## [2026-11-05] update | Index row for the #233 rendered tension check (Refs #233, Refs #149)
+
+* `docs/reference/README.md` row for #233 now names the bounded Chromium tension-sequence check and keeps its engineering-only boundary. No other knowledge base change.
