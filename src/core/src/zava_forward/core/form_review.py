@@ -222,11 +222,23 @@ def _proposals(store: Any, case: Record, draft: Record, impact: Record) -> list[
                 batch["case_id"] == case["id"]
                 and batch["schema_id"] == schema["id"]
                 and batch["schema_version"] == schema["version"]
-                and batch["schema_digest"] == draft["schema_digest"]
             )
         except (KeyError, TypeError):
             continue
         if not mine:
+            continue
+        if "schema_digest" not in batch:
+            result.append(
+                dict(
+                    batch_id=batch.get("id"),
+                    candidate_id=None,
+                    field_id=None,
+                    state="Unknown",
+                    causes=["proposal-record-malformed"],
+                )
+            )
+            continue
+        if batch["schema_digest"] != draft["schema_digest"]:
             continue
         try:
             batch_id, source = batch["id"], batch["source"]

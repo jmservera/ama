@@ -187,6 +187,37 @@ class FormDependencies(unittest.TestCase):
             self.assertEqual(by_state["Unknown"][1]["causes"], ["proposal-record-malformed"])
             self.assertEqual([r["field_id"] for r in by_state["Current"]], ["epc", "notes"])
 
+    def test_attributable_batch_missing_digest_stays_visible_as_unknown(self) -> None:
+        for store in self.stores:
+            draft, staged = self.setup_reviewed(store)
+            args = (store, self.actor, "ZF-1", draft["draft_id"])
+            before = form_review.proposal_freshness(*args)
+            with store.lock:
+                rows = store._case("ZF-1")["form_staging"]
+                del rows[0]["schema_digest"]
+                rows[1]["schema_digest"] = "0" * 64
+                rows[2]["schema_id"] = "OTHER"
+                store.save()
+                snapshot = copy.deepcopy(store._case("ZF-1"))
+            found = form_review.proposal_freshness(*args)
+            with store.lock:
+                self.assertEqual(snapshot, store._case("ZF-1"))
+            unknown = [r for r in found["proposals"] if r["state"] == "Unknown"]
+            self.assertEqual(len(before["proposals"]), 3)
+            self.assertEqual(len(found["proposals"]), 1)
+            self.assertEqual(
+                unknown,
+                [
+                    dict(
+                        batch_id=snapshot["form_staging"][0]["id"],
+                        candidate_id=None,
+                        field_id=None,
+                        state="Unknown",
+                        causes=["proposal-record-malformed"],
+                    )
+                ],
+            )
+
     def hold(self, draft_id: Any, bound: Any, **extra: Any) -> dict[str, Any]:
         return dict(
             decision_id="SYN-APPROVAL",
