@@ -84,3 +84,13 @@ run -m unittest -q tests.test_design_system tests.test_static_assets tests.test_
 ```
 
 Notes: no session wrapper, patching or instrumentation is used; the earlier wrapper's `TemporaryDirectory` patch was redundant with `TMPDIR`. The earlier geometry numbers came from instrumented diagnostic runs and are labelled as such above; only this invocation counts as pass evidence. Results for the frozen head are recorded in the next section.
+
+### Final results at frozen head 3ee3b53e5ccc5031255b1c8061aea03ad8f42cbe (origin/main still c6d5a8f3c3a35892322300be27b9747f7b11362d)
+
+Run by the invocation above, verbatim, with the heavy lock held nonblocking throughout (no other holder). Logs retained at /tmp/g1214-corr1-final (browser.log, unit.log, case-journey output); not durable, so this section is the committed summary.
+
+* First-source assertion for core, api and agents under the candidate worktree: exit 0.
+* Existing unmodified `checks.case_journey_browser_check`: process exit 0 (`BROWSER_EXIT 0`, not a wrapper echo), 407 PASS lines, `PASS 320x800 summary within one viewport scroll (1592.40625)`; bound 1600 unchanged; 7.59375px margin.
+* Existing unit checks (design_system, static_assets, case_journey, accessibility_baseline, content_standard): 72 tests OK, exit 0.
+* `git status --short --ignored` after the runs showed no untracked or ignored files, so no source bytecode appeared.
+* This record is committed after the runs as a docs-only commit; `git diff 3ee3b53e5 HEAD -- src` is empty, so the evidence applies to the handed-off head's source. Hosted CI, the maintained runner and independent exact-head review have NOT run.
