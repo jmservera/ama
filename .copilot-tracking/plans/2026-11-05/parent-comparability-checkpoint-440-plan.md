@@ -12,8 +12,8 @@ Append a dated section to `docs/architecture/cutover-evidence-pack.md`, link it 
 * [x] Phase 1: Append the evidence pack section (identities, boundary map, classification, commands, triage, gates).
 * [x] Phase 2: Add the index link and the append-only log entry.
 * [x] Phase 3: Focused checks (links and anchors, append-only diff, blob identities, ASCII style, clean status) and changes artifact.
-* [ ] Phase 4: One independent review of the frozen documentation diff; record its verdict verbatim; no second review.
-* [ ] Phase 5: Commit with noreply identity and Copilot trailer; no push, PR or merge; frozen-head report outside the repository.
+* [x] Phase 4: One independent review of the frozen documentation diff; record its verdict verbatim; no second review (original verdict NOT CLEAN preserved).
+* [x] Phase 5: Commit with noreply identity and Copilot trailer; no push, PR or merge; frozen-head report outside the repository.
 
 ## Non-goals and boundaries
 
