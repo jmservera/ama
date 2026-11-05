@@ -1,0 +1,55 @@
+{
+"task_id": "sensor-checkpoint-recovery-440-2026-11-05",
+"task_slug": "sensor-checkpoint-recovery",
+"parent_task": null,
+"mode": "automatic",
+"active_phase": "Review",
+"status": "active",
+"session_status": "running",
+"artifact_paths": {
+"research": ".copilot-tracking/research/2026-11-05-sensor-checkpoint-recovery-440-research.md",
+"plan": ".copilot-tracking/plans/2026-11-05-sensor-checkpoint-recovery-440-plan.md",
+"details": ".copilot-tracking/details/2026-11-05-sensor-checkpoint-recovery-440-details.md",
+"critique": ".copilot-tracking/plans/2026-11-05-sensor-checkpoint-recovery-440-critique.md",
+"changes": ".copilot-tracking/changes/2026-11-05-sensor-checkpoint-recovery-440-changes.md",
+"review": null
+},
+"confirmed_decisions": [
+{
+"decision": "Documentation-only, local-only, focused tier; Refs #440 #184 #110, no closing keyword",
+"status": "owner-directed",
+"evidence": "task statement 2026-11-05"
+},
+{
+"decision": "Current-main acceptance assessed against c6d5a8f3c3a35892322300be27b9747f7b11362d by git show blob identities",
+"status": "owner-directed",
+"evidence": "task statement 2026-11-05"
+},
+{
+"decision": "No heavy SQL, image, browser or FULL gate; native rpi96 FULL gate owns /tmp/ama-rpi-heavy.lock",
+"status": "owner-directed",
+"evidence": "task statement; lock holder PID 1361642 observed alive"
+},
+{
+"decision": "Research disposition executed; Planning Readiness Ready",
+"status": "recorded",
+"evidence": ".copilot-tracking/research/2026-11-05-sensor-checkpoint-recovery-440-research.md"
+},
+{
+"decision": "Critique executed once; verdict proceed; five compatible findings applied; no user decision needed",
+"status": "recorded",
+"evidence": ".copilot-tracking/plans/2026-11-05-sensor-checkpoint-recovery-440-critique.md"
+},
+{
+"decision": "Implement complete: 3 docs changed, 155 insertions 0 deletions; focused checks passed; heavy tiers unperformed",
+"status": "recorded",
+"evidence": ".copilot-tracking/changes/2026-11-05-sensor-checkpoint-recovery-440-changes.md"
+}
+],
+"blockers": [],
+"next_action": {
+"phase": "Review",
+"action": "Run the single independent read-only review of the diff, record outcome, commit locally"
+},
+"prioritized_follow_ups": null
+}

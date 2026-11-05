@@ -10578,3 +10578,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Corrects the entry above: `--active none` is removed and omission from `--active` never demotes. Demotion of an In Progress issue with no open PR needs per-issue negative evidence through a separate validated `--inactive N,N`; everything else stays In Progress and is listed as activity unverified. Overlapping, unknown, closed or malformed input stops the run before any write, and error text does not echo the rejected value.
 * `tools/test_backlog_sync.py` now runs in the existing Source CI "Local gate orchestration contracts and strict checks" step. Mock evidence only; no live board claim.
+
+## [2026-11-05] update | Current-main sensor contract, retention and handover checkpoint (Refs #440 #184 #110)
+
+* Appended a fifth stabilization checkpoint to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110) against `origin/main` `c6d5a8f3`, with document-qualified BRD/PRD IDs, ADR 0002/0003 identities and a classified evidence table. Documentation only; no code, coordinator or issue change.
+* Records that the main `live-sim-reading-v1` wire message (with `sunlight_wm2`) is not admitted by the `sensor-fault-input-v1` consumer, that retained weather/wire and the indoor observed series are distinct, and that no calibration, threshold or live handover evidence exists. Unmerged #1203 and #1205 are excluded. No criterion is ticked and no issue is closed; #440 criteria 7 and 8 stay open.
