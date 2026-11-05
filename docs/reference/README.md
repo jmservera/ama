@@ -404,6 +404,12 @@ For the finance parent held-export manifest contract (#96), the
 (originally labelled eighth, corrected here) assesses `feat/finance-integration-93` `0472fd5d` separately from main and
 dispositions the proposed required-history key (finance-parent source only;
 local draft pending coordinator consumption; no approval, defect or acceptance is implied).
+For the lifecycle parent quality evidence gate (#82, PR 1226), the
+[tenth stabilization checkpoint](../architecture/cutover-evidence-pack.md#tenth-stabilization-checkpoint-lifecycle-parent-quality-evidence-gate-2026-11-05-refs-440-82-81)
+assesses `feat/controlled-lifecycle-integration-81` `cd271cfa` separately from
+the governance target and main, with a light core test observation (183 tests,
+exit 0, no SQL Server); local draft pending coordinator consumption; no
+approval, closure or criterion tick is implied.
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope
