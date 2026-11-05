@@ -17,7 +17,7 @@ from unittest.mock import patch
 from dataset import change_metadata
 from test_form_staging import batch, schema
 from tests.test_mvp import DATA
-from zava_forward.core import forms
+from zava_forward.core import controls, forms, projection
 from zava_forward.core.sqlstore import SqlStore
 
 from zava_forward.api.server import App, make_handler
@@ -429,6 +429,54 @@ class FormApi(unittest.TestCase):
         code, text, _ = self.raw("pam", "/api/form-schemas.csv")
         self.assertEqual(code, 403)
         self.assertNotIn("SYN-TECH", text)
+
+    def register_staff(self, code: str, email: str, role: str) -> None:
+        row = dict(code=code, name=f"Synthetic {role}", email=email, role=role)
+        self.store.staff[email] = row
+        self.store.db.execute(
+            "INSERT OR REPLACE INTO staff (email, body) VALUES (?, ?)", (email, json.dumps(row))
+        )
+
+    def test_schema_csv_denies_admin_unknown_role_and_finance_without_resident_rights(
+        self,
+    ) -> None:
+        self.two_versions()
+        actors = {
+            "admin": "Application Administrator",
+            "unknown": "Unregistered Role",
+            "grants": "Grants and Evidence Officer",
+        }
+        for number, (actor, role) in enumerate(actors.items(), 1):
+            self.register_staff(f"SYN-9{number}", f"{actor}@example.test", role)
+        grants = self.store.staff["grants@example.test"]["role"]
+        self.assertIn(grants, projection.FINANCE_VIEW)
+        self.assertNotIn(grants, controls.RESIDENT_VIEW_ROLES)
+        before_data = copy.deepcopy(self.store.data["form_schemas"])
+        before_cases = copy.deepcopy(self.store.cases)
+        for actor in actors:
+            self.call(actor, "/api/me")
+            audit = self.store.db.execute("SELECT count, hash FROM audit_head").fetchone()
+            with self.subTest(actor=actor):
+                with patch.object(
+                    self.store.ai, "_chat", side_effect=AssertionError("No inference")
+                ):
+                    code, text, headers = self.raw(actor, "/api/form-schemas.csv")
+                    json_code, json_body = self.call(actor, "/api/form-schemas")
+                self.assertEqual(code, 403, text)
+                self.assertEqual(json_code, 403, json_body)
+                self.assertFalse(headers["Content-Type"].startswith("text/csv"))
+                self.assertNotIn("attachment", headers.get("Content-Disposition", ""))
+                for leaked in ("SYN-TECH", "digest", "pam@example.test", "SYN-NOT-APPROVED"):
+                    self.assertNotIn(leaked, text)
+                for case in before_cases.values():
+                    self.assertNotIn(case["resident"]["name"], text)
+                    self.assertNotIn(case["id"] + ",", text)
+                self.assertEqual(self.store.data["form_schemas"], before_data)
+                self.assertEqual(self.store.cases, before_cases)
+                self.assertEqual(
+                    self.store.db.execute("SELECT count, hash FROM audit_head").fetchone(), audit
+                )
+        self.assertTrue(self.store.verify_audit())
 
     def test_schema_csv_has_no_case_data_and_changes_nothing(self) -> None:
         self.two_versions()
