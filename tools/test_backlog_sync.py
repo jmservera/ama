@@ -76,14 +76,17 @@ def edited_options(writes):
 
 class ParseTests(unittest.TestCase):
     def test_parse(self):
-        self.assertIsNone(mod.parse_active(None))
-        self.assertEqual(mod.parse_active("none"), set())
-        self.assertEqual(mod.parse_active("79, #80,82"), {79, 80, 82})
+        self.assertEqual(mod.parse_issues("79, #80,82", "--active"), {79, 80, 82})
 
-    def test_invalid_entries_rejected(self):
-        for raw in ("", "79,", "abc", "0", "-3", "79;80", "1.5"):
-            with self.subTest(raw=raw), self.assertRaises(SystemExit):
-                mod.parse_active(raw)
+    def test_invalid_entries_rejected_without_echo(self):
+        for raw in ("", "79,", "abc", "0", "-3", "79;80", "1.5", "none", "secret-token"):
+            with self.subTest(raw=raw), self.assertRaises(SystemExit) as ctx:
+                mod.parse_issues(raw, "--inactive")
+            message = str(ctx.exception)
+            self.assertIn("--inactive", message)
+            self.assertIn("expected", message)
+            if raw:
+                self.assertNotIn(raw, message)
 
 
 class ReconcileTests(unittest.TestCase):
@@ -98,7 +101,7 @@ class ReconcileTests(unittest.TestCase):
         self.assertIn("activity unverified", out)
         self.assertIn("[79, 80, 82]", out)
 
-    def test_active_set_preserves_in_progress_with_merged_prs_and_no_open_pr(self):
+    def test_active_subset_never_demotes_unlisted_issues(self):
         issues = [issue(79), issue(80), issue(82), issue(90)]
         board = {79: "In Progress", 80: "In Progress", 82: "In Progress", 90: "In Progress"}
         merged = [pr(900, "Refs #79 #80 #82 #90")]
@@ -106,8 +109,22 @@ class ReconcileTests(unittest.TestCase):
             issues, board, merged=merged, argv=["--active", "79,80,82"], apply=True
         )
         self.assertIsNone(msg)
+        self.assertEqual(writes, [])
+        self.assertIn(
+            "activity unverified (kept In Progress: no open PR and no --active or "
+            "--inactive evidence): [90]",
+            out,
+        )
+
+    def test_explicit_inactive_demotes_only_named_issue(self):
+        issues = [issue(79), issue(90), issue(91)]
+        board = {79: "In Progress", 90: "In Progress", 91: "In Progress"}
+        out, writes, msg = run(
+            issues, board, argv=["--active", "79", "--inactive", "90"], apply=True
+        )
+        self.assertIsNone(msg)
         self.assertEqual(edited_options(writes), {"i90": "o-todo"})
-        self.assertNotIn("#79", out.split("review needed")[0])
+        self.assertIn("[91]", out)
 
     def test_active_promotes_todo_and_done_open_issue(self):
         issues = [issue(5), issue(6)]
@@ -119,10 +136,6 @@ class ReconcileTests(unittest.TestCase):
         self.assertIn("#5 open: board Todo -> In Progress", out)
         self.assertEqual(writes, [])
 
-    def test_active_none_is_explicit_demotion_evidence(self):
-        out, writes, _ = run([issue(5)], {5: "In Progress"}, argv=["--active", "none"], apply=True)
-        self.assertEqual(edited_options(writes), {"i5": "o-todo"})
-
     def test_unsupplied_activity_still_applies_other_rules(self):
         issues = [issue(1), issue(2), issue(3, "CLOSED", "* [ ] a"), issue(4)]
         board = {1: "Done", 2: "Todo", 3: "In Progress", 4: "Todo"}
@@ -130,35 +143,37 @@ class ReconcileTests(unittest.TestCase):
         self.assertEqual(edited_options(writes), {"i1": "o-todo", "i2": "o-prog", "i3": "o-done"})
         self.assertTrue(any(w[:2] == ("issue", "edit") for w in writes))
 
-    def test_open_pr_keeps_in_progress_when_activity_supplied(self):
+    def test_open_pr_outranks_inactive(self):
         out, writes, _ = run(
             [issue(7)],
             {7: "In Progress"},
             open_prs=[pr(60, "Refs #7")],
-            argv=["--active", "none"],
+            argv=["--inactive", "7"],
             apply=True,
         )
         self.assertEqual(writes, [])
 
-    def test_worktree_is_not_activity(self):
-        self.assertFalse(hasattr(mod, "live_worktree_issues"))
-
-    def test_invalid_active_issue_stops_before_any_write(self):
-        for raw in ("999", "3", "abc"):
-            with self.subTest(raw=raw):
+    def test_invalid_evidence_stops_before_any_write(self):
+        cases = (
+            ["--active", "999"],
+            ["--active", "3"],
+            ["--inactive", "3"],
+            ["--active", "abc"],
+            ["--inactive", "5", "--active", "5"],
+        )
+        for argv in cases:
+            with self.subTest(argv=argv):
                 out, writes, msg = run(
                     [issue(5), issue(3, "CLOSED", "* [x] a")],
                     {5: "Todo", 3: "Done"},
-                    argv=["--active", raw],
+                    argv=argv,
                     apply=True,
                 )
-                self.assertTrue(msg and "--active" in msg)
+                self.assertTrue(msg and msg.startswith("--") or msg.startswith("invalid"))
                 self.assertEqual(writes, [])
 
     def test_review_needed_list_preserved(self):
-        out, _, _ = run(
-            [issue(8)], {8: "Todo"}, merged=[pr(70, "Refs #8")], argv=["--active", "none"]
-        )
+        out, _, _ = run([issue(8)], {8: "Todo"}, merged=[pr(70, "Refs #8")], argv=["--active", "8"])
         self.assertIn("review needed (merged PRs reference them, criteria unticked): [8]", out)
 
 

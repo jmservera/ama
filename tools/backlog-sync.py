@@ -7,17 +7,18 @@ Default is a read-only audit. Use --apply to write. Rules:
 * Open issue on the board as Done: back to Todo (criteria are unmet).
 * Open issue named by --active (coordinator-confirmed live session or frozen
   unpublished candidate): In Progress, even with merged PRs and no open PR.
-* Open issue In Progress with no open PR: Todo only when --active was supplied
-  and omits it. Without --active, activity is unknown, so the status is kept and
-  reported as unverified; unknown activity is not proof that work finished.
+* Open issue In Progress with no open PR: Todo only when named by --inactive
+  (expressly confirmed to have no session and no frozen candidate). Otherwise
+  activity is Unknown: the status is kept and reported as unverified.
+  --active is positive evidence only; omission from it never demotes.
 * Open issue Todo with an open PR that references it: In Progress.
 * Issue missing from the board: added with the status implied above.
 
 Open issues with merged PR references but unticked criteria are listed for
 human or coordinator review because criteria need evidence to be ticked.
-A worktree, a missing upstream or an unknown session is not activity. Pass
---active 79,80 (or --active none when nothing is running); an unknown or closed
-issue number, or a malformed list, stops the run before any write.
+A worktree, a missing upstream or an unknown session is not activity or proof
+of completion. Use --active 79,80 and --inactive 90; unknown or closed issue
+numbers, overlap between the two, or a malformed list stop the run before any write.
 Requires the gh CLI with the project scope.
 """
 
@@ -43,35 +44,32 @@ def gh_json(*args):
     return json.loads(gh(*args))
 
 
-def parse_active(raw):
-    """Return None (not supplied) or the set of confirmed-active issue numbers."""
-    if raw is None:
-        return None
-    if raw.strip().lower() == "none":
-        return set()
+def parse_issues(raw, option):
+    """Parse comma-separated issue numbers; never echo the rejected value."""
     tokens = [t.strip() for t in raw.split(",")]
-    bad = [t for t in tokens if not re.fullmatch(r"#?[1-9]\d*", t)]
-    if bad:
-        raise SystemExit(f"invalid --active entries {bad}: use comma-separated issue numbers or 'none'")
+    if not all(re.fullmatch(r"#?[1-9]\d*", t) for t in tokens):
+        raise SystemExit(f"invalid {option}: expected comma-separated issue numbers such as 12,34")
     return {int(t.lstrip("#")) for t in tokens}
 
 
-def validate_active(active, issues):
-    if not active:
-        return
+def validate_evidence(active, inactive, issues):
+    both = sorted(active & inactive)
+    if both:
+        raise SystemExit(f"--active and --inactive both name issues {both}")
     state = {i["number"]: i["state"] for i in issues}
-    bad = sorted(n for n in active if state.get(n) != "OPEN")
-    if bad:
-        raise SystemExit(f"--active names issues that are not open in {REPO}: {bad}")
+    for option, nums in (("--active", active), ("--inactive", inactive)):
+        bad = sorted(n for n in nums if state.get(n) != "OPEN")
+        if bad:
+            raise SystemExit(f"{option} names issues that are not open in {REPO}: {bad}")
 
 
-def desired_status(state, current, has_open_pr, is_active, activity_supplied):
-    """Return (want, kept_unverified)."""
+def desired_status(state, current, has_open_pr, confirmed_active, confirmed_inactive):
+    """Return (want, kept_unverified). Only per-issue evidence changes In Progress."""
     if state == "CLOSED":
         return "Done", False
-    if has_open_pr or is_active:
+    if has_open_pr or confirmed_active:
         return "In Progress", False
-    if current == "In Progress" and not activity_supplied:
+    if current == "In Progress" and not confirmed_inactive:
         return "In Progress", True
     return "Todo", False
 
@@ -79,9 +77,11 @@ def desired_status(state, current, has_open_pr, is_active, activity_supplied):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--apply", action="store_true")
-    ap.add_argument("--active", help="comma-separated open issue numbers with a coordinator-confirmed live session or frozen unpublished candidate, or 'none'")
+    ap.add_argument("--active", help="open issue numbers with a coordinator-confirmed live session or frozen unpublished candidate")
+    ap.add_argument("--inactive", help="open issue numbers expressly confirmed to have no live session and no frozen candidate")
     args = ap.parse_args()
-    active = parse_active(args.active)
+    active = parse_issues(args.active, "--active") if args.active is not None else set()
+    inactive = parse_issues(args.inactive, "--inactive") if args.inactive is not None else set()
 
     fields = gh_json("project", "field-list", str(PROJECT), "--owner", OWNER, "--format", "json")["fields"]
     status = next(f for f in fields if f["name"] == "Status")
@@ -103,7 +103,7 @@ def main():
         return found
 
     open_ref, merged_ref = refs(open_prs), refs(merged)
-    validate_active(active, issues)
+    validate_evidence(active, inactive, issues)
     review, unverified = [], []
 
     for issue in sorted(issues, key=lambda i: i["number"]):
@@ -116,7 +116,7 @@ def main():
                 if args.apply:
                     gh("issue", "edit", str(n), "--repo", REPO, "--body-file", "-", data=UNTICKED.sub(r"\1[x]", body))
         else:
-            want, kept = desired_status(issue["state"], current, n in open_ref, n in (active or ()), active is not None)
+            want, kept = desired_status(issue["state"], current, n in open_ref, n in active, n in inactive)
             if kept:
                 unverified.append(n)
         if issue["state"] == "OPEN" and "epic" not in issue["title"].lower() and n in merged_ref and UNTICKED.search(body):
@@ -133,7 +133,7 @@ def main():
            "--field-id", status["id"], "--single-select-option-id", opt[want])
 
     if unverified:
-        print(f"activity unverified (kept In Progress, no open PR and no --active input): {unverified}")
+        print(f"activity unverified (kept In Progress: no open PR and no --active or --inactive evidence): {unverified}")
     print(f"review needed (merged PRs reference them, criteria unticked): {sorted(review)}")
 
 
