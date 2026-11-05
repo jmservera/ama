@@ -948,6 +948,8 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
             packages.append("agents")
         install(project, [*packages, project])
         python, cwd = py(project), f"src/{project}"
+        if project == "api":
+            add([python, "-m", "playwright", "install", "chromium"])
         parts = (
             shard_partition(root, project, shards[project]) if shards.get(project, 1) > 1 else None
         )
@@ -1807,6 +1809,9 @@ class Runner:
         self.metadata_cleanup()
         self.command([*pip, "check"])
 
+    def install_chromium(self) -> None:
+        self.command([self.python("api"), "-m", "playwright", "install", "chromium"], timeout=900)
+
     @contextlib.contextmanager
     def gate(self, name: str) -> Iterator[None]:
         self.group = name
@@ -2185,7 +2190,7 @@ class Runner:
                 "case_journey_browser_check",
             ):
                 self.lint(py, (f"checks/{name}.py",), "src/api")
-            self.command([py, "-m", "playwright", "install", "chromium"], timeout=900)
+            self.install_chromium()
             self.command(
                 [py, "-m", EMPLOYEE_ACCEPTANCE_BROWSER_MODULE],
                 "src/api",
@@ -2659,6 +2664,8 @@ class Runner:
                     list(PROJECTS) if name == "namespace" else [*packages, name],
                     dev=name != "namespace",
                 )
+                if name == "api" and group in remaining:
+                    self.install_chromium()
                 if group not in remaining:
                     self.groups.append(f"setup-{name}")
             if self.failures:
