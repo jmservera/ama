@@ -10556,3 +10556,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-04] update | Issue 92 status record (Refs #92)
 
 * Rechecked merged PRs 389, 900 and 1090: supplied four-state consultation records, a read-only letting and renewal gate and a held workflow entry are delivered. Both criteria stay unmet: no Legal-verified consultation status exists (authority stays Unverified), and no genuine let or renew transition exists for an unknown status to block (owner, Legal and Procurement decisions; provider package record dependency). Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-92 r3).
+
+## [2026-11-05] update | Issue 230 programme screens recheck (Refs #230)
+
+* Rechecked merged PRs 662, 781, 818, 854, 931, 969 and 1127: criteria 1, 2, 3 and 5 stay delivered as engineering evidence. Criterion 4 (WCAG 2.2, assistive-technology testing) stays unmet pending human review (#151, #155). No new code slice; nothing ticked or closed. Evidence under `.copilot-tracking/` (2026-11-05 issue-230 r7).
