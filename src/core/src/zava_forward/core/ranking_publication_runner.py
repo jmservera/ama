@@ -355,7 +355,7 @@ def run(
             _refusal(
                 "stage_not_removed",
                 f"The record is archived, but its temporary file {res['stage_retained']} could "
-                "not be removed. It is a hard-link alias of the record and must not be edited.",
+                "not be removed. It may share the archived record's bytes, so do not edit it.",
                 "Check the archive permissions, then remove that hidden file by hand.",
             )
         )

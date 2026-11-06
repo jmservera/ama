@@ -10,7 +10,9 @@ the loser reports it. That needs a local filesystem with hard links; a folder
 without them refuses to publish (OSError) and nothing is overwritten. The only
 file removed is the staging file this call created; if that removal fails after the
 record is committed, the result still reports the record and names the retained stage
-(stage_retained, a hard-link alias of the record that an operator removes). verify()
+(stage_retained). A stage kept by the writer that committed the record shares its
+bytes and inode, but a stage kept by a writer that lost the race was never linked and
+can differ, so an operator checks it before removing it. verify()
 re-hashes every archived snapshot so an edited or damaged record is reported. Nothing reads a
 clock: the publication date is an input. Retention period and the scheduler are
 not set here. The legal period is a Legal decision and the schedule is run by the
