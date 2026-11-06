@@ -3,8 +3,8 @@
   "task_slug": "coordinator-hve-high-simulation-r4-1204",
   "parent_task": {"task_id": "coordinator-hve-high-simulation-r3-1204", "task_slug": "coordinator-hve-high-simulation-r3-1204"},
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-06/coordinator-hve-high-simulation-r4-1204-research.md",
@@ -12,7 +12,7 @@
     "details": ".copilot-tracking/details/2026-11-06/coordinator-hve-high-simulation-r4-1204-details.md",
     "critique": ".copilot-tracking/plans/2026-11-06/coordinator-hve-high-simulation-r4-1204-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-06/coordinator-hve-high-simulation-r4-1204-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/2026-11-06/coordinator-hve-high-simulation-r4-1204-review.md"
   },
   "confirmed_decisions": [
     {"decision": "Research reused plus bounded scope decision for RV-004; critique executed once, 4 findings applied", "status": "recorded", "evidence": "research, details, critique"},
@@ -25,7 +25,7 @@
     {"id": "RUN8-F02", "summary": "H-06 non-canonical track/ paths; positive stack publication not exercised", "resolution": "canonical paths and rerun under coordinator admission"},
     {"id": "RUN8-F03", "summary": "Unsupplied fixture facts left behaviors unexercised", "resolution": "supply facts and rerun under coordinator admission"}
   ],
-  "next_action": {"phase": "Implement", "action": "Run focused checks, commit implementation, then separate author Review in a later turn"},
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independent exact-head assessment; choose corrected-fixture rerun, publication gate, or Stop"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Corrected fixture rerun for H-03F, H-06 and F-03 omissions", "rationale": "closes the only unmet coverage with no target change", "evidence": "report 009"}
   ]
