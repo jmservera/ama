@@ -416,6 +416,15 @@ assesses `feat/controlled-lifecycle-integration-81` `af891a5c` separately from
 the governance target and main, with a light core test observation (193 tests,
 exit 0, no SQL Server); local candidate pending coordinator consumption; no
 approval, closure or criterion tick is implied.
+For the ranking archive helper hard-link and staging-cleanup contract (#1231
+under #79), the
+[twelfth stabilization checkpoint](../architecture/cutover-evidence-pack.md#twelfth-stabilization-checkpoint-archive-helper-filesystem-contract-2026-11-06-refs-440-79-1231)
+records the unmerged candidate separately from the governance target and main,
+with a HOLD on #79 archive delivery and #73 expansion; no test was run, no
+filesystem is approved, and no approval, closure or criterion tick is implied.
+Correction 1 of that record reclassifies one evidence row and adds a
+document-qualified traceability table; the hard-link disposition stays blocked
+because the owner was unavailable.
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope
