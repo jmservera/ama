@@ -3,10 +3,10 @@ title: Issue 79 plan, corrective continuation r7
 ms.date: 2026-11-06
 ---
 
-* [ ] Phase 1 (tests first): add regression tests in `test_ranking_publication.py` (verify and publish) and `test_ranking_publication_runner.py` (schedule, publish, verify) for `"2026-11-31"` and malformed types (`null`, number, list, `"20261105"`, empty string); run them and record RED.
-* [ ] Phase 2 (smallest fix): `_valid_date` in `ranking_publication`; validate in `publish` before writing and in `verify` before trusting `published_on`; no runner change unless RED shows it is needed.
-* [ ] Phase 3: GREEN on the two ranking publication test files; Ruff `--no-cache`, Ruff format check, mypy with external caches.
-* [ ] Phase 4: changes record, dedicated Review, state file, one log entry, commit.
+* [x] Phase 1 (tests first): add regression tests in `test_ranking_publication.py` (verify and publish) and `test_ranking_publication_runner.py` (schedule, publish, verify) for `"2026-11-31"` and malformed types (`null`, number, list, `"20261105"`, empty string); run them and record RED.
+* [x] Phase 2 (smallest fix): `_valid_date` in `ranking_publication`; validate in `publish` before writing and in `verify` before trusting `published_on`; no runner change unless RED shows it is needed.
+* [x] Phase 3: GREEN on the two ranking publication test files; Ruff `--no-cache`, Ruff format check, mypy with external caches.
+* [x] Phase 4: changes record, dedicated Review, state file, one log entry, commit.
 
 Details: [details](../../details/2026-11-06/issue-79-r7-details.md). Research: [research](../../research/2026-11-06/issue-79-r7-research.md).
 
