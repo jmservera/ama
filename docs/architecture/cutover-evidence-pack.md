@@ -4296,3 +4296,192 @@ a shown `gh api user` resolution. Correction 1 corrects the disk and admission
 classification, replaces "paths not accessible" with "not inspected by this
 author", and fixes the pins heading. It re-fetched all three pins and found
 them unchanged. No defect, requirement or approval changed.
+
+## Fourteenth stabilization checkpoint: queue dispatch permit protocol (2026-11-06, Refs #440 #144 #107 #118 #122)
+
+Refs #440 (open), #144 (open), #107, #118 and #122. This is the fourteenth
+checkpoint, a new bounded documentation-only preimplementation checkpoint for
+the proposed #144 background-dispatch safeguards. It is not a runtime change,
+not a feature or acceptance claim and not a live enablement. Earlier
+checkpoints are historical and unchanged. Local candidate, not consumed by the
+coordinator and not approved for publication. The #144 code PR would belong
+under `feat/infra-hosting-integration-136`; this documentation child is based
+on the governance parent `feat/discovery-assurance-integration-123`.
+
+### Pins
+
+| Pin | Identity |
+| --- | --- |
+| Governance documentation target `feat/discovery-assurance-integration-123` | `119828353ccc1d678c1a4e9c1c67b621b0d263a0` (fetched 2026-11-06) |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` |
+| Code parent `feat/infra-hosting-integration-136` | Not observed: `git ls-remote` and `gh api` returned no branch (HTTP 404) on 2026-11-06. The brief says it points to main; that is supplied, not observed |
+| Candidate (read-only) `issue-144-queue-recovery` | HEAD `4c878d664853074e9dec49e57d5c89c4cc9bf3a2`, tree `978986c9374f6b1019136d121a4ee1f21be7941c`; merge base with main is main |
+
+Documents read at governance `119828353` (draft and in-review status is not
+approval): BRD 0.21.0 draft `34d88395de861e9799eb9e24121a21c92c7a5adc`;
+PRD 0.21.0 in-review `c788b917bafaede215f326f0efc71e071a687f1c`; ADR 0001
+Proposed `d42fa5c4615f4107cee83e07555dba6985c1f53e`; ADR 0002 Proposed
+`cbe21530043ff15432cc6dce1086d080f5eb15b4`; ADR 0003 accepted with owner
+amendment `d60645397b20fb70ac3d1dc47c7a6c8671201306`; ADR 0006 accepted
+`956da1a3b804c803041fe2e8a312bd9f400273ae`.
+
+### Main versus candidate
+
+A static `git grep` for symbols under `src` on each commit shows that the
+queue slice is candidate-only. The candidate differs from main by 12 `src`
+files, +1241/-18.
+
+| Symbol | Main `bb3a3b03` | Candidate `4c878d664` |
+| --- | --- | --- |
+| `WORKER_ROLE`, `_worker_complete`, `build_serve`, `publish_pending`, `ZF_ASSIST_QUEUE` | absent | present |
+| Ledger `Consumption.reserve`, `dispatch_check`, `complete`, `liability-unknown` | present | present |
+| `financial-meter-unavailable` hold in `Ai._request` | present | present |
+
+So the worker, its role and its single completion route are unmerged candidate
+code, not main behavior. Candidate-policy evidence is not merged-main
+acceptance, operational acceptance or approved requirements.
+
+### Trigger and owner decisions (supplied by the coordinator)
+
+The owner retained duplicate-dispatch and revocation safeguards for the demo
+and chose "include background processing and recovery; design and implement its
+safeguards first". This is code and design authority only. It is not a live
+grant, deployment, provider call, financial-policy waiver, price approval,
+production budget, operational enablement or final ADR acceptance, and the
+end state is not replaced by in-process only.
+
+The candidate's r8 record proposes an API-owned per-attempt dispatch permit,
+authoritative financial reservation and settlement, durable unknown-outcome
+reconciliation and no automatic re-inference of possibly dispatched work, with a
+second exact route for the Application-only AgentsWorker role. It is a draft,
+not an approved interface or implemented behavior. Existing High findings 1
+(composed worker reaches `financial-meter-unavailable`) and 2 (redelivery
+re-infers) stay open. No live unsafe call or new production bug is claimed.
+Coordinator-supplied r8 qualifications kept: its skill body was not loaded,
+its creation order was Research, Details, Plan, state, log, commit, three
+originals have no frontmatter, and "no network" is not literal because issue
+metadata was retrieved. The r8 raw log was not inspected by this author.
+
+### Traceability (document-qualified)
+
+| Requirement or decision | Source (candidate unless noted) | Status and limit |
+| --- | --- | --- |
+| PRD FR-061 (AI consumption economics; joins BRD FR-052, AC-102, AC-103, OD-51), verified by PRD AC-107, AC-108 | `ai_consumption.Consumption` ledger (main and candidate) | Draft documents; economics reporting not delivered here |
+| PRD NFR-017 (finite limits, hard termination, unknown liability degrades to workflow-only, human approval of live budgets; joins BRD NFR-012, AC-100, AC-101, OD-51), verified by PRD AC-109, AC-110 | `Consumption.reserve`, `dispatch_check`, `complete`; 40 s stale-liability window; `Ai._request` hold | AC-109 is the closest criterion and is "Not run" in the PRD; the permit protocol is a proposal that would serve it, not evidence of it |
+| BRD OD-51 and PRD OQ-027 (budgets, owners, price source) | None | Open; no budget, price or owner is invented; production budget deferred |
+| ADR 0001 (Proposed): `agents` app on the `agent-tasks` queue, agents identity without database | Candidate queue slice | Only Proposed support for a queue estate; no approval implied |
+| ADR 0002 (Proposed) Five-Assistant section: queue/agent estate "remains proposed" | In-process `Assistants.execute` | The candidate's cited "ADR 0002 decision 6" is the Dockerfile and CI item, not a dispatch decision, and is not repeated here |
+| ADR 0003 (accepted with amendment) decision 1: "No new service, queue, store or network path is added" for the journey capabilities | None | Tension with a background queue, recorded and not resolved; the owner decision above is not an ADR acceptance |
+| ADR 0006 (accepted) source layout | `src/core`, `src/api`, `src/agents` | Package boundary only; no dispatch contract |
+
+### Safeguard trace
+
+| Safeguard | Where | Status |
+| --- | --- | --- |
+| Service identity and role | `auth.service_caller` (Application-only, proxy flag, exact tenant, audience, oid, appid), one completion route `_worker_complete` | Candidate-only, implemented-unverified; the permit route is a draft |
+| Authoritative ledger and persistence | `Consumption` over the `Assistants` port (shared database and clock); `assistant_attempts` row `{task}:{fence}` | Ledger on main; queue attempts candidate |
+| Lease, fence, epoch, release, source checks | `claim` and `complete` re-validate; `execute` re-checks suspension, admission, epoch and release just before the provider thread | Present for in-process; the queue path has no equivalent pre-dispatch check (High finding 2) |
+| Unknown outcomes | `complete` returns timeout or provider-unavailable tasks to `pending`; `claim` re-claims an expired lease with a new fence | Current behavior can repeat a possibly dispatched call on the queue path; the draft reconciliation is not implemented |
+| Duplicate handling | `reserve` holds `duplicate-attempt`; draft compare-and-set `reserved -> permitted` | Ledger present; permit draft only |
+| Approval and manual paths | Manual and in-process execution unchanged; background work is proposal generation only | Preserved; no funding, consent, works or release authority |
+| Default-off activation | `ZF_ASSIST_QUEUE` unset means off (candidate, server lines 79-88) | Candidate-only; the worker stays held by `financial-meter-unavailable` |
+
+### Revocation windows (draft protocol)
+
+| Window | Physical call | Handling and limit |
+| --- | --- | --- |
+| Before a permit is issued | None | The same checks as in-process can deny with no spend |
+| Between permit and provider dispatch | Possible | Only a worker-side deadline can stop a late start; an issued permit cannot be recalled |
+| After dispatch | In flight | A late result can be rejected and settled; the call is not undone |
+| Lost permit response, lost ack, visibility expiry, restart | Unknown | Must be surfaced as unknown and not re-inferred; no exactly-once or perfect-revocation claim |
+
+### Design gaps (not code defects; no test exists)
+
+1. Transaction composition: `Assistants.transaction()` opens a new connection
+   with `BEGIN IMMEDIATE` per call, and `Consumption.reserve` and `complete`
+   each open their own. The draft names an optional `db` for `reserve` only;
+   `complete` needs the same, and atomic issue and settlement are unproven on
+   SQLite and SQL Server. The fallback order leaves an orphan-reservation
+   window that the 40 s stale-liability rule would turn into a budget-wide stop.
+2. Clocks: lease (default 60 s, range 10 to 120), provider timeout (default 20
+   s, range 1 to 40), the ledger's 40 s window and the permit deadline are not
+   bound to values. A 40 s timeout equals the window, so a legitimate late
+   settlement could be held as `liability-unknown`.
+3. Attempt state: the attempt `outcome` column is overwritten with the
+   envelope outcome at completion, and the line-1025 pending-retry for timeout
+   and provider-unavailable is not reconciled with the draft `permitted`,
+   `dispatching` and `unknown` states.
+4. Lost permit response: classed unknown although no call occurred, which
+   holds the budget with no clearing authority.
+5. Late or wrong-fence result: the draft settles by the stored meter id and
+   rejects the result; its interaction with the 40 s hold and with a settlement
+   of a real earlier call is not specified.
+6. Unknown liability: `complete` with no usage always records
+   `liability-unknown`, and `src/core` has no ledger clearing route (a `git
+   grep` for clear, reconcile and resolve functions found only unrelated
+   modules).
+7. Authority price and expiry: the draft reserves at permit time; treatment of
+   authority or price expiry between permit and call relies on `dispatch_check`
+   inside the worker path, which the draft meter makes local.
+
+### Open decisions (not approved here)
+
+* Role-code authority for a second exact AgentsWorker permit route; no live
+  grant is implied. The coordinator asks the owner separately.
+* The operator path that clears a budget-wide `liability-unknown` stop. No
+  Finance approver is named, no liability is forgiven, no usage is invented,
+  no budget is reset and no retry is silently enabled.
+* Alternative B (API-proxied inference) remains the smallest safer option if
+  the strictest revocation bound is needed; it changes hosting and identity
+  (#118).
+
+### Classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Pins, blobs, issue states (#440 and #144 open) | local observed | `git` and `gh`, 2026-11-06 |
+| Main lacks the queue slice; candidate has it | local observed | Static `git grep` on both commits; no code was run |
+| Static reading of ledger, `claim`, `complete`, server and auth anchors | local observed | Read-only; design gaps above are readings, not reproductions |
+| Parent 136 branch | unknown | 404 on the remote; brief statement supplied |
+| Queue slice behavior, worker route, default-off flag | implemented-unverified | Candidate only; no exact-head receipt for it in this checkpoint |
+| Permit, settlement, reconciliation protocol | deferred | Draft only; not implemented |
+| Candidate gate, tests and r8 raw log | unknown | Attribution: coordinator; the log was not inspected by this author |
+| Second route authority, operator clearing authority | blocked | Unassigned decisions; nothing approved |
+| Live, Azure, provider, SQL race, price and budget | blocked | Not run or supplied; synthetic and design only |
+
+### Findings, recommendation and gates
+
+No new defect is confirmed and none is reproduced. The seven design gaps and
+two open decisions are preimplementation items for #144, not duplicate issues.
+
+Recommendation: FIX, with #144 implementation held for the unresolved
+contract decisions. This is not an unconditional continue, not a feature or
+operational acceptance and not a pivot; the owner-approved background goal
+stays in force. Code readiness is separate from demo and operational
+acceptance. Bounded implementation could proceed independently of a later
+operational clearing workflow only under this invariant: no worker path calls
+the provider without an API-issued permit, no unknown outcome is
+automatically retried, and the ledger stays fail-closed on
+`liability-unknown`. That is a condition for the coordinator and owner, not an
+approval of a new authority.
+
+Resume conditions:
+
+* A corrected implementation-ready prospective #144 design that resolves the
+  gaps above.
+* A role-code authority decision on the second exact route.
+* A safe unknown-liability and operator disposition.
+* Coordinator consumption of this checkpoint after independent exact-head
+  assessment.
+* Original #144 tests-first implementation, then a new FULL gate and current
+  independent review before any publication or enablement.
+
+| Gate | Effect |
+| --- | --- |
+| #144 implementation and worker enablement | Held (FIX) |
+| #118 hosting and #122 continuity dependents | Dependent on the #144 contract; no change here |
+| #188, #79 and #1231, #80, #1204 | Independent; continue on their own prerequisites |
+| Whole #440 | Unchanged; criteria 7 and 8 and native HVE are not a Pass; no tick or closure |
+
+Process disclosure: research, plan and details were committed as `5233db299`
+before this edit. No test, SQL, browser, install, lock, cleanup, push or PR.

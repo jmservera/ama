@@ -10658,3 +10658,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Corrected the [thirteenth checkpoint](../architecture/cutover-evidence-pack.md#thirteenth-stabilization-checkpoint-finance-parent-history-export-2026-11-06-refs-440-96-93): observed disk is split from the coordinator-supplied heavy-resource admission, "paths not accessible" became "not inspected by this author" (the child receipt identity block was read: head `abeb022ba`, 205 commands), the pins heading was fixed, and the original creation order and check timing are qualified.
 * Local candidate pending coordinator consumption. Holds unchanged; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Fourteenth stabilization checkpoint: queue dispatch permit protocol (Refs #440 #144 #107 #118 #122)
+
+* Appended the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122) to the cutover evidence pack. It pins governance `119828353`, main `bb3a3b03` and the read-only candidate `4c878d664`, shows the queue slice is candidate-only, corrects the candidate's ADR 0002 anchor (ADR 0001 and 0002 are Proposed; ADR 0003 decision 1 tension recorded), and lists seven design gaps and two open decisions (second route authority, liability-unknown operator path).
+* Recommendation FIX with #144 implementation held; the owner-approved background goal stays in force. Local candidate pending coordinator consumption. No code or test ran; no approval, closure or tick. Earlier records are unchanged.

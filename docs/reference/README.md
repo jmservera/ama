@@ -431,6 +431,12 @@ records the finance source, governance target and main as separate pins with a
 HOLD on #93 and #96 closure; no test was run and no approval, closure or
 criterion tick is implied. Correction 1 splits the observed disk from the
 supplied admission and qualifies the original chronology.
+For the proposed #144 background-dispatch safeguards, the
+[fourteenth stabilization checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122)
+separates main from the unmerged candidate queue slice, corrects the
+candidate's ADR anchors, lists seven design gaps and two open decisions, and
+recommends FIX with #144 implementation held; no code ran and no approval,
+closure or tick is implied.
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope
