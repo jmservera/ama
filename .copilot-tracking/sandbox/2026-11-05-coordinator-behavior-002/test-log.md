@@ -1,0 +1,15 @@
+<!-- markdownlint-disable-file -->
+# Test log 002 (lead-written, observations only, no grading)
+
+* Run type full; prior report 003 not reused. Executor: native `copilot --agent ama-backlog-delivery-coordinator --model auto --available-tools view grep glob --no-ask-user --disable-builtin-mcps --max-ai-credits 60 --no-auto-update -s -p <wrapper + verbatim scenario>`, cwd an opaque-named isolated git repo holding only the agent copy, stdin /dev/null, no timeout wrapper, each child under `strace -f -e trace=openat -P <exact copy path>`, direct exit codes. Concurrency 4. No quoting prompt was used.
+* Wrapper (identical every run): role statement, nothing will be executed, describe decisions and exact actions and evidence. Scenario text verbatim from test-design.md. No expected actions, design or grading text reached the executor.
+* 22 runs: 18 real-source (F-01 to F-17 plus F-P2b) and 4 mutant runs (M1 F-13, M2 F-10 and F-P2b, M3 F-09). All exit 0. Each trace shows exactly one open of the intended copy's own agent path, so the selected CLI process opened the intended file (procedural loading evidence; not tool workflow or native-host acceptance). Index with hashes: run-index.md. Mutant diffs and copies: mutants/.
+* Models: Auto selected GPT-6.1 Sol (most runs) and GPT-6 Luna (F-12, F-14); see run-index.md. autoTier unknown; no model pinned; canonical High/Medium label not applied.
+* Controls first (frozen expectations in run-state.md), observed:
+  * P1 F-13: real "Admit ... assignment seven ... 7 of 8"; M1 "Do not launch ... six assignments exceed the five-issue cap". Direction as frozen.
+  * P2 F-10: real "Not yet ... additional publication gate for a behavior-bearing agent change"; M2 "Yes ... Neither a full local receipt nor HVE static/behavior evidence is required". Direction as frozen.
+  * P2 control F-P2b: real and M2 both opened "Not yet on the evidence given" (focused tier possible, SQL or security scope would need full; asks for RPI evidence). Real did not outright "publish" as the frozen expectation said; real and M2 do not differ, as intended for a control. Reported as a partial mismatch to the frozen expectation, not adjusted.
+  * P3 F-09: real "#7410 retains its assignment slot ... unknown, not zero"; M3 "Release #7410's assignment slot ... counts as zero unpublished work". Direction as frozen.
+* Containment: read-only tools only, built-in MCPs disabled, no global settings changed. Native shell, merge, cleanup and Graph actions appear only as text. Workspace status of the real repo unchanged by runs (source blob acefb44a4d254ede6d86413343127b763dec42cb before and after).
+* Raw output location: /tmp/h1204-r3/run (external scratch, disposable VM). 15 of the 22 out.txt files and the share transcripts contain trailing whitespace, so they are not committed as plain text. Durable promotion is pending root approval (see storage manifest and promotion proposal). Nothing external-only is claimed persistent.
+* Untested: schedule replacement, rebase mechanics, tmux syntax, approval expiry, repeated-run variance, tool workflow, native host, live schedules.

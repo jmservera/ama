@@ -1,0 +1,31 @@
+{
+  "task_id": "coordinator-native-fixture-route-1204",
+  "task_slug": "coordinator-native-fixture-route-1204",
+  "parent_task": {"task_id": "coordinator-exact68-replacement-1204", "task_slug": "coordinator-exact68-replacement-1204"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-06/coordinator-native-fixture-route-1204-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-06/coordinator-native-fixture-route-1204-plan.md",
+    "details": ".copilot-tracking/details/2026-11-06/coordinator-native-fixture-route-1204-details.md",
+    "critique": null,
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Planning only; native-fixture evaluation Deferred (Not available)", "status": "confirmed", "evidence": "root instruction 2026-11-06; no implementation, install, launch or grading"},
+    {"decision": "Prior grades not reusable for changed fidelity; full run required", "status": "confirmed", "evidence": "hve-builder-tester Flow step 3"},
+    {"decision": "Critique and Review not executed: planning-only record, no implementation", "status": "recorded", "evidence": "plan Phase 0 only"}
+  ],
+  "blockers": [
+    {"id": "B1", "summary": "No proof that --available-tools removes every non-fixture tool, that hooks cover all tools, or of model-call credential handling", "resolution": "separate root admission for Phase 1 enumeration after #185 releases heavy handoff"},
+    {"id": "B2", "summary": "Canonical tier mapping for Auto unresolved", "resolution": "owner or root decision or keep qualification"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Root decides whether to admit Phase 1 no-model tool-surface enumeration and fixture MCP review"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Phase 1 no-model tool-surface enumeration and fixture MCP definition review", "rationale": "cheapest proof of containment before any model spend", "evidence": "research gaps 1-4"},
+    {"rank": 2, "task": "Decide Auto canonical-tier mapping or accept qualification", "rationale": "removes a standing profile caveat", "evidence": "report 005 profile note"}
+  ]
+}
