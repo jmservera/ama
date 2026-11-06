@@ -8,8 +8,10 @@ named file in the same folder and links it to the record name, which fails if th
 record exists, so concurrent writers of one snapshot keep exactly one record and
 the loser reports it. That needs a local filesystem with hard links; a folder
 without them refuses to publish (OSError) and nothing is overwritten. The only
-file removed is the staging file this call created. verify() re-hashes every
-archived snapshot so an edited or damaged record is reported. Nothing reads a
+file removed is the staging file this call created; if that removal fails after the
+record is committed, the result still reports the record and names the retained stage
+(stage_retained, a hard-link alias of the record that an operator removes). verify()
+re-hashes every archived snapshot so an edited or damaged record is reported. Nothing reads a
 clock: the publication date is an input. Retention period and the scheduler are
 not set here. The legal period is a Legal decision and the schedule is run by the
 deployment; SCHEDULE states the contract the deployment is expected to meet.
@@ -41,6 +43,10 @@ Path = str | os.PathLike[str]
 
 class PublicationError(Exception):
     """A snapshot cannot be published, or an archived record does not verify."""
+
+
+class ArchiveStorageError(Exception):
+    """The archive location cannot take a record (for example no hard-link support)."""
 
 
 def _valid_date(value: Any) -> bool:
@@ -91,11 +97,27 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
             f.write(text)
         try:
             os.link(stage, path)
+            outcome = {"path": path, "written": True, "published_on": published_on}
         except FileExistsError:
-            return _existing(path)
-    finally:
+            outcome = _existing(path)
+    except BaseException as e:
+        if _remove(stage):
+            e.add_note(f"Staging file {os.path.basename(stage)} could not be removed.")
+        raise
+    if _remove(stage):
+        outcome["stage_retained"] = os.path.basename(stage)
+    return outcome
+
+
+def _remove(stage: str) -> bool:
+    """Remove this call's own staging file. True when it could not be removed and remains."""
+    try:
         os.unlink(stage)
-    return {"path": path, "written": True, "published_on": published_on}
+    except FileNotFoundError:
+        return False
+    except OSError:
+        return True
+    return False
 
 
 def _names(archive_dir: Path) -> list[str]:

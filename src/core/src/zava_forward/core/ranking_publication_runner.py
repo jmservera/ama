@@ -349,6 +349,16 @@ def run(
         refusals.append(_refusal("publish_failed", str(e), "Check the archive location and rerun."))
         return out
     out.update(path=res["path"], written=res["written"], published_on=res["published_on"])
+    if res.get("stage_retained"):
+        out["stage_retained"] = res["stage_retained"]
+        out["warnings"].append(
+            _refusal(
+                "stage_not_removed",
+                f"The record is archived, but its temporary file {res['stage_retained']} could "
+                "not be removed. It is a hard-link alias of the record and must not be edited.",
+                "Check the archive permissions, then remove that hidden file by hand.",
+            )
+        )
     out["status"] = "published" if res["written"] else "already_published"
     return out
 

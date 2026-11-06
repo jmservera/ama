@@ -283,6 +283,75 @@ class ConcurrentWriterTests(unittest.TestCase):
         self.assertEqual(rp.verify(self.dir)["count"], 0)
         self.assertTrue(rp.publish(snap(), self.dir, "2026-10-10")["written"])
 
+    def failing_unlink(self, error: OSError) -> Any:
+        real = os.unlink
+
+        def unlink(path: Any, *args: Any, **kwargs: Any) -> None:
+            if os.path.basename(path).startswith(".ranking-"):
+                raise error
+            real(path, *args, **kwargs)
+
+        return patch.object(os, "unlink", side_effect=unlink)
+
+    def test_cleanup_failure_after_commit_keeps_the_committed_outcome(self):
+        with self.failing_unlink(OSError(errno.EROFS, "read-only")):
+            res = rp.publish(snap(), self.dir, "2026-10-10")
+        path, data = self.record()
+        (stage,) = [p for p in self.dir.iterdir() if p.name.endswith(".tmp")]
+        self.assertEqual(
+            res,
+            dict(
+                path=str(path),
+                written=True,
+                published_on="2026-10-10",
+                stage_retained=stage.name,
+            ),
+        )
+        self.assertEqual(stage.read_bytes(), data)
+        self.assertEqual(rp.verify(self.dir), dict(count=1, problems=[], latest="2026-10-10"))
+        self.assertEqual(rp.publish(snap(), self.dir, "2026-10-11")["written"], False)
+
+    def test_cleanup_failure_for_the_loser_returns_the_winner_record(self):
+        with gated("B") as gate:
+            gate.start("B", lambda: rp.publish(snap(), self.dir, "2026-10-11"))
+            self.assertTrue(gate.arrived["B"].wait(DEADLINE))
+            first = rp.publish(snap(), self.dir, "2026-10-10")
+            _, before = self.record()
+            with self.failing_unlink(OSError(errno.EROFS, "read-only")):
+                gate.release("B")
+                gate.join()
+        late = gate.results["B"]
+        self.assertTrue(first["written"])
+        self.assertIsInstance(late, dict)
+        self.assertEqual((late["written"], late["published_on"]), (False, "2026-10-10"))
+        self.assertTrue(late["stage_retained"].endswith(".tmp"))
+        self.assertEqual(self.record()[1], before)
+
+    def test_cleanup_failure_does_not_mask_the_link_failure(self):
+        refused = OSError(errno.EPERM, "hard links are not supported")
+        with (
+            patch.object(os, "link", side_effect=refused),
+            self.failing_unlink(OSError(errno.EROFS, "read-only")),
+            self.assertRaises(OSError) as ctx,
+        ):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(ctx.exception.errno, errno.EPERM)
+        self.assertEqual(len(ctx.exception.__notes__), 1)
+        self.assertEqual(rp.verify(self.dir)["count"], 0)
+
+    def test_stage_already_gone_after_commit_reports_nothing_retained(self):
+        real_link, real_unlink = os.link, os.unlink
+
+        def link_then_lose_stage(src: Any, dst: Any) -> None:
+            real_link(src, dst)
+            real_unlink(src)
+
+        with patch.object(os, "link", side_effect=link_then_lose_stage):
+            res = rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual((res["written"], res["published_on"]), (True, "2026-10-10"))
+        self.assertNotIn("stage_retained", res)
+        self.assertEqual([p.name for p in self.dir.iterdir()], [Path(res["path"]).name])
+
     def test_sequential_bytes_and_name_are_unchanged(self):
         first = rp.publish(snap(), self.dir, "2026-10-10")
         expected = rp._canonical({"published_on": "2026-10-10", "snapshot": snap()})

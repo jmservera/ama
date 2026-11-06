@@ -32,6 +32,7 @@ from zava_forward.agents import regulatory_chat
 from zava_forward.core.source_monitor import dated_card
 from zava_forward.core.chatthreads import ChatNotFound
 from zava_forward.core.documents import DocumentStoreError
+from zava_forward.core.ranking_publication import ArchiveStorageError
 from zava_forward.core.factory import open_store
 from zava_forward.api.timecapture import TimeCapture
 from zava_forward.api.static_assets import StaticAssets
@@ -1364,6 +1365,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(503, {"error": str(e), "outcome": "committed"})
             except DocumentStoreError:
                 return self._json(502, {"error": "The document store is not available. Try again shortly."})
+            except ArchiveStorageError as e:
+                return self._json(503, {"error": str(e)})
             except ConflictError:
                 if url.path in ("/api/bulk-edits/preview", "/api/bulk-edits/apply"):
                     return self._json(409, {"error": "Preview blocked, changed or already used. Request a fresh preview before applying."})

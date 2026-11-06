@@ -205,6 +205,24 @@ class ConcurrentPublishTests(RunnerBase):
         again = self.go("publish", cases=open_cases(), as_of=AS_OF)
         self.assertEqual((again["status"], again["written"]), ("published", True))
 
+    def test_stage_cleanup_failure_after_commit_is_published_with_a_warning(self) -> None:
+        real = os.unlink
+
+        def unlink(path: Any, *args: Any, **kwargs: Any) -> None:
+            if os.path.basename(path).startswith(".ranking-"):
+                raise OSError(errno.EROFS, "read-only")
+            real(path, *args, **kwargs)
+
+        with patch.object(os, "unlink", side_effect=unlink):
+            res = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((res["status"], res["written"], res["refusals"]), ("published", True, []))
+        (record,) = [p for p in self.archive.iterdir() if p.name.startswith("ranking-")]
+        self.assertEqual(res["path"], str(record))
+        self.assertEqual(json.loads(record.read_text())["published_on"], TODAY)
+        self.assertEqual([w["code"] for w in res["warnings"]], ["stage_not_removed"])
+        self.assertIn(res["stage_retained"], [p.name for p in self.archive.iterdir()])
+        self.assertEqual(self.go("verify")["problems"], [])
+
 
 class ScheduleAndVerifyTests(RunnerBase):
     def test_schedule_reports_window_due_and_next_window_without_writing(self) -> None:

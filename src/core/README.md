@@ -17,7 +17,11 @@ registry; `overdue` reports a missing or stale publication. Concurrent writers o
 one snapshot keep exactly one record: each stages its own uniquely named file and
 links it to the record name without overwriting, and the loser reports the
 retained record and date. This needs a local filesystem with hard links; a folder
-without them refuses to publish. No clock is read: dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
+without them refuses to publish; the manager route then answers 503 with a storage
+message, not 403, and writes no record or audit entry. If the record is committed but
+its staging file cannot be removed, the result still reports the record and the
+retained file (`stage_retained`, runner warning `stage_not_removed`, a `warning` in the
+manual response); an operator removes it. No clock is read: dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
 
 Wiring (slice 2): `Store.publish_ranking_snapshot` (API `POST /api/ranking/publish`)
 archives today's snapshot under the current policy into `ranking-archive/` beside
