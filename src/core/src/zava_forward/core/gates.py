@@ -280,3 +280,40 @@ def quality_gate(gaps: Iterable[str] | None, owner: str, on: str | None = None) 
         reason = f"Checks without evidence: {'; '.join(items)}."
         return GateResult(result.gate, FAIL, reason, owner, result.correction, result.rule)
     return result
+
+
+CAPACITY_RULE = GateRule(
+    gate="capacity",
+    source=(
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-008 (governing) and FR-016; "
+        "evidenced committed capacity in procurement (exercise fixture)"
+    ),
+    effective_date="2026-11-06",
+    version="1",
+    reviewer=_UNREVIEWED,
+)
+
+
+def capacity_gate(state: bool | None, reason: str, on: str | None = None) -> GateResult:
+    """True passes, False is a known violation, None is missing or unreadable evidence."""
+    owner = "Contract Manager"
+    correction = "Ask the contract manager to record current evidenced capacity."
+    if state is True:
+        return check(
+            CAPACITY_RULE,
+            True,
+            owner=owner,
+            correction=correction,
+            label="Evidenced capacity",
+            on=on,
+        )
+    return _result(CAPACITY_RULE, UNKNOWN if state is None else FAIL, reason, owner, correction)
+
+
+class CapacityGateError(ValueError):
+    """A capacity refusal that keeps its ValueError text and carries the gate result."""
+
+    def __init__(self, message: str, state: bool | None) -> None:
+        super().__init__(message)
+        self.state = state
+        self.result = capacity_gate(state, message)

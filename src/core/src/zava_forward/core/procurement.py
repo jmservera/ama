@@ -18,7 +18,7 @@ from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
 
-from . import controls, job_pack, projection
+from . import controls, gates, job_pack, projection
 from .appointments import AppointmentCommittedError, AppointmentMixin
 from .change_provenance import _actor
 from .documents import DocumentStoreError
@@ -230,33 +230,36 @@ class ProcurementMixin(AppointmentMixin):
         cap = p["capacity"].get(contractor)
         if (not cap or type(cap.get("committed")) is not int or cap["committed"] <= 0
                 or not isinstance(cap.get("evidence"), str) or not cap["evidence"].strip()):
-            raise ValueError("No evidenced committed capacity. Ask the contract manager to record current evidence.")
+            raise gates.CapacityGateError("No evidenced committed capacity. Ask the contract manager to record current evidence.", None)
         details = cap.get("details")
         if not isinstance(details, dict):
-            raise ValueError("Legacy capacity is unverified. Ask the contract manager to record current evidence.")
+            raise gates.CapacityGateError("Legacy capacity is unverified. Ask the contract manager to record current evidence.", None)
         supplied = {k: details.get(k) for k in ("source_case_id", "document_id", "source_version", "source_date", "reviewed_on",
                                                "valid_from", "valid_to", "unit", "case_ids", "status")}
-        checked = self._capacity_details(p, contractor, supplied)
+        try:
+            checked = self._capacity_details(p, contractor, supplied)
+        except ValueError as error:
+            raise gates.CapacityGateError(str(error), None) from error
         if (checked["content_sha256"] != details.get("content_sha256") or cap.get("scope_version") != p["scope_version"]
                 or cap.get("contract_version") != p.get("contract_version") or cid not in details["case_ids"]):
-            raise ValueError("Capacity source, scope, contract or covered home changed. Ask the contract manager to record a new commitment version.")
+            raise gates.CapacityGateError("Capacity source, scope, contract or covered home changed. Ask the contract manager to record a new commitment version.", None)
         accepting = self.staff.get(cap.get("accepted_by", ""))
         if hasattr(self, "db"):
             row = self.db.execute("SELECT body FROM staff WHERE email=?", (cap.get("accepted_by"),)).fetchone()
             accepting = json.loads(row[0]) if row else None
         if not accepting or accepting.get("role") not in MANAGER_ROLES:
-            raise ValueError("Capacity acceptance no longer has a named authorized manager.")
+            raise gates.CapacityGateError("Capacity acceptance no longer has a named authorized manager.", None)
         authority = self._contract_authority(accepting, p, "capacity", contractor)
         if authority != cap.get("authority"):
-            raise ValueError("Capacity acceptance authority changed. Ask the contract manager to review it again.")
+            raise gates.CapacityGateError("Capacity acceptance authority changed. Ask the contract manager to review it again.", None)
         context = getattr(self, "_proc_context", None)
         if context is not None:
             context["authorities"].append((deepcopy(accepting), deepcopy(p), "capacity", contractor, authority))
         when = when or _today()
         if not details["valid_from"] <= when <= details["valid_to"]:
-            raise ValueError("The work date is outside the evidenced capacity period. Ask the contract manager to confirm covered dates.")
+            raise gates.CapacityGateError("The work date is outside the evidenced capacity period. Ask the contract manager to confirm covered dates.", False)
         if self._committed_used(p, contractor) > cap["committed"]:
-            raise ValueError("Committed capacity is below existing orders. The contract manager must resolve the deficit before more work is confirmed.")
+            raise gates.CapacityGateError("Committed capacity is below existing orders. The contract manager must resolve the deficit before more work is confirmed.", False)
         return cap
 
     def _package(self, pid):
@@ -654,3 +657,7 @@ class ProcurementMixin(AppointmentMixin):
             self._resident_work_order_clear(w)
         finally:
             self._proc_context = None
+        result = gates.capacity_gate(True, "Evidenced capacity: met.")
+        if not result.passed:
+            raise gates.CapacityGateError(result.reason, None)
+        return result

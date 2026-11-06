@@ -9,6 +9,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import dataset
+from zava_forward.core import gates
 from zava_forward.core.quality import CHECKLISTS, checklist_for
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import Store
@@ -654,6 +655,53 @@ class Flows:
     def test_advance_without_evidenced_booked_order_is_refused(self):
         with self.assertRaises(ValueError):
             self.store.advance(PAM, "ZF-3")
+
+    def booked_case(self):
+        pid = self.package()
+        wid = self.store.issue_work_order(
+            PAM, pid, "ZF-3", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
+        self.book(wid)
+        return pid
+
+    def refused_capacity(self, pid, **change):
+        with self.store.lock:
+            self.store._package(pid)["capacity"]["Test Ltd"]["details"].update(change)
+            self.store.save()
+        self.store = self.reopen()
+        before = copy.deepcopy((self.store.cases["ZF-3"], self.store.data["procurement"]))
+        audit = list(self.store.audit_entries())
+        with self.assertRaises(gates.CapacityGateError) as ctx:
+            self.store.advance(PAM, "ZF-3")
+        self.assertIsInstance(ctx.exception, ValueError)
+        self.assertEqual(
+            copy.deepcopy((self.store.cases["ZF-3"], self.store.data["procurement"])), before
+        )
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        return ctx.exception
+
+    def test_booking_capacity_pass_carries_unreviewed_rule_provenance(self):
+        self.booked_case()
+        result = self.store.require_booked_capacity(self.store.cases["ZF-3"])
+        self.assertEqual((result.gate, result.outcome), ("capacity", gates.PASS))
+        rule = result.as_record()["rule"]
+        self.assertIn("FR-008", rule["source"])
+        self.assertIn("Unreviewed", rule["reviewer"])
+        self.store.advance(PAM, "ZF-3")
+        self.assertEqual(self.store.cases["ZF-3"]["stage"], "Install booked")
+
+    def test_booking_capacity_known_violation_is_fail_and_changes_nothing(self):
+        pid = self.booked_case()
+        error = self.refused_capacity(pid, valid_to="2098-12-31")
+        self.assertEqual(error.result.outcome, gates.FAIL)
+        self.assertIn("outside the evidenced capacity period", str(error))
+        self.assertIn("Appointment is not committed", str(error))
+
+    def test_booking_capacity_unreadable_evidence_is_unknown_and_changes_nothing(self):
+        pid = self.booked_case()
+        error = self.refused_capacity(pid, source_version="missing")
+        self.assertEqual(error.result.outcome, gates.UNKNOWN)
+        self.assertIn("unverified", str(error))
 
     def test_evidence_matrix_fails_closed_without_success_events(self):
         pid = self.package()
