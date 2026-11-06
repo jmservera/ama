@@ -54,9 +54,9 @@ Add one compact Seventeenth stabilization checkpoint to the append-only cutover 
 
 ## Phase Checklist
 
-* [ ] P1 Re-read pack headings and pin identities; draft and append the pack section
-* [ ] P2 Append the README sentence and the log entry
-* [ ] P3 Focused checks, Changes record and state
+* [x] P1 Re-read pack headings and pin identities; draft and append the pack section
+* [x] P2 Append the README sentence and the log entry
+* [x] P3 Focused checks, Changes record and state
 * [ ] P4 Author Review in a later turn, final state, commit and freeze
 
 <!-- P1 -->

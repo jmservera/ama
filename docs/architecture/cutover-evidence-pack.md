@@ -4730,3 +4730,147 @@ no time claim of its own beyond those boundaries.
   independent and unapproved R10 design correction, and FIX with #144
   implementation held are unchanged. Both owner code decisions (comments
   `6681120797` and `6685915140`) stay resolved and are not reopened.
+
+## Seventeenth stabilization checkpoint: queue dispatch R10 design (2026-11-06, Refs #440 #144 #107 #118 #122)
+
+Refs #440 (open), #144 (open), #107, #118 and #122. This is a new bounded
+documentation-only checkpoint that records the finished #144 R10 dispatch
+protocol design as an unapproved DRAFT proposal and gives this author's own read
+assessment of it. It is design and source observation only: no test, SQL,
+browser, container, scanner or provider call, no source change and no
+enablement. Earlier checkpoints and RPI records are historical and unchanged.
+The draft design, this checkpoint and its recommendation are not approved by
+any owner, role or ADR. Local candidate, pending coordinator consumption.
+
+Evidence labels used below: Proposed (a draft design contract, not behavior);
+Approved, code-role only (an owner code decision, not a live grant, spend,
+deployment, financial waiver or ADR acceptance); Observed (a git or read-only
+check recorded in the Changes record); Implemented-unverified (candidate code
+read but not run); Unobserved (needs a real SQL, Azure or provider run);
+Deferred. Times in this section are per the coordinator's assessment, not
+independently observed, unless the Changes record captures them.
+
+### R10 pins and topology
+
+| Pin | Identity |
+| --- | --- |
+| Governance documentation target `feat/discovery-assurance-integration-123` | `119828353ccc1d678c1a4e9c1c67b621b0d263a0` (fetched; this checkpoint does not move it) |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` |
+| R10 design commit (`issue-144-queue-recovery`, read from pinned objects) | `1e19209985d93e053dd449e873e792f214dd110c`, tree `7c6126374cbd6e5f5c2e62479cbee1dea98d75e3` |
+| R10 design file | `.copilot-tracking/design/2026-11-06/issue-144-r10-dispatch-protocol-design.md`, blob `de776799aafc925c372c6c1c85e0c72ecc75b389`, 15360 bytes (re-resolved by `git rev-parse` and `git cat-file -s`) |
+| Design source pin (R10 planning commit) | `3b1f51849d4108581fcbe7fc5059ce61fb448c80`, parent `323abba2e6f392e54c4ac27b427e00d05a3e6782` (the R9 design); merge base with main is main `bb3a3b03`; `src` differs from main by 12 files, +1241/-18 (the unmerged queue slice) |
+| `feat/infra-hosting-integration-136` | Local ref `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` whose reflog reads "branch: Created from origin/main"; `git ls-remote --heads origin` returned no branch, `git fetch` of it failed ("couldn't find remote ref") and `gh pr list --state all --head` returned `[]` |
+
+Topology reading. The earlier claim that a parent 136 points to main is
+historical (fourteenth checkpoint). As observed when checked, a local label at
+main exists and no published branch or PR exists. That is neither a published
+parent, ancestry, authorization nor approval; no branch is created, retargeted,
+rebased or published here. The eventual code parent is UNKNOWN until deliberately
+resolved before any publication, and main `bb3a3b03` is the only verified pin.
+This differs from the supplied brief (no local or remote ref) for the local ref
+only; the remote and PR absence match it.
+
+Documents at governance, main and this child (identical blobs; draft or
+in-review status is not approval): BRD 0.21.0 draft
+`34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD 0.21.0 in-review
+`c788b917bafaede215f326f0efc71e071a687f1c`; ADR 0001 Proposed
+`d42fa5c4615f4107cee83e07555dba6985c1f53e`; ADR 0002 Proposed
+`cbe21530043ff15432cc6dce1086d080f5eb15b4`; ADR 0003 accepted with owner
+amendment `d60645397b20fb70ac3d1dc47c7a6c8671201306`; ADR 0006 accepted
+`956da1a3b804c803041fe2e8a312bd9f400273ae`.
+
+### R10 source facts, merged versus candidate-only
+
+| Fact cited by the design | On main `bb3a3b03` | In the 144 candidate source | Class |
+| --- | --- | --- | --- |
+| Strict ledger `EVENT_FIELDS` and `meter-evidence-invalid` reader | Present | Present | Observed by static read; not run |
+| `FINANCE_ROLES` tuple and `require_role` | Present | Present | Observed by static read |
+| `Assistants.transaction()` SERIALIZABLE on SQL Server and BEGIN IMMEDIATE on SQLite | Present | Present | Observed by static read; real SQL races unobserved |
+| Queue adapter (`MAX_DELIVERIES` 5, `visibilitytimeout`, `release` at 0), worker, `_worker_complete` route, service-caller wiring | Absent | Present | Implemented-unverified, unmerged |
+
+The design's "established code facts" therefore mix merged code with unmerged
+candidate code. Candidate-only code is not main behavior and not acceptance.
+
+### R10 contracts (all Proposed, DRAFT)
+
+The final design supersedes the preliminary R10 Research, Plan and Details where
+they differ (for example the optional digest method and the strict `reconciled`
+field set). Each of the 14 critique findings (PC-001 to PC-014) has a stated
+proposed contract; that is design coverage, not behavioral closure.
+
+| Part | Proposed contract | Owner |
+| --- | --- | --- |
+| A | API recomputes the exact request with a shared `request_plan` before any reservation; optional final-bytes `dispatch_check_request` leaves one-argument meters unchanged | #144, #107 |
+| B | Durable `queued` provenance and a never-overwritten `permitted` marker; derived states unused, permitted, unknown, settled; marker blocks reclaim, republish and retry | #144 |
+| C | One `issue_permit` transaction, task row first, DB time re-read, explicit rollback or committed denial per branch, `closed-without-permit` ordering | #144, #118 |
+| D | Marker-bound settlement first; `conflict_key` dedupe; held null amounts counted as reserved | #107 |
+| E | Strict `reconciled` ledger kind, one `_settled` helper with report cutoff, Finance reconcile route using the unchanged role tuple, `ZF_AI_RECONCILE` default off, ledger event as the audit of record | #107, #144 |
+| F | Monotonic worker timing, 35 s nominal inside the 40 s window, lease at least 45 s and visibility equal to the lease, backoff, poison and authentication hold | #118, #144 |
+| G | Race and failure matrix | #144 |
+| H | Owner map and surface change: worker permit route and Finance reconcile route; no Bicep, role, manifest or table change | #107, #144, #118, #122 |
+
+Owner code decisions (Approved, code-role only, resolved, not reopened): the
+second exact permit route for the Application-only worker (issue 144 comment
+`6681120797`) and audited Finance-role reconciliation of unknown AI usage from
+provider evidence (comment `6685915140`). Unknown amounts stay reserved;
+budget, consent, revocation, manual-path and default-off controls are
+preserved. No invented usage, reset, bypass or automatic repeat, no live grant,
+spend, deployment, financial waiver or ADR acceptance, and no new role grant.
+
+### R10 trace (document-qualified)
+
+| Requirement or decision | Design part | Status and limit |
+| --- | --- | --- |
+| PRD FR-061 (joins BRD FR-052, AC-102, AC-103, OD-51), PRD AC-107, AC-108 | A, D, E (ledger, price, reporting) | Draft documents; economics reporting not delivered here |
+| PRD NFR-017 (joins BRD NFR-012, AC-100, AC-101, OD-51), PRD AC-109, AC-110 | A to F (finite limits, hard termination, unknown liability reserved, human approval of live budgets) | AC-109 is the closest criterion and is "Not run" in the PRD; the proposal would serve it and is not evidence of it |
+| BRD OD-51, PRD OQ-027 (budgets, owners, price) | None | Open; nothing invented |
+| ADR 0001 and ADR 0002 (Proposed) | Queue and agent estate | Only Proposed support; no approval implied |
+| ADR 0003 (accepted with owner amendment) decision 1: no new service, queue, store or network path for the journey capabilities | Queue path | Tension recorded in the fourteenth checkpoint, still unresolved; the owner code decisions are not an ADR change |
+| ADR 0006 (accepted) | `src/core`, `src/api`, `src/agents` boundary | Package boundary only |
+
+The design's own closing citation of "ADR 0002 decision 6, PRD PR-005 and
+NFR-002" is not carried forward. In the documents at these pins ADR 0002
+"decision 6" is the Dockerfile and CI item and PRD PR-005 is the whole-stock
+(about 60,000 homes) paging requirement; neither concerns dispatch or AI
+consumption. The fourteenth checkpoint already flagged the ADR 0002 item.
+
+### R10 findings, recommendation and gates
+
+Independent assessment (read of the whole design, its critique and Review, plus
+static greps; no run). It agrees with the coordinator's conclusion that no new
+blocking design flaw is established, with two additions above: the document
+trace mis-citation (documentation only, non-blocking) and the local 136 ref
+observation. No new runtime defect is established by this documentation
+checkpoint. That does not remove or disprove the original two High runtime
+findings, which stay OPEN, nor the R9 Revise history; the issue 144 acceptance
+criteria stay unproven.
+
+Residual risks, owners and classes:
+
+* Provider evidence for `unused` reconciliation is free text that code cannot
+  verify; conclusive Finance-owned evidence is Unobserved (U4, Finance, #107).
+* Real SQL Server races and deadlocks for `issue_permit` are Unobserved (U6, #144).
+* Azure delayed visibility, `DequeueCount` poison behavior and the 5 s timing
+  margin are Unobserved (U3, #118).
+* Equality of API and worker Foundry settings when hosted is Unobserved (U7, #118).
+* The marker binds only workers that use the permit route.
+* The lease, visibility and startup validation contract is Proposed and absent
+  from the candidate source.
+
+Classification: local read and git topology observations (Observed);
+candidate queue and worker code (Implemented-unverified); R10 contracts
+(Proposed); U3, U4, U6, U7 (Unobserved); production budget and real
+provider evidence (Deferred). Nothing is Azure observed or blocked for this
+slice.
+
+Recommendation: CONTINUE, a bounded tests-first runtime correction, only after the
+coordinator consumes this checkpoint, run as an independent genuine full RPI.
+HOLD worker enablement, spend, live acceptance, main integration and whole
+issue closure; FIX stays the status for 144 implementation until then.
+
+Gates before any publication of that code: FULL local gate, real SQL
+Server evidence, independent exact-head review and hosted CI. Resume
+conditions: coordinator consumption, a deliberate decision on the code parent
+(topology above), and the owners above for the Unobserved items. Independent
+lanes (79, 80, 1231, HVE work) continue. No push, pull request, issue or board
+write, tick or closure is made by this checkpoint, and no approval is implied.

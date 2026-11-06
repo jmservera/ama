@@ -10684,3 +10684,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added a dated qualification to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#provenance-qualifications-2026-11-06-post-integration-correction-1): the batch "13:50Z" and "observed 13:55Z" labels were not observations then (the focused checks ran 13:49:06.882 to 13:49:07.721 per native tool boundaries), and "no runtime defect is confirmed" means no new runtime defect by this checkpoint, not that the original two High findings are removed.
 * R9 Revise, R10 pending and independent, the two resolved code decisions and FIX are unchanged. Local candidate pending coordinator reassessment; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Seventeenth checkpoint, #144 R10 dispatch design (Refs #440 #144)
+
+* Added the [seventeenth checkpoint](../architecture/cutover-evidence-pack.md#seventeenth-stabilization-checkpoint-queue-dispatch-r10-design-2026-11-06-refs-440-144-107-118-122) recording the #144 R10 design (`1e19209985d9`, blob `de776799`) as an unapproved DRAFT proposal with an independent read assessment, a merged-versus-candidate source split, document-qualified trace (PRD FR-061, NFR-017; BRD FR-052, NFR-012, OD-51; ADR 0001 to 0003, 0006) and owners 107, 144, 118 and 122.
+* Observed: a local `feat/infra-hosting-integration-136` label at main `bb3a3b03` with no remote branch or PR; the eventual code parent is unknown. The design's PR-005 and ADR 0002 decision 6 citations are not carried forward. No new runtime defect is established; the original two High findings stay open. Recommendation CONTINUE after coordinator consumption, with FULL, real SQL, independent exact-head review and hosted CI before publication; HOLD enablement, spend, live acceptance and closure.
+* Local candidate pending coordinator reassessment; no approval, closure or tick. Earlier records are unchanged.

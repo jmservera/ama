@@ -455,6 +455,14 @@ parent `9476dc96` statuses with source-qualified historical child receipts;
 neither is a receipt for the parent, main acceptance or an approval.
 A later [provenance qualification](../architecture/cutover-evidence-pack.md#provenance-qualifications-2026-11-06-post-integration-correction-1)
 corrects the batch time labels and the scope of "no runtime defect".
+
+The [seventeenth stabilization checkpoint](../architecture/cutover-evidence-pack.md#seventeenth-stabilization-checkpoint-queue-dispatch-r10-design-2026-11-06-refs-440-144-107-118-122)
+records the finished #144 R10 dispatch design (`1e199209`) as an unapproved
+DRAFT proposal with an independent read assessment, the observed topology of
+`feat/infra-hosting-integration-136` (local label at main `bb3a3b03`, no remote
+branch or pull request) and a CONTINUE-after-acceptance recommendation. It is
+not an approval, a runtime result or a closure.
+
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope
