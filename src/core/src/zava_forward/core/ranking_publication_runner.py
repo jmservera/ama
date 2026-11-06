@@ -79,6 +79,20 @@ def _free_bytes(archive_dir: Path) -> int:
     return shutil.disk_usage(probe).free if os.access(probe, os.W_OK) else 0
 
 
+def _verify(archive_dir: Path, reg: Mapping[str, Any]) -> dict[str, Any]:
+    """Verify the archive; an unreadable directory is a problem, never an empty archive."""
+    try:
+        return ranking_publication.verify(archive_dir, reg)
+    except OSError as e:
+        reason = e.strerror or str(e)
+        return {
+            "count": 0,
+            "latest": None,
+            "unreadable": True,
+            "problems": [f"The archive cannot be read: {type(e).__name__}: {reason}."],
+        }
+
+
 def _policy_view(
     policy: Mapping[str, Any] | None, problems: Sequence[str]
 ) -> dict[str, Any] | None:
@@ -156,9 +170,11 @@ def run(
     out["window"] = {"start": today, "end": (day + datetime.timedelta(days=1)).isoformat()}
 
     if operation == "verify":
-        res = ranking_publication.verify(archive_dir, reg)
-        out.update(res, overdue=bool(res["latest"] is None or res["latest"] < today))
-        out["status"] = "ok" if not res["problems"] and not out["overdue"] else "problem"
+        res = _verify(archive_dir, reg)
+        unreadable = bool(res.pop("unreadable", False))
+        overdue = None if unreadable else bool(res["latest"] is None or res["latest"] < today)
+        out.update(res, overdue=overdue)
+        out["status"] = "ok" if not res["problems"] and not overdue else "problem"
         return out
 
     policy = reg.get(policy_version) if policy_version else (ranking.latest(reg) if reg else None)
@@ -182,12 +198,13 @@ def run(
                     "Until then a manager can publish manually, or run an exercise.",
                 )
             )
-    check = ranking_publication.verify(archive_dir, reg)
+    check = _verify(archive_dir, reg)
+    unreadable = bool(check.get("unreadable"))
     latest = check["latest"]
     problems = list(check["problems"])
-    due = bool(latest is None or latest < today)
-    next_start: str | None = today
-    if not due:
+    due: bool | None = None if unreadable else bool(latest is None or latest < today)
+    next_start: str | None = None if unreadable else today
+    if not unreadable and not due:
         last = datetime.date.fromisoformat(latest)
         if last == datetime.date.max:
             next_start = None
@@ -202,13 +219,23 @@ def run(
         next_window_start=next_start,
     )
     if problems and operation == "publish" and not exercise:
-        refusals.append(
-            _refusal(
-                "archive_unverified",
-                f"{len(problems)} archived record(s) do not verify.",
-                "Run verify, repair the archive by hand, then rerun. Nothing is overwritten.",
+        if unreadable:
+            refusals.append(
+                _refusal(
+                    "archive_unreadable",
+                    problems[0],
+                    "Check that the archive location exists and the run account may list it, "
+                    "then rerun. Nothing is written.",
+                )
             )
-        )
+        else:
+            refusals.append(
+                _refusal(
+                    "archive_unverified",
+                    f"{len(problems)} archived record(s) do not verify.",
+                    "Run verify, repair the archive by hand, then rerun. Nothing is overwritten.",
+                )
+            )
 
     if operation == "schedule":
         out["status"] = (
@@ -248,6 +275,15 @@ def run(
     if refusals or policy is None or cases is None or snap_date is None:
         return out
     try:
+        if len({c["id"] for c in cases}) != len(cases):
+            refusals.append(
+                _refusal(
+                    "source_invalid",
+                    "The case source repeats a case id.",
+                    "Remove the duplicate case from the case file and rerun.",
+                )
+            )
+            return out
         snap = ranking.snapshot(list(cases), policy, snap_date)
     except (KeyError, TypeError, ValueError, AttributeError) as e:
         refusals.append(
@@ -285,15 +321,28 @@ def run(
         ranking_publication._canonical({"published_on": today, "snapshot": snap}).encode("utf-8")
     )
     exists = os.path.exists(os.path.join(archive_dir, ranking_publication._name(snap)))
-    if not exists and free_bytes(archive_dir) < need:
-        refusals.append(
-            _refusal(
-                "capacity_missing",
-                f"The archive location is not writable or has less than {need} bytes free.",
-                "Free space or fix permissions, then rerun.",
+    if not exists:
+        try:
+            free = free_bytes(archive_dir)
+        except OSError as e:
+            refusals.append(
+                _refusal(
+                    "capacity_missing",
+                    f"The archive location's free space cannot be read: {type(e).__name__}: "
+                    f"{e.strerror or e}.",
+                    "Check the archive location and permissions, then rerun.",
+                )
             )
-        )
-        return out
+            return out
+        if free < need:
+            refusals.append(
+                _refusal(
+                    "capacity_missing",
+                    f"The archive location is not writable or has less than {need} bytes free.",
+                    "Free space or fix permissions, then rerun.",
+                )
+            )
+            return out
     try:
         res = ranking_publication.publish(snap, archive_dir, today)
     except (ranking_publication.PublicationError, OSError) as e:
