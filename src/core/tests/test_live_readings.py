@@ -185,5 +185,16 @@ class MessageTests(unittest.TestCase):
             self.assertNotIn(word, body)
 
 
+class ScenarioTests(unittest.TestCase):
+    def test_default_scenario_is_unchanged_and_reference_differs_only_by_provenance(self) -> None:
+        slot = datetime(2024, 10, 1, 1, 0, tzinfo=UTC)
+        live = lr.Generator(184).reading("ZF-1", slot).row()
+        self.assertEqual(live["scenario"], "live-simulator")
+        reference = lr.Generator(184, scenario=lr.WEATHER_REFERENCE_SCENARIO).reading("ZF-1", slot)
+        self.assertEqual({k for k in live if live[k] != reference.row()[k]}, {"scenario"})
+        with self.assertRaisesRegex(lr.LiveReadingError, "INVALID_SCENARIO"):
+            lr.Generator(184, scenario="indoor-damp")
+
+
 if __name__ == "__main__":
     unittest.main()

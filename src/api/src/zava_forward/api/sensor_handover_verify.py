@@ -5,7 +5,9 @@ migration or other initialization writes. ZF_STORE (sqlite or mssql) selects the
 store, so the same command works on a local store and on Azure SQL. Readings are
 bounded to the reference window per home. --replay-check re-feeds the retained
 stored payloads for that window, in batches of 100, and needs write access.
-It reports numbers; it does not approve sensor accuracy.
+It reports numbers; it does not approve sensor accuracy. A requested home/window that
+contains live-sim rows is refused (HANDOVER_SCHEMA_UNSUPPORTED): the statistics compare
+indoor-schema rows only, so live weather rows are never dropped into a passing result.
 """
 
 import argparse
@@ -19,9 +21,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from zava_forward.core.mssqlstore import MssqlStore
-from zava_forward.core.sensor_consumer import ConsumerError, SensorConsumer
+from zava_forward.core.sensor_consumer import LIVE_SCHEMA_VERSION, ConsumerError, SensorConsumer
 from zava_forward.core.sqlstore import SqlStore
-from zava_forward.core.synthetic.sensor_consistency import ZERO_TOLERANCE, Tolerance, report
+from zava_forward.core.synthetic.sensor_consistency import (
+    ZERO_TOLERANCE,
+    Tolerance,
+    report,
+    weather_report,
+)
 
 from zava_forward.api.sensor_ingestion import BatchStopped, SensorIngestion
 
@@ -90,16 +97,31 @@ def run(
     consumer = SensorConsumer(store)
     windows = _windows(reference)
     homes = sorted(windows)
-    result: dict[str, object] = report(
-        consumer.observed_series(homes, windows),
-        reference,
-        handover=handover,
-        cadence_minutes=cadence_minutes,
-        temperature=temperature,
-        humidity=humidity,
-    )
+    observed = consumer.retained_envelopes(homes, windows)
+
+    def kinds(rows: Sequence[Mapping[str, str]]) -> set[bool]:
+        return {row.get("schema_version") == LIVE_SCHEMA_VERSION for row in rows}
+
+    seen, wanted = kinds(observed), kinds(reference)
+    if seen | wanted == {False}:
+        result: dict[str, object] = report(
+            observed,
+            reference,
+            handover=handover,
+            cadence_minutes=cadence_minutes,
+            temperature=temperature,
+            humidity=humidity,
+        )
+    elif seen == wanted == {True}:
+        if temperature != ZERO_TOLERANCE or humidity != ZERO_TOLERANCE:
+            raise ValueError("HANDOVER_TOLERANCE_NOT_APPLICABLE")
+        result = weather_report(
+            observed, reference, handover=handover, cadence_minutes=cadence_minutes
+        )
+    else:
+        raise ValueError("HANDOVER_SCHEMA_UNSUPPORTED")
     if replay_check:
-        before = consumer.observed_series(homes, windows)
+        before = consumer.retained_envelopes(homes, windows)
         stamp = received_at or datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
         ingestion = SensorIngestion(store)
         receipts = [
@@ -110,7 +132,7 @@ def run(
         result["idempotent"] = (
             len(receipts) == len(before)
             and all(item.reason == "ACCEPTED" and item.replay for item in receipts)
-            and consumer.observed_series(homes, windows) == before
+            and consumer.retained_envelopes(homes, windows) == before
         )
         result["passed"] = bool(result["passed"]) and result["idempotent"]
     return result

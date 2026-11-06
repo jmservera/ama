@@ -13,6 +13,8 @@ from typing import Protocol, cast
 
 from .mssqlstore import MssqlStore
 from .sqlstore import SqlStore
+from .synthetic.live_readings import SCHEMA_VERSION as LIVE_SCHEMA_VERSION
+from .synthetic.live_readings import SUNLIGHT_UNIT
 from .synthetic.sensor_faults import READING_FIELDS, SCHEMA_VERSION
 from .synthetic.sensor_identity import home_key
 
@@ -31,6 +33,26 @@ READING_COLUMNS = (
     "seed",
     "schema_version",
     "injected_fault",
+)
+SUNLIGHT_NUMBER = re.compile(r"(?:0|[1-9][0-9]{0,3})(?:\.[0-9]{1,2})?\Z")
+SUNLIGHT_MAX = 1400.0
+LIVE_FIELDS = (
+    "sensor_id",
+    "reading_id",
+    "home_id",
+    "observed_at",
+    "temperature_c",
+    "humidity_pct",
+    "sunlight_wm2",
+    "temperature_unit",
+    "humidity_unit",
+    "sunlight_unit",
+    "source_type",
+    "scenario",
+    "seed",
+    "schema_version",
+    "injected_fault",
+    "label",
 )
 Primitive = str | int | float | bool | None
 Observation = dict[str, Primitive]
@@ -348,7 +370,9 @@ class SensorConsumer:
             ).fetchall()
             if [r[0] for r in keys] != ["sensor_id", "reading_id"]:
                 raise ConsumerError("SENSOR_SCHEMA_UNSUPPORTED")
-            if int(str(columns["schema_version"][2])) < len(SCHEMA_VERSION):
+            if int(str(columns["schema_version"][2])) < max(
+                len(SCHEMA_VERSION), len(LIVE_SCHEMA_VERSION)
+            ):
                 db.execute(
                     "ALTER TABLE sensor_reading ALTER COLUMN schema_version VARCHAR(32) NOT NULL"
                 )
@@ -374,6 +398,8 @@ class SensorConsumer:
 
     @staticmethod
     def _shape(row: Observation) -> str | None:
+        if row.get("schema_version") == LIVE_SCHEMA_VERSION:
+            return SensorConsumer._live_shape(row)
         if set(row) != set(READING_FIELDS) or any(type(v) is not str for v in row.values()):
             return "SCHEMA"
         if row["schema_version"] != SCHEMA_VERSION or row["source_type"] != "SYNTHETIC":
@@ -397,6 +423,40 @@ class SensorConsumer:
                 return "NUMBER"
         if row["calibrated"] not in ("true", "false"):
             return "CALIBRATION"
+        return None
+
+    @staticmethod
+    def _live_shape(row: Observation) -> str | None:
+        """live-sim-reading-v1: one reading per sensor and 5-minute UTC slot, no calibrated flag."""
+        if set(row) != set(LIVE_FIELDS) or any(type(v) is not str for v in row.values()):
+            return "SCHEMA"
+        if row["source_type"] != "SYNTHETIC" or row["injected_fault"] != "none":
+            return "SCHEMA"
+        if not _text(row["label"], 120):
+            return "SCHEMA"
+        for name, length in (("sensor_id", 20), ("reading_id", 40)):
+            if not _identity(row[name], length):
+                return "IDENTITY"
+        if not home_key(row["home_id"]):
+            return "IDENTITY"
+        if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,19}", str(row["scenario"])):
+            return "PROVENANCE"
+        seed = str(row["seed"])
+        if not re.fullmatch(r"-?(?:0|[1-9][0-9]{0,18})", seed) or abs(int(seed)) > 2**63 - 1:
+            return "PROVENANCE"
+        try:
+            observed = utc(str(row["observed_at"]))
+        except ValueError:
+            return "UTC_TIME"
+        if observed.minute % 5 or observed.second:
+            return "UTC_TIME"
+        if row["reading_id"] != f"LIVE-{row['sensor_id']}-{observed:%Y%m%dT%H%M}Z":
+            return "IDENTITY"
+        for name in ("temperature_c", "humidity_pct"):
+            if not NUMBER.fullmatch(str(row[name])) or abs(Decimal(str(row[name]))) > 999.99:
+                return "NUMBER"
+        if not SUNLIGHT_NUMBER.fullmatch(str(row["sunlight_wm2"])):
+            return "NUMBER"
         return None
 
     @staticmethod
@@ -557,8 +617,11 @@ class SensorConsumer:
             control.humidity_unit,
         ):
             return "UNIT"
+        live = row["schema_version"] == LIVE_SCHEMA_VERSION
+        if live and row["sunlight_unit"] != SUNLIGHT_UNIT:
+            return "UNIT"
         if (
-            row["calibrated"] != "true"
+            (not live and row["calibrated"] != "true")
             or not control.calibration_confirmed
             or not utc(control.calibration_start) <= observed < utc(control.calibration_end)
         ):
@@ -566,6 +629,8 @@ class SensorConsumer:
         if not policy.temperature_min <= float(str(row["temperature_c"])) <= policy.temperature_max:
             return "RANGE"
         if not policy.humidity_min <= float(str(row["humidity_pct"])) <= policy.humidity_max:
+            return "RANGE"
+        if live and float(str(row["sunlight_wm2"])) > SUNLIGHT_MAX:
             return "RANGE"
         latest = self._latest_observed(db, row["sensor_id"])
         if latest is not None and observed <= latest:
@@ -670,8 +735,25 @@ class SensorConsumer:
         home_ids: Sequence[str],
         windows: Mapping[str, tuple[str, str]] | None = None,
     ) -> list[dict[str, str]]:
-        """Read stored readings per home as canonical rows with trusted control units.
+        """Indoor-contract rows (reading-v2) for comparison and indoor analysis.
 
+        Live-sim rows are a different, climate-shaped schema with no calibration flag. They are
+        excluded here, never reshaped; use retained_envelopes for their exact retained form.
+        """
+        return [
+            row
+            for row in self.retained_envelopes(home_ids, windows)
+            if row["schema_version"] != LIVE_SCHEMA_VERSION
+        ]
+
+    def retained_envelopes(
+        self,
+        home_ids: Sequence[str],
+        windows: Mapping[str, tuple[str, str]] | None = None,
+    ) -> list[dict[str, str]]:
+        """Read stored readings per home as exact retained wire envelopes with trusted units.
+
+        Live-sim rows are returned as the original accepted witness; nothing is added or dropped.
         windows optionally bounds each home to an inclusive (first, last) UTC slot range.
         """
         if (
@@ -730,6 +812,9 @@ class SensorConsumer:
                     if witness is None:
                         raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
                     self._retained_reading(record, witness)
+                    if witness["schema_version"] == LIVE_SCHEMA_VERSION:
+                        rows.append({k: str(witness[k]) for k in LIVE_FIELDS})
+                        continue
                     rows.append({key: str(witness[key]) for key in READING_FIELDS})
                     continue
                 if sensor not in units:

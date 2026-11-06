@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-11-04
+ms.date: 2026-11-06
 ms.topic: reference
 ---
 
@@ -224,6 +224,10 @@ applies the same report and a window re-run to any SQL store selected by
 refusal. It does not supply the actual Hub, Azure SQL or live-handover run,
 which remain unproven. No issue checkbox changes.
 
+## Synthetic weather continuity check (2026-11-05, Refs #188)
+
+The owner approved comparing live simulated weather with a separately versioned synthetic weather backfill, like for like, keeping the indoor series, damp and safety calibration separate. The local check is `weather_report` (`synthetic-weather-continuity-v1`) behind the existing verifier. Its tolerances are engineering bounds from the declared generator constants, not an approved operational tolerance. It is a constructed distribution check: witnessed Azure continuity, physical calibration, consent, live acceptance and the #188 criteria stay unmet and unticked.
+
 ## Shared observation contract and volume (2026-10-18, Refs #186)
 
 This documents the unchanged finite consumer merged in
@@ -235,6 +239,19 @@ This is shared-contract verification and measured accounting, not live producer
 or backfill interoperability, a new schema, or a transport implementation.
 
 ### Authority and required observation fields
+
+> Current-use note (2026-11-06, Refs #188): this section is the dated 2026-10-18
+> record of the indoor branch and is not the whole current consumer input
+> contract. The consumer now validates two separately closed branches selected by
+> `schema_version`: the 13-field indoor `sensor-fault-input-v1` described below
+> and the 16-field synthetic-weather `live-sim-reading-v1` envelope
+> ([`LIVE_FIELDS`](../../../src/core/src/zava_forward/core/sensor_consumer.py),
+> [version](../../../src/core/src/zava_forward/core/synthetic/live_readings.py)).
+> The live branch has no `calibrated` field, is outdoor weather rather than indoor
+> evidence, and does not establish authenticated provenance, calibration or
+> statistical acceptance; see
+> [Synthetic weather continuity check](#synthetic-weather-continuity-check-2026-11-05-refs-188).
+> The measurements and wording below are preserved unchanged as history.
 
 The authoritative version and closed field set are
 [`synthetic.sensor_faults.SCHEMA_VERSION` and `READING_FIELDS`](../../../src/core/src/zava_forward/core/synthetic/sensor_faults.py).

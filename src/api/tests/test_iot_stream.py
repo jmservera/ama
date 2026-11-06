@@ -19,6 +19,7 @@ from azure.iot.device import X509
 from sensor_consumer_fixture import CONTROL, POLICY, observations, store_at
 from zava_forward.core.sensor_consumer import ConsumerError, Receipt, SensorConsumer
 from zava_forward.core.synthetic import sensor_stock
+from zava_forward.core.synthetic.live_readings import Reading
 from zava_forward.core.synthetic.run_plan import RunController, RunPlan, record
 from zava_forward.core.synthetic.sensor_stream import (
     Frame,
@@ -399,6 +400,32 @@ class MetadataTests(unittest.TestCase):
                 config.validate()
         with self.assertRaisesRegex(StreamError, "INVALID_SYNTHETIC_BINDING"):
             Binding("installed-real-device", "SENS-SYN-1", "ZF-1").validate()
+
+
+class LiveSimulatorRowTests(unittest.TestCase):
+    def test_live_reading_decodes_and_lands_once_per_home_and_slot(self) -> None:
+        reading = Reading(
+            "ZF-1",
+            "SENS-SYN-1",
+            "SYN-SENS-SYN-1",
+            datetime(2024, 10, 1, 1, 0, tzinfo=UTC),
+            12.34,
+            66.5,
+            301.25,
+            184,
+        )
+        decoded = decode(event(reading.row()), {BINDING.device_id: BINDING})
+        self.assertEqual(decoded["sunlight_wm2"], "301.25")
+        with tempfile.TemporaryDirectory() as tmp:
+            store = store_at(tmp, reset=True)
+            self.addCleanup(store.db.close)
+            ingestion = SensorIngestion(store)
+            ingestion.consumer.configure(POLICY, [CONTROL])
+            first = ingestion.consume([decoded], received_at="2024-10-01T02:00:00Z")
+            again = ingestion.consume([decoded], received_at="2024-10-01T02:00:00Z")
+            self.assertEqual((first[0].status, again[0].replay), ("accepted", True))
+            rows = store.db.execute("SELECT COUNT(*) FROM sensor_reading").fetchone()
+            self.assertEqual(rows[0], 1)
 
 
 class FleetIdentityTests(unittest.TestCase):

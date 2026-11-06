@@ -470,6 +470,11 @@ day; measured 366-byte public synthetic JSON is one sample, not a maximum or
 live traffic/cost claim. Stock 73-character lowercase-hex IDs remain incompatible
 with uppercase, 20-character admission; downstream #187/#188 require a separately reviewed
 compatibility decision. No source, transport or approval change is implied.
+As of 2026-11-06 (Refs #188) that 13-field baseline is the indoor branch only: the
+consumer also validates the separately closed 16-field synthetic-weather
+`live-sim-reading-v1` envelope, an outdoor input that is not indoor evidence,
+authenticated provenance or calibrated continuity (see the
+[dated current-use note](./research/iot-sensor-analytics-research-plan.md#authority-and-required-observation-fields)).
 
 For issue #110, the [core offline sensor contract](../../src/core/README.md#constructed-offline-sensor-consumer-110)
 and [finite API adapter](../../src/api/README.md#finite-offline-sensor-ingestion-110)

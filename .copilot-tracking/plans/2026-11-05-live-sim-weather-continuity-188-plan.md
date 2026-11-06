@@ -1,0 +1,14 @@
+---
+title: Plan for #188 synthetic weather continuity
+ms.date: 2026-11-05
+---
+
+* Generator: `Generator` and `Reading` gain an optional `scenario` (default `live-simulator`, so live output is byte-identical). A reference uses `WEATHER_REFERENCE_SCENARIO = "weather-backfill-v1"` and a different seed. No new producer or helper.
+* `sensor_consistency`: extract the series comparison from `report` into one shared function over a channel list; `report` keeps its exact behavior and outputs. Add `weather_report(observed, reference, *, handover, cadence_minutes=5)` using the same comparison with channels temperature_c, humidity_pct, sunlight_wm2, tolerances from `WEATHER_TOLERANCES` derived from the generator constants, and version `synthetic-weather-continuity-v1` with explicit status and declared generator parameters. Strict weather index: live-sim-reading-v1 only, units degC/percent/W/m2, SYNTHETIC, injected_fault none, observed scenario `live-simulator`, reference scenario `weather-backfill-v1`, equal identity/unit/label metadata, no calibrated key, no duplicate slot or identity.
+* `sensor_handover_verify.run`: classify observed (retained_envelopes) and reference rows. All live on both sides: weather path. No live on either side: unchanged indoor path. Anything else (mixed window, mixed reference, weather reference against indoor store or the reverse): refuse HANDOVER_SCHEMA_UNSUPPORTED before statistics or replay writes. Non-zero explicit tolerances on the weather path are refused (HANDOVER_TOLERANCE_NOT_APPLICABLE) rather than overriding approved-looking flags. Replay check runs the existing lossless replay. No new flag, API or UI.
+* Tests first (focused, SQLite temp store, no SQL service): valid weather continuity passes with declared status; a gross shift/scale/unit fault fails; mixed window, mixed reference, wrong scenario, wrong unit and cross-schema are rejected; idempotent rerun (replay_check twice, store unchanged); duplicate delivery gives replay receipts; legacy-only and prior refusal tests unchanged; a pure unit test that bounds equal the declared constants.
+* Docs: api README (verifier), core README (report), research plan note for source-specific C2 scope; no criteria ticked.
+* Planned final selectors for a later admitted FULL run (not run now): api `test_sensor_consistency`, `test_sensor_handover`, core `test_live_readings`, `test_sensor_handover`, `test_sensor_consumer_live`, SQL Server variant via ZF_SENSOR_MSSQL=1, plus `tools/rpi-checks.py --all`.
+* Excluded: weather-to-indoor conversion, calibrated invention, threshold fitting, schema change, consent change, live send, deployment, spending, cleanup.
+* Validation now: focused unittest, Ruff check and format (no cache), mypy with external caches, PYTHONDONTWRITEBYTECODE=1, worktree import proof.
+* [ ] Human review required and left unchecked.

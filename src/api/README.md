@@ -1883,8 +1883,9 @@ flock -w 600 /tmp/ama-rpi-heavy.lock python src/api/checks/sensor_sql_check.py
 ```
 
 Ordinary discovery exercises SQLite. The second command explicitly selects this
-same handover test alongside the existing ingestion suite on its own local SQL
-Server; the test asserts the actual selected backend. The standard complete
+same handover test, the synthetic weather continuity and live-envelope replay
+classes and the live consumer module alongside the existing ingestion suite on
+its own local SQL Server; each class asserts the actual selected backend. The standard complete
 gate does not implicitly include this sensor-specific SQL selector.
 Constructed SDK origin properties and local SQL Server do not prove actual
 authenticated IoT Hub delivery, Azure SQL query/restart or live handover.
@@ -1895,14 +1896,28 @@ issue status change is authorized by this source.
 
 `zava_forward.api.sensor_handover_verify` runs the same strict report against
 the SQL store selected by `ZF_STORE` (`sqlite` or `mssql`, so Azure SQL once an
-owner provides it), using `SensorConsumer.observed_series(home_ids, windows)` for a
+owner provides it), using `SensorConsumer.retained_envelopes(home_ids, windows)` for a
 joint per-home query bounded to each home's reference window, with trusted
 control units. The store is opened without migrations or other initialization
 writes (SQLite read-only), so SELECT-only credentials suffice. Tolerances default
 to zero and are declared per channel and metric. `--replay-check` needs write
 access: it re-feeds the retained stored payloads for the window, in batches of
 100, through the #110 consumer and requires replay receipts and an unchanged
-series. Exit codes: 0 pass, 1 numeric failure, 2 refusal.
+series. A window and reference of indoor-schema rows use the strict indoor statistics. A window
+and reference that are both `live-sim-reading-v1` use `weather_report`
+(`synthetic-weather-continuity-v1`): live simulated weather (scenario `live-simulator`)
+against synthetic weather history from the same generator with another seed and scenario
+`weather-backfill-v1`, same homes, slots, units (degC, percent, W/m2) and channels
+(temperature, humidity, sunlight), with `--cadence-minutes 5`. Its tolerances are engineering
+bounds derived from the declared generator constants, deliberately wide, labelled in the
+report as not an approved operational tolerance; explicit tolerance flags are refused there
+(`HANDOVER_TOLERANCE_NOT_APPLICABLE`). The result is a constructed distribution check, not
+witnessed Azure continuity, physical accuracy, indoor evidence or calibration. Any other mix
+(a window holding both schemas, a mixed reference, or a weather reference against indoor rows
+or the reverse) is refused before statistics or any replay write with
+`HANDOVER_SCHEMA_UNSUPPORTED` (exit 2, never `passed=true`); wrong scenario or units are
+`INVALID_HANDOVER_OBSERVATION`. Weather is never reshaped into the indoor schema.
+Exit codes: 0 pass, 1 numeric failure, 2 refusal.
 
 ```bash
 cd src/api
@@ -1974,8 +1989,16 @@ discovers or represents installed real devices and has no resident-facing action
   (`LIVE-<sensor>-<UTC slot>`, unique per home and slot, used as the IoT message id), `home_id`,
   `observed_at` (UTC slot start), `temperature_c`, `humidity_pct`, `sunlight_wm2`, units,
   `source_type=SYNTHETIC`, `scenario`, `seed`, `injected_fault=none` and a plain `label`. It adds
-  `sunlight_wm2`, which the current #110 consumer schema does not accept; teaching the consumer
-  this version is a #110 decision and is not done here.
+  `sunlight_wm2`. Since issue 188 slice 1 the SQL sensor consumer admits this version (closed
+  16-field shape, slot-aligned `reading_id`, `sunlight_unit` `W/m2`, 0..1400 range, the same
+  control, consent, window, calibration-interval and clock checks as the backfill). The reading
+  row keeps temperature and humidity; sunlight is kept in the retained accepted-delivery witness
+  and returned unchanged (original 16 fields, no `calibrated`) by
+  `SensorConsumer.retained_envelopes`, which the verifier replay check uses. `observed_series`
+  keeps the indoor `reading-v2` contract and excludes live rows instead of reshaping them. A replay
+  returns the prior receipt, a same-slot change is an `IDENTITY_CONFLICT` data-quality exception,
+  and an older slot is `OUT_OF_ORDER`. No `sensor_reading` column was added (that is a SQL change
+  left to the owner) and nothing was run against Azure.
 * Homes: every open case id, re-read hourly; a failed read reuses the last list. With
   `ZF_STORE=mssql` (the job) it issues exactly one parameter-free
   `SELECT id FROM cases WHERE closed = 0 ORDER BY id` over a connection built with the existing
@@ -2021,13 +2044,19 @@ public route, SDK, AI call or resident message is added.
 The batch must be a materialized list/tuple of 1..100 bounded primitive dictionaries,
 each <=20 keys and <=4096 serialized bytes. Envelope failures are refused before
 any writes. Primitive closed-schema failures, including missing IDs, produce
-digest-keyed owned DQ without inventing device identity. Only observation fields
-from `sensor_faults.Packet.rows` are inputs, never truth/labels/clean rows.
+digest-keyed owned DQ without inventing device identity. Only two closed,
+separately validated observation shapes are inputs, never truth/labels/clean rows:
+the 13 observation fields from `sensor_faults.Packet.rows` (`sensor-fault-input-v1`,
+indoor) and the 16-field synthetic-weather `live-sim-reading-v1` envelope
+(`sensor_consumer.LIVE_FIELDS`; [live simulator container message](#live-simulator-container-184-owner-requirement-2026-11-04);
+schema authority `synthetic/live_readings.py`).
 Receipt time is an explicit trusted UTC whole-second string; no operational
 clock window, calibration, consent or range is guessed.
 
 The [shared observation contract and volume reference](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
-lists the imported 13 required string fields and measured synthetic example.
+lists the imported 13 required string fields of the indoor `sensor-fault-input-v1`
+branch and measured synthetic example (historical 2026-10-18 measurement; the
+live 16-field branch is separate: see the [live simulator container message](#live-simulator-container-184-owner-requirement-2026-11-04)).
 One record pairs temperature and RH. Three records/home/day is the unchanged
 accounting baseline; finite callable batches are not adopted wire packetization
 or Hub billing/throughput evidence. Stock/live identity compatibility remains a
@@ -2056,7 +2085,8 @@ python src/api/checks/sensor_sql_check.py
 
 The second command owns a uniquely named, memory/CPU-bounded SQL Server container
 and loopback port with random process-only credentials and finally cleanup.
-It exercises the same actual API suite plus the #188 handover selector, including concurrent independent
+It exercises the same actual API suite plus the #188 handover, weather continuity,
+live-envelope and live consumer selectors, including concurrent independent
 connections, reopen, real engine-trigger rollback and accepted/rejected
 postcommit reconciliation. It never connects to Azure or uses private datasets.
 Local SQLite/MSSQL/nonroot read-only image evidence does not meet whole AC-066:
