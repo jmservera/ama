@@ -44,6 +44,17 @@ reports what would be archived, writes nothing and never counts as approval.
 The daily schedule is reported as proposed, not an approved rule; the draft
 policy stays a draft and retention stays a separate Legal decision.
 
+Durability and races: `publish` writes a unique temp file in the archive folder,
+syncs it, links it to its final name (the first writer wins, nothing is
+overwritten) and syncs the folder. A record already at the final name is checked
+against the snapshot, its hash, its name and a valid publication date; a damaged
+one is refused with `PublicationError` (never reported as already published) and
+left for a named owner to review. The run key is informational: repeated
+publishes in the same window are idempotent because the file name holds the
+policy version, as-of date and snapshot hash, and a later window returns the
+original publication date. `Store.publish_ranking_snapshot` records whether the
+policy was signed in the audit detail and the response (`policy_signed`), and the
+status endpoint reports an unreadable archive folder as a problem.
 Sign-off check (slice 3): `ranking.is_signed` and `ranking.signoff_problems` read a recorded sign-off
 (`signoff` with `signed_by` equal to the named `owner`, an ISO `signed_on` and a `rule_order_hash` of the rules and
 stage order). A change to the rule order voids it. The publication status reports `policy_signed` and
