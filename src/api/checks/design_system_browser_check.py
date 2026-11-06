@@ -239,7 +239,10 @@ def scratch_parent() -> Path:
 
 
 def child_env() -> dict[str, str]:
-    """Server environment inherited from the caller: no credentials or endpoints, bytecode controls kept."""
+    """Server environment inherited from the caller.
+
+    No credentials or endpoints are passed; bytecode controls are kept.
+    """
     keys = ("PATH", "HOME", "LANG", "PYTHONDONTWRITEBYTECODE", "PYTHONPYCACHEPREFIX")
     return {key: os.environ[key] for key in keys if key in os.environ}
 
