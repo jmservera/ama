@@ -4571,3 +4571,132 @@ implementation held; no runtime defect is confirmed; original 144 tests-first
 RPI, checkpoint consumption, full validation and exact-head independent review
 remain required. Local 136 is `bb3a3b03` (equal to main) and remote absence is
 unchanged. No test, SQL, browser, lock, push or PR.
+
+### Current status qualifications (2026-11-06, post-correction 2)
+
+Additive status record at 13:50Z against governance `119828353`, main
+`bb3a3b03`. Nothing above is rewritten. The correction 2 Research cited the
+Correction 1 heading interval as 4285 to 4526; the Fourteenth checkpoint begins
+at line 4300, so the interval is 4300 to 4526. The count of three matching
+Correction 1 headings pack-wide stands (one inside this checkpoint before
+correction 2). The independent readiness report (approve_with_comments, one Low)
+found both original defects resolved.
+
+| Item | Class | Status at 2026-11-06 |
+| --- | --- | --- |
+| Second exact permit route for the Application-only `ZavaForward.AgentsWorker` (issue 144 comment `6681120797`, 08:57:53Z) | Approved demo code authority | Resolved, unchanged |
+| Demo Finance-role audited reconciliation of unknown AI usage from provider evidence (issue 144 comment `6685915140`, 13:26:36Z, read-only confirmed by `gh api`) | Approved demo code authority | Resolved by this status |
+| R9 dispatch permit, settlement and reconciliation design (144 candidate commit `323abba2e6f392e54c4ac27b427e00d05a3e6782`, tree `13c61bfe37b20eb42d75fc604b3c1d7fcd7f779d`, read from pinned objects) | Proposed, DRAFT | Not approved, not consumed here, no code |
+| Root assessment of R9 | Observed (coordinator, supplied) | Revise, design only |
+| Original two High runtime findings | Observed, open | Open |
+| Implementation of 144 | Held | FIX, tests first, full validation and independent exact-head review required |
+
+* Finance-role decision. The existing Finance role may handle audited
+  reconciliation of unknown AI charges using provider evidence. Unknown amounts
+  stay reserved. Resumption needs the existing budget, consent and revocation
+  checks. No invented usage, budget reset, safeguard bypass or automatic
+  repeat dispatch is authorized, and manual non-AI work stays available. It is
+  not a live grant, deployment, provider spend, real financial waiver,
+  production approval, or acceptance of the whole protocol or ADR. The earlier
+  09:40-era statements that an operator decision was pending were true when
+  dated and remain history. No further owner question on these two code
+  choices.
+* R9 items the root assessment leaves open: pre-dispatch binding of the final
+  serialized request, model and token bounds inside the worker adapter; a strict
+  reconciliation event schema; a durable no-repeat representation including
+  in-process compatibility; code-discoverable role and transaction facts (the
+  Finance role names are discoverable in code, not an owner question); and
+  numeric timing margins, backoff and poison handling. A bounded R10 design
+  correction is independent work and is not approved by this snapshot.
+* R9 process qualifications from native events (not CLI display order): the r9
+  Markdown files carry no frontmatter; Changes, Review and state creates start
+  in parallel at 13:37:53.482 to .483 and Review precedes its light checks;
+  Research 13:33:20, Plan 13:34:50, Details 13:35:14 and the planning commit
+  13:36:49 precede the design create at 13:37:35.
+* Unchanged: unknown-liability operator and safe-resume authority beyond the
+  code role, the seven design gaps and FIX recommendation remain open; no
+  runtime defect is confirmed; local 136 `bb3a3b03` is unpublished (remote
+  absent). No test, SQL, browser, lock, push or PR.
+
+## Fifteenth stabilization checkpoint: finance parent integration (2026-11-06, Refs #440 #96 #93)
+
+Focused, documentation-only status. It builds on the
+[thirteenth checkpoint](#thirteenth-stabilization-checkpoint-finance-parent-history-export-2026-11-06-refs-440-96-93) and does not repeat its static reading.
+
+### Source and document identities
+
+| Item | Value |
+| --- | --- |
+| Parent `origin/feat/finance-integration-93` (fetched 13:45Z) | `4642b55fdbafec564b67803420439b91d7ea8ce1`, tree `e2628422d13ae87df3a6b7ecfdd12f24a4fc1052`; 2 ahead and 0 behind main; not in governance |
+| Child #1233 head | `abeb022ba26fce149664f62d674c47dc6c0ef4e2`, same tree; merged 2026-11-06T06:32:47Z |
+| Prior parent | `0472fd5d5` (#1223 dependency, covered) |
+| Governance and main | `119828353ccc1d678c1a4e9c1c67b621b0d263a0` and `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` |
+| Stale local ref (not used) | local `feat/finance-integration-93` is `0472fd5d5`; the remote tracking ref is the pin |
+| BRD 0.21.0 draft | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD 0.21.0 in-review | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 accepted with owner amendment | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 accepted | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Blobs are identical at main, governance and the parent. Draft and in-review are not approval.
+
+### Evidence and classification
+
+| Observation | Class |
+| --- | --- |
+| Receipt `/mnt/ama-gates/g96-r18-1106/receipt.json` read by this author: 297806 bytes, SHA-256 `070403bd4f64bf12d46e369b1bf84e051fa4ace1d592099c126fe7bdd897dfd1`, top-level `failure` null, `image_cache` fresh; matches the supplied value | Local observed (file identity only) |
+| Supplied child FULL for source `abeb022ba` and main `bb3a3b03`: 205 commands, 17 groups; dedicated SQL 285 tests with one JSON-only skip; four images with zero fixable findings and 39 unfixed per image (37 High, 2 Critical); independent bounded functional pass | Supplied, historical child observation, not re-executed |
+| New history tests used synthetic JSON and SQLite; the MSSQL run did not specifically exercise them | Implemented-unverified on SQL Server |
+| Static: `form_export.py` lists `history` among body keys (line 30) and passes `history=report["history"]` (line 87) | Local observed (source reading) |
+| Receipt for the squashed parent `4642b55f`, main acceptance, live Azure SQL | Unknown or not performed |
+
+The child receipt is not a receipt for the squashed parent, governance or main.
+
+### Trace
+
+* PRD FR-040 with AC-048, PRD FR-042 with AC-050 and AC-054 (not met), PRD FR-043 with AC-051; BRD NFR-002 with AC-049 as an interpretive join; ADR 0006 layout. Backlog: #96 (open C1, C5, C6 and the named schemas) and #93.
+* Authority: the full-history contract and regeneration of old Invalid copies are owner-approved for synthetic data only. Originals are not rewritten or backfilled. No actual or private data authority. Real Finance, DPO, Legal, Reviewed, submission and eligibility approvals are unproven.
+
+### Gaps, owners, recommendation
+
+* Exact gaps: #96 C1, C5, C6; named schemas; per-approver evidence; MSSQL exercise of the history tests; a receipt and independent review at the parent head; main integration.
+* No new defect is established; every finding maps to an existing owner. No speculative issue or refactor. Financial policy is not activated.
+* Recommendation: CONTINUE the independent #96 lanes. HOLD closure of #96 and any dependent expansion. Resume when the owners supply the missing approvals and a gate is run at the intended head.
+* Publication and closure gates: coordinator reassessment, hosted CI on the parent, human approvals; no tick.
+
+## Sixteenth stabilization checkpoint: sensor parent integration (2026-11-06, Refs #440 #184 #185 #188 #110)
+
+Focused, documentation-only status. It builds on the fifth checkpoint, whose main-source reading and requirement IDs are reused.
+
+### Source and document identities
+
+| Item | Value |
+| --- | --- |
+| Parent `origin/feat/live-simulator-integration-184` (fetched 13:45Z) | `9476dc9610368a9a1bd46c88314586885638580d`, tree `30167885b00d308d7b29e9a78a064f4af834ce98`; 2 ahead and 0 behind main; not in governance |
+| Child #1205 (merged 02:13:34Z) | head `a7d4e956db3b2c194c7601b888be5a558869a6de`, merge `2dc125f9` |
+| Child #1203 (merged 09:37:52Z) | head `6887377845648502f2a5509801ee5d9807869703`, same tree as the parent |
+| Durable trigger | #440 comment `6681870292`, 2026-11-06T09:40:32Z |
+| Stale local ref (not used) | local `feat/live-simulator-integration-184` is `ead177ef9` |
+| Documents | BRD, PRD, ADR 0003, ADR 0006 identical to the finance table above |
+
+### Evidence and classification
+
+| Observation | Class |
+| --- | --- |
+| Receipt `/mnt/ama-gates/g188-r20-1106/receipt.json` read by this author: 297806 bytes, SHA-256 `e575146936c97ffb4e397dd78a75951a079000c18c979d3374f863e6c1c95014`, `failure` null; matches the supplied value | Local observed (file identity only) |
+| Supplied child #188 FULL for `6887377`: 205 commands, 17 groups; dedicated SQL 285 with one JSON-only skip; a separate sensor SQL supplement of 68 tests with zero skips; four images with 42 unfixed (40 High, 2 Critical), fixable 0; older figure 39 is history and the cause of the increase is unverified; two independent assessments approved with zero findings | Supplied, historical child observation |
+| Parent static diff against main: 19 files, +1169 and -81 (live envelope admission with retained envelopes at `sensor_consumer.py` lines 430 and 749, versioned synthetic weather reference `synthetic-weather-continuity-v1` in `sensor_consistency.py` line 36, dry-run device provisioning reporting "none created or stored" in `device_provision.py` line 23) | Local observed (source reading) |
+| #1205 apply path needs injected Registry and CredentialStore adapters that the CLI does not supply; its criteria 1, 3 and 4 are unmet | Implemented-unverified, deferred |
+| Receipt at the squashed parent `9476dc96`, main integration, real credential issuance, secure storage and teardown, resident consent, indoor calibration, statistical validity, live authenticated Azure SQL, activation | Unknown, not performed or blocked |
+
+The #188 receipt belongs to `6887377`, not to `9476dc96`. Weather reference data is not indoor measurement.
+
+### Trace
+
+* BRD FR-048, AC-090, RULE-014, OD-43 (real inventory; blocks operational use with real data); PRD FR-050, AC-066, AC-067, AC-068; ADR 0003 decision 6 (no public endpoint). BRD FR-050 and PRD FR-048 are different subjects and are not sensor work. Backlog: #184, #185, #188 (three criteria unchecked), #110, #186.
+
+### Gaps, owners, recommendation
+
+* Exact gaps: named credential owner and secure store, teardown evidence, resident consent, calibration and validity, authenticated Azure SQL, receipt at the squashed parent, main integration.
+* No new defect is established; no speculative issue or refactor. Independent lanes can continue (#110 and #186 analysis, #185 adapter design) without activating sensors.
+* Recommendation: CONTINUE independent lanes; HOLD closure of #184, #185 and #188 and dependent expansion. Resume when the credential owner, consent and a gate at the intended head exist.
+* Publication and closure gates: coordinator reassessment, hosted CI on the parent, human approvals; no tick.

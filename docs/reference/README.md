@@ -444,6 +444,15 @@ heading count was not a pack-wide uniqueness pass) and records the owner's
 later approval of the Application-only AgentsWorker second permit route; that
 is not a live grant, ADR acceptance or operator decision, and the operator
 disposition and seven design gaps stay open.
+A dated current-status subsection of the fourteenth checkpoint records the
+later Finance-role reconciliation code approval (issue 144 comment
+`6685915140`, not a live grant or protocol acceptance), the draft R9 design
+with its Revise outcome and the correction 2 locator clarification. The
+[fifteenth](../architecture/cutover-evidence-pack.md#fifteenth-stabilization-checkpoint-finance-parent-integration-2026-11-06-refs-440-96-93)
+and [sixteenth](../architecture/cutover-evidence-pack.md#sixteenth-stabilization-checkpoint-sensor-parent-integration-2026-11-06-refs-440-184-185-188-110)
+stabilization checkpoints record the finance parent `4642b55f` and sensor
+parent `9476dc96` statuses with source-qualified historical child receipts;
+neither is a receipt for the parent, main acceptance or an approval.
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope
