@@ -1,7 +1,7 @@
 ---
 title: Atlas findings and role journeys traced to screens
 description: Cross-role trace of the eleven profile perspectives, five atlas design themes, two tensions and one same-home walkthrough to role screens or recorded deferrals (issue #233)
-ms.date: 2026-11-04
+ms.date: 2026-11-05
 ms.topic: reference
 ---
 
@@ -17,7 +17,7 @@ Screen identifiers are `registerRoleScreen` ids in
 all twelve screens are registered on main (marked "main" with the
 delivering pull request); `programme-queue`, `technical-queue` and
 `quality-queue` merged after the first snapshot. The checker compares these labels with the registered
-ids. This trace does not assess their rendered behaviour, accessibility or design-system conformance.
+ids. This trace does not assess their accessibility or design-system conformance. Since 2026-11-05 one engineering browser check (`checks/atlas_tensions_browser_check.py`) renders the two tensions below on three screens for one synthetic home; the rest of the rendered behaviour remains unassessed.
 
 Run `python3 -m zava_forward.core.atlas_screen_trace` from `src/core` (after
 `pip install -e .`) to check that every perspective, theme, tension and
@@ -62,8 +62,8 @@ Source: [five design themes](./customer-journeys/customer-journey-atlas.md#five-
 
 | Tension | Where resolved | Resolution | Status |
 | --- | --- | --- | --- |
-| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text under a "Not shown for this role" panel (on the per-home view of both screens, on the `programme-queue` overview and on the `resident-choice` page summary; since 2026-11-04 also on the `technical-queue` and `quality-queue` per-home views, source-level test only) rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; rendered behaviour and conformance not assessed |
-| Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Rule stated in text on `procurement-packages` since 2026-11-03 (offer is not a booking or promise, resident choice takes precedence, packages in reference order not ranked by utilisation) and, from 2026-11-04, restated on the per-home `resident-choice` view after the choice and withdrawal panels ("Choice comes before offered capacity"; node render test of panel order on that one screen; no browser or assistive-technology evidence); resident-first ordering across screens and conformance not assessed |
+| Continuity versus disclosure | `programme-queue` and `resident-choice` | Each screen shows the minimum fields its role needs; withheld items are listed as text under a "Not shown for this role" panel (on the per-home view of both screens, on the `programme-queue` overview and on the `resident-choice` page summary; since 2026-11-04 also on the `technical-queue` and `quality-queue` per-home views, source-level test only) rather than silently omitted; contact and access appear as a route reference, not sensitive history | Proposed rule; rendered in Chromium for `programme-queue` and `resident-choice` on one synthetic home since 2026-11-05 (engineering check only; conformance, AT and user validation not assessed) |
+| Utilisation versus choice | `resident-choice` and `procurement-packages` | Resident options and withdrawal render first; capacity is labelled offered or committed and never ordered by utilisation; an offered slot is never worded as a promise | Rule stated in text on `procurement-packages` since 2026-11-03 (offer is not a booking or promise, resident choice takes precedence, packages in reference order not ranked by utilisation) and, from 2026-11-04, restated on the per-home `resident-choice` view after the choice and withdrawal panels ("Choice comes before offered capacity"; node render test of panel order on that one screen; no assistive-technology evidence); resident-first ordering across screens rendered in Chromium on one synthetic home since 2026-11-05 (headings and table rows in order at 1280 px and 320 px; `checks/atlas_tensions_browser_check.py`); conformance, assistive-technology and user evidence not assessed |
 
 ## Same-home walkthrough
 

@@ -10585,6 +10585,15 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * `tools/rpi-checks.py` now writes the existing policy files from `Runner._install` for the api venv (both `project-api` and `setup-api`), and the later browser-group copy is removed. Environment scrubbing, the harness, the dirty-snapshot guard, cleanup and receipt acceptance are unchanged.
 * `tools/test_rpi_checks.py` adds a regression that runs the real api install step and the real harness server launch from a scratch source copy; it failed before (core, agents and api `__pycache__` created) and passes after. Focused tier only; the complete gate and a fresh full receipt were not run. Evidence under `.copilot-tracking/` (2026-11-05 api-discovery-bytecode-1215).
 
+## [2026-11-05] update | Rendered Chromium check of the #233 atlas tensions (Refs #233, Refs #149)
+
+* Adds `src/api/checks/atlas_tensions_browser_check.py` and documents it in `src/api/README.md`. One synthetic home is opened on Programme queue, Resident choice and Package queue through the real `/app`; the check asserts rendered "Not shown for this role" panels with same-home context, choice and withdrawal panels before "Choice comes before offered capacity", the explanation before the capacity table and package rows in reference order against a different delivered order and conflicting headroom, offered and use. No application, CSS, policy or data change.
+* `docs/reference/research/ux/atlas-screen-trace.md` now records the tensions as rendered on one synthetic home (engineering evidence only). Issue criteria are unchanged: C2 engineering advanced, C4 and C5 unmet; no human, assistive-technology, user, legal, privacy or design approval is claimed.
+
+
+## [2026-11-05] update | Index row for the #233 rendered tension check (Refs #233, Refs #149)
+
+* `docs/reference/README.md` row for #233 now names the bounded Chromium tension-sequence check and keeps its engineering-only boundary. No other knowledge base change.
 ## [2026-11-06] update | Document-control retention and hold refusal wording (Refs #153)
 
 * Reworded the two refusals in `approve_retention_deletion` (`doc_controls.py`): the legal-hold refusal now explains the hold, says nothing was deleted and keeps the existing "real hold needs the Legal delegate's decision" label; the not-due refusal explains the retention start date and demonstration periods. Message text only; types, predicates, audit events and deletion behaviour are unchanged.
