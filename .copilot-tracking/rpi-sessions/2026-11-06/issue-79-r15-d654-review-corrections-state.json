@@ -1,0 +1,24 @@
+{
+  "task_id": "issue-79-r15-d654-review-corrections",
+  "task_slug": "issue-79-r15-d654-review-corrections",
+  "parent_task": {"task_id": "issue-79-r13-alignment", "task_slug": "issue-79-r13-alignment"},
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-06/issue-79-r15-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-06/issue-79-r15-plan.md",
+    "details": ".copilot-tracking/details/2026-11-06/issue-79-r15-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-06/issue-79-r15-plan.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Planning committed before tests and source", "status": "pending-commit", "evidence": "this commit"},
+    {"decision": "Independent d654 review preserved, not regraded", "status": "recorded", "evidence": "f751a4dc-045d-479c-8035-8588858e3b08/files/review-79-d654/functional-findings.json"}
+  ],
+  "blockers": [{"id": "full-and-independent", "summary": "No FULL, independent re-review, hosted CI, policy signoff or scheduling evidence for the corrected head", "resolution": "Coordinator lane; heavy lock held by #81"}],
+  "next_action": {"phase": "Implement", "action": "Add regression tests, observe RED, then minimal fixes"},
+  "prioritized_follow_ups": [{"rank": 1, "task": "Rebase #1231 child onto the corrected head", "rationale": "Stack order", "evidence": "brief"}]
+}
