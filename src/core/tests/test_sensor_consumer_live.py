@@ -99,6 +99,21 @@ class LiveReadingTests(unittest.TestCase):
         self.assertEqual((again.status, again.reason, again.replay), ("accepted", "ACCEPTED", True))
         self.assertEqual(self.count(), 1)
 
+    def test_reset_clears_retained_state_but_reopen_preserves_it(self) -> None:
+        self.consumer.process(live(), RECEIVED)
+        reopened = store_at(self.tmp.name)
+        self.addCleanup(reopened.db.close)
+        kept = SensorConsumer(reopened)
+        self.assertEqual(len(kept.retained_envelopes(["ZF-1"])), 1)
+        fresh = store_at(self.tmp.name, reset=True)
+        self.addCleanup(fresh.db.close)
+        empty = SensorConsumer(fresh)
+        for table in ("sensor_reading", "sensor_delivery", "sensor_data_quality_exception"):
+            self.assertEqual(
+                int(fresh.db.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]), 0, table
+            )
+        self.assertEqual(empty.retained_envelopes(["ZF-1"]), [])
+
     def test_mixed_schemas_keep_exact_envelopes_and_projection_excludes_live(self) -> None:
         back = observations()[0]
         self.consumer.process(back, RECEIVED)
