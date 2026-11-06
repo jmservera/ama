@@ -41,6 +41,7 @@ class DeviceProvisionTests(unittest.TestCase):
             self.assertTrue(device["device_id"].startswith("SYN-"))
         self.assertEqual({d["home_id"] for d in body["devices"]}, {"home-a", "home-c"})
         self.assertIn("none created", body["credentials"])
+        self.assertIn("dry run", body["credentials"])
 
     def test_apply_refused_without_adapters_or_owner(self) -> None:
         code, out, err = self.cli("--homes", "3", "--owner", "Named Owner", "--apply")
@@ -79,6 +80,34 @@ class DeviceProvisionTests(unittest.TestCase):
         dp.run(issued, "teardown", True, registry, store)
         self.assertEqual(store.references(), [])
         self.assertEqual(registry.list_run("run-185"), [])
+
+    def test_applied_provision_report_says_credentials_stored(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        body = dp.run(manifest(), "provision", True, registry, store)
+        self.assertEqual(len(store.references()), 3)
+        text = str(body["credentials"])
+        self.assertIn("stored", text)
+        self.assertNotIn("none created", text)
+        self.assertNotIn("PRIVATE-KEY-MATERIAL", json.dumps(body))
+
+    def test_applied_teardown_with_original_manifest_reports_revoked(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        original = manifest()
+        dp.run(original, "provision", True, registry, store)
+        body = dp.run(original, "teardown", True, registry, store)
+        self.assertEqual(store.references(), [])
+        self.assertEqual(registry.list_run("run-185"), [])
+        text = str(body["credentials"])
+        self.assertIn("revoked", text)
+        self.assertNotIn("none created", text)
+
+    def test_dry_run_with_adapters_writes_nothing_and_says_so(self) -> None:
+        registry, store = FakeRegistry(), FakeStore()
+        for action in dp.ACTIONS:
+            body = dp.run(manifest(), action, False, registry, store)
+            self.assertIn("dry run", str(body["credentials"]))
+        self.assertEqual(store.references(), [])
+        self.assertEqual(registry.devices, {"SYN-OTHER": "other-run"})
 
     def test_placeholder_owners_are_not_named(self) -> None:
         for owner in ("", " ", "TBD", "unassigned", "<owner>"):

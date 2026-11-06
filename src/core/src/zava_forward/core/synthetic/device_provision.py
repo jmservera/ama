@@ -3,7 +3,8 @@
 The default action only maps each consenting stock home to one `SYN-` device ID and prints
 non-secret references. A live run needs a named credential owner and a Registry and
 CredentialStore supplied by trusted code; this module ships none, so the command line cannot
-touch Azure and no credential material is created, stored or printed here.
+touch Azure and creates nothing. Injected trusted adapters may store and revoke credentials;
+the report then says so by outcome and never prints credential material.
 """
 
 import argparse
@@ -18,6 +19,12 @@ from zava_forward.core.synthetic import sensor_stock
 VERSION = "simulated-device-provision-v1"
 _PLACEHOLDERS = frozenset({"tbc", "tbd", "todo", "n/a", "na", "none", "unknown", "unassigned"})
 ACTIONS = ("provision", "teardown")
+_CREDENTIALS = {
+    ("dry-run", "provision"): "none created or stored; dry run only",
+    ("dry-run", "teardown"): "none revoked; dry run only",
+    ("applied", "provision"): "stored by the injected credential store; references only",
+    ("applied", "teardown"): "revoked by the injected credential store; none remain",
+}
 
 
 class ProvisionError(RuntimeError):
@@ -47,7 +54,7 @@ def report(manifest: di.Manifest, action: str, mode: str) -> dict[str, object]:
         "owner_named": owner_named(manifest.credential_owner),
         "device_count": len(manifest.identities),
         "devices": [{"device_id": i.device_id, "home_id": i.home_id} for i in manifest.identities],
-        "credentials": "none created or stored; references only after a live run",
+        "credentials": _CREDENTIALS[(mode, action)],
     }
 
 
