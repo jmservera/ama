@@ -3951,7 +3951,7 @@ rules.
 | --- | --- | --- |
 | Pins, blobs, PR 1229 merge, issues 82, 81, 440, 144, 80 and 79 open | local observed (git and `gh`) | 2026-11-06 |
 | Source read of the gate, procurement and appointment changes | local observed | Static reading at `af891a5cc` |
-| 193 core tests pass on the export of `af891a5cc` | local observed (light, lifecycle parent) | Below; JSON and SQLite paths, not SQL Server |
+| 193 core tests total, 192 executed, 1 declared JSON-only skip; suite exit 0 (PASS), on the export of `af891a5cc` | local observed (light, lifecycle parent) | Below; JSON and SQLite paths, not SQL Server |
 | Candidate `272146f4e` FULL receipt: 17 groups, 205 commands, no group skip | coordinator-supplied, historical for the candidate | Receipt sha256 `eb1cd5ed8546bd5f128324d4c1799fc3248fcb481cdc471b3138d2d0e765a0bc` matched `/tmp/g82-cap-r3-1106/receipt.json`; contents not re-adjudicated |
 | Thirteen nonzero probe commands | coordinator-supplied, attributed to the #82 comment | Expected pre-installation, import or SQL-startup probes individually read by others, not here; the earlier zero-nonzero assertion was false and is not relied on |
 | Candidate SQL Server log: 296 total, 295 executed, 1 declared JSON-only audit-ordering skip, 5 new capacity cases passed | coordinator-supplied, historical for the candidate | Log sha256 `51953f94e8674ec36038098421b2064e6c919a47fa251212da3fbc1b8edec5e1` matched; log not read or rerun here |
