@@ -431,6 +431,45 @@ records the finance source, governance target and main as separate pins with a
 HOLD on #93 and #96 closure; no test was run and no approval, closure or
 criterion tick is implied. Correction 1 splits the observed disk from the
 supplied admission and qualifies the original chronology.
+For the proposed #144 background-dispatch safeguards, the
+[fourteenth stabilization checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122)
+separates main from the unmerged candidate queue slice, corrects the
+candidate's ADR anchors, lists seven design gaps and two open decisions, and
+recommends FIX with #144 implementation held; no code ran and no approval,
+closure or tick is implied. Correction 1 qualifies the r8 chronology (Plan and
+Details were parallel, not serial) and records the local, unpublished parent
+136 ref at main; second-route authority stays unresolved.
+Correction 2 qualifies correction 1 (its Plan and Details overlapped, and its
+heading count was not a pack-wide uniqueness pass) and records the owner's
+later approval of the Application-only AgentsWorker second permit route; that
+is not a live grant, ADR acceptance or operator decision, and the operator
+disposition and seven design gaps stay open.
+A dated current-status subsection of the fourteenth checkpoint records the
+later Finance-role reconciliation code approval (issue 144 comment
+`6685915140`, not a live grant or protocol acceptance), the draft R9 design
+with its Revise outcome and the correction 2 locator clarification. The
+[fifteenth](../architecture/cutover-evidence-pack.md#fifteenth-stabilization-checkpoint-finance-parent-integration-2026-11-06-refs-440-96-93)
+and [sixteenth](../architecture/cutover-evidence-pack.md#sixteenth-stabilization-checkpoint-sensor-parent-integration-2026-11-06-refs-440-184-185-188-110)
+stabilization checkpoints record the finance parent `4642b55f` and sensor
+parent `9476dc96` statuses with source-qualified historical child receipts;
+neither is a receipt for the parent, main acceptance or an approval.
+A later [provenance qualification](../architecture/cutover-evidence-pack.md#provenance-qualifications-2026-11-06-post-integration-correction-1)
+corrects the batch time labels and the scope of "no runtime defect".
+
+The [seventeenth stabilization checkpoint](../architecture/cutover-evidence-pack.md#seventeenth-stabilization-checkpoint-queue-dispatch-r10-design-2026-11-06-refs-440-144-107-118-122)
+records the finished #144 R10 dispatch design (`1e192099`) as an unapproved
+DRAFT proposal with an independent read assessment, the observed topology of
+`feat/infra-hosting-integration-136` (local label at main `bb3a3b03`, no remote
+branch or pull request) and a CONTINUE-after-acceptance recommendation. It is
+not an approval, a runtime result or a closure.
+
+A [retained-evidence verification](../architecture/cutover-evidence-pack.md#retained-evidence-verification-of-the-sixteenth-checkpoint-2026-11-06-refs-440-184-185-188)
+qualifies the sixteenth (sensor parent) checkpoint with figures read from the
+retained child receipt, SQL logs and image scans: SQL 285 with one skip versus
+the separate 68-test supplement, and 42 unfixed findings per image (not
+security-clean). It is append-only, adds no runtime result and recommends
+CONTINUE for independent lanes and HOLD for closure of #184, #185 and #188.
+
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope
