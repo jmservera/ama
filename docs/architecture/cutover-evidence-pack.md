@@ -4175,3 +4175,124 @@ and `/tmp` evidence were read only.
   unavailable. No selection, default or approval is inferred, and the
   compatibility disposition stays blocked. The earlier #144 financial choice
   is separate and out of scope.
+
+## Thirteenth stabilization checkpoint: finance parent history export (2026-11-06, Refs #440 #96 #93)
+
+Refs #440, #96 and #93. This is the thirteenth checkpoint, a new bounded
+post-integration checkpoint. The ninth (finance) and the earlier #1225 scoped
+checkpoint are historical, unchanged and do not prove this one. Local
+candidate, not consumed by the coordinator and not approved for publication.
+Trigger: PR #1233 was squash-merged on 2026-11-06 at 06:32:47 UTC into the
+finance source parent and adds the recorded working-review history to the Held
+export (routed in the #440 comment 6678812333).
+
+### Pins (two topic heads and main)
+
+| Pin | Identity |
+| --- | --- |
+| Governance documentation target `feat/discovery-assurance-integration-123` | `7ed4a33f543bf7e1eed4aa351712734c743867b7`, tree `04d2e99a85ce26a59395d1ccfa60cae5a842308c`; does not contain #1233 |
+| Finance source parent `feat/finance-integration-93` | `4642b55fdbafec564b67803420439b91d7ea8ce1`, tree `e2628422d13ae87df3a6b7ecfdd12f24a4fc1052`, direct parent `0472fd5d5625bb610b5ac65ad177026953802830`; not an ancestor of governance |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`; has no #1233 |
+
+The source tree equals the reviewed child `abeb022ba26fce149664f62d674c47dc6c0ef4e2`
+per the coordinator; that is an equality observation, not a fresh receipt for
+the squash head. Documents (blobs equal on governance and main, read
+2026-11-06): BRD 0.21.0 draft `34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD
+0.21.0 in-review `c788b917bafaede215f326f0efc71e071a687f1c`; ADR 0003 accepted
+with owner amendment `d60645397b20fb70ac3d1dc47c7a6c8671201306`; ADR 0006
+accepted `956da1a3b804c803041fe2e8a312bd9f400273ae`. Draft and in-review are
+not approval.
+
+### What changed in #1233 (static reading of git objects)
+
+The merge diff is 10 files, +280/-1: seven original RPI artifacts,
+`src/core/README.md`, `form_export.py` (two lines) and `test_form_export.py`.
+
+* `BODY_KEYS` gains `history` and `draft_export` copies
+  `report["history"]`, so the ordered, detached per-field history (reviewer
+  email, prior and new value and evidence, decision, reason, time, input
+  version) is inside the content hash.
+* `export_freshness` rebuilds the body from `BODY_KEYS`. A saved copy without
+  `history`, with reordered or truncated history, is `Invalid` with the action
+  to create a new Held export. Nothing is backfilled and a saved copy is never
+  edited. The owner chose, for synthetic data only, full history and
+  regeneration of old copies; that authority is not broadened.
+* Preflight visibility (actor, case, current and historical evidence) is
+  `form_review._visible`, already present in parent `0472fd5d5` and not changed
+  by #1233; it checks prior and new evidence of every history event and the
+  attachments, and unreadable evidence is `Unavailable`. Parent #1223 changes
+  are not attributed to #1233.
+* Unchanged boundaries: status `Held`, `reviewed` false, `Not submitted`,
+  eligibility `Not assessed`, manual path is the working review itself. The
+  hash is not a signature and history is field review, not Finance pack
+  approval.
+
+### Traceability (document-qualified)
+
+| Requirement | Source and tests (finance parent `4642b55fd`) | Limit |
+| --- | --- | --- |
+| PRD FR-040, AC-048 (accept, correct, reject; prior value, reviewer, evidence or reason) | `form_export.draft_export` history; `test_export_carries_ordered_detached_review_history` (empty, accept, correct, reject, accept; stored equality; detached; deterministic digest) on JSON and SQLite stores | Constructed synthetic fixtures; read, not run here |
+| PRD FR-042, AC-050, AC-054 (reviewable pack, no submission or eligibility) | Status `Held`, `reviewed` false; `test_history_is_integrity_covered_and_legacy_copy_is_invalid` | A reviewed export is not implemented; PRD AC-050 and AC-054 not satisfied here |
+| PRD FR-043, AC-051 (only dependent fields stale) | `export_freshness` with history key | History change makes a copy Stale; exact dependent sets stay in earlier tests |
+| BRD NFR-002, AC-049 (retained prior versions; context only) | Saved copy is never edited; regeneration creates a new Held export | Interpretive join, not owner-confirmed |
+| ADR 0006 (accepted source layout) | `src/core` module and tests | No history or export contract; no approval implied |
+
+Remaining criteria: #96 still has unchecked the approved versioned schema, the
+reviewed export that never submits or implies eligibility, and dependent-only
+stale marking; #93 still has the stabilization checkpoint, child closure or
+deferral, and the no automated submission or approval criteria. Checked boxes
+are the owner's records and are not re-adjudicated.
+
+### Classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Pins, blobs, issue states (#440, #96, #93 open) | local observed | `git` and `gh`, 2026-11-06 |
+| Source and test reading of #1233 | local observed | Static; no test was run in this checkpoint |
+| History in Held export, Invalid legacy copy, regeneration | implemented-unverified | Child FULL is source-qualified to `abeb022ba`; no exact-head receipt for `4642b55fd` or governance |
+| Child FULL, 205-row ledger, SQL 285 tests with one JSON-only skip, hosted checks, independent and published functional and readiness approvals | unknown | Attribution: coordinator and PR #1233 comment 6678688323; not inspected by this author in the original cycle. In correction 1 only the identity block of `/mnt/ama-gates/g96-r18-1106/receipt.json` was read (head `abeb022ba`, tree `e2628422`, 205 commands, no failure); the ledger `96-r18-execution-consumption-r44.json` was not read. Child-source evidence, not a receipt for `4642b55fd`, governance or main |
+| History tests on SQL Server | unknown | SQL covers 285 tests per the coordinator; the new history tests exercised JSON and SQLite only |
+| Local constructed browser observations | unknown | Attribution: coordinator; not re-executed by this author. Not Azure, AT or WCAG acceptance |
+| Vulnerability gates (four fixable-vulnerability gates found zero; 39 unfixed per image, 37 High and 2 Critical) | unknown | Attribution: coordinator; not re-executed by this author. No security-clean or risk-acceptance claim |
+| Real or private data, named schema, DPO, Legal, resident, professional, Azure, assistive technology | blocked | Not supplied; synthetic data only |
+| Disk space at intake | local observed | `df` on 2026-11-06: 99% used, 3.8G free; nothing deleted |
+| Heavy-resource release and #188 handoff admission | unknown | Attribution: coordinator-supplied; not verified by this author. No heavy work was run |
+
+### Findings, recommendation and gates
+
+No new defect and no necessary refactor was confirmed by static reading. A
+search of open issues for form export history found only the existing owners
+#96 and #80. Recommendation: CONTINUE the independent #188, #80 and #1204
+lanes under their own prerequisites; HOLD #93 and #96 closure and dependent
+expansion until this record passes current independent and published
+assessment and explicit coordinator consumption, and an exact-head FULL for
+the integrated source is supplied if it is relied on. No pivot or deferral is
+proposed or approved.
+
+| Gate | Effect |
+| --- | --- |
+| #96 closure and #93 closure | Held; no tick |
+| Dependent expansion on the finance parent | Held on the same conditions |
+| #188, #80, #1204 | Independent |
+| Whole #440 | Unchanged; criteria 7 and 8 and native HVE Deferred or not available are not a Pass |
+
+Resume conditions: independent assessment of this record, publication gates,
+coordinator consumption, and a named exact-head receipt where relied on.
+
+Process disclosure: research, plan and details were committed as `5764cb570`
+before this edit. No test, SQL, browser, install, lock, cleanup, push or PR.
+
+### Correction 1 qualifications (2026-11-06)
+
+The original records above and in the first cycle's artifacts are preserved.
+Actual chronology: Research, Details and Plan were created in that order
+(not Research, Plan, Details as the original Changes says) before the planning
+commit `5764cb570` and any canonical edit. The first README edit failed on a
+mistyped path and was redone. Changes and state were created before the final
+checks, not after as planned, and the Review followed in a later call. The
+final check read cached refs; only the intake step fetched, so the Review's
+"re-fetched" overstates it. The commits used the privacy-safe address without
+a shown `gh api user` resolution. Correction 1 corrects the disk and admission
+classification, replaces "paths not accessible" with "not inspected by this
+author", and fixes the pins heading. It re-fetched all three pins and found
+them unchanged. No defect, requirement or approval changed.
