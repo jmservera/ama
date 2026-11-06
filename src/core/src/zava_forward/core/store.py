@@ -240,8 +240,13 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         if user["role"] not in MANAGER_ROLES:
             raise PermissionError("Only a manager can see the ranking publication record. Owner: your manager. Next action: ask a manager to open it.")
         archive = self._ranking_archive()
-        out = ranking_publication.verify(archive)
-        out["overdue"] = ranking_publication.overdue(archive, controls.today())
+        try:
+            out = ranking_publication.verify(archive)
+        except OSError as e:
+            out = {"count": 0, "latest": None, "problems": [
+                f"The archive folder cannot be read: {type(e).__name__}: {e.strerror or e}. "
+                "Owner: your manager. Next action: check the archive location and permissions."]}
+        out["overdue"] = out["latest"] is None or out["latest"] < controls.today()
         out["schedule"] = ranking_publication.SCHEDULE
         out["policy_signed"] = ranking.is_signed(ranking.CURRENT)
         out["signoff_problems"] = ranking.signoff_problems(ranking.CURRENT)
@@ -257,10 +262,11 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 res = ranking_publication.publish(snap, self._ranking_archive(), controls.today())
             except ranking_publication.PublicationError as e:
                 raise ValueError(str(e)) from e
+            signed = ranking.is_signed(ranking.CURRENT)
             self.audit(user["email"], "ranking_snapshot_published" if res["written"] else "ranking_snapshot_already_published", "-",
-                       f"policy {snap['policy_version']}; as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}")
+                       f"policy {snap['policy_version']} ({'signed' if signed else 'unsigned'}); as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}")
             return {"written": res["written"], "published_on": res["published_on"], "policy_version": snap["policy_version"],
-                    "as_of": snap["as_of"], "snapshot_hash": snap["snapshot_hash"]}
+                    "policy_signed": signed, "as_of": snap["as_of"], "snapshot_hash": snap["snapshot_hash"]}
 
     def _queue_candidates(self, queue):
         """Index IDs, never viewer-projected context; called under the store lock."""
