@@ -10,7 +10,7 @@ import threading
 import uuid
 from copy import deepcopy
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_publication, stock, taskqueues
 from .finance import FinanceMixin
@@ -29,6 +29,9 @@ from .procurement import ProcurementMixin
 from .quality import QualityMixin, handover_blockers, quality_evidence_gate
 from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view, hazard_view
 
+if TYPE_CHECKING:
+    from .complaints_route import ComplaintsReceiver
+
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
 READY_STAGE = "Final checks before ordering"
 BOOKED_STAGE = "Install booked"
@@ -45,6 +48,10 @@ class ConflictError(Exception):
 
 
 class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin, GovernanceMixin, ContinuityMixin, DocControlsMixin, ExceptionRegisterMixin):
+    if TYPE_CHECKING:
+        # Injection point for tests and a future approved receiver; absent means the configured default.
+        complaints_receiver: ComplaintsReceiver | None
+
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)

@@ -11,7 +11,9 @@ is only a non-empty ``receipt_ref`` returned by the receiver; anything else is a
 failure, never a receipt.
 """
 
+from collections.abc import Mapping
 from datetime import datetime
+from typing import Any, NoReturn, Protocol
 
 STATUSES = ("Pending", "Unconfigured", "Failed", "Acknowledged")
 FAILURE_REASON = "The receiver did not acknowledge this request. It has not been received."
@@ -26,19 +28,27 @@ class NotConfigured(RuntimeError):
     """No receiver is configured, so nothing leaves this system."""
 
 
+class ComplaintsReceiver(Protocol):
+    """The receiver contract: one envelope in, the receiver's raw reply out."""
+
+    def submit(self, envelope: dict[str, Any]) -> object: ...
+
+
 class UnconfiguredReceiver:
-    def submit(self, envelope):
+    def submit(self, envelope: dict[str, Any]) -> NoReturn:
         raise NotConfigured(UNCONFIGURED_REASON)
 
 
-def receiver_from_env(env):
+def receiver_from_env(env: Mapping[str, str]) -> ComplaintsReceiver:
     kind = (env.get("ZF_COMPLAINTS_ROUTE") or "unconfigured").lower()
     if kind == "unconfigured":
         return UnconfiguredReceiver()
     raise ValueError(f"Unknown ZF_COMPLAINTS_ROUTE {kind!r}. No real receiver is approved.")
 
 
-def build_envelope(case_id, req, route_key, attempt):
+def build_envelope(
+    case_id: str, req: Mapping[str, Any], route_key: str, attempt: int
+) -> dict[str, Any]:
     """Exact minimal allow-list; owners, representative and safe-contact data stay local."""
     return dict(
         idempotency_key=route_key,
@@ -53,7 +63,7 @@ def build_envelope(case_id, req, route_key, attempt):
     )
 
 
-def parse_acknowledgement(value):
+def parse_acknowledgement(value: Any) -> dict[str, Any]:
     ref = value.get("receipt_ref") if isinstance(value, dict) else None
     if not isinstance(ref, str) or not ref.strip() or len(ref.strip()) > RECEIPT_LIMIT:
         raise ValueError(MALFORMED_REASON)
