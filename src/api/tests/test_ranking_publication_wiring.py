@@ -84,7 +84,8 @@ class PublicationWiring(QualityMatrix):
     def test_unsupported_hard_links_are_a_storage_failure_not_an_authorization_one(self):
         for number in (errno.EPERM, errno.ENOTSUP):
             with self.subTest(errno=errno.errorcode[number]):
-                with patch.object(os, "link", side_effect=OSError(number, "hard links unsupported")):
+                unsupported = OSError(number, "hard links unsupported")
+                with patch.object(os, "link", side_effect=unsupported):
                     code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
                 self.assertEqual(code, 503)
                 self.assertIn("hard links", body["error"])
@@ -108,7 +109,8 @@ class PublicationWiring(QualityMatrix):
         self.assertEqual((code, body["written"]), (200, True))
         self.assertIn("temporary file", body["warning"])
         self.assertNotIn(self.archive(), body["warning"])
-        self.assertEqual([e["action"] for e in self.store.audit_entries()], ["ranking_snapshot_published"])
+        actions = [e["action"] for e in self.store.audit_entries()]
+        self.assertEqual(actions, ["ranking_snapshot_published"])
         self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
 
     def test_edited_archive_is_reported_not_hidden(self):
