@@ -630,7 +630,7 @@ class ProcurementMixin(AppointmentMixin):
     def require_booked_capacity(self, c):
         orders = [w for w in self._proc()["work_orders"] if w["case_id"] == c["id"] and w["state"] in ACTIVE]
         if len(orders) != 1 or orders[0]["state"] != APPOINTED:
-            raise ValueError("A single evidenced work order with a confirmed appointment is required. Ask the contract manager to issue and book it.")
+            raise gates.CapacityGateError("A single evidenced work order with a confirmed appointment is required. Ask the contract manager to issue and book it.", None)
         w = orders[0]
         self.require_appointment_commitment(w)
         when = w["appointment_offer"]["date"]

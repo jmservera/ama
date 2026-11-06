@@ -703,6 +703,30 @@ class Flows:
         self.assertEqual(error.result.outcome, gates.UNKNOWN)
         self.assertIn("unverified", str(error))
 
+    def procurement_snapshot(self):
+        empty = {"packages": [], "work_orders": []}
+        return copy.deepcopy((self.store.cases["ZF-3"], self.store.data.get("procurement") or empty))
+
+    def assert_unknown_order_evidence_refused(self):
+        before = self.procurement_snapshot()
+        audit = list(self.store.audit_entries())
+        with self.assertRaises(gates.CapacityGateError) as ctx:
+            self.store.advance(PAM, "ZF-3")
+        self.assertEqual(ctx.exception.result.outcome, gates.UNKNOWN)
+        self.assertIn("A single evidenced work order", str(ctx.exception))
+        self.assertEqual(self.procurement_snapshot(), before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+
+    def test_booking_without_any_work_order_is_unknown_and_changes_nothing(self):
+        self.assert_unknown_order_evidence_refused()
+
+    def test_booking_with_unbooked_work_order_is_unknown_and_changes_nothing(self):
+        pid = self.package()
+        self.store.issue_work_order(
+            PAM, pid, "ZF-3", resident_bindings=dataset.RESIDENT_BINDINGS
+        )
+        self.assert_unknown_order_evidence_refused()
+
     def test_evidence_matrix_fails_closed_without_success_events(self):
         pid = self.package()
         mutations = [

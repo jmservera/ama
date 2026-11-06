@@ -190,7 +190,7 @@ class AppointmentMixin:
                     missing.append("Contractor capacity confirmation changed")
             except (ValueError, PermissionError, DocumentStoreError) as error:
                 missing.append(str(error))
-                if isinstance(error, gates.CapacityGateError):
+                if isinstance(error, gates.CapacityGateError) and len(missing) == 1:
                     capacity_error = error
         return dict(status="Offer" if missing else "Committed", missing=missing), capacity_error
 
@@ -198,7 +198,7 @@ class AppointmentMixin:
         result, capacity_error = self._appointment_assessment(w)
         if result["status"] != "Committed":
             message = "Appointment is not committed: " + "; ".join(result["missing"])
-            if capacity_error is not None and result["missing"] == [str(capacity_error)]:
+            if capacity_error is not None:
                 raise gates.CapacityGateError(message, capacity_error.state) from capacity_error
             raise ValueError(message)
 
