@@ -572,6 +572,17 @@ offline and secret-free. Retrying `rotate` after `ROTATION_REVOKE_FAILED` or
 supported recovery is `teardown(error.new_manifest, ...)` using the non-secret
 manifest carried by `DeviceIdentityError`.
 
+`synthetic.device_provision` is a dry-run-by-default command that maps each consenting
+stock home to one `SYN-` device ID and prints non-secret references only. `--apply` is
+refused unless a real credential owner is named and trusted code supplies a `Registry`
+and `CredentialStore`; this repository ships neither, so the command line cannot touch
+Azure and creates no credential. Declined and unknown-consent homes get no identity.
+
+```bash
+python -m zava_forward.core.synthetic.device_provision --register register.csv \
+  --homes 30 --run-id run-185 --owner "<named owner>"
+```
+
 ## Journey ownership register and human-review routing (#128)
 
 `journey_register.draft()` lists journeys J1 to J6 and R1 against the eight AC-071
