@@ -1,0 +1,30 @@
+{
+  "task_id": "440-archive-filesystem-checkpoint-correction1",
+  "task_slug": "archive-filesystem-checkpoint-440-correction1",
+  "parent_task": {"task_id": "440-archive-filesystem-checkpoint", "task_slug": "archive-filesystem-checkpoint-440"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-06-archive-filesystem-checkpoint-440-correction1-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-06-archive-filesystem-checkpoint-440-correction1-plan.md",
+    "details": ".copilot-tracking/details/2026-11-06-archive-filesystem-checkpoint-440-correction1-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-06-archive-filesystem-checkpoint-440-correction1-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-06-archive-filesystem-checkpoint-440-correction1-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "No critique worker: evidence transcription of coordinator-identified defects", "status": "recorded", "evidence": "plan"},
+    {"decision": "Author Review executed once after final checks; no independent or human approval", "status": "recorded", "evidence": "review file"},
+    {"decision": "Hard-link disposition stays blocked; owner unavailable, no default inferred", "status": "recorded", "evidence": "pack correction 1 qualifications"}
+  ],
+  "blockers": [
+    {"id": "hardlink-disposition", "summary": "Hard-link compatibility disposition for the intended archive mount is not decided", "resolution": "Owner or deployment decision, then isolated validation"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator fresh assessment and publication"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "#1231 isolated validation and independent assessment", "rationale": "Gates #79 archive delivery", "evidence": "pack twelfth checkpoint"},
+    {"rank": 2, "task": "Owner disposition on hard-link support for the deployment mount", "rationale": "Unowned decision, owner unavailable", "evidence": "pack correction 1 qualifications"}
+  ]
+}

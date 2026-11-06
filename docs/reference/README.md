@@ -422,6 +422,9 @@ under #79), the
 records the unmerged candidate separately from the governance target and main,
 with a HOLD on #79 archive delivery and #73 expansion; no test was run, no
 filesystem is approved, and no approval, closure or criterion tick is implied.
+Correction 1 of that record reclassifies one evidence row and adds a
+document-qualified traceability table; the hard-link disposition stays blocked
+because the owner was unavailable.
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope

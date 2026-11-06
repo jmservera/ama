@@ -4079,6 +4079,24 @@ and is the only owner; no new issue is proposed.
   and out of this bounded contract: dates are inputs, no clock is read and no
   ranking changes. No new journey was run.
 
+Document-qualified joins (correction 1, read 2026-11-06). The same identifier
+AC-015 means different things in the two documents: BRD AC-015 belongs to BRD
+FR-011 (consent is not inferred), while PRD AC-015 belongs to PRD FR-012
+(prioritisation inputs missing or conflicting). Paths are in the unmerged #1231
+child (`57b3b6a09`); no join is an owner-confirmed trace.
+
+| Requirement (document-qualified) | Contract or decision | Code and tests | Observation versus unverified | Owner and resume |
+| --- | --- | --- | --- | --- |
+| BRD NFR-006, AC-060 (exportable versioned evidence, Must) | Partial, indirect fit only; no export test, approval history or exit contract was observed for the archive | `src/core/src/zava_forward/core/ranking_publication.py` (`publish`, `verify`) | unknown; nothing observed exercises export or exit | Digital and data owners; no resume point set here |
+| BRD NFR-002, AC-049 (immutable versions, supersede not overwrite, Must) | A finished record is kept unchanged | `src/core/tests/test_ranking_publication.py` `ConcurrentWriterTests`: `test_delayed_contender_leaves_a_finished_record_unchanged`, `test_sequential_bytes_and_name_are_unchanged` | local observed in the child (read, not rerun); FULL and independent assessment unverified | #1231 owner; isolated validation and independent assessment |
+| PRD PR-006, PRD AC-015 (deterministic published policy version; AC-015 status Not run) | One truthful record per snapshot and retained date | `ConcurrentWriterTests.test_same_snapshot_different_dates_keep_one_truthful_record`, `test_separate_processes_publish_one_truthful_record`; `src/core/tests/test_ranking_publication_runner.py` `test_same_snapshot_on_two_dates_publishes_once_and_reports_the_retained_date` | local observed in the child; PRD journey not run; the spawned-process case also passed the old helper | #79 archive delivery; #1231 resume |
+| PRD DH-002, DH-003, PR-003 (retention pending DPO and Legal) | The helper sets no retention period or schedule | Not applicable | unknown; legal period unowned | DPO and Legal; not decided here |
+| ADR 0006 (accepted source layout) | No hard-link or archive mount contract | Hard link in `publish`; refusal path only tested by an injected `PermissionError` | implemented-unverified; no real unsupported mount tested | Deployment owner; hard-link disposition blocked, owner unavailable on 2026-11-06 |
+
+Gate effect is unchanged: HOLD #79 archive delivery and #73 dependent expansion.
+Independent #96, #188 and #80 lanes may continue and are not necessarily
+publication-ready.
+
 ### Classification
 
 | Finding | Classification | Source and limit |
@@ -4093,7 +4111,7 @@ and is the only owner; no new issue is proposed.
 | Fix of the concurrent-writer divergence | implemented-unverified | Child local; no FULL, no independent publication Pass |
 | Hard-link compatibility disposition | blocked | Needs the #79 or deployment owner; not decided here |
 | Windows, SMB, network or production mount support | unknown | Linux development evidence only; no approved deployment mount |
-| Coordinator consumption of the 702-line native log and 11-file diff | coordinator-supplied | Not an independent publication Pass |
+| Coordinator consumption of the 702-line native log and 11-file diff | unknown (not independently re-executed by this author) | Attribution: coordinator-supplied. Not an independent publication Pass and not re-adjudicated here |
 
 ### Limits and qualifications
 
@@ -4140,3 +4158,20 @@ consumption of this record.
 
 Process disclosure: nothing was deleted, moved or cleaned; the child worktree
 and `/tmp` evidence were read only.
+
+### Correction 1 qualifications (2026-11-06)
+
+* The classification of the coordinator consumption row was corrected from an
+  attribution label to an allowed class, and a small document-qualified
+  traceability table was added. The earlier text is otherwise unchanged.
+* The original Research file says "Written before any plan". Per the
+  coordinator's reading of native events, the research, plan and details create
+  calls were dispatched together at 05:03:07.973 to .974Z, completed at
+  05:03:08.006, .017 and .028Z, and were committed at 05:03:14Z before any
+  target edit. The Research observations preceded that batch. The original
+  files are preserved; the before-implementation chronology stands.
+* The coordinator asked the owner once whether the archive may require atomic
+  hard links and refuse unsupported filesystems; the result was owner
+  unavailable. No selection, default or approval is inferred, and the
+  compatibility disposition stays blocked. The earlier #144 financial choice
+  is separate and out of scope.
