@@ -4003,3 +4003,140 @@ rules.
 
 Process disclosure: nothing was deleted, moved or cleaned; `/tmp/l440af891`
 is retained as read-only test setup and is not authority to delete it.
+
+<a id="twelfth-stabilization-checkpoint-archive-helper-filesystem-contract-2026-11-06-refs-440-79-1231"></a>
+
+## Twelfth stabilization checkpoint: archive helper filesystem contract (2026-11-06, Refs #440 #79 #1231)
+
+Refs #440, #79 and #1231. This is the twelfth checkpoint (baseline eighth,
+finance ninth, lifecycle quality tenth and capacity eleventh are distinct and
+unchanged). It is a new bounded checkpoint, not a rewrite or regrade of any of
+them. Local candidate, not consumed by the coordinator and not approved for
+publication. Trigger: bug #1231 changes the ranking archive helper inherited by
+#79 so that it requires a filesystem with hard links and removes its own
+staging file. That is a contract change for any deployment archive mount.
+
+Process: Research, then Plan and details, were committed before any pack,
+index or log edit. No test, SQL, browser, install or cleanup was run here; the
+child's retained logs were read, not rerun. Disk was 98% used and nothing was
+deleted.
+
+### Pins
+
+| Pin | Identity | Role |
+| --- | --- | --- |
+| Governance documentation target | `feat/discovery-assurance-integration-123` `dce6498cf850de9bdc79ecb1706f8491d75b2ea8`, tree `c7440e42226178d6967966b8003794c795a2c314` | Base of this docs child; eventual target |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` | Unchanged at the fetch of 2026-11-06 |
+| #79 candidate (local, unpublished) | `feat/ranking-publication-runner-79` `397419724e68b24bce879512a24c7df430177f87`, tree `c728049e33a3a0e20d9a7bf16b3738fabfbc14d7` | Not an ancestor of the governance parent; not main acceptance |
+| Child #1231 (local, unpublished) | `fix/ranking-archive-concurrent-writer-metadata` `57b3b6a09f6ac5b77b37881e21447751a56be5ff`, tree `fea8273a05c2a42da3e127d77a2c4ad9377f365b` | Based on the #79 candidate; eventual target #79, which targets #73 |
+
+These are separate pins. Nothing from the #79 candidate or #1231 is on the
+governance parent or main, and tree identity is not a test execution.
+
+### Document identities
+
+| Document | Version and status | Blob |
+| --- | --- | --- |
+| BRD `docs/brds/agentic-retrofit-programme-brd.md` | 0.21.0 draft | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD `docs/prds/zava-forward-retrofit-programme-demonstrator.md` | 0.21.0 in-review | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 `docs/adrs/0003-journey-derived-capabilities-runtime-fit.md` | accepted with owner amendment | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 `docs/adrs/0006-src-layout-and-cutover.md` | accepted | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Blobs are equal on the governance parent and main. Draft and in-review
+documents are not approval.
+
+### What changed in the candidate
+
+Read from the child diff (`748526484~1` to `24cab4b60`: 8 files, +412/-15,
+including the helper, `src/core/README.md`, two test files and the child's
+own research, plan, details and issue note). In `publish`, the existing
+pre-check and canonical text remain. A unique same-directory staging file is
+created exclusively, written, then linked to the final name with
+`os.link`, which cannot overwrite. On `FileExistsError` the existing record is
+read back and returned with `written` false. A `finally` then unlinks the
+caller-owned staging file only. Any other `OSError`, including no hard-link
+support, propagates and the runner reports `publish_failed`. There is no
+fallback and no overwrite. The old shared `.tmp` and `os.replace` are gone.
+
+Original diagnosis (issue #1231, from the #79 R11 session): one deterministic
+two-thread, one-process, local-filesystem interleaving gave `published` for
+2026-11-05 while the retained bytes said 2026-11-06, and the other caller got a
+structured `publish_failed` from a shared-temporary `FileNotFoundError`;
+verification still passed. No lost publication, overwrite of a finished
+record or production incident was demonstrated. #1231 is open, linked to #79
+and is the only owner; no new issue is proposed.
+
+### Traceability
+
+* PRD PR-006 (deterministic published policy version) is the demonstrator
+  behaviour the archive records; PRD DH-002, DH-003 and PR-003 keep retention
+  periods as defaults pending DPO and Legal approval. The helper sets neither
+  the legal period nor the schedule.
+* ADR 0006 mounts runtime data at `/data` and state at `/state` but defines no
+  hard-link or archive mount contract. A deployment filesystem is therefore an
+  unowned and unknown decision.
+* Authentication, identity, resident, AI and manual boundaries are unchanged
+  and out of this bounded contract: dates are inputs, no clock is read and no
+  ranking changes. No new journey was run.
+
+### Classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Pins, blobs, candidate and child heads, #1231 open and linked | local observed (git and `gh`) | 2026-11-06 |
+| Source and README change read in the child diff | local observed | Static reading; child is unpublished |
+| Child RED: 48 tests, 4 failures and 2 errors, exit 1 | local observed (child retained log, read not rerun) | `/tmp/1231-ranking-archive-r1-1106/red1.log`; retained as the adverse first result |
+| Child GREEN: 48 tests, 0 skips, OK in 0.628s, exit 0; API wiring 12 tests OK in 12.635s, exit 0 | local observed (child retained logs, read not rerun) | Deliberate child source and test imports with a parent read-only environment; not an isolated installed-package or FULL run |
+| Ruff check, Ruff format and mypy three-file checks passed | local observed (child, read) | Used Ruff 0.17.3 and mypy 2.4.1, newer than the maintained 0.17.1 and 2.4.0 |
+| Spawned-process smoke | local observed (child, read) | Also passed the old helper, so not independent RED proof |
+| Unsupported-filesystem refusal | implemented-unverified | Only an injected `PermissionError` was tested, not a real unsupported mount |
+| Fix of the concurrent-writer divergence | implemented-unverified | Child local; no FULL, no independent publication Pass |
+| Hard-link compatibility disposition | blocked | Needs the #79 or deployment owner; not decided here |
+| Windows, SMB, network or production mount support | unknown | Linux development evidence only; no approved deployment mount |
+| Coordinator consumption of the 702-line native log and 11-file diff | coordinator-supplied | Not an independent publication Pass |
+
+### Limits and qualifications
+
+* The child's original details forecast a completed-record overwrite and a
+  tolerated missing stage at cleanup. Later actual results demonstrate neither;
+  the final code unlinks unconditionally. The originals stay unchanged.
+* `import-proof-final.txt` was overwritten during successive green runs. The
+  final proof matches the candidate (helper sha256
+  `4d222878a5031fbe04b69f7d2c063d2486daac6505483167eeefa94160544c2b`); earlier
+  printed metadata is kept only in the native event output and the original raw
+  proof files are not restored. First RED and static failures remain retained.
+* Native child session `b353a2c9-455a-4ca9-8ab2-8ee2ca09d516`, exit 0; its
+  research, plan and details were committed before the first test edit and its
+  author Review followed its checks. Read-only evidence: the native log
+  `/tmp/rpi-1231-ranking-archive-r1-1106.log` and
+  `/tmp/1231-ranking-archive-r1-1106/`. These `/tmp` paths are session-only,
+  so the hashes and numbers above are the durable pointers.
+
+### Finding owners and recommendation
+
+* Owner of the divergence fix and its validation: #1231, then #79.
+* Owner of any deployment mount, hard-link compatibility disposition and legal
+  retention period: owner, deployment and Legal decisions not made here.
+* Recommendation: HOLD #79 archive delivery and #73 dependent expansion until
+  the hard-link compatibility disposition, relevant final validation and an
+  independent assessment hold. Continue the #1231 fix lane under its own RPI.
+  This checkpoint does not release the archive lane or approve a deployment
+  filesystem. No new defect is raised beyond #1231.
+
+### Gate effects
+
+| Gate | Effect |
+| --- | --- |
+| #79 archive delivery | Held until compatibility disposition, final validation and independent assessment |
+| #73 dependent expansion | Held on the same conditions |
+| #96, #188 and #80 lanes | Independent; may continue |
+| #1231 closure | Unchanged; no tick |
+| Whole #440 | Unchanged; criteria 7 and 8 untouched; native HVE Deferred or not available is not a Pass |
+
+Resume conditions: a named disposition on hard-link support for the intended
+mount (supported, refused or replaced), the child's relevant validation in an
+isolated installed-package run, an independent assessment, and coordinator
+consumption of this record.
+
+Process disclosure: nothing was deleted, moved or cleaned; the child worktree
+and `/tmp` evidence were read only.
