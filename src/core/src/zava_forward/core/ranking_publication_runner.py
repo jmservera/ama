@@ -66,6 +66,9 @@ def load_cases(path: Path) -> tuple[list[Mapping[str, Any]], str | None]:
     cases = data["cases"]
     if not isinstance(cases, list):
         raise TypeError("cases is not a list")
+    for c in cases:
+        if not isinstance(c, Mapping) or not isinstance(c.get("closed"), bool):
+            raise TypeError("a case is not a mapping with a boolean closed flag")
     return [c for c in cases if not c["closed"]], data.get("as_of")
 
 
@@ -141,6 +144,15 @@ def run(
     if refusals:
         return out
     assert day is not None
+    if day == datetime.date.max:
+        refusals.append(
+            _refusal(
+                "bad_date",
+                "today has no representable next day, so no window can be reported.",
+                "Supply a run date before 9999-12-31.",
+            )
+        )
+        return out
     out["window"] = {"start": today, "end": (day + datetime.timedelta(days=1)).isoformat()}
 
     if operation == "verify":
@@ -172,28 +184,40 @@ def run(
             )
     check = ranking_publication.verify(archive_dir, reg)
     latest = check["latest"]
+    problems = list(check["problems"])
+    due = bool(latest is None or latest < today)
+    next_start: str | None = today
+    if not due:
+        last = datetime.date.fromisoformat(latest)
+        if last == datetime.date.max:
+            next_start = None
+            problems.append("The latest publication date has no representable next window.")
+        else:
+            next_start = (last + datetime.timedelta(days=1)).isoformat()
     out.update(
         count=check["count"],
-        problems=check["problems"],
+        problems=problems,
         latest=latest,
-        due=bool(latest is None or latest < today),
+        due=due,
+        next_window_start=next_start,
     )
-    out["next_window_start"] = (
-        today
-        if out["due"]
-        else (datetime.date.fromisoformat(latest) + datetime.timedelta(days=1)).isoformat()
-    )
-    if check["problems"] and operation == "publish" and not exercise:
+    if problems and operation == "publish" and not exercise:
         refusals.append(
             _refusal(
                 "archive_unverified",
-                f"{len(check['problems'])} archived record(s) do not verify.",
+                f"{len(problems)} archived record(s) do not verify.",
                 "Run verify, repair the archive by hand, then rerun. Nothing is overwritten.",
             )
         )
 
     if operation == "schedule":
-        out["status"] = "blocked" if refusals else ("due" if out["due"] else "current")
+        out["status"] = (
+            "problem"
+            if problems
+            else "blocked"
+            if refusals
+            else ("due" if out["due"] else "current")
+        )
         return out
 
     snap_date = as_of
@@ -260,7 +284,8 @@ def run(
     need = len(
         ranking_publication._canonical({"published_on": today, "snapshot": snap}).encode("utf-8")
     )
-    if free_bytes(archive_dir) < need:
+    exists = os.path.exists(os.path.join(archive_dir, ranking_publication._name(snap)))
+    if not exists and free_bytes(archive_dir) < need:
         refusals.append(
             _refusal(
                 "capacity_missing",
