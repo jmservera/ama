@@ -1299,6 +1299,16 @@ Set `ZF_AXE_JS` to the pinned axe 4.10.3 file for the axe scan of `main` at
 This is an engineering check on constructed data, not assistive-technology or
 WCAG acceptance (#155, #151) and not Fluent 2 conformance (#150).
 
+`PYTHONDONTWRITEBYTECODE=1 python -m checks.schema_download_browser_check` (#80)
+registers a synthetic form schema through the real API as a Retrofit Programme
+Manager, reaches the "Download for Excel" link on Funding route and claim pack by
+Tab, activates it with Enter and checks the downloaded `form-schemas.csv` header
+and row. It then signs in as a Programme Support Officer and a Grants and
+Evidence Officer, whom the server denies, and asserts there is no link and that
+a direct request is refused without catalogue content. No response is mocked.
+It needs Playwright and Chromium, is not wired into the CI matrix, and is an
+engineering check, not assistive-technology or WCAG acceptance.
+
 `python -m checks.procurement_screens_browser_check` (#228) builds a synthetic
 package, capacity record and issued work order through the real store, signs in
 as a Retrofit Programme Manager and as a Contractor, and opens the read-only
