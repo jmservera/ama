@@ -3234,10 +3234,13 @@ class JsonResidentDecisions(unittest.TestCase):
         self.store.resident_action(user or self.rae, "ZF-1", body)
 
     def route(self) -> dict[str, Any]:
-        return self.store.cases["ZF-1"]["service_requests"][0].get("formal_route", {})
+        found: dict[str, Any] = self.store.cases["ZF-1"]["service_requests"][0].get(
+            "formal_route", {}
+        )
+        return found
 
     def request_without_route(self) -> dict[str, Any]:
-        req = copy.deepcopy(self.store.cases["ZF-1"]["service_requests"][0])
+        req: dict[str, Any] = copy.deepcopy(self.store.cases["ZF-1"]["service_requests"][0])
         req.pop("formal_route", None)
         return req
 
