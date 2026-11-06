@@ -1309,6 +1309,12 @@ a direct request is refused without catalogue content. No response is mocked.
 It needs Playwright and Chromium, is not wired into the CI matrix, and is an
 engineering check, not assistive-technology or WCAG acceptance.
 
+The shared browser harness keeps its scratch directory under the repository `.venv`
+and drops the caller's bytecode settings from the server it starts. To keep
+generated files out of the checkout, set an absolute `ZF_BROWSER_SCRATCH`
+outside it and `PYTHONDONTWRITEBYTECODE=1` (optionally `PYTHONPYCACHEPREFIX`);
+both are passed through when set.
+
 `python -m checks.procurement_screens_browser_check` (#228) builds a synthetic
 package, capacity record and issued work order through the real store, signs in
 as a Retrofit Programme Manager and as a Contractor, and opens the read-only
