@@ -28,8 +28,13 @@ Local runner (slice 5): `python3 -m zava_forward.core.ranking_publication_runner
 The date, archive and store-shaped case file are explicit; no clock, environment
 variable or default data folder is read, and no random seed is consumed (the run
 key is a hash of policy, as-of date and window start). `schedule` reports the
-one-day window, whether it is due and the next window; `verify` exits 1 when a
-record fails or the latest publication is stale; `publish` is idempotent and
+one-day window, whether it is due and the next window, and exits 1 with status
+`problem` when any archived record fails to verify (due and latest stay visible);
+`verify` exits 1 when a record fails or the latest publication is stale; the case
+file must hold boolean `closed` flags, and a malformed record refuses the whole
+source; `9999-12-31` has no next day, so it is refused as a run date and reported
+as a problem as an archived latest; `publish` is idempotent, a verified identical
+retry needs no free space because it writes nothing, and
 exits 2 with a reason code and next action when the policy has no recorded
 sign-off (`approval_missing`), the case source is missing or unusable, the
 archive does not verify or there is no room to write. `--exercise` ranks and

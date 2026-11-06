@@ -58,6 +58,24 @@ class RunnerBase(unittest.TestCase):
     def codes(self, res: dict[str, Any]) -> list[str]:
         return [r["code"] for r in res["refusals"]]
 
+    def cli(self, *args: str) -> tuple[int, dict[str, Any]]:
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
+            code = runner.main(list(args))
+        return code, json.loads(out.getvalue())
+
+    @contextlib.contextmanager
+    def registry_patched(self) -> Iterator[None]:
+        version = ranking.POLICY_V1["version"]
+        pol = self.signed[version]
+        with patch.dict(ranking.POLICIES, {version: pol}), patch.object(ranking, "CURRENT", pol):
+            yield
+
+    def cases_file(self) -> Path:
+        path = self.root / "cases.json"
+        path.write_text(json.dumps({"as_of": AS_OF, "cases": open_cases()}))
+        return path
+
 
 class PublishTests(RunnerBase):
     def test_signed_policy_publishes_once_and_repeat_is_idempotent(self) -> None:
@@ -232,24 +250,6 @@ class MalformedArchivedDateTests(RunnerBase):
 
 
 class CliAndStoreTests(RunnerBase):
-    def cli(self, *args: str) -> tuple[int, dict[str, Any]]:
-        out = io.StringIO()
-        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(io.StringIO()):
-            code = runner.main(list(args))
-        return code, json.loads(out.getvalue())
-
-    @contextlib.contextmanager
-    def registry_patched(self) -> Iterator[None]:
-        version = ranking.POLICY_V1["version"]
-        pol = self.signed[version]
-        with patch.dict(ranking.POLICIES, {version: pol}), patch.object(ranking, "CURRENT", pol):
-            yield
-
-    def cases_file(self) -> Path:
-        path = self.root / "cases.json"
-        path.write_text(json.dumps({"as_of": AS_OF, "cases": open_cases()}))
-        return path
-
     def test_cli_exit_codes_and_explicit_inputs(self) -> None:
         arch = ["--archive", str(self.archive), "--today", TODAY]
         code, res = self.cli("publish", *arch, "--cases", str(self.cases_file()))
@@ -307,6 +307,93 @@ class CliAndStoreTests(RunnerBase):
             "import random",
         ):
             self.assertNotIn(word, src)
+
+
+class AssessmentFindingTests(RunnerBase):
+    def damaged_extra(self, archive: Path) -> None:
+        archive.mkdir(exist_ok=True)
+        (archive / "ranking-garbage.json").write_text("not json")
+
+    def test_malformed_closed_flags_refuse_the_whole_source(self) -> None:
+        path = self.root / "bad.json"
+        bad_values: list[Any] = ["false", None, 1, 0, "", []]
+        for bad in bad_values:
+            with self.subTest(closed=bad):
+                cases = open_cases()
+                cases[0]["closed"] = bad
+                path.write_text(json.dumps({"as_of": AS_OF, "cases": cases}))
+                with self.assertRaises(TypeError):
+                    runner.load_cases(path)
+                arch = ["--archive", str(self.archive), "--today", TODAY, "--cases", str(path)]
+                with self.registry_patched():
+                    code, res = self.cli("publish", *arch)
+                self.assertEqual((code, self.codes(res)), (2, ["source_missing"]))
+                self.assertFalse(self.archive.exists())
+        path.write_text(json.dumps({"as_of": AS_OF, "cases": ["x"]}))
+        with self.assertRaises(TypeError):
+            runner.load_cases(path)
+        mixed = open_cases() + [dict(open_cases()[0], closed=True)]
+        path.write_text(json.dumps({"as_of": AS_OF, "cases": mixed}))
+        self.assertEqual(len(runner.load_cases(path)[0]), 2)
+
+    def test_schedule_is_a_problem_when_the_archive_does_not_verify(self) -> None:
+        self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.damaged_extra(self.archive)
+        mixed = self.go("schedule")
+        self.assertEqual(
+            (mixed["status"], mixed["due"], mixed["latest"], len(mixed["problems"])),
+            ("problem", False, TODAY, 1),
+        )
+        arch = ["--archive", str(self.archive), "--today", TODAY]
+        with self.registry_patched():
+            self.assertEqual(self.cli("schedule", *arch)[0], 1)
+        only_bad = self.root / "only-bad"
+        self.damaged_extra(only_bad)
+        res = runner.run("schedule", only_bad, TODAY, registry=self.signed)
+        self.assertEqual((res["status"], res["due"], res["latest"]), ("problem", True, None))
+        draft = runner.run("schedule", self.archive, TODAY)
+        self.assertEqual((draft["status"], self.codes(draft)), ("problem", ["approval_missing"]))
+
+    def test_verified_identical_retry_needs_no_new_capacity(self) -> None:
+        first = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        path = Path(first["path"])
+        before = path.read_bytes()
+        again = self.go(
+            "publish", cases=open_cases(), as_of=AS_OF, today="2026-11-06", free_bytes=lambda _p: 0
+        )
+        self.assertEqual((again["status"], again["written"]), ("already_published", False))
+        self.assertEqual((again["published_on"], path.read_bytes()), (TODAY, before))
+        fresh = self.go("publish", cases=open_cases()[:1], as_of=AS_OF, free_bytes=lambda _p: 0)
+        self.assertEqual(self.codes(fresh), ["capacity_missing"])
+        self.assertEqual(len(list(self.archive.iterdir())), 1)
+
+    def test_latest_representable_date_is_refused_without_a_traceback(self) -> None:
+        for op in ("schedule", "publish", "verify"):
+            with self.subTest(op=op):
+                res = self.go(op, today="9999-12-31", cases=open_cases(), as_of="9999-12-31")
+                self.assertEqual((res["status"], self.codes(res)), ("refused", ["bad_date"]))
+        code, res = self.cli("schedule", "--archive", str(self.archive), "--today", "9999-12-31")
+        self.assertEqual((code, self.codes(res)), (2, ["bad_date"]))
+        self.assertFalse(self.archive.exists())
+
+    def test_archived_latest_without_a_next_day_is_a_problem_not_a_crash(self) -> None:
+        first = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        path = Path(first["path"])
+        rec = json.loads(path.read_text())
+        rec["published_on"] = "9999-12-31"
+        path.write_text(json.dumps(rec))
+        before = path.read_bytes()
+        sched = self.go("schedule")
+        self.assertEqual(
+            (sched["status"], sched["latest"], sched["next_window_start"]),
+            ("problem", "9999-12-31", None),
+        )
+        self.assertEqual(len(sched["problems"]), 1)
+        pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((pub["status"], self.codes(pub)), ("refused", ["archive_unverified"]))
+        self.assertEqual(path.read_bytes(), before)
+        self.assertEqual(len(list(self.archive.iterdir())), 1)
+        self.assertEqual(self.go("verify")["latest"], "9999-12-31")
 
 
 if __name__ == "__main__":
