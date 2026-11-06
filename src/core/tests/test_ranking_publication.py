@@ -1,6 +1,7 @@
 """Retained ranking snapshot publication (Refs #79)."""
 
 import contextlib
+import errno
 import json
 import multiprocessing
 import os
@@ -268,6 +269,19 @@ class ConcurrentWriterTests(unittest.TestCase):
             rp.publish(snap(), self.dir, "2026-10-10")
         self.assertEqual([p.name for p in self.dir.iterdir()], [keep.name])
         self.assertEqual(keep.read_bytes(), b"other writer")
+
+    def test_filesystem_without_hard_links_refuses_and_publishes_nothing(self):
+        self.dir.mkdir()
+        foreign = {self.dir / ".other-writer.tmp": b"other", self.dir / "notes.txt": b"note"}
+        for path, data in foreign.items():
+            path.write_bytes(data)
+        unsupported = OSError(errno.EPERM, "hard links are not supported")
+        with patch.object(os, "link", side_effect=unsupported), self.assertRaises(OSError) as ctx:
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(ctx.exception.errno, errno.EPERM)
+        self.assertEqual({p: p.read_bytes() for p in self.dir.iterdir()}, foreign)
+        self.assertEqual(rp.verify(self.dir)["count"], 0)
+        self.assertTrue(rp.publish(snap(), self.dir, "2026-10-10")["written"])
 
     def test_sequential_bytes_and_name_are_unchanged(self):
         first = rp.publish(snap(), self.dir, "2026-10-10")

@@ -6,8 +6,10 @@ copies below exist only inside tests and are patched into a temporary registry.
 
 import contextlib
 import copy
+import errno
 import io
 import json
+import os
 import tempfile
 import unittest
 from collections.abc import Iterator
@@ -193,6 +195,15 @@ class ConcurrentPublishTests(RunnerBase):
         (record,) = self.archive.iterdir()
         self.assertEqual(json.loads(record.read_text())["published_on"], "2026-11-05")
         self.assertEqual(rp.verify(self.archive, self.signed)["problems"], [])
+
+    def test_filesystem_without_hard_links_is_a_refusal_and_writes_no_record(self) -> None:
+        with patch.object(os, "link", side_effect=OSError(errno.EPERM, "hard links unsupported")):
+            res = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual(self.codes(res), ["publish_failed"])
+        self.assertNotIn("written", res)
+        self.assertEqual(list(self.archive.iterdir()), [])
+        again = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((again["status"], again["written"]), ("published", True))
 
 
 class ScheduleAndVerifyTests(RunnerBase):
