@@ -436,7 +436,9 @@ For the proposed #144 background-dispatch safeguards, the
 separates main from the unmerged candidate queue slice, corrects the
 candidate's ADR anchors, lists seven design gaps and two open decisions, and
 recommends FIX with #144 implementation held; no code ran and no approval,
-closure or tick is implied.
+closure or tick is implied. Correction 1 qualifies the r8 chronology (Plan and
+Details were parallel, not serial) and records the local, unpublished parent
+136 ref at main; second-route authority stays unresolved.
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope

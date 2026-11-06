@@ -10663,3 +10663,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Appended the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122) to the cutover evidence pack. It pins governance `119828353`, main `bb3a3b03` and the read-only candidate `4c878d664`, shows the queue slice is candidate-only, corrects the candidate's ADR 0002 anchor (ADR 0001 and 0002 are Proposed; ADR 0003 decision 1 tension recorded), and lists seven design gaps and two open decisions (second route authority, liability-unknown operator path).
 * Recommendation FIX with #144 implementation held; the owner-approved background goal stays in force. Local candidate pending coordinator consumption. No code or test ran; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Queue dispatch checkpoint correction 1 (Refs #440 #144)
+
+* Added a dated correction subsection to the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122): the r8 Plan and Details creates were parallel (identical 08:18:22.940Z start in the native events), superseding the coordinator-supplied serial order; parent 136 is a local unpublished ref at `bb3a3b03` with no remote branch.
+* Second-route authority, operator disposition and the seven design gaps stay open; FIX unchanged. Local candidate pending coordinator consumption; no approval, closure or tick. Earlier records are unchanged.

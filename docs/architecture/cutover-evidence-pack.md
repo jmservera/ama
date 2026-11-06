@@ -4485,3 +4485,41 @@ Resume conditions:
 
 Process disclosure: research, plan and details were committed as `5233db299`
 before this edit. No test, SQL, browser, install, lock, cleanup, push or PR.
+
+### Correction 1 qualifications (2026-11-06)
+
+The original text above, including the sentence that the r8 creation order was
+"Research, Details, Plan, state, log, commit" and the parent 136 row, is
+preserved. This subsection supersedes them for two points only. The
+coordinator supplied the r8 order from the outer CLI log display and has since
+corrected that inference; the original text repeated it.
+
+* r8 Plan and Details were parallel, not serial. Native event metadata (only
+  call IDs, event types, timestamps and success flags) shows: first Research
+  create started 08:17:18.098Z and failed (retained; the coordinator attributes
+  it to a missing directory); successful Research create 08:17:36.958Z to
+  08:17:36.985Z; Plan create and Details create both started at exactly
+  08:18:22.940Z, with Details completing at .970Z and Plan at .981Z. Neither the
+  log display order nor the shared start time shows a serial chain, and
+  completion order is not creation order. No serial r8 phase chain is claimed.
+  The state, log and commit order is as supplied and was not re-derived. The
+  other r8 qualifications stand: unread research skill body, no source edit,
+  three original Markdown files without frontmatter, issue metadata retrieved
+  (so "no network" is not literal), and no Azure, Graph, provider, SQL or
+  browser run.
+* Parent 136: on 2026-11-06 a local `git rev-parse
+  refs/heads/feat/infra-hosting-integration-136` returned
+  `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` (equal to main), and
+  `git ls-remote origin 'refs/heads/feat/infra*'` returned nothing. So the ref
+  is a local, unpublished integration branch: local observed `bb3a3b03`,
+  remote absent as observed, intended code target. The earlier remote 404
+  stays true and historical. No remote branch is created and no owner
+  branch-choice question is raised by this.
+
+Unchanged: the second AgentsWorker route authority is unresolved (the owner's
+reply was a question about URL versus container, not an approval, and
+clarification or the general background scope is not role-code approval); the
+liability-unknown operator disposition and all seven design gaps stay open; the
+recommendation stays FIX with #144 implementation held. Correction research,
+plan and details were committed as `6d9a8818d` before this edit; no test, SQL,
+browser, lock, push or PR.
