@@ -11,8 +11,11 @@ from checks import design_system_browser_check as harness
 
 class HarnessScratchTests(unittest.TestCase):
     def test_default_scratch_parent_is_unchanged(self) -> None:
-        with patch.dict(os.environ, {}, clear=True):
-            self.assertEqual(harness.scratch_parent(), harness.ROOT / ".venv")
+        with tempfile.TemporaryDirectory() as owned:
+            root = Path(owned)
+            with patch.object(harness, "ROOT", root), patch.dict(os.environ, {}, clear=True):
+                self.assertEqual(harness.scratch_parent(), root / ".venv")
+            self.assertTrue((root / ".venv").is_dir())
 
     def test_external_scratch_parent_is_used_and_created(self) -> None:
         with tempfile.TemporaryDirectory() as outside:
