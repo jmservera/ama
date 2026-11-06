@@ -307,6 +307,34 @@ Focused local constructed tests:
 python3 -m unittest discover -s tests -p test_resident_decisions.py -q
 ```
 
+## Formal-complaints route boundary (#86)
+
+`complaints_route.py` defines a small receiver boundary and the
+`service_forward` resident action. It is a human-invoked step on one Complaint
+or Independent review request, never sent automatically. The default
+`ZF_COMPLAINTS_ROUTE=unconfigured` (the only accepted value) sends nothing and
+records an `Unconfigured` attempt. No real receiver, destination, appointment
+or transport exists; tests inject a synthetic receiver.
+
+Each attempt is appended to `formal_route.attempts` and the local request is not
+changed. Local recording and a receiver receipt stay separate: only a non-empty
+`receipt_ref` from the receiver gives `Acknowledged`; a receiver error or
+malformed reply gives `Failed`, and a send whose outcome could not be saved
+stays `Pending` and blocks a silent resend (retry needs `retry_unresolved`).
+All attempts share one `route_key` idempotency key. The caller must supply
+`resident_request_ref`, the staff reference showing the resident asked for the
+send; consent is never inferred. Only the redress owner or a manager can send a
+complaint, and only the named, independent reviewer can send an independent
+review. Holds do not block the route. Retention deletion clears the resident
+reference and requester identity. The envelope is an allow-list of existing
+staff-entered fields; free text is not screened, which a real receiver needs a
+DPO/Legal decision for. Resident-facing text still says nothing is sent to a
+live service; this adds no web control and does not prove resident access
+without detriment.
+
+Focused command: from `src/core`, `PYTHONPATH=src:tests python3 -m unittest
+test_resident_decisions -q`.
+
 ## Unapproved working field review (#96, #98, #99)
 
 `form_review.action(store, user, case_id, body)` supports `open`, `review` and
