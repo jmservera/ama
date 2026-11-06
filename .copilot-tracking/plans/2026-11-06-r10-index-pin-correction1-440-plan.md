@@ -51,24 +51,24 @@ Scope: one README token; one log entry; new RPI records. Non-goals: the older un
 
 ## Phase Checklist
 
-* [ ] P1 Correct the index pin and append the log entry
-* [ ] P2 Run focused checks
-* [ ] P3 Record Changes, run the later author Review, finalize state and commit
+* [x] P1 Correct the index pin and append the log entry
+* [x] P2 Run focused checks
+* [x] P3 Record Changes, run the later author Review, finalize state and commit
 
 ## P1 Correct the index pin and append the log entry
 
-* [ ] P1-T1 Edit the README token (FR1).
-* [ ] P1-T2 Append the log entry (FR2).
+* [x] P1-T1 Edit the README token (FR1).
+* [x] P1-T2 Append the log entry (FR2).
 
 ## P2 Run focused checks
 
-* [ ] P2-T1 Run the checks in AC1 to AC4 and capture exact commands and exits; limit them to documentation and Git checks, with no test, SQL, browser, container, model or provider execution.
+* [x] P2-T1 Run the checks in AC1 to AC4 and capture exact commands and exits; limit them to documentation and Git checks, with no test, SQL, browser, container, model or provider execution.
 
 ## P3 Record Changes, Review, state and commit
 
-* [ ] P3-T1 Write Changes after the checks, with the additive qualification of old R10 state and plan pending metadata.
-* [ ] P3-T2 Write the author Review in a later completed turn after the checks and Changes.
-* [ ] P3-T3 Write the state JSON once after Review, then commit and verify ignored-inclusive clean status.
+* [x] P3-T1 Write Changes after the checks, with the additive qualification of old R10 state and plan pending metadata.
+* [x] P3-T2 Write the author Review in a later completed turn after the checks and Changes.
+* [x] P3-T3 Write the state JSON once after Review, then commit and verify ignored-inclusive clean status.
 
 ## Follow-Up Items
 

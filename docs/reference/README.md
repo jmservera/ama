@@ -457,7 +457,7 @@ A later [provenance qualification](../architecture/cutover-evidence-pack.md#prov
 corrects the batch time labels and the scope of "no runtime defect".
 
 The [seventeenth stabilization checkpoint](../architecture/cutover-evidence-pack.md#seventeenth-stabilization-checkpoint-queue-dispatch-r10-design-2026-11-06-refs-440-144-107-118-122)
-records the finished #144 R10 dispatch design (`1e199209`) as an unapproved
+records the finished #144 R10 dispatch design (`1e192099`) as an unapproved
 DRAFT proposal with an independent read assessment, the observed topology of
 `feat/infra-hosting-integration-136` (local label at main `bb3a3b03`, no remote
 branch or pull request) and a CONTINUE-after-acceptance recommendation. It is
