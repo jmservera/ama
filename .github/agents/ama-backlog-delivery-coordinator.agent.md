@@ -117,14 +117,16 @@ without inventing, duplicating or no-op issues to look busy:
   issues at 20 or fewer open PRs unless a drain is in progress. Above 20 open
   PRs admit no new issues and enter a drain: record it in the session ledger
   on the first confirmed count above 20, read it before every admission, and
-  treat the run as draining when the state or a confirmed count is unavailable.
-  While draining, admit none even at 16 to 20, and repair, review and merge
-  existing PRs one at a time (rebasing only under step 8) until a confirmed
+  record its clearing. If the open-PR count is unavailable, admit none and
+  re-read `gh pr list --state open` this tick; if only the drain record is
+  unavailable, rebuild it from evidence and admit none while a confirmed count
+  is above 15. While draining, admit none even at 16 to 20, and repair, review
+  and merge existing PRs one PR per merge step (rebasing only under step 8;
+  sessions still count against the eight-assignment cap) until a confirmed
   count of 15 or fewer (the target is 10 to 15) clears the drain and admission
   resumes. Admission never relaxes dependency, validation, publication, review
-  or human gates. Existing-PR
-  repair, correction and review continuations stay permitted at every count
-  within the eight-assignment cap. Idle slots with
+  or human gates. Existing-PR repair, correction and review continuations stay
+  permitted at every count within the eight-assignment cap. Idle slots with
   independent `ready` issues are a defect.
 * Closure review: take a rotating batch of up to five `unassessed` items from
   the `python3 tools/backlog-sync.py` queue, compare each issue's criteria with
