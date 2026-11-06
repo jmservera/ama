@@ -5,9 +5,9 @@ ms.date: 2026-11-06
 
 ## Metadata and verdict
 
-Independent code-review agent ad465220-0525-464a-b2e6-b8032069dbdd completed in 394 seconds. The coordinator persists its actual returned assessment because the reviewer was read-only.
+Coordinator-authored summary of the assessment returned by independent code-review agent ad465220-0525-464a-b2e6-b8032069dbdd, completed in 394 seconds. This is a condensation, not the verbatim independent return. The companion coordinator-independent-final-r6-1204-return.md preserves that return separately.
 
-* Verdict: approve for a bounded engineering PR using Refs #1204.
+* Coordinator-normalized readiness: approve for a bounded engineering PR using Refs #1204. The reviewer's actual conclusion is preserved in the companion return, not replaced by this normalization.
 * Final HVE static closure: Pass. No new Critical, High or Medium source defect confirmed.
 * Reviewed HEAD a5124cbe554604e2f01b49336e91c2a325b7ea5c, tree 7c07dd4020b37393c7b2383003516d1b0c9acaae, target blob d471fc61041f9fc73a43564f7bf390a7c7d10cf5.
 * Reviewed-main base bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f.
