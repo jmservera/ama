@@ -4186,7 +4186,7 @@ Trigger: PR #1233 was squash-merged on 2026-11-06 at 06:32:47 UTC into the
 finance source parent and adds the recorded working-review history to the Held
 export (routed in the #440 comment 6678812333).
 
-### Pins (three separate, none is main)
+### Pins (two topic heads and main)
 
 | Pin | Identity |
 | --- | --- |
@@ -4250,12 +4250,13 @@ are the owner's records and are not re-adjudicated.
 | Pins, blobs, issue states (#440, #96, #93 open) | local observed | `git` and `gh`, 2026-11-06 |
 | Source and test reading of #1233 | local observed | Static; no test was run in this checkpoint |
 | History in Held export, Invalid legacy copy, regeneration | implemented-unverified | Child FULL is source-qualified to `abeb022ba`; no exact-head receipt for `4642b55fd` or governance |
-| Child FULL, 205-row ledger, SQL 285 tests with one JSON-only skip, hosted checks, independent and published functional and readiness approvals | unknown (not independently re-executed by this author) | Attribution: coordinator and PR #1233 comment 6678688323; paths not accessible here |
+| Child FULL, 205-row ledger, SQL 285 tests with one JSON-only skip, hosted checks, independent and published functional and readiness approvals | unknown | Attribution: coordinator and PR #1233 comment 6678688323; not inspected by this author in the original cycle. In correction 1 only the identity block of `/mnt/ama-gates/g96-r18-1106/receipt.json` was read (head `abeb022ba`, tree `e2628422`, 205 commands, no failure); the ledger `96-r18-execution-consumption-r44.json` was not read. Child-source evidence, not a receipt for `4642b55fd`, governance or main |
 | History tests on SQL Server | unknown | SQL covers 285 tests per the coordinator; the new history tests exercised JSON and SQLite only |
-| Local constructed browser observations | unknown (not independently re-executed by this author) | Not Azure, AT or WCAG acceptance |
-| Vulnerability gates (four fixable-vulnerability gates found zero; 39 unfixed per image, 37 High and 2 Critical) | unknown (not independently re-executed by this author) | No security-clean or risk-acceptance claim |
+| Local constructed browser observations | unknown | Attribution: coordinator; not re-executed by this author. Not Azure, AT or WCAG acceptance |
+| Vulnerability gates (four fixable-vulnerability gates found zero; 39 unfixed per image, 37 High and 2 Critical) | unknown | Attribution: coordinator; not re-executed by this author. No security-clean or risk-acceptance claim |
 | Real or private data, named schema, DPO, Legal, resident, professional, Azure, assistive technology | blocked | Not supplied; synthetic data only |
-| Heavy resource and 99% disk | local observed | 3.8G free; nothing deleted or run |
+| Disk space at intake | local observed | `df` on 2026-11-06: 99% used, 3.8G free; nothing deleted |
+| Heavy-resource release and #188 handoff admission | unknown | Attribution: coordinator-supplied; not verified by this author. No heavy work was run |
 
 ### Findings, recommendation and gates
 
@@ -4280,3 +4281,18 @@ coordinator consumption, and a named exact-head receipt where relied on.
 
 Process disclosure: research, plan and details were committed as `5764cb570`
 before this edit. No test, SQL, browser, install, lock, cleanup, push or PR.
+
+### Correction 1 qualifications (2026-11-06)
+
+The original records above and in the first cycle's artifacts are preserved.
+Actual chronology: Research, Details and Plan were created in that order
+(not Research, Plan, Details as the original Changes says) before the planning
+commit `5764cb570` and any canonical edit. The first README edit failed on a
+mistyped path and was redone. Changes and state were created before the final
+checks, not after as planned, and the Review followed in a later call. The
+final check read cached refs; only the intake step fetched, so the Review's
+"re-fetched" overstates it. The commits used the privacy-safe address without
+a shown `gh api user` resolution. Correction 1 corrects the disk and admission
+classification, replaces "paths not accessible" with "not inspected by this
+author", and fixes the pins heading. It re-fetched all three pins and found
+them unchanged. No defect, requirement or approval changed.
