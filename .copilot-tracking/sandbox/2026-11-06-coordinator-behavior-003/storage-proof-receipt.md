@@ -1,0 +1,26 @@
+<!-- markdownlint-disable-file -->
+# Storage proof receipt (issue 1204; proof preparation only, nothing replaced or pruned)
+
+* Prepared 2026-11-06 about 00:25Z UTC. Approval basis: root conditional approval for proof preparation only. Approved manifest .copilot-tracking/sandbox/2026-11-05-coordinator-behavior-002/raw-storage-manifest.md SHA256 643fb9ad14b44cf3e3b4e32d481c5646d8ff1c45f5d4527b259748375b309047 (recomputed, equal). Run 002 manifest SHA256 51af7cac90d7348e90c0ad51a9457dd71516ef928e6db15f193cf4cc2eba23a6 (recomputed, equal).
+* NOT done and NOT approved: replacement, removal, move, pruning or normalization of any old member; the 68 originals remain in place byte-identical; range `git diff --check origin/main..HEAD` remains OPEN. No .gitattributes change, exemption or suppression.
+
+## Archive A: full tracking snapshot (outside the checkout, private)
+
+* Path (owner-only, directory mode 0700, new unique name, no overwrite): /home/azureuser/.local/share/ama/tracking-archives/2026-11-06-issue1204-evidence-20261106T002451Z/tracking-snapshot.tar.gz, sha256 767ba72f80afac9c725aa72ff9e8bbbcaf2ec741e0c72e710349cb331c073277, 40791369 bytes.
+* Content: the whole `.copilot-tracking` tree, 7559 regular files, 90387458 bytes, 0 symlinks, 0 special files, 0 ignored paths (git status --ignored showed only 10 untracked new records); 7549 tracked plus the untracked new records of this run. Inventory with type, mode, size and sha256 per member: tracking-snapshot.inventory.json (sha256 ef33cd5163404f746440b287ec0d9ee37495bc641d0a168f34b68a3525a580c6) in the same directory. The snapshot predates the two copy bundles and this receipt.
+* Readback: every member read from the archive, sha256, size and mode equal to the inventory (7559 of 7559, no missing, no unexpected). Restore: every member restored into a new empty directory /tmp/h1204-r5-restore-20261106T002451Z/A and each restored file re-hashed equal. All 7549 tracked members equal their HEAD git blob ids (the first in-script check had a column bug that reported a false mismatch; corrected by a separate check over the same restored files, 0 mismatches; corrected receipt receipt-corrected.json sha256 50fad3aad715dd983e7dad25eb7ba15ce326cdc7cf92e4630b7ba1e8b492ca24; the original receipt.json is preserved with the bug).
+* The 68 selected old members are in A and were restored and compared there as well as from bundle C.
+
+## Bundle C: the 68 selected transcripts (tracked, copy only)
+
+* .copilot-tracking/sandbox/2026-11-06-coordinator-behavior-003/raw-selected-68.tar.gz, sha256 a250456ec1a6c40d0740087d0ff5721211ff961e639019524aa649916fbab9b4, 47673 bytes. Member names are the original repo-relative paths. Manifest with per-member size and sha256: raw-selected-68-manifest.md. Exactly 68 members, 288862 bytes. Each member sha256 and git blob equals the approved manifest and the blob at source commit f6b2984d9dabc181ef784caadcf045bcbb69a24a; exit-codes.json (609 bytes) is not in the bundle. Readback 68 of 68 and restore into /tmp/h1204-r5-restore-20261106T002451Z/C with hash equality: ok. An identical private copy is in the archive directory.
+
+## Bundle B: run 002 and run 003 external raw files (tracked, copy only)
+
+* raw-runs-002-003-preservation.tar.gz, sha256 c7f60f90170b4cb2dfefc024af896f132096d88e68639a8f8450574cf8ec3bb3, 354123 bytes: 400 regular members, 2602367 bytes, 0 symlinks, from /tmp/h1204-r3 (run 002, including mutant source copies, original raw mutant diffs, scripts and CLI logs) and /tmp/h1204-r4 (run 003 raw outputs, argv traces, exits, model shares, byte-exact source copy, runner, replay diffs, hygiene results). Manifest: raw-runs-002-003-preservation-manifest.md. Readback and restore 400 of 400 ok. Identical private copy in the archive directory. The run 002 manifest listed 134 files under /tmp/h1204-r3/run; the bundle also covers the other r3 reproduction inputs, which that manifest did not include.
+* Credential hygiene: names-only pattern check (tokens, keys, private-key headers, JWT, bearer, key-value secrets, connection signatures) over every file in B (396 scanned before the final run files were added) and over the 69 run-001 raw files: 0 matches. This is bounded content hygiene, not certification. The same check over the whole tracking tree matched 11 older already-committed records (generic key-value pattern, likely false positives); names in hygiene-tracking-names-only.json in the private archive directory. The tracked bundles contain none of them.
+
+## Protected sources
+
+* Source blob acefb44a4d254ede6d86413343127b763dec42cb (hash-object before and after). Backup refs unchanged: backup/issue-1204-pre-amend-cbebe cbebe58ef7c76ee2f2751c2aae532c694ddb1e17; backup/issue-1204-pre-rebase-6465 6465ac16d330129ae0314d7a5ad2df79464406f1; backup/444-pre-rebase-6878d6ec and backup/444-pre-round3-ab07351a unchanged. /tmp/h1204 retained in place (262 files; listing sha256 d64bd411195b7bc817d8ea1dee53af248a3071946a952c2329a868a7e1abce47); it is external-only on a disposable VM and is not claimed persistent.
+* Remaining PRUNE hold: no old member may be replaced or removed until root consumes this receipt. External-only paths (/tmp/h1204, /tmp/h1204-r3, /tmp/h1204-r4, /tmp/h1204-r5-restore-*, the private archive directory) are not durable on this VM.

@@ -1,0 +1,29 @@
+**T1**
+DECISION: No; “everything human-blocked” and stopping the schedule are not allowed.
+RULE: “`unknown` and `unreviewed` (never refined or never assessed) are research or refinement work for this tick, never `human-blocked`.” Also: “After two consecutive no-progress ticks while `ready` or `unassessed` work remains, diagnose the bottleneck from the log and state and execute one bounded recovery action in that same tick.”
+ACTIONS: Classify each issue with fresh evidence and a named next action; perform a bounded recovery action and record it. A printed review-needed queue is not a completed audit.
+
+**T2**
+DECISION: Advance independent issue 502; PR 501’s named legal approval blocks only its affected lane.
+RULE: “A human blocker stops only the affected issue and every issue that depends on it. Independent issues continue.” Also: “eight [...] is the TOTAL number of live issue sessions” and “Admit new issues only at 15 or fewer open PRs.”
+ACTIONS: Start 502 in its own RPI session and worktree, within the eight-session total; record the blocker for 501. The six open PRs are within the admission threshold.
+
+**T3**
+DECISION: Do not start 611; the seven sessions plus candidate 610 use all eight live-session slots.
+RULE: “A candidate keeps its slot until it is published and merged or the owner releases it.” Also: “A candidate unpublished by design (local-only or awaiting the coordinator’s gate) is `ready` for assessment.”
+ACTIONS: Assess candidate 610 and advance its coordinator gate. Recount sessions and open PRs before considering 611.
+
+**T4**
+DECISION: Route a scoped next action for the approved sending; ask the two owner questions one at a time, without delaying independent work.
+RULE: “Record every owner approval in session SQL (`approved_actions`: scope, limits such as a cost cap, source, date, expiry, affected tasks).” Also: “Ask the owner one question at a time, in the same report, naming the lane it blocks, then continue independent work without waiting for the answer.”
+ACTIONS: Record the approval and budget, reclassify affected tasks, and proceed only within its scope and required gates. Ask one question in the report, then the other separately; do not treat the approval as waiving validation or other gates.
+
+**T5**
+DECISION: Target `feat/parent-690`; the worker may not publish.
+RULE: “For a stacked child, fetch and record the parent topic SHA and use it as `{base-sha}` instead” and “preserve the child PR target and declared dependency.” Also: “The brief forbids the worker to push, open or update a PR, merge or change the target: publication belongs to the coordinator after selected-tier verification and independent exact-head assessment in step 6.”
+ACTIONS: Ignore the stale `/tmp` template; generate the brief for the parent-topic target and dependency. Keep publication with the coordinator after the required gates.
+
+**T6**
+DECISION: None of the three candidates may be deleted on the supplied facts.
+RULE: “Discovery patterns [...] only list candidates and grant no deletion authority. Resolve each candidate, then act on a finite per-run path manifest.” Also: “A path held by [...] a receipt not yet verified [...] is deferred” and “A missing upstream [...] is `unknown`, never zero unpushed commits.”
+ACTIONS: Defer the active-receipt worktree and unknown-upstream branch. Do not select or delete a path through wildcard discovery; resolve eligibility and manifest entries first.

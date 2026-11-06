@@ -1,0 +1,32 @@
+--- real
++++ mutant-m1
+@@ -94,10 +94,10 @@
+
+ * Start independent `ready` issues, each as its own RPI session in its own
+   worktree. Admission rule (single source; other sections cross-reference it):
+-  eight (owner, 2026-10-31; overrides the Inputs default of three) is the
++  five (owner, 2026-10-31; overrides the Inputs default of three) is the
+   TOTAL number of active issue assignments, counted once per issue across its
+   workers, repair, correction, validation and gate continuations and any
+-  retained unpublished candidate (never eight new plus repairs). An exited
++  retained unpublished candidate (never five new plus repairs). An exited
+   worker is not a free slot: its slot is released only when the issue is
+   published and merged, the owner releases it, or it is in an approved
+   published-only dependency-gated pause. That pause needs all of: local head
+@@ -111,14 +111,14 @@
+   `rpi-*` tmux sessions; a PR
+   queued for auto-merge stays open until the merge is confirmed. Respect the
+   caps by counting each unit once: the open-PR thresholds apply to open PRs
+-  and the total-of-eight applies to assignments, checked separately. An open
++  and the total-of-five applies to assignments, checked separately. An open
+   PR with a live repair session is one open PR and one assignment, never
+   extra open work; never sum assignments and PRs against each other. Admit new
+   issues only at 15 or fewer open PRs; from 16 to 20 admit no new issues; above
+   20 admit no new issues and drain to 10 to 15 by repairing, reviewing and
+   merging existing PRs one at a time (rebasing only under step 8). Existing-PR
+   repair, correction and review continuations stay permitted at every count
+-  within the eight-assignment cap. Idle slots with
++  within the five-assignment cap. Idle slots with
+   independent `ready` issues are a defect.
+ * Closure review: take a rotating batch of up to five `unassessed` items from
+   the `python3 tools/backlog-sync.py` queue, compare each issue's criteria with
