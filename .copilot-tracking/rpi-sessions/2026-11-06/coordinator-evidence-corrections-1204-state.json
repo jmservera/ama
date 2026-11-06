@@ -1,0 +1,31 @@
+{
+  "task_id": "1204-evidence-corrections",
+  "task_slug": "coordinator-evidence-corrections-1204",
+  "parent_task": {"task_id": "1204-behavior-fresh-full", "task_slug": "coordinator-behavior-fresh-full-1204"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-06/coordinator-evidence-corrections-1204-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-06/coordinator-evidence-corrections-1204-plan.md",
+    "details": ".copilot-tracking/details/2026-11-06/coordinator-evidence-corrections-1204-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-06/coordinator-evidence-corrections-1204-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-06/coordinator-evidence-corrections-1204-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Fresh full real-source behavior run, report 005", "status": "executed, 25 runs exit 0, grader Pass 25/25 (emulated text only)", "evidence": ".copilot-tracking/hve-builder/2026-11-06/coordinator-behavior-abd6-1204-behavior-report-005.md"},
+    {"decision": "Review", "status": "executed, outcome Revise Low only, wording fixes applied", "evidence": ".copilot-tracking/reviews/2026-11-06/coordinator-evidence-corrections-1204-review.md"},
+    {"decision": "Storage proof preparation, copy only", "status": "archive, readback, restore ok; no replacement or prune", "evidence": ".copilot-tracking/sandbox/2026-11-06-coordinator-behavior-003/storage-proof-receipt.md"},
+    {"decision": "Source unchanged", "status": "verified", "evidence": "blob acefb44a4d254ede6d86413343127b763dec42cb"}
+  ],
+  "blockers": [
+    {"id": "B-prune-hold", "summary": "Replacement of the 68 originals not approved; range git diff --check open", "resolution": "root consumes receipt and approves a lossless replacement"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Root consumes report 005 and storage receipt; decide on replacement; then final exact-head tests and independent assessment"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Approve and perform lossless replacement of the 68 originals using the receipt", "rationale": "closes the open range diff check", "evidence": "storage-proof-receipt.md"},
+    {"rank": 2, "task": "Final exact-head 97-unit repeat and independent exact-head assessment", "rationale": "required gates", "evidence": "review"}
+  ]
+}

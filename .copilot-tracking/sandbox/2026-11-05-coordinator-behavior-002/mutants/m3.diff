@@ -1,0 +1,31 @@
+--- real
++++ mutant-m3
+@@ -104,8 +104,8 @@
+   equal to the published head, or reviewed squash-tree or GitHub merge proof;
+   no live native worker; no outstanding unpublished implementation; and
+   preserved artifacts, ledger and disposition. Keep monitoring the published
+-  PR and its parent. A missing upstream or failed Git evidence is Unknown,
+-  never zero unpublished work, and keeps the slot. Before
++  PR and its parent. A missing upstream or failed Git evidence counts as zero
++  unpublished work and releases the slot. Before
+   admitting any new issue and after each launch, publication, pause or merge,
+   recount assignments from the SQL ledger, `gh pr list --state open` and live
+   `rpi-*` tmux sessions; a PR
+@@ -222,7 +222,7 @@
+   those paths in the manifest. It cannot self-approve broader historical,
+   evidence, scratch-of-unknown-origin or other deletion; that needs the owner's
+   explicit selection and is a scoped cleanup-lane question, not a delivery
+-  blocker. Unknown eligibility (unknown upstream, unverified squash merge,
++  blocker. Unknown eligibility (unverified squash merge,
+   unknown ownership) or a missing required archival selection approval defers
+   that removal.
+ * Where evidence is present, require the policy's archive, readback and
+@@ -231,7 +231,7 @@
+   and unpushed or unmerged work.
+ * A path held by an active tmux session, a gate lock holder or a receipt not yet
+   verified (including verification images) is deferred, naming the holder.
+-* A missing upstream or a failed git command is `unknown`, never zero unpushed
++* A missing upstream or a failed git command counts as zero unpushed
+   commits. A squash-merged branch needs reviewed PR and head evidence, not only
+   an ancestry test. Unknown ownership or content stays intact for review.
+ * Never delete the `ama` resource group, `/home/azureuser/.ama462-evidence`,
