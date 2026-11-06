@@ -183,6 +183,54 @@ class ScheduleAndVerifyTests(RunnerBase):
         )
 
 
+class MalformedArchivedDateTests(RunnerBase):
+    def damage(self, value: Any) -> Path:
+        self.go("publish", cases=open_cases(), as_of=AS_OF)
+        (path,) = self.archive.iterdir()
+        rec = json.loads(path.read_text())
+        rec["published_on"] = value
+        path.write_text(json.dumps(rec))
+        return path
+
+    def test_impossible_calendar_date_is_reported_by_all_operations_without_crashing(self) -> None:
+        path = self.damage("2026-11-31")
+        before = path.read_bytes()
+        problem = f"{path.name}: publication date is not a valid calendar date."
+        ver = self.go("verify")
+        self.assertEqual(
+            (ver["status"], ver["latest"], ver["problems"]), ("problem", None, [problem])
+        )
+        sched = self.go("schedule")
+        self.assertEqual(
+            (sched["due"], sched["latest"], sched["next_window_start"], sched["problems"]),
+            (True, None, TODAY, [problem]),
+        )
+        pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((pub["status"], self.codes(pub)), ("refused", ["archive_unverified"]))
+        self.assertEqual(path.read_bytes(), before)
+        self.assertEqual(len(list(self.archive.iterdir())), 1)
+
+    def test_malformed_metadata_types_never_look_current_or_crash(self) -> None:
+        self.damage("2026-11-05")
+        odd = ("2026-11-05\n", "\u0662\u0660\u0662\u0666-\u0661\u0661-\u0660\u0665")
+        for value in (None, 20261105, ["2026-11-05"], "20261105", "", *odd):
+            with self.subTest(value=value):
+                (path,) = self.archive.iterdir()
+                rec = json.loads(path.read_text())
+                rec["published_on"] = value
+                path.write_text(json.dumps(rec))
+                for op in ("verify", "schedule"):
+                    res = self.go(op)
+                    self.assertEqual(len(res["problems"]), 1)
+                    self.assertIsNone(res["latest"])
+                self.assertEqual(self.go("verify")["status"], "problem")
+
+    def test_valid_archived_date_still_schedules_next_window(self) -> None:
+        self.go("publish", cases=open_cases(), as_of=AS_OF)
+        done = self.go("schedule")
+        self.assertEqual((done["status"], done["next_window_start"]), ("current", "2026-11-06"))
+
+
 class CliAndStoreTests(RunnerBase):
     def cli(self, *args: str) -> tuple[int, dict[str, Any]]:
         out = io.StringIO()

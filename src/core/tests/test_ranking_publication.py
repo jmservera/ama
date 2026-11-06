@@ -68,6 +68,40 @@ class PublicationTests(unittest.TestCase):
         self.assertFalse(rp.overdue(self.dir, "2026-10-10"))
         self.assertTrue(rp.overdue(self.dir, "2026-10-11"))
 
+    def test_malformed_archived_publication_date_is_a_problem_and_not_latest(self):
+        good = Path(rp.publish(snap(), self.dir, "2026-10-10")["path"])
+        s2 = snap()
+        s2["as_of"] = "2026-10-08"
+        s2["snapshot_hash"] = rp.snapshot_hash(s2)
+        bad = Path(rp.publish(s2, self.dir, "2026-10-11")["path"])
+        odd = ("2026-10-11\n", "\u0662\u0660\u0662\u0666-\u0661\u0660-\u0661\u0661")
+        for value in ("2026-11-31", "20261011", "", None, 20261011, ["2026-10-11"], *odd):
+            with self.subTest(value=value):
+                rec = json.loads(bad.read_text())
+                rec["published_on"] = value
+                bad.write_text(json.dumps(rec))
+                res = rp.verify(self.dir)
+                self.assertEqual(
+                    res["problems"], [f"{bad.name}: publication date is not a valid calendar date."]
+                )
+                self.assertEqual((res["count"], res["latest"]), (2, "2026-10-10"))
+        self.assertTrue(good.exists())
+
+    def test_only_malformed_dates_leave_no_trusted_latest(self):
+        path = Path(rp.publish(snap(), self.dir, "2026-10-10")["path"])
+        rec = json.loads(path.read_text())
+        rec["published_on"] = "2026-11-31"
+        path.write_text(json.dumps(rec))
+        self.assertIsNone(rp.verify(self.dir)["latest"])
+        self.assertTrue(rp.overdue(self.dir, "2026-10-10"))
+
+    def test_publish_refuses_impossible_calendar_date_before_writing(self):
+        odd = ("2026-10-10\n", "\u0662\u0660\u0662\u0666-\u0661\u0660-\u0661\u0660")
+        for value in ("2026-11-31", "2026-02-29", "2026-13-01", "0000-01-01", *odd):
+            with self.subTest(value=value), self.assertRaises(rp.PublicationError):
+                rp.publish(snap(), self.dir, value)
+        self.assertFalse(self.dir.exists())
+
     def test_schedule_states_what_is_not_decided(self):
         self.assertEqual(rp.SCHEDULE["owner"], "to be named")
         self.assertIn("not set", rp.SCHEDULE["retention"])

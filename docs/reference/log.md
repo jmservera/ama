@@ -10595,3 +10595,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-05] update | Issue 79 current-main preparation (Refs #79)
 
 * Merged main `bb3a3b03` into the publisher candidate with a plain merge (no conflicts) and ran light, cache-external checks (30 runner tests, Ruff, strict mypy). FULL gate, independent exact-head review and hosted CI remain pending and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r6).
+
+## [2026-11-06] update | Issue 79 archived publication date validation (Refs #79)
+
+* Archive verification now reports a malformed or impossible `published_on` (for example 2026-11-31) as a problem and excludes it from the latest publication date; publish refuses such a date before writing. This fixes an unhandled error in the runner schedule operation. Valid records, policy and retention are unchanged. Light checks only; FULL gate, independent review and hosted CI remain pending and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-06 issue-79 r7).
