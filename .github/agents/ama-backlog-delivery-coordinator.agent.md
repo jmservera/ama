@@ -114,9 +114,15 @@ without inventing, duplicating or no-op issues to look busy:
   and the total-of-eight applies to assignments, checked separately. An open
   PR with a live repair session is one open PR and one assignment, never
   extra open work; never sum assignments and PRs against each other. Admit new
-  issues only at 15 or fewer open PRs; from 16 to 20 admit no new issues; above
-  20 admit no new issues and drain to 10 to 15 by repairing, reviewing and
-  merging existing PRs one at a time (rebasing only under step 8). Existing-PR
+  issues at 20 or fewer open PRs unless a drain is in progress. Above 20 open
+  PRs admit no new issues and enter a drain: record it in the session ledger
+  on the first confirmed count above 20, read it before every admission, and
+  treat the run as draining when the state or a confirmed count is unavailable.
+  While draining, admit none even at 16 to 20, and repair, review and merge
+  existing PRs one at a time (rebasing only under step 8) until a confirmed
+  count of 15 or fewer (the target is 10 to 15) clears the drain and admission
+  resumes. Admission never relaxes dependency, validation, publication, review
+  or human gates. Existing-PR
   repair, correction and review continuations stay permitted at every count
   within the eight-assignment cap. Idle slots with
   independent `ready` issues are a defect.
