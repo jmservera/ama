@@ -508,6 +508,10 @@ The lexical guard now includes staff time capture. Juan Manuel Servera was
 appointed wording reviewer on 2026-10-15; completed exact-text review and actual
 resident/representative usability/AT acceptance remain Not run. No portal,
 live contact, operational authority or whole-issue closure is delivered.
+A 2026-11-06 slice rewords the two document-retention refusals in
+`doc_controls.py` (legal hold; not yet due) and records the open question of who
+decides that a real hold has ended; see the
+[content standard, slice 4](./research/ux/content-standard.md).
 
 For issue #172, the [chat fixture isolation boundary](./research/retrofit-synthetic-data/data-dictionary.md#resource-specific-isolation-coverage-2026-10-18-172)
 distinguishes 22 personas/eleven perspectives from current eligible thread owners

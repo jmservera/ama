@@ -289,11 +289,17 @@ class DocControlsMixin:
             c = self._case(case_id)
             if (c.get("legal_hold") or {}).get("active"):
                 self.audit(user["email"], "retention_delete_blocked_legal_hold", case_id, doc_id)
-                raise PermissionError("A legal hold blocks deletion on this case.")
+                raise PermissionError("A legal hold is in place on this case (its documents must be kept for a legal reason), "
+                                      "so nothing was deleted. Keep the documents. This system only records the hold; "
+                                      "a real hold needs the Legal delegate's decision, and a programme manager can record "
+                                      "its release once the hold has ended.")
             doc = next((d for d in c["documents"] if d["id"] == doc_id and not d["generated"]), None)
             if not doc:
                 raise KeyError(doc_id)
             trig = self._trigger(c, doc)
             if trig is None or trig + timedelta(days=365 * RETENTION_YEARS.get(doc["kind"], 1)) > today:
-                raise ValueError("This document is not past its retention trigger.")
+                raise ValueError("This document is not due for deletion, so nothing was deleted. Its retention period "
+                                 "(demonstration values, not an approved schedule) counts from the date the case closed "
+                                 "or a recorded retention start date, and that date is missing or the period has not ended. "
+                                 "Keep the document and check the case closing date or retention start date.")
             self._remove_document(case_id, doc, "retention_deleted", user["email"], f"{doc_id}: {doc['kind']}: approved by {user['name']}")
