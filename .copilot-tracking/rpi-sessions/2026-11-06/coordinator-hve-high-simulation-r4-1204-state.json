@@ -11,15 +11,22 @@
     "plan": ".copilot-tracking/plans/2026-11-06/coordinator-hve-high-simulation-r4-1204-plan.md",
     "details": ".copilot-tracking/details/2026-11-06/coordinator-hve-high-simulation-r4-1204-details.md",
     "critique": ".copilot-tracking/plans/2026-11-06/coordinator-hve-high-simulation-r4-1204-critique.md",
-    "changes": null,
+    "changes": ".copilot-tracking/changes/2026-11-06/coordinator-hve-high-simulation-r4-1204-changes.md",
     "review": null
   },
   "confirmed_decisions": [
     {"decision": "Research reused plus bounded scope decision for RV-004; critique executed once, 4 findings applied", "status": "recorded", "evidence": "research, details, critique"},
     {"decision": "Prior reports 005 to 008 and sandboxes 001 to 007 preserved; target unchanged unless a defect is reproduced", "status": "confirmed", "evidence": "assignment"},
-    {"decision": "High inferred, contained simulation, native Deferred", "status": "confirmed", "evidence": "r13 decision"}
+    {"decision": "High inferred, contained simulation, native Deferred", "status": "confirmed", "evidence": "r13 decision"},
+    {"decision": "HVE run 008 executed: design, execution, grading all gpt-5.6-sol; verdict Revise, 2 High 1 Medium, 0 target defects", "status": "recorded", "evidence": ".copilot-tracking/hve-builder/2026-11-06/coordinator-behavior-abd6-1204-behavior-report-009.md"}
   ],
-  "blockers": [],
-  "next_action": {"phase": "Implement", "action": "Commit planning, allocate sandbox 008, dispatch fresh High designer"},
-  "prioritized_follow_ups": []
+  "blockers": [
+    {"id": "RUN8-F01", "summary": "H-03F executor and oracle denied admission with a free slot", "resolution": "corrected fixture and rerun under coordinator admission"},
+    {"id": "RUN8-F02", "summary": "H-06 non-canonical track/ paths; positive stack publication not exercised", "resolution": "canonical paths and rerun under coordinator admission"},
+    {"id": "RUN8-F03", "summary": "Unsupplied fixture facts left behaviors unexercised", "resolution": "supply facts and rerun under coordinator admission"}
+  ],
+  "next_action": {"phase": "Implement", "action": "Run focused checks, commit implementation, then separate author Review in a later turn"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Corrected fixture rerun for H-03F, H-06 and F-03 omissions", "rationale": "closes the only unmet coverage with no target change", "evidence": "report 009"}
+  ]
 }
