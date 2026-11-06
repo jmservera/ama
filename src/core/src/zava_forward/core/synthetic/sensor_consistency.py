@@ -84,11 +84,16 @@ def _index(
 ) -> dict[tuple[str, str, str], dict[str, str]]:
     result: dict[tuple[str, str, str], dict[str, str]] = {}
     for row in rows:
-        if SensorConsumer._shape(dict(row)) is not None or (
-            row["temperature_unit"],
-            row["humidity_unit"],
-            row["calibrated"],
-        ) != ("degC", "percent", "true"):
+        if (
+            set(row) != set(READING_FIELDS)
+            or SensorConsumer._shape(dict(row)) is not None
+            or (
+                row["temperature_unit"],
+                row["humidity_unit"],
+                row["calibrated"],
+            )
+            != ("degC", "percent", "true")
+        ):
             raise ValueError("INVALID_HANDOVER_OBSERVATION")
         key = (row["home_id"], row["sensor_id"], row["observed_at"])
         if key in result:
@@ -280,9 +285,10 @@ def weather_report(
     """Constructed continuity check of live simulated weather against synthetic weather history.
 
     Both sides are live-sim-reading-v1 rows for the same homes and slots; only the seed and the
-    scenario (live-simulator versus weather-backfill-v1) differ. Tolerances are engineering bounds
-    from the declared generator constants, not an approved tolerance, and the result is not
-    witnessed Azure continuity, physical accuracy, indoor evidence or calibration.
+    scenario (live-simulator versus weather-backfill-v1) differ; equal declared seeds are refused.
+    Distinct seeds do not authenticate independent generator provenance. Tolerances are
+    engineering bounds from the declared generator constants, not an approved tolerance, and the
+    result is not witnessed Azure continuity, physical accuracy, indoor evidence or calibration.
     """
     boundary = utc(handover)
     if type(cadence_minutes) is not int or cadence_minutes <= 0 or 1440 % cadence_minutes:
@@ -291,6 +297,8 @@ def weather_report(
     expected = _weather_index(reference, live_readings.WEATHER_REFERENCE_SCENARIO)
     if actual.keys() != expected.keys():
         raise ValueError("HANDOVER_COVERAGE_MISMATCH")
+    if any(int(actual[key]["seed"]) == int(expected[key]["seed"]) for key in expected):
+        raise ValueError("HANDOVER_REFERENCE_NOT_DISTINCT")
     provenance = {"scenario", "seed"}
     for key in expected:
         if any(

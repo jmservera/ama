@@ -483,7 +483,9 @@ weather against synthetic weather history from `live_readings.Generator` with an
 and scenario `weather-backfill-v1` (same homes, slots, units and three channels, no
 `calibrated` field). Tolerances are engineering bounds from the declared generator constants,
 not an approved operational tolerance, and the output is a constructed distribution check, not
-witnessed Azure continuity, physical accuracy or calibration. It never accepts indoor rows.
+witnessed Azure continuity, physical accuracy or calibration. It never accepts indoor rows, and
+equal declared seeds are refused (`HANDOVER_REFERENCE_NOT_DISTINCT`); distinct seeds still do not
+authenticate independent generator provenance.
 
 The JSON-compatible result includes `passed`, declared tolerances and per-home
 before/after counts, channel means and population standard deviations.

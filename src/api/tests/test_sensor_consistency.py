@@ -22,7 +22,12 @@ from zava_forward.core.sensor_consumer import READING_COLUMNS, ConsumerError, Se
 from zava_forward.core.sqlstore import CASE_COLS
 from zava_forward.core.synthetic import sensor_backfill, sensor_faults
 from zava_forward.core.synthetic.live_readings import WEATHER_REFERENCE_SCENARIO, Generator
-from zava_forward.core.synthetic.sensor_consistency import WEATHER_TOLERANCES, Tolerance, report
+from zava_forward.core.synthetic.sensor_consistency import (
+    WEATHER_TOLERANCES,
+    Tolerance,
+    report,
+    weather_report,
+)
 from zava_forward.core.synthetic.sensor_stream import Replay, descriptor, replay, wire
 
 from zava_forward.api.iot_stream import AUTH, DEVICE, Binding, decode
@@ -422,6 +427,26 @@ class WeatherContinuityTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "HANDOVER_TOLERANCE_NOT_APPLICABLE"):
             self.check(store, base, temperature=Tolerance(point=1.0))
         self.assertEqual(consumer.retained_envelopes(["ZF-1"]), before)
+
+    def test_relabelled_copy_with_equal_declared_seed_is_refused_without_writes(self) -> None:
+        store, consumer = self.seeded()
+        before = consumer.retained_envelopes(["ZF-1"])
+        observed = weather_rows(184)
+        for seed in ("184", "-0" if observed[0]["seed"] == "0" else observed[0]["seed"]):
+            copy = [{**r, "scenario": WEATHER_REFERENCE_SCENARIO, "seed": seed} for r in observed]
+            with self.subTest(seed), self.assertRaisesRegex(ValueError, "NOT_DISTINCT"):
+                weather_report(observed, copy, handover=HANDOVER, cadence_minutes=5)
+            with (
+                self.subTest(seed, path="verify"),
+                self.assertRaisesRegex(ValueError, "NOT_DISTINCT"),
+            ):
+                self.check(store, copy, replay_check=True, received_at=self.received)
+        self.assertEqual(consumer.retained_envelopes(["ZF-1"]), before)
+
+    def test_core_indoor_report_refuses_weather_rows_explicitly(self) -> None:
+        rows = weather_rows(184)
+        with self.assertRaisesRegex(ValueError, "INVALID_HANDOVER_OBSERVATION"):
+            report(rows, rows, handover=HANDOVER, cadence_minutes=5)
 
     def test_weather_reference_against_indoor_or_mixed_window_is_refused(self) -> None:
         indoor = LiveEnvelopeReplayTests()
