@@ -453,6 +453,8 @@ and [sixteenth](../architecture/cutover-evidence-pack.md#sixteenth-stabilization
 stabilization checkpoints record the finance parent `4642b55f` and sensor
 parent `9476dc96` statuses with source-qualified historical child receipts;
 neither is a receipt for the parent, main acceptance or an approval.
+A later [provenance qualification](../architecture/cutover-evidence-pack.md#provenance-qualifications-2026-11-06-post-integration-correction-1)
+corrects the batch time labels and the scope of "no runtime defect".
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope

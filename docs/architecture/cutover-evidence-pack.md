@@ -4700,3 +4700,33 @@ The #188 receipt belongs to `6887377`, not to `9476dc96`. Weather reference data
 * No new defect is established; no speculative issue or refactor. Independent lanes can continue (#110 and #186 analysis, #185 adapter design) without activating sensors.
 * Recommendation: CONTINUE independent lanes; HOLD closure of #184, #185 and #188 and dependent expansion. Resume when the credential owner, consent and a gate at the intended head exist.
 * Publication and closure gates: coordinator reassessment, hosted CI on the parent, human approvals; no tick.
+
+### Provenance qualifications (2026-11-06, post-integration correction 1)
+
+Additive qualification of the Fourteenth checkpoint current-status subsection
+and of the batch that added the Fifteenth and Sixteenth sections. It is
+appended here because the pack is append-only; it is not part of the Sixteenth
+checkpoint. Nothing above is rewritten and no new checkpoint number is used.
+The times below are tool call boundaries read from the uncommitted native
+session event log (tool start and completion, UTC); this qualification makes
+no time claim of its own beyond those boundaries.
+
+* Time labels. The status subsection says "status record at 13:50Z" and the
+  original batch Changes record says "observed 13:55Z". Neither was an
+  observation at that time. The focused checks and status ran as one bash call
+  from 13:49:06.882 to 13:49:07.721, after the canonical edits ended
+  (13:49:00.243) and before the Changes create (13:49:17.183). The pack status
+  text was written before the checks started, and 13:55Z is later than the
+  batch final commit (13:49:45.676). The checks did run after the edits and
+  before the Changes record and Review; the call was not timed per check. The
+  state create and parse ran in parallel at 13:49:25.8, and the Review create
+  and two state edits started in parallel at 13:49:40.806, after the checks
+  and the Changes record. Original records are preserved unchanged.
+* Defect wording. The statement "no runtime defect is confirmed" in the
+  current-status subsection means that no NEW runtime defect was identified
+  by this documentation checkpoint, which did not run or assess runtime
+  behaviour. It does not remove or disprove the original two High runtime
+  findings, which stay open in the status table. R9 root outcome Revise, the
+  independent and unapproved R10 design correction, and FIX with #144
+  implementation held are unchanged. Both owner code decisions (comments
+  `6681120797` and `6685915140`) stay resolved and are not reopened.
