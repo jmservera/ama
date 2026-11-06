@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-11-03
+ms.date: 2026-11-06
 ms.topic: reference
 ---
 
@@ -2957,3 +2957,109 @@ Criterion 7 has supporting evidence (the only confirmed finding was triaged to
 #687 and delivered by #689, #720 and #733, with no further confirmed finding),
 but this PR uses `Refs`, so the owner decides the ticks. Criteria 1 to 6 are
 supported by PR #461 and checkpoints 2 to 4. No issue is closed by this record.
+
+## Issue 81 parent alignment checkpoint (2026-11-06)
+
+Refs #81 #440. Bounded alignment-only checkpoint for the controlled-lifecycle
+parent topic branch `feat/controlled-lifecycle-integration-81`. It records a
+local rebase onto current `origin/main` and no-service observations. It is not
+FULL validation, publication or acceptance, and it adds no product behavior.
+Original records:
+[research](../../.copilot-tracking/research/2026-11-06/issue-81-alignment-research.md),
+[plan](../../.copilot-tracking/plans/2026-11-06/issue-81-alignment-plan.md),
+[critique](../../.copilot-tracking/plans/2026-11-06/issue-81-alignment-critique.md),
+[changes](../../.copilot-tracking/changes/2026-11-06/issue-81-alignment-changes.md) and
+[review](../../.copilot-tracking/reviews/2026-11-06/issue-81-alignment-review.md).
+
+### Source and document identities
+
+| Item | Value |
+| --- | --- |
+| Pinned `origin/main` (freshly fetched twice, unchanged) | `56eec736906774ef56d8c9a66ed7f3f9c1e520c6` (#1236), tree `e0b82395edda97b2be84f9cc1b44432fbe77727b`; it changes only the coordinator agent file and tracking records, no `src/`, `docs/` or `tools/` |
+| Parent starting HEAD (retained as local ref `refs/ama/issue81-start`) | `af891a5cccf730ccf61e670f312b7674218dbe4b`, old base `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` (not used as a workaround) |
+| Aligned child commits | `9055abce3` (#1226), `e6434dd1d` (#1228), `81c106998` (#1229); `git range-diff` reports all three `=` (identical patches) |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) | 0.21.0, draft, blob `34d88395de861e9799eb9e24121a21c92c7a5adc`, unchanged |
+| [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) | 0.21.0, in-review, unsigned, blob `c788b917bafaede215f326f0efc71e071a687f1c`, unchanged |
+| ADR 0001 to 0007 | Unchanged; only ADR 0002 states an owner acceptance line (2026-10-24, staff identity); other statuses not re-assessed |
+
+Draft and in-review documents are not approved by this record. The three
+child PRs are parent-topic observations merged into this parent, not
+merged-main acceptance. The capacity checkpoint consumed at #440 comment
+6676325240 did not satisfy integrated-parent FULL or epic acceptance.
+
+### Covered contributions and requirement traceability
+
+| PR | Behavior | Requirement trace |
+| --- | --- | --- |
+| #1226 | Fail-closed quality evidence gate; malformed metadata and corrupted replacement handling | PRD FR-008 (governing) with FR-017; PRD AC-011, AC-020 |
+| #1228 | Quality gate rule provenance qualified to the PRD | PRD FR-008 and FR-017 |
+| #1229 | Explicit capacity booking Pass, Fail and Unknown outcomes | PRD FR-008 (governing) with FR-016; PRD AC-011 |
+
+Numbering differs between documents. PRD FR-008 is the deterministic
+controlled-transition gate requirement. BRD FR-008 is a different requirement
+(material change invalidates downstream approvals) and is related traceability
+only. PRD FR-017 is per-measure quality disposition; BRD FR-017 is handoff
+content and is not a quality source. Gate rule records for quality and capacity
+cite the PRD; booking rules cite BRD RULE-001 and RULE-002. Rule records stay
+exercise fixtures with an unreviewed reviewer; no legal, operational, resident
+or professional approval is inferred.
+
+### Preservation proof (local observed)
+
+* `git merge-base --is-ancestor origin/main HEAD` returned 0.
+* The pre-alignment dry run `git merge-tree --write-tree` was clean and the real rebase completed with no conflict, so no conflict resolution changed any child content.
+* All 48 paths touched by the three children between `bb3a3b03` and `af891a5cc` (8 source and test files, 40 original evidence files) have identical mode and blob at the new head (48 same, 0 different); `git diff refs/ama/issue81-start HEAD -- src` is empty.
+* The only difference outside new records is main's own coordinator agent file change. Prior blobs: `gates.py` `0d8d3d15`, `quality.py` `4a1e2991`, `store.py` `86948572`, `appointments.py` `9dc02c5a`, `procurement.py` `f0178666`, `test_gates.py` `91330fb9`, `test_hazard_referral.py` `c89f89f2`, `test_quality_procurement.py` `73813789`.
+
+### Actual local commands and outcomes
+
+No service, no private or default dataset and no sending. Scratch
+`/mnt/ama-gates/restart-1106-81-integration`; `env -i` with an explicit
+allowlist, `PYTHONDONTWRITEBYTECODE=1`, scratch `TMPDIR`, `ZF_DATA` and caches.
+Source origin proven: `zava_forward.core.__path__` is this worktree's
+`src/core/src/zava_forward/core`; nothing was installed except `mypy` in a
+scratch venv after a real `ModuleNotFoundError`.
+
+| Check (from `src/core`, `PYTHONPATH=src:tests`) | Actual result |
+| --- | --- |
+| `python3 -m unittest test_gates test_quality_procurement test_hazard_referral -q` | 193 tests, OK, 1 skipped, exit 0 (an injected-failure traceback is logged by an expected test) |
+| `python3 -m unittest test_resident_decisions test_resident_documents test_resident_choice_queue -q` | 265 tests, OK, 93 skipped, exit 0 |
+| `python3 -m unittest test_bulk_edits test_aftercare test_consultation_controls test_change_provenance -q` | 118 tests, OK, 16 skipped, exit 0 |
+| `ruff check --no-cache .` | All checks passed, exit 0 |
+| `ruff format --check --no-cache .` | 213 files already formatted |
+| `mypy --cache-dir=<scratch>` (scratch venv) | Success, no issues in 266 source files, exit 0 |
+
+Skips, not hidden: 91 `opt-in owned loopback SQL Server`, one `explicit
+isolated synthetic Azure SQL database`, one `JSON file rollback only`; these
+were not enabled. The SQLite-file `SqlFlows` and `SqlResidentDecisions` tests
+ran as isolated local no-service tests and are not SQL Server parity.
+
+### Classification
+
+* `local observed` (core package level only): quality fail-closed, malformed-metadata and rule-provenance behavior; capacity Pass, Fail and Unknown; existing resident and authority refusals covered by the selected tests; ruff and mypy cleanliness.
+* `implemented-unverified`: SQL Server and Azure SQL paths, API, agents and orchestrator suites, browser and accessibility harnesses, Docker, scanner and the FULL gate.
+* `blocked`: the integrated-parent FULL gate is not admitted here; a later stack-tip full receipt counts only if canonical runner semantics and independent verification support the parent member.
+* `unknown`: independent exact-head assessment, hosted checks, resident consent, named professional or legal approval, owner acceptance of draft and in-review documents.
+
+### Exclusions
+
+Unmerged child #86 behavior, any new feature or refactor, and any change to
+other worktrees. No push, pull request, issue or project write or merge.
+
+### Gaps, owners and resume conditions
+
+| Gap | Owner | Resume condition |
+| --- | --- | --- |
+| Integrated FULL gate and receipt | Coordinator | Admission slot, clean frozen head, canonical runner and independent receipt verification |
+| Child #86 retarget | Coordinator | Resume #86 in its original native session onto this exact parent branch; no silent retarget to main |
+| Replacement route for in-progress quality records with missing evidence (original #1226 follow-up rank 1) | Quality owner and product owner | Owner decision on a manual route; not resolved here |
+| Reviewer for exercise rule records stays unreviewed | Named human control owners | Approval is outside agent authority |
+| Independent, hosted and human review | Owner and reviewers | After publication request |
+
+### Recommendation and criteria
+
+Recommendation: **continue**. The alignment lost no child content and the
+no-service observations are consistent with the three PRs. No fix or pivot is
+indicated by this checkpoint. The four issue #81 criteria and issue #440
+acceptance are unchanged and remain unticked; this record establishes no
+acceptance.
