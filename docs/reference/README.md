@@ -425,6 +425,11 @@ filesystem is approved, and no approval, closure or criterion tick is implied.
 Correction 1 of that record reclassifies one evidence row and adds a
 document-qualified traceability table; the hard-link disposition stays blocked
 because the owner was unavailable.
+For the finance parent history export (#1233 under #96 and #93), the
+[thirteenth stabilization checkpoint](../architecture/cutover-evidence-pack.md#thirteenth-stabilization-checkpoint-finance-parent-history-export-2026-11-06-refs-440-96-93)
+records the finance source, governance target and main as separate pins with a
+HOLD on #93 and #96 closure; no test was run and no approval, closure or
+criterion tick is implied.
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope
