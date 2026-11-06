@@ -10,6 +10,7 @@ a Legal decision and the schedule is run by the deployment; SCHEDULE states the
 contract the deployment is expected to meet. Nothing here changes a ranking.
 """
 
+import calendar
 import hashlib
 import json
 import os
@@ -28,11 +29,19 @@ SCHEDULE: dict[str, Any] = {
 }
 
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+_PUBLISHED_ON = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
 Path = str | os.PathLike[str]
 
 
 class PublicationError(Exception):
     """A snapshot cannot be published, or an archived record does not verify."""
+
+
+def _valid_date(value: Any) -> bool:
+    if not isinstance(value, str) or not _PUBLISHED_ON.fullmatch(value):
+        return False
+    year, month, day = (int(part) for part in value.split("-"))
+    return year >= 1 and 1 <= month <= 12 and 1 <= day <= calendar.monthrange(year, month)[1]
 
 
 def _canonical(value: Mapping[str, Any]) -> str:
@@ -55,7 +64,7 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
     Returns path, written (False when the identical snapshot was already archived)
     and the original published_on.
     """
-    if not _DATE.match(str(published_on)):
+    if not _valid_date(published_on):
         raise PublicationError("published_on must be an ISO date, YYYY-MM-DD.")
     if not _DATE.match(str(snap.get("as_of"))) or snapshot_hash(snap) != snap.get("snapshot_hash"):
         raise PublicationError("Snapshot is incomplete or does not match its hash; refused.")
@@ -96,6 +105,8 @@ def verify(archive_dir: Path, registry: Mapping[str, Any] | None = None) -> dict
                 problems.append(f"{n}: file name does not match its content.")
             elif known is None or known["content_hash"] != snap["policy_hash"]:
                 problems.append(f"{n}: policy version or hash is not in the policy registry.")
+            elif not _valid_date(rec["published_on"]):
+                problems.append(f"{n}: publication date is not a valid calendar date.")
             else:
                 dates.append(rec["published_on"])
         except (OSError, ValueError, KeyError, TypeError):
