@@ -396,5 +396,63 @@ class AssessmentFindingTests(RunnerBase):
         self.assertEqual(self.go("verify")["latest"], "9999-12-31")
 
 
+class StorageAndDuplicateFindingTests(RunnerBase):
+    def unreadable(self) -> Any:
+        self.archive.mkdir()
+        return patch("os.listdir", side_effect=PermissionError(13, "Permission denied"))
+
+    def test_unreadable_archive_is_a_problem_never_empty_or_healthy(self) -> None:
+        with self.unreadable():
+            ver = self.go("verify")
+            sched = self.go("schedule")
+            pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((ver["status"], ver["latest"], len(ver["problems"])), ("problem", None, 1))
+        self.assertIn("PermissionError", ver["problems"][0])
+        self.assertEqual(
+            (sched["status"], sched["due"], sched["next_window_start"]), ("problem", None, None)
+        )
+        self.assertEqual((pub["status"], self.codes(pub)), ("refused", ["archive_unreadable"]))
+        self.assertEqual(list(self.archive.iterdir()), [])
+
+    def test_unreadable_archive_exits_nonzero_through_main(self) -> None:
+        cases = self.cases_file()
+        base = ("--archive", str(self.archive), "--today", TODAY)
+        with self.registry_patched(), self.unreadable():
+            self.assertEqual(self.cli("verify", *base)[0], 1)
+            self.assertEqual(self.cli("schedule", *base)[0], 1)
+            code, res = self.cli("publish", *base, "--cases", str(cases))
+        self.assertEqual((code, self.codes(res)), (2, ["archive_unreadable"]))
+        self.assertEqual(list(self.archive.iterdir()), [])
+
+    def test_capacity_probe_failure_is_a_refusal_not_a_traceback(self) -> None:
+        def broken(_p: Any) -> int:
+            raise OSError(5, "Input/output error")
+
+        res = self.go("publish", cases=open_cases(), as_of=AS_OF, free_bytes=broken)
+        self.assertEqual((res["status"], self.codes(res)), ("refused", ["capacity_missing"]))
+        self.assertIn("OSError", res["refusals"][0]["message"])
+        cases = self.cases_file()
+        self.archive.mkdir(exist_ok=True)
+        with self.registry_patched(), patch("shutil.disk_usage", side_effect=OSError(5, "I/O")):
+            code, out = self.cli(
+                "publish", "--archive", str(self.archive), "--today", TODAY, "--cases", str(cases)
+            )
+        self.assertEqual((code, self.codes(out)), (2, ["capacity_missing"]))
+        self.assertEqual(list(self.archive.iterdir()), [])
+
+    def test_duplicate_case_identity_is_source_invalid_before_ranking(self) -> None:
+        dup = open_cases() + open_cases()[:1]
+        res = self.go("publish", cases=dup, as_of=AS_OF)
+        self.assertEqual((res["status"], self.codes(res)), ("refused", ["source_invalid"]))
+        path = self.root / "dup.json"
+        path.write_text(json.dumps({"as_of": AS_OF, "cases": dup}))
+        with self.registry_patched():
+            code, out = self.cli(
+                "publish", "--archive", str(self.archive), "--today", TODAY, "--cases", str(path)
+            )
+        self.assertEqual((code, self.codes(out)), (2, ["source_invalid"]))
+        self.assertFalse(self.archive.exists())
+
+
 if __name__ == "__main__":
     unittest.main()

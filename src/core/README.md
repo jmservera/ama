@@ -37,7 +37,9 @@ as a problem as an archived latest; `publish` is idempotent, a verified identica
 retry needs no free space because it writes nothing, and
 exits 2 with a reason code and next action when the policy has no recorded
 sign-off (`approval_missing`), the case source is missing or unusable, the
-archive does not verify or there is no room to write. `--exercise` ranks and
+archive does not verify or cannot be listed (`archive_unreadable`), a case id
+repeats (`source_invalid`) or there is no room to write or the free space cannot be
+read. `--exercise` ranks and
 reports what would be archived, writes nothing and never counts as approval.
 The daily schedule is reported as proposed, not an approved rule; the draft
 policy stays a draft and retention stays a separate Legal decision.
