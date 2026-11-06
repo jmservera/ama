@@ -244,6 +244,7 @@ class LiveEnvelopeReplayTests(unittest.TestCase):
         store = store_at(tmp.name, reset=True)
         self.addCleanup(store.db.close)
         consumer = SensorConsumer(store)
+        self.assertEqual(consumer.mssql, os.environ.get("ZF_SENSOR_MSSQL") == "1")
         consumer.configure(
             replace(POLICY, max_past_seconds=86400),
             [CONTROL, replace(CONTROL, sensor_id="SENS-SYN-2")],
@@ -347,6 +348,7 @@ class WeatherContinuityTests(unittest.TestCase):
         store = store_at(tmp.name, reset=True)
         self.addCleanup(store.db.close)
         consumer = SensorConsumer(store)
+        self.assertEqual(consumer.mssql, os.environ.get("ZF_SENSOR_MSSQL") == "1")
         consumer.configure(
             replace(POLICY, max_past_seconds=86400),
             [replace(CONTROL, sensor_id=weather_rows(184)[0]["sensor_id"])],

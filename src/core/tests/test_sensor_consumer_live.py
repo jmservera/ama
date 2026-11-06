@@ -1,5 +1,6 @@
 """live-sim-reading-v1 admission: sunlight kept, idempotent per home and slot (issue 188)."""
 
+import os
 import tempfile
 import unittest
 from dataclasses import replace
@@ -29,6 +30,7 @@ class LiveReadingTests(unittest.TestCase):
         self.store = store_at(self.tmp.name, reset=True)
         self.addCleanup(self.store.db.close)
         self.consumer = SensorConsumer(self.store)
+        self.assertEqual(self.consumer.mssql, os.environ.get("ZF_SENSOR_MSSQL") == "1")
         self.consumer.configure(POLICY, [CONTROL])
 
     def count(self) -> int:

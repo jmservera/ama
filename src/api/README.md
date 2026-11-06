@@ -1883,8 +1883,9 @@ flock -w 600 /tmp/ama-rpi-heavy.lock python src/api/checks/sensor_sql_check.py
 ```
 
 Ordinary discovery exercises SQLite. The second command explicitly selects this
-same handover test alongside the existing ingestion suite on its own local SQL
-Server; the test asserts the actual selected backend. The standard complete
+same handover test, the synthetic weather continuity and live-envelope replay
+classes and the live consumer module alongside the existing ingestion suite on
+its own local SQL Server; each class asserts the actual selected backend. The standard complete
 gate does not implicitly include this sensor-specific SQL selector.
 Constructed SDK origin properties and local SQL Server do not prove actual
 authenticated IoT Hub delivery, Azure SQL query/restart or live handover.
@@ -2078,7 +2079,8 @@ python src/api/checks/sensor_sql_check.py
 
 The second command owns a uniquely named, memory/CPU-bounded SQL Server container
 and loopback port with random process-only credentials and finally cleanup.
-It exercises the same actual API suite plus the #188 handover selector, including concurrent independent
+It exercises the same actual API suite plus the #188 handover, weather continuity,
+live-envelope and live consumer selectors, including concurrent independent
 connections, reopen, real engine-trigger rollback and accepted/rejected
 postcommit reconciliation. It never connects to Azure or uses private datasets.
 Local SQLite/MSSQL/nonroot read-only image evidence does not meet whole AC-066:
