@@ -16,6 +16,7 @@ from typing import Any
 from unittest.mock import patch
 
 from dataset import case
+from test_ranking_publication import DEADLINE, gated
 from zava_forward.core import ranking
 from zava_forward.core import ranking_publication as rp
 from zava_forward.core import ranking_publication_runner as runner
@@ -164,6 +165,34 @@ class PublishTests(RunnerBase):
         self.assertEqual(self.codes(self.go("purge")), ["unknown_operation"])
         res = self.go("publish", cases=open_cases(), as_of=AS_OF, policy_version="9.9.9")
         self.assertEqual(self.codes(res), ["policy_unknown"])
+
+
+class ConcurrentPublishTests(RunnerBase):
+    def test_same_snapshot_on_two_dates_publishes_once_and_reports_the_retained_date(self) -> None:
+        def publish(today: str) -> dict[str, Any]:
+            return self.go("publish", today=today, cases=open_cases(), as_of=AS_OF)
+
+        with gated("A", "B") as gate:
+            gate.start("A", lambda: publish("2026-11-05"))
+            self.assertTrue(gate.arrived["A"].wait(DEADLINE))
+            gate.start("B", lambda: publish("2026-11-06"))
+            self.assertTrue(gate.arrived["B"].wait(DEADLINE))
+            gate.release("A")
+            gate.release("B")
+            gate.join()
+        a, b = gate.results["A"], gate.results["B"]
+        self.assertIsInstance(b, dict)
+        self.assertEqual(
+            (a["status"], a["written"], a["published_on"]), ("published", True, "2026-11-05")
+        )
+        self.assertEqual(
+            (b["status"], b["written"], b["published_on"]),
+            ("already_published", False, "2026-11-05"),
+        )
+        self.assertEqual(self.codes(b), [])
+        (record,) = self.archive.iterdir()
+        self.assertEqual(json.loads(record.read_text())["published_on"], "2026-11-05")
+        self.assertEqual(rp.verify(self.archive, self.signed)["problems"], [])
 
 
 class ScheduleAndVerifyTests(RunnerBase):

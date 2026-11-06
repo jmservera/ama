@@ -10,10 +10,14 @@ ms.topic: reference
 
 `ranking_publication.publish(snapshot, archive_dir, published_on)` archives a
 `ranking.snapshot` as one immutable, dated file per policy version, as-of date
-and snapshot hash. It is idempotent, never overwrites and never deletes.
+and snapshot hash. It is idempotent and never overwrites or deletes a record (it
+removes only its own staging file).
 `verify` re-hashes every record and checks its policy hash against the verified
-registry; `overdue` reports a missing or stale publication. No clock is read:
-dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
+registry; `overdue` reports a missing or stale publication. Concurrent writers of
+one snapshot keep exactly one record: each stages its own uniquely named file and
+links it to the record name without overwriting, and the loser reports the
+retained record and date. This needs a local filesystem with hard links; a folder
+without them refuses to publish. No clock is read: dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
 
 Wiring (slice 2): `Store.publish_ranking_snapshot` (API `POST /api/ranking/publish`)
 archives today's snapshot under the current policy into `ranking-archive/` beside

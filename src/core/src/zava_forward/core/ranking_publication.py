@@ -2,12 +2,18 @@
 
 publish() writes one immutable, dated file per policy version, as_of date and
 snapshot hash into an archive folder. The write is idempotent: the same snapshot
-gives the same file and is not rewritten, and a file is never overwritten or
-deleted here. verify() re-hashes every archived snapshot so an edited or
-damaged record is reported. Nothing reads a clock: the publication date is an
-input. Retention period and the scheduler are not set here. The legal period is
-a Legal decision and the schedule is run by the deployment; SCHEDULE states the
-contract the deployment is expected to meet. Nothing here changes a ranking.
+gives the same file and is not rewritten, and an archived record is never
+overwritten or deleted here. Each writer stages its content in its own uniquely
+named file in the same folder and links it to the record name, which fails if the
+record exists, so concurrent writers of one snapshot keep exactly one record and
+the loser reports it. That needs a local filesystem with hard links; a folder
+without them refuses to publish (OSError) and nothing is overwritten. The only
+file removed is the staging file this call created. verify() re-hashes every
+archived snapshot so an edited or damaged record is reported. Nothing reads a
+clock: the publication date is an input. Retention period and the scheduler are
+not set here. The legal period is a Legal decision and the schedule is run by the
+deployment; SCHEDULE states the contract the deployment is expected to meet.
+Nothing here changes a ranking.
 """
 
 import calendar
@@ -58,6 +64,11 @@ def _name(snap: Mapping[str, Any]) -> str:
     return f"ranking-{version}-{as_of}-{digest}.json"
 
 
+def _existing(path: str) -> dict[str, Any]:
+    with open(path, encoding="utf-8") as f:
+        return {"path": path, "written": False, "published_on": json.load(f)["published_on"]}
+
+
 def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> dict[str, Any]:
     """Archive a snapshot. published_on is an ISO date supplied by the caller.
 
@@ -71,12 +82,19 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
     os.makedirs(archive_dir, exist_ok=True)
     path = os.path.join(archive_dir, _name(snap))
     if os.path.exists(path):
-        with open(path, encoding="utf-8") as f:
-            return {"path": path, "written": False, "published_on": json.load(f)["published_on"]}
+        return _existing(path)
     text = _canonical({"published_on": published_on, "snapshot": snap})
-    with open(path + ".tmp", "w", encoding="utf-8") as f:
-        f.write(text)
-    os.replace(path + ".tmp", path)
+    stage = os.path.join(archive_dir, f".{_name(snap)}.{os.urandom(8).hex()}.tmp")
+    fd = os.open(stage, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o666)
+    try:
+        with open(fd, "w", encoding="utf-8") as f:
+            f.write(text)
+        try:
+            os.link(stage, path)
+        except FileExistsError:
+            return _existing(path)
+    finally:
+        os.unlink(stage)
     return {"path": path, "written": True, "published_on": published_on}
 
 
