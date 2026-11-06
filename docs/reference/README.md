@@ -439,6 +439,11 @@ recommends FIX with #144 implementation held; no code ran and no approval,
 closure or tick is implied. Correction 1 qualifies the r8 chronology (Plan and
 Details were parallel, not serial) and records the local, unpublished parent
 136 ref at main; second-route authority stays unresolved.
+Correction 2 qualifies correction 1 (its Plan and Details overlapped, and its
+heading count was not a pack-wide uniqueness pass) and records the owner's
+later approval of the Application-only AgentsWorker second permit route; that
+is not a live grant, ADR acceptance or operator decision, and the operator
+disposition and seven design gaps stay open.
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope

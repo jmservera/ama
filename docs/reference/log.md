@@ -10668,3 +10668,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added a dated correction subsection to the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122): the r8 Plan and Details creates were parallel (identical 08:18:22.940Z start in the native events), superseding the coordinator-supplied serial order; parent 136 is a local unpublished ref at `bb3a3b03` with no remote branch.
 * Second-route authority, operator disposition and the seven design gaps stay open; FIX unchanged. Local candidate pending coordinator consumption; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Queue dispatch checkpoint correction 2 (Refs #440 #144)
+
+* Added a dated Correction 2 subsection to the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122): correction 1's Plan and Details creates overlapped (identical 08:55:24.371Z start in the native events; the common pre-edit commit `6d9a8818d` stands), its heading count was 3 pack-wide and one within the fourteenth checkpoint (not a global uniqueness pass), and the owner approved the Application-only AgentsWorker second permit route (issue 144 comment `6681120797`, 08:57:53Z), which is not a live grant, ADR acceptance or operator decision.
+* Operator disposition for liability-unknown and the seven design gaps stay open; FIX unchanged. Local candidate pending coordinator reassessment; no closure or tick. Earlier records are unchanged.

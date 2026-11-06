@@ -4523,3 +4523,51 @@ liability-unknown operator disposition and all seven design gaps stay open; the
 recommendation stays FIX with #144 implementation held. Correction research,
 plan and details were committed as `6d9a8818d` before this edit; no test, SQL,
 browser, lock, push or PR.
+
+### Correction 2 qualifications (2026-11-06)
+
+Correction 1 above and its records are preserved. This subsection qualifies
+them for three points, after an independent readiness report on head
+`f7d6057d9` (verdict approve_with_comments, one Medium and one Low, no tests or
+gates run) and a later owner decision.
+
+* Correction 1 order. The correction 1 details record says its Details was
+  created after its Plan. Native event metadata (call IDs, types, timestamps
+  and success flags only) shows the Research create started 08:55:04.608Z, and
+  the Plan and Details creates both started at exactly 08:55:24.371Z, with
+  Details completing at .416Z and Plan at .432Z. They overlapped; no serial
+  Plan-then-Details chain is shown, and completion order is not creation
+  order. The supported fact is unchanged: Research, Plan and Details were
+  committed together as `6d9a8818d` before any canonical edit. The correction 1
+  Changes and Review describe separate calls, which is true, but do not
+  disclose the overlap, so their chronology and conformance accounts are
+  qualified by this paragraph. The correction 2 records were created in
+  individual tool turns and were committed as `737a16abc` before this edit.
+* Correction 1 heading check. Its Changes record reports the heading count as
+  a uniqueness pass. The exact heading `### Correction 1 qualifications
+  (2026-11-06)` occurs three times in this pack (earlier checkpoints'
+  correction subsections and the fourteenth's); within the fourteenth
+  checkpoint it occurs once. The fourteenth checkpoint's own top-level anchor
+  is a distinct heading, was not shown broken, and appears once in the README
+  and twice in the log at that check. Only the scoped count supports
+  uniqueness, not a pack-wide one.
+* Second-route role-code decision. After the clarification that the second
+  endpoint is another HTTP route on the proposed API integration, not another
+  ACA environment or worker container, the owner approved it (issue 144
+  comment `6681120797`, 2026-11-06T08:57:53Z, later than the correction 1
+  launch; the saved text and readback are supplied coordinator session files).
+  The demo code may extend the Application-only `ZavaForward.AgentsWorker`
+  allowance to request an API-authorized, metered dispatch permit in addition
+  to submitting results. This resolves the role-code decision only. It is not a
+  second environment or container, live grant, infrastructure, deployment,
+  provider call or spend, approval of the whole protocol or ADR, waiver of
+  financial or revocation controls, or appointment of a financial
+  reconciliation operator. The earlier statements above that the route
+  authority was unresolved were true when dated and remain as history.
+
+Unchanged: the liability-unknown operator and safe-resume authority and all
+seven design gaps stay open; the recommendation stays FIX with #144
+implementation held; no runtime defect is confirmed; original 144 tests-first
+RPI, checkpoint consumption, full validation and exact-head independent review
+remain required. Local 136 is `bb3a3b03` (equal to main) and remote absence is
+unchanged. No test, SQL, browser, lock, push or PR.
