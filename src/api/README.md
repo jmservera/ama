@@ -2044,13 +2044,19 @@ public route, SDK, AI call or resident message is added.
 The batch must be a materialized list/tuple of 1..100 bounded primitive dictionaries,
 each <=20 keys and <=4096 serialized bytes. Envelope failures are refused before
 any writes. Primitive closed-schema failures, including missing IDs, produce
-digest-keyed owned DQ without inventing device identity. Only observation fields
-from `sensor_faults.Packet.rows` are inputs, never truth/labels/clean rows.
+digest-keyed owned DQ without inventing device identity. Only two closed,
+separately validated observation shapes are inputs, never truth/labels/clean rows:
+the 13 observation fields from `sensor_faults.Packet.rows` (`sensor-fault-input-v1`,
+indoor) and the 16-field synthetic-weather `live-sim-reading-v1` envelope
+(`sensor_consumer.LIVE_FIELDS`; [live simulator container message](#live-simulator-container-184-owner-requirement-2026-11-04);
+schema authority `synthetic/live_readings.py`).
 Receipt time is an explicit trusted UTC whole-second string; no operational
 clock window, calibration, consent or range is guessed.
 
 The [shared observation contract and volume reference](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
-lists the imported 13 required string fields and measured synthetic example.
+lists the imported 13 required string fields of the indoor `sensor-fault-input-v1`
+branch and measured synthetic example (historical 2026-10-18 measurement; the
+live 16-field branch is separate: see the [live simulator container message](#live-simulator-container-184-owner-requirement-2026-11-04)).
 One record pairs temperature and RH. Three records/home/day is the unchanged
 accounting baseline; finite callable batches are not adopted wire packetization
 or Hub billing/throughput evidence. Stock/live identity compatibility remains a
