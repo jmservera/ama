@@ -156,6 +156,10 @@ class QualityGateTests(unittest.TestCase):
         self.assertEqual(record["gate"], "quality")
         self.assertEqual(record["effective_date"], "2026-11-05")
         self.assertIn("Unreviewed", record["reviewer"])
+        self.assertIn(
+            "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-008", record["source"]
+        )
+        self.assertNotIn("brd.md FR-008", record["source"])
 
     def test_evidence_gaps_unreadable_is_none(self) -> None:
         full = [dict(label=x, evidence="seen") for x in CHECKLISTS["Loft insulation"]["items"]]
