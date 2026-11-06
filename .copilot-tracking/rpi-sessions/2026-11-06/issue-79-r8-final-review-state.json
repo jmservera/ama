@@ -1,0 +1,31 @@
+{
+  "task_id": "issue-79-r8-final-review",
+  "task_slug": "issue-79-r8-final-review",
+  "parent_task": {"task_id": "issue-79-r8-r7-adverse-qualification", "task_slug": "issue-79-r8-r7-adverse-qualification"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-06/issue-79-r8-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-06/issue-79-r8-plan.md",
+    "details": ".copilot-tracking/details/2026-11-06/issue-79-r8-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-06/issue-79-r8-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-06/issue-79-r8-final-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Review executed once, author-only, read-only", "status": "completed", "evidence": "issue-79-r8-final-review.md"},
+    {"decision": "Prior r8 review created in one parallel batch with Changes and state; not backdated or regraded", "status": "recorded limitation", "evidence": "02:36:31.719Z, 02:36:31.732Z, 02:36:31.744Z; checks at 02:36:35.777Z"},
+    {"decision": "Pre-commit ignored-inclusive emptiness was not shown by a command; only the post-commit intake status is", "status": "recorded limitation", "evidence": "final review intake"},
+    {"decision": "Host-refused compound command at 02:36:10.239Z preserved, not retried", "status": "recorded", "evidence": "issue-79-r8-final-review.md"},
+    {"decision": "Human approval unchecked; no fresh test run claimed", "status": "open", "evidence": "none"}
+  ],
+  "blockers": [
+    {"id": "full-gate", "summary": "Current-main FULL receipt, independent exact-head assessment, parent 73 stack publication and hosted checks are missing; criteria 3 and 4 of 79 unproven", "resolution": "Later admission after #82 releases heavy lock"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator re-pins head and schedules the FULL gate when admitted; no push or acceptance now"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Run current-main FULL gate and verify receipt on the final head", "rationale": "Required publication gate", "evidence": "tracking retention and RPI gate rules"}
+  ]
+}
