@@ -49,24 +49,24 @@ Scope: pack subsection, log entry, index note, new tracking records. Non-goals: 
 
 ## Phase Checklist
 
-* [ ] P1 Append pack subsection, log entry and index note
-* [ ] P2 Run focused checks
-* [ ] P3 Changes, later author Review, state, commit
+* [x] P1 Append pack subsection, log entry and index note
+* [x] P2 Run focused checks
+* [x] P3 Changes, later author Review, state, commit
 
 ## P1 Append pack subsection, log entry and index note
 
-* [ ] P1-T1 Pack subsection (FR1).
-* [ ] P1-T2 Log entry and README note (FR2).
+* [x] P1-T1 Pack subsection (FR1).
+* [x] P1-T2 Log entry and README note (FR2).
 
 ## P2 Run focused checks
 
-* [ ] P2-T1 Pins, additions-only diffs, prior-record invariance, anchors, ASCII, frontmatter, status.
+* [x] P2-T1 Pins, additions-only diffs, prior-record invariance, anchors, ASCII, frontmatter, status.
 
 ## P3 Changes, Review, state, commit
 
-* [ ] P3-T1 Changes after checks.
-* [ ] P3-T2 Author Review in a later turn.
-* [ ] P3-T3 State once, commit, verify clean.
+* [x] P3-T1 Changes after checks.
+* [x] P3-T2 Author Review in a later turn.
+* [x] P3-T3 State once, commit, verify clean.
 
 ## Follow-Up Items
 

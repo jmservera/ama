@@ -10695,3 +10695,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Corrected one short commit pin in the [reference index](README.md): the seventeenth checkpoint paragraph printed `1e199209`; the R10 design commit is `1e19209985d93e053dd449e873e792f214dd110c`, so the correct short pin is `1e192099`.
 * The cutover evidence pack, this log and the tracking records already carried correct identities. No checkpoint, numbering, source, requirement, ADR or design change; all earlier records are unchanged. Local candidate pending coordinator reassessment; no approval, closure or tick.
+
+## [2026-11-06] update | Sensor retained-evidence verification (Refs #440 #184 #185 #188)
+
+* Appended a [retained-evidence verification](../architecture/cutover-evidence-pack.md#retained-evidence-verification-of-the-sixteenth-checkpoint-2026-11-06-refs-440-184-185-188) that qualifies the sixteenth checkpoint with figures read from the child r20 receipt (sha256 `e5751469...`, head `6887377`, 205 commands, 192 exit 0 and 13 exit 1), the maintained SQL log (285 tests, one declared skip), the separate 68-test supplement and the image scans (42 instances per image, 17 unique IDs, fixable 0, not security-clean).
+* No new defect, issue or runtime run. CONTINUE independent lanes; HOLD closure of #184, #185 and #188. Live, credential, consent, calibration, validity and approval items stay unproven. Earlier records are unchanged. Local candidate pending coordinator reassessment.

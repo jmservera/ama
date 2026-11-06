@@ -4874,3 +4874,52 @@ conditions: coordinator consumption, a deliberate decision on the code parent
 (topology above), and the owners above for the Unobserved items. Independent
 lanes (79, 80, 1231, HVE work) continue. No push, pull request, issue or board
 write, tick or closure is made by this checkpoint, and no approval is implied.
+
+## Retained-evidence verification of the Sixteenth checkpoint (2026-11-06, Refs #440 #184 #185 #188)
+
+Focused, documentation-only, additive. It qualifies the Sixteenth sensor
+checkpoint, which labelled the child receipt figures as supplied. It adds no
+checkpoint number, no runtime run and no approval. Files were read by the
+author in this session; nothing was re-executed.
+
+### Pins and documents
+
+| Item | Value |
+| --- | --- |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` |
+| Parent `origin/feat/live-simulator-integration-184` | `9476dc9610368a9a1bd46c88314586885638580d`, tree `30167885b00d308d7b29e9a78a064f4af834ce98` (fetched this session) |
+| Reviewed child head | `6887377845648502f2a5509801ee5d9807869703`, same tree as the parent |
+| BRD 0.21.0 draft | blob `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD 0.21.0 in review | blob `c788b917bafaede215f326f0efc71e071a687f1c` |
+| Diff size, parent against main | 99 files, +1967 and -81 including tracking records; the Sixteenth's 19 files, +1169 and -81 counted source and tests only |
+
+Draft and in-review documents are not approvals.
+
+### Retained evidence read
+
+| Observation | Class |
+| --- | --- |
+| `/mnt/ama-gates/g188-r20-1106/receipt.json`: sha256 `e575146936c97ffb4e397dd78a75951a079000c18c979d3374f863e6c1c95014` equal to `receipt.sha256`; status passed, scope full, jobs 1, failure null, 17 executed groups, none skipped, fresh image cache | Local observed (file) |
+| Receipt identity: head `6887377`, tree `30167885...`, base and merge base main `bb3a3b03`. The receipt belongs to the child head, not to the parent commit `9476dc96`; the trees are equal | Local observed (file); not a gate at the parent commit |
+| 205 commands: 192 with exit 0 and 13 with exit 1 (counted from `exit_code`). The child's native handoff attributes the 13 to expected probes (six namespace, one yaml, one pptx, five SQL readiness attempts); that attribution was not re-derived here | Local observed (count); child account (cause) |
+| Hosted-only items in the receipt: GitHub approvals and checks, OIDC and Azure what-if, manual release, real AI acceptance | Not run, blocked or unknown |
+| Maintained real SQL (`0176-mssql.log`): 285 tests OK, one skip `MssqlHazardReferral.test_json_postsave_audit_failure_reports_persisted_uncertainty` ("JSON-only separate-file audit ordering") | Historical child observation, read from retained log |
+| Package suites: core 2363 tests with 226 skips, API 1941 with 338 skips; these skips are not real SQL runs | Historical child observation, read from logs |
+| Owned SQL supplement (`/mnt/ama-gates/e188-r20-1106/sql-sensor.log`): 68 tests OK; `cleanup.json` status removed-and-absent-confirmed. It is a separate run outside the receipt command list. Zero skips is the child's account; the log tail shows OK | Historical child observation |
+| Image scans (all-vulnerability reports for api, agents, orchestrator, importer): each 42 instances (40 High, 2 Critical), 17 unique vulnerability IDs, fixable 0. The older figure 39 (37 High) is history; the cause of the increase is not verified | Local observed (computed from JSON) |
+
+Zero fixable findings is not a security-clean result. Browser and accessibility
+results in the receipt directory were only partly read and are not cited.
+
+### Boundaries and trace
+
+* Document-qualified trace is unchanged from the Sixteenth: BRD FR-048, AC-090, RULE-014, OD-43; PRD FR-050, AC-066 to AC-068; ADR 0003 decision 6.
+* Device mapping remains dry-run and synthetic. Weather data is the versioned synthetic reference `synthetic-weather-continuity-v1`, whose source says it is not witnessed Azure continuity, physical accuracy, indoor evidence or calibration. Replay is a flag on consumer receipts and indoor rows use a separate reading-v2 path. These are static source readings, not runtime evidence.
+* Unproven: live Hub and authenticated Azure SQL, credential issuance, secure storage and teardown, resident consent, calibration, statistical validity, generator provenance, named human approvals, a receipt at the parent commit, main integration.
+
+### Classification, recommendation and gates
+
+* Local observed: file identities, counts and image scan figures above. Historical child observation: SQL runs and suite results. Implemented-unverified and deferred: the #1205 apply path and its unmet criteria. Blocked or unknown: the items under Unproven.
+* No new defect is established; no new issue or refactor is proposed. Open criteria stay with #184, #185 and #188. Verifying the 42 versus 39 image difference belongs to the #188 lane.
+* Recommendation: CONTINUE independent lanes (#110 and #186 analysis, #185 adapter design, scanner-difference verification). HOLD closure of #184, #185 and #188 and dependent expansion until the credential owner, consent, calibration evidence, a gate at the intended parent head, hosted CI and named approvals exist.
+* Gates: coordinator reassessment, hosted CI on the parent, human approvals. No tick, closure, push or pull request is made here.

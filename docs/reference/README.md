@@ -463,6 +463,13 @@ DRAFT proposal with an independent read assessment, the observed topology of
 branch or pull request) and a CONTINUE-after-acceptance recommendation. It is
 not an approval, a runtime result or a closure.
 
+A [retained-evidence verification](../architecture/cutover-evidence-pack.md#retained-evidence-verification-of-the-sixteenth-checkpoint-2026-11-06-refs-440-184-185-188)
+qualifies the sixteenth (sensor parent) checkpoint with figures read from the
+retained child receipt, SQL logs and image scans: SQL 285 with one skip versus
+the separate 68-test supplement, and 42 unfixed findings per image (not
+security-clean). It is append-only, adds no runtime result and recommends
+CONTINUE for independent lanes and HOLD for closure of #184, #185 and #188.
+
 For the parent topic prepared against main `bb3a3b03`, the
 [eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
 records merge identities, the covered #128 and #440 children, the final scope
