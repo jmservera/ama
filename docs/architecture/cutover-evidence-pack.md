@@ -3869,3 +3869,137 @@ no named professional reviewer.
 
 Process disclosure: nothing was deleted, moved or cleaned; `/tmp/l440cd271`
 is retained as read-only test setup and is not authority to delete it.
+
+<a id="eleventh-stabilization-checkpoint-lifecycle-parent-capacity-booking-gate-2026-11-06-refs-440-82-81"></a>
+
+## Eleventh stabilization checkpoint: lifecycle parent capacity booking gate (2026-11-06, Refs #440 #82 #81)
+
+Refs #440, #82 and #81. This is the eleventh checkpoint (baseline eighth,
+finance ninth and lifecycle quality tenth are distinct and unchanged). It is a
+new bounded checkpoint, not a rewrite or correction of any of them. Local
+candidate, not consumed by the coordinator and not approved for publication.
+Trigger: PR 1229, a completed capacity booking increment under #82 that
+changes controlled transition outcomes, merged 2026-11-06T03:10:17Z.
+
+Process: Research, then Plan, details and one critique, were each committed
+before any pack, index or log edit. A read-only light observation on an
+immutable export was made during research and is recorded as such.
+
+### Three separate pins
+
+| Pin | Identity | Role |
+| --- | --- | --- |
+| Governance documentation target | `feat/discovery-assurance-integration-123` `a97bea15318307aacf60ed1690d054d32417c23e`, tree `7995337ffe41a01d250c2c4856e48b5f08d45b82` | Base of this docs child; contains the tenth record unchanged |
+| Lifecycle implementation SOURCE | `feat/controlled-lifecycle-integration-81` `af891a5cccf730ccf61e670f312b7674218dbe4b`, tree `cb8a3d463b0f1d31d1a5de0d1e1a2e68de7ebc8e` | Holds #1226, #1228 and #1229; its tree equals reviewed child `272146f4eb5e810b03290004942d37b22edda968` |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` | Unchanged at the fetch of 2026-11-06; hosted status of main is not asserted |
+
+All three equal the supplied pins; nothing changed. The parent is 3 commits
+over main (48 files, +1200/-25); #1228 and #1229 together are 23 files,
++519/-16 over `cd271cfa5` (5 source files, +152/-16). Governance runtime and
+the unmerged #144, #79, #80, #96, #188 and #1204 work are excluded from
+lifecycle and main acceptance. Fetched identity is not hosted completion,
+approval or runtime acceptance.
+
+### Document identities (verified; equal to main)
+
+| Document and path | Version and status | Blob |
+| --- | --- | --- |
+| BRD `docs/brds/agentic-retrofit-programme-brd.md` | 0.21.0 draft | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD `docs/prds/zava-forward-retrofit-programme-demonstrator.md` | 0.21.0 in-review | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 `docs/adrs/0003-journey-derived-capabilities-runtime-fit.md` | accepted with owner amendment | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 `docs/adrs/0006-src-layout-and-cutover.md` | accepted | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Draft, in-review and exercise-fixture rules are not approved professional
+rules.
+
+### Traceability of the capacity booking transition
+
+* Requirements: PRD FR-008 governs gates (mapped AC-010, AC-011, AC-067 and
+  AC-144; acceptance not run). PRD FR-016 is the provider-package and
+  committed-capacity record. PRD FR-017 is the quality disposition record.
+  BRD FR-008 is a different requirement (material change invalidates
+  downstream approvals). `CAPACITY_RULE` cites PRD FR-008 and FR-016 and
+  `QUALITY_RULE` cites PRD FR-008 and FR-017 (#1228), which resolves the
+  citation ambiguity disclosed in the tenth checkpoint.
+* `gates.capacity_gate`: True is Pass, a known violation is Fail, missing or
+  unreadable evidence is Unknown. `CapacityGateError` subclasses `ValueError`,
+  so the existing API 400 text contract is kept, and carries the state and
+  result internally.
+* Procurement mapping: a known deficit or a work date outside the evidenced
+  period is Fail. An absent single appointed order, absent, legacy or
+  unverified capacity, changed source, scope or contract, a lost authorised
+  acceptor and a changed authority are Unknown. Fail and Unknown refuse before
+  a successful mutation. Pass is returned only after the resident clear, is
+  server-internal and is not newly persisted or API-exposed.
+* `appointments._appointment_assessment`: only a sole capacity failure rethrows
+  structurally; mixed failures stay a plain `ValueError`. Capacity remains the
+  last check. The inherited Low RV-C1 future-ordering caveat is not a current
+  defect.
+* Quality interaction: quality still needs explicit Pass evidence (unknown
+  never passes), independent human acceptance by someone who did not submit,
+  record or fix the work, and the resident and safety clears; capacity does not
+  bypass them and does not accept quality.
+* Boundaries: the JSON store and the SQLite-backed store were exercised;
+  SQL Server was not. Actor and authority are checked against the named
+  manager and contract authority; no identity is reassigned. Manual paths
+  (contract manager records current evidence, then re-books) are unchanged.
+  Unavailable evidence stops the transition with owner and next action.
+
+### Evidence classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Pins, blobs, PR 1229 merge, issues 82, 81, 440, 144, 80 and 79 open | local observed (git and `gh`) | 2026-11-06 |
+| Source read of the gate, procurement and appointment changes | local observed | Static reading at `af891a5cc` |
+| 193 core tests pass on the export of `af891a5cc` | local observed (light, lifecycle parent) | Below; JSON and SQLite paths, not SQL Server |
+| Candidate `272146f4e` FULL receipt: 17 groups, 205 commands, no group skip | coordinator-supplied, historical for the candidate | Receipt sha256 `eb1cd5ed8546bd5f128324d4c1799fc3248fcb481cdc471b3138d2d0e765a0bc` matched `/tmp/g82-cap-r3-1106/receipt.json`; contents not re-adjudicated |
+| Thirteen nonzero probe commands | coordinator-supplied, attributed to the #82 comment | Expected pre-installation, import or SQL-startup probes individually read by others, not here; the earlier zero-nonzero assertion was false and is not relied on |
+| Candidate SQL Server log: 296 total, 295 executed, 1 declared JSON-only audit-ordering skip, 5 new capacity cases passed | coordinator-supplied, historical for the candidate | Log sha256 `51953f94e8674ec36038098421b2064e6c919a47fa251212da3fbc1b8edec5e1` matched; log not read or rerun here |
+| Root default-FULL before merge, 10 hosted checks success, local and published functional code-review result with 0 findings, human boxes unchecked | coordinator-supplied | Not re-checked here; a code-review result is not an approval |
+| Behaviour at `af891a5cc` under SQL Server, browser or a full or partial gate | implemented-unverified | Tree equality with `272146f4e` is an identity fact, never a new run at the parent or main |
+| Other gate families, named rule review, integrated parent FULL, live acceptance | deferred or unknown | #82 and the coordinator own them; no named reviewer is recorded for either exercise rule |
+| Heavy gate, SQL Server, browser, image, scanner, Azure, AI | blocked (not admitted) | Heavy holder is original 79 r9 (PID 2560481, `/tmp/g79-pub-r9-1106`); nothing queued |
+
+### Actual commands and limits
+
+* Export: `git archive` of `origin/feat/controlled-lifecycle-integration-81`
+  (`af891a5cc`) paths `src/core` and `src/agents` into the new external path
+  `/tmp/l440af891/src`; the path was refused if it existed.
+* Environment: the existing 440-owned venv
+  `/tmp/ama-main-440-ui-cache-wave3-venv` (the #82 venv was not used or
+  changed), `env -i`, bytecode off, external `TMPDIR`, no installation, no
+  network use. Import proof: `gates`, `procurement`, `appointments`, `quality`
+  and the fixture module `test_gates` resolve under
+  `/tmp/l440af891/src/src/core/`, and `CapacityGateError` exists.
+* Command: `python -m unittest tests.test_gates tests.test_quality_procurement
+  tests.test_hazard_referral` from `/tmp/l440af891/src/src/core`. Exit 0
+  captured directly from the subprocess; 193 tests in 65.9 s, OK, 1 skip. The
+  skip is attributed by source reading, not by the non-verbose log, to the
+  single `skipTest` ("JSON-only separate-file audit ordering"). The logged
+  traceback is an injected-fault test's expected output. No `__pycache__` was
+  created. Log sha256
+  `3fd61476e1c5ceb642590380499abe252872fe825855adce3734bb568edab9e6`.
+  `/tmp` evidence is session-only; the hash is the durable pointer.
+* No failed attempt occurred. This is a focused light run, not a full or
+  partial gate and not a receipt.
+
+### Findings, triage and recommendation
+
+* No new defect and no necessary behaviour-preserving refactor was confirmed,
+  so no issue is proposed. Owners compared: #82 (remaining families and rule
+  review), #81, #80, #144, #79 and #440.
+* #82 stays OPEN with three criteria unchecked. Capacity and quality are two
+  gate families with unreviewed exercise rules; the other families and named
+  rule review remain unproven.
+* Recommendation: continue; no fix or pivot. Pivots, requirement relaxation,
+  deferral and named approvals belong to the owner and named humans.
+
+| Gate | Effect |
+| --- | --- |
+| This record | Candidate until coordinator independent assessment, publication, published-head and hosted gates, and explicit consumption |
+| #81 and #82 closure | Unchanged; no tick; remaining gate families, named rule review and integrated parent FULL must be proven first |
+| #80 dependent expansion | Waits for coordinator consumption and its own admission; independent lanes (79, 80, 96, 144, 188, 1204) may continue; a heavy or SQL gate resumes only on coordinator admission after the holder releases |
+| Whole #440 | Unchanged; criteria 7 and 8 untouched; native HVE Deferred or not available is not a Pass |
+
+Process disclosure: nothing was deleted, moved or cleaned; `/tmp/l440af891`
+is retained as read-only test setup and is not authority to delete it.

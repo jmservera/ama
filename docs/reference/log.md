@@ -10633,3 +10633,8 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-05] update | Tenth checkpoint wording follow-up (Refs #440 #82)
 
 * Follow-up to the preceding tenth-checkpoint entry after its single Review (RV-001): the pack now states that `QUALITY_RULE.source` cites BRD FR-008 while PRD FR-008 governs, as an observation for #82's owner. Wording only; no source, approval or recommendation change.
+
+## [2026-11-06] update | Eleventh stabilization checkpoint: lifecycle parent capacity booking gate (Refs #440 #82 #81)
+
+* Appended the eleventh checkpoint to [the cutover evidence pack](../architecture/cutover-evidence-pack.md#eleventh-stabilization-checkpoint-lifecycle-parent-capacity-booking-gate-2026-11-06-refs-440-82-81) and indexed it in the README. It records three separate pins (governance target `a97bea15`, lifecycle source `af891a5cc` containing PR 1229, main `bb3a3b03`), document-qualified traceability (PRD FR-008, FR-016, FR-017) and a light 193-test core run on an immutable export (exit 0, 1 skip, no SQL Server).
+* Local candidate pending coordinator consumption. Candidate `272146f4e` receipt, SQL and hosted evidence is labelled coordinator-supplied and historical. #82, #81 and #440 stay open; exercise rules have no named reviewer; no approval, closure or tick. Earlier records are unchanged.
