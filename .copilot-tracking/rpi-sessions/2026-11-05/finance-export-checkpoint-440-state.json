@@ -1,0 +1,28 @@
+{
+  "task_id": "440-finance-export-checkpoint",
+  "task_slug": "finance-export-checkpoint-440",
+  "parent_task": {"task_id": "440-ui-cache-required-observations-followup", "task_slug": "ui-cache-required-observations-followup-440"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-05-finance-export-checkpoint-440-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-05-finance-export-checkpoint-440-plan.md",
+    "details": ".copilot-tracking/details/2026-11-05-finance-export-checkpoint-440-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-05-finance-export-checkpoint-440-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-05-finance-export-checkpoint-440-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed; Planning Readiness Ready", "status": "recorded", "evidence": "research artifact"},
+    {"decision": "Critique executed once (self-applied in plan); no conflicts", "status": "recorded", "evidence": "plan artifact"},
+    {"decision": "Review executed once; no significant issues", "status": "recorded", "evidence": "review artifact"},
+    {"decision": "Recommendation: continue; no defect confirmed; no approval claimed", "status": "recorded", "evidence": "docs/architecture/cutover-evidence-pack.md eighth checkpoint"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independent exact-head assessment; publication and hosted gates remain separate"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Coordinator assesses the checkpoint and decides release of the paused #96 slice under its own FULL tier", "rationale": "Checkpoint trigger resolved as continue", "evidence": "eighth checkpoint recommendation"}
+  ]
+}

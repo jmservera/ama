@@ -2957,3 +2957,1342 @@ Criterion 7 has supporting evidence (the only confirmed finding was triaged to
 #687 and delivered by #689, #720 and #733, with no further confirmed finding),
 but this PR uses `Refs`, so the owner decides the ticks. Criteria 1 to 6 are
 supported by PR #461 and checkpoints 2 to 4. No issue is closed by this record.
+
+## Fifth stabilization checkpoint: current-main sensor contract, retention and handover (2026-11-05, Refs #440 #184 #110)
+
+Refs #440, #184 and #110. Bounded, documentation-only, local-only record on
+current `origin/main` for the already-due #184/#110 sensor contract,
+retention and handover gaps. It adds no source, schema, threshold,
+coordinator, workflow, infrastructure or requirement change and no
+acceptance. Original RPI evidence is under
+`.copilot-tracking/*/2026-11-05-sensor-checkpoint-recovery-440-*`.
+
+### Trigger, identities and coverage
+
+The trigger is the due sensor checkpoint named on #184 after the merged live
+simulator generator and container slice (2026-11-04) and the merged delivery
+tooling PRs #1209 and #1210. The existing owner is #440 (open, parent #123);
+no duplicate checkpoint issue was created.
+
+| Item | Value |
+| --- | --- |
+| Current `origin/main` (fetched 2026-11-05) | `c6d5a8f3c3a35892322300be27b9747f7b11362d`, tree `876679c32ff8f8a3d35822d9e46d8b377ce15428` |
+| Working base (parent topic pin) | `3d7ad2feaa9c4cba5fe917edd2fbc40e40a5c246`, tree `b35f4e4808a4eb74bfee55f098bb101369358d98` |
+| Base to main delta | One commit (#1210). `git diff --stat` over `src`, `docs` and `infra` is empty; only `tools/rpi-checks.py`, `tools/test_rpi_checks.py` and tracking records differ |
+| Covered merged PRs | #1209 (`3d7ad2fea`, 2026-11-05T09:31:21Z, backlog-sync active-delivery state) and #1210 (`c6d5a8f3`, 2026-11-05T10:01:58Z, isolated Chromium before API discovery). Both are delivery tooling; neither changes sensor behaviour and neither is sensor acceptance |
+| Excluded, unmerged | #1203 (open; public head `c9a14573d76a128c028ca2371ed9612b41461b8a`; a user-reported unpublished local head `834e2bec` was neither read nor validated), #1205 (open; public head `dbacb32f8713c5c1acf088f8d8b536193f3269be`) and the unmerged sibling code128 work. Their source is not main and is not accepted here |
+| This record's evidence pack blob at main | `2566e8efd7084346421fffb101d5b171100dfd63` (before this section) |
+
+Document identities at `c6d5a8f3`. Draft, in-review and proposed documents
+are not approvals by this record.
+
+| Document | Status, version, date | Blob |
+| --- | --- | --- |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) BRD-2026-AMA48-001 | draft, 0.21.0, 2026-10-24 | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) PRD-2026-AMA48-001 | in-review, 0.21.0, 2026-10-25 | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) | Proposed, no version field, 2026-10-24; its "no IoT Hub" sensor position is amended by ADR 0003 decision 6 | `cbe21530043ff15432cc6dce1086d080f5eb15b4` |
+| [ADR 0003](../adrs/0003-journey-derived-capabilities-runtime-fit.md) | Accepted with amendment by the owner (2026-10-15, reconciled 2026-10-18), no version field, 2026-10-29; Basic hub exercise only, live gates separate | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+
+Requirement IDs are used only document-qualified because numbers collide:
+BRD FR-048 (in-use monitoring capture), AC-090, RULE-014 and OD-43 (real
+inventory, blocks operational use with real data, not the simulator
+exercise); PRD FR-050 (simulated monitoring through IoT Hub), AC-066,
+AC-067 and AC-068. BRD FR-050 is opt-in working memory and PRD FR-048 is
+appointment commitment; neither is sensor work. The #184, #110 and #188
+bodies cite BRD FR-048/OD-43 and PRD FR-050/AC-066 and are read that way.
+
+### Planned feature to code, tests, journeys and backlog
+
+Source inspection only; no code or test was executed for this record.
+
+| Approved planned feature | Main code and tests (blob at `c6d5a8f3`) | Observed journey or execution | Remaining backlog |
+| --- | --- | --- | --- |
+| PRD FR-050 / AC-066 idempotent append, DQ, no public endpoint (ADR 0003 decision 6) | `src/core/src/zava_forward/core/sensor_consumer.py` (`8125b88b`), `src/api/src/zava_forward/api/sensor_ingestion.py`, `test_sensor_consumer.py`, `test_sensor_ingestion.py` | Local observed only as dated historical constructed SQLite/SQL Server runs (45 ingestion tests 2026-10-29); not re-executed here | #110: distinct Hub identities (criterion 1 unmet), Azure SQL, restart |
+| PRD FR-050 live generation every home every five minutes (owner requirement 2026-11-04) | `src/core/src/zava_forward/core/synthetic/live_readings.py` (`289051ee`), `src/api/src/zava_forward/api/live_simulator.py`, `test_live_readings.py`, `test_live_simulator.py` | Implemented-unverified; stdout dry run and fakes documented, no live send | #184 parent criteria; #185 identity; #189 run controls; #140 hub |
+| PRD FR-050 / AC-066 per-device Hub identity | `src/api/src/zava_forward/api/iot_stream.py` (`8eeaccbb`), `test_iot_stream.py`, `test_iot_credential_hygiene.py` | Fake-SDK only; no device issued, no stream sent (2026-10-29 B1 exercise was metrics only) | #185 (PR #1205 excluded), #110 |
+| Handover consistency, ADR 0003 and PRD FR-050 | `synthetic/sensor_consistency.py`, `sensor_handover_verify.py`, `test_sensor_handover.py`, `test_sensor_consistency.py` | Local observed, historical (2026-10-30 and 2026-11-01 constructed witnesses, zero default tolerance) | #188: live and backfill queryable together, statistical handover, window rerun (all unmet) |
+| BRD FR-048 / AC-090 retained raw observations, owned DQ | `sensor_consumer.py` retained witnesses, `sensor_reading` columns | Implemented-unverified; real data blocked by BRD OD-43 | OD-43 owners |
+| PRD AC-067 / AC-068 review-signal authority and method evidence | `sensor_analysis.py`, `sensor_analysis_store.py`, research plan | Out of this record's refreshed scope; unchanged | Existing research gates |
+
+### Raw weather and wire versus indoor observed series
+
+* The live generator emits a wire message `live-sim-reading-v1` at 300-second UTC slots: `temperature_c` (`degC`), `humidity_pct` (`percent`) and `sunlight_wm2` (`W/m2`, global horizontal irradiance), `source_type=SYNTHETIC`, `scenario`, `seed`, `injected_fault=none` and a `label`. Its daily averages are an illustrative UK-like monthly table, a synthetic assumption, not retrieved weather and not an observed indoor series.
+* The consumer admits only `sensor-fault-input-v1` rows with exactly the 13 closed fields of `READING_FIELDS` (including `calibrated` and unit fields, all strings). `sensor_reading` stores 11 columns: temperature and humidity only, no sunlight and no unit columns. Units and calibration claims come from trusted per-sensor controls.
+* Therefore live-sim wire messages are not admissible by the main consumer and the main API README already says so. The sunlight value has no stored indoor representation: retained raw weather or wire provenance, an indoor projection and a continuous sunlight series are three different things, and nothing here promotes an outdoor or sunlight input to indoor risk evidence or claims indoor and weather equivalence. Classification: implemented-unverified (source and README), with the gap owned by #188 and its open, excluded PR #1203.
+* Identifiers and timestamps: backfill `reading-v1` and composed rows use reading IDs of the form `<sensor>-<epoch seconds>` at three observations per day by default; live rows use `LIVE-<sensor>-<YYYYMMDDTHHMM>Z` at 288 per day. Idempotency is on `(sensor_id, reading_id)` within a producer. Cross-producer continuity at the handover instant is not observed on main. `sensor_key` is `S` plus ten base32 characters of the SHA-256 of the UTF-8 stock home ID; `home_key` accepts non-empty, untrimmed, control-free IDs up to 128 UTF-16 units. Export accepts 128 units but consumer availability and `observed_series` are bounded to 64 UTF-16 units and return `HOME_UNAVAILABLE` beyond it; that is a documented, deliberate boundary, not a new defect.
+* Calibration: no physical calibration evidence exists. Legacy fixture calibration claims and managed envelope identity are not physical sensor calibration. Indoor-risk thresholds, lawful basis, retention basis and real resident consent are unknown and unapproved (BRD OD-43); exercise values stay exercise values.
+
+### Retention, restart and handover limits
+
+Historical, source-documented behaviour, not re-observed here: fresh receivers
+replay the retained beginning (`starting_position="-1"`, non-inclusive) and
+use SQL outcomes as durable state with no checkpoint store; retention expiry
+is a recovery limit; concurrent receivers are not coordinated; database
+commit uncertainty is explicit and cancellation does not prove rollback; a
+poisoned envelope stops for investigation. A device ID must equal
+`SYN-<sensor key>` and map to one stock home. An unsupported or missing
+window is blocked or unknown and never a pass by omission. Legacy indoor
+model continuity (constructed SQLite and SQL Server witnesses with zero
+default tolerance, negative controls and reopened-window replay) is separate
+from a versioned weather-to-weather continuity, which is proposed research
+only and not an approved pivot.
+
+### Evidence classification
+
+| Finding | Classification | Source, date, limit |
+| --- | --- | --- |
+| Constructed backfill and suffix handover and 45 ingestion tests | local observed (historical) | Research plan entries 2026-10-29 to 2026-11-01 at their original heads; not re-run against `c6d5a8f3` |
+| Bounded B1 hub exercise, metrics-only diagnostics | Azure observed (historical) | 2026-10-29 infra README; no device issued, no stream sent, no identity, SQL or retention acceptance |
+| Generator schema and consumer admission mismatch | implemented-unverified | `c6d5a8f3` blobs above and API README; no execution |
+| Sunlight wire field with no stored indoor column | implemented-unverified | Source inspection; no equivalence claimed |
+| Retention, restart and commit-uncertainty behaviour | implemented-unverified | Source and README; Azure behaviour not observed |
+| Joint Azure SQL query, restart and live handover | deferred | #188; not an owner-approved deferral of acceptance |
+| Distinct Hub identities, credential issue and teardown | blocked | #110, #185; need approved credential owner action, not agent supply |
+| Candidate FULL validation of #1203 and #1205 | blocked | Heavy lock owned by native rpi96 FULL gate (PID 1361642 observed alive at 2026-11-05, running `tools/rpi-checks.py --all --jobs 1 --lock-timeout 0 --base c6d5a8f3`); observation only, no authority to stop it |
+| Physical calibration, thresholds, lawful retention, real consent | unknown | BRD OD-43; no fixture or agent can supply them |
+
+No native gate receipt, IoT send, indoor and weather equivalence, threshold,
+calibrated acceptance or approved pivot is recorded or invented.
+
+### Actual commands, exits and limitations
+
+Recorded in the changes artifact after the final validation run. Not run:
+`tools/rpi-checks.py` (acquires the shared heavy lock), package suites, SQL
+Server, Docker and images, Chromium, FULL gate, cloud, provider and model
+calls, billing and private datasets. Those paths are unperformed, not
+passed. The change is documentation only; no source, schema, coordinator
+or workflow file was edited.
+
+### Existing authorizations
+
+The owner comments on #184 (2026-11-04 live every-home five-minute and
+smoothed-climate requirement; 2026-11-05 authorization within the existing
+USD700 cap, scoped simulator job permissions and admin-only controls; 2026-11-05
+retained scoped approvals) are existing direction, are not requested again and
+do not waive exact-head validation, capacity or secret controls. No physical
+calibration or indoor-risk approval exists.
+
+### Findings, triage and recommendation
+
+No new confirmed defect or refactor need was found. The findings above are
+owned by existing open issues, so none was filed: contract and seam
+continuity #188 (PR #1203 excluded), ingestion and Hub identity #110 and
+#185 (PR #1205 excluded), run controls #189, hub #140 and the checkpoint #440.
+The 64 versus 128 unit boundary is documented by the core README.
+
+Recommendation: **continue** this bounded record, **fix** the admission,
+sensor-schema and handover gaps in the existing #188 and #185 lanes after
+their candidates pass their own independent FULL receipts, and treat versioned
+weather-to-weather continuity as a **proposed pivot** that awaits owner
+approval; none is approved here and no new permission is requested.
+
+| Gate | Condition to close or expand |
+| --- | --- |
+| #184 (keep open) | #185, #188 and #189 closed or owner-deferred; actual credential, log and telemetry evidence on a Hub |
+| #110 (keep open) | Actual distinct Hub identity with schema version and stable reading ID; Azure SQL and restart evidence |
+| #188 (keep open) | Live and backfill series queryable per home, statistical handover within declared tolerance and idempotent window rerun on a validated head |
+| #440 (keep open) | Criterion 7 triage and criterion 8 Major HVE Builder host evidence for the coordinator remain open; this record does not satisfy either |
+| Dependent expansion | Gate only work that relies on unvalidated sensor ingestion, live handover, indoor interpretation or scale; independent documentation and unrelated engineering continue |
+
+Resume conditions: the native FULL gate releases `/tmp/ama-rpi-heavy.lock`;
+#1203 and #1205 obtain current exact-head FULL receipts and independent
+assessment by the coordinator; the validated integration candidate is
+requalified against its actual main base; an authorized credential owner
+completes any live issuance. Independent lanes: coordinator (gates,
+integration), #188 owner lane (handover), #185 and #140 owners (identity and
+hub), #189 (run controls), named human owners for OD-43 decisions.
+Final independent exact-head assessment remains coordinator-owned. A
+pivot or deliberate deferral needs explicit owner approval. This record uses
+`Refs` only; no issue is closed or ticked.
+
+### Parent-base refresh qualification (2026-11-05, local, Refs #440 #184 #110)
+
+The record above is preserved unchanged at its original observation: base
+`3d7ad2feaa9c4cba5fe917edd2fbc40e40a5c246`, main `c6d5a8f3c3a35892322300be27b9747f7b11362d`,
+original published head `3082206618ca484aab6d35531e89248773fc3295` (PR #1212).
+This qualification only records a documentation branch refresh.
+
+| Item | Value |
+| --- | --- |
+| Refreshed declared parent (`feat/discovery-assurance-integration-123`) | `e546bf23e491c49de56eaa08d4e68eab48517660`, tree `adcdf2db7a29cbb5664d522e1741401c95c021f3`, after the guarded child #1211 merge |
+| Parent-only delta from original base | One commit (#1211, constructed paired-cohort comparability): `src/core/.../paired_equity.py`, its test, `src/core/README.md` and #128 tracking records. No sensor, IoT, `docs/` or `infra/` path changed |
+| Current main | Unchanged at `c6d5a8f3`. The parent-only #1211 and cohort #128 source are not main and are not sensor or acceptance evidence |
+| Sensor source identity | Blobs for `live_readings.py` (`289051ee`), `sensor_consumer.py` (`8125b88b`), `sensor_faults.py`, `sensor_identity.py`, `sensor_backfill.py`, `iot_stream.py`, the API README, BRD, PRD and ADR 0003 are identical at `c6d5a8f3` and at the refreshed branch base (observed with `git rev-parse` on both) |
+
+Every classification, exclusion and gate above stays as recorded. The
+original partial review is a documentation-scope review of the original head
+and is not promoted to current-main acceptance. #440 criteria 7 and 8 and the
+#184, #110 and #188 gates stay open; no approval, pivot or deferral is
+inferred. Source inspection does not establish SQL, browser, IoT or human
+acceptance.
+
+Process disclosure: the earlier run removed its own scratch directory
+`/tmp/s440` with `rm -rf` without a retained finite selection, archive,
+readback or restore proof. The committed RPI records and session log survived;
+no backup or restoration of that scratch exists or is claimed. Checks in this
+refresh are new observations, not recovery.
+
+## Sixth stabilization checkpoint: parent-topic paired comparability integration (2026-11-05, Refs #440 #128 #123)
+
+Refs #440, #128 and #123. Bounded, documentation-only, local-only record of
+the affected surface after the completed parent-topic child wave #1211
+(constructed paired-cohort comparability) and #1212 (qualified sensor
+documentation). It is separate from, and does not restate, the
+[fifth checkpoint](#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110):
+that earlier record was sensor-only and did not cover the comparability
+integration. It adds no source, schema, threshold, coordinator, workflow or
+requirement change, no approval and no pivot, and it is independent of sensor
+acceptance and of any actual AI or human approval. Original RPI evidence is
+under `.copilot-tracking/*/2026-11-05/parent-comparability-checkpoint-440-*`.
+
+### Trigger, identities and observation scope
+
+The existing owner is #440 (open, parent #123); no duplicate checkpoint issue
+was created. Parent #123 closure and dependent cohort expansion wait for this
+scoped record, which is a precondition and not an acceptance.
+
+| Item | Value |
+| --- | --- |
+| Declared parent topic `feat/discovery-assurance-integration-123` (remote head read with `git ls-remote`, 2026-11-05) | `ad1ee0264a381fb76de100417c535a4e194e2460`, tree `8052fa5d3248c9dc3a4f9cb8558ccfbfa65e360e`; the local ref of that name was stale at `3d7ad2fe` and was not used |
+| Observed documentation head (branch `docs/parent123-checkpoint-wave2`) | Started at the same `ad1ee026`; this section is added on top |
+| Current `origin/main` (fetched 2026-11-05) | `c6d5a8f3c3a35892322300be27b9747f7b11362d`, tree `876679c32ff8f8a3d35822d9e46d8b377ce15428` |
+| Merge base of parent and main | `3d7ad2feaa9c4cba5fe917edd2fbc40e40a5c246`. Parent is two commits ahead (#1211 `e546bf23e`, #1212 `ad1ee0264`); main is one commit ahead (#1210, delivery tooling only) |
+| Merge state | #1211 and #1212 are merged into the parent topic only. They are not on main. Parent-only source is not merged-main acceptance |
+| Excluded, unmerged | #1203, #1205, #1141 and #1206 (all open when checked, 2026-11-05). Their source was neither read nor adopted; no private dataset was read |
+| This evidence pack blob before this section (parent head) | `9e7ffed7a571f4381d5ddb743f3ac84688818efa` (main: `2566e8efd7084346421fffb101d5b171100dfd63`) |
+
+Actual observation scope: parent-topic source at `ad1ee026` only. Nothing was
+run against main, so main behaviour is known by blob identity alone. Main
+still holds the unfixed `paired_equity.py` blob `d29768d5`, the blob on which
+the original #128 reproduction (a confounded pair returning `pass`) was
+recorded; the fix is `5aedcd7b` on the parent topic only.
+
+Document identities, identical at parent and main. Draft, in-review and
+proposed documents are not approvals by this record.
+
+| Document | Status, version, date | Blob |
+| --- | --- | --- |
+| [BRD](../brds/agentic-retrofit-programme-brd.md) BRD-2026-AMA48-001 | draft, 0.21.0, 2026-10-24 | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) PRD-2026-AMA48-001 | in-review, 0.21.0, 2026-10-25 | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| [ADR 0002](../adrs/0002-pilot-readiness-architecture.md) | Proposed, no version field, 2026-10-24 (decision 4 is cited by `ranking_publication.py`) | `cbe21530043ff15432cc6dce1086d080f5eb15b4` |
+| [ADR 0003](../adrs/0003-journey-derived-capabilities-runtime-fit.md) | Accepted with amendment by the owner, no version field, 2026-10-29 | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+
+Requirement IDs are document-qualified because numbers collide: PRD FR-054
+(versioned cohort and missing-data evaluation record), PRD AC-073 (paired
+constructed cohorts, seeded defects detected, thresholds block activation
+pending human disposition; its status cell reads "Not run"), PRD FR-012,
+PRD PR-006 (deterministic ranking, versioned policy), PRD OQ-018 (which
+cohorts, lawful fields, thresholds and windows apply; open), BRD NFR-008
+(accessibility and unfair-exclusion testing with human review of missing
+data), BRD NFR-009 (journey ownership, service times, tested manual
+alternatives) and BRD AC-064 and AC-071. The #128 body also cites BRD
+RULE-005 and PRD SA-009, SA-010 and AC-055; those were not re-reconciled here.
+
+### Paired diagnostic to boundaries
+
+Source inspection of blobs at `ad1ee026`, plus the one observation below.
+`paired_equity.evaluate` is a pure, constructed-fixture check. It imports
+only `journey_register`, `ranking` and `rai_release.digest`.
+
+| Boundary | Source and tests (blob at parent, unchanged from main unless stated) | Relationship to the paired diagnostic | Limit |
+| --- | --- | --- | --- |
+| Paired diagnostic | `paired_equity.py` (`5aedcd7b`, changed from main), `test_paired_equity.py` (`f9b07cb6`, changed), `src/core/README.md` (`bb709453`, changed) | Predeclared fixture-local contrasts reject confounded, no-contrast and mislabeled pairs as `invalid_comparison` blockers and `invalid_pairs`; an invalid pair counts as neither tested nor failed; `activation_allowed` and `fairness_evidence` stay false | The contrast table is not a production field mapping or an approved policy; seeded-defect accounting on a rejected pair is not separately tested |
+| `journey_register` | `journey_register.py` (`92f75403`), `test_journey_register.py` (`12c114aa`) | `human_review_route` supplies the rank-effect-none check used per pair; the register evaluation of owners, measures and tested manual alternatives (BRD NFR-009) is not called by the diagnostic | A supplied register is checked, never invented; no owner, threshold or manual-alternative test result is approved |
+| `ranking` and `ranking_publication` | `ranking.py` (`052bc6b9`), `ranking_publication.py` (`934ef16d`), `test_ranking_publication.py` (`6b66f232`) | `ranking.rank` is the default ranker for position comparison; an injected ranker is allowed. Publication (immutable dated snapshots, `verify`, `overdue`) is a separate retained-archive boundary the diagnostic does not call | Retention period is a Legal decision and the schedule belongs to the deployment; ADR 0002 is Proposed. Store and API wiring (`store.py`, `api/server.py`) was inspected by reference only |
+| `rai_release` and invalidation | `rai_release.py` (`970678ca`), `test_rai_release.py` (`d8a346cb`), `test_rai_release_invalidation.py` (`1ca9d5e7`) | Only `digest` is shared. The diagnostic does not select, admit or invalidate any release record, so a comparability result cannot revoke or activate anything | Exercise release records and invalidation tests are constructed; no actual release authorization exists |
+| `cohort_eval` | `cohort_eval.py` (`60907194`), `test_cohort_eval.py` (`47e0c7f3`), `cohort_eval_fixture.py` (`f5bb1cfc`); agent consumers in `src/agents` were not run | Not imported by the diagnostic. `cohort_eval` holds the approved expected-outcome manifest, approval binding and thresholds (PRD AC-073); the paired diagnostic predeclares only fixture contrasts | Mocked or fixture approvals and thresholds are not actual approvals. Threshold approval stays open (PRD OQ-018) |
+
+No integration seam between `paired_equity` and `cohort_eval` or the release
+invalidation path exists in source, and none is required by this record; the
+absence is stated, not raised as a defect, because the owning criteria (#128
+cohort and release acceptance) are open and unclaimed.
+
+### Evidence classification
+
+| Finding | Classification | Source, date and limit |
+| --- | --- | --- |
+| 74 coupled core tests pass on the parent-topic candidate | local observed (parent-topic only) | Observation below, 2026-11-05; no run on main, no full core, API or agents suite |
+| Comparability fix and the four historical confound fixes present in `paired_equity.py` | local observed (parent-topic only, tests) and implemented-unverified beyond constructed fixtures | Source blob `5aedcd7b`; constructed pairs only |
+| Original NOT CLEAN review of #1211 work (two Medium) | historical adverse outcome, preserved | `.copilot-tracking/reviews/2026-11-05/issue-128-paired-cohort-comparability-review.md`; two pre-freeze fixes were verified by tests and never independently re-reviewed in that record |
+| Correction-2 adverse findings (nested sequence type masking, dotted-key shadowing) | historical adverse outcome, preserved | Same review and changes records; self-check by tests only, no review approval claimed |
+| Published exact-head functional assessment of #1211 (verdict approve, no findings) | separate later outcome, helper-only | `issue-128-published-functional-assessment.json`; reading only, constructed diagnostic scope; it does not supersede, approve or regrade the original review |
+| Independent published readiness approval of the #1212 sensor documentation (0 findings) | separate outcome for sensor documentation only | Reported in the #440 comment of 2026-11-05 (read only); not a comparability review |
+| Azure observation of the comparability, cohort or release surface | none (no Azure observation exists for this surface) | Historical Azure records elsewhere in this pack concern other surfaces |
+| Paired diagnostic with `cohort_eval` manifest, release invalidation and ranking publication integration | implemented-unverified (components) and unknown (integration) | No seam exercised; not run end to end |
+| Actual-model or AI task evaluation of paired cohorts | deferred | Needs an approved task, manifest and thresholds |
+| Independent expected-pair manifest, thresholds, representative cohorts, lawful fields (PRD OQ-018) | blocked | Named human approval; no agent or fixture can supply it |
+| Keyboard and screen-reader testing, user research, assistive-technology acceptance | blocked | #128 criteria; no results exist |
+| Population fairness, lawful protected-characteristic fields, activation of any task | unknown | Constructed pairs are not population evidence; nothing is approved or activated |
+| Hosted CI on the parent topic | unknown | No hosted green run is claimed for these documents |
+
+An accepted helper implementation is not actual AI, cohort, population
+fairness, threshold, lawful-field, user-research, assistive-technology or
+human acceptance, and none of those exists. Fixtures, mocked approvals, false
+activation flags and fairness flags are not approvals.
+
+### Actual commands, exits and limitations
+
+All commands ran from `src/core` of the documentation worktree, Python 3.12.3,
+with `PYTHONDONTWRITEBYTECODE=1` and an explicit
+`PYTHONPATH=<worktree>/src/core/src:<worktree>/src/core/tests`. The existing
+external environment `/tmp/rpi128-venv` was used read-only. Its editable
+installs resolve through other trees first (a sibling worktree and the primary
+checkout), so the explicit path was required and the loaded paths were
+asserted; no installation or shared-environment change was made.
+
+| Command | Exit | Result |
+| --- | --- | --- |
+| Import `paired_equity` and assert `__file__` is under this worktree's `src/core/src/` | 0 | Candidate path confirmed |
+| `python -m unittest tests.test_paired_equity tests.test_journey_register tests.test_rai_release tests.test_rai_release_invalidation tests.test_ranking_publication tests.test_cohort_eval` | 0 | 74 tests OK in 0.062 s |
+| Assert `__file__` under this worktree for the six modules and six test modules | 0 | All twelve confirmed |
+| `git status --short --ignored` after the runs | 0 | Empty (no bytecode written) |
+
+The log is outside the repository at
+`/tmp/parent123-comparability-440/core74.log`; it is a command summary, not a
+gate receipt. Not run: `tools/rpi-checks.py`, SQL Server, Docker and images,
+browser, cloud, provider and model calls, billing, private datasets, the full
+core, API or agents suites, Ruff or mypy. Those paths are unperformed, not
+passed. The native FULL gate lock, its receipt and images were not touched.
+
+### Findings, triage and recommendation
+
+No defect was confirmed. No finding was compared against a new owner, no
+issue was filed and no refactor is proposed. Unreproduced observations, left
+with existing owners (#128 and its coordinator lane) and not raised as
+defects: the optional seeded-defect-on-rejected-pair regression named by the
+published assessment, strict type equality separating mapping subclasses, and
+the absence of an integration seam with `cohort_eval`.
+
+Recommendation: **continue** the parent-topic integration under #123 with
+this record as the affected-surface stabilization precondition. **Fix**: none
+required; no defect is confirmed. **Proposed pivot**: none new. The earlier
+versioned weather-to-weather continuity proposal remains proposed research
+only; the #188 weather interpretation remains unanswered by the owner and is
+not assumed. No requirement is relaxed and no pivot is approved.
+
+| Gate | Condition to close or expand |
+| --- | --- |
+| Parent #123 closure | The parent-topic work is integrated into main through an independent exact-head local gate and a requalification against the actual main base; #128 is closed or owner-deferred; the sensor lane (#184, #110, #188) is closed or owner-deferred; #440 criteria 7 and 8 are met; human approvals recorded by named owners |
+| #128 closure (keep open) | Keyboard and screen-reader testing, human review of missing data and incomplete appointments, agreed user-research protocol, independent expected-pair and threshold approval (PRD OQ-018), lawful-field decision, actual-model run where relevant and named human acceptance |
+| Dependent cohort expansion | Gate only work that relies on the comparability fix being on main, on approved cohort thresholds or manifests, or on a fairness or population claim. Independent documentation and unrelated engineering continue |
+| #440 (keep open) | Criterion 7 triage and criterion 8 Major HVE Builder host evidence for the coordinator remain open; this record satisfies neither |
+| Sensor gates | #184, #110 and #188 stay open as recorded in the fifth checkpoint; nothing here changes them |
+
+Resume conditions: the parent topic is refreshed against current main and
+requalified with its own exact-head gate by the coordinator; the native FULL
+gate releases the shared heavy lock before any heavy validation; named human
+owners decide the open OQ-018 items. Independent lanes: coordinator (gates and
+integration), #128 owner lane (accessibility, user research, approvals),
+#188 and #185 owners (sensor lanes), named human owners for approvals. A pivot
+or deliberate deferral needs explicit owner approval. This record uses `Refs`
+only; no issue is closed or ticked.
+
+### Process disclosure
+
+The earlier #440 run removed its own scratch directory `/tmp/s440` with
+`rm -rf` without a retained finite selection, archive, readback or restore
+proof. That disclosure survives. This task deleted nothing, including its own
+scratch and logs, created no backup or archive, and its new observations are
+not a restoration. No human approval, gate receipt or review approval is
+invented; the one independent review of this documentation diff is recorded
+in the tracking review artifact with its original outcome.
+
+## Seventh stabilization checkpoint: current-main UI and cache recovery (2026-11-05, Refs #440 #96)
+
+Refs #440 and #96. Bounded, documentation-only, local-only record of the
+recovery after the two merged main fixes for #1215 (API discovery bytecode) and
+#1214 (320px case-summary header spacing). It is separate from the
+[sixth checkpoint](#sixth-stabilization-checkpoint-parent-topic-paired-comparability-integration-2026-11-05-refs-440-128-123),
+whose parent-topic observation, original NOT CLEAN review and #1213 records
+stay parent-only, immutable and are not regraded. It adds no runtime,
+coordinator, workflow, threshold, requirement or ADR change and no approval.
+Its original RPI evidence is under
+`.copilot-tracking/*/2026-11-05-ui-cache-checkpoint-wave3-440-*`.
+
+**The planned focused observation of current main was NOT performed.** The
+exclusive heavy lock was held by another session, and this task did not queue,
+wait or retry. Both focused checks are blocked and unrun, not passed.
+
+### Source and document identities
+
+| Item | Value |
+| --- | --- |
+| Current main, pinned after scorer run 42036086584 completed `success` and two fetches agreed (2026-11-05, about 13:36Z) | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`, tree `5c2988b71aec609b007b41f408685d54e2c28e0d`. It is the bot commit `chore(rubric): record score 77/100` (13:34:38Z); its only change from `2edba50b7` (#1219) is `.github/rubric/scores/latest.json`, 4 lines |
+| Merged fixes under checkpoint | #1217 `180dcf3e2` (#1215, `Runner.install_bytecode_policy()` called from `Runner._install("api")`); #1219 `2edba50b7739b83b88ba491648717a9750777a0c` (#1214, merged 13:28:35Z). #1214 and #1215 are closed |
+| Parent topic `feat/discovery-assurance-integration-123` (child base, unchanged) | `23cdae38b1fe47a47ba5f3f356ed18253aad9c46`, tree `263475b0e4d01203186b42b5311f4c85c0d4f5dd`. It is 3 ahead of and 4 behind the pre-rubric main, is not current main and lacks the #1215 and #1219 fixes |
+| Documentation child | Branch `docs/parent123-ui-cache-checkpoint-wave3` based on the parent `23cdae38`; no merge, rebase, reset, retarget or flattening to main |
+| This evidence pack blob at the parent before this section | `3aec3dd44b24d4bf039faadced830ae25b9deba5` (main: `2566e8efd7084346421fffb101d5b171100dfd63`; they differ because the parent carries the sixth checkpoint) |
+
+| Document | Status, version | Blob (main and parent equal, verified with `git rev-parse`) |
+| --- | --- | --- |
+| BRD-2026-AMA48-001 | draft, 0.21.0 | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD-2026-AMA48-001 | in-review, 0.21.0 | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 | Accepted with amendment by the owner (2026-10-15, reconciled 2026-10-18) | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 | Accepted (owner, 2026-10-15) | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Draft and in-review documents are not approvals. Excluded, unmerged: the #96
+feature, schema and Finance acceptance (#96 is open) and every other parent
+or sibling branch change not on main. Parent-only source was never run or
+labelled as main.
+
+### Traceability to source and tests
+
+Requirement IDs are document-qualified; reads are of main blobs.
+
+| Requirement or decision | Implementing source and tests on main | Limit |
+| --- | --- | --- |
+| BRD NFR-008 and AC-064 (accessibility, unfair-exclusion testing, digital and non-digital journeys) | `src/api/checks/case_journey_browser_check.py`: reflow over 320, 390 and 1280 CSS px at height 800 asserting `scrollWidth <= innerWidth`; 320x800 `.case-summary` bottom `<= 1600`; reduced-motion and forced-colour states; stacked fallback when the enhancement script is missing | Synthetic fixture and engineering checks, not live-contact or user-research acceptance |
+| BRD NFR-009 and AC-071 (owned journeys, tested manual alternative) | Same check: manual-route fixture, keyboard Enter, Home, End, Space and Escape paths | Owner-set thresholds (OD-09, OD-25) are not approved here |
+| PRD NFR-001, NFR-018, AC-093 and AC-134 (keyboard, focus, reflow at 320, 390, 1280) | Same check | PRD acceptance status cells read "Not run"; six-script, zoom and screen-reader results are not provided here |
+| ADR 0003 decision 2 (authority enforced in the API, not a view) | The check drives the real server and moves no authority into a view | ADR 0003 has no reflow or keyboard text; the trace is indirect |
+| ADR 0006 (src layout and cut-over gate) | `tools/rpi-checks.py` `Runner._install("api")` then `install_bytecode_policy()`; scrubbed harness server launch; `tools.test_rpi_checks.GateTests.test_api_install_prevents_scrubbed_server_child_writing_source_bytecode` | ADR 0006 has no bytecode clause; the trace is through its gate and layout rules |
+| #96 full gate versus #96 feature | Full-gate dependency is the fixed Runner install and the 320px contract | A focused main pass would not be a #96 full receipt; the earlier #96 full receipt failed, is non-resumable and is preserved |
+
+### Evidence classification
+
+| Finding | Classification | Source, date and limit |
+| --- | --- | --- |
+| Main, parent and document identities above | local observed (git only) | `git fetch`, `rev-parse`, `diff --stat`, 2026-11-05 |
+| Auxiliary main environment: detached clean worktree at `bb3a3b03`, own venv, editable installs of `src/core`, `src/agents`, `src/api[dev]`, `pip check` clean, `zava_forward.*` and `playwright 1.64.0` resolve inside the worktree | local observed (environment only) | Not a check result; ignored `*.egg-info` directories exist in that worktree |
+| Pinned axe 4.10.3 copy | local observed | SHA-256 `880970c0...a68bb` equals `AXE_SHA256` in `tools/rpi-checks.py`; copied from existing evidence, none modified |
+| Bytecode isolation regression on main | blocked (not run) | Lock held, below |
+| Case-journey browser check on main (320x800 bound 1600, wider and keyboard states, reduced motion, manual controls) | blocked (not run) | Lock held, below |
+| #1219 reported 19 checks pass, independent published functional and readiness Pass, premerge partial receipt verified; #1215 merged with the real-producer test | implemented, reported by the merged issue and PR records; not re-observed by this record | Premerge partial receipt is not a main or full receipt |
+| Azure observation of this surface | none | Local synthetic checks only |
+| Actual AI, user research, assistive-technology and human acceptance | deferred or blocked | Named owners and approved plans |
+| Hosted CI on this documentation child | unknown | Nothing published |
+
+### Actual commands, exits and the lock
+
+| Step | Result |
+| --- | --- |
+| `git worktree add --detach /tmp/ama-main-440-ui-cache-wave3 bb3a3b03...` (path absent first) | Exit 0, clean |
+| New venv `/tmp/ama-main-440-ui-cache-wave3-venv`, editable installs, bytecode policy `.pth` written, `pip check` | Exit 0 |
+| `flock -n -x /tmp/ama-rpi-heavy.lock -c <both focused checks>` at about 13:37:15Z | Exit 1 immediately; neither check ran; no check output exists |
+| Passive `lsof` of the lock at 13:37:29Z | Held by `python3 tools/rpi-checks.py --changed --base bb3a3b03... --out /tmp/r233f --lock-timeout 0` (pid 1560051) from `/tmp/ama-wt-233-gate-final`, an issue #233 session |
+
+No queue, wait, retry, interruption, or change to the holder's worktree,
+images or environment occurred. The browser, SQL, Docker, cloud and model
+paths were not exercised.
+
+Resume point, for a later session that can take the lock without queueing:
+`flock -n -x /tmp/ama-rpi-heavy.lock` around (1) from the auxiliary worktree
+root `python3 -m unittest tools.test_rpi_checks.GateTests.test_api_install_prevents_scrubbed_server_child_writing_source_bytecode`
+and (2) from `src/api`, the auxiliary venv's
+`checks.case_journey_browser_check --axe /tmp/ama-main-440-wave3-out/axe-4.10.3.min.js --out /tmp/ama-main-440-wave3-out/journey`
+with a scrubbed environment, `TMPDIR` external and module identities asserted.
+Re-fetch and re-pin `origin/main` first; a different pin needs its own worktree.
+The prepared external paths `/tmp/ama-main-440-ui-cache-wave3`,
+`/tmp/ama-main-440-ui-cache-wave3-venv` and `/tmp/ama-main-440-wave3-out` are
+retained, not deleted.
+
+### Findings, triage and recommendation
+
+No new defect was reproduced or confirmed, because the observation did not run.
+Nothing differs from #1214 or #1215, so no new issue is proposed and no
+refactor or package-card correction is proposed.
+
+Recommendation: **continue**. **Fix**: none confirmed. **Pivot**: none.
+The #1214 and #1215 recoveries rest on the merged owners' evidence until the
+focused main observation above is taken. A blocked observation is not a pass.
+
+| Gate | Effect |
+| --- | --- |
+| Publication of this child | Needs coordinator independent exact-head assessment, hosted checks and human approval; none is claimed |
+| Parent #123 closure | Still needs the parent refreshed against main with its own exact-head gate, plus the conditions in the sixth checkpoint |
+| #96 full-gate receipt | A new native full receipt by its own session; this record supplies none |
+| #440 (stays open) | Criterion 7 whole triage and criterion 8 Major HVE Builder behaviour-testing and host validation are not covered; no coordinator behaviour changed |
+
+Independent lanes continue. This record uses `Refs` only; no issue is
+closed or ticked.
+
+### Process disclosure
+
+No existing record, cache, snapshot, image or evidence was deleted, moved or
+modified. New external paths were created, not overwritten, and retained
+without archive or backup. The one axe file was copied from existing
+evidence. No human approval, receipt or review approval is invented.
+
+### Required-observations continuation: actual results (2026-11-05, Refs #440 #96)
+
+This continuation is separate and dated after the record above. The unrun
+statements above stay as the historical record at that time; they are not
+rewritten. Both required focused checks have now run on current main, in a
+documentation child that stays based on parent `23cdae38`. This is focused
+stabilization evidence only: not a full or `--changed` gate, not a #96 full
+receipt, and not #440 C7 whole triage, C8 HVE Builder host validation, legal
+or human approval, Azure or #96 feature acceptance. Original RPI evidence is
+under `.copilot-tracking/*/2026-11-05-ui-cache-required-observations-followup-440-*`.
+
+| Item | Value |
+| --- | --- |
+| Child head and tree at start | `66c81b2893f00442813220d322d254927e68f9eb`, tree `650251ad26ca0af27c3c5bb5ef633341e5f337ad`, clean |
+| Main re-resolved at admission (2026-11-05, 15:02Z) | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`, tree `5c2988b71aec609b007b41f408685d54e2c28e0d`, unchanged from the earlier pin; latest scorer run 42036086584 `completed` `success`; no newer commit |
+| Parent (unchanged, not moved) | `23cdae38b1fe47a47ba5f3f356ed18253aad9c46`, tree `263475b0e4d01203186b42b5311f4c85c0d4f5dd` |
+| Document blobs and status | Unchanged and re-read equal at main: BRD `34d88395...` draft 0.21.0, PRD `c788b917...` in-review 0.21.0, ADR 0003 `d6064539...` accepted with owner amendment, ADR 0006 `956da1a3...` accepted. Draft and in-review are not approvals |
+| Clean observed source | New detached exact-main auxiliary `/tmp/m440b` at `bb3a3b03`, 0 tracked, untracked or ignored entries before and after the observations; no `__pycache__` or `*.pyc` under it |
+| Environment | The existing #440-owned venv `/tmp/ama-main-440-ui-cache-wave3-venv` was reused without any install (Python 3.12.3, playwright 1.64.0, `src/api/pyproject.toml` identical in both auxiliaries). Explicit `PYTHONPATH` placed `/tmp/m440b/src/{core,agents,api}/src` and the tests ahead of the editable installs; `zava_forward.core.store` and `zava_forward.api.server` resolved to `/tmp/m440b/...`, and the checker `__file__` is `/tmp/m440b/src/api/checks/case_journey_browser_check.py`. Scrubbed environment (`env` cleared), `PYTHONDONTWRITEBYTECODE=1`, `TMPDIR` external, stdin from `/dev/null` |
+| Lock | One non-blocking exclusive `fcntl` hold of `/tmp/ama-rpi-heavy.lock` across both checks, acquired 15:03:36Z, released 15:05:14Z. It was free on probe (no holder, no runner process), so no queue, retry or wait occurred |
+| Axe | The copied pin `/tmp/o440c/axe-4.10.3.min.js`, SHA-256 `880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb`, equal to `AXE_SHA256` in main `tools/rpi-checks.py`; copied from the #440 wave3 output copy, nothing downloaded |
+| Browser | Chromium `156.0.8078.4` (Playwright cache `chromium-1248`), axe 4.10.3 as reported in `results.json` |
+
+| Check | Command (from) | Exit | Result |
+| --- | --- | --- | --- |
+| 1. Real-producer bytecode isolation | `python -m unittest -v tools.test_rpi_checks.GateTests.test_api_install_prevents_scrubbed_server_child_writing_source_bytecode` (`/tmp/m440b`) | 0 | `Ran 1 test in 0.722s`, OK, no skips. The test itself asserts the owned loopback server responded and no `__pycache__` or `*.pyc` appeared under its scratch source roots |
+| 2. Case-journey browser check | Runner `BROWSER_ENTRY` equivalent around `checks.case_journey_browser_check --axe /tmp/o440c/axe-4.10.3.min.js --out /tmp/o440c/journey` (`/tmp/m440b/src/api`) | 0 | 407 `PASS` lines and no `FAIL` line (the 17 other lines are printed page text); `results.json`: 87 axe scans, 0 page errors, zoom `chrome.tabs.setZoom=2; innerWidth<=640`. `320x800 summary within one viewport scroll (1592.40625)` against the unchanged bound 1600; 320, 390 and 1280 reflow, reduced-motion and forced-colour, missing-enhancement fallback, keyboard focus and 200% zoom all pass. Screenshots `mobile-320.png`, `desktop-1280.png`, `forced-colours.png`, `browser-zoom-200.png` retained |
+
+The 320px margin is 7.6 CSS px under the 1600 bound; it passes and is stated
+as a thin margin, not a defect. No skip, threshold, test or harness change was
+made. Preserved outputs: `/tmp/o440c` (accepted observation) and `/tmp/o440b`
+(a first attempt whose check 1 also passed, exit 0; its check 2 exited 1
+because the runner script had pre-created the `journey` output directory
+and pre-imported the module, a harness mistake before any browser step, so
+it is not a product result). Nothing was deleted.
+
+| Finding | Classification |
+| --- | --- |
+| Bytecode isolation regression passes on exact current main source | local observed (main, focused) |
+| Case-journey browser check passes on exact current main source at the unchanged 320x800 bound and wider, keyboard, reduced-motion and manual-fallback states | local observed (main, focused, synthetic fixture) |
+| Together with the merged #1215 and #1219 records, the two recoveries are reproduced on main | local observed; they are not a full or `--changed` gate, not a #96 full receipt and not a sealed receipt |
+| Resident, assistive-technology, screen-reader and user-research acceptance, six-script PRD AC-134 | blocked or deferred, as before |
+| Azure observation, actual AI | none |
+| #96 feature, schema and Finance acceptance | excluded, unmerged |
+| Hosted CI and independent exact-head assessment of this documentation child | unknown (coordinator work) |
+
+No new defect was reproduced, so there is nothing to compare with #1214 or
+#1215 and no new issue, fix or refactor is proposed.
+
+Recommendation: **continue**. **Fix**: none confirmed. **Pivot**: none.
+Gates: publication of this child still needs the coordinator independent
+exact-head assessment, hosted checks and human approval; parent #123 closure
+still needs the parent refreshed against main and requalified (the parent
+lacks the #1215 and #1219 fixes); a #96 full receipt must come from its own
+native full run; #440 stays open for criteria 7 and 8. Issues are not closed or
+ticked.
+
+Process disclosure: the old auxiliary `/tmp/ama-main-440-ui-cache-wave3`
+(known ignored `*.egg-info`) and the venv were reused read-only or left
+unchanged and are not the observed clean source. The runner scripts
+`/tmp/o440b-run.py` and `/tmp/o440c-run.py` are retained outside the
+repository. Nothing was deleted, moved, archived or cleaned.
+
+## Eighth stabilization checkpoint: integrated parent topic preparation (2026-11-05, Refs #123 #440 #128)
+
+Refs #123, #440 and #128. Local, light-only preparation of the parent topic
+`feat/discovery-assurance-integration-123` for an eventual main integration.
+It is not documentation only: the integrated surface carries the constructed
+#128 diagnostic `paired_equity.py` and its tests. It adds no runtime behaviour,
+threshold, approval or requirement change. Epic #123 acceptance criteria 1 and
+2 stay unchecked and unproven; #440 criteria 7 and 8, the whole-#440 HVE
+residuals, company-owner and data prerequisites, actual-model, threshold and
+lawful-field approvals, resident and accessibility research and authorized
+Azure-only residuals stay outstanding. Holds on weather and indoor series
+(#82, #188) and the #1204 HVE item stay scoped as before. Original RPI
+evidence is under `.copilot-tracking/*/2026-11-05/parent-integration-preparation-123-*`.
+
+### Source, intake and merge identities
+
+| Item | Value |
+| --- | --- |
+| Old local placeholder (strict ancestor, kept) | `3d7ad2feaa9c4cba5fe917edd2fbc40e40a5c246` |
+| Remote parent intake (fetched 2026-11-05) | `63dd5798ee474ea3137018749b604c1f78774801`, tree `73c8eda8f49891aea173623f79e1fd8f95c7ec1b` |
+| Fresh main baseline (fetched 2026-11-05) | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`, tree `5c2988b71aec609b007b41f408685d54e2c28e0d` |
+| Remote-parent merge (ordinary, fast-forward eligible) | local head became `63dd5798`, tree `73c8eda8` |
+| Main merge commit (ordinary, no reset, rebase or force) | `6703b0b1a9e44844fc64446c8a311d28f36dec81`, tree `e23d35e72b480ba0c650e57f754871a23353a14f`; parents `63dd5798` and `bb3a3b03` |
+| Final frozen local head | the commit that adds this section; reported in the task hand-off, not self-referenced here |
+
+Both tips are ancestors of the merge commit (`git merge-base --is-ancestor`
+exit 0 for each). `docs/reference/log.md` auto-merged with no conflict;
+afterwards no line of either side's log was removed (zero deleted lines
+against each parent). The prior compound command that reported exit 1 after
+the merge ended in `grep -v` over an empty tracked-change list, which exits 1
+by design; the merge itself succeeded and was rechecked separately. No parent
+pull request existed (open: #1216, #1205, #1203, #1141). Nothing was pushed.
+
+### Covered children and surface
+
+Covered #128 and #440 children already on the remote parent: #1211
+`e546bf23e` (constructed paired-cohort comparability), #1212 `ad1ee0264`
+(qualified sensor documentation), #1213 `23cdae38b` (parent comparability
+checkpoint, sixth) and #1221 `63dd5798e` (UI and cache checkpoint, seventh).
+Their original NOT CLEAN reviews, failed receipts, first harness mistakes and
+later qualified successes are unchanged.
+
+Final fresh-main-relative scope (`git diff bb3a3b03 HEAD` before this
+checkpoint): 39 files, 1710 additions, 2 deletions. Source and tests:
+`src/core/src/zava_forward/core/paired_equity.py` (`5aedcd7b`),
+`src/core/tests/test_paired_equity.py` (`f9b07cb6`) and `src/core/README.md`
+(`bb709453`). Documentation: this pack, the KB index and the log. The remaining
+33 files are dated `.copilot-tracking` RPI records. Main-only gate tooling
+(`tools/rpi-checks.py`, `src/README.md`, API `style.css`) is identical to main
+and not part of the diff. Tier: FOCUSED is recommended only while this stays
+bounded metric tooling, tests and documentation; it is a recommendation for
+coordinator admission, not an admission. Any mixed infrastructure, security,
+SQL, finance, deployment or large-feature change needs reclassification to
+FULL.
+
+### Document identities and traceability
+
+Identical on main and the parent. Statuses are not approvals by this record.
+
+| Document | Status, version, date | Blob |
+| --- | --- | --- |
+| BRD-2026-AMA48-001 | draft, 0.21.0, 2026-10-24 | `34d88395` |
+| PRD-2026-AMA48-001 | in-review, 0.21.0, 2026-10-25 | `c788b917` |
+| ADR 0002 | Proposed | `cbe21530` |
+| ADR 0003 | Accepted with amendment | `d6064539` |
+
+Traceability stays document-qualified: PRD FR-054 and AC-073 (constructed
+paired cohorts; status cell "Not run"), PRD OQ-018 (open), BRD NFR-008 and
+NFR-009. `paired_equity.py` keeps `fairness_evidence=False` and
+`activation_allowed=False`; its fixture contrasts are not a production mapping
+or an approved threshold. Main still holds the unfixed blobs `d29768d5` and
+`432aef3e` for the diagnostic and its tests; the parent holds the fix.
+
+### Evidence classification
+
+| Finding | Classification | Limit |
+| --- | --- | --- |
+| Six coupled core test modules pass on the integrated working tree | local observed (parent topic, integrated head `6703b0b1` content) | 74 tests; light only; not a gate, not a main observation |
+| Ruff check and format check of the two changed Python files pass | local observed (parent topic) | Two files only; mypy not run |
+| `git diff --check bb3a3b03 HEAD` clean | local observed (parent topic) | Whitespace only |
+| Main observations of this surface | none | Main holds the unfixed diagnostic |
+| Complete parent validation (relevant core tests as a gate, core Ruff and mypy including tests, offline requirement and design traces, link and anchor checks, final identity record) | pending coordinator admission | Not run here; historical child receipts and the earlier 74-test observation are context, not parent results |
+| Independent exact-head review, hosted checks, guarded merge | deferred to coordinator | None exist for this head |
+| Actual-model evaluation, thresholds, lawful fields, population fairness, human approval | blocked or unknown | Nothing inferred |
+
+### Actual commands, exits and skips
+
+Python 3.12.3 from the existing external `/tmp/ama-96-venv`, with
+`PYTHONDONTWRITEBYTECODE=1`, external `XDG_CACHE_HOME`, `RUFF_CACHE_DIR` and
+`MYPY_CACHE_DIR` under `/tmp`, and an explicit
+`PYTHONPATH=<worktree>/src/core/src:<worktree>/src/core/tests`.
+
+| Command | Exit | Result |
+| --- | --- | --- |
+| Import `paired_equity`, `journey_register`, `ranking`, `rai_release`; assert `__file__` under this worktree | 0 | Current-source paths confirmed |
+| `python -m unittest` over `test_paired_equity`, `test_journey_register`, `test_rai_release`, `test_rai_release_invalidation`, `test_ranking_publication`, `test_cohort_eval` | 0 | 74 tests OK in 0.062 s |
+| `ruff check --no-cache` and `ruff format --check --no-cache` on `paired_equity.py` and `test_paired_equity.py` | 0, 0 | Passed |
+| `git diff --check bb3a3b03 HEAD` | 0 | Clean |
+| Ignored-inclusive status | 0 | No ignored files |
+
+Not run: `tools/rpi-checks.py` in any mode, mypy, browser, SQL, Docker,
+scanners, cloud, provider or model calls, private datasets, broad suites and
+offline traces. The heavy lock and the #144 runner were not touched.
+
+### Findings, triage and recommendation
+
+No new defect was confirmed and no correction beyond the merge was needed.
+Earlier unreproduced observations stay observations. Recommendation: the
+coordinator admits the selected-tier parent validation, independent exact-head
+review and hosted checks; the recorded gaps remain open. No issue, board or
+criterion was changed and no closing keyword is used. Nothing was deleted,
+moved, archived, reset or cleaned.
+
+<a id="eighth-stabilization-checkpoint-finance-parent-held-export-manifest-contract-2026-11-05-refs-440-96"></a>
+
+## Ninth stabilization checkpoint: finance parent held-export manifest contract (2026-11-05, Refs #440 #96)
+
+Refs #440 and #96. This is the ninth checkpoint. The previous record of the
+same name that labelled it eighth is superseded by this label; the baseline
+eighth checkpoint is the integrated parent topic preparation. Local DRAFT,
+not consumed by the coordinator and not approved for publication.
+
+Process qualification: the original local commit `d26791065f21f45ab42cae34e4efbcfddc8f419f`
+created its Research, Plan, details and Review files after the pack, index and
+log edits, so its phase artifacts were post-implementation and its process is
+not claimed compliant or repaired. The coordinator held publication and
+consumption. A separate corrective loop (r2) started prospectively from that
+commit; its research, plan, details and critique were written before any
+corrective edit, and the original records are preserved unchanged.
+
+Refs #440 and #96. Bounded, documentation-only, local-only record of the
+finance parent integration and of one proposed material contract change: adding
+required per-field review history to the Held draft export integrity manifest.
+It is separate from main and from the governance parent, adds no source, test,
+tool, workflow, coordinator, ADR, requirement or policy change, and approves
+nothing. It does not complete whole #440 (criteria 7 and 8), HVE behaviour
+testing, parent #123 acceptance, #96 schemas, reviewed packs or dependency
+graph, Finance or Legal approval, or any main, Azure or human acceptance.
+Original RPI evidence is under
+`.copilot-tracking/*/2026-11-05-finance-export-checkpoint-440-*` (original,
+post-implementation phase files) and the prospective correction under
+`.copilot-tracking/*/2026-11-05-finance-export-checkpoint-440-r2-*`.
+
+### Identities and exclusions
+
+| Item | Value |
+| --- | --- |
+| Documentation child | Branch `docs/finance-export-checkpoint-440`, started clean at the governance-parent head `dec700c7af46778140bf5c46d4df932832a31f11` (declared target `feat/discovery-assurance-integration-123`); parent not moved |
+| Finance parent (source observed) | `feat/finance-integration-93` at `0472fd5d5625bb610b5ac65ad177026953802830`, tree `268ead3a098f2320c0fba1a16aed14dd68a7fbe2`; it is main plus exactly one commit |
+| Main (re-fetched 2026-11-05) | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`, tree `5c2988b71aec609b007b41f408685d54e2c28e0d`; fetched commit and tree identity only. Hosted run status, scorer completion and acceptance were not verified by this record |
+| Covered PR | #1223 (`c738fde9b27b5c88af6453c0ababfd84eeca5850` squash-merged into the finance parent only, 2026-11-05T21:53:46Z, merge commit `0472fd5d`); main does not contain it. #96 is open |
+| Excluded | Governance-parent runtime and its differently scoped inherited implementation; unmerged siblings; the paused #96 successor with only prospective research, plan and details; any code not on `0472fd5d` |
+
+| Document | Status, version | Blob (equal at main and finance parent) |
+| --- | --- | --- |
+| BRD-2026-AMA48-001 | draft, 0.21.0 | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD-2026-AMA48-001 | in-review, 0.21.0 | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 | Accepted with owner amendment | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 | Accepted | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Draft and in-review documents are not approvals. Actual AI registry
+prerequisite #105 is closed and in main; it supplies no personal, Legal or
+Finance authority.
+
+### Traceability (document-qualified)
+
+BRD FR-038 to FR-041 (regulatory source register, monitoring, decision
+traceability, role-appropriate evidence views) are different requirements from
+PRD FR-038 to FR-043 (assisted forms). This record concerns the PRD forms
+group, with BRD FR-040 and FR-041 as related context only.
+
+| Requirement | Finance-parent source and tests (`0472fd5d`) | Limit |
+| --- | --- | --- |
+| PRD FR-040, AC-048 (accept, correct, reject; prior value, reviewer, evidence or reason, state) | `form_review._review` appends a history event with `field_id`, `input_version`, `prior`, `new`, `decision`, `reviewer` (actor email), `reason` (at most 500 characters) and `at`; authority-bearing categories are refused (`forms.HUMAN_ONLY`) | Working draft only; no source record changes |
+| PRD FR-042 (reviewable pack with template and input versions and Finance review history), AC-050, AC-054 | `form_export.draft_export` is read-only, status `Held`, `reviewed` false, `Not submitted`, eligibility `Not assessed`; it hashes `BODY_KEYS` (11 keys, no history) with SHA-256 over canonical JSON. `form_review._report` already returns `history` | Review history is not in the export body today. A reviewed pack, AC-050 and AC-054 stay "Not run" in the PRD |
+| PRD FR-043, AC-051 (exact dependent stale sets) | `form_export.export_freshness` and `test_form_dependencies.py` | Constructed fixtures; reviewed re-export blocking is not implemented |
+| Access, persistence, manual and AI-unavailable paths | `forms._actor` requires a verified or registered Finance-view actor with reason visibility; `form_review._visible` already checks that cited evidence in history is readable and unreadable evidence returns `Unavailable`; the working review is the manual path; no AI dispatch; JSON and SQLite stores hold the working review, and the export persists nothing | Callers hold saved copies; the store stores none |
+| PRD FR-038, FR-039, FR-041 | Schema binding, staged candidates and diagnostics in `form_review` and `forms` | #96 C1, C5 and C6 stay unchecked; approved schema, rule and authority are not supplied |
+
+### Compatibility disposition of the proposed required history key
+
+Source-visible fact: `export_freshness` rebuilds `body` from `BODY_KEYS` and
+treats a missing key as `Invalid` with the action "Create a new held export from
+the working review." Adding `history` to `BODY_KEYS` therefore makes every
+existing history-less saved copy `Invalid`, with no backfill or rewrite and the
+established regenerate-Held recovery. A git search of the finance parent found
+no consumer of `form_export` outside its own tests and `src/core/README.md`
+(no API, web or store caller), so no in-repository consumer is broken. Actual
+saved copies held by users were not read and are unknown.
+
+Disposition, as a scoped engineering recommendation and not an approval:
+
+* Compatible with PRD FR-042 intent, which names review history in the pack, and it keeps the integrity manifest covering provenance. An optional history key is rejected because incomplete manifests would read as `Current`.
+* Material contract change: the meaning of "valid saved export" changes. The README must state that copies without history are `Invalid` and must be regenerated.
+* Privacy: history carries reviewer email and free-text reason, and superseded prior values. Access stays limited by the existing Finance-view actor gate and visibility check. Reviewer identity and reason in a held copy that callers store is a data-protection point for the named DPO or data owner, not decided here.
+* Integrity is a SHA-256 over content, not a signature or delegation, and proves neither author nor approval.
+* No expansion into reviewed-pack, eligibility, submission, award or payment authority; the export stays `Held`, unreviewed and `Not submitted`.
+
+### Evidence classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Identities, blobs, covered PR state | local observed (git and `gh`) | 2026-11-05 |
+| Source and consumer inspection above | local observed (source read at `0472fd5d`) | Static reading, not execution |
+| 40 form tests pass on the pinned finance source | local observed (light, finance parent); historical to the r2 correction, not rerun | Below; log `/tmp/f440fin/run.log` dated 22:05:10Z |
+| #1223 hosted checks, published functional approval, default-FULL receipt `07ae` | coordinator-supplied, unverified by this child | Supplied at `c738`; not re-checked here. A receipt is not a test at `0472fd5d` or main; tree equality is an identity fact, not a new run |
+| Behaviour at `0472fd5d` beyond the 40 tests | implemented-unverified | No full gate was run |
+| Required-history export | proposed, not implemented | Waits for this record's consumption |
+| SQL Server, browser, Docker, Azure, actual AI, user research | none or blocked | Not run; heavy resources were not admitted |
+| Finance, Legal, DPO and human acceptance; whole #96 | blocked or deferred | Named humans; nothing approved |
+
+### Actual commands and limits
+
+| Command | Exit | Result |
+| --- | --- | --- |
+| `git archive origin/feat/finance-integration-93 src/core src/agents` into the new external path `/tmp/f440fin/src` | 0 | Pinned source extracted, not a checkout |
+| `python -m unittest tests.test_form_export tests.test_form_review tests.test_form_dependencies` from `/tmp/f440fin/src/src/core` with the #440-owned venv `/tmp/ama-main-440-ui-cache-wave3-venv`, scrubbed environment, `PYTHONDONTWRITEBYTECODE=1`, external `TMPDIR`, explicit `PYTHONPATH` to the pinned export | 0 | `Ran 40 tests`, OK in 21.4 s; `form_export.__file__` resolved to `/tmp/f440fin/src/src/core/src/...`; no `__pycache__`; JSON and SQLite fixtures only, no SQL Server |
+
+The c738 checkout `/tmp/g96-r14-review1-1105/checkout` no longer exists, so it
+was not used. The first attempt failed on the shell `cd` into
+`/tmp/f440fin/src/core` (the pinned source is nested at
+`/tmp/f440fin/src/src/...`) with exit 1, before any Python import or test
+command, so no test ran in that attempt. No dedicated per-test output file was
+created for it, but its wrapper error (`cd: /tmp/f440fin/src/core: No such file
+or directory`) and exit 1 are preserved in the native session log
+`/tmp/rpi-440-finance-export-checkpoint-20261105.log`. The repaired run's exit 0
+and 40 tests OK remain historical, not rerun or upgraded. No heavy lock was taken, and no gate runner, SQL Server, browser,
+Docker, cloud or private data was used. Nothing was installed.
+
+### Findings, triage and recommendation
+
+No defect was confirmed and no new issue or refactor is proposed. Engineering
+recommendation (not an approval, and not yet consumed by the coordinator):
+**continue**. If the coordinator accepts a valid checkpoint, this record
+supports resuming the paused #96 export-history slice under its own FULL tier,
+with these conditions. #96 stays PAUSED and is not released by this draft. Conditions: the manifest change and the legacy `Invalid` and regenerate
+behaviour are documented, a regression test covers a history-less copy being
+`Invalid` and a tampered history failing the hash, and the slice adds no
+authority, endpoint or reviewed-pack state. **Fix**: none. **Pivot**: none.
+The required-history compatibility decision is proposed, not approved by a named human.
+Requirement relaxation, deliberate deferral, the reviewer-history privacy
+position and any Finance or Legal approval need named human owners.
+
+| Gate | Effect |
+| --- | --- |
+| #96 resume | Coordinator consumes this record, then runs the retained slice through its own FULL tier, independent review and hosted checks |
+| #96 closure | C1, C5 and C6 stay unchecked; approved schemas, reviewed packs, dependency graph and human acceptance remain |
+| Parent #123 and whole #440 | Unchanged; criteria 7 and 8 untouched |
+| Publication of this child | Coordinator independent exact-head assessment, hosted checks and human approval |
+
+Process disclosure: nothing was deleted, moved or cleaned; `/tmp/f440fin`
+is retained.
+
+<a id="tenth-stabilization-checkpoint-lifecycle-parent-quality-evidence-gate-2026-11-05-refs-440-82-81"></a>
+
+## Tenth stabilization checkpoint: lifecycle parent quality evidence gate (2026-11-05, Refs #440 #82 #81)
+
+Refs #440, #82 and #81. This is the tenth checkpoint: the baseline eighth is
+the integrated parent topic preparation and the ninth is the finance parent
+record. It is a new bounded lifecycle integration checkpoint, not a correction
+of either. Local DRAFT, not consumed by the coordinator and not approved for
+publication. It assesses one merged increment, PR 1226, and accepts nothing.
+
+Process: Research, Plan, details and one critique were written before any pack,
+index or log edit (verified with `git status`). A read-only light observation
+on an immutable export was made during research, before the plan, and is
+recorded as research-phase evidence.
+
+### Three separate pins
+
+| Pin | Identity | Role |
+| --- | --- | --- |
+| Governance documentation target | `feat/discovery-assurance-integration-123` `1faadaa3e75d3b4003319fde0491473fa1a87dee`, tree `678085a22e982a438fd275701f1e686bb212f258` | Base of this docs child; contains the reviewed finance record, unchanged |
+| Lifecycle implementation SOURCE | `feat/controlled-lifecycle-integration-81` `cd271cfa54216fbc2ae7d59a63ac8068f372d697`, tree `6bc669420643d524402b3b26ef325aae3a65b53a` | Contains PR 1226 merged 2026-11-05T23:01:10Z; tree equals reviewed child `10161ecbcf879e44f64d6e3ad97e481ae8e2d81d` |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` | Unchanged at the last fetch; hosted status of main is not asserted |
+
+Identities were fetched on 2026-11-05. Source is one commit over main (28
+files, +682/-10): `gates.py`, `quality.py`, `store.py`, three test files and
+issue 82 tracking. Governance runtime and the unmerged #144, #79, #80, #96,
+#185, #188 and #1204 work are excluded from lifecycle and main acceptance.
+Fetched identity is not hosted completion, approval or runtime acceptance.
+
+### Document identities (verified at the lifecycle parent, equal to main)
+
+| Document | Version and status | Blob |
+| --- | --- | --- |
+| BRD `agentic-retrofit-programme-brd.md` | 0.21.0 draft | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD `zava-forward-retrofit-programme-demonstrator.md` | 0.21.0 in-review | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 | accepted with owner amendment | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 | accepted | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Draft and in-review documents are not approval, and the quality rule below has
+no named professional reviewer.
+
+### Traceability of the quality transition
+
+* PRD FR-008 requires deterministic evidence, eligibility, authority, safety,
+  resident, funding, capacity, quality and finance gates before a controlled
+  state transition (mapped criteria AC-010, AC-011, AC-067 and AC-144). BRD
+  FR-008 is a different requirement (a material change invalidates downstream
+  approvals) and is not the governing source of the gate; `QUALITY_RULE`
+  nevertheless cites BRD FR-008 in its source field (see Findings). PRD FR-007 forbids bulk quality
+  acceptance. The acceptance rows are not run; passing light tests do not
+  tick them.
+* `gates.quality_gate` passes only with no gaps, returns Unknown for an
+  unreadable record and Fails with the reason "Checks without evidence".
+  `quality.evidence_gaps` returns `None` for malformed stored items, checklist
+  name or measure, so malformed labels, checklist or measure inference return
+  Unknown and never pass. `store.require_quality_evidence` refuses accept and
+  handover with the reason, owner and next action.
+* Corrupted in-progress evidence: a replacement is the owner's approved narrow
+  recovery (decision of 2026-11-05) and is limited to a quality role
+  (Quality Inspector or a manager); originals are kept. It does not reassign
+  identity and does not accept anything.
+* Independence: `_independent` still bars anyone who submitted, recorded or
+  fixed the work from accepting it; an unresolved contributor identity blocks
+  acceptance. Resident clear and safety clear are retained. Bulk acceptance
+  stays forbidden.
+* Store boundary: the JSON store and the SQLite-backed `SqlStore` path share the
+  gate; SQL Server is a different boundary and was not run at the parent.
+* Evidence visibility: a refusal surfaces the gate reason, owner and next
+  action to the user rather than a silent pass; manual paths are unchanged.
+* Rule provenance: `QUALITY_RULE` cites BRD FR-008 and the quality checklist as
+  an exercise fixture (effective 2026-11-05, version 1) with the reviewer set
+  to the unreviewed marker. This is unreviewed exercise-rule provenance, not
+  named professional approval.
+
+### Evidence classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Pins, blobs, PR 1226 merge, issue states (82, 81, 440, 144, 80 open) | local observed (git and `gh`) | 2026-11-05 |
+| Source read of the gate, quality and store changes | local observed | Static reading at `cd271cfa` |
+| 183 core tests pass on the export of `cd271cfa` | local observed (light, lifecycle parent) | Below; includes SQLite-backed `SqlStore` variants, not SQL Server |
+| Child `10161` full receipt (17 groups, 205 commands, 192 exit 0, 13 probe exit 1 individually inspected) | coordinator-supplied, historical for source `10161` | Receipt sha256 `ba37e035fe06e0dddb63d2ed5971fe0989387a917c10ed850e2b049bca987f57` matched the file at `/tmp/g82-measure1-1105/receipt.json`; contents not re-adjudicated |
+| SQL Server log (291 total, 290 executed, 1 JSON-only ordering skip; three new measure fallback and three earlier metadata cases ok) | coordinator-supplied, historical for source `10161` | `/tmp/g82-measure1-1105/0176-mssql.log`; not read or rerun here |
+| Root default-FULL before merge, local and published functional approval (0 findings, 28 sections), 10 hosted checks success | coordinator-supplied | Not re-checked here; published diff sha256 `408ce2bf...`, local raw diff differs, no byte identity claim |
+| Behaviour at `cd271cfa` under SQL Server, browser, full or partial gate | implemented-unverified | Tree equality with `10161` is an identity fact, never a new run at the parent or main |
+| Other capacity, authority, finance and eligibility gate families | deferred | #82 owns them |
+| Named review of `QUALITY_RULE` and the other exercise rules | unknown | No named reviewer recorded |
+| Heavy gate, SQL Server, browser, Docker, scanner, Azure, AI | blocked (not admitted) | #144 owns exclusive heavy resources; nothing was queued |
+
+### Actual commands and limits
+
+* Export: `git archive` of `origin/feat/controlled-lifecycle-integration-81`
+  (`cd271cfa`) paths `src/core` and `src/agents` into the new external path
+  `/tmp/l440cd271/src` (refused an existing path; nothing was overwritten).
+* Environment: the existing 440-owned venv
+  `/tmp/ama-main-440-ui-cache-wave3-venv`, `env -i`, bytecode off, external
+  `TMPDIR`. No installation. Import proof: `store`, `quality` and `gates`
+  resolve under `/tmp/l440cd271/src/src/core/src/zava_forward/core/` and
+  `evidence_gaps` exists.
+* Command: `python -m unittest tests.test_gates tests.test_quality_procurement
+  tests.test_hazard_referral` from `/tmp/l440cd271/src/src/core`. Exit 0
+  captured directly from the subprocess; Ran 183 tests in 80.2 s, OK with 1
+  skip. The skip is attributed by source reading, not by the non-verbose log,
+  to the single `skipTest` ("JSON-only separate-file audit ordering") in
+  `test_hazard_referral.py`. The logged traceback is an injected-fault test's
+  expected error output. No `__pycache__` was created. Output
+  `/tmp/l440cd271/out/run.log`, sha256
+  `3b43f8b16bb79baf1e4298ee649e666a67ba8c2587bb69c13f8c1706342b88e0`
+  (identified by hash only; `/tmp` is outside the repository).
+* No failed attempt occurred. No lock, service, SQL Server, browser, Docker,
+  scanner or cloud use. This is a focused light run, not a full or partial
+  gate and not a receipt.
+
+### Findings, triage and recommendation
+
+* No confirmed runtime defect, so no issue is proposed and no refactoring is
+  suggested. One provenance ambiguity is recorded for #82 ownership (not fixed
+  here): `QUALITY_RULE.source` at `cd271cfa` cites BRD FR-008, while the
+  governing requirement for controlled-transition gates is PRD FR-008. Whether
+  the citation is corrected is for #82's owner under its rule source
+  criterion. The open owners were compared: #82 (gates and named rule review),
+  #81 (epic), #80 (unmerged Excel work), #144 (heavy owner) and #440 (this
+  series).
+* #82 stays OPEN with three criteria incomplete (each gate with a pass, fail
+  or unknown result and reason; unknown never passes across all families; each
+  controlled rule with source, effective date, version and reviewer). The
+  quality gate is one family with an unreviewed rule; no tick is made.
+* Recommendation: continue. No fix or pivot is indicated by this evidence.
+  Pivots, requirement relaxation, deferral and named approvals belong to the
+  owner and named humans, not to this record.
+
+| Gate | Effect |
+| --- | --- |
+| This record | Draft until coordinator independent assessment, publication, published-head and hosted gates, and explicit consumption |
+| Remaining #82 family implementation and affected expansion | Wait for this checkpoint's consumption; independent lanes may continue; a heavy or SQL gate waits for coordinator admission after #144 releases heavy resources |
+| #81, #82 and whole #440 | Unchanged; no closure or criterion tick; #440 criteria 7 and 8 untouched |
+| #80 | Unmerged Excel work is excluded and unaffected |
+
+Process disclosure: nothing was deleted, moved or cleaned; `/tmp/l440cd271`
+is retained as read-only test setup and is not authority to delete it.
+
+<a id="eleventh-stabilization-checkpoint-lifecycle-parent-capacity-booking-gate-2026-11-06-refs-440-82-81"></a>
+
+## Eleventh stabilization checkpoint: lifecycle parent capacity booking gate (2026-11-06, Refs #440 #82 #81)
+
+Refs #440, #82 and #81. This is the eleventh checkpoint (baseline eighth,
+finance ninth and lifecycle quality tenth are distinct and unchanged). It is a
+new bounded checkpoint, not a rewrite or correction of any of them. Local
+candidate, not consumed by the coordinator and not approved for publication.
+Trigger: PR 1229, a completed capacity booking increment under #82 that
+changes controlled transition outcomes, merged 2026-11-06T03:10:17Z.
+
+Process: Research, then Plan, details and one critique, were each committed
+before any pack, index or log edit. A read-only light observation on an
+immutable export was made during research and is recorded as such.
+
+### Three separate pins
+
+| Pin | Identity | Role |
+| --- | --- | --- |
+| Governance documentation target | `feat/discovery-assurance-integration-123` `a97bea15318307aacf60ed1690d054d32417c23e`, tree `7995337ffe41a01d250c2c4856e48b5f08d45b82` | Base of this docs child; contains the tenth record unchanged |
+| Lifecycle implementation SOURCE | `feat/controlled-lifecycle-integration-81` `af891a5cccf730ccf61e670f312b7674218dbe4b`, tree `cb8a3d463b0f1d31d1a5de0d1e1a2e68de7ebc8e` | Holds #1226, #1228 and #1229; its tree equals reviewed child `272146f4eb5e810b03290004942d37b22edda968` |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` | Unchanged at the fetch of 2026-11-06; hosted status of main is not asserted |
+
+All three equal the supplied pins; nothing changed. The parent is 3 commits
+over main (48 files, +1200/-25); #1228 and #1229 together are 23 files,
++519/-16 over `cd271cfa5` (5 source files, +152/-16). Governance runtime and
+the unmerged #144, #79, #80, #96, #188 and #1204 work are excluded from
+lifecycle and main acceptance. Fetched identity is not hosted completion,
+approval or runtime acceptance.
+
+### Document identities (verified; equal to main)
+
+| Document and path | Version and status | Blob |
+| --- | --- | --- |
+| BRD `docs/brds/agentic-retrofit-programme-brd.md` | 0.21.0 draft | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD `docs/prds/zava-forward-retrofit-programme-demonstrator.md` | 0.21.0 in-review | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 `docs/adrs/0003-journey-derived-capabilities-runtime-fit.md` | accepted with owner amendment | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 `docs/adrs/0006-src-layout-and-cutover.md` | accepted | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Draft, in-review and exercise-fixture rules are not approved professional
+rules.
+
+### Traceability of the capacity booking transition
+
+* Requirements: PRD FR-008 governs gates (mapped AC-010, AC-011, AC-067 and
+  AC-144; acceptance not run). PRD FR-016 is the provider-package and
+  committed-capacity record. PRD FR-017 is the quality disposition record.
+  BRD FR-008 is a different requirement (material change invalidates
+  downstream approvals). `CAPACITY_RULE` cites PRD FR-008 and FR-016 and
+  `QUALITY_RULE` cites PRD FR-008 and FR-017 (#1228), which resolves the
+  citation ambiguity disclosed in the tenth checkpoint.
+* `gates.capacity_gate`: True is Pass, a known violation is Fail, missing or
+  unreadable evidence is Unknown. `CapacityGateError` subclasses `ValueError`,
+  so the existing API 400 text contract is kept, and carries the state and
+  result internally.
+* Procurement mapping: a known deficit or a work date outside the evidenced
+  period is Fail. An absent single appointed order, absent, legacy or
+  unverified capacity, changed source, scope or contract, a lost authorised
+  acceptor and a changed authority are Unknown. Fail and Unknown refuse before
+  a successful mutation. Pass is returned only after the resident clear, is
+  server-internal and is not newly persisted or API-exposed.
+* `appointments._appointment_assessment`: only a sole capacity failure rethrows
+  structurally; mixed failures stay a plain `ValueError`. Capacity remains the
+  last check. The inherited Low RV-C1 future-ordering caveat is not a current
+  defect.
+* Quality interaction: quality still needs explicit Pass evidence (unknown
+  never passes), independent human acceptance by someone who did not submit,
+  record or fix the work, and the resident and safety clears; capacity does not
+  bypass them and does not accept quality.
+* Boundaries: the JSON store and the SQLite-backed store were exercised;
+  SQL Server was not. Actor and authority are checked against the named
+  manager and contract authority; no identity is reassigned. Manual paths
+  (contract manager records current evidence, then re-books) are unchanged.
+  Unavailable evidence stops the transition with owner and next action.
+
+### Evidence classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Pins, blobs, PR 1229 merge, issues 82, 81, 440, 144, 80 and 79 open | local observed (git and `gh`) | 2026-11-06 |
+| Source read of the gate, procurement and appointment changes | local observed | Static reading at `af891a5cc` |
+| 193 core tests total, 192 executed, 1 declared JSON-only skip; suite exit 0 (PASS), on the export of `af891a5cc` | local observed (light, lifecycle parent) | Below; JSON and SQLite paths, not SQL Server |
+| Candidate `272146f4e` FULL receipt: 17 groups, 205 commands, no group skip | coordinator-supplied, historical for the candidate | Receipt sha256 `eb1cd5ed8546bd5f128324d4c1799fc3248fcb481cdc471b3138d2d0e765a0bc` matched `/tmp/g82-cap-r3-1106/receipt.json`; contents not re-adjudicated |
+| Thirteen nonzero probe commands | coordinator-supplied, attributed to the #82 comment | Expected pre-installation, import or SQL-startup probes individually read by others, not here; the earlier zero-nonzero assertion was false and is not relied on |
+| Candidate SQL Server log: 296 total, 295 executed, 1 declared JSON-only audit-ordering skip, 5 new capacity cases passed | coordinator-supplied, historical for the candidate | Log sha256 `51953f94e8674ec36038098421b2064e6c919a47fa251212da3fbc1b8edec5e1` matched; log not read or rerun here |
+| Root default-FULL before merge, 10 hosted checks success, local and published functional code-review result with 0 findings, human boxes unchecked | coordinator-supplied | Not re-checked here; a code-review result is not an approval |
+| Behaviour at `af891a5cc` under SQL Server, browser or a full or partial gate | implemented-unverified | Tree equality with `272146f4e` is an identity fact, never a new run at the parent or main |
+| Other gate families, named rule review, integrated parent FULL, live acceptance | deferred or unknown | #82 and the coordinator own them; no named reviewer is recorded for either exercise rule |
+| Heavy gate, SQL Server, browser, image, scanner, Azure, AI | blocked (not admitted) | Heavy holder is original 79 r9 (PID 2560481, `/tmp/g79-pub-r9-1106`); nothing queued |
+
+### Actual commands and limits
+
+* Export: `git archive` of `origin/feat/controlled-lifecycle-integration-81`
+  (`af891a5cc`) paths `src/core` and `src/agents` into the new external path
+  `/tmp/l440af891/src`; the path was refused if it existed.
+* Environment: the existing 440-owned venv
+  `/tmp/ama-main-440-ui-cache-wave3-venv` (the #82 venv was not used or
+  changed), `env -i`, bytecode off, external `TMPDIR`, no installation, no
+  network use. Import proof: `gates`, `procurement`, `appointments`, `quality`
+  and the fixture module `test_gates` resolve under
+  `/tmp/l440af891/src/src/core/`, and `CapacityGateError` exists.
+* Command: `python -m unittest tests.test_gates tests.test_quality_procurement
+  tests.test_hazard_referral` from `/tmp/l440af891/src/src/core`. Exit 0
+  captured directly from the subprocess; 193 tests in 65.9 s, OK, 1 skip. The
+  skip is attributed by source reading, not by the non-verbose log, to the
+  single `skipTest` ("JSON-only separate-file audit ordering"). The logged
+  traceback is an injected-fault test's expected output. No `__pycache__` was
+  created. Log sha256
+  `3fd61476e1c5ceb642590380499abe252872fe825855adce3734bb568edab9e6`.
+  `/tmp` evidence is session-only; the hash is the durable pointer.
+* No failed attempt occurred. This is a focused light run, not a full or
+  partial gate and not a receipt.
+
+### Findings, triage and recommendation
+
+* No new defect and no necessary behaviour-preserving refactor was confirmed,
+  so no issue is proposed. Owners compared: #82 (remaining families and rule
+  review), #81, #80, #144, #79 and #440.
+* #82 stays OPEN with three criteria unchecked. Capacity and quality are two
+  gate families with unreviewed exercise rules; the other families and named
+  rule review remain unproven.
+* Recommendation: continue; no fix or pivot. Pivots, requirement relaxation,
+  deferral and named approvals belong to the owner and named humans.
+
+| Gate | Effect |
+| --- | --- |
+| This record | Candidate until coordinator independent assessment, publication, published-head and hosted gates, and explicit consumption |
+| #81 and #82 closure | Unchanged; no tick; remaining gate families, named rule review and integrated parent FULL must be proven first |
+| #80 dependent expansion | Waits for coordinator consumption and its own admission; independent lanes (79, 80, 96, 144, 188, 1204) may continue; a heavy or SQL gate resumes only on coordinator admission after the holder releases |
+| Whole #440 | Unchanged; criteria 7 and 8 untouched; native HVE Deferred or not available is not a Pass |
+
+Process disclosure: nothing was deleted, moved or cleaned; `/tmp/l440af891`
+is retained as read-only test setup and is not authority to delete it.
+
+<a id="twelfth-stabilization-checkpoint-archive-helper-filesystem-contract-2026-11-06-refs-440-79-1231"></a>
+
+## Twelfth stabilization checkpoint: archive helper filesystem contract (2026-11-06, Refs #440 #79 #1231)
+
+Refs #440, #79 and #1231. This is the twelfth checkpoint (baseline eighth,
+finance ninth, lifecycle quality tenth and capacity eleventh are distinct and
+unchanged). It is a new bounded checkpoint, not a rewrite or regrade of any of
+them. Local candidate, not consumed by the coordinator and not approved for
+publication. Trigger: bug #1231 changes the ranking archive helper inherited by
+#79 so that it requires a filesystem with hard links and removes its own
+staging file. That is a contract change for any deployment archive mount.
+
+Process: Research, then Plan and details, were committed before any pack,
+index or log edit. No test, SQL, browser, install or cleanup was run here; the
+child's retained logs were read, not rerun. Disk was 98% used and nothing was
+deleted.
+
+### Pins
+
+| Pin | Identity | Role |
+| --- | --- | --- |
+| Governance documentation target | `feat/discovery-assurance-integration-123` `dce6498cf850de9bdc79ecb1706f8491d75b2ea8`, tree `c7440e42226178d6967966b8003794c795a2c314` | Base of this docs child; eventual target |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` | Unchanged at the fetch of 2026-11-06 |
+| #79 candidate (local, unpublished) | `feat/ranking-publication-runner-79` `397419724e68b24bce879512a24c7df430177f87`, tree `c728049e33a3a0e20d9a7bf16b3738fabfbc14d7` | Not an ancestor of the governance parent; not main acceptance |
+| Child #1231 (local, unpublished) | `fix/ranking-archive-concurrent-writer-metadata` `57b3b6a09f6ac5b77b37881e21447751a56be5ff`, tree `fea8273a05c2a42da3e127d77a2c4ad9377f365b` | Based on the #79 candidate; eventual target #79, which targets #73 |
+
+These are separate pins. Nothing from the #79 candidate or #1231 is on the
+governance parent or main, and tree identity is not a test execution.
+
+### Document identities
+
+| Document | Version and status | Blob |
+| --- | --- | --- |
+| BRD `docs/brds/agentic-retrofit-programme-brd.md` | 0.21.0 draft | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD `docs/prds/zava-forward-retrofit-programme-demonstrator.md` | 0.21.0 in-review | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 `docs/adrs/0003-journey-derived-capabilities-runtime-fit.md` | accepted with owner amendment | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 `docs/adrs/0006-src-layout-and-cutover.md` | accepted | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Blobs are equal on the governance parent and main. Draft and in-review
+documents are not approval.
+
+### What changed in the candidate
+
+Read from the child diff (`748526484~1` to `24cab4b60`: 8 files, +412/-15,
+including the helper, `src/core/README.md`, two test files and the child's
+own research, plan, details and issue note). In `publish`, the existing
+pre-check and canonical text remain. A unique same-directory staging file is
+created exclusively, written, then linked to the final name with
+`os.link`, which cannot overwrite. On `FileExistsError` the existing record is
+read back and returned with `written` false. A `finally` then unlinks the
+caller-owned staging file only. Any other `OSError`, including no hard-link
+support, propagates and the runner reports `publish_failed`. There is no
+fallback and no overwrite. The old shared `.tmp` and `os.replace` are gone.
+
+Original diagnosis (issue #1231, from the #79 R11 session): one deterministic
+two-thread, one-process, local-filesystem interleaving gave `published` for
+2026-11-05 while the retained bytes said 2026-11-06, and the other caller got a
+structured `publish_failed` from a shared-temporary `FileNotFoundError`;
+verification still passed. No lost publication, overwrite of a finished
+record or production incident was demonstrated. #1231 is open, linked to #79
+and is the only owner; no new issue is proposed.
+
+### Traceability
+
+* PRD PR-006 (deterministic published policy version) is the demonstrator
+  behaviour the archive records; PRD DH-002, DH-003 and PR-003 keep retention
+  periods as defaults pending DPO and Legal approval. The helper sets neither
+  the legal period nor the schedule.
+* ADR 0006 mounts runtime data at `/data` and state at `/state` but defines no
+  hard-link or archive mount contract. A deployment filesystem is therefore an
+  unowned and unknown decision.
+* Authentication, identity, resident, AI and manual boundaries are unchanged
+  and out of this bounded contract: dates are inputs, no clock is read and no
+  ranking changes. No new journey was run.
+
+Document-qualified joins (correction 1, read 2026-11-06). The same identifier
+AC-015 means different things in the two documents: BRD AC-015 belongs to BRD
+FR-011 (consent is not inferred), while PRD AC-015 belongs to PRD FR-012
+(prioritisation inputs missing or conflicting). Paths are in the unmerged #1231
+child (`57b3b6a09`); no join is an owner-confirmed trace.
+
+| Requirement (document-qualified) | Contract or decision | Code and tests | Observation versus unverified | Owner and resume |
+| --- | --- | --- | --- | --- |
+| BRD NFR-006, AC-060 (exportable versioned evidence, Must) | Partial, indirect fit only; no export test, approval history or exit contract was observed for the archive | `src/core/src/zava_forward/core/ranking_publication.py` (`publish`, `verify`) | unknown; nothing observed exercises export or exit | Digital and data owners; no resume point set here |
+| BRD NFR-002, AC-049 (immutable versions, supersede not overwrite, Must) | A finished record is kept unchanged | `src/core/tests/test_ranking_publication.py` `ConcurrentWriterTests`: `test_delayed_contender_leaves_a_finished_record_unchanged`, `test_sequential_bytes_and_name_are_unchanged` | local observed in the child (read, not rerun); FULL and independent assessment unverified | #1231 owner; isolated validation and independent assessment |
+| PRD PR-006, PRD AC-015 (deterministic published policy version; AC-015 status Not run) | One truthful record per snapshot and retained date | `ConcurrentWriterTests.test_same_snapshot_different_dates_keep_one_truthful_record`, `test_separate_processes_publish_one_truthful_record`; `src/core/tests/test_ranking_publication_runner.py` `test_same_snapshot_on_two_dates_publishes_once_and_reports_the_retained_date` | local observed in the child; PRD journey not run; the spawned-process case also passed the old helper | #79 archive delivery; #1231 resume |
+| PRD DH-002, DH-003, PR-003 (retention pending DPO and Legal) | The helper sets no retention period or schedule | Not applicable | unknown; legal period unowned | DPO and Legal; not decided here |
+| ADR 0006 (accepted source layout) | No hard-link or archive mount contract | Hard link in `publish`; refusal path only tested by an injected `PermissionError` | implemented-unverified; no real unsupported mount tested | Deployment owner; hard-link disposition blocked, owner unavailable on 2026-11-06 |
+
+Gate effect is unchanged: HOLD #79 archive delivery and #73 dependent expansion.
+Independent #96, #188 and #80 lanes may continue and are not necessarily
+publication-ready.
+
+### Classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Pins, blobs, candidate and child heads, #1231 open and linked | local observed (git and `gh`) | 2026-11-06 |
+| Source and README change read in the child diff | local observed | Static reading; child is unpublished |
+| Child RED: 48 tests, 4 failures and 2 errors, exit 1 | local observed (child retained log, read not rerun) | `/tmp/1231-ranking-archive-r1-1106/red1.log`; retained as the adverse first result |
+| Child GREEN: 48 tests, 0 skips, OK in 0.628s, exit 0; API wiring 12 tests OK in 12.635s, exit 0 | local observed (child retained logs, read not rerun) | Deliberate child source and test imports with a parent read-only environment; not an isolated installed-package or FULL run |
+| Ruff check, Ruff format and mypy three-file checks passed | local observed (child, read) | Used Ruff 0.17.3 and mypy 2.4.1, newer than the maintained 0.17.1 and 2.4.0 |
+| Spawned-process smoke | local observed (child, read) | Also passed the old helper, so not independent RED proof |
+| Unsupported-filesystem refusal | implemented-unverified | Only an injected `PermissionError` was tested, not a real unsupported mount |
+| Fix of the concurrent-writer divergence | implemented-unverified | Child local; no FULL, no independent publication Pass |
+| Hard-link compatibility disposition | blocked | Needs the #79 or deployment owner; not decided here |
+| Windows, SMB, network or production mount support | unknown | Linux development evidence only; no approved deployment mount |
+| Coordinator consumption of the 702-line native log and 11-file diff | unknown (not independently re-executed by this author) | Attribution: coordinator-supplied. Not an independent publication Pass and not re-adjudicated here |
+
+### Limits and qualifications
+
+* The child's original details forecast a completed-record overwrite and a
+  tolerated missing stage at cleanup. Later actual results demonstrate neither;
+  the final code unlinks unconditionally. The originals stay unchanged.
+* `import-proof-final.txt` was overwritten during successive green runs. The
+  final proof matches the candidate (helper sha256
+  `4d222878a5031fbe04b69f7d2c063d2486daac6505483167eeefa94160544c2b`); earlier
+  printed metadata is kept only in the native event output and the original raw
+  proof files are not restored. First RED and static failures remain retained.
+* Native child session `b353a2c9-455a-4ca9-8ab2-8ee2ca09d516`, exit 0; its
+  research, plan and details were committed before the first test edit and its
+  author Review followed its checks. Read-only evidence: the native log
+  `/tmp/rpi-1231-ranking-archive-r1-1106.log` and
+  `/tmp/1231-ranking-archive-r1-1106/`. These `/tmp` paths are session-only,
+  so the hashes and numbers above are the durable pointers.
+
+### Finding owners and recommendation
+
+* Owner of the divergence fix and its validation: #1231, then #79.
+* Owner of any deployment mount, hard-link compatibility disposition and legal
+  retention period: owner, deployment and Legal decisions not made here.
+* Recommendation: HOLD #79 archive delivery and #73 dependent expansion until
+  the hard-link compatibility disposition, relevant final validation and an
+  independent assessment hold. Continue the #1231 fix lane under its own RPI.
+  This checkpoint does not release the archive lane or approve a deployment
+  filesystem. No new defect is raised beyond #1231.
+
+### Gate effects
+
+| Gate | Effect |
+| --- | --- |
+| #79 archive delivery | Held until compatibility disposition, final validation and independent assessment |
+| #73 dependent expansion | Held on the same conditions |
+| #96, #188 and #80 lanes | Independent; may continue |
+| #1231 closure | Unchanged; no tick |
+| Whole #440 | Unchanged; criteria 7 and 8 untouched; native HVE Deferred or not available is not a Pass |
+
+Resume conditions: a named disposition on hard-link support for the intended
+mount (supported, refused or replaced), the child's relevant validation in an
+isolated installed-package run, an independent assessment, and coordinator
+consumption of this record.
+
+Process disclosure: nothing was deleted, moved or cleaned; the child worktree
+and `/tmp` evidence were read only.
+
+### Correction 1 qualifications (2026-11-06)
+
+* The classification of the coordinator consumption row was corrected from an
+  attribution label to an allowed class, and a small document-qualified
+  traceability table was added. The earlier text is otherwise unchanged.
+* The original Research file says "Written before any plan". Per the
+  coordinator's reading of native events, the research, plan and details create
+  calls were dispatched together at 05:03:07.973 to .974Z, completed at
+  05:03:08.006, .017 and .028Z, and were committed at 05:03:14Z before any
+  target edit. The Research observations preceded that batch. The original
+  files are preserved; the before-implementation chronology stands.
+* The coordinator asked the owner once whether the archive may require atomic
+  hard links and refuse unsupported filesystems; the result was owner
+  unavailable. No selection, default or approval is inferred, and the
+  compatibility disposition stays blocked. The earlier #144 financial choice
+  is separate and out of scope.
+
+## Thirteenth stabilization checkpoint: finance parent history export (2026-11-06, Refs #440 #96 #93)
+
+Refs #440, #96 and #93. This is the thirteenth checkpoint, a new bounded
+post-integration checkpoint. The ninth (finance) and the earlier #1225 scoped
+checkpoint are historical, unchanged and do not prove this one. Local
+candidate, not consumed by the coordinator and not approved for publication.
+Trigger: PR #1233 was squash-merged on 2026-11-06 at 06:32:47 UTC into the
+finance source parent and adds the recorded working-review history to the Held
+export (routed in the #440 comment 6678812333).
+
+### Pins (two topic heads and main)
+
+| Pin | Identity |
+| --- | --- |
+| Governance documentation target `feat/discovery-assurance-integration-123` | `7ed4a33f543bf7e1eed4aa351712734c743867b7`, tree `04d2e99a85ce26a59395d1ccfa60cae5a842308c`; does not contain #1233 |
+| Finance source parent `feat/finance-integration-93` | `4642b55fdbafec564b67803420439b91d7ea8ce1`, tree `e2628422d13ae87df3a6b7ecfdd12f24a4fc1052`, direct parent `0472fd5d5625bb610b5ac65ad177026953802830`; not an ancestor of governance |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f`; has no #1233 |
+
+The source tree equals the reviewed child `abeb022ba26fce149664f62d674c47dc6c0ef4e2`
+per the coordinator; that is an equality observation, not a fresh receipt for
+the squash head. Documents (blobs equal on governance and main, read
+2026-11-06): BRD 0.21.0 draft `34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD
+0.21.0 in-review `c788b917bafaede215f326f0efc71e071a687f1c`; ADR 0003 accepted
+with owner amendment `d60645397b20fb70ac3d1dc47c7a6c8671201306`; ADR 0006
+accepted `956da1a3b804c803041fe2e8a312bd9f400273ae`. Draft and in-review are
+not approval.
+
+### What changed in #1233 (static reading of git objects)
+
+The merge diff is 10 files, +280/-1: seven original RPI artifacts,
+`src/core/README.md`, `form_export.py` (two lines) and `test_form_export.py`.
+
+* `BODY_KEYS` gains `history` and `draft_export` copies
+  `report["history"]`, so the ordered, detached per-field history (reviewer
+  email, prior and new value and evidence, decision, reason, time, input
+  version) is inside the content hash.
+* `export_freshness` rebuilds the body from `BODY_KEYS`. A saved copy without
+  `history`, with reordered or truncated history, is `Invalid` with the action
+  to create a new Held export. Nothing is backfilled and a saved copy is never
+  edited. The owner chose, for synthetic data only, full history and
+  regeneration of old copies; that authority is not broadened.
+* Preflight visibility (actor, case, current and historical evidence) is
+  `form_review._visible`, already present in parent `0472fd5d5` and not changed
+  by #1233; it checks prior and new evidence of every history event and the
+  attachments, and unreadable evidence is `Unavailable`. Parent #1223 changes
+  are not attributed to #1233.
+* Unchanged boundaries: status `Held`, `reviewed` false, `Not submitted`,
+  eligibility `Not assessed`, manual path is the working review itself. The
+  hash is not a signature and history is field review, not Finance pack
+  approval.
+
+### Traceability (document-qualified)
+
+| Requirement | Source and tests (finance parent `4642b55fd`) | Limit |
+| --- | --- | --- |
+| PRD FR-040, AC-048 (accept, correct, reject; prior value, reviewer, evidence or reason) | `form_export.draft_export` history; `test_export_carries_ordered_detached_review_history` (empty, accept, correct, reject, accept; stored equality; detached; deterministic digest) on JSON and SQLite stores | Constructed synthetic fixtures; read, not run here |
+| PRD FR-042, AC-050, AC-054 (reviewable pack, no submission or eligibility) | Status `Held`, `reviewed` false; `test_history_is_integrity_covered_and_legacy_copy_is_invalid` | A reviewed export is not implemented; PRD AC-050 and AC-054 not satisfied here |
+| PRD FR-043, AC-051 (only dependent fields stale) | `export_freshness` with history key | History change makes a copy Stale; exact dependent sets stay in earlier tests |
+| BRD NFR-002, AC-049 (retained prior versions; context only) | Saved copy is never edited; regeneration creates a new Held export | Interpretive join, not owner-confirmed |
+| ADR 0006 (accepted source layout) | `src/core` module and tests | No history or export contract; no approval implied |
+
+Remaining criteria: #96 still has unchecked the approved versioned schema, the
+reviewed export that never submits or implies eligibility, and dependent-only
+stale marking; #93 still has the stabilization checkpoint, child closure or
+deferral, and the no automated submission or approval criteria. Checked boxes
+are the owner's records and are not re-adjudicated.
+
+### Classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Pins, blobs, issue states (#440, #96, #93 open) | local observed | `git` and `gh`, 2026-11-06 |
+| Source and test reading of #1233 | local observed | Static; no test was run in this checkpoint |
+| History in Held export, Invalid legacy copy, regeneration | implemented-unverified | Child FULL is source-qualified to `abeb022ba`; no exact-head receipt for `4642b55fd` or governance |
+| Child FULL, 205-row ledger, SQL 285 tests with one JSON-only skip, hosted checks, independent and published functional and readiness approvals | unknown | Attribution: coordinator and PR #1233 comment 6678688323; not inspected by this author in the original cycle. In correction 1 only the identity block of `/mnt/ama-gates/g96-r18-1106/receipt.json` was read (head `abeb022ba`, tree `e2628422`, 205 commands, no failure); the ledger `96-r18-execution-consumption-r44.json` was not read. Child-source evidence, not a receipt for `4642b55fd`, governance or main |
+| History tests on SQL Server | unknown | SQL covers 285 tests per the coordinator; the new history tests exercised JSON and SQLite only |
+| Local constructed browser observations | unknown | Attribution: coordinator; not re-executed by this author. Not Azure, AT or WCAG acceptance |
+| Vulnerability gates (four fixable-vulnerability gates found zero; 39 unfixed per image, 37 High and 2 Critical) | unknown | Attribution: coordinator; not re-executed by this author. No security-clean or risk-acceptance claim |
+| Real or private data, named schema, DPO, Legal, resident, professional, Azure, assistive technology | blocked | Not supplied; synthetic data only |
+| Disk space at intake | local observed | `df` on 2026-11-06: 99% used, 3.8G free; nothing deleted |
+| Heavy-resource release and #188 handoff admission | unknown | Attribution: coordinator-supplied; not verified by this author. No heavy work was run |
+
+### Findings, recommendation and gates
+
+No new defect and no necessary refactor was confirmed by static reading. A
+search of open issues for form export history found only the existing owners
+#96 and #80. Recommendation: CONTINUE the independent #188, #80 and #1204
+lanes under their own prerequisites; HOLD #93 and #96 closure and dependent
+expansion until this record passes current independent and published
+assessment and explicit coordinator consumption, and an exact-head FULL for
+the integrated source is supplied if it is relied on. No pivot or deferral is
+proposed or approved.
+
+| Gate | Effect |
+| --- | --- |
+| #96 closure and #93 closure | Held; no tick |
+| Dependent expansion on the finance parent | Held on the same conditions |
+| #188, #80, #1204 | Independent |
+| Whole #440 | Unchanged; criteria 7 and 8 and native HVE Deferred or not available are not a Pass |
+
+Resume conditions: independent assessment of this record, publication gates,
+coordinator consumption, and a named exact-head receipt where relied on.
+
+Process disclosure: research, plan and details were committed as `5764cb570`
+before this edit. No test, SQL, browser, install, lock, cleanup, push or PR.
+
+### Correction 1 qualifications (2026-11-06)
+
+The original records above and in the first cycle's artifacts are preserved.
+Actual chronology: Research, Details and Plan were created in that order
+(not Research, Plan, Details as the original Changes says) before the planning
+commit `5764cb570` and any canonical edit. The first README edit failed on a
+mistyped path and was redone. Changes and state were created before the final
+checks, not after as planned, and the Review followed in a later call. The
+final check read cached refs; only the intake step fetched, so the Review's
+"re-fetched" overstates it. The commits used the privacy-safe address without
+a shown `gh api user` resolution. Correction 1 corrects the disk and admission
+classification, replaces "paths not accessible" with "not inspected by this
+author", and fixes the pins heading. It re-fetched all three pins and found
+them unchanged. No defect, requirement or approval changed.
