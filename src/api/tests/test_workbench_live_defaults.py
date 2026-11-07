@@ -9,7 +9,10 @@ from pathlib import Path
 from typing import Any
 from urllib.request import Request, urlopen
 
+from checks import workbench_browser_check as workbench
 from checks.workbench_browser_check import MANIFEST, synthetic_data
+from playwright.sync_api import Error as PlaywrightError
+from playwright.sync_api import Page, sync_playwright
 from zava_forward.core.store import Store
 
 from zava_forward.api.server import App, make_handler
@@ -76,6 +79,78 @@ class ManifestDefaultsMatchApi(unittest.TestCase):
                 cookie = self.login(profile["identity"])
                 case, _ = self.call("/api/cases/" + endpoint.removeprefix("#/case/"), cookie)
                 self.assertEqual(case["id"], endpoint.removeprefix("#/case/"))
+
+
+QUEUE_PAGE = """<p id="workspace-status"></p>
+<select id="f-queue"><option value="">Any</option><option>new</option><option>stale</option>
+<option>overdue</option><option>priority</option><option>unowned</option></select><ul></ul>
+<script>
+const rows = {new: ["ZF-1"], stale: ["ZF-1"], overdue: ["ZF-4"], priority: [], unowned: []};
+function render(queue) {
+  const ids = rows[queue];
+  document.querySelector("#workspace-status").textContent =
+    `My assigned cases. ${ids.length} ${ids.length === 1 ? "case" : "cases"}. ` +
+    `Workflow stage: any. Work queue: ${queue}. Order: Urgent first.`;
+  document.querySelector("ul").replaceChildren(...ids.map(id => {
+    const link = document.createElement("a");
+    link.className = "item";
+    link.href = "#/case/" + id;
+    return link;
+  }));
+}
+// The response-to-render gap: the list keeps the previous queue until the timer renders.
+document.querySelector("#f-queue").addEventListener("change", event =>
+  setTimeout(() => render(event.target.value), 300));
+render("stale");
+</script>"""
+
+
+class QueueResultSynchronization(unittest.TestCase):
+    def setUp(self) -> None:
+        self.playwright = sync_playwright().start()
+        self.addCleanup(self.playwright.stop)
+        try:
+            browser = self.playwright.chromium.launch()
+        except PlaywrightError as error:
+            if "Executable doesn't exist" in str(error):
+                self.skipTest("Chromium is installed by the later browser-check step")
+            raise
+        self.addCleanup(browser.close)
+        self.page: Page = browser.new_page()
+        self.page.set_content(QUEUE_PAGE)
+
+    def status(self) -> str:
+        return self.page.locator("#workspace-status").inner_text()
+
+    def test_equal_count_stale_to_overdue_waits_for_the_new_identity(self) -> None:
+        self.assertEqual(workbench.ids(self.page), ["ZF-1"])
+        self.page.locator("#f-queue").select_option("overdue")
+        workbench.wait_queue_result(self.page, "overdue", ["ZF-4"])
+        self.assertEqual(workbench.ids(self.page), ["ZF-4"])
+        self.assertIn("Work queue: overdue.", self.status())
+
+    def test_equal_count_empty_transition_waits_for_the_new_queue(self) -> None:
+        for queue in ("overdue", "priority", "unowned"):
+            self.page.locator("#f-queue").select_option(queue)
+            workbench.wait_queue_result(self.page, queue, ["ZF-4"] if queue == "overdue" else [])
+            self.assertIn(f"Work queue: {queue}.", self.status())
+        self.assertEqual(workbench.ids(self.page), [])
+
+    def test_timeout_reports_expected_and_observed_result(self) -> None:
+        with self.assertRaises(AssertionError) as raised:
+            workbench.wait_queue_result(self.page, "overdue", ["ZF-4"], timeout_ms=100)
+        message = str(raised.exception)
+        for part in ("overdue queue", "['ZF-4']", "['ZF-1']", "Work queue: stale."):
+            self.assertIn(part, message)
+
+    def test_status_format_matches_the_application(self) -> None:
+        web = Path(workbench.__file__).parents[1] / "src/zava_forward/api/web"
+        source = (web / "app.js").read_text()
+        for token in (
+            '${total} ${total === 1 ? "case" : "cases"}. Workflow stage:',
+            'Work queue: ${listState.queue || "any"}. Order:',
+        ):
+            self.assertIn(token, source)
 
 
 if __name__ == "__main__":
