@@ -10640,3 +10640,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] update | Issue 79 merged main c1a16482 (Refs #79)
 
 * Merged main `c1a16482` (PR 1255, the unleased SQL release-denial test, SQL selector wiring and 107 RPI records) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-main1255-merge`. Publisher, runner and ranking test blobs are unchanged. Light no-service checks passed with one known SQL skip; no FULL gate was run, the three 357e842d findings stay author-corrected only, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r22).
+
+## [2026-11-07] update | Issue 79 merged score-only main 23b26a7f (Refs #79)
+
+* Merged main `23b26a7f` (one rubric score commit, `.github/rubric/scores/latest.json` only) into the ranking publication topic with one normal merge so current main is an ancestor for the gate; no conflict or rewrite, prior head preserved at `preserve/issue-79-pre-score23-merge`. No source changed and no tests or FULL were run; the three 357e842d findings stay author-corrected only. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r23).
