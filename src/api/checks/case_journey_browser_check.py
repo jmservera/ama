@@ -739,18 +739,38 @@ def run_browser(base: str, axe: str, out: Path) -> None:
                     "(el, old) => el === old", original
                 ),
             )
-            page.get_by_role("button", name="Save", exact=True).click()
-            page.wait_for_function("() => document.querySelector('#outcome').value === ''")
+            saved_text = "Unsaved synthetic call"
+            old_workspace = page.locator("[data-case-workspace]").element_handle()
+            held_reads: list[Route] = []
+            page.route("**/api/cases/ZF-1", lambda route: held_reads.append(route))
+            try:
+                with page.expect_request("**/api/cases/ZF-1"):
+                    page.get_by_role("button", name="Save", exact=True).click()
+                page.wait_for_function("() => document.querySelector('#outcome').value === ''")
+                # The cleared outcome is not the completion signal: the case read is still held.
+                check(
+                    "held refresh: cleared outcome precedes the case refresh",
+                    len(held_reads) == 1 and old_workspace.evaluate("el => el.isConnected"),
+                )
+                tab(page, "History")
+                check(
+                    "held refresh: cleared outcome alone does not show the saved call",
+                    saved_text not in page.locator("#case-panel-history").inner_text(),
+                )
+                with page.expect_response("**/api/cases/ZF-1"):
+                    held_reads[0].fulfill(response=held_reads[0].fetch())
+                page.wait_for_function("old => !old.isConnected", arg=old_workspace)
+            finally:
+                page.unroute("**/api/cases/ZF-1")
+            tab(page, "Resident")
             check(
                 "successful call clears itself, not unrelated draft",
                 page.get_by_role("textbox", name="Draft message", exact=True).input_value()
                 == "Edited template",
             )
             tab(page, "History")
-            check(
-                "saved call reaches actual history",
-                "Unsaved synthetic call" in page.locator("#case-panel-history").inner_text(),
-            )
+            expect(page.locator("#case-panel-history")).to_contain_text(saved_text)
+            check("saved call reaches actual history", True)
             finance_context = browser.new_context(viewport={"width": 1280, "height": 800})
             finance_context.route(
                 "**/*",

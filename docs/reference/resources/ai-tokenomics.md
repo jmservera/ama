@@ -1,7 +1,7 @@
 ---
 title: AI Tokenomics (Total Cost of AI and Value Realised)
 description: What the mentor clue on Tokenomics points to, the public Tokenomics Foundation framing, how it maps to the capstone rubric and the Zava Forward evidence, and what remains unmeasured
-ms.date: 2026-10-31
+ms.date: 2026-11-07
 ms.topic: reference
 ---
 
@@ -266,6 +266,99 @@ The earlier 6,884 tokens/five runs remain historical observation without a
 human-accepted denominator. Complete resident/historical joins, OD-51, named
 owners and Finance validation remain open. Capacity is not cash. Actual slide
 placement, rebuilt notes/deck and rehearsed Q&A remain owner-controlled work.
+
+## Configured Demo Model, Limits and Evidence Gaps (2026-11-07, Refs #108)
+
+Evidence class: configuration metadata for one existing demonstration
+deployment, read-only. It is not an evaluation, an actual-serving attestation,
+a quality or fairness result, a benefit, a price or a budget. It does not tick
+or complete any #108 criterion.
+
+### Observed configuration
+
+| Field | Observed value | What it does not show |
+| --- | --- | --- |
+| Account | `aif-cutover-test-rzsrg`, resource group `ama`, kind `AIServices`, SKU `S0`, resource location `uksouth` | Where prompts are processed. Resource location is not a processing location for a `Global` deployment type |
+| Deployment | `standard`, deployment type `GlobalStandard`, `currentCapacity` 10, `deploymentState` Running, `provisioningState` Succeeded | That any call has succeeded or that capacity is reserved |
+| Configured model | `gpt-4.1-nano`, version `2025-04-14`, format `OpenAI`, `versionUpgradeOption` `NoAutoUpgrade`, RAI policy `Microsoft.DefaultV2` | The model that answered any request. Metadata is not a response |
+| Rate limits | `request` 10 per 60 s, `token` 10,000 per 60 s (capacity 10; capacity 1 gave 1 request and 1,000 tokens per 60 s) | A guaranteed rate, latency, budget, cost or human benefit. `GlobalStandard` is pay-per-token best-effort, so capacity sets a ceiling, not reserved throughput |
+| Subscription availability (pre-change snapshot) | `availableCapacity` 4,999 for `gpt-4.1-nano` `GlobalStandard` in `uksouth`; account and location usage lists were empty | A subscription quota total or limit. The empty usage lists are an unexplained absence, not zero use |
+| Model lifecycle (account metadata) | `Legacy`; inference retirement 2027-04-14 (same as the 2026-10-28 note in [infra README](../../../infra/README.md#small-employee-model-prerequisite-2026-10-28-refs-514)) | That the version is available for any new deployment after that date |
+
+The capacity change from 1 to 10 was a separate owner-authorised action
+([issue #891 comment](https://github.com/jmservera/ama/issues/891#issuecomment-6705173727),
+2026-11-07T09:40:56Z). This synthesis only records its observable result. No
+Azure mutation, quota purchase, inference, participant exercise, provider,
+task, activation or budget change was part of this delta.
+
+### Semantics that limit what the metadata can prove
+
+* `GlobalStandard` may process prompts and responses in any Azure region; data
+  at rest stays in the designated geography. `uksouth` is the resource
+  location only. Serving-in-region or UK data residency is therefore not
+  evidenced ([Foundry deployment types](https://learn.microsoft.com/en-us/azure/foundry/foundry-models/concepts/deployment-types),
+  page dated 2026-08-06, retrieved 2026-11-07).
+* `NoAutoUpgrade` means the configured deployment never upgrades
+  automatically and stops working at retirement
+  ([working with models](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/working-with-models),
+  retrieved 2026-11-07). It makes the configured version stable; it is not an
+  attestation of the version that served a call. The provider response
+  `model` recorded by the application on a real call can inform version
+  confirmation.
+* A response model identifier does not by itself attest the physical
+  processing region or data residency. Actual serving evidence needs
+  source-qualified provider or operational attestation and the relevant named
+  approvals; no such attestation is recorded here.
+* Quota is assigned per subscription, region, model and deployment type in
+  tokens per minute, and the assigned capacity maps to the enforced token and
+  request limits; the request-to-token ratio varies by model
+  ([quota](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/quota),
+  page dated 2026-05-04, retrieved 2026-11-07).
+
+### Sources, commands and results
+
+| Item | Detail |
+| --- | --- |
+| Repository base | `origin/main` `0f420dc9514db22081cb48fa733267d9d33a0d24`, tree `3c23211ac77b4876d8a5928ce228760eabcdc257`. The live resource has no source commit; its state is a dated readback, and the repository's intended default (`infra/main.bicep`, capacity 1, [infra README](../../../infra/README.md#small-employee-model-prerequisite-2026-10-28-refs-514)) differs from the live capacity 10, so Bicep is not the record of live state |
+| Native evidence (private, not committed) | `/mnt/ama-gates/live-891-capacity-1107`. SHA-256 prefixes: `before-deployment.json` 3065cd42, `after-deployment.json` fdf9b30b, `model-skus.json` bdeab081, `model-capacities.json` db79e11c, `account.json` 5206b732 |
+| Fresh read-only readback | 2026-11-07 by the Azure CLI signed-in account, this resource only |
+| Not re-read | Live app environment (`AI_MODEL_VERSION`), any provider response, SQL, keys and tokens |
+
+```text
+az cognitiveservices account deployment show -g ama -n aif-cutover-test-rzsrg --deployment-name standard --query "{sku:sku,model:properties.model.name,version:properties.model.version,upgrade:properties.versionUpgradeOption,state:properties.provisioningState,rate:properties.rateLimits[].{k:key,c:count,p:renewalPeriod},rai:properties.raiPolicyName,cap:properties.currentCapacity}" -o json
+  -> sku GlobalStandard capacity 10; gpt-4.1-nano 2025-04-14; NoAutoUpgrade; Succeeded;
+     request 10 / 60 s; token 10000 / 60 s; Microsoft.DefaultV2; currentCapacity 10
+az cognitiveservices account show -g ama -n aif-cutover-test-rzsrg --query "{kind:kind,loc:location,sku:sku.name}" -o json
+  -> AIServices; uksouth; S0
+az cognitiveservices account list-models -g ama -n aif-cutover-test-rzsrg --query "[?name=='gpt-4.1-nano'].{n:name,v:version,lifecycle:lifecycleStatus,dep:deprecation}" -o json
+  -> Legacy; inference 2027-04-14
+```
+
+### Historical and comparison observations
+
+* The 2026-10-28 readback recorded the same `standard` deployment at capacity
+  1; the earlier renewed QA exercise above used a different deployment
+  (`gpt-4.1-mini-2025-04-14`, five attempts, 6,884 tokens) whose limits this
+  delta did not read. Both are history, not the current nano state, and
+  neither supports a mini-versus-nano quality or cost comparison.
+* No regional model, version or quota evidence exists for any other
+  comparison candidate. Do not infer one from the nano figures, the
+  `uksouth` availability list or another model's capacity.
+
+### Remaining #108 gates
+
+* Model names, versions and quotas in the chosen region: configured values for
+  this one deployment are now recorded, but actual serving version
+  confirmation, serving region or data-residency attestation, a subscription
+  quota total and any other candidate remain unconfirmed. Keep the criterion
+  unticked until the owner decides the evidence suffices.
+* Real-model evidence: no actual call is recorded here. A call needs separate
+  finite call, token, budget and expiry authority and approved payload
+  handling, and it can inform version confirmation only. It does not close the
+  serving region or data-residency gap.
+* Independent held-out evaluation, thresholds, qualified reviewers and
+  calibrated benefit remain blocked and unchanged, and a deployment is not an
+  evaluated model.
 
 ## Gaps
 
