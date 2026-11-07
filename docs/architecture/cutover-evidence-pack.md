@@ -4296,3 +4296,630 @@ a shown `gh api user` resolution. Correction 1 corrects the disk and admission
 classification, replaces "paths not accessible" with "not inspected by this
 author", and fixes the pins heading. It re-fetched all three pins and found
 them unchanged. No defect, requirement or approval changed.
+
+## Fourteenth stabilization checkpoint: queue dispatch permit protocol (2026-11-06, Refs #440 #144 #107 #118 #122)
+
+Refs #440 (open), #144 (open), #107, #118 and #122. This is the fourteenth
+checkpoint, a new bounded documentation-only preimplementation checkpoint for
+the proposed #144 background-dispatch safeguards. It is not a runtime change,
+not a feature or acceptance claim and not a live enablement. Earlier
+checkpoints are historical and unchanged. Local candidate, not consumed by the
+coordinator and not approved for publication. The #144 code PR would belong
+under `feat/infra-hosting-integration-136`; this documentation child is based
+on the governance parent `feat/discovery-assurance-integration-123`.
+
+### Pins
+
+| Pin | Identity |
+| --- | --- |
+| Governance documentation target `feat/discovery-assurance-integration-123` | `119828353ccc1d678c1a4e9c1c67b621b0d263a0` (fetched 2026-11-06) |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` |
+| Code parent `feat/infra-hosting-integration-136` | Not observed: `git ls-remote` and `gh api` returned no branch (HTTP 404) on 2026-11-06. The brief says it points to main; that is supplied, not observed |
+| Candidate (read-only) `issue-144-queue-recovery` | HEAD `4c878d664853074e9dec49e57d5c89c4cc9bf3a2`, tree `978986c9374f6b1019136d121a4ee1f21be7941c`; merge base with main is main |
+
+Documents read at governance `119828353` (draft and in-review status is not
+approval): BRD 0.21.0 draft `34d88395de861e9799eb9e24121a21c92c7a5adc`;
+PRD 0.21.0 in-review `c788b917bafaede215f326f0efc71e071a687f1c`; ADR 0001
+Proposed `d42fa5c4615f4107cee83e07555dba6985c1f53e`; ADR 0002 Proposed
+`cbe21530043ff15432cc6dce1086d080f5eb15b4`; ADR 0003 accepted with owner
+amendment `d60645397b20fb70ac3d1dc47c7a6c8671201306`; ADR 0006 accepted
+`956da1a3b804c803041fe2e8a312bd9f400273ae`.
+
+### Main versus candidate
+
+A static `git grep` for symbols under `src` on each commit shows that the
+queue slice is candidate-only. The candidate differs from main by 12 `src`
+files, +1241/-18.
+
+| Symbol | Main `bb3a3b03` | Candidate `4c878d664` |
+| --- | --- | --- |
+| `WORKER_ROLE`, `_worker_complete`, `build_serve`, `publish_pending`, `ZF_ASSIST_QUEUE` | absent | present |
+| Ledger `Consumption.reserve`, `dispatch_check`, `complete`, `liability-unknown` | present | present |
+| `financial-meter-unavailable` hold in `Ai._request` | present | present |
+
+So the worker, its role and its single completion route are unmerged candidate
+code, not main behavior. Candidate-policy evidence is not merged-main
+acceptance, operational acceptance or approved requirements.
+
+### Trigger and owner decisions (supplied by the coordinator)
+
+The owner retained duplicate-dispatch and revocation safeguards for the demo
+and chose "include background processing and recovery; design and implement its
+safeguards first". This is code and design authority only. It is not a live
+grant, deployment, provider call, financial-policy waiver, price approval,
+production budget, operational enablement or final ADR acceptance, and the
+end state is not replaced by in-process only.
+
+The candidate's r8 record proposes an API-owned per-attempt dispatch permit,
+authoritative financial reservation and settlement, durable unknown-outcome
+reconciliation and no automatic re-inference of possibly dispatched work, with a
+second exact route for the Application-only AgentsWorker role. It is a draft,
+not an approved interface or implemented behavior. Existing High findings 1
+(composed worker reaches `financial-meter-unavailable`) and 2 (redelivery
+re-infers) stay open. No live unsafe call or new production bug is claimed.
+Coordinator-supplied r8 qualifications kept: its skill body was not loaded,
+its creation order was Research, Details, Plan, state, log, commit, three
+originals have no frontmatter, and "no network" is not literal because issue
+metadata was retrieved. The r8 raw log was not inspected by this author.
+
+### Traceability (document-qualified)
+
+| Requirement or decision | Source (candidate unless noted) | Status and limit |
+| --- | --- | --- |
+| PRD FR-061 (AI consumption economics; joins BRD FR-052, AC-102, AC-103, OD-51), verified by PRD AC-107, AC-108 | `ai_consumption.Consumption` ledger (main and candidate) | Draft documents; economics reporting not delivered here |
+| PRD NFR-017 (finite limits, hard termination, unknown liability degrades to workflow-only, human approval of live budgets; joins BRD NFR-012, AC-100, AC-101, OD-51), verified by PRD AC-109, AC-110 | `Consumption.reserve`, `dispatch_check`, `complete`; 40 s stale-liability window; `Ai._request` hold | AC-109 is the closest criterion and is "Not run" in the PRD; the permit protocol is a proposal that would serve it, not evidence of it |
+| BRD OD-51 and PRD OQ-027 (budgets, owners, price source) | None | Open; no budget, price or owner is invented; production budget deferred |
+| ADR 0001 (Proposed): `agents` app on the `agent-tasks` queue, agents identity without database | Candidate queue slice | Only Proposed support for a queue estate; no approval implied |
+| ADR 0002 (Proposed) Five-Assistant section: queue/agent estate "remains proposed" | In-process `Assistants.execute` | The candidate's cited "ADR 0002 decision 6" is the Dockerfile and CI item, not a dispatch decision, and is not repeated here |
+| ADR 0003 (accepted with amendment) decision 1: "No new service, queue, store or network path is added" for the journey capabilities | None | Tension with a background queue, recorded and not resolved; the owner decision above is not an ADR acceptance |
+| ADR 0006 (accepted) source layout | `src/core`, `src/api`, `src/agents` | Package boundary only; no dispatch contract |
+
+### Safeguard trace
+
+| Safeguard | Where | Status |
+| --- | --- | --- |
+| Service identity and role | `auth.service_caller` (Application-only, proxy flag, exact tenant, audience, oid, appid), one completion route `_worker_complete` | Candidate-only, implemented-unverified; the permit route is a draft |
+| Authoritative ledger and persistence | `Consumption` over the `Assistants` port (shared database and clock); `assistant_attempts` row `{task}:{fence}` | Ledger on main; queue attempts candidate |
+| Lease, fence, epoch, release, source checks | `claim` and `complete` re-validate; `execute` re-checks suspension, admission, epoch and release just before the provider thread | Present for in-process; the queue path has no equivalent pre-dispatch check (High finding 2) |
+| Unknown outcomes | `complete` returns timeout or provider-unavailable tasks to `pending`; `claim` re-claims an expired lease with a new fence | Current behavior can repeat a possibly dispatched call on the queue path; the draft reconciliation is not implemented |
+| Duplicate handling | `reserve` holds `duplicate-attempt`; draft compare-and-set `reserved -> permitted` | Ledger present; permit draft only |
+| Approval and manual paths | Manual and in-process execution unchanged; background work is proposal generation only | Preserved; no funding, consent, works or release authority |
+| Default-off activation | `ZF_ASSIST_QUEUE` unset means off (candidate, server lines 79-88) | Candidate-only; the worker stays held by `financial-meter-unavailable` |
+
+### Revocation windows (draft protocol)
+
+| Window | Physical call | Handling and limit |
+| --- | --- | --- |
+| Before a permit is issued | None | The same checks as in-process can deny with no spend |
+| Between permit and provider dispatch | Possible | Only a worker-side deadline can stop a late start; an issued permit cannot be recalled |
+| After dispatch | In flight | A late result can be rejected and settled; the call is not undone |
+| Lost permit response, lost ack, visibility expiry, restart | Unknown | Must be surfaced as unknown and not re-inferred; no exactly-once or perfect-revocation claim |
+
+### Design gaps (not code defects; no test exists)
+
+1. Transaction composition: `Assistants.transaction()` opens a new connection
+   with `BEGIN IMMEDIATE` per call, and `Consumption.reserve` and `complete`
+   each open their own. The draft names an optional `db` for `reserve` only;
+   `complete` needs the same, and atomic issue and settlement are unproven on
+   SQLite and SQL Server. The fallback order leaves an orphan-reservation
+   window that the 40 s stale-liability rule would turn into a budget-wide stop.
+2. Clocks: lease (default 60 s, range 10 to 120), provider timeout (default 20
+   s, range 1 to 40), the ledger's 40 s window and the permit deadline are not
+   bound to values. A 40 s timeout equals the window, so a legitimate late
+   settlement could be held as `liability-unknown`.
+3. Attempt state: the attempt `outcome` column is overwritten with the
+   envelope outcome at completion, and the line-1025 pending-retry for timeout
+   and provider-unavailable is not reconciled with the draft `permitted`,
+   `dispatching` and `unknown` states.
+4. Lost permit response: classed unknown although no call occurred, which
+   holds the budget with no clearing authority.
+5. Late or wrong-fence result: the draft settles by the stored meter id and
+   rejects the result; its interaction with the 40 s hold and with a settlement
+   of a real earlier call is not specified.
+6. Unknown liability: `complete` with no usage always records
+   `liability-unknown`, and `src/core` has no ledger clearing route (a `git
+   grep` for clear, reconcile and resolve functions found only unrelated
+   modules).
+7. Authority price and expiry: the draft reserves at permit time; treatment of
+   authority or price expiry between permit and call relies on `dispatch_check`
+   inside the worker path, which the draft meter makes local.
+
+### Open decisions (not approved here)
+
+* Role-code authority for a second exact AgentsWorker permit route; no live
+  grant is implied. The coordinator asks the owner separately.
+* The operator path that clears a budget-wide `liability-unknown` stop. No
+  Finance approver is named, no liability is forgiven, no usage is invented,
+  no budget is reset and no retry is silently enabled.
+* Alternative B (API-proxied inference) remains the smallest safer option if
+  the strictest revocation bound is needed; it changes hosting and identity
+  (#118).
+
+### Classification
+
+| Finding | Classification | Source and limit |
+| --- | --- | --- |
+| Pins, blobs, issue states (#440 and #144 open) | local observed | `git` and `gh`, 2026-11-06 |
+| Main lacks the queue slice; candidate has it | local observed | Static `git grep` on both commits; no code was run |
+| Static reading of ledger, `claim`, `complete`, server and auth anchors | local observed | Read-only; design gaps above are readings, not reproductions |
+| Parent 136 branch | unknown | 404 on the remote; brief statement supplied |
+| Queue slice behavior, worker route, default-off flag | implemented-unverified | Candidate only; no exact-head receipt for it in this checkpoint |
+| Permit, settlement, reconciliation protocol | deferred | Draft only; not implemented |
+| Candidate gate, tests and r8 raw log | unknown | Attribution: coordinator; the log was not inspected by this author |
+| Second route authority, operator clearing authority | blocked | Unassigned decisions; nothing approved |
+| Live, Azure, provider, SQL race, price and budget | blocked | Not run or supplied; synthetic and design only |
+
+### Findings, recommendation and gates
+
+No new defect is confirmed and none is reproduced. The seven design gaps and
+two open decisions are preimplementation items for #144, not duplicate issues.
+
+Recommendation: FIX, with #144 implementation held for the unresolved
+contract decisions. This is not an unconditional continue, not a feature or
+operational acceptance and not a pivot; the owner-approved background goal
+stays in force. Code readiness is separate from demo and operational
+acceptance. Bounded implementation could proceed independently of a later
+operational clearing workflow only under this invariant: no worker path calls
+the provider without an API-issued permit, no unknown outcome is
+automatically retried, and the ledger stays fail-closed on
+`liability-unknown`. That is a condition for the coordinator and owner, not an
+approval of a new authority.
+
+Resume conditions:
+
+* A corrected implementation-ready prospective #144 design that resolves the
+  gaps above.
+* A role-code authority decision on the second exact route.
+* A safe unknown-liability and operator disposition.
+* Coordinator consumption of this checkpoint after independent exact-head
+  assessment.
+* Original #144 tests-first implementation, then a new FULL gate and current
+  independent review before any publication or enablement.
+
+| Gate | Effect |
+| --- | --- |
+| #144 implementation and worker enablement | Held (FIX) |
+| #118 hosting and #122 continuity dependents | Dependent on the #144 contract; no change here |
+| #188, #79 and #1231, #80, #1204 | Independent; continue on their own prerequisites |
+| Whole #440 | Unchanged; criteria 7 and 8 and native HVE are not a Pass; no tick or closure |
+
+Process disclosure: research, plan and details were committed as `5233db299`
+before this edit. No test, SQL, browser, install, lock, cleanup, push or PR.
+
+### Correction 1 qualifications (2026-11-06)
+
+The original text above, including the sentence that the r8 creation order was
+"Research, Details, Plan, state, log, commit" and the parent 136 row, is
+preserved. This subsection supersedes them for two points only. The
+coordinator supplied the r8 order from the outer CLI log display and has since
+corrected that inference; the original text repeated it.
+
+* r8 Plan and Details were parallel, not serial. Native event metadata (only
+  call IDs, event types, timestamps and success flags) shows: first Research
+  create started 08:17:18.098Z and failed (retained; the coordinator attributes
+  it to a missing directory); successful Research create 08:17:36.958Z to
+  08:17:36.985Z; Plan create and Details create both started at exactly
+  08:18:22.940Z, with Details completing at .970Z and Plan at .981Z. Neither the
+  log display order nor the shared start time shows a serial chain, and
+  completion order is not creation order. No serial r8 phase chain is claimed.
+  The state, log and commit order is as supplied and was not re-derived. The
+  other r8 qualifications stand: unread research skill body, no source edit,
+  three original Markdown files without frontmatter, issue metadata retrieved
+  (so "no network" is not literal), and no Azure, Graph, provider, SQL or
+  browser run.
+* Parent 136: on 2026-11-06 a local `git rev-parse
+  refs/heads/feat/infra-hosting-integration-136` returned
+  `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` (equal to main), and
+  `git ls-remote origin 'refs/heads/feat/infra*'` returned nothing. So the ref
+  is a local, unpublished integration branch: local observed `bb3a3b03`,
+  remote absent as observed, intended code target. The earlier remote 404
+  stays true and historical. No remote branch is created and no owner
+  branch-choice question is raised by this.
+
+Unchanged: the second AgentsWorker route authority is unresolved (the owner's
+reply was a question about URL versus container, not an approval, and
+clarification or the general background scope is not role-code approval); the
+liability-unknown operator disposition and all seven design gaps stay open; the
+recommendation stays FIX with #144 implementation held. Correction research,
+plan and details were committed as `6d9a8818d` before this edit; no test, SQL,
+browser, lock, push or PR.
+
+### Correction 2 qualifications (2026-11-06)
+
+Correction 1 above and its records are preserved. This subsection qualifies
+them for three points, after an independent readiness report on head
+`f7d6057d9` (verdict approve_with_comments, one Medium and one Low, no tests or
+gates run) and a later owner decision.
+
+* Correction 1 order. The correction 1 details record says its Details was
+  created after its Plan. Native event metadata (call IDs, types, timestamps
+  and success flags only) shows the Research create started 08:55:04.608Z, and
+  the Plan and Details creates both started at exactly 08:55:24.371Z, with
+  Details completing at .416Z and Plan at .432Z. They overlapped; no serial
+  Plan-then-Details chain is shown, and completion order is not creation
+  order. The supported fact is unchanged: Research, Plan and Details were
+  committed together as `6d9a8818d` before any canonical edit. The correction 1
+  Changes and Review describe separate calls, which is true, but do not
+  disclose the overlap, so their chronology and conformance accounts are
+  qualified by this paragraph. The correction 2 records were created in
+  individual tool turns and were committed as `737a16abc` before this edit.
+* Correction 1 heading check. Its Changes record reports the heading count as
+  a uniqueness pass. The exact heading `### Correction 1 qualifications
+  (2026-11-06)` occurs three times in this pack (earlier checkpoints'
+  correction subsections and the fourteenth's); within the fourteenth
+  checkpoint it occurs once. The fourteenth checkpoint's own top-level anchor
+  is a distinct heading, was not shown broken, and appears once in the README
+  and twice in the log at that check. Only the scoped count supports
+  uniqueness, not a pack-wide one.
+* Second-route role-code decision. After the clarification that the second
+  endpoint is another HTTP route on the proposed API integration, not another
+  ACA environment or worker container, the owner approved it (issue 144
+  comment `6681120797`, 2026-11-06T08:57:53Z, later than the correction 1
+  launch; the saved text and readback are supplied coordinator session files).
+  The demo code may extend the Application-only `ZavaForward.AgentsWorker`
+  allowance to request an API-authorized, metered dispatch permit in addition
+  to submitting results. This resolves the role-code decision only. It is not a
+  second environment or container, live grant, infrastructure, deployment,
+  provider call or spend, approval of the whole protocol or ADR, waiver of
+  financial or revocation controls, or appointment of a financial
+  reconciliation operator. The earlier statements above that the route
+  authority was unresolved were true when dated and remain as history.
+
+Unchanged: the liability-unknown operator and safe-resume authority and all
+seven design gaps stay open; the recommendation stays FIX with #144
+implementation held; no runtime defect is confirmed; original 144 tests-first
+RPI, checkpoint consumption, full validation and exact-head independent review
+remain required. Local 136 is `bb3a3b03` (equal to main) and remote absence is
+unchanged. No test, SQL, browser, lock, push or PR.
+
+### Current status qualifications (2026-11-06, post-correction 2)
+
+Additive status record at 13:50Z against governance `119828353`, main
+`bb3a3b03`. Nothing above is rewritten. The correction 2 Research cited the
+Correction 1 heading interval as 4285 to 4526; the Fourteenth checkpoint begins
+at line 4300, so the interval is 4300 to 4526. The count of three matching
+Correction 1 headings pack-wide stands (one inside this checkpoint before
+correction 2). The independent readiness report (approve_with_comments, one Low)
+found both original defects resolved.
+
+| Item | Class | Status at 2026-11-06 |
+| --- | --- | --- |
+| Second exact permit route for the Application-only `ZavaForward.AgentsWorker` (issue 144 comment `6681120797`, 08:57:53Z) | Approved demo code authority | Resolved, unchanged |
+| Demo Finance-role audited reconciliation of unknown AI usage from provider evidence (issue 144 comment `6685915140`, 13:26:36Z, read-only confirmed by `gh api`) | Approved demo code authority | Resolved by this status |
+| R9 dispatch permit, settlement and reconciliation design (144 candidate commit `323abba2e6f392e54c4ac27b427e00d05a3e6782`, tree `13c61bfe37b20eb42d75fc604b3c1d7fcd7f779d`, read from pinned objects) | Proposed, DRAFT | Not approved, not consumed here, no code |
+| Root assessment of R9 | Observed (coordinator, supplied) | Revise, design only |
+| Original two High runtime findings | Observed, open | Open |
+| Implementation of 144 | Held | FIX, tests first, full validation and independent exact-head review required |
+
+* Finance-role decision. The existing Finance role may handle audited
+  reconciliation of unknown AI charges using provider evidence. Unknown amounts
+  stay reserved. Resumption needs the existing budget, consent and revocation
+  checks. No invented usage, budget reset, safeguard bypass or automatic
+  repeat dispatch is authorized, and manual non-AI work stays available. It is
+  not a live grant, deployment, provider spend, real financial waiver,
+  production approval, or acceptance of the whole protocol or ADR. The earlier
+  09:40-era statements that an operator decision was pending were true when
+  dated and remain history. No further owner question on these two code
+  choices.
+* R9 items the root assessment leaves open: pre-dispatch binding of the final
+  serialized request, model and token bounds inside the worker adapter; a strict
+  reconciliation event schema; a durable no-repeat representation including
+  in-process compatibility; code-discoverable role and transaction facts (the
+  Finance role names are discoverable in code, not an owner question); and
+  numeric timing margins, backoff and poison handling. A bounded R10 design
+  correction is independent work and is not approved by this snapshot.
+* R9 process qualifications from native events (not CLI display order): the r9
+  Markdown files carry no frontmatter; Changes, Review and state creates start
+  in parallel at 13:37:53.482 to .483 and Review precedes its light checks;
+  Research 13:33:20, Plan 13:34:50, Details 13:35:14 and the planning commit
+  13:36:49 precede the design create at 13:37:35.
+* Unchanged: unknown-liability operator and safe-resume authority beyond the
+  code role, the seven design gaps and FIX recommendation remain open; no
+  runtime defect is confirmed; local 136 `bb3a3b03` is unpublished (remote
+  absent). No test, SQL, browser, lock, push or PR.
+
+## Fifteenth stabilization checkpoint: finance parent integration (2026-11-06, Refs #440 #96 #93)
+
+Focused, documentation-only status. It builds on the
+[thirteenth checkpoint](#thirteenth-stabilization-checkpoint-finance-parent-history-export-2026-11-06-refs-440-96-93) and does not repeat its static reading.
+
+### Source and document identities
+
+| Item | Value |
+| --- | --- |
+| Parent `origin/feat/finance-integration-93` (fetched 13:45Z) | `4642b55fdbafec564b67803420439b91d7ea8ce1`, tree `e2628422d13ae87df3a6b7ecfdd12f24a4fc1052`; 2 ahead and 0 behind main; not in governance |
+| Child #1233 head | `abeb022ba26fce149664f62d674c47dc6c0ef4e2`, same tree; merged 2026-11-06T06:32:47Z |
+| Prior parent | `0472fd5d5` (#1223 dependency, covered) |
+| Governance and main | `119828353ccc1d678c1a4e9c1c67b621b0d263a0` and `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` |
+| Stale local ref (not used) | local `feat/finance-integration-93` is `0472fd5d5`; the remote tracking ref is the pin |
+| BRD 0.21.0 draft | `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD 0.21.0 in-review | `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0003 accepted with owner amendment | `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 accepted | `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Blobs are identical at main, governance and the parent. Draft and in-review are not approval.
+
+### Evidence and classification
+
+| Observation | Class |
+| --- | --- |
+| Receipt `/mnt/ama-gates/g96-r18-1106/receipt.json` read by this author: 297806 bytes, SHA-256 `070403bd4f64bf12d46e369b1bf84e051fa4ace1d592099c126fe7bdd897dfd1`, top-level `failure` null, `image_cache` fresh; matches the supplied value | Local observed (file identity only) |
+| Supplied child FULL for source `abeb022ba` and main `bb3a3b03`: 205 commands, 17 groups; dedicated SQL 285 tests with one JSON-only skip; four images with zero fixable findings and 39 unfixed per image (37 High, 2 Critical); independent bounded functional pass | Supplied, historical child observation, not re-executed |
+| New history tests used synthetic JSON and SQLite; the MSSQL run did not specifically exercise them | Implemented-unverified on SQL Server |
+| Static: `form_export.py` lists `history` among body keys (line 30) and passes `history=report["history"]` (line 87) | Local observed (source reading) |
+| Receipt for the squashed parent `4642b55f`, main acceptance, live Azure SQL | Unknown or not performed |
+
+The child receipt is not a receipt for the squashed parent, governance or main.
+
+### Trace
+
+* PRD FR-040 with AC-048, PRD FR-042 with AC-050 and AC-054 (not met), PRD FR-043 with AC-051; BRD NFR-002 with AC-049 as an interpretive join; ADR 0006 layout. Backlog: #96 (open C1, C5, C6 and the named schemas) and #93.
+* Authority: the full-history contract and regeneration of old Invalid copies are owner-approved for synthetic data only. Originals are not rewritten or backfilled. No actual or private data authority. Real Finance, DPO, Legal, Reviewed, submission and eligibility approvals are unproven.
+
+### Gaps, owners, recommendation
+
+* Exact gaps: #96 C1, C5, C6; named schemas; per-approver evidence; MSSQL exercise of the history tests; a receipt and independent review at the parent head; main integration.
+* No new defect is established; every finding maps to an existing owner. No speculative issue or refactor. Financial policy is not activated.
+* Recommendation: CONTINUE the independent #96 lanes. HOLD closure of #96 and any dependent expansion. Resume when the owners supply the missing approvals and a gate is run at the intended head.
+* Publication and closure gates: coordinator reassessment, hosted CI on the parent, human approvals; no tick.
+
+## Sixteenth stabilization checkpoint: sensor parent integration (2026-11-06, Refs #440 #184 #185 #188 #110)
+
+Focused, documentation-only status. It builds on the fifth checkpoint, whose main-source reading and requirement IDs are reused.
+
+### Source and document identities
+
+| Item | Value |
+| --- | --- |
+| Parent `origin/feat/live-simulator-integration-184` (fetched 13:45Z) | `9476dc9610368a9a1bd46c88314586885638580d`, tree `30167885b00d308d7b29e9a78a064f4af834ce98`; 2 ahead and 0 behind main; not in governance |
+| Child #1205 (merged 02:13:34Z) | head `a7d4e956db3b2c194c7601b888be5a558869a6de`, merge `2dc125f9` |
+| Child #1203 (merged 09:37:52Z) | head `6887377845648502f2a5509801ee5d9807869703`, same tree as the parent |
+| Durable trigger | #440 comment `6681870292`, 2026-11-06T09:40:32Z |
+| Stale local ref (not used) | local `feat/live-simulator-integration-184` is `ead177ef9` |
+| Documents | BRD, PRD, ADR 0003, ADR 0006 identical to the finance table above |
+
+### Evidence and classification
+
+| Observation | Class |
+| --- | --- |
+| Receipt `/mnt/ama-gates/g188-r20-1106/receipt.json` read by this author: 297806 bytes, SHA-256 `e575146936c97ffb4e397dd78a75951a079000c18c979d3374f863e6c1c95014`, `failure` null; matches the supplied value | Local observed (file identity only) |
+| Supplied child #188 FULL for `6887377`: 205 commands, 17 groups; dedicated SQL 285 with one JSON-only skip; a separate sensor SQL supplement of 68 tests with zero skips; four images with 42 unfixed (40 High, 2 Critical), fixable 0; older figure 39 is history and the cause of the increase is unverified; two independent assessments approved with zero findings | Supplied, historical child observation |
+| Parent static diff against main: 19 files, +1169 and -81 (live envelope admission with retained envelopes at `sensor_consumer.py` lines 430 and 749, versioned synthetic weather reference `synthetic-weather-continuity-v1` in `sensor_consistency.py` line 36, dry-run device provisioning reporting "none created or stored" in `device_provision.py` line 23) | Local observed (source reading) |
+| #1205 apply path needs injected Registry and CredentialStore adapters that the CLI does not supply; its criteria 1, 3 and 4 are unmet | Implemented-unverified, deferred |
+| Receipt at the squashed parent `9476dc96`, main integration, real credential issuance, secure storage and teardown, resident consent, indoor calibration, statistical validity, live authenticated Azure SQL, activation | Unknown, not performed or blocked |
+
+The #188 receipt belongs to `6887377`, not to `9476dc96`. Weather reference data is not indoor measurement.
+
+### Trace
+
+* BRD FR-048, AC-090, RULE-014, OD-43 (real inventory; blocks operational use with real data); PRD FR-050, AC-066, AC-067, AC-068; ADR 0003 decision 6 (no public endpoint). BRD FR-050 and PRD FR-048 are different subjects and are not sensor work. Backlog: #184, #185, #188 (three criteria unchecked), #110, #186.
+
+### Gaps, owners, recommendation
+
+* Exact gaps: named credential owner and secure store, teardown evidence, resident consent, calibration and validity, authenticated Azure SQL, receipt at the squashed parent, main integration.
+* No new defect is established; no speculative issue or refactor. Independent lanes can continue (#110 and #186 analysis, #185 adapter design) without activating sensors.
+* Recommendation: CONTINUE independent lanes; HOLD closure of #184, #185 and #188 and dependent expansion. Resume when the credential owner, consent and a gate at the intended head exist.
+* Publication and closure gates: coordinator reassessment, hosted CI on the parent, human approvals; no tick.
+
+### Provenance qualifications (2026-11-06, post-integration correction 1)
+
+Additive qualification of the Fourteenth checkpoint current-status subsection
+and of the batch that added the Fifteenth and Sixteenth sections. It is
+appended here because the pack is append-only; it is not part of the Sixteenth
+checkpoint. Nothing above is rewritten and no new checkpoint number is used.
+The times below are tool call boundaries read from the uncommitted native
+session event log (tool start and completion, UTC); this qualification makes
+no time claim of its own beyond those boundaries.
+
+* Time labels. The status subsection says "status record at 13:50Z" and the
+  original batch Changes record says "observed 13:55Z". Neither was an
+  observation at that time. The focused checks and status ran as one bash call
+  from 13:49:06.882 to 13:49:07.721, after the canonical edits ended
+  (13:49:00.243) and before the Changes create (13:49:17.183). The pack status
+  text was written before the checks started, and 13:55Z is later than the
+  batch final commit (13:49:45.676). The checks did run after the edits and
+  before the Changes record and Review; the call was not timed per check. The
+  state create and parse ran in parallel at 13:49:25.8, and the Review create
+  and two state edits started in parallel at 13:49:40.806, after the checks
+  and the Changes record. Original records are preserved unchanged.
+* Defect wording. The statement "no runtime defect is confirmed" in the
+  current-status subsection means that no NEW runtime defect was identified
+  by this documentation checkpoint, which did not run or assess runtime
+  behaviour. It does not remove or disprove the original two High runtime
+  findings, which stay open in the status table. R9 root outcome Revise, the
+  independent and unapproved R10 design correction, and FIX with #144
+  implementation held are unchanged. Both owner code decisions (comments
+  `6681120797` and `6685915140`) stay resolved and are not reopened.
+
+## Seventeenth stabilization checkpoint: queue dispatch R10 design (2026-11-06, Refs #440 #144 #107 #118 #122)
+
+Refs #440 (open), #144 (open), #107, #118 and #122. This is a new bounded
+documentation-only checkpoint that records the finished #144 R10 dispatch
+protocol design as an unapproved DRAFT proposal and gives this author's own read
+assessment of it. It is design and source observation only: no test, SQL,
+browser, container, scanner or provider call, no source change and no
+enablement. Earlier checkpoints and RPI records are historical and unchanged.
+The draft design, this checkpoint and its recommendation are not approved by
+any owner, role or ADR. Local candidate, pending coordinator consumption.
+
+Evidence labels used below: Proposed (a draft design contract, not behavior);
+Approved, code-role only (an owner code decision, not a live grant, spend,
+deployment, financial waiver or ADR acceptance); Observed (a git or read-only
+check recorded in the Changes record); Implemented-unverified (candidate code
+read but not run); Unobserved (needs a real SQL, Azure or provider run);
+Deferred. Times in this section are per the coordinator's assessment, not
+independently observed, unless the Changes record captures them.
+
+### R10 pins and topology
+
+| Pin | Identity |
+| --- | --- |
+| Governance documentation target `feat/discovery-assurance-integration-123` | `119828353ccc1d678c1a4e9c1c67b621b0d263a0` (fetched; this checkpoint does not move it) |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` |
+| R10 design commit (`issue-144-queue-recovery`, read from pinned objects) | `1e19209985d93e053dd449e873e792f214dd110c`, tree `7c6126374cbd6e5f5c2e62479cbee1dea98d75e3` |
+| R10 design file | `.copilot-tracking/design/2026-11-06/issue-144-r10-dispatch-protocol-design.md`, blob `de776799aafc925c372c6c1c85e0c72ecc75b389`, 15360 bytes (re-resolved by `git rev-parse` and `git cat-file -s`) |
+| Design source pin (R10 planning commit) | `3b1f51849d4108581fcbe7fc5059ce61fb448c80`, parent `323abba2e6f392e54c4ac27b427e00d05a3e6782` (the R9 design); merge base with main is main `bb3a3b03`; `src` differs from main by 12 files, +1241/-18 (the unmerged queue slice) |
+| `feat/infra-hosting-integration-136` | Local ref `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` whose reflog reads "branch: Created from origin/main"; `git ls-remote --heads origin` returned no branch, `git fetch` of it failed ("couldn't find remote ref") and `gh pr list --state all --head` returned `[]` |
+
+Topology reading. The earlier claim that a parent 136 points to main is
+historical (fourteenth checkpoint). As observed when checked, a local label at
+main exists and no published branch or PR exists. That is neither a published
+parent, ancestry, authorization nor approval; no branch is created, retargeted,
+rebased or published here. The eventual code parent is UNKNOWN until deliberately
+resolved before any publication, and main `bb3a3b03` is the only verified pin.
+This differs from the supplied brief (no local or remote ref) for the local ref
+only; the remote and PR absence match it.
+
+Documents at governance, main and this child (identical blobs; draft or
+in-review status is not approval): BRD 0.21.0 draft
+`34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD 0.21.0 in-review
+`c788b917bafaede215f326f0efc71e071a687f1c`; ADR 0001 Proposed
+`d42fa5c4615f4107cee83e07555dba6985c1f53e`; ADR 0002 Proposed
+`cbe21530043ff15432cc6dce1086d080f5eb15b4`; ADR 0003 accepted with owner
+amendment `d60645397b20fb70ac3d1dc47c7a6c8671201306`; ADR 0006 accepted
+`956da1a3b804c803041fe2e8a312bd9f400273ae`.
+
+### R10 source facts, merged versus candidate-only
+
+| Fact cited by the design | On main `bb3a3b03` | In the 144 candidate source | Class |
+| --- | --- | --- | --- |
+| Strict ledger `EVENT_FIELDS` and `meter-evidence-invalid` reader | Present | Present | Observed by static read; not run |
+| `FINANCE_ROLES` tuple and `require_role` | Present | Present | Observed by static read |
+| `Assistants.transaction()` SERIALIZABLE on SQL Server and BEGIN IMMEDIATE on SQLite | Present | Present | Observed by static read; real SQL races unobserved |
+| Queue adapter (`MAX_DELIVERIES` 5, `visibilitytimeout`, `release` at 0), worker, `_worker_complete` route, service-caller wiring | Absent | Present | Implemented-unverified, unmerged |
+
+The design's "established code facts" therefore mix merged code with unmerged
+candidate code. Candidate-only code is not main behavior and not acceptance.
+
+### R10 contracts (all Proposed, DRAFT)
+
+The final design supersedes the preliminary R10 Research, Plan and Details where
+they differ (for example the optional digest method and the strict `reconciled`
+field set). Each of the 14 critique findings (PC-001 to PC-014) has a stated
+proposed contract; that is design coverage, not behavioral closure.
+
+| Part | Proposed contract | Owner |
+| --- | --- | --- |
+| A | API recomputes the exact request with a shared `request_plan` before any reservation; optional final-bytes `dispatch_check_request` leaves one-argument meters unchanged | #144, #107 |
+| B | Durable `queued` provenance and a never-overwritten `permitted` marker; derived states unused, permitted, unknown, settled; marker blocks reclaim, republish and retry | #144 |
+| C | One `issue_permit` transaction, task row first, DB time re-read, explicit rollback or committed denial per branch, `closed-without-permit` ordering | #144, #118 |
+| D | Marker-bound settlement first; `conflict_key` dedupe; held null amounts counted as reserved | #107 |
+| E | Strict `reconciled` ledger kind, one `_settled` helper with report cutoff, Finance reconcile route using the unchanged role tuple, `ZF_AI_RECONCILE` default off, ledger event as the audit of record | #107, #144 |
+| F | Monotonic worker timing, 35 s nominal inside the 40 s window, lease at least 45 s and visibility equal to the lease, backoff, poison and authentication hold | #118, #144 |
+| G | Race and failure matrix | #144 |
+| H | Owner map and surface change: worker permit route and Finance reconcile route; no Bicep, role, manifest or table change | #107, #144, #118, #122 |
+
+Owner code decisions (Approved, code-role only, resolved, not reopened): the
+second exact permit route for the Application-only worker (issue 144 comment
+`6681120797`) and audited Finance-role reconciliation of unknown AI usage from
+provider evidence (comment `6685915140`). Unknown amounts stay reserved;
+budget, consent, revocation, manual-path and default-off controls are
+preserved. No invented usage, reset, bypass or automatic repeat, no live grant,
+spend, deployment, financial waiver or ADR acceptance, and no new role grant.
+
+### R10 trace (document-qualified)
+
+| Requirement or decision | Design part | Status and limit |
+| --- | --- | --- |
+| PRD FR-061 (joins BRD FR-052, AC-102, AC-103, OD-51), PRD AC-107, AC-108 | A, D, E (ledger, price, reporting) | Draft documents; economics reporting not delivered here |
+| PRD NFR-017 (joins BRD NFR-012, AC-100, AC-101, OD-51), PRD AC-109, AC-110 | A to F (finite limits, hard termination, unknown liability reserved, human approval of live budgets) | AC-109 is the closest criterion and is "Not run" in the PRD; the proposal would serve it and is not evidence of it |
+| BRD OD-51, PRD OQ-027 (budgets, owners, price) | None | Open; nothing invented |
+| ADR 0001 and ADR 0002 (Proposed) | Queue and agent estate | Only Proposed support; no approval implied |
+| ADR 0003 (accepted with owner amendment) decision 1: no new service, queue, store or network path for the journey capabilities | Queue path | Tension recorded in the fourteenth checkpoint, still unresolved; the owner code decisions are not an ADR change |
+| ADR 0006 (accepted) | `src/core`, `src/api`, `src/agents` boundary | Package boundary only |
+
+The design's own closing citation of "ADR 0002 decision 6, PRD PR-005 and
+NFR-002" is not carried forward. In the documents at these pins ADR 0002
+"decision 6" is the Dockerfile and CI item and PRD PR-005 is the whole-stock
+(about 60,000 homes) paging requirement; neither concerns dispatch or AI
+consumption. The fourteenth checkpoint already flagged the ADR 0002 item.
+
+### R10 findings, recommendation and gates
+
+Independent assessment (read of the whole design, its critique and Review, plus
+static greps; no run). It agrees with the coordinator's conclusion that no new
+blocking design flaw is established, with two additions above: the document
+trace mis-citation (documentation only, non-blocking) and the local 136 ref
+observation. No new runtime defect is established by this documentation
+checkpoint. That does not remove or disprove the original two High runtime
+findings, which stay OPEN, nor the R9 Revise history; the issue 144 acceptance
+criteria stay unproven.
+
+Residual risks, owners and classes:
+
+* Provider evidence for `unused` reconciliation is free text that code cannot
+  verify; conclusive Finance-owned evidence is Unobserved (U4, Finance, #107).
+* Real SQL Server races and deadlocks for `issue_permit` are Unobserved (U6, #144).
+* Azure delayed visibility, `DequeueCount` poison behavior and the 5 s timing
+  margin are Unobserved (U3, #118).
+* Equality of API and worker Foundry settings when hosted is Unobserved (U7, #118).
+* The marker binds only workers that use the permit route.
+* The lease, visibility and startup validation contract is Proposed and absent
+  from the candidate source.
+
+Classification: local read and git topology observations (Observed);
+candidate queue and worker code (Implemented-unverified); R10 contracts
+(Proposed); U3, U4, U6, U7 (Unobserved); production budget and real
+provider evidence (Deferred). Nothing is Azure observed or blocked for this
+slice.
+
+Recommendation: CONTINUE, a bounded tests-first runtime correction, only after the
+coordinator consumes this checkpoint, run as an independent genuine full RPI.
+HOLD worker enablement, spend, live acceptance, main integration and whole
+issue closure; FIX stays the status for 144 implementation until then.
+
+Gates before any publication of that code: FULL local gate, real SQL
+Server evidence, independent exact-head review and hosted CI. Resume
+conditions: coordinator consumption, a deliberate decision on the code parent
+(topology above), and the owners above for the Unobserved items. Independent
+lanes (79, 80, 1231, HVE work) continue. No push, pull request, issue or board
+write, tick or closure is made by this checkpoint, and no approval is implied.
+
+## Retained-evidence verification of the Sixteenth checkpoint (2026-11-06, Refs #440 #184 #185 #188)
+
+Focused, documentation-only, additive. It qualifies the Sixteenth sensor
+checkpoint, which labelled the child receipt figures as supplied. It adds no
+checkpoint number, no runtime run and no approval. Files were read by the
+author in this session; nothing was re-executed.
+
+### Pins and documents
+
+| Item | Value |
+| --- | --- |
+| Main | `bb3a3b03cb94eef6c06ae4b12d07cfe7bbdef43f` |
+| Parent `origin/feat/live-simulator-integration-184` | `9476dc9610368a9a1bd46c88314586885638580d`, tree `30167885b00d308d7b29e9a78a064f4af834ce98` (fetched this session) |
+| Reviewed child head | `6887377845648502f2a5509801ee5d9807869703`, same tree as the parent |
+| BRD 0.21.0 draft | blob `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD 0.21.0 in review | blob `c788b917bafaede215f326f0efc71e071a687f1c` |
+| Diff size, parent against main | 99 files, +1967 and -81 including tracking records; the Sixteenth's 19 files, +1169 and -81 counted source and tests only |
+
+Draft and in-review documents are not approvals.
+
+### Retained evidence read
+
+| Observation | Class |
+| --- | --- |
+| `/mnt/ama-gates/g188-r20-1106/receipt.json`: sha256 `e575146936c97ffb4e397dd78a75951a079000c18c979d3374f863e6c1c95014` equal to `receipt.sha256`; status passed, scope full, jobs 1, failure null, 17 executed groups, none skipped, fresh image cache | Local observed (file) |
+| Receipt identity: head `6887377`, tree `30167885...`, base and merge base main `bb3a3b03`. The receipt belongs to the child head, not to the parent commit `9476dc96`; the trees are equal | Local observed (file); not a gate at the parent commit |
+| 205 commands: 192 with exit 0 and 13 with exit 1 (counted from `exit_code`). The child's native handoff attributes the 13 to expected probes (six namespace, one yaml, one pptx, five SQL readiness attempts); that attribution was not re-derived here | Local observed (count); child account (cause) |
+| Hosted-only items in the receipt: GitHub approvals and checks, OIDC and Azure what-if, manual release, real AI acceptance | Not run, blocked or unknown |
+| Maintained real SQL (`0176-mssql.log`): 285 tests OK, one skip `MssqlHazardReferral.test_json_postsave_audit_failure_reports_persisted_uncertainty` ("JSON-only separate-file audit ordering") | Historical child observation, read from retained log |
+| Package suites: core 2363 tests with 226 skips, API 1941 with 338 skips; these skips are not real SQL runs | Historical child observation, read from logs |
+| Owned SQL supplement (`/mnt/ama-gates/e188-r20-1106/sql-sensor.log`): 68 tests OK; `cleanup.json` status removed-and-absent-confirmed. It is a separate run outside the receipt command list. Zero skips is the child's account; the log tail shows OK | Historical child observation |
+| Image scans (all-vulnerability reports for api, agents, orchestrator, importer): each 42 instances (40 High, 2 Critical), 17 unique vulnerability IDs, fixable 0. The older figure 39 (37 High) is history; the cause of the increase is not verified | Local observed (computed from JSON) |
+
+Zero fixable findings is not a security-clean result. Browser and accessibility
+results in the receipt directory were only partly read and are not cited.
+
+### Boundaries and trace
+
+* Document-qualified trace is unchanged from the Sixteenth: BRD FR-048, AC-090, RULE-014, OD-43; PRD FR-050, AC-066 to AC-068; ADR 0003 decision 6.
+* Device mapping remains dry-run and synthetic. Weather data is the versioned synthetic reference `synthetic-weather-continuity-v1`, whose source says it is not witnessed Azure continuity, physical accuracy, indoor evidence or calibration. Replay is a flag on consumer receipts and indoor rows use a separate reading-v2 path. These are static source readings, not runtime evidence.
+* Unproven: live Hub and authenticated Azure SQL, credential issuance, secure storage and teardown, resident consent, calibration, statistical validity, generator provenance, named human approvals, a receipt at the parent commit, main integration.
+
+### Classification, recommendation and gates
+
+* Local observed: file identities, counts and image scan figures above. Historical child observation: SQL runs and suite results. Implemented-unverified and deferred: the #1205 apply path and its unmet criteria. Blocked or unknown: the items under Unproven.
+* No new defect is established; no new issue or refactor is proposed. Open criteria stay with #184, #185 and #188. Verifying the 42 versus 39 image difference belongs to the #188 lane.
+* Recommendation: CONTINUE independent lanes (#110 and #186 analysis, #185 adapter design, scanner-difference verification). HOLD closure of #184, #185 and #188 and dependent expansion until the credential owner, consent, calibration evidence, a gate at the intended parent head, hosted CI and named approvals exist.
+* Gates: coordinator reassessment, hosted CI on the parent, human approvals. No tick, closure, push or pull request is made here.
