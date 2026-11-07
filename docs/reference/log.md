@@ -10671,3 +10671,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] correction | Scenario manifest recipe digest refreshed for the queue-sync checker (Refs #1262)
 
 * Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) to the corrected `src/api/checks/workbench_browser_check.py` bytes (`4bd825e9...a320`), because the validator compares recorded source digests with literal current bytes and hosted src-core failed with a stale hash after the #1262 checker change. Digest only: version 0.2.1, fixture case IDs, unavailable profiles and workflows, approval and evidence status, scenario semantics and the validator are unchanged, and no observed coverage is claimed. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-1262-r2-manifest-pin).
+
+## [2026-11-07] update | Issue 79 root merged main 7c6d135d (Refs #79)
+
+* One normal merge of main `7c6d135d` (hotfix 1263: workbench check, live-defaults tests, scenario manifest) into the ranking publication root; only the log overlapped, no conflict and no root source change, prior head preserved at `preserve/issue-79-pre-main7c6d`. Light own-source checks passed; no FULL gate was run and the hotfix receipts do not validate ranking. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r30).
