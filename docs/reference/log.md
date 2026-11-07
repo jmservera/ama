@@ -10647,3 +10647,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] update | Issue 79 merged main a1d26534 (Refs #79)
 
 * Merged main `a1d26534` (PR 1252, backlog-sync inactive versus conflict reporting and its 1251 RPI records) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-main1252-merge`. Publisher, runner and ranking test blobs are unchanged. Light no-service checks passed; no FULL gate was run, the three 357e842d findings stay author-corrected only, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r21).
+
+## [2026-11-07] update | Issue 79 merged main c1a16482 (Refs #79)
+
+* Merged main `c1a16482` (PR 1255, the unleased SQL release-denial test, SQL selector wiring and 107 RPI records) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-main1255-merge`. Publisher, runner and ranking test blobs are unchanged. Light no-service checks passed with one known SQL skip; no FULL gate was run, the three 357e842d findings stay author-corrected only, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r22).
