@@ -135,6 +135,17 @@ class DataOperatorAiState(unittest.TestCase):
                 all(ai.says_failure_outcome(r[ai.HAPPENED_COLUMN]) for r in failed), bad
             )
 
+    def test_failure_outcome_must_start_the_cell(self) -> None:
+        for lead in ("Quarantined.", "Fell back to rules or template."):
+            self.assertFalse(
+                ai.says_failure_outcome(f"Model result delivered. {lead} {ai.NOT_A_MODEL_RESULT}")
+            )
+        self.assertTrue(ai.says_failure_outcome(ai.QUARANTINED_TEXT))
+        self.assertTrue(ai.says_failure_outcome(ai.FALLBACK_TEXT))
+        self.assertTrue(
+            ai.says_failure_outcome(f"Fell back to rules or template. {ai.NOT_A_MODEL_RESULT}")
+        )
+
     def test_rendered_kind_cell_matches_the_label(self) -> None:
         self.assertEqual(len(self.rows), 2 + 1)  # header row plus the two synthetic rows
         for ident in (ai.QUARANTINED_ID, ai.FALLBACK_ID):

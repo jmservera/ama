@@ -35,8 +35,8 @@ def failed_ai_rows(rows: list[list[str]]) -> list[list[str]]:
 
 
 def says_failure_outcome(happened: str) -> bool:
-    """True when a What happened cell says Quarantined or Fell back and is not a model result."""
-    return any(f"{lead} {NOT_A_MODEL_RESULT}" in happened
+    """True when a What happened cell starts with Quarantined or Fell back and is not a model result."""
+    return any(happened.startswith(f"{lead} {NOT_A_MODEL_RESULT}")
                for lead in ("Quarantined.", "Fell back to rules or template."))
 
 
