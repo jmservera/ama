@@ -159,7 +159,8 @@ class ReconcileTests(unittest.TestCase):
                 self.assertIsNone(msg)
                 self.assertEqual(writes, [])
                 self.assertIn(
-                    f"#7 conflict: --inactive contradicts open PR(s) [60]; status {start} left unchanged",
+                    f"#7 conflict: --inactive contradicts open PR(s) [60]; "
+                    f"status {start} left unchanged",
                     out,
                 )
                 self.assertNotIn("->", out)
@@ -187,7 +188,11 @@ class ReconcileTests(unittest.TestCase):
 
     def test_active_with_open_pr_stays_protected(self):
         _, writes, _ = run(
-            [issue(7)], {7: "Todo"}, open_prs=[pr(60, "Refs #7")], argv=["--active", "7"], apply=True
+            [issue(7)],
+            {7: "Todo"},
+            open_prs=[pr(60, "Refs #7")],
+            argv=["--active", "7"],
+            apply=True,
         )
         self.assertEqual(edited_options(writes), {"i7": "o-prog"})
 
@@ -202,7 +207,10 @@ class ReconcileTests(unittest.TestCase):
         )
         self.assertIsNone(msg)
         self.assertEqual(edited_options(writes), {"i8": "o-todo", "i3": "o-done"})
-        self.assertIn("#9 conflict: --inactive contradicts open PR(s) [60]; status missing left unchanged", out)
+        self.assertIn(
+            "#9 conflict: --inactive contradicts open PR(s) [60]; status missing left unchanged",
+            out,
+        )
         self.assertFalse(any(w[:2] == ("project", "item-add") for w in writes))
         self.assertTrue(any(w[:2] == ("issue", "edit") for w in writes))
 
@@ -220,7 +228,11 @@ class ReconcileTests(unittest.TestCase):
 
     def test_inactive_with_merged_reference_only_is_not_a_conflict(self):
         out, writes, _ = run(
-            [issue(7)], {7: "In Progress"}, merged=[pr(70, "Refs #7")], argv=["--inactive", "7"], apply=True
+            [issue(7)],
+            {7: "In Progress"},
+            merged=[pr(70, "Refs #7")],
+            argv=["--inactive", "7"],
+            apply=True,
         )
         self.assertEqual(edited_options(writes), {"i7": "o-todo"})
         self.assertNotIn("conflict", out)
