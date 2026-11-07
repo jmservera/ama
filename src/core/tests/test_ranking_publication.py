@@ -333,6 +333,29 @@ class ConcurrentWriterTests(unittest.TestCase):
         self.assertEqual(oct(Path(ctx.exception.path).stat().st_mode & 0o777), "0o600")
         self.assertEqual(rp.verify(self.dir)["problems"], [])
 
+    def test_stage_cleanup_failure_does_not_mask_the_unconfirmed_directory_sync(self):
+        real_fsync, real_unlink = os.fsync, os.unlink
+
+        def failing_fsync(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(errno.EIO, "sync failed")
+            return real_fsync(fd)
+
+        def failing_unlink(path, *a, **k):
+            if os.path.basename(path).endswith(".tmp"):
+                raise PermissionError(errno.EACCES, "read-only")
+            return real_unlink(path, *a, **k)
+
+        with patch.object(os, "fsync", failing_fsync), patch.object(os, "unlink", failing_unlink):
+            with self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+                rp.publish(snap(), self.dir, "2026-10-10")
+        err = ctx.exception
+        self.assertEqual(err.errno, errno.EIO)
+        self.assertTrue(err.stage_retained.endswith(".tmp"))
+        self.assertNotIn("/", err.stage_retained)
+        self.assertEqual(rp.verify(self.dir)["problems"], [])
+        self.assertTrue((self.dir / err.stage_retained).exists())
+
     def test_retry_stays_unconfirmed_until_the_sync_succeeds(self):
         real = os.fsync
         failing_sync = True

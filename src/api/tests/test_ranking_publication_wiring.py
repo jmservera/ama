@@ -264,6 +264,31 @@ class PublicationWiring(QualityMatrix):
             "ranking_snapshot_already_published",
         )
 
+    def test_stage_cleanup_failure_still_audits_and_returns_unconfirmed_not_403(self):
+        import stat
+
+        real_fsync, real_unlink = os.fsync, os.unlink
+
+        def failing_fsync(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(5, "sync failed")
+            return real_fsync(fd)
+
+        def failing_unlink(path, *a, **k):
+            if os.path.basename(path).startswith(".ranking-"):
+                raise PermissionError(13, "read-only /private/archive")
+            return real_unlink(path, *a, **k)
+
+        with patch.object(os, "fsync", failing_fsync), patch.object(os, "unlink", failing_unlink):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, body.get("outcome")), (409, "committed_unconfirmed"))
+        self.assertNotIn("/", body["error"])
+        self.assertNotIn("read-only", body["error"])
+        actions = [e["action"] for e in self.store.audit_entries()]
+        self.assertEqual(actions, ["ranking_snapshot_publication_unconfirmed"])
+        names = os.listdir(self.archive())
+        self.assertEqual(sum(n.startswith("ranking-") for n in names), 1)
+
     def test_publication_becomes_overdue_the_next_day(self):
         self.call(PM_EMAIL, "/api/ranking/publish", {})
         with patch.object(controls, "today", return_value="2999-01-01"):
