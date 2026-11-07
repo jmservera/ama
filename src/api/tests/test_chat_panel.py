@@ -545,6 +545,30 @@ class PanelTests(roles.Matrix):
                 self.assertEqual((d["kind"], d["model"]), ("answer", "workflow-only"))
                 self.assertTrue(d["citations"])
 
+    def test_demo_switch_keeps_suspension_privacy_refs_and_retention_gates(self) -> None:
+        with (
+            patch("zava_forward.api.server.chat_admission", wraps=chat_admission),
+            patch.dict(os.environ, self.DEMO_ON),
+        ):
+            tid = self.thread()
+            with patch.object(self.store, "continuity_block", return_value="AI work is suspended"):
+                d = self.ask(tid)[1]
+            self.assertEqual((d["model"], d["consumption"]["model_calls"]), ("workflow-only", 0))
+            self.assertEqual(self.prompts, [])
+            status = self.api(ROLE, "/api/chat/status")[1]
+            self.assertTrue(status["retention"])
+            self.assertEqual(status["limits"]["calls_per_turn"], 1)
+            self.assertEqual(status["limits"]["retries"], 0)
+            with patch.dict(os.environ, {k: "" for k in APPROVED}):
+                status = self.api(ROLE, "/api/chat/status")[1]
+                self.assertIs(status["storage_approved"], False)
+                self.assertEqual(self.api(ROLE, "/api/chat/threads", {"case_id": "ZF-1"})[0], 403)
+                code, reply = self.api(
+                    ROLE, "/api/chat/unstored-ask", {"content": "Stage?", "case_id": "ZF-1"}
+                )
+                self.assertEqual((code, reply["model"]), (200, "workflow-only"))
+            self.assertEqual(self.prompts, [])
+
     def test_web_panel_shows_demo_disclaimer_and_model_generated_label(self) -> None:
         js = (WEB / "chat.js").read_text()
         for needle in (
