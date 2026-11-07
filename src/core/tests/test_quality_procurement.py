@@ -703,6 +703,62 @@ class Flows:
         self.assertEqual(error.result.outcome, gates.UNKNOWN)
         self.assertIn("unverified", str(error))
 
+    def persisted_without_confirmations(self, *kinds):
+        pid = self.booked_case()
+        with self.store.lock:
+            order = next(
+                w for w in self.store.data["procurement"]["work_orders"] if w["package"] == pid
+            )
+            for kind in kinds:
+                del order["appointment_offer"]["confirmations"][kind]
+            self.store.save()
+        self.store = self.reopen()
+        return order["id"]
+
+    def assert_confirmation_refusals(self, wid, missing, typed):
+        message = "Appointment is not committed: " + "; ".join(missing)
+        status = dict(status="Offer", missing=missing)
+        calls = (
+            lambda: self.store.advance(PAM, "ZF-3"),
+            lambda: self.store.record_wo_appointment(PAM, wid, "Booked", "2099-01-01"),
+            lambda: self.store.complete_work_order(PAM, wid, "SYN done"),
+        )
+        for call in calls:
+            for _ in range(2):
+                before = copy.deepcopy((self.store.cases["ZF-3"], self.store.data["procurement"]))
+                audit = list(self.store.audit_entries())
+                self.assertEqual(self.store.appointment_status(self.store._work_order(wid)), status)
+                with self.assertRaises(ValueError) as ctx:
+                    call()
+                self.assertEqual(str(ctx.exception), message)
+                if typed:
+                    self.assertIsInstance(ctx.exception, gates.CapacityGateError)
+                    self.assertIsNone(ctx.exception.state)
+                    self.assertEqual(ctx.exception.result.outcome, gates.UNKNOWN)
+                    self.assertEqual(ctx.exception.result.gate, "capacity")
+                else:
+                    self.assertNotIsInstance(ctx.exception, gates.CapacityGateError)
+                self.assertEqual(
+                    copy.deepcopy((self.store.cases["ZF-3"], self.store.data["procurement"])),
+                    before,
+                )
+                self.assertEqual(list(self.store.audit_entries()), audit)
+                self.store = self.reopen()
+                self.assertEqual(
+                    copy.deepcopy((self.store.cases["ZF-3"], self.store.data["procurement"])),
+                    before,
+                )
+
+    def test_sole_missing_capacity_confirmation_is_unknown_and_changes_nothing(self):
+        wid = self.persisted_without_confirmations("capacity")
+        self.assert_confirmation_refusals(wid, ["Capacity confirmation missing"], True)
+
+    def test_mixed_missing_confirmations_stay_ordinary_refusals(self):
+        wid = self.persisted_without_confirmations("resident", "capacity")
+        self.assert_confirmation_refusals(
+            wid, ["Resident confirmation missing", "Capacity confirmation missing"], False
+        )
+
     def procurement_snapshot(self):
         empty = {"packages": [], "work_orders": []}
         return copy.deepcopy((self.store.cases["ZF-3"], self.store.data.get("procurement") or empty))

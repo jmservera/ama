@@ -192,6 +192,8 @@ class AppointmentMixin:
                 missing.append(str(error))
                 if isinstance(error, gates.CapacityGateError) and len(missing) == 1:
                     capacity_error = error
+        elif "capacity" not in offer["confirmations"] and len(missing) == 1:
+            capacity_error = gates.CapacityGateError(missing[0], None)
         return dict(status="Offer" if missing else "Committed", missing=missing), capacity_error
 
     def require_appointment_commitment(self: Any, w: Any) -> None:
