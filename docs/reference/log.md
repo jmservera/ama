@@ -10605,3 +10605,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-06] update | Issue 79 archived publication date validation (Refs #79)
 
 * Archive verification now reports a malformed or impossible `published_on` (for example 2026-11-31) as a problem and excludes it from the latest publication date; publish refuses such a date before writing. This fixes an unhandled error in the runner schedule operation. Valid records, policy and retention are unchanged. Light checks only; FULL gate, independent review and hosted CI remain pending and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-06 issue-79 r7).
+
+## [2026-11-07] update | Issue 79 rebased onto post-891 main (Refs #79)
+
+* Rebased the local ranking publication topic onto main `0f420dc9` (after the 891 merge and its score-only commit) with no conflict; the exact prior head is preserved at `preserve/issue-79-pre-r17-align`. No source, policy, approval or retention change. Focused publication, runner, API wiring and chat panel tests, Ruff, format and mypy pass; no FULL gate was run, so earlier receipts are historical and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r17).
