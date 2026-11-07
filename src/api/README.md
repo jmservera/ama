@@ -1378,6 +1378,21 @@ this page-level view before opening a home: it asserts both sources, the
 reopen reason, the not-a-total caveat, no write controls, Tab reach of both
 table regions, reflow at 320px and the axe scan of `main`.
 
+The same check also covers the employee exception register's AI states on
+constructed synthetic records (`checks/data_operator_ai_state.py`, with the
+configured steward and operator named through `ZF_EXCEPTION_STAFF`). It asserts
+the register is not requested until the link is opened by keyboard; a
+Quarantined row stays separate from a fell-back-to-rules-or-template row; a
+workflow-only record is never listed as a failure; the service banner stays
+Unknown; the configured owner is not an appointment; recovery guidance is
+placeholder text; no audit-trail claim, controls, write or model request
+appears (browser-observed requests only); and an intercepted unavailable or
+empty reply is not shown as all clear. Tab reach and reflow at 320px are
+checked. `tests/test_data_operator_ai_state.py` renders the real script with the
+real register contract without a browser. These fixtures prove no serving model,
+employee effectiveness, accessibility acceptance, resident consent or named
+approval.
+
 ## Resident chat and synthetic callback agenda (#520, building on #469)
 
 The resident showcase has one bottom-right Chat launcher on its sign-in,
