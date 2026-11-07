@@ -12,8 +12,8 @@ Documentation only. Files: `docs/reference/resources/ai-tokenomics.md`, `docs/re
 
 * [x] Phase 1: Add dated section "Configured Demo Model, Limits and Evidence Gaps" to the existing synthesis before its Gaps table; bump `ms.date`.
 * [x] Phase 2: Update the index row and append the log entry.
-* [ ] Phase 3: Critique once; apply compatible findings.
-* [ ] Phase 4: Validate (links, diff, focused `rpi-checks.py --changed --lock-timeout 0`), commit, review once.
+* [x] Phase 3: Critique once; apply compatible findings.
+* [x] Phase 4: Validate, commit, review once. Focused gate blocked by the shared heavy lock (review R-001).
 
 Details: [phase details](../../details/2026-11-07/issue-108-demo-model-evidence-details.md).
 
