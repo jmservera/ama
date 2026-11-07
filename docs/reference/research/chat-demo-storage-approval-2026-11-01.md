@@ -123,6 +123,9 @@ not an approval of the task.
   rules only), citation and refusal behaviour, and the fallback to workflow-only on any provider failure.
 * The chat panel shows the demo disclaimer from `/api/chat/status` and labels a model answer
   "Model-generated, not approved. Demo only." Manual route: the ordinary case controls.
+  Since 2026-11-07 (#891) the disclaimer sits in its own bordered, non-shrinking note above the
+  scrollable introduction, so it stays visible at short panel heights without relying on colour.
+  The employee chat browser check covers it (reduced motion, axe WCAG 2.2 AA).
 * Deployment note: the deployed demo app sets `ZF_ENV=production` when sign-in is on, so the
   profile marker is a separate setting. The two settings are not wired in `infra/` by this change;
   the owner-authorised deploy must set them, then the live check (#891 criterion 6) can run.

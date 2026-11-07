@@ -1,0 +1,31 @@
+{
+  "task_id": "excel-transition-80-r6-denials",
+  "task_slug": "excel-transition-80-r6-denials",
+  "parent_task": {"task_id": "excel-transition-80-r5-schema-catalogue", "task_slug": "excel-transition-80-r5-schema-catalogue"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-05-excel-transition-80-r6-denials-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-05-excel-transition-80-r6-denials-plan.md",
+    "details": ".copilot-tracking/details/2026-11-05-excel-transition-80-r6-denials-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-05-excel-transition-80-r6-denials-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-05-excel-transition-80-r6-denials-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed, then Plan and details written before any test edit", "status": "recorded", "evidence": "r6 research, plan and details"},
+    {"decision": "Review executed once; author-only, not independent", "status": "recorded", "evidence": "r6 review"},
+    {"decision": "No production change; the new test passed on its first run", "status": "recorded", "evidence": "r6 changes"}
+  ],
+  "blockers": [
+    {"id": "full-gate", "summary": "FULL receipt on the new final head and fresh main pending; #96 holds the heavy lane", "resolution": null},
+    {"id": "independent-review", "summary": "Independent exact-head review and hosted CI not yet performed", "resolution": null}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator runs FULL gate, independent exact-head review and publication"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "FULL receipt and independent exact-head review", "rationale": "Required for every tier", "evidence": "r6 review"},
+    {"rank": 2, "task": "#82 quality.py integration review of the checklist slice", "rationale": "Known overlap", "evidence": "r3 and r4 records"}
+  ]
+}

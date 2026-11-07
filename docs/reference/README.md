@@ -885,7 +885,7 @@ official links for every snapshot. Check it before relying on any file below.
 | Document | Summary | Updated |
 | --- | --- | --- |
 | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | Internal hub entry points, nonprofit hero use cases, patterns mapped to each Zava Forward agent, customer evidence and lessons | 2026-09-25 |
-| [AI Tokenomics](./resources/ai-tokenomics.md) | Public Tokenomics Foundation framing (draft v0.5.2): Total Cost of AI, unit economics above a quality floor, booked value destinations and Big-T notation; mapped to rubric A5, A6, B7, C1 and C3 and to existing Zava Forward evidence; gaps, with an internal Microsoft pointer that must not be quoted. The mentor's meaning is unconfirmed | 2026-10-22 |
+| [AI Tokenomics](./resources/ai-tokenomics.md) | Public Tokenomics Foundation framing (draft v0.5.2): Total Cost of AI, unit economics above a quality floor, booked value destinations and Big-T notation; mapped to rubric A5, A6, B7, C1 and C3 and to existing Zava Forward evidence; gaps, with an internal Microsoft pointer that must not be quoted. The mentor's meaning is unconfirmed. Includes the dated configured demo-model, limits and evidence-gap record for #108 (configuration only, no serving, region or evaluation proof) | 2026-11-07 |
 
 ### Method and Memory
 

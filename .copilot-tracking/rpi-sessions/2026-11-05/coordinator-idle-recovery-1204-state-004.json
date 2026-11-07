@@ -1,0 +1,28 @@
+{
+  "task_id": "issue-1204",
+  "task_slug": "coordinator-idle-recovery-1204",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-05-coordinator-idle-recovery-1204-research-004.md",
+    "plan": ".copilot-tracking/plans/2026-11-05-coordinator-idle-recovery-1204-plan-004.md",
+    "details": ".copilot-tracking/details/2026-11-05-coordinator-idle-recovery-1204-details-004.md",
+    "critique": ".copilot-tracking/hve-builder/2026-11-05/coordinator-idle-recovery-1204-review-001.md",
+    "changes": ".copilot-tracking/changes/2026-11-05-coordinator-idle-recovery-1204-changes-004.md",
+    "review": ".copilot-tracking/reviews/2026-11-05-coordinator-idle-recovery-1204-review-004.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "narrow #1207 activity handoff wording only", "status": "executed", "evidence": "changes-004"},
+    {"decision": "no legacy --apply before accepted tool publication", "status": "in source", "evidence": "coordinator agent file"},
+    {"decision": "native HVE final intended-profile run", "status": "incomplete; GPT-5.6 Sol authorization not obtained; no substitute, no High Pass", "evidence": "review-004"},
+    {"decision": "review", "status": "executed, bounded static self-review, no open High/Medium", "evidence": "review-004"}
+  ],
+  "blockers": [
+    {"id": "hve-authorization", "summary": "GPT-5.6 Sol authorization not obtained", "resolution": "owner authorization needed before behavioral publication lane"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "coordinator runs focused receipt, independent exact-head assessment, publishes after #1207 tool acceptance"},
+  "prioritized_follow_ups": []
+}

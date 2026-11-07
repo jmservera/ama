@@ -181,6 +181,14 @@ class DataOperatorScreen(unittest.TestCase):
             self.assertNotIn(banned, block.lower())
         self.assertNotIn("me.user.role =", block)
 
+    def test_register_source_makes_only_a_get_to_the_existing_endpoint(self) -> None:
+        source = (WEB / "role-screens.js").read_text(encoding="utf-8")
+        start = source.index("async function exceptionRegisterView")
+        block = source[start : source.index("registerRoleScreen", start)]
+        self.assertIn('api("/api/exceptions", undefined, signal)', block)
+        for banned in ("POST", "method", "innerHTML", "onclick", "fetch("):
+            self.assertNotIn(banned, block)
+
 
 if __name__ == "__main__":
     unittest.main()
