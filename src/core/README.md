@@ -50,7 +50,12 @@ policy stays a draft and retention stays a separate Legal decision.
 
 Durability and races: `publish` writes a unique temp file in the archive folder,
 syncs it, links it to its final name (the first writer wins, nothing is
-overwritten) and syncs the folder. A record already at the final name is checked
+overwritten) and syncs the folder. If only the folder sync fails after the link,
+the record stays and `DurabilityUnconfirmedError` (an `OSError`) is raised: the
+Store audits `ranking_snapshot_publication_unconfirmed` and the API returns 409
+`committed_unconfirmed`; this is not a confirmed publication and is not rolled
+back, and a retry reports the existing record without confirming durability, so a
+named owner checks the archive. A record already at the final name is checked
 against the snapshot, its hash, its name and a valid publication date; a damaged
 one is refused with `PublicationError` (never reported as already published) and
 left for a named owner to review. The run key is informational: repeated

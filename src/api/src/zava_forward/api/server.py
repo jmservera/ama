@@ -1158,7 +1158,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._forms(u, url.path, body)
             try:
                 if url.path == "/api/ranking/publish":
-                    return self._json(200, s.publish_ranking_snapshot(u))
+                    from zava_forward.core.ranking_publication import DurabilityUnconfirmedError
+                    try:
+                        return self._json(200, s.publish_ranking_snapshot(u))
+                    except DurabilityUnconfirmedError:
+                        return self._json(409, {"error": "The ranking record was written but its archive folder could not be confirmed as durable. It has been audited as unconfirmed; ask a named owner to check the archive before relying on it.",
+                                                "outcome": "committed_unconfirmed"})
                 if url.path == "/api/bulk-edits/preview":
                     return self._json(200, s.bulk_edit_preview(u, body))
                 if url.path == "/api/bulk-edits/apply":

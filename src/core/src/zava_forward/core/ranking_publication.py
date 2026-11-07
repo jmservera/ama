@@ -38,6 +38,22 @@ class PublicationError(Exception):
     """A snapshot cannot be published, or an archived record does not verify."""
 
 
+class DurabilityUnconfirmedError(OSError):
+    """The record was linked to its final name but the archive folder sync failed.
+
+    The record stays; whether the name survives a crash is unknown, so this is
+    neither a confirmed publication nor a rollback.
+    """
+
+    def __init__(self, path: str, published_on: str, cause: OSError) -> None:
+        super().__init__(
+            f"{os.path.basename(path)} was written but the archive folder could not be "
+            f"synced ({type(cause).__name__}); durability is unconfirmed."
+        )
+        self.path = path
+        self.published_on = published_on
+
+
 def _valid_date(value: Any) -> bool:
     if not isinstance(value, str) or not _PUBLISHED_ON.fullmatch(value):
         return False
@@ -121,7 +137,10 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
             os.link(tmp, path)
         except FileExistsError:
             return _existing(path, snap)
-        _fsync_dir(archive_dir)
+        try:
+            _fsync_dir(archive_dir)
+        except OSError as e:
+            raise DurabilityUnconfirmedError(path, published_on, e) from e
     finally:
         os.unlink(tmp)
     return {"path": path, "written": True, "published_on": published_on}

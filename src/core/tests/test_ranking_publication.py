@@ -167,6 +167,27 @@ class PublicationTests(unittest.TestCase):
             [p.name for p in self.dir.iterdir() if not p.name.startswith("ranking-")], []
         )
 
+    def test_directory_sync_failure_after_link_keeps_the_record_and_reports_it_unconfirmed(self):
+        import os
+        import stat
+        from unittest.mock import patch
+
+        real = os.fsync
+
+        def failing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(5, "sync failed")
+            return real(fd)
+
+        with patch.object(os, "fsync", failing):
+            with self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+                rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertIsInstance(ctx.exception, OSError)
+        self.assertEqual(ctx.exception.published_on, "2026-10-10")
+        self.assertEqual([p.name for p in self.dir.iterdir()], [Path(ctx.exception.path).name])
+        self.assertEqual(oct(Path(ctx.exception.path).stat().st_mode & 0o777), "0o600")
+        self.assertEqual(rp.verify(self.dir)["problems"], [])
+
     def test_losing_a_publish_race_keeps_the_first_writer_and_reports_it(self):
         import os
         from unittest.mock import patch
