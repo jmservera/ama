@@ -212,6 +212,11 @@ class ChecklistLoading(unittest.TestCase):
         self.assertIn("if (measures.length) paint();", branch)
         self.assertIn("no measures to check yet", branch)
 
+    def test_checklist_download_is_a_plain_link_with_the_read_only_note(self) -> None:
+        source = (WEB / "ops.js").read_text(encoding="utf-8")
+        self.assertIn('href: "/api/checklists.csv", download: "checklists.csv"', source)
+        self.assertIn("The file is a read-only copy; changes in it are not imported back.", source)
+
 
 class BriefingFeedbackGuidance(unittest.TestCase):
     def test_briefing_says_how_to_correct_and_give_feedback(self) -> None:

@@ -1,0 +1,32 @@
+{
+  "task_id": "excel-transition-80-r12-test-isolation",
+  "task_slug": "excel-transition-80-r12-test-isolation",
+  "parent_task": {"task_id": "excel-transition-80-r11-harness-hygiene", "task_slug": "excel-transition-80-r11-harness-hygiene"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-06-excel-transition-80-r12-test-isolation-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-06-excel-transition-80-r12-test-isolation-plan.md",
+    "details": ".copilot-tracking/details/2026-11-06-excel-transition-80-r12-test-isolation-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-06-excel-transition-80-r12-test-isolation-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-06-excel-transition-80-r12-test-isolation-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research, plan, details written serially and committed (02ca61914) before test or README edits", "status": "done", "evidence": "git log"},
+    {"decision": "One critique executed inside the plan", "status": "done", "evidence": "plan file"},
+    {"decision": "Focused checks passed: 4 tests, ruff, format, mypy; production and harness bytes identical to 5fa44964", "status": "done", "evidence": "changes file"},
+    {"decision": "Review execution pending; this state predates it", "status": "pending", "evidence": "review path null"},
+    {"decision": "No deletion authorised", "status": "confirmed", "evidence": "user direction"}
+  ],
+  "blockers": [
+    {"id": "dirty-ignored", "summary": "Three ignored __pycache__ dirs and empty .venv still present", "resolution": "Root consumes the external r12 proof, then authorises finite removal"},
+    {"id": "full-gate", "summary": "FULL with pip-installed distributions, independent review, hosted CI pending", "resolution": "After clean final head"}
+  ],
+  "next_action": {"phase": "Review", "action": "Write the separate final r12 Review, commit, then build the external current-head preservation proof"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Root consumes r12 proof and authorises finite removal, then owned pip-installed browser rerun", "rationale": "Cleans the worktree and proves the harness fix", "evidence": "external r12 handoff"}
+  ]
+}

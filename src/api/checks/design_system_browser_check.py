@@ -224,6 +224,29 @@ def run_browser(base: str) -> None:
             browser.close()
 
 
+def scratch_parent() -> Path:
+    """Scratch parent: ZF_BROWSER_SCRATCH (absolute, outside the checkout) or the legacy .venv."""
+    wanted = os.environ.get("ZF_BROWSER_SCRATCH")
+    if not wanted:
+        parent = ROOT / ".venv"
+        parent.mkdir(exist_ok=True)
+        return parent
+    parent = Path(wanted)
+    if not parent.is_absolute() or parent.resolve().is_relative_to(ROOT):
+        raise ValueError("ZF_BROWSER_SCRATCH must be an absolute path outside the checkout")
+    parent.mkdir(parents=True, exist_ok=True)
+    return parent
+
+
+def child_env() -> dict[str, str]:
+    """Server environment inherited from the caller.
+
+    No credentials or endpoints are passed; bytecode controls are kept.
+    """
+    keys = ("PATH", "HOME", "LANG", "PYTHONDONTWRITEBYTECODE", "PYTHONPYCACHEPREFIX")
+    return {key: os.environ[key] for key in keys if key in os.environ}
+
+
 def main(
     browser_check: Callable[[str], None] = run_browser,
     data_factory: Callable[[], dict[str, Any]] = synthetic_data,
@@ -231,8 +254,7 @@ def main(
     synthetic_chat_privacy: bool = False,
     env_overrides: dict[str, str] | None = None,
 ) -> None:
-    (ROOT / ".venv").mkdir(exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="zf-browser-", dir=ROOT / ".venv") as scratch:
+    with tempfile.TemporaryDirectory(prefix="zf-browser-", dir=scratch_parent()) as scratch:
         work = Path(scratch)
         data = work / "synthetic.json"
         data.write_text(json.dumps(data_factory()), encoding="utf-8")
@@ -241,7 +263,7 @@ def main(
             port = sock.getsockname()[1]
         base = f"http://127.0.0.1:{port}"
         # Do not inherit model endpoints, credentials, private data or deployment settings.
-        env = {key: os.environ[key] for key in ("PATH", "HOME", "LANG") if key in os.environ}
+        env = child_env()
         env.update(
             PYTHONPATH=os.pathsep.join(
                 str(ROOT / "src" / project / "src") for project in ("core", "agents", "api")
