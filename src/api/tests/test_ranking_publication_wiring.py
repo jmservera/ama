@@ -5,6 +5,7 @@ status endpoint. Nothing here changes a ranking, the unsigned policy or any case
 """
 
 import copy
+import errno
 import os
 import threading
 import unittest
@@ -78,6 +79,38 @@ class PublicationWiring(QualityMatrix):
             actions, ["ranking_snapshot_already_published", "ranking_snapshot_published"]
         )
         self.assertTrue(self.store.verify_audit())
+        self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
+
+    def test_unsupported_hard_links_are_a_storage_failure_not_an_authorization_one(self):
+        for number in (errno.EPERM, errno.ENOTSUP):
+            with self.subTest(errno=errno.errorcode[number]):
+                unsupported = OSError(number, "hard links unsupported")
+                with patch.object(os, "link", side_effect=unsupported):
+                    code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+                self.assertEqual(code, 503)
+                self.assertIn("hard links", body["error"])
+                self.assertIn("could not be confirmed", body["error"])
+                self.assertNotIn(self.archive(), body["error"])
+                self.assertEqual(os.listdir(self.archive()), [])
+                self.assertEqual(list(self.store.audit_entries()), [])
+        self.assertEqual(self.call("sam", "/api/ranking/publish", {})[0], 403)
+        self.assertEqual(self.call(PM_EMAIL, "/api/ranking/publish", {})[0], 200)
+
+    def test_stage_cleanup_failure_after_commit_is_audited_and_reported(self):
+        real = os.unlink
+
+        def unlink(path, *args, **kwargs):
+            if os.path.basename(path).startswith(".ranking-"):
+                raise OSError(errno.EROFS, "read-only")
+            real(path, *args, **kwargs)
+
+        with patch.object(os, "unlink", side_effect=unlink):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, body["written"]), (200, True))
+        self.assertIn("temporary file", body["warning"])
+        self.assertNotIn(self.archive(), body["warning"])
+        actions = [e["action"] for e in self.store.audit_entries()]
+        self.assertEqual(actions, ["ranking_snapshot_published"])
         self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
 
     def test_edited_archive_is_reported_not_hidden(self):

@@ -1,0 +1,24 @@
+{
+  "task_id": "issue-1231-r12-parent-181a-alignment",
+  "task_slug": "issue-1231-r12-parent-181a-alignment",
+  "parent_task": {"task_id": "issue-1231-r10-parent-alignment", "task_slug": "issue-1231-r10-parent-alignment"},
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-06/issue-1231-r12-parent-181a-alignment-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-06/issue-1231-r12-parent-181a-alignment-plan.md",
+    "details": ".copilot-tracking/plans/2026-11-06/issue-1231-r12-parent-181a-alignment-plan.md",
+    "critique": ".copilot-tracking/plans/2026-11-06/issue-1231-r12-parent-181a-alignment-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; critique executed once, Pass with changes, findings 1 to 3 accepted, 4 partly", "status": "recorded", "evidence": "r12 critique"},
+    {"decision": "Normal local merge of 181a1c1bb only; no push, PR, retarget, FULL or heavy gate", "status": "confirmed by coordinator brief", "evidence": "assignment 2026-11-06"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "Merge 181a1c1bb, resolve three conflicts, align tests, run light checks"},
+  "prioritized_follow_ups": []
+}

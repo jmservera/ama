@@ -6,8 +6,10 @@ copies below exist only inside tests and are patched into a temporary registry.
 
 import contextlib
 import copy
+import errno
 import io
 import json
+import os
 import tempfile
 import unittest
 from collections.abc import Iterator
@@ -16,6 +18,7 @@ from typing import Any
 from unittest.mock import patch
 
 from dataset import case
+from test_ranking_publication import DEADLINE, gated
 from zava_forward.core import ranking
 from zava_forward.core import ranking_publication as rp
 from zava_forward.core import ranking_publication_runner as runner
@@ -164,6 +167,61 @@ class PublishTests(RunnerBase):
         self.assertEqual(self.codes(self.go("purge")), ["unknown_operation"])
         res = self.go("publish", cases=open_cases(), as_of=AS_OF, policy_version="9.9.9")
         self.assertEqual(self.codes(res), ["policy_unknown"])
+
+
+class ConcurrentPublishTests(RunnerBase):
+    def test_same_snapshot_on_two_dates_publishes_once_and_reports_the_retained_date(self) -> None:
+        def publish(today: str) -> dict[str, Any]:
+            return self.go("publish", today=today, cases=open_cases(), as_of=AS_OF)
+
+        with gated("A", "B") as gate:
+            gate.start("A", lambda: publish("2026-11-05"))
+            self.assertTrue(gate.arrived["A"].wait(DEADLINE))
+            gate.start("B", lambda: publish("2026-11-06"))
+            self.assertTrue(gate.arrived["B"].wait(DEADLINE))
+            gate.release("A")
+            gate.release("B")
+            gate.join()
+        a, b = gate.results["A"], gate.results["B"]
+        self.assertIsInstance(b, dict)
+        self.assertEqual(
+            (a["status"], a["written"], a["published_on"]), ("published", True, "2026-11-05")
+        )
+        self.assertEqual(
+            (b["status"], b["written"], b["published_on"]),
+            ("already_published", False, "2026-11-05"),
+        )
+        self.assertEqual(self.codes(b), [])
+        (record,) = self.archive.iterdir()
+        self.assertEqual(json.loads(record.read_text())["published_on"], "2026-11-05")
+        self.assertEqual(rp.verify(self.archive, self.signed)["problems"], [])
+
+    def test_filesystem_without_hard_links_is_a_refusal_and_writes_no_record(self) -> None:
+        with patch.object(os, "link", side_effect=OSError(errno.EPERM, "hard links unsupported")):
+            res = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual(self.codes(res), ["publish_failed"])
+        self.assertNotIn("written", res)
+        self.assertEqual(list(self.archive.iterdir()), [])
+        again = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((again["status"], again["written"]), ("published", True))
+
+    def test_stage_cleanup_failure_after_commit_is_published_with_a_warning(self) -> None:
+        real = os.unlink
+
+        def unlink(path: Any, *args: Any, **kwargs: Any) -> None:
+            if os.path.basename(path).startswith(".ranking-"):
+                raise OSError(errno.EROFS, "read-only")
+            real(path, *args, **kwargs)
+
+        with patch.object(os, "unlink", side_effect=unlink):
+            res = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((res["status"], res["written"], res["refusals"]), ("published", True, []))
+        (record,) = [p for p in self.archive.iterdir() if p.name.startswith("ranking-")]
+        self.assertEqual(res["path"], str(record))
+        self.assertEqual(json.loads(record.read_text())["published_on"], TODAY)
+        self.assertEqual([w["code"] for w in res["warnings"]], ["stage_not_removed"])
+        self.assertIn(res["stage_retained"], [p.name for p in self.archive.iterdir()])
+        self.assertEqual(self.go("verify")["problems"], [])
 
 
 class ScheduleAndVerifyTests(RunnerBase):

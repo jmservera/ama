@@ -1,9 +1,18 @@
 """Retained ranking snapshot publication (Refs #79)."""
 
+import contextlib
+import errno
 import json
+import multiprocessing
+import os
+import stat
 import tempfile
+import threading
 import unittest
+from collections.abc import Iterator
 from pathlib import Path
+from typing import Any
+from unittest.mock import patch
 
 from dataset import case
 from zava_forward.core import ranking
@@ -18,13 +27,79 @@ def snap():
     return ranking.snapshot([a, b], ranking.POLICY_V1, AS_OF)
 
 
-def _publish_in_process(archive, published_on, gate, queue):
+DEADLINE = 20
+
+
+class CommitGate:
+    """Holds registered threads just before the real publication syscall.
+
+    The wrapper only waits, then runs the real os.link (or the earlier os.replace), so every
+    filesystem result is real. Unregistered threads pass straight through.
+    """
+
+    def __init__(self, *names: str) -> None:
+        self.arrived = {n: threading.Event() for n in names}
+        self.go = {n: threading.Event() for n in names}
+        self.done = {n: threading.Event() for n in names}
+        self.results: dict[str, Any] = {}
+        self.threads: list[threading.Thread] = []
+
+    def wrap(self, real: Any) -> Any:
+        def call(src: Any, dst: Any, *args: Any, **kw: Any) -> Any:
+            name = threading.current_thread().name
+            if name not in self.arrived:
+                return real(src, dst, *args, **kw)
+            self.arrived[name].set()
+            if not self.go[name].wait(DEADLINE):
+                raise RuntimeError(f"gate deadline for {name}")
+            try:
+                return real(src, dst, *args, **kw)
+            finally:
+                self.done[name].set()
+
+        return call
+
+    def start(self, name: str, fn: Any) -> None:
+        def work() -> None:
+            try:
+                self.results[name] = fn()
+            except BaseException as e:  # recorded, then asserted on by the test
+                self.results[name] = e
+
+        thread = threading.Thread(target=work, name=name)
+        self.threads.append(thread)
+        thread.start()
+
+    def release(self, name: str) -> None:
+        self.go[name].set()
+        self.done[name].wait(DEADLINE)
+
+    def join(self) -> None:
+        for name in self.go:
+            self.go[name].set()
+        for thread in self.threads:
+            thread.join(DEADLINE)
+
+
+@contextlib.contextmanager
+def gated(*names: str) -> Iterator[CommitGate]:
+    gate = CommitGate(*names)
+    with (
+        patch.object(os, "link", gate.wrap(os.link)),
+        patch.object(os, "replace", gate.wrap(os.replace)),
+    ):
+        try:
+            yield gate
+        finally:
+            gate.join()
+
+
+def _publish_in_process(archive: str, published_on: str, barrier: Any, out: Any) -> None:
+    barrier.wait(DEADLINE)
     try:
-        gate.wait(30)
-        res = rp.publish(snap(), archive, published_on)
-        queue.put((res["written"], res["published_on"]))
-    except BaseException as e:  # noqa: BLE001 - reported to the parent test
-        queue.put(f"{type(e).__name__}: {e}")
+        out.put(rp.publish(snap(), archive, published_on))
+    except BaseException as e:  # reported to the parent, which fails the test
+        out.put(repr(e))
 
 
 class PublicationTests(unittest.TestCase):
@@ -122,8 +197,8 @@ class PublicationTests(unittest.TestCase):
         src = Path(rp.__file__).read_text()
         for word in ("datetime", "import time", "os.remove", "rmtree"):
             self.assertNotIn(word, src)
-        self.assertEqual(src.count("unlink"), 1)
-        self.assertIn("os.unlink(tmp)", src)
+        self.assertEqual(src.count("os.unlink("), 1)
+        self.assertIn("os.unlink(stage)", src)
 
     def test_unusable_record_at_final_name_is_refused_and_untouched(self):
         path = Path(rp.publish(snap(), self.dir, "2026-10-10")["path"])
@@ -149,66 +224,238 @@ class PublicationTests(unittest.TestCase):
                 self.assertEqual(path.read_text(), text)
         self.assertEqual(len(list(self.dir.iterdir())), 1)
 
-    def test_publish_syncs_file_and_directory(self):
-        import os
-        import stat
-        from unittest.mock import patch
+    def test_publish_syncs_file_then_removes_stage_then_syncs_directory(self):
+        real_sync, real_unlink, events = os.fsync, os.unlink, []
 
-        real, kinds = os.fsync, []
+        def syncing(fd):
+            events.append("sync-dir" if stat.S_ISDIR(os.fstat(fd).st_mode) else "sync-file")
+            return real_sync(fd)
 
-        def counting(fd):
-            kinds.append(stat.S_ISDIR(os.fstat(fd).st_mode))
-            return real(fd)
+        def unlinking(path, *args, **kwargs):
+            events.append("unlink-stage")
+            return real_unlink(path, *args, **kwargs)
 
-        with patch.object(os, "fsync", counting):
+        with patch.object(os, "fsync", syncing), patch.object(os, "unlink", unlinking):
             rp.publish(snap(), self.dir, "2026-10-10")
-        self.assertEqual(sorted(kinds), [False, True])
+        self.assertEqual(events, ["sync-file", "unlink-stage", "sync-dir"])
+        self.assertEqual([p.name for p in self.dir.iterdir()], [rp._name(snap())])
+
+    def test_an_already_archived_record_is_returned_only_after_the_directory_sync(self):
+        rp.publish(snap(), self.dir, "2026-10-10")
+        kinds = []
+        real_sync = os.fsync
+
+        def syncing(fd):
+            kinds.append(stat.S_ISDIR(os.fstat(fd).st_mode))
+            return real_sync(fd)
+
+        with patch.object(os, "fsync", syncing):
+            res = rp.publish(snap(), self.dir, "2026-10-11")
+        self.assertEqual((res["written"], res["published_on"]), (False, "2026-10-10"))
+        self.assertIn(True, kinds)
+
+    def test_directory_sync_failure_after_commit_is_raised_and_the_record_is_kept(self):
+        real_sync = os.fsync
+
+        def syncing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(errno.EIO, "directory sync failed")
+            return real_sync(fd)
+
+        with patch.object(os, "fsync", syncing), self.assertRaises(OSError) as ctx:
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(ctx.exception.errno, errno.EIO)
+        self.assertEqual([p.name for p in self.dir.iterdir()], [rp._name(snap())])
+        with patch.object(os, "fsync", syncing), self.assertRaises(OSError):
+            rp.publish(snap(), self.dir, "2026-10-11")
+        self.assertEqual(rp.publish(snap(), self.dir, "2026-10-12")["published_on"], "2026-10-10")
+
+
+class ConcurrentWriterTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.dir = Path(self.tmp.name) / "archive"
+
+    def record(self):
+        (path,) = [p for p in self.dir.iterdir() if p.name.endswith(".json")]
+        return path, path.read_bytes()
+
+    def test_same_snapshot_different_dates_keep_one_truthful_record(self):
+        with gated("A", "B") as gate:
+            gate.start("A", lambda: rp.publish(snap(), self.dir, "2026-10-10"))
+            self.assertTrue(gate.arrived["A"].wait(DEADLINE))
+            gate.start("B", lambda: rp.publish(snap(), self.dir, "2026-10-11"))
+            self.assertTrue(gate.arrived["B"].wait(DEADLINE))
+            gate.release("A")
+            gate.release("B")
+            gate.join()
+        a, b = gate.results["A"], gate.results["B"]
+        path, data = self.record()
+        self.assertEqual(json.loads(data)["published_on"], "2026-10-10")
+        self.assertEqual((a["written"], a["published_on"]), (True, "2026-10-10"))
+        self.assertIsInstance(b, dict)
         self.assertEqual(
-            [p.name for p in self.dir.iterdir() if not p.name.startswith("ranking-")], []
+            (b["written"], b["published_on"], b["path"]), (False, "2026-10-10", a["path"])
         )
+        self.assertEqual(sorted(p.name for p in self.dir.iterdir()), [path.name])
+        self.assertEqual(rp.verify(self.dir), dict(count=1, problems=[], latest="2026-10-10"))
 
-    def test_losing_a_publish_race_keeps_the_first_writer_and_reports_it(self):
-        import os
-        from unittest.mock import patch
+    def test_delayed_contender_leaves_a_finished_record_unchanged(self):
+        with gated("B") as gate:
+            gate.start("B", lambda: rp.publish(snap(), self.dir, "2026-10-11"))
+            self.assertTrue(gate.arrived["B"].wait(DEADLINE))
+            first = rp.publish(snap(), self.dir, "2026-10-10")
+            _, before = self.record()
+            gate.release("B")
+            gate.join()
+        late = gate.results["B"]
+        self.assertTrue(first["written"])
+        self.assertIsInstance(late, dict)
+        self.assertEqual((late["written"], late["published_on"]), (False, "2026-10-10"))
+        self.assertEqual(self.record()[1], before)
+        self.assertEqual(json.loads(before)["published_on"], "2026-10-10")
 
-        real, state = os.link, {"raced": False}
+    def test_cleanup_removes_only_the_staging_file_it_owns(self):
+        self.dir.mkdir()
+        foreign = {
+            self.dir / f"{rp._name(snap())}.tmp": b"legacy writer",
+            self.dir / ".other-writer.tmp": b"other writer",
+            self.dir / "notes.txt": b"unrelated",
+        }
+        for path, data in foreign.items():
+            path.write_bytes(data)
+        rp.publish(snap(), self.dir, "2026-10-10")
+        rp.publish(snap(), self.dir, "2026-10-11")
+        self.assertEqual({p: p.read_bytes() for p in foreign}, foreign)
+        self.assertEqual(len(list(self.dir.iterdir())), len(foreign) + 1)
 
-        def racing(src, dst, *a, **k):
-            if not state["raced"]:
-                state["raced"] = True
-                rp.publish(snap(), self.dir, "2026-10-11")
-            return real(src, dst, *a, **k)
+    def test_failed_publication_removes_its_stage_and_keeps_foreign_files(self):
+        self.dir.mkdir()
+        keep = self.dir / ".other-writer.tmp"
+        keep.write_bytes(b"other writer")
+        refused = PermissionError("link refused")
+        with (
+            patch.object(os, "link", side_effect=refused),
+            patch.object(os, "replace", side_effect=refused),
+            self.assertRaises(PermissionError),
+        ):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual([p.name for p in self.dir.iterdir()], [keep.name])
+        self.assertEqual(keep.read_bytes(), b"other writer")
 
-        with patch.object(os, "link", racing):
+    def test_filesystem_without_hard_links_refuses_and_publishes_nothing(self):
+        self.dir.mkdir()
+        foreign = {self.dir / ".other-writer.tmp": b"other", self.dir / "notes.txt": b"note"}
+        for path, data in foreign.items():
+            path.write_bytes(data)
+        unsupported = OSError(errno.EPERM, "hard links are not supported")
+        with patch.object(os, "link", side_effect=unsupported), self.assertRaises(OSError) as ctx:
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(ctx.exception.errno, errno.EPERM)
+        self.assertEqual({p: p.read_bytes() for p in self.dir.iterdir()}, foreign)
+        self.assertEqual(rp.verify(self.dir)["count"], 0)
+        self.assertTrue(rp.publish(snap(), self.dir, "2026-10-10")["written"])
+
+    def failing_unlink(self, error: OSError) -> Any:
+        real = os.unlink
+
+        def unlink(path: Any, *args: Any, **kwargs: Any) -> None:
+            if os.path.basename(path).startswith(".ranking-"):
+                raise error
+            real(path, *args, **kwargs)
+
+        return patch.object(os, "unlink", side_effect=unlink)
+
+    def test_cleanup_failure_after_commit_keeps_the_committed_outcome(self):
+        with self.failing_unlink(OSError(errno.EROFS, "read-only")):
             res = rp.publish(snap(), self.dir, "2026-10-10")
-        self.assertFalse(res["written"])
-        self.assertEqual(res["published_on"], "2026-10-11")
-        self.assertEqual(json.loads(Path(res["path"]).read_text())["published_on"], "2026-10-11")
-        self.assertEqual(len(list(self.dir.iterdir())), 1)
-        self.assertEqual(rp.verify(self.dir), dict(count=1, problems=[], latest="2026-10-11"))
+        path, data = self.record()
+        (stage,) = [p for p in self.dir.iterdir() if p.name.endswith(".tmp")]
+        self.assertEqual(
+            res,
+            dict(
+                path=str(path),
+                written=True,
+                published_on="2026-10-10",
+                stage_retained=stage.name,
+            ),
+        )
+        self.assertEqual(stage.read_bytes(), data)
+        self.assertEqual(rp.verify(self.dir), dict(count=1, problems=[], latest="2026-10-10"))
+        self.assertEqual(rp.publish(snap(), self.dir, "2026-10-11")["written"], False)
 
-    def test_concurrent_processes_publish_one_record_with_a_consistent_date(self):
-        import multiprocessing as mp
+    def test_cleanup_failure_for_the_loser_returns_the_winner_record(self):
+        with gated("B") as gate:
+            gate.start("B", lambda: rp.publish(snap(), self.dir, "2026-10-11"))
+            self.assertTrue(gate.arrived["B"].wait(DEADLINE))
+            first = rp.publish(snap(), self.dir, "2026-10-10")
+            _, before = self.record()
+            with self.failing_unlink(OSError(errno.EROFS, "read-only")):
+                gate.release("B")
+                gate.join()
+        late = gate.results["B"]
+        self.assertTrue(first["written"])
+        self.assertIsInstance(late, dict)
+        self.assertEqual((late["written"], late["published_on"]), (False, "2026-10-10"))
+        self.assertTrue(late["stage_retained"].endswith(".tmp"))
+        self.assertEqual(self.record()[1], before)
 
-        ctx = mp.get_context("fork")
-        queue = ctx.Queue()
-        gate = ctx.Barrier(4)
-        dates = ["2026-11-05", "2026-11-06", "2026-11-07", "2026-11-08"]
+    def test_cleanup_failure_does_not_mask_the_link_failure(self):
+        refused = OSError(errno.EPERM, "hard links are not supported")
+        with (
+            patch.object(os, "link", side_effect=refused),
+            self.failing_unlink(OSError(errno.EROFS, "read-only")),
+            self.assertRaises(OSError) as ctx,
+        ):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(ctx.exception.errno, errno.EPERM)
+        self.assertEqual(len(ctx.exception.__notes__), 1)
+        self.assertEqual(rp.verify(self.dir)["count"], 0)
+
+    def test_stage_already_gone_after_commit_reports_nothing_retained(self):
+        real_link, real_unlink = os.link, os.unlink
+
+        def link_then_lose_stage(src: Any, dst: Any) -> None:
+            real_link(src, dst)
+            real_unlink(src)
+
+        with patch.object(os, "link", side_effect=link_then_lose_stage):
+            res = rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual((res["written"], res["published_on"]), (True, "2026-10-10"))
+        self.assertNotIn("stage_retained", res)
+        self.assertEqual([p.name for p in self.dir.iterdir()], [Path(res["path"]).name])
+
+    def test_sequential_bytes_and_name_are_unchanged(self):
+        first = rp.publish(snap(), self.dir, "2026-10-10")
+        expected = rp._canonical({"published_on": "2026-10-10", "snapshot": snap()})
+        path, data = self.record()
+        self.assertEqual(data, expected.encode("utf-8"))
+        self.assertEqual(path.name, rp._name(snap()))
+        self.assertEqual(first["path"], str(path))
+        self.assertEqual(rp.publish(snap(), self.dir, "2026-10-12")["published_on"], "2026-10-10")
+        self.assertEqual(self.record()[1], data)
+
+    def test_separate_processes_publish_one_truthful_record(self):
+        ctx = multiprocessing.get_context("spawn")
+        dates = ["2026-10-10", "2026-10-11", "2026-10-12", "2026-10-13"]
+        barrier, out = ctx.Barrier(len(dates)), ctx.Queue()
         procs = [
-            ctx.Process(target=_publish_in_process, args=(self.dir, d, gate, queue)) for d in dates
+            ctx.Process(target=_publish_in_process, args=(str(self.dir), d, barrier, out))
+            for d in dates
         ]
-        for p in procs:
-            p.start()
-        for p in procs:
-            p.join(60)
-        results = [queue.get(timeout=10) for _ in dates]
-        self.assertEqual([p.exitcode for p in procs], [0] * 4, results)
-        self.assertTrue(all(isinstance(r, tuple) for r in results), results)
-        self.assertEqual(sum(1 for written, _ in results if written), 1)
-        retained = rp.verify(self.dir)
-        self.assertEqual((retained["count"], retained["problems"]), (1, []))
-        self.assertEqual({d for _, d in results}, {retained["latest"]})
+        for proc in procs:
+            proc.start()
+        results = [out.get(timeout=60) for _ in procs]
+        for proc in procs:
+            proc.join(60)
+            self.assertEqual(proc.exitcode, 0)
+        self.assertTrue(all(isinstance(r, dict) for r in results), results)
+        self.assertEqual(sum(r["written"] for r in results), 1)
+        _, data = self.record()
+        self.assertEqual({r["published_on"] for r in results}, {json.loads(data)["published_on"]})
         self.assertEqual(len(list(self.dir.iterdir())), 1)
+        self.assertEqual(rp.verify(self.dir)["problems"], [])
 
 
 if __name__ == "__main__":

@@ -1,5 +1,6 @@
 """Case store: loading, views, actions, gates and the hash-chained audit log."""
 import csv
+import errno
 import hashlib
 import io
 import json
@@ -262,11 +263,23 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 res = ranking_publication.publish(snap, self._ranking_archive(), controls.today())
             except ranking_publication.PublicationError as e:
                 raise ValueError(str(e)) from e
+            except OSError as e:
+                logging.getLogger(__name__).error("Ranking archive could not be written: %s", e)
+                raise ranking_publication.ArchiveStorageError(
+                    f"The ranking archive cannot be written ({type(e).__name__}, {errno.errorcode.get(e.errno or 0, 'unknown')}). "
+                    "It must be a local folder that supports hard links and is writable. Publication could not be confirmed; "
+                    "a record already archived is reported as already published on retry. "
+                    "Owner: your operator. Next action: ask them to check the archive location.") from e
             signed = ranking.is_signed(ranking.CURRENT)
             self.audit(user["email"], "ranking_snapshot_published" if res["written"] else "ranking_snapshot_already_published", "-",
                        f"policy {snap['policy_version']} ({'signed' if signed else 'unsigned'}); as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}")
-            return {"written": res["written"], "published_on": res["published_on"], "policy_version": snap["policy_version"],
+            body = {"written": res["written"], "published_on": res["published_on"], "policy_version": snap["policy_version"],
                     "policy_signed": signed, "as_of": snap["as_of"], "snapshot_hash": snap["snapshot_hash"]}
+            if res.get("stage_retained"):
+                logging.getLogger(__name__).warning("Ranking archive temporary file %s was not removed", res["stage_retained"])
+                body["warning"] = ("The record is archived, but a temporary file could not be removed. "
+                                   "Owner: your operator. Next action: ask them to check the archive permissions.")
+            return body
 
     def _queue_candidates(self, queue):
         """Index IDs, never viewer-projected context; called under the store lock."""
