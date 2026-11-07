@@ -138,7 +138,7 @@ class DataOperatorAiState(unittest.TestCase):
     def test_rendered_kind_cell_matches_the_label(self) -> None:
         self.assertEqual(len(self.rows), 2 + 1)  # header row plus the two synthetic rows
         for ident in (ai.QUARANTINED_ID, ai.FALLBACK_ID):
-            self.assertIn(f"{ident} {ai.FAILED_AI_KIND} ", self.row(ident))
+            self.assertRegex(self.row(ident), rf"^EX-\d+ {ai.FAILED_AI_KIND} ")
 
 
 if __name__ == "__main__":
