@@ -1231,6 +1231,9 @@ registerRoleScreen({
       drafts ? (drafts.length ? drafts.map(fundingDraftPanel)
         : screenPanel("Constructed field draft", h("p", { class: "empty" }, "No field draft recorded for this home. Template, fields and evidence are Unknown.")))
         : screenPanel("Constructed field draft", h("p", { class: "empty" }, "Unknown. The field review could not be read for your role.")),
+      readable && screenPanel("Form schema catalogue",
+        h("p", {}, "The catalogue covers all forms, not only this home. Each row is one recorded version of a form definition, with its reviewer, evidence, recorder and time. A version shows Unapproved when no approval is recorded."),
+        h("p", {}, h("a", { class: "btn alt", href: "/api/form-schemas.csv", download: "form-schemas.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back. It is not an approval and not a reviewed pack.")),
       screenPanel("Readiness export",
         screenFields([["Claim pack readiness", !readable ? "Unknown. The field review could not be read." : drafts && drafts.some((d) => d.reviewed_ready) ? "A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "Not ready. No reviewed export exists."],
           ["Open decision pauses", !pauses ? "Unknown. The field review could not be read." : pauses.length ? `${pauses.length} recorded` : "None recorded"],
