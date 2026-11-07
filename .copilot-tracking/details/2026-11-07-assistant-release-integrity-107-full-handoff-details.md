@@ -13,3 +13,9 @@ Plan: [plan](../plans/2026-11-07-assistant-release-integrity-107-full-handoff-pl
 ## Then
 
 Independent actual-head assessment, normal hosted CI and human approvals. Eventual PR uses Refs #107 and #104, no closing keyword.
+
+## Prospective amendment 2026-11-07
+
+* Scratch and caches: external `/mnt/ama-gates/g107-755-preparation-1107` (venv, `XDG_CACHE_HOME`, ruff and mypy caches); existing retained receipt environments untouched.
+* The user-level editable installs of zava-forward-core, agents and api point at the canonical main checkout, so imports from them would not test this worktree. The preparation therefore installs own-worktree editable packages with pip into the scratch venv and records import origins.
+* No SQL Server, browser, scanner, image, provider or Azure service is started; SQL skips are reported, not counted as FULL.
