@@ -10620,3 +10620,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] update | Issue 79 rebased onto post-891 main (Refs #79)
 
 * Rebased the local ranking publication topic onto main `0f420dc9` (after the 891 merge and its score-only commit) with no conflict; the exact prior head is preserved at `preserve/issue-79-pre-r17-align`. No source, policy, approval or retention change. Focused publication, runner, API wiring and chat panel tests, Ruff, format and mypy pass; no FULL gate was run, so earlier receipts are historical and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r17).
+
+## [2026-11-07] update | Issue 79 runner corrections after independent 357e842d assessment (Refs #79)
+
+* The publication runner now refuses a selected policy whose registry key or content hash does not match (`policy_invalid`), reports a latest archived publication dated after the run date as a problem in `verify` and `schedule` and refuses a non-exercise publish, and exits 2 for a blocked `schedule`. No approval, threshold, archive naming, helper or retention change. Light focused checks only; the earlier FULL receipts are historical, a new combined FULL, independent exact-head assessments and hosted checks remain required, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r18).
