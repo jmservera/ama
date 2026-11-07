@@ -10608,3 +10608,95 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Appended an eighth stabilization checkpoint to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128) recording the ordinary merge of remote parent `63dd5798` and fresh main `bb3a3b03` into the local parent topic (merge commit `6703b0b1`), the covered #1211, #1212, #1213 and #1221 children, document-qualified BRD, PRD and ADR identities, the final fresh-main-relative scope (39 files, bounded metric tooling, tests and documentation, not documentation only) and a FOCUSED tier recommendation pending coordinator admission.
 * Records light local observations on the parent topic only (74 coupled core tests, Ruff check and format on two files, `git diff --check`, all exit 0). Complete parent validation, independent review and hosted checks are pending; no main observation exists. No defect confirmed; no criterion ticked, no issue closed; #123 AC1 and AC2 and #440 criteria 7 and 8 stay open.
+
+## [2026-11-05] update | Finance parent held-export manifest checkpoint (Refs #440 #96)
+
+* Appended an eighth stabilization checkpoint to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-finance-parent-held-export-manifest-contract-2026-11-05-refs-440-96) for `feat/finance-integration-93` `0472fd5d` (main plus #1223 only) against main `bb3a3b03`, with document-qualified PRD FR-040/042/043 traceability and a disposition of the proposed required-history manifest key (legacy copies become Invalid and are regenerated; no in-repository consumer found).
+* Light observation: 40 form tests pass on the pinned finance source (JSON and SQLite fixtures). Documentation only; no approval, no defect, no issue change; #96 and whole #440 stay open.
+
+## [2026-11-05] update | Correct finance checkpoint ordinal, process and evidence qualification (Refs #440 #96)
+
+* Correction to the preceding finance log entry: its "eighth" label is corrected to "ninth", because the baseline eighth checkpoint is the integrated parent topic preparation. The current anchor is [ninth stabilization checkpoint](../architecture/cutover-evidence-pack.md#ninth-stabilization-checkpoint-finance-parent-held-export-manifest-contract-2026-11-05-refs-440-96); the old anchor is retained in the pack so the earlier log link keeps resolving.
+* Process qualification: the original finance checkpoint commit `d26791065` wrote its phase artifacts after the documentation edits and is not claimed compliant. A separate prospective r2 correction loop added the process qualification, removed an unsupported hosted-status claim on main, marked the #1223 hosted checks, approval and receipt `07ae` as coordinator-supplied and unverified here, and made the recommendation conditional.
+* The record is a local draft pending coordinator consumption. It does not release or resume #96, approves nothing, changes no source and leaves whole #440 and #96 C1, C5 and C6 unchanged.
+
+## [2026-11-05] update | Correct failed archive-attempt evidence statement in the ninth finance checkpoint (Refs #440 #96)
+
+* Correction to the preceding correction entry: the statement that the failed initial archive-root attempt's output "was not preserved" was wrong. The native session log `/tmp/rpi-440-finance-export-checkpoint-20261105.log` retains its wrapper error (`cd: /tmp/f440fin/src/core: No such file or directory`) and exit 1; the failure preceded any Python or test command, so no test ran and no dedicated per-test output file exists. The [ninth stabilization checkpoint](../architecture/cutover-evidence-pack.md#ninth-stabilization-checkpoint-finance-parent-held-export-manifest-contract-2026-11-05-refs-440-96) now says so; its old anchor is retained.
+* The repaired 40-test exit 0 stays historical and was not rerun. No other recommendation, source, approval or compatibility change; #96 stays paused pending coordinator acceptance.
+
+## [2026-11-05] update | Tenth stabilization checkpoint: lifecycle parent quality evidence gate (Refs #440 #82 #81)
+
+* Appended the tenth checkpoint to [the cutover evidence pack](../architecture/cutover-evidence-pack.md#tenth-stabilization-checkpoint-lifecycle-parent-quality-evidence-gate-2026-11-05-refs-440-82-81) and indexed it in the README. It records three separate pins (governance target `1faadaa3`, lifecycle source `cd271cfa` containing PR 1226, main `bb3a3b03`), document-qualified traceability (PRD FR-008 versus BRD FR-008) and a light 183-test core run on an immutable export (exit 0, 1 skip, no SQL Server).
+* Local draft pending coordinator consumption. Coordinator-supplied receipt, SQL and hosted evidence is labelled historical for source `10161`. #82, #81 and #440 stay open; the quality rule reviewer is unnamed; no approval, closure or tick. The finance ninth and baseline eighth records are unchanged.
+
+## [2026-11-05] update | Tenth checkpoint wording follow-up (Refs #440 #82)
+
+* Follow-up to the preceding tenth-checkpoint entry after its single Review (RV-001): the pack now states that `QUALITY_RULE.source` cites BRD FR-008 while PRD FR-008 governs, as an observation for #82's owner. Wording only; no source, approval or recommendation change.
+
+## [2026-11-06] update | Eleventh stabilization checkpoint: lifecycle parent capacity booking gate (Refs #440 #82 #81)
+
+* Appended the eleventh checkpoint to [the cutover evidence pack](../architecture/cutover-evidence-pack.md#eleventh-stabilization-checkpoint-lifecycle-parent-capacity-booking-gate-2026-11-06-refs-440-82-81) and indexed it in the README. It records three separate pins (governance target `a97bea15`, lifecycle source `af891a5cc` containing PR 1229, main `bb3a3b03`), document-qualified traceability (PRD FR-008, FR-016, FR-017) and a light 193-test core run on an immutable export (exit 0, 1 skip, no SQL Server).
+* Local candidate pending coordinator consumption. Candidate `272146f4e` receipt, SQL and hosted evidence is labelled coordinator-supplied and historical. #82, #81 and #440 stay open; exercise rules have no named reviewer; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Twelfth stabilization checkpoint: archive helper filesystem contract (Refs #440 #79 #1231)
+
+* Appended the twelfth checkpoint to [the cutover evidence pack](../architecture/cutover-evidence-pack.md#twelfth-stabilization-checkpoint-archive-helper-filesystem-contract-2026-11-06-refs-440-79-1231) and indexed it in the README. It records four separate pins (governance `dce6498cf`, main `bb3a3b03`, unmerged #79 candidate `397419724`, unmerged child #1231 `57b3b6a09`), document-qualified traceability and a classification of the child's retained RED and GREEN results (read, not rerun here).
+* Local candidate pending coordinator consumption. HOLD on #79 archive delivery and #73 expansion until hard-link compatibility disposition, final validation and independent assessment; no filesystem is approved; #79, #73, #1231 and #440 stay open; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Archive filesystem checkpoint correction 1 (Refs #440 #79 #1231)
+
+* Corrected one classification row in the [twelfth checkpoint](../architecture/cutover-evidence-pack.md#twelfth-stabilization-checkpoint-archive-helper-filesystem-contract-2026-11-06-refs-440-79-1231) (coordinator consumption is attribution, classified unknown), added a document-qualified traceability table (BRD NFR-006 and NFR-002, PRD PR-006, DH-002, DH-003, PR-003, ADR 0006), and qualified the original Research timing (research, plan and details were created in one parallel batch and committed before any target edit).
+* Local candidate pending coordinator consumption. The owner was unavailable on the hard-link question, so the disposition stays blocked and the HOLD on #79 archive delivery and #73 expansion is unchanged; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Thirteenth stabilization checkpoint: finance parent history export (Refs #440 #96 #93)
+
+* Appended the thirteenth checkpoint to [the cutover evidence pack](../architecture/cutover-evidence-pack.md#thirteenth-stabilization-checkpoint-finance-parent-history-export-2026-11-06-refs-440-96-93) and indexed it in the README. It records three separate pins (governance `7ed4a33f5`, finance source `4642b55fd`, main `bb3a3b03`), the history key in Held exports, Invalid regeneration without backfill, document-qualified traceability and a classification table. Child FULL, SQL and hosted evidence is source-qualified and not re-executed.
+* Local candidate pending coordinator consumption. HOLD on #93 and #96 closure and dependent expansion; #188, #80 and #1204 independent; no new defect confirmed; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Finance history checkpoint correction 1 (Refs #440 #96 #93)
+
+* Corrected the [thirteenth checkpoint](../architecture/cutover-evidence-pack.md#thirteenth-stabilization-checkpoint-finance-parent-history-export-2026-11-06-refs-440-96-93): observed disk is split from the coordinator-supplied heavy-resource admission, "paths not accessible" became "not inspected by this author" (the child receipt identity block was read: head `abeb022ba`, 205 commands), the pins heading was fixed, and the original creation order and check timing are qualified.
+* Local candidate pending coordinator consumption. Holds unchanged; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Fourteenth stabilization checkpoint: queue dispatch permit protocol (Refs #440 #144 #107 #118 #122)
+
+* Appended the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122) to the cutover evidence pack. It pins governance `119828353`, main `bb3a3b03` and the read-only candidate `4c878d664`, shows the queue slice is candidate-only, corrects the candidate's ADR 0002 anchor (ADR 0001 and 0002 are Proposed; ADR 0003 decision 1 tension recorded), and lists seven design gaps and two open decisions (second route authority, liability-unknown operator path).
+* Recommendation FIX with #144 implementation held; the owner-approved background goal stays in force. Local candidate pending coordinator consumption. No code or test ran; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Queue dispatch checkpoint correction 1 (Refs #440 #144)
+
+* Added a dated correction subsection to the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122): the r8 Plan and Details creates were parallel (identical 08:18:22.940Z start in the native events), superseding the coordinator-supplied serial order; parent 136 is a local unpublished ref at `bb3a3b03` with no remote branch.
+* Second-route authority, operator disposition and the seven design gaps stay open; FIX unchanged. Local candidate pending coordinator consumption; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Queue dispatch checkpoint correction 2 (Refs #440 #144)
+
+* Added a dated Correction 2 subsection to the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122): correction 1's Plan and Details creates overlapped (identical 08:55:24.371Z start in the native events; the common pre-edit commit `6d9a8818d` stands), its heading count was 3 pack-wide and one within the fourteenth checkpoint (not a global uniqueness pass), and the owner approved the Application-only AgentsWorker second permit route (issue 144 comment `6681120797`, 08:57:53Z), which is not a live grant, ADR acceptance or operator decision.
+* Operator disposition for liability-unknown and the seven design gaps stay open; FIX unchanged. Local candidate pending coordinator reassessment; no closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Post-integration status checkpoints (Refs #440 #144 #96 #184 #188)
+
+* Added a dated current-status subsection to the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122): the Finance-role reconciliation code approval (issue 144 comment `6685915140`, 13:26:36Z) alongside the permit-route approval, the draft R9 design (`323abba2e`) with root outcome Revise, and the Correction 2 locator clarification (4300, not 4285). Not a live grant, spend, ADR acceptance or operator clearing.
+* Added the [fifteenth](../architecture/cutover-evidence-pack.md#fifteenth-stabilization-checkpoint-finance-parent-integration-2026-11-06-refs-440-96-93) (finance parent `4642b55f`) and [sixteenth](../architecture/cutover-evidence-pack.md#sixteenth-stabilization-checkpoint-sensor-parent-integration-2026-11-06-refs-440-184-185-188-110) (sensor parent `9476dc96`) checkpoints. Historical child receipts are source-qualified and not replayed; no new defect established; CONTINUE independent lanes, HOLD closures and dependent expansion.
+* Local candidate pending coordinator reassessment; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Post-integration provenance qualification (Refs #440 #144)
+
+* Added a dated qualification to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#provenance-qualifications-2026-11-06-post-integration-correction-1): the batch "13:50Z" and "observed 13:55Z" labels were not observations then (the focused checks ran 13:49:06.882 to 13:49:07.721 per native tool boundaries), and "no runtime defect is confirmed" means no new runtime defect by this checkpoint, not that the original two High findings are removed.
+* R9 Revise, R10 pending and independent, the two resolved code decisions and FIX are unchanged. Local candidate pending coordinator reassessment; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Seventeenth checkpoint, #144 R10 dispatch design (Refs #440 #144)
+
+* Added the [seventeenth checkpoint](../architecture/cutover-evidence-pack.md#seventeenth-stabilization-checkpoint-queue-dispatch-r10-design-2026-11-06-refs-440-144-107-118-122) recording the #144 R10 design (`1e19209985d9`, blob `de776799`) as an unapproved DRAFT proposal with an independent read assessment, a merged-versus-candidate source split, document-qualified trace (PRD FR-061, NFR-017; BRD FR-052, NFR-012, OD-51; ADR 0001 to 0003, 0006) and owners 107, 144, 118 and 122.
+* Observed: a local `feat/infra-hosting-integration-136` label at main `bb3a3b03` with no remote branch or PR; the eventual code parent is unknown. The design's PR-005 and ADR 0002 decision 6 citations are not carried forward. No new runtime defect is established; the original two High findings stay open. Recommendation CONTINUE after coordinator consumption, with FULL, real SQL, independent exact-head review and hosted CI before publication; HOLD enablement, spend, live acceptance and closure.
+* Local candidate pending coordinator reassessment; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Index pin correction for the seventeenth checkpoint (Refs #440 #144)
+
+* Corrected one short commit pin in the [reference index](README.md): the seventeenth checkpoint paragraph printed `1e199209`; the R10 design commit is `1e19209985d93e053dd449e873e792f214dd110c`, so the correct short pin is `1e192099`.
+* The cutover evidence pack, this log and the tracking records already carried correct identities. No checkpoint, numbering, source, requirement, ADR or design change; all earlier records are unchanged. Local candidate pending coordinator reassessment; no approval, closure or tick.
+
+## [2026-11-06] update | Sensor retained-evidence verification (Refs #440 #184 #185 #188)
+
+* Appended a [retained-evidence verification](../architecture/cutover-evidence-pack.md#retained-evidence-verification-of-the-sixteenth-checkpoint-2026-11-06-refs-440-184-185-188) that qualifies the sixteenth checkpoint with figures read from the child r20 receipt (sha256 `e5751469...`, head `6887377`, 205 commands, 192 exit 0 and 13 exit 1), the maintained SQL log (285 tests, one declared skip), the separate 68-test supplement and the image scans (42 instances per image, 17 unique IDs, fixable 0, not security-clean).
+* No new defect, issue or runtime run. CONTINUE independent lanes; HOLD closure of #184, #185 and #188. Live, credential, consent, calibration, validity and approval items stay unproven. Earlier records are unchanged. Local candidate pending coordinator reassessment.
