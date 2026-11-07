@@ -3,16 +3,16 @@
   "task_slug": "parent-reconciliation-123",
   "parent_task": {"task_id": "123", "task_slug": "discovery-assurance-integration"},
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "blocked",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-07/parent-reconciliation-123-research.md",
     "plan": ".copilot-tracking/plans/2026-11-07/parent-reconciliation-123-plan.md",
     "details": ".copilot-tracking/details/2026-11-07/parent-reconciliation-123-details.md",
     "critique": ".copilot-tracking/plans/2026-11-07/parent-reconciliation-123-critique.md",
-    "changes": null,
-    "review": null
+    "changes": ".copilot-tracking/changes/2026-11-07/parent-reconciliation-123-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-07/parent-reconciliation-123-review.md"
   },
   "confirmed_decisions": [
     {"decision": "Research and plan precede any merge; planning committed first", "status": "done", "evidence": "planning commit precedes merge commits"},
@@ -20,7 +20,12 @@
     {"decision": "Tier FOCUSED admitted; stop on any excluded heavy group", "status": "owner-directed", "evidence": "task statement 2026-11-07"},
     {"decision": "No push, PR, main merge, rebase, reset, amend, force or cleanup", "status": "owner-directed", "evidence": "task statement 2026-11-07"}
   ],
-  "blockers": [],
-  "next_action": {"phase": "Implement", "action": "Merge pinned parent 9bacb87d then pinned main b284d0d3; light checks; changes and review"},
-  "prioritized_follow_ups": []
+  "blockers": [
+    {"id": "gate-selection", "summary": "tools/rpi-checks.py --changed selects project-* and image-api/agents/orchestrator/importer and logo-0600 for the inherited core runtime path; image builds are excluded by this admission", "resolution": "coordinator admits those groups or chooses another gate scope"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator decides gate scope; independent exact-head review of the frozen local head; no publication by this task"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Decide focused gate scope for the exact head, then run and verify the partial receipt", "rationale": "gate not run", "evidence": "review record"},
+    {"rank": 2, "task": "Independent exact-head review and hosted checks", "rationale": "required before publication", "evidence": "review record"}
+  ]
 }

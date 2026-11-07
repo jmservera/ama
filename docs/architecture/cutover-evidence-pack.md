@@ -4970,3 +4970,4 @@ Run from `src/api` in a dedicated virtual environment with editable installs of 
 * Manager-only host (a named non-manager steward cannot open it), re-audit on refresh, raw provenance strings without `translate="no"`, placeholder guidance, and unbounded rendering above 50 rows are recorded follow-ups.
 * No actual model result was observed. Fallback, quarantine and workflow-only are never successful AI.
 * #73 criteria (stabilization #440, all children closed or deferred, every requirement with a passing check or deferral), #74, #76, #79 and #80 remain open. Nothing is closed or ticked by this record.
+
