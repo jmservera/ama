@@ -302,9 +302,13 @@ task, activation or budget change was part of this delta.
   automatically and stops working at retirement
   ([working with models](https://learn.microsoft.com/en-us/azure/foundry/openai/how-to/working-with-models),
   retrieved 2026-11-07). It makes the configured version stable; it is not an
-  attestation of the version that served a call. Only the provider response
-  `model` recorded by the application on a real call, with the retained
-  serving attestation, can support that.
+  attestation of the version that served a call. The provider response
+  `model` recorded by the application on a real call can inform version
+  confirmation.
+* A response model identifier does not by itself attest the physical
+  processing region or data residency. Actual serving evidence needs
+  source-qualified provider or operational attestation and the relevant named
+  approvals; no such attestation is recorded here.
 * Quota is assigned per subscription, region, model and deployment type in
   tokens per minute, and the assigned capacity maps to the enforced token and
   request limits; the request-to-token ratio varies by model
@@ -344,13 +348,14 @@ az cognitiveservices account list-models -g ama -n aif-cutover-test-rzsrg --quer
 ### Remaining #108 gates
 
 * Model names, versions and quotas in the chosen region: configured values for
-  this one deployment are now recorded, but actual serving region and version
-  attestation, a subscription quota total and any other candidate remain
-  unconfirmed. Keep the criterion unticked until the owner decides the
-  evidence suffices.
+  this one deployment are now recorded, but actual serving version
+  confirmation, serving region or data-residency attestation, a subscription
+  quota total and any other candidate remain unconfirmed. Keep the criterion
+  unticked until the owner decides the evidence suffices.
 * Real-model evidence: no actual call is recorded here. A call needs separate
-  finite call, token, budget and expiry authority, approved payload handling
-  and serving attestation.
+  finite call, token, budget and expiry authority and approved payload
+  handling, and it can inform version confirmation only. It does not close the
+  serving region or data-residency gap.
 * Independent held-out evaluation, thresholds, qualified reviewers and
   calibrated benefit remain blocked and unchanged, and a deployment is not an
   evaluated model.
