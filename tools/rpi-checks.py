@@ -44,6 +44,7 @@ SQL_SELECTORS = (
     "test_assistants.MssqlDurabilityTests",
     "test_assistants.MssqlApiTests",
     "test_assistants.MssqlLedgerTests",
+    "test_assistant_release.MssqlUnleasedRevocation",
     "test_resident_aoai_sql.AccountingSqlTests",
 )
 RUFF_GROUPS = (

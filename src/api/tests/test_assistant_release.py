@@ -910,14 +910,30 @@ class TaskReleaseRecord(Base):
 class UnleasedRevocation:
     """A pending, never-claimed proposal is denied by release admission, not by a lease, on a reopened worker."""
 
+    def setUp(self):
+        super().setUp()
+        with self.service.transaction() as db:
+            db.execute("DELETE FROM assistant_releases WHERE id NOT LIKE 'fx-%'")
+
     def snapshot(self, svc, tid):
         with svc.transaction() as db:
             task = svc._row(db, tid)
             now = svc.now(db)
-            events = [json.loads(b) for (b,) in db.execute(
-                "SELECT body FROM assistant_events WHERE task_id=?", (tid,)).fetchall()]
-            used = db.execute("SELECT used_calls,reserved_tokens FROM assistant_allowance").fetchone()
-        return task, now, [e for e in events if e.get("kind") == "disabled"], tuple(used) if used else None
+            events = [
+                json.loads(b)
+                for (b,) in db.execute(
+                    "SELECT body FROM assistant_events WHERE task_id=?", (tid,)
+                ).fetchall()
+            ]
+            used = db.execute(
+                "SELECT used_calls,reserved_tokens FROM assistant_allowance"
+            ).fetchone()
+        return (
+            task,
+            now,
+            [e for e in events if e.get("kind") == "disabled"],
+            tuple(used) if used else None,
+        )
 
     def test_independent_worker_revocation_denial_is_durable_for_an_unleased_task(self):
         p = self.service.invoke(self.pm, CAP, "ZF-1")
@@ -948,14 +964,18 @@ class UnleasedRevocation:
         self.assertEqual(len(disabled), 1)
         self.assertEqual(final, used)
         with restarted.transaction() as db:
-            self.assertEqual([r["status"] for r in rel.releases(db, CAP)], ["revoked"])
+            self.assertEqual(
+                [r["status"] for r in rel.releases(db, CAP) if r["id"] == f"fx-{CAP}"], ["revoked"]
+            )
 
 
 class SqliteUnleasedRevocation(UnleasedRevocation, Base):
     """Local SQLite proxy; it is not actual SQL acceptance."""
 
 
-@unittest.skipUnless(os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)")
+@unittest.skipUnless(
+    os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)"
+)
 class MssqlUnleasedRevocation(MssqlFixture, UnleasedRevocation, Base):
     """Actual disposable SQL (local service only), run by the complete gate."""
 
