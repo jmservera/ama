@@ -1,0 +1,31 @@
+{
+  "task_id": "excel-transition-80-r14-docstring-lint",
+  "task_slug": "excel-transition-80-r14-docstring-lint",
+  "parent_task": {"task_id": "excel-transition-80-r13-installed-browser-run", "task_slug": "excel-transition-80-r13-installed-browser-run"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-06-excel-transition-80-r14-docstring-lint-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-06-excel-transition-80-r14-docstring-lint-plan.md",
+    "details": ".copilot-tracking/details/2026-11-06-excel-transition-80-r14-docstring-lint-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-06-excel-transition-80-r14-docstring-lint-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-06-excel-transition-80-r14-docstring-lint-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research, Plan, Details committed (c3e4db182) before the source edit", "status": "done", "evidence": "git log"},
+    {"decision": "No plan critique executed for a one-line documentation fix", "status": "done", "evidence": "plan file"},
+    {"decision": "Docstring wrapped (261e9b96); pinned Ruff 0.17.1 check and format exit 0 over three browser files", "status": "done", "evidence": "changes record"},
+    {"decision": "Author Review executed once, not independent", "status": "done", "evidence": "review path"},
+    {"decision": "FULL not started; a new admission is needed on the final frozen head", "status": "confirmed", "evidence": "user direction"}
+  ],
+  "blockers": [
+    {"id": "full-gate", "summary": "FULL, independent exact-head review, hosted CI, every-list export and owner thresholds unproven", "resolution": "New coordinator admission on the final frozen head"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator admits a new FULL on the final frozen head"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "FULL on the final frozen head with a new admission", "rationale": "Old-head r68 receipt is invalidated by new commits", "evidence": "r68 receipt retained"}
+  ]
+}

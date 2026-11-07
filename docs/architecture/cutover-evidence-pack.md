@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-11-03
+ms.date: 2026-11-07
 ms.topic: reference
 ---
 
@@ -4923,3 +4923,50 @@ results in the receipt directory were only partly read and are not cited.
 * No new defect is established; no new issue or refactor is proposed. Open criteria stay with #184, #185 and #188. Verifying the 42 versus 39 image difference belongs to the #188 lane.
 * Recommendation: CONTINUE independent lanes (#110 and #186 analysis, #185 adapter design, scanner-difference verification). HOLD closure of #184, #185 and #188 and dependent expansion until the credential owner, consent, calibration evidence, a gate at the intended parent head, hosted CI and named approvals exist.
 * Gates: coordinator reassessment, hosted CI on the parent, human approvals. No tick, closure, push or pull request is made here.
+
+## Parent #73 topic checkpoint: employee exception screen integration (2026-11-07, Refs #73 #135)
+
+Parent-topic observed and candidate evidence on `feat/workbench-integration-73-demo`. It is not merged-`main`, Azure, live, human or assistive-technology acceptance. Focused tier, one test file and this record; no server, store, auth, schema, model, infrastructure, dependency or web source change in this slice.
+
+### Source identities
+
+| Item | Value |
+| --- | --- |
+| `origin/main` (fetched) | `23b26a7f3a4693cd20dcf0447303d97491096cb3`, unchanged |
+| Parent topic after child merge | `d17aee537ec267162af106e14056440274ae589d`, tree `38ebb2da6b0499ffadcf29fd8ddfe675afdc564c` |
+| Child PR | #1257 (`feat/operator-exception-api-screen-135` into the parent topic, not `main`), squash merged 2026-11-07T17:59:43Z, original head `819022f858b3fdc4dfe20357304a5754221d5ed8`; hosted and review results are coordinator-reported, not re-observed here |
+| `role-screens.js` | blob `55f503d5952942d0fbed84deac38f9273cc06b23` |
+| BRD | 0.21.0, draft, blob `34d88395de861e9799eb9e24121a21c92c7a5adc`, unchanged |
+| PRD | 0.21.0, in-review, blob `c788b917bafaede215f326f0efc71e071a687f1c`, unchanged |
+
+Draft and in-review documents are not approved by this record.
+
+### What the integration observes in source
+
+* The existing role-screen host (`roleScreensView`) forwards the page rows and selected case to the data-operator `overview`, which asks the existing `GET /api/exceptions` only after an explicit link (`exceptions=1`). Each view is audited by the existing endpoint (`src/core/README.md`, exception register), so the default screen load makes no request.
+* The screen is installed for the existing programme manager and support officer roles only. Other roles reach neither the screen nor the endpoint.
+* Returned values render as text with both conflict values, source, date and version, eligibility Unknown and no winner. Denied, unavailable, malformed and aborted responses show no rows. Failed or quarantined AI requests are labelled as not delivering a model result; deliberate workflow-only processing is neither a failure nor a model result and is never listed.
+* Traceability: [BRD](../brds/agentic-retrofit-programme-brd.md) `BRD::FR-034` and [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) `PRD::FR-034` and `PRD::SA-003` (shared ownership, reason and explicit unknowns), within epic #73; #135 cites `PRD::FR-029` and `PRD::AC-040`. These are mapping observations, not proven acceptance.
+
+### Actual local commands and outcomes
+
+Run from `src/api` in a dedicated virtual environment with editable installs of `src/core`, `src/agents` and `src/api` (import path confirmed inside this worktree), `PYTHONPATH=../core/tests:../agents/tests:tests`.
+
+| Command | Exit and result |
+| --- | --- |
+| `python -m unittest tests.test_exception_register.Config tests.test_exception_register_screen tests.test_data_operator_screen tests.test_role_screens tests.test_role_screens_conformance` | 0; 45 tests OK, including 5 new `HostIntegration` host-level tests |
+| Three one-line mutants of `role-screens.js` (host stops forwarding rows and case; explicit-request rule removed; screen role list widened), each restored afterwards | `HostIntegration` failed each time (1 failure per mutant); source diff empty after restore |
+| `ruff check`, `ruff format --check`, `mypy` on the test file; `node --check role-screens.js` | all pass |
+
+### Not run, open gates
+
+* Selected-tier native `python3 tools/rpi-checks.py --changed` and the integrated real-browser observation (keyboard, narrow reflow, real DOM abort): not run, because another run holds the shared heavy resource; they await a new coordinator admission. The existing `Register` and `Endpoint` authority classes (SQL store and local server fixtures) were not re-run on the parent head.
+* Independent current assessment, hosted checks on the final head and human approvals.
+* The child browser story ended 74 steps with exit 0, but an intentional held-request abort printed a `CancelledError` and the original helper expectation failures are retained; page errors were 0, which is not an all-console or pristine-harness proof.
+
+### Limitations and remaining owners
+
+* #135 stays open: no failed-import, integration or stranded-task producers wired to intake, no durable controlled recovery, no named stewards or approved runbooks, and no role, human, resident, professional, assistive-technology or live acceptance. The owner is the existing #135 issue owner.
+* Manager-only host (a named non-manager steward cannot open it), re-audit on refresh, raw provenance strings without `translate="no"`, placeholder guidance, and unbounded rendering above 50 rows are recorded follow-ups.
+* No actual model result was observed. Fallback, quarantine and workflow-only are never successful AI.
+* #73 criteria (stabilization #440, all children closed or deferred, every requirement with a passing check or deferral), #74, #76, #79 and #80 remain open. Nothing is closed or ticked by this record.

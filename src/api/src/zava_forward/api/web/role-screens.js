@@ -78,7 +78,7 @@ async function roleScreensView() {
   const data = await api(`/api/cases?view=all&limit=20&offset=${page * 20}`, undefined, signal);
   const c = caseId ? await api(`/api/cases/${encodeURIComponent(caseId)}`, undefined, signal) : null;
   const extra = c && screen.load ? await screen.load(c) : null;
-  const overview = screen.overview ? await screen.overview(signal)
+  const overview = screen.overview ? await screen.overview(signal, data.items, c)
     : !c && screen.summarise && data.items.length ? await screen.summarise(data.items, signal) : null;
   signal.throwIfAborted();
   const label = (row) => `${row.id}: ${row.address || "Address unknown"}. ${row.status || row.stage || "State unknown"}`;
@@ -851,10 +851,105 @@ registerRoleScreen({
 });
 const operatorSide = (a) => a ? `${screenValue(a.value)}; source ${screenValue(a.source_id)} v${screenValue(a.version)}; dated ${screenValue(a.date)}; ${screenValue(a.validation_state)}` : "Unknown";
 const operatorStatus = (c, q) => (c.stock_reconciliation_events || []).filter((e) => e.query_id === q.id).at(-1)?.status || "Unresolved";
+const exceptionKinds = {
+  source_conflict: "Source conflict", identity_conflict: "Identity conflict", failed_import: "Failed import",
+  failed_ai_run: "Requested AI help did not deliver a model result", failed_integration: "Failed integration run",
+  stranded_task: "Stranded work"
+};
+const exceptionRecord = (value) => value !== null && typeof value === "object" && !Array.isArray(value);
+const exceptionText = (value) => typeof value === "string" || typeof value === "number" ? screenValue(value) : "Unknown";
+const exceptionBannerLabel = { unknown: "Service state Unknown", outage: "Outage recorded", no_known_outage: "No outage recorded. This is not proof of health." };
+function validExceptionRegister(data) {
+  return exceptionRecord(data) && typeof data.state === "string" && Array.isArray(data.items) && Array.isArray(data.unrouted)
+    && Array.isArray(data.sources) && exceptionRecord(data.banner) && exceptionRecord(data.access) && typeof data.note === "string";
+}
+const exceptionItem = (item) => exceptionRecord(item) && typeof item.id === "string" && typeof item.kind === "string";
+function exceptionReference(item) {
+  const source = exceptionRecord(item.original_source) ? item.original_source : {};
+  const parts = [item.ref, source.record_id, source.batch_id, source.case_id ? `case ${source.case_id}` : null, source.query_id, source.source]
+    .filter((part) => typeof part === "string" && part);
+  return parts.length ? [...new Set(parts)].join("; ") : "Unknown";
+}
+function exceptionHappened(item) {
+  const reason = typeof item.error === "string" && item.error ? ` Reason: ${item.error}` : "";
+  if (item.kind !== "failed_ai_run") return `${exceptionText(item.summary)}${reason}`;
+  const status = exceptionRecord(item.original_source) ? item.original_source.status : null;
+  if (typeof status === "string" && status.toLowerCase() === "quarantined") return `Quarantined. Requested AI help did not deliver a model result.${reason}`;
+  if (!reason) return "Requested AI help did not deliver a model result. How it failed is Unknown.";
+  return `Fell back to rules or template. Requested AI help did not deliver a model result.${reason}`;
+}
+const exceptionOwner = (item) => `${exceptionText(item.owner)} (${exceptionText(item.owner_role)}, from configuration, not an appointment)`;
+const exceptionSide = (side) => exceptionRecord(side)
+  ? `${exceptionText(side.value)}; source ${exceptionText(side.source)} v${exceptionText(side.version)}; dated ${exceptionText(side.date)}` : "Unknown";
+function exceptionUnavailable(error) {
+  const denied = error && error.status === 403;
+  return screenPanel("Exception register",
+    h("p", { role: "alert" }, denied
+      ? `Access denied. ${typeof error.message === "string" && error.message ? error.message : "Only a named data steward or digital operator can see this."} Your access has not changed.`
+      : "The exception register could not be shown, so nothing is known about open exceptions. Do not read this as all clear."),
+    screenFields([["Owner", denied ? "Programme owner names the data steward and digital operator" : "Application support"],
+      ["Next action", denied ? "Ask the programme owner whether you should be named" : "Refresh to try again, then contact application support if it continues"]]));
+}
+function exceptionRegisterPanel(data) {
+  const items = data.items.filter(exceptionItem);
+  const unreadable = data.items.length - items.length;
+  const conflicts = items.filter((item) => Array.isArray(item.values));
+  const banner = data.banner;
+  const roles = exceptionRecord(data.access.roles) ? Object.entries(data.access.roles) : [];
+  const scope = exceptionRecord(data.access.scope) ? Object.entries(data.access.scope) : [];
+  const list = (label, values) => values.length ? h("ul", {}, values.map((value) => h("li", {}, exceptionText(value))))
+    : h("p", {}, `${label}: none returned. This does not establish that nothing is missing.`);
+  return screenPanel("Exception register",
+    h("p", { role: "status" }, `${exceptionBannerLabel[banner.state] || "Service state Unknown"}. ${exceptionText(banner.text)}`),
+    h("p", {}, "Read-only list returned by the server for your signed-in access. Nothing is replayed, re-run, released, corrected or assigned here, and no AI call is made. Recovery guidance below is placeholder text, not an approved runbook."),
+    h("p", {}, exceptionText(data.note)),
+    h("p", {}, "Deliberate rules-and-template processing (workflow-only) is not a failure and is not a model result. It is never listed here, so an empty list does not show that a model succeeded or that nothing failed."),
+    screenFields([["Register state", data.state],
+      ["Your access", roles.length ? roles.map(([name, held]) => `${exceptionText(name)}: ${Array.isArray(held) ? held.map(exceptionText).join(", ") : "Unknown"}`).join("; ") : "No role named for you"],
+      ["Role scope", scope.length ? scope.map(([kind, role]) => `${exceptionKinds[kind] || exceptionText(kind)}: ${exceptionText(role)}`).join("; ") : "Unknown"]]),
+    h("h3", {}, "Sources not connected and records not routed"),
+    list("Sources", data.sources),
+    list("Unrouted", data.unrouted),
+    h("h3", {}, "Open exception items"),
+    unreadable ? h("p", { role: "status" }, `${unreadable} returned entries could not be read and are not shown. This list is not complete.`) : null,
+    items.length ? screenTable("Exception items returned for you",
+      ["Reference", "Kind", "State", "Configured owner", "What happened and reason", "Manual next step", "Source or run reference", "Eligibility"],
+      items.map((item) => [item.id, exceptionKinds[item.kind] || exceptionText(item.kind), exceptionText(item.status), exceptionOwner(item),
+        exceptionHappened(item), `Placeholder guidance, not an approved runbook: ${exceptionText(item.runbook)}`, exceptionReference(item), exceptionText(item.eligibility)]), Infinity)
+      : h("p", { class: "empty" }, "No exception items were returned. This is not an all clear: failed imports are not connected, service health is Unknown and unrouted records are listed above."),
+    h("h3", {}, "Source conflicts: both values"),
+    conflicts.length ? screenTable("Source conflicts with every returned value",
+      ["Reference", "First value, source, version, date", "Second value, source, version, date", "Further values", "Resolution owner", "Eligibility"],
+      conflicts.map((item) => [item.id, exceptionSide(item.values[0]), exceptionSide(item.values[1]),
+        item.values.length > 2 ? item.values.slice(2).map(exceptionSide).join(" | ") : "None",
+        exceptionOwner(item), `${exceptionText(item.eligibility)}. No winning source is selected.`]), Infinity)
+      : h("p", { class: "empty" }, "No source conflicts were returned. This does not establish that none exist."));
+}
+async function exceptionRegisterView(signal) {
+  let data;
+  try {
+    data = await api("/api/exceptions", undefined, signal);
+  } catch (error) {
+    signal.throwIfAborted();
+    if (error && error.status === 401) throw error;
+    return exceptionUnavailable(error);
+  }
+  signal.throwIfAborted();
+  return validExceptionRegister(data) ? exceptionRegisterPanel(data) : exceptionUnavailable(null);
+}
+const exceptionRegisterEntry = () => screenPanel("Exception register",
+  h("p", {}, "Failed or quarantined AI requests, unowned overdue work and source conflicts for named data stewards and digital operators. Opening it is a read-only request and is recorded in the audit log."),
+  h("a", { href: `${screenHref("data-operator", null)}&exceptions=1` }, "Open the exception register"));
 registerRoleScreen({
   id: "data-operator",
   title: "Data steward and operator view",
   roles: screenManagers,
+  async overview(signal, rows, c) {
+    const [register, summary] = await Promise.all([
+      screenScopeQuery().get("exceptions") === "1" ? exceptionRegisterView(signal) : exceptionRegisterEntry(),
+      !c && rows.length ? this.summarise(rows, signal) : null]);
+    return h("div", {}, register, summary);
+  },
   async summarise(rows, signal) {
     const entries = await Promise.all(rows.map((row) =>
       api(`/api/cases/${encodeURIComponent(row.id)}`, undefined, signal).then((c) => [row, c], (e) => {
@@ -1231,6 +1326,9 @@ registerRoleScreen({
       drafts ? (drafts.length ? drafts.map(fundingDraftPanel)
         : screenPanel("Constructed field draft", h("p", { class: "empty" }, "No field draft recorded for this home. Template, fields and evidence are Unknown.")))
         : screenPanel("Constructed field draft", h("p", { class: "empty" }, "Unknown. The field review could not be read for your role.")),
+      readable && screenPanel("Form schema catalogue",
+        h("p", {}, "The catalogue covers all forms, not only this home. Each row is one recorded version of a form definition, with its reviewer, evidence, recorder and time. A version shows Unapproved when no approval is recorded."),
+        h("p", {}, h("a", { class: "btn alt", href: "/api/form-schemas.csv", download: "form-schemas.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back. It is not an approval and not a reviewed pack.")),
       screenPanel("Readiness export",
         screenFields([["Claim pack readiness", !readable ? "Unknown. The field review could not be read." : drafts && drafts.some((d) => d.reviewed_ready) ? "A reviewer recorded ready on at least one draft. A person must still check and submit it outside this system." : "Not ready. No reviewed export exists."],
           ["Open decision pauses", !pauses ? "Unknown. The field review could not be read." : pauses.length ? `${pauses.length} recorded` : "None recorded"],
