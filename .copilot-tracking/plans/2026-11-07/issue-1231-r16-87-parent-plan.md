@@ -1,4 +1,8 @@
-# Issue 1231 r16 plan: align child to parent79 87c027a30
+---
+title: Issue 1231 r16 plan, align child to parent79 87c027a30
+description: Prospective plan for a local merge of parent79 87c027a30 into the child
+ms.date: 2026-11-07
+---
 
 Date: 2026-11-07. Status: prospective, not executed. Research: `.copilot-tracking/research/2026-11-07/issue-1231-r16-87-parent-research.md`. Details: `.copilot-tracking/details/2026-11-07/issue-1231-r16-87-parent-details.md`. Critique: `.copilot-tracking/challenges/2026-11-07/issue-1231-r16-87-parent-critique.md`.
 

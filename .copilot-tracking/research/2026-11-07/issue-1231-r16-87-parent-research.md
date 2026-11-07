@@ -1,4 +1,8 @@
-# Issue 1231 r16 research: local alignment to parent79 87c027a30
+---
+title: Issue 1231 r16 research, local alignment to parent79 87c027a30
+description: Prospective research for aligning the child to parent79 87c027a30
+ms.date: 2026-11-07
+---
 
 Date: 2026-11-07. Phase: Research for a FUTURE implementation. Planning only; no source, test or README edit was made in this turn. Research disposition: executed (read-only git inspection).
 

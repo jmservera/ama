@@ -1,4 +1,8 @@
-# Issue 1231 r16 plan critique (prospective, one pass)
+---
+title: Issue 1231 r16 plan critique
+description: Prospective one-pass author critique of the r16 alignment plan
+ms.date: 2026-11-07
+---
 
 Date: 2026-11-07. Target: `.copilot-tracking/plans/2026-11-07/issue-1231-r16-87-parent-plan.md` and its details. Critique execution: Complete (author-run, not independent). Written before any implementation. Verdict: Proceed with the amendments below; amendments are applied to the future implementation through the changes record, not by editing the plan.
 

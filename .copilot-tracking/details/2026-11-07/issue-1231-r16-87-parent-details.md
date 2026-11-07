@@ -1,4 +1,8 @@
-# Issue 1231 r16 phase details
+---
+title: Issue 1231 r16 phase details
+description: Prospective phase details for the r16 parent79 alignment
+ms.date: 2026-11-07
+---
 
 Date: 2026-11-07. Companion to `.copilot-tracking/plans/2026-11-07/issue-1231-r16-87-parent-plan.md`. Prospective; nothing here has been executed.
 
