@@ -20,8 +20,25 @@ QUARANTINED_REASON = "SYN late result quarantined"
 FALLBACK_REASON = "SYN model timeout"
 
 NOT_A_MODEL_RESULT = "Requested AI help did not deliver a model result."
+# Kind column label for failed_ai_run in role-screens.js; it does not depend on the outcome text.
+FAILED_AI_KIND = "Requested AI help did not deliver a model result"
+KIND_COLUMN = 1
+HAPPENED_COLUMN = 4
 QUARANTINED_TEXT = f"Quarantined. {NOT_A_MODEL_RESULT} Reason: {QUARANTINED_REASON}"
 FALLBACK_TEXT = f"Fell back to rules or template. {NOT_A_MODEL_RESULT} Reason: {FALLBACK_REASON}"
+
+
+
+def failed_ai_rows(rows: list[list[str]]) -> list[list[str]]:
+    """Rows of the Items table whose Kind cell is the failed-AI label."""
+    return [row for row in rows if len(row) > HAPPENED_COLUMN and row[KIND_COLUMN].strip() == FAILED_AI_KIND]
+
+
+def says_failure_outcome(happened: str) -> bool:
+    """True when a What happened cell says Quarantined or Fell back and is not a model result."""
+    return any(f"{lead} {NOT_A_MODEL_RESULT}" in happened
+               for lead in ("Quarantined.", "Fell back to rules or template."))
+
 
 REGISTER_EXPECTED = (
     "Read-only list returned by the server for your signed-in access.",

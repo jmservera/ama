@@ -102,6 +102,44 @@ class DataOperatorAiState(unittest.TestCase):
             self.assertNotIn(phrase, self.page, phrase)
         self.assertEqual(self.contract["banner"]["state"], "unknown")
 
+    def test_kind_label_selects_failed_rows_whatever_the_outcome_text_says(self) -> None:
+        self.assertIn(f'"{ai.FAILED_AI_KIND}"', (WEB / "role-screens.js").read_text())
+
+        def row(ident: str, kind: str, happened: str) -> list[str]:
+            return [ident, kind, "Open", "owner", happened, "step", "ref", "Unknown"]
+
+        good = [
+            row(ai.QUARANTINED_ID, ai.FAILED_AI_KIND, ai.QUARANTINED_TEXT),
+            row(ai.FALLBACK_ID, ai.FAILED_AI_KIND, ai.FALLBACK_TEXT),
+        ]
+        extra = row(
+            "SYN-EXTRA",
+            ai.FAILED_AI_KIND,
+            f"Fell back to rules or template. {ai.NOT_A_MODEL_RESULT}",
+        )
+        other = row("SYN-IMPORT", "Failed import", "Import failed.")
+        for rows in (good, [*good, extra, other]):
+            failed = ai.failed_ai_rows(rows)
+            self.assertTrue(all(ai.says_failure_outcome(r[ai.HAPPENED_COLUMN]) for r in failed))
+            self.assertEqual([r[0] for r in failed][:2], [ai.QUARANTINED_ID, ai.FALLBACK_ID])
+        self.assertEqual(len(ai.failed_ai_rows([*good, extra, other])), 3)
+        for bad in (
+            "Model result delivered.",
+            "",
+            "Quarantined.",
+            f"Delivered. {ai.NOT_A_MODEL_RESULT}",
+        ):
+            failed = ai.failed_ai_rows([*good, row("SYN-BAD", ai.FAILED_AI_KIND, bad)])
+            self.assertEqual(len(failed), 3, bad)
+            self.assertFalse(
+                all(ai.says_failure_outcome(r[ai.HAPPENED_COLUMN]) for r in failed), bad
+            )
+
+    def test_rendered_kind_cell_matches_the_label(self) -> None:
+        self.assertEqual(len(self.rows), 2 + 1)  # header row plus the two synthetic rows
+        for ident in (ai.QUARANTINED_ID, ai.FALLBACK_ID):
+            self.assertIn(f"{ident} {ai.FAILED_AI_KIND} ", self.row(ident))
+
 
 if __name__ == "__main__":
     unittest.main()
