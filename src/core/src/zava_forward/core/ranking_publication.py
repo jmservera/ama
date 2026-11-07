@@ -135,15 +135,32 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
             os.fsync(f.fileno())
         try:
             os.link(tmp, path)
+            outcome = {"path": path, "written": True, "published_on": published_on}
         except FileExistsError:
-            return _existing(path, snap)
-        try:
-            _fsync_dir(archive_dir)
-        except OSError as e:
-            raise DurabilityUnconfirmedError(path, published_on, e) from e
-    finally:
-        os.unlink(tmp)
-    return {"path": path, "written": True, "published_on": published_on}
+            outcome = _existing(path, snap)
+        else:
+            try:
+                _fsync_dir(archive_dir)
+            except OSError as e:
+                raise DurabilityUnconfirmedError(path, published_on, e) from e
+    except BaseException as e:
+        if _remove(tmp):
+            e.stage_retained = os.path.basename(tmp)  # type: ignore[attr-defined]
+        raise
+    if _remove(tmp):
+        outcome["stage_retained"] = os.path.basename(tmp)
+    return outcome
+
+
+def _remove(stage: str) -> bool:
+    """Remove this call's own stage file without raising. True when it could not be removed."""
+    try:
+        os.unlink(stage)
+    except FileNotFoundError:
+        return False
+    except OSError:
+        return True
+    return False
 
 
 def _names(archive_dir: Path) -> list[str]:

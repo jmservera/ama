@@ -10648,3 +10648,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] update | Issue 79 directory-sync audit correction (Refs #79)
 
 * A folder-sync failure after the final link now raises `DurabilityUnconfirmedError`, is audited as `ranking_snapshot_publication_unconfirmed` and returns 409 `committed_unconfirmed`; the record is kept and never reported as confirmed. Author-corrected only; focused tests passed, no FULL gate was run, and a retry still does not confirm durability. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r24).
+
+## [2026-11-07] update | Issue 79 stage-cleanup masking correction (Refs #79)
+
+* The parent `publish` no longer lets a failed removal of its own temp file hide `DurabilityUnconfirmedError` or the committed result: removal never raises and a leftover temp file name is reported as `stage_retained` (no path). Parent-standalone snapshot; the combined tip with child 1231 is a separate later propagation. Author-corrected only; light core, API and static checks passed, no FULL gate was run, and the two other Medium follow-ups stay open. The r24 entry above is unchanged. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r25).
