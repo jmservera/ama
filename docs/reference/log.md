@@ -10675,3 +10675,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] update | Issue 79 root merged main 7c6d135d (Refs #79)
 
 * One normal merge of main `7c6d135d` (hotfix 1263: workbench check, live-defaults tests, scenario manifest) into the ranking publication root; only the log overlapped, no conflict and no root source change, prior head preserved at `preserve/issue-79-pre-main7c6d`. Light own-source checks passed; no FULL gate was run and the hotfix receipts do not validate ranking. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r30).
+
+## [2026-11-07] update | Issue 79 root merged main b284d0d3 score-only (Refs #79)
+
+* One normal merge of main `b284d0d3` into the ranking publication root; only `.github/rubric/scores/latest.json` changed (generated score provenance for main `7c6d135d`, 77/100). No root source, test or log change and no approval implied. Metadata-only checks; FULL and independent review remain open. Records: `.copilot-tracking/*/2026-11-07/issue-79-r32-main-b284d0d-*`.
