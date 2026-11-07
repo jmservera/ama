@@ -79,3 +79,12 @@ Findings from source:
 ## Planning readiness
 
 Disposition `executed` (read the full report and current source). Planning Readiness: Ready. Follow-ups, if later routed, are receiver-side dedupe, a real receiver after named human decisions, and a web control.
+
+## Amendment 1 (before source edit): legacy persisted `Failed` attempts
+
+Coordinator-identified gap in finding 2, recorded here without changing the original 8e3ab67 text. Under the old classification `Failed` was written for any receiver exception and for a malformed reply, and its reason claimed "It has not been received". Such a record is ambiguous: the receiver may have accepted the envelope. No real receiver ships, so none is known to exist outside synthetic development, but unknown legacy input is not proof of non-send.
+
+* A persisted `Failed` attempt is a historical claim, not truth. It is not migrated, rewritten or reinterpreted, and its old reason text is preserved.
+* Only a new explicit marker proves a definite non-send: an attempt written by the corrected code for a `NotSent` receiver or for the snapshot guard carries `not_sent: true`. `Unconfigured` stays definite because the contract itself says nothing left the system.
+* Rule: a `Failed` attempt without `not_sent: true` is treated as unresolved, exactly like `Pending` and `Unconfirmed`, and needs the explicit `retry_unresolved` reconciliation flag.
+* "Residual risk accepted" in the critique means only an engineering limitation recorded for inactive synthetic development. It is not owner or operational risk acceptance and not professional, legal or resident approval.

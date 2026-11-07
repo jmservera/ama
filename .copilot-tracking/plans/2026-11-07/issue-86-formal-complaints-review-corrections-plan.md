@@ -54,3 +54,11 @@ FULL for publication. The change touches adapter receipt persistence, an access 
 ## Exit evidence for the later stages
 
 Red-then-green output for the new tests, strict mypy file count, Ruff and format results, import-origin lines, final head/tree, and an ignored-inclusive empty status.
+
+## Amendment 1 (before source edit): legacy `Failed` compatibility
+
+Added after the 8e3ab67 plan commit; no second critique is run for the same objective. Research Amendment 1 gives the reasoning.
+
+* Add RED-first tests: a persisted legacy `Failed` attempt (no `not_sent` marker, old reason text) is refused an ordinary retry with the reconcile message, accepted with `retry_unresolved`, and still refused after a reopened store (JSON reload; SQL variant inherited and skipped without service). A new `NotSent` or snapshot-guard failure carries `not_sent: true` and retries ordinarily.
+* Implementation: unresolved set is `Pending`, `Unconfirmed`, and `Failed` without `not_sent: true`. No migration, no rewrite, old reasons kept.
+* Validation tier stays FULL for publication; this stage runs only no-service focused checks.

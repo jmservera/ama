@@ -65,3 +65,10 @@ Update the formal-route section (~316): statuses `Unconfigured`, `Failed` (defin
 ## Focused commands for the later stage (no service)
 
 `PYTHONDONTWRITEBYTECODE=1`, scratch TMPDIR/XDG in an issue-specific `/mnt/ama-gates/` directory, installed distributions with the printed `__file__` origin proof, no `PYTHONPATH=mvp`, no `uv`, no private data: the component's own unittest discovery limited to `test_resident_decisions`, strict mypy from the component's configuration, `ruff check` and `ruff format --check` from the repository configuration. SQL-backed variants are not started; their skips are recorded per test.
+
+## Amendment 1 (before source edit): legacy `Failed` compatibility
+
+* `_res_service_forward_outcome`: for a definite non-send the outcome body carries `not_sent=True` and the handler stores `not_sent: True` on the attempt. `_send` returns it only for `NotSent`; the snapshot guard returns it too. `Unconfirmed` never carries it.
+* `_res_service_forward`: `unresolved = [a for a in attempts if a["status"] in ("Pending", "Unconfirmed") or (a["status"] == "Failed" and a.get("not_sent") is not True)]`; refusal needs `retry_unresolved is True`. Message names the receiver check. An `Acknowledged` attempt still blocks everything.
+* Reservation id stays caller-independent: `_forward` always overwrites any body value with its own uuid; the handler stores it and does not generate one, so SQL replay is stable.
+* Edit 3 README text states legacy `Failed` records are treated as unresolved and not rewritten.
