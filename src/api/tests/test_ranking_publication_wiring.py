@@ -179,6 +179,91 @@ class PublicationWiring(QualityMatrix):
         self.assertEqual(len(status["problems"]), 1)
         self.assertIn("PermissionError", status["problems"][0])
 
+    def test_directory_sync_failure_after_link_is_audited_as_unconfirmed(self):
+        import stat
+
+        real = os.fsync
+
+        def failing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(5, "sync failed in /private/archive")
+            return real(fd)
+
+        with patch.object(os, "fsync", failing):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, body.get("outcome")), (409, "committed_unconfirmed"))
+        self.assertNotIn("/", body["error"])
+        self.assertNotIn("sync failed", body["error"])
+        self.assertEqual(len(os.listdir(self.archive())), 1)
+        self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
+        entries = list(self.store.audit_entries())
+        self.assertEqual(
+            [e["action"] for e in entries], ["ranking_snapshot_publication_unconfirmed"]
+        )
+        self.assertEqual(entries[0]["who"], "pam@example.test")
+        self.assertIn("unconfirmed", entries[0]["detail"])
+        self.assertIn("unsigned", entries[0]["detail"])
+        self.assertNotIn("/private", entries[0]["detail"])
+        self.assertTrue(self.store.verify_audit())
+
+    def test_audit_failure_after_unconfirmed_directory_sync_is_logged_and_surfaced(self):
+        import stat
+
+        real = os.fsync
+
+        def failing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(5, "sync failed")
+            return real(fd)
+
+        manager = {"email": PM_EMAIL, "role": "Retrofit Programme Manager"}
+        with (
+            patch.object(os, "fsync", failing),
+            patch.object(self.store, "audit", side_effect=OSError(28, "no space")),
+            self.assertLogs("zava_forward.core.store", level="ERROR") as logs,
+            self.assertRaises(OSError),
+        ):
+            self.store.publish_ranking_snapshot(manager)
+        self.assertIn("audit", logs.output[0])
+        self.assertEqual(len(os.listdir(self.archive())), 1)
+
+    def test_unconfirmed_sync_with_retained_stage_is_409_audited_logged_and_retry_confirms(self):
+        import stat
+
+        real_sync, real_unlink = os.fsync, os.unlink
+
+        def failing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(errno.EIO, "sync failed in /private/archive")
+            return real_sync(fd)
+
+        def unlink(path, *args, **kwargs):
+            if os.path.basename(path).startswith(".ranking-"):
+                raise OSError(errno.EROFS, "read-only")
+            real_unlink(path, *args, **kwargs)
+
+        with (
+            patch.object(os, "fsync", failing),
+            patch.object(os, "unlink", side_effect=unlink),
+            self.assertLogs("zava_forward.core.store", "WARNING") as logs,
+        ):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        stage = next(n for n in os.listdir(self.archive()) if n.endswith(".tmp"))
+        self.assertEqual((code, body.get("outcome")), (409, "committed_unconfirmed"))
+        self.assertNotIn(stage, body["error"])
+        self.assertNotIn("/private", body["error"])
+        self.assertTrue(any(stage in line for line in logs.output))
+        self.assertEqual(
+            [e["action"] for e in self.store.audit_entries()],
+            ["ranking_snapshot_publication_unconfirmed"],
+        )
+        code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, body["written"]), (200, False))
+        self.assertEqual(
+            [e["action"] for e in self.store.audit_entries()][-1],
+            "ranking_snapshot_already_published",
+        )
+
     def test_publication_becomes_overdue_the_next_day(self):
         self.call(PM_EMAIL, "/api/ranking/publish", {})
         with patch.object(controls, "today", return_value="2999-01-01"):

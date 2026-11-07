@@ -10644,3 +10644,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] update | Issue 79 merged score-only main 23b26a7f (Refs #79)
 
 * Merged main `23b26a7f` (one rubric score commit, `.github/rubric/scores/latest.json` only) into the ranking publication topic with one normal merge so current main is an ancestor for the gate; no conflict or rewrite, prior head preserved at `preserve/issue-79-pre-score23-merge`. No source changed and no tests or FULL were run; the three 357e842d findings stay author-corrected only. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r23).
+
+## [2026-11-07] update | Issue 79 directory-sync audit correction (Refs #79)
+
+* A folder-sync failure after the final link now raises `DurabilityUnconfirmedError`, is audited as `ranking_snapshot_publication_unconfirmed` and returns 409 `committed_unconfirmed`; the record is kept and never reported as confirmed. Author-corrected only; focused tests passed, no FULL gate was run, and a retry still does not confirm durability. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r24).

@@ -316,6 +316,43 @@ class ConcurrentWriterTests(unittest.TestCase):
         self.assertEqual(self.record()[1], before)
         self.assertEqual(json.loads(before)["published_on"], "2026-10-10")
 
+    def test_directory_sync_failure_after_link_keeps_the_record_and_reports_it_unconfirmed(self):
+        real = os.fsync
+
+        def failing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(5, "sync failed")
+            return real(fd)
+
+        with patch.object(os, "fsync", failing):
+            with self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+                rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertIsInstance(ctx.exception, OSError)
+        self.assertEqual(ctx.exception.published_on, "2026-10-10")
+        self.assertEqual([p.name for p in self.dir.iterdir()], [Path(ctx.exception.path).name])
+        self.assertEqual(oct(Path(ctx.exception.path).stat().st_mode & 0o777), "0o600")
+        self.assertEqual(rp.verify(self.dir)["problems"], [])
+
+    def test_retry_stays_unconfirmed_until_the_sync_succeeds(self):
+        real = os.fsync
+        failing_sync = True
+
+        def syncing(fd):
+            if failing_sync and stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(errno.EIO, "sync failed")
+            return real(fd)
+
+        with patch.object(os, "fsync", syncing):
+            with self.assertRaises(rp.DurabilityUnconfirmedError):
+                rp.publish(snap(), self.dir, "2026-10-10")
+            with self.assertRaises(rp.DurabilityUnconfirmedError) as again:
+                rp.publish(snap(), self.dir, "2026-10-11")
+            self.assertEqual(again.exception.errno, errno.EIO)
+            self.assertEqual(again.exception.published_on, "2026-10-10")
+            failing_sync = False
+            res = rp.publish(snap(), self.dir, "2026-10-12")
+        self.assertEqual((res["written"], res["published_on"]), (False, "2026-10-10"))
+
     def test_cleanup_removes_only_the_staging_file_it_owns(self):
         self.dir.mkdir()
         foreign = {

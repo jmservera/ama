@@ -59,9 +59,15 @@ policy stays a draft and retention stays a separate Legal decision.
 Durability and races: `publish` writes a unique stage file in the archive folder,
 syncs it, links it to its final name (the first writer wins, nothing is
 overwritten), removes its own stage and syncs the folder, also before returning an
-already archived record. A failed folder sync is raised (the manual route answers 503
-"could not be confirmed") although the record may be committed; a retry reports it as
-already published. A record already at the final name is checked
+already archived record. If the folder sync fails after the record is committed, the
+record stays and `DurabilityUnconfirmedError` (an `OSError` that keeps the cause's
+errno) is raised: the Store audits `ranking_snapshot_publication_unconfirmed` and the
+API returns 409 `committed_unconfirmed` with fixed path-free text. This is not a
+confirmed publication and is not rolled back. A retry syncs the folder again before
+reporting the existing record as already published (`written` false, original date);
+if that sync fails too it is unconfirmed again, so a named owner checks the archive.
+Other archive failures (for example no hard-link support) stay 503. A record already
+at the final name is checked
 against the snapshot, its hash, its name and a valid publication date; a damaged
 one is refused with `PublicationError` (never reported as already published) and
 left for a named owner to review. The run key is informational: repeated

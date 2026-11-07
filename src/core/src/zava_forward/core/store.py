@@ -271,6 +271,17 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             except ranking_publication.PublicationError as e:
                 self._log_retained_stage(e)
                 raise ValueError(str(e)) from e
+            except ranking_publication.DurabilityUnconfirmedError as e:
+                self._log_retained_stage(e)
+                signed = ranking.is_signed(ranking.CURRENT)
+                try:
+                    self.audit(user["email"], "ranking_snapshot_publication_unconfirmed", "-",
+                               f"policy {snap['policy_version']} ({'signed' if signed else 'unsigned'}); as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}; "
+                               "record written, archive folder sync unconfirmed")
+                except OSError:
+                    logging.getLogger(__name__).exception("Ranking record written, directory sync unconfirmed and its audit entry failed")
+                    raise
+                raise e
             except OSError as e:
                 logging.getLogger(__name__).error("Ranking archive could not be written: %s", e)
                 retained = self._log_retained_stage(e)
