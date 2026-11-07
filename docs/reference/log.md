@@ -10664,3 +10664,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] update | Issue 79 existing-record durability confirmation and runner outcome (Refs #79)
 
 * Publishing an existing record or losing a race now syncs the archive folder before reporting it, so a retry is reported as already published only after a sync succeeds; a failed sync raises `DurabilityUnconfirmedError`. The runner reports it as `committed_unconfirmed` (exit 2) instead of a `publish_failed` refusal. Author-corrected only against the independent High and Medium findings, which stay open until re-assessed; light checks passed, no FULL gate was run and the earlier FULL 799026a3 is historical on this head. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r28).
+
+## [2026-11-07] correction | Issue 79 unconfirmed runner outcome reports the real written value (Refs #79)
+
+* The r28 `committed_unconfirmed` runner outcome hardcoded `written` false even when this call created the record; the typed error now carries `written` (true, false or unknown as null) from the publish outcome and the runner reports it. The r28 entry is preserved as history. Author-corrected only; light checks passed, no FULL gate was run and FULL 799026a3 stays historical. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r29).

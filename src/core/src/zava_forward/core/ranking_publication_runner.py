@@ -386,7 +386,7 @@ def run(
     try:
         res = ranking_publication.publish(snap, archive_dir, today)
     except ranking_publication.DurabilityUnconfirmedError as e:
-        out.update(path=e.path, written=False, published_on=e.published_on)
+        out.update(path=e.path, written=e.written, published_on=e.published_on)
         out["status"] = "committed_unconfirmed"
         out["uncertainty"] = {
             "code": "committed_unconfirmed",

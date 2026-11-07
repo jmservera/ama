@@ -184,6 +184,10 @@ class PublicationTests(unittest.TestCase):
                 rp.publish(snap(), self.dir, "2026-10-10")
         self.assertIsInstance(ctx.exception, OSError)
         self.assertEqual(ctx.exception.published_on, "2026-10-10")
+        self.assertIs(ctx.exception.written, True)
+        self.assertIs(
+            rp.DurabilityUnconfirmedError("p", "2026-10-10", OSError(5, "x")).written, None
+        )
         self.assertEqual([p.name for p in self.dir.iterdir()], [Path(ctx.exception.path).name])
         self.assertEqual(oct(Path(ctx.exception.path).stat().st_mode & 0o777), "0o600")
         self.assertEqual(rp.verify(self.dir)["problems"], [])
@@ -251,6 +255,7 @@ class PublicationTests(unittest.TestCase):
             with self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
                 rp.publish(snap(), self.dir, "2026-10-12")
         self.assertEqual(ctx.exception.published_on, "2026-10-10")
+        self.assertIs(ctx.exception.written, False)
         self.assertEqual(rp.verify(self.dir), dict(count=1, problems=[], latest="2026-10-10"))
         res = rp.publish(snap(), self.dir, "2026-10-12")
         self.assertEqual((res["written"], res["published_on"]), (False, "2026-10-10"))
@@ -276,6 +281,7 @@ class PublicationTests(unittest.TestCase):
         finally:
             state["failing"].stop()
         self.assertEqual(ctx.exception.published_on, "2026-10-11")
+        self.assertIs(ctx.exception.written, False)
         self.assertEqual(rp.verify(self.dir)["problems"], [])
 
     def test_losing_a_publish_race_keeps_the_first_writer_and_reports_it(self):

@@ -445,10 +445,28 @@ class StorageAndDuplicateFindingTests(RunnerBase):
         self.assertEqual(res["uncertainty"]["code"], "committed_unconfirmed")
         self.assertIn("rerun", res["uncertainty"]["next_action"])
         self.assertNotIn("/", res["uncertainty"]["message"])
-        self.assertEqual((res["written"], res["published_on"]), (False, TODAY))
+        self.assertEqual((res["written"], res["published_on"]), (True, TODAY))
         self.assertTrue(res["path"].endswith(".json"))
         self.assertEqual(len(list(self.archive.iterdir())), 1)
         self.assertEqual(rp.verify(self.archive, self.signed)["problems"], [])
+
+    def test_unconfirmed_retry_of_an_existing_record_is_not_reported_as_created(self) -> None:
+        import os
+        import stat
+
+        first = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        real = os.fsync
+
+        def failing(fd: int) -> None:
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(5, "sync failed")
+            real(fd)
+
+        with patch.object(os, "fsync", failing):
+            again = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual(again["status"], "committed_unconfirmed")
+        self.assertIs(again["written"], False)
+        self.assertEqual(again["path"], first["path"])
 
     def test_capacity_probe_failure_is_a_refusal_not_a_traceback(self) -> None:
         def broken(_p: Any) -> int:
