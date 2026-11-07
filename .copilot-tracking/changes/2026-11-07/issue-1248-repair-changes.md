@@ -11,6 +11,11 @@ ms.topic: reference
 * Phase 1 controlled proof: commit 82ce7f63 and [phase 1 record](issue-1248-phase1-proof-changes.md). Unchanged. Base run 407 PASS, held run 411 PASS.
 * R4 adverse evidence (`/mnt/ama-gates/g86-r4-1107/0102-browser.log`, receipt sha256 7c96fb63...) untouched.
 
+## Rebase Disclosure
+
+* The first focused gate run on pre-rebase head 6ce42c67 (tree 97c4b7ce) ran its checks but ended `BLOCKED: Reviewed base differs from current origin/main` because docs-only main commit a7f166c7 (#1247) landed. Its failed receipt is retained at `/mnt/ama-gates/g1248-final-1107/gate/receipt.json` as adverse evidence.
+* The unpublished topic was rebased onto a7f166c7 with identical content. Commit ids in this record named before the rebase (9e0c29cd, 82ce7f63) became 14c44f44 and c6f57a86; the original hashes remain in earlier reports.
+
 ## Change
 
 One file: `src/api/checks/case_journey_browser_check.py` (test-only). No application, role, dataset or transport change.
