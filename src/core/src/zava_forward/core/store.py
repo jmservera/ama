@@ -262,6 +262,16 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 res = ranking_publication.publish(snap, self._ranking_archive(), controls.today())
             except ranking_publication.PublicationError as e:
                 raise ValueError(str(e)) from e
+            except ranking_publication.DurabilityUnconfirmedError as e:
+                signed = ranking.is_signed(ranking.CURRENT)
+                try:
+                    self.audit(user["email"], "ranking_snapshot_publication_unconfirmed", "-",
+                               f"policy {snap['policy_version']} ({'signed' if signed else 'unsigned'}); as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}; "
+                               "record written, archive folder sync unconfirmed")
+                except OSError:
+                    logging.getLogger(__name__).exception("Ranking record written, directory sync unconfirmed and its audit entry failed")
+                    raise
+                raise e
             signed = ranking.is_signed(ranking.CURRENT)
             self.audit(user["email"], "ranking_snapshot_published" if res["written"] else "ranking_snapshot_already_published", "-",
                        f"policy {snap['policy_version']} ({'signed' if signed else 'unsigned'}); as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}")
