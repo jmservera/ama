@@ -128,7 +128,8 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
         return _confirmed(_existing(path, snap), archive_dir)
     text = _canonical({"published_on": published_on, "snapshot": snap})
     stage = os.path.join(archive_dir, f".{_name(snap)}.{os.urandom(8).hex()}.tmp")
-    fd = os.open(stage, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o666)
+    # Owner-only, like the earlier mkstemp stage: the linked record keeps this mode.
+    fd = os.open(stage, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     try:
         with open(fd, "w", encoding="utf-8") as f:
             f.write(text)
@@ -141,6 +142,7 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
             outcome = _existing(path, snap)
     except BaseException as e:
         if _remove(stage):
+            e.stage_retained = os.path.basename(stage)  # type: ignore[attr-defined]
             e.add_note(f"Staging file {os.path.basename(stage)} could not be removed.")
         raise
     if _remove(stage):

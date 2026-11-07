@@ -401,6 +401,34 @@ class ConcurrentWriterTests(unittest.TestCase):
         self.assertTrue(late["stage_retained"].endswith(".tmp"))
         self.assertEqual(self.record()[1], before)
 
+    def test_stage_and_record_stay_owner_only_under_any_umask(self):
+        for mask in (0o022, 0o002):
+            with self.subTest(umask=oct(mask)):
+                old = os.umask(mask)
+                try:
+                    with (
+                        tempfile.TemporaryDirectory() as d,
+                        self.failing_unlink(OSError(errno.EROFS, "ro")),
+                    ):
+                        res = rp.publish(snap(), Path(d), "2026-10-10")
+                        modes = {p.name: stat.S_IMODE(p.stat().st_mode) for p in Path(d).iterdir()}
+                finally:
+                    os.umask(old)
+                self.assertEqual(set(modes.values()), {0o600})
+                self.assertEqual(len(modes), 2)
+                self.assertIn(res["stage_retained"], modes)
+
+    def test_retained_stage_after_link_failure_is_named_on_the_exception(self):
+        with (
+            patch.object(os, "link", side_effect=OSError(errno.EPERM, "no links")),
+            self.failing_unlink(OSError(errno.EROFS, "read-only")),
+            self.assertRaises(OSError) as ctx,
+        ):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        (stage,) = [p for p in self.dir.iterdir() if p.name.endswith(".tmp")]
+        self.assertEqual(ctx.exception.stage_retained, stage.name)
+        self.assertEqual(stat.S_IMODE(stage.stat().st_mode), 0o600)
+
     def test_cleanup_failure_does_not_mask_the_link_failure(self):
         refused = OSError(errno.EPERM, "hard links are not supported")
         with (

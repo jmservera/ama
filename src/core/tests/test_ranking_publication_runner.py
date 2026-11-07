@@ -223,6 +223,29 @@ class ConcurrentPublishTests(RunnerBase):
         self.assertIn(res["stage_retained"], [p.name for p in self.archive.iterdir()])
         self.assertEqual(self.go("verify")["problems"], [])
 
+    def test_link_and_cleanup_failure_names_the_retained_stage_without_a_path(self) -> None:
+        real = os.unlink
+
+        def unlink(path: Any, *args: Any, **kwargs: Any) -> None:
+            if os.path.basename(path).startswith(".ranking-"):
+                raise OSError(errno.EROFS, "read-only")
+            real(path, *args, **kwargs)
+
+        foreign = self.archive / "operator-note.txt"
+        self.archive.mkdir(parents=True, exist_ok=True)
+        foreign.write_text("keep")
+        with (
+            patch.object(os, "link", side_effect=OSError(errno.EPERM, "no links")),
+            patch.object(os, "unlink", side_effect=unlink),
+        ):
+            res = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual(self.codes(res), ["publish_failed"])
+        (stage,) = [p.name for p in self.archive.iterdir() if p.name.endswith(".tmp")]
+        self.assertEqual(res["stage_retained"], stage)
+        self.assertIn(stage, res["refusals"][0]["message"])
+        self.assertNotIn(str(self.archive), json.dumps(res["refusals"]))
+        self.assertEqual(foreign.read_text(), "keep")
+
 
 class ScheduleAndVerifyTests(RunnerBase):
     def test_schedule_reports_window_due_and_next_window_without_writing(self) -> None:

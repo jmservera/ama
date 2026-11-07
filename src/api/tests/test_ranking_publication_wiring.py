@@ -113,6 +113,33 @@ class PublicationWiring(QualityMatrix):
         self.assertEqual(actions, ["ranking_snapshot_published"])
         self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
 
+    def test_link_and_cleanup_failure_is_logged_and_path_free(self):
+        real = os.unlink
+
+        def unlink(path, *args, **kwargs):
+            if os.path.basename(path).startswith(".ranking-"):
+                raise OSError(errno.EROFS, "read-only")
+            real(path, *args, **kwargs)
+
+        os.makedirs(self.archive(), exist_ok=True)
+        foreign = os.path.join(self.archive(), "operator-note.txt")
+        with open(foreign, "w", encoding="utf-8") as f:
+            f.write("keep")
+        with (
+            patch.object(os, "link", side_effect=OSError(errno.EPERM, "no links")),
+            patch.object(os, "unlink", side_effect=unlink),
+            self.assertLogs("zava_forward.core.store", "WARNING") as logs,
+        ):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        stage = next(n for n in os.listdir(self.archive()) if n.endswith(".tmp"))
+        self.assertEqual(code, 503)
+        self.assertIn("temporary file could not be removed", body["error"])
+        self.assertNotIn(stage, body["error"])
+        self.assertNotIn(self.archive(), body["error"])
+        self.assertTrue(any(stage in line for line in logs.output))
+        self.assertTrue(os.path.exists(foreign))
+        self.assertEqual(list(self.store.audit_entries()), [])
+
     def test_edited_archive_is_reported_not_hidden(self):
         self.call(PM_EMAIL, "/api/ranking/publish", {})
         name = os.listdir(self.archive())[0]

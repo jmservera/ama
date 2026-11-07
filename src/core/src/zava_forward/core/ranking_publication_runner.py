@@ -346,7 +346,14 @@ def run(
     try:
         res = ranking_publication.publish(snap, archive_dir, today)
     except (ranking_publication.PublicationError, OSError) as e:
-        refusals.append(_refusal("publish_failed", str(e), "Check the archive location and rerun."))
+        action = "Check the archive location and rerun."
+        message = str(e)
+        retained = getattr(e, "stage_retained", None)
+        if retained:
+            message += f" Its temporary file {retained} could not be removed and remains."
+            action = "Check the archive permissions, remove that hidden file by hand, then rerun."
+            out["stage_retained"] = retained
+        refusals.append(_refusal("publish_failed", message, action))
         return out
     out.update(path=res["path"], written=res["written"], published_on=res["published_on"])
     if res.get("stage_retained"):
