@@ -1,0 +1,31 @@
+{
+  "task_id": "assistant-release-integrity-107",
+  "task_slug": "assistant-release-integrity-107",
+  "parent_task": {"task_id": "issue-104-integration-pr1170", "task_slug": null},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-07-assistant-release-integrity-107-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-07-assistant-release-integrity-107-plan.md",
+    "details": ".copilot-tracking/details/2026-11-07-assistant-release-integrity-107-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-07-assistant-release-integrity-107-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-07-assistant-release-integrity-107-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-07-assistant-release-integrity-107-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed; Planning Readiness Ready", "status": "recorded", "evidence": "research artifact"},
+    {"decision": "Critique executed once, verdict proceed, advice to add attestation code rejected", "status": "recorded", "evidence": "critique artifact"},
+    {"decision": "Review executed once by author, outcome conformant to bounded scope, not independent", "status": "recorded", "evidence": "review artifact"},
+    {"decision": "FULL PUBLICATION NOT READY until coordinator admits the full gate", "status": "confirmed", "evidence": "owner instruction 2026-11-07"}
+  ],
+  "blockers": [
+    {"id": "human-live-gates", "summary": "Approver, serving attestation, SQL Server, Azure, independent review, hosted CI", "resolution": "External authority; see review"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator admits FULL gate; owner selects follow-up"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Run SQL Server variant of assistant classes under admitted gate", "rationale": "Closes the SQL part of C10", "evidence": "review artifact"},
+    {"rank": 2, "task": "Per-assistant usage attribution joins (C16)", "rationale": "Remaining tokenomics gap", "evidence": "issue closure audit 2026-10-31"}
+  ]
+}

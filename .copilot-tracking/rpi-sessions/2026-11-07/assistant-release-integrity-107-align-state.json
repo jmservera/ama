@@ -1,0 +1,27 @@
+{
+  "task_id": "assistant-release-integrity-107-align",
+  "task_slug": "assistant-release-integrity-107-align",
+  "parent_task": {"task_id": "assistant-release-integrity-107", "task_slug": "assistant-release-integrity-107"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-07-assistant-release-integrity-107-align-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-07-assistant-release-integrity-107-align-plan.md",
+    "details": ".copilot-tracking/details/2026-11-07-assistant-release-integrity-107-align-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-07-assistant-release-integrity-107-align-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-07-assistant-release-integrity-107-align-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-07-assistant-release-integrity-107-align-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Critique once, proceed; Review once by author, conformant, not independent", "status": "recorded", "evidence": "align critique and review"},
+    {"decision": "Format exclusion invariant recorded, no reformat", "status": "recorded", "evidence": "src/api/pyproject.toml [tool.ruff.format] exclude"},
+    {"decision": "FULL PUBLICATION NOT READY", "status": "confirmed", "evidence": "owner instruction 2026-11-07"}
+  ],
+  "blockers": [
+    {"id": "human-live-gates", "summary": "Approver, serving attestation, SQL Server, Azure, FULL receipt, independent review, hosted CI", "resolution": "External authority"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator admits FULL gate on frozen head"},
+  "prioritized_follow_ups": []
+}
