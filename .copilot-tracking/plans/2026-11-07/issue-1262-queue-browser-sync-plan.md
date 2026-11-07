@@ -9,10 +9,10 @@ Task `issue-1262-queue-browser-sync`, tier FOCUSED, test-only. Research: [resear
 
 ## Phases
 
-* [ ] Phase 1: Prospective probes (after critique). Run an unchanged-code deterministic reproduction with a controlled delayed-render page and record actual IDs, control value, status text and result state. Run the unchanged maintained browser journey once under nonqueued admission and record what it actually does.
-* [ ] Phase 2: Add `wait_queue_result` to the checker and use it in the queue loop. Add the focused regression tests to `tests/test_workbench_live_defaults.py`. Run the regression against the old synchronization (red) and the new helper (green).
-* [ ] Phase 3: Validation: unit module, ruff check and format, mypy for the touched files, the maintained browser journey (`python -m checks.design_system_browser_check` invokes the workbench check) under nonqueued admission; `rpi-checks.py --changed` if admission allows.
-* [ ] Phase 4: Changes record, original Review, state, commit on the topic.
+* [x] Phase 1: Prospective probes (after critique). Run an unchanged-code deterministic reproduction with a controlled delayed-render page and record actual IDs, control value, status text and result state. Run the unchanged maintained browser journey once under nonqueued admission and record what it actually does.
+* [x] Phase 2: Add `wait_queue_result` to the checker and use it in the queue loop. Add the focused regression tests to `tests/test_workbench_live_defaults.py`. Run the regression against the old synchronization (red) and the new helper (green).
+* [x] Phase 3: Validation (as run: unit module, ruff check and format, mypy, `python -m checks.workbench_browser_check` under nonqueued admission; focused `rpi-checks.py --changed` run after commit with an external receipt).
+* [x] Phase 4: Changes record, original Review, state, commit on the topic.
 
 ## Decisions and exclusions
 
