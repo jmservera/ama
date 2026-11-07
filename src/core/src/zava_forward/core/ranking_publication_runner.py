@@ -93,6 +93,28 @@ def _verify(archive_dir: Path, reg: Mapping[str, Any]) -> dict[str, Any]:
         }
 
 
+def _policy_problem(reg: Mapping[str, Any], policy: Mapping[str, Any]) -> str | None:
+    """Why the selected policy is untrusted, or None; the registry key must name its version."""
+    try:
+        if not any(k == policy["version"] and v is policy for k, v in reg.items()):
+            return "The registry key does not match the selected policy version."
+        if ranking.policy_hash(policy) != policy["content_hash"]:
+            return "The selected policy does not match its recorded content hash."
+    except (KeyError, TypeError, ValueError):
+        return "The selected policy is incomplete or malformed."
+    return None
+
+
+def _future(latest: str | None, today: str) -> str | None:
+    """A problem text when the newest archived publication is dated after the run day."""
+    if latest is None or latest <= today:
+        return None
+    return (
+        f"The latest archived publication date {latest} is after the run date {today}, "
+        "so the current window cannot be reported."
+    )
+
+
 def _policy_view(
     policy: Mapping[str, Any] | None, problems: Sequence[str]
 ) -> dict[str, Any] | None:
@@ -172,7 +194,11 @@ def run(
     if operation == "verify":
         res = _verify(archive_dir, reg)
         unreadable = bool(res.pop("unreadable", False))
-        overdue = None if unreadable else bool(res["latest"] is None or res["latest"] < today)
+        future = _future(res["latest"], today)
+        if future:
+            res["problems"] = [*res["problems"], future]
+        stale = unreadable or future
+        overdue = None if stale else bool(res["latest"] is None or res["latest"] < today)
         out.update(res, overdue=overdue)
         out["status"] = "ok" if not res["problems"] and not overdue else "problem"
         return out
@@ -184,6 +210,14 @@ def run(
                 "policy_unknown",
                 "The ranking policy version is not in the verified registry.",
                 f"Choose one of: {', '.join(sorted(reg))}.",
+            )
+        )
+    elif bad := _policy_problem(reg, policy):
+        refusals.append(
+            _refusal(
+                "policy_invalid",
+                bad,
+                "Restore the policy registry from its reviewed file; nothing is published.",
             )
         )
     else:
@@ -202,9 +236,13 @@ def run(
     unreadable = bool(check.get("unreadable"))
     latest = check["latest"]
     problems = list(check["problems"])
-    due: bool | None = None if unreadable else bool(latest is None or latest < today)
-    next_start: str | None = None if unreadable else today
-    if not unreadable and not due:
+    future = _future(latest, today)
+    if future:
+        problems.append(future)
+    unknown = unreadable or bool(future)
+    due: bool | None = None if unknown else bool(latest is None or latest < today)
+    next_start: str | None = None if unknown else today
+    if not unknown and not due:
         last = datetime.date.fromisoformat(latest)
         if last == datetime.date.max:
             next_start = None
@@ -232,7 +270,9 @@ def run(
             refusals.append(
                 _refusal(
                     "archive_unverified",
-                    f"{len(problems)} archived record(s) do not verify.",
+                    future
+                    if future and problems == [future]
+                    else f"{len(problems)} archived record(s) do not verify.",
                     "Run verify, repair the archive by hand, then rerun. Nothing is overwritten.",
                 )
             )
@@ -410,7 +450,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     for w in res["warnings"]:
         print(f"Warning {w['code']}: {w['message']}", file=sys.stderr)
     print(json.dumps(res, sort_keys=True, indent=2))
-    if res["status"] == "refused":
+    if res["status"] in ("refused", "blocked"):
         return EXIT_REFUSED
     return EXIT_PROBLEM if res["status"] == "problem" else EXIT_OK
 

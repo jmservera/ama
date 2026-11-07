@@ -49,6 +49,10 @@ archive does not verify or cannot be listed (`archive_unreadable`), a case id
 repeats (`source_invalid`) or there is no room to write or the free space cannot be
 read. `--exercise` ranks and
 reports what would be archived, writes nothing and never counts as approval.
+A selected policy whose content hash or registry key does not match is refused
+(`policy_invalid`) before sign-off. A latest archived publication dated after the
+run date is a problem in `verify` and `schedule` (window state unknown) and
+refuses a non-exercise `publish`; `schedule` with status `blocked` also exits 2.
 The daily schedule is reported as proposed, not an approved rule; the draft
 policy stays a draft and retention stays a separate Legal decision.
 

@@ -535,5 +535,70 @@ class StorageAndDuplicateFindingTests(RunnerBase):
         self.assertFalse(self.archive.exists())
 
 
+class AssessmentCycle1Tests(RunnerBase):
+    """Findings of the independent 357e842d assessment."""
+
+    def stale_hash_registry(self) -> dict[str, Any]:
+        reg = copy.deepcopy(self.signed)
+        next(iter(reg.values()))["effective_date"] = "2031-01-01"
+        return reg
+
+    def test_policy_whose_content_hash_does_not_match_is_refused_before_signoff(self) -> None:
+        reg = self.stale_hash_registry()
+        for op, kw, status in (
+            ("schedule", {}, "blocked"),
+            ("publish", {"cases": open_cases(), "as_of": AS_OF}, "refused"),
+        ):
+            res = self.go(op, registry=reg, **kw)
+            self.assertEqual((res["status"], self.codes(res)), (status, ["policy_invalid"]))
+        ex = self.go("publish", registry=reg, cases=open_cases(), as_of=AS_OF, exercise=True)
+        self.assertEqual(self.codes(ex), ["policy_invalid"])
+        self.assertFalse(self.archive.exists())
+
+    def test_registry_key_must_equal_the_policy_version(self) -> None:
+        (pol,) = self.signed.values()
+        res = self.go("schedule", registry={"9.9": pol}, policy_version="9.9")
+        self.assertEqual(self.codes(res), ["policy_invalid"])
+
+    def test_future_archived_date_is_an_invalid_schedule_state(self) -> None:
+        self.go("publish", cases=open_cases(), as_of="2026-11-04", today="2026-11-04")
+        (older,) = self.archive.iterdir()
+        newer = copy.deepcopy(open_cases())
+        newer[0]["days_in_stage"] = 99
+        self.go("publish", cases=newer, as_of="2026-11-05", today="2026-11-05")
+        (future,) = [p for p in self.archive.iterdir() if p != older]
+        rec = json.loads(future.read_text())
+        rec["published_on"] = "2026-11-09"
+        future.write_text(json.dumps(rec))
+        before = {p.name: p.read_bytes() for p in self.archive.iterdir()}
+        ver = self.go("verify", today="2026-11-05")
+        self.assertEqual(
+            (ver["status"], ver["latest"], ver["overdue"]), ("problem", "2026-11-09", None)
+        )
+        self.assertEqual(len(ver["problems"]), 1)
+        sched = self.go("schedule", today="2026-11-05")
+        self.assertEqual(
+            (sched["status"], sched["due"], sched["next_window_start"]), ("problem", None, None)
+        )
+        pub = self.go("publish", cases=open_cases(), as_of=AS_OF, today="2026-11-05")
+        self.assertEqual((pub["status"], self.codes(pub)), ("refused", ["archive_unverified"]))
+        ex = self.go("publish", cases=open_cases(), as_of=AS_OF, today="2026-11-05", exercise=True)
+        self.assertEqual((ex["status"], ex["written"]), ("exercise", False))
+        self.assertEqual({p.name: p.read_bytes() for p in self.archive.iterdir()}, before)
+        ok = self.go("verify", today="2026-11-09")
+        self.assertEqual((ok["status"], ok["overdue"]), ("ok", False))
+
+    def test_blocked_schedule_exits_nonzero_and_keeps_the_refusal_json(self) -> None:
+        base = ("--archive", str(self.archive), "--today", TODAY)
+        code, res = self.cli("schedule", *base)
+        self.assertEqual(
+            (code, res["status"], self.codes(res)), (2, "blocked", ["approval_missing"])
+        )
+        code, res = self.cli("schedule", *base, "--policy", "9.9")
+        self.assertEqual((code, res["status"], self.codes(res)), (2, "blocked", ["policy_unknown"]))
+        with self.registry_patched():
+            self.assertEqual(self.cli("schedule", *base)[0], 0)
+
+
 if __name__ == "__main__":
     unittest.main()
