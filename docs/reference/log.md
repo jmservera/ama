@@ -10623,3 +10623,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## 2026-11-07 - Issue 149 operator browser check row selection
 
 The data-operator browser check now selects failed-AI register rows by their Kind cell instead of the outcome sentence it validates, so a failed row with a wrong or missing sentence is rejected. Checker and tests only; no product, SQL or security change, no acceptance claim, browser run on the corrected source pending. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-correction-1).
+
+## 2026-11-07 - Issue 149 operator check failure-outcome prefix
+
+The data-operator check helper now requires the failure outcome sentence to start the What happened cell, so a delivered-result prefix is rejected. Test-helper only; no product, SQL or security change, no acceptance claim, browser run pending. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-correction-2).
