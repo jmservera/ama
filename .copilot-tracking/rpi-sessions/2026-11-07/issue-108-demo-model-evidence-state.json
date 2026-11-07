@@ -1,0 +1,30 @@
+{
+  "task_id": "issue-108-demo-model-evidence",
+  "task_slug": "issue-108-demo-model-evidence",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-07/issue-108-demo-model-evidence-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-07/issue-108-demo-model-evidence-plan.md",
+    "details": ".copilot-tracking/details/2026-11-07/issue-108-demo-model-evidence-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-07/issue-108-demo-model-evidence-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-07/issue-108-demo-model-evidence-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-07/issue-108-demo-model-evidence-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Documentation-only configured model/limits record in existing AI Tokenomics synthesis; no evaluation or runtime work", "status": "confirmed", "evidence": "coordinator brief 2026-11-07"},
+    {"decision": "Critique executed once, verdict Proceed with applied fixes (C-001 to C-005)", "status": "recorded", "evidence": ".copilot-tracking/reviews/plans/2026-11-07/issue-108-demo-model-evidence-plan-critique.md"},
+    {"decision": "Review executed once, outcome Conformant for content with residual gate blocker R-001", "status": "recorded", "evidence": ".copilot-tracking/reviews/logs/2026-11-07/issue-108-demo-model-evidence-review.md"}
+  ],
+  "blockers": [
+    {"id": "R-001", "summary": "Focused gate selected preflight, namespace, static but the runner could not take the shared heavy-resource lock (/tmp/ama-rpi-heavy.lock held by another lane); no receipt", "resolution": "Re-run python3 tools/rpi-checks.py --changed --base 0f420dc9514db22081cb48fa733267d9d33a0d24 --lock-timeout 0 when the lock is free; do not bypass"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independent exact-head assessment; focused gate when lock is free; publication decision"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Run focused gate once the shared heavy lock is free", "rationale": "Required local evidence is missing", "evidence": "R-001"},
+    {"rank": 2, "task": "Owner-authorised actual-serving attestation via one finite real call", "rationale": "Closes the serving region/version gap", "evidence": "R-003"}
+  ]
+}
