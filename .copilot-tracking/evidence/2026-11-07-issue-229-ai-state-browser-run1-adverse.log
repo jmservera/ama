@@ -1,0 +1,63 @@
+PASS owned server is running and responsive on loopback
+PASS the register is not opened automatically: no request to /api/exceptions yet
+PASS the entry offers an explicit link and no register table
+PASS page queue has no write controls
+PASS page queue shows: not a portfolio total
+PASS page queue shows: no winning source is selected
+PASS page queue shows: does not establish that none exists
+PASS page queue shows: SYN-STOCK-A v1
+PASS page queue shows: SYN-STOCK-B v2
+PASS page queue shows: Unresolved
+PASS page queue shows: Withdrawn
+PASS page queue shows: Returned
+PASS page queue shows: SYN missing roof reference
+PASS page queue shows both sources for both queries
+PASS page queue lists the reopen with its reason
+PASS forward moves are not shown as returns in the page queue
+PASS page queue has both labelled table regions: ['Source conflicts by home with both values', 'Returns and reopens by home']
+PASS Tab reaches every table region: ['Source conflicts by home with both values', 'Returns and reopens by home']
+PASS axe file is the pinned 4.10.3 build
+PASS axe 4.10.3 finds no violations in main at 1280px, page-level queue: []
+INFO axe incomplete: []
+PASS page queue reflow 320px
+PASS page queue reflow 1280px
+PASS the register link is keyboard focusable
+PASS register shows: Read-only list returned by the server for your signed-in access.
+PASS register shows: no AI call is made
+PASS register shows: Recovery guidance below is placeholder text, not an approved runbook.
+PASS register shows: Recovery is a recorded human request made elsewhere; nothing is replayed.
+PASS register shows: Deliberate rules-and-template processing (workflow-only) is not a failure and is not a model result.
+PASS register shows: It is never listed here, so an empty list does not show that a model succeeded
+PASS register shows: Service state Unknown
+PASS register shows: No service health check feeds this register, so service state is Unknown.
+PASS register shows: Failed imports are not connected to this register yet
+PASS register shows: Placeholder guidance, not an approved runbook
+PASS register shows: from configuration, not an appointment
+PASS register shows: Source conflicts with every returned value
+PASS register shows: No winning source is selected.
+PASS register does not claim: No outage recorded
+PASS register does not claim: audit trail
+PASS register does not claim: audit history
+PASS register does not claim: SYN-AI-WORKFLOW
+PASS exactly one register row for SYN-AI-QUARANTINED
+PASS exactly one register row for SYN-AI-FALLBACK
+PASS quarantined row says Quarantined with its reason, not a fallback
+PASS fallback row says it fell back with its reason, not Quarantined
+PASS quarantined row keeps owner as configuration, eligibility Unknown and placeholder recovery
+PASS fallback row keeps owner as configuration, eligibility Unknown and placeholder recovery
+PASS workflow-only record is not listed as a failure
+PASS no controls in the register panel
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/azureuser/source/ama-wt/issue-229-ai-state-browser/src/api/checks/data_operator_browser_check.py", line 302, in <module>
+    main(run_browser, operator_data, env_overrides=ai.STAFF_ENV)
+  File "/home/azureuser/source/ama-wt/issue-229-ai-state-browser/src/api/checks/design_system_browser_check.py", line 308, in main
+    browser_check(base)
+  File "/home/azureuser/source/ama-wt/issue-229-ai-state-browser/src/api/checks/data_operator_browser_check.py", line 276, in run_browser
+    check_register(page)
+  File "/home/azureuser/source/ama-wt/issue-229-ai-state-browser/src/api/checks/data_operator_browser_check.py", line 208, in check_register
+    check("exactly the two failed AI rows are listed",
+  File "/home/azureuser/source/ama-wt/issue-229-ai-state-browser/src/api/checks/design_system_browser_check.py", line 33, in check
+    raise AssertionError(name)
+AssertionError: exactly the two failed AI rows are listed

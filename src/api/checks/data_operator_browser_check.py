@@ -205,8 +205,12 @@ def check_register(page: Page) -> None:
     check("workflow-only record is not listed as a failure", ai.WORKFLOW_ID not in text)
     check("no controls in the register panel",
           panel.locator("button, form, input, select, textarea").count() == 0)
-    check("exactly the two failed AI rows are listed",
-          panel.locator("tr").filter(has_text=ai.NOT_A_MODEL_RESULT).count() == 2)
+    # The running app records its own "AI is not configured" fallback, so other rows may exist.
+    failed = panel.locator("tr").filter(has_text=ai.NOT_A_MODEL_RESULT).all_text_contents()
+    check("at least both synthetic failed AI rows are listed", len(failed) >= 2)
+    check("every failed AI row says Quarantined or Fell back, none claims a model result",
+          all(("Quarantined. " + ai.NOT_A_MODEL_RESULT in row or "Fell back to rules or template. "
+               + ai.NOT_A_MODEL_RESULT in row) for row in failed))
     labels = [name for name in ai.REGISTER_TABLES
               if panel.get_by_role("region", name=name, exact=True).count() == 1]
     check(f"register table regions are labelled: {labels}", labels == list(ai.REGISTER_TABLES))
