@@ -21,10 +21,16 @@ const item = (extra) => ({id: "EX-001", status: "open", owner: "synthetic.operat
   runbook: "Synthetic runbook text", ...extra});
 const failedAi = item({id: "EX-001", kind: "failed_ai_run", ref: "REC-9",
   summary: "AI task briefing did not deliver a model result.", error: "Model timed out",
-  original_source: {record_id: "REC-9", task: "briefing", case_ids: ["C-1"], status: "fallback"}});
+  original_source: {record_id: "REC-9", task: "briefing", case_ids: ["C-1"],
+    status: "Not reviewed"}});
 const quarantined = item({id: "EX-002", kind: "failed_ai_run", ref: "REC-10",
-  summary: "AI task draft did not deliver a model result.", error: "Result quarantined.",
-  original_source: {record_id: "REC-10", status: "quarantined"}});
+  summary: "AI task draft did not deliver a model result.", error: "Real quarantine reason",
+  original_source: {record_id: "REC-10", status: "Quarantined"}});
+const legacyQuarantined = item({id: "EX-005", kind: "failed_ai_run", ref: "REC-11",
+  error: "Legacy quarantine reason",
+  original_source: {record_id: "REC-11", status: "quarantined"}});
+const noReason = item({id: "EX-006", kind: "failed_ai_run", ref: "REC-12",
+  original_source: {record_id: "REC-12", status: "Not reviewed"}});
 const conflict = item({id: "EX-003", kind: "source_conflict",
   owner: "synthetic.steward@example.test",
   owner_role: "data_steward", summary: "Stock epc differs between sources for case C-1.",
@@ -34,7 +40,8 @@ const html = item({id: "EX-004", kind: "stranded_task", summary: "<img src=x one
   error: "<b>bold</b>", original_source: {source: "TASK-1"}});
 const banner = {state: "unknown", last_checked: null, components: {},
   text: "Service state has not been checked recently. Do not assume it is healthy."};
-const base = {state: "ok", items: [failedAi, quarantined, conflict, html, 7],
+const base = {state: "ok", items: [failedAi, quarantined, legacyQuarantined, noReason, conflict,
+    html, 7],
   unrouted: [
     "Case C-9: stock query could not be read, so its conflicts are not routed. Open the case."],
   sources: ["Failed imports are not connected to this register yet.",
@@ -105,6 +112,9 @@ def walk(node: object) -> list[dict[str, Any]]:
     return found
 
 
+QUARANTINED = "Quarantined. Requested AI help did not deliver a model result."
+
+
 def text(node: object) -> str:
     return json.dumps(node)
 
@@ -128,7 +138,9 @@ class ExceptionRegisterScreen(unittest.TestCase):
         for phrase in (
             "Fell back to rules or template. Requested AI help did not deliver a model result.",
             "Reason: Model timed out",
-            "Quarantined. Requested AI help did not deliver a model result.",
+            f"{QUARANTINED} Reason: Real quarantine reason",
+            f"{QUARANTINED} Reason: Legacy quarantine reason",
+            "Requested AI help did not deliver a model result. How it failed is Unknown.",
             "REC-9",
             "synthetic.operator@example.test",
             "from configuration, not an appointment",

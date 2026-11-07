@@ -873,9 +873,10 @@ function exceptionReference(item) {
 function exceptionHappened(item) {
   const reason = typeof item.error === "string" && item.error ? ` Reason: ${item.error}` : "";
   if (item.kind !== "failed_ai_run") return `${exceptionText(item.summary)}${reason}`;
-  const how = exceptionRecord(item.original_source) && item.original_source.status === "quarantined"
-    ? "Quarantined" : "Fell back to rules or template";
-  return `${how}. Requested AI help did not deliver a model result.${reason}`;
+  const status = exceptionRecord(item.original_source) ? item.original_source.status : null;
+  if (typeof status === "string" && status.toLowerCase() === "quarantined") return `Quarantined. Requested AI help did not deliver a model result.${reason}`;
+  if (!reason) return "Requested AI help did not deliver a model result. How it failed is Unknown.";
+  return `Fell back to rules or template. Requested AI help did not deliver a model result.${reason}`;
 }
 const exceptionOwner = (item) => `${exceptionText(item.owner)} (${exceptionText(item.owner_role)}, from configuration, not an appointment)`;
 const exceptionSide = (side) => exceptionRecord(side)
