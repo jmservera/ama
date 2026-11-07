@@ -329,6 +329,10 @@ class ConcurrentWriterTests(unittest.TestCase):
                 rp.publish(snap(), self.dir, "2026-10-10")
         self.assertIsInstance(ctx.exception, OSError)
         self.assertEqual(ctx.exception.published_on, "2026-10-10")
+        self.assertIs(ctx.exception.written, True)
+        self.assertIs(
+            rp.DurabilityUnconfirmedError("p", "2026-10-10", OSError(5, "x")).written, None
+        )
         self.assertEqual([p.name for p in self.dir.iterdir()], [Path(ctx.exception.path).name])
         self.assertEqual(oct(Path(ctx.exception.path).stat().st_mode & 0o777), "0o600")
         self.assertEqual(rp.verify(self.dir)["problems"], [])
@@ -372,9 +376,37 @@ class ConcurrentWriterTests(unittest.TestCase):
                 rp.publish(snap(), self.dir, "2026-10-11")
             self.assertEqual(again.exception.errno, errno.EIO)
             self.assertEqual(again.exception.published_on, "2026-10-10")
+            self.assertIs(again.exception.written, False)
             failing_sync = False
             res = rp.publish(snap(), self.dir, "2026-10-12")
         self.assertEqual((res["written"], res["published_on"]), (False, "2026-10-10"))
+
+    def test_publish_race_loser_confirms_durability_before_reporting_it(self):
+        real_link, state = os.link, {}
+        real_sync = os.fsync
+
+        def failing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(errno.EIO, "sync failed")
+            return real_sync(fd)
+
+        def racing(src, dst, *a, **k):
+            if not state:
+                state["raced"] = True
+                rp.publish(snap(), self.dir, "2026-10-11")
+                state["sync"] = patch.object(os, "fsync", failing)
+                state["sync"].start()
+            return real_link(src, dst, *a, **k)
+
+        try:
+            with patch.object(os, "link", racing):
+                with self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+                    rp.publish(snap(), self.dir, "2026-10-10")
+        finally:
+            state["sync"].stop()
+        self.assertEqual(ctx.exception.published_on, "2026-10-11")
+        self.assertIs(ctx.exception.written, False)
+        self.assertEqual(rp.verify(self.dir)["problems"], [])
 
     def test_cleanup_removes_only_the_staging_file_it_owns(self):
         self.dir.mkdir()

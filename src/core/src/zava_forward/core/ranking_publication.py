@@ -55,10 +55,14 @@ class DurabilityUnconfirmedError(OSError):
     """The record is at its final name but the archive folder sync failed.
 
     The record stays; whether the name survives a crash is unknown, so this is
-    neither a confirmed publication nor a rollback.
+    neither a confirmed publication nor a rollback. written is True when this call
+    created the record, False for an existing record or a lost race, and None when
+    the caller does not know.
     """
 
-    def __init__(self, path: str, published_on: str, cause: OSError) -> None:
+    def __init__(
+        self, path: str, published_on: str, cause: OSError, written: bool | None = None
+    ) -> None:
         super().__init__(
             cause.errno,
             f"{os.path.basename(path)} was written but the archive folder could not be "
@@ -66,6 +70,7 @@ class DurabilityUnconfirmedError(OSError):
         )
         self.path = path
         self.published_on = published_on
+        self.written = written
 
 
 def _valid_date(value: Any) -> bool:
@@ -173,7 +178,9 @@ def _confirmed(outcome: dict[str, Any], archive_dir: Path) -> dict[str, Any]:
     try:
         _fsync_dir(archive_dir)
     except OSError as e:
-        error = DurabilityUnconfirmedError(outcome["path"], outcome["published_on"], e)
+        error = DurabilityUnconfirmedError(
+            outcome["path"], outcome["published_on"], e, outcome["written"]
+        )
         if "stage_retained" in outcome:
             error.stage_retained = outcome["stage_retained"]  # type: ignore[attr-defined]
         raise error from e

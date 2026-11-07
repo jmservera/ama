@@ -66,6 +66,10 @@ API returns 409 `committed_unconfirmed` with fixed path-free text. This is not a
 confirmed publication and is not rolled back. A retry syncs the folder again before
 reporting the existing record as already published (`written` false, original date);
 if that sync fails too it is unconfirmed again, so a named owner checks the archive.
+The error carries `written` (true when this call created the record, false for an
+existing record or lost race, null when unknown); the runner reports it with status
+`committed_unconfirmed` (exit 2, a path-free `uncertainty` with a safe next action),
+not as a `publish_failed` refusal.
 Other archive failures (for example no hard-link support) stay 503. A record already
 at the final name is checked
 against the snapshot, its hash, its name and a valid publication date; a damaged
