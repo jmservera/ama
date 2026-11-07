@@ -10619,3 +10619,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] correction | Scenario manifest recipe digest refreshed for the queue-sync checker (Refs #1262)
 
 * Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) to the corrected `src/api/checks/workbench_browser_check.py` bytes (`4bd825e9...a320`), because the validator compares recorded source digests with literal current bytes and hosted src-core failed with a stale hash after the #1262 checker change. Digest only: version 0.2.1, fixture case IDs, unavailable profiles and workflows, approval and evidence status, scenario semantics and the validator are unchanged, and no observed coverage is claimed. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-1262-r2-manifest-pin).
+
+## 2026-11-07 - Issue 149 operator browser check row selection
+
+The data-operator browser check now selects failed-AI register rows by their Kind cell instead of the outcome sentence it validates, so a failed row with a wrong or missing sentence is rejected. Checker and tests only; no product, SQL or security change, no acceptance claim, browser run on the corrected source pending. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-correction-1).
