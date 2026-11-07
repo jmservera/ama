@@ -18,6 +18,15 @@ def snap():
     return ranking.snapshot([a, b], ranking.POLICY_V1, AS_OF)
 
 
+def _publish_in_process(archive, published_on, gate, queue):
+    try:
+        gate.wait(30)
+        res = rp.publish(snap(), archive, published_on)
+        queue.put((res["written"], res["published_on"]))
+    except BaseException as e:  # noqa: BLE001 - reported to the parent test
+        queue.put(f"{type(e).__name__}: {e}")
+
+
 class PublicationTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -40,7 +49,10 @@ class PublicationTests(unittest.TestCase):
         path.write_text(json.dumps(rec))
         want = [f"{path.name}: content does not match its snapshot hash."]
         self.assertEqual(rp.verify(self.dir)["problems"], want)
-        self.assertFalse(rp.publish(snap(), self.dir, "2026-10-12")["written"])
+        damaged = path.read_bytes()
+        with self.assertRaises(rp.PublicationError):
+            rp.publish(snap(), self.dir, "2026-10-12")
+        self.assertEqual(path.read_bytes(), damaged)
 
     def test_unknown_policy_hash_and_unreadable_files_are_reported(self):
         s = snap()
@@ -68,14 +80,135 @@ class PublicationTests(unittest.TestCase):
         self.assertFalse(rp.overdue(self.dir, "2026-10-10"))
         self.assertTrue(rp.overdue(self.dir, "2026-10-11"))
 
+    def test_malformed_archived_publication_date_is_a_problem_and_not_latest(self):
+        good = Path(rp.publish(snap(), self.dir, "2026-10-10")["path"])
+        s2 = snap()
+        s2["as_of"] = "2026-10-08"
+        s2["snapshot_hash"] = rp.snapshot_hash(s2)
+        bad = Path(rp.publish(s2, self.dir, "2026-10-11")["path"])
+        odd = ("2026-10-11\n", "\u0662\u0660\u0662\u0666-\u0661\u0660-\u0661\u0661")
+        for value in ("2026-11-31", "20261011", "", None, 20261011, ["2026-10-11"], *odd):
+            with self.subTest(value=value):
+                rec = json.loads(bad.read_text())
+                rec["published_on"] = value
+                bad.write_text(json.dumps(rec))
+                res = rp.verify(self.dir)
+                self.assertEqual(
+                    res["problems"], [f"{bad.name}: publication date is not a valid calendar date."]
+                )
+                self.assertEqual((res["count"], res["latest"]), (2, "2026-10-10"))
+        self.assertTrue(good.exists())
+
+    def test_only_malformed_dates_leave_no_trusted_latest(self):
+        path = Path(rp.publish(snap(), self.dir, "2026-10-10")["path"])
+        rec = json.loads(path.read_text())
+        rec["published_on"] = "2026-11-31"
+        path.write_text(json.dumps(rec))
+        self.assertIsNone(rp.verify(self.dir)["latest"])
+        self.assertTrue(rp.overdue(self.dir, "2026-10-10"))
+
+    def test_publish_refuses_impossible_calendar_date_before_writing(self):
+        odd = ("2026-10-10\n", "\u0662\u0660\u0662\u0666-\u0661\u0660-\u0661\u0660")
+        for value in ("2026-11-31", "2026-02-29", "2026-13-01", "0000-01-01", *odd):
+            with self.subTest(value=value), self.assertRaises(rp.PublicationError):
+                rp.publish(snap(), self.dir, value)
+        self.assertFalse(self.dir.exists())
+
     def test_schedule_states_what_is_not_decided(self):
         self.assertEqual(rp.SCHEDULE["owner"], "to be named")
         self.assertIn("not set", rp.SCHEDULE["retention"])
 
     def test_module_has_no_clock_and_no_delete(self):
         src = Path(rp.__file__).read_text()
-        for word in ("datetime", "import time", "os.remove", "unlink", "rmtree"):
+        for word in ("datetime", "import time", "os.remove", "rmtree"):
             self.assertNotIn(word, src)
+        self.assertEqual(src.count("unlink"), 1)
+        self.assertIn("os.unlink(tmp)", src)
+
+    def test_unusable_record_at_final_name_is_refused_and_untouched(self):
+        path = Path(rp.publish(snap(), self.dir, "2026-10-10")["path"])
+        good = path.read_text()
+        other = snap()
+        other["total"] = 99
+        other["snapshot_hash"] = rp.snapshot_hash(other)
+        bad_date = json.loads(good)
+        bad_date["published_on"] = "2026-11-31"
+        cases = {
+            "garbage": "{",
+            "truncated": good[:25],
+            "empty": "",
+            "not a mapping": "[]",
+            "different snapshot": rp._canonical({"published_on": "2026-10-10", "snapshot": other}),
+            "bad date": json.dumps(bad_date),
+        }
+        for label, text in cases.items():
+            with self.subTest(label):
+                path.write_text(text)
+                with self.assertRaises(rp.PublicationError):
+                    rp.publish(snap(), self.dir, "2026-10-12")
+                self.assertEqual(path.read_text(), text)
+        self.assertEqual(len(list(self.dir.iterdir())), 1)
+
+    def test_publish_syncs_file_and_directory(self):
+        import os
+        import stat
+        from unittest.mock import patch
+
+        real, kinds = os.fsync, []
+
+        def counting(fd):
+            kinds.append(stat.S_ISDIR(os.fstat(fd).st_mode))
+            return real(fd)
+
+        with patch.object(os, "fsync", counting):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(sorted(kinds), [False, True])
+        self.assertEqual(
+            [p.name for p in self.dir.iterdir() if not p.name.startswith("ranking-")], []
+        )
+
+    def test_losing_a_publish_race_keeps_the_first_writer_and_reports_it(self):
+        import os
+        from unittest.mock import patch
+
+        real, state = os.link, {"raced": False}
+
+        def racing(src, dst, *a, **k):
+            if not state["raced"]:
+                state["raced"] = True
+                rp.publish(snap(), self.dir, "2026-10-11")
+            return real(src, dst, *a, **k)
+
+        with patch.object(os, "link", racing):
+            res = rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertFalse(res["written"])
+        self.assertEqual(res["published_on"], "2026-10-11")
+        self.assertEqual(json.loads(Path(res["path"]).read_text())["published_on"], "2026-10-11")
+        self.assertEqual(len(list(self.dir.iterdir())), 1)
+        self.assertEqual(rp.verify(self.dir), dict(count=1, problems=[], latest="2026-10-11"))
+
+    def test_concurrent_processes_publish_one_record_with_a_consistent_date(self):
+        import multiprocessing as mp
+
+        ctx = mp.get_context("fork")
+        queue = ctx.Queue()
+        gate = ctx.Barrier(4)
+        dates = ["2026-11-05", "2026-11-06", "2026-11-07", "2026-11-08"]
+        procs = [
+            ctx.Process(target=_publish_in_process, args=(self.dir, d, gate, queue)) for d in dates
+        ]
+        for p in procs:
+            p.start()
+        for p in procs:
+            p.join(60)
+        results = [queue.get(timeout=10) for _ in dates]
+        self.assertEqual([p.exitcode for p in procs], [0] * 4, results)
+        self.assertTrue(all(isinstance(r, tuple) for r in results), results)
+        self.assertEqual(sum(1 for written, _ in results if written), 1)
+        retained = rp.verify(self.dir)
+        self.assertEqual((retained["count"], retained["problems"]), (1, []))
+        self.assertEqual({d for _, d in results}, {retained["latest"]})
+        self.assertEqual(len(list(self.dir.iterdir())), 1)
 
 
 if __name__ == "__main__":

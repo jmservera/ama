@@ -66,7 +66,9 @@ ignore_errors = true
 module = ["zava_forward.core.chat_panel", "test_chat_panel", "tests.test_chat_panel",
           "zava_forward.core.rule_engine", "zava_forward.core.job_pack",
           "test_job_pack", "tests.test_job_pack",
-          "zava_forward.core.source_monitor", "zava_forward.core.forms"]
+          "zava_forward.core.source_monitor", "zava_forward.core.forms",
+          "zava_forward.core.ranking_publication_runner",
+          "test_ranking_publication_runner", "tests.test_ranking_publication_runner"]
 disallow_untyped_calls = false
 
 # Optional SQL driver (the sql extra); core CI and the isolated gate venv install core without it.

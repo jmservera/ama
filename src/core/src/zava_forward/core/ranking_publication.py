@@ -10,10 +10,12 @@ a Legal decision and the schedule is run by the deployment; SCHEDULE states the
 contract the deployment is expected to meet. Nothing here changes a ranking.
 """
 
+import calendar
 import hashlib
 import json
 import os
 import re
+import tempfile
 from collections.abc import Mapping
 from typing import Any
 
@@ -28,11 +30,19 @@ SCHEDULE: dict[str, Any] = {
 }
 
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+_PUBLISHED_ON = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
 Path = str | os.PathLike[str]
 
 
 class PublicationError(Exception):
     """A snapshot cannot be published, or an archived record does not verify."""
+
+
+def _valid_date(value: Any) -> bool:
+    if not isinstance(value, str) or not _PUBLISHED_ON.fullmatch(value):
+        return False
+    year, month, day = (int(part) for part in value.split("-"))
+    return year >= 1 and 1 <= month <= 12 and 1 <= day <= calendar.monthrange(year, month)[1]
 
 
 def _canonical(value: Mapping[str, Any]) -> str:
@@ -49,25 +59,71 @@ def _name(snap: Mapping[str, Any]) -> str:
     return f"ranking-{version}-{as_of}-{digest}.json"
 
 
+def _existing(path: str, snap: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate the record already at the final name against the snapshot being published."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            rec = json.load(f)
+        held = rec["snapshot"]
+        published_on = rec["published_on"]
+        ok = (
+            _canonical(held) == _canonical(snap)
+            and snapshot_hash(held) == held["snapshot_hash"]
+            and os.path.basename(path) == _name(held)
+            and _valid_date(published_on)
+        )
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
+        raise PublicationError(
+            f"{os.path.basename(path)} exists but cannot be read as this snapshot "
+            f"({type(e).__name__}); not overwritten. A named owner must review the archive."
+        ) from e
+    if not ok:
+        raise PublicationError(
+            f"{os.path.basename(path)} exists but does not match this snapshot, its hash, "
+            "its name or a valid publication date; not overwritten. "
+            "A named owner must review the archive."
+        )
+    return {"path": path, "written": False, "published_on": published_on}
+
+
+def _fsync_dir(archive_dir: Path) -> None:
+    fd = os.open(archive_dir, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
 def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> dict[str, Any]:
     """Archive a snapshot. published_on is an ISO date supplied by the caller.
 
     Returns path, written (False when the identical snapshot was already archived)
-    and the original published_on.
+    and the original published_on. The record is written to a unique temp file,
+    synced and linked to its final name, so the first writer wins and nothing is
+    overwritten; an existing record is validated, and refused when it is damaged.
     """
-    if not _DATE.match(str(published_on)):
+    if not _valid_date(published_on):
         raise PublicationError("published_on must be an ISO date, YYYY-MM-DD.")
     if not _DATE.match(str(snap.get("as_of"))) or snapshot_hash(snap) != snap.get("snapshot_hash"):
         raise PublicationError("Snapshot is incomplete or does not match its hash; refused.")
     os.makedirs(archive_dir, exist_ok=True)
     path = os.path.join(archive_dir, _name(snap))
-    if os.path.exists(path):
-        with open(path, encoding="utf-8") as f:
-            return {"path": path, "written": False, "published_on": json.load(f)["published_on"]}
+    if os.path.lexists(path):
+        return _existing(path, snap)
     text = _canonical({"published_on": published_on, "snapshot": snap})
-    with open(path + ".tmp", "w", encoding="utf-8") as f:
-        f.write(text)
-    os.replace(path + ".tmp", path)
+    fd, tmp = tempfile.mkstemp(prefix=".publishing-", suffix=".tmp", dir=archive_dir)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as f:
+            f.write(text)
+            f.flush()
+            os.fsync(f.fileno())
+        try:
+            os.link(tmp, path)
+        except FileExistsError:
+            return _existing(path, snap)
+        _fsync_dir(archive_dir)
+    finally:
+        os.unlink(tmp)
     return {"path": path, "written": True, "published_on": published_on}
 
 
@@ -96,6 +152,8 @@ def verify(archive_dir: Path, registry: Mapping[str, Any] | None = None) -> dict
                 problems.append(f"{n}: file name does not match its content.")
             elif known is None or known["content_hash"] != snap["policy_hash"]:
                 problems.append(f"{n}: policy version or hash is not in the policy registry.")
+            elif not _valid_date(rec["published_on"]):
+                problems.append(f"{n}: publication date is not a valid calendar date.")
             else:
                 dates.append(rec["published_on"])
         except (OSError, ValueError, KeyError, TypeError):

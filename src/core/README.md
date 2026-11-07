@@ -22,6 +22,39 @@ the data, audited and idempotent, and `Store.ranking_publication_status` (API
 and stated schedule. Both are manager-only. The manual path is the same
 endpoint, run by a manager; no AI is involved.
 
+Local runner (slice 5): `python3 -m zava_forward.core.ranking_publication_runner
+{schedule,publish,verify} --archive DIR --today YYYY-MM-DD [--cases FILE]
+[--policy VERSION] [--exercise]` is the invocation a scheduler or a person calls.
+The date, archive and store-shaped case file are explicit; no clock, environment
+variable or default data folder is read, and no random seed is consumed (the run
+key is a hash of policy, as-of date and window start). `schedule` reports the
+one-day window, whether it is due and the next window, and exits 1 with status
+`problem` when any archived record fails to verify (due and latest stay visible);
+`verify` exits 1 when a record fails or the latest publication is stale; the case
+file must hold boolean `closed` flags, and a malformed record refuses the whole
+source; `9999-12-31` has no next day, so it is refused as a run date and reported
+as a problem as an archived latest; `publish` is idempotent, a verified identical
+retry needs no free space because it writes nothing, and
+exits 2 with a reason code and next action when the policy has no recorded
+sign-off (`approval_missing`), the case source is missing or unusable, the
+archive does not verify or cannot be listed (`archive_unreadable`), a case id
+repeats (`source_invalid`) or there is no room to write or the free space cannot be
+read. `--exercise` ranks and
+reports what would be archived, writes nothing and never counts as approval.
+The daily schedule is reported as proposed, not an approved rule; the draft
+policy stays a draft and retention stays a separate Legal decision.
+
+Durability and races: `publish` writes a unique temp file in the archive folder,
+syncs it, links it to its final name (the first writer wins, nothing is
+overwritten) and syncs the folder. A record already at the final name is checked
+against the snapshot, its hash, its name and a valid publication date; a damaged
+one is refused with `PublicationError` (never reported as already published) and
+left for a named owner to review. The run key is informational: repeated
+publishes in the same window are idempotent because the file name holds the
+policy version, as-of date and snapshot hash, and a later window returns the
+original publication date. `Store.publish_ranking_snapshot` records whether the
+policy was signed in the audit detail and the response (`policy_signed`), and the
+status endpoint reports an unreadable archive folder as a problem.
 Sign-off check (slice 3): `ranking.is_signed` and `ranking.signoff_problems` read a recorded sign-off
 (`signoff` with `signed_by` equal to the named `owner`, an ISO `signed_on` and a `rule_order_hash` of the rules and
 stage order). A change to the rule order voids it. The publication status reports `policy_signed` and
