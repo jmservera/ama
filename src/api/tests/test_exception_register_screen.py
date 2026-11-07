@@ -229,5 +229,116 @@ class ExceptionRegisterScreen(unittest.TestCase):
             self.assertEqual(region["attrs"]["tabindex"], 0)
 
 
+HOST_SCRIPT = r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const host = fs.readFileSync(process.argv[1] + "/role-screens.js", "utf8");
+const register = {state: "ok", items: [{id: "EX-900", kind: "source_conflict", status: "open",
+    owner: "synthetic.steward@example.test", owner_role: "data_steward", eligibility: "Unknown",
+    runbook: "Synthetic", values: [{value: "D", source: "S-A", date: "2026-01-01", version: "1"},
+      {value: "C", source: "S-B", date: "2026-01-02", version: "2"}]}],
+  unrouted: [], sources: [], banner: {state: "unknown", text: "Synthetic banner."},
+  access: {roles: {}, scope: {}}, note: "Synthetic note."};
+const rows = [{id: "C-1", address: "1 Synthetic Road", status: "open"}];
+async function scenario(name, role, hash, exceptions) {
+  const calls = [];
+  const shown = [];
+  const controller = new AbortController();
+  const context = vm.createContext({
+    URLSearchParams, Intl, AbortController, Date, Promise,
+    location: {hash}, routeController: controller, me: {user: {role}},
+    workspaceStatus: {textContent: ""},
+    show: (...kids) => shown.push(kids),
+    api: async (path, body, signal) => {
+      calls.push({path, write: body !== undefined});
+      if (path.startsWith("/api/exceptions")) return exceptions(controller, signal);
+      if (path.startsWith("/api/cases?")) return {items: rows, total: 1};
+      return {id: "C-1", stock_reconciliation_events: [], stock_queries: []};
+    },
+    h: (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat(Infinity).filter(
+      kid => kid !== false && kid !== null && kid !== undefined)})
+  });
+  vm.runInContext(host + "\n;globalThis.__view = roleScreensView;", context);
+  let error = null;
+  try { await context.__view(); } catch (e) { error = e.name || String(e); }
+  return {name, calls, shown, error};
+}
+const manager = "Retrofit Programme Manager";
+const link = "#/screens?screen=data-operator";
+const denied = () => {
+  const e = new Error("Only a named data steward or digital operator can see this.");
+  e.status = 403;
+  throw e;
+};
+(async () => {
+  const results = await Promise.all([
+    scenario("loaded", manager, link + "&exceptions=1", async () => register),
+    scenario("default", manager, link, async () => { throw new Error("must not load"); }),
+    scenario("other_role", "Retrofit Coordinator", link + "&exceptions=1", async () => register),
+    scenario("stale", manager, link + "&exceptions=1", async (controller) => {
+      controller.abort();
+      return register;
+    }),
+    scenario("denied", manager, link + "&exceptions=1", denied)
+  ]);
+  console.log(JSON.stringify(results));
+})();
+"""
+
+
+def run_host() -> dict[str, dict[str, Any]]:
+    result = subprocess.run(
+        ["node", "-e", HOST_SCRIPT, str(WEB)], capture_output=True, text=True, timeout=30
+    )
+    assert result.returncode == 0, result.stderr
+    return {r["name"]: r for r in json.loads(result.stdout)}
+
+
+class HostIntegration(unittest.TestCase):
+    """The existing role-screen host reaches the register only for managers and on request."""
+
+    out: dict[str, dict[str, Any]]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.out = run_host()
+
+    def test_manager_request_reaches_the_endpoint_once_with_the_page_summary(self) -> None:
+        result = self.out["loaded"]
+        paths = [call["path"] for call in result["calls"]]
+        self.assertEqual(paths.count("/api/exceptions"), 1)
+        self.assertIn("/api/cases/C-1", paths)
+        self.assertFalse(any(call["write"] for call in result["calls"]))
+        page = text(result["shown"][-1])
+        for phrase in (
+            "EX-900",
+            "Source conflicts with every returned value",
+            "No winning source is selected",
+            "Choose a home",
+        ):
+            self.assertIn(phrase, page)
+
+    def test_register_is_not_requested_without_the_explicit_link(self) -> None:
+        result = self.out["default"]
+        self.assertNotIn("/api/exceptions", [call["path"] for call in result["calls"]])
+        self.assertIn("Open the exception register", text(result["shown"][-1]))
+
+    def test_other_roles_never_reach_the_screen_or_the_endpoint(self) -> None:
+        result = self.out["other_role"]
+        self.assertEqual(result["calls"], [])
+        self.assertIn("not installed for your signed-in role", text(result["shown"]))
+
+    def test_superseded_navigation_never_renders_the_register(self) -> None:
+        result = self.out["stale"]
+        self.assertEqual(result["error"], "AbortError")
+        self.assertNotIn("EX-900", text(result["shown"]))
+        self.assertEqual(len(result["shown"]), 1)
+
+    def test_denial_shows_no_rows_inside_the_page(self) -> None:
+        page = text(self.out["denied"]["shown"][-1])
+        self.assertIn("Access denied. Only a named data steward", page)
+        self.assertNotIn("EX-900", page)
+
+
 if __name__ == "__main__":
     unittest.main()
