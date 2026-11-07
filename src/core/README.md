@@ -55,7 +55,9 @@ the record stays and `DurabilityUnconfirmedError` (an `OSError`) is raised: the
 Store audits `ranking_snapshot_publication_unconfirmed` and the API returns 409
 `committed_unconfirmed`; this is not a confirmed publication and is not rolled
 back, and a retry reports the existing record without confirming durability, so a
-named owner checks the archive. A record already at the final name is checked
+named owner checks the archive. If removing this
+call's own temp file also fails, that never hides the outcome: the temp file name
+(no path) is reported as `stage_retained` on the result or the error. A record already at the final name is checked
 against the snapshot, its hash, its name and a valid publication date; a damaged
 one is refused with `PublicationError` (never reported as already published) and
 left for a named owner to review. The run key is informational: repeated

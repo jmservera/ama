@@ -123,7 +123,7 @@ class PublicationTests(unittest.TestCase):
         for word in ("datetime", "import time", "os.remove", "rmtree"):
             self.assertNotIn(word, src)
         self.assertEqual(src.count("unlink"), 1)
-        self.assertIn("os.unlink(tmp)", src)
+        self.assertIn("os.unlink(stage)", src)
 
     def test_unusable_record_at_final_name_is_refused_and_untouched(self):
         path = Path(rp.publish(snap(), self.dir, "2026-10-10")["path"])
@@ -187,6 +187,48 @@ class PublicationTests(unittest.TestCase):
         self.assertEqual([p.name for p in self.dir.iterdir()], [Path(ctx.exception.path).name])
         self.assertEqual(oct(Path(ctx.exception.path).stat().st_mode & 0o777), "0o600")
         self.assertEqual(rp.verify(self.dir)["problems"], [])
+
+    def test_stage_cleanup_failure_does_not_mask_the_unconfirmed_directory_sync(self):
+        import os
+        import stat
+        from unittest.mock import patch
+
+        real_fsync, real_unlink = os.fsync, os.unlink
+
+        def failing_fsync(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(5, "sync failed")
+            return real_fsync(fd)
+
+        def failing_unlink(path, *a, **k):
+            if os.path.basename(path).startswith(".publishing-"):
+                raise PermissionError(13, "read-only")
+            return real_unlink(path, *a, **k)
+
+        with patch.object(os, "fsync", failing_fsync), patch.object(os, "unlink", failing_unlink):
+            with self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+                rp.publish(snap(), self.dir, "2026-10-10")
+        err = ctx.exception
+        self.assertTrue(err.stage_retained.startswith(".publishing-"))
+        self.assertNotIn("/", err.stage_retained)
+        self.assertEqual(rp.verify(self.dir)["problems"], [])
+        self.assertTrue((self.dir / err.stage_retained).exists())
+
+    def test_stage_cleanup_failure_after_a_confirmed_publish_is_reported_not_raised(self):
+        import os
+        from unittest.mock import patch
+
+        real_unlink = os.unlink
+
+        def failing_unlink(path, *a, **k):
+            if os.path.basename(path).startswith(".publishing-"):
+                raise PermissionError(13, "read-only")
+            return real_unlink(path, *a, **k)
+
+        with patch.object(os, "unlink", failing_unlink):
+            res = rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertTrue(res["written"])
+        self.assertTrue(res["stage_retained"].startswith(".publishing-"))
 
     def test_losing_a_publish_race_keeps_the_first_writer_and_reports_it(self):
         import os
