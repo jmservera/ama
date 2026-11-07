@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-11-06
+ms.date: 2026-11-07
 ms.topic: reference
 ---
 
@@ -3063,3 +3063,56 @@ no-service observations are consistent with the three PRs. No fix or pivot is
 indicated by this checkpoint. The four issue #81 criteria and issue #440
 acceptance are unchanged and remain unticked; this record establishes no
 acceptance.
+
+### Re-alignment addendum after #1245 (2026-11-07)
+
+Refs #81 #440. Local re-alignment of the parent topic branch onto later
+`origin/main`; this addendum does not change the section above, which stays
+valid for its own base only. Original records:
+[research](../../.copilot-tracking/research/2026-11-07/issue-81-realign-r2-research.md),
+[plan](../../.copilot-tracking/plans/2026-11-07/issue-81-realign-r2-plan.md),
+[critique](../../.copilot-tracking/plans/2026-11-07/issue-81-realign-r2-critique.md),
+[changes](../../.copilot-tracking/changes/2026-11-07/issue-81-realign-r2-changes.md) and
+[review](../../.copilot-tracking/reviews/2026-11-07/issue-81-realign-r2-review.md).
+
+| Item | Value |
+| --- | --- |
+| Pinned `origin/main` (fetched again after Capstone Rubric Scorer run 42361331168 completed with success) | `0f420dc9514db22081cb48fa733267d9d33a0d24`; above the previous base it adds `0209b46bf` (#1241 checklist export), `add72cc90` (score), `312fa3dcc` (#1245 chat demo disclaimer) and `0f420dc95` (score-only) |
+| Prior frozen head (local ref `refs/ama/issue81-r2-pre-realign`) | `c5edb320ad10d3d73bb985bfb82b2d0bee94381a`, tree `4f2a712c483112e1c6c5faf231591c1b24fac234` |
+| Conflicts | None; `git merge-tree` dry run and the rebase were clean |
+| Child commits after rebase | `cf9bf329e` (#1226), `eca6e1bbf` (#1228), `5f1bf0a42` (#1229); range-diff `=` for #1228 and #1229, and `!` for #1226 only by the context line of main's `from typing import Any` |
+
+Preservation (local observed): 47 of 48 original child paths are identical in
+mode and blob. The one difference is `quality.py`, and the full diff against
+the prior head is exactly main's additive `typing.Any` import and
+`checklist_rows()` helper (#1241), which reads only `CHECKLISTS` and does not
+touch the fail-closed gate paths. Main's #1245 disclaimer, browser-check, UI
+and log changes are present unmodified.
+
+The 2026-11-06 FULL receipt (`g81-r15-1106`, head `c5edb320a`, base `56eec7369`,
+status passed) is invalid for this base and is not reused. No FULL gate was run
+for this head.
+
+Actual local commands (scratch venv, `env -i`, no service switches, core and
+agents installed non-editable with `--no-deps`; imports resolve first to the
+worktree sources):
+
+| Check | Result |
+| --- | --- |
+| core `test_gates test_quality_procurement test_hazard_referral` | 193 tests OK, 1 skipped |
+| core `test_list_export` | 4 tests OK |
+| core resident, bulk edit, aftercare, consultation and change-provenance suites | 383 tests OK, 109 skipped: 91 loopback SQL Server, 15 task-owned SQL Server, 1 Azure SQL, 1 JSON-only, 1 SQL writer dependency |
+| core `ruff check`, `ruff format --check`, `mypy` (ruff 0.17.1, mypy 2.4.0) | passed; 213 files formatted; no issues in 266 files |
+| api `test_chat_panel test_loading_feedback test_role_endpoint_inventory test_list_export_api test_form_staging_api test_finance_grants_screens` | 123 tests OK, 1 skipped (opt-in local Chromium) |
+
+An earlier API run without `node` on the restricted `PATH` failed with 21
+errors (`FileNotFoundError: node`); that was an invocation error and the
+corrected run passed.
+
+Classification: the above is `local observed` at package level. FULL gate,
+browser harnesses, SQL Server and Azure paths, Docker, scanner, independent
+exact-head review, hosted CI and resident, legal or human approval remain
+`implemented-unverified`, `blocked` or `unknown`. Child #86 (PR #1243) is
+excluded and untouched. Recommendation: **continue** to the coordinator's
+combined-tip FULL gate. The four issue #81 criteria and issue #440 acceptance
+remain unticked.
