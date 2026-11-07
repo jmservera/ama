@@ -10656,3 +10656,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] update | Issue 79 root rebased onto main 38990b19 (Refs #79)
 
 * Rebased the local ranking publication root onto main `38990b19` (PR 1260, exception register screen) with no conflict and no source change; the old head is preserved at `preserve/issue-79-pre-base3899`. Light core, API and static checks passed; no FULL gate was run, and child 1231 still needs propagation. Author-corrected only. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r26).
+
+## [2026-11-07] update | Issue 79 root adopted score-only main f0afa8d7 (Refs #79)
+
+* One normal merge of main `f0afa8d7` (generated rubric score JSON only, 77/100 unchanged) into the ranking publication root; no conflict, no source change, prior head preserved at `preserve/issue-79-pre-scoref0af`. No tests or FULL were run; author-only, gates remain open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r27).
