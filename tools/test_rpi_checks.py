@@ -2419,6 +2419,7 @@ os.fstat(3)
     def test_matrix_drift_and_unreviewed_extra_commands_refuse(self) -> None:
         self.assertEqual(len(gate.required_groups([])), 17)
         self.assertEqual(gate.SQL_SELECTORS[0], "test_mssqlstore")
+        self.assertIn("test_assistant_release.MssqlUnleasedRevocation", gate.SQL_SELECTORS)
         self.assertEqual(set(gate.WORKFLOW_HASHES), set(gate.WORKFLOWS))
         root = Path(__file__).resolve().parents[1]
         for name in gate.WORKFLOWS:
