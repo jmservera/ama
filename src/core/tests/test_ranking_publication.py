@@ -5,6 +5,7 @@ import errno
 import json
 import multiprocessing
 import os
+import stat
 import tempfile
 import threading
 import unittest
@@ -123,7 +124,10 @@ class PublicationTests(unittest.TestCase):
         path.write_text(json.dumps(rec))
         want = [f"{path.name}: content does not match its snapshot hash."]
         self.assertEqual(rp.verify(self.dir)["problems"], want)
-        self.assertFalse(rp.publish(snap(), self.dir, "2026-10-12")["written"])
+        damaged = path.read_bytes()
+        with self.assertRaises(rp.PublicationError):
+            rp.publish(snap(), self.dir, "2026-10-12")
+        self.assertEqual(path.read_bytes(), damaged)
 
     def test_unknown_policy_hash_and_unreadable_files_are_reported(self):
         s = snap()
@@ -195,6 +199,76 @@ class PublicationTests(unittest.TestCase):
             self.assertNotIn(word, src)
         self.assertEqual(src.count("os.unlink("), 1)
         self.assertIn("os.unlink(stage)", src)
+
+    def test_unusable_record_at_final_name_is_refused_and_untouched(self):
+        path = Path(rp.publish(snap(), self.dir, "2026-10-10")["path"])
+        good = path.read_text()
+        other = snap()
+        other["total"] = 99
+        other["snapshot_hash"] = rp.snapshot_hash(other)
+        bad_date = json.loads(good)
+        bad_date["published_on"] = "2026-11-31"
+        cases = {
+            "garbage": "{",
+            "truncated": good[:25],
+            "empty": "",
+            "not a mapping": "[]",
+            "different snapshot": rp._canonical({"published_on": "2026-10-10", "snapshot": other}),
+            "bad date": json.dumps(bad_date),
+        }
+        for label, text in cases.items():
+            with self.subTest(label):
+                path.write_text(text)
+                with self.assertRaises(rp.PublicationError):
+                    rp.publish(snap(), self.dir, "2026-10-12")
+                self.assertEqual(path.read_text(), text)
+        self.assertEqual(len(list(self.dir.iterdir())), 1)
+
+    def test_publish_syncs_file_then_removes_stage_then_syncs_directory(self):
+        real_sync, real_unlink, events = os.fsync, os.unlink, []
+
+        def syncing(fd):
+            events.append("sync-dir" if stat.S_ISDIR(os.fstat(fd).st_mode) else "sync-file")
+            return real_sync(fd)
+
+        def unlinking(path, *args, **kwargs):
+            events.append("unlink-stage")
+            return real_unlink(path, *args, **kwargs)
+
+        with patch.object(os, "fsync", syncing), patch.object(os, "unlink", unlinking):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(events, ["sync-file", "unlink-stage", "sync-dir"])
+        self.assertEqual([p.name for p in self.dir.iterdir()], [rp._name(snap())])
+
+    def test_an_already_archived_record_is_returned_only_after_the_directory_sync(self):
+        rp.publish(snap(), self.dir, "2026-10-10")
+        kinds = []
+        real_sync = os.fsync
+
+        def syncing(fd):
+            kinds.append(stat.S_ISDIR(os.fstat(fd).st_mode))
+            return real_sync(fd)
+
+        with patch.object(os, "fsync", syncing):
+            res = rp.publish(snap(), self.dir, "2026-10-11")
+        self.assertEqual((res["written"], res["published_on"]), (False, "2026-10-10"))
+        self.assertIn(True, kinds)
+
+    def test_directory_sync_failure_after_commit_is_raised_and_the_record_is_kept(self):
+        real_sync = os.fsync
+
+        def syncing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(errno.EIO, "directory sync failed")
+            return real_sync(fd)
+
+        with patch.object(os, "fsync", syncing), self.assertRaises(OSError) as ctx:
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(ctx.exception.errno, errno.EIO)
+        self.assertEqual([p.name for p in self.dir.iterdir()], [rp._name(snap())])
+        with patch.object(os, "fsync", syncing), self.assertRaises(OSError):
+            rp.publish(snap(), self.dir, "2026-10-11")
+        self.assertEqual(rp.publish(snap(), self.dir, "2026-10-12")["published_on"], "2026-10-10")
 
 
 class ConcurrentWriterTests(unittest.TestCase):

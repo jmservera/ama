@@ -241,8 +241,13 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         if user["role"] not in MANAGER_ROLES:
             raise PermissionError("Only a manager can see the ranking publication record. Owner: your manager. Next action: ask a manager to open it.")
         archive = self._ranking_archive()
-        out = ranking_publication.verify(archive)
-        out["overdue"] = ranking_publication.overdue(archive, controls.today())
+        try:
+            out = ranking_publication.verify(archive)
+        except OSError as e:
+            out = {"count": 0, "latest": None, "problems": [
+                f"The archive folder cannot be read: {type(e).__name__}: {e.strerror or e}. "
+                "Owner: your manager. Next action: check the archive location and permissions."]}
+        out["overdue"] = out["latest"] is None or out["latest"] < controls.today()
         out["schedule"] = ranking_publication.SCHEDULE
         out["policy_signed"] = ranking.is_signed(ranking.CURRENT)
         out["signoff_problems"] = ranking.signoff_problems(ranking.CURRENT)
@@ -262,12 +267,14 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 logging.getLogger(__name__).error("Ranking archive could not be written: %s", e)
                 raise ranking_publication.ArchiveStorageError(
                     f"The ranking archive cannot be written ({type(e).__name__}, {errno.errorcode.get(e.errno or 0, 'unknown')}). "
-                    "It must be a local folder that supports hard links and is writable. Nothing was published. "
+                    "It must be a local folder that supports hard links and is writable. Publication could not be confirmed; "
+                    "a record already archived is reported as already published on retry. "
                     "Owner: your operator. Next action: ask them to check the archive location.") from e
+            signed = ranking.is_signed(ranking.CURRENT)
             self.audit(user["email"], "ranking_snapshot_published" if res["written"] else "ranking_snapshot_already_published", "-",
-                       f"policy {snap['policy_version']}; as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}")
+                       f"policy {snap['policy_version']} ({'signed' if signed else 'unsigned'}); as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}")
             body = {"written": res["written"], "published_on": res["published_on"], "policy_version": snap["policy_version"],
-                    "as_of": snap["as_of"], "snapshot_hash": snap["snapshot_hash"]}
+                    "policy_signed": signed, "as_of": snap["as_of"], "snapshot_hash": snap["snapshot_hash"]}
             if res.get("stage_retained"):
                 logging.getLogger(__name__).warning("Ranking archive temporary file %s was not removed", res["stage_retained"])
                 body["warning"] = ("The record is archived, but a temporary file could not be removed. "

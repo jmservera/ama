@@ -89,7 +89,7 @@ class PublicationWiring(QualityMatrix):
                     code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
                 self.assertEqual(code, 503)
                 self.assertIn("hard links", body["error"])
-                self.assertIn("Nothing was published", body["error"])
+                self.assertIn("could not be confirmed", body["error"])
                 self.assertNotIn(self.archive(), body["error"])
                 self.assertEqual(os.listdir(self.archive()), [])
                 self.assertEqual(list(self.store.audit_entries()), [])
@@ -123,6 +123,34 @@ class PublicationWiring(QualityMatrix):
             f.write(text.replace('"rank":1', '"rank":9', 1))
         status = self.call(PM_EMAIL, "/api/ranking/publication")[1]
         self.assertEqual(len(status["problems"]), 1)
+
+    def test_corrupt_final_file_is_refused_and_not_audited_as_already_published(self):
+        self.call(PM_EMAIL, "/api/ranking/publish", {})
+        path = os.path.join(self.archive(), os.listdir(self.archive())[0])
+        damaged = '{"published_on":"2026-01-01","snapshot":{}}'
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(damaged)
+        code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertGreaterEqual(code, 400, body)
+        with open(path, encoding="utf-8") as f:
+            self.assertEqual(f.read(), damaged)
+        actions = [e["action"] for e in self.store.audit_entries()]
+        self.assertEqual(actions, ["ranking_snapshot_published"])
+
+    def test_unsigned_policy_publication_is_recorded_in_audit_and_response(self):
+        code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, body["policy_signed"]), (200, False))
+        entry = list(self.store.audit_entries())[0]
+        self.assertIn("(unsigned)", entry["detail"])
+
+    def test_status_listing_error_is_a_structured_problem(self):
+        self.call(PM_EMAIL, "/api/ranking/publish", {})
+        with patch.object(os, "listdir", side_effect=PermissionError("denied")):
+            code, status = self.call(PM_EMAIL, "/api/ranking/publication")
+        self.assertEqual(code, 200)
+        self.assertEqual((status["count"], status["latest"], status["overdue"]), (0, None, True))
+        self.assertEqual(len(status["problems"]), 1)
+        self.assertIn("PermissionError", status["problems"][0])
 
     def test_publication_becomes_overdue_the_next_day(self):
         self.call(PM_EMAIL, "/api/ranking/publish", {})

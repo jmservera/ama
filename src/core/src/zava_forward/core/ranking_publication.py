@@ -72,16 +72,51 @@ def _name(snap: Mapping[str, Any]) -> str:
     return f"ranking-{version}-{as_of}-{digest}.json"
 
 
-def _existing(path: str) -> dict[str, Any]:
-    with open(path, encoding="utf-8") as f:
-        return {"path": path, "written": False, "published_on": json.load(f)["published_on"]}
+def _existing(path: str, snap: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate the record already at the final name against the snapshot being published."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            rec = json.load(f)
+        held = rec["snapshot"]
+        published_on = rec["published_on"]
+        ok = (
+            _canonical(held) == _canonical(snap)
+            and snapshot_hash(held) == held["snapshot_hash"]
+            and os.path.basename(path) == _name(held)
+            and _valid_date(published_on)
+        )
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
+        raise PublicationError(
+            f"{os.path.basename(path)} exists but cannot be read as this snapshot "
+            f"({type(e).__name__}); not overwritten. A named owner must review the archive."
+        ) from e
+    if not ok:
+        raise PublicationError(
+            f"{os.path.basename(path)} exists but does not match this snapshot, its hash, "
+            "its name or a valid publication date; not overwritten. "
+            "A named owner must review the archive."
+        )
+    return {"path": path, "written": False, "published_on": published_on}
+
+
+def _fsync_dir(archive_dir: Path) -> None:
+    fd = os.open(archive_dir, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
 
 
 def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> dict[str, Any]:
     """Archive a snapshot. published_on is an ISO date supplied by the caller.
 
     Returns path, written (False when the identical snapshot was already archived)
-    and the original published_on.
+    and the original published_on. The record is written to a unique stage file, synced
+    and linked to its final name, so the first writer wins and nothing is overwritten;
+    the stage is removed and the folder synced before the result is returned, including
+    for an existing record, which is validated and refused when it is damaged. A failed
+    folder sync is raised as OSError although the record may already be committed; a
+    retry then reports it as already published.
     """
     if not _valid_date(published_on):
         raise PublicationError("published_on must be an ISO date, YYYY-MM-DD.")
@@ -89,25 +124,33 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
         raise PublicationError("Snapshot is incomplete or does not match its hash; refused.")
     os.makedirs(archive_dir, exist_ok=True)
     path = os.path.join(archive_dir, _name(snap))
-    if os.path.exists(path):
-        return _existing(path)
+    if os.path.lexists(path):
+        return _confirmed(_existing(path, snap), archive_dir)
     text = _canonical({"published_on": published_on, "snapshot": snap})
     stage = os.path.join(archive_dir, f".{_name(snap)}.{os.urandom(8).hex()}.tmp")
     fd = os.open(stage, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o666)
     try:
         with open(fd, "w", encoding="utf-8") as f:
             f.write(text)
+            f.flush()
+            os.fsync(f.fileno())
         try:
             os.link(stage, path)
             outcome = {"path": path, "written": True, "published_on": published_on}
         except FileExistsError:
-            outcome = _existing(path)
+            outcome = _existing(path, snap)
     except BaseException as e:
         if _remove(stage):
             e.add_note(f"Staging file {os.path.basename(stage)} could not be removed.")
         raise
     if _remove(stage):
         outcome["stage_retained"] = os.path.basename(stage)
+    return _confirmed(outcome, archive_dir)
+
+
+def _confirmed(outcome: dict[str, Any], archive_dir: Path) -> dict[str, Any]:
+    """Sync the archive folder so the committed name is durable before the caller is told."""
+    _fsync_dir(archive_dir)
     return outcome
 
 
