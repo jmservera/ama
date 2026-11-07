@@ -13,6 +13,7 @@ import hashlib
 import logging
 import os
 import uuid
+import weakref
 from contextlib import contextmanager
 from copy import deepcopy
 from datetime import UTC, date, datetime
@@ -194,6 +195,16 @@ def _person(store, email):
     if context is not None and not context["validating"]:
         context["subjects"].append(deepcopy(actor))
     return actor
+
+
+def _require_named_reviewer(actor, identity):
+    """Persisted identity continuity: every recorded code/oid must match; no manager bypass."""
+    if _identity_status(identity) == "Unknown":
+        raise PermissionError("The named reviewer's identity is Unknown. Resolve it before forwarding this review.")
+    compared = [(_identity_value(identity, key), _identity_value(actor, key)) for key in ("code", "oid")
+                if _identity_value(identity, key)]
+    if not compared or any(recorded != current for recorded, current in compared):
+        raise PermissionError("Only the named independent reviewer can send this review.")
 
 
 def _owner_rights(store, actor, identity, email=None):
@@ -537,29 +548,52 @@ def _receiver(store):
     return getattr(store, "complaints_receiver", None) or complaints_route.receiver_from_env(os.environ)
 
 
+_IN_FLIGHT: "weakref.WeakKeyDictionary[object, set[tuple[str, str, int]]]" = weakref.WeakKeyDictionary()
+
+
+def in_flight(store, case_id, request_id):
+    return {attempt for case, request, attempt in _IN_FLIGHT.get(store, ()) if (case, request) == (case_id, request_id)}
+
+
 def _forward(store, user, case_id, body):
     """Reserve, send outside the store lock, then record the outcome; each record is its own committed step."""
     receiver = _receiver(store)
-    with _operation(store, user, case_id, dict(body, action="service_forward")):
-        pass
+    reservation = uuid.uuid4().hex
     with store.lock:
+        with _operation(store, user, case_id, dict(body, action="service_forward", reservation_id=reservation)):
+            pass
         req = k.find(store.cases[case_id].get("service_requests", []), body.get("id"), "request")
         route = req["formal_route"]
-        attempt = route["attempts"][-1]["attempt"]
-        envelope = complaints_route.build_envelope(case_id, req, route["route_key"], attempt)
-    outcome = _send(receiver, envelope)
-    outcome.update(action="service_forward_outcome", id=req["id"], attempt=attempt)
+        matches = [a for a in route["attempts"] if a.get("reservation_id") == reservation]
+        if len(matches) != 1:
+            raise ResidentCommittedError(
+                "The formal-route send was reserved, but its attempt could not be identified. Reload: check with the receiver before retrying."
+            )
+        attempt = matches[0]["attempt"]
+        # Point-in-time guard under the lock; a change after this point is not detected.
+        stale = req["status"] == "Closed" or req.get("version", 0) != matches[0]["request_version"]
+        envelope = None if stale else complaints_route.build_envelope(case_id, req, route["route_key"], attempt)
+        key = (case_id, req["id"], attempt)
+        _IN_FLIGHT.setdefault(store, set()).add(key)
     try:
-        with _operation(store, user, case_id, outcome):
-            pass
-    except ResidentCommittedError:
-        raise
-    except Exception as error:
-        logging.getLogger(__name__).warning("Formal-route outcome not recorded: %s", type(error).__name__)
-        raise ResidentCommittedError(
-            "The formal-route send was reserved, but its outcome was not recorded. Reload: the attempt shows Pending. "
-            "Check with the receiver before retrying."
-        ) from error
+        if envelope is None:
+            outcome = dict(status="Failed", reason=complaints_route.NOT_SENT_REASON, not_sent=True)
+        else:
+            outcome = _send(receiver, envelope)
+        outcome.update(action="service_forward_outcome", id=req["id"], attempt=attempt, reservation_id=reservation)
+        try:
+            with _operation(store, user, case_id, outcome):
+                pass
+        except ResidentCommittedError:
+            raise
+        except Exception as error:
+            logging.getLogger(__name__).warning("Formal-route outcome not recorded: %s", type(error).__name__)
+            raise ResidentCommittedError(
+                "The formal-route send was reserved, but its outcome was not recorded. Reload: the attempt shows Pending. "
+                "Check with the receiver before retrying."
+            ) from error
+    finally:
+        _IN_FLIGHT.get(store, set()).discard(key)
 
 
 def _send(receiver, envelope):
@@ -567,13 +601,15 @@ def _send(receiver, envelope):
         raw = receiver.submit(envelope)
     except complaints_route.NotConfigured:
         return dict(status="Unconfigured", reason=complaints_route.UNCONFIGURED_REASON)
+    except complaints_route.NotSent:
+        return dict(status="Failed", reason=complaints_route.NOT_SENT_REASON, not_sent=True)
     except Exception as error:
         logging.getLogger(__name__).warning("Formal-route receiver failed: %s", type(error).__name__)
-        return dict(status="Failed", reason=complaints_route.FAILURE_REASON)
+        return dict(status="Unconfirmed", reason=complaints_route.UNCONFIRMED_REASON)
     try:
         ack = complaints_route.parse_acknowledgement(raw)
     except ValueError:
-        return dict(status="Failed", reason=complaints_route.MALFORMED_REASON)
+        return dict(status="Unconfirmed", reason=complaints_route.MALFORMED_REASON)
     return dict(status="Acknowledged", reason="The receiver acknowledged this request.", **ack)
 
 
@@ -1329,20 +1365,28 @@ class ResidentDecisionMixin:
         if req["status"] == "Closed":
             raise ValueError("This request is closed.")
         route = req.get("formal_route") or dict(route_key=uuid.uuid4().hex, attempts=[])
-        statuses = [a["status"] for a in route["attempts"]]
-        if "Acknowledged" in statuses:
+        attempts = route["attempts"]
+        if any(a["status"] == "Acknowledged" for a in attempts):
             raise ValueError("The formal route has already acknowledged this request.")
-        if "Pending" in statuses and body.get("retry_unresolved") is not True:
-            raise ValueError("An earlier send has no recorded outcome. Check with the receiver, then retry explicitly.")
+        # A legacy Failed attempt has no not_sent evidence, so its "not received" claim is not trusted.
+        unresolved = [a for a in attempts if a["status"] in ("Pending", "Unconfirmed")
+                      or (a["status"] == "Failed" and a.get("not_sent") is not True)]
+        if unresolved and body.get("retry_unresolved") is not True:
+            raise ValueError("An earlier send has no confirmed outcome. Check with the receiver, then retry explicitly.")
+        if unresolved and in_flight(self, c.get("id"), req["id"]):
+            raise ValueError("A send for this request is still in progress on this system. Wait for its outcome.")
         if req["route"] == "Independent review":
             if user["email"].lower() != req["redress_owner_email"].lower():
                 raise PermissionError("Only the named independent reviewer can send this review.")
+            _require_named_reviewer(user, req.get("redress_identity"))
             _require_independent_reviewer(user, req.get("reviewed_identity"))
-        _owner_rights(self, user, req.get("redress_identity"), req.get("redress_owner_email"))
+        else:
+            _owner_rights(self, user, req.get("redress_identity"), req.get("redress_owner_email"))
         ref = k.text(body.get("resident_request_ref"), "the reference showing the resident asked for this to be sent", 100)
         attempt = len(route["attempts"]) + 1
         route["attempts"].append(dict(attempt=attempt, status="Pending", request_id=req["id"],
                                       request_version=req.get("version", 0), resident_request_ref=ref,
+                                      reservation_id=body.get("reservation_id"),
                                       requested_by=_identity(user), reserved_at=_time(),
                                       reason="Sending. No outcome is recorded yet."))
         req["formal_route"] = route
@@ -1352,11 +1396,14 @@ class ResidentDecisionMixin:
         req = k.find(c.get("service_requests", []), body.get("id"), "request")
         attempts = (req.get("formal_route") or {}).get("attempts", [])
         attempt = body.get("attempt")
-        if type(attempt) is not int or not 1 <= attempt <= len(attempts) or attempts[attempt - 1]["status"] != "Pending":
+        if (type(attempt) is not int or not 1 <= attempt <= len(attempts) or attempts[attempt - 1]["status"] != "Pending"
+                or attempts[attempt - 1].get("reservation_id") != body.get("reservation_id")):
             raise ValueError("There is no pending formal-route attempt to record.")
         if body.get("status") not in complaints_route.STATUSES[1:]:
             raise ValueError("Unknown formal-route outcome.")
         attempts[attempt - 1].update(status=body["status"], reason=body["reason"], outcome_at=_time())
+        if body.get("not_sent") is True and body["status"] == "Failed":
+            attempts[attempt - 1]["not_sent"] = True
         if body["status"] == "Acknowledged":
             attempts[attempt - 1].update(receipt_ref=body["receipt_ref"], received_at=body.get("received_at"))
         return f"{req['id']} formal-route attempt {attempt}: {body['status']}"

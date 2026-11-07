@@ -7,25 +7,32 @@ appointment, resident-consent source and DPO/Legal decision first. Choose with
 ZF_COMPLAINTS_ROUTE=unconfigured (default).
 
 Local recording and a receiver's receipt are different facts. An acknowledgement
-is only a non-empty ``receipt_ref`` returned by the receiver; anything else is a
-failure, never a receipt.
+is only a non-empty ``receipt_ref`` returned by the receiver. ``Failed`` means a
+definite non-send (marked ``not_sent``); any other exception or an invalid reply is
+``Unconfirmed``: receipt is unknown and a resend needs explicit reconciliation.
 """
 
 from collections.abc import Mapping
 from datetime import datetime
 from typing import Any, NoReturn, Protocol
 
-STATUSES = ("Pending", "Unconfigured", "Failed", "Acknowledged")
-FAILURE_REASON = "The receiver did not acknowledge this request. It has not been received."
-UNCONFIGURED_REASON = "No formal-complaints receiver is configured. Nothing was sent."
-MALFORMED_REASON = (
-    "The receiver reply had no valid receipt reference. It has not been treated as received."
+STATUSES = ("Pending", "Unconfigured", "Failed", "Unconfirmed", "Acknowledged")
+NOT_SENT_REASON = "The request was not sent. Nothing reached the receiver."
+UNCONFIRMED_REASON = (
+    "Acknowledgement was not obtained. Whether the receiver has this request is unknown. "
+    "Check with the receiver before sending again."
 )
+UNCONFIGURED_REASON = "No formal-complaints receiver is configured. Nothing was sent."
+MALFORMED_REASON = UNCONFIRMED_REASON
 RECEIPT_LIMIT = 100
 
 
 class NotConfigured(RuntimeError):
     """No receiver is configured, so nothing leaves this system."""
+
+
+class NotSent(RuntimeError):
+    """A receiver raises this only when it knows nothing reached it."""
 
 
 class ComplaintsReceiver(Protocol):

@@ -319,8 +319,14 @@ or transport exists; tests inject a synthetic receiver.
 Each attempt is appended to `formal_route.attempts` and the local request is not
 changed. Local recording and a receiver receipt stay separate: only a non-empty
 `receipt_ref` from the receiver gives `Acknowledged`; a receiver error or
-malformed reply gives `Failed`, and a send whose outcome could not be saved
-stays `Pending` and blocks a silent resend (retry needs `retry_unresolved`).
+malformed reply gives `Unconfirmed` (receipt unknown, not proof of non-receipt),
+and only a receiver that raises `NotSent` gives `Failed` with `not_sent`. A send
+whose outcome could not be saved stays `Pending`. `Pending`, `Unconfirmed` and
+legacy `Failed` attempts without `not_sent` are unresolved: a resend needs
+`retry_unresolved` after reconciliation, and the in-flight check is per store
+instance only. The outcome is bound to the reservation id the send committed.
+Independent review forwarding needs the named reviewer's own identity (code or
+oid continuity), with no manager bypass; unknown identity fails closed.
 All attempts share one `route_key` idempotency key. The caller must supply
 `resident_request_ref`, the staff reference showing the resident asked for the
 send; consent is never inferred. Only the redress owner or a manager can send a

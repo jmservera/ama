@@ -7,12 +7,13 @@ import sqlite3
 import tempfile
 import unittest
 import uuid
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from datetime import date, datetime
 from functools import partial
 from pathlib import Path
-from threading import Barrier
+from threading import Barrier, Event
 from typing import Any
 from unittest.mock import patch
 
@@ -3263,18 +3264,22 @@ class JsonResidentDecisions(unittest.TestCase):
         for mode in ("raise", "malformed"):
             receiver = SyntheticReceiver(mode)
             self.store.complaints_receiver = receiver
-            self.forward()
+            self.forward(retry_unresolved=True)
             attempt = self.route()["attempts"][-1]
-            self.assertEqual(attempt["status"], "Failed")
+            self.assertEqual(attempt["status"], "Unconfirmed")
+            self.assertNotIn("not been received", attempt["reason"])
+            self.assertNotIn("not_sent", attempt)
             self.assertNotIn("receipt_ref", attempt)
             self.assertNotIn("SECRET", json.dumps(self.route()))
             self.assertEqual(len(receiver.envelopes), 1)
         self.assertEqual(self.request_without_route(), before)
         receiver = SyntheticReceiver("ack")
         self.store.complaints_receiver = receiver
-        self.forward()
+        self.forward(retry_unresolved=True)
         attempts = self.route()["attempts"]
-        self.assertEqual([a["status"] for a in attempts], ["Failed", "Failed", "Acknowledged"])
+        self.assertEqual(
+            [a["status"] for a in attempts], ["Unconfirmed", "Unconfirmed", "Acknowledged"]
+        )
         self.assertEqual(attempts[2]["receipt_ref"], "SYN-RCPT-1")
         self.assertEqual(receiver.envelopes[0]["idempotency_key"], self.route()["route_key"])
         self.assertEqual(
@@ -3355,6 +3360,175 @@ class JsonResidentDecisions(unittest.TestCase):
         for private in ("SYN-REP-A", "SYN-SAFE-CANARY", "SYN-WISHES-CANARY"):
             self.assertNotIn(private, text)
 
+    @contextmanager
+    def after_reservation(self, inject: Callable[[dict[str, Any]], None]) -> Iterator[None]:
+        """Run inject once, after the reservation commits and before the send reads it."""
+        original = resident_decisions._operation
+        done: list[bool] = []
+
+        @contextmanager
+        def seam(store: Any, user: Any, case_id: str, body: dict[str, Any]) -> Iterator[None]:
+            with original(store, user, case_id, body):
+                yield
+            if body["action"] == "service_forward" and not done:
+                done.append(True)
+                with store.lock:
+                    inject(store._case(case_id)["service_requests"][0])
+                    store.save()
+
+        with patch.object(resident_decisions, "_operation", seam):
+            yield
+
+    def competing_attempt(self, req: dict[str, Any]) -> None:
+        route = req["formal_route"]
+        route["attempts"].append(
+            dict(
+                attempt=2,
+                status="Pending",
+                request_id=req["id"],
+                request_version=req["version"],
+                resident_request_ref="SYN-COMPETING",
+                reason="Sending. No outcome is recorded yet.",
+                reservation_id="SYN-OTHER-RESERVATION",
+            )
+        )
+
+    def test_forward_send_is_bound_to_the_attempt_it_reserved(self) -> None:
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.request()
+        with self.after_reservation(self.competing_attempt):
+            self.forward()
+        attempts = self.route()["attempts"]
+        self.assertEqual([e["attempt"] for e in receiver.envelopes], [1])
+        self.assertEqual([a["status"] for a in attempts], ["Acknowledged", "Pending"])
+        self.assertEqual(attempts[0]["receipt_ref"], "SYN-RCPT-1")
+        self.assertNotIn("receipt_ref", attempts[1])
+
+    def test_forward_guard_sends_nothing_when_request_changed_after_reservation(self) -> None:
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.request()
+
+        def change(req: dict[str, Any]) -> None:
+            req["version"] += 1
+
+        with self.after_reservation(change):
+            self.forward()
+        attempt = self.route()["attempts"][0]
+        self.assertEqual(receiver.envelopes, [])
+        self.assertEqual((attempt["status"], attempt["not_sent"]), ("Failed", True))
+        self.assertNotIn("receipt_ref", attempt)
+        self.forward(expected_version=2)
+        self.assertEqual(self.route()["attempts"][1]["status"], "Acknowledged")
+
+    def test_forward_in_flight_attempt_refuses_unresolved_retry_on_this_store(self) -> None:
+        receiver = SyntheticReceiver("block")
+        self.store.complaints_receiver = receiver
+        self.request()
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            sending = pool.submit(self.forward)
+            try:
+                self.assertTrue(receiver.entered.wait(20))
+                with self.assertRaises(ValueError):
+                    self.forward(retry_unresolved=True)
+                self.assertEqual(len(self.route()["attempts"]), 1)
+            finally:
+                receiver.release.set()
+            sending.result(timeout=20)
+        self.assertEqual([a["status"] for a in self.route()["attempts"]], ["Acknowledged"])
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_forward_receiver_that_records_then_raises_is_unconfirmed(self) -> None:
+        receiver = SyntheticReceiver("raise")
+        self.store.complaints_receiver = receiver
+        self.request()
+        self.forward()
+        self.assertEqual(self.route()["attempts"][0]["status"], "Unconfirmed")
+        self.unchanged_failure(self.forward)
+        receiver.mode = "ack"
+        self.forward(retry_unresolved=True)
+        self.assertEqual(
+            [a["status"] for a in self.route()["attempts"]], ["Unconfirmed", "Acknowledged"]
+        )
+        self.assertEqual(
+            receiver.envelopes[0]["idempotency_key"], receiver.envelopes[1]["idempotency_key"]
+        )
+        self.assertEqual([e["attempt"] for e in receiver.envelopes], [1, 2])
+
+    def test_forward_declared_non_send_is_failed_and_retries_ordinarily(self) -> None:
+        receiver = SyntheticReceiver("not-sent")
+        self.store.complaints_receiver = receiver
+        self.request()
+        self.forward()
+        attempt = self.route()["attempts"][0]
+        self.assertEqual((attempt["status"], attempt["not_sent"]), ("Failed", True))
+        receiver.mode = "ack"
+        self.forward()
+        self.assertEqual(self.route()["attempts"][1]["status"], "Acknowledged")
+
+    def test_forward_legacy_failed_attempt_needs_reconciliation_after_reopen(self) -> None:
+        self.request()
+        with self.store.lock:
+            req = self.store._case("ZF-1")["service_requests"][0]
+            req["formal_route"] = dict(
+                route_key="SYN-LEGACY-KEY",
+                attempts=[
+                    dict(
+                        attempt=1,
+                        status="Failed",
+                        request_id="SR-1",
+                        request_version=1,
+                        reason="The receiver did not acknowledge this request. "
+                        "It has not been received.",
+                    )
+                ],
+            )
+            self.store.save()
+        self.store = self.open_store()
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.unchanged_failure(self.forward)
+        self.assertEqual(receiver.envelopes, [])
+        self.forward(retry_unresolved=True)
+        attempts = self.route()["attempts"]
+        self.assertEqual([a["status"] for a in attempts], ["Failed", "Acknowledged"])
+        self.assertIn("It has not been received.", attempts[0]["reason"])
+        self.assertNotIn("not_sent", attempts[0])
+
+    def named_reviewer_setup(self) -> "SyntheticReceiver":
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.scope()
+        self.answer()
+        self.store.resident_action(self.sam, "ZF-1", self.review_body())
+        return receiver
+
+    def test_forward_named_reviewer_email_reassigned_to_a_manager_is_refused(self) -> None:
+        receiver = self.named_reviewer_setup()
+        manager = dict(self.pam, email=self.rae["email"])
+        self.register_followup_actor(manager)
+        self.unchanged_failure(partial(self.forward, manager))
+        self.assertEqual(receiver.envelopes, [])
+        self.register_followup_actor(self.rae)
+        self.forward(self.rae)
+        self.assertEqual(self.route()["attempts"][0]["status"], "Acknowledged")
+
+    def test_forward_independent_review_without_known_persisted_identity_fails_closed(self) -> None:
+        receiver = self.named_reviewer_setup()
+        with self.store.lock:
+            req = self.store._case("ZF-1")["service_requests"][0]
+            req["redress_identity"] = dict(email=self.rae["email"], code=None, oid=None)
+            self.store.save()
+        self.unchanged_failure(partial(self.forward, self.rae))
+        self.assertEqual(receiver.envelopes, [])
+
+    def test_forward_complaint_route_keeps_manager_rights(self) -> None:
+        self.store.complaints_receiver = SyntheticReceiver("ack")
+        self.request()
+        self.forward(self.pam)
+        self.assertEqual(self.route()["attempts"][0]["status"], "Acknowledged")
+
     def test_forward_outcome_save_failure_leaves_pending_and_blocks_silent_resend(self) -> None:
         receiver = SyntheticReceiver("ack")
         self.store.complaints_receiver = receiver
@@ -3400,11 +3574,20 @@ class SyntheticReceiver:
     def __init__(self, mode: str) -> None:
         self.mode = mode
         self.envelopes: list[dict[str, Any]] = []
+        self.entered = Event()
+        self.release = Event()
 
     def submit(self, envelope: dict[str, Any]) -> dict[str, Any]:
         self.envelopes.append(copy.deepcopy(envelope))
+        if self.mode == "block" and len(self.envelopes) == 1:
+            self.entered.set()
+            self.release.wait(20)
         if self.mode == "raise":
             raise RuntimeError("SYN-RECEIVER-SECRET unavailable")
+        if self.mode == "not-sent":
+            from zava_forward.core import complaints_route
+
+            raise complaints_route.NotSent("SYN-RECEIVER-SECRET refused before sending")
         if self.mode == "malformed":
             return {"status": "ok"}
         return {"receipt_ref": "SYN-RCPT-1", "received_at": "2099-01-01T10:00:00+00:00"}
