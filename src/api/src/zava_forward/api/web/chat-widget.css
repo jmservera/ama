@@ -17,6 +17,7 @@
 .chat-widget-close:hover{background:var(--soft);color:var(--brand)}
 .chat-widget-intro{flex:0 1 auto;min-height:0;max-height:30%;overflow:auto}
 .chat-widget-intro p{margin:var(--spacingHorizontalS) 0}
+.chat-widget-demo-note{flex:none;margin:0;border:2px solid var(--ink);border-radius:var(--borderRadiusMedium);padding:var(--spacingHorizontalXS) var(--spacingHorizontalS);font-size:.8rem;line-height:1.3}
 .chat-widget summary{cursor:pointer;min-height:2rem;padding:var(--spacingHorizontalS);touch-action:manipulation}
 .chat-widget summary:hover{background:var(--soft)}
 @media (min-height:700px){#employee-chat .chat-widget-log{min-height:max(3rem,40%)}}

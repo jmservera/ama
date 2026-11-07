@@ -778,7 +778,10 @@ PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.employee_chat_br
 
 The browser check uses an isolated constructed-data loopback server and
 explicit synthetic privacy references, actual unavailable-model fallback,
-intercepted answer-rendering cases and pinned axe on the open dialog.
+intercepted answer-rendering cases and pinned axe on the open dialog. It also
+intercepts `/api/chat/status` and the answer to prove the demo disclaimer is
+visible inside the panel (a bordered note, not colour alone) and a model answer
+is labelled "Model-generated, not approved. Demo only." (#891).
 It requires ask arrival before navigation in the transport test, then separately
 settles controlled successful API promises after hide, navigation and session
 change. Hide retains current reads without moving focus; navigation/session
