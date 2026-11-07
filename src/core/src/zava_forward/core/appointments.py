@@ -6,6 +6,7 @@ from copy import deepcopy
 from datetime import UTC, date, datetime
 from typing import Any
 
+from . import gates
 from .change_provenance import _actor, append_event
 from .documents import DocumentStoreError
 
@@ -127,12 +128,19 @@ class AppointmentMixin:
         return authority
 
     def appointment_status(self: Any, w: Any) -> Any:
+        return self._appointment_assessment(w)[0]
+
+    def _appointment_assessment(self: Any, w: Any) -> Any:
         offer = w.get("appointment_offer")
         missing: list[str] = []
+        capacity_error: gates.CapacityGateError | None = None
         if not offer:
-            return dict(status="Unknown", missing=["No verified appointment offer"])
+            return dict(status="Unknown", missing=["No verified appointment offer"]), None
         if w["state"] == "Withdrawn":
-            return dict(status="Ended", missing=["Work order withdrawn; historical agreement only"])
+            ended = dict(
+                status="Ended", missing=["Work order withdrawn; historical agreement only"]
+            )
+            return ended, None
         if self.cases[w["case_id"]].get("closed") is not False:
             missing.append("Underlying home case is not evidenced active")
         if offer["binding"] != self._appointment_binding(w):
@@ -182,12 +190,17 @@ class AppointmentMixin:
                     missing.append("Contractor capacity confirmation changed")
             except (ValueError, PermissionError, DocumentStoreError) as error:
                 missing.append(str(error))
-        return dict(status="Offer" if missing else "Committed", missing=missing)
+                if isinstance(error, gates.CapacityGateError) and len(missing) == 1:
+                    capacity_error = error
+        return dict(status="Offer" if missing else "Committed", missing=missing), capacity_error
 
     def require_appointment_commitment(self: Any, w: Any) -> None:
-        result = self.appointment_status(w)
+        result, capacity_error = self._appointment_assessment(w)
         if result["status"] != "Committed":
-            raise ValueError("Appointment is not committed: " + "; ".join(result["missing"]))
+            message = "Appointment is not committed: " + "; ".join(result["missing"])
+            if capacity_error is not None:
+                raise gates.CapacityGateError(message, capacity_error.state) from capacity_error
+            raise ValueError(message)
 
     def appointment_control(self: Any, user: Any, wid: str, body: Any) -> Any:
         if not isinstance(body, dict) or "status" in body:
