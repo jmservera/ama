@@ -10660,3 +10660,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] update | Issue 79 root adopted score-only main f0afa8d7 (Refs #79)
 
 * One normal merge of main `f0afa8d7` (generated rubric score JSON only, 77/100 unchanged) into the ranking publication root; no conflict, no source change, prior head preserved at `preserve/issue-79-pre-scoref0af`. No tests or FULL were run; author-only, gates remain open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r27).
+
+## [2026-11-07] update | Issue 79 existing-record durability confirmation and runner outcome (Refs #79)
+
+* Publishing an existing record or losing a race now syncs the archive folder before reporting it, so a retry is reported as already published only after a sync succeeds; a failed sync raises `DurabilityUnconfirmedError`. The runner reports it as `committed_unconfirmed` (exit 2) instead of a `publish_failed` refusal. Author-corrected only against the independent High and Medium findings, which stay open until re-assessed; light checks passed, no FULL gate was run and the earlier FULL 799026a3 is historical on this head. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r28).

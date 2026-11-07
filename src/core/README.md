@@ -54,8 +54,10 @@ overwritten) and syncs the folder. If only the folder sync fails after the link,
 the record stays and `DurabilityUnconfirmedError` (an `OSError`) is raised: the
 Store audits `ranking_snapshot_publication_unconfirmed` and the API returns 409
 `committed_unconfirmed`; this is not a confirmed publication and is not rolled
-back, and a retry reports the existing record without confirming durability, so a
-named owner checks the archive. If removing this
+back. An existing record or a lost race also syncs the folder before it is reported,
+so a retry is reported as already published only after a sync succeeds; the runner
+reports a failed sync as status `committed_unconfirmed` (exit 2, an `uncertainty`
+entry with a safe next action, not a `publish_failed` refusal). If removing this
 call's own temp file also fails, that never hides the outcome: the temp file name
 (no path) is reported as `stage_retained` on the result or the error. A record already at the final name is checked
 against the snapshot, its hash, its name and a valid publication date; a damaged

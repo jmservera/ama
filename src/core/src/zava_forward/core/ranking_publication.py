@@ -117,6 +117,9 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
     and the original published_on. The record is written to a unique temp file,
     synced and linked to its final name, so the first writer wins and nothing is
     overwritten; an existing record is validated, and refused when it is damaged.
+    The archive folder is synced before any result, including for an existing record
+    or a lost race; a failed sync raises DurabilityUnconfirmedError although the record
+    is kept, and a retry reports it only after a sync succeeds.
     """
     if not _valid_date(published_on):
         raise PublicationError("published_on must be an ISO date, YYYY-MM-DD.")
@@ -125,7 +128,7 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
     os.makedirs(archive_dir, exist_ok=True)
     path = os.path.join(archive_dir, _name(snap))
     if os.path.lexists(path):
-        return _existing(path, snap)
+        return _confirmed(_existing(path, snap), archive_dir)
     text = _canonical({"published_on": published_on, "snapshot": snap})
     fd, tmp = tempfile.mkstemp(prefix=".publishing-", suffix=".tmp", dir=archive_dir)
     try:
@@ -138,17 +141,24 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
             outcome = {"path": path, "written": True, "published_on": published_on}
         except FileExistsError:
             outcome = _existing(path, snap)
-        else:
-            try:
-                _fsync_dir(archive_dir)
-            except OSError as e:
-                raise DurabilityUnconfirmedError(path, published_on, e) from e
     except BaseException as e:
         if _remove(tmp):
             e.stage_retained = os.path.basename(tmp)  # type: ignore[attr-defined]
         raise
     if _remove(tmp):
         outcome["stage_retained"] = os.path.basename(tmp)
+    return _confirmed(outcome, archive_dir)
+
+
+def _confirmed(outcome: dict[str, Any], archive_dir: Path) -> dict[str, Any]:
+    """Sync the archive folder so the committed name is durable before the caller is told."""
+    try:
+        _fsync_dir(archive_dir)
+    except OSError as e:
+        error = DurabilityUnconfirmedError(outcome["path"], outcome["published_on"], e)
+        if "stage_retained" in outcome:
+            error.stage_retained = outcome["stage_retained"]  # type: ignore[attr-defined]
+        raise error from e
     return outcome
 
 

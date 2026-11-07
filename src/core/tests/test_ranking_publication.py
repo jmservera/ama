@@ -230,6 +230,54 @@ class PublicationTests(unittest.TestCase):
         self.assertTrue(res["written"])
         self.assertTrue(res["stage_retained"].startswith(".publishing-"))
 
+    def _dir_sync_fails(self):
+        import os
+        import stat
+        from unittest.mock import patch
+
+        real = os.fsync
+
+        def failing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(5, "sync failed")
+            return real(fd)
+
+        return patch.object(os, "fsync", failing)
+
+    def test_retry_of_an_existing_record_confirms_durability_before_reporting_it(self):
+        with self._dir_sync_fails():
+            with self.assertRaises(rp.DurabilityUnconfirmedError):
+                rp.publish(snap(), self.dir, "2026-10-10")
+            with self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+                rp.publish(snap(), self.dir, "2026-10-12")
+        self.assertEqual(ctx.exception.published_on, "2026-10-10")
+        self.assertEqual(rp.verify(self.dir), dict(count=1, problems=[], latest="2026-10-10"))
+        res = rp.publish(snap(), self.dir, "2026-10-12")
+        self.assertEqual((res["written"], res["published_on"]), (False, "2026-10-10"))
+
+    def test_publish_race_loser_confirms_durability_before_reporting_it(self):
+        import os
+        from unittest.mock import patch
+
+        real, state = os.link, {"raced": False}
+
+        def racing(src, dst, *a, **k):
+            if not state["raced"]:
+                state["raced"] = True
+                rp.publish(snap(), self.dir, "2026-10-11")
+                state["failing"] = self._dir_sync_fails()
+                state["failing"].start()
+            return real(src, dst, *a, **k)
+
+        try:
+            with patch.object(os, "link", racing):
+                with self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+                    rp.publish(snap(), self.dir, "2026-10-10")
+        finally:
+            state["failing"].stop()
+        self.assertEqual(ctx.exception.published_on, "2026-10-11")
+        self.assertEqual(rp.verify(self.dir)["problems"], [])
+
     def test_losing_a_publish_race_keeps_the_first_writer_and_reports_it(self):
         import os
         from unittest.mock import patch

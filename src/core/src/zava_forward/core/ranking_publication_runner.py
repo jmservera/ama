@@ -385,6 +385,21 @@ def run(
             return out
     try:
         res = ranking_publication.publish(snap, archive_dir, today)
+    except ranking_publication.DurabilityUnconfirmedError as e:
+        out.update(path=e.path, written=False, published_on=e.published_on)
+        out["status"] = "committed_unconfirmed"
+        out["uncertainty"] = {
+            "code": "committed_unconfirmed",
+            "message": (
+                "The record is in the archive but the archive folder sync failed "
+                f"({os.path.basename(e.path)}); durability is unconfirmed and this is not a "
+                "confirmed publication."
+            ),
+            "next_action": "Check the archive location, then rerun publish to confirm the sync.",
+        }
+        if hasattr(e, "stage_retained"):
+            out["uncertainty"]["stage_retained"] = e.stage_retained
+        return out
     except (ranking_publication.PublicationError, OSError) as e:
         refusals.append(_refusal("publish_failed", str(e), "Check the archive location and rerun."))
         return out
@@ -433,7 +448,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     for w in res["warnings"]:
         print(f"Warning {w['code']}: {w['message']}", file=sys.stderr)
     print(json.dumps(res, sort_keys=True, indent=2))
-    if res["status"] in ("refused", "blocked"):
+    if res["status"] in ("refused", "blocked", "committed_unconfirmed"):
         return EXIT_REFUSED
     return EXIT_PROBLEM if res["status"] == "problem" else EXIT_OK
 
