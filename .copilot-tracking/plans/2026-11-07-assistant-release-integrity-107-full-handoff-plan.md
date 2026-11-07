@@ -28,3 +28,19 @@ ms.date: 2026-11-07
 * Integration choice: exactly one normal merge of the pinned main; no rebase, force or history rewrite. Stop on drift or unreconcilable intent.
 * Light selectors, from `src/api` in an own-worktree venv with `PYTHONDONTWRITEBYTECODE=1` and `PYTHONPATH=tests:../core/tests:../agents/tests`: `python -m unittest test_assistant_release -q` (module `test_assistant_release`, classes DependentPolicyRelease, Release, Legacy, TaskReleaseRelease record class as named in source), then `test_assistant_release test_assistants test_continuity`; plus `ruff check .`, `ruff format --check .`, `mypy`, and an import-origin check that `zava_forward.*` resolve under this worktree.
 * Later FULL (not run now): read the command from current tools and README, `--all --base 7551e50e904cd4d696ed74ecd6fb1e0cb6be1ba8` (or the then-current main), new external directory, stdin from /dev/null, no cached-image or partial substitute, one nonqueued heavy holder after actual and logical resource admission, external verified receipt.
+
+## Second prospective amendment 2026-11-07 (before mutation; earlier text unchanged)
+
+---
+title: Second amendment to the 107 FULL handoff plan
+description: Additional normal merge of the score-only main 8af3aea and disclosure of prior process deviations
+ms.date: 2026-11-07
+---
+
+* Start head 35bc44a970028f09ebb244f7cd437c634cd57b44, tree 0eecd4588c4c6639da13fa920e92f15e5e7837ed, clean. Local ref `backup/issue-107-35bc44a97-pre-merge2` preserves it.
+* New base: main 8af3aea6b042f5dfb3305e18334439717f7c5649, an automated rubric commit parented on 7551e50e9 changing only `.github/rubric/scores/latest.json` (scorer run 42374095807 succeeded). It invalidates the exact base, so exactly one additional normal merge is needed; no rebase, force or history rewrite.
+* Expected delta after merge: that JSON file plus the planned record files only; test and production blobs unchanged.
+* The prior author critiques remain author-only; the class-name correction in the earlier changes record was not independently approved.
+* Disclosed observations on the earlier light run: pipelines used `tail` without pipefail so wrapper exit codes do not prove each underlying command exit (the unittest selectors were separately rerun with a direct exit code 0); one redirection order was reversed and was rerun; earlier session runs imported canonical-source packages.
+* Deviation: the earlier cleanup used recursive wildcard removal of egg-info and cache directories, outside the safe cleanup procedure. It is recorded, not repeated, and not retrospectively authorised. No glob or recursive deletion in this run; caches stay external.
+* FULL lane: sole nonqueued run after the coordinator admission, with resources and lock rechecked immediately before the runner; no commit or cleanup after it.
