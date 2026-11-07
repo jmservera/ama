@@ -10628,3 +10628,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] update | Issue 79 merged main 8af3aea6 (Refs #79)
 
 * Merged main `8af3aea6` (docs 1247, browser readiness 1249 and the score commit) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-8af3-merge`. Publisher, runner and test blobs are unchanged. Light no-service checks passed; no FULL gate was run, the three 357e842d findings stay author-corrected only (not independently confirmed), and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r19).
+
+## [2026-11-07] update | Issue 79 merged main 39506027 (Refs #79)
+
+* Merged main `39506027` (the 1253 assistant release regression test, the 107 RPI records and the score commit) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-main1253-merge`. Publisher, runner and ranking test blobs are unchanged. Light no-service checks passed; no FULL gate was run, the three 357e842d findings stay author-corrected only, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r20).
