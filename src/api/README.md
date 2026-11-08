@@ -2078,7 +2078,12 @@ screen for these controls is not delivered (unmet #189 detail; no UI was changed
 entry for the existing `HubReceiver` (#110): it binds the same cohort (`SYN-<sensor key>`),
 needs an owner-verified routed Event Hub (`ZF_SIM_ROUTING_READY=1`, `ZF_SIM_HUB_HOSTNAME`), runs
 one window of at most 4 minutes by default, never past the control expiry, and exits. It starts
-only from a manual job trigger.
+only from the manual job `infra/live-receiver-job.bicep` (its own identity, `routingReady` false
+by default). It polls the control file every 2 seconds during the window and signals the
+`HubReceiver` stop on a stop, expiry, cohort change or unreadable file; a window under one second
+is refused. The simulator reads the cohort every slot and sends nothing if the control refuses
+it; it reuses its cached homes only after a transient store read failure and only those the
+current control still lists.
 
 Retained interface for the Quality UI and AI slice (frozen): each stored live row keeps
 `sensor_id`, `reading_id` (`LIVE-<sensor>-<UTC slot>`), `home_id`, `observed_at` (UTC),

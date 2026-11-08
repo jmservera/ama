@@ -375,6 +375,9 @@ async def run(
             try:
                 if not homes or len(summaries) % refresh_slots == 0:
                     homes = list_homes() or homes
+            except StreamError:
+                LOG.error("run control refused the current cohort; nothing sent")
+                return summaries
             except Exception:
                 LOG.error("home enumeration failed; reusing the previous list")
             if homes:
@@ -445,11 +448,22 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
         if args.sink == "iothub" and control_path is None:
             raise StreamError("CONTROL_REQUIRED")
 
+        cached: list[str] = []
+
         def homes() -> list[str]:
-            ids = store_home_ids(env)
             if control_path is None:
+                ids = store_home_ids(env)
                 return ids[: args.max_homes] if args.max_homes > 0 else ids
-            return cohort_homes(live_control.load(control_path), ids)
+            control = live_control.load(control_path)
+            try:
+                result = cohort_homes(control, store_home_ids(env))
+            except HomeListError:
+                # Transient store failure: reuse only cached homes the current control authorizes.
+                result = [h for h in cached if h in control.homes]
+                if not result:
+                    raise
+            cached[:] = result
+            return result
 
         def gate(moment: datetime) -> bool:
             if control_path is None:
@@ -468,7 +482,16 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
         first = homes()
         LOG.info("capacity %s", check_capacity(len(first), limits))
         asyncio.run(
-            run(lambda: homes(), generator, sink, limits, once=args.once, report=_report, gate=gate)
+            run(
+                lambda: homes(),
+                generator,
+                sink,
+                limits,
+                once=args.once,
+                report=_report,
+                gate=gate,
+                refresh_slots=1,
+            )
         )
     except HomeListError as error:
         print(f"Cannot run: {error}", file=sys.stderr)

@@ -192,7 +192,9 @@ class ReceiverTests(unittest.TestCase):
             def __init__(self, ingestion: object, act: object, bound: tuple[object, ...]) -> None:
                 seen["bound"] = len(bound)
 
-            async def run(self, *, max_seconds: float, max_events: int) -> tuple[int, ...]:
+            async def run(
+                self, *, max_seconds: float, max_events: int, stop: asyncio.Event
+            ) -> tuple[int, ...]:
                 seen["seconds"] = max_seconds
                 return (1, 2)
 
@@ -212,6 +214,162 @@ class ReceiverTests(unittest.TestCase):
 
     def test_main_without_control_file_is_refused(self) -> None:
         self.assertEqual(rx.main([], {}), 2)
+
+
+class RefreshRegressionTests(unittest.TestCase):
+    def test_cohort_changed_to_absent_homes_sends_nothing_more(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "control.json"
+            lc.write(path, lc.parse(document(homes=HOMES[:2])))
+            sink, calls = ls.MemorySink(), {"n": 0}
+
+            def list_homes() -> list[str]:
+                calls["n"] += 1
+                if calls["n"] == 2:
+                    lc.write(path, lc.parse(document(homes=["HOME-900"])))
+                return ls.cohort_homes(lc.load(path), HOMES)
+
+            summaries = asyncio.run(
+                ls.run(
+                    list_homes,
+                    lr.Generator(1),
+                    sink,
+                    ls.Limits(max_per_second=100.0),
+                    max_slots=5,
+                    refresh_slots=1,
+                    now=lambda: NOW,
+                    sleep=_no_sleep,
+                )
+            )
+        self.assertEqual(len(summaries), 1)
+        self.assertEqual(len(sink.messages), 2)
+
+    def test_cohort_removal_is_refused_not_cached(self) -> None:
+        sink = ls.MemorySink()
+
+        def list_homes() -> list[str]:
+            raise StreamError("COHORT_NOT_IN_STORE")
+
+        summaries = asyncio.run(
+            ls.run(
+                list_homes,
+                lr.Generator(1),
+                sink,
+                ls.Limits(max_per_second=100.0),
+                once=True,
+                now=lambda: NOW,
+            )
+        )
+        self.assertEqual((summaries, sink.messages), ([], []))
+
+
+async def _no_sleep(seconds: float) -> None:
+    return None
+
+
+class ReceiverStopTests(unittest.TestCase):
+    def run_with_change(self, change: Any, expires: str = EXPIRES) -> dict[str, Any]:
+        seen: dict[str, Any] = {"ingested": 0}
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "control.json"
+            control = lc.parse(document(expires_at=expires))
+            lc.write(path, control)
+
+            class Fake:
+                def __init__(self, i: object, a: object, b: tuple[object, ...]) -> None:
+                    pass
+
+                async def run(
+                    self, *, max_seconds: float, max_events: int, stop: asyncio.Event
+                ) -> tuple[int, ...]:
+                    seen["seconds"] = max_seconds
+                    change(path, control)
+                    for _ in range(50):
+                        if stop.is_set():
+                            break
+                        await asyncio.sleep(0.01)
+                        seen["ingested"] += 1
+                    seen["stopped"] = stop.is_set()
+                    return ()
+
+            asyncio.run(
+                rx.run_window(
+                    control,
+                    {},
+                    object(),  # type: ignore[arg-type]
+                    240.0,
+                    10,
+                    NOW,
+                    receiver_type=Fake,  # type: ignore[arg-type]
+                    reload=lambda: lc.load(path),
+                    clock=lambda: NOW,
+                    poll=0.01,
+                )
+            )
+        return seen
+
+    def test_stop_during_window_signals_the_receiver(self) -> None:
+        seen = self.run_with_change(
+            lambda p, c: lc.write(p, lc.parse(c.as_document() | {"enabled": False}))
+        )
+        self.assertTrue(seen["stopped"])
+        self.assertLess(seen["ingested"], 5)
+
+    def test_invalid_file_and_changed_cohort_also_stop(self) -> None:
+        self.assertTrue(
+            self.run_with_change(lambda p, c: p.write_text("{", encoding="utf-8"))["stopped"]
+        )
+        other = lambda p, c: lc.write(p, lc.parse(c.as_document() | {"homes": [HOMES[5]]}))  # noqa: E731
+        self.assertTrue(self.run_with_change(other)["stopped"])
+
+    def test_expiry_during_window_stops(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "control.json"
+            control = lc.parse(document())
+            lc.write(path, control)
+            ticks = iter([NOW, control.expires_at, control.expires_at])
+            stop = asyncio.Event()
+            asyncio.run(rx._watch(control, lambda: lc.load(path), lambda: next(ticks), stop, 0.0))
+        self.assertTrue(stop.is_set())
+
+    def test_sub_second_remaining_is_refused_not_rounded_up(self) -> None:
+        control = lc.parse(document())
+        with self.assertRaises(StreamError):
+            asyncio.run(
+                rx.run_window(
+                    control,
+                    {},
+                    object(),  # type: ignore[arg-type]
+                    60.0,
+                    10,
+                    control.expires_at - timedelta(milliseconds=500),
+                )
+            )
+
+
+class ReceiverJobContractTests(unittest.TestCase):
+    text = (Path(__file__).resolve().parents[3] / "infra" / "live-receiver-job.bicep").read_text()
+    sim = (Path(__file__).resolve().parents[3] / "infra" / "live-simulator-job.bicep").read_text()
+
+    def test_receiver_job_is_manual_with_its_own_identity_and_command(self) -> None:
+        for needle in (
+            "triggerType: 'Manual'",
+            "zava_forward.api.live_receiver",
+            "ZF_SIM_CLIENT_ID",
+            "ZF_SIM_ROUTING_READY",
+            "param routingReady bool = false",
+            "/certs/control.json",
+            "ZF_STORE', value: 'mssql'",
+            "mountOptions: 'ro'",
+        ):
+            self.assertIn(needle, self.text)
+        self.assertNotIn("zava_forward.api.live_simulator", self.text)
+
+    def test_simulator_job_keeps_its_read_only_scheduled_shape(self) -> None:
+        self.assertIn("zava_forward.api.live_simulator", self.sim)
+        self.assertIn("triggerType: 'Schedule'", self.sim)
+        self.assertNotIn("ZF_SIM_CLIENT_ID", self.sim)
+        self.assertNotIn("live_receiver", self.sim)
 
 
 class SecretHygieneTests(unittest.TestCase):

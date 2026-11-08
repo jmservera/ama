@@ -11,7 +11,7 @@ import argparse
 import asyncio
 import os
 import sys
-from collections.abc import Mapping, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -44,6 +44,32 @@ def activation(env: Mapping[str, str], control: live_control.Control) -> Activat
     )
 
 
+POLL_SECONDS = 2.0
+
+
+async def _watch(
+    control: live_control.Control,
+    reload: Callable[[], live_control.Control],
+    clock: Callable[[], datetime],
+    stop: asyncio.Event,
+    poll: float,
+) -> None:
+    """Stop the receiver when the control stops, expires, changes cohort or is unreadable."""
+    while not stop.is_set():
+        try:
+            current = reload()
+            keep = current.homes == control.homes and (
+                live_control.decide(current, clock()) == live_control.SEND
+            )
+        except StreamError:
+            keep = False
+        if not keep:
+            stop.set()
+            return
+        wait = min(poll, max(0.0, (control.expires_at - clock()).total_seconds()))
+        await asyncio.sleep(wait)
+
+
 async def run_window(
     control: live_control.Control,
     env: Mapping[str, str],
@@ -52,14 +78,30 @@ async def run_window(
     events: int,
     now: datetime,
     receiver_type: type[HubReceiver] = HubReceiver,
+    reload: Callable[[], live_control.Control] | None = None,
+    clock: Callable[[], datetime] = lambda: datetime.now(UTC),
+    poll: float = POLL_SECONDS,
 ) -> int:
-    """One receive window; refuses unless the control is enabled and unexpired. Returns receipts."""
+    """One receive window; refuses unless the control is enabled and unexpired. Returns receipts.
+
+    The window never outlives the expiry and is stopped as soon as `reload` shows a stop, an
+    expiry, a changed cohort or an unreadable file.
+    """
     if live_control.decide(control, now) != live_control.SEND:
         raise StreamError("CONTROL_NOT_SENDING")
-    receiver = receiver_type(ingestion, activation(env, control), bindings(control))
-    # Never outlive the control's expiry, whatever window was requested.
     remaining = (control.expires_at - now).total_seconds()
-    receipts = await receiver.run(max_seconds=max(1.0, min(seconds, remaining)), max_events=events)
+    window = min(seconds, remaining)
+    if window < 1.0:
+        raise StreamError("CONTROL_NOT_SENDING")
+    receiver = receiver_type(ingestion, activation(env, control), bindings(control))
+    stop = asyncio.Event()
+    watcher = asyncio.create_task(_watch(control, reload, clock, stop, poll)) if reload else None
+    try:
+        receipts = await receiver.run(max_seconds=window, max_events=events, stop=stop)
+    finally:
+        if watcher is not None:
+            watcher.cancel()
+            await asyncio.gather(watcher, return_exceptions=True)
     return len(receipts)
 
 
@@ -84,6 +126,7 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
                 args.seconds,
                 args.events,
                 datetime.now(UTC),
+                reload=lambda: live_control.load(Path(args.control_file)),
             )
         )
     except (StreamError, SystemExit) as error:

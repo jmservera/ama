@@ -3930,8 +3930,18 @@ The executor, under separate admission, runs these in order and stops at the fir
    `dbo.cases` only), the hub route, the `api-consumer` group and the consumer identity.
 5. Build and push the image by digest, run `az deployment group what-if`, deploy
    `live-simulator-job.bicep`, trigger one manual execution and check one slot end to end.
-6. Run the receiver as a manual job from the same image
-   (`python -m zava_forward.api.live_receiver`), then check the retained rows for the cohort.
+6. Deploy `live-receiver-job.bicep` (Manual trigger, same image digest, its own receiver
+   identity; `routingReady` stays `false` until step 4 verified the route). Its command is
+   `python -m zava_forward.api.live_receiver --control-file /certs/control.json --seconds 240`,
+   with `ZF_SIM_CLIENT_ID` and `ZF_SQL_CLIENT_ID` set to the receiver identity, `ZF_STORE=mssql`
+   and the control share mounted read-only. The receiver identity needs AcrPull, Azure Event Hubs
+   Data Receiver on `sensor-readings`, `SELECT` on `dbo.cases`, `dbo.sensor_register`,
+   `dbo.sensor_consumer_control` and `dbo.sensor_consumer_policy`, and `SELECT, INSERT` on
+   `dbo.sensor_reading`, `dbo.sensor_delivery` and `dbo.sensor_data_quality_exception`; the
+   executor confirms this list against the consumer statements and grants nothing wider. The
+   simulator identity stays read-only on `dbo.cases`. Start one execution per window; the receiver
+   stops at once on a control stop, expiry, cohort change or unreadable file. Then check the
+   retained rows for the cohort.
 7. Finish: `live_control stop` (or let it expire), delete the job, revoke the certificates
    (#185 teardown) and record actual cost. The simulator sends nothing after expiry even if
    this step is late; the schedule still ticks and exits, so delete the job.
