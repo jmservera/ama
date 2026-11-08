@@ -124,7 +124,9 @@ class DataOperatorAiState(unittest.TestCase):
         for rows in (good, [*good, extra, other]):
             failed = ai.failed_ai_rows(rows)
             self.assertTrue(all(ai.says_failure_outcome(r[ai.HAPPENED_COLUMN]) for r in failed))
-            self.assertEqual([r[ai.SOURCE_COLUMN] for r in failed][:2], [ai.QUARANTINED_ID, ai.FALLBACK_ID])
+            self.assertEqual(
+                [r[ai.SOURCE_COLUMN] for r in failed][:2], [ai.QUARANTINED_ID, ai.FALLBACK_ID]
+            )
         self.assertEqual(len(ai.failed_ai_rows([*good, extra, other])), 3)
         for bad in (
             "Model result delivered.",
