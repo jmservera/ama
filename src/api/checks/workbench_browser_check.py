@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 
 from playwright.sync_api import Page, Route, sync_playwright
+from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
 from checks.design_system_browser_check import ROOT, check, main
 
@@ -72,6 +73,33 @@ def wait_cases(page: Page, count: int) -> None:
         && document.querySelector('#workspace-status').textContent.includes(`${count} case`)""",
         arg=count,
     )
+
+
+def wait_queue_result(
+    page: Page, queue: str, expected: list[str], *, timeout_ms: float | None = None
+) -> None:
+    """Wait until the rendered list is the named queue with exactly the expected IDs, in order."""
+    try:
+        page.wait_for_function(
+            """({queue, expected}) => {
+                const status = document.querySelector('#workspace-status').textContent;
+                const word = expected.length === 1 ? 'case' : 'cases';
+                const rendered = [...document.querySelectorAll('.item')].map(
+                    el => decodeURIComponent(el.getAttribute('href').split('/').pop()));
+                return status.includes(`Work queue: ${queue}. Order:`)
+                    && status.includes(`. ${expected.length} ${word}. Workflow stage:`)
+                    && rendered.length === expected.length
+                    && rendered.every((id, index) => id === expected[index]);
+            }""",
+            arg={"queue": queue, "expected": expected},
+            timeout=timeout_ms,
+        )
+    except PlaywrightTimeoutError as error:
+        status = page.locator("#workspace-status").text_content()
+        raise AssertionError(
+            f"{queue} queue rendered result not reached: expected IDs {expected}, "
+            f"observed IDs {ids(page)}, status {status!r}"
+        ) from error
 
 
 def reflow(page: Page, label: str) -> None:
@@ -497,10 +525,10 @@ def run_browser(base: str) -> None:
                         )
                     ):
                         page.locator("#f-queue").select_option(queue)
-                    wait_cases(page, len(expected))
+                    wait_queue_result(page, queue, expected)
                     check(f"{queue} queue exact expected IDs", ids(page) == expected)
                 page.locator("#f-queue").select_option("overdue")
-                wait_cases(page, 1)
+                wait_queue_result(page, "overdue", ["ZF-4"])
                 check(
                     "queue clock and named owner use recorded snapshot",
                     "12 elapsed hours" in page.locator(".item").inner_text()

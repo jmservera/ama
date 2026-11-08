@@ -2958,6 +2958,137 @@ Criterion 7 has supporting evidence (the only confirmed finding was triaged to
 but this PR uses `Refs`, so the owner decides the ticks. Criteria 1 to 6 are
 supported by PR #461 and checkpoints 2 to 4. No issue is closed by this record.
 
+## Parent #73 topic checkpoint: employee exception screen integration (2026-11-07, Refs #73 #135)
+
+Parent-topic observed and candidate evidence on `feat/workbench-integration-73-demo`. It is not merged-`main`, Azure, live, human or assistive-technology acceptance. Focused tier, one test file and this record; no server, store, auth, schema, model, infrastructure, dependency or web source change in this slice.
+
+### Source identities
+
+| Item | Value |
+| --- | --- |
+| `origin/main` (fetched) | `23b26a7f3a4693cd20dcf0447303d97491096cb3`, unchanged |
+| Parent topic after child merge | `d17aee537ec267162af106e14056440274ae589d`, tree `38ebb2da6b0499ffadcf29fd8ddfe675afdc564c` |
+| Child PR | #1257 (`feat/operator-exception-api-screen-135` into the parent topic, not `main`), squash merged 2026-11-07T17:59:43Z, original head `819022f858b3fdc4dfe20357304a5754221d5ed8`; hosted and review results are coordinator-reported, not re-observed here |
+| `role-screens.js` | blob `55f503d5952942d0fbed84deac38f9273cc06b23` |
+| BRD | 0.21.0, draft, blob `34d88395de861e9799eb9e24121a21c92c7a5adc`, unchanged |
+| PRD | 0.21.0, in-review, blob `c788b917bafaede215f326f0efc71e071a687f1c`, unchanged |
+
+Draft and in-review documents are not approved by this record.
+
+### What the integration observes in source
+
+* The existing role-screen host (`roleScreensView`) forwards the page rows and selected case to the data-operator `overview`, which asks the existing `GET /api/exceptions` only after an explicit link (`exceptions=1`). Each view is audited by the existing endpoint (`src/core/README.md`, exception register), so the default screen load makes no request.
+* The screen is installed for the existing programme manager and support officer roles only. Other roles reach neither the screen nor the endpoint.
+* Returned values render as text with both conflict values, source, date and version, eligibility Unknown and no winner. Denied, unavailable, malformed and aborted responses show no rows. Failed or quarantined AI requests are labelled as not delivering a model result; deliberate workflow-only processing is neither a failure nor a model result and is never listed.
+* Traceability: [BRD](../brds/agentic-retrofit-programme-brd.md) `BRD::FR-034` and [PRD](../prds/zava-forward-retrofit-programme-demonstrator.md) `PRD::FR-034` and `PRD::SA-003` (shared ownership, reason and explicit unknowns), within epic #73; #135 cites `PRD::FR-029` and `PRD::AC-040`. These are mapping observations, not proven acceptance.
+
+### Actual local commands and outcomes
+
+Run from `src/api` in a dedicated virtual environment with editable installs of `src/core`, `src/agents` and `src/api` (import path confirmed inside this worktree), `PYTHONPATH=../core/tests:../agents/tests:tests`.
+
+| Command | Exit and result |
+| --- | --- |
+| `python -m unittest tests.test_exception_register.Config tests.test_exception_register_screen tests.test_data_operator_screen tests.test_role_screens tests.test_role_screens_conformance` | 0; 45 tests OK, including 5 new `HostIntegration` host-level tests |
+| Three one-line mutants of `role-screens.js` (host stops forwarding rows and case; explicit-request rule removed; screen role list widened), each restored afterwards | `HostIntegration` failed each time (1 failure per mutant); source diff empty after restore |
+| `ruff check`, `ruff format --check`, `mypy` on the test file; `node --check role-screens.js` | all pass |
+
+### Not run, open gates
+
+* Selected-tier native `python3 tools/rpi-checks.py --changed` and the integrated real-browser observation (keyboard, narrow reflow, real DOM abort): not run, because another run holds the shared heavy resource; they await a new coordinator admission. The existing `Register` and `Endpoint` authority classes (SQL store and local server fixtures) were not re-run on the parent head.
+* Independent current assessment, hosted checks on the final head and human approvals.
+* The child browser story ended 74 steps with exit 0, but an intentional held-request abort printed a `CancelledError` and the original helper expectation failures are retained; page errors were 0, which is not an all-console or pristine-harness proof.
+
+### Limitations and remaining owners
+
+* #135 stays open: no failed-import, integration or stranded-task producers wired to intake, no durable controlled recovery, no named stewards or approved runbooks, and no role, human, resident, professional, assistive-technology or live acceptance. The owner is the existing #135 issue owner.
+* Manager-only host (a named non-manager steward cannot open it), re-audit on refresh, raw provenance strings without `translate="no"`, placeholder guidance, and unbounded rendering above 50 rows are recorded follow-ups.
+* No actual model result was observed. Fallback, quarantine and workflow-only are never successful AI.
+* #73 criteria (stabilization #440, all children closed or deferred, every requirement with a passing check or deferral), #74, #76, #79 and #80 remain open. Nothing is closed or ticked by this record.
+
+## Ranking publication current-main stabilization checkpoint (2026-11-08, Refs #440 #79 #1231)
+
+Scoped recurrence of the open #440 checkpoint on current `main` after the ranking publication integration (PR #1239) merged. Focused tier: documentation and tracking only, no production, deployment, infrastructure, SQL or security-policy change. It is local engineering observation, not whole #79, #1231 or #440 acceptance, and it does not alter the earlier sensor or discovery checkpoints, which stay on their own protected branch and PR.
+
+### Source and document identities
+
+| Item | Value |
+| --- | --- |
+| Source observed (merged PR #1239 squash) | `a80acadaa1b7d96a10e71b246e297bc2825d3de5`, tree `5d2df9af254883ec75dedb93ac29bab50482fbe1`, merged 2026-11-08T02:11:31Z; coordinator reports tree equality with candidate `ac0f29f92afcc39e0700f67239a4b202f29b7573`, and the retained receipt identity tree is the same value |
+| `origin/main` when observed | advanced once to `77fa5d35e` (generated rubric score commit, one file `.github/rubric/scores/latest.json`); no ranking source, test or document change, so the observed ranking source is unchanged |
+| Docs child | branch `docs/ranking-main-stabilization-440`, declared PR target `main`, started on `a80acada`; planning commit `32db7bd6e430fa99292b495ebe9dd9e01f0aee98` precedes this edit |
+| BRD | 0.21.0, status draft, blob `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD | 0.21.0, status in-review, blob `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0002 | Status Proposed, ms.date 2026-10-24, blob `cbe21530043ff15432cc6dce1086d080f5eb15b4` (decision 4: ranking policy and retained publication) |
+| ADR 0003 | accepted with owner amendment, blob `d60645397b20fb70ac3d1dc47c7a6c8671201306` |
+| ADR 0006 | accepted, blob `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+
+Draft, in-review and Proposed documents are not approved by this record.
+
+### Retained historical evidence (source-qualified, not fresh at the squash commit)
+
+* Receipt `/home/azureuser/.local/share/ama/gates/g79-p-dd92-r1-1108/receipt.json`, sha256 `5627d5758cb14745164054c0c1803544ed0c90f5d064b2fc1b4297ed75a0744c` (matches the supplied value): schema 4, scope full, status passed, failure null, jobs 1 (a higher count was requested), image cache fresh, sealed 2026-11-08T01:34:20Z, head `ac0f29f9`, base `b284d0d3e8ebed24d40bf9eb1e23de1ae9101d01`. It was verified full immediately before merge against that base; main then advanced, so it is historical premerge evidence and not a current full-base receipt or a gate at `a80acada`.
+* 205 commands, 192 exit 0 and 13 exit 1; the 13 are `python -c import ...` probes (read from the receipt argv). No group is recorded as skipped. This session read the retained logs and the sha256 of every log read equals the receipt value. Counts from those logs: core 2404 tests with 226 skips, agents 273, API 1982 with 339 skips, orchestrator 104, importer 39, static 86, infra 533, migration 25, MSSQL 286 with 1 skip (the declared JSON-only audit-ordering skip), browser logs 3 and 1. The maintained Chromium and axe states and the four image reports are coordinator-reported and were not re-read here.
+* Hosted-only items the receipt lists as not run: GitHub approvals and protection, OIDC and Azure what-if, manual release or deployment, real AI acceptance.
+* The serialized `gh pr diff` failed at the 300-file cap and is recorded as failed; it is not claimed successful. The complete 308-path equivalence (four paginated API pages, 308 blob matches, byte-equal remote Git diff) is a coordinator report in session files and was not re-run here, so it is not observed in this session. The earlier full-log read's missing contemporaneous-hash caveat remains.
+* Retained history, unedited: the original socket-path preflight refusal and the earlier R35, R31 and 7990 adverse records are kept by the coordinator and named in `.copilot-tracking/reviews/2026-11-08/issue-79-r33-parent-dd92-review.md` (RV-001, RV-002). No tracked file in this checkout holds the socket-path refusal log, so no path is invented and it is not read or reported as a pass.
+
+### Actual local commands and outcomes (this session, installed packages)
+
+Environment: Python 3.12.3 virtual environment `/mnt/ama-gates/ranking-main-440-1108/venv`, built from `git archive HEAD src` exported to scratch so no build output touched the checkout; `src/core`, `src/agents` and `src/api` installed non-editable (`pip install` exit 0, `pip check` exit 0, versions 0.1.0). `PYTHONDONTWRITEBYTECODE=1`, scratch `TMPDIR`, `HOME` and `ZF_DATA=/mnt/ama-gates/ranking-main-440-1108/data/zavaforward.json` (empty; no private dataset read). Import identity run from the scratch directory: every probed module (`zava_forward.core`, `ranking_publication`, `ranking_publication_runner`, `zava_forward.api.server`, `cohort_ranking_eval`) resolves under the venv `site-packages`; the installed `ranking_publication.py`, `ranking_publication_runner.py`, `ranking.py`, `store.py` and `server.py` have the same sha256 prefix as the worktree files. Native time 2026-11-08T02:20:08Z to 02:21:26Z; no heavy lock holder or competing gate was present; `/mnt` stayed at 5.4 GB free; the checkout stayed ignored-inclusive clean after the install and after the runs.
+
+| Command | Exit and result |
+| --- | --- |
+| `cd src/core && PYTHONPATH=tests python -m unittest discover -s tests -p "test_ranking_publication*.py" -q` | 0; 76 tests OK, 0 skips |
+| `cd src/api && PYTHONPATH=../core/tests:../agents/tests python -m unittest discover -s tests -p "test_ranking_*.py" -v` | 0; 53 tests OK, 0 skips; includes the 60,000-case timing in `test_ranking_scale.py` (filtered paged list 63 ms, map clusters 325 ms) |
+| `cd src/agents && PYTHONPATH=../core/tests python -m unittest discover -s tests -p "test_cohort_ranking_eval.py" -q` | 0; 20 tests OK; the runner output keeps the blockers `insufficient_sample` and `unapproved_thresholds` (OQ-018) |
+
+The API `SqlStore` classes in `test_ranking_policy.py` use a SQLite-backed store, not SQL Server; this observation is not real MSSQL evidence. Logs are in `/mnt/ama-gates/ranking-main-440-1108` (`core.log`, `api.log`, `agents.log`, `identity.log`, `bytes-equal.log`, `pip-install.log`).
+
+### Traceability and boundary findings
+
+| Requirement or decision | Source and observation | Class |
+| --- | --- | --- |
+| PRD `PR-006`: deterministic order, versioned policy, named owner | `ranking.py` pure function with no clock, seed or model; `ranking_publication.py` immutable record named by policy version, as_of and snapshot hash; core selectors passed | local observed (this session) plus historical receipt |
+| PRD `PR-006` truthful concurrent outcome | exclusive 0600 stage, synced, hard link so the first writer wins; the loser reports the existing record; stage removal failure reported as `stage_retained`; damaged existing record refused; `ConcurrentWriterTests` including separate processes passed | local observed |
+| Durability | a failed folder sync after the link raises `DurabilityUnconfirmedError`, record kept, audited as `ranking_snapshot_publication_unconfirmed`, HTTP 409 `committed_unconfirmed`; retry confirms; wiring tests passed. Crash and supported-filesystem behaviour is not observed; first publication into missing nested ancestors is owned by #1258 | local observed for the mocked paths; filesystem crash unknown |
+| Hard links and storage | no hard-link support or unwritable folder is a path-free storage failure, not an authorization failure; nothing is overwritten; wiring test passed | local observed |
+| API, auth and roles | snapshot, publication status and publish are manager-only; GET does not publish; non-manager gets 403; wiring and policy tests passed | local observed |
+| Human authority | the runner refuses to publish an unsigned policy outside exercise (`approval_missing`); sign-off is a recorded human act bound to the rule-order hash and cannot be proved by code; `ranking-v1.json` has owner `to be named`, no sign-off and status draft; the API reports `policy_signed` and unsigned publication is audited | local observed; sign-off, first rule order and policy owner unapproved |
+| PRD `PR-007`, `PR-008` AI never changes ranking | ranking has no AI input; the offline cohort evaluation uses constructed pairs through the real `rank` and says its results are never fairness evidence | deterministic computation observed; actual model work not observed |
+| PRD `FR-012` with `AC-015`, `AC-040`; `FR-054` with `AC-073` | missing or ineligible inputs give reason codes or review, not silent exclusion; evaluation stays blocked on unapproved thresholds (OQ-018); manifest is a developer fixture | implemented, unverified for acceptance; blocked on owner approval |
+| ADR 0002 decision 4 (Proposed) | its implementation-status row (a dated 2026-10-08 snapshot that says it is not the current status) still says no scheduled publish step; the current contract is in `src/core/README.md` | dated history, not a contradiction; no ADR edit |
+| ADR 0003, ADR 0006 | local-first ladder and layout boundaries respected; nothing in this slice changes them | no change |
+| BRD 0.21.0 draft | states ranking only generally (arithmetic once weights are agreed; fair prioritisation needs an approved cohort policy); no numbered BRD NFR for ranking is claimed | draft |
+
+Boundary observations: the viewer snapshot file `ranking-snapshot-<version>.json` beside the data is rewritten with `os.replace` and is not the immutable archive, so it carries no no-overwrite contract; this is a design distinction, not a PR-006 defect. No new runtime defect is established by this checkpoint: static reading and the three selectors found none.
+
+### Existing owners compared
+
+* #1258 (Medium, archive ancestor durability) and #1259 (Medium, unusable archive path read as a healthy empty archive) stay open and non-blocking for the previously scoped publication. They were compared against every observation; this record adds no duplicate and no new issue.
+* #1231 (concurrent-writer metadata, parent topic merged), #79 (epic), #81, #86 and #107 stay open. No other open issue matched `ranking in:title`.
+* This record cannot regrade or close any of them.
+
+### Not run, exclusions and open gates
+
+* Not run: fresh FULL at the squash commit, real SQL Server, browser or axe, container or image build and scan, Azure, any model or provider call, private `ZF_DATA`, and the native focused gate result, which is kept in the external handoff for the final head and not embedded here.
+* Not established: live model effectiveness (there is none in this checkpoint), controlled benchmark, policy owner and first rule order, thresholds, retention (a separate Legal or DPO decision), deployed scheduling, supported deployment, filesystem, cross-UID and crash behaviour, assistive-technology and human acceptance.
+* Remaining gates: independent exact-head assessment, hosted CI, human and policy-owner approvals, a later full gate at the then-current `main` before any whole-issue claim, whole #79, #1231 and #440 closure, and expansion approvals for #81, #86, #107 and ranking follow-up work.
+
+### Classification, recommendation and gates
+
+* Local observed (this session): installed-package ranking publication, runner, API boundary and cohort evaluation selectors above. Local observed, historical and source-qualified: the full receipt at `ac0f29f9` against `b284d0d3`. Azure observed: none. Implemented, unverified: scheduler, retention, crash behaviour, sign-off. Deferred: #1258, #1259 fixes. Blocked: threshold approval and policy sign-off. Unknown: live model, Azure and acceptance behaviour.
+* Recommendation: CONTINUE. The merged ranking surface holds its deterministic, no-overwrite, truthful-outcome and manager-only boundaries at this source; no fix or pivot is proposed, and no pivot, threshold, rule order or retention is approved here. Work on #1258 and #1259 proceeds as separate FULL-tier RPI, and independent lanes continue.
+* Gated by this record: closure of #79, #1231 and #440, and approval of #81, #86 and #107 expansion, stay gated on the remaining gates above. Nothing is ticked and nothing is closed by this record.
+
+### Current-main currency note (2026-11-08, appended later)
+
+* After the section above was frozen at `aa8f0d11baefab38e4d5e4dc4d9c6f55ed03d77b`, `origin/main` was `77fa5d35e915e524af9a5d536e3ae093b69c5807` (`chore(rubric): record score 77/100`, 2026-11-08T02:19:23Z). Against `a80acada` it changes only `.github/rubric/scores/latest.json` (blob `6741ddd61aba2ff80cd8b7cb2f59e63cb1af7db3`, mode 100644, valid JSON). It is a generated score commit, not new ranking, model, deployment or acceptance evidence. The observations above stay as recorded, and the `ac0f29f9` full receipt remains historical premerge evidence against `b284d0d3`, not a current-base full run.
+* This branch took `77fa5d35` by a normal merge; no rebase, amend or reset was used, so the earlier planning, author Review and refusal evidence stay in ancestry.
+* Distinct refusals: the original socket-path preflight refusal and the earlier R35 adverse records are unchanged and coordinator-held; the native focused gate attempt for `aa8f0d11` was refused before execution (exit 1, candidate does not descend from the reviewed main base) with no receipt, logs in `/mnt/ama-gates/ranking-main-440-1108`.
+* Selectors refreshed on the merged tree with a fresh out-of-tree install in `/mnt/ama-gates/c440-currency-r2-1108-checks` (installed modules byte-equal to the worktree sources, synthetic empty `ZF_DATA`, no bytecode): core ranking publication 76 OK, API ranking 53 OK on a SQLite-backed store (not SQL Server), cohort evaluation 20 OK, retention pytest 37 passed, no skips reported, all exit 0. The native focused gate result for the final head is kept in the external handoff and is not stated here.
+* The failed serialized `gh pr diff` and the coordinator-reported 308-path equivalence qualification are unchanged. Recommendation stays CONTINUE and gates ranking expansion, #81, #86, #107, #1258, #1259 and discovery #123 shared-document reconciliation; it accepts no whole #79, #1231 or #440 and no policy.
+
+
 ## Issue 81 parent alignment checkpoint (2026-11-06)
 
 Refs #81 #440. Bounded alignment-only checkpoint for the controlled-lifecycle

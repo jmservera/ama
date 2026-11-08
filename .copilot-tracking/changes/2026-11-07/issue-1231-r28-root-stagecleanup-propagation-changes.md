@@ -1,0 +1,14 @@
+---
+title: Issue 1231 r28 changes, root bb7e044c stage-cleanup propagation
+description: Implementation record for the local merge of root bb7e044c and its reconciliation with the child
+ms.date: 2026-11-07
+---
+
+* Planning commit 3f44534566ca0f79073740c135f6788b494e648a (research, plan, details, critique) preceded the merge. Backup ref `backup/issue-1231-4ec4c-pre-r28-merge` preserves 4ec4c280.
+* One normal `--no-ff` merge of bb7e044c33d7f3670ad293ae9e3ff0cae2a801fc: commit 00efa6f9d52f493ab03745b22913090627ea2cc9, tree 353b7569af19793e7d2b65f09c12e80d36a339f1, parents 3f445345 and bb7e044c. Merge form chosen instead of the authorised rebase to avoid rewriting PR #1242 history; no push or force.
+* Conflicts: four (core README, `ranking_publication.py`, both test files), as the dry run predicted. Resolution: `git checkout --ours` for the README and helper, so the child's `_remove`, `stage_retained`, `_confirmed` re-sync and unique private stage are unchanged. Production source (helper, Store, server, README) is byte-identical to 4ec4c280.
+* Tests adopted from the root, adapted to the child's stage name (`.ranking-*.tmp`, not `.publishing-`): core `test_stage_cleanup_failure_does_not_mask_the_unconfirmed_directory_sync` (errno EIO kept, PermissionError cleanup does not mask the typed error, retained stage name path-free) and API `test_stage_cleanup_failure_still_audits_and_returns_unconfirmed_not_403` (PermissionError on cleanup gives 409 committed_unconfirmed, audit, no path). Dropped as duplicates of existing child tests: the root's confirmed-publish retained-stage core test, and the root's source-text assertion change (the child already asserts `os.unlink(` once and `os.unlink(stage)`).
+* Non-vacuity: with `_remove` replaced by a throwing unlink, both adopted tests fail (core 1 error, API 1 failure; scripts mut.py and mut2.py in the scratch folder); they pass with the real helper.
+* Proof: child delta outside .copilot-tracking is only the two test files plus `docs/reference/log.md`; log.md has 4 added and 0 deleted lines (root append preserved, matches root); no existing .copilot-tracking path modified; main 23b26a7f, root bb7e044c and old head 4ec4c280 are ancestors. Root worktree head unchanged at bb7e044c.
+* Light checks (PYTHONDONTWRITEBYTECODE=1, own venv with import paths verified in this worktree, external cache and logs in /mnt/ama-gates/g1231-r28-root-propagation-1107): core ranking tests 73 OK; API wiring 22 OK; test_assistant_release 48 OK with 1 skipped (opt-in SQL, not SQL acceptance); Ruff check and format on src/core and src/api exit 0; mypy 128 files exit 0.
+* Not done: Docker, scanners, browser, MSSQL, `--all`/`--changed`, lock use, push, PR edit. #1258 and #1259 untouched. r27 receipt 30ee3665 is historical for 4ec4c280/fd57f086/main 23b26a7f only.
