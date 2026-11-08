@@ -3,7 +3,7 @@ title: Quality sensor demo 1288 C6 research
 ms.date: 2026-11-08
 ---
 
-Written 2026-11-08T22:27Z, before any product or test edit. Refs #1288, #107. Base: frozen `5f89248b` / tree `437ce301`, tracked clean (verified). Research disposition: executed (source reading plus the independent C5 report). Planning readiness: Ready.
+Written 2026-11-08T22:26Z (corrected: first commit stated a later minute than the clock), before any product or test edit. Refs #1288, #107. Base: frozen `5f89248b` / tree `437ce301`, tracked clean (verified). Research disposition: executed (source reading plus the independent C5 report). Planning readiness: Ready.
 
 ## Authority and limits
 

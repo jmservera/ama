@@ -3,7 +3,7 @@ title: Quality sensor demo 1288 C6 details
 ms.date: 2026-11-08
 ---
 
-Written 2026-11-08T22:30Z with the C6 plan, before any product or test edit.
+Written 2026-11-08T22:26Z (corrected from a later stated minute) with the C6 plan, before any product or test edit.
 
 ## Files
 

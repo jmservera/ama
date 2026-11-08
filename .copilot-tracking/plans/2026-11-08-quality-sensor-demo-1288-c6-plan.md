@@ -3,7 +3,7 @@ title: Quality sensor demo 1288 C6 plan
 ms.date: 2026-11-08
 ---
 
-Written 2026-11-08T22:29Z after the C6 research and before any product or test edit. Refs #1288, #107. No closing claim.
+Written 2026-11-08T22:26Z (corrected from a later stated minute) after the C6 research and before any product or test edit. Refs #1288, #107. No closing claim.
 
 ## Phases
 
@@ -27,7 +27,7 @@ Written 2026-11-08T22:29Z after the C6 research and before any product or test e
 
 ## Critique (one, final candidate)
 
-* Executed once 2026-11-08T22:31Z. Verdict: proceed with amendments.
+* Executed once 2026-11-08T22:26Z (corrected from a later stated minute). Verdict: proceed with amendments.
 * Amendment 1: the hold must be released in a second transaction even on provider error; expiry is the crash backstop.
 * Amendment 2: `configure` must read the hold using the database clock, not the process clock.
 * Amendment 3: a replaced-counter exhaustion must be tested with a stable recovery and restart.
