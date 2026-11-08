@@ -2049,7 +2049,43 @@ dataset prints three labelled messages and sends nothing. Tests:
 `PYTHONPATH=../core/tests:../agents/tests python3 -m unittest tests.test_live_simulator -q` from
 `src/api` and `python3 -m unittest tests.test_live_readings -q` from `src/core`. Not proved: any
 live send, device registration, Hub-side receipt, #110 acceptance of the new schema, or the
-throttle and tier limits against the real hub.
+throttle and tier limits against the real hub. (The consumer admission of `live-sim-reading-v1`
+landed separately in #1203.)
+
+### Bounded cohort and finite run control (2026-11-08)
+
+The receiver binds at most 100 devices, so the hub sink never sends "every home". It reads a
+control document (`live-sim-control-v1`, `--control-file` or `ZF_SIM_CONTROL_FILE`) that names
+the demo cohort (1 to 100 home ids), an owner, an approval reference, `enabled` and a hard
+`expires_at`. `--sink iothub` refuses to start without it. The simulator re-reads it every slot;
+a stop (`enabled` false), an expiry, or an unreadable or invalid file ends sending
+(fail closed, exit 0 with nothing sent). Cohort homes missing from the store are skipped, and an
+empty cohort is refused.
+
+```text
+python -m zava_forward.api.live_control start --file control.json --expires-at 2026-11-12T18:00:00Z \
+  --approval <reference> --owner "<named owner>" --homes HOME-1,HOME-2
+python -m zava_forward.api.live_control status --file control.json
+python -m zava_forward.api.live_control stop --file control.json
+```
+
+A start must expire in the future and within 14 days. The file holds no credential. Admin-only
+control is Azure RBAC: only holders of write access to the certificate file share (and of the
+job) can start, stop or change the cohort; the job mounts the share read-only. An in-app admin
+screen for these controls is not delivered (unmet #189 detail; no UI was changed).
+
+`python -m zava_forward.api.live_receiver --control-file control.json` is the bounded host
+entry for the existing `HubReceiver` (#110): it binds the same cohort (`SYN-<sensor key>`),
+needs an owner-verified routed Event Hub (`ZF_SIM_ROUTING_READY=1`, `ZF_SIM_HUB_HOSTNAME`), runs
+one window of at most 4 minutes by default, never past the control expiry, and exits. It starts
+only from a manual job trigger.
+
+Retained interface for the Quality UI and AI slice (frozen): each stored live row keeps
+`sensor_id`, `reading_id` (`LIVE-<sensor>-<UTC slot>`), `home_id`, `observed_at` (UTC),
+`temperature_c` (degC), `humidity_pct` (%), `sunlight_wm2` (W/m2), `source_type` `SYNTHETIC`,
+`schema_version` `live-sim-reading-v1` and `label`. A live synthetic row is not calibrated indoor
+evidence or weather; the consumer shows pre and post retrofit context as missing until real
+retained context exists. Tests: `python3 -m unittest test_live_control -q`.
 
 ## Finite offline sensor ingestion (#110)
 

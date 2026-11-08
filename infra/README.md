@@ -3905,6 +3905,40 @@ certificate (#185 manifest, 100 device cap in `device_identity`); a certificate 
 the minimal SQL grant for the job identity, `GRANT SELECT ON OBJECT::dbo.cases TO [<job identity>]` and nothing else (the job runs only `SELECT id FROM cases WHERE closed = 0 ORDER BY id`, with no DDL, seeding, migration, write or other table, and mounts no `/data`); AcrPull; image push by digest; a hub-side route and
 consumer that accept `live-sim-reading-v1` (#110, #140).
 
+#### Finite demo deployment plan (source handoff 2026-11-08, nothing executed)
+
+Existing authority (#184 comment 6652226413): five-minute synthetic readings within the USD700
+cap; job identity roles IoT Hub Registry Contributor, AcrPull and read-only SQL. The receiver
+binds at most 100 devices, so the demo cohort is at most 100 homes (28,800 messages per day, 7 %
+of the B1 400,000 per day). Existing hub `iot-cutover-test-rzsrg` (uksouth, `ama`); no new hub,
+tier or unit. The current job inventory has only Manual jobs, so nothing sends today. The B1
+figure in the table above (recalled list price) differs from the owner-checked USD10 per month
+of 2026-10-29; confirm the current rate before activation. Either figure plus the job (under
+USD1) stays far inside the cap.
+
+The executor, under separate admission, runs these in order and stops at the first failure:
+
+1. Confirm the live state: hub SKU and units, daily message usage, budget alert (#146), and no
+   existing scheduled simulator job.
+2. Choose at most 100 homes and a named owner; `python -m zava_forward.api.live_control start`
+   with `--expires-at` at most 14 days away writes `control.json` to the certificate share.
+   This is the single admin start; `stop` is the single admin stop.
+3. Plan devices with `python -m zava_forward.core.synthetic.device_provision` (dry run), then,
+   with a named credential owner, register the `SYN-` devices and put `<device>.pem` and `.key`
+   on the share. Do not print or commit them.
+4. Verify the identity grants (Registry Contributor for the operator, AcrPull, `SELECT` on
+   `dbo.cases` only), the hub route, the `api-consumer` group and the consumer identity.
+5. Build and push the image by digest, run `az deployment group what-if`, deploy
+   `live-simulator-job.bicep`, trigger one manual execution and check one slot end to end.
+6. Run the receiver as a manual job from the same image
+   (`python -m zava_forward.api.live_receiver`), then check the retained rows for the cohort.
+7. Finish: `live_control stop` (or let it expire), delete the job, revoke the certificates
+   (#185 teardown) and record actual cost. The simulator sends nothing after expiry even if
+   this step is late; the schedule still ticks and exits, so delete the job.
+
+Not delivered or proven: any of these steps, the real throttle, current prices, the in-app admin
+screen and the budget alert.
+
 ### Bounded existing-hub exercise (2026-10-29, Refs #140 #184 #137)
 
 The owner approved paid B1/one unit after the UK South USD10/month cost check,

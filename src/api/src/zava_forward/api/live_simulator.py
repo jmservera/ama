@@ -31,6 +31,7 @@ from zava_forward.core.synthetic.run_plan import (
 )
 from zava_forward.core.synthetic.sensor_stream import StreamError
 
+from . import live_control
 from .iot_stream import DeviceActivation
 
 LOG = logging.getLogger("zava_forward.live_simulator")
@@ -335,6 +336,15 @@ def store_home_ids(env: Mapping[str, str] | None = None) -> list[str]:
     return sorted(cid for cid, case in store.cases.items() if not case.get("closed"))
 
 
+def cohort_homes(control: live_control.Control, existing: Sequence[str]) -> list[str]:
+    """The control cohort present in the store, in control order; never the whole fleet."""
+    present = set(existing)
+    cohort = [home for home in control.homes if home in present]
+    if not cohort:
+        raise StreamError("COHORT_NOT_IN_STORE")
+    return cohort
+
+
 async def run(
     list_homes: Callable[[], Sequence[str]],
     generator: lr.Generator,
@@ -348,13 +358,20 @@ async def run(
     sleep: Sleep = asyncio.sleep,
     clock: Callable[[], float] = time.monotonic,
     report: Callable[[Summary], None] | None = None,
+    gate: Callable[[datetime], bool] | None = None,
 ) -> list[Summary]:
-    """Send the current slot, then (unless `once`) one every 5 minutes; missed slots are skipped."""
+    """Send the current slot, then (unless `once`) one every 5 minutes; missed slots are skipped.
+
+    `gate` is asked before every slot and a False ends the run, so a stop or an expiry is final.
+    """
     summaries: list[Summary] = []
     homes: Sequence[str] = []
     try:
         while True:
             slot = lr.slot_floor(now())
+            if gate is not None and not gate(now()):
+                LOG.warning("run control: stopped or expired; nothing sent")
+                return summaries
             try:
                 if not homes or len(summaries) % refresh_slots == 0:
                     homes = list_homes() or homes
@@ -413,7 +430,8 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
         print("Cannot run: SIM_CONFIG_INVALID", file=sys.stderr)
         return 2
     parser.add_argument("--seed", type=int, default=default_seed)
-    parser.add_argument("--max-homes", type=int, default=0, help="0 means every home")
+    parser.add_argument("--max-homes", type=int, default=0, help="0 means every home (stdout only)")
+    parser.add_argument("--control-file", default=env.get("ZF_SIM_CONTROL_FILE", ""))
     parser.add_argument("--max-per-second", type=float, default=Limits.max_per_second)
     parser.add_argument("--batch-size", type=int, default=Limits.batch_size)
     args = parser.parse_args(list(argv))
@@ -423,13 +441,35 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
         sink = _sink(args, env)
         generator = lr.Generator(args.seed)
 
+        control_path = Path(args.control_file) if args.control_file else None
+        if args.sink == "iothub" and control_path is None:
+            raise StreamError("CONTROL_REQUIRED")
+
         def homes() -> list[str]:
             ids = store_home_ids(env)
-            return ids[: args.max_homes] if args.max_homes > 0 else ids
+            if control_path is None:
+                return ids[: args.max_homes] if args.max_homes > 0 else ids
+            return cohort_homes(live_control.load(control_path), ids)
 
+        def gate(moment: datetime) -> bool:
+            if control_path is None:
+                return True
+            try:
+                return (
+                    live_control.decide(live_control.load(control_path), moment)
+                    == live_control.SEND
+                )
+            except StreamError:
+                return False
+
+        if not gate(datetime.now(UTC)):
+            LOG.warning("run control: stopped or expired; nothing sent")
+            return 0
         first = homes()
         LOG.info("capacity %s", check_capacity(len(first), limits))
-        asyncio.run(run(lambda: homes(), generator, sink, limits, once=args.once, report=_report))
+        asyncio.run(
+            run(lambda: homes(), generator, sink, limits, once=args.once, report=_report, gate=gate)
+        )
     except HomeListError as error:
         print(f"Cannot run: {error}", file=sys.stderr)
         return 3
