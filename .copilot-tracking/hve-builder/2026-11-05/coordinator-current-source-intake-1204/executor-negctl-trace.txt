@@ -1,0 +1,41 @@
+### T1
+**DECISION:** No. Do not classify everything as human-blocked or stop the schedule.
+
+**RULE:** “`unknown` and `unreviewed` (never refined or never assessed) are research or refinement work for this tick, never `human-blocked`.” “Printing the queue is not an audit; an audit is complete only when every row is assessed.” “After two consecutive no-progress ticks while `ready` or `unassessed` work remains, diagnose the bottleneck from the log and state … and execute one bounded recovery action in that same tick.”
+
+**ACTIONS:** Freshly classify each in-scope item with evidence and a named next action. Assess the review-needed queue in rotating batches and take a bounded recovery action; do not stop the schedule.
+
+### T2
+**DECISION:** Advance issue 502; PR 501’s human blocker does not stop independent work.
+
+**RULE:** “A human blocker stops only the affected issue and every issue that depends on it. Independent issues continue.” “Admit new issues only at 15 or fewer open PRs”; the total live-session cap is eight, including continuations.
+
+**ACTIONS:** Record and report PR 501’s named legal approval blocker. After recounting, start issue 502 in its own RPI session and worktree: 6 open PRs and 3 live sessions are within the stated caps. Recount after launch.
+
+### T3
+**DECISION:** Yes, after a fresh recount, if capacity remains.
+
+**RULE:** “A candidate unpublished by design (local-only or awaiting the coordinator's gate) is `ready` for assessment.” “The total-of-eight applies to live sessions, checked separately” from open-PR thresholds; admit new issues only at 15 or fewer open PRs.
+
+**ACTIONS:** Assess issue 610’s frozen candidate. Recount before launching; with 7 live sessions, one slot remains, and 9 open PRs are within the admission threshold. If those counts still hold, start independent issue 611 in its own RPI session and worktree, then recount.
+
+### T4
+**DECISION:** Keep the synthetic-sending approval within its stated budget and scope; ask the two open questions one at a time.
+
+**RULE:** “Record every owner approval in session SQL (`approved_actions`: scope, limits such as a cost cap, source, date, expiry, affected tasks).” “Never ask again for authority already granted and never read an approval more broadly than its scope; it waives no validation, review, legal or resident gate.” “Ask the owner one question at a time, in the same report, naming the lane it blocks, then continue independent work without waiting for the answer.”
+
+**ACTIONS:** Record the approval and reclassify its affected tasks; route the approved work as ready only with its dependencies and tier gates. Ask one focused question naming the lane it blocks, then handle the other question separately. Nothing is executed.
+
+### T5
+**DECISION:** Target `feat/parent-690`; the worker may not publish.
+
+**RULE:** “For a stacked child, fetch and record the parent topic SHA and use it as `{base-sha}` instead” of `main`. “The brief forbids the worker to push, open or update a PR, merge or change the target: publication belongs to the coordinator.”
+
+**ACTIONS:** Generate a current brief naming the parent topic as the target and dependency; disregard the stale `/tmp` template. The worker returns a frozen local candidate for coordinator review and publication gating.
+
+### T6
+**DECISION:** None may be deleted on the supplied facts.
+
+**RULE:** “Discovery patterns … only list candidates and grant no deletion authority. Resolve each candidate, then act on a finite per-run path manifest.” “A path held by … a receipt not yet verified … is deferred.” “A missing upstream or a failed git command is `unknown`, never zero unpushed commits.”
+
+**ACTIONS:** Defer the worktree while its receipt is active, defer the branch with unknown upstream, and do not delete a wildcard-discovered path. Deletion would require individually verified eligibility and a manifest entry; nothing was executed.

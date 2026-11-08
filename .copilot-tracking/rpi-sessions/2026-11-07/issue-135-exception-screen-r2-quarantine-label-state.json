@@ -1,0 +1,30 @@
+{
+  "task_id": "issue-135-exception-screen-r2-quarantine-label",
+  "task_slug": "issue-135-exception-screen-r2-quarantine-label",
+  "parent_task": {"task_id": "issue-135-exception-screen", "task_slug": "issue-135-exception-screen"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-07-issue-135-exception-screen-r2-quarantine-label-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-07-issue-135-exception-screen-r2-quarantine-label-plan.md",
+    "details": ".copilot-tracking/details/2026-11-07-issue-135-exception-screen-r2-quarantine-label-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-07-issue-135-exception-screen-r2-quarantine-label-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-07-issue-135-exception-screen-r2-quarantine-label-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-07-issue-135-exception-screen-r2-quarantine-label-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; Planning Readiness Ready", "status": "recorded", "evidence": "research artifact"},
+    {"decision": "Critique executed once before code; proceed with direct amendments", "status": "recorded", "evidence": "plan artifact"},
+    {"decision": "Regression failed before fix and passed after", "status": "recorded", "evidence": "/mnt/ama-gates/g135-r2-evidence/regression-before-fix.txt; changes artifact"},
+    {"decision": "Review executed once; conformant for the r2 correction; R2-1 open", "status": "recorded", "evidence": "review artifact"}
+  ],
+  "blockers": [
+    {"id": "B1", "summary": "Focused gate and real-DOM story on the frozen head not yet run", "resolution": "Run after commit with sole nonqueued heavy admission"}
+  ],
+  "next_action": {"phase": "Review", "action": "Commit, freeze, run focused gate r2 and the external story on a new archive export"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Run the focused gate and the real-DOM story on the frozen head", "rationale": "Closes R2-1 and original F1", "evidence": "review artifact"}
+  ]
+}

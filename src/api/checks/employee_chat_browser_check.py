@@ -14,6 +14,7 @@ from playwright.sync_api import Page, Route, expect, sync_playwright
 from checks.design_system_browser_check import main, synthetic_data
 from checks.regulatory_ux_check import AXE_SHA256
 
+
 def scan(page: Page, axe: str, state: str) -> dict[str, Any]:
     page.evaluate(axe)
     result: dict[str, Any] = page.evaluate("""async () => await axe.run(
@@ -26,7 +27,8 @@ def scan(page: Page, axe: str, state: str) -> dict[str, Any]:
 
 def late_success(page: Page, pending: str, transition: str) -> None:
     """Settle an actual successful API promise independently of transport abort."""
-    page.evaluate("""pending => {
+    page.evaluate(
+        """pending => {
       employeeChat.reset();
       const state = window.employeeLate = {pending, api, askCalls: 0};
       api = (path, body, signal) => {
@@ -42,7 +44,9 @@ def late_success(page: Page, pending: str, transition: str) -> None:
       };
       state.open = document.getElementById('employee-chat-launcher').onclick();
       if (pending === 'skills') state.task = state.open;
-    }""", pending)
+    }""",
+        pending,
+    )
     try:
         dialog = page.get_by_role("dialog", name="Employee assistant")
         expect(dialog).to_be_visible()
@@ -122,7 +126,7 @@ def late_success(page: Page, pending: str, transition: str) -> None:
             throw new Error('Obsolete thread completion started an ask');
           if (document.activeElement !== state.focus) throw new Error('Late success moved focus');
           return state.snapshot();
-        }""")
+        }""")  # noqa: E501 embedded JavaScript is kept byte-identical
         assert after == before, (pending, transition, before, after)
     finally:
         page.evaluate("""async () => {
@@ -139,8 +143,12 @@ def run_browser(base: str, axe: str, output: Path) -> None:
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         context = browser.new_context(reduced_motion="reduce")
-        context.route("**/*", lambda route: route.continue_()
-                      if route.request.url.startswith(base + "/") else route.abort())
+        context.route(
+            "**/*",
+            lambda route: (
+                route.continue_() if route.request.url.startswith(base + "/") else route.abort()
+            ),
+        )
         try:
             page = context.new_page()
             page.on("dialog", lambda dialog: dialog.accept())
@@ -163,7 +171,9 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             question.fill("What can chat do?")
             dialog.get_by_role("button", name="Send", exact=True).click()
             expect(dialog.get_by_role("log")).to_contain_text("ordinary case workflow")
-            expect(dialog.get_by_role("log")).to_contain_text("Workflow-only help, no record changed")
+            expect(dialog.get_by_role("log")).to_contain_text(
+                "Workflow-only help, no record changed"
+            )
             expect(dialog).to_contain_text("No case or home record is visible")
             expect(dialog.get_by_role("log")).to_have_attribute("aria-live", "polite")
             reports.append(scan(page, axe, "actual-model-unavailable"))
@@ -171,8 +181,16 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             expect(page.locator("#employee-chat")).to_be_hidden()
             expect(launcher).to_be_focused()
 
-            for destination in ("#/", "#/all", "#/overview", "#/time", "#/progress",
-                                "#/closed", "#/assistants", "#/case/ZF-1"):
+            for destination in (
+                "#/",
+                "#/all",
+                "#/overview",
+                "#/time",
+                "#/progress",
+                "#/closed",
+                "#/assistants",
+                "#/case/ZF-1",
+            ):
                 page.evaluate("(hash) => { location.hash = hash; }", destination)
                 expect(page.locator("#app h1").first).to_be_visible()
                 launcher.click()
@@ -190,21 +208,93 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             def answer(route: Route) -> None:
                 body = route.request.post_data_json
                 assert isinstance(body, dict)
-                route.fulfill(json={
-                    "kind": "answer", "reply": "Synthetic cited case explanation.",
-                    "label": "AI suggestion, not approved", "skill": body["skill"],
-                    "workflow_only": False,
-                    "citations": [{"id": "ZF-1/stage", "text": "Survey"}],
-                })
+                route.fulfill(
+                    json={
+                        "kind": "answer",
+                        "reply": "Synthetic cited case explanation.",
+                        "label": "AI suggestion, not approved",
+                        "skill": body["skill"],
+                        "workflow_only": False,
+                        "citations": [{"id": "ZF-1/stage", "text": "Survey"}],
+                    }
+                )
 
             page.route("**/api/chat/threads/*/ask", answer)
             for skill in ids:
                 skills.select_option(skill)
                 question.fill("Explain the next check")
                 page.get_by_role("dialog").get_by_role("button", name="Send", exact=True).click()
-                expect(page.get_by_role("log", name="Employee assistant conversation")).to_contain_text(f"Skill: {skill}.")
-                expect(page.get_by_role("log", name="Employee assistant conversation")).to_contain_text("ZF-1/stage")
+                expect(
+                    page.get_by_role("log", name="Employee assistant conversation")
+                ).to_contain_text(f"Skill: {skill}.")
+                expect(
+                    page.get_by_role("log", name="Employee assistant conversation")
+                ).to_contain_text("ZF-1/stage")
             reports.append(scan(page, axe, "synthetic-cited-answer"))
+            page.keyboard.press("Escape")
+            page.unroute("**/api/chat/threads/*/ask", answer)
+
+            def demo_status(route: Route) -> None:
+                response = route.fetch()
+                body = response.json()
+                body.update(
+                    activation="demo-only",
+                    demo_activation=True,
+                    demo_disclaimer=(
+                        "Demonstration only. Answers are generated by an AI model from synthetic "
+                        "case facts, may be wrong, and are not reviewed or approved. "
+                        "No DPO, Legal or RAI approval exists. "
+                        "Check the sources."
+                    ),
+                )
+                route.fulfill(response=response, json=body)
+
+            def model_answer(route: Route) -> None:
+                route.fulfill(
+                    json={
+                        "kind": "answer",
+                        "reply": "Synthetic model explanation.",
+                        "model": "azure-openai",
+                        "label": "AI suggestion, not approved",
+                        "skill": "case-explainer",
+                        "workflow_only": False,
+                        "citations": [{"id": "ZF-1/stage", "text": "Survey"}],
+                    }
+                )
+
+            page.route("**/api/chat/status", demo_status)
+            page.route("**/api/chat/threads/*/ask", model_answer)
+            page.evaluate("() => employeeChat.reset()")
+            launcher.click()
+            note = page.locator("#chat-demo-disclaimer")
+            expect(note).to_be_visible()
+            expect(note).to_have_attribute("role", "note")
+            expect(note).to_contain_text("No DPO, Legal or RAI approval exists")
+            assert page.evaluate("""() => {
+              const note = document.querySelector('#chat-demo-disclaimer');
+              const box = note.getBoundingClientRect();
+              const frame = document.querySelector('#employee-chat').getBoundingClientRect();
+              return note.nextElementSibling.classList.contains('chat-widget-intro')
+                && box.height > 24 && box.top >= frame.top && box.bottom <= frame.bottom
+                && getComputedStyle(note).borderTopStyle === 'solid';
+            }""")
+            expect(question).to_have_attribute(
+                "aria-describedby",
+                "employee-chat-entry-warning chat-privacy employee-chat-error chat-demo-disclaimer",
+            )
+            question.fill("Explain the next check")
+            page.get_by_role("dialog").get_by_role("button", name="Send", exact=True).click()
+            log = page.get_by_role("log", name="Employee assistant conversation")
+            expect(log).to_contain_text("Model-generated, not approved. Demo only.")
+            expect(log).to_contain_text("AI-generated content may be incorrect")
+            reports.append(scan(page, axe, "demo-disclaimer-model-answer"))
+            page.keyboard.press("Escape")
+            page.unroute("**/api/chat/status", demo_status)
+            page.unroute("**/api/chat/threads/*/ask", model_answer)
+            page.evaluate("() => employeeChat.reset()")
+            launcher.click()
+            expect(page.locator("#chat-demo-disclaimer")).to_have_count(0)
+            expect(page.get_by_role("dialog")).to_be_visible()
             close = page.get_by_role("button", name="Close chat", exact=True)
             close.focus()
             for key in ("Shift+Tab", "Tab", "Tab", "Tab", "Tab", "Tab", "Tab"):
@@ -212,13 +302,13 @@ def run_browser(base: str, axe: str, output: Path) -> None:
                 assert page.evaluate("document.activeElement !== null")
             for width in (320, 390, 1280):
                 page.set_viewport_size({"width": width, "height": 900})
-                assert page.get_by_role("dialog").evaluate(
-                    "el => el.scrollWidth <= el.clientWidth")
+                assert page.get_by_role("dialog").evaluate("el => el.scrollWidth <= el.clientWidth")
             assert page.evaluate("""() => getComputedStyle(
               document.querySelector('#employee-chat')).transitionDuration === '0s'""")
 
             page.unroute("**/api/chat/threads/*/ask", answer)
             held: list[Route] = []
+
             def hold(route: Route) -> None:
                 held.append(route)
                 page.evaluate("() => { window.employeeAskArrived = true; }")
@@ -236,7 +326,9 @@ def run_browser(base: str, axe: str, output: Path) -> None:
                 # Transport cancellation is separate from the successful API proof below.
                 assert "Invalid" in str(error) or "Target" in str(error), str(error)
             launcher.click()
-            expect(page.get_by_role("dialog")).not_to_contain_text("Synthetic cited case explanation")
+            expect(page.get_by_role("dialog")).not_to_contain_text(
+                "Synthetic cited case explanation"
+            )
             page.keyboard.press("Escape")
             page.unroute("**/api/chat/threads/*/ask")
 
@@ -245,7 +337,9 @@ def run_browser(base: str, axe: str, output: Path) -> None:
                     try:
                         late_success(page, pending, transition)
                     except PlaywrightError as error:
-                        raise AssertionError(f"Late success failed: {pending}/{transition}") from error
+                        raise AssertionError(
+                            f"Late success failed: {pending}/{transition}"
+                        ) from error
 
             for endpoint in ("skills", "threads", "threads/*/ask"):
                 for denied in (403, 404, 401):
@@ -256,8 +350,11 @@ def run_browser(base: str, axe: str, output: Path) -> None:
                         expect(launcher).to_be_visible()
                         expect(page.locator("#app h1").first).to_be_visible()
                     page.evaluate("() => { location.hash = '#/case/ZF-1'; }")
-                    expect(page.get_by_role("link", name="Back to the list", exact=True)).to_be_visible()
-                    def denied_reply(route: Route) -> None:
+                    expect(
+                        page.get_by_role("link", name="Back to the list", exact=True)
+                    ).to_be_visible()
+
+                    def denied_reply(route: Route, *, denied: int = denied) -> None:
                         route.fulfill(status=denied, json={"error": "Synthetic access ended"})
 
                     pattern = f"**/api/chat/{endpoint}"
@@ -266,11 +363,15 @@ def run_browser(base: str, axe: str, output: Path) -> None:
                     if endpoint != "skills":
                         expect(page.get_by_label("Agent skill", exact=True)).to_be_enabled()
                         question.fill("Check access")
-                        page.get_by_role("dialog").get_by_role("button", name="Send", exact=True).click()
+                        page.get_by_role("dialog").get_by_role(
+                            "button", name="Send", exact=True
+                        ).click()
                     expect(page.locator("#employee-chat")).to_have_count(0)
                     expect(page.locator("#app")).to_be_focused()
                     if denied != 401:
-                        expect(page.locator("#workspace-status")).to_contain_text("Chat access ended.")
+                        expect(page.locator("#workspace-status")).to_contain_text(
+                            "Chat access ended."
+                        )
                         expect(launcher).to_be_visible()
                     else:
                         expect(page.get_by_label("Work email", exact=True)).to_be_visible()
@@ -279,7 +380,12 @@ def run_browser(base: str, axe: str, output: Path) -> None:
             expect(page.get_by_label("Work email", exact=True)).to_be_visible()
             expect(launcher).to_be_hidden()
             assert not errors, errors
-            print("PASS employee chat: real fallback; six selections; arrived transport; nine controlled late successes; metadata/thread/ask denials; route/session disposal; keyboard, focus, live, reduced motion, reflow and dialog axe")
+            print(
+                "PASS employee chat: real fallback; six selections; arrived transport; "
+                "nine controlled late successes; metadata/thread/ask denials; "
+                "route/session disposal; keyboard, focus, live, reduced motion, reflow "
+                "and dialog axe"
+            )
         finally:
             context.close()
             browser.close()

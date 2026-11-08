@@ -1,0 +1,32 @@
+{
+  "task_id": "excel-transition-80-r11-harness-hygiene",
+  "task_slug": "excel-transition-80-r11-harness-hygiene",
+  "parent_task": {"task_id": "excel-transition-80-r9-schema-download-browser-check", "task_slug": "excel-transition-80-r9-schema-download-browser-check"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-06-excel-transition-80-r11-harness-hygiene-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-06-excel-transition-80-r11-harness-hygiene-plan.md",
+    "details": ".copilot-tracking/details/2026-11-06-excel-transition-80-r11-harness-hygiene-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-06-excel-transition-80-r11-harness-hygiene-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-06-excel-transition-80-r11-harness-hygiene-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research, plan, details committed (004c0a005) before test or harness edits", "status": "done", "evidence": "git log"},
+    {"decision": "Critique executed once inside the plan", "status": "done", "evidence": "plan file"},
+    {"decision": "Light checks passed: 124 tests, ruff, format, mypy 188 files", "status": "done", "evidence": "changes file"},
+    {"decision": "Preservation proof built; restore a1 failed and a2 passed; deletion NOT authorised", "status": "done", "evidence": "/mnt/ama-gates/e80-r11-r64-1106/pending-manifest.json"},
+    {"decision": "Review execution pending", "status": "pending", "evidence": "review path null"}
+  ],
+  "blockers": [
+    {"id": "dirty-ignored", "summary": "Three ignored __pycache__ dirs and empty .venv still present", "resolution": "Root authorises the finite pending manifest, then removal and clean rerun"},
+    {"id": "full-gate", "summary": "FULL with pip-installed distributions, independent exact-head review, hosted CI pending", "resolution": "After clean final head against fresh main"}
+  ],
+  "next_action": {"phase": "Review", "action": "Write the separate final r11 Review and commit it"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Root authorisation of pending manifest, then removal, then browser rerun in an owned pip-installed environment with ZF_BROWSER_SCRATCH and bytecode disabled", "rationale": "Proves the harness correction and cleans the worktree", "evidence": "pending-manifest.json"}
+  ]
+}

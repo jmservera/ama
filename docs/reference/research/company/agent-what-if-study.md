@@ -1,9 +1,20 @@
 ---
 title: Agent What-If Study
 description: What-if session on the Agent Request Challenge, running multiple augmentation scenarios per requested agent to test whether any moves them closer to a viable agentic end-to-end
-ms.date: 2026-10-23
+ms.date: 2026-11-08
 ms.topic: reference
 ---
+
+## Brief fidelity qualification (2026-11-08)
+
+The historical verdicts below challenge bundled responsibilities and
+mechanisms, not an original demand for unrestricted autonomy. The case
+specified L2-L4 and reserved professional approval and resident consent.
+Richer evidence can improve task preparation without replacing those rights;
+L4 autonomous flags are not autonomous quality acceptance. Use the
+[current requested-versus-built matrix](../../../capstone/source/review-2026-11-08.md#requested-versus-built-autonomy)
+when presenting the result. Scenario verdicts and original evidence remain
+unchanged; this qualification activates no task or higher authority.
 
 ## Prospective communication qualification (2026-10-23, #441)
 

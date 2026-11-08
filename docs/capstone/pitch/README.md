@@ -1,7 +1,7 @@
 ---
 title: Current Capstone Pitch Preparation
 description: Audience strategy, current narration route, delivery cues and honest preparation boundaries
-ms.date: 2026-10-30
+ms.date: 2026-11-08
 ms.topic: how-to
 ---
 
@@ -56,12 +56,18 @@ proposed only near the end of the main presentation, before optional Q&A.
 | Moment | Main message / optional depth |
 | --- | --- |
 | Page 8: discovery method | Brief/sector evidence -> role research instruments -> journey hypotheses -> pain/design/test; eight earlier challenge instruments versus nine later atlas instruments, not interviews |
+| Pages 7/10: project history | Dated activity and scope growth, not housing outcomes; completed and not-planned issues stay distinct. Refresh the 8 November snapshot before final delivery |
+| Page 9: brief fidelity | Exact L2-L4 request and existing human/resident rights; distinguish preserved boundaries from incomplete task scope and genuine authority reductions |
 | Page 13: resident journey | DT Coach's editable Excalidraw map connects actions/needs, pain hypotheses and proposed gains across five moments; direct validation pending |
-| Page 14: what we built | Owned work, versioned evidence, separate decisions, bounded assistance and existing read-model reporting; dated technical proof is not whole-service acceptance |
+| Page 14: how help appears | Immediate rules/queue/briefing, recommendations on case cards and Assistant proposals, then optional employee/resident follow-up chat; no automatic approval |
 | Page 15: bounded adoption | Existing preview/quarantine/export library and CLI, not an accepted web import journey or live enterprise replacement |
-| Page 16: AI placement | Five business capabilities; rules enforce, models propose and people decide |
+| Page 16: AI placement | Five requested/current levels; current generative proposal engine versus historical Decision 1; rules, models and human decisions do different jobs |
 | Pages 22-24: lesson, future, decision | Test usability, then propose future portfolio history and semantic/preview ontology context. Compare analytics and agent context independently; retain the simpler route when it wins |
-| Page 31 / B04 | Decision 1 must beat the parser/manual comparator; a successful call is not a benefit result |
+| Page 22: study now underway | Registered OSF base, unregistered exploratory amendments and coauthor execution separation; no experimental outcome claims |
+| Page 40 / B13 | Three models/five arms, selected 21/default 12, F1-F10 + CR1 and all three implementation epochs. Completed steps are not independent replicates or one frozen source |
+| Page 30 / B03 | Full autonomy matrix: Stock L2 boundary matches; Assessment/Funding preparation is partial; Coordination/Quality authority is reduced |
+| Page 31 / B04 | Historical scoring/current generation; Decision 1 must beat the parser/manual comparator, not claim unmeasured savings |
+| Page 33 / B06 | Why optional resident website/advice was added, record-use versus works consent, assisted routes, synthetic callbacks and default-off AI |
 | Page 37 / B10 | Shared Container Apps API, Entra, SQL and Blob; split only for measured operating need |
 | Page 46 / B19 | Source-only synthetic IoT flow, private Event Hub and independent human safety route |
 | Page 47 / B20 | Retain operational SQL; compare conditional Fabric analytics against SQL/history plus Power BI |
@@ -74,8 +80,15 @@ proposed only near the end of the main presentation, before optional Q&A.
 * On page 13, trace contact, choice and aftercare once; do not read every map cell. Distinguish the pain hypothesis, designed response and actual test.
 * On pages 23-24, pause on "future, not today's product" and "ontology is preview"; explain the benefit in business terms before naming components.
 * Say "historical observation", "source implementation", "proposed" or "not evaluated" where each applies.
+* On page 22, distinguish the registered base from unregistered amendments
+  before describing execution. Credit Isabel's data collection without
+  claiming independent institutional validation or completed analysis.
 * Slow the voice for currencies, denominators, alternatives and unknowns; do not rush caveats after a confident claim.
 * Keep facial expression neutral and attentive during challenge; restate the objection before defending the design.
+* On page 9, concede the earlier wording: the case already reserved approvals.
+  Explain the real reductions without claiming the requested L3/L4 levels were
+  inherently unsafe. Use the [dated review](../source/review-2026-11-08.md) for
+  the decision trace and current evidence limits.
 * Use dress appropriate to the actual executive setting, avoiding visual distractions that compete with the material.
 
 For Q&A, restate the question, answer it directly, then add one supporting
@@ -92,7 +105,9 @@ they occur. A prepared answer is not evidence of live listening or composure.
 
 Current live identity/SQL/model acceptance, reviewer effectiveness,
 accessibility and direct human comprehension remain separate gates. The
-critical unsupported-claim-with-valid-citation counterexample remains open.
+scripted chat counterexample is caught by the lexical claim check; unlisted
+paraphrases remain a limitation, and actual-model grounding and competent
+human-review acceptance remain unproved.
 The earlier general exercise window expired; later narrow task approvals do
 not automatically fund this roadmap or Fabric. No new paid run is authorized here.
 Fresh provider/price checks and original-image reuse provenance remain

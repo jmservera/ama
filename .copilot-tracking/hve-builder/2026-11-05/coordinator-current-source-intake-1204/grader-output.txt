@@ -1,0 +1,9 @@
+T1 — Pass: Rejects human-blocking and schedule stoppage; calls for fresh classification and bounded same-tick recovery.
+T2 — Pass: Keeps 501’s blocker scoped and advances independent 502.
+T3 — Pass: Counts frozen candidate 610 toward capacity, holds 611, and assesses 610.
+T4 — Pass: Records approval, reclassifies affected work, asks questions separately, and preserves scope and gates while independent work continues.
+T5 — Pass: Uses the parent topic as target, ignores the stale template, and reserves publication for the coordinator.
+T6 — Pass: Defers the active-receipt and unknown-upstream candidates and grants no deletion authority to wildcard discovery.
+Negative control T3 — Fail: Recommends starting 611 based on a count that excludes candidate 610, as expected.
+
+Verdict: The real trace passes T1–T6; the negative control fails T3 as expected.

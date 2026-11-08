@@ -1,7 +1,7 @@
 ---
 title: Capstone Demo and Recovery Runbook
 description: Current v2 same-home story, under-two-minute hook, ten-minute route and honest live/evidence preflight
-ms.date: 2026-10-30
+ms.date: 2026-11-08
 ms.topic: how-to
 ---
 
@@ -18,6 +18,32 @@ Use S22/page 25 to introduce it and S23/page 26 to close. The closing
 
 This is preparation, not an executed demo or rehearsal. No cloud, identity,
 model, resident-data or workflow mutation is authorized by this runbook.
+
+## Explain the Requested and Built Autonomy
+
+Use [page 30's matrix and review](../source/review-2026-11-08.md#requested-versus-built-autonomy)
+to describe exact brief fidelity. The case already specified L2-L4 and
+professional/resident decisions. The current five helpers are evidence
+proposals; a request or approved scan can prepare one without advancing the
+case. Do not call that a delivered L3 booking or L4 autonomous quality flag.
+
+For the prepared walkthrough, show the three existing help modes rather than
+adding features to the ten-minute route:
+
+* Immediate role queue/next action and the rules label in Today's briefing.
+* A source-linked proposal on the same case or in Assistant proposals, showing
+  reactive/proactive provenance. Do not enable scans or spend a call to prove
+  this without separately approved preflight.
+* A prepared follow-up through Ask the assistant, with its explicit skill and
+  read-only boundary. Selecting a skill does not invoke the proposal task.
+
+If discussing resident access, show only an authorised synthetic site or its
+source contract. Explain that website/chat is an added optional route, not
+mandatory works consent. An automatic fictional callback search still needs
+the resident's explicit confirmation; it is not an operational appointment.
+Decision 1 is historical scoring evidence with a pending current rebuild,
+not the current five-helper engine. Refresh the progress and activation
+snapshot before the final demo.
 
 ## Choose The Route Beforehand
 

@@ -1,0 +1,31 @@
+{
+  "task_id": "issue1274-ci-release-retrieval",
+  "task_slug": "issue1274-ci-release-retrieval",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-08-issue1274-ci-release-retrieval-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-08-issue1274-ci-release-retrieval-plan.md",
+    "details": ".copilot-tracking/details/2026-11-08-issue1274-ci-release-retrieval-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-08-issue1274-ci-release-retrieval-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-08-issue1274-ci-release-retrieval-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-08-issue1274-ci-release-retrieval-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed", "status": "done", "evidence": "research artifact, Planning Readiness Ready"},
+    {"decision": "Critique executed once, proceed with compatible amendments", "status": "done", "evidence": "critique artifact"},
+    {"decision": "Review executed once, conformant for owned scope, AWF routed", "status": "done", "evidence": "review artifact; native self-review, independent exact-head review pending"}
+  ],
+  "blockers": [
+    {"id": "R1", "summary": "AWF 0.28.23 bootstrap in generated rubric-score.lock.yml has no repository source hook", "resolution": "upstream or compiler route, owner decision"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Independent exact-head review, then owner publication and hosted CI on that head"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent exact-head review of the frozen candidate", "rationale": "required next gate", "evidence": "review artifact"},
+    {"rank": 2, "task": "Resume route for #1243/#1271/#1273 after merge", "rationale": "old runs do not consume new workflow", "evidence": "changes record"},
+    {"rank": 3, "task": "AWF bootstrap upstream route", "rationale": "scorer 504 remains", "evidence": "research E3"}
+  ]
+}

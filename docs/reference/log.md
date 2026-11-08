@@ -10579,6 +10579,79 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Corrects the entry above: `--active none` is removed and omission from `--active` never demotes. Demotion of an In Progress issue with no open PR needs per-issue negative evidence through a separate validated `--inactive N,N`; everything else stays In Progress and is listed as activity unverified. Overlapping, unknown, closed or malformed input stops the run before any write, and error text does not echo the rejected value.
 * `tools/test_backlog_sync.py` now runs in the existing Source CI "Local gate orchestration contracts and strict checks" step. Mock evidence only; no live board claim.
 
+## [2026-11-02] query | Prospective whitepaper replication choices
+
+* Revised the [paper protocol](../capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex)
+  from fixed 33/cell to researcher-selected 12 (default), 21 or 33 independent
+  repository trajectories per model per arm. Choice and rationale precede
+  study collection; outcomes cannot resize the sample and resume cannot
+  change the saved allocation. Three models and all five proposed arms remain.
+* Verified the ten-point B-D normal planning calculation: assumed within-cell
+  SDs of 15/20/25 points give 12/21/33. These are conditional assumptions;
+  default 12 does not retain 80% power at SD 25. Scheduling-block dependence
+  remains a pre-freeze analysis gap.
+* Derived every resource scenario from the arm schedules and CR1. Default 12
+  gives 180 study trajectories, 3,060 study sessions, 3,300 sessions including
+  excluded calibration, 1,500 combined maximum hours and 1,107,000 nominal
+  credits. Summed allowances do not enlarge the actual 300,000-credit envelope
+  or 270,000 admission ceiling. Prior spending, unknown-usage holds and
+  full-selected-allocation affordability/deadline gates remain.
+* Disclosed the owner-reported MVE selector's immutable 12/21/33 selection
+  and A/B/C-only implementation. D/E and a source-bound selector pin remain
+  gaps; inspected older snapshots do not certify the newer update. Historical
+  five-arm implementation wording, fixed-33 records, original critiques,
+  prompt and published v4 freeze remain historical, not silently rewritten.
+* The [dated revision record](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#prospective-allocation-revision-2-november)
+  records 34 passing authoring tests, structural checks, all 39 numerical
+  resource cells, three planning rows and the compiled 38-page PDF. The
+  Supplement starts on page 33; pages 19/20 render without clipping, and
+  all-page text bounds pass. One inherited inputenc warning remains.
+* The focused repository gate against fetched `origin/main` at `a56df549`
+  stopped at its clean-candidate preflight. No passing receipt, independent
+  scientific approval or publication readiness is claimed. No MVE source or
+  study state was changed, experiment launched, OSF record modified, commit
+  created or remote write performed.
+* The final consistency check also corrected fixed-33 labels in the two
+  active allocation figures and their authoring script. Regenerated native
+  SVG/PNG exports, refreshed source/export hashes, overflow checks and all
+  nine figure/integration tests pass. The rebuilt integrated PDF and all
+  34 authoring tests pass; the original prompt and Supplement hashes remain
+  unchanged. The separate MVE checkout remains clean and unmodified.
+
+## [2026-11-05] update | Whitepaper recovery and source-bound scientific review
+
+* Closed PR #1206 at the owner's request, retaining its branch. Verified that
+  merged PR #746 already preserves the scientific skills, reviewer and earlier
+  paper package. Replayed only amendment `3ef395b8` on fresh current-main topic
+  `docs/paper-scientific-reconciliation`; the actual replay was conflict-free
+  and preserved the existing log as a prefix.
+* The [fresh review and disposition](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#recovery-and-scientific-alignment-5-november)
+  identify current public MVE source `5ab24be4` and v6 execution `7de2f0d4`.
+  All five arms and the immutable selector exist in source. Corrected active
+  A/B/C-only claims and the design figure, preserving the dated stale-local
+  inspection and historical v4 records.
+* Retained the original three-major/one-minor assisted review. Clarified
+  conservative unavailable retention summaries versus proposed observed-
+  subset bounds and graded CR1 reporting, unknown prior acquisition,
+  independent-arm resampling versus unresolved block inference, primary-frame
+  availability and matched-ceiling B-D framing. Reporting/analysis choices
+  require author-approved source-bound reconciliation before collection.
+* Added stdlib planning regressions and independently checked symbolic
+  variance, cost accumulation and conditional power. The 12/21/33 choices
+  remain prospective; no allocation or scientific analysis was silently
+  selected. Nominal allowances do not enlarge the actual aggregate envelope.
+* Full-allocation affordability/deadline acceptance, qualified source binding,
+  prospective OSF recording and collection permission remain gates. The
+  inspected v6 manifest has no registration date, no recorded prospective
+  update and no collection authorization. No kit, saved study, original review,
+  freeze, registration, private dataset, Azure or paid model action was changed.
+* Final local checks pass all 44 authoring tests and the structural checker.
+  Native source/export hashes pass, and the 38-page single PDF retains its
+  Supplement on page 33. All-page text bounds/internal destinations and the
+  rendered revised figures/power/resource pages pass scoped checks; one
+  inherited inputenc compatibility warning remains. Exact-head assessment,
+  focused repository gate and hosted checks follow the committed candidate
+  and are reported separately with the replacement PR.
 ## [2026-11-05] update | Local gate installs the API bytecode policy before API discovery (Refs #1215)
 
 * Diagnosis of the retained failed full receipt for issue 96 (head 38dc133f, base c6d5a8f3): the 68 core, agents and api `*.pyc` files in its snapshot were written within 0.34 s at 10:23:53Z during the project-api `unittest discover` run. The producer is the design-system harness server (`checks/design_system_browser_check.py`, reached from `test_chat_widget_layout`), whose child environment keeps only `PATH`, `HOME`, `LANG` and `PYTHONPATH` and so drops the runner's no-bytecode flags. The API-venv `.pth` bytecode policy was written only later, in the browser group. The logo-0600 snapshot held copies of the same files and is not a second producer. Which exact server process wrote the files is inferred from code, ordering and timing; the failed run kept no process trace.
@@ -10593,3 +10666,237 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Qualifies the 2026-10-18 shared observation contract synthesis: the consumer validates two separately closed input branches selected by `schema_version`, the 13-field indoor `sensor-fault-input-v1` and the 16-field synthetic-weather `live-sim-reading-v1`. Added a dated current-use note before the preserved historical section and aligned `src/core/README.md`, `src/api/README.md` and the index. Historical measurements and the section anchor are unchanged.
 * Weather and sunlight originals stay in the lossless retained envelope witness, not indoor observed series. No authenticated provenance, indoor calibration, statistical, live or approval claim; distinct seeds do not authenticate generator provenance; no criterion changes. Documentation only; fresh FULL on the resulting head is separate. Evidence under `.copilot-tracking/*/2026-11-06-doc-dual-schema-188-*`.
+## [2026-11-07] update | Chat demo disclaimer stays visible; demo gates tested (Refs #891)
+
+* The employee chat panel now renders the demo disclaimer as its own bordered, non-shrinking note above the scrollable introduction. A real-browser run showed the previous placement was clipped to about 30 px at a 720 px viewport. The employee chat browser check proves visibility, `role=note`, the `aria-describedby` link, the model-generated label and axe WCAG 2.2 AA with reduced motion.
+* `src/api/tests/test_chat_panel.py` adds a regression that suspension, missing privacy references, retention and the one-call cap still hold with the demo switch on. Updated [the demo activation record](./research/chat-demo-storage-approval-2026-11-01.md) and the API README. No Legal, DPO or RAI approval is claimed.
+* Live check (criterion 6) is blocked: the deployed `ca-cutover-test-demo-api` revision already runs image `1f465bf5e` with both demo settings, but sign-in needs the owner-held test-user password, which the agent does not hold. Evidence is under `.copilot-tracking/` (2026-11-07 issue-891 chat demo).
+## [2026-11-05] update | Ranking publication local runner (Refs #79)
+
+* Added `ranking_publication_runner` in `src/core`: an explicit-input schedule, publish and verify invocation with a one-day window, idempotent run key, fail-closed approval, source, archive and capacity checks, and an exercise mode that writes nothing. The daily schedule is reported as proposed, not approved. Criteria 3 (named owner sign-off) and 4 (scheduled and retained) stay unmet: no owner is named, no scheduler is deployed and no retention period is set. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r4).
+
+## [2026-11-05] update | Issue 79 clean frozen candidate and typing report (Refs #79)
+
+* Removed 333 own generated, git-ignored files (bytecode, egg-info, mypy and ruff caches) from this worktree under a verified per-file manifest with hash-archive backing kept outside the checkout, so the candidate is clean including ignored files. No source or policy change. The new runner module is strictly type-checked; its mypy override relaxes only untyped-call checking. The FULL gate is still pending and no criterion changed. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r5).
+
+## [2026-11-05] update | Issue 79 current-main preparation (Refs #79)
+
+* Merged main `bb3a3b03` into the publisher candidate with a plain merge (no conflicts) and ran light, cache-external checks (30 runner tests, Ruff, strict mypy). FULL gate, independent exact-head review and hosted CI remain pending and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r6).
+
+## [2026-11-06] update | Issue 79 archived publication date validation (Refs #79)
+
+* Archive verification now reports a malformed or impossible `published_on` (for example 2026-11-31) as a problem and excludes it from the latest publication date; publish refuses such a date before writing. This fixes an unhandled error in the runner schedule operation. Valid records, policy and retention are unchanged. Light checks only; FULL gate, independent review and hosted CI remain pending and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-06 issue-79 r7).
+
+## [2026-11-07] update | Issue 79 rebased onto post-891 main (Refs #79)
+
+* Rebased the local ranking publication topic onto main `0f420dc9` (after the 891 merge and its score-only commit) with no conflict; the exact prior head is preserved at `preserve/issue-79-pre-r17-align`. No source, policy, approval or retention change. Focused publication, runner, API wiring and chat panel tests, Ruff, format and mypy pass; no FULL gate was run, so earlier receipts are historical and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r17).
+
+## [2026-11-07] update | Issue 79 runner corrections after independent 357e842d assessment (Refs #79)
+
+* The publication runner now refuses a selected policy whose registry key or content hash does not match (`policy_invalid`), reports a latest archived publication dated after the run date as a problem in `verify` and `schedule` and refuses a non-exercise publish, and exits 2 for a blocked `schedule`. No approval, threshold, archive naming, helper or retention change. Light focused checks only; the earlier FULL receipts are historical, a new combined FULL, independent exact-head assessments and hosted checks remain required, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r18).
+
+## [2026-11-07] update | Configured demo model, limits and evidence gaps recorded (Refs #108)
+
+* Added a dated section to [AI Tokenomics](./resources/ai-tokenomics.md#configured-demo-model-limits-and-evidence-gaps-2026-11-07-refs-108) recording the read-only configuration of the existing `standard` deployment on `aif-cutover-test-rzsrg`: `GlobalStandard` capacity 10, 10 requests and 10,000 tokens per 60 s, `gpt-4.1-nano` `2025-04-14`, `NoAutoUpgrade`, `Succeeded`, resource location `uksouth`, with sanitized read commands, source identities, official-source semantics and private native evidence pointers.
+* Resource location is not serving location for `GlobalStandard`; configured version is not serving attestation or a response; capacity is a rate ceiling, not a budget, latency or benefit. No other candidate's regional quota is inferred.
+* No #108 criterion was ticked or relaxed. Actual-serving attestation, real-model calls, the independent held-out evaluation, qualified reviewers, thresholds and benefit remain open. Original case study, memory, architecture and experimental design are unchanged. Evidence under `.copilot-tracking/` (2026-11-07 issue-108-demo-model-evidence).
+
+## [2026-11-07] correction | Serving-evidence wording and RPI order acknowledged (Refs #108)
+
+* Clarified the [configured demo model section](./resources/ai-tokenomics.md#configured-demo-model-limits-and-evidence-gaps-2026-11-07-refs-108): a real response's model identifier can inform version confirmation but does not by itself attest physical processing region or data residency, which needs source-qualified provider or operational attestation and the relevant named approvals. A real call therefore does not close the serving region gap. No figure, unknown, budget or gate changed; no call, Azure read, approval or criterion tick occurred.
+* Corrects the overclaim in the earlier 2026-11-07 #108 state follow-up ("Closes the serving region/version gap"), which is preserved unchanged as history. The earlier #108 iteration edited the synthesis before writing its research and plan, so its research, plan, critique and Review are retrospective in order; the corrective iteration wrote research, plan, details and critique first. Evidence under `.copilot-tracking/` (2026-11-07 issue-108-serving-evidence-correction).
+
+## [2026-11-07] update | Issue 79 merged main 8af3aea6 (Refs #79)
+
+* Merged main `8af3aea6` (docs 1247, browser readiness 1249 and the score commit) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-8af3-merge`. Publisher, runner and test blobs are unchanged. Light no-service checks passed; no FULL gate was run, the three 357e842d findings stay author-corrected only (not independently confirmed), and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r19).
+
+## [2026-11-07] update | Issue 79 merged main 39506027 (Refs #79)
+
+* Merged main `39506027` (the 1253 assistant release regression test, the 107 RPI records and the score commit) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-main1253-merge`. Publisher, runner and ranking test blobs are unchanged. Light no-service checks passed; no FULL gate was run, the three 357e842d findings stay author-corrected only, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r20).
+
+## [2026-11-07] update | Issue 79 merged main a1d26534 (Refs #79)
+
+* Merged main `a1d26534` (PR 1252, backlog-sync inactive versus conflict reporting and its 1251 RPI records) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-main1252-merge`. Publisher, runner and ranking test blobs are unchanged. Light no-service checks passed; no FULL gate was run, the three 357e842d findings stay author-corrected only, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r21).
+
+## [2026-11-07] update | Issue 79 merged main c1a16482 (Refs #79)
+
+* Merged main `c1a16482` (PR 1255, the unleased SQL release-denial test, SQL selector wiring and 107 RPI records) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-main1255-merge`. Publisher, runner and ranking test blobs are unchanged. Light no-service checks passed with one known SQL skip; no FULL gate was run, the three 357e842d findings stay author-corrected only, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r22).
+
+## [2026-11-07] update | Issue 79 merged score-only main 23b26a7f (Refs #79)
+
+* Merged main `23b26a7f` (one rubric score commit, `.github/rubric/scores/latest.json` only) into the ranking publication topic with one normal merge so current main is an ancestor for the gate; no conflict or rewrite, prior head preserved at `preserve/issue-79-pre-score23-merge`. No source changed and no tests or FULL were run; the three 357e842d findings stay author-corrected only. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r23).
+
+## [2026-11-07] update | Issue 79 directory-sync audit correction (Refs #79)
+
+* A folder-sync failure after the final link now raises `DurabilityUnconfirmedError`, is audited as `ranking_snapshot_publication_unconfirmed` and returns 409 `committed_unconfirmed`; the record is kept and never reported as confirmed. Author-corrected only; focused tests passed, no FULL gate was run, and a retry still does not confirm durability. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r24).
+
+## [2026-11-07] update | Issue 79 stage-cleanup masking correction (Refs #79)
+
+* The parent `publish` no longer lets a failed removal of its own temp file hide `DurabilityUnconfirmedError` or the committed result: removal never raises and a leftover temp file name is reported as `stage_retained` (no path). Parent-standalone snapshot; the combined tip with child 1231 is a separate later propagation. Author-corrected only; light core, API and static checks passed, no FULL gate was run, and the two other Medium follow-ups stay open. The r24 entry above is unchanged. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r25).
+
+## [2026-11-07] update | Issue 79 root rebased onto main 38990b19 (Refs #79)
+
+* Rebased the local ranking publication root onto main `38990b19` (PR 1260, exception register screen) with no conflict and no source change; the old head is preserved at `preserve/issue-79-pre-base3899`. Light core, API and static checks passed; no FULL gate was run, and child 1231 still needs propagation. Author-corrected only. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r26).
+
+## [2026-11-07] update | Issue 79 root adopted score-only main f0afa8d7 (Refs #79)
+
+* One normal merge of main `f0afa8d7` (generated rubric score JSON only, 77/100 unchanged) into the ranking publication root; no conflict, no source change, prior head preserved at `preserve/issue-79-pre-scoref0af`. No tests or FULL were run; author-only, gates remain open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r27).
+
+## [2026-11-07] update | Issue 79 existing-record durability confirmation and runner outcome (Refs #79)
+
+* Publishing an existing record or losing a race now syncs the archive folder before reporting it, so a retry is reported as already published only after a sync succeeds; a failed sync raises `DurabilityUnconfirmedError`. The runner reports it as `committed_unconfirmed` (exit 2) instead of a `publish_failed` refusal. Author-corrected only against the independent High and Medium findings, which stay open until re-assessed; light checks passed, no FULL gate was run and the earlier FULL 799026a3 is historical on this head. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r28).
+
+## [2026-11-07] correction | Issue 79 unconfirmed runner outcome reports the real written value (Refs #79)
+
+* The r28 `committed_unconfirmed` runner outcome hardcoded `written` false even when this call created the record; the typed error now carries `written` (true, false or unknown as null) from the publish outcome and the runner reports it. The r28 entry is preserved as history. Author-corrected only; light checks passed, no FULL gate was run and FULL 799026a3 stays historical. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r29).
+## [2026-11-07] correction | Scenario manifest recipe digest refreshed for the queue-sync checker (Refs #1262)
+
+* Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) to the corrected `src/api/checks/workbench_browser_check.py` bytes (`4bd825e9...a320`), because the validator compares recorded source digests with literal current bytes and hosted src-core failed with a stale hash after the #1262 checker change. Digest only: version 0.2.1, fixture case IDs, unavailable profiles and workflows, approval and evidence status, scenario semantics and the validator are unchanged, and no observed coverage is claimed. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-1262-r2-manifest-pin).
+
+## [2026-11-07] update | Issue 79 root merged main 7c6d135d (Refs #79)
+
+* One normal merge of main `7c6d135d` (hotfix 1263: workbench check, live-defaults tests, scenario manifest) into the ranking publication root; only the log overlapped, no conflict and no root source change, prior head preserved at `preserve/issue-79-pre-main7c6d`. Light own-source checks passed; no FULL gate was run and the hotfix receipts do not validate ranking. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r30).
+
+## [2026-11-07] update | Issue 79 root merged main b284d0d3 score-only (Refs #79)
+
+* One normal merge of main `b284d0d3` into the ranking publication root; only `.github/rubric/scores/latest.json` changed (generated score provenance for main `7c6d135d`, 77/100). No root source, test or log change and no approval implied. Metadata-only checks; FULL and independent review remain open. Records: `.copilot-tracking/*/2026-11-07/issue-79-r32-main-b284d0d-*`.
+
+## [2026-11-08] update | Issue 79 root integrated parent topic dd92e0d1 (Refs #79, #1231)
+
+* One normal merge of the squash-merged child 1242 (`dd92e0d1`, ranking archive concurrent-writer metadata) into the ranking publication root, on main `b284d0d3`. Parent-topic local observation only: not merged-main, whole-issue, cross-platform, human or deployed scheduling acceptance; #440 stabilization, #1258/#1259 and unmerged #123/#81/#86/#107 stay out. Earlier root341/child40d FULL evidence is historical. Records: `.copilot-tracking/*/2026-11-08/issue-79-r33-parent-dd92-*`.
+
+## [2026-11-08] update | Issue 440 ranking publication current-main stabilization checkpoint (Refs #440, #79, #1231)
+
+* Appended one dated section to the cut-over evidence pack for merged main `a80acada` (PR #1239), with BRD, PRD and ADR blob identities, installed-package focused observations (core 76, API 53, agents 20, all exit 0, no skips, SQLite-backed store only, no real SQL Server), traceability, existing owners #1258 and #1259 and the continue recommendation. The pre-merge full receipt at `ac0f29f9` stays historical and source-qualified. No new defect, closure, tick, approval or live model claim. Records: `.copilot-tracking/*/2026-11-08-ranking-main-stabilization-440-*`.
+
+## [2026-11-08] update | Issue 440 ranking checkpoint current-main currency (Refs #440)
+
+* Merged `origin/main` `77fa5d35` (rubric score file only) into the checkpoint branch by a normal merge and appended a currency note to the ranking section of the cut-over evidence pack; selectors refreshed (core 76, API 53 SQLite, agents 20, retention 37). Historical receipt and refusals unchanged. Records: `.copilot-tracking/*/2026-11-08-ranking-main-currency-440-*`.
+
+## [2026-11-08] update | Issue 1274 hosted CI release retrieval (Refs #1274)
+
+* Source CI now installs actionlint 1.7.7 through `tools/install-actionlint.py` (bounded retries over the official download URL and release asset API, pinned archive and checksums SHA-256, fail closed) after hosted 504 failures on #1243 and #1271. The AWF 0.28.23 bootstrap failure sits in the generated scorer lock and upstream setup action; no supported repository hook exists, so it stays an open partial blocker. Records: `.copilot-tracking/*/2026-11-08-issue1274-ci-release-retrieval-*`.
+
+## [2026-11-08] review | Capstone brief fidelity, autonomy and ongoing product story
+
+* Owner requested correction of the presentation's implication that the case
+  demanded unrestricted autonomous agents. The
+  [dated review](../capstone/source/review-2026-11-08.md) maps exact L2-L4
+  requests to current evidence preparation, preserved human/resident rights,
+  partial Assessment/Funding scope and reduced Coordination/Quality authority.
+  It explains reactive/proactive proposals, chat, historical Decision 1 versus
+  current generation, optional resident access and the design-thinking
+  decision trace. Original case, role answers, disagreements and prior reviews
+  remain unchanged; the addendum and historical syntheses gain qualifications.
+* Read-only Project 7 capture at 14:12 UTC retrieved all 260 members:
+  125 open, 126 completed and nine not planned. Done135 includes cancellations.
+  Git at `bcd86707` has 1,147 non-merge commits; 982 merged PRs were retrieved.
+  Current-membership history is not the complete Insights event series,
+  accepted-feature count or a causal productivity finding. Final presentation
+  must refresh these data and current acceptance evidence.
+* Updated the [54-slide source](../capstone/source/slides.json), synchronized
+  deck/PDF/pitch and index. Build/Verify preserve 108 native actions, timing,
+  all note blocks and six protected cost pages. Linux preview verifies all
+  108 PDF jumps; 301 revised frames retain their words and 43 unchanged page
+  renders are pixel-identical. Eleven visual pages were inspected; initial
+  count/table clipping was corrected. Nine PDF tests, 32 native-shape guards,
+  canonical source semantics and changed-document local links passed.
+* The [compact receipt](../capstone/source/validation.json) records source and
+  delivery hashes. Heavy previews/raw captures remain external. Native Windows
+  PowerPoint, rehearsal, human accessibility, live application/model authority,
+  comparative value and panel floors are not established. No deployment,
+  spending, requirement approval or increased autonomy is authorized.
+
+## [2026-11-08] correction | Independent capstone story review F1
+
+* The exact-head strategist assessment of `fe8a7327` returned FAIL for one
+  Medium finding: current pages 16/31 and the pitch guide incorrectly called
+  the scripted unsupported-claim chat scenario an open gap. The
+  [agents harness guide](../../src/agents/README.md#ai-evaluation-harness)
+  records that its lexical check catches it; unlisted paraphrases and
+  actual-model/human assurance remain limitations.
+* Accepted F1 in the [current source](../capstone/source/slides.json) and
+  pitch guide, preserving the [original review disposition](../capstone/source/review-2026-11-08.md#independent-review-disposition).
+  The autonomy, resident, model-fit, design-thinking and history story was
+  otherwise supported, with no serious visual finding. Rebuild/Verify,
+  fresh exact-head local gate and same-reviewer correction assessment remain
+  required after this source change. No model run, new approval or changed
+  operational authority follows.
+## [2026-11-08] update | Issue 440 AI and employee chat current-main stabilization checkpoint (Refs #440, #157, #159, #104, #107)
+
+* Appended one dated section to the cut-over evidence pack for main `608c98e6` (covering merged #1275, #1271 and #1273): BRD, PRD and ADR identities, the corrected #157 and #159 status drift (no new adoption), where AI is invoked and the proposal-only authority ceiling for the five assistants and employee chat, focused installed-package selectors (core 124, agents 46, API 217 tests, 59 skips for SQL Server and Chromium, all exit 0, SQLite or fixture stores only), document-qualified traceability and two findings (F1 Low unreachable `ChatIsolation.turn` clean-up, F2 evaluation prompt differs from the live prompt). Historical SQL, browser and restart evidence stays source-qualified; no real-provider, Azure or human approval evidence. Recommendation is continue; nothing approved, ticked or closed. Records: `.copilot-tracking/*/2026-11-08-ai-main-stabilization-440-*`.
+
+## [2026-11-08] update | Issue 440 AI and employee chat checkpoint correction 1 and currency (Refs #440, #157, #159, #104, #107)
+
+* Corrected the qualifications in the 2026-11-08 AI and employee chat checkpoint of the cut-over evidence pack after independent assessment `review-440-c96a`: the historical AWF 504 is dated and distinguished from the rootless installer recovery in #1275 and the unimplemented #1274 resilience; earlier exclusions are scoped to the 608c pin beside current identities (main `3c57a02d`, #1278 on main as `e73d4210`, #1243 on its parent branch as `6ef6dc36`, PR 1240 open); the assistant review row states only the enforced checks; the unused chat clean-up is unowned and pending triage, not deferred; the unsupported original reading claim is amended in new evidence. Original c96a text is kept as dated history and earlier log entries are unchanged. No adoption, approval, rerun, source change or real-provider, SQL, browser or Azure evidence. Records: `.copilot-tracking/*/2026-11-08-ai-main-stabilization-440-correction1-*`.
+
+## [2026-11-08] update | Running exploratory study, coauthor and mixed-source history
+
+* Owner confirmed coauthorship/affiliation agreement for Isabel Cabezas Martin,
+  Software Engineer in Frontier Company at Microsoft, executing and collecting
+  data separately from designer/analyst Juan Manuel Servera Bondroit.
+  This is intended execution-bias mitigation, not independent institutional
+  validation, independent analysis or a completed experimental result.
+* OSF base [xcpt4](https://osf.io/xcpt4) is owner-confirmed for 7 November.
+  Public API retrieval returned 401; the running design includes explicitly
+  unregistered exploratory amendments. Public source/protocol at `e71037d9`
+  was read: three models/five arms, selected 21/default 12, F1-F10 plus CR1,
+  medium effort and seed 2027. No historical freeze tag is the current execution.
+* Owner-reported completed-step history is 651 on `99a1ed1`, then 227 on
+  `3c2ce89`, then 369 on `e71037d9`: total 1,247. The dataset is not one frozen
+  implementation, and steps are not independent trajectories or efficacy.
+  The [current paper](../capstone/thought-leadership/everything-but-the-software/README.md)
+  and [study-slide record](../capstone/source/review-2026-11-08.md#later-8-november-study-and-coauthor-update)
+  distinguish this from earlier paused/prospective records.
+* Existing pages 22/40 and the B13 index entry were updated in the same topic
+  branch. Build/Verify preserve 54 slides/notes, 108 actions, timing and all
+  protected cost bytes/calculations. Linux preview checks 337 text frames
+  and 108 PDF jumps; only 22/27/40 change visually, with 51 identical neighbours.
+  Paper validation, independent review and a fresh local publication gate
+  remain separate; no study/data/configuration/OSF action is performed here.
+* Paper authoring completed directly on the current branch: 44 regressions
+  and structural checks pass, the coauthored PDF has 40 pages, Supplement 35,
+  174 valid internal links and 47 outline destinations. Tectonic has one
+  retained `inputenc` warning and no errors or unresolved references.
+  Names/metadata and source/history/status were checked without private
+  experimental data or new results. Independent assessment and publication
+  gate remain separate from these local component checks.
+
+## [2026-11-08] update | Paper measurement provenance and active treatment prompts
+
+* Applied the owner's measurement audit request to the existing paper and
+  additive Supplement. Tables 7/15 distinguish hidden-contract outcomes,
+  structural complexity/duplication/lint/size proxies, variable resource
+  observations and annotation/integrity records, with actual fields, units,
+  checkpoints, denominators, tool settings and missingness.
+* Public source `e71037d9` contains no separate numerical LLM-as-judge.
+  Arm C's qualitative review is a treatment, not an outcome score. The B/C
+  source templates are retained verbatim with SHA-256/Git-blob guards and
+  complete PDF-display checks; the historical frozen v4 prompt is unchanged.
+* Corrected the earlier Ruff safeguard claim: `--isolated` is present,
+  `--ignore-noqa` is absent and no suppression count is exported. Inline
+  suppression remains a measurement limitation, not a silently fixed
+  instrument or an accusation of participant use. Conservative unavailable
+  retention and composite CR1 summaries remain distinct from planned
+  richer exports.
+* The [current paper record](../capstone/thought-leadership/everything-but-the-software/README.md#measurement-provenance-8-november)
+  describes the 45-page single PDF, Supplement 37, 50 passing authoring
+  tests, structural checks, 180 internal/49 outline destinations and all-page
+  bounds. New tables/listings were visually inspected. One inherited
+  Tectonic `inputenc` warning remains; the historical body baseline is
+  unavailable. Independent exact-head review, focused publication gate,
+  hosted and human approval remain separate.
+* Authoring stayed on the existing branch. No slides, private data, experimental
+  outcomes, source/configuration, model run, registration/amendment or
+  repository-visibility action was performed. Coauthors, source epochs,
+  original/adverse reviews and pending results remain intact.
+
+## [2026-11-08] update | Paper current-delivery index correction
+
+* Independent scoped source review of `f367b70e` found the measurement account
+  source-faithful and one Low index inconsistency: the maintained introduction
+  still described the prior 40-page/Supplement-35 delivery. Updated that current
+  pointer to the validated v13 PDF's 45 pages/Supplement 37, preserving dated
+  records and the original review outcome. Paper source, PDF, prompt bindings,
+  study and slides are unchanged. A new exact-head assessment and focused
+  publication receipt are required after this correction.

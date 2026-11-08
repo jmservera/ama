@@ -12,6 +12,9 @@ Default is a read-only audit. Use --apply to write. Rules:
   activity is Unknown: the status is kept and reported as unverified.
   --active is positive evidence only; omission from it never demotes.
 * Open issue Todo with an open PR that references it: In Progress.
+* Open issue named by --inactive that an open PR references: a conflict. It is
+  reported and its status is left unchanged, from Todo or In Progress. A PR
+  mention is a reference, not proof that the issue is being implemented.
 * Issue missing from the board: added with the status implied above.
 
 Open issues with merged PR references but unticked criteria are listed for
@@ -115,6 +118,10 @@ def main():
                 print(f"#{n} closed: tick criteria")
                 if args.apply:
                     gh("issue", "edit", str(n), "--repo", REPO, "--body-file", "-", data=UNTICKED.sub(r"\1[x]", body))
+        elif n in inactive and n in open_ref:
+            want = current
+            print(f"#{n} conflict: --inactive contradicts open PR(s) {sorted(set(open_ref[n]))}; "
+                  f"status {current or 'missing'} left unchanged")
         else:
             want, kept = desired_status(issue["state"], current, n in open_ref, n in active, n in inactive)
             if kept:
