@@ -24,6 +24,8 @@ NOT_A_MODEL_RESULT = "Requested AI help did not deliver a model result."
 FAILED_AI_KIND = "Requested AI help did not deliver a model result"
 KIND_COLUMN = 1
 HAPPENED_COLUMN = 4
+# Source or run reference cell: where the synthetic record ID shows; cell 0 is the EX item ID.
+SOURCE_COLUMN = 6
 QUARANTINED_TEXT = f"Quarantined. {NOT_A_MODEL_RESULT} Reason: {QUARANTINED_REASON}"
 FALLBACK_TEXT = f"Fell back to rules or template. {NOT_A_MODEL_RESULT} Reason: {FALLBACK_REASON}"
 
@@ -31,7 +33,7 @@ FALLBACK_TEXT = f"Fell back to rules or template. {NOT_A_MODEL_RESULT} Reason: {
 
 def failed_ai_rows(rows: list[list[str]]) -> list[list[str]]:
     """Rows of the Items table whose Kind cell is the failed-AI label."""
-    return [row for row in rows if len(row) > HAPPENED_COLUMN and row[KIND_COLUMN].strip() == FAILED_AI_KIND]
+    return [row for row in rows if len(row) > SOURCE_COLUMN and row[KIND_COLUMN].strip() == FAILED_AI_KIND]
 
 
 def says_failure_outcome(happened: str) -> bool:

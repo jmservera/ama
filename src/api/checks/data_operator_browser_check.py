@@ -209,7 +209,7 @@ def check_register(page: Page) -> None:
     cells = panel.get_by_role("region", name=ai.REGISTER_TABLES[0], exact=True).locator("tbody tr").evaluate_all(
         "rows => rows.map(row => [...row.cells].map(cell => cell.textContent || ''))")
     failed = ai.failed_ai_rows(cells)
-    ids = [row[0] for row in failed]
+    ids = [row[ai.SOURCE_COLUMN] for row in failed]
     check("both synthetic failed AI rows are listed once each by Kind",
           ids.count(ai.QUARANTINED_ID) == 1 and ids.count(ai.FALLBACK_ID) == 1)
     check("every failed AI row says Quarantined or Fell back, none claims a model result",

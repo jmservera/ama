@@ -45,7 +45,7 @@ class Register(ExceptionRegisterMixin):  # type: ignore[misc]
         self.audits.append(args)
 
 
-def rendered() -> tuple[dict[str, Any], str, list[str]]:
+def rendered() -> tuple[dict[str, Any], str, list[str], list[list[str]]]:
     user = {"email": ai.OPERATOR_EMAIL, "role": "Retrofit Programme Manager"}
     staff = {ai.OPERATOR_EMAIL: ("data_steward", "digital_operator")}
     contract = Register(ai.ai_records()).exception_register(user, staff)
@@ -58,6 +58,7 @@ def rendered() -> tuple[dict[str, Any], str, list[str]]:
     assert result.returncode == 0, result.stderr
     tree = json.loads(result.stdout)
     rows: list[str] = []
+    cells: list[list[str]] = []
 
     def walk(node: Any) -> str:
         if isinstance(node, str):
@@ -65,19 +66,21 @@ def rendered() -> tuple[dict[str, Any], str, list[str]]:
         text = " ".join(walk(kid) for kid in node.get("kids", []))
         if node.get("tag") == "tr":
             rows.append(text)
+            cells.append([walk(cell) for cell in node.get("kids", [])])
         return text
 
-    return contract, walk(tree), rows
+    return contract, walk(tree), rows, cells
 
 
 class DataOperatorAiState(unittest.TestCase):
     contract: dict[str, Any]
     page: str
     rows: list[str]
+    cells: list[list[str]]
 
     @classmethod
     def setUpClass(cls) -> None:
-        cls.contract, cls.page, cls.rows = rendered()
+        cls.contract, cls.page, cls.rows, cls.cells = rendered()
 
     def row(self, record_id: str) -> str:
         found = [row for row in self.rows if record_id in row]
@@ -106,7 +109,7 @@ class DataOperatorAiState(unittest.TestCase):
         self.assertIn(f'"{ai.FAILED_AI_KIND}"', (WEB / "role-screens.js").read_text())
 
         def row(ident: str, kind: str, happened: str) -> list[str]:
-            return [ident, kind, "Open", "owner", happened, "step", "ref", "Unknown"]
+            return ["EX-0", kind, "Open", "owner", happened, "step", ident, "Unknown"]
 
         good = [
             row(ai.QUARANTINED_ID, ai.FAILED_AI_KIND, ai.QUARANTINED_TEXT),
@@ -121,7 +124,7 @@ class DataOperatorAiState(unittest.TestCase):
         for rows in (good, [*good, extra, other]):
             failed = ai.failed_ai_rows(rows)
             self.assertTrue(all(ai.says_failure_outcome(r[ai.HAPPENED_COLUMN]) for r in failed))
-            self.assertEqual([r[0] for r in failed][:2], [ai.QUARANTINED_ID, ai.FALLBACK_ID])
+            self.assertEqual([r[ai.SOURCE_COLUMN] for r in failed][:2], [ai.QUARANTINED_ID, ai.FALLBACK_ID])
         self.assertEqual(len(ai.failed_ai_rows([*good, extra, other])), 3)
         for bad in (
             "Model result delivered.",
@@ -145,6 +148,13 @@ class DataOperatorAiState(unittest.TestCase):
         self.assertTrue(
             ai.says_failure_outcome(f"Fell back to rules or template. {ai.NOT_A_MODEL_RESULT}")
         )
+
+    def test_rendered_failed_rows_carry_synthetic_ids_in_the_source_cell(self) -> None:
+        failed = ai.failed_ai_rows(self.cells)
+        ids = [row[ai.SOURCE_COLUMN] for row in failed]
+        self.assertEqual(sorted(ids), sorted([ai.QUARANTINED_ID, ai.FALLBACK_ID]))
+        self.assertTrue(all(row[0].startswith("EX-") for row in failed))
+        self.assertTrue(all(ai.says_failure_outcome(row[ai.HAPPENED_COLUMN]) for row in failed))
 
     def test_rendered_kind_cell_matches_the_label(self) -> None:
         self.assertEqual(len(self.rows), 2 + 1)  # header row plus the two synthetic rows
