@@ -368,22 +368,52 @@ class SensorConsumer:
         while True:
             with self._write() as db:
                 self._schema(db)
-                if not self._dispatch_in_flight(db):
+                if not self._dispatch_in_flight(db, self._changed_homes(db, policy, controls)):
                     self._replace_controls(db, policy, controls)
                     return
-            # A control change waits for a started provider call, bounded by its timeout and
-            # grace, outside the write transaction so the call can release its hold.
+            # A control change waits only for a started provider call on a home whose effective
+            # controls change, bounded by its timeout and grace, outside the write transaction so the
+            # call can release its gate.
             if time.monotonic() >= deadline:
                 raise ConsumerError("SENSOR_DISPATCH_IN_FLIGHT")
             time.sleep(0.05)
 
-    def _dispatch_in_flight(self, db: Connection) -> bool:
-        """True while an assistant holds a live dispatch of captured readings. The hold uses the
+    def _changed_homes(
+        self, db: Connection, policy: ExercisePolicy, controls: Sequence[SensorControl]
+    ) -> set[str] | None:
+        """Homes whose effective controls change; None means any home (policy change or unreadable
+        prior controls), which keeps the wait conservative."""
+        top = "TOP 101 " if self.mssql else ""
+        tail = "" if self.mssql else " LIMIT 101"
+        rows = db.execute(f"SELECT {top}sensor_id, body FROM sensor_consumer_control{tail}").fetchall()
+        old = db.execute("SELECT body FROM sensor_consumer_policy").fetchone()
+        if len(rows) > 100 or (old and old[0] != json.dumps(asdict(policy))):
+            return None
+        try:
+            homes = {str(r[0]): str(json.loads(r[1])["home_id"]) for r in rows}
+        except (ValueError, KeyError, TypeError):
+            return None
+        before = {str(r[0]): str(r[1]) for r in rows}
+        after = {c.sensor_id: json.dumps(asdict(c)) for c in controls}
+        changed: set[str] = set()
+        for sensor in before.keys() | after.keys():
+            if before.get(sensor) != after.get(sensor):
+                if sensor in homes:
+                    changed.add(homes[sensor])
+        for control in controls:
+            if before.get(control.sensor_id) != after[control.sensor_id]:
+                changed.add(control.home_id)
+        return changed
+
+    def _dispatch_in_flight(self, db: Connection, homes: set[str] | None = None) -> bool:
+        """True while an assistant holds a live dispatch gate for a changing home. The gate uses the
         database clock, commits with the final consent check, and expires on its own."""
+        if homes is not None and not homes:
+            return False
         exists = (
-            "SELECT OBJECT_ID(N'assistant_dispatch_hold')"
+            "SELECT OBJECT_ID(N'assistant_dispatch_gate')"
             if self.mssql
-            else "SELECT 1 FROM sqlite_master WHERE type='table' AND name='assistant_dispatch_hold'"
+            else "SELECT 1 FROM sqlite_master WHERE type='table' AND name='assistant_dispatch_gate'"
         )
         if db.execute(exists).fetchone() in (None, (None,)):
             return False
@@ -393,10 +423,20 @@ class SensorConsumer:
             if self.mssql
             else "SELECT (julianday('now')-2440587.5)*86400.0"
         )
+        stamp = float(db.execute(now).fetchone()[0])
+        if homes is None:
+            return (
+                db.execute(
+                    "SELECT COUNT(*) FROM assistant_dispatch_gate WHERE expires_at>?", (stamp,)
+                ).fetchone()[0]
+                > 0
+            )
+        marks = ",".join("?" * len(homes))
         return (
             db.execute(
-                "SELECT COUNT(*) FROM assistant_dispatch_hold WHERE expires_at>?",
-                (float(db.execute(now).fetchone()[0]),),
+                f"SELECT COUNT(*) FROM assistant_dispatch_gate WHERE expires_at>?"
+                f" AND home_id IN ({marks})",
+                (stamp, *sorted(homes)),
             ).fetchone()[0]
             > 0
         )

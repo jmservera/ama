@@ -559,8 +559,14 @@ class ReadModel(Seed, ta.Base):
         self.assertEqual((self.view()["state"], self._control_state()), ("ok", before))
 
     def _move_control_home(self, sensor, home):
-        modify = "JSON_MODIFY(body,'$.home_id',?)" if self.service.mssql else "json_set(body,'$.home_id',?)"
-        self._tamper(f"UPDATE sensor_consumer_control SET body={modify} WHERE sensor_id=?", home, sensor)
+        modify = (
+            "JSON_MODIFY(body,'$.home_id',?)"
+            if self.service.mssql
+            else "json_set(body,'$.home_id',?)"
+        )
+        self._tamper(
+            f"UPDATE sensor_consumer_control SET body={modify} WHERE sensor_id=?", home, sensor
+        )
 
     def test_changed_control_home_with_a_valid_marker_fails_closed_until_migrated(self):
         self.put(3)
@@ -583,7 +589,13 @@ class ReadModel(Seed, ta.Base):
         self.assertEqual(self.view()["state"], "consent-withheld")
         self.service.migrate()
         self.assertEqual(self.view()["state"], "ok")
-        self._tamper("DROP TRIGGER sensor_consumer_control_guard_upd")
+        # SQL Server has one trigger for all three events; SQLite has one per event.
+        guard = (
+            "sensor_consumer_control_guard"
+            if self.service.mssql
+            else "sensor_consumer_control_guard_upd"
+        )
+        self._tamper(f"DROP TRIGGER {guard}")
         self.assertEqual(self.view()["state"], "consent-withheld")
         before = self._control_state()
         self.service.migrate()
@@ -591,13 +603,13 @@ class ReadModel(Seed, ta.Base):
         self.assertEqual((self.view()["state"], self._control_state()), ("ok", before))
         with self.service.transaction() as db:
             catalog = (
-                "SELECT name FROM sys.triggers WHERE name LIKE 'sensor_consumer_control_guard_%'"
+                "SELECT name FROM sys.triggers WHERE name LIKE 'sensor_consumer_control_guard%'"
                 if self.service.mssql
                 else "SELECT name FROM sqlite_master WHERE type='trigger'"
                 " AND name LIKE 'sensor_consumer_control_guard_%'"
             )
             names = db.execute(catalog).fetchall()
-        self.assertEqual(len(names), 3)
+        self.assertEqual(len(names), 1 if self.service.mssql else 3)
 
     def test_future_readings_beyond_a_day_are_reported_not_absent(self):
         self.put(0)
@@ -1479,7 +1491,9 @@ class Http(Seed, ta.ApiTests):
             self.assertTrue(gate["entered"].wait(20))
             thread, errors = self._withdraw_in_thread()
             thread.join(1.0)
-            self.assertTrue(thread.is_alive(), "withdrawal committed while the provider call was in flight")
+            self.assertTrue(
+                thread.is_alive(), "withdrawal committed while the provider call was in flight"
+            )
             self.assertEqual(self._consent_now(), "granted")
         finally:
             gate["proceed"].set()
@@ -1490,30 +1504,33 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(self._consent_now(), "declined")
         self.assertEqual(self.provider.calls, 1)
         with self.service.transaction() as db:
-            held = db.execute("SELECT COUNT(*) FROM assistant_dispatch_hold").fetchone()[0]
+            held = db.execute("SELECT COUNT(*) FROM assistant_dispatch_gate").fetchone()[0]
         self.assertEqual(held, 0)
 
-    def test_provider_failure_releases_the_hold_and_an_expired_hold_does_not_block(self):
+    def test_provider_failure_releases_the_gate_and_an_expired_gate_does_not_block(self):
         self._ready_one(fail=1)
         self.service.scan()
         (tid,) = self.quality_task()
         self.service.execute(tid)
         with self.service.transaction() as db:
-            self.assertEqual(db.execute("SELECT COUNT(*) FROM assistant_dispatch_hold").fetchone()[0], 0)
+            self.assertEqual(
+                db.execute("SELECT COUNT(*) FROM assistant_dispatch_gate").fetchone()[0], 0
+            )
             db.execute(
-                "INSERT INTO assistant_dispatch_hold (home_id,task_id,fence,expires_at) VALUES ('ZF-1','dead',1,?)",
+                "INSERT INTO assistant_dispatch_gate (home_id,task_id,fence,expires_at)"
+                " VALUES ('ZF-1','dead',1,?)",
                 (self.service.now(db) - 5,),
             )
         started = time.time()
         self.set_consent("declined")
         self.assertLess(time.time() - started, 5)
 
-    def test_a_hold_that_cannot_be_written_sends_nothing(self):
+    def test_a_gate_that_cannot_be_written_sends_nothing(self):
         self._ready_one()
         self.service.scan()
         (tid,) = self.quality_task()
         with self.service.transaction() as db:
-            db.execute("DROP TABLE assistant_dispatch_hold")
+            db.execute("DROP TABLE assistant_dispatch_gate")
         self.service.execute(tid)
         self.assertEqual(self.provider.calls, 0)
 
@@ -1572,7 +1589,9 @@ class Http(Seed, ta.ApiTests):
         self.service.scan()
         for minute in (9, 8, 7, 6, 5, 4, 3, 2, 1):
             (pending,) = [
-                t for t in self.quality_task() if self.service.detail(self.pm, t)["state"] == "pending"
+                t
+                for t in self.quality_task()
+                if self.service.detail(self.pm, t)["state"] == "pending"
             ] or [None]
             if pending is None:
                 break
@@ -1582,13 +1601,31 @@ class Http(Seed, ta.ApiTests):
         self.assertLessEqual(len(self.quality_task()), 5)
         self.service.scan_cursor = ""
         self.service.scan()
-        pending = [t for t in self.quality_task() if self.service.detail(self.pm, t)["state"] == "pending"]
-        self.assertEqual(len(pending), 1)
-        self.assertTrue(self.service.execute(pending[0]))
+        pending = [
+            t for t in self.quality_task() if self.service.detail(self.pm, t)["state"] == "pending"
+        ]
+        self.assertEqual(pending, [])
+        with self.clock(400):
+            self.service.scan_cursor = ""
+            self.service.scan()
+            pending = [
+                t
+                for t in self.quality_task()
+                if self.service.detail(self.pm, t)["state"] == "pending"
+            ]
+            self.assertEqual(len(pending), 1)
+            self.assertTrue(self.service.execute(pending[0]))
         self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
         self.service.scan_cursor = ""
         self.service.scan()
-        self.assertEqual([t for t in self.quality_task() if self.service.detail(self.pm, t)["state"] == "pending"], [])
+        self.assertEqual(
+            [
+                t
+                for t in self.quality_task()
+                if self.service.detail(self.pm, t)["state"] == "pending"
+            ],
+            [],
+        )
 
     def _legacy(self):
         """A pre-upgrade store: tasks exist, the schedule table has no rows."""
@@ -1609,7 +1646,10 @@ class Http(Seed, ta.ApiTests):
         self.service.scan()
         self.assertEqual(self.quality_task(), [tid])
         with self.service.transaction() as db:
-            rows = db.execute("SELECT COUNT(*) FROM assistant_schedule WHERE case_id='ZF-1' AND capability='quality-evidence'").fetchone()[0]
+            rows = db.execute(
+                "SELECT COUNT(*) FROM assistant_schedule"
+                " WHERE case_id='ZF-1' AND capability='quality-evidence'"
+            ).fetchone()[0]
         self.assertEqual(rows, 1)
 
     def test_upgrade_does_not_adopt_a_legacy_task_from_another_release(self):
@@ -1617,7 +1657,9 @@ class Http(Seed, ta.ApiTests):
         tid, _ = self.proactive()
         self._legacy()
         with self.service.transaction() as db:
-            body = json.loads(db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()[0])
+            body = json.loads(
+                db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()[0]
+            )
             body["release"] = "older-release"
             db.execute("UPDATE assistant_tasks SET body=? WHERE id=?", (json.dumps(body), tid))
         self.add_live(5)
@@ -1651,7 +1693,9 @@ class Http(Seed, ta.ApiTests):
         self.assertTrue(set(self.service.scan()["enqueued"]) - {manual})
         (auto,) = set(self.quality_task()) - {manual}
         self.assertTrue(self.service.execute(auto))
-        self.assertEqual(self.service.detail(self.pm, manual)["review_flag"]["status"], "not-current")
+        self.assertEqual(
+            self.service.detail(self.pm, manual)["review_flag"]["status"], "not-current"
+        )
         self.assertEqual(self.service.detail(self.pm, auto)["dispatch"]["trigger"], "proactive")
         self.assertEqual(self.service.detail(self.pm, manual)["dispatch"]["trigger"], "requested")
         self.add_live(4)
@@ -1685,7 +1729,8 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(flag["newer_reading_count"], 0)
         self.add_live(5)
         flag = self.service.detail(self.pm, tid)["review_flag"]
-        self.assertIs(flag["changed_since_capture"], True)
+        # An extra uncited reading is counted apart; the cited rows still hold the same values.
+        self.assertIs(flag["changed_since_capture"], False)
         self.assertEqual(flag["newer_reading_count"], 1)
         self.assertEqual(flag["status"], "review-suggested")
 
@@ -1731,7 +1776,7 @@ class AccountSummaryName(unittest.TestCase):
 
 
 class WebWording(unittest.TestCase):
-    """Static checks of the shipped web source; a rendered browser check is a separate pending gate."""
+    """Static checks of the shipped web source; a rendered browser check is a separate gate."""
 
     def _web(self, name):
         from pathlib import Path
@@ -1747,12 +1792,18 @@ class WebWording(unittest.TestCase):
 
     def test_flag_block_shows_captured_as_of_freshness_age_and_changes(self):
         js = self._web("assistants.js")
-        for token in ("evidence_as_of", "freshness", "age_minutes", "changed_since_capture", "newer_reading_count"):
+        for token in (
+            "evidence_as_of",
+            "freshness",
+            "age_minutes",
+            "changed_since_capture",
+            "newer_reading_count",
+        ):
             self.assertIn(token, js)
 
     def test_stale_review_suggested_flag_stays_in_the_main_path_and_counts_as_waiting(self):
         js = self._web("assistants.js")
-        self.assertIn("p.review_flag?.status === \"review-suggested\"", js)
+        self.assertIn('p.review_flag?.status === "review-suggested"', js)
         self.assertIn("review_flag", self._web("case-workspace.js"))
 
 

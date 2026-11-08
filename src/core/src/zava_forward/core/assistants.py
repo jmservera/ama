@@ -290,9 +290,16 @@ def review_flag(task, provenance=(), actionable=True, withheld=False, newer_read
     as_of = (task.get("dispatch") or {}).get("as_of")
     timing = sensor_view.as_of_state(sensors, as_of) if isinstance(as_of, (int, float)) else {}
     newer = bool(newer_readings and autonomous)
-    now_cited = set(sensor_view.citations(((current or {}).get("sources") or {}).get("sensors") or {})) if current is not None else None
-    changed = None if now_cited is None else now_cited != set(known)
-    return dict(changed_since_capture=changed, newer_reading_count=None if now_cited is None else len(now_cited - set(known)),
+    now_rows = sensor_view.citations(((current or {}).get("sources") or {}).get("sensors") or {}) if current is not None else None
+    comparison = dict(state="unknown", changed_ids=[], missing_ids=[])
+    if now_rows is not None and sensor_cited:
+        # Content, not identity: a corrected row keeps its id. Only cited rows decide; extra rows are counted apart.
+        comparison["changed_ids"] = sorted(k for k in sensor_cited if k in now_rows and canonical(now_rows[k]) != canonical(known[k]))
+        comparison["missing_ids"] = sorted(k for k in sensor_cited if k not in now_rows)
+        comparison["state"] = "changed" if comparison["changed_ids"] or comparison["missing_ids"] else "match"
+    changed = {"match": False, "changed": True}.get(comparison["state"])
+    return dict(changed_since_capture=changed, cited_comparison=comparison,
+                newer_reading_count=None if now_rows is None else len(set(now_rows) - set(known)),
                 level="L4" if autonomous else None, status=status, autonomous=autonomous, unapproved=True,
                 newer_readings=newer, evidence_as_of=timing.get("request_as_of"), freshness=timing.get("freshness"),
                 age_minutes=timing.get("age_minutes"),
@@ -453,24 +460,64 @@ def shape_result(task, result, limits):
 
 
 HOLD_GRACE = 5.0
+PAUSED = "Readings kept changing before the model ran; automatic review is paused briefly. Request review manually or wait."
 SQLITE_DDL = (
-    "CREATE TABLE IF NOT EXISTS assistant_tasks (id TEXT PRIMARY KEY, capability TEXT NOT NULL, case_id TEXT NOT NULL, signature TEXT NOT NULL, body TEXT NOT NULL, state TEXT NOT NULL, fence INTEGER NOT NULL, owner TEXT NOT NULL, lease_until REAL NOT NULL, attempts INTEGER NOT NULL, not_before REAL NOT NULL, revision INTEGER NOT NULL)",
+    "CREATE TABLE IF NOT EXISTS assistant_tasks (id TEXT PRIMARY KEY, capability TEXT NOT NULL, case_id TEXT NOT NULL, signature TEXT NOT NULL, body TEXT NOT NULL, state TEXT NOT NULL, fence INTEGER NOT NULL, owner TEXT NOT NULL, lease_until REAL NOT NULL, attempts INTEGER NOT NULL, not_before REAL NOT NULL, revision INTEGER NOT NULL, dispatched REAL NOT NULL DEFAULT 0)",
     "CREATE TABLE IF NOT EXISTS assistant_allowance (id TEXT PRIMARY KEY, calls INTEGER NOT NULL, tokens INTEGER NOT NULL, expires REAL NOT NULL, used_calls INTEGER NOT NULL, reserved_tokens INTEGER NOT NULL)",
     "CREATE TABLE IF NOT EXISTS assistant_attempts (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, fence INTEGER NOT NULL, pool TEXT NOT NULL, reserved INTEGER NOT NULL, actual INTEGER, outcome TEXT NOT NULL, active_until REAL NOT NULL DEFAULT 0)",
     "CREATE TABLE IF NOT EXISTS assistant_events (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, at REAL NOT NULL, body TEXT NOT NULL)",
     "CREATE INDEX IF NOT EXISTS ix_assistant_pending ON assistant_tasks (state, not_before, lease_until)",
     "CREATE TABLE IF NOT EXISTS assistant_schedule (capability TEXT NOT NULL, case_id TEXT NOT NULL, scope TEXT NOT NULL, signature TEXT NOT NULL, task_id TEXT NOT NULL, at REAL NOT NULL, replaced INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (capability, case_id))",
     "CREATE INDEX IF NOT EXISTS ix_assistant_case ON assistant_tasks (capability, case_id)",
-    "CREATE TABLE IF NOT EXISTS assistant_dispatch_hold (home_id TEXT NOT NULL, task_id TEXT NOT NULL, fence INTEGER NOT NULL, expires_at REAL NOT NULL, PRIMARY KEY (home_id, task_id))",
+    "CREATE TABLE IF NOT EXISTS assistant_dispatch_gate (home_id TEXT NOT NULL, task_id TEXT NOT NULL, fence INTEGER NOT NULL, expires_at REAL NOT NULL, PRIMARY KEY (home_id, task_id, fence))",
 ) + rel.SQLITE_DDL
 MSSQL_DDL = (
-    "CREATE TABLE assistant_tasks (id VARCHAR(64) PRIMARY KEY, capability VARCHAR(64) NOT NULL, case_id NVARCHAR(64) NOT NULL, signature VARCHAR(64) NOT NULL, body NVARCHAR(MAX) NOT NULL, state VARCHAR(24) NOT NULL, fence BIGINT NOT NULL, owner VARCHAR(64) NOT NULL, lease_until FLOAT NOT NULL, attempts INT NOT NULL, not_before FLOAT NOT NULL, revision BIGINT NOT NULL)",
+    "CREATE TABLE assistant_tasks (id VARCHAR(64) PRIMARY KEY, capability VARCHAR(64) NOT NULL, case_id NVARCHAR(64) NOT NULL, signature VARCHAR(64) NOT NULL, body NVARCHAR(MAX) NOT NULL, state VARCHAR(24) NOT NULL, fence BIGINT NOT NULL, owner VARCHAR(64) NOT NULL, lease_until FLOAT NOT NULL, attempts INT NOT NULL, not_before FLOAT NOT NULL, revision BIGINT NOT NULL, dispatched FLOAT NOT NULL DEFAULT 0)",
     "CREATE TABLE assistant_allowance (id VARCHAR(64) PRIMARY KEY, calls BIGINT NOT NULL, tokens BIGINT NOT NULL, expires FLOAT NOT NULL, used_calls BIGINT NOT NULL, reserved_tokens BIGINT NOT NULL)",
     "CREATE TABLE assistant_attempts (id VARCHAR(100) PRIMARY KEY, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL, pool VARCHAR(64) NOT NULL, reserved BIGINT NOT NULL, actual BIGINT NULL, outcome VARCHAR(40) NOT NULL, active_until FLOAT NOT NULL DEFAULT 0)",
     "CREATE TABLE assistant_events (id VARCHAR(64) PRIMARY KEY, task_id VARCHAR(64) NOT NULL, at FLOAT NOT NULL, body NVARCHAR(MAX) NOT NULL)",
     "CREATE TABLE assistant_schedule (capability VARCHAR(64) NOT NULL, case_id NVARCHAR(64) NOT NULL, scope VARCHAR(64) NOT NULL, signature VARCHAR(64) NOT NULL, task_id VARCHAR(64) NOT NULL, at FLOAT NOT NULL, replaced INT NOT NULL DEFAULT 0, PRIMARY KEY (capability, case_id))",
-    "CREATE TABLE assistant_dispatch_hold (home_id NVARCHAR(128) NOT NULL, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL, expires_at FLOAT NOT NULL, PRIMARY KEY (home_id, task_id))",
+    "CREATE TABLE assistant_dispatch_gate (home_id NVARCHAR(128) NOT NULL, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL, expires_at FLOAT NOT NULL, PRIMARY KEY (home_id, task_id, fence))",
 ) + rel.MSSQL_DDL
+
+
+class DispatchGate:
+    """Per-attempt authorisation for the physical send of captured sensor readings.
+
+    Calling it commits the final consent check and a fenced gate row together, so a withdrawal for that home
+    waits for the row, and returns a validity check. The check is a monotonic send-by deadline strictly inside
+    the database expiry, so a stalled thread cannot send after the row could expire. Each attempt owns only
+    its own (home, task, fence) row, and release never touches another attempt's row. Not covered: direct SQL
+    writes that bypass the consumer, or a process suspended between the last check and the kernel send."""
+
+    def __init__(self, service, task):
+        self.service, self.task, self.written = service, task, False
+
+    def __call__(self):
+        service, task = self.service, self.task
+        started = time.monotonic()
+        with service.transaction() as db:
+            granted = service._sensors_granted(db, task)
+            if granted and service._captured_sensors(task):
+                key = (task["case_id"], task["id"], task["fence"])
+                db.execute("DELETE FROM assistant_dispatch_gate WHERE home_id=? AND task_id=? AND fence=?", key)
+                db.execute("INSERT INTO assistant_dispatch_gate (home_id,task_id,fence,expires_at) VALUES (?,?,?,?)",
+                           (*key, service.now(db) + service.limits.timeout + HOLD_GRACE))
+                self.written = True
+        if not granted:
+            raise ai_consumption.DispatchWithdrawn("consent-withdrawn")
+        deadline = started + service.limits.timeout + HOLD_GRACE / 2
+        return lambda: time.monotonic() < deadline
+
+    def release(self):
+        if not self.written:
+            return
+        try:
+            with self.service.transaction() as db:
+                db.execute("DELETE FROM assistant_dispatch_gate WHERE home_id=? AND task_id=? AND fence=?",
+                           (self.task["case_id"], self.task["id"], self.task["fence"]))
+        except Exception:
+            pass  # The row expires on the database clock and the send-by deadline has passed.
 
 
 class Affected(list):
@@ -486,7 +533,7 @@ class Assistants:
     def __init__(self, store, env=None, provider=None):
         self.store, self.limits = store, Limits(env)
         # The provider port: (system, prompt, max_tokens, timeout) -> raw envelope. The default late-binds to the store's AI client.
-        self.provider = provider or (lambda *args: self.store.ai.evidence(*args))
+        self.provider = provider or self._default_provider
         self.sql = hasattr(store, "assistant_connection")
         self.mssql = hasattr(store, "_env")
         self.stop_event = threading.Event()
@@ -529,12 +576,37 @@ class Assistants:
                     db.execute(ddl)
                 for action in ("UPDATE", "DELETE"):
                     db.execute(f"CREATE TRIGGER IF NOT EXISTS assistant_events_no_{action.lower()} BEFORE {action} ON assistant_events BEGIN SELECT RAISE(ABORT, 'assistant evidence is append-only'); END")
+            self._upgrade(db)
             try:
                 from .sensor_consumer import ensure_control_home
                 ensure_control_home(db, self.mssql)
             except Exception:
                 # Readers fail closed on a missing or partial index; assistants keep working.
                 LOG.warning("Sensor consent index could not be reconciled; retained readings stay withheld.")
+
+    def _add_column(self, db, table, column, ddl):
+        """Idempotently add a column to an existing table; True when it was added now."""
+        if self.mssql:
+            present = db.execute(f"SELECT COL_LENGTH(N'{table}', N'{column}')").fetchone()[0] is not None
+        else:
+            present = column in [r[1] for r in db.execute(f"PRAGMA table_info({table})").fetchall()]
+        if not present:
+            db.execute(f"ALTER TABLE {table} ADD {'' if self.mssql else 'COLUMN '}{column} {ddl}")
+        return not present
+
+    def _upgrade(self, db):
+        """In-place upgrade of C5 schedule/task tables, keeping their rows. `dispatched` backfills from the
+        recorded claim events, so legacy serviced ordering is the actual claim time; unrecorded history
+        stays 0 and is never treated as approved."""
+        self._add_column(db, "assistant_schedule", "replaced", "INT NOT NULL DEFAULT 0" if self.mssql else "INTEGER NOT NULL DEFAULT 0")
+        if self._add_column(db, "assistant_tasks", "dispatched", "FLOAT NOT NULL DEFAULT 0" if self.mssql else "REAL NOT NULL DEFAULT 0"):
+            db.execute("UPDATE assistant_tasks SET dispatched=COALESCE((SELECT MAX(e.at) FROM assistant_events e"
+                       " WHERE e.task_id=assistant_tasks.id AND e.body LIKE '%\"kind\":\"claimed\"%'),0) WHERE attempts>0")
+        index = "CREATE INDEX ix_assistant_dispatched ON assistant_tasks (capability, case_id, dispatched, revision)"
+        if self.mssql:
+            db.execute(f"IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name='ix_assistant_dispatched' AND object_id=OBJECT_ID(N'assistant_tasks')) {index}")
+        else:
+            db.execute(index.replace("CREATE INDEX", "CREATE INDEX IF NOT EXISTS"))
 
     @contextmanager
     def transaction(self):
@@ -792,7 +864,7 @@ class Assistants:
                            (canonical(task), tid))
                 if was == "stale":
                     self.event(db, tid, kind="requeued", reason="The exact source evidence is current again.")
-        self._occupy(db, capability, c["id"], scheduling_signature(snapshot), tid, replaced)
+        self._occupy(db, capability, c["id"], scheduling_signature(snapshot), tid, replaced, touch=mode == "proactive")
         if row is not None and mode != "proactive":
             self._mark_requested(db, tid)
         denied = self.admission(db, capability)
@@ -1022,38 +1094,49 @@ class Assistants:
     def _scope(self, db, cap):
         return digest([self.release_reference(db, cap), self.continuity(db)["epoch"]])
 
-    def _occupy(self, db, cap, case_id, coarse, tid, replaced=None):
+    def _occupy(self, db, cap, case_id, coarse, tid, replaced=None, touch=True):
         """Record the task that holds this case's proactive schedule slot; one row per (assistant, case).
         `replaced` counts consecutive replacements without a dispatch; it is kept within one schedule and
-        reset when the schedule changes or a proactive dispatch happens."""
+        reset when the schedule changes, when a proactive dispatch happens, or when a quiet interval has
+        passed after the limit was reached. A person's request does not refresh the slot time."""
         scope = self._scope(db, cap)
-        slot = db.execute("SELECT scope,signature,replaced FROM assistant_schedule WHERE capability=? AND case_id=?", (cap, case_id)).fetchone()
+        slot = db.execute("SELECT scope,signature,replaced,at FROM assistant_schedule WHERE capability=? AND case_id=?", (cap, case_id)).fetchone()
+        now = self.now(db)
         if replaced is None:
             replaced = slot[2] if slot is not None and slot[0] == scope and slot[1] == coarse else 0
-        values = (scope, coarse, tid, self.now(db), replaced, cap, case_id)
+            if replaced >= self.REPLACEMENTS and now - slot[3] >= self.COALESCE_QUIET:
+                replaced = 0
+        at = now if touch or slot is None else slot[3]
+        values = (scope, coarse, tid, at, replaced, cap, case_id)
         if slot is None:
             db.execute("INSERT INTO assistant_schedule (scope,signature,task_id,at,replaced,capability,case_id) VALUES (?,?,?,?,?,?,?)", values)
         else:
             db.execute("UPDATE assistant_schedule SET scope=?,signature=?,task_id=?,at=?,replaced=? WHERE capability=? AND case_id=?", values)
 
+    ADOPT_ROWS = 5
+    COALESCE_QUIET = 300.0
+
     def _adopt(self, db, cap, case_id, coarse):
-        """Pre-upgrade stores have tasks but no schedule row. Adopt, once per case, only the newest dispatched
-        task of the current release and epoch that was not a person's request; unrecorded history is never
-        treated as approved, only as serviced for this schedule. An empty slot is written so this runs once."""
+        """Pre-upgrade stores have tasks but no schedule row. Adopt, once per case, the newest dispatched task
+        of the current release and epoch that was not a person's request, recording that task's OWN schedule
+        signature so a later assessment or funding change is still new work. Unrecorded history is never
+        treated as approved. The history read is bounded in the database by the dispatched-order index; an
+        empty slot is written when nothing qualifies so this runs once."""
         scope = self._scope(db, cap)
         epoch = self.continuity(db)["epoch"]
         release = self.release_reference(db, cap)
-        rows = db.execute("SELECT id,body FROM assistant_tasks WHERE capability=? AND case_id=? AND attempts>0 ORDER BY revision DESC",
-                          (cap, case_id)).fetchall()
-        for tid, raw in rows[:20]:
+        query = ("SELECT id,body,signature FROM assistant_tasks WHERE capability=? AND case_id=? AND attempts>0"
+                 " ORDER BY dispatched DESC, revision DESC")
+        query += " OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY" if self.mssql else " LIMIT ?"
+        for tid, raw, own in db.execute(query, (cap, case_id, self.ADOPT_ROWS)).fetchall():
             task = json.loads(raw)
-            if task.get("release") != release or task.get("continuity_epoch") != epoch or task.get("manual_requested"):
+            if task.get("release") != release or task.get("continuity_epoch") != epoch:
                 continue
-            if (task.get("dispatch") or {}).get("trigger") == "requested":
+            trigger = (task.get("dispatch") or {}).get("trigger")
+            if trigger == "requested" or (trigger is None and task.get("manual_requested")):
                 continue
-            if scheduling_signature(task.get("snapshot") or {}) == coarse:
-                self._occupy(db, cap, case_id, coarse, tid, 0)
-                return True
+            self._occupy(db, cap, case_id, own, tid, 0)
+            return True
         values = ("", "", "", self.now(db), 0, cap, case_id)
         db.execute("INSERT INTO assistant_schedule (scope,signature,task_id,at,replaced,capability,case_id) VALUES (?,?,?,?,?,?,?)", values)
         return False
@@ -1061,21 +1144,28 @@ class Assistants:
     def _due(self, db, cap, c, snapshot, today):
         """Whether a proactive scan may start work. The coarse signature throttles every eligible branch,
         gaps included, only within the current release and continuity scope and only while the slot's task
-        is serviced; any other change or a manual request is never suppressed. Reads are by primary key."""
+        is serviced; any other change or a manual request is never suppressed. A dispatched task is a
+        person's request only when its frozen dispatch says so. Reads are by primary key."""
         coarse = scheduling_signature(snapshot)
-        slot = db.execute("SELECT scope,signature,task_id FROM assistant_schedule WHERE capability=? AND case_id=?", (cap, c["id"])).fetchone()
+        columns = "SELECT scope,signature,task_id,at,replaced FROM assistant_schedule WHERE capability=? AND case_id=?"
+        slot = db.execute(columns, (cap, c["id"])).fetchone()
         if slot is None:
             self._adopt(db, cap, c["id"], coarse)
-            slot = db.execute("SELECT scope,signature,task_id FROM assistant_schedule WHERE capability=? AND case_id=?", (cap, c["id"])).fetchone()
+            slot = db.execute(columns, (cap, c["id"])).fetchone()
         scoped = slot is not None and slot[0] == self._scope(db, cap)
         known = False
         if scoped and slot[1] == coarse:
             held = db.execute("SELECT state,attempts,body FROM assistant_tasks WHERE id=?", (slot[2],)).fetchone()
             if held is not None:
                 body = json.loads(held[2])
-                manual = bool(body.get("manual_requested")) or (body.get("dispatch") or {}).get("trigger") == "requested"
-                # A person's request services a non-sensor schedule but never the autonomous Quality flag.
-                known = (not manual or cap != "quality-evidence") and not (held[0] == "stale" and held[1] == 0)
+                dispatched = held[1] > 0
+                manual = ((body.get("dispatch") or {}).get("trigger") == "requested") if dispatched else bool(body.get("manual_requested"))
+                if held[0] == "stale" and not dispatched:
+                    if not manual and slot[4] >= self.REPLACEMENTS and self.now(db) - slot[3] < self.COALESCE_QUIET:
+                        return False
+                else:
+                    # A person's request services a non-sensor schedule but never the autonomous Quality flag.
+                    known = not manual or cap != "quality-evidence"
         if not eligible(cap, snapshot, today, scoped and not known, known):
             return False
         exists = db.execute("SELECT 1 FROM assistant_tasks WHERE id=?", (self._task_id(db, cap, c, signature(snapshot)),)).fetchone()
@@ -1132,10 +1222,12 @@ class Assistants:
             row = db.execute("SELECT body FROM cases WHERE id=?", (task["case_id"],)).fetchone()
             current = self.snapshot(db, task["capability"], json.loads(row[0])) if row else None
             if current is None or signature(current) != task["source_signature"]:
-                task["reason"] = "Permitted source changed; request a new proposal or work manually."
+                replace = current is not None and self._replaceable(db, task, current)
+                paused = current is not None and not replace and self._paused(db, task, current)
+                task["reason"] = (PAUSED if paused else "Permitted source changed; request a new proposal or work manually.")
                 db.execute("UPDATE assistant_tasks SET state='stale',body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
                 self.event(db, tid, kind="stale", reason=task["reason"])
-                if current is not None and self._replaceable(db, task, current):
+                if replace:
                     # Newer readings in the same coarse schedule: the current capture is its own task with its own
                     # evidence identity, so a person's later request for it reuses it instead of duplicating it.
                     slot = db.execute("SELECT replaced FROM assistant_schedule WHERE capability=? AND case_id=?",
@@ -1171,8 +1263,8 @@ class Assistants:
             if task["dispatch"]["trigger"] == "proactive":
                 db.execute("UPDATE assistant_schedule SET replaced=0 WHERE capability=? AND case_id=?", (task["capability"], task["case_id"]))
             task["claim_binding"] = digest(runtime_binding(task["capability"], self.store.ai))
-            result = db.execute("UPDATE assistant_tasks SET state='leased',body=?,owner=?,fence=?,lease_until=?,attempts=attempts+1,revision=revision+1 WHERE id=? AND fence=? AND revision=?",
-                                (canonical(task), owner, fence, now + l.lease, tid, task["fence"], task["revision"]))
+            result = db.execute("UPDATE assistant_tasks SET state='leased',body=?,owner=?,fence=?,lease_until=?,attempts=attempts+1,dispatched=?,revision=revision+1 WHERE id=? AND fence=? AND revision=?",
+                                (canonical(task), owner, fence, now + l.lease, now, tid, task["fence"], task["revision"]))
             if result.rowcount != 1:
                 raise ConflictError(tid)
             db.execute("UPDATE assistant_allowance SET used_calls=used_calls+1,reserved_tokens=reserved_tokens+? WHERE id=?", (l.reservation, l.pool))
@@ -1183,6 +1275,14 @@ class Assistants:
             return self._row(db, tid)
 
     REPLACEMENTS = 3
+
+    def _paused(self, db, task, current):
+        """An unrequested proactive task whose schedule is unchanged but whose consecutive-replacement limit is
+        reached: automatic review waits for a quiet interval, and a person can still request it."""
+        slot = db.execute("SELECT replaced FROM assistant_schedule WHERE capability=? AND case_id=?",
+                          (task["capability"], task["case_id"])).fetchone()
+        return (task.get("manual_requested") is False and scheduling_signature(current) == scheduling_signature(task["snapshot"])
+                and (slot[0] if slot else 0) >= self.REPLACEMENTS)
 
     def _replaceable(self, db, task, current):
         """Only an unrequested proactive task whose coarse schedule is unchanged, within the input bound and
@@ -1277,6 +1377,19 @@ class Assistants:
                        financial_attribution=current.get("financial_attribution"))
             return True
 
+    def _provider_honours_gate(self):
+        provider = self.provider
+        owner = getattr(provider, "__self__", None)
+        if owner is self:
+            return bool(getattr(self.store.ai, "honours_dispatch_gate", False))
+        return bool(getattr(owner, "honours_dispatch_gate", False))
+
+    def _default_provider(self, *args):
+        return self.store.ai.evidence(*args)
+
+    def _dispatch_gate(self, task):
+        return DispatchGate(self, task)
+
     def execute(self, tid):
         if self.stop_event.is_set():
             return False
@@ -1307,19 +1420,8 @@ class Assistants:
         returned, values = threading.Event(), []
 
         def call():
-            held = False
+            gate = self._dispatch_gate(task)
             try:
-                with self.transaction() as db:
-                    withdrawn = not self._sensors_granted(db, task)
-                    if not withdrawn and self._captured_sensors(task):
-                        # The final consent check and the dispatch hold commit together; a withdrawal waits for the hold.
-                        db.execute("DELETE FROM assistant_dispatch_hold WHERE home_id=? AND task_id=?", (task["case_id"], task["id"]))
-                        db.execute("INSERT INTO assistant_dispatch_hold (home_id,task_id,fence,expires_at) VALUES (?,?,?,?)",
-                                   (task["case_id"], task["id"], task["fence"], self.now(db) + self.limits.timeout + HOLD_GRACE))
-                        held = True
-                if withdrawn:
-                    values.append(dict(outcome="suspended-before-dispatch", usage=None, source="unverified", text=None))
-                    return
                 context = ai_consumption.CallContext(
                     ai_consumption.reference(task["id"]),
                     ai_consumption.reference(f"{task['id']}:{task['fence']}"),
@@ -1328,16 +1430,20 @@ class Assistants:
                     retry=task["attempts"] - 1,
                 )
                 with ai_consumption.call_context(context):
-                    values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
+                    if self._provider_honours_gate():
+                        # The transport authorises at the real outbound boundary, after connect/TLS and before bytes.
+                        with ai_consumption.dispatch_gate(gate):
+                            values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
+                    else:
+                        # A foreign provider cannot be intercepted: authorise immediately before handing it the data.
+                        gate()
+                        values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
+            except ai_consumption.DispatchWithdrawn:
+                values.append(dict(outcome="suspended-before-dispatch", usage=None, source="unverified", text=None))
             except Exception:
                 values.append(dict(outcome="provider-unavailable", usage=None, source="unverified", text=None))
             finally:
-                if held:
-                    try:
-                        with self.transaction() as db:
-                            db.execute("DELETE FROM assistant_dispatch_hold WHERE home_id=? AND task_id=?", (task["case_id"], task["id"]))
-                    except Exception:
-                        pass  # The hold expires on the database clock.
+                gate.release()
                 # A timed-out physical call continues owning its local slot until it returns.
                 self.call_slots.release()
                 returned.set()

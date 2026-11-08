@@ -70,6 +70,23 @@ provider, the final consent check and an `assistant_dispatch_hold` row commit in
 home and one call, not a global lock; a hold that cannot be written sends nothing. A direct SQL write
 that bypasses `configure` is outside this guarantee (the guard trigger invalidates the marker but
 cannot recall a call). The SQL Server DDL for the hold, schedule and index is written but not yet
+C7: the dispatch authorisation is now a per-attempt fence row in `assistant_dispatch_gate`
+(home, task, fence) written in the same transaction as the final consent check. The shipped `Ai`
+transport calls the gate after connect and before the first request byte, and refuses to send once a
+monotonic send-by deadline inside the database expiry has passed, so a stalled thread cannot send
+after the row could lapse. An attempt releases only its own fence. A provider that does not honour
+the gate (a test double or foreign provider) is covered only by a check immediately before the call.
+`SensorConsumer.configure` waits only for gates of the homes whose controls actually change (old and
+new home of a moved sensor). `migrate()` adds `assistant_schedule.replaced` and
+`assistant_tasks.dispatched` to existing C5/C6 tables idempotently on both backends and backfills
+`dispatched` from claim events. Adoption reads at most five rows by `dispatched`. After three
+replacements a stale task pauses (truthful message, manual request still available) until a quiet
+period; a late manual request does not refresh the slot or reattribute the frozen proactive call.
+The review flag compares cited reading content, reporting changed or missing cited rows apart from
+extra uncited rows, or unknown. Residual limits: a direct SQL write that bypasses `configure` and a
+process suspension between the last monotonic check and the kernel send are not closed; SQL Server
+statements (gate table, `COL_LENGTH` ALTER, index, `OFFSET/FETCH`) and query plans are unexecuted.
+
 executed against SQL Server. A returned proactive flag stays a review-suggested flag in the case panel
 with its captured as-of, freshness and age, and whether the current authorised capture differs from the
 readings it cited. Consent is checked again before dispatch and

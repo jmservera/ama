@@ -6,6 +6,7 @@ fields it needs, output is checked before it is shown, every run is recorded in
 the audit log, and a plain template is used if the model is unavailable.
 """
 import base64
+import http.client
 import json
 import os
 import re
@@ -24,6 +25,45 @@ class DispatchDenied(RuntimeError):
     pass
 
 
+def _gated_opener(gate):
+    """An opener whose connections call the dispatch gate after connect/TLS and before the first request byte.
+
+    The gate is re-checked on every send, so bytes never leave after its send-by deadline. The exception
+    is not an OSError, so urllib does not rewrap it.
+    """
+    state = {}
+
+    def check():
+        if "valid" not in state:
+            state["valid"] = gate()
+        if not state["valid"]():
+            raise ai_consumption.DispatchWithdrawn("dispatch-window-ended")
+
+    class Plain(http.client.HTTPConnection):
+        def send(self, data):
+            if self.sock is None:
+                self.connect()
+            check()
+            super().send(data)
+
+    class Secure(http.client.HTTPSConnection):
+        def send(self, data):
+            if self.sock is None:
+                self.connect()
+            check()
+            super().send(data)
+
+    class PlainHandler(urllib.request.HTTPHandler):
+        def http_open(self, req):
+            return self.do_open(Plain, req)
+
+    class SecureHandler(urllib.request.HTTPSHandler):
+        def https_open(self, req):
+            return self.do_open(Secure, req, context=self._context)
+
+    return urllib.request.build_opener(PlainHandler, SecureHandler)
+
+
 MAX_TEXT_BYTES = 128 * 1024
 MAX_IMAGE_BYTES = 4 * 1024 * 1024
 IMAGE_TYPES = ("image/png", "image/jpeg")
@@ -40,6 +80,8 @@ class ModelMismatch(ValueError):
 
 
 class Ai:
+    honours_dispatch_gate = True
+
     def __init__(self):
         self.endpoint = os.environ.get("AI_ENDPOINT", "").rstrip("/")
         self.fast = os.environ.get("AI_DEPLOYMENT", "standard")
@@ -114,7 +156,9 @@ class Ai:
             req = urllib.request.Request(f"{self.endpoint}/openai/deployments/{deployment}/chat/completions?api-version=2024-10-21",
                                          data=body, headers={"Authorization": f"Bearer {self._token()}", "Content-Type": "application/json"})
             self.consumption.dispatch_check(rid)
-            with urllib.request.urlopen(req, timeout=timeout) as response:
+            gate = ai_consumption.DISPATCH_GATE.get()
+            opened = _gated_opener(gate).open if gate else urllib.request.urlopen
+            with opened(req, timeout=timeout) as response:
                 raw = response.read(256001)
                 if len(raw) > 256000:
                     raise ValueError("Oversized provider envelope.")
@@ -148,6 +192,8 @@ class Ai:
             envelope.update(outcome="input-refused", reason=str(error))
         except ModelMismatch as error:
             envelope.update(model=error.model, outcome="model-mismatch")
+        except ai_consumption.DispatchWithdrawn:
+            envelope.update(outcome="suspended-before-dispatch", usage=None)
         except ai_consumption.DispatchHeld as error:
             envelope.update(outcome="financial-held", reason=str(error))
         except TimeoutError:

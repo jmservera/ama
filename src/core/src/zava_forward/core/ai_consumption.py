@@ -7,7 +7,7 @@ import json
 import logging
 import re
 import uuid
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
@@ -191,6 +191,25 @@ class CallContext:
 
 
 CURRENT: ContextVar[CallContext | None] = ContextVar("ai_consumption_context", default=None)
+
+
+class DispatchWithdrawn(RuntimeError):
+    """Consent or the dispatch window ended before the first request byte; nothing was sent."""
+
+
+# Called by the transport once the connection is ready and immediately before request bytes leave.
+DISPATCH_GATE: ContextVar[Callable[[], Callable[[], bool]] | None] = ContextVar(
+    "ai_dispatch_gate", default=None
+)
+
+
+@contextmanager
+def dispatch_gate(gate: Callable[[], Callable[[], bool]]) -> Iterator[None]:
+    token = DISPATCH_GATE.set(gate)
+    try:
+        yield
+    finally:
+        DISPATCH_GATE.reset(token)
 
 
 @contextmanager

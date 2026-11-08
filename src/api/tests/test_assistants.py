@@ -1119,7 +1119,7 @@ class DialectConnection:
             return self.raw.execute("SELECT 0")
         if sql.startswith("SET TRANSACTION ISOLATION LEVEL"):
             return self.raw.execute("SELECT 1")
-        if "N'TR'" in sql or "sys.indexes" in sql:
+        if "N'TR'" in sql or "sys.indexes" in sql or "COL_LENGTH" in sql:
             return self.raw.execute("SELECT 1")
         if sql.startswith("IF OBJECT_ID"):
             sql = sql[sql.index("CREATE TABLE"):]
