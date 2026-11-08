@@ -52,3 +52,11 @@ See .copilot-tracking/plans/2026-11-08-ranking-archive-path-health-1259-critique
 ## Boundaries
 
 No write to the parent worktree, issue, board or PR; no push, merge or close; no skip tokens, cloud fallback, old receipt reuse or fabricated approval. Static finding is not production proof.
+
+## Prospective propagation update (2026-11-08)
+
+* Exact parent: fix/ranking-archive-ancestor-durability at 26b4ea391d6a6000e9be8fc6f78994e52a6d0f6c, tree c9c7c239d2b0872425843ad9cff97c74f277a6f8, parent 3712f107. Child planning head abc142fb, tree d088b597. Main f548b65f4 (origin/main unchanged). Ignored-inclusive clean.
+* Parent source delta is disjoint from `_names`/`verify`: publish docstring, new `_ancestors`, `_confirmed` parent sync, DurabilityUnconfirmedError text, one runner message string. Dry merge (git merge-tree) is conflict-free. Phase 2.1 is executed as one normal merge, no rebase, reset, amend or parent worktree write.
+* Callers outside tests: runner `_verify` (OSError mapped to unreadable) and `Store.ranking_publication_status` (OSError mapped to a problem; its overdue-vs-unknown semantics stay the recorded PC-004 residual, out of scope).
+* Parent residuals R1 to R6 (writable-parent heuristic, boundary coverage, API-fault) are preserved and not resolved here.
+* Scope: LIGHT source/regression preparation only; FULL, receipt, independent assessment, hosted checks and human approval remain unperformed.
