@@ -47,6 +47,27 @@ def activation(env: Mapping[str, str], control: live_control.Control) -> Activat
 POLL_SECONDS = 2.0
 
 
+def window_seconds(control: live_control.Control, seconds: float, now: datetime) -> float:
+    """The finite window, or a refusal; a remainder under one second is never rounded up."""
+    if live_control.decide(control, now) != live_control.SEND:
+        raise StreamError("CONTROL_NOT_SENDING")
+    window = min(seconds, (control.expires_at - now).total_seconds())
+    if window < 1.0:
+        raise StreamError("CONTROL_NOT_SENDING")
+    return window
+
+
+def persistence(env: Mapping[str, str]) -> object:
+    """Sensor-only SQL for ZF_STORE=mssql (no application-store schema, seed or queue set-up)."""
+    if (env.get("ZF_STORE") or "").lower() == "mssql":
+        from zava_forward.core.sensor_sql import SensorMssqlConnector
+
+        return SensorMssqlConnector(env)
+    from zava_forward.core.factory import open_store
+
+    return open_store(env)
+
+
 async def _watch(
     control: live_control.Control,
     reload: Callable[[], live_control.Control],
@@ -87,12 +108,7 @@ async def run_window(
     The window never outlives the expiry and is stopped as soon as `reload` shows a stop, an
     expiry, a changed cohort or an unreadable file.
     """
-    if live_control.decide(control, now) != live_control.SEND:
-        raise StreamError("CONTROL_NOT_SENDING")
-    remaining = (control.expires_at - now).total_seconds()
-    window = min(seconds, remaining)
-    if window < 1.0:
-        raise StreamError("CONTROL_NOT_SENDING")
+    window = window_seconds(control, seconds, now)
     receiver = receiver_type(ingestion, activation(env, control), bindings(control))
     stop = asyncio.Event()
     watcher = asyncio.create_task(_watch(control, reload, clock, stop, poll)) if reload else None
@@ -116,16 +132,16 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
         if not args.control_file:
             raise StreamError("CONTROL_REQUIRED")
         control = live_control.load(Path(args.control_file))
-        from zava_forward.core.factory import open_store
-
+        now = datetime.now(UTC)
+        window_seconds(control, args.seconds, now)
         count = asyncio.run(
             run_window(
                 control,
                 env,
-                SensorIngestion(open_store(env)),
+                SensorIngestion(persistence(env)),
                 args.seconds,
                 args.events,
-                datetime.now(UTC),
+                now,
                 reload=lambda: live_control.load(Path(args.control_file)),
             )
         )

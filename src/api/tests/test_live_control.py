@@ -347,6 +347,83 @@ class ReceiverStopTests(unittest.TestCase):
             )
 
 
+class ReceiverStartupTests(unittest.TestCase):
+    """A refused control must not reach persistence; a valid one builds the sensor connector."""
+
+    def run_main(self, change: dict[str, Any] | str, env: dict[str, str]) -> tuple[int, list[str]]:
+        built: list[str] = []
+        future = (datetime.now(UTC) + timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "control.json"
+            if isinstance(change, str):
+                path.write_text(change, encoding="utf-8")
+            else:
+                path.write_text(json.dumps(document(expires_at=future) | change), encoding="utf-8")
+
+            def persistence(_env: Any) -> object:
+                built.append("persistence")
+                return object()
+
+            class Ingestion:
+                def __init__(self, _store: object) -> None:
+                    built.append("ingestion")
+
+            async def window(*_a: Any, **_k: Any) -> int:
+                return 3
+
+            saved = (rx.persistence, rx.SensorIngestion, rx.run_window)
+            rx.persistence, rx.SensorIngestion, rx.run_window = persistence, Ingestion, window  # type: ignore[assignment,misc]
+            try:
+                code = rx.main(["--control-file", str(path)], env)
+            finally:
+                rx.persistence, rx.SensorIngestion, rx.run_window = saved
+        return code, built
+
+    def test_stopped_expired_and_invalid_control_never_reach_persistence(self) -> None:
+        cases: list[dict[str, Any] | str] = [
+            {"enabled": False},
+            {"expires_at": "2026-01-01T00:00:00Z"},
+            {
+                "expires_at": (datetime.now(UTC) + timedelta(milliseconds=400)).strftime(
+                    "%Y-%m-%dT%H:%M:%SZ"
+                )
+            },
+            "{",
+        ]
+        for case in cases:
+            with self.subTest(case=str(case)[:40]):
+                code, built = self.run_main(case, {})
+                self.assertEqual((code, built), (2, []))
+
+    def test_valid_control_builds_persistence_then_runs(self) -> None:
+        code, built = self.run_main({}, {})
+        self.assertEqual((code, built), (0, ["persistence", "ingestion"]))
+
+    def test_mssql_uses_the_sensor_connector_without_connecting_or_open_store(self) -> None:
+        from zava_forward.core import factory
+        from zava_forward.core.sensor_sql import SensorMssqlConnector
+
+        env = {
+            "ZF_STORE": "mssql",
+            "ZF_SQL_SERVER": "sql.example.invalid",
+            "ZF_SQL_DATABASE": "db",
+            "ZF_SQL_AUTH": "msi",
+            "ZF_SQL_CLIENT_ID": "00000000-0000-0000-0000-000000000000",
+        }
+        saved = factory.open_store
+
+        def forbidden(_env: Any = None) -> object:
+            raise AssertionError("application store must not be opened")
+
+        factory.open_store = forbidden  # type: ignore[assignment]
+        try:
+            self.assertIsInstance(rx.persistence(env), SensorMssqlConnector)
+        finally:
+            factory.open_store = saved
+        with self.assertRaises(SystemExit):
+            rx.persistence({"ZF_STORE": "mssql"})
+
+
 class ReceiverJobContractTests(unittest.TestCase):
     text = (Path(__file__).resolve().parents[3] / "infra" / "live-receiver-job.bicep").read_text()
     sim = (Path(__file__).resolve().parents[3] / "infra" / "live-simulator-job.bicep").read_text()

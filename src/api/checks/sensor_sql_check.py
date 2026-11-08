@@ -16,6 +16,7 @@ DEFAULT_TESTS = (
     "test_sensor_consistency.WeatherContinuityTests",
     "test_sensor_consistency.LiveEnvelopeReplayTests",
     "test_sensor_consumer_live",
+    "test_live_receiver_sql",
 )
 # Closed allowlist: each selector names fixed test targets, never caller-supplied modules.
 SELECTORS = {"default": DEFAULT_TESTS, "analysis": ("test_sensor_analysis_mssql",)}

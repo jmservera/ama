@@ -2081,7 +2081,10 @@ one window of at most 4 minutes by default, never past the control expiry, and e
 only from the manual job `infra/live-receiver-job.bicep` (its own identity, `routingReady` false
 by default). It polls the control file every 2 seconds during the window and signals the
 `HubReceiver` stop on a stop, expiry, cohort change or unreadable file; a window under one second
-is refused. The simulator reads the cohort every slot and sends nothing if the control refuses
+is refused. With `ZF_STORE=mssql` the receiver uses a sensor-only SQL connector
+(`core/sensor_sql.py`) against an already provisioned database: no schema, index, seed, metadata
+or queue set-up runs, and a stopped, expired or invalid control is refused before any SQL
+connection. The simulator reads the cohort every slot and sends nothing if the control refuses
 it; it reuses its cached homes only after a transient store read failure and only those the
 current control still lists.
 

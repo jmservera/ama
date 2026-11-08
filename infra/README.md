@@ -3935,12 +3935,16 @@ The executor, under separate admission, runs these in order and stops at the fir
    `python -m zava_forward.api.live_receiver --control-file /certs/control.json --seconds 240`,
    with `ZF_SIM_CLIENT_ID` and `ZF_SQL_CLIENT_ID` set to the receiver identity, `ZF_STORE=mssql`
    and the control share mounted read-only. The receiver identity needs AcrPull, Azure Event Hubs
-   Data Receiver on `sensor-readings`, `SELECT` on `dbo.cases`, `dbo.sensor_register`,
+   Data Receiver on `sensor-readings`, `SELECT` on `dbo.cases`,
    `dbo.sensor_consumer_control` and `dbo.sensor_consumer_policy`, and `SELECT, INSERT` on
    `dbo.sensor_reading`, `dbo.sensor_delivery` and `dbo.sensor_data_quality_exception`; the
-   executor confirms this list against the consumer statements and grants nothing wider. The
+   list was checked against the statements `SensorConsumer.process` runs (no `sensor_register`
+   read, no DDL, seeding or metadata write) and nothing wider may be granted. The tables must
+   already exist: a setup or admin identity provisions them separately, and the receiver
+   refuses rather than creating schema. The
    simulator identity stays read-only on `dbo.cases`. Start one execution per window; the receiver
-   stops at once on a control stop, expiry, cohort change or unreadable file. Then check the
+   refuses a stopped or expired control before it opens any SQL connection, and stops at once on a
+   control stop, expiry, cohort change or unreadable file. Then check the
    retained rows for the cohort.
 7. Finish: `live_control stop` (or let it expire), delete the job, revoke the certificates
    (#185 teardown) and record actual cost. The simulator sends nothing after expiry even if

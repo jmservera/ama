@@ -12,6 +12,7 @@ from decimal import Decimal
 from typing import Protocol, cast
 
 from .mssqlstore import MssqlStore
+from .sensor_sql import SensorMssqlConnector
 from .sqlstore import SqlStore
 from .synthetic.live_readings import SCHEMA_VERSION as LIVE_SCHEMA_VERSION
 from .synthetic.live_readings import SUNLIGHT_UNIT
@@ -217,10 +218,10 @@ def preflight(batch: object) -> list[Observation]:
 
 class SensorConsumer:
     def __init__(self, store: object) -> None:
-        if not isinstance(store, SqlStore):
+        if not isinstance(store, SqlStore | SensorMssqlConnector):
             raise ConsumerError("UNSUPPORTED_STORE_SQL_REQUIRED")
         self.store = store
-        self.mssql = isinstance(store, MssqlStore)
+        self.mssql = isinstance(store, MssqlStore | SensorMssqlConnector)
 
     def _connect(self) -> Connection:
         try:
