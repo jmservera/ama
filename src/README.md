@@ -64,10 +64,12 @@ Owner policy (2026-10-27, refined by issue #1294): during development run the
 relevant targeted tests. Small issues, tooling and documentation-only changes
 use the planned relevant local checks plus the applicable hosted CI, without a
 blanket `rpi-checks.py --changed` run. Big features, releases, infrastructure,
-deployment, SQL and security changes, and any workflow, gate-tool, dependency
-manifest or Dockerfile change, require the complete gate; size alone cannot
-downgrade them, mixed changes take the strictest tier and doubt takes the full
-tier. Do not treat a partial receipt as full-tier evidence. For the full tier,
+deployment, SQL and security-sensitive changes require the complete gate; size
+alone cannot downgrade them, mixed changes take the strictest tier and doubt
+takes the full tier. Workflow, gate-tool, dependency-manifest and Dockerfile
+edits are classified by what they actually change, never by file name alone
+and never as categorically safe (see the
+[classification rule](#hosted-ci-versus-local-gate-coverage-issue-1294)). Do not treat a partial receipt as full-tier evidence. For the full tier,
 finish implementation
 and the original RPI Review, commit the candidate and dated evidence, then run
 from the repository root with Python 3.12, Node, Docker, Azure CLI/offline Bicep,
@@ -153,20 +155,26 @@ the files before relying on them; they are not self-updating.
   `.copilot-tracking/` and `support/` as inert but still selects `preflight`,
   `static` and `namespace`.
 * Local-only: the employee-chat browser harness
-  (`checks.employee_chat_browser_check` with the SHA-256-pinned axe and the
-  no-skip, three-state result check); exact-count, zero-skip verification of the
-  chat-panel selector; the `test_assistant_release.MssqlUnleasedRevocation` SQL
-  selector and the named SQL chat tests that must report `ok`; workflow-hash
-  drift, ShellCheck and Trivy database identity probes; fresh-image, shard
-  fail-closed and clean exact-head receipt binding.
-* Both: the chat-panel selector
+  (`checks.employee_chat_browser_check`, run by the runner and directly) with its
+  complete acceptance contract (below); exact-count, zero-skip, named-test
+  verification of the chat-panel selector; the
+  `test_assistant_release.MssqlUnleasedRevocation` SQL selector and the named
+  SQL chat tests that must report `ok`; workflow-hash drift, ShellCheck and
+  Trivy database identity probes; fresh-image, shard fail-closed and clean
+  exact-head receipt binding.
+* Shared (the same kind of check runs in both places; compare the verification
+  before relying on one side): the chat-panel selector
   `test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log`
   runs in hosted `src-api` with `ZF_BROWSER_TESTS=1` (a missing Playwright
-  errors, it does not skip) and locally. Hosted CI does not verify the exact
-  count or zero skips.
-* Hosted-only: the Trivy gate and SPDX upload run in the hosted image steps and
-  the local image group; Bicep lint, `no-working-data` and the migration checks
-  run in hosted namespace jobs.
+  errors, it does not skip) and locally, but only the runner verifies exactly
+  one test, no skip and the named test passing; the Trivy gate and SPDX
+  generation (hosted image steps, local image group, which also verifies the
+  SPDX document); Bicep build and lint and the branding migration regressions
+  (hosted `src-namespace`; local `namespace`, `infra` and `migration` groups);
+  and the tracked working-data guard (the separate hosted
+  `src-no-working-data` job; local `static` group).
+* Hosted-only: `actions/upload-artifact` retention of Trivy, SPDX and UX
+  evidence, and hosted runner, matrix and path-filter execution.
 * Hosted CI is observable only after a push. For an unpublished candidate, state
   hosted CI as not yet observed. A skipped, path-filtered, absent or unobserved
   workflow is never a pass. This guide does not change required checks or
@@ -175,14 +183,42 @@ the files before relying on them; they are not self-updating.
 
 Direct local checks for a small employee-chat or browser change, from
 `src/api` with the worktree distributions installed (see the
-[API guide](./api/README.md)): the affected unit modules, lint and types;
-`python -m checks.employee_acceptance_check`; the chat-panel selector with
-`ZF_BROWSER_TESTS=1`, accepted only when exactly one test ran with no skip; and
-`python -m checks.employee_chat_browser_check --axe <pinned axe> --out <new
-external directory>` with axe 4.10.3 matching the runner's `AXE_SHA256`,
-accepted only when its three states report no violations and no skip. A single
-wrapper for the last two does not exist; adding one, or hosting the harness in
-CI, is follow-up work that needs owner direction.
+[API guide](./api/README.md)). The runner is the reference for each rule, so
+match it rather than a summary:
+
+* Unit modules, lint and types, and `python -m checks.employee_acceptance_check`.
+* The chat-panel selector, run as `python -m unittest -v
+  test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log`
+  with `ZF_BROWSER_TESTS=1` and the hosted job's test path
+  (`PYTHONPATH=tests:../core/tests:../agents/tests` from `src/api`). Accept it only when the
+  output shows `Ran 1 test`, the named test passing, a bare `OK` line and no
+  skip.
+* `python -m checks.employee_chat_browser_check --axe <pinned axe> --out <new
+  external directory>`, with axe-core 4.10.3 whose SHA-256 equals the runner's
+  `AXE_SHA256` (verify with `sha256sum`; the harness also refuses any other
+  digest). Accept it only when the command exits 0, its output contains
+  `PASS employee chat:` and no `skipped`, and `<out>/axe-results.json` is a
+  list of exactly three entries whose `state` values, in order, are
+  `actual-model-unavailable`, `synthetic-cited-answer` and
+  `demo-disclaimer-model-answer`, each with `violations` equal to `[]` and
+  `passes` an integer (not a boolean) above zero, and with no `skipped` text
+  (matched case-insensitively). Use an `--out` within the 58-byte limit
+  described above.
+  The runner copies that file to `employee-chat-results.json` before applying
+  the same check. Passing states alone, or a zero-pass or wrong-state result,
+  is not acceptance.
+
+A single wrapper for these checks does not exist; adding one, or hosting the
+harness in CI, is follow-up work that needs owner direction.
+
+Classification rule for workflow, gate-tool, dependency-manifest and Dockerfile
+edits: record the impact classification and its basis in the changes or review
+record. A focused classification needs a stated reason that no permission,
+pinned action or image, package, secret, deployment path, security control or
+gate semantic changed (for example a comment, a typo or an unrelated
+documentation link). Any such change, any doubt and any mixed change takes the
+full tier. Local `--changed` selection (the full matrix for a workflow path, `tooling`
+for a gate tool) is a conservative aid, not a tier.
 
 Policy examples. Selections come from `changed_groups` and
 `ci-affected.select` for the stated paths; reproduce them read-only (import the
@@ -196,7 +232,7 @@ tool by path with bytecode writing disabled) before relying on them.
 | SQL | `src/api/src/zava_forward/api/mssqlstore.py` | Full | Complete gate, verified external full receipt | `mssql` job when selected | A partial receipt |
 | Bicep or security | `infra/main.bicep` | Full | Complete gate; `--changed` selects only `preflight`, `namespace`, `static` and `infra` and is partial | `src-namespace` Bicep lint and infra tests; what-if only if enabled | A partial receipt, a weakened control |
 | Mixed | documentation plus `infra/main.bicep` | Strictest (full) | Complete gate | Union of the above | A lighter tier because most paths are documentation |
-| Gate tool or workflow | `.github/workflows/src-ci.yml`, `tools/rpi-checks.py` | Full | Complete gate; `--changed` selects the full matrix | Source CI | A focused tier |
+| Workflow, gate tool, dependency manifest or Dockerfile | `.github/workflows/src-ci.yml`, `tools/rpi-checks.py` | Classified by actual impact: Full when permissions, pinned actions or images, packages, secrets, deployment, a security control or gate semantics change, or when unresolved; Focused only with a recorded reason that none did | Focused: planned local checks and a diff review of the edit; Full: complete gate. Local `--changed` selects the full matrix for a workflow path and only `preflight`, `namespace`, `static` and `tooling` for `tools/rpi-checks.py`, an aid and not a tier | Source CI when the path filter matches | A focused tier chosen by file name, or a full tier imposed by file name alone |
 
 #### Gate speed controls (issue #470)
 

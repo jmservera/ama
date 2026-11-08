@@ -79,10 +79,14 @@ hosted CI for the exact head. A blanket `python3 tools/rpi-checks.py --changed`
 run is optional there and never replaces a planned check. The
 [complete local gate](../src/README.md#local-rpi-gate) and a verified external
 full receipt are required for big features, releases, infrastructure,
-deployment, SQL and security-sensitive changes, and for any workflow,
-gate-tool, dependency-manifest or Dockerfile change; size alone cannot
-downgrade them. A mixed change takes the strictest applicable tier, and doubt
-takes the full tier. A partial or `--changed` receipt never satisfies the full
+deployment, SQL and security-sensitive changes; size alone cannot downgrade
+them. Workflow, gate-tool, dependency-manifest and Dockerfile edits are
+classified by their actual impact, not by file name: they take the full tier
+when they change permissions, pinned actions or images, packages, secrets,
+deployment, a security control or gate semantics, or when the impact is
+unresolved, and are never assumed safe. Record the classification and its
+basis. A mixed change takes the strictest applicable tier, and doubt takes the
+full tier. A partial or `--changed` receipt never satisfies the full
 tier. Independent exact-head review, human approvals and applicable hosted CI
 remain required for every tier. An absent, path-filtered, skipped or
 unobserved hosted workflow is not a successful check: state what ran and what

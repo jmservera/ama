@@ -467,8 +467,13 @@ full-local-gate requirement for this coordinator's work.
   successful check; record what ran and what did not.
 
 Classify by change category, not by diff size or by what `--changed` selects.
-A workflow, gate-tool, dependency-manifest or Dockerfile change takes the full
-tier, and doubt takes the full tier. A partial receipt never satisfies it.
+Workflow, gate-tool, dependency-manifest and Dockerfile edits are classified by
+their actual impact and recorded with the basis: the full tier when they change
+permissions, pinned actions or images, packages, secrets, deployment, a
+security control or gate semantics, or when the impact is unresolved; the
+focused tier only with a recorded reason that none did. None is categorically
+safe, and doubt takes the full tier. A partial receipt never satisfies the full
+tier.
 
 Reassess the tier when scope changes; mixed work takes the full tier if any
 part requires it. Both tiers retain the complete RPI loop, independent
