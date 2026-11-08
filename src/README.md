@@ -113,11 +113,19 @@ unresolvable membership fails closed.
 All selected checks retain their original contracts.
 
 ```bash
+git fetch origin main
+BASE_SHA=$(git rev-parse origin/main)
 python3 tools/rpi-checks.py --changed --jobs 3 --base "$BASE_SHA" --out /tmp/rpi-ISSUE-fast
 python3 tools/rpi-checks.py --verify-receipt /tmp/rpi-ISSUE-fast/receipt.json \
   --required-scope partial --base "$BASE_SHA"
+```
+
+Only after a run that failed, resume that receipt at the same clean commit with
+the base recorded in the failed receipt (not a freshly fetched `origin/main`):
+
+```bash
 python3 tools/rpi-checks.py --resume /tmp/rpi-ISSUE-fast/receipt.json \
-  --jobs 3 --base "$BASE_SHA" --out /tmp/rpi-ISSUE-retry
+  --jobs 3 --base "$FAILED_RECEIPT_BASE_SHA" --out /tmp/rpi-ISSUE-retry
 ```
 
 Resume is only for a failed receipt at the exact same clean commit/base and
@@ -140,7 +148,7 @@ the files before relying on them; they are not self-updating.
 
 * Triggers: Source projects CI (`src-ci.yml`) is the only pull request source
   workflow and runs only when the diff touches its path filter (`src/**`,
-  `infra/**`, the gate tools and their tests, listed workflows and a few
+  `infra/**`, listed tools and their tests, listed workflows and a few
   synthetic-data and UX paths). A PR that changes only other documentation,
   `.github/copilot-instructions.md`, agent files or `.copilot-tracking/` may
   have no Source CI run at all. `mvp-ci.yml` and `mvp-validation.yml` are
@@ -148,10 +156,21 @@ the files before relying on them; they are not self-updating.
   only when `infra/` changed and its repository variable enables it. The rubric
   workflow ignores only `.copilot-tracking/**`.
 * Selection: `tools/ci-affected.py` selects projects, `namespace` and `mssql`
-  from the diff and selects everything on doubt. A `src/**/*.md`-only change
+  from the diff and selects everything on doubt. Project install, unit, lint,
+  type and browser steps run only for selected projects (`matrix.run`), after
+  the `image-paths` job. A change whose paths are all markdown directly in
+  `src/` or under a known project directory (for example only `src/README.md`)
   starts Source CI but selects no project, so the `src-*` matrix jobs start
   with every step skipped and report success without running tests, and
-  namespace and mssql are skipped. Local `--changed` treats `*.md`, `docs/`,
+  namespace and mssql are skipped. Selection widens to every project, namespace
+  and mssql when the diff also has a non-`src/` path other than the
+  namespace-only tools (`tools/rpi-checks.py`, `tools/install-actionlint.py`,
+  their tests and `tools/rename-zava*`; for example `docs/`,
+  `.copilot-tracking/`, `tools/ci-affected.py` or `tools/backlog-sync.py`
+  select everything), an unknown `src/`
+  directory or a dependency manifest. The `src-no-working-data` guard has no
+  selection condition and runs whenever Source CI starts. Hosted results are
+  inferred from the workflow and selector files, not observed. Local `--changed` treats `*.md`, `docs/`,
   `.copilot-tracking/` and `support/` as inert but still selects `preflight`,
   `static` and `namespace`.
 * Local-only: the employee-chat browser harness
@@ -239,12 +258,12 @@ tool by path with bytecode writing disabled) before relying on them.
 | Case | Example paths | Tier | Required local evidence | Hosted CI | Never claim |
 | --- | --- | --- | --- | --- | --- |
 | Documentation or instruction only | `docs/reference/README.md`, `.github/copilot-instructions.md` | Focused | Link review, Git diff, stale-wording search; the hve-builder static, behavior and host gates for a behavior-bearing instruction | Outside the Source CI path filter, so possibly none | Source CI passed; a blanket `--changed` run was needed |
-| Documentation under `src/` | `src/README.md` | Focused | Same | Source CI runs but selects no project, so success means nothing executed | That project tests ran |
-| Small employee chat or browser | `src/api/src/zava_forward/api/web/app.js`, `src/api/checks/employee_chat_browser_check.py` | Focused | Direct local checks above; local `--changed` selects `browser` and `project-api` and is an optional aid | `src-api` runs the selector, the employee acceptance check and three other browser checks (design system, regulatory UX and case journey), not the employee-chat harness | Hosted CI covers the harness |
-| SQL | `src/api/src/zava_forward/api/mssqlstore.py` | Full | Complete gate, verified external full receipt | `mssql` job when selected | A partial receipt |
+| Documentation under `src/` | `src/README.md` as the only changed path | Focused | Same | Source CI runs; selects no project, namespace or mssql, so the project jobs report success with every step skipped, while the `src-no-working-data` guard runs. Any accompanying `docs/` or `.copilot-tracking/` path widens selection to every project, namespace and mssql | That project tests ran |
+| Small employee chat or browser | `src/api/src/zava_forward/api/web/app.js`, `src/api/checks/employee_chat_browser_check.py` | Focused | Direct local checks above; local `--changed` selects `browser` and `project-api` and is an optional aid | `src-api` runs the selector, the employee acceptance check and three other browser checks (design system, regulatory UX and case journey), not the employee-chat harness; `src-namespace` and the `mssql` job are also selected | Hosted CI covers the harness |
+| SQL | `src/core/src/zava_forward/core/mssqlstore.py` | Full | Complete gate, verified external full receipt | A `src/core` change selects every project, namespace and the `mssql` job | A partial receipt |
 | Bicep or security | `infra/main.bicep` | Full | Complete gate; `--changed` selects only `preflight`, `namespace`, `static` and `infra` and is partial | `src-namespace` Bicep lint and infra tests; what-if only if enabled | A partial receipt, a weakened control |
 | Mixed: documentation plus infrastructure | documentation plus `infra/main.bicep` | Strictest applicable (full, because a component is infrastructure) | Complete gate | Union of the above | A lighter tier because most paths are documentation |
-| Mixed: documentation plus small chat change | `src/README.md` plus `src/api/src/zava_forward/api/web/app.js` | Strictest applicable (focused, because both components are focused) | Union of the planned local checks, including the direct employee-chat checks | `src-api` runs the selector, not the harness | That a full receipt is required, or that hosted CI covers the harness |
+| Mixed: documentation plus small chat change | `src/README.md` plus `src/api/src/zava_forward/api/web/app.js` | Strictest applicable (focused, because both components are focused) | Union of the planned local checks, including the direct employee-chat checks | `src-api` runs the selector, not the harness; selection is the same as for the chat change alone | That a full receipt is required, or that hosted CI covers the harness |
 | Workflow, gate tool, dependency manifest or Dockerfile | `.github/workflows/src-ci.yml`, `tools/rpi-checks.py` | Classified by actual impact: Full when permissions, pinned actions or images, packages, secrets, deployment, a security control or gate semantics change, or when unresolved; Focused only with a recorded reason that none did | Focused: planned local checks and a diff review of the edit; Full: complete gate. Local `--changed` selects the full matrix for a workflow path and only `preflight`, `namespace`, `static` and `tooling` for `tools/rpi-checks.py`, an aid and not a tier | Source CI when the path filter matches | A focused tier chosen by file name, or a full tier imposed by file name alone |
 
 #### Gate speed controls (issue #470)
@@ -492,8 +511,11 @@ verification; a matching receipt sidecar does not establish executable trust.
 Keep the authoritative receipt outside git to avoid self-reference. It binds
 HEAD/tree/base, matrix/helper/tool/package identities, command logs, images and
 fresh scan DB metadata. A committed evidence copy is historical. Every later
-commit, correction or rebase requires a new selected-tier run, as does a changed base or
-relevant tool/image identity. Dirty, untracked and ignored candidate inputs are
+commit, correction or rebase requires a new selected-tier run, as does a
+relevant tool/image identity change. A changed base requires a new run for a
+full receipt or `--exact-base`; an existing partial receipt may stay valid only
+when verification prints `BASE RELAXED` under the base-match rule above, and
+otherwise needs a new run. Dirty, untracked and ignored candidate inputs are
 refused. Fetch main again and verify immediately before independent exact-head
 review and push; if it moved, reconcile under the issue's approved RPI scope
 and rerun. Preserve original adverse findings. Local verification is not a
@@ -609,7 +631,8 @@ registry tags and immutable deployment digests. Build/test jobs have no cloud
 credentials; publication and deployment use separate OIDC identities on private
 ephemeral runners. Source CI now filters image builds by project paths and
 transitive dependencies without renaming any existing checks. Application unit,
-lint and type checks still run for every project. No Azure workflow was run for
+lint and type checks run for the projects `tools/ci-affected.py` selects, which
+fails open to every project on doubt. No Azure workflow was run for
 this implementation; federation, approvals, quarantine release and live checks
 remain setup/acceptance gaps.
 

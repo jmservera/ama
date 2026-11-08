@@ -1,0 +1,23 @@
+## source diff-check (src/README.md docs/reference/log.md)
+exit 0
+## log append-only: removed lines
+0
+## ASCII added lines
+0
+## stale phrases
+195:* Hosted-only: `actions/upload-artifact` retention of Trivy, SPDX and UX
+grep exit 0
+## raw whitespace base..HEAD (retained raw sandbox files only, not rewritten)
+      8 + 
+      4 + local
+      1 +['.github/workflows/src-ci.yml'] 
+      1 +['docs/README.md', 'infra/main.bicep'] 
+      1 +['src/README.md', 'src/api/src/zava_forward/api/web/app.js'] 
+      1 +['src/README.md'] 
+      8 .copilot-tracking/sandbox/2026-11-08-issue-1294-policy-3/checks/selection.txt
+      3 .copilot-tracking/sandbox/2026-11-08-issue-1294-policy-3/post-grade-final-diff-readme.patch
+      3 .copilot-tracking/sandbox/2026-11-08-issue-1294-policy-3/target-diff-vs-7260826.patch
+      2 .copilot-tracking/sandbox/2026-11-08-issue-1294-policy-4/target-diff-vs-bd63b22.patch
+## source docs base..HEAD
+exit 0
+link scan done
