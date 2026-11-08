@@ -4,7 +4,7 @@ import hashlib
 import json
 import math
 import re
-from collections.abc import Iterator, Mapping, Sequence
+from collections.abc import Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -12,6 +12,7 @@ from decimal import Decimal
 from typing import Protocol, cast
 
 from .mssqlstore import MssqlStore
+from .sensor_view import home_digest
 from .sqlstore import SqlStore
 from .synthetic.sensor_faults import READING_FIELDS, SCHEMA_VERSION
 from .synthetic.sensor_identity import home_key
@@ -199,6 +200,24 @@ def _control_home_ddl(mssql: bool) -> str:
     return f"(home_id {home} NOT NULL, sensor_id {key} NOT NULL, PRIMARY KEY (home_id, sensor_id))"
 
 
+def _state_ddl(mssql: bool) -> str:
+    return f"(id INT NOT NULL PRIMARY KEY, body {'NVARCHAR(MAX)' if mssql else 'TEXT'} NOT NULL)"
+
+
+def _write_marker(db: Connection, controls: Iterable[tuple[str, str]]) -> None:
+    homes: dict[str, list[str]] = {}
+    count = 0
+    for home_id, sensor_id in controls:
+        homes.setdefault(home_id, []).append(sensor_id)
+        count += 1
+    body = {"count": count, "homes": {h: home_digest(s) for h, s in homes.items()}}
+    db.execute("DELETE FROM sensor_consumer_index_state")
+    db.execute(
+        "INSERT INTO sensor_consumer_index_state (id, body) VALUES (1, ?)",
+        (json.dumps(body, sort_keys=True),),
+    )
+
+
 def ensure_control_home(db: Connection, mssql: bool) -> None:
     """Create the per-home index when absent and reconcile it, only if controls were ever stored."""
     if mssql:
@@ -208,6 +227,10 @@ def ensure_control_home(db: Connection, mssql: bool) -> None:
                 "IF OBJECT_ID(N'sensor_consumer_control_home', N'U') IS NULL "
                 f"CREATE TABLE sensor_consumer_control_home {_control_home_ddl(True)}"
             )
+            db.execute(
+                "IF OBJECT_ID(N'sensor_consumer_index_state', N'U') IS NULL "
+                f"CREATE TABLE sensor_consumer_index_state {_state_ddl(True)}"
+            )
     else:
         present = db.execute(
             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='sensor_consumer_control'"
@@ -215,22 +238,33 @@ def ensure_control_home(db: Connection, mssql: bool) -> None:
         if present:
             ddl = _control_home_ddl(False)
             db.execute(f"CREATE TABLE IF NOT EXISTS sensor_consumer_control_home {ddl}")
+            db.execute(
+                f"CREATE TABLE IF NOT EXISTS sensor_consumer_index_state {_state_ddl(False)}"
+            )
     if present:
-        reconcile_control_home(db)
+        try:
+            reconcile_control_home(db)
+        except Exception:
+            # Without a marker the readers withhold consent until an operator repairs the controls.
+            db.execute("DELETE FROM sensor_consumer_index_state")
+            raise
 
 
 def reconcile_control_home(db: Connection) -> None:
     """Derive the per-home control index from the stored controls.
 
-    Adds missing rows and removes orphans. It never writes policy, controls or consent.
+    Every control is parsed before anything is written, so a malformed control or home raises with
+    the index untouched. It then adds missing rows, removes orphans and rewrites the marker that
+    readers verify. It never writes policy, controls or consent.
     """
     controls: dict[tuple[str, str], None] = {}
     for sensor_id, body in db.execute(
         "SELECT sensor_id, body FROM sensor_consumer_control"
     ).fetchall():
         home_id = json.loads(str(body)).get("home_id")
-        if isinstance(home_id, str) and home_key(home_id):
-            controls[(home_id, str(sensor_id))] = None
+        if not isinstance(home_id, str) or not home_key(home_id):
+            raise ValueError("CONTROL_HOME_INVALID")
+        controls[(home_id, str(sensor_id))] = None
     indexed = {
         (str(h), str(sensor))
         for h, sensor in db.execute(
@@ -247,6 +281,7 @@ def reconcile_control_home(db: Connection) -> None:
             "DELETE FROM sensor_consumer_control_home WHERE home_id=? AND sensor_id=?",
             (home_id, sensor_id),
         )
+    _write_marker(db, controls)
 
 
 class SensorConsumer:
@@ -325,6 +360,7 @@ class SensorConsumer:
                     "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES (?, ?)",
                     (control.home_id, control.sensor_id),
                 )
+            _write_marker(db, [(c.home_id, c.sensor_id) for c in controls])
 
     def _schema(self, db: Connection) -> None:
         text = "NVARCHAR(MAX)" if self.mssql else "TEXT"
@@ -335,6 +371,7 @@ class SensorConsumer:
                 f"(sensor_id {key} NOT NULL PRIMARY KEY, body {text} NOT NULL)"
             ),
             "sensor_consumer_control_home": _control_home_ddl(self.mssql),
+            "sensor_consumer_index_state": _state_ddl(self.mssql),
             "sensor_delivery": (
                 f"(reference {key} NOT NULL PRIMARY KEY, status VARCHAR(12) NOT NULL,"
                 " reason VARCHAR(40) NOT NULL, received_at VARCHAR(20) NOT NULL,"

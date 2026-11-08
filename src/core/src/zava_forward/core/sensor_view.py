@@ -8,6 +8,7 @@ ones the model request carries. The capture holds no clock value, so unchanged e
 digest. Values are withheld unless the sensors' recorded monitoring consent is granted.
 """
 
+import hashlib
 import json
 from datetime import UTC, datetime, timedelta
 
@@ -48,9 +49,11 @@ RETROFIT = dict(
     ),
 )
 AS_OF_RULE = (
-    "Only readings observed at or before the time of this request, within the last "
-    f"{WINDOW_DAYS} days, are included. Later-dated readings are excluded and are never "
-    "treated as recent. Current freshness is not asserted by this evidence."
+    "The newest readings are those observed at or before the time of this request and "
+    f"within the last {WINDOW_DAYS} days. Context readings (up to four each side) are those "
+    f"within {CONTEXT_DAYS} days of the quality evidence record time and never after this "
+    f"request, so they may be older than {WINDOW_DAYS} days. Later-dated readings are "
+    "excluded and are never treated as recent. Current freshness is not asserted by this evidence."
 )
 ANCHOR_NAME = "quality_record_anchor"
 ANCHOR_MEANING = (
@@ -101,6 +104,21 @@ def classify(row):
     return "synthetic-unclassified"
 
 
+def home_digest(sensor_ids):
+    return hashlib.sha256("\n".join(sorted(map(str, sensor_ids))).encode()).hexdigest()
+
+
+def index_state(db):
+    """The index marker: total count and a digest of each home's sensor set."""
+    try:
+        row = db.execute("SELECT body FROM sensor_consumer_index_state WHERE id=1").fetchone()
+        state = json.loads(str(row[0])) if row else None
+    except Exception:
+        return None
+    ok = isinstance(state, dict) and isinstance(state.get("homes"), dict)
+    return state if ok and isinstance(state.get("count"), int) else None
+
+
 def _controls(db, home_id, sensor_ids, mssql=False):
     """Every control of this home from the indexed per-home table, loaded by primary key.
 
@@ -113,11 +131,17 @@ def _controls(db, home_id, sensor_ids, mssql=False):
         (home_id, CONTROL_MAX + 1),
     ).fetchall()
     indexed = [str(r[0]) for r in rows]
-    # Both tables hold one row per bound sensor (cohort of at most 100). A mismatch means a stale or
-    # partial index that could hide a decline, so consent fails closed.
-    complete = len(indexed) <= CONTROL_MAX and (
-        db.execute("SELECT COUNT(*) FROM sensor_consumer_control_home").fetchone()[0]
-        == db.execute("SELECT COUNT(*) FROM sensor_consumer_control").fetchone()[0]
+    # Equal counts do not prove the sensor-to-home mapping, so the reconciled marker must also match
+    # this home's exact sensor set; anything else is a stale index and consent fails closed.
+    marker = index_state(db)
+    controls = db.execute("SELECT COUNT(*) FROM sensor_consumer_control").fetchone()[0]
+    complete = (
+        len(indexed) <= CONTROL_MAX
+        and marker is not None
+        and marker["count"]
+        == controls
+        == db.execute("SELECT COUNT(*) FROM sensor_consumer_control_home").fetchone()[0]
+        and marker["homes"].get(home_id, home_digest(())) == home_digest(indexed)
     )
     found = {}
     for sensor_id in sorted(set(indexed[:CONTROL_MAX]) | set(sensor_ids)):

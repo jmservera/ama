@@ -6,9 +6,11 @@ not evidence that a real model ran, and nothing here accepts quality work. Seed 
 actual retained contract (sensor consumer controls, live simulator and backfill row shapes).
 """
 
+import contextlib
 import dataclasses
 import json
 import os
+import threading
 import time
 import unittest
 from datetime import UTC, datetime
@@ -35,12 +37,19 @@ def stamp(seconds):
 class CapturingProvider(ta.Provider):
     """Mock: cites the first retained readings it was given, or only the home when told not to."""
 
-    def __init__(self, cite=True, leak=None, **kw):
+    def __init__(self, cite=True, leak=None, gate=None, fail=0, **kw):
         super().__init__(**kw)
         self.cite, self.leak, self.prompts = cite, leak, []
+        self.gate, self.fail = gate, fail
 
     def evidence(self, system, prompt, max_tokens, timeout):
         self.prompts.append(json.loads(prompt))
+        if self.gate:
+            self.gate["entered"].set()
+            self.gate["proceed"].wait(20)
+        if self.fail:
+            self.fail -= 1
+            raise RuntimeError("scripted provider failure")
         keys = self.prompts[-1]["evidence"]["citations"]
         cited = sorted(k for k in keys if k.startswith("sensor:"))[:2] if self.cite else []
         result = super().evidence(system, prompt, max_tokens, timeout)
@@ -68,6 +77,7 @@ class Seed:
                 "sensor_reading",
                 "sensor_consumer_control",
                 "sensor_consumer_control_home",
+                "sensor_consumer_index_state",
                 "sensor_consumer_policy",
             ):
                 db.execute(f"DROP TABLE IF EXISTS {table}")
@@ -482,6 +492,71 @@ class ReadModel(Seed, ta.Base):
         self.service.migrate()
         self.assertNotIn(("ZF-1", "GONE-1"), self._index())
         self.assertEqual(self.view()["state"], "ok")
+
+    def _tamper(self, sql, *args):
+        with self.service.transaction() as db:
+            db.execute(sql, args)
+
+    def test_equal_count_wrong_home_index_fails_closed_and_migration_repairs_it(self):
+        self.put(3)
+        self.set_consent("declined", sensor="SENS-OTHER-9")
+        want = self._index()
+        self._tamper(
+            "UPDATE sensor_consumer_control_home SET home_id='ZF-2' WHERE sensor_id='SENS-OTHER-9'"
+        )
+        v = self.view()
+        self.assertEqual((v["state"], v["latest"]), ("consent-withheld", None))
+        self.service.migrate()
+        self.assertEqual(self._index(), want)
+
+    def test_equal_count_missing_plus_orphan_fails_closed_until_migrated(self):
+        self.put(3)
+        self.set_consent("granted", sensor="SENS-OTHER-9")
+        want = self._index()
+        self._tamper("DELETE FROM sensor_consumer_control_home WHERE sensor_id='SENS-OTHER-9'")
+        self._tamper(
+            "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES ('ZF-9','GONE-1')"
+        )
+        self.assertEqual(self.view()["state"], "consent-withheld")
+        self.service.migrate()
+        self.assertEqual((self._index(), self.view()["state"]), (want, "ok"))
+
+    def test_failed_reconciliation_fails_all_consent_closed_until_repaired(self):
+        self.put(3)
+        self.set_consent("declined", sensor="SENS-OTHER-9")
+        want, state = self._index(), self._control_state()
+        self._tamper(
+            "UPDATE sensor_consumer_control_home SET home_id='ZF-2' WHERE sensor_id='SENS-OTHER-9'"
+        )
+        self._tamper("INSERT INTO sensor_consumer_control (sensor_id, body) VALUES ('BAD-1','x')")
+        self._tamper(
+            "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES ('ZF-9','BAD-1')"
+        )
+        self.service.migrate()
+        self.assertEqual(self.view()["state"], "consent-withheld")
+        self.assertEqual(self.view()["latest"], None)
+        self._tamper("DELETE FROM sensor_consumer_control WHERE sensor_id='BAD-1'")
+        self.service.migrate()
+        self.assertEqual((self._index(), self._control_state()), (want, state))
+
+    def test_failed_reconciliation_does_not_grant_a_granted_home(self):
+        self.put(3)
+        self._tamper("INSERT INTO sensor_consumer_control (sensor_id, body) VALUES ('BAD-1','x')")
+        self._tamper(
+            "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES ('ZF-9','BAD-1')"
+        )
+        self.service.migrate()
+        self.assertEqual(self.view()["state"], "consent-withheld")
+
+    def test_missing_state_marker_fails_closed_until_migrated_and_migration_is_idempotent(self):
+        self.put(3)
+        self._tamper("DROP TABLE IF EXISTS sensor_consumer_index_state")
+        self.assertNotEqual(self.view()["state"], "ok")
+        self.service.migrate()
+        self.assertEqual(self.view()["state"], "ok")
+        before = self._control_state()
+        self.service.migrate()
+        self.assertEqual((self.view()["state"], self._control_state()), ("ok", before))
 
 
 class Http(Seed, ta.ApiTests):
@@ -953,6 +1028,195 @@ class Http(Seed, ta.ApiTests):
         self.assertTrue(self.service.execute(tid))
         flag = self.service.detail(self.pm, tid)["review_flag"]
         self.assertEqual((flag["status"], flag["trigger"]), ("manual-proposal", "requested"))
+
+    def _tasks_of(self, cap):
+        with self.service.transaction() as db:
+            rows = db.execute(
+                "SELECT id FROM assistant_tasks WHERE capability=? AND case_id='ZF-1' ORDER BY id",
+                (cap,),
+            ).fetchall()
+        return [r[0] for r in rows]
+
+    def _new(self, cap):
+        found = {a["id"]: a for a in self.service.forecast(self.pm)["assistants"]}
+        return found[cap]["new_proposals"]
+
+    def _release(self, name):
+        return patch.object(
+            self.service,
+            "release_reference",
+            side_effect=lambda db, cap: dict(id=name, capability=cap),
+        )
+
+    def _epoch(self):
+        """A later epoch with no suspension; only the epoch the schedule reads changes."""
+        real = self.service.continuity
+        stack = contextlib.ExitStack()
+        stack.enter_context(
+            patch.object(
+                self.service,
+                "continuity",
+                side_effect=lambda db: dict(real(db), epoch=real(db)["epoch"] + 1),
+            )
+        )
+        stack.enter_context(patch.object(self.service, "suspended", return_value=None))
+        return stack
+
+    def test_release_or_epoch_change_offers_fresh_work_for_an_unchanged_case(self):
+        self.ready()
+        caps = ("quality-evidence", "assessment-preparation")
+        for name, scope in (("release", lambda: self._release("REL-2")), ("epoch", self._epoch)):
+            with self.subTest(change=name):
+                self.service.scan_cursor = ""
+                self.service.scan()
+                had = {cap: len(self._tasks_of(cap)) for cap in caps}
+                self.assertTrue(all(n >= 1 for n in had.values()))
+                self.assertEqual([self._new(cap) for cap in caps], [0, 0])
+                with scope():
+                    self.assertTrue(all(self._new(cap) >= 1 for cap in caps))
+                    for _ in range(2):
+                        self.service.scan_cursor = ""
+                        self.service.scan()
+                        self.assertEqual(
+                            {cap: len(self._tasks_of(cap)) for cap in caps},
+                            {cap: n + 1 for cap, n in had.items()},
+                        )
+                    self.assertEqual([self._new(cap) for cap in caps], [0, 0])
+
+    def _set_epc(self, value):
+        with self.store.lock:
+            self.store._case("ZF-1")["home"]["epc"] = value
+            self.store.save()
+
+    def test_non_sensor_a_b_a_with_a_new_reading_is_new_work_but_sensor_only_is_throttled(self):
+        self.ready()
+        original = self.store.detail("ZF-1")["home"].get("epc")
+        self.service.scan()
+        self.assertEqual(len(self.quality_task()), 1)
+        self._set_epc("Z")
+        with self.clock(10):
+            self.service.scan()
+        self.assertEqual(len(self.quality_task()), 2)
+        self._set_epc(original)
+        self.add_live(5)
+        with self.clock(20):
+            self.assertEqual(self._new("quality-evidence"), 1)
+            self.service.scan()
+        self.assertEqual(len(self.quality_task()), 3)
+        self.add_live(4)
+        with self.clock(30):
+            self.assertEqual(self._new("quality-evidence"), 0)
+            self.service.scan()
+        self.assertEqual(len(self.quality_task()), 3)
+
+    def _used_calls(self):
+        with self.service.transaction() as db:
+            row = db.execute("SELECT SUM(used_calls) FROM assistant_allowance").fetchone()
+        return row[0] or 0
+
+    def test_arrival_before_claim_replaces_the_stale_task_once_within_the_allowance(self):
+        self.mock()
+        self.put(4)
+        self.add_live(10)
+        self.quality_ready()
+        self.service.scan()
+        (first,) = self.quality_task()
+        self.add_live(5)
+        self.service.scan()
+        self.assertEqual(self.quality_task(), [first])
+        self.assertFalse(self.service.execute(first))
+        self.assertEqual((self.provider.calls, self._used_calls()), (0, 0))
+        self.assertEqual(self.service.detail(self.pm, first)["state"], "stale")
+        self.assertEqual(self._new("quality-evidence"), 1)
+        self.service.scan_cursor = ""
+        self.service.scan()
+        tasks = self.quality_task()
+        self.assertEqual(len(tasks), 2)
+        (second,) = set(tasks) - {first}
+        self.add_live(4)
+        self.service.scan()
+        self.assertEqual(len(self.quality_task()), 2)
+        self.assertEqual(self._new("quality-evidence"), 0)
+        self.assertFalse(self.service.execute(second))
+        self.service.scan()
+        (third,) = set(self.quality_task()) - {first, second}
+        self.assertTrue(self.service.execute(third))
+        self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
+        self.add_live(3)
+        self.service.scan()
+        self.assertEqual(len(self.quality_task()), 3)
+        self.assertEqual(self.provider.calls, 1)
+
+    def _gated(self, **kw):
+        gate = dict(entered=threading.Event(), proceed=threading.Event())
+        self.mock(gate=gate, **kw)
+        return gate
+
+    def test_a_request_during_an_in_flight_proactive_call_does_not_relabel_it(self):
+        gate = self._gated()
+        self.put(4)
+        self.add_live(10)
+        self.quality_ready()
+        self.service.scan()
+        (tid,) = self.quality_task()
+        worker = threading.Thread(target=self.service.execute, args=(tid,))
+        worker.start()
+        try:
+            self.assertTrue(gate["entered"].wait(20))
+            self.assertEqual(self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"], tid)
+        finally:
+            gate["proceed"].set()
+            worker.join(30)
+        shown = self.service.detail(self.pm, tid)
+        self.assertEqual(shown["review_flag"]["status"], "review-suggested")
+        self.assertEqual(self.provider.calls, 1)
+        claimed = [e for e in shown["provenance"] if e.get("kind") == "claimed"]
+        self.assertEqual({e["trigger"] for e in claimed}, {"proactive"})
+
+    def test_a_request_before_claim_is_manual_and_a_retry_follows_the_flag_at_its_own_claim(self):
+        self.mock(fail=1)
+        self.put(4)
+        self.add_live(10)
+        self.quality_ready()
+        for requested in (False, True):
+            with self.subTest(requested=requested):
+                self.provider.fail = 1
+                with self.service.transaction() as db:
+                    db.execute("DELETE FROM assistant_attempts")
+                    db.execute("DELETE FROM assistant_tasks")
+                self.service.scan()
+                (tid,) = self.quality_task()
+                self.assertTrue(self.service.execute(tid))
+                self.assertEqual(self.service.detail(self.pm, tid)["state"], "pending")
+                if requested:
+                    self.service.invoke(self.pm, "quality-evidence", "ZF-1")
+                with self.clock(3600 * (2 if requested else 1)):
+                    self.assertTrue(self.service.execute(tid))
+                want = "manual-proposal" if requested else "review-suggested"
+                self.assertEqual(self.service.detail(self.pm, tid)["review_flag"]["status"], want)
+
+    def test_old_anchor_wording_names_both_horizons_in_the_ui_and_the_model(self):
+        self.mock()
+        self.put(0)
+        now = int(time.time())
+        ref = datetime.fromtimestamp(now - 500 * 86400, UTC).replace(microsecond=0)
+        self.add_readings(2, base=int(ref.timestamp()), offset=3600, tag="OLD")
+        self.quality_ready()
+        with patch.object(sensor_view, "reference_for", return_value=ref):
+            api = self.request("/api/cases/ZF-1/sensors")[1]
+            tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
+            self.assertTrue(self.service.execute(tid))
+        sent = self.provider.prompts[-1]["evidence"]
+        rule = sent["sources"]["sensors"]["as_of_rule"]
+        self.assertEqual(api["as_of_rule"], rule)
+        self.assertIn("newest readings", rule)
+        self.assertIn("within the last 366 days", rule)
+        self.assertIn("within 30 days of the quality evidence record time", rule)
+        self.assertIn("may be older than 366 days", rule)
+        self.assertEqual(
+            sorted(k for k in sent["citations"] if k.startswith("sensor:")),
+            sorted(sensor_view.citations(api)),
+        )
 
 
 MSSQL = unittest.skipUnless(

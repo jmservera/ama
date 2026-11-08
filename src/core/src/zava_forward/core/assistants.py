@@ -777,13 +777,11 @@ class Assistants:
 
     def _mark_requested(self, db, tid):
         """A person's request is durable on the task, so attribution never depends on an event window.
-        A dispatch not yet returned is marked too; a completed one keeps its own provenance."""
+        It governs the next claim only; an executing or returned dispatch keeps the trigger frozen at its claim."""
         task = self._row(db, tid)
         if task["state"] not in ("pending", "leased", "disabled"):
             return
         task["manual_requested"] = True
-        if task["state"] == "leased" and task.get("dispatch"):
-            task["dispatch"] = dict(task["dispatch"], trigger="requested")
         db.execute("UPDATE assistant_tasks SET body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
 
     def invoke(self, user, capability, case_id):
@@ -984,17 +982,38 @@ class Assistants:
                     basis="Upper bound from current case state; routine case edits can add proposals later. Read-only.",
                     manual="Proactive scans stay off unless an operator enables them; use the ordinary case controls.")
 
+    def _serviced(self, db, cap, c):
+        """Coarse schedules of the latest task in the current release and continuity scope. A task that
+        went stale before any model call never serviced its schedule, so it does not throttle."""
+        release, epoch = canonical(self.release_reference(db, cap)), self.continuity(db)["epoch"]
+        latest, found = None, set()
+        for sig, state, attempts, raw in db.execute(
+                "SELECT signature,state,attempts,body FROM assistant_tasks WHERE capability=? AND case_id=?",
+                (cap, c["id"])).fetchall():
+            body = json.loads(raw)
+            if canonical(body.get("release")) != release or body.get("continuity_epoch") != epoch:
+                continue
+            if state == "stale" and attempts == 0:
+                continue
+            stamp = body.get("created_at", 0)
+            if latest is None or stamp > latest:
+                latest, found = stamp, set()
+            if stamp == latest:
+                found.add(sig)
+        return found
+
     def _due(self, db, cap, c, snapshot, today):
         """Whether a proactive scan may start work. The coarse signature throttles every eligible branch,
-        gaps included, but only when this exact capture has no task and the schedule is already known, so
-        non-sensor changes, existing tasks and manual requests are never suppressed."""
-        known = {r[0] for r in db.execute("SELECT signature FROM assistant_tasks WHERE capability=? AND case_id=?",
-                                          (cap, c["id"])).fetchall()}
+        gaps included, only within the current release and continuity scope and only while the latest
+        serviced task has the same schedule; any other change, an existing exact task or a manual
+        request is never suppressed."""
+        serviced = self._serviced(db, cap, c)
         sig = scheduling_signature(snapshot)
-        if not eligible(cap, snapshot, today, bool(known) and sig not in known, sig in known):
+        known = sig in serviced
+        if not eligible(cap, snapshot, today, bool(serviced) and not known, known):
             return False
         exists = db.execute("SELECT 1 FROM assistant_tasks WHERE id=?", (self._task_id(db, cap, c, signature(snapshot)),)).fetchone()
-        return exists is not None or sig not in known
+        return exists is not None or not known
 
     def scan(self):
         if not self.sql or not self.limits.proactive:

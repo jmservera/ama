@@ -44,7 +44,16 @@ dispatch proactive, so a missing or unclear value is "requested". The coarse sch
 every proactive branch, including quality gaps, never a manual request or a non-sensor change.
 `Assistants.migrate()` and `SensorConsumer.migrate_control_index()` reconcile the control index
 from the stored controls (adds missing rows, removes orphans, never writes policy, controls or
-consent); a count mismatch fails consent closed.
+consent). C4: each reconcile also rewrites a marker (`sensor_consumer_index_state`: total count and a
+digest of every home's sensor set); readers withhold consent unless the marker, both counts and the
+home's digest agree, so an equal-count wrong-home, missing-plus-orphan or failed reconcile fails
+closed. A residual out-of-band edit that restores counts and the home digest is not detectable.
+The proactive schedule is scoped to the current release and continuity epoch and compares the
+latest serviced task, so a release or epoch change, or a non-sensor A-to-B-to-A change, is new
+work; a task that went stale before any model call does not throttle its replacement. A request
+sets only the durable `manual_requested` flag and never rewrites a dispatch already claimed. The
+evidence rule states both horizons: newest readings within 366 days, and context readings within
+30 days of the quality record time, which may be older.
 
 `review_flag` names the state of a returned model output. Only a proactive,
 current, returned finding that cites a captured reading is an automatic L4
