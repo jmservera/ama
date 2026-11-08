@@ -19,9 +19,9 @@
         }
       ],
       "revised_notes": [
-        "S01 | Zava Forward: a built foundation for accountable retrofit work.",
-        "SAY within the retained 40-second opening: We built Zava Forward to turn fragmented retrofit work into an owned, evidence-linked next step. I will show the problem, how research and journey hypotheses shaped the design, and the Workbench we implemented. Then, near the close, I will propose how the product could become stronger with joined portfolio history and richer agent context. That future is not part of today's product. People retain resident choice, professional acceptance and Finance authority. We have meaningful engineering and historical real-service evidence to show; whole-service acceptance and measured customer benefit remain separate tests.",
-        "SOURCES: original case, addendum, current component guides and DT journey evidence. This is a built demonstrator, not five autonomous managers or an accepted production service. Case ambition, synthetic scale, dated observations and measured housing outcomes remain distinct. No spending authority is granted."
+        "S01 | Zava Forward: the requested rights, a proposal-first build.",
+        "SAY within the retained 40-second opening: Zava Forward turns fragmented retrofit work into an owned next step. The case specified recommendations, approved drafts, preference-bounded actions and autonomous quality flags, not unrestricted managers. I will show how we challenged the mechanisms, built the Workbench and added optional resident access. We preserved resident and professional authority; some requested scope and higher autonomy remain unfinished. My ask is to agree the next validation priorities and owners before a costed plan. Future analytics and customer benefits are proposals, not today's proof.",
+        "SOURCES: docs/case_study_48_original.md, Agentic Architecture Brief; docs/capstone/source/review-2026-11-08.md. The original explicitly specifies Stock L2, Assessment/Funding/Coordination L3 and Quality L4 flags. Human approval and resident consent are fidelity to that brief, not newly imposed restrictions. Built scope, automatic invocation, permitted decision authority and live acceptance are separate claims. No spending authority is granted."
       ]
     },
     {
@@ -379,14 +379,37 @@
     {
       "number": 7,
       "code": "S06",
-      "title": "Six weeks of product work sit under these slides.",
-      "layout": "baseline",
+      "title": "Discovery grew scope. Delivery keeps learning.",
+      "layout": "text",
+      "replacements": [
+        {"id": 33476, "from": "Six weeks of product work", "to": "Discovery grew scope."},
+        {"id": 33476, "from": "sit under these slides.", "to": "Delivery keeps learning."},
+        {"id": 33487, "from": "What you see: this deck", "to": "Activity and scope, not outcomes"},
+        {"id": 33494, "from": "480", "to": "1147", "box": [6.5, 2.457, 1.75, 1.0859]},
+        {"id": 33502, "from": "commits", "to": "non-merge commits"},
+        {"id": 33511, "from": "233", "to": "982"},
+        {"id": 33532, "from": "6", "to": "260"},
+        {"id": 33544, "from": "architecture decisions", "to": "tracked project items"},
+        {"id": 33557, "from": "142", "to": "126"},
+        {"id": 33571, "from": "requirements", "to": "completed issues"},
+        {"id": 33586, "from": "196", "to": "125"},
+        {"id": 33602, "from": "acceptance criteria", "to": "open issues"},
+        {"id": 33619, "from": "34", "to": "9"},
+        {"id": 33637, "from": "research documents", "to": "not planned"},
+        {"id": 33676, "from": "journey maps", "to": "journey hypotheses"},
+        {"id": 33697, "from": "189", "to": "5"},
+        {"id": 33719, "from": "backlog items", "to": "proposal capabilities"},
+        {"id": 33742, "from": "Since 11 Sep 2026", "to": "Snapshot: 8 Nov 2026"},
+        {"id": 33742, "from": "one architect, GitHub Copilot and automation", "to": "Ongoing build; activity is not customer benefit"},
+        {"id": 33766, "from": "Sources: public repository jmservera/ama at 140d8f4 (23 Oct 2026) · BRD v0.19.0 · PRD v0.18.0 · AMA Plan board", "to": "Sources: git bcd86707; GitHub merged PRs; AMA Plan 7, 8 Nov 2026, 14:12 UTC. Refresh before final delivery."}
+      ],
       "notes": "S06 | Six weeks of product work sit under these slides.\n\r\nTIMING: 60 s for this slide (all builds together) · 05:20-06:20 on the 23:45 narration clock.\n\r\n\n\r\nSAY\n\r\nThese counts show activity, not accepted value; the lesson is to preserve short, usable feedback loops.\n\r\n\n\r\nThese slides sit on six weeks of product work: 480 commits, 233 merged pull requests and six architecture decision records. A business requirements document and a product requirements document with 142 requirements and 196 acceptance criteria. 34 research documents, 28 journey maps, a what-if study with 20 scenarios and a backlog of 189 items generated from all of it.\n\r\n\n\r\nThe recorded contributors are one architect, GitHub Copilot and automation. These activity counts do not validate a long coordinator loop or establish accepted delivery for Zava.\n\r\n\n\r\nThis is a product-management story first: understand the problem, test the assumptions, then build.\n\r\n\n\r\nSOURCES AND CALCULATIONS\n\r\nRepository home page and pull request search, 23 Oct 2026: 480 commits on main, 233 merged pull requests, 3 contributors; docs/adrs (6 ADRs); BRD v0.19.0 (52 FR, 12 NFR, 103 AC) and PRD v0.18.0 (61 FR, 17 NFR, 93 AC); docs/reference/research (34 documents); journey atlas (28 maps); agent what-if study (20 scenarios); AMA Plan board (189 items). BRD created 11 Sep 2026; first pull request 20 Sep 2026.\n\r\n",
       "revised_notes": [
-        "S06 | Research and iterations made the design traceable.",
-        "SAY in the retained 60-second slot: This is not a build assembled only for these slides. Requirements, architecture decisions, journey hypotheses, prototype feedback and bounded engineering tests sit behind the Workbench. The dated activity counts show the amount of work, not accepted customer value. The important chain is what we learned, which choice it changed and how we tested the boundary. Role instruments helped expose missing ownership, conflicting evidence and separate decisions; prototypes showed where labels and workflows needed simplification. Historical real-service exercises then demonstrated bounded integration. That is the product-management story to defend. The next page makes the evidence-to-design reasoning visible; it is not a claim that activity or agent output proves benefit.",
-        "EVIDENCE: displayed repository/backlog counts are the retained 23 October snapshot, not today's totals, accepted features or a delivery forecast. The journey count is 27 companion maps plus one atlas map. Direct resident/staff research and measured improvement remain gaps.",
-        "SOURCES: dated repository/board evidence in the retained authoring package; customer journey atlas; prototype/UX learnings; current component guides. No new count, interview, causal result or current live acceptance was established here."
+        "S06 | Discovery grew scope. Delivery keeps learning.",
+        "SAY in the retained 60-second slot: The project is still moving. On 8 November, AMA Plan has 260 tracked items: 125 open, 126 completed and nine not planned. The board's 135 Done items include those nine cancellations, so I do not call them 135 delivered capabilities. The October scope jump coincides with decomposing requirements, journeys, sensors and assurance into testable work. Later growth includes resident access and hardening. The repository now has 1,147 non-merge commits and 982 merged pull requests. Those are activity, not housing results. The product story is the learning each iteration preserved, and the remaining proof: complete journeys, useful reviewed assistance and resident choice.",
+        "SNAPSHOT: Project 7 GraphQL read at 2026-11-08T14:12:52Z retrieved all 260 non-archived issue members: OPEN 125, CLOSED/COMPLETED 126, CLOSED/NOT_PLANNED 9; Status Todo 101, In Progress 24, Done 135. These are overlapping views of the same denominator, not extra items. The supplied Insights chart is stacked: its upper boundary is not 260 open issues. We verified endpoint counts, not every historical chart transition.",
+        "HISTORY: 131 currently tracked issues were created on 14 October; 172 current members existed by 15 October. This is current-membership issue history, not a complete historical membership or status-transition export. Scope expansion is not a measured failure rate or causal productivity finding. Epics, features, stories and assurance items are not interchangeable units.",
+        "SOURCES: docs/capstone/source/review-2026-11-08.md, Progress snapshot and refresh; git rev-list --count --no-merges bcd86707542af59cf8fb6978090a2559c037e33d; gh pr list --state merged, 982 records at this snapshot; AMA Plan project 7. Commits include automation. Twenty-seven companion maps plus one atlas map remain 28 hypotheses, not interviews. Refresh all changing counts and evidence before final presentation."
       ]
     },
     {
@@ -502,7 +525,7 @@
             2.6,
             0.48
           ],
-          "text": "Challenge the ask",
+          "text": "Ask: what if?",
           "size": 20,
           "bold": true
         },
@@ -514,7 +537,7 @@
             3.87,
             0.72
           ],
-          "text": "8 role instruments first;\n9 in the later journey atlas",
+          "text": "8 role instruments: richer evidence,\nphotos and contractor capacity",
           "size": 17,
           "color": "50655E"
         },
@@ -566,7 +589,7 @@
             3.87,
             0.72
           ],
-          "text": "27 companion maps + 1 atlas map\nActions, needs, pains and gains",
+          "text": "9 later instruments / 28 maps\nNeeds, pains, gains and handoffs",
           "size": 17,
           "color": "50655E"
         },
@@ -625,7 +648,7 @@
             3.67,
             0.35
           ],
-          "text": "Scoped case + named owner",
+          "text": "Owned case + optional access",
           "size": 16
         },
         {
@@ -636,7 +659,7 @@
             3.67,
             0.31
           ],
-          "text": "Test: Effort and disclosure",
+          "text": "Test: Effort and inclusion",
           "size": 14,
           "color": "50655E"
         },
@@ -659,7 +682,7 @@
             3.67,
             0.35
           ],
-          "text": "Unowned handoff",
+          "text": "False commitment",
           "size": 19,
           "bold": true
         },
@@ -671,7 +694,7 @@
             3.67,
             0.35
           ],
-          "text": "Receiver + chase responsibility",
+          "text": "Offer != booking; choice stays",
           "size": 16
         },
         {
@@ -682,7 +705,7 @@
             3.67,
             0.31
           ],
-          "text": "Test: Rejection and delay",
+          "text": "Test: Cancellation and recovery",
           "size": 14,
           "color": "50655E"
         },
@@ -751,7 +774,7 @@
             11.69,
             0.36
           ],
-          "text": "Structured desk research, not interviews. Pains and gains remain hypotheses.",
+          "text": "Desk research, owner feedback and synthetic tests; direct resident validation remains pending.",
           "size": 16,
           "color": "885500",
           "bold": true
@@ -764,49 +787,90 @@
       ],
       "revised_notes": [
         "S07 | From the brief to bounded design.",
-        "SAY in the retained 60-second slot: We started with the case brief and official sector context, separating facts from unknown company details. Eight role research instruments challenged the original autonomy request. The later atlas used nine instruments to explore responsibilities, handoffs and exceptions. They were not interviews or company approvers. Twenty-seven companion maps plus one atlas map give twenty-eight journey hypotheses. We compared actions, needs, pains and proposed gains. Three patterns shaped the product: preserve the resident account, make commitments owned, and keep changed evidence tied to separate reviews. Zava Forward gives those hypotheses concrete engineering form. The next test is whether residents and staff complete the work with less total effort and no weakened choices.",
+        "SAY in the retained 60-second slot: We challenged the mechanism, not an invented demand for unrestricted autonomy. What if assessors supplied richer photos and invoices? That improves preparation, but not professional authority. What if contractor APIs offered available slots? An offer still needs actual capacity and the resident's preferences. What if a small decision model selects a sourced field instead of generating it? Test it against a parser. Eight role research instruments explored those questions; the later nine-instrument atlas produced 28 journey hypotheses. We translated repeated stories, false commitments and changed evidence into owned cases, optional access, explicit confirmation and version-bound review. Prototypes and engineering tests exercised those choices. Real resident comprehension and total effort remain the next tests.",
         "METHOD: case facts and dated official-sector sources -> role research instruments -> stage-based journey hypotheses -> pain/gain synthesis -> bounded design choice -> falsifiable test. The arrow is reasoning traceability, not independent validation. Nine instruments share a source corpus, not nine empirical samples; the 28 maps are not interviewed people, validated journeys or accepted features.",
-        "CONCLUSION TRACES: repeated explanations suggest a purpose-scoped account and named update contact; unaccepted handoffs suggest sender chase until a receiver accepts; changed scope suggests version-bound invalidation of dependent reviews. Keep professional, resident and Finance decisions distinct. The paired test retains the same workflow/rights with and without AI and counts failures, correction and displaced effort.",
-        "SOURCES: docs/capstone/source/diagrams/discovery-journey/text-equivalent.md, method/evidence and D01-D05; docs/reference/research/ux/customer-journeys/customer-journey-atlas.md; docs/reference/research/company/agent-request-challenge.md. The DT Coach supplied the representative map and source-linked decision trace, not customer approval.",
-        "TRANSITION: show how those findings changed the original agent request, then the actual Workbench. Page 13 illustrates a resident's actions, pain hypotheses and proposed gains rather than another technical process chart."
+        "CONCLUSION TRACES: richer evidence led to source/version checklists rather than model sign-off; supplied slots led to offer/commitment separation; repeated explanations led to the optional own-case resident channel plus assisted continuity; changed scope led to invalidation of only dependent reviews. These are designed improvements with technical evidence, not measured resident gains. The paired value test retains the same workflow/rights with and without AI and counts failures, corrections and displaced effort.",
+        "SOURCES: docs/capstone/source/review-2026-11-08.md, Design-thinking decision trace; docs/capstone/source/diagrams/discovery-journey/text-equivalent.md, D01-D05; customer-journey-atlas.md; agent-request-challenge.md; agent-what-if-study.md; prototype-learnings-and-simplicity-review.md. The DT Coach supplied a source-linked synthesis, not customer approval.",
+        "TRANSITION: show exact brief fidelity and the genuine scope/autonomy reductions, then the actual Workbench. Page 13 illustrates resident actions, pain hypotheses and proposed gains rather than another technical process chart."
       ]
     },
     {
       "number": 9,
       "code": "S08",
-      "title": "We challenged the brief to make it shippable.\r",
+      "title": "We kept the rights. We changed the mechanism.",
       "layout": "text",
       "notes": "S08 | We challenged the brief to make it shippable.\r\nTIMING: 70 s for this slide (all builds together) · 07:20-08:30 on the 23:45 narration clock.\r\n\r\nSAY\r\nThe original brief asked for five autonomous AI agents, from stock prioritisation to quality verification, with autonomy up to level four. We took the brief seriously, and that is exactly why we challenged it.\r\n\r\nWe ran it past nine role instruments. Their verdict was clear: none of the five should run end to end. So we kept all five responsibilities as five bounded assistants on one proposal service.\r\n\r\nWe also refused the easy story that the spreadsheets are the problem. As our requirements put it, Zava does not have a spreadsheet problem, it has a delivery control problem that spreadsheets make harder to see. The first investment is data ownership and workflow, then AI.\r\n\r\nWe kept AI, and changed its job: AI prepares, people decide, because consent, safety and money need a named human.\r\n\r\nThe portal is optional, not rejected. Issue #441 assesses resident self-service to reduce avoidable status calls and protect staff working time. Phone, email, letter and visits stay available. Portal/workflow comes first; any resident-answer assistant is separately gated, human-reviewed and off for routine automation. No benefit has been measured.\r\n\r\nSOURCES AND CALCULATIONS\r\nIssue #441, read 23 October 2026: owner-confirmed Option B reuses case/API authority; portal/workflow first, resident-answer task separately gated. Its latest public comment reports a Research-stage integration blocker and no published PR. The owner reports local work in progress, not inspected implementation or approval. Per-message human review remains normative; routine automation stays off pending requirements-owner disposition and separate release approval.\r\nOriginal case brief: five agents with autonomy L2-L4 (E01); agent-request challenge and agent what-if study: \"none of the five requested agents should be end-to-end\" (E03, WIS); BRD L161-166 spreadsheet quote; discovery brief: first investment is data ownership and workflow instrumentation; PRD: one proposal service, not five applications; architecture README: no resident portal required, separate workers deferred, Foundry Agent Service not used.\r\n\r\nRELATED ANSWERS: B03 = slide 30; B14 = slide 41. Question index = slide 27.\r\n",
       "revised_notes": [
-        "S08 | We challenged the brief and kept the useful responsibilities.",
-        "SAY in the retained 70-second slot: The brief requested five autonomous agents. The earlier challenge used eight role research instruments, not nine interviewed stakeholders. Their source-backed analysis suggested that none of the five should own its whole consequential journey. We kept the five business responsibilities as bounded assistance, with workflow and named people retaining decisions. The later nine-instrument journey atlas reinforced the need for owned handoffs, source evidence and separate versions. That is why the first investment was data ownership and controlled work, not model-led consent or funding. Optional resident service was not rejected: later showcase, advisory and callback source now exists at its stated boundary, while operational enrolment, rights and live acceptance remain separate. Assisted routes stay.",
-        "COUNTING: eight instruments in the 26 September agent-request challenge; nine in the later journey atlas, including the Executive Reviewer. The maps are hypotheses, not interviews, company delegations or approval. No role instrument supplied privileged customer facts.",
-        "SOURCES: docs/reference/research/company/agent-request-challenge.md; customer-journey-atlas.md; resident-assistant-prototype.md and current API guide for later source status. Earlier 23 October 'unpublished local work only' statements are historical, not the current source inventory."
+        "S08 | We kept the rights. We changed the mechanism.",
+        "SAY in the retained 70-second slot: The case was precise: Stock recommends at L2; Assessment drafts at L3 with coordinator approval; Funding drafts at L3 with Finance submission; Coordination acts at L3 within resident preferences; Quality raises flags autonomously at L4. It already reserved investment approval and resident consent. Our current shared service produces L2 evidence proposals for all five roles. Stock retains the recommendation boundary; Assessment and Funding deliver preparation, not their complete requested drafts. Coordination does not book or send, and Quality does not autonomously raise a domain flag. Those are genuine scope or autonomy reductions, not proof the brief demanded unsafe decisions. The shared workflow supports the requested supervision. The optional resident website is an added channel, not an original portal requirement.",
+        "JUSTIFICATION: known arithmetic, policy and state belong in reproducible rules; bounded models interpret permitted evidence. Source quality, qualified review, supplier capacity, operational connectors and tested false-positive/critical-miss limits must precede wider authority. Quality L4 means raise-only flags, never autonomous acceptance; it is not inherently incompatible with the brief's human approvals. OD-31 and OD-32 retain the decisions/tests for Quality and Coordination. No current authority is increased by this presentation.",
+        "SOURCES: docs/case_study_48_original.md:24-36; src/core/src/zava_forward/core/assistants.py, REGISTRY, scan and review; PRD Five Reactive and Proactive Assistants; BRD OD-31/OD-32; docs/capstone/source/review-2026-11-08.md. Eight earlier role instruments and nine later atlas instruments supplied hypotheses, not customer approval."
       ],
       "replacements": [
         {
           "id": 34557,
-          "from": "our 9 role instruments",
-          "to": "8 role research instruments",
+          "from": "Why: our 9 role instruments concluded none of the five should run end to end.",
+          "to": "Why: test full drafts, L3 actions and L4 flags separately.",
           "box": [
             2.7267,
             3.35,
             3.7733,
             0.59
           ]
-        }
+        },
+        {"id": 34469, "from": "We challenged the brief to make it shippable.", "to": "We kept the rights. We changed the mechanism."},
+        {"id": 34532, "from": "Five autonomous agents, autonomy L2-L4", "to": "Five tasks with explicit L2-L4 levels"},
+        {"id": 34544, "from": "Five bounded assistants on one proposal service", "to": "Five L2 evidence proposals; fuller scope remains"},
+        {"id": 34676, "from": "Fix the spreadsheets", "to": "Programme supervision and coordination"},
+        {"id": 34697, "from": "Data ownership and workflow instrumentation first, then AI", "to": "Shared case, workflow and accountable handoffs"},
+        {"id": 34719, "from": "Why: slow delivery is a coordination problem that spreadsheets hide.", "to": "Why: shared state first; live connectors remain gated."},
+        {"id": 34901, "from": "AI makes decisions", "to": "People approve; residents control consent"},
+        {"id": 34931, "from": "AI prepares, people decide", "to": "The same decision rights, enforced in the API"},
+        {"id": 34962, "from": "Why: consent, safety and money need a named human.", "to": "This meets the brief's boundary; it is not a new restriction."},
+        {"id": 35169, "from": "UNDER ASSESSMENT", "to": "ADDED OPTION"},
+        {"id": 35207, "from": "Resident portal", "to": "Resident channel with consent management"},
+        {"id": 35246, "from": "Optional portal; assisted routes stay", "to": "Optional website + advice; assisted routes stay"},
+        {"id": 35286, "from": "Test fewer calls and staff interruptions (#441).", "to": "Why: easier own-case answers, never digital-only service."}
       ]
     },
     {
       "number": 10,
       "code": "S09",
       "title": "Every prototype taught us something we kept.\r",
-      "layout": "baseline",
+      "layout": "text",
+      "replacements": [
+        {"id": 35381, "from": "20 Sep", "to": "26 Sep"},
+        {"id": 35395, "from": "PR #19", "to": "7 Oct"},
+        {"id": 35395, "from": "four role-based perspectives", "to": "Owner: clearer case context"},
+        {"id": 35395, "from": "roles need their own queues", "to": "next owner and plain status"},
+        {"id": 35410, "from": "6 Oct", "to": "8 Oct"},
+        {"id": 35410, "from": "review of 11 perspectives,", "to": "Prototype simplicity review"},
+        {"id": 35410, "from": "9 filters, 8 cases", "to": "rules first; AI adds drafting"},
+        {"id": 35410, "from": "inconsistent owner labels", "to": "total review effort unknown"},
+        {"id": 35410, "from": "fixed in requirements", "to": "retain the simpler comparator"},
+        {"id": 35426, "from": "8 Oct", "to": "14 Oct"},
+        {"id": 35426, "from": "MVP replaces prototype", "to": "28 journey hypotheses"},
+        {"id": 35426, "from": "one shared workbench", "to": "131 tracked issues created"},
+        {"id": 35443, "from": "11 Oct", "to": "14 Oct"},
+        {"id": 35443, "from": "PR #58 real AI,", "to": "Five real proposals,"},
+        {"id": 35443, "from": "Azure SQL and Blob", "to": "6,884 tokens + SQL restart"},
+        {"id": 35443, "from": "decision model +", "to": "integration proved;"},
+        {"id": 35443, "from": "generative calls work", "to": "human value still unknown"},
+        {"id": 35461, "from": "14 Oct", "to": "27 Oct"},
+        {"id": 35461, "from": "five assistants, real proposals, 73 SQL tests, survived a restart", "to": "Optional resident site, own-case help and synthetic sensors"},
+        {"id": 35461, "from": "the proposal service holds", "to": "assisted routes remain"},
+        {"id": 35480, "from": "23 Oct", "to": "8 Nov"},
+        {"id": 35480, "from": "PR #433 Tokenomics", "to": "Source and release hardening"},
+        {"id": 35480, "from": "AI is managed by cost per accepted outcome", "to": "125 tracked issues still open; final evidence refresh ahead"},
+        {"id": 35521, "from": "From a requirements review to five real AI assistants in 25 days", "to": "Brief -> options -> prototypes -> backlog -> build -> review"},
+        {"id": 35566, "from": "Owner feedback reshaped the screen: my cases, next owner, plain status", "to": "Scope growth records discovery; closed issues are not housing outcomes"},
+        {"id": 35615, "from": "Every lesson became a requirement, a decision or a test", "to": "Next: accepted journeys, useful assistance and tested autonomy"}
+      ],
       "notes": "S09 | Every prototype taught us something we kept.\r\nTIMING: 50 s for this slide (all builds together) · 08:30-09:20 on the 23:45 narration clock.\r\n\r\nSAY\r\nWe did not design this on a whiteboard. Every prototype taught us something we kept.\r\n\r\nIt started on 20 September with a review of the open decisions in the requirements. The first prototype gave each role its own perspective, and taught us that roles need their own queues. On 6 October we reviewed eleven perspectives, nine workflow filters and eight constructed cases, found inconsistent owner labels, and fixed them in the requirements. Two days later the MVP replaced the prototype with one shared workbench.\r\n\r\nOn 11 October we made real AI, Azure SQL and Blob storage mandatory, and the decision-model and generative calls worked. By 14 October five assistants were making real, citation-validated proposals backed by 73 SQL tests, and the evidence survived a service restart. This morning we merged the Tokenomics requirements: AI is managed by cost per accepted outcome.\r\n\r\nTwenty-five days from the first prototype review to five real assistants. Every lesson became a requirement, a decision or a test.\r\n\r\nSOURCES AND CALCULATIONS\r\nPR #1 (opened 20 Sep 2026); PR #19 four role-based task perspectives (PRD L1726); 6 Oct HTML review (PRD L1736-1746); 8 Oct MVP replaced prototype (PRD L414-419); 11 Oct real AI, SQL and Azure required (ADD L182-213); PR #58 (ADD L277-285); five-assistant exercise 13-14 Oct (ADD L252-273; PRD L588-621): 5 citation-validated proposals, 6,884 tokens, 73 SQL tests, persistence across restart; PR #433 Tokenomics (merged 23 Oct 2026). \"25 days\" = 20 Sep to 14 Oct.\r\n",
       "revised_notes": [
         "S09 | Every prototype taught us something we kept.",
-        "SAY in the retained 50-second slot: We learned by building and inspecting boundaries. Early role perspectives led to clearer work queues. The October prototype review exposed inconsistent ownership and reset behaviour, which fed back into requirements and the shared Workbench. Later exercises recorded actual model calls, SQL-backed state and retained evidence across a restart. Those are dated technical observations, not proof that the whole current service or human review is accepted. The Tokenomics requirements merged on 23 October, not this morning; they define what complete accepted-outcome economics should measure, not a measured unit cost we already have. Each useful lesson became a requirement, decision or test rather than another unqualified feature claim.",
-        "SOURCES: retained prototype/UX learnings, the addendum's 12-14 October operator evidence, current component guides and the dated Tokenomics brief. The 25-day historical interval is not a current delivery promise. Source/recorded evidence, fresh acceptance and benefit stay distinct."
+        "SAY in the retained 50-second slot: Each iteration changed a product decision. Requirements review exposed unknowns. Owner feedback asked for clearer case context, next owners and plain status. Prototype critique kept the fast rules path and questioned the total cost of reading an AI draft. The October journeys turned handoffs, resident choice and assurance into testable backlog work. Five real proposal paths then survived a SQL-backed service restart. Later we added optional resident access, own-case advice and synthetic sensors. November work is hardening those paths and their release evidence. The project continues: completed issues are not measured safer homes or lower bills, and the final talk must refresh this snapshot.",
+        "SOURCES: docs/capstone/source/review-2026-11-08.md, Dated product history; PR #1 merged 26 September; owner feedback 7 October; prototype simplicity review 8 October; atlas/log and current project-member issue creation 14 October; five-path operator observation 14 October; merged #474/#480 on 27 October; current-main ranking/AI/chat/sensor evidence 8 November. PR #58 is historical unmerged feasibility, not a merged feature. No causal productivity claim or new user-study result."
       ]
     },
     {
@@ -933,7 +997,7 @@
       "number": 14,
       "code": "S13",
       "notes": "S13 | 189 backlog items, 16 epics, one coherent product.\r\nTIMING: 50 s for this slide (all builds together) · 12:40-13:30 on the 23:45 narration clock.\r\n\r\nSAY\r\nBehind the workbench is a real, structured product backlog. 189 items across 16 epics, generated from the business requirements, the product requirements and the architecture decisions.\r\n\r\n54 are delivered, 24 are in progress and 111 are queued and ready to be picked up in dependency order. Every item traces back to a requirement and forward to a pull request with its evidence.\r\n\r\nThis is what makes the plan credible: we are not asking you to imagine a product. We are showing you the inventory of one, and the order we will build the rest in.\r\n\r\nSOURCES AND CALCULATIONS\r\nAMA Plan project snapshot (E20): 189 items; labels: 16 epic, 110 feature, 34 story, 29 other; status 54 Done, 24 In Progress, 111 Todo. Per-epic counts computed from item area labels (items outside the 16 epic areas: 28).\r\n",
-      "title": "What we built: one accountable workbench.",
+      "title": "Three ways to get help. No new decision rights.",
       "layout": "native",
       "keep_ids": [
         39457,
@@ -943,7 +1007,7 @@
       "headers": [
         {
           "id": 39459,
-          "text": "What we built: one accountable workbench.",
+          "text": "Three ways to get help. No new decision rights.",
           "size": 30,
           "box": [
             0.6,
@@ -954,7 +1018,7 @@
         },
         {
           "id": 39462,
-          "text": "Sources: current guides; dated operator proof. Current acceptance and value remain separate.",
+          "text": "Sources: current API/core/agents contracts, 8 Nov 2026. Automatic preparation is not automatic approval.",
           "size": 12,
           "box": [
             0.6,
@@ -1072,7 +1136,7 @@
             4.96,
             0.29
           ],
-          "text": "AI suggestion is not an accepted decision.",
+          "text": "Source-linked help, not an accepted case decision.",
           "size": 15,
           "color": "50655E"
         },
@@ -1101,7 +1165,7 @@
             5.37,
             0.38
           ],
-          "text": "Work stays owned",
+          "text": "See the next action",
           "size": 22,
           "bold": true
         },
@@ -1113,7 +1177,7 @@
             5.37,
             0.62
           ],
-          "text": "Role and case scope\nSent is not accepted; exceptions stay visible",
+          "text": "Rules, role queues and Today's briefing\nCase work does not wait for a model",
           "size": 16,
           "color": "50655E"
         },
@@ -1142,7 +1206,7 @@
             5.37,
             0.38
           ],
-          "text": "Change stays traceable",
+          "text": "Review recommendations",
           "size": 22,
           "bold": true
         },
@@ -1154,7 +1218,7 @@
             5.37,
             0.62
           ],
-          "text": "Source and scope versions\nReopen only the dependent reviews",
+          "text": "Case cards + Assistant proposals\nStaff request or approved gap scan",
           "size": 16,
           "color": "50655E"
         },
@@ -1183,7 +1247,7 @@
             5.37,
             0.38
           ],
-          "text": "AI stays bounded",
+          "text": "Ask a follow-up",
           "size": 22,
           "bold": true
         },
@@ -1195,7 +1259,7 @@
             5.37,
             0.62
           ],
-          "text": "Sourced drafts; human review\nRules own calculations; manual work stays usable",
+          "text": "Employee chat: five selected skills\nResident chat: optional, own-record",
           "size": 16,
           "color": "50655E"
         },
@@ -1218,7 +1282,7 @@
             11.69,
             0.36
           ],
-          "text": "CURRENT FOUNDATION  |  Workbench + API + SQL/Blob + rules + bounded AI + read-model reporting",
+          "text": "CURRENT SOURCE  |  Staff Workbench + optional resident site. AI activation remains task-specific.",
           "size": 14,
           "color": "FAF9F6",
           "bold": true
@@ -1231,11 +1295,12 @@
         "docs/capstone/source/diagrams/discovery-journey/text-equivalent.md"
       ],
       "revised_notes": [
-        "S13 | What we built: one accountable workbench.",
-        "SAY in the retained 50-second slot: This is the foundation we built, not a platform shopping list. The Workbench connects a scoped case and its evidence to an owned next action, with consequential decisions kept separate. The engineering handles unaccepted handoffs, changed scope and dependent reviews, source-linked proposals, QA returns and financial distinctions. Rules keep calculations and gates deterministic; AI prepares permitted help. Existing read-model reporting explains progress without another analytics platform. Historical real model paths and SQL restart evidence establish technical feasibility at their dated boundary. Current whole-journey acceptance and resident or staff benefit still need proof. That is a substantial product foundation to build on.",
+        "S13 | Three ways to get help. No new decision rights.",
+        "SAY in the retained 50-second slot: Staff get help in three ways. Rules show the role queue and next action without waiting for AI. A staff request, or an approved background gap scan, prepares recommendations in the case card and Assistant proposals queue; sources and unknowns are visible before human review. Ask the assistant gives follow-up help through one chat with five explicitly selected skills, not another approval tool. The added resident site offers own-case status, document explanations, synthetic sensors and optional questions, while phone, letters and assisted visits stay. These channels reduce avoidable chasing by design; real effort and comprehension still need testing.",
         "PRODUCT BOUNDARY: current components are the employee Workbench/shared API, core domain logic and SQL/Blob state/evidence, deterministic controls, bounded assistant paths and current reporting. Neither of the future analytics products belongs in this current-product architecture. Field-specific authoritative sources, permission projections and human review remain distinct; SQL owns programme state, not the truth of every property fact.",
-        "IMPLEMENTATION CREDIT: bounded appointment/commitment mechanics, measure-specific QA, version-dependent invalidation, resident choice and remedy records, plus historical five-path generative and SQL persistence observations. Preserve source, constructed-test and actual-operator evidence classifications. A backlog Done label alone is not delivery or acceptance.",
-        "SOURCES: src/api/README.md; src/core/README.md; src/agents/README.md; docs/capstone/source/diagrams/discovery-journey/text-equivalent.md, What the Product Can Earn Credit For. No private dataset or deployed build was freshly inspected by this presentation task.",
+        "EXECUTION: deterministic predicates scan bounded pages of open cases, capture permitted sources and enqueue a durable proposal. The same workers handle reactive and proactive proposals. SQL deduplication, finite allowance, version-bound release, expiry and current permissions apply. Proactive scans default off; this deck is not evidence that they are running on Azure today. Automatic recommendation generation never sends, books, ranks or advances a case.",
+        "SURFACES: Today's briefing labels Summary by rules versus AI suggestion, not approved. Assistant proposals exposes summary, cited findings, unknowns, source versions, invocation mode, usage and verification/review history. Employee Ask the assistant and the inline case/regulatory panels are read-only conversational surfaces. Selecting a skill does not invoke the proposal operation. Resident Chat requires separate record-use permission and offers human help; it is optional, not works consent.",
+        "SOURCES: src/core/src/zava_forward/core/assistants.py:847-876,1106-1169; src/api/src/zava_forward/api/web/assistants.js:90-110; src/api/README.md, Today's briefing and Employee chat with bounded skills; resident chat/agenda and bounded Azure advisor; docs/capstone/source/review-2026-11-08.md. No private dataset or deployed configuration was read for this review.",
         "TRANSITION: explain the bounded adoption path and the existing file tools, then why rules and assistance have different jobs. The optional future roadmap comes near the close, after the current product story."
       ]
     },
@@ -1544,7 +1609,7 @@
       "number": 16,
       "code": "S15",
       "notes": "S15 | AI where it earns its place: five assistants, one workbench, people decide.\r\nTIMING: 70 s for this slide (all builds together) · 14:40-15:50 on the 23:45 narration clock.\r\n\r\nSAY\r\nWe put AI exactly where it earns its keep, and nowhere else.\r\n\r\nKnown policy and arithmetic stay in rules: eligibility, freshness, consent and release gates are deterministic, fast and repeatable. Where the task is choosing between supplied candidates, a learned decision model scores them and can abstain. Where the job is explaining evidence or drafting a letter, generative AI writes a cited draft.\r\n\r\nThe original brief asked for five agents. We kept all five responsibilities as five assistants on one proposal service: prioritisation, assessment, funding evidence, coordination and quality evidence. The task registry and the accept-or-reject flow are delivered; the five assistants are being built on top.\r\n\r\nEvery suggestion is accepted or rejected with a reason, which means we learn from every decision, and if the AI is switched off the workflow keeps running.\r\n\r\nSOURCES AND CALCULATIONS\r\nAI placement diagram and Decision 1 research (E04); five-assistant runtime and proposal lifecycle (E09); AMA Plan #105 AI task registry and proposal envelope (Done), #106 suggestions, accept or reject with reason, workflow-only fallback (Done), #107 five reactive and proactive assistants on one proposal service (In Progress), #214 home-specific cited chat (In Progress).\r\n\r\nRELATED ANSWERS: B04 = slide 31; B11 = slide 38. Question index = slide 27.\r\n",
-      "title": "Five assists. One workflow. People decide.",
+      "title": "Five responsibilities. Clear autonomy levels.",
       "layout": "native",
       "keep_ids": [
         52590,
@@ -1554,7 +1619,7 @@
       "headers": [
         {
           "id": 52592,
-          "text": "Five assists. One workflow. People decide.",
+          "text": "Five responsibilities. Clear autonomy levels.",
           "size": 30,
           "box": [
             0.6,
@@ -1565,7 +1630,7 @@
         },
         {
           "id": 52595,
-          "text": "Sources: AI placement review. Five bounded assists, not five deployed autonomous managers. Value unproved.",
+          "text": "Brief -> current proposal authority. Full task scope and activation remain separate; B03 / page 30.",
           "size": 12,
           "box": [
             0.6,
@@ -1614,7 +1679,7 @@
             2.426,
             0.64
           ],
-          "text": "Explain sourced\nstock evidence",
+          "text": "L2 -> L2 recommend\nRules + stock facts",
           "size": 15,
           "align": "ctr",
           "color": "50655E"
@@ -1657,7 +1722,7 @@
             2.426,
             0.64
           ],
-          "text": "Prepare a sourced\nsurvey pack",
+          "text": "L3 -> L2 preparation\nSurvey/design checklist",
           "size": 15,
           "align": "ctr",
           "color": "50655E"
@@ -1700,7 +1765,7 @@
             2.426,
             0.64
           ],
-          "text": "Draft funding\nevidence",
+          "text": "L3 -> L2 preparation\nApplication/claim gaps",
           "size": 15,
           "align": "ctr",
           "color": "50655E"
@@ -1743,7 +1808,7 @@
             2.426,
             0.64
           ],
-          "text": "Suggest slots;\ndraft updates",
+          "text": "L3 acts -> L2 options\nNo auto-book or send",
           "size": 15,
           "align": "ctr",
           "color": "50655E"
@@ -1786,7 +1851,7 @@
             2.426,
             0.64
           ],
-          "text": "Assemble evidence\nfor independent review",
+          "text": "L4 flags -> L2 concerns\nNo autonomous QV flag",
           "size": 15,
           "align": "ctr",
           "color": "50655E"
@@ -1845,7 +1910,7 @@
             3.51,
             0.26
           ],
-          "text": "DECISION 1 PROPOSES",
+          "text": "DECISION 1 / HISTORICAL",
           "size": 14,
           "bold": true,
           "color": "173F35"
@@ -1858,7 +1923,7 @@
             3.51,
             0.5
           ],
-          "text": "Select or abstain.\nMust beat a parser.",
+          "text": "Candidate / support scoring\nCurrent rebuild still pending",
           "size": 16
         },
         {
@@ -1893,7 +1958,7 @@
             3.51,
             0.5
           ],
-          "text": "Sourced narrative;\na person checks the meaning.",
+          "text": "Five sourced proposals + chat\nA person checks the meaning.",
           "size": 16
         },
         {
@@ -1928,14 +1993,14 @@
         "src/api/README.md"
       ],
       "revised_notes": [
-        "S15 | Five assists. One workflow. People decide.",
-        "SAY within the retained 70-second slot: We kept the five business responsibilities, not five autonomous managers. The shared API owns permissions, versions and workflow. Rules do arithmetic and ranking; Decision 1 can select a supplied value or abstain; generative AI can prepare a sourced draft. A person still owns consequential decisions. We did not assume every structured field needs AI: a parser is the comparator. A separate worker or another model must earn its place through measured quality, effort, latency or recovery need. Integration has been observed historically; useful human-accepted work and current end-to-end acceptance remain separate.",
-        "RATIONALE: ADR 0002 retains deterministic priorities and shared-API proposal services. Decision 1 is not a workflow engine and provides no provider rationale. Thresholds are application rules, not calibrated accuracy guarantees. Azure hosting preference does not establish a model-quality advantage.",
+        "S15 | Five responsibilities. Clear autonomy levels.",
+        "SAY within the retained 70-second slot: Read each requested level against what we built. The current five helpers recommend at L2. Stock keeps that boundary. Assessment and Funding preserve professional and Finance review, but their outputs are evidence preparation rather than complete L3 assessments or applications. Coordination stops at options instead of L3 booking or sending. Quality stops at concerns for review instead of L4 autonomous flags. Rules do ranking, arithmetic and gates. Decision 1 was exercised historically for supplied EPC candidates and binary evidence support; its current-main rebuild remains pending. Generative models prepare sourced proposals and eligible chat answers. The decision-model rationale is constrained selection, not a proven saving. A clear field may only need a parser.",
+        "RATIONALE: shared-API helpers have no domain-write tools. L3 drafting with approval and L4 raise-only flags are legitimate original boundaries; lack of current full task scope/activation is not evidence that those requested levels were unsafe. Better source quality, complete task contracts, actual capacity/connectors, effective reviewers and evaluated misses/false flags are the unlocks. The matrix describes this source baseline, not a formally standardised autonomy taxonomy or operational acceptance.",
         "CURRENT SOURCE DISTINCTION: the employee chat has one read-only agent with five explicitly selected advisory skills; these are not five independently deployed managers or a new approval channel. Five proposal capabilities and the chat skill set are different surfaces.",
         "QUALITY LIMIT: the current agents guide retains an unsupported-claim-with-valid-citation counterexample as a critical enablement failure. Citation identifiers are not semantic truth. Named human review is not itself proof of effective review.",
-        "NOT SELECTED: AI-owned ranking, consent, safety release, signatures, funding or payment approval. Deferred workers/queues are an operating option only when measured need justifies them. No task or proactive authority is enabled here.",
-        "SOURCES: docs/adrs/0002-pilot-readiness-architecture.md; docs/ideas/typesafe-system-one-agent-fit.md; docs/reference/research/decision-1-behaviour-specification.md; src/agents/README.md; src/api/README.md.",
-        "EVIDENCE: repository synthesis dated 2026-10-29; historical real-inference observations, source controls and missing acceptance are distinct. Value is a hypothesis, not a saving.",
+        "MODEL PLACEMENT: the five current helpers call Ai.evidence through the generative chat-completions adapter. Decision 1 is not wired into that runtime. Historical #58 selected a source-bound EPC candidate; its specification also describes binary support screening. Do not imply both tasks or the full request-review-application route were accepted live. It cannot generate a rationale, sign a form or decide eligibility. Restore the simpler route if held-out quality, complete review effort, latency and full cost do not justify model use.",
+        "SOURCES: docs/case_study_48_original.md; src/core/src/zava_forward/core/assistants.py, REGISTRY/build_request/review; src/core/src/zava_forward/core/ai.py, evidence; docs/ideas/typesafe-system-one-agent-fit.md; docs/reference/research/decision-1-behaviour-specification.md; docs/capstone/source/review-2026-11-08.md. No task or proactive authority is enabled by this presentation.",
+        "EVIDENCE: source review at bcd86707 on 2026-11-08; dated actual-model examples, constructed tests, current activation and missing benefit acceptance are distinct. Quality/Coordination authority decisions remain OD-31/OD-32. Stock ranking policy is still draft and does not yet deliver the brief's complete energy/health/grant cohort policy.",
         "DELIVERY: gesture once across the five responsibilities, then contrast the three tools. Pause on 'a person still owns consequential decisions'. For detail use B04 on page 31, B10 on page 37 and B20 on page 47. Native fixed slide-jump navigation is preserved, not reclassified as dynamic caller return."
       ]
     },
@@ -2698,8 +2763,8 @@
       ],
       "revised_notes": [
         "S21 | Prove the need. Choose the smallest next step.",
-        "SAY in the retained 60-second slot: The next decision is not to add a platform. First verify one connected home journey, including access denial, recovery, meaningful review and assisted service. Then define one recurring portfolio question and a costed, permission-bounded comparison. Start with existing SQL and read-model reporting; Power BI Import is another future option, not something already installed. Use the same permitted data, cohort, history and definitions. Compare reconciliation, preparation and review effort, freshness, source load and full cost. Separately compare existing scoped context, curated SQL context and optional preview ontology context against checked reference answers. A context improvement need not depend on adopting managed analytics. Include stale and forbidden relationships. Keep the simpler route if it wins. Agree owners and a review point; obtain separate authority before paid execution or expansion.",
-        "PRODUCT MANAGEMENT: current-product verification, an analytics comparison and a context-quality experiment are different decisions and evidence sets. Bound planning effort too; propose no dates, staffing, pricing, deployment or platform commitment without actual ownership and authorization. A rejected technology increment does not diminish the engineered product foundation.",
+        "SAY in the retained 60-second slot: The next decision is not to add a platform. First verify one connected home journey and prioritise the original scope gaps: complete review-ready Assessment and Funding drafts, then evaluate preference-bounded Coordination actions and raise-only Quality flags with their owners. Keep resident access optional and test comprehension, assisted recovery and total effort. Those are product questions, not an instruction to switch autonomy on. If portfolio history or richer context then solves a demonstrated need, compare it against existing SQL and scoped context using the same permitted data and full costs. Keep the simpler route if it wins. Agree priorities, owners and a review point before paid execution or expansion.",
+        "PRODUCT MANAGEMENT: retain the original task-specific ladder as the candidate target unless reviewed evidence and an explicit owner decision justify a change. Current preparation is not a permanent veto on L3/L4. Complete-task verification, higher-authority evaluation, analytics and context-quality tests are different decisions. Bound planning effort; invent no dates, staffing, prices or delegations.",
         "COMPARATORS: current workflow without AI versus bounded help on the same permitted tasks; current SQL/read-model reporting versus a justified future Power BI/Fabric path for the same portfolio question; existing scoped agent context versus a curated SQL context and optional ontology context. Compare quality floors, critical misses, abstention, reviewer correction and complete effort/cost, not tokens or graph size alone.",
         "AUTHORITY: no approval transfers to an agent, ontology, semantic model or analytics report. Resident choice, professional acceptance, Finance decisions, data/privacy rights and safety handling remain independently owned. Named roles are proposed review functions, not appointed company postholders. Later narrow exercise approvals do not automatically fund this future option.",
         "SOURCES: docs/reference/research/company/pilot-measurement-challenge.md; docs/reference/research/microsoft-fabric-fit-assessment.md; docs/capstone/source/roadmap-recommendations.md. No paid experiment, current acceptance, benefit result or production decision is claimed.",
@@ -2742,7 +2807,7 @@
       ],
       "revised_notes": [
         "S23 | A strong foundation, with an evidence-led future.",
-        "SAY in the retained 30-second close: We built a Workbench around the home, the evidence and the next accountable action. The journey explains why its controls matter. Keep that foundation, prove the user value, then evaluate the next need: shared history and better context could make it stronger. The proposed future platform is not today's product. Agree owners and the next proof; return with evidence before expanding. People keep the authority.",
+        "SAY in the retained 30-second close: We built a Workbench around the home, the evidence and the next accountable action. Keep that foundation, finish the requested tasks and test the remaining autonomy with its owners. Residents choose their channel; professionals keep their decisions. Then evaluate the next demonstrated need, not a bigger technology inventory. Agree priorities and the next proof. This is an ongoing product, not a claim of completed transformation.",
         "No delivered housing benefit, platform purchase, automatic scale-up or renewed spending approval follows. The current-product demo and optional future roadmap remain distinct before the Q&A."
       ]
     },
@@ -2767,19 +2832,20 @@
         {
           "id": 21070,
           "from": "How do Decision Models cut cost and latency?",
-          "to": "When does Decision 1 beat simpler rules?",
+          "to": "Where do rules, Decision 1 and generation fit?",
           "box": [
             0.6,
             4.91,
             5.8667,
             0.33
           ]
-        }
+        },
+        {"id": 21196, "from": "Why not exactly the five agents requested?", "to": "Which autonomy levels did we meet or change?"}
       ],
       "revised_notes": [
         "QX | Question index: optional depth after the current-product story and future proposal.",
         "Pages 1-22 establish the built product and design reasoning; pages 23-24 propose the separate future portfolio/history/context opportunity. Pages 25-26 demonstrate/debrief the current product and close. Fabric and Power BI are not current components. All 54 page numbers and fixed native action targets are preserved.",
-        "B20/page 47 provides future-platform alternatives. Its retained Topic button still goes to page 15, the current adoption boundary, not the future roadmap. Type page 23 deliberately when discussing the future option. B04/page 31 is conditional model value, not established savings. PDF back-history is viewer-specific.",
+        "B03/page 30 is the exact requested-versus-current autonomy matrix; B06/page 33 explains optional resident access. B20/page 47 provides future-platform alternatives. Its retained Topic button still goes to page 15, the current adoption boundary. B04/page 31 distinguishes rules, historical Decision 1 and current generation, not established savings. PDF back-history is viewer-specific.",
         "Restate the question, answer it directly, then add evidence and its limit. Return to the actual interrupted page deliberately. Optional depth consumes the discussion reserve; silence is not consent or approval. Native/keyboard and human acceptance are separate checks."
       ]
     },
@@ -2800,8 +2866,65 @@
     {
       "number": 30,
       "code": "B03",
-      "title": "Why did you not build exactly the five agents we requested?\r",
-      "layout": "baseline",
+      "title": "Which autonomy levels did we meet or change?",
+      "layout": "native",
+      "keep_ids": [2723, 2735, 2748, 2762, 2777, 2],
+      "headers": [
+        {"id": 2735, "text": "Which autonomy levels did we meet or change?", "size": 30, "box": [0.6, 0.78, 12.13, 0.72]},
+        {"id": 2748, "text": "Sources: original brief; current assistants/ranking; PRD FR-047; BRD OD-31/32. Reviewed 8 Nov 2026.", "size": 12, "box": [0.6, 6.7, 9.7, 0.3]}
+      ],
+      "elements": [
+        {"key": "autonomy-header-fill", "box": [0.6, 1.76, 12.13, 0.47], "fill": "173F35", "geometry": "rect"},
+        {"key": "autonomy-header-agent", "box": [0.72, 1.85, 2.48, 0.3], "text": "BUSINESS AGENT", "size": 15, "bold": true, "color": "FFFFFF"},
+        {"key": "autonomy-header-brief", "box": [3.36, 1.85, 2.02, 0.3], "text": "BRIEF", "size": 15, "bold": true, "color": "FFFFFF"},
+        {"key": "autonomy-header-current", "box": [5.62, 1.85, 2.28, 0.3], "text": "CURRENT", "size": 15, "bold": true, "color": "FFFFFF"},
+        {"key": "autonomy-header-why", "box": [8.16, 1.85, 4.43, 0.3], "text": "WHY / REMAINING WORK", "size": 15, "bold": true, "color": "FFFFFF"},
+        {"key": "autonomy-row-0-fill", "box": [0.6, 2.32, 12.13, 0.7], "fill": "E8F1ED", "geometry": "rect"},
+        {"key": "autonomy-row-0-agent", "box": [0.72, 2.36, 2.48, 0.6], "text": "Stock\nPrioritisation", "size": 18, "bold": true},
+        {"key": "autonomy-row-0-brief", "box": [3.36, 2.36, 2.18, 0.6], "text": "L2\nRecommend", "size": 16},
+        {"key": "autonomy-row-0-current", "box": [5.62, 2.36, 2.28, 0.6], "text": "L2 recommend\nBoundary matches", "size": 18},
+        {"key": "autonomy-row-0-why", "box": [8.16, 2.36, 4.43, 0.6], "text": "Rules + stock facts; full EPC/health/grant\ncohort policy remains partial", "size": 17},
+        {"key": "autonomy-row-1-agent", "box": [0.72, 3.09, 2.48, 0.6], "text": "Assessment", "size": 18, "bold": true},
+        {"key": "autonomy-row-1-brief", "box": [3.36, 3.09, 2.18, 0.6], "text": "L3 draft\nCoordinator approves", "size": 16},
+        {"key": "autonomy-row-1-current", "box": [5.62, 3.09, 2.28, 0.6], "text": "L2 preparation\nScope reduced", "size": 18},
+        {"key": "autonomy-row-1-why", "box": [8.16, 3.09, 4.43, 0.6], "text": "Survey/design checklist, not a full PAS\nassessment; professional review retained", "size": 17},
+        {"key": "autonomy-row-2-fill", "box": [0.6, 3.78, 12.13, 0.7], "fill": "E8F1ED", "geometry": "rect"},
+        {"key": "autonomy-row-2-agent", "box": [0.72, 3.82, 2.48, 0.6], "text": "Grant & Funding", "size": 18, "bold": true},
+        {"key": "autonomy-row-2-brief", "box": [3.36, 3.82, 2.18, 0.6], "text": "L3 draft\nFinance submits", "size": 16},
+        {"key": "autonomy-row-2-current", "box": [5.62, 3.82, 2.28, 0.6], "text": "L2 preparation\nScope reduced", "size": 18},
+        {"key": "autonomy-row-2-why", "box": [8.16, 3.82, 4.43, 0.6], "text": "Application/claim gaps, not a full bid;\nFinance still owns submission", "size": 17},
+        {"key": "autonomy-row-3-agent", "box": [0.72, 4.55, 2.48, 0.6], "text": "Works + residents\nCoordination", "size": 17, "bold": true},
+        {"key": "autonomy-row-3-brief", "box": [3.36, 4.55, 2.18, 0.6], "text": "L3 acts\nWithin preferences", "size": 16},
+        {"key": "autonomy-row-3-current", "box": [5.62, 4.55, 2.28, 0.6], "text": "L2 options\nAuthority reduced", "size": 18},
+        {"key": "autonomy-row-3-why", "box": [8.16, 4.55, 4.43, 0.6], "text": "No auto-book/send. Prove capacity,\npreferences and current confirmation", "size": 17},
+        {"key": "autonomy-row-4-fill", "box": [0.6, 5.24, 12.13, 0.7], "fill": "E8F1ED", "geometry": "rect"},
+        {"key": "autonomy-row-4-agent", "box": [0.72, 5.28, 2.48, 0.6], "text": "Quality Verification", "size": 18, "bold": true},
+        {"key": "autonomy-row-4-brief", "box": [3.36, 5.28, 2.18, 0.6], "text": "L4 autonomous\nFlags only", "size": 16},
+        {"key": "autonomy-row-4-current", "box": [5.62, 5.28, 2.28, 0.6], "text": "L2 concerns\nAuthority reduced", "size": 18},
+        {"key": "autonomy-row-4-why", "box": [8.16, 5.28, 4.43, 0.6], "text": "No autonomous QV domain flag;\nindependent QA and OD-31 trial remain", "size": 17},
+        {"key": "autonomy-boundary", "box": [0.6, 6.09, 12.13, 0.36], "text": "L3 draft/review rights are preserved; full drafts are not delivered. Automatic invocation != decision authority.", "size": 15, "bold": true, "color": "885500"}
+      ],
+      "sources": [
+        "docs/case_study_48_original.md",
+        "src/core/src/zava_forward/core/assistants.py",
+        "src/core/src/zava_forward/core/ranking.py",
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+        "docs/brds/agentic-retrofit-programme-brd.md",
+        "docs/capstone/source/review-2026-11-08.md"
+      ],
+      "revised_notes": [
+        "B03 | Which autonomy levels did we meet or change?",
+        "ANSWER FIRST: the brief already specified bounded L2-L4 authority and human/resident decisions. We did not reject a request for unrestricted agents. The current five registered helpers all produce L2 evidence recommendations; their names do not establish complete delivery of the original jobs.",
+        "STOCK: L2 recommendation authority matches. The rule-ranked work queue and stock-fact/reconciliation proposal are source-implemented. The current draft policy uses safety, support, waiting time and stage, not the full requested energy/health/grant prioritisation policy. No investment decision is automated.",
+        "ASSESSMENT: requested L3 full PAS assessment drafting with coordinator approval. Current assessment-preparation is an L2 survey/design evidence checklist. Human review aligns with the requested boundary, but complete assessment drafting and professional acceptance are not delivered by this helper.",
+        "FUNDING: requested L3 applications/reporting with Finance submission. Current funding-evidence is L2 application/claim gap preparation. Finance authority is preserved; the helper neither assembles a complete accepted bid nor calculates eligibility, awards funding or submits. Deterministic finance records are a separate capability, not proof the requested agent scope is complete.",
+        "COORDINATION: requested L3 actions within resident preferences. Current works-resident-coordination offers L2 updates/capacity options; no automatic sending, booking, instruction or consent capture. Actual supplier capacity/connectors, safe contact, preferences and current confirmation precede any extension. OD-32 keeps the later L3 booking decision open.",
+        "QUALITY: requested L4 autonomous flags, not autonomous quality acceptance. Current quality-evidence provides L2 discrepancies for review. A proactive scan automatically preparing a concern is not an autonomous domain flag. Deterministic sensor/quality review signals are separate and cannot be relabelled as a delivered L4 model agent. OD-31 compares checklist-only, L4 flags and recommend-level reading on seeded/past packs before authority changes.",
+        "WHY THE ORIGINAL LADDER MAKES SENSE: ranking recommends because investment policy is accountable; assessment/funding drafts need professional or Finance acceptance; coordination may perform routine actions inside verified preferences and delegations; quality may flag potential issues automatically because flagging does not certify, clear or close work. These are product-design interpretations of the brief, not new legal requirements. The current preparation boundary is a staged implementation choice, not a permanent rejection of L3/L4.",
+        "WHY THESE LEVELS: reusable state and policy are rules; model output has no controlled-domain write tools. Improve source validity, complete the task, prove reviewer effectiveness and measure critical misses/false-flag workload before increasing authority. This is a reversible proposal-first implementation choice, not a conclusion that the original L3/L4 guardrails were wrong. Authority, task breadth, trigger mode and current activation are separate.",
+        "EVIDENCE: original brief table; current REGISTRY, capture, scan and review in core/assistants.py; PRD FR-047; BRD OD-31/32; review-2026-11-08.md. Five real generative paths on 14 October prove bounded invocation/durability, not complete original tasks, continuous autonomy or benefit.",
+        "NAVIGATION: B03/page 30; index page 27; fixed topic S08/page 9. Retain all native targets and deliberately return to the actual interrupted page."
+      ],
       "notes": "B03 | Why did you not build exactly the five agents we requested?\r\nQuestion-led appendix answer | Audience: CEO / sponsor / CTO | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nWe kept stock prioritisation, assessment preparation, funding evidence, coordination and quality evidence. We changed the mechanism where the original autonomy could imply authority that belongs to residents or accountable professionals. Known policy remains deterministic, models prepare unreviewed proposals and people make separate controlled decisions. One API hosts the current assistants; independent queue workers remain deferred. Historical five-path real inference is evidence of bounded invocation, not standing autonomy.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Five requested responsibilities are preserved\r\n- Autonomy is bounded by decision rights and risk\r\n- Five assistants != five independent runtimes\r\n\r\nVISUAL\r\nFive-row mapping: original responsibility -> bounded help -> human decision owner. Funding -> Finance submits; quality -> independent professional accepts; coordination -> resident agrees; stock -> approved policy/human review; assessment -> qualified reviewer.\r\n\r\nRETURN\r\nReturn to S08 (slide 9), what we challenged. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE01 | docs/case_study_48_original.md | Business Challenge; Agentic Architecture Brief; Expected Outcomes; Business Case\r\n   Classification: Original case brief, including unvalidated outcome ambitions\r\n   Supports: 60,000-home scale and five requested responsibilities/autonomy levels\r\n   Limit: Original regulatory wording and GBP 40m/doubling claims are not current legal findings or observed results.\r\nE03 | docs/reference/research/company/agent-request-challenge.md | Summary and five-agent request challenge; see ai-cost-evidence.md for precise line citations\r\n   Classification: Consultative design analysis\r\n   Supports: Retain five business capabilities while challenging autonomy, service proliferation and agent-first design\r\n   Limit: Not a customer approval or a measured comparison of architecture options.\r\nE06 | docs/architecture/README.md; docs/architecture/assets/README.md; infra/main.bicep | Executive and Technical Architecture; interaction contracts; Icon Source and Terms; modelDeployments and profile parameters\r\n   Classification: Source-based architecture and dated historical handover\r\n   Supports: Single-API assistants, SQL/Blob, Entra, managed identities, model contracts, configured operations and official icons\r\n   Limit: Historical source/deployment evidence, not fresh Azure inventory. GlobalStandard does not establish UK-only processing.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Five assistants are not five autonomous managers or five active workers.\r\n\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
     },
     {
@@ -2935,7 +3058,7 @@
             3.43,
             0.9
           ],
-          "text": "Supplied candidates\nBinary support screening\nSelect or abstain",
+          "text": "Supplied candidates\nBinary support / abstain\n#58 only; rebuild pending",
           "size": 17
         },
         {
@@ -3056,8 +3179,9 @@
       ],
       "revised_notes": [
         "B04 | Decision 1 must beat the simpler baseline.",
-        "SHORT ANSWER: It is a conditional closed-question scoring tool, not a proven cost or latency improvement. Use deterministic parsing for a clear labelled EPC field unless a like-for-like comparison demonstrates an incremental benefit.",
-        "CHOICE: Decision 1 selects one supplied candidate or abstains; the evidence-support task is binary. Generative inference produces the cited narrative. Rules retain calculations, priorities, source freshness and approval gates. Neither model receives workflow credentials or approval authority.",
+        "SHORT ANSWER: use rules for known arithmetic, ranking and exact labelled fields; a decision model for constrained semantic selection/support; generation for permitted narrative and follow-up answers. This is task-fit reasoning, not a proven cost or latency advantage.",
+        "ACTUAL PLACEMENT: historical unmerged PR #58 recorded a real source-bound EPC candidate selection by Decision 1 and cited GPT-4.1-mini generation. The retained behaviour specification describes candidate selection and binary support screening. The current main five-assistant runtime uses generative Ai.evidence, not Decision 1. Its complete scoring request-review-application rebuild/adoption remains pending. Do not present historical feasibility as current deployed model coverage.",
+        "CHOICE: Decision 1 scores supplied candidates or abstains; the application checks the closed set and source versions. It cannot generate a rationale or a full letter. Generation produces source-linked proposals and eligible employee/resident answers, with rights and output checks retained. Rules own calculation and state. Neither model approves, submits, records works consent or accepts quality.",
         "DISCARDED ASSUMPTION: one general-purpose agent for every task. A model call is not required for deterministic arithmetic or an exact labelled field. Decision 1 does not generate an explanation; the application must not invent a provider rationale.",
         "EVALUATE: the same held-out cases across manual/template, parser/rules, Decision/templates, generation and hybrid arms where relevant. Include errors, abstentions, reviewer checks, corrections, re-review, latency, operating costs and failure/manual handling. Binary support results cannot establish three-class macro-F1.",
         "LIMITS: the historical probability/margin thresholds were not calibrated on held-out human-labelled data. Actual source-bound calls show feasibility, not accuracy or human value. The current critical unsupported-claim-with-valid-citation finding stays open; a valid citation ID does not prove a supported claim.",
@@ -3077,14 +3201,26 @@
       "number": 33,
       "code": "B06",
       "title": "How do residents retain choice, especially without digital access?\r",
-      "layout": "baseline",
+      "layout": "text",
+      "replacements": [
+        {"id": 22630, "from": "UNDER ASSESSMENT", "to": "SYNTHETIC OPTION"},
+        {"id": 22642, "from": "Optional portal", "to": "Website + chat"},
+        {"id": 22684, "from": "Preferred and safe communication, support needs and representative limits must be explicit", "to": "Your case: status, documents and sensors. Ask a question or use a person. Login is not consent."},
+        {"id": 22774, "from": "Optional portal; assisted routes stay", "to": "Optional website + chat; assisted routes stay"},
+        {"id": 22840, "from": "DESIGN BOUNDARY · HUMAN VALIDATION NEXT", "to": "SOURCE BUILT | AI OFF | HUMAN VALIDATION NEXT"},
+        {"id": 22864, "from": "Direct resident research, approved communications and privacy decisions remain necessary", "to": "AI tariff expired 1 Nov. Synthetic callbacks are not real bookings. Resident validation remains."}
+      ],
       "notes": "B06 | How do residents retain choice, especially without digital access?\r\nQuestion-led appendix answer | Audience: CEO / resident-services leader | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe current workbench is staff-facing; an optional resident portal is under assessment in issue #441. The hypothesis is that self-service status access could reduce avoidable calls and long interruptions of staff working time, without shifting work onto residents. Test staff interruption time, total handling/review effort, resident effort, access and comprehension; no saving is measured. Owner-confirmed Option B reuses existing case/API authority: portal/workflow first, any bounded resident-answer task separately gated. Per-message human review remains normative and routine automation is off. Phone, email, letters, visits and accessible assisted routes remain available without detriment. Preferred/safe contact and task-limited representative rights must be explicit. Sent does not mean received; silence, portal use and access never mean works consent. The issue remains open with a Research-stage integration blocker and no published PR at the retrieved snapshot. Direct resident research, privacy and accessibility acceptance remain separate gates.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Optional portal under assessment; assisted routes stay. Issue #441 retrieved 2026-10-23: https://github.com/jmservera/ama/issues/441 and latest comment https://github.com/jmservera/ama/issues/441#issuecomment-6374724922. The owner reports unpublished local work; this presentation does not inspect or accept it.\r\n- Offer != agreement; silence != consent\r\n- Representative authority is task-limited\r\n\r\nVISUAL\r\nResident at the centre, digital and assisted routes of equal visual weight. No invented quote or photograph presented as a real resident.\r\n\r\nRETURN\r\nReturn to S12 (slide 13), one home, end to end. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE02 | docs/case_study_48_addendum.md | Purpose and Status; Owner-Approved Exercise Baseline; Numerical Targets and Attribution; Subsequent Application Exercise Builds\r\n   Classification: Declared exercise assumptions, subsequent owner directions and proposals\r\n   Supports: One-home story, human boundaries, GBP fixture arithmetic, real AI/SQL/Azure requirement and value hypotheses\r\n   Limit: Not company commitments, formal governance approval or operational outcomes.\r\nE08 | docs/adrs/0003-journey-derived-capabilities-runtime-fit.md; docs/reference/research/ux/customer-journeys/customer-journey-atlas.md | Context and Decisions 1-5; journey-derived authority, offer/commitment and independent closure\r\n   Classification: Owner-accepted scoped ADR direction and role-instrument desk research\r\n   Supports: Separate offers, resident decisions, representative authority, remedies and controlled progression\r\n   Limit: No direct resident/staff validation, professional appointment or lawful-processing acceptance.\r\nE12 | docs/adrs/0003-journey-derived-capabilities-runtime-fit.md; docs/case_study_48_addendum.md; docs/reference/regulatory/README.md | ADR Decision 6 and Implementation Status; Responsible AI release boundary; source authority and human acceptance\r\n   Classification: Accepted Basic IoT Hub exercise direction; partial engineering; separate human/legal gates\r\n   Supports: Offline consumer is not live Hub integration; no diagnosis or suppressed hazard route; human/legal/privacy acceptance remains distinct\r\n   Limit: No current legal determination, live telemetry, qualified assessment, fairness or WCAG-conformance claim.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- The home is fictional and explicitly labelled as such; no resident, testimonial or approval is invented.\r\n- No legal-currentness, WCAG-conformance, production-readiness or completed human-validation claim follows from this package.\r\n\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history.",
       "revised_notes": [
         "B06 | How do residents retain choice, especially without digital access?",
-        "ANSWER FIRST: assisted phone, letter and visit routes remain; an optional digital channel never creates works consent or removes human help. A household can ask, defer, decline or withdraw for a specific scope. Representative permission is task-limited and checked separately from login, communication access and works choice.",
-        "CURRENT SOURCE STATUS: later bounded resident showcase, advisory-answer and callback source exists, as described in the current API and resident-assistant guides. That engineering does not establish operational enrolment, appointments, meaningful consent, direct comprehension or live acceptance. The old 23 October portal-under-assessment and unpublished-local-work account is historical, not the current source inventory. The displayed under-assessment status still applies to operational service/acceptance, not absence of all source work.",
+        "ANSWER FIRST: we added an optional resident website and advisory assistant because the journey hypotheses exposed repeat status calls, uncertainty and lost aftercare concerns. The original requested a resident channel with consent management, not a mandatory website or unrestricted resident agent. This is a convenient extra route, not a requirement residents must use.",
+        "WHAT EXISTS: the source-implemented synthetic site shows the authenticated own-case update, requested-document facts and synthetic temperature/humidity gauges/history with text alternatives. Residents can ask about status, documents, forms or in-scope concerns. The host uses rules for protected/unsupported topics and human safety routes. Eligible typed questions can use bounded generated answers; document answers preserve host-rendered facts and may select approved guidance. This is L2-equivalent advisory help, no case-changing authority or persistent model memory.",
+        "RESIDENT CONTROL: sign-in, permission to use a record in chat, representative grants and measure-specific works consent are distinct. Phone, email, letters, visits and assisted support remain without detriment. Chat does not upload, submit, consent, diagnose, send a report or promise a visit. The wider portal/representative/recovery service remains separately proposed and unaccepted.",
+        "CALLBACK EXAMPLE: an appointment question automatically searches a separately configured synthetic agenda and shows options; no slot is held. The resident must select a specific slot and explicitly confirm booking through the deterministic form. These are fictional callbacks; nobody will call. No operational calendar, contractor booking or L3 coordination authority follows.",
+        "ACTIVATION AT THIS REVIEW: the regional gpt-4.1-mini advisor is default off; its retained inference/tariff expiry is 2026-11-01T00:00:00Z. Later funding or resident-site access horizons do not renew model authority. Source existence and dated live site observations do not establish current paid inference, answer quality or end-to-end resident acceptance.",
         "DESIGN AND TEST: preserve safe contact, language/format support, task-specific representative grants, explicit supplied scope choices and owned exceptions. No silence, booking, login or normal sensor value establishes consent or safety. Test recovery, cross-case denial, representative revocation, assisted continuity and actual resident/staff effort; roles and capabilities do not prove availability or human effectiveness.",
-        "SOURCES: docs/reference/research/ux/customer-journeys/residents.md; docs/architecture/resident-assistant-prototype.md; src/api/README.md; addendum optional resident proposal. The main resident journey is a DT Coach synthesis of pain/gain hypotheses, not direct testimony or a completed user study.",
+        "WHY / TEST: optional self-service may improve clarity and reduce interruptions; it may also move effort onto residents or exclude them. Compare comprehension, total resident/staff handling effort, safe recovery and assisted continuity. No measured call reduction, satisfaction, energy-bill saving or full accessibility acceptance is claimed.",
+        "SOURCES: docs/capstone/source/review-2026-11-08.md; resident journey hypotheses; docs/architecture/resident-assistant-prototype.md; src/api/README.md:1361-1518,1580-1658; resident_demo/chat.py, aoai.py and agenda.py. The DT map is a source-linked hypothesis, not testimony or approval.",
         "NAVIGATION: B06/page 33; fixed topic S12/page 13 now shows the editable resident journey. Native actions remain fixed; return to the actual interrupted page deliberately."
       ]
     },
@@ -3793,7 +3929,28 @@
       "number": 41,
       "code": "B14",
       "title": "Is this actually agentic if so much is deterministic?\r",
-      "layout": "baseline",
+      "layout": "text",
+      "replacements": [
+        {"id": 23218, "from": "Policy and state", "to": "Controlled workflow"},
+        {"id": 23225, "from": "Deterministic orchestration protects controlled state", "to": "Rules rank, route and protect state."},
+        {"id": 23225, "from": "The application determines eligibility and protects state.", "to": "A model cannot advance a case."},
+        {"id": 23236, "from": "Reasoning and preparation", "to": "Automatic preparation"},
+        {"id": 23243, "from": "AI PREPARES", "to": "APPROVED SCANS / L2"},
+        {"id": 23251, "from": "Reasoning and preparation are bounded capabilities", "to": "Gap scan -> proposal -> human review."},
+        {"id": 23251, "from": "Models reason over permitted context and prepare drafts or flags.", "to": "One model call per attempt; no tools."},
+        {"id": 23293, "from": "People retain decisions requiring consent, professional judgement or delegation.", "to": "Resident, professional and Finance rights stay.\nChat answers; decisions remain separate."},
+        {"id": 23335, "from": "Autonomy is task-specific, not a marketing label", "to": "Automatic invocation != decision authority."},
+        {"id": 23335, "from": "Future autonomous actions require an explicit, evaluated task contract and authorised boundary.", "to": "L3 actions and L4 flags need separate evaluated activation."}
+      ],
+      "revised_notes": [
+        "B14 | Is this actually agentic if so much is deterministic?",
+        "ANSWER FIRST: bounded model interpretation and service-initiated preparation exist in the design, but automatic invocation does not increase the proposal's L2 decision authority. Do not call every rules loop an agent or claim standing autonomous operation.",
+        "STATE GRAPH: a permitted request or deterministic gap predicate captures a versioned source snapshot and enqueues a durable task. SQL owns deduplication, reservation, pending/leased/ready/failed states and fenced completion. One model call per attempt prepares a typed proposal; bounded retries reuse the same finite allowance. Source/permission/release checks and independent human verification precede draft acceptance. No model tool advances the case.",
+        "PROACTIVE VS REACTIVE: Assistants.scan runs without a staff question only when proactive opt-in, valid finite operator authority and task release admit it. Missing stock/evidence, changed versions, overdue updates or coordination gaps trigger the registered helper. Results appear in the same case cards and Assistant proposals queue. Default-off source and historical five reactive real calls are not proof of live proactive operation today.",
+        "FOLLOW-UP: employee chat is one read-only conversational agent with five explicit skills; each question rechecks role/case context. Regulatory chat retrieves/cites and routes doubt within synthetic authority. Resident chat is separate optional own-record advisory help. These are channels/tasks, not additional programme managers or approval delegates.",
+        "HONEST A7 LIMIT: this is a deliberately bounded task state graph, not an open-ended planner, tool-using agent swarm or demonstrated self-improvement loop. Human feedback is recorded; autonomous retraining/reflection is not delivered. Real service-initiated behaviour and stronger L3/L4 authority must be shown under approved evaluated contracts before claiming them.",
+        "SOURCES: src/core/src/zava_forward/core/assistants.py, REGISTRY/model_bounds/scan/start/review; src/api/README.md, Employee chat with bounded skills; PRD Bounded-Agent Orchestration Pattern; docs/capstone/source/review-2026-11-08.md. Native fixed topic S08/page 9 and index page 27 are unchanged."
+      ],
       "notes": "B14 | Is this actually agentic if so much is deterministic?\r\nQuestion-led appendix answer | Audience: Innovation leader / CTO | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe architecture deliberately assigns different jobs to rules, models and humans. Models reason over permitted context and prepare drafts or flags; the application determines eligibility and protects state; people retain decisions requiring consent, professional judgement or delegation. That is a bounded AI-assisted operating model. We should not inflate the current autonomy to satisfy the word agentic. Future autonomous actions require an explicit, evaluated task contract and authorised boundary.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Reasoning and preparation are bounded capabilities\r\n- Deterministic orchestration protects controlled state\r\n- Autonomy is task-specific, not a marketing label\r\n\r\nVISUAL\r\nThree ownership bands: policy/state; reasoning/preparation; accountable decision.\r\n\r\nRETURN\r\nReturn to S08 (slide 9), what we challenged. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE03 | docs/reference/research/company/agent-request-challenge.md | Summary and five-agent request challenge; see ai-cost-evidence.md for precise line citations\r\n   Classification: Consultative design analysis\r\n   Supports: Retain five business capabilities while challenging autonomy, service proliferation and agent-first design\r\n   Limit: Not a customer approval or a measured comparison of architecture options.\r\nE06 | docs/architecture/README.md; docs/architecture/assets/README.md; infra/main.bicep | Executive and Technical Architecture; interaction contracts; Icon Source and Terms; modelDeployments and profile parameters\r\n   Classification: Source-based architecture and dated historical handover\r\n   Supports: Single-API assistants, SQL/Blob, Entra, managed identities, model contracts, configured operations and official icons\r\n   Limit: Historical source/deployment evidence, not fresh Azure inventory. GlobalStandard does not establish UK-only processing.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Five assistants are not five autonomous managers or five active workers.\r\n\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
     },
     {
@@ -4464,6 +4621,6 @@
       "notes": "B27 | What stops chat and agent sprawl multiplying hidden calls?\r\nQuestion-led appendix answer | Audience: CTO / CIO / panel | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe assistant design does not run an open-ended autonomous agent conversation. However, chat, memory, retries and additional model paths can multiply calls, so a finite authority allowance alone is not enough to describe cost per user request. The merged Tokenomics requirements call for complete per-call metering, request attribution, task/period monetary budgets and tested call/depth bounds with a workflow-only stop. AC-109 is the acceptance test that proves it in the pilot. No API gateway, semantic cache or hard currency stop should be drawn as implemented to satisfy this answer.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Deterministic state graph, not an open-ended agent loop\r\n- Existing bounded authority expires and exhausts\r\n- Per-request call/depth limits are proposed, Not run\r\n\r\nVISUAL\r\nOne user request branching into a bounded call tree, all proposed request bounds marked dashed. Avoid presenting draft Big-T notation as an industry standard.\r\n\r\nRETURN\r\nReturn to S18 (slide 21), AI economics. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE19 | docs/reference/resources/ai-tokenomics.md; docs/capstone/pitch/tokenomics-pitch-brief.md | What Zava Forward Can Already Show; Gaps; Executive Questions; Numbers to Bring\r\n   Classification: PR #433 merged 2026-10-23 baseline: public draft framing, repository observations and proposed requirements\r\n   Supports: 6,884 tokens/five runs; partial metering; finite authority not money cap; accepted-proposal quality-floor unit; TCA and keep/revert comparison\r\n   Limit: No dated price or human-accepted denominator, no cheaper/faster/payback claim. Public Tokenomics framing is draft, not an industry standard. No internal Microsoft material is included.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Finite call/token allowances and expiry are not a currency cap. Complete metering, monetary/task/period budgets and request/depth limits are proposed requirements, not observed controls.\r\n- Public Tokenomics community framing is draft - not an industry or Microsoft standard. No internal Microsoft material is used.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
     }
   ],
-  "content_date": "2026-10-30",
+  "content_date": "2026-11-08",
   "visual_revision": "2026-10-30 / restored illustrated timeline, resident touchpoints and testable value canvas"
 }

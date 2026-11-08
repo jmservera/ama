@@ -1,7 +1,7 @@
 ---
 title: Capstone Authoring Source
 description: Complete native-template and JSON editing contract, retained media and technology-decision evidence
-ms.date: 2026-10-31
+ms.date: 2026-11-08
 ms.topic: how-to
 ---
 
@@ -23,6 +23,20 @@ The baseline hash is pinned in the manifest. The delivered PPTX is an output,
 never an implicit fallback input. A complete rebuild needs the native baseline,
 JSON, catalog, all referenced media and both scripts above. The old 18-slide
 authoring inventory does not recreate the 54-slide deck.
+
+## Current Autonomy and Product Story
+
+The [8 November review](./review-2026-11-08.md) records the exact requested
+versus current autonomy, partial original task breadth, reactive/proactive
+proposal surfaces, employee/resident follow-up channels and design-thinking
+decisions. Decision 1 is historical #58 feasibility and a pending current
+scoring rebuild, not the current five-helper generative engine. The optional
+resident site is an added channel, not an original mandatory-portal request.
+
+The review includes the fully retrieved dated Project 7 snapshot and a
+refresh recipe. Update changing figures and source/live evidence before final
+delivery; board Done includes not-planned work. Regenerate the deck and pitch
+from the manifest, never by hand-editing the generated notes.
 
 ## AI Consumption Evidence (#432)
 
@@ -168,7 +182,7 @@ Run="$(mktemp -d /tmp/ama-capstone-XXXXXX)"
 python3 -m venv "$Run/venv"
 "$Run/venv/bin/python" -m pip install -r tools/capstone/requirements.txt
 pwsh -NoLogo -NoProfile -File tools/capstone/Invoke-Capstone.ps1 -Action Build -RepoRoot "$PWD" -OutputDir "$Run/build"
-"$Run/venv/bin/python" tools/capstone/render_preview.py --input "$Run/build/zava-forward-cowork-v2-draft.pptx" --output-dir "$Run/preview"
+"$Run/venv/bin/python" -m tools.capstone.render_preview --input "$Run/build/zava-forward-cowork-v2-draft.pptx" --output-dir "$Run/preview"
 ```
 
 The preview writes the matching PDF, 54 slide PNGs and a compact report with

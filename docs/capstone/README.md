@@ -1,7 +1,7 @@
 ---
 title: Capstone Working Set
 description: Current presentation, reproducible sources, pitch, demo and rubric inputs
-ms.date: 2026-10-30
+ms.date: 2026-11-08
 ms.topic: how-to
 ---
 
@@ -20,6 +20,7 @@ choice between the older executive and Cowork routes.
 | Understand the discovery and journey | [DT Coach method, pain/gain and decision trace](./source/diagrams/discovery-journey/text-equivalent.md), [editable Excalidraw](./source/diagrams/discovery-journey/resident-journey.excalidraw) and [PNG](./source/diagrams/discovery-journey/resident-journey.png); main pages 8 and 13 |
 | Understand what comes next | [Future roadmap and proposal crosswalk](./source/roadmap-recommendations.md); future Fabric/Power BI and agent-context proposal only near the close on pages 23-24 |
 | Understand technology choices | [Decision register](./source/README.md#technology-decisions); main page 16 and deeper appendix comparisons |
+| Explain brief fidelity and the evolving product | [8 November autonomy/story review](./source/review-2026-11-08.md): exact requested/current levels, three help modes, historical Decision 1, optional resident access, design-thinking decisions and refreshable progress snapshot |
 | Inspect findings and checks | [30 October illustrated visual refresh](./source/review-2026-10-30.md#illustrated-visual-refresh-on-linux), earlier roadmap findings on the same page and preserved [29 October review](./source/review-2026-10-29.md) |
 | Recover previous work | [History and restore map](./history/README.md); original findings and authoring sources are retained |
 | Continue thought leadership | [Existing paper package](./thought-leadership/everything-but-the-software/README.md), unchanged by this reorganization |
@@ -27,6 +28,13 @@ choice between the older executive and Cowork routes.
 The PPTX and PDF are drafts for owner review. Prepared notes, native rendering
 and local extraction do not establish rehearsal, human acceptance, measured
 benefits or a fresh rubric score.
+
+The revised story compares the case's explicit L2-L4 levels with the current
+proposal-first implementation. Human/resident rights were already in the
+brief; full task breadth, automatic invocation and higher authority are
+separate claims. Pages 7/10 use the dated 8 November activity snapshot,
+not final project results. Refresh it and the live-demo evidence before the
+final presentation.
 
 ## What To Keep
 
