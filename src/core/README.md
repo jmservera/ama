@@ -6,22 +6,40 @@ ms.date: 2026-10-31
 ms.topic: reference
 ---
 
-## Retained indoor readings for employees and Quality evidence (Refs #1288)
+## Retained sensor readings for employees and Quality evidence (Refs #1288, #107)
 
-`sensor_view` is a read-only, bounded view of the retained synthetic
-`sensor_reading` rows for one home. `Assistants.sensors` (API
-`GET /api/cases/{id}/sensors`) shows readings, units (degC, %RH), UTC times,
-freshness and before/after context to the same roles that may use the
-`quality-evidence` assistant. `capture_source` (6 hour sealed UTC window, at most
-12 window readings and 4 before and 4 after) also feeds the quality-evidence
-snapshot, citations (`sensor:{reading_id}`) and the `review_flag`, so the
-employee and the model see the same IDs and values. Nothing generates values,
-reads weather or queries unbounded history. Consent withheld, no readings or an
-unreadable store show an explicit state and the manual route. The before/after
-reference is the first quality evidence record time, not an install date. The
-`review_flag` exists only for a returned, model-attributed output; it is an
-unapproved request for human review, not acceptance, payment, defect closure,
-consent, hazard diagnosis or a ranking change.
+`sensor_view` is a read-only, bounded view of retained synthetic `sensor_reading`
+rows for one home (`home_id`, indexed with `observed_at`). `Assistants.sensors`
+(API `GET /api/cases/{id}/sensors`) shows values, units (degC, %RH), UTC times,
+freshness and provenance to Quality Inspector and Retrofit Programme Manager
+only; the Programme Support Officer keeps the ordinary quality panel and manual
+route. `capture_source` holds the newest 12 readings (so the displayed latest is
+always inside the capture) plus at most 4 before and 4 after the first quality
+evidence record. It reads no clock; the same capture feeds the snapshot, the UI
+and the citations `sensor:{sensor_id}:{reading_id}` (the retained composite key).
+Only the staleness and trigger signature is coarse (six-hour bucket of the latest
+reading), so a new reading in the same bucket is captured but does not stale or
+re-enqueue a proposal, and empty, withheld or unavailable captures stay stable.
+
+Provenance is classified from the retained schema and scenario:
+`live-sim-reading*` with scenario `live-simulator` is synthetic and
+weather-derived; `reading-v1` and `sensor-fault-input-v1` are synthetic modelled
+indoor; anything else is synthetic and unclassified. None is calibrated. No
+installation date or marker exists, so pre/post-retrofit context is stated as
+unavailable; the first quality evidence record time is a separately named
+`quality_record_anchor`, not a retrofit effect. Consent is looked up by primary
+key for the captured sensors only. When current consent is withdrawn, values,
+citations, derived output and flags are withheld from the detail, list and
+export projections (the stored record is kept).
+
+`review_flag` names the state of a returned model output. Only a proactive,
+current, returned finding that cites a captured reading is an automatic L4
+review flag (`review-suggested`); manual, uncited, rejected, reviewed,
+not-current and withheld states are shown as such. A flag is an unapproved
+request for human review, with no recorded recipient or delivery, and is not
+acceptance, payment, defect closure, consent, hazard diagnosis or a ranking
+change. The quality-evidence rule hash changed, so activation needs a matching
+release.
 
 ## Ranking snapshot publication (Refs #79)
 

@@ -9,6 +9,23 @@ const assistantNames = {
 };
 const proposalReviewStates = new Map();
 
+const FLAG_TITLES = { "review-suggested": "Review suggested by the model (automatic review flag, level L4)", "manual-proposal": "Requested by a person: not an automatic flag",
+  "uncited": "No retained reading cited: not a flag", "rejected": "Rejected by a person: not a flag", "reviewed": "Reviewed by a person: not a flag",
+  "not-current": "No longer current: not a flag", "withheld": "Withheld: monitoring consent is not granted now" };
+
+function reviewFlagBlock(f) {
+  const model = f.model ? `${f.model.provider || "unknown"} ${f.model.deployment || ""} ${f.model.model || ""}`.trim() : "not shown";
+  const kids = [h("h4", {}, FLAG_TITLES[f.status] || "Not a flag")];
+  if (f.status !== "withheld") {
+    kids.push(h("p", {}, `Model: ${model}. Raised ${f.source_time || "at an unknown time"} (${f.trigger}). Not approved.`),
+      h("p", {}, `Cited IDs: ${(f.cited_ids || []).join(", ") || "none"}. Readings cited: ${(f.readings || []).map((r) => `sensor ${r.sensor_id}, reading ${r.reading_id}`).join("; ") || "none"}.`),
+      h("p", {}, `Reading source: ${(f.provenance_classes || []).join(", ") || "none"}. Not calibrated.`),
+      h("p", { class: "muted" }, f.delivery));
+  }
+  kids.push(h("p", { class: "muted" }, f.effect));
+  return h("div", { class: "card", role: "group", "aria-label": "Review flag status" }, ...kids);
+}
+
 function assistantProposal(p, reload, recoverable = new Map(), session = caseSession) {
   const reviewKey = `${p.id}:${p.revision}`;
   const previous = proposalReviewStates.get(reviewKey);
@@ -97,10 +114,7 @@ function assistantProposal(p, reload, recoverable = new Map(), session = caseSes
     h("p", { class: "muted" }, "Confidence: not provided. Confidence is not accuracy."),
     h("p", {}, "Accepting or editing this proposal records a draft review. This is not an approval, consent or safety decision."),
     h("p", {}, `Requested using: ${p.provenance.filter((e) => e.kind === "invocation").map((e) => e.mode).join(", ")}. Attempts: ${p.attempts}.`),
-    p.review_flag && h("div", { class: "card", role: "group", "aria-label": "Review requested" }, h("h4", {}, "Review requested (autonomous flag, level L4)"),
-      h("p", {}, `A returned model output asks a named person to review. Model: ${p.review_flag.model.provider || "unknown"} ${p.review_flag.model.deployment || ""} ${p.review_flag.model.model || ""}. Raised ${p.review_flag.source_time || "at an unknown time"} (${p.review_flag.trigger}). Not approved.`),
-      h("p", {}, `Cited IDs: ${p.review_flag.cited_ids.join(", ") || "none"}. Indoor readings cited: ${p.review_flag.reading_ids.join(", ") || "none"}.`),
-      h("p", { class: "muted" }, p.review_flag.effect)),
+    p.review_flag && reviewFlagBlock(p.review_flag),
     p.output && h("div", {}, h("p", {}, p.output.summary),
       h("ul", {}, p.output.findings.map((f) => h("li", {}, `${f.text}. Sources: ${f.citations.join(", ") || "Not provided"}`))),
       h("h4", {}, "Unknowns"), h("ul", {}, p.output.unknowns.map((u) => h("li", {}, u)))),

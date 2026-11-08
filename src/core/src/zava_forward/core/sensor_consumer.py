@@ -308,6 +308,17 @@ class SensorConsumer:
                 db.execute(f"IF OBJECT_ID(N'{name}', N'U') IS NULL {ddl}")
             else:
                 db.execute(ddl.replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", 1))
+        if self.mssql:
+            db.execute(
+                "IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name='ix_sensor_reading_home_time'"
+                " AND object_id=OBJECT_ID(N'sensor_reading')) CREATE INDEX"
+                " ix_sensor_reading_home_time ON sensor_reading (home_id, observed_at)"
+            )
+        else:
+            db.execute(
+                "CREATE INDEX IF NOT EXISTS ix_sensor_reading_home_time"
+                " ON sensor_reading (home_id, observed_at)"
+            )
         self._check_reading_schema(db)
 
     _collation = "COLLATE Latin1_General_100_BIN2"

@@ -53,7 +53,7 @@ RULES = {
     "assessment-preparation": "Missing Survey/Design metadata/content hash or technical.design_version; relevant permitted source signature changes.",
     "funding-evidence": "Missing measures, funding.route/reference, grants or budget amount; incomplete supplied invoice ref/lines/milestone inputs; claim-phase grant lacks sourced history or hashed Funding evidence metadata; relevant permitted terms/evidence signature changes.",
     "works-resident-coordination": "handoff.state=Offered/Received/Escalated; past appointment.date with missing/Booked/Planned/No access/Missed outcome; past open service_request.next_update.",
-    "quality-evidence": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented indoor readings present in the sealed window for a case with a quality record (a review flag only, not a threshold, defect or acceptance).",
+    "quality-evidence": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented synthetic readings captured for a case with a quality record, one proposal per six-hour bucket of the latest reading (a review flag only, not a threshold, defect or acceptance).",
 }
 # One provider call per attempt, one agent, no tools or sub-agents (#107, #432). Attempts per request
 # are the configured ZF_ASSIST_ATTEMPTS, never above ATTEMPT_CEILING.
@@ -72,6 +72,17 @@ def canonical(value):
 
 def digest(value):
     return hashlib.sha256(canonical(value).encode()).hexdigest()
+
+
+def signature(snapshot):
+    """Identity and staleness digest. Sensor evidence enters only as its coarse, clock-free trigger signature."""
+    sensors = snapshot["sources"].get("sensors")
+    if sensors is None:
+        return digest(snapshot)
+    coarse = dict(snapshot, sources=dict(snapshot["sources"], sensors=sensor_view.signature(sensors)),
+                  citations={k: v for k, v in snapshot["citations"].items()
+                           if not k.startswith("sensor:") and k != "source:sensors"})
+    return digest(coarse)
 
 
 def proposal_identity(capability):
@@ -186,7 +197,7 @@ def capture(capability, c, procurement=None, sensors=None):
                 exercise_rule="Selected synthetic gap predicates, not approved company rules.")
 
 
-def eligible(capability, snapshot, now_date, changed=False):
+def eligible(capability, snapshot, now_date, changed=False, known=False):
     s = snapshot["sources"]
     if capability == "stock-prioritisation":
         h, survey = s["home"], s["survey"]
@@ -233,25 +244,48 @@ def eligible(capability, snapshot, now_date, changed=False):
         if any(len({i["evidence"] for i in q["items"] if i["label"] == label}) > 1 for label in labels):
             return True
     sensors = s.get("sensors") or {}
-    return changed or bool(sensors.get("state") == "ok" and sensors.get("readings") and s["quality"])
+    return changed or bool(sensors.get("state") == "ok" and sensors.get("readings") and s["quality"] and not known)
 
 
-def review_flag(task, provenance=()):
-    """Autonomous L4 review flag. Exists only for stored output from an actual returned model call."""
+def review_flag(task, provenance=(), actionable=True, withheld=False):
+    """Projection of a returned quality-evidence output. Only a proactive, current, returned model finding
+    that cites captured sensor readings is an autonomous L4 review flag; every other state is named as such."""
     envelope, output = task.get("envelope") or {}, task.get("output")
     if task.get("capability") != "quality-evidence" or not output or envelope.get("source") != "ai" or envelope.get("outcome") != "returned":
         return None
+    if withheld:
+        return dict(level=None, status="withheld", autonomous=False, unapproved=True, task_state=task.get("state"),
+                    effect="Monitoring consent is not granted now, so retained readings, citations and findings built on them are withheld. "
+                           "The stored record is kept.")
+    known = sensor_view.citations(task["snapshot"]["sources"].get("sensors") or {})
     cited = sorted({x for finding in output["findings"] for x in finding["citations"]})
-    readings = [x[len("sensor:"):] for x in cited if x.startswith("sensor:")]
+    sensor_cited = [x for x in cited if x in known]
+    proactive = any(e.get("mode") == "proactive" for e in provenance if e.get("kind") == "invocation")
+    state = task.get("state")
+    if state == "rejected":
+        status = "rejected"
+    elif state == "accepted":
+        status = "reviewed"
+    elif not actionable or state != "ready":
+        status = "not-current"
+    elif not proactive:
+        status = "manual-proposal"
+    elif not sensor_cited:
+        status = "uncited"
+    else:
+        status = "review-suggested"
+    autonomous = status == "review-suggested"
     sensors = task["snapshot"]["sources"].get("sensors") or {}
-    return dict(level="L4", status="human-review-requested", unapproved=True, task_state=task.get("state"),
-                trigger="proactive" if any(e.get("mode") == "proactive" for e in provenance if e.get("kind") == "invocation") else "requested",
+    return dict(level="L4" if autonomous else None, status=status, autonomous=autonomous, unapproved=True,
+                task_state=state, trigger="proactive" if proactive else "requested",
                 model=dict(provider=envelope.get("provider"), deployment=envelope.get("deployment"), model=envelope.get("model"),
                            task_version=envelope.get("task_version"), release=task.get("release")),
-                cited_ids=cited, reading_ids=readings, sensor_grounded=bool(readings),
-                source_window=sensors.get("window"),
+                cited_ids=cited, sensor_cited_ids=sensor_cited,
+                readings=[dict(sensor_id=known[k]["sensor_id"], reading_id=known[k]["reading_id"]) for k in sensor_cited],
+                sensor_grounded=bool(sensor_cited), provenance_classes=sorted(sensors.get("provenance") or {}),
                 source_time=datetime.fromtimestamp(task["created_at"], timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ") if isinstance(task.get("created_at"), (int, float)) else None,
-                effect="Requests a named person to review. It does not accept work, close a defect, authorise payment or consent, "
+                delivery="No named recipient or delivery of a request is recorded.",
+                effect="Suggests a person review the cited readings. It does not accept work, close a defect, authorise payment or consent, "
                        "diagnose a hazard or change any ranking.")
 
 
@@ -533,7 +567,7 @@ class Assistants:
             proc = json.loads(row[0]) if row else {}
         sensors = None
         if capability == "quality-evidence":
-            sensors = sensor_view.capture_source(db, c["id"], sensor_view.reference_for(c.get("quality")), self.now(db), self.mssql)
+            sensors = sensor_view.capture_source(db, c["id"], sensor_view.reference_for(c.get("quality")), self.mssql)
         return capture(capability, c, proc, sensors)
 
     def continuity(self, db):
@@ -600,8 +634,10 @@ class Assistants:
                 s = continuity.active(self.continuity(db), capability, constructed=not isinstance(self.store.ai, Ai))
                 current = continuity.epoch_current(body, self.continuity(db))
                 row = db.execute("SELECT body FROM cases WHERE id=?", (body["case_id"],)).fetchone()
-                stale = capability not in REGISTRY or row is None or digest(self.snapshot(db, capability, json.loads(row[0]))) != body["source_signature"]
+                stale = capability not in REGISTRY or row is None or signature(self.snapshot(db, capability, json.loads(row[0]))) != body["source_signature"]
                 actionable = current and not stale and body["state"] in ("ready", "accepted") and not s and not self.admission(db, capability) and body.get("release") == self.release_reference(db, capability)
+                if self._withhold_sensors(db, body):
+                    events = self._scrub_events(events)
                 out.append(dict(body, provenance=events, epoch_current=current, stale=stale, actionable=bool(actionable),
                                 relied_on=bool(actionable and body["state"] == "accepted"),
                                 suspension=s["id"] if s else None))
@@ -690,23 +726,23 @@ class Assistants:
 
     def _enqueue(self, db, capability, c, mode, actor):
         snapshot = self.snapshot(db, capability, c)
-        signature = digest(snapshot)
+        signature_ = signature(snapshot)
         identity = proposal_identity(capability)
         release = self.release_reference(db, capability)
         epoch = self.continuity(db)["epoch"]
-        tid = self._task_id(db, capability, c, signature)
+        tid = self._task_id(db, capability, c, signature_)
         row = db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()
         if row is None:
             reason = self.disabled(db, capability)
             body = dict(id=tid, capability=capability, version=VERSION, case_id=c["id"], proposal_identity=identity,
-                        source_signature=signature, snapshot=snapshot, output=None, verification=None, review=None, envelope=None,
+                        source_signature=signature_, snapshot=snapshot, output=None, verification=None, review=None, envelope=None,
                         manual=f"Review the ordinary case with {', '.join(REGISTRY[capability]['roles'])}.",
                         release=release, reason=reason, continuity_epoch=epoch, created_at=self.now(db))
             state = "disabled" if reason else "pending"
             if self.limits.valid and len(canonical(snapshot)) > self.limits.input_chars - 1500:
                 state, body["reason"] = "failed", "Source capture exceeds bounded input. Review manually."
             db.execute("INSERT INTO assistant_tasks (id,capability,case_id,signature,body,state,fence,owner,lease_until,attempts,not_before,revision) VALUES (?,?,?,?,?,?,0,'',0,0,0,1)",
-                       (tid, capability, c["id"], signature, canonical(body), state))
+                       (tid, capability, c["id"], signature_, canonical(body), state))
         elif not self.disabled(db, capability):
             task = self._row(db, tid)
             if task["state"] == "disabled" and task["attempts"] < self.limits.attempts:
@@ -740,7 +776,7 @@ class Assistants:
     def _view(self, db, user, tid, history_offset=0):
         body = self._row(db, tid)
         c = self.authorize(db, user, body["capability"], body["case_id"])
-        body["stale"] = digest(self.snapshot(db, body["capability"], c)) != body["source_signature"]
+        body["stale"] = signature(self.snapshot(db, body["capability"], c)) != body["source_signature"]
         history_limit = 50
         query = "SELECT body FROM assistant_events WHERE task_id=? ORDER BY at DESC,id DESC"
         query += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY" if self.mssql else " LIMIT ? OFFSET ?"
@@ -750,7 +786,6 @@ class Assistants:
         body["history_next_offset"] = history_offset + history_limit if total > history_offset + history_limit else None
         body["history_count"] = total
         body["display_state"] = "stale" if body["stale"] else body["state"]
-        body["review_flag"] = review_flag(body, body["provenance"])
         held = continuity.active(self.continuity(db), body["capability"], constructed=not isinstance(self.store.ai, Ai))
         body["epoch_current"] = continuity.epoch_current(body, self.continuity(db))
         body["release_denial"] = self.admission(db, body["capability"])
@@ -765,7 +800,43 @@ class Assistants:
             body["display_state"] = "release-denied"
         elif not body["epoch_current"]:
             body["display_state"] = "epoch-stale"
+        withheld = self._withhold_sensors(db, body)
+        if withheld:
+            body["provenance"] = self._scrub_events(body["provenance"])
+        body["review_flag"] = review_flag(body, body["provenance"], body["actionable"], withheld)
         return body
+
+    def _withhold_sensors(self, db, body):
+        """Current-consent projection: stored records stay, but values, citations and derived text are not disclosed."""
+        sensors = (body.get("snapshot") or {}).get("sources", {}).get("sensors")
+        if body.get("capability") != "quality-evidence" or not sensors or sensors.get("state") != "ok":
+            return False
+        ids = {r["sensor_id"] for r in sensor_view.citations(sensors).values()}
+        try:
+            granted = sensor_view.consent(db, body["case_id"], ids) == "granted"
+        except Exception:
+            granted = False
+        if granted:
+            return False
+        note = "Monitoring consent is not granted now; retained readings are withheld."
+        stub = dict(state="consent-withheld", detail=note, readings=[], before=[], after=[], latest=None, citation_keys=[])
+        body["snapshot"] = dict(body["snapshot"], sources=dict(body["snapshot"]["sources"], sensors=stub),
+                                citations={k: v for k, v in body["snapshot"]["citations"].items() if not k.startswith("sensor:")})
+        output = body.get("output")
+        if output and any(x.startswith("sensor:") for f in output["findings"] for x in f["citations"]):
+            body["output"] = dict(summary="Withheld: this output used retained readings and monitoring consent is not granted now.",
+                                  findings=[], unknowns=[])
+        body["sensor_withheld"] = True
+        return True
+
+    @staticmethod
+    def _scrub_events(events):
+        """Provenance outputs that cite retained readings are not disclosed while consent is withdrawn."""
+        def cites(o):
+            return bool(o) and any(x.startswith("sensor:") for f in o.get("findings", []) for x in f.get("citations", []))
+        stub = dict(summary="Withheld: this output used retained readings and monitoring consent is not granted now.",
+                    findings=[], unknowns=[])
+        return [dict(e, output=stub) if cites(e.get("output")) else e for e in events]
 
     def sensors(self, user, case_id):
         """Bounded retained indoor readings for one authorised case; the same source the quality snapshot captures."""
@@ -866,10 +937,11 @@ class Assistants:
                     s = self.snapshot(db, cap, c)
                     signatures = {r[0] for r in db.execute(
                         "SELECT signature FROM assistant_tasks WHERE capability=? AND case_id=?", (cap, c["id"])).fetchall()}
-                    if eligible(cap, s, today, bool(signatures) and digest(s) not in signatures):
+                    sig = signature(s)
+                    if eligible(cap, s, today, bool(signatures) and sig not in signatures, sig in signatures):
                         eligible_now += 1
                         if db.execute("SELECT 1 FROM assistant_tasks WHERE id=?",
-                                      (self._task_id(db, cap, c, digest(s)),)).fetchone() is None:
+                                      (self._task_id(db, cap, c, sig),)).fetchone() is None:
                             new += 1
                 result.append(dict(id=cap, rule=RULES[cap], open_cases_in_scope=len(scoped), eligible_cases=eligible_now,
                                    new_proposals=new, max_calls_per_request=bounds["max_calls_per_request"],
@@ -908,8 +980,9 @@ class Assistants:
                         s = self.snapshot(db, cap, c)
                         signatures = db.execute("SELECT signature FROM assistant_tasks WHERE capability=? AND case_id=?",
                                                 (cap, cid)).fetchall()
-                        changed = bool(signatures) and digest(s) not in {r[0] for r in signatures}
-                        if eligible(cap, s, today, changed):
+                        known = {r[0] for r in signatures}
+                        sig = signature(s)
+                        if eligible(cap, s, today, bool(known) and sig not in known, sig in known):
                             result.append(self._enqueue(db, cap, c, "proactive", PURPOSE))
                 return dict(enqueued=result, disabled=None)
         finally:
@@ -936,7 +1009,7 @@ class Assistants:
                 self.event(db, tid, kind="disabled", reason=reason)
                 return None
             row = db.execute("SELECT body FROM cases WHERE id=?", (task["case_id"],)).fetchone()
-            if row is None or digest(self.snapshot(db, task["capability"], json.loads(row[0]))) != task["source_signature"]:
+            if row is None or signature(self.snapshot(db, task["capability"], json.loads(row[0]))) != task["source_signature"]:
                 task["reason"] = "Permitted source changed; request a new proposal or work manually."
                 db.execute("UPDATE assistant_tasks SET state='stale',body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
                 self.event(db, tid, kind="stale", reason=task["reason"])

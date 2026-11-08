@@ -1,6 +1,7 @@
 "use strict";
 // Quality checks, defects, capacity and work orders. Shares h, api, post, me, show and isManager with app.js.
 const QUALITY_ROLES = ["Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer"];
+const SENSOR_ROLES = ["Quality Inspector", "Retrofit Programme Manager"];
 const QUALITY_SOURCES = ["Installer", "Contractor", "Provider submission", "Our own inspection"];
 const WO_OUTCOMES = ["Booked", "Declined by provider", "Resident not available", "No access", "Rebooking needed"];
 let capacityHistoryBarrier = null;
@@ -20,7 +21,7 @@ function residentBindings(text) {
   });
 }
 
-function sensorTable(title, rows, absent) {
+function sensorTable(title, rows, absent, labels = {}) {
   const box = h("div", {}, h("h3", {}, title));
   if (!rows || !rows.length) return box.append(h("p", {}, absent || "No retained readings.")), box;
   const head = ["Reading ID", "Sensor ID", "Observed (UTC)", "Temperature (degC)", "Relative humidity (%RH)", "Source"];
@@ -28,30 +29,32 @@ function sensorTable(title, rows, absent) {
     h("thead", {}, h("tr", {}, head.map((t) => h("th", { scope: "col" }, t)))),
     h("tbody", {}, rows.map((r) => h("tr", {}, h("th", { scope: "row" }, r.reading_id), h("td", {}, r.sensor_id),
       h("td", {}, h("time", { datetime: r.observed_at }, r.observed_at)), h("td", {}, r.temperature_c), h("td", {}, r.humidity_pct),
-      h("td", {}, "Synthetic indoor observation"))))));
+      h("td", {}, labels[r.provenance_class] || "Synthetic reading, not calibrated"))))));
   return box;
 }
 
 function sensorPanel(id) {
   const body = h("div", {}, h("p", { role: "status" }, "Loading retained readings..."));
-  const box = h("section", { class: "card", id: "sensors" }, h("h2", {}, "Indoor readings (synthetic demonstration)"), body);
-  if (!QUALITY_ROLES.includes(me.user.role)) {
+  const box = h("section", { class: "card", id: "sensors" }, h("h2", {}, "Retained sensor readings (synthetic demonstration)"), body);
+  if (!SENSOR_ROLES.includes(me.user.role)) {
     body.replaceChildren(h("p", {}, "Your role does not include indoor readings. Ask the quality team."));
     return box;
   }
   api(`/api/cases/${encodeURIComponent(id)}/sensors`).then((v) => {
     const kids = [
       h("p", { role: "status" }, `${v.freshness_text} Generated ${v.generated_at}.`),
-      h("p", { class: "muted" }, "Retained synthetic indoor temperature and relative humidity for this home only. These are not weather and not a measure of comfort or hazard. The Quality evidence assistant reads these same readings."),
+      h("p", { class: "muted" }, "Synthetic temperature and relative humidity retained for this home only. They are not calibrated, not a measure of comfort or hazard, and live demonstration readings are weather-derived rather than measured indoors. The Quality evidence assistant reads these same readings."),
     ];
-    if (v.latest) kids.push(h("p", {}, `Latest: ${v.latest.temperature_c} degC and ${v.latest.humidity_pct} %RH at ${v.latest.observed_at} (${v.latest.reading_id}, ${v.latest.sensor_id}). Freshness: ${v.freshness}.`));
+    if (v.latest) kids.push(h("p", {}, `Latest: ${v.latest.temperature_c} degC and ${v.latest.humidity_pct} %RH at ${v.latest.observed_at} (sensor ${v.latest.sensor_id}, reading ${v.latest.reading_id}). Freshness: ${v.freshness}. Source: ${(v.provenance || {})[v.latest.provenance_class] || "synthetic, not calibrated"}`));
+    if (v.retrofit_context) kids.push(h("p", { class: "muted" }, v.retrofit_context.text));
     if (v.state !== "ok") {
       kids.push(h("p", {}, `${v.detail || v.freshness_text} Use the manual route: ${v.manual_route}`));
     } else {
-      kids.push(sensorTable(`Sealed window ${v.window.start} to ${v.window.end} (UTC, up to ${v.max_readings.window})`, v.readings, v.window_absent));
-      kids.push(h("p", { class: "muted" }, `Before and after use the first quality evidence record time${v.reference ? ` (${v.reference})` : ""}, not an install date.`));
-      kids.push(sensorTable("Before the first quality evidence record", v.before, v.before_absent));
-      kids.push(sensorTable("From the first quality evidence record", v.after, v.after_absent));
+      const labels = v.provenance || {};
+      kids.push(sensorTable(`Newest readings, up to ${v.max_readings.window}, in the same capture the assistant uses`, v.readings, v.window_absent, labels));
+      kids.push(h("p", { class: "muted" }, `Comparison anchor "${v.anchor.name}"${v.anchor.at ? ` (${v.anchor.at})` : ""}: ${v.anchor.meaning}`));
+      kids.push(sensorTable("Before the first quality evidence record", v.before, v.before_absent, labels));
+      kids.push(sensorTable("From the first quality evidence record", v.after, v.after_absent, labels));
     }
     body.replaceChildren(...kids);
   }).catch((error) => {
