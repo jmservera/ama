@@ -14,12 +14,12 @@ ms.topic: reference
 * Dependencies: none for the bounded fix. No stacking on #184 or #1288 (no file overlap in core sqlstore or store at their current heads, per coordinator).
 * Scope: SQL recommendation order only. No ranking-policy, approval, consent, deployment or live-data change.
 
-## Acceptance criteria status (local frozen candidate; updated by the changes record)
+## Acceptance criteria status (local frozen candidate)
 
-* [ ] Deterministic creation ordering across cold and incremental reload: see changes record.
-* [ ] Same-transaction ties, edits of older proposals, multiple users, truthful legacy transition: see changes record.
-* [ ] Focused regression red then green, SQLite and in-memory parity, actual SQL Server with zero skips: SQL Server PENDING heavy-lock admission.
-* [ ] Review and approval boundary preserved: see changes and review records.
-* [ ] RPI research, plan, changes and review evidence on this branch.
+* [x] Deterministic creation ordering across cold and incremental reload: implemented (immutable `created_ord`), SQLite and in-memory executed; see changes record.
+* [x] Same-transaction ties, edits of older proposals, multiple users, interleaved writers; legacy transition documented (README, `meta.rec_order_legacy`).
+* [ ] Focused regression on actual SQL Server with zero skips: red/green on SQLite done (base source fails 2 failures, 3 errors; head OK); SQL Server PENDING heavy-lock admission.
+* [x] Review and approval boundary unchanged.
+* [ ] RPI evidence delivered via PR: records committed on the branch; PR not opened (coordinator).
 
-The issue stays open. No closing keyword is justified until native SQL Server evidence, independent exact-head review and hosted CI exist.
+The issue stays open. Use Refs, not a closing keyword, until native SQL Server evidence, independent exact-head review and hosted CI exist.
