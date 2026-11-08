@@ -2,9 +2,12 @@
 import copy
 import json
 import os
+import subprocess
+import sys
 import threading
 import time
 import unittest
+from pathlib import Path
 from unittest.mock import patch
 
 import release_support
@@ -969,14 +972,208 @@ class UnleasedRevocation:
             )
 
 
-class SqliteUnleasedRevocation(UnleasedRevocation, Base):
+class ProcessRaces(UnleasedRevocation):
+    """Separate OS processes reopen source-current stores; a fake provider logs calls to an owned file."""
+
+    WORKER = Path(__file__).with_name("assistant_process_worker.py")
+    DEADLINE = 40
+    FORWARDED = ("PATH", "LD_LIBRARY_PATH", "ODBCSYSINI", "ODBCINI", "LANG", "LC_ALL")
+
+    def setUp(self):
+        super().setUp()
+        self.children = {}
+        self.addCleanup(self.reap)
+        self.work = self.root / "process"
+        self.work.mkdir()
+        self.call_log = self.work / "calls.log"
+
+    def reap(self):
+        for child in self.children.values():
+            if child.poll() is None:
+                child.kill()
+            child.wait(10)
+
+    def child_env(self):
+        sql = getattr(self, "sql_env", {})
+        env = {k: v for k, v in os.environ.items() if k in self.FORWARDED}
+        env.update({k: v for k, v in sql.items() if k.startswith("ZF_SQL_")})
+        env.update(
+            ZF_DATA=str(self.work / "unused.json"),
+            PYTHONDONTWRITEBYTECODE="1",
+            PYTHONPATH=os.pathsep.join(p for p in sys.path if p and os.path.isdir(p)),
+        )
+        if sql:
+            env["ZF_TEST_MSSQL"] = "1"
+        return env
+
+    def until(self, ready, child=None):
+        deadline = time.monotonic() + self.DEADLINE
+        while not ready():
+            self.assertLess(time.monotonic(), deadline, "bounded wait expired")
+            if child is not None:
+                self.assertIsNone(child.poll(), "worker exited early")
+            time.sleep(0.02)
+
+    def spawn(self, label, tasks, wave, gate=False, **cfg):
+        wave.mkdir(exist_ok=True)
+        spec = dict(
+            label=label,
+            kind="mssql" if hasattr(self, "sql_env") else "sqlite",
+            seed=str(self.seed),
+            db=str(self.dbpath),
+            state_dir=str(self.root),
+            config=cfg,
+            tasks=tasks,
+            gate=gate,
+            barrier=str(wave),
+            call_log=str(self.call_log),
+            deadline=self.DEADLINE,
+        )
+        path = self.work / f"{wave.name}-{label}.json"
+        path.write_text(json.dumps(spec))
+        with (
+            open(self.work / f"{label}.out", "w") as out,
+            open(self.work / f"{label}.err", "w") as err,
+        ):
+            child = subprocess.Popen(
+                [sys.executable, str(self.WORKER), str(path)],
+                env=self.child_env(),
+                stdin=subprocess.DEVNULL,
+                stdout=out,
+                stderr=err,
+            )
+        self.children[label] = child
+        self.until((wave / f"ready-{label}").exists, child)
+
+    def release(self, wave, gated, before=None):
+        (wave / "start").write_text("")
+        for label in gated:
+            self.until((wave / f"claim-{label}").exists, self.children[label])
+        if before:
+            before()
+        (wave / "go").write_text("")
+
+    def finish(self, labels):
+        results = []
+        for label in labels:
+            err = (self.work / f"{label}.err").read_text()
+            self.assertEqual(self.children[label].wait(self.DEADLINE), 0, err)
+            self.assertEqual(err, "")
+            results.append(json.loads((self.work / f"{label}.out").read_text()))
+        self.assertEqual(len({r["pid"] for r in results}), len(labels))
+        self.assertNotIn(os.getpid(), {r["pid"] for r in results})
+        return results
+
+    def provider_calls(self):
+        return self.call_log.read_text().splitlines() if self.call_log.exists() else []
+
+    def pool(self, svc):
+        with svc.transaction() as db:
+            row = db.execute(
+                "SELECT calls,tokens,expires,used_calls FROM assistant_allowance"
+            ).fetchone()
+            attempts = db.execute("SELECT COUNT(*) FROM assistant_attempts").fetchone()[0]
+        return tuple(row), attempts
+
+    def test_racing_processes_cannot_overspend_or_replenish_a_finite_allowance(self):
+        ids = [
+            self.service.invoke(self.pm, cap, "ZF-1")["id"] for cap in list(assistants.REGISTRY)[:4]
+        ]
+        raced, held = ids[:3], ids[3]
+        with self.service.transaction() as db:
+            self.assertIsNone(db.execute("SELECT 1 FROM assistant_allowance").fetchone())
+        race, labels = self.work / "race", [f"race{i}" for i in range(4)]
+        for i, label in enumerate(labels):
+            self.spawn(
+                label,
+                raced[i % 3 :] + raced[: i % 3],
+                race,
+                gate=True,
+                call_allowance=2,
+                active_calls=4,
+            )
+        self.release(race, labels)
+        self.finish(labels)
+        self.assertEqual(len(self.provider_calls()), 2)
+        states = sorted(self.snapshot(self.service, tid)[0]["state"] for tid in raced)
+        self.assertEqual(states, ["disabled", "ready", "ready"])
+        stored, attempts = self.pool(self.service)
+        self.assertEqual((stored[0], stored[1], stored[3], attempts), (2, 2000000, 2, 2))
+        self.assertEqual(self.snapshot(self.service, held)[0]["state"], "pending")
+
+        restart = self.work / "restart"
+        larger = dict(call_allowance=1000, token_allowance=9000000, expires="2100-01-01T00:00:00Z")
+        for label in ("again0", "again1"):
+            self.spawn(label, [held], restart, **larger)
+        self.release(restart, [])
+        self.assertEqual(
+            [r["results"] for r in self.finish(["again0", "again1"])], [[False], [False]]
+        )
+        self.assertEqual(len(self.provider_calls()), 2)
+        task, _, disabled, _ = self.snapshot(self.service, held)
+        self.assertEqual((task["state"], task["attempts"]), ("disabled", 0))
+        self.assertIn("allowance exhausted", task["reason"])
+        self.assertEqual(len(disabled), 1)
+        self.assertEqual(self.pool(self.service), (stored, attempts))
+
+    def test_processes_after_revocation_and_restart_are_denied_without_calls_or_replenishment(self):
+        p = self.service.invoke(self.pm, CAP, "ZF-1")
+        control = self.service.invoke(self.pm, "assessment-preparation", "ZF-1")
+        first = self.work / "control"
+        self.spawn("control", [control["id"]], first)
+        self.release(first, [])
+        self.assertEqual(self.finish(["control"])[0]["results"], [True])
+        self.assertEqual(len(self.provider_calls()), 1)
+        task, _, disabled, used = self.snapshot(self.service, p["id"])
+        self.assertEqual(
+            (task["state"], task["owner"], task["attempts"], disabled), ("pending", "", 0, [])
+        )
+        stored = self.pool(self.service)
+
+        def revoke():
+            revoker = self.other()
+            revoker.approvers = {self.pm["email"].lower()}
+            revoker.change_release(self.pm, f"fx-{CAP}", "revoked", "withdrawn")
+
+        race, labels = self.work / "revoked", [f"denied{i}" for i in range(3)]
+        for label in labels:
+            self.spawn(label, [p["id"]], race, gate=True)
+        self.release(race, labels, before=revoke)
+        self.assertEqual([r["results"] for r in self.finish(labels)], [[False]] * 3)
+        self.assertEqual(len(self.provider_calls()), 1)
+        task, _, disabled, after = self.snapshot(self.service, p["id"])
+        self.assertEqual((task["state"], task["owner"], task["attempts"]), ("disabled", "", 0))
+        self.assertTrue(task["reason"].startswith("Release admission denied"), task["reason"])
+        self.assertEqual([e["reason"] for e in disabled], [task["reason"]])
+        self.assertEqual(after, used)
+
+        restart = self.work / "restart"
+        larger = dict(call_allowance=1000, token_allowance=9000000, expires="2100-01-01T00:00:00Z")
+        for label in ("again0", "again1"):
+            self.spawn(label, [p["id"]], restart, **larger)
+        self.release(restart, [])
+        self.assertEqual(
+            [r["results"] for r in self.finish(["again0", "again1"])], [[False], [False]]
+        )
+        self.assertEqual(len(self.provider_calls()), 1)
+        again, _, disabled, final = self.snapshot(self.service, p["id"])
+        self.assertEqual((again["state"], again["reason"]), ("disabled", task["reason"]))
+        self.assertEqual((len(disabled), final), (1, used))
+        self.assertEqual(self.pool(self.service), stored)
+        with self.service.transaction() as db:
+            self.assertEqual(
+                [r["status"] for r in rel.releases(db, CAP) if r["id"] == f"fx-{CAP}"], ["revoked"]
+            )
+
+
+class SqliteUnleasedRevocation(ProcessRaces, Base):
     """Local SQLite proxy; it is not actual SQL acceptance."""
 
 
 @unittest.skipUnless(
     os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)"
 )
-class MssqlUnleasedRevocation(MssqlFixture, UnleasedRevocation, Base):
+class MssqlUnleasedRevocation(MssqlFixture, ProcessRaces, Base):
     """Actual disposable SQL (local service only), run by the complete gate."""
 
 
