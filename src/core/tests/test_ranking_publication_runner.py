@@ -531,6 +531,31 @@ class StorageAndDuplicateFindingTests(RunnerBase):
         self.assertEqual(len(list(self.archive.iterdir())), 1)
         self.assertEqual(rp.verify(self.archive, self.signed)["problems"], [])
 
+    def test_parent_folder_sync_failure_is_unconfirmed_and_path_free(self) -> None:
+        import os
+        import stat
+
+        real = os.fsync
+        nested = self.archive / "x" / "y"
+        parent = nested.parent
+
+        def failing(fd: int) -> None:
+            if stat.S_ISDIR(os.fstat(fd).st_mode) and os.path.samestat(
+                os.fstat(fd), os.stat(parent.parent)
+            ):
+                raise OSError(5, "sync failed")
+            real(fd)
+
+        cases = self.cases_file()
+        with self.registry_patched(), patch.object(os, "fsync", failing):
+            code, res = self.cli(
+                "publish", "--archive", str(nested), "--today", TODAY, "--cases", str(cases)
+            )
+        self.assertEqual((code, res["status"]), (2, "committed_unconfirmed"))
+        self.assertIn("parent folder", res["uncertainty"]["message"])
+        self.assertNotIn("/", res["uncertainty"]["message"])
+        self.assertEqual(len(list(nested.iterdir())), 1)
+
     def test_unconfirmed_retry_of_an_existing_record_is_not_reported_as_created(self) -> None:
         import os
         import stat
