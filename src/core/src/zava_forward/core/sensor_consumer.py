@@ -4,6 +4,7 @@ import hashlib
 import json
 import math
 import re
+import time
 from collections.abc import Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
@@ -17,6 +18,7 @@ from .sqlstore import SqlStore
 from .synthetic.sensor_faults import READING_FIELDS, SCHEMA_VERSION
 from .synthetic.sensor_identity import home_key
 
+DISPATCH_WAIT_SECONDS = 45.0
 IDENTITY = re.compile(r"[A-Z0-9][A-Z0-9_-]*\Z")
 NUMBER = re.compile(r"-?(?:0|[1-9][0-9]{0,2})(?:\.[0-9]{1,2})?\Z")
 STAMP = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ\Z")
@@ -362,26 +364,64 @@ class SensorConsumer:
             raise ValueError("INVALID_CONTROL_BATCH")
         for control in controls:
             control.validate()
-        with self._write() as db:
-            self._schema(db)
-            db.execute("DELETE FROM sensor_consumer_policy")
+        deadline = time.monotonic() + DISPATCH_WAIT_SECONDS
+        while True:
+            with self._write() as db:
+                self._schema(db)
+                if not self._dispatch_in_flight(db):
+                    self._replace_controls(db, policy, controls)
+                    return
+            # A control change waits for a started provider call, bounded by its timeout and
+            # grace, outside the write transaction so the call can release its hold.
+            if time.monotonic() >= deadline:
+                raise ConsumerError("SENSOR_DISPATCH_IN_FLIGHT")
+            time.sleep(0.05)
+
+    def _dispatch_in_flight(self, db: Connection) -> bool:
+        """True while an assistant holds a live dispatch of captured readings. The hold uses the
+        database clock, commits with the final consent check, and expires on its own."""
+        exists = (
+            "SELECT OBJECT_ID(N'assistant_dispatch_hold')"
+            if self.mssql
+            else "SELECT 1 FROM sqlite_master WHERE type='table' AND name='assistant_dispatch_hold'"
+        )
+        if db.execute(exists).fetchone() in (None, (None,)):
+            return False
+        now = (
+            "SELECT DATEDIFF_BIG(MILLISECOND, CONVERT(datetime2,'1970-01-01'),"
+            " SYSUTCDATETIME()) / 1000.0"
+            if self.mssql
+            else "SELECT (julianday('now')-2440587.5)*86400.0"
+        )
+        return (
             db.execute(
-                "INSERT INTO sensor_consumer_policy (id, body) VALUES (1, ?)",
-                (json.dumps(asdict(policy)),),
+                "SELECT COUNT(*) FROM assistant_dispatch_hold WHERE expires_at>?",
+                (float(db.execute(now).fetchone()[0]),),
+            ).fetchone()[0]
+            > 0
+        )
+
+    def _replace_controls(
+        self, db: Connection, policy: ExercisePolicy, controls: Sequence[SensorControl]
+    ) -> None:
+        db.execute("DELETE FROM sensor_consumer_policy")
+        db.execute(
+            "INSERT INTO sensor_consumer_policy (id, body) VALUES (1, ?)",
+            (json.dumps(asdict(policy)),),
+        )
+        db.execute("DELETE FROM sensor_consumer_control")
+        for control in controls:
+            db.execute(
+                "INSERT INTO sensor_consumer_control (sensor_id, body) VALUES (?, ?)",
+                (control.sensor_id, json.dumps(asdict(control))),
             )
-            db.execute("DELETE FROM sensor_consumer_control")
-            for control in controls:
-                db.execute(
-                    "INSERT INTO sensor_consumer_control (sensor_id, body) VALUES (?, ?)",
-                    (control.sensor_id, json.dumps(asdict(control))),
-                )
-            db.execute("DELETE FROM sensor_consumer_control_home")
-            for control in controls:
-                db.execute(
-                    "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES (?, ?)",
-                    (control.home_id, control.sensor_id),
-                )
-            _write_marker(db, [(c.home_id, c.sensor_id) for c in controls])
+        db.execute("DELETE FROM sensor_consumer_control_home")
+        for control in controls:
+            db.execute(
+                "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES (?, ?)",
+                (control.home_id, control.sensor_id),
+            )
+        _write_marker(db, [(c.home_id, c.sensor_id) for c in controls])
 
     def _schema(self, db: Connection) -> None:
         text = "NVARCHAR(MAX)" if self.mssql else "TEXT"

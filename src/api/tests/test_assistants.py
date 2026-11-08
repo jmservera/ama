@@ -87,7 +87,7 @@ class Base(unittest.TestCase):
         self.pm = self.people["Retrofit Programme Manager"]
         for c in data["cases"]:
             c["resident"]["adjustment"] = "PRIVATE-VULNERABILITY-REASON"
-            c["finance"] = dict(budget=dict(amount=93417, status="Approved"), commitments=[], invoices=[])
+            c["finance"] = dict(budget=dict(amount=9183461, status="Approved"), commitments=[], invoices=[])
             c["handoff"] = dict(state="Offered", to_code="ROLE-0", note="PRIVATE-HANDOFF-NOTE")
             c["documents"] = [dict(id="SURVEY-1", kind="Survey", name="PRIVATE-DOCUMENT-NAME",
                                     summary="PRIVATE-AI-SUMMARY", content_sha256="abc", version=1)]
@@ -327,7 +327,7 @@ class ContractTests(Base):
             for private in ("PRIVATE-VULNERABILITY-REASON", "PRIVATE-DOCUMENT-NAME", "PRIVATE-AI-SUMMARY", "PRIVATE-HANDOFF-NOTE"):
                 self.assertNotIn(private, stored)
             if cap != "funding-evidence":
-                self.assertNotIn("93417", stored)
+                self.assertNotIn("9183461", stored)
                 self.assertNotIn("source:finance", stored)
             if cap == "stock-prioritisation":
                 self.assertEqual({r["code"] for r in p["snapshot"]["sources"]["ranking"]["reasons"]},
@@ -1158,7 +1158,7 @@ class DialectTests(Base):
         self.assertIn("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE", statements)
         self.assertTrue(any("OFFSET 0 ROWS FETCH NEXT" in s for s in statements))
         self.assertTrue(any("fence=?" in s and "lease_until>?" in s for s in statements))
-        self.assertEqual(len(MSSQL_DDL), 6)
+        self.assertEqual(len(MSSQL_DDL), 7)
 
 
 class ConfigurationTests(unittest.TestCase):

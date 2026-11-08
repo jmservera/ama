@@ -57,10 +57,22 @@ evidence rule states both horizons: newest readings within 366 days, and context
 C5: SQL guard triggers on `sensor_consumer_control` delete the index marker on any control write
 outside `configure` or reconcile, and the marker carries `v: 2`, so a changed control home, an older
 marker or a missing guard fails consent closed until `migrate()`. Scheduling reads one compact
-`assistant_schedule` row and the exact task by primary key (no task-body scans). A queued proactive
-task takes newer same-schedule readings at claim instead of being replaced, a never-dispatched stale
-task is requeued when its exact evidence returns, and a returned proactive flag stays a
-review-suggested flag with a newer-readings note. Consent is checked again before dispatch and
+`assistant_schedule` row and the exact task by primary key (no task-body scans). C6: a queued
+proactive task is never refreshed in place; if newer same-schedule readings arrive before its claim it
+is marked stale and the current capture becomes its own task (at most three replacements without a
+dispatch, reset by a dispatch), so evidence identity always matches the task and a later request reuses
+it. A manual request never services the autonomous Quality flag. Pre-upgrade tasks are adopted once per
+case from the newest dispatched, non-requested task of the same release and epoch (index
+`ix_assistant_case`); unrecorded history is never treated as approved. Before readings leave for the
+provider, the final consent check and an `assistant_dispatch_hold` row commit in one transaction;
+`SensorConsumer.configure` (a withdrawal) waits for a live hold, bounded by the provider timeout plus a
+5 second grace on the database clock, then fails with `SENSOR_DISPATCH_IN_FLIGHT`. The hold covers one
+home and one call, not a global lock; a hold that cannot be written sends nothing. A direct SQL write
+that bypasses `configure` is outside this guarantee (the guard trigger invalidates the marker but
+cannot recall a call). The SQL Server DDL for the hold, schedule and index is written but not yet
+executed against SQL Server. A returned proactive flag stays a review-suggested flag in the case panel
+with its captured as-of, freshness and age, and whether the current authorised capture differs from the
+readings it cited. Consent is checked again before dispatch and
 immediately before the provider call. The request carries the as-of time and a fresh, stale or unknown
 freshness state; readings dated beyond the next day are reported as future-dated, not absent.
 

@@ -43,7 +43,7 @@ function sensorPanel(id) {
   api(`/api/cases/${encodeURIComponent(id)}/sensors`).then((v) => {
     const kids = [
       h("p", { role: "status" }, `${v.freshness_text} Generated ${v.generated_at}.`),
-      h("p", { class: "muted" }, "Synthetic temperature and relative humidity retained for this home only. They are not calibrated, not a measure of comfort or hazard, and live demonstration readings are weather-derived rather than measured indoors. The Quality evidence assistant reads these same readings."),
+      h("p", { class: "muted" }, "Synthetic temperature and relative humidity retained for this home only. They are not calibrated, not a measure of comfort or hazard, and live demonstration readings are weather-derived rather than measured indoors. This is the current authorised capture. A suggestion shows the readings it cited when it ran, which may be older."),
     ];
     if (v.latest) kids.push(h("p", {}, `Latest: ${v.latest.temperature_c} degC and ${v.latest.humidity_pct} %RH at ${v.latest.observed_at} (sensor ${v.latest.sensor_id}, reading ${v.latest.reading_id}). Freshness: ${v.freshness}. Source: ${(v.provenance || {})[v.latest.provenance_class] || "synthetic, not calibrated"}`));
     if (v.as_of_rule) kids.push(h("p", { class: "muted" }, `${v.as_of_rule}${v.future_dated_excluded ? " Readings dated after this time exist and are not shown or used." : ""}`));
@@ -52,7 +52,7 @@ function sensorPanel(id) {
       kids.push(h("p", {}, `${v.detail || v.freshness_text} Use the manual route: ${v.manual_route}`));
     } else {
       const labels = v.provenance || {};
-      kids.push(sensorTable(`Newest readings, up to ${v.max_readings.window}, in the same capture the assistant uses`, v.readings, v.window_absent, labels));
+      kids.push(sensorTable(`Newest readings, up to ${v.max_readings.window}, in the current authorised capture`, v.readings, v.window_absent, labels));
       kids.push(h("p", { class: "muted" }, `Comparison anchor "${v.anchor.name}"${v.anchor.at ? ` (${v.anchor.at})` : ""}: ${v.anchor.meaning}`));
       kids.push(sensorTable("Before the first quality evidence record", v.before, v.before_absent, labels));
       kids.push(sensorTable("From the first quality evidence record", v.after, v.after_absent, labels));

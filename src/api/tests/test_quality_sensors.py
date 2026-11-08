@@ -559,12 +559,8 @@ class ReadModel(Seed, ta.Base):
         self.assertEqual((self.view()["state"], self._control_state()), ("ok", before))
 
     def _move_control_home(self, sensor, home):
-        self._tamper(
-            "UPDATE sensor_consumer_control SET body=json_set(body,'$.home_id',?)"
-            " WHERE sensor_id=?",
-            home,
-            sensor,
-        )
+        modify = "JSON_MODIFY(body,'$.home_id',?)" if self.service.mssql else "json_set(body,'$.home_id',?)"
+        self._tamper(f"UPDATE sensor_consumer_control SET body={modify} WHERE sensor_id=?", home, sensor)
 
     def test_changed_control_home_with_a_valid_marker_fails_closed_until_migrated(self):
         self.put(3)
@@ -582,7 +578,8 @@ class ReadModel(Seed, ta.Base):
 
     def test_previous_format_marker_or_missing_guard_fails_closed_until_migrated(self):
         self.put(3)
-        self._tamper("UPDATE sensor_consumer_index_state SET body=json_remove(body,'$.v')")
+        drop = "JSON_MODIFY(body,'$.v',NULL)" if self.service.mssql else "json_remove(body,'$.v')"
+        self._tamper(f"UPDATE sensor_consumer_index_state SET body={drop}")
         self.assertEqual(self.view()["state"], "consent-withheld")
         self.service.migrate()
         self.assertEqual(self.view()["state"], "ok")
@@ -593,10 +590,13 @@ class ReadModel(Seed, ta.Base):
         self.service.migrate()
         self.assertEqual((self.view()["state"], self._control_state()), ("ok", before))
         with self.service.transaction() as db:
-            names = db.execute(
-                "SELECT name FROM sqlite_master WHERE type='trigger'"
+            catalog = (
+                "SELECT name FROM sys.triggers WHERE name LIKE 'sensor_consumer_control_guard_%'"
+                if self.service.mssql
+                else "SELECT name FROM sqlite_master WHERE type='trigger'"
                 " AND name LIKE 'sensor_consumer_control_guard_%'"
-            ).fetchall()
+            )
+            names = db.execute(catalog).fetchall()
         self.assertEqual(len(names), 3)
 
     def test_future_readings_beyond_a_day_are_reported_not_absent(self):
@@ -1291,12 +1291,14 @@ class Http(Seed, ta.ApiTests):
             self.service.scan()
         self.assertEqual(self.quality_task(), [first])
         self.assertEqual(self._new("quality-evidence"), 0)
-        self.assertTrue(self.service.execute(first))
+        self.assertFalse(self.service.execute(first))
+        (second,) = set(self.quality_task()) - {first}
+        self.assertTrue(self.service.execute(second))
         sent = self.provider.prompts[-1]["evidence"]["sources"]["sensors"]["latest"]
         self.assertEqual(sent["reading_id"], self.view_latest())
         self.service.scan_cursor = ""
         self.service.scan()
-        self.assertEqual(self.quality_task(), [first])
+        self.assertEqual(len(self.quality_task()), 2)
         self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
 
     def test_a_new_reading_keeps_the_returned_flag_with_a_newer_readings_note(self):
@@ -1388,10 +1390,28 @@ class Http(Seed, ta.ApiTests):
         seen = []
         real = self.store.assistant_connection
 
+        class Recording:
+            """Backend-neutral statement recorder; SQLite also traces natively."""
+
+            def __init__(self, db):
+                self.db = db
+
+            def execute(self, sql, *args):
+                seen.append(sql)
+                return self.db.execute(sql, *args)
+
+            def __enter__(self):
+                self.db.__enter__()
+                return self
+
+            def __exit__(self, *exc):
+                return self.db.__exit__(*exc)
+
+            def __getattr__(self, name):
+                return getattr(self.db, name)
+
         def traced():
-            db = real()
-            db.set_trace_callback(seen.append)
-            return db
+            return Recording(real())
 
         with patch.object(self.store, "assistant_connection", side_effect=traced):
             self.service.scan_cursor = ""
@@ -1428,6 +1448,258 @@ class Http(Seed, ta.ApiTests):
         sent = self.provider.prompts[-1]["evidence"]["sources"]["sensors"]
         self.assertEqual(sent["freshness"], "unknown")
 
+    # C6: dispatch ordering, immutable identity, upgrade, manual slot, flag display.
+    def _withdraw_in_thread(self):
+        errors = []
+
+        def withdraw():
+            try:
+                self.set_consent("declined")
+            except Exception as error:  # noqa: BLE001 - recorded and asserted by the caller
+                errors.append(error)
+
+        thread = threading.Thread(target=withdraw)
+        thread.start()
+        return thread, errors
+
+    def _consent_now(self):
+        with self.service.transaction() as db:
+            return sensor_view.consent(db, "ZF-1", {DEFAULT}, self.service.mssql)
+
+    def test_withdrawal_cannot_commit_between_the_final_check_and_provider_transport(self):
+        gate = self._gated()
+        self.put(4)
+        self.add_live(10)
+        self.quality_ready()
+        self.service.scan()
+        (tid,) = self.quality_task()
+        worker = threading.Thread(target=self.service.execute, args=(tid,))
+        worker.start()
+        try:
+            self.assertTrue(gate["entered"].wait(20))
+            thread, errors = self._withdraw_in_thread()
+            thread.join(1.0)
+            self.assertTrue(thread.is_alive(), "withdrawal committed while the provider call was in flight")
+            self.assertEqual(self._consent_now(), "granted")
+        finally:
+            gate["proceed"].set()
+            worker.join(30)
+        thread.join(30)
+        self.assertFalse(thread.is_alive())
+        self.assertEqual(errors, [])
+        self.assertEqual(self._consent_now(), "declined")
+        self.assertEqual(self.provider.calls, 1)
+        with self.service.transaction() as db:
+            held = db.execute("SELECT COUNT(*) FROM assistant_dispatch_hold").fetchone()[0]
+        self.assertEqual(held, 0)
+
+    def test_provider_failure_releases_the_hold_and_an_expired_hold_does_not_block(self):
+        self._ready_one(fail=1)
+        self.service.scan()
+        (tid,) = self.quality_task()
+        self.service.execute(tid)
+        with self.service.transaction() as db:
+            self.assertEqual(db.execute("SELECT COUNT(*) FROM assistant_dispatch_hold").fetchone()[0], 0)
+            db.execute(
+                "INSERT INTO assistant_dispatch_hold (home_id,task_id,fence,expires_at) VALUES ('ZF-1','dead',1,?)",
+                (self.service.now(db) - 5,),
+            )
+        started = time.time()
+        self.set_consent("declined")
+        self.assertLess(time.time() - started, 5)
+
+    def test_a_hold_that_cannot_be_written_sends_nothing(self):
+        self._ready_one()
+        self.service.scan()
+        (tid,) = self.quality_task()
+        with self.service.transaction() as db:
+            db.execute("DROP TABLE assistant_dispatch_hold")
+        self.service.execute(tid)
+        self.assertEqual(self.provider.calls, 0)
+
+    def _two_tasks_after_arrival(self):
+        self._ready_one()
+        self.service.scan()
+        (first,) = self.quality_task()
+        self.add_live(5)
+        return first
+
+    def test_a_new_capture_in_the_same_schedule_is_its_own_task_and_a_request_reuses_it(self):
+        first = self._two_tasks_after_arrival()
+        self.assertFalse(self.service.execute(first))
+        tasks = self.quality_task()
+        self.assertEqual(len(tasks), 2)
+        (second,) = set(tasks) - {first}
+        old = self.service.detail(self.pm, first)
+        self.assertEqual(old["state"], "stale")
+        self.assertEqual(signature(old["snapshot"]), old["source_signature"])
+        again = self.service.invoke(self.pm, "quality-evidence", "ZF-1")
+        self.assertEqual(again["id"], second)
+        self.assertEqual(len(self.quality_task()), 2)
+        self.assertTrue(self.service.execute(second))
+        done = self.service.detail(self.pm, second)
+        self.assertEqual(done["dispatch"]["trigger"], "requested")
+        self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
+        sent = self.provider.prompts[-1]["evidence"]["sources"]["sensors"]["latest"]
+        self.assertEqual(sent["reading_id"], self.view_latest())
+
+    def test_a_request_during_the_lease_of_a_new_capture_reuses_it_and_keeps_provenance(self):
+        gate = self._gated()
+        self.put(4)
+        self.add_live(10)
+        self.quality_ready()
+        self.service.scan()
+        (first,) = self.quality_task()
+        self.add_live(5)
+        self.assertFalse(self.service.execute(first))
+        (second,) = set(self.quality_task()) - {first}
+        worker = threading.Thread(target=self.service.execute, args=(second,))
+        worker.start()
+        try:
+            self.assertTrue(gate["entered"].wait(20))
+            again = self.service.invoke(self.pm, "quality-evidence", "ZF-1")
+            self.assertEqual(again["id"], second)
+            self.assertEqual(len(self.quality_task()), 2)
+        finally:
+            gate["proceed"].set()
+            worker.join(30)
+        done = self.service.detail(self.pm, second)
+        self.assertEqual(done["dispatch"]["trigger"], "proactive")
+        self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
+
+    def test_replacement_is_bounded_without_dispatch_and_recovers_when_stable(self):
+        self._ready_one()
+        self.service.scan()
+        for minute in (9, 8, 7, 6, 5, 4, 3, 2, 1):
+            (pending,) = [
+                t for t in self.quality_task() if self.service.detail(self.pm, t)["state"] == "pending"
+            ] or [None]
+            if pending is None:
+                break
+            self.add_live(minute)
+            self.service.execute(pending)
+        self.assertEqual(self.provider.calls, 0)
+        self.assertLessEqual(len(self.quality_task()), 5)
+        self.service.scan_cursor = ""
+        self.service.scan()
+        pending = [t for t in self.quality_task() if self.service.detail(self.pm, t)["state"] == "pending"]
+        self.assertEqual(len(pending), 1)
+        self.assertTrue(self.service.execute(pending[0]))
+        self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
+        self.service.scan_cursor = ""
+        self.service.scan()
+        self.assertEqual([t for t in self.quality_task() if self.service.detail(self.pm, t)["state"] == "pending"], [])
+
+    def _legacy(self):
+        """A pre-upgrade store: tasks exist, the schedule table has no rows."""
+        with self.service.transaction() as db:
+            db.execute("DELETE FROM assistant_schedule")
+
+    def test_upgrade_adopts_the_serviced_legacy_task_and_does_not_call_again_in_the_bucket(self):
+        self._ready_one()
+        tid, _ = self.proactive()
+        self._legacy()
+        self.add_live(5)
+        self.service.scan_cursor = ""
+        scanned = self.service.scan()
+        self.assertEqual(self.quality_task(), [tid])
+        self.assertEqual(self.provider.calls, 1)
+        self.assertEqual(set(scanned["enqueued"]) & set(self.quality_task()), set())
+        self.service.scan_cursor = ""
+        self.service.scan()
+        self.assertEqual(self.quality_task(), [tid])
+        with self.service.transaction() as db:
+            rows = db.execute("SELECT COUNT(*) FROM assistant_schedule WHERE case_id='ZF-1' AND capability='quality-evidence'").fetchone()[0]
+        self.assertEqual(rows, 1)
+
+    def test_upgrade_does_not_adopt_a_legacy_task_from_another_release(self):
+        self._ready_one()
+        tid, _ = self.proactive()
+        self._legacy()
+        with self.service.transaction() as db:
+            body = json.loads(db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()[0])
+            body["release"] = "older-release"
+            db.execute("UPDATE assistant_tasks SET body=? WHERE id=?", (json.dumps(body), tid))
+        self.add_live(5)
+        self.service.scan_cursor = ""
+        self.service.scan()
+        self.assertEqual(len(self.quality_task()), 2)
+
+    def test_upgrade_makes_a_source_change_after_a_legacy_assessment_eligible(self):
+        self._ready_one()
+        cap = "assessment-preparation"
+        first = self.service.invoke(self.pm, cap, "ZF-1")["id"]
+        self.assertTrue(self.service.execute(first))
+        self.service.scan_cursor = ""
+        self.service.scan()
+        quiet = self._tasks_of(cap)
+        self._legacy()
+        self._set_epc("Z")
+        self.service.scan_cursor = ""
+        self.service.scan()
+        self.assertEqual(len(self._tasks_of(cap)), len(quiet) + 1)
+
+    def test_a_manual_request_completed_before_a_scan_does_not_hide_the_autonomous_flag(self):
+        self._ready_one()
+        manual = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
+        self.assertTrue(self.service.execute(manual))
+        self.service.scan_cursor = ""
+        self.service.scan()
+        self.assertEqual(self.quality_task(), [manual])
+        self.add_live(5)
+        self.service.scan_cursor = ""
+        self.assertTrue(set(self.service.scan()["enqueued"]) - {manual})
+        (auto,) = set(self.quality_task()) - {manual}
+        self.assertTrue(self.service.execute(auto))
+        self.assertEqual(self.service.detail(self.pm, manual)["review_flag"]["status"], "not-current")
+        self.assertEqual(self.service.detail(self.pm, auto)["dispatch"]["trigger"], "proactive")
+        self.assertEqual(self.service.detail(self.pm, manual)["dispatch"]["trigger"], "requested")
+        self.add_live(4)
+        self.service.scan_cursor = ""
+        self.service.scan()
+        self.assertEqual(len(self.quality_task()), 2)
+        self.assertEqual((self.provider.calls, self._used_calls()), (2, 2))
+
+    def test_a_manual_request_before_claim_or_after_failure_is_not_autonomous_and_recovers(self):
+        self._ready_one(fail=1)
+        self.service.scan()
+        (first,) = self.quality_task()
+        self.service.invoke(self.pm, "quality-evidence", "ZF-1")
+        self.service.execute(first)
+        self.assertEqual(self.service.detail(self.pm, first)["dispatch"]["trigger"], "requested")
+        self.add_live(5)
+        self.service.scan_cursor = ""
+        self.service.scan()
+        pending = set(self.quality_task()) - {first}
+        self.assertEqual(len(pending), 1)
+        (auto,) = pending
+        self.assertTrue(self.service.execute(auto))
+        self.assertEqual(self.service.detail(self.pm, auto)["dispatch"]["trigger"], "proactive")
+        self.assertLessEqual(self._used_calls(), 2)
+
+    def test_flag_reports_matching_and_changed_readings_since_capture(self):
+        self._ready_one()
+        tid, p = self.proactive()
+        flag = p["review_flag"]
+        self.assertIs(flag["changed_since_capture"], False)
+        self.assertEqual(flag["newer_reading_count"], 0)
+        self.add_live(5)
+        flag = self.service.detail(self.pm, tid)["review_flag"]
+        self.assertIs(flag["changed_since_capture"], True)
+        self.assertEqual(flag["newer_reading_count"], 1)
+        self.assertEqual(flag["status"], "review-suggested")
+
+    def test_delayed_claim_flag_states_the_captured_as_of_and_unknown_is_explicit(self):
+        self._ready_one()
+        self.service.scan()
+        (tid,) = self.quality_task()
+        with self.clock(1200):
+            self.assertTrue(self.service.execute(tid))
+        flag = self.service.detail(self.pm, tid)["review_flag"]
+        self.assertEqual(flag["freshness"], "stale")
+        self.assertGreaterEqual(flag["age_minutes"], 30)
+        self.assertTrue(flag["evidence_as_of"].endswith("Z"))
+
 
 MSSQL = unittest.skipUnless(
     os.environ.get("ZF_TEST_MSSQL") == "1", "needs disposable SQL Server (ZF_TEST_MSSQL=1)"
@@ -1456,6 +1728,32 @@ class AccountSummaryName(unittest.TestCase):
         js = (web / "app.js").read_text(encoding="utf-8")
         self.assertIn('"aria-label", `${short}, your account`', js)
         self.assertIn('getElementById("account-short").textContent = short', js)
+
+
+class WebWording(unittest.TestCase):
+    """Static checks of the shipped web source; a rendered browser check is a separate pending gate."""
+
+    def _web(self, name):
+        from pathlib import Path
+
+        root = Path(sensor_view.__file__).parents[4] / "api/src/zava_forward/api/web"
+        return (root / name).read_text(encoding="utf-8")
+
+    def test_sensor_panel_says_current_capture_not_the_models_capture(self):
+        js = self._web("ops.js")
+        self.assertNotIn("The Quality evidence assistant reads these same readings", js)
+        self.assertNotIn("in the same capture the assistant uses", js)
+        self.assertIn("current authorised capture", js)
+
+    def test_flag_block_shows_captured_as_of_freshness_age_and_changes(self):
+        js = self._web("assistants.js")
+        for token in ("evidence_as_of", "freshness", "age_minutes", "changed_since_capture", "newer_reading_count"):
+            self.assertIn(token, js)
+
+    def test_stale_review_suggested_flag_stays_in_the_main_path_and_counts_as_waiting(self):
+        js = self._web("assistants.js")
+        self.assertIn("p.review_flag?.status === \"review-suggested\"", js)
+        self.assertIn("review_flag", self._web("case-workspace.js"))
 
 
 if __name__ == "__main__":

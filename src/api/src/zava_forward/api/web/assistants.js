@@ -17,7 +17,13 @@ function reviewFlagBlock(f) {
   const model = f.model ? `${f.model.provider || "unknown"} ${f.model.deployment || ""} ${f.model.model || ""}`.trim() : "not shown";
   const kids = [h("h4", {}, FLAG_TITLES[f.status] || "Not a flag")];
   if (f.status !== "withheld") {
+    const asOf = f.evidence_as_of ? `Evidence as of ${f.evidence_as_of}, ${f.freshness || "unknown"}${f.age_minutes == null ? "" : `, ${f.age_minutes} minutes old at capture`}.`
+      : "Evidence as-of time unknown: do not treat these readings as live.";
+    const change = f.changed_since_capture == null ? "Whether the readings have changed since capture is unknown."
+      : f.changed_since_capture ? `The current authorised capture differs from the readings this finding cited (${f.newer_reading_count} newer or different readings). Review the current readings.`
+        : "The current authorised capture matches the readings this finding cited.";
     kids.push(h("p", {}, `Model: ${model}. Raised ${f.source_time || "at an unknown time"} (${f.trigger}). Not approved.`),
+      h("p", {}, `${asOf} ${change}`),
       h("p", {}, `Cited IDs: ${(f.cited_ids || []).join(", ") || "none"}. Readings cited: ${(f.readings || []).map((r) => `sensor ${r.sensor_id}, reading ${r.reading_id}`).join("; ") || "none"}.`),
       h("p", {}, `Reading source: ${(f.provenance_classes || []).join(", ") || "none"}. Not calibrated.`),
       h("p", { class: "muted" }, f.delivery));
@@ -186,7 +192,7 @@ function assistantCasePanel(id, session) {
       panel.dataset.assistance = registry.disabled
         ? "AI assistance unavailable. Work continues manually."
         : "Assistance available.";
-      panel.dataset.waiting = String(proposals.filter(p => p.state === "ready" && p.output && !p.stale).length);
+      panel.dataset.waiting = String(proposals.filter(p => p.state === "ready" && p.output && (!p.stale || p.review_flag?.status === "review-suggested")).length);
       panel.append(h("p", {}, "These are synthetic exercise rules. Continue ordinary case work manually when assistance is disabled, failed or stale."));
       for (const a of registry.assistants) {
         session.assistantRequests ||= new Map();
@@ -226,7 +232,7 @@ function assistantCasePanel(id, session) {
       const reviewed = h("details", {}, h("summary", {}, "Reviewed or stale suggestions"));
       for (const p of proposals) {
         const card = assistantProposal(p, () => caseView(id), recoverable);
-        if (p.stale || p.review) reviewed.append(card);
+        if ((p.stale && p.review_flag?.status !== "review-suggested") || p.review) reviewed.append(card);
         else panel.append(card);
       }
       if (reviewed.childElementCount > 1) panel.append(reviewed);
