@@ -3,29 +3,66 @@
   "task_slug": "ranking-archive-ancestor-durability-1258",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Plan",
-  "status": "blocked",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-08-ranking-archive-ancestor-durability-1258-research.md",
     "plan": ".copilot-tracking/plans/2026-11-08-ranking-archive-ancestor-durability-1258-plan.md",
     "details": ".copilot-tracking/details/2026-11-08-ranking-archive-ancestor-durability-1258-details.md",
     "critique": ".copilot-tracking/plans/2026-11-08-ranking-archive-ancestor-durability-1258-critique.md",
-    "changes": null,
-    "review": null
+    "changes": ".copilot-tracking/changes/2026-11-08-ranking-archive-ancestor-durability-1258-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-08-ranking-archive-ancestor-durability-1258-review.md"
   },
   "confirmed_decisions": [
-    {"decision": "research executed, Planning Readiness Ready", "status": "done", "evidence": ".copilot-tracking/research/2026-11-08-ranking-archive-ancestor-durability-1258-research.md"},
-    {"decision": "critique executed once, verdict Revise, PC-001..PC-006 applied directly", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-08-ranking-archive-ancestor-durability-1258-critique.md"},
-    {"decision": "final tier FULL; stop before source/test implementation per staging ceiling", "status": "confirmed", "evidence": "coordinator request"},
-    {"decision": "no preprovisioned-only option, no criterion relaxation without owner approval", "status": "confirmed", "evidence": "coordinator request"},
-    {"decision": "implementation and Review not started", "status": "confirmed", "evidence": "plan phases 1-4 unticked"}
+    {
+      "decision": "research executed, Planning Readiness Ready",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-08-ranking-archive-ancestor-durability-1258-research.md"
+    },
+    {
+      "decision": "critique executed once, verdict Revise, PC-001..PC-006 applied directly",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-08-ranking-archive-ancestor-durability-1258-critique.md"
+    },
+    {
+      "decision": "final tier FULL; stop before source/test implementation per staging ceiling",
+      "status": "confirmed",
+      "evidence": "coordinator request"
+    },
+    {
+      "decision": "no preprovisioned-only option, no criterion relaxation without owner approval",
+      "status": "confirmed",
+      "evidence": "coordinator request"
+    },
+    {
+      "decision": "LIGHT implementation executed (phases 1-3), red 7 failures then green",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-11-08-ranking-archive-ancestor-durability-1258-changes.md"
+    },
+    {
+      "decision": "Review executed once, outcome Residual work; FULL, independent assessment, hosted, human acceptance unperformed",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-08-ranking-archive-ancestor-durability-1258-review.md"
+    }
   ],
   "blockers": [
-    {"id": "B1", "summary": "Implementation waits for coordinator reconciliation and admission; FULL gate not admitted", "resolution": "Coordinator resumes this native session at plan Phase 1"}
+    {
+      "id": "B2",
+      "summary": "FULL receipt awaits stable current main and separate coordinator admission",
+      "resolution": "coordinator admits --all after this freeze; no later commit after receipt"
+    }
   ],
-  "next_action": {"phase": "Implement", "action": "On coordinator admission, resume this session at plan Phase 1 (red tests), then Phase 2 to 4 including FULL --all receipt on current origin/main"},
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator admits FULL (plan 4.2) on this frozen head; then 1259 consumes this source"
+  },
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "1259 ranking archive path health, stacked on this branch after its source is frozen", "rationale": "shares ranking_publication.py", "evidence": "ranking-followups-review-1108.md"}
+    {
+      "rank": 1,
+      "task": "1259 ranking archive path health, stacked on this branch after its source is frozen",
+      "rationale": "shares ranking_publication.py",
+      "evidence": "ranking-followups-review-1108.md"
+    }
   ]
 }

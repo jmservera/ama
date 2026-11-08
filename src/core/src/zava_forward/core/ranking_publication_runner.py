@@ -391,7 +391,8 @@ def run(
         out["uncertainty"] = {
             "code": "committed_unconfirmed",
             "message": (
-                "The record is in the archive but the archive folder sync failed "
+                "The record is in the archive but the archive folder or a parent folder sync "
+                "failed "
                 f"({os.path.basename(e.path)}); durability is unconfirmed and this is not a "
                 "confirmed publication."
             ),

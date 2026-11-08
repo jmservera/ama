@@ -237,7 +237,9 @@ class PublicationTests(unittest.TestCase):
 
         with patch.object(os, "fsync", syncing), patch.object(os, "unlink", unlinking):
             rp.publish(snap(), self.dir, "2026-10-10")
-        self.assertEqual(events, ["sync-file", "unlink-stage", "sync-dir"])
+        self.assertEqual(events[:2], ["sync-file", "unlink-stage"])
+        self.assertGreaterEqual(events[2:].count("sync-dir"), 2)
+        self.assertEqual(set(events[2:]), {"sync-dir"})
         self.assertEqual([p.name for p in self.dir.iterdir()], [rp._name(snap())])
 
     def test_an_already_archived_record_is_returned_only_after_the_directory_sync(self):
@@ -269,6 +271,118 @@ class PublicationTests(unittest.TestCase):
         with patch.object(os, "fsync", syncing), self.assertRaises(OSError):
             rp.publish(snap(), self.dir, "2026-10-11")
         self.assertEqual(rp.publish(snap(), self.dir, "2026-10-12")["published_on"], "2026-10-10")
+
+
+class AncestorDurabilityTests(unittest.TestCase):
+    """Refs #1258. Mocked syscall order only; not real crash or filesystem durability proof."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name).resolve()
+        self.dir = self.root / "a" / "b" / "archive"
+
+    def labelled(self, fault=None, events=None):
+        names = {
+            "root": self.root,
+            "a": self.root / "a",
+            "b": self.root / "a" / "b",
+            "archive": self.dir,
+        }
+        real_sync, real_link = os.fsync, os.link
+        events = [] if events is None else events
+
+        def label(fd):
+            st = os.fstat(fd)
+            if not stat.S_ISDIR(st.st_mode):
+                return "file"
+            for name, path in names.items():
+                try:
+                    if os.path.samestat(st, os.stat(path)):
+                        return name
+                except OSError:
+                    pass
+            return "other"
+
+        def syncing(fd):
+            name = label(fd)
+            events.append(name)
+            if name == fault:
+                raise OSError(errno.EIO, "sync failed")
+            return real_sync(fd)
+
+        def linking(src, dst, *args, **kwargs):
+            events.append("link")
+            return real_link(src, dst, *args, **kwargs)
+
+        return events, patch.object(os, "fsync", syncing), patch.object(os, "link", linking)
+
+    def test_new_nested_ancestors_are_synced_after_link_deepest_first(self):
+        events, sync, link = self.labelled()
+        with sync, link:
+            rp.publish(snap(), self.dir, "2026-10-10")
+        known = [e for e in events if e != "other"]
+        self.assertEqual(known, ["file", "link", "archive", "b", "a", "root"])
+
+    def test_existing_archive_keeps_its_parent_sync_after_the_archive_sync(self):
+        self.dir.mkdir(parents=True)
+        events, sync, link = self.labelled()
+        with sync, link:
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual([e for e in events if e != "other"][:3], ["file", "link", "archive"])
+
+    def test_ancestor_sync_failure_after_link_is_unconfirmed_and_keeps_the_record(self):
+        _, sync, link = self.labelled(fault="a")
+        with sync, link, self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(ctx.exception.errno, errno.EIO)
+        self.assertIs(ctx.exception.written, True)
+        self.assertEqual(ctx.exception.published_on, "2026-10-10")
+        self.assertNotIn(str(self.root), str(ctx.exception))
+        self.assertEqual([p.name for p in self.dir.iterdir()], [rp._name(snap())])
+        self.assertEqual(rp.verify(self.dir)["problems"], [])
+
+    def test_retry_with_all_directories_present_is_not_confirmed_until_ancestors_sync(self):
+        rp.publish(snap(), self.dir, "2026-10-10")
+        _, sync, link = self.labelled(fault="a")
+        with sync, link, self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+            rp.publish(snap(), self.dir, "2026-10-11")
+        self.assertIs(ctx.exception.written, False)
+        res = rp.publish(snap(), self.dir, "2026-10-12")
+        self.assertEqual((res["written"], res["published_on"]), (False, "2026-10-10"))
+
+    def test_partially_created_ancestors_from_an_earlier_run_are_still_synced(self):
+        (self.root / "a" / "b").mkdir(parents=True)
+        events, sync, link = self.labelled(fault="root")
+        with sync, link, self.assertRaises(rp.DurabilityUnconfirmedError):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertIn("a", events)
+
+    def test_symlinked_parent_syncs_the_directory_that_holds_the_entry(self):
+        real = self.root / "real"
+        real.mkdir()
+        (self.root / "link").symlink_to(real)
+        archive = self.root / "link" / "x" / "archive"
+        synced = []
+        real_sync = os.fsync
+        names = {"real": real, "x": real / "x"}
+
+        def syncing(fd):
+            st = os.fstat(fd)
+            for name, path in names.items():
+                if stat.S_ISDIR(st.st_mode) and os.path.samestat(st, os.stat(path)):
+                    synced.append(name)
+            return real_sync(fd)
+
+        with patch.object(os, "fsync", syncing):
+            rp.publish(snap(), archive, "2026-10-10")
+        self.assertEqual(synced, ["x", "real"])
+
+    def test_chain_stops_at_a_mount_point_and_at_a_non_writable_ancestor(self):
+        events, sync, link = self.labelled()
+        with sync, link, patch.object(os.path, "ismount", lambda p: str(p) == str(self.root / "a")):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual([e for e in events if e != "other"][-3:], ["archive", "b", "a"])
 
 
 class ConcurrentWriterTests(unittest.TestCase):

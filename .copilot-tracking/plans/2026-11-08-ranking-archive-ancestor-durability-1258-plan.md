@@ -15,7 +15,7 @@ Details: `.copilot-tracking/details/2026-11-08-ranking-archive-ancestor-durabili
 
 ## Current ceiling
 
-Planning only. Phases 1 to 4 below are NOT started; every checkbox is unticked. Implementation waits for coordinator admission and resumes in this same native session.
+Phases 1 to 3 executed as LIGHT source preparation (see changes record). Phase 4 (FULL) is not started and stays unticked. Implementation waits for coordinator admission and resumes in this same native session.
 
 ## Decisions (agent-recommended, within issue wording; revised after critique PC-001 to PC-006)
 
@@ -30,29 +30,29 @@ Planning only. Phases 1 to 4 below are NOT started; every checkbox is unticked. 
 
 Fixture note (PC-003): both existing test classes set `self.dir = tmp/"archive"`, so every existing test is already a first run with one missing component. Tests use `Path(self.tmp.name)` as the existing root, `root/"a"/"b"/"archive"` as the nested case, and a pre-created archive for the steady-state case. Directory syncs are labelled by device and inode against known paths; any unlabelled directory sync (ancestors above the temp root vary by host) is ignored by order assertions through a subsequence check, so tests do not depend on the host layout.
 
-* [ ] 1.1 `PublicationTests`: nested missing ancestors. Expect the labelled subsequence file, unlink-stage, archive, b, a, root, and every directory sync after `link`.
-* [ ] 1.2 `PublicationTests`: post-link failure of the sync of `a` only. Expect `DurabilityUnconfirmedError`, errno, `written True`, original `published_on`, record valid, `verify` clean, basename-only message, mode `0o600`.
-* [ ] 1.3 Retry (PC-004): seed state independently, not via 1.2: create the nested directories and the record with a normal `publish`, then call `publish` again with the sync of `a` failing; expect `DurabilityUnconfirmedError` (not `already_published`). A separate call with the fault removed returns `written False` and the original date. This fails before the fix.
-* [ ] 1.4 Partial creation (PC-001): pre-create `a` and `b` without syncing, publish with an unfaulted run and assert `a` and `root` are synced; a fault on `root` raises unconfirmed.
-* [ ] 1.5 Lost race: use the existing `CommitGate`/link-racing pattern so the loser finds the record and the nested directories; assert it syncs the chain before `already_published`.
-* [ ] 1.6 Symlink: archive reached through a symlinked parent; assert the real parent is the directory synced.
-* [ ] 1.7 Boundary: a non-writable ancestor (mode change on a temp directory, skipped when running as root) ends the chain without error; a writable ancestor whose sync fails raises unconfirmed. Mount-point stop is asserted with a patched `os.path.ismount`; this is a mock boundary, stated as such.
-* [ ] 1.8 `test_ranking_publication_runner.py` and `src/api/tests/test_ranking_publication_wiring.py` (PC-004): an ancestor-targeted sync fault yields `committed_unconfirmed` with audit uncertainty and a path-free 409; record preserved; the existing archive-directory fault tests stay.
-* [ ] 1.9 Update `test_publish_syncs_file_then_removes_stage_then_syncs_directory` to the labelled-subsequence form (it already creates `archive`), keeping its intent: file, unlink-stage, archive directory, then the parent. Record this as an intentional existing-test change.
-* [ ] 1.10 Run only the new tests on unfixed source; keep the failing output as the "fails before the fix" evidence. Scratch under a root external directory, not `/mnt`; no repo-local output.
+* [x] 1.1 `PublicationTests`: nested missing ancestors. Expect the labelled subsequence file, unlink-stage, archive, b, a, root, and every directory sync after `link`.
+* [x] 1.2 `PublicationTests`: post-link failure of the sync of `a` only. Expect `DurabilityUnconfirmedError`, errno, `written True`, original `published_on`, record valid, `verify` clean, basename-only message, mode `0o600`.
+* [x] 1.3 Retry (PC-004): seed state independently, not via 1.2: create the nested directories and the record with a normal `publish`, then call `publish` again with the sync of `a` failing; expect `DurabilityUnconfirmedError` (not `already_published`). A separate call with the fault removed returns `written False` and the original date. This fails before the fix.
+* [x] 1.4 Partial creation (PC-001): pre-create `a` and `b` without syncing, publish with an unfaulted run and assert `a` and `root` are synced; a fault on `root` raises unconfirmed.
+* [x] 1.5 Lost race: use the existing `CommitGate`/link-racing pattern so the loser finds the record and the nested directories; assert it syncs the chain before `already_published`.
+* [x] 1.6 Symlink: archive reached through a symlinked parent; assert the real parent is the directory synced.
+* [x] 1.7 Boundary: a non-writable ancestor (mode change on a temp directory, skipped when running as root) ends the chain without error; a writable ancestor whose sync fails raises unconfirmed. Mount-point stop is asserted with a patched `os.path.ismount`; this is a mock boundary, stated as such.
+* [x] 1.8 (runner test added; the API wiring test was not changed, see changes DV-2) `test_ranking_publication_runner.py` and `src/api/tests/test_ranking_publication_wiring.py` (PC-004): an ancestor-targeted sync fault yields `committed_unconfirmed` with audit uncertainty and a path-free 409; record preserved; the existing archive-directory fault tests stay.
+* [x] 1.9 Update `test_publish_syncs_file_then_removes_stage_then_syncs_directory` to the labelled-subsequence form (it already creates `archive`), keeping its intent: file, unlink-stage, archive directory, then the parent. Record this as an intentional existing-test change.
+* [x] 1.10 Run only the new tests on unfixed source; keep the failing output as the "fails before the fix" evidence. Scratch under a root external directory, not `/mnt`; no repo-local output.
 
 ## Phase 2. Source change (`src/core/src/zava_forward/core/ranking_publication.py`, plus the runner message only)
 
-* [ ] 2.1 Add private `_ancestors(archive_dir)`: realpath, then parents nearest first, applying the D3 boundary.
-* [ ] 2.2 In `_confirmed()`, after `_fsync_dir(archive_dir)`, call `_fsync_dir` for each ancestor; any `OSError` (including `open`) becomes `DurabilityUnconfirmedError` as today, so the record and audit path stay unchanged on every outcome.
-* [ ] 2.3 Update the exception message to "archive folder or a parent folder", basename-only; update module and `publish()` docstrings (D5 wording).
-* [ ] 2.4 Update the runner message (D6) and its tests only. Do not touch `store.py` or `server.py` unless a test proves it necessary; then record why.
+* [x] 2.1 Add private `_ancestors(archive_dir)`: realpath, then parents nearest first, applying the D3 boundary.
+* [x] 2.2 In `_confirmed()`, after `_fsync_dir(archive_dir)`, call `_fsync_dir` for each ancestor; any `OSError` (including `open`) becomes `DurabilityUnconfirmedError` as today, so the record and audit path stay unchanged on every outcome.
+* [x] 2.3 Update the exception message to "archive folder or a parent folder", basename-only; update module and `publish()` docstrings (D5 wording).
+* [x] 2.4 Update the runner message (D6) and its tests only. Do not touch `store.py` or `server.py` unless a test proves it necessary; then record why.
 
 ## Phase 3. Green and regression
 
-* [ ] 3.1 Rerun the new tests, then `test_ranking_publication*.py` in `src/core` and `test_ranking_publication_wiring.py` / ranking tests in `src/api` using the documented component commands with synthetic temporary data only.
-* [ ] 3.2 Confirm existing event-order, retry, concurrent private-stage, audit, 409/503 and original-date tests pass unchanged.
-* [ ] 3.3 State in changes evidence that mocked ordering is not real crash or filesystem durability proof.
+* [x] 3.1 Rerun the new tests, then `test_ranking_publication*.py` in `src/core` and `test_ranking_publication_wiring.py` / ranking tests in `src/api` using the documented component commands with synthetic temporary data only.
+* [x] 3.2 Confirm existing event-order, retry, concurrent private-stage, audit, 409/503 and original-date tests pass unchanged.
+* [x] 3.3 State in changes evidence that mocked ordering is not real crash or filesystem durability proof.
 
 ## Phase 4. Gates and evidence (resume point: FULL)
 

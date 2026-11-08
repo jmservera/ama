@@ -52,7 +52,7 @@ class ArchiveStorageError(Exception):
 
 
 class DurabilityUnconfirmedError(OSError):
-    """The record is at its final name but the archive folder sync failed.
+    """The record is at its final name but the archive folder or a parent folder sync failed.
 
     The record stays; whether the name survives a crash is unknown, so this is
     neither a confirmed publication nor a rollback. written is True when this call
@@ -65,8 +65,8 @@ class DurabilityUnconfirmedError(OSError):
     ) -> None:
         super().__init__(
             cause.errno,
-            f"{os.path.basename(path)} was written but the archive folder could not be "
-            f"synced ({type(cause).__name__}); durability is unconfirmed.",
+            f"{os.path.basename(path)} was written but the archive folder or a parent "
+            f"folder could not be synced ({type(cause).__name__}); durability is unconfirmed.",
         )
         self.path = path
         self.published_on = published_on
@@ -129,13 +129,34 @@ def _fsync_dir(archive_dir: Path) -> None:
         os.close(fd)
 
 
+def _ancestors(archive_dir: Path) -> list[str]:
+    """Real parent folders whose entries may need a sync, nearest first.
+
+    The run of writable ancestors, ending after the first mount point or the
+    filesystem root and stopping before a non-writable one. A writable parent is
+    one this process could have added an entry to. Permissions alone do not prove
+    durability; a sync error on any listed folder is raised, never skipped.
+    """
+    chain: list[str] = []
+    current = os.path.realpath(archive_dir)
+    while True:
+        parent = os.path.dirname(current)
+        if parent == current or not os.access(parent, os.W_OK):
+            return chain
+        chain.append(parent)
+        if os.path.ismount(parent):
+            return chain
+        current = parent
+
+
 def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> dict[str, Any]:
     """Archive a snapshot. published_on is an ISO date supplied by the caller.
 
     Returns path, written (False when the identical snapshot was already archived)
     and the original published_on. The record is written to a unique stage file, synced
     and linked to its final name, so the first writer wins and nothing is overwritten;
-    the stage is removed and the folder synced before the result is returned, including
+    the stage is removed and the folder and its writable parent folders (up to a mount point)
+    are synced before the result is returned, including
     for an existing record, which is validated and refused when it is damaged. A failed
     folder sync is raised as DurabilityUnconfirmedError (an OSError carrying the cause's
     errno) although the record is committed and kept; a retry syncs again and reports
@@ -174,9 +195,14 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
 
 
 def _confirmed(outcome: dict[str, Any], archive_dir: Path) -> dict[str, Any]:
-    """Sync the archive folder so the committed name is durable before the caller is told."""
+    """Sync the archive folder and its parent folders so the committed name and any newly
+    created folder entries are durable before the caller is told. Parents are synced on
+    every confirmation, including a retry, so a failed earlier sync is never reported as
+    already published."""
     try:
         _fsync_dir(archive_dir)
+        for parent in _ancestors(archive_dir):
+            _fsync_dir(parent)
     except OSError as e:
         error = DurabilityUnconfirmedError(
             outcome["path"], outcome["published_on"], e, outcome["written"]
