@@ -431,6 +431,10 @@ All six live issue criteria remain unchecked. Local checks:
 `actionlint -config-file infra/tests/actionlint.yaml .github/workflows/infra-plan.yml .github/workflows/src-deploy.yml .github/workflows/src-ci.yml`
 checks real workflow syntax when actionlint is installed. Source CI persists
 the structure/permission/pinning/no-echo mutation tests and helper Ruff/mypy.
+Source CI installs actionlint 1.7.7 with `python3 tools/install-actionlint.py
+<dir>`, which retrieves the official release assets with bounded retries (browser
+download URL, then the official release asset API), requires the pinned SHA-256
+digests and fails closed without installing on exhaustion.
 
 `deploymentProfile` defaults to `production`. Development alone relaxes
 nothing: public access, purge protection and registry quarantine each require
