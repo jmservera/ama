@@ -2,12 +2,22 @@
 
 publish() writes one immutable, dated file per policy version, as_of date and
 snapshot hash into an archive folder. The write is idempotent: the same snapshot
-gives the same file and is not rewritten, and a file is never overwritten or
-deleted here. verify() re-hashes every archived snapshot so an edited or
-damaged record is reported. Nothing reads a clock: the publication date is an
-input. Retention period and the scheduler are not set here. The legal period is
-a Legal decision and the schedule is run by the deployment; SCHEDULE states the
-contract the deployment is expected to meet. Nothing here changes a ranking.
+gives the same file and is not rewritten, and an archived record is never
+overwritten or deleted here. Each writer stages its content in its own uniquely
+named file in the same folder and links it to the record name, which fails if the
+record exists, so concurrent writers of one snapshot keep exactly one record and
+the loser reports it. That needs a local filesystem with hard links; a folder
+without them refuses to publish (OSError) and nothing is overwritten. The only
+file removed is the staging file this call created; if that removal fails after the
+record is committed, the result still reports the record and names the retained stage
+(stage_retained). A stage kept by the writer that committed the record shares its
+bytes and inode, but a stage kept by a writer that lost the race was never linked and
+can differ, so an operator checks it before removing it. verify()
+re-hashes every archived snapshot so an edited or damaged record is reported. Nothing reads a
+clock: the publication date is an input. Retention period and the scheduler are
+not set here. The legal period is a Legal decision and the schedule is run by the
+deployment; SCHEDULE states the contract the deployment is expected to meet.
+Nothing here changes a ranking.
 """
 
 import calendar
@@ -15,7 +25,6 @@ import hashlib
 import json
 import os
 import re
-import tempfile
 from collections.abc import Mapping
 from typing import Any
 
@@ -38,8 +47,12 @@ class PublicationError(Exception):
     """A snapshot cannot be published, or an archived record does not verify."""
 
 
+class ArchiveStorageError(Exception):
+    """The archive location cannot take a record (for example no hard-link support)."""
+
+
 class DurabilityUnconfirmedError(OSError):
-    """The record was linked to its final name but the archive folder sync failed.
+    """The record is at its final name but the archive folder sync failed.
 
     The record stays; whether the name survives a crash is unknown, so this is
     neither a confirmed publication nor a rollback. written is True when this call
@@ -51,8 +64,9 @@ class DurabilityUnconfirmedError(OSError):
         self, path: str, published_on: str, cause: OSError, written: bool | None = None
     ) -> None:
         super().__init__(
+            cause.errno,
             f"{os.path.basename(path)} was written but the archive folder could not be "
-            f"synced ({type(cause).__name__}); durability is unconfirmed."
+            f"synced ({type(cause).__name__}); durability is unconfirmed.",
         )
         self.path = path
         self.published_on = published_on
@@ -119,12 +133,13 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
     """Archive a snapshot. published_on is an ISO date supplied by the caller.
 
     Returns path, written (False when the identical snapshot was already archived)
-    and the original published_on. The record is written to a unique temp file,
-    synced and linked to its final name, so the first writer wins and nothing is
-    overwritten; an existing record is validated, and refused when it is damaged.
-    The archive folder is synced before any result, including for an existing record
-    or a lost race; a failed sync raises DurabilityUnconfirmedError although the record
-    is kept, and a retry reports it only after a sync succeeds.
+    and the original published_on. The record is written to a unique stage file, synced
+    and linked to its final name, so the first writer wins and nothing is overwritten;
+    the stage is removed and the folder synced before the result is returned, including
+    for an existing record, which is validated and refused when it is damaged. A failed
+    folder sync is raised as DurabilityUnconfirmedError (an OSError carrying the cause's
+    errno) although the record is committed and kept; a retry syncs again and reports
+    the record as already published once the sync succeeds.
     """
     if not _valid_date(published_on):
         raise PublicationError("published_on must be an ISO date, YYYY-MM-DD.")
@@ -135,23 +150,26 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
     if os.path.lexists(path):
         return _confirmed(_existing(path, snap), archive_dir)
     text = _canonical({"published_on": published_on, "snapshot": snap})
-    fd, tmp = tempfile.mkstemp(prefix=".publishing-", suffix=".tmp", dir=archive_dir)
+    stage = os.path.join(archive_dir, f".{_name(snap)}.{os.urandom(8).hex()}.tmp")
+    # Owner-only, like the earlier mkstemp stage: the linked record keeps this mode.
+    fd = os.open(stage, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
     try:
-        with os.fdopen(fd, "w", encoding="utf-8") as f:
+        with open(fd, "w", encoding="utf-8") as f:
             f.write(text)
             f.flush()
             os.fsync(f.fileno())
         try:
-            os.link(tmp, path)
+            os.link(stage, path)
             outcome = {"path": path, "written": True, "published_on": published_on}
         except FileExistsError:
             outcome = _existing(path, snap)
     except BaseException as e:
-        if _remove(tmp):
-            e.stage_retained = os.path.basename(tmp)  # type: ignore[attr-defined]
+        if _remove(stage):
+            e.stage_retained = os.path.basename(stage)  # type: ignore[attr-defined]
+            e.add_note(f"Staging file {os.path.basename(stage)} could not be removed.")
         raise
-    if _remove(tmp):
-        outcome["stage_retained"] = os.path.basename(tmp)
+    if _remove(stage):
+        outcome["stage_retained"] = os.path.basename(stage)
     return _confirmed(outcome, archive_dir)
 
 
@@ -170,7 +188,7 @@ def _confirmed(outcome: dict[str, Any], archive_dir: Path) -> dict[str, Any]:
 
 
 def _remove(stage: str) -> bool:
-    """Remove this call's own stage file without raising. True when it could not be removed."""
+    """Remove this call's own staging file. True when it could not be removed and remains."""
     try:
         os.unlink(stage)
     except FileNotFoundError:

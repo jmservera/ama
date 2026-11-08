@@ -1,5 +1,6 @@
 """Case store: loading, views, actions, gates and the hash-chained audit log."""
 import csv
+import errno
 import hashlib
 import io
 import json
@@ -252,6 +253,13 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         out["signoff_problems"] = ranking.signoff_problems(ranking.CURRENT)
         return out
 
+    @staticmethod
+    def _log_retained_stage(error):
+        retained = getattr(error, "stage_retained", None)
+        if retained:
+            logging.getLogger(__name__).warning("Ranking archive temporary file %s was not removed", retained)
+        return retained
+
     def publish_ranking_snapshot(self, user):
         """Archive today's snapshot under the current policy; a manager action, idempotent, audited, never rewrites an archived file."""
         if user["role"] not in MANAGER_ROLES:
@@ -261,8 +269,10 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             try:
                 res = ranking_publication.publish(snap, self._ranking_archive(), controls.today())
             except ranking_publication.PublicationError as e:
+                self._log_retained_stage(e)
                 raise ValueError(str(e)) from e
             except ranking_publication.DurabilityUnconfirmedError as e:
+                self._log_retained_stage(e)
                 signed = ranking.is_signed(ranking.CURRENT)
                 try:
                     self.audit(user["email"], "ranking_snapshot_publication_unconfirmed", "-",
@@ -272,11 +282,26 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                     logging.getLogger(__name__).exception("Ranking record written, directory sync unconfirmed and its audit entry failed")
                     raise
                 raise e
+            except OSError as e:
+                logging.getLogger(__name__).error("Ranking archive could not be written: %s", e)
+                retained = self._log_retained_stage(e)
+                leftover = (" A temporary file could not be removed; the operator log names it."
+                            if retained else "")
+                raise ranking_publication.ArchiveStorageError(
+                    f"The ranking archive cannot be written ({type(e).__name__}, {errno.errorcode.get(e.errno or 0, 'unknown')}). "
+                    "It must be a local folder that supports hard links and is writable. Publication could not be confirmed; "
+                    "a record already archived is reported as already published on retry." + leftover + " "
+                    "Owner: your operator. Next action: ask them to check the archive location.") from e
             signed = ranking.is_signed(ranking.CURRENT)
             self.audit(user["email"], "ranking_snapshot_published" if res["written"] else "ranking_snapshot_already_published", "-",
                        f"policy {snap['policy_version']} ({'signed' if signed else 'unsigned'}); as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}")
-            return {"written": res["written"], "published_on": res["published_on"], "policy_version": snap["policy_version"],
+            body = {"written": res["written"], "published_on": res["published_on"], "policy_version": snap["policy_version"],
                     "policy_signed": signed, "as_of": snap["as_of"], "snapshot_hash": snap["snapshot_hash"]}
+            if res.get("stage_retained"):
+                logging.getLogger(__name__).warning("Ranking archive temporary file %s was not removed", res["stage_retained"])
+                body["warning"] = ("The record is archived, but a temporary file could not be removed. "
+                                   "Owner: your operator. Next action: ask them to check the archive permissions.")
+            return body
 
     def _queue_candidates(self, queue):
         """Index IDs, never viewer-projected context; called under the store lock."""
