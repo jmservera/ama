@@ -180,8 +180,9 @@ the native `core` frame of the full Azure drawing, not a scaled full poster.
 Keep the complete Excalidraw/SVG/PNG, core derivatives, generator and text
 equivalent together. Local Excalidraw 0.2.0 with existing Chromium generated
 the PNGs; no account/upload or remote image model was used. The catalog pins
-both source models and their exact derivatives. `architecture-*` is an
-explicit allowed media prefix, not an unchecked image-source fallback.
+both source models and their exact derivatives. New package member names
+reuse the builder's existing `roadmap-*` additional-media convention; this
+internal prefix does not classify an architecture as future or deployed.
 The full view's PaaS services are outside the VNet; production/background/
 resident options remain distinct from the selected shared-API source view.
 

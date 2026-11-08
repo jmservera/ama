@@ -225,3 +225,11 @@ The only changed diagram-evidence input is the API README; its bounded-chat
 section is identical, so the diagram refresh changes provenance hashes,
 not topology or claims. The final candidate needs a fresh gate and
 independent exact-head assessment after that refresh.
+
+The initial focused-gate attempt selected all runtime/resource groups because
+the revision unnecessarily extended the shared builder's media-prefix list.
+That attempt was stopped, not reported as passed. The final implementation
+instead reuses the existing additional-media naming contract and restores the
+builder exactly to main. Diagram IDs, content, hashes, visible meaning and
+behaviour do not change; no gate rule or protection is weakened. A new
+exact-head gate follows the packaging correction.

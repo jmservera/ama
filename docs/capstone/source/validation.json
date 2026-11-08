@@ -9,16 +9,16 @@
     "package_members": 298,
     "baseline_members": 293,
     "added_media_parts": [
-      "ppt/media/architecture-azure-core.png",
-      "ppt/media/architecture-cxo.png",
       "ppt/media/journey-resident.png",
+      "ppt/media/roadmap-azure-architecture.png",
+      "ppt/media/roadmap-cxo-architecture.png",
       "ppt/media/roadmap-fabric.png",
       "ppt/media/roadmap-power-bi.png"
     ],
     "changed_members": [
-      "ppt/media/architecture-azure-core.png",
-      "ppt/media/architecture-cxo.png",
       "ppt/media/journey-resident.png",
+      "ppt/media/roadmap-azure-architecture.png",
+      "ppt/media/roadmap-cxo-architecture.png",
       "ppt/media/roadmap-fabric.png",
       "ppt/media/roadmap-power-bi.png",
       "ppt/notesSlides/notesSlide1.xml",
@@ -113,28 +113,29 @@
       52
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "dd2a52fa8408ccf9efdb7b7e6e21369220d872502c4578bc3ed0ffef550041e8",
+    "candidate_sha256": "385931154d1184950d248b7e5ccc6cee27781ae93090419db92aa40ba8c5710e",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
     "manifest_sha256": "d51cb2e324dc76a4be828f5725f91b4469d35b13695614c5046745f5f1ba52ca",
-    "asset_catalog_sha256": "13d9e75ee5a02af33ae7540963549fbb2a0e321f3f69da22b9fd2c936a0c25bf",
-    "builder_sha256": "0806858e1bdbae7f67b3069ef8d9b812efbb738262bba542904fa43068960b3f",
+    "asset_catalog_sha256": "e7eb49ecbe5e3530cc5834acb0e1634e152d5e68448dd52217f6ee05cbc10466",
+    "builder_sha256": "4c168289a7352017e6c9cb9456fe9fe1436e8ad38ca3721268366c85492829d4",
     "native_helper_sha256": "956d56cf4032d33deca9f61c606899927e3a3ae431878811bfe84aefba742c94"
   },
   "source_verification": {
     "verified_on": "2026-11-08",
     "action": "Verify",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
-    "verification_report_sha256": "dc3b6588da87fd47183736d1eac8a35c1eca787489048e1e5dafd0b42e95755f",
-    "delivery_unchanged": true,
+    "verification_report_sha256": "ac4c29d520c49afe07fe643a3f938be0e9a48033257dd6e6601d352941c9971a",
+    "delivery_unchanged": false,
     "runtime": "Installed PowerShell on Linux; no Windows PowerPoint execution.",
-    "source_refresh": "Owner-approved normal merge over fa7ae0c9; original model basis c50e9f0b; exact PPTX/notes and all diagram PNGs byte-identical after evidence refresh."
+    "source_refresh": "Owner-approved normal merge over fa7ae0c9; original model basis c50e9f0b; exact PPTX/notes and all diagram PNGs byte-identical after evidence refresh.",
+    "packaging": "Existing additional-media names reused; shared builder equals main. All slide XML and rendered pixels unchanged by naming-only correction."
   },
   "preview": {
     "renderer": "LibreOffice 24.2.7.2 420(Build:2)",
     "native_powerpoint_validation": false,
-    "source_sha256": "dd2a52fa8408ccf9efdb7b7e6e21369220d872502c4578bc3ed0ffef550041e8",
-    "pdf_sha256": "14c8aa8bafb8a03548faf4018211f983ab3ba44f736399d764e39a5a4c9c6a19",
+    "source_sha256": "385931154d1184950d248b7e5ccc6cee27781ae93090419db92aa40ba8c5710e",
+    "pdf_sha256": "d18cab2f22d753f37e36f929a606ac3eba671cf9734ce90b46059d70702c494c",
     "navigation": {
       "slides": 54,
       "fixed_slide_jumps": 108,
@@ -174,7 +175,8 @@
     "identical_pages": 44,
     "revised_text_frames": 349,
     "text_failures": [],
-    "tolerance_points": 1.5
+    "tolerance_points": 1.5,
+    "packaging_refresh": "All 54 slide XML parts and all 54 rendered pixels are identical to validated build-2; only image package member names/notes candidate hash change."
   },
   "native": {
     "status": "not_run",

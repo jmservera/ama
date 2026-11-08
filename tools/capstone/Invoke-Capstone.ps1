@@ -188,7 +188,7 @@ function Export-AuthoringSource {
     if (@($Additional.id | Select-Object -Unique).Count -ne $Additional.Count -or
         @($Additional.part | Select-Object -Unique).Count -ne $Additional.Count) { throw 'Duplicate additional-media identity' }
     foreach ($Asset in $Additional) {
-        if ($Asset.id -cnotmatch '^[a-z][a-z0-9-]*$' -or $Asset.part -cnotmatch '^ppt/media/(roadmap|journey|architecture)-[a-z0-9-]+\.png$' -or
+        if ($Asset.id -cnotmatch '^[a-z][a-z0-9-]*$' -or $Asset.part -cnotmatch '^ppt/media/(roadmap|journey)-[a-z0-9-]+\.png$' -or
             $Archive.GetEntry($Asset.part)) { throw 'Invalid or colliding additional-media part' }
         $Bytes = [IO.File]::ReadAllBytes((Resolve-LocalInput $Root $Asset.path))
         if ((Get-ByteHash $Bytes) -cne $Asset.sha256) { throw "Additional media hash mismatch: $($Asset.id)" }

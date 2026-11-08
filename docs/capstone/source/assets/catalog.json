@@ -3,7 +3,7 @@
   "additional_media": [
     {
       "id": "cxo-architecture",
-      "part": "ppt/media/architecture-cxo.png",
+      "part": "ppt/media/roadmap-cxo-architecture.png",
       "path": "diagrams/architecture/cxo-architecture.png",
       "sha256": "53fe4a9d1595a9139bd856f9ac5278afa917da0c9025bef4e3ce83b520acf006",
       "pixel_width": 2400,
@@ -18,7 +18,7 @@
     },
     {
       "id": "azure-architecture",
-      "part": "ppt/media/architecture-azure-core.png",
+      "part": "ppt/media/roadmap-azure-architecture.png",
       "path": "diagrams/architecture/azure-core.png",
       "sha256": "af98b963b6923c1835e2f4d6ddc50d9c0a3232e06ce7991caba06127e82b3492",
       "pixel_width": 3600,
