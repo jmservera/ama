@@ -54,6 +54,15 @@ work; a task that went stale before any model call does not throttle its replace
 sets only the durable `manual_requested` flag and never rewrites a dispatch already claimed. The
 evidence rule states both horizons: newest readings within 366 days, and context readings within
 30 days of the quality record time, which may be older.
+C5: SQL guard triggers on `sensor_consumer_control` delete the index marker on any control write
+outside `configure` or reconcile, and the marker carries `v: 2`, so a changed control home, an older
+marker or a missing guard fails consent closed until `migrate()`. Scheduling reads one compact
+`assistant_schedule` row and the exact task by primary key (no task-body scans). A queued proactive
+task takes newer same-schedule readings at claim instead of being replaced, a never-dispatched stale
+task is requeued when its exact evidence returns, and a returned proactive flag stays a
+review-suggested flag with a newer-readings note. Consent is checked again before dispatch and
+immediately before the provider call. The request carries the as-of time and a fresh, stale or unknown
+freshness state; readings dated beyond the next day are reported as future-dated, not absent.
 
 `review_flag` names the state of a returned model output. Only a proactive,
 current, returned finding that cites a captured reading is an automatic L4

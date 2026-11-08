@@ -210,12 +210,32 @@ def _write_marker(db: Connection, controls: Iterable[tuple[str, str]]) -> None:
     for home_id, sensor_id in controls:
         homes.setdefault(home_id, []).append(sensor_id)
         count += 1
-    body = {"count": count, "homes": {h: home_digest(s) for h, s in homes.items()}}
+    body = {"v": 2, "count": count, "homes": {h: home_digest(s) for h, s in homes.items()}}
     db.execute("DELETE FROM sensor_consumer_index_state")
     db.execute(
         "INSERT INTO sensor_consumer_index_state (id, body) VALUES (1, ?)",
         (json.dumps(body, sort_keys=True),),
     )
+
+
+def ensure_control_guard(db: Connection, mssql: bool) -> None:
+    """Any control write outside a reconciled write deletes the index marker.
+
+    Readers then fail consent closed until the index is rebuilt. It never writes policy, controls
+    or consent.
+    """
+    if mssql:
+        db.execute(
+            "IF OBJECT_ID(N'sensor_consumer_control_guard', N'TR') IS NULL EXEC(N'CREATE TRIGGER"
+            " sensor_consumer_control_guard ON sensor_consumer_control AFTER INSERT, UPDATE, DELETE"
+            " AS DELETE FROM sensor_consumer_index_state')"
+        )
+        return
+    for event, suffix in (("INSERT", "ins"), ("UPDATE", "upd"), ("DELETE", "del")):
+        db.execute(
+            f"CREATE TRIGGER IF NOT EXISTS sensor_consumer_control_guard_{suffix} AFTER {event}"
+            " ON sensor_consumer_control BEGIN DELETE FROM sensor_consumer_index_state; END"
+        )
 
 
 def ensure_control_home(db: Connection, mssql: bool) -> None:
@@ -243,6 +263,7 @@ def ensure_control_home(db: Connection, mssql: bool) -> None:
             )
     if present:
         try:
+            ensure_control_guard(db, mssql)
             reconcile_control_home(db)
         except Exception:
             # Without a marker the readers withhold consent until an operator repairs the controls.
@@ -408,6 +429,7 @@ class SensorConsumer:
                 db.execute(f"IF OBJECT_ID(N'{name}', N'U') IS NULL {ddl}")
             else:
                 db.execute(ddl.replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", 1))
+        ensure_control_guard(db, self.mssql)
         if self.mssql:
             db.execute(
                 "IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name='ix_sensor_reading_home_time'"

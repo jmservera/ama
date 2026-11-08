@@ -1158,7 +1158,7 @@ class DialectTests(Base):
         self.assertIn("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE", statements)
         self.assertTrue(any("OFFSET 0 ROWS FETCH NEXT" in s for s in statements))
         self.assertTrue(any("fence=?" in s and "lease_until>?" in s for s in statements))
-        self.assertEqual(len(MSSQL_DDL), 5)
+        self.assertEqual(len(MSSQL_DDL), 6)
 
 
 class ConfigurationTests(unittest.TestCase):

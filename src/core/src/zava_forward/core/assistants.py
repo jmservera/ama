@@ -258,7 +258,7 @@ def eligible(capability, snapshot, now_date, changed=False, known=False):
     return changed or bool(sensors.get("state") == "ok" and sensors.get("readings") and s["quality"] and not known)
 
 
-def review_flag(task, provenance=(), actionable=True, withheld=False):
+def review_flag(task, provenance=(), actionable=True, withheld=False, newer_readings=False):
     """Projection of a returned quality-evidence output. Only a proactive, current, returned model finding
     that cites captured sensor readings is an autonomous L4 review flag; every other state is named as such."""
     envelope, output = task.get("envelope") or {}, task.get("output")
@@ -287,7 +287,12 @@ def review_flag(task, provenance=(), actionable=True, withheld=False):
         status = "review-suggested"
     autonomous = status == "review-suggested"
     sensors = task["snapshot"]["sources"].get("sensors") or {}
+    as_of = (task.get("dispatch") or {}).get("as_of")
+    timing = sensor_view.as_of_state(sensors, as_of) if isinstance(as_of, (int, float)) else {}
+    newer = bool(newer_readings and autonomous)
     return dict(level="L4" if autonomous else None, status=status, autonomous=autonomous, unapproved=True,
+                newer_readings=newer, evidence_as_of=timing.get("request_as_of"), freshness=timing.get("freshness"),
+                age_minutes=timing.get("age_minutes"),
                 task_state=state, trigger="proactive" if proactive else "requested",
                 model=dict(provider=envelope.get("provider"), deployment=envelope.get("deployment"), model=envelope.get("model"),
                            task_version=envelope.get("task_version"), release=task.get("release")),
@@ -297,7 +302,8 @@ def review_flag(task, provenance=(), actionable=True, withheld=False):
                 source_time=datetime.fromtimestamp(task["created_at"], timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ") if isinstance(task.get("created_at"), (int, float)) else None,
                 delivery="No named recipient or delivery of a request is recorded.",
                 effect="Suggests a person review the cited readings. It does not accept work, close a defect, authorise payment or consent, "
-                       "diagnose a hazard or change any ranking.")
+                       "diagnose a hazard or change any ranking."
+                       + (" Retained readings changed after this finding was captured; review the current readings and request a new proposal if needed." if newer else ""))
 
 
 def validate_output(value, snapshot, max_chars):
@@ -403,8 +409,12 @@ def runtime_binding(capability, ai):
 
 def build_request(task):
     """The system and user text sent to the provider; shared by the API and the agents worker."""
+    evidence, as_of = task["snapshot"], (task.get("dispatch") or {}).get("as_of")
+    sensors = evidence.get("sources", {}).get("sensors")
+    if sensors is not None and isinstance(as_of, (int, float)):
+        evidence = dict(evidence, sources=dict(evidence["sources"], sensors=dict(sensors, **sensor_view.as_of_state(sensors, as_of))))
     return SYSTEM, canonical(dict(capability=task["capability"], purpose=REGISTRY[task["capability"]]["purpose"],
-                                  evidence=task["snapshot"]))
+                                  evidence=evidence))
 
 
 def shape_result(task, result, limits):
@@ -445,12 +455,14 @@ SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS assistant_attempts (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, fence INTEGER NOT NULL, pool TEXT NOT NULL, reserved INTEGER NOT NULL, actual INTEGER, outcome TEXT NOT NULL, active_until REAL NOT NULL DEFAULT 0)",
     "CREATE TABLE IF NOT EXISTS assistant_events (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, at REAL NOT NULL, body TEXT NOT NULL)",
     "CREATE INDEX IF NOT EXISTS ix_assistant_pending ON assistant_tasks (state, not_before, lease_until)",
+    "CREATE TABLE IF NOT EXISTS assistant_schedule (capability TEXT NOT NULL, case_id TEXT NOT NULL, scope TEXT NOT NULL, signature TEXT NOT NULL, task_id TEXT NOT NULL, at REAL NOT NULL, PRIMARY KEY (capability, case_id))",
 ) + rel.SQLITE_DDL
 MSSQL_DDL = (
     "CREATE TABLE assistant_tasks (id VARCHAR(64) PRIMARY KEY, capability VARCHAR(64) NOT NULL, case_id NVARCHAR(64) NOT NULL, signature VARCHAR(64) NOT NULL, body NVARCHAR(MAX) NOT NULL, state VARCHAR(24) NOT NULL, fence BIGINT NOT NULL, owner VARCHAR(64) NOT NULL, lease_until FLOAT NOT NULL, attempts INT NOT NULL, not_before FLOAT NOT NULL, revision BIGINT NOT NULL)",
     "CREATE TABLE assistant_allowance (id VARCHAR(64) PRIMARY KEY, calls BIGINT NOT NULL, tokens BIGINT NOT NULL, expires FLOAT NOT NULL, used_calls BIGINT NOT NULL, reserved_tokens BIGINT NOT NULL)",
     "CREATE TABLE assistant_attempts (id VARCHAR(100) PRIMARY KEY, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL, pool VARCHAR(64) NOT NULL, reserved BIGINT NOT NULL, actual BIGINT NULL, outcome VARCHAR(40) NOT NULL, active_until FLOAT NOT NULL DEFAULT 0)",
     "CREATE TABLE assistant_events (id VARCHAR(64) PRIMARY KEY, task_id VARCHAR(64) NOT NULL, at FLOAT NOT NULL, body NVARCHAR(MAX) NOT NULL)",
+    "CREATE TABLE assistant_schedule (capability VARCHAR(64) NOT NULL, case_id NVARCHAR(64) NOT NULL, scope VARCHAR(64) NOT NULL, signature VARCHAR(64) NOT NULL, task_id VARCHAR(64) NOT NULL, at FLOAT NOT NULL, PRIMARY KEY (capability, case_id))",
 ) + rel.MSSQL_DDL
 
 
@@ -764,10 +776,15 @@ class Assistants:
                        (tid, capability, c["id"], scheduling_signature(snapshot), canonical(body), state))
         elif not self.disabled(db, capability):
             task = self._row(db, tid)
-            if task["state"] == "disabled" and task["attempts"] < self.limits.attempts:
+            # The exact evidence is current again, so a never-dispatched stale or disabled task is runnable work.
+            if task["state"] in ("disabled", "stale") and task["attempts"] < self.limits.attempts:
+                was = task["state"]
                 task["reason"] = None
                 db.execute("UPDATE assistant_tasks SET state='pending',body=?,revision=revision+1 WHERE id=?",
                            (canonical(task), tid))
+                if was == "stale":
+                    self.event(db, tid, kind="requeued", reason="The exact source evidence is current again.")
+        self._occupy(db, capability, c["id"], scheduling_signature(snapshot), tid)
         if row is not None and mode != "proactive":
             self._mark_requested(db, tid)
         denied = self.admission(db, capability)
@@ -806,7 +823,9 @@ class Assistants:
     def _view(self, db, user, tid, history_offset=0):
         body = self._row(db, tid)
         c = self.authorize(db, user, body["capability"], body["case_id"])
-        body["stale"] = signature(self.snapshot(db, body["capability"], c)) != body["source_signature"]
+        current = self.snapshot(db, body["capability"], c)
+        body["stale"] = signature(current) != body["source_signature"]
+        newer = body["stale"] and scheduling_signature(current) == scheduling_signature(body["snapshot"])
         history_limit = 50
         query = "SELECT body FROM assistant_events WHERE task_id=? ORDER BY at DESC,id DESC"
         query += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY" if self.mssql else " LIMIT ? OFFSET ?"
@@ -833,21 +852,25 @@ class Assistants:
         withheld = self._withhold_sensors(db, body)
         if withheld:
             body["provenance"] = self._scrub_events(body["provenance"])
-        body["review_flag"] = review_flag(body, body["provenance"], body["actionable"], withheld)
+        keeps = newer and (body.get("dispatch") or {}).get("trigger") == "proactive" and body["epoch_current"] and held is None and body["state"] == "ready" and not body["release_denial"]
+        body["review_flag"] = review_flag(body, body["provenance"], body["actionable"] or keeps, withheld, newer_readings=newer)
         return body
 
-    def _withhold_sensors(self, db, body):
-        """Current-consent projection: stored records stay, but values, citations and derived text are not disclosed."""
+    def _sensors_granted(self, db, body):
+        """True when the captured readings may still be shown or sent: none captured, or consent is granted now."""
         sensors = (body.get("snapshot") or {}).get("sources", {}).get("sensors")
         captured = sensor_view.citations(sensors or {})
         if body.get("capability") != "quality-evidence" or not captured:
-            return False
+            return True
         ids = {r["sensor_id"] for r in captured.values()}
         try:
-            granted = sensor_view.consent(db, body["case_id"], ids, self.mssql) == "granted"
+            return sensor_view.consent(db, body["case_id"], ids, self.mssql) == "granted"
         except Exception:
-            granted = False
-        if granted:
+            return False
+
+    def _withhold_sensors(self, db, body):
+        """Current-consent projection: stored records stay, but values, citations and derived text are not disclosed."""
+        if self._sensors_granted(db, body):
             return False
         note = "Monitoring consent is not granted now; retained readings are withheld."
         stub = dict(state="consent-withheld", detail=note, readings=[], before=[], after=[], latest=None, citation_keys=[])
@@ -966,8 +989,9 @@ class Assistants:
                     s = self.snapshot(db, cap, c)
                     if self._due(db, cap, c, s, today):
                         eligible_now += 1
-                        if db.execute("SELECT 1 FROM assistant_tasks WHERE id=?",
-                                      (self._task_id(db, cap, c, signature(s)),)).fetchone() is None:
+                        found = db.execute("SELECT state,attempts FROM assistant_tasks WHERE id=?",
+                                           (self._task_id(db, cap, c, signature(s)),)).fetchone()
+                        if found is None or (found[0] == "stale" and found[1] < self.limits.attempts):
                             new += 1
                 result.append(dict(id=cap, rule=RULES[cap], open_cases_in_scope=len(scoped), eligible_cases=eligible_now,
                                    new_proposals=new, max_calls_per_request=bounds["max_calls_per_request"],
@@ -982,35 +1006,26 @@ class Assistants:
                     basis="Upper bound from current case state; routine case edits can add proposals later. Read-only.",
                     manual="Proactive scans stay off unless an operator enables them; use the ordinary case controls.")
 
-    def _serviced(self, db, cap, c):
-        """Coarse schedules of the latest task in the current release and continuity scope. A task that
-        went stale before any model call never serviced its schedule, so it does not throttle."""
-        release, epoch = canonical(self.release_reference(db, cap)), self.continuity(db)["epoch"]
-        latest, found = None, set()
-        for sig, state, attempts, raw in db.execute(
-                "SELECT signature,state,attempts,body FROM assistant_tasks WHERE capability=? AND case_id=?",
-                (cap, c["id"])).fetchall():
-            body = json.loads(raw)
-            if canonical(body.get("release")) != release or body.get("continuity_epoch") != epoch:
-                continue
-            if state == "stale" and attempts == 0:
-                continue
-            stamp = body.get("created_at", 0)
-            if latest is None or stamp > latest:
-                latest, found = stamp, set()
-            if stamp == latest:
-                found.add(sig)
-        return found
+    def _scope(self, db, cap):
+        return digest([self.release_reference(db, cap), self.continuity(db)["epoch"]])
+
+    def _occupy(self, db, cap, case_id, coarse, tid):
+        """Record the task that holds this case's proactive schedule slot; one row per (assistant, case)."""
+        values = (self._scope(db, cap), coarse, tid, self.now(db), cap, case_id)
+        if db.execute("UPDATE assistant_schedule SET scope=?,signature=?,task_id=?,at=? WHERE capability=? AND case_id=?", values).rowcount == 0:
+            db.execute("INSERT INTO assistant_schedule (scope,signature,task_id,at,capability,case_id) VALUES (?,?,?,?,?,?)", values)
 
     def _due(self, db, cap, c, snapshot, today):
         """Whether a proactive scan may start work. The coarse signature throttles every eligible branch,
-        gaps included, only within the current release and continuity scope and only while the latest
-        serviced task has the same schedule; any other change, an existing exact task or a manual
-        request is never suppressed."""
-        serviced = self._serviced(db, cap, c)
-        sig = scheduling_signature(snapshot)
-        known = sig in serviced
-        if not eligible(cap, snapshot, today, bool(serviced) and not known, known):
+        gaps included, only within the current release and continuity scope and only while the slot's task
+        is serviced; any other change or a manual request is never suppressed. Reads are by primary key."""
+        slot = db.execute("SELECT scope,signature,task_id FROM assistant_schedule WHERE capability=? AND case_id=?", (cap, c["id"])).fetchone()
+        scoped = slot is not None and slot[0] == self._scope(db, cap)
+        known = False
+        if scoped and slot[1] == scheduling_signature(snapshot):
+            held = db.execute("SELECT state,attempts FROM assistant_tasks WHERE id=?", (slot[2],)).fetchone()
+            known = held is not None and not (held[0] == "stale" and held[1] == 0)
+        if not eligible(cap, snapshot, today, scoped and not known, known):
             return False
         exists = db.execute("SELECT 1 FROM assistant_tasks WHERE id=?", (self._task_id(db, cap, c, signature(snapshot)),)).fetchone()
         return exists is not None or not known
@@ -1064,7 +1079,15 @@ class Assistants:
                 self.event(db, tid, kind="disabled", reason=reason)
                 return None
             row = db.execute("SELECT body FROM cases WHERE id=?", (task["case_id"],)).fetchone()
-            if row is None or signature(self.snapshot(db, task["capability"], json.loads(row[0]))) != task["source_signature"]:
+            current = self.snapshot(db, task["capability"], json.loads(row[0])) if row else None
+            if current is not None and signature(current) != task["source_signature"] and self._refreshable(task, current):
+                # Newer readings in the same coarse schedule: the queued proactive task takes the current capture, so churn
+                # before a claim never replaces it. The call is still gated by the allowance below.
+                task["snapshot"], task["source_signature"] = current, signature(current)
+                db.execute("UPDATE assistant_tasks SET body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
+                task["revision"] += 1
+                self.event(db, tid, kind="refreshed", reason="Newer readings in the same schedule were captured before the model call.")
+            if current is None or signature(current) != task["source_signature"]:
                 task["reason"] = "Permitted source changed; request a new proposal or work manually."
                 db.execute("UPDATE assistant_tasks SET state='stale',body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
                 self.event(db, tid, kind="stale", reason=task["reason"])
@@ -1094,7 +1117,7 @@ class Assistants:
             task["reason"] = None
             task["claim_epoch"] = self.continuity(db)["epoch"]
             # Only an explicit absence of a person's request is proactive; legacy or unclear tasks are not.
-            task["dispatch"] = dict(trigger="proactive" if task.get("manual_requested") is False else "requested", fence=fence)
+            task["dispatch"] = dict(trigger="proactive" if task.get("manual_requested") is False else "requested", fence=fence, as_of=now)
             task["claim_binding"] = digest(runtime_binding(task["capability"], self.store.ai))
             result = db.execute("UPDATE assistant_tasks SET state='leased',body=?,owner=?,fence=?,lease_until=?,attempts=attempts+1,revision=revision+1 WHERE id=? AND fence=? AND revision=?",
                                 (canonical(task), owner, fence, now + l.lease, tid, task["fence"], task["revision"]))
@@ -1106,6 +1129,11 @@ class Assistants:
             self.event(db, tid, kind="claimed", owner=owner, fence=fence, reservation=l.reservation,
                        authority_reference=l.authority, trigger=task["dispatch"]["trigger"])
             return self._row(db, tid)
+
+    def _refreshable(self, task, current):
+        """Only an unrequested proactive task whose coarse schedule is unchanged and still within the input bound."""
+        return (task.get("manual_requested") is False and scheduling_signature(current) == scheduling_signature(task["snapshot"])
+                and not (self.limits.valid and len(canonical(current)) > self.limits.input_chars - 1500))
 
     def renew(self, tid, owner, fence):
         with self.transaction() as db:
@@ -1222,6 +1250,11 @@ class Assistants:
 
         def call():
             try:
+                with self.transaction() as db:
+                    withdrawn = not self._sensors_granted(db, task)
+                if withdrawn:
+                    values.append(dict(outcome="suspended-before-dispatch", usage=None, source="unverified", text=None))
+                    return
                 context = ai_consumption.CallContext(
                     ai_consumption.reference(task["id"]),
                     ai_consumption.reference(f"{task['id']}:{task['fence']}"),
@@ -1243,6 +1276,8 @@ class Assistants:
                 held = "Epoch changed before dispatch; use the manual route."
             if not held and task.get("release") != self.release_reference(db, task["capability"]):
                 held = "Release changed before dispatch; use the manual route."
+            if not held and not self._sensors_granted(db, task):
+                held = "Monitoring consent is not granted now; readings were not sent. Use the manual route."
         if held:
             self.call_slots.release()
             return self.complete(task, dict(outcome="suspended-before-dispatch", usage=None, source="unverified"), None, held)

@@ -322,7 +322,7 @@ class ReadModel(Seed, ta.Base):
         controls = [s for s in statements if "sensor_consumer_control" in s]
         self.assertTrue(controls)
         for s in controls:
-            if s.startswith("SELECT COUNT(*)"):
+            if s.startswith("SELECT COUNT(*)") or "sys.triggers" in s:
                 continue
             if "sensor_consumer_control_home" in s:
                 self.assertIn("WHERE home_id=?", s)
@@ -333,7 +333,7 @@ class ReadModel(Seed, ta.Base):
         self.assertTrue(readings)
         for s in readings:
             self.assertIn("home_id=?", s)
-            self.assertIn("observed_at<?", s)
+            self.assertTrue("observed_at<?" in s or "observed_at>=?" in s, s)
             self.assertTrue("FETCH NEXT" in s or "LIMIT" in s, s)
         with self.service.transaction() as db:
             if self.service.mssql:
@@ -558,6 +558,58 @@ class ReadModel(Seed, ta.Base):
         self.service.migrate()
         self.assertEqual((self.view()["state"], self._control_state()), ("ok", before))
 
+    def _move_control_home(self, sensor, home):
+        self._tamper(
+            "UPDATE sensor_consumer_control SET body=json_set(body,'$.home_id',?)"
+            " WHERE sensor_id=?",
+            home,
+            sensor,
+        )
+
+    def test_changed_control_home_with_a_valid_marker_fails_closed_until_migrated(self):
+        self.put(3)
+        self.set_consent("declined", home="ZF-2", sensor="SENS-B1")
+        self.assertEqual(self.view()["state"], "ok")
+        self._move_control_home("SENS-B1", "ZF-1")
+        v = self.view()
+        self.assertEqual((v["state"], v["latest"]), ("consent-withheld", None))
+        self.service.migrate()
+        self.assertEqual(self.view()["state"], "consent-withheld")
+        self._move_control_home("SENS-B1", "ZF-2")
+        self.assertEqual(self.view()["state"], "consent-withheld")
+        self.service.migrate()
+        self.assertEqual(self.view()["state"], "ok")
+
+    def test_previous_format_marker_or_missing_guard_fails_closed_until_migrated(self):
+        self.put(3)
+        self._tamper("UPDATE sensor_consumer_index_state SET body=json_remove(body,'$.v')")
+        self.assertEqual(self.view()["state"], "consent-withheld")
+        self.service.migrate()
+        self.assertEqual(self.view()["state"], "ok")
+        self._tamper("DROP TRIGGER sensor_consumer_control_guard_upd")
+        self.assertEqual(self.view()["state"], "consent-withheld")
+        before = self._control_state()
+        self.service.migrate()
+        self.service.migrate()
+        self.assertEqual((self.view()["state"], self._control_state()), ("ok", before))
+        with self.service.transaction() as db:
+            names = db.execute(
+                "SELECT name FROM sqlite_master WHERE type='trigger'"
+                " AND name LIKE 'sensor_consumer_control_guard_%'"
+            ).fetchall()
+        self.assertEqual(len(names), 3)
+
+    def test_future_readings_beyond_a_day_are_reported_not_absent(self):
+        self.put(0)
+        now = int(time.time())
+        for tag, ahead in (("A", 86400 + 60), ("B", 2 * 86400), ("C", 40 * 86400)):
+            with self.subTest(tag=tag):
+                self._tamper("DELETE FROM sensor_reading")
+                self.add_readings(1, tag=tag, base=now, offset=-ahead)
+                v = self.capture(now)
+                self.assertEqual((v["state"], v["latest"]), ("no-readings", None))
+                self.assertIs(v["future_dated_excluded"], True)
+
 
 class Http(Seed, ta.ApiTests):
     def proactive(self):
@@ -641,7 +693,8 @@ class Http(Seed, ta.ApiTests):
         self.ready()
         tid, _ = self.proactive()
         self.add_live(0, base=int(time.time()) // SEAL * SEAL + SEAL)
-        stale = self.service.detail(self.pm, tid)
+        with self.clock(SEAL + 60):
+            stale = self.service.detail(self.pm, tid)
         self.assertTrue(stale["stale"])
         self.assertEqual(stale["review_flag"]["status"], "not-current")
         self.assertFalse(stale["review_flag"]["autonomous"])
@@ -1114,39 +1167,6 @@ class Http(Seed, ta.ApiTests):
             row = db.execute("SELECT SUM(used_calls) FROM assistant_allowance").fetchone()
         return row[0] or 0
 
-    def test_arrival_before_claim_replaces_the_stale_task_once_within_the_allowance(self):
-        self.mock()
-        self.put(4)
-        self.add_live(10)
-        self.quality_ready()
-        self.service.scan()
-        (first,) = self.quality_task()
-        self.add_live(5)
-        self.service.scan()
-        self.assertEqual(self.quality_task(), [first])
-        self.assertFalse(self.service.execute(first))
-        self.assertEqual((self.provider.calls, self._used_calls()), (0, 0))
-        self.assertEqual(self.service.detail(self.pm, first)["state"], "stale")
-        self.assertEqual(self._new("quality-evidence"), 1)
-        self.service.scan_cursor = ""
-        self.service.scan()
-        tasks = self.quality_task()
-        self.assertEqual(len(tasks), 2)
-        (second,) = set(tasks) - {first}
-        self.add_live(4)
-        self.service.scan()
-        self.assertEqual(len(self.quality_task()), 2)
-        self.assertEqual(self._new("quality-evidence"), 0)
-        self.assertFalse(self.service.execute(second))
-        self.service.scan()
-        (third,) = set(self.quality_task()) - {first, second}
-        self.assertTrue(self.service.execute(third))
-        self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
-        self.add_live(3)
-        self.service.scan()
-        self.assertEqual(len(self.quality_task()), 3)
-        self.assertEqual(self.provider.calls, 1)
-
     def _gated(self, **kw):
         gate = dict(entered=threading.Event(), proceed=threading.Event())
         self.mock(gate=gate, **kw)
@@ -1217,6 +1237,196 @@ class Http(Seed, ta.ApiTests):
             sorted(k for k in sent["citations"] if k.startswith("sensor:")),
             sorted(sensor_view.citations(api)),
         )
+
+    def _ready_one(self, **kw):
+        self.mock(**kw)
+        self.put(4)
+        self.add_live(10)
+        self.quality_ready()
+
+    def view_latest(self):
+        return self.request("/api/cases/ZF-1/sensors")[1]["latest"]["reading_id"]
+
+    def test_exact_a_b_a_return_requeues_the_stale_task_within_the_allowance(self):
+        self._ready_one()
+        original = self.store.detail("ZF-1")["home"].get("epc")
+        self.service.scan()
+        (first,) = self.quality_task()
+        self._set_epc("Z")
+        self.assertFalse(self.service.execute(first))
+        self.assertEqual(self.service.detail(self.pm, first)["state"], "stale")
+        self.service.scan()
+        self._set_epc(original)
+        self.assertEqual(self._new("quality-evidence"), 1)
+        self.assertIn(first, self.service.scan()["enqueued"])
+        self.assertEqual(self.service.detail(self.pm, first)["state"], "pending")
+        self.assertTrue(self.service.execute(first))
+        self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
+        self.assertEqual(self.service.detail(self.pm, first)["state"], "ready")
+
+    def test_exact_a_b_a_return_is_requeued_by_a_manual_request_and_for_other_assistants(self):
+        self._ready_one()
+        original = self.store.detail("ZF-1")["home"].get("epc")
+        first = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
+        self._set_epc("Z")
+        self.assertFalse(self.service.execute(first))
+        self._set_epc(original)
+        again = self.service.invoke(self.pm, "quality-evidence", "ZF-1")
+        self.assertEqual((again["id"], again["state"]), (first, "pending"))
+        other = "assessment-preparation"
+        mine = self.service.invoke(self.pm, other, "ZF-1")["id"]
+        self._set_epc("Y")
+        self.assertFalse(self.service.execute(mine))
+        self._set_epc(original)
+        back = self.service.invoke(self.pm, other, "ZF-1")
+        self.assertEqual((back["id"], back["state"]), (mine, "pending"))
+
+    def test_sensor_churn_before_claim_is_one_task_one_dispatch_and_survives_restart(self):
+        self._ready_one()
+        self.service.scan()
+        (first,) = self.quality_task()
+        for minute in (9, 8, 7, 6, 5):
+            self.add_live(minute)
+            self.service.scan_cursor = ""
+            self.service.scan()
+        self.assertEqual(self.quality_task(), [first])
+        self.assertEqual(self._new("quality-evidence"), 0)
+        self.assertTrue(self.service.execute(first))
+        sent = self.provider.prompts[-1]["evidence"]["sources"]["sensors"]["latest"]
+        self.assertEqual(sent["reading_id"], self.view_latest())
+        self.service.scan_cursor = ""
+        self.service.scan()
+        self.assertEqual(self.quality_task(), [first])
+        self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
+
+    def test_a_new_reading_keeps_the_returned_flag_with_a_newer_readings_note(self):
+        self._ready_one()
+        tid, p = self.proactive()
+        self.assertEqual(p["review_flag"]["status"], "review-suggested")
+        before = self.quality_task()
+        self.add_live(5)
+        shown = self.service.detail(self.pm, tid)
+        flag = shown["review_flag"]
+        self.assertTrue(shown["stale"])
+        self.assertFalse(shown["actionable"])
+        self.assertEqual((flag["status"], flag["autonomous"]), ("review-suggested", True))
+        self.assertIs(flag["newer_readings"], True)
+        self.service.scan_cursor = ""
+        self.assertEqual(set(self.service.scan()["enqueued"]) & set(before), set())
+        self.assertEqual(self.quality_task(), before)
+        self.assertEqual(self.provider.calls, 1)
+
+    def test_withdrawal_between_claim_and_dispatch_sends_nothing(self):
+        self._ready_one()
+        self.service.scan()
+        (tid,) = self.quality_task()
+        real = self.service.claim
+
+        def claim(task, owner):
+            got = real(task, owner)
+            self.set_consent("declined")
+            return got
+
+        with patch.object(self.service, "claim", side_effect=claim):
+            self.service.execute(tid)
+        self.assertEqual(self.provider.calls, 0)
+        self.assertEqual(self.provider.prompts, [])
+
+    def test_withdrawal_after_the_pre_dispatch_check_sends_nothing(self):
+        self._ready_one()
+        self.service.scan()
+        (tid,) = self.quality_task()
+        outer = self
+
+        class Barrier:
+            def __init__(self, real):
+                self.real = real
+
+            def __enter__(self):
+                outer.set_consent("declined")
+                return self.real.__enter__()
+
+            def __exit__(self, *a):
+                return self.real.__exit__(*a)
+
+        with patch.object(self.service, "dispatch_lock", Barrier(self.service.dispatch_lock)):
+            self.service.execute(tid)
+        self.assertEqual(self.provider.calls, 0)
+
+    def test_withdrawal_during_a_started_call_is_withheld_everywhere(self):
+        gate = self._gated()
+        self.put(4)
+        self.add_live(10)
+        self.quality_ready()
+        self.service.scan()
+        (tid,) = self.quality_task()
+        worker = threading.Thread(target=self.service.execute, args=(tid,))
+        worker.start()
+        try:
+            self.assertTrue(gate["entered"].wait(20))
+            self.set_consent("declined")
+        finally:
+            gate["proceed"].set()
+            worker.join(30)
+        reading = self.provider.prompts[0]["evidence"]["sources"]["sensors"]["latest"]["reading_id"]
+        for name, body in self._after_withdrawal(tid).items():
+            self.assertNotIn(reading, json.dumps(body), name)
+
+    def test_scan_reads_schedule_by_key_with_many_historical_tasks(self):
+        self._ready_one()
+        self.service.scan()
+        (first,) = self.quality_task()
+        with self.service.transaction() as db:
+            body = db.execute("SELECT body FROM assistant_tasks WHERE id=?", (first,)).fetchone()[0]
+            for i in range(300):
+                db.execute(
+                    "INSERT INTO assistant_tasks (id,capability,case_id,signature,body,state,fence,"
+                    "owner,lease_until,attempts,not_before,revision)"
+                    " VALUES (?,?,?,?,?,'stale',0,'',0,0,0,1)",
+                    (f"old{i:03d}", "quality-evidence", "ZF-1", f"s{i}", body),
+                )
+        seen = []
+        real = self.store.assistant_connection
+
+        def traced():
+            db = real()
+            db.set_trace_callback(seen.append)
+            return db
+
+        with patch.object(self.store, "assistant_connection", side_effect=traced):
+            self.service.scan_cursor = ""
+            self.service.scan()
+            self._new("quality-evidence")
+        scans = [
+            x
+            for x in seen
+            if "FROM assistant_tasks" in x and "WHERE id=" not in x and "state IN" not in x
+        ]
+        self.assertEqual(scans, [])
+        self.assertEqual(self.quality_task().count(first), 1)
+
+    def test_request_carries_as_of_and_freshness_and_the_flag_repeats_them(self):
+        self._ready_one()
+        self.service.scan()
+        (tid,) = self.quality_task()
+        with self.clock(1200):
+            self.assertTrue(self.service.execute(tid))
+        sent = self.provider.prompts[-1]["evidence"]["sources"]["sensors"]
+        self.assertTrue(sent["request_as_of"].endswith("Z"))
+        self.assertEqual(sent["freshness"], "stale")
+        self.assertGreaterEqual(sent["age_minutes"], 30)
+        flag = self.service.detail(self.pm, tid)["review_flag"]
+        self.assertEqual(flag["freshness"], "stale")
+        self.assertEqual(flag["evidence_as_of"], sent["request_as_of"])
+
+    def test_request_marks_missing_sensor_evidence_as_unknown(self):
+        self.mock()
+        self.put(0)
+        self.quality_ready()
+        tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
+        self.service.execute(tid)
+        sent = self.provider.prompts[-1]["evidence"]["sources"]["sensors"]
+        self.assertEqual(sent["freshness"], "unknown")
 
 
 MSSQL = unittest.skipUnless(

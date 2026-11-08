@@ -115,8 +115,26 @@ def index_state(db):
         state = json.loads(str(row[0])) if row else None
     except Exception:
         return None
-    ok = isinstance(state, dict) and isinstance(state.get("homes"), dict)
+    ok = isinstance(state, dict) and isinstance(state.get("homes"), dict) and state.get("v") == 2
     return state if ok and isinstance(state.get("count"), int) else None
+
+
+def _guarded(db, mssql):
+    """The control guard drops the marker on any later control write; consent needs it present."""
+    try:
+        if mssql:
+            row = db.execute(
+                "SELECT 1 FROM sys.triggers WHERE name='sensor_consumer_control_guard'"
+                " AND is_disabled=0"
+            ).fetchone()
+            return row is not None
+        count = db.execute(
+            "SELECT COUNT(*) FROM sqlite_master WHERE type='trigger'"
+            " AND name LIKE 'sensor_consumer_control_guard_%'"
+        ).fetchone()[0]
+        return count == 3
+    except Exception:
+        return False
 
 
 def _controls(db, home_id, sensor_ids, mssql=False):
@@ -138,6 +156,7 @@ def _controls(db, home_id, sensor_ids, mssql=False):
     complete = (
         len(indexed) <= CONTROL_MAX
         and marker is not None
+        and _guarded(db, mssql)
         and marker["count"]
         == controls
         == db.execute("SELECT COUNT(*) FROM sensor_consumer_control_home").fetchone()[0]
@@ -259,9 +278,7 @@ def capture_source(db, home_id, reference, now, mssql=False):
             lower=as_of - timedelta(days=WINDOW_DAYS),
             upper=edge,
         )
-        future = bool(
-            _select(db, mssql, home_id, 1, False, lower=edge, upper=edge + timedelta(days=1))
-        )
+        future = bool(_select(db, mssql, home_id, 1, False, lower=edge, upper=None))
         before = after = []
         if reference is not None:
             span = timedelta(days=CONTEXT_DAYS)
@@ -361,9 +378,7 @@ def view(db, home_id, reference, now, mssql=False):
         return out
     latest = out["latest"]
     if latest:
-        age = int(now) - int(
-            datetime.strptime(latest["observed_at"], STAMP).replace(tzinfo=UTC).timestamp()
-        )
+        age = _age(latest, now)
         if age < 0:
             out.update(
                 age_seconds=0,
@@ -381,4 +396,33 @@ def view(db, home_id, reference, now, mssql=False):
                 else "Latest reading is older than 15 minutes. Treat it as out of date."
             ),
         )
+    return out
+
+
+def _age(latest, now):
+    observed = datetime.strptime(latest["observed_at"], STAMP).replace(tzinfo=UTC)
+    return int(now) - int(observed.timestamp())
+
+
+def as_of_state(sensors, as_of):
+    """The request time and freshness of a captured source.
+
+    A model cannot then take old or absent measurements for live evidence. It is added to the
+    request only and never enters the capture identity.
+    """
+    latest = (sensors or {}).get("latest")
+    out = dict(request_as_of=_text(_utc(int(as_of))), freshness="unknown", age_minutes=None)
+    notice = "No current indoor reading is available. Do not treat any value as live."
+    if latest:
+        age = _age(latest, as_of)
+        if age >= 0:
+            fresh = age <= FRESH_SECONDS
+            out.update(freshness="fresh" if fresh else "stale", age_minutes=age // 60)
+            notice = (
+                "The latest reading is within 15 minutes of the request time."
+                if fresh
+                else "The latest reading is older than 15 minutes at the request time."
+                " Treat it as out of date, not live."
+            )
+    out["freshness_notice"] = notice
     return out
