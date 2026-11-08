@@ -76,6 +76,7 @@ def digest(value):
 
 WITHHELD_OUTPUT = dict(summary="Withheld: this output was built with retained readings and monitoring consent is not granted now.",
                        findings=[], unknowns=[])
+WITHHELD_NOTE = "Withheld: this note may refer to retained readings and monitoring consent is not granted now."
 
 
 def signature(snapshot):
@@ -508,6 +509,12 @@ class Assistants:
                     db.execute(ddl)
                 for action in ("UPDATE", "DELETE"):
                     db.execute(f"CREATE TRIGGER IF NOT EXISTS assistant_events_no_{action.lower()} BEFORE {action} ON assistant_events BEGIN SELECT RAISE(ABORT, 'assistant evidence is append-only'); END")
+            try:
+                from .sensor_consumer import ensure_control_home
+                ensure_control_home(db, self.mssql)
+            except Exception:
+                # Readers fail closed on a missing or partial index; assistants keep working.
+                LOG.warning("Sensor consent index could not be reconciled; retained readings stay withheld.")
 
     @contextmanager
     def transaction(self):
@@ -748,7 +755,8 @@ class Assistants:
             body = dict(id=tid, capability=capability, version=VERSION, case_id=c["id"], proposal_identity=identity,
                         source_signature=signature_, snapshot=snapshot, output=None, verification=None, review=None, envelope=None,
                         manual=f"Review the ordinary case with {', '.join(REGISTRY[capability]['roles'])}.",
-                        release=release, reason=reason, continuity_epoch=epoch, created_at=self.now(db))
+                        release=release, reason=reason, continuity_epoch=epoch, created_at=self.now(db),
+                        manual_requested=mode != "proactive")
             state = "disabled" if reason else "pending"
             if self.limits.valid and len(canonical(snapshot)) > self.limits.input_chars - 1500:
                 state, body["reason"] = "failed", "Source capture exceeds bounded input. Review manually."
@@ -760,10 +768,23 @@ class Assistants:
                 task["reason"] = None
                 db.execute("UPDATE assistant_tasks SET state='pending',body=?,revision=revision+1 WHERE id=?",
                            (canonical(task), tid))
+        if row is not None and mode != "proactive":
+            self._mark_requested(db, tid)
         denied = self.admission(db, capability)
         self.event(db, tid, kind="invocation", mode=mode, actor=actor, purpose=PURPOSE if mode == "proactive" else None,
                    rules=RULE_VERSION, release=release, release_denial=denied)
         return tid
+
+    def _mark_requested(self, db, tid):
+        """A person's request is durable on the task, so attribution never depends on an event window.
+        A dispatch not yet returned is marked too; a completed one keeps its own provenance."""
+        task = self._row(db, tid)
+        if task["state"] not in ("pending", "leased", "disabled"):
+            return
+        task["manual_requested"] = True
+        if task["state"] == "leased" and task.get("dispatch"):
+            task["dispatch"] = dict(task["dispatch"], trigger="requested")
+        db.execute("UPDATE assistant_tasks SET body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
 
     def invoke(self, user, capability, case_id):
         if not isinstance(case_id, str) or not 1 <= len(case_id) <= 64:
@@ -820,9 +841,10 @@ class Assistants:
     def _withhold_sensors(self, db, body):
         """Current-consent projection: stored records stay, but values, citations and derived text are not disclosed."""
         sensors = (body.get("snapshot") or {}).get("sources", {}).get("sensors")
-        if body.get("capability") != "quality-evidence" or not sensors or sensors.get("state") != "ok":
+        captured = sensor_view.citations(sensors or {})
+        if body.get("capability") != "quality-evidence" or not captured:
             return False
-        ids = {r["sensor_id"] for r in sensor_view.citations(sensors).values()}
+        ids = {r["sensor_id"] for r in captured.values()}
         try:
             granted = sensor_view.consent(db, body["case_id"], ids, self.mssql) == "granted"
         except Exception:
@@ -835,13 +857,17 @@ class Assistants:
                                 citations={k: v for k, v in body["snapshot"]["citations"].items() if not k.startswith("sensor:")})
         if body.get("output"):
             body["output"] = dict(WITHHELD_OUTPUT)
+        for key in ("verification", "review"):
+            if (body.get(key) or {}).get("note"):
+                body[key] = dict(body[key], note=WITHHELD_NOTE)
         body["sensor_withheld"] = True
         return True
 
     @staticmethod
     def _scrub_events(events):
         """The model and any editor saw the withheld capture, so every output-bearing event field is withheld."""
-        return [dict(e, **{k: dict(WITHHELD_OUTPUT) for k in ("output", "edited_output") if e.get(k)}) for e in events]
+        return [dict(e, **{k: dict(WITHHELD_OUTPUT) for k in ("output", "edited_output") if e.get(k)},
+                     **({"note": WITHHELD_NOTE} if e.get("note") else {})) for e in events]
 
     def sensors(self, user, case_id):
         """Bounded retained indoor readings for one authorised case; the same source the quality snapshot captures."""
@@ -940,10 +966,7 @@ class Assistants:
                 eligible_now = new = 0
                 for c in scoped:
                     s = self.snapshot(db, cap, c)
-                    signatures = {r[0] for r in db.execute(
-                        "SELECT signature FROM assistant_tasks WHERE capability=? AND case_id=?", (cap, c["id"])).fetchall()}
-                    sig = scheduling_signature(s)
-                    if eligible(cap, s, today, bool(signatures) and sig not in signatures, sig in signatures):
+                    if self._due(db, cap, c, s, today):
                         eligible_now += 1
                         if db.execute("SELECT 1 FROM assistant_tasks WHERE id=?",
                                       (self._task_id(db, cap, c, signature(s)),)).fetchone() is None:
@@ -960,6 +983,18 @@ class Assistants:
                     cost="Unknown: no price source is set (BRD OD-51).",
                     basis="Upper bound from current case state; routine case edits can add proposals later. Read-only.",
                     manual="Proactive scans stay off unless an operator enables them; use the ordinary case controls.")
+
+    def _due(self, db, cap, c, snapshot, today):
+        """Whether a proactive scan may start work. The coarse signature throttles every eligible branch,
+        gaps included, but only when this exact capture has no task and the schedule is already known, so
+        non-sensor changes, existing tasks and manual requests are never suppressed."""
+        known = {r[0] for r in db.execute("SELECT signature FROM assistant_tasks WHERE capability=? AND case_id=?",
+                                          (cap, c["id"])).fetchall()}
+        sig = scheduling_signature(snapshot)
+        if not eligible(cap, snapshot, today, bool(known) and sig not in known, sig in known):
+            return False
+        exists = db.execute("SELECT 1 FROM assistant_tasks WHERE id=?", (self._task_id(db, cap, c, signature(snapshot)),)).fetchone()
+        return exists is not None or sig not in known
 
     def scan(self):
         if not self.sql or not self.limits.proactive:
@@ -983,11 +1018,7 @@ class Assistants:
                         if self.suspended(db, cap):
                             continue
                         s = self.snapshot(db, cap, c)
-                        signatures = db.execute("SELECT signature FROM assistant_tasks WHERE capability=? AND case_id=?",
-                                                (cap, cid)).fetchall()
-                        known = {r[0] for r in signatures}
-                        sig = scheduling_signature(s)
-                        if eligible(cap, s, today, bool(known) and sig not in known, sig in known):
+                        if self._due(db, cap, c, s, today):
                             result.append(self._enqueue(db, cap, c, "proactive", PURPOSE))
                 return dict(enqueued=result, disabled=None)
         finally:
@@ -1043,11 +1074,8 @@ class Assistants:
             fence = task["fence"] + 1
             task["reason"] = None
             task["claim_epoch"] = self.continuity(db)["epoch"]
-            invocations = [json.loads(r[0]) for r in db.execute(
-                "SELECT body FROM assistant_events WHERE task_id=? ORDER BY at,id" + (
-                    " OFFSET 0 ROWS FETCH NEXT 50 ROWS ONLY" if self.mssql else " LIMIT 50"), (tid,)).fetchall()]
-            requested = any(e.get("kind") == "invocation" and e.get("mode") != "proactive" for e in invocations)
-            task["dispatch"] = dict(trigger="requested" if requested else "proactive", fence=fence)
+            # Only an explicit absence of a person's request is proactive; legacy or unclear tasks are not.
+            task["dispatch"] = dict(trigger="proactive" if task.get("manual_requested") is False else "requested", fence=fence)
             task["claim_binding"] = digest(runtime_binding(task["capability"], self.store.ai))
             result = db.execute("UPDATE assistant_tasks SET state='leased',body=?,owner=?,fence=?,lease_until=?,attempts=attempts+1,revision=revision+1 WHERE id=? AND fence=? AND revision=?",
                                 (canonical(task), owner, fence, now + l.lease, tid, task["fence"], task["revision"]))
@@ -1237,7 +1265,11 @@ class Assistants:
             task = self._view(db, user, tid)
             if type(revision) is not int or revision != task["revision"]:
                 raise ConflictError(tid)
+            # The view may be a consent projection. Checks use it; the write uses the stored record.
+            stored = self._row(db, tid)
             if action != "reject":
+                if task.get("sensor_withheld"):
+                    raise PermissionError("Monitoring consent is not granted now, so the readings cannot be verified. Use the manual route or reject.")
                 if not task["epoch_current"]:
                     raise PermissionError("Proposal epoch changed or is unavailable; request fresh work or use the manual route.")
                 if task["suspension"]:
@@ -1255,20 +1287,19 @@ class Assistants:
                 if action == "verify":
                     if source_verified is not True:
                         raise ValueError("Explicit human source verification is required.")
-                    task["verification"] = dict(by=user["email"], signature=task["source_signature"], note=note, at=self.now(db))
+                    stored["verification"] = dict(by=user["email"], signature=task["source_signature"], note=note, at=self.now(db))
                 else:
                     verification = task.get("verification")
                     if not verification or verification["by"] != user["email"] or verification["signature"] != task["source_signature"]:
                         raise ValueError("Record your human source verification before accept/edit.")
                     if action == "edit-accept":
-                        task["output"] = validate_output(output, task["snapshot"], self.limits.output_chars)
-                    task["review"] = dict(action=action, by=user["email"], note=note, at=self.now(db))
+                        stored["output"] = validate_output(output, task["snapshot"], self.limits.output_chars)
+                    stored["review"] = dict(action=action, by=user["email"], note=note, at=self.now(db))
             else:
-                task["review"] = dict(action=action, by=user["email"], note=note, at=self.now(db))
+                stored["review"] = dict(action=action, by=user["email"], note=note, at=self.now(db))
             state = task["state"] if action == "verify" else ("rejected" if action == "reject" else "accepted")
-            task.pop("provenance", None)
             for key in ("history_next_offset", "history_count", "display_state", "stale", "actionable", "suspension", "release_denial", "epoch_current", "relied_on"):
-                task.pop(key, None)
+                stored.pop(key, None)
             if action != "verify" and (task.get("envelope") or {}).get("meter_root"):
                 try:
                     self.consumption.review(
@@ -1280,16 +1311,16 @@ class Assistants:
                     self.consumption.review_unresolved(
                         task["envelope"]["meter_root"], tid, str(error),
                         revision=revision + 1, db=db)
-                    task["financial_attribution"] = dict(
+                    stored["financial_attribution"] = dict(
                         status="unresolved", reason=str(error), action=action)
             res = db.execute("UPDATE assistant_tasks SET body=?,state=?,revision=revision+1 WHERE id=? AND revision=?",
-                             (canonical(task), state, tid, revision))
+                             (canonical(stored), state, tid, revision))
             if res.rowcount != 1:
                 raise ConflictError(tid)
             self.event(db, tid, kind="review", action=action, reviewer=user["email"], note=note,
                        source_verified=action == "verify", source_signature=task["source_signature"],
-                       edited_output=task["output"] if action == "edit-accept" else None,
-                       financial_attribution=task.get("financial_attribution"))
+                       edited_output=stored["output"] if action == "edit-accept" else None,
+                       financial_attribution=stored.get("financial_attribution"))
         return self.detail(user, tid)
 
     def _worker(self):

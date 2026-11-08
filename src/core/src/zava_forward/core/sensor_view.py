@@ -113,7 +113,12 @@ def _controls(db, home_id, sensor_ids, mssql=False):
         (home_id, CONTROL_MAX + 1),
     ).fetchall()
     indexed = [str(r[0]) for r in rows]
-    complete = len(indexed) <= CONTROL_MAX
+    # Both tables hold one row per bound sensor (cohort of at most 100). A mismatch means a stale or
+    # partial index that could hide a decline, so consent fails closed.
+    complete = len(indexed) <= CONTROL_MAX and (
+        db.execute("SELECT COUNT(*) FROM sensor_consumer_control_home").fetchone()[0]
+        == db.execute("SELECT COUNT(*) FROM sensor_consumer_control").fetchone()[0]
+    )
     found = {}
     for sensor_id in sorted(set(indexed[:CONTROL_MAX]) | set(sensor_ids)):
         row = db.execute(
@@ -274,8 +279,10 @@ def capture_source(db, home_id, reference, now, mssql=False):
     )
     out = dict(
         base,
-        state="ok" if window else "no-readings",
-        detail=None if window else "No retained readings for this home in the bounded time window.",
+        state="ok" if window or before or after else "no-readings",
+        detail=None
+        if window or before or after
+        else "No retained readings for this home in the bounded time window.",
         readings=window,
         before=before,
         after=after,

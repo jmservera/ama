@@ -35,7 +35,16 @@ unavailable; the first quality evidence record time is a separately named
 `sensor_consumer_control_home` table (at most 100 controls for the home); any
 declined control wins, and an absent, incomplete or unindexed set is unknown. When current consent is withdrawn, values,
 citations, derived output (including uncited text and `edited_output`) and flags are withheld from the detail, list and
-export projections (the stored record is kept).
+export projections (the stored record is kept). C3: a capture holding only old
+before/after context is still a sensor capture, so withdrawal withholds it. Verification,
+review and event notes are withheld too, verify/accept are refused while withheld, and
+rejecting keeps the stored snapshot and output (the original returns with consent). A task
+records whether a person requested it (`manual_requested`); only an explicit `false` makes a
+dispatch proactive, so a missing or unclear value is "requested". The coarse schedule throttles
+every proactive branch, including quality gaps, never a manual request or a non-sensor change.
+`Assistants.migrate()` and `SensorConsumer.migrate_control_index()` reconcile the control index
+from the stored controls (adds missing rows, removes orphans, never writes policy, controls or
+consent); a count mismatch fails consent closed.
 
 `review_flag` names the state of a returned model output. Only a proactive,
 current, returned finding that cites a captured reading is an automatic L4

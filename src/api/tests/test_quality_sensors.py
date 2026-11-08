@@ -312,6 +312,8 @@ class ReadModel(Seed, ta.Base):
         controls = [s for s in statements if "sensor_consumer_control" in s]
         self.assertTrue(controls)
         for s in controls:
+            if s.startswith("SELECT COUNT(*)"):
+                continue
             if "sensor_consumer_control_home" in s:
                 self.assertIn("WHERE home_id=?", s)
                 self.assertTrue("FETCH NEXT" in s or "LIMIT" in s, s)
@@ -411,6 +413,75 @@ class ReadModel(Seed, ta.Base):
         self.assertEqual(first["latest"], second["latest"])
         self.assertNotEqual(first["before"], second["before"])
         self.assertNotEqual(digest(first), digest(second))
+
+    def _old_anchor(self, days=500):
+        now = int(time.time())
+        ref = datetime.fromtimestamp(now - days * 86400, UTC).replace(microsecond=0)
+        self.add_readings(2, base=int(ref.timestamp()), offset=3600, tag="OLD")
+        return now, ref
+
+    def test_context_only_capture_is_an_ok_capture_with_no_latest(self):
+        self.put(0)
+        now, ref = self._old_anchor()
+        cap = self.capture(now, ref)
+        self.assertEqual(cap["state"], "ok")
+        self.assertIsNone(cap["latest"])
+        self.assertEqual(len(cap["before"]), 2)
+        self.assertEqual(sorted(cap["citation_keys"]), sorted(sensor_view.citations(cap)))
+        with patch.object(sensor_view, "reference_for", return_value=ref):
+            v = self.view()
+        self.assertEqual((v["state"], v["freshness"]), ("ok", "unknown"))
+        self.assertEqual(v["before"], cap["before"])
+
+    def _control_state(self):
+        with self.service.transaction() as db:
+            return [
+                db.execute(f"SELECT * FROM {t} ORDER BY 1").fetchall()
+                for t in ("sensor_consumer_policy", "sensor_consumer_control")
+            ]
+
+    def _index(self):
+        with self.service.transaction() as db:
+            return db.execute(
+                "SELECT home_id,sensor_id FROM sensor_consumer_control_home ORDER BY 1,2"
+            ).fetchall()
+
+    def test_migration_restores_a_missing_index_without_replacing_policy_or_controls(self):
+        self.put(3)
+        self.set_consent("granted", sensor="SENS-OTHER-9")
+        want, state = self._index(), self._control_state()
+        with self.service.transaction() as db:
+            db.execute("DROP TABLE sensor_consumer_control_home")
+        self.assertEqual(self.view()["state"], "unavailable")
+        self.service.migrate()
+        self.assertEqual((self._index(), self._control_state()), (want, state))
+        self.assertEqual(self.view()["state"], "ok")
+        self.service.migrate()
+        SensorConsumer(self.store).migrate_control_index()
+        self.assertEqual((self._index(), self._control_state()), (want, state))
+
+    def test_partial_index_fails_closed_until_migrated_and_then_sees_the_decline(self):
+        self.put(3)
+        self.set_consent("declined", sensor="SENS-OTHER-9")
+        with self.service.transaction() as db:
+            db.execute("DELETE FROM sensor_consumer_control_home WHERE sensor_id='SENS-OTHER-9'")
+        self.assertEqual(self.view()["state"], "consent-withheld")
+        self.assertEqual(self.view()["latest"], None)
+        self.service.migrate()
+        self.assertIn(("ZF-1", "SENS-OTHER-9"), self._index())
+        self.assertEqual(self.view()["state"], "consent-withheld")
+
+    def test_orphan_index_row_fails_closed_and_is_removed_by_migration(self):
+        self.put(3)
+        with self.service.transaction() as db:
+            db.execute(
+                "INSERT INTO sensor_consumer_control_home (home_id, sensor_id)"
+                " VALUES ('ZF-1','GONE-1')"
+            )
+        self.assertEqual(self.view()["state"], "consent-withheld")
+        self.service.migrate()
+        self.assertNotIn(("ZF-1", "GONE-1"), self._index())
+        self.assertEqual(self.view()["state"], "ok")
 
 
 class Http(Seed, ta.ApiTests):
@@ -703,6 +774,185 @@ class Http(Seed, ta.ApiTests):
         tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
         self.service.execute(tid)
         self.assertIsNone(self.service.detail(self.pm, tid).get("review_flag"))
+
+    def _roles(self):
+        return self.people["Quality Inspector"]
+
+    def _all_text(self, tid):
+        return {k: json.dumps(v) for k, v in self._after_withdrawal(tid).items()}
+
+    def test_context_only_capture_reaches_the_model_and_is_withheld_after_withdrawal(self):
+        self.mock()
+        self.put(0)
+        now = int(time.time())
+        ref = datetime.fromtimestamp(now - 500 * 86400, UTC).replace(microsecond=0)
+        self.add_readings(2, base=int(ref.timestamp()), offset=3600, tag="OLD")
+        self.quality_ready()
+        with patch.object(sensor_view, "reference_for", return_value=ref):
+            api = self.request("/api/cases/ZF-1/sensors")[1]
+            tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
+            self.assertTrue(self.service.execute(tid))
+            sent = self.provider.prompts[-1]["evidence"]["sources"]["sensors"]
+            self.assertEqual(sent["before"], api["before"])
+            self.assertEqual(api["state"], "ok")
+            self.assertTrue(api["before"])
+            self.assertIn("OLD-ZF-1-000", json.dumps(self.service.detail(self.pm, tid)))
+            self.set_consent("declined")
+            for name, text in self._all_text(tid).items():
+                self.assertNotIn("OLD-ZF-1-", text, name)
+            shown = self.request(f"/api/assistants/proposals/{tid}")[1]
+            self.assertTrue(shown["sensor_withheld"])
+            self.assertEqual(shown["review_flag"]["status"], "withheld")
+
+    def _verified_note_flow(self):
+        self.ready()
+        tid, p = self.proactive()
+        reading = p["review_flag"]["readings"][0]["reading_id"]
+        value = p["snapshot"]["sources"]["sensors"]["readings"][0]["temperature_c"]
+        qa = self._roles()
+        note = f"Checked {reading} at {value} degC against the photo."
+        p = self.service.review(qa, tid, "verify", p["revision"], note, source_verified=True)
+        edited = dict(p["output"], summary="Reviewed summary without readings.")
+        self.service.review(qa, tid, "edit-accept", p["revision"], f"Accepted {reading}.", edited)
+        return tid, reading, note
+
+    def test_review_notes_are_withheld_with_consent_and_return_when_it_does(self):
+        tid, reading, note = self._verified_note_flow()
+        self.assertIn(note, json.dumps(self.request(f"/api/assistants/proposals/{tid}")[1]))
+        self.set_consent("declined")
+        for name, text in self._all_text(tid).items():
+            self.assertNotIn(reading, text, name)
+            self.assertNotIn("degC against the photo", text, name)
+        self.set_consent("granted")
+        shown = self.request(f"/api/assistants/proposals/{tid}")[1]
+        self.assertIn(note, json.dumps(shown))
+        self.assertEqual(shown["review"]["note"], f"Accepted {reading}.")
+
+    def test_reject_after_withdrawal_keeps_the_stored_snapshot_and_output(self):
+        self.ready()
+        tid, p = self.proactive()
+        reading = p["review_flag"]["readings"][0]["reading_id"]
+        self.set_consent("declined")
+        shown = self.request(f"/api/assistants/proposals/{tid}")[1]
+        self.assertTrue(shown["sensor_withheld"])
+        with self.service.transaction() as db:
+            before = json.loads(
+                db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()[0]
+            )
+        self.service.review(self._roles(), tid, "reject", shown["revision"], "Not relied on.")
+        with self.service.transaction() as db:
+            after = json.loads(
+                db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()[0]
+            )
+        self.assertEqual(after["snapshot"], before["snapshot"])
+        self.assertEqual(after["output"], before["output"])
+        self.assertIn(reading, json.dumps(after["snapshot"]))
+        self.assertEqual(after["review"]["action"], "reject")
+        self.assertNotIn(reading, json.dumps(self.request(f"/api/assistants/proposals/{tid}")[1]))
+        self.set_consent("granted")
+        restored = self.request(f"/api/assistants/proposals/{tid}")[1]
+        self.assertEqual(restored["output"], before["output"])
+        self.assertIn(reading, json.dumps(restored["snapshot"]))
+        self.assertNotIn("sensor_withheld", restored)
+
+    def test_verification_and_acceptance_are_refused_while_consent_is_withheld(self):
+        self.ready()
+        tid, p = self.proactive()
+        self.set_consent("declined")
+        shown = self.request(f"/api/assistants/proposals/{tid}")[1]
+        with self.assertRaises((PermissionError, ValueError)):
+            self.service.review(
+                self._roles(), tid, "verify", shown["revision"], "Looked.", source_verified=True
+            )
+
+    def _scan_counts(self):
+        quality_ids = self.quality_task()
+        bucket = int(time.time()) // SEAL * SEAL
+        for minute in (1, 2, 3):
+            self.add_live(minute, base=bucket)
+            self.service.scan()
+        forecast = {a["id"]: a for a in self.service.forecast(self.pm)["assistants"]}
+        return quality_ids, self.quality_task(), forecast["quality-evidence"]["new_proposals"]
+
+    def _gap_case(self, prepare):
+        self.mock()
+        self.put(4)
+        self.add_live(10)
+        prepare()
+        self.service.scan()
+        first = self.quality_task()
+        self.assertEqual(len(first), 1)
+        self.assertTrue(self.service.execute(first[0]))
+        self.assertEqual(self.provider.calls, 1)
+        _, after, new = self._scan_counts()
+        self.assertEqual(after, first)
+        self.assertEqual(new, 0)
+        tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
+        self.assertNotEqual(tid, first[0])
+        self.assertTrue(self.service.execute(tid))
+        self.assertEqual(
+            self.service.detail(self.pm, tid)["review_flag"]["status"], "manual-proposal"
+        )
+        return first
+
+    def _measures_only(self):
+        with self.store.lock:
+            supplied_resident_fixture(self.store._case("ZF-1"))
+            self.store.save()
+
+    def _submitted_only(self):
+        self._measures_only()
+        items = {
+            label: "SYN current photo"
+            for label in quality.checklist_for("Loft insulation")["items"]
+        }
+        self.store.submit_quality(
+            self.pm,
+            "ZF-1",
+            "Loft insulation",
+            "SYN installer",
+            "Installer",
+            items,
+            context_revision=1,
+        )
+
+    def test_throttle_applies_with_no_measures(self):
+        self._gap_case(lambda: None)
+
+    def test_throttle_applies_with_measures_and_no_quality_record(self):
+        self._gap_case(self._measures_only)
+
+    def test_throttle_applies_with_an_unaccepted_quality_record(self):
+        first = self._gap_case(self._submitted_only)
+        self.store.accept_quality(self.people["Quality Inspector"], "ZF-1", 0)
+        self.assertTrue(set(self.service.scan()["enqueued"]) - set(first))
+
+    def test_a_manual_request_after_many_events_is_not_labelled_proactive(self):
+        self.ready()
+        self.service.scan()
+        tid = self.quality_task()[0]
+        case = self.store.detail("ZF-1")
+        with self.service.transaction() as db:
+            for _ in range(60):
+                self.service._enqueue(db, "quality-evidence", case, "proactive", "scan")
+        self.service.invoke(self.pm, "quality-evidence", "ZF-1")
+        self.assertTrue(self.service.execute(tid))
+        flag = self.service.detail(self.pm, tid)["review_flag"]
+        self.assertEqual((flag["status"], flag["trigger"]), ("manual-proposal", "requested"))
+
+    def test_unknown_dispatch_authority_is_requested_not_proactive(self):
+        self.ready()
+        self.service.scan()
+        tid = self.quality_task()[0]
+        with self.service.transaction() as db:
+            body = json.loads(
+                db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()[0]
+            )
+            body.pop("manual_requested", None)
+            db.execute("UPDATE assistant_tasks SET body=? WHERE id=?", (ta.canonical(body), tid))
+        self.assertTrue(self.service.execute(tid))
+        flag = self.service.detail(self.pm, tid)["review_flag"]
+        self.assertEqual((flag["status"], flag["trigger"]), ("manual-proposal", "requested"))
 
 
 MSSQL = unittest.skipUnless(

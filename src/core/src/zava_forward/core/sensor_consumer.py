@@ -193,6 +193,62 @@ def preflight(batch: object) -> list[Observation]:
     return result
 
 
+def _control_home_ddl(mssql: bool) -> str:
+    key = "VARCHAR(64) COLLATE Latin1_General_100_BIN2" if mssql else "TEXT"
+    home = "NVARCHAR(128) COLLATE Latin1_General_100_BIN2" if mssql else "TEXT"
+    return f"(home_id {home} NOT NULL, sensor_id {key} NOT NULL, PRIMARY KEY (home_id, sensor_id))"
+
+
+def ensure_control_home(db: Connection, mssql: bool) -> None:
+    """Create the per-home index when absent and reconcile it, only if controls were ever stored."""
+    if mssql:
+        present = db.execute("SELECT OBJECT_ID(N'sensor_consumer_control', N'U')").fetchone()[0]
+        if present:
+            db.execute(
+                "IF OBJECT_ID(N'sensor_consumer_control_home', N'U') IS NULL "
+                f"CREATE TABLE sensor_consumer_control_home {_control_home_ddl(True)}"
+            )
+    else:
+        present = db.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='sensor_consumer_control'"
+        ).fetchone()
+        if present:
+            ddl = _control_home_ddl(False)
+            db.execute(f"CREATE TABLE IF NOT EXISTS sensor_consumer_control_home {ddl}")
+    if present:
+        reconcile_control_home(db)
+
+
+def reconcile_control_home(db: Connection) -> None:
+    """Derive the per-home control index from the stored controls.
+
+    Adds missing rows and removes orphans. It never writes policy, controls or consent.
+    """
+    controls: dict[tuple[str, str], None] = {}
+    for sensor_id, body in db.execute(
+        "SELECT sensor_id, body FROM sensor_consumer_control"
+    ).fetchall():
+        home_id = json.loads(str(body)).get("home_id")
+        if isinstance(home_id, str) and home_key(home_id):
+            controls[(home_id, str(sensor_id))] = None
+    indexed = {
+        (str(h), str(sensor))
+        for h, sensor in db.execute(
+            "SELECT home_id, sensor_id FROM sensor_consumer_control_home"
+        ).fetchall()
+    }
+    for home_id, sensor_id in sorted(set(controls) - indexed):
+        db.execute(
+            "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES (?, ?)",
+            (home_id, sensor_id),
+        )
+    for home_id, sensor_id in sorted(indexed - set(controls)):
+        db.execute(
+            "DELETE FROM sensor_consumer_control_home WHERE home_id=? AND sensor_id=?",
+            (home_id, sensor_id),
+        )
+
+
 class SensorConsumer:
     def __init__(self, store: object) -> None:
         if not isinstance(store, SqlStore):
@@ -273,16 +329,12 @@ class SensorConsumer:
     def _schema(self, db: Connection) -> None:
         text = "NVARCHAR(MAX)" if self.mssql else "TEXT"
         key = "VARCHAR(64) COLLATE Latin1_General_100_BIN2" if self.mssql else "TEXT"
-        home = "NVARCHAR(128) COLLATE Latin1_General_100_BIN2" if self.mssql else "TEXT"
         tables = {
             "sensor_consumer_policy": f"(id INT NOT NULL PRIMARY KEY, body {text} NOT NULL)",
             "sensor_consumer_control": (
                 f"(sensor_id {key} NOT NULL PRIMARY KEY, body {text} NOT NULL)"
             ),
-            "sensor_consumer_control_home": (
-                f"(home_id {home} NOT NULL, sensor_id {key} NOT NULL,"
-                " PRIMARY KEY (home_id, sensor_id))"
-            ),
+            "sensor_consumer_control_home": _control_home_ddl(self.mssql),
             "sensor_delivery": (
                 f"(reference {key} NOT NULL PRIMARY KEY, status VARCHAR(12) NOT NULL,"
                 " reason VARCHAR(40) NOT NULL, received_at VARCHAR(20) NOT NULL,"
@@ -330,22 +382,13 @@ class SensorConsumer:
                 "CREATE INDEX IF NOT EXISTS ix_sensor_reading_home_time"
                 " ON sensor_reading (home_id, observed_at)"
             )
-        self._backfill_control_home(db)
+        reconcile_control_home(db)
         self._check_reading_schema(db)
 
-    def _backfill_control_home(self, db: Connection) -> None:
-        """One-time fill of the per-home control index for controls stored before it existed."""
-        if db.execute("SELECT COUNT(*) FROM sensor_consumer_control_home").fetchone()[0]:
-            return
-        for sensor_id, body in db.execute(
-            "SELECT sensor_id, body FROM sensor_consumer_control"
-        ).fetchall():
-            home_id = json.loads(str(body)).get("home_id")
-            if isinstance(home_id, str) and home_key(home_id):
-                db.execute(
-                    "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES (?, ?)",
-                    (home_id, str(sensor_id)),
-                )
+    def migrate_control_index(self) -> None:
+        """Idempotent, non-destructive bootstrap for stores configured before the index existed."""
+        with self._write() as db:
+            self._schema(db)
 
     _collation = "COLLATE Latin1_General_100_BIN2"
 
