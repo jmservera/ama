@@ -43,7 +43,7 @@ TABLES = {
   queue_stale INT NOT NULL DEFAULT 0, queue_blocked INT NOT NULL DEFAULT 0,
   queue_overdue INT NOT NULL DEFAULT 0, queue_unowned INT NOT NULL DEFAULT 0)""",
     "recommendations": f"CREATE TABLE recommendations (id {_t(64)} PRIMARY KEY, rowversion BIGINT NOT NULL DEFAULT 1, seq BIGINT NOT NULL, "
-                       f"[user] {_t(200)}, body NVARCHAR(MAX) NOT NULL)",
+                       f"[user] {_t(200)}, body NVARCHAR(MAX) NOT NULL, created_ord BIGINT NOT NULL DEFAULT 0)",
     "audit": f"""CREATE TABLE audit (
   seq BIGINT IDENTITY(1,1) PRIMARY KEY, at {_t(40)}, who {_t(200)}, action {_t(200)}, case_id {_t(64)},
   detail NVARCHAR(MAX) NOT NULL, prev {_t(100)}, hash {_t(100)} UNIQUE)""",
@@ -287,6 +287,13 @@ class MssqlStore(SqlStore):
                     raise SystemExit(f"audit is a {kind}, not an append-only ledger table; drop and recreate it before starting.")
             else:
                 self.db.execute(APPEND_ONLY)
+
+    def _has_rec_order(self):
+        return self.db.execute("SELECT COL_LENGTH(N'recommendations', N'created_ord')").fetchone()[0] is not None
+
+    def _create_rec_order_index(self):
+        self.db.execute("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_recs_created_ord' AND object_id = OBJECT_ID(N'recommendations')) "
+                        "CREATE INDEX ix_recs_created_ord ON recommendations (created_ord)")
 
     def _create_indexes(self):
         with self.dblock:

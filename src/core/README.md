@@ -4699,3 +4699,24 @@ Manual path: staff print or read the pack and key the worker's notes through the
 `submit_quality` form; no AI is involved. Not delivered: persistence, API and screens, the provider
 identity decision (#116), the owner decision on staff-mediated intake versus a provider portal, and
 accessibility proof. Tests: `src/core/tests/test_job_pack.py`.
+
+## Priority recommendation creation order (#1292)
+
+`Store.latest_priority` returns the newest eligible proposal for the requesting user, excluding
+`ai_task` rows: the last such row in creation order. The in-memory store appends, so list order is
+creation order. The SQL stores persist that order in `recommendations.created_ord`, an immutable
+ordinal assigned once at insert (current maximum plus one inside the serialised write; rows saved
+together get consecutive values in creation order) and never updated. Reload reads
+`ORDER BY created_ord, id`, cold or incremental, and the cached list is re-sorted by ordinal after a
+load or a save, so a later edit or a concurrent commit cannot move a proposal. `seq` (last write) and
+the second-resolution `created` text are not used for ordering. Ordering is data only: review,
+approval, consent and ranking policy are unchanged and a proposal never becomes a decision.
+
+Legacy rows have no recoverable creation order. On first start with the column, ordinals are derived
+once from body `created`, then `seq`, then `id`, so same-second rows and rows edited before the
+migration may differ from their true original order. The count of legacy rows and of same-second
+groups is stored as JSON in `meta` key `rec_order_legacy`; a named data owner decides whether a live
+database needs manual review. Rows written with ordinal 0 by an older binary after migration are
+backfilled after the existing maximum at the next start; stop older writers before the new binary
+serves. Tests: `src/core/tests/test_priority_order.py` (in-memory, SQLite, and SQL Server with
+`ZF_RESIDENT_MSSQL=1`).

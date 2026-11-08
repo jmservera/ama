@@ -71,7 +71,7 @@ CREATE INDEX IF NOT EXISTS ix_cases_postcode ON cases (postcode);
 CREATE INDEX IF NOT EXISTS ix_cases_address ON cases (address);
 CREATE TABLE IF NOT EXISTS recommendations (
   id TEXT PRIMARY KEY, rowversion INTEGER NOT NULL DEFAULT 1, seq INTEGER NOT NULL,
-  user TEXT NOT NULL, body TEXT NOT NULL);
+  user TEXT NOT NULL, body TEXT NOT NULL, created_ord INTEGER NOT NULL DEFAULT 0);
 CREATE INDEX IF NOT EXISTS ix_recs_seq ON recommendations (seq);
 CREATE TABLE IF NOT EXISTS audit (
   seq INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, who TEXT NOT NULL, action TEXT NOT NULL,
@@ -173,6 +173,7 @@ class SqlStore(Store):
         self._migrate()
         self._migrate_queues()
         self._create_indexes()
+        self._migrate_recommendations()
         self.docs_dir = docs_dir or os.path.join(os.path.dirname(db_path) or ".", "docs")
         self.docstore = open_document_store(self.docs_dir)
         self.scanner = open_scanner(self.docstore)
@@ -189,6 +190,7 @@ class SqlStore(Store):
         self._rv, self._snap = {}, {}
         self._proc_snap = {}
         self._recs = {}
+        self._rec_ord = {}
         self._seed(data_path)
         self._insert_ignore("meta", ["key", "value"], ["as_of", os.environ.get("ZF_AS_OF") or datetime.now().date().isoformat()])
         self.as_of = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
@@ -320,6 +322,42 @@ class SqlStore(Store):
                     self._add_column_default("cases", col, "INTEGER", "0")
             if missing:
                 self._meta_set("queue_context", "")
+            self.db.execute("COMMIT")
+        except BaseException:
+            self.db.execute("ROLLBACK")
+            raise
+
+    def _has_rec_order(self):
+        return "created_ord" in {r[1] for r in self.db.execute("PRAGMA table_info(recommendations)")}
+
+    def _create_rec_order_index(self):
+        self.db.execute("CREATE INDEX IF NOT EXISTS ix_recs_created_ord ON recommendations (created_ord)")
+
+    def _migrate_recommendations(self):
+        """Give every recommendation an immutable creation ordinal (#1292).
+
+        A legacy row has no recoverable creation order: its ordinal is derived from body created (seconds), then seq (last
+        write) then id, placed after every existing ordinal, and the first backfill is recorded in meta rec_order_legacy.
+        Backfilled rows and meta seq take one new seq so a running reader reloads them. Bodies are never rewritten."""
+        self.db.execute("BEGIN IMMEDIATE")
+        try:
+            added = not self._has_rec_order()
+            if added:
+                self._add_column_default("recommendations", "created_ord", "BIGINT", "0")
+            self._create_rec_order_index()
+            rows = self.db.execute("SELECT id, seq, body FROM recommendations WHERE created_ord = 0").fetchall()
+            if rows:
+                start = int(self.db.execute("SELECT COALESCE(MAX(created_ord), 0) FROM recommendations").fetchone()[0])
+                keyed = sorted((json.loads(body).get("created") or "", seq, rid) for rid, seq, body in rows)
+                new = self._db_seq() + 1
+                for n, (_, _, rid) in enumerate(keyed, start + 1):
+                    self.db.execute("UPDATE recommendations SET created_ord=?, seq=? WHERE id=?", (n, new, rid))
+                if start == 0:
+                    seconds = [created for created, _, _ in keyed]
+                    self._meta_set("rec_order_legacy", json.dumps(dict(
+                        rows=len(keyed), same_second_groups=sum(1 for c in set(seconds) if seconds.count(c) > 1),
+                        order="created,seq,id")))
+                self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
             self.db.execute("COMMIT")
         except BaseException:
             self.db.execute("ROLLBACK")
@@ -555,7 +593,12 @@ class SqlStore(Store):
                 return
             for cid, rv, body in self.db.execute("SELECT id, rowversion, body FROM cases WHERE seq > ?", (self._seq,)).fetchall():
                 self._load_case(cid, rv, body)
-            for rid, rv, body in self.db.execute("SELECT id, rowversion, body FROM recommendations WHERE seq > ?", (self._seq,)).fetchall():
+            loaded = False
+            for rid, rv, body, created_ord in self.db.execute(
+                    "SELECT id, rowversion, body, created_ord FROM recommendations WHERE seq > ? ORDER BY created_ord, id",
+                    (self._seq,)).fetchall():
+                loaded = True
+                self._rec_ord[rid] = int(created_ord)
                 rec = json.loads(body)
                 old = self._recs.get(rid)
                 if old is not None:
@@ -565,6 +608,8 @@ class SqlStore(Store):
                 else:
                     self.data["recommendations"].append(rec)
                 self._recs[rid] = [rv, rec, body]
+            if loaded:
+                self._order_recs()
             self._proc_sync()
             if not self.staff:
                 for (body,) in self.db.execute("SELECT body FROM staff").fetchall():
@@ -573,6 +618,11 @@ class SqlStore(Store):
                     self.data["staff"].append(s)
             self._seq = seq
             self.version = seq
+
+    def _order_recs(self):
+        """Keep the cached list in persisted creation order; edits never move a row and unsaved rows stay last."""
+        end = float("inf")
+        self.data["recommendations"].sort(key=lambda r: self._rec_ord.get(r["id"], end))
 
     def _load_case(self, cid, rv, body):
         c = json.loads(body)
@@ -701,12 +751,17 @@ class SqlStore(Store):
                     if n != 1:
                         raise ConflictError(cid)
                     changed.append((cid, body))
-                recs = []
+                recs, new_ord, top = [], {}, None
                 for rid, rec in ((r["id"], r) for r in self.data["recommendations"]):
                     body = json.dumps(rec)
                     known = self._recs.get(rid)
                     if known is None:
-                        self.db.execute("INSERT INTO recommendations (id, rowversion, seq, user, body) VALUES (?,1,?,?,?)", (rid, new, rec["user"], body))
+                        if top is None:
+                            top = int(self.db.execute("SELECT COALESCE(MAX(created_ord), 0) FROM recommendations").fetchone()[0])
+                        top += 1
+                        self.db.execute("INSERT INTO recommendations (id, rowversion, seq, user, body, created_ord) VALUES (?,1,?,?,?,?)",
+                                        (rid, new, rec["user"], body, top))
+                        new_ord[rid] = top
                         recs.append((rid, 1, rec, body))
                     elif known[2] != body:
                         if self.db.execute("UPDATE recommendations SET rowversion=rowversion+1, seq=?, body=? WHERE id=? AND rowversion=?",
@@ -768,6 +823,9 @@ class SqlStore(Store):
                 self._snap[cid] = body
             for rid, rv, rec, body in recs:
                 self._recs[rid] = [rv, rec, body]
+            if new_ord:
+                self._rec_ord.update(new_ord)
+                self._order_recs()
             pending.clear()
             touched.clear()
             self.local.safety_clear.clear()
