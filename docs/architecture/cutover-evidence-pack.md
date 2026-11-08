@@ -3088,3 +3088,96 @@ Boundary observations: the viewer snapshot file `ranking-snapshot-<version>.json
 * Selectors refreshed on the merged tree with a fresh out-of-tree install in `/mnt/ama-gates/c440-currency-r2-1108-checks` (installed modules byte-equal to the worktree sources, synthetic empty `ZF_DATA`, no bytecode): core ranking publication 76 OK, API ranking 53 OK on a SQLite-backed store (not SQL Server), cohort evaluation 20 OK, retention pytest 37 passed, no skips reported, all exit 0. The native focused gate result for the final head is kept in the external handoff and is not stated here.
 * The failed serialized `gh pr diff` and the coordinator-reported 308-path equivalence qualification are unchanged. Recommendation stays CONTINUE and gates ranking expansion, #81, #86, #107, #1258, #1259 and discovery #123 shared-document reconciliation; it accepts no whole #79, #1231 or #440 and no policy.
 
+
+## AI and employee chat current-main stabilization checkpoint (2026-11-08, Refs #440 #157 #159 #104 #107)
+
+Scoped recurrence of the open #440 checkpoint on current `main`, reconciling the AI and employee chat integration surface after three bounded engineering increments merged and after backlog status drift was found. Focused tier: documentation and tracking only; no production, tool, workflow, agent, test, BRD, PRD or ADR change. It is local engineering observation. It is not whole #157, #159, #104, #107 or #440 acceptance, not real-provider evidence, and not an approval, pivot, deferral or relaxation.
+
+### Source and document identities
+
+| Item | Value |
+| --- | --- |
+| Source observed | `main` `608c98e639c874b127b3a4e8f9fdb335673c22c6`, tree `b518fcbc0fbd5f96d834c405a8b853f39d07cc7c`; `origin/main` was equal when fetched (newest change is the generated rubric score file, blob `7e10826b967a9d530dc45f75fb1df8ec9524cb09`) |
+| Covered merged PRs | #1275 `4bc1e3f3361a762cc9f0c187d394fdab9a11b033` (tree `85ef5852bcdd17ce73d1684e76f96b70f8d2274f`, merged 2026-11-08T10:51:51Z, Refs #1274 #118 #138); #1271 `457a0c824972f318e41cafae635563d252f8b0ef` (tree `31d67a841b5f0884eef85115222fe56a72717117`, 2026-11-08T11:09:27Z, Refs #107 #104); #1273 `a5295c45209ecc25206c79566a07191921700cfe` (tree `a6f392d4201bc75d6dfcd235805050803b0be740`, 2026-11-08T11:17:13Z, Refs #530) |
+| Excluded | PR 1278 (sensor analysis, candidate `6d7b52fd`), PR 1243 (complaints, `eddc7d71`) and parent PR 1240 (`c5edb320`) were OPEN at launch and are not in main; their added functionality and acceptance are excluded, and candidate-policy observations stay separate |
+| BRD | 0.21.0, status draft, ms.date 2026-10-24, blob `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| PRD | 0.21.0, status in-review, ms.date 2026-10-25, blob `c788b917bafaede215f326f0efc71e071a687f1c` |
+| ADR 0004 | Accepted by the owner 2026-10-15 (decision issue #158, closed 2026-10-15T14:19:00Z), option C staged, blob `9406c2e747ced91e5ba7be4072f9482293c0c38f` |
+| ADR 0002, 0003, 0006 | 0002 Proposed `cbe21530043ff15432cc6dce1086d080f5eb15b4`; 0003 `d60645397b20fb70ac3d1dc47c7a6c8671201306`; 0006 accepted `956da1a3b804c803041fe2e8a312bd9f400273ae` |
+| Pack and case study at start | pack `81c183ed555a244c1072cff72b6a27a1e168a62b`; case study original `0aec2d8070117a647574b1fadc8cfbdd2af68598`, addendum `888d9ff7d0190799308618dc7f153c00adabd6f6` |
+| Docs child | branch `docs/ai-main-stabilization-440`, declared target `main`, started on `608c98e6` |
+
+Owner adoption of ADR 0004 option C staged on 2026-10-15 adopts the architectural direction. It is not DPO, Legal, HR, control-owner or live personal-data acceptance. Draft, in-review and Proposed documents are not approved by this record.
+
+### Status-drift correction (recorded, no new adoption)
+
+The coordinator found that #157 said ADR 0004 was not adopted and #159 said no follow-up panel existed, although ADR 0004 is Accepted (#158 closed 2026-10-15) and child delivery is recorded in `src/`. Only those status paragraphs and the proven #157 criterion "Decision issue below is accepted or the epic is closed as out of scope" were corrected; both updated issue bodies were read in this session and still leave the checkpoint criterion, child acceptance, the #159 screen-reader criterion and the tokenomics criteria unticked. The correction adds no adoption, approval or closure; the earlier "not adopted" wording described the retired MVP.
+
+### Retained historical evidence (source-qualified, not fresh at the pinned main)
+
+* #1273 (coordinator summary `review-530-c162`, reviewed head `c1628cb5`, executed candidate `b02f4492`): 21 actual SQL Server cases (privacy 13, projection 4, demo meter 4), zero skips; three controlled employee Chromium states each with 20 axe passes and zero violations. The coordinator reports that the merged executable inputs equal the tested projection and only the rubric JSON race differed. The responses are controlled or model-unavailable, so this is not real-provider evidence; native egress confinement was unavailable, so no network isolation is certified. Three Low execution-record qualifications are retained by the coordinator, including an expired throwaway SQL credential in generated container metadata that was restricted and not copied. The earlier failed r1 receipt remains unchanged and the manual run is not a verified partial or FULL receipt.
+* #1271 (`review-107-0639`, head `0639b6e3`, executed source `8fac72f8`): three `MssqlUnleasedRevocation` methods pass with zero skips; the sole executable delta is 27 added test lines. It proves a restarted worker keeps a partially used allowance. It is not real-AI, budget, attestation or release acceptance; #107 and #104 stay open and use Refs only.
+* #1275 (`review-1274-4db`, head `4db31928`, tree equal to the merged tree): actionlint release retrieval is bounded and verified (12 installer, 19 selection and 86 runner tests, plus seven-file lint and four-file strict typing). The AWF checksum retrieval still fails with 504 and has no supported override; #1274 stays a partial blocker, and no whole-#1274 acceptance is claimed.
+* Each is an actual execution on a historical candidate, plus source equivalence to main as reported by the coordinator. Only the section "Actual local commands and outcomes" below was freshly observed on this main. Human review boxes in those summaries are unchecked.
+
+### Where AI is invoked and the authority ceiling (source observation)
+
+Provider boundary for the five assistants and employee chat: `Ai._request` in `src/core/src/zava_forward/core/ai.py` (the resident demo has separate inventoried call sites in `src/api/tests/test_ai_call_site_inventory.py`). It refuses under a data-protection hold, requires a financial meter, and reserves, dispatch-checks and completes the consumption ledger. `Ai.evidence` returns a bounded envelope with no fallback text or raw error.
+
+| Surface | Where the model is called | What deterministic services do | Authority ceiling |
+| --- | --- | --- | --- |
+| Five registered assistants: `stock-prioritisation`, `assessment-preparation`, `funding-evidence`, `works-resident-coordination`, `quality-evidence` (`REGISTRY`, `src/core/src/zava_forward/core/assistants.py`) | `Assistants.execute`: one provider call per attempt, one agent, no tools, at most 3 attempts, via `AgentWorker.provider_call` | SQL owns role and scope check (`authorize`), rule eligibility, snapshot and source signature, claim and lease, continuity suspension, release admission, validation of output shape and citations, ledger and review state | Proposal only. `Assistants.review` needs current role and scope, explicit human source verification, accept by the verifying reviewer, extra independence checks for `quality-evidence`; it writes task state and events, never a controlled record. Manual owner route stays available |
+| Employee chat, stored thread (`/api/chat/threads/{id}/ask`, `ChatPanel._ask`, `src/core/src/zava_forward/core/chat_panel.py`) | One call per turn through `ChatModel` only when permitted case sources exist; denied by default unless `chat_admission` (`src/api/src/zava_forward/api/server.py`) returns none before and after the call | Refusal of approve, decide, certify, record consent, diagnose and contact-resident asks before any call; per-turn role and case re-check; citation and unsupported-claim, action-claim and withheld-value checks; consumption receipt and audit | Text with citations and the label "AI suggestion, not approved"; no tools, no write path. On any model failure the reply is workflow-only and then a rules-only grounded answer |
+| Employee chat, unstored (`/api/chat/unstored-ask`, `ask_unstored`) | None (`model_calls` 0) | Rules-only `chat_case_answers.answer` over the caller's own case projection; audit `chat.turn.unstored` | Used while chat storage is unapproved; stores nothing |
+| Proposal from chat (`/api/chat/threads/{id}/proposals`) | Indirect, through `Assistants.invoke` | Same queue and review as the assistants row | HTTP 202 request only; independent role review before anything changes |
+| Regulatory chat (`src/agents/src/zava_forward/agents/regulatory_chat.py`) | None; offline extractive, `model="offline-extractive"` | Separate synthetic-demo route and role rule | Source excerpts, not legal advice or approval |
+| Retained legacy tasks (`ai_tasks.py`, `store.py` `priority`) | `Ai.run` and `look_at` | Template fallback | Not part of the five assistants; unchanged by this record |
+
+Controls observed in source: staff roles only, no contractor chat (`projection.py`); owner-filtered SQL thread, message and memory storage (`chatthreads.py`, Azure SQL or SQLite); storage refused until DPIA, lawful basis and staff notice references exist (`chat_privacy.py`, `ChatNotApproved`) and retention Unknown until a reference and day count exist; owner demo-only activation (`ai_registry.DEMO_ACTIVATION`, owner decision 2026-11-03) honoured only with the exact switch and the demo deployment profile and recorded as superseding DPO and Legal review for the demonstrator only, with DPO, Legal and RAI approval outstanding. Memory items can be stored, listed, edited and deleted, but the live panel prompt does not include them (`memory_used: False` in `/api/chat/status`). No resident contact, consent or approval is possible from any of these paths.
+
+### Actual local commands and outcomes (this session, installed packages)
+
+Environment: Python 3.12.3 virtual environment `/tmp/ai-main-440-1108/venv` built from `git archive HEAD src` exported to scratch; `src/core`, `src/agents` and `src/api` installed non-editable (`pip install` exit 0, `pip check` exit 0, versions 0.1.0). `PYTHONDONTWRITEBYTECODE=1`, scratch `TMPDIR`, `HOME` and empty `ZF_DATA`; no `.env`, no provider or demo-switch variable, no private dataset, no Docker. Import identity: the probed `zava_forward` modules resolve under the venv `site-packages` and the installed `chat_panel.py`, `chat_isolation.py` and `assistants.py` have the same sha256 prefix as the worktree files. Native time 2026-11-08T11:38Z to 11:40Z, sequential, `timeout` and `nice` bounded. Logs stayed in the scratch directory.
+
+| Command (from the project directory) | Exit and result |
+| --- | --- |
+| core `python -m unittest discover -s tests -p "test_<name>.py" -q` for `chat_panel`, `chat_privacy`, `chatthreads`, `chat_memory`, `chat_case_answers` | all 0; 43, 29, 27, 21 and 4 tests OK, 0 skips |
+| agents (`PYTHONPATH=../core/tests`, `ZF_CHAT_GOLDEN` set to the archived `evals/chat_golden.json`) for `chat_model`, `chat_eval` | both 0; 7 and 39 tests OK, 0 skips |
+| api (`PYTHONPATH=../core/tests:../agents/tests`) for `chat_panel`, `chat_isolation`, `ai_boundary`, `ai_call_site_inventory` | all 0; 53 (1 skip, "opt-in local Chromium"), 32, 6 and 6 tests OK |
+| api `test_assistants.py` | 0; 120 tests OK, 58 skips, each "needs disposable SQL Server (ZF_TEST_MSSQL=1)" |
+
+The skips are reported, not passes: no Chromium and no SQL Server ran in this session. The chat selectors use SQLite-backed stores and a fixture model, so they are not Azure SQL, real-provider or live-processing evidence. Reproduction for finding F1: from the checkout, `grep -rn "\bturn(" src tools --include=*.py` shows only the definition in `src/core/src/zava_forward/core/chat_isolation.py` (non-JavaScript lines).
+
+### Traceability (document-qualified)
+
+| Requirement or decision | Source and tests observed | Class |
+| --- | --- | --- |
+| PRD FR-047, FR-036; ADR 0002 five-assistant runtime; ADR 0003 decision 3 | five-entry `REGISTRY` and the execute and review path above; `test_assistants.py`, `test_ai_boundary.py`, `test_ai_call_site_inventory.py` | local observed (SQLite and fixture); MSSQL cases skipped here and historical for #1271 |
+| PRD FR-055 (panel, registered assistants, sources shown), BRD FR-049 | `ChatPanel`, `permitted_sources`, `skill_sources`; `test_chat_panel.py` (core and API) | local observed; screen-reader acceptance not established (#159, #619) |
+| PRD FR-056, AC-095 (owner thread, delete, ledger metadata only), PRD NFR-016, BRD FR-049, NFR-011, RULE-026 | `chatthreads.py`, `chat_privacy.py`; `test_chatthreads.py`, `test_chat_privacy.py` | local observed; retention per class Unknown until BRD OD-46; DPIA, lawful basis and notice references are not recorded; the RULE-026 performance-use prohibition appears as a decision field in `ChatPrivacy.decision()` and its enforcement was not separately observed |
+| PRD FR-057, BRD FR-050 (opt-in memory) | `chat_privacy` memory lifecycle; `test_chat_memory.py` | local observed for the lifecycle; memory is not used in the live prompt; BRD OD-48 scope decision open |
+| PRD FR-058, PR-007, PR-008, SA-004; BRD RULE-025 (refuse approve and decide, untrusted input, context not evidence, no AI approval) | `out_of_scope`, `ACTION_CLAIM`, `TOOLISH`, withheld paths; `test_chat_panel.py`, `test_chat_model.py` | local observed (lexical checks, not semantic safety guarantees) |
+| PRD NFR-015, BRD NFR-010 (per-user isolation and break-glass) | `ChatIsolation.current_user`, `case_context`; `test_chat_isolation.py`; SQL projection cases in #1273 | local observed; SQL cases historical and source-qualified |
+| PRD FR-059 (registered task, thresholds, multi-turn evaluation) | `chat_eval.py` over the real `ChatPanel`; `test_chat_eval.py`, golden file | implemented, unverified for acceptance; thresholds and reviewer approvals not recorded |
+| BRD NFR-012, FR-052, PRD NFR-017, FR-061, AC-103; BRD OD-51 (tokenomics) | consumption ledger, `chat_demo_meter`, caps in `/api/chat/status` ("engineering caps, not spend authorization") | local observed for caps; price, budget and cost per accepted outcome Unknown |
+| ADR 0004 decisions 5 and 6 (isolation, break-glass) | `chat_isolation.py` break-glass default-deny with audit | local observed; owner demo-only policy, unreviewed by DPO or Legal |
+| Real model operation, Azure deployment, attestation | none observed | unknown or blocked; no actual-provider response was observed |
+
+### Findings and existing owners
+
+* F1, confirmed, Low, refactor need, no new behaviour defect: `ChatIsolation.turn` and its `_ask` (`src/core/src/zava_forward/core/chat_isolation.py`, lines 133 and 147) have no static callers in `src` or `tools`. If wired, `_ask` calls `Ai._chat` without `chat_admission`, release or continuity checks (the data-protection hold and financial meter in `_request` would still apply). It is unreachable from the API today. Suggested owner family: #162 (isolation) or #164; a search of open and closed issues for the wording found no existing owner. No issue was filed and no source was changed here.
+* F2, traceability gap, not a defect: the evaluation `isolation_contains` and `isolation_forbid` probes use `ChatIsolation.build_prompt`, which can add memory, while the live `ChatPanel._ask` builds a different prompt without memory. Memory-in-prompt behaviour is therefore not evaluated on the live path. It is consistent with `memory_used: False` and stays in the scope of #164 and #163; no separate issue is proposed.
+* No new bug in the ordinary employee chat, assistant, isolation or consumption paths was reproduced by the selectors above. This does not prove absence of defects.
+* Existing owners compared and left open: #157, #159, #104, #107, #116, #121, #162, #163, #164, #432, #530, #619 (assistive technology, consent and Fluent acceptance for the widget) and #1274 (AWF resilience). #158, #160 and #161 are closed. This record cannot regrade, tick or close any of them.
+
+### Not run, exclusions and open gates
+
+* Not run: Azure SQL or any SQL Server, Chromium and axe, container build or scan, any real provider, Azure or production mutation, private `ZF_DATA`, the full local gate, and fresh hosted CI. No new Docker resources or receipt.
+* Not established: real-model operation and quality, screen-reader and other human acceptance, DPO, Legal, HR and control-owner decisions (BRD OD-45, OD-46, OD-48), retention, RAI and Assurance release approvals, tokenomics approval (BRD OD-51), live personal-data use, and whole-epic acceptance.
+* Excluded from main: PR 1278, PR 1243 and PR 1240 functionality.
+
+### Classification, recommendation and gates
+
+* Local observed (this session): the focused chat, assistant boundary, isolation and evaluation selectors above on SQLite or fixture stores. Local observed, historical and source-qualified: #1273 SQL and controlled browser runs, #1271 restart regression, #1275 installer. Azure observed: none. Implemented, unverified: memory in prompts, retention, real-provider behaviour. Deferred: F1 clean-up. Blocked: named DPO, Legal, RAI and owner approvals, and AWF checksum retrieval (#1274). Unknown: real-provider answers, cost and screen-reader behaviour.
+* Recommendation (proposal only): CONTINUE. The merged surface holds its proposal-only, human-review, role-scoped and workflow-only fallback boundaries at this source; no pivot, deferral or relaxation is proposed and none can be approved here. Resume conditions: independent exact-head assessment of this record, hosted CI, then the existing child lanes (#162, #163, #164, #619, #432, #107) proceed as separate RPI; F1 may be picked up under #162 as a small clean-up.
+* Gated by this record: closure of #157, #159, #104, #107 and #440, and any dependent expansion (#208 and further assistant or memory features), stay gated on the open items above. Independent lanes that do not touch chat or assistant admission (ranking, discovery, resident work) are not blocked by this checkpoint. Nothing is ticked and nothing is closed by this record.
