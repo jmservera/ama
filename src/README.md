@@ -186,7 +186,12 @@ Direct local checks for a small employee-chat or browser change, from
 [API guide](./api/README.md)). The runner is the reference for each rule, so
 match it rather than a summary:
 
-* Unit modules, lint and types, and `python -m checks.employee_acceptance_check`.
+* Unit modules, lint and types.
+* `python -m checks.employee_acceptance_check` with
+  `PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests`
+  from `src/api` (the runner's and hosted job's path; without it the test
+  module is not importable). It runs three named Chromium regressions and is
+  accepted only on exit 0 with exactly three tests run and no skip.
 * The chat-panel selector, run as `python -m unittest -v
   test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log`
   with `ZF_BROWSER_TESTS=1` and the hosted job's test path

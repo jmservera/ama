@@ -10948,3 +10948,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-08] update | Correction C2 to the local validation policy (Refs #1294)
 
 * A second independent review found two wording defects, corrected in `src/README.md`: the guide no longer says every mixed change takes the full tier (a mixed change takes the strictest applicable tier, so two focused components stay focused and any full-tier component makes the candidate full), and the runner-specific 58-byte `--out` limit is no longer attributed to the direct employee-chat harness, whose `--out` only receives the results file and whose scratch directory is set by `ZF_BROWSER_SCRATCH`. The behavior test was repeated as a fresh full run on the final wording; earlier reports and the retained sandboxes are preserved. Hosted CI remains unobserved.
+
+## [2026-11-08] correction | Tested revision of the C2 validation-policy behavior run (Refs #1294)
+
+* The C2 entry above says the behavior test was repeated "on the final wording". That is inaccurate. The run tested HEAD 7260826 plus the pre-grade C2 working-tree edits and returned Revise (nine scenarios Pass, three Revise, four findings). Four wording edits were then applied after grading and were not re-simulated, so the committed C2 wording was not behavior-tested. The earlier entry is preserved unchanged; a fresh full run on the corrected wording follows in correction C3.
+
+## [2026-11-08] update | Correction C3 to the local validation policy (Refs #1294)
+
+* The direct `python -m checks.employee_acceptance_check` command in `src/README.md` now carries the runner's `PYTHONPATH` from `src/api` and its three-test, zero-skip acceptance contract (discovery was verified read-only; no browser run). A fresh full, independently designed, simulated and graded behavior run (report 4, sandbox `2026-11-08-issue-1294-policy-4`) tested the final guide wording, with no edit after grading, and returned Pass with no confirmed contract defects. It is a proxy run: the host cannot bind the target profile, so no intended-profile or native claim is made. Earlier reports and sandboxes are preserved. Hosted CI remains unobserved.
