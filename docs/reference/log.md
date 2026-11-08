@@ -10679,3 +10679,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-07] update | Issue 79 root merged main b284d0d3 score-only (Refs #79)
 
 * One normal merge of main `b284d0d3` into the ranking publication root; only `.github/rubric/scores/latest.json` changed (generated score provenance for main `7c6d135d`, 77/100). No root source, test or log change and no approval implied. Metadata-only checks; FULL and independent review remain open. Records: `.copilot-tracking/*/2026-11-07/issue-79-r32-main-b284d0d-*`.
+
+## [2026-11-08] update | Issue 79 root integrated parent topic dd92e0d1 (Refs #79, #1231)
+
+* One normal merge of the squash-merged child 1242 (`dd92e0d1`, ranking archive concurrent-writer metadata) into the ranking publication root, on main `b284d0d3`. Parent-topic local observation only: not merged-main, whole-issue, cross-platform, human or deployed scheduling acceptance; #440 stabilization, #1258/#1259 and unmerged #123/#81/#86/#107 stay out. Earlier root341/child40d FULL evidence is historical. Records: `.copilot-tracking/*/2026-11-08/issue-79-r33-parent-dd92-*`.
