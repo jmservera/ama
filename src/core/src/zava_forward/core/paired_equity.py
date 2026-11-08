@@ -82,6 +82,18 @@ def _comparability(dimension: str, pair: Mapping[str, Any]) -> str | None:
     return "wrong_contrast"
 
 
+def _identity_problem(pair: Mapping[str, Any], anchors: Sequence[Mapping[str, Any]]) -> str | None:
+    """Return why a ranked case ID cannot be located unambiguously, or None when it can."""
+    case_id = pair["reference"].get("id")
+    if case_id != pair["subject"].get("id"):
+        return None
+    if not isinstance(case_id, str) or not case_id:
+        return "missing_case_id"
+    if any(a.get("id") == case_id for a in anchors):
+        return "anchor_id_collision"
+    return None
+
+
 def _position(case: Mapping[str, Any], anchors: Sequence[Mapping[str, Any]], rank: Ranker) -> int:
     ordered = rank([*anchors, case])
     return next(int(e["rank"]) for e in ordered if e["id"] == case["id"])
@@ -123,7 +135,7 @@ def evaluate(
         ):
             blockers.append(f"{pid}:invalid_pair")
             continue
-        why = _comparability(str(dim), pair)
+        why = _comparability(str(dim), pair) or _identity_problem(pair, anchors)
         if why:
             blockers.append(f"{pid}:invalid_comparison:{why}")
             invalid.append({"pair": pid, "dimension": str(dim), "reason": why})
