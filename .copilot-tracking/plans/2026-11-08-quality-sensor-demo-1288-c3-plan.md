@@ -1,6 +1,6 @@
 # Plan: #1288 correction 3 (C3)
 
-Written 2026-11-08T20:53Z after the C3 research and before product or test edits. Refs #1288, #107. No closing claim.
+Written 2026-11-08T20:51Z (commit c9562a90; the first draft header said 20:53Z, ahead of the real clock, corrected here)  after the C3 research and before product or test edits. Refs #1288, #107. No closing claim.
 
 ## Phases
 

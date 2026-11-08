@@ -1,6 +1,6 @@
 # Details: #1288 C3
 
-Written 2026-11-08T20:54Z before product or test edits. Refs #1288.
+Written 2026-11-08T20:51Z (commit c9562a90; the first draft header said 20:54Z, ahead of the real clock, corrected here)  before product or test edits. Refs #1288.
 
 ## Files
 

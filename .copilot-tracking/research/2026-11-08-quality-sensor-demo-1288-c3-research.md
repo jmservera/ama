@@ -1,6 +1,6 @@
 # Research: #1288 correction 3 (C3)
 
-Written 2026-11-08T20:52Z, before any product or test edit. Refs #1288, #107. No closing claim.
+Written 2026-11-08T20:51Z (commit c9562a90; the first draft header said 20:52Z, ahead of the real clock, corrected here) , before any product or test edit. Refs #1288, #107. No closing claim.
 
 ## Authority and scope
 
