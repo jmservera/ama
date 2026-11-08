@@ -21,6 +21,14 @@ from zava_forward.core import ranking_publication as rp
 AS_OF = "2026-10-09"
 
 
+def mount_table(*points):
+    lines = [b"1 0 0:1 / / rw - ext4 /dev/root rw\n"]
+    for number, point in enumerate(points, 2):
+        escaped = str(point).replace(" ", "\\040")
+        lines.append(f"{number} 1 0:{number} / {escaped} rw - ext4 /dev/x rw\n".encode())
+    return b"".join(lines)
+
+
 def snap():
     a, b = case("ZF-A"), case("ZF-B")
     b["days_in_stage"] = 50
@@ -378,9 +386,12 @@ class AncestorDurabilityTests(unittest.TestCase):
             rp.publish(snap(), archive, "2026-10-10")
         self.assertEqual(synced, ["x", "real"])
 
+    def mounts(self, *points):
+        return patch.object(rp, "_read_mountinfo", lambda: mount_table(*points), create=True)
+
     def test_chain_stops_after_a_mount_point_ancestor(self):
         events, sync, link = self.labelled()
-        with sync, link, patch.object(os.path, "ismount", lambda p: str(p) == str(self.root / "a")):
+        with sync, link, self.mounts(self.root / "a"):
             rp.publish(snap(), self.dir, "2026-10-10")
         self.assertEqual([e for e in events if e != "other"][-3:], ["archive", "b", "a"])
 
@@ -445,11 +456,70 @@ class AncestorDurabilityTests(unittest.TestCase):
                 self.assertEqual(known, ["file", "link", "archive", "b", "a", "root"])
 
     def test_archive_that_is_itself_a_mount_point_is_not_synced_past_its_filesystem(self):
+        # A bind mount shares st_dev with its host parent, so only the mount table shows it.
         events, sync, link = self.labelled(fault="b")
-        with sync, link, patch.object(os.path, "ismount", lambda p: str(p) == str(self.dir)):
+        with sync, link, self.mounts(self.dir):
             res = rp.publish(snap(), self.dir, "2026-10-10")
         self.assertIs(res["written"], True)
         self.assertEqual([e for e in events if e != "other"], ["file", "link", "archive"])
+
+    def test_archive_inside_a_mount_is_synced_through_the_mount_root_only(self):
+        events, sync, link = self.labelled(fault="a")
+        with sync, link, self.mounts(self.root / "a" / "b"):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual([e for e in events if e != "other"], ["file", "link", "archive", "b"])
+
+    def test_subvolume_root_that_is_not_a_mount_does_not_end_the_chain(self):
+        # Mocked ismount stands in for a Btrfs subvolume root: different st_dev, not a mount.
+        _, sync, link = self.labelled(fault="root")
+        with (
+            sync,
+            link,
+            self.mounts(),
+            patch.object(os.path, "ismount", lambda p: str(p) == str(self.root / "a")),
+            self.assertRaises(rp.DurabilityUnconfirmedError) as ctx,
+        ):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertIs(ctx.exception.written, True)
+        self.assertEqual(rp.verify(self.dir)["problems"], [])
+
+    def test_mount_hidden_by_a_later_mount_is_not_a_boundary(self):
+        events, sync, link = self.labelled()
+        with sync, link, self.mounts(self.dir, self.root / "a"):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual([e for e in events if e != "other"][-3:], ["archive", "b", "a"])
+
+    def test_unreadable_mount_table_is_unconfirmed_and_keeps_the_record(self):
+        def unreadable():
+            raise OSError(errno.EIO, "no mount table")
+
+        _, sync, link = self.labelled()
+        with (
+            sync,
+            link,
+            patch.object(rp, "_read_mountinfo", unreadable, create=True),
+            self.assertRaises(rp.DurabilityUnconfirmedError) as ctx,
+        ):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual((ctx.exception.errno, ctx.exception.written), (errno.EIO, True))
+        self.assertNotIn(str(self.root), str(ctx.exception))
+        self.assertEqual([p.name for p in self.dir.iterdir()], [rp._name(snap())])
+
+    def test_mount_table_parser_handles_escapes_optional_fields_and_overmounts(self):
+        data = (
+            b"1 0 0:1 / / rw - ext4 /dev/a rw\n"
+            b"2 1 0:2 / /srv/with\\040space rw shared:1 master:2 - ext4 /dev/b rw\n"
+            b"3 1 0:3 /sub /data rw - ext4 /dev/b rw\n"
+            b"4 1 0:4 / /data rw - tmpfs tmpfs rw\n"
+            b"5 1 0:5 / /data/x rw - ext4 /dev/c rw\n"
+            b"6 1 0:6 / /srv rw - ext4 /dev/d rw\n"
+        )
+        self.assertEqual(rp._active_mounts(data), {"/", "/data/x", "/srv", "/data"})
+
+    def test_mount_table_parser_refuses_malformed_lines(self):
+        for bad in (b"1 0 0:1 / /\n", b"1 0 0:1 / rw - ext4\n", b"garbage - x\n"):
+            with self.subTest(bad=bad), self.assertRaises(OSError):
+                rp._active_mounts(bad)
 
     def test_required_ancestor_open_failure_is_reported_not_skipped(self):
         real_open = os.open

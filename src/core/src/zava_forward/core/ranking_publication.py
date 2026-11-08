@@ -21,6 +21,7 @@ Nothing here changes a ranking.
 """
 
 import calendar
+import errno
 import hashlib
 import json
 import os
@@ -129,25 +130,65 @@ def _fsync_dir(archive_dir: Path) -> None:
         os.close(fd)
 
 
+def _read_mountinfo() -> bytes:
+    with open("/proc/self/mountinfo", "rb") as f:
+        return f.read()
+
+
+def _active_mounts(table: bytes) -> set[str]:
+    """Mount points visible in a /proc/self/mountinfo table.
+
+    A mount hidden by a later one at the same or an ancestor path is dropped, so the
+    walk continues past it and only ever syncs more. Any line that does not parse is
+    an OSError: the boundary is then unknown and must not be guessed.
+    """
+    try:
+        points: list[str] = []
+        for line in table.splitlines():
+            if not line.strip():
+                continue
+            head, separator, _ = line.partition(b" - ")
+            fields = head.split(b" ")
+            if not separator or len(fields) < 6:
+                raise ValueError("malformed mount table line")
+            raw = re.sub(rb"\\([0-7]{3})", lambda m: bytes([int(m[1], 8)]), fields[4])
+            points.append(os.fsdecode(raw))
+    except ValueError as e:
+        raise OSError(errno.EIO, "The mount table could not be read.") from e
+    active: set[str] = set()
+    later: set[str] = set()
+    for point in reversed(points):
+        names = point.split("/")
+        covered = any(("/".join(names[:n]) or "/") in later for n in range(len(names), 0, -1))
+        if not covered:
+            active.add(point)
+        later.add(point)
+    return active
+
+
 def _ancestors(archive_dir: Path) -> list[str]:
     """Real parent folders whose entries may need a sync, nearest first.
 
     Every parent up to the filesystem boundary: the first mount point, which is
     included because its entries live on the archive's filesystem, or the root. An
-    archive that is itself a mount point has no parent on its filesystem. Present
-    permissions are not evidence that an entry was synced earlier, so none is used
-    to skip a folder; a sync or open error on any listed folder is raised, never skipped.
+    archive that is itself a mount point has no parent on its filesystem. Mount points
+    come from the mount table, not st_dev: a bind mount shares its parent's device and a
+    Btrfs subvolume root differs from its parent without being a mount. Unknown mount
+    data raises OSError. Present permissions are not evidence that an entry was synced
+    earlier, so none is used to skip a folder; a sync or open error on any listed
+    folder is raised, never skipped. The mount layout is assumed stable during a call.
     """
+    mounts = _active_mounts(_read_mountinfo())
     chain: list[str] = []
     current = os.path.realpath(archive_dir)
-    if os.path.ismount(current):
+    if current in mounts:
         return chain
     while True:
         parent = os.path.dirname(current)
         if parent == current:
             return chain
         chain.append(parent)
-        if os.path.ismount(parent):
+        if parent in mounts:
             return chain
         current = parent
 
