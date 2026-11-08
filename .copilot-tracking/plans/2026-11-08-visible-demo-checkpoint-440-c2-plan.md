@@ -9,10 +9,10 @@ Correct R1 to R3 only. Research: [C2 research](../research/2026-11-08-visible-de
 
 ## Phases
 
-* [ ] Phase 1: edit pack line 3243 (conditional, at most once) and the trace row (distinguish the one observed generic model answer); add a compact additive C2 provenance note in the new section.
-* [ ] Phase 2: append a dated log entry; earlier bytes preserved.
-* [ ] Phase 3: focused validation: `git diff --check`, ASCII, anchors and links, byte-preservation of earlier pack text and log prefix, C1 and original records unchanged, fetch main, status.
-* [ ] Phase 4: C2 changes, one author Review per finding, state, commit.
+* [x] Phase 1: edit pack line 3243 (conditional, at most once) and the trace row (distinguish the one observed generic model answer); add a compact additive C2 provenance note in the new section.
+* [x] Phase 2: append a dated log entry; earlier bytes preserved.
+* [x] Phase 3: focused validation: `git diff --check`, ASCII, anchors and links, byte-preservation of earlier pack text and log prefix, C1 and original records unchanged, fetch main, status.
+* [x] Phase 4: C2 changes, one author Review per finding, state, commit.
 
 ## Decisions
 
