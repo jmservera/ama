@@ -20,6 +20,46 @@ function residentBindings(text) {
   });
 }
 
+function sensorTable(title, rows, absent) {
+  const box = h("div", {}, h("h3", {}, title));
+  if (!rows || !rows.length) return box.append(h("p", {}, absent || "No retained readings.")), box;
+  const head = ["Reading ID", "Sensor ID", "Observed (UTC)", "Temperature (degC)", "Relative humidity (%RH)", "Source"];
+  box.append(h("table", { "aria-label": title },
+    h("thead", {}, h("tr", {}, head.map((t) => h("th", { scope: "col" }, t)))),
+    h("tbody", {}, rows.map((r) => h("tr", {}, h("th", { scope: "row" }, r.reading_id), h("td", {}, r.sensor_id),
+      h("td", {}, h("time", { datetime: r.observed_at }, r.observed_at)), h("td", {}, r.temperature_c), h("td", {}, r.humidity_pct),
+      h("td", {}, "Synthetic indoor observation"))))));
+  return box;
+}
+
+function sensorPanel(id) {
+  const body = h("div", {}, h("p", { role: "status" }, "Loading retained readings..."));
+  const box = h("section", { class: "card", id: "sensors" }, h("h2", {}, "Indoor readings (synthetic demonstration)"), body);
+  if (!QUALITY_ROLES.includes(me.user.role)) {
+    body.replaceChildren(h("p", {}, "Your role does not include indoor readings. Ask the quality team."));
+    return box;
+  }
+  api(`/api/cases/${encodeURIComponent(id)}/sensors`).then((v) => {
+    const kids = [
+      h("p", { role: "status" }, `${v.freshness_text} Generated ${v.generated_at}.`),
+      h("p", { class: "muted" }, "Retained synthetic indoor temperature and relative humidity for this home only. These are not weather and not a measure of comfort or hazard. The Quality evidence assistant reads these same readings."),
+    ];
+    if (v.latest) kids.push(h("p", {}, `Latest: ${v.latest.temperature_c} degC and ${v.latest.humidity_pct} %RH at ${v.latest.observed_at} (${v.latest.reading_id}, ${v.latest.sensor_id}). Freshness: ${v.freshness}.`));
+    if (v.state !== "ok") {
+      kids.push(h("p", {}, `${v.detail || v.freshness_text} Use the manual route: ${v.manual_route}`));
+    } else {
+      kids.push(sensorTable(`Sealed window ${v.window.start} to ${v.window.end} (UTC, up to ${v.max_readings.window})`, v.readings, v.window_absent));
+      kids.push(h("p", { class: "muted" }, `Before and after use the first quality evidence record time${v.reference ? ` (${v.reference})` : ""}, not an install date.`));
+      kids.push(sensorTable("Before the first quality evidence record", v.before, v.before_absent));
+      kids.push(sensorTable("From the first quality evidence record", v.after, v.after_absent));
+    }
+    body.replaceChildren(...kids);
+  }).catch((error) => {
+    body.replaceChildren(h("p", { class: "err", role: "alert" }, `${error.message || "Readings are unavailable."} Use the manual route: manual-sensor-review.`));
+  });
+  return box;
+}
+
 function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
   const box = h("section", { class: "card", id: "quality" }, h("h2", {}, "Quality checks and defects"));
   const canCheck = QUALITY_ROLES.includes(me.user.role);

@@ -754,6 +754,20 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(502, {"error": "The document store is not available. Try again shortly."})
                 safe = "".join(ch for ch in name if ch.isalnum() or ch in " ._-")
                 return self._send(200, raw, mime, {"Content-Disposition": f'attachment; filename="{safe}"'})
+            if url.path.startswith("/api/cases/") and url.path.endswith("/sensors"):
+                parts = url.path.strip("/").split("/")
+                if len(parts) != 4:
+                    return self._json(404, {"error": "Case not found."})
+                try:
+                    return self._json(200, app.assistants.sensors(u, unquote(parts[2])))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except KeyError:
+                    return self._json(404, {"error": "Case not found."})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+                except Exception:
+                    return self._json(503, {"error": "Sensor readings unavailable; continue the ordinary quality check manually."})
             if url.path.startswith("/api/cases/") and url.path.endswith("/home-case"):
                 parts = url.path.strip("/").split("/")
                 if len(parts) != 4:

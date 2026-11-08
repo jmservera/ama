@@ -6,6 +6,23 @@ ms.date: 2026-10-31
 ms.topic: reference
 ---
 
+## Retained indoor readings for employees and Quality evidence (Refs #1288)
+
+`sensor_view` is a read-only, bounded view of the retained synthetic
+`sensor_reading` rows for one home. `Assistants.sensors` (API
+`GET /api/cases/{id}/sensors`) shows readings, units (degC, %RH), UTC times,
+freshness and before/after context to the same roles that may use the
+`quality-evidence` assistant. `capture_source` (6 hour sealed UTC window, at most
+12 window readings and 4 before and 4 after) also feeds the quality-evidence
+snapshot, citations (`sensor:{reading_id}`) and the `review_flag`, so the
+employee and the model see the same IDs and values. Nothing generates values,
+reads weather or queries unbounded history. Consent withheld, no readings or an
+unreadable store show an explicit state and the manual route. The before/after
+reference is the first quality evidence record time, not an install date. The
+`review_flag` exists only for a returned, model-attributed output; it is an
+unapproved request for human review, not acceptance, payment, defect closure,
+consent, hazard diagnosis or a ranking change.
+
 ## Ranking snapshot publication (Refs #79)
 
 `ranking_publication.publish(snapshot, archive_dir, published_on)` archives a

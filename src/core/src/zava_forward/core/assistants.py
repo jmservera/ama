@@ -16,7 +16,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 
 from . import assistant_release as rel
-from . import ai_consumption, continuity, projection, quality, ranking, rai_release
+from . import ai_consumption, continuity, projection, quality, ranking, rai_release, sensor_view
 from zava_forward.core.ai import FORBIDDEN, Ai
 from .store import ConflictError
 
@@ -45,15 +45,15 @@ REGISTRY = {
                                        categories=("home", "measures", "preferences", "appointments", "handoff", "capacity", "requests"),
                                        purpose="Draft an update or committed-capacity option"),
     "quality-evidence": dict(roles=("Quality Inspector", PM),
-                            categories=("home", "measures", "quality", "checklists", "documents"),
-                            purpose="Assemble per-measure quality evidence discrepancies"),
+                            categories=("home", "measures", "quality", "checklists", "documents", "sensors"),
+                            purpose="Assemble per-measure quality evidence discrepancies and review-flag retained indoor readings"),
 }
 RULES = {
     "stock-prioritisation": "Missing/unknown home.epc, home.type or home.built; supplied survey.epc/type/built conflicts with home.",
     "assessment-preparation": "Missing Survey/Design metadata/content hash or technical.design_version; relevant permitted source signature changes.",
     "funding-evidence": "Missing measures, funding.route/reference, grants or budget amount; incomplete supplied invoice ref/lines/milestone inputs; claim-phase grant lacks sourced history or hashed Funding evidence metadata; relevant permitted terms/evidence signature changes.",
     "works-resident-coordination": "handoff.state=Offered/Received/Escalated; past appointment.date with missing/Booked/Planned/No access/Missed outcome; past open service_request.next_update.",
-    "quality-evidence": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes.",
+    "quality-evidence": "Missing/unknown measures; not exactly one active (non-Superseded) quality record per measure; current work not Accepted/Handed over; missing/conflicting checklist item evidence or checklist version mismatch; current evidence version or relevant permitted signature changes; retained consented indoor readings present in the sealed window for a case with a quality record (a review flag only, not a threshold, defect or acceptance).",
 }
 # One provider call per attempt, one agent, no tools or sub-agents (#107, #432). Attempts per request
 # are the configured ZF_ASSIST_ATTEMPTS, never above ATTEMPT_CEILING.
@@ -94,7 +94,7 @@ def measures(c):
     return [m.strip() for m in values if isinstance(m, str) and m.strip()]
 
 
-def capture(capability, c, procurement=None):
+def capture(capability, c, procurement=None, sensors=None):
     """Closed field allowlists, never whole records, notes, vulnerability or AI summaries."""
     source = {"home": pick(c.get("home"), ("address", "town", "postcode", "type", "built", "epc", "tenure"))}
     # Role-independent so the source signature is stable: outcomes only when every role of the assistant has a recorded need.
@@ -158,6 +158,8 @@ def capture(capability, c, procurement=None):
                                  items=[pick(i, ("label", "evidence")) for i in q.get("items", [])])
                              for q in quality.active_records(c.get("quality", []))]
         source["checklists"] = {m: quality.checklist_for(m) for m in measures(c)}
+        if sensors is not None:
+            source["sensors"] = sensors
     unknowns = []
 
     def missing(value, path):
@@ -172,6 +174,9 @@ def capture(capability, c, procurement=None):
     missing(source, "source")
     citations = {f"source:{key}": dict(locator=f"case:{c['id']}/{key}", content_hash=digest(value))
                  for key, value in source.items()}
+    if source.get("sensors"):
+        for key, reading in sensor_view.citations(source["sensors"]).items():
+            citations[key] = dict(locator=f"sensor_reading/{reading['sensor_id']}/{reading['reading_id']}", content_hash=digest(reading))
     return dict(sources=source, citations=citations, unknowns=unknowns,
                 schema=SCHEMA_VERSION, rules=RULE_VERSION, registry=VERSION,
                 registry_hash=digest(dict(version=VERSION, capability=capability, contract=REGISTRY[capability])),
@@ -227,7 +232,27 @@ def eligible(capability, snapshot, now_date, changed=False):
             return True
         if any(len({i["evidence"] for i in q["items"] if i["label"] == label}) > 1 for label in labels):
             return True
-    return changed
+    sensors = s.get("sensors") or {}
+    return changed or bool(sensors.get("state") == "ok" and sensors.get("readings") and s["quality"])
+
+
+def review_flag(task, provenance=()):
+    """Autonomous L4 review flag. Exists only for stored output from an actual returned model call."""
+    envelope, output = task.get("envelope") or {}, task.get("output")
+    if task.get("capability") != "quality-evidence" or not output or envelope.get("source") != "ai" or envelope.get("outcome") != "returned":
+        return None
+    cited = sorted({x for finding in output["findings"] for x in finding["citations"]})
+    readings = [x[len("sensor:"):] for x in cited if x.startswith("sensor:")]
+    sensors = task["snapshot"]["sources"].get("sensors") or {}
+    return dict(level="L4", status="human-review-requested", unapproved=True, task_state=task.get("state"),
+                trigger="proactive" if any(e.get("mode") == "proactive" for e in provenance if e.get("kind") == "invocation") else "requested",
+                model=dict(provider=envelope.get("provider"), deployment=envelope.get("deployment"), model=envelope.get("model"),
+                           task_version=envelope.get("task_version"), release=task.get("release")),
+                cited_ids=cited, reading_ids=readings, sensor_grounded=bool(readings),
+                source_window=sensors.get("window"),
+                source_time=datetime.fromtimestamp(task["created_at"], timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ") if isinstance(task.get("created_at"), (int, float)) else None,
+                effect="Requests a named person to review. It does not accept work, close a defect, authorise payment or consent, "
+                       "diagnose a hazard or change any ranking.")
 
 
 def validate_output(value, snapshot, max_chars):
@@ -506,7 +531,10 @@ class Assistants:
         if capability == "works-resident-coordination":
             row = db.execute("SELECT value FROM meta WHERE key='procurement'").fetchone()
             proc = json.loads(row[0]) if row else {}
-        return capture(capability, c, proc)
+        sensors = None
+        if capability == "quality-evidence":
+            sensors = sensor_view.capture_source(db, c["id"], sensor_view.reference_for(c.get("quality")), self.now(db), self.mssql)
+        return capture(capability, c, proc, sensors)
 
     def continuity(self, db):
         """The persisted suspension state, read on the caller's own SQL connection so no process caches it."""
@@ -722,6 +750,7 @@ class Assistants:
         body["history_next_offset"] = history_offset + history_limit if total > history_offset + history_limit else None
         body["history_count"] = total
         body["display_state"] = "stale" if body["stale"] else body["state"]
+        body["review_flag"] = review_flag(body, body["provenance"])
         held = continuity.active(self.continuity(db), body["capability"], constructed=not isinstance(self.store.ai, Ai))
         body["epoch_current"] = continuity.epoch_current(body, self.continuity(db))
         body["release_denial"] = self.admission(db, body["capability"])
@@ -737,6 +766,17 @@ class Assistants:
         elif not body["epoch_current"]:
             body["display_state"] = "epoch-stale"
         return body
+
+    def sensors(self, user, case_id):
+        """Bounded retained indoor readings for one authorised case; the same source the quality snapshot captures."""
+        if not isinstance(case_id, str) or not 1 <= len(case_id) <= 64:
+            raise ValueError("Choose a bounded case ID.")
+        if not self.sql:
+            raise ValueError(self.disabled())
+        with self.transaction() as db:
+            c = self.authorize(db, user, "quality-evidence", case_id)
+            out = sensor_view.view(db, case_id, sensor_view.reference_for(c.get("quality")), self.now(db), self.mssql)
+        return dict(out, case_id=case_id)
 
     def detail(self, user, tid, history_offset=0):
         if not self.sql:
