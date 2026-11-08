@@ -41,6 +41,18 @@ The [paper's current record](../capstone/thought-leadership/everything-but-the-s
 and pages 22/40 supersede paused/prospective-only status, not earlier adverse
 reviews or unresolved interpretation/approval limits.
 
+The [8 November measurement clarification](../capstone/thought-leadership/everything-but-the-software/README.md#measurement-provenance-8-november)
+adds an outcome/proxy/resource table, actual raw field/instrument definitions
+and source-bound active B/C templates. There is no separate numerical AI
+outcome judge: model review is a treatment, while hidden contracts and fixed
+analysis tools measure outcomes and structural proxies. Current-source
+inspection confirms conservative loss/composite CR1 summaries and the Ruff
+inline-`noqa` limitation; no running instrumentation or data is changed.
+The v13 single PDF has 45 pages, Supplement 37, with 50 authoring checks
+and PDF bounds/destinations verified. Historical/adverse records, coauthors,
+registered-base/unregistered-amendment disclosure and result TODOs remain;
+independent/human and publication approvals are separate.
+
 The owner-requested additive revision removes repeated Background, figures
 and case narratives; the paper retains only extra source
 qualifications and methodological/provenance detail in its Supplement.

@@ -10853,3 +10853,32 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   Names/metadata and source/history/status were checked without private
   experimental data or new results. Independent assessment and publication
   gate remain separate from these local component checks.
+
+## [2026-11-08] update | Paper measurement provenance and active treatment prompts
+
+* Applied the owner's measurement audit request to the existing paper and
+  additive Supplement. Tables 7/15 distinguish hidden-contract outcomes,
+  structural complexity/duplication/lint/size proxies, variable resource
+  observations and annotation/integrity records, with actual fields, units,
+  checkpoints, denominators, tool settings and missingness.
+* Public source `e71037d9` contains no separate numerical LLM-as-judge.
+  Arm C's qualitative review is a treatment, not an outcome score. The B/C
+  source templates are retained verbatim with SHA-256/Git-blob guards and
+  complete PDF-display checks; the historical frozen v4 prompt is unchanged.
+* Corrected the earlier Ruff safeguard claim: `--isolated` is present,
+  `--ignore-noqa` is absent and no suppression count is exported. Inline
+  suppression remains a measurement limitation, not a silently fixed
+  instrument or an accusation of participant use. Conservative unavailable
+  retention and composite CR1 summaries remain distinct from planned
+  richer exports.
+* The [current paper record](../capstone/thought-leadership/everything-but-the-software/README.md#measurement-provenance-8-november)
+  describes the 45-page single PDF, Supplement 37, 50 passing authoring
+  tests, structural checks, 180 internal/49 outline destinations and all-page
+  bounds. New tables/listings were visually inspected. One inherited
+  Tectonic `inputenc` warning remains; the historical body baseline is
+  unavailable. Independent exact-head review, focused publication gate,
+  hosted and human approval remain separate.
+* Authoring stayed on the existing branch. No slides, private data, experimental
+  outcomes, source/configuration, model run, registration/amendment or
+  repository-visibility action was performed. Coauthors, source epochs,
+  original/adverse reviews and pending results remain intact.

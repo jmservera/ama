@@ -19,6 +19,9 @@
     },
     "anc/deferred-measures.tex": {
       "content_sha256": "c8608e6fe586fa252099e566a859d01350c5709fd79c9bc40c72595d19f25ccc"
+    },
+    "anc/measurement-provenance.tex": {
+      "content_sha256": "5f077094937c9369280106554d4c69e0fcb986e26f913fc228fde33917392ab4"
     }
   },
   "author_review_revision": {
@@ -40,6 +43,24 @@
       "main.tex": "95ffbf850ded241423a6eef686afdc38afe5c913c9b264d98b67d08a67b4cb26",
       "anc/experiment-protocol.tex": "e803b122d7ffbae7507273652b457a401b72d0e15490c672ce2ea8e1dcfc8ee7",
       "anc/supplement-section.tex": "b86572be9405315d95bdec36ee5dfe197baeaca1c123d902e3f03e1d1d448f3a"
+    }
+  },
+  "measurement_provenance_revision": {
+    "date": "2026-11-08",
+    "scope": "Source-bound outcome/proxy/resource definitions and active B/C treatment templates; corrected Ruff suppression claim without changing the running experiment or results.",
+    "experiment_source_commit": "e71037d961cb80fc5c659437796de7736820f6c9",
+    "delivery_sha256": "58287cefefb4d0b10b6db6bac086a23c329597fe356211a88cda3ac144fea52f",
+    "delivery_pages": 45,
+    "supplement_start_page": 37,
+    "source_sha256": {
+      "main.tex": "498aa6045340c693a17b3be685d07c18659ebef98da4527ac68ff5e538bfc7fd",
+      "anc/experiment-protocol.tex": "c55ab9e2105724cf15f7dd8c71aa2120f6788633f9b8a0da28ef04843457005e",
+      "anc/supplement-section.tex": "9322ebb2893576d872fa87371d724b3a5a657f7f01e3d8cda6bfa4185d81cd15",
+      "anc/measurement-provenance.tex": "ee3f165d230313808493adb31056ab6e3aa6ac59d0814ba9cb71f96acda5e7da"
+    },
+    "prompt_git_blobs": {
+      "anc/consolidation-active-e71037d9.prompt.txt": "fe00defa94b65eeb319e24256e425942247e0a14",
+      "anc/review-only-active-e71037d9.prompt.txt": "706d15d3c7e1615d58c0902a050b0e80d163e929"
     }
   },
   "restored_citation_keys": [
@@ -190,7 +211,9 @@
     "rendering_change": "Literal-file renderer changes are normalized; the entire authoritative prompt remains separately SHA256-bound."
   },
   "literal_inputs": {
-    "anc/consolidation-frozen-v4.prompt.txt": "75f646edbe04e1e3403b092b13edd6b66615a3362e67ad49744d229cdcb94f29"
+    "anc/consolidation-frozen-v4.prompt.txt": "75f646edbe04e1e3403b092b13edd6b66615a3362e67ad49744d229cdcb94f29",
+    "anc/consolidation-active-e71037d9.prompt.txt": "1ee3da712fcb787a7843d1270aabf61b55abb7c8b7df2534d4adc078b0241494",
+    "anc/review-only-active-e71037d9.prompt.txt": "06a8dfcaee30ab52c243c771844619cf08f23854ef866f1bfde5277362391725"
   },
   "historical_integrated_cited_keys": [
     "agarwal2026sdd",

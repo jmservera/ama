@@ -1,9 +1,12 @@
 ---
 title: Everything but the Software - Revision Record
-description: Execution/coauthorship provenance, author dispositions and retained historical revision evidence
+description: Source-bound measurement clarification, execution/coauthorship provenance and retained historical revision evidence
 ms.date: 2026-11-08
 ---
 
+The 8 November measurement clarification supplements the execution and
+coauthorship record and corrects the earlier Ruff safeguard claim. It
+changes no running experiment or recorded outcomes.
 The 8 November execution and coauthorship record supersedes earlier
 then-current implementation and pre-collection status. It does not
 overwrite historical scientific findings or certify current execution.
@@ -12,6 +15,107 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Measurement Provenance Clarification 8 November
+
+### Scope, Assistance and Source
+
+The owner explicitly requested paper explanations, tables and relevant example
+prompts after the read-only measurement audit. Work continues directly on
+`docs/capstone-autonomy-story`, from clean `836093cf`, with PR #1283 open.
+The authorized outputs are the existing paper/source record and additive
+Supplement, plus directly related documentation and focused authoring tests.
+The slides and the running experiment are not revised in this scope.
+
+The active public source is
+[`e71037d961cb80fc5c659437796de7736820f6c9`](https://github.com/jmservera/ama-thought-mve/tree/e71037d961cb80fc5c659437796de7736820f6c9).
+The default `baf58b4f` inspected during the audit contains it; the supplied
+execution has no tag. The source files below were inspected directly.
+No private run records, hidden oracle bodies or paid model calls were used.
+This is implementation-source verification, not verification of collected
+outcomes or actual per-session tool/provider conditions.
+
+Copilot-assisted clarification used scientific-critical-thinking, the
+scientific-writing reference, existing tests and PDF tooling. The existing
+`kassis2026skills` citation and prior metadata-verification limit are retained;
+the manuscript records the actual added assistance. No new algebra/design
+audit, venue policy check or claim of independent human peer review is made.
+
+### Claims, Locators and Evidence States
+
+| Claim / paper locator | Inspected active source | Evidence state and limit |
+| --- | --- | --- |
+| No separate numerical AI judge; Outcomes and retained-contract loss | `harness/measure.py:342-374`, `harness/pilot_analysis.py:53-154`, `harness/runner.py:387-433` | Full-text/source support for the described code path, not proof of every private execution |
+| Functional coverage is hidden-contract pass fraction, not line/branch coverage | `harness/measure.py:205-320`, `harness/pilot_analysis.py:157-307` and public panel/config metadata | Source support for scoring and completeness rules; no hidden test contents or outcome data inspected |
+| Complexity/duplication/lint/size are structural proxies; field table in additive Supplement | `skeleton/tools/metrics_core.py:126-292`, `skeleton/tools/quality.py:8-39` | Source support for actual fields, scales, backend settings and lack of a general quality/maintainability-index score |
+| Earlier Ruff suppression safeguard is false; final Measures paragraph | `skeleton/tools/metrics_core.py:217-250,255-292` | Conflict: actual call has `--isolated`, not `--ignore-noqa`, and no suppression count; corrected, not fixed in the running kit |
+| AI credits/tokens/time are recorded resource observations, not AI scores | `harness/analyze.py:74-184`, `harness/runner.py:222-263` | Source support for parsing and observations; full all-attempt cost needs the journal and complete usage, neither newly inspected |
+| B/C text is treatment instruction, not a scoring rubric; Active prompt examples | Both `harness/prompts/*-step.prompt.md` templates, `harness/runner.py:51-69,222-263,387-433` | Exact template bytes retained and SHA/Git-blob checked; actual private `prompt.md` and full provider/system context not inspected |
+| Conservative loss/CR1 reporting remains narrower than the planned specification | `harness/pilot_analysis.py:53-154,157-307` and failure-attribution module | Source support for conservative unavailable summaries and composite CR1; richer graded/stratified exports remain gaps |
+
+The main table distinguishes outcomes, structural proxies, resource observations
+and explicit annotation/integrity records. The Supplement gives raw field names,
+units, denominators, backend/pin and missingness limits. Empty denominators
+remain undefined; zero complexity summaries on an empty function set are
+described as source-emitted sentinels, not a valid measured mean/share.
+
+The active prompt snapshots are:
+
+* [B](./consolidation-active-e71037d9.prompt.txt): 1,471 bytes, SHA-256
+  `1ee3da712fcb787a7843d1270aabf61b55abb7c8b7df2534d4adc078b0241494`,
+  Git blob `fe00defa94b65eeb319e24256e425942247e0a14`.
+* [C](./review-only-active-e71037d9.prompt.txt): 719 bytes, SHA-256
+  `06a8dfcaee30ab52c243c771844619cf08f23854ef866f1bfde5277362391725`,
+  Git blob `706d15d3c7e1615d58c0902a050b0e80d163e929`.
+
+All retained bytes include the Markdown heading/comment. The PDF explains how
+the runner strips these and substitutes the 900-second budget as `15 minutes`.
+The current C source's `optional placebo` heading is retained, but the paper
+continues to classify it as information-bearing review. The old frozen v4
+prompt and its checksum remain unchanged. Matching measurement-module/C-prompt
+blobs across the three disclosed epochs do not make all data or execution
+conditions uniform.
+
+### Validation and Assessment Boundary
+
+The 50-test authoring suite and structural checker pass: 94 cited entries,
+105 reusable entries and a 1,806-character abstract. The approximate main-body
+count is 11,156 using the existing method (tables included; abstract,
+bibliography and appendices excluded); historical baseline `0d5dcb02` is
+unavailable, so no before/after comparison is claimed.
+Six focused documentation regressions guard template byte
+bindings, active Supplement includes, field names and instrument classification,
+the Ruff limitation, and the distinction between AI review and outcome scoring.
+They validate authoring invariants, not experimental correctness or efficacy.
+
+Tectonic 0.17.0 compiled the single 45-page PDF, Supplement page 37. Its log has
+no TeX errors, unresolved references or overfull/underfull boxes; the inherited
+`inputenc` compatibility warning remains. The optional checker still expects
+a pdfLaTeX marker and is not used as evidence of Tectonic failure.
+All-page word bounds, 180 internal named destinations and 49 outline
+destinations pass; no blank pages or invalid internal targets were found.
+Tables 7/15, explanation pages and both prompt listings were rendered and
+inspected, along with an all-page layout proof. The final short C example is
+kept intact on page 45. The complete B/C display text matches after NFKC/
+whitespace normalization and exclusion of page-number footers; that check
+does not claim byte identity of PDF text. The retained source templates are
+separately byte/hash-bound as specified above.
+
+Final PDF SHA-256:
+`58287cefefb4d0b10b6db6bac086a23c329597fe356211a88cda3ac144fea52f`.
+Current source, normalized additive-body and literal-input bindings are in
+[supplement-integration.json](./supplement-integration.json); earlier
+authorship/historical bindings are preserved. The external component build
+is under this session's `files/paper-measurement-2026-11-08/`. Independent
+exact-head review and a fresh focused local publication gate remain separate
+steps; their outcomes/receipts are retained in PR #1283 rather than making
+component checks stand in for approval.
+
+The existing title, coauthors, case claims, original/adverse reviews, historical
+figures, source epochs, pending result TODOs and false results switch are
+preserved. No experiment code/configuration, results, OSF registration or
+amendment, repository visibility or slides are changed. The inspection cannot
+certify scientific, human, employer, ethics or venue approval.
 
 ## Execution, Registration and Coauthorship 8 November
 

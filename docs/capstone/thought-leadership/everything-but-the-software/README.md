@@ -1,6 +1,6 @@
 ---
-title: Everything but the Software - source package (draft v12)
-description: Single-document paper with additive Supplement, coauthorship and registered-base/unregistered-amendment execution provenance
+title: Everything but the Software - source package (draft v13)
+description: Single-document paper with source-bound measurement definitions and active AI treatment prompts, preserving execution and coauthorship provenance
 ms.date: 2026-11-08
 ---
 
@@ -10,7 +10,7 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 The title is unchanged at the owner's request. The complete
 [paper](./main.pdf) and [source](./main.tex) now include a
-[Supplement section](./main.pdf#page=35) in the same document.
+[Supplement section](./main.pdf#page=37) in the same document.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
 Repeated Background text, figures and case narratives are excluded from
@@ -19,8 +19,10 @@ The standalone supplement PDF/TeX/bibliography were removed at the owner's
 request after exact archive readback and restore checks; their original
 committed versions remain in Git at `80656f32`. No source evidence was discarded.
 
-The [8 November execution and authorship record](./anc/revision-report.md#execution-registration-and-coauthorship-8-november)
-records the current revision. The earlier
+The [8 November measurement clarification](./anc/revision-report.md#measurement-provenance-clarification-8-november)
+records the current revision; the
+[execution and authorship record](./anc/revision-report.md#execution-registration-and-coauthorship-8-november)
+retains that earlier scope. The earlier
 [nine-point author review disposition](./anc/revision-report.md#author-review-disposition-1-november)
 retains its own scope. The case follows agent-assisted research,
 Design Thinking challenge, prototypes, requirements, epics and stories,
@@ -29,6 +31,54 @@ calendar dates no longer lead the argument. The supplied
 [project-insights export](./anc/project-insights-2026-11-01.csv) supports the
 backlog handoff; its provenance and missing export metadata are in the
 [evidence index](./anc/case-evidence-matrix.json).
+
+### Measurement Provenance 8 November
+
+The paper now explains which quantities are measured, their units, denominators,
+checkpoints and instruments, separating functional outcomes, structural proxies,
+resource observations and annotation-based integrity records. The
+[active measurement section](./anc/experiment-protocol.tex) and
+[additive field/prompt inventory](./anc/measurement-provenance.tex) are based on
+read-only inspection of public
+[`e71037d9`](https://github.com/jmservera/ama-thought-mve/tree/e71037d961cb80fc5c659437796de7736820f6c9),
+not remeasurement of private data.
+
+There is **no separate numerical LLM-as-judge**. Hidden contracts and fixed
+code-analysis tools produce outcomes and metrics. Arm C's qualitative review
+is an intervention, not a scored measurement. The
+[active B template](./anc/consolidation-active-e71037d9.prompt.txt) and
+[active C template](./anc/review-only-active-e71037d9.prompt.txt) are retained
+verbatim with SHA-256/Git-blob regression checks, distinct from the unchanged
+[historical v4 prompt](./anc/consolidation-frozen-v4.prompt.txt). The paper
+explains stripping/substitution and the limits of replaying private session
+context from a public template.
+
+The current Ruff call uses isolated fixed rules but does **not** ignore inline
+`# noqa`; no separate suppression count is exported. The earlier safeguard
+claim is corrected as a limitation, not a silently applied instrumentation
+fix. The code's conservative unavailable retention summaries and composite-only
+CR1 reporting are distinguished from richer planned exports. Quality-report
+targets are model instructions, not a hard aggregate `make check` quality gate.
+No overall architecture/readability/comprehension score or maintainability index
+is emitted.
+
+The running experiment, source epochs, registration/amendment account,
+coauthors, false results switch, historical records and slides are unchanged.
+Current build, PDF inspection and publication evidence are recorded in the
+[dated revision](./anc/revision-report.md#measurement-provenance-clarification-8-november).
+Six documentation regressions supplement the existing authoring suite.
+
+The checked v13 delivery has **45 pages**, Supplement **page 37**. All
+**50 authoring tests** and structural checks pass (94 cited/105 reusable
+entries; 1,806-character abstract). Tables 7/15 and the complete B/C examples
+were rendered and inspected; both templates match the visible PDF text after
+whitespace normalization and exclusion of page-number footers. All-page bounds,
+180 internal destinations and 49 outline destinations pass. The C example
+stays together on page 45. Tectonic 0.17.0 has no errors, unresolved references
+or overfull/underfull boxes; one inherited `inputenc` compatibility warning
+remains. Historical body-word comparison is unavailable, and the old
+pdfLaTeX-specific marker check is not claimed under Tectonic.
+Independent scientific/human, hosted and publication approval remain separate.
 
 ### Execution, Registration and Coauthorship 8 November
 
@@ -94,7 +144,7 @@ Focused validation and delivered-PDF details are recorded in the dated
 revision record; independent assessment and the publication gate are left
 to the parent.
 
-The checked delivery is **40 pages**, with the additive Supplement beginning
+The v12 execution/authorship delivery was **40 pages**, with the additive Supplement beginning
 on **page 35**. All **44 existing tests** and the structural checker pass.
 Tectonic 0.17.0 reports no TeX errors, unresolved references or overfull/
 underfull boxes; one inherited `inputenc` compatibility warning remains.

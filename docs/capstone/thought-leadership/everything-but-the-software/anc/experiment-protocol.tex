@@ -139,6 +139,86 @@ with legacy identifiers H2 and H6 retained only for data traceability.
 HIR/IDR definitions are in the supplementary appendices;
 comprehension is not measured.
 
+\paragraph{Who measures, and what ``quality'' means.}
+The running kit does not call a separate LLM-as-judge to assign numerical
+outcome scores. The experiment models produce features, consolidation,
+review notes or repairs; these are treatments, not independent measurement
+instruments. The host evaluator runs fixed hidden test contracts and
+external code-analysis tools, writes \texttt{measure.json}, and computes
+summaries from those records. Table~\ref{tab:measurementprovenance} separates
+outcomes, structural proxies and resource observations.
+``Behavioural coverage'' is a test-contract pass fraction, not instrumented
+line or branch coverage. Complexity, duplication and lint do not constitute
+a general architecture, readability or comprehension score; the active
+metric dictionary contains no maintainability-index score.
+
+\begin{table}[!htbp]
+\small
+\centering
+\caption{Measurements in the active kit inspected at \texttt{e71037d9}.
+Programmatic scoring is distinct from model-generated treatment text.
+Deterministic means repeatable for fixed source, inputs, tools and environment,
+not identical across different generated repositories or runtime sessions.}
+\label{tab:measurementprovenance}
+\begin{tabularx}{\linewidth}{@{}L{0.22\linewidth}Y L{0.23\linewidth}@{}}
+\toprule
+Measure and role & Values and instrument & Provenance \\
+\midrule
+Final coverage; primary & Hidden feature contracts passed out of 127 at
+$P_{10}$, expressed on the 0--100 scale & Programmatic test oracles \\
+Retained-contract loss; secondary & Previously acquired unchanged
+contracts later failing; counts, density, episodes and accumulated test-cycles
+& Checkpoint calculations; incomplete history can be unavailable \\
+CR1 adaptation; secondary & All 15 CR1 contracts pass and previously
+passing feature contracts remain satisfied & Programmatic tests and
+documented disposition rules \\
+Complexity; structural proxy & Lizard function-level cyclomatic complexity:
+mean, maximum and share above 10 & Deterministic code analysis \\
+Duplication; structural proxy & jscpd duplicated-line percentage,
+Python mode, minimum 50 tokens and five lines & Deterministic clone detection \\
+Lint; structural proxy & Ruff diagnostic counts and warnings per
+1,000 source-code lines, frozen selected rules & Deterministic diagnostics;
+inline suppression caveat below \\
+Size and change; companions & Source/test code lines, files/functions,
+Markdown words, test/assertion counts and Git additions/deletions & Deterministic
+counts; not proof of code quality \\
+Resources; cost companions & Recorded credits, input/output/cache tokens,
+session seconds and available API-duration telemetry & Variable observations;
+aggregation is programmatic, not AI judgement \\
+Assistance and integrity; companions & Recorded help/dispositions,
+protected-file hashes, violations and leak indicators & Explicit records and
+checks; absent annotation is not zero \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+For fixed inputs, test oracles and static metrics are programmatic and
+normally repeatable. Environment-dependent code, timeouts or flaky tests
+can still vary. The evaluator records errors, skips and timeouts; missing
+or non-binary endpoints cannot silently become passing outcomes.
+The reported local evaluator is not a claim of OS or network isolation.
+Elapsed time and consumption vary with execution and provider conditions;
+their deterministic aggregation after recording does not make the underlying
+observations deterministic.
+Raw fields, units, scopes, tool settings and missingness are specified in
+Supplement Section~\ref{app:measurementprovenance}.
+
+\paragraph{AI review is a treatment, not an outcome judge.}
+Arm C's model reads \nolinkurl{reports/quality.md} and the feature diff, then
+rewrites \texttt{REVIEW.md} in at most 300 words using a checklist of
+duplication, complex functions, names, dead code, responsibilities and
+behaviour-focused tests. Those qualitative judgements may vary between
+model sessions, but the kit does not convert them into a numerical review
+or quality score. Arm B uses a similar checklist to guide changes.
+Its complexity $\leq10$, duplication $<3\%$ and zero configured-lint-warning
+targets are requested stopping conditions and treatment-fidelity checks.
+\texttt{make check} runs tests and generates the metrics report; the report
+writer does not itself assert that all three structural targets are met.
+The runner enforces the time budget, protected tests and retained green
+code, rather than accepting an AI statement as an independent quality verdict.
+The exact checked-in B/C examples, parameter substitution and saved-prompt
+limitations are in Supplement Section~\ref{app:activeprompts}.
+
 For trajectory $r$, $F_t$ is the retained state after feature step $t$ and
 $P_t$ the state after its assigned post-step; these source states coincide
 in A and D. Let $\mathcal{R}_{r,t}$ contain eligible, unchanged contracts
@@ -172,8 +252,10 @@ acquisition or any unobserved eligible result makes its loss count and
 density unavailable, with completeness flags. Its standard export does
 not emit the observed-subset counts, missing-count fields and bounds
 specified above. Those are prospective reporting requirements retained
-from the earlier design. This update does not re-inspect the active
-analyzer, establish that reporting pipeline or amend the reporting rule.
+from the earlier design. The 8 November read-only inspection of active
+\texttt{e71037d9} confirms that the conservative rule remains in
+\texttt{pilot\_analysis.retention}; it does not establish the planned
+observed-subset export or amend the reporting rule.
 The source-bound reporting decision remains to be documented without
 backdating an amendment or inferring completeness from raw vectors.
 
@@ -193,9 +275,10 @@ an incomplete arm has fewer retention obligations, and prerequisite
 strata are post-treatment selections, not randomised subgroups.
 One fixed CR1 is task-specific. A prewritten, randomly selected request
 pool belongs to a separately registered subsequent study.
-The summary inspected on 5 November computes composite CR1 success. Its graded and
-F9/F10-stratified reporting pipeline has not been established by this
-source check. Those additional reporting requirements retain the same
+The summary inspected on 5 November computes composite CR1 success. The
+active-source inspection on 8 November likewise finds composite
+\texttt{cr\_success}, not a completed graded or F9/F10-stratified CR1
+reporting pipeline. Those additional reporting requirements retain the same
 source-bound reconciliation gap; retained raw vectors alone
 do not establish a completed reporting pipeline.
 
@@ -208,16 +291,23 @@ budget are treatment-fidelity checks, not independent efficacy outcomes.
 Unknown results and billing remain unknown. The observed-subset retention
 and graded CR1 panels describe planned reporting requirements; their
 implementation was unresolved in the 5 November v6 inspection.
-This update does not verify the active reporting pipeline.}\label{fig:experimentmeasures}
+The active-source inspection confirms conservative loss and composite CR1
+summaries, not those planned richer exports.}\label{fig:experimentmeasures}
 \end{figure}
 
 Actual AI credits include every delivery and CR1 attempt, including
 failures, assistance and infrastructure retries; phases are reported
 separately. Cheap failure is not efficiency. Credits, tokens, elapsed
 time and currency are distinct. Lizard measures complexity, Ruff lint
-and jscpd duplication. External fixed settings and
-\texttt{ruff --isolated --ignore-noqa} prevent local suppressions from
-silently improving the lint score; count added suppressions separately.
+and jscpd duplication. The inspected Ruff invocation uses
+\texttt{--isolated} with the fixed \texttt{E,F,W,C90,B,SIM} rule selection,
+ignoring repository configuration files, but does not include
+\texttt{--ignore-noqa}. Inline \texttt{\# noqa} can therefore suppress
+diagnostics, and the active metric dictionary exports no separate suppression
+count. The earlier description overstated this safeguard. This is a
+measurement-integrity limitation, not evidence that participants used
+suppression. This manuscript clarification changes no running instrumentation;
+any subsequent fix needs explicit source/epoch and amendment disclosure.
 SDK request wall time and tool time are observable. Provider-active
 time and rate-limit waits require explicit telemetry; absent telemetry
 is not zero.
