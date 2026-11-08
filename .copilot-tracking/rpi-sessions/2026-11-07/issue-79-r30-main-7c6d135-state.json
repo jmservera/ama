@@ -1,0 +1,24 @@
+{
+  "task_id": "issue-79-r30-main-7c6d135",
+  "task_slug": "issue-79-r30-main-7c6d135",
+  "parent_task": {"task_id": "issue-79-r29-unconfirmed-written", "task_slug": "issue-79-r29-unconfirmed-written"},
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-07/issue-79-r30-main-7c6d135-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-07/issue-79-r30-main-7c6d135-plan.md",
+    "details": ".copilot-tracking/details/2026-11-07/issue-79-r30-main-7c6d135-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-07/issue-79-r30-main-7c6d135-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-07/issue-79-r30-main-7c6d135-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-07/issue-79-r30-main-7c6d135-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Plan and author critique committed before merge", "status": "recorded", "evidence": "80d266ac"},
+    {"decision": "One normal merge of 7c6d135d, no source change", "status": "recorded", "evidence": "changes record"}
+  ],
+  "blockers": [{"id": "gates", "summary": "No FULL, independent review or hosted checks on this head", "resolution": "Child incorporates root, one new canonical FULL, new independent exact-head reviews"}],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator resumes child to incorporate this root, then admits one FULL"},
+  "prioritized_follow_ups": [{"rank": 1, "task": "Child incorporation and FULL", "rationale": "Root and base changed", "evidence": "RV-004"}]
+}

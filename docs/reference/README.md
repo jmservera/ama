@@ -1071,3 +1071,14 @@ Final correction TWO integrates resident #392 on mainbcb4871b, retaining both
 SQL recovery scopes and sensor boundaries. Full core942 run/847 pass/95 skips,
 actual integrated MSSQL35 pass and combined/image/static checks provide
 engineering evidence; PR #394 independent exact-head gate remains outstanding.
+
+The 2026-11-08 ranking publication current-main stabilization checkpoint for #440
+(Refs #79 #1231) is appended to the
+[cut-over evidence pack](../architecture/cutover-evidence-pack.md#ranking-publication-current-main-stabilization-checkpoint-2026-11-08-refs-440-79-1231).
+It pins merged main source `a80acada` with the BRD, PRD and ADR identities,
+records installed-package ranking publication, API boundary and cohort
+selectors (core 76, API 53, agents 20, no skips) as local observations, and
+keeps the pre-merge full receipt at `ac0f29f9` historical and source-qualified.
+Recommendation is continue; #1258 and #1259 stay open owners. Whole #79, #1231
+and #440 closure, policy sign-off, retention, deployed scheduling, live model
+and Azure behaviour remain unproven.

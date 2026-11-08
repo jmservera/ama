@@ -1,0 +1,34 @@
+{
+  "task_id": "issue-79-r4-publication-runner",
+  "task_slug": "issue-79-r4-publication-runner",
+  "parent_task": {"task_id": "issue-73-case-workbench-integration", "task_slug": "case-workbench-integration-73"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-05/issue-79-r4-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-05/issue-79-r4-plan.md",
+    "details": ".copilot-tracking/details/2026-11-05/issue-79-r4-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-05/issue-79-r4-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-05/issue-79-r4-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-05/issue-79-r4-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; Planning Readiness Ready", "status": "recorded", "evidence": "research artifact"},
+    {"decision": "Critique executed once, compatible findings applied directly", "status": "recorded", "evidence": "plan artifact"},
+    {"decision": "Review executed once; conformant, one finding resolved in candidate", "status": "recorded", "evidence": "review artifact"},
+    {"decision": "FULL gate pending: lock held by #188 pid 1148896; no queued gate", "status": "blocked-by-holder", "evidence": "changes artifact"},
+    {"decision": "Base pinned: source, origin/main and parent topic all ead177ef90d24666557708ea344848a1be43bdf8", "status": "recorded", "evidence": "git rev-parse 2026-11-05"}
+  ],
+  "blockers": [
+    {"id": "full-gate-busy", "summary": "Heavy lock held by the #188 full gate", "resolution": "Run the full gate with --lock-timeout 0 when the holder exits, on the clean actual head"},
+    {"id": "human-signoff", "summary": "No named owner sign-off of the rule order; retention not set", "resolution": "Human and Legal decisions"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Run FULL gate when free, then independent exact-head assessment; no publication in this task"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Run FULL gate and external receipt on the clean head", "rationale": "Required before any publication", "evidence": "changes artifact"},
+    {"rank": 2, "task": "Deployment scheduler invoking the runner", "rationale": "Criterion 4 operational proof", "evidence": "review artifact"},
+    {"rank": 3, "task": "Owner sign-off and Legal retention", "rationale": "Criteria 3 and 4 human gates", "evidence": "research artifact"}
+  ]
+}

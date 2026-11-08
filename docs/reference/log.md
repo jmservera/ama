@@ -10705,6 +10705,29 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * The employee chat panel now renders the demo disclaimer as its own bordered, non-shrinking note above the scrollable introduction. A real-browser run showed the previous placement was clipped to about 30 px at a 720 px viewport. The employee chat browser check proves visibility, `role=note`, the `aria-describedby` link, the model-generated label and axe WCAG 2.2 AA with reduced motion.
 * `src/api/tests/test_chat_panel.py` adds a regression that suspension, missing privacy references, retention and the one-call cap still hold with the demo switch on. Updated [the demo activation record](./research/chat-demo-storage-approval-2026-11-01.md) and the API README. No Legal, DPO or RAI approval is claimed.
 * Live check (criterion 6) is blocked: the deployed `ca-cutover-test-demo-api` revision already runs image `1f465bf5e` with both demo settings, but sign-in needs the owner-held test-user password, which the agent does not hold. Evidence is under `.copilot-tracking/` (2026-11-07 issue-891 chat demo).
+## [2026-11-05] update | Ranking publication local runner (Refs #79)
+
+* Added `ranking_publication_runner` in `src/core`: an explicit-input schedule, publish and verify invocation with a one-day window, idempotent run key, fail-closed approval, source, archive and capacity checks, and an exercise mode that writes nothing. The daily schedule is reported as proposed, not approved. Criteria 3 (named owner sign-off) and 4 (scheduled and retained) stay unmet: no owner is named, no scheduler is deployed and no retention period is set. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r4).
+
+## [2026-11-05] update | Issue 79 clean frozen candidate and typing report (Refs #79)
+
+* Removed 333 own generated, git-ignored files (bytecode, egg-info, mypy and ruff caches) from this worktree under a verified per-file manifest with hash-archive backing kept outside the checkout, so the candidate is clean including ignored files. No source or policy change. The new runner module is strictly type-checked; its mypy override relaxes only untyped-call checking. The FULL gate is still pending and no criterion changed. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r5).
+
+## [2026-11-05] update | Issue 79 current-main preparation (Refs #79)
+
+* Merged main `bb3a3b03` into the publisher candidate with a plain merge (no conflicts) and ran light, cache-external checks (30 runner tests, Ruff, strict mypy). FULL gate, independent exact-head review and hosted CI remain pending and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-05 issue-79 r6).
+
+## [2026-11-06] update | Issue 79 archived publication date validation (Refs #79)
+
+* Archive verification now reports a malformed or impossible `published_on` (for example 2026-11-31) as a problem and excludes it from the latest publication date; publish refuses such a date before writing. This fixes an unhandled error in the runner schedule operation. Valid records, policy and retention are unchanged. Light checks only; FULL gate, independent review and hosted CI remain pending and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-06 issue-79 r7).
+
+## [2026-11-07] update | Issue 79 rebased onto post-891 main (Refs #79)
+
+* Rebased the local ranking publication topic onto main `0f420dc9` (after the 891 merge and its score-only commit) with no conflict; the exact prior head is preserved at `preserve/issue-79-pre-r17-align`. No source, policy, approval or retention change. Focused publication, runner, API wiring and chat panel tests, Ruff, format and mypy pass; no FULL gate was run, so earlier receipts are historical and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r17).
+
+## [2026-11-07] update | Issue 79 runner corrections after independent 357e842d assessment (Refs #79)
+
+* The publication runner now refuses a selected policy whose registry key or content hash does not match (`policy_invalid`), reports a latest archived publication dated after the run date as a problem in `verify` and `schedule` and refuses a non-exercise publish, and exits 2 for a blocked `schedule`. No approval, threshold, archive naming, helper or retention change. Light focused checks only; the earlier FULL receipts are historical, a new combined FULL, independent exact-head assessments and hosted checks remain required, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r18).
 
 ## [2026-11-07] update | Configured demo model, limits and evidence gaps recorded (Refs #108)
 
@@ -10717,6 +10740,69 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Clarified the [configured demo model section](./resources/ai-tokenomics.md#configured-demo-model-limits-and-evidence-gaps-2026-11-07-refs-108): a real response's model identifier can inform version confirmation but does not by itself attest physical processing region or data residency, which needs source-qualified provider or operational attestation and the relevant named approvals. A real call therefore does not close the serving region gap. No figure, unknown, budget or gate changed; no call, Azure read, approval or criterion tick occurred.
 * Corrects the overclaim in the earlier 2026-11-07 #108 state follow-up ("Closes the serving region/version gap"), which is preserved unchanged as history. The earlier #108 iteration edited the synthesis before writing its research and plan, so its research, plan, critique and Review are retrospective in order; the corrective iteration wrote research, plan, details and critique first. Evidence under `.copilot-tracking/` (2026-11-07 issue-108-serving-evidence-correction).
 
+## [2026-11-07] update | Issue 79 merged main 8af3aea6 (Refs #79)
+
+* Merged main `8af3aea6` (docs 1247, browser readiness 1249 and the score commit) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-8af3-merge`. Publisher, runner and test blobs are unchanged. Light no-service checks passed; no FULL gate was run, the three 357e842d findings stay author-corrected only (not independently confirmed), and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r19).
+
+## [2026-11-07] update | Issue 79 merged main 39506027 (Refs #79)
+
+* Merged main `39506027` (the 1253 assistant release regression test, the 107 RPI records and the score commit) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-main1253-merge`. Publisher, runner and ranking test blobs are unchanged. Light no-service checks passed; no FULL gate was run, the three 357e842d findings stay author-corrected only, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r20).
+
+## [2026-11-07] update | Issue 79 merged main a1d26534 (Refs #79)
+
+* Merged main `a1d26534` (PR 1252, backlog-sync inactive versus conflict reporting and its 1251 RPI records) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-main1252-merge`. Publisher, runner and ranking test blobs are unchanged. Light no-service checks passed; no FULL gate was run, the three 357e842d findings stay author-corrected only, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r21).
+
+## [2026-11-07] update | Issue 79 merged main c1a16482 (Refs #79)
+
+* Merged main `c1a16482` (PR 1255, the unleased SQL release-denial test, SQL selector wiring and 107 RPI records) into the ranking publication topic with one normal merge, no conflict and no rewrite; the prior head is preserved at `preserve/issue-79-pre-main1255-merge`. Publisher, runner and ranking test blobs are unchanged. Light no-service checks passed with one known SQL skip; no FULL gate was run, the three 357e842d findings stay author-corrected only, and criteria 3 and 4 stay open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r22).
+
+## [2026-11-07] update | Issue 79 merged score-only main 23b26a7f (Refs #79)
+
+* Merged main `23b26a7f` (one rubric score commit, `.github/rubric/scores/latest.json` only) into the ranking publication topic with one normal merge so current main is an ancestor for the gate; no conflict or rewrite, prior head preserved at `preserve/issue-79-pre-score23-merge`. No source changed and no tests or FULL were run; the three 357e842d findings stay author-corrected only. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r23).
+
+## [2026-11-07] update | Issue 79 directory-sync audit correction (Refs #79)
+
+* A folder-sync failure after the final link now raises `DurabilityUnconfirmedError`, is audited as `ranking_snapshot_publication_unconfirmed` and returns 409 `committed_unconfirmed`; the record is kept and never reported as confirmed. Author-corrected only; focused tests passed, no FULL gate was run, and a retry still does not confirm durability. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r24).
+
+## [2026-11-07] update | Issue 79 stage-cleanup masking correction (Refs #79)
+
+* The parent `publish` no longer lets a failed removal of its own temp file hide `DurabilityUnconfirmedError` or the committed result: removal never raises and a leftover temp file name is reported as `stage_retained` (no path). Parent-standalone snapshot; the combined tip with child 1231 is a separate later propagation. Author-corrected only; light core, API and static checks passed, no FULL gate was run, and the two other Medium follow-ups stay open. The r24 entry above is unchanged. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r25).
+
+## [2026-11-07] update | Issue 79 root rebased onto main 38990b19 (Refs #79)
+
+* Rebased the local ranking publication root onto main `38990b19` (PR 1260, exception register screen) with no conflict and no source change; the old head is preserved at `preserve/issue-79-pre-base3899`. Light core, API and static checks passed; no FULL gate was run, and child 1231 still needs propagation. Author-corrected only. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r26).
+
+## [2026-11-07] update | Issue 79 root adopted score-only main f0afa8d7 (Refs #79)
+
+* One normal merge of main `f0afa8d7` (generated rubric score JSON only, 77/100 unchanged) into the ranking publication root; no conflict, no source change, prior head preserved at `preserve/issue-79-pre-scoref0af`. No tests or FULL were run; author-only, gates remain open. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r27).
+
+## [2026-11-07] update | Issue 79 existing-record durability confirmation and runner outcome (Refs #79)
+
+* Publishing an existing record or losing a race now syncs the archive folder before reporting it, so a retry is reported as already published only after a sync succeeds; a failed sync raises `DurabilityUnconfirmedError`. The runner reports it as `committed_unconfirmed` (exit 2) instead of a `publish_failed` refusal. Author-corrected only against the independent High and Medium findings, which stay open until re-assessed; light checks passed, no FULL gate was run and the earlier FULL 799026a3 is historical on this head. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r28).
+
+## [2026-11-07] correction | Issue 79 unconfirmed runner outcome reports the real written value (Refs #79)
+
+* The r28 `committed_unconfirmed` runner outcome hardcoded `written` false even when this call created the record; the typed error now carries `written` (true, false or unknown as null) from the publish outcome and the runner reports it. The r28 entry is preserved as history. Author-corrected only; light checks passed, no FULL gate was run and FULL 799026a3 stays historical. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r29).
 ## [2026-11-07] correction | Scenario manifest recipe digest refreshed for the queue-sync checker (Refs #1262)
 
 * Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) to the corrected `src/api/checks/workbench_browser_check.py` bytes (`4bd825e9...a320`), because the validator compares recorded source digests with literal current bytes and hosted src-core failed with a stale hash after the #1262 checker change. Digest only: version 0.2.1, fixture case IDs, unavailable profiles and workflows, approval and evidence status, scenario semantics and the validator are unchanged, and no observed coverage is claimed. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-1262-r2-manifest-pin).
+
+## [2026-11-07] update | Issue 79 root merged main 7c6d135d (Refs #79)
+
+* One normal merge of main `7c6d135d` (hotfix 1263: workbench check, live-defaults tests, scenario manifest) into the ranking publication root; only the log overlapped, no conflict and no root source change, prior head preserved at `preserve/issue-79-pre-main7c6d`. Light own-source checks passed; no FULL gate was run and the hotfix receipts do not validate ranking. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r30).
+
+## [2026-11-07] update | Issue 79 root merged main b284d0d3 score-only (Refs #79)
+
+* One normal merge of main `b284d0d3` into the ranking publication root; only `.github/rubric/scores/latest.json` changed (generated score provenance for main `7c6d135d`, 77/100). No root source, test or log change and no approval implied. Metadata-only checks; FULL and independent review remain open. Records: `.copilot-tracking/*/2026-11-07/issue-79-r32-main-b284d0d-*`.
+
+## [2026-11-08] update | Issue 79 root integrated parent topic dd92e0d1 (Refs #79, #1231)
+
+* One normal merge of the squash-merged child 1242 (`dd92e0d1`, ranking archive concurrent-writer metadata) into the ranking publication root, on main `b284d0d3`. Parent-topic local observation only: not merged-main, whole-issue, cross-platform, human or deployed scheduling acceptance; #440 stabilization, #1258/#1259 and unmerged #123/#81/#86/#107 stay out. Earlier root341/child40d FULL evidence is historical. Records: `.copilot-tracking/*/2026-11-08/issue-79-r33-parent-dd92-*`.
+
+## [2026-11-08] update | Issue 440 ranking publication current-main stabilization checkpoint (Refs #440, #79, #1231)
+
+* Appended one dated section to the cut-over evidence pack for merged main `a80acada` (PR #1239), with BRD, PRD and ADR blob identities, installed-package focused observations (core 76, API 53, agents 20, all exit 0, no skips, SQLite-backed store only, no real SQL Server), traceability, existing owners #1258 and #1259 and the continue recommendation. The pre-merge full receipt at `ac0f29f9` stays historical and source-qualified. No new defect, closure, tick, approval or live model claim. Records: `.copilot-tracking/*/2026-11-08-ranking-main-stabilization-440-*`.
+
+## [2026-11-08] update | Issue 440 ranking checkpoint current-main currency (Refs #440)
+
+* Merged `origin/main` `77fa5d35` (rubric score file only) into the checkpoint branch by a normal merge and appended a currency note to the ranking section of the cut-over evidence pack; selectors refreshed (core 76, API 53 SQLite, agents 20, retention 37). Historical receipt and refusals unchanged. Records: `.copilot-tracking/*/2026-11-08-ranking-main-currency-440-*`.
