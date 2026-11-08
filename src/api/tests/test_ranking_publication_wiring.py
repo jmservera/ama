@@ -246,11 +246,11 @@ class PublicationWiring(QualityMatrix):
             self.assertEqual(f.read(), original)
         self.assertTrue(self.store.verify_audit())
 
-    def test_unreadable_mount_table_is_audited_as_unconfirmed_and_retry_is_sound(self):
-        def unreadable():
-            raise OSError(5, "no mount table at /private/proc")
+    def test_unreadable_mount_id_is_audited_as_unconfirmed_and_retry_is_sound(self):
+        def unreadable(fd):
+            raise OSError(5, "no mount id at /private/proc")
 
-        with patch.object(ranking_publication, "_read_mountinfo", unreadable, create=True):
+        with patch.object(ranking_publication, "_mount_id", unreadable, create=True):
             code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
             self.assertEqual((code, body.get("outcome")), (409, "committed_unconfirmed"))
             self.assertNotIn("/", body["error"])
