@@ -110,7 +110,8 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
             "data-case-field-key": JSON.stringify(["checklist", m, list.version, lab]) });
           input.caseBinding = { kind: "checklist", id: `${m}, checklist ${list.version}` };
           return h("div", {}, h("label", { for: input.id }, lab), input);
-        }));
+        }),
+        h("p", {}, h("a", { class: "btn alt", href: "/api/checklists.csv", download: "checklists.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back."));
       restoreBoundFields(savedFields, form, "checklist", session);
     };
     measure.addEventListener("change", () => {

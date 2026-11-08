@@ -903,7 +903,7 @@ official links for every snapshot. Check it before relying on any file below.
 | Document | Summary | Updated |
 | --- | --- | --- |
 | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | Internal hub entry points, nonprofit hero use cases, patterns mapped to each Zava Forward agent, customer evidence and lessons | 2026-09-25 |
-| [AI Tokenomics](./resources/ai-tokenomics.md) | Public Tokenomics Foundation framing (draft v0.5.2): Total Cost of AI, unit economics above a quality floor, booked value destinations and Big-T notation; mapped to rubric A5, A6, B7, C1 and C3 and to existing Zava Forward evidence; gaps, with an internal Microsoft pointer that must not be quoted. The mentor's meaning is unconfirmed | 2026-10-22 |
+| [AI Tokenomics](./resources/ai-tokenomics.md) | Public Tokenomics Foundation framing (draft v0.5.2): Total Cost of AI, unit economics above a quality floor, booked value destinations and Big-T notation; mapped to rubric A5, A6, B7, C1 and C3 and to existing Zava Forward evidence; gaps, with an internal Microsoft pointer that must not be quoted. The mentor's meaning is unconfirmed. Includes the dated configured demo-model, limits and evidence-gap record for #108 (configuration only, no serving, region or evaluation proof) | 2026-11-07 |
 
 ### Method and Memory
 
@@ -1002,3 +1002,14 @@ Final correction TWO integrates resident #392 on mainbcb4871b, retaining both
 SQL recovery scopes and sensor boundaries. Full core942 run/847 pass/95 skips,
 actual integrated MSSQL35 pass and combined/image/static checks provide
 engineering evidence; PR #394 independent exact-head gate remains outstanding.
+
+The 2026-11-08 ranking publication current-main stabilization checkpoint for #440
+(Refs #79 #1231) is appended to the
+[cut-over evidence pack](../architecture/cutover-evidence-pack.md#ranking-publication-current-main-stabilization-checkpoint-2026-11-08-refs-440-79-1231).
+It pins merged main source `a80acada` with the BRD, PRD and ADR identities,
+records installed-package ranking publication, API boundary and cohort
+selectors (core 76, API 53, agents 20, no skips) as local observations, and
+keeps the pre-merge full receipt at `ac0f29f9` historical and source-qualified.
+Recommendation is continue; #1258 and #1259 stay open owners. Whole #79, #1231
+and #440 closure, policy sign-off, retention, deployed scheduling, live model
+and Azure behaviour remain unproven.

@@ -87,6 +87,11 @@ before measuring and non-ASCII characters may use multiple filesystem bytes.
 Browser-free changed selections do not impose this bound. Existing external
 output ownership, cleanup and receipt verification requirements still apply.
 
+The runner writes its bytecode policy (a `.pth` that sets `sys.dont_write_bytecode`) into the
+API environment when it creates it, before API test discovery. Harness servers scrub their
+environment, so without it they would write `__pycache__` into the owned source snapshot and
+the dirty-snapshot guard would then retain it (issue 1215).
+
 For small issues, the conservative changed-path tier maps the committed
 `base...HEAD` diff to checks and transitive prerequisites. Unknown paths fall
 back to the full matrix; inspect the selection before execution when full work

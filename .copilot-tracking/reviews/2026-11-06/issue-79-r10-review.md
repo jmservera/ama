@@ -1,0 +1,17 @@
+---
+title: Issue 79 author-only review, continuation r10
+ms.date: 2026-11-06
+---
+
+* Author-only Review, executed once, after the implementation commit `0c0b1a9bdc635d08875f6593c12da432429a1edd` and its validation (JSON state, artifact paths, diff and ignored-inclusive status, all checked before this file was created). It is not independent and not human review; no human-review box is ticked. The state file was committed with `review: null` and is not edited here, so this Review is located by this path, not by the state.
+* Chronology: Research, Plan and details at `16d939be7ab19035d01f4d8dc863e4c697fd5736`, then tests and RED, then the fix and its checks, then Changes and state in `0c0b1a9b`, then this Review. The Review is a separate later step and does not describe checks that follow it; none follow it.
+* Assessed boundary: the diff of `fe414bb71e24..0c0b1a9b` against the four findings of the independent exact-head assessment, valid behaviour, prospective chronology, the recorded execution and the pending FULL gate.
+* Findings against the actual defects:
+  * F1: `load_cases` now raises `TypeError` for a non-mapping case or a non-boolean `closed`; the CLI reports an unreadable source and `publish` refuses with `source_missing`, no archive written. Valid closed and open cases are still read.
+  * F2: `schedule` returns `problem` (CLI exit 1) when archive problems exist; due, latest and an approval refusal stay in the result.
+  * F3: capacity is skipped only when the exact target file exists; a new record still needs capacity, and the helper still never overwrites. Verification still runs first and refuses a damaged archive.
+  * F4: `today` of `9999-12-31` is refused as `bad_date`; an archived latest of `9999-12-31` yields a null next window plus a problem line, so schedule is `problem` and publish refuses. No future-date freshness or retention policy was added. `verify` for that latest is unchanged and does not overflow.
+* Valid behaviour kept: all 36 earlier publication and runner tests pass unchanged in the 41-test selector; bytes, identity and idempotence of valid records are unchanged.
+* Execution recorded (see Changes): RED run exit 1 with all five new tests failing; final GREEN, Ruff, format and mypy all exit 0 in the `*4` logs. First failures (`ruff1`, `format1`, `mypy2`, `mypy3`) are preserved. Tool versions differ from the pins and are not pinned results. The runner module's untyped-call override is unchanged, so typing there is not full type safety.
+* Limits and residual points: one edit method deviated from the edit tool (a small script, disclosed in Changes). The `schedule` status for an approval-blocked archive with no problems is still `blocked` with exit 0, as before. The inherited helper `.tmp` and exists-then-replace race, the loose `as_of` check and archive schema hardening are untouched. No API, FULL, SQL, browser or scan check ran for the new head.
+* Outcome, qualified: conformant within the assessed boundary with no open finding from the four. This is not a FULL receipt, independent reassessment, hosted check or human approval. The corrected head needs a fresh FULL gate and a fresh independent reassessment; the r9 receipt (`2ac8174c...`) is historical. Policy-owner signoff, Legal retention, scheduler activation and retained scheduled operation remain unproven, #79 stays open, and the eventual child publication targets #73 with `Refs #79`.

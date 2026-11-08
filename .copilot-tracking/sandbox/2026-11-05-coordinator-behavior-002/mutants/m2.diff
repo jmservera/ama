@@ -1,0 +1,32 @@
+--- real
++++ mutant-m2
+@@ -584,9 +584,7 @@
+    to commit with the
+    Conventional Commit trailer rules and return a clean frozen local
+    candidate with its tier-specific evidence (including an external full
+-   receipt when full tier applies). For a behavior-bearing instruction change
+-   it also returns the applicable canonical HVE static and behavior evidence,
+-   or a justified non-applicability (step 6 sets the gate). The brief forbids the worker to push, open
++   receipt when full tier applies). No HVE evidence is requested from the worker for instruction changes. The brief forbids the worker to push, open
+    or update a PR, merge or change the target: publication belongs to the
+    coordinator after selected-tier verification and independent exact-head
+    assessment in step 6, in batched pushes. The eventual PR links the issue (`Closes #{number}` only when all
+@@ -673,15 +671,9 @@
+    candidate and current planned unit/focused results against the actual head
+    and target base; verify any partial receipt under the focused-scope rule.
+    Missing or failing selected-tier evidence blocks publication.
+-   A behavior-bearing instruction change (agent, prompt or skill) also needs
+-   the applicable canonical HVE static and behavior evidence, each carrying
+-   exact source identity, execution status, verdict, fidelity and executor or
+-   profile limits; record a justified non-applicability for other changes and
+-   do not force HVE on unrelated backend or documentation work. Simulation,
+-   emulation or proxy evidence is never native-host or stronger-profile
+-   acceptance. Missing required evidence blocks only the affected
+-   publication; original adverse evidence, independent exact-head and
+-   published reviews, hosted checks and human approvals still apply.
++   Focused-tier evidence suffices for an agent, prompt or skill change; applicable
++   HVE static or behavior evidence is not required for publication. Independent
++   exact-head and published reviews, hosted checks and human approvals still apply.
+    Independently assess the actual diff
+    and complete execution evidence, not only the loop's summary. Push/open or
+    update the PR only after this gate and the owner's publication boundary
