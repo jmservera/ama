@@ -83,6 +83,15 @@ insufficient. Synthetic poisoning/injection passes are not actual-model or
 human assurance. Held-out independent labels, approved thresholds/accountable
 reviewer and competent authorized human exercises remain unavailable.
 
+The isolation memory assertions (`isolation_contains`, `isolation_forbid`) check
+`ChatIsolation.build_prompt`, a separate prompt from the serving `ChatPanel`
+prompt. The report labels them `component-only diagnostic` in `summary.memory_scope`,
+the `memory-poisoning` gate row and `evidence.memory_scope`, and states serving-path
+memory as `not exercised: no panel memory consumed` only when every receipt records
+`memory_used` false (no receipts is `unknown`). A passing component probe is not
+integrated memory-poisoning coverage, serving-path acceptance or retained-memory
+acceptance; outcomes, thresholds and bindings are unchanged.
+
 `enablement_decision` can apply owner-approved floors (`minimum_rates`,
 `maximum_critical_error_rate`) bound to the versions in `bindings`. A rate below
 its floor fails; an unmeasured rate or any changed binding (model, prompt, policy,

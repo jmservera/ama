@@ -1,0 +1,63 @@
+{
+  "task_id": "issue-164-f2-memory-probe-scope",
+  "task_slug": "issue-164-f2-memory-probe-scope",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-08/issue-164-f2-memory-probe-scope-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-08/issue-164-f2-memory-probe-scope-plan.md",
+    "details": ".copilot-tracking/details/2026-11-08/issue-164-f2-memory-probe-scope-details.md",
+    "critique": ".copilot-tracking/challenges/2026-11-08/issue-164-f2-memory-probe-scope-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-08/issue-164-f2-memory-probe-scope-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-08/issue-164-f2-memory-probe-scope-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": "research artifact, base 3c57a02d4d2ef61f6922436025b245c8a97e2694"
+    },
+    {
+      "decision": "Critique executed once; verdict proceed with changes; CR-001..CR-003 accepted directly",
+      "status": "recorded",
+      "evidence": "critique artifact"
+    },
+    {
+      "decision": "Scope: offline report traceability only; Refs #164, no closing keyword, no push/PR",
+      "status": "confirmed",
+      "evidence": "task instruction 2026-11-08"
+    },
+    {
+      "decision": "Review executed once; outcome Residual work (RV-001, RV-002 Medium); no re-review in this task",
+      "status": "recorded",
+      "evidence": "review artifact"
+    },
+    {
+      "decision": "Focused validation: 53 tests OK, ruff, mypy; outcomes unchanged vs base",
+      "status": "recorded",
+      "evidence": "changes artifact"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator independent exact-head assessment and hosted checks before any publication; follow-up selection"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Soften serving-path wording to receipt-declared memory_used false (RV-001)",
+      "rationale": "small wording fix, removes overstatement",
+      "evidence": "review RV-001; chat_panel.py:402"
+    },
+    {
+      "rank": 2,
+      "task": "Report serving coverage unknown when a scenario ends unexpectedly or receipts are fewer than turns (RV-002)",
+      "rationale": "small guard, not reachable today",
+      "evidence": "review RV-002"
+    }
+  ]
+}

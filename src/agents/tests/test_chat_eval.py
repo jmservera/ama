@@ -173,6 +173,61 @@ class GoldenRunTests(unittest.TestCase):
         self.assertIn("not produced", self.report["evidence"]["held_out"])
         self.assertEqual(self.report, chat_eval.run_eval())
 
+    def test_memory_probe_is_component_only_and_serving_path_is_not_exercised(self) -> None:
+        scope = self.report["summary"]["memory_scope"]
+        self.assertEqual(scope["component_probes"], 2)
+        self.assertEqual(
+            scope["component_probe_scenarios"],
+            ["memory-poisoning-has-no-authority", "memory-special-category-rejected"],
+        )
+        self.assertIn("component-only", scope["component_probe_scope"])
+        self.assertIn("not serving-path", scope["component_probe_scope"])
+        self.assertEqual(scope["serving_memory_used_turns"], 0)
+        self.assertGreater(scope["serving_receipts"], 0)
+        self.assertTrue(scope["serving_path_coverage"].startswith("not exercised"))
+        self.assertTrue(scope["integrated_memory_poisoning"].startswith("not covered"))
+        self.assertEqual(
+            self.report["evidence"]["memory_scope"]["serving_path"], scope["serving_path_coverage"]
+        )
+        gates = {g["category"]: g for g in self.report["enablement"]["gates"]}
+        gate = gates["memory-poisoning"]
+        self.assertEqual(gate["outcome"], "pass")
+        self.assertEqual(gate["component_probes"], 2)
+        self.assertIn("component-only", gate["memory_assertion_scope"])
+        self.assertTrue(gate["integrated_memory_poisoning"].startswith("not covered"))
+        for name in ("prompt-injection", "permission", "out-of-scope"):
+            self.assertNotIn("memory_assertion_scope", gates[name])
+        self.assertEqual(self.report["enablement"]["outcome"], "insufficient")
+
+    def test_serving_memory_coverage_is_never_inferred_without_receipts(self) -> None:
+        none = chat_eval.memory_scope([dict(id="x", consumption=[])])
+        self.assertTrue(none["serving_path_coverage"].startswith("unknown"))
+        partial = chat_eval.memory_scope([dict(id="x", consumption=[dict(model_calls=1)])])
+        self.assertTrue(partial["serving_path_coverage"].startswith("unknown"))
+        used = chat_eval.memory_scope(
+            [dict(id="x", consumption=[dict(memory_used=False), dict(memory_used=True)])]
+        )
+        self.assertEqual(used["serving_memory_used_turns"], 1)
+        self.assertTrue(used["serving_path_coverage"].startswith("deviation"))
+        report = copy.deepcopy(self.report)
+        del report["summary"]["memory_scope"]
+        gate = next(
+            g for g in chat_eval.gate_results(report) if g["category"] == "memory-poisoning"
+        )
+        self.assertEqual(gate["outcome"], "pass")
+        self.assertTrue(gate["serving_path_coverage"].startswith("unknown"))
+
+    def test_scenarios_without_a_probe_and_failed_runs_count_only_executed_probes(self) -> None:
+        report = run(dict(version="t", scenarios=[scenario("grounding-cited-follow-ups")]))
+        self.assertEqual(report["summary"]["memory_scope"]["component_probes"], 0)
+        self.assertEqual(report["summary"]["memory_scope"]["component_probe_scenarios"], [])
+        broken = scenario("memory-poisoning-has-no-authority")
+        broken["cases"] = []
+        with tempfile.TemporaryDirectory() as tmp:
+            result = chat_eval.run_scenario(broken, tmp)
+        self.assertEqual(result["component_memory_probes"], 0)
+        self.assertFalse(result["passed"])
+
     def test_enablement_is_never_granted_by_this_evidence(self) -> None:
         e = self.report["enablement"]
         self.assertEqual(
@@ -416,6 +471,8 @@ class CliTests(unittest.TestCase):
         with contextlib.redirect_stdout(output):
             self.assertEqual(chat_eval.main([]), 0)
         self.assertNotIn("open critical gap", output.getvalue())
+        self.assertIn("memory probes: 2 component-only diagnostic", output.getvalue())
+        self.assertIn("memory serving path: not exercised", output.getvalue())
         self.assertIn("enablement: insufficient (task disabled)", output.getvalue())
 
     def test_gap_free_cli_returns_zero_but_never_enables(self) -> None:
