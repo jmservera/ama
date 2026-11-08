@@ -10687,3 +10687,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-08] update | Issue 440 ranking publication current-main stabilization checkpoint (Refs #440, #79, #1231)
 
 * Appended one dated section to the cut-over evidence pack for merged main `a80acada` (PR #1239), with BRD, PRD and ADR blob identities, installed-package focused observations (core 76, API 53, agents 20, all exit 0, no skips, SQLite-backed store only, no real SQL Server), traceability, existing owners #1258 and #1259 and the continue recommendation. The pre-merge full receipt at `ac0f29f9` stays historical and source-qualified. No new defect, closure, tick, approval or live model claim. Records: `.copilot-tracking/*/2026-11-08-ranking-main-stabilization-440-*`.
+
+## [2026-11-08] update | Issue 440 ranking checkpoint current-main currency (Refs #440)
+
+* Merged `origin/main` `77fa5d35` (rubric score file only) into the checkpoint branch by a normal merge and appended a currency note to the ranking section of the cut-over evidence pack; selectors refreshed (core 76, API 53 SQLite, agents 20, retention 37). Historical receipt and refusals unchanged. Records: `.copilot-tracking/*/2026-11-08-ranking-main-currency-440-*`.
