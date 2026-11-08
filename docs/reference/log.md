@@ -10882,3 +10882,13 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   outcomes, source/configuration, model run, registration/amendment or
   repository-visibility action was performed. Coauthors, source epochs,
   original/adverse reviews and pending results remain intact.
+
+## [2026-11-08] update | Paper current-delivery index correction
+
+* Independent scoped source review of `f367b70e` found the measurement account
+  source-faithful and one Low index inconsistency: the maintained introduction
+  still described the prior 40-page/Supplement-35 delivery. Updated that current
+  pointer to the validated v13 PDF's 45 pages/Supplement 37, preserving dated
+  records and the original review outcome. Paper source, PDF, prompt bindings,
+  study and slides are unchanged. A new exact-head assessment and focused
+  publication receipt are required after this correction.

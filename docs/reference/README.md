@@ -24,8 +24,8 @@ management: short pages that point to clusters of related material.
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
-The current coauthored delivery has 40 pages, with the additive Supplement
-starting on page 35. This is a draft with unreported experimental outcomes,
+The current coauthored delivery has 45 pages, with the additive Supplement
+starting on page 37. This is a draft with unreported experimental outcomes,
 not a completed confirmatory report.
 
 The later [8 November study update](../capstone/source/review-2026-11-08.md#later-8-november-study-and-coauthor-update)
