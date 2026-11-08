@@ -1246,10 +1246,10 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(after[idx]["aware_at"], "2026-01-01T09:00+00:00")
         self.assertEqual(after[idx]["hold"]["status"], "Active")
 
-    def test_challenge_edited_in_case_outside_generation_candidates(self) -> None:
+    def seed_extra_cases(self, count: int) -> None:
         data = copy.deepcopy(DATA)
         data["staff"] = copy.deepcopy(self.store.data["staff"])
-        for index in range(41):
+        for index in range(count):
             case = copy.deepcopy(self.store.cases["ZF-1"])
             case["id"] = f"SYN-EDIT-{index:02}"
             data["cases"].append(case)
@@ -1257,6 +1257,9 @@ class JsonResidentDecisions(unittest.TestCase):
         self.path.parent.mkdir()
         self.path.write_text(json.dumps(data))
         self.store = self.open_store()
+
+    def test_challenge_edited_in_case_outside_generation_candidates(self) -> None:
+        self.seed_extra_cases(41)
         proposal = self.priority_fixture()
         original = copy.deepcopy(self.store.data["recommendations"][-1])
         self.assertEqual(len(original["case_ids"]), 40)
@@ -4556,6 +4559,19 @@ class MssqlResidentControls(SqlResidentDecisions):
         self.addCleanup(drop_owned_database)
         os.environ["ZF_SQL_DATABASE"] = self.database
         super().setUp()
+
+    def seed_extra_cases(self, count: int) -> None:
+        cases = []
+        for index in range(count):
+            case = copy.deepcopy(self.store.cases["ZF-1"])
+            case["id"] = f"SYN-EDIT-{index:02}"
+            cases.append(case)
+        seed = Path(self.tmp.name) / "extra-cases-seed.json"
+        seed.write_text(json.dumps(dict(cases=cases)))
+        report = self.store.merge_seed(seed, apply=True, expect_added=count)
+        self.assertEqual(report["to_insert"], count)
+        self.assertTrue(report["applied"])
+        self.store = self.open_store()
 
     def open_store(self) -> Any:
         from zava_forward.core.mssqlstore import MssqlStore
