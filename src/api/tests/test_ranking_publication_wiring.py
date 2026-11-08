@@ -206,6 +206,46 @@ class PublicationWiring(QualityMatrix):
         self.assertNotIn("/private", entries[0]["detail"])
         self.assertTrue(self.store.verify_audit())
 
+    def test_parent_folder_sync_failure_is_audited_as_unconfirmed_and_retry_is_sound(self):
+        import stat
+
+        parent = os.path.dirname(os.path.abspath(self.archive()))
+        real = os.fsync
+        faulted = {"on": True}
+
+        def failing(fd):
+            if (
+                faulted["on"]
+                and stat.S_ISDIR(os.fstat(fd).st_mode)
+                and os.path.samestat(os.fstat(fd), os.stat(parent))
+            ):
+                raise OSError(5, "sync failed in /private/parent")
+            return real(fd)
+
+        with patch.object(os, "fsync", failing):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+            self.assertEqual((code, body.get("outcome")), (409, "committed_unconfirmed"))
+            self.assertNotIn("/", body["error"])
+            self.assertNotIn("sync failed", body["error"])
+            names = os.listdir(self.archive())
+            self.assertEqual(len(names), 1)
+            with open(os.path.join(self.archive(), names[0]), encoding="utf-8") as f:
+                original = f.read()
+            self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
+            self.assertEqual(
+                [e["action"] for e in self.store.audit_entries()],
+                ["ranking_snapshot_publication_unconfirmed"],
+            )
+            self.assertNotIn("/private", list(self.store.audit_entries())[0]["detail"])
+            code, again = self.call(PM_EMAIL, "/api/ranking/publish", {})
+            self.assertEqual((code, again.get("outcome")), (409, "committed_unconfirmed"))
+            faulted["on"] = False
+            code, done = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, done["written"]), (200, False))
+        with open(os.path.join(self.archive(), names[0]), encoding="utf-8") as f:
+            self.assertEqual(f.read(), original)
+        self.assertTrue(self.store.verify_audit())
+
     def test_audit_failure_after_unconfirmed_directory_sync_is_logged_and_surfaced(self):
         import stat
 

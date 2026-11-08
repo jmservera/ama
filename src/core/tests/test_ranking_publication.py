@@ -384,6 +384,28 @@ class AncestorDurabilityTests(unittest.TestCase):
             rp.publish(snap(), self.dir, "2026-10-10")
         self.assertEqual([e for e in events if e != "other"][-3:], ["archive", "b", "a"])
 
+    def test_chain_ends_before_the_first_non_writable_ancestor(self):
+        if os.geteuid() == 0:
+            self.skipTest("root bypasses permission bits; see the mocked root-run test")
+        self.dir.mkdir(parents=True)
+        events, sync, link = self.labelled()
+        os.chmod(self.root / "a", 0o555)
+        try:
+            with sync, link:
+                rp.publish(snap(), self.dir, "2026-10-10")
+        finally:
+            os.chmod(self.root / "a", 0o755)
+        self.assertEqual([e for e in events if e != "other"], ["file", "link", "archive", "b"])
+
+    def test_mocked_root_run_where_every_ancestor_looks_writable_syncs_the_whole_chain(self):
+        # Mocked os.access stands in for a privileged run; not live root behavior.
+        events, sync, link = self.labelled()
+        with sync, link, patch.object(os, "access", return_value=True):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        known = [e for e in events if e != "other"]
+        self.assertEqual(known, ["file", "link", "archive", "b", "a", "root"])
+        self.assertGreater(len(events), len(known))
+
 
 class ConcurrentWriterTests(unittest.TestCase):
     def setUp(self):
