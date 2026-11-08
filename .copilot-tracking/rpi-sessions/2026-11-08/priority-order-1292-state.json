@@ -35,12 +35,22 @@
     {
       "id": "B-1",
       "summary": "Native SQL Server run requires coordinator heavy-lock admission",
-      "resolution": "coordinator resumes this session"
+      "resolution": "resolved 2026-11-08: focused native red/green done, see changes addendum"
+    },
+    {
+      "id": "B-2",
+      "summary": "FULL local gate (SQL schema/migration change) not run; #184 has heavy-resource priority",
+      "resolution": "coordinator routes separate clean exact-head full gate, receipt verification, independent exact-head review and hosted CI"
+    },
+    {
+      "id": "B-3",
+      "summary": "Ledger-enabled migration unproven",
+      "resolution": "separate test if required"
     }
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator admits heavy lock; run MssqlPriorityOrder and two MssqlResidentControls selectors (red on base, green on head); then independent exact-head review"
+    "action": "Coordinator: full gate, receipt verification, independent exact-head review, hosted CI; see plan amendment, changes addendum and review addendum"
   },
   "prioritized_follow_ups": [
     {
