@@ -3,8 +3,10 @@ import json
 import re
 import tempfile
 import unittest
+from collections.abc import Callable
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import dataset
 import test_sqlstore as base
@@ -21,31 +23,40 @@ TASK = "stock-prioritisation"
 APPROVED = dict(CHAT_DPIA_REF="SYNTH-DPIA-1", CHAT_LAWFUL_BASIS_REF="SYNTH-LB-1", CHAT_NOTICE_REF="SYNTH-NOTICE-1")
 
 
-class ChatPrivacyBehaviour:
+if TYPE_CHECKING:
+    _TestCase = unittest.TestCase
+else:
+    _TestCase = object
+
+
+class ChatPrivacyBehaviour(_TestCase):
     """Shared behaviour over the #160 chat repository; subclasses supply make_store."""
 
-    def setUp(self):
+    store: Any
+    make_store: Callable[[str], Any]
+
+    def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         self.store = self.make_store(self.tmp.name)
 
-    def cp(self, **env):
+    def cp(self, **env: str) -> ChatPrivacy:
         return ChatPrivacy(self.store, env=env)
 
-    def test_data_map_covers_required_classes(self):
+    def test_data_map_covers_required_classes(self) -> None:
         ids = {r["id"] for r in cp.DATA_MAP}
         self.assertTrue({"message", "memory", "prompt", "diagnostic_log"} <= ids)
         self.assertFalse(cp.MODEL_PROVIDER_POSITION["zava_stores_prompts"])
         self.assertIn("uksouth", cp.MODEL_PROVIDER_POSITION["region"])
 
-    def test_provider_position_is_documented_but_not_accepted(self):
+    def test_provider_position_is_documented_but_not_accepted(self) -> None:
         terms = cp.MODEL_PROVIDER_POSITION["documented_terms"]
         self.assertEqual(terms["status"], "vendor_documentation_not_dpo_accepted")
         self.assertEqual(terms["source"], "https://learn.microsoft.com/en-us/azure/foundry/responsible-ai/openai/data-privacy")
         self.assertRegex(terms["retrieved"], r"^\d{4}-\d{2}-\d{2}$")
         self.assertTrue(any("DPO and Legal" in i for i in cp.MODEL_PROVIDER_POSITION["open_items"]))
 
-    def test_storage_refused_without_dpo_legal_references(self):
+    def test_storage_refused_without_dpo_legal_references(self) -> None:
         c = self.cp(CHAT_DPIA_REF="SYNTH-DPIA-1")
         self.assertEqual(c.decision()["missing"], ["lawful_basis_ref", "notice_ref"])
         with self.assertRaises(ChatNotApproved):
@@ -54,18 +65,18 @@ class ChatPrivacyBehaviour:
             c.add_memory(U1, "prefers short summaries", task=TASK)
         self.assertEqual(self.store.chat_list_threads(U1), [])
 
-    def test_no_retention_period_before_approval(self):
+    def test_no_retention_period_before_approval(self) -> None:
         self.assertIsNone(self.cp(**APPROVED, CHAT_RETENTION_DAYS="30").decision()["retention_days"])
         self.assertEqual(self.cp(**APPROVED, CHAT_RETENTION_DAYS="30", CHAT_RETENTION_REF="SYNTH-RET-1").decision()["retention_days"], 30)
 
-    def test_no_expiry_without_retention(self):
+    def test_no_expiry_without_retention(self) -> None:
         c = self.cp(**APPROVED)
         c.opt_in(U1, True)
         c.add_memory(U1, "likes tables", task=TASK)
         self.assertIsNone(c.export(U1)["memory"][0]["expires_at"])
         self.assertEqual(c.purge_expired("9999"), 0)
 
-    def test_rights_run_through_the_160_chat_repository(self):
+    def test_rights_run_through_the_160_chat_repository(self) -> None:
         c = self.cp(**APPROVED)
         for u in (U1, U2):
             t = c.start_thread(u, "ZF-1", TASK)
@@ -82,19 +93,19 @@ class ChatPrivacyBehaviour:
         self.assertEqual(c.locate(U2)["messages"], 1)
         self.assertEqual(len(c.export(U2)["memory"]), 1)
 
-    def test_cannot_write_to_another_users_thread(self):
+    def test_cannot_write_to_another_users_thread(self) -> None:
         c = self.cp(**APPROVED)
         t = c.start_thread(U1, "ZF-1", TASK)
         with self.assertRaises(ChatNotFound):
             c.add_message(U2, t, "user", "hi")
 
-    def test_redaction_masks_identifiers_and_cues(self):
+    def test_redaction_masks_identifiers_and_cues(self) -> None:
         text, kinds = cp.redact("Call 07700 900123 or a@example.test, AB 12 34 56 C, SW1A 1AA, resident has dementia")
         for leak in ("07700", "a@example.test", "AB 12", "SW1A", "dementia"):
             self.assertNotIn(leak, text)
         self.assertEqual(kinds, ["email", "ni_number", "phone", "postcode", "special_category"])
 
-    def test_message_stored_redacted_and_memory_rejects_special_category(self):
+    def test_message_stored_redacted_and_memory_rejects_special_category(self) -> None:
         c = self.cp(**APPROVED)
         t = c.start_thread(U1, "ZF-1", TASK)
         c.opt_in(U1, True)
@@ -104,11 +115,11 @@ class ChatPrivacyBehaviour:
             c.add_memory(U1, "tenant has asthma", task=TASK)
         self.assertIn("special-category", cp.WARNING)
 
-    def test_diagnostics_exclude_content(self):
+    def test_diagnostics_exclude_content(self) -> None:
         out = cp.diagnostic_safe(dict(thread_id="t", content="secret", prompt="p", memory="m", count=2))
         self.assertEqual(out, dict(thread_id="t", count=2))
 
-    def test_expiry_set_and_purged_when_retention_approved(self):
+    def test_expiry_set_and_purged_when_retention_approved(self) -> None:
         c = self.cp(**APPROVED, CHAT_RETENTION_REF="SYNTH-RET-1", CHAT_RETENTION_DAYS="1")
         c.opt_in(U1, True)
         c.add_memory(U1, "likes tables", task=TASK)
@@ -117,13 +128,13 @@ class ChatPrivacyBehaviour:
         self.assertEqual(c.purge_expired("9999"), 1)
         self.assertEqual(c.locate(U1)["memory"], [])
 
-    def test_retention_purge_does_nothing_without_a_recorded_period(self):
+    def test_retention_purge_does_nothing_without_a_recorded_period(self) -> None:
         c = self.cp(**APPROVED)
         c.add_message(U1, c.start_thread(U1, "ZF-1", TASK), "user", "synthetic question")
         self.assertEqual(c.purge_retention("9999-01-01T00:00:00+00:00"), dict(threads=0, messages=0, memory=0, applied=False))
         self.assertEqual(len(c.locate(U1)["threads"]), 1)
 
-    def test_retention_purge_is_age_based_and_ignores_later_activity(self):
+    def test_retention_purge_is_age_based_and_ignores_later_activity(self) -> None:
         c = self.cp(**APPROVED, CHAT_RETENTION_REF="SYNTH-RET-1", CHAT_RETENTION_DAYS="30")
         old = c.start_thread(U1, "ZF-1", TASK)
         c.add_message(U1, old, "user", "synthetic question")
@@ -143,18 +154,18 @@ class ChatPrivacyBehaviour:
 
 
 class MemoryStoreChatPrivacy(ChatPrivacyBehaviour, unittest.TestCase):
-    def make_store(self, tmp):
+    def make_store(self, tmp: str) -> Any:
         data = Path(tmp) / "zavaforward.json"
         data.write_text(json.dumps(dataset.DATA))
         return Store(str(data))
 
 
 class SqlChatPrivacy(ChatPrivacyBehaviour, unittest.TestCase):
-    def make_store(self, tmp):
+    def make_store(self, tmp: str) -> Any:
         data, db = base.seed(tmp)
         return SqlStore(data, db)
 
-    def test_memory_table_comes_from_the_store_dialect_hooks(self):
+    def test_memory_table_comes_from_the_store_dialect_hooks(self) -> None:
         import sqlite3
         raw = sqlite3.connect(self.store.db_path)
         tables = {r[0] for r in raw.execute("SELECT name FROM sqlite_master WHERE type='table'")}
@@ -166,7 +177,7 @@ class SqlChatPrivacy(ChatPrivacyBehaviour, unittest.TestCase):
 class PortabilityTests(unittest.TestCase):
     BANNED = re.compile(r"(?i)\bINSERT\s+OR\b|\bREPLACE\s+INTO\b|\bAUTOINCREMENT\b|\bPRAGMA\b")
 
-    def test_chat_privacy_has_no_own_sql_or_connection(self):
+    def test_chat_privacy_has_no_own_sql_or_connection(self) -> None:
         src = inspect.getsource(cp)
         code = "\n".join(l for l in src.splitlines() if not l.lstrip().startswith(("*", "#")))
         self.assertEqual([l.strip() for l in code.splitlines() if self.BANNED.search(l)], [])
@@ -174,7 +185,7 @@ class PortabilityTests(unittest.TestCase):
             self.assertNotIn(forbidden, code)
         self.assertNotRegex(code, r"(?i)\b(SELECT|DELETE FROM|INSERT INTO|UPDATE)\b.*\bchat_")
 
-    def test_memory_ddl_is_dialect_specific_and_shared_sql_portable(self):
+    def test_memory_ddl_is_dialect_specific_and_shared_sql_portable(self) -> None:
         self.assertTrue(any("chat_memory" in d for d in chatthreads.SQLITE_DDL))
         self.assertTrue(any("chat_memory" in d for d in chatthreads.MSSQL_DDL))
         self.assertIn("chat_memory", chatthreads.TABLE_NAMES)
