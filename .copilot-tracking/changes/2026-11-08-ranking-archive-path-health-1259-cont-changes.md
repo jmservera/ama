@@ -6,7 +6,7 @@ ms.date: 2026-11-08
 
 ## Changes
 
-* One normal merge (--no-ff) of local fix/ranking-archive-ancestor-durability 6d793bc3ad3fd8427f745530a633bb1e553ec0ef (tree b614f008) into the child; plan commit e174b2cf precedes it. Merge head e174b2cf is the first parent chain; merge commit parents: child plan commit and 6d793bc3. No conflicts; no source edit, rebase, amend, reset or parent write. Production source unchanged by this step; the _names/_require_creatable hunks and original histories are preserved.
+* One normal merge (--no-ff) of local fix/ranking-archive-ancestor-durability 6d793bc3ad3fd8427f745530a633bb1e553ec0ef (tree b614f008) into the child; prospective plan commit 80c04772 precedes it. The merge commit is e174b2cfa6e58e7e84fc636b1cbcad26ef103044 (parents 80c04772 and 6d793bc3). Correction: the first version of this record had the two IDs swapped. No conflicts; no source edit, rebase, amend, reset or parent write. Production source unchanged by this step; the _names/_require_creatable hunks and original histories are preserved.
 * The delta brought only two test files (core test_ranking_publication.py, API test_ranking_publication_wiring.py) and 1258 continuation records.
 
 ## Commands and results (scratch /home/azureuser/.local/share/ama/gates/g1259-parent6d-light-1108)
