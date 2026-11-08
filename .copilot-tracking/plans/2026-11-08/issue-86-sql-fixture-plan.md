@@ -30,3 +30,9 @@ No production bug, no FULL, no real receiver, cross-process, multiuser, model, l
 * F2: set `PYTHONPATH` to the tree's `src/core/tests` only (top-level `dataset` import); verify test-module origin and installed-package origin; import errors or skips are inconclusive.
 * F3: record that the run exercises the normal-database append-only trigger, not Azure SQL ledger tables; no ledger compatibility claim.
 * F4: the helper must assert exactly 41 cases inserted (report `to_insert`), reopen before use, keep all existing assertions, and report any backend divergence rather than adjusting assertions.
+
+## Prospective amendment 2026-11-08 (admission after baseline f5309e5b)
+
+Baseline B1/B2 both failed `4 != 40` (Main reproduction proven; root cause not proven until the fixed regression). Admitted: test-only correction. A helper `seed_extra_cases` on `JsonResidentDecisions` keeps the write-new-file-and-reopen flow (JSON and SQLite); `MssqlResidentControls` overrides it to write a cases-only seed file, call `merge_seed(apply=True)`, require `to_insert == 41` and `applied`, then reopen. Used only by the one failing method; all assertions and skips unchanged; no private SQL.
+
+Step 5 amended per owner CI-first position: the whole 108-test `MssqlResidentControls` rerun is REMOVED from this scope (already run; baseline captured). Required focused checks: the method on the three classes (3 OK, 0 skip); `-k challenge` on the three classes; `tests.test_seed_merge`; ruff/mypy on the touched file; proof that production, tools, infra and .github are unchanged and only one test file differs. Repeat broader runs only if new failures reveal a wider concern, reported before expansion. Evidence in `/home/azureuser/.local/share/ama/gates/g86-fixture-fix-r1`. No new critique: objectives were covered by the 4afe critique (F4 invariants).
