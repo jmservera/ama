@@ -4713,23 +4713,38 @@ the second-resolution `created` text are not used for ordering. Ordering is data
 approval, consent and ranking policy are unchanged and a proposal never becomes a decision.
 
 Legacy rows have no stored creation order, so the migration derives one and records what it could
-not establish. Where the audit chain verifies against its head, the `ai_run_end priority_recommendation
-<id>` event written in the same transaction as the creation gives the order of same-second proposals
-even when an older one was edited later. Otherwise order falls back to body `created`, then `seq`,
-then `id`. A same-second group is recovered only when every member has an audit event; any other
-same-second group is ambiguous. Every backfill batch, including rows an older binary wrote after a
-rollback, appends an entry to `meta` key `rec_order_backfills` (counts, ordinal range, audited and
-heuristic rows, `audit_chain` flag and up to 100 ambiguous ids); the first-ever migration also keeps
-the original `rec_order_legacy` record, which is never replaced. A named data owner decides whether a
-live database with ambiguous entries needs manual review; nothing is invented.
+not establish. Audit evidence is trusted only when the chain verifies, matches the retained audit
+head and any retained daily or year digests, and the `ai_run_end priority_recommendation <id>` event
+is not contradicted by the insertion `seq` of an unedited row. Such an event, written in the same
+transaction as the creation, orders same-second proposals by audit position, even across a backward
+wall-clock step or a later edit. Rows without usable evidence fall back to body `created`, then
+`seq`, then `id`, merged among audited rows by `created`. A same-second group, a contradicted row or
+a row after a timestamp inversion without evidence is ambiguous.
 
-Mixed-version fence: a pre-fix binary can insert ordinal 0 at any time, including after the new
-binary starts. The new binary never serves or follows a zero ordinal: every synchronisation that sees
-new data repairs zero rows first under the same write lock all writers use, and a save repairs them
-before allocating its own ordinal, so an older-binary row ranks by its commit position. If repair
-fails the read fails instead of returning a wrong newest proposal. The repair holds the write lock
-once per batch with one pass over the batch; it is not a substitute for draining older writers
-before a release. Tests: `src/core/tests/test_priority_order.py` (in-memory, SQLite, and SQL Server
-with `ZF_RESIDENT_MSSQL=1`, which now requires `ZF_SQL_SERVER` to be a loopback address and
-`ZF_SQL_AUTH=password`, see `tests/sqlguard.py`). SQL Server timing, the ledger-enabled migration and
-the SQL Server audit path are not yet proven.
+Ambiguity is visible. Every backfill batch writes its own `meta` key `rec_order_batch:<n>` (counter
+`rec_order_batches`; counts, ordinal range, audit flags and up to 100 ambiguous ids), and
+`rec_order_unresolved` lists every unresolved id. When the newest eligible proposal of an employee is
+unresolved, `latest_priority` returns it with `order_confirmed` false, `actionable` false and an
+`order_note` naming the data owner; other employees and `ai_task` rows are unaffected. The original
+`rec_order_legacy` and the earlier `rec_order_backfills` records are never rewritten. A database
+backfilled by the earlier candidate is reviewed once at migration (batch source `c0-review`), which
+flags same-second groups without changing any ordinal. The named data owner decides how flagged
+records are resolved; this change adds no resolution mechanism and invents no order.
+
+Mixed-version fence: a pre-fix binary can insert ordinal 0 at any time, because every writer bumps
+`meta.seq` in the same commit as its rows. Reload therefore reads the sequence, fetches, and reads the
+sequence again; a changed sequence retries (bounded) and a fetched zero ordinal is repaired under the
+writer lock and re-read, so a zero ordinal is never cached or served and exhaustion fails the read.
+Queue lookups synchronise before their transaction and re-check the sequence inside it, so a rolled
+back transaction publishes no cache state. A save repairs zero rows before allocating its own ordinal
+and drops unsaved proposals and their pending creation events when it rolls back. The audit evidence
+is cached per process and extended incrementally, so repeated repairs do not rescan the chain. This
+is a fence, not a substitute for draining older writers before a release.
+
+SQL fixtures (`tests/sqlguard.py`) refuse to connect unless `ZF_SQL_TASK_MANIFEST` names a private
+(0600, owned by the user, under 24 hours old) manifest written by the disposable setup with
+`write_manifest`, whose host, port and password digest match `ZF_SQL_SERVER`, `ZF_SQL_PORT` and
+`ZF_SQL_PASSWORD`; loopback and password authentication alone are refused. Tests:
+`src/core/tests/test_priority_order.py` (in-memory, SQLite, and SQL Server with `ZF_RESIDENT_MSSQL=1`).
+SQL Server behaviour of the C2 source, the ledger-enabled migration and SQL Server scale are not yet
+proven.

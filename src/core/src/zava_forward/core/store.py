@@ -1018,10 +1018,20 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                             cites=ai_tasks.cites_for(c, "Open safety issues:", "Extra support:", "Resident decision:", "Days in stage:", "Stage:", reason_ok=ok)))
         return out
 
+    def rec_order_unresolved(self, rec_id):
+        return False
+
     def latest_priority(self, user):
         with self.lock:
             mine = [r for r in self.data["recommendations"] if r["user"] == user["email"] and r.get("kind") != "ai_task"]
-            return self._rec_view(mine[-1], user) if mine else None
+            if not mine:
+                return None
+            view = self._rec_view(mine[-1], user)
+            if self.rec_order_unresolved(mine[-1]["id"]):
+                view.update(order_confirmed=False, actionable=False,
+                            order_note="After a database upgrade the order of this record could not be proven, so it may "
+                                       "not be your newest. The named data owner must confirm it before it is acted on.")
+            return view
 
     def resolve_priority(self, user, rec_id, action, reason="", items=None):
         if action not in self.REC_ACTIONS:
