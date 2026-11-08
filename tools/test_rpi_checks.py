@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import copy
 import fcntl
 import importlib.util
@@ -42,9 +43,9 @@ CHAT_SCANS = [
 ]
 
 
-def sql_chat_log(extra: str = "") -> str:
-    results = "".join(f"{name} ... ok\n" for name in gate.SQL_CHAT_REQUIRED_TESTS)
-    count = len(gate.SQL_CHAT_REQUIRED_TESTS)
+def sql_chat_log(extra: str = "", names: tuple[str, ...] = gate.SQL_CHAT_REQUIRED_TESTS) -> str:
+    results = "".join(f"{name} ... ok\n" for name in names)
+    count = len(names)
     return f"{results}{extra}Ran {count} tests in 0.1s\n\nOK\n"
 
 
@@ -427,6 +428,201 @@ class GateTests(unittest.TestCase):
             self.assertTrue(
                 name.endswith(")") and name.split(" (")[1].startswith("test_mssqlstore.")
             )
+
+    def test_sensor_mssql_discovery_skip_is_exact_and_fail_closed(self) -> None:
+        names = gate.SENSOR_MSSQL_REQUIRED_TESTS
+        reason = gate.SENSOR_MSSQL_SKIP_REASON
+        self.assertNotIn(reason, gate.EXPECTED_SKIP_REASONS)
+
+        def log(rows: list[tuple[str, str]]) -> str:
+            lines = "".join(f"{name} ... skipped '{why}'\n" for name, why in rows)
+            return f"{lines}Ran {len(rows)} tests in 0.1s\n\nOK (skipped={len(rows)})\n"
+
+        text = log([(name, reason) for name in names])
+        self.assertEqual(len(gate.check_skips(text, group="project-core")["skips"]), len(names))
+        other = names[0].replace("test_any_declined", "test_other_declined")
+        for label, value, group, integration in (
+            ("other-group", text, "project-api", False),
+            ("no-group", text, "", False),
+            ("integration", text, "project-core", True),
+            ("altered-id", log([(other, reason)]), "project-core", False),
+            ("altered-reason", log([(names[0], reason + "x")]), "project-core", False),
+            (
+                "other-class",
+                log([(names[0].replace("Mssql", "Other"), reason)]),
+                "project-core",
+                False,
+            ),
+        ):
+            with self.subTest(label), self.assertRaises(gate.GateError):
+                gate.check_skips(value, group=group, integration=integration)
+
+    def test_pinned_sensor_mssql_tests_match_the_real_suite(self) -> None:
+        def methods(path: str, klass: str) -> set[str]:
+            tests = Path(__file__).resolve().parents[1] / "src/core/tests"
+            tree = ast.parse((tests / path).read_text())
+            node = next(n for n in tree.body if isinstance(n, ast.ClassDef) and n.name == klass)
+            return {
+                n.name
+                for n in node.body
+                if isinstance(n, ast.FunctionDef) and n.name.startswith("test_")
+            }
+
+        found = methods("test_sensor_analysis_store.py", "RetainedAnalysisTests") | methods(
+            f"{gate.SENSOR_MSSQL_SELECTOR}.py", "MssqlRetainedAnalysisTests"
+        )
+        self.assertEqual(
+            {
+                f"{name} ({gate.SENSOR_MSSQL_SELECTOR}.MssqlRetainedAnalysisTests.{name})"
+                for name in found
+            },
+            set(gate.SENSOR_MSSQL_REQUIRED_TESTS),
+        )
+        self.assertIn(
+            "test_reopened_store_reproduces_signal_without_writes "
+            "(test_sensor_analysis_mssql.MssqlRetainedAnalysisTests."
+            "test_reopened_store_reproduces_signal_without_writes)",
+            gate.SENSOR_MSSQL_REQUIRED_TESTS,
+        )
+
+    def test_sensor_mssql_is_a_required_flagged_command_after_the_existing_sql_suites(
+        self,
+    ) -> None:
+        receipt = {
+            "owner": "a" * 24,
+            "sql": {"container": "b" * 64, "port": "25432"},
+            "images": {"mssql": "sha256:" + "c" * 64},
+            "extras": [],
+            "executed_groups": ["mssql"],
+        }
+        suites = [c for c in gate.required_checks(self.root, receipt) if c["suite"]]
+        self.assertEqual(len(suites), 2)
+        existing, sensor = suites
+        self.assertEqual(existing["argv"][-len(gate.SQL_SELECTORS) :], list(gate.SQL_SELECTORS))
+        self.assertNotIn(gate.SENSOR_MSSQL_FLAG, existing["env"])
+        self.assertEqual(sensor["argv"][1:], ["-m", "unittest", "-v", gate.SENSOR_MSSQL_SELECTOR])
+        self.assertEqual(sensor["cwd"], "src/api")
+        self.assertEqual(sensor["env"], {**existing["env"], gate.SENSOR_MSSQL_FLAG: "1"})
+        self.assertTrue(sensor["integration"])
+        self.assertEqual(gate.required_sql_tests(sensor["argv"]), gate.SENSOR_MSSQL_REQUIRED_TESTS)
+        self.assertEqual(
+            gate.required_sql_count(sensor["argv"]), len(gate.SENSOR_MSSQL_REQUIRED_TESTS)
+        )
+        self.assertIsNone(gate.required_sql_count(existing["argv"]))
+
+    def test_sensor_mssql_execution_evidence_rejects_missing_substituted_skipped_or_failed(
+        self,
+    ) -> None:
+        names = gate.SENSOR_MSSQL_REQUIRED_TESTS
+        argv = ["python", "-m", "unittest", "-v", gate.SENSOR_MSSQL_SELECTOR]
+        count = gate.required_sql_count(argv)
+
+        def check(text: str) -> dict[str, Any]:
+            result: dict[str, Any] = gate.check_skips(
+                text,
+                integration=True,
+                expected_count=count,
+                required_tests=gate.required_sql_tests(argv),
+            )
+            return result
+
+        good = sql_chat_log(names=names)
+        self.assertEqual(check(good)["skips"], [])
+        named = names[4]
+        skipped_one = good.replace(
+            f"{named} ... ok\n",
+            f"{named} ... skipped '{gate.SENSOR_MSSQL_SKIP_REASON}'\n",
+            1,
+        ).replace("OK\n", "OK (skipped=1)\n")
+        broken = {
+            "missing": good.replace(f"{named} ... ok\n", "", 1).replace("Ran 8", "Ran 7"),
+            "duplicate": good.replace(f"{named} ... ok\n", f"{named} ... ok\n" * 2, 1),
+            "substituted": good.replace(named.split(" (")[0], "test_other", 1),
+            "failed": good.replace(f"{named} ... ok\n", f"{named} ... FAIL\n", 1),
+            "errored": good.replace(f"{named} ... ok\n", f"{named} ... ERROR\n", 1),
+            "skipped": skipped_one,
+            "extra-test": good.replace("Ran 8", "Ran 9"),
+            "no-summary": good.replace("OK\n", ""),
+            "zero-run": "Ran 0 tests in 0.0s\n\nOK\n",
+        }
+        for label, text in broken.items():
+            with self.subTest(label=label), self.assertRaises(gate.GateError):
+                check(text)
+
+    def test_sensor_mssql_receipt_rejects_tampered_or_incomplete_evidence(self) -> None:
+        receipt: dict[str, Any] = {
+            "owner": "a" * 24,
+            "sql": {"container": "b" * 64, "port": "25432"},
+            "images": {"mssql": "sha256:" + "c" * 64},
+            "extras": [],
+            "executed_groups": ["mssql"],
+            "commands": [],
+            "files": {},
+        }
+        for index, check in enumerate(gate.required_checks(self.root, receipt)):
+            row = {k: v for k, v in check.items() if k not in ("probe", "attempts")}
+            name = f"{index:04d}-{check['group']}.log"
+            text = "ok\n"
+            required = gate.required_sql_tests(check["argv"])
+            if required:
+                text = sql_chat_log(names=required)
+            elif check["suite"]:
+                text = "test_x ... ok\nRan 1 test in 0.1s\n\nOK\n"
+            (self.out / name).write_text(text)
+            if check["suite"]:
+                row.update(
+                    gate.check_skips(
+                        text,
+                        integration=check["integration"],
+                        expected_count=gate.required_sql_count(check["argv"]),
+                    )
+                )
+            row.update(exit_code=0, log=name, sha256=gate.digest(self.out / name))
+            receipt["commands"].append(row)
+            receipt["files"][name] = row["sha256"]
+        gate.verify_commands(self.root, self.out, receipt)
+        sensor_log = next(
+            r["log"] for r in receipt["commands"] if r["argv"][-1:] == [gate.SENSOR_MSSQL_SELECTOR]
+        )
+        named = gate.SENSOR_MSSQL_REQUIRED_TESTS[4]
+        skipped_named = f"{named} ... skipped '{gate.SENSOR_MSSQL_SKIP_REASON}'\n"
+
+        def sensor(changed: dict[str, Any]) -> dict[str, Any]:
+            row: dict[str, Any] = next(r for r in changed["commands"] if r["log"] == sensor_log)
+            return row
+
+        def log_edit(old: str, new: str, tail: tuple[str, str] = ("", "")) -> Any:
+            def apply(changed: dict[str, Any]) -> None:
+                path = self.out / sensor_log
+                text = path.read_text().replace(old, new, 1).replace(*tail)
+                path.write_text(text)
+                sensor(changed)["sha256"] = changed["files"][sensor_log] = gate.digest(path)
+
+            return apply
+
+        mutations: dict[str, Any] = {
+            "missing": lambda c: c["commands"].remove(sensor(c)),
+            "selector": lambda c: sensor(c)["argv"].__setitem__(-1, "test_sensor_consistency"),
+            "flag-removed": lambda c: sensor(c)["env"].pop(gate.SENSOR_MSSQL_FLAG),
+            "flag-zero": lambda c: sensor(c)["env"].__setitem__(gate.SENSOR_MSSQL_FLAG, "0"),
+            "cwd": lambda c: sensor(c).__setitem__("cwd", "src/core"),
+            "counts": lambda c: sensor(c).__setitem__("tests", 7),
+            "skips": lambda c: sensor(c).__setitem__("skips", [{"test": named, "reason": "x"}]),
+            "named-test-missing": log_edit(f"{named} ... ok\n", "", ("Ran 8", "Ran 7")),
+            "named-test-skipped": log_edit(
+                f"{named} ... ok\n", skipped_named, ("OK\n", "OK (skipped=1)\n")
+            ),
+        }
+        saved = (self.out / sensor_log).read_text()
+        for label, mutate in mutations.items():
+            with self.subTest(label=label):
+                changed = copy.deepcopy(receipt)
+                try:
+                    mutate(changed)
+                    with self.assertRaises(gate.GateError):
+                        gate.verify_commands(self.root, self.out, changed)
+                finally:
+                    (self.out / sensor_log).write_text(saved)
 
     def test_employee_acceptance_runtime_requires_three_tests_and_zero_skips(
         self,
@@ -1687,9 +1883,16 @@ os.fstat(3)
                     text = f"{gate.CHAT_PANEL_DISCOVERY_SKIP[0]} ... ok\nRan 1 test in 0.1s\n\nOK\n"
                 if gate.EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"]:
                     text = "test_x ... ok\n" * 3 + "Ran 3 tests in 0.1s\n\nOK\n"
-                if gate.required_sql_tests(check["argv"]):
-                    text = sql_chat_log()
-                row.update(gate.check_skips(text, integration=check["integration"]))
+                required = gate.required_sql_tests(check["argv"])
+                if required:
+                    text = sql_chat_log(names=required)
+                row.update(
+                    gate.check_skips(
+                        text,
+                        integration=check["integration"],
+                        expected_count=gate.required_sql_count(check["argv"]),
+                    )
+                )
             if gate.EMPLOYEE_CHAT_BROWSER_MODULE in check["argv"]:
                 text = gate.EMPLOYEE_CHAT_PASS + "3 states\n"
             if check["argv"][0] == "git":
@@ -1792,7 +1995,7 @@ os.fstat(3)
             for row in suites:
                 changed["commands"].remove(row)
                 changed["files"].pop(row["log"])
-            self.assertEqual(len(suites), 10)
+            self.assertEqual(len(suites), 11)
             gate.atomic_json(path, changed)
             (self.out / "receipt.sha256").write_text(real_digest(path))
             with self.assertRaises(gate.GateError):
