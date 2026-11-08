@@ -132,16 +132,19 @@ def _fsync_dir(archive_dir: Path) -> None:
 def _ancestors(archive_dir: Path) -> list[str]:
     """Real parent folders whose entries may need a sync, nearest first.
 
-    The run of writable ancestors, ending after the first mount point or the
-    filesystem root and stopping before a non-writable one. A writable parent is
-    one this process could have added an entry to. Permissions alone do not prove
-    durability; a sync error on any listed folder is raised, never skipped.
+    Every parent up to the filesystem boundary: the first mount point, which is
+    included because its entries live on the archive's filesystem, or the root. An
+    archive that is itself a mount point has no parent on its filesystem. Present
+    permissions are not evidence that an entry was synced earlier, so none is used
+    to skip a folder; a sync or open error on any listed folder is raised, never skipped.
     """
     chain: list[str] = []
     current = os.path.realpath(archive_dir)
+    if os.path.ismount(current):
+        return chain
     while True:
         parent = os.path.dirname(current)
-        if parent == current or not os.access(parent, os.W_OK):
+        if parent == current:
             return chain
         chain.append(parent)
         if os.path.ismount(parent):
@@ -155,8 +158,8 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
     Returns path, written (False when the identical snapshot was already archived)
     and the original published_on. The record is written to a unique stage file, synced
     and linked to its final name, so the first writer wins and nothing is overwritten;
-    the stage is removed and the folder and its writable parent folders (up to a mount point)
-    are synced before the result is returned, including
+    the stage is removed and the folder and every parent folder (up to the archive's mount point
+    or the root) are synced before the result is returned, including
     for an existing record, which is validated and refused when it is damaged. A failed
     folder sync is raised as DurabilityUnconfirmedError (an OSError carrying the cause's
     errno) although the record is committed and kept; a retry syncs again and reports

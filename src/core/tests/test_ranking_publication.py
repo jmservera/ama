@@ -378,15 +378,15 @@ class AncestorDurabilityTests(unittest.TestCase):
             rp.publish(snap(), archive, "2026-10-10")
         self.assertEqual(synced, ["x", "real"])
 
-    def test_chain_stops_at_a_mount_point_and_at_a_non_writable_ancestor(self):
+    def test_chain_stops_after_a_mount_point_ancestor(self):
         events, sync, link = self.labelled()
         with sync, link, patch.object(os.path, "ismount", lambda p: str(p) == str(self.root / "a")):
             rp.publish(snap(), self.dir, "2026-10-10")
         self.assertEqual([e for e in events if e != "other"][-3:], ["archive", "b", "a"])
 
-    def test_chain_ends_before_the_first_non_writable_ancestor(self):
+    def test_non_writable_ancestor_is_still_synced_through_a_read_only_handle(self):
         if os.geteuid() == 0:
-            self.skipTest("root bypasses permission bits; see the mocked root-run test")
+            self.skipTest("root bypasses permission bits; see the mocked access test")
         self.dir.mkdir(parents=True)
         events, sync, link = self.labelled()
         os.chmod(self.root / "a", 0o555)
@@ -395,16 +395,77 @@ class AncestorDurabilityTests(unittest.TestCase):
                 rp.publish(snap(), self.dir, "2026-10-10")
         finally:
             os.chmod(self.root / "a", 0o755)
-        self.assertEqual([e for e in events if e != "other"], ["file", "link", "archive", "b"])
-
-    def test_mocked_root_run_where_every_ancestor_looks_writable_syncs_the_whole_chain(self):
-        # Mocked os.access stands in for a privileged run; not live root behavior.
-        events, sync, link = self.labelled()
-        with sync, link, patch.object(os, "access", return_value=True):
-            rp.publish(snap(), self.dir, "2026-10-10")
         known = [e for e in events if e != "other"]
         self.assertEqual(known, ["file", "link", "archive", "b", "a", "root"])
-        self.assertGreater(len(events), len(known))
+
+    def test_failed_ancestor_then_permission_change_retry_stays_unconfirmed(self):
+        if os.geteuid() == 0:
+            self.skipTest("root bypasses permission bits; see the mocked access test")
+        _, sync, link = self.labelled(fault="a")
+        with sync, link, self.assertRaises(rp.DurabilityUnconfirmedError):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        os.chmod(self.root / "a", 0o555)
+        try:
+            _, sync, link = self.labelled(fault="a")
+            with sync, link, self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+                rp.publish(snap(), self.dir, "2026-10-11")
+            events, sync, link = self.labelled()
+            with sync, link:
+                res = rp.publish(snap(), self.dir, "2026-10-12")
+        finally:
+            os.chmod(self.root / "a", 0o755)
+        self.assertIs(ctx.exception.written, False)
+        self.assertEqual((res["written"], res["published_on"]), (False, "2026-10-10"))
+        self.assertIn("a", events)
+
+    def test_mocked_denied_access_does_not_skip_any_ancestor_sync(self):
+        # Mocked os.access stands in for another creator or later permission change.
+        for denied in ("a", "b"):
+            with self.subTest(denied=denied):
+                tmp = tempfile.TemporaryDirectory()
+                self.addCleanup(tmp.cleanup)
+                self.root = Path(tmp.name).resolve()
+                self.dir = self.root / "a" / "b" / "archive"
+                path = str(self.root.joinpath(*(["a"] if denied == "a" else ["a", "b"])))
+                events, sync, link = self.labelled()
+                real = os.access
+                with (
+                    sync,
+                    link,
+                    patch.object(
+                        os,
+                        "access",
+                        lambda p, m, *a, path=path, real=real, **k: (
+                            False if str(p) == path else real(p, m)
+                        ),
+                    ),
+                ):
+                    rp.publish(snap(), self.dir, "2026-10-10")
+                known = [e for e in events if e != "other"]
+                self.assertEqual(known, ["file", "link", "archive", "b", "a", "root"])
+
+    def test_archive_that_is_itself_a_mount_point_is_not_synced_past_its_filesystem(self):
+        events, sync, link = self.labelled(fault="b")
+        with sync, link, patch.object(os.path, "ismount", lambda p: str(p) == str(self.dir)):
+            res = rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertIs(res["written"], True)
+        self.assertEqual([e for e in events if e != "other"], ["file", "link", "archive"])
+
+    def test_required_ancestor_open_failure_is_reported_not_skipped(self):
+        real_open = os.open
+
+        def opening(path, flags, *a, **k):
+            if str(path) == str(self.root / "a"):
+                raise OSError(errno.EACCES, "denied")
+            return real_open(path, flags, *a, **k)
+
+        with (
+            patch.object(os, "open", opening),
+            self.assertRaises(rp.DurabilityUnconfirmedError) as ctx,
+        ):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(ctx.exception.errno, errno.EACCES)
+        self.assertEqual(rp.verify(self.dir)["problems"], [])
 
 
 class ConcurrentWriterTests(unittest.TestCase):
