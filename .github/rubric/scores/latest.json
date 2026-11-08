@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-08T10:57:48+00:00",
-  "commit": "4bc1e3f3361a762cc9f0c187d394fdab9a11b033",
+  "scored_at": "2026-11-08T11:16:46+00:00",
+  "commit": "457a0c824972f318e41cafae635563d252f8b0ef",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/42473216720",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/42474493920",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
-    "solution-code": "5d32c2d09f8d7e08cebfe4e0f5d2b6c93b51a1f62f54b440575ec12bb6782744",
+    "solution-code": "3c3837f2c1b4e540114a9ff1046441abc28299db761d63cbe82ebd64835610f4",
     "infrastructure": "7829e0d5b60790a27890969d32d8f827d95cddad8a5f89672d3e4480f35b6b2c",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "0c212fc27c0b4f5347cb28912b69d7a718b59c375ed1551f367a435636328c1e",
@@ -46,7 +46,7 @@
       "evidence": [
         "src/api/tests/test_assistant_release.py:910-979"
       ],
-      "rationale": "New UnleasedRevocation test proves a pending, never-claimed release proposal is denied by release admission (not just a lease), durable across worker restart, with no allowance side effects. Reinforces existing release-admission security evidence; ceiling 5 retained."
+      "rationale": "New UnleasedRevocation test proves a pending, never-claimed release proposal is denied by release admission, durable across worker restart. Reinforces existing release-admission security evidence; ceiling 5 retained."
     },
     "A4": {
       "score": 5,
@@ -70,7 +70,7 @@
         "src/agents/src/zava_forward/agents/candidate_comparison.py:170-243",
         "src/agents/tests/test_heldout_freeze.py:1-92"
       ],
-      "rationale": "New heldout_freeze.check_freeze is a genuine pre-evaluation freeze/leak gate (digest, independent labeller, versioned bindings, cohort minimums, digest-bound approval), wired into compare_candidates via freeze=. Strengthens evaluation rigor; no real manifest/results yet. Ceiling 5 retained."
+      "rationale": "New heldout_freeze.check_freeze is a genuine pre-evaluation freeze/leak gate, wired into compare_candidates via freeze=. Strengthens evaluation rigor; no real manifest/results yet. Ceiling 5 retained."
     },
     "A7": {
       "score": 4,
@@ -118,7 +118,7 @@
         "src/api/README.md:502-522",
         "infra/README.md:1577-1611"
       ],
-      "rationale": "Diff updates component technical README documentation, not the capstone deck itself (deck file unchanged). Immaterial to B6 deck/capstone-documentation scoring; baseline retained."
+      "rationale": "Diff updates component README documentation, not the capstone deck itself (deck file unchanged). Immaterial to B6 deck/capstone-documentation scoring; baseline retained."
     },
     "B7": {
       "score": 5,
