@@ -1,0 +1,28 @@
+{
+  "task_id": "issue-79-r17-align-post-891",
+  "task_slug": "issue-79-r17-align-post-891",
+  "parent_task": {"task_id": "issue-79-r15-d654-review-corrections", "task_slug": "issue-79-r15-d654-review-corrections"},
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-07/issue-79-r17-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-07/issue-79-r17-plan.md",
+    "details": ".copilot-tracking/details/2026-11-07/issue-79-r17-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-07/issue-79-r17-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-07/issue-79-r17-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-07/issue-79-r17-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Planning committed before rebase", "status": "recorded", "evidence": "02c0368bc (pre-rebase), 7e4bf6373 (rebased)"},
+    {"decision": "Final base 0f420dc9 after scorer 42361331168 completed", "status": "recorded", "evidence": "changes record"},
+    {"decision": "Author-only Review executed; outcome Conformant with residual work", "status": "recorded", "evidence": "review record"}
+  ],
+  "blockers": [{"id": "stack-gate", "summary": "No FULL, independent review or hosted CI for this head; remote PR head differs", "resolution": "Coordinator aligns child 1231, runs one stack gate on 0f420dc9"}],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator aligns child 1231 onto final head and runs --stack parent --stack tip"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Align child 1231 and run one stack gate", "rationale": "Head changed", "evidence": "RV-003"},
+    {"rank": 2, "task": "Owner-approved lease push of rebased topic", "rationale": "Remote 181a1c1bb diverges", "evidence": "RV-002"}
+  ]
+}
