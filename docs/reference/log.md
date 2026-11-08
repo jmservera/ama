@@ -10683,3 +10683,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-08] update | Issue 79 root integrated parent topic dd92e0d1 (Refs #79, #1231)
 
 * One normal merge of the squash-merged child 1242 (`dd92e0d1`, ranking archive concurrent-writer metadata) into the ranking publication root, on main `b284d0d3`. Parent-topic local observation only: not merged-main, whole-issue, cross-platform, human or deployed scheduling acceptance; #440 stabilization, #1258/#1259 and unmerged #123/#81/#86/#107 stay out. Earlier root341/child40d FULL evidence is historical. Records: `.copilot-tracking/*/2026-11-08/issue-79-r33-parent-dd92-*`.
+
+## [2026-11-08] update | Issue 440 ranking publication current-main stabilization checkpoint (Refs #440, #79, #1231)
+
+* Appended one dated section to the cut-over evidence pack for merged main `a80acada` (PR #1239), with BRD, PRD and ADR blob identities, installed-package focused observations (core 76, API 53, agents 20, all exit 0, no skips, SQLite-backed store only, no real SQL Server), traceability, existing owners #1258 and #1259 and the continue recommendation. The pre-merge full receipt at `ac0f29f9` stays historical and source-qualified. No new defect, closure, tick, approval or live model claim. Records: `.copilot-tracking/*/2026-11-08-ranking-main-stabilization-440-*`.
