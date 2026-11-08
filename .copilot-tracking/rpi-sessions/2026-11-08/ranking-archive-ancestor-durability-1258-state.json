@@ -49,6 +49,11 @@
       "decision": "continuation tests for R2/R3 added, LIGHT, passing on unchanged source; no independent critique",
       "status": "done",
       "evidence": ".copilot-tracking/changes/2026-11-08-ranking-archive-ancestor-durability-1258-cont-changes.md"
+    },
+    {
+      "decision": "FULL continuation records written; critique Revise PC-001..004 applied; gate output path shortened",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-08-ranking-archive-ancestor-durability-1258-full-critique.md"
     }
   ],
   "blockers": [
@@ -60,7 +65,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "1259 consumes this head; coordinator admits FULL on final head"
+    "action": "Run FULL --all on frozen head; external receipt and verification"
   },
   "prioritized_follow_ups": [
     {
