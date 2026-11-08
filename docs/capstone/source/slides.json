@@ -20,7 +20,7 @@
       ],
       "revised_notes": [
         "S01 | Zava Forward: the requested rights, a proposal-first build.",
-        "SAY within the retained 40-second opening: Zava Forward turns fragmented retrofit work into an owned next step. The case specified recommendations, approved drafts, preference-bounded actions and autonomous quality flags, not unrestricted managers. I will show how we challenged the mechanisms, built the Workbench and added optional resident access. We preserved resident and professional authority; some requested scope and higher autonomy remain unfinished. My ask is to agree the next validation priorities and owners before a costed plan. Future analytics and customer benefits are proposals, not today's proof.",
+        "SAY within the retained 40-second opening: The brief is about moving homes through retrofit without losing the person or the evidence between teams. I recommend one owned case workflow: rules protect the process, AI prepares evidence, and people retain consequential decisions. I will show the choices we challenged, the demonstrator we built, and the limits of its proof. Then we agree the next validation question and accountable owners before a costed plan. More autonomous actions and better housing outcomes are still things to test, not benefits I can claim today.",
         "SOURCES: docs/case_study_48_original.md, Agentic Architecture Brief; docs/capstone/source/review-2026-11-08.md. The original explicitly specifies Stock L2, Assessment/Funding/Coordination L3 and Quality L4 flags. Human approval and resident consent are fidelity to that brief, not newly imposed restrictions. Built scope, automatic invocation, permitted decision authority and live acceptance are separate claims. No spending authority is granted."
       ]
     },
@@ -797,12 +797,13 @@
     {
       "number": 9,
       "code": "S08",
-      "title": "We kept the rights. We changed the mechanism.",
+      "title": "We chose a controlled workflow with bounded AI.",
       "layout": "text",
       "notes": "S08 | We challenged the brief to make it shippable.\r\nTIMING: 70 s for this slide (all builds together) · 07:20-08:30 on the 23:45 narration clock.\r\n\r\nSAY\r\nThe original brief asked for five autonomous AI agents, from stock prioritisation to quality verification, with autonomy up to level four. We took the brief seriously, and that is exactly why we challenged it.\r\n\r\nWe ran it past nine role instruments. Their verdict was clear: none of the five should run end to end. So we kept all five responsibilities as five bounded assistants on one proposal service.\r\n\r\nWe also refused the easy story that the spreadsheets are the problem. As our requirements put it, Zava does not have a spreadsheet problem, it has a delivery control problem that spreadsheets make harder to see. The first investment is data ownership and workflow, then AI.\r\n\r\nWe kept AI, and changed its job: AI prepares, people decide, because consent, safety and money need a named human.\r\n\r\nThe portal is optional, not rejected. Issue #441 assesses resident self-service to reduce avoidable status calls and protect staff working time. Phone, email, letter and visits stay available. Portal/workflow comes first; any resident-answer assistant is separately gated, human-reviewed and off for routine automation. No benefit has been measured.\r\n\r\nSOURCES AND CALCULATIONS\r\nIssue #441, read 23 October 2026: owner-confirmed Option B reuses case/API authority; portal/workflow first, resident-answer task separately gated. Its latest public comment reports a Research-stage integration blocker and no published PR. The owner reports local work in progress, not inspected implementation or approval. Per-message human review remains normative; routine automation stays off pending requirements-owner disposition and separate release approval.\r\nOriginal case brief: five agents with autonomy L2-L4 (E01); agent-request challenge and agent what-if study: \"none of the five requested agents should be end-to-end\" (E03, WIS); BRD L161-166 spreadsheet quote; discovery brief: first investment is data ownership and workflow instrumentation; PRD: one proposal service, not five applications; architecture README: no resident portal required, separate workers deferred, Foundry Agent Service not used.\r\n\r\nRELATED ANSWERS: B03 = slide 30; B14 = slide 41. Question index = slide 27.\r\n",
       "revised_notes": [
-        "S08 | We kept the rights. We changed the mechanism.",
-        "SAY in the retained 70-second slot: The case was precise: Stock recommends at L2; Assessment drafts at L3 with coordinator approval; Funding drafts at L3 with Finance submission; Coordination acts at L3 within resident preferences; Quality raises flags autonomously at L4. It already reserved investment approval and resident consent. Our current shared service produces L2 evidence proposals for all five roles. Stock retains the recommendation boundary; Assessment and Funding deliver preparation, not their complete requested drafts. Coordination does not book or send, and Quality does not autonomously raise a domain flag. Those are genuine scope or autonomy reductions, not proof the brief demanded unsafe decisions. The shared workflow supports the requested supervision. The optional resident website is an added channel, not an original portal requirement.",
+        "S08 | We chose a controlled workflow with bounded AI.",
+        "SAY in the retained 70-second slot: The brief already bounded each responsibility: Stock L2 recommendations; Assessment and Funding L3 drafts with professional approval; Coordination L3 actions within resident preferences; Quality L4 flags, not acceptance. We considered rules and templates alone, rules with bounded AI, and wider permitted automation. We chose rules with bounded AI: rules protect the workflow, models prepare evidence, and people retain the decisions. The rules-only path remains our comparator. Today all five helpers produce L2-equivalent proposals. Stock's recommendation boundary matches; complete Assessment and Funding drafts are unfinished; automated coordination actions and quality flags are not delivered. That is a disclosed scope reduction, not evidence that the brief was unsafe. Next we test useful preparation before extending authority. B03 holds the full matrix.",
+        "RECOMMENDATION AND LIMIT: keep the deterministic case path as the dependable baseline. Model-led workflow control was not selected: known gates and arithmetic do not need generation. Wider L3/L4 tasks are separate, testable increments within the brief's existing rights. Real invocation and persistence are not evidence of less total work or better resident outcomes; compare accepted results and all review/correction effort before expanding.",
         "JUSTIFICATION: known arithmetic, policy and state belong in reproducible rules; bounded models interpret permitted evidence. Source quality, qualified review, supplier capacity, operational connectors and tested false-positive/critical-miss limits must precede wider authority. Quality L4 means raise-only flags, never autonomous acceptance; it is not inherently incompatible with the brief's human approvals. OD-31 and OD-32 retain the decisions/tests for Quality and Coordination. No current authority is increased by this presentation.",
         "SOURCES: docs/case_study_48_original.md:24-36; src/core/src/zava_forward/core/assistants.py, REGISTRY, scan and review; PRD Five Reactive and Proactive Assistants; BRD OD-31/OD-32; docs/capstone/source/review-2026-11-08.md. Eight earlier role instruments and nine later atlas instruments supplied hypotheses, not customer approval."
       ],
@@ -810,7 +811,7 @@
         {
           "id": 34557,
           "from": "Why: our 9 role instruments concluded none of the five should run end to end.",
-          "to": "Why: test full drafts, L3 actions and L4 flags separately.",
+          "to": "Choice: rules + bounded AI. Rules-only stays the comparator.",
           "box": [
             2.7267,
             3.35,
@@ -818,7 +819,7 @@
             0.59
           ]
         },
-        {"id": 34469, "from": "We challenged the brief to make it shippable.", "to": "We kept the rights. We changed the mechanism."},
+        {"id": 34469, "from": "We challenged the brief to make it shippable.", "to": "We chose a controlled workflow with bounded AI."},
         {"id": 34532, "from": "Five autonomous agents, autonomy L2-L4", "to": "Five tasks with explicit L2-L4 levels"},
         {"id": 34544, "from": "Five bounded assistants on one proposal service", "to": "Five L2 evidence proposals; fuller scope remains"},
         {"id": 34676, "from": "Fix the spreadsheets", "to": "Programme supervision and coordination"},
@@ -883,13 +884,35 @@
     {
       "number": 12,
       "code": "S11",
-      "title": "Meet the Workbench: every home, one owner, one next step.\r",
-      "layout": "baseline",
+      "title": "One case service connects people, evidence and advice.",
+      "layout": "native",
+      "keep_ids": [37905, 37907, 37910, 37914],
+      "headers": [
+        {"id": 37907, "text": "One case service connects people, evidence and advice.", "size": 30, "box": [0.6, 0.78, 12.1333, 0.72]},
+        {"id": 37910, "text": "Conceptual source-backed view, 8 Nov 2026. Dashed paths require separate acceptance; not a live inventory.", "size": 12, "box": [0.6, 6.7, 9.7, 0.3]}
+      ],
+      "elements": [],
+      "images": [
+        {
+          "asset": "cxo-architecture",
+          "box": [0.6, 1.83, 12.1333, 4.73],
+          "alt": "Conceptual application view: company Microsoft login and application roles, a staff Workbench, optional separate resident access, controlled file import from shared Excel, gated device readings, a case API, private case/evidence records and minimum-necessary AI advice. Dashed paths are gated integration targets, not a claim of deployed connectivity. Human approval, consent and compliance release remain separate."
+        }
+      ],
+      "sources": [
+        "src/api/src/zava_forward/api/auth.py",
+        "src/api/README.md",
+        "src/importer/README.md",
+        "src/agents/README.md",
+        "docs/capstone/source/diagrams/architecture/text-equivalent.md"
+      ],
       "notes": "S11 | Meet the Workbench: every home, one owner, one next step.\r\nTIMING: 70 s for this slide (all builds together) · 10:30-11:40 on the 23:45 narration clock.\r\n\r\nSAY\r\nThis is the product. We call it the Workbench, and it is deliberately simple.\r\n\r\nEvery person opens to their cases. Every case shows one next owner, a plain status and the evidence behind it. When two sources disagree, the case does not disappear into an amber dot: it goes to the person who can resolve it, with the clock visible.\r\n\r\nAI sits in the side panel. It prepares a summary, a letter or a funding pack, and a person accepts it or rejects it with a reason. Nothing is approved by a model.\r\n\r\nThis is not a slideware concept. The work-queue signals, controlled bulk edits, hazard referral, grant and claim states, forecasts and the accept-or-reject AI suggestions are already delivered in the MVP backlog. What you see here is the product view of that delivered work, with fictional homes.\r\n\r\nSOURCES AND CALCULATIONS\r\nAMA Plan project snapshot 2026-10-23 07:21 UTC (E20): Done items #77, #78, #85, #95, #102, #105, #106; epic #73 and feature #76. Prototype learnings and owner feedback PR #26 (E15).\r\n\r\nRELATED ANSWERS: B02 = slide 29. Question index = slide 27.\r\n",
       "revised_notes": [
-        "S11 | Meet the Workbench: evidence, ownership and the next action.",
-        "SAY in the retained 70-second slot: This is the Workbench we implemented. Its organising unit is a scoped case: what is known, what conflicts, who owns the next action and which evidence supports it. A handoff is not complete because it was sent, and a contractor's completion is not independent QA or resident handover. Bounded assistance prepares source-linked proposals; rules and separately authorised people keep control of progression. Existing progress views and exports explain the retained evidence. The source and dated technical exercises are more than a concept, but a backlog Done label is not a current end-to-end acceptance result. The resident journey on the next page shows why these controls matter to a person rather than only to an architecture diagram.",
-        "SOURCES: current API/core/agents guides; dated board snapshot and prototype learnings. The image is a dated product view using fictional scope, not a live authenticated session or fresh private-case inspection. Current identity, SQL/model, human task and operational acceptance retain their own gates."
+        "S11 | One case service connects people, evidence and advice.",
+        "SAY in the retained 70-second slot: Start with people, not product names. Employees use their company Microsoft login; the application separately checks each role, case and field. The Workbench gives coordination, liaison, Finance, Quality and Programme one evidence-linked case view. Shared Excel files can enter through controlled read-only preview; a live OneDrive connector is not claimed. The case service keeps database records separate from evidence files. Device readings enter only after validation. AI receives approved task facts and returns advice for review, not unrestricted access to every record. The optional resident service uses separate identity and own-case permission, with assisted routes retained. Dashed paths need separate integration or activation acceptance. This is the product map; B10 provides the Azure reference view.",
+        "SECURITY AND PRIVACY: one company account does not mean one permission for everything. Workbench and Microsoft 365 share the corporate identity concept, not automatic Graph/file rights. Resident login is not staff-directory membership, household authority or works consent. The boundary shown is a logical application/data scope, not a network perimeter or a data-residency guarantee.",
+        "COMPLIANCE: rules and evidence versions support accountable decisions; qualified people approve applicable policy, consent, technical work, Finance and release. Architecture controls alone do not establish legal compliance, approved retention or real resident benefit. Manual service and the independent safety route remain.",
+        "SOURCES: src/api/src/zava_forward/api/auth.py, DEFAULT_ROLE_MAP and TrustedProxyProvider; src/api/README.md, Employee chat with bounded skills; src/importer/README.md, Excel transition and Not built; src/agents/README.md, Five retrofit assistants; docs/capstone/source/diagrams/architecture/text-equivalent.md. This is a conceptual source-backed view and integration target, not a fresh live inventory."
       ]
     },
     {
@@ -997,7 +1020,7 @@
       "number": 14,
       "code": "S13",
       "notes": "S13 | 189 backlog items, 16 epics, one coherent product.\r\nTIMING: 50 s for this slide (all builds together) · 12:40-13:30 on the 23:45 narration clock.\r\n\r\nSAY\r\nBehind the workbench is a real, structured product backlog. 189 items across 16 epics, generated from the business requirements, the product requirements and the architecture decisions.\r\n\r\n54 are delivered, 24 are in progress and 111 are queued and ready to be picked up in dependency order. Every item traces back to a requirement and forward to a pull request with its evidence.\r\n\r\nThis is what makes the plan credible: we are not asking you to imagine a product. We are showing you the inventory of one, and the order we will build the rest in.\r\n\r\nSOURCES AND CALCULATIONS\r\nAMA Plan project snapshot (E20): 189 items; labels: 16 epic, 110 feature, 34 story, 29 other; status 54 Done, 24 In Progress, 111 Todo. Per-epic counts computed from item area labels (items outside the 16 epic areas: 28).\r\n",
-      "title": "Three ways to get help. No new decision rights.",
+      "title": "Rules run the workflow. AI helps with the evidence.",
       "layout": "native",
       "keep_ids": [
         39457,
@@ -1007,7 +1030,7 @@
       "headers": [
         {
           "id": 39459,
-          "text": "Three ways to get help. No new decision rights.",
+          "text": "Rules run the workflow. AI helps with the evidence.",
           "size": 30,
           "box": [
             0.6,
@@ -1165,7 +1188,7 @@
             5.37,
             0.38
           ],
-          "text": "See the next action",
+          "text": "Rules choose the next task",
           "size": 22,
           "bold": true
         },
@@ -1177,7 +1200,7 @@
             5.37,
             0.62
           ],
-          "text": "Rules, role queues and Today's briefing\nCase work does not wait for a model",
+          "text": "Case facts -> coded gates -> next owner\nNo model is needed to keep work moving",
           "size": 16,
           "color": "50655E"
         },
@@ -1206,7 +1229,7 @@
             5.37,
             0.38
           ],
-          "text": "Review recommendations",
+          "text": "AI prepares evidence",
           "size": 22,
           "bold": true
         },
@@ -1218,7 +1241,7 @@
             5.37,
             0.62
           ],
-          "text": "Case cards + Assistant proposals\nStaff request or approved gap scan",
+          "text": "Staff request or approved scan -> proposal\nCase card + queue; no case-state change",
           "size": 16,
           "color": "50655E"
         },
@@ -1247,7 +1270,7 @@
             5.37,
             0.38
           ],
-          "text": "Ask a follow-up",
+          "text": "People review or ask",
           "size": 22,
           "bold": true
         },
@@ -1259,7 +1282,7 @@
             5.37,
             0.62
           ],
-          "text": "Employee chat: five selected skills\nResident chat: optional, own-record",
+          "text": "Check/edit/reject; optional follow-up chat\nConsent and sign-offs stay separate",
           "size": 16,
           "color": "50655E"
         },
@@ -1282,7 +1305,7 @@
             11.69,
             0.36
           ],
-          "text": "CURRENT SOURCE  |  Staff Workbench + optional resident site. AI activation remains task-specific.",
+          "text": "WORKFLOW IN CODE  |  AI is an optional branch, never the state-transition authority.",
           "size": 14,
           "color": "FAF9F6",
           "bold": true
@@ -1295,13 +1318,14 @@
         "docs/capstone/source/diagrams/discovery-journey/text-equivalent.md"
       ],
       "revised_notes": [
-        "S13 | Three ways to get help. No new decision rights.",
-        "SAY in the retained 50-second slot: Staff get help in three ways. Rules show the role queue and next action without waiting for AI. A staff request, or an approved background gap scan, prepares recommendations in the case card and Assistant proposals queue; sources and unknowns are visible before human review. Ask the assistant gives follow-up help through one chat with five explicitly selected skills, not another approval tool. The added resident site offers own-case status, document explanations, synthetic sensors and optional questions, while phone, letters and assisted visits stay. These channels reduce avoidable chasing by design; real effort and comprehension still need testing.",
+        "S13 | Rules run the workflow. AI helps with the evidence.",
+        "SAY in the retained 50-second slot: Follow this one fictional home. Two sources disagree, so coded rules keep the case blocked and route the next action to the assessor. The case path does not wait for AI. A staff request, or an approved gap scan, can prepare a source-linked proposal in the case card and queue. The model cannot clear the conflict or advance the case. A person verifies, edits or rejects the proposal, then uses the ordinary controlled action. Follow-up chat is one bounded call with an explicitly chosen skill; resident questions are an optional separate route. B14 explains this workflow/AI distinction; B27 explains the call limits.",
+        "STATE-FLOW ACCURACY: the graph is a conceptual view of explicit coded gates, queues and controlled transitions, not a claim that a deployed LangGraph runtime or an open-ended model loop owns the programme. Unknown gates do not pass; hazard referral and manual case work remain independent of inference.",
         "PRODUCT BOUNDARY: current components are the employee Workbench/shared API, core domain logic and SQL/Blob state/evidence, deterministic controls, bounded assistant paths and current reporting. Neither of the future analytics products belongs in this current-product architecture. Field-specific authoritative sources, permission projections and human review remain distinct; SQL owns programme state, not the truth of every property fact.",
         "EXECUTION: deterministic predicates scan bounded pages of open cases, capture permitted sources and enqueue a durable proposal. The same workers handle reactive and proactive proposals. SQL deduplication, finite allowance, version-bound release, expiry and current permissions apply. Proactive scans default off; this deck is not evidence that they are running on Azure today. Automatic recommendation generation never sends, books, ranks or advances a case.",
         "SURFACES: Today's briefing labels Summary by rules versus AI suggestion, not approved. Assistant proposals exposes summary, cited findings, unknowns, source versions, invocation mode, usage and verification/review history. Employee Ask the assistant and the inline case/regulatory panels are read-only conversational surfaces. Selecting a skill does not invoke the proposal operation. Resident Chat requires separate record-use permission and offers human help; it is optional, not works consent.",
         "SOURCES: src/core/src/zava_forward/core/assistants.py:847-876,1106-1169; src/api/src/zava_forward/api/web/assistants.js:90-110; src/api/README.md, Today's briefing and Employee chat with bounded skills; resident chat/agenda and bounded Azure advisor; docs/capstone/source/review-2026-11-08.md. No private dataset or deployed configuration was read for this review.",
-        "TRANSITION: explain the bounded adoption path and the existing file tools, then why rules and assistance have different jobs. The optional future roadmap comes near the close, after the current product story."
+        "TRANSITION: the useful outcome is an owned correction route, not a model response. Explain the controlled file-adoption path, then the five exact autonomy boundaries. The optional future roadmap remains near the close."
       ]
     },
     {
@@ -1609,7 +1633,7 @@
       "number": 16,
       "code": "S15",
       "notes": "S15 | AI where it earns its place: five assistants, one workbench, people decide.\r\nTIMING: 70 s for this slide (all builds together) · 14:40-15:50 on the 23:45 narration clock.\r\n\r\nSAY\r\nWe put AI exactly where it earns its keep, and nowhere else.\r\n\r\nKnown policy and arithmetic stay in rules: eligibility, freshness, consent and release gates are deterministic, fast and repeatable. Where the task is choosing between supplied candidates, a learned decision model scores them and can abstain. Where the job is explaining evidence or drafting a letter, generative AI writes a cited draft.\r\n\r\nThe original brief asked for five agents. We kept all five responsibilities as five assistants on one proposal service: prioritisation, assessment, funding evidence, coordination and quality evidence. The task registry and the accept-or-reject flow are delivered; the five assistants are being built on top.\r\n\r\nEvery suggestion is accepted or rejected with a reason, which means we learn from every decision, and if the AI is switched off the workflow keeps running.\r\n\r\nSOURCES AND CALCULATIONS\r\nAI placement diagram and Decision 1 research (E04); five-assistant runtime and proposal lifecycle (E09); AMA Plan #105 AI task registry and proposal envelope (Done), #106 suggestions, accept or reject with reason, workflow-only fallback (Done), #107 five reactive and proactive assistants on one proposal service (In Progress), #214 home-specific cited chat (In Progress).\r\n\r\nRELATED ANSWERS: B04 = slide 31; B11 = slide 38. Question index = slide 27.\r\n",
-      "title": "Five responsibilities. Clear autonomy levels.",
+      "title": "Five responsibilities. Autonomy is not one switch.",
       "layout": "native",
       "keep_ids": [
         52590,
@@ -1619,7 +1643,7 @@
       "headers": [
         {
           "id": 52592,
-          "text": "Five responsibilities. Clear autonomy levels.",
+          "text": "Five responsibilities. Autonomy is not one switch.",
           "size": 30,
           "box": [
             0.6,
@@ -1888,7 +1912,7 @@
             3.51,
             0.5
           ],
-          "text": "Ranking, arithmetic,\nrights and workflow gates",
+          "text": "Ranking, arithmetic,\nexplicit state-flow gates",
           "size": 16
         },
         {
@@ -1958,7 +1982,7 @@
             3.51,
             0.5
           ],
-          "text": "Five sourced proposals + chat\nA person checks the meaning.",
+          "text": "Five proposals + chat\nSource + meaning review",
           "size": 16
         },
         {
@@ -1993,7 +2017,7 @@
         "src/api/README.md"
       ],
       "revised_notes": [
-        "S15 | Five responsibilities. Clear autonomy levels.",
+        "S15 | Five responsibilities. Autonomy is not one switch.",
         "SAY within the retained 70-second slot: Read each requested level against what we built. The current five helpers recommend at L2. Stock keeps that boundary. Assessment and Funding preserve professional and Finance review, but their outputs are evidence preparation rather than complete L3 assessments or applications. Coordination stops at options instead of L3 booking or sending. Quality stops at concerns for review instead of L4 autonomous flags. Rules do ranking, arithmetic and gates. Decision 1 was exercised historically for supplied EPC candidates and binary evidence support; its current-main rebuild remains pending. Generative models prepare sourced proposals and eligible chat answers. The decision-model rationale is constrained selection, not a proven saving. A clear field may only need a parser.",
         "RATIONALE: shared-API helpers have no domain-write tools. L3 drafting with approval and L4 raise-only flags are legitimate original boundaries; lack of current full task scope/activation is not evidence that those requested levels were unsafe. Better source quality, complete task contracts, actual capacity/connectors, effective reviewers and evaluated misses/false flags are the unlocks. The matrix describes this source baseline, not a formally standardised autonomy taxonomy or operational acceptance.",
         "CURRENT SOURCE DISTINCTION: the employee chat has one read-only agent with five explicitly selected advisory skills; these are not five independently deployed managers or a new approval channel. Five proposal capabilities and the chat skill set are different surfaces.",
@@ -2084,7 +2108,7 @@
         {"key": "study-executor-name", "box": [7.09, 3.49, 5.42, 0.44], "text": "Isabel Cabezas Martin", "size": 22, "bold": true},
         {"key": "study-executor-role", "box": [7.09, 4.01, 5.42, 0.76], "text": "Independent execution / data collection.\nSoftware Engineer, Frontier Company\nat Microsoft. Co-author.", "size": 16},
         {"key": "study-bias-fill", "box": [0.6, 5.22, 12.13, 0.72], "fill": "FFF1D6", "geometry": "rect"},
-        {"key": "study-bias", "box": [0.82, 5.35, 11.69, 0.47], "text": "Separation is intended to reduce experimenter bias.\nBoth authors work at Microsoft; this is not independent institutional validation.", "size": 16, "bold": true, "color": "885500"},
+        {"key": "study-bias", "box": [0.82, 5.35, 11.69, 0.59], "text": "Separation is intended to reduce experimenter bias.\nBoth authors work at Microsoft; this is not independent institutional validation.", "size": 16, "bold": true, "color": "885500"},
         {"key": "study-results-boundary", "box": [0.6, 6.14, 12.13, 0.38], "text": "Multiple implementation epochs. Experimental outcome results are not reported here.", "size": 17, "bold": true}
       ],
       "sources": [
@@ -2848,7 +2872,7 @@
         {
           "id": 25767,
           "from": "Why Azure, not M365, Power Platform or buy?",
-          "to": "Why Fabric later? Value, cost and alternatives",
+          "to": "When would Fabric add value beyond SQL?",
           "box": [
             0.6,
             3.02,
@@ -2859,7 +2883,7 @@
         {
           "id": 21070,
           "from": "How do Decision Models cut cost and latency?",
-          "to": "Where do rules, Decision 1 and generation fit?",
+          "to": "Where do rules, models and generation fit?",
           "box": [
             0.6,
             4.91,
@@ -2868,12 +2892,15 @@
           ]
         },
         {"id": 21196, "from": "Why not exactly the five agents requested?", "to": "Which autonomy levels did we meet or change?"},
-        {"id": 21031, "from": "How did requirements become the backlog?", "to": "Who runs the study, under which protocol?"}
+        {"id": 21031, "from": "How did requirements become the backlog?", "to": "Who runs the study, under which protocol?"},
+        {"id": 21218, "from": "Why not deploy each agent independently?", "to": "How is the application architecture organised?"},
+        {"id": 26092, "from": "Sensors: can AI diagnose damp or mould?", "to": "How do device readings support safe decisions?"}
       ],
       "revised_notes": [
         "QX | Question index: optional depth after the current-product story and future proposal.",
         "Pages 1-22 establish the built product and design reasoning; pages 23-24 propose the separate future portfolio/history/context opportunity. Pages 25-26 demonstrate/debrief the current product and close. Fabric and Power BI are not current components. All 54 page numbers and fixed native action targets are preserved.",
-        "B03/page 30 is the exact requested-versus-current autonomy matrix; B06/page 33 explains optional resident access. B13/page 40 explains the running exploratory study, coauthor execution and mixed implementation history. B20/page 47 provides future-platform alternatives. Its retained Topic button still goes to page 15, the current adoption boundary. B04/page 31 distinguishes rules, historical Decision 1 and current generation, not established savings. PDF back-history is viewer-specific.",
+        "Main pages 9/16 explain the chosen automation and exact levels; page 12 is the CxO application/trust map; page 14 shows the coded state-flow and optional AI branch. B03/page 30 retains the full autonomy matrix, B10/page 37 the Azure reference view, B14/page 41 the workflow/AI distinction and B27/page 54 the single-call and financial-limit explanation. These are depth answers, not first disclosure of the design.",
+        "The question, answer headline and index entries for B04, B10, B19 and B20 are reconciled. B06/page 33 explains resident choice; B13/page 40 the study and implementation epochs; B20/page 47 conditional Fabric value beyond SQL. Its fixed Topic button still goes to page 15, the adoption boundary. B04 is task-fit reasoning, not measured savings. All native destinations remain unchanged.",
         "Restate the question, answer it directly, then add evidence and its limit. Return to the actual interrupted page deliberately. Optional depth consumes the discussion reserve; silence is not consent or approval. Native/keyboard and human acceptance are separate checks."
       ]
     },
@@ -2959,7 +2986,7 @@
       "number": 31,
       "code": "B04",
       "notes": "B04 | How do Decision Models reduce cost and response time?\r\nQuestion-led appendix answer | Audience: CFO / CTO | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nDecision 1 has historical narrow real-call feasibility for source-bound candidate selection; it is a learned scorer, not a deterministic decision table. A bounded scoring call may need less generation, but access, serving method, candidate count and human correction determine the result. Cheaper and faster results are calibrated in the pilot. Compare rules/manual, parser/templates, Decision 1 and generation on identical held-out tasks, counting abstentions, errors, review, retries, hosting and usage. Separately, a historical prototype recorded 0.03 ms workflow-only gates versus a 12.5 s median agent drafting step. Those are different outputs, not an equivalent-task speedup: keep explicit policy and arithmetic deterministic, then test whether drafting earns its cost.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Bounded candidates may avoid long-form generation\r\n- Compare complete tasks, not endpoint prices\r\n- Cheaper and faster results are calibrated in the pilot\r\n\r\nVISUAL\r\nTask-cost equation plus a blank comparison table marked 'Not measured', never invented bars. Columns: accepted quality, total staff time, p50/p95 latency, cost/accepted task, critical errors.\r\n\r\nRETURN\r\nReturn to S15 (slide 16), AI where it earns its place. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE04 | docs/ideas/typesafe-system-one-agent-fit.md | Observed Feasibility and Parallel Value Experiment, 2026-10-11; task suitability and serving limitations\r\n   Classification: Dated research, feasibility observations and experiment proposals\r\n   Supports: Decision 1 candidate scoring and screening distinct from rules and generation\r\n   Limit: No general cheaper/faster, calibrated quality, Foundry tier availability or accepted-outcome saving claim.\r\nE05 | docs/brds/agentic-retrofit-programme-brd.md; docs/prds/zava-forward-retrofit-programme-demonstrator.md | Merged Tokenomics delta: BRD FR-052/NFR-012/OD-51; PRD AC-108/AC-109; RULE-016/RULE-019\r\n   Classification: Requirements and acceptance proposals, not execution results\r\n   Supports: Complete metering, quality floor, monetary/task/period budgets and request/depth bounds to test\r\n   Limit: New criteria remain unexecuted; time saved is capacity until Finance validates a value destination.\r\nE15 | docs/reference/research/ux/prototype-learnings-and-simplicity-review.md; docs/reference/research/ux/zava-forward-prototype-profile-review.md | Prototype learnings; owner feedback; shared workbench direction; profile review and validation limits\r\n   Classification: Owner feedback, expert artifact review and role-instrument hypotheses\r\n   Supports: Simpler workbench, ownership, evidence and assisted routes; prototype/MVP design learning\r\n   Limit: Not a resident interview, observed workforce acceptance or complete usability/accessibility result.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Decision 1 is learned scoring, not deterministic rules. Its cheaper/faster advantage is not yet measured and it is not a proven deployed Foundry tier.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history.",
-      "title": "Decision 1 must beat the simpler baseline.",
+      "title": "Where do rules, decision models and generation fit?",
       "layout": "native",
       "keep_ids": [
         2793,
@@ -2969,7 +2996,7 @@
       "headers": [
         {
           "id": 2810,
-          "text": "Decision 1 must beat the simpler baseline.",
+          "text": "Where do rules, decision models and generation fit?",
           "size": 30,
           "box": [
             0.6,
@@ -3206,7 +3233,7 @@
         "src/agents/README.md"
       ],
       "revised_notes": [
-        "B04 | Decision 1 must beat the simpler baseline.",
+        "B04 | Where do rules, decision models and generation fit?",
         "SHORT ANSWER: use rules for known arithmetic, ranking and exact labelled fields; a decision model for constrained semantic selection/support; generation for permitted narrative and follow-up answers. This is task-fit reasoning, not a proven cost or latency advantage.",
         "ACTUAL PLACEMENT: historical unmerged PR #58 recorded a real source-bound EPC candidate selection by Decision 1 and cited GPT-4.1-mini generation. The retained behaviour specification describes candidate selection and binary support screening. The current main five-assistant runtime uses generative Ai.evidence, not Decision 1. Its complete scoring request-review-application rebuild/adoption remains pending. Do not present historical feasibility as current deployed model coverage.",
         "CHOICE: Decision 1 scores supplied candidates or abstains; the application checks the closed set and source versions. It cannot generate a rationale or a full letter. Generation produces source-linked proposals and eligible employee/resident answers, with rights and output checks retained. Rules own calculation and state. Neither model approves, submits, records works consent or accepts quality.",
@@ -3277,7 +3304,7 @@
       "number": 37,
       "code": "B10",
       "notes": "B10 | Why not deploy each agent independently?\r\nQuestion-led appendix answer | Audience: CTO / CIO | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nIndependent workers can be appropriate when load, isolation, deployment cadence or resilience requires them. They also introduce queue ownership, retries, duplicate handling and distributed state. The five assistants currently use the API proposal service, with short SQL transactions and inference outside locks. Do not draw deferred orchestrator/queue/worker placeholders as the active five-agent implementation. A future split needs explicit contracts, operational evidence and a separate decision.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Current runtime: shared API and SQL\r\n- Separate workers add failure and operating boundaries\r\n- Split when measured isolation or load justifies it\r\n\r\nVISUAL\r\nCurrent single runtime left; future split right, dashed and labelled deferred. No suggestion of a deployed Service Bus or Foundry Agent Service.\r\n\r\nRETURN\r\nReturn to S16 (slide 19), architecture and security boundaries. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE06 | docs/architecture/README.md; docs/architecture/assets/README.md; infra/main.bicep | Executive and Technical Architecture; interaction contracts; Icon Source and Terms; modelDeployments and profile parameters\r\n   Classification: Source-based architecture and dated historical handover\r\n   Supports: Single-API assistants, SQL/Blob, Entra, managed identities, model contracts, configured operations and official icons\r\n   Limit: Historical source/deployment evidence, not fresh Azure inventory. GlobalStandard does not establish UK-only processing.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\nE13 | docs/architecture/cutover-evidence-pack.md; infra/README.md | Bounded RG Publication Continuation, 2026-10-19; Current Exercise Handover; Direct Entra Setup and Acceptance\r\n   Classification: Dated actual cloud observations, failed attempts and source runbook\r\n   Supports: Current cutover blockers; exact live versus local evidence; preflight, rollback, private backing and owner sign-off requirements\r\n   Limit: No fresh deployment, paid call or genuine staff session performed for this presentation package.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Five assistants are not five autonomous managers or five active workers.\r\n\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history.",
-      "title": "One controlled API now; split only for measured need.",
+      "title": "How is the full application architecture organised?",
       "layout": "native",
       "keep_ids": [
         3738,
@@ -3287,7 +3314,7 @@
       "headers": [
         {
           "id": 3785,
-          "text": "One controlled API now; split only for measured need.",
+          "text": "How is the full application architecture organised?",
           "size": 30,
           "box": [
             0.6,
@@ -3295,179 +3322,48 @@
             12.13,
             0.72
           ]
+        },
+        {
+          "id": 3833,
+          "text": "Sources: Bicep + current source contracts, 8 Nov 2026. Gated paths are not live acceptance.",
+          "size": 12,
+          "box": [0.6, 6.7, 8.0, 0.3]
         }
       ],
       "elements": [
         {
-          "key": "current-scope",
-          "box": [
-            0.6,
-            1.82,
-            12.13,
-            0.26
-          ],
-          "text": "CURRENT BOUNDED APP / NOT A CLAIM OF MEASURED PLATFORM SUPERIORITY",
-          "size": 13,
-          "bold": true,
+          "key": "full-view-caption",
+          "box": [0.6, 6.12, 12.13, 0.35],
+          "text": "Core view here. Full editable reference: device flow, operations, production/worker options and separate resident boundary.",
+          "size": 15,
           "color": "50655E"
-        },
+        }
+      ],
+      "images": [
         {
-          "key": "identity-node",
-          "box": [
-            0.6,
-            2.51,
-            3.42,
-            1.11
-          ],
-          "text": "ENTRA SIGN-IN\nAPI rechecks scope",
-          "size": 22,
-          "fill": "E8F2FB",
-          "stroke": "173F35",
-          "bold": true,
-          "align": "ctr",
-          "valign": "ctr"
-        },
-        {
-          "key": "identity-api",
-          "box": [
-            4.15,
-            2.95,
-            0.46,
-            0.22
-          ],
-          "fill": "173F35",
-          "geometry": "rightArrow"
-        },
-        {
-          "key": "api-node",
-          "box": [
-            4.73,
-            2.31,
-            3.42,
-            1.51
-          ],
-          "text": "CONTAINER APPS API\nWorkflow + assists",
-          "size": 22,
-          "fill": "173F35",
-          "color": "FAF9F6",
-          "bold": true,
-          "align": "ctr",
-          "valign": "ctr"
-        },
-        {
-          "key": "api-state",
-          "box": [
-            8.28,
-            2.95,
-            0.46,
-            0.22
-          ],
-          "fill": "173F35",
-          "geometry": "rightArrow"
-        },
-        {
-          "key": "state-node",
-          "box": [
-            8.86,
-            2.51,
-            3.87,
-            1.11
-          ],
-          "text": "AZURE SQL + BLOB\nState, audit + evidence",
-          "size": 22,
-          "fill": "E8F1ED",
-          "stroke": "173F35",
-          "bold": true,
-          "align": "ctr",
-          "valign": "ctr"
-        },
-        {
-          "key": "runtime-choice",
-          "box": [
-            0.6,
-            4.3,
-            5.81,
-            0.32
-          ],
-          "text": "CONTAINER APPS, NOT AKS",
-          "size": 16,
-          "bold": true,
-          "color": "173F35"
-        },
-        {
-          "key": "runtime-why",
-          "box": [
-            0.6,
-            4.83,
-            5.81,
-            0.75
-          ],
-          "text": "Avoid cluster operations for this bounded app.\nFewer service, retry and state boundaries.",
-          "size": 18
-        },
-        {
-          "key": "storage-choice",
-          "box": [
-            6.92,
-            4.3,
-            5.81,
-            0.32
-          ],
-          "text": "SQL STATE; BLOB DOCUMENT BYTES",
-          "size": 16,
-          "bold": true,
-          "color": "173F35"
-        },
-        {
-          "key": "storage-why",
-          "box": [
-            6.92,
-            4.83,
-            5.81,
-            0.75
-          ],
-          "text": "Transactions and versioned reviews in SQL.\nFiles in Blob; references and hashes in SQL.",
-          "size": 18
-        },
-        {
-          "key": "split-condition-fill",
-          "box": [
-            0.6,
-            5.98,
-            12.13,
-            0.62
-          ],
-          "fill": "FFF1D6",
-          "geometry": "rect"
-        },
-        {
-          "key": "split-condition",
-          "box": [
-            0.82,
-            6.11,
-            11.69,
-            0.36
-          ],
-          "text": "SPLIT ONLY FOR EVIDENCE  |  Measured isolation, scale or recovery need; not five agents by default.",
-          "size": 16,
-          "color": "885500",
-          "bold": true
+          "asset": "azure-architecture",
+          "box": [0.6, 1.83, 12.13, 4.18],
+          "alt": "Core projection of the source-grounded Azure reference architecture. Staff sign-in reaches one Container Apps Workbench/API with coded gates and five proposal helpers. Private endpoints sit within the VNet; SQL, Blob and conditional Foundry/OpenAI sit outside it. The complete editable drawing separately shows device validation, operations and gated production, worker and resident options. It is not a live deployment or UK-inference attestation."
         }
       ],
       "sources": [
         "docs/adrs/0002-pilot-readiness-architecture.md",
         "docs/adrs/0006-src-layout-and-cutover.md",
-        "src/README.md"
+        "src/README.md",
+        "infra/main.bicep",
+        "docs/capstone/source/diagrams/architecture/text-equivalent.md"
       ],
       "revised_notes": [
-        "B10 | One controlled API now; split only for measured need.",
-        "SHORT ANSWER: Five business responsibilities do not require five independently operated services. The retained shared-API design avoids extra distributed state, retry and deployment boundaries while testing controlled end-to-end work.",
+        "B10 | How is the full application architecture organised?",
+        "SHORT ANSWER: People enter through authenticated application surfaces; the current staff Workbench/API owns permissions and controlled workflow, SQL retains case/audit records, Blob retains evidence bytes, and task-scoped AI returns proposals. The full reference view separates those coded interactions from conditional Bicep infrastructure and alternative topologies.",
         "RUNTIME: ADR 0002 chooses Container Apps over AKS for the application baseline to avoid cluster operating overhead. No measured claim of lower total cost or higher availability is made. Introduce a queue or worker only for a demonstrated isolation, scaling, long-running work or recovery requirement. Deferred topology is not the deployed five-assistant runtime.",
         "PERSISTENCE: Azure SQL owns relational transitions, versioned state and the audit/ledger design; Blob holds evidence bytes with references and hashes in SQL. A shared JSON file has concurrency weaknesses. Cosmos DB is not ruled out universally, but a document-oriented store is a less direct fit for this retained relational/gated transition contract. PostgreSQL remains a viable alternative when portability matters, with separate audit/control engineering. No benchmark or completed migration appraisal is implied.",
         "IDENTITY: Entra plus trusted platform ingress authenticates; every request still needs server-enforced role, case and field checks. A shared password, browser hiding or model prompt is not equivalent authorisation. Sign-in is not professional, resident or financial authority.",
         "CURRENT STRUCTURE: the five src distributions are core, agents, api, orchestrator and importer. Python package boundaries are not evidence of five deployed autonomous workers. Use src/README.md for current commands; preserve old mvp paths only in explicitly historical evidence.",
+        "FULL VIEW: the editable reference adds the conditional IoT Hub/private Event Hub/validated SQL path, registry/vault/managed identities, Monitor/Log Analytics/App Insights/AMPLS, notifications, queues/jobs, and separate production and resident options. The slide is a readable core projection, not a reduced full poster.",
+        "NETWORK AND PROCESSING: PaaS services are outside the VNet, accessed through declared private endpoints. Direct demo and private production ingress are different profiles. Main defaults and independent flags do not prove a working worker or an enabled API consumer. GlobalStandard is not UK-only processing; the separate optional resident model is public Sweden Central. Legal/privacy/retention and current runtime acceptance remain separate.",
         "VALUE HYPOTHESIS: fewer conflicting updates and fewer operating boundaries. Verify human effort, recovery and load before treating architectural simplicity as a measured benefit.",
-        "SOURCES: docs/adrs/0002-pilot-readiness-architecture.md (runtime, data-store and identity decisions); docs/adrs/0006-src-layout-and-cutover.md; src/README.md. Repository synthesis 2026-10-29; no fresh deployment or platform test.",
+        "SOURCES: bounded System Architecture Reviewer analysis of main/modules and resident/simulator entrypoints at c50e9f0b, 8 Nov 2026; exact locators and limits in docs/capstone/source/diagrams/architecture/text-equivalent.md. Existing ADR/runtime alternatives are retained. No fresh cloud inventory, deployment, credential read or operational adoption occurred.",
         "NAVIGATION: B10, page 37; question index page 27; fixed topic S16/page 19. Existing native slide-jump links remain unchanged."
       ]
     },
@@ -4044,7 +3940,7 @@
       "number": 46,
       "code": "B19",
       "notes": "B19 | Where do sensors fit and can AI diagnose damp or mould?\r\nQuestion-led appendix answer | Audience: Asset / safety / CTO | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe accepted ADR selects Basic IoT Hub for exercise device-to-cloud telemetry. The finite offline consumer has local engineering evidence; it does not establish live device identity, transport, Azure SQL, analysis or application acceptance. Proposed analysis is deterministic and source/version-bound. Missing data is insufficient, not safe. No AI or sensor result may suppress a resident report, diagnose a hazard or release a hold. Raw device/resident context must not leak into prompts or map payloads.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- IoT Hub Basic is an exercise design decision\r\n- Offline consumer tested locally; live Hub integration remains a separate gate. In-use temperature/humidity trends could help identify a need for post-retrofit follow-up; this is a value hypothesis, not measured prevention or diagnostic accuracy. The main architecture build now shows this sensor-to-human-review path.\r\n- Signals request human review, never diagnose or suppress\r\n\r\nVISUAL\r\ndiagrams/06-sensor-target.svg, with the whole telemetry path dashed and independent safety route solid.\r\n\r\nRETURN\r\nReturn to S16 (slide 19), architecture and security boundaries. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE12 | docs/adrs/0003-journey-derived-capabilities-runtime-fit.md; docs/case_study_48_addendum.md; docs/reference/regulatory/README.md | ADR Decision 6 and Implementation Status; Responsible AI release boundary; source authority and human acceptance\r\n   Classification: Accepted Basic IoT Hub exercise direction; partial engineering; separate human/legal gates\r\n   Supports: Offline consumer is not live Hub integration; no diagnosis or suppressed hazard route; human/legal/privacy acceptance remains distinct\r\n   Limit: No current legal determination, live telemetry, qualified assessment, fairness or WCAG-conformance claim.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- No legal-currentness, WCAG-conformance, production-readiness or completed human-validation claim follows from this package.\r\n\r\nTEXT ALTERNATIVE (diagram 06: sensor target)\r\nA device or explicitly labelled simulator uses a distinct identity and stable reading ID. The target transport is Azure IoT Hub Basic, device-to-cloud only for the exercise. The API validates mapping/time and appends idempotently to SQL, with owned data-quality exceptions. A derived deterministic signal may request human review; it does not diagnose a hazard or change priority. Missing data is insufficient. All telemetry boxes and arrows are dashed because this end-to-end live path is not accepted. A solid separate human safety route handles resident reports independently.\r\nDo not label a simulator or finite offline consumer as deployed telemetry. No new IoT threshold, device credential or operational legal claim is supplied.\r\nShared legend: deep green text and solid rails = application, human or logical workflow relationships described in the sources, not a fresh deployment test; pale blue = evidence, identity or configured dependencies; pale purple = bounded model assistance; amber = unknown, proposed or deferred work (read the words; colour alone is not the status). These are curated static source views of the exercise, not live inventory. A service icon does not prove deployment.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history.",
-      "title": "Device intake is not a diagnosis or safety decision.",
+      "title": "How do device readings support decisions safely?",
       "layout": "native",
       "keep_ids": [
         6843,
@@ -4054,7 +3950,7 @@
       "headers": [
         {
           "id": 6935,
-          "text": "Device intake is not a diagnosis or safety decision.",
+          "text": "How do device readings support decisions safely?",
           "size": 30,
           "box": [
             0.6,
@@ -4380,7 +4276,7 @@
         "infra/README.md"
       ],
       "revised_notes": [
-        "B19 | Device intake is not a diagnosis or safety decision.",
+        "B19 | How do device readings support decisions safely?",
         "LATER ACTUAL OBSERVATION: on 29 October, a bounded existing-hub reconciliation succeeded with metrics-only diagnostics. Missing operator registry permission and the unapproved custom receive adapter still block live-to-SQL. This narrow real exercise does not prove the full source-only private Event Hub route, credential lifecycle or whole live acceptance. No Azure or sensor operation was performed by this presentation task.",
         "SHORT ANSWER: No diagnosis. The source design admits bounded synthetic observations and can request accountable human review. Reports from residents bypass this analytics route and go directly to the independent human safety service.",
         "UPDATED ROUTE: exact synthetic X.509 device binding -> IoT Hub Basic B1/one unit -> custom private Event Hub with Hub-only Data Sender -> keyless receiver -> API validation and SQL admission/replay/DQ -> human review. Event Hubs alone was not selected as the device identity boundary; the adapter serves the separate private keyless-consumption requirement.",
@@ -4396,7 +4292,7 @@
       "number": 47,
       "code": "B20",
       "notes": "B20 | Why Azure instead of M365, Power Platform or buying a product?\r\nQuestion-led appendix answer | Audience: CIO / CFO | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nAzure is the selected exercise realisation, not proof that custom development is commercially superior. Compare an existing housing product, M365/Power Platform configuration and custom Azure against the same workflow, permissions, audit, integration, accessibility, model terms and total cost. Existing licences and tenant capability cannot be assumed. A training preference is not customer value. The current source gives us testable contracts and trade-offs to take into that appraisal, not a completed procurement decision.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Appraise buy/configure/build on the same requirements\r\n- The Azure exercise proves the contracts end to end\r\n- Licensing, integration, control and TCO decide\r\n\r\nVISUAL\r\nOption matrix with evidence required; no unsupported winning score.\r\n\r\nRETURN\r\nReturn to S14 (slide 15), Excel in, Excel out and Microsoft 365. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE02 | docs/case_study_48_addendum.md | Purpose and Status; Owner-Approved Exercise Baseline; Numerical Targets and Attribution; Subsequent Application Exercise Builds\r\n   Classification: Declared exercise assumptions, subsequent owner directions and proposals\r\n   Supports: One-home story, human boundaries, GBP fixture arithmetic, real AI/SQL/Azure requirement and value hypotheses\r\n   Limit: Not company commitments, formal governance approval or operational outcomes.\r\nE03 | docs/reference/research/company/agent-request-challenge.md | Summary and five-agent request challenge; see ai-cost-evidence.md for precise line citations\r\n   Classification: Consultative design analysis\r\n   Supports: Retain five business capabilities while challenging autonomy, service proliferation and agent-first design\r\n   Limit: Not a customer approval or a measured comparison of architecture options.\r\nE06 | docs/architecture/README.md; docs/architecture/assets/README.md; infra/main.bicep | Executive and Technical Architecture; interaction contracts; Icon Source and Terms; modelDeployments and profile parameters\r\n   Classification: Source-based architecture and dated historical handover\r\n   Supports: Single-API assistants, SQL/Blob, Entra, managed identities, model contracts, configured operations and official icons\r\n   Limit: Historical source/deployment evidence, not fresh Azure inventory. GlobalStandard does not establish UK-only processing.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history.",
-      "title": "Keep SQL for control. Evaluate Fabric for analytics.",
+      "title": "When would Fabric add value beyond SQL?",
       "layout": "native",
       "keep_ids": [
         7313,
@@ -4406,7 +4302,7 @@
       "headers": [
         {
           "id": 7410,
-          "text": "Keep SQL for control. Evaluate Fabric for analytics.",
+          "text": "When would Fabric add value beyond SQL?",
           "size": 30,
           "box": [
             0.6,
@@ -4613,7 +4509,7 @@
         "docs/case_study_48_addendum.md"
       ],
       "revised_notes": [
-        "B20 | Keep SQL for control. Evaluate Fabric for analytics.",
+        "B20 | When would Fabric add value beyond SQL?",
         "ONTOLOGY EVIDENCE FOLLOW-UP: the 29 October component assessment and W1-W16 remain dated evidence. The separately labelled 30 October Future Agent Context Option in that same research page records fresh official Fabric IQ/ontology overviews and explicitly preview ontology status. It supports the future context proposal, not current integration, quality, permissions or production approval.",
         "OWNER-CORRECTED NARRATIVE: Fabric and Power BI are not part of the current product. The future proposal is near the close on pages 23-24, covering governed portfolio history and potentially richer agent context through semantic definitions and ontology (preview). Page 14 is the built Workbench; page 15 is current bounded adoption. The retained Topic button targets page 15, not the future roadmap; navigate to page 23 explicitly.",
         "SHORT ANSWER: keep the API, core domain logic and Azure SQL as operational authority. Fabric has a credible conditional role as read-only analytics, not as the programme's transaction, consent or approval engine. Reporting requirements remain in scope even when a new platform is deferred.",
@@ -4675,11 +4571,44 @@
     {
       "number": 54,
       "code": "B27",
-      "title": "What stops chat and agent sprawl multiplying hidden calls?\r",
-      "layout": "baseline",
+      "title": "What stops chat and agent sprawl multiplying hidden calls?",
+      "layout": "native",
+      "keep_ids": [11303, 11435, 11568, 11702],
+      "headers": [
+        {"id": 11435, "text": "What stops chat and agent sprawl multiplying hidden calls?", "size": 30, "box": [0.6, 0.92, 12.13, 0.72]},
+        {"id": 11568, "text": "Sources: API bounded-skills and core consumption guides, 8 Nov 2026. Source controls, not live financial acceptance.", "size": 12, "box": [0.6, 6.7, 8.0, 0.3]}
+      ],
+      "elements": [
+        {"key": "question-frame", "geometry": "rect", "box": [0.6, 1.94, 3.78, 2.44], "fill": "FAF9F6", "stroke": "C7D8CF", "stroke_width": 1},
+        {"key": "question-cap", "box": [0.82, 2.14, 3.34, 0.28], "text": "USER QUESTION", "size": 14, "bold": true, "color": "50655E"},
+        {"key": "question-title", "box": [0.82, 2.69, 3.34, 0.78], "text": "One selected skill.\nOne bounded call.", "size": 24, "bold": true},
+        {"key": "question-body", "box": [0.82, 3.65, 3.34, 0.53], "text": "No routing-model hop,\ntool loop or write tool.", "size": 17},
+        {"key": "admission-frame", "geometry": "rect", "box": [4.78, 1.94, 3.78, 2.44], "fill": "E8F1ED"},
+        {"key": "admission-cap", "box": [5, 2.14, 3.34, 0.28], "text": "BEFORE DISPATCH", "size": 14, "bold": true, "color": "50655E"},
+        {"key": "admission-title", "box": [5, 2.69, 3.34, 0.78], "text": "Scope and release\nFinancial admission", "size": 23, "bold": true},
+        {"key": "admission-body", "box": [5, 3.65, 3.34, 0.53], "text": "Unknown authority or liability:\nstop; keep manual work.", "size": 17},
+        {"key": "output-frame", "geometry": "rect", "box": [8.96, 1.94, 3.78, 2.44], "fill": "EEE8F4"},
+        {"key": "output-cap", "box": [9.18, 2.14, 3.34, 0.28], "text": "ADVISORY OUTPUT", "size": 14, "bold": true, "color": "61437C"},
+        {"key": "output-title", "box": [9.18, 2.69, 3.34, 0.78], "text": "Advice, not a\ncase decision.", "size": 23, "bold": true},
+        {"key": "output-body", "box": [9.18, 3.65, 3.34, 0.66], "text": "Sources and permissions\nchecked again.", "size": 17},
+        {"key": "coded-title", "box": [0.6, 4.82, 5.87, 0.31], "text": "SOURCE-CODED BOUNDS", "size": 15, "bold": true},
+        {"key": "coded-body", "box": [0.6, 5.3, 5.87, 1.0], "text": "Calls/tokens/expiry + task/period money limits.\nDurable request call/depth ceilings.\nApproved evidence required before dispatch.", "size": 18},
+        {"key": "unproved-title", "box": [6.87, 4.82, 5.87, 0.31], "text": "LIVE ACCEPTANCE STILL SEPARATE", "size": 15, "bold": true, "color": "885500"},
+        {"key": "unproved-body", "box": [6.87, 5.3, 5.87, 1.0], "text": "Billing and whole-journey coverage unproved.\nHistorical calls and resident accounting\nremain explicitly unjoined.", "size": 18}
+      ],
+      "sources": ["src/api/README.md", "src/core/README.md", "src/core/src/zava_forward/core/ai_consumption.py"],
+      "revised_notes": [
+        "B27 | What stops chat and agent sprawl multiplying hidden calls?",
+        "SHORT ANSWER: the employee chooses one advisory skill and gets one bounded ChatModel call, not a router followed by a model swarm. The case workflow is coded separately. Financial admission also binds durable task/period and request call/depth ceilings; missing approval, price or unresolved liability keeps dispatch off.",
+        "CORRECTION TO THE HISTORICAL ANSWER: the current core consumption ledger has source-coded currency, task/period and root call/depth bounds. Those are no longer merely a proposed hard-stop design. This does not prove live activation, complete billing reconciliation or a complete cost-per-resident/employee journey. The older captured notes remain historical.",
+        "SCOPE: explicit skill selection is not an assistant proposal invocation. Employee chat has no tool, booking, consent, approval or domain-write operation. Other retained inference paths and retries still require attribution/admission; no gateway, semantic cache or open-ended graph runtime is introduced by this diagram. Historical calls and the separate resident SQL accounting remain unjoined.",
+        "KNOWN / ASSUMED / NEXT: known source contracts are one selected-skill call and serialized admission limits. Applicable live prices, owners, approval and reconciled accepted-value costs are still required. Test missing/overrun/failure cases and the workflow-only stop on an authorised exact source; do not infer savings or permission from a bounded test.",
+        "SOURCES: src/api/README.md:707-734, Employee chat with bounded skills; src/core/README.md:94-144, AI consumption ledger; src/core/src/zava_forward/core/ai_consumption.py. All are source evidence, not a current production control attestation.",
+        "NAVIGATION: B27/page 54; index 27; fixed Topic S18/page 21. Native destinations remain unchanged. Return to the actual interrupted page deliberately."
+      ],
       "notes": "B27 | What stops chat and agent sprawl multiplying hidden calls?\r\nQuestion-led appendix answer | Audience: CTO / CIO / panel | Not part of the spoken route; show only when asked.\r\n\r\nANSWER FIRST (one sentence), THEN THE STRONGEST EVIDENCE AND ITS LIMIT\r\nThe assistant design does not run an open-ended autonomous agent conversation. However, chat, memory, retries and additional model paths can multiply calls, so a finite authority allowance alone is not enough to describe cost per user request. The merged Tokenomics requirements call for complete per-call metering, request attribution, task/period monetary budgets and tested call/depth bounds with a workflow-only stop. AC-109 is the acceptance test that proves it in the pilot. No API gateway, semantic cache or hard currency stop should be drawn as implemented to satisfy this answer.\r\n\r\nON-SLIDE COPY (slides.json, verbatim)\r\n- Deterministic state graph, not an open-ended agent loop\r\n- Existing bounded authority expires and exhausts\r\n- Per-request call/depth limits are proposed, Not run\r\n\r\nVISUAL\r\nOne user request branching into a bounded call tree, all proposed request bounds marked dashed. Avoid presenting draft Big-T notation as an industry standard.\r\n\r\nRETURN\r\nReturn to S18 (slide 21), AI economics. Question index = slide 27. In Slide Show type the number and press Enter.\r\nA full backup explanation replaces detail on the main route; it does not add free time.\r\n\r\nEVIDENCE AND CLAIM CLASSIFICATION\r\nE19 | docs/reference/resources/ai-tokenomics.md; docs/capstone/pitch/tokenomics-pitch-brief.md | What Zava Forward Can Already Show; Gaps; Executive Questions; Numbers to Bring\r\n   Classification: PR #433 merged 2026-10-23 baseline: public draft framing, repository observations and proposed requirements\r\n   Supports: 6,884 tokens/five runs; partial metering; finite authority not money cap; accepted-proposal quality-floor unit; TCA and keep/revert comparison\r\n   Limit: No dated price or human-accepted denominator, no cheaper/faster/payback claim. Public Tokenomics framing is draft, not an industry standard. No internal Microsoft material is included.\r\nE09 | docs/adrs/0002-pilot-readiness-architecture.md; src/agents/README.md; src/core/src/zava_forward/core/assistants.py | Five-assistant exercise runtime and finite operator authority; proposal capture/review and token handling\r\n   Classification: Source controls and dated bounded operator observations\r\n   Supports: Five current API assistants, SQL transactions, scoped evidence, inference outside locks, finite allowances, expired/disabled denial and unreviewed output\r\n   Limit: Normal authority/scans off after bounded QA; token allowances are not currency caps or complete per-request/period budgets.\r\n\r\nEVIDENCE GUARDRAILS FOR THIS SLIDE\r\n- Finite call/token allowances and expiry are not a currency cap. Complete metering, monetary/task/period budgets and request/depth limits are proposed requirements, not observed controls.\r\n- Public Tokenomics community framing is draft - not an industry or Microsoft standard. No internal Microsoft material is used.\nNAVIGATION (PR438 correction): During an interruption, Return to caller uses Last Slide Viewed to resume the interrupted main slide. Use the separate fixed Topic button only after entry from the appendix index. PDF readers use the fixed topic link or their own Back history."
     }
   ],
   "content_date": "2026-11-08",
-  "visual_revision": "2026-10-30 / restored illustrated timeline, resident touchpoints and testable value canvas"
+  "visual_revision": "2026-11-08 / CxO application map, Azure reference core, explicit state-flow and aligned appendix; original order/timing/costs retained"
 }

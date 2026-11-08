@@ -15,6 +15,7 @@ ms.topic: how-to
 | [assets/media](./assets/media/) | All 36 original embedded media files, not flattened pictures of whole slides |
 | [Official product icons](./assets/official/README.md) | Fabric and Power BI source SVGs, native PNG derivatives, permitted-use guidance and archive provenance |
 | [DT resident journey](./diagrams/discovery-journey/text-equivalent.md) | Editable Excalidraw, same-geometry SVG/PNG, deterministic generator and provision-linked method/pain/gain/decision trace |
+| [Application and Azure architecture views](./diagrams/architecture/text-equivalent.md) | Original CxO Excalidraw for main page 12; complete Bicep-grounded Azure source plus readable core frame for B10/page 37; native renders, generator, icon rights and explicit trust/acceptance limits |
 | [Invoke-Capstone.ps1](../../../tools/capstone/Invoke-Capstone.ps1) | Current ExportSource, Build, Verify and native Render entry point |
 | [Native shape helper](../../../tools/cowork-native-recovery/Invoke-StoryReview.ps1) | Existing XML/native-shape functions used by the current builder; its historical standalone workflow is not the current build command |
 | [validation.json](./validation.json) | Compact delivery/verification receipt, not another build input |
@@ -25,6 +26,13 @@ JSON, catalog, all referenced media and both scripts above. The old 18-slide
 authoring inventory does not recreate the 54-slide deck.
 
 ## Current Autonomy and Product Story
+
+The [CxO/story continuation](./review-2026-11-08-cxo.md) brings the architecture,
+coded workflow and exact autonomy reasoning onto existing main pages 9/12/14/16.
+It aligns B04/B10/B19/B20 questions and corrects B27's stale "designed money
+limits" wording against current source. A conceptual state-flow is not a
+deployed LangGraph runtime, and prepared improvements do not demonstrate live
+listening/composure or a higher score.
 
 The [8 November review](./review-2026-11-08.md) records the exact requested
 versus current autonomy, partial original task breadth, reactive/proactive
@@ -108,8 +116,9 @@ Use the [root build commands](../README.md#rebuild). Every run writes to an
 explicit external directory and checks:
 
 * The pinned template, complete ordered manifest and every media input
-* Exact expected package bytes: 293 captured baseline members plus three declared
-  PNGs (two future logos and the journey); only declared image relationships change
+* Exact expected package bytes: 293 captured baseline members plus five declared
+  PNGs (two future logos, the journey and two architecture projections);
+  only declared image relationships change
 * All 54 nonempty note blocks and retained timing lines
 * Native navigation actions and unique shape IDs
 * The six protected cost slides on pages 6, 11, 21, 32, 36 and 52; notes may
@@ -166,6 +175,16 @@ value-proposition canvas uses editable native PowerPoint sectors and text.
 Direct resident/staff and
 projection/accessibility acceptance remain unperformed.
 
+The new architecture images are placed only on pages 12 and 37. Page 37 uses
+the native `core` frame of the full Azure drawing, not a scaled full poster.
+Keep the complete Excalidraw/SVG/PNG, core derivatives, generator and text
+equivalent together. Local Excalidraw 0.2.0 with existing Chromium generated
+the PNGs; no account/upload or remote image model was used. The catalog pins
+both source models and their exact derivatives. `architecture-*` is an
+explicit allowed media prefix, not an unchecked image-source fallback.
+The full view's PaaS services are outside the VNet; production/background/
+resident options remain distinct from the selected shared-API source view.
+
 Build and Verify also generate current main-route speaker notes and appendix
 Q&A under the run's `pitch/` folder. Publish the matching PPTX/PDF and those
 two Markdown outputs together after review. Retain dated review evidence;
@@ -213,6 +232,8 @@ pwsh -NoLogo -NoProfile -File tools/capstone/Test-NativeShapes.ps1 -RepoRoot "$P
 pwsh -NoLogo -NoProfile -File tools/capstone/Test-SourceHashes.ps1 -RepoRoot "$PWD"
 PYTHONDONTWRITEBYTECODE=1 "$Run/venv/bin/python" -m pytest -p no:cacheprovider -q tools/capstone/test_render_preview.py
 node docs/capstone/source/diagrams/discovery-journey/build-resident-journey.mjs --check
+node docs/capstone/source/diagrams/architecture/build-architecture.mjs --check
+node --test docs/capstone/source/diagrams/architecture/test-architecture.mjs
 ```
 
 Use `Test-SourceHashes.ps1 -SemanticOnly` before regenerating the receipt.

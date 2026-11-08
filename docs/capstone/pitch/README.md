@@ -57,20 +57,22 @@ proposed only near the end of the main presentation, before optional Q&A.
 | --- | --- |
 | Page 8: discovery method | Brief/sector evidence -> role research instruments -> journey hypotheses -> pain/design/test; eight earlier challenge instruments versus nine later atlas instruments, not interviews |
 | Pages 7/10: project history | Dated activity and scope growth, not housing outcomes; completed and not-planned issues stay distinct. Refresh the 8 November snapshot before final delivery |
-| Page 9: brief fidelity | Exact L2-L4 request and existing human/resident rights; distinguish preserved boundaries from incomplete task scope and genuine authority reductions |
+| Page 9: recommendation and brief fidelity | Rules-only baseline, chosen rules-plus-bounded-AI path and separately tested wider autonomy; exact L2-L4 request and preserved rights |
+| Page 12: CxO application map | Company identity with separate app roles, Workbench/API, controlled records/evidence, file/device inputs and task-scoped advice; dashed integrations remain gated |
 | Page 13: resident journey | DT Coach's editable Excalidraw map connects actions/needs, pain hypotheses and proposed gains across five moments; direct validation pending |
-| Page 14: how help appears | Immediate rules/queue/briefing, recommendations on case cards and Assistant proposals, then optional employee/resident follow-up chat; no automatic approval |
+| Page 14: causal state-flow and help | A fictional source conflict -> coded gates -> owned correction; optional AI prepares a proposal; a person uses controlled actions. Follow-up chat is not a write/approval tool |
 | Page 15: bounded adoption | Existing preview/quarantine/export library and CLI, not an accepted web import journey or live enterprise replacement |
-| Page 16: AI placement | Five requested/current levels; current generative proposal engine versus historical Decision 1; rules, models and human decisions do different jobs |
+| Page 16: autonomy and AI placement | All five requested/current levels; coded state-flow, current generative proposals and historical Decision 1 do different jobs. Complete drafts and L3/L4 actions remain unfinished |
 | Pages 22-24: lesson, future, decision | Test usability, then propose future portfolio history and semantic/preview ontology context. Compare analytics and agent context independently; retain the simpler route when it wins |
 | Page 22: study now underway | Registered OSF base, unregistered exploratory amendments and coauthor execution separation; no experimental outcome claims |
 | Page 40 / B13 | Three models/five arms, selected 21/default 12, F1-F10 + CR1 and all three implementation epochs. Completed steps are not independent replicates or one frozen source |
 | Page 30 / B03 | Full autonomy matrix: Stock L2 boundary matches; Assessment/Funding preparation is partial; Coordination/Quality authority is reduced |
 | Page 31 / B04 | Historical scoring/current generation; Decision 1 must beat the parser/manual comparator, not claim unmeasured savings |
 | Page 33 / B06 | Why optional resident website/advice was added, record-use versus works consent, assisted routes, synthetic callbacks and default-off AI |
-| Page 37 / B10 | Shared Container Apps API, Entra, SQL and Blob; split only for measured operating need |
+| Page 37 / B10 | Readable core projection of the full Bicep-grounded Azure reference; private endpoints versus managed services, conditional AI and separate full-view options |
 | Page 46 / B19 | Source-only synthetic IoT flow, private Event Hub and independent human safety route |
-| Page 47 / B20 | Retain operational SQL; compare conditional Fabric analytics against SQL/history plus Power BI |
+| Page 47 / B20 | When Fabric adds value beyond SQL: compare conditional analytics against SQL/history plus Power BI |
+| Page 54 / B27 | One chosen skill/one bounded call; source-coded financial admission and durable request bounds versus still-unproved whole-journey cost acceptance |
 | Pages 25-26 | State the demo evidence route before showing it; close on the next accountable decision |
 
 ## Delivery At The Important Moments
@@ -96,6 +98,33 @@ detail or acknowledge the gap and how to resolve it. A simpler approach that
 beats the proposed technology is a valid result, not a threat to the story.
 Native buttons retain fixed destinations despite historical "Return to caller"
 labels; navigate back deliberately rather than promise dynamic return.
+
+## Strengthening The Four Challenged Criteria
+
+The [story and architecture review](../source/review-2026-11-08-cxo.md)
+separates written preparation from evidence of live behaviour:
+
+* For B1, lead with the recommendation, then show the options, the same-home
+  causal example and what evidence supports the next decision. Do not let
+  the service inventory become the argument.
+* For B4, practise variations beyond the appendix: rules beating AI, requested
+  L4 flags, a failed supplier connection, changed household authority and an
+  unsupported AI answer. Give a direct answer, then the mechanism and its limit.
+* For C2, let the question finish, restate the actual concern and clarify an
+  ambiguous challenge. Concede a sound point without treating silence as consent.
+* For C3, defend a choice and disclose its unproved benefit before being asked.
+  State what would reverse the choice, the missing evidence and its owner.
+
+The CxO [application view](../source/diagrams/architecture/cxo-architecture.svg)
+is for the main route; the [full Azure reference](../source/diagrams/architecture/azure-architecture.svg)
+and B10 core projection provide technical depth. B03/B14/B27 retain deeper
+autonomy, workflow and call-bound reasoning rather than being their first
+disclosure. B04/B10/B19/B20 questions, headlines and index wording are aligned.
+Existing cost arithmetic, numbering, native destinations and time slots remain.
+
+Record rehearsal timings, questions, disagreements and decisions only after
+they occur. These changes do not establish composure, listening, native viewer
+acceptance or a higher panel/automated score.
 
 ## Evidence Still Needed
 

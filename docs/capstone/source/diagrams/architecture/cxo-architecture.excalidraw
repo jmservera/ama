@@ -1,0 +1,2016 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "Original Zava Forward presentation diagram",
+  "elements": [
+    {
+      "id": "canvas",
+      "type": "rectangle",
+      "x": 0,
+      "y": 0,
+      "width": 1600,
+      "height": 620,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#FAF9F6",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 101,
+      "version": 1,
+      "versionNonce": 201,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": []
+      }
+    },
+    {
+      "id": "application-boundary",
+      "type": "rectangle",
+      "x": 404,
+      "y": 12,
+      "width": 1168,
+      "height": 570,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "#FAF9F6",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 102,
+      "version": 1,
+      "versionNonce": 202,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": []
+      }
+    },
+    {
+      "id": "boundary-label",
+      "type": "text",
+      "x": 430,
+      "y": 20,
+      "width": 1090,
+      "height": 27.599999999999998,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 103,
+      "version": 1,
+      "versionNonce": 203,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": []
+      },
+      "text": "APPLICATION + CONTROLLED CASE DATA / LOGICAL SCOPE",
+      "originalText": "APPLICATION + CONTROLLED CASE DATA / LOGICAL SCOPE",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "company",
+      "type": "rectangle",
+      "x": 30,
+      "y": 58,
+      "width": 328,
+      "height": 118,
+      "angle": 0,
+      "strokeColor": "#C7D8CF",
+      "backgroundColor": "#FFFFFF",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 104,
+      "version": 1,
+      "versionNonce": 204,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "identity",
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 101,
+            "anchor": "class TrustedProxyProvider:",
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Source-coded employee principal checks; platform authentication is a separate dependency"
+          },
+          {
+            "key": "roles",
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 34,
+            "anchor": "DEFAULT_ROLE_MAP = {",
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Application role mapping, not unrestricted company-account access"
+          }
+        ]
+      }
+    },
+    {
+      "id": "company-title",
+      "type": "text",
+      "x": 50,
+      "y": 72,
+      "width": 288,
+      "height": 34.5,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 105,
+      "version": 1,
+      "versionNonce": 205,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "identity",
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 101,
+            "anchor": "class TrustedProxyProvider:",
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Source-coded employee principal checks; platform authentication is a separate dependency"
+          },
+          {
+            "key": "roles",
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 34,
+            "anchor": "DEFAULT_ROLE_MAP = {",
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Application role mapping, not unrestricted company-account access"
+          }
+        ],
+        "container": "company"
+      },
+      "text": "Company login",
+      "originalText": "Company login",
+      "fontSize": 30,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "company-body",
+      "type": "text",
+      "x": 50,
+      "y": 110.5,
+      "width": 288,
+      "height": 59.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 106,
+      "version": 1,
+      "versionNonce": 206,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "identity",
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 101,
+            "anchor": "class TrustedProxyProvider:",
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Source-coded employee principal checks; platform authentication is a separate dependency"
+          },
+          {
+            "key": "roles",
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 34,
+            "anchor": "DEFAULT_ROLE_MAP = {",
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Application role mapping, not unrestricted company-account access"
+          }
+        ],
+        "container": "company"
+      },
+      "text": "Same Microsoft account\nApp permissions differ",
+      "originalText": "Same Microsoft account\nApp permissions differ",
+      "fontSize": 26,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "resident",
+      "type": "rectangle",
+      "x": 30,
+      "y": 192,
+      "width": 328,
+      "height": 118,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "#FFFFFF",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 107,
+      "version": 1,
+      "versionNonce": 207,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "src/core/src/zava_forward/core/resident_preview.py",
+            "line": 24,
+            "anchor": "FIELD_CATALOG =",
+            "sha256": "4d34049a99b9afcbd8d4e15032f831282aefe72693b3f944d2692a1e336e9250",
+            "classification": "Field-limited resident view; separate identity and own-case grants"
+          },
+          {
+            "key": "residentDeployment",
+            "path": "infra/resident-demo.bicep",
+            "line": 14,
+            "anchor": "@description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')",
+            "sha256": "389723779fe25ef927cf8a2bb99923a0850b545d69e7c1eed1b0a558341377a7",
+            "classification": "Separate synthetic resident showcase; its configured SQL dependency does not prove shared staff SQL"
+          }
+        ]
+      }
+    },
+    {
+      "id": "resident-title",
+      "type": "text",
+      "x": 50,
+      "y": 206,
+      "width": 288,
+      "height": 34.5,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 108,
+      "version": 1,
+      "versionNonce": 208,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "src/core/src/zava_forward/core/resident_preview.py",
+            "line": 24,
+            "anchor": "FIELD_CATALOG =",
+            "sha256": "4d34049a99b9afcbd8d4e15032f831282aefe72693b3f944d2692a1e336e9250",
+            "classification": "Field-limited resident view; separate identity and own-case grants"
+          },
+          {
+            "key": "residentDeployment",
+            "path": "infra/resident-demo.bicep",
+            "line": 14,
+            "anchor": "@description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')",
+            "sha256": "389723779fe25ef927cf8a2bb99923a0850b545d69e7c1eed1b0a558341377a7",
+            "classification": "Separate synthetic resident showcase; its configured SQL dependency does not prove shared staff SQL"
+          }
+        ],
+        "container": "resident"
+      },
+      "text": "Resident option",
+      "originalText": "Resident option",
+      "fontSize": 30,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "resident-body",
+      "type": "text",
+      "x": 50,
+      "y": 244.5,
+      "width": 288,
+      "height": 59.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 109,
+      "version": 1,
+      "versionNonce": 209,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "src/core/src/zava_forward/core/resident_preview.py",
+            "line": 24,
+            "anchor": "FIELD_CATALOG =",
+            "sha256": "4d34049a99b9afcbd8d4e15032f831282aefe72693b3f944d2692a1e336e9250",
+            "classification": "Field-limited resident view; separate identity and own-case grants"
+          },
+          {
+            "key": "residentDeployment",
+            "path": "infra/resident-demo.bicep",
+            "line": 14,
+            "anchor": "@description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')",
+            "sha256": "389723779fe25ef927cf8a2bb99923a0850b545d69e7c1eed1b0a558341377a7",
+            "classification": "Separate synthetic resident showcase; its configured SQL dependency does not prove shared staff SQL"
+          }
+        ],
+        "container": "resident"
+      },
+      "text": "Separate sign-in\nOwn-case link gated",
+      "originalText": "Separate sign-in\nOwn-case link gated",
+      "fontSize": 26,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "excel",
+      "type": "rectangle",
+      "x": 30,
+      "y": 326,
+      "width": 328,
+      "height": 118,
+      "angle": 0,
+      "strokeColor": "#C7D8CF",
+      "backgroundColor": "#FFFFFF",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 110,
+      "version": 1,
+      "versionNonce": 210,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "files",
+            "path": "src/importer/README.md",
+            "line": 13,
+            "anchor": "* Excel transition",
+            "sha256": "2a734d5800ae22526fdb6c1f2894737414cf90181e5b358c66ffd98316c26244",
+            "classification": "Read-only file tooling; live OneDrive connector not established"
+          }
+        ]
+      }
+    },
+    {
+      "id": "excel-title",
+      "type": "text",
+      "x": 50,
+      "y": 340,
+      "width": 288,
+      "height": 34.5,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 111,
+      "version": 1,
+      "versionNonce": 211,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "files",
+            "path": "src/importer/README.md",
+            "line": 13,
+            "anchor": "* Excel transition",
+            "sha256": "2a734d5800ae22526fdb6c1f2894737414cf90181e5b358c66ffd98316c26244",
+            "classification": "Read-only file tooling; live OneDrive connector not established"
+          }
+        ],
+        "container": "excel"
+      },
+      "text": "Excel / OneDrive",
+      "originalText": "Excel / OneDrive",
+      "fontSize": 30,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "excel-body",
+      "type": "text",
+      "x": 50,
+      "y": 378.5,
+      "width": 288,
+      "height": 59.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 112,
+      "version": 1,
+      "versionNonce": 212,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "files",
+            "path": "src/importer/README.md",
+            "line": 13,
+            "anchor": "* Excel transition",
+            "sha256": "2a734d5800ae22526fdb6c1f2894737414cf90181e5b358c66ffd98316c26244",
+            "classification": "Read-only file tooling; live OneDrive connector not established"
+          }
+        ],
+        "container": "excel"
+      },
+      "text": "File preview today\nConnector: not live",
+      "originalText": "File preview today\nConnector: not live",
+      "fontSize": 26,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "devices",
+      "type": "rectangle",
+      "x": 30,
+      "y": 460,
+      "width": 328,
+      "height": 118,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "#FFFFFF",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 113,
+      "version": 1,
+      "versionNonce": 213,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "sensors",
+            "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
+            "line": 31,
+            "anchor": "## Bounded streaming engineering",
+            "sha256": "77d7645e42dd4e75e17f8f67acdfb4c5554a324198b20b92d6801f45315d4ee4",
+            "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "devices-title",
+      "type": "text",
+      "x": 50,
+      "y": 474,
+      "width": 288,
+      "height": 34.5,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 114,
+      "version": 1,
+      "versionNonce": 214,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "sensors",
+            "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
+            "line": 31,
+            "anchor": "## Bounded streaming engineering",
+            "sha256": "77d7645e42dd4e75e17f8f67acdfb4c5554a324198b20b92d6801f45315d4ee4",
+            "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
+          }
+        ],
+        "container": "devices"
+      },
+      "text": "Home sensors",
+      "originalText": "Home sensors",
+      "fontSize": 30,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "devices-body",
+      "type": "text",
+      "x": 50,
+      "y": 512.5,
+      "width": 288,
+      "height": 59.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 115,
+      "version": 1,
+      "versionNonce": 215,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "sensors",
+            "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
+            "line": 31,
+            "anchor": "## Bounded streaming engineering",
+            "sha256": "77d7645e42dd4e75e17f8f67acdfb4c5554a324198b20b92d6801f45315d4ee4",
+            "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
+          }
+        ],
+        "container": "devices"
+      },
+      "text": "Validated readings\nLive route: gated",
+      "originalText": "Validated readings\nLive route: gated",
+      "fontSize": 26,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "workbench",
+      "type": "rectangle",
+      "x": 430,
+      "y": 58,
+      "width": 530,
+      "height": 210,
+      "angle": 0,
+      "strokeColor": "#C7D8CF",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 116,
+      "version": 1,
+      "versionNonce": 216,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "roles",
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 34,
+            "anchor": "DEFAULT_ROLE_MAP = {",
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Application role mapping, not unrestricted company-account access"
+          },
+          {
+            "key": "gates",
+            "path": "src/core/src/zava_forward/core/gates.py",
+            "line": 105,
+            "anchor": "def transition_allowed(",
+            "sha256": "00929abc74254296291f229871360d9ee50430676735ab5977cfa0dd92504059",
+            "classification": "Explicit coded state-flow; unknown gates do not pass"
+          }
+        ]
+      }
+    },
+    {
+      "id": "workbench-title",
+      "type": "text",
+      "x": 450,
+      "y": 72,
+      "width": 490,
+      "height": 46,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 117,
+      "version": 1,
+      "versionNonce": 217,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "roles",
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 34,
+            "anchor": "DEFAULT_ROLE_MAP = {",
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Application role mapping, not unrestricted company-account access"
+          },
+          {
+            "key": "gates",
+            "path": "src/core/src/zava_forward/core/gates.py",
+            "line": 105,
+            "anchor": "def transition_allowed(",
+            "sha256": "00929abc74254296291f229871360d9ee50430676735ab5977cfa0dd92504059",
+            "classification": "Explicit coded state-flow; unknown gates do not pass"
+          }
+        ],
+        "container": "workbench"
+      },
+      "text": "Staff Workbench",
+      "originalText": "Staff Workbench",
+      "fontSize": 40,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "workbench-body",
+      "type": "text",
+      "x": 450,
+      "y": 122,
+      "width": 490,
+      "height": 103.49999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 118,
+      "version": 1,
+      "versionNonce": 218,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "roles",
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 34,
+            "anchor": "DEFAULT_ROLE_MAP = {",
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Application role mapping, not unrestricted company-account access"
+          },
+          {
+            "key": "gates",
+            "path": "src/core/src/zava_forward/core/gates.py",
+            "line": 105,
+            "anchor": "def transition_allowed(",
+            "sha256": "00929abc74254296291f229871360d9ee50430676735ab5977cfa0dd92504059",
+            "classification": "Explicit coded state-flow; unknown gates do not pass"
+          }
+        ],
+        "container": "workbench"
+      },
+      "text": "Roles for coordination, liaison,\nFinance, Quality and Programme.\nOne owned next action.",
+      "originalText": "Roles for coordination, liaison,\nFinance, Quality and Programme.\nOne owned next action.",
+      "fontSize": 30,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "api",
+      "type": "rectangle",
+      "x": 430,
+      "y": 322,
+      "width": 530,
+      "height": 222,
+      "angle": 0,
+      "strokeColor": "#C7D8CF",
+      "backgroundColor": "#E8F1ED",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 119,
+      "version": 1,
+      "versionNonce": 219,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "transition",
+            "path": "src/core/src/zava_forward/core/store.py",
+            "line": 635,
+            "anchor": "    def advance(",
+            "sha256": "6b2236eb171e889c2ed652b86541740388ef8d3d08dd6db7c1b61a18af7c0b05",
+            "classification": "Controlled human case transition, not an AI action"
+          },
+          {
+            "key": "gates",
+            "path": "src/core/src/zava_forward/core/gates.py",
+            "line": 105,
+            "anchor": "def transition_allowed(",
+            "sha256": "00929abc74254296291f229871360d9ee50430676735ab5977cfa0dd92504059",
+            "classification": "Explicit coded state-flow; unknown gates do not pass"
+          }
+        ]
+      }
+    },
+    {
+      "id": "api-title",
+      "type": "text",
+      "x": 450,
+      "y": 336,
+      "width": 490,
+      "height": 46,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 120,
+      "version": 1,
+      "versionNonce": 220,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "transition",
+            "path": "src/core/src/zava_forward/core/store.py",
+            "line": 635,
+            "anchor": "    def advance(",
+            "sha256": "6b2236eb171e889c2ed652b86541740388ef8d3d08dd6db7c1b61a18af7c0b05",
+            "classification": "Controlled human case transition, not an AI action"
+          },
+          {
+            "key": "gates",
+            "path": "src/core/src/zava_forward/core/gates.py",
+            "line": 105,
+            "anchor": "def transition_allowed(",
+            "sha256": "00929abc74254296291f229871360d9ee50430676735ab5977cfa0dd92504059",
+            "classification": "Explicit coded state-flow; unknown gates do not pass"
+          }
+        ],
+        "container": "api"
+      },
+      "text": "Case service + API",
+      "originalText": "Case service + API",
+      "fontSize": 40,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "api-body",
+      "type": "text",
+      "x": 450,
+      "y": 386,
+      "width": 490,
+      "height": 103.49999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 121,
+      "version": 1,
+      "versionNonce": 221,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "transition",
+            "path": "src/core/src/zava_forward/core/store.py",
+            "line": 635,
+            "anchor": "    def advance(",
+            "sha256": "6b2236eb171e889c2ed652b86541740388ef8d3d08dd6db7c1b61a18af7c0b05",
+            "classification": "Controlled human case transition, not an AI action"
+          },
+          {
+            "key": "gates",
+            "path": "src/core/src/zava_forward/core/gates.py",
+            "line": 105,
+            "anchor": "def transition_allowed(",
+            "sha256": "00929abc74254296291f229871360d9ee50430676735ab5977cfa0dd92504059",
+            "classification": "Explicit coded state-flow; unknown gates do not pass"
+          }
+        ],
+        "container": "api"
+      },
+      "text": "Rules + role/case/field checks\nPeople approve real actions\nManual work remains available",
+      "originalText": "Rules + role/case/field checks\nPeople approve real actions\nManual work remains available",
+      "fontSize": 30,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "case-records",
+      "type": "rectangle",
+      "x": 1090,
+      "y": 58,
+      "width": 444,
+      "height": 140,
+      "angle": 0,
+      "strokeColor": "#C7D8CF",
+      "backgroundColor": "#FFFFFF",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 122,
+      "version": 1,
+      "versionNonce": 222,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "transition",
+            "path": "src/core/src/zava_forward/core/store.py",
+            "line": 635,
+            "anchor": "    def advance(",
+            "sha256": "6b2236eb171e889c2ed652b86541740388ef8d3d08dd6db7c1b61a18af7c0b05",
+            "classification": "Controlled human case transition, not an AI action"
+          },
+          {
+            "key": "sql",
+            "path": "infra/modules/sql.bicep",
+            "line": 34,
+            "anchor": "resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {",
+            "sha256": "b3d90d793141cd937612c271423e6edc1d83b83fcdec24f7532f7c1c3599ac4e",
+            "classification": "Managed SQL service outside VNet; contained-user/grant initialization separate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "case-records-title",
+      "type": "text",
+      "x": 1110,
+      "y": 72,
+      "width": 404,
+      "height": 43.699999999999996,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 123,
+      "version": 1,
+      "versionNonce": 223,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "transition",
+            "path": "src/core/src/zava_forward/core/store.py",
+            "line": 635,
+            "anchor": "    def advance(",
+            "sha256": "6b2236eb171e889c2ed652b86541740388ef8d3d08dd6db7c1b61a18af7c0b05",
+            "classification": "Controlled human case transition, not an AI action"
+          },
+          {
+            "key": "sql",
+            "path": "infra/modules/sql.bicep",
+            "line": 34,
+            "anchor": "resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {",
+            "sha256": "b3d90d793141cd937612c271423e6edc1d83b83fcdec24f7532f7c1c3599ac4e",
+            "classification": "Managed SQL service outside VNet; contained-user/grant initialization separate"
+          }
+        ],
+        "container": "case-records"
+      },
+      "text": "Case database",
+      "originalText": "Case database",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "case-records-body",
+      "type": "text",
+      "x": 1110,
+      "y": 119.69999999999999,
+      "width": 404,
+      "height": 64.39999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 124,
+      "version": 1,
+      "versionNonce": 224,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "transition",
+            "path": "src/core/src/zava_forward/core/store.py",
+            "line": 635,
+            "anchor": "    def advance(",
+            "sha256": "6b2236eb171e889c2ed652b86541740388ef8d3d08dd6db7c1b61a18af7c0b05",
+            "classification": "Controlled human case transition, not an AI action"
+          },
+          {
+            "key": "sql",
+            "path": "infra/modules/sql.bicep",
+            "line": 34,
+            "anchor": "resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {",
+            "sha256": "b3d90d793141cd937612c271423e6edc1d83b83fcdec24f7532f7c1c3599ac4e",
+            "classification": "Managed SQL service outside VNet; contained-user/grant initialization separate"
+          }
+        ],
+        "container": "case-records"
+      },
+      "text": "State, owners and audit\nControlled updates via API",
+      "originalText": "State, owners and audit\nControlled updates via API",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "evidence-files",
+      "type": "rectangle",
+      "x": 1090,
+      "y": 238,
+      "width": 444,
+      "height": 140,
+      "angle": 0,
+      "strokeColor": "#C7D8CF",
+      "backgroundColor": "#FFFFFF",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 125,
+      "version": 1,
+      "versionNonce": 225,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "storage",
+            "path": "infra/modules/storage.bicep",
+            "line": 58,
+            "anchor": "var containers = ['evidence', 'imports', 'quarantine', 'exports', 'audit-archive', 'ledger-digests', 'staff-results']",
+            "sha256": "fa08533e606f2c5c7a3a13d3f7e0544f8f94554691bd4c2e26cce7b1effa65db",
+            "classification": "Authored Blob containers and queues; quarantine/retention configuration is not accepted scanner or erasure proof"
+          }
+        ]
+      }
+    },
+    {
+      "id": "evidence-files-title",
+      "type": "text",
+      "x": 1110,
+      "y": 252,
+      "width": 404,
+      "height": 43.699999999999996,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 126,
+      "version": 1,
+      "versionNonce": 226,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "storage",
+            "path": "infra/modules/storage.bicep",
+            "line": 58,
+            "anchor": "var containers = ['evidence', 'imports', 'quarantine', 'exports', 'audit-archive', 'ledger-digests', 'staff-results']",
+            "sha256": "fa08533e606f2c5c7a3a13d3f7e0544f8f94554691bd4c2e26cce7b1effa65db",
+            "classification": "Authored Blob containers and queues; quarantine/retention configuration is not accepted scanner or erasure proof"
+          }
+        ],
+        "container": "evidence-files"
+      },
+      "text": "Evidence storage",
+      "originalText": "Evidence storage",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "evidence-files-body",
+      "type": "text",
+      "x": 1110,
+      "y": 299.7,
+      "width": 404,
+      "height": 64.39999999999999,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 127,
+      "version": 1,
+      "versionNonce": 227,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "storage",
+            "path": "infra/modules/storage.bicep",
+            "line": 58,
+            "anchor": "var containers = ['evidence', 'imports', 'quarantine', 'exports', 'audit-archive', 'ledger-digests', 'staff-results']",
+            "sha256": "fa08533e606f2c5c7a3a13d3f7e0544f8f94554691bd4c2e26cce7b1effa65db",
+            "classification": "Authored Blob containers and queues; quarantine/retention configuration is not accepted scanner or erasure proof"
+          }
+        ],
+        "container": "evidence-files"
+      },
+      "text": "Files + versions + scan status\nMetadata links to the case",
+      "originalText": "Files + versions + scan status\nMetadata links to the case",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "advice",
+      "type": "rectangle",
+      "x": 1090,
+      "y": 408,
+      "width": 444,
+      "height": 170,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "#EEE8F4",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 128,
+      "version": 1,
+      "versionNonce": 228,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "advice",
+            "path": "src/agents/README.md",
+            "line": 692,
+            "anchor": "### Five retrofit assistants",
+            "sha256": "41de4d35f6d40a2c58733aef143254d84744e26dc953469f614e340f9c6242d5",
+            "classification": "Five source-coded proposal helpers; activation/benefit acceptance separate"
+          },
+          {
+            "key": "chat",
+            "path": "src/api/README.md",
+            "line": 707,
+            "anchor": "## Employee chat with bounded skills",
+            "sha256": "cd92cee3c52336c2959deba31cac69d00ce2fcbb3284923f230c8aba132eb0a9",
+            "classification": "One selected skill and bounded call; no tools or case writes"
+          }
+        ]
+      }
+    },
+    {
+      "id": "advice-title",
+      "type": "text",
+      "x": 1110,
+      "y": 422,
+      "width": 404,
+      "height": 43.699999999999996,
+      "angle": 0,
+      "strokeColor": "#61437C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 129,
+      "version": 1,
+      "versionNonce": 229,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "advice",
+            "path": "src/agents/README.md",
+            "line": 692,
+            "anchor": "### Five retrofit assistants",
+            "sha256": "41de4d35f6d40a2c58733aef143254d84744e26dc953469f614e340f9c6242d5",
+            "classification": "Five source-coded proposal helpers; activation/benefit acceptance separate"
+          },
+          {
+            "key": "chat",
+            "path": "src/api/README.md",
+            "line": 707,
+            "anchor": "## Employee chat with bounded skills",
+            "sha256": "cd92cee3c52336c2959deba31cac69d00ce2fcbb3284923f230c8aba132eb0a9",
+            "classification": "One selected skill and bounded call; no tools or case writes"
+          }
+        ],
+        "container": "advice"
+      },
+      "text": "AI advice",
+      "originalText": "AI advice",
+      "fontSize": 38,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "advice-body",
+      "type": "text",
+      "x": 1110,
+      "y": 469.7,
+      "width": 404,
+      "height": 96.6,
+      "angle": 0,
+      "strokeColor": "#61437C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 130,
+      "version": 1,
+      "versionNonce": 230,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "advice",
+            "path": "src/agents/README.md",
+            "line": 692,
+            "anchor": "### Five retrofit assistants",
+            "sha256": "41de4d35f6d40a2c58733aef143254d84744e26dc953469f614e340f9c6242d5",
+            "classification": "Five source-coded proposal helpers; activation/benefit acceptance separate"
+          },
+          {
+            "key": "chat",
+            "path": "src/api/README.md",
+            "line": 707,
+            "anchor": "## Employee chat with bounded skills",
+            "sha256": "cd92cee3c52336c2959deba31cac69d00ce2fcbb3284923f230c8aba132eb0a9",
+            "classification": "One selected skill and bounded call; no tools or case writes"
+          }
+        ],
+        "container": "advice"
+      },
+      "text": "Approved task facts only\nDrafts returned for review\nNo consent or sign-off",
+      "originalText": "Approved task facts only\nDrafts returned for review\nNo consent or sign-off",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "staff-entry",
+      "type": "arrow",
+      "x": 360,
+      "y": 110,
+      "width": 60,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 131,
+      "version": 1,
+      "versionNonce": 231,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "identity",
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 101,
+            "anchor": "class TrustedProxyProvider:",
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Source-coded employee principal checks; platform authentication is a separate dependency"
+          },
+          {
+            "key": "roles",
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 34,
+            "anchor": "DEFAULT_ROLE_MAP = {",
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Application role mapping, not unrestricted company-account access"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "resident-projection",
+      "type": "arrow",
+      "x": 360,
+      "y": 251,
+      "width": 60,
+      "height": 99,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 132,
+      "version": 1,
+      "versionNonce": 232,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "src/core/src/zava_forward/core/resident_preview.py",
+            "line": 24,
+            "anchor": "FIELD_CATALOG =",
+            "sha256": "4d34049a99b9afcbd8d4e15032f831282aefe72693b3f944d2692a1e336e9250",
+            "classification": "Field-limited resident view; separate identity and own-case grants"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          26,
+          0
+        ],
+        [
+          26,
+          99
+        ],
+        [
+          60,
+          99
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "file-preview",
+      "type": "arrow",
+      "x": 360,
+      "y": 385,
+      "width": 60,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 133,
+      "version": 1,
+      "versionNonce": 233,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "files",
+            "path": "src/importer/README.md",
+            "line": 13,
+            "anchor": "* Excel transition",
+            "sha256": "2a734d5800ae22526fdb6c1f2894737414cf90181e5b358c66ffd98316c26244",
+            "classification": "Read-only file tooling; live OneDrive connector not established"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "sensor-admission",
+      "type": "arrow",
+      "x": 360,
+      "y": 519,
+      "width": 60,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 134,
+      "version": 1,
+      "versionNonce": 234,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "sensors",
+            "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
+            "line": 31,
+            "anchor": "## Bounded streaming engineering",
+            "sha256": "77d7645e42dd4e75e17f8f67acdfb4c5554a324198b20b92d6801f45315d4ee4",
+            "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "controlled-action",
+      "type": "arrow",
+      "x": 695,
+      "y": 276,
+      "width": 0,
+      "height": 36,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 135,
+      "version": 1,
+      "versionNonce": 235,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "gates",
+            "path": "src/core/src/zava_forward/core/gates.py",
+            "line": 105,
+            "anchor": "def transition_allowed(",
+            "sha256": "00929abc74254296291f229871360d9ee50430676735ab5977cfa0dd92504059",
+            "classification": "Explicit coded state-flow; unknown gates do not pass"
+          },
+          {
+            "key": "transition",
+            "path": "src/core/src/zava_forward/core/store.py",
+            "line": 635,
+            "anchor": "    def advance(",
+            "sha256": "6b2236eb171e889c2ed652b86541740388ef8d3d08dd6db7c1b61a18af7c0b05",
+            "classification": "Controlled human case transition, not an AI action"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          36
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "record-access",
+      "type": "arrow",
+      "x": 970,
+      "y": 119,
+      "width": 110,
+      "height": 235,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 136,
+      "version": 1,
+      "versionNonce": 236,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "transition",
+            "path": "src/core/src/zava_forward/core/store.py",
+            "line": 635,
+            "anchor": "    def advance(",
+            "sha256": "6b2236eb171e889c2ed652b86541740388ef8d3d08dd6db7c1b61a18af7c0b05",
+            "classification": "Controlled human case transition, not an AI action"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          235
+        ],
+        [
+          40,
+          235
+        ],
+        [
+          40,
+          0
+        ],
+        [
+          110,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": "triangle",
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "file-access",
+      "type": "arrow",
+      "x": 970,
+      "y": 287,
+      "width": 110,
+      "height": 135,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 137,
+      "version": 1,
+      "versionNonce": 237,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "advice",
+            "path": "src/agents/README.md",
+            "line": 692,
+            "anchor": "### Five retrofit assistants",
+            "sha256": "41de4d35f6d40a2c58733aef143254d84744e26dc953469f614e340f9c6242d5",
+            "classification": "Five source-coded proposal helpers; activation/benefit acceptance separate"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          135
+        ],
+        [
+          80,
+          135
+        ],
+        [
+          80,
+          0
+        ],
+        [
+          110,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": "triangle",
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "scoped-model",
+      "type": "arrow",
+      "x": 970,
+      "y": 469,
+      "width": 110,
+      "height": 31,
+      "angle": 0,
+      "strokeColor": "#61437C",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 138,
+      "version": 1,
+      "versionNonce": 238,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "advice",
+            "path": "src/agents/README.md",
+            "line": 692,
+            "anchor": "### Five retrofit assistants",
+            "sha256": "41de4d35f6d40a2c58733aef143254d84744e26dc953469f614e340f9c6242d5",
+            "classification": "Five source-coded proposal helpers; activation/benefit acceptance separate"
+          },
+          {
+            "key": "chat",
+            "path": "src/api/README.md",
+            "line": 707,
+            "anchor": "## Employee chat with bounded skills",
+            "sha256": "cd92cee3c52336c2959deba31cac69d00ce2fcbb3284923f230c8aba132eb0a9",
+            "classification": "One selected skill and bounded call; no tools or case writes"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          31
+        ],
+        [
+          110,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": "triangle",
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "control-caption",
+      "type": "text",
+      "x": 30,
+      "y": 590,
+      "width": 1535,
+      "height": 27.599999999999998,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 139,
+      "version": 1,
+      "versionNonce": 239,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": []
+      },
+      "text": "SECURITY: scoped access   |   PRIVACY: necessary facts only   |   ASSURANCE: versions, audit and human release",
+      "originalText": "SECURITY: scoped access   |   PRIVACY: necessary facts only   |   ASSURANCE: versions, audit and human release",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#FAF9F6",
+    "gridSize": null,
+    "name": "Zava Forward: people, case control, evidence and advice"
+  },
+  "files": {}
+}

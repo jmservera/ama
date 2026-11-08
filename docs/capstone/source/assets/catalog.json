@@ -2,6 +2,37 @@
   "schema_version": 1,
   "additional_media": [
     {
+      "id": "cxo-architecture",
+      "part": "ppt/media/architecture-cxo.png",
+      "path": "diagrams/architecture/cxo-architecture.png",
+      "sha256": "53fe4a9d1595a9139bd856f9ac5278afa917da0c9025bef4e3ce83b520acf006",
+      "pixel_width": 2400,
+      "pixel_height": 930,
+      "source_svg": "diagrams/architecture/cxo-architecture.svg",
+      "source_sha256": "32f66c3ce3adacf4bdff4aa8f32bd3161a63fb91347b34fe4b9b3604d3b20289",
+      "source_native": "diagrams/architecture/cxo-architecture.excalidraw",
+      "source_native_sha256": "185c925a77083d1f1dbd224f80612264ad3ff11e7e23b88d56642a3a1ddd52a2",
+      "slides": [12],
+      "derivation": "Original PM application concept; local Excalidraw CLI 0.2.0 PNG with existing Chromium, padding 0, scale 1.5 and fonts-url none.",
+      "provenance": "Source-backed logical application/data scope, not network or live deployment; separate resident/OneDrive/device/AI acceptance and human decision boundaries remain explicit."
+    },
+    {
+      "id": "azure-architecture",
+      "part": "ppt/media/architecture-azure-core.png",
+      "path": "diagrams/architecture/azure-core.png",
+      "sha256": "af98b963b6923c1835e2f4d6ddc50d9c0a3232e06ce7991caba06127e82b3492",
+      "pixel_width": 3600,
+      "pixel_height": 1215,
+      "source_svg": "diagrams/architecture/azure-core.svg",
+      "source_sha256": "49e16ff23db92379cec3354fa3a5ae9149d231a2ebba98e63b83f54152fbb6eb",
+      "source_native": "diagrams/architecture/azure-architecture.excalidraw",
+      "source_native_sha256": "480dbf3355f32b290e2af6e6d0d6f89fafffe2a76d8df52ce61b9e428a9007ad",
+      "source_frame": "core",
+      "slides": [37],
+      "derivation": "Local Excalidraw CLI 0.2.0 native core-frame PNG, existing Chromium, scale 1.5, no account/upload. Readable projection of the complete editable Azure model.",
+      "provenance": "Original reference-style drawing grounded in Bicep and a bounded architecture review. PaaS/private-endpoint boundaries, conditional paths, separate resident processing and unproved live/compliance acceptance remain distinct."
+    },
+    {
       "id": "fabric",
       "part": "ppt/media/roadmap-fabric.png",
       "path": "assets/official/fabric.png",

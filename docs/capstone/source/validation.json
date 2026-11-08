@@ -1,19 +1,23 @@
 {
   "source_as_of": "2026-11-08",
-  "revision": "Owner-confirmed OSF base, running exploratory amendments, coauthor roles and complete implementation-epoch history",
+  "revision": "CxO application map, Bicep-grounded Azure reference/core, explicit state-flow/autonomy and aligned appendix; original timing/navigation/costs preserved",
   "package": {
     "status": "pass",
     "slides": 54,
     "nonempty_notes": 54,
     "navigation_actions": 108,
-    "package_members": 296,
+    "package_members": 298,
     "baseline_members": 293,
     "added_media_parts": [
+      "ppt/media/architecture-azure-core.png",
+      "ppt/media/architecture-cxo.png",
       "ppt/media/journey-resident.png",
       "ppt/media/roadmap-fabric.png",
       "ppt/media/roadmap-power-bi.png"
     ],
     "changed_members": [
+      "ppt/media/architecture-azure-core.png",
+      "ppt/media/architecture-cxo.png",
       "ppt/media/journey-resident.png",
       "ppt/media/roadmap-fabric.png",
       "ppt/media/roadmap-power-bi.png",
@@ -67,10 +71,13 @@
       "ppt/notesSlides/notesSlide7.xml",
       "ppt/notesSlides/notesSlide8.xml",
       "ppt/notesSlides/notesSlide9.xml",
+      "ppt/slides/_rels/slide12.xml.rels",
       "ppt/slides/_rels/slide13.xml.rels",
       "ppt/slides/_rels/slide23.xml.rels",
+      "ppt/slides/_rels/slide37.xml.rels",
       "ppt/slides/slide1.xml",
       "ppt/slides/slide10.xml",
+      "ppt/slides/slide12.xml",
       "ppt/slides/slide13.xml",
       "ppt/slides/slide14.xml",
       "ppt/slides/slide15.xml",
@@ -91,6 +98,7 @@
       "ppt/slides/slide41.xml",
       "ppt/slides/slide46.xml",
       "ppt/slides/slide47.xml",
+      "ppt/slides/slide54.xml",
       "ppt/slides/slide7.xml",
       "ppt/slides/slide8.xml",
       "ppt/slides/slide9.xml"
@@ -105,27 +113,27 @@
       52
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "7dbc06a89463c05197430fb0748fa7df6d0bca3631bd7c8c2ea44db4d90df73b",
+    "candidate_sha256": "dd2a52fa8408ccf9efdb7b7e6e21369220d872502c4578bc3ed0ffef550041e8",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
-    "manifest_sha256": "ab7961403cbe8809db2f2170ef27b48f101ffcb2dbd9946a96b979d3724c5b02",
-    "asset_catalog_sha256": "de34d2eba585eab470ebe7438b40695e0b239f6b2c8183a3cd4236ca5a1dc901",
-    "builder_sha256": "4c168289a7352017e6c9cb9456fe9fe1436e8ad38ca3721268366c85492829d4",
+    "manifest_sha256": "d51cb2e324dc76a4be828f5725f91b4469d35b13695614c5046745f5f1ba52ca",
+    "asset_catalog_sha256": "bd423957cbb86df95f5f5b28a1b56f7ac344ce33e6e85f8a82c2488c951220c2",
+    "builder_sha256": "0806858e1bdbae7f67b3069ef8d9b812efbb738262bba542904fa43068960b3f",
     "native_helper_sha256": "956d56cf4032d33deca9f61c606899927e3a3ae431878811bfe84aefba742c94"
   },
   "source_verification": {
     "verified_on": "2026-11-08",
     "action": "Verify",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
-    "verification_report_sha256": "f6ccb5cc52731c6ac3c6fd08cfd11c8a2e7f0acc242863c93b81177b8c77de61",
+    "verification_report_sha256": "bccc0920525fc38366118ee9661137735e19edd359786526b6d34fe51553a79c",
     "delivery_unchanged": false,
     "runtime": "Installed PowerShell on Linux; no Windows PowerPoint execution."
   },
   "preview": {
     "renderer": "LibreOffice 24.2.7.2 420(Build:2)",
     "native_powerpoint_validation": false,
-    "source_sha256": "7dbc06a89463c05197430fb0748fa7df6d0bca3631bd7c8c2ea44db4d90df73b",
-    "pdf_sha256": "712475ee0a4776958c82fad6fc7a4b702c6c070d064197d3164252d9b1fc0360",
+    "source_sha256": "dd2a52fa8408ccf9efdb7b7e6e21369220d872502c4578bc3ed0ffef550041e8",
+    "pdf_sha256": "14c8aa8bafb8a03548faf4018211f983ab3ba44f736399d764e39a5a4c9c6a19",
     "navigation": {
       "slides": 54,
       "fixed_slide_jumps": 108,
@@ -137,25 +145,39 @@
     "human_acceptance": false
   },
   "frame_and_preservation_checks": {
-    "pdf_pages": 54,
-    "revised_pages": [
+    "changed_slide_parts": [
+      9,
+      12,
+      14,
+      16,
       22,
       27,
-      40
+      31,
+      37,
+      46,
+      47,
+      54
     ],
-    "native_text_frames_checked": 337,
-    "source_text_frames_missing_words": [],
-    "source_text_word_matching_tolerance_points": 1.5,
-    "unchanged_pages_pixel_differences": [],
-    "unchanged_pages": 51,
-    "fixed_pdf_links": 108,
-    "qanda_index_answers": 27,
-    "qanda_fixed_returns": 27
+    "visually_changed_pages": [
+      9,
+      12,
+      14,
+      16,
+      27,
+      31,
+      37,
+      46,
+      47,
+      54
+    ],
+    "identical_pages": 44,
+    "revised_text_frames": 349,
+    "text_failures": [],
+    "tolerance_points": 1.5
   },
   "native": {
-    "performed_on_current_candidate": false,
-    "reason": "Linux VM; Microsoft PowerPoint COM unavailable. LibreOffice and source-frame checks are explicitly separate.",
-    "human_acceptance": false
+    "status": "not_run",
+    "reason": "Native Windows PowerPoint and direct human/keyboard/assistive-technology acceptance not performed for this revision."
   },
   "historical_native": {
     "renderer": "Microsoft PowerPoint 16.0 COM",

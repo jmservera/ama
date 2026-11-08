@@ -1,11 +1,20 @@
 ---
 title: Zava Forward Architecture Views
-description: Editable Excalidraw executive and technical architecture views grounded in PR 68, with Azure icons, interaction contracts and explicit implementation limits
-ms.date: 2026-10-27
+description: Current capstone application and Azure reference views, with preserved dated architecture diagrams and explicit source/implementation limits
+ms.date: 2026-11-08
 ms.topic: concept
 ---
 
 ## Scope and Reading Order
+
+For the current 8 November capstone application and Bicep-grounded reference
+views, use the [new diagram package](../capstone/source/diagrams/architecture/text-equivalent.md):
+an original [CxO application concept](../capstone/source/diagrams/architecture/cxo-architecture.svg)
+and [full Azure reference](../capstone/source/diagrams/architecture/azure-architecture.svg).
+The full editable model includes a readable core frame for slide 37 and
+separate device, operations, production/background and resident options.
+It is source-grounded, not a fresh cloud inventory, adoption or compliance
+acceptance. The historical diagrams and evidence below remain unchanged.
 
 For issue #441, the separate
 [UNREGISTERED resident service proposal](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)

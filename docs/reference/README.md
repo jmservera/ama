@@ -21,6 +21,16 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+The [8 November CxO/story review](../capstone/source/review-2026-11-08-cxo.md)
+strengthens the main-route recommendation, deterministic workflow/AI distinction
+and exact autonomy levels, while aligning appendix questions and preserving
+native numbering, links, timing and cost evidence. The
+[application and Azure diagram package](../capstone/source/diagrams/architecture/text-equivalent.md)
+contains original editable CxO and full Bicep-grounded views with readable
+projection, source/icon provenance and explicit integration/privacy/compliance
+limits. Prepared materials do not establish live listening, composure,
+production acceptance or a higher score.
+
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.

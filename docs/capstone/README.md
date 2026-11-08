@@ -20,6 +20,8 @@ choice between the older executive and Cowork routes.
 | Understand the discovery and journey | [DT Coach method, pain/gain and decision trace](./source/diagrams/discovery-journey/text-equivalent.md), [editable Excalidraw](./source/diagrams/discovery-journey/resident-journey.excalidraw) and [PNG](./source/diagrams/discovery-journey/resident-journey.png); main pages 8 and 13 |
 | Understand what comes next | [Future roadmap and proposal crosswalk](./source/roadmap-recommendations.md); future Fabric/Power BI and agent-context proposal only near the close on pages 23-24 |
 | Understand technology choices | [Decision register](./source/README.md#technology-decisions); main page 16 and deeper appendix comparisons |
+| Understand the application and full Azure topology | [CxO concept](./source/diagrams/architecture/cxo-architecture.svg), [full reference](./source/diagrams/architecture/azure-architecture.svg) and [editable sources/text equivalent](./source/diagrams/architecture/text-equivalent.md); main 12 and B10/core frame 37 |
+| Improve the story and challenged criteria | [CxO/story review](./source/review-2026-11-08-cxo.md); main-route recommendation/state-flow/autonomy, appendix alignment and real rehearsal evidence still needed |
 | Explain brief fidelity and the evolving product | [8 November autonomy/story review](./source/review-2026-11-08.md): exact requested/current levels, three help modes, historical Decision 1, optional resident access, design-thinking decisions and refreshable progress snapshot |
 | Inspect findings and checks | [30 October illustrated visual refresh](./source/review-2026-10-30.md#illustrated-visual-refresh-on-linux), earlier roadmap findings on the same page and preserved [29 October review](./source/review-2026-10-29.md) |
 | Recover previous work | [History and restore map](./history/README.md); original findings and authoring sources are retained |
@@ -47,6 +49,13 @@ and the DT journey's editable Excalidraw, SVG, PNG, generator and text equivalen
 The catalog pins every input and approved new-image placement. Neither Fabric
 nor Power BI is a current product component; pages 14-15 explain the built
 Workbench and existing bounded adoption tools without those logos.
+
+Keep the new application/Azure architecture sources together: two editable
+Excalidraw models, full SVG/PNG derivatives, the Azure core projection,
+generator, source/rights trace and text equivalent. The CxO map is a logical
+application/data view; the Azure view distinguishes network endpoints,
+managed services, current source realization and separately gated options.
+No picture is a live inventory or compliance/data-residency attestation.
 
 Keep pitch and demo material together with the same deck revision. Do not edit
 the generated speaker notes or Q&A independently of the source manifest.
