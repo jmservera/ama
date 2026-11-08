@@ -23,6 +23,7 @@ import logging
 import os
 import sqlite3
 import threading
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
@@ -51,6 +52,7 @@ CREATE TABLE IF NOT EXISTS cases (
   queue_overdue INTEGER NOT NULL DEFAULT 0, queue_unowned INTEGER NOT NULL DEFAULT 0);
 """
 
+REC_ORDER_IDS = 100  # identifiers kept per backfill batch record
 QUEUE_COLS = tuple(f"queue_{name}" for name, _, _ in taskqueues.DEFINITIONS)
 
 INDEXES = "\n".join(
@@ -336,32 +338,87 @@ class SqlStore(Store):
     def _migrate_recommendations(self):
         """Give every recommendation an immutable creation ordinal (#1292).
 
-        A legacy row has no recoverable creation order: its ordinal is derived from body created (seconds), then seq (last
-        write) then id, placed after every existing ordinal, and the first backfill is recorded in meta rec_order_legacy.
-        Backfilled rows and meta seq take one new seq so a running reader reloads them. Bodies are never rewritten."""
+        Adds the column and index, then repairs every zero ordinal through the same fenced path a running store uses."""
         self.db.execute("BEGIN IMMEDIATE")
         try:
-            added = not self._has_rec_order()
-            if added:
+            if not self._has_rec_order():
                 self._add_column_default("recommendations", "created_ord", "BIGINT", "0")
             self._create_rec_order_index()
-            rows = self.db.execute("SELECT id, seq, body FROM recommendations WHERE created_ord = 0").fetchall()
-            if rows:
-                start = int(self.db.execute("SELECT COALESCE(MAX(created_ord), 0) FROM recommendations").fetchone()[0])
-                keyed = sorted((json.loads(body).get("created") or "", seq, rid) for rid, seq, body in rows)
-                new = self._db_seq() + 1
-                for n, (_, _, rid) in enumerate(keyed, start + 1):
-                    self.db.execute("UPDATE recommendations SET created_ord=?, seq=? WHERE id=?", (n, new, rid))
-                if start == 0:
-                    seconds = [created for created, _, _ in keyed]
-                    self._meta_set("rec_order_legacy", json.dumps(dict(
-                        rows=len(keyed), same_second_groups=sum(1 for c in set(seconds) if seconds.count(c) > 1),
-                        order="created,seq,id")))
-                self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
+            self._repair_zero_ordinals(in_transaction=True)
             self.db.execute("COMMIT")
         except BaseException:
             self.db.execute("ROLLBACK")
             raise
+
+    def _repair_zero_ordinals(self, in_transaction):
+        """Fence for mixed-version writers: a zero ordinal is never read or followed by a new ordinal.
+
+        A pre-fix writer inserts the column default 0 at any time, including after startup. Repair runs under the same
+        write section as every writer, and meta seq moves so running readers reload. Failure propagates, so a zero
+        ordinal is never served."""
+        if int(self.db.execute("SELECT COUNT(*) FROM recommendations WHERE created_ord = 0").fetchone()[0]) == 0:
+            return
+        if not in_transaction:
+            self.db.execute("BEGIN IMMEDIATE")
+        try:
+            new = self._db_seq() + 1
+            if self._backfill_zero_ordinals(new):
+                self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
+            if not in_transaction:
+                self.db.execute("COMMIT")
+        except BaseException:
+            if not in_transaction:
+                self.db.execute("ROLLBACK")
+            raise
+
+    def _audit_creation_order(self):
+        """Position of each priority proposal's creation event in a verified audit chain, or None when it cannot be trusted."""
+        rows = self.db.execute("SELECT at, who, action, case_id, detail, prev, hash FROM audit ORDER BY seq").fetchall()
+        chain = ledger.verify_entries([dict(at=a, who=w, action=ac, case=ci, detail=d, prev=p, hash=h)
+                                       for a, w, ac, ci, d, p, h in rows])
+        head = self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone()
+        if not chain["intact"] or head is None or (chain["entries"], chain["head"]) != (head[0], head[1]):
+            return None
+        found, prefix = {}, "priority_recommendation "
+        for position, (_, _, action, _, detail, _, _) in enumerate(rows):
+            if action == "ai_run_end" and detail.startswith(prefix):
+                found.setdefault(detail[len(prefix):].split(" ", 1)[0], position)
+        return found
+
+    def _backfill_zero_ordinals(self, seq):
+        """Order rows with no ordinal after every existing one; the caller holds the write section and commits (#1292).
+
+        Order is the verified audit creation event when the audit chain is intact, otherwise body created (seconds),
+        then seq (last write, not creation), then id. A same-second group is recovered only when every member has an
+        audit event; otherwise its ids are recorded in meta rec_order_backfills for the named data owner. Earlier
+        records are never replaced, and bodies are never rewritten."""
+        rows = self.db.execute("SELECT id, seq, body FROM recommendations WHERE created_ord = 0").fetchall()
+        if not rows:
+            return 0
+        audit = self._audit_creation_order()
+        trusted = audit or {}
+        keyed = sorted(
+            (json.loads(body).get("created") or "", 0 if rid in trusted else 1, trusted.get(rid, rseq), rid)
+            for rid, rseq, body in rows)
+        start = int(self.db.execute("SELECT COALESCE(MAX(created_ord), 0) FROM recommendations").fetchone()[0])
+        self.db.executemany("UPDATE recommendations SET created_ord=?, seq=? WHERE id=?",
+                            [(n, seq, k[3]) for n, k in enumerate(keyed, start + 1)])
+        sizes = Counter(k[0] for k in keyed)
+        guessed = {k[0] for k in keyed if k[1]}
+        ambiguous = [k[3] for k in keyed if sizes[k[0]] > 1 and k[0] in guessed]
+        groups = sum(1 for n in sizes.values() if n > 1)
+        row = self.db.execute("SELECT value FROM meta WHERE key='rec_order_backfills'").fetchone()
+        batches = json.loads(row[0]) if row else []
+        batches.append(dict(
+            at=datetime.now().isoformat(timespec="seconds"), rows=len(keyed), first_ord=start + 1,
+            last_ord=start + len(keyed), audited=sum(1 for k in keyed if not k[1]), heuristic=sum(1 for k in keyed if k[1]),
+            same_second_groups=groups, ambiguous_total=len(ambiguous), ambiguous_ids=ambiguous[:REC_ORDER_IDS],
+            audit_chain=audit is not None, order="audit,created,seq,id"))
+        self._meta_set("rec_order_backfills", json.dumps(batches))
+        if start == 0 and not self.db.execute("SELECT 1 FROM meta WHERE key='rec_order_legacy'").fetchone():
+            self._meta_set("rec_order_legacy", json.dumps(dict(rows=len(keyed), same_second_groups=groups,
+                                                               order="created,seq,id")))
+        return len(keyed)
 
     def _queue_fingerprint(self):
         return json.dumps(
@@ -432,7 +489,11 @@ class SqlStore(Store):
             self.db.execute("BEGIN IMMEDIATE")
             try:
                 # Synchronise under the same writer lock as the membership generation.
-                self._sync()
+                self.local.writing = True
+                try:
+                    self._sync()
+                finally:
+                    self.local.writing = False
                 self._refresh_queue_membership([])
                 generation = self.db.execute(
                     "SELECT value FROM meta WHERE key='queue_generation'"
@@ -591,6 +652,8 @@ class SqlStore(Store):
             seq = self._db_seq()
             if seq == self._seq and self.cases:
                 return
+            self._repair_zero_ordinals(in_transaction=bool(getattr(self.local, "writing", False)))
+            seq = self._db_seq()
             for cid, rv, body in self.db.execute("SELECT id, rowversion, body FROM cases WHERE seq > ?", (self._seq,)).fetchall():
                 self._load_case(cid, rv, body)
             loaded = False
@@ -757,6 +820,7 @@ class SqlStore(Store):
                     known = self._recs.get(rid)
                     if known is None:
                         if top is None:
+                            self._backfill_zero_ordinals(new)
                             top = int(self.db.execute("SELECT COALESCE(MAX(created_ord), 0) FROM recommendations").fetchone()[0])
                         top += 1
                         self.db.execute("INSERT INTO recommendations (id, rowversion, seq, user, body, created_ord) VALUES (?,1,?,?,?,?)",

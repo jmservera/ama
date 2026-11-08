@@ -4712,11 +4712,24 @@ load or a save, so a later edit or a concurrent commit cannot move a proposal. `
 the second-resolution `created` text are not used for ordering. Ordering is data only: review,
 approval, consent and ranking policy are unchanged and a proposal never becomes a decision.
 
-Legacy rows have no recoverable creation order. On first start with the column, ordinals are derived
-once from body `created`, then `seq`, then `id`, so same-second rows and rows edited before the
-migration may differ from their true original order. The count of legacy rows and of same-second
-groups is stored as JSON in `meta` key `rec_order_legacy`; a named data owner decides whether a live
-database needs manual review. Rows written with ordinal 0 by an older binary after migration are
-backfilled after the existing maximum at the next start; stop older writers before the new binary
-serves. Tests: `src/core/tests/test_priority_order.py` (in-memory, SQLite, and SQL Server with
-`ZF_RESIDENT_MSSQL=1`).
+Legacy rows have no stored creation order, so the migration derives one and records what it could
+not establish. Where the audit chain verifies against its head, the `ai_run_end priority_recommendation
+<id>` event written in the same transaction as the creation gives the order of same-second proposals
+even when an older one was edited later. Otherwise order falls back to body `created`, then `seq`,
+then `id`. A same-second group is recovered only when every member has an audit event; any other
+same-second group is ambiguous. Every backfill batch, including rows an older binary wrote after a
+rollback, appends an entry to `meta` key `rec_order_backfills` (counts, ordinal range, audited and
+heuristic rows, `audit_chain` flag and up to 100 ambiguous ids); the first-ever migration also keeps
+the original `rec_order_legacy` record, which is never replaced. A named data owner decides whether a
+live database with ambiguous entries needs manual review; nothing is invented.
+
+Mixed-version fence: a pre-fix binary can insert ordinal 0 at any time, including after the new
+binary starts. The new binary never serves or follows a zero ordinal: every synchronisation that sees
+new data repairs zero rows first under the same write lock all writers use, and a save repairs them
+before allocating its own ordinal, so an older-binary row ranks by its commit position. If repair
+fails the read fails instead of returning a wrong newest proposal. The repair holds the write lock
+once per batch with one pass over the batch; it is not a substitute for draining older writers
+before a release. Tests: `src/core/tests/test_priority_order.py` (in-memory, SQLite, and SQL Server
+with `ZF_RESIDENT_MSSQL=1`, which now requires `ZF_SQL_SERVER` to be a loopback address and
+`ZF_SQL_AUTH=password`, see `tests/sqlguard.py`). SQL Server timing, the ledger-enabled migration and
+the SQL Server audit path are not yet proven.

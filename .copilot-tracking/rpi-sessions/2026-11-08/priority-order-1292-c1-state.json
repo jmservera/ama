@@ -1,0 +1,33 @@
+{
+  "task_id": "1292-priority-order-reload-c1",
+  "task_slug": "priority-order-1292-c1",
+  "parent_task": {"task_id": "1292-priority-order-reload", "task_slug": "priority-order-1292"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-08-priority-order-1292-c1-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-08-priority-order-1292-c1-plan.md",
+    "details": ".copilot-tracking/details/2026-11-08-priority-order-1292-c1-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-08-priority-order-1292-c1-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-08-priority-order-1292-c1-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "critique not repeated: correction driven by the coordinator's independent review findings", "status": "done", "evidence": "user request"},
+    {"decision": "light tests only; no SQL Server, Docker, browser or heavy lock; no push or PR", "status": "confirmed", "evidence": "user request"},
+    {"decision": "review executed once, outcome Conformant with one routed Medium residual", "status": "done", "evidence": ".copilot-tracking/reviews/2026-11-08-priority-order-1292-c1-review.md"}
+  ],
+  "blockers": [
+    {"id": "B-1", "summary": "Native SQL Server red/green for C1 source pending admission", "resolution": "coordinator admits the heavy resource"},
+    {"id": "B-2", "summary": "FULL local gate and receipt pending (SQL schema and migration change)", "resolution": "coordinator routes a clean exact-head gate"},
+    {"id": "B-3", "summary": "Ledger-enabled migration and SQL Server scale unproven", "resolution": "separate admitted test"},
+    {"id": "B-4", "summary": "Data owner must decide on recorded ambiguous legacy groups", "resolution": "human decision, none claimed"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator: independent exact-head review, admitted SQL Server red/green, full gate with receipt, hosted CI"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Native SQL Server red/green for C1", "rationale": "unmet acceptance criterion for SQL parity on corrected source", "evidence": "C1 changes record, PENDING"},
+    {"rank": 2, "task": "Shared loopback guard for other SQL test modules", "rationale": "review residual, engineering-quality leverage", "evidence": "C1 review"}
+  ]
+}

@@ -17,6 +17,7 @@ from typing import Any
 from unittest.mock import patch
 
 from dataset import DATA, supplied_appointment_fixture, supplied_contract_fixture
+from sqlguard import require_task_owned_loopback
 from zava_forward.core import ai_tasks, assistants, controls, projection, resident_decisions
 from zava_forward.core.quality import checklist_for
 from zava_forward.core.resident_decisions import resident_gate
@@ -4154,6 +4155,7 @@ class SqlResidentDecisions(JsonResidentDecisions):
 @unittest.skipUnless(os.environ.get("ZF_RESIDENT_MSSQL") == "1", "opt-in owned loopback SQL Server")
 class MssqlResidentControls(SqlResidentDecisions):
     def setUp(self) -> None:
+        require_task_owned_loopback(os.environ)
         from zava_forward.core.mssqlstore import _Conn, connection_string
 
         self.database = "zf_resident88_" + uuid.uuid4().hex
