@@ -10,10 +10,18 @@ ms.topic: reference
 
 `ranking_publication.publish(snapshot, archive_dir, published_on)` archives a
 `ranking.snapshot` as one immutable, dated file per policy version, as-of date
-and snapshot hash. It is idempotent, never overwrites and never deletes.
+and snapshot hash. It is idempotent and never overwrites or deletes a record (it
+removes only its own staging file).
 `verify` re-hashes every record and checks its policy hash against the verified
-registry; `overdue` reports a missing or stale publication. No clock is read:
-dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
+registry; `overdue` reports a missing or stale publication. Concurrent writers of
+one snapshot keep exactly one record: each stages its own uniquely named file and
+links it to the record name without overwriting, and the loser reports the
+retained record and date. This needs a local filesystem with hard links; a folder
+without them refuses to publish; the manager route then answers 503 with a storage
+message, not 403, and writes no record or audit entry. If the record is committed but
+its staging file cannot be removed, the result still reports the record and the
+retained file (`stage_retained`, runner warning `stage_not_removed`, a `warning` in the
+manual response); an operator removes it. No clock is read: dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
 
 Wiring (slice 2): `Store.publish_ranking_snapshot` (API `POST /api/ranking/publish`)
 archives today's snapshot under the current policy into `ranking-archive/` beside
@@ -48,20 +56,22 @@ refuses a non-exercise `publish`; `schedule` with status `blocked` also exits 2.
 The daily schedule is reported as proposed, not an approved rule; the draft
 policy stays a draft and retention stays a separate Legal decision.
 
-Durability and races: `publish` writes a unique temp file in the archive folder,
+Durability and races: `publish` writes a unique stage file in the archive folder,
 syncs it, links it to its final name (the first writer wins, nothing is
-overwritten) and syncs the folder. If only the folder sync fails after the link,
-the record stays and `DurabilityUnconfirmedError` (an `OSError`) is raised: the
-Store audits `ranking_snapshot_publication_unconfirmed` and the API returns 409
-`committed_unconfirmed`; this is not a confirmed publication and is not rolled
-back. An existing record or a lost race also syncs the folder before it is reported,
-so a retry is reported as already published only after a sync succeeds; the runner
-reports a failed sync as status `committed_unconfirmed` (exit 2, `written` true only
-when this call created the record, false for an existing record or lost race,
-null when unknown, an `uncertainty`
-entry with a safe next action, not a `publish_failed` refusal). If removing this
-call's own temp file also fails, that never hides the outcome: the temp file name
-(no path) is reported as `stage_retained` on the result or the error. A record already at the final name is checked
+overwritten), removes its own stage and syncs the folder, also before returning an
+already archived record. If the folder sync fails after the record is committed, the
+record stays and `DurabilityUnconfirmedError` (an `OSError` that keeps the cause's
+errno) is raised: the Store audits `ranking_snapshot_publication_unconfirmed` and the
+API returns 409 `committed_unconfirmed` with fixed path-free text. This is not a
+confirmed publication and is not rolled back. A retry syncs the folder again before
+reporting the existing record as already published (`written` false, original date);
+if that sync fails too it is unconfirmed again, so a named owner checks the archive.
+The error carries `written` (true when this call created the record, false for an
+existing record or lost race, null when unknown); the runner reports it with status
+`committed_unconfirmed` (exit 2, a path-free `uncertainty` with a safe next action),
+not as a `publish_failed` refusal.
+Other archive failures (for example no hard-link support) stay 503. A record already
+at the final name is checked
 against the snapshot, its hash, its name and a valid publication date; a damaged
 one is refused with `PublicationError` (never reported as already published) and
 left for a named owner to review. The run key is informational: repeated

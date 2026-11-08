@@ -401,9 +401,26 @@ def run(
             out["uncertainty"]["stage_retained"] = e.stage_retained
         return out
     except (ranking_publication.PublicationError, OSError) as e:
-        refusals.append(_refusal("publish_failed", str(e), "Check the archive location and rerun."))
+        action = "Check the archive location and rerun."
+        message = str(e)
+        retained = getattr(e, "stage_retained", None)
+        if retained:
+            message += f" Its temporary file {retained} could not be removed and remains."
+            action = "Check the archive permissions, remove that hidden file by hand, then rerun."
+            out["stage_retained"] = retained
+        refusals.append(_refusal("publish_failed", message, action))
         return out
     out.update(path=res["path"], written=res["written"], published_on=res["published_on"])
+    if res.get("stage_retained"):
+        out["stage_retained"] = res["stage_retained"]
+        out["warnings"].append(
+            _refusal(
+                "stage_not_removed",
+                f"The record is archived, but its temporary file {res['stage_retained']} could "
+                "not be removed. It may share the archived record's bytes, so do not edit it.",
+                "Check the archive permissions, then remove that hidden file by hand.",
+            )
+        )
     out["status"] = "published" if res["written"] else "already_published"
     return out
 
