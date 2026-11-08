@@ -1,4 +1,4 @@
-"""Retained readings: bounded read model, API and Quality evidence (issue 1288, correction 1).
+"""Retained readings: bounded read model, API and Quality evidence (issue 1288, C1 and C2).
 
 The model provider here is a local MOCK that records the request it receives. These prove which
 retained values reach the model request and how a returned output is cited and projected. They are
@@ -35,9 +35,9 @@ def stamp(seconds):
 class CapturingProvider(ta.Provider):
     """Mock: cites the first retained readings it was given, or only the home when told not to."""
 
-    def __init__(self, cite=True, **kw):
+    def __init__(self, cite=True, leak=None, **kw):
         super().__init__(**kw)
-        self.cite, self.prompts = cite, []
+        self.cite, self.leak, self.prompts = cite, leak, []
 
     def evidence(self, system, prompt, max_tokens, timeout):
         self.prompts.append(json.loads(prompt))
@@ -51,6 +51,10 @@ class CapturingProvider(ta.Provider):
                 citations=cited or ["source:home"],
             )
         ]
+        if self.leak:
+            value["summary"] = f"Indoor {self.leak} degC was recorded."
+            value["unknowns"] = [f"Whether {self.leak} degC is typical."]
+            value["findings"][0]["text"] = f"Reading of {self.leak} degC."
         result["text"] = ta.canonical(value)
         return result
 
@@ -60,7 +64,12 @@ class Seed:
         super().setUp()
         self.controls = {}
         with self.service.transaction() as db:
-            for table in ("sensor_reading", "sensor_consumer_control", "sensor_consumer_policy"):
+            for table in (
+                "sensor_reading",
+                "sensor_consumer_control",
+                "sensor_consumer_control_home",
+                "sensor_consumer_policy",
+            ):
                 db.execute(f"DROP TABLE IF EXISTS {table}")
 
     def mock(self, **kw):
@@ -302,12 +311,18 @@ class ReadModel(Seed, ta.Base):
             sensor_view.view(Spy(db), "ZF-1", None, time.time(), self.service.mssql)
         controls = [s for s in statements if "sensor_consumer_control" in s]
         self.assertTrue(controls)
-        self.assertTrue(all("WHERE sensor_id=?" in s for s in controls), controls)
+        for s in controls:
+            if "sensor_consumer_control_home" in s:
+                self.assertIn("WHERE home_id=?", s)
+                self.assertTrue("FETCH NEXT" in s or "LIMIT" in s, s)
+            else:
+                self.assertIn("WHERE sensor_id=?", s)
         readings = [s for s in statements if "FROM sensor_reading" in s]
         self.assertTrue(readings)
-        self.assertTrue(
-            all("home_id=?" in s and "FETCH NEXT" in s or "LIMIT" in s for s in readings)
-        )
+        for s in readings:
+            self.assertIn("home_id=?", s)
+            self.assertIn("observed_at<?", s)
+            self.assertTrue("FETCH NEXT" in s or "LIMIT" in s, s)
         with self.service.transaction() as db:
             if self.service.mssql:
                 row = db.execute(
@@ -319,6 +334,83 @@ class ReadModel(Seed, ta.Base):
                     "SELECT 1 FROM sqlite_master WHERE name='ix_sensor_reading_home_time'"
                 ).fetchone()
         self.assertIsNotNone(row)
+
+    def capture(self, now, reference=None):
+        with self.service.transaction() as db:
+            return sensor_view.capture_source(db, "ZF-1", reference, now, self.service.mssql)
+
+    def test_declined_unsampled_control_for_the_home_withholds(self):
+        self.put(3)
+        self.assertEqual(self.view()["state"], "ok")
+        self.set_consent("declined", sensor="SENS-OTHER-9")
+        self.assertEqual(self.view()["state"], "consent-withheld")
+        self.assertEqual(self.view()["latest"], None)
+
+    def test_control_missing_from_the_home_index_fails_closed(self):
+        self.put(3)
+        self.assertEqual(self.view()["state"], "ok")
+        with self.service.transaction() as db:
+            db.execute("DELETE FROM sensor_consumer_control_home")
+        self.assertEqual(self.view()["state"], "consent-withheld")
+
+    def test_other_homes_declined_control_does_not_withhold_this_home(self):
+        self.put(3)
+        self.set_consent("declined", home="ZF-2", sensor="SENS-SYN-2")
+        self.assertEqual(self.view()["state"], "ok")
+
+    def test_future_boundary_old_and_missing_readings(self):
+        self.put(0)
+        now = int(time.time())
+        horizon = sensor_view.WINDOW_DAYS * 86400
+        self.assertEqual(self.capture(now)["state"], "no-readings")
+        self.assertIs(self.capture(now)["future_dated_excluded"], False)
+        self.add_readings(1, tag="F", base=now, offset=-3600)
+        only_future = self.capture(now)
+        self.assertEqual((only_future["state"], only_future["latest"]), ("no-readings", None))
+        self.assertIs(only_future["future_dated_excluded"], True)
+        self.add_readings(1, tag="B", base=now, offset=0)
+        self.add_readings(1, tag="E", base=now, offset=horizon)
+        self.add_readings(1, tag="O", base=now, offset=horizon + 1)
+        ids = [r["reading_id"] for r in self.capture(now)["readings"]]
+        self.assertEqual(ids, ["E-ZF-1-000", "B-ZF-1-000"])
+        self.assertIs(self.capture(now)["future_dated_excluded"], True)
+        later = self.capture(now + 7200)
+        self.assertEqual(later["latest"]["reading_id"], "F-ZF-1-000")
+        self.assertIs(later["future_dated_excluded"], False)
+
+    def test_future_reading_is_never_the_latest_or_fresh(self):
+        self.put(2)
+        self.add_readings(1, tag="F", base=int(time.time()), offset=-3600)
+        v = self.view()
+        self.assertEqual(v["latest"]["reading_id"], "R-ZF-1-001")
+        self.assertNotEqual(v["freshness"], "fresh")
+        self.assertTrue(v["future_dated_excluded"])
+        self.assertIn("Current freshness is not asserted", v["as_of_rule"])
+
+    def test_context_rows_are_bounded_in_time_and_by_as_of(self):
+        self.put(0)
+        now = int(time.time())
+        ref = datetime.fromtimestamp(now - 3 * 86400, UTC).replace(microsecond=0)
+        day = 86400
+        self.add_readings(1, tag="A", base=now, offset=3 * day + 31 * day)
+        self.add_readings(1, tag="B", base=now, offset=3 * day + 29 * day)
+        self.add_readings(1, tag="C", base=now, offset=3 * day - 29 * day)
+        cap = self.capture(now, ref)
+        self.assertEqual([r["reading_id"] for r in cap["before"]], ["B-ZF-1-000"])
+        self.assertEqual(cap["after"], [])
+
+    def test_context_change_outside_the_window_changes_the_capture_identity(self):
+        self.put(0)
+        now = int(time.time())
+        ref = datetime.fromtimestamp(now - 3600, UTC).replace(microsecond=0)
+        self.add_readings(20, base=now, offset=3600 + 120)
+        first = self.capture(now, ref)
+        self.add_readings(1, tag="C", base=now, offset=3600 + 90)
+        second = self.capture(now, ref)
+        self.assertEqual(first["readings"], second["readings"])
+        self.assertEqual(first["latest"], second["latest"])
+        self.assertNotEqual(first["before"], second["before"])
+        self.assertNotEqual(digest(first), digest(second))
 
 
 class Http(Seed, ta.ApiTests):
@@ -434,7 +526,7 @@ class Http(Seed, ta.ApiTests):
             stored = db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()[0]
         self.assertIn(reading, stored)
 
-    def test_dedupe_restart_bucket_and_fresh_evidence(self):
+    def test_same_bucket_arrival_is_new_evidence_for_the_model_and_stales_the_old_task(self):
         self.ready()
         first = self.service.invoke(self.pm, "quality-evidence", "ZF-1")
         self.assertEqual(
@@ -443,21 +535,121 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(
             self.other().invoke(self.pm, "quality-evidence", "ZF-1")["id"], first["id"]
         )
+        self.assertTrue(self.service.execute(first["id"]))
         bucket = int(time.time()) // SEAL * SEAL
         newer = self.add_live(1, base=bucket)
-        with self.service.transaction() as db:
-            snap = self.service.snapshot(db, "quality-evidence", self.store.detail("ZF-1"))
-        # A fresh reading in the same bucket reaches the evidence without another request.
-        self.assertEqual(snap["sources"]["sensors"]["latest"]["reading_id"], newer)
-        self.assertFalse(self.service.detail(self.pm, first["id"])["stale"])
+        view = self.request("/api/cases/ZF-1/sensors")[1]
+        self.assertEqual(view["latest"]["reading_id"], newer)
+        old = self.service.detail(self.pm, first["id"])
+        self.assertTrue(old["stale"])
+        self.assertEqual(old["review_flag"]["status"], "not-current")
+        second = self.service.invoke(self.pm, "quality-evidence", "ZF-1")
+        self.assertNotEqual(second["id"], first["id"])
         self.assertEqual(
-            self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"], first["id"]
+            self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"], second["id"]
         )
-        # A reading in a later six-hour bucket is a substantive change.
-        self.add_live(0, base=bucket + SEAL, sensor=DEFAULT)
-        self.assertTrue(self.service.detail(self.pm, first["id"])["stale"])
-        self.assertNotEqual(
-            self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"], first["id"]
+        self.assertTrue(self.service.execute(second["id"]))
+        sent = self.provider.prompts[-1]["evidence"]
+        self.assertEqual(sent["sources"]["sensors"]["latest"], view["latest"])
+        self.assertIn(sensor_view.key_of(view["latest"]), sent["citations"])
+        fresh = self.service.detail(self.pm, second["id"])
+        self.assertFalse(fresh["stale"])
+        self.assertEqual(fresh["snapshot"]["sources"]["sensors"]["latest"], view["latest"])
+        self.assertEqual(self.provider.calls, 2)
+
+    def test_scan_does_not_start_new_work_for_each_arrival_in_one_bucket(self):
+        self.ready()
+        self.proactive()
+        before = self.quality_task()
+        bucket = int(time.time()) // SEAL * SEAL
+        self.add_live(1, base=bucket)
+        self.add_live(2, base=bucket)
+        self.assertEqual(set(self.service.scan()["enqueued"]) & set(self.quality_task()), set())
+        self.assertEqual(self.quality_task(), before)
+        self.add_live(0, base=bucket + SEAL)
+        self.assertTrue(set(self.service.scan()["enqueued"]) - set(before))
+
+    def test_context_change_makes_the_old_task_stale(self):
+        self.ready()
+        tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
+        self.service.execute(tid)
+        self.add_live(60 * 5)
+        self.assertTrue(self.service.detail(self.pm, tid)["stale"])
+
+    def test_manual_completion_then_proactive_scan_stays_manual(self):
+        self.ready()
+        tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
+        self.assertTrue(self.service.execute(tid))
+        with self.service.transaction() as db:
+            self.service._enqueue(
+                db, "quality-evidence", self.store.detail("ZF-1"), "proactive", "scan"
+            )
+        flag = self.service.detail(self.pm, tid)["review_flag"]
+        self.assertEqual(
+            (flag["status"], flag["trigger"], flag["autonomous"]),
+            ("manual-proposal", "requested", False),
+        )
+
+    def test_proactive_completion_then_manual_invocation_keeps_its_attribution(self):
+        self.ready()
+        tid, _ = self.proactive()
+        self.assertEqual(self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"], tid)
+        flag = self.service.detail(self.pm, tid)["review_flag"]
+        self.assertEqual((flag["status"], flag["trigger"]), ("review-suggested", "proactive"))
+        self.assertEqual(self.provider.calls, 1)
+
+    def test_person_request_queued_before_dispatch_wins_over_a_scan(self):
+        self.ready()
+        scanned = self.service.scan()["enqueued"]
+        tid = self.quality_task()[0]
+        self.assertIn(tid, scanned)
+        self.service.invoke(self.pm, "quality-evidence", "ZF-1")
+        self.service.execute(tid)
+        self.assertEqual(
+            self.service.detail(self.pm, tid)["review_flag"]["status"], "manual-proposal"
+        )
+
+    def _after_withdrawal(self, tid):
+        return {
+            "detail": self.request(f"/api/assistants/proposals/{tid}")[1],
+            "list": self.request("/api/assistants/proposals?case_id=ZF-1")[1],
+            "export": self.service.export(),
+            "sensors": self.request("/api/cases/ZF-1/sensors")[1],
+        }
+
+    def test_withdrawal_withholds_uncited_derived_text_and_edited_output(self):
+        self.ready(cite=False, leak="23.7")
+        tid, p = self.proactive()
+        self.assertEqual(p["review_flag"]["status"], "uncited")
+        self.assertIn("23.7", json.dumps(p["output"]))
+        qa = self.people["Quality Inspector"]
+        p = self.service.review(
+            qa, tid, "verify", p["revision"], "Compared the sources.", source_verified=True
+        )
+        edited = dict(p["output"], summary="Edited: indoor 24.9 degC was recorded.")
+        p = self.service.review(qa, tid, "edit-accept", p["revision"], "Edited.", edited)
+        self.assertIn("24.9", json.dumps(self.request(f"/api/assistants/proposals/{tid}")[1]))
+        self.set_consent("declined")
+        for name, body in self._after_withdrawal(tid).items():
+            text = json.dumps(body)
+            for derived in ("23.7", "24.9"):
+                self.assertNotIn(derived, text, name)
+        shown = self.request(f"/api/assistants/proposals/{tid}")[1]
+        self.assertEqual(shown["output"]["findings"], [])
+        self.assertTrue(any("edited_output" in e for e in shown["provenance"]))
+        self.assertTrue(
+            all(not (e.get("edited_output") or {}).get("findings") for e in shown["provenance"])
+        )
+
+    def test_declined_unsampled_control_withholds_every_historical_projection(self):
+        self.ready()
+        tid, p = self.proactive()
+        reading = p["review_flag"]["readings"][0]["reading_id"]
+        self.set_consent("declined", sensor="SENS-OTHER-9")
+        for name, body in self._after_withdrawal(tid).items():
+            self.assertNotIn(reading, json.dumps(body), name)
+        self.assertEqual(
+            self.request(f"/api/assistants/proposals/{tid}")[1]["review_flag"]["status"], "withheld"
         )
 
     def test_known_signature_is_not_proposed_again_by_scan(self):
@@ -530,6 +722,16 @@ class MssqlReadModel(ta.MssqlFixture, ReadModel):
 @MSSQL
 class MssqlHttp(ta.MssqlFixture, Http):
     pass
+
+
+class AccountSummaryName(unittest.TestCase):
+    def test_account_summary_name_starts_with_visible_text(self):
+        from pathlib import Path
+
+        web = Path(sensor_view.__file__).parents[4] / "api/src/zava_forward/api/web"
+        js = (web / "app.js").read_text(encoding="utf-8")
+        self.assertIn('"aria-label", `${short}, your account`', js)
+        self.assertIn('getElementById("account-short").textContent = short', js)
 
 
 if __name__ == "__main__":

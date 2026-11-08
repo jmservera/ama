@@ -46,6 +46,7 @@ function sensorPanel(id) {
       h("p", { class: "muted" }, "Synthetic temperature and relative humidity retained for this home only. They are not calibrated, not a measure of comfort or hazard, and live demonstration readings are weather-derived rather than measured indoors. The Quality evidence assistant reads these same readings."),
     ];
     if (v.latest) kids.push(h("p", {}, `Latest: ${v.latest.temperature_c} degC and ${v.latest.humidity_pct} %RH at ${v.latest.observed_at} (sensor ${v.latest.sensor_id}, reading ${v.latest.reading_id}). Freshness: ${v.freshness}. Source: ${(v.provenance || {})[v.latest.provenance_class] || "synthetic, not calibrated"}`));
+    if (v.as_of_rule) kids.push(h("p", { class: "muted" }, `${v.as_of_rule}${v.future_dated_excluded ? " Readings dated after this time exist and are not shown or used." : ""}`));
     if (v.retrofit_context) kids.push(h("p", { class: "muted" }, v.retrofit_context.text));
     if (v.state !== "ok") {
       kids.push(h("p", {}, `${v.detail || v.freshness_text} Use the manual route: ${v.manual_route}`));

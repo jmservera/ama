@@ -15,11 +15,15 @@ freshness and provenance to Quality Inspector and Retrofit Programme Manager
 only; the Programme Support Officer keeps the ordinary quality panel and manual
 route. `capture_source` holds the newest 12 readings (so the displayed latest is
 always inside the capture) plus at most 4 before and 4 after the first quality
-evidence record. It reads no clock; the same capture feeds the snapshot, the UI
-and the citations `sensor:{sensor_id}:{reading_id}` (the retained composite key).
-Only the staleness and trigger signature is coarse (six-hour bucket of the latest
-reading), so a new reading in the same bucket is captured but does not stale or
-re-enqueue a proposal, and empty, withheld or unavailable captures stay stable.
+evidence record. The capture takes an as-of time only as a filter (it is not stored): readings
+dated after it are excluded and reported as `future_dated_excluded`, never shown
+as latest or fresh; the window is bounded to 366 days and context to 30 days
+around the anchor. The same exact capture feeds the snapshot, the UI, the
+citations `sensor:{sensor_id}:{reading_id}` (the retained composite key) and the
+task identity and staleness, so a new reading or context change in the same
+six-hour bucket stales the old proposal. Only proactive scan scheduling uses the
+coarse six-hour signature, so arrivals do not enqueue work each time, and empty,
+withheld or unavailable captures stay stable.
 
 Provenance is classified from the retained schema and scenario:
 `live-sim-reading*` with scenario `live-simulator` is synthetic and
@@ -27,9 +31,10 @@ weather-derived; `reading-v1` and `sensor-fault-input-v1` are synthetic modelled
 indoor; anything else is synthetic and unclassified. None is calibrated. No
 installation date or marker exists, so pre/post-retrofit context is stated as
 unavailable; the first quality evidence record time is a separately named
-`quality_record_anchor`, not a retrofit effect. Consent is looked up by primary
-key for the captured sensors only. When current consent is withdrawn, values,
-citations, derived output and flags are withheld from the detail, list and
+`quality_record_anchor`, not a retrofit effect. Consent is read from the indexed
+`sensor_consumer_control_home` table (at most 100 controls for the home); any
+declined control wins, and an absent, incomplete or unindexed set is unknown. When current consent is withdrawn, values,
+citations, derived output (including uncited text and `edited_output`) and flags are withheld from the detail, list and
 export projections (the stored record is kept).
 
 `review_flag` names the state of a returned model output. Only a proactive,

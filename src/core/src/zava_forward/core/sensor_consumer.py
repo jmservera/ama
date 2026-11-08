@@ -263,14 +263,25 @@ class SensorConsumer:
                     "INSERT INTO sensor_consumer_control (sensor_id, body) VALUES (?, ?)",
                     (control.sensor_id, json.dumps(asdict(control))),
                 )
+            db.execute("DELETE FROM sensor_consumer_control_home")
+            for control in controls:
+                db.execute(
+                    "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES (?, ?)",
+                    (control.home_id, control.sensor_id),
+                )
 
     def _schema(self, db: Connection) -> None:
         text = "NVARCHAR(MAX)" if self.mssql else "TEXT"
         key = "VARCHAR(64) COLLATE Latin1_General_100_BIN2" if self.mssql else "TEXT"
+        home = "NVARCHAR(128) COLLATE Latin1_General_100_BIN2" if self.mssql else "TEXT"
         tables = {
             "sensor_consumer_policy": f"(id INT NOT NULL PRIMARY KEY, body {text} NOT NULL)",
             "sensor_consumer_control": (
                 f"(sensor_id {key} NOT NULL PRIMARY KEY, body {text} NOT NULL)"
+            ),
+            "sensor_consumer_control_home": (
+                f"(home_id {home} NOT NULL, sensor_id {key} NOT NULL,"
+                " PRIMARY KEY (home_id, sensor_id))"
             ),
             "sensor_delivery": (
                 f"(reference {key} NOT NULL PRIMARY KEY, status VARCHAR(12) NOT NULL,"
@@ -319,7 +330,22 @@ class SensorConsumer:
                 "CREATE INDEX IF NOT EXISTS ix_sensor_reading_home_time"
                 " ON sensor_reading (home_id, observed_at)"
             )
+        self._backfill_control_home(db)
         self._check_reading_schema(db)
+
+    def _backfill_control_home(self, db: Connection) -> None:
+        """One-time fill of the per-home control index for controls stored before it existed."""
+        if db.execute("SELECT COUNT(*) FROM sensor_consumer_control_home").fetchone()[0]:
+            return
+        for sensor_id, body in db.execute(
+            "SELECT sensor_id, body FROM sensor_consumer_control"
+        ).fetchall():
+            home_id = json.loads(str(body)).get("home_id")
+            if isinstance(home_id, str) and home_key(home_id):
+                db.execute(
+                    "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES (?, ?)",
+                    (home_id, str(sensor_id)),
+                )
 
     _collation = "COLLATE Latin1_General_100_BIN2"
 

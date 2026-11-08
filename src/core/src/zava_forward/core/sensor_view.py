@@ -9,9 +9,7 @@ digest. Values are withheld unless the sensors' recorded monitoring consent is g
 """
 
 import json
-from datetime import UTC, datetime
-
-from .synthetic.sensor_identity import home_key, sensor_key
+from datetime import UTC, datetime, timedelta
 
 VERSION = "retained-reading-view-v2"
 KIND = "synthetic-retained-readings"
@@ -19,6 +17,9 @@ UNITS = dict(temperature_c="degC", humidity_pct="%RH")
 WINDOW_MAX = 12
 CONTEXT_MAX = 4
 SEAL_SECONDS = 21600
+CONTROL_MAX = 100
+WINDOW_DAYS = 366
+CONTEXT_DAYS = 30
 FRESH_SECONDS = 900
 STAMP = "%Y-%m-%dT%H:%M:%SZ"
 COLUMNS = (
@@ -45,6 +46,11 @@ RETROFIT = dict(
         "No installation date or marker is recorded, so no before or after retrofit "
         "comparison is made."
     ),
+)
+AS_OF_RULE = (
+    "Only readings observed at or before the time of this request, within the last "
+    f"{WINDOW_DAYS} days, are included. Later-dated readings are excluded and are never "
+    "treated as recent. Current freshness is not asserted by this evidence."
 )
 ANCHOR_NAME = "quality_record_anchor"
 ANCHOR_MEANING = (
@@ -95,34 +101,43 @@ def classify(row):
     return "synthetic-unclassified"
 
 
-def _controls(db, home_id, sensor_ids):
-    """Per-home control records by primary key; bounded to the sensors this home's rows name."""
-    wanted = set(sensor_ids)
-    if home_key(home_id):
-        wanted.add(sensor_key(home_id))
-    if len(home_id) > 3:
-        wanted.add("SENS-SYN-" + home_id[3:])
+def _controls(db, home_id, sensor_ids, mssql=False):
+    """Every control of this home from the indexed per-home table, loaded by primary key.
+
+    Returns (states by sensor, complete). Incomplete means an indexed control is missing or a named
+    sensor has a control for this home that the index does not hold; consent then fails closed.
+    """
+    rows = db.execute(
+        "SELECT sensor_id FROM sensor_consumer_control_home WHERE home_id=? ORDER BY sensor_id"
+        + (" OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY" if mssql else " LIMIT ?"),
+        (home_id, CONTROL_MAX + 1),
+    ).fetchall()
+    indexed = [str(r[0]) for r in rows]
+    complete = len(indexed) <= CONTROL_MAX
     found = {}
-    for sensor_id in sorted(wanted):
+    for sensor_id in sorted(set(indexed[:CONTROL_MAX]) | set(sensor_ids)):
         row = db.execute(
             "SELECT body FROM sensor_consumer_control WHERE sensor_id=?", (sensor_id,)
         ).fetchone()
         if row is None:
+            complete = complete and sensor_id not in indexed
             continue
         control = json.loads(str(row[0]))
-        if control.get("home_id") == home_id:
-            found[sensor_id] = control.get("consent")
-    return found
+        if control.get("home_id") != home_id:
+            complete = complete and sensor_id not in indexed
+            continue
+        found[sensor_id] = control.get("consent")
+        complete = complete and sensor_id in indexed
+    return found, complete
 
 
-def consent(db, home_id, sensor_ids=()):
-    """Trusted per-home consent; anything unclear is unknown, never granted."""
-    found = _controls(db, home_id, sensor_ids)
+def consent(db, home_id, sensor_ids=(), mssql=False):
+    """Trusted per-home consent. A decline on any control of the home wins; unclear is unknown."""
+    found, complete = _controls(db, home_id, sensor_ids, mssql)
     states = set(found.values())
     if "declined" in states:
         return "declined"
-    named = {s for s in sensor_ids}
-    if states == {"granted"} and named <= set(found):
+    if complete and states == {"granted"} and set(sensor_ids) <= set(found):
         return "granted"
     return "unknown"
 
@@ -196,18 +211,51 @@ def _classes(rows):
     return sorted({r["provenance_class"] for r in rows})
 
 
-def capture_source(db, home_id, reference, mssql=False):
-    """Clock-free, bounded sensor source holding the newest readings, the latest included."""
+def capture_source(db, home_id, reference, now, mssql=False):
+    """Bounded sensor source holding the newest readings at or before `now`, the latest included.
+
+    `now` only filters. It is not stored, so unchanged evidence keeps one digest as the clock moves.
+    """
     base = _base(home_id, reference)
     empty = dict(readings=[], before=[], after=[], latest=None, provenance={}, citation_keys=[])
     try:
-        window = _select(db, mssql, home_id, WINDOW_MAX, True)
+        as_of = _utc(int(now)).replace(microsecond=0)
+        edge = as_of + timedelta(seconds=1)
+        window = _select(
+            db,
+            mssql,
+            home_id,
+            WINDOW_MAX,
+            True,
+            lower=as_of - timedelta(days=WINDOW_DAYS),
+            upper=edge,
+        )
+        future = bool(
+            _select(db, mssql, home_id, 1, False, lower=edge, upper=edge + timedelta(days=1))
+        )
         before = after = []
         if reference is not None:
-            before = _select(db, mssql, home_id, CONTEXT_MAX, True, upper=reference)
-            after = _select(db, mssql, home_id, CONTEXT_MAX, False, lower=reference)
+            span = timedelta(days=CONTEXT_DAYS)
+            before = _select(
+                db,
+                mssql,
+                home_id,
+                CONTEXT_MAX,
+                True,
+                lower=reference - span,
+                upper=min(reference, edge),
+            )
+            after = _select(
+                db,
+                mssql,
+                home_id,
+                CONTEXT_MAX,
+                False,
+                lower=reference,
+                upper=min(reference + span + timedelta(seconds=1), edge),
+            )
         sensor_ids = {r["sensor_id"] for r in window + before + after}
-        state = consent(db, home_id, sensor_ids)
+        state = consent(db, home_id, sensor_ids, mssql)
         if state != "granted":
             return dict(
                 base,
@@ -227,7 +275,7 @@ def capture_source(db, home_id, reference, mssql=False):
     out = dict(
         base,
         state="ok" if window else "no-readings",
-        detail=None if window else "No retained readings for this home.",
+        detail=None if window else "No retained readings for this home in the bounded time window.",
         readings=window,
         before=before,
         after=after,
@@ -239,6 +287,8 @@ def capture_source(db, home_id, reference, mssql=False):
             None if after else "No retained readings from the first quality evidence record onward."
         ),
         window_absent=None if window else "No retained readings for this home.",
+        future_dated_excluded=future,
+        as_of_rule=AS_OF_RULE,
     )
     rows = window + before + after
     out["provenance"] = {c: CLASSES[c] for c in _classes(rows)}
@@ -268,7 +318,7 @@ def signature(sensors):
 
 def view(db, home_id, reference, now, mssql=False):
     """Employee read model: the captured source plus freshness from the capture's own latest."""
-    out = capture_source(db, home_id, reference, mssql)
+    out = capture_source(db, home_id, reference, now, mssql)
     out.update(
         generated_at=_text(_utc(int(now))),
         freshness="unknown",
@@ -283,9 +333,16 @@ def view(db, home_id, reference, now, mssql=False):
         age = int(now) - int(
             datetime.strptime(latest["observed_at"], STAMP).replace(tzinfo=UTC).timestamp()
         )
+        if age < 0:
+            out.update(
+                age_seconds=0,
+                freshness="unknown",
+                freshness_text="Latest reading is dated after this request; not treated as recent.",
+            )
+            return out
         fresh = age <= FRESH_SECONDS
         out.update(
-            age_seconds=max(age, 0),
+            age_seconds=age,
             freshness="fresh" if fresh else "stale",
             freshness_text=(
                 "Latest reading is recent (within 15 minutes)."

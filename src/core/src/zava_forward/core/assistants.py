@@ -74,8 +74,18 @@ def digest(value):
     return hashlib.sha256(canonical(value).encode()).hexdigest()
 
 
+WITHHELD_OUTPUT = dict(summary="Withheld: this output was built with retained readings and monitoring consent is not granted now.",
+                       findings=[], unknowns=[])
+
+
 def signature(snapshot):
-    """Identity and staleness digest. Sensor evidence enters only as its coarse, clock-free trigger signature."""
+    """Identity and staleness digest of the exact capture, retained readings, context and citations included."""
+    return digest(snapshot)
+
+
+def scheduling_signature(snapshot):
+    """Rate-limit key for proactive scans only. It never decides identity or staleness: sensor evidence
+    enters as a coarse six-hour value so one five-minute reading does not start new model work."""
     sensors = snapshot["sources"].get("sensors")
     if sensors is None:
         return digest(snapshot)
@@ -260,7 +270,7 @@ def review_flag(task, provenance=(), actionable=True, withheld=False):
     known = sensor_view.citations(task["snapshot"]["sources"].get("sensors") or {})
     cited = sorted({x for finding in output["findings"] for x in finding["citations"]})
     sensor_cited = [x for x in cited if x in known]
-    proactive = any(e.get("mode") == "proactive" for e in provenance if e.get("kind") == "invocation")
+    proactive = (task.get("dispatch") or {}).get("trigger") == "proactive"
     state = task.get("state")
     if state == "rejected":
         status = "rejected"
@@ -567,7 +577,8 @@ class Assistants:
             proc = json.loads(row[0]) if row else {}
         sensors = None
         if capability == "quality-evidence":
-            sensors = sensor_view.capture_source(db, c["id"], sensor_view.reference_for(c.get("quality")), self.mssql)
+            sensors = sensor_view.capture_source(db, c["id"], sensor_view.reference_for(c.get("quality")),
+                                                 self.now(db), self.mssql)
         return capture(capability, c, proc, sensors)
 
     def continuity(self, db):
@@ -742,7 +753,7 @@ class Assistants:
             if self.limits.valid and len(canonical(snapshot)) > self.limits.input_chars - 1500:
                 state, body["reason"] = "failed", "Source capture exceeds bounded input. Review manually."
             db.execute("INSERT INTO assistant_tasks (id,capability,case_id,signature,body,state,fence,owner,lease_until,attempts,not_before,revision) VALUES (?,?,?,?,?,?,0,'',0,0,0,1)",
-                       (tid, capability, c["id"], signature_, canonical(body), state))
+                       (tid, capability, c["id"], scheduling_signature(snapshot), canonical(body), state))
         elif not self.disabled(db, capability):
             task = self._row(db, tid)
             if task["state"] == "disabled" and task["attempts"] < self.limits.attempts:
@@ -813,7 +824,7 @@ class Assistants:
             return False
         ids = {r["sensor_id"] for r in sensor_view.citations(sensors).values()}
         try:
-            granted = sensor_view.consent(db, body["case_id"], ids) == "granted"
+            granted = sensor_view.consent(db, body["case_id"], ids, self.mssql) == "granted"
         except Exception:
             granted = False
         if granted:
@@ -822,21 +833,15 @@ class Assistants:
         stub = dict(state="consent-withheld", detail=note, readings=[], before=[], after=[], latest=None, citation_keys=[])
         body["snapshot"] = dict(body["snapshot"], sources=dict(body["snapshot"]["sources"], sensors=stub),
                                 citations={k: v for k, v in body["snapshot"]["citations"].items() if not k.startswith("sensor:")})
-        output = body.get("output")
-        if output and any(x.startswith("sensor:") for f in output["findings"] for x in f["citations"]):
-            body["output"] = dict(summary="Withheld: this output used retained readings and monitoring consent is not granted now.",
-                                  findings=[], unknowns=[])
+        if body.get("output"):
+            body["output"] = dict(WITHHELD_OUTPUT)
         body["sensor_withheld"] = True
         return True
 
     @staticmethod
     def _scrub_events(events):
-        """Provenance outputs that cite retained readings are not disclosed while consent is withdrawn."""
-        def cites(o):
-            return bool(o) and any(x.startswith("sensor:") for f in o.get("findings", []) for x in f.get("citations", []))
-        stub = dict(summary="Withheld: this output used retained readings and monitoring consent is not granted now.",
-                    findings=[], unknowns=[])
-        return [dict(e, output=stub) if cites(e.get("output")) else e for e in events]
+        """The model and any editor saw the withheld capture, so every output-bearing event field is withheld."""
+        return [dict(e, **{k: dict(WITHHELD_OUTPUT) for k in ("output", "edited_output") if e.get(k)}) for e in events]
 
     def sensors(self, user, case_id):
         """Bounded retained indoor readings for one authorised case; the same source the quality snapshot captures."""
@@ -937,11 +942,11 @@ class Assistants:
                     s = self.snapshot(db, cap, c)
                     signatures = {r[0] for r in db.execute(
                         "SELECT signature FROM assistant_tasks WHERE capability=? AND case_id=?", (cap, c["id"])).fetchall()}
-                    sig = signature(s)
+                    sig = scheduling_signature(s)
                     if eligible(cap, s, today, bool(signatures) and sig not in signatures, sig in signatures):
                         eligible_now += 1
                         if db.execute("SELECT 1 FROM assistant_tasks WHERE id=?",
-                                      (self._task_id(db, cap, c, sig),)).fetchone() is None:
+                                      (self._task_id(db, cap, c, signature(s)),)).fetchone() is None:
                             new += 1
                 result.append(dict(id=cap, rule=RULES[cap], open_cases_in_scope=len(scoped), eligible_cases=eligible_now,
                                    new_proposals=new, max_calls_per_request=bounds["max_calls_per_request"],
@@ -981,7 +986,7 @@ class Assistants:
                         signatures = db.execute("SELECT signature FROM assistant_tasks WHERE capability=? AND case_id=?",
                                                 (cap, cid)).fetchall()
                         known = {r[0] for r in signatures}
-                        sig = signature(s)
+                        sig = scheduling_signature(s)
                         if eligible(cap, s, today, bool(known) and sig not in known, sig in known):
                             result.append(self._enqueue(db, cap, c, "proactive", PURPOSE))
                 return dict(enqueued=result, disabled=None)
@@ -1038,6 +1043,11 @@ class Assistants:
             fence = task["fence"] + 1
             task["reason"] = None
             task["claim_epoch"] = self.continuity(db)["epoch"]
+            invocations = [json.loads(r[0]) for r in db.execute(
+                "SELECT body FROM assistant_events WHERE task_id=? ORDER BY at,id" + (
+                    " OFFSET 0 ROWS FETCH NEXT 50 ROWS ONLY" if self.mssql else " LIMIT 50"), (tid,)).fetchall()]
+            requested = any(e.get("kind") == "invocation" and e.get("mode") != "proactive" for e in invocations)
+            task["dispatch"] = dict(trigger="requested" if requested else "proactive", fence=fence)
             task["claim_binding"] = digest(runtime_binding(task["capability"], self.store.ai))
             result = db.execute("UPDATE assistant_tasks SET state='leased',body=?,owner=?,fence=?,lease_until=?,attempts=attempts+1,revision=revision+1 WHERE id=? AND fence=? AND revision=?",
                                 (canonical(task), owner, fence, now + l.lease, tid, task["fence"], task["revision"]))
@@ -1047,7 +1057,7 @@ class Assistants:
             db.execute("INSERT INTO assistant_attempts (id,task_id,fence,pool,reserved,actual,outcome,active_until) VALUES (?,?,?,?,?,NULL,'reserved',?)",
                        (f"{tid}:{fence}", tid, fence, l.pool, l.reservation, now + l.lease))
             self.event(db, tid, kind="claimed", owner=owner, fence=fence, reservation=l.reservation,
-                       authority_reference=l.authority)
+                       authority_reference=l.authority, trigger=task["dispatch"]["trigger"])
             return self._row(db, tid)
 
     def renew(self, tid, owner, fence):

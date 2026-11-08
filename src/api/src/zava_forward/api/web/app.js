@@ -185,7 +185,9 @@ function showAccount() {
   clearPhoto();
   const account = me.account || { name: me.user.name, email: "" };
   document.getElementById("account-name").textContent = account.name;
-  document.getElementById("account-short").textContent = account.name.split(/\s+/)[0] || "Account";
+  const short = account.name.split(/\s+/)[0] || "Account";
+  document.getElementById("account-short").textContent = short;
+  document.querySelector("#account > summary").setAttribute("aria-label", `${short}, your account`);
   document.getElementById("account-email").textContent = account.email;
   document.getElementById("who").textContent = me.user.role;
   document.getElementById("account-initials").textContent = account.name.trim().split(/\s+/).slice(0, 2).map((n) => n[0]).join("").toUpperCase();
