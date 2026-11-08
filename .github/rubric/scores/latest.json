@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-08T13:58:47+00:00",
-  "commit": "19a910c2f036e98093371f8743d96f4cce2adc57",
+  "scored_at": "2026-11-08T16:57:10+00:00",
+  "commit": "564e716d477f962668d22f44c3bb9920c0f5c394",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/42486991355",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/42501984196",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
-    "solution-code": "40eee8a3b287da5d84451272971c80d6ae5cbda3861da7c689a44450ff45944c",
+    "solution-code": "f68f1d223fdb58941c26e79d75821b0da8f41be505fd1b911acf948ba7a2b99f",
     "infrastructure": "7829e0d5b60790a27890969d32d8f827d95cddad8a5f89672d3e4480f35b6b2c",
     "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
     "pitch": "0c212fc27c0b4f5347cb28912b69d7a718b59c375ed1551f367a435636328c1e",
@@ -55,7 +55,7 @@
         "src/api/tests/test_sensor_sql_check.py:1-48",
         "src/core/tests/test_sensor_analysis_mssql.py:1-54"
       ],
-      "rationale": "Diff adds a stricter, test-covered --selector analysis path (exact-count/no-skip validation) and an opt-in MSSQL-backed retained-analysis durability test for Refs #\u200b111, with README explicitly disclaiming it does not meet full #\u200b111 acceptance or live sensor accuracy. Incremental harness rigor; c..."
+      "rationale": "Diff adds a stricter, test-covered --selector analysis path (exact-count/no-skip validation) and an opt-in MSSQL-backed retained-analysis durability test for Refs #\u200b111, with README disclaiming full #\u200b111 acceptance. Incremental harness rigor; ceiling 5 retained."
     },
     "A5": {
       "score": 5,
