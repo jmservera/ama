@@ -10627,3 +10627,7 @@ The data-operator browser check now selects failed-AI register rows by their Kin
 ## 2026-11-07 - Issue 149 operator check failure-outcome prefix
 
 The data-operator check helper now requires the failure outcome sentence to start the What happened cell, so a delivered-result prefix is rejected. Test-helper only; no product, SQL or security change, no acceptance claim, browser run pending. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-correction-2).
+
+## 2026-11-07 - Issue 149 operator check source-cell contract
+
+The data-operator browser check now reads the synthetic record ID from the Source or run reference cell of Kind-selected failed rows. The earlier failure was a checker contract error, not a product defect. Checker and tests only; maintained atlas (194) and data-operator (100, required axe) Chromium checks passed on the corrected source, with no whole-issue, accessibility or assistive-technology acceptance. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-correction-3).
