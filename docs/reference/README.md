@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-05
+ms.date: 2026-11-08
 ms.topic: overview
 ---
 
@@ -24,15 +24,44 @@ management: short pages that point to clusters of related material.
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
+The current coauthored delivery has 45 pages, with the additive Supplement
+starting on page 37. This is a draft with unreported experimental outcomes,
+not a completed confirmatory report.
+
+The later [8 November study update](../capstone/source/review-2026-11-08.md#later-8-november-study-and-coauthor-update)
+records owner-confirmed OSF base `xcpt4` (7 November; public API returned 401),
+an ongoing **unregistered exploratory amendment** and coauthor
+Isabel Cabezas Martin's separate execution/data-collection role. Both
+authors work at Microsoft; this is not independent institutional validation.
+Active source `e71037d9`, selected 21/default 12, three models/five arms,
+F1-F10 plus CR1 and seed 2027 are distinguished from older plans.
+The reported 651/227/369 steps under three implementations total 1,247;
+they are not independent replicates, one frozen source or reported efficacy.
+The [paper's current record](../capstone/thought-leadership/everything-but-the-software/README.md)
+and pages 22/40 supersede paused/prospective-only status, not earlier adverse
+reviews or unresolved interpretation/approval limits.
+
+The [8 November measurement clarification](../capstone/thought-leadership/everything-but-the-software/README.md#measurement-provenance-8-november)
+adds an outcome/proxy/resource table, actual raw field/instrument definitions
+and source-bound active B/C templates. There is no separate numerical AI
+outcome judge: model review is a treatment, while hidden contracts and fixed
+analysis tools measure outcomes and structural proxies. Current-source
+inspection confirms conservative loss/composite CR1 summaries and the Ruff
+inline-`noqa` limitation; no running instrumentation or data is changed.
+The v13 single PDF has 45 pages, Supplement 37, with 50 authoring checks
+and PDF bounds/destinations verified. Historical/adverse records, coauthors,
+registered-base/unregistered-amendment disclosure and result TODOs remain;
+independent/human and publication approvals are separate.
+
 The owner-requested additive revision removes repeated Background, figures
-and case narratives; the current 38-page paper retains only extra source
+and case narratives; the paper retains only extra source
 qualifications and methodological/provenance detail in its Supplement.
 The [nine-point author review](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#author-review-disposition-1-november)
 restores the discovery-to-backlog-to-feedback account, abstracts the case and
 records the supplied project export. Four requested scientific skills support
 the equation audit; risk/annotation domains and discrete break-even are
-explicit. Scheduling-block dependence must still be resolved against the
-variance and bootstrap scheme before approved source binding and collection.
+explicit. Scheduling-block dependence remains an interpretation/approval
+issue; reported exploratory collection does not establish its resolution.
 The [2 November allocation revision](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#prospective-allocation-revision-2-november)
 retains three models and five proposed arms, with 12 (default), 21 or 33
 independent repository trajectories per model per arm: 180/315/495 study
@@ -52,15 +81,17 @@ bounds and graded/prerequisite CR1 reports remain prospective reporting
 requirements not established in the inspected analyzer/export.
 Independent-arm resampling is implemented, but scheduling-block inference
 and the primary availability rule still need an explicit source-bound
-scientific decision before collection. The v6 manifest records no prospective
+scientific decision for accepted inference. The historical v6 manifest records no prospective
 OSF completion or collection authorization; release existence is not approval.
 The original review, historical v4 assets and dated inspections are retained.
 Three pinned static snapshots, source/access limits, lexical validation and
 corrected zero/undefined and break-even figures are retained. Source metadata
 and code tests do not establish scientific acceptance or historical deployed
 usability. Public development PRs are owner-authorized; future privacy,
-approved source alignment, proper prospective OSF recording, affordability and collection
-gates remain. Historical cloud exports are explicitly deferred.
+approved source alignment, proper prospective OSF amendment, affordability and
+scientific acceptance remain unproved; the reported running amendment is
+exploratory, not evidence that those earlier gates were met. Historical cloud
+exports are explicitly deferred.
 Original v4 assets, adverse critiques and prior data remain unchanged.
 The [new reflection/memory source check](../capstone/thought-leadership/everything-but-the-software/anc/supplementary-context.md#reflection-memory-and-self-improvement-1-november-source-check)
 distinguishes Ng's human-feedback opening from Moroney's later reflection/
@@ -139,7 +170,14 @@ and three-test, zero-skip evidence in both execution and receipt verification.
 For capstone work, start with the [current working set](../capstone/README.md),
 [complete native/JSON source guide](../capstone/source/README.md),
 [pitch preparation](../capstone/pitch/README.md) and
-[demo runbook](../capstone/demo/runbook.md). The 2026-10-29 reorganization
+[demo runbook](../capstone/demo/runbook.md). The
+[8 November autonomy and product-story review](../capstone/source/review-2026-11-08.md)
+corrects the original-versus-built framing, maps exact L2-L4 requests to
+current preparation, distinguishes historical Decision 1 from current
+generation, explains optional resident access and traces design-thinking
+decisions. Its complete Project 7 snapshot is dated and must be refreshed
+before final delivery; board Done includes not-planned work.
+The 2026-10-29 reorganization
 preserves one 54-slide deck, all 36 media inputs and the historical sources;
 15 approved obsolete exports are [archive-backed](../capstone/history/README.md).
 The [owner-corrected product-first story](../capstone/source/review-2026-10-30.md#current-revision-product-first-future-later)
@@ -841,7 +879,7 @@ or infra acceptance claimed.
 | [Applicability review pack for UK automated-decision rules and the EU AI Act](./regulatory/reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md) | Dated official-source check (legislation.gov.uk retrieved 2026-11-01; EUR-Lex retrieval failed), pending Legal/DPO decision record, review items and non-inference rules for OQ-019 | 2026-11-01 |
 | [Legal briefing on UK automated-decision rules and EU AI Act applicability](./research/rai/legal-briefing-adm-ai-act.md) | Briefing for the Legal contact: main points, 10 recommendations and gaps; adds S.I. 2026/82 reg. 5 read on 2026-11-04; EU text still unverified; no decision made. Capstone slide: [legal-briefing-224.pptx](../presentations/legal-briefing-224.pptx) | 2026-11-04 |
 | [Historical native agent process map](../capstone/history/README.md#archive-and-restore) | The superseded 24-slide deck and process/architecture exports are in the exact verified archive selection, not the current authoring route. [Original text equivalent and value tests](../capstone/history/storage-map-before-reorganization.md#agents-in-the-retrofit-process-2026-10-13) remain preserved. Current page 16 retains five bounded capabilities and human authority | 2026-10-29 |
-| [Current Cowork v2 capstone working set](../capstone/README.md) | Product/discovery-first deck with [DT Coach journey and decision trace](../capstone/source/diagrams/discovery-journey/text-equivalent.md); current Workbench/read models separated from future-only Fabric/PBI/history/preview ontology. [Owner-correction review](../capstone/source/review-2026-10-30.md#current-revision-product-first-future-later) preserves prior outcomes and new findings. All 54 notes/actions/timing/cost contracts remain; zero revised overflow is not user/accessibility or service acceptance | 2026-10-30 |
+| [Current Cowork v2 capstone working set](../capstone/README.md) | [8 November autonomy/story review](../capstone/source/review-2026-11-08.md): exact requested/current levels, scope gaps, three help modes, historical scoring/current generation, optional resident service and refreshable progress. All 54 slides/notes, 108 actions and protected cost contracts remain; Linux word-presence/navigation checks are not native PowerPoint, human or service acceptance. Prior reviews are preserved | 2026-11-08 |
 | [Historical Zava Forward executive capstone deck](../capstone/history/README.md#archive-and-restore) | Superseded by Cowork v2 on 2026-10-23; restored and hash-checked before the owner-approved archive-backed removal of its redundant checkout exports. Restore map and original findings remain; no fallback scoring or acceptance claim | 2026-10-29 |
 | [85-day roadmap](../case-study-85-day-roadmap.svg) | C-suite solution roadmap diagram, with its [Excalidraw source](../case-study-85-day-roadmap.excalidraw) | Binary file |
 
@@ -856,8 +894,8 @@ or infra acceptance claimed.
 | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md) | Official publications and datasets behind each baseline benchmark | 2026-09-11 |
 | [Retrofit, Damp and Mould Statistics Report](./research/sector/uk-social-housing-retrofit-damp-stats-report.md) | England-focused EPC, retrofit cost and funding, damp and mould, repairs, complaints and Decent Homes statistics for a 60,000-home landlord, with sources and caveats. National benchmarks are not company facts; Scottish case counts are separate and AI pricing remains third-party and unconfirmed | 2026-10-23 |
 | [Company Profile Research](./research/company/company-profile-research.md) | Confirmed not-for-profit status, comparators, modelled customer profile (estimates, not company facts), common sector problems, role map and company gaps for the role agents | 2026-09-26 |
-| [Agent Request Challenge](./research/company/agent-request-challenge.md) | Role-agent challenge of the five requested agents: real problems, non-agent alternatives, bounded AI fit, shared foundation, value tests and stop criteria | 2026-09-26 |
-| [Agent What-If Study](./research/company/agent-what-if-study.md) | Follow-up thought experiment running 20 augmentation scenarios across the requested agents, from phone-captured evidence and structured invoices to funder integrations, sensors and call transcription, with role-agent clarification answers re-run against the current proposal, a value-versus-complexity grid and a reconciliation with the agent-led modernisation reframe; headline verdict unchanged after the post-merge review | 2026-09-27 |
+| [Agent Request Challenge](./research/company/agent-request-challenge.md) | Historical role-instrument alternatives, foundation, value tests and disagreements retained. 8 November qualification distinguishes the case's explicit L2-L4/human rights from the research conclusion about end-to-end mechanism; current scope/authority matrix is linked | 2026-11-08 |
+| [Agent What-If Study](./research/company/agent-what-if-study.md) | Historical 20-scenario richer-evidence/capacity thought experiment and original verdicts retained. 8 November qualification explains that bounded L3 drafts/L4 flags were already in the brief, not an unrestricted-autonomy request; no task activated | 2026-11-08 |
 | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | Role-agent challenge of measuring acceleration with a dashboard, short history and non-pilot comparison, plus the owner's modernisation decision: Comparison 1 and 2, frozen protocol, benefits scorecard, guardrails, vanity metrics and history sources | 2026-09-26 |
 | [Cohort and Missing-Data Evaluation Review Pack](./research/evaluation/cohort-evaluation-review-pack.md) | DRAFT, unapproved, not executed owner review pack for issue #222 (v0.2.0 correction returned for owner approval): synthetic paired-scenario manifest, proposed held-out custody and independent reviewer protocol (roles unfilled), sample-size, error-rule and uncertainty options, critical-error and review-burden handling, Unknown-support policy proposal, AC traceability and owner checklist; no fairness evidence | 2026-10-20 |
 | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of constructed operating records for 980 candidate homes. The case presents a professional team aware of bottlenecks but not where they occur. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. These records are for the exercise and are not evidence of actual company performance. The answer key and generator are held outside the knowledge base so analysis can stay blind. Stock-to-case link report and synthetic fabric attributes for the 60,000-home stock added; synthetic EPC, survey records and a seeded EPC conflict manifest added (#170); per-user chat and memory test fixtures (personas, threads, memory, isolation and deletion cases) added (#172) | 2026-10-15 |

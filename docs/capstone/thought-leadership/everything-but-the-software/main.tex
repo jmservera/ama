@@ -1,6 +1,6 @@
 % !TEX program = pdflatex
 % ---------------------------------------------------------------------------
-% Everything but the Software -- LaTeX source (draft v11, integrated Supplement)
+% Everything but the Software -- LaTeX source (draft v13, integrated Supplement)
 % Figures use PNG for LaTeX; conceptual editing authority is .excalidraw.
 % anc/make_figures.py regenerates only case and published-evidence figures.
 % anc/export_diagrams.mjs exports native Excalidraw sources to SVG and PNG.
@@ -31,7 +31,7 @@
 \usepackage{listings}
 \usepackage[colorlinks=true,linkcolor={blue!50!black},citecolor={blue!50!black},urlcolor={blue!50!black}]{hyperref}
 
-\hypersetup{pdftitle={Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop},pdfauthor={Juan Manuel Servera Bondroit}}
+\hypersetup{pdftitle={Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop},pdfauthor={Juan Manuel Servera Bondroit; Isabel Cabezas Martin}}
 \captionsetup{font=small,labelfont=bf}
 \setlist{itemsep=2pt,topsep=4pt}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
@@ -44,17 +44,19 @@
 \renewcommand{\floatpagefraction}{0.85}
 \newif\ifresults
 \resultsfalse
-% TODO(author): set to \resultstrue only after the prospectively documented runs and checked analysis are complete; retain the earlier run history.
+% TODO(author): set to \resultstrue only after checked runs and analysis support an authorized results update; retain base registration, unregistered amendments and implementation epochs.
 
 \title{Everything but the Software:\\[4pt]
 \large Feature-Driven Decay in an Agentic Coding Loop.\\
 An Exploratory Case Study and an Experiment Protocol}
 
 \author{Juan Manuel Servera Bondroit\thanks{The views expressed are the
-author's own and do not necessarily reflect those of Microsoft.}\\[4pt]
-\small Senior Partner Solution Architect, Microsoft Schweiz, Zurich}
+authors' own and do not necessarily reflect those of Microsoft.}\\[4pt]
+\small Senior Partner Solution Architect, Microsoft EMEA, Zurich\\[9pt]
+\large Isabel Cabezas Martin\\[4pt]
+\small Software Engineer, Frontier Company at Microsoft}
 
-\date{Draft of 5 November 2026}
+\date{Draft of 8 November 2026}
 % TODO(author): replace with the submission date.
 
 \begin{document}
@@ -75,18 +77,19 @@ and prompted renewed feedback and refactoring. Five candidate mechanisms
 organise this transition: specification inflation, proxy capture, learning
 evaporation, process-gate inflation and feedback starvation. Migration and
 deployment dependencies remain central to the observed failure.
-A prospective three-model, five-arm protocol compares feature-only delivery,
-scheduled consolidation, read-only review, matched-resource delivery and
-visible regression repair. The researcher selects 12 (default), 21 or 33
-independent repository trajectories per model per arm before collection.
-The outcomes are final behavioural coverage, retained-contract loss,
-an unforeseen change request and resource cost. Planning power for a
-ten-percentage-point gain depends on the assumed variance.
-Approved source alignment, prospective registration, affordability and collection
-authorization remain gates. The study asks whether consolidation improves
-the system inherited by later feature work.
+A three-model, five-arm exploratory experiment is now running. It compares
+feature-only delivery, consolidation, read-only review, matched-resource
+delivery and visible regression repair, measuring final coverage,
+retained-contract loss, an unforeseen change request and resource cost.
+The selected 21 trajectories per model per arm give 315 planned trajectories,
+from the historical 12 (default), 21 or 33 options.
+The owner confirms an OSF-registered base dated 7 November 2026; current
+execution includes disclosed unregistered amendments. A coauthor conducts
+execution and data collection separately from study design and manuscript
+preparation to minimise potential experimenter bias. The study asks whether
+consolidation improves the system inherited by later feature work.
 \end{abstract}
-% TODO(author): report the prospective experiment results after the runs and checked analysis are complete.
+% TODO(author): report experimental outcomes only after checked analysis, preserving amendment and implementation-epoch provenance.
 
 \noindent\textbf{Keywords:} agentic software engineering; coding agents;
 spec-driven development; software evolution; technical debt; refactoring;
@@ -173,7 +176,7 @@ product-use feedback.
 
 Here \emph{feature-driven decay} describes loss of retained behaviour or
 increasing change burden across feature steps. Whether feature-driven decay
-occurs remains a question for the prospective study.
+occurs remains a question for the ongoing exploratory study.
 
 Three questions guide the investigation:
 
@@ -199,21 +202,22 @@ and challenged requirements to coordinated feature delivery and corrective
 product feedback. Five candidate mechanisms and within-case contrasts connect
 the interruption of usability to competing explanations
 (Sections~\ref{sec:method}--\ref{sec:mechanisms}).
-\item A consolidation harness and a prospectively sized five-arm protocol to
-estimate retained behaviour, future changeability and resource cost. It follows the
-registered-report example of Lulla et~al.~\cite{lulla2026protocol} and HVE
-Core's Minimum Viable Experiment method
+\item A consolidation harness and an evolving five-arm exploratory protocol
+to estimate retained behaviour, future changeability and resource cost.
+Its earlier planning drew on the registered-report example of
+Lulla et~al.~\cite{lulla2026protocol} and HVE Core's Minimum Viable Experiment method
 (Sections~\ref{sec:harness} and~\ref{sec:experiment}).
 \end{enumerate}
 
-The case concerns a migration and a configuration designed by the author, including
+The case concerns a migration and a configuration designed by Servera Bondroit, including
 delegated delivery and merge decisions. The case suggests hypotheses whose
 causal relationships remain to be tested. The primary comparison estimates a multi-component consolidation package
 against matched time and nominal-credit ceilings. The extra-allowance B--A
 comparison is secondary. Equal ceilings need not produce equal spending,
 and the design does not isolate refactoring or validate the five case
-mechanisms individually. Registration and launch checks precede
-collection. The case's validity and the pilot's
+mechanisms individually. An owner-confirmed registered base and disclosed
+unregistered amendments frame ongoing collection
+(Section~\ref{sec:studyexecution}). The case's validity and the pilot's
 identification limits are consolidated in Sections~\ref{sec:threats}
 and~\ref{sec:protocollimits}.
 
@@ -404,7 +408,7 @@ outcome checks, steering decisions and subsequent implementation changes. \\
 \end{tabularx}
 \end{table}
 
-The author selected the episodes, designed the coordinator and had an
+Servera Bondroit selected the episodes, designed the coordinator and had an
 interest in successful delivery. Those roles favour a coherent retrospective
 explanation. Experience-based beliefs can differ from project
 evidence~\cite{devanbu2016belief}; the same caution applies to AI-written
@@ -757,7 +761,8 @@ appending to it;
 \end{enumerate}
 Only then may the next feature start. The supplement reproduces the
 historical v4 prompt; the current researcher kit defines the amended
-prompt. The intervention combines refactoring, additional tests and a
+prompt. The active B/C templates and their source bindings are reproduced
+in Supplement Section~\ref{app:activeprompts}. The intervention combines refactoring, additional tests and a
 design-oriented note; it is not a pure refactoring treatment.
 
 The hypothesis draws on Beck's alternation of features and
@@ -975,20 +980,36 @@ particular failure. The versioned repository retains the evolving record
 and the distinction between local engineering evidence and accepted journeys
 (Section~\ref{sec:currentstatus}).
 
-The prospective five-arm study asks what scheduled consolidation leaves
+The ongoing five-arm exploratory study asks what scheduled consolidation leaves
 for later work. It separates final behavioural coverage from retained-contract
 loss, probes an unforeseen change and reports the resources consumed.
 Secondary metrics provide descriptive evidence; testing the proposed mechanisms
 would require further work.
-An approved source-bound packet, prospective OSF recording and collection
-gates precede the planned runs. The cost-of-inaction scenario makes the break-even
-assumptions explicit.
+Collection follows an owner-confirmed OSF-registered base with disclosed
+unregistered amendments, including changes to calibration and execution.
+The retained record must distinguish implementation epochs and their
+potential temporal, arm and model confounding
+(Section~\ref{sec:studyexecution}). The cost-of-inaction scenario makes the
+break-even assumptions explicit.
 What matters is whether the agents' combined work preserves the behaviour and
 options needed by subsequent features.
 
 \section*{Acknowledgements}
 % TODO(author): thank reviewers once they have commented.
-The author thanks the colleagues and partners whose questions shaped this report.
+The authors thank the colleagues and partners whose questions shaped this report.
+
+\section*{Author contributions}
+Juan Manuel Servera Bondroit conceived the study, designed the methodology,
+defined the evaluation criteria, analysed the historical exploratory case
+and wrote the manuscript. Experimental analysis remains his responsibility
+as collection proceeds. Isabel Cabezas Martin is conducting the ongoing
+experiment and collecting its data independently under the predefined
+exploratory protocol and disclosed amendments.
+Separating execution and data collection from study conception, design and
+manuscript preparation is intended to minimise potential experimenter bias.
+Both authors are Microsoft employees: this operational separation establishes
+neither institutional independence nor independent scientific review or
+analysis, and does not demonstrate elimination of bias.
 
 \section*{Use of generative AI}
 GitHub Copilot with HVE Core agents supported development of the system under
@@ -1023,13 +1044,23 @@ The later v9 revision used Copilot-assisted source comparison, static
 measurements, five-arm kit implementation and local native diagram
 authoring, as reported in its dated record. The 2 November allocation
 record assessed A/B/C-only capability from the then-inspected snapshots.
-A 5 November source check supersedes that assessment: the current v6
+A 5 November source check superseded that assessment: the then-inspected v6
 source contains all five arms and the immutable allocation selector.
 The recovery used Copilot-assisted source review, symbolic and numerical
 checks, authoring regressions and PDF inspection. It added no experimental
 trajectories, independent human peer review or new Gemini design-session claim.
+The 8 November revision used Copilot-assisted editing and the
+scientific-critical-thinking skill to qualify operational separation,
+registration evidence and implementation provenance. It inspected the
+supplied commit-bound public protocol and relevant public README and
+contributor passages, and used the existing authoring checks and PDF tooling.
+The measurement clarification inspected the public measurement engine,
+collector, pilot analyzer, usage parsing and B/C prompt templates. It added
+instrument/field tables, verbatim source-bound prompt examples and the
+Ruff inline-suppression limitation, without changing experimental scoring
+or instrumentation. It performed no model runs or experimental outcome analysis.
 
-The author supplied the observations, selected the case and made the analytical
+Servera Bondroit supplied the case observations, selected the case and made the analytical
 judgements, and reports checking the repository figures and Azure expenditure
 and confirming the Beck paraphrase after reading the essay and watching the talk.
 The supplied automatic critique and this revision's focused source and
@@ -1037,18 +1068,23 @@ arithmetic checks are assisted evidence assessments, not independent human
 verification. The package records their coverage and unavailable sources.
 Metadata checks do not establish claim support;
 source comparison does not independently validate a source's experiments.
-The author takes responsibility for the content. Further disclosure must follow the
+The human authors retain responsibility for the content and final approval.
+Further disclosure must follow the
 actual submission venue's policy, which has not been assessed here.
 % TODO(author): record underlying model/build identifiers and historical runtime or reviewer versions where exposed; do not infer hidden versions from interface labels or claim exhaustive manual review.
 % TODO(author): verify numerical findings attributed to cited studies against the original papers, including SlopCodeBench and METR; author verification is pending.
 % TODO(author): prepare the authorised provenance excerpts from retained exchanges, redacting partner identities and internal reviewer names/contact suggestions; AI assertions of source checking are not independent evidence.
 
 \section*{Competing interests}
-The author is a Microsoft employee studying Microsoft and GitHub tools
-within a Microsoft training programme and designed the coordinator under
-study. This professional and participant-observer interest is disclosed;
-it does not establish an independent evaluation or company endorsement.
-External-publication clearance remains a separate author responsibility.
+Both authors are Microsoft employees. The study concerns Microsoft and
+GitHub tools, and its historical case arose within a Microsoft training
+programme. Servera Bondroit designed the coordinator and analysed a case
+in which he was a participant; Cabezas Martin conducts experimental execution
+and data collection separately from those roles. These professional and
+participant-observer interests remain relevant despite the operational
+separation. The authors' views do not imply company endorsement.
+Employer external-publication clearance and final-author approval remain
+separate responsibilities.
 
 \section*{Data availability}
 The repository analysed was publicly accessible during the case at
@@ -1074,7 +1110,7 @@ experiment notes in HVE Core's Minimum Viable Experiment format are earlier
 proposals, not the tagged study record. The separate researcher kit is at
 \url{https://github.com/jmservera/ama-thought-mve}. Preserve its
 \href{https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v4}
-{historical frozen v4 release} alongside the source-published
+{historical frozen v4 release} alongside the historical source-published
 \href{https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v6}
 {v6 release}. The 5 November read-only check inspected default commit
 \nolinkurl{5ab24be4556876500a40e56201f6efc3930cc8b8},
@@ -1082,27 +1118,67 @@ a manifest-only child of v6's execution source
 \nolinkurl{7de2f0d42955c62b52906747de480df2b3f1e0ca}.
 That source implements A/B/C/D/E and a saved, immutable
 \texttt{--replicates} selection of 12, 21 or 33, default 12.
-Source inspection verified the implementation and release identities;
+That dated source inspection verified the implementation and release identities;
 runtime-image qualification and source-declared test totals were not
-reproduced. The inspected manifest has no registration date, records no
-prospective OSF update and leaves collection unauthorized.
-The retention-reporting and block-inference decisions in
-Section~\ref{sec:experiment}, full-allocation affordability and an approved
-source-bound prospective record remain collection gates. Any authorized
-source change needs renewed qualification and freeze. This paper recovery
-changes neither the kit, its published freezes nor OSF records.
-The author plans to make both repositories private before the experiment,
-give the independent researcher a protected kit without access to the
-original repositories or manuscript, and release the approved kit and
-experiment materials with the paper after collection. OSF registration and
-embargo are distinct from GitHub visibility. Prior public exposure cannot
-be undone, and privacy alone cannot prove absence of model contamination.
-On 1 November the owner explicitly authorised development PR updates while
-both repositories were public. That interim exposure is separate from the
-planned post-collection release and must be disclosed to the researcher.
-Private paid diagnostic code, results and transcripts and runtime image
-bytes are excluded from that packet. The author-reported original OSF
-registration does not establish prospective v4 or v6 registration.
+reproduced. The then-inspected v6 manifest had no registration date, recorded no
+prospective OSF update and left collection unauthorized. These are
+5 November findings, not current OSF metadata or a freeze of the ongoing run.
+Historical v4, v6 and v7 records remain distinct from current execution.
+
+The active source is commit
+\href{https://github.com/jmservera/ama-thought-mve/tree/e71037d961cb80fc5c659437796de7736820f6c9}
+{\nolinkurl{e71037d961cb80fc5c659437796de7736820f6c9}},
+tree \nolinkurl{e7ec1561d4ecee921e7c9eba3711a1ab7e9f4058}, without a tag.
+The inspected public \nolinkurl{protocol/pilot-estimation.json} specifies
+\texttt{model-stratified-v2-five-arm}, S1, ten features, CR1 and no formal
+hypotheses. Its file default is 12; the owner-supplied runtime selection is
+21 trajectories per model per arm, or 315 planned trajectories.
+The source's false/null current-registration object concerns the uncompleted
+amendment, rather than absence of the base study.
+
+The owner confirms the registered base at \url{https://osf.io/xcpt4},
+dated 7 November 2026. Supplied access checks returned only an OSF app shell
+and HTTP 401 from \url{https://api.osf.io/v2/registrations/xcpt4/};
+the registration identity and date remain owner-confirmed rather than
+independently verified OSF metadata. The current run includes disclosed
+unregistered amendments for short calibration, parallel execution and VM
+restarts. The pinned public README and contributor instructions disclose
+these departures from the earlier registration. Public disclosure does not
+make the amended run a single preregistered confirmatory dataset.
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Implementation epochs and owner-reported completed steps as of
+8 November 2026. Steps can include nonpasses; they are neither independent
+replicates nor completed trajectories. Source identifiers describe
+implementations, not collection times.}\label{tab:executionepochs}
+\begin{tabularx}{\textwidth}{@{}L{1cm}YL{2.1cm}@{}}
+\toprule
+Epoch & Execution source and correction & Reported steps \\
+\midrule
+E1 & \nolinkurl{99a1ed170d7c71acb428b52e0e24be8856cc3ea3};
+pinned CLI fix & 651 \\
+E2 & \nolinkurl{3c2ce89b00fe583c1f0715e8ccd3510419d5e734};
+source-bound estimation recovery & 227 \\
+E3 & \nolinkurl{e71037d961cb80fc5c659437796de7736820f6c9};
+failed-request charging fix & 369 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The owner-reported total is 1,247 completed steps. This revision did not
+inspect the private dataset, collection timestamps, completed-trajectory
+counts or reconciled costs. Epoch labels, failures, unknowns and actual
+arm/model/time assignments must remain available for analysis; temporal,
+arm and model confounding limits homogeneous pooling. No post-hoc
+sensitivity result is asserted.
+Exact commit metadata, supplied execution status and source-access limits
+are retained in \nolinkurl{anc/revision-report.md}.
+The earlier protected-workspace and post-collection-release plans remain
+historical intentions; current access, prior exposure and release permissions
+require their own records. OSF status and GitHub visibility are distinct.
+This paper revision changes neither experiment sources, configuration,
+registration, repository visibility nor collection.
 Sanitized pilot data and exact execution provenance still require a later
 authorized deposit; no completed independent replication is claimed.
 % TODO(author): archive the exact registered protocol and study materials at an authorised destination, preserving prior proposals and excluding credentials, partner identifiers, DLP sidecars and unapproved internal material.
