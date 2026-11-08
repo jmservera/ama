@@ -10691,3 +10691,7 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 ## [2026-11-08] update | Issue 440 ranking checkpoint current-main currency (Refs #440)
 
 * Merged `origin/main` `77fa5d35` (rubric score file only) into the checkpoint branch by a normal merge and appended a currency note to the ranking section of the cut-over evidence pack; selectors refreshed (core 76, API 53 SQLite, agents 20, retention 37). Historical receipt and refusals unchanged. Records: `.copilot-tracking/*/2026-11-08-ranking-main-currency-440-*`.
+
+## [2026-11-08] update | Issue 1274 hosted CI release retrieval (Refs #1274)
+
+* Source CI now installs actionlint 1.7.7 through `tools/install-actionlint.py` (bounded retries over the official download URL and release asset API, pinned archive and checksums SHA-256, fail closed) after hosted 504 failures on #1243 and #1271. The AWF 0.28.23 bootstrap failure sits in the generated scorer lock and upstream setup action; no supported repository hook exists, so it stays an open partial blocker. Records: `.copilot-tracking/*/2026-11-08-issue1274-ci-release-retrieval-*`.
