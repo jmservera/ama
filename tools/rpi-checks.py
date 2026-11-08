@@ -1125,6 +1125,7 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         "design_system_browser_check",
         "regulatory_ux_check",
         "case_journey_browser_check",
+        "employee_chat_browser_check",
     ):
         lint(python, (f"checks/{name}.py",), "src/api")
     add([python, "-m", "playwright", "install", "chromium"])
@@ -2323,6 +2324,7 @@ class Runner:
                 "design_system_browser_check",
                 "regulatory_ux_check",
                 "case_journey_browser_check",
+                "employee_chat_browser_check",
             ):
                 self.lint(py, (f"checks/{name}.py",), "src/api")
             self.install_chromium()

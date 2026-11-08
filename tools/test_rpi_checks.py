@@ -31,6 +31,12 @@ assert SPEC is not None and SPEC.loader is not None
 gate = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(gate)
 
+BROWSER_LINTED = (
+    "design_system_browser_check",
+    "regulatory_ux_check",
+    "case_journey_browser_check",
+    "employee_chat_browser_check",
+)
 CHAT_SCANS = [
     {"state": state, "violations": [], "passes": 5} for state in gate.EMPLOYEE_CHAT_STATES
 ]
@@ -279,6 +285,50 @@ class GateTests(unittest.TestCase):
                 "checks.regulatory_ux_check",
             ],
         )
+
+    def test_employee_chat_checker_is_linted_in_planned_and_executed_browser_contracts(
+        self,
+    ) -> None:
+        target = "checks/employee_chat_browser_check.py"
+        checks = gate.required_checks(
+            self.root,
+            {
+                "owner": "a" * 24,
+                "sql": {},
+                "images": {},
+                "extras": [],
+                "executed_groups": ["browser"],
+            },
+        )
+        planned = [row for row in checks if row["group"] == "browser" and target in row["argv"]]
+        self.assertEqual(
+            [row["argv"][2:4] for row in planned], [["ruff", "check"], ["ruff", "format"]]
+        )
+        self.assertTrue(all(row["cwd"] == "src/api" for row in planned))
+        runner = self.runner()
+        runner.snapshot = self.root
+        response = Mock()
+        response.__enter__ = Mock(return_value=response)
+        response.__exit__ = Mock(return_value=False)
+        response.read.return_value = b"fixture axe"
+        with (
+            patch.object(runner, "lint") as lint,
+            patch.object(runner, "install_chromium"),
+            patch.object(runner, "command", return_value=gate.EMPLOYEE_CHAT_PASS),
+            patch.object(gate, "urlopen", return_value=response),
+            patch.object(gate, "digest", return_value=gate.AXE_SHA256),
+            patch.object(
+                gate.shutil,
+                "copyfile",
+                side_effect=lambda _source, target: Path(target).write_text(json.dumps(CHAT_SCANS)),
+            ),
+        ):
+            runner.browser()
+        self.assertEqual(
+            [call.args[1] for call in lint.call_args_list],
+            [(f"checks/{name}.py",) for name in BROWSER_LINTED],
+        )
+        self.assertIn((target,), [call.args[1] for call in lint.call_args_list])
 
     def test_employee_chat_receipt_requires_exact_command_pass_line_and_results(self) -> None:
         original = self.scoped_receipt(["browser"])
