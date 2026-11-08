@@ -89,34 +89,34 @@ The plan reconciles the local-validation wording in four files so that small and
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Baseline and edit the policy files
+### [x] P01: Baseline and edit the policy files
 
 <!-- rpi:task id=P01-T01 -->
-#### [ ] P01-T01: Record HVE baseline of the four target passages
+#### [x] P01-T01: Record HVE baseline of the four target passages
 
 <!-- rpi:task id=P01-T02 -->
-#### [ ] P01-T02: Rewrite the instruction gate paragraph (copilot-instructions.md)
+#### [x] P01-T02: Rewrite the instruction gate paragraph (copilot-instructions.md)
 
 <!-- rpi:task id=P01-T03 -->
-#### [ ] P01-T03: Add coverage reconciliation and examples to src/README.md
+#### [x] P01-T03: Add coverage reconciliation and examples to src/README.md
 
 <!-- rpi:task id=P01-T04 -->
-#### [ ] P01-T04: Align coordinator tiers and retention policy wording
+#### [x] P01-T04: Align coordinator tiers and retention policy wording
 
 <!-- rpi:task id=P01-T05 -->
-#### [ ] P01-T05: Add issue record and knowledge-base log entry
+#### [x] P01-T05: Add issue record and knowledge-base log entry
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Validate and freeze
+### [x] P02: Validate and freeze
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Reproduce example selections read-only and run link/diff/stale-wording checks
+#### [x] P02-T01: Reproduce example selections read-only and run link/diff/stale-wording checks
 
 <!-- rpi:task id=P02-T02 -->
-#### [ ] P02-T02: HVE static review, hve-builder-tester simulation, host validation
+#### [x] P02-T02: HVE static review, hve-builder-tester simulation, host validation
 
 <!-- rpi:task id=P02-T03 -->
-#### [ ] P02-T03: Changes record, original review, commit and freeze
+#### [x] P02-T03: Changes record, original review, commit and freeze (review artifact and final commit follow the behavior-test commit; see changes record)
 
 ## Dependencies
 
