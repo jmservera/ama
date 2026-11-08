@@ -1,15 +1,316 @@
 ---
 title: Everything but the Software - Revision Record
-description: Author review dispositions, equation audit and retained historical revision evidence
-ms.date: 2026-11-05
+description: Source-bound measurement clarification, execution/coauthorship provenance and retained historical revision evidence
+ms.date: 2026-11-08
 ---
 
-The 5 November recovery and source check supersede the earlier current-
-implementation assessment. The 2 November allocation record and
+The 8 November measurement clarification supplements the execution and
+coauthorship record and corrects the earlier Ruff safeguard claim. It
+changes no running experiment or recorded outcomes.
+The 8 November execution and coauthorship record supersedes earlier
+then-current implementation and pre-collection status. It does not
+overwrite historical scientific findings or certify current execution.
+The 5 November recovery/source check, 2 November allocation record and
 1 November disposition retain their original evidence and limits. The sections
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Measurement Provenance Clarification 8 November
+
+### Scope, Assistance and Source
+
+The owner explicitly requested paper explanations, tables and relevant example
+prompts after the read-only measurement audit. Work continues directly on
+`docs/capstone-autonomy-story`, from clean `836093cf`, with PR #1283 open.
+The authorized outputs are the existing paper/source record and additive
+Supplement, plus directly related documentation and focused authoring tests.
+The slides and the running experiment are not revised in this scope.
+
+The active public source is
+[`e71037d961cb80fc5c659437796de7736820f6c9`](https://github.com/jmservera/ama-thought-mve/tree/e71037d961cb80fc5c659437796de7736820f6c9).
+The default `baf58b4f` inspected during the audit contains it; the supplied
+execution has no tag. The source files below were inspected directly.
+No private run records, hidden oracle bodies or paid model calls were used.
+This is implementation-source verification, not verification of collected
+outcomes or actual per-session tool/provider conditions.
+
+Copilot-assisted clarification used scientific-critical-thinking, the
+scientific-writing reference, existing tests and PDF tooling. The existing
+`kassis2026skills` citation and prior metadata-verification limit are retained;
+the manuscript records the actual added assistance. No new algebra/design
+audit, venue policy check or claim of independent human peer review is made.
+
+### Claims, Locators and Evidence States
+
+| Claim / paper locator | Inspected active source | Evidence state and limit |
+| --- | --- | --- |
+| No separate numerical AI judge; Outcomes and retained-contract loss | `harness/measure.py:342-374`, `harness/pilot_analysis.py:53-154`, `harness/runner.py:387-433` | Full-text/source support for the described code path, not proof of every private execution |
+| Functional coverage is hidden-contract pass fraction, not line/branch coverage | `harness/measure.py:205-320`, `harness/pilot_analysis.py:157-307` and public panel/config metadata | Source support for scoring and completeness rules; no hidden test contents or outcome data inspected |
+| Complexity/duplication/lint/size are structural proxies; field table in additive Supplement | `skeleton/tools/metrics_core.py:126-292`, `skeleton/tools/quality.py:8-39` | Source support for actual fields, scales, backend settings and lack of a general quality/maintainability-index score |
+| Earlier Ruff suppression safeguard is false; final Measures paragraph | `skeleton/tools/metrics_core.py:217-250,255-292` | Conflict: actual call has `--isolated`, not `--ignore-noqa`, and no suppression count; corrected, not fixed in the running kit |
+| AI credits/tokens/time are recorded resource observations, not AI scores | `harness/analyze.py:74-184`, `harness/runner.py:222-263` | Source support for parsing and observations; full all-attempt cost needs the journal and complete usage, neither newly inspected |
+| B/C text is treatment instruction, not a scoring rubric; Active prompt examples | Both `harness/prompts/*-step.prompt.md` templates, `harness/runner.py:51-69,222-263,387-433` | Exact template bytes retained and SHA/Git-blob checked; actual private `prompt.md` and full provider/system context not inspected |
+| Conservative loss/CR1 reporting remains narrower than the planned specification | `harness/pilot_analysis.py:53-154,157-307` and failure-attribution module | Source support for conservative unavailable summaries and composite CR1; richer graded/stratified exports remain gaps |
+
+The main table distinguishes outcomes, structural proxies, resource observations
+and explicit annotation/integrity records. The Supplement gives raw field names,
+units, denominators, backend/pin and missingness limits. Empty denominators
+remain undefined; zero complexity summaries on an empty function set are
+described as source-emitted sentinels, not a valid measured mean/share.
+
+The active prompt snapshots are:
+
+* [B](./consolidation-active-e71037d9.prompt.txt): 1,471 bytes, SHA-256
+  `1ee3da712fcb787a7843d1270aabf61b55abb7c8b7df2534d4adc078b0241494`,
+  Git blob `fe00defa94b65eeb319e24256e425942247e0a14`.
+* [C](./review-only-active-e71037d9.prompt.txt): 719 bytes, SHA-256
+  `06a8dfcaee30ab52c243c771844619cf08f23854ef866f1bfde5277362391725`,
+  Git blob `706d15d3c7e1615d58c0902a050b0e80d163e929`.
+
+All retained bytes include the Markdown heading/comment. The PDF explains how
+the runner strips these and substitutes the 900-second budget as `15 minutes`.
+The current C source's `optional placebo` heading is retained, but the paper
+continues to classify it as information-bearing review. The old frozen v4
+prompt and its checksum remain unchanged. Matching measurement-module/C-prompt
+blobs across the three disclosed epochs do not make all data or execution
+conditions uniform.
+
+### Validation and Assessment Boundary
+
+The 50-test authoring suite and structural checker pass: 94 cited entries,
+105 reusable entries and a 1,806-character abstract. The approximate main-body
+count is 11,156 using the existing method (tables included; abstract,
+bibliography and appendices excluded); historical baseline `0d5dcb02` is
+unavailable, so no before/after comparison is claimed.
+Six focused documentation regressions guard template byte
+bindings, active Supplement includes, field names and instrument classification,
+the Ruff limitation, and the distinction between AI review and outcome scoring.
+They validate authoring invariants, not experimental correctness or efficacy.
+
+Tectonic 0.17.0 compiled the single 45-page PDF, Supplement page 37. Its log has
+no TeX errors, unresolved references or overfull/underfull boxes; the inherited
+`inputenc` compatibility warning remains. The optional checker still expects
+a pdfLaTeX marker and is not used as evidence of Tectonic failure.
+All-page word bounds, 180 internal named destinations and 49 outline
+destinations pass; no blank pages or invalid internal targets were found.
+Tables 7/15, explanation pages and both prompt listings were rendered and
+inspected, along with an all-page layout proof. The final short C example is
+kept intact on page 45. The complete B/C display text matches after NFKC/
+whitespace normalization and exclusion of page-number footers; that check
+does not claim byte identity of PDF text. The retained source templates are
+separately byte/hash-bound as specified above.
+
+Final PDF SHA-256:
+`58287cefefb4d0b10b6db6bac086a23c329597fe356211a88cda3ac144fea52f`.
+Current source, normalized additive-body and literal-input bindings are in
+[supplement-integration.json](./supplement-integration.json); earlier
+authorship/historical bindings are preserved. The external component build
+is under this session's `files/paper-measurement-2026-11-08/`. Independent
+exact-head review and a fresh focused local publication gate remain separate
+steps; their outcomes/receipts are retained in PR #1283 rather than making
+component checks stand in for approval.
+
+The existing title, coauthors, case claims, original/adverse reviews, historical
+figures, source epochs, pending result TODOs and false results switch are
+preserved. No experiment code/configuration, results, OSF registration or
+amendment, repository visibility or slides are changed. The inspection cannot
+certify scientific, human, employer, ethics or venue approval.
+
+## Execution, Registration and Coauthorship 8 November
+
+### Authorized Scope and Assistance
+
+Mode: scoped revision and existing local tests/build, not a new study-design
+or research audit. After an explicit owner override, authoring moved to the
+existing `/home/jmservera/source/ama` branch `docs/capstone-autonomy-story`.
+Its checked starting HEAD was `d3edf91039872e8e6d8548ea0387d371cca34ac7`,
+including `80fc5ba8`'s author-affiliation change. Both original and child
+paper packages were clean and byte-identical before editing. No child edits
+had been made or transferred; `/tmp/ama-study-authorship-1108` remains
+untouched. No branch switch, stash, commit, remote write or parent
+slide/index/log edit belongs to this revision.
+
+The named inputs were the package README, manuscript, current `review.md`,
+relevant revision dispositions, active TeX inputs and existing local tooling,
+plus the supplied exact-commit public `pilot-estimation.json` and narrow
+public README/CONTRIBUTOR passages. The scientific-writing reference was
+read; capstone Section D was kept separate from generic scholarly criteria.
+No target venue or current employer publication policy was inspected.
+No private experimental data, study launch or actual outcome analysis was
+requested or performed.
+
+Copilot-assisted revision used the scientific-critical-thinking skill for
+bias/source qualification, not a new equation or design audit. The existing
+`kassis2026skills` citation, DOI `10.48550/arXiv.2609.00065` without a
+version suffix, and earlier four-skill disclosure are retained. The parent
+supplied a latest-v2 arXiv metadata check; its simplified page did not verify
+the full author list. No new author-list verification is claimed.
+The manuscript adds the actual 8 November assistance scope.
+
+### Authorship and Current Registration
+
+The owner explicitly selected **COAUTHOR** and confirmed that Isabel
+Cabezas Martin agrees to the credit and stated affiliation, **Software
+Engineer, Frontier Company at Microsoft**. The author list/PDF metadata
+and contribution statement add her, preserving Juan Manuel Servera
+Bondroit's current name and **Senior Partner Solution Architect,
+Microsoft EMEA, Zurich** affiliation. No location, email, ORCID,
+credential, manuscript review or final-author approval is inferred.
+
+Servera Bondroit conceived the study, designed methodology, defined
+evaluation criteria, analysed the historical case and wrote the manuscript.
+Experimental analysis remains a responsibility as collection proceeds.
+Cabezas Martin conducts ongoing execution/data collection independently
+under the predefined exploratory protocol and disclosed amendments.
+Operational separation is intended to minimise potential experimenter bias;
+both authors remain Microsoft employees. It supplies neither institutional
+independence nor independent scientific review/analysis, and does not
+demonstrate elimination of bias. Views/competing interests are plural.
+Employer external-publication clearance and final-author approval are separate.
+
+The owner confirms **registered base** `https://osf.io/xcpt4`, dated
+**7 November 2026**. The supplied displayed time is `Nov 7, 2026 4:46 PM`,
+with no timezone; the manuscript uses the date only. Access evidence
+supplied for this task reports an app shell on the public page and HTTP 401
+from `https://api.osf.io/v2/registrations/xcpt4/`. Registration/date are
+owner-confirmed, not independently verified OSF metadata. No approval,
+embargo, DOI or prospective timing for all observations is inferred.
+
+Current execution includes **disclosed unregistered amendments** for short
+calibration, parallel execution and VM restarts. The public source describes
+the changed path as unregistered; its false/null amendment-registration
+fields do not mean there is no registered base. Neither public source
+disclosure nor an older freeze makes this a homogeneous preregistered
+confirmatory dataset. No new OSF amendment is asserted or created.
+
+### Implementation Epochs and Evidence States
+
+Active source: `jmservera/ama-thought-mve` commit
+`e71037d961cb80fc5c659437796de7736820f6c9`, tree
+`e7ec1561d4ecee921e7c9eba3711a1ab7e9f4058`, **no tag**.
+Profile: `protocol/pilot-estimation.json`, analysis design
+`model-stratified-v2-five-arm`, suite `s1-retrofit`, exploratory
+pilot-estimation, `formal_hypotheses=[]`. Owner-supplied runtime selection:
+GPT 6.1 Sol / Claude Sonnet 5.5 / Gemini 4 Argon, medium effort, A–E,
+21 replicates per model/arm despite file default 12, F1–F10 plus CR1,
+seed 2027. Planned trajectories are `3*5*21=315`; completed trajectories
+and an independent observed n were not supplied.
+
+| Epoch | Exact execution source | Public commit time supplied as checked metadata | Owner-reported completed steps as of 8 November |
+| --- | --- | --- | ---: |
+| E1, pinned CLI fix | `99a1ed170d7c71acb428b52e0e24be8856cc3ea3` | `2026-11-07T22:12:45Z` | 651 |
+| E2, source-bound estimation recovery | `3c2ce89b00fe583c1f0715e8ccd3510419d5e734` | `2026-11-08T08:36:43Z` | 227 |
+| E3, failed-request charging fix | `e71037d961cb80fc5c659437796de7736820f6c9` | `2026-11-08T13:01:01Z` | 369 |
+
+Total **1,247 completed steps**, including possible measured nonpasses.
+These are owner-reported progress, not inspected private data, independent
+replicates or completed trajectories. Commit times are not collection times.
+Preserve each step's actual source epoch, failures, unknowns and model/arm/time
+assignments. Temporal/arm/model confounding limits pooling evolving-source
+data. No post-hoc sensitivity analysis/result is invented.
+
+| Claim and manuscript locator | Source and inspected locator | Evidence state and limit |
+| --- | --- | --- |
+| Coauthor identity, affiliation and roles; title block, Author contributions and Competing interests | Explicit owner instructions for this revision | **User-supplied unchecked**, owner-confirmed credit agreement; not a manuscript approval or credential check |
+| Registered base/date; Section 7.1 (PDF p. 15) and Data availability (pp. 27–28) | Owner confirmation of OSF xcpt4 and supplied page/API access results | **User-supplied unchecked** confirmation; OSF metadata **Unavailable** to independent verification in this task |
+| Declared current design/default/models/features; Section 7.1 and Data availability | Retained `pilot-estimation-e71037d9.json`, `study`/`runtime`/`analysis`/`registration` objects; exact public commit identity supplied | **Full-text support** for inspected declared fields, not saved runtime identity or actual execution |
+| Unregistered short calibration/parallel/restart path; Section 7.1 and Data availability | Read-only `gh api` at `e71037d9`, README lines 9–17, 129–154, and CONTRIBUTOR lines 1–17, 74–81 | **Full-text support** for the disclosed changes; historical readiness prose is not evidence of current operational approval |
+| Current SHA/tree and epoch commit times; Data availability and this table | Public commit metadata supplied as previously verified by the parent task | **Metadata-only**, supplied prior check, not re-queried here; times identify commits rather than run events |
+| Selected n21, ongoing collection and 651/227/369 steps; abstract, Section 7.1 and Data availability | Owner-supplied runtime choice and progress account as of 8 November | **User-supplied unchecked**; no dataset, trajectory completion, cost reconciliation or efficacy result inspected |
+
+The retained protocol input is
+`/home/jmservera/.copilot/session-state/a94bf42c-3cbc-40ed-936a-62702b3fce6f/files/paper-study-update-2026-11-08/pilot-estimation-e71037d9.json`.
+Pinned source locators:
+[protocol](https://github.com/jmservera/ama-thought-mve/blob/e71037d961cb80fc5c659437796de7736820f6c9/protocol/pilot-estimation.json),
+[README](https://github.com/jmservera/ama-thought-mve/blob/e71037d961cb80fc5c659437796de7736820f6c9/README.md),
+[CONTRIBUTOR](https://github.com/jmservera/ama-thought-mve/blob/e71037d961cb80fc5c659437796de7736820f6c9/CONTRIBUTOR.md).
+Read-only source retrieval checked the relevant passages, not the entire
+execution implementation, release image or study data.
+
+### Applied Changes and Preservation
+
+Updated the abstract, protocol/current execution, conclusion, author list
+and metadata, contributions, plural views/competing interests, data
+availability and assistance disclosure. The existing Supplement receives
+only cross-reference/provenance corrections, without a parallel supplement
+or duplicated case narrative. The retained v6 design/measurement diagrams
+are unchanged and labelled historical in captions; no new diagram is needed.
+
+Historical v4/v6/v7 records, registered materials, original adverse reviews,
+case data, numerical observations, frozen consolidation prompt and
+`\resultsfalse` remain. Power/resource tables, thresholds, planned analyses,
+budgets and economic assumptions were not recalculated or silently revised.
+Earlier source-inspection reporting/inference gaps remain explicit, without
+pretending to re-audit their active implementation or backdating a remedy.
+
+### Local Validation and Delivery
+
+All new compiler intermediates/logs, caches and inspection PNGs are in
+the external run:
+`/home/jmservera/.copilot/session-state/a94bf42c-3cbc-40ed-936a-62702b3fce6f/files/paper-study-update-2026-11-08/paper-build/authorship-revision-GQAxhZ`.
+Only the verified `main.pdf` was copied into the paper package after
+confirming that the original delivery had no conflicting tracked or staged
+edit and still matched the starting child delivery.
+
+* `python3 -B -m unittest discover -s anc -p 'test_*.py' -q`: **44 tests
+  pass**, no test failures/errors. These are existing authoring/planning
+  regressions, including all 39 historical resource cells and five native
+  diagram source/export bindings, not executed-study validation.
+* `python3 -B anc/check_paper.py`: **PASS**, 94 cited/embedded entries,
+  105 reusable entries, 1,806 abstract source characters, unique resolved
+  labels and a false results switch. Approximate body words: 10,487.
+  The configured historical baseline `0d5dcb02` remains **UNAVAILABLE**;
+  no baseline reduction is claimed.
+* Tectonic **0.17.0**, `--untrusted --keep-logs --keep-intermediates` with
+  an external output directory and task-local HOME/XDG caches: **exit 0**.
+  Actual final log: **0 TeX errors**, **0 unresolved references/rerun
+  warnings**, **0 overfull boxes**, **0 underfull boxes**. One inherited
+  warning remains: `Package inputenc Warning: inputenc package ignored
+  with utf8 based engines.` No pdfLaTeX output-marker check is claimed.
+  The normal automatic rerun completed; `main.log` and
+  `tectonic-console.txt` are retained in the run's `compiler/` directory.
+* PyMuPDF **2.0**: **40 pages**, one additive Supplement starting at
+  **page 35** (Appendix A). All-page word bounds checked 17,370 extracted
+  words at a 0.5-point boundary tolerance: **0 out-of-page words**, **0
+  blank extracted pages**. **174 named internal links**, **254 destination
+  page bindings** and **47 outline destinations** resolve within the
+  document, with **0 invalid destinations**. The 83 external URI
+  annotations were enumerated, not live-access validated.
+* Full 125-dpi renders inspected on pages **1–3, 8–9, 15–22, 25–28,
+  35–37 and 40** (21 pages), covering changed authorship, status, historical
+  figure/table labels, conclusion, disclosure, availability and Supplement
+  corrections. All 40 pages were also inspected in layout proofs.
+  Renders/proofs remain in `inspection/`; no scientific figure was changed.
+  An optional Pillow contact-sheet attempt failed to import `PIL`.
+  No dependency was installed; the existing PyMuPDF renderer then produced
+  the inspected all-page layout proofs successfully.
+* Source comparison confirms unchanged equation bodies, bibliography,
+  `review.md`, original adverse review, case data/evidence index, native
+  diagrams and literal frozen prompt. Active normalized Supplement digests
+  are refreshed with prior digests retained; current source/PDF digests are
+  in `supplement-integration.json`.
+* Checked delivered PDF SHA-256:
+  `1a39c104c7e6ae0bb2075cceffe54b3ed8cdb037effe8d6efa223f3b84a47cda`.
+  PDF metadata lists **Juan Manuel Servera Bondroit; Isabel Cabezas Martin**.
+  Title and current Juan Manuel affiliation were preserved.
+* Scoped `git diff --check` passes. Pre-existing ignored checkout compiler
+  remnants were observed and left untouched (the `main.log`/`main.aux`
+  timestamps precede this task; historical `supplement.*` remnants also
+  remain). They were not this revision's outputs. No dirty-input exclusion,
+  stash or commit was used. The child worktree has **no task changes**.
+
+There is **no blocking component validation**. Exact-head independent
+assessment, the focused repository publication gate, hosted checks and
+human publication/author approvals were not run or inferred; the parent
+owns those steps and its slide/index/log synchronization.
+
+Work execution: **Complete** for the scoped revision and local validation.
+Assessment: evidence-bounded assisted revision with owner-confirmed
+registration/runtime/progress facts and independently unavailable OSF
+metadata, not independent review, statistical certification, scientific
+acceptance or publication approval. No new experimental result,
+experiment-source/configuration or registration change, or actual model run.
 
 ## Recovery and Scientific Alignment 5 November
 

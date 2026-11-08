@@ -10794,6 +10794,51 @@ The data-operator browser check now reads the synthetic record ID from the Sourc
 
 * Source CI now installs actionlint 1.7.7 through `tools/install-actionlint.py` (bounded retries over the official download URL and release asset API, pinned archive and checksums SHA-256, fail closed) after hosted 504 failures on #1243 and #1271. The AWF 0.28.23 bootstrap failure sits in the generated scorer lock and upstream setup action; no supported repository hook exists, so it stays an open partial blocker. Records: `.copilot-tracking/*/2026-11-08-issue1274-ci-release-retrieval-*`.
 
+## [2026-11-08] review | Capstone brief fidelity, autonomy and ongoing product story
+
+* Owner requested correction of the presentation's implication that the case
+  demanded unrestricted autonomous agents. The
+  [dated review](../capstone/source/review-2026-11-08.md) maps exact L2-L4
+  requests to current evidence preparation, preserved human/resident rights,
+  partial Assessment/Funding scope and reduced Coordination/Quality authority.
+  It explains reactive/proactive proposals, chat, historical Decision 1 versus
+  current generation, optional resident access and the design-thinking
+  decision trace. Original case, role answers, disagreements and prior reviews
+  remain unchanged; the addendum and historical syntheses gain qualifications.
+* Read-only Project 7 capture at 14:12 UTC retrieved all 260 members:
+  125 open, 126 completed and nine not planned. Done135 includes cancellations.
+  Git at `bcd86707` has 1,147 non-merge commits; 982 merged PRs were retrieved.
+  Current-membership history is not the complete Insights event series,
+  accepted-feature count or a causal productivity finding. Final presentation
+  must refresh these data and current acceptance evidence.
+* Updated the [54-slide source](../capstone/source/slides.json), synchronized
+  deck/PDF/pitch and index. Build/Verify preserve 108 native actions, timing,
+  all note blocks and six protected cost pages. Linux preview verifies all
+  108 PDF jumps; 301 revised frames retain their words and 43 unchanged page
+  renders are pixel-identical. Eleven visual pages were inspected; initial
+  count/table clipping was corrected. Nine PDF tests, 32 native-shape guards,
+  canonical source semantics and changed-document local links passed.
+* The [compact receipt](../capstone/source/validation.json) records source and
+  delivery hashes. Heavy previews/raw captures remain external. Native Windows
+  PowerPoint, rehearsal, human accessibility, live application/model authority,
+  comparative value and panel floors are not established. No deployment,
+  spending, requirement approval or increased autonomy is authorized.
+
+## [2026-11-08] correction | Independent capstone story review F1
+
+* The exact-head strategist assessment of `fe8a7327` returned FAIL for one
+  Medium finding: current pages 16/31 and the pitch guide incorrectly called
+  the scripted unsupported-claim chat scenario an open gap. The
+  [agents harness guide](../../src/agents/README.md#ai-evaluation-harness)
+  records that its lexical check catches it; unlisted paraphrases and
+  actual-model/human assurance remain limitations.
+* Accepted F1 in the [current source](../capstone/source/slides.json) and
+  pitch guide, preserving the [original review disposition](../capstone/source/review-2026-11-08.md#independent-review-disposition).
+  The autonomy, resident, model-fit, design-thinking and history story was
+  otherwise supported, with no serious visual finding. Rebuild/Verify,
+  fresh exact-head local gate and same-reviewer correction assessment remain
+  required after this source change. No model run, new approval or changed
+  operational authority follows.
 ## [2026-11-08] update | Issue 440 AI and employee chat current-main stabilization checkpoint (Refs #440, #157, #159, #104, #107)
 
 * Appended one dated section to the cut-over evidence pack for main `608c98e6` (covering merged #1275, #1271 and #1273): BRD, PRD and ADR identities, the corrected #157 and #159 status drift (no new adoption), where AI is invoked and the proposal-only authority ceiling for the five assistants and employee chat, focused installed-package selectors (core 124, agents 46, API 217 tests, 59 skips for SQL Server and Chromium, all exit 0, SQLite or fixture stores only), document-qualified traceability and two findings (F1 Low unreachable `ChatIsolation.turn` clean-up, F2 evaluation prompt differs from the live prompt). Historical SQL, browser and restart evidence stays source-qualified; no real-provider, Azure or human approval evidence. Recommendation is continue; nothing approved, ticked or closed. Records: `.copilot-tracking/*/2026-11-08-ai-main-stabilization-440-*`.
@@ -10805,3 +10850,73 @@ The data-operator browser check now reads the synthetic record ID from the Sourc
 ## 2026-11-08 - Issue 149 parent integration of main e2ecee25
 
 The parent topic merged main e2ecee25 with a normal merge and no conflicts. Focused unit, static and type checks and the maintained atlas (194) and data-operator (100, required axe) Chromium checks passed on the merged source. No whole-issue, accessibility or assistive-technology acceptance. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-main-e2ec).
+## [2026-11-08] update | Running exploratory study, coauthor and mixed-source history
+
+* Owner confirmed coauthorship/affiliation agreement for Isabel Cabezas Martin,
+  Software Engineer in Frontier Company at Microsoft, executing and collecting
+  data separately from designer/analyst Juan Manuel Servera Bondroit.
+  This is intended execution-bias mitigation, not independent institutional
+  validation, independent analysis or a completed experimental result.
+* OSF base [xcpt4](https://osf.io/xcpt4) is owner-confirmed for 7 November.
+  Public API retrieval returned 401; the running design includes explicitly
+  unregistered exploratory amendments. Public source/protocol at `e71037d9`
+  was read: three models/five arms, selected 21/default 12, F1-F10 plus CR1,
+  medium effort and seed 2027. No historical freeze tag is the current execution.
+* Owner-reported completed-step history is 651 on `99a1ed1`, then 227 on
+  `3c2ce89`, then 369 on `e71037d9`: total 1,247. The dataset is not one frozen
+  implementation, and steps are not independent trajectories or efficacy.
+  The [current paper](../capstone/thought-leadership/everything-but-the-software/README.md)
+  and [study-slide record](../capstone/source/review-2026-11-08.md#later-8-november-study-and-coauthor-update)
+  distinguish this from earlier paused/prospective records.
+* Existing pages 22/40 and the B13 index entry were updated in the same topic
+  branch. Build/Verify preserve 54 slides/notes, 108 actions, timing and all
+  protected cost bytes/calculations. Linux preview checks 337 text frames
+  and 108 PDF jumps; only 22/27/40 change visually, with 51 identical neighbours.
+  Paper validation, independent review and a fresh local publication gate
+  remain separate; no study/data/configuration/OSF action is performed here.
+* Paper authoring completed directly on the current branch: 44 regressions
+  and structural checks pass, the coauthored PDF has 40 pages, Supplement 35,
+  174 valid internal links and 47 outline destinations. Tectonic has one
+  retained `inputenc` warning and no errors or unresolved references.
+  Names/metadata and source/history/status were checked without private
+  experimental data or new results. Independent assessment and publication
+  gate remain separate from these local component checks.
+
+## [2026-11-08] update | Paper measurement provenance and active treatment prompts
+
+* Applied the owner's measurement audit request to the existing paper and
+  additive Supplement. Tables 7/15 distinguish hidden-contract outcomes,
+  structural complexity/duplication/lint/size proxies, variable resource
+  observations and annotation/integrity records, with actual fields, units,
+  checkpoints, denominators, tool settings and missingness.
+* Public source `e71037d9` contains no separate numerical LLM-as-judge.
+  Arm C's qualitative review is a treatment, not an outcome score. The B/C
+  source templates are retained verbatim with SHA-256/Git-blob guards and
+  complete PDF-display checks; the historical frozen v4 prompt is unchanged.
+* Corrected the earlier Ruff safeguard claim: `--isolated` is present,
+  `--ignore-noqa` is absent and no suppression count is exported. Inline
+  suppression remains a measurement limitation, not a silently fixed
+  instrument or an accusation of participant use. Conservative unavailable
+  retention and composite CR1 summaries remain distinct from planned
+  richer exports.
+* The [current paper record](../capstone/thought-leadership/everything-but-the-software/README.md#measurement-provenance-8-november)
+  describes the 45-page single PDF, Supplement 37, 50 passing authoring
+  tests, structural checks, 180 internal/49 outline destinations and all-page
+  bounds. New tables/listings were visually inspected. One inherited
+  Tectonic `inputenc` warning remains; the historical body baseline is
+  unavailable. Independent exact-head review, focused publication gate,
+  hosted and human approval remain separate.
+* Authoring stayed on the existing branch. No slides, private data, experimental
+  outcomes, source/configuration, model run, registration/amendment or
+  repository-visibility action was performed. Coauthors, source epochs,
+  original/adverse reviews and pending results remain intact.
+
+## [2026-11-08] update | Paper current-delivery index correction
+
+* Independent scoped source review of `f367b70e` found the measurement account
+  source-faithful and one Low index inconsistency: the maintained introduction
+  still described the prior 40-page/Supplement-35 delivery. Updated that current
+  pointer to the validated v13 PDF's 45 pages/Supplement 37, preserving dated
+  records and the original review outcome. Paper source, PDF, prompt bindings,
+  study and slides are unchanged. A new exact-head assessment and focused
+  publication receipt are required after this correction.
