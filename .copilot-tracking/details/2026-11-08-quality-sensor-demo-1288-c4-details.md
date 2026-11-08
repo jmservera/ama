@@ -1,6 +1,6 @@
 # Details: #1288 correction 4 (C4)
 
-Written 2026-11-08T21:36Z (real clock), before product or test edits. Refs #1288.
+Written 2026-11-08T21:33Z (commit d1edf1b2e; first draft said 21:36Z, ahead of the real clock, corrected), before product or test edits. Refs #1288.
 
 ## F1 index proof (`sensor_view.py`, `sensor_consumer.py`, `assistants.py`)
 

@@ -1,6 +1,6 @@
 # Plan: #1288 correction 4 (C4)
 
-Written 2026-11-08T21:35Z (real clock) after the C4 research and before any product or test edit. Refs #1288, #107. No closing claim. Details: `.copilot-tracking/details/2026-11-08-quality-sensor-demo-1288-c4-details.md`.
+Written 2026-11-08T21:33Z (commit d1edf1b2e; first draft said 21:35Z, ahead of the real clock, corrected) after the C4 research and before any product or test edit. Refs #1288, #107. No closing claim. Details: `.copilot-tracking/details/2026-11-08-quality-sensor-demo-1288-c4-details.md`.
 
 ## Phases
 
