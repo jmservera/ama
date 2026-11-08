@@ -1013,3 +1013,21 @@ keeps the pre-merge full receipt at `ac0f29f9` historical and source-qualified.
 Recommendation is continue; #1258 and #1259 stay open owners. Whole #79, #1231
 and #440 closure, policy sign-off, retention, deployed scheduling, live model
 and Azure behaviour remain unproven.
+
+The 2026-11-08 AI and employee chat current-main stabilization checkpoint for #440
+(Refs #157 #159 #104 #107) is appended to the
+[cut-over evidence pack](../architecture/cutover-evidence-pack.md#ai-and-employee-chat-current-main-stabilization-checkpoint-2026-11-08-refs-440-157-159-104-107).
+It pins main `608c98e6` after #1275, #1271 and #1273, records the #157 and #159
+status-drift correction without any new adoption, maps where AI is invoked for the
+five assistants and employee chat, and records focused SQLite and fixture selectors
+(SQL Server and Chromium skipped) with historical SQL and browser evidence kept
+source-qualified. Recommendation is continue; real-provider behaviour, human and
+named approvals, tokenomics and whole-epic closure remain unproven.
+
+Correction 1 to that checkpoint (2026-11-08, after independent assessment) is the
+[Correction 1 and currency](../architecture/cutover-evidence-pack.md#correction-1-and-currency-observed-2026-11-08t1155z-after-independent-assessment-review-440-c96a)
+subsection. It records current main, #1278 on main, #1243 on its parent branch and
+PR 1240 still open, scopes the earlier exclusions to the 608c pin, separates the
+historical AWF 504 (recovered by the rootless installer in #1275) from the
+unimplemented #1274 resilience, qualifies the assistant review wording and marks the
+unused chat clean-up as pending triage, not deferred.
