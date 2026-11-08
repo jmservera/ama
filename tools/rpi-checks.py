@@ -73,7 +73,7 @@ WORKFLOWS = (
 )
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "197606992ba38bc5f705770a30d2ed0a5d7be5ded2166e441abb110ffd744476",
+    "src-ci.yml": "4fb913e1ac29772b4a4a6ee82a08f05ab0a917d3cd64974dd461dc960e159122",
     "mvp-ci.yml": "a0f227717e1d6f675898e2ff6d45f493ce88851ad236c578f2dbcb7921bd0179",
     "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
     "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
