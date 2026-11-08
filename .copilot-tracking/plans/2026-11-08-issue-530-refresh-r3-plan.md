@@ -10,9 +10,9 @@ ms.date: 2026-11-08
 ## Phases
 
 * [x] Phase 1: independent critique of this plan, then commit research, plan, details and critique alone.
-* [ ] Phase 2: one normal merge of fetched `2e0c676a` into this branch; prove ancestry, `src`/`tools`/`infra`/`.github` trees equal Main, post-merge `<main>...HEAD` set inert-only, chat blob attribution.
-* [ ] Phase 3: write changes, review and state records; commit; freeze ignored-clean.
-* [ ] Phase 4: one attached `--changed` gate and partial verification against freshly fetched Main.
+* [x] Phase 2: one normal merge of fetched `2e0c676a` into this branch; prove ancestry, `src`/`tools`/`infra`/`.github` trees equal Main, post-merge `<main>...HEAD` set inert-only, chat blob attribution.
+* [x] Phase 3: write changes, review and state records; commit; freeze ignored-clean.
+* [x] Phase 4: one attached `--changed` gate and partial verification against freshly fetched Main.
 
 ## Stop rules
 
