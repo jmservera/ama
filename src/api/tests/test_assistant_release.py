@@ -1116,6 +1116,33 @@ class ProcessRaces(UnleasedRevocation):
         self.assertEqual(len(disabled), 1)
         self.assertEqual(self.pool(self.service), (stored, attempts))
 
+    def test_restarted_processes_keep_partially_used_allowance_and_stop_at_stored_calls(self):
+        first, second, third = (
+            self.service.invoke(self.pm, cap, "ZF-1")["id"] for cap in list(assistants.REGISTRY)[:3]
+        )
+        wave = self.work / "one"
+        self.spawn("one", [first], wave, call_allowance=2)
+        self.release(wave, [])
+        self.assertEqual([r["results"] for r in self.finish(["one"])], [[True]])
+        stored, attempts = self.pool(self.service)
+        self.assertEqual((stored[0], stored[1], stored[3], attempts), (2, 2000000, 1, 1))
+
+        larger = dict(call_allowance=1000, token_allowance=9000000, expires="2100-01-01T00:00:00Z")
+        for label, tid, expected in (("two", second, True), ("three", third, False)):
+            wave = self.work / label
+            self.spawn(label, [tid], wave, **larger)
+            self.release(wave, [])
+            self.assertEqual([r["results"] for r in self.finish([label])], [[expected]])
+        self.assertEqual(len(self.provider_calls()), 2)
+        self.assertEqual(self.snapshot(self.service, second)[0]["state"], "ready")
+        task, _, disabled, _ = self.snapshot(self.service, third)
+        self.assertEqual((task["state"], task["attempts"]), ("disabled", 0))
+        self.assertIn("allowance exhausted", task["reason"])
+        self.assertEqual(len(disabled), 1)
+        final, total = self.pool(self.service)
+        self.assertEqual(final[:3], stored[:3])
+        self.assertEqual((final[3], total), (2, 2))
+
     def test_processes_after_revocation_and_restart_are_denied_without_calls_or_replenishment(self):
         p = self.service.invoke(self.pm, CAP, "ZF-1")
         control = self.service.invoke(self.pm, "assessment-preparation", "ZF-1")
