@@ -10920,3 +10920,7 @@ The parent topic merged main e2ecee25 with a normal merge and no conflicts. Focu
   records and the original review outcome. Paper source, PDF, prompt bindings,
   study and slides are unchanged. A new exact-head assessment and focused
   publication receipt are required after this correction.
+
+## 2026-11-08 - Issue 149 parent integration of main ecb28815
+
+The parent topic merged main ecb28815 with a normal merge and no conflict; API, Core, tools, infra and workflow bytes equal the previously assessed head. Docs-only integration, no acceptance claim. No index change. Evidence under `.copilot-tracking/` (2026-11-08 issue-149-parent-main-ecb2).
