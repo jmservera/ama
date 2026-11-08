@@ -84,7 +84,7 @@ def _verify(archive_dir: Path, reg: Mapping[str, Any]) -> dict[str, Any]:
     try:
         return ranking_publication.verify(archive_dir, reg)
     except OSError as e:
-        reason = e.strerror or str(e)
+        reason = e.strerror or "reason not available"
         return {
             "count": 0,
             "latest": None,

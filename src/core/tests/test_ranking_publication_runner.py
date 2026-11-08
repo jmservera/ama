@@ -669,5 +669,121 @@ class AssessmentCycle1Tests(RunnerBase):
             self.assertEqual(self.cli("schedule", *base)[0], 0)
 
 
+class UnusableArchivePathTests(RunnerBase):
+    """An existing archive path that is not a usable folder is unknown, never empty (Refs #1259)."""
+
+    def regular_file(self) -> Path:
+        self.archive.write_text("not a folder")
+        return self.archive
+
+    def dangling_link(self) -> Path:
+        os.symlink(self.root / "missing", self.archive)
+        return self.archive
+
+    def dangling_ancestor(self) -> Path:
+        os.symlink(self.root / "missing", self.root / "link")
+        self.archive = self.root / "link" / "archive"
+        return self.root / "link"
+
+    def stat_failure(self) -> Path:
+        self.archive.mkdir()
+        real = os.stat
+        archive = os.fspath(self.archive)
+
+        def failing(path: Any, *a: Any, **kw: Any) -> Any:
+            if os.fspath(path) == archive:
+                raise PermissionError(13, "Permission denied")
+            return real(path, *a, **kw)
+
+        self.enterContext(patch("os.stat", failing))
+        return self.archive
+
+    def scenarios(self) -> list[Any]:
+        return [self.regular_file, self.dangling_link, self.dangling_ancestor, self.stat_failure]
+
+    def check_unknown(self, make: Any) -> None:
+        sentinel = make()
+        before = os.path.lexists(sentinel), os.path.islink(sentinel)
+        ver = self.go("verify")
+        sched = self.go("schedule")
+        pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        exe = self.go("publish", cases=open_cases(), as_of=AS_OF, exercise=True)
+        label = make.__name__
+        self.assertEqual(
+            (ver["status"], ver["latest"], ver["overdue"]), ("problem", None, None), label
+        )
+        self.assertEqual(len(ver["problems"]), 1, label)
+        self.assertEqual(
+            (sched["status"], sched["due"], sched["next_window_start"]),
+            ("problem", None, None),
+            label,
+        )
+        self.assertEqual(
+            (pub["status"], self.codes(pub)), ("refused", ["archive_unreadable"]), label
+        )
+        self.assertEqual((pub["due"], pub["next_window_start"]), (None, None), label)
+        self.assertEqual(
+            (exe["status"], exe["written"], exe["due"]), ("exercise", False, None), label
+        )
+        self.assertTrue(exe["problems"], label)
+        for res in (ver, sched, pub, exe):
+            self.assertNotIn(str(self.root), json.dumps(res), label)
+        self.assertEqual((os.path.lexists(sentinel), os.path.islink(sentinel)), before, label)
+
+    def test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing(self) -> None:
+        for make in self.scenarios():
+            with self.subTest(make.__name__):
+                self.setUp()
+                self.check_unknown(make)
+
+    def test_regular_file_archive_exits_nonzero_through_main(self) -> None:
+        self.regular_file()
+        cases = self.cases_file()
+        base = ("--archive", str(self.archive), "--today", TODAY)
+        with self.registry_patched():
+            self.assertEqual(self.cli("verify", *base)[0], 1)
+            self.assertEqual(self.cli("schedule", *base)[0], 1)
+            code, res = self.cli("publish", *base, "--cases", str(cases))
+        self.assertEqual((code, self.codes(res)), (2, ["archive_unreadable"]))
+        self.assertEqual(self.archive.read_text(), "not a folder")
+
+    def test_oserror_without_a_reason_is_reported_without_the_path(self) -> None:
+        self.archive.mkdir()
+        with patch.object(rp, "verify", side_effect=OSError(str(self.archive))):
+            ver = self.go("verify")
+        self.assertEqual(ver["status"], "problem")
+        self.assertNotIn(str(self.root), json.dumps(ver))
+
+    def test_absent_directory_stays_creatable_for_first_run(self) -> None:
+        ver = self.go("verify")
+        sched = self.go("schedule")
+        self.assertEqual((ver["count"], ver["problems"], ver["overdue"]), (0, [], True))
+        self.assertEqual(
+            (sched["status"], sched["due"], sched["next_window_start"]), ("due", True, TODAY)
+        )
+        pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual(pub["status"], "published")
+        self.assertEqual(len(list(self.archive.iterdir())), 1)
+
+    def test_absent_folder_below_a_link_to_a_real_folder_is_creatable(self) -> None:
+        real = self.root / "real"
+        real.mkdir()
+        os.symlink(real, self.root / "link")
+        self.archive = self.root / "link" / "archive"
+        sched = self.go("schedule")
+        self.assertEqual((sched["status"], sched["due"]), ("due", True))
+        self.assertEqual(self.go("publish", cases=open_cases(), as_of=AS_OF)["status"], "published")
+
+    def test_store_status_is_a_problem_for_a_regular_file_archive(self) -> None:
+        data = self.root / "zavaforward.json"
+        data.write_text(json.dumps({"as_of": AS_OF, "staff": [], "cases": open_cases()}))
+        store = Store(str(data))
+        store.save()
+        Path(store._ranking_archive()).write_text("not a folder")
+        manager = {"email": "pam@example.test", "role": "Retrofit Programme Manager"}
+        status = store.ranking_publication_status(manager)
+        self.assertTrue(status["problems"])
+
+
 if __name__ == "__main__":
     unittest.main()

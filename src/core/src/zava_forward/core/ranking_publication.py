@@ -21,10 +21,12 @@ Nothing here changes a ranking.
 """
 
 import calendar
+import errno
 import hashlib
 import json
 import os
 import re
+import stat
 from collections.abc import Mapping
 from typing import Any
 
@@ -224,15 +226,53 @@ def _remove(stage: str) -> bool:
     return False
 
 
+def _require_creatable(path: str) -> None:
+    """Return when path is missing and its nearest existing ancestor is a real folder.
+
+    Raises a path-free OSError for a dangling link, a non-folder or a stat failure, so an
+    unusable archive location is never mistaken for an empty one.
+    """
+    while True:
+        try:
+            os.lstat(path)
+        except FileNotFoundError:
+            parent = os.path.dirname(path)
+            if parent == path:
+                return
+            path = parent
+            continue
+        try:
+            usable = stat.S_ISDIR(os.stat(path).st_mode)
+        except FileNotFoundError:
+            raise OSError(
+                errno.ENOENT, "A symbolic link in the archive location is dangling"
+            ) from None
+        if not usable:
+            raise NotADirectoryError(
+                errno.ENOTDIR, "A parent of the archive location is not a folder"
+            )
+        return
+
+
 def _names(archive_dir: Path) -> list[str]:
-    if not os.path.isdir(archive_dir):
+    path = os.fspath(archive_dir)
+    try:
+        usable = stat.S_ISDIR(os.stat(path).st_mode)
+    except FileNotFoundError:
+        _require_creatable(path)
         return []
+    if not usable:
+        raise NotADirectoryError(errno.ENOTDIR, "The archive location is not a folder")
     names = os.listdir(archive_dir)
     return sorted(n for n in names if n.startswith("ranking-") and n.endswith(".json"))
 
 
 def verify(archive_dir: Path, registry: Mapping[str, Any] | None = None) -> dict[str, Any]:
-    """Check every archived record. Returns count, problems and latest publication date."""
+    """Check every archived record. Returns count, problems and latest publication date.
+
+    An absent archive folder is empty (first run). An existing non-folder, a dangling link or a
+    stat failure raises a path-free OSError and is never reported as empty.
+    """
     reg = ranking.POLICIES if registry is None else registry
     problems: list[str] = []
     dates: list[str] = []
