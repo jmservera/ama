@@ -9,10 +9,10 @@ Correct findings F1-F4 and the real-provider qualification in the new pack secti
 
 ## Phases
 
-* [ ] Phase 1: edit the new pack section only (F1-F4, provider qualification); no earlier section or original record changes.
-* [ ] Phase 2: align README paragraph and append a dated log entry only if needed; log prefix preserved.
-* [ ] Phase 3: focused validation: `git diff --check`, ASCII, anchors and links, byte-preservation of everything before the new section, log prefix, fetch main, status.
-* [ ] Phase 4: C1 changes, one author Review per finding, state, commit.
+* [x] Phase 1: edit the new pack section only (F1-F4, provider qualification); no earlier section or original record changes.
+* [x] Phase 2: align README paragraph and append a dated log entry only if needed; log prefix preserved.
+* [x] Phase 3: focused validation: `git diff --check`, ASCII, anchors and links, byte-preservation of everything before the new section, log prefix, fetch main, status.
+* [x] Phase 4: C1 changes, one author Review per finding, state, commit.
 
 ## Decisions
 
