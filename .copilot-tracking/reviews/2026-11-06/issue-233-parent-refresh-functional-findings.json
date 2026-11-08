@@ -1,0 +1,87 @@
+{
+  "summary": "One bounded standard-depth functional source assessment of PR 1224's unpublished local proposed update, branch fix/atlas-tensions-233-parent-refresh, head cae201c176d9a9277c42bb262acfab9a61394fb3, tree 05d7204ee709011b3bc494f69dd5d53912ae300f, against declared parent test/ux-evidence-149 at c66f2cdd1bd3f841cd61d8487791931e8762a53c, not main. Head, tree, clean status and ancestry identities are supplied by the caller's independent verification, not independently executed Git checks in this assessment. Read the entire review-233-cae-full.patch once: all 40 files, 1206 additions and 6 deletions, including every RPI/KB hunk, the complete 530-line checker and complete 102-line checker test. Adjacent reads covered the complete shared design-system browser harness and role-screen fixtures, actual served role-screens.js table construction and relevant resident/package rendering, and trace acceptance boundaries. No high-confidence actionable functional defect found, either in the candidate's checker changes relative to the declared parent or introduced by this maintenance refresh relative to the published head. No tests, services, browser, builds, GitHub actions or source edits performed. No matching diff-state.json was supplied or located in the session files; review scope and identities use the explicit caller-provided patch and context.",
+  "verdict": "approve",
+  "severity_counts": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "changed_files": [
+    { "file": ".copilot-tracking/changes/2026-11-05-issue-233-rendered-tensions-changes.md", "lines_changed": "New file; all 14 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/changes/2026-11-05-issue-233-rendered-tensions-correction-1-changes.md", "lines_changed": "New file; all 14 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/changes/2026-11-05-issue-233-rendered-tensions-correction-2-changes.md", "lines_changed": "New file; all 10 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/changes/2026-11-05-issue-233-rendered-tensions-correction-3-changes.md", "lines_changed": "New file; all 12 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/changes/2026-11-05-issue-233-rendered-tensions-correction-4-changes.md", "lines_changed": "New file; all 13 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/changes/2026-11-05-issue-233-rendered-tensions-integration-changes.md", "lines_changed": "New file; all 10 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/changes/2026-11-05-issue-233-rendered-tensions-recovery-changes.md", "lines_changed": "New file; all 24 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/changes/2026-11-06-issue-233-parent-refresh-changes.md", "lines_changed": "New file; all 22 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/details/2026-11-05-issue-233-rendered-tensions-details.md", "lines_changed": "New file; all 7 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/plans/2026-11-05-issue-233-rendered-tensions-correction-1-plan.md", "lines_changed": "New file; all 15 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/plans/2026-11-05-issue-233-rendered-tensions-correction-2-plan.md", "lines_changed": "New file; all 14 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/plans/2026-11-05-issue-233-rendered-tensions-correction-3-plan.md", "lines_changed": "New file; all 15 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/plans/2026-11-05-issue-233-rendered-tensions-correction-4-plan.md", "lines_changed": "New file; all 16 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/plans/2026-11-05-issue-233-rendered-tensions-integration-plan.md", "lines_changed": "New file; all 13 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/plans/2026-11-05-issue-233-rendered-tensions-plan.md", "lines_changed": "New file; all 11 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/plans/2026-11-05-issue-233-rendered-tensions-recovery-plan.md", "lines_changed": "New file; all 35 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/plans/2026-11-06-issue-233-parent-refresh-plan.md", "lines_changed": "New file; all 31 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/research/2026-11-05-issue-233-rendered-tensions-correction-1-research.md", "lines_changed": "New file; all 15 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/research/2026-11-05-issue-233-rendered-tensions-correction-2-research.md", "lines_changed": "New file; all 9 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/research/2026-11-05-issue-233-rendered-tensions-correction-3-research.md", "lines_changed": "New file; all 9 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/research/2026-11-05-issue-233-rendered-tensions-correction-4-research.md", "lines_changed": "New file; all 11 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/research/2026-11-05-issue-233-rendered-tensions-integration-research.md", "lines_changed": "New file; all 9 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/research/2026-11-05-issue-233-rendered-tensions-recovery-research.md", "lines_changed": "New file; all 33 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/research/2026-11-05-issue-233-rendered-tensions-research.md", "lines_changed": "New file; all 24 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/research/2026-11-06-issue-233-parent-refresh-research.md", "lines_changed": "New file; all 28 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/reviews/2026-11-05-issue-233-rendered-tensions-correction-1-review.md", "lines_changed": "New file; all 13 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/reviews/2026-11-05-issue-233-rendered-tensions-correction-2-review.md", "lines_changed": "New file; all 9 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/reviews/2026-11-05-issue-233-rendered-tensions-correction-3-review.md", "lines_changed": "New file; all 9 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/reviews/2026-11-05-issue-233-rendered-tensions-correction-4-review.md", "lines_changed": "New file; all 9 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/reviews/2026-11-05-issue-233-rendered-tensions-integration-review.md", "lines_changed": "New file; all 9 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/reviews/2026-11-05-issue-233-rendered-tensions-recovery-review.md", "lines_changed": "New file; all 28 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/reviews/2026-11-05-issue-233-rendered-tensions-review.md", "lines_changed": "New file; all 21 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": ".copilot-tracking/reviews/2026-11-06-issue-233-parent-refresh-review.md", "lines_changed": "New file; all 25 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": "docs/reference/README.md", "lines_changed": "738-744 patch hunk; one index row replaced", "risk": "Low", "issue_count": 0 },
+    { "file": "docs/reference/log.md", "lines_changed": "10588-10596 added; surrounding parent entry reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": "docs/reference/research/ux/atlas-screen-trace.md", "lines_changed": "Three hunks: date, introduction and both tension rows; all reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": "src/api/README.md", "lines_changed": "1316-1335 added checker usage and evidence boundary", "risk": "Low", "issue_count": 0 },
+    { "file": "src/api/checks/atlas_tensions_browser_check.py", "lines_changed": "New file; all 530 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": "src/api/tests/test_atlas_tensions_checker.py", "lines_changed": "New file; all 102 lines reviewed", "risk": "Low", "issue_count": 0 },
+    { "file": "src/api/tests/test_role_screens_conformance.py", "lines_changed": "76-78 replacement assertion and surrounding patch context", "risk": "Low", "issue_count": 0 }
+  ],
+  "findings": [],
+  "positive_changes": [
+    "The checker uses the shared owned-loopback harness and real Store fixture construction rather than introducing an alternative application or fabricated capacity result.",
+    "Rendered package rows are compared to independently obtained fixture API values after test-side response reordering; conflicting rankings and reference order are explicitly checked.",
+    "Region reach is scoped by DOM index rather than deduplicated label text; nonblank-label guards and duplicate-name regression tests preserve the earlier checker corrections.",
+    "The actual candidate script path is src/api/src/zava_forward/api/web/role-screens.js. Source identity checking in the patch uses this existing path, not the previously guessed static path.",
+    "Maintenance Changes and author Review correctly distinguish the clean normal local merge from GitHub's unreproduced CONFLICTING metadata, retain both KB contributions, and do not claim manual conflict resolution.",
+    "Current refresh records preserve author-only review and unchecked human permission; earlier evidence and process deviations are not silently replaced by the maintenance outcome."
+  ],
+  "testing_recommendations": [
+    "No additional execution performed or requested within this bounded assessment. Preserve the caller-consumed focused maintenance evidence as selected evidence, not a full integration gate or current browser receipt."
+  ],
+  "recommended_actions": [
+    "Have a qualified human review this source assessment before any decision to update the PR or merge; the normalized approve verdict means no functional findings in this scope only.",
+    "Keep full parent integration, hosted merge-state checks and any separately required admitted runtime validation under their existing owners; do not infer them from this assessment."
+  ],
+  "out_of_scope_observations": [
+    {
+      "file": ".copilot-tracking/research/2026-11-05-issue-233-rendered-tensions-recovery-research.md",
+      "observation": "Baseline process noncompliance remains: the original checker preceded original Research/Plan, and corrections 1-3 had late artifacts. Correction 4 and forward recovery do not cure that historical failure. This is not a newly introduced functional merge defect. Historical timestamp/order assertions were not independently re-audited here."
+    },
+    {
+      "file": ".copilot-tracking/research/2026-11-06-issue-233-parent-refresh-research.md",
+      "observation": "Line 20 contains a prospective 'likely cause' hypothesis about the shared log ending. It is not proof of GitHub metadata causation. The subsequent Changes explicitly says the cause is not established, and the Review says the hosted state was not reproduced. This assessment makes no root-cause claim."
+    },
+    {
+      "file": ".copilot-tracking/changes/2026-11-06-issue-233-parent-refresh-changes.md",
+      "observation": "Current focused results are caller-consumed evidence, not runs executed by this assessor: unit2.log 54 tests/0 skips/OK after retained unit.log import failure; trace.log 17 tests/OK with no acceptance inference; selected strong Ruff/format and strict mypy on two files PASS; caller additionally ran configured canonical Ruff 0.17.1 check/format successfully. No new browser, SQL, image, full API, native gate or receipt is claimed. Receipt 17f52dd7735066444b0781a76cf281a90a3c255f2f0a9f55525c552a409c46ed and old Chromium 194 PASS/0 FAIL/0 SKIP with 46 screenshots at published 1add are historical, not exact-current-head validation."
+    },
+    {
+      "file": "docs/reference/research/ux/atlas-screen-trace.md",
+      "observation": "One synthetic home's three-screen engineering sequence is not C4 connected-journey acceptance, C5/WCAG conformance, assistive-technology or user acceptance, or whole-issue 233/149 acceptance. No standalone UX/accessibility audit, human approval or acceptance checkbox completion was performed."
+    }
+  ],
+  "risk_assessment": "Low for the bounded maintenance refresh: no new production UI, auth, finance, SQL or deployment source change; checker/test/runtime identities are preserved according to supplied exact-head verification. Existing checker behavior was reviewed against the declared-parent patch at standard depth, including assertion failure behavior, fixture values, route interception, state/read-only checks, keyboard-region identity and shared harness cleanup. Runtime and full parent integration remain outside this source-only assessment. This agent is an assistive review tool only; this output does not constitute engineering approval, merge authorization or compliance certification and requires qualified human validation."
+}

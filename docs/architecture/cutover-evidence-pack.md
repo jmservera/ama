@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-11-07
+ms.date: 2026-11-08
 ms.topic: reference
 ---
 
@@ -3212,3 +3212,72 @@ Scope: documentation qualifications only. The independent assessment of candidat
 #### Remaining gates and exact resume conditions
 
 Unchanged: independent exact-head assessment of this corrected record, hosted CI, and named DPO, Legal, HR and control-owner decisions (BRD OD-45, OD-46, OD-48). Continue is still proposal only. F1 needs triage before any lane; F2 stays within #164 and #163. Pivot, deferral, relaxation and approval cannot be granted here. Nothing is ticked or closed.
+
+## Visible-demo integration checkpoint (2026-11-08, Refs #440 #149 #229 #891)
+
+Scoped recurrence of the open #440 checkpoint after the #149/#229 UX wave (PR 1286) and the owner-authorized employee model observation (PR 1290, #891). Documentation only; no production, tool, workflow, agent, test, BRD, PRD or ADR change, and no test, SQL, browser or model run. It builds on the earlier AI and employee chat section above and does not repeat its architecture or traceability. It is not whole #149, #229, #891 or #440 acceptance, and no approval, pivot, deferral or relaxation follows. Records: `.copilot-tracking/*/2026-11-08-visible-demo-checkpoint-440-*`.
+
+### Identities and covered changes
+
+| Item | Value |
+| --- | --- |
+| Base and `origin/main` | `6354b13f7abf1441a815e92f2b01dc184ce0b0ac`, tree `0fddb514670c2e1e112f0eb284fdee9f9846c952`, fetched 2026-11-08T19:55Z. Actual `git diff --name-only 656cafb1 6354b13f7` lists only `.github/rubric/scores/latest.json` |
+| PR 1286 | merged `28c6ec11cbfc0185a756eb15cd9b324ab0856b94` 2026-11-08T19:38:09Z, exact head `0362e2626587153f367d1dab49c7d0f52611bcba`. AI-state and exception-register checks, atlas and source identity checks, content-standard evidence and document-control refusal wording (Refs #149 #229 #153 #233) |
+| PR 1290 | merged `656cafb1eca2813469cf0e8e60af3bfb31b619a6` 2026-11-08T19:44:02Z, head `5b6b965715d5192b323145574156bddedcb3e7ae`. Ten `.copilot-tracking` record paths only (#891 live and C1 records); no application, test or infrastructure file |
+| Also on main since the previous checkpoint | #1281 (that checkpoint), #1284 (memory-evaluation scope qualification), #1285 (VM demo release record) |
+| Documents | BRD 0.21.0 draft `34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD 0.21.0 in-review `c788b917bafaede215f326f0efc71e071a687f1c`; ADR 0004 accepted by the owner 2026-10-15, option C staged, `9406c2e747ced91e5ba7be4072f9482293c0c38f`; original case study `0aec2d8070117a647574b1fadc8cfbdd2af68598`; addendum `28c1924285eed255e53c1e359e0ad98eedab1d22`. Draft and in-review documents are not approved, and ADR 0004 adoption is not DPO, Legal, HR, control-owner or live-personal-data acceptance |
+| Excluded | Unmerged #184 (live streaming into Azure IoT Hub) and #1288 (sensor values and sensor-grounded Quality AI flags) candidate work, and parent PR 1240 (#81, open, head `6ef6dc36`). Their native corrections proceed in their own sessions and their source and activation state is not asserted here. No live IoT sender or receiver activation and no sensor-grounded Quality model activation was observed or verified within this checkpoint |
+
+Source movement since the previous checkpoint pin (`608c98e6`, actual Git): two production modules changed, `src/agents/src/zava_forward/agents/chat_eval.py` (#1284: isolation memory assertions disclosed as component-only, serving memory only as receipt-declared, integrated memory poisoning "not covered") and `src/core/src/zava_forward/core/doc_controls.py` (#1286: refusal wording only, stating nothing was deleted and that retention values are demonstration values). Tests, checks and READMEs under `src/` also changed. The chat, assistant, isolation, privacy, thread, AI and registry modules, `chat_admission` and `Assistants.review` are unchanged, so the earlier source observations on them hold as source reading, not as a new execution.
+
+### Where AI is invoked in the visible demo and the authority ceiling
+
+| Original agent and autonomy | Registered assistant (`REGISTRY`, `assistants.py`) | Where the model is called | Deterministic services | Authority ceiling today |
+| --- | --- | --- | --- | --- |
+| Stock Prioritisation, L2 recommend | `stock-prioritisation` | `Assistants.execute`, at most 3 attempts, no tools | Ranking, eligibility, scope check, citation validation, ledger | Proposal; human verification and review before any use |
+| Assessment, L3 drafts | `assessment-preparation` | same | Stage gates, sign-off separation, safety-hold check | Evidence preparation; no draft submission or sign-off |
+| Grant and Funding, L3 drafts | `funding-evidence` | same | Four-state ledger, claim holds | Evidence preparation; Finance submits |
+| Contractor and Resident Coordination, L3 acts | `works-resident-coordination` | same | Consent and preference rules | Proposal; no resident contact or booking |
+| Quality Verification, L4 autonomous flags | `quality-evidence` | same | Evidence checklist, independence check | Proposal; no autonomous flag, acceptance or sensor-grounded input |
+
+Employee chat is separate from the five assistants. The stored-thread route can call `ChatModel` through `ChatPanel._ask`, at most once per turn and only after `chat_admission` (`src/api/src/zava_forward/api/server.py` lines 48-58) passes. Admission needs a registered activation and, in the demo, the owner-approved demo-only switch (`ai_registry.demo_activation_honoured`: exact `ZF_CHAT_DEMO_ACTIVATION` value and `ZF_DEPLOYMENT_PROFILE=demo`), a finance meter and no continuity suspension. Otherwise the reply is workflow-only or the rules-only grounded answer, and the unstored route never calls a model. The UI label in `src/api/src/zava_forward/api/web/chat.js` line 131 is chosen from the response: "Summary by rules, no record changed", "Model-generated, not approved. Demo only." or "Workflow-only help, no record changed". The employee browser check asserts that label against a controlled provider only, so it shows rendering, not model inference. The ceiling is unchanged: cited text, no tool and no write path; AI cannot approve, decide, certify, record consent, diagnose or contact a resident. A model-generated answer needs the model, called at most once per stored turn. Where no model answer is available (unstored route, model failure, or no model admitted), a rules-only grounded answer from permitted case facts or workflow-only guidance is returned where applicable (`chat_panel.py` 455-505 and 681-688), and the ordinary case controls remain the manual path.
+
+### Evidence by classification
+
+| Class | Item | Source and date | Not shown |
+| --- | --- | --- | --- |
+| Local observed (this session) | Git identities, diffs and PR and issue states above; direct source reads | 2026-11-08T19:55Z | Any test result. No suite was run |
+| Local observed, historical | PR 1286 candidate `fd48`: selected API 76 and Core 19 tests OK; raw mypy API 195 and Core 269 success; Ruff API 121 and Core 216 pass; 212 matching installed production files; Chromium Atlas 194 and Data 100 passed, with two bounded axe scans on Data and zero violations (Atlas has none). Initial API-only import failure in the Core selection retained | Coordinator-reported 2026-11-08, `review-149-fd48-20261108-functional`, executed before the ordinary merge and later main moves | New-tree results, assistive-technology or human usability, real model, SQL Server, scanner or full gate. The Core test selection was source-qualified, not a universal installed-file comparison |
+| Local observed, exact head (coordinator assessment) | `0362e262` independent bounded Functional assessment Pass with no blocking findings; merged tree matched the prepared projection | PR 1286 body, 2026-11-08 | Whole-issue acceptance |
+| Hosted exact-head checks | All 19 hosted checks passed on `0362e262` (`gh pr checks 1286`, 2026-11-08). Hosted, not local, evidence | GitHub Actions | Results do not transfer to later heads or to this candidate |
+| Azure observed, historical | One generic synthetic employee question on the deployed demo app (source `e2ecee2565e86889c6beb43cb32e7c5b54270e01`, revision 0000027): HTTP 200, provider `azure-openai`, `workflow_only` false, `model_calls` 1, outcome answer; UI disclaimer and model-generated label visible; displayed token count 375. First-party identity attested; identity, token and account values are not copied | PR 1290 body and coordinator assessment `891-5b6b`, Pass with zero blocking findings; C1 made zero new calls | Five agents, case-grounded or Quality inference, current-main deployment, complete token, cost, privacy, retention and refusal acceptance (#891 criterion 2 stays unticked), named approval. #891 criteria 3 and 6 are ticked by the coordinator and criterion 2 is not |
+| Implemented, unverified | Employee chat over real case sources with a real model; five-assistant answers; the full map, case and briefing journey | Source and controlled tests only. A real generic model answer was observed once (Azure row above) | A real case-grounded answer or human acceptance |
+| Deferred or blocked | Sensor-grounded Quality AI (#1288), live IoT streaming (#184), parent #81 integration (PR 1240), assistive-technology and human usability, DPO, Legal, HR, RAI and control-owner decisions | Existing open issues | Any activation or approval |
+| Unknown | Whether the deployed demo matches current main; effect of later main moves on the demo | None observed | Current-main deployment |
+
+Adverse qualifications retained. The earlier fd48 evidence ran before the merge into later mains. The PR 1286 native record named `fd48` as the immediate first parent of the merge; the actual immediate parents are `86ed569` and `ecb28815`, so the PR body annotates it additively and the original is preserved. The two early navigation failures and the retrospective chronology of the #891 original report are preserved; its C1 records qualify them, and no timestamp witness is claimed. Existing guarded test-demo direction and the finite demo meter are references, not Legal, DPO, Finance or RAI approval, a new budget or a release waiver. Synthetic fixtures establish no resident or human approval.
+
+### Traceability for this checkpoint
+
+| Requirement or decision | Source and tests | Journey and status | Remaining owner |
+| --- | --- | --- | --- |
+| Original brief, five agents with L2 to L4 autonomy (original case study; addendum lines 15-26 and 1481-1560) | `REGISTRY` in `assistants.py`; `Assistants.review` | Five proposal-only assistants; fuller L3 and L4 behaviour is a scope or authority gap, not delivered | #157, #104, #107 |
+| ADR 0004 option C staged (accepted 2026-10-15) | `chat_panel.py`, `chat_isolation.py`, `server.py` admission | Employee chat, demo-only activation observed once (Azure, historical); stored chat storage remains unapproved | #157, #159 |
+| BRD and PRD AI authority rules (FR-044, AC-084, RULE-018, 022, 025, 028 as traced in the earlier section; BRD draft, PRD in-review) | `chat_panel`, `chat_privacy`, `test_chat_panel.py`, `employee_chat_browser_check.py` | Label, refusal and manual path implemented; one real generic model answer was observed (see the Azure observed row), but real case-grounded provider behavior and human acceptance are not shown | #159, #891 |
+| UX wave (#149, #229): AI-state, exception register, document-control refusals, content standard | `data_operator_ai_state.py`, `atlas_tensions_browser_check.py`, `doc_controls.py`, `test_document_controls.py` | Local observed at `fd48`, hosted 19 passed at `0362e262`; assistive-technology and usability not shown | #149, #229 |
+| Sensor exclusions (addendum sensor-supported condition review row) | None on main for #184 and #1288 | Not delivered. At this pin the `Assistants.capture` Quality allowlist (`assistants.py` 156-160) takes quality records, checklists and documents, not sensor readings; this is not an exhaustive claim about every path or about the deployed demo | #184, #1288, #81 |
+
+### Findings, owners and gates
+
+* No additional defect was confirmed by this checkpoint, and none was reproduced. No new issue is proposed.
+* The unused `ChatIsolation.turn` clean-up (F1 of the previous section) is still unowned and unfiled, pending triage. The evaluation probe prompt still differs from the serving prompt (F2); #1284 now discloses it as component-only, and it stays within #164 and #163.
+* A recommendation-ordering defect said to have been diagnosed in #81 could not be verified in the #81 body or comments, so it is not linked here and no duplicate is created.
+* Open gates: independent exact-head assessment of this record, hosted checks, named professional approvals, assistive-technology and human usability, tokenomics and cost, privacy, retention and refusal acceptance for model calls, fresh deployment evidence on a later head.
+
+### C2 provenance note
+
+The C1 research record states "Written 2026-11-08T20:10Z", but Git records its commit `844884247` at 2026-11-08T20:08:47Z and the correction commit `d8cda455` at 20:09:18Z. Commit ancestry shows the committed plan preceded the correction commit; the stated wall-clock time conflicts with the commit times and the cause is unknown. No timestamp witness exists, and the C1 record is preserved unchanged (C2 research, 2026-11-08).
+
+### Recommendation and resume conditions
+
+Proposed bounded CONTINUE of the existing employee demo and of the independent source corrections for #184 (cohort, receiver and stop contract) and #1288 (sensor provenance, latest capture, honest autonomous flags, withdrawal-safe projections). Only sensor-grounded Quality acceptance needs its own corrected source, integration, separately admitted activation and observed journey. Other gates are each issue's own and are not tied to IoT: #229 its accessibility (WCAG) criterion; #159 screen-reader and turn-accounting criteria; #891 its per-call token, cost, privacy, retention and refusal conjunction (criterion 2); #149, #157 and #81 their epic checkpoints and named-human gates; #440 its triage and independent-review criteria. Named Legal, DPO, Finance, RAI and control-owner decisions stay with their owners. Independent lanes continue, and no criterion is ticked. Pivot, deferral, relaxation and named approval cannot be granted here. Nothing is ticked or closed.
