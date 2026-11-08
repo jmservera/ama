@@ -456,9 +456,19 @@ full-local-gate requirement for this coordinator's work.
   security-sensitive changes require the complete local gate and a verified
   external full receipt. Size alone cannot downgrade a change in these areas.
 * Focused: small issues, tooling and documentation changes outside the full
-  categories require relevant unit and focused tests only. Record commands,
-  results and justified non-applicability; do not require heavy full-gate
-  services or a full receipt for this tier.
+  categories require the relevant targeted unit and focused tests plus the
+  applicable hosted checks. Record commands, results and justified
+  non-applicability; do not require heavy full-gate services, a full receipt
+  or a blanket `--changed` run for this tier. Keep local-only coverage the
+  change touches (for example the employee-chat browser harness, exact-count
+  zero-skip chat-panel selector evidence) as direct local checks, per the
+  [coverage comparison and examples](../../src/README.md#hosted-ci-versus-local-gate-coverage-issue-1294).
+  An absent, path-filtered, skipped or unobserved hosted workflow is not a
+  successful check; record what ran and what did not.
+
+Classify by change category, not by diff size or by what `--changed` selects.
+A workflow, gate-tool, dependency-manifest or Dockerfile change takes the full
+tier, and doubt takes the full tier. A partial receipt never satisfies it.
 
 Reassess the tier when scope changes; mixed work takes the full tier if any
 part requires it. Both tiers retain the complete RPI loop, independent

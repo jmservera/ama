@@ -69,12 +69,26 @@ also require the relevant existing tests: for example, from `src/api`,
 use `python3 tools/rename-zava-tests.py` from the repository root. Use the
 component guides and existing workflows rather than infer that no tests exist.
 
-Every final RPI candidate, including documentation-only work, requires a local
-gate before publication. The focused tier (`python3 tools/rpi-checks.py
---changed`) is the default. The [complete local gate](../src/README.md#local-rpi-gate)
-is required only for big features, releases, infrastructure, deployment, SQL
-and security-sensitive changes (owner decision D4, 2026-11-01). Independent
-exact-head review, hosted CI and human approvals remain required for every tier.
+Validation follows two tiers (owner decision D4, 2026-11-01, refined by issue
+#1294). During development run the relevant targeted local tests. Small
+issues, tooling and documentation-only candidates take the focused tier: run
+the planned relevant local checks (for example documentation link and diff
+review, the affected unit tests, and any local-only check that the change
+touches, such as the employee-chat browser harness) and read the applicable
+hosted CI for the exact head. A blanket `python3 tools/rpi-checks.py --changed`
+run is optional there and never replaces a planned check. The
+[complete local gate](../src/README.md#local-rpi-gate) and a verified external
+full receipt are required for big features, releases, infrastructure,
+deployment, SQL and security-sensitive changes, and for any workflow,
+gate-tool, dependency-manifest or Dockerfile change; size alone cannot
+downgrade them. A mixed change takes the strictest applicable tier, and doubt
+takes the full tier. A partial or `--changed` receipt never satisfies the full
+tier. Independent exact-head review, human approvals and applicable hosted CI
+remain required for every tier. An absent, path-filtered, skipped or
+unobserved hosted workflow is not a successful check: state what ran and what
+did not, and keep any local-only coverage as a direct local check. The
+[guide](../src/README.md#hosted-ci-versus-local-gate-coverage-issue-1294)
+holds the coverage comparison and examples.
 For the complete gate: commit the implementation and dated original RPI evidence, then run
 `python3 tools/rpi-checks.py --all --base <reviewed-main-sha>
 --out <new-external-directory>`. Keep the final receipt external and verify it

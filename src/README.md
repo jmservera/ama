@@ -60,10 +60,15 @@ Regenerate hashed requirements with `pip-compile --generate-hashes --no-emit-ind
 
 ### Local RPI gate
 
-Owner policy (2026-10-27): small issues, tooling and documentation use planned
-unit and focused tests, with hosted CI still required. Big features, releases,
-infrastructure, deployment, SQL and security changes require the complete gate.
-Do not treat a partial receipt as full-tier evidence. Finish implementation
+Owner policy (2026-10-27, refined by issue #1294): during development run the
+relevant targeted tests. Small issues, tooling and documentation-only changes
+use the planned relevant local checks plus the applicable hosted CI, without a
+blanket `rpi-checks.py --changed` run. Big features, releases, infrastructure,
+deployment, SQL and security changes, and any workflow, gate-tool, dependency
+manifest or Dockerfile change, require the complete gate; size alone cannot
+downgrade them, mixed changes take the strictest tier and doubt takes the full
+tier. Do not treat a partial receipt as full-tier evidence. For the full tier,
+finish implementation
 and the original RPI Review, commit the candidate and dated evidence, then run
 from the repository root with Python 3.12, Node, Docker, Azure CLI/offline Bicep,
 actionlint, ShellCheck and Trivy 0.76.0 available on PATH:
@@ -92,8 +97,9 @@ API environment when it creates it, before API test discovery. Harness servers s
 environment, so without it they would write `__pycache__` into the owned source snapshot and
 the dirty-snapshot guard would then retain it (issue 1215).
 
-For small issues, the conservative changed-path tier maps the committed
-`base...HEAD` diff to checks and transitive prerequisites. Unknown paths fall
+For small issues, the optional conservative changed-path aid maps the committed
+`base...HEAD` diff to checks and transitive prerequisites. It is not the default
+and does not replace planned targeted checks. Unknown paths fall
 back to the full matrix; inspect the selection before execution when full work
 is not authorized. Documentation selects static checks plus their namespace
 bootstrap; runner/tests also select focused tooling lint/types. Runtime/build
@@ -124,6 +130,73 @@ Verification defaults to requiring full coverage; `--required-scope partial`
 explicitly accepts partial coverage and never upgrades it to a full claim.
 Measured wall-clock times for the speed controls are not yet recorded; see
 [gate speed controls](#gate-speed-controls-issue-470).
+
+#### Hosted CI versus local gate coverage (issue #1294)
+
+Facts verified from the workflows and runner on 2026-11-08. Re-verify them from
+the files before relying on them; they are not self-updating.
+
+* Triggers: Source projects CI (`src-ci.yml`) is the only pull request source
+  workflow and runs only when the diff touches its path filter (`src/**`,
+  `infra/**`, the gate tools and their tests, listed workflows and a few
+  synthetic-data and UX paths). A PR that changes only other documentation,
+  `.github/copilot-instructions.md`, agent files or `.copilot-tracking/` may
+  have no Source CI run at all. `mvp-ci.yml` and `mvp-validation.yml` are
+  dispatch-only. The infrastructure what-if runs after Source projects CI and
+  only when `infra/` changed and its repository variable enables it. The rubric
+  workflow ignores only `.copilot-tracking/**`.
+* Selection: `tools/ci-affected.py` selects projects, `namespace` and `mssql`
+  from the diff and selects everything on doubt. A `src/**/*.md`-only change
+  starts Source CI but selects no project, so the `src-*` matrix jobs start
+  with every step skipped and report success without running tests, and
+  namespace and mssql are skipped. Local `--changed` treats `*.md`, `docs/`,
+  `.copilot-tracking/` and `support/` as inert but still selects `preflight`,
+  `static` and `namespace`.
+* Local-only: the employee-chat browser harness
+  (`checks.employee_chat_browser_check` with the SHA-256-pinned axe and the
+  no-skip, three-state result check); exact-count, zero-skip verification of the
+  chat-panel selector; the `test_assistant_release.MssqlUnleasedRevocation` SQL
+  selector and the named SQL chat tests that must report `ok`; workflow-hash
+  drift, ShellCheck and Trivy database identity probes; fresh-image, shard
+  fail-closed and clean exact-head receipt binding.
+* Both: the chat-panel selector
+  `test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log`
+  runs in hosted `src-api` with `ZF_BROWSER_TESTS=1` (a missing Playwright
+  errors, it does not skip) and locally. Hosted CI does not verify the exact
+  count or zero skips.
+* Hosted-only: the Trivy gate and SPDX upload run in the hosted image steps and
+  the local image group; Bicep lint, `no-working-data` and the migration checks
+  run in hosted namespace jobs.
+* Hosted CI is observable only after a push. For an unpublished candidate, state
+  hosted CI as not yet observed. A skipped, path-filtered, absent or unobserved
+  workflow is never a pass. This guide does not change required checks or
+  branch protection; at retrieval on 2026-11-08 the active `mainprotect` ruleset
+  listed no required status contexts, so read the PR's actual check results.
+
+Direct local checks for a small employee-chat or browser change, from
+`src/api` with the worktree distributions installed (see the
+[API guide](./api/README.md)): the affected unit modules, lint and types;
+`python -m checks.employee_acceptance_check`; the chat-panel selector with
+`ZF_BROWSER_TESTS=1`, accepted only when exactly one test ran with no skip; and
+`python -m checks.employee_chat_browser_check --axe <pinned axe> --out <new
+external directory>` with axe 4.10.3 matching the runner's `AXE_SHA256`,
+accepted only when its three states report no violations and no skip. A single
+wrapper for the last two does not exist; adding one, or hosting the harness in
+CI, is follow-up work that needs owner direction.
+
+Policy examples. Selections come from `changed_groups` and
+`ci-affected.select` for the stated paths; reproduce them read-only (import the
+tool by path with bytecode writing disabled) before relying on them.
+
+| Case | Example paths | Tier | Required local evidence | Hosted CI | Never claim |
+| --- | --- | --- | --- | --- | --- |
+| Documentation or instruction only | `docs/reference/README.md`, `.github/copilot-instructions.md` | Focused | Link review, Git diff, stale-wording search; HVE gates for a behavior-bearing instruction | Outside the Source CI path filter, so possibly none | Source CI passed; a blanket `--changed` run was needed |
+| Documentation under `src/` | `src/README.md` | Focused | Same | Source CI runs but selects no project, so success means nothing executed | That project tests ran |
+| Small employee chat or browser | `src/api/src/zava_forward/api/web/app.js`, `src/api/checks/employee_chat_browser_check.py` | Focused | Direct local checks above; local `--changed` selects `browser` and `project-api` and is an optional aid | `src-api` runs the selector and four other browser checks, not the employee-chat harness | Hosted CI covers the harness |
+| SQL | `src/api/src/zava_forward/api/mssqlstore.py` | Full | Complete gate, verified external full receipt | `mssql` job when selected | A partial receipt |
+| Bicep or security | `infra/main.bicep` | Full | Complete gate; `--changed` selects only `preflight`, `namespace`, `static` and `infra` and is partial | `src-namespace` Bicep lint and infra tests; what-if only if enabled | A partial receipt, a weakened control |
+| Mixed | documentation plus `infra/main.bicep` | Strictest (full) | Complete gate | Union of the above | A lighter tier because most paths are documentation |
+| Gate tool or workflow | `.github/workflows/src-ci.yml`, `tools/rpi-checks.py` | Full | Complete gate; `--changed` selects the full matrix | Source CI | A focused tier |
 
 #### Gate speed controls (issue #470)
 
