@@ -1,6 +1,6 @@
 # Plan: #1288 correction 2 (C2)
 
-Written 2026-11-08T20:21Z after the C2 research and before product edits. Refs #1288, #107. No closing claim.
+Written 2026-11-08T20:19Z (commit 34409ed8; the first draft header said 20:21Z, which was ahead of the real clock and is corrected here) after the C2 research and before product edits. Refs #1288, #107. No closing claim.
 
 ## Phases
 
@@ -13,7 +13,7 @@ Written 2026-11-08T20:21Z after the C2 research and before product edits. Refs #
 * [ ] P7 Light tests (SQLite) and static checks; heavy SQL/browser PENDING.
 * [ ] P8 Changes artifact, review (one), state, commit.
 
-## Critique (one, executed 2026-11-08T20:22Z, verdict: proceed with amendments)
+## Critique (one, executed 2026-11-08T20:19Z (header time corrected the same way), verdict: proceed with amendments)
 
 * Exact identity would enqueue a model request on every five-minute reading. Amendment: the scheduling key keeps the coarse value in the existing column, so scan/forecast cost is unchanged; only manual invocation or an actual substantive change creates new work.
 * A clock in the capture would churn identity. Amendment: as-of is a filter only; empty/withheld/unavailable captures stay identical across clock-only changes (regression required).
