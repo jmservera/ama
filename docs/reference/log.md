@@ -10798,3 +10798,19 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   PowerPoint, rehearsal, human accessibility, live application/model authority,
   comparative value and panel floors are not established. No deployment,
   spending, requirement approval or increased autonomy is authorized.
+
+## [2026-11-08] correction | Independent capstone story review F1
+
+* The exact-head strategist assessment of `fe8a7327` returned FAIL for one
+  Medium finding: current pages 16/31 and the pitch guide incorrectly called
+  the scripted unsupported-claim chat scenario an open gap. The
+  [agents harness guide](../../src/agents/README.md#ai-evaluation-harness)
+  records that its lexical check catches it; unlisted paraphrases and
+  actual-model/human assurance remain limitations.
+* Accepted F1 in the [current source](../capstone/source/slides.json) and
+  pitch guide, preserving the [original review disposition](../capstone/source/review-2026-11-08.md#independent-review-disposition).
+  The autonomy, resident, model-fit, design-thinking and history story was
+  otherwise supported, with no serious visual finding. Rebuild/Verify,
+  fresh exact-head local gate and same-reviewer correction assessment remain
+  required after this source change. No model run, new approval or changed
+  operational authority follows.

@@ -100,7 +100,9 @@ they occur. A prepared answer is not evidence of live listening or composure.
 
 Current live identity/SQL/model acceptance, reviewer effectiveness,
 accessibility and direct human comprehension remain separate gates. The
-critical unsupported-claim-with-valid-citation counterexample remains open.
+scripted chat counterexample is caught by the lexical claim check; unlisted
+paraphrases remain a limitation, and actual-model grounding and competent
+human-review acceptance remain unproved.
 The earlier general exercise window expired; later narrow task approvals do
 not automatically fund this roadmap or Fabric. No new paid run is authorized here.
 Fresh provider/price checks and original-image reuse provenance remain

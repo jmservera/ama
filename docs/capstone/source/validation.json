@@ -1,6 +1,6 @@
 {
   "source_as_of": "2026-11-08",
-  "revision": "Brief autonomy fidelity, three help modes, optional resident access and dated ongoing-product story",
+  "revision": "Brief autonomy fidelity, three help modes, optional resident access and dated ongoing-product story; independent F1 scripted-counterexample wording corrected",
   "package": {
     "status": "pass",
     "slides": 54,
@@ -103,10 +103,10 @@
       52
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "043b08eb967e0e9883167aa5f87e0e1c51c146362229a1c1b21c0e2ab1fcb916",
+    "candidate_sha256": "1817e9e6c0b1fb9325b591f0c24ad139cf6e9bf0ec1297d5699ed5635f9b5ace",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
-    "manifest_sha256": "d47f4f859dc747202b723a0dc00b2ca356e6899d67554af057de969b3432875f",
+    "manifest_sha256": "0a07b6687564a42d17ccac244d3eaef2b0b2158f192ddc54e1f97d0ff8da6c37",
     "asset_catalog_sha256": "de34d2eba585eab470ebe7438b40695e0b239f6b2c8183a3cd4236ca5a1dc901",
     "builder_sha256": "4c168289a7352017e6c9cb9456fe9fe1436e8ad38ca3721268366c85492829d4",
     "native_helper_sha256": "956d56cf4032d33deca9f61c606899927e3a3ae431878811bfe84aefba742c94"
@@ -115,15 +115,15 @@
     "verified_on": "2026-11-08",
     "action": "Verify",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
-    "verification_report_sha256": "332792484dfadb45707f91093093c1f46ed591ac5c6d7e0e3432f0b7e08a3365",
+    "verification_report_sha256": "c005c89053ce68769026a2a45d96b05dc9b1158582f249c1eb145ce9c1ddda9a",
     "delivery_unchanged": false,
     "runtime": "Installed PowerShell on Linux; no Windows PowerPoint execution."
   },
   "preview": {
     "renderer": "LibreOffice 24.2.7.2 420(Build:2)",
     "native_powerpoint_validation": false,
-    "source_sha256": "043b08eb967e0e9883167aa5f87e0e1c51c146362229a1c1b21c0e2ab1fcb916",
-    "pdf_sha256": "b7abc7318eeddcb2d4f7c8806281953887a301922df53027a6f8a7d65904d8a9",
+    "source_sha256": "1817e9e6c0b1fb9325b591f0c24ad139cf6e9bf0ec1297d5699ed5635f9b5ace",
+    "pdf_sha256": "730ff1e037e64de40499139dd66cd1afcee7b9c8edcba054d00f136c0a32b2f8",
     "navigation": {
       "slides": 54,
       "fixed_slide_jumps": 108,
@@ -155,7 +155,9 @@
     "unchanged_pages": 43,
     "fixed_pdf_links": 108,
     "qanda_index_answers": 27,
-    "qanda_fixed_returns": 27
+    "qanda_fixed_returns": 27,
+    "source_text_word_matching_tolerance_points": 1.5,
+    "correction_pages_pixel_differences": []
   },
   "native": {
     "performed_on_current_candidate": false,
