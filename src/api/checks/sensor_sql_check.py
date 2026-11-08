@@ -106,9 +106,7 @@ def main(argv: list[str] | None = None) -> int:
             ZF_SQL_USER="sa",
             ZF_SQL_PASSWORD=password,
             ZF_SQL_TRUST_CERT="1",
-            PYTHONPATH=os.pathsep.join(
-                (str(root / "src/api/tests"), str(root / "src/core/tests"))
-            ),
+            PYTHONPATH=os.pathsep.join((str(root / "src/api/tests"), str(root / "src/core/tests"))),
         )
         command = [python, "-m", "unittest", *SELECTORS[selector], "-q"]
         if selector == "default":
