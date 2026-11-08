@@ -2,29 +2,29 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-08T16:57:10+00:00",
-  "commit": "564e716d477f962668d22f44c3bb9920c0f5c394",
+  "scored_at": "2026-11-08T19:44:28+00:00",
+  "commit": "28c6ec11cbfc0185a756eb15cd9b324ab0856b94",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/42501984196",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/42516020694",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
-    "solution-code": "f68f1d223fdb58941c26e79d75821b0da8f41be505fd1b911acf948ba7a2b99f",
+    "solution-code": "b882cc5a5df4dfd1fbe72ed555e2201ecf541335c363a09615e4ceadfaa06934",
     "infrastructure": "7829e0d5b60790a27890969d32d8f827d95cddad8a5f89672d3e4480f35b6b2c",
-    "capstone-deck": "d47300e5b770fc16066608c985fb356dde897bad889faeb40d7d1d39f6c2e01e",
-    "pitch": "0c212fc27c0b4f5347cb28912b69d7a718b59c375ed1551f367a435636328c1e",
-    "thought-leadership": "1c6d1d69abdf3cbdcea5e00a69404b31d6c2ddf0abb00aa54aba26de50fa02dc"
+    "capstone-deck": "4c8e86dc609338fd2cfac3924a98c47e26c9e20f137c9f831815a75d58e676de",
+    "pitch": "5f1c5259b13f33711702801b2120e49cdc3c9a70f917a355a7d2ef016d9e2408",
+    "thought-leadership": "0d1994c725e0ba4957b5b92c03fc542ea56f282d391ca72e35c4dca5dedca159"
   },
-  "total": 77,
+  "total": 78,
   "sections": {
     "A": 34,
-    "B": 23,
+    "B": 24,
     "C": 11,
     "D": 9
   },
   "floors_met": true,
-  "outcome": "Pass",
+  "outcome": "Pass with Merit",
   "criteria": {
     "A1": {
       "score": 5,
@@ -84,51 +84,51 @@
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live-scored; no rehearsal or delivered-session evidence exists. New pitch/README.md and speaker-script.md remain prepared, unrehearsed material. Baseline readiness retained."
+      "rationale": "Live readiness; no rehearsal exists. New review-2026-11-08.md and rewritten S01/S08/S09 narration are stronger written argument but still unrehearsed. Baseline retained."
     },
     "B2": {
       "score": 4,
       "evidence": [
         "docs/capstone/pitch/README.md:27-33"
       ],
-      "rationale": "New README's archetype table replaces the deleted audience-and-delivery.md role map with equivalent register-calibration guidance. Still unrehearsed, so readiness score retained."
+      "rationale": "Archetype/register-calibration table persists unchanged in substance. Still unrehearsed, readiness retained."
     },
     "B3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/README.md:41-45"
+        "docs/capstone/demo/runbook.md:22-45"
       ],
-      "rationale": "Demo hook/timing guidance persists; the new tokenomics-placement-draft.md explicitly states nothing is rehearsed or decided. No rehearsal or delivered-session evidence exists. Needs Improvement retained."
+      "rationale": "New runbook section adds precise help-mode walkthrough but states this is preparation, not an executed demo or rehearsal. No live evidence exists. Needs Improvement retained."
     },
     "B4": {
-      "score": 2,
+      "score": 3,
       "evidence": [
-        "docs/capstone/pitch/questions-and-answers.md:17-38"
+        "docs/capstone/pitch/questions-and-answers.md:93-116"
       ],
-      "rationale": "26-entry appendix Q&A bank provides comparable prepared depth. No transcript/rehearsal of composure under live challenge, readiness stays Needs Improvement."
+      "rationale": "B03/B04/B13/B14 Q&A rewritten with sharper, more precise honest limits and deeper source trails distinguishing known from assumed. Prepared depth is materially stronger, though still no live-challenge transcript."
     },
     "B5": {
       "score": 2,
       "evidence": [
         "docs/capstone/pitch/speaker-script.md:24-34"
       ],
-      "rationale": "Speaker-script.md carries per-slide timing but remains a written plan, not an observed, paced delivery. Unrehearsed pacing retained."
+      "rationale": "Speaker-script timing cues persist; still a written plan, not observed paced delivery. Unrehearsed pacing retained."
     },
     "B6": {
       "score": 5,
       "evidence": [
-        "src/api/README.md:502-522",
-        "infra/README.md:1577-1611"
+        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide14",
+        "docs/capstone/source/slides.json"
       ],
-      "rationale": "Diff updates component README documentation, not the capstone deck itself (deck file unchanged). Immaterial to B6 deck/capstone-documentation scoring; baseline retained."
+      "rationale": "Deck and slides.json were materially changed this revision (unlike last time). Slides 9/14 remain single-idea, standalone with complete sourced notes; documentation stays complete and navigable. Excellent retained on fresh evidence."
     },
     "B7": {
       "score": 5,
       "evidence": [
-        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide22",
+        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide30",
         "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide40"
       ],
-      "rationale": "Deck unchanged in this diff; prior Excellent-level storytelling discipline preserved."
+      "rationale": "Slides 30/40 show claims backed by specific actionable numbers (315 planned trajectories, 1,247 completed steps across named commits) with visuals built to make the point. Excellent discipline preserved on fresh deck evidence."
     },
     "C1": {
       "score": 5,
@@ -140,37 +140,38 @@
       "evidence": [
         "docs/capstone/pitch/README.md:79-83"
       ],
-      "rationale": "Core restate-before-answering instruction persists in new README; no transcript/live exchange exists, readiness unchanged."
+      "rationale": "Restate-before-answering instruction persists; no transcript or live exchange demonstrates the behaviour under challenge. Readiness unchanged."
     },
     "C3": {
       "score": 4,
       "evidence": [
         "docs/capstone/pitch/tokenomics-placement-draft.md:33-45"
       ],
-      "rationale": "New draft explicitly surfaces an unresolved tension (modelled figure vs. no-price-claim criterion) and recommends disclosure, consistent with existing honesty evidence; written disclosure persists at same strength, score retained."
+      "rationale": "New tokenomics-placement-draft.md surfaces an unresolved tension between a modelled cost figure and the no-price-claim criterion, recommending the more honest disclosure option. Clear unprompted risk-surfacing, consistent with Excellent honesty."
     },
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:243-250",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/background.tex:8-14"
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:243-260",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex:1-40"
       ],
-      "rationale": "Critique-driven revision to a five-arm/33-cell design fixes prior CR1-powering, loss-density and cost-arithmetic flaws; still a prospective protocol with no results. Score retained at 4."
+      "rationale": "Protocol now an actually running experiment with OSF registration, disclosed amendments and three implementation epochs pinned to real commits. Genuine synthesis, but still no outcomes to act on. Good (4) retained."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:191-203",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:28"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:38-170",
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1053-1066"
       ],
-      "rationale": "Split into 35-page main.tex plus separate supplement.tex addresses prior critique and improves structure. Tectonic warnings resolved and 34 tests pass; 16 TODO(author) items, incl. pending Microsoft publication approval, remain. Score retained at 3."
+      "rationale": "New author-contributions/coauthorship disclosure and measurement-provenance appendix improve structure and honesty, but the same TODO(author) count remains and Microsoft publication approval is still pending. Satisfactory (3) retained."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:38-42"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:38-42",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:310-311"
       ],
-      "rationale": "README states explicitly: no archive, OSF upload, visibility change or scientific submission occurred; publication/registration approval remain pending. Baseline unchanged at 2."
+      "rationale": "README states explicitly: no archive, OSF upload, visibility change or scientific submission occurred; publication approval remains pending. Needs Improvement (2) retained."
     }
   }
 }
