@@ -1,7 +1,7 @@
 ---
-title: Everything but the Software - source package (draft v11)
-description: Single-document paper with integrated Supplement, verified source corrections and prospective study limits
-ms.date: 2026-11-05
+title: Everything but the Software - source package (draft v12)
+description: Single-document paper with additive Supplement, coauthorship and registered-base/unregistered-amendment execution provenance
+ms.date: 2026-11-08
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
@@ -10,7 +10,7 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 The title is unchanged at the owner's request. The complete
 [paper](./main.pdf) and [source](./main.tex) now include a
-[Supplement section](./main.pdf#page=33) in the same document.
+[Supplement section](./main.pdf#page=35) in the same document.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
 Repeated Background text, figures and case narratives are excluded from
@@ -19,8 +19,10 @@ The standalone supplement PDF/TeX/bibliography were removed at the owner's
 request after exact archive readback and restore checks; their original
 committed versions remain in Git at `80656f32`. No source evidence was discarded.
 
-The [nine-point author review disposition](./anc/revision-report.md#author-review-disposition-1-november)
-records the current revision. The case now follows agent-assisted research,
+The [8 November execution and authorship record](./anc/revision-report.md#execution-registration-and-coauthorship-8-november)
+records the current revision. The earlier
+[nine-point author review disposition](./anc/revision-report.md#author-review-disposition-1-november)
+retains its own scope. The case follows agent-assisted research,
 Design Thinking challenge, prototypes, requirements, epics and stories,
 autonomous delivery and renewed participant feedback. Project counts and
 calendar dates no longer lead the argument. The supplied
@@ -28,7 +30,85 @@ calendar dates no longer lead the argument. The supplied
 backlog handoff; its provenance and missing export metadata are in the
 [evidence index](./anc/case-evidence-matrix.json).
 
+### Execution, Registration and Coauthorship 8 November
+
+The exploratory experiment is now running. The owner chose **coauthor**
+credit for Isabel Cabezas Martin and confirmed her agreement to that credit
+and the stated affiliation: **Software Engineer, Frontier Company at
+Microsoft**. The paper and PDF metadata add her alongside Juan Manuel
+Servera Bondroit, preserving his current name and affiliation. No location,
+email, ORCID, credential, manuscript review or final approval is inferred.
+
+Servera Bondroit conceived the study, designed methodology and evaluation
+criteria, analysed the historical exploratory case and wrote the manuscript;
+experimental analysis remains his responsibility, not a completed new result.
+Cabezas Martin conducts ongoing execution and data collection independently
+under the predefined exploratory protocol and disclosed amendments.
+Separating execution from design and manuscript preparation is intended to
+minimise potential experimenter bias. Both authors are Microsoft employees;
+operational separation does not establish institutional independence,
+independent scientific review/analysis or demonstrated elimination of bias.
+The views and competing-interest statements are plural. Employer
+external-publication clearance and final-author approval remain separate.
+
+The **registered base** is [OSF xcpt4](https://osf.io/xcpt4), dated
+**7 November 2026**, as confirmed by the owner. Supplied access checks saw
+an app shell and API HTTP 401; independently verified OSF metadata is
+unavailable. The date does not imply a timezone, approval/embargo status,
+DOI or prospective timing for the entire dataset.
+Current execution includes **disclosed unregistered amendments** for short
+calibration, parallel execution and VM restarts. It is not one preregistered
+confirmatory run, and no new OSF amendment is asserted.
+
+The commit-pinned active source is
+[`e71037d961cb80fc5c659437796de7736820f6c9`](https://github.com/jmservera/ama-thought-mve/tree/e71037d961cb80fc5c659437796de7736820f6c9),
+tree `e7ec1561d4ecee921e7c9eba3711a1ab7e9f4058`, **without a tag**.
+The profile is `pilot-estimation.json`, design
+`model-stratified-v2-five-arm`, suite `s1-retrofit`, exploratory
+pilot-estimation with no formal hypotheses. The owner-supplied runtime
+selection is GPT 6.1 Sol / Claude Sonnet 5.5 / Gemini 4 Argon, medium
+effort, arms A–E, **21 trajectories per model per arm** despite file default
+12, F1–F10 plus held-out CR1, seed 2027: **315 planned trajectories**.
+The protocol's false/null current-registration fields describe the
+uncompleted current amendment, not absence of the registered base.
+
+The [revision record](./anc/revision-report.md#implementation-epochs-and-evidence-states)
+retains all three implementation epochs and owner-reported step counts
+(651 + 227 + 369 = 1,247). Completed steps are not independent n, successful
+outcomes or completed trajectories. Commit dates are not collection times.
+Keep epoch labels, failures, unknowns and temporal/arm/model confounding
+limits; no homogeneous pooling or post-hoc sensitivity results are supplied.
+Historical v4/v6/v7 records and the earlier power/resource scenarios stay
+historical and numerically unchanged. The default/full-calibration labels
+in the retained v6 diagrams are explicitly historical in their PDF captions.
+
+The false results switch, owner-selected title, original adverse reviews,
+case evidence, frozen prompt and one PDF with an additive Supplement are
+preserved. Scientific-critical-thinking materially supported this scoped
+revision; the existing `kassis2026skills` citation and earlier assistance
+disclosure remain, with an 8 November assistance account added.
+No experimental outcome analysis, model call, private-data read,
+experiment-source/config change, registration/visibility action or
+collection action was performed.
+Focused validation and delivered-PDF details are recorded in the dated
+revision record; independent assessment and the publication gate are left
+to the parent.
+
+The checked delivery is **40 pages**, with the additive Supplement beginning
+on **page 35**. All **44 existing tests** and the structural checker pass.
+Tectonic 0.17.0 reports no TeX errors, unresolved references or overfull/
+underfull boxes; one inherited `inputenc` compatibility warning remains.
+All-page text bounds, 174 internal links and 47 outline destinations pass.
+Changed-content page renders and all-page layout proofs were inspected.
+Current source/PDF digests and active Supplement bindings are in
+[supplement-integration.json](./anc/supplement-integration.json); exact
+checks, access limits and the external run are in the revision record.
+
 ### Recovery and Scientific Alignment 5 November
+
+This dated recovery record retains the earlier source findings and gates.
+Its then-current implementation and pre-collection status are superseded
+by the owner-confirmed execution account above, not silently overwritten.
 
 PR #1206 was closed at the owner's request without deleting its branch.
 The earlier scientific skills, reviewer and manuscript work were already
@@ -90,7 +170,9 @@ replacement PR; none authorizes experiment collection.
 
 This dated record retains the original allocation revision and inspection
 limits. Its A/B/C-only account is superseded by the 5 November v6 source
-check above; it no longer describes the current implementation.
+check above; it no longer describes the current implementation. The
+power/resource scenarios remain historical planning, distinct from active
+F10/n21 execution and its short-calibration amendment.
 
 The researcher selects 12 (default), 21 or 33 independent repository
 trajectories per model per arm before study collection. Record the choice,
@@ -1498,7 +1580,7 @@ verification of research statistics.
 | `main.tex` | Paper source. The bibliography is embedded, so it compiles on arXiv without BibTeX. |
 | `fig-log-growth.png` | Figure 1: words and hedging phrases appended to the project log per day (400 dpi). |
 | `fig-causal-loop.png` | Figure 2: the reinforcing loop and the feedback-first intervention (400 dpi). |
-| `references.bib` | The same 93 main-paper references as BibTeX, for reuse or a later switch to `\bibliography{}`; both bibliographies are ordered by key. |
+| `references.bib` | Reusable BibTeX entries, including the embedded cited bibliography; both bibliographies are ordered by key. |
 | `anc/case-evidence-matrix.json` | Machine-readable O1-O5 index distinguishing reported source locators, author accounts and missing release/execution evidence; not new independent corroboration. |
 | `anc/supplementary-context.md` | Practitioner/framework context, external repository observations, proposed practices and deferred extensions moved outside the main PDF. |
 | `anc/log_metrics.py` | Recomputes the log measures in Appendix A from `docs/reference/log.md` at commit `29c6b51`; `--json` writes the per-day data. |
@@ -1506,7 +1588,8 @@ verification of research statistics.
 | `anc/make_figures.py` | Redraws both figures from `anc/log_daily.json`. |
 | `anc/check_paper.py` | Reports the current approximate body count and checks citations, labels, environments, braces, inline comments and abstract length. Historical comparison is optional. |
 | `anc/test_paper_tooling.py` | Isolated stdlib regressions for the paper checker and exported TCR helper. |
-| `anc/protocol_checks.py` | Historical check of rank-test floors and the earlier eight-feature A/B proposal; it does not check the current ten-feature A/B/C design. |
+| `anc/protocol_checks.py` | Historical check of rank-test floors and the earlier eight-feature A/B proposal; it does not validate active ten-feature five-arm execution. |
+| `anc/test_protocol_planning.py` | Existing regressions for the retained conditional planning/resource scenarios, historical source pins and figure labels; not validation of study execution or inferential coverage. |
 | `anc/repo_history_metrics.py` | Measures path-class line churn at the pinned commit, separating literal merges from PR-numbered first-parent integrations. |
 | `anc/repo_history_metrics.out.txt` | Saved history measurement, including definitions, commands and limitations. |
 | `anc/mve-feature-consolidation-harness/` | Earlier MVE proposal notes: divergence log, experiment design, hypotheses and plan. Not the separate tagged study kit. |
@@ -1556,7 +1639,9 @@ python3 anc/log_metrics.py ama/docs/reference/log.md --json anc/log_daily.json
 * Overleaf: upload the zip as a new project. The compiler is pdfLaTeX. The zip has `main.tex` and `anc/` at its root, the layout arXiv expects.
 * Locally: run `pdflatex main.tex` twice.
 * Packages, all in TeX Live: lmodern, geometry, microtype, graphicx, booktabs, tabularx, placeins, array, enumitem, xcolor, natbib, xurl, caption, hyperref.
-* The switch `\resultsfalse` near the top keeps the study status note visible. Set `\resultstrue` only after the prospectively documented runs and checked analysis are complete.
+* Keep `\resultsfalse` while experimental outcomes remain deferred. An authorized results update requires checked runs and analysis with registered-base, unregistered-amendment and implementation-epoch provenance.
+* Focused source checks: from this package, run `python3 -B -m unittest discover -s anc -p 'test_*.py' -q` and `python3 -B anc/check_paper.py`.
+* Tectonic is also supported. Keep compiler intermediates/logs, caches and rendered inspection pages in an explicit external build directory; inspect its actual log and PDF before replacing only `main.pdf`. The optional `--check-latex-log` expects a pdfLaTeX-specific output marker and is not a Tectonic validation pass.
 
 ## What changed in draft v2
 

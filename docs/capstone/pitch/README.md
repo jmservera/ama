@@ -63,6 +63,8 @@ proposed only near the end of the main presentation, before optional Q&A.
 | Page 15: bounded adoption | Existing preview/quarantine/export library and CLI, not an accepted web import journey or live enterprise replacement |
 | Page 16: AI placement | Five requested/current levels; current generative proposal engine versus historical Decision 1; rules, models and human decisions do different jobs |
 | Pages 22-24: lesson, future, decision | Test usability, then propose future portfolio history and semantic/preview ontology context. Compare analytics and agent context independently; retain the simpler route when it wins |
+| Page 22: study now underway | Registered OSF base, unregistered exploratory amendments and coauthor execution separation; no experimental outcome claims |
+| Page 40 / B13 | Three models/five arms, selected 21/default 12, F1-F10 + CR1 and all three implementation epochs. Completed steps are not independent replicates or one frozen source |
 | Page 30 / B03 | Full autonomy matrix: Stock L2 boundary matches; Assessment/Funding preparation is partial; Coordination/Quality authority is reduced |
 | Page 31 / B04 | Historical scoring/current generation; Decision 1 must beat the parser/manual comparator, not claim unmeasured savings |
 | Page 33 / B06 | Why optional resident website/advice was added, record-use versus works consent, assisted routes, synthetic callbacks and default-off AI |
@@ -78,6 +80,9 @@ proposed only near the end of the main presentation, before optional Q&A.
 * On page 13, trace contact, choice and aftercare once; do not read every map cell. Distinguish the pain hypothesis, designed response and actual test.
 * On pages 23-24, pause on "future, not today's product" and "ontology is preview"; explain the benefit in business terms before naming components.
 * Say "historical observation", "source implementation", "proposed" or "not evaluated" where each applies.
+* On page 22, distinguish the registered base from unregistered amendments
+  before describing execution. Credit Isabel's data collection without
+  claiming independent institutional validation or completed analysis.
 * Slow the voice for currencies, denominators, alternatives and unknowns; do not rush caveats after a confident claim.
 * Keep facial expression neutral and attentive during challenge; restate the objection before defending the design.
 * On page 9, concede the earlier wording: the case already reserved approvals.

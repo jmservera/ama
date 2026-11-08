@@ -2066,14 +2066,41 @@
     {
       "number": 22,
       "code": "S19",
-      "title": "Delivery learning: Everything But the Software",
-      "layout": "baseline",
+      "title": "The delivery lesson is now being tested.",
+      "layout": "native",
+      "keep_ids": [30774, 30776, 30779, 30783],
+      "headers": [
+        {"id": 30776, "text": "The delivery lesson is now being tested.", "size": 30, "box": [0.6, 0.78, 12.13, 0.72]},
+        {"id": 30779, "text": "OSF base xcpt4: owner-confirmed 7 Nov. Current amendments unregistered; e71037d9, no tag. Detail: B13.", "size": 12, "box": [0.6, 6.7, 9.7, 0.3]}
+      ],
+      "elements": [
+        {"key": "study-status-fill", "box": [0.6, 1.78, 12.13, 0.58], "fill": "173F35", "geometry": "rect"},
+        {"key": "study-status", "box": [0.82, 1.92, 11.69, 0.32], "text": "RUNNING PILOT  |  Registered OSF base xcpt4  |  Unregistered exploratory amendments", "size": 16, "bold": true, "color": "FFFFFF"},
+        {"key": "study-question", "box": [0.6, 2.61, 12.13, 0.46], "text": "Does consolidation preserve usable, changeable software?", "size": 24, "bold": true},
+        {"key": "study-designer-fill", "box": [0.6, 3.3, 5.86, 1.66], "fill": "E8F1ED", "geometry": "rect"},
+        {"key": "study-designer-name", "box": [0.82, 3.49, 5.42, 0.44], "text": "Juan Manuel Servera Bondroit", "size": 22, "bold": true},
+        {"key": "study-designer-role", "box": [0.82, 4.08, 5.42, 0.65], "text": "Conception, methodology and evaluation.\nHistorical case analysis and manuscript.", "size": 17},
+        {"key": "study-executor-fill", "box": [6.87, 3.3, 5.86, 1.66], "fill": "E8F1ED", "geometry": "rect"},
+        {"key": "study-executor-name", "box": [7.09, 3.49, 5.42, 0.44], "text": "Isabel Cabezas Martin", "size": 22, "bold": true},
+        {"key": "study-executor-role", "box": [7.09, 4.01, 5.42, 0.76], "text": "Independent execution / data collection.\nSoftware Engineer, Frontier Company\nat Microsoft. Co-author.", "size": 16},
+        {"key": "study-bias-fill", "box": [0.6, 5.22, 12.13, 0.72], "fill": "FFF1D6", "geometry": "rect"},
+        {"key": "study-bias", "box": [0.82, 5.35, 11.69, 0.47], "text": "Separation is intended to reduce experimenter bias.\nBoth authors work at Microsoft; this is not independent institutional validation.", "size": 16, "bold": true, "color": "885500"},
+        {"key": "study-results-boundary", "box": [0.6, 6.14, 12.13, 0.38], "text": "Multiple implementation epochs. Experimental outcome results are not reported here.", "size": 17, "bold": true}
+      ],
+      "sources": [
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md"
+      ],
       "notes": "S19 | Delivery learning: Everything But the Software\nTIMING: 60 s for this slide (all builds together) · 19:30-20:30 on the 23:45 narration clock.\nSPEAKER SCRIPT\nThe latest delivery lesson is the draft paper Everything But the Software, with author clarification dated 25 October 2026. Table 2 (Before and during the delivery loop) records 183 merged pull requests over 15-24 October and 36,755 words appended to the knowledge-base log over 15-22 October. These are different windows; the author could no longer use the replacement.\nThis is an exploratory single case with rival explanations, not causal proof that agents degrade software. It challenges counting output as usable delivery. My proposed feedback rail is feature, tests, use journey, then keep, cut or tidy before adding more.\nThe research question is whether an additional agent can perform bounded reflection and course correction, not whether reflection is exclusively human. The selected S1 comparison is four runs per arm, ten features and full CR1. The proposed consolidation experiment is paused, registration is pending and there are no study results. HVE has human stops by default; the long coordinator loop was owner-designed. B/C share an equal extra budget while A has less time; differing tests and notes also prevent isolating pure refactoring.\nThe paper experiment is separate. \nZava's\n next decision is to validate one usable home journey against the comparator.\nDIAGRAM TEXT EQUIVALENT\nContrast: 183 merged PRs over 15-24 October and 36,755 added knowledge-base log words over 15-22 October versus the author unable to use the replacement. Proposed feedback rail: Feature -> Tests -> Use journey -> Keep/cut/tidy -> next feature. The paper's bounded experiment is paused, registration pending and no results; this is an exploratory non-causal single case, not published or accepted research.\nEVIDENCE AND LIMITS\nTable 2 defines 183 merged PRs as 15-24 October and 36,755 appended log words as 15-22 October. These are retrospective activity measures, not controlled productivity or causation measures.\nThe paper's 192 initial issues, the dated 23 October board snapshot of 189 items and the 183-PR window are distinct scopes and must never be substituted for one another.\nExperiment execution is paused, registration pending, exact tagged materials still to be supplied; no study results or retrospective preregistration claim.\nHVE normally stops for human handoffs. The case coordinator loop was owner-designed; it is not the default HVE workflow. Existing cost caveats remain unvalidated prices.\nSOURCES\ndocs/capstone/thought-leadership/everything-but-the-software/\nmain.tex\ndocs/capstone/thought-leadership/everything-but-the-software/README.md\nNAVIGATION\nS19 main route; B13 on slide 40 carries method context and planned experiment detail. Existing footer and links remain unchanged.\nExisting source footers are retained verbatim; the paths above identify the sources for this revision.",
       "revised_notes": [
-        "S19 | Delivery learning: test usability, not just output.",
-        "SAY in the retained 60-second slot: There is one delivery lesson behind this roadmap. Our exploratory paper distinguishes activity from a usable outcome; more pull requests are not proof that the replacement works for its user. It is a single case with competing explanations, not a causal result. The proposed consolidation experiment is separate, paused and without results in the retained record. For this customer, the practical next step is simpler: use one home journey, test it against the comparator, inspect failures and total effort, then keep, change or stop before adding another capability. That is why the roadmap has evidence gates rather than a platform shopping list.",
-        "DETAIL: the original PR/log observation windows, proposed experiment arms and rival explanations remain in the dated paper/story evidence and B13/page 40. They are not new housing results or an authority to execute research. Do not spend the main-route minute explaining the experimental arms.",
-        "SOURCES: docs/capstone/thought-leadership/everything-but-the-software/README.md; retained 25 October story review in docs/capstone/history/cowork-generated/presentation-review-2026-10-25.md. This narration does not edit or freshly peer-review the paper.",
+        "S19 | The delivery lesson is now being tested.",
+        "SAY in the retained 60-second slot: Our exploratory case showed why output is not the same as a usable product. We are now testing whether consolidation improves what later features inherit. The base study has an OSF registration; the running pilot includes disclosed, unregistered exploratory amendments. I conceived the method and criteria and wrote the manuscript. Co-author Isabel Cabezas Martin, a Software Engineer in Microsoft's Frontier Company, is executing the experiment and collecting data separately from me. That separation is intended to reduce direct experimenter influence; it is not independent institutional validation. The dataset spans multiple implementations and no experimental outcome results are reported here. For Zava, the lesson remains: test usable journeys, not activity alone.",
+        "REGISTRATION AND SCOPE: owner confirmed OSF xcpt4, displayed 7 November 2026 at 4:46 PM, timezone unspecified. The public API returned 401, so registration/date are owner-confirmed rather than independently verified. The registered base and current unregistered amendments are distinct; do not call the complete mixed-source dataset a single preregistered confirmatory implementation. The source handover describes a pilot/estimation study, not seven confirmatory hypothesis tests.",
+        "PROFILE: commit e71037d961cb80fc5c659437796de7736820f6c9, no execution tag; pilot-estimation.json, model-stratified-v2-five-arm, s1-retrofit; GPT 6.1 Sol, Claude Sonnet 5.5 and Gemini 4 Argon; medium effort; arms A-E; selected 21 replicates per model/arm despite file default 12; F1-F10 plus held-out CR1; seed 2027. 315 trajectories are planned, not reported complete.",
+        "SOURCE HISTORY: owner reports 651 completed steps on 99a1ed170d7c71acb428b52e0e24be8856cc3ea3, then 227 on 3c2ce89b00fe583c1f0715e8ccd3510419d5e734, then 369 on e71037d961cb80fc5c659437796de7736820f6c9: 1,247 completed steps. Steps are not independent trajectories or a new efficacy result. Preserve source-epoch and temporal/arm/model interpretation limits. Commit dates do not establish collection dates.",
+        "CONTRIBUTIONS: Juan supplied conception, methodology, evaluation criteria, historical case analysis and manuscript; analysis of the ongoing experiment is not claimed complete. Isabel conducts execution and data collection independently according to the predefined exploratory protocol and disclosed amendments. Owner confirmed coauthor credit and affiliation agreement on 8 November. Both authors are Microsoft employees; separation of execution is not independent analysis, institutional replication, peer review or proof of eliminated bias.",
+        "SOURCES: current paper/main.tex, README and anc/revision-report.md; owner update and clarifications on 8 November; https://github.com/jmservera/ama-thought-mve/commit/e71037d961cb80fc5c659437796de7736820f6c9; https://osf.io/xcpt4. Earlier paused/prospective records remain dated history. No study run, data analysis, paid inference, OSF amendment or research approval is created by updating these slides.",
         "TRANSITION: now show what could earn its way onto the customer roadmap, with a value hypothesis and an explicit unlock for each lane. Existing fixed links remain unchanged."
       ]
     },
@@ -2840,12 +2867,13 @@
             0.33
           ]
         },
-        {"id": 21196, "from": "Why not exactly the five agents requested?", "to": "Which autonomy levels did we meet or change?"}
+        {"id": 21196, "from": "Why not exactly the five agents requested?", "to": "Which autonomy levels did we meet or change?"},
+        {"id": 21031, "from": "How did requirements become the backlog?", "to": "Who runs the study, under which protocol?"}
       ],
       "revised_notes": [
         "QX | Question index: optional depth after the current-product story and future proposal.",
         "Pages 1-22 establish the built product and design reasoning; pages 23-24 propose the separate future portfolio/history/context opportunity. Pages 25-26 demonstrate/debrief the current product and close. Fabric and Power BI are not current components. All 54 page numbers and fixed native action targets are preserved.",
-        "B03/page 30 is the exact requested-versus-current autonomy matrix; B06/page 33 explains optional resident access. B20/page 47 provides future-platform alternatives. Its retained Topic button still goes to page 15, the current adoption boundary. B04/page 31 distinguishes rules, historical Decision 1 and current generation, not established savings. PDF back-history is viewer-specific.",
+        "B03/page 30 is the exact requested-versus-current autonomy matrix; B06/page 33 explains optional resident access. B13/page 40 explains the running exploratory study, coauthor execution and mixed implementation history. B20/page 47 provides future-platform alternatives. Its retained Topic button still goes to page 15, the current adoption boundary. B04/page 31 distinguishes rules, historical Decision 1 and current generation, not established savings. PDF back-history is viewer-specific.",
         "Restate the question, answer it directly, then add evidence and its limit. Return to the actual interrupted page deliberately. Optional depth consumes the discussion reserve; silence is not consent or approval. Native/keyboard and human acceptance are separate checks."
       ]
     },
@@ -3897,32 +3925,63 @@
     {
       "number": 40,
       "code": "B13",
-      "title": "HVE delivery context and planned consolidation experiment",
-      "layout": "baseline",
+      "title": "What is running, and how independent is the execution?",
+      "layout": "native",
+      "keep_ids": [4548, 4610, 4673, 4737, 4802, 2],
+      "headers": [
+        {"id": 4610, "text": "What is running, and how independent is the execution?", "size": 30, "box": [0.6, 0.78, 12.13, 0.72]},
+        {"id": 4673, "text": "MVE source e71037d9; owner-confirmed 8 Nov profile. OSF base xcpt4; current amendments unregistered.", "size": 12, "box": [0.6, 6.7, 9.7, 0.3]}
+      ],
+      "elements": [
+        {"key": "pilot-profile-fill", "box": [0.6, 1.78, 12.13, 0.62], "fill": "E8F1ED", "geometry": "rect"},
+        {"key": "pilot-profile", "box": [0.82, 1.94, 11.69, 0.34], "text": "3 models x 5 arms x 21 = 315 planned trajectories; F1-F10 + held-out CR1.", "size": 20, "bold": true},
+        {"key": "pilot-roster", "box": [0.6, 2.58, 12.13, 0.36], "text": "GPT 6.1 Sol / Claude Sonnet 5.5 / Gemini 4 Argon; medium effort; seed 2027. Active 21, default 12.", "size": 16},
+        {"key": "pilot-arms-header-fill", "box": [0.6, 3.12, 5.62, 0.43], "fill": "173F35", "geometry": "rect"},
+        {"key": "pilot-arms-header", "box": [0.77, 3.22, 5.28, 0.26], "text": "ARM / TREATMENT", "size": 14, "bold": true, "color": "FFFFFF"},
+        {"key": "pilot-arm-0-fill", "box": [0.6, 3.6, 5.62, 0.43], "fill": "E8F1ED", "geometry": "rect"},
+        {"key": "pilot-arm-0-id", "box": [0.77, 3.67, 0.3, 0.28], "text": "A", "size": 18, "bold": true},
+        {"key": "pilot-arm-0-name", "box": [1.24, 3.67, 4.81, 0.3], "text": "Feature-only delivery", "size": 18},
+        {"key": "pilot-arm-1-id", "box": [0.77, 4.13, 0.3, 0.28], "text": "B", "size": 18, "bold": true},
+        {"key": "pilot-arm-1-name", "box": [1.24, 4.13, 4.81, 0.3], "text": "Scheduled consolidation", "size": 18},
+        {"key": "pilot-arm-2-fill", "box": [0.6, 4.52, 5.62, 0.43], "fill": "E8F1ED", "geometry": "rect"},
+        {"key": "pilot-arm-2-id", "box": [0.77, 4.59, 0.3, 0.28], "text": "C", "size": 18, "bold": true},
+        {"key": "pilot-arm-2-name", "box": [1.24, 4.59, 4.81, 0.3], "text": "Read-only review", "size": 18},
+        {"key": "pilot-arm-3-id", "box": [0.77, 5.05, 0.3, 0.28], "text": "D", "size": 18, "bold": true},
+        {"key": "pilot-arm-3-name", "box": [1.24, 5.05, 4.81, 0.3], "text": "Matched-resource longer delivery", "size": 18},
+        {"key": "pilot-arm-4-fill", "box": [0.6, 5.44, 5.62, 0.43], "fill": "E8F1ED", "geometry": "rect"},
+        {"key": "pilot-arm-4-id", "box": [0.77, 5.51, 0.3, 0.28], "text": "E", "size": 18, "bold": true},
+        {"key": "pilot-arm-4-name", "box": [1.24, 5.51, 4.81, 0.3], "text": "Visible regression repair", "size": 18},
+        {"key": "pilot-history-header-fill", "box": [6.52, 3.12, 6.21, 0.43], "fill": "173F35", "geometry": "rect"},
+        {"key": "pilot-history-header", "box": [6.69, 3.22, 5.87, 0.26], "text": "IMPLEMENTATION / COMPLETED STEPS", "size": 14, "bold": true, "color": "FFFFFF"},
+        {"key": "pilot-history-0-code", "box": [6.69, 3.74, 3.53, 0.36], "text": "99a1ed1", "size": 21, "bold": true},
+        {"key": "pilot-history-0-count", "box": [10.65, 3.69, 1.91, 0.44], "text": "651", "size": 26, "bold": true, "align": "r"},
+        {"key": "pilot-history-1-code", "box": [6.69, 4.25, 3.53, 0.36], "text": "3c2ce89", "size": 21, "bold": true},
+        {"key": "pilot-history-1-count", "box": [10.65, 4.2, 1.91, 0.44], "text": "227", "size": 26, "bold": true, "align": "r"},
+        {"key": "pilot-history-2-code", "box": [6.69, 4.76, 3.53, 0.36], "text": "e71037d9 (no tag)", "size": 20, "bold": true},
+        {"key": "pilot-history-2-count", "box": [10.65, 4.71, 1.91, 0.44], "text": "369", "size": 26, "bold": true, "align": "r"},
+        {"key": "pilot-history-total", "box": [6.52, 5.29, 6.21, 0.36], "text": "1,247 steps; owner-reported progress", "size": 19, "bold": true},
+        {"key": "pilot-history-boundary", "box": [6.52, 5.69, 6.21, 0.29], "text": "Not independent n; not one frozen implementation.", "size": 15, "bold": true, "color": "885500"},
+        {"key": "pilot-interpretation-fill", "box": [0.6, 6.16, 12.13, 0.38], "fill": "FFF1D6", "geometry": "rect"},
+        {"key": "pilot-interpretation", "box": [0.77, 6.24, 11.79, 0.24], "text": "Execution separated from the designer; not independent analysis or institutional validation. No outcome results reported.", "size": 13, "bold": true, "color": "885500"}
+      ],
+      "sources": [
+        "docs/capstone/thought-leadership/everything-but-the-software/main.tex",
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md"
+      ],
       "notes": "B13 | HVE delivery context and planned consolidation experiment\nSPEAKER SCRIPT\nThe original deck and notes preserve this concrete trace in their 23 October 2026 snapshot: BRD/PRD -> epic #73 -> feature #76 -> story #77 -> PR #376. Story #77 concerns queue definitions and versioned reset; PR #376 records local browser verification. A general upstream BRD/PRD label is used, not a newly asserted requirement ID. PR evidence is not whole-journey acceptance, current cloud readiness or human acceptance. This retained dated trace is not a fresh remote issue verification. HVE supplied research, plan, implement and review context, normally with human handoffs. The owner-designed coordinator connected those loops; that automation is not a default HVE claim.\nThe planned first pass compares three packages: A adds features only; B adds a review/refactor step, behaviour-pinning tests and an architectural DESIGN.md note; C uses the same extra budget for read-only review, no changed tests and an issue-oriented REVIEW.md note. It uses S1, four independent runs per arm, ten features and the unforeseen change request CR1.\nB and C can use up to 50 percent more agent time per feature than A. B versus C also changes tests and the notes read by later sessions, so it cannot isolate refactoring. The study is paused and registration pending, with no results. An extra agent is not an independent source of truth.\nKeep the dated 23 October board snapshot of 189 items separate from the paper's 192 initial issues and its 183 merged PRs over 15-24 October. A closed item or local test does not establish usable delivery, current cloud readiness or customer acceptance.\nDIAGRAM TEXT EQUIVALENT\nTop rail, retained 23 October 2026 snapshot: BRD/PRD -> epic #73 -> feature #76 -> story #77 -> PR #376. PR evidence is not whole-journey acceptance. HVE normally has human stops; the coordinator was owner-designed. Separate paper question: can another agent supply bounded reflection between features? Three planned arms: A feature-only, no extra review budget; B feature plus review/refactor, optional behaviour-pinning tests and architectural DESIGN.md; C feature plus equal-budget read-only review and issue REVIEW.md, without test changes. Four runs per arm, ten features and full unforeseen CR1. B/C use extra time versus A, and B/C tests and notes confound pure-refactoring attribution. Paused, registration pending, no results; the case is exploratory and not causal proof.\nEVIDENCE AND LIMITS\nThe selected 25 October design supersedes older ancillary eight-feature protocols. The private tagged kit remains untouched; exact snapshot and completed registration remain to be supplied.\nExecution paused; no study results. Earlier runs remain pre-registration and cannot enter fresh registered confirmatory analysis. No study run, model call or spending is authorised by this slide.\nThe additional agent is a separate session with a bounded responsibility, not an independent truth source or proof that reflection is exclusively human.\nB versus A is not time-matched. B versus C compares the entire consolidation package, including differing tests and DESIGN.md versus REVIEW.md notes, not refactoring alone.\nExisting B13 title is retained as the requirements-to-backlog context question; the answer now extends to delivery learning and the proposed experiment. Existing footer source labels remain historical; current evidence paths are in these notes.\nSOURCES\ndocs/capstone/deck/zava-forward-cowork-v2-draft.pptx\ndocs/capstone/thought-leadership/everything-but-the-software/\nmain.tex\ndocs/capstone/thought-leadership/everything-but-the-software/README.md\nNAVIGATION\nB13 appendix answer. Preserve Last Slide Viewed caller, fixed Topic: S19 / slide 22, and Index: slide 27. B14 autonomy on slide 41 remains entirely byte-identical.\nExisting source footers are retained verbatim; the paths above identify the sources for this revision.",
       "revised_notes": [
-        "B13 | HVE delivery context and planned consolidation experiment",
-        "SPEAKER SCRIPT",
-        "The original deck and notes preserve this concrete trace in their 23 October 2026 snapshot: BRD/PRD -> epic #73 -> feature #76 -> story #77 -> PR #376. Story #77 concerns queue definitions and versioned reset; PR #376 records local browser verification. A general upstream BRD/PRD label is used, not a newly asserted requirement ID. PR evidence is not whole-journey acceptance, current cloud readiness or human acceptance. This retained dated trace is not a fresh remote issue verification. HVE supplied research, plan, implement and review context, normally with human handoffs. The owner-designed coordinator connected those loops; that automation is not a default HVE claim.",
-        "The planned first pass compares three packages: A adds features only; B adds a review/refactor step, behaviour-pinning tests and an architectural DESIGN.md note; C uses the same extra budget for read-only review, no changed tests and an issue-oriented REVIEW.md note. It uses S1, four independent runs per arm, ten features and the unforeseen change request CR1.",
-        "B and C can use up to 50 percent more agent time per feature than A. B versus C also changes tests and the notes read by later sessions, so it cannot isolate refactoring. The study is paused and registration pending, with no results. An extra agent is not an independent source of truth.",
-        "Keep the dated 23 October board snapshot of 189 items separate from the paper's 192 initial issues and its 183 merged PRs over 15-24 October. A closed item or local test does not establish usable delivery, current cloud readiness or customer acceptance.",
-        "DIAGRAM TEXT EQUIVALENT",
-        "Top rail, retained 23 October 2026 snapshot: BRD/PRD -> epic #73 -> feature #76 -> story #77 -> PR #376. PR evidence is not whole-journey acceptance. HVE normally has human stops; the coordinator was owner-designed. Separate paper question: can another agent supply bounded reflection between features? Three planned arms: A feature-only, no extra review budget; B feature plus review/refactor, optional behaviour-pinning tests and architectural DESIGN.md; C feature plus equal-budget read-only review and issue REVIEW.md, without test changes. Four runs per arm, ten features and full unforeseen CR1. B/C use extra time versus A, and B/C tests and notes confound pure-refactoring attribution. Paused, registration pending, no results; the case is exploratory and not causal proof.",
-        "EVIDENCE AND LIMITS",
-        "The selected 25 October design supersedes older ancillary eight-feature protocols. The private tagged kit remains untouched; exact snapshot and completed registration remain to be supplied.",
-        "Execution paused; no study results. Earlier runs remain pre-registration and cannot enter fresh registered confirmatory analysis. No study run, model call or spending is authorised by this slide.",
-        "The additional agent is a separate session with a bounded responsibility, not an independent truth source or proof that reflection is exclusively human.",
-        "B versus A is not time-matched. B versus C compares the entire consolidation package, including differing tests and DESIGN.md versus REVIEW.md notes, not refactoring alone.",
-        "Existing B13 title is retained as the requirements-to-backlog context question; the answer now extends to delivery learning and the proposed experiment. Existing footer source labels remain historical; current evidence paths are in these notes.",
-        "SOURCES",
-        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx",
-        "docs/capstone/thought-leadership/everything-but-the-software/",
-        "main.tex",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md",
-        "NAVIGATION",
-        "NAVIGATION: Native controls retain their fixed Topic and Index destinations. Return deliberately to the actual interrupted page; no dynamic Last Slide Viewed behaviour is claimed. Other content and action targets remain unchanged.",
-        "Existing source footers are retained verbatim; the paths above identify the sources for this revision."
+        "B13 | What is running, and how independent is the execution?",
+        "ANSWER FIRST: the base study is registered in OSF xcpt4, according to the author's 7 November record. The running amendment is explicitly unregistered/exploratory, not a single preregistered confirmatory implementation. Co-author Isabel Cabezas Martin conducts execution/data collection separately from designer/analyst Juan Manuel Servera Bondroit. Both work at Microsoft; operational separation is not independent analysis, institutional replication or peer review.",
+        "ACTIVE PROFILE: pilot-estimation.json; model-stratified-v2-five-arm; s1-retrofit; configured GPT 6.1 Sol, Claude Sonnet 5.5 and Gemini 4 Argon, medium effort; arms A-E; selected 21 replicates per model/arm, while the source file defaults to 12; F1-F10 and held-out CR1; seed 2027. 3 x 5 x 21 = 315 planned trajectories. Neither the trajectory total nor configured model roster is proof of completed runs or authoritative serving-version attestation.",
+        "TREATMENTS: A feature-only delivery; B scheduled consolidation; C information-bearing read-only review; D matched-resource longer delivery; E visible regression repair. Compare whole treatment packages and resource ceilings, not pure refactoring or equal actual spend. The running design is a pilot/estimation study; no new experimental outcome analysis is reported in this manuscript update.",
+        "COMPLETE SOURCE HISTORY: 651 owner-reported completed steps used 99a1ed170d7c71acb428b52e0e24be8856cc3ea3; the next 227 used 3c2ce89b00fe583c1f0715e8ccd3510419d5e734; the latest 369 used e71037d961cb80fc5c659437796de7736820f6c9. Total 1,247 completed steps. These counts are execution progress, not independent n, completed trajectories, retained contracts or treatment efficacy. The dataset is not one frozen implementation. Retain source-epoch labels, failures and missingness; source changes may align with time, model or arm and need qualified interpretation.",
+        "REGISTRATION LIMIT: OSF xcpt4 is owner-confirmed, displayed 7 November 2026 at 4:46 PM with timezone unspecified. Public metadata API retrieval returned 401. The current protocol's null amendment-registration fields do not negate the base registration; they do not register current changes either. Current execution is commit-pinned to e71037d961cb80fc5c659437796de7736820f6c9, with no tag, not a historical v4/v6/v7 freeze. Do not infer prospective registration timing from code-commit dates or retroactively promote earlier/mixed data to confirmatory evidence.",
+        "CONTRIBUTIONS AND BIAS: Juan conceived the study, methodology and evaluation criteria, analysed the historical exploratory case and wrote the manuscript; current experimental analysis is not claimed complete. Isabel is conducting the experiment and collecting data independently under the predefined exploratory protocol with disclosed amendments. She is a Software Engineer in Frontier Company at Microsoft; owner confirmed coauthorship/affiliation agreement. Separating execution is intended to reduce experimenter influence, not eliminate bias or prove independent scientific acceptance.",
+        "HISTORICAL HVE CONTEXT: retain the 23 October BRD/PRD -> epic73 -> feature76 -> story77 -> PR376 trace as history, not fresh whole-journey acceptance. HVE normally has human handoffs; the long coordinator loop was owner-designed. Old three-arm/four-run plans and paused records are historical, not the active five-arm/n21 profile. Activity counts are not housing outcomes.",
+        "SOURCES: current paper/main.tex, README, anc/experiment-protocol.tex and anc/revision-report.md; owner update/clarifications on 8 November; https://osf.io/xcpt4; https://github.com/jmservera/ama-thought-mve/commit/e71037d961cb80fc5c659437796de7736820f6c9 and the two earlier full commit IDs. Public commit metadata and protocol content were read; actual private run data was not.",
+        "NAVIGATION: B13/page40, index/page27 and fixed topic S19/page22 retain their actual native destinations. Return deliberately to the interrupted page; no dynamic Last Slide Viewed behaviour. This documentation update launches no study, model, payment or OSF amendment."
       ]
     },
     {

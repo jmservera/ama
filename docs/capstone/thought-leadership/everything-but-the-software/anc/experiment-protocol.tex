@@ -1,17 +1,56 @@
-\section{Testing the harness: a prospective experiment}\label{sec:experiment}
+\section{Testing the harness: an evolving exploratory experiment}\label{sec:experiment}
 
 The experiment asks whether scheduled correction improves the repository
-inherited by later feature work. RQ3 is addressed by the prospective design
-specified below.
-The 1 November amendment supersedes v4's two runs per arm/model.
-The 2 November revision replaces that amendment's fixed 33-per-cell
-allocation with a prospective researcher choice of 12, 21 or 33, default 12.
-Historical freezes, diagnostics and the original owner-reported OSF
-registration are retained; none approves this new design. The researcher
-kit requires an approved source-bound packet and prospective OSF amendment
-before collection. Agent configuration
-protocols and empirical-study guidance inform this pre-data design
+inherited by later feature work. RQ3 is addressed by a five-arm exploratory
+study now in execution. Agent configuration protocols and empirical-study
+guidance informed its earlier planning
 ~\cite{lulla2026protocol,baltes2026guidelines,wohlin2012experimentation}.
+
+\subsection{Execution status and disclosed amendments}\label{sec:studyexecution}
+
+As of 8 November 2026, Isabel Cabezas Martin is conducting the experiment
+and collecting its data independently under the predefined exploratory
+protocol and disclosed amendments. Study conception, methodology,
+evaluation criteria and manuscript preparation were undertaken by
+Juan Manuel Servera Bondroit. This operational separation is intended to
+minimise potential experimenter bias; both authors are Microsoft employees,
+and neither institutional independence nor independent scientific review
+or analysis follows from it.
+
+The owner confirms an OSF-registered base at \url{https://osf.io/xcpt4},
+dated 7 November 2026. Its metadata was not independently verified
+(Data availability). Current execution includes disclosed unregistered
+amendments: short calibration, parallel execution and VM restarts.
+The run is an exploratory pilot/estimation study, rather than a single
+preregistered confirmatory evaluation. The public protocol's empty formal
+hypothesis list and false/null current-amendment registration fields do
+not negate the owner-confirmed registered base.
+
+The active profile is \nolinkurl{pilot-estimation.json},
+\texttt{model-stratified-v2-five-arm}, suite \texttt{s1-retrofit}.
+GPT~6.1 Sol, Claude Sonnet~5.5 and Gemini~4 Argon use medium effort across
+arms A--E, F1--F10 and held-out CR1, with seed 2027. The owner-supplied
+runtime selection is $n=21$ trajectories per model per arm despite the
+file default of 12: $3\times5\times21=315$ planned trajectories.
+Feature steps, sessions and completion counters do not supply an
+independent sample size or a completed-trajectory count.
+
+Collection spans three implementation epochs, ending at commit
+\nolinkurl{e71037d961cb80fc5c659437796de7736820f6c9}, without a freeze tag.
+Data availability identifies all three sources and the owner-reported
+step counts. Failures, unknowns and epoch labels remain part of the record;
+implementation changes and execution scheduling can be confounded with
+time, arm and model. The dataset cannot be treated as one homogeneous
+frozen implementation. Commit times locate source changes, not collection
+events.
+
+The 1 November five-arm amendment, 2 November allocation revision and
+5 November v6 source findings below remain dated planning and inspection
+records. Historical v4/v6/v7 freezes and diagnostics retain their own
+scope. Earlier power/resource scenarios, including full ten-feature
+calibration, are preserved unchanged; they do not establish power or
+expenditure for the active F10/$n=21$ amendment.
+% TODO(author): report checked experimental outcomes with actual trajectory, phase and implementation-epoch provenance; retain failures and unknowns.
 
 \subsection{Design and estimands}\label{sec:protocolsummary}
 
@@ -26,7 +65,7 @@ sessions are not independent units either. The selected number $n$ applies
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Prospective five-arm allocation. D is the matched-resource A+
+\caption{Five-arm comparison retained from the earlier design. D is the matched-resource A+
 control; E tests visible regression repair, not hidden-test feedback.}
 \label{tab:protocolsummary}
 \begin{tabularx}{\textwidth}{@{}L{1cm}YL{3.6cm}@{}}
@@ -52,10 +91,11 @@ source-published v6 kit. D uses the longer feature session without a
 post-step; E implements visible-specification repair. Data availability
 lists the inspected execution and manifest commits.
 These source findings supersede the earlier A/B/C-only capability account.
-The v6 release records an implementation, while its registration,
-collection authorization and the scientific alignment decisions below
-remain open. Its source-declared runtime qualification was not reproduced
-by this review. The historical v4 freeze remains unchanged.
+The v6 release records that historical implementation; its then-uncompleted
+registration and collection gates are distinct from the later registered
+base and unregistered execution path. Its source-declared runtime
+qualification was not reproduced by this review. The historical v4
+freeze remains unchanged.
 
 B--D is the primary practical comparison: consolidation versus giving
 the builder the same total time and nominal credits. Equal ceilings do
@@ -80,7 +120,10 @@ Immutable example tests remain protected in every arm.
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{fig-pilot-design.png}
-\caption{Prospective design, not results. Every model runs all five arms.
+\caption{Historical v6 design diagram. Its default allocation, full
+calibration and pending-registration/launch labels describe that source
+record; current $n=21$ execution and amendments are in
+Section~\ref{sec:studyexecution}. Every model runs all five arms.
 The external evaluator is separate from candidate tools. CR1 content
 remains withheld until its session; privacy and isolation reduce exposure
 without proving that a model has no prior knowledge.}\label{fig:pilotdesign}
@@ -124,13 +167,15 @@ Retain onset, recovery, recurrence and uncertainty across missing
 checkpoints. Recovery does not erase an episode. Distinguish same-cycle
 post-step losses and rejected attempts from losses in retained code.
 
-The inspected v6 analyzer uses a stricter summary rule: incomplete prior
+The v6 analyzer inspected on 5 November uses a stricter summary rule: incomplete prior
 acquisition or any unobserved eligible result makes its loss count and
 density unavailable, with completeness flags. Its standard export does
 not emit the observed-subset counts, missing-count fields and bounds
-specified above. Those are prospective reporting requirements. Before
-collection, the author must authorize a source-bound implementation or
-prospectively amend the reporting rule; this manuscript does neither.
+specified above. Those are prospective reporting requirements retained
+from the earlier design. This update does not re-inspect the active
+analyzer, establish that reporting pipeline or amend the reporting rule.
+The source-bound reporting decision remains to be documented without
+backdating an amendment or inferring completeness from raw vectors.
 
 \begin{figure}[!htbp]
 \centering
@@ -148,21 +193,22 @@ an incomplete arm has fewer retention obligations, and prerequisite
 strata are post-treatment selections, not randomised subgroups.
 One fixed CR1 is task-specific. A prewritten, randomly selected request
 pool belongs to a separately registered subsequent study.
-The inspected summary computes composite CR1 success. Its graded and
+The summary inspected on 5 November computes composite CR1 success. Its graded and
 F9/F10-stratified reporting pipeline has not been established by this
-source check. Those additional reporting requirements need the same
-source-bound reconciliation before collection; retained raw vectors alone
+source check. Those additional reporting requirements retain the same
+source-bound reconciliation gap; retained raw vectors alone
 do not establish a completed reporting pipeline.
 
 \begin{figure}[!htbp]
 \centering
 \includegraphics[width=\linewidth]{fig-experiment-measures.png}
-\caption{Coverage, retained behaviour, adaptation and all-attempt cost
+\caption{Historical measurement design: coverage, retained behaviour, adaptation and all-attempt cost
 are separate measures. Structural metrics targeted by B's stopping
 budget are treatment-fidelity checks, not independent efficacy outcomes.
 Unknown results and billing remain unknown. The observed-subset retention
-and graded CR1 panels describe reporting requirements whose v6 alignment
-remains a collection gate.}\label{fig:experimentmeasures}
+and graded CR1 panels describe planned reporting requirements; their
+implementation was unresolved in the 5 November v6 inspection.
+This update does not verify the active reporting pipeline.}\label{fig:experimentmeasures}
 \end{figure}
 
 Actual AI credits include every delivery and CR1 attempt, including
@@ -178,17 +224,18 @@ is not zero.
 
 \subsection{Replication and uncertainty}\label{sec:protocollimits}
 
-The researcher prospectively selects $n\in\{12,21,33\}$ independent
-repository trajectories per model per arm, with \textbf{12 as the default}.
-Before study collection, record the choice, rationale, planning SD,
-power/precision trade-off, date and source-bound configuration in the saved
-study record and prospective protocol. Selecting a sample size does not
+The 2 November planning record offers $n\in\{12,21,33\}$ independent
+repository trajectories per model per arm, with \textbf{12 as the default};
+current execution selects 21. That record calls for the choice, rationale,
+planning SD, power/precision trade-off, date and source-bound configuration
+to be recorded before collection. It does not establish that the current
+amendments were prospectively registered. Selecting a sample size does not
 establish that its associated SD assumption is true.
 The saved allocation is immutable on resume. Outcome-driven sample-size
 changes, additions and replacements are prohibited; interim coverage,
 loss, CR1 success or other outcomes cannot determine $n$.
 
-The author selected a minimum useful absolute coverage gain of ten
+Servera Bondroit selected a minimum useful absolute coverage gain of ten
 percentage points, approximately thirteen test-weighted contracts.
 Coverage scores $Y$ are expressed on the 0--100 scale. Let
 $\overline{Y}_{ma}$ be mean final coverage for model $m$ and arm $a$.
@@ -214,7 +261,7 @@ n_{\mathrm{plan}}(\sigma)=
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Conditional normal planning for the ten-point B--D contrast,
+\caption{Historical conditional normal planning for the ten-point B--D contrast,
 three equally weighted models, $\alpha=0.05$ and target power 0.80.
 The SDs are assumptions, not measured variances or interchangeable power
 guarantees.}
@@ -237,8 +284,9 @@ not guaranteed by any offered choice. In particular, default $n=12$ is
 \emph{not} an 80\%-power design under the existing SD of 25 points.
 The bounded score's worst-case SD is 50, requiring 131 per cell under
 the same approximation; that is outside the offered allocation choices.
-The variance assumption and selected allocation require explicit author
-review and prospective registration before collection.
+These planning requirements and assumptions are retained from the earlier
+record. Neither the registered base nor selection of $n=21$ establishes
+their validity for evolving-source exploratory data.
 
 The candidate independent-cell analysis resamples whole trajectories
 within model and arm, with 10,000 draws and pointwise 95\% percentile
@@ -254,14 +302,16 @@ This availability rule also needs explicit adoption or prospective
 revision in the approved study record.
 Model-specific estimates and other contrasts are secondary, with no
 family-wide coverage claim.
-Retain scheduling-block identifiers. Before collection, source-bound review
-must reconcile this independent-trajectory variance and bootstrap scheme
-with the model/replicate blocking. A scheduling label alone establishes
-neither pairing nor independence. The author must justify scheduling-only
-blocks with independent-trajectory inference, or separately approve a
-block-aware analysis and aligned planning variance. Shared block/service
-effects remain unmeasured; the v6 source freeze does not resolve this choice.
-% TODO(author): resolve scheduling-block dependence and bind the variance/resampling choice to the new kit freeze and prospective registration.
+Retain scheduling-block identifiers. The earlier source-bound review
+identified an unresolved choice between this independent-trajectory
+variance/bootstrap scheme and model/replicate blocking.
+A scheduling label alone establishes
+neither pairing nor independence. Scheduling-only blocks with independent
+inference require justification; block-aware analysis would require a
+separately approved, disclosed choice and aligned planning variance.
+Shared block/service effects remain unmeasured; the v6 source freeze
+does not resolve this choice, and this update supplies no new resolution.
+% TODO(author): document the scheduling-block inference decision and actual amendment timing; do not silently change the analysis or backdate registration.
 Chen, Zaharia and Zou's dated ChatGPT comparison motivates monitoring
 service drift despite exposed names~\cite{chen2023drift}; it does not
 measure drift in this roster or make a version pin an immutability guarantee.
@@ -272,7 +322,13 @@ component intervals under independent runs with a common success
 probability within each cell. Aggregate contrasts must preserve model
 strata. The coverage calculation supplies no power guarantee for CR1.
 
-\subsection{Resources, feasibility and collection gates}\label{sec:prerun}
+\subsection{Historical resource planning and operational boundaries}\label{sec:prerun}
+
+The following resource scenarios and feasibility criteria retain the
+2--5 November planning record. In particular, their full ten-feature
+calibration differs from the short calibration disclosed for ongoing
+unregistered execution. They are not measured costs, a current affordability
+approval or evidence that historical launch gates were satisfied.
 
 The actual aggregate envelope remains 300,000 AI credits, with a
 270,000-credit local admission ceiling. Prior spending and provisions for
@@ -293,7 +349,7 @@ $3n[2(11)+3(21)]=255n$ sessions,
 $3n[5.75+4(8.25)]=116.25n$ maximum agent-hours and
 $3n[3300+4(6300)]=85500n$ nominal session credits.
 
-Excluded cost-only calibration retains one trajectory per model per arm:
+The historical excluded cost-only calibration scenario retains one trajectory per model per arm:
 15 trajectories, ten features each and no CR1. A/D have ten sessions and
 B/C/E twenty; A allows five hours and 3,000 credits, and B/C/D/E each
 allow 7.5 hours and 6,000 credits. Thus calibration adds 240 sessions,
@@ -301,8 +357,8 @@ allow 7.5 hours and 6,000 credits. Thus calibration adds 240 sessions,
 
 \begin{table}[!htbp]
 \centering\small
-\caption{Five-arm resources for every prospective choice of $n$ per
-model per arm; the default column is bold. These are summed nominal
+\caption{Historical five-arm resource scenarios for the offered choices of $n$ per
+model per arm; the historical default column is bold. These are summed nominal
 session allowances and time ceilings, not expenditure or enlarged budgets.
 Every choice exceeds the aggregate envelope at nominal session caps.}
 \label{tab:pilotresources}
@@ -340,7 +396,7 @@ requires a separately authorized prospective amendment and a new saved
 study, never a changed allocation on resume or a silent reduction to fit
 the budget. An interrupted or unaffordable study retains its selected
 allocation and is reported incomplete.
-The inspected launcher enforces attempt and aggregate admission but does
+The launcher inspected on 5 November enforces attempt and aggregate admission but does
 not compute or approve that full-allocation forecast. A dated researcher
 forecast and approval are required separately; a nonempty calibration
 note is insufficient.
@@ -356,17 +412,18 @@ Only current and previous visible specifications and examples reach
 candidate tools. Hidden tests, scores, identifiers, messages, reference
 code and future CR1 remain external. Candidate commands use no-network
 containers; the trusted host SDK's provider connection is different.
-The independent researcher receives a protected kit without access to
-the original repositories or manuscript.
-Use a researcher-managed workspace/account without the author's original
-checkouts, manuscript or session-context caches; record actual access and
-prior exposure rather than assuming blindness from a private flag.
-The owner will make both
-repositories private before collection and release approved materials
-with the paper afterward. OSF registration/embargo and GitHub privacy
-are separate; neither removes prior public or model exposure.
-Fresh source-bound access checks, approval, freeze, prospective OSF
-recording and launch permission remain required.
+The earlier plan called for a researcher-managed protected workspace
+without the original case repositories, manuscript or session-context
+caches. Cabezas Martin's current execution role is separate from design
+and manuscript preparation; coauthorship supplies no evidence of blindness
+or actual access restrictions. Record actual access and prior exposure.
+The earlier repository-privacy and later approved-release plans remain
+historical intentions, not inspected current visibility.
+OSF status and GitHub privacy are separate; neither removes prior public
+or model exposure. The historical registered-freeze path and current
+disclosed unregistered path have different registration status.
+This manuscript update neither verifies operational approvals nor changes
+information boundaries, budgets, configuration or launch permissions.
 
 Unsuccessful feature increments are reset; later features and scheduled
 B/C/E post-steps continue on retained green state. Hidden denominators
@@ -377,7 +434,7 @@ Assisted and incomplete trajectories and all their costs are retained,
 without replacements or success-conditioned primary analyses.
 
 \ifresults
-% TODO(author): insert the prospectively collected results and checked analysis.
+% TODO(author): insert authorized checked results with registered-base, unregistered-amendment and implementation-epoch provenance.
 \else
 % TODO(author): PF1 requires actual F/P checkpoint vectors, eligibility and missingness.
 % TODO(author): PF2 requires actual CR1 vectors, prerequisites, assistance and all-attempt costs.

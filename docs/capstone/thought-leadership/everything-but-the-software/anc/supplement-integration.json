@@ -15,10 +15,10 @@
       "content_sha256": "3193b1b9780098db65501b4c40c2481799bca96015c60edb58ca8c049c598a30"
     },
     "anc/case-audits.tex": {
-      "content_sha256": "4a7e3ef241d60aa7f85fbbc636e1e40dc3e17ac255f1e8ed0b05e4cf0ba79bc7"
+      "content_sha256": "a99caa560f0ca38c26587ab7c77f7f347b52f04eb631db20b1f9ff75389aa1c0"
     },
     "anc/deferred-measures.tex": {
-      "content_sha256": "119f39c08246042af8a6f1fca6a849553777346f10f614a2ee405e3a5371c43b"
+      "content_sha256": "c8608e6fe586fa252099e566a859d01350c5709fd79c9bc40c72595d19f25ccc"
     }
   },
   "author_review_revision": {
@@ -27,6 +27,19 @@
     "prior_active_content_sha256": {
       "anc/case-audits.tex": "7851092f12e56fe9455e93ca2a512f85e12ff62509f9d5073523e5793208e1b1",
       "anc/deferred-measures.tex": "64201296afcad342dd5ca6092e18705abdd6667070d129725fcd296fbf4d45b8"
+    }
+  },
+  "execution_authorship_revision": {
+    "date": "2026-11-08",
+    "scope": "Coauthorship and registered-base/disclosed-unregistered-execution status in the existing article and additive Supplement; no new case narrative, diagram, experimental outcome or experiment change.",
+    "prior_active_content_sha256": {
+      "anc/case-audits.tex": "4a7e3ef241d60aa7f85fbbc636e1e40dc3e17ac255f1e8ed0b05e4cf0ba79bc7",
+      "anc/deferred-measures.tex": "119f39c08246042af8a6f1fca6a849553777346f10f614a2ee405e3a5371c43b"
+    },
+    "source_sha256": {
+      "main.tex": "95ffbf850ded241423a6eef686afdc38afe5c913c9b264d98b67d08a67b4cb26",
+      "anc/experiment-protocol.tex": "e803b122d7ffbae7507273652b457a401b72d0e15490c672ce2ea8e1dcfc8ee7",
+      "anc/supplement-section.tex": "b86572be9405315d95bdec36ee5dfe197baeaca1c123d902e3f03e1d1d448f3a"
     }
   },
   "restored_citation_keys": [
@@ -285,7 +298,8 @@
     "zhang2023snowball",
     "zhong2026impossiblebench"
   ],
-  "current_pages": 41,
-  "current_supplement_start_page": 36,
+  "current_pages": 40,
+  "current_supplement_start_page": 35,
+  "current_pdf_sha256": "1a39c104c7e6ae0bb2075cceffe54b3ed8cdb037effe8d6efa223f3b84a47cda",
   "literal_renderer": "Wrapped listings; original ASCII bytes, input path and SHA256 retained; no lineno dependency."
 }

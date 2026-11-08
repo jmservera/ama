@@ -38,6 +38,16 @@ refresh recipe. Update changing figures and source/live evidence before final
 delivery; board Done includes not-planned work. Regenerate the deck and pitch
 from the manifest, never by hand-editing the generated notes.
 
+The later 8 November study update is on existing pages 22/40 and their index
+entry. It credits coauthor Isabel Cabezas Martin's execution/data collection
+and distinguishes the OSF-registered base from the active unregistered
+exploratory amendments. Selected 21/default 12, three models/five arms,
+F1-F10 plus CR1 and all three implementation epochs are explicit.
+Owner-reported completed steps are not independent replicates, a single
+frozen implementation or newly reported efficacy results. The
+[paper's current record](../thought-leadership/everything-but-the-software/README.md)
+supersedes older paused/prospective status without rewriting its history.
+
 ## AI Consumption Evidence (#432)
 
 The [dated source-only Tokenomics drafting insert](../../reference/resources/ai-tokenomics.md#pitch-drafting-insert-2026-10-31)

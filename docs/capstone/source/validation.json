@@ -1,6 +1,6 @@
 {
   "source_as_of": "2026-11-08",
-  "revision": "Brief autonomy fidelity, three help modes, optional resident access and dated ongoing-product story; independent F1 scripted-counterexample wording corrected",
+  "revision": "Owner-confirmed OSF base, running exploratory amendments, coauthor roles and complete implementation-epoch history",
   "package": {
     "status": "pass",
     "slides": 54,
@@ -75,6 +75,7 @@
       "ppt/slides/slide14.xml",
       "ppt/slides/slide15.xml",
       "ppt/slides/slide16.xml",
+      "ppt/slides/slide22.xml",
       "ppt/slides/slide23.xml",
       "ppt/slides/slide24.xml",
       "ppt/slides/slide25.xml",
@@ -86,6 +87,7 @@
       "ppt/slides/slide33.xml",
       "ppt/slides/slide37.xml",
       "ppt/slides/slide39.xml",
+      "ppt/slides/slide40.xml",
       "ppt/slides/slide41.xml",
       "ppt/slides/slide46.xml",
       "ppt/slides/slide47.xml",
@@ -103,10 +105,10 @@
       52
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "1817e9e6c0b1fb9325b591f0c24ad139cf6e9bf0ec1297d5699ed5635f9b5ace",
+    "candidate_sha256": "7dbc06a89463c05197430fb0748fa7df6d0bca3631bd7c8c2ea44db4d90df73b",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
-    "manifest_sha256": "0a07b6687564a42d17ccac244d3eaef2b0b2158f192ddc54e1f97d0ff8da6c37",
+    "manifest_sha256": "ab7961403cbe8809db2f2170ef27b48f101ffcb2dbd9946a96b979d3724c5b02",
     "asset_catalog_sha256": "de34d2eba585eab470ebe7438b40695e0b239f6b2c8183a3cd4236ca5a1dc901",
     "builder_sha256": "4c168289a7352017e6c9cb9456fe9fe1436e8ad38ca3721268366c85492829d4",
     "native_helper_sha256": "956d56cf4032d33deca9f61c606899927e3a3ae431878811bfe84aefba742c94"
@@ -115,15 +117,15 @@
     "verified_on": "2026-11-08",
     "action": "Verify",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
-    "verification_report_sha256": "c005c89053ce68769026a2a45d96b05dc9b1158582f249c1eb145ce9c1ddda9a",
+    "verification_report_sha256": "f6ccb5cc52731c6ac3c6fd08cfd11c8a2e7f0acc242863c93b81177b8c77de61",
     "delivery_unchanged": false,
     "runtime": "Installed PowerShell on Linux; no Windows PowerPoint execution."
   },
   "preview": {
     "renderer": "LibreOffice 24.2.7.2 420(Build:2)",
     "native_powerpoint_validation": false,
-    "source_sha256": "1817e9e6c0b1fb9325b591f0c24ad139cf6e9bf0ec1297d5699ed5635f9b5ace",
-    "pdf_sha256": "730ff1e037e64de40499139dd66cd1afcee7b9c8edcba054d00f136c0a32b2f8",
+    "source_sha256": "7dbc06a89463c05197430fb0748fa7df6d0bca3631bd7c8c2ea44db4d90df73b",
+    "pdf_sha256": "712475ee0a4776958c82fad6fc7a4b702c6c070d064197d3164252d9b1fc0360",
     "navigation": {
       "slides": 54,
       "fixed_slide_jumps": 108,
@@ -137,27 +139,18 @@
   "frame_and_preservation_checks": {
     "pdf_pages": 54,
     "revised_pages": [
-      7,
-      8,
-      9,
-      10,
-      14,
-      16,
+      22,
       27,
-      30,
-      31,
-      33,
-      41
+      40
     ],
-    "native_text_frames_checked": 301,
+    "native_text_frames_checked": 337,
     "source_text_frames_missing_words": [],
+    "source_text_word_matching_tolerance_points": 1.5,
     "unchanged_pages_pixel_differences": [],
-    "unchanged_pages": 43,
+    "unchanged_pages": 51,
     "fixed_pdf_links": 108,
     "qanda_index_answers": 27,
-    "qanda_fixed_returns": 27,
-    "source_text_word_matching_tolerance_points": 1.5,
-    "correction_pages_pixel_differences": []
+    "qanda_fixed_returns": 27
   },
   "native": {
     "performed_on_current_candidate": false,

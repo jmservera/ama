@@ -24,15 +24,32 @@ management: short pages that point to clusters of related material.
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
+The current coauthored delivery has 40 pages, with the additive Supplement
+starting on page 35. This is a draft with unreported experimental outcomes,
+not a completed confirmatory report.
+
+The later [8 November study update](../capstone/source/review-2026-11-08.md#later-8-november-study-and-coauthor-update)
+records owner-confirmed OSF base `xcpt4` (7 November; public API returned 401),
+an ongoing **unregistered exploratory amendment** and coauthor
+Isabel Cabezas Martin's separate execution/data-collection role. Both
+authors work at Microsoft; this is not independent institutional validation.
+Active source `e71037d9`, selected 21/default 12, three models/five arms,
+F1-F10 plus CR1 and seed 2027 are distinguished from older plans.
+The reported 651/227/369 steps under three implementations total 1,247;
+they are not independent replicates, one frozen source or reported efficacy.
+The [paper's current record](../capstone/thought-leadership/everything-but-the-software/README.md)
+and pages 22/40 supersede paused/prospective-only status, not earlier adverse
+reviews or unresolved interpretation/approval limits.
+
 The owner-requested additive revision removes repeated Background, figures
-and case narratives; the current 38-page paper retains only extra source
+and case narratives; the paper retains only extra source
 qualifications and methodological/provenance detail in its Supplement.
 The [nine-point author review](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#author-review-disposition-1-november)
 restores the discovery-to-backlog-to-feedback account, abstracts the case and
 records the supplied project export. Four requested scientific skills support
 the equation audit; risk/annotation domains and discrete break-even are
-explicit. Scheduling-block dependence must still be resolved against the
-variance and bootstrap scheme before approved source binding and collection.
+explicit. Scheduling-block dependence remains an interpretation/approval
+issue; reported exploratory collection does not establish its resolution.
 The [2 November allocation revision](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#prospective-allocation-revision-2-november)
 retains three models and five proposed arms, with 12 (default), 21 or 33
 independent repository trajectories per model per arm: 180/315/495 study
@@ -52,15 +69,17 @@ bounds and graded/prerequisite CR1 reports remain prospective reporting
 requirements not established in the inspected analyzer/export.
 Independent-arm resampling is implemented, but scheduling-block inference
 and the primary availability rule still need an explicit source-bound
-scientific decision before collection. The v6 manifest records no prospective
+scientific decision for accepted inference. The historical v6 manifest records no prospective
 OSF completion or collection authorization; release existence is not approval.
 The original review, historical v4 assets and dated inspections are retained.
 Three pinned static snapshots, source/access limits, lexical validation and
 corrected zero/undefined and break-even figures are retained. Source metadata
 and code tests do not establish scientific acceptance or historical deployed
 usability. Public development PRs are owner-authorized; future privacy,
-approved source alignment, proper prospective OSF recording, affordability and collection
-gates remain. Historical cloud exports are explicitly deferred.
+approved source alignment, proper prospective OSF amendment, affordability and
+scientific acceptance remain unproved; the reported running amendment is
+exploratory, not evidence that those earlier gates were met. Historical cloud
+exports are explicitly deferred.
 Original v4 assets, adverse critiques and prior data remain unchanged.
 The [new reflection/memory source check](../capstone/thought-leadership/everything-but-the-software/anc/supplementary-context.md#reflection-memory-and-self-improvement-1-november-source-check)
 distinguishes Ng's human-feedback opening from Moroney's later reflection/

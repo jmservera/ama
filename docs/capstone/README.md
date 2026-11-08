@@ -23,7 +23,7 @@ choice between the older executive and Cowork routes.
 | Explain brief fidelity and the evolving product | [8 November autonomy/story review](./source/review-2026-11-08.md): exact requested/current levels, three help modes, historical Decision 1, optional resident access, design-thinking decisions and refreshable progress snapshot |
 | Inspect findings and checks | [30 October illustrated visual refresh](./source/review-2026-10-30.md#illustrated-visual-refresh-on-linux), earlier roadmap findings on the same page and preserved [29 October review](./source/review-2026-10-29.md) |
 | Recover previous work | [History and restore map](./history/README.md); original findings and authoring sources are retained |
-| Continue thought leadership | [Existing paper package](./thought-leadership/everything-but-the-software/README.md), unchanged by this reorganization |
+| Continue thought leadership | [Current coauthored paper package](./thought-leadership/everything-but-the-software/README.md): owner-confirmed OSF base, ongoing unregistered exploratory amendments, independent execution and three implementation epochs; not experimental outcome proof |
 
 The PPTX and PDF are drafts for owner review. Prepared notes, native rendering
 and local extraction do not establish rehearsal, human acceptance, measured
