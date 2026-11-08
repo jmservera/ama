@@ -1359,7 +1359,7 @@
             "path": "src/api/README.md",
             "line": 707,
             "anchor": "## Employee chat with bounded skills",
-            "sha256": "cd92cee3c52336c2959deba31cac69d00ce2fcbb3284923f230c8aba132eb0a9",
+            "sha256": "70c0098c6e6c6c1c314b19e74945cec3939dc658a7a861fd5e5b944ec24f1549",
             "classification": "One selected skill and bounded call; no tools or case writes"
           }
         ]
@@ -1406,7 +1406,7 @@
             "path": "src/api/README.md",
             "line": 707,
             "anchor": "## Employee chat with bounded skills",
-            "sha256": "cd92cee3c52336c2959deba31cac69d00ce2fcbb3284923f230c8aba132eb0a9",
+            "sha256": "70c0098c6e6c6c1c314b19e74945cec3939dc658a7a861fd5e5b944ec24f1549",
             "classification": "One selected skill and bounded call; no tools or case writes"
           }
         ],
@@ -1463,7 +1463,7 @@
             "path": "src/api/README.md",
             "line": 707,
             "anchor": "## Employee chat with bounded skills",
-            "sha256": "cd92cee3c52336c2959deba31cac69d00ce2fcbb3284923f230c8aba132eb0a9",
+            "sha256": "70c0098c6e6c6c1c314b19e74945cec3939dc658a7a861fd5e5b944ec24f1549",
             "classification": "One selected skill and bounded call; no tools or case writes"
           }
         ],
@@ -1945,7 +1945,7 @@
             "path": "src/api/README.md",
             "line": 707,
             "anchor": "## Employee chat with bounded skills",
-            "sha256": "cd92cee3c52336c2959deba31cac69d00ce2fcbb3284923f230c8aba132eb0a9",
+            "sha256": "70c0098c6e6c6c1c314b19e74945cec3939dc658a7a861fd5e5b944ec24f1549",
             "classification": "One selected skill and bounded call; no tools or case writes"
           }
         ]

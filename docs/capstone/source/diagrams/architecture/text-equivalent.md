@@ -92,6 +92,11 @@ A bounded System Architecture Reviewer analysed Bicep at
 precision findings and exact locators; it did not adopt an ADR, query Azure,
 deploy, inspect credentials or certify current operation.
 The parent implements that model as an original reference drawing.
+The owner-approved normal main merge brings evidence to `fa7ae0c9`.
+No infrastructure declarations or deck inputs changed between those bases;
+the sole diagram-evidence file change was the API README, whose bounded-chat
+section is byte-unchanged. Native/SVG metadata refreshes its whole-file hash
+and records both the original model basis and current source base.
 
 The selected main view is the **direct-demo shared-API realization**.
 Its corporate sign-in registration is configured separately. `enableApiAi`

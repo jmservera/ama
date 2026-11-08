@@ -117,7 +117,7 @@
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
     "manifest_sha256": "d51cb2e324dc76a4be828f5725f91b4469d35b13695614c5046745f5f1ba52ca",
-    "asset_catalog_sha256": "bd423957cbb86df95f5f5b28a1b56f7ac344ce33e6e85f8a82c2488c951220c2",
+    "asset_catalog_sha256": "13d9e75ee5a02af33ae7540963549fbb2a0e321f3f69da22b9fd2c936a0c25bf",
     "builder_sha256": "0806858e1bdbae7f67b3069ef8d9b812efbb738262bba542904fa43068960b3f",
     "native_helper_sha256": "956d56cf4032d33deca9f61c606899927e3a3ae431878811bfe84aefba742c94"
   },
@@ -125,9 +125,10 @@
     "verified_on": "2026-11-08",
     "action": "Verify",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
-    "verification_report_sha256": "bccc0920525fc38366118ee9661137735e19edd359786526b6d34fe51553a79c",
-    "delivery_unchanged": false,
-    "runtime": "Installed PowerShell on Linux; no Windows PowerPoint execution."
+    "verification_report_sha256": "dc3b6588da87fd47183736d1eac8a35c1eca787489048e1e5dafd0b42e95755f",
+    "delivery_unchanged": true,
+    "runtime": "Installed PowerShell on Linux; no Windows PowerPoint execution.",
+    "source_refresh": "Owner-approved normal merge over fa7ae0c9; original model basis c50e9f0b; exact PPTX/notes and all diagram PNGs byte-identical after evidence refresh."
   },
   "preview": {
     "renderer": "LibreOffice 24.2.7.2 420(Build:2)",

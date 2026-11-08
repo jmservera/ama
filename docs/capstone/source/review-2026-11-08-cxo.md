@@ -217,3 +217,11 @@ PowerPoint, keyboard/AT, projector or human acceptance.
 Independent exact-head storytelling/source assessment and the fresh focused
 publication gate remain separate. The owner approved a normal latest-main
 merge before final publication; no rebase or force-push is authorised.
+
+The implementation commit is `35907670`; the owner-approved normal merge
+completed as `b2009737`, incorporating main `fa7ae0c9` without conflicts.
+No diagram-referenced infrastructure declaration or deck source changed.
+The only changed diagram-evidence input is the API README; its bounded-chat
+section is identical, so the diagram refresh changes provenance hashes,
+not topology or claims. The final candidate needs a fresh gate and
+independent exact-head assessment after that refresh.

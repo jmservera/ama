@@ -63,7 +63,12 @@ function scene(name, width, height, status) {
   const elements = [];
   const files = {};
   let currentFrame = null;
-  const metadata = { name, date: "2026-11-08", source_head: "c50e9f0b888e267d5949cab09069d31b6c740e3b", width, height, status, sources };
+  const metadata = {
+    name, date: "2026-11-08",
+    model_basis_head: "c50e9f0b888e267d5949cab09069d31b6c740e3b",
+    source_head: "fa7ae0c9770e890f82482456bfcb8e97f1e05429",
+    width, height, status, sources,
+  };
   function base(id, type, box, evidence = []) {
     assert(!elements.some((entry) => entry.id === id), `Duplicate element: ${id}`);
     return {
