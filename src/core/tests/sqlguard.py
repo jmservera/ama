@@ -61,16 +61,29 @@ def write_manifest(
 
 
 def _loopback(host: str) -> bool:
-    if host.lower() == "localhost":
-        return True
     try:
         return ipaddress.ip_address(host).is_loopback
     except ValueError:
         return False
 
 
+def _local_engine(env: Mapping[str, str]) -> None:
+    """The container must be inspected on this machine's own engine, not a remote or named one."""
+    docker_host = (env.get("DOCKER_HOST") or "").strip()
+    if docker_host and not docker_host.startswith("unix://"):
+        raise _refuse("DOCKER_HOST must be unset or a local unix socket")
+    if (env.get("DOCKER_TLS_VERIFY") or "").strip() or (env.get("DOCKER_CERT_PATH") or "").strip():
+        raise _refuse("a TLS Docker endpoint is not a local engine")
+    if (env.get("DOCKER_CONTEXT") or "default").strip() != "default":
+        raise _refuse("DOCKER_CONTEXT must be the default local context")
+
+
 def _verify_container(
-    container: str, port: str, password: str, inspect: Callable[[str], dict[str, Any]]
+    container: str,
+    host: str,
+    port: str,
+    password: str,
+    inspect: Callable[[str], dict[str, Any]],
 ) -> None:
     if not re.fullmatch(r"[0-9a-f]{64}", container):
         raise _refuse("the manifest does not name a full container id")
@@ -86,10 +99,14 @@ def _verify_container(
     if (config.get("Labels") or {}).get("zf.task") != TASK_LABEL:
         raise _refuse("the container was not created for this task")
     bindings = ((info.get("NetworkSettings") or {}).get("Ports") or {}).get("1433/tcp") or []
-    if not bindings or any(b.get("HostIp") not in ("127.0.0.1", "::1") for b in bindings):
+    if not bindings or any(not _loopback(str(b.get("HostIp"))) for b in bindings):
         raise _refuse("the container must publish its SQL port on loopback only")
-    if not any(str(b.get("HostPort")) == port for b in bindings):
-        raise _refuse("the container does not publish ZF_SQL_PORT")
+    wanted = ipaddress.ip_address(host)
+    if not any(
+        str(b.get("HostPort")) == port and ipaddress.ip_address(b["HostIp"]) == wanted
+        for b in bindings
+    ):
+        raise _refuse("the container does not publish ZF_SQL_SERVER and ZF_SQL_PORT together")
     if f"MSSQL_SA_PASSWORD={password}" not in (config.get("Env") or []):
         raise _refuse("the container was not provisioned with this password")
     try:
@@ -114,7 +131,8 @@ def require_task_owned_loopback(
     and never connects to the listener."""
     host = (env.get("ZF_SQL_SERVER") or "").strip().strip("[]")
     if not _loopback(host):
-        raise _refuse("ZF_SQL_SERVER must be localhost or a loopback address")
+        raise _refuse("ZF_SQL_SERVER must be a literal loopback address, not a name")
+    _local_engine(env)
     if (env.get("ZF_SQL_AUTH") or "").lower() != "password":
         raise _refuse("ZF_SQL_AUTH must be password, never Entra or a managed identity")
     path = env.get("ZF_SQL_TASK_MANIFEST") or ""
@@ -152,6 +170,7 @@ def require_task_owned_loopback(
         raise _refuse("the password is not the one generated for this task")
     _verify_container(
         str(manifest.get("container") or ""),
+        host,
         env.get("ZF_SQL_PORT") or "1433",
         env.get("ZF_SQL_PASSWORD") or "",
         inspect or docker_inspect,

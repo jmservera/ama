@@ -18,6 +18,7 @@ Case detail, the map, statistics, visits and writes still use
 the in-memory copy kept in step with the change sequence; the full-list export
 and the closed list also fall back to it.
 """
+import hashlib
 import json
 import logging
 import os
@@ -150,6 +151,12 @@ class _SyncLock:
             self.depth -= 1
             self.rl.release()
         return False
+
+
+class CommittedReloadError(RuntimeError):
+    """The write committed but the reload afterwards did not settle; the change must not be repeated."""
+
+    committed = True
 
 
 class SqlStore(Store):
@@ -337,6 +344,7 @@ class SqlStore(Store):
 
     def _create_rec_order_index(self):
         self.db.execute("CREATE INDEX IF NOT EXISTS ix_recs_created_ord ON recommendations (created_ord)")
+        self.db.execute("CREATE INDEX IF NOT EXISTS ix_recs_user_ord ON recommendations (user, created_ord)")
 
     def _migrate_recommendations(self):
         """Give every recommendation an immutable creation ordinal (#1292).
@@ -430,6 +438,11 @@ class SqlStore(Store):
                 return self._cache_evidence(dict(ok=False, reason="independent digests are unreadable", anchored=True,
                                                  positions={}, key=key, last_seq=0, head=ledger.GENESIS, hashes=[]))
             anchored = bool(digests or years)
+            malformed = self._malformed_anchor(digests, years)
+            if malformed or any(h is None for _, h in anchor):
+                return self._cache_evidence(dict(ok=False, anchored=anchored, positions={}, key=key, last_seq=0,
+                                                 head=ledger.GENESIS, hashes=[],
+                                                 reason=malformed or "independent digests are unreadable"))
             if (cached is not None and cached["ok"] and cached["key"][0] < key[0]
                     and cached.get("anchor") == anchor):
                 rows, key = self._audit_rows(cached["last_seq"])
@@ -474,17 +487,33 @@ class SqlStore(Store):
                                              hashes=[e["hash"] for e in entries]))
 
     def _anchor_fingerprint(self):
-        """Names, sizes and mtimes of the independent digest files; a change re-verifies instead of trusting the cache."""
+        """Name and content hash of each independent digest file (None when unreadable); any change re-verifies."""
         found = []
         try:
             with os.scandir(self.digest_dir) as entries:
                 for e in entries:
                     if e.name.startswith(("digest-", "year-")) and e.name.endswith(".json"):
-                        st = e.stat()
-                        found.append((e.name, st.st_size, st.st_mtime_ns))
+                        try:
+                            with open(e.path, "rb") as f:
+                                found.append((e.name, hashlib.sha256(f.read()).hexdigest()))
+                        except OSError:
+                            found.append((e.name, None))
         except OSError:
             return ()
-        return tuple(sorted(found))
+        return tuple(sorted(found, key=lambda x: x[0]))
+
+    @staticmethod
+    def _malformed_anchor(digests, years):
+        """A reason when an independent anchor cannot be interpreted; such an anchor is never silently ignored."""
+        for d in digests:
+            count = d.get("count") if isinstance(d, dict) else None
+            if (not isinstance(d, dict) or isinstance(count, bool) or not isinstance(count, int) or count < 1
+                    or not isinstance(d.get("head"), str) or not d["head"]
+                    or d.get("algorithm", "sha256") != "sha256"):
+                return "independent digests are malformed"
+        if any(not isinstance(y, dict) or "unreadable" in y for y in years):
+            return "independent digests are unreadable"
+        return None
 
     def _cache_evidence(self, evidence):
         evidence["anchor"] = self._anchor_now
@@ -531,19 +560,14 @@ class SqlStore(Store):
 
     @classmethod
     def _proven_later(cls, earlier, later):
-        """Whether `later` is provably created after `earlier`; only a trusted audit position can prove it.
+        """Whether `later` is provably created after `earlier` inside one batch.
 
-        The audit position of both must be present and agree. The wall clock may corroborate it, and an unedited
-        insertion seq (only available inside one backfill batch) may stand in for a clock that stepped back, but any
-        disagreement leaves the pair unproven. Ties are no evidence. No timestamp alone proves anything."""
-        if earlier["pos"] is None or later["pos"] is None:
+        Both rows must be unedited (their insertion seq is intact), carry a trusted audit position, and the audit
+        and seq orders must agree and differ. The wall clock proves nothing: it can step back, and ties, edits,
+        orphan or missing events leave the pair unproven."""
+        if earlier["pos"] is None or later["pos"] is None or earlier["seq"] is None or later["seq"] is None:
             return False
-        audit = cls._sign(earlier["pos"], later["pos"])
-        clock = cls._sign(earlier["created"], later["created"]) if earlier["created"] and later["created"] else 0
-        seq = 0
-        if earlier["seq"] is not None and later["seq"] is not None:
-            seq = cls._sign(earlier["seq"], later["seq"])
-        return audit > 0 and (seq > 0 or (clock > 0 and seq >= 0))
+        return cls._sign(earlier["pos"], later["pos"]) > 0 and cls._sign(earlier["seq"], later["seq"]) > 0
 
     @classmethod
     def _unproven_latest(cls, recs, only=None):
@@ -585,14 +609,15 @@ class SqlStore(Store):
         recs = []
         for rid, rseq, user, body, version in rows:
             rec = json.loads(body)
-            recs.append(dict(id=rid, seq=int(rseq), user=user, created=rec.get("created") or "",
-                             task=rec.get("kind") == "ai_task", version=int(version), pos=usable.get(rid)))
-        contradicted = self._contradicted([r for r in recs if r["pos"] is not None])
+            recs.append(dict(id=rid, seq=int(rseq) if int(version) == 1 else None, last_write=int(rseq), user=user,
+                             created=rec.get("created") or "", task=rec.get("kind") == "ai_task",
+                             version=int(version), pos=usable.get(rid)))
+        contradicted = self._contradicted([r for r in recs if r["pos"] is not None and r["seq"] is not None])
         for r in recs:
             if r["id"] in contradicted:
                 r["pos"] = None
         audited = sorted((r for r in recs if r["pos"] is not None), key=lambda r: r["pos"])
-        rest = sorted((r for r in recs if r["pos"] is None), key=lambda r: (r["created"], r["seq"], r["id"]))
+        rest = sorted((r for r in recs if r["pos"] is None), key=lambda r: (r["created"], r["last_write"], r["id"]))
         inversions = sum(1 for a, b in zip(audited, audited[1:]) if a["created"] > b["created"])
         keyed, i, j = [], 0, 0
         while i < len(audited) and j < len(rest):
@@ -607,8 +632,7 @@ class SqlStore(Store):
         self.db.executemany("UPDATE recommendations SET created_ord=?, seq=? WHERE id=?",
                             [(n, seq, r["id"]) for n, r in enumerate(keyed, start + 1)])
         sizes = Counter((r["user"], r["created"]) for r in recs if not r["task"])
-        by_user = self._prior_for(keyed, start, usable)
-        ambiguous = self._unproven_latest(by_user)
+        ambiguous = self._ambiguous_latest(keyed, start)
         groups = sum(1 for n in sizes.values() if n > 1)
         self._flag_unresolved(ambiguous)
         self._record_batch(dict(
@@ -623,43 +647,79 @@ class SqlStore(Store):
                                                                order="created,seq,id")))
         return len(keyed)
 
-    def _prior_for(self, keyed, start, usable):
-        """Eligible records of the employees touched by a batch, in ordinal order: earlier rows, then the batch."""
-        users = sorted({r["user"] for r in keyed if not r["task"]})
-        by = {u: [] for u in users}
-        for i in range(0, len(users), 400):
-            chunk = users[i:i + 400]
-            marks = ",".join("?" * len(chunk))
-            for rid, user, body in self.db.execute(
-                    f"SELECT id, user, body FROM recommendations WHERE created_ord BETWEEN 1 AND ? AND user IN ({marks}) "
-                    "ORDER BY created_ord", [start] + chunk).fetchall():
-                rec = json.loads(body)
-                if rec.get("kind") != "ai_task":
-                    by[user].append(dict(id=rid, user=user, task=False, created=rec.get("created") or "",
-                                         pos=usable.get(rid), seq=None))
+    def _ambiguous_latest(self, keyed, start):
+        """Per employee of a batch, the batch's newest eligible record when it is not provably the latest.
+
+        Every row that already had an ordinal committed before this repair, because save and sync repair before they
+        publish, so a provably ordered batch follows them provided that employee's previous newest record is not
+        itself unresolved. Within the batch every other row must be provably earlier. Only a small page of the
+        employee's newest rows is read, never the whole history."""
+        by = {}
         for r in keyed:
             if not r["task"]:
-                by[r["user"]].append(dict(id=r["id"], user=r["user"], task=False, created=r["created"], pos=r["pos"],
-                                          seq=r["seq"] if r["version"] == 1 else None))
-        return [r for rows in by.values() for r in rows]
+                by.setdefault(r["user"], []).append(r)
+        out = []
+        for user, rows in by.items():
+            last = rows[-1]
+            if any(not self._proven_later(r, last) for r in rows[:-1]) or self._previous_unresolved(user, start):
+                out.append(last["id"])
+        return out
+
+    def _previous_unresolved(self, user, start):
+        """Whether the employee's newest eligible record before this batch is unresolved (indexed, paged by ordinal)."""
+        if start == 0:
+            return False
+        page, offset = 5, 0
+        while True:
+            tail, args = self._limit(page, offset)
+            rows = self.db.execute("SELECT id, body FROM recommendations WHERE user=? AND created_ord BETWEEN 1 AND ? "
+                                   "ORDER BY created_ord DESC" + tail, [user, start] + args).fetchall()
+            for rid, body in rows:
+                if json.loads(body).get("kind") != "ai_task":
+                    return self._meta_value(f"rec_unres:{rid}") is not None
+            if len(rows) < page:
+                return False
+            offset += page
 
     def _suspect_ranges(self):
-        """Ordinal ranges that were assigned by a heuristic backfill rather than at insert: earlier candidates and batches."""
-        ranges = []
+        """Coalesced ordinal ranges assigned by a heuristic backfill rather than at insert, from every known format.
+
+        Reads the earlier candidates' single legacy row, the C1 list rec_order_backfills and the per-batch rows in one
+        query. Anything unreadable makes every ordinal suspect; no history is trusted by default."""
+        everything, ranges = (1, 1 << 62), []
+
+        def span(entry):
+            lo, hi = entry["first_ord"], entry["last_ord"]
+            if (not all(isinstance(v, int) and not isinstance(v, bool) for v in (lo, hi)) or lo < 1 or hi < lo):
+                raise ValueError
+            return lo, hi
+
         try:
             legacy = int(json.loads(self._meta_value("rec_order_legacy") or "{}").get("rows", 0))
         except (ValueError, TypeError, AttributeError):
             legacy = 0
         if legacy:
             ranges.append((1, legacy))
-        for n in range(1, int(self._meta_value("rec_order_batches") or 0) + 1):
+        try:
+            raw = self._meta_value("rec_order_backfills")
+            for entry in json.loads(raw) if raw else []:
+                ranges.append(span(entry))
+        except (ValueError, TypeError, KeyError, AttributeError):
+            return [everything]
+        for (value,) in self.db.execute("SELECT value FROM meta WHERE key LIKE 'rec_order_batch:%'").fetchall():
             try:
-                batch = json.loads(self._meta_value(f"rec_order_batch:{n}") or "{}")
+                batch = json.loads(value or "{}")
                 if batch.get("ordinals_changed") is not False:
-                    ranges.append((int(batch["first_ord"]), int(batch["last_ord"])))
+                    ranges.append(span(batch))
             except (ValueError, TypeError, KeyError, AttributeError):
-                ranges.append((1, 1 << 62))
-        return ranges
+                return [everything]
+        merged = []
+        for lo, hi in sorted(ranges):
+            if merged and lo <= merged[-1][1] + 1:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], hi))
+            else:
+                merged.append((lo, hi))
+        return merged
 
     def _review_priority_order(self):
         """Once, assess every heuristic ordinal of earlier candidates without changing any, whatever batch metadata exists.
@@ -673,10 +733,12 @@ class SqlStore(Store):
                                "ORDER BY created_ord").fetchall()
         evidence = self._audit_evidence()
         usable = evidence["positions"] if evidence["ok"] else {}
-        suspect, recs = set(), []
+        suspect, recs, at = set(), [], 0
         for rid, user, body, ordinal in rows:
             rec = json.loads(body)
-            if any(lo <= ordinal <= hi for lo, hi in ranges):
+            while at < len(ranges) and ranges[at][1] < ordinal:
+                at += 1
+            if at < len(ranges) and ranges[at][0] <= ordinal:
                 suspect.add(rid)
             recs.append(dict(id=rid, user=user, task=rec.get("kind") == "ai_task", created=rec.get("created") or "",
                              pos=usable.get(rid), seq=None))
@@ -1191,7 +1253,14 @@ class SqlStore(Store):
                 self._seq = new
                 self.version = new
             else:
-                self._sync()
+                try:
+                    self._sync()
+                except RuntimeError as error:
+                    self._seq = -1
+                    raise CommittedReloadError(
+                        "The change was saved, but the refresh afterwards did not settle. Reload before doing "
+                        "anything else; do not repeat the change."
+                    ) from error
 
     def _drop_unsaved_recommendations(self):
         """A rolled-back save must neither keep its new recommendations for a later save nor flush their creation events."""
@@ -1200,9 +1269,13 @@ class SqlStore(Store):
         if not unsaved:
             return
         recs[:] = [r for r in recs if r["id"] in self._recs]
-        prefixes = tuple(f"priority_recommendation {rid} " for rid in unsaved)
         pending = self.local.pending
-        pending[:] = [p for p in pending if not (p[1] == "ai_run_end" and p[3].startswith(prefixes))]
+
+        def creation_event(entry):
+            words = entry[3].split(" ", 2)
+            return entry[1] in ("ai_run_end", "ai_record") and len(words) > 1 and words[1] in unsaved
+
+        pending[:] = [p for p in pending if not creation_event(p)]
 
     def rec_order_unresolved(self, rec_id):
         with self.dblock:

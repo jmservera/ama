@@ -175,7 +175,11 @@ class _Conn:
     def execute(self, sql, args=()):
         key = sql.strip().upper()
         if key == "BEGIN IMMEDIATE":
-            self._run(BEGIN, ())
+            try:
+                self._run(BEGIN, ())
+            except BaseException:
+                self._abandon_partial_begin()
+                raise
             self.in_tran = True
             return None
         if key in ("COMMIT", "ROLLBACK"):
@@ -191,6 +195,22 @@ class _Conn:
                 self.in_tran = False
             return None
         return _Cursor(self._run(self._rewrite(sql), tuple(args)))
+
+    def _abandon_partial_begin(self):
+        """BEGIN TRAN may have run before the lock request failed; never leave that transaction open.
+
+        If it cannot be rolled back, discard the connection, which ends it on the server. The original error is kept."""
+        self.in_tran = False
+        if self.raw is None:
+            return
+        try:
+            self.raw.cursor().execute("IF @@TRANCOUNT > 0 ROLLBACK TRAN")
+        except BaseException:
+            try:
+                self.raw.close()
+            except BaseException:
+                pass
+            self.raw = None
 
     def executemany(self, sql, rows):
         return _Cursor(self._run(self._rewrite(sql), list(rows), many=True))
@@ -294,6 +314,8 @@ class MssqlStore(SqlStore):
     def _create_rec_order_index(self):
         self.db.execute("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_recs_created_ord' AND object_id = OBJECT_ID(N'recommendations')) "
                         "CREATE INDEX ix_recs_created_ord ON recommendations (created_ord)")
+        self.db.execute("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_recs_user_ord' AND object_id = OBJECT_ID(N'recommendations')) "
+                        "CREATE INDEX ix_recs_user_ord ON recommendations ([user], created_ord)")
 
     def _create_indexes(self):
         with self.dblock:

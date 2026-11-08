@@ -4720,11 +4720,14 @@ contradicted by the insertion `seq` of an unedited row. Rows without usable evid
 body `created`, then `seq`, then `id`, merged among audited rows by `created`.
 
 Order is never proven by absence of contradiction. For an employee, the newest eligible record is
-confirmed only if, against every other eligible record, both audit positions are present and agree
-and either the unedited insertion `seq` of both rows (inside one backfill batch) agrees or the
-`created` text strictly agrees with no `seq` contradiction. Ties, edited rows, orphan or late
-creation events, a missing audit and a timestamp alone are unproven and the newest record is
-flagged. Ordinals are never changed to resolve this.
+confirmed only if, inside its backfill batch, every other eligible record is provably earlier: both
+rows unedited, both audit positions present, and the audit order and the distinct insertion `seq`
+agree. The wall clock proves nothing, because it can step back. Ties, edited rows, orphan or late
+creation events (an event does not prove it committed with its row), a missing audit and a timestamp
+alone are unproven and the newest record is flagged. The batch also follows every row that already had
+an ordinal, because save and reload repair before they publish, so it is confirmed only when the
+employee's previous newest record is not itself unresolved; that check reads a small indexed page
+(`ix_recs_user_ord`), never the history. Ordinals are never changed to resolve this.
 
 Ambiguity is visible. Every backfill batch writes its own `meta` key `rec_order_batch:<n>` (counter
 `rec_order_batches`; counts, ordinal range, audit flags and up to 100 ambiguous ids), and
@@ -4734,9 +4737,13 @@ untouched). When the newest eligible proposal of an employee is unresolved, the 
 `order_confirmed` false, `actionable` false, `relied_on` false and adds an `order_note` naming the
 data owner. This holds for `latest_priority` and every other view of that record, and the server
 refuses direct accept and edit requests with a permission error; rejecting stays available, as do
-the ordinary case controls. The priority panel shows the note. Other employees and `ai_task` rows
+the ordinary case controls. The same projection applies to the full and limited continuity exports
+(`order_confirmed`, `actionable`, `relied_on` for proposed, accepted and edited records), and the
+priority panel shows the note for reviewed records after a reload too. Other employees and `ai_task` rows
 are unaffected. The original `rec_order_legacy` and `rec_order_backfills` records are never
-rewritten. Every database without the `rec_order_review` marker is reviewed once at migration (batch
+rewritten. The C1 list `rec_order_backfills`, the single `rec_order_legacy` row and every
+`rec_order_batch:<n>` row are read, validated and coalesced into ordinal ranges in one pass; any
+malformed entry makes every ordinal suspect. Every database without the `rec_order_review` marker is reviewed once at migration (batch
 source `review`, whatever batch metadata exists): ordinals assigned by a heuristic backfill are
 assessed without changing any, so earlier-candidate and cross-timestamp inversions are found. The
 named data owner decides how flagged records are resolved; this change adds no resolution mechanism
@@ -4749,16 +4756,25 @@ writer lock and re-read, so a zero ordinal is never cached or served and exhaust
 Queue lookups synchronise before their transaction and re-check the sequence inside it, so a rolled
 back transaction publishes no cache state. A save repairs zero rows before allocating its own ordinal
 and drops unsaved proposals and their pending creation events when it rolls back or when its
-transaction cannot begin (no rollback is attempted for a transaction that never opened). The audit evidence
-is cached per process and extended incrementally, so repeated repairs do not rescan the chain. This
+transaction cannot begin (no rollback is attempted for a transaction that never opened), including
+their `ai_task` and priority creation events; unrelated audit entries are kept. If the reload after a
+commit does not settle, `CommittedReloadError` reports the change as saved (HTTP 409, `outcome`
+`committed`) and must not be repeated. On SQL Server a partly failed BEGIN batch is rolled back on the
+same connection, or the connection is discarded, so no transaction stays open. The audit evidence
+is cached per process by chain head and the content hash of each independent digest, which must be
+readable and well formed (positive integer `count`, non-empty `head`, `sha256`); a malformed or
+unreadable anchor makes the evidence unusable. It is extended incrementally, so repeated repairs do not
+rescan the chain. This
 is a fence, not a substitute for draining older writers before a release.
 
 SQL fixtures (`tests/sqlguard.py`) refuse to connect unless `ZF_SQL_TASK_MANIFEST` names a private
 (0600, owned by the user, under 24 hours old) manifest whose host, port and password digest match
-`ZF_SQL_SERVER`, `ZF_SQL_PORT` and `ZF_SQL_PASSWORD` and whose container id is confirmed by
+`ZF_SQL_SERVER` (a literal loopback address, never a name), `ZF_SQL_PORT` and `ZF_SQL_PASSWORD` and
+whose container id is confirmed by
 `docker inspect` metadata (no listener contact): running, labelled `zf.task=1292-sql-disposable`,
-created within 24 hours, `1433/tcp` published on loopback only at `ZF_SQL_PORT`, and provisioned with
-that password. A manifest alone, loopback or a password alone are refused. Tests:
+created within 24 hours, `1433/tcp` published on the connecting loopback address at `ZF_SQL_PORT`, and
+provisioned with that password. A remote `DOCKER_HOST`, TLS endpoint or non-default `DOCKER_CONTEXT`
+is refused before any inspection. A manifest alone, loopback or a password alone are refused. Tests:
 `src/core/tests/test_priority_order.py` (in-memory, SQLite, and SQL Server with `ZF_RESIDENT_MSSQL=1`).
-SQL Server behaviour of the C3 source, the real Docker provisioning path, the ledger-enabled
-migration and SQL Server scale are not yet proven.
+SQL Server behaviour of the C4 source (lock timeout, `@@TRANCOUNT`, cross-connection writes), the real
+Docker provisioning path, the ledger-enabled migration and SQL Server scale are not yet proven.

@@ -1016,6 +1016,414 @@ class SqliteC3Corrections(SqliteFixture):
         self.assertEqual(self.meta(reopened, "rec_unres_index"), "1")
 
 
+class CountingCursor:
+    def __init__(self, probe: "CountingDb", cursor: Any, counted: bool) -> None:
+        self.probe, self.cursor, self.counted = probe, cursor, counted
+
+    def fetchall(self) -> Any:
+        rows = self.cursor.fetchall()
+        if self.counted:
+            self.probe.rows += len(rows)
+        return rows
+
+    def fetchone(self) -> Any:
+        row = self.cursor.fetchone()
+        if self.counted and row is not None:
+            self.probe.rows += 1
+        return row
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self.cursor, name)
+
+
+class CountingDb:
+    """Counts statements and recommendation rows read through a real connection."""
+
+    def __init__(self, db: Any) -> None:
+        self.real, self.rows, self.statements = db, 0, 0
+
+    def execute(self, sql: str, *args: Any) -> Any:
+        self.statements += 1
+        counted = "FROM recommendations" in sql and "created_ord = 0" not in sql
+        return CountingCursor(self, self.real.execute(sql, *args), counted)
+
+    def __getattr__(self, name: str) -> Any:
+        return getattr(self.real, name)
+
+
+class SqliteC4Corrections(SqliteFixture):
+    """Correction C4 scenarios; SQLite and fakes only, SQL Server equivalents are pending."""
+
+    rows: list[tuple[Any, ...]]
+    two_audited: Any = SqliteC3Corrections.two_audited
+
+    def ordinal_db(self, rows: list[tuple[Any, ...]], **meta: str) -> None:
+        """A database with ordinals assigned by an earlier candidate: (id, seq, body, version)."""
+        db = self.store.db
+        db.execute("DROP TABLE recommendations")
+        db.execute(
+            "CREATE TABLE recommendations (id TEXT PRIMARY KEY, "
+            "rowversion INTEGER NOT NULL DEFAULT 1, seq INTEGER NOT NULL, user TEXT NOT NULL, "
+            "body TEXT NOT NULL, created_ord BIGINT NOT NULL DEFAULT 0)"
+        )
+        for ordinal, (rid, seq, body, version) in enumerate(rows, 1):
+            db.execute(
+                "INSERT INTO recommendations VALUES (?,?,?,?,?,?)",
+                (rid, version, seq, self.sam["email"], body, ordinal),
+            )
+        for key in ("rec_order_review", "rec_order_legacy", "rec_order_batches", "rec_unres_index"):
+            db.execute("DELETE FROM meta WHERE key=?", (key,))
+        db.execute("DELETE FROM meta WHERE key LIKE 'rec_order_batch:%' OR key LIKE 'rec_unres:%'")
+        for key, value in meta.items():
+            db.execute("INSERT OR REPLACE INTO meta (key, value) VALUES (?, ?)", (key, value))
+
+    def test_orphan_event_then_later_insert_and_edit_does_not_confirm_the_newest(self) -> None:
+        first, second = self.two_audited((EARLIER, SECOND))
+        top = max(seq for _, seq, *_ in self.rows)
+        rows = [
+            (rid, top + 1 if rid == first else seq, user, body, 2 if rid == first else version)
+            for rid, seq, user, body, version in self.rows
+        ]
+        self.make_legacy(self.store, rows)
+        reopened = self.open_store()
+        self.assertEqual(self.latest(reopened), second)
+        self.assertEqual(self.unresolved(reopened), [second])
+        self.assertFalse(reopened.latest_priority(self.sam)["actionable"])
+
+    def test_tied_sequence_with_different_timestamps_is_not_confirmed(self) -> None:
+        first, second = self.two_audited((EARLIER, SECOND))
+        self.make_legacy(
+            self.store,
+            [(rid, 50, user, body, version) for rid, _, user, body, version in self.rows],
+        )
+        reopened = self.open_store()
+        self.assertEqual(self.latest(reopened), second)
+        self.assertEqual(self.unresolved(reopened), [second])
+
+    def test_agreeing_audit_and_distinct_unedited_sequence_confirm_in_order(self) -> None:
+        self.two_audited((EARLIER, SECOND))
+        self.make_legacy(self.store, self.rows)
+        reopened = self.open_store()
+        self.assertEqual(self.unresolved(reopened), [])
+        self.assertTrue(reopened.latest_priority(self.sam)["actionable"])
+
+    def test_c1_shaped_rollback_history_is_reviewed_without_rewriting_ordinals(self) -> None:
+        rows = [
+            (f"c1r00000000{n}", n + 1, self.body(f"c1r00000000{n}", SECOND), 1) for n in (1, 2, 3)
+        ]
+        backfills = json.dumps(
+            [dict(at=SECOND, rows=2, first_ord=2, last_ord=3, audited=0, heuristic=2)]
+        )
+        self.ordinal_db(rows, rec_order_backfills=backfills)
+        reopened = self.open_store()
+        self.assertEqual(self.ordinals(reopened), [r[0] for r in rows])
+        self.assertEqual(self.unresolved(reopened), ["c1r000000003"])
+        self.assertTrue(self.flagged_latest(reopened))
+        self.assertEqual([b["source"] for b in self.batches(reopened)], ["review"])
+
+    def flagged_latest(self, store: Any) -> bool:
+        view = store.latest_priority(self.sam)
+        return bool(view.get("order_confirmed") is False and not view["actionable"])
+
+    def test_malformed_c1_history_is_treated_as_wholly_suspect(self) -> None:
+        for bad in ("not json", json.dumps([dict(first_ord="x")]), json.dumps({"a": 1})):
+            with self.subTest(bad=bad):
+                rows = [
+                    (f"c1m0000000{n}", n + 1, self.body(f"c1m0000000{n}", SECOND), 1)
+                    for n in (10, 11)
+                ]
+                self.ordinal_db(rows, rec_order_backfills=bad)
+                reopened = self.open_store()
+                self.assertEqual(self.unresolved(reopened), ["c1m000000011"])
+
+    def legacy_pair(self, status: str) -> Any:
+        user = self.sam["email"]
+        newest = json.dumps(dict(self.template, id="mmm000000002", created=SECOND, status=status))
+        self.make_legacy(
+            self.store,
+            [
+                ("zzz000000001", 2, user, self.body("zzz000000001", SECOND)),
+                ("mmm000000002", 3, user, newest),
+            ],
+        )
+        return self.open_store()
+
+    def exported(self, store: Any, limited: bool) -> dict[str, Any]:
+        ids = [r["id"] for r in store.data["recommendations"]]
+        with patch("zava_forward.core.projection.can_see_reason", return_value=not limited):
+            bundle = store.continuity_export(self.pam)
+        self.assertEqual(bundle["audience"]["scope"], "limited" if limited else "full")
+        return dict(zip(ids, bundle["ai_records"], strict=True))
+
+    def test_continuity_exports_apply_the_unresolved_projection(self) -> None:
+        for status in ("Proposed", "Accepted", "Edited"):
+            for limited in (False, True):
+                with self.subTest(status=status, limited=limited):
+                    self.setUp()
+                    record = self.exported(self.legacy_pair(status), limited)["mmm000000002"]
+                    self.assertIs(record["actionable"], False)
+                    self.assertIs(record["relied_on"], False)
+                    self.assertIs(record["order_confirmed"], False)
+
+    def test_continuity_export_leaves_confirmed_and_other_records_unchanged(self) -> None:
+        self.two_audited((EARLIER, SECOND))
+        self.make_legacy(self.store, self.rows)
+        records = self.exported(self.open_store(), False)
+        self.assertNotIn("order_confirmed", records[self.rows[1][0]])
+        self.assertTrue(records[self.rows[1][0]]["actionable"])
+
+    def test_singleton_rollback_write_after_native_records_stays_confirmed(self) -> None:
+        native = self.store.ai_priority(self.sam, mode="workflow-only")["id"]
+        self.old_writer_insert(self.store, "bbb000000002")
+        self.store._audit_immediate(
+            ("system", "ai_run_end", "-", "priority_recommendation bbb000000002 n=5", SECOND)
+        )
+        reopened = self.open_store()
+        self.assertEqual(self.ordinals(reopened)[-2:], [native, "bbb000000002"])
+        self.assertEqual(self.latest(reopened), "bbb000000002")
+        self.assertEqual(self.unresolved(reopened), [])
+        done = reopened.resolve_priority(self.sam, "bbb000000002", "accept")
+        self.assertEqual(done["status"], "Accepted")
+
+    def test_two_rollback_writes_in_one_batch_stay_unresolved_and_other_user_is_clear(self) -> None:
+        self.old_writer_insert(self.store, "bbb000000002")
+        self.old_writer_insert(self.store, "ccc000000003")
+        self.old_writer_insert(self.store, "ppp000000004", user=self.pam)
+        reopened = self.open_store()
+        self.assertEqual(self.unresolved(reopened), ["ccc000000003"])
+        self.assertEqual(self.latest(reopened, self.pam), "ppp000000004")
+
+    def test_post_commit_reload_exhaustion_is_a_committed_outcome(self) -> None:
+        from zava_forward.core import sqlstore as sqlmod
+
+        other = self.open_store()
+        self.add(other, "ooo000000001", self.pam)
+        other.save()
+        self.add(self.store, "bbb000000005", self.sam)
+
+        def exhausted() -> None:
+            raise RuntimeError("Reload could not settle against concurrent writers; retry.")
+
+        with patch.object(self.store, "_sync", exhausted):
+            with self.assertRaises(sqlmod.CommittedReloadError) as caught:
+                self.store.save()
+        self.assertTrue(caught.exception.committed)
+        self.assertIn("saved", str(caught.exception))
+        ids = [r[0] for r in self.store.db.execute("SELECT id FROM recommendations").fetchall()]
+        self.assertEqual(ids.count("bbb000000005"), 1)
+        self.assertEqual(self.latest(self.store), "bbb000000005")
+
+    def test_server_reports_a_committed_priority_outcome(self) -> None:
+        server = (Path(__file__).parents[2] / "api/src/zava_forward/api/server.py").read_text()
+        at = server.rindex('if url.path == "/api/ai/priority":')
+        self.assertIn("CommittedReloadError", server[at - 400 : at + 700])
+
+    def pending_task(self, store: Any) -> None:
+        self.add(store, "tsk000000001", self.sam, kind="ai_task")
+        self.add(store, "bbb000000007", self.sam)
+        mine = self.sam["email"]
+        store.local.pending.extend(
+            [
+                (mine, "synthetic_note", "-", "SYN unrelated tsk000000001x", SECOND),
+                (mine, "ai_record", "-", "plan tsk000000001 mode=x source=y verified=True", SECOND),
+                (mine, "ai_run_end", "-", "priority_recommendation bbb000000007 n=5", SECOND),
+            ]
+        )
+
+    def assert_quarantined(self, store: Any) -> None:
+        self.assertEqual([p[3] for p in store.local.pending], ["SYN unrelated tsk000000001x"])
+        store.save()
+        ids = {r[0] for r in store.db.execute("SELECT id FROM recommendations").fetchall()}
+        self.assertFalse(ids & {"tsk000000001", "bbb000000007"})
+        details = [e["detail"] for e in store.audit_entries()]
+        self.assertFalse([d for d in details if "plan tsk000000001" in d or "bbb000000007" in d])
+        self.assertIn("SYN unrelated tsk000000001x", details)
+
+    def test_failed_begin_quarantines_the_ai_task_creation_event_too(self) -> None:
+        store = self.open_store()
+        flaky = FlakyDb(store.db)
+        store.db = flaky
+        self.pending_task(store)
+        flaky.armed = True
+        with self.assertRaises(sqlite3.OperationalError):
+            store.save()
+        self.assert_quarantined(store)
+
+    def test_failure_after_begin_quarantines_the_ai_task_creation_event_too(self) -> None:
+        store = self.open_store()
+        self.pending_task(store)
+        with patch.object(store, "_validate_safety_clear", side_effect=RuntimeError("injected")):
+            with self.assertRaises(RuntimeError):
+                store.save()
+        self.assert_quarantined(store)
+
+    def test_repeated_singleton_repairs_read_a_bounded_number_of_history_rows(self) -> None:
+        history = [(f"h{n:011d}", n + 1, self.body(f"h{n:011d}", SECOND), 1) for n in range(60)]
+        self.ordinal_db(history, rec_order_review="3")
+        store = self.open_store()
+        probe = CountingDb(store.db)
+        store.db = probe
+        reads = []
+        for n in range(4):
+            self.old_writer_insert(store, f"s{n:011d}")
+            before = probe.rows
+            store._repair_zero_ordinals()
+            reads.append(probe.rows - before)
+        self.assertLessEqual(max(reads), 8, reads)
+        self.assertEqual(self.unresolved(store), [])
+
+    def test_many_singleton_batches_are_reviewed_with_bounded_statements(self) -> None:
+        rows = [
+            (f"b{n:011d}", n + 1, self.body(f"b{n:011d}", f"2026-11-08T09:{n % 60:02d}:00"), 1)
+            for n in range(1500)
+        ]
+        self.ordinal_db(rows)
+        batches = {
+            f"rec_order_batch:{n}": json.dumps(dict(first_ord=n, last_ord=n, source="repair"))
+            for n in range(1, 1501)
+        }
+        for key, value in batches.items():
+            self.store.db.execute("INSERT INTO meta (key, value) VALUES (?, ?)", (key, value))
+        self.store.db.execute("INSERT INTO meta (key, value) VALUES ('rec_order_batches', '1500')")
+        probe = CountingDb(self.store.db)
+        self.store.db = probe
+        self.store.db.execute("BEGIN IMMEDIATE")
+        self.store._review_priority_order()
+        self.store.db.execute("COMMIT")
+        self.assertLess(probe.statements, 60)
+        self.assertEqual(self.unresolved(self.store), ["b00000001499"])
+
+    def digest_for(self, store: Any) -> Path:
+        count, head = store.ledger_head()
+        return Path(ledger.write_digest(store.digest_dir, ledger.make_digest(count, head)))
+
+    def test_digest_readability_and_content_changes_invalidate_the_cache(self) -> None:
+        self.two_audited()
+        store = self.open_store()
+        path = self.digest_for(store)
+        self.assertTrue(store._audit_evidence()["ok"])
+        path.chmod(0)
+        try:
+            self.assertFalse(store._audit_evidence()["ok"])
+        finally:
+            path.chmod(0o600)
+        self.assertTrue(store._audit_evidence()["ok"])
+        stamp = path.stat().st_mtime_ns
+        original = path.read_text()
+        changed = json.loads(original)
+        changed["head"] = "f" * len(changed["head"])
+        path.write_text(json.dumps(changed, sort_keys=True))
+        os.utime(path, ns=(stamp, stamp))
+        self.assertEqual(len(original), len(path.read_text()))
+        self.assertFalse(store._audit_evidence()["ok"])
+
+    def test_malformed_independent_digests_are_unusable_evidence(self) -> None:
+        self.two_audited()
+        store = self.open_store()
+        count, head = store.ledger_head()
+        good = dict(algorithm="sha256", chain="main", count=count, head=head)
+        bad = [
+            {},
+            [],
+            "text",
+            dict(good, count="1"),
+            dict(good, count=True),
+            dict(good, count=0),
+            dict(good, count=-3),
+            dict(good, head=""),
+            dict(good, head=7),
+            dict(good, algorithm="md5"),
+        ]
+        for n, content in enumerate(bad):
+            with self.subTest(content=content):
+                folder = Path(self.tmp.name) / f"digests{n}"
+                folder.mkdir()
+                (folder / "digest-0000000001.json").write_text(json.dumps(content))
+                store.digest_dir = str(folder)
+                store._audit_ev = None
+                evidence = store._audit_evidence()
+                self.assertFalse(evidence["ok"])
+                self.assertIn("digest", evidence["reason"])
+
+    def test_malformed_digest_does_not_stop_startup_and_leaves_order_unresolved(self) -> None:
+        self.two_audited()
+        self.make_legacy(self.store, self.rows)
+        Path(self.store.digest_dir).mkdir(parents=True, exist_ok=True)
+        (Path(self.store.digest_dir) / "digest-0000000001.json").write_text("[]")
+        reopened = self.open_store()
+        self.assertEqual(self.unresolved(reopened), [self.latest(reopened)])
+
+    def test_priority_panel_keeps_the_order_note_for_every_status(self) -> None:
+        web = Path(__file__).parents[2] / "api/src/zava_forward/api/web/app.js"
+        text = web.read_text(encoding="utf-8")
+        shared = text.index("rec?.order_note")
+        self.assertLess(shared, text.index('if (rec.status === "Proposed")'))
+        load = text.index('api("/api/ai/priority").then')
+        self.assertIn("order_note", text[load : load + 400])
+
+
+class MssqlBeginRecovery(unittest.TestCase):
+    """The SQL Server adapter must not leave a transaction open when BEGIN fails part way."""
+
+    class Error(Exception):
+        pass
+
+    def adapter(self, rollback_fails: bool = False) -> Any:
+        from zava_forward.core import mssqlstore
+
+        outer = self
+        state = types.SimpleNamespace(open=0, log=[], timeout=True)
+
+        class Cursor:
+            rowcount = 0
+
+            def execute(self, sql: str, args: Any = ()) -> None:
+                state.log.append(sql.split()[0] + " " + sql.split()[1])
+                if sql.startswith("BEGIN TRAN"):
+                    state.open += 1
+                    if state.timeout:
+                        raise outer.Error("could not take the write lock")
+                elif "ROLLBACK TRAN" in sql:
+                    if rollback_fails:
+                        raise outer.Error("rollback failed")
+                    state.open = 0
+                elif sql.startswith("COMMIT"):
+                    state.open = max(0, state.open - 1)
+
+        class Raw:
+            def cursor(self) -> Cursor:
+                return Cursor()
+
+            def close(self) -> None:
+                state.open = 0
+                state.log.append("CLOSE")
+
+        conn = mssqlstore._Conn.__new__(mssqlstore._Conn)
+        conn.driver = types.SimpleNamespace(Error=self.Error)
+        conn.conn_str, conn.raw, conn.in_tran, conn.attrs = "", Raw(), False, {}
+        conn.state = state  # type: ignore[attr-defined]
+        return conn
+
+    def test_failed_begin_batch_leaves_no_open_transaction(self) -> None:
+        conn = self.adapter()
+        with self.assertRaisesRegex(self.Error, "write lock"):
+            conn.execute("BEGIN IMMEDIATE")
+        self.assertEqual((conn.state.open, conn.in_tran), (0, False))
+        conn.state.timeout = False
+        conn.execute("BEGIN IMMEDIATE")
+        self.assertEqual((conn.state.open, conn.in_tran), (1, True))
+        conn.execute("COMMIT")
+        self.assertEqual(conn.state.open, 0)
+
+    def test_failed_rollback_discards_the_connection_and_keeps_the_original_error(self) -> None:
+        conn = self.adapter(rollback_fails=True)
+        with self.assertRaisesRegex(self.Error, "write lock"):
+            conn.execute("BEGIN IMMEDIATE")
+        self.assertEqual((conn.state.open, conn.in_tran), (0, False))
+        self.assertIn("CLOSE", conn.state.log)
+        self.assertIsNone(conn.raw)
+
+
 class LoopbackGuard(unittest.TestCase):
     PASSWORD = "SYN-one-time-secret"
     CONTAINER = "ab" * 32
@@ -1113,15 +1521,52 @@ class LoopbackGuard(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             require_task_owned_loopback(self.env(ZF_SQL_TASK_MANIFEST=str(link)), self.inspect())
 
-    def test_admitted_loopback_endpoint_is_accepted(self) -> None:
-        for host in ("127.0.0.1", "localhost", "[::1]"):
-            write_manifest(
-                self.manifest + host, host.strip("[]"), "14331", self.PASSWORD, self.CONTAINER
-            )
-            require_task_owned_loopback(
-                self.env(ZF_SQL_SERVER=host, ZF_SQL_TASK_MANIFEST=self.manifest + host),
-                self.inspect(),
-            )
+    def bound(self, host_ip: str, port: str = "14331") -> Any:
+        return self.inspect(
+            NetworkSettings=dict(Ports={"1433/tcp": [dict(HostIp=host_ip, HostPort=port)]})
+        )
+
+    def test_admitted_loopback_endpoint_is_accepted_only_for_its_own_published_address(
+        self,
+    ) -> None:
+        for host in ("127.0.0.1", "127.0.0.2", "::1"):
+            path = self.manifest + host
+            write_manifest(path, host, "14331", self.PASSWORD, self.CONTAINER)
+            env = self.env(ZF_SQL_SERVER=f"[{host}]" if ":" in host else host)
+            env["ZF_SQL_TASK_MANIFEST"] = path
+            require_task_owned_loopback(env, self.bound(host))
+
+    def test_connecting_host_must_equal_the_address_the_container_publishes(self) -> None:
+        for host, published in (
+            ("127.0.0.2", "127.0.0.1"),
+            ("127.0.0.1", "::1"),
+            ("::1", "127.0.0.1"),
+            ("localhost", "127.0.0.1"),
+        ):
+            with self.subTest(host=host, published=published):
+                path = self.manifest + host
+                write_manifest(path, host, "14331", self.PASSWORD, self.CONTAINER)
+                env = self.env(ZF_SQL_SERVER=host, ZF_SQL_TASK_MANIFEST=path)
+                with self.assertRaises(RuntimeError):
+                    require_task_owned_loopback(env, self.bound(published))
+
+    def test_remote_docker_engines_are_refused_before_any_inspection(self) -> None:
+        def forbidden(_container: str) -> Any:
+            raise AssertionError("inspected before the engine was proven local")
+
+        for extra in (
+            dict(DOCKER_HOST="tcp://10.1.2.3:2375"),
+            dict(DOCKER_HOST="ssh://someone@host"),
+            dict(DOCKER_HOST="unix:///var/run/docker.sock", DOCKER_TLS_VERIFY="1"),
+            dict(DOCKER_CONTEXT="remote"),
+        ):
+            with self.subTest(extra=extra):
+                with self.assertRaises(RuntimeError):
+                    require_task_owned_loopback(self.env(**extra), forbidden)
+        require_task_owned_loopback(
+            self.env(DOCKER_HOST="unix:///var/run/docker.sock", DOCKER_CONTEXT="default"),
+            self.inspect(),
+        )
 
     def test_caller_written_manifest_without_matching_container_evidence_is_refused(self) -> None:
         def missing(_container: str) -> Any:

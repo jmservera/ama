@@ -691,8 +691,8 @@ function priorityPanel() {
         h("div", {}, h("h3", {}, `Rule-based order (policy ${rec.policy_version})`), rowsOf(rec.deterministic, false)),
         h("div", {}, h("h3", {}, `Suggestion: ${rec.label}`), rowsOf(rec.items, true),
           h("p", { class: "muted" }, `${rec.source === "ai" ? "Written by AI" : `Written by rules: ${rec.fallback_reason || "AI not available"}`}. ${rec.validated === false ? "Unverified. " : ""}${rec.overlap} of ${rec.items.length} match the rule-based top ${rec.n}.`))));
+      if (rec?.order_note) kids.push(h("p", { class: "flag danger", role: "status" }, rec.order_note));
       if (rec.status === "Proposed") {
-        if (rec.order_note) kids.push(h("p", { class: "flag danger", role: "status" }, rec.order_note));
         const why = h("input", { id: "pri-why", type: "text", placeholder: "Reason (needed to edit or reject)", maxlength: 300 });
         const keep = rec.items.map((i) => h("input", { type: "checkbox", checked: true, "aria-label": `Keep ${i.resident}` }));
         const act = (action) => async () => {
@@ -722,7 +722,7 @@ function priorityPanel() {
   };
   const ask = async () => { box.setAttribute("aria-busy", "true"); try { paint(await api("/api/ai/priority", modeBody({ n: 5 }))); } catch (e) { paint(null, e.message); } box.removeAttribute("aria-busy"); };
   box.append(h("p", { role: "status" }, "Loading priority suggestions..."));
-  api("/api/ai/priority").then((d) => paint(d.recommendation && d.recommendation.status === "Proposed" ? d.recommendation : null)).catch(error => {
+  api("/api/ai/priority").then((d) => paint(d.recommendation && (d.recommendation.status === "Proposed" || d.recommendation.order_note) ? d.recommendation : null)).catch(error => {
     if (error.name !== "AbortError") paint(null, `Priority suggestions unavailable: ${error.message}. Try requesting a suggestion again.`);
   });
   return box;
