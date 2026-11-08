@@ -1,0 +1,25 @@
+{
+  "task_id": "issue-79-r24-dirsync-audit",
+  "task_slug": "issue-79-r24-dirsync-audit",
+  "parent_task": {"task_id": "issue-79-r23-merge-score-23b", "task_slug": "issue-79-r23-merge-score-23b"},
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-07/issue-79-r24-dirsync-audit-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-07/issue-79-r24-dirsync-audit-plan.md",
+    "details": ".copilot-tracking/details/2026-11-07/issue-79-r24-dirsync-audit-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-07/issue-79-r24-dirsync-audit-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-07/issue-79-r24-dirsync-audit-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-07/issue-79-r24-dirsync-audit-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Planning and critique committed before tests and source", "status": "recorded", "evidence": "8d5772eaa"},
+    {"decision": "Audit unconfirmed outcome, 409, no rollback", "status": "recorded", "evidence": "changes record"},
+    {"decision": "Author-only Review", "status": "recorded", "evidence": "review record"}
+  ],
+  "blockers": [{"id": "gates", "summary": "No FULL, independent assessment or hosted checks on this head", "resolution": "Coordinator reconciles child 1231, pins main, one FULL with both stack members"}],
+  "next_action": {"phase": "Follow-up", "action": "Reconcile child 1231 with this parent delta, then one FULL"},
+  "prioritized_follow_ups": [{"rank": 1, "task": "Child reconciliation and FULL", "rationale": "Source changed", "evidence": "RV-003, RV-004"}]
+}

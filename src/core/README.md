@@ -10,10 +10,18 @@ ms.topic: reference
 
 `ranking_publication.publish(snapshot, archive_dir, published_on)` archives a
 `ranking.snapshot` as one immutable, dated file per policy version, as-of date
-and snapshot hash. It is idempotent, never overwrites and never deletes.
+and snapshot hash. It is idempotent and never overwrites or deletes a record (it
+removes only its own staging file).
 `verify` re-hashes every record and checks its policy hash against the verified
-registry; `overdue` reports a missing or stale publication. No clock is read:
-dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
+registry; `overdue` reports a missing or stale publication. Concurrent writers of
+one snapshot keep exactly one record: each stages its own uniquely named file and
+links it to the record name without overwriting, and the loser reports the
+retained record and date. This needs a local filesystem with hard links; a folder
+without them refuses to publish; the manager route then answers 503 with a storage
+message, not 403, and writes no record or audit entry. If the record is committed but
+its staging file cannot be removed, the result still reports the record and the
+retained file (`stage_retained`, runner warning `stage_not_removed`, a `warning` in the
+manual response); an operator removes it. No clock is read: dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
 
 Wiring (slice 2): `Store.publish_ranking_snapshot` (API `POST /api/ranking/publish`)
 archives today's snapshot under the current policy into `ranking-archive/` beside
@@ -22,6 +30,56 @@ the data, audited and idempotent, and `Store.ranking_publication_status` (API
 and stated schedule. Both are manager-only. The manual path is the same
 endpoint, run by a manager; no AI is involved.
 
+Local runner (slice 5): `python3 -m zava_forward.core.ranking_publication_runner
+{schedule,publish,verify} --archive DIR --today YYYY-MM-DD [--cases FILE]
+[--policy VERSION] [--exercise]` is the invocation a scheduler or a person calls.
+The date, archive and store-shaped case file are explicit; no clock, environment
+variable or default data folder is read, and no random seed is consumed (the run
+key is a hash of policy, as-of date and window start). `schedule` reports the
+one-day window, whether it is due and the next window, and exits 1 with status
+`problem` when any archived record fails to verify (due and latest stay visible);
+`verify` exits 1 when a record fails or the latest publication is stale; the case
+file must hold boolean `closed` flags, and a malformed record refuses the whole
+source; `9999-12-31` has no next day, so it is refused as a run date and reported
+as a problem as an archived latest; `publish` is idempotent, a verified identical
+retry needs no free space because it writes nothing, and
+exits 2 with a reason code and next action when the policy has no recorded
+sign-off (`approval_missing`), the case source is missing or unusable, the
+archive does not verify or cannot be listed (`archive_unreadable`), a case id
+repeats (`source_invalid`) or there is no room to write or the free space cannot be
+read. `--exercise` ranks and
+reports what would be archived, writes nothing and never counts as approval.
+A selected policy whose content hash or registry key does not match is refused
+(`policy_invalid`) before sign-off. A latest archived publication dated after the
+run date is a problem in `verify` and `schedule` (window state unknown) and
+refuses a non-exercise `publish`; `schedule` with status `blocked` also exits 2.
+The daily schedule is reported as proposed, not an approved rule; the draft
+policy stays a draft and retention stays a separate Legal decision.
+
+Durability and races: `publish` writes a unique stage file in the archive folder,
+syncs it, links it to its final name (the first writer wins, nothing is
+overwritten), removes its own stage and syncs the folder, also before returning an
+already archived record. If the folder sync fails after the record is committed, the
+record stays and `DurabilityUnconfirmedError` (an `OSError` that keeps the cause's
+errno) is raised: the Store audits `ranking_snapshot_publication_unconfirmed` and the
+API returns 409 `committed_unconfirmed` with fixed path-free text. This is not a
+confirmed publication and is not rolled back. A retry syncs the folder again before
+reporting the existing record as already published (`written` false, original date);
+if that sync fails too it is unconfirmed again, so a named owner checks the archive.
+The error carries `written` (true when this call created the record, false for an
+existing record or lost race, null when unknown); the runner reports it with status
+`committed_unconfirmed` (exit 2, a path-free `uncertainty` with a safe next action),
+not as a `publish_failed` refusal.
+Other archive failures (for example no hard-link support) stay 503. A record already
+at the final name is checked
+against the snapshot, its hash, its name and a valid publication date; a damaged
+one is refused with `PublicationError` (never reported as already published) and
+left for a named owner to review. The run key is informational: repeated
+publishes in the same window are idempotent because the file name holds the
+policy version, as-of date and snapshot hash, and a later window returns the
+original publication date. `Store.publish_ranking_snapshot` records whether the
+policy was signed in the audit detail and the response (`policy_signed`), and the
+status endpoint reports an unreadable archive folder as a problem.
 Sign-off check (slice 3): `ranking.is_signed` and `ranking.signoff_problems` read a recorded sign-off
 (`signoff` with `signed_by` equal to the named `owner`, an ISO `signed_on` and a `rule_order_hash` of the rules and
 stage order). A change to the rule order voids it. The publication status reports `policy_signed` and
