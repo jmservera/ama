@@ -10969,3 +10969,19 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
   exact-head assessment and the focused publication gate are recorded in
   the PR separately. No paper/results, runtime/infra, private data, model
   experiment, deployment, regulatory activation or new approval is changed.
+
+## [2026-11-08] update | CxO story review consistency corrections
+
+* Preserved the original independent story FAIL at `08e4d3ca`: three Medium
+  findings, for stale proposed cost-control status, overbroad historical
+  binary-support observation and a recording/evidence fallback mismatch.
+* Accepted the bounded corrections. The owner approved only status wording
+  and narration on protected cost pages, preserving all financial numbers,
+  calculations, currencies, timing and navigation. A closed, explicitly
+  named authoring exception and negative number/geometry/note/approval tests
+  retain protection; all remaining cost bytes must match.
+* The historical Decision 1 claim is EPC-selection observation versus
+  specified binary support; B18's fallback is repository evidence. This
+  adds no real run, recording, financial/operational approval or benefit.
+  Current source and exact-head assessment/full gate are required after
+  the shared guard change; the earlier partial receipt remains historical.

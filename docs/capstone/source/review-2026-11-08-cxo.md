@@ -233,3 +233,33 @@ instead reuses the existing additional-media naming contract and restores the
 builder exactly to main. Diagram IDs, content, hashes, visible meaning and
 behaviour do not change; no gate rule or protection is weakened. A new
 exact-head gate follows the packaging correction.
+
+### Independent Story Review And Owner Disposition
+
+The independent assessment of `08e4d3ca` is **FAIL**, retained rather than
+replaced by the otherwise coherent narrative verdict. It found three Medium
+consistency issues:
+
+* Main 21/B25 52 and B26 53 still called admission controls proposed, while
+  B27 correctly described their source-coded status.
+* The page-16 SAY paragraph overclaimed a historical binary-support run;
+  the cited observation establishes EPC selection, with support separately
+  specified.
+* B18/page 45 labelled its fallback "Recorded walkthrough", whereas the
+  prepared route uses repository evidence, not a recording.
+
+All three corrections are accepted. The owner explicitly approved a narrow,
+tested status-wording/narration exception on protected cost pages, with every
+financial number, calculation, currency, timing and action retained.
+The builder requires that exact revision name, permits only fixed status
+substitutions on 21/52, and compares all remaining slide/note bytes exactly.
+Negative tests reject other numbers, geometry, notes and approval values.
+It must report the status exception; raw-byte preservation of all six pages
+is not claimed after that correction.
+
+The historical model claim now distinguishes observed EPC selection from
+specified binary support. The fallback label is "Repository evidence".
+No new model run, recording, approval, price or accepted-value result follows.
+The original FAIL and exact corrective assessment are preserved in PR evidence.
+These shared authoring-guard changes require a fresh full local matrix; the
+earlier partial receipt is historical, not publication evidence for this head.

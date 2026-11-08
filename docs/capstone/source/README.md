@@ -121,8 +121,11 @@ explicit external directory and checks:
   only declared image relationships change
 * All 54 nonempty note blocks and retained timing lines
 * Native navigation actions and unique shape IDs
-* The six protected cost slides on pages 6, 11, 21, 32, 36 and 52; notes may
-  change only through exact navigation-sentence corrections, not calculations
+* The six protected cost slides on pages 6, 11, 21, 32, 36 and 52; all financial
+  evidence remains unchanged. Default protection permits only fixed
+  navigation-note corrections. The owner-approved 8 November status-only
+  revision permits a closed list of words/notes on 21/52, never calculations,
+  other text, geometry, timing or actions
 
 The present baseline contains 108 fixed slide-jump actions. Preserve their
 actual targets; neither their labels nor an older review establishes dynamic
@@ -236,6 +239,21 @@ node docs/capstone/source/diagrams/discovery-journey/build-resident-journey.mjs 
 node docs/capstone/source/diagrams/architecture/build-architecture.mjs --check
 node --test docs/capstone/source/diagrams/architecture/test-architecture.mjs
 ```
+
+The current manifest explicitly names
+`cost_status_revision: owner-approved-2026-11-08-status-only`.
+The builder's fixed exception is absent by default and rejects any other
+revision name. Verify compares the entire cost slide/note against only those
+fixed substitutions and reports the exception instead of claiming all six
+raw slide bytes are unchanged. Run the negative guards against a built candidate:
+
+```powershell
+./tools/capstone/Test-CostStatus.ps1 -RepoRoot $PWD.Path -CandidatePath "$Run/build/zava-forward-cowork-v2-draft.pptx"
+```
+
+The tests reject an unapproved revision, altered numeric text, geometry and
+extra note words. This is authoring permission, not spend or operational
+financial approval.
 
 Use `Test-SourceHashes.ps1 -SemanticOnly` before regenerating the receipt.
 Run its default mode afterward to check all four canonical source bindings and

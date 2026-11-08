@@ -32,6 +32,7 @@
       "ppt/notesSlides/notesSlide18.xml",
       "ppt/notesSlides/notesSlide19.xml",
       "ppt/notesSlides/notesSlide2.xml",
+      "ppt/notesSlides/notesSlide21.xml",
       "ppt/notesSlides/notesSlide22.xml",
       "ppt/notesSlides/notesSlide23.xml",
       "ppt/notesSlides/notesSlide24.xml",
@@ -82,6 +83,7 @@
       "ppt/slides/slide14.xml",
       "ppt/slides/slide15.xml",
       "ppt/slides/slide16.xml",
+      "ppt/slides/slide21.xml",
       "ppt/slides/slide22.xml",
       "ppt/slides/slide23.xml",
       "ppt/slides/slide24.xml",
@@ -96,8 +98,10 @@
       "ppt/slides/slide39.xml",
       "ppt/slides/slide40.xml",
       "ppt/slides/slide41.xml",
+      "ppt/slides/slide45.xml",
       "ppt/slides/slide46.xml",
       "ppt/slides/slide47.xml",
+      "ppt/slides/slide52.xml",
       "ppt/slides/slide54.xml",
       "ppt/slides/slide7.xml",
       "ppt/slides/slide8.xml",
@@ -105,37 +109,42 @@
     ],
     "timing_preserved": true,
     "native_navigation_preserved": true,
-    "six_cost_slide_bytes_preserved": true,
+    "six_cost_slide_bytes_preserved": false,
+    "cost_financial_evidence_preserved": true,
+    "approved_cost_status_updates": [
+      21,
+      52
+    ],
     "cost_note_calculations_preserved": true,
     "cost_note_navigation_only_updates": [
       32,
-      36,
-      52
+      36
     ],
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "385931154d1184950d248b7e5ccc6cee27781ae93090419db92aa40ba8c5710e",
+    "candidate_sha256": "47098c84516c044e3baa4ce74cb8dbb67588f988e24c01a62196746807122129",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
-    "manifest_sha256": "d51cb2e324dc76a4be828f5725f91b4469d35b13695614c5046745f5f1ba52ca",
+    "manifest_sha256": "55be01e68a67928f493bf393fcc0d8e5e5ceca83a778203a5fc88f8c33927de4",
     "asset_catalog_sha256": "e7eb49ecbe5e3530cc5834acb0e1634e152d5e68448dd52217f6ee05cbc10466",
-    "builder_sha256": "4c168289a7352017e6c9cb9456fe9fe1436e8ad38ca3721268366c85492829d4",
+    "builder_sha256": "0990c3dbf37217a73745c647ab0ddd3473b0ac052fbadf43cea7b8200c0fd547",
     "native_helper_sha256": "956d56cf4032d33deca9f61c606899927e3a3ae431878811bfe84aefba742c94"
   },
   "source_verification": {
     "verified_on": "2026-11-08",
     "action": "Verify",
     "source_hash_convention": "SHA-256 of UTF-8 bytes with CRLF and CR normalized to LF; BOM and all other bytes preserved.",
-    "verification_report_sha256": "ac4c29d520c49afe07fe643a3f938be0e9a48033257dd6e6601d352941c9971a",
+    "verification_report_sha256": "8ad9d8ed1b523ed3222a0555c9a52e231b30f3a89a83810b3e9ba8a6a727af65",
     "delivery_unchanged": false,
     "runtime": "Installed PowerShell on Linux; no Windows PowerPoint execution.",
     "source_refresh": "Owner-approved normal merge over fa7ae0c9; original model basis c50e9f0b; exact PPTX/notes and all diagram PNGs byte-identical after evidence refresh.",
-    "packaging": "Existing additional-media names reused; shared builder equals main. All slide XML and rendered pixels unchanged by naming-only correction."
+    "packaging": "Existing additional-media names reused; shared builder equals main. All slide XML and rendered pixels unchanged by naming-only correction.",
+    "protected_status_revision": "Owner explicitly approved fixed status words/notes on 21/52; all numeric/currency token sequences and other financial evidence preserved; raw six-slide byte preservation not claimed."
   },
   "preview": {
     "renderer": "LibreOffice 24.2.7.2 420(Build:2)",
     "native_powerpoint_validation": false,
-    "source_sha256": "385931154d1184950d248b7e5ccc6cee27781ae93090419db92aa40ba8c5710e",
-    "pdf_sha256": "d18cab2f22d753f37e36f929a606ac3eba671cf9734ce90b46059d70702c494c",
+    "source_sha256": "47098c84516c044e3baa4ce74cb8dbb67588f988e24c01a62196746807122129",
+    "pdf_sha256": "ab6cc2253151c7d1033ada33b4f03d1fd4baccafeb21beb66f702856ee5a5248",
     "navigation": {
       "slides": 54,
       "fixed_slide_jumps": 108,
@@ -147,36 +156,72 @@
     "human_acceptance": false
   },
   "frame_and_preservation_checks": {
-    "changed_slide_parts": [
-      9,
-      12,
-      14,
-      16,
-      22,
-      27,
-      31,
-      37,
-      46,
-      47,
-      54
-    ],
-    "visually_changed_pages": [
-      9,
-      12,
-      14,
-      16,
-      27,
-      31,
-      37,
-      46,
-      47,
-      54
-    ],
-    "identical_pages": 44,
-    "revised_text_frames": 349,
+    "revised_text_frames": 358,
     "text_failures": [],
     "tolerance_points": 1.5,
-    "packaging_refresh": "All 54 slide XML parts and all 54 rendered pixels are identical to validated build-2; only image package member names/notes candidate hash change."
+    "financial_preservation": [
+      {
+        "page": 6,
+        "part": "slide",
+        "all_numeric_and_currency_tokens_unchanged": true
+      },
+      {
+        "page": 6,
+        "part": "notes",
+        "all_numeric_and_currency_tokens_unchanged": true
+      },
+      {
+        "page": 11,
+        "part": "slide",
+        "all_numeric_and_currency_tokens_unchanged": true
+      },
+      {
+        "page": 11,
+        "part": "notes",
+        "all_numeric_and_currency_tokens_unchanged": true
+      },
+      {
+        "page": 21,
+        "part": "slide",
+        "all_numeric_and_currency_tokens_unchanged": true
+      },
+      {
+        "page": 21,
+        "part": "notes",
+        "all_numeric_and_currency_tokens_unchanged": true
+      },
+      {
+        "page": 32,
+        "part": "slide",
+        "all_numeric_and_currency_tokens_unchanged": true
+      },
+      {
+        "page": 32,
+        "part": "notes",
+        "all_numeric_and_currency_tokens_unchanged": true
+      },
+      {
+        "page": 36,
+        "part": "slide",
+        "all_numeric_and_currency_tokens_unchanged": true
+      },
+      {
+        "page": 36,
+        "part": "notes",
+        "all_numeric_and_currency_tokens_unchanged": true
+      },
+      {
+        "page": 52,
+        "part": "slide",
+        "all_numeric_and_currency_tokens_unchanged": true
+      },
+      {
+        "page": 52,
+        "part": "notes",
+        "all_numeric_and_currency_tokens_unchanged": true
+      }
+    ],
+    "final_status_label": "HELD replaces the awkwardly wrapped GATED badge; all other parts match validated build-6."
   },
   "native": {
     "status": "not_run",

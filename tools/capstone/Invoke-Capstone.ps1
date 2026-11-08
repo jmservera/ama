@@ -116,9 +116,93 @@ function Export-AuthoringSource {
         return $Text
     }
 
+function Test-CostStatusRevision {
+    param($Definition)
+    if (-not $Definition.cost_status_revision) { return $false }
+    if ($Definition.cost_status_revision -cne 'owner-approved-2026-11-08-status-only') {
+        throw 'Unrecognised protected cost-status revision'
+    }
+    return $true
+}
+
+function Get-CostStatusReplacements {
+    param([int]$Number)
+    if ($Number -eq 21) {
+        return @(
+            [pscustomobject]@{ id = 63877; from = 'controls proposed'; to = 'controls coded' }
+            [pscustomobject]@{ id = 64007; from = 'IN PLACE'; to = 'CODED' }
+            [pscustomobject]@{ id = 64042; from = 'NEXT'; to = 'HELD' }
+            [pscustomobject]@{ id = 64061; from = 'proposed money budgets per task and period'; to = 'coded money budgets per task and period' }
+        )
+    }
+    if ($Number -eq 52) {
+        return @(
+            [pscustomobject]@{ id = 21807; from = 'DESIGNED · NEXT MILESTONE'; to = 'SOURCE-CODED · GATED' }
+            [pscustomobject]@{ id = 21877; from = 'Not hard currency or request-depth limits.'; to = 'Coded money / request-depth admission.' }
+            [pscustomobject]@{ id = 21897; from = 'Proposed: not run'; to = 'Live gates: not run' }
+            [pscustomobject]@{ id = 21918; from = 'Complete attribution; task/period money stops'; to = 'Full attribution; live money-stop proof' }
+            [pscustomobject]@{ id = 21918; from = 'Request/depth bounds; billing reconciliation.'; to = 'Request-bound proof; billing reconciliation.' }
+        )
+    }
+    return @()
+}
+
+function Update-CostStatusNote {
+    param([string]$Text, [int]$Number, [bool]$Enabled)
+    if (-not $Enabled) { return $Text }
+    $From = $null
+    $To = $null
+    if ($Number -eq 21) {
+        $From = 'Complete metering and task, period and request-depth controls remain proposed.'
+        $To = 'Task/period money and root call/depth admission are source-coded; live approval and full billing remain unproved.'
+    } elseif ($Number -eq 52) {
+        $From = 'Complete attribution, task/period monetary budgets with hard termination, per-request calls/depth and billing reconciliation are proposed'
+        $To = 'Task/period monetary and root call/depth admission are source-coded; complete attribution and billing reconciliation remain unproved'
+    }
+    if (-not $From) { return $Text }
+    if ($From -match '\d|\b(?:USD|GBP|EUR)\b' -or $To -match '\d|\b(?:USD|GBP|EUR)\b') {
+        throw 'Cost-status note substitution must not contain financial numbers or currencies'
+    }
+    if (($Text.Split(@([string]$From), [StringSplitOptions]::None).Count - 1) -ne 1) {
+        throw "Expected one fixed cost-status note fragment on page $Number"
+    }
+    return $Text.Replace($From, $To)
+}
+
+function Assert-CostSlide {
+    param($BaselineArchive, $CandidateArchive, [int]$Number, [bool]$StatusRevision)
+    $Name = "ppt/slides/slide$Number.xml"
+    $Before = Get-PartBytes $BaselineArchive $Name
+    $Expected = $Before
+    if ($StatusRevision -and $Number -in @(21, 52)) {
+        $Replacements = @(Get-CostStatusReplacements $Number)
+        foreach ($Replacement in $Replacements) {
+            if ($Replacement.from -match '\d|\b(?:USD|GBP|EUR)\b' -or $Replacement.to -match '\d|\b(?:USD|GBP|EUR)\b') {
+                throw 'Cost-status substitutions must not contain financial numbers or currencies'
+            }
+        }
+        $Expected = Set-TargetedPart $BaselineArchive $Name $Replacements @() $Number
+    }
+    $Actual = Get-PartBytes $CandidateArchive $Name
+    if ((Get-ByteHash $Expected) -cne (Get-ByteHash $Actual)) {
+        throw "Protected cost slide changed beyond the fixed approved status words: $Number"
+    }
+    $BeforeCost = Get-SlideInventory $BaselineArchive $Number
+    $AfterCost = Get-SlideInventory $CandidateArchive $Number
+    $ExpectedNotes = Update-CostStatusNote (Update-NavigationNote $BeforeCost.notes) $Number $StatusRevision
+    if ($AfterCost.notes -cne $ExpectedNotes) {
+        throw "Protected cost note changed beyond fixed navigation/status corrections: $Number"
+    }
+    return [pscustomobject]@{
+        status_updated = ((Get-ByteHash $Before) -cne (Get-ByteHash $Actual))
+        notes_updated = ($AfterCost.notes -cne $BeforeCost.notes)
+    }
+}
+
     function Get-DeckRevision {
     param($Archive, $Definition, [string]$Root)
     $Parts = @{}
+    $CostStatusRevision = Test-CostStatusRevision $Definition
     foreach ($Slide in $Definition.slides) {
         if ($Slide.revised_notes) {
             $NoteCode = ([string]$Slide.revised_notes[0] -split ' \| ', 2)[0]
@@ -154,10 +238,17 @@ function Export-AuthoringSource {
             }
         }
         elseif ($Slide.layout -ne 'baseline') { throw "Unsupported slide layout: $($Slide.layout)" }
+        if ($CostStatusRevision -and $Slide.number -in @(21, 52)) {
+            if ($Slide.layout -cne 'baseline' -or $Slide.images) {
+                throw 'Protected cost-status pages must retain their complete baseline layouts'
+            }
+            $Parts[$Name] = Set-TargetedPart $Archive $Name @(Get-CostStatusReplacements $Slide.number) @() $Slide.number
+        }
         $Before = Get-SlideInventory $Archive $Slide.number
         $Text = $Slide.notes
         if ($Slide.revised_notes) { $Text = @($Slide.revised_notes) -join "`n" }
         $Text = Update-NavigationNote $Text
+        $Text = Update-CostStatusNote $Text $Slide.number $CostStatusRevision
         if ($Before.notes -ceq $Text) { continue }
         $Timing = @([regex]::Matches($Before.notes, '(?m)^TIMING:.*$') | ForEach-Object Value)
         $NewTiming = @([regex]::Matches($Text, '(?m)^TIMING:.*$') | ForEach-Object Value)
@@ -298,16 +389,12 @@ function Test-DeckCandidate {
         }
         if ($Actions -ne $BaselineActions) { throw 'Native action count differs from the pinned current template' }
         $CostNavigationUpdates = @()
+        $CostStatusUpdates = @()
+        $CostStatusRevision = Test-CostStatusRevision $Definition
         foreach ($Number in @(6, 11, 21, 32, 36, 52)) {
-            if ("ppt/slides/slide$Number.xml" -in $Changed) { throw "Protected cost slide changed: $Number" }
-            if ("ppt/notesSlides/notesSlide$Number.xml" -in $Changed) {
-                $BeforeCost = Get-SlideInventory $BaselineArchive $Number
-                $AfterCost = Get-SlideInventory $Candidate $Number
-                if ($AfterCost.notes -cne (Update-NavigationNote $BeforeCost.notes)) {
-                    throw "Protected cost note changed beyond the exact navigation correction: $Number"
-                }
-                $CostNavigationUpdates += $Number
-            }
+            $CostResult = Assert-CostSlide $BaselineArchive $Candidate $Number $CostStatusRevision
+            if ($CostResult.status_updated) { $CostStatusUpdates += $Number }
+            if ($CostResult.notes_updated -and $Number -notin $CostStatusUpdates) { $CostNavigationUpdates += $Number }
         }
         $Catalog = Get-Content -LiteralPath (Resolve-LocalInput $SourceRoot $Definition.assets) -Raw | ConvertFrom-Json
         foreach ($Asset in $Catalog.additional_media) {
@@ -318,7 +405,8 @@ function Test-DeckCandidate {
             status = 'pass'; slides = 54; nonempty_notes = 54; navigation_actions = $Actions
             package_members = $ExpectedNames.Count; baseline_members = $Names.Count; added_media_parts = $Added
             changed_members = $Changed; timing_preserved = $true
-            native_navigation_preserved = $true; six_cost_slide_bytes_preserved = $true
+            native_navigation_preserved = $true; six_cost_slide_bytes_preserved = ($CostStatusUpdates.Count -eq 0)
+            cost_financial_evidence_preserved = $true; approved_cost_status_updates = $CostStatusUpdates
             cost_note_calculations_preserved = $true; cost_note_navigation_only_updates = $CostNavigationUpdates
             full_manifest_and_media_verified = $true; candidate_sha256 = (Get-FileHash $CandidatePath -Algorithm SHA256).Hash.ToLowerInvariant()
         }
