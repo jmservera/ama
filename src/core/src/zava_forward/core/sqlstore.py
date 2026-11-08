@@ -53,6 +53,7 @@ CREATE TABLE IF NOT EXISTS cases (
 """
 
 REC_ORDER_IDS = 100  # identifiers kept per backfill batch record
+REC_REVIEW = "3"  # version of the one-time review of every heuristic ordinal (#1292)
 SYNC_RETRIES = 8  # bounded retries of an optimistic reload or queue transaction
 QUEUE_COLS = tuple(f"queue_{name}" for name, _, _ in taskqueues.DEFINITIONS)
 
@@ -349,10 +350,11 @@ class SqlStore(Store):
             if not self._has_rec_order():
                 self._add_column_default("recommendations", "created_ord", "BIGINT", "0")
             self._create_rec_order_index()
+            self._adopt_unresolved_index()
+            self._review_priority_order()
             new = self._db_seq() + 1
             if self._backfill_zero_ordinals(new):
                 self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
-            self._review_c0_backfill()
             self.db.execute("COMMIT")
         except BaseException:
             self.db.execute("ROLLBACK")
@@ -362,16 +364,12 @@ class SqlStore(Store):
         row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
         return None if row is None else row[0]
 
-    def _c0_review_pending(self):
-        """The earlier candidate wrote only rec_order_legacy; no batch evidence means a heuristic-only backfill."""
-        return (self._meta_value("rec_order_legacy") is not None and self._meta_value("rec_order_batches") is None
-                and self._meta_value("rec_order_backfills") is None)
-
     def _rec_order_pending(self):
         if not self._has_rec_order():
             return self.db.execute("SELECT 1 FROM recommendations").fetchone() is not None
         return (self.db.execute("SELECT 1 FROM recommendations WHERE created_ord = 0").fetchone() is not None
-                or self._c0_review_pending())
+                or (self._meta_value("rec_order_review") != REC_REVIEW
+                    and self.db.execute("SELECT 1 FROM recommendations").fetchone() is not None))
 
     def _repair_zero_ordinals(self):
         """Fence for mixed-version writers: a zero ordinal is never cached and never followed by a new ordinal.
@@ -423,7 +421,8 @@ class SqlStore(Store):
                 return dict(ok=False, reason="the audit ledger has no head", anchored=False, positions={},
                             key=None, last_seq=0, head=ledger.GENESIS, hashes=[])
             key = (int(head[0]), head[1])
-            if cached is not None and cached["key"] == key:
+            self._anchor_now = anchor = self._anchor_fingerprint()
+            if cached is not None and cached["key"] == key and cached.get("anchor") == anchor:
                 return cached
             try:
                 digests, years = ledger.read_digests(self.digest_dir), ledger.read_year_digests(self.digest_dir)
@@ -431,7 +430,8 @@ class SqlStore(Store):
                 return self._cache_evidence(dict(ok=False, reason="independent digests are unreadable", anchored=True,
                                                  positions={}, key=key, last_seq=0, head=ledger.GENESIS, hashes=[]))
             anchored = bool(digests or years)
-            if cached is not None and cached["ok"] and cached["key"][0] < key[0]:
+            if (cached is not None and cached["ok"] and cached["key"][0] < key[0]
+                    and cached.get("anchor") == anchor):
                 rows, key = self._audit_rows(cached["last_seq"])
                 entries = [dict(at=a, who=w, action=ac, case=ci, detail=d, prev=p, hash=h)
                            for _, a, w, ac, ci, d, p, h in rows]
@@ -444,6 +444,8 @@ class SqlStore(Store):
                 elif any(d.get("count", 0) > len(hashes) or (d.get("count") and hashes[d["count"] - 1] != d.get("head"))
                          for d in digests):
                     reason = "the chain differs from an independent digest"
+                elif any(isinstance(y, dict) and str(y.get("year")) == str(e["at"])[:4] for y in years for e in entries):
+                    reason = "the chain differs from a sealed year digest"
                 if reason is None:
                     positions = cached["positions"]
                     for rid, pos in self._audit_positions(rows).items():
@@ -471,7 +473,21 @@ class SqlStore(Store):
                                              key=key, last_seq=int(rows[-1][0]) if rows else 0, head=key[1],
                                              hashes=[e["hash"] for e in entries]))
 
+    def _anchor_fingerprint(self):
+        """Names, sizes and mtimes of the independent digest files; a change re-verifies instead of trusting the cache."""
+        found = []
+        try:
+            with os.scandir(self.digest_dir) as entries:
+                for e in entries:
+                    if e.name.startswith(("digest-", "year-")) and e.name.endswith(".json"):
+                        st = e.stat()
+                        found.append((e.name, st.st_size, st.st_mtime_ns))
+        except OSError:
+            return ()
+        return tuple(sorted(found))
+
     def _cache_evidence(self, evidence):
+        evidence["anchor"] = self._anchor_now
         self._audit_ev = evidence
         return evidence
 
@@ -492,12 +508,60 @@ class SqlStore(Store):
         return bad
 
     def _flag_unresolved(self, ids):
-        if not ids:
+        """One meta row per record, written once and read by primary key, so a batch costs only its own flags."""
+        for rid in ids:
+            if self._meta_value(f"rec_unres:{rid}") is None:
+                self._meta_set(f"rec_unres:{rid}", "1")
+
+    def _adopt_unresolved_index(self):
+        """Copy the earlier single-list index once into per-record rows; the list itself is left untouched."""
+        if self._meta_value("rec_unres_index") is not None:
             return
         row = self._meta_value("rec_order_unresolved")
-        known = set(json.loads(row)) if row else set()
-        if not set(ids) <= known:
-            self._meta_set("rec_order_unresolved", json.dumps(sorted(known | set(ids))))
+        try:
+            known = json.loads(row) if row else []
+        except ValueError:
+            known = []
+        self._flag_unresolved([rid for rid in known if isinstance(rid, str)])
+        self._meta_set("rec_unres_index", "1")
+
+    @staticmethod
+    def _sign(a, b):
+        return (b > a) - (b < a)
+
+    @classmethod
+    def _proven_later(cls, earlier, later):
+        """Whether `later` is provably created after `earlier`; only a trusted audit position can prove it.
+
+        The audit position of both must be present and agree. The wall clock may corroborate it, and an unedited
+        insertion seq (only available inside one backfill batch) may stand in for a clock that stepped back, but any
+        disagreement leaves the pair unproven. Ties are no evidence. No timestamp alone proves anything."""
+        if earlier["pos"] is None or later["pos"] is None:
+            return False
+        audit = cls._sign(earlier["pos"], later["pos"])
+        clock = cls._sign(earlier["created"], later["created"]) if earlier["created"] and later["created"] else 0
+        seq = 0
+        if earlier["seq"] is not None and later["seq"] is not None:
+            seq = cls._sign(earlier["seq"], later["seq"])
+        return audit > 0 and (seq > 0 or (clock > 0 and seq >= 0))
+
+    @classmethod
+    def _unproven_latest(cls, recs, only=None):
+        """Per employee, the newest eligible record if it is not provably later than every other eligible one.
+
+        `recs` are in ordinal order; AI tasks are excluded. Ordinals are never changed. Linear per employee."""
+        by = {}
+        for r in recs:
+            if not r["task"]:
+                by.setdefault(r["user"], []).append(r)
+        out = []
+        for rows in by.values():
+            last = rows[-1]
+            if only is not None and not only(last):
+                continue
+            if any(not cls._proven_later(r, last) for r in rows[:-1]):
+                out.append(last["id"])
+        return out
 
     def _record_batch(self, detail):
         count = int(self._meta_value("rec_order_batches") or 0) + 1
@@ -543,8 +607,8 @@ class SqlStore(Store):
         self.db.executemany("UPDATE recommendations SET created_ord=?, seq=? WHERE id=?",
                             [(n, seq, r["id"]) for n, r in enumerate(keyed, start + 1)])
         sizes = Counter((r["user"], r["created"]) for r in recs if not r["task"])
-        ambiguous = [r["id"] for r in keyed if not r["task"] and r["pos"] is None
-                     and (r["id"] in contradicted or sizes[(r["user"], r["created"])] > 1 or inversions)]
+        by_user = self._prior_for(keyed, start, usable)
+        ambiguous = self._unproven_latest(by_user)
         groups = sum(1 for n in sizes.values() if n > 1)
         self._flag_unresolved(ambiguous)
         self._record_batch(dict(
@@ -559,38 +623,73 @@ class SqlStore(Store):
                                                                order="created,seq,id")))
         return len(keyed)
 
-    def _review_c0_backfill(self):
-        """Identify a database backfilled by the earlier candidate without changing any ordinal.
+    def _prior_for(self, keyed, start, usable):
+        """Eligible records of the employees touched by a batch, in ordinal order: earlier rows, then the batch."""
+        users = sorted({r["user"] for r in keyed if not r["task"]})
+        by = {u: [] for u in users}
+        for i in range(0, len(users), 400):
+            chunk = users[i:i + 400]
+            marks = ",".join("?" * len(chunk))
+            for rid, user, body in self.db.execute(
+                    f"SELECT id, user, body FROM recommendations WHERE created_ord BETWEEN 1 AND ? AND user IN ({marks}) "
+                    "ORDER BY created_ord", [start] + chunk).fetchall():
+                rec = json.loads(body)
+                if rec.get("kind") != "ai_task":
+                    by[user].append(dict(id=rid, user=user, task=False, created=rec.get("created") or "",
+                                         pos=usable.get(rid), seq=None))
+        for r in keyed:
+            if not r["task"]:
+                by[r["user"]].append(dict(id=r["id"], user=r["user"], task=False, created=r["created"], pos=r["pos"],
+                                          seq=r["seq"] if r["version"] == 1 else None))
+        return [r for rows in by.values() for r in rows]
 
-        That candidate ordered by created, seq and id and kept no batch evidence. Records of one employee within one
-        second whose current order is not shown by verified audit evidence are listed for the named data owner."""
-        if not self._c0_review_pending():
-            return
+    def _suspect_ranges(self):
+        """Ordinal ranges that were assigned by a heuristic backfill rather than at insert: earlier candidates and batches."""
+        ranges = []
         try:
-            limit = int(json.loads(self._meta_value("rec_order_legacy")).get("rows", 0))
+            legacy = int(json.loads(self._meta_value("rec_order_legacy") or "{}").get("rows", 0))
         except (ValueError, TypeError, AttributeError):
-            limit = 0
-        rows = self.db.execute("SELECT id, user, body, created_ord FROM recommendations WHERE created_ord BETWEEN 1 AND ? "
-                               "ORDER BY created_ord", (limit or 1 << 40,)).fetchall()
+            legacy = 0
+        if legacy:
+            ranges.append((1, legacy))
+        for n in range(1, int(self._meta_value("rec_order_batches") or 0) + 1):
+            try:
+                batch = json.loads(self._meta_value(f"rec_order_batch:{n}") or "{}")
+                if batch.get("ordinals_changed") is not False:
+                    ranges.append((int(batch["first_ord"]), int(batch["last_ord"])))
+            except (ValueError, TypeError, KeyError, AttributeError):
+                ranges.append((1, 1 << 62))
+        return ranges
+
+    def _review_priority_order(self):
+        """Once, assess every heuristic ordinal of earlier candidates without changing any, whatever batch metadata exists.
+
+        The newest eligible record of each employee that is not provably later than that employee's other records is
+        listed for the named data owner; the seq column is not used because these rows were restamped by backfill."""
+        if self._meta_value("rec_order_review") == REC_REVIEW:
+            return
+        ranges = self._suspect_ranges()
+        rows = self.db.execute("SELECT id, user, body, created_ord FROM recommendations WHERE created_ord > 0 "
+                               "ORDER BY created_ord").fetchall()
         evidence = self._audit_evidence()
         usable = evidence["positions"] if evidence["ok"] else {}
-        groups = {}
-        for rid, user, body, _ in rows:
+        suspect, recs = set(), []
+        for rid, user, body, ordinal in rows:
             rec = json.loads(body)
-            if rec.get("kind") != "ai_task":
-                groups.setdefault((user, rec.get("created") or ""), []).append(rid)
-        flagged = []
-        for members in groups.values():
-            positions = [usable.get(rid) for rid in members]
-            if len(members) > 1 and (None in positions or positions != sorted(positions)):
-                flagged += members
+            if any(lo <= ordinal <= hi for lo, hi in ranges):
+                suspect.add(rid)
+            recs.append(dict(id=rid, user=user, task=rec.get("kind") == "ai_task", created=rec.get("created") or "",
+                             pos=usable.get(rid), seq=None))
+        flagged = self._unproven_latest(recs, only=lambda r: r["id"] in suspect)
         self._flag_unresolved(flagged)
-        self._record_batch(dict(
-            source="c0-review", at=datetime.now().isoformat(timespec="seconds"), rows=len(rows), first_ord=1,
-            last_ord=limit, same_second_groups=sum(1 for m in groups.values() if len(m) > 1),
-            ambiguous_total=len(flagged), ambiguous_ids=flagged[:REC_ORDER_IDS], audit_chain=evidence["ok"],
-            audit_reason=evidence["reason"], anchored=evidence["anchored"], ordinals_changed=False,
-            order="existing ordinals kept; same-second groups not shown by audit evidence are listed"))
+        if rows:
+            self._record_batch(dict(
+                source="review", at=datetime.now().isoformat(timespec="seconds"), rows=len(rows), first_ord=1,
+                last_ord=int(rows[-1][3]), heuristic=len(suspect), ambiguous_total=len(flagged),
+                ambiguous_ids=flagged[:REC_ORDER_IDS], audit_chain=evidence["ok"], audit_reason=evidence["reason"],
+                anchored=evidence["anchored"], ordinals_changed=False,
+                order="existing ordinals kept; the newest record of an employee not provably latest is listed"))
+        self._meta_set("rec_order_review", REC_REVIEW)
 
     def _queue_fingerprint(self):
         return json.dumps(
@@ -967,7 +1066,11 @@ class SqlStore(Store):
     def save(self):
         touched, pending = self._touched(), self.local.pending
         with self.dblock:
-            self.db.execute("BEGIN IMMEDIATE")
+            try:
+                self.db.execute("BEGIN IMMEDIATE")
+            except BaseException:
+                self._drop_unsaved_recommendations()
+                raise
             try:
                 from .change_provenance import validate_sql as validate_change
                 validate_change(self)
@@ -1103,8 +1206,8 @@ class SqlStore(Store):
 
     def rec_order_unresolved(self, rec_id):
         with self.dblock:
-            row = self.db.execute("SELECT value FROM meta WHERE key='rec_order_unresolved'").fetchone()
-        return row is not None and rec_id in set(json.loads(row[0]))
+            row = self.db.execute("SELECT 1 FROM meta WHERE key=?", (f"rec_unres:{rec_id}",)).fetchone()
+        return row is not None
 
     def _discard(self, pending=()):
         """Restore snapshots, retain supplied prior audit, then reload persisted records."""

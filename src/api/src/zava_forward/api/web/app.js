@@ -692,6 +692,7 @@ function priorityPanel() {
         h("div", {}, h("h3", {}, `Suggestion: ${rec.label}`), rowsOf(rec.items, true),
           h("p", { class: "muted" }, `${rec.source === "ai" ? "Written by AI" : `Written by rules: ${rec.fallback_reason || "AI not available"}`}. ${rec.validated === false ? "Unverified. " : ""}${rec.overlap} of ${rec.items.length} match the rule-based top ${rec.n}.`))));
       if (rec.status === "Proposed") {
+        if (rec.order_note) kids.push(h("p", { class: "flag danger", role: "status" }, rec.order_note));
         const why = h("input", { id: "pri-why", type: "text", placeholder: "Reason (needed to edit or reject)", maxlength: 300 });
         const keep = rec.items.map((i) => h("input", { type: "checkbox", checked: true, "aria-label": `Keep ${i.resident}` }));
         const act = (action) => async () => {

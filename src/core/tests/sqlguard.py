@@ -4,11 +4,16 @@ import hashlib
 import ipaddress
 import json
 import os
+import re
 import stat
+import subprocess
 import time
-from collections.abc import Mapping
+from collections.abc import Callable, Mapping
+from datetime import datetime
+from typing import Any
 
-SCHEMA = "zf-task-sql/1"
+SCHEMA = "zf-task-sql/2"
+TASK_LABEL = "1292-sql-disposable"
 MAX_AGE = 24 * 3600
 
 
@@ -19,14 +24,32 @@ def _refuse(reason: str) -> RuntimeError:
     )
 
 
-def write_manifest(
-    path: str, host: str, port: str, password: str, created: float | None = None
-) -> None:
-    """Called by the admitted setup after it creates its own server with a new password.
+def docker_inspect(container: str) -> dict[str, Any]:
+    """Read container metadata only; the listener itself is never contacted."""
+    result = subprocess.run(
+        ["docker", "inspect", container], capture_output=True, text=True, timeout=30, check=True
+    )
+    found = json.loads(result.stdout)
+    if not isinstance(found, list) or len(found) != 1 or not isinstance(found[0], dict):
+        raise ValueError("unexpected docker inspect output")
+    return found[0]
 
-    Only the password digest is stored, and the file is private to the current user."""
+
+def write_manifest(
+    path: str,
+    host: str,
+    port: str,
+    password: str,
+    container: str,
+    created: float | None = None,
+) -> None:
+    """Called by the admitted setup after it creates its own labelled container with a new password.
+
+    Only the password digest is stored, and the file is private to the current user. The manifest
+    is a pointer: admission also needs the live container evidence checked below."""
     body = dict(
         schema=SCHEMA,
+        container=container,
         host=host,
         port=str(port),
         password_sha256=hashlib.sha256(password.encode()).hexdigest(),
@@ -46,12 +69,49 @@ def _loopback(host: str) -> bool:
         return False
 
 
-def require_task_owned_loopback(env: Mapping[str, str]) -> None:
-    """Raise before any connection unless ZF_SQL_* matches a current private task manifest.
+def _verify_container(
+    container: str, port: str, password: str, inspect: Callable[[str], dict[str, Any]]
+) -> None:
+    if not re.fullmatch(r"[0-9a-f]{64}", container):
+        raise _refuse("the manifest does not name a full container id")
+    try:
+        info = inspect(container)
+    except Exception:
+        raise _refuse("the task container cannot be inspected") from None
+    if info.get("Id") != container:
+        raise _refuse("the inspected container is not the one in the manifest")
+    if not (info.get("State") or {}).get("Running"):
+        raise _refuse("the task container is not running")
+    config = info.get("Config") or {}
+    if (config.get("Labels") or {}).get("zf.task") != TASK_LABEL:
+        raise _refuse("the container was not created for this task")
+    bindings = ((info.get("NetworkSettings") or {}).get("Ports") or {}).get("1433/tcp") or []
+    if not bindings or any(b.get("HostIp") not in ("127.0.0.1", "::1") for b in bindings):
+        raise _refuse("the container must publish its SQL port on loopback only")
+    if not any(str(b.get("HostPort")) == port for b in bindings):
+        raise _refuse("the container does not publish ZF_SQL_PORT")
+    if f"MSSQL_SA_PASSWORD={password}" not in (config.get("Env") or []):
+        raise _refuse("the container was not provisioned with this password")
+    try:
+        started = datetime.fromisoformat(
+            re.sub(r"(\.\d{6})\d*Z$", r"\1+00:00", str(info["Created"]))
+        )
+        age = time.time() - started.timestamp()
+    except (KeyError, ValueError):
+        raise _refuse("the container creation time is unreadable") from None
+    if age > MAX_AGE or age < -60:
+        raise _refuse("the task container is not current")
 
-    Loopback and password authentication are necessary but not sufficient: a shared local server or
-    tunnel to a remote one passes them. The manifest binds this process to the endpoint and the
-    one-time password the setup created."""
+
+def require_task_owned_loopback(
+    env: Mapping[str, str], inspect: Callable[[str], dict[str, Any]] | None = None
+) -> None:
+    """Raise before any connection unless ZF_SQL_* names a live, labelled, task-created container.
+
+    Loopback and password authentication are necessary but not sufficient, and a caller-written
+    manifest proves nothing: a shared local server or tunnel passes both. Admission therefore reads
+    the container's own metadata (label, loopback-only publish, port, provisioned password, age)
+    and never connects to the listener."""
     host = (env.get("ZF_SQL_SERVER") or "").strip().strip("[]")
     if not _loopback(host):
         raise _refuse("ZF_SQL_SERVER must be localhost or a loopback address")
@@ -90,3 +150,9 @@ def require_task_owned_loopback(env: Mapping[str, str]) -> None:
     digest = hashlib.sha256((env.get("ZF_SQL_PASSWORD") or "").encode()).hexdigest()
     if manifest.get("password_sha256") != digest:
         raise _refuse("the password is not the one generated for this task")
+    _verify_container(
+        str(manifest.get("container") or ""),
+        env.get("ZF_SQL_PORT") or "1433",
+        env.get("ZF_SQL_PASSWORD") or "",
+        inspect or docker_inspect,
+    )

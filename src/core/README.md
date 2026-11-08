@@ -4714,22 +4714,33 @@ approval, consent and ranking policy are unchanged and a proposal never becomes 
 
 Legacy rows have no stored creation order, so the migration derives one and records what it could
 not establish. Audit evidence is trusted only when the chain verifies, matches the retained audit
-head and any retained daily or year digests, and the `ai_run_end priority_recommendation <id>` event
-is not contradicted by the insertion `seq` of an unedited row. Such an event, written in the same
-transaction as the creation, orders same-second proposals by audit position, even across a backward
-wall-clock step or a later edit. Rows without usable evidence fall back to body `created`, then
-`seq`, then `id`, merged among audited rows by `created`. A same-second group, a contradicted row or
-a row after a timestamp inversion without evidence is ambiguous.
+head and any retained daily or year digests (re-checked when the digest files change, and for any
+entry appended to a sealed year), and the `ai_run_end priority_recommendation <id>` event is not
+contradicted by the insertion `seq` of an unedited row. Rows without usable evidence fall back to
+body `created`, then `seq`, then `id`, merged among audited rows by `created`.
+
+Order is never proven by absence of contradiction. For an employee, the newest eligible record is
+confirmed only if, against every other eligible record, both audit positions are present and agree
+and either the unedited insertion `seq` of both rows (inside one backfill batch) agrees or the
+`created` text strictly agrees with no `seq` contradiction. Ties, edited rows, orphan or late
+creation events, a missing audit and a timestamp alone are unproven and the newest record is
+flagged. Ordinals are never changed to resolve this.
 
 Ambiguity is visible. Every backfill batch writes its own `meta` key `rec_order_batch:<n>` (counter
 `rec_order_batches`; counts, ordinal range, audit flags and up to 100 ambiguous ids), and
-`rec_order_unresolved` lists every unresolved id. When the newest eligible proposal of an employee is
-unresolved, `latest_priority` returns it with `order_confirmed` false, `actionable` false and an
-`order_note` naming the data owner; other employees and `ai_task` rows are unaffected. The original
-`rec_order_legacy` and the earlier `rec_order_backfills` records are never rewritten. A database
-backfilled by the earlier candidate is reviewed once at migration (batch source `c0-review`), which
-flags same-second groups without changing any ordinal. The named data owner decides how flagged
-records are resolved; this change adds no resolution mechanism and invents no order.
+one `rec_unres:<id>` row per unresolved newest record (primary-key lookup, written once, so a batch
+costs only its own flags; the earlier single `rec_order_unresolved` list is copied once and left
+untouched). When the newest eligible proposal of an employee is unresolved, the store marks it
+`order_confirmed` false, `actionable` false, `relied_on` false and adds an `order_note` naming the
+data owner. This holds for `latest_priority` and every other view of that record, and the server
+refuses direct accept and edit requests with a permission error; rejecting stays available, as do
+the ordinary case controls. The priority panel shows the note. Other employees and `ai_task` rows
+are unaffected. The original `rec_order_legacy` and `rec_order_backfills` records are never
+rewritten. Every database without the `rec_order_review` marker is reviewed once at migration (batch
+source `review`, whatever batch metadata exists): ordinals assigned by a heuristic backfill are
+assessed without changing any, so earlier-candidate and cross-timestamp inversions are found. The
+named data owner decides how flagged records are resolved; this change adds no resolution mechanism
+and invents no order.
 
 Mixed-version fence: a pre-fix binary can insert ordinal 0 at any time, because every writer bumps
 `meta.seq` in the same commit as its rows. Reload therefore reads the sequence, fetches, and reads the
@@ -4737,14 +4748,17 @@ sequence again; a changed sequence retries (bounded) and a fetched zero ordinal 
 writer lock and re-read, so a zero ordinal is never cached or served and exhaustion fails the read.
 Queue lookups synchronise before their transaction and re-check the sequence inside it, so a rolled
 back transaction publishes no cache state. A save repairs zero rows before allocating its own ordinal
-and drops unsaved proposals and their pending creation events when it rolls back. The audit evidence
+and drops unsaved proposals and their pending creation events when it rolls back or when its
+transaction cannot begin (no rollback is attempted for a transaction that never opened). The audit evidence
 is cached per process and extended incrementally, so repeated repairs do not rescan the chain. This
 is a fence, not a substitute for draining older writers before a release.
 
 SQL fixtures (`tests/sqlguard.py`) refuse to connect unless `ZF_SQL_TASK_MANIFEST` names a private
-(0600, owned by the user, under 24 hours old) manifest written by the disposable setup with
-`write_manifest`, whose host, port and password digest match `ZF_SQL_SERVER`, `ZF_SQL_PORT` and
-`ZF_SQL_PASSWORD`; loopback and password authentication alone are refused. Tests:
+(0600, owned by the user, under 24 hours old) manifest whose host, port and password digest match
+`ZF_SQL_SERVER`, `ZF_SQL_PORT` and `ZF_SQL_PASSWORD` and whose container id is confirmed by
+`docker inspect` metadata (no listener contact): running, labelled `zf.task=1292-sql-disposable`,
+created within 24 hours, `1433/tcp` published on loopback only at `ZF_SQL_PORT`, and provisioned with
+that password. A manifest alone, loopback or a password alone are refused. Tests:
 `src/core/tests/test_priority_order.py` (in-memory, SQLite, and SQL Server with `ZF_RESIDENT_MSSQL=1`).
-SQL Server behaviour of the C2 source, the ledger-enabled migration and SQL Server scale are not yet
-proven.
+SQL Server behaviour of the C3 source, the real Docker provisioning path, the ledger-enabled
+migration and SQL Server scale are not yet proven.
