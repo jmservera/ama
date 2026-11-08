@@ -1,0 +1,30 @@
+{
+  "task_id": "issue-891-vm-demo-release-2026-11-08",
+  "task_slug": "issue-891-vm-demo-release",
+  "parent_task": {"task_id": "issue-891", "task_slug": "issue-891-chat-demo"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-08-issue-891-vm-demo-release-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-08-issue-891-vm-demo-release-plan.md",
+    "details": ".copilot-tracking/details/2026-11-08-issue-891-vm-demo-release-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-08-issue-891-vm-demo-release-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-08-issue-891-vm-demo-release-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-08-issue-891-vm-demo-release-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed; Planning Readiness Ready", "status": "recorded", "evidence": "research record"},
+    {"decision": "Critique executed once, verdict revise, findings applied", "status": "recorded", "evidence": "plan Critique section"},
+    {"decision": "Deploy from VM, no ACA runner", "status": "owner-confirmed", "evidence": "issue 891 comment 6723702746"},
+    {"decision": "Review executed once; release met, live model proof not met", "status": "recorded", "evidence": "review record"}
+  ],
+  "blockers": [
+    {"id": "entra-oid", "summary": "Expected tenant/object id cannot be independently verified; Entra read denied", "resolution": "Owner-held expected object id or Entra read grant plus finite attempt manifest"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator exact-head evidence handoff; then guarded employee chat once identity is verifiable"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Verify expected oid and run one guarded employee chat ask on revision --0000027", "rationale": "Only remaining proof for the live criterion", "evidence": "review record"}
+  ]
+}
