@@ -26,7 +26,7 @@ MAX_WINDOW = timedelta(days=14)
 STAMP = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ\Z")
 PLACEHOLDERS = frozenset({"tbc", "tbd", "todo", "n/a", "na", "none", "unknown", "unassigned"})
 FIELDS = frozenset({"version", "enabled", "expires_at", "approval_reference", "owner", "homes"})
-SEND, STOPPED, EXPIRED = "send", "stopped", "expired"
+SEND, STOPPED, EXPIRED, INVALID = "send", "stopped", "expired", "invalid"
 
 
 def _stamp(value: object) -> datetime:
@@ -87,8 +87,11 @@ def load(path: Path) -> Control:
 
 
 def decide(control: Control, now: datetime) -> str:
+    """Only SEND allows work; an expiry beyond the 14-day maximum is INVALID for every reader."""
     if now >= control.expires_at:
         return EXPIRED
+    if control.expires_at > now + MAX_WINDOW:
+        return INVALID
     return SEND if control.enabled else STOPPED
 
 

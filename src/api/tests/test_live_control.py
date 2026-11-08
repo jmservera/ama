@@ -69,6 +69,24 @@ class ControlTests(unittest.TestCase):
         stopped = lc.parse(document(enabled=False))
         self.assertEqual(lc.decide(stopped, NOW), lc.STOPPED)
 
+    def test_readers_refuse_an_expiry_beyond_fourteen_days(self) -> None:
+        cases = {
+            "2026-11-23T10:00:00Z": lc.SEND,
+            "2026-11-23T10:00:01Z": lc.INVALID,
+            "2027-11-09T10:00:00Z": lc.INVALID,
+            "2026-11-10T10:00:00Z": lc.SEND,
+        }
+        for expires, expected in cases.items():
+            with self.subTest(expires=expires):
+                self.assertEqual(lc.decide(lc.parse(document(expires_at=expires)), NOW), expected)
+        far = document(expires_at="2027-11-09T10:00:00Z")
+        self.assertEqual(lc.decide(lc.parse(far | {"enabled": False}), NOW), lc.INVALID)
+        self.assertEqual(lc.decide(lc.parse(document(enabled=False)), NOW), lc.STOPPED)
+
+    def test_expired_stays_expired_not_invalid_or_send(self) -> None:
+        for expires in ("2026-11-09T10:00:00Z", "2020-01-01T00:00:00Z"):
+            self.assertEqual(lc.decide(lc.parse(document(expires_at=expires)), NOW), lc.EXPIRED)
+
     def test_window_must_be_future_and_at_most_fourteen_days(self) -> None:
         lc.check_window(lc.parse(document()), NOW)
         for expires in ("2026-11-09T10:00:00Z", "2026-11-23T10:00:01Z"):
@@ -147,6 +165,15 @@ class CohortAndGateTests(unittest.TestCase):
         )
         self.assertEqual((summaries, sink.messages), ([], []))
 
+    def test_over_window_control_sends_nothing_through_main(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "control.json"
+            far = (datetime.now(UTC) + timedelta(days=365)).strftime("%Y-%m-%dT%H:%M:%SZ")
+            lc.write(path, lc.parse(document(expires_at=far)))
+            env = {"ZF_STORE": "json", "ZF_DATA": str(Path(directory) / "none.json")}
+            code = ls.main(["--sink", "stdout", "--once", "--control-file", str(path)], env)
+            self.assertEqual(code, 0)
+
     def test_iothub_sink_needs_a_control_file(self) -> None:
         env = {"ZF_SIM_HUB_HOSTNAME": "hub-x.azure-devices.net", "ZF_SIM_APPROVAL": "r"}
         self.assertEqual(ls.main(["--sink", "iothub", "--once"], env), 2)
@@ -177,6 +204,13 @@ class ReceiverTests(unittest.TestCase):
             rx.activation(env, control).validate()
         ready = rx.activation(env | {"ZF_SIM_ROUTING_READY": "1"}, control)
         ready.validate()
+
+    def test_window_is_refused_for_an_expiry_beyond_fourteen_days(self) -> None:
+        control = lc.parse(document(expires_at="2027-11-09T10:00:00Z"))
+        with self.assertRaises(StreamError):
+            rx.window_seconds(control, 60.0, NOW)
+        with self.assertRaises(StreamError):
+            asyncio.run(rx.run_window(control, {}, object(), 60.0, 10, NOW))  # type: ignore[arg-type]
 
     def test_window_is_refused_when_stopped_or_expired(self) -> None:
         for control in (lc.parse(document(enabled=False)), lc.parse(document())):
@@ -331,6 +365,15 @@ class ReceiverStopTests(unittest.TestCase):
             stop = asyncio.Event()
             asyncio.run(rx._watch(control, lambda: lc.load(path), lambda: next(ticks), stop, 0.0))
         self.assertTrue(stop.is_set())
+
+    def test_rewrite_beyond_fourteen_days_during_window_stops(self) -> None:
+        seen = self.run_with_change(
+            lambda p, c: lc.write(
+                p, lc.parse(c.as_document() | {"expires_at": "2027-11-09T10:00:00Z"})
+            )
+        )
+        self.assertTrue(seen["stopped"])
+        self.assertLess(seen["ingested"], 5)
 
     def test_sub_second_remaining_is_refused_not_rounded_up(self) -> None:
         control = lc.parse(document())
