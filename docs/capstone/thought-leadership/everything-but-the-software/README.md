@@ -1,7 +1,7 @@
 ---
 title: Everything but the Software - source package (draft v11)
 description: Single-document paper with integrated Supplement, verified source corrections and prospective study limits
-ms.date: 2026-11-01
+ms.date: 2026-11-05
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
@@ -10,7 +10,7 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 The title is unchanged at the owner's request. The complete
 [paper](./main.pdf) and [source](./main.tex) now include a
-[Supplement section](./main.pdf#page=32) in the same document.
+[Supplement section](./main.pdf#page=33) in the same document.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
 Repeated Background text, figures and case narratives are excluded from
@@ -28,31 +28,140 @@ calendar dates no longer lead the argument. The supplied
 backlog handoff; its provenance and missing export metadata are in the
 [evidence index](./anc/case-evidence-matrix.json).
 
-The four requested scientific skills informed the equation and design audit.
-Exact algebra and planning arithmetic check out under their stated assumptions.
-The new freeze must still reconcile replicate-block scheduling with the
-independent-trajectory variance and bootstrap scheme. This is an explicit
-pre-collection TODO; the kit and its sample allocation were not changed.
-Pending results remain author TODOs. The rebuilt paper has 37 pages, with its
-Supplement starting on page 32. Thirty-four authoring tests pass. Direct
-Tectonic/PDF checks find no unresolved references, overfull text or out-of-page
-text; one inherited `inputenc` compatibility warning remains. The old optional
-log check expects a pdfLaTeX-specific output marker, so its failure and the
-direct verification are recorded separately.
-The focused repository gate was attempted against fetched `origin/main`, but
-preflight blocked on tracked modifications and untracked inputs. No passing
-repository-gate receipt or publication readiness is claimed.
+### Recovery and Scientific Alignment 5 November
 
-The prospective candidate uses five arms and three selected models, with
-33 trajectories per arm/model: 495 total. A is feature-only, B consolidation,
-C information-bearing review, D matched-resource longer feature delivery
-and E visible regression repair. The primary equal-model-weight B-D coverage
-comparison targets a 10-percentage-point gain under an explicit 25-point SD
-assumption, alpha .05 and power .80. This is conditional planning, not observed
-variance or guaranteed power. The current kit is the
-[v5 candidate](https://github.com/jmservera/ama-thought-mve/tree/feat/fair-study-v5);
-the [frozen v4 release](https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v4)
-and original registration remain historical.
+PR #1206 was closed at the owner's request without deleting its branch.
+The earlier scientific skills, reviewer and manuscript work were already
+preserved by PR #746. Only amendment `3ef395b8` was recovered onto
+`docs/paper-scientific-reconciliation` from current main `c6d5a8f3`;
+the actual replay completed without conflicts and preserved the existing
+knowledge-base log as a prefix.
+
+The [fresh scientific review and disposition](./anc/revision-report.md#recovery-and-scientific-alignment-5-november)
+supersede the dated implementation assessment below. Read-only inspection
+of `jmservera/ama-thought-mve` default `5ab24be4` verified all five arms,
+the immutable 12/21/33 selector and the published
+[v6 source packet](https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v6).
+Its execution source is `7de2f0d4`; the default head changes only the freeze
+manifest. The stale local MVE checkout was not used as current evidence.
+Source-declared runtime qualification was not reproduced.
+
+The review found three major concerns and one minor framing issue.
+Current-capability wording and the primary matched-ceiling description are
+corrected. The protocol and measurement figure now distinguish the proposed
+observed-subset retention/graded-CR1 reports from the inspected analyzer's
+conservative unavailable summaries. The independent-arm bootstrap is an
+implemented candidate, not an accepted resolution of scheduling-block
+dependence. The original adverse review is retained unchanged.
+
+Before collection, the author must resolve reporting and block-inference
+alignment, record and justify the selected allocation, establish full-study
+affordability/deadline acceptance and obtain an approved exact-source
+prospective record. The inspected v6 manifest has a null registration date,
+no recorded prospective OSF update and no collection authorization.
+No kit, saved study, freeze, OSF record, paid experiment or visibility was
+changed. This recovery is manuscript development, not scientific acceptance
+or permission to collect data.
+
+Nine new stdlib planning regressions reproduce all 39 resource-table cells,
+three sample-size rows, nine economic sensitivity cells, discrete payback,
+matched ceilings and allocation-bearing labels. A further regression guards
+the current source pins and explicit reporting/inference limits.
+The independent SymPy check confirms the conditional independent-cell
+variance and cost summation. At assumed SD 25, the normal planning powers
+for n=12/21/33 are approximately 0.396438/0.612203/0.803527; these are
+hypothetical sensitivities, not measured variability or observed power.
+Final build and publication evidence is recorded in the dated disposition.
+The existing Scientific Agent Skills citation and four-skill assistance
+disclosure are retained.
+
+Final local validation passes all 44 authoring regressions and the structural
+checker: 94 cited entries, 105 reusable entries and a 1,719-character abstract.
+Tectonic rebuilds the 38-page delivered PDF, with the Supplement on page 33.
+All-page text bounds and internal links pass; the revised power/resource
+pages and both changed native diagrams were rendered and inspected.
+One inherited `inputenc` compatibility warning remains. Historical body-word
+comparison is unavailable, and the optional pdfLaTeX-specific marker check
+is not claimed under Tectonic. Exact-head review, the focused repository gate
+and hosted checks are separate publication steps recorded with the
+replacement PR; none authorizes experiment collection.
+
+### Prospective Allocation 2 November
+
+This dated record retains the original allocation revision and inspection
+limits. Its A/B/C-only account is superseded by the 5 November v6 source
+check above; it no longer describes the current implementation.
+
+The researcher selects 12 (default), 21 or 33 independent repository
+trajectories per model per arm before study collection. Record the choice,
+rationale, planning SD, power/precision trade-off, date and source-bound
+configuration in the saved study record and prospective protocol. The saved
+allocation cannot change on resume or in response to outcomes. Features,
+tests, checkpoints and agent sessions are observations within a trajectory,
+not extra independent replicates.
+
+The proposal retains three models and five arms. A is feature-only,
+B consolidation, C information-bearing review, D matched-resource longer
+feature delivery and E visible regression repair. For the primary
+equal-model-weight ten-point B-D contrast, the existing normal approximation
+with alpha .05 and target power .80 gives 12/21/33 per cell under assumed
+within-cell SDs of 15/20/25 percentage points, respectively. These are
+conditional planning assumptions, not measured variances or interchangeable
+80%-power guarantees. Default 12 is not an 80%-power design under SD 25.
+
+| n per model per arm | Study trajectories | Study sessions | Sessions with calibration | Maximum hours with calibration | Nominal credits with calibration |
+| ------------------- | ------------------: | --------------: | -------------------------: | ------------------------------: | --------------------------------: |
+| 12 (default)        |                 180 |          3,060 |                     3,300 |                       1,500.00 |                        1,107,000 |
+| 21                  |                 315 |          5,355 |                     5,595 |                       2,546.25 |                        1,876,500 |
+| 33                  |                 495 |          8,415 |                     8,655 |                       3,941.25 |                        2,902,500 |
+
+Study trajectories are `15*n`; study sessions are `255*n`. Excluded
+cost-only calibration remains 15 trajectories, 240 sessions, 105 maximum
+agent-hours and 81,000 nominal credits, without CR1. Combined maximum hours
+are `116.25*n + 105`; summed nominal session allowances are
+`85500*n + 81000` credits. The table combines only study and calibration
+allowances, not prior charges or unknown-usage holds.
+
+These allowances do not enlarge the actual 300,000-credit aggregate envelope
+or 270,000-credit local admission ceiling. Prior spending, unknown-usage
+holds and all-attempt costs remain in admission accounting. Cost-only
+calibration must establish affordability of the entire selected allocation
+and deadline; otherwise halt, retaining the selected sample. A revised
+allocation requires a separately authorized prospective amendment and a new
+saved study, never outcome-driven resizing, a changed allocation on resume
+or a silent reduction to fit the budget.
+
+The owner-reported MVE update accepts `--replicates 12`, `21` or `33`,
+default 12, and preserves its saved selection immutably, but implements only
+A/B/C. The five-arm paper is not a five-arm executable implementation; D/E
+and their source-bound qualification remain gaps. The earlier
+[v5 candidate](https://github.com/jmservera/ama-thought-mve/tree/feat/fair-study-v5)
+records do not establish current D/E implementation. Neither the new choices
+nor the MVE update is included in the published
+[v4 freeze](https://github.com/jmservera/ama-thought-mve/releases/tag/protocol-frozen-v4).
+The original registration and historical freezes remain unchanged.
+
+The [2 November revision record](./anc/revision-report.md#prospective-allocation-revision-2-november)
+records the arithmetic and source limits. The four scientific skills informed
+the audit. Replicate-block scheduling still needs reconciliation with the
+independent-trajectory variance and bootstrap scheme before a new freeze.
+No MVE source or saved study was changed or executed here.
+
+Pending results remain author TODOs. The rebuilt paper has 38 pages, with its
+Supplement starting on page 33. All 34 authoring tests, the structural checker,
+39 resource-table cells and three sample-size rows pass. Direct compiler/PDF
+checks find no unresolved references, overfull text, blank pages or out-of-page
+words; both revised table pages were rendered and inspected. One inherited
+`inputenc` compatibility warning remains. The historical body-word comparison
+is unavailable; the optional old log check still expects a pdfLaTeX marker.
+Both allocation-bearing figures and their authoring script now use the
+selectable sample and default 180 trajectories. Refreshed native SVG/PNG
+exports pass overflow, hash-binding and visual checks; the frozen prompt and
+active Supplement hashes remain unchanged.
+The focused repository gate against freshly fetched `origin/main` at
+`a56df549` stopped at clean-candidate preflight because tracked modifications
+or untracked inputs are present. No passing receipt or publication readiness
+is claimed; no commit, stash or exclusion was used to bypass it.
 
 No experiment was collected. New source-bound review, runtime qualification,
 cost-only calibration, affordability/deadline, owner freeze, actual prospective
@@ -74,6 +183,11 @@ The five-arm and measurement diagrams remove the prematurely printed CR1
 topic; the economic diagram plots the break-even boundary against k/delta.
 PF1-PF3 still await real data. Original critiques, prior datasets, published
 chart inputs and historical revision records are retained.
+
+The dated sections below retain their earlier allocations, page counts and
+five-arm implementation claims as historical disclosures. Their fixed-33
+resource totals describe the 33 option, not the new default; the current
+allocation and implementation boundaries above supersede those claims.
 
 The [dated review and complete pending checklist](./anc/review-2026-10-29.md)
 records the earlier findings, evidence coverage, applied changes, launch

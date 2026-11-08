@@ -2122,6 +2122,14 @@ selects Basic IoT Hub for the exercise, excluding cloud-to-device messages,
 device twins and device management. Sizing, cost, provisioning, network and
 device credential ownership remain separate decisions. No issue closure follows.
 
+`python src/api/checks/sensor_sql_check.py --selector analysis` runs only
+`test_sensor_analysis_mssql`, the retained-reading analysis tests (#111), on the
+same disposable server. The harness accepts only `default` and `analysis`. For
+`analysis` it requires exit 0, exactly eight tests and a clean `OK`, so a
+skipped test fails the run. This shows the analysis path executing on local SQL
+Server only; it does not meet whole #111 acceptance, complete research R1 to R3
+or show live sensor accuracy.
+
 ## Constructed RAI evidence register API (#126)
 
 `GET /api/governance` remains current-registered-manager only and includes

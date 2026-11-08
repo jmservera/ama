@@ -1,0 +1,14 @@
+---
+title: Issue 530 chat local-unit validation changes
+ms.date: 2026-11-08
+---
+
+* Source identity: HEAD and fetched `origin/main` `f548b65f4aa31eb92a2cc9cb801130e422daed7f`, tree `32ecad35029eb102f435c7802a29edd148de5642`. No source, test, runner, workflow or dependency file changed (`git diff HEAD -- src` empty before and after the run). Only these RPI records are added.
+* Environment: new external venv `/tmp/rpi-530-venv-1108` (no site packages, nothing installed; no dependency was reported missing). `ZF_DATA=/tmp/rpi-530-synthetic-1108.json` (never created). Python 3.12.3, Node v24.21.0.
+* Import origin: inside the test process every `zava_forward`, `.core`, `.agents`, `.api` path and every selected test module `__file__` was asserted to be under this worktree's `src/`; `test_chat_panel` resolved to `src/core/tests/`. The global editable installs point at `/home/azureuser/source/ama` and were not on the path.
+* Command (cwd `src/api`, one process): `env PYTHONPATH=../core/tests:.:src:tests:../core/src:../agents/src:../agents/tests ZF_DATA=/tmp/rpi-530-synthetic-1108.json PYTHONDONTWRITEBYTECODE=1 /tmp/rpi-530-venv-1108/bin/python /tmp/rpi-530-out-1108/run.py` (scratch wrapper: origin asserts, then `unittest.defaultTestLoader.loadTestsFromNames` of the ids in the details file, verbosity 2). Wrapper sha256 `88f6dfaa74595ca75cecc2f2cc3917ef57b2d9158c7ae336e7b9feb6b7428dc6`.
+* Result: exit 0; 71 tests run, 0 failures, 0 errors, 0 skips. Raw log `/tmp/rpi-530-out-1108/unit.log` (sha256 `3f7fedbbfc69c92eba8b0141f777da8e7198b657942cea8cae4ddc4b245faadd`) is external and not committed. The log contains the expected stub-induced "Employee chat model unavailable (RuntimeError)" messages from the fallback tests.
+* Source blobs of the selected modules at HEAD (unchanged): `src/agents/tests/test_chat_model.py` d9729d740c87, `test_chat_provenance.py` 87fd75cf4119, `src/core/tests/test_chat_case_answers.py` 98ff45bf8564, `test_chat_panel.py` 9cb39f77fc8f, `test_chat_privacy.py` 14b542c0e36a, `src/api/tests/test_chat_widget_focus.py` 2ba1024674b1.
+* Not run: SQL-backed classes (SQLite `SqlStore`/ledger), the opt-in Chromium case, any browser, Docker, scanner or FULL work; SQL Server. Deterministic ledger/cost tests (`test_ai_consumption_safety`) and the API role matrix proof (`test_chat_isolation`, API `test_chat_panel`) are SQL-backed and excluded, so only the chat-model admission/consumption boundary is covered here.
+* Focused gate: trusted inspection of `tools/rpi-checks.py` shows `main` enters `heavy_lock(args.lock_timeout, ...)` at line ~3138 for every invocation, including `--changed`, and `/tmp/ama-rpi-heavy.lock` is held by FULL1258. `--changed` also always selects `preflight` (Docker and Trivy version probes). Per the launch rule the gate was NOT executed or queued. Focused gate admission is pending; no partial receipt exists.
+* Divergences: none from the plan; critique dispositions applied before running.

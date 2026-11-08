@@ -31,6 +31,22 @@ assert SPEC is not None and SPEC.loader is not None
 gate = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(gate)
 
+BROWSER_LINTED = (
+    "design_system_browser_check",
+    "regulatory_ux_check",
+    "case_journey_browser_check",
+    "employee_chat_browser_check",
+)
+CHAT_SCANS = [
+    {"state": state, "violations": [], "passes": 5} for state in gate.EMPLOYEE_CHAT_STATES
+]
+
+
+def sql_chat_log(extra: str = "") -> str:
+    results = "".join(f"{name} ... ok\n" for name in gate.SQL_CHAT_REQUIRED_TESTS)
+    count = len(gate.SQL_CHAT_REQUIRED_TESTS)
+    return f"{results}{extra}Ran {count} tests in 0.1s\n\nOK\n"
+
 
 class GateTests(unittest.TestCase):
     def test_employee_acceptance_cli_is_required_without_extras_and_dispatched(
@@ -168,6 +184,249 @@ class GateTests(unittest.TestCase):
                         gate.verify_commands(self.root, self.out, receipt)
                 finally:
                     path.write_text(saved)
+
+    def test_employee_chat_check_is_in_the_browser_contract_and_dispatched(self) -> None:
+        checks = gate.required_checks(
+            self.root,
+            {
+                "owner": "a" * 24,
+                "sql": {},
+                "images": {},
+                "extras": [],
+                "executed_groups": ["browser"],
+            },
+        )
+        selected = [row for row in checks if gate.EMPLOYEE_CHAT_BROWSER_MODULE in row["argv"]]
+        self.assertEqual(len(selected), 1)
+        contract = selected[0]
+        python = "<output>/venvs/api/bin/python"
+        self.assertEqual(
+            contract["argv"],
+            [
+                python,
+                "-c",
+                gate.BROWSER_ENTRY,
+                "checks.employee_chat_browser_check",
+                "--axe",
+                "<output>/axe-4.10.3.min.js",
+                "--out",
+                "<output>/employee-chat",
+            ],
+        )
+        self.assertEqual(contract["cwd"], "src/api")
+        self.assertEqual(
+            contract["env"], {"PYTHONPATH": "<output>/safety:" + gate.test_paths("api", True)}
+        )
+        self.assertEqual((contract["suite"], contract["integration"]), (False, False))
+        self.assertEqual(contract["timeout_seconds"], 900)
+        order = [
+            next(arg for arg in row["argv"] if arg.startswith("checks."))
+            for row in checks
+            if row["group"] == "browser" and any(str(a).startswith("checks.") for a in row["argv"])
+        ]
+        self.assertEqual(
+            order,
+            [
+                "checks.employee_acceptance_check",
+                "checks.design_system_browser_check",
+                "checks.case_journey_browser_check",
+                "checks.employee_chat_browser_check",
+                "checks.regulatory_ux_check",
+            ],
+        )
+        runner = self.runner()
+        runner.snapshot = self.root
+        modules = []
+
+        def command(argv: list[str], cwd: str = ".", **kwargs: Any) -> str:
+            if gate.EMPLOYEE_CHAT_BROWSER_MODULE in argv:
+                self.assertEqual(argv[:3], [runner.python("api"), "-c", gate.BROWSER_ENTRY])
+                self.assertEqual(
+                    argv[3:],
+                    [
+                        gate.EMPLOYEE_CHAT_BROWSER_MODULE,
+                        "--axe",
+                        str(runner.out / "axe-4.10.3.min.js"),
+                        "--out",
+                        str(runner.out / "employee-chat"),
+                    ],
+                )
+                self.assertEqual(cwd, "src/api")
+                self.assertEqual(kwargs["timeout"], 900)
+                self.assertTrue(kwargs["env"]["PYTHONPATH"].startswith(str(runner.safety) + ":"))
+            modules.append(next((a for a in argv if str(a).startswith("checks.")), None))
+            return gate.EMPLOYEE_CHAT_PASS if gate.EMPLOYEE_CHAT_BROWSER_MODULE in argv else ""
+
+        def copy(source: Path, target: Path) -> None:
+            Path(target).write_text(json.dumps(CHAT_SCANS))
+
+        response = Mock()
+        response.__enter__ = Mock(return_value=response)
+        response.__exit__ = Mock(return_value=False)
+        response.read.return_value = b"fixture axe"
+        with (
+            patch.object(runner, "lint"),
+            patch.object(runner, "install_chromium"),
+            patch.object(runner, "command", side_effect=command),
+            patch.object(gate, "urlopen", return_value=response),
+            patch.object(gate, "digest", return_value=gate.AXE_SHA256),
+            patch.object(gate.shutil, "copyfile", side_effect=copy),
+        ):
+            runner.browser()
+        self.assertEqual(
+            runner.failures, ["browser: Required group browser has no execution evidence"]
+        )
+        self.assertEqual(
+            [m for m in modules if m and m != "checks.employee_acceptance_check"],
+            [
+                "checks.design_system_browser_check",
+                "checks.case_journey_browser_check",
+                "checks.employee_chat_browser_check",
+                "checks.regulatory_ux_check",
+            ],
+        )
+
+    def test_employee_chat_checker_is_linted_in_planned_and_executed_browser_contracts(
+        self,
+    ) -> None:
+        target = "checks/employee_chat_browser_check.py"
+        checks = gate.required_checks(
+            self.root,
+            {
+                "owner": "a" * 24,
+                "sql": {},
+                "images": {},
+                "extras": [],
+                "executed_groups": ["browser"],
+            },
+        )
+        planned = [row for row in checks if row["group"] == "browser" and target in row["argv"]]
+        self.assertEqual(
+            [row["argv"][2:4] for row in planned], [["ruff", "check"], ["ruff", "format"]]
+        )
+        self.assertTrue(all(row["cwd"] == "src/api" for row in planned))
+        runner = self.runner()
+        runner.snapshot = self.root
+        response = Mock()
+        response.__enter__ = Mock(return_value=response)
+        response.__exit__ = Mock(return_value=False)
+        response.read.return_value = b"fixture axe"
+        with (
+            patch.object(runner, "lint") as lint,
+            patch.object(runner, "install_chromium"),
+            patch.object(runner, "command", return_value=gate.EMPLOYEE_CHAT_PASS),
+            patch.object(gate, "urlopen", return_value=response),
+            patch.object(gate, "digest", return_value=gate.AXE_SHA256),
+            patch.object(
+                gate.shutil,
+                "copyfile",
+                side_effect=lambda _source, target: Path(target).write_text(json.dumps(CHAT_SCANS)),
+            ),
+        ):
+            runner.browser()
+        self.assertEqual(
+            [call.args[1] for call in lint.call_args_list],
+            [(f"checks/{name}.py",) for name in BROWSER_LINTED],
+        )
+        self.assertIn((target,), [call.args[1] for call in lint.call_args_list])
+
+    def test_employee_chat_receipt_requires_exact_command_pass_line_and_results(self) -> None:
+        original = self.scoped_receipt(["browser"])
+        gate.verify_commands(self.root, self.out, original)
+        for mutation in ("missing", "module", "paths", "axe", "exit", "no-pass", "skipped"):
+            with self.subTest(mutation=mutation):
+                receipt = copy.deepcopy(original)
+                row = next(
+                    row
+                    for row in receipt["commands"]
+                    if gate.EMPLOYEE_CHAT_BROWSER_MODULE in row["argv"]
+                )
+                path = self.out / row["log"]
+                saved = path.read_text()
+                if mutation == "missing":
+                    receipt["commands"].remove(row)
+                elif mutation == "module":
+                    row["argv"][3] = "checks.case_journey_browser_check"
+                elif mutation == "paths":
+                    row["env"]["PYTHONPATH"] = "<output>/safety"
+                elif mutation == "axe":
+                    row["argv"][5] = "<output>/other.js"
+                elif mutation == "exit":
+                    row["exit_code"] = 1
+                else:
+                    path.write_text("done\n" if mutation == "no-pass" else saved + "skipped\n")
+                    row["sha256"] = gate.digest(path)
+                    receipt["files"][row["log"]] = row["sha256"]
+                try:
+                    with self.assertRaises(gate.GateError):
+                        gate.verify_commands(self.root, self.out, receipt)
+                finally:
+                    path.write_text(saved)
+
+    def test_employee_chat_results_require_exact_states_zero_violations_and_passes(self) -> None:
+        path = self.out / "employee-chat-results.json"
+        path.write_text(json.dumps(CHAT_SCANS))
+        gate.check_employee_chat_results(path)
+        broken = [
+            CHAT_SCANS[:2],
+            CHAT_SCANS[::-1],
+            [*CHAT_SCANS, CHAT_SCANS[0]],
+            [dict(CHAT_SCANS[0], violations=[{"id": "color-contrast"}]), *CHAT_SCANS[1:]],
+            [dict(CHAT_SCANS[0], passes=0), *CHAT_SCANS[1:]],
+            [dict(CHAT_SCANS[0], passes=True), *CHAT_SCANS[1:]],
+            [dict(CHAT_SCANS[0], note="skipped"), *CHAT_SCANS[1:]],
+            {"state": "synthetic-cited-answer"},
+        ]
+        for index, value in enumerate(broken):
+            with self.subTest(index=index):
+                path.write_text(json.dumps(value))
+                with self.assertRaises(gate.GateError):
+                    gate.check_employee_chat_results(path)
+
+    def test_required_actual_sql_chat_tests_must_each_report_ok_once(self) -> None:
+        names = gate.SQL_CHAT_REQUIRED_TESTS
+        self.assertEqual(len(names), len(set(names)))
+        selectors = gate.required_sql_tests(["python", "-m", "unittest", "-v", *gate.SQL_SELECTORS])
+        self.assertEqual(selectors, names)
+        self.assertIsNone(gate.required_sql_tests(["python", "-m", "unittest", "-v", "test_x"]))
+        good = sql_chat_log()
+        self.assertEqual(
+            gate.check_skips(good, integration=True, required_tests=names)["skips"], []
+        )
+        interleaved = good.replace(f"{names[0]} ... ok\n", f"{names[0]} ... log line\nok\n", 1)
+        gate.check_skips(interleaved, integration=True, required_tests=names)
+        other = sql_chat_log().replace(f"{names[1]} ... ok\n", f"{names[1]} ... FAIL\n", 1)
+        broken = {
+            "missing": good.replace(f"{names[2]} ... ok\n", "", 1).replace("Ran 24", "Ran 23"),
+            "duplicate": good.replace(f"{names[2]} ... ok\n", f"{names[2]} ... ok\n" * 2, 1),
+            "failed": other.replace("OK\n", "OK\n"),
+            "error-region": good.replace(f"{names[3]} ... ok\n", f"{names[3]} ... ERROR\n", 1),
+            "skipped": good.replace(
+                f"{names[4]} ... ok\n",
+                f"{names[4]} ... skipped 'needs a SQL Server (ZF_TEST_MSSQL=1)'\n",
+                1,
+            ),
+            "other-method": good.replace(names[5].split(" (")[0], "test_other", 1),
+        }
+        for label, text in broken.items():
+            with self.subTest(label=label), self.assertRaises(gate.GateError):
+                gate.check_skips(text, integration=True, required_tests=names)
+
+    def test_required_actual_sql_chat_tests_exist_and_are_selected(self) -> None:
+        source = (
+            Path(__file__).resolve().parents[1] / "src/api/tests/test_mssqlstore.py"
+        ).read_text()
+        self.assertIn("test_mssqlstore", gate.SQL_SELECTORS)
+        classes = {name.split(" (")[1].split(".")[1] for name in gate.SQL_CHAT_REQUIRED_TESTS}
+        self.assertEqual(
+            classes, {"MssqlChatPrivacy", "MssqlChatRoleProjection", "MssqlChatDemoMeter"}
+        )
+        for klass in classes:
+            self.assertRegex(source, rf"(?m)^class {klass}\(")
+        for name in gate.SQL_CHAT_REQUIRED_TESTS:
+            self.assertTrue(
+                name.endswith(")") and name.split(" (")[1].startswith("test_mssqlstore.")
+            )
 
     def test_employee_acceptance_runtime_requires_three_tests_and_zero_skips(
         self,
@@ -666,6 +925,8 @@ class GateTests(unittest.TestCase):
                 if gate.EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"]:
                     text = "test_x ... ok\n" * 3 + "Ran 3 tests in 0.1s\n\nOK\n"
                 row.update(gate.check_skips(text))
+            if gate.EMPLOYEE_CHAT_BROWSER_MODULE in check["argv"]:
+                text = gate.EMPLOYEE_CHAT_PASS + "3 states\n"
             (self.out / name).write_text(text)
             row.update(exit_code=0, log=name, sha256=gate.digest(self.out / name))
             receipt["commands"].append(row)
@@ -1388,6 +1649,7 @@ os.fstat(3)
                 "axe-4.10.3.min.js": "fixture",
                 "regulatory-ux-results.json": "fixture",
                 "case-journey-results.json": "fixture",
+                "employee-chat-results.json": "fixture",
                 "workflow-coverage.json": "fixture",
                 "browser-bytecode-policy.pth": "fixture",
                 "snapshot-inputs.log": "fixture",
@@ -1425,7 +1687,11 @@ os.fstat(3)
                     text = f"{gate.CHAT_PANEL_DISCOVERY_SKIP[0]} ... ok\nRan 1 test in 0.1s\n\nOK\n"
                 if gate.EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"]:
                     text = "test_x ... ok\n" * 3 + "Ran 3 tests in 0.1s\n\nOK\n"
+                if gate.required_sql_tests(check["argv"]):
+                    text = sql_chat_log()
                 row.update(gate.check_skips(text, integration=check["integration"]))
+            if gate.EMPLOYEE_CHAT_BROWSER_MODULE in check["argv"]:
+                text = gate.EMPLOYEE_CHAT_PASS + "3 states\n"
             if check["argv"][0] == "git":
                 text = ""
             if check["argv"][1:3] == ["-c", gate.WORKFLOW_INVENTORY]:
@@ -1467,6 +1733,8 @@ os.fstat(3)
                     "zoom": "chrome.tabs.setZoom=2; innerWidth<=640",
                     "scans": [{"violations": []} for _ in range(87)],
                 }
+            elif name == "employee-chat-results.json":
+                content = CHAT_SCANS
             elif name == "workflow-coverage.json":
                 content = {"steps": []}
             else:
@@ -1558,9 +1826,7 @@ os.fstat(3)
                     with self.assertRaises(gate.GateError):
                         gate.verify(self.root, path, self.base)
                     if mutation == "suite-log":
-                        (self.out / sqlrow["log"]).write_text(
-                            "test_x (test_x.Fixture.test_x) ... ok\nRan 1 test in 0.1s\n\nOK\n"
-                        )
+                        (self.out / sqlrow["log"]).write_text(sql_chat_log())
             for name, key, value in (
                 ("regulatory-ux-results.json", "outcome", "failed"),
                 ("case-journey-results.json", "zoom", "device scale only"),
@@ -1594,6 +1860,19 @@ os.fstat(3)
                     with self.assertRaises(gate.GateError):
                         gate.verify(self.root, path, self.base)
                     target.write_text(original_content)
+            target = self.out / "employee-chat-results.json"
+            for index, value in enumerate(
+                (CHAT_SCANS[:2], [dict(CHAT_SCANS[0], violations=[{"id": "x"}]), *CHAT_SCANS[1:]])
+            ):
+                with self.subTest(chat_result_evidence=index):
+                    target.write_text(json.dumps(value))
+                    changed = copy.deepcopy(original_receipt)
+                    changed["files"][target.name] = real_digest(target)
+                    gate.atomic_json(path, changed)
+                    (self.out / "receipt.sha256").write_text(real_digest(path))
+                    with self.assertRaises(gate.GateError):
+                        gate.verify(self.root, path, self.base)
+            target.write_text(json.dumps(CHAT_SCANS))
             gate.atomic_json(path, original_receipt)
             (self.out / "receipt.sha256").write_text(real_digest(path))
             environment = self.out / "venvs/core"

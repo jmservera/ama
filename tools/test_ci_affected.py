@@ -62,7 +62,7 @@ class SelectTests(unittest.TestCase):
                 self.assertTrue(s["namespace"] and s["mssql"])
 
     def test_gate_tooling_selects_namespace_only(self) -> None:
-        s = ci.select(["tools/rpi-checks.py"])
+        s = ci.select(["tools/rpi-checks.py", "tools/install-actionlint.py"])
         self.assertEqual(s["projects"], set())
         self.assertTrue(s["namespace"])
         self.assertFalse(s["mssql"])
