@@ -9,10 +9,10 @@ Add one concise dated section to the existing `docs/architecture/cutover-evidenc
 
 ## Phases
 
-* [ ] Phase 1: write the pack section after the existing last section, with these subsections: identities and covered changes; where AI is invoked and the authority ceiling for the visible demo; evidence table by classification; traceability; sensor and unmerged exclusions; findings, owners and gates; recommendation.
-* [ ] Phase 2: add one index paragraph and one appended log entry, leaving every earlier log line byte-identical.
-* [ ] Phase 3: focused validation: `git diff --check`, frontmatter, ASCII and em-dash check on added lines, relative links and anchors, protected prefix check of the log and of the pack, scope guard (three docs files plus `.copilot-tracking`), final `git fetch` and diff of `origin/main` against the pin.
-* [ ] Phase 4: changes record, one original author Review against the #440 acceptance criteria, state, commit.
+* [x] Phase 1: write the pack section after the existing last section, with these subsections: identities and covered changes; where AI is invoked and the authority ceiling for the visible demo; evidence table by classification; traceability; sensor and unmerged exclusions; findings, owners and gates; recommendation.
+* [x] Phase 2: add one index paragraph and one appended log entry, leaving every earlier log line byte-identical.
+* [x] Phase 3: focused validation: `git diff --check`, frontmatter, ASCII and em-dash check on added lines, relative links and anchors, protected prefix check of the log and of the pack, scope guard (three docs files plus `.copilot-tracking`), final `git fetch` and diff of `origin/main` against the pin.
+* [x] Phase 4: changes record, one original author Review against the #440 acceptance criteria, state, commit.
 
 ## Decisions
 

@@ -10924,3 +10924,7 @@ The parent topic merged main e2ecee25 with a normal merge and no conflicts. Focu
 ## 2026-11-08 - Issue 149 parent integration of main ecb28815
 
 The parent topic merged main ecb28815 with a normal merge and no conflict; API, Core, tools, infra and workflow bytes equal the previously assessed head. Docs-only integration, no acceptance claim. No index change. Evidence under `.copilot-tracking/` (2026-11-08 issue-149-parent-main-ecb2).
+
+## [2026-11-08] update | Issue 440 visible-demo integration checkpoint (Refs #440, #149, #229, #891)
+
+* Added a dated visible-demo integration checkpoint to the cut-over evidence pack and one index paragraph. It records base `6354b13f` (only the rubric score file after `656cafb1`), PR 1286 `28c6ec11` and PR 1290 `656cafb1`, the source movement since the previous pin, where AI is invoked and the proposal-only ceiling, and one historical generic employee model answer on the deployed demo as Azure observed for that source only. Five-agent, case-grounded, sensor-grounded, current-main deployment, cost, privacy and approval acceptance remain unproven; unmerged #184 and #1288 work is excluded; no new defect was confirmed. Recommendation: bounded continue. Documentation only; no test, model or Azure action, issue write or approval. Records: `.copilot-tracking/*/2026-11-08-visible-demo-checkpoint-440-*`.
