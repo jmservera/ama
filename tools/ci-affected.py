@@ -47,6 +47,8 @@ MSSQL_PROJECTS = {"core", "agents", "api", "orchestrator"}
 NAMESPACE_ONLY = (
     "tools/rpi-checks.py",
     "tools/test_rpi_checks.py",
+    "tools/install-actionlint.py",
+    "tools/test_install_actionlint.py",
     "tools/rename-zava",
 )
 

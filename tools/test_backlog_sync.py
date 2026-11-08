@@ -49,6 +49,9 @@ def run(issues, board, open_prs=(), merged=(), argv=(), apply=False):
             return list(issues)
         if a[:2] == ("pr", "list"):
             return list(open_prs) if "open" in a else list(merged)
+        if a[:2] == ("project", "item-add"):
+            writes.append(a)
+            return {"id": "new-" + a[a.index("--url") + 1].rsplit("/", 1)[1]}
         raise AssertionError(a)
 
     def fake_gh(*a, data=None):
@@ -143,15 +146,97 @@ class ReconcileTests(unittest.TestCase):
         self.assertEqual(edited_options(writes), {"i1": "o-todo", "i2": "o-prog", "i3": "o-done"})
         self.assertTrue(any(w[:2] == ("issue", "edit") for w in writes))
 
-    def test_open_pr_outranks_inactive(self):
+    def test_inactive_conflicting_with_open_pr_is_reported_not_written(self):
+        for start in ("Todo", "In Progress"):
+            with self.subTest(start=start):
+                out, writes, msg = run(
+                    [issue(7)],
+                    {7: start},
+                    open_prs=[pr(60, "Refs #7")],
+                    argv=["--inactive", "7"],
+                    apply=True,
+                )
+                self.assertIsNone(msg)
+                self.assertEqual(writes, [])
+                self.assertIn(
+                    f"#7 conflict: --inactive contradicts open PR(s) [60]; "
+                    f"status {start} left unchanged",
+                    out,
+                )
+                self.assertNotIn("->", out)
+
+    def test_observed_parent_stack_mention_does_not_promote_inactive_issue(self):
+        parent = {
+            "number": 1239,
+            "title": "feat(ranking): publication runner (#79)",
+            "body": "Parent of the #1231 and #80 stacks.",
+            "headRefName": "feat/ranking-publication-runner-79",
+        }
+        numbers = (79, 80, 81, 86, 107, 108, 1231)
+        board = dict.fromkeys(numbers, "In Progress") | {80: "Todo", 108: "Todo"}
+        out, writes, msg = run(
+            [issue(n) for n in numbers],
+            board,
+            open_prs=[parent],
+            argv=["--active", "79,81,86,1231,107", "--inactive", "80,108"],
+            apply=True,
+        )
+        self.assertIsNone(msg)
+        self.assertEqual(writes, [])
+        self.assertIn("#80 conflict: --inactive contradicts open PR(s) [1239]", out)
+        self.assertNotIn("In Progress", out.replace("left unchanged", ""))
+
+    def test_active_with_open_pr_stays_protected(self):
+        _, writes, _ = run(
+            [issue(7)],
+            {7: "Todo"},
+            open_prs=[pr(60, "Refs #7")],
+            argv=["--active", "7"],
+            apply=True,
+        )
+        self.assertEqual(edited_options(writes), {"i7": "o-prog"})
+
+    def test_conflict_does_not_block_other_writes_or_add_missing_item(self):
+        issues = [issue(7), issue(8), issue(9), issue(3, "CLOSED", "* [ ] a")]
+        out, writes, msg = run(
+            issues,
+            {7: "In Progress", 8: "In Progress", 3: "In Progress"},
+            open_prs=[pr(60, "Refs #7 #9")],
+            argv=["--inactive", "7,8,9"],
+            apply=True,
+        )
+        self.assertIsNone(msg)
+        self.assertEqual(edited_options(writes), {"i8": "o-todo", "i3": "o-done"})
+        self.assertIn(
+            "#9 conflict: --inactive contradicts open PR(s) [60]; status missing left unchanged",
+            out,
+        )
+        self.assertFalse(any(w[:2] == ("project", "item-add") for w in writes))
+        self.assertTrue(any(w[:2] == ("issue", "edit") for w in writes))
+
+    def test_missing_unreferenced_item_is_still_added(self):
+        _, writes, _ = run([issue(9)], {}, argv=["--inactive", "9"], apply=True)
+        self.assertTrue(any(w[:2] == ("project", "item-add") for w in writes))
+        self.assertEqual(edited_options(writes), {"new-9": "o-todo"})
+
+    def test_conflict_audit_writes_nothing(self):
+        out, writes, _ = run(
+            [issue(7)], {7: "Todo"}, open_prs=[pr(60, "Refs #7")], argv=["--inactive", "7"]
+        )
+        self.assertIn("#7 conflict", out)
+        self.assertEqual(writes, [])
+
+    def test_inactive_with_merged_reference_only_is_not_a_conflict(self):
         out, writes, _ = run(
             [issue(7)],
             {7: "In Progress"},
-            open_prs=[pr(60, "Refs #7")],
+            merged=[pr(70, "Refs #7")],
             argv=["--inactive", "7"],
             apply=True,
         )
-        self.assertEqual(writes, [])
+        self.assertEqual(edited_options(writes), {"i7": "o-todo"})
+        self.assertNotIn("conflict", out)
+        self.assertIn("review needed (merged PRs reference them, criteria unticked): [7]", out)
 
     def test_invalid_evidence_stops_before_any_write(self):
         cases = (

@@ -191,6 +191,10 @@ def walk(node: object) -> list[dict[str, Any]]:
     return found
 
 
+def anchors(tree: object) -> list[dict[str, Any]]:
+    return [n for n in walk(tree) if n["tag"] == "a"]
+
+
 def node_text(node: object) -> str:
     if isinstance(node, dict):
         return "".join(node_text(k) for k in node.get("kids", []))
@@ -214,6 +218,33 @@ class FinanceGrantsScreens(unittest.TestCase):
             self.assertNotIn("Contractor", screen["roles"])  # type: ignore[arg-type]
             for control in CONTROLS:
                 self.assertNotIn(control, tags(screen["tree"]))
+
+    def test_schema_download_is_one_read_only_link_when_form_review_is_readable(self) -> None:
+        out = run()
+        self.assertEqual(anchors(out["finance-invoices"]["tree"]), [])
+        funding = out["finance-funding"]["tree"]
+        found = anchors(funding)
+        self.assertEqual(len(found), 1)
+        link = found[0]
+        self.assertEqual(
+            link["attrs"],
+            {"class": "btn alt", "href": "/api/form-schemas.csv", "download": "form-schemas.csv"},
+        )
+        self.assertEqual(node_text(link), "Download for Excel")
+        text = json.dumps(funding)
+        self.assertIn("Form schema catalogue", text)
+        self.assertIn("all forms, not only this home", text)
+        self.assertIn("read-only copy", text)
+        self.assertIn("not an approval", text)
+
+    def test_schema_download_is_absent_when_form_review_is_not_readable(self) -> None:
+        reviews: list[object] = [None, {}, {"drafts": [], "decision_holds": None}]
+        for review in reviews:
+            with self.subTest(review=review):
+                funding = run(review=review)["finance-funding"]["tree"]
+                self.assertEqual(anchors(funding), [])
+                self.assertNotIn("Form schema catalogue", json.dumps(funding))
+                self.assertNotIn("form-schemas.csv", json.dumps(funding))
 
     def test_invoice_lines_compare_scope_quantity_budget_milestone(self) -> None:
         text = json.dumps(run()["finance-invoices"]["tree"])
@@ -411,7 +442,9 @@ class FinanceGrantsScreens(unittest.TestCase):
                 if tabindex is not None:
                     self.assertLessEqual(int(str(tabindex)), 0, node)
                 attrs = node["attrs"] or {}
-                self.assertNotIn(node["tag"], ("button", "input", "select", "textarea", "a"))
+                self.assertNotIn(node["tag"], ("button", "input", "select", "textarea"))
+                if node["tag"] == "a":
+                    self.assertEqual(attrs.get("href"), "/api/form-schemas.csv", node)
                 self.assertNotEqual(attrs.get("role"), "button", node)
                 self.assertNotIn("onclick", attrs, node)
             for table in (n for n in nodes if n["tag"] == "table"):
