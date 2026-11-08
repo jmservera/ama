@@ -22,6 +22,12 @@ def run(spec: dict[str, Any]) -> dict[str, Any]:
         return chat_eval.run_eval(path)
 
 
+def done(
+    sid: str, receipts: list[dict[str, Any]], asked: int, complete: bool = True
+) -> dict[str, Any]:
+    return dict(id=sid, consumption=receipts, turns_asked=asked, execution_complete=complete)
+
+
 def scenario(sid: str) -> dict[str, Any]:
     found = next(s for s in GOLDEN["scenarios"] if s["id"] == sid)
     return copy.deepcopy(found)
@@ -182,9 +188,11 @@ class GoldenRunTests(unittest.TestCase):
         )
         self.assertIn("component-only", scope["component_probe_scope"])
         self.assertIn("not serving-path", scope["component_probe_scope"])
-        self.assertEqual(scope["serving_memory_used_turns"], 0)
+        self.assertEqual(scope["serving_declared_memory_used_turns"], 0)
         self.assertGreater(scope["serving_receipts"], 0)
-        self.assertTrue(scope["serving_path_coverage"].startswith("not exercised"))
+        self.assertTrue(scope["serving_path_coverage"].startswith("declared not exercised"))
+        self.assertIn("not independently observed", scope["serving_path_coverage"])
+        self.assertEqual(scope["incomplete_scenarios"], [])
         self.assertTrue(scope["integrated_memory_poisoning"].startswith("not covered"))
         self.assertEqual(
             self.report["evidence"]["memory_scope"]["serving_path"], scope["serving_path_coverage"]
@@ -200,15 +208,28 @@ class GoldenRunTests(unittest.TestCase):
         self.assertEqual(self.report["enablement"]["outcome"], "insufficient")
 
     def test_serving_memory_coverage_is_never_inferred_without_receipts(self) -> None:
-        none = chat_eval.memory_scope([dict(id="x", consumption=[])])
+        none = chat_eval.memory_scope([done("x", [], 0)])
         self.assertTrue(none["serving_path_coverage"].startswith("unknown"))
-        partial = chat_eval.memory_scope([dict(id="x", consumption=[dict(model_calls=1)])])
+        partial = chat_eval.memory_scope([done("x", [dict(model_calls=1)], 1)])
         self.assertTrue(partial["serving_path_coverage"].startswith("unknown"))
         used = chat_eval.memory_scope(
-            [dict(id="x", consumption=[dict(memory_used=False), dict(memory_used=True)])]
+            [done("x", [dict(memory_used=False), dict(memory_used=True)], 2)]
         )
-        self.assertEqual(used["serving_memory_used_turns"], 1)
+        self.assertEqual(used["serving_declared_memory_used_turns"], 1)
         self.assertTrue(used["serving_path_coverage"].startswith("deviation"))
+        self.assertIn("declare memory_used true", used["serving_path_coverage"])
+        mixed = chat_eval.memory_scope(
+            [done("x", [dict(memory_used=True)], 1), done("y", [], 1, complete=False)]
+        )
+        self.assertTrue(mixed["serving_path_coverage"].startswith("unknown"))
+        self.assertIn("1 receipt(s) declare memory_used true", mixed["serving_path_coverage"])
+        old = copy.deepcopy(self.report)
+        old["summary"]["memory_scope"].pop("incomplete_scenarios")
+        old_gate = next(
+            g for g in chat_eval.gate_results(old) if g["category"] == "memory-poisoning"
+        )
+        self.assertTrue(old_gate["serving_path_coverage"].startswith("unknown"))
+        self.assertEqual(old_gate["component_probes"], 2)
         report = copy.deepcopy(self.report)
         del report["summary"]["memory_scope"]
         gate = next(
@@ -216,6 +237,55 @@ class GoldenRunTests(unittest.TestCase):
         )
         self.assertEqual(gate["outcome"], "pass")
         self.assertTrue(gate["serving_path_coverage"].startswith("unknown"))
+
+    def test_surviving_receipts_cannot_certify_a_failed_or_partial_scenario(self) -> None:
+        good = scenario("grounding-cited-follow-ups")
+        ctor = scenario("memory-poisoning-has-no-authority")
+        ctor["cases"] = []
+        late = scenario("memory-poisoning-has-no-authority")
+        late["turns"][1]["before"] = [dict(op="bogus")]
+        with tempfile.TemporaryDirectory() as a, tempfile.TemporaryDirectory() as b:
+            with tempfile.TemporaryDirectory() as c:
+                results = [
+                    chat_eval.run_scenario(good, a),
+                    chat_eval.run_scenario(ctor, b),
+                    chat_eval.run_scenario(late, c),
+                ]
+        self.assertEqual([r["execution_complete"] for r in results], [True, False, False])
+        self.assertTrue(results[0]["passed"] and len(results[0]["consumption"]) == 3)
+        self.assertEqual(results[1]["component_memory_probes"], 0)
+        self.assertEqual(results[2]["component_memory_probes"], 1)
+        self.assertEqual([f["check"] for f in results[2]["failures"]], ["unexpected"])
+        scope = chat_eval.memory_scope(results)
+        self.assertEqual(scope["component_probes"], 1)
+        self.assertEqual(scope["incomplete_scenarios"], [results[1]["id"], results[2]["id"]])
+        self.assertTrue(scope["serving_path_coverage"].startswith("unknown"))
+        self.assertNotIn("declared not exercised", scope["serving_path_coverage"])
+        self.assertTrue(
+            chat_eval.memory_scope(results[:1])["serving_path_coverage"].startswith(
+                "declared not exercised"
+            )
+        )
+
+    def test_expected_assertion_failure_is_complete_and_keeps_its_declaration(self) -> None:
+        wrong = scenario("memory-poisoning-has-no-authority")
+        wrong["turns"][1]["expect"]["kind"] = "answer"
+        with tempfile.TemporaryDirectory() as tmp:
+            result = chat_eval.run_scenario(wrong, tmp)
+        self.assertFalse(result["passed"])
+        self.assertEqual([f["check"] for f in result["failures"]], ["kind"])
+        self.assertTrue(result["execution_complete"])
+        scope = chat_eval.memory_scope([result])
+        self.assertTrue(scope["serving_path_coverage"].startswith("declared not exercised"))
+        self.assertEqual(scope["component_probes"], 1)
+
+    def test_static_memory_text_never_claims_observed_non_consumption(self) -> None:
+        text = " ".join(chat_eval.OPEN_ITEMS).casefold()
+        for forbidden in ("no panel memory consumed", "serving-path memory is not exercised"):
+            self.assertNotIn(forbidden, text)
+        self.assertIn("receipts declare", chat_eval.SERVING_DECLARED_FALSE)
+        self.assertIn("not independently observed", chat_eval.SERVING_DECLARED_FALSE)
+        self.assertIn("what receipts declare", " ".join(chat_eval.OPEN_ITEMS))
 
     def test_scenarios_without_a_probe_and_failed_runs_count_only_executed_probes(self) -> None:
         report = run(dict(version="t", scenarios=[scenario("grounding-cited-follow-ups")]))
@@ -472,7 +542,7 @@ class CliTests(unittest.TestCase):
             self.assertEqual(chat_eval.main([]), 0)
         self.assertNotIn("open critical gap", output.getvalue())
         self.assertIn("memory probes: 2 component-only diagnostic", output.getvalue())
-        self.assertIn("memory serving path: not exercised", output.getvalue())
+        self.assertIn("memory serving path: declared not exercised", output.getvalue())
         self.assertIn("enablement: insufficient (task disabled)", output.getvalue())
 
     def test_gap_free_cli_returns_zero_but_never_enables(self) -> None:
