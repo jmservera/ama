@@ -37,11 +37,11 @@
     "cost_note_navigation_and_route_updates": [6, 11, 33, 37],
     "cost_note_calculations_preserved": true,
     "full_manifest_and_media_verified": true,
-    "candidate_sha256": "343d133a252010d9de61ee064141e81d93f6a5e9a9f0efe915f50947e50cbb1a",
+    "candidate_sha256": "949e207731707bad194ab3eafb350fd7e0ee2d9ab0ce7d0adb35cbb472fa7fca",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
     "manifest_sha256": "705875492c163e24b5106b5b94dc2ac71626f81a96b99200bbb1cf79889400cd",
     "asset_catalog_sha256": "d2545166301639b0c7980c68100a52454b0cf35bd4d49a5b4506d563ebdcb050",
-    "builder_sha256": "01afb6e36ef23f88f1e8058c88c9f727a5300f970be718a767234d90fdfcafc7",
+    "builder_sha256": "99ac3da7385b4a05e5f12bbe246e7d923e19eedebec34b987a1df493b4b04cd4",
     "native_helper_sha256": "69269277dc7bafa9786414fd013648bb4c4ee9c756b52545c3af2e24a0004068"
   },
   "source_verification": {
@@ -60,8 +60,8 @@
   },
   "linux_preview": {
     "renderer": "LibreOffice 24.2.7.2 420(Build:2)",
-    "source_sha256": "343d133a252010d9de61ee064141e81d93f6a5e9a9f0efe915f50947e50cbb1a",
-    "pdf_sha256": "b8ec7712c834a3ac04e5d1f9b5aecb1bf3ecfc900933e8f7172fa93ddc803d27",
+    "source_sha256": "949e207731707bad194ab3eafb350fd7e0ee2d9ab0ce7d0adb35cbb472fa7fca",
+    "pdf_sha256": "e147633054e0c00595e33d9d42f72efd7afcc5283ff54865b9c60c7387c50504",
     "rendered_images": 55,
     "fixed_slide_jumps": 108,
     "all_destinations_and_hit_regions_verified": true,
@@ -76,7 +76,7 @@
     "aligned_visually_changed_existing_pages": 29,
     "added_page": 13,
     "visually_inspected_pages": [12, 13],
-    "metrics_scope_note": "2026-11-09 CxO boundary correction: PDF and source hashes, 55 images and 108 jumps were regenerated; only pages 12 and 13 were visually re-inspected. The aligned-page, text-frame and word-box counts above and earlier page inspections come from the previous build and were not reproduced. The PDF is a LibreOffice preview, not native PowerPoint rendering.",
+    "metrics_scope_note": "2026-11-09 C3 navigation-number correction: the PPTX, PDF, source hash, 55 images and 108 jumps were regenerated from the corrected builder; all 55 page images are byte-identical to the previous preview (notes are not rendered), so no new visual inspection is claimed. Earlier note: 2026-11-09 CxO boundary correction: PDF and source hashes, 55 images and 108 jumps were regenerated; only pages 12 and 13 were visually re-inspected. The aligned-page, text-frame and word-box counts above and earlier page inspections come from the previous build and were not reproduced. The PDF is a LibreOffice preview, not native PowerPoint rendering.",
     "main_projection_minimum_text_points": 12.1,
     "cxo_projection_minimum_text_points": 12.0,
     "core_detail_limit": "Selected readable core; smaller technical endpoint labels direct readers to the full-size editable map and main13 projection.",
@@ -91,8 +91,8 @@
     "narration": "24:30",
     "question_contingency_reserve": "5:30 inside the planned 30-minute presentation",
     "separate_demo": "10 minutes; existing outcome hook under two minutes remains a plan",
-    "speaker_script_sha256": "487d5a46d24cb3764f4dd2b9499a6ce87a78d7e75d798aee4d41cdf46760a98f",
-    "questions_and_answers_sha256": "dfddc00fd5b784760d51e2412f5d21e8b8af3e08ae8d7728330e05c45369d8d1",
+    "speaker_script_sha256": "27eecfafb8dcfa482561b18116f6b3dfe84d16cdbe2f47bcb82646e746530448",
+    "questions_and_answers_sha256": "0da33f7fa56457d05649e11a6cd292ea0b32a2feab62095e14e2fda3d5950dd5",
     "rehearsal_performed": false
   },
   "native": {

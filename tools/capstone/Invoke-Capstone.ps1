@@ -192,17 +192,29 @@ function Get-InsertionParts {
     return ,$Parts
 }
 
+function Convert-BaselineSlideNumber {
+    param([string]$Value)
+    $Number = [int]$Value
+    if ($Number -ge 13 -and $Number -le 54) { $Number++ }
+    return [string]$Number
+}
+
+function Update-BaselineNavigationNumbers {
+    param([string]$Text)
+    # One baseline-to-physical mapping for page/slide/index references, with or
+    # without a space and with range endpoints; delimiters are preserved.
+    return [regex]::Replace($Text, '(?i)\b(pages?|slides?|index)( ?)(\d+)(?:([-\u2013/])(\d+))?\b', {
+        param($Match)
+        $Result = $Match.Groups[1].Value + $Match.Groups[2].Value + (Convert-BaselineSlideNumber $Match.Groups[3].Value)
+        if ($Match.Groups[4].Success) { $Result += $Match.Groups[4].Value + (Convert-BaselineSlideNumber $Match.Groups[5].Value) }
+        return $Result
+    })
+}
+
 function Update-RouteNote {
     param([string]$Text, [int]$PartNumber, $Definition)
     if (-not $Definition.insertion) { return $Text }
-    if ($PartNumber -ne 55) {
-        $Text = [regex]::Replace($Text, '(?i)\b(page|slide) (\d+)\b', {
-            param($Match)
-            $Number = [int]$Match.Groups[2].Value
-            if ($Number -ge 13 -and $Number -le 54) { $Number++ }
-            return $Match.Groups[1].Value + ' ' + $Number
-        })
-    }
+    if ($PartNumber -ne 55) { $Text = Update-BaselineNavigationNumbers $Text }
     if ($PartNumber -le 26) {
         $Timing = [regex]::Match($Text, '(?m)^TIMING: (\d+) s.*?(\d\d):(\d\d)-(\d\d):(\d\d)')
         if (-not $Timing.Success) { throw 'Main-route timing source is missing' }

@@ -42,6 +42,27 @@ foreach ($Mutation in @('template', 'count', 'mapping', 'asset', 'timing', 'note
     try { Assert-DeckDefinition $Mutant } catch { $Refused = $true }
     if (-not $Refused) { throw "Insertion mutation was not refused: $Mutation" }
 }
+$NavigationCases = @(
+    @('B13/page40, index/page27 and fixed topic S19/page22 retain', 'B13/page41, index/page28 and fixed topic S19/page23 retain'),
+    @('NAVIGATION: B13/page 40; index 27; fixed Topic S19/page 22.', 'NAVIGATION: B13/page 41; index 28; fixed Topic S19/page 23.'),
+    @('index 27', 'index 28'),
+    @('index27', 'index28'),
+    @('Index slide 27', 'Index slide 28'),
+    @('question index page 27', 'question index page 28'),
+    @('pages 23-24', 'pages 24-25'),
+    @('Pages 1-22 and pages 25-26', 'Pages 1-23 and pages 26-27'),
+    @('pages 9/16', 'pages 9/17'),
+    @('page 12, slide 12, index 12 and pages 5-12', 'page 12, slide 12, index 12 and pages 5-12'),
+    @('page 13 and page 54', 'page 14 and page 55'),
+    @('page 55 and index 55', 'page 55 and index 55'),
+    @('slides.json and homepage 40', 'slides.json and homepage 40')
+)
+foreach ($Case in $NavigationCases) {
+    $Actual = Update-BaselineNavigationNumbers $Case[0]
+    if ($Actual -cne $Case[1]) { throw "Navigation mapping mismatch: '$($Case[0])' gave '$Actual', expected '$($Case[1])'" }
+}
+if ((Update-RouteNote 'page 40; index 27; pages 23-24' 55 $Definition) -cne 'page 40; index 27; pages 23-24') { throw 'Current part 55 note was shifted again' }
+if ((Update-RouteNote 'page 40; index 27; pages 23-24' 40 $Definition) -cne 'page 41; index 28; pages 24-25') { throw 'Update-RouteNote did not apply the mapping once' }
 $UniqueTimings = @{}
 foreach ($Slide in $Definition.slides | Where-Object { $_.number -lt 28 }) {
     $Timing = [regex]::Match($Slide.notes, '(?m)^TIMING: (\d+) s')
@@ -52,7 +73,7 @@ foreach ($Slide in $Definition.slides | Where-Object { $_.number -lt 28 }) {
 }
 if (($UniqueTimings.Values | Measure-Object -Sum).Sum -ne 1470) { throw 'Expected 24:30 narration including added 45 seconds' }
 if ($Definition.slides[27].code -cne 'QX' -or $Definition.slides[28].code -cne 'B01' -or $Definition.slides[54].code -cne 'B27') { throw 'Question-index or answer order changed' }
-Write-Output 'Insertion source checks pass: original notes, six denied mutations, baseline mapping, 24:30 shared-build timing, QX28 and answers29-55.'
+Write-Output 'Insertion source checks pass: original notes, six denied mutations, baseline mapping, literal navigation-number table, 24:30 shared-build timing, QX28 and answers29-55.'
 if (-not $CandidatePath) { return }
 $Baseline = [IO.Compression.ZipFile]::OpenRead((Join-Path $RepoRoot 'docs/capstone/source/baseline.pptx'))
 $Candidate = [IO.Compression.ZipFile]::OpenRead($CandidatePath)

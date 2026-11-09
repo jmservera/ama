@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-29
+ms.date: 2026-11-09
 ms.topic: reference
 ---
 
@@ -11152,3 +11152,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Under the owner's authorization of up to two extra focused cycles, current `main` (which added the retained sensor MSSQL suite, #1299) was merged. `src/README.md` now lists that suite as local-only (hosted `mssql` does not run it), gives its non-inert `--changed` selection rule and extends the SQL example; the rubric publication runbook, the coordinator refresh and base-change rules and the instruction wording are qualified by selected tier; a dated supersession note was added to D4 of the 2026-10-31 delivery bottleneck analysis.
 * Supersession, not erasure: the original C1-C4 evidence, the C4 lead review (Residual work) and the exhausted-cycles outcome stand. The independent C4 exact-head review (two High, three Medium, two Low) is known only from the 2026-11-08 issue comment; no durable copy was found, so its exact text is missing evidence. Static review of all current targets and a labelled proxy behavior simulation were repeated; neither is native, intended-profile or qualified-human proof. Hosted CI is unobserved.
+
+## [2026-11-09] update | PR 1295 C3 navigation numbers and current-text corrections (Refs #1295)
+
+* `tools/capstone/Invoke-Capstone.ps1` now applies one baseline-to-physical mapping (baseline slides 13 to 54 move up one for the inserted page 13) to `page`, `pages`, `slide`, `slides` and `index` references, including no-space forms (`page40`), plural ranges (`pages 23-24`) and slash ranges (`pages 9/16`), while leaving numbers below 13 and part 55 notes unchanged. Five notes changed (QX, B13, B20, B26, B27); the deck, both generated pitch files, the preview PDF and the receipt were regenerated, and all other package members, protected cost slides and the 55 page images are unchanged. `Test-DeckInsertion.ps1` gained a literal independent table.
+* `docs/architecture/README.md` now separates the 14 October baseline diagrams (no sensor ingestion) from the 8 November continuation (source-coded finite sensor chain; no live deployment claimed). This index now states 55 slides with current physical page numbers; the dated 2026-10-29 54-slide entry is historical and kept. The discovery-journey R09 anchors now point to the actual headings (`#L33`, `#L253`, `#L327`).
+* Not changed, frozen for owner decision: current baseline page numbers in `docs/capstone/demo/runbook.md` and the QX manifest sentence "All 54 page numbers". No native, visual, assistive-technology, rehearsal or live approval is claimed.

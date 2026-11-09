@@ -260,11 +260,13 @@ not a staff-browser acceptance session, calibrated semantic quality or benefit.
 No cloud read, paid model call, new authority or resource change was performed
 to create these diagrams.
 
-The diagrams do not depict sensor ingestion. The simulator-only humidity and
-temperature capture path, deterministic review signal and proposed map overlay
-are documented in
-[ADR 0002](../adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map);
-they are not implemented or represented as deployed integrations here.
+The 14 October baseline diagrams did not depict sensor ingestion. The 8
+November continuation (current source, not a deployment record) depicts the
+source-coded finite IoT Hub to Event Hubs to API intake to SQL history chain.
+Live transport, calibration, resident consent, persisted averages and Quality
+linkage remain gated; no live deployment is claimed. The capture, deterministic
+review signal and proposed map overlay design is in
+[ADR 0002](../adrs/0002-pilot-readiness-architecture.md#sensor-data-capture-analysis-and-map).
 
 * The existing API/SQL proposal service is the current implementation.
   Separate queue workers would add deployment, failure and permission
