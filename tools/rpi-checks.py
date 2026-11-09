@@ -743,9 +743,8 @@ def changed_groups(paths: list[str], extras: list[str]) -> list[str]:
                 "requirements" in path.lower() or parts[2] == "pyproject.toml"
             ):
                 selected.add("mssql")
-            if (
-                any(word in path.lower() for word in ("store", "schema", "sql", "assistants"))
-                or (project == "core" and "sensor" in path.lower())
+            if any(word in path.lower() for word in ("store", "schema", "sql", "assistants")) or (
+                project == "core" and "sensor" in path.lower()
             ):
                 selected.add("mssql")
         else:
