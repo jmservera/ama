@@ -6,6 +6,114 @@ ms.date: 2026-10-31
 ms.topic: reference
 ---
 
+## Retained sensor readings for employees and Quality evidence (Refs #1288, #107)
+
+`sensor_view` is a read-only, bounded view of retained synthetic `sensor_reading`
+rows for one home (`home_id`, indexed with `observed_at`). `Assistants.sensors`
+(API `GET /api/cases/{id}/sensors`) shows values, units (degC, %RH), UTC times,
+freshness and provenance to Quality Inspector and Retrofit Programme Manager
+only; the Programme Support Officer keeps the ordinary quality panel and manual
+route. `capture_source` holds the newest 12 readings (so the displayed latest is
+always inside the capture) plus at most 4 before and 4 after the first quality
+evidence record. The capture takes an as-of time only as a filter (it is not stored): readings
+dated after it are excluded and reported as `future_dated_excluded`, never shown
+as latest or fresh; the window is bounded to 366 days and context to 30 days
+around the anchor. The same exact capture feeds the snapshot, the UI, the
+citations `sensor:{sensor_id}:{reading_id}` (the retained composite key) and the
+task identity and staleness, so a new reading or context change in the same
+six-hour bucket stales the old proposal. Only proactive scan scheduling uses the
+coarse six-hour signature, so arrivals do not enqueue work each time, and empty,
+withheld or unavailable captures stay stable.
+
+Provenance is classified from the retained schema and scenario:
+`live-sim-reading*` with scenario `live-simulator` is synthetic and
+weather-derived; `reading-v1` and `sensor-fault-input-v1` are synthetic modelled
+indoor; anything else is synthetic and unclassified. None is calibrated. No
+installation date or marker exists, so pre/post-retrofit context is stated as
+unavailable; the first quality evidence record time is a separately named
+`quality_record_anchor`, not a retrofit effect. Consent is read from the indexed
+`sensor_consumer_control_home` table (at most 100 controls for the home); any
+declined control wins, and an absent, incomplete or unindexed set is unknown. When current consent is withdrawn, values,
+citations, derived output (including uncited text and `edited_output`) and flags are withheld from the detail, list and
+export projections (the stored record is kept). C3: a capture holding only old
+before/after context is still a sensor capture, so withdrawal withholds it. Verification,
+review and event notes are withheld too, verify/accept are refused while withheld, and
+rejecting keeps the stored snapshot and output (the original returns with consent). A task
+records whether a person requested it (`manual_requested`); only an explicit `false` makes a
+dispatch proactive, so a missing or unclear value is "requested". The coarse schedule throttles
+every proactive branch, including quality gaps, never a manual request or a non-sensor change.
+`Assistants.migrate()` and `SensorConsumer.migrate_control_index()` reconcile the control index
+from the stored controls (adds missing rows, removes orphans, never writes policy, controls or
+consent). C4: each reconcile also rewrites a marker (`sensor_consumer_index_state`: total count and a
+digest of every home's sensor set); readers withhold consent unless the marker, both counts and the
+home's digest agree, so an equal-count wrong-home, missing-plus-orphan or failed reconcile fails
+closed. A residual out-of-band edit that restores counts and the home digest is not detectable.
+The proactive schedule is scoped to the current release and continuity epoch and compares the
+latest serviced task, so a release or epoch change, or a non-sensor A-to-B-to-A change, is new
+work; a task that went stale before any model call does not throttle its replacement. A request
+sets only the durable `manual_requested` flag and never rewrites a dispatch already claimed. The
+evidence rule states both horizons: newest readings within 366 days, and context readings within
+30 days of the quality record time, which may be older.
+C5: SQL guard triggers on `sensor_consumer_control` delete the index marker on any control write
+outside `configure` or reconcile, and the marker carries `v: 2`, so a changed control home, an older
+marker or a missing guard fails consent closed until `migrate()`. Scheduling reads one compact
+`assistant_schedule` row and the exact task by primary key (no task-body scans). C6: a queued
+proactive task is never refreshed in place; if newer same-schedule readings arrive before its claim it
+is marked stale and the current capture becomes its own task (at most three replacements without a
+dispatch, reset by a dispatch), so evidence identity always matches the task and a later request reuses
+it. A manual request never services the autonomous Quality flag. Pre-upgrade tasks are adopted once per
+case from the newest dispatched, non-requested task of the same release and epoch (index
+`ix_assistant_case`); unrecorded history is never treated as approved. Before readings leave for the
+provider, the final consent check and an `assistant_dispatch_hold` row commit in one transaction;
+`SensorConsumer.configure` (a withdrawal) waits for a live hold, bounded by the provider timeout plus a
+5 second grace on the database clock, then fails with `SENSOR_DISPATCH_IN_FLIGHT`. The hold covers one
+home and one call, not a global lock; a hold that cannot be written sends nothing. A direct SQL write
+that bypasses `configure` is outside this guarantee (the guard trigger invalidates the marker but
+cannot recall a call). The SQL Server DDL for the hold, schedule and index is written but not yet
+C7: the dispatch authorisation is now a per-attempt fence row in `assistant_dispatch_gate`
+(home, task, fence) written in the same transaction as the final consent check. The shipped `Ai`
+transport calls the gate after connect and before the first request byte, and refuses to send once a
+monotonic send-by deadline inside the database expiry has passed, so a stalled thread cannot send
+after the row could lapse. An attempt releases only its own fence. A provider that does not honour
+the gate (a test double or foreign provider) is covered only by a check immediately before the call.
+`SensorConsumer.configure` waits only for gates of the homes whose controls actually change (old and
+new home of a moved sensor). `migrate()` adds `assistant_schedule.replaced` and
+`assistant_tasks.dispatched` to existing C5/C6 tables idempotently on both backends and backfills
+`dispatched` from claim events. Adoption reads at most five rows by `dispatched`. After three
+replacements a stale task pauses (truthful message, manual request still available) until a quiet
+period; a late manual request does not refresh the slot or reattribute the frozen proactive call.
+The review flag compares cited reading content, reporting changed or missing cited rows apart from
+extra uncited rows, or unknown. Residual limits: a direct SQL write that bypasses `configure` and a
+process suspension between the last monotonic check and the kernel send are not closed; SQL Server
+statements (gate table, `COL_LENGTH` ALTER, index, `OFFSET/FETCH`) and query plans are unexecuted.
+E1 (issue 1288, local candidate) supersedes the residual limits above: the control guard trigger now
+rejects any INSERT, UPDATE or DELETE (and an invalid JSON body) for a home with a live gate row on the
+database clock, so a direct SQL withdrawal cannot commit during a send; `Ai` sends in 16 KiB chunks and
+checks the gate and caps the socket timeout before every chunk; the API wires `store.ai` as a gate-aware
+transport and holds to the manual route when a provider neither honours the gate nor declares
+`sends_no_bytes`; adoption pages at most 5 rows by 20 pages and records an explicit `incomplete-history`
+marker rather than treating an unfinished search as no history; coalescing measures its quiet interval
+from the last observed change; an unavailable or withheld current capture compares as unknown, never
+as missing. The guard, schedule and adoption changes ran on a disposable SQL Server 2022 container.
+Still not closed: a process or VM suspension longer than the margin between the last in-process
+check and the kernel send, changes that revert between scans, and TLS (chunk-bounded, tested on plain
+loopback only).
+
+executed against SQL Server. A returned proactive flag stays a review-suggested flag in the case panel
+with its captured as-of, freshness and age, and whether the current authorised capture differs from the
+readings it cited. Consent is checked again before dispatch and
+immediately before the provider call. The request carries the as-of time and a fresh, stale or unknown
+freshness state; readings dated beyond the next day are reported as future-dated, not absent.
+
+`review_flag` names the state of a returned model output. Only a proactive,
+current, returned finding that cites a captured reading is an automatic L4
+review flag (`review-suggested`); manual, uncited, rejected, reviewed,
+not-current and withheld states are shown as such. A flag is an unapproved
+request for human review, with no recorded recipient or delivery, and is not
+acceptance, payment, defect closure, consent, hazard diagnosis or a ranking
+change. The quality-evidence rule hash changed, so activation needs a matching
+release.
+
 ## Ranking snapshot publication (Refs #79)
 
 `ranking_publication.publish(snapshot, archive_dir, published_on)` archives a
