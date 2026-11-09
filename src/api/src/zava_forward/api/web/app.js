@@ -342,6 +342,7 @@ function missingWorkspaceScripts(hash, caseRoute) {
     ["/chat.js", Boolean(me) && !contractor, typeof chatCasePanel === "function" && typeof employeeChat !== "undefined"],
     ["/timecapture.js", staffDestination && hash === "#/time", typeof timeView === "function"],
     ["/role-screens.js", Boolean(me) && destination === "#/screens", typeof roleScreensView === "function"],
+    ["/simulator-control.js", Boolean(me) && destination === "#/simulator", typeof simulatorControlView === "function"],
     ["/progress.js", staffDestination && ["#/progress", "#/closed"].includes(destination), typeof ProgressViews === "object"],
     ["/vendor/leaflet.js", staffDestination && (hash === "#/overview" || destination === "#/coordinator"), typeof L === "object"],
   ].filter(([, needed, loaded]) => needed && !loaded).map(([path]) => path);
@@ -421,6 +422,7 @@ async function route() {
   if (typeof employeeChat !== "undefined") employeeChat.install();
   workspaceStatus.textContent = routeStatus;
   if (hash.split("?")[0] === "#/screens") return await roleScreensView();
+  if (hash.split("?")[0] === "#/simulator") return await simulatorControlView();
   if (me.user.role === "Contractor") return await (m ? contractorCaseView(decodeURIComponent(m[1])) : contractorListView());
   if (me.services?.cases === false && hash !== "#/assistants" && hash !== "#/import") {
     return show(h("h1", {}, "No case work for this account"),

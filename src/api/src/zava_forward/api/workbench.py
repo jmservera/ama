@@ -64,4 +64,13 @@ def navigation(user: dict[str, str]) -> list[Destination]:
                     href=href, label=label, scope=scope, access="needs a role with this authority"
                 )
             )
+    if admin:
+        out.append(
+            Destination(
+                href="#/simulator",
+                label="Simulator control",
+                scope="Finite simulator run control",
+                access="available",
+            )
+        )
     return out
