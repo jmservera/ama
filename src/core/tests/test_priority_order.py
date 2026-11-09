@@ -736,7 +736,10 @@ class SqliteLegacyEdges(SqliteFixture):
         final = self.open_store()
         self.assertEqual(len(self.batches(final)), 1)
         self.assertEqual(self.batches(final)[0]["rows"], size)
-        ords = [int(r[0]) for r in final.db.execute("SELECT created_ord FROM recommendations")]
+        ords = [
+            int(r[0])
+            for r in final.db.execute("SELECT created_ord FROM recommendations").fetchall()
+        ]
         self.assertEqual(sorted(ords), list(range(1, size + 1)))
 
 
