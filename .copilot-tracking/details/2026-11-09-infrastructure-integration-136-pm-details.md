@@ -16,9 +16,10 @@ ms.date: 2026-11-09
 
 ## Phase 3 Evidence verification
 
-* `git diff 24d1cfb16 HEAD --name-only -- . ':!.copilot-tracking'` compared with `git diff 0f05e9aae origin/main --name-only -- . ':!.copilot-tracking'`.
-* `git diff --name-status 24d1cfb16 HEAD -- .copilot-tracking/*136*` shows no modification of branch records (additions of main's unrelated tracking files are acceptable).
-* `docs/reference/log.md`: branch entries still present.
+* Non-tracking content: compare `git ls-tree -r <ref>` (with modes) filtered to exclude `.copilot-tracking/` for the merge result against `origin/main`, and for `24d1cfb16` against merge base `0f05e9aae`.
+* Tracking preservation: for every path under `.copilot-tracking/` at `24d1cfb16`, `git rev-parse <ref>:<path>` equals the merge result's blob id.
+* `git diff origin/main HEAD -- docs/reference/log.md` is empty.
+* Before the merge, re-fetch and confirm main is still `d4d6827fe60be651cd922ab9656688c18c978e1d`; otherwise stop and reassess.
 
 ## Phase 4 Records
 
