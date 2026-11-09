@@ -11,7 +11,7 @@ import threading
 import uuid
 from copy import deepcopy
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_publication, stock, taskqueues
 from .finance import FinanceMixin
@@ -27,8 +27,11 @@ from .doc_controls import DocControlsMixin, open_scanner
 from .exception_register import ExceptionRegisterMixin
 from .documents import ACCEPTED, MAX_BYTES, open_document_store
 from .procurement import ProcurementMixin
-from .quality import QualityMixin, handover_blockers
+from .quality import QualityMixin, handover_blockers, quality_evidence_gate
 from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view, hazard_view
+
+if TYPE_CHECKING:
+    from .complaints_route import ComplaintsReceiver
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
 READY_STAGE = "Final checks before ordering"
@@ -46,6 +49,10 @@ class ConflictError(Exception):
 
 
 class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin, GovernanceMixin, ContinuityMixin, DocControlsMixin, ExceptionRegisterMixin):
+    if TYPE_CHECKING:
+        # Injection point for tests and a future approved receiver; absent means the configured default.
+        complaints_receiver: ComplaintsReceiver | None
+
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)
@@ -602,6 +609,12 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         results.append(gates.evidence_gate(self._evidence_missing(c), "Grants and Evidence Officer"))
         if not gates.transition_allowed(results):
             raise GateError([f"{r.reason} Owner: {r.owner}. Next action: {r.correction}" for r in gates.unmet(results)])
+
+    def require_quality_evidence(self, rec):
+        """Fail closed: acceptance and handover need an explicit pass on the stored checklist evidence."""
+        result = quality_evidence_gate(rec)
+        if not result.passed:
+            raise GateError([f"{result.reason} Owner: {result.owner}. Next action: {result.correction}"])
 
     def log_call(self, user, case_id, outcome, note, channel="Phone"):
         outcome = (outcome or "").strip()[:80]
