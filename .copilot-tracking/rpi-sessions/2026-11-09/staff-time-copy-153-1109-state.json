@@ -18,7 +18,7 @@
     {"decision": "Research executed, Ready (2026-11-09T22:49Z)", "status": "done", "evidence": "research record, repro-before.log exit 0"},
     {"decision": "Plan and details authored (22:50Z)", "status": "done", "evidence": "plan and details records"},
     {"decision": "Critique executed once, verdict revise, seven findings all applied (22:51Z)", "status": "done", "evidence": "critique record"},
-    {"decision": "Implement started 2026-11-09T22:52Z; no source edit before this transition", "status": "active", "evidence": "git status clean apart from tracking"}
+    {"decision": "Implement started 2026-11-09T22:51Z; no source edit before this transition", "status": "active", "evidence": "git status clean apart from tracking"}
   ],
   "blockers": [],
   "next_action": {"phase": "Implement", "action": "Edit timecapture.js and add test_timecapture_copy.py"},
