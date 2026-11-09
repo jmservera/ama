@@ -10,11 +10,12 @@ import json
 import os
 import re
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
 from dataclasses import replace
-from . import ai_consumption, ai_prompts, data_protection, export_fields
+from . import ai_consumption, ai_prompts, ai_transport, data_protection, export_fields
 
 SCOPE = "https://cognitiveservices.azure.com"
 FORBIDDEN = re.compile(r"\b(i have sent|has been sent|we have sent|i've sent|email sent|message sent)\b", re.I)
@@ -22,6 +23,12 @@ FORBIDDEN = re.compile(r"\b(i have sent|has been sent|we have sent|i've sent|ema
 
 class DispatchDenied(RuntimeError):
     pass
+
+
+def may_carry_captured_readings(carrier):
+    """Captured IoT readings may only reach a carrier that is not a real Ai client and declares that it
+    sends no bytes. This is a composition declaration about the sink, not data provenance."""
+    return not isinstance(carrier, Ai) and getattr(carrier, "sends_no_bytes", False) is True
 
 
 MAX_TEXT_BYTES = 128 * 1024
@@ -40,6 +47,10 @@ class ModelMismatch(ValueError):
 
 
 class Ai:
+    # No transport here can establish an atomic suspend-and-send guarantee against a real provider,
+    # so the sealed simulation route is unavailable. Only labelled scripted test doubles set this.
+    send_fence_supported = False
+
     def __init__(self):
         self.endpoint = os.environ.get("AI_ENDPOINT", "").rstrip("/")
         self.fast = os.environ.get("AI_DEPLOYMENT", "standard")
@@ -51,6 +62,7 @@ class Ai:
         self.gate = None  # (task, deployment) -> reason the task is suspended, or None
         self.release = None  # Per-invocation selected record; never mutable shared request state.
         self.consumption = None
+        self.simulation_verifier = None  # set only by trusted composition: (seal, body bytes) -> raises SimulationRefused
         self.synthetic_price_capabilities = frozenset()  # demo-only: capabilities whose synthetic price may admit a live call
 
     @property
@@ -85,9 +97,25 @@ class Ai:
             api_version="2024-10-21", temperature=temperature, max_tokens=max_tokens,
         ), sort_keys=True))
 
-    def _request(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
-        body = json.dumps({"messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+    @staticmethod
+    def provider_body(system, user, max_tokens, temperature):
+        """The only serializer of the provider request body; the sealed simulation lane uses it too."""
+        return json.dumps({"messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
                            "max_tokens": max_tokens, "temperature": temperature}, ensure_ascii=True).encode("ascii")
+
+    def _request(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
+        seal = ai_consumption.SIMULATION_SEAL.get()
+        if ai_consumption.CAPTURED_READINGS.get() and seal is None:
+            raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
+        body = self.provider_body(system, user, max_tokens, temperature)
+        if seal is not None:
+            if not self.send_fence_supported:
+                raise ai_consumption.SimulationRefused("real-provider-route-unavailable")
+            # Verified against the bytes serialized here, before the data hold, meter, token or socket.
+            verifier = self.simulation_verifier
+            if verifier is None:
+                raise ai_consumption.SimulationRefused("verifier-unavailable")
+            verifier(seal, body)
         protected = data_protection.dispatch_hold("prompt_output", os.environ)
         if protected:
             raise DispatchDenied(protected)
@@ -95,6 +123,9 @@ class Ai:
             raise InputRefused("input-too-large")
         if self.consumption is None:
             raise ai_consumption.DispatchHeld("financial-meter-unavailable")
+        fence = ai_consumption.SEND_FENCE.get()
+        if fence is not None:
+            fence()  # a late caller creates no financial reservation, credential or socket
         model = self.model_version_strong if deployment == self.strong else self.model_version
         context = ai_consumption.CURRENT.get()
         if context is None:
@@ -114,7 +145,8 @@ class Ai:
             req = urllib.request.Request(f"{self.endpoint}/openai/deployments/{deployment}/chat/completions?api-version=2024-10-21",
                                          data=body, headers={"Authorization": f"Bearer {self._token()}", "Content-Type": "application/json"})
             self.consumption.dispatch_check(rid)
-            with urllib.request.urlopen(req, timeout=timeout) as response:
+            open_request = urllib.request.urlopen if fence is None else ai_transport.opener(fence, timeout).open
+            with open_request(req, timeout=timeout) as response:
                 raw = response.read(256001)
                 if len(raw) > 256000:
                     raise ValueError("Oversized provider envelope.")
@@ -123,6 +155,8 @@ class Ai:
                            returned_model=ai_consumption.bounded_model(result.get("model")))
             self.consumption.complete(rid, result.get("usage"), result.get("model"), "returned")
         except Exception as error:
+            if isinstance(error, urllib.error.HTTPError):
+                error.close()  # releases the absolute deadline that owns the connection
             self.consumption.complete(rid, None, None, "timeout" if isinstance(error, TimeoutError) else "provider-unavailable")
             raise
         if model != "unattested" and result.get("model") != model:
@@ -148,6 +182,10 @@ class Ai:
             envelope.update(outcome="input-refused", reason=str(error))
         except ModelMismatch as error:
             envelope.update(model=error.model, outcome="model-mismatch")
+        except ai_consumption.SimulationRefused as error:
+            envelope.update(outcome="simulation-refused", reason=error.code, usage=None)
+        except ai_consumption.DispatchWithdrawn:
+            envelope.update(outcome="suspended-before-dispatch", usage=None)
         except ai_consumption.DispatchHeld as error:
             envelope.update(outcome="financial-held", reason=str(error))
         except TimeoutError:
