@@ -531,6 +531,29 @@ DPO/Legal decision for. Resident-facing text still says nothing is sent to a
 live service; this adds no web control and does not prove resident access
 without detriment.
 
+Pending supersession (#1238, owner decision Q6 `manual_verified`, 2026-11-08):
+the `service_supersede_authorize` action marks a `Pending` attempt `Superseded`
+only after two separate authorizations on the same verified-outcome evidence
+reference (at most 100 characters; a reference, not resident detail): the
+request's service owner as control owner and its redress owner as reviewer
+(the named independent reviewer on an Independent review). Both must be
+registered persisted identities, different people, with no manager bypass.
+No separate control-owner role exists, so this pairing is an interpretation
+awaiting owner confirmation; no role, account or grant is added. The evidence
+is a reference the two people vouch for; the code cannot verify it, and
+synthetic tests show the gate, not human approval. An authorization whose owner
+was since reassigned is moved to `withdrawn` and does not count. The original
+attempt record, reservation, receipt reference, route idempotency key and audit
+entries are kept. Age is never an input and no timeout exists: an aged
+`Pending` attempt stays `Pending`. Supersession sends nothing and does not
+authorize a resend: a later send still needs `retry_unresolved` and the usual
+owner or named-reviewer rights, and a `Superseded` attempt still counts as
+unresolved. A late outcome for a superseded attempt is refused and its
+`receipt_ref` logged. Limits: the in-flight check is per store instance;
+a receipt found by verification has no manual recording path (do not
+supersede, reconcile with the receiver); the evidence reference is kept
+by retention deletion.
+
 Focused command: from `src/core`, `PYTHONPATH=src:tests python3 -m unittest
 test_resident_decisions -q`.
 

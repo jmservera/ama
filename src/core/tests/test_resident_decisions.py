@@ -3634,6 +3634,225 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(len(receiver.envelopes), 1)
         self.assertIn("'SYN-RCPT-1'", "\n".join(logged.output))
 
+    def pending_attempt(self, route: str = "Complaint") -> "SyntheticReceiver":
+        """Leave one acknowledged-but-unrecorded attempt Pending, as a failed outcome write does."""
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        if route == "Complaint":
+            self.request()
+        else:
+            self.scope()
+            self.answer()
+            self.store.resident_action(self.sam, "ZF-1", self.review_body())
+        with patch.object(
+            resident_decisions.ResidentDecisionMixin,
+            "_res_service_forward_outcome",
+            side_effect=RuntimeError("SYN outcome save failed"),
+        ):
+            with self.assertLogs(resident_decisions.__name__, "WARNING"):
+                with self.assertRaises(resident_decisions.ResidentCommittedError):
+                    self.forward(self.rae if route != "Complaint" else None)
+        return receiver
+
+    def supersede(self, user: dict[str, Any], role: str, **kw: Any) -> None:
+        reservation = self.route()["attempts"][0]["reservation_id"]
+        body = dict(
+            action="service_supersede_authorize",
+            id="SR-1",
+            attempt=1,
+            reservation_id=reservation,
+            authorize_as=role,
+            evidence_ref="SYN-VERIFIED-OUTCOME-1",
+        )
+        body.update(kw)
+        self.store.resident_action(user, "ZF-1", body)
+
+    def test_supersede_needs_both_owners_and_keeps_receipt_key_and_audit(self) -> None:
+        receiver = self.pending_attempt()
+        before = copy.deepcopy(self.route()["attempts"][0])
+        key = self.route()["route_key"]
+        self.supersede(self.sam, "control_owner")
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.supersede(self.rae, "reviewer")
+        attempt = self.route()["attempts"][0]
+        self.assertEqual(attempt["status"], "Superseded")
+        self.assertEqual(attempt["superseded_from"], "Pending")
+        for field in ("reservation_id", "reason", "request_id", "request_version", "reserved_at"):
+            self.assertEqual(attempt[field], before[field])
+        self.assertEqual(self.route()["route_key"], key)
+        self.assertEqual(attempt["supersession"]["evidence_ref"], "SYN-VERIFIED-OUTCOME-1")
+        self.assertEqual(
+            [a["role"] for a in attempt["supersession"]["authorizations"]],
+            ["control_owner", "reviewer"],
+        )
+        actions = [e["action"] for e in self.store.audit_entries()]
+        self.assertEqual(actions.count("resident_service_supersede_authorize"), 2)
+        self.assertTrue(self.store.verify_audit())
+        self.assertEqual(len(receiver.envelopes), 1)
+        reopened = self.open_store().cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(reopened["formal_route"]["attempts"][0], attempt)
+        self.unchanged_failure(self.forward)
+        self.unchanged_failure(partial(self.supersede, self.sam, "control_owner"))
+        self.assertEqual(len(receiver.envelopes), 1)
+        self.forward(retry_unresolved=True)
+        self.assertEqual(len(receiver.envelopes), 2)
+        self.assertEqual(receiver.envelopes[1]["idempotency_key"], key)
+
+    def test_supersede_refusals_record_nothing_and_send_nothing(self) -> None:
+        receiver = self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        reservation = self.route()["attempts"][0]["reservation_id"]
+        for user, role, kw in (
+            (self.sam, "reviewer", {}),
+            (self.rae, "control_owner", {}),
+            (self.pam, "reviewer", {}),
+            (self.kim, "control_owner", {}),
+            (self.rae, "reviewer", dict(evidence_ref="")),
+            (self.rae, "reviewer", dict(evidence_ref="SYN-OTHER-EVIDENCE")),
+            (self.rae, "reviewer", dict(evidence_ref="x" * 101)),
+            (self.rae, "reviewer", dict(attempt=2)),
+            (self.rae, "reviewer", dict(reservation_id="SYN-OTHER")),
+            (self.rae, "reviewer", dict(authorize_as="manager")),
+            (self.sam, "control_owner", {}),
+        ):
+            with self.subTest(user=user["name"], role=role, kw=kw):
+                self.unchanged_failure(partial(self.supersede, user, role, **kw))
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.assertEqual(self.route()["attempts"][0]["reservation_id"], reservation)
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_supersede_refuses_aged_pending_and_non_pending_attempts(self) -> None:
+        receiver = self.pending_attempt()
+        with self.store.lock:
+            self.store._case("ZF-1")["service_requests"][0]["formal_route"]["attempts"][0][
+                "reserved_at"
+            ] = "2000-01-01T00:00:00+00:00"
+            self.store.save()
+        self.unchanged_failure(self.forward)
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.assertNotIn("supersession", self.route()["attempts"][0])
+        self.forward(retry_unresolved=True)
+        self.assertEqual(self.route()["attempts"][1]["status"], "Acknowledged")
+        reservation = self.route()["attempts"][1]["reservation_id"]
+        self.unchanged_failure(
+            partial(
+                self.supersede, self.sam, "control_owner", attempt=2, reservation_id=reservation
+            )
+        )
+        self.assertEqual(len(receiver.envelopes), 2)
+
+    def test_supersede_independent_review_needs_the_named_independent_reviewer(self) -> None:
+        receiver = self.pending_attempt("Independent review")
+        self.unchanged_failure(partial(self.supersede, self.sam, "reviewer"))
+        with self.store.lock:
+            req = self.store._case("ZF-1")["service_requests"][0]
+            req["reviewed_identity"] = dict(req["redress_identity"])
+            self.store.save()
+        self.unchanged_failure(partial(self.supersede, self.rae, "reviewer"))
+        with self.store.lock:
+            self.store._case("ZF-1")["service_requests"][0]["reviewed_identity"] = dict(
+                self.store._case("ZF-1")["service_requests"][0]["service_identity"], code="SYN-X"
+            )
+            self.store.save()
+        self.supersede(self.pam, "control_owner")
+        self.supersede(self.rae, "reviewer")
+        self.assertEqual(self.route()["attempts"][0]["status"], "Superseded")
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_supersede_authorization_ends_when_its_owner_is_reassigned(self) -> None:
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        req = self.store.cases["ZF-1"]["service_requests"][0]
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            dict(
+                action="service_reassign",
+                id="SR-1",
+                expected_version=req["version"],
+                responsibility="service",
+                owner=self.rex["email"],
+                note="SYN reassignment",
+            ),
+        )
+        self.supersede(self.rae, "reviewer")
+        attempt = self.route()["attempts"][0]
+        self.assertEqual(attempt["status"], "Pending")
+        self.assertEqual(
+            [a["role"] for a in attempt["supersession"]["authorizations"]], ["reviewer"]
+        )
+        self.assertEqual(
+            [a["role"] for a in attempt["supersession"]["withdrawn"]], ["control_owner"]
+        )
+        self.unchanged_failure(partial(self.supersede, self.sam, "control_owner"))
+        self.supersede(self.rex, "control_owner")
+        self.assertEqual(self.route()["attempts"][0]["status"], "Superseded")
+
+    def test_supersede_failure_is_atomic_and_can_be_replayed(self) -> None:
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        audit = list(self.store.audit_entries())
+        with patch.object(self.store, "audit", side_effect=RuntimeError("SYN audit fault")):
+            with self.assertRaises(RuntimeError):
+                self.supersede(self.rae, "reviewer")
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertEqual(self.open_store().cases["ZF-1"], before)
+        self.supersede(self.rae, "reviewer")
+        self.assertEqual(self.route()["attempts"][0]["status"], "Superseded")
+
+    def test_supersede_is_refused_while_the_send_is_in_flight(self) -> None:
+        receiver = SyntheticReceiver("block")
+        self.store.complaints_receiver = receiver
+        self.request()
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            sending = pool.submit(self.forward)
+            try:
+                self.assertTrue(receiver.entered.wait(20))
+                reservation = self.route()["attempts"][0]["reservation_id"]
+                with self.assertRaisesRegex(ValueError, "still in progress"):
+                    self.supersede(self.sam, "control_owner", reservation_id=reservation)
+            finally:
+                receiver.release.set()
+            sending.result(timeout=20)
+        self.assertEqual([a["status"] for a in self.route()["attempts"]], ["Acknowledged"])
+
+    def test_late_outcome_for_a_superseded_attempt_is_refused_and_logs_the_receipt(self) -> None:
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        self.supersede(self.rae, "reviewer")
+        before = copy.deepcopy(self.route())
+        outcome = dict(
+            action="service_forward_outcome",
+            id="SR-1",
+            attempt=1,
+            reservation_id=before["attempts"][0]["reservation_id"],
+            status="Acknowledged",
+            reason="SYN",
+            receipt_ref="SYN-RCPT-LATE",
+        )
+        with self.assertLogs(resident_decisions.__name__, "WARNING") as logged:
+            with self.assertRaises(resident_decisions.ResidentCommittedError):
+                resident_decisions._record_outcome(self.store, self.rae, "ZF-1", outcome)
+        self.assertIn("'SYN-RCPT-LATE'", "\n".join(logged.output))
+        self.assertEqual(self.route(), before)
+
+    def test_supersede_retention_deletion_keeps_the_disposition(self) -> None:
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        self.supersede(self.rae, "reviewer")
+        with self.store.lock:
+            self.store._case("ZF-1")["resident"]["first_contact_at"] = "2020-01-01"
+            self.store.save()
+        self.store.delete_resident_records(self.pam, "ZF-1", "2040-01-01")
+        attempt = self.open_store().cases["ZF-1"]["service_requests"][0]["formal_route"][
+            "attempts"
+        ][0]
+        self.assertEqual(attempt["status"], "Superseded")
+        self.assertNotIn("resident_request_ref", attempt)
+        self.assertEqual(len(attempt["supersession"]["authorizations"]), 2)
+
     def test_forward_retention_deletion_clears_resident_reference_only(self) -> None:
         self.store.complaints_receiver = SyntheticReceiver("ack")
         self.request()

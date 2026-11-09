@@ -30,7 +30,7 @@ ACCESS_CODES = ("None", "Unknown", "Large print", "Phone only", "Plain language"
 RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_record", "disclosure_check",
                     "decision_record", "service_open", "service_update", "service_close",
                     "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update",
-                    "challenge_open", "challenge_resolve", "service_forward",
+                    "challenge_open", "challenge_resolve", "service_forward", "service_supersede_authorize",
                     "nomination_record", "nomination_correct", "nomination_review", "tenure_intake",
                     "tenure_legal_position", "tenure_verify", "tenure_question_pack",
                     "tenure_question_pack_review",
@@ -67,7 +67,8 @@ TENURE_HOLD = (
 MANAGERS = ("Retrofit Programme Manager", "Programme Support Officer")
 FORMAL_ROUTES = ("Complaint", "Independent review")
 FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen", "service_reassign",
-                    "update_record", "remedy_confirm", "remedy_update", "challenge_open", "challenge_resolve")
+                    "update_record", "remedy_confirm", "remedy_update", "challenge_open", "challenge_resolve",
+                    "service_supersede_authorize")
 
 
 class ResidentCommittedError(RuntimeError):
@@ -108,6 +109,16 @@ def _require_independent_reviewer(reviewer, historical):
         raise PermissionError("The historical recorder identity is Unknown. Resolve the original evidence before assigning independent review.")
     if _same_person(reviewer, historical):
         raise PermissionError("Choose a reviewer who did not make the contested decision.")
+
+
+# Control owner is the registered service owner and reviewer the registered redress owner: the existing
+# distinct pair on a formal route. No role, grant or account is added.
+_SUPERSEDE_ROLES = dict(control_owner="service", reviewer="redress")
+
+
+def _same_owner(recorded, current):
+    keys = [key for key in ("code", "oid") if _identity_value(recorded, key)]
+    return bool(keys) and all(_identity_value(recorded, key) == _identity_value(current, key) for key in keys)
 
 
 def _day(value):
@@ -1400,7 +1411,7 @@ class ResidentDecisionMixin:
         if any(a["status"] == "Acknowledged" for a in attempts):
             raise ValueError("The formal route has already acknowledged this request.")
         # A legacy Failed attempt has no not_sent evidence, so its "not received" claim is not trusted.
-        unresolved = [a for a in attempts if a["status"] in ("Pending", "Unconfirmed")
+        unresolved = [a for a in attempts if a["status"] in ("Pending", "Unconfirmed", "Superseded")
                       or (a["status"] == "Failed" and a.get("not_sent") is not True)]
         if unresolved and body.get("retry_unresolved") is not True:
             raise ValueError("An earlier send has no confirmed outcome. Check with the receiver, then retry explicitly.")
@@ -1438,6 +1449,45 @@ class ResidentDecisionMixin:
         if body["status"] == "Acknowledged":
             attempts[attempt - 1].update(receipt_ref=body["receipt_ref"], received_at=body.get("received_at"))
         return f"{req['id']} formal-route attempt {attempt}: {body['status']}"
+
+    def _res_service_supersede_authorize(self, user, c, body):
+        """Owner-approved manual_verified step (issue 1238 Q6): two named owners, never age, never a resend."""
+        req = k.find(c.get("service_requests", []), body.get("id"), "request")
+        attempts = (req.get("formal_route") or {}).get("attempts", [])
+        number = body.get("attempt")
+        if (type(number) is not int or not 1 <= number <= len(attempts) or attempts[number - 1]["status"] != "Pending"
+                or attempts[number - 1].get("reservation_id") != body.get("reservation_id")):
+            raise ValueError("There is no pending formal-route attempt to supersede.")
+        if in_flight(self, c.get("id"), req["id"]):
+            raise ValueError("A send for this request is still in progress on this system. Wait for its outcome.")
+        role = k.choice(body.get("authorize_as"), tuple(_SUPERSEDE_ROLES), "the authorizing role")
+        evidence = k.text(body.get("evidence_ref"), "the reference to the verified outcome evidence", 100)
+        owner_key = _SUPERSEDE_ROLES[role]
+        if user["email"].lower() != req[owner_key + "_owner_email"].lower():
+            raise PermissionError(f"Only the named {role.replace('_', ' ')} can authorize this supersession.")
+        _require_named_reviewer(user, req.get(owner_key + "_identity"))
+        if role == "reviewer" and req["route"] == "Independent review":
+            _require_independent_reviewer(user, req.get("reviewed_identity"))
+        attempt = attempts[number - 1]
+        record = attempt.setdefault("supersession", dict(evidence_ref=evidence, authorizations=[], withdrawn=[]))
+        current = {name: req.get(key + "_identity") for name, key in _SUPERSEDE_ROLES.items()}
+        for given in list(record["authorizations"]):
+            if not _same_owner(given["identity"], current[given["role"]]):
+                record["authorizations"].remove(given)
+                record["withdrawn"].append(given)
+        if not record["authorizations"]:
+            record["evidence_ref"] = evidence
+        if any(a["role"] == role for a in record["authorizations"]):
+            raise ValueError("This role has already authorized the supersession. Reload to see its state.")
+        if record["evidence_ref"] != evidence:
+            raise ValueError("Both owners must authorize the same verified outcome evidence reference.")
+        if any(_same_person(user, a["identity"]) for a in record["authorizations"]):
+            raise PermissionError("A different named person must give the other authorization.")
+        record["authorizations"].append(dict(role=role, identity=_identity(user), at=_time()))
+        if len(record["authorizations"]) == 2:
+            attempt.update(status="Superseded", superseded_from="Pending", superseded_at=_time())
+            return f"{req['id']} formal-route attempt {number} superseded; receipt, key and history kept"
+        return f"{req['id']} formal-route attempt {number} supersession authorized by the {role.replace('_', ' ')}"
 
     def _res_service_update(self, user, c, body):
         req = k.find(c.get("service_requests", []), body.get("id"), "request")
