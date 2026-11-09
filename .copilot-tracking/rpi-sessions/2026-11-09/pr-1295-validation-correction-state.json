@@ -1,0 +1,32 @@
+{
+  "task_id": "pr-1295-validation-correction",
+  "task_slug": "pr-1295-validation-correction",
+  "parent_task": {"task_id": "pr-1295-owner-reconcile", "task_slug": "pr-1295-owner-reconcile"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09/pr-1295-validation-correction-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09/pr-1295-validation-correction-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09/pr-1295-validation-correction-phase-details.md",
+    "critique": ".copilot-tracking/reviews/2026-11-09/pr-1295-validation-correction-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09/pr-1295-validation-correction-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-09/pr-1295-validation-correction-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research", "status": "executed, Planning Readiness Ready", "evidence": "research record"},
+    {"decision": "Critique", "status": "executed once, verdict Revise, findings applied directly", "evidence": "critique record"},
+    {"decision": "Journey check failure", "status": "confirmed main defect (fresh main 76db469b1), not fixed here, fix draft recorded", "evidence": "changes record"},
+    {"decision": "Page 12 boundary overlap", "status": "fixed with failing-first regression", "evidence": "changes record"},
+    {"decision": "Review", "status": "executed once, self-assessment, conformant at checked scope", "evidence": "review record"},
+    {"decision": "Correction budget", "status": "cycle 1 of 5 used", "evidence": "changes record"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independent exact-head review; re-read owner remote and main before any publication"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Separate fix for stale resident-journey asset on main", "rationale": "README-listed check red on main", "evidence": "changes record"},
+    {"rank": 2, "task": "Native PowerPoint, AT, projector, rehearsal", "rationale": "not establishable on Linux", "evidence": "review record"},
+    {"rank": 3, "task": "Owner confirmation of boundary notch and page 13 near-contact", "rationale": "design semantics and 1 px contact", "evidence": "changes record"}
+  ]
+}
