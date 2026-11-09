@@ -10924,3 +10924,15 @@ The parent topic merged main e2ecee25 with a normal merge and no conflicts. Focu
 ## 2026-11-08 - Issue 149 parent integration of main ecb28815
 
 The parent topic merged main ecb28815 with a normal merge and no conflict; API, Core, tools, infra and workflow bytes equal the previously assessed head. Docs-only integration, no acceptance claim. No index change. Evidence under `.copilot-tracking/` (2026-11-08 issue-149-parent-main-ecb2).
+
+## [2026-11-08] update | Issue 440 visible-demo integration checkpoint (Refs #440, #149, #229, #891)
+
+* Added a dated visible-demo integration checkpoint to the cut-over evidence pack and one index paragraph. It records base `6354b13f` (only the rubric score file after `656cafb1`), PR 1286 `28c6ec11` and PR 1290 `656cafb1`, the source movement since the previous pin, where AI is invoked and the proposal-only ceiling, and one historical generic employee model answer on the deployed demo as Azure observed for that source only. Five-agent, case-grounded, sensor-grounded, current-main deployment, cost, privacy and approval acceptance remain unproven; unmerged #184 and #1288 work is excluded; no new defect was confirmed. Recommendation: bounded continue. Documentation only; no test, model or Azure action, issue write or approval. Records: `.copilot-tracking/*/2026-11-08-visible-demo-checkpoint-440-*`.
+
+## [2026-11-08] update | Issue 440 visible-demo checkpoint correction 1 (Refs #440, #149, #229, #891)
+
+* Corrected the visible-demo checkpoint in the cut-over evidence pack after independent assessment of `398a1b6c`: chat no-model path wording, issue-specific closure criteria instead of a blanket IoT dependency, sensor exclusion narrowed to the verified Quality capture allowlist and to no activation observed in this checkpoint, hosted checks separated from the local assessment, and the one real generic model answer distinguished from unproven case-grounded answers. Documentation only; earlier entries and records unchanged. Records: `.copilot-tracking/*/2026-11-08-visible-demo-checkpoint-440-c1-*`.
+
+## [2026-11-08] update | Issue 440 visible-demo checkpoint correction 2 (Refs #440, #149, #229, #891)
+
+* Made the stored-route model-call sentence in the visible-demo section of the cut-over evidence pack conditional and at most once (`chat_panel.py` 583-591), qualified the BRD and PRD trace row to distinguish the one observed generic model answer from unproven case-grounded provider behavior and human acceptance, and added a compact note that the C1 research wall-clock claim conflicts with Git commit times (cause unknown, record preserved). Documentation only; no approval, closure or new evidence.

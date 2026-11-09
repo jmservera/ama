@@ -1073,3 +1073,11 @@ PR 1240 still open, scopes the earlier exclusions to the 608c pin, separates the
 historical AWF 504 (recovered by the rootless installer in #1275) from the
 unimplemented #1274 resilience, qualifies the assistant review wording and marks the
 unused chat clean-up as pending triage, not deferred.
+
+The [visible-demo integration checkpoint](../architecture/cutover-evidence-pack.md#visible-demo-integration-checkpoint-2026-11-08-refs-440-149-229-891)
+(2026-11-08, base `6354b13f`) records PR 1286 and PR 1290 on main, the source
+movement since the previous pin, where AI is invoked and the proposal-only ceiling,
+and one historical generic employee model answer on the deployed demo as Azure
+observed for that source only. Five-agent, case-grounded, sensor-grounded,
+current-main deployment, cost, privacy and approval acceptance remain unproven, and
+unmerged #184 and #1288 work is excluded. The recommendation is bounded continue.
