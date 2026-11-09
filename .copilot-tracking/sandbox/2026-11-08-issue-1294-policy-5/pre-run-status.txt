@@ -1,0 +1,10 @@
+ M docs/reference/log.md
+ M src/README.md
+?? .copilot-tracking/changes/2026-11-08/issue-1294-validation-policy-correction-c4-changes.md
+?? .copilot-tracking/details/2026-11-08/issue-1294-validation-policy-correction-c4-phase-details.md
+?? .copilot-tracking/hve-builder/2026-11-08/issue-1294-validation-policy-static-review-c4-log.md
+?? .copilot-tracking/plans/2026-11-08/issue-1294-validation-policy-correction-c4-plan.md
+?? .copilot-tracking/plans/critiques/2026-11-08/issue-1294-validation-policy-correction-c4-plan-critique.md
+?? .copilot-tracking/research/2026-11-08/issue-1294-validation-policy-correction-c4-research.md
+?? .copilot-tracking/sandbox/2026-11-08-issue-1294-policy-5/
+!! tools/__pycache__/

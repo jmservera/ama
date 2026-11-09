@@ -1,0 +1,14 @@
+src/README.md [] False False
+readme+log ['agents', 'api', 'core', 'importer', 'orchestrator'] True True
+readme+tracking ['agents', 'api', 'core', 'importer', 'orchestrator'] True True
+core sql ['agents', 'api', 'core', 'importer', 'orchestrator'] True True
+api app.js ['api'] True True
+unknown src md ['agents', 'api', 'core', 'importer', 'orchestrator'] True True
+rpi-checks [] True False
+workflow ['agents', 'api', 'core', 'importer', 'orchestrator'] True True
+infra ['agents', 'api', 'core', 'importer', 'orchestrator'] True True
+closure tools/ci-affected.py ['agents', 'api', 'core', 'importer', 'orchestrator'] True True
+closure tools/backlog-sync.py ['agents', 'api', 'core', 'importer', 'orchestrator'] True True
+closure tools/install-actionlint.py [] True False
+closure tools/rename-zava-tests.py [] True False
+actual-candidate-files 24 ['agents', 'api', 'core', 'importer', 'orchestrator'] True True
