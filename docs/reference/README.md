@@ -1237,4 +1237,7 @@ check runs plus one status on the PR head, and records fresh targeted local unit
 at the current tree with one retained load-sensitive SQLite failure. No hosted check
 executing the priority suite on SQL Server was identified. Source SQL merge is not full
 demo acceptance; #1292, #81, #1240 and #440 criteria stay unclosed and the recommendation
-is bounded continue with closure held.
+is bounded continue with closure held. A dated C2 qualification in the same section
+narrows the committed-versus-uncertain creation wording, restates the SQLite failure as
+one in five executions then four passes (cause unknown, no waiver), and cross-references
+a later #1292 diagnosis with 0 of 6 reproductions and an unconfirmed timing hypothesis.

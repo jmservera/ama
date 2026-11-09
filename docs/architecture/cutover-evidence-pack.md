@@ -5389,6 +5389,8 @@ BRD and PRD functional requirement numbers collide in this repository, so each t
 
 Mocks, rules and fixtures are not actual AI: the SQL-wave tests use a database and fakes, and no provider answer is observed or claimed. The UI states whether the order was written by AI or by rules at runtime; which applies on a deployed service is unknown here.
 
+Qualified 2026-11-09 (C2): the last row's "Committed or uncertain" wording is narrowed; see Q1 in the C2 qualification below. The row is kept as originally written.
+
 ### Evidence by class
 
 | Class | Items |
@@ -5440,3 +5442,15 @@ Proposed bounded CONTINUE through the existing owners with a HOLD on every closu
 Dependent expansion that relies on the SQL ordering wave (for example the #1240 lifecycle integration evidence) resumes when all hold: (1) an independent exact-head assessment of this record exists; (2) the owners decide whether hosted or one nonqueued owned SQL admission must execute `test_priority_order` for the current main, and any such run records exits, counts, skips and the source identity; (3) F2 is diagnosed or its recurrence is accepted by the owner; (4) the named data-owner confirmation of unresolved-order records is shown to exist as a process; (5) deployed parity and a rendered browser observation of the committed-creation notice are obtained under the existing cost and release controls.
 
 Limits: single-session authored record with no independent exact-head review and no hosted CI for the commit that carries it; the hosted state for the squash was read at 15:47Z; author-reported items are labelled; the check count came from the status rollup and the commit status API.
+
+### C2 qualification, 2026-11-09
+
+Dated qualification of the section above after an independent PARTIAL Readiness assessment (one Medium, one Low finding; not a full publication clearance). The original table row, the original authored Review and the F2 finding text are kept unchanged; this subsection narrows them. No source, test or policy changed, no test was repeated, and the statements below are source reads or coordinator-reported facts, not browser, SQL or hosted observations.
+
+| Id | Qualification | Evidence |
+| --- | --- | --- |
+| Q1 | The creation row in the SQL wave behavior table said "Committed or uncertain creation maps to HTTP 409 `outcome=committed`". Only a `CommittedReloadError`, a write that committed whose reload afterwards did not settle, is mapped to HTTP 409 with `outcome=committed`; a successful creation returns 200. An uncertain outcome or a transport failure is a different path: the UI treats `outcome` committed, `outcome` uncertain or an error without a `status` as needing history reconciliation, latches that state in the current panel instance and hides the repeat control. That state does not prove that a write committed or that any HTTP status was returned. | `server.py:1242-1246` (also `1265-1268` for resolve); `sqlstore.py:156-159`; `app.js:38-40`, `724-730` |
+| Q2 | The original Review R3 says "one occurrence in four runs". The retained records show five executions of the affected SQLite concurrent-opener test: the first Core selection failed (exit 1, 421 tests, one "database is locked" failure), then three isolated runs and the serial Core selection (exit 0, 421 tests) passed. That is one failure in five executions followed by four passes. The failed assertion was the errors-list assertion at `test_priority_order.py:734`, not the elapsed-time assertion at 735. Cause UNKNOWN; not classified as a flake or a defect; no waiver of the failure. | Retained external logs named in the Current observations section; test file lines 734 and 735 |
+| Q3 | A later, separate #1292 diagnosis at frozen head `59accfa1ca9be77f2e98faf5ef862deba76cf941` (base `ef28d4da4`, documentation records only) ran the same test six times (three plain, three observer-instrumented, about 15 to 16 s each) with 0 of 6 reproductions. Its observational timing hypothesis, a write-lock hold of about 3.05 to 3.25 s against a 5.0 s wait, is consistent with a load-sensitive failure but is NOT confirmed or reproduced. It neither explains nor relabels the earlier failure, implies no fix, and gives no basis to close F2, #1292 or any criterion. | Coordinator-reported from the diagnosis handoff (raw logs outside this repository, not re-read here) |
+
+The F2 owner handling, F1 and the resume conditions above are unchanged. Hold on closure for #1292, #81, #1240, #440 and #123 remains. Not claimed: approval, closure, independent exact-head review or hosted CI for this commit, whole #440, #1292 or #81 acceptance, live SQL, Azure or AI evidence.
