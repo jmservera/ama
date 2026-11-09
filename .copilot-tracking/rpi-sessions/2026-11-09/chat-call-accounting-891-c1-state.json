@@ -1,28 +1,81 @@
 {
   "task_id": "issue-891-chat-call-accounting-1109-c1",
   "task_slug": "chat-call-accounting-891-c1",
-  "parent_task": {"task_id": "issue-891-chat-call-accounting-1109", "task_slug": "chat-call-accounting-891"},
+  "parent_task": {
+    "task_id": "issue-891-chat-call-accounting-1109",
+    "task_slug": "chat-call-accounting-891"
+  },
   "mode": "manual",
-  "active_phase": "Plan",
-  "status": "active",
-  "session_status": null,
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-09-chat-call-accounting-891-c1-research.md",
     "plan": ".copilot-tracking/plans/2026-11-09-chat-call-accounting-891-c1-plan.md",
     "details": ".copilot-tracking/details/2026-11-09-chat-call-accounting-891-c1-details.md",
     "critique": ".copilot-tracking/plans/2026-11-09-chat-call-accounting-891-c1-critique.md",
-    "changes": null,
-    "review": null
+    "changes": ".copilot-tracking/changes/2026-11-09-chat-call-accounting-891-c1-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09-chat-call-accounting-891-c1-review.md"
   },
   "confirmed_decisions": [
-    {"decision": "Corrective cycle C1 of five total authorised by the coordinator on 2026-11-09; parent head fb972548480ed83a3c2855e4bae1f1c1f1793f93 and its records preserved; Refs #891 only; criterion 2 stays unticked", "status": "confirmed", "evidence": "coordinator brief 2026-11-09"},
-    {"decision": "Main 1b7a1719bee088ce2823bff45242e319bc928295 merged normally at 2026-11-09T22:52:34Z as 97f0036b573f8d0497c0d67904506f8156c11920; minimal core/ai.py marker admitted by the coordinator", "status": "confirmed", "evidence": "git log; research record"},
-    {"decision": "Research executed 22:52Z-22:54Z; Planning Readiness Ready", "status": "confirmed", "evidence": ".copilot-tracking/research/2026-11-09-chat-call-accounting-891-c1-research.md"},
-    {"decision": "Critique executed once before any test or source edit; verdict Revise; five findings dispositioned directly; no second critique", "status": "confirmed", "evidence": ".copilot-tracking/plans/2026-11-09-chat-call-accounting-891-c1-critique.md"}
+    {
+      "decision": "Corrective cycle C1 of five total authorised by the coordinator on 2026-11-09; parent head fb972548480ed83a3c2855e4bae1f1c1f1793f93 and its records preserved; Refs #891 only; criterion 2 stays unticked",
+      "status": "confirmed",
+      "evidence": "coordinator brief 2026-11-09"
+    },
+    {
+      "decision": "Main 1b7a1719bee088ce2823bff45242e319bc928295 merged normally at 2026-11-09T22:52:34Z as 97f0036b573f8d0497c0d67904506f8156c11920; minimal core/ai.py marker admitted by the coordinator",
+      "status": "confirmed",
+      "evidence": "git log; research record"
+    },
+    {
+      "decision": "Research executed 22:52Z-22:54Z; Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-09-chat-call-accounting-891-c1-research.md"
+    },
+    {
+      "decision": "Critique executed once before any test or source edit; verdict Revise; five findings dispositioned directly; no second critique",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-09-chat-call-accounting-891-c1-critique.md"
+    },
+    {
+      "decision": "Implement activated at 2026-11-09T22:55:50Z (date -u) before any test or source edit; planning commit ab6d7b1ab",
+      "status": "confirmed",
+      "evidence": "date -u transition record"
+    },
+    {
+      "decision": "Red tests run before any source edit (core 1 failure + 12 errors, agents 3 failures); source commit f466f4997 at 2026-11-09T23:01:43Z",
+      "status": "confirmed",
+      "evidence": "changes record and logs c1-red-*.log"
+    },
+    {
+      "decision": "Review executed once on f466f4997; outcome conformant; 4 non-blocking findings routed",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-09-chat-call-accounting-891-c1-review.md"
+    },
+    {
+      "decision": "Correction cycles spent: 1 of 5 (C1). Criterion 2 of #891 remains unticked",
+      "status": "confirmed",
+      "evidence": "coordinator brief"
+    }
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "Activate Implement (record date -u and read back), then write the red tests before any source edit"},
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator independent actual-code assessment, then publication, then actual-head CI"
+  },
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Carry count provenance (measured versus unverified) into the chat receipt", "rationale": "PC-002: chat_panel is shared and not owned here", "evidence": "critique PC-002"}
+    {
+      "rank": 1,
+      "task": "Carry count provenance (measured versus unverified) into the chat receipt",
+      "rationale": "PC-002/R4",
+      "evidence": "critique and review"
+    },
+    {
+      "rank": 2,
+      "task": "Pin fence withdrawal and TimeoutError/HTTPError dispatch counts in tests",
+      "rationale": "R2/R3",
+      "evidence": "review"
+    }
   ]
 }
