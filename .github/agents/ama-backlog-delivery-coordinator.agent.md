@@ -640,8 +640,10 @@ remains subject to the tracking retention policy.
    Real AI, Azure/OIDC, protected what-if and deployment acceptance remain
    separate owner-authorized gates; this local gate grants no cloud authority.
    Every subsequent commit, correction, rebase or changed base requires
-   refreshed selected-tier validation on the final exact HEAD; full tier
-   requires a new full receipt. Changed source/tool/image inputs invalidate
+   refreshed selected-tier validation on the final exact HEAD, except that an
+   existing partial receipt stays valid across a base change only when
+   verification prints `BASE RELAXED` (step 8); full tier requires a new full
+   receipt. Changed source/tool/image inputs invalidate
    receipt evidence as well. Never overwrite adverse receipts or fabricate
    check contexts. Each loop keeps its
    own `.copilot-tracking/` per worktree; do not share tracking state between
@@ -771,7 +773,7 @@ remains subject to the tracking retention policy.
    `--verify-receipt ... --required-scope partial`; `--resume FAILED_RECEIPT`
    applies only to a failed gate run. The coordinator may run this itself or
    route the gate run to a continuation session (fresh brief; counts toward the
-   session total) and always runs the final verification. If the shared
+   session total) and always runs the final verification of any receipt it uses. If the shared
    heavy-resource lock is held, defer to the next tick, never a blocking wait.
    A refresh at the unchanged head does not by itself invalidate the independent
    exact-head assessment; a new commit or rebase does. Rebase only for a conflict, or for a required integration
@@ -791,7 +793,10 @@ remains subject to the tracking retention policy.
    assessment: rerun selected-tier checks and assess the resulting exact
    HEAD before any push of it. Full tier requires a new full receipt and
    successful verification; focused tier requires refreshed unit/focused
-   evidence, not an unconditional full receipt. Reassess tier if scope
+   evidence, not an unconditional full receipt. A focused candidate that carries
+   no receipt refreshes with its targeted local checks before any push and reads the applicable hosted checks after the push;
+   a partial receipt is verified only when one was produced and is cited, and
+   this step never makes a blanket `--changed` run mandatory. Reassess tier if scope
    changes. Do not silently retarget a stacked child to `main`; after parent
    integration, re-evaluate and declare any target/dependency update.
    Unknown protection/ruleset mapping and missing retained

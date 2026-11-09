@@ -143,7 +143,8 @@ Measured wall-clock times for the speed controls are not yet recorded; see
 
 #### Hosted CI versus local gate coverage (issue #1294)
 
-Facts verified from the workflows and runner on 2026-11-08. Re-verify them from
+Facts verified from the workflows and runner on 2026-11-08 and, for the retained
+sensor suite (merged from main, #1299), on 2026-11-09. Re-verify them from
 the files before relying on them; they are not self-updating.
 
 * Triggers: Source projects CI (`src-ci.yml`) is the only pull request source
@@ -178,7 +179,17 @@ the files before relying on them; they are not self-updating.
   complete acceptance contract (below); exact-count, zero-skip, named-test
   verification of the chat-panel selector; the
   `test_assistant_release.MssqlUnleasedRevocation` SQL selector and the named
-  SQL chat tests that must report `ok`; workflow-hash drift, ShellCheck and
+  SQL chat tests that must report `ok`; the retained sensor analysis suite
+  (`test_sensor_analysis_mssql` with `ZF_SENSOR_MSSQL=1`, run in the local SQL
+  group after the store and assistant selectors, exactly the pinned
+  `SENSOR_MSSQL_REQUIRED_TESTS` with zero skips; the hosted `mssql` job does not
+  run it, and `project-core` discovery tolerates its opt-in skips on the
+  expectation that the SQL group runs them, so a selection that includes
+  `project-core` without `mssql` must run the sensor suite directly when the
+  change touches it; local `--changed` selects `mssql` for non-inert
+  core paths containing `sensor` and for the listed
+  `SENSOR_MSSQL_DIRECT_DEPENDENCIES`, so a sensor-named Markdown file selects
+  nothing extra); workflow-hash drift, ShellCheck and
   Trivy database identity probes; fresh-image, shard fail-closed and clean
   exact-head receipt binding.
 * Shared (the same kind of check runs in both places; compare the verification
@@ -260,7 +271,7 @@ tool by path with bytecode writing disabled) before relying on them.
 | Documentation or instruction only | `docs/reference/README.md`, `.github/copilot-instructions.md` | Focused | Link review, Git diff, stale-wording search; the hve-builder static, behavior and host gates for a behavior-bearing instruction | Outside the Source CI path filter, so possibly none | Source CI passed; a blanket `--changed` run was needed |
 | Documentation under `src/` | `src/README.md` as the only changed path | Focused | Same | Source CI runs; selects no project, namespace or mssql, so the project jobs report success with every step skipped, while the `src-no-working-data` guard runs. Any accompanying `docs/` or `.copilot-tracking/` path widens selection to every project, namespace and mssql | That project tests ran |
 | Small employee chat or browser | `src/api/src/zava_forward/api/web/app.js`, `src/api/checks/employee_chat_browser_check.py` | Focused | Direct local checks above; local `--changed` selects `browser` and `project-api` and is an optional aid | `src-api` runs the selector, the employee acceptance check and three other browser checks (design system, regulatory UX and case journey), not the employee-chat harness; `src-namespace` and the `mssql` job are also selected | Hosted CI covers the harness |
-| SQL | `src/core/src/zava_forward/core/mssqlstore.py` | Full | Complete gate, verified external full receipt | A `src/core` change selects every project, namespace and the `mssql` job | A partial receipt |
+| SQL | `src/core/src/zava_forward/core/mssqlstore.py`, `src/core/src/zava_forward/core/sensor_analysis.py` | Full | Complete gate, verified external full receipt; the SQL group includes the retained sensor suite | A `src/core` change selects every project, namespace and the `mssql` job, which does not run the retained sensor suite | A partial receipt; hosted CI covering the sensor suite |
 | Bicep or security | `infra/main.bicep` | Full | Complete gate; `--changed` selects only `preflight`, `namespace`, `static` and `infra` and is partial | `src-namespace` Bicep lint and infra tests; what-if only if enabled | A partial receipt, a weakened control |
 | Mixed: documentation plus infrastructure | documentation plus `infra/main.bicep` | Strictest applicable (full, because a component is infrastructure) | Complete gate | Union of the above | A lighter tier because most paths are documentation |
 | Mixed: documentation plus small chat change | `src/README.md` plus `src/api/src/zava_forward/api/web/app.js` | Strictest applicable (focused, because both components are focused) | Union of the planned local checks, including the direct employee-chat checks | `src-api` runs the selector, not the harness; selection is the same as for the chat change alone | That a full receipt is required, or that hosted CI covers the harness |
@@ -292,9 +303,11 @@ receipt records what ran and what was skipped.
 * Scoped skips: `--changed` skips project groups and image builds whose
   paths, or whose dependencies' paths, are untouched (a `src/api`-only change
   skips the agents, orchestrator and importer images and projects). The
-  receipt has `scope: partial` and records every skipped group with its
+  receipt has `scope: partial` when groups are skipped and records every skipped group with its
   reason in `selection.skipped` and `skipped`. Unmapped paths still select
-  the full matrix.
+  the full matrix, and the receipt scope follows the groups actually selected;
+  a `--changed` receipt never satisfies the full tier by policy, whatever its
+  recorded scope.
 * Image layer cache: scanned image builds reuse unchanged Docker layers by
   default (receipt `image_cache: layer`). Trivy still gates every built image,
   so a stale `apt-get upgrade` layer fails the scan rather than passing. Use

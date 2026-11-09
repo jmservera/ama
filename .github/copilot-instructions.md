@@ -71,7 +71,7 @@ component guides and existing workflows rather than infer that no tests exist.
 
 Validation follows two tiers (owner decision D4, 2026-11-01, refined by issue
 #1294). During development run the relevant targeted local tests. Small
-issues, tooling and documentation-only candidates take the focused tier: run
+issues, non-gate tooling and documentation-only candidates take the focused tier: run
 the planned relevant local checks (for example documentation link and diff
 review, the affected unit tests, and any local-only check that the change
 touches, such as the employee-chat browser harness) and read the applicable
