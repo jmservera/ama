@@ -19,7 +19,7 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine
-from zava_forward.api import auth
+from zava_forward.api import auth, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
@@ -404,6 +404,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(401, {"error": "Please sign in."})
             q = parse_qs(url.query)
             s = app.store
+            if simulator_admin.handles(url.path):
+                return self._json(*simulator_admin.handle(s, u, "GET", url.path))
             if url.path == "/api/governance":
                 try:
                     result = s.governance_view(u)
@@ -1129,6 +1131,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(403, {"error": "Missing request header."})
             if u.get("view_only") and url.path != "/api/logout":
                 return self._json(403, {"error": "Administrator access shows every option but changes nothing; a staff role is needed to act."})
+            if simulator_admin.handles(url.path):
+                return self._json(*simulator_admin.handle(app.store, u, "POST", url.path, body))
             if url.path == "/api/logout":
                 if app.provider.name == "trusted-proxy":
                     if body.get("switchAccount") is True:
