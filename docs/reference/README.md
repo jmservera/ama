@@ -1183,7 +1183,10 @@ The [demo stabilization current-main checkpoint](../architecture/cutover-evidenc
 qualifies BRD and PRD identifiers and decision record status, reads the simulator to
 persistence to UI to Quality model to flag path from source, and records three tiny
 local test observations plus the 184 results as historical observed with Git source
-equivalence. The employee retained-value view, sensor input to the real Quality model
-and an attributed flag are not on main, and unmerged #1288, #1292, #144, #189, #1295 and
-#1296 work is excluded. No new defect, closure or approval is claimed; the
-recommendation is bounded continue with closure held.
+equivalence. No retained-value employee view or sensor-attributed flag was identified in
+the inspected paths (a differently named path remains unverified); the registered
+quality-evidence snapshot has permitted document metadata, Quality records and
+checklists but no dedicated retained-sensor fields; the selected tests did not exercise
+the full sensor-to-Quality-model journey (dated Qualification C1, 2026-11-09). Unmerged
+#1288, #1292, #144, #189, #1295 and #1296 work is excluded. No new defect, closure or
+approval is claimed; the recommendation is bounded continue with closure held.

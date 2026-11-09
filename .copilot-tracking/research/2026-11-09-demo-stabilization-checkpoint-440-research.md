@@ -104,3 +104,7 @@ Q1 Which requirement and decision IDs does the sensor path trace to, BRD against
 ## Not done
 
 * No `.copilot-tracking` edit of historical records, no private data, no credential read, no Azure, model, SQL, browser or full-gate run, no push or issue write.
+
+## Qualification C1 (2026-11-09, added after independent readiness review)
+
+Claims C9 to C11 and C17 above and the closing hop conclusions were written as categorical absence ("no employee route", "none exists", "no such path exists"). The evidence is bounded to the inspected paths: a textual search of `src/api` and a reading of the registered `quality-evidence` snapshot (`assistants.py:97-180`, caller `:504-509`), which also holds permitted document metadata. Read them as "not identified in the inspected paths; a differently named path remains unverified". The original text and outcome are not regraded. See `2026-11-09-demo-stabilization-checkpoint-440-c1-qualification-research.md`.

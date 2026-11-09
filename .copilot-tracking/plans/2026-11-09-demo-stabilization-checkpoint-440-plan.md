@@ -82,3 +82,7 @@ Critique `.copilot-tracking/plans/2026-11-09-demo-stabilization-checkpoint-440-c
 
 * F1 Observed outside scope: the #184 issue body text reported stale by the 2026-11-09 audit (owner #184). No issue is written.
 * F2 SQL-backed observations on main (assistants 58 skipped, #1297) await a later admitted SQL window after #1292 releases the resource.
+
+## Qualification C1 (2026-11-09, added after independent readiness review)
+
+The key-limit sentence above ("do not exist on main") is superseded in scope: no retained-value UI, sensor input or attributed flag was identified in the inspected paths and a differently named path remains unverified. Original plan and critique outcome are not regraded. See the C1 plan `2026-11-09-demo-stabilization-checkpoint-440-c1-qualification-plan.md`.
