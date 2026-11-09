@@ -11,7 +11,7 @@ Keep active research, plans, details, changes and original critique/Review
 evidence in dated tracking locations. Unknown-active RPI records and adverse
 findings stay intact. Completion, age, duplication or an unreferenced path alone
 does not authorize deletion. Preserve original RPI evidence and the
-[complete local publication gate](../../../src/README.md#local-rpi-gate),
+[selected-tier local publication gate](../../../src/README.md#local-rpi-gate),
 independent review, hosted checks and human approval requirements.
 
 Promote reusable builders to `tools/` and durable evidence to the appropriate

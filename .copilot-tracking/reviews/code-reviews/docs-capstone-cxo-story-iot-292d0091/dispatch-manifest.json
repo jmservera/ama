@@ -1,0 +1,40 @@
+{
+  "reviewTarget": {
+    "kind": "branch_diff",
+    "headRef": "docs/capstone-cxo-story",
+    "headSha": "0bcf55da1d516c82567e6eb44357343054c69b76",
+    "baseRef": "origin/main",
+    "baseSha": "b46a9ad9a9619db535368d1b2cbbddec8110e122"
+  },
+  "reviewProfile": "custom",
+  "recommendedPerspectives": ["functional", "readiness"],
+  "selectedPerspectives": ["functional", "readiness"],
+  "recommendedDepth": "standard",
+  "depthTier": "standard",
+  "mode": "workflow",
+  "phaseGates": {
+    "orientationConfirmed": true,
+    "humanAccepted": false,
+    "walkbackComplete": false,
+    "emissionReady": false
+  },
+  "phaseGateNote": "Scope/depth supplied by owner; no walkback requested, human sign-off or external emission performed.",
+  "currentPhase": "assessment_complete",
+  "verdict": "approve",
+  "findings": [],
+  "boardItems": [
+    {"id": "package-navigation", "area": "Insertion, physical ordering, sections, notes and fixed navigation", "status": "complete", "register": "register-2", "summary": "Source reasoning, in-memory candidate verification and independent XML/PDF parsing completed; no material finding."},
+    {"id": "financial-guards", "area": "Protected cost content and insertion/status exceptions", "status": "complete", "register": "register-2", "summary": "Six protected pages, independent numeric/geometry checks and negative mutations completed; no material finding."},
+    {"id": "diagram-source-contracts", "area": "Native/SVG/PNG consistency and current-versus-gated claims", "status": "complete", "register": "register-2", "summary": "Source contracts, parsed native models, hashes, selected tests and six PNG views checked; browser/live acceptance excluded."},
+    {"id": "deliverable-readiness", "area": "Manifest/catalog/deck/pitch/receipt bindings and limits", "status": "complete", "register": "register-2", "summary": "Local deliverable bindings and claims assessed; implementation-only evidence attributed separately; hosted/final gate not asserted."}
+  ],
+  "pendingReviewBoardItems": 0,
+  "nextActions": [
+    {"id": "parent-persistence", "kind": "handoff", "target": "parent", "reason": "Caller persisted original assessment content; reviewer created no files."},
+    {"id": "parent-final-gate", "kind": "handoff", "target": "parent", "reason": "Own final exact-head RPI/publication validation and final remote PR identity checks."}
+  ],
+  "historicalEvidenceModified": false,
+  "externalSubmissionPerformed": false,
+  "sameTaskFollowupIsRereview": false,
+  "persistedBy": "parent"
+}

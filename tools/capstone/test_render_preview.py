@@ -165,3 +165,41 @@ def test_given_overlapping_same_target_when_restoring_then_both_links_preserved(
     )
 
     assert result["fixed_slide_jumps"] == 2
+
+
+def test_given_inserted_slide_with_stable_parts_when_rendering_then_fixed_target_shifts(
+    tmp_path,
+):
+    source = make_deck(tmp_path)
+    candidate = tmp_path / "inserted.pptx"
+    with zipfile.ZipFile(source) as before, zipfile.ZipFile(candidate, "w") as after:
+        for entry in before.infolist():
+            data = before.read(entry.filename)
+            if entry.filename == "ppt/presentation.xml":
+                data = data.replace(
+                    b'<p:sldId r:id="r2"/>',
+                    b'<p:sldId r:id="added"/><p:sldId r:id="r2"/>',
+                )
+            elif entry.filename == "ppt/_rels/presentation.xml.rels":
+                data = data.replace(
+                    b"</Relationships>",
+                    (
+                        f'<Relationship Id="added" Target="slides/slide55.xml" '
+                        f'Type="{R}/slide"/></Relationships>'
+                    ).encode(),
+                )
+            after.writestr(entry, data)
+        after.writestr(
+            "ppt/slides/slide55.xml",
+            f'<p:sld xmlns:p="{P}"><p:cSld><p:spTree/></p:cSld></p:sld>',
+        )
+
+    assert read_slide_jumps(candidate) == (
+        3,
+        [SlideJump(0, 2, (0.1, 0.1, 0.3, 0.2))],
+    )
+    output = tmp_path / "inserted.pdf"
+    result = restore_slide_links(candidate, make_pdf(tmp_path, pages=3), output)
+    with pymupdf.open(output) as document:
+        assert result["slides"] == len(document) == 3
+        assert document[0].get_links()[0]["page"] == 2

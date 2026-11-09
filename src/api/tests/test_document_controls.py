@@ -6,7 +6,7 @@ import os
 import tempfile
 import unittest
 import urllib.parse
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 import test_mvp
@@ -236,6 +236,47 @@ class RetentionTests(Base):
 
     def test_json_store(self):
         self.run_stock()
+
+    def test_retention_refusals_explain_reason_owner_next_action_and_change_nothing(self):
+        triggers = {"ZF-N1": None, "ZF-N2": AS_OF.isoformat(), "ZF-N3": (AS_OF - timedelta(days=365 * 6)).isoformat()}
+        cases = []
+        for cid, trigger in triggers.items():
+            c = test_mvp.case(cid)
+            c["closed"], c["retention_trigger"] = False, trigger
+            cases.append(c)
+        st = self.make(cases)
+        docs = {cid: st.add_document(SAM, cid, "epc.pdf", "EPC", b"%PDF-1", metadata=change_metadata(st, cid)) for cid in triggers}
+
+        def refuse(cid, exc):
+            did = docs[cid]["id"]
+            before = (len(st.docstore.get(cid, did)), len(st.detail(cid)["documents"]), len(self.actions(st)))
+            with self.assertRaises(exc) as ctx:
+                st.approve_retention_deletion(PAM, cid, did, AS_OF)
+            self.assertEqual(before, (len(st.docstore.get(cid, did)), len(st.detail(cid)["documents"]),
+                                      len(self.actions(st)) - (exc is PermissionError)))
+            self.assertTrue(st.verify_audit())
+            return str(ctx.exception)
+
+        for text in (refuse("ZF-N1", ValueError), refuse("ZF-N2", ValueError)):
+            for phrase in ("not due for deletion", "nothing was deleted", "retention period", "recorded retention start date",
+                           "not an approved schedule", "Keep the document", "check the case closing date"):
+                self.assertIn(phrase, text)
+            self.assertNotIn("retention trigger", text)
+        self.assertNotIn("retention_delete_blocked_legal_hold", self.actions(st))
+
+        st.place_legal_hold(PAM, "ZF-N3", "HOLD-ZF-N3")
+        held = refuse("ZF-N3", PermissionError)
+        for phrase in ("legal hold is in place", "kept for a legal reason", "nothing was deleted", "Keep the documents",
+                       "programme manager", "Legal delegate's decision", "once the hold has ended"):
+            self.assertIn(phrase, held)
+        self.assertEqual(self.actions(st).count("retention_delete_blocked_legal_hold"), 1)
+        self.assertNotIn("retention_deleted", self.actions(st))
+
+        st.release_legal_hold(PAM, "ZF-N3")
+        st.approve_retention_deletion(PAM, "ZF-N3", docs["ZF-N3"]["id"], AS_OF)
+        self.assertIn("retention_deleted", self.actions(st))
+        with self.assertRaises(KeyError):
+            st.docstore.get("ZF-N3", docs["ZF-N3"]["id"])
 
     def test_not_due_documents_are_refused_and_not_listed(self):
         st = self.make()

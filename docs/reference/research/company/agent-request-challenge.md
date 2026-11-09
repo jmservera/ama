@@ -1,9 +1,21 @@
 ---
 title: Agent Request Challenge
 description: Role-by-role challenge of the five requested Zava Forward agents, the problems behind them, non-agent alternatives and what to build instead
-ms.date: 2026-10-23
+ms.date: 2026-11-08
 ms.topic: reference
 ---
+
+## Brief fidelity qualification (2026-11-08)
+
+The original brief requested L2 recommendations, specified L3 drafts/actions
+and L4 autonomous flags, with human approval and resident consent already
+explicit. The historical "none should run end to end" conclusion below is a
+research-instrument recommendation about mechanism and scope, not evidence
+that the case requested unrestricted decision-making. Most roles accepted
+L4 raise-only flags; its recommend-level alternative remains a distinct open
+decision. The [current presentation review](../../../capstone/source/review-2026-11-08.md#requested-versus-built-autonomy)
+separates preserved rights from partial task delivery and genuine authority
+reductions. Original role answers, disagreements and dates remain unchanged.
 
 ## Prospective resident scope qualification (2026-10-23, #441)
 

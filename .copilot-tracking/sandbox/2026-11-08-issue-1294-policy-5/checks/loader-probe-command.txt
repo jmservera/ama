@@ -1,0 +1,5 @@
+cwd: src/api (worktree docs/validation-policy-1294, HEAD 2f1aa2e4d42b79364b95622d6198975203c1417e before C4 edits)
+env: PYTHONDONTWRITEBYTECODE=1; PYTHONPATH either unset or the runner value .:src:tests:../core/src:../agents/src:../core/tests:../agents/tests
+probe: a fresh unittest.TestLoader().loadTestsFromNames of the three names test_employee_acceptance_check.AcceptanceTests.test_chromium_{rosterless,wrong_account,map_contract}; flatten suites; fail (exit 1) if loader.errors is non-empty or the flattened ids differ from the three names; print errors and ids.
+scope: proves import and name resolution only; it is not a browser run.
+outputs: loader-probe-runner.txt, loader-probe-unset.txt, loader-probe-exits.txt in this directory (exit 0 with runner path, exit 1 unset).

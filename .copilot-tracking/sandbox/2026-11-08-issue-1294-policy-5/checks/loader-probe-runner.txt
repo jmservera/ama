@@ -1,0 +1,4 @@
+mode runner
+loader.errors 0
+ids ['test_employee_acceptance_check.AcceptanceTests.test_chromium_rosterless', 'test_employee_acceptance_check.AcceptanceTests.test_chromium_wrong_account', 'test_employee_acceptance_check.AcceptanceTests.test_chromium_map_contract']
+exact three flattened ids and no loader errors: True

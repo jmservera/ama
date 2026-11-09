@@ -1,0 +1,26 @@
+{
+  "task_id": "440-finance-export-checkpoint-r2",
+  "task_slug": "finance-export-checkpoint-440-r2",
+  "parent_task": {"task_id": "440-finance-export-checkpoint", "task_slug": "finance-export-checkpoint-440"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-05-finance-export-checkpoint-440-r2-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-05-finance-export-checkpoint-440-r2-plan.md",
+    "details": ".copilot-tracking/details/2026-11-05-finance-export-checkpoint-440-r2-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-05-finance-export-checkpoint-440-r2-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-05-finance-export-checkpoint-440-r2-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-05-finance-export-checkpoint-440-r2-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed, Planning Readiness Ready", "status": "recorded", "evidence": "r2 research"},
+    {"decision": "Critique executed once, Complete, verdict Revise, PC-001 applied directly", "status": "recorded", "evidence": "r2 critique"},
+    {"decision": "Review executed once, no significant issues", "status": "recorded", "evidence": "r2 review"},
+    {"decision": "Original d26791065 process is non-compliant and unrepaired; r2 is prospective", "status": "recorded", "evidence": "coordinator finding; file timestamps in r2 review"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independent exact-head assessment; publication, hosted and consumption gates remain; #96 stays paused"},
+  "prioritized_follow_ups": []
+}

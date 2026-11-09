@@ -18,7 +18,7 @@ param hubHostname string = 'iot-cutover-test-rzsrg.azure-devices.net'
 @description('Owner approval reference for sending synthetic readings to the hub. Empty refuses the deployment.')
 @minLength(1)
 param approvalReference string
-@description('Existing Container Apps environment storage (Azure Files share) holding <device>.pem and <device>.key, mounted read-only.')
+@description('Existing Container Apps environment storage (Azure Files share) holding <device>.pem, <device>.key and the admin-written control.json (cohort, owner, expiry, stop), mounted read-only.')
 param certStorageName string
 @description('Existing SQL logical server FQDN and database; the identity needs read access to the case ids only.')
 param sqlServerFqdn string
@@ -78,6 +78,7 @@ resource job 'Microsoft.App/jobs@2025-07-01' = {
           { name: 'ZF_SIM_HUB_HOSTNAME', value: hubHostname }
           { name: 'ZF_SIM_APPROVAL', value: approvalReference }
           { name: 'ZF_SIM_CERT_DIR', value: '/certs' }
+          { name: 'ZF_SIM_CONTROL_FILE', value: '/certs/control.json' }
           { name: 'ZF_STORE', value: 'mssql' }
           { name: 'ZF_SQL_AUTH', value: 'msi' }
           { name: 'ZF_SQL_CLIENT_ID', value: identity.properties.clientId }
