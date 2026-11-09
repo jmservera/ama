@@ -1,0 +1,31 @@
+======================================================================
+ERROR: test_unresolved_newest_is_marked_in_the_view_and_other_employees_are_not (test_priority_order.SqlitePriorityOrder.test_unresolved_newest_is_marked_in_the_view_and_other_employees_are_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 415, in test_unresolved_newest_is_marked_in_the_view_and_other_employees_are_not
+    self.assertNotIn("order_confirmed", other)
+  File "/usr/lib/python3.12/unittest/case.py", line 1156, in assertNotIn
+    if member in container:
+       ^^^^^^^^^^^^^^^^^^^
+TypeError: argument of type 'NoneType' is not iterable
+
+======================================================================
+FAIL: test_failed_publication_is_neither_persisted_nor_flushed_later (test_priority_order.SqlitePriorityOrder.test_failed_publication_is_neither_persisted_nor_flushed_later)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 430, in test_failed_publication_is_neither_persisted_nor_flushed_later
+    self.assertEqual(len(ends), 2)
+AssertionError: 5 != 2
+
+======================================================================
+FAIL: test_provable_creation_order_survives_a_backward_clock_step (test_priority_order.SqlitePriorityOrder.test_provable_creation_order_survives_a_backward_clock_step)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 389, in test_provable_creation_order_survives_a_backward_clock_step
+    self.assertEqual(batch["timestamp_inversions"], 1)
+AssertionError: 2 != 1
+
+----------------------------------------------------------------------
+Ran 54 tests in 35.310s
+
+FAILED (failures=2, errors=1, skipped=19)

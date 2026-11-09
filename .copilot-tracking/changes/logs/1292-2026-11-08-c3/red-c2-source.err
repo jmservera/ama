@@ -1,0 +1,273 @@
+======================================================================
+ERROR: test_priority_panel_renders_the_order_explanation_accessibly (test_priority_order.SqliteC3Corrections.test_priority_panel_renders_the_order_explanation_accessibly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 926, in test_priority_panel_renders_the_order_explanation_accessibly
+    at = text.index("order_note")
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: substring not found
+
+======================================================================
+FAIL: test_already_accepted_unresolved_record_is_not_relied_on (test_priority_order.SqliteC3Corrections.test_already_accepted_unresolved_record_is_not_relied_on)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 920, in test_already_accepted_unresolved_record_is_not_relied_on
+    self.assertFalse(view["relied_on"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_appending_to_a_sealed_year_is_not_served_incrementally (test_priority_order.SqliteC3Corrections.test_appending_to_a_sealed_year_is_not_served_incrementally)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 949, in test_appending_to_a_sealed_year_is_not_served_incrementally
+    self.assertFalse(evidence["ok"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_earlier_single_list_index_is_adopted_once_and_left_untouched (test_priority_order.SqliteC3Corrections.test_earlier_single_list_index_is_adopted_once_and_left_untouched)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 1002, in test_earlier_single_list_index_is_adopted_once_and_left_untouched
+    self.assertEqual(self.unresolved(reopened), ["old000000001", "old000000002"])
+AssertionError: Lists differ: [] != ['old000000001', 'old000000002']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'old000000001'
+
+- []
++ ['old000000001', 'old000000002']
+
+======================================================================
+FAIL: test_failed_begin_quarantines_unsaved_records_and_events_without_a_rollback (test_priority_order.SqliteC3Corrections.test_failed_begin_quarantines_unsaved_records_and_events_without_a_rollback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 964, in test_failed_begin_quarantines_unsaved_records_and_events_without_a_rollback
+    self.assertNotIn("bbb000000007", {r["id"] for r in store.data["recommendations"]})
+AssertionError: 'bbb000000007' unexpectedly found in {'bbb000000007', 'f289a59a2143'}
+
+======================================================================
+FAIL: test_new_conflicting_digest_with_the_same_head_is_not_served_from_the_cache (test_priority_order.SqliteC3Corrections.test_new_conflicting_digest_with_the_same_head_is_not_served_from_the_cache)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 937, in test_new_conflicting_digest_with_the_same_head_is_not_served_from_the_cache
+    self.assertFalse(evidence["ok"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_orphan_creation_event_for_a_later_inserted_row_is_not_proof (test_priority_order.SqliteC3Corrections.test_orphan_creation_event_for_a_later_inserted_row_is_not_proof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 823, in test_orphan_creation_event_for_a_later_inserted_row_is_not_proof
+    self.assertEqual(self.unresolved(reopened), ["orph00000009"])
+AssertionError: Lists differ: [] != ['orph00000009']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'orph00000009'
+
+- []
++ ['orph00000009']
+
+======================================================================
+FAIL: test_prior_batch_database_is_reviewed_once_even_with_batch_metadata_and_a_zero_row (test_priority_order.SqliteC3Corrections.test_prior_batch_database_is_reviewed_once_even_with_batch_metadata_and_a_zero_row)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 849, in test_prior_batch_database_is_reviewed_once_even_with_batch_metadata_and_a_zero_row
+    self.assertEqual(self.unresolved(reopened), ["ccc000000003", "mmm000000002"])
+AssertionError: Lists differ: [] != ['ccc000000003', 'mmm000000002']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'ccc000000003'
+
+- []
++ ['ccc000000003', 'mmm000000002']
+
+======================================================================
+FAIL: test_prior_candidate_audit_inversion_across_timestamps_is_reviewed (test_priority_order.SqliteC3Corrections.test_prior_candidate_audit_inversion_across_timestamps_is_reviewed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 877, in test_prior_candidate_audit_inversion_across_timestamps_is_reviewed
+    self.assertEqual(self.unresolved(reopened), [first])
+AssertionError: Lists differ: [] != ['836dd02dfc9f']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'836dd02dfc9f'
+
+- []
++ ['836dd02dfc9f']
+
+======================================================================
+FAIL: test_repeated_ambiguous_batches_write_only_their_own_flags (test_priority_order.SqliteC3Corrections.test_repeated_ambiguous_batches_write_only_their_own_flags)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 988, in test_repeated_ambiguous_batches_write_only_their_own_flags
+    self.assertEqual(len(flags), 4)
+AssertionError: 0 != 4
+
+======================================================================
+FAIL: test_server_refuses_accept_and_edit_of_an_unresolved_record_but_allows_reject (test_priority_order.SqliteC3Corrections.test_server_refuses_accept_and_edit_of_an_unresolved_record_but_allows_reject)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 899, in test_server_refuses_accept_and_edit_of_an_unresolved_record_but_allows_reject
+    with self.assertRaises(PermissionError):
+AssertionError: PermissionError not raised
+
+======================================================================
+FAIL: test_tied_transaction_sequence_is_not_proof_of_joint_commit (test_priority_order.SqliteC3Corrections.test_tied_transaction_sequence_is_not_proof_of_joint_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 811, in test_tied_transaction_sequence_is_not_proof_of_joint_commit
+    self.assertEqual(self.unresolved(reopened), [self.latest(reopened)])
+AssertionError: Lists differ: [] != ['46fb105ec84a']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'46fb105ec84a'
+
+- []
++ ['46fb105ec84a']
+
+======================================================================
+FAIL: test_unaudited_row_beside_audited_rows_leaves_the_newest_unconfirmed (test_priority_order.SqliteC3Corrections.test_unaudited_row_beside_audited_rows_leaves_the_newest_unconfirmed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 781, in test_unaudited_row_beside_audited_rows_leaves_the_newest_unconfirmed
+    self.assertEqual(self.unresolved(reopened), [self.latest(reopened)])
+AssertionError: Lists differ: [] != ['e5323da1a97b']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'e5323da1a97b'
+
+- []
++ ['e5323da1a97b']
+
+======================================================================
+FAIL: test_unaudited_rows_with_different_timestamps_are_not_confirmed_newest (test_priority_order.SqliteC3Corrections.test_unaudited_rows_with_different_timestamps_are_not_confirmed_newest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 796, in test_unaudited_rows_with_different_timestamps_are_not_confirmed_newest
+    self.assertEqual(self.unresolved(reopened), ["zzz000000002"])
+AssertionError: Lists differ: [] != ['zzz000000002']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'zzz000000002'
+
+- []
++ ['zzz000000002']
+
+======================================================================
+FAIL: test_ambiguous_group_is_recorded_with_ids_when_audit_evidence_is_absent (test_priority_order.SqlitePriorityOrder.test_ambiguous_group_is_recorded_with_ids_when_audit_evidence_is_absent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 335, in test_ambiguous_group_is_recorded_with_ids_when_audit_evidence_is_absent
+    self.assertEqual(batch["ambiguous_total"], 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_audited_same_second_creations_keep_order_after_edit_of_the_older (test_priority_order.SqlitePriorityOrder.test_audited_same_second_creations_keep_order_after_edit_of_the_older)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 321, in test_audited_same_second_creations_keep_order_after_edit_of_the_older
+    self.assertEqual(batch["ambiguous_ids"], [second])
+AssertionError: Lists differ: [] != ['7686e446ec31']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'7686e446ec31'
+
+- []
++ ['7686e446ec31']
+
+======================================================================
+FAIL: test_rollback_batch_is_recorded_without_erasing_earlier_metadata (test_priority_order.SqlitePriorityOrder.test_rollback_batch_is_recorded_without_erasing_earlier_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 365, in test_rollback_batch_is_recorded_without_erasing_earlier_metadata
+    self.assertEqual(batches[1]["ambiguous_total"], 1)
+AssertionError: 2 != 1
+
+======================================================================
+FAIL: test_unresolved_newest_is_marked_in_the_view_and_other_employees_are_not (test_priority_order.SqlitePriorityOrder.test_unresolved_newest_is_marked_in_the_view_and_other_employees_are_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 419, in test_unresolved_newest_is_marked_in_the_view_and_other_employees_are_not
+    self.assertEqual(self.unresolved(reopened), ["mmm000000002"])
+AssertionError: Lists differ: [] != ['mmm000000002']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'mmm000000002'
+
+- []
++ ['mmm000000002']
+
+======================================================================
+FAIL: test_broken_audit_chain_is_not_trusted (test_priority_order.SqliteLegacyEdges.test_broken_audit_chain_is_not_trusted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 685, in test_broken_audit_chain_is_not_trusted
+    self.assertEqual(batch["ambiguous_ids"], [first])
+AssertionError: Lists differ: ['68034e28a0f6', 'de326a3e246d', '59be108e5e55'] != ['59be108e5e55']
+
+First differing element 0:
+'68034e28a0f6'
+'59be108e5e55'
+
+First list contains 2 additional elements.
+First extra element 1:
+'de326a3e246d'
+
+- ['68034e28a0f6', 'de326a3e246d', '59be108e5e55']
++ ['59be108e5e55']
+
+======================================================================
+FAIL: test_creation_event_that_contradicts_commit_order_is_not_proof (test_priority_order.SqliteLegacyEdges.test_creation_event_that_contradicts_commit_order_is_not_proof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 556, in test_creation_event_that_contradicts_commit_order_is_not_proof
+    self.assertEqual(self.unresolved(reopened), [first])
+AssertionError: Lists differ: [] != ['83627b5f305f']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'83627b5f305f'
+
+- []
++ ['83627b5f305f']
+
+======================================================================
+FAIL: test_database_backfilled_by_the_earlier_candidate_is_reviewed_not_rewritten (test_priority_order.SqliteLegacyEdges.test_database_backfilled_by_the_earlier_candidate_is_reviewed_not_rewritten)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 637, in test_database_backfilled_by_the_earlier_candidate_is_reviewed_not_rewritten
+    self.assertEqual(self.batches(reopened)[0]["source"], "review")
+AssertionError: 'c0-review' != 'review'
+- c0-review
+? ---
++ review
+
+
+======================================================================
+FAIL: test_self_consistent_rechain_conflicting_with_a_retained_digest_is_not_trusted (test_priority_order.SqliteLegacyEdges.test_self_consistent_rechain_conflicting_with_a_retained_digest_is_not_trusted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/ama-1292-scratch/c2tree-c3/src/core/tests/test_priority_order.py", line 600, in test_self_consistent_rechain_conflicting_with_a_retained_digest_is_not_trusted
+    self.assertEqual(self.unresolved(reopened), [self.latest(reopened)])
+AssertionError: Lists differ: [] != ['94ab20af2479']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'94ab20af2479'
+
+- []
++ ['94ab20af2479']
+
+----------------------------------------------------------------------
+Ran 47 tests in 36.412s
+
+FAILED (failures=21, errors=1)

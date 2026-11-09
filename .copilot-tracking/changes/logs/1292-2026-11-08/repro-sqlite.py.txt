@@ -1,0 +1,23 @@
+import copy, json, tempfile
+from pathlib import Path
+from types import SimpleNamespace
+from unittest.mock import patch
+from dataset import DATA
+from zava_forward.core.sqlstore import SqlStore
+tmp = tempfile.mkdtemp(dir="/tmp/ama-1292-scratch")
+p = Path(tmp) / "s.json"
+data = copy.deepcopy(DATA); p.write_text(json.dumps(data))
+sam = data["staff"][0]
+s = SqlStore(str(p), str(p.with_suffix(".sqlite")))
+ids = iter(["zzz000000001", "mmm000000002", "aaa000000003"])
+with patch("zava_forward.core.store.uuid.uuid4", lambda: SimpleNamespace(hex=next(ids) + "0" * 20)):
+    made = [s.ai_priority(sam, mode="workflow-only")["id"] for _ in range(3)]
+print("created in order", made)
+print("in-memory latest", s.latest_priority(sam)["id"])
+s2 = SqlStore(str(p), str(p.with_suffix(".sqlite")))
+print("cold reload latest", s2.latest_priority(sam)["id"])
+print("plan:", s2.db.execute("EXPLAIN QUERY PLAN SELECT id, rowversion, body FROM recommendations WHERE seq > ?", (0,)).fetchall())
+s.resolve_priority(sam, made[0], "accept", "SYN edit of oldest")
+s3 = SqlStore(str(p), str(p.with_suffix(".sqlite")))
+print("after update of oldest: memory", s.latest_priority(sam)["id"], "cold", s3.latest_priority(sam)["id"])
+print(s3.db.execute("SELECT id, seq FROM recommendations").fetchall())
