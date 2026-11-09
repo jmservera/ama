@@ -14,6 +14,18 @@ bounds. Assistant result shaping retains the consumption IDs and separately
 validated cached-token count. Chat keeps cached usage and successful meter IDs;
 chat answers are not human-accepted proposal denominators.
 
+Chat reports provider calls as the transport made them, by the core provider
+envelope contract. A turn that ends before the financial reservation (`disabled`,
+`input-refused`, or `financial-held` without a `meter_id`) reports zero calls. A
+`financial-held` envelope that carries a `meter_id` is counted as one call,
+because a later ledger hold can follow a real transport. Two known
+over-counts remain, both toward reporting a possible attempt: a hold at the
+pre-dispatch recheck after reservation, and a prompt-output guard denial, which
+the envelope cannot tell from a provider failure. Exact attribution needs a
+transport marker in the core provider, which is a separate core change. This
+is a receipt-accounting rule, not evidence of admission, spend, retention or
+refusal acceptance for #891 criterion 2.
+
 Financial admission and immutable recording remain with core/API, not a second
 worker database. See the [core ledger](../core/README.md#ai-consumption-ledger-432).
 An absent price, authority or known maximum liability keeps workflow-only.

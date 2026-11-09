@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import logging
 from collections.abc import Callable
+from typing import Any
 
 from zava_forward.core.chat_panel import ModelReply, ModelUnavailable, valid_usage
 
@@ -19,6 +20,20 @@ from zava_forward.agents.dispatch import AgentWorker
 
 CHAT_MAX_TOKENS = 600
 CHAT_TIMEOUT = 20
+
+
+def provider_calls(envelope: dict[str, Any]) -> int:
+    """Provider calls made, by the core `Ai.evidence` envelope contract.
+
+    `disabled`, `input-refused` and a financial hold without `meter_id` end before any reservation,
+    so before the transport. A held envelope with `meter_id` may follow a real call: count it.
+    """
+    outcome = envelope.get("outcome")
+    if outcome in ("disabled", "input-refused"):
+        return 0
+    if outcome == "financial-held" and not envelope.get("meter_id"):
+        return 0
+    return 1
 
 
 class ChatModel:
@@ -50,7 +65,7 @@ class ChatModel:
             raise ModelUnavailable("activation-not-approved")
         envelope = self.worker.provider_call(system, prompt, self.max_tokens, self.timeout)
         usage = valid_usage(envelope.get("usage"))
-        calls = 0 if envelope.get("outcome") == "disabled" else 1
+        calls = provider_calls(envelope)
         try:
             denied = self.admission()
         except Exception as error:
