@@ -13,10 +13,14 @@ from pathlib import Path
 DEFAULT_TESTS = (
     "test_sensor_ingestion",
     "test_sensor_consistency.SqlHandoverTests.test_composed_joint_query_statistics_and_reopened_window_replay",
+    "test_sensor_consistency.WeatherContinuityTests",
+    "test_sensor_consistency.LiveEnvelopeReplayTests",
+    "test_sensor_consumer_live",
+    "test_live_receiver_sql",
 )
 # Closed allowlist: each selector names fixed test targets, never caller-supplied modules.
 SELECTORS = {"default": DEFAULT_TESTS, "analysis": ("test_sensor_analysis_mssql",)}
-ANALYSIS_TESTS = 8
+ANALYSIS_TESTS = 10
 
 
 def validate(selector: str, returncode: int, output: str) -> bool:
@@ -102,9 +106,7 @@ def main(argv: list[str] | None = None) -> int:
             ZF_SQL_USER="sa",
             ZF_SQL_PASSWORD=password,
             ZF_SQL_TRUST_CERT="1",
-            PYTHONPATH=os.pathsep.join(
-                (str(root / "src/api/tests"), str(root / "src/core/tests"))
-            ),
+            PYTHONPATH=os.pathsep.join((str(root / "src/api/tests"), str(root / "src/core/tests"))),
         )
         command = [python, "-m", "unittest", *SELECTORS[selector], "-q"]
         if selector == "default":
