@@ -278,8 +278,9 @@ function Add-NativeShape {
 }
 
 function Set-StorySlide {
-    param($Archive, $Spec)
-    $Document = Get-PartDocument $Archive "ppt/slides/slide$($Spec.number).xml"
+    param($Archive, $Spec, [int]$TemplateNumber = 0)
+    if (-not $TemplateNumber) { $TemplateNumber = $Spec.number }
+    $Document = Get-PartDocument $Archive "ppt/slides/slide$TemplateNumber.xml"
     $Namespaces = Get-Namespaces $Document
     $Tree = $Document.SelectSingleNode('/p:sld/p:cSld/p:spTree', $Namespaces)
     foreach ($Shape in @($Tree.ChildNodes)) {

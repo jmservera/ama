@@ -129,6 +129,65 @@ remains withheld until its session; privacy and isolation reduce exposure
 without proving that a model has no prior knowledge.}\label{fig:pilotdesign}
 \end{figure}
 
+\subsection{Development and evaluation execution boundaries}\label{sec:runtimeboundaries}
+
+The pinned runtime separates model transport from candidate-code execution
+(Figure~\ref{fig:runtimeboundaries}). The trusted host runs the Python
+experiment controller and JavaScript Copilot SDK/CLI transport. Prompt
+preparation and the authenticated model connection remain on that host.
+The development model can request \texttt{isolated\_exec}; a Python broker
+runs each requested command in a fresh isolated container, returning bounded
+stdout, stderr and exit status through the transport to the model.
+Validated filesystem/Git state is replayed into a fresh writable isolated
+workspace for the next call; this is not a persistent container or writable
+host checkout. Candidate processes and memory do not persist, while
+host/model conversation context is not reset by that boundary.
+Only validated committed regular content crosses feature/CR checkpoints;
+the host canonicalises history rather than retaining arbitrary actor
+commit metadata.
+Visible-test verification and hidden measurements use separate evaluator
+containers after development steps.
+
+The supplementary post-run path begins with a stopped local study archive.
+Host Python selects recorded checkpoint HEADs and asks the broker to replay
+fixed API workflows through \nolinkurl{judging/execute.py}.
+Candidate snapshots and evaluator code are mounted read-only.
+Bounded observations, failures and errors become anonymised evidence
+packets. Host Python then invokes the configured adapter; the JavaScript
+\nolinkurl{copilot-judge.mjs} establishes a separate tool-free Copilot
+session. The judge receives the packet and returns ordinal ratings,
+rationales and evidence citations for host-side validation and reporting.
+It has no command tools or candidate-repository access. Its model connection
+is outside the replay container; candidate isolation does not place the
+AI judge or host orchestration inside that sandbox.
+
+The broker's candidate-execution containers disable networking, use a
+read-only root filesystem and set \texttt{no-new-privileges}, with CPU,
+memory, process and time limits. Docker uses \texttt{--cap-drop=ALL}
+but re-adds four for its protected supervisor; the candidate child runs
+as UID/GID 1001 with cleared effective, permitted and inheritable
+capabilities. The entire container is therefore not capability-free.
+Development workspace mounts remain writable; replay snapshot/evaluator
+mounts are read-only. Copilot authentication stays with the trusted host transport.
+An isolation or collection failure leaves the checkpoint unavailable.
+A successfully collected candidate failure remains failure evidence,
+rather than automatically becoming unavailable or a numerical zero rating.
+These boundaries describe inspected source contracts, not an adversarial
+integrity proof or verification of every archived execution epoch.
+
+\begin{figure}[!htbp]
+\centering
+\includegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{fig-runtime-boundaries.png}
+\caption{Source-described execution paths at \texttt{b7973e20}.
+Development agents request isolated commands against a writable repository;
+post-run judging follows read-only workflow replay and receives evidence
+without tools. Python orchestration and JavaScript model transport remain
+on the trusted host in both paths. Arrows describe information/control
+flow, not observed study execution or measured causal effects.
+Source and historical-runtime qualification are in the revision record.}
+\label{fig:runtimeboundaries}
+\end{figure}
+
 \subsection{Outcomes and retained-contract loss}\label{sec:decaymeasurement}
 
 The primary outcome is final behavioural coverage: contracts passed out
@@ -140,8 +199,8 @@ HIR/IDR definitions are in the supplementary appendices;
 comprehension is not measured.
 
 \paragraph{Who measures, and what ``quality'' means.}
-The running kit does not call a separate LLM-as-judge to assign numerical
-outcome scores. The experiment models produce features, consolidation,
+The running kit at \texttt{e71037d9} does not call a separate LLM-as-judge
+to assign numerical outcome scores. The experiment models produce features, consolidation,
 review notes or repairs; these are treatments, not independent measurement
 instruments. The host evaluator runs fixed hidden test contracts and
 external code-analysis tools, writes \texttt{measure.json}, and computes
@@ -311,6 +370,52 @@ any subsequent fix needs explicit source/epoch and amendment disclosure.
 SDK request wall time and tool time are observable. Provider-active
 time and rate-limit waits require explicit telemetry; absent telemetry
 is not zero.
+
+\subsection{Supplementary post-run workflow assessment}\label{sec:postrunjudging}
+
+A separate judging enhancement proposes an exploratory assessment of the
+software inherited at the end of development. After collection stops, a
+fixed specification-led panel will replay API workflows against archived
+S1 snapshots, without rerunning development agents or repairing their
+repositories. The source inspected on 9 November 2026 is
+\texttt{b7973e20}; Supplement Section~\ref{app:postrunjudging} records its
+full pin and measurement rules. This assessment leaves the running
+protocol, treatment budgets and original coverage, retained-contract-loss
+and CR1 endpoints unchanged. Its post-collection design supplies
+supplementary exploratory evidence, with no preregistration or
+confirmatory status inferred from freezing the judging instrument.
+
+The panel covers ten feature workflows, a cross-feature delivery/reopening
+journey and a separate CR1 workflow. Each scenario becomes eligible when
+its dependencies have been scheduled. Recorded end-of-cycle HEADs supply
+$P_1$--$P_{10}$, with $P_{10}$ after the applicable consolidation, review
+or repair step; post-CR1 is assessed separately. A failing endpoint is
+classified as witnessed capability loss only when that scenario passed
+at an earlier eligible checkpoint. Acquisition failures and unavailable
+observations remain distinct. These workflow witnesses complement the
+more extensive hidden-contract instrument.
+Post-CR1 endpoint loss can include a failure already present at $P_{10}$;
+it does not isolate loss caused by CR1.
+
+Separately configured AI judges will receive anonymised execution evidence
+and rate functional completeness, workflow coherence, error recovery and
+API usability on four distinct ordinal 0--4 scales, citing observations
+and abstaining where evidence is insufficient. These ratings address the
+exercised API tasks; human interface usability and satisfaction require
+different evidence. The inspected packets also expose earlier passing
+witnesses and retention labels, which can anchor nominally endpoint-focused
+ratings; this contextual limitation requires disclosure.
+Arm C's in-development review remains a treatment,
+separate from this post-run assessment.
+
+Repeated judge sessions will describe rating variability within a
+trajectory. Arm contrasts require the complete allocated comparison frame
+and equal weighting of within-development-model differences. Trajectories
+remain the study units; scenarios, snapshots and repeated ratings do not
+increase independent $n$. Human calibration, residual blinding risks,
+source epochs and scheduling dependence require explicit reporting before
+interpretation. Judging costs are accounted for separately.
+% TODO(author): after an authorised assessment, supply actual judging hashes, runtime/model versions, repetitions, allocated/evaluated/missing counts, costs, prior outcome exposure and blinded human-calibration evidence; retain exploratory status.
 
 \subsection{Replication and uncertainty}\label{sec:protocollimits}
 
