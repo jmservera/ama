@@ -1250,3 +1250,12 @@ diagnosis: 0 of 2 paired selections reproduced the failure, cause unknown, with 
 bounded qualifications (recorder limits, unittest versus process timings, a 26-member
 log manifest, and the observer-pair design). Counts are not aggregated with the earlier
 0 of 6 or the original single failure; all #1292 criteria stay open and E5 is not authorized.
+
+The [lifecycle and simulator controls checkpoint](../architecture/cutover-evidence-pack.md#lifecycle-and-simulator-controls-current-main-checkpoint-2026-11-09-refs-440-81-189-954-1292)
+(2026-11-09, `main` `48350983`, draft, not approved) pins the merged PRs 1240, 1313, 1315,
+1317 and 1318, proves by Git and a 642-file manifest that main's runtime source is the source
+the retained 189 (13 states, 13 axe scans, 0 violations) and 954 (83 PASS plus one expected
+negative control) browser runs exercised, and compares the BRD, PRD and ADR identities. It
+confirms no new defect or refactoring, excludes the open chat receipts PR 1320 and #159, does
+not satisfy the earlier lifecycle-wave trigger, and keeps closure holds, the live budget alert
+and the whole #440 behavior validation obligation open.

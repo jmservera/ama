@@ -5638,3 +5638,90 @@ Bounded additive note. A second unchanged-source diagnosis (frozen head `f1f73d2
 | N4 | The design allowed the observer pair after a plain PASS or REPRODUCED (disclosed partial disposition); the actual P1 was PASS and the REPRODUCED branch was not exercised. | plan P4, `driver.sh` |
 
 Counts are not aggregated: the original series of one failure among five total executions, with the initial failure followed by four passes, the 0 of 6 earlier attempts (Q3 above) and this 0 of 2 pairs are separate denominators. The qualification addresses current claims only; it does not state the older records were accurate, authorizes no past amendment and does not authorize E5. The merged source equals main `2b6d80a25` (lifecycle source `3a9767d5c`); nothing was retested or accepted. All whole-issue #1292 criteria remain unticked and open. Not claimed: independent exact-head review of this commit, hosted CI, SQL, browser or cloud evidence, a full gate or approval.
+
+## Lifecycle and simulator controls current-main checkpoint (2026-11-09, Refs #440 #81 #189 #954 #1292)
+
+DRAFT, not approved. A new recurring #440 checkpoint, not a corrective cycle or a renewal, and documentation only: no feature, code or policy changed. It gives the merged lifecycle (#1240) and simulator controls (#1313) integration an explicit current-main disposition after the photo regression (#1315) and the #1292 diagnostic record (#1318). It appends to the sections above; the earlier SQL-wave section, its C2, its independent Low findings and the open #1314 wording follow-up are not changed. Records:
+[research](../../.copilot-tracking/research/2026-11-09-controls-checkpoint-440-research.md),
+[plan](../../.copilot-tracking/plans/2026-11-09-controls-checkpoint-440-plan.md),
+[details](../../.copilot-tracking/details/2026-11-09-controls-checkpoint-440-details.md) and
+[critique](../../.copilot-tracking/plans/2026-11-09-controls-checkpoint-440-critique.md).
+
+### Identities, merged changes and exclusions
+
+| Item | Pinned value (read 2026-11-09) |
+| --- | --- |
+| Source `main` | `48350983be156d33afb5803570e1bc0bdb5455bb`, tree `1f6f8021cfbab17ee4975ada308771ba1cbd952b`, `src` tree `99c5354df6d5ebe886d1ad1b98e6a60146543c03` (PR 1315 squash) |
+| PR 1240 (#81 lifecycle) | `3a9767d5c`, merged 16:50:00Z, head `ccc7358dad0628a660b76b1feb4e3a3556cc952c` |
+| PR 1317 (previous #440 checkpoint) | `2b6d80a25`, merged 17:11:39Z |
+| PR 1313 (#189 simulator controls) | `0dc4dd35ce9ea6bddd1d4ca34d5f8ec6e234adfe`, merged 17:35:18Z, reviewed head `e192bc74732e824a3488c49a4875df9bd4463cd8` |
+| PR 1318 (#1292 diagnostic record) | `9557d9da429ec732f4f24dbd94cb28acaf0a7545`, merged 17:44:15Z, documentation only |
+| PR 1315 (#954 photo regression) | `48350983b`, merged 17:47:10Z, head `c46a7a025a20666527b65783410f12967379ee0a` |
+| Rubric commits | `700bf11e1`, `b4a343a16`: only `.github/rubric/scores/latest.json` |
+| Issue states (read live) | #81 OPEN, #189 OPEN, #954 CLOSED (both literal acceptance criteria ticked), #1292 OPEN, #440 OPEN, #1314 OPEN, #159, #1288, #1258, #144 and #123 OPEN |
+| Excluded | PR 1320 (`ff06a15f`, chat refusal receipts) is OPEN and not on main; its approved source and any candidate compatibility run are candidate evidence only and are not main acceptance. #159 stays separate |
+
+Hosted checks: PR 1313 and PR 1315 are reported by the coordinator as all 19 status entries SUCCESS; PR 1240 was read as 19 of 19 SUCCESS in the earlier preparation note. Source CI does not run on a push to `main`, so none of these is a hosted run of `48350983b` itself.
+
+### Source delta and equivalence (Git, read-only)
+
+Main changed 16 files since the previous checkpoint base `3a9767d5c` (1889 insertions, 43 deletions), all under `src/api` plus the rubric file. Nothing under `src/core`, `src/agents`, `infra`, `tools` or `.github/workflows` changed.
+
+| Command | Result |
+| --- | --- |
+| `git diff e192bc747 0dc4dd35c -- src tools infra` | empty: the 1313 squash source equals the reviewed 189 head |
+| `git diff e192bc747 48350983b -- src tools infra` | one file: new `src/api/checks/photo_flag_stale_browser_check.py` (448 lines, sha256 `620301300f3f3dc541e2d1bb577e5331a89e2e440c6a56466a62bd19f324a6db`); no production source changed |
+| `git rev-parse` of the `src` tree of the tested 954 projection `7c72dbd58588094956c7467e0b7b4afbe1c7fc2e` versus `48350983b:src` | both `99c5354d`, identical |
+| `sha256sum -c MANIFEST-projection-src.sha256` over `git archive 48350983b src` | 642 of 642 OK |
+
+Equivalence therefore shows that the runtime source on main is the source that the 189 and 954 browser runs exercised. It does not extend to `src/core` behavior, which was last exercised by the PR 1240 hosted checks and the SQL-wave observations, and it adds nothing about SQL Server.
+
+### Byte witnesses consumed (coordinator-held, outside this repository)
+
+| Evidence | Witness | Result |
+| --- | --- | --- |
+| 189 composed browser, head `e192bc747` | `capture-189-composed-browser/hashes.sha256`, sha256 `2f0275c1743b7af5062b08bb60057e710209d461c569b3aa6a998e6142b03e01` | 78 of 78 members OK; exit 0; 13 states, 13 axe scans, 0 violations; delayed-Stop probe old exit 1 (negative control), new exit 0; synthetic, intended 503 write-error state in stderr |
+| 189 independent Functional | `independent-189-c4-final/functional-findings.json`, sha256 `0230cf4aecafb0aeabee56fd5779ff5811659263e7a18e8eb33d2922c871bb77` | approve, 0 findings; reused unchanged coverage, not a fresh full web or assistive-technology audit |
+| 954 current-main compatibility | `evidence-954-current-main/MANIFEST.sha256`, sha256 `2647335942707f46d134b1fe9a5f9442db044962fed4d42f40bc0c084d64fe49` | 16 of 16 OK; exit 0; 83 PASS and one FAIL that is the expected negative control; one nonqueued `flock -n` admission 17:41:21Z to 17:41:27Z after a holder check; both 503 and 403 receipts quiet |
+| 954 independent | `independent-954-current-main/functional-findings.json`, sha256 `480ed8441b7e1c10e49b3f595f024a115fd36589724b9781fd91cc6e7cf318a5` | approve, 0 findings |
+| 1292 record (#1318) | coordinator ledger and the original-load diagnostic section above | 0 of 2 historical paired campaigns reproduced, cause UNKNOWN; the original series stays one failure then four passes in five total executions; manifest 26 members plus itself |
+
+The 954 result is native diagnostics with `literal_no_console_event` false and informational (two native failed-resource diagnostics per receipt). It is not a literal console-zero, assistive-technology, live or general UI conformance claim. The 1292 record supports no current-source SQL fix or acceptance.
+
+### Document identities (draft is not approved)
+
+BRD 0.21.0 `draft` blob `34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD 0.21.0 `in-review`, unsigned, blob `c788b917bafaede215f326f0efc71e071a687f1c`; case study original `0aec2d80` and addendum `28c19242`; ADR 0001 `d42fa5c4`, 0002 `cbe21530` (only its staff identity decision is owner-accepted, 2026-10-24), 0003 `d6064539`, 0004 `9406c2e7`, 0005 `4d610335`, 0006 `956da1a3`, 0007 `abb21088`. All identical to the previous checkpoint; no new legal or regulatory claim is made.
+
+### Requirement trace (document-qualified) and boundaries
+
+BRD and PRD functional requirement numbers collide, so each trace names its document.
+
+| Requirement | Package, API or UI boundary read from source at `48350983b` |
+| --- | --- |
+| PRD FR-050 and AC-066 (simulated monitoring through IoT Hub), ADR 0003 decision 6 as cited by the #189 issue body | `src/api/src/zava_forward/api/simulator_admin.py` edits only the existing `live-sim-control-v1` document through `live_control` guards and `live_simulator.check_capacity`; it starts no job, calls no Azure API and changes no role or resource |
+| Auth and roles | administrator only (`ADMIN_REQUIRED` 403); a view-only administrator sees every option and changes nothing (`VIEW_ONLY` 403); the destination is listed in `workbench.py` with access "needs a role with this authority" for view-only users |
+| Finite cost and run controls | expiry must be in the future and at most 14 days (`CONTROL_WINDOW_INVALID`); cohort capacity checks (`B1_QUOTA_HEADROOM`, `RATE_TOO_LOW_FOR_HOMES`); confirmation tick; stale-control check; `live_control.locked` advisory lock refuses interleaved writers with `CONTROL_BUSY` |
+| Failure and manual routes | unconfigured control returns 503 with a named manual route (`MANUAL_ROUTE`); write failures 503; a missing or invalid control already blocks sending; the IoT SDK import is lazy and reports `IOT_SDK_MISSING` |
+| Budget alert (live gate) | reported `not_recorded`, `live_verified` false (`simulator_admin.py:131`); the approval reference is not evidence of an alert; #146 stays the owner |
+| PRD FR-008 controlled transition gate with FR-016 and FR-017 (issue 81 alignment section above) | lifecycle source merged by PR 1240 in `src/core` (gates, quality, procurement, appointments, store, resident decisions, complaints route); human approval, resident consent and legal review stay with named humans, and the rule records stay exercise fixtures |
+| BRD OD-43 | the actual monitoring inventory and ownership stay an open decision; simulated values are not site facts |
+
+Resident-facing consent and human quality decisions are unchanged by this record. Backlog owners: #189 (live run owner, time limit and budget alert criterion unticked), #1292 (SQL priority ordering), #1258, #1288, #144, #159 (with unmerged PR 1320) and #146 (budget alert).
+
+### Findings, owners and gates
+
+No new defect and no new refactoring is confirmed by this checkpoint, within this bounded scope: source and evidence identity, the boundaries above and the open issue states. The candidate items are existing and owned: current-source SQL recurrence and acceptance (#1292, wording in #1314), ranking archive durability (#1258), quality sensor grounding (#1288), hosting and load (#144) and chat receipts (#159, PR 1320). No speculative issue is opened.
+
+Not run, so unverified: any new unit, static or browser check (none needed after the equivalence proof above, and neither browser campaign is repeated), SQL Server and Azure paths (the 189 handoff records 19 Source and 110 Core SQL or Azure skips), live run and budget alert, real IoT or model calls, assistive technology, literal console zero, hosted CI for this branch, and the whole Major HVE behavior validation obligation of #440. None of these is relaxed. This documentation checkpoint does not supply that behavior evidence and does not approve any deferral.
+
+### Recommendation and resume conditions
+
+Continue the existing owners, with a HOLD on every closure claim. No fix, pivot or deferral is proposed or granted.
+
+* This checkpoint does NOT satisfy the lifecycle-wave trigger recorded in the SQL-wave section above. That trigger still needs new integrated evidence: targeted local results, hosted state of the exact head, and resident-decision and gate behavior on SQL where the owner requires it. Those resume conditions are retained unchanged.
+* Closure holds stay on #81 and its #1240 integration, #1292, #123, #440, and the #189 live criterion (owner, time limit and budget alert verified live).
+* Dependent expansion that relies on lifecycle or SQL ordering evidence waits for the trigger above. Expansion that relies on the simulator controls waits for a live-verified budget alert and a named run owner.
+* #159 compatibility with main, PR 1320 and any candidate work are evaluated on their own evidence.
+* Independent #189, #954, #159, #1288, #1258 and #144 source work may proceed. #954 is already closed on its literal criteria.
+
+Limits: single-session authored record with no independent exact-head review and no hosted CI for the commit that carries it; the witnesses are coordinator-held files read in this session, with their digests recorded here; PR check counts for 1313 and 1315 are coordinator-reported. Not claimed: approval, closure, acceptance of any criterion, whole #440, #81, #189 or #1292 acceptance, live, SQL, Azure, model, assistive-technology or production readiness, or any legal, resident or production approval.

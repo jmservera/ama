@@ -11250,3 +11250,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Corrected one clause in the [original-load note](../architecture/cutover-evidence-pack.md#original-load-1292-diagnostic-and-record-qualification-2026-11-09-refs-1292): the original series is one failure among five total executions, with the initial failure followed by four passes, not a failure in the fifth execution. A dated qualification was appended to the tracking record; no count, cause or proof boundary changed.
 * Not claimed: E5 or source correction, ticked criteria, independent review of this delta, hosted CI or any retest. Earlier entries unchanged.
+
+## [2026-11-09] update | Lifecycle and simulator controls current-main checkpoint (Refs #440)
+
+* Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#lifecycle-and-simulator-controls-current-main-checkpoint-2026-11-09-refs-440-81-189-954-1292) for `main` `48350983` covering merged PRs 1240, 1313, 1315, 1317 and 1318 (issues #81, #189, #954, #1292), with an index sentence. Runtime source equivalence to the 189 and 954 browser runs is shown by tree identity and a 642-file manifest; document identities are compared; PR 1320 and #159 are excluded.
+* No new defect or refactoring confirmed. Not claimed: approval, closure, live budget alert, SQL, model or assistive-technology evidence, hosted CI or independent review of this commit, or satisfaction of the earlier lifecycle-wave trigger. Earlier entries unchanged.
