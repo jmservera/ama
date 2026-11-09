@@ -37,19 +37,24 @@
       "decision": "Review",
       "status": "executed once, conformant for four-file scope, self-review",
       "evidence": "review record"
+    },
+    {
+      "decision": "Selected geometry validation",
+      "status": "executed: test-geometry.mjs exit 0 (4/4) with scratch @excalidraw/cli 0.3.0 verified against lock and registry integrity; earlier exit 1 (missing CLI) preserved",
+      "evidence": ".copilot-tracking/changes/2026-11-09-pr-1295-main-provenance-geometry-validation.md"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Same independent reviewers close exact result before coordinator publication"
+    "action": "Same independent reviewers close exact head before coordinator publication; no push"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Rerun test-geometry and capstone Verify where excalidraw CLI and pwsh exist",
-      "rationale": "Unrun prerequisites",
-      "evidence": "changes record"
+      "task": "Capstone Verify with pwsh",
+      "rationale": "Not applicable: capstone references unchanged",
+      "evidence": "geometry validation record"
     },
     {
       "rank": 2,
