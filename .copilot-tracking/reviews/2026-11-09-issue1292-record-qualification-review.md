@@ -28,3 +28,7 @@ Conformant for the bounded record scope; no blocking finding remains open for th
 ## Routing
 
 Independent exact-head Readiness of this head, then the coordinator publication decision. Any further attempts or E5 need a separate explicit owner brief. No new cycle is started.
+
+## Disposition RC1 (2026-11-09, appended authored note)
+
+Two independent findings (one semantic error) on `603f1fa6`: the "fifth execution" ordinal was wrong. The original line 19 above is kept; its "met" for counts is superseded on this point only. Corrected in the pack (line 5640) and the changes record by dated qualification; clause: one failure among five total executions, with the initial failure followed by four passes. Checks: only that clause changed in docs; source equals main; links resolve; no other finding addressed. Authored, not independent; RC1 of 1 used.

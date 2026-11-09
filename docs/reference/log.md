@@ -11245,3 +11245,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a dated bounded note to [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#original-load-1292-diagnostic-and-record-qualification-2026-11-09-refs-1292) and an entry to the [index](README.md): the second unchanged-source diagnosis had 0 of 2 paired reproductions with cause unknown, qualified by four additive notes (observer recorder limits, unittest versus process timings, a 26-member log manifest, the observer-pair design). Merged `main` `2b6d80a25` with an ordinary merge.
 * Not claimed: a cause, flake, load necessity, source fix, E5 authorization, ticked criteria, independent exact-head review, hosted CI, retest, SQL, browser or cloud evidence, a full gate or approval. The 0 of 2 pairs, the earlier 0 of 6 and the original failure are not aggregated. Earlier entries and records are unchanged.
+
+## [2026-11-09] update | Issue 1292 chronology correction (Refs #1292)
+
+* Corrected one clause in the [original-load note](../architecture/cutover-evidence-pack.md#original-load-1292-diagnostic-and-record-qualification-2026-11-09-refs-1292): the original series is one failure among five total executions, with the initial failure followed by four passes, not a failure in the fifth execution. A dated qualification was appended to the tracking record; no count, cause or proof boundary changed.
+* Not claimed: E5 or source correction, ticked criteria, independent review of this delta, hosted CI or any retest. Earlier entries unchanged.
