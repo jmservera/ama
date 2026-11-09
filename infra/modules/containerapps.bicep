@@ -33,6 +33,8 @@ param zoneRedundant bool = false
 @allowed(['blob', 'sharepoint'])
 param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
+@description('Ranking archive container name for the Blob JSON archive (Refs #1258). Empty keeps the API on its existing configuration, where the store selects the local folder archive (a dev/test adapter, not evidence of durable storage).')
+param rankingArchiveContainer string = ''
 param apiImage string
 @description('Minimum API replicas. Default 0 permits scale-to-zero for cost-safe demos and cold starts; set 2 explicitly for always-on production replicas.')
 @minValue(0)
@@ -172,6 +174,9 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
             { name: 'ZF_BLOB_ACCOUNT_URL', value: blobEndpoint }
             { name: 'ZF_BLOB_CONTAINER', value: 'evidence' }
             { name: 'ZF_BLOB_CLIENT_ID', value: identityClientIds.api }
+          ], empty(rankingArchiveContainer) ? [] : [
+            { name: 'ZF_RANKING_ARCHIVE', value: 'azure-blob' }
+            { name: 'ZF_RANKING_BLOB_CONTAINER', value: rankingArchiveContainer }
           ], tokenStoreReady ? [
             // A versionless secret reference triggers the supported revision refresh on SAS rotation.
             { name: 'AUTH_TOKEN_STORE_ROTATION', secretRef: 'entra-token-store-sas' }

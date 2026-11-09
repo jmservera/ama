@@ -1,0 +1,38 @@
+{
+  "task_id": "136-ranking-blob-bicep-1258-dependency",
+  "task_slug": "ranking-blob-bicep-136",
+  "parent_task": {
+    "task_id": "1258-ranking-archive-blob-c4",
+    "task_slug": "ranking-archive-blob-1258"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-ranking-blob-bicep-136-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-ranking-blob-bicep-136-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-ranking-blob-bicep-136-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-ranking-blob-bicep-136-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09-ranking-blob-bicep-136-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09-ranking-blob-bicep-136-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "owner selected Blob JSON for ranking persistence; this child adds only direct missing Bicep wiring", "status": "confirmed", "evidence": "issue 1258 owner decision 2026-11-08; coordinator brief 2026-11-09"},
+    {"decision": "research executed, Planning Readiness Ready", "status": "done", "evidence": ".copilot-tracking/research/2026-11-09-ranking-blob-bicep-136-research.md"},
+    {"decision": "critique executed once, verdict Revise, PC-001..PC-004 applied directly", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-09-ranking-blob-bicep-136-critique.md"},
+    {"decision": "implementation committed d4c0f42da; DEMO-tier targeted checks green (policy+rbac+secret 90 OK, bicep build/lint/params exit 0, provider contract 23 OK)", "status": "done", "evidence": ".copilot-tracking/changes/2026-11-09-ranking-blob-bicep-136-changes.md"},
+    {"decision": "review executed once on d4c0f42da, outcome Approve, one Minor (F1) applied directly", "status": "done", "evidence": ".copilot-tracking/reviews/2026-11-09-ranking-blob-bicep-136-review.md"},
+    {"decision": "no retention duration chosen, no role/migration/deploy approval inferred; source-only", "status": "confirmed", "evidence": "coordinator brief; research G3-G5"}
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "coordinator reviews local freeze; final integration after parent #1258 freeze/review; Refs #136 and #1258 only"
+  },
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Integrate with frozen #1258 parent and rerun infra tests", "rationale": "Parent is moving; interface expected unchanged", "evidence": "coordinator brief"},
+    {"rank": 2, "task": "Owner: ranking-record retention duration, lock and approval", "rationale": "Archive is not immutable until set", "evidence": "research G4"},
+    {"rank": 3, "task": "Platform: container-scoped blob role; owner: folder-record migration; deployment run", "rationale": "Residual delete permission; Blob starts empty", "evidence": "research G3, review"}
+  ]
+}
