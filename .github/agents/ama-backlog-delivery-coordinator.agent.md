@@ -494,7 +494,7 @@ full scope; never use partial evidence to satisfy the full tier.
 
 Focused runs may use `--changed --jobs N` for affected-project checks with
 bounded parallelism; select N for available resources. When a focused run
-produces a partial receipt, verify it with `--required-scope partial` and
+produces a partial receipt that is used or cited as evidence, verify it with `--required-scope partial` and
 check the recorded scope against the planned unit and focused tests. That
 option does not downgrade a full-tier requirement or replace omitted tests.
 Omit `--jobs` to derive N from the host; with N of 2 or more `project-api`

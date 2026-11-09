@@ -23,3 +23,8 @@
 | 4 | Low | "Always runs the final verification" conflicted with the no-receipt path | Fixed (any receipt it uses) |
 
 Verdict pass 1: Revise. Verdict pass 2: Revise. The pass 2 fixes were verified by the lead (not a third independent pass); the coordinator's independent exact-head assessment must cover them. Hosted CI: not observed.
+
+## Pass 3 (independent closure at commit ad2160d4e)
+
+* Fresh rubber-duck subagent, read-only, proxy. Verified the four pass-2 fixes; one Medium: coordinator line 496 required verifying every focused partial receipt while the new step 8 sentence says only a cited receipt. Fixed: "that is used or cited as evidence". This single-line fix was verified by the lead only; no fourth pass. The behavior run graded the coordinator file before this one-line edit (hash fc104010...); the edit narrows a receipt-verification condition and does not alter any scenario answer (S10 already reasoned from the cited-receipt rule). Coordinator independent exact-head assessment must cover it.
+* Static stage status: Revise findings all dispositioned; final state not independently re-passed after the pass-3 fix. Not a canonical Pass.
