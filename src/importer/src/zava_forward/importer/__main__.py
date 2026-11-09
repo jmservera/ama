@@ -1,10 +1,104 @@
 import argparse
+import os
+import sqlite3
 import sys
 from pathlib import Path
 
+from zava_forward.core.exception_queue import STEWARD, ExceptionQueue
+from zava_forward.core.exception_register import staff_from_env
+
+from zava_forward.importer.exceptions import RefusalLedger, route, submit_file
 from zava_forward.importer.mapping import STRUCTURES, preview_file
+from zava_forward.importer.quarantine import ImportError_, QuarantineStore
 from zava_forward.importer.version import __version__
 from zava_forward.importer.xlsx import WorkbookError
+
+
+def _ensure_schema(conn: sqlite3.Connection) -> tuple[QuarantineStore, RefusalLedger]:
+    store, ledger = QuarantineStore(conn), RefusalLedger(conn)
+    present = {
+        row[0]
+        for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'").fetchall()
+    }
+    if "import_batches" not in present:
+        store.create_schema()
+    if "import_refusals" not in present:
+        ledger.create_schema()
+    return store, ledger
+
+
+def _database_failure(exc: sqlite3.Error, action: str) -> int:
+    """Exit 2 is never a recorded refusal: the database could not be used, so nothing is claimed."""
+    print(f"Cannot {action}: the database failed ({exc}). Nothing was recorded.", file=sys.stderr)
+    return 2
+
+
+def _close(conn: sqlite3.Connection | None) -> None:
+    if conn is None:
+        return
+    try:
+        conn.close()
+    except sqlite3.Error:
+        pass
+
+
+def _stage(args: argparse.Namespace) -> int:
+    conn: sqlite3.Connection | None = None
+    try:
+        conn = sqlite3.connect(args.db)
+        store, ledger = _ensure_schema(conn)
+        result = submit_file(store, ledger, args.file, args.staged_by, STRUCTURES[args.structure])
+    except ImportError_ as exc:
+        print(f"Cannot import: {exc}", file=sys.stderr)
+        return 2
+    except sqlite3.Error as exc:
+        return _database_failure(exc, "stage")
+    finally:
+        _close(conn)
+    if result.batch:
+        print(f"staged batch={result.batch.batch_id} version={result.batch.version} status=staged")
+        return 0
+    refusal = result.refusal
+    assert refusal is not None
+    print(
+        f"refused ref={refusal.ref} reason={refusal.reason} Nothing staged; the file is unchanged."
+    )
+    return 1
+
+
+def _exceptions(args: argparse.Namespace) -> int:
+    """Local diagnostic: shows the failed-import queue item; the served screen controls access."""
+    if not args.db.is_file():
+        print(f"Cannot read: {args.db} does not exist", file=sys.stderr)
+        return 2
+    conn: sqlite3.Connection | None = None
+    try:
+        conn = sqlite3.connect(f"{args.db.resolve().as_uri()}?mode=ro", uri=True)
+        store, ledger = QuarantineStore(conn), RefusalLedger(conn)
+        staff = staff_from_env(os.environ)
+        owner = next((n for n in sorted(staff) if STEWARD in staff[n]), None)
+        queue = ExceptionQueue({owner: staff[owner]} if owner else {})
+        routing = route(queue, store, ledger, owner)
+        items = queue.queue(owner) if owner and not routing.unrouted else []
+    except sqlite3.Error as exc:
+        return _database_failure(exc, "read")
+    finally:
+        _close(conn)
+    print(
+        f"local diagnostic, not access control; data={routing.data_label} "
+        f"owner={routing.owner_label}"
+    )
+    for item in items:
+        source = item["original_source"]
+        print(
+            f"  {item['id']} {item['kind']} ref={item.get('ref')} status={item['status']} "
+            f"eligibility={item['eligibility']} source={source.get('source_name')} "
+            f"sha256={source.get('source_sha256')} reason={item['error']}"
+        )
+    for line in routing.unrouted:
+        print(f"  UNROUTED: {line}")
+    print(f"  items={len(items)} Nothing was retried, approved or changed.")
+    return 0
 
 
 def main(argv: list[str]) -> int:
@@ -18,7 +112,22 @@ def main(argv: list[str]) -> int:
     )
     p.add_argument("file", type=Path)
     p.add_argument("--structure", default="case-list", choices=sorted(STRUCTURES))
+    st = sub.add_parser(
+        "stage", help="stage a clean workbook copy, or record durably why it was refused"
+    )
+    st.add_argument("file", type=Path)
+    st.add_argument("--db", type=Path, required=True)
+    st.add_argument("--staged-by", required=True)
+    st.add_argument("--structure", default="case-list", choices=sorted(STRUCTURES))
+    ex = sub.add_parser(
+        "exceptions", help="read-only: show failed imports as steward-owned exception items"
+    )
+    ex.add_argument("db", type=Path)
     args = parser.parse_args(argv)
+    if args.command == "stage":
+        return _stage(args)
+    if args.command == "exceptions":
+        return _exceptions(args)
     try:
         prev, _ = preview_file(args.file, STRUCTURES[args.structure])
     except (WorkbookError, OSError) as exc:
