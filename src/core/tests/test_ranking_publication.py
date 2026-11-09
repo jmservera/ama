@@ -198,7 +198,7 @@ class PublicationTests(unittest.TestCase):
         for word in ("datetime", "import time", "os.remove", "rmtree"):
             self.assertNotIn(word, src)
         self.assertEqual(src.count("os.unlink("), 1)
-        self.assertIn("os.unlink(stage)", src)
+        self.assertIn("os.unlink(stage, dir_fd=held)", src)
 
     def test_unusable_record_at_final_name_is_refused_and_untouched(self):
         path = Path(rp.publish(snap(), self.dir, "2026-10-10")["path"])
@@ -378,15 +378,9 @@ class AncestorDurabilityTests(unittest.TestCase):
             rp.publish(snap(), archive, "2026-10-10")
         self.assertEqual(synced, ["x", "real"])
 
-    def test_chain_stops_at_a_mount_point_and_at_a_non_writable_ancestor(self):
-        events, sync, link = self.labelled()
-        with sync, link, patch.object(os.path, "ismount", lambda p: str(p) == str(self.root / "a")):
-            rp.publish(snap(), self.dir, "2026-10-10")
-        self.assertEqual([e for e in events if e != "other"][-3:], ["archive", "b", "a"])
-
-    def test_chain_ends_before_the_first_non_writable_ancestor(self):
+    def test_non_writable_ancestor_is_still_synced_through_a_read_only_handle(self):
         if os.geteuid() == 0:
-            self.skipTest("root bypasses permission bits; see the mocked root-run test")
+            self.skipTest("root bypasses permission bits; see the mocked access test")
         self.dir.mkdir(parents=True)
         events, sync, link = self.labelled()
         os.chmod(self.root / "a", 0o555)
@@ -395,16 +389,225 @@ class AncestorDurabilityTests(unittest.TestCase):
                 rp.publish(snap(), self.dir, "2026-10-10")
         finally:
             os.chmod(self.root / "a", 0o755)
-        self.assertEqual([e for e in events if e != "other"], ["file", "link", "archive", "b"])
-
-    def test_mocked_root_run_where_every_ancestor_looks_writable_syncs_the_whole_chain(self):
-        # Mocked os.access stands in for a privileged run; not live root behavior.
-        events, sync, link = self.labelled()
-        with sync, link, patch.object(os, "access", return_value=True):
-            rp.publish(snap(), self.dir, "2026-10-10")
         known = [e for e in events if e != "other"]
         self.assertEqual(known, ["file", "link", "archive", "b", "a", "root"])
-        self.assertGreater(len(events), len(known))
+
+    def test_failed_ancestor_then_permission_change_retry_stays_unconfirmed(self):
+        if os.geteuid() == 0:
+            self.skipTest("root bypasses permission bits; see the mocked access test")
+        _, sync, link = self.labelled(fault="a")
+        with sync, link, self.assertRaises(rp.DurabilityUnconfirmedError):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        os.chmod(self.root / "a", 0o555)
+        try:
+            _, sync, link = self.labelled(fault="a")
+            with sync, link, self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+                rp.publish(snap(), self.dir, "2026-10-11")
+            events, sync, link = self.labelled()
+            with sync, link:
+                res = rp.publish(snap(), self.dir, "2026-10-12")
+        finally:
+            os.chmod(self.root / "a", 0o755)
+        self.assertIs(ctx.exception.written, False)
+        self.assertEqual((res["written"], res["published_on"]), (False, "2026-10-10"))
+        self.assertIn("a", events)
+
+    def test_mocked_denied_access_does_not_skip_any_ancestor_sync(self):
+        # Mocked os.access stands in for another creator or later permission change.
+        for denied in ("a", "b"):
+            with self.subTest(denied=denied):
+                tmp = tempfile.TemporaryDirectory()
+                self.addCleanup(tmp.cleanup)
+                self.root = Path(tmp.name).resolve()
+                self.dir = self.root / "a" / "b" / "archive"
+                path = str(self.root.joinpath(*(["a"] if denied == "a" else ["a", "b"])))
+                events, sync, link = self.labelled()
+                real = os.access
+                with (
+                    sync,
+                    link,
+                    patch.object(
+                        os,
+                        "access",
+                        lambda p, m, *a, path=path, real=real, **k: (
+                            False if str(p) == path else real(p, m)
+                        ),
+                    ),
+                ):
+                    rp.publish(snap(), self.dir, "2026-10-10")
+                known = [e for e in events if e != "other"]
+                self.assertEqual(known, ["file", "link", "archive", "b", "a", "root"])
+
+    def test_required_ancestor_open_failure_is_reported_not_skipped(self):
+        real_open = os.open
+
+        def opening(path, flags, *a, dir_fd=None, **k):
+            if path == ".." and dir_fd is not None:
+                if os.path.samestat(os.fstat(dir_fd), os.stat(self.root / "a" / "b")):
+                    raise OSError(errno.EACCES, "denied")
+            return real_open(path, flags, *a, dir_fd=dir_fd, **k)
+
+        with (
+            patch.object(os, "open", opening),
+            self.assertRaises(rp.DurabilityUnconfirmedError) as ctx,
+        ):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(ctx.exception.errno, errno.EACCES)
+        self.assertEqual(rp.verify(self.dir)["problems"], [])
+
+    # Correction 3 (Refs #1258): the directory that gets the link is the one that is
+    # synced, and the boundary comes from per-descriptor mount ids. Mount shapes are mocked.
+    def mount_ids(self, ids, default=1):
+        def fake(fd):
+            st = os.fstat(fd)
+            for path, value in ids.items():
+                if os.path.samestat(st, os.stat(path)):
+                    return value() if callable(value) else value
+            return default
+
+        return patch.object(rp, "_mount_id", fake, create=True)
+
+    def swapping(self, when):
+        real_link = os.link
+        moved = self.root / "moved"
+
+        def linking(src, dst, *args, **kwargs):
+            if when == "before":
+                self.dir.rename(moved)
+                self.dir.mkdir()
+            real_link(src, dst, *args, **kwargs)
+            if when == "after":
+                self.dir.rename(moved)
+                self.dir.mkdir()
+
+        return moved, patch.object(os, "link", linking)
+
+    def test_path_swapped_around_the_link_is_unconfirmed_and_the_record_stays_where_linked(self):
+        for when in ("before", "after"):
+            with self.subTest(when=when):
+                tmp = tempfile.TemporaryDirectory()
+                self.addCleanup(tmp.cleanup)
+                self.root = Path(tmp.name).resolve()
+                self.dir = self.root / "a" / "b" / "archive"
+                moved, swap = self.swapping(when)
+                with swap, self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
+                    rp.publish(snap(), self.dir, "2026-10-10")
+                self.assertIs(ctx.exception.written, True)
+                self.assertEqual([p.name for p in moved.iterdir()], [rp._name(snap())])
+                self.assertEqual(list(self.dir.iterdir()), [])
+                self.assertNotIn(str(self.root), str(ctx.exception))
+
+    def test_record_removed_or_replaced_during_the_syncs_is_unconfirmed(self):
+        for how in ("removed", "replaced"):
+            with self.subTest(how=how):
+                tmp = tempfile.TemporaryDirectory()
+                self.addCleanup(tmp.cleanup)
+                self.root = Path(tmp.name).resolve()
+                self.dir = self.root / "a" / "b" / "archive"
+                record = self.dir / rp._name(snap())
+                real_sync, done = os.fsync, []
+
+                def syncing(fd, record=record, how=how, real_sync=real_sync, done=done):
+                    if stat.S_ISDIR(os.fstat(fd).st_mode) and not done:
+                        done.append(1)
+                        if how == "removed":
+                            record.unlink()
+                        else:
+                            other = record.with_name("other")
+                            other.write_text("{}")
+                            os.replace(other, record)
+                    return real_sync(fd)
+
+                with (
+                    patch.object(os, "fsync", syncing),
+                    self.assertRaises(rp.DurabilityUnconfirmedError) as ctx,
+                ):
+                    rp.publish(snap(), self.dir, "2026-10-10")
+                self.assertIs(ctx.exception.written, True)
+
+    def test_mount_id_change_between_the_walk_and_the_verification_is_unconfirmed(self):
+        first_then_other = iter([1, 2, 2, 2])
+        _, sync, link = self.labelled()
+        with (
+            sync,
+            link,
+            self.mount_ids({self.root / "a": lambda: next(first_then_other, 2)}),
+            self.assertRaises(rp.DurabilityUnconfirmedError) as ctx,
+        ):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertIs(ctx.exception.written, True)
+        self.assertEqual([p.name for p in self.dir.iterdir()], [rp._name(snap())])
+
+    def test_archive_that_is_its_own_mount_by_mount_id_has_no_host_parent_sync(self):
+        events, sync, link = self.labelled(fault="b")
+        with sync, link, self.mount_ids({self.dir: 2}):
+            res = rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertIs(res["written"], True)
+        self.assertEqual([e for e in events if e != "other"], ["file", "link", "archive"])
+
+    def test_chain_ends_at_the_last_directory_on_the_archive_mount_by_mount_id(self):
+        events, sync, link = self.labelled(fault="root")
+        with sync, link, self.mount_ids({self.root: 3}):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        known = [e for e in events if e != "other"]
+        self.assertEqual(known, ["file", "link", "archive", "b", "a"])
+
+    def test_same_mount_id_across_a_device_change_does_not_end_the_chain(self):
+        # A subvolume root differs in st_dev from its parent but is not a mount.
+        _, sync, link = self.labelled(fault="root")
+        real_fstat = os.fstat
+
+        def fstat(fd):
+            st = real_fstat(fd)
+            if os.path.samestat(st, os.stat(self.root / "a")):
+                return os.stat_result((*tuple(st)[:2], st.st_dev + 1, *tuple(st)[3:]))
+            return st
+
+        with (
+            sync,
+            link,
+            self.mount_ids({}),
+            patch.object(os, "fstat", fstat),
+            self.assertRaises(rp.DurabilityUnconfirmedError),
+        ):
+            rp.publish(snap(), self.dir, "2026-10-10")
+
+    def test_unreadable_mount_id_is_unconfirmed_and_keeps_the_record(self):
+        def unreadable(fd):
+            raise OSError(errno.EIO, "no fdinfo")
+
+        _, sync, link = self.labelled()
+        with (
+            sync,
+            link,
+            patch.object(rp, "_mount_id", unreadable, create=True),
+            self.assertRaises(rp.DurabilityUnconfirmedError) as ctx,
+        ):
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual((ctx.exception.errno, ctx.exception.written), (errno.EIO, True))
+        self.assertNotIn(str(self.root), str(ctx.exception))
+        self.assertEqual([p.name for p in self.dir.iterdir()], [rp._name(snap())])
+
+    def test_mount_id_text_is_parsed_strictly(self):
+        self.assertEqual(rp._parse_mount_id("pos:\t0\nflags:\t02\nmnt_id:\t36\nino:\t5\n"), 36)
+        for bad in ("", "pos:\t0\n", "mnt_id:\tx\n", "mnt_id:\t\n"):
+            with self.subTest(bad=bad), self.assertRaises(OSError):
+                rp._parse_mount_id(bad)
+
+    def test_real_descriptor_reports_an_integer_mount_id(self):
+        if not os.path.exists("/proc/self/fdinfo"):
+            self.skipTest("no /proc/self/fdinfo on this platform")
+        fd = os.open(self.root, os.O_RDONLY)
+        try:
+            self.assertIsInstance(rp._mount_id(fd), int)
+        finally:
+            os.close(fd)
+
+    def test_platform_without_descriptor_relative_calls_refuses_before_writing(self):
+        with patch.object(rp, "_DIR_FD_OK", False), self.assertRaises(OSError) as ctx:
+            rp.publish(snap(), self.dir, "2026-10-10")
+        self.assertEqual(ctx.exception.errno, errno.ENOSYS)
+        self.assertFalse((self.root / "a").exists())
 
 
 class ConcurrentWriterTests(unittest.TestCase):
@@ -672,9 +875,9 @@ class ConcurrentWriterTests(unittest.TestCase):
     def test_stage_already_gone_after_commit_reports_nothing_retained(self):
         real_link, real_unlink = os.link, os.unlink
 
-        def link_then_lose_stage(src: Any, dst: Any) -> None:
-            real_link(src, dst)
-            real_unlink(src)
+        def link_then_lose_stage(src: Any, dst: Any, **kwargs: Any) -> None:
+            real_link(src, dst, **kwargs)
+            real_unlink(src, dir_fd=kwargs["src_dir_fd"])
 
         with patch.object(os, "link", side_effect=link_then_lose_stage):
             res = rp.publish(snap(), self.dir, "2026-10-10")

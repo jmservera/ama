@@ -785,5 +785,99 @@ class UnusableArchivePathTests(RunnerBase):
         self.assertTrue(status["problems"])
 
 
+class BlobArchiveRunnerTests(RunnerBase):
+    """The runner against the Blob archive on a mock REST transport (Refs #1258)."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        from ranking_blob_fixture import SAS, URL, FakeBlobContainer
+        from zava_forward.core import ranking_archive_blob as rab
+
+        self.fake = FakeBlobContainer(page_size=1)
+        self.archive = rab.BlobRankingArchive(
+            URL, "ranking-archive", sas=SAS, transport=self.fake, env={}
+        )  # type: ignore[assignment]
+
+    def test_publish_repeat_and_verify_without_a_capacity_or_file_probe(self) -> None:
+        def no_probe(_: Any) -> int:
+            raise AssertionError("capacity probe used for Blob")
+
+        first = self.go("publish", cases=open_cases(), as_of=AS_OF, free_bytes=no_probe)
+        self.assertEqual((first["status"], first["written"]), ("published", True))
+        self.assertEqual(first["path"], next(iter(self.fake.blobs)))
+        again = self.go("publish", cases=open_cases(), as_of=AS_OF, free_bytes=no_probe)
+        self.assertEqual((again["status"], again["written"]), ("already_published", False))
+        self.assertEqual(len(self.fake.blobs), 1)
+        ver = self.go("verify")
+        self.assertEqual((ver["status"], ver["count"], ver["problems"]), ("ok", 1, []))
+        self.assertEqual(self.go("schedule")["status"], "current")
+
+    def test_uncertain_write_is_committed_unconfirmed_with_no_rollback_or_secret(self) -> None:
+        self.fake.put_faults = ["lost"]
+        res = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual(
+            (res["status"], res["uncertainty"]["code"], res["written"]),
+            ("committed_unconfirmed", "committed_unconfirmed", None),
+        )
+        self.assertEqual(len(self.fake.blobs), 1)
+        text = json.dumps(res)
+        for secret in ("SENTINEL", "acct.blob.core.windows.net", "ranking-archive/", "was written"):
+            self.assertNotIn(secret, text)
+        retry = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((retry["status"], retry["written"]), ("already_published", False))
+
+    def test_definite_refusal_and_unreadable_listing_are_refusals_never_empty(self) -> None:
+        self.fake.put_faults = [403]
+        res = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((res["status"], self.codes(res)), ("refused", ["publish_failed"]))
+        self.assertNotIn("SENTINEL", json.dumps(res))
+        self.fake.list_status = 500
+        ver = self.go("verify")
+        self.assertEqual((ver["status"], ver["overdue"], ver["count"]), ("problem", None, 0))
+        pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual(self.codes(pub), ["archive_unreadable"])
+        self.assertEqual(self.fake.blobs, {})
+
+    def test_structurally_invalid_200_listing_is_unreadable_and_sends_no_put(self) -> None:
+        for body in (b"<Error><Code>InternalError</Code></Error>", b"<EnumerationResults/>"):
+            self.fake.list_body = body
+            ver = self.go("verify")
+            self.assertEqual((ver["status"], ver["overdue"], ver["count"]), ("problem", None, 0))
+            pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+            self.assertEqual(self.codes(pub), ["archive_unreadable"])
+            self.assertEqual(self.fake.blobs, {})
+            self.assertEqual(self.fake.requests("PUT"), [])
+        self.fake.list_body = b"<EnumerationResults><Blobs/></EnumerationResults>"
+        empty = self.go("verify")
+        self.assertEqual((empty["overdue"], empty["count"], empty["problems"]), (True, 0, []))
+
+    def test_cli_blob_selection_requires_configuration_and_excludes_a_folder(self) -> None:
+        base = ["--today", TODAY]
+        with patch.dict(os.environ, {}, clear=True):
+            err = io.StringIO()
+            with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(err):
+                code = runner.main(["verify", "--blob", *base])
+        self.assertEqual(code, 2)
+        self.assertNotIn("Traceback", err.getvalue())
+        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            runner.main(["verify", "--blob", "--archive", str(self.root), *base])
+        with contextlib.redirect_stderr(io.StringIO()), self.assertRaises(SystemExit):
+            runner.main(["verify", *base])
+        env = {
+            "ZF_RANKING_ARCHIVE": "azure-blob",
+            "ZF_BLOB_ACCOUNT_URL": "https://acct.blob.core.windows.net",
+            "ZF_RANKING_BLOB_CONTAINER": "ranking-archive",
+            "ZF_BLOB_SAS": "sig=SENTINEL",
+        }
+        with (
+            patch.dict(os.environ, env),
+            patch("zava_forward.core.documents.urllib_transport", self.fake),
+        ):
+            code, res = self.cli("verify", "--blob", *base)
+        self.assertEqual(code, 1)
+        self.assertEqual(res["count"], 0)
+
+
+
 if __name__ == "__main__":
     unittest.main()

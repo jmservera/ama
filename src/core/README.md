@@ -23,6 +23,33 @@ its staging file cannot be removed, the result still reports the record and the
 retained file (`stage_retained`, runner warning `stage_not_removed`, a `warning` in the
 manual response); an operator removes it. No clock is read: dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
 
+Blob JSON persistence (owner decision on #1258, 2026-11-08; Refs #1258): setting
+`ZF_RANKING_ARCHIVE=azure-blob` with `ZF_BLOB_ACCOUNT_URL`,
+`ZF_RANKING_BLOB_CONTAINER` and either `ZF_BLOB_SAS` or the managed identity
+(`ZF_BLOB_CLIENT_ID` optional) selects `ranking_archive_blob.BlobRankingArchive`
+for the Store, the API routes and the runner (`--blob`). `publish` is one
+create-only Put Blob (`If-None-Match: *`) of the dated record with verifiable
+metadata (policy version, as-of date, publication date, snapshot hash and the
+SHA-256 of the stored bytes); a conflict reads the existing record back and
+reports it as already published, so concurrent writers keep one record. The adapter
+can only create, read and list; there is no overwrite or delete, and the location
+is configuration, never caller input. Errors name an HTTP status only, never the
+account, container, URL or credential. A write whose outcome is unknown after the
+request was sent (lost response, timeout, 5xx) raises
+`ArchiveWriteUncertainError` (a `DurabilityUnconfirmedError`): the API answers 409
+`committed_unconfirmed`, the runner status is `committed_unconfirmed`, nothing is
+rolled back and nothing is claimed as written; repeating the same publication
+confirms it. An unreadable listing is an error, never an empty archive: a
+non-200 status, invalid XML, a root other than `EnumerationResults`, a missing
+`Blobs` element or a `Blob` without one plain `Name` are all refused with a fixed
+message, while a valid empty `Blobs` is an empty archive. Selecting
+Blob never falls back to a folder; an unset selector keeps the local folder
+adapter, which is for development and tests only (its fsync is no evidence that a
+container persists a record). Evidence for the Blob path is a mock REST
+transport, not an emulator or a storage account. Not covered here: the container,
+immutability policy and role grant, the deployment setting, and existing folder
+records, which are not migrated (a Blob archive starts empty).
+
 Wiring (slice 2): `Store.publish_ranking_snapshot` (API `POST /api/ranking/publish`)
 archives today's snapshot under the current policy into `ranking-archive/` beside
 the data, audited and idempotent, and `Store.ranking_publication_status` (API
@@ -535,6 +562,16 @@ duplicate, incomplete or irregular series raise explicit errors, not a pass.
 Use explicit SQL observation queries plus trusted persisted control units, not
 relabelled incoming units, when constructing the observed input.
 
+`weather_report(observed, reference, handover=..., cadence_minutes=5)` is the separate
+`synthetic-weather-continuity-v1` check for `live-sim-reading-v1` rows: live simulated
+weather against synthetic weather history from `live_readings.Generator` with another seed
+and scenario `weather-backfill-v1` (same homes, slots, units and three channels, no
+`calibrated` field). Tolerances are engineering bounds from the declared generator constants,
+not an approved operational tolerance, and the output is a constructed distribution check, not
+witnessed Azure continuity, physical accuracy or calibration. It never accepts indoor rows, and
+equal declared seeds are refused (`HANDOVER_REFERENCE_NOT_DISTINCT`); distinct seeds still do not
+authenticate independent generator provenance.
+
 The JSON-compatible result includes `passed`, declared tolerances and per-home
 before/after counts, channel means and population standard deviations.
 `Tolerance(point=0, mean_step=0, stddev=0)` is the default for each of the
@@ -630,6 +667,17 @@ offline and secret-free. Retrying `rotate` after `ROTATION_REVOKE_FAILED` or
 supported recovery is `teardown(error.new_manifest, ...)` using the non-secret
 manifest carried by `DeviceIdentityError`.
 
+`synthetic.device_provision` is a dry-run-by-default command that maps each consenting
+stock home to one `SYN-` device ID and prints non-secret references only. `--apply` is
+refused unless a real credential owner is named and trusted code supplies a `Registry`
+and `CredentialStore`; this repository ships neither, so the command line cannot touch
+Azure and creates no credential. Declined and unknown-consent homes get no identity.
+
+```bash
+python -m zava_forward.core.synthetic.device_provision --register register.csv \
+  --homes 30 --run-id run-185 --owner "<named owner>"
+```
+
 ## Journey ownership register and human-review routing (#128)
 
 `journey_register.draft()` lists journeys J1 to J6 and R1 against the eight AC-071
@@ -644,7 +692,10 @@ data only; no usability, accessibility or fairness evidence. See the
 `paired_equity.evaluate(pairs, anchors, seeded_defects, rank)` checks constructed pairs that
 differ in one attribute (sensor completeness, support or contact need, appointment history) and
 requires the subject to rank no lower than the reference and its review route to have no rank
-effect. It reports tested and failed counts per dimension, never averages a failing dimension
+effect. Each dimension has a fixture-local predeclared contrast (not a production mapping or
+approved policy); confounded, no-contrast or mislabeled pairs, and pairs whose case ID is missing or
+shared with an anchor, are listed in `invalid_pairs`,
+block the record and are not counted as tested. It reports tested and failed counts per dimension, never averages a failing dimension
 away, and blocks on a missing dimension or an undetected seeded defect. It uses the deterministic
 policy by default, approves nothing and is not fairness evidence; AI task cohorts are not covered.
 
@@ -670,9 +721,16 @@ Current SQL controls and mapped-home existence are checked within each database
 writer transaction. A payload's home, source label or `calibrated=true` never grants
 mapping, consent or calibration authority.
 
-Input is the closed `sensor-fault-input-v1` observation shape from
-`synthetic.sensor_faults.READING_FIELDS`, not Packet labels/clean rows/evaluator
-truth. The [shared field reference and measured daily accounting](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
+Input is one of two separately validated closed branches selected by
+`schema_version`, each refusing the other's key set, never Packet labels/clean
+rows/evaluator truth: the 13-field indoor `sensor-fault-input-v1` shape from
+`synthetic.sensor_faults.READING_FIELDS`, and the 16-field synthetic-weather
+`live-sim-reading-v1` envelope from `sensor_consumer.LIVE_FIELDS` (version in
+`synthetic/live_readings.py`; no `calibrated` field; outdoor weather, not indoor
+evidence, authenticated provenance or calibrated continuity). The field rules
+below describe the indoor branch; the live branch keeps sunlight and the original
+fields in the lossless `retained_envelopes` witness, not a new reading column.
+The [shared field reference and measured daily accounting](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
 describe this imported authority without another schema: three paired records/
 home/day gives 3N records, not a selected wire-message count. Stock-derived
 73-character lowercase-hex sensor IDs are incompatible with this consumer;
@@ -774,8 +832,12 @@ method sign-off and R3 limits that gate any measure beyond an exercise rule.
 
 `sensor_analysis_store.analyse_retained(consumer, home_id, window, as_of)` runs
 the derivation over readings retained in the SQL store. It uses only read-only
-`SensorConsumer` methods: `observed_series` for the window and `home_consent`
-for trusted consent (any declined control declines the home; anything other
+`SensorConsumer` methods: `retained_envelopes` for the window and `home_consent`
+for trusted consent. `live-sim-reading-v1` rows are climate-shaped outdoor
+readings, not indoor measurements: they are never passed to the indoor
+derivation, and a window holding only such rows is `INSUFFICIENT` with reason
+`WEATHER_INPUT_NOT_INDOOR_MEASUREMENT`. A weather-to-indoor model is separate,
+versioned and approved scope (any declined control declines the home; anything other
 than all-granted is unknown). If the store cannot be read, the result is
 `INSUFFICIENT` with reason `RETAINED_READINGS_UNAVAILABLE` and priority effect
 `NONE`; the manual review route is unchanged. It writes nothing and creates no

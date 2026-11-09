@@ -162,6 +162,13 @@ class CopyAudit(unittest.TestCase):
                     self.assertFalse(re.search(r"(?:release|releases|released) (?:this|the) hold", literal), literal)
         self.assertIn("Next action: ask Legal to verify the decision.", (core / "procurement.py").read_text())
 
+    def test_document_control_refusals_use_plain_wording(self):
+        text = (ROOT / "src" / "core" / "src" / "zava_forward" / "core" / "doc_controls.py").read_text()
+        self.assertNotIn("A legal hold blocks deletion on this case.", text)
+        self.assertNotIn("is not past its retention trigger", text)
+        self.assertIn("A legal hold is in place on this case (its documents must be kept for a legal reason)", text)
+        self.assertIn("This document is not due for deletion, so nothing was deleted.", text)
+
     def test_time_capture_copy_is_guarded(self):
         self.assertIn("timecapture.js", AUDITED_FILES)
         js = (WEB / "timecapture.js").read_text()
