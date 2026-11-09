@@ -36,18 +36,51 @@ STATUSES = (503, 403)
 PHOTO = "/api/account/photo"
 NATIVE_PREFIX = "Failed to load resource"
 WORKTREE = Path(__file__).resolve().parents[3]
-DISRUPTIVE = (
-    "[role=alert],[role=alertdialog],dialog,[aria-modal=true],"
-    "[class*=toast],[class*=snackbar],[id*=toast]"
+SEVERE = (
+    "dialog,[role=dialog],[role=alertdialog],[aria-modal=true],"
+    "[class*=toast],[class*=snackbar],[id*=toast],"
+    "[class*=modal],[class*=backdrop],[class*=overlay]"
 )
-WATCH = (
-    "window.__zfDisruptive = [];"
-    "new MutationObserver(ms => { for (const m of ms) for (const n of m.addedNodes) {"
-    "if (n.nodeType !== 1) continue;"
-    f"const hit = n.matches('{DISRUPTIVE}') ? n : n.querySelector('{DISRUPTIVE}');"
-    "if (hit) window.__zfDisruptive.push(hit.outerHTML.slice(0, 200)); } })"
-    ".observe(document, {childList: true, subtree: true});"
-)
+CANDIDATES = f"[role=alert],{SEVERE}"
+# Records disruptive nodes as outerHTML when seen rendered, so later clearing cannot erase a hit.
+# A severe overlay counts when rendered even if empty; an ordinary role=alert needs meaningful
+# content, so the persistent empty #account-error placeholder is ignored (and receipted). Rendering
+# is CSS/hidden/box only: aria-hidden does not hide a visible backdrop. A transient shorter than the
+# 50 ms sweep with no delivered mutation batch is not captured.
+WATCH = """(() => {
+  window.__zfDisruptive = []; window.__zfIgnored = [];
+  const seen = new WeakMap();
+  const rendered = n => {
+    for (let e = n; e; e = e.parentElement) {
+      if (e.hasAttribute('hidden') || getComputedStyle(e).display === 'none') return false;
+    }
+    if (getComputedStyle(n).visibility === 'hidden') return false;
+    const r = n.getBoundingClientRect();
+    return r.width > 0 && r.height > 0;
+  };
+  const meaningful = n => (n.textContent || '').trim() !== '' ||
+    ['aria-label', 'aria-labelledby', 'title'].some(a => (n.getAttribute(a) || '').trim() !== '') ||
+    !!n.querySelector('img,svg,button,a,input');
+  const note = (list, n, why) => {
+    const key = why + n.outerHTML.slice(0, 200);
+    if (seen.get(n) === key) return;
+    seen.set(n, key);
+    list.push({why, html: n.outerHTML.slice(0, 200)});
+  };
+  const sweep = () => {
+    for (const n of document.querySelectorAll('__CANDIDATES__')) {
+      if (!rendered(n)) { if (n.matches('[role=alert]')) note(window.__zfIgnored, n, 'not-rendered'); continue; }
+      if (n.matches('__SEVERE__') || meaningful(n)) note(window.__zfDisruptive, n, 'disruptive');
+      else note(window.__zfIgnored, n, 'empty-alert');
+    }
+  };
+  window.__zfSweep = sweep;
+  new MutationObserver(sweep).observe(document, {childList: true, subtree: true,
+    characterData: true, attributes: true,
+    attributeFilter: ['hidden', 'style', 'class', 'open', 'aria-hidden']});
+  setInterval(sweep, 50);
+})()""".replace("__CANDIDATES__", CANDIDATES).replace("__SEVERE__", SEVERE)
+BOX = "display:block;width:100px;height:40px"
 
 
 def check(label: str, ok: bool) -> None:
@@ -78,6 +111,72 @@ def refresh(page: Page, state: dict[str, Any], photo: bool, label: str) -> None:
     page.wait_for_function(
         "() => document.getElementById('photo-status').textContent !== 'refresh pending'"
     )
+
+
+def detector_self_test(browser: Any) -> None:
+    """Prove the detector on controlled DOM in the same browser launch (no app, no network)."""
+    page = browser.new_page()
+    page.goto("about:blank")
+    page.evaluate(WATCH)
+
+    def case(label: str, html: str, expected: int, action: str = "") -> int:
+        page.evaluate(
+            "html => { document.body.innerHTML = ''; window.__zfDisruptive.length = 0;"
+            "window.__zfIgnored.length = 0; document.body.insertAdjacentHTML('beforeend', html); }",
+            html,
+        )
+        page.wait_for_timeout(120)
+        if action:
+            page.evaluate(action)
+            page.wait_for_timeout(120)
+        count = page.evaluate("window.__zfDisruptive.length")
+        check(f"detector self-test: {label} -> {expected} disruptive", count == expected)
+        return count
+
+    case("empty unsized alert placeholder is ignored", '<p id="account-error" role="alert"></p>', 0)
+    case("empty rendered alert without a name is ignored", f'<p role="alert" style="{BOX}"></p>', 0)
+    check(
+        "detector self-test: empty alert receipted", page.evaluate("window.__zfIgnored.length") >= 1
+    )
+    case(
+        "placeholder later filled with text is flagged",
+        '<p id="account-error" role="alert"></p>',
+        1,
+        "document.getElementById('account-error').textContent = 'Photo failed'",
+    )
+    case("hidden alert with text is ignored", '<p role="alert" hidden>Photo failed</p>', 0)
+    case(
+        "alert revealed inside a hidden container is flagged",
+        '<div id="c" hidden><p role="alert">Photo failed</p></div>',
+        1,
+        "document.getElementById('c').hidden = false",
+    )
+    case(
+        "rendered alert with an accessible name is flagged",
+        f'<p role="alert" aria-label="Failed" style="{BOX}"></p>',
+        1,
+    )
+    case("empty rendered dialog is flagged", f'<dialog open style="{BOX}"></dialog>', 1)
+    case("empty rendered role=dialog is flagged", f'<div role="dialog" style="{BOX}"></div>', 1)
+    case(
+        "empty named alertdialog is flagged",
+        f'<div role="alertdialog" aria-label="x" style="{BOX}"></div>',
+        1,
+    )
+    case(
+        "visible aria-hidden modal backdrop is flagged",
+        f'<div aria-modal="true" aria-hidden="true" style="{BOX}"></div>',
+        1,
+    )
+    case("modal-backdrop class is flagged", f'<div class="modal-backdrop" style="{BOX}"></div>', 1)
+    case("hidden empty dialog is ignored", f'<div role="dialog" hidden style="{BOX}"></div>', 0)
+    case(
+        "transient toast removed after delivery is still recorded",
+        f'<div class="toast" style="{BOX}">Saved</div>',
+        1,
+        "document.querySelector('.toast').remove()",
+    )
+    page.close()
 
 
 def observe(browser: Any, base: str, status: int, result: dict[str, Any]) -> None:
@@ -184,7 +283,9 @@ def observe(browser: Any, base: str, status: int, result: dict[str, Any]) -> Non
             and page.evaluate("performance.timeOrigin") == origin,
         )
         result["fallback_after_retry"] = page.locator("#photo-status").text_content()
+        page.evaluate("window.__zfSweep()")
         result["disruptive_nodes"] = page.evaluate("window.__zfDisruptive")
+        result["ignored_empty_alerts"] = page.evaluate("window.__zfIgnored")
     except BaseException as error:
         result["failure"] = repr(error)
         raise
@@ -247,6 +348,7 @@ def main() -> None:
                 with sync_playwright() as playwright:
                     browser = playwright.chromium.launch()
                     try:
+                        detector_self_test(browser)
                         for status in STATUSES:
                             item: dict[str, Any] = {}
                             results.append(item)
