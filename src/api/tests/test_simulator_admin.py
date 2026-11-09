@@ -69,8 +69,9 @@ class AdminModuleTests(unittest.TestCase):
         self.env = {simulator_admin.ENV: str(self.file)}
         self.store = FakeStore()
         self.admin: dict[str, Any] = identity.principal(
-            TENANT, OID_NEW, identity.ADMIN_ROLE_NAME, app_admin=True, view_only=True
+            TENANT, OID_NEW, identity.ADMIN_ROLE_NAME, app_admin=True, view_only=False
         )
+        self.read_only: dict[str, Any] = dict(self.admin, view_only=True)
 
     def call(
         self, method: str, path: str, body: Any = None, user: Any = None
@@ -115,6 +116,30 @@ class AdminModuleTests(unittest.TestCase):
                     self.assertEqual((code, body["code"]), (403, "ADMIN_REQUIRED"))
                     self.assertFalse(self.file.exists())
                     self.assertNotIn("owner", body)
+
+    def test_view_only_administrator_reads_status_but_cannot_start_or_stop(self) -> None:
+        self.assertEqual(self.start()[0], 200)
+        before = digest(self.file)
+        revision = simulator_admin._snapshot(self.file)[0]
+        self.assertEqual(revision, before)
+        entries = len(self.store.entries)
+        locks = sorted(Path(self.tmp.name).iterdir())
+        for path, body in (
+            (PATH + "/start", start_body(expected_revision=revision)),
+            (PATH + "/stop", {"expected_revision": revision, "confirm": True}),
+        ):
+            for user in (self.read_only, dict(self.read_only, view_only="yes")):
+                with self.subTest(path=path, view_only=user["view_only"]):
+                    code, out = self.call("POST", path, body, user)
+                    self.assertEqual((code, out["code"]), (403, "VIEW_ONLY"))
+                    self.assertNotIn("owner", out)
+                    self.assertEqual(digest(self.file), before)
+                    self.assertEqual(len(self.store.entries), entries)
+                    self.assertEqual(sorted(Path(self.tmp.name).iterdir()), locks)
+        code, status = self.call("GET", PATH, user=self.read_only)
+        self.assertEqual((code, status["state"], status["read_only"]), (200, "send", True))
+        self.assertFalse(status["writable"])
+        self.assertFalse(self.call("GET", PATH)[1]["read_only"])
 
     def test_unconfigured_and_missing_file_are_unavailable_and_refuse_writes(self) -> None:
         code, status = simulator_admin.handle(self.store, self.admin, "GET", PATH, None, {}, NOW)
@@ -514,14 +539,22 @@ class AdminHttpTests(Base):  # type: ignore[misc]
                 self.assertIn(code, (403, 404))
                 self.assertNotIn("revision", out)
         for path in (PATH + "/start/x", PATH + "/other"):
-            self.assertEqual(self.request("POST", path, start_body())[0], 404)
+            self.assertEqual(self.request("POST", path, start_body(), roles=(ADMIN, STAFF))[0], 404)
+            self.assertEqual(self.request("POST", path, start_body())[0], 403)
         self.assertEqual(self.request("GET", PATH + "/start")[0], 404)
         self.assertFalse(self.file.exists())
 
-    def test_administrator_alone_can_use_only_this_surface(self) -> None:
-        self.assertEqual(self.request("GET", PATH, oid=OID_NEW)[1]["availability"], "unavailable")
+    def test_administrator_alone_reads_status_and_the_server_gate_denies_writes(self) -> None:
+        status = self.request("GET", PATH, oid=OID_NEW)[1]
+        self.assertEqual(
+            (status["availability"], status["read_only"], status["writable"]),
+            ("unavailable", True, False),
+        )
         code, body = self.request("POST", PATH + "/start", start_body(), oid=OID_NEW)
-        self.assertEqual((code, body["status"]["state"]), (200, "send"))
+        self.assertEqual(code, 403)
+        self.assertIn("changes nothing", body["error"])
+        self.assertNotIn("code", body)
+        self.assertFalse(self.file.exists())
         for path in (
             "/api/cases",
             "/api/stats",
@@ -533,11 +566,49 @@ class AdminHttpTests(Base):  # type: ignore[misc]
         for path in ("/api/time/enable", "/api/cases/ZF-1/notes"):
             self.assertEqual(self.request("POST", path, {}, oid=OID_NEW)[0], 403, path)
         me = self.request("GET", "/api/me", oid=OID_NEW)[1]
-        entry = [d for d in me["navigation"] if d["href"] == "#/simulator"]
-        self.assertEqual(
-            [(d["label"], d["access"]) for d in entry], [("Simulator control", "available")]
+        self.assertTrue(
+            all(d["access"] == "needs a role with this authority" for d in me["navigation"])
         )
+        self.assertIn("Simulator control", [d["label"] for d in me["navigation"]])
         self.assertEqual((me["counts"], me["staff"]), ({}, []))
+        staffed = self.request("GET", "/api/me", roles=(ADMIN, STAFF), oid=OID_NEW)[1]
+        self.assertEqual(
+            [d["access"] for d in staffed["navigation"] if d["href"] == "#/simulator"],
+            ["available"],
+        )
+
+    def test_view_only_administrator_stop_and_start_are_denied_before_the_module(self) -> None:
+        self.assertEqual(
+            self.request("POST", PATH + "/start", start_body(), roles=(ADMIN, STAFF))[0], 200
+        )
+        before = digest(self.file)
+        entries = len(list(self.store.audit_entries()))
+        for path, body in (
+            (PATH + "/start", start_body(expected_revision=before)),
+            (PATH + "/stop", {"expected_revision": before, "confirm": True}),
+        ):
+            with self.subTest(path=path), patch.object(simulator_admin, "handle") as module:
+                code, out = self.request("POST", path, body, oid=OID_NEW)
+                self.assertEqual(code, 403)
+                self.assertIn("changes nothing", out["error"])
+                module.assert_not_called()
+            self.assertEqual(digest(self.file), before)
+            self.assertEqual(len(list(self.store.audit_entries())), entries)
+        for path, body in (
+            (PATH + "/start", start_body(expected_revision=before)),
+            (PATH + "/stop", {"expected_revision": before, "confirm": True}),
+        ):
+            code, out = simulator_admin.handle(
+                self.store, dict(self.admin_user(), view_only=True), "POST", path, body
+            )
+            self.assertEqual((code, out["code"]), (403, "VIEW_ONLY"))
+        self.assertEqual(digest(self.file), before)
+
+    def admin_user(self) -> dict[str, Any]:
+        user: dict[str, Any] = identity.principal(
+            TENANT, OID_NEW, identity.ADMIN_ROLE_NAME, app_admin=True, view_only=False
+        )
+        return user
 
     def test_admin_with_a_staff_role_is_served_and_the_staff_role_only_is_not(self) -> None:
         self.assertEqual(self.request("GET", PATH, roles=(ADMIN, STAFF))[0], 200)
@@ -548,13 +619,16 @@ class AdminHttpTests(Base):  # type: ignore[misc]
         self.assertFalse(self.file.exists())
 
     def test_start_stop_round_trip_over_http_with_audit(self) -> None:
-        code, started = self.request("POST", PATH + "/start", start_body())
+        both = (ADMIN, STAFF)
+        code, started = self.request("POST", PATH + "/start", start_body(), roles=both)
         self.assertEqual((code, started["changed"]), (200, True))
         revision = started["status"]["revision"]
-        code, second = self.request("POST", PATH + "/start", start_body(expected_revision=revision))
+        code, second = self.request(
+            "POST", PATH + "/start", start_body(expected_revision=revision), roles=both
+        )
         self.assertEqual((code, second["code"]), (409, "ALREADY_RUNNING"))
         code, stopped = self.request(
-            "POST", PATH + "/stop", {"expected_revision": revision, "confirm": True}
+            "POST", PATH + "/stop", {"expected_revision": revision, "confirm": True}, roles=both
         )
         self.assertEqual((code, stopped["status"]["state"]), (200, "stopped"))
         actions = [e["action"] for e in self.store.audit_entries()]

@@ -2119,7 +2119,12 @@ approval reference are declared and unverified, and the budget alert is always "
 not verified live" because the control schema has no alert reference. The service reports
 unavailable when the file is not configured or not writable and makes no infrastructure
 change; the share is mounted read-only into the job and may not be mounted into the API.
-`flock` behaviour on an Azure Files SMB mount is unproven. Local proof is synthetic only
+`flock` behaviour on an Azure Files SMB mount is unproven. A start or stop also needs the
+existing write authority: an administrator with no staff role is view-only, may read the
+status, and is refused every start and stop by the existing view-only gate and again inside the
+module; no new permission or allowlist exists. The screen offers a confirmed Stop for every
+readable, writable control, including an expired, invalid-window or already stopped one. Local
+proof is synthetic only
 (`tests/test_simulator_admin.py`, `checks/simulator_control_browser_check.py`); no deployed
 job was started and live acceptance remains open.
 

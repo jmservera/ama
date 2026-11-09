@@ -68,14 +68,7 @@ class EntraHttpTests(Base):
             {"Finance", "Capacity and work orders", "Closed cases", "All cases"} <= labels
         )
         self.assertTrue(
-            all(
-                d["access"] == "needs a role with this authority"
-                for d in me["navigation"]
-                if d["href"] != "#/simulator"
-            )
-        )
-        self.assertEqual(
-            [d["access"] for d in me["navigation"] if d["href"] == "#/simulator"], ["available"]
+            all(d["access"] == "needs a role with this authority" for d in me["navigation"])
         )
         for path in (
             "/api/stats",

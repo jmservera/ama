@@ -37,6 +37,10 @@ MESSAGES = {
     "CONTROL_NOT_CONFIGURED": (
         "No run control file is configured for this service. Use the manual route."
     ),
+    "VIEW_ONLY": (
+        "Administrator access shows every option but changes nothing; a staff role is needed "
+        "to act."
+    ),
     "CONFIRMATION_REQUIRED": "Tick the confirmation box before you continue.",
     "BODY_INVALID": "The request was not complete. Check every field and try again.",
     "STALE_CONTROL": (
@@ -65,6 +69,7 @@ MESSAGES = {
 }
 STATUS_FOR = {
     "ADMIN_REQUIRED": 403,
+    "VIEW_ONLY": 403,
     "CONTROL_NOT_CONFIGURED": 503,
     "STALE_CONTROL": 409,
     "ALREADY_RUNNING": 409,
@@ -114,13 +119,14 @@ def _snapshot(path: Path) -> tuple[str, live_control.Control | None, str]:
         return revision, None, "invalid"
 
 
-def _status(path: Path | None, now: datetime) -> dict[str, Any]:
+def _status(path: Path | None, now: datetime, read_only: bool = False) -> dict[str, Any]:
     base: dict[str, Any] = {
         "availability": "not_configured",
         "state": None,
         "activity": "unverified",
         "revision": "absent",
         "writable": False,
+        "read_only": read_only,
         "manual_route": MANUAL_ROUTE,
         "budget_alert": {"status": "not_recorded", "live_verified": False, "detail": ALERT_DETAIL},
         "owner": None,
@@ -135,7 +141,7 @@ def _status(path: Path | None, now: datetime) -> dict[str, Any]:
     base |= {
         "availability": availability,
         "revision": revision,
-        "writable": os.access(path.parent, os.W_OK),
+        "writable": not read_only and os.access(path.parent, os.W_OK),
     }
     if control is None:
         return base
@@ -290,12 +296,15 @@ def handle(
         and identity.verified(dict(user)) is not None
     ):
         return _reply("ADMIN_REQUIRED")
+    read_only = bool(user.get("view_only"))
+    if method != "GET" and read_only:
+        return _reply("VIEW_ONLY")
     environment = os.environ if env is None else env
     moment = now or datetime.now(UTC)
     target = _path(environment)
     try:
         if method == "GET" and path == PREFIX:
-            return 200, _status(target, moment)
+            return 200, _status(target, moment, read_only)
         action = {PREFIX + "/start": _start, PREFIX + "/stop": _stop}.get(path)
         if method != "POST" or action is None:
             return _reply("NOT_FOUND")

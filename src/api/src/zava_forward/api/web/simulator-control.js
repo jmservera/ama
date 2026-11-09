@@ -77,41 +77,46 @@ async function simulatorControlView() {
     notice,
   ];
   const canWrite = status.writable && status.availability !== "not_configured";
-  if (!canWrite) {
+  if (status.read_only) {
+    parts.push(h("p", { role: "status" }, "Start and Stop are switched off because administrator access without a staff role shows every option but changes nothing. A staff role is needed to act."));
+  } else if (!canWrite) {
     parts.push(h("p", { role: "status" }, status.availability === "not_configured"
       ? "Start and Stop are switched off because no control file is configured."
       : "Start and Stop are switched off because the control file location is not writable from this service."));
-  } else if (status.state !== "send") {
-    const owner = h("input", { id: "sim-owner", name: "owner", type: "text", maxlength: 160, required: true, autocomplete: "off", spellcheck: "false" });
-    const approval = h("input", { id: "sim-approval", name: "approval_reference", type: "text", maxlength: 160, required: true, autocomplete: "off", spellcheck: "false" });
-    const expires = h("input", { id: "sim-expires", name: "expires_at", type: "text", required: true, autocomplete: "off", spellcheck: "false", placeholder: "2026-11-12T18:00:00Z", "aria-describedby": "sim-expires-help" });
-    const homes = h("textarea", { id: "sim-homes", name: "homes", rows: 3, required: true, autocomplete: "off", spellcheck: "false", "aria-describedby": "sim-homes-help" });
-    const confirm = h("input", { id: "sim-start-confirm", name: "confirm", type: "checkbox" });
-    parts.push(h("form", { class: "card", "aria-labelledby": "simulator-start-heading", onsubmit: (event) => {
-      event.preventDefault();
-      return act(`${SIMULATOR_CONTROL_API}/start`, {
-        owner: owner.value, approval_reference: approval.value, expires_at: expires.value.trim(),
-        homes: homes.value.split(/[\s,]+/).filter(Boolean), expected_revision: status.revision, confirm: confirm.checked,
-      }, "Start");
-    } },
-      h("h2", { id: "simulator-start-heading" }, "Start a finite run"),
-      h("p", { id: "sim-start-help" }, "The existing limits apply: 1 to 100 homes, an expiry in the future and at most 14 days away, and the daily message budget. A start that breaks a limit is refused."),
-      h("div", {}, h("label", { for: "sim-owner" }, "Named owner"), owner),
-      h("div", {}, h("label", { for: "sim-approval" }, "Approval reference"), approval),
-      h("div", {}, h("label", { for: "sim-expires" }, "Expiry time (UTC)"), expires, h("p", { id: "sim-expires-help", class: "muted" }, "Use the form 2026-11-12T18:00:00Z.")),
-      h("div", {}, h("label", { for: "sim-homes" }, "Home ids"), homes, h("p", { id: "sim-homes-help", class: "muted" }, "Separate ids with commas, spaces or new lines.")),
-      h("div", {}, confirm, h("label", { for: "sim-start-confirm" }, "I confirm this permits sending for these homes until the expiry time.")),
-      h("button", { type: "submit" }, "Start Finite Run")));
   } else {
-    const confirm = h("input", { id: "sim-stop-confirm", name: "confirm", type: "checkbox" });
-    parts.push(h("form", { class: "card", "aria-labelledby": "simulator-stop-heading", onsubmit: (event) => {
-      event.preventDefault();
-      return act(`${SIMULATOR_CONTROL_API}/stop`, { expected_revision: status.revision, confirm: confirm.checked }, "Stop");
-    } },
-      h("h2", { id: "simulator-stop-heading" }, "Stop the run"),
-      h("p", {}, "A stop takes effect at the simulator's next slot check. The cohort and expiry stay in the control file."),
-      h("div", {}, confirm, h("label", { for: "sim-stop-confirm" }, "I confirm I want to stop this run.")),
-      h("button", { type: "submit" }, "Stop Run")));
+    if (status.state !== "send") {
+      const owner = h("input", { id: "sim-owner", name: "owner", type: "text", maxlength: 160, required: true, autocomplete: "off", spellcheck: "false" });
+      const approval = h("input", { id: "sim-approval", name: "approval_reference", type: "text", maxlength: 160, required: true, autocomplete: "off", spellcheck: "false" });
+      const expires = h("input", { id: "sim-expires", name: "expires_at", type: "text", required: true, autocomplete: "off", spellcheck: "false", placeholder: "2026-11-12T18:00:00Z", "aria-describedby": "sim-expires-help" });
+      const homes = h("textarea", { id: "sim-homes", name: "homes", rows: 3, required: true, autocomplete: "off", spellcheck: "false", "aria-describedby": "sim-homes-help" });
+      const confirm = h("input", { id: "sim-start-confirm", name: "confirm", type: "checkbox" });
+      parts.push(h("form", { class: "card", "aria-labelledby": "simulator-start-heading", onsubmit: (event) => {
+        event.preventDefault();
+        return act(`${SIMULATOR_CONTROL_API}/start`, {
+          owner: owner.value, approval_reference: approval.value, expires_at: expires.value.trim(),
+          homes: homes.value.split(/[\s,]+/).filter(Boolean), expected_revision: status.revision, confirm: confirm.checked,
+        }, "Start");
+      } },
+        h("h2", { id: "simulator-start-heading" }, "Start a finite run"),
+        h("p", { id: "sim-start-help" }, "The existing limits apply: 1 to 100 homes, an expiry in the future and at most 14 days away, and the daily message budget. A start that breaks a limit is refused."),
+        h("div", {}, h("label", { for: "sim-owner" }, "Named owner"), owner),
+        h("div", {}, h("label", { for: "sim-approval" }, "Approval reference"), approval),
+        h("div", {}, h("label", { for: "sim-expires" }, "Expiry time (UTC)"), expires, h("p", { id: "sim-expires-help", class: "muted" }, "Use the form 2026-11-12T18:00:00Z.")),
+        h("div", {}, h("label", { for: "sim-homes" }, "Home ids"), homes, h("p", { id: "sim-homes-help", class: "muted" }, "Separate ids with commas, spaces or new lines.")),
+        h("div", {}, confirm, h("label", { for: "sim-start-confirm" }, "I confirm this permits sending for these homes until the expiry time.")),
+        h("button", { type: "submit" }, "Start Finite Run")));
+    }
+    if (status.state) {
+      const confirm = h("input", { id: "sim-stop-confirm", name: "confirm", type: "checkbox" });
+      parts.push(h("form", { class: "card", "aria-labelledby": "simulator-stop-heading", onsubmit: (event) => {
+        event.preventDefault();
+        return act(`${SIMULATOR_CONTROL_API}/stop`, { expected_revision: status.revision, confirm: confirm.checked }, "Stop");
+      } },
+        h("h2", { id: "simulator-stop-heading" }, "Stop the run"),
+        h("p", {}, "A stop takes effect at the simulator's next slot check. The cohort and expiry stay in the control file. Stopping again is safe if the control is already stopped or expired."),
+        h("div", {}, confirm, h("label", { for: "sim-stop-confirm" }, "I confirm I want to stop this run.")),
+        h("button", { type: "submit" }, "Stop Run")));
+    }
   }
   parts.push(h("section", { class: "card", "aria-labelledby": "simulator-manual-heading" }, h("h2", { id: "simulator-manual-heading" }, "Manual route"), h("p", {}, status.manual_route)));
   show(...parts);
