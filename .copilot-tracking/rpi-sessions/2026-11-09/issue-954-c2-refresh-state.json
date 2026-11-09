@@ -1,0 +1,25 @@
+{
+  "task_id": "issue-954-c2-refresh",
+  "task_slug": "issue-954-c2-refresh",
+  "parent_task": {"task_id": "issue-954-c1-detector", "task_slug": "issue-954-c1-detector"},
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-issue-954-c2-refresh-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-issue-954-c2-refresh-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-issue-954-c2-refresh-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-09-issue-954-c2-refresh-plan-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; Planning Readiness Ready", "status": "done", "evidence": "research artifact"},
+    {"decision": "Critique executed once, verdict Revise applied directly", "status": "done", "evidence": "critique artifact"},
+    {"decision": "C2 authorized within five total; three remain after C2; no reset", "status": "confirmed", "evidence": "coordinator brief"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "Edit the checker only after the prospective commit"},
+  "prioritized_follow_ups": []
+}

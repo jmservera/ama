@@ -15,3 +15,7 @@ Not conformant for the second acceptance criterion. The browser checker fails at
 ## Routing
 
 Later work: apply F1, one nonqueued admission, rerun targeted tests. Issue #954 criterion 2 stays unproven: use `Refs #954`.
+
+## Qualification (dated 2026-11-09, C2; original text above is unchanged)
+
+F2 above is imprecise. The original raw observation (`evidence-954/obs/photo-flag-stale-console.json`, session files) contains both a 503 row and a 403 row. The final classification loop asserted 503 first and failed there, so the 403 classification assertions never executed; "403 receipt rows were not produced" should read "the 403 classification was never reached". The adverse original outcome (not conformant at that run) stands.
