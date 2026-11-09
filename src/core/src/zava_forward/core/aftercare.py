@@ -71,6 +71,18 @@ def neutral_text(text: str) -> str:
     return text
 
 
+def _context(value: Mapping[str, str] | None) -> dict[str, str] | None:
+    """Sensor context is short descriptive text only; it passes the same neutral-text guard."""
+    if not value:
+        return None
+    out: dict[str, str] = {}
+    for key, item in value.items():
+        if not isinstance(key, str) or not isinstance(item, str):
+            raise ValueError("Sensor context must be short text.")
+        out[key] = neutral_text(item)
+    return out
+
+
 def _labelled(pairs: Iterable[tuple[str, str]]) -> list[dict[str, str]]:
     return [{"value": v, "label": neutral_text(label)} for v, label in pairs]
 
@@ -256,12 +268,22 @@ class AftercareRegister:
             "investigation": "received",
             "outcome": None,
             "remedy": {"status": "not_assessed", "evidence": None},
-            "sensor_context": dict(sensor_context) if sensor_context else None,
+            "sensor_context": _context(sensor_context),
             "dismissed_by_sensor": False,
             "history": [{"event": "received"}],
             **extra,
         }
         self.concerns[cid] = rec
+        return deepcopy(rec)
+
+    def add_sensor_context(self, cid: str, context: Mapping[str, str]) -> Record:
+        """Attach a later sensor signal as context only. No state, outcome or remedy changes."""
+        rec = self._get(cid)
+        new = _context(context)
+        if new is None:
+            raise ValueError("Sensor context is required.")
+        rec["sensor_context"] = {**(rec["sensor_context"] or {}), **new}
+        rec["history"].append({"event": "sensor_context_added"})
         return deepcopy(rec)
 
     def start_investigation(self, cid: str, owner: str, next_update: str) -> Record:

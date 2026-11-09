@@ -59,6 +59,8 @@ CSRF_COOKIE = "__Host-zfdemo-csrf"
 CSRF_HEADER = "X-CSRF-Token"
 SESSION_HEADER = "X-Resident-Session"
 MAX_BODY = 2048
+# Decision (#1054): keep 8. One replica serves a short demonstration; the cap bounds load and sheds
+# the rest with Retry-After; the page retries a shed view once.
 MAX_CONCURRENT = 8
 SOCKET_TIMEOUT = 10
 HEADERS = {

@@ -1,0 +1,27 @@
+{
+ "overflow_x": false,
+ "text_has": {
+  "Temperature": true,
+  "Humidity": true,
+  "24-hour": true,
+  "forecast": true,
+  "No synthetic sensor readings are available": false,
+  "synthetic": true,
+  "stale": false,
+  "more than 24 hours old": false
+ },
+ "responses": {
+  "/demo.css?v=53949258697458de94e30e264e866f5894fd7f4b283d25f52b70c012662bd736": 200,
+  "/demo.js?v=53949258697458de94e30e264e866f5894fd7f4b283d25f52b70c012662bd736": 200,
+  "/demo/session": 200,
+  "/demo/login": 200,
+  "/demo/view": 200
+ },
+ "sensor_section_found": true,
+ "sensor_text_excerpt": "Your home sensors and forecast Synthetic sensor history for your home. These are stored demo readings, not live measurements or safety advice. Latest stored reading: 4 Nov 2026, 16:00 (UK time) Temperature (\u00b0C) 20.5 \u00b0C Humidity (%) 42.96 % Demo display ranges are not safe or unsafe limits. Readings that are missing or look wrong appear as gaps, not zero. Simple 24-hour synthetic forecast (estimate) Simple 24-hour synthetic forecast (estimate): calculated from your home's recent synthetic readings and typical daily pattern. It is not a weather forecast or a live sensor feed. Demo display ranges (-10 to 45 \u00b0C and 0 to 100 %) are chart limits, not safe or unsafe household limits. Temperature history and 24-hour forecast (\u00b0C) -10 17.5 45 Latest stored Across 48 readings: lowest 16.62 \u00b0C, highest 21.12 \u00b0C. The latest value is about the same as the first. Simple 24-hour forecast (estimate): 18",
+ "svg_or_canvas": {
+  "svg": 3,
+  "meter": 4,
+  "tables": 1
+ }
+}

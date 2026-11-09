@@ -1,0 +1,30 @@
+{
+  "task_id": "issue-79-r15-d654-review-corrections",
+  "task_slug": "issue-79-r15-d654-review-corrections",
+  "parent_task": {"task_id": "issue-79-r13-alignment", "task_slug": "issue-79-r13-alignment"},
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-06/issue-79-r15-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-06/issue-79-r15-plan.md",
+    "details": ".copilot-tracking/details/2026-11-06/issue-79-r15-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-06/issue-79-r15-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-06/issue-79-r15-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-06/issue-79-r15-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Planning committed before tests and source", "status": "recorded", "evidence": "e88bf6b10fc67a89595d8a90ee763b906ca15bf9"},
+    {"decision": "Real RED observed, then GREEN", "status": "recorded", "evidence": "/tmp/79-r15-1106 red2-core, red5-api, green3-core, green3-api"},
+    {"decision": "Author-only Review executed; outcome Residual work", "status": "recorded", "evidence": "review record"},
+    {"decision": "Independent d654 review preserved, not regraded", "status": "recorded", "evidence": "f751a4dc-045d-479c-8035-8588858e3b08/files/review-79-d654/functional-findings.json"}
+  ],
+  "blockers": [{"id": "full-and-independent", "summary": "No FULL, independent re-review, hosted CI, policy signoff or scheduling evidence for the corrected head", "resolution": "Coordinator lane; heavy lock held by #81"}],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator rebases #1231 onto this head, runs FULL and independent exact-head review"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Fresh FULL and independent re-review of corrected head", "rationale": "Head changed", "evidence": "review RV-006"},
+    {"rank": 2, "task": "Rebase #1231 child onto corrected head", "rationale": "Stack order", "evidence": "brief"},
+    {"rank": 3, "task": "Archive file mode and store cache .tmp race", "rationale": "Residual", "evidence": "RV-004, RV-005"}
+  ]
+}

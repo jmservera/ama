@@ -2,7 +2,7 @@ name: Source projects CI
 
 on:
   pull_request:
-    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/ci-affected.py", "tools/test_ci_affected.py", "tools/rename-zava*", "docs/reference/research/retrofit-synthetic-data/**", "docs/reference/research/chat-memory-dpia.md", "docs/reference/research/ux/customer-journeys/residents.md", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/mvp-ci.yml", ".github/workflows/mvp-validation.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
+    paths: ["src/**", "infra/**", "tools/rpi-checks.py", "tools/test_rpi_checks.py", "tools/ci-affected.py", "tools/test_ci_affected.py", "tools/install-actionlint.py", "tools/test_install_actionlint.py", "tools/backlog-sync.py", "tools/test_backlog_sync.py", "tools/rename-zava*", "docs/reference/research/retrofit-synthetic-data/**", "docs/reference/research/chat-memory-dpia.md", "docs/reference/research/ux/customer-journeys/residents.md", "support/synthetic-data/**", ".github/workflows/src-ci.yml", ".github/workflows/mvp-ci.yml", ".github/workflows/mvp-validation.yml", ".github/workflows/src-deploy.yml", ".github/workflows/infra-plan.yml"]
   workflow_dispatch:
 
 permissions:
@@ -258,22 +258,25 @@ jobs:
         run: |
           python -m unittest discover -s tools -p test_rpi_checks.py -v
           python -m unittest discover -s tools -p test_ci_affected.py -v
-          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 tools/rpi-checks.py tools/test_rpi_checks.py tools/ci-affected.py tools/test_ci_affected.py
-          ruff format --isolated --line-length 100 --check tools/rpi-checks.py tools/test_rpi_checks.py tools/ci-affected.py tools/test_ci_affected.py
+          python -m unittest discover -s tools -p test_backlog_sync.py -v
+          python -m unittest discover -s tools -p test_install_actionlint.py -v
+          ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100 tools/rpi-checks.py tools/test_rpi_checks.py tools/ci-affected.py tools/test_ci_affected.py tools/test_backlog_sync.py tools/install-actionlint.py tools/test_install_actionlint.py
+          ruff format --isolated --line-length 100 --check tools/rpi-checks.py tools/test_rpi_checks.py tools/ci-affected.py tools/test_ci_affected.py tools/test_backlog_sync.py tools/install-actionlint.py tools/test_install_actionlint.py
           mypy --strict tools/rpi-checks.py tools/test_rpi_checks.py
+          mypy --ignore-missing-imports tools/test_backlog_sync.py tools/backlog-sync.py
+          mypy --strict tools/install-actionlint.py tools/test_install_actionlint.py
       - name: Branding migration regressions
         run: |
           pip install -r tools/rename-zava-requirements.txt
           python3 tools/rename-zava-tests.py
       - name: Native workflow actionlint
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          version=1.7.7
-          curl -fsSL "https://github.com/rhysd/actionlint/releases/download/v$version/actionlint_${version}_linux_amd64.tar.gz" -o "$RUNNER_TEMP/actionlint.tar.gz"
-          curl -fsSL "https://github.com/rhysd/actionlint/releases/download/v$version/actionlint_${version}_checksums.txt" -o "$RUNNER_TEMP/actionlint-checksums.txt"
-          cp "$RUNNER_TEMP/actionlint.tar.gz" "$RUNNER_TEMP/actionlint_${version}_linux_amd64.tar.gz"
-          (cd "$RUNNER_TEMP" && grep " actionlint_${version}_linux_amd64.tar.gz$" actionlint-checksums.txt | sha256sum -c -)
-          tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
-          "$RUNNER_TEMP/actionlint" -config-file infra/tests/actionlint.yaml .github/workflows/infra-plan.yml .github/workflows/src-deploy.yml .github/workflows/src-ci.yml .github/workflows/mvp-ci.yml .github/workflows/mvp-validation.yml
+          python3 tools/install-actionlint.py "$RUNNER_TEMP/actionlint-bin"
+          export PATH="$RUNNER_TEMP/actionlint-bin:$PATH"
+          actionlint -version | head -n 1 | grep -Fx 1.7.7
+          actionlint -config-file infra/tests/actionlint.yaml .github/workflows/infra-plan.yml .github/workflows/src-deploy.yml .github/workflows/src-ci.yml .github/workflows/mvp-ci.yml .github/workflows/mvp-validation.yml
 
   no-working-data:
     name: src-no-working-data

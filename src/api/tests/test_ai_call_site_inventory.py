@@ -27,7 +27,8 @@ INVENTORY = {
     "core/src/zava_forward/core/ai.py": ("ledger", "admission, call context, counts, outcome"),
     "api/src/zava_forward/api/resident_demo/aoai.py": (
         "own-accounting",
-        "reserved and closed token accounting for the resident demo; not the ledger",
+        "reserved and closed token accounting for the resident demo; optional ledger join "
+        "via ledger_meter.advisor_meters when meters are supplied, which no host does yet",
     ),
     "api/src/zava_forward/api/resident_demo/assistant.py": (
         "counts-only-sink",

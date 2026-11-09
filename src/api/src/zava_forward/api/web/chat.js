@@ -157,13 +157,14 @@ const employeeChat = (() => {
       if (typeof admission.warning !== "string" || !admission.warning.trim()) {
         throw new Error("The privacy warning is missing.");
       }
+      if (admission.demo_activation && typeof admission.demo_disclaimer === "string") {
+        ui.intro.before(h("p", { id: "chat-demo-disclaimer", class: "chat-widget-demo-note", role: "note" }, admission.demo_disclaimer));
+      }
       ui.intro.append(h("p", { id: "chat-privacy" },
         `${admission.warning} Retention: ${admission.retention}. Synthetic data only. ${admission.demo_activation ? "" : "Model activation requires separate approval."}`));
       if (admission.limits) ui.intro.append(h("p", { id: "chat-limits" }, limitsNote(admission.limits)));
-      if (admission.demo_activation && typeof admission.demo_disclaimer === "string") {
-        ui.intro.append(h("p", { id: "chat-demo-disclaimer", role: "note" }, admission.demo_disclaimer));
-      }
-      input.setAttribute("aria-describedby", "employee-chat-entry-warning chat-privacy employee-chat-error" + (admission.demo_activation ? " chat-demo-disclaimer" : ""));      stored = admission.storage_approved !== false;
+      input.setAttribute("aria-describedby", "employee-chat-entry-warning chat-privacy employee-chat-error" + (admission.demo_activation ? " chat-demo-disclaimer" : ""));
+      stored = admission.storage_approved !== false;
       if (!stored) ui.intro.append(h("p", { id: "chat-unstored" },
         "Chat storage is not approved yet. Replies use rules only on the case you have open, nothing you type is saved and no AI model is used."));
       for (const skill of data.skills) select.append(h("option", { value: skill.id }, `${skill.id}: ${skill.purpose}`));

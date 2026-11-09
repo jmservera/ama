@@ -32,10 +32,13 @@ class LedgerTopicMeter:
         model: str,
         configuration: str,
         prompt: str,
+        capability: str = CAPABILITY,
+        case_type: str = CASE_TYPE,
         new_id: Callable[[], str] = lambda: uuid.uuid4().hex,
     ) -> None:
         self.consumption, self.model = consumption, model
         self.configuration, self.prompt, self.new_id = configuration, prompt, new_id
+        self.capability, self.case_type = capability, case_type
         self._open = threading.local()
 
     def reserve(self, envelope: RequestEnvelope) -> bool:
@@ -44,8 +47,8 @@ class LedgerTopicMeter:
         context = CallContext(
             root,
             ai_consumption.reference(self.new_id()),
-            CAPABILITY,
-            CASE_TYPE,
+            self.capability,
+            self.case_type,
             self.configuration,
             self.prompt,
         )
@@ -81,3 +84,25 @@ class LedgerTopicMeter:
             return
         self._open.rid = None
         self.consumption.complete(rid, counts, model, outcome)
+
+
+ADVISOR_CAPABILITIES = {"guidance": "resident-guidance", "question": "resident-question"}
+
+
+def advisor_meters(
+    consumption: Consumption, *, model: str, configuration: str, prompts: dict[str, str]
+) -> dict[str, LedgerTopicMeter]:
+    """One meter per advisor request kind; each needs its own prompt version reference."""
+    if set(prompts) != set(ADVISOR_CAPABILITIES):
+        raise ValueError("A prompt version is required for each advisor request kind.")
+    return {
+        kind: LedgerTopicMeter(
+            consumption,
+            model=model,
+            configuration=configuration,
+            prompt=prompts[kind],
+            capability=capability,
+            case_type=CASE_TYPE,
+        )
+        for kind, capability in ADVISOR_CAPABILITIES.items()
+    }

@@ -1,0 +1,29 @@
+{
+  "task_id": "issue-530-focused-sql-browser-route",
+  "task_slug": "issue-530-focused-sql-browser-route",
+  "parent_task": {"task_id": "issue-530-c1-lint-and-hygiene", "task_slug": "issue-530-c1-lint-and-hygiene"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-08-issue-530-focused-sql-browser-route-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-08-issue-530-focused-sql-browser-route-plan.md",
+    "details": ".copilot-tracking/details/2026-11-08-issue-530-focused-sql-browser-route-details.md",
+    "critique": ".copilot-tracking/challenges/2026-11-08-issue-530-focused-sql-browser-route-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-08-issue-530-focused-sql-browser-route-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-08-issue-530-focused-sql-browser-route-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "critique executed once", "status": "Revise; F1-F5 applied before checks", "evidence": "critique record"},
+    {"decision": "review executed once", "status": "conformant for prepared and LIGHT scope; actual SQL and browser unexecuted", "evidence": "review record"}
+  ],
+  "blockers": [
+    {"id": "heavy-admission", "summary": "Actual SQL and chat browser need a non-queued heavy window holding the canonical lock", "resolution": "Coordinator admission later"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator heavy admission, then fresh exact-head CI and independent review"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Admitted focused runner invocation for actual SQL and chat browser", "rationale": "Only route to actual execution", "evidence": "changes record"},
+    {"rank": 2, "task": "Native CI parity for the chat browser check", "rationale": "Hosted CI does not run it", "evidence": "review record"}
+  ]
+}

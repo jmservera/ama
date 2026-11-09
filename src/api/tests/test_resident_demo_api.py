@@ -692,6 +692,28 @@ class AbuseAndHardeningTests(DemoTestCase):
                 self.app.slots.release()
         self.assertEqual(self.client().call("GET", "/healthz")[0], 200)
 
+    def test_one_slot_below_the_cap_still_admits_a_request(self) -> None:
+        held = [self.app.slots.acquire(blocking=False) for _ in range(demo.MAX_CONCURRENT - 1)]
+        self.assertTrue(all(held))
+        try:
+            self.assertEqual(self.client().call("GET", "/healthz")[0], 200)
+        finally:
+            for _ in held:
+                self.app.slots.release()
+
+    def test_shed_signed_in_view_carries_retry_guidance(self) -> None:
+        client = self.client()
+        self.assertEqual(client.login("one@example.com"), 200)
+        held = [self.app.slots.acquire(blocking=False) for _ in range(demo.MAX_CONCURRENT)]
+        try:
+            status, body, response = client.call("GET", "/demo/view")
+            self.assertEqual(status, 503)
+            self.assertEqual(body["retry_after"], demo.RETRY_AFTER_SECONDS)
+            self.assertEqual(response.getheader("Retry-After"), str(demo.RETRY_AFTER_SECONDS))
+        finally:
+            for _ in held:
+                self.app.slots.release()
+
 
 class BoundaryTests(unittest.TestCase):
     def test_app_does_not_import_the_loopback_preview_or_staff_surfaces(self) -> None:

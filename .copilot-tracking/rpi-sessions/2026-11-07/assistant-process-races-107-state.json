@@ -1,0 +1,29 @@
+{
+  "task_id": "assistant-process-races-107",
+  "task_slug": "assistant-process-races-107",
+  "parent_task": {"task_id": "assistant-unleased-sql-revocation-107", "task_slug": "assistant-unleased-sql-revocation-107"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-07-assistant-process-races-107-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-07-assistant-process-races-107-plan.md",
+    "details": ".copilot-tracking/details/2026-11-07-assistant-process-races-107-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-07-assistant-process-races-107-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-07-assistant-process-races-107-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-07-assistant-process-races-107-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed; independence from active 1231 ranking candidate proved", "status": "recorded", "evidence": "research artifact"},
+    {"decision": "Critique executed once (rubber-duck), verdict Revise, all five findings accepted", "status": "recorded", "evidence": "critique artifact"},
+    {"decision": "Review executed once by the author; outcome conditionally conformant locally, actual SQL unverified, FULL NOT READY", "status": "recorded", "evidence": "review artifact"}
+  ],
+  "blockers": [
+    {"id": "actual-sql", "summary": "New MSSQL methods not yet run against disposable SQL; needs coordinator-admitted nonqueued FULL slot", "resolution": null}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator admits one FULL run after merging current main; independent exact-head review and hosted gates follow"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Run FULL gate showing the two new Mssql methods ok", "rationale": "Only actual SQL evidence closes the preparation", "evidence": "changes artifact, Remaining gate"}
+  ]
+}

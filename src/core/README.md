@@ -10,10 +10,18 @@ ms.topic: reference
 
 `ranking_publication.publish(snapshot, archive_dir, published_on)` archives a
 `ranking.snapshot` as one immutable, dated file per policy version, as-of date
-and snapshot hash. It is idempotent, never overwrites and never deletes.
+and snapshot hash. It is idempotent and never overwrites or deletes a record (it
+removes only its own staging file).
 `verify` re-hashes every record and checks its policy hash against the verified
-registry; `overdue` reports a missing or stale publication. No clock is read:
-dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
+registry; `overdue` reports a missing or stale publication. Concurrent writers of
+one snapshot keep exactly one record: each stages its own uniquely named file and
+links it to the record name without overwriting, and the loser reports the
+retained record and date. This needs a local filesystem with hard links; a folder
+without them refuses to publish; the manager route then answers 503 with a storage
+message, not 403, and writes no record or audit entry. If the record is committed but
+its staging file cannot be removed, the result still reports the record and the
+retained file (`stage_retained`, runner warning `stage_not_removed`, a `warning` in the
+manual response); an operator removes it. No clock is read: dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
 
 Wiring (slice 2): `Store.publish_ranking_snapshot` (API `POST /api/ranking/publish`)
 archives today's snapshot under the current policy into `ranking-archive/` beside
@@ -22,6 +30,56 @@ the data, audited and idempotent, and `Store.ranking_publication_status` (API
 and stated schedule. Both are manager-only. The manual path is the same
 endpoint, run by a manager; no AI is involved.
 
+Local runner (slice 5): `python3 -m zava_forward.core.ranking_publication_runner
+{schedule,publish,verify} --archive DIR --today YYYY-MM-DD [--cases FILE]
+[--policy VERSION] [--exercise]` is the invocation a scheduler or a person calls.
+The date, archive and store-shaped case file are explicit; no clock, environment
+variable or default data folder is read, and no random seed is consumed (the run
+key is a hash of policy, as-of date and window start). `schedule` reports the
+one-day window, whether it is due and the next window, and exits 1 with status
+`problem` when any archived record fails to verify (due and latest stay visible);
+`verify` exits 1 when a record fails or the latest publication is stale; the case
+file must hold boolean `closed` flags, and a malformed record refuses the whole
+source; `9999-12-31` has no next day, so it is refused as a run date and reported
+as a problem as an archived latest; `publish` is idempotent, a verified identical
+retry needs no free space because it writes nothing, and
+exits 2 with a reason code and next action when the policy has no recorded
+sign-off (`approval_missing`), the case source is missing or unusable, the
+archive does not verify or cannot be listed (`archive_unreadable`), a case id
+repeats (`source_invalid`) or there is no room to write or the free space cannot be
+read. `--exercise` ranks and
+reports what would be archived, writes nothing and never counts as approval.
+A selected policy whose content hash or registry key does not match is refused
+(`policy_invalid`) before sign-off. A latest archived publication dated after the
+run date is a problem in `verify` and `schedule` (window state unknown) and
+refuses a non-exercise `publish`; `schedule` with status `blocked` also exits 2.
+The daily schedule is reported as proposed, not an approved rule; the draft
+policy stays a draft and retention stays a separate Legal decision.
+
+Durability and races: `publish` writes a unique stage file in the archive folder,
+syncs it, links it to its final name (the first writer wins, nothing is
+overwritten), removes its own stage and syncs the folder, also before returning an
+already archived record. If the folder sync fails after the record is committed, the
+record stays and `DurabilityUnconfirmedError` (an `OSError` that keeps the cause's
+errno) is raised: the Store audits `ranking_snapshot_publication_unconfirmed` and the
+API returns 409 `committed_unconfirmed` with fixed path-free text. This is not a
+confirmed publication and is not rolled back. A retry syncs the folder again before
+reporting the existing record as already published (`written` false, original date);
+if that sync fails too it is unconfirmed again, so a named owner checks the archive.
+The error carries `written` (true when this call created the record, false for an
+existing record or lost race, null when unknown); the runner reports it with status
+`committed_unconfirmed` (exit 2, a path-free `uncertainty` with a safe next action),
+not as a `publish_failed` refusal.
+Other archive failures (for example no hard-link support) stay 503. A record already
+at the final name is checked
+against the snapshot, its hash, its name and a valid publication date; a damaged
+one is refused with `PublicationError` (never reported as already published) and
+left for a named owner to review. The run key is informational: repeated
+publishes in the same window are idempotent because the file name holds the
+policy version, as-of date and snapshot hash, and a later window returns the
+original publication date. `Store.publish_ranking_snapshot` records whether the
+policy was signed in the audit detail and the response (`policy_signed`), and the
+status endpoint reports an unreadable archive folder as a problem.
 Sign-off check (slice 3): `ranking.is_signed` and `ranking.signoff_problems` read a recorded sign-off
 (`signoff` with `signed_by` equal to the named `owner`, an ISO `signed_on` and a `rule_order_hash` of the rules and
 stage order). A change to the rule order voids it. The publication status reports `policy_signed` and
@@ -202,8 +260,8 @@ screening or #440 stabilization is inferred.
 ## Unverified nomination and tenure intake (#130, #131)
 
 The existing `resident_action` ledger accepts `nomination_record`,
-`nomination_correct`, `nomination_review`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack` and
-`tenure_question_pack_review`. These are constructed staff-recorded
+`nomination_correct`, `nomination_review`, `tenure_intake`, `tenure_legal_position`, `tenure_verify`, `tenure_question_pack`,
+`tenure_question_pack_review`, `tenure_review_trigger` and `tenure_trigger_resolve`. These are constructed staff-recorded
 intake, not nomination eligibility, verified identity, consent, Legal approval
 or an offer. Current registered staff need both resident-workflow and
 recorded-reason rights. Owners are named follow-up staff, not appointed Legal
@@ -268,6 +326,15 @@ named human outcome (`Approved` as questions only, or `Returned`) by a home
 ownership and leasehold team member other than the drafter or recorder. A pack
 becomes stale when the verification or Legal position changes and then cannot
 be approved; draft a new one. Neither action changes the hold, route or cost.
+`tenure_review_trigger` records a changed scope, dispute, defect, charge query or
+ambiguous lease identity against a report. While any trigger is open the report
+review stays open, its question pack is stale and cannot be approved or
+redrafted, and no new `Verified` outcome can be recorded. An ambiguous lease
+identity also returns verification and route to Unknown, sets `reuse_blocked`
+and routes to the Home Ownership data owner (appointment still required).
+`tenure_trigger_resolve` is recorded by a named person other than the recorder
+(the data owner for ambiguous identity); the route stays Unknown until the data
+owner verifies again. Triggers are per report, so the case-wide hold remains.
 Prior homes without intake are unchanged: this does not prove complete tenure
 coverage or an all-offer gate across the programme.
 
@@ -573,6 +640,17 @@ sensor data, unknown support and incomplete appointments to a human review route
 reasons and counts. The route has no score and never changes rank or service. Constructed
 data only; no usability, accessibility or fairness evidence. See the
 [test plan](../../docs/reference/research/ux/equity-journey-test-plan.md).
+
+`paired_equity.evaluate(pairs, anchors, seeded_defects, rank)` checks constructed pairs that
+differ in one attribute (sensor completeness, support or contact need, appointment history) and
+requires the subject to rank no lower than the reference and its review route to have no rank
+effect. It reports tested and failed counts per dimension, never averages a failing dimension
+away, and blocks on a missing dimension or an undetected seeded defect. It uses the deterministic
+policy by default, approves nothing and is not fairness evidence; AI task cohorts are not covered.
+
+```bash
+python -m unittest discover -s tests -p test_paired_equity.py -q
+```
 
 ## Constructed offline sensor consumer (#110)
 
@@ -4249,8 +4327,19 @@ model call or rights log, so the #121 acceptance criteria stay unmet.
 `GET /api/data-protection` (any signed-in staff role, read-only, no body
 accepted) returns `register_report(os.environ)` so owners and auditors can see
 which approvals are missing; reference values are never echoed and
-`dpo_reviewed` stays false. This route is the only wiring: no model call site
-consults `model_dispatch` yet and no rights log is persisted.
+`dpo_reviewed` stays false.
+
+Slice 3 wires the gate into the model transport (`ai.Ai`). `dispatch_hold`
+reads `ZF_DATA_PROCESSING`: unset or `constructed` (the development path)
+changes nothing; any other value, including a typo, means actual processing,
+so `Ai.run` (class `prompt_output`), `Ai.look_at` (class `raw_document`, intact
+bytes, no derivative path yet) and a backstop in `Ai._request` refuse the call
+until the class has its non-synthetic references. The user sees the template or
+"file is stored" text plus the manual path. The default is constructed-only, so
+the control depends on operators setting the mode before any actual data is
+processed; it is not proof that none is. `Ai.evidence` and the chat model in
+`src/agents` are covered only by the `_request` backstop where they use it.
+No rights log is persisted.
 
 ### Offline regulatory consumption (2026-10-27, #208)
 
@@ -4502,6 +4591,10 @@ changes the concern, its outcome or its remedy, and a sensor reading never appea
 task `aftercare-concern-pack` is registered in `ai_registry` as an unapproved, disabled proposal
 task with a manual route and no model binding (FR-036).
 
+`add_sensor_context` attaches a later sensor signal to a concern as context only: it changes no
+investigation state, outcome or remedy, never marks the concern dismissed, and the text (also at
+`raise_concern`) passes the neutral-text guard. The household view still omits sensor context.
+
 `intake_form()` returns the plain-language household route (who is raising it, representative
 basis, concern kind, own-words statement, and the phone, in-person, paper and assisted-visit
 channels) for a screen or paper form to follow, and `intake_errors(values)` returns plain,
@@ -4540,9 +4633,24 @@ version, the query owner and the original query; it picks no winner and eligibil
 `raise_failure` and `raise_conflict` take an optional `ref`, so reading the same feed again does not duplicate an item.
 Nothing is re-run or re-sent.
 
-Not delivered: persistence in the JSON, SQL and MSSQL stores, API and UI wiring, wiring of the
-feeds (they read records; nothing calls them yet), integration and identity-conflict producers, and owner approval of the role names and runbooks (open). Tests:
-`src/core/tests/test_exception_queue.py`, `src/core/tests/test_exception_feeds.py`.
+`zava_forward.core.exception_register.ExceptionRegisterMixin.exception_register(user, staff)` (on `Store`,
+served read-only at `GET /api/exceptions`) rebuilds the queue from live records: unresolved stock conflicts
+go to the first named `data_steward`; AI tasks that fell back or were quarantined, overdue tasks with no
+named owner and unaccepted handoffs flagged by `handoff_ageing` go to the first named `digital_operator`.
+Named staff come from `ZF_EXCEPTION_STAFF`, a JSON object of staff email to roles; the owner has not named
+the roles, so with none configured only a programme manager or support officer sees an empty
+`roles_not_named` result and nothing is assigned by default. Anyone not named is refused (403) and the
+refusal is audited in the store ledger, as is each view (including the empty-staff view and refusal). The reply carries each item's owner, values with
+source, date and version, original source and `Unknown` eligibility, the caller's own role entry (not other staff emails) and scope, the
+outage banner (always `unknown` here: no health check feeds it) and a list of sources not connected (failed
+imports) and case or stock records that could not be read (reported per case, never failing the register), so absence is never shown as health. Recovery is not exposed and
+nothing is stored: the queue is rebuilt on each read.
+
+Not delivered: persistence of the queue and of recovery requests in the JSON, SQL and MSSQL stores, a recovery
+endpoint, a staff screen on `/api/exceptions`, the importer producer for failed imports, integration and
+identity-conflict producers, a health check for the outage banner, and owner approval of the role names and
+runbooks (open). Tests: `src/core/tests/test_exception_queue.py`, `src/core/tests/test_exception_feeds.py`,
+`src/api/tests/test_exception_register.py`.
 
 ## Versioned home case (#74)
 

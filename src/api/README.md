@@ -778,7 +778,10 @@ PYTHONPATH=tests:../core/tests:../agents/tests python -m checks.employee_chat_br
 
 The browser check uses an isolated constructed-data loopback server and
 explicit synthetic privacy references, actual unavailable-model fallback,
-intercepted answer-rendering cases and pinned axe on the open dialog.
+intercepted answer-rendering cases and pinned axe on the open dialog. It also
+intercepts `/api/chat/status` and the answer to prove the demo disclaimer is
+visible inside the panel (a bordered note, not colour alone) and a model answer
+is labelled "Model-generated, not approved. Demo only." (#891).
 It requires ask arrival before navigation in the transport test, then separately
 settles controlled successful API promises after hide, navigation and session
 change. Hide retains current reads without moving focus; navigation/session
@@ -1079,6 +1082,8 @@ including after a cached session's staff registration changes.
 | `tenure_verify` | `case_id`, `report_version`, `expected_version` (0 initially, latest verification version for that report thereafter), `outcome` (`Verified`/`Not verified`), `verified_tenure` (`Unknown` when not verified), `identity_confirmed` (boolean), `verifier_name` (named data owner, not the recorder), `verifier_role` (must name the Home Ownership data owner), `evidence_ref`, `verified_on` (YYYY-MM-DD, not future). `Verified` needs an attached Legal position reference and sets a route label only; the case hold remains |
 | `tenure_question_pack` | `case_id`, `report_version`, `expected_version` (0 initially, latest pack version thereafter). Needs a `Verified` outcome and an attached Legal position reference; drafts a template pack for human approval |
 | `tenure_question_pack_review` | `case_id`, `report_version`, `expected_version` (latest pack version), `outcome` (`Approved`/`Returned`), `reviewer_name` (home ownership or leasehold team member, not the drafter or recorder), `reviewer_role`, `reviewed_on` (YYYY-MM-DD, not future), `note`. Refused when the pack is stale or already reviewed; the hold remains |
+| `tenure_review_trigger` | `case_id`, `report_version`, `expected_version` (0 initially, latest trigger version thereafter), `trigger` (`Changed scope`/`Dispute`/`Defect`/`Charge query`/`Ambiguous lease identity`), `source`, `owner` (named follow-up staff), `next_update` (YYYY-MM-DD). Keeps the report review open and the pack stale; ambiguous identity sets `reuse_blocked`, returns the route to Unknown and routes to the data owner |
+| `tenure_trigger_resolve` | `case_id`, `report_version`, `expected_version` (latest trigger version), `trigger_version`, `resolver_name` (not the recorder), `resolver_role` (home ownership or leasehold team; data owner for ambiguous identity), `resolved_on` (YYYY-MM-DD, not future), `note`. Does not restore a route or approve anything; the hold remains |
 
 Channels: `Digital`, `Phone`, `Letter`, `In person`, `Trusted intermediary`.
 Reported tenure: `Tenant`, `Shared owner`, `Right to buy leaseholder`,
@@ -1297,6 +1302,23 @@ Set `ZF_AXE_JS` to the pinned axe 4.10.3 file for the axe scan of `main` at
 This is an engineering check on constructed data, not assistive-technology or
 WCAG acceptance (#155, #151) and not Fluent 2 conformance (#150).
 
+`PYTHONDONTWRITEBYTECODE=1 python -m checks.schema_download_browser_check` (#80)
+registers a synthetic form schema through the real API as a Retrofit Programme
+Manager, reaches the "Download for Excel" link on Funding route and claim pack by
+Tab, activates it with Enter and checks the downloaded `form-schemas.csv` header
+and row. It then signs in as a Programme Support Officer and a Grants and
+Evidence Officer, whom the server denies, and asserts there is no link and that
+a direct request is refused without catalogue content. No response is mocked.
+It needs Playwright and Chromium, is not wired into the CI matrix, and is an
+engineering check, not assistive-technology or WCAG acceptance.
+
+By default the shared browser harness keeps its scratch directory under the
+repository `.venv`. Setting an absolute `ZF_BROWSER_SCRATCH` outside the checkout
+overrides that location; a relative path or one inside the checkout is refused.
+When set, `PYTHONDONTWRITEBYTECODE` and `PYTHONPYCACHEPREFIX` are passed to the
+server the harness starts, so `PYTHONDONTWRITEBYTECODE=1` keeps bytecode out of
+the checkout sources.
+
 `python -m checks.procurement_screens_browser_check` (#228) builds a synthetic
 package, capacity record and issued work order through the real store, signs in
 as a Retrofit Programme Manager and as a Contractor, and opens the read-only
@@ -1310,6 +1332,26 @@ PARTIAL (or fails when `ZF_AXE_REQUIRED=1`). Zero violations in a run covers
 only those scans and is not a complete accessibility result. This is an engineering check, not
 assistive-technology or WCAG acceptance (#155, #151). Submission, correction
 and checklist capture are not built (OD-47).
+
+`PYTHONDONTWRITEBYTECODE=1 python -m checks.atlas_tensions_browser_check`
+(#233) builds the shared synthetic home plus three packages through the real
+store and signs in as a Retrofit Programme Manager. It opens Programme queue,
+Resident choice and Package queue for that same home through the real `/app`
+navigation and asserts what Chromium renders: the "Not shown for this role"
+panel beside permitted same-home context, fixture-derived choice measure, scope
+version, pause and safe route reference kept apart from contact and access,
+the choice and withdrawal panels above "Choice comes before offered capacity",
+that explanation above the capacity table, and package rows in reference order
+although the browser is handed them in another order and headroom, offered
+capacity and use rank them differently (only the response order is changed,
+by a test route, values untouched). It also checks that no non-GET/HEAD/OPTIONS
+request, contact link, evidence write control or JavaScript error appears after
+sign-in, that the case and package state are unchanged, labelled table regions,
+Tab reach and reflow at 1280 px and 320 px, and that the served
+`role-screens.js` is this checkout's file. Set `ZF_TENSIONS_SCREENSHOTS` to a new
+directory to keep full-page and per-panel screenshots. This is an engineering
+check on one synthetic home, not the connected eight-stage walk, assistive
+technology, WCAG, Fluent 2 or user acceptance (#150, #151, #155).
 
 `PYTHONDONTWRITEBYTECODE=1 python -m checks.data_operator_browser_check` (#229)
 signs in as the Retrofit Programme Manager, opens the read-only Data steward and
@@ -1335,6 +1377,21 @@ covered by `tests/test_data_operator_screen.py`. The browser check also visits
 this page-level view before opening a home: it asserts both sources, the
 reopen reason, the not-a-total caveat, no write controls, Tab reach of both
 table regions, reflow at 320px and the axe scan of `main`.
+
+The same check also covers the employee exception register's AI states on
+constructed synthetic records (`checks/data_operator_ai_state.py`, with the
+configured steward and operator named through `ZF_EXCEPTION_STAFF`). It asserts
+the register is not requested until the link is opened by keyboard; a
+Quarantined row stays separate from a fell-back-to-rules-or-template row; a
+workflow-only record is never listed as a failure; the service banner stays
+Unknown; the configured owner is not an appointment; recovery guidance is
+placeholder text; no audit-trail claim, controls, write or model request
+appears (browser-observed requests only); and an intercepted unavailable or
+empty reply is not shown as all clear. Tab reach and reflow at 320px are
+checked. `tests/test_data_operator_ai_state.py` renders the real script with the
+real register contract without a browser. These fixtures prove no serving model,
+employee effectiveness, accessibility acceptance, resident consent or named
+approval.
 
 ## Resident chat and synthetic callback agenda (#520, building on #469)
 
@@ -2064,6 +2121,14 @@ unexecuted. The
 selects Basic IoT Hub for the exercise, excluding cloud-to-device messages,
 device twins and device management. Sizing, cost, provisioning, network and
 device credential ownership remain separate decisions. No issue closure follows.
+
+`python src/api/checks/sensor_sql_check.py --selector analysis` runs only
+`test_sensor_analysis_mssql`, the retained-reading analysis tests (#111), on the
+same disposable server. The harness accepts only `default` and `analysis`. For
+`analysis` it requires exit 0, exactly eight tests and a clean `OK`, so a
+skipped test fails the run. This shows the analysis path executing on local SQL
+Server only; it does not meet whole #111 acceptance, complete research R1 to R3
+or show live sensor accuracy.
 
 ## Constructed RAI evidence register API (#126)
 
@@ -5362,16 +5427,27 @@ Staff lists offer a CSV copy for Excel: `GET /api/packages.csv`,
 `/api/workorders.csv` (optional `case`), `/api/handoffs.csv`,
 `/api/visits.csv` (`view=mine|all`), `/api/funding.csv`, `/api/finance.csv`
 (finance queue; finance roles and managers) and `/api/asset/stock-queue.csv`
-(stock conflict queue; managers), in addition to
-`/api/cases.csv`. Each calls the same store method as its JSON list, so rows
+(stock conflict queue; managers) and `/api/checklists.csv` (the quality
+checklists, one row per check with measure, version, step and check; staff roles;
+fixed reference text, so no query selector changes it) and
+`/api/form-schemas.csv` (the immutable form-schema catalogue: one row per
+retained version with `definition` as JSON text, `digest`, `approval`,
+`approval_evidence`, `source_policy_status`, `recorded_by` and `recorded_at`),
+in addition to `/api/cases.csv`. The schema export calls `forms.list_schemas`
+unchanged, so it needs the same current Finance, resident-record, reason-view
+and document-read rights as the JSON list, re-read on every request; other
+roles get 403. Versions are `Unapproved` with empty evidence until a person
+approves them elsewhere; the CSV never approves, writes, reads a case,
+candidate or document text, or uses AI. It has no download link on the form
+screens yet. Each calls the same store method as its JSON list, so rows
 and role limits match; contractors receive 403 on every export. Cells that
 start with `=`, `+`, `-`, `@`, tab or carriage return get a leading apostrophe
 so Excel cannot run them as formulas. The file is a values-only, one-way copy:
 nothing reads it back, and edits in Excel change nothing. No AI provider is
 involved, so exports work when AI is unavailable. Visits, funding and handoffs
-screens, the finance queue and the asset board carry a "Download for Excel"
-link. Not yet exported: checklists, governance, continuity (its own export exists) and the
-chat, resident and form-staging surfaces. The row-level history sheet and
+screens, the finance queue, the asset board and the quality checklist form carry a "Download for Excel"
+link. Not yet exported: governance, continuity (its own export exists) and the
+chat, resident and form-staging candidate and review surfaces. The row-level history sheet and
 `.xlsx` output stay in the importer library; the API offers CSV only.
 
 ## Contractor job pack read (#132, slice 2)

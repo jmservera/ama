@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-01
+ms.date: 2026-11-08
 ms.topic: overview
 ---
 
@@ -24,24 +24,74 @@ management: short pages that point to clusters of related material.
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
+The current coauthored delivery has 45 pages, with the additive Supplement
+starting on page 37. This is a draft with unreported experimental outcomes,
+not a completed confirmatory report.
+
+The later [8 November study update](../capstone/source/review-2026-11-08.md#later-8-november-study-and-coauthor-update)
+records owner-confirmed OSF base `xcpt4` (7 November; public API returned 401),
+an ongoing **unregistered exploratory amendment** and coauthor
+Isabel Cabezas Martin's separate execution/data-collection role. Both
+authors work at Microsoft; this is not independent institutional validation.
+Active source `e71037d9`, selected 21/default 12, three models/five arms,
+F1-F10 plus CR1 and seed 2027 are distinguished from older plans.
+The reported 651/227/369 steps under three implementations total 1,247;
+they are not independent replicates, one frozen source or reported efficacy.
+The [paper's current record](../capstone/thought-leadership/everything-but-the-software/README.md)
+and pages 22/40 supersede paused/prospective-only status, not earlier adverse
+reviews or unresolved interpretation/approval limits.
+
+The [8 November measurement clarification](../capstone/thought-leadership/everything-but-the-software/README.md#measurement-provenance-8-november)
+adds an outcome/proxy/resource table, actual raw field/instrument definitions
+and source-bound active B/C templates. There is no separate numerical AI
+outcome judge: model review is a treatment, while hidden contracts and fixed
+analysis tools measure outcomes and structural proxies. Current-source
+inspection confirms conservative loss/composite CR1 summaries and the Ruff
+inline-`noqa` limitation; no running instrumentation or data is changed.
+The v13 single PDF has 45 pages, Supplement 37, with 50 authoring checks
+and PDF bounds/destinations verified. Historical/adverse records, coauthors,
+registered-base/unregistered-amendment disclosure and result TODOs remain;
+independent/human and publication approvals are separate.
+
 The owner-requested additive revision removes repeated Background, figures
-and case narratives; the current 37-page paper retains only extra source
+and case narratives; the paper retains only extra source
 qualifications and methodological/provenance detail in its Supplement.
 The [nine-point author review](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#author-review-disposition-1-november)
 restores the discovery-to-backlog-to-feedback account, abstracts the case and
 records the supplied project export. Four requested scientific skills support
 the equation audit; risk/annotation domains and discrete break-even are
-explicit. Scheduling-block dependence must still be resolved against the
-variance and bootstrap scheme before the new freeze and collection.
-The prospective five-arm candidate has
-33 trajectories per arm/model (495), a conditional 10-point coverage target,
-matched-resource delivery, visible repair and a blocked primary comparison.
+explicit. Scheduling-block dependence remains an interpretation/approval
+issue; reported exploratory collection does not establish its resolution.
+The [2 November allocation revision](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#prospective-allocation-revision-2-november)
+retains three models and five proposed arms, with 12 (default), 21 or 33
+independent repository trajectories per model per arm: 180/315/495 study
+trajectories. The researcher records the choice and rationale before study
+collection; saved selection is immutable on resume and outcome-driven
+resizing is prohibited. The ten-point B-D normal planning minima correspond
+to assumed SDs of 15/20/25 points, not measured variances or interchangeable
+80%-power guarantees; default 12 is not an 80%-power design at SD 25.
+Combined nominal allowances of 1,107,000/1,876,500/2,902,500 credits do not
+enlarge the actual 300,000 aggregate envelope or 270,000 admission ceiling.
+Prior spend, unknown-usage holds and full-allocation affordability remain
+gates. The [5 November recovery and scientific review](../capstone/thought-leadership/everything-but-the-software/anc/revision-report.md#recovery-and-scientific-alignment-5-november)
+verified current public MVE source `5ab24be4`, published v6 execution source
+`7de2f0d4`, all five arms and the immutable selector, superseding the earlier
+A/B/C-only assessment from stale local snapshots. Observed-subset retention
+bounds and graded/prerequisite CR1 reports remain prospective reporting
+requirements not established in the inspected analyzer/export.
+Independent-arm resampling is implemented, but scheduling-block inference
+and the primary availability rule still need an explicit source-bound
+scientific decision for accepted inference. The historical v6 manifest records no prospective
+OSF completion or collection authorization; release existence is not approval.
+The original review, historical v4 assets and dated inspections are retained.
 Three pinned static snapshots, source/access limits, lexical validation and
 corrected zero/undefined and break-even figures are retained. Source metadata
 and code tests do not establish scientific acceptance or historical deployed
-usability. Public development PRs are owner-authorized; future privacy, new
-review/freeze, proper prospective OSF recording, affordability and collection
-gates remain. Historical cloud exports are explicitly deferred.
+usability. Public development PRs are owner-authorized; future privacy,
+approved source alignment, proper prospective OSF amendment, affordability and
+scientific acceptance remain unproved; the reported running amendment is
+exploratory, not evidence that those earlier gates were met. Historical cloud
+exports are explicitly deferred.
 Original v4 assets, adverse critiques and prior data remain unchanged.
 The [new reflection/memory source check](../capstone/thought-leadership/everything-but-the-software/anc/supplementary-context.md#reflection-memory-and-self-improvement-1-november-source-check)
 distinguishes Ng's human-feedback opening from Moroney's later reflection/
@@ -62,7 +112,10 @@ authoring regressions cover the earlier corrections and unified delivery.
 The [Tectonic warning remedy](../capstone/thought-leadership/everything-but-the-software/README.md#tectonic-warning-review-and-remedy)
 uses a literal wrapped renderer without the old Latin-1 `lineno` dependency,
 with scoped citation alignment and no diagnostic suppression. Thirty-four
-focused tests cover the current additive revision and unchanged prompt.
+focused tests cover the original additive revision and unchanged prompt.
+The recovered, source-aligned candidate adds ten regressions; all 44 pass.
+Its rebuilt 38-page PDF retains the Supplement on page 33, with checked
+text bounds/internal links and one inherited `inputenc` compatibility warning.
 
 For the [31 October live app observations](../architecture/cutover-evidence-pack.md#live-app-verification-2026-10-31-refs-523-524-570-432),
 resident sign-in and chat open/close, resize, dock/undock and narrow/wide
@@ -117,7 +170,14 @@ and three-test, zero-skip evidence in both execution and receipt verification.
 For capstone work, start with the [current working set](../capstone/README.md),
 [complete native/JSON source guide](../capstone/source/README.md),
 [pitch preparation](../capstone/pitch/README.md) and
-[demo runbook](../capstone/demo/runbook.md). The 2026-10-29 reorganization
+[demo runbook](../capstone/demo/runbook.md). The
+[8 November autonomy and product-story review](../capstone/source/review-2026-11-08.md)
+corrects the original-versus-built framing, maps exact L2-L4 requests to
+current preparation, distinguishes historical Decision 1 from current
+generation, explains optional resident access and traces design-thinking
+decisions. Its complete Project 7 snapshot is dated and must be refreshed
+before final delivery; board Done includes not-planned work.
+The 2026-10-29 reorganization
 preserves one 54-slide deck, all 36 media inputs and the historical sources;
 15 approved obsolete exports are [archive-backed](../capstone/history/README.md).
 The [owner-corrected product-first story](../capstone/source/review-2026-10-30.md#current-revision-product-first-future-later)
@@ -508,6 +568,10 @@ The lexical guard now includes staff time capture. Juan Manuel Servera was
 appointed wording reviewer on 2026-10-15; completed exact-text review and actual
 resident/representative usability/AT acceptance remain Not run. No portal,
 live contact, operational authority or whole-issue closure is delivered.
+A 2026-11-06 slice rewords the two document-retention refusals in
+`doc_controls.py` (legal hold; not yet due) and records the open question of who
+decides that a real hold has ended; see the
+[content standard, slice 4](./research/ux/content-standard.md).
 
 For issue #172, the [chat fixture isolation boundary](./research/retrofit-synthetic-data/data-dictionary.md#resource-specific-isolation-coverage-2026-10-18-172)
 distinguishes 22 personas/eleven perspectives from current eligible thread owners
@@ -734,7 +798,7 @@ or infra acceptance claimed.
 | Inspect role task queues, shared case context and versioned reset (#76) | [Definitions and API contract](../../src/api/README.md#role-task-queues-and-shared-case-context-76) | [Before/after parity audit](../architecture/mvp-to-src-parity-matrix.md#role-task-queue-offline-slice-2026-10-16), [core read model](../../src/core/README.md#derived-role-task-queues-76) and [generated 60k queue timings (#327)](../../src/core/README.md#generated-60000-case-queue-timing-327-2026-10-16); indexed SQL membership maintained with writes/backfill, retained hot IDs and request-time authorisation/projection. Cold post-write medians 1.06-1.24 s versus 2.85-3.49 s; global ranking and full shared/clock/policy refresh costs remain. Draft priority policy, owner queue/role/redaction ratification, human and live-platform acceptance remain open |
 | Understand all users' motivations, pains, gains and agent-assisted journeys | [Customer Journey Atlas](./research/ux/customer-journeys/customer-journey-atlas.md) | Nine linked company-role contributions, 28 stage-based maps, nomination/source-change subjourneys and 24 bounded opportunities; research hypotheses with current-delivery reconciliation, not observed user validation or approved features |
 | Run the five journey learning-test bundles against non-AI comparators (#129) | [Journey learning-test bundles protocol](./research/ux/journey-learning-test-bundles.md) | Protocol (2026-11-03) plus a deterministic net-effort comparison helper in `src/core` (2026-11-04) tested on constructed inputs only: comparators, six-component net-effort measure, stop rules, O10/O18-O20 exclusion; no experiment run; atlas-owner mapping confirmation, including O16 overlap, unmet |
-| Trace atlas themes and the eleven role journeys to screens (#233) | [Atlas findings and role journeys traced to screens](./research/ux/atlas-screen-trace.md) | Hypotheses until #155; all twelve screens are registered on main (2026-11-02 refresh); checker `src/core` `zava_forward.core.atlas_screen_trace`; static source guardrail test added 2026-11-02; rendered accessibility, design-system acceptance and user validation unproven |
+| Trace atlas themes and the eleven role journeys to screens (#233) | [Atlas findings and role journeys traced to screens](./research/ux/atlas-screen-trace.md) | Hypotheses until #155; all twelve screens are registered on main (2026-11-02 refresh); checker `src/core` `zava_forward.core.atlas_screen_trace`; static source guardrail test added 2026-11-02; bounded Chromium check of the tension sequence on one synthetic home added 2026-11-05 (`src/api/checks/atlas_tensions_browser_check.py`, engineering evidence only; connected walkthrough not shown); rendered accessibility, design-system acceptance and user validation unproven |
 | Compare Azure development with M365 and business-platform implementation | [Implementation Options and Provisional Platform Recommendation](../case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) and [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) |
 | Evaluate a new idea | [Idea Register](../ideas/idea-register.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Migrate company/programme branding to Zava North Homes / Zava Forward | [One-off migration script and guide](../../tools/rename-zava.md) | Dry-run inventory, tracked text/paths, PPTX/YAML/logo handling, readable image assets and historical exceptions; [observed from-empty Azure rebuild](../../infra/README.md#from-empty-rebuild-observed-on-2026-10-12), real SQL/model checks, [callback-only initialization](../../infra/README.md#post-deployment-api-authentication-initialization) and [tenant provisioning consent boundary](../../infra/README.md#api-registration-management-with-the-existing-m365-session) |
@@ -770,7 +834,7 @@ or infra acceptance claimed.
 | Refer hazards without owning the hazard service (#85) | [Hazard referral API and evidence limits](../../src/api/README.md#hazard-referral-and-retrofit-hold-api-85) | [Core home-hold contract](../../src/core/README.md#hazard-referral-and-home-retrofit-holds-85) and [dated evidence audit](./research/ux/zava-forward-prototype-profile-review.md#hazard-referral-evidence-engineering-continuation-2026-10-17-85): existing separate sent/receipt/acceptance, scope/follow-up and external times retained; current caller/destination, email/code/OID independence and failed-event audit quarantine exercised on fictional JSON/SQLite and actual loopback SQL Server. Original independent Review Not accepted; correction ONE separates acknowledged commit from failed synchronization, with exactly-once audit and explicit committed-outcome evidence. Independent final-head closure pending. JSON uncertainty explicit; no UI change. Operational policy, verified transport and Azure/model/human acceptance remain open |
 | Inspect building shared systems, dependencies, stopped works and costs | [Core building model](../../src/core/README.md#building-shared-context-issue-75) | [Staff API/view](../../src/api/README.md#building-shared-context-issue-75); #75 adds explicit home/package scopes, read-only source assertions and Finance-only amounts. Home consent, approvals, evidence and allocations stay independent; real register, governed updates and live platform/human acceptance remain open |
 | Inspect the synthetic resident feedback preview (#444) | [Resident preview API and start-up](../../src/api/README.md#synthetic-resident-feedback-preview-444) | [Core boundary and fixture](../../src/core/README.md#resident-owned-preview-boundary-444): server-owned fixture identity, default-deny grants, positive-allowlist view, offers versus confirmed arrangements, loopback only. Invented data, read-only, not enrolment, not an approved resident design; PR 442 is input only. Live Azure/SQL/real-AI acceptance and resident enrolment remain separate later gates |
-| Inspect the synthetic resident showcase with fake-email sign-in (#462) | [Showcase server, image and checks](../../src/api/README.md#synthetic-resident-showcase-462) | [Core boundary](../../src/core/README.md#synthetic-resident-showcase-boundary-462), [SQL view and read-only principal](../../infra/README.md#synthetic-resident-showcase-sql-boundary-issue-462), [dated UX redesign specification](./research/ux/resident-demo-redesign-2026-11-04.md) and [phase 1 page redesign](../../src/api/README.md#resident-demo-page-redesign-phase-1-462) and [phase 2 sensors and forecast](../../src/api/README.md#sensors-section-and-24-hour-synthetic-forecast-462-phase-2). Local candidate only: shared demo password by design, invented allowlisted records, live criteria blocked; signed-in live walkthrough 2026-11-04 recorded in the [prototype profile review](./research/ux/zava-forward-prototype-profile-review.md#signed-in-live-walkthrough-of-the-resident-showcase-2026-11-04-462)and the [live redesign deploy and signed-in walkthrough](./research/ux/zava-forward-prototype-profile-review.md#live-redesign-deploy-and-signed-in-walkthrough-2026-11-04-refs-462-refs-521) |
+| Inspect the synthetic resident showcase with fake-email sign-in (#462) | [Showcase server, image and checks](../../src/api/README.md#synthetic-resident-showcase-462) | [Core boundary](../../src/core/README.md#synthetic-resident-showcase-boundary-462), [SQL view and read-only principal](../../infra/README.md#synthetic-resident-showcase-sql-boundary-issue-462), [dated UX redesign specification](./research/ux/resident-demo-redesign-2026-11-04.md) and [phase 1 page redesign](../../src/api/README.md#resident-demo-page-redesign-phase-1-462) and [phase 2 sensors and forecast](../../src/api/README.md#sensors-section-and-24-hour-synthetic-forecast-462-phase-2). Local candidate only: shared demo password by design, invented allowlisted records, live criteria blocked; signed-in live walkthrough 2026-11-04 recorded in the [prototype profile review](./research/ux/zava-forward-prototype-profile-review.md#signed-in-live-walkthrough-of-the-resident-showcase-2026-11-04-462)and the [live redesign deploy and signed-in walkthrough](./research/ux/zava-forward-prototype-profile-review.md#live-redesign-deploy-and-signed-in-walkthrough-2026-11-04-refs-462-refs-521) and the [live sensors seed and re-walk](./research/ux/zava-forward-prototype-profile-review.md#live-sensors-seed-and-signed-in-re-walk-2026-11-04-refs-1072-refs-462) |
 | Trace source migration and retirement | [Parity matrix and migration order](../architecture/mvp-to-src-parity-matrix.md) | M1-M6 migrated; [owner cut-over sign-off, archive v0.21.0 and remaining acceptance](../architecture/cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27); current guides under `src/` |
 | Configure or troubleshoot rubric scoring authentication | [Capstone Rubric Gate](../../.github/rubric/README.md#owner-setup) | Built-in Actions token, job-scoped permissions and Copilot inference eligibility; compilation and a passing score do not establish product acceptance |
 | Compare cheaper rubric-scoring models | [Dated Sonnet/Haiku/Luna pilot](./resources/ai-tokenomics.md#rubric-scorer-model-pilot-2026-10-24) | Original final-response pilot plus two pinned-runtime native MCP invocations: one valid append each but nine grade differences and Haiku rationale overlength; not full hosted equivalence or application-model acceptance |
@@ -819,7 +883,7 @@ or infra acceptance claimed.
 | [Applicability review pack for UK automated-decision rules and the EU AI Act](./regulatory/reviewed-updates/2026-11-01-adm-ai-act-applicability-review.md) | Dated official-source check (legislation.gov.uk retrieved 2026-11-01; EUR-Lex retrieval failed), pending Legal/DPO decision record, review items and non-inference rules for OQ-019 | 2026-11-01 |
 | [Legal briefing on UK automated-decision rules and EU AI Act applicability](./research/rai/legal-briefing-adm-ai-act.md) | Briefing for the Legal contact: main points, 10 recommendations and gaps; adds S.I. 2026/82 reg. 5 read on 2026-11-04; EU text still unverified; no decision made. Capstone slide: [legal-briefing-224.pptx](../presentations/legal-briefing-224.pptx) | 2026-11-04 |
 | [Historical native agent process map](../capstone/history/README.md#archive-and-restore) | The superseded 24-slide deck and process/architecture exports are in the exact verified archive selection, not the current authoring route. [Original text equivalent and value tests](../capstone/history/storage-map-before-reorganization.md#agents-in-the-retrofit-process-2026-10-13) remain preserved. Current page 16 retains five bounded capabilities and human authority | 2026-10-29 |
-| [Current Cowork v2 capstone working set](../capstone/README.md) | Product/discovery-first deck with [DT Coach journey and decision trace](../capstone/source/diagrams/discovery-journey/text-equivalent.md); current Workbench/read models separated from future-only Fabric/PBI/history/preview ontology. [Owner-correction review](../capstone/source/review-2026-10-30.md#current-revision-product-first-future-later) preserves prior outcomes and new findings. All 54 notes/actions/timing/cost contracts remain; zero revised overflow is not user/accessibility or service acceptance | 2026-10-30 |
+| [Current Cowork v2 capstone working set](../capstone/README.md) | [8 November autonomy/story review](../capstone/source/review-2026-11-08.md): exact requested/current levels, scope gaps, three help modes, historical scoring/current generation, optional resident service and refreshable progress. All 54 slides/notes, 108 actions and protected cost contracts remain; Linux word-presence/navigation checks are not native PowerPoint, human or service acceptance. Prior reviews are preserved | 2026-11-08 |
 | [Historical Zava Forward executive capstone deck](../capstone/history/README.md#archive-and-restore) | Superseded by Cowork v2 on 2026-10-23; restored and hash-checked before the owner-approved archive-backed removal of its redundant checkout exports. Restore map and original findings remain; no fallback scoring or acceptance claim | 2026-10-29 |
 | [85-day roadmap](../case-study-85-day-roadmap.svg) | C-suite solution roadmap diagram, with its [Excalidraw source](../case-study-85-day-roadmap.excalidraw) | Binary file |
 
@@ -834,8 +898,8 @@ or infra acceptance claimed.
 | [UK Social Housing Baseline Source Register](./research/sector/uk-social-housing-baseline-source-register.md) | Official publications and datasets behind each baseline benchmark | 2026-09-11 |
 | [Retrofit, Damp and Mould Statistics Report](./research/sector/uk-social-housing-retrofit-damp-stats-report.md) | England-focused EPC, retrofit cost and funding, damp and mould, repairs, complaints and Decent Homes statistics for a 60,000-home landlord, with sources and caveats. National benchmarks are not company facts; Scottish case counts are separate and AI pricing remains third-party and unconfirmed | 2026-10-23 |
 | [Company Profile Research](./research/company/company-profile-research.md) | Confirmed not-for-profit status, comparators, modelled customer profile (estimates, not company facts), common sector problems, role map and company gaps for the role agents | 2026-09-26 |
-| [Agent Request Challenge](./research/company/agent-request-challenge.md) | Role-agent challenge of the five requested agents: real problems, non-agent alternatives, bounded AI fit, shared foundation, value tests and stop criteria | 2026-09-26 |
-| [Agent What-If Study](./research/company/agent-what-if-study.md) | Follow-up thought experiment running 20 augmentation scenarios across the requested agents, from phone-captured evidence and structured invoices to funder integrations, sensors and call transcription, with role-agent clarification answers re-run against the current proposal, a value-versus-complexity grid and a reconciliation with the agent-led modernisation reframe; headline verdict unchanged after the post-merge review | 2026-09-27 |
+| [Agent Request Challenge](./research/company/agent-request-challenge.md) | Historical role-instrument alternatives, foundation, value tests and disagreements retained. 8 November qualification distinguishes the case's explicit L2-L4/human rights from the research conclusion about end-to-end mechanism; current scope/authority matrix is linked | 2026-11-08 |
+| [Agent What-If Study](./research/company/agent-what-if-study.md) | Historical 20-scenario richer-evidence/capacity thought experiment and original verdicts retained. 8 November qualification explains that bounded L3 drafts/L4 flags were already in the brief, not an unrestricted-autonomy request; no task activated | 2026-11-08 |
 | [Pilot Measurement Challenge](./research/company/pilot-measurement-challenge.md) | Role-agent challenge of measuring acceleration with a dashboard, short history and non-pilot comparison, plus the owner's modernisation decision: Comparison 1 and 2, frozen protocol, benefits scorecard, guardrails, vanity metrics and history sources | 2026-09-26 |
 | [Cohort and Missing-Data Evaluation Review Pack](./research/evaluation/cohort-evaluation-review-pack.md) | DRAFT, unapproved, not executed owner review pack for issue #222 (v0.2.0 correction returned for owner approval): synthetic paired-scenario manifest, proposed held-out custody and independent reviewer protocol (roles unfilled), sample-size, error-rule and uncertainty options, critical-error and review-burden handling, Unknown-support policy proposal, AC traceability and owner checklist; no fairness evidence | 2026-10-20 |
 | [Retrofit Operating-Data Exercise Pack](./research/retrofit-synthetic-data/README.md) | Version 2.0.0: fifteen months of constructed operating records for 980 candidate homes. The case presents a professional team aware of bottlenecks but not where they occur. The pack covers the tracker, stage event log, property register, CRM contacts, supplier appointments, safety holds, QA and evidence, grant and finance, capacity, board reports and issues log, with realistic record-keeping imperfections, a data dictionary and a manifest. These records are for the exercise and are not evidence of actual company performance. The answer key and generator are held outside the knowledge base so analysis can stay blind. Stock-to-case link report and synthetic fabric attributes for the 60,000-home stock added; synthetic EPC, survey records and a seeded EPC conflict manifest added (#170); per-user chat and memory test fixtures (personas, threads, memory, isolation and deletion cases) added (#172) | 2026-10-15 |
@@ -848,7 +912,7 @@ or infra acceptance claimed.
 | [Employee Case Workspace Redesign](./research/ux/employee-case-workspace-redesign.md) | Issue #526 specification and implementation boundary: six evidence-based journey steps, summary strip, nine retained tabs and consistent draft/proposal reviews. Constructed-data unit, browser/37-state axe, keyboard and actual 200% zoom checks pass after mobile spacing/focus corrections. No new journey/confidence API fields; chat answers retain their separate proposal-review route. Screen-reader, staff usability, live acceptance and publication gates remain separate | 2026-10-28 |
 | [Zava Forward Workbench WCAG 2.2 Conformance Baseline](./research/ux/wcag-conformance-baseline.md) | Proposed WCAG 2.2 AA target and scope, first audit with computed contrast, fixes (focus indicator, field border, chart table equivalent), automated check coverage, manual check record per role and accessibility statement draft with known gaps (issue #151). Owner confirmation, rendered scanner, and all screen-reader, zoom and target-size tests remain open; no conformance claim | 2026-10-15 |
 | [Production UX Acceptance Protocol (chat widget and case view)](./research/ux/production-ux-acceptance-protocol.md) | Criterion status, human test scripts (keyboard, NVDA/VoiceOver, 320 px, 200 percent text, 400 percent zoom, resident consent journey) and blank record tables for the production acceptance carried into #619. All rows Not run; no conformance claim | 2026-11-02 |
-| [Equity, journey ownership and user research test plan](./research/ux/equity-journey-test-plan.md) | Plan and blank records for keyboard and screen reader checks, missing-data human review, journey owners and the draft aggregate-only user research protocol (#128). Nothing run or agreed; no usability or fairness claim | 2026-11-03 |
+| [Equity, journey ownership and user research test plan](./research/ux/equity-journey-test-plan.md) | Plan and blank records for keyboard and screen reader checks, missing-data human review, journey owners and the draft aggregate-only user research protocol (#128). Nothing run or agreed; no usability or fairness claim. Second slice adds a paired-cohort priority check for the deterministic policy | 2026-11-04 |
 | [Usability testing programme plan](./research/ux/usability-test-programme-plan.md) | Draft moderated test plan, task scripts from the profile checks and learning-test bundles, aggregate-only measures, findings and results templates (#155). Nothing run or agreed; no usability result | 2026-11-04 |
 | [Regulatory Alert and Home Chat Acceptance Kit](./research/ux/regulatory-ux-acceptance-protocol.md) | Per-role keyboard and screen-reader scripts, frozen comprehension answer key and blank record tables for the two unmet #215 criteria. All rows Not run; no conformance or comprehension claim | 2026-11-03 |
 | [Zava Forward Workbench Supported Devices Proposal](./research/ux/supported-devices-proposal.md) | Proposed desktop, laptop, tablet and reflow widths for owner ratification (issue 152, OQ-004/011). Not decided; browsers, assistive tools and field or mobile use remain open | 2026-11-01 |
@@ -881,7 +945,7 @@ official links for every snapshot. Check it before relying on any file below.
 | Document | Summary | Updated |
 | --- | --- | --- |
 | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | Internal hub entry points, nonprofit hero use cases, patterns mapped to each Zava Forward agent, customer evidence and lessons | 2026-09-25 |
-| [AI Tokenomics](./resources/ai-tokenomics.md) | Public Tokenomics Foundation framing (draft v0.5.2): Total Cost of AI, unit economics above a quality floor, booked value destinations and Big-T notation; mapped to rubric A5, A6, B7, C1 and C3 and to existing Zava Forward evidence; gaps, with an internal Microsoft pointer that must not be quoted. The mentor's meaning is unconfirmed | 2026-10-22 |
+| [AI Tokenomics](./resources/ai-tokenomics.md) | Public Tokenomics Foundation framing (draft v0.5.2): Total Cost of AI, unit economics above a quality floor, booked value destinations and Big-T notation; mapped to rubric A5, A6, B7, C1 and C3 and to existing Zava Forward evidence; gaps, with an internal Microsoft pointer that must not be quoted. The mentor's meaning is unconfirmed. Includes the dated configured demo-model, limits and evidence-gap record for #108 (configuration only, no serving, region or evaluation proof) | 2026-11-07 |
 
 ### Method and Memory
 
@@ -980,3 +1044,40 @@ Final correction TWO integrates resident #392 on mainbcb4871b, retaining both
 SQL recovery scopes and sensor boundaries. Full core942 run/847 pass/95 skips,
 actual integrated MSSQL35 pass and combined/image/static checks provide
 engineering evidence; PR #394 independent exact-head gate remains outstanding.
+
+The 2026-11-08 ranking publication current-main stabilization checkpoint for #440
+(Refs #79 #1231) is appended to the
+[cut-over evidence pack](../architecture/cutover-evidence-pack.md#ranking-publication-current-main-stabilization-checkpoint-2026-11-08-refs-440-79-1231).
+It pins merged main source `a80acada` with the BRD, PRD and ADR identities,
+records installed-package ranking publication, API boundary and cohort
+selectors (core 76, API 53, agents 20, no skips) as local observations, and
+keeps the pre-merge full receipt at `ac0f29f9` historical and source-qualified.
+Recommendation is continue; #1258 and #1259 stay open owners. Whole #79, #1231
+and #440 closure, policy sign-off, retention, deployed scheduling, live model
+and Azure behaviour remain unproven.
+
+The 2026-11-08 AI and employee chat current-main stabilization checkpoint for #440
+(Refs #157 #159 #104 #107) is appended to the
+[cut-over evidence pack](../architecture/cutover-evidence-pack.md#ai-and-employee-chat-current-main-stabilization-checkpoint-2026-11-08-refs-440-157-159-104-107).
+It pins main `608c98e6` after #1275, #1271 and #1273, records the #157 and #159
+status-drift correction without any new adoption, maps where AI is invoked for the
+five assistants and employee chat, and records focused SQLite and fixture selectors
+(SQL Server and Chromium skipped) with historical SQL and browser evidence kept
+source-qualified. Recommendation is continue; real-provider behaviour, human and
+named approvals, tokenomics and whole-epic closure remain unproven.
+
+Correction 1 to that checkpoint (2026-11-08, after independent assessment) is the
+[Correction 1 and currency](../architecture/cutover-evidence-pack.md#correction-1-and-currency-observed-2026-11-08t1155z-after-independent-assessment-review-440-c96a)
+subsection. It records current main, #1278 on main, #1243 on its parent branch and
+PR 1240 still open, scopes the earlier exclusions to the 608c pin, separates the
+historical AWF 504 (recovered by the rootless installer in #1275) from the
+unimplemented #1274 resilience, qualifies the assistant review wording and marks the
+unused chat clean-up as pending triage, not deferred.
+
+The [visible-demo integration checkpoint](../architecture/cutover-evidence-pack.md#visible-demo-integration-checkpoint-2026-11-08-refs-440-149-229-891)
+(2026-11-08, base `6354b13f`) records PR 1286 and PR 1290 on main, the source
+movement since the previous pin, where AI is invoked and the proposal-only ceiling,
+and one historical generic employee model answer on the deployed demo as Azure
+observed for that source only. Five-agent, case-grounded, sensor-grounded,
+current-main deployment, cost, privacy and approval acceptance remain unproven, and
+unmerged #184 and #1288 work is excluded. The recommendation is bounded continue.

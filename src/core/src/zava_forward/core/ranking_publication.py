@@ -2,14 +2,25 @@
 
 publish() writes one immutable, dated file per policy version, as_of date and
 snapshot hash into an archive folder. The write is idempotent: the same snapshot
-gives the same file and is not rewritten, and a file is never overwritten or
-deleted here. verify() re-hashes every archived snapshot so an edited or
-damaged record is reported. Nothing reads a clock: the publication date is an
-input. Retention period and the scheduler are not set here. The legal period is
-a Legal decision and the schedule is run by the deployment; SCHEDULE states the
-contract the deployment is expected to meet. Nothing here changes a ranking.
+gives the same file and is not rewritten, and an archived record is never
+overwritten or deleted here. Each writer stages its content in its own uniquely
+named file in the same folder and links it to the record name, which fails if the
+record exists, so concurrent writers of one snapshot keep exactly one record and
+the loser reports it. That needs a local filesystem with hard links; a folder
+without them refuses to publish (OSError) and nothing is overwritten. The only
+file removed is the staging file this call created; if that removal fails after the
+record is committed, the result still reports the record and names the retained stage
+(stage_retained). A stage kept by the writer that committed the record shares its
+bytes and inode, but a stage kept by a writer that lost the race was never linked and
+can differ, so an operator checks it before removing it. verify()
+re-hashes every archived snapshot so an edited or damaged record is reported. Nothing reads a
+clock: the publication date is an input. Retention period and the scheduler are
+not set here. The legal period is a Legal decision and the schedule is run by the
+deployment; SCHEDULE states the contract the deployment is expected to meet.
+Nothing here changes a ranking.
 """
 
+import calendar
 import hashlib
 import json
 import os
@@ -28,11 +39,45 @@ SCHEDULE: dict[str, Any] = {
 }
 
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+_PUBLISHED_ON = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
 Path = str | os.PathLike[str]
 
 
 class PublicationError(Exception):
     """A snapshot cannot be published, or an archived record does not verify."""
+
+
+class ArchiveStorageError(Exception):
+    """The archive location cannot take a record (for example no hard-link support)."""
+
+
+class DurabilityUnconfirmedError(OSError):
+    """The record is at its final name but the archive folder sync failed.
+
+    The record stays; whether the name survives a crash is unknown, so this is
+    neither a confirmed publication nor a rollback. written is True when this call
+    created the record, False for an existing record or a lost race, and None when
+    the caller does not know.
+    """
+
+    def __init__(
+        self, path: str, published_on: str, cause: OSError, written: bool | None = None
+    ) -> None:
+        super().__init__(
+            cause.errno,
+            f"{os.path.basename(path)} was written but the archive folder could not be "
+            f"synced ({type(cause).__name__}); durability is unconfirmed.",
+        )
+        self.path = path
+        self.published_on = published_on
+        self.written = written
+
+
+def _valid_date(value: Any) -> bool:
+    if not isinstance(value, str) or not _PUBLISHED_ON.fullmatch(value):
+        return False
+    year, month, day = (int(part) for part in value.split("-"))
+    return year >= 1 and 1 <= month <= 12 and 1 <= day <= calendar.monthrange(year, month)[1]
 
 
 def _canonical(value: Mapping[str, Any]) -> str:
@@ -49,26 +94,108 @@ def _name(snap: Mapping[str, Any]) -> str:
     return f"ranking-{version}-{as_of}-{digest}.json"
 
 
+def _existing(path: str, snap: Mapping[str, Any]) -> dict[str, Any]:
+    """Validate the record already at the final name against the snapshot being published."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            rec = json.load(f)
+        held = rec["snapshot"]
+        published_on = rec["published_on"]
+        ok = (
+            _canonical(held) == _canonical(snap)
+            and snapshot_hash(held) == held["snapshot_hash"]
+            and os.path.basename(path) == _name(held)
+            and _valid_date(published_on)
+        )
+    except (OSError, ValueError, KeyError, TypeError, AttributeError) as e:
+        raise PublicationError(
+            f"{os.path.basename(path)} exists but cannot be read as this snapshot "
+            f"({type(e).__name__}); not overwritten. A named owner must review the archive."
+        ) from e
+    if not ok:
+        raise PublicationError(
+            f"{os.path.basename(path)} exists but does not match this snapshot, its hash, "
+            "its name or a valid publication date; not overwritten. "
+            "A named owner must review the archive."
+        )
+    return {"path": path, "written": False, "published_on": published_on}
+
+
+def _fsync_dir(archive_dir: Path) -> None:
+    fd = os.open(archive_dir, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
 def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> dict[str, Any]:
     """Archive a snapshot. published_on is an ISO date supplied by the caller.
 
     Returns path, written (False when the identical snapshot was already archived)
-    and the original published_on.
+    and the original published_on. The record is written to a unique stage file, synced
+    and linked to its final name, so the first writer wins and nothing is overwritten;
+    the stage is removed and the folder synced before the result is returned, including
+    for an existing record, which is validated and refused when it is damaged. A failed
+    folder sync is raised as DurabilityUnconfirmedError (an OSError carrying the cause's
+    errno) although the record is committed and kept; a retry syncs again and reports
+    the record as already published once the sync succeeds.
     """
-    if not _DATE.match(str(published_on)):
+    if not _valid_date(published_on):
         raise PublicationError("published_on must be an ISO date, YYYY-MM-DD.")
     if not _DATE.match(str(snap.get("as_of"))) or snapshot_hash(snap) != snap.get("snapshot_hash"):
         raise PublicationError("Snapshot is incomplete or does not match its hash; refused.")
     os.makedirs(archive_dir, exist_ok=True)
     path = os.path.join(archive_dir, _name(snap))
-    if os.path.exists(path):
-        with open(path, encoding="utf-8") as f:
-            return {"path": path, "written": False, "published_on": json.load(f)["published_on"]}
+    if os.path.lexists(path):
+        return _confirmed(_existing(path, snap), archive_dir)
     text = _canonical({"published_on": published_on, "snapshot": snap})
-    with open(path + ".tmp", "w", encoding="utf-8") as f:
-        f.write(text)
-    os.replace(path + ".tmp", path)
-    return {"path": path, "written": True, "published_on": published_on}
+    stage = os.path.join(archive_dir, f".{_name(snap)}.{os.urandom(8).hex()}.tmp")
+    # Owner-only, like the earlier mkstemp stage: the linked record keeps this mode.
+    fd = os.open(stage, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    try:
+        with open(fd, "w", encoding="utf-8") as f:
+            f.write(text)
+            f.flush()
+            os.fsync(f.fileno())
+        try:
+            os.link(stage, path)
+            outcome = {"path": path, "written": True, "published_on": published_on}
+        except FileExistsError:
+            outcome = _existing(path, snap)
+    except BaseException as e:
+        if _remove(stage):
+            e.stage_retained = os.path.basename(stage)  # type: ignore[attr-defined]
+            e.add_note(f"Staging file {os.path.basename(stage)} could not be removed.")
+        raise
+    if _remove(stage):
+        outcome["stage_retained"] = os.path.basename(stage)
+    return _confirmed(outcome, archive_dir)
+
+
+def _confirmed(outcome: dict[str, Any], archive_dir: Path) -> dict[str, Any]:
+    """Sync the archive folder so the committed name is durable before the caller is told."""
+    try:
+        _fsync_dir(archive_dir)
+    except OSError as e:
+        error = DurabilityUnconfirmedError(
+            outcome["path"], outcome["published_on"], e, outcome["written"]
+        )
+        if "stage_retained" in outcome:
+            error.stage_retained = outcome["stage_retained"]  # type: ignore[attr-defined]
+        raise error from e
+    return outcome
+
+
+def _remove(stage: str) -> bool:
+    """Remove this call's own staging file. True when it could not be removed and remains."""
+    try:
+        os.unlink(stage)
+    except FileNotFoundError:
+        return False
+    except OSError:
+        return True
+    return False
 
 
 def _names(archive_dir: Path) -> list[str]:
@@ -96,6 +223,8 @@ def verify(archive_dir: Path, registry: Mapping[str, Any] | None = None) -> dict
                 problems.append(f"{n}: file name does not match its content.")
             elif known is None or known["content_hash"] != snap["policy_hash"]:
                 problems.append(f"{n}: policy version or hash is not in the policy registry.")
+            elif not _valid_date(rec["published_on"]):
+                problems.append(f"{n}: publication date is not a valid calendar date.")
             else:
                 dates.append(rec["published_on"])
         except (OSError, ValueError, KeyError, TypeError):

@@ -10,14 +10,11 @@ from pathlib import Path
 from unittest.mock import patch
 
 import test_mvp
+from role_matrix_fixture import PHONE, REASON, RESIDENT, ROLES, MatrixServer, build  # noqa: F401
 from zava_forward.core import projection
 from zava_forward.api.server import App, make_handler
 from zava_forward.core.store import Store
 
-REASON = "SEEDED-REASON-dementia-and-hearing-loss"
-PHONE = "01999 888777"
-RESIDENT = "Quentin Residentname"
-ROLES = list(projection.STAFF_ROLES) + [projection.CONTRACTOR]
 
 
 class QualityMatrix(unittest.TestCase):
@@ -147,24 +144,6 @@ class QualityMatrix(unittest.TestCase):
         self.assertTrue(self.store.verify_audit())
 
 
-def build():
-    d = copy.deepcopy(test_mvp.DATA)
-    d["staff"] = [dict(code=f"U{i}", name=f"User {i}", email=f"u{i}@example.test", role=r) for i, r in enumerate(ROLES)]
-    d["staff"][-1]["contractor"] = "Test Ltd"
-    d["staff"].append(dict(code="U99", name="Other Contractor", email="other@example.test", role=projection.CONTRACTOR, contractor="Other Ltd"))
-    for c in d["cases"]:
-        c["owner_code"] = "U1"
-        c["owner"] = "User 1"
-    c = d["cases"][0]
-    c["resident"].update(adjustment=REASON, priority_support=True, phone=PHONE, name=RESIDENT, email="q@example.test")
-    c["contacts"].append(dict(at="2026-01-01T10:00", purpose="Update", channel="Phone", direction="Outbound", outcome="Spoke",
-                              note="private note", by="User 1"))
-    c["appointments"].append(dict(type="Survey", date="2099-01-01", slot="AM", outcome="Booked", note="private appointment note",
-                                  who="Test Ltd", person="Kim Builder"))
-    d["cases"][1]["contractor"]["name"] = "Other Ltd"
-    return d
-
-
 NEW_POSTS = [("/api/cases/ZF-1/quality-" + a, {"index": 0, "measure": "Loft insulation"}) for a in
              ("submit", "accept", "return", "fix", "reinspect", "handover", "aftercare")] + [
     ("/api/packages", {"name": "P"}), ("/api/packages/PKG-001/rescope", {}), ("/api/packages/PKG-001/capacity", {}),
@@ -172,35 +151,7 @@ NEW_POSTS = [("/api/cases/ZF-1/quality-" + a, {"index": 0, "measure": "Loft insu
     (f"/api/workorders/WO-0001/{a}", {}) for a in ("reissue", "appointment", "complete", "correct", "withdraw")]
 
 
-class Matrix(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.tmp = tempfile.TemporaryDirectory()
-        p = Path(cls.tmp.name) / "zavaforward.json"
-        p.write_text(json.dumps(build()))
-        cls.store = Store(str(p))
-        cls.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(cls.store, "zf-test")))
-        threading.Thread(target=cls.httpd.serve_forever, daemon=True).start()
-        cls.base = f"http://127.0.0.1:{cls.httpd.server_address[1]}"
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.httpd.shutdown()
-        cls.httpd.server_close()
-        cls.tmp.cleanup()
-
-    def session(self, email):
-        req = urllib.request.Request(self.base + "/api/login", json.dumps(dict(email=email, password="zf-test")).encode())
-        return urllib.request.urlopen(req).headers["Set-Cookie"].split(";")[0]
-
-    def call(self, ck, path, body=None):
-        req = urllib.request.Request(self.base + path, json.dumps(body).encode() if body is not None else None, headers={"Cookie": ck})
-        try:
-            with urllib.request.urlopen(req) as r:
-                return r.status, r.read().decode()
-        except urllib.error.HTTPError as e:
-            return e.code, e.read().decode()
-
+class Matrix(MatrixServer):
     GETS = ["/api/me", "/api/cases?view=all", "/api/cases?view=mine", "/api/cases?view=all&sort=name", "/api/cases?view=all&q=Test",
             "/api/cases?view=all&flag=support", "/api/cases.csv?view=all", "/api/cases/ZF-1", "/api/cases/ZF-2", "/api/ranking/policy",
             "/api/ai/priority", "/api/facets", "/api/stats", "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing",

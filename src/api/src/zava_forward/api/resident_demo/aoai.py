@@ -12,6 +12,7 @@ from typing import Any, Protocol
 
 from azure.core.exceptions import AzureError
 from azure.identity import ManagedIdentityCredential
+from zava_forward.core.ai_consumption import usage as valid_usage
 from zava_forward.core.resident_assistant import (
     Advice,
     AssistantUnavailable,
@@ -22,7 +23,7 @@ from zava_forward.core.resident_assistant import (
     guidance,
 )
 
-from .assistant import EXPIRES, _post
+from .assistant import EXPIRES, RequestEnvelope, _post
 
 LOG = logging.getLogger(__name__)
 DEPLOYMENT = "resident-mini"
@@ -42,6 +43,7 @@ FALLBACK_REASONS = {
     "usage_limit": "the AI usage limit was reached",
     "credential_or_expiry": "AI access is unavailable or the exercise has ended",
     "accounting_unavailable": "the AI usage check is unavailable",
+    "meter_held": "the AI consumption limit or price check stopped the request",
     "accounting_close_failed": "the AI usage check could not finish",
     "reply_limit": "the AI reply exceeded the response limit",
     "invalid_usage": "the AI usage response could not be verified",
@@ -72,6 +74,16 @@ class Accounting(Protocol):
     def reserve(self, resident: str) -> str | None: ...
 
     def complete(self, reservation: str, prompt: int, completion: int) -> None: ...
+
+
+class Meter(Protocol):
+    """Optional consumption ledger join; see ledger_meter.advisor_meters."""
+
+    def reserve(self, envelope: RequestEnvelope) -> bool: ...
+
+    def token(self, acquire: Callable[[], str]) -> Callable[[], str]: ...
+
+    def close(self, outcome: str, counts: dict[str, int | None] | None, model: object) -> None: ...
 
 
 def resident_key(case_id: str) -> str:
@@ -128,6 +140,7 @@ class AzureAdvisor:
         *,
         clock: Callable[[], float] = time.time,
         transport: Callable[[str, bytes, str], bytes] = _post,
+        meters: Mapping[str, Meter] | None = None,
     ) -> None:
         endpoint = endpoint.removesuffix("/")
         if not re.fullmatch(r"https://[a-z0-9][a-z0-9-]{0,62}\.openai\.azure\.com", endpoint):
@@ -137,6 +150,7 @@ class AzureAdvisor:
         )
         self.accounting, self.token = accounting, token
         self.clock, self.transport = clock, transport
+        self.meters = meters
 
     def answer_question(
         self, question: str, case: CaseProgress, resident: str, base: Advice
@@ -218,7 +232,7 @@ class AzureAdvisor:
             },
             ensure_ascii=True,
         ).encode("ascii")
-        selected = self._request(payload, resident)
+        selected = self._request(payload, resident, "question")
         if not isinstance(selected, dict) or set(selected) != {"answer", "sources"}:
             raise AssistantUnavailable("invalid_output")
         text, ids = selected["answer"], selected["sources"]
@@ -302,7 +316,7 @@ class AzureAdvisor:
             },
             ensure_ascii=True,
         ).encode("ascii")
-        selected = self._request(payload, resident)
+        selected = self._request(payload, resident, "guidance")
         if not isinstance(selected, dict) or set(selected) != {"guidance"}:
             raise AssistantUnavailable("invalid_output")
         ids = selected["guidance"]
@@ -331,16 +345,35 @@ class AzureAdvisor:
             label="AI suggestion, not approved",
         )
 
-    def _request(self, payload: bytes, resident: str) -> object:
+    def _request(self, payload: bytes, resident: str, kind: str = "guidance") -> object:
         if len(payload) > MAX_PAYLOAD or not re.fullmatch(r"[a-f0-9]{64}", resident):
             raise AssistantUnavailable("request_limit")
         reservation = self.accounting.reserve(resident)
         if reservation is None:
             raise AssistantUnavailable("usage_limit")
-        token = self.token()
+        meter = self.meters.get(kind) if self.meters is not None else None
+        acquire = self.token
+        if self.meters is not None:
+            # A kind without a meter is refused when a ledger is configured, never sent unmetered.
+            if meter is None or not meter.reserve(
+                RequestEnvelope(payload.decode("ascii"), MAX_OUTPUT)
+            ):
+                raise AssistantUnavailable("meter_held")
+            acquire = meter.token(self.token)
+        try:
+            token = acquire()
+        except ValueError:
+            raise AssistantUnavailable("credential_or_expiry") from None
         if not token or "\r" in token or "\n" in token or self.clock() >= EXPIRES:
             raise AssistantUnavailable("credential_or_expiry")
-        raw = self.transport(self.url, payload, token)
+        try:
+            raw = self.transport(self.url, payload, token)
+        except Exception as error:
+            self._close(
+                meter, "timeout" if isinstance(error, TimeoutError) else "provider-unavailable"
+            )
+            raise
+        self._close(meter, "returned", raw)
         if len(raw) > MAX_RESPONSE:
             raise AssistantUnavailable("reply_limit")
         body = json.loads(raw)
@@ -364,6 +397,23 @@ class AzureAdvisor:
             raise AssistantUnavailable("incomplete")
         result: object = json.loads(choice["message"]["content"])
         return result
+
+    @staticmethod
+    def _close(meter: Meter | None, outcome: str, raw: bytes | None = None) -> None:
+        # Counts and the returned model name only; a ledger failure never changes the outcome.
+        if meter is None:
+            return
+        body: object = None
+        if raw is not None and len(raw) <= MAX_RESPONSE:
+            try:
+                body = json.loads(raw)
+            except ValueError:
+                body = None
+        reply = body if isinstance(body, dict) else {}
+        try:
+            meter.close(outcome, valid_usage(reply.get("usage")), reply.get("model"))
+        except Exception:
+            LOG.warning("resident_assistant meter_close_failed")
 
 
 def configured_advisor(env: Mapping[str, str], connect: Callable[[], Any]) -> AzureAdvisor | None:

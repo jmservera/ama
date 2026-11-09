@@ -1,0 +1,30 @@
+{
+  "task_id": "issue-1231-r10-parent-alignment",
+  "task_slug": "issue-1231-r10-parent-alignment",
+  "parent_task": {"task_id": "issue-1231-r8-api-lint-wrap", "task_slug": "issue-1231-r8-api-lint-wrap"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-06/issue-1231-r10-parent-alignment-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-06/issue-1231-r10-parent-alignment-plan.md",
+    "details": ".copilot-tracking/details/2026-11-06/issue-1231-r10-parent-alignment-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-06/issue-1231-r10-parent-alignment-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-06/issue-1231-r10-parent-alignment-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-06/issue-1231-r10-parent-alignment-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Critique executed once: Pass with changes", "status": "applied", "evidence": "r10 critique"},
+    {"decision": "Review executed once, author-only; outcome Residual work", "status": "complete", "evidence": "r10 review"},
+    {"decision": "Merge a4d01c103 of d654634fc into the child; tree unchanged in src, infra, tools, workflows", "status": "complete", "evidence": "r10 changes"}
+  ],
+  "blockers": [
+    {"id": "full-gate", "summary": "Fresh FULL for the merged head, independent assessment and human approvals pending", "resolution": null}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator admits a nonqueued FULL for stack 1231 -> 79 -> 73"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Fresh FULL on the merged head", "rationale": "r9 receipt is not current", "evidence": "r10 review RV-001"},
+    {"rank": 2, "task": "Decide store.py ruff format finding", "rationale": "pre-existing, unflagged by FULL", "evidence": "r10 review RV-002"}
+  ]
+}

@@ -73,6 +73,38 @@ class ResidentReportTests(unittest.TestCase):
         )
 
 
+class SensorContextTests(unittest.TestCase):
+    def test_later_normal_signal_is_context_only(self) -> None:
+        reg = AftercareRegister()
+        cid = raised(reg)
+        before = {k: reg.concerns[cid][k] for k in ("investigation", "outcome", "remedy")}
+        rec = reg.add_sensor_context(cid, {"signal": "normal"})
+        self.assertEqual(rec["sensor_context"], {"signal": "normal"})
+        self.assertEqual({k: rec[k] for k in before}, before)
+        self.assertFalse(rec["dismissed_by_sensor"])
+        self.assertEqual(rec["history"][-1], {"event": "sensor_context_added"})
+        self.assertIn(cid, [r["id"] for r in reg.unresolved()])
+        self.assertNotIn("sensor_context", reg.view(cid))
+        reg.start_investigation(cid, OWNER, "2026-12-08")
+        reg.add_sensor_context(cid, {"signal": "normal"})
+        self.assertEqual(reg.concerns[cid]["investigation"], "under_investigation")
+
+    def test_context_text_is_guarded_and_typed(self) -> None:
+        reg = AftercareRegister()
+        cid = raised(reg)
+        with self.assertRaises(ValueError):
+            reg.add_sensor_context(cid, {"note": "Damp caused by the resident"})
+        with self.assertRaises(ValueError):
+            reg.add_sensor_context(cid, {})
+        with self.assertRaises(ValueError):
+            reg.add_sensor_context(cid, {"signal": 3})  # type: ignore[dict-item]
+        with self.assertRaises(ValueError):
+            raised(reg, sensor_context={"note": "Misuse of heating"})
+        with self.assertRaises(KeyError):
+            reg.add_sensor_context("AC-999", {"signal": "normal"})
+        self.assertIsNone(reg.concerns[cid]["sensor_context"])
+
+
 class ClosureTests(unittest.TestCase):
     def test_closure_cannot_erase_concern_or_remedy(self) -> None:
         reg = AftercareRegister()

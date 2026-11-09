@@ -5,6 +5,7 @@ status endpoint. Nothing here changes a ranking, the unsigned policy or any case
 """
 
 import copy
+import errno
 import os
 import threading
 import unittest
@@ -80,6 +81,65 @@ class PublicationWiring(QualityMatrix):
         self.assertTrue(self.store.verify_audit())
         self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
 
+    def test_unsupported_hard_links_are_a_storage_failure_not_an_authorization_one(self):
+        for number in (errno.EPERM, errno.ENOTSUP):
+            with self.subTest(errno=errno.errorcode[number]):
+                unsupported = OSError(number, "hard links unsupported")
+                with patch.object(os, "link", side_effect=unsupported):
+                    code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+                self.assertEqual(code, 503)
+                self.assertIn("hard links", body["error"])
+                self.assertIn("could not be confirmed", body["error"])
+                self.assertNotIn(self.archive(), body["error"])
+                self.assertEqual(os.listdir(self.archive()), [])
+                self.assertEqual(list(self.store.audit_entries()), [])
+        self.assertEqual(self.call("sam", "/api/ranking/publish", {})[0], 403)
+        self.assertEqual(self.call(PM_EMAIL, "/api/ranking/publish", {})[0], 200)
+
+    def test_stage_cleanup_failure_after_commit_is_audited_and_reported(self):
+        real = os.unlink
+
+        def unlink(path, *args, **kwargs):
+            if os.path.basename(path).startswith(".ranking-"):
+                raise OSError(errno.EROFS, "read-only")
+            real(path, *args, **kwargs)
+
+        with patch.object(os, "unlink", side_effect=unlink):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, body["written"]), (200, True))
+        self.assertIn("temporary file", body["warning"])
+        self.assertNotIn(self.archive(), body["warning"])
+        actions = [e["action"] for e in self.store.audit_entries()]
+        self.assertEqual(actions, ["ranking_snapshot_published"])
+        self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
+
+    def test_link_and_cleanup_failure_is_logged_and_path_free(self):
+        real = os.unlink
+
+        def unlink(path, *args, **kwargs):
+            if os.path.basename(path).startswith(".ranking-"):
+                raise OSError(errno.EROFS, "read-only")
+            real(path, *args, **kwargs)
+
+        os.makedirs(self.archive(), exist_ok=True)
+        foreign = os.path.join(self.archive(), "operator-note.txt")
+        with open(foreign, "w", encoding="utf-8") as f:
+            f.write("keep")
+        with (
+            patch.object(os, "link", side_effect=OSError(errno.EPERM, "no links")),
+            patch.object(os, "unlink", side_effect=unlink),
+            self.assertLogs("zava_forward.core.store", "WARNING") as logs,
+        ):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        stage = next(n for n in os.listdir(self.archive()) if n.endswith(".tmp"))
+        self.assertEqual(code, 503)
+        self.assertIn("temporary file could not be removed", body["error"])
+        self.assertNotIn(stage, body["error"])
+        self.assertNotIn(self.archive(), body["error"])
+        self.assertTrue(any(stage in line for line in logs.output))
+        self.assertTrue(os.path.exists(foreign))
+        self.assertEqual(list(self.store.audit_entries()), [])
+
     def test_edited_archive_is_reported_not_hidden(self):
         self.call(PM_EMAIL, "/api/ranking/publish", {})
         name = os.listdir(self.archive())[0]
@@ -90,6 +150,144 @@ class PublicationWiring(QualityMatrix):
             f.write(text.replace('"rank":1', '"rank":9', 1))
         status = self.call(PM_EMAIL, "/api/ranking/publication")[1]
         self.assertEqual(len(status["problems"]), 1)
+
+    def test_corrupt_final_file_is_refused_and_not_audited_as_already_published(self):
+        self.call(PM_EMAIL, "/api/ranking/publish", {})
+        path = os.path.join(self.archive(), os.listdir(self.archive())[0])
+        damaged = '{"published_on":"2026-01-01","snapshot":{}}'
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(damaged)
+        code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertGreaterEqual(code, 400, body)
+        with open(path, encoding="utf-8") as f:
+            self.assertEqual(f.read(), damaged)
+        actions = [e["action"] for e in self.store.audit_entries()]
+        self.assertEqual(actions, ["ranking_snapshot_published"])
+
+    def test_unsigned_policy_publication_is_recorded_in_audit_and_response(self):
+        code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, body["policy_signed"]), (200, False))
+        entry = list(self.store.audit_entries())[0]
+        self.assertIn("(unsigned)", entry["detail"])
+
+    def test_status_listing_error_is_a_structured_problem(self):
+        self.call(PM_EMAIL, "/api/ranking/publish", {})
+        with patch.object(os, "listdir", side_effect=PermissionError("denied")):
+            code, status = self.call(PM_EMAIL, "/api/ranking/publication")
+        self.assertEqual(code, 200)
+        self.assertEqual((status["count"], status["latest"], status["overdue"]), (0, None, True))
+        self.assertEqual(len(status["problems"]), 1)
+        self.assertIn("PermissionError", status["problems"][0])
+
+    def test_directory_sync_failure_after_link_is_audited_as_unconfirmed(self):
+        import stat
+
+        real = os.fsync
+
+        def failing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(5, "sync failed in /private/archive")
+            return real(fd)
+
+        with patch.object(os, "fsync", failing):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, body.get("outcome")), (409, "committed_unconfirmed"))
+        self.assertNotIn("/", body["error"])
+        self.assertNotIn("sync failed", body["error"])
+        self.assertEqual(len(os.listdir(self.archive())), 1)
+        self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
+        entries = list(self.store.audit_entries())
+        self.assertEqual(
+            [e["action"] for e in entries], ["ranking_snapshot_publication_unconfirmed"]
+        )
+        self.assertEqual(entries[0]["who"], "pam@example.test")
+        self.assertIn("unconfirmed", entries[0]["detail"])
+        self.assertIn("unsigned", entries[0]["detail"])
+        self.assertNotIn("/private", entries[0]["detail"])
+        self.assertTrue(self.store.verify_audit())
+
+    def test_audit_failure_after_unconfirmed_directory_sync_is_logged_and_surfaced(self):
+        import stat
+
+        real = os.fsync
+
+        def failing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(5, "sync failed")
+            return real(fd)
+
+        manager = {"email": PM_EMAIL, "role": "Retrofit Programme Manager"}
+        with (
+            patch.object(os, "fsync", failing),
+            patch.object(self.store, "audit", side_effect=OSError(28, "no space")),
+            self.assertLogs("zava_forward.core.store", level="ERROR") as logs,
+            self.assertRaises(OSError),
+        ):
+            self.store.publish_ranking_snapshot(manager)
+        self.assertIn("audit", logs.output[0])
+        self.assertEqual(len(os.listdir(self.archive())), 1)
+
+    def test_unconfirmed_sync_with_retained_stage_is_409_audited_logged_and_retry_confirms(self):
+        import stat
+
+        real_sync, real_unlink = os.fsync, os.unlink
+
+        def failing(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(errno.EIO, "sync failed in /private/archive")
+            return real_sync(fd)
+
+        def unlink(path, *args, **kwargs):
+            if os.path.basename(path).startswith(".ranking-"):
+                raise OSError(errno.EROFS, "read-only")
+            real_unlink(path, *args, **kwargs)
+
+        with (
+            patch.object(os, "fsync", failing),
+            patch.object(os, "unlink", side_effect=unlink),
+            self.assertLogs("zava_forward.core.store", "WARNING") as logs,
+        ):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        stage = next(n for n in os.listdir(self.archive()) if n.endswith(".tmp"))
+        self.assertEqual((code, body.get("outcome")), (409, "committed_unconfirmed"))
+        self.assertNotIn(stage, body["error"])
+        self.assertNotIn("/private", body["error"])
+        self.assertTrue(any(stage in line for line in logs.output))
+        self.assertEqual(
+            [e["action"] for e in self.store.audit_entries()],
+            ["ranking_snapshot_publication_unconfirmed"],
+        )
+        code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, body["written"]), (200, False))
+        self.assertEqual(
+            [e["action"] for e in self.store.audit_entries()][-1],
+            "ranking_snapshot_already_published",
+        )
+
+    def test_stage_cleanup_failure_still_audits_and_returns_unconfirmed_not_403(self):
+        import stat
+
+        real_fsync, real_unlink = os.fsync, os.unlink
+
+        def failing_fsync(fd):
+            if stat.S_ISDIR(os.fstat(fd).st_mode):
+                raise OSError(5, "sync failed")
+            return real_fsync(fd)
+
+        def failing_unlink(path, *a, **k):
+            if os.path.basename(path).startswith(".ranking-"):
+                raise PermissionError(13, "read-only /private/archive")
+            return real_unlink(path, *a, **k)
+
+        with patch.object(os, "fsync", failing_fsync), patch.object(os, "unlink", failing_unlink):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, body.get("outcome")), (409, "committed_unconfirmed"))
+        self.assertNotIn("/", body["error"])
+        self.assertNotIn("read-only", body["error"])
+        actions = [e["action"] for e in self.store.audit_entries()]
+        self.assertEqual(actions, ["ranking_snapshot_publication_unconfirmed"])
+        names = os.listdir(self.archive())
+        self.assertEqual(sum(n.startswith("ranking-") for n in names), 1)
 
     def test_publication_becomes_overdue_the_next_day(self):
         self.call(PM_EMAIL, "/api/ranking/publish", {})
