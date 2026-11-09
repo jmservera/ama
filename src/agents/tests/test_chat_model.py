@@ -50,7 +50,12 @@ class Ledger:
         self.hold("complete")
 
 
-def metered_model(ledger: Ledger | None, fail_transport: bool = False) -> tuple[ChatModel, Mock]:
+def metered_model(
+    ledger: Ledger | None,
+    fail_transport: bool = False,
+    guard: str | None = None,
+    token_error: bool = False,
+) -> tuple[ChatModel, Mock]:
     """The real core Ai behind the real adapter; only the transport is a counted stub."""
     ai = Ai()
     ai.endpoint = "https://synthetic.invalid"
@@ -66,9 +71,17 @@ def metered_model(ledger: Ledger | None, fail_transport: bool = False) -> tuple[
     )
     model = ChatModel(AgentWorker(foundry_provider(ai)), admission=lambda: None)
     patches = (
-        patch.object(ai, "_token", return_value="synthetic"),
+        patch.object(
+            ai,
+            "_token",
+            **(
+                dict(side_effect=OSError("PRIVATE-TOKEN"))
+                if token_error
+                else dict(return_value="synthetic")
+            ),
+        ),
         patch("urllib.request.urlopen", transport),
-        patch("zava_forward.core.ai.data_protection.dispatch_hold", return_value=None),
+        patch("zava_forward.core.ai.data_protection.dispatch_hold", return_value=guard),
     )
     for item in patches:
         item.start()
@@ -141,7 +154,8 @@ class ChatModelTests(unittest.TestCase):
                     with self.assertRaises(ModelUnavailable) as caught:
                         ChatModel(AgentWorker(provider), admission=admission)("s", "p")
                 self.assertEqual(provider.call_count, int(completion))
-                self.assertEqual(caught.exception.calls, int(completion and not disabled))
+                # A stub provider is unverified: one call is assumed.
+                self.assertEqual(caught.exception.calls, int(completion))
                 self.assertEqual(
                     caught.exception.usage, usage if completion and not disabled else None
                 )
@@ -192,13 +206,16 @@ class ChatModelTests(unittest.TestCase):
                 turns = [r for r in store.audit_entries() if r["action"] == "chat.turn"]
                 self.assertEqual(json.loads(turns[-1]["detail"]), receipt)
 
-    def test_hold_before_reservation_reports_zero_calls_like_the_transport(self) -> None:
-        for label, ledger in (
-            ("meter missing", None),
-            ("reserve held", Ledger(reserve="authority-unknown")),
+    def test_every_pre_dispatch_exit_reports_the_zero_transport_count(self) -> None:
+        for label, ledger, options in (
+            ("meter missing", None, {}),
+            ("reserve held", Ledger(reserve="authority-unknown"), {}),
+            ("check held after reservation", Ledger(check="liability-unknown"), {}),
+            ("prompt-output guard denial", Ledger(), dict(guard="held")),
+            ("token failure after reservation", Ledger(), dict(token_error=True)),
         ):
             with self.subTest(label), self.assertRaises(ModelUnavailable) as caught:
-                model, transport = metered_model(ledger)
+                model, transport = metered_model(ledger, **options)
                 try:
                     model("s", "p")
                 finally:
@@ -206,6 +223,12 @@ class ChatModelTests(unittest.TestCase):
             self.assertEqual((caught.exception.calls, caught.exception.usage), (0, None))
             self.assertEqual(caught.exception.outcome, "provider-unavailable")
             self.assertNotIn("PRIVATE", str(caught.exception))
+
+    def test_real_input_refusal_is_zero_calls(self) -> None:
+        model, transport = metered_model(Ledger())
+        with self.assertRaises(ModelUnavailable) as caught:
+            model("s", "x" * 200_000)
+        self.assertEqual((transport.call_count, caught.exception.calls), (0, 0))
 
     def test_hold_after_transport_keeps_the_actual_attempt_count(self) -> None:
         for label, fail in (("response then hold", False), ("failure then hold", True)):
@@ -218,13 +241,6 @@ class ChatModelTests(unittest.TestCase):
             self.assertEqual(caught.exception.calls, 1)
             self.assertNotIn("PRIVATE", str(caught.exception))
 
-    def test_reserved_hold_before_transport_is_counted_conservatively(self) -> None:
-        # The envelope cannot tell this hold from a later failure; never under-report an attempt.
-        model, transport = metered_model(Ledger(check="liability-unknown"))
-        with self.assertRaises(ModelUnavailable) as caught:
-            model("s", "p")
-        self.assertEqual((transport.call_count, caught.exception.calls), (0, 1))
-
     def test_provider_failure_still_counts_the_attempt(self) -> None:
         model, transport = metered_model(Ledger(), fail_transport=True)
         with self.assertRaises(ModelUnavailable) as caught:
@@ -232,19 +248,22 @@ class ChatModelTests(unittest.TestCase):
         self.assertEqual((transport.call_count, caught.exception.calls), (1, 1))
         self.assertNotIn("PRIVATE", str(caught.exception))
 
-    def test_input_refusal_is_a_pre_call_outcome(self) -> None:
-        model = ChatModel(
-            worker(dict(outcome="input-refused", text=None, reason="input-too-large")),
-            admission=lambda: None,
-        )
-        with self.assertRaises(ModelUnavailable) as caught:
+    def test_a_provider_that_is_not_core_ai_is_an_explicit_unverified_count(self) -> None:
+        spoofed = dict(outcome="disabled", text=None, usage=None, meter_id=None, dispatches=0)
+        model = ChatModel(worker(spoofed), admission=lambda: None)
+        with (
+            self.assertLogs("zava_forward.agents.chat", level="WARNING") as logs,
+            self.assertRaises(ModelUnavailable) as caught,
+        ):
             model("s", "p")
-        self.assertEqual(caught.exception.calls, 0)
+        self.assertEqual(caught.exception.calls, 1)
+        self.assertIn("unverified", " ".join(logs.output))
 
     def test_panel_receipt_and_audit_match_the_transport_for_financial_holds(self) -> None:
         for label, ledger, expected in (
             ("meter missing", None, 0),
             ("reserve held", Ledger(reserve="authority-unknown"), 0),
+            ("check held after reservation", Ledger(check="liability-unknown"), 0),
             ("hold after transport", Ledger(complete="meter-capacity-reached"), 1),
         ):
             with self.subTest(label), tempfile.TemporaryDirectory() as work:
