@@ -1326,7 +1326,7 @@
             "path": "src/api/README.md",
             "line": 707,
             "anchor": "## Employee chat with bounded skills",
-            "sha256": "70c0098c6e6c6c1c314b19e74945cec3939dc658a7a861fd5e5b944ec24f1549",
+            "sha256": "d3e815ae45704ac2860eccff072ebb9dcaeebcd697f4d83b1944865b02e980cc",
             "classification": "One selected skill and bounded call; no tools or case writes"
           }
         ]
@@ -1373,7 +1373,7 @@
             "path": "src/api/README.md",
             "line": 707,
             "anchor": "## Employee chat with bounded skills",
-            "sha256": "70c0098c6e6c6c1c314b19e74945cec3939dc658a7a861fd5e5b944ec24f1549",
+            "sha256": "d3e815ae45704ac2860eccff072ebb9dcaeebcd697f4d83b1944865b02e980cc",
             "classification": "One selected skill and bounded call; no tools or case writes"
           }
         ],
@@ -1430,7 +1430,7 @@
             "path": "src/api/README.md",
             "line": 707,
             "anchor": "## Employee chat with bounded skills",
-            "sha256": "70c0098c6e6c6c1c314b19e74945cec3939dc658a7a861fd5e5b944ec24f1549",
+            "sha256": "d3e815ae45704ac2860eccff072ebb9dcaeebcd697f4d83b1944865b02e980cc",
             "classification": "One selected skill and bounded call; no tools or case writes"
           }
         ],
@@ -1905,7 +1905,7 @@
             "path": "src/api/README.md",
             "line": 707,
             "anchor": "## Employee chat with bounded skills",
-            "sha256": "70c0098c6e6c6c1c314b19e74945cec3939dc658a7a861fd5e5b944ec24f1549",
+            "sha256": "d3e815ae45704ac2860eccff072ebb9dcaeebcd697f4d83b1944865b02e980cc",
             "classification": "One selected skill and bounded call; no tools or case writes"
           }
         ]
@@ -1966,9 +1966,9 @@
           {
             "key": "analysis",
             "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
-            "line": 19,
+            "line": 21,
             "anchor": "def analyse_retained(",
-            "sha256": "0df86bac578f80af30579f7936978de19269a03eed8442a06c32fe4f3f7bba71",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
             "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
           },
           {
@@ -2029,7 +2029,7 @@
             "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
             "line": 31,
             "anchor": "## Bounded streaming engineering",
-            "sha256": "77d7645e42dd4e75e17f8f67acdfb4c5554a324198b20b92d6801f45315d4ee4",
+            "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
             "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
           }
         ]
@@ -2068,7 +2068,7 @@
             "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
             "line": 31,
             "anchor": "## Bounded streaming engineering",
-            "sha256": "77d7645e42dd4e75e17f8f67acdfb4c5554a324198b20b92d6801f45315d4ee4",
+            "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
             "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
           }
         ],
@@ -2117,7 +2117,7 @@
             "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
             "line": 31,
             "anchor": "## Bounded streaming engineering",
-            "sha256": "77d7645e42dd4e75e17f8f67acdfb4c5554a324198b20b92d6801f45315d4ee4",
+            "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
             "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
           }
         ],
@@ -2501,17 +2501,17 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 196,
+            "line": 219,
             "anchor": "class SensorConsumer:",
-            "sha256": "44300de5b01040f848448904bcffe1c337122857c4f3c08489825332bce9efd8",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
             "key": "analysis",
             "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
-            "line": 19,
+            "line": 21,
             "anchor": "def analyse_retained(",
-            "sha256": "0df86bac578f80af30579f7936978de19269a03eed8442a06c32fe4f3f7bba71",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
             "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
           },
           {
@@ -2564,17 +2564,17 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 196,
+            "line": 219,
             "anchor": "class SensorConsumer:",
-            "sha256": "44300de5b01040f848448904bcffe1c337122857c4f3c08489825332bce9efd8",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
             "key": "analysis",
             "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
-            "line": 19,
+            "line": 21,
             "anchor": "def analyse_retained(",
-            "sha256": "0df86bac578f80af30579f7936978de19269a03eed8442a06c32fe4f3f7bba71",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
             "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
           },
           {
@@ -2637,17 +2637,17 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 196,
+            "line": 219,
             "anchor": "class SensorConsumer:",
-            "sha256": "44300de5b01040f848448904bcffe1c337122857c4f3c08489825332bce9efd8",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
             "key": "analysis",
             "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
-            "line": 19,
+            "line": 21,
             "anchor": "def analyse_retained(",
-            "sha256": "0df86bac578f80af30579f7936978de19269a03eed8442a06c32fe4f3f7bba71",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
             "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
           },
           {
@@ -2707,9 +2707,9 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 196,
+            "line": 219,
             "anchor": "class SensorConsumer:",
-            "sha256": "44300de5b01040f848448904bcffe1c337122857c4f3c08489825332bce9efd8",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
@@ -2762,9 +2762,9 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 196,
+            "line": 219,
             "anchor": "class SensorConsumer:",
-            "sha256": "44300de5b01040f848448904bcffe1c337122857c4f3c08489825332bce9efd8",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
@@ -2827,9 +2827,9 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 196,
+            "line": 219,
             "anchor": "class SensorConsumer:",
-            "sha256": "44300de5b01040f848448904bcffe1c337122857c4f3c08489825332bce9efd8",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
@@ -3081,17 +3081,17 @@
           {
             "key": "consumer",
             "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-            "line": 196,
+            "line": 219,
             "anchor": "class SensorConsumer:",
-            "sha256": "44300de5b01040f848448904bcffe1c337122857c4f3c08489825332bce9efd8",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
             "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
           },
           {
             "key": "analysis",
             "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
-            "line": 19,
+            "line": 21,
             "anchor": "def analyse_retained(",
-            "sha256": "0df86bac578f80af30579f7936978de19269a03eed8442a06c32fe4f3f7bba71",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
             "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
           }
         ]
@@ -3152,9 +3152,9 @@
           {
             "key": "analysis",
             "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
-            "line": 19,
+            "line": 21,
             "anchor": "def analyse_retained(",
-            "sha256": "0df86bac578f80af30579f7936978de19269a03eed8442a06c32fe4f3f7bba71",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
             "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
           },
           {
@@ -3299,7 +3299,7 @@
         "path": "src/api/README.md",
         "line": 707,
         "anchor": "## Employee chat with bounded skills",
-        "sha256": "70c0098c6e6c6c1c314b19e74945cec3939dc658a7a861fd5e5b944ec24f1549",
+        "sha256": "d3e815ae45704ac2860eccff072ebb9dcaeebcd697f4d83b1944865b02e980cc",
         "classification": "One selected skill and bounded call; no tools or case writes"
       },
       "files": {
@@ -3313,7 +3313,7 @@
         "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
         "line": 31,
         "anchor": "## Bounded streaming engineering",
-        "sha256": "77d7645e42dd4e75e17f8f67acdfb4c5554a324198b20b92d6801f45315d4ee4",
+        "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
         "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
       },
       "intake": {
@@ -3325,16 +3325,16 @@
       },
       "consumer": {
         "path": "src/core/src/zava_forward/core/sensor_consumer.py",
-        "line": 196,
+        "line": 219,
         "anchor": "class SensorConsumer:",
-        "sha256": "44300de5b01040f848448904bcffe1c337122857c4f3c08489825332bce9efd8",
+        "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
         "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
       },
       "analysis": {
         "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
-        "line": 19,
+        "line": 21,
         "anchor": "def analyse_retained(",
-        "sha256": "0df86bac578f80af30579f7936978de19269a03eed8442a06c32fe4f3f7bba71",
+        "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
         "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
       },
       "averages": {
@@ -3481,7 +3481,7 @@
         "path": "infra/live-simulator-job.bicep",
         "line": 18,
         "anchor": "@description('Owner approval reference for sending synthetic readings to the hub. Empty refuses the deployment.')",
-        "sha256": "5344ae9a5fadae2d80302ae8b0fe02fcbac35f06f9599861f4f2783fd3994893",
+        "sha256": "0847c5c1259d2e3414dc9950d9c32201f905948d43ebc1111b8bd494f2597b50",
         "classification": "Conditional synthetic job and referenced existing certificate mount; not provisioned by main"
       }
     }

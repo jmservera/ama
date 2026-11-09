@@ -40,7 +40,7 @@
     "candidate_sha256": "949e207731707bad194ab3eafb350fd7e0ee2d9ab0ce7d0adb35cbb472fa7fca",
     "baseline_sha256": "2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8",
     "manifest_sha256": "705875492c163e24b5106b5b94dc2ac71626f81a96b99200bbb1cf79889400cd",
-    "asset_catalog_sha256": "d2545166301639b0c7980c68100a52454b0cf35bd4d49a5b4506d563ebdcb050",
+    "asset_catalog_sha256": "4f4d404d4387f4e9c551906ce679ca223db5896fe2eb17ff7f5dd868a4d5986b",
     "builder_sha256": "99ac3da7385b4a05e5f12bbe246e7d923e19eedebec34b987a1df493b4b04cd4",
     "native_helper_sha256": "69269277dc7bafa9786414fd013648bb4c4ee9c756b52545c3af2e24a0004068"
   },
