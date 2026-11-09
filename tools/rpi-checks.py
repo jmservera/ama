@@ -180,6 +180,34 @@ SQL_CHAT_REQUIRED_TESTS = (
         "test_synthetic_price_still_holds_a_live_call_outside_the_demo",
     ),
 )
+# Retained sensor analysis on the owned SQL Server: its own flag, run after SQL_SELECTORS.
+SENSOR_MSSQL_SELECTOR = "test_sensor_analysis_mssql"
+SENSOR_MSSQL_FLAG = "ZF_SENSOR_MSSQL"
+SENSOR_MSSQL_SKIP_REASON = "requires ZF_SENSOR_MSSQL=1"
+SENSOR_MSSQL_REQUIRED_TESTS = _sql_tests(
+    SENSOR_MSSQL_SELECTOR,
+    "MssqlRetainedAnalysisTests",
+    "test_any_declined_control_wins",
+    "test_declined_unknown_and_unmapped_consent_fail_closed",
+    "test_matches_pure_derivation_over_retained_rows_and_is_reproducible",
+    "test_read_only_and_no_task_without_approved_rule",
+    "test_reopened_store_reproduces_signal_without_writes",
+    "test_stale_and_missing_readings_are_insufficient",
+    "test_unmapped_or_invalid_home_is_insufficient",
+    "test_unreadable_store_is_insufficient_with_no_priority_effect",
+)
+# Opt-in discovery skips tolerated only in project-core; the SQL group must run them instead.
+SENSOR_MSSQL_DISCOVERY_SKIPS = frozenset(
+    (name, SENSOR_MSSQL_SKIP_REASON) for name in SENSOR_MSSQL_REQUIRED_TESTS
+)
+# Direct or exercised sensor MSSQL suite dependencies no path keyword selects (not transitive).
+SENSOR_MSSQL_DIRECT_DEPENDENCIES = frozenset(
+    (
+        "src/core/tests/dataset.py",
+        "src/core/src/zava_forward/core/synthetic/__init__.py",
+        "src/core/src/zava_forward/core/synthetic/indoor_projection.py",
+    )
+)
 SQL_NOT_APPLICABLE = {
     (
         "test_json_postsave_audit_failure_reports_persisted_uncertainty "
@@ -647,7 +675,7 @@ SKIP_REASONS = {
     "infra": "no path under infra/ or its tests changed",
     "migration": "no path forced the full matrix",
     "browser": "no src/api web or checks path changed",
-    "mssql": "no store, schema, SQL or SQL dependency path changed",
+    "mssql": "no store, schema, SQL, core sensor or SQL dependency path changed",
     "logo-0600": "no consumer runtime, build or dependency path of the API image changed",
 }
 
@@ -723,7 +751,11 @@ def changed_groups(paths: list[str], extras: list[str]) -> list[str]:
                 "requirements" in path.lower() or parts[2] == "pyproject.toml"
             ):
                 selected.add("mssql")
-            if any(word in path.lower() for word in ("store", "schema", "sql", "assistants")):
+            if (
+                any(word in path.lower() for word in ("store", "schema", "sql", "assistants"))
+                or (project == "core" and "sensor" in path.lower())
+                or path in SENSOR_MSSQL_DIRECT_DEPENDENCIES
+            ):
                 selected.add("mssql")
         else:
             return required_groups(extras)
@@ -1246,6 +1278,14 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         integration=True,
         timeout=1800,
     )
+    add(
+        [python, "-m", "unittest", "-v", SENSOR_MSSQL_SELECTOR],
+        "src/api",
+        env={**sqlenv, SENSOR_MSSQL_FLAG: "1"},
+        suite=True,
+        integration=True,
+        timeout=1800,
+    )
     add(["docker", "rm", "-f", sql["container"]])
     for name in (*[f"image-{p}" for p in IMAGES], "logo-0600"):
         if name not in groups:
@@ -1405,7 +1445,9 @@ def verify_commands(root: Path, out: Path, receipt: dict[str, Any]) -> None:
                     integration=check["integration"],
                     group=check["group"],
                     expected_count=(
-                        3 if EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"] else None
+                        3
+                        if EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"]
+                        else required_sql_count(check["argv"])
                     ),
                     expected_test=(
                         CHAT_PANEL_DISCOVERY_SKIP[0]
@@ -1549,7 +1591,14 @@ def _required_tests_passed(text: str, expected: tuple[str, ...]) -> bool:
 
 
 def required_sql_tests(argv: list[str]) -> tuple[str, ...] | None:
+    if argv[-1:] == [SENSOR_MSSQL_SELECTOR]:
+        return SENSOR_MSSQL_REQUIRED_TESTS
     return SQL_CHAT_REQUIRED_TESTS if argv[-len(SQL_SELECTORS) :] == list(SQL_SELECTORS) else None
+
+
+def required_sql_count(argv: list[str]) -> int | None:
+    """The retained sensor suite must run exactly its pinned tests, with zero skips."""
+    return len(SENSOR_MSSQL_REQUIRED_TESTS) if argv[-1:] == [SENSOR_MSSQL_SELECTOR] else None
 
 
 def check_employee_chat_log(output: str) -> None:
@@ -1594,6 +1643,11 @@ def check_skips(
         integration and any((s["test"], s["reason"]) not in SQL_NOT_APPLICABLE for s in skips)
     ) or any(
         s["reason"] not in EXPECTED_SKIP_REASONS
+        and not (
+            group == "project-core"
+            and (s["test"], s["reason"]) in SENSOR_MSSQL_DISCOVERY_SKIPS
+            and not integration
+        )
         or (
             s["reason"] == CHAT_PANEL_DISCOVERY_SKIP[1]
             and (group != "project-api" or (s["test"], s["reason"]) != CHAT_PANEL_DISCOVERY_SKIP)
@@ -1873,7 +1927,11 @@ class Runner:
                     output,
                     integration=integration,
                     group=self.group,
-                    expected_count=(3 if EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in argv else None),
+                    expected_count=(
+                        3
+                        if EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in argv
+                        else required_sql_count(argv)
+                    ),
                     expected_test=(
                         CHAT_PANEL_DISCOVERY_SKIP[0]
                         if CHAT_PANEL_BROWSER_SELECTOR in argv
@@ -2510,6 +2568,14 @@ class Runner:
                 [py, "-m", "unittest", "-v", *SQL_SELECTORS],
                 "src/api",
                 env=sqlenv,
+                suite=True,
+                integration=True,
+                timeout=1800,
+            )
+            self.command(
+                [py, "-m", "unittest", "-v", SENSOR_MSSQL_SELECTOR],
+                "src/api",
+                env={**sqlenv, SENSOR_MSSQL_FLAG: "1"},
                 suite=True,
                 integration=True,
                 timeout=1800,
