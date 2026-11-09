@@ -1,0 +1,1 @@
+cd src/api && HOME=/tmp/ama-1292-scratch ZF_DATA=/tmp/ama-1292-scratch/none.json PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:../core/src:../agents/src:../core/tests:../agents/tests timeout 500 python3 -m unittest discover -s tests -k priority -q  (second attempt; first omitted agents/src, exit 1, see api-priority.*)

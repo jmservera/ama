@@ -1,0 +1,34 @@
+unformatted: File would be reformatted
+   --> tests/sqlguard.py:96:42
+   |
+95 |     try:
+   -         started = datetime.fromisoformat(re.sub(r"(\.\d{6})\d*Z$", r"\1+00:00", str(info["Created"])))
+96 +         started = datetime.fromisoformat(
+97 +             re.sub(r"(\.\d{6})\d*Z$", r"\1+00:00", str(info["Created"]))
+98 +         )
+99 |         age = time.time() - started.timestamp()
+   |
+
+unformatted: File would be reformatted
+   --> tests/test_priority_order.py:910:31
+    |
+909 |         user = self.sam["email"]
+    -         accepted = json.dumps(dict(self.template, id="mmm000000002", created=SECOND, status="Accepted"))
+910 +         accepted = json.dumps(
+911 +             dict(self.template, id="mmm000000002", created=SECOND, status="Accepted")
+912 +         )
+913 |         self.make_legacy(
+--------------------------------------------------------------------------------
+959 |         store.local.pending.append(
+    -             (self.sam["email"], "ai_run_end", "-", "priority_recommendation bbb000000007 n=5", SECOND)
+960 +             (
+961 +                 self.sam["email"],
+962 +                 "ai_run_end",
+963 +                 "-",
+964 +                 "priority_recommendation bbb000000007 n=5",
+965 +                 SECOND,
+966 +             )
+967 |         )
+    |
+
+2 files would be reformatted

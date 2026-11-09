@@ -1,0 +1,2 @@
+tests/test_priority_order.py:739: error: Need type annotation for "seen" (hint: "seen: list[<type>] = ...")  [var-annotated]
+Found 1 error in 1 file (checked 271 source files)
