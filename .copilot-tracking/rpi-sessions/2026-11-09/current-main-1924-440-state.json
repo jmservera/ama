@@ -1,0 +1,40 @@
+{
+  "task_id": "440-current-main-1924",
+  "task_slug": "current-main-1924-440",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-current-main-1924-440-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-current-main-1924-440-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-current-main-1924-440-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-current-main-1924-440-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "New isolated evidence-only checkpoint on merged main 2be660e9; demo-targeted tier; no source fix, new test, SQL rerun or blanket gate",
+      "status": "done",
+      "evidence": "coordinator brief brief-440-current-main-1924.md"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-09-current-main-1924-440-research.md"
+    },
+    {
+      "decision": "Critique executed once (separate rubber-duck agent), verdict Revise, PC-001 to PC-004 applied; no second critique",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-09-current-main-1924-440-critique.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Run sanitized checks A1 to A3, write changes record, append pack section, index and log"
+  },
+  "prioritized_follow_ups": null
+}
