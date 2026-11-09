@@ -11255,3 +11255,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#lifecycle-and-simulator-controls-current-main-checkpoint-2026-11-09-refs-440-81-189-954-1292) for `main` `48350983` covering merged PRs 1240, 1313, 1315, 1317 and 1318 (issues #81, #189, #954, #1292), with an index sentence. Runtime source equivalence to the 189 and 954 browser runs is shown by tree identity and a 642-file manifest; document identities are compared; PR 1320 and #159 are excluded.
 * No new defect or refactoring confirmed. Not claimed: approval, closure, live budget alert, SQL, model or assistive-technology evidence, hosted CI or independent review of this commit, or satisfaction of the earlier lifecycle-wave trigger. Earlier entries unchanged.
+
+## [2026-11-09] update | SQL wave checkpoint comparison count qualification (Refs #1314 #440)
+
+* Appended a dated [comparison count qualification](../architecture/cutover-evidence-pack.md#comparison-count-qualification-2026-11-09-refs-1314-440) to the cut-over evidence pack and one sentence to the index entry of the SQL-wave checkpoint. It restates, from pinned Git ranges, the final C2 comparison against `ef28d4da4` (17 paths, 700 additions, 0 deletions; the 15-path figure is an intermediate tree and the index re-wrap belongs to the `06f408dd7` comparison), the composition of the current-main preparation additions, and the limit of the byte-prefix wording.
+* Not claimed: a SQL fix, new live, SQL, browser or model evidence, closure of #1314, #440 or #81, a third #440 correction cycle or budget renewal, independent exact-head review, hosted CI or approval. Original records unchanged; earlier entries unchanged.
