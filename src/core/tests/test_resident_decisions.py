@@ -3545,9 +3545,13 @@ class JsonResidentDecisions(unittest.TestCase):
             resident_decisions.ResidentDecisionMixin,
             "_res_service_forward_outcome",
             side_effect=RuntimeError("SYN outcome save failed"),
-        ):
-            with self.assertRaises(resident_decisions.ResidentCommittedError):
-                self.forward()
+        ) as handler:
+            with self.assertLogs(resident_decisions.__name__, "WARNING") as logged:
+                with self.assertRaises(resident_decisions.ResidentCommittedError):
+                    self.forward()
+        self.assertEqual(handler.call_count, 2)
+        self.assertEqual(len(receiver.envelopes), 1)
+        self.assertIn("'SYN-RCPT-1'", "\n".join(logged.output))
         self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
         reopened = self.open_store().cases["ZF-1"]["service_requests"][0]
         self.assertEqual(reopened["formal_route"]["attempts"][0]["status"], "Pending")
@@ -3560,6 +3564,75 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(
             receiver.envelopes[0]["idempotency_key"], receiver.envelopes[1]["idempotency_key"]
         )
+
+    @contextmanager
+    def outcome_save_fault(self, *, committed: bool) -> Iterator[list[int]]:
+        """Fail the first outcome save only; a committed fault loses just its acknowledgement."""
+        real = self.store.save
+        calls: list[int] = []
+
+        def save() -> None:
+            outcome = (self.route().get("attempts") or [{}])[-1].get("status") == "Acknowledged"
+            if not outcome or calls:
+                real()
+                return
+            calls.append(1)
+            if committed:
+                real()
+                holder: Any = getattr(self.store, "local", self.store)
+                holder.resident_validation["persisted"] = False
+            raise RuntimeError("SYN outcome save failed")
+
+        with patch.object(self.store, "save", save):
+            yield calls
+
+    def check_outcome_write_retried_once(self, *, committed: bool) -> None:
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.request()
+        found: list[bool] = []
+        check = resident_decisions._outcome_recorded
+
+        def spy(*args: Any) -> bool:
+            found.append(check(*args))
+            return found[-1]
+
+        with patch.object(resident_decisions, "_outcome_recorded", spy):
+            with self.outcome_save_fault(committed=committed) as calls:
+                self.forward()
+        self.assertEqual(calls, [1])
+        # SQL reconciles a committed outcome; JSON restores the pre-image and its retry rewrites it.
+        self.assertEqual(found, [committed and hasattr(self.store, "db")])
+        self.assertEqual(len(receiver.envelopes), 1)
+        attempts = self.route()["attempts"]
+        self.assertEqual([a["status"] for a in attempts], ["Acknowledged"])
+        self.assertEqual(attempts[0]["receipt_ref"], "SYN-RCPT-1")
+        reopened = self.open_store().cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(reopened["formal_route"]["attempts"], attempts)
+
+    def test_forward_failed_outcome_write_is_retried_once_without_resending(self) -> None:
+        self.check_outcome_write_retried_once(committed=False)
+
+    def test_forward_lost_commit_acknowledgement_is_reconciled_without_duplicate(self) -> None:
+        self.check_outcome_write_retried_once(committed=True)
+
+    def test_forward_unverified_recovery_is_not_retried_and_logs_the_receipt(self) -> None:
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.request()
+        failure = RuntimeError("SYN outcome save failed")
+        failure.add_note("Resident record recovery failed; reload to establish the outcome.")
+        with patch.object(
+            resident_decisions.ResidentDecisionMixin,
+            "_res_service_forward_outcome",
+            side_effect=failure,
+        ) as handler:
+            with self.assertLogs(resident_decisions.__name__, "WARNING") as logged:
+                with self.assertRaises(resident_decisions.ResidentCommittedError):
+                    self.forward()
+        self.assertEqual(handler.call_count, 1)
+        self.assertEqual(len(receiver.envelopes), 1)
+        self.assertIn("'SYN-RCPT-1'", "\n".join(logged.output))
 
     def test_forward_retention_deletion_clears_resident_reference_only(self) -> None:
         self.store.complaints_receiver = SyntheticReceiver("ack")
