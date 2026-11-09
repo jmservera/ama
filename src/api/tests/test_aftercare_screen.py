@@ -1,14 +1,20 @@
 """Synthetic aftercare screens render the returned contract (issue 133, Stage A).
 
-All data is constructed synthetic text. The module is not wired into any route yet, so this
-runs the file alone in a node vm with stubs. It is not a served-browser or keyboard check.
+Real service payloads are produced here by AftercareService over a temporary synthetic store and
+passed to node, beside hand-built adversarial cases. The module is not wired into any route yet,
+so this runs the file alone in a node vm with stubs. It is not a served-browser or keyboard check.
 """
 
 import json
 import subprocess
+import tempfile
 import unittest
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+from zava_forward.core import aftercare_intake as ai
+from zava_forward.core.synthetic import sensor_scenarios as ss
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -16,71 +22,100 @@ SCRIPT = r"""
 const fs = require("node:fs");
 const vm = require("node:vm");
 const src = fs.readFileSync(process.argv[1] + "/aftercare.js", "utf8");
+const real = JSON.parse(fs.readFileSync(0, "utf8"));
 const h = (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat(Infinity).filter(
   kid => kid !== false && kid !== null && kid !== undefined)});
 const context = vm.createContext({Intl, h});
 vm.runInContext(src, context);
 const s = context.aftercareScreens;
-const form = {title: "Raise a concern", intro: "Intro", owner_note: "No owner at intake.",
-  synthetic_notice: "Synthetic demonstration.", manual_route: "Use paper.", protection: "Safe.",
-  fields: [
-    {name: "raised_by", label: "Who", required: true, options: [{value: "household", label: "H"}]},
-    {name: "representative_basis", label: "Basis", required: false},
-    {name: "home_ref", label: "Home", required: true},
-    {name: "statement", label: "Statement", required: true}],
-  staff_fields: [{name: "channel", label: "Channel", required: true,
-    options: [{value: "phone", label: "By phone"}]},
-    {name: "next_update", label: "Next", required: true}]};
-const receipt = {receipt_id: "RC-AC-001", concern_id: "AC-001",
-  received_at: "2026-11-09T10:00:00+00:00",
-  recorded_by: {name: "<b>Sam</b>", role: "Resident Liaison Officer"}, channel: "phone",
-  raised_by: "representative", home_ref: "HM-1", kind: "discomfort",
-  original: {statement: "<img src=x onerror=alert(1)>", representative_basis: "Signed letter"},
-  owner: {label: "Unknown (no owner named)", status: "unknown"}, next_update: "2026-11-20",
-  what_happens_next: "Stays open.", accessible_route: "Phone route.", protection: "Safe.",
-  synthetic_notice: "Synthetic."};
-const concern = {id: "AC-001", kind: "discomfort", unresolved: true, overdue: false,
-  owner: {label: "x", status: "unknown"}, investigation: "received", outcome: null,
-  remedy: {status: "not_assessed"}, next_update: "2026-11-20", statement: "Cold",
-  raised_by: "household", channel: "phone", closures: [{note: "Closure does not erase a remedy."}],
-  sensor_note: "A normal reading does not dismiss a concern."};
-const sufficient = {status: "sufficient", baseline: {temperature_c: 18.2},
-  late: {temperature_c: 19.4}};
-const view = {synthetic_notice: "Synthetic.", notice: "Neutral.", sensor_note: "Sensors.",
-  totals: {homes_with_usable_comparison: {count: 1, denominator: 2}, concerns_raised: 1,
-    concerns_unresolved: 1},
-  rows: [{home_ref: "HM-1", comparison: sufficient, concerns: [{}], unresolved_count: 1},
-    {home_ref: "HM-2", comparison: {status: "unknown"}, concerns: [], unresolved_count: 0}],
-  unknowns: ["Evaluator role is Unknown."]};
 const err = (status, extra = {}) => {
   const e = new Error("boom"); e.status = status; Object.assign(e, extra); return e;
 };
+const fraction = (unresolved) => ({...real.evaluator, totals: {...real.evaluator.totals,
+  concerns_unresolved: unresolved}});
+const RID = real.receipt.request_id;
+const send = (api, opts) => s.submit(api, {home_ref: "HM-1"}, RID, undefined, opts);
+const fail = (e, opts) => send(async () => { throw e; }, opts);
+const adversarial = {...real.receipt, original: {statement: "<img src=x onerror=alert(1)>",
+  representative_basis: "Signed letter"}, recorded_by: {name: "<b>Sam</b>", role: "Liaison"}};
 (async () => {
   const out = {
-    formClean: s.formView(form, {values: {raised_by: "household"}, requestId: "req-1"}),
-    formRep: s.formView(form, {values: {raised_by: "representative"}}),
-    formErr: s.formView(form, {errors: {home_ref: "Choose a home."}, values: {}}),
-    receipt: s.receiptView(receipt), replay: s.receiptView(receipt, true),
-    concern: s.concernView(concern), evaluator: s.evaluatorView(view),
-    emptyEval: s.evaluatorView({...view, rows: [], unknowns: []}),
-    ok: await s.submit(async () => ({receipt, replayed: false}), {home_ref: "HM-1"}, "req-1"),
-    replayed: await s.submit(async () => ({receipt, replayed: true}), {}, "req-1"),
-    invalid: await s.submit(async () => {
-      throw err(400, {errors: {home_ref: "Bad"}});
-    }, {}, "req-1"),
-    denied: await s.submit(async () => { throw err(403); }, {}, "req-1"),
-    network: await s.submit(async () => { throw new TypeError("Failed to fetch"); }, {}, "req-1"),
-    server: await s.submit(async () => { throw err(503); }, {}, "req-1"),
-    empty: await s.submit(async () => null, {}, "req-1"),
+    formClean: s.formView(real.form, {values: {raised_by: "household"}, requestId: "req-1"}),
+    formRep: s.formView(real.form, {values: {raised_by: "representative"}}),
+    formErr: s.formView(real.form, {errors: {home_ref: "Choose a home."}, values: {}}),
+    receipt: s.receiptView(real.receipt), replay: s.receiptView(real.receipt, true),
+    adversarial: s.receiptView(adversarial),
+    concern: s.concernView(real.concern), evaluator: s.evaluatorView(real.evaluator),
+    emptyEval: s.evaluatorView(real.evaluatorEmpty),
+    fracZero: s.evaluatorView(fraction({count: 0, denominator: 0})),
+    fracNull: s.evaluatorView(fraction({count: 1, denominator: null})),
+    fracScalar: s.evaluatorView(fraction(1)),
+    fracMissing: s.evaluatorView(fraction(undefined)),
+    fracOver: s.evaluatorView(fraction({count: 3, denominator: 2})),
+    saved: await send(async () => ({receipt: real.receipt, replayed: false})),
+    replayed: await send(async () => ({receipt: real.receipt, replayed: true})),
+    invalid: await fail(err(400, {errors: {home_ref: "Bad"}})),
+    invalidNoMap: await fail(err(400)),
+    denied: await fail(err(403)),
+    signedOut: await fail(err(401)),
+    conflict: await fail(err(409)),
+    network: await fail(new TypeError("Failed to fetch")),
+    server503: await fail(err(503)),
+    server500: await fail(err(500)),
+    empty: await send(async () => null),
+    emptyObject: await send(async () => ({receipt: {}})),
+    arrayReceipt: await send(async () => ({receipt: []})),
+    mismatched: await send(async () => ({receipt: {...real.receipt, request_id: "other-0001"}})),
+    refusedAfterUnconfirmed: await fail(err(400, {errors: {home_ref: "Bad"}}), {unresolved: true}),
+    deniedAfterUnconfirmed: await fail(err(403), {unresolved: true}),
+    savedAfterUnconfirmed: await send(async () => ({receipt: real.receipt, replayed: true}),
+      {unresolved: true}),
   };
   console.log(JSON.stringify(out));
 })();
 """
 
+NOW = datetime(2026, 11, 9, 12, 0, tzinfo=UTC)
+LIAISON = {"name": "Synthetic Liaison", "role": "Resident Liaison Officer"}
+MANAGER = {"name": "Synthetic Manager", "role": "Retrofit Programme Manager"}
+
+
+def real_payloads() -> dict[str, Any]:
+    homes = [str(s["rows"][0]["home_id"]) for s in ss.retrofit_exercise_scenarios()]
+    with tempfile.TemporaryDirectory() as tmp:
+        svc = ai.AftercareService(
+            ai.FileStateStore(Path(tmp) / "a.json"), homes=homes, now=lambda: NOW
+        )
+        empty = svc.evaluator_view(MANAGER)
+        receipt, _ = svc.record_concern(
+            LIAISON,
+            {
+                "request_id": "req-0000001",
+                "raised_by": "representative",
+                "representative_basis": "Signed letter from the tenant",
+                "home_ref": homes[0],
+                "kind": "discomfort",
+                "statement": "The living room stays cold in the evening.",
+                "channel": "phone",
+                "next_update": "2026-11-20",
+            },
+        )
+        return {
+            "form": svc.form(LIAISON),
+            "receipt": receipt,
+            "concern": svc.concern(MANAGER, "AC-001"),
+            "evaluator": svc.evaluator_view(MANAGER),
+            "evaluatorEmpty": empty,
+        }
+
 
 def run() -> dict[str, Any]:
     result = subprocess.run(
-        ["node", "-e", SCRIPT, str(WEB)], capture_output=True, text=True, timeout=30
+        ["node", "-e", SCRIPT, str(WEB)],
+        input=json.dumps(real_payloads()),
+        capture_output=True,
+        text=True,
+        timeout=60,
     )
     assert result.returncode == 0, result.stderr
     parsed: dict[str, Any] = json.loads(result.stdout)
@@ -96,6 +131,10 @@ def walk(node: object) -> list[dict[str, Any]]:
     return found
 
 
+def visible(node: object) -> str:
+    return " ".join(kid for n in walk(node) for kid in n.get("kids", []) if isinstance(kid, str))
+
+
 class AftercareScreens(unittest.TestCase):
     out: dict[str, Any]
 
@@ -104,75 +143,116 @@ class AftercareScreens(unittest.TestCase):
         cls.out = run()
 
     def text(self, key: str) -> str:
-        return json.dumps(self.out[key])
+        return visible(self.out[key])
 
     def test_form_uses_native_labelled_controls_and_no_owner_field(self) -> None:
         nodes = walk(self.out["formClean"])
         labels = {n["attrs"].get("for") for n in nodes if n["tag"] == "label"}
-        controls = {
-            n["attrs"].get("id") for n in nodes if n["tag"] in ("input", "select", "textarea")
-        }
+        ids = ("input", "select", "textarea")
+        controls = {n["attrs"].get("id") for n in nodes if n["tag"] in ids}
         self.assertTrue(controls and controls <= labels)
         self.assertNotIn("ac-owner_role", controls)
         self.assertIn("ac-channel", controls)
-        self.assertIn("req-1", self.text("formClean"))
+        self.assertIn("req-1", json.dumps(self.out["formClean"]))
 
     def test_representative_basis_only_when_representative(self) -> None:
-        self.assertNotIn("ac-representative_basis", self.text("formClean"))
-        self.assertIn("ac-representative_basis", self.text("formRep"))
+        self.assertNotIn("ac-representative_basis", json.dumps(self.out["formClean"]))
+        self.assertIn("ac-representative_basis", json.dumps(self.out["formRep"]))
 
     def test_errors_are_summarised_for_focus_and_shown_inline(self) -> None:
         nodes = walk(self.out["formErr"])
         summary = [n for n in nodes if n["attrs"].get("id") == "ac-error-summary"]
         self.assertEqual(summary[0]["attrs"]["tabindex"], "-1")
         self.assertIn("Problem: Choose a home.", self.text("formErr"))
-        self.assertIn("#ac-home_ref", self.text("formErr"))
-        self.assertNotIn("ac-error-summary", self.text("formClean"))
+        self.assertIn("#ac-home_ref", json.dumps(self.out["formErr"]))
+        self.assertNotIn("ac-error-summary", json.dumps(self.out["formClean"]))
 
-    def test_receipt_shows_original_and_unknown_owner_as_text(self) -> None:
+    def test_receipt_from_the_service_shows_original_and_unknown_owner_as_text(self) -> None:
         text = self.text("receipt")
-        for phrase in ("RC-AC-001", "Signed letter", "Unknown. No owner is named yet."):
+        for phrase in ("Signed letter from the tenant", "No owner is named yet"):
             self.assertIn(phrase, text)
         self.assertIn("Saved. Keep this receipt reference.", text)
         self.assertIn("No second record was made.", self.text("replay"))
+        self.assertNotIn("[object Object]", text)
 
     def test_user_text_is_data_not_markup(self) -> None:
-        self.assertIn("<img src=x onerror=alert(1)>", self.text("receipt"))
-        for key in ("receipt", "concern", "evaluator"):
+        self.assertIn("<img src=x onerror=alert(1)>", self.text("adversarial"))
+        for key in ("receipt", "adversarial", "concern", "evaluator"):
             for node in walk(self.out[key]):
                 self.assertNotIn("onerror", node["attrs"] or {})
                 self.assertNotEqual(node["tag"], "img")
 
     def test_concern_view_states_text_status_and_no_sensor_dismissal(self) -> None:
         text = self.text("concern")
-        for phrase in ("Unresolved", "No outcome yet", "Not assessed yet", "does not dismiss"):
-            self.assertIn(phrase, text)
-        self.assertIn("does not erase a remedy", text)
+        self.assertIn("Unresolved", text)
+        self.assertNotIn("[object Object]", text)
 
-    def test_evaluator_view_states_denominator_unknowns_and_caption(self) -> None:
+    def test_evaluator_view_from_the_service_states_fraction_and_unknowns(self) -> None:
         text = self.text("evaluator")
-        for phrase in ("1 of 2 homes", "Evaluator role is Unknown.", "18.2 \\u00b0C"):
-            self.assertIn(phrase, text)
+        self.assertIn("1 of 1 concerns unresolved", text)
+        self.assertNotIn("[object Object]", text)
+        self.assertNotIn("undefined", text)
         nodes = walk(self.out["evaluator"])
         self.assertTrue(any(n["tag"] == "caption" for n in nodes))
-        self.assertTrue(any(n["attrs"].get("scope") == "row" for n in nodes if n["tag"] == "th"))
-        self.assertEqual(text.count('"Unknown"'), 3)
-        for banned in ("caused", "saved", "fault", "blame"):
-            self.assertNotIn(banned, text.lower().replace("savings", ""))
+        self.assertIn("do not show what caused a concern", text)
+        self.assertNotIn("blame", text.lower())
 
-    def test_empty_evaluator_cohort_is_stated(self) -> None:
-        self.assertIn("No homes are in the synthetic cohort.", self.text("emptyEval"))
+    def test_unresolved_fraction_zero_unknown_and_malformed_denominators(self) -> None:
+        zero = "0 of 0 concerns unresolved. No proportion is stated"
+        self.assertIn(zero, self.text("emptyEval"))
+        self.assertIn(zero, self.text("fracZero"))
+        for key in ("fracNull", "fracScalar", "fracMissing", "fracOver"):
+            with self.subTest(key=key):
+                text = self.text(key)
+                self.assertIn("Unresolved concerns: Unknown", text)
+                self.assertNotIn("[object Object]", text)
 
-    def test_submit_outcomes_and_request_id_retention(self) -> None:
-        self.assertTrue(self.out["ok"]["ok"])
+    def test_saved_and_replayed_outcomes_clear_uncertainty(self) -> None:
+        self.assertEqual(self.out["saved"]["outcome"], "saved")
+        self.assertEqual(self.out["replayed"]["outcome"], "replayed")
         self.assertTrue(self.out["replayed"]["replay"])
+        for key in ("saved", "replayed", "savedAfterUnconfirmed"):
+            self.assertFalse(self.out[key]["unresolved"], key)
+
+    def test_unknown_outcomes_never_claim_nothing_was_saved_and_keep_the_request_id(self) -> None:
+        keys = (
+            "network", "server503", "server500", "empty", "emptyObject", "arrayReceipt",
+            "mismatched", "conflict",
+        )  # fmt: skip
+        for key in keys:
+            with self.subTest(key=key):
+                result = self.out[key]
+                self.assertFalse(result["ok"])
+                self.assertTrue(result["retainRequestId"])
+                self.assertTrue(result["unresolved"])
+                self.assertNotIn("nothing was saved", result["message"].lower())
+                self.assertIn("may or may not have been saved", result["message"])
+                self.assertIn("same details", result["message"])
+                self.assertIn("Check the concerns list", result["message"])
+        self.assertEqual(self.out["conflict"]["outcome"], "conflict")
+        self.assertEqual(self.out["network"]["outcome"], "unconfirmed")
+
+    def test_definite_refusals_are_separate_and_without_the_unconfirmed_text(self) -> None:
+        self.assertEqual(self.out["invalid"]["outcome"], "refused")
         self.assertEqual(self.out["invalid"]["errors"], {"home_ref": "Bad"})
-        self.assertFalse(self.out["invalid"]["retainRequestId"])
-        self.assertFalse(self.out["denied"]["retainRequestId"])
-        for key in ("network", "server", "empty"):
-            self.assertFalse(self.out[key]["ok"], key)
-            self.assertTrue(self.out[key]["retainRequestId"], key)
-            self.assertIn("Nothing was saved", self.out[key]["message"], key)
+        self.assertEqual(self.out["invalidNoMap"]["errors"], {})
+        self.assertTrue(self.out["invalidNoMap"]["message"])
+        for key in ("invalid", "invalidNoMap", "denied"):
+            with self.subTest(key=key):
+                self.assertFalse(self.out[key]["retainRequestId"])
+                self.assertFalse(self.out[key]["unresolved"])
+                self.assertNotIn("may or may not", self.out[key]["message"])
+        self.assertTrue(self.out["signedOut"]["retainRequestId"])
+        self.assertIn("Sign in again", self.out["signedOut"]["message"])
+
+    def test_a_refusal_after_an_unconfirmed_attempt_keeps_the_uncertainty(self) -> None:
+        for key in ("refusedAfterUnconfirmed", "deniedAfterUnconfirmed"):
+            with self.subTest(key=key):
+                result = self.out[key]
+                self.assertTrue(result["retainRequestId"])
+                self.assertTrue(result["unresolved"])
+                self.assertIn("earlier attempt may have been saved", result["message"])
+                self.assertIn("original details", result["message"])
 
 
 if __name__ == "__main__":

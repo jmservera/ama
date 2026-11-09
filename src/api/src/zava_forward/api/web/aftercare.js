@@ -42,6 +42,15 @@ function acNumber(value, digits = 1) {
     : "Unknown";
 }
 
+function acFraction(value) {
+  const ok = (n) => typeof n === "number" && Number.isInteger(n) && n >= 0;
+  if (!value || typeof value !== "object" || !ok(value.count) || !ok(value.denominator) || value.count > value.denominator) {
+    return "Unresolved concerns: Unknown";
+  }
+  const base = `${value.count} of ${value.denominator} concerns unresolved.`;
+  return value.denominator === 0 ? `${base} No proportion is stated.` : base;
+}
+
 function acOwner(owner) {
   if (!owner || owner.status === "unknown") return "Unknown. No owner is named yet.";
   return `${acText(owner.label)}`;
@@ -173,7 +182,8 @@ function aftercareEvaluatorView(v) {
     h("h1", { id: "ac-eval-title", tabindex: "-1" }, "Aftercare view for a synthetic cohort"),
     h("p", {}, acText(v.synthetic_notice)),
     h("p", {}, acText(v.notice)),
-    h("p", {}, `${acText(usable.count)} of ${acText(usable.denominator)} homes have a usable comparison. Concerns raised: ${acText(totals.concerns_raised)}. Unresolved: ${acText(totals.concerns_unresolved)}.`),
+    h("p", {}, `${acText(usable.count)} of ${acText(usable.denominator)} homes have a usable comparison. Concerns raised: ${acText(totals.concerns_raised)}.`),
+    h("p", {}, acFraction(totals.concerns_unresolved)),
     rows.length
       ? h("table", {},
         h("caption", {}, "Observed baseline and late means, with concerns by home"),
@@ -186,27 +196,48 @@ function aftercareEvaluatorView(v) {
     h("p", {}, acText(v.sensor_note)));
 }
 
-function aftercareErrorMessage(error) {
-  if (error && error.status === 401) return "Your session has ended. Sign in again.";
-  if (error && error.status === 403) return "Your role cannot do this. Ask a colleague who can, or use the paper route.";
-  if (error && error.status === 409) return error.message || "This request conflicts with an earlier one.";
-  if (error && error.status === 503) return "The record could not be saved or read. Nothing was saved. Use the paper route.";
-  if (error && error.status === 400) return error.message || "Some details need fixing.";
-  return "The service could not be reached. Nothing was saved. Keep this page open and try again, or use the paper route.";
+const AC_UNCONFIRMED = "Saving could not be confirmed. The concern may or may not have been saved. Do not start another record or use the paper route yet. Send again with the same details, which is safe because the same request reference is kept, or ask a colleague to check. Check the concerns list for a receipt first.";
+const AC_EARLIER = "An earlier attempt may have been saved. Send the original details again without changes, or check the concerns list for a receipt, before starting another record or using the paper route.";
+
+function acRefusal(error, unresolved) {
+  const own = error.status === 403
+    ? "Your role cannot do this. Ask a colleague who can, or use the paper route."
+    : (error.message || "Some details need fixing.");
+  return unresolved ? `${own} ${AC_EARLIER}` : own;
 }
 
-// The shared api() must copy data.errors onto the thrown error (hook item). The caller owns requestId and keeps it across retries so a repeated send is recognised.
-async function aftercareSubmit(api, values, requestId, signal) {
+function acValidReceipt(receipt, requestId) {
+  return Boolean(receipt) && typeof receipt === "object" && !Array.isArray(receipt)
+    && typeof receipt.receipt_id === "string" && typeof receipt.concern_id === "string"
+    && receipt.request_id === requestId;
+}
+
+function acUnconfirmed(outcome, message = AC_UNCONFIRMED) {
+  return { ok: false, outcome, message, errors: {}, retainRequestId: true, unresolved: true };
+}
+
+// The shared api() must copy data.errors onto the thrown error (paused hook item). The caller owns requestId and keeps it across retries; opts.unresolved says an earlier attempt is still unconfirmed.
+async function aftercareSubmit(api, values, requestId, signal, opts = {}) {
+  const earlier = Boolean(opts.unresolved);
   const body = { ...values, request_id: requestId };
   try {
     const reply = await api(`${AFTERCARE_API}/concerns`, body, signal);
-    if (!reply || !reply.receipt) return { ok: false, message: aftercareErrorMessage(null), errors: {}, retainRequestId: true };
-    return { ok: true, receipt: reply.receipt, replay: Boolean(reply.replayed) };
+    if (!reply || !acValidReceipt(reply.receipt, requestId)) return acUnconfirmed("unconfirmed");
+    const replay = Boolean(reply.replayed);
+    return { ok: true, outcome: replay ? "replayed" : "saved", receipt: reply.receipt, replay, unresolved: false };
   } catch (error) {
     if (error && error.name === "AbortError") throw error;
-    const errors = (error && error.errors) || {};
-    const definite = error && [400, 403, 409].includes(error.status);
-    return { ok: false, message: aftercareErrorMessage(error), errors, retainRequestId: !definite };
+    const status = error && error.status;
+    if (status === 400 || status === 403) {
+      return {
+        ok: false, outcome: "refused", message: acRefusal(error, earlier),
+        errors: (error.errors && typeof error.errors === "object") ? error.errors : {},
+        retainRequestId: earlier, unresolved: earlier,
+      };
+    }
+    if (status === 401) return acUnconfirmed("unconfirmed", `Your session has ended. Sign in again. ${AC_UNCONFIRMED}`);
+    if (status === 409) return acUnconfirmed("conflict");
+    return acUnconfirmed("unconfirmed");
   }
 }
 

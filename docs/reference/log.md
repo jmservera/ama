@@ -11289,3 +11289,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added a dedicated core service, an unwired screen module and focused tests, and a README paragraph in `src/core/README.md` that states what is and is not delivered. No server, store, route, inventory or shared fixture was changed.
 * Not claimed: connected API, persistence, restart or browser evidence, evaluator role, DPO or lawful-basis position, closure or tick of any criterion. Earlier entries unchanged.
+
+## [2026-11-09] update | Stage A corrective cycle C2: replay, sensor-context guard and unconfirmed-save wording (Refs #133)
+
+* Fixed four Medium independent Functional findings in the dedicated Stage A modules only: replay after `next_update` passes, sensor-context privacy guard and limits, unresolved-concern fraction rendering, and unconfirmed-save wording. No server, store, route, inventory or shared fixture changed.
+* Not claimed: connected API, persistence, restart or browser evidence, evaluator role, DPO or lawful-basis position, closure or tick of any criterion, independent review of the corrected head. Earlier entries unchanged.

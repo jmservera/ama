@@ -4716,7 +4716,12 @@ demonstration store only. `handle(method, path, user, body, query)` is the route
 thin hook. Not delivered: server, store, UI route or endpoint-inventory wiring; served, persistence,
 restart and browser evidence; evaluator role; DPO or lawful-basis position. The unwired screen module
 is `src/api/src/zava_forward/api/web/aftercare.js`. Tests: `src/core/tests/test_aftercare_intake.py`
-and `src/api/tests/test_aftercare_screen.py`.
+and `src/api/tests/test_aftercare_screen.py`. Corrective cycle C2: an exact replay returns the
+original receipt even after `next_update` has passed (the time check applies to new records only),
+sensor-context keys and values pass the same best-effort synthetic privacy guard and length limits
+as free text before anything is stored (a guard, not privacy proof), and the screen module says
+that saving could not be confirmed, keeps the same request reference, and renders the unresolved
+count as a fraction with its denominator.
 
 ## Data steward and digital operator exception queue (#135)
 

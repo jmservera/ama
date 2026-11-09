@@ -18,6 +18,7 @@ import json
 import os
 import re
 import tempfile
+import unicodedata
 from collections.abc import Callable, Collection, Mapping, Sequence
 from copy import deepcopy
 from datetime import UTC, date, datetime
@@ -54,6 +55,10 @@ OWNER_SUFFIX = " (synthetic scenario owner)"
 REQUEST_ID = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 STATEMENT_MAX = 1000
 BASIS_MAX = 200
+CONTEXT_MAX_ITEMS = 10
+CONTEXT_VALUE_MAX = 200
+CONTEXT_KEY = re.compile(r"[A-Za-z][A-Za-z0-9 _-]{0,39}")
+_INVISIBLE = dict.fromkeys([*range(0x200B, 0x2010), 0x2060, 0xFEFF])
 EVIDENCE_MAX = 1000
 CHANNEL_LABELS = {
     "phone": "By phone",
@@ -270,19 +275,53 @@ def _parse(text: str | None) -> Doc:
         ) from exc
 
 
+def _guard_kinds(text: str) -> list[str]:
+    """Best-effort flagged kinds after folding width, invisible characters and separators."""
+    folded = unicodedata.normalize("NFKC", text).translate(_INVISIBLE)
+    kinds: list[str] = []
+    for candidate in (folded, folded.replace("_", " ").replace("-", " ")):
+        for kind in _redact(candidate)[1]:
+            if kind not in kinds:
+                kinds.append(kind)
+    return kinds
+
+
+def _flagged(kinds: Sequence[str]) -> str:
+    found = ", ".join(_PRIVACY_LABELS.get(k, k) for k in kinds)
+    return (
+        f"This looks like it contains {found}. This demonstration holds synthetic "
+        "records only, so take it out and describe the concern without it."
+    )
+
+
+def _context_errors(context: object) -> dict[str, str]:
+    """Defined synthetic schema for sensor context: short descriptive text, guarded."""
+    if not isinstance(context, Mapping) or not context:
+        return {"context": "Add at least one short descriptive note."}
+    if len(context) > CONTEXT_MAX_ITEMS:
+        return {"context": f"Keep sensor context to {CONTEXT_MAX_ITEMS} notes or fewer."}
+    for position, (key, value) in enumerate(context.items(), start=1):
+        if not isinstance(key, str) or not CONTEXT_KEY.fullmatch(key):
+            return {"context": f"Note {position}: use a short plain label of letters and numbers."}
+        if not isinstance(value, str) or not value.strip():
+            return {"context": f"Note {position}: write a short description."}
+        if len(value) > CONTEXT_VALUE_MAX:
+            return {"context": f"Note {position} is too long. Keep it under {CONTEXT_VALUE_MAX}."}
+        kinds = _guard_kinds(key) + [k for k in _guard_kinds(value) if k not in _guard_kinds(key)]
+        if kinds:
+            return {"context": f"Note {position}: {_flagged(kinds)}"}
+    return {}
+
+
 def _free_text(value: object, field: str, label: str, cap: int, errors: dict[str, str]) -> str:
     if not isinstance(value, str) or not value.strip():
         return ""
     if len(value) > cap:
         errors[field] = f"{label} is too long. Keep it under {cap} characters."
     else:
-        _, kinds = _redact(value)
+        kinds = _guard_kinds(value)
         if kinds:
-            found = ", ".join(_PRIVACY_LABELS.get(k, k) for k in kinds)
-            errors[field] = (
-                f"This looks like it contains {found}. This demonstration holds synthetic "
-                "records only, so take it out and describe the concern without it."
-            )
+            errors[field] = _flagged(kinds)
     return value
 
 
@@ -330,10 +369,12 @@ class AftercareService:
     def _load(self) -> Doc:
         return _parse(self.store.read())
 
-    def _txn(self, fn: Callable[[Doc], T]) -> T:
+    def _txn(self, fn: Callable[[Doc], T], writes: Callable[[T], bool] = lambda _: True) -> T:
         def mutator(text: str | None) -> tuple[str, T]:
             doc = _parse(text)
             result = fn(doc)
+            if text is not None and not writes(result):
+                return text, result
             doc["version"] += 1
             return json.dumps(doc, sort_keys=True), result
 
@@ -420,6 +461,8 @@ class AftercareService:
                         "Start a new record."
                     )
                 return deepcopy(doc["receipts"][seen["concern_id"]]), True
+            if next_update < self._today():
+                raise ValidationError({"next_update": "Choose today or a later date."})
             reg = _register(doc)
             rec = reg.raise_concern(
                 "staff_recorded",
@@ -441,7 +484,7 @@ class AftercareService:
             self._log(doc, actor, "concern_recorded", cid)
             return deepcopy(receipt), False
 
-        return self._txn(work)
+        return self._txn(work, writes=lambda outcome: not outcome[1])
 
     def _assisted_errors(self, actor: Record, values: Mapping[str, Any]) -> dict[str, str]:
         errors: dict[str, str] = {}
@@ -458,7 +501,7 @@ class AftercareService:
             errors["home_ref"] = "This home reference is not in the demonstration set."
         if values.get("owner_role"):
             errors["owner_role"] = "Leave the owner blank. A manager names the owner afterwards."
-        _date(values.get("next_update"), "next_update", self._today(), errors)
+        _date(values.get("next_update"), "next_update", "0001-01-01", errors)
         for field, label, cap in (
             ("statement", "The statement", STATEMENT_MAX),
             ("representative_basis", "The authority statement", BASIS_MAX),
@@ -651,11 +694,19 @@ class AftercareService:
         self, user: Mapping[str, Any] | None, cid: str, context: Mapping[str, str]
     ) -> Record:
         actor = self._staff(user, VIEW_ROLES, "add sensor context")
+        errors = _context_errors(context)
+        if errors:
+            raise ValidationError(errors)
 
         def work(doc: Doc) -> Record:
             reg = _register(doc)
             if cid not in reg.concerns:
                 raise KeyError(cid)
+            merged = {**(reg.concerns[cid]["sensor_context"] or {}), **context}
+            if len(merged) > CONTEXT_MAX_ITEMS:
+                raise ValidationError(
+                    {"context": f"A concern can hold {CONTEXT_MAX_ITEMS} sensor notes at most."}
+                )
             reg.add_sensor_context(cid, context)
             doc["register"] = reg.to_state()
             self._log(doc, actor, "add_sensor_context", cid)

@@ -552,5 +552,128 @@ class RouteTests(Base):
         self.assertTrue(shown["unresolved"])
 
 
+class ReplayAfterDateTests(Base):
+    """C2 finding 3: an exact retry recovers the stored receipt after next_update has passed."""
+
+    def later(self) -> ai.AftercareService:
+        tomorrow = datetime(2026, 11, 21, 12, 0, tzinfo=UTC)
+        return ai.AftercareService(ai.FileStateStore(self.path), homes=HOMES, now=lambda: tomorrow)
+
+    def test_exact_retry_after_the_update_date_returns_the_original_receipt_unchanged(self) -> None:
+        first = self.record(next_update="2026-11-20")
+        before = self.path.read_bytes()
+        receipt, replayed = self.later().record_concern(LIAISON, values(next_update="2026-11-20"))
+        self.assertTrue(replayed)
+        self.assertEqual(receipt, first)
+        self.assertEqual(self.path.read_bytes(), before)
+
+    def test_changed_payload_after_the_date_conflicts_and_a_new_past_date_is_refused(self) -> None:
+        self.record(next_update="2026-11-20")
+        before = self.path.read_bytes()
+        with self.assertRaises(ai.ConflictError):
+            self.later().record_concern(
+                LIAISON, values(next_update="2026-11-20", statement="A different statement.")
+            )
+        with self.assertRaises(ai.ValidationError) as ctx:
+            self.later().record_concern(LIAISON, values(request_id="req-0000002"))
+        self.assertIn("next_update", ctx.exception.errors)
+        self.assertEqual(self.path.read_bytes(), before)
+
+    def test_concurrent_same_request_retries_make_one_concern(self) -> None:
+        self.record(next_update="2026-11-20")
+        svc = self.later()
+        results: list[bool] = []
+
+        def retry() -> None:
+            results.append(svc.record_concern(LIAISON, values(next_update="2026-11-20"))[1])
+
+        threads = [threading.Thread(target=retry) for _ in range(6)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
+        self.assertEqual(results, [True] * 6)
+        self.assertEqual(self.svc.concerns(MANAGER)["count"], 1)
+
+    def test_replay_over_the_route_after_the_date_is_200(self) -> None:
+        self.record(next_update="2026-11-20")
+        status, payload = self.later().handle(
+            "POST", "/api/aftercare/concerns", LIAISON, values(next_update="2026-11-20")
+        )
+        self.assertEqual((status, payload["replayed"]), (200, True))
+
+
+class SensorContextGuardTests(Base):
+    """C2 finding 4: sensor context passes the synthetic free-text guard before persistence."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.record()
+
+    def refused(self, context: Any) -> dict[str, str]:
+        before = self.path.read_bytes()
+        with self.assertRaises(ai.ValidationError) as ctx:
+            self.svc.add_sensor_context(COORDINATOR, "AC-001", context)
+        self.assertEqual(self.path.read_bytes(), before)
+        return ctx.exception.errors
+
+    def test_flagged_values_and_keys_are_refused_without_echo_or_change(self) -> None:
+        cases: list[dict[str, str]] = [
+            {"note": "call me on 07123456789"},
+            {"note": "write to someone@example.com"},
+            {"phone_07123456789": "x"},
+            {"note": "07123\u200b456789"},
+            {"mail": "someone\uff20example.com"},
+        ]
+        for context in cases:
+            with self.subTest(context=context):
+                errors = self.refused(context)
+                self.assertIn("context", errors)
+                self.assertNotIn("07123", json.dumps(errors))
+                self.assertNotIn("example", json.dumps(errors))
+
+    def test_shape_and_length_limits(self) -> None:
+        for context in (
+            {},
+            [("a", "b")],
+            {"a": 5},
+            {"a": ""},
+            {"a": "x" * (ai.CONTEXT_VALUE_MAX + 1)},
+            {"bad key!": "x"},
+            {"a\n": "x"},
+            {f"k{i}": "x" for i in range(ai.CONTEXT_MAX_ITEMS + 1)},
+        ):
+            with self.subTest(context=context):
+                self.assertIn("context", self.refused(context))
+
+    def test_merged_context_cannot_exceed_the_key_cap_across_calls(self) -> None:
+        half = ai.CONTEXT_MAX_ITEMS // 2 + 1
+        self.svc.add_sensor_context(COORDINATOR, "AC-001", {f"a{i}": "x" for i in range(half)})
+        self.assertIn("context", self.refused({f"b{i}": "x" for i in range(half)}))
+        self.svc.add_sensor_context(COORDINATOR, "AC-001", {"a0": "changed"})
+
+    def test_valid_descriptive_context_is_kept_and_never_dismisses_or_touches_remedy(self) -> None:
+        shown = self.svc.add_sensor_context(
+            COORDINATOR, "AC-001", {"signal": "NO_EXERCISE_SIGNAL", "label": "Normal reading"}
+        )
+        self.assertEqual(shown["sensor_context"]["label"], "Normal reading")
+        self.assertTrue(shown["unresolved"])
+        self.assertFalse(shown["dismissed_by_sensor"])
+        self.assertEqual(shown["remedy"]["status"], "not_assessed")
+
+    def test_route_refusal_is_400_with_the_context_error(self) -> None:
+        before = self.path.read_bytes()
+        status, payload = self.svc.handle(
+            "POST",
+            "/api/aftercare/concerns/AC-001/sensor-context",
+            COORDINATOR,
+            {"context": {"note": "someone@example.com"}},
+        )
+        self.assertEqual(status, 400)
+        self.assertIn("context", payload["errors"])
+        self.assertNotIn("someone@example.com", json.dumps(payload))
+        self.assertEqual(self.path.read_bytes(), before)
+
+
 if __name__ == "__main__":
     unittest.main()
