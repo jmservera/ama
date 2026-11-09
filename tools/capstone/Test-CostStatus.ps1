@@ -72,22 +72,23 @@ function New-CostMutant {
 $Owned = [Collections.Generic.List[string]]::new()
 $Baseline = [IO.Compression.ZipFile]::OpenRead((Join-Path $RepoRoot 'docs/capstone/source/baseline.pptx'))
 $Candidate = [IO.Compression.ZipFile]::OpenRead($CandidatePath)
+$Definition = Get-Content (Join-Path $RepoRoot 'docs/capstone/source/slides.json') -Raw | ConvertFrom-Json
 try {
     if (Test-CostStatusRevision ([pscustomobject]@{})) { throw 'Missing approval enabled cost status' }
     if (-not (Test-CostStatusRevision ([pscustomobject]@{ cost_status_revision = 'owner-approved-2026-11-08-status-only' }))) { throw 'Fixed approved revision rejected' }
     Assert-CostRefusal { Test-CostStatusRevision ([pscustomobject]@{ cost_status_revision = 'arbitrary' }) } 'Unrecognised'
     foreach ($Number in @(6, 11, 21, 32, 36, 52)) {
-        $Result = Assert-CostSlide $Baseline $Candidate $Number $true
+        $Result = Assert-CostSlide $Baseline $Candidate $Number $true $Definition
         if ($Result.status_updated -ne ($Number -in @(21, 52))) { throw "Unexpected status revision on page $Number" }
     }
     foreach ($Number in @(21, 52)) {
-        Assert-CostRefusal { Assert-CostSlide $Baseline $Candidate $Number $false } 'fixed approved status words'
+        Assert-CostRefusal { Assert-CostSlide $Baseline $Candidate $Number $false $Definition } 'fixed approved status words'
     }
     foreach ($Kind in @('number', 'geometry', 'notes')) {
         $MutantPath = New-CostMutant 21 $Kind
         $Mutant = [IO.Compression.ZipFile]::OpenRead($MutantPath)
         try {
-            Assert-CostRefusal { Assert-CostSlide $Baseline $Mutant 21 $true } 'Protected cost'
+            Assert-CostRefusal { Assert-CostSlide $Baseline $Mutant 21 $true $Definition } 'Protected cost'
         } finally { $Mutant.Dispose() }
     }
     Write-Output 'Protected-cost tests passed: explicit fixed approval, all six pages, denied unapproved status, number, geometry and note mutations.'

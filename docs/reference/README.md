@@ -21,6 +21,19 @@ management: short pages that point to clusters of related material.
 
 ## How to Use This Knowledge Base
 
+The owner-requested [IoT and resident architecture update](../capstone/source/diagrams/architecture/text-equivalent.md)
+adds the home-sensor receiving chain, telemetry/history and average-service
+responsibilities, and the separate resident site to both
+[architecture views](../architecture/README.md) and the current capstone model.
+The main presentation gains a full Azure deployment slide, including support
+services and gated options, alongside the CxO summary. Read the
+[current source guide](../capstone/source/README.md) for insertion-aware slide
+mapping and the [communications review](../capstone/source/review-2026-11-08-cxo.md)
+for evidence and remaining checks. Historical page references below retain
+their original revision context. No diagram or slide activates real-home
+monitoring, shared-case resident identity, autonomous safety decisions or a
+new analytics platform.
+
 The [8 November CxO/story review](../capstone/source/review-2026-11-08-cxo.md)
 strengthens the main-route recommendation, deterministic workflow/AI distinction
 and exact autonomy levels, while aligning appendix questions and preserving

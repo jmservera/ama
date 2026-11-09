@@ -39,11 +39,14 @@ describe the conditional future. Keep one factual core across those registers.
 
 ## Current Route
 
-Physical pages 1-26 are the main story, page 27 is the question index and
-pages 28-54 are 27 optional appendix answers. Progressive builds share their
-stated slot; they are not extra narration minutes. The retained notes finish
-at 23:45, leaving 6:15 inside the 30-minute presentation slot for questions
-and contingency. The separate demo is ten minutes, with its outcome hook
+Physical pages 1-27 are the main story, page 28 is the question index and
+pages 29-55 are 27 optional appendix answers. Progressive builds share their
+stated slot; they are not extra narration minutes. The new full deployment
+slide on page 13 has a 45-second slot. The revised route finishes
+at 24:30, leaving 5:30 inside the 30-minute presentation slot for questions
+and contingency. Original `TIMING` lines retain baseline provenance;
+`CURRENT ROUTE TIMING` gives the operative shifted windows.
+The separate demo is ten minutes, with its outcome hook
 inside two minutes. These are plans, not observed timings.
 
 Follow the argument: problem and stakes -> evidence and journey hypotheses ->
@@ -59,30 +62,32 @@ proposed only near the end of the main presentation, before optional Q&A.
 | Pages 7/10: project history | Dated activity and scope growth, not housing outcomes; completed and not-planned issues stay distinct. Refresh the 8 November snapshot before final delivery |
 | Page 9: recommendation and brief fidelity | Rules-only baseline, chosen rules-plus-bounded-AI path and separately tested wider autonomy; exact L2-L4 request and preserved rights |
 | Page 12: CxO application map | Company identity with separate app roles, Workbench/API, controlled records/evidence, file/device inputs and task-scoped advice; dashed integrations remain gated |
-| Page 13: resident journey | DT Coach's editable Excalidraw map connects actions/needs, pain hypotheses and proposed gains across five moments; direct validation pending |
-| Page 14: causal state-flow and help | A fictional source conflict -> coded gates -> owned correction; optional AI prepares a proposal; a person uses controlled actions. Follow-up chat is not a write/approval tool |
-| Page 15: bounded adoption | Existing preview/quarantine/export library and CLI, not an accepted web import journey or live enterprise replacement |
-| Page 16: autonomy and AI placement | All five requested/current levels; coded state-flow, current generative proposals and historical Decision 1 do different jobs. Complete drafts and L3/L4 actions remain unfinished |
-| Pages 22-24: lesson, future, decision | Test usability, then propose future portfolio history and semantic/preview ontology context. Compare analytics and agent context independently; retain the simpler route when it wins |
-| Page 22: study now underway | Registered OSF base, unregistered exploratory amendments and coauthor execution separation; no experimental outcome claims |
-| Page 40 / B13 | Three models/five arms, selected 21/default 12, F1-F10 + CR1 and all three implementation epochs. Completed steps are not independent replicates or one frozen source |
-| Page 30 / B03 | Full autonomy matrix: Stock L2 boundary matches; Assessment/Funding preparation is partial; Coordination/Quality authority is reduced |
-| Page 31 / B04 | Historical scoring/current generation; Decision 1 must beat the parser/manual comparator, not claim unmeasured savings |
-| Page 33 / B06 | Why optional resident website/advice was added, record-use versus works consent, assisted routes, synthetic callbacks and default-off AI |
-| Page 37 / B10 | Readable core projection of the full Bicep-grounded Azure reference; private endpoints versus managed services, conditional AI and separate full-view options |
-| Page 46 / B19 | Source-only synthetic IoT flow, private Event Hub and independent human safety route |
-| Page 47 / B20 | When Fabric adds value beyond SQL: compare conditional analytics against SQL/history plus Power BI |
-| Page 54 / B27 | One chosen skill/one bounded call; source-coded financial admission and durable request bounds versus still-unproved whole-journey cost acceptance |
-| Pages 25-26 | State the demo evidence route before showing it; close on the next accountable decision |
+| Page 13 / S11A: full deployment | Home sensors -> IoT Hub -> Event Hubs -> validated/idempotent intake -> SQL retained observations/history and on-read averages. Include resident own-case/assisted routes and supporting Azure services; optional edge/token/background/queue/model/simulator gates are not new deployment authority |
+| Page 14: resident journey | DT Coach's editable Excalidraw map connects actions/needs, pain hypotheses and proposed gains across five moments; direct validation pending |
+| Page 15: causal state-flow and help | A fictional source conflict -> coded gates -> owned correction; optional AI prepares a proposal; a person uses controlled actions. Follow-up chat is not a write/approval tool |
+| Page 16: bounded adoption | Existing preview/quarantine/export library and CLI, not an accepted web import journey or live enterprise replacement |
+| Page 17: autonomy and AI placement | All five requested/current levels; coded state-flow, current generative proposals and historical Decision 1 do different jobs. Complete drafts and L3/L4 actions remain unfinished |
+| Pages 23-25: lesson, future, decision | Test usability, then propose future portfolio history and semantic/preview ontology context. Compare analytics and agent context independently; retain the simpler route when it wins |
+| Page 23: study now underway | Registered OSF base, unregistered exploratory amendments and coauthor execution separation; no experimental outcome claims |
+| Page 41 / B13 | Three models/five arms, selected 21/default 12, F1-F10 + CR1 and all three implementation epochs. Completed steps are not independent replicates or one frozen source |
+| Page 31 / B03 | Full autonomy matrix: Stock L2 boundary matches; Assessment/Funding preparation is partial; Coordination/Quality authority is reduced |
+| Page 32 / B04 | Historical scoring/current generation; Decision 1 must beat the parser/manual comparator, not claim unmeasured savings |
+| Page 34 / B06 | Why optional resident website/advice was added, record-use versus works consent, assisted routes, synthetic callbacks and default-off AI |
+| Page 38 / B10 | Readable core projection of the full Bicep-grounded Azure reference; private endpoints versus managed services, conditional AI and separate full-view options |
+| Page 47 / B19 | Source-only synthetic IoT flow, private Event Hub, SQL readings/derived averages and independent human safety route |
+| Page 48 / B20 | When Fabric adds value beyond SQL: compare conditional analytics against SQL/history plus Power BI |
+| Page 55 / B27 | One chosen skill/one bounded call; source-coded financial admission and durable request bounds versus still-unproved whole-journey cost acceptance |
+| Pages 26-27 | State the demo evidence route before showing it; close on the next accountable decision |
 
 ## Delivery At The Important Moments
 
 * Keep posture still for the recommendation and the final ask; do not talk to the diagram.
 * Use one measured gesture across the workflow, then separate resident, professional and Finance decisions.
-* On page 13, trace contact, choice and aftercare once; do not read every map cell. Distinguish the pain hypothesis, designed response and actual test.
-* On pages 23-24, pause on "future, not today's product" and "ontology is preview"; explain the benefit in business terms before naming components.
+* On page 13, trace the receiving chain once, then the resident permission boundary. Use a measured gesture for private endpoints; do not read every Azure label. State that averages are derived on read and Quality sensor linkage remains gated.
+* On page 14, trace contact, choice and aftercare once; do not read every map cell. Distinguish the pain hypothesis, designed response and actual test.
+* On pages 24-25, pause on "future, not today's product" and "ontology is preview"; explain the benefit in business terms before naming components.
 * Say "historical observation", "source implementation", "proposed" or "not evaluated" where each applies.
-* On page 22, distinguish the registered base from unregistered amendments
+* On page 23, distinguish the registered base from unregistered amendments
   before describing execution. Credit Isabel's data collection without
   claiming independent institutional validation or completed analysis.
 * Slow the voice for currencies, denominators, alternatives and unknowns; do not rush caveats after a confident claim.

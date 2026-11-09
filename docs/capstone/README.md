@@ -7,20 +7,20 @@ ms.topic: how-to
 
 ## Start Here
 
-Use the 54-slide Cowork v2 presentation. There is one current deck, not a
+Use the 55-slide Cowork v2 presentation. There is one current deck, not a
 choice between the older executive and Cowork routes.
 
 | Work | Current material |
 | --- | --- |
 | Present or review | [PowerPoint](./deck/zava-forward-cowork-v2-draft.pptx) and [matching PDF](./deck/zava-forward-cowork-v2-draft.pdf) |
-| Edit and rebuild | [Source guide](./source/README.md), [54-slide manifest](./source/slides.json) and [native baseline](./source/baseline.pptx) |
+| Edit and rebuild | [Source guide](./source/README.md), [55-slide manifest](./source/slides.json) and [immutable 54-slide native baseline](./source/baseline.pptx) |
 | Find image inputs and provenance | [Asset catalog](./source/assets/catalog.json), [retained media](./source/assets/media/) and [official Fabric/Power BI sources](./source/assets/official/README.md) |
 | Prepare the pitch | [Speaker notes](./pitch/speaker-script.md), [question bank](./pitch/questions-and-answers.md) and [pitch folder](./pitch/) |
 | Prepare the demo | [Ten-minute runbook](./demo/runbook.md), including the under-two-minute executive hook and recovery route |
-| Understand the discovery and journey | [DT Coach method, pain/gain and decision trace](./source/diagrams/discovery-journey/text-equivalent.md), [editable Excalidraw](./source/diagrams/discovery-journey/resident-journey.excalidraw) and [PNG](./source/diagrams/discovery-journey/resident-journey.png); main pages 8 and 13 |
-| Understand what comes next | [Future roadmap and proposal crosswalk](./source/roadmap-recommendations.md); future Fabric/Power BI and agent-context proposal only near the close on pages 23-24 |
-| Understand technology choices | [Decision register](./source/README.md#technology-decisions); main page 16 and deeper appendix comparisons |
-| Understand the application and full Azure topology | [CxO concept](./source/diagrams/architecture/cxo-architecture.svg), [full reference](./source/diagrams/architecture/azure-architecture.svg) and [editable sources/text equivalent](./source/diagrams/architecture/text-equivalent.md); main 12 and B10/core frame 37 |
+| Understand the discovery and journey | [DT Coach method, pain/gain and decision trace](./source/diagrams/discovery-journey/text-equivalent.md), [editable Excalidraw](./source/diagrams/discovery-journey/resident-journey.excalidraw) and [PNG](./source/diagrams/discovery-journey/resident-journey.png); main pages 8 and 14 |
+| Understand what comes next | [Future roadmap and proposal crosswalk](./source/roadmap-recommendations.md); future Fabric/Power BI and agent-context proposal only near the close on pages 24-25 |
+| Understand technology choices | [Decision register](./source/README.md#technology-decisions); main page 17 and deeper appendix comparisons |
+| Understand the application and full Azure topology | [CxO concept](./source/diagrams/architecture/cxo-architecture.svg), [new main-route deployment projection](./source/diagrams/architecture/azure-deployment.svg), [full reference](./source/diagrams/architecture/azure-architecture.svg) and [editable sources/text equivalent](./source/diagrams/architecture/text-equivalent.md); main 12/13 and B10/core frame 38 |
 | Improve the story and challenged criteria | [CxO/story review](./source/review-2026-11-08-cxo.md); main-route recommendation/state-flow/autonomy, appendix alignment and real rehearsal evidence still needed |
 | Explain brief fidelity and the evolving product | [8 November autonomy/story review](./source/review-2026-11-08.md): exact requested/current levels, three help modes, historical Decision 1, optional resident access, design-thinking decisions and refreshable progress snapshot |
 | Inspect findings and checks | [30 October illustrated visual refresh](./source/review-2026-10-30.md#illustrated-visual-refresh-on-linux), earlier roadmap findings on the same page and preserved [29 October review](./source/review-2026-10-29.md) |
@@ -41,17 +41,17 @@ final presentation.
 ## What To Keep
 
 Keep the complete source package and its builder dependencies. The JSON covers
-all 54 slide records and notes; the pinned native baseline owns unchanged
+all 55 slide records and notes; the pinned 54-slide native baseline owns unchanged
 layouts, relationships, themes and embedded graphics. JSON alone does not
 reconstruct those native designs. Keep the 36 captured media inputs and the
 two official future-roadmap icons, each with original SVG and PNG derivative,
 and the DT journey's editable Excalidraw, SVG, PNG, generator and text equivalent.
 The catalog pins every input and approved new-image placement. Neither Fabric
-nor Power BI is a current product component; pages 14-15 explain the built
+nor Power BI is a current product component; pages 15-16 explain the built
 Workbench and existing bounded adoption tools without those logos.
 
 Keep the new application/Azure architecture sources together: two editable
-Excalidraw models, full SVG/PNG derivatives, the Azure core projection,
+Excalidraw models, full SVG/PNG derivatives, the Azure core and deployment projections,
 generator, source/rights trace and text equivalent. The CxO map is a logical
 application/data view; the Azure view distinguishes network endpoints,
 managed services, current source realization and separately gated options.
@@ -91,8 +91,8 @@ On Linux, use the [explicit preview route](./source/README.md#linux-preview)
 after Build. It renders all slides with LibreOffice and restores the 108 PDF
 slide jumps from the actual PPTX. This is not native Windows PowerPoint
 validation. The current refresh restores the illustrated timeline on page 3,
-the resident touchpoint map on page 13 and the editable pain/gain canvas on
-page 39, with coordinated visual refinements on ten other pages. The question
+the resident touchpoint map on page 14 and the editable pain/gain canvas on
+page 40, with coordinated visual refinements on ten other pages. The question
 index also separates two formerly overlapping click regions without changing
 their destinations.
 
@@ -111,8 +111,11 @@ is integrated. No recorded score is manually changed.
 
 ## Next Work
 
-Rehearse the retained 23:45 narration plan within the 30-minute presentation
-slot, with a separate ten-minute demo. Build variants share their timing;
+Rehearse the revised 24:30 narration plan within the 30-minute presentation
+slot, leaving 5:30 for questions and contingency, with a separate ten-minute
+demo. The added full deployment slide on page 13 has a 45-second slot.
+Original `TIMING` lines retain the 23:45 source clock for provenance;
+`CURRENT ROUTE TIMING` gives the operative shifted windows. Build variants share their timing;
 appendix answers are optional depth. Confirm the actual panel slot before
 the final rehearsal rather than reviving a historical timing route.
 

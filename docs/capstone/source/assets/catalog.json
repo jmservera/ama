@@ -5,32 +5,48 @@
       "id": "cxo-architecture",
       "part": "ppt/media/roadmap-cxo-architecture.png",
       "path": "diagrams/architecture/cxo-architecture.png",
-      "sha256": "53fe4a9d1595a9139bd856f9ac5278afa917da0c9025bef4e3ce83b520acf006",
+      "sha256": "61ee78e3e6de60050bda65b05726c073b5f031287c1220df7ac9a3fc72e04360",
       "pixel_width": 2400,
-      "pixel_height": 930,
+      "pixel_height": 1275,
       "source_svg": "diagrams/architecture/cxo-architecture.svg",
-      "source_sha256": "8aa8df9ee740bb7a470c59bbe781832407263a1a09e8378d5f7c4b9a61bf0d5e",
+      "source_sha256": "8773378a8d03fba2515dc925df893120aadc7c82654570f8d34a01252782486b",
       "source_native": "diagrams/architecture/cxo-architecture.excalidraw",
-      "source_native_sha256": "29be9d792c920484736237bb0224f5c64f6131ac9e20edafe8f564bc4bcedfdc",
+      "source_native_sha256": "7e993c74aaed053994ba9b8ae42065a1f8382bae9617595df7ccd66f801c4866",
       "slides": [12],
-      "derivation": "Original PM application concept; local Excalidraw CLI 0.2.0 PNG with existing Chromium, padding 0, scale 1.5 and fonts-url none.",
+      "derivation": "Original application concept and receiving chain; local Excalidraw CLI 0.3.0 native PNG, existing Chromium, padding 0, scale 1.5, no account/upload.",
       "provenance": "Source-backed logical application/data scope, not network or live deployment; separate resident/OneDrive/device/AI acceptance and human decision boundaries remain explicit."
     },
     {
       "id": "azure-architecture",
       "part": "ppt/media/roadmap-azure-architecture.png",
       "path": "diagrams/architecture/azure-core.png",
-      "sha256": "af98b963b6923c1835e2f4d6ddc50d9c0a3232e06ce7991caba06127e82b3492",
+      "sha256": "75f6b25a5d456e62234dbc0fb792d5177c94735fab3f13f74984ee28944c2e80",
       "pixel_width": 3600,
       "pixel_height": 1215,
       "source_svg": "diagrams/architecture/azure-core.svg",
-      "source_sha256": "5e271f16d20f59ede3dc75f7ab2f06b60c2f8de5d9116d0000d9fedd01041904",
+      "source_sha256": "2fbb5e3126e0a69f83616f43fd29478f73d3dc0cf71a47ea02686d665307f28f",
       "source_native": "diagrams/architecture/azure-architecture.excalidraw",
-      "source_native_sha256": "92c12a9c761d7a40613546557af0706e0904b6b5ffe58641ce5cb5d6c3373f3e",
+      "source_native_sha256": "8a5a3a9e6de4d6b14db860fe81881060ac43b239d64a1c94ecaf67835619d3ba",
       "source_frame": "core",
-      "slides": [37],
-      "derivation": "Local Excalidraw CLI 0.2.0 native core-frame PNG, existing Chromium, scale 1.5, no account/upload. Readable projection of the complete editable Azure model.",
+      "slides": [38],
+      "derivation": "Local Excalidraw CLI 0.3.0 native core-frame PNG, existing Chromium, scale 1.5, no account/upload. Selected core with directions to main13 deployment and full-size editable detail.",
       "provenance": "Original reference-style drawing grounded in Bicep and a bounded architecture review. PaaS/private-endpoint boundaries, conditional paths, separate resident processing and unproved live/compliance acceptance remain distinct."
+    },
+    {
+      "id": "architecture-azure-deployment",
+      "part": "ppt/media/roadmap-azure-deployment.png",
+      "path": "diagrams/architecture/azure-deployment.png",
+      "sha256": "b88da1217e3db7cb0be4edb88c502de2aa35fd1c992bd25d807de927d0c3cee6",
+      "pixel_width": 3600,
+      "pixel_height": 1755,
+      "source_svg": "diagrams/architecture/azure-deployment.svg",
+      "source_sha256": "d133656505d0b7043f4eb8867f3e6908daa2f73c939d91b1b5b12ff05270e28e",
+      "source_native": "diagrams/architecture/azure-architecture.excalidraw",
+      "source_native_sha256": "8a5a3a9e6de4d6b14db860fe81881060ac43b239d64a1c94ecaf67835619d3ba",
+      "source_frame": "deployment",
+      "slides": [13],
+      "derivation": "Local Excalidraw CLI 0.3.0 native deployment-frame PNG, existing Chromium, scale 1.5, no account/upload. Same source model, 2400x1170 wide frame; all projection text is 34 native pixels.",
+      "provenance": "Full source-backed Azure responsibility view, including home receiving chain, retained SQL telemetry/history and on-read averages, separate resident target, supporting services and gated options. Materialization, sensor-to-Quality linkage, shared managed identity/live resident/device and compliance acceptance remain unproved. No new Azure service adoption or runtime behavior."
     },
     {
       "id": "fabric",
@@ -42,7 +58,7 @@
       "pixel_width": 512,
       "pixel_height": 512,
       "slides": [
-        23
+        24
       ],
       "source_page": "https://learn.microsoft.com/en-us/fabric/fundamentals/icons",
       "download_url": "https://raw.githubusercontent.com/microsoft/fabric-samples/main/docs-samples/Icons.zip",
@@ -62,7 +78,7 @@
       "pixel_width": 512,
       "pixel_height": 512,
       "slides": [
-        23
+        24
       ],
       "source_page": "https://learn.microsoft.com/en-us/fabric/fundamentals/icons",
       "download_url": "https://raw.githubusercontent.com/microsoft/fabric-samples/main/docs-samples/Icons.zip",
@@ -85,7 +101,7 @@
       "id": "resident-journey",
       "part": "ppt/media/journey-resident.png",
       "slides": [
-        13
+        14
       ],
       "provenance": "DT Coach bounded synthesis from retained public repository evidence; pain/gain hypotheses, not direct resident research. Editable Excalidraw, SVG, PNG, generator and text equivalent retained together."
     }
