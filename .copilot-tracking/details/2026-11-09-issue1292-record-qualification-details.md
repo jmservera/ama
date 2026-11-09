@@ -14,3 +14,10 @@ task_id: 1292-record-qualification-1109
 * D6 Integration: pack note under a new dated heading after the last existing section, index row in `docs/reference/README.md`, log entry appended at the end of `docs/reference/log.md` after the merge. Use relative links. State: durable 0 of 2 paired result UNKNOWN; counts not aggregated; all #1292 criteria open.
 * D7 Review: one authored Review record `.copilot-tracking/reviews/2026-11-09-issue1292-record-qualification-review.md` checking links, diff, ASCII, blob equality of the 21 earlier records, raw directory manifest, source equality with main and absence of unsupported claims. Findings are routed, not re-reviewed.
 * D8 Validation commands (read-only): `git diff --stat`, `git diff <base> HEAD -- src infra tools .github pyproject.toml` equals main's, `sha256sum -c SHA256SUMS` (26 of 26) and the earlier raw packet manifest (29 of 29) and `baseline-prior.sha256`, `git cat-file` blob comparison, link existence check, `grep -nP '[^\x00-\x7F]'` on changed lines.
+
+## Amendment RC1 (2026-11-09, prospective, before edits)
+
+* DR1 Replace only the original-series clause at pack line 5640 with the exact clause above.
+* DR2 Append a dated superseding chronology qualification to the changes record (original line 29 kept) linking the two independent findings.
+* DR3 Append a dated review disposition (original line 19 kept). The earlier handoff shorthand is not evidence.
+* DR4 Append one short log entry; the index paragraph has no ordinal and needs no change. Checks: links, diff, source equality with main, ASCII.
