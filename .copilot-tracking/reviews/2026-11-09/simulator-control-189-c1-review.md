@@ -21,3 +21,7 @@ Assessed boundary: local working tree on `522adc394` plus the C1 diff, synthetic
 * Final host integration after #1292 is on current main, then rerun the narrow tests.
 
 Follow-ups ranked: (1) independent exact-head review of the corrected head; (2) full-suite capture to resolve F3 when the owner selects it; (3) host integration after #1292; (4) owner schema decision for the alert reference; (5) prove flock on the real share.
+
+## Addendum 2026-11-09: F3 import-collection diagnostic (additive)
+
+F3 stays UNKNOWN. Importing all 122 API test modules (2105 collected, 0 import failures) and then running only the failing method passed (exit 0, 1 test OK). No product change; no waiver. See `.copilot-tracking/changes/2026-11-09/simulator-control-189-c1-f3-diagnostic.md`. Execution-order, load and clock interaction remain uncovered; only an owner-selected full-suite capture can settle them.
