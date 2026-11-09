@@ -20,7 +20,7 @@ DEFAULT_TESTS = (
 )
 # Closed allowlist: each selector names fixed test targets, never caller-supplied modules.
 SELECTORS = {"default": DEFAULT_TESTS, "analysis": ("test_sensor_analysis_mssql",)}
-ANALYSIS_TESTS = 8
+ANALYSIS_TESTS = 10
 
 
 def validate(selector: str, returncode: int, output: str) -> bool:

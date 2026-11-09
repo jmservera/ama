@@ -2199,7 +2199,7 @@ device credential ownership remain separate decisions. No issue closure follows.
 `python src/api/checks/sensor_sql_check.py --selector analysis` runs only
 `test_sensor_analysis_mssql`, the retained-reading analysis tests (#111), on the
 same disposable server. The harness accepts only `default` and `analysis`. For
-`analysis` it requires exit 0, exactly eight tests and a clean `OK`, so a
+`analysis` it requires exit 0, exactly ten tests (the eight on main plus the two live-weather exclusion tests, #184) and a clean `OK`, so a
 skipped test fails the run. This shows the analysis path executing on local SQL
 Server only; it does not meet whole #111 acceptance, complete research R1 to R3
 or show live sensor accuracy.
