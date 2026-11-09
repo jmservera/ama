@@ -665,7 +665,9 @@ class GateTests(unittest.TestCase):
             1,
         ).replace("OK\n", "OK (skipped=1)\n")
         broken = {
-            "missing": good.replace(f"{named} ... ok\n", "", 1).replace(f"Ran {len(names)}", f"Ran {len(names) - 1}"),
+            "missing": good.replace(f"{named} ... ok\n", "", 1).replace(
+                f"Ran {len(names)}", f"Ran {len(names) - 1}"
+            ),
             "duplicate": good.replace(f"{named} ... ok\n", f"{named} ... ok\n" * 2, 1),
             "substituted": good.replace(named.split(" (")[0], "test_other", 1),
             "failed": good.replace(f"{named} ... ok\n", f"{named} ... FAIL\n", 1),
@@ -737,11 +739,11 @@ class GateTests(unittest.TestCase):
             "flag-removed": lambda c: sensor(c)["env"].pop(gate.SENSOR_MSSQL_FLAG),
             "flag-zero": lambda c: sensor(c)["env"].__setitem__(gate.SENSOR_MSSQL_FLAG, "0"),
             "cwd": lambda c: sensor(c).__setitem__("cwd", "src/core"),
-            "counts": lambda c: sensor(c).__setitem__("tests", len(gate.SENSOR_MSSQL_REQUIRED_TESTS) - 1),
-            "skips": lambda c: sensor(c).__setitem__("skips", [{"test": named, "reason": "x"}]),
-            "named-test-missing": log_edit(
-                f"{named} ... ok\n", "", (f"Ran {n}", f"Ran {n - 1}")
+            "counts": lambda c: sensor(c).__setitem__(
+                "tests", len(gate.SENSOR_MSSQL_REQUIRED_TESTS) - 1
             ),
+            "skips": lambda c: sensor(c).__setitem__("skips", [{"test": named, "reason": "x"}]),
+            "named-test-missing": log_edit(f"{named} ... ok\n", "", (f"Ran {n}", f"Ran {n - 1}")),
             "named-test-skipped": log_edit(
                 f"{named} ... ok\n", skipped_named, ("OK\n", "OK (skipped=1)\n")
             ),

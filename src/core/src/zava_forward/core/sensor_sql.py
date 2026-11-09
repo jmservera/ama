@@ -14,7 +14,7 @@ from .mssqlstore import _Conn, connection_string
 class SensorMssqlConnector:
     def __init__(self, env: Mapping[str, str]) -> None:
         self._env = env
-        connection_string(env)  # settings only: no connection, no SQL
+        connection_string(env)  # type: ignore[no-untyped-call]  # settings only: no connection, no SQL
 
     @property
     def dberror(self) -> Any:
@@ -23,4 +23,7 @@ class SensorMssqlConnector:
         return mssql_python.Error
 
     def assistant_connection(self) -> Any:
-        return _Conn(connection_string(self._env), self._env.get("ZF_SQL_TOKEN"))
+        return _Conn(  # type: ignore[no-untyped-call]
+            connection_string(self._env),  # type: ignore[no-untyped-call]
+            self._env.get("ZF_SQL_TOKEN"),
+        )

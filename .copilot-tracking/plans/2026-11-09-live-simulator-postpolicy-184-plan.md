@@ -33,3 +33,16 @@ Rationale: the parent touches SQL, infra and the gate tool, which are higher-ris
 ## Out of scope
 
 Sibling 1288 or 1292 imports, rebasing, remote branch work, PR, push, issue or board writes, closing or ticking criteria, owner memory, global Docker pruning, private data, credentials, live Hub traffic.
+
+## Amendment A1 (recorded after P4 results, before the edit)
+
+* Finding from this pass: the runner's own contract (`ruff check --isolated --select E,F,I,B,UP --target-version py312 --line-length 100`, and `ruff format --isolated --line-length 100 --check`) fails on tools/test_rpi_checks.py at lines 668 and 740 (two E501 plus formatting). The same files on origin/main pass, and the diff shows the long lines are the earlier recovery edit (tuple-derived counts). The earlier handoff had stated lint was not run; it is a defect in that edit, not a pre-existing one.
+* Correction scope: formatting only, `ruff format --isolated --line-length 100 tools/test_rpi_checks.py`; no logic, tuple or count change. A failing selected check is not waived.
+* Cycle accounting: C1 to C5 spent the five scoped review-correction cycles. This is a format fix to the recovery pass's own edit, found by this validation, not an independent-review correction; it is disclosed for the coordinator and spends no authorization beyond the owner's tightly coupled test-fixture allowance. Rerun after the edit: ruff check and format under the gate contract, mypy --strict tools, tools unit tests (102), and later the full planned set at the final head.
+* Separate finding F1 (not fixed here): test_iot_stream.PublisherTests.test_actual_send_rate_after_connect_and_preparation_across_devices failed once at 0.04998 < 0.05 (time.monotonic jitter under shared load) and passed on three isolated reruns. The test and src/api/src/zava_forward/api/iot_stream.py are unchanged by this parent (both from main). Recorded with its first failure, never waived; proposed as a separate flake fix draft for the coordinator.
+
+## Amendment A2 (recorded after the project mypy run, before the edit)
+
+* Finding from this pass: `python -m mypy` in src/core (the project command the runner and hosted CI use, strict) reports 3 errors, all in parent-added src/core/src/zava_forward/core/sensor_sql.py (calls to the untyped mssqlstore connection_string and _Conn). In src/api it reports 53 errors: 46 are the absent optional playwright stubs (prerequisite missing in this venv; not parent code), 2 are in main tests unchanged by the parent, and 5 are in parent-added src/api/tests/test_live_control.py (SensorIngestion not explicitly exported, unused ignores). Earlier passes never ran project typing.
+* Correction scope: typing comments only, following the repository convention (`# type: ignore[no-untyped-call]` is already used in core); no behavior change. Edit sensor_sql.py and test_live_control.py comments only, then rerun mypy for both projects, ruff check and format, and the affected unit tests (core live/sensor, api test_live_control, test_live_receiver_sql). The remaining playwright-stub and main-test errors are reported as pre-existing or environment and are not edited.
+* Cycle accounting: as A1 (C1 to C5 spent; recovery validation finding in the parent's own added lines, disclosed for the coordinator).

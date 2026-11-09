@@ -414,12 +414,12 @@ class ReceiverStartupTests(unittest.TestCase):
             async def window(*_a: Any, **_k: Any) -> int:
                 return 3
 
-            saved = (rx.persistence, rx.SensorIngestion, rx.run_window)
-            rx.persistence, rx.SensorIngestion, rx.run_window = persistence, Ingestion, window  # type: ignore[assignment,misc]
+            saved = (rx.persistence, rx.SensorIngestion, rx.run_window)  # type: ignore[attr-defined]
+            rx.persistence, rx.SensorIngestion, rx.run_window = persistence, Ingestion, window  # type: ignore[assignment,attr-defined]
             try:
                 code = rx.main(["--control-file", str(path)], env)
             finally:
-                rx.persistence, rx.SensorIngestion, rx.run_window = saved
+                rx.persistence, rx.SensorIngestion, rx.run_window = saved  # type: ignore[attr-defined]
         return code, built
 
     def test_stopped_expired_and_invalid_control_never_reach_persistence(self) -> None:
@@ -458,7 +458,7 @@ class ReceiverStartupTests(unittest.TestCase):
         def forbidden(_env: Any = None) -> object:
             raise AssertionError("application store must not be opened")
 
-        factory.open_store = forbidden  # type: ignore[assignment]
+        factory.open_store = forbidden
         try:
             self.assertIsInstance(rx.persistence(env), SensorMssqlConnector)
         finally:
