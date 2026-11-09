@@ -1,0 +1,22 @@
+{
+  "reviewTarget": {
+    "kind": "branch_diff",
+    "baseRef": "06e3f2f456ab008f8e41f013d9019c2d82ea05b9",
+    "headRef": "docs/blind-post-run-judging",
+    "headSha": "6465a90684b10882831a7e7fe1062c185003fe63"
+  },
+  "reviewProfile": "standard",
+  "depthTier": "standard",
+  "selectionOrigin": "automation-derived non-interactive workflow",
+  "brief": "Prospective supplementary judging methods and source-verified execution boundaries with one editable paired diagram and rebuilt PDF",
+  "hotspots": [
+    "Witnessed risk sets, ordinal rating abstention and full-frame nested aggregation",
+    "Source contracts versus performed methods and historical runtime guarantees",
+    "Native diagram/export and source/PDF bindings",
+    "Current page links, retained historical evidence and authoring regressions"
+  ],
+  "outOfScope": ["Private experiment outcomes", "Paid judging", "Human peer review", "Live deployment", "External publication approval"],
+  "initialReviewedHead": "17dee5d325b264796e47401aa249de189012ea57",
+  "refreshEvidence": "Full binary candidate diff byte-identical after owner-approved main merge",
+  "task": {"kind": "workflow_review", "outputPath": "review.md"}
+}

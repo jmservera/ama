@@ -47,8 +47,8 @@ production acceptance or a higher score.
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
-The current coauthored delivery has 45 pages, with the additive Supplement
-starting on page 37. This is a draft with unreported experimental outcomes,
+The current coauthored delivery has 49 pages, with the additive Supplement
+starting on page 39. This is a draft with unreported experimental outcomes,
 not a completed confirmatory report.
 
 The later [8 November study update](../capstone/source/review-2026-11-08.md#later-8-november-study-and-coauthor-update)
@@ -66,7 +66,7 @@ reviews or unresolved interpretation/approval limits.
 
 The [8 November measurement clarification](../capstone/thought-leadership/everything-but-the-software/README.md#measurement-provenance-8-november)
 adds an outcome/proxy/resource table, actual raw field/instrument definitions
-and source-bound active B/C templates. There is no separate numerical AI
+and source-bound active B/C templates. At that running-source pin there is no separate numerical AI
 outcome judge: model review is a treatment, while hidden contracts and fixed
 analysis tools measure outcomes and structural proxies. Current-source
 inspection confirms conservative loss/composite CR1 summaries and the Ruff
@@ -75,6 +75,21 @@ The v13 single PDF has 45 pages, Supplement 37, with 50 authoring checks
 and PDF bounds/destinations verified. Historical/adverse records, coauthors,
 registered-base/unregistered-amendment disclosure and result TODOs remain;
 independent/human and publication approvals are separate.
+
+The [9 November supplementary judging revision](../capstone/thought-leadership/everything-but-the-software/README.md#supplementary-blind-judging-9-november)
+adds a separate prospective, exploratory post-collection workflow assessment
+at source `b7973e20`. Archived eligible checkpoints supply witnessed endpoint
+loss; anonymised evidence supplies four separate ordinal API-task ratings.
+Full allocated-frame missingness, nested rating units, treatment-dependent
+acquisition, residual blinding, human calibration and separate paid-judging
+authorisation remain explicit. The running experiment, original endpoints
+and deferred results are unchanged; source inspection and a Coach-guided
+assisted assessment do not establish collected ratings or scientific approval.
+The owner's technical-flow continuation also separates host Python/
+JavaScript transport, tool-enabled development in fresh containers and
+read-only post-run replay followed by evidence-only judging. A paired
+conceptual runtime figure describes those source contracts without
+claiming every historical runtime was newly verified.
 
 The owner-requested additive revision removes repeated Background, figures
 and case narratives; the paper retains only extra source
@@ -1200,3 +1215,16 @@ and one historical generic employee model answer on the deployed demo as Azure
 observed for that source only. Five-agent, case-grounded, sensor-grounded,
 current-main deployment, cost, privacy and approval acceptance remain unproven, and
 unmerged #184 and #1288 work is excluded. The recommendation is bounded continue.
+
+The [demo stabilization current-main checkpoint](../architecture/cutover-evidence-pack.md#demo-stabilization-current-main-checkpoint-2026-11-09-refs-440-123-184-136)
+(2026-11-09, `main` `df8e858b`, draft, not approved) pins main after PR 1222 and PR 1304,
+qualifies BRD and PRD identifiers and decision record status, reads the simulator to
+persistence to UI to Quality model to flag path from source, and records three tiny
+local test observations plus the 184 results as historical observed with Git source
+equivalence. No retained-value employee view or sensor-attributed flag was identified in
+the inspected paths (a differently named path remains unverified); the registered
+quality-evidence snapshot has permitted document metadata, Quality records and
+checklists but no dedicated retained-sensor fields; the selected tests did not exercise
+the full sensor-to-Quality-model journey (dated Qualification C1, 2026-11-09). Unmerged
+#1288, #1292, #144, #189, #1295 and #1296 work is excluded. No new defect, closure or
+approval is claimed; the recommendation is bounded continue with closure held.

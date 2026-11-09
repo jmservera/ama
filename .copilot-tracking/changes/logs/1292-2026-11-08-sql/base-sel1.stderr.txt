@@ -1,0 +1,14 @@
+test_challenge_source_exact_dependency_manifest_and_original_reviews (test_resident_decisions.MssqlResidentControls.test_challenge_source_exact_dependency_manifest_and_original_reviews) ... FAIL
+
+======================================================================
+FAIL: test_challenge_source_exact_dependency_manifest_and_original_reviews (test_resident_decisions.MssqlResidentControls.test_challenge_source_exact_dependency_manifest_and_original_reviews)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_resident_decisions.py", line 1181, in test_challenge_source_exact_dependency_manifest_and_original_reviews
+    self.assertEqual(self.open_store().latest_priority(self.sam)["stale"], False)
+AssertionError: True != False
+
+----------------------------------------------------------------------
+Ran 1 test in 4.675s
+
+FAILED (failures=1)

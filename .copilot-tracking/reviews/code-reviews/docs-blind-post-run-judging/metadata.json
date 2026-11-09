@@ -1,0 +1,42 @@
+{
+  "schema_version": "1",
+  "branch": "docs/blind-post-run-judging",
+  "head_commit": "6465a90684b10882831a7e7fe1062c185003fe63",
+  "base_commit": "06e3f2f456ab008f8e41f013d9019c2d82ea05b9",
+  "reviewed_at": "2026-11-09T14:08:26Z",
+  "verdict": "approve",
+  "reviewer": "code-review",
+  "persisted_by": "parent from actual read-only reviewer responses",
+  "depth_tier": "standard",
+  "selection_origin": "automation-derived workflow defaults",
+  "files_changed": [
+    "docs/capstone/thought-leadership/everything-but-the-software/README.md",
+    "docs/capstone/thought-leadership/everything-but-the-software/main.tex",
+    "docs/capstone/thought-leadership/everything-but-the-software/main.pdf",
+    "docs/capstone/thought-leadership/everything-but-the-software/diagram-exports.json",
+    "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex",
+    "docs/capstone/thought-leadership/everything-but-the-software/anc/measurement-provenance.tex",
+    "docs/capstone/thought-leadership/everything-but-the-software/anc/revision-report.md",
+    "docs/capstone/thought-leadership/everything-but-the-software/anc/supplement-integration.json",
+    "docs/capstone/thought-leadership/everything-but-the-software/anc/test_measurement_provenance.py",
+    "docs/capstone/thought-leadership/everything-but-the-software/anc/test_conceptual_figures.py",
+    "docs/capstone/thought-leadership/everything-but-the-software/anc/export_diagrams.mjs",
+    "docs/capstone/thought-leadership/everything-but-the-software/anc/runtime_boundaries.mjs",
+    "docs/capstone/thought-leadership/everything-but-the-software/fig-runtime-boundaries.excalidraw",
+    "docs/capstone/thought-leadership/everything-but-the-software/fig-runtime-boundaries.svg",
+    "docs/capstone/thought-leadership/everything-but-the-software/fig-runtime-boundaries.png",
+    "docs/reference/README.md",
+    "docs/reference/log.md"
+  ],
+  "findings_count": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+  "history": [
+    {
+      "head_commit": "17dee5d325b264796e47401aa249de189012ea57",
+      "base_commit": "ad679b96b8c14f79623e0cc03dbf52d9d0fba99e",
+      "verdict": "approve",
+      "findings": "No significant issues found"
+    }
+  ],
+  "refresh_basis": "Exact new head/base and byte-identical full binary candidate diff verified by same reviewer",
+  "limitations": ["Not human or scientific approval", "Hosted CI and publication clearance remain separate"]
+}

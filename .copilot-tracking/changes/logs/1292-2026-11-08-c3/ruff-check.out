@@ -1,0 +1,83 @@
+E501 Line too long (102 > 100)
+  --> tests/sqlguard.py:96:101
+   |
+94 |         raise _refuse("the container was not provisioned with this password")
+95 |     try:
+96 |         started = datetime.fromisoformat(re.sub(r"(\.\d{6})\d*Z$", r"\1+00:00", str(info["Created"])))
+   |                                                                                                     ^^
+97 |         age = time.time() - started.timestamp()
+98 |     except (KeyError, ValueError):
+   |
+
+F841 Local variable `second` is assigned to but never used
+   --> tests/test_priority_order.py:546:9
+    |
+544 |     def test_creation_event_that_contradicts_commit_order_is_not_proof(self) -> None:
+545 |         first = self.store.ai_priority(self.sam, mode="workflow-only")["id"]
+546 |         second = self.store.ai_priority(self.sam, mode="workflow-only")["id"]
+    |         ^^^^^^
+547 |         rows = []
+548 |         for rid, seq, user, body, version in self.store.db.execute(
+    |
+help: Remove assignment to unused variable `second`
+    |
+545 |         first = self.store.ai_priority(self.sam, mode="workflow-only")["id"]
+    -         second = self.store.ai_priority(self.sam, mode="workflow-only")["id"]
+546 +         self.store.ai_priority(self.sam, mode="workflow-only")["id"]
+547 |         rows = []
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+F841 Local variable `second` is assigned to but never used
+   --> tests/test_priority_order.py:669:9
+    |
+667 |     def test_broken_audit_chain_is_not_trusted(self) -> None:
+668 |         first = self.store.ai_priority(self.sam, mode="workflow-only")["id"]
+669 |         second = self.store.ai_priority(self.sam, mode="workflow-only")["id"]
+    |         ^^^^^^
+670 |         self.store.resolve_priority(self.sam, first, "accept", "SYN review of the older proposal")
+671 |         rows = []
+    |
+help: Remove assignment to unused variable `second`
+    |
+668 |         first = self.store.ai_priority(self.sam, mode="workflow-only")["id"]
+    -         second = self.store.ai_priority(self.sam, mode="workflow-only")["id"]
+669 +         self.store.ai_priority(self.sam, mode="workflow-only")["id"]
+670 |         self.store.resolve_priority(self.sam, first, "accept", "SYN review of the older proposal")
+    |
+note: This is an unsafe fix and may change runtime behavior
+
+E501 Line too long (102 > 100)
+   --> tests/test_priority_order.py:736:101
+    |
+735 | class FlakyDb:
+736 |     """Delegates to a real connection; fails the next BEGIN once armed and records every statement."""
+    |                                                                                                     ^^
+737 |
+738 |     def __init__(self, db: Any) -> None:
+    |
+
+E501 Line too long (104 > 100)
+   --> tests/test_priority_order.py:910:101
+    |
+908 |     def test_already_accepted_unresolved_record_is_not_relied_on(self) -> None:
+909 |         user = self.sam["email"]
+910 |         accepted = json.dumps(dict(self.template, id="mmm000000002", created=SECOND, status="Accepted"))
+    |                                                                                                     ^^^^
+911 |         self.make_legacy(
+912 |             self.store,
+    |
+
+E501 Line too long (102 > 100)
+   --> tests/test_priority_order.py:958:101
+    |
+956 |         self.add(store, "bbb000000007", self.sam)
+957 |         store.local.pending.append(
+958 |             (self.sam["email"], "ai_run_end", "-", "priority_recommendation bbb000000007 n=5", SECOND)
+    |                                                                                                     ^^
+959 |         )
+960 |         flaky.armed = True
+    |
+
+Found 6 errors.
+2 unsafe fixes available with `--fix --unsafe-fixes`.

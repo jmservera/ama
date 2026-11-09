@@ -1,0 +1,92 @@
+......ssssssssssssssssEFEF.........FFF.E
+======================================================================
+ERROR: test_broken_audit_chain_is_not_trusted (test_priority_order.SqliteLegacyEdges.test_broken_audit_chain_is_not_trusted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 357, in test_broken_audit_chain_is_not_trusted
+    batch = self.batches(self.open_store())[0]
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_ambiguous_group_is_recorded_with_ids_when_audit_evidence_is_absent (test_priority_order.SqlitePriorityOrder.test_ambiguous_group_is_recorded_with_ids_when_audit_evidence_is_absent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 307, in test_ambiguous_group_is_recorded_with_ids_when_audit_evidence_is_absent
+    batch = self.batches(self.open_store())[0]
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_zero_ordinal_read_fails_closed_when_repair_is_blocked (test_priority_order.SqlitePriorityOrder.test_zero_ordinal_read_fails_closed_when_repair_is_blocked)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 268, in test_zero_ordinal_read_fails_closed_when_repair_is_blocked
+    with patch.object(
+  File "/usr/lib/python3.12/unittest/mock.py", line 1458, in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/mock.py", line 1431, in get_original
+    raise AttributeError(
+AttributeError: <zava_forward.core.sqlstore.SqlStore object at 0x7542cd0f0410> does not have the attribute '_backfill_zero_ordinals'
+
+======================================================================
+FAIL: test_large_legacy_backfill_is_linear_and_survives_concurrent_openers (test_priority_order.SqliteLegacyEdges.test_large_legacy_backfill_is_linear_and_survives_concurrent_openers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 398, in test_large_legacy_backfill_is_linear_and_survives_concurrent_openers
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: [OperationalError('database is locked')] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+OperationalError('database is locked')
+
+- [OperationalError('database is locked')]
++ []
+
+======================================================================
+FAIL: test_audited_same_second_creations_keep_order_after_edit_of_the_older (test_priority_order.SqlitePriorityOrder.test_audited_same_second_creations_keep_order_after_edit_of_the_older)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 291, in test_audited_same_second_creations_keep_order_after_edit_of_the_older
+    self.assertEqual(self.latest(reopened), second)
+AssertionError: '8df1dccc3c75' != '3a266e0facab'
+- 8df1dccc3c75
++ 3a266e0facab
+
+
+======================================================================
+FAIL: test_old_writer_insert_after_startup_is_repaired_before_a_later_new_write (test_priority_order.SqlitePriorityOrder.test_old_writer_insert_after_startup_is_repaired_before_a_later_new_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 242, in test_old_writer_insert_after_startup_is_repaired_before_a_later_new_write
+    self.assertEqual(self.latest(running), "mmm000000002")
+AssertionError: 'zzz000000001' != 'mmm000000002'
+- zzz000000001
++ mmm000000002
+
+
+======================================================================
+FAIL: test_old_writer_insert_between_two_new_writes_keeps_commit_order (test_priority_order.SqlitePriorityOrder.test_old_writer_insert_between_two_new_writes_keeps_commit_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 259, in test_old_writer_insert_between_two_new_writes_keeps_commit_order
+    self.assertEqual(self.latest(store), "aaa000000003")
+AssertionError: 'mmm000000002' != 'aaa000000003'
+- mmm000000002
++ aaa000000003
+
+
+======================================================================
+FAIL: test_rollback_batch_is_recorded_without_erasing_earlier_metadata (test_priority_order.SqlitePriorityOrder.test_rollback_batch_is_recorded_without_erasing_earlier_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 326, in test_rollback_batch_is_recorded_without_erasing_earlier_metadata
+    self.assertEqual(len(first), 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 40 tests in 32.234s
+
+FAILED (failures=5, errors=3, skipped=16)

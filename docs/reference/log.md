@@ -11173,6 +11173,15 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Under the owner's authorization of up to two extra focused cycles, current `main` (which added the retained sensor MSSQL suite, #1299) was merged. `src/README.md` now lists that suite as local-only (hosted `mssql` does not run it), gives its non-inert `--changed` selection rule and extends the SQL example; the rubric publication runbook, the coordinator refresh and base-change rules and the instruction wording are qualified by selected tier; a dated supersession note was added to D4 of the 2026-10-31 delivery bottleneck analysis.
 * Supersession, not erasure: the original C1-C4 evidence, the C4 lead review (Residual work) and the exhausted-cycles outcome stand. The independent C4 exact-head review (two High, three Medium, two Low) is known only from the 2026-11-08 issue comment; no durable copy was found, so its exact text is missing evidence. Static review of all current targets and a labelled proxy behavior simulation were repeated; neither is native, intended-profile or qualified-human proof. Hosted CI is unobserved.
 
+## [2026-11-09] update | Demo stabilization current-main checkpoint (Refs #440 #123 #184 #136)
+
+* Appended a dated draft section to [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#demo-stabilization-current-main-checkpoint-2026-11-09-refs-440-123-184-136) and updated its `ms.date` and the [index](README.md). It pins `main` `df8e858b`, qualifies BRD and PRD identifiers and decision record status, reads the demo path from source, classifies evidence and records three tiny local test runs (two earlier harness-import failures retained). Retained 184 results are historical observed with proven Git source equivalence.
+* Not claimed: approval, issue closure, acceptance ticks, live or Azure evidence, a new defect, a full gate, independent review or hosted CI. Unmerged #1288, #1292, #144, #189, #1295 and #1296 work is excluded and the #1296 REVISE result is not a current-main outcome. No earlier entry or record changed.
+
+## [2026-11-09] update | Demo stabilization checkpoint C1 evidence qualification (Refs #440)
+
+* Qualified the dated 2026-11-09 checkpoint in [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#qualification-c1-2026-11-09-refs-440) and the [index](README.md) after an independent readiness review: absence statements now read "not identified in the inspected paths", a differently named path remains unverified, the quality-evidence snapshot also holds permitted document metadata, and the selected tests did not exercise the sensor-to-Quality-model journey. The DF8 observation, the original research, plan, critique, changes, review and state are preserved with appended dated qualifications. Correction cycle 1 of 5; no earlier review-correction cycle recorded.
+* Not claimed: a runtime defect, approval, closure, tick, live, model or SQL evidence, hosted CI or merge readiness. No earlier entry changed.
 ## [2026-11-09] update | PR 1295 C3 navigation numbers and current-text corrections (Refs #1295)
 
 * `tools/capstone/Invoke-Capstone.ps1` now applies one baseline-to-physical mapping (baseline slides 13 to 54 move up one for the inserted page 13) to `page`, `pages`, `slide`, `slides` and `index` references, including no-space forms (`page40`), plural ranges (`pages 23-24`) and slash ranges (`pages 9/16`), while leaving numbers below 13 and part 55 notes unchanged. Five notes changed (QX, B13, B20, B26, B27); the deck, both generated pitch files, the preview PDF and the receipt were regenerated, and all other package members, protected cost slides and the 55 page images are unchanged. `Test-DeckInsertion.ps1` gained a literal independent table.
@@ -11187,3 +11196,32 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Merged current `origin/main` df8e858b (contains PR 1304 IoT source and a rubric score commit) into the issue 144 branch with an ordinary merge, after recording a prospective plan. Both append-only entry sets in this log and the `2026-11-09` issue 144 headers are retained; the only textual overlaps (this log and one `infra/README.md` row) merged cleanly. The hosted CONFLICTING cause stays unestablished.
 * `src/agents` is unchanged from the approved 63d7f8c1; main changed no Agents file. Demo-targeted checks and the Date positive and mutation-negative results are in the dated changes record under `.copilot-tracking/`. Independent exact-head review and hosted CI of the new head are pending; all five issue 144 acceptance criteria stay unproven live.
+
+## [2026-11-09] query | Supplementary blind post-run judging in the paper
+
+* Added prospective supplementary judging methods to the existing paper and
+  additive Supplement from the full supplied README at `b7973e20`, with
+  fixed workflow panel, witnessed endpoint-loss definition, separate ordinal
+  API-task ratings, allocated-frame missingness, nested measurement units,
+  blinding/calibration and separate judging costs/authorisation.
+* Updated the paper source guide, revision/evidence record, focused authoring
+  regressions, active digest bindings and this index. The supplied Data
+  Science and Engineering Coach definition guided a separate agent context;
+  the exact named agent was not exposed by the launcher.
+* Preserved the running experiment, original endpoints and treatment budgets,
+  false results switch, historical/adverse evidence and registration/
+  amendment provenance. No private outcome data, paid judging, candidate
+  repair, OSF or visibility action; scientific/human approval remains separate.
+
+## [2026-11-09] query | Development and post-run execution boundaries
+
+* Integrated the owner's follow-up technical explanation in the same paper
+  workstream: the stopped-archive flow is post-run replay/judging, while the
+  model-requested command flow is development. The paper distinguishes
+  host Python/JavaScript/model transport from fresh candidate containers,
+  persistent writable development files/Git from read-only replay inputs,
+  tool-enabled builders from evidence-only judges and collected failures
+  from isolation/collection unavailability.
+* Added one original editable paired runtime diagram with local exports and
+  provenance, without rewriting historical figures. Source descriptions do
+  not establish observed execution, judge accuracy or security certification.

@@ -21,7 +21,7 @@
       "content_sha256": "c8608e6fe586fa252099e566a859d01350c5709fd79c9bc40c72595d19f25ccc"
     },
     "anc/measurement-provenance.tex": {
-      "content_sha256": "5f077094937c9369280106554d4c69e0fcb986e26f913fc228fde33917392ab4"
+      "content_sha256": "744973da456158b572ba49726af780c1682a1ea0e560bcf640d6ce0473bacd08"
     }
   },
   "author_review_revision": {
@@ -61,6 +61,45 @@
     "prompt_git_blobs": {
       "anc/consolidation-active-e71037d9.prompt.txt": "fe00defa94b65eeb319e24256e425942247e0a14",
       "anc/review-only-active-e71037d9.prompt.txt": "706d15d3c7e1615d58c0902a050b0e80d163e929"
+    }
+  },
+  "blind_judging_revision": {
+    "date": "2026-11-09",
+    "scope": "Prospective supplementary post-run judging and source-based Coach-guided critique; no experimental execution, calibration, results or running-source change.",
+    "judging_source_commit": "b7973e200a6edbb1d19355badae3b7e03a066b09",
+    "judging_readme_git_blob": "6cc0c236e4ca093198d38909dceb80f850196faa",
+    "running_experiment_source_commit": "e71037d961cb80fc5c659437796de7736820f6c9",
+    "prior_active_content_sha256": {
+      "anc/measurement-provenance.tex": "5f077094937c9369280106554d4c69e0fcb986e26f913fc228fde33917392ab4"
+    },
+    "delivery_sha256": "93f3b405fc0a9118787619be514d5c58eea1e99154bd4fdb5edc97bf050fb75b",
+    "delivery_pages": 47,
+    "supplement_start_page": 37,
+    "source_sha256": {
+      "main.tex": "4a270dda1a5b35fbe697d83d655f204b51a1f9f4f216566678e2d5c0381262ca",
+      "anc/experiment-protocol.tex": "d0225afcedd420783428d93f3f5ff0d3e2fae1a2ab29e3b792607403659b1f32",
+      "anc/measurement-provenance.tex": "62e495034dffcbf2b94075c48705fdfc2ed1783c5469c4faa9d1523a0a696ea1"
+    }
+  },
+  "runtime_flow_revision": {
+    "date": "2026-11-09",
+    "scope": "Source-verified host/container development and post-run paths with an original editable paired figure; supervisor capabilities qualified. Earlier judging-only bindings preserved.",
+    "judging_source_commit": "b7973e200a6edbb1d19355badae3b7e03a066b09",
+    "running_experiment_source_commit": "e71037d961cb80fc5c659437796de7736820f6c9",
+    "delivery_sha256": "6847840ddbf3d49abc27ab52b626fad57728ebccb592c7e83c13bd11734abdb6",
+    "delivery_pages": 49,
+    "supplement_start_page": 39,
+    "source_sha256": {
+      "main.tex": "4a270dda1a5b35fbe697d83d655f204b51a1f9f4f216566678e2d5c0381262ca",
+      "anc/experiment-protocol.tex": "5aef2fce106af1e3f2c56946a27fcc964e0a1957d0b2872a4712f341c11b1771",
+      "anc/measurement-provenance.tex": "62e495034dffcbf2b94075c48705fdfc2ed1783c5469c4faa9d1523a0a696ea1"
+    },
+    "figure": {
+      "stem": "fig-runtime-boundaries",
+      "source_sha256": "60d6fe84ee15930ce2fe80b59e8d540f1372ec6c2c8a518e09a53db62182587f",
+      "svg_sha256": "90eefa122bea04e67371ff94912351c822d97c82300867c0adde30c7f76796b7",
+      "png_sha256": "f9d4a5c30cbd4617cf4f1a6ab995db678f84771e52e7091226683adeac4f5798",
+      "export_manifest": "diagram-exports.json"
     }
   },
   "restored_citation_keys": [
