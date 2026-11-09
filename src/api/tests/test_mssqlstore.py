@@ -15,7 +15,11 @@ from unittest.mock import patch
 
 import building_fixture
 import test_buildings as buildingapi
+import role_matrix_fixture as rolefixture
+import test_assistants as assistants
+import test_chat_privacy as chatprivacy
 import test_chatthreads as chattests
+import test_continuity as continuity
 import test_handoff_api as handofftests
 import test_hazard_referral as hazardtests
 import test_mvp
@@ -27,7 +31,10 @@ import test_finance_signoffs as financetests
 import test_timecapture as timetests
 import test_quality_procurement as procurementtests
 import test_procurement_api as procurementapi
-from zava_forward.core.chatthreads import MSSQL_DDL as CHAT_DDL
+from zava_forward.core import chat_demo_meter, projection
+from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
+from zava_forward.core.chat_panel import WITHHELD, ChatPanel
+from zava_forward.core.chatthreads import MSSQL_DDL as CHAT_DDL, ChatNotFound
 from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, GateError
 
@@ -446,6 +453,123 @@ class MssqlChatThreads(chattests.ChatBehaviour, unittest.TestCase):
     def make_store(self, tmp):
         data, db = base.seed(tmp)
         return factory(data, db)
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlChatPrivacy(chatprivacy.ChatPrivacyBehaviour, unittest.TestCase):
+    def setUp(self):
+        wipe()
+        super().setUp()
+
+    def make_store(self, tmp):
+        data, db = base.seed(tmp)
+        return factory(data, db)
+
+
+@unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlChatRoleProjection(unittest.TestCase):
+    ENV = chatprivacy.APPROVED
+    REVOKED = ({"role": projection.CONTRACTOR}, {"role": "Unknown"}, {"disabled": True}, {"active": False}, None)
+
+    def setUp(self):
+        wipe()
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        data, db = Path(tmp.name) / "zavaforward.json", os.path.join(tmp.name, "pw.sqlite")
+        data.write_text(json.dumps(rolefixture.build()))
+        self.store = factory(str(data), db)
+        self.addCleanup(self.store.db.close)
+        self.staff = {s["role"]: dict(s) for s in rolefixture.build()["staff"]}
+        self.user = self.staff["Retrofit Coordinator"]
+        self.calls = 0
+        self.panel = ChatPanel(ChatIsolation(self.store, env=self.ENV), self.model)
+
+    def model(self, system, prompt):
+        self.calls += 1
+        return json.dumps(dict(answer="SQL-ANSWER-CANARY", citations=["ZF-1/stage"]))
+
+    def change_roster(self, changes):
+        from zava_forward.core.mssqlstore import _Conn, connection_string
+        writer = _Conn(connection_string())
+        try:
+            if changes is None:
+                writer.execute("DELETE FROM staff WHERE email=?", (self.user["email"],))
+            else:
+                writer.execute("UPDATE staff SET body=? WHERE email=?", (json.dumps(dict(self.user, **changes)), self.user["email"]))
+        finally:
+            writer.close()
+
+    def prompt(self, role):
+        iso = ChatIsolation(self.store, env=self.ENV)
+        user = self.staff[role]
+        tid = self.store.chat_create_thread(user, case_id="ZF-1")["id"]
+        return iso.build_prompt(user, tid, "What stage is it?")[2]
+
+    def test_prompt_withholds_reason_by_role_and_phone_from_all(self):
+        for role in ("Retrofit Coordinator", "Quality Inspector", "Resident Liaison Officer"):
+            with self.subTest(role=role):
+                prompt = self.prompt(role)
+                self.assertEqual(rolefixture.REASON in prompt, role in projection.DEFAULT_REASON_ROLES)
+                self.assertNotIn(rolefixture.PHONE, prompt)
+                self.assertNotIn(rolefixture.RESIDENT, prompt)
+
+    def test_revoked_roster_denies_a_stale_actor_before_dispatch(self):
+        for changes in self.REVOKED:
+            with self.subTest(changes=changes):
+                tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+                self.change_roster(changes)
+                before = len([e for e in self.store.audit_entries() if e["action"] == "chat.turn"])
+                with self.assertRaises(ChatForbidden):
+                    self.panel.ask(self.user, tid, "What stage is it?")
+                self.assertEqual(self.calls, 0)
+                self.assertEqual(self.store.chat_resume(self.user, tid)["messages"], [])
+                turns = [e for e in self.store.audit_entries() if e["action"] == "chat.turn"]
+                self.assertEqual(len(turns), before + 1)
+                receipt = json.loads(turns[-1]["detail"])
+                self.assertEqual((receipt["outcome"], receipt["model_calls"]), ("access-rejected", 0))
+                self.assertNotIn("What stage is it?", turns[-1]["detail"])
+
+    def test_role_demoted_during_inference_withholds_the_answer(self):
+        tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+
+        def demote(system, prompt):
+            reply = self.model(system, prompt)
+            self.change_roster({"role": "Quality Inspector"})
+            return reply
+
+        self.panel.model = demote
+        reply = self.panel.ask(self.user, tid, "What stage is it?")
+        self.assertEqual((reply["kind"], reply["reply"], reply["citations"]), ("withheld", WITHHELD, []))
+        self.assertNotIn("SQL-ANSWER-CANARY", json.dumps(self.store.chat_resume(self.user, tid)["messages"]))
+
+    def test_another_user_cannot_resume_or_ask_in_the_thread(self):
+        other = self.staff["Quality Inspector"]
+        tid = self.store.chat_create_thread(self.user, case_id="ZF-1")["id"]
+        self.assertEqual(self.store.chat_list_threads(other), [])
+        with self.assertRaises(ChatNotFound):
+            self.store.chat_resume(other, tid)
+        with self.assertRaises(ChatNotFound):
+            self.panel.ask(other, tid, "What stage is it?")
+        self.assertEqual(self.calls, 0)
+
+
+@unittest.skipUnless(ON, "needs disposable SQL Server (ZF_TEST_MSSQL=1)")
+class MssqlChatDemoMeter(assistants.MssqlFixture, continuity.ChatDemoMeterOnSqlStore):
+    def kinds(self, service):
+        with service.transaction() as db:
+            return [json.loads(row[0])["kind"] for row in db.execute("SELECT body FROM assistant_events").fetchall()]
+
+    def test_demo_path_seeds_synthetic_records_and_admits_exactly_one_call(self):
+        service, reply, sent = self.ask(self.DEMO_ON)
+        self.assertEqual((reply.text, sent, reply.calls), ("ok", 1, 1))
+        with service.transaction() as db:
+            records = [json.loads(row[0]) for row in db.execute("SELECT body FROM assistant_events").fetchall()]
+        by_kind = {r["kind"]: r for r in records}
+        self.assertEqual(sorted(by_kind), ["authority", "completed", "price", "reserved"])
+        self.assertEqual(len(records), 4)
+        self.assertTrue(by_kind["price"]["synthetic"])
+        authority = by_kind["authority"]
+        self.assertEqual((authority["max_calls"], authority["budgets"][0]["calls"]), (1, chat_demo_meter.CALLS))
 
 
 @unittest.skipUnless(ON, "needs a SQL Server (ZF_TEST_MSSQL=1)")

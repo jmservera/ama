@@ -73,7 +73,7 @@ WORKFLOWS = (
 )
 # Explicitly updated with the matrix whenever native workflow commands change.
 WORKFLOW_HASHES = {
-    "src-ci.yml": "197606992ba38bc5f705770a30d2ed0a5d7be5ded2166e441abb110ffd744476",
+    "src-ci.yml": "4fb913e1ac29772b4a4a6ee82a08f05ab0a917d3cd64974dd461dc960e159122",
     "mvp-ci.yml": "a0f227717e1d6f675898e2ff6d45f493ce88851ad236c578f2dbcb7921bd0179",
     "mvp-validation.yml": "841e06bad7856c6cf9102a7f383ee027ec24e88ad27360f8ab7462d0eb76da8d",
     "src-deploy.yml": "3c2f1ed59b1486fc1316a48207cc4ef7d6a830bbba1dcad4152acab4bd2f1bbc",
@@ -130,6 +130,83 @@ CHAT_PANEL_DISCOVERY_SKIP = (
 EMPLOYEE_ACCEPTANCE_BROWSER_MODULE = "checks.employee_acceptance_check"
 EMPLOYEE_ACCEPTANCE_BROWSER_PATHS = (
     ".:src:tests:../core/src:../agents/src:../core/tests:../agents/tests"
+)
+EMPLOYEE_CHAT_BROWSER_MODULE = "checks.employee_chat_browser_check"
+EMPLOYEE_CHAT_PASS = "PASS employee chat: "
+EMPLOYEE_CHAT_STATES = (
+    "actual-model-unavailable",
+    "synthetic-cited-answer",
+    "demo-disclaimer-model-answer",
+)
+
+
+def _sql_tests(module: str, klass: str, *names: str) -> tuple[str, ...]:
+    return tuple(f"{name} ({module}.{klass}.{name})" for name in names)
+
+
+# Actual-SQL chat coverage that must report ok in the maintained SQL group, never only skip-free.
+SQL_CHAT_REQUIRED_TESTS = (
+    *_sql_tests(
+        "test_mssqlstore",
+        "MssqlChatPrivacy",
+        "test_data_map_covers_required_classes",
+        "test_provider_position_is_documented_but_not_accepted",
+        "test_storage_refused_without_dpo_legal_references",
+        "test_no_retention_period_before_approval",
+        "test_no_expiry_without_retention",
+        "test_rights_run_through_the_160_chat_repository",
+        "test_cannot_write_to_another_users_thread",
+        "test_redaction_masks_identifiers_and_cues",
+        "test_message_stored_redacted_and_memory_rejects_special_category",
+        "test_diagnostics_exclude_content",
+        "test_expiry_set_and_purged_when_retention_approved",
+        "test_retention_purge_does_nothing_without_a_recorded_period",
+        "test_retention_purge_is_age_based_and_ignores_later_activity",
+    ),
+    *_sql_tests(
+        "test_mssqlstore",
+        "MssqlChatRoleProjection",
+        "test_prompt_withholds_reason_by_role_and_phone_from_all",
+        "test_revoked_roster_denies_a_stale_actor_before_dispatch",
+        "test_role_demoted_during_inference_withholds_the_answer",
+        "test_another_user_cannot_resume_or_ask_in_the_thread",
+    ),
+    *_sql_tests(
+        "test_mssqlstore",
+        "MssqlChatDemoMeter",
+        "test_demo_path_seeds_synthetic_records_and_admits_exactly_one_call",
+        "test_demo_path_holds_a_second_call_in_the_same_request",
+        "test_without_the_switch_nothing_is_seeded_and_the_call_is_refused",
+        "test_synthetic_price_still_holds_a_live_call_outside_the_demo",
+    ),
+)
+# Retained sensor analysis on the owned SQL Server: its own flag, run after SQL_SELECTORS.
+SENSOR_MSSQL_SELECTOR = "test_sensor_analysis_mssql"
+SENSOR_MSSQL_FLAG = "ZF_SENSOR_MSSQL"
+SENSOR_MSSQL_SKIP_REASON = "requires ZF_SENSOR_MSSQL=1"
+SENSOR_MSSQL_REQUIRED_TESTS = _sql_tests(
+    SENSOR_MSSQL_SELECTOR,
+    "MssqlRetainedAnalysisTests",
+    "test_any_declined_control_wins",
+    "test_declined_unknown_and_unmapped_consent_fail_closed",
+    "test_matches_pure_derivation_over_retained_rows_and_is_reproducible",
+    "test_read_only_and_no_task_without_approved_rule",
+    "test_reopened_store_reproduces_signal_without_writes",
+    "test_stale_and_missing_readings_are_insufficient",
+    "test_unmapped_or_invalid_home_is_insufficient",
+    "test_unreadable_store_is_insufficient_with_no_priority_effect",
+)
+# Opt-in discovery skips tolerated only in project-core; the SQL group must run them instead.
+SENSOR_MSSQL_DISCOVERY_SKIPS = frozenset(
+    (name, SENSOR_MSSQL_SKIP_REASON) for name in SENSOR_MSSQL_REQUIRED_TESTS
+)
+# Direct or exercised sensor MSSQL suite dependencies no path keyword selects (not transitive).
+SENSOR_MSSQL_DIRECT_DEPENDENCIES = frozenset(
+    (
+        "src/core/tests/dataset.py",
+        "src/core/src/zava_forward/core/synthetic/__init__.py",
+        "src/core/src/zava_forward/core/synthetic/indoor_projection.py",
+    )
 )
 SQL_NOT_APPLICABLE = {
     (
@@ -598,7 +675,7 @@ SKIP_REASONS = {
     "infra": "no path under infra/ or its tests changed",
     "migration": "no path forced the full matrix",
     "browser": "no src/api web or checks path changed",
-    "mssql": "no store, schema, SQL or SQL dependency path changed",
+    "mssql": "no store, schema, SQL, core sensor or SQL dependency path changed",
     "logo-0600": "no consumer runtime, build or dependency path of the API image changed",
 }
 
@@ -674,7 +751,11 @@ def changed_groups(paths: list[str], extras: list[str]) -> list[str]:
                 "requirements" in path.lower() or parts[2] == "pyproject.toml"
             ):
                 selected.add("mssql")
-            if any(word in path.lower() for word in ("store", "schema", "sql", "assistants")):
+            if (
+                any(word in path.lower() for word in ("store", "schema", "sql", "assistants"))
+                or (project == "core" and "sensor" in path.lower())
+                or path in SENSOR_MSSQL_DIRECT_DEPENDENCIES
+            ):
                 selected.add("mssql")
         else:
             return required_groups(extras)
@@ -1076,6 +1157,7 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         "design_system_browser_check",
         "regulatory_ux_check",
         "case_journey_browser_check",
+        "employee_chat_browser_check",
     ):
         lint(python, (f"checks/{name}.py",), "src/api")
     add([python, "-m", "playwright", "install", "chromium"])
@@ -1108,6 +1190,20 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
             "<output>/axe-4.10.3.min.js",
             "--out",
             "<output>/case-journey",
+        ],
+        "src/api",
+        env={"PYTHONPATH": "<output>/safety:" + test_paths("api", True)},
+    )
+    add(
+        [
+            python,
+            "-c",
+            BROWSER_ENTRY,
+            EMPLOYEE_CHAT_BROWSER_MODULE,
+            "--axe",
+            "<output>/axe-4.10.3.min.js",
+            "--out",
+            "<output>/employee-chat",
         ],
         "src/api",
         env={"PYTHONPATH": "<output>/safety:" + test_paths("api", True)},
@@ -1178,6 +1274,14 @@ def required_checks(root: Path, receipt: dict[str, Any]) -> list[dict[str, Any]]
         [python, "-m", "unittest", "-v", *SQL_SELECTORS],
         "src/api",
         env=sqlenv,
+        suite=True,
+        integration=True,
+        timeout=1800,
+    )
+    add(
+        [python, "-m", "unittest", "-v", SENSOR_MSSQL_SELECTOR],
+        "src/api",
+        env={**sqlenv, SENSOR_MSSQL_FLAG: "1"},
         suite=True,
         integration=True,
         timeout=1800,
@@ -1341,16 +1445,21 @@ def verify_commands(root: Path, out: Path, receipt: dict[str, Any]) -> None:
                     integration=check["integration"],
                     group=check["group"],
                     expected_count=(
-                        3 if EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"] else None
+                        3
+                        if EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in check["argv"]
+                        else required_sql_count(check["argv"])
                     ),
                     expected_test=(
                         CHAT_PANEL_DISCOVERY_SKIP[0]
                         if CHAT_PANEL_BROWSER_SELECTOR in check["argv"]
                         else None
                     ),
+                    required_tests=required_sql_tests(check["argv"]),
                 )
                 if counts["executed"] <= 0 or any(row.get(k) != v for k, v in counts.items()):
                     raise GateError("Required suite result evidence missing/mismatched")
+            if EMPLOYEE_CHAT_BROWSER_MODULE in check["argv"]:
+                check_employee_chat_log(output)
             if check["group"] == "static" and check["argv"][0] == "git" and output.strip():
                 raise GateError("Tracked data guard evidence is not empty")
             break
@@ -1392,6 +1501,7 @@ def verify_results(out: Path, receipt: dict[str, Any]) -> None:
             )
         ):
             raise GateError("Required case journey evidence is incomplete/failed")
+        check_employee_chat_results(out / "employee-chat-results.json")
     for project in IMAGES:
         if f"image-{project}" not in groups:
             continue
@@ -1432,6 +1542,18 @@ def extra_selector(value: str) -> tuple[str, str]:
     return project, selector
 
 
+def _region_passed(region: list[str]) -> bool:
+    region = [line.rstrip() for line in region if line.strip() and set(line) != {"-"}]
+    failing = re.compile(
+        r"((?<![A-Za-z])(FAIL|ERROR|skipped\b.*)|expected failure|unexpected success)$"
+    )
+    return (
+        bool(region)
+        and re.search(r"(?<![A-Za-z])ok$", region[-1]) is not None
+        and not any(failing.search(line) for line in region)
+    )
+
+
 def _single_test_passed(text: str, expected_test: str) -> bool:
     """Accept one verbose result whose "ok" may follow interleaved log lines."""
     lines = text.splitlines()
@@ -1444,16 +1566,61 @@ def _single_test_passed(text: str, expected_test: str) -> bool:
     )
     if end is None or end < headers[0]:
         return False
-    region = [lines[headers[0]].split(" ... ", 1)[1], *lines[headers[0] + 1 : end]]
-    region = [line.rstrip() for line in region if line.strip() and set(line) != {"-"}]
-    failing = re.compile(
-        r"((?<![A-Za-z])(FAIL|ERROR|skipped\b.*)|expected failure|unexpected success)$"
+    return _region_passed([lines[headers[0]].split(" ... ", 1)[1], *lines[headers[0] + 1 : end]])
+
+
+def _required_tests_passed(text: str, expected: tuple[str, ...]) -> bool:
+    """Each expected verbose header occurs exactly once and its own region ends in ok."""
+    lines = text.splitlines()
+    headers = [i for i, line in enumerate(lines) if re.match(r"(.+?) \.\.\. ", line)]
+    end = next(
+        (i for i, line in enumerate(lines) if re.match(r"Ran \d+ tests? in ", line)),
+        None,
     )
-    return (
-        bool(region)
-        and re.search(r"(?<![A-Za-z])ok$", region[-1]) is not None
-        and not any(failing.search(line) for line in region)
-    )
+    if end is None or len(set(expected)) != len(expected):
+        return False
+    for name in expected:
+        hits = [i for i in headers if i < end and lines[i].startswith(f"{name} ... ")]
+        if len(hits) != 1:
+            return False
+        start = hits[0]
+        stop = min([i for i in headers if i > start] + [end])
+        if not _region_passed([lines[start].split(" ... ", 1)[1], *lines[start + 1 : stop]]):
+            return False
+    return True
+
+
+def required_sql_tests(argv: list[str]) -> tuple[str, ...] | None:
+    if argv[-1:] == [SENSOR_MSSQL_SELECTOR]:
+        return SENSOR_MSSQL_REQUIRED_TESTS
+    return SQL_CHAT_REQUIRED_TESTS if argv[-len(SQL_SELECTORS) :] == list(SQL_SELECTORS) else None
+
+
+def required_sql_count(argv: list[str]) -> int | None:
+    """The retained sensor suite must run exactly its pinned tests, with zero skips."""
+    return len(SENSOR_MSSQL_REQUIRED_TESTS) if argv[-1:] == [SENSOR_MSSQL_SELECTOR] else None
+
+
+def check_employee_chat_log(output: str) -> None:
+    if EMPLOYEE_CHAT_PASS not in output or "skipped" in output.lower():
+        raise GateError("Required employee chat browser evidence missing/skipped")
+
+
+def check_employee_chat_results(path: Path) -> None:
+    scans = json.loads(path.read_text())
+    if (
+        not isinstance(scans, list)
+        or [scan.get("state") for scan in scans] != list(EMPLOYEE_CHAT_STATES)
+        or any(
+            scan.get("violations") != []
+            or not isinstance(scan.get("passes"), int)
+            or isinstance(scan["passes"], bool)
+            or scan["passes"] <= 0
+            for scan in scans
+        )
+        or "skipped" in json.dumps(scans).lower()
+    ):
+        raise GateError("Required employee chat evidence is incomplete/failed")
 
 
 def check_skips(
@@ -1463,6 +1630,7 @@ def check_skips(
     group: str = "",
     expected_test: str | None = None,
     expected_count: int | None = None,
+    required_tests: tuple[str, ...] | None = None,
 ) -> dict[str, Any]:
     counts = re.findall(r"Ran (\d+) tests? in ", text)
     skips = [
@@ -1475,6 +1643,11 @@ def check_skips(
         integration and any((s["test"], s["reason"]) not in SQL_NOT_APPLICABLE for s in skips)
     ) or any(
         s["reason"] not in EXPECTED_SKIP_REASONS
+        and not (
+            group == "project-core"
+            and (s["test"], s["reason"]) in SENSOR_MSSQL_DISCOVERY_SKIPS
+            and not integration
+        )
         or (
             s["reason"] == CHAT_PANEL_DISCOVERY_SKIP[1]
             and (group != "project-api" or (s["test"], s["reason"]) != CHAT_PANEL_DISCOVERY_SKIP)
@@ -1501,6 +1674,8 @@ def check_skips(
         raise GateError(
             f"Required exact test execution evidence missing/mismatched: {expected_test}"
         )
+    if required_tests is not None and not _required_tests_passed(text, required_tests):
+        raise GateError("Required actual SQL chat test execution evidence missing/mismatched")
     return {
         "tests": int(counts[-1]),
         "executed": int(counts[-1]) - len(skips),
@@ -1752,14 +1927,21 @@ class Runner:
                     output,
                     integration=integration,
                     group=self.group,
-                    expected_count=(3 if EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in argv else None),
+                    expected_count=(
+                        3
+                        if EMPLOYEE_ACCEPTANCE_BROWSER_MODULE in argv
+                        else required_sql_count(argv)
+                    ),
                     expected_test=(
                         CHAT_PANEL_DISCOVERY_SKIP[0]
                         if CHAT_PANEL_BROWSER_SELECTOR in argv
                         else None
                     ),
+                    required_tests=required_sql_tests(argv),
                 )
             )
+        if EMPLOYEE_CHAT_BROWSER_MODULE in argv:
+            check_employee_chat_log(output)
         return output
 
     def stop_command(self) -> str:
@@ -2200,6 +2382,7 @@ class Runner:
                 "design_system_browser_check",
                 "regulatory_ux_check",
                 "case_journey_browser_check",
+                "employee_chat_browser_check",
             ):
                 self.lint(py, (f"checks/{name}.py",), "src/api")
             self.install_chromium()
@@ -2255,6 +2438,30 @@ class Runner:
                     self.out / "case-journey/results.json",
                     self.out / "case-journey-results.json",
                 )
+                self.command(
+                    [
+                        py,
+                        "-c",
+                        BROWSER_ENTRY,
+                        EMPLOYEE_CHAT_BROWSER_MODULE,
+                        "--axe",
+                        str(axe),
+                        "--out",
+                        str(self.out / "employee-chat"),
+                    ],
+                    "src/api",
+                    timeout=900,
+                    env={
+                        "PYTHONPATH": str(self.safety)
+                        + ":"
+                        + self.tests_env("api", True)["PYTHONPATH"]
+                    },
+                )
+                shutil.copyfile(
+                    self.out / "employee-chat/axe-results.json",
+                    self.out / "employee-chat-results.json",
+                )
+                check_employee_chat_results(self.out / "employee-chat-results.json")
             finally:
                 marker = self.snapshot / ".venv"
                 if marker.exists():
@@ -2361,6 +2568,14 @@ class Runner:
                 [py, "-m", "unittest", "-v", *SQL_SELECTORS],
                 "src/api",
                 env=sqlenv,
+                suite=True,
+                integration=True,
+                timeout=1800,
+            )
+            self.command(
+                [py, "-m", "unittest", "-v", SENSOR_MSSQL_SELECTOR],
+                "src/api",
+                env={**sqlenv, SENSOR_MSSQL_FLAG: "1"},
                 suite=True,
                 integration=True,
                 timeout=1800,
@@ -2910,6 +3125,7 @@ def validate_receipt(
                 "axe-4.10.3.min.js",
                 "regulatory-ux-results.json",
                 "case-journey-results.json",
+                "employee-chat-results.json",
                 "browser-bytecode-policy.pth",
             )
         )

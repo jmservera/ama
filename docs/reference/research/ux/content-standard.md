@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Content Standard, Glossary and Copy Audit
 description: Plain-language content standard, status and next-action glossary, blocked-message pattern, AI label wording and the copy audit of the core flow (issue #153)
-ms.date: 2026-10-27
+ms.date: 2026-11-06
 ms.topic: reference
 ---
 
@@ -137,6 +137,23 @@ decision). Consultation status stays unknown and no Legal or approval rule
 changed. `signoffs.py` messages already state reason, owner and next action.
 Other typed errors (`gates.py` configuration errors, `ai_consumption.py` metering
 hold, `doc_controls.py` legal hold, `resident_decisions.py`) remain unaudited.
+
+Slice 4 (2026-11-06) rewords only the two refusals raised by
+`approve_retention_deletion` in `doc_controls.py`. The legal-hold refusal now
+says what a legal hold is, that nothing was deleted and that the documents are
+kept, and quotes the existing label that a real hold needs the Legal delegate's
+decision. The not-due refusal replaces "retention trigger" with the date the
+retention period counts from (case closing or a recorded retention start date),
+marks the periods as demonstration values and tells the user to check that date.
+Open decision: the repository does not record who decides that a real hold has
+ended or on what evidence. The copy says only that a programme manager can record
+the release, which the code already allows, and does not say Legal approves it.
+Exception types, predicates, the blocked-hold audit event, stored statuses and
+deletion behaviour are unchanged. The identical legal-hold refusal in
+`resident_decisions.py`, the other `doc_controls.py` messages and the
+other typed errors remain unaudited. Behaviour test in
+`test_document_controls.py`; lexical guard in `test_content_standard.py`. This
+slice establishes no resident comprehension and no named human wording approval.
 
 The safety alternatives come from the existing stopped-work/restart glossary.
 They do not close a hazard-service case, establish safety, give the panel new

@@ -1,7 +1,7 @@
 ---
 title: Case Study 48 Addendum - Executive Solution Proposal
 description: Critical assessment, solution trade-offs and business value for the retrofit programme
-ms.date: 2026-10-25
+ms.date: 2026-11-08
 ms.topic: reference
 ---
 
@@ -19,6 +19,16 @@ The recommendations are proposals for validation, not approved requirements
 or observed outcomes. Sector benchmarks and illustrative economics are not
 company facts. Where this addendum challenges the original claims or autonomy
 levels, the distinction is intentional; the original remains unchanged.
+
+The [8 November autonomy and product-story review](./capstone/source/review-2026-11-08.md)
+qualifies that challenge: the original specified L2-L4 tasks, including
+professional approval and resident-controlled consent, not unrestricted
+autonomous managers. Preserving those rights is fidelity to the brief.
+The current five-helper service has a recommendation/evidence-preparation
+boundary; fuller Assessment/Funding drafts, L3 coordination actions and L4
+autonomous quality flags are separate scope or authority gaps. Automatic
+proposal generation is not automatic case action. The review changes the
+presentation explanation, not requirements, approvals or live authority.
 
 ### Optional resident service proposal (2026-10-23, #441)
 

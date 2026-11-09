@@ -1,0 +1,30 @@
+diff --git a/docs/reference/log.md b/docs/reference/log.md
+index 156e1d791..484c921d7 100644
+--- a/docs/reference/log.md
++++ b/docs/reference/log.md
+@@ -10948,3 +10948,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API,
+ ## [2026-11-08] update | Correction C2 to the local validation policy (Refs #1294)
+ 
+ * A second independent review found two wording defects, corrected in `src/README.md`: the guide no longer says every mixed change takes the full tier (a mixed change takes the strictest applicable tier, so two focused components stay focused and any full-tier component makes the candidate full), and the runner-specific 58-byte `--out` limit is no longer attributed to the direct employee-chat harness, whose `--out` only receives the results file and whose scratch directory is set by `ZF_BROWSER_SCRATCH`. The behavior test was repeated as a fresh full run on the final wording; earlier reports and the retained sandboxes are preserved. Hosted CI remains unobserved.
++
++## [2026-11-08] correction | Tested revision of the C2 validation-policy behavior run (Refs #1294)
++
++* The C2 entry above says the behavior test was repeated "on the final wording". That is inaccurate. The run tested HEAD 7260826 plus the pre-grade C2 working-tree edits and returned Revise (nine scenarios Pass, three Revise, four findings). Four wording edits were then applied after grading and were not re-simulated, so the committed C2 wording was not behavior-tested. The earlier entry is preserved unchanged; a fresh full run on the corrected wording follows in correction C3.
+diff --git a/src/README.md b/src/README.md
+index c163696d3..da6b20abe 100644
+--- a/src/README.md
++++ b/src/README.md
+@@ -186,7 +186,12 @@ Direct local checks for a small employee-chat or browser change, from
+ [API guide](./api/README.md)). The runner is the reference for each rule, so
+ match it rather than a summary:
+ 
+-* Unit modules, lint and types, and `python -m checks.employee_acceptance_check`.
++* Unit modules, lint and types.
++* `python -m checks.employee_acceptance_check` with
++  `PYTHONPATH=.:src:tests:../core/src:../agents/src:../core/tests:../agents/tests`
++  from `src/api` (the runner's and hosted job's path; without it the test
++  module is not importable). It runs three named Chromium regressions and is
++  accepted only on exit 0 with exactly three tests run and no skip.
+ * The chat-panel selector, run as `python -m unittest -v
+   test_chat_panel.PanelTests.test_browser_warning_failure_keyboard_refusal_and_live_log`
+   with `ZF_BROWSER_TESTS=1` and the hosted job's test path
