@@ -16,7 +16,7 @@
   },
   "confirmed_decisions": [
     {"decision": "Owner grant E6-E10; E1-E7 spent, E8-E10 remain; unchanged-source integration does not consume E8", "status": "owner-directed", "evidence": "issue comment 6747867150; task brief"},
-    {"decision": "Plan committed before merging origin/main cd687abad", "status": "recorded", "evidence": "69d1a0c30"},
+    {"decision": "Plan committed before merging origin/main cd687abad", "status": "recorded", "evidence": "8e3fda601"},
     {"decision": "Critique not executed: no new design, source-unchanged merge", "status": "recorded", "evidence": "plan"},
     {"decision": "Direct review executed once; no defect; independent assessment pending", "status": "recorded", "evidence": "review artifact"},
     {"decision": "No SQL run; 5827ebede SQL result is historical", "status": "recorded", "evidence": "changes artifact"}

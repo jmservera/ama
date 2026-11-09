@@ -1,7 +1,7 @@
 <!-- markdownlint-disable-file -->
 # Release Changes: #1288 ordinary main integration
 
-Plan: [plan](../plans/2026-11-09-issue-1288-main-integration-plan.md). Details: [details](../details/2026-11-09-issue-1288-main-integration-details.md). Research: [research](../research/2026-11-09-issue-1288-main-integration-research.md). Plan, research and details committed (69d1a0c30) before the merge. Refs #1288 only.
+Plan: [plan](../plans/2026-11-09-issue-1288-main-integration-plan.md). Details: [details](../details/2026-11-09-issue-1288-main-integration-details.md). Research: [research](../research/2026-11-09-issue-1288-main-integration-research.md). Plan, research and details committed (8e3fda601) before the merge. Refs #1288 only.
 
 ## Change
 
