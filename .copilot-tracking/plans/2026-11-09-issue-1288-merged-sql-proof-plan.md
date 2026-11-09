@@ -47,3 +47,11 @@ The harness uses the real `Assistants`, `MssqlStore`, `fence_send` and `CallTick
 ## Out of scope and explicit limits
 
 Real provider simulation stays OFF (`send_fence_supported=False`); no model, provider network, live IoT or Azure, real receiver or real data; no new permission, spending, production privacy or legal approval, or human acceptance. Ordinary post-fence suspension race, local-only socket cancellation, hosted interleaving and final audit persistence under an actual model remain limits. The sibling unmerged 891 changes are excluded. No cutover pack, reference index, log or shared documents are edited.
+
+## Amendment after critique (2026-11-09T23:25Z; the original text above is retained)
+
+The critique `.copilot-tracking/plans/critiques/2026-11-09-issue-1288-merged-sql-proof-critique.md` is applied:
+
+* Selected tests add `test_quality_sensors_e2.MssqlCursor.test_the_cap_is_unchanged_and_a_long_history_completes_over_scans_and_restarts` and `test_quality_sensors_e1.MssqlManualAndProactive.test_a_completed_manual_request_after_a_restart_does_not_allow_another_call`. The churn test name is not treated as restart proof of IDs.
+* Harness methods are selected by explicit id only (no inherited lane test runs on SQL Server): H0 restart of sensor and flag IDs and role projection through a second `Assistants` over a new `MssqlStore`; H2a direct `fence_send` transaction contract; H2b real `Ai.evidence` path through the lane request with a bounded SQL-clock wait at the meter `before` hook so the transport fence refuses on authority expiry (lease 60 s, no suspension), asserting meter/token 1 each (the fence follows them), peer accepts 0 and bytes 0, the committed event reason equal to the expiry text, the attempt `reserved`; H3 settlement and durable allowance via a fresh raw connection, with the physical slot checked in process and labelled as such.
+* The simulation lane store stays SQLite by design; only the working store is SQL Server.
