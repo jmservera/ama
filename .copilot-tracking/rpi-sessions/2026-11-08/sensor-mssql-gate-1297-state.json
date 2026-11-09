@@ -35,6 +35,13 @@
       "details": ".copilot-tracking/details/2026-11-09/sensor-mssql-gate-1297-c3-phase-details.md",
       "changes": ".copilot-tracking/changes/2026-11-09/sensor-mssql-gate-1297-c3-changes.md",
       "review": ".copilot-tracking/reviews/logs/2026-11-09/sensor-mssql-gate-1297-c3-review.md"
+    },
+    "c4": {
+      "research": ".copilot-tracking/research/2026-11-09/sensor-mssql-gate-1297-c4-research.md",
+      "plan": ".copilot-tracking/plans/2026-11-09/sensor-mssql-gate-1297-c4-plan.md",
+      "details": ".copilot-tracking/details/2026-11-09/sensor-mssql-gate-1297-c4-phase-details.md",
+      "changes": ".copilot-tracking/changes/2026-11-09/sensor-mssql-gate-1297-c4-changes.md",
+      "review": ".copilot-tracking/reviews/logs/2026-11-09/sensor-mssql-gate-1297-c4-review.md"
     }
   },
   "confirmed_decisions": [
@@ -82,12 +89,17 @@
       "decision": "Correction C3 (direct dependencies dataset.py and synthetic/__init__.py select mssql): research, plan, one critique (Revise, PC-001..004 applied), implement, review executed; outcome Residual work (transitive closure policy)",
       "status": "done",
       "evidence": ".copilot-tracking/*/2026-11-09/sensor-mssql-gate-1297-c3-*"
+    },
+    {
+      "decision": "Correction C4 (indoor_projection.py exercised dependency selects mssql): research, plan (critique skipped by recorded rationale), implement, review executed; outcome Residual work",
+      "status": "done",
+      "evidence": ".copilot-tracking/*/2026-11-09/sensor-mssql-gate-1297-c4-*"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator admits fresh full gate on the C3 head, verifies receipt, independent review, hosted CI"
+    "action": "Coordinator admits fresh full gate on the C4 head, verifies receipt, independent review, hosted CI"
   },
   "prioritized_follow_ups": [
     {

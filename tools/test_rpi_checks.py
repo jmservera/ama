@@ -603,7 +603,32 @@ class GateTests(unittest.TestCase):
                 word in path.lower() for word in ("store", "schema", "sql", "assistants", "sensor")
             ):
                 missed.add(path)
-        self.assertEqual(missed, set(gate.SENSOR_MSSQL_DIRECT_DEPENDENCIES))
+        self.assertEqual(
+            missed | {"src/core/src/zava_forward/core/synthetic/indoor_projection.py"},
+            set(gate.SENSOR_MSSQL_DIRECT_DEPENDENCIES),
+        )
+
+    def test_exercised_sensor_fixture_dependency_selects_mssql(self) -> None:
+        repo = Path(__file__).resolve().parents[1]
+        synthetic = "src/core/src/zava_forward/core/synthetic"
+        backfill = ast.parse((repo / synthetic / "sensor_backfill.py").read_text(encoding="utf-8"))
+        indoor = next(
+            node
+            for node in ast.walk(backfill)
+            if isinstance(node, ast.FunctionDef) and node.name == "_indoor"
+        )
+        self.assertTrue(
+            any(
+                isinstance(call, ast.Call)
+                and isinstance(call.func, ast.Attribute)
+                and call.func.attr == "project"
+                and isinstance(call.func.value, ast.Name)
+                and call.func.value.id == "indoor_projection"
+                for call in ast.walk(indoor)
+            )
+        )
+        self.assertIn("mssql", gate.changed_groups([f"{synthetic}/indoor_projection.py"], []))
+        self.assertNotIn("mssql", gate.changed_groups([f"{synthetic}/household_conditions.py"], []))
 
     def test_non_dependency_paths_do_not_select_mssql_through_the_dependency_rule(self) -> None:
         for path in (

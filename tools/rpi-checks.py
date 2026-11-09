@@ -200,11 +200,12 @@ SENSOR_MSSQL_REQUIRED_TESTS = _sql_tests(
 SENSOR_MSSQL_DISCOVERY_SKIPS = frozenset(
     (name, SENSOR_MSSQL_SKIP_REASON) for name in SENSOR_MSSQL_REQUIRED_TESTS
 )
-# Direct imports of the sensor MSSQL suite that no path keyword selects (not transitive ones).
+# Direct or exercised sensor MSSQL suite dependencies no path keyword selects (not transitive).
 SENSOR_MSSQL_DIRECT_DEPENDENCIES = frozenset(
     (
         "src/core/tests/dataset.py",
         "src/core/src/zava_forward/core/synthetic/__init__.py",
+        "src/core/src/zava_forward/core/synthetic/indoor_projection.py",
     )
 )
 SQL_NOT_APPLICABLE = {
