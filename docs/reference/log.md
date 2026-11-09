@@ -11109,3 +11109,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Merged current `origin/main` d4d6827f (PR 1222) into the issue 144 branch with an ordinary merge, after recording a prospective plan. Both append-only entry sets in this log are retained (the issue 144 entries and main's later entries); the only overlapping path was this log. The cause of the hosted CONFLICTING report was not established; local merge-tree prediction is not hosted mergeability.
 * `src/agents` is byte-identical to the approved 63d7f8c1; main's source delta is `paired_equity` in core only. Demo-targeted local checks are in the dated changes record under `.copilot-tracking/`. Hosted CI and independent review of the new head are pending; all five issue 144 acceptance criteria stay unproven live.
+
+## [2026-11-09] update | Issue 144 current-main integration (Refs #144)
+
+* Merged current `origin/main` df8e858b (contains PR 1304 IoT source and a rubric score commit) into the issue 144 branch with an ordinary merge, after recording a prospective plan. Both append-only entry sets in this log and the `2026-11-09` issue 144 headers are retained; the only textual overlaps (this log and one `infra/README.md` row) merged cleanly. The hosted CONFLICTING cause stays unestablished.
+* `src/agents` is unchanged from the approved 63d7f8c1; main changed no Agents file. Demo-targeted checks and the Date positive and mutation-negative results are in the dated changes record under `.copilot-tracking/`. Independent exact-head review and hosted CI of the new head are pending; all five issue 144 acceptance criteria stay unproven live.
