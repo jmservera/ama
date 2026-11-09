@@ -185,7 +185,9 @@ function showAccount() {
   clearPhoto();
   const account = me.account || { name: me.user.name, email: "" };
   document.getElementById("account-name").textContent = account.name;
-  document.getElementById("account-short").textContent = account.name.split(/\s+/)[0] || "Account";
+  const short = account.name.split(/\s+/)[0] || "Account";
+  document.getElementById("account-short").textContent = short;
+  document.querySelector("#account > summary").setAttribute("aria-label", `${short}, your account`);
   document.getElementById("account-email").textContent = account.email;
   document.getElementById("who").textContent = me.user.role;
   document.getElementById("account-initials").textContent = account.name.trim().split(/\s+/).slice(0, 2).map((n) => n[0]).join("").toUpperCase();
@@ -1057,8 +1059,8 @@ async function caseView(id) {
       h("p", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
       h("p", {}, `Next visit: ${fmtDate((c.appointments.find(a => a.outcome === "Booked") || {}).date)}`),
       c.appointments.length ? h("ul", {}, c.appointments.map(a => h("li", {}, `${fmtDate(a.date)}: ${a.type}, ${a.slot}, ${a.who}. ${a.outcome}`))) : h("p", {}, "No appointments recorded. Ask the case owner to record the next visit."))]],
-    ["quality", "Quality and handover", [qualityPanel(c, id, refresh, savedFields, session), handoffPanel(c, id, refresh), sugg]],
-    ["ai", "AI assistance", [assistantPanel, chatPanel,
+    ["quality", "Quality and handover", [sensorPanel(id), qualityPanel(c, id, refresh, savedFields, session), handoffPanel(c, id, refresh), sugg]],
+    ["ai", "AI assistance", [assistantPanel, simulationPanel(), chatPanel,
       h("p", {}, "Resident message and summary drafts stay with the resident record.",
         h("button", { class: "alt", onclick: () => session.controller ? session.controller.select("resident", true, true) : document.getElementById("case-panel-resident").scrollIntoView() }, "Review resident drafts")),
       h("p", {}, "Funding drafts stay with the funding record.",

@@ -107,7 +107,7 @@ class AiCallSiteInventoryTest(unittest.TestCase):
         names = (
             "self.consumption.reserve",
             "self.consumption.dispatch_check",
-            "urllib.request.urlopen",
+            "open_request",  # urllib.request.urlopen, or the fenced opener when a send fence is set
             "self.consumption.complete",
         )
         for name in names:

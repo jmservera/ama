@@ -23,7 +23,7 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/governance", "/api/continuity", "/api/continuity/export", "/api/exceptions", "/api/retention", "/api/data-protection", "/api/docs/ZF-1/none",
                  "/api/time/status", "/api/time/mine", "/api/time/report", "/api/law/sources", "/api/law/search?q=x",
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",
-                 "/api/assistants", "/api/assistants/forecast", "/api/assistants/proposals", "/api/chat/status", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
+                 "/api/assistants", "/api/assistants/forecast", "/api/assistants/proposals", "/api/assistants/simulation/quality", "/api/chat/status", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
                  "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/nothing"]
 POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/workorders/WO-0001/field-capture", {}), ("/api/workorders/WO-0001/field-correct", {}), ("/api/workorders/WO-0001/field-acknowledge", {}), ("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}),
                   ("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
@@ -45,6 +45,7 @@ POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/workorders/WO-0001/field-
                   ("/api/cases/ZF-1/call", {"outcome": "x"}), ("/api/import-check", {"text": "a"}), ("/api/time/acknowledge", {}), ("/api/time/request-enable", {}), ("/api/time/enable", {}),
                   ("/api/ledger/digest", {}), ("/api/assistants/stock-prioritisation/invoke", {"case_id": "ZF-1"}),
                   ("/api/continuity/suspend", {}), ("/api/assistants/releases", {}),
+                  ("/api/assistants/simulation/quality/observe", {}), ("/api/assistants/simulation/quality/request", {}),
                   ("/api/law/cards", {}), ("/api/law/cards/hazard-awareness-clock/1/approve", {}),
                   ("/api/law/checks/ZF-1", {}), ("/api/law/alerts/none/acknowledge", {"note": "SYN"})]
 
@@ -69,6 +70,23 @@ class RoleEndpointInventory(Matrix):
         tested = {u.split("?")[0].rstrip("/") for u in GET_ENDPOINTS} | {p for p, _ in POST_ENDPOINTS}
         missing = sorted(r for r in routes if not any(t == r or t.startswith(r + "/") for t in tested))
         self.assertEqual(missing, [], "add these routes to the role inventory")
+
+    def test_simulation_routes_refuse_before_any_work_and_expose_nothing_private(self):
+        # This fixture has no durable assistant store or simulation lane, so every staff role is refused with
+        # the manual route (503) and the contractor with 403; the per-role gate with a live lane is covered
+        # by test_quality_simulation_lane.
+        paths = [("/api/assistants/simulation/quality", None),
+                 ("/api/assistants/simulation/quality/observe", {}),
+                 ("/api/assistants/simulation/quality/request", {})]
+        for role in ROLES:
+            ck = self.session(self.email(role))
+            for path, body in paths:
+                code, text = self.call(ck, path, body) if body is not None else self.call(ck, path)
+                self.assertIn(code, (403, 503), (role, path))
+                if role == projection.CONTRACTOR:
+                    self.assertEqual(code, 403, (role, path))
+                for canary in (REASON, PHONE, RESIDENT, NOTE_CANARY, OUTCOME_CANARY):
+                    self.assertNotIn(canary, text, (role, path, canary))
 
     def test_inventory_covers_dynamic_workorder_job_pack_route(self):
         self.assertIn("/api/workorders/WO-0001/job-pack", GET_ENDPOINTS)

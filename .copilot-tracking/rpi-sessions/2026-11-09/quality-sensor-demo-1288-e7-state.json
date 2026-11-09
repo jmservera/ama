@@ -1,0 +1,30 @@
+{
+  "task_id": "issue-1288-e7",
+  "task_slug": "quality-sensor-demo-1288-e7",
+  "parent_task": {"task_id": "issue-1288-e6", "task_slug": "quality-sensor-demo-1288-e6"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-quality-sensor-demo-1288-e7-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-quality-sensor-demo-1288-e7-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-quality-sensor-demo-1288-e7-details.md",
+    "critique": ".copilot-tracking/challenges/2026-11-09-issue-1288-e7-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09-quality-sensor-demo-1288-e7-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09-quality-sensor-demo-1288-e7-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Owner grant E6-E10, finite; E1-E6 spent, E7 active and spent on this run, E8-E10 remain, no reset", "status": "owner-directed", "evidence": "issue comment 6747867150"},
+    {"decision": "Critique executed once (rework, 4 blocking findings applied) before source edits", "status": "recorded", "evidence": "3801d2dc4"},
+    {"decision": "Review executed once; no significant issues; both High dispositions adequate within residuals", "status": "recorded", "evidence": "review artifact"},
+    {"decision": "No SQL run; 5827ebede SQL605/1skip + Core53 is historical, not final-head SQL", "status": "recorded", "evidence": "changes artifact"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independent exact-head assessment and hosted checks before any publication"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent exact-head review and hosted checks", "rationale": "Required before publication", "evidence": "review artifact"},
+    {"rank": 2, "task": "Provider/contract decision: independently owning sender or provider-side per-send fence", "rationale": "Only way to re-enable the real-provider route; not assumed or granted", "evidence": "changes artifact limits"},
+    {"rank": 3, "task": "Fresh SQL Server run at final head under non-queued admission if SQL evidence is required", "rationale": "SQL evidence is historical", "evidence": "changes artifact SQL qualification"}
+  ]
+}

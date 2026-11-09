@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-09T20:37:04+00:00",
-  "commit": "3d23e890768c72cc53c8ff6715799ae8c177efad",
+  "scored_at": "2026-11-09T23:00:51+00:00",
+  "commit": "1b7a1719bee088ce2823bff45242e319bc928295",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/42693421702",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/42715028030",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
-    "solution-code": "44255f2875641096df289863ecabe778b1b2182e43ff558423ccb42e0bebfccd",
+    "solution-code": "68b5567134f3793d8d58ca9c8275dcc903fb93043b63255aca112f72cdfdebc4",
     "infrastructure": "7c74c76598ba4b6302fd325e88da5abc4ca3489696d813db42d117c4bd1cf1fd",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "5b414b81c3cc0512d987acd669648d14eb85eae2af031105e39dd8bd5054fbe7",
@@ -18,8 +18,8 @@
   },
   "total": 78,
   "sections": {
-    "A": 34,
-    "B": 24,
+    "A": 35,
+    "B": 23,
     "C": 11,
     "D": 9
   },
@@ -32,7 +32,7 @@
         "src/api/src/zava_forward/api/server.py:690-699",
         "src/api/src/zava_forward/api/web/app.js:1223-1265"
       ],
-      "rationale": "Not touched by this diff (only new browser test added). Baseline ceiling unchanged."
+      "rationale": "Not materially touched; dispatch gate/ai_transport additions are operations/security, not architecture. Ceiling unchanged."
     },
     "A2": {
       "score": 5,
@@ -44,10 +44,12 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/server.py:960-999",
-        "src/core/src/zava_forward/core/chat_panel.py:431-444"
+        "src/core/src/zava_forward/core/ai_transport.py:1-60",
+        "src/core/src/zava_forward/core/ai.py:28-31",
+        "src/core/src/zava_forward/core/assistants.py:492-515",
+        "src/core/README.md:95-100"
       ],
-      "rationale": "New record_validation_refused path writes metadata-only audit receipts for malformed asks, scrubbing request content per new tests. Reinforces existing ceiling 5; not a new capability class."
+      "rationale": "New fenced transport + per-attempt dispatch gate + SQL guard triggers enforce fail-closed boundary: captured IoT readings never carried by a real Ai client. Threat model and residual limits explicitly disclosed."
     },
     "A4": {
       "score": 5,
@@ -72,11 +74,13 @@
       "rationale": "Not touched by this diff. Baseline ceiling unchanged."
     },
     "A7": {
-      "score": 4,
+      "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/queue_azure.py:1-217"
+        "src/core/src/zava_forward/core/assistants.py:262-300",
+        "src/core/src/zava_forward/core/assistants.py:1243-1300",
+        "src/core/src/zava_forward/core/assistants.py:492-515"
       ],
-      "rationale": "Not touched by this diff. Baseline 4 (Good) retained."
+      "rationale": "New bounded proactive-scheduling state machine (coalescing, replacement/pause, legacy adoption) and a named autonomous-vs-manual review-flag projection show deliberate guarded autonomy beyond prior Good(4) baseline."
     },
     "B1": {
       "score": 3,
@@ -108,12 +112,12 @@
       "rationale": "docs/capstone/pitch/speaker-script.md timing cues updated (CURRENT ROUTE TIMING added) but remain a written plan, not observed paced delivery. Unrehearsed pacing retained."
     },
     "B6": {
-      "score": 5,
+      "score": 4,
       "evidence": [
-        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide13",
-        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide9"
+        "src/core/README.md:72",
+        "src/core/README.md:102"
       ],
-      "rationale": "Deck not touched by this diff (only infra Bicep, ranking Blob adapter code and tests changed). Excellent retained unchanged."
+      "rationale": "New capstone documentation (src/core/README.md) has a sentence split across non-adjacent paragraphs, hurting navigability. Deck untouched. Lowered from Excellent(5) to Good(4)."
     },
     "B7": {
       "score": 5,
