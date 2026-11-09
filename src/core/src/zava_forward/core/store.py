@@ -13,7 +13,7 @@ from copy import deepcopy
 from datetime import datetime
 from typing import TYPE_CHECKING, Any
 
-from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_publication, stock, taskqueues
+from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_archive_blob, ranking_publication, stock, taskqueues
 from .finance import FinanceMixin
 from .list_export import safe_cell
 from .continuity import ContinuityMixin
@@ -241,15 +241,25 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return snap
 
     def _ranking_archive(self):
+        """The ranking archive: Azure Blob when ZF_RANKING_ARCHIVE=azure-blob (owner decision,
+        issue 1258), else a local folder. The folder is a dev/test adapter only; its fsync is
+        not evidence that a container persists a record. Blob selection never falls back."""
+        blob = ranking_archive_blob.from_environment()
+        if blob is not None:
+            return blob
         return os.path.join(os.path.dirname(getattr(self, "live_path", None) or self.db_path) or ".", "ranking-archive")
 
     def ranking_publication_status(self, user):
         """Retained-snapshot check for managers: count, problems, latest date, overdue flag and the stated schedule."""
         if user["role"] not in MANAGER_ROLES:
             raise PermissionError("Only a manager can see the ranking publication record. Owner: your manager. Next action: ask a manager to open it.")
-        archive = self._ranking_archive()
         try:
+            archive = self._ranking_archive()
             out = ranking_publication.verify(archive)
+        except ranking_archive_blob.BlobArchiveError as e:
+            out = {"count": 0, "latest": None, "problems": [
+                f"The ranking archive cannot be read: {e}. "
+                "Owner: your operator. Next action: ask them to check the Blob archive configuration and access."]}
         except OSError as e:
             out = {"count": 0, "latest": None, "problems": [
                 f"The archive folder cannot be read: {type(e).__name__}: {e.strerror or e}. "
@@ -284,11 +294,19 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 try:
                     self.audit(user["email"], "ranking_snapshot_publication_unconfirmed", "-",
                                f"policy {snap['policy_version']} ({'signed' if signed else 'unsigned'}); as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}; "
-                               "record written, archive folder sync unconfirmed")
+                               + ("Blob write outcome unconfirmed; the record may or may not be stored, nothing rolled back"
+                                  if isinstance(e, ranking_publication.ArchiveWriteUncertainError)
+                                  else "record written, archive folder sync unconfirmed"))
                 except OSError:
                     logging.getLogger(__name__).exception("Ranking record written, directory sync unconfirmed and its audit entry failed")
                     raise
                 raise e
+            except ranking_archive_blob.BlobArchiveError as e:
+                logging.getLogger(__name__).error("Ranking archive could not be written: %s", e)
+                raise ranking_publication.ArchiveStorageError(
+                    f"The ranking archive cannot be written ({e}). Publication could not be confirmed; "
+                    "a record already archived is reported as already published on retry. "
+                    "Owner: your operator. Next action: ask them to check the Blob archive configuration and access.") from None
             except OSError as e:
                 logging.getLogger(__name__).error("Ranking archive could not be written: %s", e)
                 retained = self._log_retained_stage(e)

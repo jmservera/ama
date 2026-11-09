@@ -1,0 +1,32 @@
+{
+  "task_id": "1258-ranking-archive-blob-sql-main",
+  "task_slug": "ranking-archive-blob-1258-sql-main",
+  "parent_task": {"task_id": "1258-ranking-archive-blob-main-prep", "task_slug": "ranking-archive-blob-1258-main-prep"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-ranking-archive-blob-1258-sql-main-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-ranking-archive-blob-1258-sql-main-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-ranking-archive-blob-1258-sql-main-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-ranking-archive-blob-1258-sql-main-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09-ranking-archive-blob-1258-sql-main-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09-ranking-archive-blob-1258-sql-main-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "c1 to c5 spent; no sixth cycle; ordinary merge only", "status": "confirmed", "evidence": "coordinator brief 2026-11-09"},
+    {"decision": "research executed, Ready; prospective records committed 25f523b2 before merge", "status": "done", "evidence": "research file"},
+    {"decision": "critique executed once, Revise, three findings applied directly", "status": "done", "evidence": "critique file"},
+    {"decision": "merged origin/main 8d6f029c as 59d8ad8a without conflict; adapter byte-identical to 52f9b61b", "status": "done", "evidence": "changes file"},
+    {"decision": "targeted tests, core ruff and mypy pass; API wiring test lint has 10 pre-existing errors, unfixed", "status": "done", "evidence": "changes file"},
+    {"decision": "review executed once, conformant with findings (Minor)", "status": "done", "evidence": "review file"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "coordinator: independent exact-head Functional closure, hosted CI, publication decision"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent exact-head Functional closure on the final parent", "rationale": "Self-review does not replace it", "evidence": "review file"},
+    {"rank": 2, "task": "Lint-only fix of test_ranking_publication_wiring.py (10 ruff errors)", "rationale": "Pre-existing; needs explicit authorization", "evidence": "changes file"},
+    {"rank": 3, "task": "Azurite or real account acceptance, WORM, role grant, Bicep env, deployment", "rationale": "Unperformed production criteria", "evidence": "changes file unmet list"}
+  ]
+}

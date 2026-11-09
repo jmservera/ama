@@ -23,6 +23,33 @@ its staging file cannot be removed, the result still reports the record and the
 retained file (`stage_retained`, runner warning `stage_not_removed`, a `warning` in the
 manual response); an operator removes it. No clock is read: dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
 
+Blob JSON persistence (owner decision on #1258, 2026-11-08; Refs #1258): setting
+`ZF_RANKING_ARCHIVE=azure-blob` with `ZF_BLOB_ACCOUNT_URL`,
+`ZF_RANKING_BLOB_CONTAINER` and either `ZF_BLOB_SAS` or the managed identity
+(`ZF_BLOB_CLIENT_ID` optional) selects `ranking_archive_blob.BlobRankingArchive`
+for the Store, the API routes and the runner (`--blob`). `publish` is one
+create-only Put Blob (`If-None-Match: *`) of the dated record with verifiable
+metadata (policy version, as-of date, publication date, snapshot hash and the
+SHA-256 of the stored bytes); a conflict reads the existing record back and
+reports it as already published, so concurrent writers keep one record. The adapter
+can only create, read and list; there is no overwrite or delete, and the location
+is configuration, never caller input. Errors name an HTTP status only, never the
+account, container, URL or credential. A write whose outcome is unknown after the
+request was sent (lost response, timeout, 5xx) raises
+`ArchiveWriteUncertainError` (a `DurabilityUnconfirmedError`): the API answers 409
+`committed_unconfirmed`, the runner status is `committed_unconfirmed`, nothing is
+rolled back and nothing is claimed as written; repeating the same publication
+confirms it. An unreadable listing is an error, never an empty archive: a
+non-200 status, invalid XML, a root other than `EnumerationResults`, a missing
+`Blobs` element or a `Blob` without one plain `Name` are all refused with a fixed
+message, while a valid empty `Blobs` is an empty archive. Selecting
+Blob never falls back to a folder; an unset selector keeps the local folder
+adapter, which is for development and tests only (its fsync is no evidence that a
+container persists a record). Evidence for the Blob path is a mock REST
+transport, not an emulator or a storage account. Not covered here: the container,
+immutability policy and role grant, the deployment setting, and existing folder
+records, which are not migrated (a Blob archive starts empty).
+
 Wiring (slice 2): `Store.publish_ranking_snapshot` (API `POST /api/ranking/publish`)
 archives today's snapshot under the current policy into `ranking-archive/` beside
 the data, audited and idempotent, and `Store.ranking_publication_status` (API

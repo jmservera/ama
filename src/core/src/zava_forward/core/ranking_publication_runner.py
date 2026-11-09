@@ -4,10 +4,14 @@ schedule, publish and verify run through ranking_publication; this module adds o
 invocation contract a scheduler (or a person at a terminal) calls:
 
     python3 -m zava_forward.core.ranking_publication_runner publish \
-        --archive DIR --today YYYY-MM-DD --cases FILE [--policy VERSION] [--exercise]
+        (--archive DIR | --blob) --today YYYY-MM-DD --cases FILE [--policy VERSION] [--exercise]
 
-Nothing reads a clock, an environment variable or a default data folder: the date,
-the archive and the case file are all explicit. Ranking is a pure function, so no
+Nothing reads a clock or a default data folder: the date, the archive and the case file are
+all explicit. --blob selects the owner-chosen Azure Blob archive (issue 1258) and reads only
+its deployment configuration (ZF_RANKING_ARCHIVE=azure-blob, ZF_BLOB_ACCOUNT_URL,
+ZF_RANKING_BLOB_CONTAINER and ZF_BLOB_SAS or the managed identity); it never falls back to a
+folder, and the capacity and file probes below apply to the folder adapter only.
+Ranking is a pure function, so no
 random seed is consumed; the run key (policy hash, as_of, window start) is the only
 identity a repeat run needs. Publishing fails closed and says why when the policy
 rule order has no recorded named-owner sign-off, the case source is missing or
@@ -28,7 +32,7 @@ import sys
 from collections.abc import Callable, Mapping, Sequence
 from typing import Any
 
-from . import ranking, ranking_publication
+from . import ranking, ranking_archive_blob, ranking_publication
 
 EXIT_OK, EXIT_PROBLEM, EXIT_REFUSED = 0, 1, 2
 
@@ -79,12 +83,14 @@ def _free_bytes(archive_dir: Path) -> int:
     return shutil.disk_usage(probe).free if os.access(probe, os.W_OK) else 0
 
 
-def _verify(archive_dir: Path, reg: Mapping[str, Any]) -> dict[str, Any]:
+def _verify(archive_dir: ranking_publication.Archive, reg: Mapping[str, Any]) -> dict[str, Any]:
     """Verify the archive; an unreadable directory is a problem, never an empty archive."""
     try:
         return ranking_publication.verify(archive_dir, reg)
     except OSError as e:
-        reason = e.strerror or str(e)
+        # Blob adapter errors carry fixed path-free text; other errors keep the generic reason.
+        blob_text = str(e) if isinstance(e, ranking_archive_blob.BlobArchiveError) else None
+        reason = e.strerror or blob_text or "reason not available"
         return {
             "count": 0,
             "latest": None,
@@ -132,7 +138,7 @@ def _policy_view(
 
 def run(
     operation: str,
-    archive_dir: Path,
+    archive_dir: ranking_publication.Archive,
     today: str,
     *,
     cases: Sequence[Mapping[str, Any]] | None = None,
@@ -360,8 +366,9 @@ def run(
     need = len(
         ranking_publication._canonical({"published_on": today, "snapshot": snap}).encode("utf-8")
     )
-    exists = os.path.exists(os.path.join(archive_dir, ranking_publication._name(snap)))
-    if not exists:
+    if not isinstance(archive_dir, ranking_archive_blob.BlobRankingArchive) and not os.path.exists(
+        os.path.join(archive_dir, ranking_publication._name(snap))
+    ):
         try:
             free = free_bytes(archive_dir)
         except OSError as e:
@@ -388,10 +395,22 @@ def run(
     except ranking_publication.DurabilityUnconfirmedError as e:
         out.update(path=e.path, written=e.written, published_on=e.published_on)
         out["status"] = "committed_unconfirmed"
+        if isinstance(e, ranking_publication.ArchiveWriteUncertainError):
+            out["uncertainty"] = {
+                "code": "committed_unconfirmed",
+                "message": (
+                    f"The archive did not confirm the write of {os.path.basename(e.path)}; the "
+                    "record may or may not be stored and nothing was rolled back. This is not a "
+                    "confirmed publication."
+                ),
+                "next_action": "Rerun publish for the same snapshot to confirm the record.",
+            }
+            return out
         out["uncertainty"] = {
             "code": "committed_unconfirmed",
             "message": (
-                "The record is in the archive but the archive folder sync failed "
+                "The record is in the archive but the archive folder or a parent folder sync "
+                "failed "
                 f"({os.path.basename(e.path)}); durability is unconfirmed and this is not a "
                 "confirmed publication."
             ),
@@ -430,7 +449,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         description="Run ranking snapshot schedule, publish or verify locally."
     )
     ap.add_argument("operation", choices=["schedule", "publish", "verify"])
-    ap.add_argument("--archive", required=True, help="archive folder; no default is used")
+    where = ap.add_mutually_exclusive_group(required=True)
+    where.add_argument("--archive", help="local archive folder (dev/test); no default is used")
+    where.add_argument(
+        "--blob", action="store_true", help="Azure Blob archive from the deployment configuration"
+    )
     ap.add_argument("--today", required=True, help="ISO date of the run window; no clock is read")
     ap.add_argument(
         "--cases", help="store-shaped JSON file with cases and as_of; required to publish"
@@ -453,9 +476,26 @@ def main(argv: Sequence[str] | None = None) -> int:
                 f"Case file {a.cases} is unreadable or not store-shaped: {type(e).__name__}",
                 file=sys.stderr,
             )
+    archive: ranking_publication.Archive | None = a.archive
+    if a.blob:
+        configured = None
+        refused = False
+        try:
+            configured = ranking_archive_blob.from_environment()
+        except ranking_archive_blob.BlobArchiveError:
+            refused = True
+        if refused or configured is None:
+            print(
+                "Blob archive is not configured: set ZF_RANKING_ARCHIVE=azure-blob, "
+                "ZF_BLOB_ACCOUNT_URL and ZF_RANKING_BLOB_CONTAINER.",
+                file=sys.stderr,
+            )
+            return EXIT_REFUSED
+        archive = configured
+    assert archive is not None
     res = run(
         a.operation,
-        a.archive,
+        archive,
         a.today,
         cases=cases,
         as_of=as_of,

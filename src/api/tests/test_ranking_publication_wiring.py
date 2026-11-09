@@ -206,6 +206,64 @@ class PublicationWiring(QualityMatrix):
         self.assertNotIn("/private", entries[0]["detail"])
         self.assertTrue(self.store.verify_audit())
 
+    def test_parent_folder_sync_failure_is_audited_as_unconfirmed_and_retry_is_sound(self):
+        import stat
+
+        parent = os.path.dirname(os.path.abspath(self.archive()))
+        real = os.fsync
+        faulted = {"on": True}
+
+        def failing(fd):
+            if (
+                faulted["on"]
+                and stat.S_ISDIR(os.fstat(fd).st_mode)
+                and os.path.samestat(os.fstat(fd), os.stat(parent))
+            ):
+                raise OSError(5, "sync failed in /private/parent")
+            return real(fd)
+
+        with patch.object(os, "fsync", failing):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+            self.assertEqual((code, body.get("outcome")), (409, "committed_unconfirmed"))
+            self.assertNotIn("/", body["error"])
+            self.assertNotIn("sync failed", body["error"])
+            names = os.listdir(self.archive())
+            self.assertEqual(len(names), 1)
+            with open(os.path.join(self.archive(), names[0]), encoding="utf-8") as f:
+                original = f.read()
+            self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
+            self.assertEqual(
+                [e["action"] for e in self.store.audit_entries()],
+                ["ranking_snapshot_publication_unconfirmed"],
+            )
+            self.assertNotIn("/private", list(self.store.audit_entries())[0]["detail"])
+            code, again = self.call(PM_EMAIL, "/api/ranking/publish", {})
+            self.assertEqual((code, again.get("outcome")), (409, "committed_unconfirmed"))
+            faulted["on"] = False
+            code, done = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, done["written"]), (200, False))
+        with open(os.path.join(self.archive(), names[0]), encoding="utf-8") as f:
+            self.assertEqual(f.read(), original)
+        self.assertTrue(self.store.verify_audit())
+
+    def test_unreadable_mount_id_is_audited_as_unconfirmed_and_retry_is_sound(self):
+        def unreadable(fd):
+            raise OSError(5, "no mount id at /private/proc")
+
+        with patch.object(ranking_publication, "_mount_id", unreadable, create=True):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+            self.assertEqual((code, body.get("outcome")), (409, "committed_unconfirmed"))
+            self.assertNotIn("/", body["error"])
+            self.assertEqual(len(os.listdir(self.archive())), 1)
+            self.assertEqual(ranking_publication.verify(self.archive())["problems"], [])
+            self.assertEqual(
+                [e["action"] for e in self.store.audit_entries()],
+                ["ranking_snapshot_publication_unconfirmed"],
+            )
+        code, done = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, done["written"]), (200, False))
+        self.assertTrue(self.store.verify_audit())
+
     def test_audit_failure_after_unconfirmed_directory_sync_is_logged_and_surfaced(self):
         import stat
 
@@ -297,6 +355,185 @@ class PublicationWiring(QualityMatrix):
     def test_get_does_not_publish(self):
         self.assertEqual(self.call(PM_EMAIL, "/api/ranking/publish")[0], 403)
         self.assertFalse(os.path.exists(self.archive()))
+
+
+class BlobPublicationWiring(QualityMatrix):
+    """The same routes with the owner-selected Blob archive on a mock REST transport.
+
+    Refs #1258.
+    """
+
+    def setUp(self):
+        super().setUp()
+        from ranking_blob_fixture import SAS, URL, FakeBlobContainer
+        from zava_forward.core import ranking_archive_blob as rab
+
+        self.fake = FakeBlobContainer(page_size=1)
+        self.blob = rab.BlobRankingArchive(
+            URL, "ranking-archive", sas=SAS, transport=self.fake, env={}
+        )
+        self.archive_patch = patch.object(self.store, "_ranking_archive", return_value=self.blob)
+        self.archive_patch.start()
+        self.addCleanup(self.archive_patch.stop)
+
+    def clean(self, text):
+        for secret in (
+            "SENTINEL",
+            "acct.blob.core.windows.net",
+            "ranking-archive",
+            "hard links",
+            "folder",
+        ):
+            self.assertNotIn(secret, text)
+
+    def test_publish_is_manager_only_idempotent_audited_and_verified(self):
+        for actor in ("sam", "quin", "kim"):
+            self.assertEqual(self.call(actor, "/api/ranking/publish", {})[0], 403)
+        self.assertEqual(self.fake.calls, [])
+        code, first = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual(
+            (code, first["written"], first["published_on"]), (200, True, controls.today())
+        )
+        code, again = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, again["written"]), (200, False))
+        status = self.call(PM_EMAIL, "/api/ranking/publication")[1]
+        self.assertEqual((status["count"], status["problems"], status["overdue"]), (1, [], False))
+        self.assertEqual(
+            [e["action"] for e in self.store.audit_entries()],
+            ["ranking_snapshot_published", "ranking_snapshot_already_published"],
+        )
+        self.assertTrue(self.store.verify_audit())
+        self.assertEqual({c[0] for c in self.fake.calls}, {"PUT", "GET"})
+
+    def test_concurrent_publish_keeps_one_record_and_an_intact_audit_chain(self):
+        manager = {"email": PM_EMAIL, "role": "Retrofit Programme Manager"}
+        results = []
+        threads = [
+            threading.Thread(
+                target=lambda: results.append(
+                    self.store.publish_ranking_snapshot(manager)["written"]
+                )
+            )
+            for _ in range(2)
+        ]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join(30)
+        self.assertEqual(sorted(results), [False, True])
+        self.assertEqual(len(self.fake.blobs), 1)
+        self.assertTrue(self.store.verify_audit())
+
+    def test_uncertain_write_is_409_audited_without_claiming_the_write_and_retry_is_sound(self):
+        for fault in ("lost", "unreachable", 503):
+            with self.subTest(fault=fault):
+                self.fake.blobs.clear()
+                self.fake.meta.clear()
+                before = len(list(self.store.audit_entries()))
+                self.fake.put_faults = [fault]
+                code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+                self.assertEqual((code, body.get("outcome")), (409, "committed_unconfirmed"))
+                self.clean(body["error"])
+                self.assertIn("may or may not", body["error"])
+                entries = list(self.store.audit_entries())[before:]
+                self.assertEqual(
+                    [e["action"] for e in entries], ["ranking_snapshot_publication_unconfirmed"]
+                )
+                self.assertNotIn("record written", entries[0]["detail"])
+                self.assertIn("unconfirmed", entries[0]["detail"])
+                self.clean(entries[0]["detail"])
+                code, retry = self.call(PM_EMAIL, "/api/ranking/publish", {})
+                self.assertEqual((code, retry["written"]), (200, fault != "lost"))
+        self.assertTrue(self.store.verify_audit())
+
+    def test_definite_refusal_is_503_path_free_and_not_audited_as_published(self):
+        self.fake.put_faults = [403]
+        code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual(code, 503)
+        self.clean(body["error"])
+        self.assertIn("could not be confirmed", body["error"])
+        self.assertEqual(self.fake.blobs, {})
+        self.assertEqual(list(self.store.audit_entries()), [])
+
+    def test_unavailable_configuration_is_503_path_free_with_no_fallback_to_a_folder(self):
+        self.archive_patch.stop()
+        env = {
+            "ZF_RANKING_ARCHIVE": "azure-blob",
+            "ZF_BLOB_ACCOUNT_URL": "https://acct.blob.core.windows.net",
+        }
+        with patch.dict(os.environ, env):
+            code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
+            status_code, status = self.call(PM_EMAIL, "/api/ranking/publication")
+        self.assertEqual(code, 503)
+        self.clean(body["error"])
+        self.assertEqual(status_code, 200)
+        self.assertEqual(status["count"], 0)
+        self.assertEqual(len(status["problems"]), 1)
+        self.clean(status["problems"][0])
+        self.assertFalse(
+            os.path.exists(os.path.join(os.path.dirname(self.store.db_path), "ranking-archive"))
+        )
+        self.assertEqual(list(self.store.audit_entries()), [])
+
+    def test_store_selects_the_adapter_from_the_environment(self):
+        self.archive_patch.stop()
+        env = {
+            "ZF_RANKING_ARCHIVE": "azure-blob",
+            "ZF_BLOB_ACCOUNT_URL": "https://acct.blob.core.windows.net",
+            "ZF_RANKING_BLOB_CONTAINER": "ranking-archive",
+            "ZF_BLOB_SAS": "sig=SENTINEL",
+        }
+        with patch.dict(os.environ, env):
+            self.assertEqual(type(self.store._ranking_archive()).__name__, "BlobRankingArchive")
+        with patch.dict(os.environ, {"ZF_RANKING_ARCHIVE": "local"}):
+            self.assertEqual(os.path.basename(self.store._ranking_archive()), "ranking-archive")
+
+    def test_status_reports_a_tampered_blob_and_an_unreadable_listing(self):
+        self.call(PM_EMAIL, "/api/ranking/publish", {})
+        name = next(iter(self.fake.blobs))
+        self.fake.blobs[name] = self.fake.blobs[name].replace(b'"rank":1', b'"rank":9', 1)
+        status = self.call(PM_EMAIL, "/api/ranking/publication")[1]
+        self.assertEqual(len(status["problems"]), 1)
+        self.fake.list_status = 500
+        code, status = self.call(PM_EMAIL, "/api/ranking/publication")
+        self.assertEqual(
+            (code, status["count"], status["latest"], status["overdue"]), (200, 0, None, True)
+        )
+        self.assertIn("ranking archive", status["problems"][0])
+        self.clean(status["problems"][0])
+
+    def test_publish_route_is_a_conditional_create_and_does_not_list(self):
+        self.fake.list_status = 500
+        code, first = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, first["written"]), (200, True))
+        self.assertEqual([c for c in self.fake.calls if "comp=list" in c[1]], [])
+        self.assertEqual(len(self.fake.blobs), 1)
+        code, status = self.call(PM_EMAIL, "/api/ranking/publication")
+        self.assertEqual((code, status["count"], status["latest"]), (200, 0, None))
+        self.assertEqual(len(status["problems"]), 1)
+        self.clean(status["problems"][0])
+
+    def test_structurally_invalid_200_listing_is_unreadable_status_not_healthy_empty(self):
+        bodies = (
+            b"<Error><Code>InternalError</Code></Error>",
+            b"<EnumerationResults/>",
+            b"<EnumerationResults><Blobs><Blob/></Blobs></EnumerationResults>",
+        )
+        for body in bodies:
+            with self.subTest(body=body):
+                self.fake.list_body = body
+                code, status = self.call(PM_EMAIL, "/api/ranking/publication")
+                self.assertEqual(
+                    (code, status["count"], status["latest"], status["overdue"]),
+                    (200, 0, None, True),
+                )
+                self.assertEqual(len(status["problems"]), 1)
+                self.assertIn("ranking archive", status["problems"][0])
+                self.clean(status["problems"][0])
+        self.fake.list_body = b"<EnumerationResults><Blobs/></EnumerationResults>"
+        code, status = self.call(PM_EMAIL, "/api/ranking/publication")
+        self.assertEqual((code, status["count"], status["problems"]), (200, 0, []))
+        self.assertEqual(self.fake.requests("PUT"), [])
 
 
 if __name__ == "__main__":
