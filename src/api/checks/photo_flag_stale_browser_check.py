@@ -17,13 +17,14 @@ import json
 import os
 import tempfile
 import threading
+from collections.abc import Callable, Mapping
 from http.server import ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 
 import test_auth
 import test_mvp
-from playwright.sync_api import Page, sync_playwright
+from playwright.sync_api import Dialog, Page, sync_playwright
 from test_auth import ENV, OID_SAM, TENANT, principal
 from zava_forward.api import auth
 from zava_forward.api import server as api_server
@@ -36,6 +37,12 @@ STATUSES = (503, 403)
 PHOTO = "/api/account/photo"
 NATIVE_PREFIX = "Failed to load resource"
 WORKTREE = Path(__file__).resolve().parents[3]
+# The untyped test_auth and server callables are given typed signatures here, once.
+principal_header: Callable[..., str] = principal
+make_provider: Callable[[Store, Mapping[str, str]], auth.TrustedProxyProvider] = (
+    auth.TrustedProxyProvider
+)
+make_app: Callable[..., App] = App
 SEVERE = (
     "dialog,[role=dialog],[role=alertdialog],[aria-modal=true],"
     "[class*=toast],[class*=snackbar],[id*=toast],"
@@ -157,7 +164,7 @@ def detector_self_test(browser: Any) -> None:
         if action:
             page.evaluate(action)
             page.wait_for_timeout(120)
-        count = page.evaluate("window.__zfDisruptive.length")
+        count = int(page.evaluate("window.__zfDisruptive.length"))
         check(f"detector self-test: {label} -> {expected} disruptive", count == expected)
         return count
 
@@ -211,7 +218,7 @@ def observe(
     browser: Any, base: str, status: int, result: dict[str, Any], ignore_false: bool = False
 ) -> None:
     page = browser.new_context(
-        extra_http_headers={"X-MS-CLIENT-PRINCIPAL": principal(oid=OID_SAM)}
+        extra_http_headers={"X-MS-CLIENT-PRINCIPAL": principal_header(oid=OID_SAM)}
     ).new_page()
     page.add_init_script(WATCH)
     state: dict[str, Any] = {"photo": True}
@@ -229,7 +236,12 @@ def observe(
         ),
     )
     page.on("pageerror", lambda e: page_errors.append(str(e)))
-    page.on("dialog", lambda d: (dialogs.append(d.message), d.dismiss()))
+
+    def on_dialog(dialog: Dialog) -> None:
+        dialogs.append(dialog.message)
+        dialog.dismiss()
+
+    page.on("dialog", on_dialog)
     page.on("load", lambda: loads.append(page.url))
     page.on(
         "response",
@@ -384,7 +396,7 @@ def main() -> None:
             path = Path(scratch) / "zavaforward.json"
             path.write_text(json.dumps(data), encoding="utf-8")
             store = Store(str(path))
-            app = App(store, provider=auth.TrustedProxyProvider(store, ENV))
+            app = make_app(store, provider=make_provider(store, ENV))
             httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
             threading.Thread(target=httpd.serve_forever, daemon=True).start()
             base = f"http://127.0.0.1:{httpd.server_port}"
