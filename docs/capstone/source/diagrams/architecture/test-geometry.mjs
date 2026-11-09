@@ -73,6 +73,29 @@ test("native diagram geometry has no clipping or newly introduced label/node cro
   }
 });
 
+test("capstone boundary outlines never cut through label or node text", () => {
+  for (const path of paths.slice(2)) {
+    const drawing = JSON.parse(readFileSync(resolve(repository, path)));
+    const owners = new Set(drawing.elements.map((element) => element.customData?.container).filter(Boolean));
+    const texts = drawing.elements.filter((element) => element.type === "text");
+    const failures = [];
+    for (const outline of drawing.elements) {
+      if (outline.type === "rectangle" && owners.has(outline.id)) continue;
+      let points;
+      if (outline.type === "line") points = outline.points.map(([x, y]) => [outline.x + x, outline.y + y]);
+      else if (outline.type === "rectangle") {
+        const { x, y, width, height } = outline;
+        points = [[x, y], [x + width, y], [x + width, y + height], [x, y + height], [x, y]];
+      } else continue;
+      for (const text of texts) {
+        if (text.frameId !== outline.frameId) continue;
+        if (points.slice(1).some((point, i) => intersects(points[i], point, text))) failures.push(`${outline.id} -> ${text.id}`);
+      }
+    }
+    assert.deepEqual(failures, [], `${path}: outline crosses text`);
+  }
+});
+
 test("installed browser measures every native label within its authored width", async () => {
   const cli = realpathSync(execFileSync("which", ["excalidraw"], { encoding: "utf8" }).trim());
   const require = createRequire(cli);

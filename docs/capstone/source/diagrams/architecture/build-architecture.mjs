@@ -95,6 +95,17 @@ function scene(name, width, height, status) {
     elements.push(element);
     return element;
   }
+  function outline(id, points, stroke = colours.rule, evidence = []) {
+    assert(points.length >= 4 && points[0].join() === points.at(-1).join(), `Open outline: ${id}`);
+    const xs = points.map((point) => point[0]), ys = points.map((point) => point[1]);
+    const x = Math.min(...xs), y = Math.min(...ys);
+    const element = { ...base(id, "line", [x, y, Math.max(...xs) - x, Math.max(...ys) - y], evidence),
+      strokeColor: stroke, points: points.map(([px, py]) => [px - x, py - y]),
+      lastCommittedPoint: null, startBinding: null, endBinding: null,
+      startArrowhead: null, endArrowhead: null, polygon: true };
+    elements.push(element);
+    return element;
+  }
   function frame(id, box, label) {
     elements.push({ ...base(id, "frame", box), name: label });
     currentFrame = id;
@@ -256,13 +267,13 @@ function scene(name, width, height, status) {
     ].join("\n");
   }
   rectangle("canvas", [0, 0, width, height], colours.paper, "transparent");
-  return { rectangle, text, arrow, node, icon, service, badge, frame, endFrame, drawing, svg, metadata };
+  return { rectangle, outline, text, arrow, node, icon, service, badge, frame, endFrame, drawing, svg, metadata };
 }
 
 function cxo() {
   const d = scene("Zava Forward: people, case control, evidence and advice", 1600, 850,
     "Conceptual application/data-scope view; not a network map or live inventory. Dashed paths are separately gated integration/activation; residents retain assisted choice.");
-  d.rectangle("application-boundary", [404, 12, 1168, 800], colours.paper, colours.ink);
+  d.outline("application-boundary", [[404, 12], [1572, 12], [1572, 812], [275, 812], [275, 578], [404, 578], [404, 12]], colours.ink);
   d.text("boundary-label", "APPLICATION + CONTROLLED CASE DATA / LOGICAL SCOPE", 430, 20, 1090, 26);
   d.node("company", [30, 58, 328, 118], "Company login", "Same Microsoft account\nApp permissions differ", { titleSize: 30, evidence: ["identity", "roles"] });
   d.node("resident", [30, 192, 328, 118], "Resident website", "Own-case; assisted help\nShared-case: gated", { titleSize: 30, dashed: true, evidence: ["resident", "residentDeployment"] });
@@ -279,7 +290,7 @@ function cxo() {
   d.arrow("record-access", [[970, 354], [1010, 354], [1010, 119], [1080, 119]], colours.ink, false, true, ["transition"]);
   d.arrow("file-access", [[970, 422], [1050, 422], [1050, 287], [1080, 287]], colours.ink, false, true, ["advice"]);
   d.arrow("scoped-model", [[970, 500], [1080, 469]], colours.purple, true, true, ["advice", "chat"]);
-  d.text("sensor-caption", "HOME TELEMETRY / FINITE INTAKE + READ-ONLY ANALYSIS", 30, 590, 920, 26, colours.azure, "left", ["analysis", "qualityHelper"]);
+  d.text("sensor-caption", "HOME TELEMETRY / FINITE INTAKE + READ-ONLY ANALYSIS", 290, 590, 765, 26, colours.azure, "left", ["analysis", "qualityHelper"]);
   d.node("devices", [30, 640, 230, 152], "Home sensors", "Consent + QA\nLive: gated", { titleSize: 28, bodySize: 26, dashed: true, evidence: ["sensors"] });
   d.node("iot-hub", [290, 640, 210, 152], "Azure IoT Hub", "B1 / private\nHub MI route", { titleSize: 26, bodySize: 26, dashed: true, evidence: ["deviceTransport"] });
   d.node("event-hubs", [530, 640, 210, 152], "Event Hubs", "Sensor stream\nAPI via PE", { titleSize: 28, bodySize: 26, dashed: true, evidence: ["deviceTransport", "stream"] });
@@ -289,7 +300,7 @@ function cxo() {
   d.arrow("sensor-transport", [[500, 716], [530, 716]], colours.azure, true, false, ["deviceTransport"], ["iot-hub", "event-hubs"]);
   d.arrow("sensor-receive", [[740, 716], [770, 716]], colours.azure, true, false, ["stream"], ["event-hubs", "telemetry-service"]);
   d.arrow("sensor-retention", [[1190, 716], [1240, 716]], colours.ink, false, true, ["consumer", "analysis"], ["telemetry-service", "telemetry-store"]);
-  d.arrow("sensor-quality-context", [[980, 640], [1020, 640], [1020, 558], [940, 558], [940, 544]], colours.amber, true, false, ["analysis", "qualityHelper"], ["telemetry-service", "api"]);
+  d.arrow("sensor-quality-context", [[980, 640], [1070, 640], [1070, 558], [940, 558], [940, 544]], colours.amber, true, false, ["analysis", "qualityHelper"], ["telemetry-service", "api"]);
   d.text("control-caption", "Insufficient / stale / declined -> manual review. Averages are context, not diagnosis, consent, quality sign-off or safety release.", 30, 818, 1535, 26);
   return d;
 }

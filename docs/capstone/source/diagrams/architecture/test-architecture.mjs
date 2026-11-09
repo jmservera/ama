@@ -66,7 +66,12 @@ test("native sources have unique editable elements and source-backed evidence", 
     assert.equal(drawing.type, "excalidraw");
     assert.equal(new Set(drawing.elements.map((element) => element.id)).size, drawing.elements.length);
     for (const element of drawing.elements) {
-      assert(["rectangle", "ellipse", "text", "arrow", "image", "frame"].includes(element.type));
+      assert(["rectangle", "ellipse", "text", "arrow", "image", "frame", "line"].includes(element.type));
+      if (element.type === "line") {
+        assert.equal(element.id, "application-boundary");
+        assert.deepEqual(element.points[0], element.points.at(-1));
+        assert.equal(element.polygon, true);
+      }
       for (const reference of element.customData?.evidence ?? []) {
         const bytes = readFileSync(resolve(repository, reference.path));
         assert.equal(sha(bytes), reference.sha256);

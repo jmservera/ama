@@ -35,14 +35,14 @@
     },
     {
       "id": "application-boundary",
-      "type": "rectangle",
-      "x": 404,
+      "type": "line",
+      "x": 275,
       "y": 12,
-      "width": 1168,
+      "width": 1297,
       "height": 800,
       "angle": 0,
       "strokeColor": "#173F35",
-      "backgroundColor": "#FAF9F6",
+      "backgroundColor": "transparent",
       "fillStyle": "solid",
       "strokeWidth": 2,
       "strokeStyle": "solid",
@@ -61,7 +61,43 @@
       "locked": false,
       "customData": {
         "evidence": []
-      }
+      },
+      "points": [
+        [
+          129,
+          0
+        ],
+        [
+          1297,
+          0
+        ],
+        [
+          1297,
+          800
+        ],
+        [
+          0,
+          800
+        ],
+        [
+          0,
+          566
+        ],
+        [
+          129,
+          566
+        ],
+        [
+          129,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": null,
+      "endBinding": null,
+      "startArrowhead": null,
+      "endArrowhead": null,
+      "polygon": true
     },
     {
       "id": "boundary-label",
@@ -1902,9 +1938,9 @@
     {
       "id": "sensor-caption",
       "type": "text",
-      "x": 30,
+      "x": 290,
       "y": 590,
-      "width": 920,
+      "width": 765,
       "height": 29.9,
       "angle": 0,
       "strokeColor": "#0078D4",
@@ -3090,7 +3126,7 @@
       "type": "arrow",
       "x": 940,
       "y": 544,
-      "width": 80,
+      "width": 130,
       "height": 96,
       "angle": 0,
       "strokeColor": "#885500",
@@ -3137,11 +3173,11 @@
           96
         ],
         [
-          80,
+          130,
           96
         ],
         [
-          80,
+          130,
           14
         ],
         [

@@ -101,7 +101,10 @@ Read the simple view left to right:
     task creation, quality acceptance or safety release.
 
 The outer boundary is **logical application/data scope**, not a VNet, data
-residency guarantee or contractual provider boundary. Solid lines mean
+residency guarantee or contractual provider boundary. It is one closed
+editable outline with a notch at its lower left: the Home sensors box stays
+outside, and the IoT Hub, Event Hubs, API telemetry service and SQL history
+boxes stay inside, so no outline line cuts through a label or node. Solid lines mean
 source-coded interactions; dashed paths mean separately gated integration
 or activation. AI remains untrusted advice across an evidence/decision
 boundary even where its box appears within the product concept.
