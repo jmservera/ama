@@ -5,17 +5,24 @@ Constructed data only: the transport, token and guard are stubs; no network, SDK
 
 from __future__ import annotations
 
+import contextlib
 import io
 import json
+import os
+import subprocess
+import sys
 import threading
 import unittest
+import urllib.error
 from contextlib import nullcontext
+from email.message import Message
 from typing import Any
 from unittest import mock
 
 from zava_forward.core import ai as core_ai
+from zava_forward.core import data_protection
 from zava_forward.core.ai import Ai as UntypedAi
-from zava_forward.core.ai_consumption import DispatchHeld
+from zava_forward.core.ai_consumption import DispatchHeld, DispatchWithdrawn
 
 Ai: Any = UntypedAi
 count_dispatches: Any = getattr(core_ai, "count_dispatches", None)
@@ -71,27 +78,30 @@ class DispatchWitness(unittest.TestCase):
         return witness.attempts, envelope
 
     def test_attempts_equal_the_transport_for_every_pre_dispatch_exit(self) -> None:
+        def broken_token() -> Any:
+            return mock.patch.object(self.ai, "_token", side_effect=OSError("synthetic"))
+
         cases: dict[str, Any] = {
-            "unconfigured": lambda: setattr(self.ai, "endpoint", ""),
-            "meter missing": lambda: setattr(self.ai, "consumption", None),
-            "reserve held": lambda: setattr(self.ai, "consumption", Ledger(reserve="held")),
-            "check held after reservation": lambda: setattr(
-                self.ai, "consumption", Ledger(check="held")
+            "unconfigured": dict(endpoint=""),
+            "meter missing": dict(consumption=None),
+            "reserve held": dict(consumption=Ledger(reserve="held")),
+            "check held after reservation": dict(consumption=Ledger(check="held")),
+            "token failure": dict(patch=broken_token),
+            "guard denial": dict(
+                patch=lambda: mock.patch.object(
+                    data_protection, "dispatch_hold", return_value="denied"
+                )
             ),
-            "token failure": lambda: setattr(
-                self.ai, "_token", mock.Mock(side_effect=OSError("synthetic"))
-            ),
-            "guard denial": lambda: mock.patch(
-                "zava_forward.core.ai.data_protection.dispatch_hold", return_value="denied"
-            ).start(),
-            "input refusal": lambda: None,
+            "input refusal": dict(user="x" * (core_ai.MAX_TEXT_BYTES + 1)),
         }
-        for label, arrange in cases.items():
-            with self.subTest(label):
-                self.setUp()
-                arrange()
-                user = "x" * (core_ai.MAX_TEXT_BYTES + 1) if label == "input refusal" else "p"
-                attempts, envelope = self.attempts(user)
+        for label, case in cases.items():
+            with self.subTest(label), contextlib.ExitStack() as stack:
+                for name in ("endpoint", "consumption"):
+                    if name in case:
+                        stack.enter_context(mock.patch.object(self.ai, name, case[name]))
+                if "patch" in case:
+                    stack.enter_context(case["patch"]())
+                attempts, envelope = self.attempts(case.get("user", "p"))
                 self.assertEqual((attempts, self.transport.call_count), (0, 0))
                 self.assertNotEqual(envelope["outcome"], "returned")
 
@@ -109,6 +119,38 @@ class DispatchWitness(unittest.TestCase):
         attempts, envelope = self.attempts()
         self.assertEqual((attempts, self.transport.call_count), (1, 1))
         self.assertEqual(envelope["outcome"], "financial-held")
+
+    def handed_off(self, error: Exception) -> tuple[int, dict[str, Any]]:
+        opener = mock.Mock()
+        opener.open.side_effect = error
+        with (
+            mock.patch("zava_forward.core.ai.ai_consumption.SEND_FENCE") as fence,
+            mock.patch("zava_forward.core.ai.ai_transport.opener", return_value=opener),
+        ):
+            fence.get.return_value = lambda: None
+            attempts, envelope = self.attempts()
+        self.assertEqual(
+            (attempts, opener.open.call_count, self.transport.call_count), (attempts, 1, 0)
+        )
+        return attempts, envelope
+
+    def test_withdrawal_timeout_and_http_error_after_handoff_count_one(self) -> None:
+        for error, outcome in (
+            (
+                DispatchWithdrawn("fence-stalled"),
+                "suspended-before-dispatch",
+            ),
+            (TimeoutError("synthetic"), "timeout"),
+            (
+                urllib.error.HTTPError(
+                    "https://synthetic.invalid", 500, "x", Message(), io.BytesIO()
+                ),
+                "provider-unavailable",
+            ),
+        ):
+            with self.subTest(outcome):
+                attempts, envelope = self.handed_off(error)
+                self.assertEqual((attempts, envelope["outcome"]), (1, outcome))
 
     def test_opener_construction_failure_is_not_an_attempt(self) -> None:
         with (
@@ -176,6 +218,39 @@ class DispatchWitness(unittest.TestCase):
 
     def test_without_a_witness_evidence_is_unchanged(self) -> None:
         self.assertEqual(self.ai.evidence("s", "p")["outcome"], "returned")
+
+
+ISOLATION_SCRIPT = """
+import sys, unittest
+from unittest import mock
+from zava_forward.core import data_protection
+import test_ai_dispatch_marker as marker
+original = data_protection.dispatch_hold
+suite = unittest.defaultTestLoader.loadTestsFromTestCase(marker.DispatchWitness)
+result = unittest.TextTestRunner(stream=sys.stderr).run(suite)
+assert result.wasSuccessful()
+assert data_protection.dispatch_hold is original, "guard leaked after the suite"
+mock.patch.stopall()
+assert data_protection.dispatch_hold is original, "guard leaked after stopall"
+import test_ai_input_bounds as bounds
+result = unittest.TextTestRunner(stream=sys.stderr).run(
+    unittest.defaultTestLoader.loadTestsFromModule(bounds))
+assert result.wasSuccessful()
+"""
+
+
+class GuardPatchIsolation(unittest.TestCase):
+    def test_witness_cases_leave_the_process_guard_restored_for_later_modules(self) -> None:
+        here = os.path.dirname(os.path.abspath(__file__))
+        env = dict(os.environ, PYTHONPATH=os.pathsep.join([here, *sys.path]))
+        done = subprocess.run(
+            [sys.executable, "-c", ISOLATION_SCRIPT],
+            env=env,
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        self.assertEqual(done.returncode, 0, done.stderr[-2000:])
 
 
 if __name__ == "__main__":

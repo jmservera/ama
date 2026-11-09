@@ -28,10 +28,12 @@ counter, and no provider-supplied field, reservation or `meter_id` is used.
 
 Known limits. A provider that is not core `Ai.evidence`, or that runs on another
 thread without the copied context, leaves no witness: the adapter logs that the
-count is unverified and assumes one call, which is an upper bound and is not
-shown as measured in the receipt (a receipt provenance field needs the shared
-chat panel). Exactness holds for the trusted composition where the provider is
-core `Ai.evidence`; calls a provider makes outside `Ai` are not seen. A send
+count is unverified and keeps the legacy assumption of one call. That assumption
+is not exact, not a bound (an arbitrary provider may make more calls) and not a
+billing estimate, and the receipt does not show it as unverified (a receipt
+provenance field needs the shared chat panel). The count is the number of
+requests handed to the transport, not wire or billing exactness, and holds for
+the trusted synchronous composition where the provider is core `Ai.evidence`; calls a provider makes outside `Ai` are not seen. A send
 fence withdrawn inside the opener, before the first request byte, still counts
 as one attempt, and redirects followed inside `urlopen` are not counted
 separately. This is a receipt-accounting rule, not evidence of admission, spend,
