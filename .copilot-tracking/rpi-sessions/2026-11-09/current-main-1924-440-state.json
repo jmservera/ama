@@ -1,0 +1,73 @@
+{
+  "task_id": "440-current-main-1924",
+  "task_slug": "current-main-1924-440",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-current-main-1924-440-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-current-main-1924-440-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-current-main-1924-440-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-current-main-1924-440-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09-current-main-1924-440-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09-current-main-1924-440-review.md",
+    "q1_plan": ".copilot-tracking/plans/2026-11-09-current-main-1924-440-q1-plan.md",
+    "q1_details": ".copilot-tracking/details/2026-11-09-current-main-1924-440-q1-details.md",
+    "q1_review": ".copilot-tracking/reviews/2026-11-09-current-main-1924-440-q1-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "New isolated evidence-only checkpoint on merged main 2be660e9; demo-targeted tier; no source fix, new test, SQL rerun or blanket gate",
+      "status": "done",
+      "evidence": "coordinator brief brief-440-current-main-1924.md"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-09-current-main-1924-440-research.md"
+    },
+    {
+      "decision": "Critique executed once (separate rubber-duck agent), verdict Revise, PC-001 to PC-004 applied; no second critique",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-09-current-main-1924-440-critique.md"
+    },
+    {
+      "decision": "Review executed once (independent rubber-duck); initial Needs fixes, 5 findings fixed directly, no repeat",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/2026-11-09-current-main-1924-440-review.md"
+    },
+    {
+      "decision": "Q1: S1 was selected after the plan without a recorded prospective amendment; not an ordered phase; the earlier 'no SQL rerun' decision text is historical",
+      "status": "qualified",
+      "evidence": ".copilot-tracking/changes/2026-11-09-current-main-1924-440-changes.md#qualification-q1-appended-2026-11-09-after-frozen-head-3965fa489-original-text-above-unchanged"
+    },
+    {
+      "decision": "Q1: producer scratch removed; A-series originals survive at coordinator observed-440-1945-logs; S1 raw retention unverified, nothing reconstructed",
+      "status": "qualified",
+      "evidence": "docs/architecture/cutover-evidence-pack.md#qualification-q1-2026-11-09-appended-after-the-frozen-checkpoint-3965fa489d8f07d0180b94d3fdfd7db16441790d-originals-above-unchanged"
+    },
+    {
+      "decision": "Q1: absence claim bounded to inspected paths; PRD FR-016/017 are not resident or complaints IDs; four final processes include one SQL run (1205 discovered, 171 skipped)",
+      "status": "qualified",
+      "evidence": "docs/architecture/cutover-evidence-pack.md#qualification-q1-2026-11-09-appended-after-the-frozen-checkpoint-3965fa489d8f07d0180b94d3fdfd7db16441790d-originals-above-unchanged"
+    },
+    {
+      "decision": "Historical next_action of frozen head 3965fa489 (preserved): Follow-up / Coordinator reviews handoff; continue via existing owners, hold closures, no pivot",
+      "status": "historical",
+      "evidence": "original state record at 3965fa489"
+    },
+    {
+      "decision": "Q1 Review executed once (independent rubber-duck): Needs fixes (1 blocking, 2 non-blocking), fixed directly, no repeat",
+      "status": "complete",
+      "evidence": ".copilot-tracking/reviews/2026-11-09-current-main-1924-440-q1-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Stop for same-session independent verification of Q1; no auto-loop"
+  },
+  "prioritized_follow_ups": null
+}
