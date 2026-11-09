@@ -1241,3 +1241,7 @@ is bounded continue with closure held. A dated C2 qualification in the same sect
 narrows the committed-versus-uncertain creation wording, restates the SQLite failure as
 one in five executions then four passes (cause unknown, no waiver), and cross-references
 a later #1292 diagnosis with 0 of 6 reproductions and an unconfirmed timing hypothesis.
+A dated current-main preparation note in the same section records that `main` `3a9767d5`
+now includes the merged #1240 lifecycle integration, which this historical SQL-wave record
+(observed source `8d6f029c`) did not retest or accept, and holds the next lifecycle-wave
+checkpoint trigger and closure hold.

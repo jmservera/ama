@@ -5608,3 +5608,20 @@ Dated qualification of the section above after an independent PARTIAL Readiness 
 | Q3 | A later, separate #1292 diagnosis at frozen head `59accfa1ca9be77f2e98faf5ef862deba76cf941` (base `ef28d4da4`, documentation records only) ran the same test six times (three plain, three observer-instrumented, about 15 to 16 s each) with 0 of 6 reproductions. Its observational timing hypothesis, a write-lock hold of about 3.05 to 3.25 s against a 5.0 s wait, is consistent with a load-sensitive failure but is NOT confirmed or reproduced. It neither explains nor relabels the earlier failure, implies no fix, and gives no basis to close F2, #1292 or any criterion. | Coordinator-reported from the diagnosis handoff (raw logs outside this repository, not re-read here) |
 
 The F2 owner handling, F1 and the resume conditions above are unchanged. Hold on closure for #1292, #81, #1240, #440 and #123 remains. Not claimed: approval, closure, independent exact-head review or hosted CI for this commit, whole #440, #1292 or #81 acceptance, live SQL, Azure or AI evidence.
+
+### Current-main preparation, 2026-11-09 (Refs #440 #81)
+
+Source-preserving preparation, not a new correction cycle and not a new checkpoint. Prospective records:
+[research](../../.copilot-tracking/research/2026-11-09-sql-wave-checkpoint-440-mainprep-research.md),
+[plan](../../.copilot-tracking/plans/2026-11-09-sql-wave-checkpoint-440-mainprep-plan.md) and
+[critique](../../.copilot-tracking/plans/2026-11-09-sql-wave-checkpoint-440-mainprep-critique.md).
+
+| Item | Value (read 2026-11-09) |
+| --- | --- |
+| Observed SQL-wave source (unchanged) | `8d6f029cac004506953f36606862168bbe9d9412`, the PR 1308 squash; every observation above still refers to it |
+| Current base merged locally | `main` `3a9767d5cf728c5e3be76813ce0bfdac4c06841e`, tree `d5b8e46c4931e729bdd04ef5701be5da32e46c2e`, the PR 1240 squash (merged 2026-11-09T16:50:00Z, head `ccc7358dad0628a660b76b1feb4e3a3556cc952c`, 19 of 19 status entries SUCCESS read with `gh`) |
+| Main delta since the observed source | 225 paths: 12 in `src/core` (source, tests, README), `tools/rpi-checks.py` with its test (#1312 at `1464b4d85`), the rubric score, the pack and tracking records |
+
+Main `3a9767d5c` includes controlled lifecycle source (gates, quality, procurement, appointments, store, resident decisions, complaints route) that this SQL-wave record did not observe. This record does not retest or accept it, and its hosted result for #1240 is not evidence for the SQL-wave observations. Whole #81 and #440 stay open. The merge kept both main's new pack sections and every earlier SQL-wave and C2 line; no source file was edited.
+
+Next lifecycle-wave checkpoint trigger: an owner-selected, bounded integrated checkpoint of main at or after `3a9767d5c` with new evidence (targeted local results, hosted state of the exact head and the resident-decision and gate behavior on SQL where the owner requires it). Until it exists, the resume condition above that depends on the #1240 lifecycle integration evidence is not met, and closure of #81, #1240, #1292, #440 and #123 stays on hold. This note is the hold and resume point, not a completed checkpoint. Independent #189, #954 and #159 source work may proceed. No legal, resident or production approval is implied.

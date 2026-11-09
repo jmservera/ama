@@ -6,16 +6,16 @@
     "task_slug": "sql-wave-checkpoint-440-c2"
   },
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-09-sql-wave-checkpoint-440-mainprep-research.md",
     "plan": ".copilot-tracking/plans/2026-11-09-sql-wave-checkpoint-440-mainprep-plan.md",
     "details": ".copilot-tracking/details/2026-11-09-sql-wave-checkpoint-440-mainprep-details.md",
     "critique": ".copilot-tracking/plans/2026-11-09-sql-wave-checkpoint-440-mainprep-critique.md",
-    "changes": null,
-    "review": null
+    "changes": ".copilot-tracking/changes/2026-11-09-sql-wave-checkpoint-440-mainprep-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09-sql-wave-checkpoint-440-mainprep-review.md"
   },
   "confirmed_decisions": [
     {
@@ -32,12 +32,35 @@
       "decision": "Low 15 versus 17 finding stays with durable follow-up #1314 (D5); not fixed here",
       "status": "done",
       "evidence": "independent-440-context-complete/readiness-findings.json (external)"
+    },
+    {
+      "decision": "Implement complete: clean ordinary merge of main 3a9767d5c, dated note, index, log",
+      "status": "done",
+      "evidence": "changes file"
+    },
+    {
+      "decision": "Review executed once, authored not independent; conformant for bounded scope",
+      "status": "done",
+      "evidence": "review file"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Commit prospective records, ordinary --no-ff merge of origin/main 3a9767d5c, append dated provenance note, validate, Review once"
+    "phase": "Follow-up",
+    "action": "Coordinator current-head Readiness qualification, independent exact-head review and hosted CI before any publication"
   },
-  "prioritized_follow_ups": []
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Current-head Readiness qualification reusing prefix coverage by byte proof",
+      "rationale": "Required gate",
+      "evidence": "review file"
+    },
+    {
+      "rank": 2,
+      "task": "Low 15 vs 17 scope finding (#1314)",
+      "rationale": "Durable follow-up D5",
+      "evidence": "external readiness-findings.json"
+    }
+  ]
 }

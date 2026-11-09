@@ -11235,3 +11235,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a dated C2 qualification to [the SQL-wave checkpoint](../architecture/cutover-evidence-pack.md#sql-feature-recovery-wave-current-main-checkpoint-2026-11-09-refs-440) after a partial independent Readiness assessment: committed-reload (HTTP 409) versus uncertain or transport outcomes narrowed from source reads, the SQLite failure restated as one in five executions then four passes (cause unknown, no waiver), and a cross-reference to the later #1292 diagnosis (0 of 6 reproductions, timing hypothesis unconfirmed). Original text, Review and earlier entries unchanged.
 * Not claimed: approval, closure, independent exact-head review, hosted CI, SQL, browser, live, Azure or model evidence.
+
+## [2026-11-09] update | SQL wave checkpoint current-main preparation (Refs #440)
+
+* Merged `main` `3a9767d5c` (PR 1240 lifecycle integration, plus #1312) into the branch with an ordinary merge and appended a dated [current-main preparation note](../architecture/cutover-evidence-pack.md#current-main-preparation-2026-11-09-refs-440-81) to the SQL-wave section: observed source stays `8d6f029ca`; lifecycle source in main was not retested or accepted by that record; whole #81 and #440 stay open; the next lifecycle-wave checkpoint trigger and closure hold are recorded.
+* Not claimed: a completed lifecycle checkpoint, approval, closure, independent exact-head review, hosted CI for this branch, SQL, browser, live, Azure or model evidence. Earlier entries and the open Low scope finding (#1314) are unchanged.
