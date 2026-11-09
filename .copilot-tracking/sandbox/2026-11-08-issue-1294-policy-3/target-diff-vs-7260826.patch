@@ -1,0 +1,64 @@
+diff --git a/docs/reference/log.md b/docs/reference/log.md
+index 33320375b..156e1d791 100644
+--- a/docs/reference/log.md
++++ b/docs/reference/log.md
+@@ -10944,3 +10944,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API,
+ ## [2026-11-08] update | Correction C1 to the local validation policy (Refs #1294)
+ 
+ * Independent review of the first candidate found four defects, corrected as wording only. The direct employee-chat check now states the runner's full acceptance contract (pinned axe digest, three ordered states, positive integer `passes`, `PASS employee chat:` marker, no skips or violations; selector exactly one test and zero skips). The coverage comparison now separates Shared checks from Local-only verification and genuinely hosted-only artifact upload and hosted execution, and no longer lists locally executed Trivy, SPDX, Bicep, migration and data-guard checks as hosted-only. The categorical full-tier rule for workflow, gate-tool, dependency-manifest and Dockerfile edits was replaced with impact-based classification that keeps the full tier for security-sensitive, infrastructure, deployment, SQL, major, release, mixed and unresolved-risk changes. The behavior test was repeated with independent design and grading. The earlier behavior report and log entry are preserved unchanged. Hosted CI remains unobserved.
++
++## [2026-11-08] update | Correction C2 to the local validation policy (Refs #1294)
++
++* A second independent review found two wording defects, corrected in `src/README.md`: the guide no longer says every mixed change takes the full tier (a mixed change takes the strictest applicable tier, so two focused components stay focused and any full-tier component makes the candidate full), and the runner-specific 58-byte `--out` limit is no longer attributed to the direct employee-chat harness, whose `--out` only receives the results file and whose scratch directory is set by `ZF_BROWSER_SCRATCH`. The behavior test was repeated as a fresh full run on the final wording; earlier reports and the retained sandboxes are preserved. Hosted CI remains unobserved.
+diff --git a/src/README.md b/src/README.md
+index 30df66be7..f8845b1ff 100644
+--- a/src/README.md
++++ b/src/README.md
+@@ -65,7 +65,7 @@ relevant targeted tests. Small issues, tooling and documentation-only changes
+ use the planned relevant local checks plus the applicable hosted CI, without a
+ blanket `rpi-checks.py --changed` run. Big features, releases, infrastructure,
+ deployment, SQL and security-sensitive changes require the complete gate; size
+-alone cannot downgrade them, mixed changes take the strictest tier and doubt
++alone cannot downgrade them, mixed changes take the strictest applicable tier and doubt
+ takes the full tier. Workflow, gate-tool, dependency-manifest and Dockerfile
+ edits are classified by what they actually change, never by file name alone
+ and never as categorically safe (see the
+@@ -202,8 +202,14 @@ match it rather than a summary:
+   `actual-model-unavailable`, `synthetic-cited-answer` and
+   `demo-disclaimer-model-answer`, each with `violations` equal to `[]` and
+   `passes` an integer (not a boolean) above zero, and with no `skipped` text
+-  (matched case-insensitively). Use an `--out` within the 58-byte limit
+-  described above.
++  (matched case-insensitively). The direct `--out` only receives
++  `axe-results.json`, so no length limit is evidenced for it; the 58-byte limit
++  above is the runner's, which sets browser `TMPDIR` to `<out>/tmp`. The direct
++  run keeps its temporary and state directory under `ZF_BROWSER_SCRATCH` (an
++  absolute path outside the checkout, otherwise the harness raises an error) or
++  under `<checkout>/.venv` when it is unset, so set it. Chromium inherits the
++  caller's `TMPDIR`, so a short `TMPDIR` is an unmeasured precaution, not a
++  requirement.
+   The runner copies that file to `employee-chat-results.json` before applying
+   the same check. Passing states alone, or a zero-pass or wrong-state result,
+   is not acceptance.
+@@ -216,8 +222,9 @@ edits: record the impact classification and its basis in the changes or review
+ record. A focused classification needs a stated reason that no permission,
+ pinned action or image, package, secret, deployment path, security control or
+ gate semantic changed (for example a comment, a typo or an unrelated
+-documentation link). Any such change, any doubt and any mixed change takes the
+-full tier. Local `--changed` selection (the full matrix for a workflow path, `tooling`
++documentation link). Any such change and any doubt takes the full tier. A mixed change
++takes the strictest applicable tier of its components: two focused components
++stay focused, and any full-tier component makes the combined candidate full. Local `--changed` selection (the full matrix for a workflow path, `tooling`
+ for a gate tool) is a conservative aid, not a tier.
+ 
+ Policy examples. Selections come from `changed_groups` and
+@@ -231,7 +238,8 @@ tool by path with bytecode writing disabled) before relying on them.
+ | Small employee chat or browser | `src/api/src/zava_forward/api/web/app.js`, `src/api/checks/employee_chat_browser_check.py` | Focused | Direct local checks above; local `--changed` selects `browser` and `project-api` and is an optional aid | `src-api` runs the selector and four other browser checks, not the employee-chat harness | Hosted CI covers the harness |
+ | SQL | `src/api/src/zava_forward/api/mssqlstore.py` | Full | Complete gate, verified external full receipt | `mssql` job when selected | A partial receipt |
+ | Bicep or security | `infra/main.bicep` | Full | Complete gate; `--changed` selects only `preflight`, `namespace`, `static` and `infra` and is partial | `src-namespace` Bicep lint and infra tests; what-if only if enabled | A partial receipt, a weakened control |
+-| Mixed | documentation plus `infra/main.bicep` | Strictest (full) | Complete gate | Union of the above | A lighter tier because most paths are documentation |
++| Mixed: documentation plus infrastructure | documentation plus `infra/main.bicep` | Strictest applicable (full, because a component is infrastructure) | Complete gate | Union of the above | A lighter tier because most paths are documentation |
++| Mixed: documentation plus small chat change | `src/README.md` plus `src/api/src/zava_forward/api/web/app.js` | Strictest applicable (focused, because both components are focused) | Union of the planned local checks, including the direct employee-chat checks | `src-api` runs the selector, not the harness | A full receipt as required, or that hosted CI covers the harness |
+ | Workflow, gate tool, dependency manifest or Dockerfile | `.github/workflows/src-ci.yml`, `tools/rpi-checks.py` | Classified by actual impact: Full when permissions, pinned actions or images, packages, secrets, deployment, a security control or gate semantics change, or when unresolved; Focused only with a recorded reason that none did | Focused: planned local checks and a diff review of the edit; Full: complete gate. Local `--changed` selects the full matrix for a workflow path and only `preflight`, `namespace`, `static` and `tooling` for `tools/rpi-checks.py`, an aid and not a tier | Source CI when the path filter matches | A focused tier chosen by file name, or a full tier imposed by file name alone |
+ 
+ #### Gate speed controls (issue #470)
