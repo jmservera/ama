@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-09T16:58:27+00:00",
-  "commit": "3a9767d5cf728c5e3be76813ce0bfdac4c06841e",
+  "scored_at": "2026-11-09T17:44:09+00:00",
+  "commit": "0dc4dd35ce9ea6bddd1d4ca34d5f8ec6e234adfe",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/42658722465",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/42666089455",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
-    "solution-code": "27502cc4879c665c9d8650aa79cfa99730a75997bab3306d9ed739c0b6a39cd0",
+    "solution-code": "aae6a77762e50acacaf48c49e510a08233966a0e0ba667fc418756e56736b599",
     "infrastructure": "e7b1f3cbf26bc8ba1f18c5ed64ac96f9d115515dfa33fa76d907b3b72d9fbd2d",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "5b414b81c3cc0512d987acd669648d14eb85eae2af031105e39dd8bd5054fbe7",
@@ -44,24 +44,27 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/tests/test_assistant_release.py:910-979"
+        "src/api/src/zava_forward/api/simulator_admin.py:283-315",
+        "src/api/src/zava_forward/api/live_control.py:107-122"
       ],
-      "rationale": "Not touched by this diff. Baseline ceiling unchanged."
+      "rationale": "New admin control surface adds verified-identity + app_admin + view-only authorization, confirmation and stale-revision checks, and an advisory flock; core controls already in place, AI risk n/a here. Ceiling 5 retained with reinforcing evidence."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/queue_azure.py:1-217",
-        "infra/README.md:1332"
+        "src/api/README.md:2106-2131",
+        "src/api/src/zava_forward/api/simulator_admin.py:283-315",
+        "src/api/tests/test_simulator_admin.py:1-120"
       ],
-      "rationale": "New stdlib Azure Queue adapter is unit-tested only with a scripted transport (not run against Azure); infra/README.md still discloses serve refuses to start (token source, API post-back, wiring unbuilt). Incremental, gap proactively disclosed; ceiling 5 retained."
+      "rationale": "Previously-disclosed #\u200b189 gap (no admin UI) is now delivered end to end: API handler, browser screen, CLI-shared locking, extensive unit and browser/axe checks. README still discloses unproven flock-on-SMB behaviour and no deployed job run. Ceiling 5 retained, gap disclosure improved."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/monitoring_coverage.py:240-311"
+        "src/api/src/zava_forward/api/simulator_admin.py:235-245",
+        "src/api/src/zava_forward/api/live_control.py:107-122"
       ],
-      "rationale": "Not touched by this diff. Baseline ceiling unchanged."
+      "rationale": "New locked() advisory lock, write-then-verify and audit_recorded reporting add resilience/consistency patterns to the control path. No cost/perf modelling added. Ceiling 5 retained on incremental reliability evidence."
     },
     "A6": {
       "score": 5,
