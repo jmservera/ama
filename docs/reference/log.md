@@ -11250,3 +11250,27 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Corrected one clause in the [original-load note](../architecture/cutover-evidence-pack.md#original-load-1292-diagnostic-and-record-qualification-2026-11-09-refs-1292): the original series is one failure among five total executions, with the initial failure followed by four passes, not a failure in the fifth execution. A dated qualification was appended to the tracking record; no count, cause or proof boundary changed.
 * Not claimed: E5 or source correction, ticked criteria, independent review of this delta, hosted CI or any retest. Earlier entries unchanged.
+
+## [2026-11-09] update | Issue 1292 current-main priority SQL validation (Refs #1292)
+
+* Appended a dated bounded subsection to [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#current-main-priority-sql-regression-validation-2026-11-09-refs-1292) and an entry to the [index](README.md): at pinned `main` `ba71894bb`, one non-queued admission on a disposable SQL Server 2022 ran the 142-test priority module (split A 108 and B 34) and the two original resident-control methods with SQLite and in-memory parity (6): 148 tests, 67 on SQL Server, 0 skips, 0 failures, 540 s. Genuine prospective RPI records, one independent critique (Revise, applied) and the planning commit preceded execution.
+* Not claimed: root cause or fix of the unknown historical startup failure, a pre-fix failing-test re-proof, whole-SQL acceptance, a full-gate waiver, hosted CI, independent review, scale, lock-duration, Azure or live evidence, E5 or any source correction, or ticked or closed criteria for #1292, #81 or #440. Earlier entries unchanged.
+## [2026-11-09] update | Lifecycle and simulator controls current-main checkpoint (Refs #440)
+
+* Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#lifecycle-and-simulator-controls-current-main-checkpoint-2026-11-09-refs-440-81-189-954-1292) for `main` `48350983` covering merged PRs 1240, 1313, 1315, 1317 and 1318 (issues #81, #189, #954, #1292), with an index sentence. Runtime source equivalence to the 189 and 954 browser runs is shown by tree identity and a 642-file manifest; document identities are compared; PR 1320 and #159 are excluded.
+* No new defect or refactoring confirmed. Not claimed: approval, closure, live budget alert, SQL, model or assistive-technology evidence, hosted CI or independent review of this commit, or satisfaction of the earlier lifecycle-wave trigger. Earlier entries unchanged.
+
+## [2026-11-09] update | SQL wave checkpoint comparison count qualification (Refs #1314 #440)
+
+* Appended a dated [comparison count qualification](../architecture/cutover-evidence-pack.md#comparison-count-qualification-2026-11-09-refs-1314-440) to the cut-over evidence pack and one sentence to the index entry of the SQL-wave checkpoint. It restates, from pinned Git ranges, the final C2 comparison against `ef28d4da4` (17 paths, 700 additions, 0 deletions; the 15-path figure is an intermediate tree and the index re-wrap belongs to the `06f408dd7` comparison), the composition of the current-main preparation additions, and the limit of the byte-prefix wording.
+* Not claimed: a SQL fix, new live, SQL, browser or model evidence, closure of #1314, #440 or #81, a third #440 correction cycle or budget renewal, independent exact-head review, hosted CI or approval. Original records unchanged; earlier entries unchanged.
+
+## [2026-11-09] update | Issue 1292 current-main priority SQL candidate main preparation (Refs #1292)
+
+* Merged `main` `1a84b3b0054990262a0df0625d95e3f545d2739a` into the local candidate branch with an ordinary merge (Git and Markdown only). Both sides' pack sections, index paragraphs and log entries are kept; no row deleted, no earlier count rewritten. Added a dated current-target binding to the [priority SQL subsection](../architecture/cutover-evidence-pack.md#current-main-priority-sql-regression-validation-2026-11-09-refs-1292): `src`, `tools`, `infra` and workflow trees equal the executed source, so the earlier 148-test, 67-on-SQL-Server, 0-skip run is not repeated.
+* Not claimed: root cause of the unknown historical startup failure, the old-behavior-fails half of AC3, whole-SQL acceptance, a full-gate waiver, hosted CI, independent review of this commit, or any criterion tick or closure. The controls and photo observations and the #1314 qualification remain historical main records.
+
+## [2026-11-09] update | Issue 1292 current-main priority SQL Q1 qualification (Refs #1292)
+
+* Added a dated [Q1 qualification](../architecture/cutover-evidence-pack.md#current-main-priority-sql-regression-validation-2026-11-09-refs-1292) after the same-reviewer assessment: the verifier gates test outcomes only and cleanup was observed separately; limits on the timeout bound (C4) and local image and endpoint checks (C5); the seven Applied dispositions are prior record. Original claims are kept, not blessed.
+* Not claimed: a new defect or fix, an immutable runtime image, endpoint authentication, a universal timeout bound, the startup cause, whole-SQL acceptance, a full-gate waiver, or any criterion tick.

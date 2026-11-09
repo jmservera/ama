@@ -5638,3 +5638,126 @@ Bounded additive note. A second unchanged-source diagnosis (frozen head `f1f73d2
 | N4 | The design allowed the observer pair after a plain PASS or REPRODUCED (disclosed partial disposition); the actual P1 was PASS and the REPRODUCED branch was not exercised. | plan P4, `driver.sh` |
 
 Counts are not aggregated: the original series of one failure among five total executions, with the initial failure followed by four passes, the 0 of 6 earlier attempts (Q3 above) and this 0 of 2 pairs are separate denominators. The qualification addresses current claims only; it does not state the older records were accurate, authorizes no past amendment and does not authorize E5. The merged source equals main `2b6d80a25` (lifecycle source `3a9767d5c`); nothing was retested or accepted. All whole-issue #1292 criteria remain unticked and open. Not claimed: independent exact-head review of this commit, hosted CI, SQL, browser or cloud evidence, a full gate or approval.
+
+### Current-main priority SQL regression validation, 2026-11-09 (Refs #1292)
+
+Bounded, validation-only record on pinned `main` `ba71894bb1a94d6a24aabf9828312668f88f3ff5` (tree `83ab51163dd0d24f6a48ea1a329b1693881e8f38`; `src` tree `86bc00e19a167e517ae2955ad88d6e2f7b4eac26`, identical at the executed tracking-only commit `e208748cf`). It is the due earlier lifecycle and priority current-source SQL checkpoint; the controls and photo records (#1322) do not satisfy it. PR #1308 (`8d6f029ca`, merged 2026-11-09) is an ancestor and current main orders reloads by `created_ord`. Planning records were committed before execution; one independent critique (Revise) was applied before any SQL ran.
+
+One non-queued shared-heavy admission, one disposable SQL Server 2022 container (16.0.4305.5, image `sha256:cf8f0ab2ebe6...1718`, loopback only, removed afterwards, no leftover database), `mssql-python` 1.15.0, Python 3.12.3, own environment with imports verified under this worktree's `src` (blobs `sqlstore.py` `89f409ee0`, `mssqlstore.py` `c712ad4a8`).
+
+| Id | Process | Selection | Result |
+| --- | --- | --- | --- |
+| V1 | A | `test_priority_order`: JSON, SQLite and guard classes plus `MssqlPriorityOrder`, `MssqlLegacyMetadata`, `MssqlLegacyEdges`, `MssqlLockTimeoutBegin`, `MssqlBeginRecovery` | 108 ran, 108 ok, 0 skips, exit 0, 309.4 s, 31 on SQL Server |
+| V2 | B | `MssqlC3Corrections`, `MssqlC4Corrections` | 34 ran, 34 ok, 0 skips, exit 0, 201.2 s, 34 on SQL Server |
+| V3 | C | the two original `MssqlResidentControls` methods (`test_challenge_source_exact_dependency_manifest_and_original_reviews`, `test_failed_priority_accept_edit_remove_disposition_and_audit`) with SQLite and in-memory parity | 6 ran, 6 ok, 0 skips, exit 0, 10.4 s, 2 on SQL Server |
+
+Totals: 3 processes, 148 tests, 0 skips, 0 failures, 67 on SQL Server, 540 s campaign. A plus B equal the full 142-test module once (split by class only to stay under the 600 s per-process bound; earlier full runs took 536.7 s and 558.0 s). Raw outputs are external with a 30-member `SHA256SUMS` (digest `b6cec06e5c4075e5271747f188078a30e49e169255a7810a350475fc57798bc0`).
+
+Separate statements: source fulfillment, current observed behavior and root cause are not merged. At the pinned source, the selected existing tests passed once on SQL Server. This does not show the original unordered defect is absent from pre-fix source (the fails-against-old-behavior half of the third criterion is not re-proved here), and it does not explain, fix or retire the unknown historical startup failure, which remains UNKNOWN with the earlier 0 of 6, 0 of 2 and one-in-five denominators unaggregated. No whole-SQL acceptance, full-gate waiver, hosted CI, independent review, scale or lock-duration, Azure or live evidence, resident or professional approval, source correction or E5 is claimed or consumed. All whole-issue #1292, #81 and #440 criteria remain unticked and open. Records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-09-priority-sql-main-1292-*` and the state file.
+
+Current-target binding, 2026-11-09 (Git, read-only, no SQL run). The campaign above executed at planning commit `e208748cf` on source tree `86bc00e19a167e517ae2955ad88d6e2f7b4eac26` (pinned base `ba71894bb`). Current `main` `1a84b3b0054990262a0df0625d95e3f545d2739a` (merged PR 1322 plus a rubric score commit) has the same `src` tree and the same `tools` (`74ad3cb586db...`), `infra` (`b0969f8b7b8c...`) and `.github/workflows` (`29eb03ea759e...`) trees; the only non-documentation path that moved is `.github/rubric/scores/latest.json`. The 148 tests, 67 on SQL Server, 0 skips and one 540 s admission therefore remain the evidence for the unchanged source, and no ceremonial SQL rerun is made or implied. The main-side controls checkpoint (its 13 and 83 browser observations) and the #1314 count qualification stay the historical dated records main published, not fresh claims here. This candidate was brought to main by an ordinary merge, keeping both sides' sections, index paragraphs and log entries; one block order was moved in a separate commit to keep this subsection under its original parent heading. Unchanged limits: the historical startup cause stays unknown, the old-behavior-fails half of AC3 stays unproven, and there is no full-gate, Azure, live, human, whole-#81 or whole-#440 acceptance; no criterion is ticked or closed and E5 stays unspent.
+
+Qualification Q1, 2026-11-09 (documentation only, no SQL rerun, from the same-reviewer assessment of `6c05b1e12`: approve with comments, one Medium; [research](../../.copilot-tracking/research/2026-11-09-priority-sql-q1-1292-research.md), [critique](../../.copilot-tracking/plans/2026-11-09-priority-sql-q1-1292-critique.md)). The original claim above and in the earlier critique and plan that the external verifier covers cleanup and leftovers is kept as originally authored and is not retrospectively blessed. Correct attribution: `verify-1292-cm.py` gates test outcomes only (exits, totals, `OK`, skips, SQL counts); it prints cleanup and leftovers but does not fail on missing or failed cleanup. Cleanup was observed separately in the successful run: `container-id.txt` and `container-cleanup.txt` hold the same container id, `leftover-databases.txt` is empty (captured output only, because the script did not keep the query exit status), and the executing session reported an empty `docker ps -a` afterwards (stated in the changes record, not a retained receipt). The seven critique dispositions C1 to C7 marked Applied describe changes made before the run, not proof of universal guarantees. Limit on C4 (deadlines): the per-process intervals were 311, 201 and 11 s (unittest 309.366, 201.206 and 10.367 s) and the campaign 540 s, all inside the 600 and 1200 s bounds, but no timeout-path receipt exists and the post-timeout output-thread joins can add up to 5 s each, so a universal hard bound is not shown. Limit on C5 (local-only admission): the precheck tested `DOCKER_HOST`, the context name and the local tag image id `sha256:cf8f0ab2ebe6...1718`, and the run used the tag with `--pull=never` rather than the immutable id; no daemon endpoint inspection was retained, so neither an immutable runtime image nor endpoint authentication is claimed. The observed versions, tag, image id and the 67 passing SQL Server tests stay as recorded. No new defect or fix is asserted; the startup cause stays unknown and no criterion is ticked.
+
+### Comparison count qualification, 2026-11-09 (Refs #1314 #440)
+
+Dated wording qualification, a first pass of the separately scoped #1314 follow-up and not a new #440 correction cycle. It supersedes only the explanatory counts and ranges named below. The original C2 and current-main preparation records, their reviews and adverse findings are kept byte for byte, and no source, fixture, policy, SQL behavior or acceptance changed. Every number was reproduced with `git diff --name-only` and `git diff --numstat` between the pinned commits, never against a later `origin/main`. Records:
+[research](../../.copilot-tracking/research/2026-11-09-count-qualification-1314-research.md),
+[plan](../../.copilot-tracking/plans/2026-11-09-count-qualification-1314-plan.md),
+[details](../../.copilot-tracking/details/2026-11-09-count-qualification-1314-details.md) and
+[critique](../../.copilot-tracking/plans/2026-11-09-count-qualification-1314-critique.md).
+
+| Id | Qualification | Evidence |
+| --- | --- | --- |
+| Q1 | The C2 changes record (`2026-11-09-sql-wave-checkpoint-440-c2-changes.md`, line 17) says the comparison against `ef28d4da4` is 15 paths with "one re-wrapped index line". The final comparison of C2 `f2e07999386399694abe91562555b35c0105ab9b` against `ef28d4da4` is 17 paths, 700 additions and 0 deletions, with no index replacement. The 15-path figure (604 additions, 0 deletions) matches the intermediate tree at the C2 merge `ec597d023`, before the C2 changes and review records were added and the C2 state record was rewritten. The index re-wrap (`docs/reference/README.md`, 4 additions and 1 deletion) belongs to the separate comparison of `06f408dd7` against `f2e07999` (11 paths, 258 additions, 5 deletions; the other 4 deletions are in `.github/rubric/scores/latest.json`, which arrived with the C2 merge of `ef28d4da4`). Neither comparison is a range against later `origin/main`. | `git diff --name-only` and `--numstat` for `ef28d4da4..f2e07999`, `ef28d4da4..ec597d023`, `ec597d023..f2e07999` and `06f408dd7..f2e07999` |
+| Q2 | The current-main preparation details (`2026-11-09-sql-wave-checkpoint-440-mainprep-details.md`, line 12) describe main's pack insertions as the only additions versus `f2e07999`, and the note, index sentence and log entry as the only additions versus `origin/main`. The reproduced figures in the preparation changes record (pack 171 and 133, log 5 and 15, index 4 and 17) are correct but mix sources. Versus `f2e07999` for `45e8744f`: pack +171, index +4, log +5 are incoming main pack content (+154 pack, 0 index, 0 log, to the merge `53cef9040`) plus the new preparation note (+17, +4, +5). Versus main `3a9767d5c`: pack +133, index +17, log +15 are inherited SQL-wave and C2 content (+116, +13, +10) plus the same new note (+17, +4, +5). Zero deletions holds for those three files in every one of these ranges only; the whole tree from `f2e07999` to `45e8744f` is 234 files with 7141 insertions and 34 deletions because it contains incoming main, and the 7 deletions between `53cef9040` and `45e8744f` are in the preparation state record, not in the pack, index or log. | `git diff --numstat` for `f2e07999..53cef9040`, `53cef9040..45e8744f`, `f2e07999..45e8744f`, `3a9767d5c..53cef9040` and `3a9767d5c..45e8744f` limited to the pack, index and log, plus the whole-tree `--shortstat` |
+| Q3 | The preparation plan (line 30, P5) and details (line 12) speak of append-only prefix equality. The index and log of `45e8744f` are byte-prefix extensions of `f2e07999` (checked with `cmp`); the pack is not, because incoming main inserted its sections before the SQL-wave sections. For the pack the valid proof is ordered line preservation with 0 deletions, not a byte prefix. | `cmp` of the `f2e07999` blobs against the leading bytes of the `45e8744f` blobs |
+
+The original records, reviews and adverse outcomes stay as authored, and their other statements are not re-assessed here. Not claimed: a SQL fix, new live, SQL, browser or model evidence, whole #440, #81 or #1314 closure or acceptance, a third #440 correction cycle or budget renewal, independent exact-head review, hosted CI or any approval.
+
+## Lifecycle and simulator controls current-main checkpoint (2026-11-09, Refs #440 #81 #189 #954 #1292)
+
+DRAFT, not approved. A new recurring #440 checkpoint, not a corrective cycle or a renewal, and documentation only: no feature, code or policy changed. It gives the merged lifecycle (#1240) and simulator controls (#1313) integration an explicit current-main disposition after the photo regression (#1315) and the #1292 diagnostic record (#1318). It appends to the sections above; the earlier SQL-wave section, its C2, its independent Low findings and the open #1314 wording follow-up are not changed. Records:
+[research](../../.copilot-tracking/research/2026-11-09-controls-checkpoint-440-research.md),
+[plan](../../.copilot-tracking/plans/2026-11-09-controls-checkpoint-440-plan.md),
+[details](../../.copilot-tracking/details/2026-11-09-controls-checkpoint-440-details.md) and
+[critique](../../.copilot-tracking/plans/2026-11-09-controls-checkpoint-440-critique.md).
+
+### Identities, merged changes and exclusions
+
+| Item | Pinned value (read 2026-11-09) |
+| --- | --- |
+| Source `main` | `48350983be156d33afb5803570e1bc0bdb5455bb`, tree `1f6f8021cfbab17ee4975ada308771ba1cbd952b`, `src` tree `99c5354df6d5ebe886d1ad1b98e6a60146543c03` (PR 1315 squash) |
+| PR 1240 (#81 lifecycle) | `3a9767d5c`, merged 16:50:00Z, head `ccc7358dad0628a660b76b1feb4e3a3556cc952c` |
+| PR 1317 (previous #440 checkpoint) | `2b6d80a25`, merged 17:11:39Z |
+| PR 1313 (#189 simulator controls) | `0dc4dd35ce9ea6bddd1d4ca34d5f8ec6e234adfe`, merged 17:35:18Z, reviewed head `e192bc74732e824a3488c49a4875df9bd4463cd8` |
+| PR 1318 (#1292 diagnostic record) | `9557d9da429ec732f4f24dbd94cb28acaf0a7545`, merged 17:44:15Z, documentation only |
+| PR 1315 (#954 photo regression) | `48350983b`, merged 17:47:10Z, head `c46a7a025a20666527b65783410f12967379ee0a` |
+| Rubric commits | `700bf11e1`, `b4a343a16`: only `.github/rubric/scores/latest.json` |
+| Issue states (read live) | #81 OPEN, #189 OPEN, #954 CLOSED (both literal acceptance criteria ticked), #1292 OPEN, #440 OPEN, #1314 OPEN, #159, #1288, #1258, #144 and #123 OPEN |
+| Excluded | PR 1320 (`ff06a15f`, chat refusal receipts) is OPEN and not on main; its approved source and any candidate compatibility run are candidate evidence only and are not main acceptance. #159 stays separate |
+
+Hosted checks: PR 1313 and PR 1315 are reported by the coordinator as all 19 status entries SUCCESS; PR 1240 was read as 19 of 19 SUCCESS in the earlier preparation note. Source CI does not run on a push to `main`, so none of these is a hosted run of `48350983b` itself.
+
+### Source delta and equivalence (Git, read-only)
+
+Main changed 16 files since the previous checkpoint base `3a9767d5c` (1889 insertions, 43 deletions), all under `src/api` plus the rubric file. Nothing under `src/core`, `src/agents`, `infra`, `tools` or `.github/workflows` changed.
+
+| Command | Result |
+| --- | --- |
+| `git diff e192bc747 0dc4dd35c -- src tools infra` | empty: the 1313 squash source equals the reviewed 189 head |
+| `git diff e192bc747 48350983b -- src tools infra` | one file: new `src/api/checks/photo_flag_stale_browser_check.py` (448 lines, sha256 `620301300f3f3dc541e2d1bb577e5331a89e2e440c6a56466a62bd19f324a6db`); no production source changed |
+| `git rev-parse` of the `src` tree of the tested 954 projection `7c72dbd58588094956c7467e0b7b4afbe1c7fc2e` versus `48350983b:src` | both `99c5354d`, identical |
+| `sha256sum -c MANIFEST-projection-src.sha256` over `git archive 48350983b src` | 642 of 642 OK |
+
+Equivalence therefore shows that the runtime source on main is the source that the 189 and 954 browser runs exercised. It does not extend to `src/core` behavior, which was last exercised by the PR 1240 hosted checks and the SQL-wave observations, and it adds nothing about SQL Server.
+
+### Byte witnesses consumed (coordinator-held, outside this repository)
+
+| Evidence | Witness | Result |
+| --- | --- | --- |
+| 189 composed browser, head `e192bc747` | `capture-189-composed-browser/hashes.sha256`, sha256 `2f0275c1743b7af5062b08bb60057e710209d461c569b3aa6a998e6142b03e01` | 78 of 78 members OK; exit 0; 13 states, 13 axe scans, 0 violations; delayed-Stop probe old exit 1 (negative control), new exit 0; synthetic, intended 503 write-error state in stderr |
+| 189 independent Functional | `independent-189-c4-final/functional-findings.json`, sha256 `0230cf4aecafb0aeabee56fd5779ff5811659263e7a18e8eb33d2922c871bb77` | approve, 0 findings; reused unchanged coverage, not a fresh full web or assistive-technology audit |
+| 954 current-main compatibility | `evidence-954-current-main/MANIFEST.sha256`, sha256 `2647335942707f46d134b1fe9a5f9442db044962fed4d42f40bc0c084d64fe49` | 16 of 16 OK; exit 0; 83 PASS and one FAIL that is the expected negative control; one nonqueued `flock -n` admission 17:41:21Z to 17:41:27Z after a holder check; both 503 and 403 receipts quiet |
+| 954 independent | `independent-954-current-main/functional-findings.json`, sha256 `480ed8441b7e1c10e49b3f595f024a115fd36589724b9781fd91cc6e7cf318a5` | approve, 0 findings |
+| 1292 record (#1318) | coordinator ledger and the original-load diagnostic section above | 0 of 2 historical paired campaigns reproduced, cause UNKNOWN; the original series stays one failure then four passes in five total executions; manifest 26 members plus itself |
+
+The 954 result is native diagnostics with `literal_no_console_event` false and informational (two native failed-resource diagnostics per receipt). It is not a literal console-zero, assistive-technology, live or general UI conformance claim. The 1292 record supports no current-source SQL fix or acceptance.
+
+### Document identities (draft is not approved)
+
+BRD 0.21.0 `draft` blob `34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD 0.21.0 `in-review`, unsigned, blob `c788b917bafaede215f326f0efc71e071a687f1c`; case study original `0aec2d80` and addendum `28c19242`; ADR 0001 `d42fa5c4`, 0002 `cbe21530` (only its staff identity decision is owner-accepted, 2026-10-24), 0003 `d6064539`, 0004 `9406c2e7`, 0005 `4d610335`, 0006 `956da1a3`, 0007 `abb21088`. All identical to the previous checkpoint; no new legal or regulatory claim is made.
+
+### Requirement trace (document-qualified) and boundaries
+
+BRD and PRD functional requirement numbers collide, so each trace names its document.
+
+| Requirement | Package, API or UI boundary read from source at `48350983b` |
+| --- | --- |
+| PRD FR-050 and AC-066 (simulated monitoring through IoT Hub), ADR 0003 decision 6 as cited by the #189 issue body | `src/api/src/zava_forward/api/simulator_admin.py` edits only the existing `live-sim-control-v1` document through `live_control` guards and `live_simulator.check_capacity`; it starts no job, calls no Azure API and changes no role or resource |
+| Auth and roles | administrator only (`ADMIN_REQUIRED` 403); a view-only administrator sees every option and changes nothing (`VIEW_ONLY` 403); the destination is listed in `workbench.py` with access "needs a role with this authority" for view-only users |
+| Finite cost and run controls | expiry must be in the future and at most 14 days (`CONTROL_WINDOW_INVALID`); cohort capacity checks (`B1_QUOTA_HEADROOM`, `RATE_TOO_LOW_FOR_HOMES`); confirmation tick; stale-control check; `live_control.locked` advisory lock refuses interleaved writers with `CONTROL_BUSY` |
+| Failure and manual routes | unconfigured control returns 503 with a named manual route (`MANUAL_ROUTE`); write failures 503; a missing or invalid control already blocks sending; the IoT SDK import is lazy and reports `IOT_SDK_MISSING` |
+| Budget alert (live gate) | reported `not_recorded`, `live_verified` false (`simulator_admin.py:131`); the approval reference is not evidence of an alert; #146 stays the owner |
+| PRD FR-008 controlled transition gate with FR-016 and FR-017 (issue 81 alignment section above) | lifecycle source merged by PR 1240 in `src/core` (gates, quality, procurement, appointments, store, resident decisions, complaints route); human approval, resident consent and legal review stay with named humans, and the rule records stay exercise fixtures |
+| BRD OD-43 | the actual monitoring inventory and ownership stay an open decision; simulated values are not site facts |
+
+Resident-facing consent and human quality decisions are unchanged by this record. Backlog owners: #189 (live run owner, time limit and budget alert criterion unticked), #1292 (SQL priority ordering), #1258, #1288, #144, #159 (with unmerged PR 1320) and #146 (budget alert).
+
+### Findings, owners and gates
+
+No new defect and no new refactoring is confirmed by this checkpoint, within this bounded scope: source and evidence identity, the boundaries above and the open issue states. The candidate items are existing and owned: current-source SQL recurrence and acceptance (#1292, wording in #1314), ranking archive durability (#1258), quality sensor grounding (#1288), hosting and load (#144) and chat receipts (#159, PR 1320). No speculative issue is opened.
+
+Not run, so unverified: any new unit, static or browser check (none needed after the equivalence proof above, and neither browser campaign is repeated), SQL Server and Azure paths (the 189 handoff records 19 Source and 110 Core SQL or Azure skips), live run and budget alert, real IoT or model calls, assistive technology, literal console zero, hosted CI for this branch, and the whole Major HVE behavior validation obligation of #440. None of these is relaxed. This documentation checkpoint does not supply that behavior evidence and does not approve any deferral.
+
+### Recommendation and resume conditions
+
+Continue the existing owners, with a HOLD on every closure claim. No fix, pivot or deferral is proposed or granted.
+
+* This checkpoint does NOT satisfy the lifecycle-wave trigger recorded in the SQL-wave section above. That trigger still needs new integrated evidence: targeted local results, hosted state of the exact head, and resident-decision and gate behavior on SQL where the owner requires it. Those resume conditions are retained unchanged.
+* Closure holds stay on #81 and its #1240 integration, #1292, #123, #440, and the #189 live criterion (owner, time limit and budget alert verified live).
+* Dependent expansion that relies on lifecycle or SQL ordering evidence waits for the trigger above. Expansion that relies on the simulator controls waits for a live-verified budget alert and a named run owner.
+* #159 compatibility with main, PR 1320 and any candidate work are evaluated on their own evidence.
+* Independent #189, #954, #159, #1288, #1258 and #144 source work may proceed. #954 is already closed on its literal criteria.
+
+Limits: single-session authored record with no independent exact-head review and no hosted CI for the commit that carries it; the witnesses are coordinator-held files read in this session, with their digests recorded here; PR check counts for 1313 and 1315 are coordinator-reported. Not claimed: approval, closure, acceptance of any criterion, whole #440, #81, #189 or #1292 acceptance, live, SQL, Azure, model, assistive-technology or production readiness, or any legal, resident or production approval.

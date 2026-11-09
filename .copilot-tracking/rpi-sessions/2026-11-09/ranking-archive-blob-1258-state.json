@@ -1,0 +1,82 @@
+{
+  "task_id": "1258-ranking-archive-blob-c4",
+  "task_slug": "ranking-archive-blob-1258",
+  "parent_task": {
+    "task_id": "1258-ranking-archive-ancestor-durability",
+    "task_slug": "ranking-archive-ancestor-durability-1258"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-ranking-archive-blob-1258-c4-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-ranking-archive-blob-1258-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-ranking-archive-blob-1258-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-ranking-archive-blob-1258-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09-ranking-archive-blob-1258-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09-ranking-archive-blob-1258-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "owner selects Blob for ranking archive JSON persistence (2026-11-08); not further filesystem hardening or SQL migration",
+      "status": "confirmed",
+      "evidence": "issue 1258 comment 2026-11-08T18:44:58Z"
+    },
+    {
+      "decision": "research executed, Planning Readiness Ready",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-09-ranking-archive-blob-1258-c4-research.md"
+    },
+    {
+      "decision": "critique executed once, verdict Revise, PC-001..PC-007 applied directly",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-09-ranking-archive-blob-1258-critique.md"
+    },
+    {
+      "decision": "cycles: c1..c3 spent, this is c4 of at most five total; c5 reserve",
+      "status": "confirmed",
+      "evidence": "research record, correction-cycle accounting"
+    },
+    {
+      "decision": "tier DEMO (targeted changed and impacted modules); no full gate, SQL, browser, scanners",
+      "status": "confirmed",
+      "evidence": "coordinator brief 2026-11-09"
+    },
+    {
+      "decision": "implementation committed 3b8320ac6; targeted tests green (core 134, API 34, digest 27), ruff/mypy clean",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-11-09-ranking-archive-blob-1258-changes.md"
+    },
+    {
+      "decision": "review executed once on 3b8320ac6, outcome: no blocking or significant findings, one Minor routed",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-09-ranking-archive-blob-1258-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "owner/coordinator selects follow-up; parent PR later (Refs #1258), after #1292 delivery and exact-main integration"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Final exact-main integration and affected tests after #1292 delivery",
+      "rationale": "Store/API overlap",
+      "evidence": "coordinator brief"
+    },
+    {
+      "rank": 2,
+      "task": "Blob container, immutability policy, role grant and Bicep env var; decide migration of existing folder records",
+      "rationale": "Required for any Azure acceptance; not proved here",
+      "evidence": "changes record, Not proved"
+    },
+    {
+      "rank": 3,
+      "task": "Guard _publish_blob against a policy version outside the record-name pattern (Minor)",
+      "rationale": "Uncaught ValueError only for non-conforming registry versions",
+      "evidence": "review record"
+    }
+  ]
+}

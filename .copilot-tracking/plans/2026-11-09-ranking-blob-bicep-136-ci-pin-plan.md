@@ -1,0 +1,3 @@
+# Plan: qualify pinned Ruff 0.17.1 on unchanged infra inputs (Refs #136, #1258)
+
+Prospective, written before any run. Validation only, no source/config/ignore edit, no new source cycle (1 of 5 spent, 4 remain). Handoff disclosed local ruff 0.17.3 vs CI pin 0.17.1. Plan: install `ruff==0.17.1` in an own pip venv under /tmp (no global, no uv), capture `--version`, run the exact `.github/workflows/src-ci.yml` infra check and format commands from the repo root on `infra/tests/test_bicep_policy.py infra/tests/test_deploy.py infra/scripts/deploy.py`. A failure is preserved and reported, not waived. No other checks rerun.

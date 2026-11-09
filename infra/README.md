@@ -3837,6 +3837,7 @@ documentation record, not machine-checked and not live Azure evidence.
 | Log Analytics, Application Insights, private link scope, action group, alerts, workbook | `modules/monitoring.bicep`, `operationalMonitoring.bicep` | In Bicep |
 | Key Vault and secret definitions | `modules/keyvault.bicep` | In Bicep; secret values are set outside the repository (see `secret-inventory.json`) |
 | Storage (blob, immutable audit container, queues, lifecycle) | `modules/storage.bicep` | In Bicep |
+| Ranking archive Blob container and API settings (#1258) | `modules/storage.bicep`, `modules/containerapps.bicep`, `main.bicep` | Source definition, opt-in (`enableRankingArchiveBlob`, default false); immutability duration and lock are manual prerequisites; see [Ranking archive Blob wiring](#ranking-archive-blob-wiring-refs-136-1258-2026-11-09) |
 | Container Registry | `modules/registry.bicep` | In Bicep; image builds use `az acr build` or the release workflow |
 | Azure SQL server, database, auditing, threat protection, PITR | `modules/sql.bicep` | In Bicep |
 | SQL database users and grants | `scripts/create-sql-users.*` | Scripted, run by the in-VNet initializer; owner runs it |
@@ -3860,6 +3861,25 @@ open: #137, #138, #140, #142, #143, #144, #145, #146, #148), 4 (from-empty
 deployment observed on 2026-10-12 but not reproven since) and 5 (status kept
 current in the epic). Criterion 2 is recorded here but its manual rows still
 need owner confirmation.
+
+## Ranking archive Blob wiring (Refs #136, #1258, 2026-11-09)
+
+Source wiring only for the Blob JSON ranking publication archive chosen on #1258
+(2026-11-08). It is a source candidate and compiled template, not resource
+provisioning, a role grant, WORM enforcement, a migration or a deployment
+approval. No Azure call, what-if or deployment was made.
+
+| Parameter | Default | Effect |
+| --- | --- | --- |
+| `enableRankingArchiveBlob` | `false` | `true` adds the private `ranking-archive` container (`publicAccess` None, same private account and endpoints) and sets `ZF_RANKING_ARCHIVE=azure-blob` and `ZF_RANKING_BLOB_CONTAINER=ranking-archive` on the API app. `false` leaves every existing resource and setting unchanged; the API store then selects the local folder archive (a dev/test adapter whose fsync is not evidence of durable storage), and only the operator CLI `--blob` mode refuses when the variables are missing. |
+| `rankingArchiveImmutabilityDays` | `0` (unset) | `0` creates no immutability policy. A positive value creates an unlocked time-based policy on that container only. |
+
+* The API already has `ZF_BLOB_ACCOUNT_URL` and `ZF_BLOB_CLIENT_ID` (managed identity). The wiring adds no key, SAS, connection string, secret or public access, and no role: the existing API storage-account `Storage Blob Data Contributor` assignment covers the adapter's create, read and list. Residual: that role also permits delete at account scope; the adapter has no delete path, but a container-scoped assignment is a later platform decision, not made here.
+* No retention duration is approved for ranking records, so none is chosen. Until the owner sets and approves a duration and locks the policy, nothing may claim immutable or durable release of ranking records. The existing 365-day audit and digest values are not an approved schedule either.
+* `environmentName=pilot` with the flag on and a zero duration fails the named guard `pilotRankingArchiveRequiresConfiguredRetention`. It checks only that a duration is set, not that it is approved or locked.
+* Existing folder records are not migrated, deleted or read: Blob starts empty. The runner (`ranking_publication_runner --blob`) is an operator CLI and needs the same variables; no job is deployed for it.
+* `main.test.bicepparam` records both parameters explicitly as `false` and `0`. Set the flag in the private parameter copy to wire the demo.
+* Offline checks: `az bicep build` of `main.bicep`, `tests.test_bicep_policy` (flag-off identity, container privacy, optional policy, compiled output-to-env chain, provider constant match, pilot guard) and `tests.test_identity_rbac`. Real-account, emulator and role behaviour are not established.
 
 ## Validate locally
 
