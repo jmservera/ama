@@ -643,6 +643,16 @@ duplicate, incomplete or irregular series raise explicit errors, not a pass.
 Use explicit SQL observation queries plus trusted persisted control units, not
 relabelled incoming units, when constructing the observed input.
 
+`weather_report(observed, reference, handover=..., cadence_minutes=5)` is the separate
+`synthetic-weather-continuity-v1` check for `live-sim-reading-v1` rows: live simulated
+weather against synthetic weather history from `live_readings.Generator` with another seed
+and scenario `weather-backfill-v1` (same homes, slots, units and three channels, no
+`calibrated` field). Tolerances are engineering bounds from the declared generator constants,
+not an approved operational tolerance, and the output is a constructed distribution check, not
+witnessed Azure continuity, physical accuracy or calibration. It never accepts indoor rows, and
+equal declared seeds are refused (`HANDOVER_REFERENCE_NOT_DISTINCT`); distinct seeds still do not
+authenticate independent generator provenance.
+
 The JSON-compatible result includes `passed`, declared tolerances and per-home
 before/after counts, channel means and population standard deviations.
 `Tolerance(point=0, mean_step=0, stddev=0)` is the default for each of the
@@ -738,6 +748,17 @@ offline and secret-free. Retrying `rotate` after `ROTATION_REVOKE_FAILED` or
 supported recovery is `teardown(error.new_manifest, ...)` using the non-secret
 manifest carried by `DeviceIdentityError`.
 
+`synthetic.device_provision` is a dry-run-by-default command that maps each consenting
+stock home to one `SYN-` device ID and prints non-secret references only. `--apply` is
+refused unless a real credential owner is named and trusted code supplies a `Registry`
+and `CredentialStore`; this repository ships neither, so the command line cannot touch
+Azure and creates no credential. Declined and unknown-consent homes get no identity.
+
+```bash
+python -m zava_forward.core.synthetic.device_provision --register register.csv \
+  --homes 30 --run-id run-185 --owner "<named owner>"
+```
+
 ## Journey ownership register and human-review routing (#128)
 
 `journey_register.draft()` lists journeys J1 to J6 and R1 against the eight AC-071
@@ -781,9 +802,16 @@ Current SQL controls and mapped-home existence are checked within each database
 writer transaction. A payload's home, source label or `calibrated=true` never grants
 mapping, consent or calibration authority.
 
-Input is the closed `sensor-fault-input-v1` observation shape from
-`synthetic.sensor_faults.READING_FIELDS`, not Packet labels/clean rows/evaluator
-truth. The [shared field reference and measured daily accounting](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
+Input is one of two separately validated closed branches selected by
+`schema_version`, each refusing the other's key set, never Packet labels/clean
+rows/evaluator truth: the 13-field indoor `sensor-fault-input-v1` shape from
+`synthetic.sensor_faults.READING_FIELDS`, and the 16-field synthetic-weather
+`live-sim-reading-v1` envelope from `sensor_consumer.LIVE_FIELDS` (version in
+`synthetic/live_readings.py`; no `calibrated` field; outdoor weather, not indoor
+evidence, authenticated provenance or calibrated continuity). The field rules
+below describe the indoor branch; the live branch keeps sunlight and the original
+fields in the lossless `retained_envelopes` witness, not a new reading column.
+The [shared field reference and measured daily accounting](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
 describe this imported authority without another schema: three paired records/
 home/day gives 3N records, not a selected wire-message count. Stock-derived
 73-character lowercase-hex sensor IDs are incompatible with this consumer;
@@ -885,8 +913,12 @@ method sign-off and R3 limits that gate any measure beyond an exercise rule.
 
 `sensor_analysis_store.analyse_retained(consumer, home_id, window, as_of)` runs
 the derivation over readings retained in the SQL store. It uses only read-only
-`SensorConsumer` methods: `observed_series` for the window and `home_consent`
-for trusted consent (any declined control declines the home; anything other
+`SensorConsumer` methods: `retained_envelopes` for the window and `home_consent`
+for trusted consent. `live-sim-reading-v1` rows are climate-shaped outdoor
+readings, not indoor measurements: they are never passed to the indoor
+derivation, and a window holding only such rows is `INSUFFICIENT` with reason
+`WEATHER_INPUT_NOT_INDOOR_MEASUREMENT`. A weather-to-indoor model is separate,
+versioned and approved scope (any declined control declines the home; anything other
 than all-granted is unknown). If the store cannot be read, the result is
 `INSUFFICIENT` with reason `RETAINED_READINGS_UNAVAILABLE` and priority effect
 `NONE`; the manual review route is unchanged. It writes nothing and creates no
