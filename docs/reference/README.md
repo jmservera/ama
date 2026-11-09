@@ -47,8 +47,8 @@ production acceptance or a higher score.
 For the paper's [single-document delivery](../capstone/thought-leadership/everything-but-the-software/README.md#single-document-delivery),
 the owner-selected title is preserved and the supplement is part of the
 main PDF, with reconciled labels and one bibliography.
-The current coauthored delivery has 45 pages, with the additive Supplement
-starting on page 37. This is a draft with unreported experimental outcomes,
+The current coauthored delivery has 49 pages, with the additive Supplement
+starting on page 39. This is a draft with unreported experimental outcomes,
 not a completed confirmatory report.
 
 The later [8 November study update](../capstone/source/review-2026-11-08.md#later-8-november-study-and-coauthor-update)
@@ -66,7 +66,7 @@ reviews or unresolved interpretation/approval limits.
 
 The [8 November measurement clarification](../capstone/thought-leadership/everything-but-the-software/README.md#measurement-provenance-8-november)
 adds an outcome/proxy/resource table, actual raw field/instrument definitions
-and source-bound active B/C templates. There is no separate numerical AI
+and source-bound active B/C templates. At that running-source pin there is no separate numerical AI
 outcome judge: model review is a treatment, while hidden contracts and fixed
 analysis tools measure outcomes and structural proxies. Current-source
 inspection confirms conservative loss/composite CR1 summaries and the Ruff
@@ -75,6 +75,21 @@ The v13 single PDF has 45 pages, Supplement 37, with 50 authoring checks
 and PDF bounds/destinations verified. Historical/adverse records, coauthors,
 registered-base/unregistered-amendment disclosure and result TODOs remain;
 independent/human and publication approvals are separate.
+
+The [9 November supplementary judging revision](../capstone/thought-leadership/everything-but-the-software/README.md#supplementary-blind-judging-9-november)
+adds a separate prospective, exploratory post-collection workflow assessment
+at source `b7973e20`. Archived eligible checkpoints supply witnessed endpoint
+loss; anonymised evidence supplies four separate ordinal API-task ratings.
+Full allocated-frame missingness, nested rating units, treatment-dependent
+acquisition, residual blinding, human calibration and separate paid-judging
+authorisation remain explicit. The running experiment, original endpoints
+and deferred results are unchanged; source inspection and a Coach-guided
+assisted assessment do not establish collected ratings or scientific approval.
+The owner's technical-flow continuation also separates host Python/
+JavaScript transport, tool-enabled development in fresh containers and
+read-only post-run replay followed by evidence-only judging. A paired
+conceptual runtime figure describes those source contracts without
+claiming every historical runtime was newly verified.
 
 The owner-requested additive revision removes repeated Background, figures
 and case narratives; the paper retains only extra source

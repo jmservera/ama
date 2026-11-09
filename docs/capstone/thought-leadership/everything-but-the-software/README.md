@@ -1,7 +1,7 @@
 ---
-title: Everything but the Software - source package (draft v13)
-description: Single-document paper with source-bound measurement definitions and active AI treatment prompts, preserving execution and coauthorship provenance
-ms.date: 2026-11-08
+title: Everything but the Software - source package (draft v14)
+description: Single-document paper with prospective supplementary blind judging, source-bound measurements and preserved execution provenance
+ms.date: 2026-11-09
 ---
 
 Working title: *Everything but the Software: Feature-Driven Decay in an Agentic Coding Loop. An Exploratory Case Study and an Experiment Protocol.*
@@ -10,7 +10,7 @@ Working title: *Everything but the Software: Feature-Driven Decay in an Agentic 
 
 The title is unchanged at the owner's request. The complete
 [paper](./main.pdf) and [source](./main.tex) now include a
-[Supplement section](./main.pdf#page=37) in the same document.
+[Supplement section](./main.pdf#page=39) in the same document.
 The supplement is additive: source-specific qualifications, detailed
 method/rival checks, the frozen prompt, deferred rates and provenance.
 Repeated Background text, figures and case narratives are excluded from
@@ -32,6 +32,86 @@ calendar dates no longer lead the argument. The supplied
 backlog handoff; its provenance and missing export metadata are in the
 [evidence index](./anc/case-evidence-matrix.json).
 
+### Supplementary Blind Judging 9 November
+
+The paper adds a prospective supplementary assessment from the supplied
+[judging README](https://github.com/jmservera/ama-thought-mve/blob/b7973e200a6edbb1d19355badae3b7e03a066b09/judging/README.md),
+commit `b7973e200a6edbb1d19355badae3b7e03a066b09`, README Git blob
+`6cc0c236e4ca093198d38909dceb80f850196faa`. It is a separate development
+branch, not the running source `e71037d9`. The
+[main methods](./anc/experiment-protocol.tex) introduce the panel and
+the [additive instrument account](./anc/measurement-provenance.tex)
+defines scenario eligibility, witnessed endpoint loss, ordinal AI ratings,
+full-frame missingness, blinding/calibration and separate judging costs.
+
+After collection stops, archived measurement HEADs will supply P1-P10 and
+post-CR1 evaluations without rerunning or repairing development trajectories.
+The fixed panel includes ten feature workflows, a delivery/reopening journey
+and CR1. Four separate 0-4 ratings concern exercised API tasks, with
+unsupported dimensions null. There is no composite quality score or
+human-usability claim. A low conditional loss density can accompany poor
+acquisition; final fulfilment and risk-set sizes must be reported with it.
+Repeated judges/scenarios/checkpoints do not enlarge independent n.
+Model-balanced contrasts require the full allocated comparison frame.
+The source-based assessment identified a material packet limitation:
+earlier passing witnesses and retention labels are visible to the judge,
+and historical/final observations reuse local IDs. Ratings may consequently
+reflect historical anchoring despite requiring final evidence citations.
+Post-CR1 endpoint loss also includes failures already present at P10.
+The paper discloses both rather than describing endpoint-only packets or
+CR1-induced loss. Judge-specific calibration, private block/epoch linkage
+and full-frame affordability remain operator decisions.
+
+The original endpoints, treatment budgets, registered-base/unregistered-
+amendment account, historical source pins and false results switch remain.
+The assessment is supplementary exploratory, not retrospectively
+preregistered. Actual judging runs, calibration, outcome exposure, evaluated/
+missing counts, versions and costs remain author/operator TODOs.
+The [dated revision](./anc/revision-report.md#supplementary-blind-judging-9-november)
+records source support, the Coach-guided assessment and validation limits.
+The supplied Data Science and Engineering Coach definition was used in a
+separate general-purpose agent context because the exact named agent was
+not launchable; this is not independent human or scientific approval.
+
+The initial judging-only v14 candidate had **47 pages**, Supplement **page 37**, main judging
+methods **page 21**, and instrument/rubric detail **pages 44-46**.
+Tectonic 0.17.0 compiled it without errors, unresolved references or
+overfull/underfull boxes; the inherited `inputenc` compatibility warning
+remains. The actual changed pages, intact B/C prompt displays and all-page
+layout proof were inspected. All-page text bounds, 183 internal destinations,
+51 outline entries and absence of blank pages pass. Current source/PDF
+bindings and historical records remain distinct.
+
+#### Technical Flow Continuation
+
+The owner subsequently supplied a useful host/container explanation and
+two flows. The first describes supplementary post-run replay and judging;
+the second describes development-agent command execution. The paper uses
+those names to avoid confusing a tool-enabled builder with a tool-free
+judge. The [execution-boundary subsection](./anc/experiment-protocol.tex)
+and paired runtime diagram separate trusted-host Python/JavaScript transport,
+fresh command containers, persistent writable development files/Git and
+read-only post-run snapshots/evaluator inputs.
+They distinguish collection/isolation unavailability from observed
+candidate failures and keep source-described controls separate from
+verification of historical runtime conditions.
+
+The complete v14 delivery has **49 pages**, Supplement **page 39**,
+execution-boundary text **page 17**, paired diagram **page 19** and judging
+methods **page 21**; detailed judging rules are **pages 46-48**.
+The diagram retains editable Excalidraw source, native SVG/PNG exports and
+source/export hashes. It is conceptual, not an execution trace.
+Source comparison qualifies the supplied capability claim: four supervisor
+capabilities are re-added, while the candidate child has cleared capabilities.
+Development state persists by validated replay, not a writable host checkout.
+The [current binding](./anc/supplement-integration.json) preserves the
+earlier judging-only and 8 November records.
+All **57 authoring tests** and structural checks pass. The complete PDF's
+all-page bounds, 184 internal destinations, 52 outline entries and absence
+of blank pages pass; the paired diagram, changed pages and intact B/C
+listings were inspected. Tectonic retains the inherited `inputenc` warning
+without errors, unresolved references or overfull/underfull boxes.
+
 ### Measurement Provenance 8 November
 
 The paper now explains which quantities are measured, their units, denominators,
@@ -43,7 +123,9 @@ read-only inspection of public
 [`e71037d9`](https://github.com/jmservera/ama-thought-mve/tree/e71037d961cb80fc5c659437796de7736820f6c9),
 not remeasurement of private data.
 
-There is **no separate numerical LLM-as-judge**. Hidden contracts and fixed
+At that running-source pin there is **no separate numerical LLM-as-judge**.
+The proposed supplementary instrument above has a distinct role.
+Hidden contracts and fixed
 code-analysis tools produce outcomes and metrics. Arm C's qualitative review
 is an intervention, not a scored measurement. The
 [active B template](./anc/consolidation-active-e71037d9.prompt.txt) and

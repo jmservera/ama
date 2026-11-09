@@ -11187,3 +11187,32 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Merged current `origin/main` df8e858b (contains PR 1304 IoT source and a rubric score commit) into the issue 144 branch with an ordinary merge, after recording a prospective plan. Both append-only entry sets in this log and the `2026-11-09` issue 144 headers are retained; the only textual overlaps (this log and one `infra/README.md` row) merged cleanly. The hosted CONFLICTING cause stays unestablished.
 * `src/agents` is unchanged from the approved 63d7f8c1; main changed no Agents file. Demo-targeted checks and the Date positive and mutation-negative results are in the dated changes record under `.copilot-tracking/`. Independent exact-head review and hosted CI of the new head are pending; all five issue 144 acceptance criteria stay unproven live.
+
+## [2026-11-09] query | Supplementary blind post-run judging in the paper
+
+* Added prospective supplementary judging methods to the existing paper and
+  additive Supplement from the full supplied README at `b7973e20`, with
+  fixed workflow panel, witnessed endpoint-loss definition, separate ordinal
+  API-task ratings, allocated-frame missingness, nested measurement units,
+  blinding/calibration and separate judging costs/authorisation.
+* Updated the paper source guide, revision/evidence record, focused authoring
+  regressions, active digest bindings and this index. The supplied Data
+  Science and Engineering Coach definition guided a separate agent context;
+  the exact named agent was not exposed by the launcher.
+* Preserved the running experiment, original endpoints and treatment budgets,
+  false results switch, historical/adverse evidence and registration/
+  amendment provenance. No private outcome data, paid judging, candidate
+  repair, OSF or visibility action; scientific/human approval remains separate.
+
+## [2026-11-09] query | Development and post-run execution boundaries
+
+* Integrated the owner's follow-up technical explanation in the same paper
+  workstream: the stopped-archive flow is post-run replay/judging, while the
+  model-requested command flow is development. The paper distinguishes
+  host Python/JavaScript/model transport from fresh candidate containers,
+  persistent writable development files/Git from read-only replay inputs,
+  tool-enabled builders from evidence-only judges and collected failures
+  from isolation/collection unavailability.
+* Added one original editable paired runtime diagram with local exports and
+  provenance, without rewriting historical figures. Source descriptions do
+  not establish observed execution, judge accuracy or security certification.
