@@ -317,8 +317,12 @@ def ensure_control_guard(db: Connection, mssql: bool) -> None:
     # A body that is not JSON names no home, so it is rejected while any gate is live.
     for event, suffix, homes, invalid in (
         ("INSERT", "ins", _HOME_NEW, "NOT json_valid(NEW.body)"),
-        ("UPDATE", "upd", _HOME_NEW + ", " + _HOME_OLD,
-         "NOT json_valid(NEW.body) OR NOT json_valid(OLD.body)"),
+        (
+            "UPDATE",
+            "upd",
+            _HOME_NEW + ", " + _HOME_OLD,
+            "NOT json_valid(NEW.body) OR NOT json_valid(OLD.body)",
+        ),
         ("DELETE", "del", _HOME_OLD, "NOT json_valid(OLD.body)"),
     ):
         name = f"sensor_consumer_control_guard_{suffix}"
@@ -468,8 +472,8 @@ class SensorConsumer:
                     self._replace_controls(db, policy, controls)
                     return
             # A control change waits only for a started provider call on a home whose effective
-            # controls change, bounded by its timeout and grace, outside the write transaction so the
-            # call can release its gate.
+            # controls change, bounded by its timeout and grace, outside the write transaction
+            # so the call can release its gate.
             if time.monotonic() >= deadline:
                 raise ConsumerError("SENSOR_DISPATCH_IN_FLIGHT")
             time.sleep(0.05)
@@ -481,7 +485,9 @@ class SensorConsumer:
         prior controls), which keeps the wait conservative."""
         top = "TOP 101 " if self.mssql else ""
         tail = "" if self.mssql else " LIMIT 101"
-        rows = db.execute(f"SELECT {top}sensor_id, body FROM sensor_consumer_control{tail}").fetchall()
+        rows = db.execute(
+            f"SELECT {top}sensor_id, body FROM sensor_consumer_control{tail}"
+        ).fetchall()
         old = db.execute("SELECT body FROM sensor_consumer_policy").fetchone()
         if len(rows) > 100 or (old and old[0] != json.dumps(asdict(policy))):
             return None
