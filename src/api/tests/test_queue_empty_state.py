@@ -1,11 +1,11 @@
-"""Empty own-queue explanations never claim scenario coverage without a bound declaration.
+"""Empty own-queue explanations never claim scenario coverage.
 
-Runs the real helper functions from app.js in Node. Constructed synthetic values only; this is
-partial AC-034/043 evidence and proves neither browser behaviour nor a runtime producer.
+Runs the real helper function from app.js in Node. Constructed synthetic values only; this is
+partial AC-034/043 evidence and proves neither browser behaviour nor a runtime producer. No
+authoritative current fixture or provenance exists, so any coverage payload is ignored.
 """
 
 import json
-import re
 import subprocess
 import unittest
 from pathlib import Path
@@ -30,7 +30,7 @@ const cut = (name) => {
   }
 };
 const context = vm.createContext({});
-vm.runInContext(cut("trustedCoverage") + "\n" + cut("queueEmptyExplanation"), context);
+vm.runInContext(cut("queueEmptyExplanation"), context);
 const cases = JSON.parse(process.argv[2]);
 console.log(JSON.stringify(cases.map((c) => vm.runInContext(
   "queueEmptyExplanation(" + JSON.stringify(c) + ")", context))));
@@ -95,7 +95,7 @@ class EmptyQueueExplanation(unittest.TestCase):
         for coverage in (None, DECLARATION):
             self.assertIsNone(explain(rowsLength=len(manager["default"]["ids"]), coverage=coverage))
 
-    def test_no_match_is_a_search_result_even_with_a_valid_declaration(self) -> None:
+    def test_no_match_is_a_search_result_even_when_a_coverage_payload_is_supplied(self) -> None:
         for coverage in (None, DECLARATION):
             out = explain(filtered=True, coverage=coverage)
             assert out is not None
@@ -104,41 +104,23 @@ class EmptyQueueExplanation(unittest.TestCase):
             self.assertIn("not a statement about scenario coverage", out["text"])
             self.assertNotIn("fixture", out["text"])
 
-    def test_valid_bound_declaration_is_a_declared_gap_with_provenance(self) -> None:
-        out = explain(coverage=DECLARATION)
-        assert out is not None
-        self.assertEqual(out["state"], "declared-unrepresented")
-        for part in ("152-ia-v1", "dataset declaration", "2026-10-16", "declared gap"):
-            self.assertIn(part, out["text"])
-        self.assertNotIn("complete", out["text"])
-
-    def test_missing_stale_mismatched_or_malformed_declarations_stay_unknown(self) -> None:
-        variants: dict[str, Any] = {
-            "stale as_of": {**DECLARATION, "as_of": "2026-10-01"},
-            "stale policy": {**DECLARATION, "policy_version": "ranking-0"},
-            "contract mismatch": {**DECLARATION, "contract": "work-queues-0"},
-            "other role": {**DECLARATION, "perspective": "Retrofit Programme Manager"},
-            "represented": {**DECLARATION, "status": "represented"},
-            "blank fixture": {**DECLARATION, "fixture_version": " "},
-            "no source": {k: v for k, v in DECLARATION.items() if k != "source"},
-            "no as_of": {k: v for k, v in DECLARATION.items() if k != "as_of"},
-            "numeric policy": {**DECLARATION, "policy_version": 1},
-            "list": [DECLARATION],
-            "string": "unrepresented",
+    def test_unverified_provenance_never_becomes_a_declared_gap(self) -> None:
+        payloads: dict[str, Any] = {
+            "well formed": DECLARATION,
+            "stale or unrelated fixture": {
+                **DECLARATION,
+                "fixture_version": "stale-or-unrelated-fixture",
+                "source": "unverified declaration",
+            },
+            "malformed": [DECLARATION],
         }
-        for name, coverage in variants.items():
+        for name, coverage in payloads.items():
             with self.subTest(name):
                 out = explain(coverage=coverage)
                 assert out is not None
                 self.assertEqual(out["state"], UNKNOWN)
-        for name in ("asOf", "policyVersion", "version", "role"):
-            with self.subTest(f"page value {name} missing"):
-                out = explain(coverage=DECLARATION, ctx={**CTX, name: ""})
-                assert out is not None
-                self.assertEqual(out["state"], UNKNOWN)
-        out = explain(coverage=DECLARATION, ctx={k: v for k, v in CTX.items() if k != "asOf"})
-        assert out is not None
-        self.assertEqual(out["state"], UNKNOWN)
+                for part in ("fixture", "declared", "unrepresented", "unverified declaration"):
+                    self.assertNotIn(part, out["text"])
 
     def test_all_cases_scope_never_uses_coverage_wording(self) -> None:
         out = explain(view="all", coverage=DECLARATION)
@@ -149,17 +131,11 @@ class EmptyQueueExplanation(unittest.TestCase):
     def test_no_server_produces_a_coverage_declaration_yet(self) -> None:
         self.assertNotIn("coverage", taskqueues.contract(ranking.CURRENT))
 
-    def test_list_view_passes_the_page_and_session_values_to_the_helper(self) -> None:
+    def test_list_view_passes_only_the_row_count_and_scope_to_the_helper(self) -> None:
         source = APP.read_text()
-        self.assertTrue(re.search(r"asOf = d\.as_of;", source))
-        for token in (
-            "coverage: me.work_queues.coverage",
-            "role: me.user.role",
-            "version: me.work_queues.version",
-            "policyVersion: policy",
-            "rowsLength: rows.length",
-        ):
-            self.assertIn(token, source)
+        self.assertIn("rowsLength: rows.length", source)
+        for gone in ("trustedCoverage", "declared-unrepresented", "me.work_queues.coverage"):
+            self.assertNotIn(gone, source)
 
 
 if __name__ == "__main__":

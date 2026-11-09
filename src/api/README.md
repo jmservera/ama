@@ -3869,13 +3869,14 @@ research.
 An empty My cases list is explained by three distinct states. A search or filter
 with no result says it is a search result and not a coverage statement. An empty
 unfiltered own queue says coverage for the perspective is unknown, because no
-server supplies a coverage declaration and the static manifest above is test
-evidence, not runtime provenance. The client reads an optional
-`work_queues.coverage` declaration and calls it a declared gap only when its
-status is `unrepresented` and its contract, `as_of`, policy version and
-perspective all equal the page and signed-in role; anything else stays unknown.
-Producing that declaration needs a separate owner decision. The check is
-`tests/test_queue_empty_state.py` (Node, partial AC-034/043 evidence).
+authoritative runtime source of current fixture provenance exists: the server
+supplies no coverage declaration and the static manifest above is test evidence,
+not runtime provenance. The client ignores any `work_queues.coverage` value, so
+no payload can produce a declared-gap statement. That state is deferred until an
+owner-approved trusted producer with a current fixture and provenance binding
+exists; that producer is not part of this change. The all-cases scope keeps its
+own wording. The check is `tests/test_queue_empty_state.py` (Node, partial
+AC-034/043 evidence only).
 From `src/api`, using the installed src packages and `.[dev]`:
 
 ```bash
