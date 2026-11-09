@@ -189,13 +189,14 @@ class Served:
         path = Path(self.tmp.name) / "zavaforward.json"
         path.write_text(json.dumps(test_mvp.DATA))
         self.store = Store(str(path))
-        self.time = TimeCapture(self.store, env, os.path.join(self.tmp.name, "time.sqlite"))
+        db = os.path.join(self.tmp.name, "time.sqlite")
+        self.time = TimeCapture(self.store, env, db)  # type: ignore[no-untyped-call]
         if ready:
-            self.time.request_enable(SUPPORT)
-            self.time.activate(PAM)
+            self.time.request_enable(SUPPORT)  # type: ignore[no-untyped-call]
+            self.time.activate(PAM)  # type: ignore[no-untyped-call]
         if acknowledged:
-            self.time.acknowledge(SAM)
-        app = App(self.store, "zf-test", self.time)
+            self.time.acknowledge(SAM)  # type: ignore[no-untyped-call]
+        app = App(self.store, "zf-test", self.time)  # type: ignore[no-untyped-call]
         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
         threading.Thread(target=self.httpd.serve_forever, daemon=True).start()
         self.base = f"http://127.0.0.1:{self.httpd.server_address[1]}"
@@ -249,7 +250,7 @@ class StaffTimeGuidanceBrowser(unittest.TestCase):
         return served
 
     def entries(self, served: Served) -> int:
-        return len(served.time.mine(SAM))
+        return len(served.time.mine(SAM))  # type: ignore[no-untyped-call]
 
     def test_disabled_and_missing_prerequisite_explain_owner_and_next_action(self) -> None:
         from playwright.sync_api import expect
