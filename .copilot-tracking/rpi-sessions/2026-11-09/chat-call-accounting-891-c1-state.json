@@ -1,0 +1,28 @@
+{
+  "task_id": "issue-891-chat-call-accounting-1109-c1",
+  "task_slug": "chat-call-accounting-891-c1",
+  "parent_task": {"task_id": "issue-891-chat-call-accounting-1109", "task_slug": "chat-call-accounting-891"},
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-chat-call-accounting-891-c1-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-chat-call-accounting-891-c1-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-chat-call-accounting-891-c1-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-chat-call-accounting-891-c1-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Corrective cycle C1 of five total authorised by the coordinator on 2026-11-09; parent head fb972548480ed83a3c2855e4bae1f1c1f1793f93 and its records preserved; Refs #891 only; criterion 2 stays unticked", "status": "confirmed", "evidence": "coordinator brief 2026-11-09"},
+    {"decision": "Main 1b7a1719bee088ce2823bff45242e319bc928295 merged normally at 2026-11-09T22:52:34Z as 97f0036b573f8d0497c0d67904506f8156c11920; minimal core/ai.py marker admitted by the coordinator", "status": "confirmed", "evidence": "git log; research record"},
+    {"decision": "Research executed 22:52Z-22:54Z; Planning Readiness Ready", "status": "confirmed", "evidence": ".copilot-tracking/research/2026-11-09-chat-call-accounting-891-c1-research.md"},
+    {"decision": "Critique executed once before any test or source edit; verdict Revise; five findings dispositioned directly; no second critique", "status": "confirmed", "evidence": ".copilot-tracking/plans/2026-11-09-chat-call-accounting-891-c1-critique.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "Activate Implement (record date -u and read back), then write the red tests before any source edit"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Carry count provenance (measured versus unverified) into the chat receipt", "rationale": "PC-002: chat_panel is shared and not owned here", "evidence": "critique PC-002"}
+  ]
+}
