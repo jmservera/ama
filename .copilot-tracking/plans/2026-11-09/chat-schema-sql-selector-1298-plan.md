@@ -5,7 +5,7 @@
 
 * Task ID: issue-1298-fresh-demo
 * Task slug: chat-schema-sql-selector-1298
-* Planning status: ready
+* Planning status: ready (implemented; see changes record)
 * Plan date: 2026-11-09
 * Phase details: .copilot-tracking/details/2026-11-09/chat-schema-sql-selector-1298-phase-details.md
 * Plan critique: .copilot-tracking/reviews/plans/2026-11-09/chat-schema-sql-selector-1298-plan-critique.md
@@ -109,39 +109,39 @@ For current user input, see [User Decisions and Requirements](#user-decisions-an
 ## Phase Checklist
 
 <!-- rpi:phase id=P01 -->
-### [ ] P01: Reproduce and add the failing regression
+### [x] P01: Reproduce and add the failing regression
 
 * Intent: demonstrate the omission against unchanged source and pin it in a test.
 * Dependencies: none
 
 <!-- rpi:task id=P01-T01 -->
-#### [ ] P01-T01: Record the reproduction and add the regression
+#### [x] P01-T01: Record the reproduction and add the regression
 
 * Requirement and evidence: reproduce the omission (research C1, C4); regression and receipt expectations (C9 to C11).
 * Expected result: the new test fails on unchanged source for the stated reason.
 * Detail section: P01-T01 in .copilot-tracking/details/2026-11-09/chat-schema-sql-selector-1298-phase-details.md
 
 <!-- rpi:phase id=P02 -->
-### [ ] P02: Make the selector change
+### [x] P02: Make the selector change
 
 * Intent: smallest fail-closed source change.
 * Dependencies: P01
 
 <!-- rpi:task id=P02-T01 -->
-#### [ ] P02-T01: Add `chatthreads.py` to the explicit sensor MSSQL dependency set
+#### [x] P02-T01: Add `chatthreads.py` to the explicit sensor MSSQL dependency set
 
 * Requirement and evidence: C2, C6 to C8.
 * Expected result: the regression and the adjusted exact-set pin pass; comment states the set is explicit, not exhaustive.
 * Detail section: P02-T01 in .copilot-tracking/details/2026-11-09/chat-schema-sql-selector-1298-phase-details.md
 
 <!-- rpi:phase id=P03 -->
-### [ ] P03: Targeted validation and evidence
+### [x] P03: Targeted validation and evidence
 
 * Intent: owner demo-targeted tier evidence with exact commands, counts and exits.
 * Dependencies: P02
 
 <!-- rpi:task id=P03-T01 -->
-#### [ ] P03-T01: Run the targeted tool checks and record the tier
+#### [x] P03-T01: Run the targeted tool checks and record the tier
 
 * Requirement and evidence: owner demo tier; C9 to C13.
 * Expected result: unittest module passes with recorded counts; formatter and strict typing results or their unavailability recorded; SQL need decision recorded.
