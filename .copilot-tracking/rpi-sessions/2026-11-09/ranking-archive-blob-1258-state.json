@@ -1,0 +1,27 @@
+{
+  "task_id": "1258-ranking-archive-blob-c4",
+  "task_slug": "ranking-archive-blob-1258",
+  "parent_task": {"task_id": "1258-ranking-archive-ancestor-durability", "task_slug": "ranking-archive-ancestor-durability-1258"},
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-ranking-archive-blob-1258-c4-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-ranking-archive-blob-1258-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-ranking-archive-blob-1258-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-ranking-archive-blob-1258-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "owner selects Blob for ranking archive JSON persistence (2026-11-08); not further filesystem hardening or SQL migration", "status": "confirmed", "evidence": "issue 1258 comment 2026-11-08T18:44:58Z"},
+    {"decision": "research executed, Planning Readiness Ready", "status": "done", "evidence": ".copilot-tracking/research/2026-11-09-ranking-archive-blob-1258-c4-research.md"},
+    {"decision": "critique executed once, verdict Revise, PC-001..PC-007 applied directly", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-09-ranking-archive-blob-1258-critique.md"},
+    {"decision": "cycles: c1..c3 spent, this is c4 of at most five total; c5 reserve", "status": "confirmed", "evidence": "research record, correction-cycle accounting"},
+    {"decision": "tier DEMO (targeted changed and impacted modules); no full gate, SQL, browser, scanners", "status": "confirmed", "evidence": "coordinator brief 2026-11-09"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "merge origin/main, write failing-first Blob tests, implement adapter and adapters"},
+  "prioritized_follow_ups": []
+}
