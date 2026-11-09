@@ -1476,16 +1476,19 @@ class Assistants:
         send is in flight. A refusal raises DispatchWithdrawn and sends nothing. A process suspended after this
         returns, outside user space, can still transmit late; the send window and socket deadline bound it."""
         window = self.limits.timeout + HOLD_GRACE
+        refused = None
         with self.transaction() as db:
             now = self.now(db)
             held = self.disabled(db, capability, capacity=False)
             row = db.execute("SELECT outcome,active_until FROM assistant_attempts WHERE id=?", (attempt,)).fetchone()
             if held or row is None or row[0] not in ("reserved", "sending") or row[1] <= now:
-                reason = held or "The admission lease ended before the request was sent."
-                self.event(db, attempt.split(":")[0], kind="send-refused", reason=reason[:120])
-                raise ai_consumption.DispatchWithdrawn(reason)
-            db.execute("UPDATE assistant_attempts SET outcome='sending',active_until=? WHERE id=?",
-                       (max(row[1], now + window), attempt))
+                refused = held or "The admission lease ended before the request was sent."
+                self.event(db, attempt.split(":")[0], kind="send-refused", reason=refused[:120])
+            else:
+                db.execute("UPDATE assistant_attempts SET outcome='sending',active_until=? WHERE id=?",
+                           (max(row[1], now + window), attempt))
+        if refused:
+            raise ai_consumption.DispatchWithdrawn(refused)
 
     REPLACEMENTS = 3
 

@@ -619,6 +619,11 @@ class Lane(c7.Base):
         self.assertEqual((late["reserved"], late["checked"], late["tokens"]), (1, 1, 1))
         self.assertEqual(self.allowance(), (1, service.limits.reservation))
         self.assertEqual(self.active_attempts(), 0)
+        with self.service.transaction() as db:
+            refusals = db.execute(
+                "SELECT COUNT(*) FROM assistant_events WHERE body LIKE '%send-refused%'"
+            ).fetchone()[0]
+        self.assertEqual(refusals, 1, "the refusal was rolled back instead of recorded")
         before = (self.meter.reserved, len(self.tokens))
         self.assertEqual(
             self.post()["status"], "held"
