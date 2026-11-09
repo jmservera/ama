@@ -17,7 +17,7 @@
   "confirmed_decisions": [
     {"decision": "Research executed; Planning Readiness Ready", "status": "confirmed", "evidence": "research artifact"},
     {"decision": "Critique executed once: Revise, six findings applied", "status": "confirmed", "evidence": "critique artifact"},
-    {"decision": "Records committed 8e519002e before merge; ordinary --no-ff merge of 3a9767d5c is 0dea95875, no conflicts", "status": "confirmed", "evidence": "changes artifact"},
+    {"decision": "Records committed 8e519002e before merge; ordinary --no-ff merge of 3a9767d5c is 0dea95876, no conflicts", "status": "confirmed", "evidence": "changes artifact"},
     {"decision": "Selected checks all exit 0; browser NOT RUN (heavy lock held by 1292 driver)", "status": "confirmed", "evidence": "changes artifact"},
     {"decision": "Review executed once: no significant findings", "status": "confirmed", "evidence": "review artifact"},
     {"decision": "C1 to C4 spent, one of five remains; no cycle consumed", "status": "confirmed", "evidence": "coordinator brief"}

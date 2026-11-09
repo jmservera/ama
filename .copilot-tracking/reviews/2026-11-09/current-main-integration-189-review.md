@@ -1,7 +1,7 @@
 <!-- markdownlint-disable-file -->
 # Issue 189 current-main integration review (2026-11-09)
 
-One independent read-only Review (code-review agent) of merge `0dea95875` over the integration delta. Executed once; outcome: conformant for the assessed boundary, no significant findings. Not repeated for this task. Not an approval of the final head: independent exact-head Functional review, hosted CI and human approval remain required.
+One independent read-only Review (code-review agent) of merge `0dea95876` over the integration delta. Executed once; outcome: conformant for the assessed boundary, no significant findings. Not repeated for this task. Not an approval of the final head: independent exact-head Functional review, hosted CI and human approval remain required.
 
 | # | Severity | Finding | Disposition |
 |---|----------|---------|-------------|
