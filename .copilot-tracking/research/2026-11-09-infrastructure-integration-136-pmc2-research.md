@@ -12,7 +12,7 @@ Written and committed before any correction edit. Research disposition: executed
 
 * Branch `fix/demo-recovery-136-1109`, frozen clean start `fc6adc5c5d2dba6f2b2acdac25048e14fe3e2508`, tree `6df8ec47e465525d7d521fb4b01ed74921817dc9`.
 * Freshly fetched `origin/main` `1f28d09130c8e058a0436d468e6a22f3c4c24f47` (github-actions bot rubric score commit). Its parent is `d4d6827fe60be651cd922ab9656688c18c978e1d` (PR 1222), the main imported by the merge commit `f2554acbd`.
-* PR 1272: OPEN, base `main`, head `f16a398d400538b918eb965baf461cb2997a0c27` (unchanged, an ancestor of the candidate), `mergeStateStatus` CLEAN at retrieval, empty `statusCheckRollup`. No hosted check evidence exists for any head of this PR.
+* PR 1272: OPEN, base `main`, head `f16a398d400538b918eb965baf461cb2997a0c27` (unchanged, an ancestor of the candidate), `mergeStateStatus` CLEAN at retrieval, empty `statusCheckRollup`. No hosted check evidence was observed for head `f16a398d4` at that retrieval (2026-11-09); the claim is bounded to that head and time.
 
 ## Findings
 
