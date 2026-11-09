@@ -469,6 +469,17 @@ class BlobPublicationWiring(QualityMatrix):
         self.assertIn("ranking archive", status["problems"][0])
         self.clean(status["problems"][0])
 
+    def test_publish_route_is_a_conditional_create_and_does_not_list(self):
+        self.fake.list_status = 500
+        code, first = self.call(PM_EMAIL, "/api/ranking/publish", {})
+        self.assertEqual((code, first["written"]), (200, True))
+        self.assertEqual([c for c in self.fake.calls if "comp=list" in c[1]], [])
+        self.assertEqual(len(self.fake.blobs), 1)
+        code, status = self.call(PM_EMAIL, "/api/ranking/publication")
+        self.assertEqual((code, status["count"], status["latest"]), (200, 0, None))
+        self.assertEqual(len(status["problems"]), 1)
+        self.clean(status["problems"][0])
+
     def test_structurally_invalid_200_listing_is_unreadable_status_not_healthy_empty(self):
         bodies = (
             b"<Error><Code>InternalError</Code></Error>",

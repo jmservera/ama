@@ -24,11 +24,11 @@ Historical productive review-correction cycles: 0 (research record). This task c
 
 * [x] 1. Research (done, `...-parent-c5-research.md`).
 * [x] 2. Plan, details, one critique (this file, details, critique); compatible findings applied.
-* [ ] 3. Merge exact `52f9b61bb` locally with `--no-ff` and a prospective message; resolve the two conflicts by intent: keep both import sets (drop the child import if unused after resolution only when ruff proves it unused), merge the `verify` signature to `Archive` with a docstring that states both the Blob listing rule and the local-folder rule; keep both sides' tests in the runner test file. No other hand edits to parent files.
-* [ ] 4. Failing-first probe: add Blob path-health matrix tests (below) and run them before any source edit; record the actual pass or fail of each. A test that passes on merged source is regression coverage, not a fix; do not add duplicate production code.
-* [ ] 5. Source edit only for a probed failure (candidate: runner `_verify` reason text for fixed, path-free Blob error messages). Smallest change, no new policy.
-* [ ] 6. Targeted tests, ruff check and format check on changed files, mypy on changed source, from this worktree via `PYTHONPATH`.
-* [ ] 7. Changes record, one Review, state, commit, handoff.
+* [x] 3. Merge exact `52f9b61bb` locally with `--no-ff` and a prospective message; resolve the two conflicts by intent: keep both import sets (drop the child import if unused after resolution only when ruff proves it unused), merge the `verify` signature to `Archive` with a docstring that states both the Blob listing rule and the local-folder rule; keep both sides' tests in the runner test file. No other hand edits to parent files.
+* [x] 4. Failing-first probe: add Blob path-health matrix tests (below) and run them before any source edit; record the actual pass or fail of each. A test that passes on merged source is regression coverage, not a fix; do not add duplicate production code.
+* [x] 5. Source edit only for a probed failure (candidate: runner `_verify` reason text for fixed, path-free Blob error messages). Smallest change, no new policy.
+* [x] 6. Targeted tests, ruff check and format check on changed files, mypy on changed source, from this worktree via `PYTHONPATH`.
+* [x] 7. Changes record, one Review, state, commit, handoff.
 
 ## Test matrix (runner and archive level, mocked Blob transport)
 

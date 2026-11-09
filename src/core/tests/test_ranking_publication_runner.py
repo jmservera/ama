@@ -878,6 +878,117 @@ class BlobArchiveRunnerTests(RunnerBase):
         self.assertEqual(res["count"], 0)
 
 
+class BlobArchivePathHealthTests(RunnerBase):
+    """An unknown or unreadable Blob listing is never a healthy empty archive (Refs #1259)."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        from ranking_blob_fixture import SAS, URL, FakeBlobContainer
+        from zava_forward.core import ranking_archive_blob as rab
+
+        self.fake = FakeBlobContainer(page_size=1)
+        self.listing: Any = None
+
+        def transport(method: str, url: str, headers: Any, body: Any, timeout: int = 20) -> Any:
+            if self.listing is not None and "comp=list" in url:
+                return self.listing(url)
+            return self.fake(method, url, headers, body, timeout)
+
+        self.archive = rab.BlobRankingArchive(
+            URL, "ranking-archive", sas=SAS, transport=transport, env={}
+        )  # type: ignore[assignment]
+
+    def unreachable(self, url: str) -> Any:
+        from zava_forward.core.documents import DocumentStoreError
+
+        raise DocumentStoreError(f"storage unreachable: {url}")
+
+    def second_page_fails(self, url: str) -> Any:
+        if "marker=" in url:
+            return 500, {}, b""
+        name = "ranking-1.0.0-2026-11-05-aaaaaaaaaaaa.json"
+        page = f"<EnumerationResults><Blobs><Blob><Name>{name}</Name></Blob></Blobs>"
+        return 200, {}, (page + "<NextMarker>next</NextMarker></EnumerationResults>").encode()
+
+    def endless(self, url: str) -> Any:
+        return (
+            200,
+            {},
+            b"<EnumerationResults><Blobs/><NextMarker>again</NextMarker></EnumerationResults>",
+        )
+
+    def scenarios(self) -> list[tuple[str, str]]:
+        def status(code: int) -> Any:
+            def apply() -> None:
+                self.fake.list_status = code
+
+            return apply
+
+        def body(text: bytes) -> Any:
+            def apply() -> None:
+                self.fake.list_body = text
+
+            return apply
+
+        def hook(fn: Any) -> Any:
+            def apply() -> None:
+                self.listing = fn
+
+            return apply
+
+        self.setups = {
+            "403": (status(403), "listing refused (HTTP 403)"),
+            "404 missing container": (status(404), "listing refused (HTTP 404)"),
+            "500": (status(500), "listing refused (HTTP 500)"),
+            "transport failure": (hook(self.unreachable), "listing failed: storage unreachable"),
+            "malformed body": (body(b"<Error/>"), "listing was unreadable"),
+            "later page fails": (hook(self.second_page_fails), "listing refused (HTTP 500)"),
+            "endless pagination": (hook(self.endless), "listing did not finish"),
+        }
+        return [(label, text) for label, (_, text) in self.setups.items()]
+
+    def test_unreadable_listing_is_unknown_for_schedule_verify_and_publish_with_no_put(
+        self,
+    ) -> None:
+        for label, text in self.scenarios():
+            with self.subTest(label):
+                self.fake.list_status, self.fake.list_body, self.listing = 200, None, None
+                self.setups[label][0]()
+                ver = self.go("verify")
+                sched = self.go("schedule")
+                pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+                self.assertEqual(
+                    (ver["status"], ver["count"], ver["latest"], ver["overdue"]),
+                    ("problem", 0, None, None),
+                )
+                self.assertEqual(
+                    (sched["status"], sched["due"], sched["next_window_start"]),
+                    ("problem", None, None),
+                )
+                self.assertEqual(
+                    (pub["status"], self.codes(pub)), ("refused", ["archive_unreadable"])
+                )
+                self.assertIn(text, ver["problems"][0])
+                self.assertEqual(self.fake.requests("PUT"), [])
+                self.assertEqual(self.fake.blobs, {})
+                shown = json.dumps([ver, sched, pub])
+                for secret in (
+                    "SENTINEL",
+                    "acct.blob.core.windows.net",
+                    "ranking-archive",
+                    "sv=2022",
+                ):
+                    self.assertNotIn(secret, shown)
+
+    def test_valid_empty_listing_is_a_first_run_and_publish_proceeds(self) -> None:
+        self.fake.list_body = b"<EnumerationResults><Blobs/></EnumerationResults>"
+        ver = self.go("verify")
+        self.assertEqual((ver["count"], ver["problems"], ver["overdue"]), (0, [], True))
+        self.fake.list_body = None
+        pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((pub["status"], pub["written"]), ("published", True))
+        self.assertEqual(self.go("verify")["count"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()
