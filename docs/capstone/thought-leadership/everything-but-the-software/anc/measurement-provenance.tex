@@ -9,7 +9,9 @@ private experimental data. The collection path is
 \nolinkurl{skeleton/tools/metrics_core.py}; pilot outcomes are derived in
 \nolinkurl{harness/pilot_analysis.py}, with consumption parsing in
 \nolinkurl{harness/analyze.py}.
-The numerical evaluator does not invoke an AI judge.
+At this running-source pin, the numerical evaluator does not invoke an AI
+judge. The separate post-run instrument below adds supplementary ratings
+without changing that collection path.
 
 \begin{table}[!htbp]
 \small
@@ -107,6 +109,165 @@ need a matching attempt journal. Aggregate statistics and seeded resampling
 operate on these records, not on AI opinions. Model-specific allocation,
 missingness and observed runtime variation remain distinct from whether
 the scoring algorithm is programmatic.
+
+\subsection{Supplementary judging instrument and interpretation}\label{app:postrunjudging}
+
+The proposed post-collection instrument is documented in
+\href{https://github.com/jmservera/ama-thought-mve/blob/b7973e200a6edbb1d19355badae3b7e03a066b09/judging/README.md}{\nolinkurl{judging/README.md}} at
+\nolinkurl{b7973e200a6edbb1d19355badae3b7e03a066b09} in the experiment
+repository. The README's Git blob is
+\nolinkurl{6cc0c236e4ca093198d38909dceb80f850196faa}.
+This pin identifies a separate development branch, not a replacement for
+the running experiment or evidence that judging has occurred.
+Preparation will use a stopped local archive, retain every allocated
+model/arm/replicate cell and select recorded measurement HEADs.
+Missing $P_{10}$ or CR1 observations cannot be replaced by an earlier
+successful checkpoint. Committed runtime assets will remain available
+in a read-only isolated evaluator with an inspected immutable image.
+Each scenario starts with a fresh in-memory Workbench.
+
+\begin{table}[!htbp]
+\centering\small
+\caption{Fixed supplementary workflow panel. Feature labels denote
+dependencies, not attribution of a failure to a particular feature.}
+\label{tab:judgingpanel}
+\begin{tabularx}{\linewidth}{@{}L{0.15\linewidth}Y@{}}
+\toprule
+Workflow & Exercised requirements \\
+\midrule
+F1 & Registration, combined filtering, atomic import and recovery \\
+F2 & Lifecycle, invalid transitions, history and stage counts \\
+F3 & Handoff, decline and acceptance with ownership preservation \\
+F4 & Rework and reopening with ownership and reasons retained \\
+F5 & Safety holds, permitted rework and role-controlled release \\
+F6 & Consent withdrawal, reinstatement and safety precedence \\
+F7 & Offered/confirmed appointments, verified escalation and reopening reset \\
+F8 & Live contractor reads, protected fields and read-only enforcement \\
+F9 & Stable priority ranking with interacting hold, consent and vulnerability reasons \\
+F10 & Audit verification, tamper detection and visibility-preserving export \\
+Journey & F1--F10 delivery/reopening with consent, handoff, appointments and audit \\
+CR1 & Region-scoped reads, rankings, exports and approved cross-region handoff \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\paragraph{Witnessed endpoint loss.}
+For trajectory $r$ and endpoint $e\in\{P_{10},\mathrm{CR1}\}$, let
+$\mathcal{W}_{r,e}$ contain panel scenarios witnessed passing at an
+earlier eligible end-of-cycle checkpoint, and let $S_{r,e}(w)$ be the
+observed binary endpoint outcome for scenario $w$. When
+$|\mathcal{W}_{r,e}|>0$ and every member has an available endpoint,
+the supplementary retention density is
+\begin{equation}
+d^{\mathrm{workflow}}_{r,e}=
+\frac{\sum_{w\in\mathcal{W}_{r,e}}\mathbf{1}\{S_{r,e}(w)=0\}}
+{|\mathcal{W}_{r,e}|}.
+\label{eq:workflowloss}
+\end{equation}
+It is a dimensionless fraction of witnessed earlier capabilities lost
+at the selected endpoint, ranging from zero to one. An empty risk set
+or any unavailable risk-set endpoint leaves the density undefined.
+Publish the witnessed risk-set size, losses and unavailable count with
+final scenario outcomes. Acquisition itself depends on treatment:
+low loss among a small acquired set can accompany poor final fulfilment.
+This conditional density therefore cannot alone rank treatment efficacy
+or replace the original hidden-contract loss measure.
+
+The instrument distinguishes retained and observed-loss scenarios,
+endpoint passes without an earlier witness, complete histories with no
+observed pass, incomplete histories with no observed pass, and unavailable
+endpoints. F10 first becomes eligible at $P_{10}$, so a failure there
+cannot establish earlier-capability loss; its $P_{10}$ pass can establish
+a post-CR1 baseline. The full delivery journey likewise first becomes
+eligible at $P_{10}$; CR1's region workflow first becomes eligible after
+CR1. The maximum earlier-witness risk sets therefore contain nine scenarios
+at $P_{10}$ and eleven after CR1. Post-CR1 loss uses any earlier eligible
+$P$ witness, so it can include a failure already present at $P_{10}$.
+An incremental $P_{10}$-to-CR1 loss would require a passing $P_{10}$
+baseline and remains distinct from this endpoint measure.
+A witnessed pass followed by an endpoint failure
+supports endpoint loss despite missing intervening observations, while
+leaving onset time unresolved. A final pass can conceal a recovered
+regression. The panel estimates neither uninterrupted retention nor
+episode duration, recurrence or causal feature attribution.
+
+\paragraph{Ratings, blinding and calibration.}
+Functional completeness, workflow coherence, error recovery and API
+usability are separate ordinal dimensions: 0 absent/unusable; 1 major
+blocking failures; 2 material gaps; 3 working with minor evidenced
+limitations; 4 coherent fulfilment of exercised requirements.
+Unsupported dimensions are null, not zero, and every rating requires a
+rationale with citations to supplied final execution observations.
+There is no composite software-quality score. A perfect completeness
+rating is rejected when execution demonstrates a workflow failure.
+
+Random packet identifiers and shuffled submission order conceal development
+arm/model labels. Judges receive requirements, rubric, response shape
+and execution evidence, excluding original run IDs, commit hashes,
+source trees, treatment notes, transcripts and usage logs.
+The inspected packet also includes an earlier passing witness and its
+retention label. Historical and final observations reuse scenario-local
+IDs; validation checks citation membership in final evidence, without
+establishing which occurrence influenced a rationale. Historical anchoring
+and dimension-specific support therefore need human inspection.
+Endpoint-only rating packets or checkpoint-qualified IDs would require
+a separately versioned instrument; they are not claimed implemented here.
+The separate judge adapter disables tool/configuration discovery and
+checks its tool-free transport. Residual performance patterns and returned
+values can still suggest treatment or model; the preparing researcher is
+not automatically blinded. Scenario instrumentation is a software-behaviour
+assessment, not proof against deliberate candidate tampering.
+
+Before interpreting ratings, a blinded human-reviewed calibration sample
+must cover successful, incomplete and regressed workflows, with sample
+selection, reviewers, timing and disagreements recorded. Multiple judge
+models can expose model-specific disagreement; overlap with development
+models and possible family preference require disclosure. Fresh repeated
+sessions provide descriptive means and ranges, not established inter-rater
+reliability. Three repetitions in the example configuration are a planning
+example, not a validated reliability threshold. The retained ledger should
+also be examined by judge for abstentions and disagreement: pooled ranges
+combine within-judge repeat variation with between-judge differences.
+
+\paragraph{Aggregation and resources.}
+A scenario/dimension mean requires all scheduled judge/repeat ratings.
+A trajectory mean describes its available scenario means and retains
+available/scheduled counts and a completeness flag. Ordinal averaging is
+a pragmatic descriptive convention, without equal-interval calibration.
+Arm differences require complete trajectory scores for both compared
+arms in every allocated development model; otherwise the contrast is
+unavailable rather than estimated from complete survivors. Complete-frame
+contrasts equally weight within-model differences, as in
+Equation~\ref{eq:primarycontrast}, with B--D the matched-ceiling package
+comparison and B--A, B--C and E--B secondary. The tool supplies no
+bootstrap intervals, hypothesis tests or formal verdicts.
+Repeated scenarios, snapshots and judge sessions remain nested within
+trajectory; implementation epochs and shared scheduling/service effects
+retain the unresolved interpretation limits in
+Section~\ref{sec:protocollimits}. The inspected report does not export
+block/epoch identifiers, so a private trajectory-to-source/epoch/block
+linkage is needed for those checks.
+
+Before inspecting candidate outcomes, the researcher will record judging
+source/scenario/rubric hashes, judge runtime/model and adapter versions,
+repetitions, budget, missingness policy, calibration procedure and any
+prior exposure to experiment outcomes. Local timestamps and hashes support
+provenance, not independently verified preregistration.
+Preparation spends no AI credits. For $N$ complete trajectories with CR1,
+$J$ judge configurations and $R$ repetitions, at most $2NJR$ sessions
+are scheduled for the two endpoints; wholly unavailable specimens trigger
+no calls. Paid judging needs separate explicit operator authorisation.
+Recorded judge credits and unknown-charge reservations remain separate
+from development/treatment costs. Admission reservations do not establish
+a hard provider spending cap. Configuration and request hashes bind
+resume; interrupted, invalid, failed or overspent calls block new admission
+pending documented operator recovery rather than automatic replacement.
+Per-call admission also does not establish full-frame affordability;
+budget exhaustion can leave required comparisons unavailable. Calibration
+costs require their own allowance and accounting.
+Public reports require review and sanitisation; raw packets and mappings
+remain private.
+% TODO(author): supply the completed assessment's actual provenance, exposure, calibration, counts and cost record before replacing prospective wording with performed methods.
 
 \subsection{Active AI review and consolidation prompt examples}\label{app:activeprompts}
 
