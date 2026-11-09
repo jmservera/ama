@@ -320,8 +320,15 @@ class MssqlStore(SqlStore):
     def _create_indexes(self):
         with self.dblock:
             self._migrate_chat_memory()
-            for stmt in _indexes() + [CHAT_INDEX]:
-                self.db.execute(stmt)
+            # check-then-create is not atomic across connections; the write lock serializes concurrent first opens
+            self.db.execute("BEGIN IMMEDIATE")
+            try:
+                for stmt in _indexes() + [CHAT_INDEX]:
+                    self.db.execute(stmt)
+                self.db.execute("COMMIT")
+            except BaseException:
+                self.db.execute("ROLLBACK")
+                raise
 
     def _columns(self):
         return {r[0] for r in self.db.execute("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID(N'cases')").fetchall()}

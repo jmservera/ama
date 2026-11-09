@@ -1752,12 +1752,7 @@ class MssqlLegacyMetadata(OwnedMssql, LegacyMetadata):
 
 @OPT_IN
 class MssqlLegacyEdges(OwnedMssql, SqliteLegacyEdges):
-    @unittest.skip(
-        "open finding: concurrent first opens race on CREATE INDEX ix_recs_seq in the "
-        "SQL Server schema bootstrap (pre-existing, unrelated to ordinals); tracked as a follow-up"
-    )
-    def test_large_legacy_backfill_is_linear_and_survives_concurrent_openers(self) -> None:
-        pass
+    pass
 
 
 @OPT_IN
