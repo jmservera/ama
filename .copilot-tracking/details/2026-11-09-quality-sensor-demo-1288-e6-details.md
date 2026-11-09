@@ -26,3 +26,10 @@ Plan: `.copilot-tracking/plans/2026-11-09-quality-sensor-demo-1288-e6-plan.md`.
 ## P4 types
 
 * Measure post-merge with `mypy` in `src/core` and `src/api` (pinned 2.4.0 profile). Annotate; reuse existing typed helpers; no suppression, cast, stub or override.
+
+## Amendments after the independent critique
+
+* `Assistants._authority_hold(db, capability)`: the existing `disabled` checks without the new-reservation capacity clause; `disabled` = hold, then capacity. `fence_send` uses `_authority_hold`.
+* `ai.py`: `_request` calls the fence first (before seal-independent data hold, meter and token) and again immediately before the first request byte. The fenced opener is a private `OpenerDirector` (fenced HTTP and HTTPS handlers, `HTTPErrorProcessor`, `UnknownHandler`); no proxy or redirect handler. The connection subclass runs the fence once before the first `send`, with a monotonic margin of 2 s over the fence call, and records the socket for a total-deadline `Timer` that shuts it down.
+* Ordinary path: `Assistants.execute` sets the same fence for `f"{tid}:{fence}"` inside `call()`.
+* Tests: lease 10 s, timeout 5 s; event files synchronise the worker; two-process stall assertions use `peer.bodies`; request-start refusal asserts zero accepts, meter and token; trickle-read total deadline; inventory covers every role.

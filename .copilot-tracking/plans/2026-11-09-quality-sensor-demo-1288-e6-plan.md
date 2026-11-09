@@ -31,3 +31,14 @@ Task `issue-1288-e6`, parent `issue-1288-e5`. Start `5271d62fa`; main `5c3b8b4be
 * Two-process tests fail on unchanged source and pass after the change; no late send, no excess overlap, finite accounting.
 * Inventory test passes with all three routes; no waiver.
 * Pinned mypy reconciled and recorded honestly; ruff and format clean on changed files.
+
+## Amendments after the independent critique (verdict: rework; all findings dispositioned, see the critique artifact)
+
+* A1 (High 1, residual freeze): residual named explicitly, not called microsecond; fence is two checks (request start, before the first byte); live provider needs an owner decision.
+* A2 (High 2, other dispatchers): the same fence is wired into the ordinary `execute` path, which shares the cap and `_reserve`.
+* A3 (High 3, transport): fenced requests use a private opener with only the fenced HTTP/HTTPS handler, `HTTPErrorProcessor` and `UnknownHandler` (no proxy, no redirect, no retry); `Connection: close`; the fence runs once per connection before the first `send`; total-deadline timer shuts the socket down; tests for multi-send, trickle read and refused redirect.
+* A4 (Medium 4): split `disabled` into a current-authority check and the new-reservation capacity check; the fence uses only the former, so a valid reserved call is not refused by its own debit.
+* A5 (Medium 5): valid bounds (lease 10 s minimum, timeout 5, lease >= timeout + 5); assert request bytes and bodies, not accepts, for the pre-send stall; counters zero only for a stall before the request starts; explicit event synchronisation between processes.
+* A6 (Medium 6): the request-start fence runs before data hold, meter and token, so a late caller creates no financial reservation; the pre-send refusal keeps the existing conservative `dispatch_check` completion semantics and is documented.
+* A7 (Medium 7): the fence is a method of the same `Assistants` that admitted (same store identity by construction); one clock domain (the database clock) is part of the stated boundary; restamp-versus-reclaim tested on SQLite locally and in the owned SQL run when admitted.
+* A8 (Low 8): inventory asserts every role on all three routes; all new code (transport, worker, tests) is included in the pinned mypy and ruff results.
