@@ -1250,3 +1250,8 @@ diagnosis: 0 of 2 paired selections reproduced the failure, cause unknown, with 
 bounded qualifications (recorder limits, unittest versus process timings, a 26-member
 log manifest, and the observer-pair design). Counts are not aggregated with the earlier
 0 of 6 or the original single failure; all #1292 criteria stay open and E5 is not authorized.
+A further dated #1292 current-main note in the same pack records one bounded
+validation on a disposable SQL Server: the priority module (142 tests) plus the two original
+resident-control methods and their SQLite and in-memory parity, 148 tests, 67 on SQL Server,
+0 skips and 0 failures at main `ba71894bb`. It does not retire the unknown startup cause,
+accept SQL as a whole, waive a gate or tick any criterion; E5 stays unspent.

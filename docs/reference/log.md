@@ -11250,3 +11250,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Corrected one clause in the [original-load note](../architecture/cutover-evidence-pack.md#original-load-1292-diagnostic-and-record-qualification-2026-11-09-refs-1292): the original series is one failure among five total executions, with the initial failure followed by four passes, not a failure in the fifth execution. A dated qualification was appended to the tracking record; no count, cause or proof boundary changed.
 * Not claimed: E5 or source correction, ticked criteria, independent review of this delta, hosted CI or any retest. Earlier entries unchanged.
+
+## [2026-11-09] update | Issue 1292 current-main priority SQL validation (Refs #1292)
+
+* Appended a dated bounded subsection to [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#current-main-priority-sql-regression-validation-2026-11-09-refs-1292) and an entry to the [index](README.md): at pinned `main` `ba71894bb`, one non-queued admission on a disposable SQL Server 2022 ran the 142-test priority module (split A 108 and B 34) and the two original resident-control methods with SQLite and in-memory parity (6): 148 tests, 67 on SQL Server, 0 skips, 0 failures, 540 s. Genuine prospective RPI records, one independent critique (Revise, applied) and the planning commit preceded execution.
+* Not claimed: root cause or fix of the unknown historical startup failure, a pre-fix failing-test re-proof, whole-SQL acceptance, a full-gate waiver, hosted CI, independent review, scale, lock-duration, Azure or live evidence, E5 or any source correction, or ticked or closed criteria for #1292, #81 or #440. Earlier entries unchanged.
