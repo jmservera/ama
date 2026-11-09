@@ -3871,7 +3871,7 @@ approval. No Azure call, what-if or deployment was made.
 
 | Parameter | Default | Effect |
 | --- | --- | --- |
-| `enableRankingArchiveBlob` | `false` | `true` adds the private `ranking-archive` container (`publicAccess` None, same private account and endpoints) and sets `ZF_RANKING_ARCHIVE=azure-blob` and `ZF_RANKING_BLOB_CONTAINER=ranking-archive` on the API app. `false` leaves every existing resource and setting unchanged and the API keeps refusing ranking publication. |
+| `enableRankingArchiveBlob` | `false` | `true` adds the private `ranking-archive` container (`publicAccess` None, same private account and endpoints) and sets `ZF_RANKING_ARCHIVE=azure-blob` and `ZF_RANKING_BLOB_CONTAINER=ranking-archive` on the API app. `false` leaves every existing resource and setting unchanged; the API store then selects the local folder archive (a dev/test adapter whose fsync is not evidence of durable storage), and only the operator CLI `--blob` mode refuses when the variables are missing. |
 | `rankingArchiveImmutabilityDays` | `0` (unset) | `0` creates no immutability policy. A positive value creates an unlocked time-based policy on that container only. |
 
 * The API already has `ZF_BLOB_ACCOUNT_URL` and `ZF_BLOB_CLIENT_ID` (managed identity). The wiring adds no key, SAS, connection string, secret or public access, and no role: the existing API storage-account `Storage Blob Data Contributor` assignment covers the adapter's create, read and list. Residual: that role also permits delete at account scope; the adapter has no delete path, but a container-scoped assignment is a later platform decision, not made here.

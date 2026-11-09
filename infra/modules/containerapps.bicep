@@ -33,7 +33,7 @@ param zoneRedundant bool = false
 @allowed(['blob', 'sharepoint'])
 param evidenceStore string = 'blob'
 param sharePointSiteId string = ''
-@description('Ranking archive container name for the Blob JSON archive (Refs #1258). Empty keeps the API on its existing configuration, which refuses ranking publication.')
+@description('Ranking archive container name for the Blob JSON archive (Refs #1258). Empty keeps the API on its existing configuration, where the store selects the local folder archive (a dev/test adapter, not evidence of durable storage).')
 param rankingArchiveContainer string = ''
 param apiImage string
 @description('Minimum API replicas. Default 0 permits scale-to-zero for cost-safe demos and cold starts; set 2 explicitly for always-on production replicas.')

@@ -1933,7 +1933,10 @@ class BicepPolicyTests(unittest.TestCase):
         self.assertTrue(selector and container_var)
         storage = module_template(self.main, "storage")
         apps = module_template(self.main, "containerapps")
-        for template, flag in ((self.main, "enableRankingArchiveBlob"), (storage, "enableRankingArchive")):
+        for template, flag in (
+            (self.main, "enableRankingArchiveBlob"),
+            (storage, "enableRankingArchive"),
+        ):
             self.assertIs(template["parameters"][flag]["defaultValue"], False)
         for template, name in (
             (self.main, "rankingArchiveImmutabilityDays"),
@@ -1947,9 +1950,9 @@ class BicepPolicyTests(unittest.TestCase):
             main_args["enableRankingArchive"], {"value": "[parameters('enableRankingArchiveBlob')]"}
         )
         self.assertEqual(
-            module(self.main, "containerapps")["properties"]["parameters"]["rankingArchiveContainer"][
-                "value"
-            ],
+            module(self.main, "containerapps")["properties"]["parameters"][
+                "rankingArchiveContainer"
+            ]["value"],
             "[reference(resourceId('Microsoft.Resources/deployments', 'storage'), "
             "'2025-04-01').outputs.rankingArchiveContainer.value]",
         )
@@ -1994,8 +1997,12 @@ class BicepPolicyTests(unittest.TestCase):
                     "enableRankingArchive": flag,
                     "rankingArchiveImmutabilityDays": days,
                 }
-                self.assertIs(evaluate(container["condition"], values, storage["variables"]), container_on)
-                self.assertIs(evaluate(policy["condition"], values, storage["variables"]), policy_on)
+                self.assertIs(
+                    evaluate(container["condition"], values, storage["variables"]), container_on
+                )
+                self.assertIs(
+                    evaluate(policy["condition"], values, storage["variables"]), policy_on
+                )
                 name = evaluate(output, values, storage["variables"])
                 self.assertEqual(name, "ranking-archive" if flag else "")
                 evaluated = evaluate(ranking_env, {"rankingArchiveContainer": name}, {})
@@ -2007,7 +2014,12 @@ class BicepPolicyTests(unittest.TestCase):
                     else {},
                 )
         text = json.dumps([container, policy, env])
-        for forbidden in ("ZF_BLOB_SAS", "connectionString", "AccountKey", *FORBIDDEN_KEY_FUNCTIONS):
+        for forbidden in (
+            "ZF_BLOB_SAS",
+            "connectionString",
+            "AccountKey",
+            *FORBIDDEN_KEY_FUNCTIONS,
+        ):
             self.assertNotIn(forbidden, text)
         self.assertIs(self.main["parameters"]["allowPublicNetworkAccess"]["defaultValue"], False)
 
