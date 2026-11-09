@@ -2,19 +2,19 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-09T12:29:50+00:00",
-  "commit": "23e944c1fccf0c4578e7beb0740ddd55c3f935b2",
+  "scored_at": "2026-11-09T15:38:51+00:00",
+  "commit": "8d6f029cac004506953f36606862168bbe9d9412",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/42616095762",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/42645390735",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
-    "solution-code": "bf861817357cc4f7168fbd6795e4e65382125fc3aa58b1b75c4318975ff801b2",
-    "infrastructure": "7ad8e90c765fd1186983edf724d06b20e6937740dec9f43f45f43b05e70b014c",
-    "capstone-deck": "4c8e86dc609338fd2cfac3924a98c47e26c9e20f137c9f831815a75d58e676de",
-    "pitch": "5f1c5259b13f33711702801b2120e49cdc3c9a70f917a355a7d2ef016d9e2408",
-    "thought-leadership": "0d1994c725e0ba4957b5b92c03fc542ea56f282d391ca72e35c4dca5dedca159"
+    "solution-code": "3d717af430c94e66038b2fd215dd96ae3765ab8d48b2cf1ec9c11c986078c06f",
+    "infrastructure": "e7b1f3cbf26bc8ba1f18c5ed64ac96f9d115515dfa33fa76d907b3b72d9fbd2d",
+    "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
+    "pitch": "5b414b81c3cc0512d987acd669648d14eb85eae2af031105e39dd8bd5054fbe7",
+    "thought-leadership": "f7f2adc273905a84d848d54be0a77abc3550013fd1c9ea9e2fedb743bdacf70a"
   },
   "total": 78,
   "sections": {
@@ -32,7 +32,7 @@
         "src/api/src/zava_forward/api/server.py:690-699",
         "src/api/src/zava_forward/api/web/app.js:1223-1265"
       ],
-      "rationale": "Diff adds a decoupled versioned home-case module (API route, store methods, separate screen) that keeps home vs shared-building evidence apart via defined contracts; incremental, consistent with existing modular design. Ceiling 5 retained."
+      "rationale": "Not touched by this diff (changed files are deck/pitch/thought-leadership/infra README/queue_azure). Baseline ceiling unchanged."
     },
     "A2": {
       "score": 5,
@@ -46,89 +46,81 @@
       "evidence": [
         "src/api/tests/test_assistant_release.py:910-979"
       ],
-      "rationale": "New UnleasedRevocation test proves a pending, never-claimed release proposal is denied by release admission, durable across worker restart. Reinforces existing release-admission security evidence; ceiling 5 retained."
+      "rationale": "Not touched by this diff. Baseline ceiling unchanged."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/checks/sensor_sql_check.py:1-40",
-        "src/api/tests/test_sensor_sql_check.py:1-48",
-        "src/core/tests/test_sensor_analysis_mssql.py:1-54"
+        "src/agents/src/zava_forward/agents/queue_azure.py:1-217",
+        "infra/README.md:1332"
       ],
-      "rationale": "Diff adds a stricter, test-covered --selector analysis path (exact-count/no-skip validation) and an opt-in MSSQL-backed retained-analysis durability test for Refs #\u200b111, with README disclaiming full #\u200b111 acceptance. Incremental harness rigor; ceiling 5 retained."
+      "rationale": "New stdlib Azure Queue adapter is unit-tested only with a scripted transport (not run against Azure); infra/README.md still discloses serve refuses to start (token source, API post-back, wiring unbuilt). Incremental, gap proactively disclosed; ceiling 5 retained."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/monitoring_coverage.py:240-311",
-        "infra/monitoring-runbooks.md:342-349"
+        "src/core/src/zava_forward/core/monitoring_coverage.py:240-311"
       ],
-      "rationale": "New check_monitoring_declaration checks six harm indicators for denominators, windows, thresholds and named owners; strengthens ops evidence, still offline/no live metrics. Ceiling 5 retained."
+      "rationale": "Not touched by this diff. Baseline ceiling unchanged."
     },
     "A6": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/heldout_freeze.py:1-136",
-        "src/agents/src/zava_forward/agents/candidate_comparison.py:170-243",
-        "src/agents/tests/test_heldout_freeze.py:1-92"
+        "src/agents/src/zava_forward/agents/heldout_freeze.py:1-136"
       ],
-      "rationale": "New heldout_freeze.check_freeze is a genuine pre-evaluation freeze/leak gate, wired into compare_candidates via freeze=. Strengthens evaluation rigor; no real manifest/results yet. Ceiling 5 retained."
+      "rationale": "Not touched by this diff. Baseline ceiling unchanged."
     },
     "A7": {
       "score": 4,
       "evidence": [
-        "src/agents/src/zava_forward/agents/candidate_comparison.py:170-200"
+        "src/agents/src/zava_forward/agents/queue_azure.py:1-217"
       ],
-      "rationale": "Agents-directory changes in this diff are evaluation/freeze-gate scaffolding, not autonomous agent dispatch or orchestration; no handoff, reflection or state-graph pattern added. Baseline 4 (Good) retained."
+      "rationale": "New queue_azure.py is a transport adapter (lease/ack/release/poison), not autonomous dispatch, handoff, reflection or state-graph behaviour. Baseline 4 (Good) retained."
     },
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live readiness; no rehearsal exists. New review-2026-11-08.md and rewritten S01/S08/S09 narration are stronger written argument but still unrehearsed. Baseline retained."
+      "rationale": "Live readiness; no rehearsal evidence in this diff. Rewritten S08/S09 narration (docs/capstone/pitch/speaker-script.md) is stronger written argument only. Baseline retained."
     },
     "B2": {
       "score": 4,
       "evidence": [
         "docs/capstone/pitch/README.md:27-33"
       ],
-      "rationale": "Archetype/register-calibration table persists unchanged in substance. Still unrehearsed, readiness retained."
+      "rationale": "Archetype/register-calibration table persists unchanged in substance this revision. Still unrehearsed, readiness retained."
     },
     "B3": {
       "score": 2,
-      "evidence": [
-        "docs/capstone/demo/runbook.md:22-45"
-      ],
-      "rationale": "New runbook section adds precise help-mode walkthrough but states this is preparation, not an executed demo or rehearsal. No live evidence exists. Needs Improvement retained."
+      "evidence": [],
+      "rationale": "docs/capstone/demo/runbook.md is not changed in this diff; no new live or rehearsal evidence. Needs Improvement retained."
     },
     "B4": {
       "score": 3,
       "evidence": [
-        "docs/capstone/pitch/questions-and-answers.md:93-116"
+        "docs/capstone/pitch/questions-and-answers.md:98-124"
       ],
-      "rationale": "B03/B04/B13/B14 Q&A rewritten with sharper, more precise honest limits and deeper source trails distinguishing known from assumed. Prepared depth is materially stronger, though still no live-challenge transcript."
+      "rationale": "B03/B04/B13/B14 Q&A further sharpened (new title/REVERSAL/EVALUATE framing on B04) with deeper source trails, but this is prepared material; no live-challenge transcript exists. Readiness unchanged at 3."
     },
     "B5": {
       "score": 2,
-      "evidence": [
-        "docs/capstone/pitch/speaker-script.md:24-34"
-      ],
-      "rationale": "Speaker-script timing cues persist; still a written plan, not observed paced delivery. Unrehearsed pacing retained."
+      "evidence": [],
+      "rationale": "docs/capstone/pitch/speaker-script.md timing cues updated (CURRENT ROUTE TIMING added) but remain a written plan, not observed paced delivery. Unrehearsed pacing retained."
     },
     "B6": {
       "score": 5,
       "evidence": [
-        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide14",
-        "docs/capstone/source/slides.json"
+        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide13",
+        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide9"
       ],
-      "rationale": "Deck and slides.json were materially changed this revision (unlike last time). Slides 9/14 remain single-idea, standalone with complete sourced notes; documentation stays complete and navigable. Excellent retained on fresh evidence."
+      "rationale": "Deck materially changed again (new S11A slide 13 added, pagination shifted). Inspected slides 9/12/13/14 remain single-idea, standalone with complete sourced notes; documentation stays complete and navigable. Excellent retained on fresh evidence."
     },
     "B7": {
       "score": 5,
       "evidence": [
-        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide30",
-        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide40"
+        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide40",
+        "docs/capstone/deck/zava-forward-cowork-v2-draft.pptx:slide41"
       ],
-      "rationale": "Slides 30/40 show claims backed by specific actionable numbers (315 planned trajectories, 1,247 completed steps across named commits) with visuals built to make the point. Excellent discipline preserved on fresh deck evidence."
+      "rationale": "Slides (renumbered 40/41, formerly 30/40) retain claims backed by specific actionable numbers (315 planned trajectories, 1,247 completed steps across named commits) with visuals built to make the point. Excellent discipline preserved on fresh deck evidence."
     },
     "C1": {
       "score": 5,
@@ -138,40 +130,37 @@
     "C2": {
       "score": 2,
       "evidence": [
-        "docs/capstone/pitch/README.md:79-83"
+        "docs/capstone/pitch/README.md:79-86"
       ],
-      "rationale": "Restate-before-answering instruction persists; no transcript or live exchange demonstrates the behaviour under challenge. Readiness unchanged."
+      "rationale": "New 'Strengthening The Four Challenged Criteria' section gives written advice for C2 (restate the concern, concede sound points) but is preparation, not a transcript or live exchange demonstrating the behaviour under challenge. Readiness unchanged."
     },
     "C3": {
       "score": 4,
-      "evidence": [
-        "docs/capstone/pitch/tokenomics-placement-draft.md:33-45"
-      ],
-      "rationale": "New tokenomics-placement-draft.md surfaces an unresolved tension between a modelled cost figure and the no-price-claim criterion, recommending the more honest disclosure option. Clear unprompted risk-surfacing, consistent with Excellent honesty."
+      "evidence": [],
+      "rationale": "docs/capstone/pitch/tokenomics-placement-draft.md is unchanged in this diff; no new unprompted risk-surfacing evidence for the pitch/C3. Baseline Excellent (4) retained."
     },
     "D1": {
       "score": 4,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:243-260",
-        "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex:1-40"
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex:132-190",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/measurement-provenance.tex:113-270"
       ],
-      "rationale": "Protocol now an actually running experiment with OSF registration, disclosed amendments and three implementation epochs pinned to real commits. Genuine synthesis, but still no outcomes to act on. Good (4) retained."
+      "rationale": "New prospective supplementary blind-judging instrument (witnessed endpoint loss, four ordinal dimensions, blinding/calibration rules) is genuine further synthesis with concrete method detail, but still no completed judging or outcomes to act on. Good (4) retained, consistent with baseline."
     },
     "D2": {
       "score": 3,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:38-170",
-        "docs/capstone/thought-leadership/everything-but-the-software/main.tex:1053-1066"
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex:188-189",
+        "docs/capstone/thought-leadership/everything-but-the-software/anc/measurement-provenance.tex:268-269"
       ],
-      "rationale": "New author-contributions/coauthorship disclosure and measurement-provenance appendix improve structure and honesty, but the same TODO(author) count remains and Microsoft publication approval is still pending. Satisfactory (3) retained."
+      "rationale": "Two new '% TODO(author)' markers were added alongside the supplementary judging section, and Microsoft publication approval remains pending; the draft version advanced (v13 to v14) but completeness did not improve. Satisfactory (3) retained."
     },
     "D3": {
       "score": 2,
       "evidence": [
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:38-42",
-        "docs/capstone/thought-leadership/everything-but-the-software/README.md:310-311"
+        "docs/capstone/thought-leadership/everything-but-the-software/README.md:38-42"
       ],
-      "rationale": "README states explicitly: no archive, OSF upload, visibility change or scientific submission occurred; publication approval remains pending. Needs Improvement (2) retained."
+      "rationale": "README continues to state explicitly that no archive, OSF upload, visibility change or scientific submission has occurred; publication approval remains pending. Needs Improvement (2) retained."
     }
   }
 }

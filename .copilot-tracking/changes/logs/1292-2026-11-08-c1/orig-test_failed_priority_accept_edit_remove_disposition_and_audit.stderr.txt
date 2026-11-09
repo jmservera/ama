@@ -1,0 +1,6 @@
+test_failed_priority_accept_edit_remove_disposition_and_audit (test_resident_decisions.SqlResidentDecisions.test_failed_priority_accept_edit_remove_disposition_and_audit) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.642s
+
+OK

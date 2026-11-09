@@ -1,0 +1,6 @@
+test_challenge_source_exact_dependency_manifest_and_original_reviews (test_resident_decisions.MssqlResidentControls.test_challenge_source_exact_dependency_manifest_and_original_reviews) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 4.954s
+
+OK

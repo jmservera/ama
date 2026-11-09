@@ -1,0 +1,25 @@
+unformatted: File would be reformatted
+    --> tests/test_priority_order.py:1096:24
+     |
+1095 |         self.make_legacy(
+     -             self.store, [(rid, 50, user, body, version) for rid, _, user, body, version in self.rows]
+1096 +             self.store,
+1097 +             [(rid, 50, user, body, version) for rid, _, user, body, version in self.rows],
+1098 |         )
+--------------------------------------------------------------------------------
+1233 |     def assert_quarantined(self, store: Any) -> None:
+     -         self.assertEqual(
+     -             [p[3] for p in store.local.pending], ["SYN unrelated tsk000000001x"]
+     -         )
+1234 +         self.assertEqual([p[3] for p in store.local.pending], ["SYN unrelated tsk000000001x"])
+1235 |         store.save()
+--------------------------------------------------------------------------------
+1260 |     def test_repeated_singleton_repairs_read_a_bounded_number_of_history_rows(self) -> None:
+     -         history = [
+     -             (f"h{n:011d}", n + 1, self.body(f"h{n:011d}", SECOND), 1) for n in range(60)
+     -         ]
+1261 +         history = [(f"h{n:011d}", n + 1, self.body(f"h{n:011d}", SECOND), 1) for n in range(60)]
+1262 |         self.ordinal_db(history, rec_order_review="3")
+     |
+
+1 file would be reformatted, 1 file already formatted
