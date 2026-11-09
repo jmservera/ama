@@ -1,0 +1,63 @@
+{
+  "summary": "Standard independent functional review of all 20 changed paths. The encoded-byte poison-copy correction is sound, but the default Azure REST requests omit the required request date header.",
+  "verdict": "request_changes",
+  "severity_counts": {"critical": 0, "high": 1, "medium": 0, "low": 0},
+  "changed_files": [
+    {"file": ".copilot-tracking/changes/2026-11-04/issue-144-queue-adapter-changes.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/changes/2026-11-05/issue-144-poison-size-correction-changes.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/changes/2026-11-09/issue-144-queue-slice-recovery-changes.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/details/2026-11-04/issue-144-queue-adapter-details.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/details/2026-11-05/issue-144-poison-size-correction-details.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/details/2026-11-09/issue-144-queue-slice-recovery-details.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/plans/2026-11-04/issue-144-queue-adapter-plan.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/plans/2026-11-05/issue-144-poison-size-correction-plan.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/plans/2026-11-09/issue-144-queue-slice-recovery-plan.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/research/2026-11-04-issue-144-queue-adapter-research.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/research/2026-11-05-issue-144-poison-size-correction-research.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/research/2026-11-09-issue-144-queue-slice-recovery-research.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/reviews/2026-11-04/issue-144-queue-adapter-review.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/reviews/2026-11-05/issue-144-poison-size-correction-review.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/reviews/2026-11-09/issue-144-queue-slice-recovery-review.md", "lines_changed": "All added lines reviewed", "risk": "Low", "issue_count": 0},
+    {"file": ".copilot-tracking/rpi-sessions/2026-11-05/issue-144-poison-size-correction-state.json", "lines_changed": "Entire added record reviewed", "risk": "Low", "issue_count": 0},
+    {"file": "docs/reference/log.md", "lines_changed": "Both changed hunks reviewed", "risk": "Low", "issue_count": 0},
+    {"file": "infra/README.md", "lines_changed": "Criterion row replacement reviewed", "risk": "Low", "issue_count": 0},
+    {"file": "src/agents/src/zava_forward/agents/queue_azure.py", "lines_changed": "1-215 reviewed, with worker and dispatch context", "risk": "High", "issue_count": 1},
+    {"file": "src/agents/tests/test_queue_azure.py", "lines_changed": "1-203 reviewed, with adjacent offline tests", "risk": "Low", "issue_count": 0}
+  ],
+  "findings": [
+    {
+      "number": 1,
+      "title": "Supply a request date for Azure Queue REST authorization",
+      "severity": "High",
+      "category": "Contract",
+      "skill": null,
+      "file": "src/agents/src/zava_forward/agents/queue_azure.py",
+      "lines": "123-128",
+      "problem": "Every operation supplies Authorization and x-ms-version but neither Date nor x-ms-date. Azure Storage REST requires a request date (see Microsoft Learn Queue Get Messages / Put Message request headers and Authorize with Microsoft Entra ID). urllib does not add it. With the shipped default transport and a valid injected bearer token, requests are therefore rejected rather than leasing, deleting, releasing or moving messages. The worker catches receive failures and backs off indefinitely. This is an adapter wire-contract defect, not missing managed-identity wiring. Recorder tests accept arbitrary headers, so their passing results do not establish this contract. No live-service reproduction was performed.",
+      "current_code": "        headers = {\n            \"Authorization\": f\"Bearer {self.token()}\",\n            \"x-ms-version\": API_VERSION,\n            \"Content-Type\": \"application/xml\",\n        }\n        return self.transport(method, url, headers, body)",
+      "suggested_fix": "Add a fresh RFC 1123 UTC x-ms-date in _call, for example using email.utils.formatdate(usegmt=True), before invoking the transport. Add an offline contract-enforcing transport test that refuses calls without a parseable current x-ms-date, covering receive, poison POST, ack and release. References: https://learn.microsoft.com/en-us/rest/api/storageservices/get-messages and https://learn.microsoft.com/en-us/rest/api/storageservices/authorize-with-azure-active-directory (not retrieved during this review)."
+    }
+  ],
+  "positive_changes": [
+    "Poison copies cap UTF-8 bytes at 45,000: base64 is at most 60,000 bytes, with the XML wrapper still below 65,536. Truncated multibyte prefixes remain valid UTF-8 and explicitly report original byte length.",
+    "Poison storage must return 201 before deletion; failed writes retain the leased original.",
+    "Delivery six is poisoned before task execution; malformed task parsing is routed to poison. Missing identity and malformed XML produce retryable errors rather than acknowledgement.",
+    "Message IDs are path-quoted and pop receipts query-encoded; release uses zero visibility without rewriting message text.",
+    "Worker context confirms post-before-ack, retry/backoff on receive faults, and unchanged fail-closed command-line serve."
+  ],
+  "testing_recommendations": [
+    "Add request-header contract tests as described in finding 1.",
+    "Add offline count-five/count-six boundary, missing identity, release 404/error, poison-success/delete-failure, and fresh-token-per-call tests.",
+    "The supplied queue, worker, dispatch and dependency tests were read, not executed by this reviewer."
+  ],
+  "recommended_actions": ["Fix finding 1 and obtain an independent exact-new-head review before coordinator publication."],
+  "out_of_scope_observations": [
+    {"file": "src/agents/src/zava_forward/agents/worker.py", "observation": "Managed identity, postback fencing, serve wiring, deployed identity, hosting and restart/restore proofs remain later-slice concerns. No epic acceptance inferred."},
+    {"file": "handoff-144.md", "observation": "Publication/force-push wording is internally inconsistent; not a queue source defect. Supplied identities and clean status are coordinator-verified, not independently executed Git checks."},
+    {"file": "rpi-144.log", "observation": "The supplied transcript records commands and author summaries, but folds many stdout blocks and pipes output through tail/grep. Test counts and clean-tool claims are attributed to coordinator/native evidence, not independently verified exit statuses or tool versions."}
+  ],
+  "risk_assessment": "High: Azure REST request-contract defect in the bounded queue adapter. No broad production or security assessment performed.",
+  "acceptance_criteria_coverage": [
+    {"ac": "#144 literal hosting criteria C1-C5", "status": "Partial", "notes": "This queue-only slice is preparatory; all literal hosting criteria remain unproven. Use Refs #144, not closure. Tokenomics previously ticked is not re-evidenced."}
+  ]
+}

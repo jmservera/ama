@@ -1,0 +1,27 @@
+{
+  "reviewer": "Independent functional reviewer",
+  "date": "2026-11-09",
+  "perspective": "Functional",
+  "depthTier": "standard",
+  "branch": "fix/demo-recovery-144-1109",
+  "head": "2619f050fd2cd2eebd649babd45bd07752ba1a6d",
+  "tree": "6243ef02e20cb40cf7b134e36c4c324cb415d02f",
+  "base": "b46a9ad9a9619db535368d1b2cbbddec8110e122",
+  "identity_source": "Coordinator-supplied frozen identities; no independent Git execution",
+  "diff": "/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files/review-144.diff",
+  "full_diff_read": true,
+  "changed_paths_reviewed": 20,
+  "diff_state": "No diff-state.json found in supplied session; equivalent review scope supplied by user and path manifest",
+  "untracked_files": "No untracked source files supplied; clean status attributed to coordinator",
+  "verdict": "request_changes",
+  "severity_counts": {"critical": 0, "high": 1, "medium": 0, "low": 0},
+  "report": "functional-findings.json",
+  "limits": [
+    "No source edits, tests, installations, network calls, delegation or GitHub writes.",
+    "Read full precomputed diff once, all listed paths covered; queue/dispatch/worker contracts and adjacent tests read for context.",
+    "No independent clean-worktree, lineage, hosted-check or test-exit verification.",
+    "Published-head hosted green is not evidence for frozen candidate.",
+    "Standard queue slice only; not epic acceptance or human approval.",
+    "Structured-only perspective output; no markdown/general PR review emitted."
+  ]
+}
