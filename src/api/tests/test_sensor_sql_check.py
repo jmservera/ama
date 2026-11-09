@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from checks import sensor_sql_check as check
 
-CLEAN = "........\n" + "-" * 70 + "\nRan 8 tests in 4.2s\n\nOK\n"
+CLEAN = "........\n" + "-" * 70 + "\nRan 10 tests in 4.2s\n\nOK\n"
 
 
 class SensorSqlCheckTests(unittest.TestCase):
@@ -16,6 +16,10 @@ class SensorSqlCheckTests(unittest.TestCase):
                 "test_sensor_ingestion",
                 "test_sensor_consistency.SqlHandoverTests."
                 "test_composed_joint_query_statistics_and_reopened_window_replay",
+                "test_sensor_consistency.WeatherContinuityTests",
+                "test_sensor_consistency.LiveEnvelopeReplayTests",
+                "test_sensor_consumer_live",
+                "test_live_receiver_sql",
             ),
         )
         self.assertEqual(check.SELECTORS["analysis"], ("test_sensor_analysis_mssql",))
@@ -34,9 +38,9 @@ class SensorSqlCheckTests(unittest.TestCase):
     def test_analysis_result_requires_exact_count_and_no_skips(self) -> None:
         self.assertTrue(check.validate("analysis", 0, CLEAN))
         self.assertFalse(check.validate("analysis", 1, CLEAN))
-        self.assertFalse(check.validate("analysis", 0, CLEAN.replace("OK", "OK (skipped=8)")))
-        self.assertFalse(check.validate("analysis", 0, CLEAN.replace("Ran 8", "Ran 7")))
-        self.assertFalse(check.validate("analysis", 0, "Ran 8 tests in 1s\n\nFAILED (failures=1)"))
+        self.assertFalse(check.validate("analysis", 0, CLEAN.replace("OK", "OK (skipped=10)")))
+        self.assertFalse(check.validate("analysis", 0, CLEAN.replace("Ran 10", "Ran 9")))
+        self.assertFalse(check.validate("analysis", 0, "Ran 10 tests in 1s\n\nFAILED (failures=1)"))
         self.assertFalse(check.validate("analysis", 0, ""))
 
     def test_default_result_keeps_exit_code_semantics(self) -> None:

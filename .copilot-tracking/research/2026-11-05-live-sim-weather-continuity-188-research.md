@@ -1,0 +1,14 @@
+---
+title: Research for #188 synthetic weather continuity
+ms.date: 2026-11-05
+---
+
+* Research disposition: executed (source reading only; no network, no SQL service, no private data). Planning Readiness: Ready.
+* Start: clean head 70d81b566c94e0bacc9e83df944ce4ecbd752a8c, tree 266793280e295a618cc934c867e149db1614d45a, main bb3a3b03c, declared target feat/live-simulator-integration-184 at ead177ef9. PR 1203 public head c9a14573d is older than this candidate.
+* Owner decision (focused form, true): a separately versioned synthetic WEATHER backfill may be compared with live simulated weather like-for-like. Original indoor series, damp and safety calibration stay separate. This is not a prior pass, physical calibration, consent, deployment, spending or a change to the 700 cap. Simulator permissions are not re-asked.
+* Existing contracts reused: `live_readings.Generator` (VERSION live-sim-generator-v1, pure function of seed, home, slot; declared constants NOISE_*, OFFSET_*, 5-minute slots, 2-decimal rounding); `live-sim-reading-v1` envelope and its `_live_shape` admission; `retained_envelopes` lossless witness; `observed_series` indoor-only; `sensor_handover_verify.run` with the HANDOVER_SCHEMA_UNSUPPORTED refusal; `sensor_consistency.report` and its `_index` (indoor schema and calibrated=true only).
+* Gap: no like-for-like comparison exists for weather rows, so the verifier can only refuse. The reference producer exists (the generator) but stamps scenario `live-simulator`, so a backfill cannot be distinguished by provenance.
+* Tolerance source: no approved tolerance exists. A prospective engineering envelope can be derived from the declared generator constants alone. Reference and live differ only by seed: per-home offsets (OFFSET_*) and noise (NOISE_*) over identical anchors. Temperature and humidity: point <= 2*(offset+noise) plus 0.01 rounding; sunlight is multiplicative, point <= 0.3 * 1400 (consumer cap). Mean step <= 2x point and stddev difference <= point follow from the triangle inequality, and also hold under the 0..100 and non-negative clamps (1-Lipschitz). These are deliberately wide: they detect gross discontinuity, scale and unit faults, not fine drift. Status: engineering bound from declared parameters, NOT an approved operational tolerance. Nothing is fitted to observed data.
+* Evidence class: constructed distribution check on synthetic data only. It is not witnessed actual Azure continuity and proves no physical accuracy, calibration or C1/C2 live acceptance.
+* Risks: reference built from different anchors invalidates the bound (declared assumption, cannot be verified from rows, recorded in the report). Mixed schema, units, scenario or purpose must be rejected, not dropped.
+* Not run: FULL gate, browser, SQL Server, Docker, scan, cloud. #96 owns the heavy lock; #233 then holds admitted focused/browser work.
