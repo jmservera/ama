@@ -197,6 +197,12 @@ separate PR and are not applied here. D4 and D5 policy text is applied in
   The complete gate applies to big features, releases, infrastructure,
   deployment, SQL and security-sensitive changes. Independent exact-head
   review, hosted CI and human approvals are kept.
+  Update 2026-11-09 (issue #1294): the 2026-11-01 sentence above, and the
+  "current repository instructions" wording in this item, describe the state at
+  that date and are superseded for current use by
+  [the validation tiers](../../../.github/copilot-instructions.md): small and
+  documentation-only candidates take the focused tier with relevant local checks
+  and applicable hosted CI and no blanket `--changed` run.
 * D5 Two-cycle review rule: after two review correction cycles, convert new
   non-blocking threads to follow-up issues. Consequence: some edge cases ship
   and are tracked rather than fixed in place; blocking safety, privacy and

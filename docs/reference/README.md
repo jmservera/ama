@@ -306,6 +306,9 @@ bindings, retained-history/SQL recovery and finite cost/rate/time controls.
 Local fake-network/actual-constructed-SQLite evidence is not actual Hub,
 credential lifecycle, Azure SQL handover, active budget alerts or whole AC-066.
 Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
+For the 2026-11-05 current-main contract, retention and handover boundary, see the
+[fifth stabilization checkpoint](../architecture/cutover-evidence-pack.md#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110)
+(documentation only; the live-sim wire schema is not admitted by the main consumer and nothing is accepted).
 The [2026-10-30 composed local handover contract](./research/iot-sensor-analytics-research-plan.md#composed-local-handover-evidence-2026-10-30-refs-188)
 adds same-model replay, strict reference-adjusted statistical tolerances and
 whole-window SQL replay checks. It does not establish actual Hub-to-Azure SQL
@@ -467,6 +470,94 @@ benchmark at17383ms; three focused repeats passed but do not repair its failed
 receipt. Native policy-host discovery remains Deferred. No total-product pass,
 new confirmed code defect, acceptance tick, cloud/real-AI approval, final
 publication receipt or PR is implied. Independent local lanes can continue.
+For the 2026-11-05 parent-topic paired comparability integration, the
+[sixth stabilization checkpoint](../architecture/cutover-evidence-pack.md#sixth-stabilization-checkpoint-parent-topic-paired-comparability-integration-2026-11-05-refs-440-128-123)
+maps the diagnostic to the journey, ranking, release and cohort boundaries
+(parent-topic observation only, not merged main; no defect confirmed and no
+fairness, threshold or human acceptance is implied).
+For the UI and cache recovery after #1214 and #1215, the
+[seventh stabilization checkpoint](../architecture/cutover-evidence-pack.md#seventh-stabilization-checkpoint-current-main-ui-and-cache-recovery-2026-11-05-refs-440-96)
+pins main `bb3a3b03` and records document identities and traceability; the
+focused main checks were blocked by a held heavy lock and are unrun, not
+passed, and no defect or acceptance is implied. A dated continuation records
+that both focused checks later passed on exact current main `bb3a3b03`
+(focused only; not a full receipt or any acceptance).
+For the finance parent held-export manifest contract (#96), the
+[ninth stabilization checkpoint](../architecture/cutover-evidence-pack.md#ninth-stabilization-checkpoint-finance-parent-held-export-manifest-contract-2026-11-05-refs-440-96)
+(originally labelled eighth, corrected here) assesses `feat/finance-integration-93` `0472fd5d` separately from main and
+dispositions the proposed required-history key (finance-parent source only;
+local draft pending coordinator consumption; no approval, defect or acceptance is implied).
+For the lifecycle parent quality evidence gate (#82, PR 1226), the
+[tenth stabilization checkpoint](../architecture/cutover-evidence-pack.md#tenth-stabilization-checkpoint-lifecycle-parent-quality-evidence-gate-2026-11-05-refs-440-82-81)
+assesses `feat/controlled-lifecycle-integration-81` `cd271cfa` separately from
+the governance target and main, with a light core test observation (183 tests,
+exit 0, no SQL Server); local draft pending coordinator consumption; no
+approval, closure or criterion tick is implied.
+For the lifecycle parent capacity booking gate (#82, PR 1229), the
+[eleventh stabilization checkpoint](../architecture/cutover-evidence-pack.md#eleventh-stabilization-checkpoint-lifecycle-parent-capacity-booking-gate-2026-11-06-refs-440-82-81)
+assesses `feat/controlled-lifecycle-integration-81` `af891a5c` separately from
+the governance target and main, with a light core test observation (193 tests,
+exit 0, no SQL Server); local candidate pending coordinator consumption; no
+approval, closure or criterion tick is implied.
+For the ranking archive helper hard-link and staging-cleanup contract (#1231
+under #79), the
+[twelfth stabilization checkpoint](../architecture/cutover-evidence-pack.md#twelfth-stabilization-checkpoint-archive-helper-filesystem-contract-2026-11-06-refs-440-79-1231)
+records the unmerged candidate separately from the governance target and main,
+with a HOLD on #79 archive delivery and #73 expansion; no test was run, no
+filesystem is approved, and no approval, closure or criterion tick is implied.
+Correction 1 of that record reclassifies one evidence row and adds a
+document-qualified traceability table; the hard-link disposition stays blocked
+because the owner was unavailable.
+For the finance parent history export (#1233 under #96 and #93), the
+[thirteenth stabilization checkpoint](../architecture/cutover-evidence-pack.md#thirteenth-stabilization-checkpoint-finance-parent-history-export-2026-11-06-refs-440-96-93)
+records the finance source, governance target and main as separate pins with a
+HOLD on #93 and #96 closure; no test was run and no approval, closure or
+criterion tick is implied. Correction 1 splits the observed disk from the
+supplied admission and qualifies the original chronology.
+For the proposed #144 background-dispatch safeguards, the
+[fourteenth stabilization checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122)
+separates main from the unmerged candidate queue slice, corrects the
+candidate's ADR anchors, lists seven design gaps and two open decisions, and
+recommends FIX with #144 implementation held; no code ran and no approval,
+closure or tick is implied. Correction 1 qualifies the r8 chronology (Plan and
+Details were parallel, not serial) and records the local, unpublished parent
+136 ref at main; second-route authority stays unresolved.
+Correction 2 qualifies correction 1 (its Plan and Details overlapped, and its
+heading count was not a pack-wide uniqueness pass) and records the owner's
+later approval of the Application-only AgentsWorker second permit route; that
+is not a live grant, ADR acceptance or operator decision, and the operator
+disposition and seven design gaps stay open.
+A dated current-status subsection of the fourteenth checkpoint records the
+later Finance-role reconciliation code approval (issue 144 comment
+`6685915140`, not a live grant or protocol acceptance), the draft R9 design
+with its Revise outcome and the correction 2 locator clarification. The
+[fifteenth](../architecture/cutover-evidence-pack.md#fifteenth-stabilization-checkpoint-finance-parent-integration-2026-11-06-refs-440-96-93)
+and [sixteenth](../architecture/cutover-evidence-pack.md#sixteenth-stabilization-checkpoint-sensor-parent-integration-2026-11-06-refs-440-184-185-188-110)
+stabilization checkpoints record the finance parent `4642b55f` and sensor
+parent `9476dc96` statuses with source-qualified historical child receipts;
+neither is a receipt for the parent, main acceptance or an approval.
+A later [provenance qualification](../architecture/cutover-evidence-pack.md#provenance-qualifications-2026-11-06-post-integration-correction-1)
+corrects the batch time labels and the scope of "no runtime defect".
+
+The [seventeenth stabilization checkpoint](../architecture/cutover-evidence-pack.md#seventeenth-stabilization-checkpoint-queue-dispatch-r10-design-2026-11-06-refs-440-144-107-118-122)
+records the finished #144 R10 dispatch design (`1e192099`) as an unapproved
+DRAFT proposal with an independent read assessment, the observed topology of
+`feat/infra-hosting-integration-136` (local label at main `bb3a3b03`, no remote
+branch or pull request) and a CONTINUE-after-acceptance recommendation. It is
+not an approval, a runtime result or a closure.
+
+A [retained-evidence verification](../architecture/cutover-evidence-pack.md#retained-evidence-verification-of-the-sixteenth-checkpoint-2026-11-06-refs-440-184-185-188)
+qualifies the sixteenth (sensor parent) checkpoint with figures read from the
+retained child receipt, SQL logs and image scans: SQL 285 with one skip versus
+the separate 68-test supplement, and 42 unfixed findings per image (not
+security-clean). It is append-only, adds no runtime result and recommends
+CONTINUE for independent lanes and HOLD for closure of #184, #185 and #188.
+
+For the parent topic prepared against main `bb3a3b03`, the
+[eighth stabilization checkpoint](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128)
+records merge identities, the covered #128 and #440 children, the final scope
+and tier recommendation and light local observations; complete parent
+validation is pending and no acceptance is implied.
 For issue #119, the [map tile provider options review](./research/ux/map-tile-provider-options.md)
 records dated licence, attribution, coverage, cost, processor and privacy
 evidence for the public OSM server, Azure Maps, OS Maps API, MapTiler and
