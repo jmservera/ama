@@ -1215,3 +1215,16 @@ and one historical generic employee model answer on the deployed demo as Azure
 observed for that source only. Five-agent, case-grounded, sensor-grounded,
 current-main deployment, cost, privacy and approval acceptance remain unproven, and
 unmerged #184 and #1288 work is excluded. The recommendation is bounded continue.
+
+The [demo stabilization current-main checkpoint](../architecture/cutover-evidence-pack.md#demo-stabilization-current-main-checkpoint-2026-11-09-refs-440-123-184-136)
+(2026-11-09, `main` `df8e858b`, draft, not approved) pins main after PR 1222 and PR 1304,
+qualifies BRD and PRD identifiers and decision record status, reads the simulator to
+persistence to UI to Quality model to flag path from source, and records three tiny
+local test observations plus the 184 results as historical observed with Git source
+equivalence. No retained-value employee view or sensor-attributed flag was identified in
+the inspected paths (a differently named path remains unverified); the registered
+quality-evidence snapshot has permitted document metadata, Quality records and
+checklists but no dedicated retained-sensor fields; the selected tests did not exercise
+the full sensor-to-Quality-model journey (dated Qualification C1, 2026-11-09). Unmerged
+#1288, #1292, #144, #189, #1295 and #1296 work is excluded. No new defect, closure or
+approval is claimed; the recommendation is bounded continue with closure held.
