@@ -10,6 +10,7 @@ import json
 import os
 import re
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
@@ -46,8 +47,9 @@ class ModelMismatch(ValueError):
 
 
 class Ai:
-    # This client runs the admitting authority's send fence at its own socket (see ai_transport).
-    send_fence_supported = True
+    # No transport here can establish an atomic suspend-and-send guarantee against a real provider,
+    # so the sealed simulation route is unavailable. Only labelled scripted test doubles set this.
+    send_fence_supported = False
 
     def __init__(self):
         self.endpoint = os.environ.get("AI_ENDPOINT", "").rstrip("/")
@@ -107,6 +109,8 @@ class Ai:
             raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
         body = self.provider_body(system, user, max_tokens, temperature)
         if seal is not None:
+            if not self.send_fence_supported:
+                raise ai_consumption.SimulationRefused("real-provider-route-unavailable")
             # Verified against the bytes serialized here, before the data hold, meter, token or socket.
             verifier = self.simulation_verifier
             if verifier is None:
@@ -151,6 +155,8 @@ class Ai:
                            returned_model=ai_consumption.bounded_model(result.get("model")))
             self.consumption.complete(rid, result.get("usage"), result.get("model"), "returned")
         except Exception as error:
+            if isinstance(error, urllib.error.HTTPError):
+                error.close()  # releases the absolute deadline that owns the connection
             self.consumption.complete(rid, None, None, "timeout" if isinstance(error, TimeoutError) else "provider-unavailable")
             raise
         if model != "unattested" and result.get("model") != model:

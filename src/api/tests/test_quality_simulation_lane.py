@@ -65,7 +65,15 @@ class Lane(c7.Base):
     ) -> tuple[e2.TlsPeer, Any]:
         boundary: Any = self
         peer, ai = e2.Boundary.tls_ai(boundary, before, trickle)
+        # Scripted plumbing: the peer is a local counted socket, not a provider. The production
+        # client never advertises this capability; only this labelled test double sets it.
+        ai.send_fence_supported = True
         return peer, ai
+
+    def real_ai(self) -> tuple[e2.TlsPeer, Any]:
+        """The unmodified production client over the same counted local peer (no scripted flag)."""
+        boundary: Any = self
+        return e2.Boundary.tls_ai(boundary, None, True)
 
     def provision(self, name: str) -> tuple[str, str]:
         store, key = os.path.join(self.dir, f"{name}.sqlite"), os.path.join(self.dir, f"{name}.key")
@@ -643,25 +651,73 @@ class Lane(c7.Base):
         self.assertEqual(self.active_attempts(), 0)
         self.assertTrue(service.call_slots.acquire(blocking=False))
 
-    def test_a_client_that_cannot_fence_its_send_is_refused_before_admission(self) -> None:
-        begun: list[int] = []
+    def sealed_rows(self) -> int:
+        with self.lane._connect() as db:
+            return int(db.execute("SELECT COUNT(*) FROM sim_seals").fetchone()[0])
 
-        class Unfenced:
-            configured = True
-
-        def begin(chars: int, call_id: str) -> Any:
-            begun.append(chars)
-            raise AssertionError("admission must not be reached")
-
-        admission = simulation_lane.Admission(
-            hold=lambda: None, bounds=lambda: (600, 20), begin=begin
-        )
+    def test_production_app_with_a_real_ai_refuses_before_credentials_reservation_and_socket(
+        self,
+    ) -> None:
+        peer, self.ai = self.real_ai()
+        peer.reply = valid_reply
+        self.ai.simulation_verifier = self.lane.verify
         self.lane.observe()
-        result = self.lane.request(Unfenced(), admission)
+        service = self.authority()
+        for _ in range(2):
+            result = self.post()
+            self.assertEqual(
+                (result["status"], result["reason"]),
+                ("unavailable", "real-provider-route-unavailable"),
+            )
+            self.assertTrue(result["manual_route"])
+        self.nothing_left(peer)
+        self.assertEqual((self.allowance(), self.active_attempts()), ((0, 0), 0))
+        self.assertEqual(self.sealed_rows(), 0)
+        self.assertIsNone(self.lane.last_proposal())
+        self.assertTrue(service.call_slots.acquire(blocking=False))
+
+    def test_a_plain_subclass_or_delegating_client_cannot_reach_the_real_provider_route(
+        self,
+    ) -> None:
+        peer, self.ai = self.real_ai()
+        real = self.ai
+        real.simulation_verifier = self.lane.verify
+        self.lane.observe()
+        self.authority()
+
+        class Delegate:
+            """Lies about the capability, so only the real client's own boundary can refuse."""
+
+            configured = True
+            send_fence_supported = True
+
+            def evidence(self, *args: Any, **kwargs: Any) -> Any:
+                return real.evidence(*args, **kwargs)
+
+        sub = type("Subclass", (type(real),), {})
+        real.__class__ = sub
+        self.assertFalse(real.send_fence_supported)
+        self.assertEqual(self.post()["reason"], "real-provider-route-unavailable")
+        self.nothing_left(peer)
+        self.store.ai = Delegate()
+        self.assertEqual(self.post()["status"], "held")  # declined upstream, before any socket
+        self.nothing_left(peer)
+        envelope = self.attempt(self.lane.mint(self.lane.compose()["body"]), "s", "p")
         self.assertEqual(
-            (result["status"], result["reason"]), ("unavailable", "dispatch-fence-unavailable")
+            (envelope["outcome"], envelope["reason"]),
+            ("simulation-refused", "real-provider-route-unavailable"),
         )
-        self.assertEqual(begun, [])
+        self.nothing_left(peer)
+
+    def test_no_production_source_sets_the_send_fence_capability(self) -> None:
+        src = Path(simulation_lane.__file__).parents[4]
+        offenders = [
+            str(path)
+            for path in src.rglob("*.py")
+            if "tests" not in path.parts
+            and re.search(r"send_fence_supported\s*=\s*True", path.read_text(encoding="utf-8"))
+        ]
+        self.assertEqual(offenders, [])
 
     def refused_at(self, peer: e2.TlsPeer, ai: Any, refuse_at: int) -> tuple[int, int, int]:
         calls: list[int] = []

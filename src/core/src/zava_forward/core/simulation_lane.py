@@ -437,7 +437,7 @@ class Lane:
         if not getattr(ai, "configured", False):
             return dict(base, status="unavailable", reason="model-not-configured")
         if not getattr(ai, "send_fence_supported", False):
-            return dict(base, status="unavailable", reason="dispatch-fence-unavailable")
+            return dict(base, status="unavailable", reason="real-provider-route-unavailable")
         max_tokens, timeout = admission.bounds()
         composed = self.compose(max_tokens)
         if not composed["readings"]:

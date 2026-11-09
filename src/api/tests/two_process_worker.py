@@ -69,6 +69,7 @@ def main(spec: dict[str, Any]) -> dict[str, Any]:
         return token
 
     ai._token = counted_token
+    ai.send_fence_supported = True  # scripted plumbing over a local counted peer, not a provider
     ai.model_version = ai.model_version_strong = (
         "test-model"  # the parent's constructed release binds this
     )
