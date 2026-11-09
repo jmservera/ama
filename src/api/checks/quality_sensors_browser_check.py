@@ -198,7 +198,7 @@ def main(axe_path: Path | None = None, out: Path | None = None):
                 bool(cited) and cited <= {i for i, _, _ in captured},
             )
             expect(flag).to_contain_text(
-                "still holds the readings this finding cited, with the same values"
+                "still includes the readings this finding cited, with the same values"
             )
             check("flag offers no approval control", flag.get_by_role("button").count() == 0)
             scan(page, "unapproved flag")

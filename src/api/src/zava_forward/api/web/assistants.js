@@ -23,7 +23,7 @@ function reviewFlagBlock(f) {
     const extra = f.newer_reading_count ? ` ${f.newer_reading_count} additional reading${f.newer_reading_count === 1 ? "" : "s"} not cited by this finding ${f.newer_reading_count === 1 ? "is" : "are"} now in the current capture.` : "";
     const change = f.changed_since_capture == null ? "Whether the cited readings have changed since capture is unknown."
       : f.changed_since_capture ? `The current authorised capture differs from the readings this finding cited: ${(cmp.changed_ids || []).length} changed and ${(cmp.missing_ids || []).length} not in the current bounded capture (they may still be stored). Review the current readings.${extra}`
-        : `The current authorised capture still holds the readings this finding cited, with the same values.${extra}`;
+        : `The current authorised capture still includes the readings this finding cited, with the same values.${extra}`;
     kids.push(h("p", {}, `Model: ${model}. Raised ${f.source_time || "at an unknown time"} (${f.trigger}). Not approved.`),
       h("p", {}, `${asOf} ${change}`),
       h("p", {}, `Cited IDs: ${(f.cited_ids || []).join(", ") || "none"}. Readings cited: ${(f.readings || []).map((r) => `sensor ${r.sensor_id}, reading ${r.reading_id}`).join("; ") || "none"}.`),
