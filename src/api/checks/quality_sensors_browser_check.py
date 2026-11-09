@@ -30,7 +30,7 @@ import test_mvp
 import test_quality_sensors as qs
 from checks.regulatory_ux_check import AXE_SHA256
 from zava_forward.api.server import App, make_handler
-from zava_forward.core import projection
+from zava_forward.core import projection, simulation_lane
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.sqlstore import SqlStore
 
@@ -82,6 +82,10 @@ def main(axe_path: Path | None = None, out: Path | None = None):
     fx = Fixture(root)
     inspector = fx.people["Quality Inspector"]
     liaison = fx.people["Resident Liaison Officer"]
+    lane_store, lane_key = str(root / "sim.sqlite"), str(root / "sim.key")
+    simulation_lane.provision(lane_store, lane_key)
+    os.environ[simulation_lane.STORE_ENV] = lane_store
+    os.environ[simulation_lane.KEY_ENV] = lane_key
     app = App(fx.store, PASSWORD)
     app.assistants = fx.service
     server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
@@ -208,7 +212,8 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             )
             check(
                 "withheld current capture is not reported as missing readings",
-                "no longer retained" not in proposal.inner_text() and "deleted" not in proposal.inner_text(),
+                "no longer retained" not in proposal.inner_text()
+                and "deleted" not in proposal.inner_text(),
             )
             scan(page, "withheld")
 
@@ -236,10 +241,51 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             )
             check(
                 "unavailable current capture is unknown, not missing",
-                "no longer retained" not in proposal.inner_text() and "deleted" not in proposal.inner_text(),
+                "no longer retained" not in proposal.inner_text()
+                and "deleted" not in proposal.inner_text(),
             )
             scan(page, "unavailable")
 
+            page = browser.new_page()
+            page.on("pageerror", lambda e: errors.append(str(e)))
+            page.route(
+                "**/*",
+                lambda route: (
+                    route.continue_() if route.request.url.startswith(base) else route.abort()
+                ),
+            )
+            login(page, inspector)
+            page.goto(base + "/app?sim#/case/ZF-1?tab=ai")
+            sim = page.locator("#simulation")
+            expect(sim).to_be_visible()
+            expect(sim).to_contain_text("Public synthetic simulation (not this home)")
+            expect(sim).to_contain_text("Not a real home")
+            check("simulation panel is labelled synthetic", "Not a real home" in sim.inner_text())
+            page.get_by_role("button", name="Add Simulated Readings").click()
+            expect(sim.locator("tbody tr")).not_to_have_count(0)
+            shown = {
+                (r.locator("th").inner_text(), *r.locator("td").all_inner_texts()[2:4])
+                for r in sim.locator("tbody tr").all()
+            }
+            stored = {
+                (r["reading_id"], r["temperature_c"], r["humidity_pct"])
+                for r in app.simulation.view()["readings"]
+            }
+            check(
+                "simulation UI readings equal the stored simulation readings",
+                {(a, b, c) for a, b, c in shown} == stored,
+            )
+            page.get_by_role("button", name="Request Simulation Proposal").click()
+            expect(page.locator("#simulation [role=status]").last).to_contain_text(
+                "Proposal stored as unapproved"
+            )
+            expect(sim).to_contain_text("Status: unapproved proposal")
+            check("proposal shown as unapproved", "Status: unapproved proposal" in sim.inner_text())
+            check(
+                "no accept control in the simulation",
+                sim.get_by_role("button", name=re.compile("accept", re.I)).count() == 0,
+            )
+            scan(page, "simulation panel")
             page = browser.new_page()
             page.on("pageerror", lambda e: errors.append(str(e)))
             page.route(

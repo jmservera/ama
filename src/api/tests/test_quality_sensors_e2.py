@@ -82,6 +82,8 @@ class TlsPeer:
         self.context.load_cert_chain(f"{directory}/cert.pem", f"{directory}/key.pem")
         self.cert = f"{directory}/cert.pem"
         self.accepts, self.bytes, self.trickle = 0, 0, trickle
+        self.bodies: list[bytes] = []
+        self.reply: Callable[[bytes], bytes] | None = None
         self.sock = socket.socket()
         if trickle:
             self.sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 2048)
@@ -125,7 +127,12 @@ class TlsPeer:
                 self.bytes += len(chunk)
                 if self.trickle:
                     time.sleep(0.002)
-            out = b'{"model":"test-model","choices":[{"message":{"content":"{}"}}],"usage":{}}'
+            self.bodies.append(body)
+            out = (
+                self.reply(body)
+                if self.reply
+                else b'{"model":"test-model","choices":[{"message":{"content":"{}"}}],"usage":{}}'
+            )
             conn.sendall(
                 b"HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: "
                 + str(len(out)).encode()

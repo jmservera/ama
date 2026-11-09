@@ -5430,6 +5430,25 @@ requires separate exact owner confirmation and a fresh USD700 all-in headroom
 check. The independent resident model tariff and SQL inference admission cutoff
 are unchanged; extending resident access does not authorize later paid inference.
 
+### Public synthetic simulation lane (#1288, CANDIDATE, not approved)
+
+An isolated public synthetic route lets the Quality assistant run against a bundled fixture
+home and readings stored in a separate simulation store, never the private working case.
+
+* Configure `ZF_SIM_STORE` (a dedicated SQLite file) and `ZF_SIM_KEY_FILE` (a 0600 key file).
+  Both must be separate from the working store. Unset, unsafe or overlapping paths report
+  the route as unavailable with the manual route; nothing is sent.
+* The trusted composer builds the whole model input from the fixture and the stored
+  simulation readings and seals the exact serialized provider body (HMAC, single use,
+  expiring). `Ai` verifies the seal against the bytes it serialized before any meter,
+  token or socket. Altered, expired, replayed, cross-store or non-public input is refused
+  with an explicit code.
+* Routes: `GET /api/assistants/simulation/quality`, `POST .../observe`, `POST .../request`.
+  Results stay unapproved proposals and change no case. The panel is labelled synthetic.
+* Limits: the private captured-data AI route stays off. The seal is in-process, so hostile
+  code that reads the key file is out of scope. The real withdrawal and suspension race is
+  not made atomic. There is no separate SQL Server login; SQLite files are the boundary.
+
 ### Own-home synthetic sensor history (#468)
 
 `GET /demo/view` includes `sensors` with `synthetic: true`, a non-live notice and

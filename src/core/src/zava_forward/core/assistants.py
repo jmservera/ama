@@ -704,6 +704,15 @@ class Assistants:
         ai = self.store.ai
         return rel.admission(db, capability, runtime_binding(capability, ai), self.now(db), live=isinstance(ai, Ai))
 
+    def authorize_user(self, user, capability):
+        with self.transaction() as db:
+            self.authorize(db, user, capability)
+
+    def dispatch_hold(self, capability):
+        """The suspension or release denial for a capability, read now on a fresh connection, or None."""
+        with self.transaction() as db:
+            return self.suspended(db, capability) or (self.admission(db, capability) or {}).get("reason")
+
     def release_reference(self, db, capability):
         selected, _ = rel.assessment(db, capability, runtime_binding(capability, self.store.ai),
                                      self.now(db), live=isinstance(self.store.ai, Ai))

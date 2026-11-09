@@ -202,6 +202,31 @@ class DispatchWithdrawn(RuntimeError):
 CAPTURED_READINGS: ContextVar[bool] = ContextVar("ai_captured_readings", default=False)
 
 
+class SimulationRefused(DispatchWithdrawn):
+    """A sealed public-simulation request failed verification at the client; nothing was sent."""
+
+    def __init__(self, code: str) -> None:
+        super().__init__(code)
+        self.code = code
+
+
+# The seal minted by the trusted simulation lane for the exact request bytes. It is only a
+# claim: the real Ai client verifies it against the bytes it serialized before any meter, token
+# or socket.
+SIMULATION_SEAL: ContextVar[Mapping[str, Any] | None] = ContextVar(
+    "ai_simulation_seal", default=None
+)
+
+
+@contextmanager
+def sealed_simulation(seal: Mapping[str, Any]) -> Iterator[None]:
+    token = SIMULATION_SEAL.set(seal)
+    try:
+        yield
+    finally:
+        SIMULATION_SEAL.reset(token)
+
+
 @contextmanager
 def captured_readings(active: bool = True) -> Iterator[None]:
     token = CAPTURED_READINGS.set(active)

@@ -64,6 +64,53 @@ function sensorPanel(id) {
   return box;
 }
 
+function simulationPanel() {
+  const body = h("div", {}, h("p", { role: "status" }, "Loading simulation…"));
+  const box = h("section", { class: "card", id: "simulation" }, h("h2", {}, "Public synthetic simulation (not this home)"), body);
+  if (!SENSOR_ROLES.includes(me.user.role)) {
+    body.replaceChildren(h("p", {}, "Your role does not include this simulation. Ask the quality team."));
+    return box;
+  }
+  const feedback = h("p", { role: "status", "aria-live": "polite" });
+  const render = (s) => {
+    const kids = [h("p", { class: "muted" }, s.label)];
+    if (s.status === "unavailable") {
+      kids.push(h("p", { role: "status" }, `The simulation is unavailable (${s.reason}). ${s.manual_route}`));
+      return body.replaceChildren(...kids);
+    }
+    const v = s.view || {};
+    kids.push(h("p", {}, `${v.freshness_text || ""} Fixture home: ${s.home.address}, ${s.home.town}.`));
+    kids.push(sensorTable("Simulated readings stored in the separate simulation store", v.readings, "No simulated readings yet.", v.provenance || {}));
+    const proposal = s.proposal;
+    if (proposal) {
+      kids.push(h("h3", {}, "Last model proposal (unapproved)"));
+      kids.push(h("p", {}, `Request ${proposal.digest.slice(0, 16)}. It cited ${proposal.readings.length} stored readings. Status: unapproved proposal. It is not accepted and changes no case. Use the ordinary quality check.`));
+      kids.push(h("p", {}, proposal.output.summary));
+      kids.push(h("ul", {}, proposal.output.findings.map((f) => h("li", {}, `${f.text} (${f.citations.join(", ")})`))));
+    }
+    body.replaceChildren(...kids, controls);
+  };
+  const run = async (action, label) => {
+    feedback.textContent = `${label}…`;
+    try {
+      const r = await api(`/api/assistants/simulation/quality/${action}`, {});
+      feedback.textContent = r.status === "proposal" ? "Proposal stored as unapproved." : r.status === "ready" ? `Stored ${r.added || 0} new simulated readings.` : `Not sent (${r.reason || r.status}). ${r.manual_route || ""}`;
+      render(await api("/api/assistants/simulation/quality"));
+    } catch (error) {
+      feedback.textContent = `${error.message || "Simulation unavailable."} Use the manual route.`;
+    }
+  };
+  const observe = h("button", { type: "button", class: "btn" }, "Add Simulated Readings");
+  const ask = h("button", { type: "button", class: "btn" }, "Request Simulation Proposal");
+  observe.addEventListener("click", () => run("observe", "Adding readings"));
+  ask.addEventListener("click", () => run("request", "Requesting proposal"));
+  const controls = h("div", {}, observe, " ", ask, feedback);
+  api("/api/assistants/simulation/quality").then(render).catch((error) => {
+    body.replaceChildren(h("p", { class: "err", role: "alert" }, `${error.message || "Simulation unavailable."} Use the manual route.`));
+  });
+  return box;
+}
+
 function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
   const box = h("section", { class: "card", id: "quality" }, h("h2", {}, "Quality checks and defects"));
   const canCheck = QUALITY_ROLES.includes(me.user.role);

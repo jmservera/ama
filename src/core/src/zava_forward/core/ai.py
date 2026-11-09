@@ -57,6 +57,7 @@ class Ai:
         self.gate = None  # (task, deployment) -> reason the task is suspended, or None
         self.release = None  # Per-invocation selected record; never mutable shared request state.
         self.consumption = None
+        self.simulation_verifier = None  # set only by trusted composition: (seal, body bytes) -> raises SimulationRefused
         self.synthetic_price_capabilities = frozenset()  # demo-only: capabilities whose synthetic price may admit a live call
 
     @property
@@ -91,11 +92,23 @@ class Ai:
             api_version="2024-10-21", temperature=temperature, max_tokens=max_tokens,
         ), sort_keys=True))
 
-    def _request(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
-        if ai_consumption.CAPTURED_READINGS.get():
-            raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
-        body = json.dumps({"messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
+    @staticmethod
+    def provider_body(system, user, max_tokens, temperature):
+        """The only serializer of the provider request body; the sealed simulation lane uses it too."""
+        return json.dumps({"messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
                            "max_tokens": max_tokens, "temperature": temperature}, ensure_ascii=True).encode("ascii")
+
+    def _request(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
+        seal = ai_consumption.SIMULATION_SEAL.get()
+        if ai_consumption.CAPTURED_READINGS.get() and seal is None:
+            raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
+        body = self.provider_body(system, user, max_tokens, temperature)
+        if seal is not None:
+            # Verified against the bytes serialized here, before the data hold, meter, token or socket.
+            verifier = self.simulation_verifier
+            if verifier is None:
+                raise ai_consumption.SimulationRefused("verifier-unavailable")
+            verifier(seal, body)
         protected = data_protection.dispatch_hold("prompt_output", os.environ)
         if protected:
             raise DispatchDenied(protected)
@@ -156,6 +169,8 @@ class Ai:
             envelope.update(outcome="input-refused", reason=str(error))
         except ModelMismatch as error:
             envelope.update(model=error.model, outcome="model-mismatch")
+        except ai_consumption.SimulationRefused as error:
+            envelope.update(outcome="simulation-refused", reason=error.code, usage=None)
         except ai_consumption.DispatchWithdrawn:
             envelope.update(outcome="suspended-before-dispatch", usage=None)
         except ai_consumption.DispatchHeld as error:

@@ -23,7 +23,8 @@ from zava_forward.api import auth
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
-from zava_forward.core.ai import may_carry_captured_readings
+from zava_forward.core import simulation_lane
+from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
@@ -91,12 +92,37 @@ class App:
         self.panel = ChatPanel(self.chat, ChatModel(
             AgentWorker(lambda *args: store.ai.evidence(*args)),
             admission=lambda: chat_admission(store)))
+        self.simulation, self.simulation_reason = None, "not-configured"
+        try:
+            self.simulation = simulation_lane.Lane.open(os.environ, working=(getattr(store, "db_path", ""),))
+        except simulation_lane.Unavailable as error:
+            self.simulation_reason = error.code
         self.law = law
         self.regulatory = RegulatoryChat(
             self.chat, law, regulatory_chat.answer, regulatory_chat.purpose, regulatory_chat.refusal
         )
         self.law_lock = threading.Lock()
         self.engine = None
+
+    def simulation_state(self, user):
+        """Public synthetic lane state for a role that owns the quality assistant; default deny otherwise."""
+        self.assistants.authorize_user(user, simulation_lane.CAPABILITY)
+        if self.simulation is None:
+            return simulation_lane.unavailable_state(self.simulation_reason)
+        return self.simulation.state()
+
+    def simulation_act(self, user, action):
+        self.assistants.authorize_user(user, simulation_lane.CAPABILITY)
+        lane = self.simulation
+        if lane is None:
+            return simulation_lane.unavailable_state(self.simulation_reason)
+        ai = self.store.ai
+        if action == "observe":
+            return dict(lane.state(), added=lane.observe())
+        if isinstance(ai, Ai):
+            ai.simulation_verifier = lane.verify  # trusted composition owns the verifier
+        return dict(lane.request(ai, lambda: self.assistants.dispatch_hold(simulation_lane.CAPABILITY)),
+                    proposal_state=lane.state())
 
     def rule_engine(self):
         if self.law is None:
@@ -531,6 +557,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(404, {"error": "Not found."})
             if url.path.startswith("/api/assistants"):
                 try:
+                    if url.path == "/api/assistants/simulation/quality":
+                        return self._json(200, app.simulation_state(u))
                     if url.path == "/api/assistants":
                         return self._json(200, app.assistants.registry(u))
                     if url.path == "/api/assistants/forecast":
@@ -1192,6 +1220,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, s.bulk_edit_apply(u, body))
                 if len(parts) == 4 and parts[:2] == ["api", "assistants"] and parts[3] == "invoke":
                     return self._json(202, app.assistants.invoke(u, parts[2], body.get("case_id")))
+                if url.path in ("/api/assistants/simulation/quality/observe", "/api/assistants/simulation/quality/request"):
+                    return self._json(200, app.simulation_act(u, url.path.rsplit("/", 1)[1]))
                 if url.path == "/api/assistants/releases":
                     return self._json(201, app.assistants.record_release(u, body))
                 if len(parts) == 5 and parts[:3] == ["api", "assistants", "releases"] and parts[4] in ("suspend", "revoke"):
