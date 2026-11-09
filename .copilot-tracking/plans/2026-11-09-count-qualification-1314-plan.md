@@ -38,3 +38,7 @@ Add one dated qualification subsection to the SQL-wave part of the cut-over evid
 * AC7 The qualification states that index and log (not the pack) are byte-prefix extensions of `f2e07999` and that the pack proof is ordered zero-deletion line preservation.
 * AC5 No source, fixture, policy, workflow, SQL, fix, live evidence, closure, C3 or budget claim.
 * AC6 No closing keyword in any record; `Refs #1314` and `Refs #440` only.
+
+## Correction C1 (2026-11-09, prospective, one of five default cycles)
+
+Trigger: the independent Readiness of `042af2a2276662b51236d1abdb289cc2bf96d9c2` found one new Low: the changes record line 19 says five `A` entries; the final comparison against `efb2f7e0` is seven `A` plus three `M` (10 paths). The five was measured before the changes and review records were added. Smallest correction: change that one count to seven in the changes record, then append the C1 disposition to the review and state. No new files, no source change, no gate, no amend or rebase. The original commit `042af2a22`, the reviewer finding and all original #440 records stay as they are. Validation: `git diff --raw -M efb2f7e0 HEAD` shows 7 A and 3 M; added-link check on changed files.

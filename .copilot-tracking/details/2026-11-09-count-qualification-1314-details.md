@@ -16,3 +16,9 @@ task_id: 1314-count-qualification-1109
 
 * Plain ASCII, `*` lists, no em dashes, no bold-prefix list items.
 * Do not edit any earlier record; do not copy the parent worktree's uncommitted files.
+
+## C1 details (2026-11-09)
+
+* C1-1 Edit only line 19 of the changes record: five becomes seven, with a note that five was the pre-changes-and-review intermediate measurement.
+* C1-2 Append a C1 section to the review and update the state (C1 spent, 4 of 5 remain, no renewal, no new count beyond 7 A, 3 M, 10 paths).
+* C1-3 Verify with `git diff --raw -M efb2f7e0 HEAD` and `git diff --numstat` of the C1 commit (3 files, text-only), then commit normally.
