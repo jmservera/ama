@@ -8,10 +8,11 @@ import threading
 import unittest
 import urllib.error
 import urllib.request
+from collections.abc import Callable, Mapping
 from datetime import UTC, datetime
 from http.server import ThreadingHTTPServer
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 from unittest.mock import patch
 
 from zava_forward.core import identity
@@ -32,6 +33,17 @@ HOMES = [f"HOME-{i:03d}" for i in range(5)]
 Provider: Any = auth.TrustedProxyProvider
 Application: Any = App
 handler: Any = make_handler
+
+
+class SessionProvider(Protocol):
+    def login(self, email: str, password: str) -> str: ...
+
+    def authenticate(self, headers: Mapping[str, str]) -> Mapping[str, object] | None: ...
+
+
+make_password_provider: Callable[[object, str], SessionProvider] = auth.PasswordProvider
+principal_header: Callable[..., str] = principal
+base_set_up: Callable[[Base], None] = Base.setUp
 
 
 def start_body(**changes: Any) -> dict[str, Any]:
@@ -450,9 +462,9 @@ class AdminModuleTests(unittest.TestCase):
         )
 
 
-class AdminHttpTests(Base):  # type: ignore[misc]
+class AdminHttpTests(Base):
     def setUp(self) -> None:
-        super().setUp()
+        base_set_up(self)
         self.control_dir = tempfile.TemporaryDirectory()
         self.addCleanup(self.control_dir.cleanup)
         self.file = Path(self.control_dir.name) / "control.json"
@@ -481,7 +493,7 @@ class AdminHttpTests(Base):  # type: ignore[misc]
         if header is not None:
             headers["X-MS-CLIENT-PRINCIPAL"] = header
         elif roles is not None:
-            headers["X-MS-CLIENT-PRINCIPAL"] = principal(roles=roles, **kw)
+            headers["X-MS-CLIENT-PRINCIPAL"] = principal_header(roles=roles, **kw)
         if csrf:
             headers["X-ZF-CSRF"] = "1"
         data = None if body is None else json.dumps(body).encode()
@@ -635,11 +647,12 @@ class AdminHttpTests(Base):  # type: ignore[misc]
         self.assertEqual(actions[-2:], ["sim_control_start", "sim_control_stop"])
 
     def test_password_provider_user_cannot_use_the_surface(self) -> None:
-        provider = auth.PasswordProvider(self.store, "synthetic")
+        provider = make_password_provider(self.store, "synthetic")
         user = provider.authenticate(
             {"Cookie": f"zf_session={provider.login('sam@example.test', 'synthetic')}"}
         )
         self.assertIsNotNone(user)
+        assert user is not None
         self.assertEqual(simulator_admin.handle(self.store, user, "GET", PATH)[0], 403)
 
 

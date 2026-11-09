@@ -8,6 +8,7 @@ import importlib
 import json
 import tempfile
 import threading
+from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 from http.server import ThreadingHTTPServer
 from pathlib import Path
@@ -25,6 +26,8 @@ test_auth: Any = importlib.import_module("test_auth")
 test_mvp: Any = importlib.import_module("test_mvp")
 ADMIN = "ZavaForward.ApplicationAdmin"
 STAFF = "ZavaForward.LiaisonOfficer"
+make_provider: Callable[[Store, object], auth.TrustedProxyProvider] = auth.TrustedProxyProvider
+make_app: Callable[..., server.App] = server.App
 
 
 def load_axe(path: Path) -> str:
@@ -120,9 +123,9 @@ def main() -> int:
         control = Path(tmp) / "control.json"
         header = test_auth.principal(roles=(ADMIN, STAFF), oid=test_auth.OID_NEW)
         read_only_header = test_auth.principal(roles=(ADMIN,), oid=test_auth.OID_NEW)
-        provider = auth.TrustedProxyProvider(store, test_auth.ENV)
+        provider = make_provider(store, test_auth.ENV)
         httpd = ThreadingHTTPServer(
-            ("127.0.0.1", 0), server.make_handler(server.App(store, provider=provider))
+            ("127.0.0.1", 0), server.make_handler(make_app(store, provider=provider))
         )
         threading.Thread(target=httpd.serve_forever, daemon=True).start()
         base = f"http://127.0.0.1:{httpd.server_address[1]}"
