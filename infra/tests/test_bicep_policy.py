@@ -164,7 +164,7 @@ def evaluate(expression, parameters: dict, variables: dict, context: dict | None
         "resourceId": lambda kind, *names: "/fixture/" + kind + "/" + "/".join(names),
     }
     scope.update(context or {})
-    return eval(source, {"__builtins__": {}}, scope)
+    return eval(source, {"__builtins__": {}}, scope)  # noqa: S307 - compiled repository template only
 
 
 def unguarded_resources(template: dict, guard_name: str) -> set[str]:
