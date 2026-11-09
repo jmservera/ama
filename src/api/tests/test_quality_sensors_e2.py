@@ -225,6 +225,32 @@ class Boundary(e1.GateBase):
         self.assertEqual((self.meter.reserved, self.meter.checked), (0, 0))
         self.assertEqual(self.tokens, [])
 
+    def test_no_spoofed_simulation_claim_releases_captured_readings_to_a_real_ai(self) -> None:
+        # E3: SYN naming, demo-profile and chat switches, an arbitrary dataset path and
+        # free text saying "synthetic" are all inference; none may open the real route.
+        spoof = {
+            "ZF_CHAT_DEMO_ACTIVATION": "approved-2026-11-03",
+            "ZF_DEPLOYMENT_PROFILE": "demo",
+            "ZF_DATA": os.path.join(tempfile.gettempdir(), "synthetic-simulation-dataset.json"),
+            "ZF_SIMULATION": "1",
+        }
+        self.put(4)
+        self.add_live(10)
+        self.quality_ready()
+        peer, ai = self.tls_ai()
+        with patch.dict(os.environ, spoof):
+            self.service.scan()
+            (tid,) = self.quality_task()
+            self.assertTrue(self.service.execute(tid))
+            request = assistants_module.build_request(self.service.detail(self.pm, tid))
+        self.assertIn("LIVE-", request[1])
+        task = self.service.detail(self.pm, tid)
+        self.assertNotEqual(task["state"], "ready")
+        self.assertIn("cannot be sent to a real AI model", task.get("reason") or "")
+        self.assertEqual((peer.accepts, peer.bytes), (0, 0))
+        self.assertEqual((self.meter.reserved, self.meter.checked), (0, 0))
+        self.assertEqual(self.tokens, [])
+
     def withdraw_in_another_process(self) -> float:
         script = (
             "import sqlite3,sys;c=sqlite3.connect(sys.argv[1],timeout=20);"
