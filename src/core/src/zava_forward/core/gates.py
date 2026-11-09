@@ -251,3 +251,69 @@ def evidence_gate(missing: Iterable[str] | None, owner: str, on: str | None = No
         reason = f"Required evidence missing: {', '.join(kinds)}."
         return GateResult(result.gate, FAIL, reason, owner, result.correction, result.rule)
     return result
+
+
+QUALITY_RULE = GateRule(
+    gate="quality",
+    source=(
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-008 (governing) and FR-017; "
+        "versioned quality checklist in quality.CHECKLISTS (exercise fixture)"
+    ),
+    effective_date="2026-11-05",
+    version="1",
+    reviewer=_UNREVIEWED,
+)
+
+
+def quality_gate(gaps: Iterable[str] | None, owner: str, on: str | None = None) -> GateResult:
+    """Pass only when every checklist item has evidence; None means the record is unreadable."""
+    items = None if gaps is None else list(gaps)
+    result = check(
+        QUALITY_RULE,
+        None if items is None else not items,
+        owner=owner,
+        correction="Ask the quality owner to record evidence for every check before this step.",
+        label="Quality evidence on file",
+        on=on,
+    )
+    if result.outcome == FAIL and items:
+        reason = f"Checks without evidence: {'; '.join(items)}."
+        return GateResult(result.gate, FAIL, reason, owner, result.correction, result.rule)
+    return result
+
+
+CAPACITY_RULE = GateRule(
+    gate="capacity",
+    source=(
+        "docs/prds/zava-forward-retrofit-programme-demonstrator.md FR-008 (governing) and FR-016; "
+        "evidenced committed capacity in procurement (exercise fixture)"
+    ),
+    effective_date="2026-11-06",
+    version="1",
+    reviewer=_UNREVIEWED,
+)
+
+
+def capacity_gate(state: bool | None, reason: str, on: str | None = None) -> GateResult:
+    """True passes, False is a known violation, None is missing or unreadable evidence."""
+    owner = "Contract Manager"
+    correction = "Ask the contract manager to record current evidenced capacity."
+    if state is True:
+        return check(
+            CAPACITY_RULE,
+            True,
+            owner=owner,
+            correction=correction,
+            label="Evidenced capacity",
+            on=on,
+        )
+    return _result(CAPACITY_RULE, UNKNOWN if state is None else FAIL, reason, owner, correction)
+
+
+class CapacityGateError(ValueError):
+    """A capacity refusal that keeps its ValueError text and carries the gate result."""
+
+    def __init__(self, message: str, state: bool | None) -> None:
+        super().__init__(message)
+        self.state = state
+        self.result = capacity_gate(state, message)
