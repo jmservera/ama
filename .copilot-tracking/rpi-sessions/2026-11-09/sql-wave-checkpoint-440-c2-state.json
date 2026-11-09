@@ -1,0 +1,26 @@
+{
+  "task_id": "440-sql-wave-checkpoint-1109-c2",
+  "task_slug": "sql-wave-checkpoint-440-c2",
+  "parent_task": {"task_id": "440-sql-wave-checkpoint-1109", "task_slug": "sql-wave-checkpoint-440"},
+  "mode": "automatic",
+  "active_phase": "Plan",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-sql-wave-checkpoint-440-c2-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-sql-wave-checkpoint-440-c2-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-sql-wave-checkpoint-440-c2-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-sql-wave-checkpoint-440-c2-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "C2 scoped correction authorized by coordinator within five total cycles; C1 spent; fix only the two Readiness findings and cross-reference the #1292 diagnosis", "status": "done", "evidence": "brief-440-c2-facts.md"},
+    {"decision": "Research executed; Planning Readiness Ready", "status": "done", "evidence": ".copilot-tracking/research/2026-11-09-sql-wave-checkpoint-440-c2-research.md"},
+    {"decision": "Original authored Review, critique and pack text preserved; qualifications appended", "status": "done", "evidence": "plan"},
+    {"decision": "Critique executed once, verdict Revise; PC-001..004 applied directly; merge limited to rubric-only ef28d4da4, later main 1464b4d85 not merged", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-09-sql-wave-checkpoint-440-c2-critique.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "Commit planning records, then edit pack, index, log and merge ef28d4da4"},
+  "prioritized_follow_ups": []
+}
