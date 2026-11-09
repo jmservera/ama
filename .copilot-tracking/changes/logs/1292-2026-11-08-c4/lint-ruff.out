@@ -1,0 +1,53 @@
+E501 Line too long (104 > 100)
+  --> tests/sqlguard.py:71:101
+   |
+70 | def _local_engine(env: Mapping[str, str]) -> None:
+71 |     """The container must be inspected on this machine's own engine, never a remote or named context."""
+   |                                                                                                     ^^^^
+72 |     docker_host = (env.get("DOCKER_HOST") or "").strip()
+73 |     if docker_host and not docker_host.startswith("unix://"):
+   |
+
+E501 Line too long (106 > 100)
+   --> tests/sqlguard.py:105:101
+    |
+103 |         raise _refuse("the container must publish its SQL port on loopback only")
+104 |     if not any(
+105 |         str(b.get("HostPort")) == port and ipaddress.ip_address(b["HostIp"]) == ipaddress.ip_address(host)
+    |                                                                                                     ^^^^^^
+106 |         for b in bindings
+107 |     ):
+    |
+
+E501 Line too long (104 > 100)
+    --> tests/test_priority_order.py:1060:101
+     |
+1059 |     def ordinal_db(self, rows: list[tuple[Any, ...]], **meta: str) -> None:
+1060 |         """A database whose ordinals were assigned by an earlier candidate: (id, seq, body, version)."""
+     |                                                                                                     ^^^^
+1061 |         db = self.store.db
+1062 |         db.execute("DROP TABLE recommendations")
+     |
+
+E501 Line too long (101 > 100)
+    --> tests/test_priority_order.py:1095:101
+     |
+1093 |         first, second = self.two_audited((EARLIER, SECOND))
+1094 |         self.make_legacy(
+1095 |             self.store, [(rid, 50, user, body, version) for rid, _, user, body, version in self.rows]
+     |                                                                                                     ^
+1096 |         )
+1097 |         reopened = self.open_store()
+     |
+
+E501 Line too long (103 > 100)
+    --> tests/test_priority_order.py:1368:101
+     |
+1367 | class MssqlBeginRecovery(unittest.TestCase):
+1368 |     """The SQL Server adapter must not leave a transaction open when its BEGIN batch fails part way."""
+     |                                                                                                     ^^^
+1369 |
+1370 |     class Error(Exception):
+     |
+
+Found 5 errors.

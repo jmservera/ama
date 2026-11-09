@@ -1,0 +1,6 @@
+Sun Nov  8 20:35:23 UTC 2026
+holder: pid 1771153 flock on /tmp/ama-rpi-heavy.lock (nonqueued)
+head 16375e3ca3a933b4f00dac907cecd98a5d78a635 tree 271d0fb60c015bdaa7473fc89b325c7a2b1eb180
+container ama1292-sql-1771153-31999 port 24165
+/dev/sda1       247G  237G   11G  96% /
+Mem:           15983        8590         711           4        7032        7393

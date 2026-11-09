@@ -926,12 +926,26 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return r
         denied = rec["source"] == "ai" and not self.release_current("priority", rec.get("release"), rec.get("model"))
         current = rec["source"] != "ai" or (self.ai_epoch_current(rec) and not self.continuity_suspension("priority"))
-        return dict(rec, label=self.REC_LABEL, actionable=current and not denied and not challenge["stale"], release_denied=denied,
+        view = dict(rec, label=self.REC_LABEL, actionable=current and not denied and not challenge["stale"], release_denied=denied,
                     **challenge,
                     epoch_current=current, relied_on=current and not denied and not challenge["stale"] and rec["status"] in ("Accepted", "Edited"),
                     items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["items"]],
                     final_items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
                     deterministic=[row(cid) for cid in rec["deterministic"]])
+        if self._order_unresolved(rec):
+            view.update(order_confirmed=False, actionable=False, relied_on=False, order_note=self.ORDER_NOTE)
+        return view
+
+    ORDER_NOTE = ("After a database upgrade the order of this record could not be proven, so it may not be your newest. "
+                  "The named data owner must confirm it before it is acted on. You can still reject it or use the "
+                  "ordinary case controls.")
+
+    def _order_unresolved(self, rec):
+        """The employee's newest eligible record whose creation order the upgrade could not prove (#1292)."""
+        if rec.get("kind") == "ai_task" or not self.rec_order_unresolved(rec["id"]):
+            return False
+        mine = [r for r in self.data["recommendations"] if r["user"] == rec["user"] and r.get("kind") != "ai_task"]
+        return bool(mine) and mine[-1]["id"] == rec["id"]
 
     def ai_priority(self, user, n=5, mode=None):
         n = max(1, min(10, int(n)))
@@ -1018,10 +1032,15 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                             cites=ai_tasks.cites_for(c, "Open safety issues:", "Extra support:", "Resident decision:", "Days in stage:", "Stage:", reason_ok=ok)))
         return out
 
+    def rec_order_unresolved(self, rec_id):
+        return False
+
     def latest_priority(self, user):
         with self.lock:
             mine = [r for r in self.data["recommendations"] if r["user"] == user["email"] and r.get("kind") != "ai_task"]
-            return self._rec_view(mine[-1], user) if mine else None
+            if not mine:
+                return None
+            return self._rec_view(mine[-1], user)
 
     def resolve_priority(self, user, rec_id, action, reason="", items=None):
         if action not in self.REC_ACTIONS:
@@ -1037,6 +1056,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 raise KeyError(rec_id)
             if rec["user"] != user["email"]:
                 raise PermissionError("This suggestion was made for someone else.")
+            if action != "reject" and rec["status"] == "Proposed" and self._order_unresolved(rec):
+                raise PermissionError(self.ORDER_NOTE)
             if rec["status"] != "Proposed":
                 repaired = self._repair_ai_review(rec, action, self.REC_ACTIONS[action])
                 if repaired is not None:
