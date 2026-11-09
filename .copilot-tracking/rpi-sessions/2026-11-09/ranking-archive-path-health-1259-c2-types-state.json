@@ -1,0 +1,31 @@
+{
+  "task_id": "1259-ranking-archive-path-health-c2-types",
+  "task_slug": "ranking-archive-path-health-1259-c2-types",
+  "parent_task": {"task_id": "1259-ranking-archive-path-health", "task_slug": "ranking-archive-path-health-1259"},
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-ranking-archive-path-health-1259-c2-types-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-ranking-archive-path-health-1259-c2-types-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-ranking-archive-path-health-1259-c2-types-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-ranking-archive-path-health-1259-c2-types-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09-ranking-archive-path-health-1259-c2-types-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09-ranking-archive-path-health-1259-c2-types-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed, Ready", "status": "done", "evidence": "research record"},
+    {"decision": "Critique executed once, Proceed with changes applied; plan committed 72bf8f494 before edit", "status": "done", "evidence": "critique record"},
+    {"decision": "C2 consumed for two child-owned diagnostics; three cycles remain, no reset", "status": "confirmed", "evidence": "coordinator brief"},
+    {"decision": "Review executed Complete, Conformant for scope with residual inherited work, author only", "status": "done", "evidence": "review record"}
+  ],
+  "blockers": [
+    {"id": "B1", "summary": "Parent 1258 C5 zero, no new owner grant; parent publication held", "resolution": "Owner grant"},
+    {"id": "B2", "summary": "Inherited mypy core 84, API 9, API Ruff 10 and format 1 unfixed; independent, hosted and human gates and original AC unmet", "resolution": "Parent-owned work and later admission"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Same Functional reviewer assesses final head; coordinator decides publication"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Parent-owned fixture and test typing plus API wiring lint", "rationale": "removes inherited red mypy and Ruff", "evidence": "changes record"}
+  ]
+}
