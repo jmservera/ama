@@ -11225,3 +11225,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added one original editable paired runtime diagram with local exports and
   provenance, without rewriting historical figures. Source descriptions do
   not establish observed execution, judge accuracy or security certification.
+
+## [2026-11-09] update | SQL feature-recovery wave current-main checkpoint (Refs #440)
+
+* Appended a dated draft section to [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#sql-feature-recovery-wave-current-main-checkpoint-2026-11-09-refs-440) and an entry to the [index](README.md) after PR 1308 merged at `8d6f029c`. Recorded Git and hash source equivalence for the retained real-SQL results, hosted checks on the PR head, fresh targeted local unit observations with one retained failure, existing-owner comparison and bounded resume conditions.
+* Not claimed: approval, issue closure, acceptance ticks, fresh SQL, browser, live, Azure or model evidence, a hosted run of the priority suite on SQL Server, full demo acceptance, independent review or hosted CI for this commit. No earlier entry changed.
+
+## [2026-11-09] update | SQL wave checkpoint C2 qualification (Refs #440)
+
+* Appended a dated C2 qualification to [the SQL-wave checkpoint](../architecture/cutover-evidence-pack.md#sql-feature-recovery-wave-current-main-checkpoint-2026-11-09-refs-440) after a partial independent Readiness assessment: committed-reload (HTTP 409) versus uncertain or transport outcomes narrowed from source reads, the SQLite failure restated as one in five executions then four passes (cause unknown, no waiver), and a cross-reference to the later #1292 diagnosis (0 of 6 reproductions, timing hypothesis unconfirmed). Original text, Review and earlier entries unchanged.
+* Not claimed: approval, closure, independent exact-head review, hosted CI, SQL, browser, live, Azure or model evidence.
+
+## [2026-11-09] update | SQL wave checkpoint current-main preparation (Refs #440)
+
+* Merged `main` `3a9767d5c` (PR 1240 lifecycle integration, plus #1312) into the branch with an ordinary merge and appended a dated [current-main preparation note](../architecture/cutover-evidence-pack.md#current-main-preparation-2026-11-09-refs-440-81) to the SQL-wave section: observed source stays `8d6f029ca`; lifecycle source in main was not retested or accepted by that record; whole #81 and #440 stay open; the next lifecycle-wave checkpoint trigger and closure hold are recorded.
+* Not claimed: a completed lifecycle checkpoint, approval, closure, independent exact-head review, hosted CI for this branch, SQL, browser, live, Azure or model evidence. Earlier entries and the open Low scope finding (#1314) are unchanged.
