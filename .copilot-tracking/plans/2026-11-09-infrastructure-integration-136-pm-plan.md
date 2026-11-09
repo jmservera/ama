@@ -37,3 +37,7 @@ Executed once by an independent read-only rubber-duck agent (claude-sonnet-5.5 h
 * PC-004 a moved main requires stop and reassessment. Applied in P2.
 
 The critique is not repeated.
+
+### Correction C2 (2026-11-09)
+
+The sentence above, which names `claude-sonnet-5.5 harness default` for the critique agent, is superseded for attribution only. The native stdout of the post-merge refresh run (coordinator session log `rpi-136-postmerge-refresh.log`, line 76) displays `Rubber-duck (model: gpt-6.1-terra) Critique post-merge plan` with verdict `proceed with changes`. The independent critique was therefore executed by the gpt-6.1-terra rubber-duck agent. Claude Sonnet 5.5 is the author of the plan and of the native rpi-agent run, a separate role. The verdict, PC-001 to PC-004 and the original commits `008a8dea2` and `b1cf9b525` are unchanged and not regraded. See `.copilot-tracking/changes/2026-11-09-infrastructure-integration-136-pmc2-changes.md`.
