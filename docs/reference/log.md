@@ -11284,3 +11284,13 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a [qualification](../architecture/cutover-evidence-pack.md#qualification-q1-2026-11-09-appended-after-the-frozen-checkpoint-3965fa489d8f07d0180b94d3fdfd7db16441790d-originals-above-unchanged) to the checkpoint entry above: S1 was selected without a recorded prospective amendment, S1 raw retention is unverified after the scratch directory was removed (A-series originals survive with the coordinator), the absence statement is bounded to inspected paths, PRD FR-016 and FR-017 are not resident or complaints IDs, and the four final processes include one SQL run (1205 discovered, 171 skipped).
 * The earlier entry is unchanged. No approval, closure or acceptance is claimed.
+
+## [2026-11-09] update | Parent-topic Blob and Quality checkpoint (Refs #440 #1288 #1258 #1259 #136)
+
+* Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#parent-topic-blob-and-quality-checkpoint-2026-11-09-refs-440-1288-1258-1259-136) with an index paragraph: merged-main Blob identities and historical reuse kept separate from parent-topic Quality observations at local `34838154` (PR 1331 unmerged), one adverse local browser run (exit 1 at the simulation step, stale check versus the code-off route), the unreproducible 861 count, an unmet matrix with existing owners, and the merged-main resume requirement.
+* Earlier entries and the 2026-11-09 current-main checkpoint are unchanged. Not claimed: Quality merged-main functionality, live Blob, actual-model AI, assistive-technology or Major HVE acceptance, hosted success of the unpublished E8 commit, or any closure.
+
+## [2026-11-09] update | Merged-main Blob and Quality qualification (Refs #440 #1288 #1258 #1259 #136)
+
+* Appended a dated draft [qualification](../architecture/cutover-evidence-pack.md#merged-main-blob-and-quality-qualification-2026-11-09-refs-440-1288-1258-1259-136) after PR 1331 merged: `main` `1b7a1719b` (squash, tree equal to `f995774`), merge of main into the local checkpoint with source identical to main, one corrected browser observation M1 (exit 0, 30 checks, axe 0 violations, serious contrast incompletes remain), three failed invocation attempts preserved, historical reuse limits, and gap owners.
+* The parent-topic entry above, the original adverse O1 and all earlier entries are unchanged. Not claimed: whole #1288, #136 or #440 closure, live Blob, actual-model AI, assistive-technology, consent, human or Major HVE acceptance, Azure SQL or the refusal-event second-connection contract.

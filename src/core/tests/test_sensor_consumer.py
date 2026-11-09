@@ -441,6 +441,9 @@ class SensorConsumerTests(unittest.TestCase):
     def damage_reading(self, column: str, value: str) -> None:
         if self.consumer.mssql and value in ("invalid-sql-time", "not-a-number", "NaN"):
             self.store.db.execute(
+                "DROP INDEX IF EXISTS ix_sensor_reading_home_time ON sensor_reading"
+            )
+            self.store.db.execute(
                 f"ALTER TABLE sensor_reading ALTER COLUMN {column} NVARCHAR(40) NULL"
             )
         self.store.db.execute(f"UPDATE sensor_reading SET {column}=?", (value,))
@@ -565,6 +568,9 @@ class SensorConsumerTests(unittest.TestCase):
             ).fetchone()
             assert kind is not None
             if kind[0] == "datetime2":
+                self.store.db.execute(
+                    "DROP INDEX IF EXISTS ix_sensor_reading_home_time ON sensor_reading"
+                )
                 self.store.db.execute(
                     "ALTER TABLE sensor_reading ALTER COLUMN observed_at NVARCHAR(40) NULL"
                 )

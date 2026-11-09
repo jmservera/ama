@@ -23,6 +23,8 @@ from zava_forward.api import auth, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
+from zava_forward.core import simulation_lane
+from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
@@ -79,17 +81,57 @@ class App:
         self.csp = "default-src 'self'; img-src 'self' data: blob:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
         self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
         # The provider call is agents code; the API composes it in process until the queue transport (#144) replaces it.
-        self.assistants = Assistants(store, provider=AgentWorker(lambda *args: store.ai.evidence(*args)).provider_call)
+        def fenced(*args):
+            ai = store.ai  # Resolved once: the object checked is the object called.
+            if ai_consumption.CAPTURED_READINGS.get() and not may_carry_captured_readings(ai):
+                raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
+            return ai.evidence(*args)
+
+        self.assistants = Assistants(store, provider=AgentWorker(fenced).provider_call, transport=lambda: store.ai)
         self.chat = ChatIsolation(store)
         self.panel = ChatPanel(self.chat, ChatModel(
             AgentWorker(lambda *args: store.ai.evidence(*args)),
             admission=lambda: chat_admission(store)))
+        self.simulation, self.simulation_reason = None, "not-configured"
+        try:
+            self.simulation = simulation_lane.Lane.open(os.environ, working=(getattr(store, "db_path", ""),))
+        except simulation_lane.Unavailable as error:
+            self.simulation_reason = error.code
         self.law = law
         self.regulatory = RegulatoryChat(
             self.chat, law, regulatory_chat.answer, regulatory_chat.purpose, regulatory_chat.refusal
         )
         self.law_lock = threading.Lock()
         self.engine = None
+
+    def simulation_state(self, user):
+        """Public synthetic lane state for a role that owns the quality assistant; default deny otherwise."""
+        self.assistants.authorize_user(user, simulation_lane.CAPABILITY)
+        if self.simulation is None:
+            return simulation_lane.unavailable_state(self.simulation_reason)
+        return self.simulation.state()
+
+    def simulation_admission(self, service):
+        """The same operator authority, durable allowance and call slots the ordinary assistants use."""
+        capability = simulation_lane.CAPABILITY
+        return simulation_lane.Admission(
+            hold=lambda: service.dispatch_hold(capability),
+            bounds=lambda: (min(600, service.limits.output_tokens), service.limits.timeout),
+            begin=lambda chars, call_id: service.begin_call(capability, chars, call_id),
+        )
+
+    def simulation_act(self, user, action):
+        self.assistants.authorize_user(user, simulation_lane.CAPABILITY)
+        lane = self.simulation
+        if lane is None:
+            return simulation_lane.unavailable_state(self.simulation_reason)
+        ai = self.store.ai
+        if action == "observe":
+            return dict(lane.state(), added=lane.observe())
+        if isinstance(ai, Ai):
+            ai.simulation_verifier = lane.verify  # trusted composition owns the verifier
+        return dict(lane.request(ai, self.simulation_admission(self.assistants)),
+                    proposal_state=lane.state())
 
     def rule_engine(self):
         if self.law is None:
@@ -526,6 +568,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(404, {"error": "Not found."})
             if url.path.startswith("/api/assistants"):
                 try:
+                    if url.path == "/api/assistants/simulation/quality":
+                        return self._json(200, app.simulation_state(u))
                     if url.path == "/api/assistants":
                         return self._json(200, app.assistants.registry(u))
                     if url.path == "/api/assistants/forecast":
@@ -756,6 +800,20 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(502, {"error": "The document store is not available. Try again shortly."})
                 safe = "".join(ch for ch in name if ch.isalnum() or ch in " ._-")
                 return self._send(200, raw, mime, {"Content-Disposition": f'attachment; filename="{safe}"'})
+            if url.path.startswith("/api/cases/") and url.path.endswith("/sensors"):
+                parts = url.path.strip("/").split("/")
+                if len(parts) != 4:
+                    return self._json(404, {"error": "Case not found."})
+                try:
+                    return self._json(200, app.assistants.sensors(u, unquote(parts[2])))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except KeyError:
+                    return self._json(404, {"error": "Case not found."})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+                except Exception:
+                    return self._json(503, {"error": "Sensor readings unavailable; continue the ordinary quality check manually."})
             if url.path.startswith("/api/cases/") and url.path.endswith("/home-case"):
                 parts = url.path.strip("/").split("/")
                 if len(parts) != 4:
@@ -1181,6 +1239,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, s.bulk_edit_apply(u, body))
                 if len(parts) == 4 and parts[:2] == ["api", "assistants"] and parts[3] == "invoke":
                     return self._json(202, app.assistants.invoke(u, parts[2], body.get("case_id")))
+                if url.path in ("/api/assistants/simulation/quality/observe", "/api/assistants/simulation/quality/request"):
+                    return self._json(200, app.simulation_act(u, url.path.rsplit("/", 1)[1]))
                 if url.path == "/api/assistants/releases":
                     return self._json(201, app.assistants.record_release(u, body))
                 if len(parts) == 5 and parts[:3] == ["api", "assistants", "releases"] and parts[4] in ("suspend", "revoke"):
