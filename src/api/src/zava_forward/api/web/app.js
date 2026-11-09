@@ -678,6 +678,7 @@ function priorityPanel() {
   const rowsOf = (items, withReason) => h("ol", {}, items.map((i) => h("li", {},
     h("a", { href: `#/case/${encodeURIComponent(i.case_id)}` }, `${i.resident}, ${i.address}`), ` (rank ${i.rank})`,
     withReason && i.reason ? h("div", { class: "muted" }, i.reason, i.cites && i.cites.length ? ` Sources: ${i.cites.join("; ")}.` : "") : null)));
+  const holdNote = () => h("p", { role: "status" }, "Reload the workspace and check priority review history before requesting another suggestion.");
   const paint = (rec, msg) => {
     const kids = [h("h2", {}, "Which cases first? A second opinion"),
       h("p", { class: "muted" }, "The rule-based order below is the list order. The AI suggestion, not approved, is advice only: it never changes the ranking, owners, stages or queues.")];
@@ -685,7 +686,7 @@ function priorityPanel() {
     if (rec && rec.release_denied) kids.push(h("p", { role: "status" }, "This suggestion's release is no longer valid. Use the ordinary case controls or request a new suggestion. The release owner must review the missing evidence."));
     if (rec?.stale) kids.push(h("p", { role: "status" }, "A supplied human correction affects this suggestion. It and any recorded draft review need a fresh review. Use ordinary case work or request a new suggestion."));
     if (!rec) {
-      kids.push(h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest my top 5")));
+      kids.push(checkHistory ? holdNote() : h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest my top 5")));
     } else {
       kids.push(h("div", { class: "grid" },
         h("div", {}, h("h3", {}, `Rule-based order (policy ${rec.policy_version})`), rowsOf(rec.deterministic, false)),
@@ -715,12 +716,19 @@ function priorityPanel() {
             h("button", { class: "alt", disabled: checkHistory, onclick: act("reject") }, "Reject")));
       } else {
         kids.push(h("p", {}, `${rec.status}${rec.reason ? `: ${rec.reason}` : ""}. Recorded in the audit log.`),
-          h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest again")));
+          checkHistory ? holdNote() : h("p", {}, h("button", { class: "alt", onclick: ask }, "Suggest again")));
       }
     }
     box.replaceChildren(...kids);
   };
-  const ask = async () => { box.setAttribute("aria-busy", "true"); try { paint(await api("/api/ai/priority", modeBody({ n: 5 }))); } catch (e) { paint(null, e.message); } box.removeAttribute("aria-busy"); };
+  const ask = async () => {
+    if (pending || checkHistory) return;
+    pending = true;
+    box.setAttribute("aria-busy", "true");
+    try { paint(await api("/api/ai/priority", modeBody({ n: 5 }))); }
+    catch (e) { checkHistory = mutationNeedsHistory(e); paint(null, e.message); }
+    finally { pending = false; box.removeAttribute("aria-busy"); }
+  };
   box.append(h("p", { role: "status" }, "Loading priority suggestions..."));
   api("/api/ai/priority").then((d) => paint(d.recommendation && (d.recommendation.status === "Proposed" || d.recommendation.order_note) ? d.recommendation : null)).catch(error => {
     if (error.name !== "AbortError") paint(null, `Priority suggestions unavailable: ${error.message}. Try requesting a suggestion again.`);

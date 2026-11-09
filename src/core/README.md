@@ -4780,7 +4780,10 @@ priority panel shows the note for reviewed records after a reload too. Other emp
 are unaffected. The original `rec_order_legacy` and `rec_order_backfills` records are never
 rewritten. The C1 list `rec_order_backfills`, the single `rec_order_legacy` row and every
 `rec_order_batch:<n>` row are read, validated and coalesced into ordinal ranges in one pass; any
-malformed entry makes every ordinal suspect. Every database without the `rec_order_review` marker is reviewed once at migration (batch
+malformed entry makes every ordinal suspect. A present `rec_order_legacy` row is valid only as a
+JSON object whose `rows` is a positive integer (the only producer writes it solely when rows were
+backfilled); invalid JSON, an empty value, a non-object, a missing, zero, negative, string, boolean
+or fractional count is malformed, while an absent row means no legacy backfill. Every database without the `rec_order_review` marker is reviewed once at migration (batch
 source `review`, whatever batch metadata exists): ordinals assigned by a heuristic backfill are
 assessed without changing any, so earlier-candidate and cross-timestamp inversions are found. The
 named data owner decides how flagged records are resolved; this change adds no resolution mechanism

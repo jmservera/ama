@@ -694,11 +694,16 @@ class SqlStore(Store):
                 raise ValueError
             return lo, hi
 
-        try:
-            legacy = int(json.loads(self._meta_value("rec_order_legacy") or "{}").get("rows", 0))
-        except (ValueError, TypeError, AttributeError):
-            legacy = 0
-        if legacy:
+        present = self.db.execute("SELECT value FROM meta WHERE key='rec_order_legacy'").fetchone()
+        if present is not None:
+            # The producer writes an object with a positive integer row count; anything else is unreadable.
+            try:
+                entry = json.loads(present[0])
+                legacy = entry["rows"] if isinstance(entry, dict) else None
+                if not isinstance(legacy, int) or isinstance(legacy, bool) or legacy < 1:
+                    raise ValueError
+            except (ValueError, TypeError, KeyError):
+                return [everything]
             ranges.append((1, legacy))
         try:
             raw = self._meta_value("rec_order_backfills")
