@@ -44,12 +44,17 @@
       "decision": "Implementation: 4 files +113; demo-targeted tests, Ruff 0.17.1 and strict mypy 2.4.0 pass; hosted CI and independent exact-head review pending",
       "status": "done",
       "evidence": ".copilot-tracking/changes/2026-11-09/issue-159-validation-receipts-initial-changes.md"
+    },
+    {
+      "decision": "Retarget to main; main merged ordinary no-ff; src identical to de79f4b8b; fresh Core/API Ruff, mypy and focused tests pass; target main Refs 159/189",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-11-09/issue-159-main-retarget-changes.md"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Coordinator independent exact-head review and publication decision; any correction needs bounded coordinator history disposition"
+    "action": "Independent reviewer qualification of record/base delta, then coordinator publication to main"
   },
   "prioritized_follow_ups": [
     {
