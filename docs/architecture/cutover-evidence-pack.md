@@ -5853,3 +5853,59 @@ These statements qualify the section above and take precedence over it where the
 * Requirement IDs. PRD FR-008 governs controlled gates. PRD FR-016 and FR-017 are provider-package and quality-disposition records, not resident-decision or complaints IDs; no resident or complaints requirement ID is asserted by this checkpoint, and none is invented. The original native Review corrected this pack only, not every tracking record.
 * Process count. The four final processes are A1, A2b, A3 and S1, including one nonqueued disposable SQL run: 1205 discovered, 171 skipped. The first failed A2 is separate and not a fifth final process. The 108 S1 discoveries are not all actual SQL executions (one by-design skip).
 * Unchanged: the document approval statuses, the #440 closure and Major HVE holds, pin `2be660e9`, and the exclusions of unmerged Quality and Blob work, which remain a historical current-main observation and not later acceptance. Refs #440 #81 #123 #184 #136 only.
+
+## Parent-topic Blob and Quality checkpoint (2026-11-09, Refs #440 #1288 #1258 #1259 #136)
+
+Draft, local-only, not approved. It qualifies the 2026-11-09 current-main checkpoint above, which observed `main` `2be660e9` and excluded Blob and Quality; that record is unchanged and remains a historical observation. This section records two separately labelled source scopes and is neither final merged-main acceptance nor Quality merged-main functionality. Records: [research](../../.copilot-tracking/research/2026-11-09-blob-quality-2055-440-research.md), [plan](../../.copilot-tracking/plans/2026-11-09-blob-quality-2055-440-plan.md), [details](../../.copilot-tracking/details/2026-11-09-blob-quality-2055-440-details.md), [changes](../../.copilot-tracking/changes/2026-11-09-blob-quality-2055-440-changes.md) and [review](../../.copilot-tracking/reviews/2026-11-09-blob-quality-2055-440-review.md).
+
+### Source identities
+
+| Item | Identity |
+| --- | --- |
+| Merged main (fetched) | `a04668ae94b5c2f38e6c55ed789db245e8c71d16`: Blob and Bicep #1328, historical checkpoint #1329, bot score metadata #1330 |
+| Quality parent topic | `feat/demo-recovery-quality-1288-1109`, PR 1331 OPEN against `main`; published head `581207e18fedd66d9e24704a663dbb5f7b870d50` (hosted `src-agents` FAILURE on E501, `src-api` in progress at read time) |
+| Checkpoint source | local `3483815492f331b1254d46bee7be783584977ef2`, tree `3aebb1da13c452da48f49da1b8d063a3df1fbdd0`: the parent head plus two unpublished commits (E8 plan and the E8 line wrap, AST-equal); contains main `a04668ae` and is 0 commits behind it; E8 is under independent assessment and no hosted success is assumed |
+| Documents (unchanged, statuses not promoted) | BRD 0.21.0 draft `34d88395`; PRD (Zava Forward) 0.21.0 in-review `c788b917`; PRD (proper-warm) `f7f9b767`; addendum `28c19242`; original `0aec2d80`; ADRs 0001 `d42fa5c4`, 0002 `cbe21530`, 0003 `d6064539`, 0004 `9406c2e7`, 0005 `4d610335`, 0006 `956da1a3`, 0007 `abb21088` (identical at HEAD and `origin/main`) |
+
+### Merged-main Blob observations (source-qualified, historical reuse)
+
+* The Blob archive wave adds the ranking archive Blob adapter, publication and runner, store wiring, the `/api/ranking/publish` uncertain-write handling and Bicep policy tests. Main's own unit tests exercise it with fakes; no live or emulated Blob service, immutability policy, remote atomicity or from-empty deployment was observed here (owners #1258, #1259, #136).
+* Retained raw logs from the Quality parent's main-integration run at the tree of `2aa038043` (session files `logs-1288-main-integration/`): Core `ranking_archive_blob` 26, `ranking_publication` 57, `ranking_publication_runner` 53; API `ranking_publication_wiring` 36; infra `test_bicep_policy` 59; all OK, no skips. These are historical, not fresh at this head: `git diff 2aa038043 HEAD -- src infra tools .github '*.toml'` changes only `dispatch.py` (E8) and bot score data.
+
+### Parent-topic Quality observations (not main)
+
+* The Quality delta against main is 144 files and touches no ranking, Blob, infra or Bicep file. The only shared file is `server.py`, where both intents were preserved by the recorded ordinary merge.
+* Historical reuse from the same retained logs: assistants 120 OK (58 skipped, disposable SQL Server needed), assistant release 54 (4 skipped), sensor c7 45 (7 skipped), sensor e2 62 (31 skipped), simulation lane 30, transport deadline 7, inventories 29, consumption 17 and 42, input bounds 6, sensor consumer 47. Summed from the retained logs: 761 discovered, 100 skipped. A figure of 861 discovered appeared in a task statement; it is not reproducible from the retained logs (difference exactly 100) and is not used here. Agents 303 OK at the E8 wrap (`logs-1288-e8/unittest-after.log`) is a local result for that one line wrap, not a hosted result.
+* SQL Server legs remain historical (605 with one skip at `5827ebede`); no SQL was rerun here. The real-provider simulation route is code-disabled; the ordinary-assistant post-fence suspension risk, local-only socket cancellation and final SQL refusal-audit persistence remain unproven.
+
+### Observation O1 (one local run, adverse)
+
+Selected before running (plan committed `1b1c3f73`): `python -m checks.quality_sensors_browser_check --out results.json` from an owned `mktemp` directory under one nonqueued `flock -n /tmp/ama-rpi-heavy.lock` (the lock was free; the holder was this run), in an `env -i` sanitized environment, with an owned `mktemp` venv (editable `src/core`, `src/agents`, `src/api`; Playwright 1.64.1 installed in that venv only after a real `ModuleNotFoundError`; Chromium from the existing user cache; Python 3.12.3). Constructed synthetic fixture, mock provider, SQLite store, loopback only; no model, Azure, credential, private data or default `ZF_DATA`. Axe was not run (bytes not supplied). Window 2026-11-09T20:56:52Z to 20:57:05Z.
+
+* Exit 1. Twelve checks passed before the failure: the authorised Quality request reaches the mock provider; the captured snapshot holds retained readings; displayed reading ids and values equal the captured snapshot; the attributed unapproved flag cites readings the model was given and offers no approval control; withheld consent shows no readings table and is not reported as missing; stale readings are labelled stale, not live; unavailable readings and unavailable capture are explicit; the simulation panel is labelled synthetic and its readings equal the stored simulation readings.
+* The step "Request Simulation Proposal" failed: the check expects `Proposal stored as unapproved`, but the panel shows `Not sent (real-provider-route-unavailable) ... nothing was sent to a model`. This is the intended guarded-off behavior of commit `cf3f84692` (E7, newer than the check's last change `c8afa77bb`), which updated the lane unit tests but not this browser check. Cause confirmed by the source, the panel text and the unit-test expectation; it is a stale check, not a product defect. The later checks (stored-proposal counts, rotation, role denials, manual path) did not run, so they are unobserved at this head.
+* Raw stdout, stderr, exit, window, versions and install logs are retained in the coordinator session files `observed-440-bq-2055/` with `SHA256SUMS`, and the owned scratch directory is preserved, not deleted. No owned process remained afterwards. The run is local synthetic engineering evidence only: no assistive-technology, actual-model, human, Fluent or merged-main claim.
+
+### Document-qualified trace
+
+| Statement | Document-qualified link | Status |
+| --- | --- | --- |
+| Controlled gates before transitions; human approval, consent and quality decision stay with named humans | PRD (Zava Forward) FR-008 | Fixture and unit observed on the parent topic; no actual-model or human acceptance |
+| Independent per-measure quality-disposition record linking checklist evidence, provider submission and reviewer acceptance | PRD (Zava Forward) FR-017 (quality-disposition record); FR-016 is the provider-package record | The retained-sensor journey is advisory display of synthetic readings against a mock model snapshot; it does not establish FR-017 |
+| Resident or complaints requirement IDs | none asserted | Earlier join mistakes are preserved and not copied |
+| Src layout and distributions | ADR-0006 | Editable installs resolve to this worktree |
+
+### Unmet matrix and owners
+
+| Gap | State | Owner |
+| --- | --- | --- |
+| Quality browser journey after the simulation step; browser check stale versus code-off route | Observed adverse, minimal fix is to update the check expectation to the unavailable and manual-route outcome and keep a stored-proposal seed path, with a regression run of the same command | #1288 (existing parent, within its recorded finite correction grant; owner authorization to use it is not inferred); no new issue proposed |
+| Quality merged-main status | Not merged; PR 1331 hosted checks incomplete; E8 unpublished | #1288 |
+| Live Blob, immutability, remote atomicity, from-empty deployment | Unknown, deferred | #1258, #1259, #136 |
+| Actual-model AI, real-provider route, ordinary post-fence risk, final SQL audit | Code-off, unproven | #1288 |
+| Priority-order recurrence, startup cause | Unknown | #1292 |
+| Axe, assistive technology, human acceptance | Not run | #440 later criteria |
+
+Recommendation: CONTINUE; hold Quality merged-main claims, #1288 closure and dependent expansion, and the whole #440 and Major HVE criteria; no pivot, deferral or requirement relaxation is inferred. Independent repairs may continue.
+
+Final merged-main resume requirement: after PR 1331 actually merges, fetch `main`, prove the merged source tree and its hosted checks, rerun the O1 command once (or its corrected successor) at that tree through one nonqueued admission, and then re-evaluate this checkpoint as a separate merged-main qualification. Until then every Quality statement here is parent-topic only.
