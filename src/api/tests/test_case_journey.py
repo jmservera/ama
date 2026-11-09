@@ -535,6 +535,126 @@ const api = async (path, body) => {
         result = subprocess.run(["node", "-e", script], text=True, capture_output=True, timeout=30)
         self.assertEqual(result.returncode, 0, result.stderr)
 
+    def test_priority_creation_after_a_real_committed_outcome_offers_no_repeat(self) -> None:
+        import copy
+        import os
+        import tempfile
+        import threading
+        from http.server import ThreadingHTTPServer
+        from unittest.mock import patch
+        from urllib.error import HTTPError
+        from urllib.request import Request, urlopen
+
+        from tests.test_mvp import DATA
+        from zava_forward.core.sqlstore import CommittedReloadError, SqlStore
+
+        from zava_forward.api.server import App, make_handler
+
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        path = Path(tmp.name) / "synthetic.json"
+        path.write_text(json.dumps(copy.deepcopy(DATA)))
+        store = SqlStore(str(path), os.path.join(tmp.name, "synthetic.sqlite"))
+        self.addCleanup(store.db.close)
+        app = App(store, "synthetic-only")  # type: ignore[no-untyped-call]
+        server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+
+        def stop() -> None:
+            server.shutdown()
+            server.server_close()
+            thread.join(timeout=5)
+
+        self.addCleanup(stop)
+        base = f"http://127.0.0.1:{server.server_address[1]}"
+        login = Request(
+            base + "/api/login",
+            json.dumps(dict(email=DATA["staff"][0]["email"], password="synthetic-only")).encode(),
+        )
+        with urlopen(login, timeout=5) as response:
+            cookie = response.headers["Set-Cookie"].split(";")[0]
+
+        def post(error: Exception) -> dict[str, Any]:
+            request = Request(
+                base + "/api/ai/priority",
+                json.dumps(dict(n=5)).encode(),
+                headers={"Cookie": cookie, "Content-Type": "application/json", "X-ZF-CSRF": "1"},
+            )
+            with patch.object(store, "ai_priority", side_effect=error):
+                try:
+                    with urlopen(request, timeout=5) as response:
+                        return {"status": response.status, "body": json.loads(response.read())}
+                except HTTPError as failed:
+                    return {"status": failed.code, "body": json.loads(failed.read())}
+
+        committed = post(CommittedReloadError("Saved; the reload did not settle."))
+        refused = post(PermissionError("Only a programme manager can ask."))
+        self.assertEqual((committed["status"], committed["body"]["outcome"]), (409, "committed"))
+        self.assertNotIn("outcome", refused["body"])
+        self.assertGreaterEqual(refused["status"], 400)
+
+        source = (WEB / "app.js").read_text()
+        script = (
+            DOM
+            + shipped_helpers()
+            + "async function api"
+            + source.split("async function api", 1)[1].split("const fmtDate", 1)[0]
+            + "function priorityPanel"
+            + source.split("function priorityPanel", 1)[1].split("function pendingHandoffs", 1)[0]
+            + "const captured = "
+            + json.dumps(dict(committed=committed, refused=refused))
+            + r"""
+Node.prototype.replaceChildren = function(...children) {
+  this.children = []; this.append(...children);
+};
+const routeController = new AbortController(), modeBody = body => body;
+const tick = () => new Promise(resolve => setImmediate(resolve));
+let posts = 0, planned;
+const fetch = async (path, options) => {
+  if (options.method !== "POST")
+    return {ok: true, status: 200, json: async () => ({recommendation: null})};
+  posts++;
+  if (planned.transport) throw new TypeError("Connection lost");
+  const {status, body} = planned;
+  return {ok: status < 400, status, json: async () => body};
+};
+const buttons = box => box.querySelectorAll("button")
+  .filter(b => b.textContent.startsWith("Suggest"));
+const texts = box => box.querySelectorAll("p").map(p => p.textContent);
+(async () => {
+  for (const name of ["committed", "refused"]) {
+    planned = captured[name]; posts = 0;
+    const box = priorityPanel(); await tick();
+    const ask = buttons(box)[0];
+    assert.equal(ask.textContent, "Suggest my top 5");
+    await ask.events.click();
+    assert.equal(posts, 1, name);
+    assert.equal(box.getAttribute("aria-busy"), null);
+    if (name === "committed") {
+      assert.equal(buttons(box).length, 0, "no repeat control after a committed outcome");
+      assert.ok(texts(box).some(t => t.includes("check priority review")));
+      assert.ok(box.querySelectorAll("p").some(p => p.attrs.role === "alert"));
+      await ask.events.click();
+      assert.equal(posts, 1, "a stale handle cannot post again");
+    } else {
+      assert.equal(buttons(box).length, 1, "an ordinary refusal stays retryable");
+      assert.equal(buttons(box)[0].disabled, false);
+      await buttons(box)[0].events.click();
+      assert.equal(posts, 2);
+    }
+  }
+  planned = {transport: true}; posts = 0;
+  const failing = priorityPanel(); await tick();
+  await buttons(failing)[0].events.click();
+  assert.equal(buttons(failing).length, 0, "transport loss may hide a commit");
+  console.log("PASS");
+})().catch(error => {console.error(error); process.exitCode = 1;});
+"""
+        )
+        result = subprocess.run(["node", "-e", script], text=True, capture_output=True, timeout=30)
+        self.assertEqual(result.returncode, 0, result.stderr)
+
     def test_raw_resident_and_challenge_outcomes_exclude_repeat_posts(self) -> None:
         source = (WEB / "panels.js").read_text()
         app_source = (WEB / "app.js").read_text()

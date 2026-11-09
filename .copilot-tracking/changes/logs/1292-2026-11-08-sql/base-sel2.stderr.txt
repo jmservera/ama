@@ -1,0 +1,20 @@
+test_failed_priority_accept_edit_remove_disposition_and_audit (test_resident_decisions.MssqlResidentControls.test_failed_priority_accept_edit_remove_disposition_and_audit) ... FAIL
+
+======================================================================
+FAIL: test_failed_priority_accept_edit_remove_disposition_and_audit (test_resident_decisions.MssqlResidentControls.test_failed_priority_accept_edit_remove_disposition_and_audit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_resident_decisions.py", line 1489, in test_failed_priority_accept_edit_remove_disposition_and_audit
+    self.assertEqual(self.open_store().data["recommendations"], before)
+AssertionError: Lists differ: [{'id': '2e1dc0f790a9', 'user': 'sam@example.test'[5411 chars]: 4}] != [{'id': '8f5f202b3111', 'user': 'sam@example.test'[5411 chars]: 4}]
+
+First differing element 0:
+{'id': '2e1dc0f790a9', 'user': 'sam@example.test'[2677 chars]': 4}
+{'id': '8f5f202b3111', 'user': 'sam@example.test'[2677 chars]': 4}
+
+Diff is 13080 characters long. Set self.maxDiff to None to see it.
+
+----------------------------------------------------------------------
+Ran 1 test in 5.171s
+
+FAILED (failures=1)

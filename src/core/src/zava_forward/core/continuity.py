@@ -694,6 +694,8 @@ class ContinuityMixin:
         result.update(epoch_current=r.get("source") != "ai" or epoch_current(r, self._cont()),
                       actionable=current and r["status"] in ("Not reviewed", "Proposed"),
                       relied_on=current and r["status"] in ("Accepted", "Edited"))
+        if r.get("kind") != "ai_task" and self._order_unresolved(r):
+            result.update(order_confirmed=False, actionable=False, relied_on=False, order_note=self.ORDER_NOTE)
         return result
 
 
@@ -758,7 +760,7 @@ def limited_export(bundle):
     def summary(record):
         if not isinstance(record, dict):
             return dict(detail=held)
-        result = {key: value for key in ("continuity_epoch", "claim_epoch", "epoch_current", "actionable", "relied_on", "revision")
+        result = {key: value for key in ("continuity_epoch", "claim_epoch", "epoch_current", "actionable", "relied_on", "revision", "order_confirmed")
                   if type(value := record.get(key)) in (int, bool)}
         for key in ("status", "state"):
             value = record.get(key)

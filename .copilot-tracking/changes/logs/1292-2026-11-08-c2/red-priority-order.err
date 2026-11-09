@@ -1,0 +1,163 @@
+======================================================================
+ERROR: test_broken_audit_chain_is_not_trusted (test_priority_order.SqliteLegacyEdges.test_broken_audit_chain_is_not_trusted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 650, in test_broken_audit_chain_is_not_trusted
+    batch = self.batches(self.open_store())[0]
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_database_backfilled_by_the_earlier_candidate_is_reviewed_not_rewritten (test_priority_order.SqliteLegacyEdges.test_database_backfilled_by_the_earlier_candidate_is_reviewed_not_rewritten)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 610, in test_database_backfilled_by_the_earlier_candidate_is_reviewed_not_rewritten
+    self.assertEqual(self.batches(reopened)[0]["source"], "c0-review")
+                     ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_self_consistent_rechain_conflicting_with_a_retained_digest_is_not_trusted (test_priority_order.SqliteLegacyEdges.test_self_consistent_rechain_conflicting_with_a_retained_digest_is_not_trusted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 573, in test_self_consistent_rechain_conflicting_with_a_retained_digest_is_not_trusted
+    batch = self.batches(reopened)[0]
+            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_ambiguous_group_is_recorded_with_ids_when_audit_evidence_is_absent (test_priority_order.SqlitePriorityOrder.test_ambiguous_group_is_recorded_with_ids_when_audit_evidence_is_absent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 330, in test_ambiguous_group_is_recorded_with_ids_when_audit_evidence_is_absent
+    batch = self.batches(self.open_store())[0]
+            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+ERROR: test_audited_same_second_creations_keep_order_after_edit_of_the_older (test_priority_order.SqlitePriorityOrder.test_audited_same_second_creations_keep_order_after_edit_of_the_older)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 316, in test_audited_same_second_creations_keep_order_after_edit_of_the_older
+    batch = self.batches(reopened)[0]
+            ~~~~~~~~~~~~~~~~~~~~~~^^^
+IndexError: list index out of range
+
+======================================================================
+FAIL: test_creation_event_that_contradicts_commit_order_is_not_proof (test_priority_order.SqliteLegacyEdges.test_creation_event_that_contradicts_commit_order_is_not_proof)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 538, in test_creation_event_that_contradicts_commit_order_is_not_proof
+    self.assertTrue({first, second} <= set(self.unresolved(reopened)))
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_large_legacy_backfill_is_linear_and_survives_concurrent_openers (test_priority_order.SqliteLegacyEdges.test_large_legacy_backfill_is_linear_and_survives_concurrent_openers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 695, in test_large_legacy_backfill_is_linear_and_survives_concurrent_openers
+    self.assertEqual(errors, [])
+AssertionError: Lists differ: [OperationalError('database is locked')] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+OperationalError('database is locked')
+
+- [OperationalError('database is locked')]
++ []
+
+======================================================================
+FAIL: test_old_writer_commit_between_any_two_reload_statements_is_never_served (test_priority_order.SqliteLegacyEdges.test_old_writer_commit_between_any_two_reload_statements_is_never_served) (statement=2, victim='sam@example.test')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 499, in test_old_writer_commit_between_any_two_reload_statements_is_never_served
+    self.assertEqual(self.latest(watcher), mine)
+AssertionError: 'ccc000000003' != 'mmm000000009'
+- ccc000000003
++ mmm000000009
+
+
+======================================================================
+FAIL: test_old_writer_commit_between_any_two_reload_statements_is_never_served (test_priority_order.SqliteLegacyEdges.test_old_writer_commit_between_any_two_reload_statements_is_never_served) (statement=2, victim='pam@example.test')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 500, in test_old_writer_commit_between_any_two_reload_statements_is_never_served
+    self.assertEqual(self.latest(watcher, self.pam), theirs)
+AssertionError: 'bbb000000002' != 'mmm000000009'
+- bbb000000002
++ mmm000000009
+
+
+======================================================================
+FAIL: test_repeated_singleton_repairs_do_not_rescan_the_audit_or_rewrite_history (test_priority_order.SqliteLegacyEdges.test_repeated_singleton_repairs_do_not_rescan_the_audit_or_rewrite_history)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 634, in test_repeated_singleton_repairs_do_not_rescan_the_audit_or_rewrite_history
+    self.assertLessEqual(sum(verified), total + 50, verified)
+AssertionError: 30025 not less than or equal to 6052 : [6003, 6004, 6005, 6006, 6007]
+
+======================================================================
+FAIL: test_rolled_back_queue_transaction_does_not_publish_repaired_cache (test_priority_order.SqliteLegacyEdges.test_rolled_back_queue_transaction_does_not_publish_repaired_cache)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 522, in test_rolled_back_queue_transaction_does_not_publish_repaired_cache
+    self.assertEqual(self.latest(watcher), "ccc000000003")
+AssertionError: 'mmm000000002' != 'ccc000000003'
+- mmm000000002
++ ccc000000003
+
+
+======================================================================
+FAIL: test_failed_publication_is_neither_persisted_nor_flushed_later (test_priority_order.SqlitePriorityOrder.test_failed_publication_is_neither_persisted_nor_flushed_later)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 424, in test_failed_publication_is_neither_persisted_nor_flushed_later
+    self.assertEqual(len(list(store.audit_entries())), before + 1)
+AssertionError: 4 != 3
+
+======================================================================
+FAIL: test_old_writer_insert_after_startup_is_repaired_before_a_later_new_write (test_priority_order.SqlitePriorityOrder.test_old_writer_insert_after_startup_is_repaired_before_a_later_new_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 271, in test_old_writer_insert_after_startup_is_repaired_before_a_later_new_write
+    self.assertEqual(len(self.batches(restarted)), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_provable_creation_order_survives_a_backward_clock_step (test_priority_order.SqlitePriorityOrder.test_provable_creation_order_survives_a_backward_clock_step)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 382, in test_provable_creation_order_survives_a_backward_clock_step
+    self.assertEqual(self.latest(reopened), second)
+AssertionError: '0be483632f4e' != '990f07139623'
+- 0be483632f4e
++ 990f07139623
+
+
+======================================================================
+FAIL: test_rollback_batch_is_recorded_without_erasing_earlier_metadata (test_priority_order.SqlitePriorityOrder.test_rollback_batch_is_recorded_without_erasing_earlier_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 349, in test_rollback_batch_is_recorded_without_erasing_earlier_metadata
+    self.assertEqual(len(first), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unresolved_newest_is_marked_in_the_view_and_other_employees_are_not (test_priority_order.SqlitePriorityOrder.test_unresolved_newest_is_marked_in_the_view_and_other_employees_are_not)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 410, in test_unresolved_newest_is_marked_in_the_view_and_other_employees_are_not
+    self.assertEqual(self.unresolved(reopened), ["mmm000000002", "zzz000000001"])
+AssertionError: Lists differ: [] != ['mmm000000002', 'zzz000000001']
+
+Second list contains 2 additional elements.
+First extra element 0:
+'mmm000000002'
+
+- []
++ ['mmm000000002', 'zzz000000001']
+
+----------------------------------------------------------------------
+Ran 54 tests in 50.810s
+
+FAILED (failures=11, errors=5, skipped=19)

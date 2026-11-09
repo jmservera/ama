@@ -1,0 +1,2 @@
+/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/src/zava_forward/core/sqlstore.py d38b07f6fa7ad68e98667908194174c025700c074d9eeb992fc6fbe77e2835aa
+/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/src/zava_forward/core/mssqlstore.py 0e618ac5f05fe02e3e08ab8c5eb30d3989817995e56077a2c5a035c02c6e16d1

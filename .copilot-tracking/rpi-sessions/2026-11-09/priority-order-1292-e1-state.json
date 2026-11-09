@@ -1,0 +1,77 @@
+{
+ "task_id": "1292-e1-1109",
+ "task_slug": "priority-order-1292-e1",
+ "parent_task": {
+  "task_id": "1292-vc-1109",
+  "task_slug": "priority-order-1292-vc"
+ },
+ "mode": "automatic",
+ "active_phase": "Review",
+ "status": "blocked",
+ "session_status": "stopped",
+ "artifact_paths": {
+  "research": ".copilot-tracking/research/2026-11-09-priority-order-1292-e1-research.md",
+  "plan": ".copilot-tracking/plans/2026-11-09-priority-order-1292-e1-plan.md",
+  "details": ".copilot-tracking/details/2026-11-09-priority-order-1292-e1-details.md",
+  "critique": ".copilot-tracking/plans/2026-11-09-priority-order-1292-e1-critique.md",
+  "changes": ".copilot-tracking/changes/2026-11-09-priority-order-1292-e1-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-09-priority-order-1292-e1-review.md"
+ },
+ "confirmed_decisions": [
+  {
+   "decision": "five new additional cycles E1-E5 approved by owner after spent C5; E1 first, four left; no reset",
+   "status": "owner-approved",
+   "evidence": "coordinator brief-1292-e1.md"
+  },
+  {
+   "decision": "demo-targeted test tier, no blanket full gate",
+   "status": "owner-selected",
+   "evidence": "demo-rpi-common.md"
+  },
+  {
+   "decision": "research executed; planning readiness Ready",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/research/2026-11-09-priority-order-1292-e1-research.md"
+  },
+  {
+   "decision": "critique executed once, verdict revise, findings applied directly",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/plans/2026-11-09-priority-order-1292-e1-critique.md"
+  },
+  {
+   "decision": "admission continuation: ordinary merge of origin/main ad679b96b; one flock -n probe busy",
+   "status": "recorded",
+   "evidence": "changes record"
+  },
+  {
+   "decision": "review executed once, outcome partial",
+   "status": "recorded",
+   "evidence": ".copilot-tracking/reviews/2026-11-09-priority-order-1292-e1-review.md"
+  }
+ ],
+ "blockers": [
+  {
+   "id": "sql-admission",
+   "summary": "selected owned SQL Server run not executed: shared heavy lock held by another lane (1288 E3, pids 2801862/2801863/2802427)",
+   "resolution": "single flock -n run into new e1-sql-admission-<unique> when lock free"
+  }
+ ],
+ "next_action": {
+  "phase": "Review",
+  "action": "coordinator independent exact-head review plus SQL run when lock free"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Run selected SQL Server tests once admitted",
+   "rationale": "R1 blocks publication",
+   "evidence": "review R1"
+  },
+  {
+   "rank": 2,
+   "task": "Reproduce skipped ix_recs_seq concurrent-open race on SQL Server",
+   "rationale": "R2 unproven skip",
+   "evidence": "review R2"
+  }
+ ]
+}

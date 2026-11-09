@@ -43,7 +43,7 @@ TABLES = {
   queue_stale INT NOT NULL DEFAULT 0, queue_blocked INT NOT NULL DEFAULT 0,
   queue_overdue INT NOT NULL DEFAULT 0, queue_unowned INT NOT NULL DEFAULT 0)""",
     "recommendations": f"CREATE TABLE recommendations (id {_t(64)} PRIMARY KEY, rowversion BIGINT NOT NULL DEFAULT 1, seq BIGINT NOT NULL, "
-                       f"[user] {_t(200)}, body NVARCHAR(MAX) NOT NULL)",
+                       f"[user] {_t(200)}, body NVARCHAR(MAX) NOT NULL, created_ord BIGINT NOT NULL DEFAULT 0)",
     "audit": f"""CREATE TABLE audit (
   seq BIGINT IDENTITY(1,1) PRIMARY KEY, at {_t(40)}, who {_t(200)}, action {_t(200)}, case_id {_t(64)},
   detail NVARCHAR(MAX) NOT NULL, prev {_t(100)}, hash {_t(100)} UNIQUE)""",
@@ -175,7 +175,11 @@ class _Conn:
     def execute(self, sql, args=()):
         key = sql.strip().upper()
         if key == "BEGIN IMMEDIATE":
-            self._run(BEGIN, ())
+            try:
+                self._run(BEGIN, ())
+            except BaseException:
+                self._abandon_partial_begin()
+                raise
             self.in_tran = True
             return None
         if key in ("COMMIT", "ROLLBACK"):
@@ -191,6 +195,22 @@ class _Conn:
                 self.in_tran = False
             return None
         return _Cursor(self._run(self._rewrite(sql), tuple(args)))
+
+    def _abandon_partial_begin(self):
+        """BEGIN TRAN may have run before the lock request failed; never leave that transaction open.
+
+        If it cannot be rolled back, discard the connection, which ends it on the server. The original error is kept."""
+        self.in_tran = False
+        if self.raw is None:
+            return
+        try:
+            self.raw.cursor().execute("IF @@TRANCOUNT > 0 ROLLBACK TRAN")
+        except BaseException:
+            try:
+                self.raw.close()
+            except BaseException:
+                pass
+            self.raw = None
 
     def executemany(self, sql, rows):
         return _Cursor(self._run(self._rewrite(sql), list(rows), many=True))
@@ -288,11 +308,27 @@ class MssqlStore(SqlStore):
             else:
                 self.db.execute(APPEND_ONLY)
 
+    def _has_rec_order(self):
+        return self.db.execute("SELECT COL_LENGTH(N'recommendations', N'created_ord')").fetchone()[0] is not None
+
+    def _create_rec_order_index(self):
+        self.db.execute("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_recs_created_ord' AND object_id = OBJECT_ID(N'recommendations')) "
+                        "CREATE INDEX ix_recs_created_ord ON recommendations (created_ord)")
+        self.db.execute("IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name = N'ix_recs_user_ord' AND object_id = OBJECT_ID(N'recommendations')) "
+                        "CREATE INDEX ix_recs_user_ord ON recommendations ([user], created_ord)")
+
     def _create_indexes(self):
         with self.dblock:
             self._migrate_chat_memory()
-            for stmt in _indexes() + [CHAT_INDEX]:
-                self.db.execute(stmt)
+            # check-then-create is not atomic across connections; the write lock serializes concurrent first opens
+            self.db.execute("BEGIN IMMEDIATE")
+            try:
+                for stmt in _indexes() + [CHAT_INDEX]:
+                    self.db.execute(stmt)
+                self.db.execute("COMMIT")
+            except BaseException:
+                self.db.execute("ROLLBACK")
+                raise
 
     def _columns(self):
         return {r[0] for r in self.db.execute("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID(N'cases')").fetchall()}

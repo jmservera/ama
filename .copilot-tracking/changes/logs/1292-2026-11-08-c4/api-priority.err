@@ -1,0 +1,1468 @@
+======================================================================
+ERROR: test_ai_boundary (unittest.loader._FailedTest.test_ai_boundary)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_ai_boundary
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_ai_boundary.py", line 19, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_ai_consumption_api (unittest.loader._FailedTest.test_ai_consumption_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_ai_consumption_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_ai_consumption_api.py", line 22, in <module>
+    from zava_forward.agents.chat import ChatModel  # type: ignore[import-untyped]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_ai_tasks (unittest.loader._FailedTest.test_ai_tasks)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_ai_tasks
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_ai_tasks.py", line 15, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_assistant_release (unittest.loader._FailedTest.test_assistant_release)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_assistant_release
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_assistant_release.py", line 14, in <module>
+    from test_assistants import Assistants, Base, MssqlFixture, config
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_assistants.py", line 20, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_assistants (unittest.loader._FailedTest.test_assistants)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_assistants
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_assistants.py", line 20, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_assistants_dispatch (unittest.loader._FailedTest.test_assistants_dispatch)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_assistants_dispatch
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_assistants_dispatch.py", line 4, in <module>
+    from test_assistants import Base, Provider, config
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_assistants.py", line 20, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_atlas_tensions_checker (unittest.loader._FailedTest.test_atlas_tensions_checker)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_atlas_tensions_checker
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_atlas_tensions_checker.py", line 11, in <module>
+    from checks.atlas_tensions_browser_check import check_regions_and_keys
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/atlas_tensions_browser_check.py", line 29, in <module>
+    from playwright.sync_api import Page, Route, sync_playwright
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_auth (unittest.loader._FailedTest.test_auth)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_auth
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_auth.py", line 14, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_browser_asset_urls (unittest.loader._FailedTest.test_browser_asset_urls)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_browser_asset_urls
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_browser_asset_urls.py", line 8, in <module>
+    from checks.chat_widget_browser_check import recovery_case
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/chat_widget_browser_check.py", line 12, in <module>
+    from playwright.sync_api import Browser, Page, Route, expect, sync_playwright
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_browser_harness_scratch (unittest.loader._FailedTest.test_browser_harness_scratch)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_browser_harness_scratch
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_browser_harness_scratch.py", line 9, in <module>
+    from checks import design_system_browser_check as harness
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/design_system_browser_check.py", line 26, in <module>
+    from playwright.sync_api import sync_playwright
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_buildings (unittest.loader._FailedTest.test_buildings)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_buildings
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_buildings.py", line 16, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_bulk_edit_api (unittest.loader._FailedTest.test_bulk_edit_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_bulk_edit_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_bulk_edit_api.py", line 20, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_capacity_browser_check (unittest.loader._FailedTest.test_capacity_browser_check)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_capacity_browser_check
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_capacity_browser_check.py", line 15, in <module>
+    from checks.capacity_browser_check import load_axe, scan_capacity
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/capacity_browser_check.py", line 27, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_chat_isolation (unittest.loader._FailedTest.test_chat_isolation)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_chat_isolation
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_chat_isolation.py", line 16, in <module>
+    from test_role_matrix import Matrix, PHONE, REASON, ROLES
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_role_matrix.py", line 12, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_chat_panel (unittest.loader._FailedTest.test_chat_panel)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_chat_panel
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_chat_panel.py", line 17, in <module>
+    import test_role_matrix as roles
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_role_matrix.py", line 12, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_continuity (unittest.loader._FailedTest.test_continuity)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_continuity
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_continuity.py", line 9, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_continuity_epoch_export (unittest.loader._FailedTest.test_continuity_epoch_export)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_continuity_epoch_export
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_continuity_epoch_export.py", line 19, in <module>
+    import test_assistants as fixtures
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_assistants.py", line 20, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_coordinator_api (unittest.loader._FailedTest.test_coordinator_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_coordinator_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_coordinator_api.py", line 24, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_document_controls (unittest.loader._FailedTest.test_document_controls)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_document_controls
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_document_controls.py", line 12, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_employee_acceptance_check (unittest.loader._FailedTest.test_employee_acceptance_check)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_employee_acceptance_check
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_employee_acceptance_check.py", line 12, in <module>
+    from checks import employee_acceptance_check as check
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/employee_acceptance_check.py", line 13, in <module>
+    from playwright.sync_api import Error as BrowserError
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_employee_identity_check (unittest.loader._FailedTest.test_employee_identity_check)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_employee_identity_check
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_employee_identity_check.py", line 12, in <module>
+    from test_auth import ENV, OID_NEW, OID_SAM, TENANT, Base, principal
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_auth.py", line 14, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_employee_live_acceptance (unittest.loader._FailedTest.test_employee_live_acceptance)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_employee_live_acceptance
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_employee_live_acceptance.py", line 12, in <module>
+    from checks import employee_live_acceptance as live
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/employee_live_acceptance.py", line 15, in <module>
+    from playwright.sync_api import Error as BrowserError
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_employee_live_responses (unittest.loader._FailedTest.test_employee_live_responses)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_employee_live_responses
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_employee_live_responses.py", line 17, in <module>
+    import test_mvp  # noqa: F401  (puts the shared fixtures on the path)
+    ^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_entra_authoritative (unittest.loader._FailedTest.test_entra_authoritative)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_entra_authoritative
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_entra_authoritative.py", line 14, in <module>
+    from test_auth import ENV, OID_NEW, TENANT, Base, principal
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_auth.py", line 14, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_error_logging (unittest.loader._FailedTest.test_error_logging)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_error_logging
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_error_logging.py", line 14, in <module>
+    from test_auth import ENV, OID_SAM, Base, principal
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_auth.py", line 14, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_exception_register (unittest.loader._FailedTest.test_exception_register)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_exception_register
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_exception_register.py", line 13, in <module>
+    from role_matrix_fixture import ROLES, MatrixServer, SqlStoreCase
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/role_matrix_fixture.py", line 20, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_expected_denials (unittest.loader._FailedTest.test_expected_denials)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_expected_denials
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_expected_denials.py", line 10, in <module>
+    from test_auth import ENV, OID_NEW, OID_SAM, Base, principal
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_auth.py", line 14, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_finance_exposure_api (unittest.loader._FailedTest.test_finance_exposure_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_finance_exposure_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_finance_exposure_api.py", line 21, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_finance_match_api (unittest.loader._FailedTest.test_finance_match_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_finance_match_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_finance_match_api.py", line 18, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_form_staging_api (unittest.loader._FailedTest.test_form_staging_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_form_staging_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_form_staging_api.py", line 19, in <module>
+    from tests.test_mvp import DATA
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_governance_evidence_api (unittest.loader._FailedTest.test_governance_evidence_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_governance_evidence_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_governance_evidence_api.py", line 17, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_grant_lifecycle_api (unittest.loader._FailedTest.test_grant_lifecycle_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_grant_lifecycle_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_grant_lifecycle_api.py", line 11, in <module>
+    import test_finance_match_api as fixture
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_finance_match_api.py", line 18, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_handoff_api (unittest.loader._FailedTest.test_handoff_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_handoff_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_handoff_api.py", line 16, in <module>
+    from tests.test_mvp import DATA
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_hazard_api (unittest.loader._FailedTest.test_hazard_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_hazard_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_hazard_api.py", line 14, in <module>
+    from tests.test_mvp import DATA
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_home_case_api (unittest.loader._FailedTest.test_home_case_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_home_case_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_home_case_api.py", line 15, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_iot_credential_hygiene (unittest.loader._FailedTest.test_iot_credential_hygiene)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_iot_credential_hygiene
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_iot_credential_hygiene.py", line 18, in <module>
+    from azure.iot.device import X509
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_iot_stream (unittest.loader._FailedTest.test_iot_stream)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_iot_stream
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_iot_stream.py", line 16, in <module>
+    from azure.eventhub import EventData
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_keepalive (unittest.loader._FailedTest.test_keepalive)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_keepalive
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_keepalive.py", line 8, in <module>
+    from test_auth import ENV, Base
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_auth.py", line 14, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_lawstore (unittest.loader._FailedTest.test_lawstore)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_lawstore
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_lawstore.py", line 14, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_ledger (unittest.loader._FailedTest.test_ledger)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_ledger
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_ledger.py", line 11, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_list_export_api (unittest.loader._FailedTest.test_list_export_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_list_export_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_list_export_api.py", line 18, in <module>
+    from zava_forward.api.server import LIST_EXPORTS, App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_listen_backlog (unittest.loader._FailedTest.test_listen_backlog)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_listen_backlog
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_listen_backlog.py", line 10, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_live_simulator (unittest.loader._FailedTest.test_live_simulator)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_live_simulator
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_live_simulator.py", line 16, in <module>
+    from zava_forward.api import live_simulator as ls
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/live_simulator.py", line 34, in <module>
+    from .iot_stream import DeviceActivation
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/iot_stream.py", line 13, in <module>
+    from azure.eventhub import EventData
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_mssqlstore (unittest.loader._FailedTest.test_mssqlstore)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_mssqlstore
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mssqlstore.py", line 17, in <module>
+    import test_buildings as buildingapi
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_buildings.py", line 16, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_mvp (unittest.loader._FailedTest.test_mvp)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_mvp
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_operator_suspension (unittest.loader._FailedTest.test_operator_suspension)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_operator_suspension
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_operator_suspension.py", line 18, in <module>
+    import test_continuity_epoch_export as epoch_fixtures
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_continuity_epoch_export.py", line 19, in <module>
+    import test_assistants as fixtures
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_assistants.py", line 20, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_procurement_api (unittest.loader._FailedTest.test_procurement_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_procurement_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_procurement_api.py", line 25, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_production_config_a11y_check (unittest.loader._FailedTest.test_production_config_a11y_check)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_production_config_a11y_check
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_production_config_a11y_check.py", line 5, in <module>
+    from checks.production_config_a11y_browser_check import PRODUCTION_ENV, principal_header
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/production_config_a11y_browser_check.py", line 19, in <module>
+    from playwright.sync_api import Page, expect, sync_playwright
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_progress_dashboard (unittest.loader._FailedTest.test_progress_dashboard)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_progress_dashboard
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_progress_dashboard.py", line 26, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_progress_report_api (unittest.loader._FailedTest.test_progress_report_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_progress_report_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_progress_report_api.py", line 26, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_ranking_policy (unittest.loader._FailedTest.test_ranking_policy)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_ranking_policy
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_ranking_policy.py", line 9, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_ranking_publication_wiring (unittest.loader._FailedTest.test_ranking_publication_wiring)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_ranking_publication_wiring
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_ranking_publication_wiring.py", line 16, in <module>
+    from test_role_matrix import QualityMatrix
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_role_matrix.py", line 12, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_ranking_scale (unittest.loader._FailedTest.test_ranking_scale)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_ranking_scale
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_ranking_scale.py", line 15, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_regulatory_chat_api (unittest.loader._FailedTest.test_regulatory_chat_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_regulatory_chat_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_regulatory_chat_api.py", line 23, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_regulatory_ux_check (unittest.loader._FailedTest.test_regulatory_ux_check)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_regulatory_ux_check
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_regulatory_ux_check.py", line 16, in <module>
+    from checks.regulatory_ux_check import run, scan, target_sizes
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/regulatory_ux_check.py", line 15, in <module>
+    from test_regulatory_chat_api import RegulatoryApi
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_regulatory_chat_api.py", line 23, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_resident_aoai (unittest.loader._FailedTest.test_resident_aoai)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_aoai
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_aoai.py", line 10, in <module>
+    from zava_forward.api.resident_demo.aoai import (
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_aoai_sql (unittest.loader._FailedTest.test_resident_aoai_sql)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_aoai_sql
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_aoai_sql.py", line 12, in <module>
+    from zava_forward.api.resident_demo.aoai import SqlAccounting, resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_api (unittest.loader._FailedTest.test_resident_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_api.py", line 16, in <module>
+    from tests.test_mvp import DATA
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_resident_assistant_api (unittest.loader._FailedTest.test_resident_assistant_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_assistant_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_assistant_api.py", line 12, in <module>
+    from test_resident_aoai import ENDPOINT, reply
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_aoai.py", line 10, in <module>
+    from zava_forward.api.resident_demo.aoai import (
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_callbacks_page (unittest.loader._FailedTest.test_resident_callbacks_page)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_callbacks_page
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_callbacks_page.py", line 15, in <module>
+    from resident_demo_fixture import DemoTestCase
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/resident_demo_fixture.py", line 17, in <module>
+    from zava_forward.api.resident_demo import app as demo
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/app.py", line 41, in <module>
+    from .aoai import resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_chat_api (unittest.loader._FailedTest.test_resident_chat_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_chat_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_chat_api.py", line 22, in <module>
+    from test_resident_aoai import ENDPOINT, question_reply, reply
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_aoai.py", line 10, in <module>
+    from zava_forward.api.resident_demo.aoai import (
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_demo_api (unittest.loader._FailedTest.test_resident_demo_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_demo_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_demo_api.py", line 19, in <module>
+    from zava_forward.api.resident_demo import app as demo
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/app.py", line 41, in <module>
+    from .aoai import resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_ledger_meter (unittest.loader._FailedTest.test_resident_ledger_meter)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_ledger_meter
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_ledger_meter.py", line 20, in <module>
+    from zava_forward.api.resident_demo.aoai import AzureAdvisor, resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_summary_ai_ui (unittest.loader._FailedTest.test_resident_summary_ai_ui)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_summary_ai_ui
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_summary_ai_ui.py", line 14, in <module>
+    from test_resident_demo_api import FAKE_PASSWORD, KEY, NOW, Clock, FakeReader, make_row
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_demo_api.py", line 19, in <module>
+    from zava_forward.api.resident_demo import app as demo
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/app.py", line 41, in <module>
+    from .aoai import resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_restart_audit (unittest.loader._FailedTest.test_restart_audit)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_restart_audit
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_restart_audit.py", line 10, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_role_endpoint_inventory (unittest.loader._FailedTest.test_role_endpoint_inventory)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_role_endpoint_inventory
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_role_endpoint_inventory.py", line 8, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_role_matrix (unittest.loader._FailedTest.test_role_matrix)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_role_matrix
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_role_matrix.py", line 12, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_rule_alerts (unittest.loader._FailedTest.test_rule_alerts)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_rule_alerts
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_rule_alerts.py", line 25, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_scale_load (unittest.loader._FailedTest.test_scale_load)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_scale_load
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_scale_load.py", line 7, in <module>
+    import scale_load
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/scale_load.py", line 33, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_sensor_consistency (unittest.loader._FailedTest.test_sensor_consistency)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_sensor_consistency
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_sensor_consistency.py", line 16, in <module>
+    from azure.eventhub import EventData
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_sensor_handover_demo (unittest.loader._FailedTest.test_sensor_handover_demo)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_sensor_handover_demo
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_sensor_handover_demo.py", line 14, in <module>
+    import sensor_handover_demo as demo  # type: ignore[import-not-found]  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/sensor_handover_demo.py", line 27, in <module>
+    from azure.eventhub import EventData
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_static_assets (unittest.loader._FailedTest.test_static_assets)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_static_assets
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_static_assets.py", line 11, in <module>
+    from test_resident_demo_api import DemoTestCase
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_demo_api.py", line 19, in <module>
+    from zava_forward.api.resident_demo import app as demo
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/app.py", line 41, in <module>
+    from .aoai import resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_stock_reconciliation_api (unittest.loader._FailedTest.test_stock_reconciliation_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_stock_reconciliation_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_stock_reconciliation_api.py", line 15, in <module>
+    from tests.test_mvp import DATA
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_task_queue_api (unittest.loader._FailedTest.test_task_queue_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_task_queue_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_task_queue_api.py", line 20, in <module>
+    from zava_forward.api.server import App, make_handler
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_timecapture (unittest.loader._FailedTest.test_timecapture)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_timecapture
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_timecapture.py", line 12, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_ui_support (unittest.loader._FailedTest.test_ui_support)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_ui_support
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_ui_support.py", line 15, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_workbench_live_defaults (unittest.loader._FailedTest.test_workbench_live_defaults)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_workbench_live_defaults
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_workbench_live_defaults.py", line 12, in <module>
+    from checks import workbench_browser_check as workbench
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/workbench_browser_check.py", line 12, in <module>
+    from playwright.sync_api import Page, Route, sync_playwright
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_workflows (unittest.loader._FailedTest.test_workflows)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_workflows
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_workflows.py", line 10, in <module>
+    import test_mvp
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_mvp.py", line 13, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+======================================================================
+ERROR: test_workspace_paging (unittest.loader._FailedTest.test_workspace_paging)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_workspace_paging
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_workspace_paging.py", line 5, in <module>
+    from test_procurement_api import ProcurementApiFixture
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_procurement_api.py", line 25, in <module>
+    from zava_forward.api import server
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 24, in <module>
+    from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
+ModuleNotFoundError: No module named 'zava_forward.agents'
+
+
+----------------------------------------------------------------------
+Ran 80 tests in 0.062s
+
+FAILED (errors=79)
