@@ -75,6 +75,11 @@ def stop(page: Page) -> None:
     page.get_by_role("button", name="Stop Run").click()
 
 
+def wait_for_stop_saved(page: Page) -> None:
+    # The always-visible Stop help text contains "stopped", so wait for the completed response notice.
+    page.locator("#simulator-control-notice").filter(has_text="Stop saved and read back").wait_for()
+
+
 def stop_state(
     page: Page,
     control: Path,
@@ -152,7 +157,10 @@ def main() -> int:
                 assert page.get_by_role("button", name="Start Finite Run").count() == 0
                 scan(page, axe, "permitted")
                 stop(page)
-                page.get_by_text("Stopped", exact=False).first.wait_for()
+                wait_for_stop_saved(page)
+                assert page.locator("#app dl dd").first.inner_text().startswith("Stopped."), (
+                    page.inner_text("#app")
+                )
                 assert json.loads(control.read_text())["enabled"] is False
                 scan(page, axe, "stopped after stop")
                 stop_state(page, control, axe, base, "permitted stop", "Permitted", True, 1)
