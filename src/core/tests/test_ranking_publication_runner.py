@@ -722,6 +722,19 @@ class BlobArchiveRunnerTests(RunnerBase):
         self.assertEqual(self.codes(pub), ["archive_unreadable"])
         self.assertEqual(self.fake.blobs, {})
 
+    def test_structurally_invalid_200_listing_is_unreadable_and_sends_no_put(self) -> None:
+        for body in (b"<Error><Code>InternalError</Code></Error>", b"<EnumerationResults/>"):
+            self.fake.list_body = body
+            ver = self.go("verify")
+            self.assertEqual((ver["status"], ver["overdue"], ver["count"]), ("problem", None, 0))
+            pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+            self.assertEqual(self.codes(pub), ["archive_unreadable"])
+            self.assertEqual(self.fake.blobs, {})
+            self.assertEqual(self.fake.requests("PUT"), [])
+        self.fake.list_body = b"<EnumerationResults><Blobs/></EnumerationResults>"
+        empty = self.go("verify")
+        self.assertEqual((empty["overdue"], empty["count"], empty["problems"]), (True, 0, []))
+
     def test_cli_blob_selection_requires_configuration_and_excludes_a_folder(self) -> None:
         base = ["--today", TODAY]
         with patch.dict(os.environ, {}, clear=True):

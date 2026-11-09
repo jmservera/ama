@@ -52,6 +52,30 @@ def _header(headers: Mapping[str, str], name: str) -> str | None:
     return None
 
 
+def _parse_listing(body: bytes) -> tuple[list[str], str]:
+    """Names and next marker of one List Blobs page; any other structure is unreadable."""
+    unreadable = "ranking archive listing was unreadable"
+    bad = False
+    try:
+        root = ET.fromstring(body)
+    except (ET.ParseError, LookupError, ValueError):
+        bad = True
+    if bad or root.tag != "EnumerationResults":
+        raise BlobArchiveError(unreadable)
+    blobs = root.findall("Blobs")
+    if len(blobs) != 1:
+        raise BlobArchiveError(unreadable)
+    names: list[str] = []
+    for blob in blobs[0]:
+        entry = blob.findall("Name") if blob.tag == "Blob" else []
+        if len(entry) != 1 or len(entry[0]) or not (entry[0].text or "").strip():
+            raise BlobArchiveError(unreadable)
+        name = entry[0].text or ""
+        if name.startswith("ranking-") and name.endswith(".json"):
+            names.append(name)
+    return names, (root.findtext("NextMarker") or "").strip()
+
+
 class BlobRankingArchive:
     def __init__(
         self,
@@ -154,19 +178,8 @@ class BlobRankingArchive:
             status, _, body = self._send("GET", url, {}, None, "listing")
             if status != 200:
                 raise BlobArchiveError(f"ranking archive listing refused (HTTP {status})")
-            bad = False
-            try:
-                root = ET.fromstring(body)
-            except ET.ParseError:
-                bad = True
-            if bad:
-                raise BlobArchiveError("ranking archive listing was unreadable")
-            found += [
-                n.text
-                for n in root.iter("Name")
-                if n.text and n.text.startswith("ranking-") and n.text.endswith(".json")
-            ]
-            marker = (root.findtext("NextMarker") or "").strip()
+            page, marker = _parse_listing(body)
+            found += page
             if not marker:
                 return sorted(found)
         raise BlobArchiveError("ranking archive listing did not finish")

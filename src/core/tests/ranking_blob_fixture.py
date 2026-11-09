@@ -23,6 +23,7 @@ class FakeBlobContainer:
         self.put_faults = []
         self.get_faults = {}
         self.list_status = 200
+        self.list_body = None
         self.page_size = page_size
         self.mixed_case = mixed_case
         self.lock = threading.Lock()
@@ -90,6 +91,8 @@ class FakeBlobContainer:
     def _list(self, q):
         if self.list_status != 200:
             return self.list_status, {}, b""
+        if self.list_body is not None:
+            return 200, {}, self.list_body
         prefix, marker = q.get("prefix", [""])[0], q.get("marker", [""])[0]
         with self.lock:
             names = sorted(n for n in self.blobs if n.startswith(prefix))

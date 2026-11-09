@@ -344,6 +344,64 @@ class VerifyTests(unittest.TestCase):
         with self.assertRaises(OSError):
             rp.overdue(self.archive, "2026-10-04")
 
+    def test_structurally_invalid_200_listing_is_an_error_never_an_empty_archive(self):
+        ok = "ranking-1.0.0-2026-10-01-aaaaaaaaaaaa.json"
+
+        def page(inner):
+            return f"<EnumerationResults>{inner}</EnumerationResults>".encode()
+
+        def blob(inner):
+            return page(f"<Blobs><Blob>{inner}</Blob></Blobs>")
+
+        bodies = {
+            "error root": b"<Error><Code>InternalError</Code></Error>",
+            "bare root": b"<EnumerationResults/>",
+            "wrong root": b"<Other><Blobs/></Other>",
+            "nested blobs": page("<X><Blobs/></X>"),
+            "two blobs": page("<Blobs/><Blobs/>"),
+            "stray name only": page(f"<Name>{ok}</Name>"),
+            "blob without name": blob(""),
+            "blank name": blob("<Name> </Name>"),
+            "empty name": blob("<Name/>"),
+            "deep name": blob(f"<P><Name>{ok}</Name></P>"),
+            "two names": blob(f"<Name>{ok}</Name><Name>{ok}</Name>"),
+            "name with child": blob(f"<Name>{ok}<Other/></Name>"),
+            "foreign child of blobs": page(f"<Blobs><Item><Name>{ok}</Name></Item></Blobs>"),
+            "unsupported encoding": b'<?xml version="1.0" encoding="x-unknown"?><A><Blobs/></A>',
+            "not xml": b"",
+        }
+        for label, body in bodies.items():
+            with self.subTest(label):
+                self.fake.list_body = body
+                for call in (
+                    self.archive.names,
+                    lambda: rp.verify(self.archive),
+                    lambda: rp.overdue(self.archive, "2026-10-04"),
+                ):
+                    with self.assertRaises(rab.BlobArchiveError) as ctx:
+                        call()
+                    self.assertEqual(str(ctx.exception), "ranking archive listing was unreadable")
+                    assert_clean(self, repr(ctx.exception))
+
+    def test_valid_empty_and_ordinary_listings_are_still_accepted(self):
+        ok = "ranking-1.0.0-2026-10-01-aaaaaaaaaaaa.json"
+        attrs = 'ServiceEndpoint="https://x/" ContainerName="c"'
+        for body in (
+            f"<EnumerationResults {attrs}><Blobs/><NextMarker/></EnumerationResults>",
+            f"<EnumerationResults {attrs}><Blobs></Blobs></EnumerationResults>",
+            f"<EnumerationResults {attrs}><Blobs><Blob><Name>notes.txt</Name></Blob></Blobs>"
+            "<NextMarker> </NextMarker></EnumerationResults>",
+        ):
+            self.fake.list_body = body.encode()
+            self.assertEqual(self.archive.names(), [])
+        self.fake.list_body = (
+            f"<EnumerationResults {attrs}><Blobs><Blob><Name>{ok}</Name><Properties><Name>x</Name>"
+            f"</Properties></Blob></Blobs><Name>stray</Name></EnumerationResults>"
+        ).encode()
+        self.assertEqual(self.archive.names(), [ok])
+        self.fake.list_body = None
+        self.assertEqual(rp.verify(self.archive)["count"], 3)
+
     def test_unreadable_record_is_a_problem_not_a_pass(self):
         name = sorted(self.fake.blobs)[0]
         self.fake.get_faults[name] = 503
