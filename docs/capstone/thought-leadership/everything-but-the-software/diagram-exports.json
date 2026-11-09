@@ -48,6 +48,28 @@
       "width": 1240,
       "height": 1080,
       "elements": 73
+    },
+    {
+      "stem": "fig-runtime-boundaries",
+      "source_sha256": "60d6fe84ee15930ce2fe80b59e8d540f1372ec6c2c8a518e09a53db62182587f",
+      "svg_sha256": "90eefa122bea04e67371ff94912351c822d97c82300867c0adde30c7f76796b7",
+      "png_sha256": "f9d4a5c30cbd4617cf4f1a6ab995db678f84771e52e7091226683adeac4f5798",
+      "width": 1500,
+      "height": 1530,
+      "elements": 57,
+      "renderer": "@excalidraw/excalidraw 0.18.1",
+      "browser": "141.0.7390.37",
+      "png_scale": 3,
+      "export": "Native offline SVG and 3x PNG; Arial text and arrows remain editable in the source.",
+      "generator": "anc/runtime_boundaries.mjs",
+      "source_qualification": {
+        "repository": "jmservera/ama-thought-mve",
+        "commit": "b7973e200a6edbb1d19355badae3b7e03a066b09",
+        "basis": "Owner-provided conceptual flow at this pin; source verification delegated separately.",
+        "observed_execution": false,
+        "private_data_accessed": false
+      },
+      "caption": "Conceptual, source-described development and post-run evaluation boundaries. Host-side AI transport remains outside isolated execution; development uses writable state-replay workspaces, while replay uses a read-only snapshot and the remote blind judge has no tools or repository access. Replay paths are not observed experiment execution."
     }
   ]
 }

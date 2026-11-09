@@ -1,0 +1,285 @@
+{
+  "schema": "ZAVA_ARCHITECTURE_DERIVATIVE_VALIDATION_V1",
+  "date": "2026-11-08",
+  "source_basis_head": "b671116d571b76ebbbc9e277a791e67f781609cd",
+  "source_basis": "Authoring-start checkout; embedded source-file hashes identify actual inputs",
+  "tests": {
+    "command": "TMPDIR=\"$PWD/.zf-render-runtime\" EXCALIDRAW_BROWSER_PATH=/home/jmservera/.cache/ms-playwright/chromium-1194/chrome-linux/chrome node --test --test-reporter=spec docs/capstone/source/diagrams/architecture/test-architecture.mjs docs/capstone/source/diagrams/architecture/test-geometry.mjs",
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0
+  },
+  "generator_checks": [
+    "node docs/capstone/source/diagrams/architecture/build-architecture.mjs --check",
+    "node docs/architecture/update-architecture.mjs --check"
+  ],
+  "renderer": {
+    "tool": "Excalidraw CLI 0.3.0",
+    "browser": "Existing Chromium 1194",
+    "mode": "local free render; --fonts-url none; no account or upload",
+    "scale": 1.5,
+    "review_staging": ".copilot-tracking/architecture-diagrams/2026-11-08/zava-forward",
+    "full_reference_export": "export-reference.mjs selects the complete same-scene reference, hides editor frame chrome and omits the duplicated deployment projection; no independent model"
+  },
+  "geometry": {
+    "canvas_overflows": 0,
+    "node_text_overflows": 0,
+    "browser_font_overflows": 0,
+    "new_arrow_label_or_node_crossings": 0,
+    "all_arrow_bindings": "valid and reciprocal",
+    "embedded_icons": "original bytes, aspect ratios and crops preserved",
+    "main_cxo_min_native_font_px": 26,
+    "main_deployment_min_native_font_px": 34,
+    "main_cxo_projected_min_pt": 12.002823529411767,
+    "main_deployment_projected_min_pt": 12.135384615384615
+  },
+  "visual_review": {
+    "native_png_views": 6,
+    "result": "Inspected locally; no clipping, label crossings, missing arrow paths or unreadable primary service text",
+    "core_detail": "Retained detailed controls direct readers to full-size editable map and main slide 13"
+  },
+  "limits": [
+    "Derivative/source validation only; not independent exact-head review, hosted CI, human acceptance or the final RPI publication receipt",
+    "Averages persistence/materialization and sensor-to-Quality-Verification linkage remain gated targets; current exercise means are computed on read",
+    "Resident showcase SQL is independently supplied; shared-case external identity is a gated target and optional public Sweden Central model is outside core",
+    "No live deployment, credentials, private dataset, runtime change, infrastructure adoption or native editor drag roundtrip was performed",
+    "Retained-analysis/comparison functions do not establish a served API analysis endpoint, scheduler or current Workbench aggregate integration"
+  ],
+  "original_evidence_preserved": [
+    {
+      "path": ".copilot-tracking/architecture-diagrams/2026-10-14/zava-forward/generate.py",
+      "sha256": "febf3aaa4ca5536473e60a690515329341e8489b4457a20ef03a1b12475a70e2"
+    },
+    {
+      "path": ".copilot-tracking/architecture-diagrams/2026-10-14/zava-forward/validate.py",
+      "sha256": "d07363e63dede100df82efdd7498f274b04c063a9f116da5cba55bd28d2f9122"
+    },
+    {
+      "path": ".copilot-tracking/architecture-diagrams/2026-10-14/zava-forward/validation.md",
+      "sha256": "0a5d779f93dc69ee246254b8a25c9d93270c86b4c9ff6a5f6ab91b0aa665f309"
+    }
+  ],
+  "scripts": [
+    {
+      "path": "docs/architecture/update-architecture.mjs",
+      "sha256": "cd16cc7bfc52c819a808d88983299a16d2b0d9b02b2e60975c1b54b6fa3f77b8"
+    },
+    {
+      "path": "docs/architecture/annotate-previews.mjs",
+      "sha256": "8a52d4c997e748457fe74fbf109d5efaa31e64271d6dbf7fcaee7317a8c44e3c"
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/build-architecture.mjs",
+      "sha256": "d2456d93b77962389c6028b4aa4178922c373d8afd0c62abe10dadc1e4738a30"
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/export-reference.mjs",
+      "sha256": "ed4aea38e6e02e5ca8bfb0046c510582d3536abf7e8aaeeb01585b565675dd8f"
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/test-architecture.mjs",
+      "sha256": "7f8d83d52c2168e634b9c7240e4e1208d546030a719fab06cfc4e6f138b1bbe7"
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/test-geometry.mjs",
+      "sha256": "55d7eb40831a1e81942ac3ff602d9d2fcdfa4633e4c1dcf0a29e847fbbc424ac"
+    }
+  ],
+  "assets": [
+    {
+      "path": "docs/capstone/source/diagrams/architecture/cxo-architecture.excalidraw",
+      "sha256": "7e993c74aaed053994ba9b8ae42065a1f8382bae9617595df7ccd66f801c4866",
+      "bytes": 106813,
+      "elements": 56,
+      "arrows": 12,
+      "images": 0,
+      "frames": [],
+      "original_elements_preserved": null
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/cxo-architecture.svg",
+      "sha256": "8773378a8d03fba2515dc925df893120aadc7c82654570f8d34a01252782486b",
+      "bytes": 27607,
+      "dimensions": [
+        1600,
+        850
+      ]
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/cxo-architecture.png",
+      "sha256": "61ee78e3e6de60050bda65b05726c073b5f031287c1220df7ac9a3fc72e04360",
+      "bytes": 549519,
+      "dimensions": [
+        2400,
+        1275
+      ]
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/azure-architecture.excalidraw",
+      "sha256": "8a5a3a9e6de4d6b14db860fe81881060ac43b239d64a1c94ecaf67835619d3ba",
+      "bytes": 410517,
+      "elements": 208,
+      "arrows": 32,
+      "images": 14,
+      "frames": [
+        {
+          "id": "core",
+          "bounds": [
+            0,
+            0,
+            2400,
+            810
+          ]
+        },
+        {
+          "id": "deployment",
+          "bounds": [
+            0,
+            2120,
+            2400,
+            1170
+          ]
+        }
+      ],
+      "original_elements_preserved": null
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/azure-architecture.svg",
+      "sha256": "c4dbe20f02eaa59794b92f62718d566ce503a18114141f0c351c117f61187d03",
+      "bytes": 80880,
+      "dimensions": [
+        2400,
+        2060
+      ]
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/azure-architecture.png",
+      "sha256": "500444a888af2c53f3a9898a516c8b01cd80a13237e625bfd39dd4a96b89abff",
+      "bytes": 1585424,
+      "dimensions": [
+        3600,
+        3090
+      ]
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/azure-core.svg",
+      "sha256": "2fbb5e3126e0a69f83616f43fd29478f73d3dc0cf71a47ea02686d665307f28f",
+      "bytes": 44924,
+      "dimensions": [
+        2400,
+        810
+      ]
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/azure-core.png",
+      "sha256": "75f6b25a5d456e62234dbc0fb792d5177c94735fab3f13f74984ee28944c2e80",
+      "bytes": 588621,
+      "dimensions": [
+        3600,
+        1215
+      ]
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/azure-deployment.svg",
+      "sha256": "d133656505d0b7043f4eb8867f3e6908daa2f73c939d91b1b5b12ff05270e28e",
+      "bytes": 34987,
+      "dimensions": [
+        2400,
+        1170
+      ]
+    },
+    {
+      "path": "docs/capstone/source/diagrams/architecture/azure-deployment.png",
+      "sha256": "b88da1217e3db7cb0be4edb88c502de2aa35fd1c992bd25d807de927d0c3cee6",
+      "bytes": 1029577,
+      "dimensions": [
+        3600,
+        1755
+      ]
+    },
+    {
+      "path": "docs/architecture/zava-forward-executive-architecture.excalidraw",
+      "sha256": "c949a16c42f35e1d6b3be6d21044763c180cf7a1383defa9ef3625f4e174bcd4",
+      "bytes": 172152,
+      "elements": 95,
+      "arrows": 15,
+      "images": 5,
+      "frames": [],
+      "original_elements_preserved": 57
+    },
+    {
+      "path": "docs/architecture/zava-forward-executive-architecture.svg",
+      "sha256": "233c8654caf1166706c1a0a8a1a5b4adaf0b2869fb57adbf7a455ad548ffe236",
+      "bytes": 107832,
+      "dimensions": [
+        1920,
+        2010
+      ]
+    },
+    {
+      "path": "docs/architecture/zava-forward-executive-architecture.png",
+      "sha256": "ca087e8717c363955e72920d91f69eb16b14be79f18a3f69f1246786c401a459",
+      "bytes": 1152285,
+      "dimensions": [
+        2880,
+        3015
+      ]
+    },
+    {
+      "path": "docs/architecture/zava-forward-technical-architecture.excalidraw",
+      "sha256": "a1619d95d5e3586a0cae17d941d0a1a810c2579ab8d967028cfdcc27d2d635d7",
+      "bytes": 431877,
+      "elements": 236,
+      "arrows": 37,
+      "images": 26,
+      "frames": [],
+      "original_elements_preserved": 194
+    },
+    {
+      "path": "docs/architecture/zava-forward-technical-architecture.svg",
+      "sha256": "384eff66d01057b65631a36b611f3456d5a55956eb502dd75ebb8e16f6887e43",
+      "bytes": 292619,
+      "dimensions": [
+        2850,
+        4100
+      ]
+    },
+    {
+      "path": "docs/architecture/zava-forward-technical-architecture.png",
+      "sha256": "25d1006e930a8ce847c7def178cbd250ef7beb44ac74f06654aee5645e009c1b",
+      "bytes": 3169749,
+      "dimensions": [
+        4275,
+        6150
+      ]
+    }
+  ],
+  "iteration_findings": [
+    {
+      "finding": "Initial font-width and wire-crossing checks reported bounded authoring failures",
+      "resolution": "Labels shortened and routes moved into gutters; final browser/geometry suite passes"
+    },
+    {
+      "finding": "CLI SVG exports omitted accessible title/description",
+      "resolution": "Annotation restores image semantics and exact native hash without changing pixels; covered by regression test"
+    },
+    {
+      "finding": "Visual review required Quality helper and proposed sensor linkage to be visible",
+      "resolution": "Quality appears as one of five helpers; sensor-to-Quality linkage remains a visible gated TARGET"
+    },
+    {
+      "finding": "Blanket read-only service label could conflict with telemetry SQL append",
+      "resolution": "Only analysis is labelled read-only; finite intake append and owned DQ remain separate"
+    },
+    {
+      "finding": "Jobs-to-Blob arrow could conflate separate token storage with main evidence Blob",
+      "resolution": "Separate token Blob is explicit; the main-Blob arrow denotes digest archive only"
+    }
+  ],
+  "documentation": {
+    "local_links_passed": 152,
+    "failed": 0,
+    "git_diff_whitespace": "passed",
+    "original_october_evidence": "unchanged"
+  }
+}
