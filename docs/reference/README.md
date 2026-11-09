@@ -1245,3 +1245,8 @@ A dated current-main preparation note in the same section records that `main` `3
 now includes the merged #1240 lifecycle integration, which this historical SQL-wave record
 (observed source `8d6f029c`) did not retest or accept, and holds the next lifecycle-wave
 checkpoint trigger and closure hold.
+A dated #1292 original-load note in the same pack records a second unchanged-source
+diagnosis: 0 of 2 paired selections reproduced the failure, cause unknown, with four
+bounded qualifications (recorder limits, unittest versus process timings, a 26-member
+log manifest, and the observer-pair design). Counts are not aggregated with the earlier
+0 of 6 or the original single failure; all #1292 criteria stay open and E5 is not authorized.
