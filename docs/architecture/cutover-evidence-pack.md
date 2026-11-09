@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-11-08
+ms.date: 2026-11-09
 ms.topic: reference
 ---
 
@@ -5247,3 +5247,86 @@ The C1 research record states "Written 2026-11-08T20:10Z", but Git records its c
 ### Recommendation and resume conditions
 
 Proposed bounded CONTINUE of the existing employee demo and of the independent source corrections for #184 (cohort, receiver and stop contract) and #1288 (sensor provenance, latest capture, honest autonomous flags, withdrawal-safe projections). Only sensor-grounded Quality acceptance needs its own corrected source, integration, separately admitted activation and observed journey. Other gates are each issue's own and are not tied to IoT: #229 its accessibility (WCAG) criterion; #159 screen-reader and turn-accounting criteria; #891 its per-call token, cost, privacy, retention and refusal conjunction (criterion 2); #149, #157 and #81 their epic checkpoints and named-human gates; #440 its triage and independent-review criteria. Named Legal, DPO, Finance, RAI and control-owner decisions stay with their owners. Independent lanes continue, and no criterion is ticked. Pivot, deferral, relaxation and named approval cannot be granted here. Nothing is ticked or closed.
+
+## Demo stabilization current-main checkpoint (2026-11-09, Refs #440 #123 #184 #136)
+
+DRAFT, not approved. This documentation-only record pins current `main`, qualifies the governing documents, reads the demo path hop by hop from source, classifies the evidence and records three tiny current observations. It follows PR 1222 (merged 2026-11-09) and PR 1304 (merged 2026-11-09) and the #440 comment `6740015794` (2026-11-09T12:25:55Z). It changes no source, test, coordinator, workflow, infrastructure or approved document, and it writes to no issue, board, pull request or remote. The earlier sections above, every historical adverse record or grade and every previous acceptance tick are unchanged.
+
+### Identities and triggers
+
+| Item | Pinned value (read 2026-11-09) |
+| --- | --- |
+| `main` commit | `df8e858b2150198e5e22c73d224a0d3592c73daa`, tree `af1e9ea329f7ff5116c1279ab780ef649b1593cd` (rubric-bot commit; its only difference from the PR 1304 squash `23e944c1fccf0c4578e7beb0740ddd55c3f935b2` is `.github/rubric/scores/latest.json`) |
+| PR 1222 | merged `d4d6827fe60be651cd922ab9656688c18c978e1d` at 09:12:23Z, head `5ecc1fe9dd214b8f2b8080f680f3f9d6d03842e5`; constructed-cohort paired-equity diagnostic only, `fairness_evidence=False`, `activation_allowed=False` per its body |
+| PR 1304 | merged `23e944c1fccf0c4578e7beb0740ddd55c3f935b2` at 12:19:47Z, head `68fc3e61b187175e87bedd412a2b8d8c261be435`, tree `39e2a3f4b7599844e45fe7c441910ea6ff0d08f6`; 19 hosted check entries returned, counted from the status rollup and not individually re-read |
+| Business requirements document | version 0.21.0, status draft, blob `34d88395de861e9799eb9e24121a21c92c7a5adc` |
+| Product requirements document | version 0.21.0, status in-review, blob `c788b917bafaede215f326f0efc71e071a687f1c` |
+| Case study and addendum | original `0aec2d8070117a647574b1fadc8cfbdd2af68598` (unchanged); addendum `28c1924285eed255e53c1e359e0ad98eedab1d22` (`ms.date` 2026-11-08) |
+| Decision records | 0001 Proposed (`d42fa5c4`); 0002 Proposed with the owner-accepted staff identity decision of 2026-10-24 (`cbe21530`); 0003 Accepted with amendment 2026-10-15, Basic IoT Hub (`d6064537`); 0004 Accepted 2026-10-15 (`9406c2e7`); 0005 accepted for synthetic development only (`4d610335`); 0006 Accepted 2026-10-15 (`956da1a3`); 0007 Proposed, not accepted (`abb21088`) |
+
+The local read-only ref `origin/pr1304` (`refs/pull/1304/head`) was fetched only to compare heads. The dirty primary checkout was not used.
+
+### Requirement trace (document-qualified)
+
+BRD and PRD functional requirement numbers collide, so each trace names its document. BRD FR-050 is opt-in staff memory and PRD FR-048 is offered against confirmed appointments; neither is sensor work.
+
+| Concern | BRD (draft) | PRD (in-review) | Decision record |
+| --- | --- | --- | --- |
+| Consented in-use monitoring retained with source, mapping, calibration and time | FR-048, AC-090 | FR-050 with AC-066 to AC-068 | ADR 0003 decision 6 (IoT Hub is the ingestion product) |
+| Sensor data or an absent flag is not acceptance evidence | RULE-014 | AC-067 (deterministic review signal only creates a human review task) | ADR 0005 synthetic development only |
+| Real AI per record, proposed against reviewed, case access independent of model | FR-044, AC-084 | FR-044 | ADR 0004 option C staged (employee chat, not sensor Quality review) |
+
+### Demo path read from source on `main`
+
+| Hop | What main implements (source) | Not on main |
+| --- | --- | --- |
+| Simulator | One synthetic reading per home per 5-minute UTC slot, `live-sim-reading-v1`, `source_type=SYNTHETIC`, no AI. Control file `live-sim-control-v1` with owner, approval reference, `enabled`, hard `expires_at` (at most 14 days from start) and cohort 1 to 100; the Hub sink refuses without it and fails closed on stop, expiry or an unreadable file (`src/api/README.md:2025-2135`, `src/api/src/zava_forward/api/live_control.py:28-100`) | Deployed jobs, certificates, route, grants and quota are not verified; the authored Bicep jobs state they are not deployed (`infra/live-simulator-job.bicep`, `infra/live-receiver-job.bicep:34-36`: immutable `@sha256` image, scope guard, `routingReady` false by default) |
+| Persistence | Receiver admission of `live-sim-reading-v1` in a 16-field closed shape (`src/core/src/zava_forward/core/sensor_consumer.py:431`), mapping interval, consent and window checks (`:603-611`), `observed_series` keeping the indoor `reading-v2` contract and excluding live rows (`:734`), and a sensor-only SQL connector with no DDL, seed or case write (`sensor_sql.py`) | A live end-to-end ingestion observation; live rows are not calibrated indoor evidence |
+| Employee UI | None. A textual search of `src/api` finds sensor code only in control, ingestion, simulator, receiver, handover and the resident demo script, and no employee route, template or script reads retained live readings | The retained-value employee view (owner #1288, unmerged). The textual search cannot exclude a differently named path |
+| Actual Quality model | The `quality-evidence` source is built from Quality records and checklists only, with no sensor key (`src/core/src/zava_forward/core/assistants.py:156-160`); the assistant is proposal-only (`:47-56`); `src/core/README.md:1136-1178` states no new sensor AI task is authorised | Any sensor input to the real model (#1288) |
+| Attributed flag | None for sensors. The only sensor-derived human task is the deterministic review signal of PRD AC-067, which is not model output | A visible unapproved flag naming model, version and time (#1288) |
+| Auth, tenant, admin | Staff access derives from an Entra principal in the configured tenant with assigned application roles (PRD FR-003; ADR 0002 owner decision). Authentication trusts the ingress-provided `X-MS-CLIENT-PRINCIPAL` header and validates no token signature (`src/api/src/zava_forward/api/auth.py:7-14`), so it is safe only when the service is reachable solely through the platform ingress; that deployment prerequisite is not observed here. Simulator administration is Azure RBAC on the share and job; the receiver and simulator use separate identities (`infra/live-receiver-job.bicep:9-10`) | The in-app simulator admin screen (`src/api/README.md:2107-2110`, owner #189) |
+| Manual, failure, consent, approval | Stdout dry-run sink; fixed-code errors with no traceback or driver text; a missing certificate is non-retryable; stale, missing and unavailable states are explicit; resident consent is checked at admission; Quality acceptance stays a named human decision (#91 closed 2026-10-17) | Named human approvals for production, legal, security and cost remain with their owners |
+| Package identity | The receiver image digest requirement and the case and measure identity on Quality records | Work-package identity is unknown: an image digest is not work-package identity and that path was not examined here |
+
+### Evidence by class
+
+| Class | Items |
+| --- | --- |
+| Local observed (this checkpoint) | Git identities and source equivalence; document blobs and statuses; the source reading above; the three test runs below |
+| Local observed, historical | The retained 184 results below (source-equivalent, environment not re-proved) |
+| Azure observed | None for sensors. The single generic employee chat model answer of 2026-11-08 (PR 1290) is not sensor or Quality evidence |
+| Implemented, unverified | Simulator, control, receiver jobs, admission against a real Hub, sensor-only SQL grants, deployed jobs, resident own-home view freshness |
+| Deferred | Production compliance, legal, security hardening, named approvals, live finite-cohort admission and model use |
+| Blocked | Employee retained-value UI and Quality model input (#1288, unmerged), admin screen (#189), live transport prerequisites (#185, #140, #110) |
+| Unknown | Deployment parity with main; certificates, route, quota and cost headroom; calibration and statistical validity; authentication of generator provenance; work-package identity |
+
+### Retained 184 evidence and Git equivalence
+
+`git diff --stat 68fc3e61b df8e858b2 -- src infra tools .github/workflows pyproject.toml` is empty, so the source tested in the 2026-11-09 #184 validation (head `68fc3e61`) is byte-identical to `main` for those paths. That proves which source ran; it does not make the logs, image or environment current. The following are therefore reused only as historical observed and are not rerun or relabelled here: owned disposable SQL default 70 and analysis 10 with zero skips; Core `sensor*` 192 OK with 11 offline opt-in skips; API `live*` 66 with 2 SQL-need skips, `iot*` 49 and `sensor*` 103; paired-equity 23; API mypy 0 errors in 199 files; Ruff exit 0; tools checks 102. Limits carried forward: the SQL image tag is mutable and only a contemporaneous digest and package hashes were recorded (not a hermetic attestation); some earlier piped producer exits were not individually captured; there is no executed-selector import trace; the original failing logs were overwritten by reruns; one send-rate timing assertion failed once then passed with the cause unproven; the original mypy 53 errors in 48 files came from a missing playwright 1.64.0; the carried Low items (exact-grant receiver main, rejected data quality, replay SQL coverage) remain open. Mock, skip and merge counts are not live acceptance.
+
+### Current observations (this checkpoint)
+
+Commands ran at `df8e858b2` on Python 3.12.3 in an isolated virtual environment with editable installs of this worktree's `src/core`, `src/agents` and `src/api`, because the existing editable installs pointed at another checkout. Logs are outside the repository in `/home/azureuser/source/ama-demo-wt/logs-440-1109/` and are not committed. Two first attempts failed on harness imports only (producer exit 1: `core-sensor-consumer-live.log` sha256 prefix `d008abcd`, missing `sensor_consumer_fixture`; `api-assistants.log` prefix `f64dd5cf`, missing `test_mvp`) because the tests directory was not on `PYTHONPATH`. They are retained unchanged and are not product failures.
+
+| Command (working directory) | Producer exit | Result |
+| --- | --- | --- |
+| `python -m unittest -v tests.test_live_control tests.test_live_simulator` (`src/api`, `PYTHONPATH=../core/tests:../agents/tests`), log prefix `07930eca` | 0 | 64 tests OK, 0 skips |
+| `PYTHONPATH=tests python -m unittest -v tests.test_sensor_consumer_live` (`src/core`), log prefix `c8afc350` | 0 | 10 tests OK, 0 skips |
+| `PYTHONPATH=../core/tests:../agents/tests:tests python -m unittest -v tests.test_assistants` (`src/api`), log prefix `43a33be0` | 0 | 120 tests, 58 skipped ("needs disposable SQL Server"), 62 ran OK |
+
+These runs show control fail-closed logic, simulator mechanics, live-envelope admission on fixtures and assistant contract mechanics at this exact tree. They do not show SQL behavior (not run, to avoid the resource owned by #1292), a live Hub send, the employee UI, a real model call or any acceptance. The 58 skipped assistant tests are not SQL evidence. No sensor Quality test exists because no such path exists. No full gate, browser, Azure, model or job run was made.
+
+### Exclusions
+
+Unmerged and excluded functionality, reported by the coordinator from the 2026-11-09 briefs and not observed here: #1288 E3 (from `89a7a45b`), #1292 E1 (from `384d149a`), #144 new head (from `d2d95606`), #189, #1295 (published head `0bcf55da`) and #1296 (frozen `52e44a70`). The #1296 High-profile validation outcome REVISE, eleven of 27 matches, is an adverse result for an unmerged candidate policy. It is not a current-main pass, not native validation and not a reason to change the coordinator in this task. MainIoT PR 1304 source is implemented; it is not an accepted, fully actual-model-grounded demo.
+
+### Findings, owners and gates
+
+No new defect was reproduced, so no issue is proposed and no code fix is made. If one were confirmed, this record would need its reproduction, severity, minimum fix, test and requirement dependencies. The #184 body text reported stale by the audit ("not started", "no Hub module") was not re-verified here. Gaps are assigned to existing owners and not duplicated: persistence to employee UI to Quality model to attributed flag (#1288); admin surface (#189); provisioning and credentials (#185, #140); live receiver ingestion (#110, #188); persistence ordering (#1292, #81 via PR 1240); worker and queue (#144 via PR 1141); skip contract (#1297); per-call chat activation (#891); architecture deck (#1295). Closure of #184, #185, #188, #110, #189 and #136, the parent #123, and the #440 triage and HVE Builder behavior-change independent-review criteria stay unproven. Nothing is ticked or closed, and the previous #440 first-checkpoint tick is preserved.
+
+### Recommendation and resume conditions
+
+Proposed bounded CONTINUE through the existing owners and HOLD on every closure claim. No pivot, deferral or relaxation is inferred or granted. The lanes #189 source, #1292, #144, #1295 and #1296 continue independently. Dependent expansion of the Quality sensor path resumes only when all of these hold: (1) #1288 is merged on `main` and independently assessed at its exact head; (2) the dedicated synthetic source is authenticated without inferring from `SYN-` ids or labels; (3) finite admission names the owner, cohort of at most 100, duration, call and token ceilings and cost headroom; (4) certificates, route and grants are verified by an authorised operator; (5) one retained observation shows identical reading ids and values in the employee view and snapshot, a privacy-compatible traceable link to the provider request (no raw values in logs, per PRD AC-067), and a visible unapproved flag with model, version and time.
+
+Limits: this is a single-session, authored record with no independent exact-head review, no hosted CI observation for the commit that carries it and no live check. Coordinator-reported items are labelled as such.
