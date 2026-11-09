@@ -21,7 +21,7 @@ from zava_forward.core import ranking_publication as rp
 AS_OF = "2026-10-09"
 
 
-def snap():
+def snap() -> dict[str, Any]:
     a, b = case("ZF-A"), case("ZF-B")
     b["days_in_stage"] = 50
     return ranking.snapshot([a, b], ranking.POLICY_V1, AS_OF)

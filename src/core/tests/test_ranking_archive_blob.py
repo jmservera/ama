@@ -10,6 +10,7 @@ import json
 import logging
 import threading
 import unittest
+from collections.abc import Mapping
 
 from ranking_blob_fixture import SAS, URL, FakeBlobContainer
 from test_ranking_publication import AS_OF, snap
@@ -21,23 +22,23 @@ CONTAINER = "ranking-archive"
 SECRETS = ("SENTINEL-SAS-SECRET", "SENTINEL-TOKEN", "acct.blob.core.windows.net", CONTAINER)
 
 
-def opened(fake):
+def opened(fake: FakeBlobContainer) -> rab.BlobRankingArchive:
     return rab.BlobRankingArchive(URL, CONTAINER, sas=SAS, transport=fake, env={})
 
 
-def assert_clean(test, text):
+def assert_clean(test: unittest.TestCase, text: str) -> None:
     for secret in SECRETS:
         test.assertNotIn(secret, text)
 
 
 class ConditionalCreateTests(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.fake = FakeBlobContainer()
         self.archive = opened(self.fake)
         self.snap = snap()
         self.name = rp._name(self.snap)
 
-    def test_first_publication_is_one_conditional_create_with_verifiable_metadata(self):
+    def test_first_publication_is_one_conditional_create_with_verifiable_metadata(self) -> None:
         out = rp.publish(self.snap, self.archive, "2026-10-10")
         self.assertEqual(
             (out["written"], out["published_on"], out["path"]), (True, "2026-10-10", self.name)
@@ -60,7 +61,7 @@ class ConditionalCreateTests(unittest.TestCase):
         )
         self.assertEqual({c[0] for c in self.fake.calls}, {"PUT"})
 
-    def test_repeat_is_idempotent_and_keeps_the_original_date_and_bytes(self):
+    def test_repeat_is_idempotent_and_keeps_the_original_date_and_bytes(self) -> None:
         rp.publish(self.snap, self.archive, "2026-10-10")
         before = dict(self.fake.blobs)
         again = rp.publish(self.snap, self.archive, "2026-10-20")
@@ -68,7 +69,7 @@ class ConditionalCreateTests(unittest.TestCase):
         self.assertEqual(self.fake.blobs, before)
         self.assertEqual({m for m, *_ in self.fake.calls}, {"PUT", "GET"})
 
-    def test_changed_input_is_a_new_record_never_an_overwrite(self):
+    def test_changed_input_is_a_new_record_never_an_overwrite(self) -> None:
         rp.publish(self.snap, self.archive, "2026-10-10")
         first = dict(self.fake.blobs)
         other = ranking.snapshot([], ranking.POLICY_V1, AS_OF)
@@ -76,12 +77,12 @@ class ConditionalCreateTests(unittest.TestCase):
         self.assertEqual(len(self.fake.blobs), 2)
         self.assertEqual({k: self.fake.blobs[k] for k in first}, first)
 
-    def test_concurrent_writers_keep_one_record_and_one_reports_it(self):
+    def test_concurrent_writers_keep_one_record_and_one_reports_it(self) -> None:
         barrier = threading.Barrier(2)
         self.fake.put_gate = lambda: barrier.wait(10)
         results, errors = [], []
 
-        def run(day):
+        def run(day: str) -> None:
             try:
                 results.append(rp.publish(self.snap, self.archive, day))
             except Exception as e:  # noqa: BLE001 - asserted below
@@ -100,7 +101,9 @@ class ConditionalCreateTests(unittest.TestCase):
             {json.loads(self.fake.blobs[self.name])["published_on"]},
         )
 
-    def test_existing_record_that_is_damaged_different_or_unverifiable_is_refused_untouched(self):
+    def test_existing_record_that_is_damaged_different_or_unverifiable_is_refused_untouched(
+        self,
+    ) -> None:
         rp.publish(self.snap, self.archive, "2026-10-10")
         good = self.fake.blobs[self.name]
         meta = dict(self.fake.meta[self.name])
@@ -128,8 +131,8 @@ class ConditionalCreateTests(unittest.TestCase):
                 assert_clean(self, str(ctx.exception))
                 self.assertEqual(self.fake.blobs[self.name], raw)
 
-    def test_conflict_classification(self):
-        for fault, expect in [
+    def test_conflict_classification(self) -> None:
+        cases: list[tuple[int | tuple[int, str], str]] = [
             ((409, "BlobAlreadyExists"), "exists"),
             (409, "exists"),
             (412, "exists"),
@@ -137,7 +140,8 @@ class ConditionalCreateTests(unittest.TestCase):
             (403, "refused"),
             (404, "refused"),
             (400, "refused"),
-        ]:
+        ]
+        for fault, expect in cases:
             with self.subTest(fault=fault):
                 self.fake.blobs.clear()
                 self.fake.put_faults = [fault]
@@ -160,7 +164,7 @@ class ConditionalCreateTests(unittest.TestCase):
                     assert_clean(self, str(ctx.exception))
                     self.assertNotIsInstance(ctx.exception, rp.DurabilityUnconfirmedError)
 
-    def test_exists_without_a_readable_record_is_refused_not_confirmed(self):
+    def test_exists_without_a_readable_record_is_refused_not_confirmed(self) -> None:
         self.fake.put_faults = [(409, "BlobAlreadyExists")]
         with self.assertRaises(rab.BlobArchiveError):
             rp.publish(self.snap, self.archive, "2026-10-10")
@@ -170,13 +174,13 @@ class ConditionalCreateTests(unittest.TestCase):
         with self.assertRaises(rab.BlobArchiveError):
             rp.publish(self.snap, self.archive, "2026-10-10")
 
-    def test_mixed_case_metadata_headers_verify(self):
+    def test_mixed_case_metadata_headers_verify(self) -> None:
         self.fake.mixed_case = True
         rp.publish(self.snap, self.archive, "2026-10-10")
         self.assertFalse(rp.publish(self.snap, self.archive, "2026-10-12")["written"])
         self.assertEqual(rp.verify(self.archive)["problems"], [])
 
-    def test_adapter_can_only_create_read_and_list(self):
+    def test_adapter_can_only_create_read_and_list(self) -> None:
         for forbidden in ("put", "delete", "list_ids", "get"):
             self.assertFalse(hasattr(self.archive, forbidden), forbidden)
         with self.assertRaises(ValueError):
@@ -187,13 +191,13 @@ class ConditionalCreateTests(unittest.TestCase):
 
 
 class UncertainWriteTests(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.fake = FakeBlobContainer()
         self.archive = opened(self.fake)
         self.snap = snap()
         self.name = rp._name(self.snap)
 
-    def uncertain(self, fault):
+    def uncertain(self, fault: int | str | tuple[int, str]) -> rp.DurabilityUnconfirmedError:
         self.fake.put_faults = [fault]
         with self.assertRaises(rp.DurabilityUnconfirmedError) as ctx:
             rp.publish(self.snap, self.archive, "2026-10-10")
@@ -208,18 +212,18 @@ class UncertainWriteTests(unittest.TestCase):
         self.assertEqual({m for m, *_ in self.fake.calls}, {"PUT"})
         return err
 
-    def test_lost_response_after_commit_is_unconfirmed_then_retry_reports_the_record(self):
+    def test_lost_response_after_commit_is_unconfirmed_then_retry_reports_the_record(self) -> None:
         self.uncertain("lost")
         self.assertIn(self.name, self.fake.blobs)
         retry = rp.publish(self.snap, self.archive, "2026-10-12")
         self.assertEqual((retry["written"], retry["published_on"]), (False, "2026-10-10"))
 
-    def test_failure_before_commit_leaves_nothing_and_the_retry_writes(self):
+    def test_failure_before_commit_leaves_nothing_and_the_retry_writes(self) -> None:
         self.uncertain("unreachable")
         self.assertEqual(self.fake.blobs, {})
         self.assertTrue(rp.publish(self.snap, self.archive, "2026-10-12")["written"])
 
-    def test_server_error_timeout_and_busy_are_unconfirmed_not_failed(self):
+    def test_server_error_timeout_and_busy_are_unconfirmed_not_failed(self) -> None:
         for status in (500, 503, 504, 408):
             with self.subTest(status):
                 self.fake.blobs.clear()
@@ -227,14 +231,16 @@ class UncertainWriteTests(unittest.TestCase):
 
     def test_a_changed_input_retry_is_a_new_record_and_the_first_attempt_stays_visible_by_hash(
         self,
-    ):
+    ) -> None:
         self.uncertain("lost")
         other = ranking.snapshot([], ranking.POLICY_V1, AS_OF)
         self.assertTrue(rp.publish(other, self.archive, "2026-10-12")["written"])
         self.assertEqual(len(self.fake.blobs), 2)
 
-    def test_authorization_failure_before_dispatch_is_a_refusal_with_nothing_sent(self):
-        def no_token(method, url, headers, body, timeout=20):
+    def test_authorization_failure_before_dispatch_is_a_refusal_with_nothing_sent(self) -> None:
+        def no_token(
+            method: str, url: str, headers: Mapping[str, str], body: bytes | None, timeout: int = 20
+        ) -> tuple[int, dict[str, str], bytes]:
             self.fake.calls.append((method, url, headers, body))
             return 500, {}, b""
 
@@ -250,7 +256,7 @@ class UncertainWriteTests(unittest.TestCase):
         assert_clean(self, str(ctx.exception))
         self.assertEqual([c for c in self.fake.calls if c[0] == "PUT"], [])
 
-    def test_managed_identity_token_is_used_and_never_logged(self):
+    def test_managed_identity_token_is_used_and_never_logged(self) -> None:
         archive = rab.BlobRankingArchive(
             URL,
             CONTAINER,
@@ -267,11 +273,11 @@ class UncertainWriteTests(unittest.TestCase):
 
 
 class ConfigurationTests(unittest.TestCase):
-    def test_unset_selector_keeps_the_local_folder_adapter(self):
+    def test_unset_selector_keeps_the_local_folder_adapter(self) -> None:
         self.assertIsNone(rab.open_ranking_archive({}))
         self.assertIsNone(rab.open_ranking_archive({"ZF_RANKING_ARCHIVE": "local"}))
 
-    def test_invalid_or_missing_configuration_refuses_without_echoing_or_sending(self):
+    def test_invalid_or_missing_configuration_refuses_without_echoing_or_sending(self) -> None:
         fake = FakeBlobContainer()
         base = {
             "ZF_RANKING_ARCHIVE": "azure-blob",
@@ -297,7 +303,7 @@ class ConfigurationTests(unittest.TestCase):
 
 
 class VerifyTests(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.fake = FakeBlobContainer(page_size=2)
         self.archive = opened(self.fake)
         self.snaps = [
@@ -307,14 +313,14 @@ class VerifyTests(unittest.TestCase):
         for i, s in enumerate(self.snaps):
             rp.publish(s, self.archive, f"2026-10-0{i + 1}")
 
-    def test_verify_pages_through_the_listing_and_reports_latest_and_overdue(self):
+    def test_verify_pages_through_the_listing_and_reports_latest_and_overdue(self) -> None:
         out = rp.verify(self.archive)
         self.assertEqual((out["count"], out["problems"], out["latest"]), (3, [], "2026-10-03"))
         self.assertGreater(len(self.fake.requests("GET")), 3)
         self.assertTrue(rp.overdue(self.archive, "2026-10-04"))
         self.assertFalse(rp.overdue(self.archive, "2026-10-03"))
 
-    def test_tampered_bytes_metadata_name_policy_and_date_are_reported(self):
+    def test_tampered_bytes_metadata_name_policy_and_date_are_reported(self) -> None:
         names = sorted(self.fake.blobs)
         raw = json.loads(self.fake.blobs[names[0]])
         self.fake.blobs[names[0]] = json.dumps({**raw, "published_on": "2026-02-31"}).encode()
@@ -325,7 +331,7 @@ class VerifyTests(unittest.TestCase):
         for p in problems:
             assert_clean(self, p)
 
-    def test_unlisted_or_foreign_names_are_ignored_and_a_misnamed_record_is_a_problem(self):
+    def test_unlisted_or_foreign_names_are_ignored_and_a_misnamed_record_is_a_problem(self) -> None:
         self.fake.blobs["notes.txt"] = b"x"
         self.fake.blobs["ranking-9.9-2026-01-01-aaaaaaaaaaaa.json"] = self.fake.blobs[
             sorted(self.fake.blobs)[0]
@@ -335,7 +341,7 @@ class VerifyTests(unittest.TestCase):
         self.assertEqual(out["count"], 4)
         self.assertEqual(len(out["problems"]), 1)
 
-    def test_unreadable_listing_is_an_error_never_an_empty_archive(self):
+    def test_unreadable_listing_is_an_error_never_an_empty_archive(self) -> None:
         self.fake.list_status = 500
         with self.assertRaises(OSError) as ctx:
             rp.verify(self.archive)
@@ -344,13 +350,13 @@ class VerifyTests(unittest.TestCase):
         with self.assertRaises(OSError):
             rp.overdue(self.archive, "2026-10-04")
 
-    def test_structurally_invalid_200_listing_is_an_error_never_an_empty_archive(self):
+    def test_structurally_invalid_200_listing_is_an_error_never_an_empty_archive(self) -> None:
         ok = "ranking-1.0.0-2026-10-01-aaaaaaaaaaaa.json"
 
-        def page(inner):
+        def page(inner: str) -> bytes:
             return f"<EnumerationResults>{inner}</EnumerationResults>".encode()
 
-        def blob(inner):
+        def blob(inner: str) -> bytes:
             return page(f"<Blobs><Blob>{inner}</Blob></Blobs>")
 
         bodies = {
@@ -383,7 +389,7 @@ class VerifyTests(unittest.TestCase):
                     self.assertEqual(str(ctx.exception), "ranking archive listing was unreadable")
                     assert_clean(self, repr(ctx.exception))
 
-    def test_valid_empty_and_ordinary_listings_are_still_accepted(self):
+    def test_valid_empty_and_ordinary_listings_are_still_accepted(self) -> None:
         ok = "ranking-1.0.0-2026-10-01-aaaaaaaaaaaa.json"
         attrs = 'ServiceEndpoint="https://x/" ContainerName="c"'
         for body in (
@@ -402,14 +408,14 @@ class VerifyTests(unittest.TestCase):
         self.fake.list_body = None
         self.assertEqual(rp.verify(self.archive)["count"], 3)
 
-    def test_unreadable_record_is_a_problem_not_a_pass(self):
+    def test_unreadable_record_is_a_problem_not_a_pass(self) -> None:
         name = sorted(self.fake.blobs)[0]
         self.fake.get_faults[name] = 503
         out = rp.verify(self.archive)
         self.assertEqual(out["count"], 3)
         self.assertEqual(len(out["problems"]), 1)
 
-    def test_no_request_leaks_the_secret_into_the_url_of_a_listing_error(self):
+    def test_no_request_leaks_the_secret_into_the_url_of_a_listing_error(self) -> None:
         self.fake.list_status = 500
         with contextlib.redirect_stderr(io.StringIO()) as err, self.assertRaises(OSError):
             rp.verify(self.archive)

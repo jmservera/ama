@@ -8,6 +8,7 @@ a paginated container listing, and injected faults. It has no delete and no over
 import json
 import threading
 import urllib.parse
+from collections.abc import Callable, Mapping
 
 from zava_forward.core.documents import DocumentStoreError
 
@@ -15,21 +16,32 @@ URL = "https://acct.blob.core.windows.net"
 SAS = "sv=2022&sig=SENTINEL-SAS-SECRET"
 
 
+Response = tuple[int, dict[str, str], bytes]
+Call = tuple[str, str, Mapping[str, str], bytes | None]
+
+
 class FakeBlobContainer:
-    def __init__(self, page_size=100, mixed_case=False):
-        self.blobs = {}
-        self.meta = {}
-        self.calls = []
-        self.put_faults = []
-        self.get_faults = {}
+    def __init__(self, page_size: int = 100, mixed_case: bool = False) -> None:
+        self.blobs: dict[str, bytes] = {}
+        self.meta: dict[str, dict[str, str]] = {}
+        self.calls: list[Call] = []
+        self.put_faults: list[int | str | tuple[int, str]] = []
+        self.get_faults: dict[str, int] = {}
         self.list_status = 200
-        self.list_body = None
+        self.list_body: bytes | None = None
         self.page_size = page_size
         self.mixed_case = mixed_case
         self.lock = threading.Lock()
-        self.put_gate = None
+        self.put_gate: Callable[[], object] | None = None
 
-    def __call__(self, method, url, headers, body, timeout=20):
+    def __call__(
+        self,
+        method: str,
+        url: str,
+        headers: Mapping[str, str],
+        body: bytes | None,
+        timeout: int = 20,
+    ) -> Response:
         with self.lock:
             self.calls.append((method, url, dict(headers), body))
         if "oauth2/token" in url or "msi/token" in url or "identity.local" in url:
@@ -48,7 +60,7 @@ class FakeBlobContainer:
             return self._get(name)
         return 405, {}, b""
 
-    def _put(self, name, headers, body):
+    def _put(self, name: str, headers: Mapping[str, str], body: bytes | None) -> Response:
         if self.put_gate:
             self.put_gate()
         with self.lock:
@@ -62,7 +74,11 @@ class FakeBlobContainer:
         if isinstance(fault, tuple):
             return fault[0], {"x-ms-error-code": fault[1]}, b""
         with self.lock:
-            if headers.get("If-None-Match") != "*" or "x-ms-blob-type" not in headers:
+            if (
+                headers.get("If-None-Match") != "*"
+                or "x-ms-blob-type" not in headers
+                or body is None
+            ):
                 return 400, {}, b""
             if name in self.blobs:
                 return 409, {"x-ms-error-code": "BlobAlreadyExists"}, b""
@@ -76,7 +92,7 @@ class FakeBlobContainer:
             raise DocumentStoreError("storage unreachable: response lost")
         return 201, {}, b""
 
-    def _get(self, name):
+    def _get(self, name: str) -> Response:
         if name in self.get_faults:
             return self.get_faults[name], {}, b""
         with self.lock:
@@ -88,7 +104,7 @@ class FakeBlobContainer:
             }
             return 200, meta, self.blobs[name]
 
-    def _list(self, q):
+    def _list(self, q: dict[str, list[str]]) -> Response:
         if self.list_status != 200:
             return self.list_status, {}, b""
         if self.list_body is not None:
@@ -106,5 +122,5 @@ class FakeBlobContainer:
         )
         return 200, {}, xml.encode()
 
-    def requests(self, method):
+    def requests(self, method: str) -> list[Call]:
         return [c for c in self.calls if c[0] == method and "oauth2" not in c[1]]
