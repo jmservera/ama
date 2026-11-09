@@ -61,6 +61,15 @@ class ConditionalCreateTests(unittest.TestCase):
         )
         self.assertEqual({c[0] for c in self.fake.calls}, {"PUT"})
 
+    def test_conditional_create_never_lists_so_an_unreadable_listing_does_not_block_it(
+        self,
+    ) -> None:
+        self.fake.list_status = 500
+        out = rp.publish(self.snap, self.archive, "2026-10-10")
+        self.assertEqual((out["written"], out["path"]), (True, self.name))
+        self.assertEqual([c for c in self.fake.calls if "comp=list" in c[1]], [])
+        self.assertEqual(len([c for c in self.fake.calls if c[0] == "PUT"]), 1)
+
     def test_repeat_is_idempotent_and_keeps_the_original_date_and_bytes(self) -> None:
         rp.publish(self.snap, self.archive, "2026-10-10")
         before = dict(self.fake.blobs)

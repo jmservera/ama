@@ -669,6 +669,122 @@ class AssessmentCycle1Tests(RunnerBase):
             self.assertEqual(self.cli("schedule", *base)[0], 0)
 
 
+class UnusableArchivePathTests(RunnerBase):
+    """An existing archive path that is not a usable folder is unknown, never empty (Refs #1259)."""
+
+    def regular_file(self) -> Path:
+        self.archive.write_text("not a folder")
+        return self.archive
+
+    def dangling_link(self) -> Path:
+        os.symlink(self.root / "missing", self.archive)
+        return self.archive
+
+    def dangling_ancestor(self) -> Path:
+        os.symlink(self.root / "missing", self.root / "link")
+        self.archive = self.root / "link" / "archive"
+        return self.root / "link"
+
+    def stat_failure(self) -> Path:
+        self.archive.mkdir()
+        real = os.stat
+        archive = os.fspath(self.archive)
+
+        def failing(path: Any, *a: Any, **kw: Any) -> Any:
+            if os.fspath(path) == archive:
+                raise PermissionError(13, "Permission denied")
+            return real(path, *a, **kw)
+
+        self.enterContext(patch("os.stat", failing))
+        return self.archive
+
+    def scenarios(self) -> list[Any]:
+        return [self.regular_file, self.dangling_link, self.dangling_ancestor, self.stat_failure]
+
+    def check_unknown(self, make: Any) -> None:
+        sentinel = make()
+        before = os.path.lexists(sentinel), os.path.islink(sentinel)
+        ver = self.go("verify")
+        sched = self.go("schedule")
+        pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        exe = self.go("publish", cases=open_cases(), as_of=AS_OF, exercise=True)
+        label = make.__name__
+        self.assertEqual(
+            (ver["status"], ver["latest"], ver["overdue"]), ("problem", None, None), label
+        )
+        self.assertEqual(len(ver["problems"]), 1, label)
+        self.assertEqual(
+            (sched["status"], sched["due"], sched["next_window_start"]),
+            ("problem", None, None),
+            label,
+        )
+        self.assertEqual(
+            (pub["status"], self.codes(pub)), ("refused", ["archive_unreadable"]), label
+        )
+        self.assertEqual((pub["due"], pub["next_window_start"]), (None, None), label)
+        self.assertEqual(
+            (exe["status"], exe["written"], exe["due"]), ("exercise", False, None), label
+        )
+        self.assertTrue(exe["problems"], label)
+        for res in (ver, sched, pub, exe):
+            self.assertNotIn(str(self.root), json.dumps(res), label)
+        self.assertEqual((os.path.lexists(sentinel), os.path.islink(sentinel)), before, label)
+
+    def test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing(self) -> None:
+        for make in self.scenarios():
+            with self.subTest(make.__name__):
+                self.setUp()
+                self.check_unknown(make)
+
+    def test_regular_file_archive_exits_nonzero_through_main(self) -> None:
+        self.regular_file()
+        cases = self.cases_file()
+        base = ("--archive", str(self.archive), "--today", TODAY)
+        with self.registry_patched():
+            self.assertEqual(self.cli("verify", *base)[0], 1)
+            self.assertEqual(self.cli("schedule", *base)[0], 1)
+            code, res = self.cli("publish", *base, "--cases", str(cases))
+        self.assertEqual((code, self.codes(res)), (2, ["archive_unreadable"]))
+        self.assertEqual(self.archive.read_text(), "not a folder")
+
+    def test_oserror_without_a_reason_is_reported_without_the_path(self) -> None:
+        self.archive.mkdir()
+        with patch.object(rp, "verify", side_effect=OSError(str(self.archive))):
+            ver = self.go("verify")
+        self.assertEqual(ver["status"], "problem")
+        self.assertNotIn(str(self.root), json.dumps(ver))
+
+    def test_absent_directory_stays_creatable_for_first_run(self) -> None:
+        ver = self.go("verify")
+        sched = self.go("schedule")
+        self.assertEqual((ver["count"], ver["problems"], ver["overdue"]), (0, [], True))
+        self.assertEqual(
+            (sched["status"], sched["due"], sched["next_window_start"]), ("due", True, TODAY)
+        )
+        pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual(pub["status"], "published")
+        self.assertEqual(len(list(self.archive.iterdir())), 1)
+
+    def test_absent_folder_below_a_link_to_a_real_folder_is_creatable(self) -> None:
+        real = self.root / "real"
+        real.mkdir()
+        os.symlink(real, self.root / "link")
+        self.archive = self.root / "link" / "archive"
+        sched = self.go("schedule")
+        self.assertEqual((sched["status"], sched["due"]), ("due", True))
+        self.assertEqual(self.go("publish", cases=open_cases(), as_of=AS_OF)["status"], "published")
+
+    def test_store_status_is_a_problem_for_a_regular_file_archive(self) -> None:
+        data = self.root / "zavaforward.json"
+        data.write_text(json.dumps({"as_of": AS_OF, "staff": [], "cases": open_cases()}))
+        store = Store(str(data))
+        store.save()
+        Path(store._ranking_archive()).write_text("not a folder")
+        manager = {"email": "pam@example.test", "role": "Retrofit Programme Manager"}
+        status = store.ranking_publication_status(manager)
+        self.assertTrue(status["problems"])
+
+
 class BlobArchiveRunnerTests(RunnerBase):
     """The runner against the Blob archive on a mock REST transport (Refs #1258)."""
 
@@ -760,6 +876,118 @@ class BlobArchiveRunnerTests(RunnerBase):
             code, res = self.cli("verify", "--blob", *base)
         self.assertEqual(code, 1)
         self.assertEqual(res["count"], 0)
+
+
+class BlobArchivePathHealthTests(RunnerBase):
+    """An unknown or unreadable Blob listing is never a healthy empty archive (Refs #1259)."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        from ranking_blob_fixture import SAS, URL, FakeBlobContainer
+        from zava_forward.core import ranking_archive_blob as rab
+
+        self.fake = FakeBlobContainer(page_size=1)
+        self.listing: Any = None
+
+        def transport(method: str, url: str, headers: Any, body: Any, timeout: int = 20) -> Any:
+            if self.listing is not None and "comp=list" in url:
+                return self.listing(url)
+            return self.fake(method, url, headers, body, timeout)
+
+        self.archive = rab.BlobRankingArchive(
+            URL, "ranking-archive", sas=SAS, transport=transport, env={}
+        )  # type: ignore[assignment]
+
+    def unreachable(self, url: str) -> Any:
+        from zava_forward.core.documents import DocumentStoreError
+
+        raise DocumentStoreError(f"storage unreachable: {url}")
+
+    def second_page_fails(self, url: str) -> Any:
+        if "marker=" in url:
+            return 500, {}, b""
+        name = "ranking-1.0.0-2026-11-05-aaaaaaaaaaaa.json"
+        page = f"<EnumerationResults><Blobs><Blob><Name>{name}</Name></Blob></Blobs>"
+        return 200, {}, (page + "<NextMarker>next</NextMarker></EnumerationResults>").encode()
+
+    def endless(self, url: str) -> Any:
+        return (
+            200,
+            {},
+            b"<EnumerationResults><Blobs/><NextMarker>again</NextMarker></EnumerationResults>",
+        )
+
+    def scenarios(self) -> list[tuple[str, str]]:
+        def status(code: int) -> Any:
+            def apply() -> None:
+                self.fake.list_status = code
+
+            return apply
+
+        def body(text: bytes) -> Any:
+            def apply() -> None:
+                self.fake.list_body = text
+
+            return apply
+
+        def hook(fn: Any) -> Any:
+            def apply() -> None:
+                self.listing = fn
+
+            return apply
+
+        self.setups = {
+            "403": (status(403), "listing refused (HTTP 403)"),
+            "404 missing container": (status(404), "listing refused (HTTP 404)"),
+            "500": (status(500), "listing refused (HTTP 500)"),
+            "transport failure": (hook(self.unreachable), "listing failed: storage unreachable"),
+            "malformed body": (body(b"<Error/>"), "listing was unreadable"),
+            "later page fails": (hook(self.second_page_fails), "listing refused (HTTP 500)"),
+            "endless pagination": (hook(self.endless), "listing did not finish"),
+        }
+        return [(label, text) for label, (_, text) in self.setups.items()]
+
+    def test_unreadable_listing_is_unknown_for_schedule_verify_and_publish_with_no_put(
+        self,
+    ) -> None:
+        for label, text in self.scenarios():
+            with self.subTest(label):
+                self.fake.list_status, self.fake.list_body, self.listing = 200, None, None
+                self.setups[label][0]()
+                ver = self.go("verify")
+                sched = self.go("schedule")
+                pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+                self.assertEqual(
+                    (ver["status"], ver["count"], ver["latest"], ver["overdue"]),
+                    ("problem", 0, None, None),
+                )
+                self.assertEqual(
+                    (sched["status"], sched["due"], sched["next_window_start"]),
+                    ("problem", None, None),
+                )
+                self.assertEqual(
+                    (pub["status"], self.codes(pub)), ("refused", ["archive_unreadable"])
+                )
+                self.assertIn(text, ver["problems"][0])
+                self.assertEqual(self.fake.requests("PUT"), [])
+                self.assertEqual(self.fake.blobs, {})
+                shown = json.dumps([ver, sched, pub])
+                for secret in (
+                    "SENTINEL",
+                    "acct.blob.core.windows.net",
+                    "ranking-archive",
+                    "sv=2022",
+                ):
+                    self.assertNotIn(secret, shown)
+
+    def test_valid_empty_listing_is_a_first_run_and_publish_proceeds(self) -> None:
+        self.fake.list_body = b"<EnumerationResults><Blobs/></EnumerationResults>"
+        ver = self.go("verify")
+        self.assertEqual((ver["count"], ver["problems"], ver["overdue"]), (0, [], True))
+        self.fake.list_body = None
+        pub = self.go("publish", cases=open_cases(), as_of=AS_OF)
+        self.assertEqual((pub["status"], pub["written"]), ("published", True))
+        self.assertEqual(self.go("verify")["count"], 1)
 
 
 if __name__ == "__main__":
