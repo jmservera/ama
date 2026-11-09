@@ -1,0 +1,25 @@
+{
+  "task_id": "issue-189-type-applicability-c3",
+  "task_slug": "type-applicability-189-c3",
+  "parent_task": {"task_id": "issue-189-browser-check-c2", "task_slug": "browser-check-189-c2"},
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09/type-applicability-189-c3-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09/type-applicability-189-c3-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09/type-applicability-189-c3-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09/type-applicability-189-c3-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; Planning Readiness Ready; 8 mypy errors are in files added by #189, main mypy exit 0 (199 files), CI runs mypy over tests and checks", "status": "confirmed", "evidence": "research artifact"},
+    {"decision": "Critique executed once: no blocking finding", "status": "confirmed", "evidence": "critique artifact"},
+    {"decision": "C3 authorised by coordinator for typed remediation only; two of five remain after", "status": "confirmed", "evidence": "coordinator brief"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "Commit planning records, then apply typed helpers to the two files"},
+  "prioritized_follow_ups": []
+}
