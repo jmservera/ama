@@ -9,6 +9,8 @@ function intakeField(id, label, control, hint) {
   return h("div", { class: "field" }, h("label", { for: id }, label), control, hint && h("p", { id: `${id}-hint`, class: "hint" }, hint));
 }
 
+const intakeNotices = new Map();
+
 function intakeForm(label, fields, submitLabel, task, rerender) {
   const feedback = h("p", { role: "alert", class: "err", hidden: true });
   const form = h("form", { "aria-label": label, autocomplete: "off", novalidate: true,
@@ -103,14 +105,19 @@ function intakeCapture(order, pack, rerender) {
       capture_ref: ref, pack_digest: pack.pack_digest,
       mode: data.get("offline") === "on" ? "offline" : "online",
       captured_at: data.get("offline") === "on" ? data.get("captured_at") : undefined });
-    if (result.outcome === "duplicate") throw new Error("This evidence was already recorded, so nothing was added.");
+    if (result.outcome === "duplicate") intakeNotices.set(order, "This evidence was already recorded. The existing receipt is shown and nothing was added.");
   }, rerender);
 }
 
 function intakeOrder(data, orderId, rerender) {
   const pack = data.pack;
+  const status = h("p", { role: "status", "aria-live": "polite" });
+  const notice = intakeNotices.get(orderId);
+  intakeNotices.delete(orderId);
+  if (notice) setTimeout(() => { status.textContent = notice; }, 0);
   return h("section", { class: "card", "aria-label": `Work order ${orderId}` },
     h("h3", {}, `Work order ${orderId}`),
+    status,
     screenFields([["Scope", `${pack.scope} (version ${pack.scope_version})`], ["Design version", pack.design_version],
       ["Access", pack.access], ["Named contact", pack.named_contact], ["Appointment state", pack.state],
       ["Ready to start", pack.ready ? "Yes" : pack.not_ready_reason]]),

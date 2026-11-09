@@ -98,6 +98,40 @@ class StaffIntakeBrowser(ProcurementApiFixture):
             self.scan(other, "acknowledged")
             browser.close()
 
+    def test_lost_response_retry_reconciles_without_error_or_second_record(self) -> None:
+        from playwright.sync_api import sync_playwright
+
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            page = self.open(browser, "sam@example.test")
+            page.get_by_text("Work order WO-0001").first.wait_for()
+            lost: list[int] = []
+
+            def drop_first_response(route: Any) -> None:
+                if lost:
+                    route.continue_()
+                    return
+                route.fetch()
+                lost.append(1)
+                route.abort()
+
+            page.route("**/field-capture", drop_first_response)
+            for i in range(5):
+                page.locator(f"#intake-note-{i}").fill(f"Seen on site {i}")
+            page.get_by_label("Worker's name").fill(WORKER)
+            page.get_by_label("The worker confirms these notes are their own").check()
+            page.get_by_role("button", name="Record worker evidence").click()
+            page.locator("#app [role=alert]").first.wait_for()
+            self.assertEqual(len(self.store.cases["ZF-3"]["quality"]), 1)
+            page.get_by_role("button", name="Record worker evidence").click()
+            page.get_by_text("Receipt SYN-").first.wait_for()
+            page.get_by_text("already recorded").first.wait_for()
+            self.assertEqual(page.locator("#app [role=alert]:visible").count(), 0)
+            self.assertEqual(page.get_by_role("button", name="Acknowledge receipt").count(), 1)
+            self.assertEqual(len(self.store.cases["ZF-3"]["quality"]), 1)
+            self.scan(page, "duplicate reconciled")
+            browser.close()
+
 
 if __name__ == "__main__":
     unittest.main()

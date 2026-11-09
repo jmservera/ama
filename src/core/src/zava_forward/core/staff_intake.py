@@ -12,10 +12,11 @@ import re
 from copy import deepcopy
 from typing import Any, NoReturn
 
-from . import job_pack, projection, quality, workflows
+from . import job_pack, projection, quality, resident_decisions, workflows
 from .quality import SUBMITTED
 
 REF = re.compile(r"[A-Za-z0-9._-]{8,64}")
+DIGEST = re.compile(r"[0-9a-f]{64}")
 NOTE_LIMIT = 200
 WORKER_LIMIT = 80
 SOURCE = "Installer"
@@ -129,6 +130,11 @@ def _view_receipt(idx: int, rec: dict[str, Any], user: Any) -> dict[str, Any]:
     ack = fr.get("acknowledgement")
     blocker = job_pack.review_blocker(_review_view(rec), _identity(user))
     me = {_norm(user.get(k)) for k in ("name", "email", "code")} - {""}
+    if blocker is None and not rec.get("resident_binding"):
+        blocker = (
+            "This evidence was recorded without a resident scope binding, so it cannot be "
+            "accepted. Ask the contract manager how to replace it."
+        )
     if blocker is None and any(
         me & {_norm(p.get(k)) for k in ("name", "email", "code")}
         for p in rec.get("participants", [])
@@ -198,9 +204,46 @@ def view(store: Any, user: Any, wid: str) -> dict[str, Any]:
         )
 
 
-def _same(fr: dict[str, Any], receipt: dict[str, Any]) -> bool:
-    keys = ("order", "measure", "notes_digest", "confirmed_by")
-    return all(fr.get(k) == receipt.get(k) for k in keys)
+def _replay(
+    store: Any, user: Any, c: dict[str, Any], wid: str, ref: str, body: dict[str, Any]
+) -> dict[str, Any] | None:
+    """A retry of stored evidence is matched on the stored receipt, not on today's pack."""
+    for idx, rec in _records(c, wid):
+        fr = rec["field_receipt"]
+        if fr["capture_ref"] != ref:
+            continue
+        if body.get("confirmed") is not True:
+            raise ValueError("The worker must confirm these notes are their own.")
+        notes = _notes(body.get("notes"), list(fr["original_notes"]))
+        worker = _worker(body.get("confirmed_by"), store, user)
+        if (
+            body.get("measure") != rec["measure"]
+            or notes != fr["original_notes"]
+            or _norm(worker) != _norm(fr["confirmed_by"])
+        ):
+            _fail(409, "That capture reference was already used for different evidence.")
+        return dict(outcome="duplicate", receipt=_view_receipt(idx, rec, user))
+    return None
+
+
+def _binding(c: dict[str, Any], w: dict[str, Any], measure: str) -> int:
+    """The work order's bound resident scope revision, valid only while it is still current."""
+    bound = {
+        b.get("measure"): b.get("context_revision")
+        for b in w["versions"][-1].get("resident_bindings") or []
+        if isinstance(b, dict)
+    }
+    context: dict[str, Any] | None = resident_decisions.current_context(  # type: ignore[no-untyped-call]
+        c, measure
+    )
+    revision = bound.get(measure)
+    if context is None or type(revision) is not int or revision != context["revision"]:
+        _fail(
+            409,
+            "The resident scope for this measure is not confirmed or has changed. "
+            "Ask the contract manager to reissue the work order with the current scope.",
+        )
+    return revision
 
 
 def capture(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str, Any]:
@@ -210,23 +253,26 @@ def capture(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str, 
     with store.lock:
         pack = _pack(store, user, wid)
         w, c = _find(store, wid)
-        measure = body.get("measure")
-        if not isinstance(measure, str) or measure not in pack["checklists"]:
-            raise ValueError("Choose one of the measures in this job pack.")
-        notes = _notes(body.get("notes"), pack["checklists"][measure]["items"])
-        worker = _worker(body.get("confirmed_by"), store, user)
         ref = body.get("capture_ref")
         if not isinstance(ref, str) or not REF.fullmatch(ref):
             raise ValueError(
                 "The capture reference is 8 to 64 letters, digits, dots, dashes or underscores."
             )
+        replay = _replay(store, user, c, wid, ref, body)
+        if replay:
+            return replay
+        measure = body.get("measure")
+        if not isinstance(measure, str) or measure not in pack["checklists"]:
+            raise ValueError("Choose one of the measures in this job pack.")
+        notes = _notes(body.get("notes"), pack["checklists"][measure]["items"])
+        worker = _worker(body.get("confirmed_by"), store, user)
         mode = body.get("mode", "online")
         captured_at = body.get("captured_at") if mode == "offline" else None
         captured_at = (
             captured_at if isinstance(captured_at, str) and captured_at.strip() else _now()
         )
         receipt = job_pack.worker_receipt(
-            dict(pack, pack_digest=body.get("pack_digest") or pack["pack_digest"]),
+            pack,
             measure,
             notes,
             worker,
@@ -236,22 +282,30 @@ def capture(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str, 
             _identity(user),
             mode,
         )
-        for _, rec in _records(c, wid):
-            fr = rec["field_receipt"]
-            if fr["capture_ref"] == ref:
-                if not _same(fr, receipt):
-                    _fail(409, "That capture reference was already used for different evidence.")
-                return dict(outcome="duplicate", receipt=_view_one(c, wid, ref, user))
-        if not pack["ready"]:
-            raise ValueError(pack["not_ready_reason"])
-        if receipt["pack_digest"] != pack["pack_digest"]:
+        digest = body.get("pack_digest")
+        if not isinstance(digest, str) or not DIGEST.fullmatch(digest):
+            raise ValueError(
+                "Send the job pack reference the worker's notes were written against. "
+                "Reload the job pack if you do not have it."
+            )
+        if digest != pack["pack_digest"]:
             _fail(
                 409,
                 "The job pack changed after this was captured. "
                 "Reload it and have the worker re-confirm.",
             )
+        if not pack["ready"]:
+            raise ValueError(pack["not_ready_reason"])
+        revision = _binding(c, w, measure)
         store.submit_quality(
-            user, w["case_id"], measure, worker, SOURCE, notes, field_receipt=receipt
+            user,
+            w["case_id"],
+            measure,
+            worker,
+            SOURCE,
+            notes,
+            context_revision=revision,
+            field_receipt=dict(receipt, pack_digest=digest),
         )
         return dict(outcome="recorded", receipt=_view_one(c, wid, ref, user))
 
@@ -308,6 +362,9 @@ def correct(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str, 
                 label=label, note=note, confirmed_by=worker, recorded_by=_identity(actor), at=_now()
             )
         )
+        for item in rec["items"]:
+            if item.get("label") == label:
+                item["evidence"] = note
         rec.setdefault("participants", []).append(_identity(actor))
         store._quality_event(
             c, rec, actor, SUBMITTED, SUBMITTED, f"Worker correction recorded for: {label}"

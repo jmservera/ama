@@ -14,6 +14,7 @@ from test_procurement_api import ProcurementApiFixture
 
 ROUTE = "/api/workorders/WO-0001/"
 WORKER = "Wren Fictional"
+OMIT = object()
 LOFT = [
     "Depth measured and photo taken",
     "Ventilation at the eaves kept clear",
@@ -49,7 +50,20 @@ class StaffIntakeApi(ProcurementApiFixture):
         return base
 
     def capture(self, actor: str = "sam", **over: Any) -> tuple[int, Any]:
-        return self.call(ROUTE + "field-capture", self.body(**over), actor)
+        body = self.body(**over)
+        if "pack_digest" not in over:
+            body["pack_digest"] = self.view(actor)["pack"]["pack_digest"]
+        elif over["pack_digest"] is OMIT:
+            del body["pack_digest"]
+        return self.call(ROUTE + "field-capture", body, actor)
+
+    def accept(self, actor: str, record: int) -> tuple[int, Any]:
+        return self.call(
+            "/api/cases/ZF-3/quality-accept", dict(index=record, note="Synthetic"), actor
+        )
+
+    def correction(self, record: int, label: str = LOFT[0], note: str = "Corrected") -> dict:
+        return dict(record=record, label=label, note=note, confirmed_by=WORKER, confirmed=True)
 
     def view(self, actor: str = "sam") -> dict[str, Any]:
         code, out = self.call(ROUTE + "field-intake", actor=actor)
@@ -234,6 +248,125 @@ class StaffIntakeApi(ProcurementApiFixture):
         self.restart()
         self.assertEqual(self.view()["receipts"], [])
         self.assertEqual(self.capture()[0], 200)
+
+    def test_recorder_is_denied_and_independent_qa_accepts(self) -> None:
+        record = self.capture("pam")[1]["receipt"]["record"]
+        rec = self.store.cases["ZF-3"]["quality"][record]
+        self.assertEqual(
+            rec["resident_binding"], dict(measure="Loft insulation", context_revision=1)
+        )
+        code, out = self.accept("pam", record)
+        self.assertIn("independent", out["error"], (code, out))
+        self.assertEqual(self.store.cases["ZF-3"]["quality"][record]["state"], "Submitted")
+        self.assertEqual(self.accept("quil", record)[0], 200)
+        self.restart()
+        self.assertEqual(self.view("quil")["receipts"][0]["quality_state"], "Accepted")
+
+    def test_corrector_is_denied_by_the_real_accept_path(self) -> None:
+        record = self.capture("sam")[1]["receipt"]["record"]
+        self.assertEqual(
+            self.call(ROUTE + "field-correct", self.correction(record), "quil")[0], 200
+        )
+        code, out = self.accept("quil", record)
+        self.assertIn("independent", out["error"], (code, out))
+        self.assertEqual(self.accept("pam", record)[0], 200)
+
+    def test_acknowledger_is_denied_by_the_real_accept_path(self) -> None:
+        record = self.capture("sam")[1]["receipt"]["record"]
+        self.assertEqual(self.call(ROUTE + "field-acknowledge", dict(record=record), "pam")[0], 200)
+        code, out = self.accept("pam", record)
+        self.assertIn("independent", out["error"], (code, out))
+        self.assertEqual(self.accept("quil", record)[0], 200)
+
+    def test_worker_identity_denied_and_replacement_after_acceptance(self) -> None:
+        record = self.capture("sam")[1]["receipt"]["record"]
+        rec = self.store.cases["ZF-3"]["quality"][record]
+        worker = dict(self.store.staff["quil@example.test"], name=WORKER, email="w@example.test")
+        with self.assertRaises(PermissionError):
+            self.store._independent(rec, worker, "accept this work")
+        self.assertEqual(self.accept("quil", record)[0], 200)
+        code, out = self.capture("sam", capture_ref="SYN-CAPTURE-0002", notes=notes("Later"))
+        self.assertEqual((code, out["outcome"]), (200, "recorded"), out)
+        quality = self.store.cases["ZF-3"]["quality"]
+        self.assertEqual(
+            (quality[record]["state"], quality[-1]["supersedes"]), ("Superseded", [record])
+        )
+        self.assertEqual(quality[-1]["resident_binding"]["context_revision"], 1)
+
+    def test_unbound_or_changed_resident_scope_is_refused(self) -> None:
+        case = self.store.cases["ZF-3"]
+        case["resident_scopes"]["Loft insulation"].append(
+            dict(case["resident_scopes"]["Loft insulation"][0], revision=2)
+        )
+        code, out = self.capture()
+        self.assertEqual(code, 409, out)
+        self.assertEqual(self.view()["receipts"], [])
+        case["technical"]["design_version"] = 2
+        self.assertEqual(self.capture(pack_digest="f" * 64)[0], 409)
+        self.assertEqual(self.view()["receipts"], [])
+
+    def test_unbound_legacy_receipt_shows_blocker(self) -> None:
+        record = self.capture("sam")[1]["receipt"]["record"]
+        self.store.cases["ZF-3"]["quality"][record]["resident_binding"] = None
+        review = self.view("quil")["receipts"][0]["review"]
+        self.assertFalse(review["you_may_review"])
+        self.assertIn("resident scope", review["blocker"])
+
+    def test_correction_updates_current_quality_item_and_survives_restart(self) -> None:
+        record = self.capture("sam")[1]["receipt"]["record"]
+        for note in ("First fix", "Second fix"):
+            code, out = self.call(
+                ROUTE + "field-correct", self.correction(record, note=note), "quil"
+            )
+            self.assertEqual(code, 200, out)
+        self.restart()
+        rec = self.store.cases["ZF-3"]["quality"][record]
+        items = {i["label"]: i["evidence"] for i in rec["items"]}
+        self.assertEqual(items[LOFT[0]], "Second fix")
+        self.assertEqual(items[LOFT[1]], notes()[LOFT[1]])
+        self.assertEqual(rec["field_receipt"]["original_notes"], notes())
+        self.assertEqual(
+            [c["note"] for c in rec["field_receipt"]["corrections"]], ["First fix", "Second fix"]
+        )
+        self.assertEqual(self.view("pam")["receipts"][0]["original_notes"], notes())
+        self.assertEqual(self.store.cases["ZF-3"]["quality"][record]["evidence_version"], 1)
+
+    def test_correction_failure_leaves_item_and_history_unchanged(self) -> None:
+        record = self.capture("sam")[1]["receipt"]["record"]
+        with mock.patch.object(type(self.store), "audit", side_effect=RuntimeError("boom")):
+            code, _ = self.call(ROUTE + "field-correct", self.correction(record), "quil")
+        self.assertGreaterEqual(code, 400)
+        self.restart()
+        rec = self.store.cases["ZF-3"]["quality"][record]
+        self.assertEqual(rec["items"][0]["evidence"], notes()[LOFT[0]])
+        self.assertEqual(rec["field_receipt"].get("corrections", []), [])
+
+    def test_explicit_valid_digest_is_required_for_new_evidence(self) -> None:
+        for bad in (OMIT, "", None, 5, "xyz", "A" * 64, "0" * 63):
+            code, out = self.capture(pack_digest=bad)
+            self.assertEqual(code, 400, (bad, out))
+        self.assertEqual(self.view()["receipts"], [])
+        digest = self.view()["pack"]["pack_digest"]
+        self.assertEqual(self.capture(pack_digest=digest)[0], 200)
+        code, dup = self.capture(pack_digest=OMIT)
+        self.assertEqual((code, dup["outcome"]), (200, "duplicate"))
+        self.assertEqual(len(self.view()["receipts"]), 1)
+        self.assertEqual(self.view()["receipts"][0]["pack_digest"], digest)
+
+    def test_offline_evidence_before_a_design_change_is_stale(self) -> None:
+        old = self.view()["pack"]["pack_digest"]
+        self.store.cases["ZF-3"]["technical"]["design_version"] = 2
+        code, out = self.capture(pack_digest=old, mode="offline", captured_at="2099-01-01T08:00")
+        self.assertEqual(code, 409, out)
+        self.assertEqual(self.view()["receipts"], [])
+
+    def test_lost_response_retry_replays_after_the_pack_changed(self) -> None:
+        digest = self.view()["pack"]["pack_digest"]
+        self.assertEqual(self.capture(pack_digest=digest)[0], 200)
+        self.call(ROUTE + "appointment", dict(outcome="No access"))
+        code, dup = self.capture(pack_digest=digest)
+        self.assertEqual((code, dup["outcome"]), (200, "duplicate"), dup)
+        self.assertEqual(len(self.view()["receipts"]), 1)
 
 
 class JsonStaffIntakeApi(StaffIntakeApi):

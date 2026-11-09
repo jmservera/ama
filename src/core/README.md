@@ -4893,3 +4893,7 @@ rejected as stale. The configured escalation destination comes from `ZF_STAFF_IN
 `_ROLE` and `_CONTACT`; anything missing shows "Unknown - not configured". Nothing here is a contract
 instruction, resident consent or acceptance, and there is no escalation write path (gap kept). Persistence
 reuses the case body, so there is no schema change. Tests: `src/api/tests/test_staff_intake_api.py`.
+C4 changes: `capture` passes the work order's bound, still-current resident scope revision as
+`context_revision` (409 if missing or changed, never waived); new evidence needs an explicit valid
+`pack_digest`; a replay of a stored `capture_ref` is matched on the stored receipt before any current-pack
+check; `correct` also updates the matching quality item so the latest correction is what review sees.
