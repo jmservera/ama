@@ -4704,6 +4704,20 @@ Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), ev
 and the DPO position on outcome data (both open), a model route for the pack summary (needs
 release evidence and owner approval), and a pack screen. Tests: `src/core/tests/test_aftercare.py`.
 
+Stage A of the connected slice (#133, Refs only, unwired) adds
+`zava_forward.core.aftercare_intake.AftercareService`, a synthetic staff-assisted layer over the
+register above. It does not reimplement the register. It adds a role-gated intake (existing staff
+roles only), a durable receipt that keeps the raw statement and representative basis, an idempotent
+`request_id`, owner actions limited to the named synthetic scenario owner (a missing owner is
+`Unknown`, and only a manager can name one afterwards), manager-only closure that never alters a
+concern, and a joined baseline, outcome and unresolved view with denominators and Unknowns. State is
+one validated JSON document behind an atomic `StateStore.update`; `FileStateStore` is a
+demonstration store only. `handle(method, path, user, body, query)` is the route contract for a later
+thin hook. Not delivered: server, store, UI route or endpoint-inventory wiring; served, persistence,
+restart and browser evidence; evaluator role; DPO or lawful-basis position. The unwired screen module
+is `src/api/src/zava_forward/api/web/aftercare.js`. Tests: `src/core/tests/test_aftercare_intake.py`
+and `src/api/tests/test_aftercare_screen.py`.
+
 ## Data steward and digital operator exception queue (#135)
 
 `zava_forward.core.exception_queue.ExceptionQueue` is a store-independent register (FR-012, FR-029,

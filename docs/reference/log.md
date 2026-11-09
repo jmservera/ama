@@ -11284,3 +11284,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a [qualification](../architecture/cutover-evidence-pack.md#qualification-q1-2026-11-09-appended-after-the-frozen-checkpoint-3965fa489d8f07d0180b94d3fdfd7db16441790d-originals-above-unchanged) to the checkpoint entry above: S1 was selected without a recorded prospective amendment, S1 raw retention is unverified after the scratch directory was removed (A-series originals survive with the coordinator), the absence statement is bounded to inspected paths, PRD FR-016 and FR-017 are not resident or complaints IDs, and the four final processes include one SQL run (1205 discovered, 171 skipped).
 * The earlier entry is unchanged. No approval, closure or acceptance is claimed.
+
+## [2026-11-09] update | Stage A synthetic assisted aftercare service and screen module (Refs #133)
+
+* Added a dedicated core service, an unwired screen module and focused tests, and a README paragraph in `src/core/README.md` that states what is and is not delivered. No server, store, route, inventory or shared fixture was changed.
+* Not claimed: connected API, persistence, restart or browser evidence, evaluator role, DPO or lawful-basis position, closure or tick of any criterion. Earlier entries unchanged.

@@ -55,6 +55,12 @@ REQUEST_ID = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 STATEMENT_MAX = 1000
 BASIS_MAX = 200
 EVIDENCE_MAX = 1000
+CHANNEL_LABELS = {
+    "phone": "By phone",
+    "in_person": "In person",
+    "paper": "On paper",
+    "assisted_visit": "During an assisted visit",
+}
 SYNTHETIC_NOTICE = (
     "This is a demonstration with synthetic records only. Do not enter real names, contact "
     "details or health information."
@@ -357,7 +363,12 @@ class AftercareService:
         self._staff(user, RECORD_ROLES, "record a concern")
         form = intake_form()
         staff_fields: list[Record] = [
-            {"name": "channel", "label": "How was this raised with you?", "required": True},
+            {
+                "name": "channel",
+                "label": "How was this raised with you?",
+                "required": True,
+                "options": [{"value": c, "label": CHANNEL_LABELS[c]} for c in NON_DIGITAL_CHANNELS],
+            },
             {"name": "next_update", "label": "Date of the next update", "required": True},
         ]
         for field in staff_fields:
