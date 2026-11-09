@@ -7,6 +7,7 @@ F2 a durable cursor lets a long adoption history complete within the unchanged p
 F3 forecast writes nothing; F4 rotation out of a bounded capture is not deletion."""
 
 import atexit
+import importlib
 import json
 import os
 import shutil
@@ -18,10 +19,11 @@ import threading
 import time
 import unittest
 import urllib.request
+from collections.abc import Callable
+from typing import Any
 from unittest.mock import patch
 
 import release_support
-from zava_forward.agents.dispatch import AgentWorker, TaskMessage, foundry_provider
 from zava_forward.core import ai_consumption, rai_release
 from zava_forward.core import assistants as assistants_module
 from zava_forward.core.ai import Ai, may_carry_captured_readings
@@ -30,15 +32,19 @@ import test_assistants as ta
 import test_quality_sensors_c7 as c7
 import test_quality_sensors_e1 as e1
 
+dispatch = importlib.import_module("zava_forward.agents.dispatch")
+server = importlib.import_module("zava_forward.api.server")
+
 OPENSSL = shutil.which("openssl")
-CERTS = {}
+CERTS: dict[str, str] = {}
 
 
-def certificate():
+def certificate() -> str:
     if "dir" not in CERTS:
         directory = tempfile.mkdtemp(prefix="zf-e2-tls-")
         CERTS["dir"] = directory
         atexit.register(shutil.rmtree, directory, True)
+        assert OPENSSL is not None
         subprocess.run(
             [
                 OPENSSL,
@@ -68,7 +74,7 @@ class TlsPeer:
     """A real TLS server on loopback that counts TCP accepts and decrypted request bytes and
     reads the request in small slow reads, so a send to it is genuinely partial."""
 
-    def __init__(self, trickle=True):
+    def __init__(self, trickle: bool = True) -> None:
         import socket
 
         directory = certificate()
@@ -87,11 +93,10 @@ class TlsPeer:
         self.thread.start()
 
     @property
-    def endpoint(self):
+    def endpoint(self) -> str:
         return f"https://127.0.0.1:{self.sock.getsockname()[1]}"
 
-    def serve(self):
-
+    def serve(self) -> None:
         while not self.stop.is_set():
             try:
                 raw, _ = self.sock.accept()
@@ -100,7 +105,7 @@ class TlsPeer:
             self.accepts += 1
             threading.Thread(target=self.handle, args=(raw,), daemon=True).start()
 
-    def handle(self, raw):
+    def handle(self, raw: Any) -> None:
         try:
             conn = self.context.wrap_socket(raw, server_side=True)
             conn.settimeout(5)
@@ -131,70 +136,80 @@ class TlsPeer:
         except Exception:  # noqa: BLE001 - a refused client simply has no data to read
             pass
 
-    def close(self):
+    def close(self) -> None:
         self.stop.set()
         self.thread.join(5)
         self.sock.close()
 
 
 class CountingMeter(c7.Meter):
-    def __init__(self, before=None):
+    def __init__(self, before: Callable[[], object] | None = None) -> None:
         super().__init__(before)
         self.reserved = self.checked = 0
 
-    def reserve(self, *args, **kwargs):
+    def reserve(self, *args: object, **kwargs: object) -> str:
         self.reserved += 1
         return super().reserve(*args, **kwargs)
 
-    def dispatch_check(self, rid):
+    def dispatch_check(self, rid: str) -> None:
         self.checked += 1
-        return super().dispatch_check(rid)
+        super().dispatch_check(rid)
 
 
 @unittest.skipUnless(OPENSSL, "needs the openssl CLI to build a loopback certificate")
-class Boundary(c7.Base):
+class Boundary(e1.GateBase):
     """F1: no real Ai request carries captured readings, however the final check is suspended."""
 
-    def tls_ai(self, before=None, trickle=True):
+    def tls_ai(
+        self, before: Callable[[], object] | None = None, trickle: bool = True
+    ) -> tuple[TlsPeer, Ai]:
         peer = TlsPeer(trickle)
         self.addCleanup(peer.close)
         patcher = patch.dict(os.environ, {"SSL_CERT_FILE": peer.cert})
         patcher.start()
         self.addCleanup(patcher.stop)
         # urllib caches its default opener (and its trust store) across tests
-        previous = urllib.request._opener
-        urllib.request._opener = None
-        self.addCleanup(setattr, urllib.request, "_opener", previous)
+        opener = patch.object(urllib.request, "_opener", None)
+        opener.start()
+        self.addCleanup(opener.stop)
         ai = Ai()
         ai.endpoint, ai.token, ai.expires = peer.endpoint, "t", time.time() + 3600
-        ai.consumption = CountingMeter(before)
-        self.tokens = []
+        meter = CountingMeter(before)
+        self.meter = meter
+        ai.consumption = meter
+        self.tokens: list[int] = []
         real_token = ai._token
-        ai._token = lambda: self.tokens.append(1) or real_token()
+
+        def counted_token() -> str:
+            self.tokens.append(1)
+            token: str = real_token()
+            return token
+
+        ai._token = counted_token
         self.store.ai = ai
         release_support.install(self.store, cls="actual")
         return peer, ai
 
-    def test_a_non_captured_request_reaches_the_trickling_tls_peer(self):
+    def test_a_non_captured_request_reaches_the_trickling_tls_peer(self) -> None:
         peer, ai = self.tls_ai()
         body = "x" * 20000
         envelope = ai.evidence("system", body)
         self.assertEqual(envelope["outcome"], "returned")
         self.assertGreaterEqual(peer.accepts, 1)
         self.assertGreater(peer.bytes, 20000)
-        self.assertEqual((ai.consumption.reserved, ai.consumption.checked), (1, 1))
+        self.assertEqual((self.meter.reserved, self.meter.checked), (1, 1))
         self.assertEqual(len(self.tokens), 1)
 
-    def test_captured_readings_are_refused_before_any_meter_token_or_socket(self):
+    def test_captured_readings_are_refused_before_any_meter_token_or_socket(self) -> None:
         peer, ai = self.tls_ai()
         with ai_consumption.captured_readings():
             envelope = ai.evidence("system", "x" * 20000)
         self.assertEqual(envelope["outcome"], "suspended-before-dispatch")
         self.assertEqual((peer.accepts, peer.bytes), (0, 0))
-        self.assertEqual((ai.consumption.reserved, ai.consumption.checked), (0, 0))
+        self.assertEqual((self.meter.reserved, self.meter.checked), (0, 0))
         self.assertEqual(self.tokens, [])
 
-    def test_the_assistant_dispatch_holds_captured_readings_with_a_manual_route(self):
+    def test_the_assistant_dispatch_holds_captured_readings_with_a_manual_route(self) -> None:
         self.put(4)
         self.add_live(10)
         self.quality_ready()
@@ -207,16 +222,16 @@ class Boundary(c7.Base):
         self.assertIn("cannot be sent to a real AI model", task.get("reason") or "")
         self.assertIn("manual route", task.get("reason") or "")
         self.assertEqual((peer.accepts, peer.bytes), (0, 0))
-        self.assertEqual((ai.consumption.reserved, ai.consumption.checked), (0, 0))
+        self.assertEqual((self.meter.reserved, self.meter.checked), (0, 0))
         self.assertEqual(self.tokens, [])
 
-    def withdraw_in_another_process(self):
+    def withdraw_in_another_process(self) -> float:
         script = (
             "import sqlite3,sys;c=sqlite3.connect(sys.argv[1],timeout=20);"
             "c.execute('UPDATE assistant_dispatch_gate SET expires_at=expires_at-1000');"
             "c.execute(sys.argv[2],(sys.argv[3],));c.commit()"
         )
-        sql, sensor = e1.DirectControlWrites.withdraw_sql(self)
+        sql, sensor = self.withdraw_sql()
         started = time.monotonic()
         subprocess.run(
             [sys.executable, "-c", script, str(self.dbpath), sql, sensor],
@@ -228,10 +243,10 @@ class Boundary(c7.Base):
 
     def test_a_suspension_at_the_old_final_check_with_another_process_withdrawal_sends_nothing(
         self,
-    ):
+    ) -> None:
         if self.service.mssql:
             self.skipTest("the cross-process SQLite withdrawal is SQLite-only")
-        reached = []
+        reached: list[float] = []
         self.put(4)
         self.add_live(10)
         self.quality_ready()
@@ -246,7 +261,7 @@ class Boundary(c7.Base):
         self.assertLess(self.withdraw_in_another_process(), 10)
         self.assertNotEqual(self.consent_now(), "granted")
 
-    def test_the_agents_worker_never_gives_captured_readings_to_a_real_ai(self):
+    def test_the_agents_worker_never_gives_captured_readings_to_a_real_ai(self) -> None:
         self.put(4)
         self.add_live(10)
         self.quality_ready()
@@ -257,19 +272,17 @@ class Boundary(c7.Base):
             task = self.service._row(db, tid)
         self.assertTrue(self.service._captured_sensors(task))
         limits = self.service.limits
-        worker = AgentWorker(foundry_provider(ai))
+        worker = dispatch.AgentWorker(dispatch.foundry_provider(ai))
         for _ in range(2):  # a redelivery behaves the same way
-            result = worker.handle(TaskMessage.from_task(task, limits), limits)
+            result = worker.handle(dispatch.TaskMessage.from_task(task, limits), limits)
             self.assertIsNotNone(result)
             self.assertNotEqual(result.envelope.get("outcome"), "returned")
         self.assertEqual((peer.accepts, peer.bytes), (0, 0))
-        self.assertEqual((ai.consumption.reserved, ai.consumption.checked), (0, 0))
+        self.assertEqual((self.meter.reserved, self.meter.checked), (0, 0))
 
-    def test_the_api_composition_applies_the_same_policy(self):
-        from zava_forward.api.server import App
-
+    def test_the_api_composition_applies_the_same_policy(self) -> None:
         peer, ai = self.tls_ai()
-        app = App(self.store)
+        app = server.App(self.store)
         self.addCleanup(app.assistants.stop)
         with ai_consumption.captured_readings():
             envelope = app.assistants.provider("system", "user", 50, 5)
@@ -280,11 +293,11 @@ class Boundary(c7.Base):
         class Silent:
             sends_no_bytes = True
 
-            def evidence(self, *args):
+            def evidence(self, *args: object) -> dict[str, Any]:
                 return dict(outcome="returned", usage=None, source="unverified", text=None)
 
         class Undeclared:
-            def evidence(self, *args):
+            def evidence(self, *args: object) -> dict[str, Any]:
                 raise AssertionError("must not be called")
 
         self.store.ai = Silent()
@@ -295,7 +308,7 @@ class Boundary(c7.Base):
         with ai_consumption.captured_readings():
             self.assertNotEqual(app.assistants.provider("s", "u", 50, 5).get("outcome"), "returned")
 
-    def test_a_non_transmitting_mock_still_serves_the_demo_path(self):
+    def test_a_non_transmitting_mock_still_serves_the_demo_path(self) -> None:
         self.ready()
         self.service.scan()
         (tid,) = self.quality_task()
@@ -304,14 +317,10 @@ class Boundary(c7.Base):
         self.assertEqual(self.provider.calls, 1)
 
 
-class Cursor(e1.GateBase):
+class Cursor(e1.AdoptionHelpers):
     """F2: history beyond the unchanged 100-row per-scan cap progresses by a durable cursor."""
 
-    legacy = e1.Adoption.legacy
-    assessments = e1.Adoption.assessments
-    complete_documents = e1.Adoption.complete_documents
-
-    def history(self, manual=120):
+    def history(self, manual: int = 120) -> str:
         first = self.legacy(manual)
         with self.service.transaction() as db:
             raw = db.execute(
@@ -329,12 +338,13 @@ class Cursor(e1.GateBase):
             )
         return first
 
-    def scan_again(self, service=None):
+    def scan_again(self, service: Any = None) -> dict[str, Any]:
         service = service or self.service
         service.scan_cursor = ""
-        return service.scan()
+        report: dict[str, Any] = service.scan()
+        return report
 
-    def slot(self):
+    def slot(self) -> Any:
         with self.service.transaction() as db:
             return db.execute(
                 "SELECT signature,task_id FROM assistant_schedule"
@@ -342,7 +352,9 @@ class Cursor(e1.GateBase):
                 " AND case_id='ZF-1'"
             ).fetchone()
 
-    def test_the_cap_is_unchanged_and_a_long_history_completes_over_scans_and_restarts(self):
+    def test_the_cap_is_unchanged_and_a_long_history_completes_over_scans_and_restarts(
+        self,
+    ) -> None:
         self.assertEqual(
             assistants_module.Assistants.ADOPT_ROWS * assistants_module.Assistants.ADOPT_PAGES, 100
         )
@@ -368,13 +380,13 @@ class Cursor(e1.GateBase):
         self.assertEqual(len(self.assessments()), 2)
         self.assertEqual(self.provider.calls, calls)
 
-    def test_every_page_reads_strictly_after_the_stored_cursor(self):
+    def test_every_page_reads_strictly_after_the_stored_cursor(self) -> None:
         self.history()
         self.complete_documents("1")
-        seen = []
+        seen: list[str | None] = []
         real = assistants_module.Assistants._adopt
 
-        def spy(service, db, cap, case_id, cursor=None):
+        def spy(service: Any, db: Any, cap: str, case_id: str, cursor: str | None = None) -> Any:
             seen.append(cursor)
             return real(service, db, cap, case_id, cursor)
 
@@ -386,12 +398,8 @@ class Cursor(e1.GateBase):
         self.assertGreater(starts[1], starts[0])
 
 
-class ForecastPurity(e1.GateBase):
+class ForecastPurity(e1.AdoptionHelpers):
     """F3: a forecast is read-only for schedule, release, event and in-memory state."""
-
-    legacy = e1.Adoption.legacy
-    assessments = e1.Adoption.assessments
-    complete_documents = e1.Adoption.complete_documents
 
     TABLES = (
         "assistant_schedule",
@@ -403,8 +411,8 @@ class ForecastPurity(e1.GateBase):
         "assistant_dispatch_gate",
     )
 
-    def dump(self):
-        out = {}
+    def dump(self) -> dict[str, Any]:
+        out: dict[str, Any] = {}
         with self.service.transaction() as db:
             for table in self.TABLES:
                 try:
@@ -414,31 +422,31 @@ class ForecastPurity(e1.GateBase):
         out["memory"] = (sorted(self.service.incomplete), self.service.scan_cursor)
         return out
 
-    def assert_pure(self):
+    def assert_pure(self) -> dict[str, Any]:
         before = self.dump()
-        result = self.service.forecast(self.pm)
+        result: dict[str, Any] = self.service.forecast(self.pm)
         self.assertEqual(self.dump(), before)
         return result
 
-    def test_a_fresh_store_forecast_changes_nothing_and_a_later_scan_still_adopts(self):
+    def test_a_fresh_store_forecast_changes_nothing_and_a_later_scan_still_adopts(self) -> None:
         self.ready()
         result = self.assert_pure()
         self.assertTrue(result["assistants"])
         self.service.scan()
         self.assertEqual(len(self.quality_task()), 1)
 
-    def test_a_legacy_store_forecast_changes_nothing(self):
+    def test_a_legacy_store_forecast_changes_nothing(self) -> None:
         self.legacy(8)
         self.complete_documents("1")
         self.assert_pure()
         self.scan_legacy()
         self.assertEqual(len(self.assessments()), 2)
 
-    def scan_legacy(self):
+    def scan_legacy(self) -> None:
         self.service.scan_cursor = ""
         self.service.scan()
 
-    def test_a_persisted_incomplete_slot_and_the_held_marker_are_not_changed(self):
+    def test_a_persisted_incomplete_slot_and_the_held_marker_are_not_changed(self) -> None:
         self.legacy(8)
         self.complete_documents("1")
         with patch.object(type(self.service), "ADOPT_PAGES", 1):
@@ -455,7 +463,7 @@ class ForecastPurity(e1.GateBase):
                     1,
                 )
 
-    def test_a_material_release_change_is_not_revoked_by_a_forecast(self):
+    def test_a_material_release_change_is_not_revoked_by_a_forecast(self) -> None:
         self.ready()
         self.service.scan()
         with patch.object(rai_release, "changed_triggers", return_value=["model_version"]):
@@ -472,7 +480,7 @@ class ForecastPurity(e1.GateBase):
 class Rotation(c7.Base):
     """F4: a citation rotated out of the bounded capture is reported as such; rows still exist."""
 
-    def test_rotation_is_not_deletion_and_a_real_delete_is_still_reported_apart(self):
+    def test_rotation_is_not_deletion_and_a_real_delete_is_still_reported_apart(self) -> None:
         self.ready()
         self.service.scan()
         (tid,) = self.quality_task()

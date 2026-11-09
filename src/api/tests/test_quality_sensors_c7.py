@@ -6,7 +6,9 @@ import os
 import threading
 import time
 import unittest
+from collections.abc import Callable
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from typing import Any
 from unittest.mock import patch
 
 import release_support
@@ -20,17 +22,17 @@ import test_quality_sensors as qs
 class Meter:
     """Stands in for the financial meter; `before` runs where the former final check sat."""
 
-    def __init__(self, before=None):
+    def __init__(self, before: Callable[[], object] | None = None) -> None:
         self.before = before
 
-    def reserve(self, *args, **kwargs):
+    def reserve(self, *args: object, **kwargs: object) -> str:
         return "rid"
 
-    def dispatch_check(self, rid):
+    def dispatch_check(self, rid: str) -> None:
         if self.before:
             self.before()
 
-    def complete(self, *args, **kwargs):
+    def complete(self, *args: object, **kwargs: object) -> None:
         return None
 
 
@@ -69,13 +71,37 @@ class Sink:
 
 
 class Base(qs.Seed, ta.ApiTests):
-    def ready(self, **kw):
+    def ready(self, **kw: Any) -> None:
         self.mock(**kw)
         self.put(4)
         self.add_live(10)
         self.quality_ready()
 
-    def real_transport(self, before=None):
+    def complete_documents(self, version: str) -> None:
+        with self.store.lock:
+            case = self.store._case("ZF-1")
+            case["documents"] = [
+                dict(
+                    id="SURVEY-1",
+                    kind="Survey",
+                    name="s",
+                    summary="s",
+                    content_sha256="a" + version,
+                    version=1,
+                ),
+                dict(
+                    id="DESIGN-1",
+                    kind="Design",
+                    name="d",
+                    summary="d",
+                    content_sha256="b" + version,
+                    version=1,
+                ),
+            ]
+            case["technical"] = dict(case.get("technical") or {}, design_version="v1")
+            self.store.save()
+
+    def real_transport(self, before: Callable[[], object] | None = None) -> Sink:
         """A real Ai client whose only network is a loopback sink."""
         sink = Sink()
         self.addCleanup(sink.close)
@@ -104,9 +130,10 @@ class Base(qs.Seed, ta.ApiTests):
         thread.start()
         return thread, errors
 
-    def consent_now(self):
+    def consent_now(self) -> str:
         with self.service.transaction() as db:
-            return sensor_view.consent(db, "ZF-1", {qs.DEFAULT}, self.service.mssql)
+            state: str = sensor_view.consent(db, "ZF-1", {qs.DEFAULT}, self.service.mssql)
+        return state
 
     def used_calls(self):
         with self.service.transaction() as db:
@@ -263,30 +290,6 @@ class Upgrade(Base):
         restarted.scan()
         self.assertEqual(self.quality_task(), [tid])
         self.assertEqual(restarted.invoke(self.pm, "quality-evidence", "ZF-1")["id"], tid)
-
-    def complete_documents(self, version):
-        with self.store.lock:
-            case = self.store._case("ZF-1")
-            case["documents"] = [
-                dict(
-                    id="SURVEY-1",
-                    kind="Survey",
-                    name="s",
-                    summary="s",
-                    content_sha256="a" + version,
-                    version=1,
-                ),
-                dict(
-                    id="DESIGN-1",
-                    kind="Design",
-                    name="d",
-                    summary="d",
-                    content_sha256="b" + version,
-                    version=1,
-                ),
-            ]
-            case["technical"] = dict(case.get("technical") or {}, design_version="v1")
-            self.store.save()
 
     def test_a_legacy_gap_free_assessment_change_is_detected_after_upgrade(self):
         self.ready()

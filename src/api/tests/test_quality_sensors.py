@@ -14,6 +14,7 @@ import threading
 import time
 import unittest
 from datetime import UTC, datetime
+from typing import Any
 from unittest.mock import patch
 
 import release_support
@@ -69,6 +70,8 @@ class CapturingProvider(ta.Provider):
 
 
 class Seed:
+    provider: ta.Provider
+
     def setUp(self):
         super().setUp()
         self.controls = {}
@@ -97,7 +100,14 @@ class Seed:
         self.controls[sensor] = (home, consent)
         self.configure()
 
-    def put(self, count=3, consent="granted", home="ZF-1", offset=3 * 3600, **kw):
+    def put(
+        self,
+        count: int = 3,
+        consent: str | None = "granted",
+        home: str = "ZF-1",
+        offset: int = 3 * 3600,
+        **kw: Any,
+    ) -> None:
         sensor = kw.setdefault("sensor", "SENS-SYN-" + home[3:])
         if consent:
             self.controls[sensor] = (home, consent)
@@ -138,7 +148,9 @@ class Seed:
                     tuple(row[c] for c in READING_COLUMNS),
                 )
 
-    def add_live(self, minute, home="ZF-1", sensor=DEFAULT, base=None):
+    def add_live(
+        self, minute: int, home: str = "ZF-1", sensor: str = DEFAULT, base: int | None = None
+    ) -> str:
         """A row built by the actual live simulator contract."""
         base = int(time.time()) // SEAL * SEAL if base is None else base
         reading = live_readings.Reading(
@@ -157,9 +169,10 @@ class Seed:
                 f"INSERT INTO sensor_reading VALUES ({','.join('?' * len(READING_COLUMNS))})",
                 tuple(row[c] for c in READING_COLUMNS),
             )
-        return reading.reading_id
+        reading_id: str = reading.reading_id
+        return reading_id
 
-    def quality_ready(self):
+    def quality_ready(self) -> None:
         cl = quality.checklist_for("Loft insulation")
         items = {label: "SYN current photo" for label in cl["items"]}
         with self.store.lock:
@@ -179,7 +192,7 @@ class Seed:
     def clock(self, seconds):
         return patch.object(self.service, "now", side_effect=lambda db=None: time.time() + seconds)
 
-    def quality_task(self):
+    def quality_task(self) -> list[str]:
         with self.service.transaction() as db:
             rows = db.execute(
                 "SELECT id FROM assistant_tasks WHERE capability='quality-evidence'"
@@ -1588,15 +1601,16 @@ class Http(Seed, ta.ApiTests):
         self._ready_one()
         self.service.scan()
         for minute in (9, 8, 7, 6, 5, 4, 3, 2, 1):
-            (pending,) = [
+            waiting = [
                 t
                 for t in self.quality_task()
                 if self.service.detail(self.pm, t)["state"] == "pending"
-            ] or [None]
-            if pending is None:
+            ]
+            if not waiting:
                 break
+            (current,) = waiting
             self.add_live(minute)
-            self.service.execute(pending)
+            self.service.execute(current)
         self.assertEqual(self.provider.calls, 0)
         self.assertLessEqual(len(self.quality_task()), 5)
         self.service.scan_cursor = ""

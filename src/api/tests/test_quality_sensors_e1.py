@@ -36,9 +36,16 @@ class GateBase(c7.Base):
         with self.service.transaction() as db:
             db.execute("DELETE FROM assistant_dispatch_gate")
 
-    def direct(self, sql, *args):
+    def direct(self, sql: str, *args: object) -> None:
         with self.service.transaction() as db:
             db.execute(sql, args)
+
+    def withdraw_sql(self) -> tuple[str, str]:
+        return (
+            "UPDATE sensor_consumer_control SET body=REPLACE(body,'\"granted\"','\"declined\"')"
+            " WHERE sensor_id=?",
+            qs.DEFAULT,
+        )
 
     def control_body(self, sensor=qs.DEFAULT):
         with self.service.transaction() as db:
@@ -49,13 +56,6 @@ class GateBase(c7.Base):
 
 class DirectControlWrites(GateBase):
     """F2: a direct write cannot commit while a dispatch for the home is authorised."""
-
-    def withdraw_sql(self):
-        return (
-            "UPDATE sensor_consumer_control SET body=REPLACE(body,'\"granted\"','\"declined\"')"
-            " WHERE sensor_id=?",
-            qs.DEFAULT,
-        )
 
     def test_direct_update_delete_and_insert_are_rejected_for_a_home_with_a_live_gate(self):
         self.put(3)
@@ -234,10 +234,10 @@ class ManualAndProactive(GateBase):
         self.assertEqual((self.provider.calls, self.used_calls()), (2, 2))
 
 
-class Adoption(GateBase):
-    """F4: legacy history is searched within a bound; an incomplete search is not no history."""
+class AdoptionHelpers(GateBase):
+    """Typed legacy-history builders shared by the adoption, cursor and forecast suites."""
 
-    def legacy(self, newer):
+    def legacy(self, newer: int) -> str:
         self.ready()
         cap = "assessment-preparation"
         self.service.scan()
@@ -266,13 +266,17 @@ class Adoption(GateBase):
             db.execute("DELETE FROM assistant_schedule")
         return first
 
-    def assessments(self):
+    def assessments(self) -> list[str]:
         with self.service.transaction() as db:
             rows = db.execute(
                 "SELECT id FROM assistant_tasks WHERE capability='assessment-preparation'"
                 " AND case_id='ZF-1' AND id NOT LIKE 'old%' ORDER BY id"
             ).fetchall()
         return [r[0] for r in rows]
+
+
+class Adoption(AdoptionHelpers):
+    """F4: legacy history is searched within a bound; an incomplete search is not no history."""
 
     def test_more_than_one_page_of_newer_manual_tasks_does_not_hide_the_serviced_task(self):
         self.legacy(8)
@@ -299,9 +303,6 @@ class Adoption(GateBase):
             restarted.scan()
             # The durable cursor lets the next scan resume and reach the serviced task.
             self.assertEqual(len(self.assessments()), 2)
-
-    def complete_documents(self, version):
-        c7.Upgrade.complete_documents(self, version)
 
 
 class Coalescing(GateBase):

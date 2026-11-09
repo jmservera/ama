@@ -13,6 +13,7 @@ import urllib.request
 import uuid
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 from unittest.mock import Mock
 
@@ -44,6 +45,9 @@ def proposal(snapshot):
 
 
 class Provider:
+    # Set by the capturing subclass; declared here so a shared `provider` attribute has one type.
+    prompts: list[dict[str, Any]]
+    fail: int
     configured = True
     sends_no_bytes = True
     provider, endpoint, fast = "local-test-double", "local-test", "test"
@@ -74,6 +78,8 @@ class Provider:
 
 
 class Base(unittest.TestCase):
+    provider: Provider
+
     def setUp(self):
         self.root = Path(tempfile.mkdtemp(prefix="assistant-test-"))
         self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
@@ -103,7 +109,7 @@ class Base(unittest.TestCase):
         self.service.stop()
         self.store.db.close()
 
-    def other(self, **cfg):
+    def other(self, **cfg: Any) -> Assistants:
         store = self.open_store()
         store.ai = self.provider
         service = Assistants(store, config(**cfg))
