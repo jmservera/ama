@@ -33,12 +33,12 @@
     {
       "decision": "Research executed, Planning Readiness Ready for Stage A",
       "status": "confirmed",
-      "evidence": "research artifact 2026-11-09T22:31Z"
+      "evidence": "research artifact, commit aebfe6f40"
     },
     {
       "decision": "Critique executed once (independent rubber-duck): Revise, seven findings applied directly, no user decision",
       "status": "confirmed",
-      "evidence": "critique artifact 2026-11-09T22:41Z"
+      "evidence": "critique artifact, commit aebfe6f40"
     }
   ],
   "blockers": [

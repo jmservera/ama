@@ -2,7 +2,7 @@
 title: "Plan, issue 133 assisted aftercare source integration, Stage A (2026-11-09)"
 ms.date: 2026-11-09
 ---
-Written 2026-11-09T22:36Z, before any source edit. Research: [research](../research/2026-11-09/assisted-aftercare-133-stagea-research.md). Details: [details](../details/2026-11-09/assisted-aftercare-133-stagea-details.md). State: `.copilot-tracking/rpi-sessions/2026-11-09/assisted-aftercare-133-stagea-state.json`.
+Written 2026-11-09 (UTC, committed 22:32Z as aebfe6f40), before any source edit. Research: [research](../research/2026-11-09/assisted-aftercare-133-stagea-research.md). Details: [details](../details/2026-11-09/assisted-aftercare-133-stagea-details.md). State: `.copilot-tracking/rpi-sessions/2026-11-09/assisted-aftercare-133-stagea-state.json`.
 
 ## Objective
 
@@ -36,4 +36,4 @@ Five total productive correction cycles for the issue; none spent at planning.
 
 ## Critique (one pass)
 
-Executed once at 2026-11-09T22:41Z. Verdict: Revise; seven findings applied directly to the details, none needed a user decision. See [critique](assisted-aftercare-133-stagea-critique.md). The plan phases are unchanged; the details carry the corrections. Implementation begins after the plan commit.
+Executed once on 2026-11-09 before commit aebfe6f40. Verdict: Revise; seven findings applied directly to the details, none needed a user decision. See [critique](assisted-aftercare-133-stagea-critique.md). The plan phases are unchanged; the details carry the corrections. Implementation begins after the plan commit.

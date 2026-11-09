@@ -4,7 +4,7 @@ ms.date: 2026-11-09
 ---
 ## Scope and disposition
 
-Research disposition: executed (started 2026-11-09T22:28Z, written 2026-11-09T22:31Z). Planning Readiness: Ready for Stage A (dedicated modules and isolated synthetic contracts). Not ready: connected integration, which needs shared hooks not admitted to this slice.
+Research disposition: executed (started 2026-11-09T22:28Z, recorded before commit aebfe6f40 at 22:32Z). Planning Readiness: Ready for Stage A (dedicated modules and isolated synthetic contracts). Not ready: connected integration, which needs shared hooks not admitted to this slice.
 
 Inputs read: the ready issue file for #133 (acceptance criteria C1 to C6 and the 2026-10-31 and 2026-11-05 closure audits, treated as requirements data), the shared demo capacity guidance, the repository and Markdown instructions, the core README aftercare section, `aftercare.py`, `test_aftercare.py`, the #193 production-consumer test, `sensor_scenarios.retrofit_comparison`, `projection.STAFF_ROLES`, `controls.RESIDENT_ROLES`, `workflows.MANAGER_ROLES`, `chat_privacy.redact`, the existing server `/api/exceptions` hook, `store.py`/`sqlstore.py` persistence patterns and the `simulator-control.js` and exception-register screen test patterns. Both case studies, the knowledge-base index and memory were opened for context; no regulatory claim is made by this slice.
 
