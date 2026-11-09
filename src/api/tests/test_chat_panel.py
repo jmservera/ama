@@ -578,6 +578,62 @@ class PanelTests(roles.Matrix):
         ):
             self.assertIn(needle, js)
 
+    def test_validation_refused_turns_record_one_metadata_only_receipt(self) -> None:
+        canary = "CANARY-QUESTION"
+        field = "CANARY-FIELD"
+        value = "CANARY-VALUE"
+
+        def turns(action: str) -> list[dict[str, Any]]:
+            return [e for e in self.store.audit_entries() if e["action"] == action]
+
+        tid = self.thread()
+        unstored = "/api/chat/unstored-ask"
+        cases = (
+            ("chat.turn.unstored", unstored, {"content": canary, field: value}),
+            ("chat.turn", f"/api/chat/threads/{tid}/ask", {"content": canary, field: value}),
+            ("chat.turn", f"/api/chat/threads/{tid}/ask", {"content": canary, "skill": None}),
+        )
+        for action, path, body in cases:
+            sibling = "chat.turn" if action == "chat.turn.unstored" else "chat.turn.unstored"
+            before, others = len(turns(action)), len(turns(sibling))
+            code, reply = self.api(ROLE, path, body)
+            self.assertEqual(code, 400, (path, body))
+            rows = turns(action)
+            self.assertEqual(len(rows), before + 1, (path, body))
+            self.assertEqual(len(turns(sibling)), others)
+            detail = json.loads(rows[-1]["detail"])
+            self.assertEqual((detail["outcome"], detail["model_calls"]), ("rejected", 0))
+            self.assertEqual(rows[-1]["case"], "")
+            if action == "chat.turn":
+                self.assertEqual(detail["thread_id"], tid)
+                self.assertIsNone(detail["tokens"])
+                self.assertEqual(detail["provider_outcome"], "not-called")
+            else:
+                self.assertEqual(set(detail), {"outcome", "model_calls"})
+            for secret in (canary, field, value):
+                self.assertNotIn(secret, json.dumps(rows[-1]))
+        owner = self.store.staff[self.email(ROLE)]
+        self.assertEqual(self.store.chat_resume(owner, tid)["messages"], [])
+        self.assertEqual(self.prompts, [])
+
+    def test_validation_refusal_controls_keep_one_normal_receipt_and_denials(self) -> None:
+        def count() -> int:
+            return len([e for e in self.store.audit_entries() if e["action"] == "chat.turn"])
+
+        tid = self.thread()
+        before = count()
+        self.assertEqual(self.ask(tid)[0], 200)
+        self.assertEqual((count(), len(self.prompts)), (before + 1, 1))
+        user = self.store.staff[self.email(ROLE)]
+        user["disabled"] = True
+        self.addCleanup(user.pop, "disabled", None)
+        before = count()
+        path = f"/api/chat/threads/{tid}/ask"
+        self.assertEqual(self.api(ROLE, path, {"content": "x", "extra": 1})[0], 403)
+        rows = [e for e in self.store.audit_entries() if e["action"] == "chat.turn"]
+        self.assertEqual(len(rows), before + 1)
+        self.assertEqual(json.loads(rows[-1]["detail"])["outcome"], "access-rejected")
+
     def test_turn_refused_before_dispatch_still_records_a_receipt(self) -> None:
         user = self.store.staff[self.email(ROLE)]
         tid = self.thread()

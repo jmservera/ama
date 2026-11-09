@@ -7,12 +7,14 @@ boundary (Azure RBAC on the file share); this module holds no secret and makes n
 """
 
 import argparse
+import fcntl
 import json
 import os
 import re
 import sys
 import tempfile
-from collections.abc import Sequence
+from collections.abc import Iterator, Sequence
+from contextlib import contextmanager, nullcontext
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -101,6 +103,26 @@ def check_window(control: Control, now: datetime) -> None:
         raise StreamError("CONTROL_WINDOW_INVALID")
 
 
+@contextmanager
+def locked(path: Path) -> Iterator[None]:
+    """Hold an exclusive advisory lock on a sidecar file so writers cannot interleave.
+
+    Readers never lock (a replace is atomic). A held lock refuses with CONTROL_BUSY.
+    """
+    try:
+        handle = os.open(path.with_name(path.name + ".lock"), os.O_CREAT | os.O_RDWR, 0o600)
+    except OSError:
+        raise StreamError("CONTROL_UNAVAILABLE") from None
+    try:
+        try:
+            fcntl.flock(handle, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            raise StreamError("CONTROL_BUSY") from None
+        yield
+    finally:
+        os.close(handle)
+
+
 def write(path: Path, control: Control) -> None:
     """Replace the document atomically so a reader never sees a partial file."""
     handle, temporary = tempfile.mkstemp(dir=path.parent, prefix=".control-")
@@ -127,29 +149,30 @@ def main(argv: Sequence[str] | None = None, now: datetime | None = None) -> int:
     args = parser.parse_args(list(argv) if argv is not None else None)
     moment = now or datetime.now(UTC)
     try:
-        if args.action == "start":
-            control = parse(
-                {
-                    "version": VERSION,
-                    "enabled": True,
-                    "expires_at": args.expires_at,
-                    "approval_reference": args.approval,
-                    "owner": args.owner,
-                    "homes": [h for h in (args.homes or "").split(",") if h],
-                }
-            )
-            check_window(control, moment)
-        else:
-            current = load(args.file)
-            control = Control(
-                False if args.action == "stop" else current.enabled,
-                current.expires_at,
-                current.approval_reference,
-                current.owner,
-                current.homes,
-            )
-        if args.action != "status":
-            write(args.file, control)
+        with locked(args.file) if args.action != "status" else nullcontext():
+            if args.action == "start":
+                control = parse(
+                    {
+                        "version": VERSION,
+                        "enabled": True,
+                        "expires_at": args.expires_at,
+                        "approval_reference": args.approval,
+                        "owner": args.owner,
+                        "homes": [h for h in (args.homes or "").split(",") if h],
+                    }
+                )
+                check_window(control, moment)
+            else:
+                current = load(args.file)
+                control = Control(
+                    False if args.action == "stop" else current.enabled,
+                    current.expires_at,
+                    current.approval_reference,
+                    current.owner,
+                    current.homes,
+                )
+            if args.action != "status":
+                write(args.file, control)
     except (StreamError, OSError) as error:
         print(f"Cannot continue: {error}", file=sys.stderr)
         return 2

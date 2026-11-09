@@ -131,7 +131,7 @@ class CliTests(unittest.TestCase):
             self.assertFalse(stopped.enabled)
             self.assertEqual(stopped.homes, tuple(HOMES[:2]))
             self.assertEqual(self.run_cli("status", *base), 0)
-            self.assertEqual(list(Path(directory).iterdir()), [path])
+            self.assertEqual(sorted(Path(directory).iterdir()), [path, Path(f"{path}.lock")])
 
     def test_start_refuses_an_unbounded_or_past_window_and_writes_nothing(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

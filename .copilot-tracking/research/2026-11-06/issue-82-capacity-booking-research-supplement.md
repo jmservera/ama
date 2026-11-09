@@ -1,0 +1,13 @@
+---
+title: Issue 82 capacity-at-booking research supplement (2026-11-06)
+ms.date: 2026-11-06
+---
+
+* Supplements, and leaves byte-identical, `issue-82-family-readiness-research.md` (sha256 e9f169a4...). Start: HEAD d688866b2, tree 62f901688, parent d4d33c7ec, main bb3a3b03c; source unchanged from d4.
+* Qualification 1: "existing approved semantics" in the earlier files means existing IMPLEMENTED semantics. Code existence is not named professional approval; the new rule is an unreviewed exercise fixture.
+* Qualification 2: the earlier finance and eligibility "blocked" cells came from a partial trace. They are withdrawn as human-blocker claims and are simply out of scope; readiness for them is not established or denied here.
+* Actual `require_booked_capacity` (procurement.py) order: exactly one ACTIVE work order and it is Appointed (ValueError); `require_appointment_commitment` (ValueError "Appointment is not committed"); SQL-backed staff read of the issuer and manager-role check (PermissionError); staff confirmation authority revalidated via `_contract_authority` (PermissionError); in SQL stores a transaction validation context is registered; commitment again; `_existing_capacity` (ValueError family, `_evidenced_capacity`); `_resident_work_order_clear` (ValueError, then resident-clear errors); context reset in `finally`. All raise before any mutation, so refusal changes no state.
+* Capacity discriminators already in `_evidenced_capacity`: missing/non-positive/blank evidence, legacy non-dict details, `_capacity_details` validation failure, hash/scope/contract/covered-home mismatch, accepting manager missing, authority record changed are missing, unreadable, legacy or stale evidence (Unknown). Work date outside the evidenced period and committed capacity below existing orders are known violations (Fail). `_contract_authority` PermissionError and resident refusals are the authority and resident families and keep their types; they are not converted.
+* Decision: raise from the capacity sites a `ValueError` subclass carrying an explicit `GateResult` (state False = fail, None = unknown). No message matching, no catch-all. `_capacity_details` is the single established validation helper; only its ValueError is mapped, by an explicit narrow try around that one call. Other errors (KeyError, TypeError, database) surface unchanged.
+* Observability: `require_booked_capacity` returns the pass `GateResult`; `advance` refusals carry `.result` on the exception. The pass result is not persisted; no event, schema or API field changes. If persisting provenance is needed it is a later contract change.
+* Planning Readiness: Ready, tier FULL.

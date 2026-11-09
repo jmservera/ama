@@ -3,12 +3,14 @@ import io
 import json
 import logging
 import random
+import sys
 import tempfile
 import unittest
 from contextlib import redirect_stdout
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 from zava_forward.core.synthetic import live_readings as lr
 from zava_forward.core.synthetic.sensor_stream import StreamError
@@ -479,6 +481,16 @@ class CliTests(unittest.TestCase):
             code = ls.main(["--sink", "iothub", "--once"], env={})
         self.assertEqual(code, 2)
         self.assertIn("IOT_ACTIVATION_REQUIRED", err.getvalue())
+
+    def test_iothub_sink_without_streaming_sdk_reports_the_missing_dependency(self) -> None:
+        from contextlib import redirect_stderr
+
+        err = io.StringIO()
+        with patch.dict(sys.modules, {"azure.eventhub": None}), redirect_stderr(err):
+            sys.modules.pop("zava_forward.api.iot_stream", None)
+            code = ls.main(["--sink", "iothub", "--once"], env={})
+        self.assertEqual(code, 2)
+        self.assertIn("IOT_SDK_MISSING", err.getvalue())
 
     def test_over_capacity_fleet_is_refused_before_any_send(self) -> None:
         original = ls.store_home_ids

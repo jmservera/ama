@@ -10,6 +10,8 @@ import hashlib
 import json
 import os
 import re
+from collections.abc import Mapping, Sequence
+from typing import Any
 
 from .stock import support_status
 
@@ -143,7 +145,7 @@ def canonical(entries):
     return json.dumps(entries, sort_keys=True, separators=(",", ":"))
 
 
-def snapshot(cases, policy, as_of):
+def snapshot(cases: Sequence[Mapping[str, Any]], policy: Mapping[str, Any], as_of: str) -> dict[str, Any]:
     """Ranking snapshot: policy version and hash, as_of, and per case rank, reason codes and deciding rule.
 
     The deciding rule is the first rule in policy order that separates a case from the one ranked above it.
