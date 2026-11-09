@@ -5909,3 +5909,74 @@ Selected before running (plan committed `1b1c3f73`): `python -m checks.quality_s
 Recommendation: CONTINUE; hold Quality merged-main claims, #1288 closure and dependent expansion, and the whole #440 and Major HVE criteria; no pivot, deferral or requirement relaxation is inferred. Independent repairs may continue.
 
 Final merged-main resume requirement: after PR 1331 actually merges, fetch `main`, prove the merged source tree and its hosted checks, rerun the O1 command once (or its corrected successor) at that tree through one nonqueued admission, and then re-evaluate this checkpoint as a separate merged-main qualification. Until then every Quality statement here is parent-topic only.
+
+## Merged-main Blob and Quality qualification (2026-11-09, Refs #440 #1288 #1258 #1259 #136)
+
+Separate dated continuation of the parent-topic checkpoint above, which is preserved unchanged, including its original exit 1 observation O1. It qualifies only what is implemented on merged `main` after PR 1331 and records one new observation M1. Records: [research](../../.copilot-tracking/research/2026-11-09-blob-quality-main-440-research.md), [plan](../../.copilot-tracking/plans/2026-11-09-blob-quality-main-440-plan.md), [details](../../.copilot-tracking/details/2026-11-09-blob-quality-main-440-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-09-blob-quality-main-440-critique.md), [changes](../../.copilot-tracking/changes/2026-11-09-blob-quality-main-440-changes.md), [review](../../.copilot-tracking/reviews/2026-11-09-blob-quality-main-440-review.md). LOCAL ONLY, documentation only, no source, check or test change by this lane.
+
+### Source identities and provenance
+
+| Item | Identity |
+| --- | --- |
+| Merged `main` (fetched 2026-11-09T22:52:08Z) | `1b7a1719bee088ce2823bff45242e319bc928295`, tree `dd2bedcb8f4e73266e143be09bf72474c62db9fd`; squash merge of PR 1331 at 2026-11-09T22:47:40Z |
+| PR 1331 final head | `f995774ca2415f6ae8903b6f45683dd55432eff1`; its tree equals the main tree (empty diff) |
+| Former parent-topic head (E8 wrap) | `348381549`; not an ancestor of main (squash provenance) |
+| Prior local checkpoint head | `6c2173dc3f5c6e35c7b30512f637f329fc883ddc`, preserved as an ancestor; the merge's first parent is `dbce15bc2a626e25c9e9aa869500ea9ba8c950aa` (the timestamp-correction commit above it) |
+| Prospective records commit | `0a6f5a605f41a90d2aa67e36e52ed5b7b8473f03` (plus timestamp correction), recorded before the merge and M1 |
+| Merge commit | `d0f806c9467fe0fe2f7d8b737567dd9e59315d01` (parents: the local checkpoint and main) |
+
+The declared target of this local child is now `main` (the Quality parent topic has merged as a squash). The ordinary merge of `origin/main` conflicted in two source files because the local branch carried the parent's unsquashed commits and main the squashed result; the conflict intent was unambiguous (main is the reviewed final tree), both were resolved to main, and `git diff origin/main HEAD -- src infra tools .github` is empty. No rebase, force or remote write. The candidate therefore differs from main by documentation and tracking files only. Hosted checks at PR 1331 head, read with `gh`: all listed checks SUCCESS (src-api, src-agents, mssql, src-core, src-orchestrator, src-importer, rubric and the framework jobs). Durations, the independent APPROVE and the c160 MSSQL job (319 tests, 1 skip) are coordinator-reported or historical figures, not re-read by this lane.
+
+### Source change since the original O1
+
+Between the parent-topic head `348381549` and main the src delta is five files, +117/-10: `quality_sensors_browser_check.py` (E9: expect the guarded-off refusal and its manual-route text, assert that a refused request stores no proposal, then seed a proposal for the later steps), one line of `assistants.js`, and three API tests (journey pin, web copy audit, resident demo shed). No Blob, ranking, infra or Bicep file changed. The Blob wave (#1328) was already on main at `a04668ae`; Blob observations from the parent-topic section remain valid historical reuse. Original O1 stays exit 1 at `348381549` (12 checks, then the stale expectation; later assertions and axe not reached) and is not relabelled green.
+
+### Observation M1 (new, source-qualified, local synthetic)
+
+Selected before running (plan and details committed first). Environment: the owned venv of the parent-topic checkpoint (editable `src/core`, `src/agents`, `src/api` resolve to this worktree, whose `src` equals main; Python 3.12.3, Playwright 1.64.1, azure-storage-blob 12.31.0; `pip freeze` retained), Chromium from the existing user cache, `env -i` with `PYTHONPATH` to `src/api`, `src/api/tests`, `src/core/tests` and `src/agents/tests`, constructed synthetic fixture with a mock provider, SQLite in an owned `mktemp` directory and a loopback server, and the pinned axe 4.10.3 bytes (sha256 `880970c0...a68bb`, verified by the check). No private data, `ZF_DATA`, model, Azure, SQL campaign or credential.
+
+Command (nonqueued, one heavy-resource admission each): `flock -n /tmp/ama-rpi-heavy.lock python -m checks.quality_sensors_browser_check --axe axe-4.10.3.min.js --out results.json`.
+
+| Attempt | Time (UTC) | Outcome |
+| --- | --- | --- |
+| 1 | 22:53:43 | Harness error, exit 1: `ModuleNotFoundError: checks` (no `PYTHONPATH`); the check did not start |
+| 2 | 22:53:53 | Harness error, exit 1: `ModuleNotFoundError: release_support` (test helper path missing); the check did not start |
+| 3 | 22:54:02 | Admission refused, exit 1, no output: lock held by another lane (holder named from a live `fuser` and `ps` read at 22:54:04Z, `flock` PID 3349620 running `unittest ... test_timecapture_copy.py` in the issue 153 worktree; that read was not saved to a file, only the empty log and exit 1 are retained); not queued, not killed |
+| 4 | 22:54:17 to 22:54:31 | Lock free; this run was the holder. Exit 0, 30 checks passed |
+
+Attempts 1 to 3 are harness or admission failures of the invocation, not observations of the product, and their logs are retained. No owned process remained after attempt 4.
+
+Observed behavior labels (attempt 4): the authorised Quality request reaches the mock provider; the captured snapshot holds retained readings and the displayed reading ids and values equal it; the attributed flag is unapproved with no approval control; withheld consent shows no readings table and is not reported as missing; stale readings are labelled stale not live; unavailable readings and capture are explicit; the simulation panel is labelled synthetic; the guarded-off real-provider route refuses and points to the manual route, and a refused request stores no proposal; with a seeded (synthetic, fixture) proposal the panel says how many readings it was given and cited, including one of twelve and zero cited, keeps them after rotation; the denied role sees no readings and the sensor API denies it too; no page errors. The seeded proposal is a fixture rendering, not model output, and is labelled separately from the refusal path.
+
+Axe, separate from the labels (WCAG rule set of axe 4.10.3, scripted states): 0 violations in all seven scans. Incomplete results remain: `color-contrast` (impact serious) needs manual review in five of the seven scans (unapproved flag 3 nodes, withheld 3, unavailable 3, simulation panel 2, and simulation panel with supplied and cited readings 2). Zero violations with serious contrast incompletes is not WCAG conformance, not an assistive-technology result and not Fluent 2 or human acceptance.
+
+Raw evidence (coordinator session files `observed-440-bq-main/`, `SHA256SUMS` verified; scratch preserved, path in `scratch-path.txt`): stdout, stderr, exit and start and end times per attempt, `m1-results.json`, `pip-freeze.txt`, `axe.sha256`. The `http-error ... client-disconnect` stderr lines are server-side teardown notices from the loopback fixture, not check failures.
+
+### Reuse of historical evidence
+
+| Evidence | Basis for reuse |
+| --- | --- |
+| Hosted Core, API, Agents, orchestrator, importer, MSSQL, rubric at `f995774` | Main tree equals the `f995774` tree, so hosted results at that exact head cover identical executable inputs; read via `gh`, not rerun here |
+| c160 MSSQL 319 tests, 1 skip | Historical, qualified: it does not by itself prove a specific unexamined refusal-event transaction or second-connection contract, or Azure SQL |
+| Parent-topic local logs (761 discovered, 100 skipped) and Blob suites | Historical for their trees; the 861 figure remains unreproducible; no local broad rerun |
+
+### Document-qualified trace (statuses not promoted)
+
+| Statement | Document-qualified link | Status after M1 |
+| --- | --- | --- |
+| Controlled gates; human approval, consent and quality decision stay with named humans | PRD (Zava Forward) 0.21.0 in review, FR-008 | Fixture and local browser observed on main source: no approval control on flags or simulation, consent withheld and role denial. No actual-model, human or live acceptance |
+| Per-measure quality-disposition record; provider package | PRD (Zava Forward) FR-017 and FR-016 | Not established by the advisory retained-sensor display |
+| No resident or complaints requirement ID asserted | BRD 0.21.0 draft and PRD (documents' numbers collide, so always document-qualified) | Earlier join mistakes preserved, not copied |
+| src distributions and layout | ADR-0006 | Editable installs resolve to this worktree |
+| Blob configuration and ranking publication | ADR set as listed in the parent-topic trace | Merged-main source and historical suites only; live Blob not observed |
+
+### Gaps, owners and recommendation
+
+| Gap | State | Owner |
+| --- | --- | --- |
+| Actual-model demo, ordinary post-fence suspension risk, local-only or remote cancellation, final SQL refusal-audit persistence, Azure SQL | Unproven, unchanged | #1288 (no closure claimed) |
+| Live Blob, immutability, remote atomicity, from-empty deployment | Unknown, deferred | #1258, #1259, #136 |
+| Serious `color-contrast` incompletes; assistive technology, consent, human acceptance, Major HVE, whole #440 | Open | #440 later criteria and existing accessibility owners; no new issue |
+| Priority-order recurrence, startup cause | Unknown | #1292 |
+
+No new defect was confirmed: the original O1 red was a stale check, corrected on main by E9, and M1 observed the corrected successor green. Recommendation: CONTINUE. Affected closure of #1288, #136 and #440, dependent expansion, and the Major HVE criterion stay on hold for the unmet criteria above; independent lanes may continue. No pivot, deferral, requirement relaxation or document approval is inferred. Source corrections need their own scoped route; this lane consumed no cycle of any other issue.

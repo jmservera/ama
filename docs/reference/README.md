@@ -1290,3 +1290,10 @@ reuses retained logs as historical (761 discovered, 100 skipped, the 861 figure 
 reproducible), and records one adverse local browser run of the Quality retained-sensor journey
 (a stale check after the real-provider route was made unavailable in code). Quality is not merged-main
 functionality; closure holds and the later merged-main requalification requirement stand.
+
+A separate [merged-main qualification](../architecture/cutover-evidence-pack.md#merged-main-blob-and-quality-qualification-2026-11-09-refs-440-1288-1258-1259-136)
+(2026-11-09, draft, local only) records `main` `1b7a1719b` (PR 1331 squash; tree equal to its final head
+`f995774`), the five-file source delta since the parent topic, and one new local browser observation of the
+corrected Quality check with its axe stage (exit 0, 30 checks, 0 axe violations, serious contrast
+incompletes remain). The original red observation is preserved. Closure, live, model, assistive-technology
+and human acceptance holds stand.
