@@ -515,6 +515,7 @@ class GateTests(unittest.TestCase):
         for path in (
             f"{core}sensor_analysis.py",
             f"{core}sensor_consumer.py",
+            f"{core}chatthreads.py",
             f"{core}synthetic/sensor_faults.py",
             "src/core/tests/sensor_consumer_fixture.py",
             "src/core/tests/test_sensor_analysis_mssql.py",
@@ -604,9 +605,54 @@ class GateTests(unittest.TestCase):
             ):
                 missed.add(path)
         self.assertEqual(
-            missed | {"src/core/src/zava_forward/core/synthetic/indoor_projection.py"},
+            missed
+            | {
+                "src/core/src/zava_forward/core/synthetic/indoor_projection.py",
+                "src/core/src/zava_forward/core/chatthreads.py",
+            },
             set(gate.SENSOR_MSSQL_DIRECT_DEPENDENCIES),
         )
+
+    def test_sensor_store_chat_schema_dependency_selects_mssql(self) -> None:
+        repo = Path(__file__).resolve().parents[1]
+        core = "src/core/src/zava_forward/core"
+        fixture = ast.parse(
+            (repo / "src/core/tests/sensor_consumer_fixture.py").read_text(encoding="utf-8")
+        )
+        self.assertTrue(
+            any(
+                isinstance(node, ast.ImportFrom)
+                and node.module == "zava_forward.core.mssqlstore"
+                and "MssqlStore" in {alias.name for alias in node.names}
+                for node in ast.walk(fixture)
+            )
+        )
+        store = ast.parse((repo / core / "mssqlstore.py").read_text(encoding="utf-8"))
+        imported = {
+            alias.name: alias.asname
+            for node in ast.walk(store)
+            if isinstance(node, ast.ImportFrom) and node.level == 1 and node.module == "chatthreads"
+            for alias in node.names
+        }
+        self.assertEqual(
+            imported,
+            {
+                "MEMORY_ADDED": "CHAT_MEMORY_ADDED",
+                "MSSQL_DDL": "CHAT_DDL",
+                "MSSQL_INDEX": "CHAT_INDEX",
+            },
+        )
+        used = {node.id for node in ast.walk(store) if isinstance(node, ast.Name)}
+        self.assertLessEqual(set(imported.values()), used)
+        path = f"{core}/chatthreads.py"
+        self.assertTrue((repo / path).is_file())
+        self.assertIn(path, gate.SENSOR_MSSQL_DIRECT_DEPENDENCIES)
+        self.assertFalse(
+            any(word in path.lower() for word in ("store", "schema", "sql", "assistants", "sensor"))
+        )
+        self.assertIn("mssql", gate.changed_groups([path], []))
+        for other in ("chat_panel.py", "chat_privacy.py"):
+            self.assertNotIn("mssql", gate.changed_groups([f"{core}/{other}"], []))
 
     def test_exercised_sensor_fixture_dependency_selects_mssql(self) -> None:
         repo = Path(__file__).resolve().parents[1]

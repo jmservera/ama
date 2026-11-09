@@ -1,0 +1,82 @@
+{
+  "task_id": "issue-189-validation-recapture",
+  "task_slug": "validation-recapture-189",
+  "parent_task": {
+    "task_id": "issue-189-sql-main-integration",
+    "task_slug": "sql-main-integration-189"
+  },
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09/validation-recapture-189-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09/validation-recapture-189-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09/validation-recapture-189-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09/validation-recapture-189-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09/validation-recapture-189-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09/validation-recapture-189-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once: four blocking and two non-blocking findings, all applied",
+      "status": "confirmed",
+      "evidence": "critique artifact"
+    },
+    {
+      "decision": "Earlier raw logs of sql-main-integration-189 were removed; loss retained, not reconstructed",
+      "status": "confirmed",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Validation only: no source edit; C1 one of five spent, four remain",
+      "status": "confirmed",
+      "evidence": "coordinator brief"
+    },
+    {
+      "decision": "Capture executed once: 8 API modules, core priority_order 142/65 skipped and resident_decisions 256/93 skipped exit 0; node checks exit 0; browser axe exit 1 (assertion at check line 156), diagnostic reruns 0,0,1",
+      "status": "confirmed",
+      "evidence": "changes artifact and retained raw capture"
+    },
+    {
+      "decision": "Review executed once: conformant for assessed boundary; one medium doc finding corrected",
+      "status": "confirmed",
+      "evidence": "review artifact"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "browser-axe-intermittent",
+      "summary": "Browser/axe check failed in 2 of 4 runs at simulator_control_browser_check.py:156 (suspected non-specific text wait); no correction authorized",
+      "resolution": "Explicit authorization for scoped cycle C2, then fresh capture"
+    },
+    {
+      "id": "sql-skips",
+      "summary": "158 actual-SQL/Azure cases skipped, unverified",
+      "resolution": "Owned disposable SQL only where the #1292 gate applies"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator decision on C2 for the check wait; independent exact-head review; hosted CI"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Authorize C2: replace the non-specific Stopped wait in the browser check, then recapture",
+      "rationale": "Control is not a passing gate until all 11 states run",
+      "evidence": "changes artifact"
+    },
+    {
+      "rank": 2,
+      "task": "Independent exact-head review and hosted CI",
+      "rationale": "Required for every tier",
+      "evidence": "review artifact"
+    }
+  ]
+}

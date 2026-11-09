@@ -358,21 +358,32 @@ class PublicationWiring(QualityMatrix):
 
 
 class BlobPublicationWiring(QualityMatrix):
-    """The same routes with the owner-selected Blob archive on a mock REST transport (Refs #1258)."""
+    """The same routes with the owner-selected Blob archive on a mock REST transport.
+
+    Refs #1258.
+    """
 
     def setUp(self):
         super().setUp()
-        from ranking_blob_fixture import SAS, FakeBlobContainer, URL
+        from ranking_blob_fixture import SAS, URL, FakeBlobContainer
         from zava_forward.core import ranking_archive_blob as rab
 
         self.fake = FakeBlobContainer(page_size=1)
-        self.blob = rab.BlobRankingArchive(URL, "ranking-archive", sas=SAS, transport=self.fake, env={})
+        self.blob = rab.BlobRankingArchive(
+            URL, "ranking-archive", sas=SAS, transport=self.fake, env={}
+        )
         self.archive_patch = patch.object(self.store, "_ranking_archive", return_value=self.blob)
         self.archive_patch.start()
         self.addCleanup(self.archive_patch.stop)
 
     def clean(self, text):
-        for secret in ("SENTINEL", "acct.blob.core.windows.net", "ranking-archive", "hard links", "folder"):
+        for secret in (
+            "SENTINEL",
+            "acct.blob.core.windows.net",
+            "ranking-archive",
+            "hard links",
+            "folder",
+        ):
             self.assertNotIn(secret, text)
 
     def test_publish_is_manager_only_idempotent_audited_and_verified(self):
@@ -380,7 +391,9 @@ class BlobPublicationWiring(QualityMatrix):
             self.assertEqual(self.call(actor, "/api/ranking/publish", {})[0], 403)
         self.assertEqual(self.fake.calls, [])
         code, first = self.call(PM_EMAIL, "/api/ranking/publish", {})
-        self.assertEqual((code, first["written"], first["published_on"]), (200, True, controls.today()))
+        self.assertEqual(
+            (code, first["written"], first["published_on"]), (200, True, controls.today())
+        )
         code, again = self.call(PM_EMAIL, "/api/ranking/publish", {})
         self.assertEqual((code, again["written"]), (200, False))
         status = self.call(PM_EMAIL, "/api/ranking/publication")[1]
@@ -395,7 +408,14 @@ class BlobPublicationWiring(QualityMatrix):
     def test_concurrent_publish_keeps_one_record_and_an_intact_audit_chain(self):
         manager = {"email": PM_EMAIL, "role": "Retrofit Programme Manager"}
         results = []
-        threads = [threading.Thread(target=lambda: results.append(self.store.publish_ranking_snapshot(manager)["written"])) for _ in range(2)]
+        threads = [
+            threading.Thread(
+                target=lambda: results.append(
+                    self.store.publish_ranking_snapshot(manager)["written"]
+                )
+            )
+            for _ in range(2)
+        ]
         for t in threads:
             t.start()
         for t in threads:
@@ -416,7 +436,9 @@ class BlobPublicationWiring(QualityMatrix):
                 self.clean(body["error"])
                 self.assertIn("may or may not", body["error"])
                 entries = list(self.store.audit_entries())[before:]
-                self.assertEqual([e["action"] for e in entries], ["ranking_snapshot_publication_unconfirmed"])
+                self.assertEqual(
+                    [e["action"] for e in entries], ["ranking_snapshot_publication_unconfirmed"]
+                )
                 self.assertNotIn("record written", entries[0]["detail"])
                 self.assertIn("unconfirmed", entries[0]["detail"])
                 self.clean(entries[0]["detail"])
@@ -435,7 +457,10 @@ class BlobPublicationWiring(QualityMatrix):
 
     def test_unavailable_configuration_is_503_path_free_with_no_fallback_to_a_folder(self):
         self.archive_patch.stop()
-        env = {"ZF_RANKING_ARCHIVE": "azure-blob", "ZF_BLOB_ACCOUNT_URL": "https://acct.blob.core.windows.net"}
+        env = {
+            "ZF_RANKING_ARCHIVE": "azure-blob",
+            "ZF_BLOB_ACCOUNT_URL": "https://acct.blob.core.windows.net",
+        }
         with patch.dict(os.environ, env):
             code, body = self.call(PM_EMAIL, "/api/ranking/publish", {})
             status_code, status = self.call(PM_EMAIL, "/api/ranking/publication")
@@ -445,13 +470,19 @@ class BlobPublicationWiring(QualityMatrix):
         self.assertEqual(status["count"], 0)
         self.assertEqual(len(status["problems"]), 1)
         self.clean(status["problems"][0])
-        self.assertFalse(os.path.exists(os.path.join(os.path.dirname(self.store.db_path), "ranking-archive")))
+        self.assertFalse(
+            os.path.exists(os.path.join(os.path.dirname(self.store.db_path), "ranking-archive"))
+        )
         self.assertEqual(list(self.store.audit_entries()), [])
 
     def test_store_selects_the_adapter_from_the_environment(self):
         self.archive_patch.stop()
-        env = {"ZF_RANKING_ARCHIVE": "azure-blob", "ZF_BLOB_ACCOUNT_URL": "https://acct.blob.core.windows.net",
-               "ZF_RANKING_BLOB_CONTAINER": "ranking-archive", "ZF_BLOB_SAS": "sig=SENTINEL"}
+        env = {
+            "ZF_RANKING_ARCHIVE": "azure-blob",
+            "ZF_BLOB_ACCOUNT_URL": "https://acct.blob.core.windows.net",
+            "ZF_RANKING_BLOB_CONTAINER": "ranking-archive",
+            "ZF_BLOB_SAS": "sig=SENTINEL",
+        }
         with patch.dict(os.environ, env):
             self.assertEqual(type(self.store._ranking_archive()).__name__, "BlobRankingArchive")
         with patch.dict(os.environ, {"ZF_RANKING_ARCHIVE": "local"}):
@@ -465,7 +496,9 @@ class BlobPublicationWiring(QualityMatrix):
         self.assertEqual(len(status["problems"]), 1)
         self.fake.list_status = 500
         code, status = self.call(PM_EMAIL, "/api/ranking/publication")
-        self.assertEqual((code, status["count"], status["latest"], status["overdue"]), (200, 0, None, True))
+        self.assertEqual(
+            (code, status["count"], status["latest"], status["overdue"]), (200, 0, None, True)
+        )
         self.assertIn("ranking archive", status["problems"][0])
         self.clean(status["problems"][0])
 
@@ -490,7 +523,10 @@ class BlobPublicationWiring(QualityMatrix):
             with self.subTest(body=body):
                 self.fake.list_body = body
                 code, status = self.call(PM_EMAIL, "/api/ranking/publication")
-                self.assertEqual((code, status["count"], status["latest"], status["overdue"]), (200, 0, None, True))
+                self.assertEqual(
+                    (code, status["count"], status["latest"], status["overdue"]),
+                    (200, 0, None, True),
+                )
                 self.assertEqual(len(status["problems"]), 1)
                 self.assertIn("ranking archive", status["problems"][0])
                 self.clean(status["problems"][0])
