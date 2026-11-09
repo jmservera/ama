@@ -1273,3 +1273,12 @@ negative control) browser runs exercised, and compares the BRD, PRD and ADR iden
 confirms no new defect or refactoring, excludes the open chat receipts PR 1320 and #159, does
 not satisfy the earlier lifecycle-wave trigger, and keeps closure holds, the live budget alert
 and the whole #440 behavior validation obligation open.
+
+The [integrated current-main journey checkpoint](../architecture/cutover-evidence-pack.md#integrated-current-main-journey-checkpoint-2026-11-09-refs-440-81-123-184-136)
+(2026-11-09, `main` `2be660e9`, draft, not approved) pins the document identities and the
+merged PRs through 1326 (now including the queue adapter 1141 and the chat receipts 1320),
+records four targeted local test processes in a sanitized task-owned environment (1205 ran in total, including the 108 SQL Server run, no
+final failure, one retained environment-fault run) and one nonqueued disposable SQL Server run
+of the resident-decision class (108 ran), reuses the #1326 priority SQL campaign by source
+identity with its limits, and maps each gap to its existing owner. It confirms no defect,
+excludes #1288 and the #1258, #1259 and #136 Blob work, and keeps every closure hold.

@@ -11274,3 +11274,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added a dated [Q1 qualification](../architecture/cutover-evidence-pack.md#current-main-priority-sql-regression-validation-2026-11-09-refs-1292) after the same-reviewer assessment: the verifier gates test outcomes only and cleanup was observed separately; limits on the timeout bound (C4) and local image and endpoint checks (C5); the seven Applied dispositions are prior record. Original claims are kept, not blessed.
 * Not claimed: a new defect or fix, an immutable runtime image, endpoint authentication, a universal timeout bound, the startup cause, whole-SQL acceptance, a full-gate waiver, or any criterion tick.
+
+## [2026-11-09] update | Integrated current-main journey checkpoint (Refs #440 #81 #123 #184 #136)
+
+* Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#integrated-current-main-journey-checkpoint-2026-11-09-refs-440-81-123-184-136) for `main` `2be660e9` with an index sentence: document identities and statuses, covered and excluded PRs and issues, a document-qualified trace, four targeted local test processes (one retained environment-fault run, `node` missing from a sanitized `PATH`) and one nonqueued disposable SQL Server run of the resident-decision class, the #1326 priority SQL evidence reused by source identity with its limits, and gaps mapped to existing owners.
+* No defect or refactoring confirmed. Not claimed: approval of any document, closure or tick of any criterion, whole #440 or Major HVE acceptance, live, Azure, actual-model, assistive-technology or browser evidence, hosted CI or independent review of this commit. Earlier entries unchanged.

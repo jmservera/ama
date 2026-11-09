@@ -5761,3 +5761,84 @@ Continue the existing owners, with a HOLD on every closure claim. No fix, pivot 
 * Independent #189, #954, #159, #1288, #1258 and #144 source work may proceed. #954 is already closed on its literal criteria.
 
 Limits: single-session authored record with no independent exact-head review and no hosted CI for the commit that carries it; the witnesses are coordinator-held files read in this session, with their digests recorded here; PR check counts for 1313 and 1315 are coordinator-reported. Not claimed: approval, closure, acceptance of any criterion, whole #440, #81, #189 or #1292 acceptance, live, SQL, Azure, model, assistive-technology or production readiness, or any legal, resident or production approval.
+
+## Integrated current-main journey checkpoint (2026-11-09, Refs #440 #81 #123 #184 #136)
+
+DRAFT, not approved. A new recurring #440 checkpoint for the earlier lifecycle and shared-SQL integration trigger that stayed due after the controls and count records (#1322) and the current-source SQL observations (#1326). It is evidence only: no source, test, policy, coordinator or workflow change, no issue, board or pull request write, and no corrective cycle or budget renewal. Earlier sections, their reviews and adverse outcomes are unchanged. Records:
+[research](../../.copilot-tracking/research/2026-11-09-current-main-1924-440-research.md),
+[plan](../../.copilot-tracking/plans/2026-11-09-current-main-1924-440-plan.md),
+[details](../../.copilot-tracking/details/2026-11-09-current-main-1924-440-details.md),
+[critique](../../.copilot-tracking/plans/2026-11-09-current-main-1924-440-critique.md),
+[changes](../../.copilot-tracking/changes/2026-11-09-current-main-1924-440-changes.md) and
+[review](../../.copilot-tracking/reviews/2026-11-09-current-main-1924-440-review.md).
+
+### Identities, covered changes and exclusions
+
+| Item | Value (read 2026-11-09) |
+| --- | --- |
+| Pinned `main` and latest `origin/main` | `2be660e9d290f95ff05fc5a56d6539768576732b` (PR 1326), tree `d09e22c71df705ad13127a490b0d742269d2f2a2`; `git fetch origin main` resolved the same commit |
+| Executed source | planning commit `eb8301c50feeebf2b40892c3878f682181dbe668` (tree `339f2bd93c236fe776933a6b129a506506089c3c`), whose only difference from main is `.copilot-tracking`; `src` tree `86bc00e19a167e517ae2955ad88d6e2f7b4eac26` equals main and the #1326 campaign input; `tools`, `infra` and `.github/workflows` trees equal main |
+| Documents | BRD 0.21.0 `draft` blob `34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD 0.21.0 `in-review` blob `c788b917bafaede215f326f0efc71e071a687f1c`; case study original `0aec2d80`, addendum `28c19242`; ADR 0001 `d42fa5c4` Proposed, 0002 `cbe21530` (only the staff identity decision accepted 2026-10-24), 0003 `d6064539`, 0004 `9406c2e7`, 0005 `4d610335`, 0006 `956da1a3`, 0007 `abb21088` Proposed. All unchanged since the previous checkpoint; none becomes approved here |
+| Covered merged changes | PR 1141 Azure Queue adapter (`4fcd1934f`), 1295 capstone documentation (`ad679b96b`), 1308 priority ordering (`8d6f029ca`), 1312 chat-schema SQL selector, 1240 lifecycle (`3a9767d5c`), 1313 simulator controls (`0dc4dd35c`), 1315 photo regression (`48350983b`), 1320 metadata-only validation refusal receipts (`ba71894bb`, merged 18:00Z, so no longer excluded), 1322 and 1326. Issues #81, #123, #144 (queue slice), #184, #189, #954, #1292, #159 |
+| Excluded, not on main | #1288 retained-value UI and Quality AI (issue open, no published pull request); #1258 and #1259 ranking archive durability (open issues); open PR 1327 (Blob ranking archive Bicep, #136); #136 epic; #1296 candidate policy; any unpublished work. No functionality of these is observed or accepted |
+| Issue states (read live) | #440, #123, #81, #136, #144, #146, #159, #184, #185, #189, #891, #1258, #1259, #1288, #1292, #1296 and #1297 open; #91, #954 and #1314 closed |
+
+### Requirement trace (document-qualified)
+
+BRD and PRD functional requirement numbers collide, so each row names its document.
+
+| Requirement | Source boundary on `main` | Observed local this checkpoint | Class |
+| --- | --- | --- | --- |
+| PRD FR-050 with AC-066 to AC-068 and BRD FR-048, AC-090, RULE-014 (simulated monitoring, sensor data is not acceptance evidence); ADR 0003 decision 6 | `live_control.py`, `live_simulator.py`, `simulator_admin.py`, `iot_stream.py`, `sensor_ingestion.py`; core `sensor_consumer.py`, `sensor_stream.py`, resident sensors | API `live_control` 34, `live_simulator` 31, `simulator_admin` 27, `iot_stream` 37, `iot_credential_hygiene` 12, `sensor_ingestion` 47, `sensor_handover_demo` 4; core `sensor_consumer` 37, `sensor_consumer_live` 10, `sensor_stream` 15, `resident_sensors` 10, `sensor_privacy` 17 | Local observed on fixtures; live Hub, deployed jobs, grants, route unverified |
+| PRD FR-044 and BRD FR-044 with AC-084 (real AI per record, proposal against reviewed, case access independent of the model); ADR 0004 option C staged; ADR 0005 synthetic only | `chat_panel.py`, `assistants.py`, AI boundary and ledger paths | API `ai_boundary` 6, `ai_call_site_inventory` 6, `chat_panel` 55, `resident_assistant_api` 10, `assistants` 120 (58 SQL skips); core `chat_panel` 45, `ai_consumption_safety` 2. Named AI-unavailable cases passed: demo switch off or wrong key keeps rules-only status and makes no call, provider failure falls back to workflow-only, a call fails closed without a ledger | Local observed with stub providers; no actual model call, so no actual-AI evidence |
+| PRD FR-008 controlled transition gate (resident decisions and complaints route: no requirement ID asserted here, because BRD and PRD numbers collide); human approval and resident consent stay with named humans | core `gates.py`, `resident_decisions.py`, `complaints_route.py`, `store.py`, `sqlstore.py` | Core `gates` 20, `handoff_lifecycle` 20, `resident_decisions` (SQLite and JSON legs), `resident_choice_queue` 4, `quality_procurement` 136, `journey_acceptance` 4; plus SQL Server run S1 below | Local observed, including one SQL Server run of the resident-decision class |
+| PRD FR-003 and ADR 0002 staff identity (Entra principal, roles) | `auth.py`, role matrix, administrator-only simulator control (403 for view-only) | API `role_matrix` 13, `simulator_admin` 27, `workbench` 5, `photo_availability` 1 (Node-driven fixture) | Local observed; ingress trust and tenant not observed |
+| PR 1320 chat refusal receipts (issue #159 thread; this record asserts no requirement ID for it) | `chat_panel.record_validation_refused`, `server.py` | four new tests passed in both packages; the "JSON and SQL audit" case uses the SQLite-backed `SqlStore`, not SQL Server | Local observed; not live |
+| ADR 0006 package boundaries | core, agents and api dependency-rule tests | merged queue adapter `test_queue_azure` 24 and `test_worker` 6 | Local observed |
+
+### Actual local commands and outcomes
+
+Python 3.12.3 in a task-owned virtual environment with editable installs of this worktree's `src/core`, `src/agents` and `src/api`, because the pre-existing editable installs point at another checkout. Every A-series check ran under `env -i` with only `PATH`, `HOME`, `TMPDIR`, `ZF_DATA` (inside the owned scratch directory), `LANG` and `PYTHONPATH`, so every `ZF_*` SQL, Azure, browser and benchmark switch and every credential was unset (the ambient shell held none). S1 alone ran under the nonqueued SQL harness, which exported the disposable-SQL switches and a generated throwaway container password for its own container only; no other secret was present. Source status was empty before and after, and a preflight proved package and test-module import origins inside this worktree. Raw logs are outside the repository in the owned scratch directory, are not committed and are summarized by the digests below.
+
+| Id | Selection (working directory) | Producer exit | Result |
+| --- | --- | --- | --- |
+| A1 | 13 core modules (`src/core`, `PYTHONPATH=tests`): `test_sensor_consumer`, `_consumer_live`, `_stream`, `test_resident_sensors`, `test_sensor_privacy`, `test_chat_panel`, `test_gates`, `test_handoff_lifecycle`, `test_resident_decisions`, `test_resident_choice_queue`, `test_quality_procurement`, `test_ai_consumption_safety`, `test_journey_acceptance` | 0 | 628 ran, OK, 111 skipped: 108 `MssqlResidentControls` needing an owned loopback SQL Server (observed separately in S1), 1 own local SQL, 1 JSON-only rollback, 1 explicit isolated Azure SQL |
+| A2 | 16 API modules (`src/api`, `PYTHONPATH=../core/tests:../agents/tests:tests`) | 1 | 439 ran, 36 errors, 59 skipped. Cause: my sanitized `PATH` omitted `node`, so 35 `test_case_journey` and 1 `test_photo_availability` tests raised `FileNotFoundError: 'node'`. Environment fault of this run, not a product failure. The log is retained unchanged |
+| A2b | the same 16 modules with the Node directory added to `PATH` (node v24.21.0) | 0 | 439 ran, OK, 59 skipped: 58 `test_assistants` needing a disposable SQL Server, 1 opt-in local Chromium chat browser test. 37 handled fail-closed log tracebacks "Rule evaluation unavailable ... law store is not loaded" appear in the passing output (fixtures without a law store); no defect is asserted |
+| A3 | `test_queue_azure` and `test_worker` (`src/agents`, `PYTHONPATH=tests`) | 0 | 30 ran, OK, 0 skips |
+| S1 | `test_resident_decisions.MssqlResidentControls` (108 tests) on a disposable SQL Server 2022 container (16.0.4305.5 RTM-CU27-GDR, image `sha256:cf8f0ab2ebe6...1718`, loopback only, `mssql-python` 1.15.0, `--pull=never`), one nonqueued `timeout -k 10 700 flock -n /tmp/ama-rpi-heavy.lock` admission at 19:43Z (lock observed free), one 600 s process bound | 0 | 108 ran, OK, 1 skipped (`JSON file rollback only`), 528.1 s unittest time, 547 s campaign. Cleanup: removal exit 0, leftover-database query exit 0 with an empty result, no container with the owned name afterwards, container id `79c48f89fcb7`. Imports verified under this worktree (`sqlstore.py` sha256 `0b0caf62...`, `mssqlstore.py` `1825dc5f...`) |
+
+Totals of the four final processes A1, A2b, A3 and S1: 1205 tests ran, 0 failures or errors, 171 skips (108 of A1's skips are the class S1 ran). The superseded A2 run (439 ran, 36 errors) is retained, not counted. Digests of the retained raw output manifests: `SHA256SUMS` of the A-series logs `60aff6461f6aaa3824b9fc5e51b5a26705a9ed993ab8477c8decdf3eb05097ba` (9 members), of the S1 outputs `8d607b0eab4d7bc56a97690dfbdd81bcec2fdeaf39636fa0e679f7ca2dd4942f` (14 members). Log sha256 prefixes: A1 `bad8e841a806`, A2 `f8181f8dece4`, A2b `565e72b22425`, A3 `352eaf6524d7`.
+
+S1 limits, stated as the earlier SQL records state theirs: only the resident-decision class on SQL Server (the lifecycle gates, quality, procurement and appointment tests ran on SQLite and JSON stores only); the mutable image tag was used with `--pull=never` and the immutable image id was checked before start; no daemon endpoint authentication was inspected; the test outcome gate is the unittest exit and `OK` line read by hand, and cleanup was gated by the script exit statuses recorded in files, not by an external verifier; a timeout path was not exercised.
+
+### Reused evidence (not rerun)
+
+* #1326 priority SQL campaign: 3 processes, 148 tests, 67 on SQL Server, 0 skips, source `src` tree `86bc00e19a167e517ae2955ad88d6e2f7b4eac26`, identical to this checkpoint's tree (`git rev-parse HEAD:src`). Its limits stand: the verifier gated outcomes and not cleanup (cleanup was observed separately), the leftover query exit status was not retained, no timeout-path receipt, mutable tag with `--pull=never`, and no endpoint authentication. It does not show the original unordered defect is absent from pre-fix source and does not explain the UNKNOWN historical startup failure. Not rerun to refresh a date.
+* #1313 and #1315 browser observations and the #1322 witnesses: their inputs predate #1320 (the 189 input `e192bc747` predates the photo-check script too), so each keeps its own source identity and the production runtime differs from the current by the four-file #1320 chat receipt delta. Not rerun here: Playwright is not installed in the task environment and the #1320 change is server-side. No browser, axe or assistive-technology result is claimed for this tree, and scripted axe observations never equal assistive-technology or actual-model acceptance.
+
+### Journey read from source and what is not observed
+
+The merged chain is: finite simulator control (administrator only, 14 day maximum, cohort 1 to 100, advisory lock, fail closed) to the Hub sink to receiver admission with consent, mapping and window checks to the observed-series store to the resident own-home view. The employee retained-value view and the sensor input to the real Quality model are not on main (#1288, no published pull request). The chain is exercised in pieces by fixture-level tests, not by one end-to-end automated journey, and no live Hub send, deployed job, certificate, route or grant was observed. Quality acceptance, resident consent, legal review and professional approval stay named human decisions; deterministic rules and stubs are never presented as actual AI.
+
+### Findings, owners and gates
+
+No defect or refactoring need is confirmed. The A2 failure was this run's `PATH` and is corrected by A2b; it is not filed. Gaps map to existing owners and are not duplicated:
+
+| Gap | Owner | Gate effect |
+| --- | --- | --- |
+| Employee retained-value UI, sensor input to the Quality model, attributed unapproved flag | #1288 | holds Quality sensor expansion; no merged candidate |
+| Live Hub, provisioning, certificates, run owner, time limit, budget alert | #184, #185, #189, #146 | holds those closures and live-dependent expansion |
+| Resident-decision SQL Server leg (S1) now observed once; remaining lifecycle gates, quality and appointment SQL legs, assistants SQL (58 skipped) and sensor SQL (opt-in) not run | #81 (#1240), #1297 for the sensor skip contract | #81 closure still waits for hosted state of the exact head and any owner-required SQL scope |
+| Priority ordering recurrence and startup cause UNKNOWN | #1292 | unchanged |
+| Ranking archive durability and Blob wiring | #1258, #1259, #136 (PR 1327 open) | excluded; unproven |
+| Container hosting beyond the merged queue adapter | #144 | unproven |
+| Chat per-call activation and receipts beyond #1320 | #891, #159 | unchanged |
+
+### Recommendation and resume conditions
+
+CONTINUE through the existing owners, HOLD every closure claim, and gate only the affected closures and dependent expansion: #81 and #123 closure, #184, #185, #188, #189 live criteria, #136 and #1288-dependent Quality sensor expansion. Independent repairs continue. No fix, pivot, requirement relaxation or deferral is proposed or granted, and none is inferred.
+
+Resume conditions: (1) hosted checks for the exact head of any #81 or #123 closure candidate; (2) the remaining lifecycle SQL legs only if the owner requires them, via one nonqueued shared-lock admission with finite cleanup and no live or private fallback; (3) #1288 merged and independently assessed before any Quality sensor claim; (4) authorised operators verify certificates, route, grants and budget alert before any live claim; (5) assistive-technology and actual-model evidence under named human approval.
+
+Limits: single-session authored record; the commit carrying it has no independent exact-head review (see the review record for the one review executed), no hosted CI and no push; per-process logs are retained outside the repository. Not claimed: approval of any document, closure or tick of any criterion, whole #440, #81, #123, #184, #136 or Major HVE acceptance, live, Azure, actual-model, assistive-technology, browser or production evidence, legal, resident or professional approval, or a full gate.
