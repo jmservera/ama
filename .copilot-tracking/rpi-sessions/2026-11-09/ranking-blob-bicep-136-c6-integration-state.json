@@ -1,0 +1,30 @@
+{
+  "task_id": "136-ranking-blob-parent-c6-integration",
+  "task_slug": "ranking-blob-bicep-136-c6-integration",
+  "parent_task": {"task_id": "136-ranking-blob-final-parent", "task_slug": "ranking-blob-bicep-136-final-parent"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-ranking-blob-bicep-136-c6-integration-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-ranking-blob-bicep-136-c6-integration-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-ranking-blob-bicep-136-c6-integration-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-ranking-blob-bicep-136-c6-integration-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09-ranking-blob-bicep-136-c6-integration-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09-ranking-blob-bicep-136-c6-integration-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "research executed, Ready; critique executed once (Revise: PC-1 Blocking, PC-2 Minor applied) before merge", "status": "done", "evidence": "735069b4e17101c6908b1ed5b4065a91bd755fb6"},
+    {"decision": "parent 99814198079c7c8fcd641497826986c706627b0f merged locally --no-ff, tree 3bf3cc7e041366baccde5a2a7ca5f21ff72b7142, child infra unchanged", "status": "done", "evidence": "merge 437f68ca9f4ec840b886724b41770a36a2a19707"},
+    {"decision": "DEMO checks green: infra 100 OK, bicep build/lint/4 params 0, Core 25/45/57 OK, API wiring 35 OK, ruff check/format 0", "status": "done", "evidence": "changes artifact"},
+    {"decision": "review executed once, Approve; 1 of 5 review-correction cycles spent, 4 remain", "status": "done", "evidence": "review artifact"},
+    {"decision": "publication blocked until parent independent Functional review approved and current; no parent mutation", "status": "confirmed", "evidence": "brief"}
+  ],
+  "blockers": [{"id": "parent-review", "summary": "Parent independent Functional review 362c0bec was running", "resolution": "coordinator publishes only after parent approval; refresh record if pin changes"}],
+  "next_action": {"phase": "Follow-up", "action": "coordinator independent assessment of final diff and evidence"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Refresh integration if parent pin changes after its review", "rationale": "Parent not approved", "evidence": "brief"},
+    {"rank": 2, "task": "Owner: retention duration/lock, container-scoped role, migration, deployment", "rationale": "Not immutable or live until done", "evidence": "research"}
+  ]
+}

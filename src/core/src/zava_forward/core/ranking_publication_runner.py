@@ -88,7 +88,9 @@ def _verify(archive_dir: ranking_publication.Archive, reg: Mapping[str, Any]) ->
     try:
         return ranking_publication.verify(archive_dir, reg)
     except OSError as e:
-        reason = e.strerror or str(e)
+        # Blob adapter errors carry fixed path-free text; other errors keep the generic reason.
+        blob_text = str(e) if isinstance(e, ranking_archive_blob.BlobArchiveError) else None
+        reason = e.strerror or blob_text or "reason not available"
         return {
             "count": 0,
             "latest": None,
