@@ -1,0 +1,48 @@
+{
+  "task_id": "440-sql-wave-checkpoint-1109",
+  "task_slug": "sql-wave-checkpoint-440",
+  "parent_task": {
+    "task_id": "440-demo-stabilization-checkpoint-1109",
+    "task_slug": "demo-stabilization-checkpoint-440"
+  },
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-sql-wave-checkpoint-440-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-sql-wave-checkpoint-440-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-sql-wave-checkpoint-440-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-sql-wave-checkpoint-440-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Automatic single-run full RPI loop in order; research, plan, details and critique committed before any check or documentation edit",
+      "status": "done",
+      "evidence": "Owner brief brief-440-sql-wave-checkpoint.md and demo-rpi-common.md, 2026-11-09"
+    },
+    {
+      "decision": "Research executed (one cycle); Planning Readiness Ready",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-09-sql-wave-checkpoint-440-research.md"
+    },
+    {
+      "decision": "Critique executed once, verdict Revise; PC-001..004 applied directly, no user decision",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-09-sql-wave-checkpoint-440-critique.md"
+    },
+    {
+      "decision": "No SQL admission planned: production SQL source byte-equal to the retained real-SQL runs; missing or busy admission would block only a SQL row",
+      "status": "done",
+      "evidence": "Research source equivalence and critique"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Commit planning records, then run P1 environment and P2 targeted tests, then write the pack section, index and log entry"
+  },
+  "prioritized_follow_ups": []
+}
