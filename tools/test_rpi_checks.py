@@ -554,6 +554,67 @@ class GateTests(unittest.TestCase):
         )
         self.assertIn("core sensor", skipped["mssql"])
 
+    def test_direct_sensor_suite_dependencies_select_mssql(self) -> None:
+        repo = Path(__file__).resolve().parents[1]
+        tests = repo / "src/core/tests"
+        pkg_root = repo / "src/core/src"
+
+        def resolve(module: str, names: list[str]) -> set[Path]:
+            base = tests if "." not in module and (tests / f"{module}.py").is_file() else None
+            found: set[Path] = set()
+            if base is not None:
+                found.add(tests / f"{module}.py")
+            if not module.startswith("zava_forward.core"):
+                return found
+            pkg = pkg_root.joinpath(*module.split("."))
+            for candidate in (pkg / "__init__.py", pkg.with_suffix(".py")):
+                if candidate.is_file():
+                    found.add(candidate)
+            for name in names:
+                for candidate in (pkg / f"{name}.py", pkg / name / "__init__.py"):
+                    if candidate.is_file():
+                        found.add(candidate)
+            return found
+
+        resolved: set[Path] = set()
+        for suite in (
+            "test_sensor_analysis_mssql.py",
+            "test_sensor_analysis_store.py",
+            "sensor_consumer_fixture.py",
+        ):
+            for node in ast.walk(ast.parse((tests / suite).read_text(encoding="utf-8"))):
+                if isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+                    resolved |= resolve(node.module, [alias.name for alias in node.names])
+                elif isinstance(node, ast.Import):
+                    for alias in node.names:
+                        resolved |= resolve(alias.name, [])
+        relative = {path.relative_to(repo).as_posix() for path in resolved}
+        for expected in (
+            "src/core/tests/dataset.py",
+            "src/core/src/zava_forward/core/synthetic/__init__.py",
+            "src/core/src/zava_forward/core/mssqlstore.py",
+            "src/core/src/zava_forward/core/synthetic/sensor_backfill.py",
+        ):
+            self.assertIn(expected, relative)
+        missed = set()
+        for path in relative:
+            self.assertIn("mssql", gate.changed_groups([path], []), path)
+            if not any(
+                word in path.lower() for word in ("store", "schema", "sql", "assistants", "sensor")
+            ):
+                missed.add(path)
+        self.assertEqual(missed, set(gate.SENSOR_MSSQL_DIRECT_DEPENDENCIES))
+
+    def test_non_dependency_paths_do_not_select_mssql_through_the_dependency_rule(self) -> None:
+        for path in (
+            "src/core/tests/building_fixture.py",
+            "src/core/src/zava_forward/core/synthetic/climate_history.py",
+            "src/api/tests/scale_load.py",
+        ):
+            with self.subTest(path=path):
+                self.assertTrue((Path(__file__).resolve().parents[1] / path).is_file())
+                self.assertNotIn("mssql", gate.changed_groups([path], []))
+
     def test_sensor_mssql_execution_evidence_rejects_missing_substituted_skipped_or_failed(
         self,
     ) -> None:

@@ -200,6 +200,13 @@ SENSOR_MSSQL_REQUIRED_TESTS = _sql_tests(
 SENSOR_MSSQL_DISCOVERY_SKIPS = frozenset(
     (name, SENSOR_MSSQL_SKIP_REASON) for name in SENSOR_MSSQL_REQUIRED_TESTS
 )
+# Direct imports of the sensor MSSQL suite that no path keyword selects (not transitive ones).
+SENSOR_MSSQL_DIRECT_DEPENDENCIES = frozenset(
+    (
+        "src/core/tests/dataset.py",
+        "src/core/src/zava_forward/core/synthetic/__init__.py",
+    )
+)
 SQL_NOT_APPLICABLE = {
     (
         "test_json_postsave_audit_failure_reports_persisted_uncertainty "
@@ -743,8 +750,10 @@ def changed_groups(paths: list[str], extras: list[str]) -> list[str]:
                 "requirements" in path.lower() or parts[2] == "pyproject.toml"
             ):
                 selected.add("mssql")
-            if any(word in path.lower() for word in ("store", "schema", "sql", "assistants")) or (
-                project == "core" and "sensor" in path.lower()
+            if (
+                any(word in path.lower() for word in ("store", "schema", "sql", "assistants"))
+                or (project == "core" and "sensor" in path.lower())
+                or path in SENSOR_MSSQL_DIRECT_DEPENDENCIES
             ):
                 selected.add("mssql")
         else:
