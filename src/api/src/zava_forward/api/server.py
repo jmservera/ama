@@ -957,6 +957,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, c.privacy.memory_status(c.current_user(user), (parse_qs(urlparse(self.path).query).get("task") or [""])[0]))
                 if post and parts == ["unstored-ask"]:
                     if set(body) - {"content", "skill", "case_id"}:
+                        app.panel.record_validation_refused(user)
                         raise ValueError("Only content, skill and case_id are accepted.")
                     u = c.current_user(user)
                     if c.privacy.decision()["approved"]:
@@ -992,8 +993,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(200, dict(answer, withheld=answer["kind"] == "withheld"))
                     if parts[2] == "ask":
                         if set(body) - {"content", "skill"}:
+                            app.panel.record_validation_refused(u, tid)
                             raise ValueError("Only content and skill are accepted.")
                         if "skill" in body and body["skill"] is None:
+                            app.panel.record_validation_refused(u, tid)
                             raise ValueError("Choose a listed skill or omit skill for legacy chat.")
                         return self._json(200, app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")))
                     if parts[2] == "proposals":
