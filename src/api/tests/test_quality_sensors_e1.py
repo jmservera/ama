@@ -9,17 +9,13 @@ missing."""
 import copy
 import json
 import os
-import socket
 import threading
 import time
 import unittest
-import urllib.request
 from unittest.mock import patch
 
-from zava_forward.core import ai as ai_module
 from zava_forward.core import ai_consumption, sensor_view
 from zava_forward.core import assistants as ai_gate
-from zava_forward.core.ai import Ai
 from zava_forward.core.assistants import review_flag
 
 import test_assistants as ta
@@ -90,11 +86,11 @@ class DirectControlWrites(GateBase):
         self.direct(*self.withdraw_sql())
         self.assertNotEqual(self.consent_now(), "granted")
 
-    def test_a_direct_withdrawal_is_rejected_while_a_real_transport_is_held(self):
-        self.put(4)
-        self.add_live(10)
-        self.quality_ready()
-        sink = self.real_transport()
+    def test_a_direct_withdrawal_is_rejected_while_a_non_transmitting_carrier_is_held(self):
+        self.ready()
+        calls = []
+        real_evidence = self.provider.evidence
+        self.provider.evidence = lambda *a: calls.append(a) or real_evidence(*a)
         self.service.scan()
         (tid,) = self.quality_task()
         seen = []
@@ -118,7 +114,7 @@ class DirectControlWrites(GateBase):
         with patch.object(self.service, "_dispatch_gate", side_effect=factory):
             self.service.execute(tid)
         self.assertEqual(seen, ["rejected"])
-        self.assertEqual(len(sink.bodies), 1)
+        self.assertEqual(len(calls), 1)
         self.assertEqual(self.consent_now(), "granted")
         self.direct(*self.withdraw_sql())
         self.assertNotEqual(self.consent_now(), "granted")
@@ -169,32 +165,7 @@ class DirectControlWrites(GateBase):
 
 
 class Fence(GateBase):
-    """F1: no byte leaves after the send-by time, even when a send blocks."""
-
-    def test_a_blocked_send_is_bounded_by_the_deadline_and_a_late_chunk_is_not_sent(self):
-        server = socket.socket()
-        server.bind(("127.0.0.1", 0))
-        server.listen(1)
-        held = []
-        threading.Thread(target=lambda: held.append(server.accept()), daemon=True).start()
-        port = server.getsockname()[1]
-        deadline = time.monotonic() + 0.5
-        gate = lambda: ai_consumption.Deadline(deadline)  # noqa: E731
-        opener = ai_module._gated_opener(gate)
-        started = time.monotonic()
-        try:
-            with self.assertRaises((ai_consumption.DispatchWithdrawn, OSError)):
-                opener.open(
-                    urllib.request.Request(
-                        f"http://127.0.0.1:{port}/", data=b"x" * (32 * 1024 * 1024)
-                    ),
-                    timeout=8,
-                )
-        finally:
-            for conn, _ in held:
-                conn.close()
-            server.close()
-        self.assertLess(time.monotonic() - started, 4)
+    """F1 (E2): a carrier not declared to send no bytes never receives captured readings."""
 
     def test_a_provider_that_cannot_be_fenced_is_never_given_captured_readings(self):
         self.ready()
@@ -212,14 +183,6 @@ class Fence(GateBase):
         task = self.service.detail(self.pm, tid)
         self.assertNotEqual(task["state"], "ready")
         self.assertIn("manual", (task.get("reason") or "").lower())
-
-    def test_the_real_api_composition_reports_the_gate_honouring_transport(self):
-        from zava_forward.api.server import App
-
-        self.store.ai = Ai()
-        app = App(self.store)
-        self.addCleanup(app.assistants.stop)
-        self.assertTrue(app.assistants._provider_honours_gate())
 
 
 class ManualAndProactive(GateBase):
@@ -334,10 +297,8 @@ class Adoption(GateBase):
             restarted = self.other()
             restarted.scan_cursor = ""
             restarted.scan()
-            self.assertEqual(len(self.assessments()), 1)
-        self.service.scan_cursor = ""
-        self.service.scan()
-        self.assertEqual(len(self.assessments()), 2)
+            # The durable cursor lets the next scan resume and reach the serviced task.
+            self.assertEqual(len(self.assessments()), 2)
 
     def complete_documents(self, version):
         c7.Upgrade.complete_documents(self, version)

@@ -23,6 +23,7 @@ from zava_forward.api import auth
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
+from zava_forward.core.ai import may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
@@ -81,8 +82,8 @@ class App:
         # The provider call is agents code; the API composes it in process until the queue transport (#144) replaces it.
         def fenced(*args):
             ai = store.ai  # Resolved once: the object checked is the object called.
-            if ai_consumption.DISPATCH_GATE.get() is not None and not getattr(ai, "honours_dispatch_gate", False):
-                raise ai_consumption.DispatchWithdrawn("unfenced-provider")
+            if ai_consumption.CAPTURED_READINGS.get() and not may_carry_captured_readings(ai):
+                raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
             return ai.evidence(*args)
 
         self.assistants = Assistants(store, provider=AgentWorker(fenced).provider_call, transport=lambda: store.ai)

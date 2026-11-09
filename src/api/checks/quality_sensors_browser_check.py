@@ -208,7 +208,7 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             )
             check(
                 "withheld current capture is not reported as missing readings",
-                "no longer retained" not in proposal.inner_text(),
+                "no longer retained" not in proposal.inner_text() and "deleted" not in proposal.inner_text(),
             )
             scan(page, "withheld")
 
@@ -236,7 +236,7 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             )
             check(
                 "unavailable current capture is unknown, not missing",
-                "no longer retained" not in proposal.inner_text(),
+                "no longer retained" not in proposal.inner_text() and "deleted" not in proposal.inner_text(),
             )
             scan(page, "unavailable")
 

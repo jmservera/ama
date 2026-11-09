@@ -16,6 +16,7 @@ from contextlib import contextmanager
 from datetime import datetime, timezone
 
 from . import assistant_release as rel
+from .ai import may_carry_captured_readings
 from . import ai_consumption, continuity, projection, quality, ranking, rai_release, sensor_view
 from zava_forward.core.ai import FORBIDDEN, Ai
 from .store import ConflictError
@@ -295,7 +296,10 @@ def review_flag(task, provenance=(), actionable=True, withheld=False, newer_read
     # capture is unknown, never an empty one.
     observed = current is not None and now_sensors.get("state") in ("ok", "no-readings")
     now_rows = sensor_view.citations(now_sensors) if observed else None
-    comparison = dict(state="unknown", changed_ids=[], missing_ids=[])
+    # missing_ids means absent from the current bounded capture (a newest-window selection). Rotation out of
+    # that window is not a deletion; the stored rows may still exist.
+    comparison = dict(state="unknown", changed_ids=[], missing_ids=[],
+                      basis="current bounded capture; a missing citation may still be stored")
     if now_rows is not None and sensor_cited:
         # Content, not identity: a corrected row keeps its id. Only cited rows decide; extra rows are counted apart.
         comparison["changed_ids"] = sorted(k for k in sensor_cited if k in now_rows and canonical(now_rows[k]) != canonical(known[k]))
@@ -486,21 +490,19 @@ MSSQL_DDL = (
 
 
 class DispatchGate:
-    """Per-attempt authorisation for the physical send of captured sensor readings.
+    """Per-attempt consent re-check for a carrier that declares it sends no bytes.
 
     Calling it commits the final consent check and a fenced gate row together, so a withdrawal for that home
-    waits for the row, and returns a validity check. The check is a monotonic send-by deadline strictly inside
-    the database expiry, so a stalled thread cannot send after the row could expire. Each attempt owns only
-    its own (home, task, fence) row, and release never touches another attempt's row. Direct SQL control
-    writes for the home are rejected by the guard trigger while a row is live. Not covered: a process or VM
-    suspended between the last in-process check and the kernel send for longer than the margin."""
+    waits for the row. Direct SQL control writes for the home are rejected by the guard trigger while a row
+    is live. This is NOT a guarantee about physical transmission: a process suspended between this check and
+    a real send could still transmit. For that reason a real Ai client is never given captured readings
+    (see `ai.may_carry_captured_readings`); this gate only covers carriers that cannot transmit them."""
 
     def __init__(self, service, task):
         self.service, self.task, self.written = service, task, False
 
     def __call__(self):
         service, task = self.service, self.task
-        started = time.monotonic()
         with service.transaction() as db:
             granted = service._sensors_granted(db, task)
             if granted and service._captured_sensors(task):
@@ -511,7 +513,6 @@ class DispatchGate:
                 self.written = True
         if not granted:
             raise ai_consumption.DispatchWithdrawn("consent-withdrawn")
-        return ai_consumption.Deadline(started + service.limits.timeout + HOLD_GRACE / 2)
 
     def release(self):
         if not self.written:
@@ -1077,7 +1078,7 @@ class Assistants:
             raise ValueError("The scan interval must be greater than zero seconds, so no forecast can be given. Set a valid interval or continue ordinary case work manually.")
         bounds = model_bounds(self.limits)
         cycles = period_seconds // self.limits.scan_interval
-        with self.transaction() as db:
+        with self.transaction() as db, rel.read_only():
             allowed = [k for k, v in REGISTRY.items() if user.get("role") in v["roles"]]
             if not allowed:
                 raise PermissionError("Staff assistance only.")
@@ -1144,59 +1145,82 @@ class Assistants:
     COALESCE_MAX = 1800.0
     INCOMPLETE = "incomplete-history"
 
-    def _adopt(self, db, cap, case_id, coarse):
+    def _adopt(self, db, cap, case_id, cursor=None):
         """Pre-upgrade stores have tasks but no schedule row. Adopt, once per case, the newest dispatched task
         of the current release and epoch that was not a person's request, recording that task's OWN schedule
         signature so a later assessment or funding change is still new work. Unrecorded history is never
-        treated as approved. The history is read in ordered pages of ADOPT_ROWS, at most ADOPT_PAGES; an
-        empty slot is written only when the whole history was read and nothing qualified. When the bound is
-        reached first, the slot is marked INCOMPLETE: that is not proof of no history, so no autonomous call
-        is made, and a later scan or a person's request resolves it."""
+        treated as approved. Pure: it reads and returns a slot `(scope, signature, task_id, at, replaced, seen,
+        paused_at)` and writes nothing. The first read is the newest ADOPT_ROWS x ADOPT_PAGES dispatched
+        tasks. When that bound is reached first the slot is INCOMPLETE and stores a durable cursor, the last
+        task id examined; later scans walk the remaining history by immutable task id (retries rewrite
+        `dispatched`, so that is not a stable key), adopting the first qualifying task, so a long history
+        completes in bounded scans without a larger cap or a model call. After the first window the adopted
+        task is the first qualifying by id, which is not necessarily the newest. Nothing qualifying after a
+        complete read is an empty slot, never an approval."""
         epoch = self.continuity(db)["epoch"]
         release = self.release_reference(db, cap)
+        now = self.now(db)
+
+        def qualifies(raw):
+            task = json.loads(raw)
+            if task.get("release") != release or task.get("continuity_epoch") != epoch:
+                return False
+            trigger = (task.get("dispatch") or {}).get("trigger")
+            return not (trigger == "requested" or (trigger is None and task.get("manual_requested")))
+
+        if cursor is None:
+            query = ("SELECT id,body,signature FROM assistant_tasks WHERE capability=? AND case_id=? AND attempts>0"
+                     " ORDER BY dispatched DESC, revision DESC, id")
+            query += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY" if self.mssql else " LIMIT ? OFFSET ?"
+            for page in range(self.ADOPT_PAGES):
+                args = (self.ADOPT_ROWS, page * self.ADOPT_ROWS) if not self.mssql else (page * self.ADOPT_ROWS, self.ADOPT_ROWS)
+                rows = db.execute(query, (cap, case_id, *args)).fetchall()
+                for tid, raw, own in rows:
+                    if qualifies(raw):
+                        return (self._scope(db, cap), own, tid, now, 0, "", 0)
+                if len(rows) < self.ADOPT_ROWS:
+                    return ("", "", "", now, 0, "", 0)
+            return ("", self.INCOMPLETE, "", now, 0, "", 0)
         query = ("SELECT id,body,signature FROM assistant_tasks WHERE capability=? AND case_id=? AND attempts>0"
-                 " ORDER BY dispatched DESC, revision DESC, id")
-        query += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY" if self.mssql else " LIMIT ? OFFSET ?"
-        complete = False
-        for page in range(self.ADOPT_PAGES):
-            args = (self.ADOPT_ROWS, page * self.ADOPT_ROWS) if not self.mssql else (page * self.ADOPT_ROWS, self.ADOPT_ROWS)
-            rows = db.execute(query, (cap, case_id, *args)).fetchall()
+                 " AND id>? ORDER BY id")
+        query += " OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY" if self.mssql else " LIMIT ?"
+        for _ in range(self.ADOPT_PAGES):
+            rows = db.execute(query, (cap, case_id, cursor, self.ADOPT_ROWS)).fetchall()
             for tid, raw, own in rows:
-                task = json.loads(raw)
-                if task.get("release") != release or task.get("continuity_epoch") != epoch:
-                    continue
-                trigger = (task.get("dispatch") or {}).get("trigger")
-                if trigger == "requested" or (trigger is None and task.get("manual_requested")):
-                    continue
-                self._occupy(db, cap, case_id, own, tid, 0)
-                return True
+                if qualifies(raw):
+                    return (self._scope(db, cap), own, tid, now, 0, "", 0)
             if len(rows) < self.ADOPT_ROWS:
-                complete = True
-                break
-        marker = "" if complete else self.INCOMPLETE
-        # An empty slot has no scope, so a case with no serviced history is never treated as already serviced.
-        values = ("", marker, "", self.now(db), 0, cap, case_id)
-        db.execute("INSERT INTO assistant_schedule (scope,signature,task_id,at,replaced,capability,case_id) VALUES (?,?,?,?,?,?,?)", values)
-        return False
+                return ("", "", "", now, 0, "", 0)
+            cursor = rows[-1][0]
+        return ("", self.INCOMPLETE, cursor, now, 0, "", 0)
+
+    def _write_slot(self, db, cap, case_id, slot, exists):
+        if exists:
+            db.execute("UPDATE assistant_schedule SET scope=?,signature=?,task_id=?,at=?,replaced=?,seen=?,paused_at=? WHERE capability=? AND case_id=?",
+                       (*slot, cap, case_id))
+        else:
+            db.execute("INSERT INTO assistant_schedule (scope,signature,task_id,at,replaced,seen,paused_at,capability,case_id) VALUES (?,?,?,?,?,?,?,?,?)",
+                       (*slot, cap, case_id))
 
     def _due(self, db, cap, c, snapshot, today, observe=True):
         """Whether a proactive scan may start work. The coarse signature throttles every eligible branch,
         gaps included, only within the current release and continuity scope and only while the slot's task
         is serviced; any other change or a manual request is never suppressed. A dispatched task is a
-        person's request only when its frozen dispatch says so. Reads are by primary key."""
+        person's request only when its frozen dispatch says so. Reads are by primary key. Only an observing
+        scan persists adoption or the history cursor; a forecast computes the same result in memory."""
         coarse = scheduling_signature(snapshot)
         columns = "SELECT scope,signature,task_id,at,replaced,seen,paused_at FROM assistant_schedule WHERE capability=? AND case_id=?"
         slot = db.execute(columns, (cap, c["id"])).fetchone()
-        if slot is not None and slot[1] == self.INCOMPLETE:
-            if not observe:
+        if slot is None or slot[1] == self.INCOMPLETE:
+            if slot is not None and not observe:
                 return False
-            db.execute("DELETE FROM assistant_schedule WHERE capability=? AND case_id=?", (cap, c["id"]))
-            slot = None
-        if slot is None:
-            self._adopt(db, cap, c["id"], coarse)
-            slot = db.execute(columns, (cap, c["id"])).fetchone()
-            if slot is not None and slot[1] == self.INCOMPLETE:
-                self.incomplete.add((cap, c["id"]))
+            stored = slot is not None
+            slot = self._adopt(db, cap, c["id"], slot[2] if stored else None)
+            if observe:
+                self._write_slot(db, cap, c["id"], slot, stored)
+            if slot[1] == self.INCOMPLETE:
+                if observe:
+                    self.incomplete.add((cap, c["id"]))
                 return False
         scoped = slot is not None and slot[0] == self._scope(db, cap)
         known = False
@@ -1220,6 +1244,7 @@ class Assistants:
             # The exact capture already belongs to a person's request; the serviced autonomous slot is not rewritten.
             return False
         return exists is not None or not known
+
 
     def _resumes(self, db, cap, c, snapshot, slot, observe):
         """While the replacement limit holds a stale, undispatched slot, readings still arriving keep it paused
@@ -1456,13 +1481,6 @@ class Assistants:
         owner = getattr(self.provider, "__self__", None)
         return self.store.ai if owner is self else (owner if owner is not None else self.provider)
 
-    def _provider_honours_gate(self):
-        return bool(getattr(self._carrier(), "honours_dispatch_gate", False))
-
-    def _provider_sends_nothing(self):
-        """A test or manual double that is declared never to transmit captured readings."""
-        return bool(getattr(self._carrier(), "sends_no_bytes", False))
-
     def _default_provider(self, *args):
         return self.store.ai.evidence(*args)
 
@@ -1498,6 +1516,8 @@ class Assistants:
         started = time.perf_counter()
         returned, values = threading.Event(), []
 
+        captured = self._captured_sensors(task)
+
         def call():
             gate = self._dispatch_gate(task)
             try:
@@ -1508,15 +1528,9 @@ class Assistants:
                     ai_consumption.reference(runtime_binding(task["capability"], self.store.ai)["prompt_version"]),
                     retry=task["attempts"] - 1,
                 )
-                with ai_consumption.call_context(context):
-                    if self._provider_honours_gate():
-                        # The transport authorises at the real outbound boundary, after connect/TLS and before bytes.
-                        with ai_consumption.dispatch_gate(gate):
-                            values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
-                    else:
-                        # A foreign provider cannot be intercepted: authorise immediately before handing it the data.
-                        gate()
-                        values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
+                with ai_consumption.call_context(context), ai_consumption.captured_readings(captured):
+                    gate()
+                    values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
             except ai_consumption.DispatchWithdrawn:
                 values.append(dict(outcome="suspended-before-dispatch", usage=None, source="unverified", text=None))
             except Exception:
@@ -1534,9 +1548,9 @@ class Assistants:
                 held = "Release changed before dispatch; use the manual route."
             if not held and not self._sensors_granted(db, task):
                 held = "Monitoring consent is not granted now; readings were not sent. Use the manual route."
-            if (not held and self._captured_sensors(task) and not self._provider_honours_gate()
-                    and not self._provider_sends_nothing()):
-                held = "This provider cannot be fenced at the physical send; captured readings were not sent. Use the manual route."
+            if not held and captured and not may_carry_captured_readings(self._carrier()):
+                held = ("Captured sensor readings cannot be sent to a real AI model in this release; they were "
+                        "not sent. Use the manual route.")
         if held:
             self.call_slots.release()
             return self.complete(task, dict(outcome="suspended-before-dispatch", usage=None, source="unverified"), None, held)

@@ -9,6 +9,8 @@ import json
 import uuid
 import logging
 import sqlite3
+from contextlib import contextmanager
+from contextvars import ContextVar
 from datetime import datetime, timezone
 from . import rai_release
 
@@ -66,6 +68,20 @@ def releases(db, task):
     return [dict(release_body(b), id=i, status=s) for i, s, b in rows]
 
 
+# Set by read-only callers such as the forecast: a material change is still treated as revoked in memory,
+# but no release row or event is written.
+READ_ONLY: ContextVar[bool] = ContextVar("assistant_release_read_only", default=False)
+
+
+@contextmanager
+def read_only():
+    token = READ_ONLY.set(True)
+    try:
+        yield
+    finally:
+        READ_ONLY.reset(token)
+
+
 def invalidate_changed(db, now, spec, binding, found, live):
     """Revoke active records whose bound versions or intended use changed; return the records still held."""
     kept = []
@@ -74,8 +90,9 @@ def invalidate_changed(db, now, spec, binding, found, live):
         if triggers:
             fields = rai_release.missing_contract(rec, spec) + rai_release.missing_binding(rec, binding, BOUND, now, live)
             cause = dict(at=now, triggers=triggers, fields=fields or triggers)
-            change(db, now, None, rec["id"], "revoked", "Material change invalidated release: " + ", ".join(triggers),
-                   system=True, invalidated=cause)
+            if not READ_ONLY.get():
+                change(db, now, None, rec["id"], "revoked", "Material change invalidated release: " + ", ".join(triggers),
+                       system=True, invalidated=cause)
             rec.update(status="revoked", invalidated=cause)
         else:
             kept.append(rec)

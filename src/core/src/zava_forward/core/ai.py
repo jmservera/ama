@@ -6,13 +6,11 @@ fields it needs, output is checked before it is shown, every run is recorded in
 the audit log, and a plain template is used if the model is unavailable.
 """
 import base64
-import http.client
 import json
 import os
 import re
 import time
 import urllib.parse
-import ssl
 import urllib.request
 import uuid
 from dataclasses import replace
@@ -26,70 +24,10 @@ class DispatchDenied(RuntimeError):
     pass
 
 
-CHUNK = 16 * 1024
-
-
-def _gated_opener(gate):
-    """An opener whose connections call the dispatch gate after connect/TLS and before the first request byte.
-
-    The body leaves in bounded chunks and the send-by deadline is re-checked, and the socket timeout is
-    capped to the time left, before every socket send, so no byte leaves after the deadline even when the
-    peer stalls or trickles. A body that is not bytes fails closed. The exception is not an OSError, so
-    urllib does not rewrap it.
-    """
-    state = {}
-
-    def check():
-        if "valid" not in state:
-            state["valid"] = gate()
-        valid = state["valid"]
-        if not valid():
-            raise ai_consumption.DispatchWithdrawn("dispatch-window-ended")
-        return valid
-
-    def bounded_send(connection, data):
-        if not isinstance(data, (bytes, bytearray, memoryview)):
-            raise ai_consumption.DispatchWithdrawn("unfenced-body")
-        view = memoryview(data).cast("B")
-        sock = connection.sock
-        original = sock.gettimeout()
-        try:
-            while len(view):
-                valid = check()
-                left = getattr(valid, "remaining", lambda: original)()
-                limit = left if original is None else min(original, left)
-                if limit is None or limit <= 0:
-                    raise ai_consumption.DispatchWithdrawn("dispatch-window-ended")
-                sock.settimeout(limit)
-                try:
-                    sent = sock.send(view[:CHUNK])
-                except (BlockingIOError, ssl.SSLWantWriteError, ssl.SSLWantReadError):
-                    continue
-                view = view[sent:]
-        finally:
-            sock.settimeout(original)
-
-    class Plain(http.client.HTTPConnection):
-        def send(self, data):
-            if self.sock is None:
-                self.connect()
-            bounded_send(self, data)
-
-    class Secure(http.client.HTTPSConnection):
-        def send(self, data):
-            if self.sock is None:
-                self.connect()
-            bounded_send(self, data)
-
-    class PlainHandler(urllib.request.HTTPHandler):
-        def http_open(self, req):
-            return self.do_open(Plain, req)
-
-    class SecureHandler(urllib.request.HTTPSHandler):
-        def https_open(self, req):
-            return self.do_open(Secure, req, context=self._context)
-
-    return urllib.request.build_opener(PlainHandler, SecureHandler)
+def may_carry_captured_readings(carrier):
+    """Captured IoT readings may only reach a carrier that is not a real Ai client and declares that it
+    sends no bytes. This is a composition declaration about the sink, not data provenance."""
+    return not isinstance(carrier, Ai) and getattr(carrier, "sends_no_bytes", False) is True
 
 
 MAX_TEXT_BYTES = 128 * 1024
@@ -108,8 +46,6 @@ class ModelMismatch(ValueError):
 
 
 class Ai:
-    honours_dispatch_gate = True
-
     def __init__(self):
         self.endpoint = os.environ.get("AI_ENDPOINT", "").rstrip("/")
         self.fast = os.environ.get("AI_DEPLOYMENT", "standard")
@@ -156,6 +92,8 @@ class Ai:
         ), sort_keys=True))
 
     def _request(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
+        if ai_consumption.CAPTURED_READINGS.get():
+            raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
         body = json.dumps({"messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
                            "max_tokens": max_tokens, "temperature": temperature}, ensure_ascii=True).encode("ascii")
         protected = data_protection.dispatch_hold("prompt_output", os.environ)
@@ -184,9 +122,7 @@ class Ai:
             req = urllib.request.Request(f"{self.endpoint}/openai/deployments/{deployment}/chat/completions?api-version=2024-10-21",
                                          data=body, headers={"Authorization": f"Bearer {self._token()}", "Content-Type": "application/json"})
             self.consumption.dispatch_check(rid)
-            gate = ai_consumption.DISPATCH_GATE.get()
-            opened = _gated_opener(gate).open if gate else urllib.request.urlopen
-            with opened(req, timeout=timeout) as response:
+            with urllib.request.urlopen(req, timeout=timeout) as response:
                 raw = response.read(256001)
                 if len(raw) > 256000:
                     raise ValueError("Oversized provider envelope.")

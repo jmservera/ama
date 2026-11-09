@@ -20,9 +20,9 @@ function reviewFlagBlock(f) {
     const asOf = f.evidence_as_of ? `Evidence as of ${f.evidence_as_of}, ${f.freshness || "unknown"}${f.age_minutes == null ? "" : `, ${f.age_minutes} minutes old at capture`}.`
       : "Evidence as-of time unknown: do not treat these readings as live.";
     const cmp = f.cited_comparison || {};
-    const extra = f.newer_reading_count ? ` ${f.newer_reading_count} additional reading${f.newer_reading_count === 1 ? "" : "s"} not cited by this finding ${f.newer_reading_count === 1 ? "is" : "are"} now retained.` : "";
+    const extra = f.newer_reading_count ? ` ${f.newer_reading_count} additional reading${f.newer_reading_count === 1 ? "" : "s"} not cited by this finding ${f.newer_reading_count === 1 ? "is" : "are"} now in the current capture.` : "";
     const change = f.changed_since_capture == null ? "Whether the cited readings have changed since capture is unknown."
-      : f.changed_since_capture ? `The current authorised capture differs from the readings this finding cited: ${(cmp.changed_ids || []).length} changed and ${(cmp.missing_ids || []).length} no longer retained. Review the current readings.${extra}`
+      : f.changed_since_capture ? `The current authorised capture differs from the readings this finding cited: ${(cmp.changed_ids || []).length} changed and ${(cmp.missing_ids || []).length} not in the current bounded capture (they may still be stored). Review the current readings.${extra}`
         : `The current authorised capture still holds the readings this finding cited, with the same values.${extra}`;
     kids.push(h("p", {}, `Model: ${model}. Raised ${f.source_time || "at an unknown time"} (${f.trigger}). Not approved.`),
       h("p", {}, `${asOf} ${change}`),

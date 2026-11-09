@@ -6,9 +6,8 @@ import hashlib
 import json
 import logging
 import re
-import time
 import uuid
-from collections.abc import Callable, Iterator, Mapping
+from collections.abc import Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
@@ -198,32 +197,18 @@ class DispatchWithdrawn(RuntimeError):
     """Consent or the dispatch window ended before the first request byte; nothing was sent."""
 
 
-class Deadline:
-    """A monotonic send-by time: truthy while it has not passed, with the seconds left."""
-
-    def __init__(self, at: float) -> None:
-        self.at = at
-
-    def remaining(self) -> float:
-        return self.at - time.monotonic()
-
-    def __call__(self) -> bool:
-        return self.remaining() > 0
-
-
-# Called by the transport once the connection is ready and immediately before request bytes leave.
-DISPATCH_GATE: ContextVar[Callable[[], Callable[[], bool]] | None] = ContextVar(
-    "ai_dispatch_gate", default=None
-)
+# True while a captured-readings request is being prepared. A real Ai refuses it before any
+# reservation, credential or socket, so no captured IoT value is transmitted to a model.
+CAPTURED_READINGS: ContextVar[bool] = ContextVar("ai_captured_readings", default=False)
 
 
 @contextmanager
-def dispatch_gate(gate: Callable[[], Callable[[], bool]]) -> Iterator[None]:
-    token = DISPATCH_GATE.set(gate)
+def captured_readings(active: bool = True) -> Iterator[None]:
+    token = CAPTURED_READINGS.set(active)
     try:
         yield
     finally:
-        DISPATCH_GATE.reset(token)
+        CAPTURED_READINGS.reset(token)
 
 
 @contextmanager
