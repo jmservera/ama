@@ -311,6 +311,46 @@ class StoredQuestionTests(unittest.TestCase):
         self.assertEqual(reply["consumption"]["provider_outcome"], "returned")
         self.assertTrue(self.store.verify_audit())
 
+    def test_validation_refusal_receipt_shapes_persist_on_json_and_sql_audits(self) -> None:
+        with tempfile.TemporaryDirectory() as work:
+            data, db = test_sqlstore.seed(work)
+            sql = SqlStore(data, db)
+            self.addCleanup(sql.db.close)
+            for store in (self.store, sql):
+                with self.subTest(store=type(store).__name__):
+                    user = store.data["staff"][0]
+                    tid = store.chat_create_thread(user)["id"]
+                    panel = ChatPanel(ChatIsolation(store, env=self.panel.iso.env))
+                    before = len(list(store.audit_entries()))
+                    panel.record_validation_refused(user, tid)
+                    panel.record_validation_refused(user)
+                    stored, unstored = list(store.audit_entries())[before:]
+                    self.assertEqual((stored["action"], stored["case"]), ("chat.turn", ""))
+                    receipt = json.loads(stored["detail"])
+                    self.assertEqual(receipt["thread_id"], tid)
+                    self.assertEqual(receipt["outcome"], "rejected")
+                    self.assertEqual(receipt["model_calls"], 0)
+                    self.assertIsNone(receipt["tokens"])
+                    self.assertEqual(receipt["provider_outcome"], "not-called")
+                    self.assertEqual(
+                        (unstored["action"], unstored["case"]), ("chat.turn.unstored", "")
+                    )
+                    self.assertEqual(
+                        json.loads(unstored["detail"]), {"model_calls": 0, "outcome": "rejected"}
+                    )
+                    self.assertTrue(store.verify_audit())
+            restarted = SqlStore(data, db)
+            self.addCleanup(restarted.db.close)
+            self.assertEqual(list(restarted.audit_entries()), list(sql.audit_entries()))
+
+    def test_validation_refusal_for_a_refused_user_writes_nothing(self) -> None:
+        self.user["disabled"] = True
+        self.addCleanup(self.user.pop, "disabled", None)
+        before = len(list(self.store.audit_entries()))
+        self.panel.record_validation_refused(self.user, self.tid)
+        self.panel.record_validation_refused(self.user)
+        self.assertEqual(len(list(self.store.audit_entries())), before)
+
     def test_nested_store_lock_callers_preserve_json_and_sql_audits(self) -> None:
         with tempfile.TemporaryDirectory() as work:
             data, db = test_sqlstore.seed(work)

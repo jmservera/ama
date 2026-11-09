@@ -21,7 +21,7 @@ from collections.abc import Awaitable, Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
 from zava_forward.core.synthetic import live_readings as lr
 from zava_forward.core.synthetic.run_plan import (
@@ -32,7 +32,9 @@ from zava_forward.core.synthetic.run_plan import (
 from zava_forward.core.synthetic.sensor_stream import StreamError
 
 from . import live_control
-from .iot_stream import DeviceActivation
+
+if TYPE_CHECKING:
+    from .iot_stream import DeviceActivation
 
 LOG = logging.getLogger("zava_forward.live_simulator")
 DAILY_MESSAGE_BUDGET = B1_DAILY_MESSAGES - RESERVED_HEADROOM
@@ -90,7 +92,7 @@ class IotHubSink:
 
     def __init__(
         self,
-        activation: DeviceActivation,
+        activation: "DeviceActivation",
         cert_dir: Path,
         max_open: int = 100,
         client_factory: Callable[[str, str, Path, Path], Any] | None = None,
@@ -411,6 +413,10 @@ def _report(summary: Summary) -> None:
 def _sink(args: argparse.Namespace, env: Mapping[str, str]) -> Sink:
     if args.sink == "stdout":
         return StdoutSink()
+    try:
+        from .iot_stream import DeviceActivation
+    except ModuleNotFoundError:
+        raise StreamError("IOT_SDK_MISSING") from None
     activation = DeviceActivation(
         env.get("ZF_SIM_HUB_HOSTNAME", ""),
         env.get("ZF_SIM_APPROVAL", ""),
