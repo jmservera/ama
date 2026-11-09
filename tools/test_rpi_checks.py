@@ -510,6 +510,50 @@ class GateTests(unittest.TestCase):
         )
         self.assertIsNone(gate.required_sql_count(existing["argv"]))
 
+    def test_changed_core_sensor_paths_select_mssql_and_the_flagged_command(self) -> None:
+        core = "src/core/src/zava_forward/core/"
+        for path in (
+            f"{core}sensor_analysis.py",
+            f"{core}sensor_consumer.py",
+            f"{core}synthetic/sensor_faults.py",
+            "src/core/tests/sensor_consumer_fixture.py",
+            "src/core/tests/test_sensor_analysis_mssql.py",
+        ):
+            with self.subTest(path=path):
+                groups = gate.changed_groups([path], [])
+                self.assertIn("mssql", groups)
+                receipt = {
+                    "owner": "a" * 24,
+                    "sql": {"container": "b" * 64, "port": "25432"},
+                    "images": {"mssql": "sha256:" + "c" * 64},
+                    "extras": [],
+                    "executed_groups": ["mssql"],
+                }
+                sensor = [
+                    c
+                    for c in gate.required_checks(self.root, receipt)
+                    if c["suite"] and gate.SENSOR_MSSQL_SELECTOR in c["argv"]
+                ]
+                self.assertEqual(len(sensor), 1)
+                self.assertEqual(sensor[0]["env"][gate.SENSOR_MSSQL_FLAG], "1")
+                self.assertEqual(
+                    gate.required_sql_count(sensor[0]["argv"]),
+                    len(gate.SENSOR_MSSQL_REQUIRED_TESTS),
+                )
+
+    def test_unrelated_paths_do_not_select_mssql_through_the_sensor_rule(self) -> None:
+        for path in (
+            "src/core/src/zava_forward/core/timeline.py",
+            "src/api/src/zava_forward/api/sensor_ingestion.py",
+            "src/agents/src/zava_forward/agents/sensor_notes.py",
+        ):
+            with self.subTest(path=path):
+                self.assertNotIn("mssql", gate.changed_groups([path], []))
+        skipped = gate.skipped_groups(
+            gate.changed_groups(["src/api/src/zava_forward/api/sensor_ingestion.py"], []), []
+        )
+        self.assertIn("core sensor", skipped["mssql"])
+
     def test_sensor_mssql_execution_evidence_rejects_missing_substituted_skipped_or_failed(
         self,
     ) -> None:
