@@ -10658,6 +10658,20 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * `tools/rpi-checks.py` now writes the existing policy files from `Runner._install` for the api venv (both `project-api` and `setup-api`), and the later browser-group copy is removed. Environment scrubbing, the harness, the dirty-snapshot guard, cleanup and receipt acceptance are unchanged.
 * `tools/test_rpi_checks.py` adds a regression that runs the real api install step and the real harness server launch from a scratch source copy; it failed before (core, agents and api `__pycache__` created) and passes after. Focused tier only; the complete gate and a fresh full receipt were not run. Evidence under `.copilot-tracking/` (2026-11-05 api-discovery-bytecode-1215).
 
+## [2026-11-05] update | Rendered Chromium check of the #233 atlas tensions (Refs #233, Refs #149)
+
+* Adds `src/api/checks/atlas_tensions_browser_check.py` and documents it in `src/api/README.md`. One synthetic home is opened on Programme queue, Resident choice and Package queue through the real `/app`; the check asserts rendered "Not shown for this role" panels with same-home context, choice and withdrawal panels before "Choice comes before offered capacity", the explanation before the capacity table and package rows in reference order against a different delivered order and conflicting headroom, offered and use. No application, CSS, policy or data change.
+* `docs/reference/research/ux/atlas-screen-trace.md` now records the tensions as rendered on one synthetic home (engineering evidence only). Issue criteria are unchanged: C2 engineering advanced, C4 and C5 unmet; no human, assistive-technology, user, legal, privacy or design approval is claimed.
+
+
+## [2026-11-05] update | Index row for the #233 rendered tension check (Refs #233, Refs #149)
+
+* `docs/reference/README.md` row for #233 now names the bounded Chromium tension-sequence check and keeps its engineering-only boundary. No other knowledge base change.
+## [2026-11-06] update | Document-control retention and hold refusal wording (Refs #153)
+
+* Reworded the two refusals in `approve_retention_deletion` (`doc_controls.py`): the legal-hold refusal now explains the hold, says nothing was deleted and keeps the existing "real hold needs the Legal delegate's decision" label; the not-due refusal explains the retention start date and demonstration periods. Message text only; types, predicates, audit events and deletion behaviour are unchanged.
+* Open decision recorded in the content standard: who decides a real hold has ended is not evidenced, so the copy only says a programme manager can record the release. `resident_decisions.py` keeps its old wording (out of scope).
+* Behaviour regression in `test_document_controls.py` and lexical guard in `test_content_standard.py`. No resident comprehension or named human approval is claimed; criteria stay unmet.
 ## [2026-11-07] update | Chat demo disclaimer stays visible; demo gates tested (Refs #891)
 
 * The employee chat panel now renders the demo disclaimer as its own bordered, non-shrinking note above the scrollable introduction. A real-browser run showed the previous placement was clipped to about 30 px at a 720 px viewport. The employee chat browser check proves visibility, `role=note`, the `aria-describedby` link, the model-generated label and axe WCAG 2.2 AA with reduced motion.
@@ -10745,6 +10759,17 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) to the corrected `src/api/checks/workbench_browser_check.py` bytes (`4bd825e9...a320`), because the validator compares recorded source digests with literal current bytes and hosted src-core failed with a stale hash after the #1262 checker change. Digest only: version 0.2.1, fixture case IDs, unavailable profiles and workflows, approval and evidence status, scenario semantics and the validator are unchanged, and no observed coverage is claimed. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-1262-r2-manifest-pin).
 
+## 2026-11-07 - Issue 149 operator browser check row selection
+
+The data-operator browser check now selects failed-AI register rows by their Kind cell instead of the outcome sentence it validates, so a failed row with a wrong or missing sentence is rejected. Checker and tests only; no product, SQL or security change, no acceptance claim, browser run on the corrected source pending. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-correction-1).
+
+## 2026-11-07 - Issue 149 operator check failure-outcome prefix
+
+The data-operator check helper now requires the failure outcome sentence to start the What happened cell, so a delivered-result prefix is rejected. Test-helper only; no product, SQL or security change, no acceptance claim, browser run pending. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-correction-2).
+
+## 2026-11-07 - Issue 149 operator check source-cell contract
+
+The data-operator browser check now reads the synthetic record ID from the Source or run reference cell of Kind-selected failed rows. The earlier failure was a checker contract error, not a product defect. Checker and tests only; maintained atlas (194) and data-operator (100, required axe) Chromium checks passed on the corrected source, with no whole-issue, accessibility or assistive-technology acceptance. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-correction-3).
 ## [2026-11-07] update | Issue 79 root merged main 7c6d135d (Refs #79)
 
 * One normal merge of main `7c6d135d` (hotfix 1263: workbench check, live-defaults tests, scenario manifest) into the ranking publication root; only the log overlapped, no conflict and no root source change, prior head preserved at `preserve/issue-79-pre-main7c6d`. Light own-source checks passed; no FULL gate was run and the hotfix receipts do not validate ranking. Evidence under `.copilot-tracking/` (2026-11-07 issue-79 r30).
@@ -10822,6 +10847,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Corrected the qualifications in the 2026-11-08 AI and employee chat checkpoint of the cut-over evidence pack after independent assessment `review-440-c96a`: the historical AWF 504 is dated and distinguished from the rootless installer recovery in #1275 and the unimplemented #1274 resilience; earlier exclusions are scoped to the 608c pin beside current identities (main `3c57a02d`, #1278 on main as `e73d4210`, #1243 on its parent branch as `6ef6dc36`, PR 1240 open); the assistant review row states only the enforced checks; the unused chat clean-up is unowned and pending triage, not deferred; the unsupported original reading claim is amended in new evidence. Original c96a text is kept as dated history and earlier log entries are unchanged. No adoption, approval, rerun, source change or real-provider, SQL, browser or Azure evidence. Records: `.copilot-tracking/*/2026-11-08-ai-main-stabilization-440-correction1-*`.
 
+## 2026-11-08 - Issue 149 parent integration of main e2ecee25
+
+The parent topic merged main e2ecee25 with a normal merge and no conflicts. Focused unit, static and type checks and the maintained atlas (194) and data-operator (100, required axe) Chromium checks passed on the merged source. No whole-issue, accessibility or assistive-technology acceptance. No index change. Evidence under `.copilot-tracking/` (2026-11-07 issue-149-parent-main-e2ec).
 ## [2026-11-08] update | Running exploratory study, coauthor and mixed-source history
 
 * Owner confirmed coauthorship/affiliation agreement for Isabel Cabezas Martin,
@@ -10892,3 +10920,19 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
   records and the original review outcome. Paper source, PDF, prompt bindings,
   study and slides are unchanged. A new exact-head assessment and focused
   publication receipt are required after this correction.
+
+## 2026-11-08 - Issue 149 parent integration of main ecb28815
+
+The parent topic merged main ecb28815 with a normal merge and no conflict; API, Core, tools, infra and workflow bytes equal the previously assessed head. Docs-only integration, no acceptance claim. No index change. Evidence under `.copilot-tracking/` (2026-11-08 issue-149-parent-main-ecb2).
+
+## [2026-11-08] update | Issue 440 visible-demo integration checkpoint (Refs #440, #149, #229, #891)
+
+* Added a dated visible-demo integration checkpoint to the cut-over evidence pack and one index paragraph. It records base `6354b13f` (only the rubric score file after `656cafb1`), PR 1286 `28c6ec11` and PR 1290 `656cafb1`, the source movement since the previous pin, where AI is invoked and the proposal-only ceiling, and one historical generic employee model answer on the deployed demo as Azure observed for that source only. Five-agent, case-grounded, sensor-grounded, current-main deployment, cost, privacy and approval acceptance remain unproven; unmerged #184 and #1288 work is excluded; no new defect was confirmed. Recommendation: bounded continue. Documentation only; no test, model or Azure action, issue write or approval. Records: `.copilot-tracking/*/2026-11-08-visible-demo-checkpoint-440-*`.
+
+## [2026-11-08] update | Issue 440 visible-demo checkpoint correction 1 (Refs #440, #149, #229, #891)
+
+* Corrected the visible-demo checkpoint in the cut-over evidence pack after independent assessment of `398a1b6c`: chat no-model path wording, issue-specific closure criteria instead of a blanket IoT dependency, sensor exclusion narrowed to the verified Quality capture allowlist and to no activation observed in this checkpoint, hosted checks separated from the local assessment, and the one real generic model answer distinguished from unproven case-grounded answers. Documentation only; earlier entries and records unchanged. Records: `.copilot-tracking/*/2026-11-08-visible-demo-checkpoint-440-c1-*`.
+
+## [2026-11-08] update | Issue 440 visible-demo checkpoint correction 2 (Refs #440, #149, #229, #891)
+
+* Made the stored-route model-call sentence in the visible-demo section of the cut-over evidence pack conditional and at most once (`chat_panel.py` 583-591), qualified the BRD and PRD trace row to distinguish the one observed generic model answer from unproven case-grounded provider behavior and human acceptance, and added a compact note that the C1 research wall-clock claim conflicts with Git commit times (cause unknown, record preserved). Documentation only; no approval, closure or new evidence.
