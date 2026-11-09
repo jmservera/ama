@@ -3,16 +3,16 @@
   "task_slug": "assisted-aftercare-133-stagea",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-09/assisted-aftercare-133-stagea-research.md",
     "plan": ".copilot-tracking/plans/2026-11-09/assisted-aftercare-133-stagea-plan.md",
     "details": ".copilot-tracking/details/2026-11-09/assisted-aftercare-133-stagea-details.md",
     "critique": ".copilot-tracking/plans/2026-11-09/assisted-aftercare-133-stagea-critique.md",
-    "changes": null,
-    "review": null
+    "changes": ".copilot-tracking/changes/2026-11-09/assisted-aftercare-133-stagea-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09/assisted-aftercare-133-stagea-review.md"
   },
   "confirmed_decisions": [
     {
@@ -39,6 +39,11 @@
       "decision": "Critique executed once (independent rubber-duck): Revise, seven findings applied directly, no user decision",
       "status": "confirmed",
       "evidence": "critique artifact, commit aebfe6f40"
+    },
+    {
+      "decision": "Review executed once; outcome no significant issues; reviewer did not read tests",
+      "status": "confirmed",
+      "evidence": "review artifact"
     }
   ],
   "blockers": [
@@ -50,7 +55,14 @@
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Implement phases 1-3 in aftercare_intake.py and its tests, then the screen"
+    "action": "Coordinator merges sibling 132, then admits the hook continuation"
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Hook continuation after sibling 132: server delegation, store update, nav wiring, connected checks",
+      "rationale": "Only way to meet C1-C6",
+      "evidence": "handoff-133-aftercare-stageA-1109.md"
+    }
+  ]
 }
