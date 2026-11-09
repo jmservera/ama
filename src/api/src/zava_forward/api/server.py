@@ -1242,7 +1242,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 if url.path == "/api/import-check":
                     return self._json(200, s.import_check(body.get("text", "")))
                 if url.path == "/api/ai/priority":
-                    return self._json(200, s.ai_priority(u, body.get("n", 5), body.get("mode")))
+                    from zava_forward.core.sqlstore import CommittedReloadError
+                    try:
+                        return self._json(200, s.ai_priority(u, body.get("n", 5), body.get("mode")))
+                    except CommittedReloadError as error:
+                        return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "review"]:
                     return self._json(200, s.review_ai(u, parts[3], parts[4], body.get("reason", ""), body.get("text")))
                 if parts[:2] == ["api", "packages"] or parts[:2] == ["api", "workorders"]:
@@ -1261,9 +1265,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._send(200, raw)
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "priority"]:
                     from zava_forward.core.resident_decisions import ResidentCommittedError
+                    from zava_forward.core.sqlstore import CommittedReloadError
                     try:
                         return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
-                    except ResidentCommittedError as error:
+                    except (ResidentCommittedError, CommittedReloadError) as error:
                         return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]

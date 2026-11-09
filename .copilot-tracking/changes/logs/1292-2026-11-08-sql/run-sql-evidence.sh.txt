@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+# Task-owned #1292 SQL evidence run; invoked under flock -n on the shared heavy lock.
+set -u
+WT=/home/azureuser/source/ama-wt/issue-1292-priority-order
+BASE=6354b13f7abf1441a815e92f2b01dc184ce0b0ac
+OUT=/tmp/ama-1292-sql-evidence-$(date -u +%Y%m%dT%H%M%SZ)
+mkdir -p "$OUT/base-src" "$OUT/home"
+NAME=ama1292-sql-$$-$RANDOM
+PORT=$((20000 + RANDOM % 20000))
+PW="Zf-$(head -c 12 /dev/urandom | base64 | tr -dc 'A-Za-z0-9')aA1!"
+echo "$OUT" > /tmp/ama-1292-sql-out-path.txt
+{
+  date -u
+  echo "holder: pid $$ flock on /tmp/ama-rpi-heavy.lock (nonqueued)"
+  echo "head $(git -C "$WT" rev-parse HEAD) tree $(git -C "$WT" rev-parse 'HEAD^{tree}')"
+  echo "container $NAME port $PORT"
+  df -h / | tail -1; free -m | sed -n 2p
+} > "$OUT/meta.txt"
+git -C "$WT" archive "$BASE" src/core/src | tar -x -C "$OUT/base-src"
+cleanup() { docker rm -f "$NAME" > "$OUT/container-cleanup.txt" 2>&1; }
+trap cleanup EXIT
+docker run -d --name "$NAME" --memory 3g -e ACCEPT_EULA=Y -e "MSSQL_SA_PASSWORD=$PW" \
+  -p 127.0.0.1:$PORT:1433 mcr.microsoft.com/mssql/server:2022-latest > "$OUT/container-id.txt" 2>&1 || { echo "docker run failed"; exit 90; }
+docker image inspect mcr.microsoft.com/mssql/server:2022-latest --format '{{.Id}}' > "$OUT/image-id.txt"
+ready=0
+for i in $(seq 1 40); do
+  if docker exec "$NAME" /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$PW" -Q "select 1" >/dev/null 2>&1; then ready=1; break; fi
+  sleep 3
+done
+[ $ready = 1 ] || { echo "SQL not ready"; docker logs "$NAME" > "$OUT/container-logs.txt" 2>&1; exit 91; }
+docker exec "$NAME" /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$PW" -h -1 -Q "set nocount on; select @@VERSION" > "$OUT/server-version.txt" 2>&1
+
+export ZF_RESIDENT_MSSQL=1 ZF_SQL_SERVER=127.0.0.1 ZF_SQL_PORT=$PORT ZF_SQL_DATABASE=master \
+  ZF_SQL_AUTH=password ZF_SQL_USER=sa ZF_SQL_PASSWORD="$PW" ZF_SQL_TRUST_CERT=1 \
+  HOME="$OUT/home" ZF_DATA="$OUT/home/none.json" PYTHONDONTWRITEBYTECODE=1
+cd "$WT/src/core" || exit 92
+
+SEL1=test_resident_decisions.MssqlResidentControls.test_challenge_source_exact_dependency_manifest_and_original_reviews
+SEL2=test_resident_decisions.MssqlResidentControls.test_failed_priority_accept_edit_remove_disposition_and_audit
+run() { # label srcpath selector
+  label=$1; src=$2; shift 2
+  PYTHONPATH="$src:$WT/src/core/tests" /tmp/ama-1292-sql-venv-20261108T203512Z/bin/python -c "
+import zava_forward.core.sqlstore as s, zava_forward.core.mssqlstore as m, hashlib
+for mod in (s, m): print(mod.__file__, hashlib.sha256(open(mod.__file__,'rb').read()).hexdigest())
+" > "$OUT/$label.imports.txt" 2>&1
+  PYTHONPATH="$src:$WT/src/core/tests" /tmp/ama-1292-sql-venv-20261108T203512Z/bin/python -m unittest -v "$@" > "$OUT/$label.stdout.txt" 2> "$OUT/$label.stderr.txt"
+  echo $? > "$OUT/$label.exit.txt"
+}
+for phase in base head; do
+  if [ $phase = base ]; then src="$OUT/base-src/src/core/src"; else src="$WT/src/core/src"; fi
+  run $phase-priority "$src" test_priority_order.MssqlPriorityOrder
+  run $phase-sel1 "$src" "$SEL1"
+  run $phase-sel2 "$src" "$SEL2"
+done
+docker exec "$NAME" /opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P "$PW" -h -1 -Q "set nocount on; select name from sys.databases where name like 'zf_priority1292_%'" > "$OUT/leftover-databases.txt" 2>&1
+echo done > "$OUT/DONE"

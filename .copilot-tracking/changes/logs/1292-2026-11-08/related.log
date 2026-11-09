@@ -1,0 +1,19 @@
+s........................................................................sssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss......................................................s...................................................................[timing] queue=new, 60,000 synthetic cases: first=1116.7 ms (50 contexts), repeat_ms=[225.9, 192.4, 176.3], repeat_contexts=150, matches=19375
+[timing] queue=priority, 60,000 synthetic cases: first=0.3 ms (0 contexts), repeat_ms=[0.1, 0.1, 0.1], repeat_contexts=0, matches=0
+[timing] queue=stale, 60,000 synthetic cases: first=43.2 ms (50 contexts), repeat_ms=[148.4, 171.1, 138.2], repeat_contexts=150, matches=14539
+[timing] queue=blocked, 60,000 synthetic cases: first=13.3 ms (50 contexts), repeat_ms=[36.5, 39.7, 37.3], repeat_contexts=150, matches=4333
+[timing] queue=overdue, 60,000 synthetic cases: first=47.4 ms (50 contexts), repeat_ms=[157.2, 157.7, 165.2], repeat_contexts=150, matches=18326
+[timing] queue=unowned, 60,000 synthetic cases: first=30.4 ms (50 contexts), repeat_ms=[97.3, 138.5, 107.7], repeat_contexts=150, matches=11675
+..............................................................................ssssssssss..........
+----------------------------------------------------------------------
+Ran 384 tests in 146.401s
+
+OK (skipped=103)
+[timing] SQL first page, default order, 60,000 cases: 80 ms (58224 matches; load1=4.27 load5=2.78 cpus=4)
+[timing] SQL keyset page after 50 pages, 60,000 cases: 120 ms (58224 matches; load1=4.27 load5=2.78 cpus=4)
+[timing] SQL filtered page (area, long wait), 60,000 cases: 211 ms (8577 matches; load1=4.27 load5=2.78 cpus=4)
+[timing] SQL my cases, 60,000 cases: 60 ms (29098 matches; load1=4.41 load5=2.84 cpus=4)
+[timing] SQL search 'smith', 60,000 cases: 187 ms (8299 matches; load1=4.41 load5=2.84 cpus=4)
+[timing] SQL sort by waiting, 60,000 cases: 58 ms (58224 matches; load1=4.41 load5=2.84 cpus=4)
+[timing] SQL contractor list, 60,000 cases: 58 ms (29004 matches; load1=4.41 load5=2.84 cpus=4)
+[timing] SQL header counts, 60,000 cases: 65 ms

@@ -1,0 +1,29 @@
+test_batch_in_one_save_keeps_creation_order_despite_id_order (test_priority_order.JsonPriorityOrder.test_batch_in_one_save_keeps_creation_order_despite_id_order) ... ok
+test_decision_boundary_unchanged_by_ordering (test_priority_order.JsonPriorityOrder.test_decision_boundary_unchanged_by_ordering) ... ok
+test_each_user_gets_own_newest_and_ai_task_is_excluded (test_priority_order.JsonPriorityOrder.test_each_user_gets_own_newest_and_ai_task_is_excluded) ... ok
+test_edit_of_older_proposal_does_not_make_it_newest (test_priority_order.JsonPriorityOrder.test_edit_of_older_proposal_does_not_make_it_newest) ... ok
+test_batch_in_one_save_keeps_creation_order_despite_id_order (test_priority_order.MssqlPriorityOrder.test_batch_in_one_save_keeps_creation_order_despite_id_order) ... skipped 'opt-in owned loopback SQL Server'
+test_decision_boundary_unchanged_by_ordering (test_priority_order.MssqlPriorityOrder.test_decision_boundary_unchanged_by_ordering) ... skipped 'opt-in owned loopback SQL Server'
+test_each_user_gets_own_newest_and_ai_task_is_excluded (test_priority_order.MssqlPriorityOrder.test_each_user_gets_own_newest_and_ai_task_is_excluded) ... skipped 'opt-in owned loopback SQL Server'
+test_edit_of_older_proposal_does_not_make_it_newest (test_priority_order.MssqlPriorityOrder.test_edit_of_older_proposal_does_not_make_it_newest) ... skipped 'opt-in owned loopback SQL Server'
+test_edit_of_older_proposal_is_not_newest_after_incremental_reload (test_priority_order.MssqlPriorityOrder.test_edit_of_older_proposal_is_not_newest_after_incremental_reload) ... skipped 'opt-in owned loopback SQL Server'
+test_fresh_database_has_the_ordinal_column_and_orders_by_it (test_priority_order.MssqlPriorityOrder.test_fresh_database_has_the_ordinal_column_and_orders_by_it) ... skipped 'opt-in owned loopback SQL Server'
+test_incremental_reload_mixes_new_and_updated_rows (test_priority_order.MssqlPriorityOrder.test_incremental_reload_mixes_new_and_updated_rows) ... skipped 'opt-in owned loopback SQL Server'
+test_interleaved_writer_commit_does_not_displace_the_later_local_proposal (test_priority_order.MssqlPriorityOrder.test_interleaved_writer_commit_does_not_displace_the_later_local_proposal) ... skipped 'opt-in owned loopback SQL Server'
+test_legacy_rows_are_backfilled_by_created_then_seq_then_id_and_recorded (test_priority_order.MssqlPriorityOrder.test_legacy_rows_are_backfilled_by_created_then_seq_then_id_and_recorded) ... skipped 'opt-in owned loopback SQL Server'
+test_running_reader_picks_up_a_backfill_done_by_another_process (test_priority_order.MssqlPriorityOrder.test_running_reader_picks_up_a_backfill_done_by_another_process) ... skipped 'opt-in owned loopback SQL Server'
+test_batch_in_one_save_keeps_creation_order_despite_id_order (test_priority_order.SqlitePriorityOrder.test_batch_in_one_save_keeps_creation_order_despite_id_order) ... ok
+test_decision_boundary_unchanged_by_ordering (test_priority_order.SqlitePriorityOrder.test_decision_boundary_unchanged_by_ordering) ... ok
+test_each_user_gets_own_newest_and_ai_task_is_excluded (test_priority_order.SqlitePriorityOrder.test_each_user_gets_own_newest_and_ai_task_is_excluded) ... ok
+test_edit_of_older_proposal_does_not_make_it_newest (test_priority_order.SqlitePriorityOrder.test_edit_of_older_proposal_does_not_make_it_newest) ... ok
+test_edit_of_older_proposal_is_not_newest_after_incremental_reload (test_priority_order.SqlitePriorityOrder.test_edit_of_older_proposal_is_not_newest_after_incremental_reload) ... ok
+test_fresh_database_has_the_ordinal_column_and_orders_by_it (test_priority_order.SqlitePriorityOrder.test_fresh_database_has_the_ordinal_column_and_orders_by_it) ... ok
+test_incremental_reload_mixes_new_and_updated_rows (test_priority_order.SqlitePriorityOrder.test_incremental_reload_mixes_new_and_updated_rows) ... ok
+test_interleaved_writer_commit_does_not_displace_the_later_local_proposal (test_priority_order.SqlitePriorityOrder.test_interleaved_writer_commit_does_not_displace_the_later_local_proposal) ... ok
+test_legacy_rows_are_backfilled_by_created_then_seq_then_id_and_recorded (test_priority_order.SqlitePriorityOrder.test_legacy_rows_are_backfilled_by_created_then_seq_then_id_and_recorded) ... ok
+test_running_reader_picks_up_a_backfill_done_by_another_process (test_priority_order.SqlitePriorityOrder.test_running_reader_picks_up_a_backfill_done_by_another_process) ... ok
+
+----------------------------------------------------------------------
+Ran 24 tests in 3.926s
+
+OK (skipped=10)

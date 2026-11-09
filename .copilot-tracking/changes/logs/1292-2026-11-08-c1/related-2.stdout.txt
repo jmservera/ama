@@ -1,0 +1,14 @@
+[timing] queue=new, 60,000 synthetic cases: first=1157.1 ms (50 contexts), repeat_ms=[174.3, 190.9, 168.7], repeat_contexts=150, matches=19375
+[timing] queue=priority, 60,000 synthetic cases: first=0.4 ms (0 contexts), repeat_ms=[0.1, 0.1, 0.1], repeat_contexts=0, matches=0
+[timing] queue=stale, 60,000 synthetic cases: first=36.3 ms (50 contexts), repeat_ms=[118.3, 125.2, 131.1], repeat_contexts=150, matches=14539
+[timing] queue=blocked, 60,000 synthetic cases: first=13.5 ms (50 contexts), repeat_ms=[44.0, 38.8, 37.7], repeat_contexts=150, matches=4333
+[timing] queue=overdue, 60,000 synthetic cases: first=48.0 ms (50 contexts), repeat_ms=[159.4, 162.5, 165.2], repeat_contexts=150, matches=18326
+[timing] queue=unowned, 60,000 synthetic cases: first=29.9 ms (50 contexts), repeat_ms=[98.8, 108.4, 113.0], repeat_contexts=150, matches=11675
+[timing] SQL first page, default order, 60,000 cases: 60 ms (58224 matches; load1=2.54 load5=1.82 cpus=4)
+[timing] SQL keyset page after 50 pages, 60,000 cases: 56 ms (58224 matches; load1=2.54 load5=1.82 cpus=4)
+[timing] SQL filtered page (area, long wait), 60,000 cases: 111 ms (8577 matches; load1=2.54 load5=1.82 cpus=4)
+[timing] SQL my cases, 60,000 cases: 65 ms (29098 matches; load1=2.54 load5=1.82 cpus=4)
+[timing] SQL search 'smith', 60,000 cases: 189 ms (8299 matches; load1=2.54 load5=1.82 cpus=4)
+[timing] SQL sort by waiting, 60,000 cases: 75 ms (58224 matches; load1=2.54 load5=1.82 cpus=4)
+[timing] SQL contractor list, 60,000 cases: 53 ms (29004 matches; load1=2.54 load5=1.82 cpus=4)
+[timing] SQL header counts, 60,000 cases: 64 ms
