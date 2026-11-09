@@ -528,9 +528,13 @@ class DispatchGate:
 class CallTicket:
     """One admitted direct call. end() settles the durable reservation once and releases the physical slot once."""
 
-    def __init__(self, service, attempt, reason):
-        self.service, self.attempt, self.reason = service, attempt, reason
+    def __init__(self, service, attempt, reason, capability=None):
+        self.service, self.attempt, self.reason, self.capability = service, attempt, reason, capability
         self.lock, self.done = threading.Lock(), attempt is None
+
+    def send_fence(self):
+        """Raises DispatchWithdrawn unless this admission is still valid to send now (see Assistants.fence_send)."""
+        self.service.fence_send(self.attempt, self.capability)
 
     def end(self, envelope):
         with self.lock:
@@ -807,7 +811,9 @@ class Assistants:
                         task_releases=dict(supported=True, records=releases, total=len(rows), exported=len(releases),
                                            truncated=len(rows) > release_limit))
 
-    def disabled(self, db=None, capability=None):
+    def disabled(self, db=None, capability=None, capacity=True):
+        """The reason new work is refused, or None. With capacity=False only the authority conditions that can
+        end an already admitted call are checked (not the room for a further reservation)."""
         l = self.limits
         if self.schema_error:
             return self.schema_error
@@ -825,8 +831,8 @@ class Assistants:
             return "AI is not configured; use the manual owner route."
         if db is not None:
             pool = db.execute("SELECT calls,tokens,expires,used_calls,reserved_tokens FROM assistant_allowance WHERE id=?", (l.pool,)).fetchone()
-            if pool and (pool[2] <= self.now(db) or pool[3] >= min(pool[0], l.calls) or
-                         pool[4] + l.reservation > min(pool[1], l.tokens)):
+            if pool and (pool[2] <= self.now(db) or capacity and (
+                    pool[3] >= min(pool[0], l.calls) or pool[4] + l.reservation > min(pool[1], l.tokens))):
                 return "Shared durable allowance exhausted/expired; use the manual owner route."
         return None
 
@@ -1461,7 +1467,25 @@ class Assistants:
         if reason:
             self.call_slots.release()
             return CallTicket(self, None, reason)
-        return CallTicket(self, attempt, None)
+        return CallTicket(self, attempt, None, capability)
+
+    def fence_send(self, attempt, capability):
+        """The last durable decision before a request byte, in one transaction: the same operator authority,
+        suspension, release and allowance-expiry conditions as admission, and an attempt that is still live. It
+        then restamps the attempt to cover the bounded send, so another caller cannot reuse the slot while this
+        send is in flight. A refusal raises DispatchWithdrawn and sends nothing. A process suspended after this
+        returns, outside user space, can still transmit late; the send window and socket deadline bound it."""
+        window = self.limits.timeout + HOLD_GRACE
+        with self.transaction() as db:
+            now = self.now(db)
+            held = self.disabled(db, capability, capacity=False)
+            row = db.execute("SELECT outcome,active_until FROM assistant_attempts WHERE id=?", (attempt,)).fetchone()
+            if held or row is None or row[0] not in ("reserved", "sending") or row[1] <= now:
+                reason = held or "The admission lease ended before the request was sent."
+                self.event(db, attempt.split(":")[0], kind="send-refused", reason=reason[:120])
+                raise ai_consumption.DispatchWithdrawn(reason)
+            db.execute("UPDATE assistant_attempts SET outcome='sending',active_until=? WHERE id=?",
+                       (max(row[1], now + window), attempt))
 
     REPLACEMENTS = 3
 
@@ -1610,7 +1634,8 @@ class Assistants:
                     ai_consumption.reference(runtime_binding(task["capability"], self.store.ai)["prompt_version"]),
                     retry=task["attempts"] - 1,
                 )
-                with ai_consumption.call_context(context), ai_consumption.captured_readings(captured):
+                with (ai_consumption.call_context(context), ai_consumption.captured_readings(captured),
+                      ai_consumption.send_fence(lambda: self.fence_send(f"{task['id']}:{task['fence']}", task["capability"]))):
                     gate()
                     values.append(self.provider(system, prompt, self.limits.output_tokens, self.limits.timeout))
             except ai_consumption.DispatchWithdrawn:

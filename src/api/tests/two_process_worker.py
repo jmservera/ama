@@ -13,13 +13,17 @@ import json
 import os
 import sys
 import time
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from zava_forward.api.server import App
 from zava_forward.core.ai import Ai
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.sqlstore import SqlStore
+
+from zava_forward.api.server import App
+
+build_app: Callable[..., Any] = App
 
 
 class Nobody:
@@ -30,7 +34,7 @@ class Nobody:
 
 
 class StallingMeter:
-    """Counts reservations and checks; stalls once at the last check until the parent releases it."""
+    """Counts reservations and checks; stalls at the last check until the parent signals."""
 
     def __init__(self, admitted: Path, go: Path, stall: float) -> None:
         self.admitted, self.go, self.stall = admitted, go, stall
@@ -65,12 +69,14 @@ def main(spec: dict[str, Any]) -> dict[str, Any]:
         return token
 
     ai._token = counted_token
-    ai.model_version = ai.model_version_strong = "test-model"  # the parent's constructed release binds this
+    ai.model_version = ai.model_version_strong = (
+        "test-model"  # the parent's constructed release binds this
+    )
     store.ai = ai
     ai.release = store.release_context
     service = Assistants(store, spec["settings"])
     meter = StallingMeter(Path(spec["admitted"]), Path(spec["go"]), float(spec["stall"]))
-    app = App(store, provider=Nobody())
+    app = build_app(store, provider=Nobody())
     app.assistants = service
     ai.consumption = meter  # the app and service install their own ledger; count instead
     result = app.simulation_act(spec["user"], "request")

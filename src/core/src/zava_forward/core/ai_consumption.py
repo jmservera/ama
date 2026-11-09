@@ -7,7 +7,7 @@ import json
 import logging
 import re
 import uuid
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
@@ -216,6 +216,21 @@ class SimulationRefused(DispatchWithdrawn):
 SIMULATION_SEAL: ContextVar[Mapping[str, Any] | None] = ContextVar(
     "ai_simulation_seal", default=None
 )
+
+
+# The durable send decision of the admitting authority. A real Ai client that honours it calls it at
+# the start, before connecting and before the first request byte; it raises DispatchWithdrawn to
+# refuse.
+SEND_FENCE: ContextVar[Callable[[], None] | None] = ContextVar("ai_send_fence", default=None)
+
+
+@contextmanager
+def send_fence(fence: Callable[[], None]) -> Iterator[None]:
+    token = SEND_FENCE.set(fence)
+    try:
+        yield
+    finally:
+        SEND_FENCE.reset(token)
 
 
 @contextmanager

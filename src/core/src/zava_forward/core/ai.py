@@ -14,7 +14,7 @@ import urllib.parse
 import urllib.request
 import uuid
 from dataclasses import replace
-from . import ai_consumption, ai_prompts, data_protection, export_fields
+from . import ai_consumption, ai_prompts, ai_transport, data_protection, export_fields
 
 SCOPE = "https://cognitiveservices.azure.com"
 FORBIDDEN = re.compile(r"\b(i have sent|has been sent|we have sent|i've sent|email sent|message sent)\b", re.I)
@@ -46,6 +46,9 @@ class ModelMismatch(ValueError):
 
 
 class Ai:
+    # This client runs the admitting authority's send fence at its own socket (see ai_transport).
+    send_fence_supported = True
+
     def __init__(self):
         self.endpoint = os.environ.get("AI_ENDPOINT", "").rstrip("/")
         self.fast = os.environ.get("AI_DEPLOYMENT", "standard")
@@ -116,6 +119,9 @@ class Ai:
             raise InputRefused("input-too-large")
         if self.consumption is None:
             raise ai_consumption.DispatchHeld("financial-meter-unavailable")
+        fence = ai_consumption.SEND_FENCE.get()
+        if fence is not None:
+            fence()  # a late caller creates no financial reservation, credential or socket
         model = self.model_version_strong if deployment == self.strong else self.model_version
         context = ai_consumption.CURRENT.get()
         if context is None:
@@ -135,7 +141,8 @@ class Ai:
             req = urllib.request.Request(f"{self.endpoint}/openai/deployments/{deployment}/chat/completions?api-version=2024-10-21",
                                          data=body, headers={"Authorization": f"Bearer {self._token()}", "Content-Type": "application/json"})
             self.consumption.dispatch_check(rid)
-            with urllib.request.urlopen(req, timeout=timeout) as response:
+            open_request = urllib.request.urlopen if fence is None else ai_transport.opener(fence, timeout).open
+            with open_request(req, timeout=timeout) as response:
                 raw = response.read(256001)
                 if len(raw) > 256000:
                     raise ValueError("Oversized provider envelope.")

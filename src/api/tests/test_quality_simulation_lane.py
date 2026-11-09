@@ -589,7 +589,9 @@ class Lane(c7.Base):
         self.assertEqual(len(peer.bodies), 1)
         go.write_text("go")  # caller A resumes after its lease ended and B sent
         late = self.finish(process)
-        self.assertEqual((late["status"], late["reason"]), ("not-sent", "suspended-before-dispatch"))
+        self.assertEqual(
+            (late["status"], late["reason"]), ("not-sent", "suspended-before-dispatch")
+        )
         self.assertEqual(len(peer.bodies), 1, "the stalled caller sent after its lease ended")
         self.assertEqual(peer.bytes, len(peer.bodies[0]))
         self.assertEqual((peer.accepts, late["reserved"], late["tokens"]), (1, 1, 1))
@@ -610,13 +612,17 @@ class Lane(c7.Base):
         self.assertTrue(self.until(lambda: time.time() > expiry + 1, 30))
         go.write_text("go")
         late = self.finish(process)
-        self.assertEqual((late["status"], late["reason"]), ("not-sent", "suspended-before-dispatch"))
+        self.assertEqual(
+            (late["status"], late["reason"]), ("not-sent", "suspended-before-dispatch")
+        )
         self.assertEqual((len(peer.bodies), peer.accepts, peer.bytes), (0, 0, 0))
         self.assertEqual((late["reserved"], late["checked"], late["tokens"]), (1, 1, 1))
         self.assertEqual(self.allowance(), (1, service.limits.reservation))
         self.assertEqual(self.active_attempts(), 0)
         before = (self.meter.reserved, len(self.tokens))
-        self.assertEqual(self.post()["status"], "held")  # a new request is declined before the meter
+        self.assertEqual(
+            self.post()["status"], "held"
+        )  # a new request is declined before the meter
         self.assertEqual((self.meter.reserved, len(self.tokens), peer.accepts), (*before, 0))
 
     def test_a_valid_request_in_a_second_process_still_sends_and_releases_its_slots(self) -> None:
@@ -647,28 +653,34 @@ class Lane(c7.Base):
         )
         self.lane.observe()
         result = self.lane.request(Unfenced(), admission)
-        self.assertEqual((result["status"], result["reason"]), ("unavailable", "dispatch-fence-unavailable"))
+        self.assertEqual(
+            (result["status"], result["reason"]), ("unavailable", "dispatch-fence-unavailable")
+        )
         self.assertEqual(begun, [])
 
-    def test_the_fence_runs_before_the_meter_before_connecting_and_before_the_first_byte(self) -> None:
+    def refused_at(self, peer: e2.TlsPeer, ai: Any, refuse_at: int) -> tuple[int, int, int]:
+        calls: list[int] = []
+
+        def fence() -> None:
+            calls.append(1)
+            if len(calls) == refuse_at:
+                raise ai_consumption.DispatchWithdrawn("fenced")
+
+        self.meter.reserved = self.meter.checked = 0
+        before = peer.accepts
+        with ai_consumption.send_fence(fence):
+            envelope = ai.evidence("system", "x" * 100, 100, 5)
+        self.assertEqual(envelope["outcome"], "suspended-before-dispatch")
+        time.sleep(1)  # the peer accepts asynchronously
+        return peer.accepts - before, self.meter.reserved, len(peer.bodies)
+
+    def test_the_fence_runs_before_the_meter_before_connecting_and_before_the_first_byte(
+        self,
+    ) -> None:
         peer, ai = self.tls_ai()
-        for refuse_at, accepts, reserved in ((1, 0, 0), (2, 0, 1), (3, 1, 1)):
-            calls: list[int] = []
-
-            def fence() -> None:
-                calls.append(1)
-                if len(calls) == refuse_at:
-                    raise ai_consumption.DispatchWithdrawn("fenced")
-
+        for refuse_at, expected in ((1, (0, 0, 0)), (2, (0, 1, 0)), (3, (1, 1, 0))):
             with self.subTest(refuse_at=refuse_at):
-                self.meter.reserved = self.meter.checked = 0
-                before = peer.accepts
-                with ai_consumption.send_fence(fence):
-                    envelope = ai.evidence("system", "x" * 100, 100, 5)
-                self.assertEqual(envelope["outcome"], "suspended-before-dispatch")
-                self.assertEqual(
-                    (peer.accepts - before, self.meter.reserved, len(peer.bodies)), (accepts, reserved, 0)
-                )
+                self.assertEqual(self.refused_at(peer, ai, refuse_at), expected)
 
 
 if __name__ == "__main__":

@@ -39,12 +39,12 @@ class Meter:
 class Sink:
     """Loopback server that records every request body it receives."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         sink = self
-        self.bodies = []
+        self.bodies: list[bytes] = []
 
         class Handler(BaseHTTPRequestHandler):
-            def do_POST(self):
+            def do_POST(self) -> None:
                 size = int(self.headers.get("Content-Length", 0))
                 sink.bodies.append(self.rfile.read(size))
                 out = b'{"model":"test-model","choices":[{"message":{"content":"{}"}}],"usage":{}}'
@@ -53,7 +53,7 @@ class Sink:
                 self.end_headers()
                 self.wfile.write(out)
 
-            def log_message(self, *args):
+            def log_message(self, *args: Any) -> None:
                 return None
 
         self.server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
@@ -61,10 +61,10 @@ class Sink:
         self.thread.start()
 
     @property
-    def endpoint(self):
+    def endpoint(self) -> str:
         return f"http://127.0.0.1:{self.server.server_address[1]}"
 
-    def close(self):
+    def close(self) -> None:
         self.server.shutdown()
         self.server.server_close()
         self.thread.join(5)
@@ -113,10 +113,12 @@ class Base(qs.Seed, ta.ApiTests):
         release_support.install(self.store, cls="actual")
         return sink
 
-    def withdraw_in_thread(self, controls=None):
-        errors = []
+    def withdraw_in_thread(
+        self, controls: dict[str, tuple[str, str]] | None = None
+    ) -> tuple[threading.Thread, list[Exception]]:
+        errors: list[Exception] = []
 
-        def run():
+        def run() -> None:
             try:
                 if controls is None:
                     self.set_consent("declined")
@@ -135,21 +137,21 @@ class Base(qs.Seed, ta.ApiTests):
             state: str = sensor_view.consent(db, "ZF-1", {qs.DEFAULT}, self.service.mssql)
         return state
 
-    def used_calls(self):
+    def used_calls(self) -> Any:
         with self.service.transaction() as db:
             return db.execute("SELECT SUM(used_calls) FROM assistant_allowance").fetchone()[0] or 0
 
-    def pending(self, service=None):
+    def pending(self, service: Any = None) -> list[str]:
         service = service or self.service
         return [t for t in self.quality_task() if service.detail(self.pm, t)["state"] == "pending"]
 
-    def gate_task(self):
+    def gate_task(self) -> Any:
         self.service.scan()
         (tid,) = self.quality_task()
         with self.service.transaction() as db:
             return self.service._row(db, tid)
 
-    def gate_rows(self):
+    def gate_rows(self) -> Any:
         with self.service.transaction() as db:
             return db.execute(
                 "SELECT home_id,fence FROM assistant_dispatch_gate ORDER BY home_id,fence"
@@ -157,7 +159,7 @@ class Base(qs.Seed, ta.ApiTests):
 
 
 class PhysicalSend(Base):
-    def test_each_attempt_has_its_own_fence_and_never_releases_another(self):
+    def test_each_attempt_has_its_own_fence_and_never_releases_another(self) -> None:
         self.ready()
         task = self.gate_task()
         first, second = (
@@ -177,25 +179,25 @@ class PhysicalSend(Base):
         self.assertEqual((thread.is_alive(), errors), (False, []))
         self.assertEqual(self.consent_now(), "declined")
 
-    def test_a_dispatch_for_a_foreign_provider_runs_the_gate_before_the_call(self):
+    def test_a_dispatch_for_a_foreign_provider_runs_the_gate_before_the_call(self) -> None:
         self.ready()
         self.service.scan()
         (tid,) = self.quality_task()
-        rows = []
-        real = self.provider.evidence
+        rows: list[Any] = []
+        real: Callable[..., Any] = self.provider.evidence
 
-        def evidence(*args):
+        def evidence(*args: Any) -> Any:
             rows.append(self.gate_rows())
             return real(*args)
 
-        self.provider.evidence = evidence
-        self.assertTrue(self.service.execute(tid))
+        with patch.object(self.provider, "evidence", evidence):
+            self.assertTrue(self.service.execute(tid))
         self.assertEqual(rows, [[("ZF-1", 1)]])
         self.assertEqual(self.gate_rows(), [])
 
 
 class PerHome(Base):
-    def live_row(self, home):
+    def live_row(self, home: str) -> None:
         with self.service.transaction() as db:
             db.execute(
                 "INSERT INTO assistant_dispatch_gate (home_id,task_id,fence,expires_at)"
@@ -203,11 +205,11 @@ class PerHome(Base):
                 (home, "t-" + home, self.service.now(db) + 600),
             )
 
-    def clear_rows(self):
+    def clear_rows(self) -> None:
         with self.service.transaction() as db:
             db.execute("DELETE FROM assistant_dispatch_gate")
 
-    def test_an_unrelated_homes_dispatch_does_not_block_a_withdrawal(self):
+    def test_an_unrelated_homes_dispatch_does_not_block_a_withdrawal(self) -> None:
         self.put(3)
         self.live_row("ZF-2")
         thread, errors = self.withdraw_in_thread()
@@ -215,7 +217,7 @@ class PerHome(Base):
         self.assertEqual((thread.is_alive(), errors), (False, []))
         self.assertEqual(self.consent_now(), "declined")
 
-    def test_a_same_home_dispatch_blocks_until_it_ends(self):
+    def test_a_same_home_dispatch_blocks_until_it_ends(self) -> None:
         self.put(3)
         self.live_row("ZF-1")
         thread, errors = self.withdraw_in_thread()
@@ -225,7 +227,9 @@ class PerHome(Base):
         thread.join(30)
         self.assertEqual((thread.is_alive(), errors), (False, []))
 
-    def test_moving_a_sensor_waits_for_the_old_home_and_a_batch_only_for_changed_homes(self):
+    def test_moving_a_sensor_waits_for_the_old_home_and_a_batch_only_for_changed_homes(
+        self,
+    ) -> None:
         self.put(3)
         self.controls["SENS-SYN-2"] = ("ZF-2", "granted")
         self.configure()
@@ -248,7 +252,7 @@ class Upgrade(Base):
         " PRIMARY KEY (capability, case_id))"
     )
 
-    def downgrade(self):
+    def downgrade(self) -> Any:
         """Rebuild the C5 shape, with the retained rows, from the current one."""
         with self.service.transaction() as db:
             saved = db.execute(
@@ -264,11 +268,11 @@ class Upgrade(Base):
                 db.execute("ALTER TABLE assistant_tasks DROP COLUMN dispatched")
         return saved
 
-    def columns(self, table):
+    def columns(self, table: str) -> list[Any]:
         with self.service.transaction() as db:
             return [r[1] for r in db.execute(f"PRAGMA table_info({table})")]
 
-    def test_actual_c5_tables_are_upgraded_in_place_idempotently_and_keep_their_rows(self):
+    def test_actual_c5_tables_are_upgraded_in_place_idempotently_and_keep_their_rows(self) -> None:
         self.ready()
         self.service.scan()
         (tid,) = self.quality_task()
@@ -291,7 +295,7 @@ class Upgrade(Base):
         self.assertEqual(self.quality_task(), [tid])
         self.assertEqual(restarted.invoke(self.pm, "quality-evidence", "ZF-1")["id"], tid)
 
-    def test_a_legacy_gap_free_assessment_change_is_detected_after_upgrade(self):
+    def test_a_legacy_gap_free_assessment_change_is_detected_after_upgrade(self) -> None:
         self.ready()
         cap = "assessment-preparation"
         self.service.scan()
@@ -314,7 +318,7 @@ class Upgrade(Base):
         self.service.scan()
         self.assertEqual(len(self.tasks(cap)), 3)
 
-    def tasks(self, cap):
+    def tasks(self, cap: str) -> list[Any]:
         with self.service.transaction() as db:
             rows = db.execute(
                 "SELECT id FROM assistant_tasks WHERE capability=? AND case_id='ZF-1' ORDER BY id",
@@ -322,7 +326,7 @@ class Upgrade(Base):
             ).fetchall()
         return [r[0] for r in rows]
 
-    def test_legacy_adoption_reads_a_bounded_number_of_task_bodies(self):
+    def test_legacy_adoption_reads_a_bounded_number_of_task_bodies(self) -> None:
         self.ready()
         self.service.scan()
         (first,) = self.quality_task()
@@ -337,28 +341,29 @@ class Upgrade(Base):
                     (f"old{i:03d}", "quality-evidence", "ZF-1", f"s{i}", body, 100 + i),
                 )
             db.execute("DELETE FROM assistant_schedule")
-        fetched, real = [], self.store.assistant_connection
+        fetched: list[tuple[str, int]] = []
+        real = self.store.assistant_connection
 
         class Cursor:
-            def __init__(self, cursor, sql):
+            def __init__(self, cursor: Any, sql: str) -> None:
                 self.cursor, self.sql = cursor, sql
 
-            def fetchall(self):
+            def fetchall(self) -> Any:
                 rows = self.cursor.fetchall()
                 fetched.append((self.sql, len(rows)))
                 return rows
 
-            def __getattr__(self, name):
+            def __getattr__(self, name: str) -> Any:
                 return getattr(self.cursor, name)
 
         class Recording:
-            def __init__(self, db):
+            def __init__(self, db: Any) -> None:
                 self.db = db
 
-            def execute(self, sql, *args):
+            def execute(self, sql: str, *args: Any) -> Cursor:
                 return Cursor(self.db.execute(sql, *args), sql)
 
-            def __getattr__(self, name):
+            def __getattr__(self, name: str) -> Any:
                 return getattr(self.db, name)
 
         with patch.object(
@@ -372,7 +377,9 @@ class Upgrade(Base):
 
 
 class Coalescing(Base):
-    def test_sustained_churn_is_bounded_without_dispatch_and_recovers_after_a_quiet_interval(self):
+    def test_sustained_churn_is_bounded_without_dispatch_and_recovers_after_a_quiet_interval(
+        self,
+    ) -> None:
         self.ready()
         self.service.scan()
         for minute in (31, 25, 19, 13, 7):
@@ -401,7 +408,9 @@ class Coalescing(Base):
             self.assertTrue(restarted.execute(recovery))
         self.assertEqual((self.provider.calls, self.used_calls()), (1, 1))
 
-    def test_a_late_manual_request_does_not_cause_another_autonomous_call_in_the_bucket(self):
+    def test_a_late_manual_request_does_not_cause_another_autonomous_call_in_the_bucket(
+        self,
+    ) -> None:
         gate = dict(entered=threading.Event(), proceed=threading.Event())
         self.mock(gate=gate)
         self.put(4)
@@ -429,17 +438,17 @@ class Coalescing(Base):
 
 
 class Comparison(Base):
-    def flag(self, tid):
+    def flag(self, tid: str) -> Any:
         return self.service.detail(self.pm, tid)["review_flag"]
 
-    def proactive(self):
+    def proactive(self) -> str:
         self.ready()
         self.service.scan()
         (tid,) = self.quality_task()
         self.assertTrue(self.service.execute(tid))
         return tid
 
-    def test_a_corrected_cited_row_is_reported_changed_even_with_the_same_id(self):
+    def test_a_corrected_cited_row_is_reported_changed_even_with_the_same_id(self) -> None:
         tid = self.proactive()
         cited = self.flag(tid)["readings"][0]
         with self.service.transaction() as db:
@@ -452,7 +461,7 @@ class Comparison(Base):
         self.assertEqual(flag["cited_comparison"]["state"], "changed")
         self.assertEqual(len(flag["cited_comparison"]["changed_ids"]), 1)
 
-    def test_an_extra_uncited_row_is_reported_separately_and_the_cited_rows_match(self):
+    def test_an_extra_uncited_row_is_reported_separately_and_the_cited_rows_match(self) -> None:
         tid = self.proactive()
         self.add_live(5)
         flag = self.flag(tid)
@@ -460,7 +469,7 @@ class Comparison(Base):
         self.assertEqual(flag["cited_comparison"]["state"], "match")
         self.assertEqual(flag["newer_reading_count"], 1)
 
-    def test_a_removed_cited_row_is_missing_and_no_current_capture_is_unknown(self):
+    def test_a_removed_cited_row_is_missing_and_no_current_capture_is_unknown(self) -> None:
         tid = self.proactive()
         cited = self.flag(tid)["readings"][0]
         with self.service.transaction() as db:
@@ -472,7 +481,7 @@ class Comparison(Base):
         self.assertIs(flag["changed_since_capture"], True)
         self.assertEqual(len(flag["cited_comparison"]["missing_ids"]), 1)
 
-    def test_withheld_current_capture_reports_unknown_not_match(self):
+    def test_withheld_current_capture_reports_unknown_not_match(self) -> None:
         tid = self.proactive()
         task = self.service.detail(self.pm, tid)
         from zava_forward.core.assistants import review_flag

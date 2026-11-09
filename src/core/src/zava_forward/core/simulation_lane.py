@@ -131,6 +131,8 @@ class Ticket(Protocol):
 
     def end(self, envelope: Mapping[str, Any]) -> None: ...
 
+    def send_fence(self) -> None: ...
+
 
 @dataclass(frozen=True)
 class Admission:
@@ -434,6 +436,8 @@ class Lane:
         base: dict[str, Any] = dict(label=LABEL, manual_route=MANUAL, namespace=NAMESPACE)
         if not getattr(ai, "configured", False):
             return dict(base, status="unavailable", reason="model-not-configured")
+        if not getattr(ai, "send_fence_supported", False):
+            return dict(base, status="unavailable", reason="dispatch-fence-unavailable")
         max_tokens, timeout = admission.bounds()
         composed = self.compose(max_tokens)
         if not composed["readings"]:
@@ -460,6 +464,7 @@ class Lane:
                 ai_consumption.call_context(context),
                 ai_consumption.captured_readings(True),
                 ai_consumption.sealed_simulation(seal),
+                ai_consumption.send_fence(ticket.send_fence),
             ):
                 envelope = ai.evidence(
                     composed["system"], composed["prompt"], composed["max_tokens"], timeout

@@ -13,6 +13,7 @@ import os
 import threading
 import time
 import unittest
+from collections.abc import Callable
 from datetime import UTC, datetime
 from typing import Any
 from unittest.mock import patch
@@ -21,7 +22,7 @@ import release_support
 from dataset import supplied_resident_fixture
 from sensor_consumer_fixture import CONTROL, POLICY
 from zava_forward.core import quality, sensor_view
-from zava_forward.core.assistants import capture, digest, signature
+from zava_forward.core.assistants import canonical, capture, digest, signature
 from zava_forward.core.sensor_consumer import READING_COLUMNS, SensorConsumer
 from zava_forward.core.synthetic import live_readings
 
@@ -31,19 +32,27 @@ SEAL = sensor_view.SEAL_SECONDS
 DEFAULT = "SENS-SYN-1"
 
 
-def stamp(seconds):
+def stamp(seconds: float) -> str:
     return datetime.fromtimestamp(seconds, UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 class CapturingProvider(ta.Provider):
     """Mock: cites the first retained readings it was given, or only the home when told not to."""
 
-    def __init__(self, cite=True, leak=None, gate=None, fail=0, **kw):
-        super().__init__(**kw)
+    def __init__(
+        self,
+        cite: bool = True,
+        leak: str | None = None,
+        gate: dict[str, Any] | None = None,
+        fail: int = 0,
+        **kw: Any,
+    ) -> None:
+        base_init: Callable[..., None] = super().__init__
+        base_init(**kw)
         self.cite, self.leak, self.prompts = cite, leak, []
         self.gate, self.fail = gate, fail
 
-    def evidence(self, system, prompt, max_tokens, timeout):
+    def evidence(self, system: Any, prompt: str, max_tokens: Any, timeout: Any) -> Any:
         self.prompts.append(json.loads(prompt))
         if self.gate:
             self.gate["entered"].set()
@@ -53,7 +62,8 @@ class CapturingProvider(ta.Provider):
             raise RuntimeError("scripted provider failure")
         keys = self.prompts[-1]["evidence"]["citations"]
         cited = sorted(k for k in keys if k.startswith("sensor:"))[:2] if self.cite else []
-        result = super().evidence(system, prompt, max_tokens, timeout)
+        base_evidence: Callable[..., Any] = super().evidence
+        result = base_evidence(system, prompt, max_tokens, timeout)
         value = json.loads(result["text"])
         value["findings"] = [
             dict(
@@ -65,16 +75,17 @@ class CapturingProvider(ta.Provider):
             value["summary"] = f"Indoor {self.leak} degC was recorded."
             value["unknowns"] = [f"Whether {self.leak} degC is typical."]
             value["findings"][0]["text"] = f"Reading of {self.leak} degC."
-        result["text"] = ta.canonical(value)
+        result["text"] = canonical(value)
         return result
 
 
-class Seed:
+class Seed(ta.Base):
     provider: ta.Provider
 
-    def setUp(self):
-        super().setUp()
-        self.controls = {}
+    def setUp(self) -> None:
+        base_set_up: Callable[[], None] = super().setUp
+        base_set_up()
+        self.controls: dict[str, tuple[str, str]] = {}
         with self.service.transaction() as db:
             for table in (
                 "sensor_reading",
@@ -85,18 +96,18 @@ class Seed:
             ):
                 db.execute(f"DROP TABLE IF EXISTS {table}")
 
-    def mock(self, **kw):
+    def mock(self, **kw: Any) -> None:
         self.provider = self.store.ai = CapturingProvider(**kw)
         release_support.install(self.store)
 
-    def configure(self):
+    def configure(self) -> None:
         controls = [
             dataclasses.replace(CONTROL, sensor_id=s, home_id=h, consent=c)
             for s, (h, c) in sorted(self.controls.items())
         ]
         SensorConsumer(self.store).configure(POLICY, controls)
 
-    def set_consent(self, consent, home="ZF-1", sensor=DEFAULT):
+    def set_consent(self, consent: str, home: str = "ZF-1", sensor: str = DEFAULT) -> None:
         self.controls[sensor] = (home, consent)
         self.configure()
 
@@ -116,16 +127,16 @@ class Seed:
 
     def add_readings(
         self,
-        count,
-        home="ZF-1",
-        offset=3 * 3600,
-        tag="R",
-        source="SYNTHETIC",
-        sensor=None,
-        scenario="BACKFILL_2Y",
-        version="reading-v1",
-        base=None,
-    ):
+        count: int,
+        home: str = "ZF-1",
+        offset: int = 3 * 3600,
+        tag: str = "R",
+        source: str = "SYNTHETIC",
+        sensor: str | None = None,
+        scenario: str = "BACKFILL_2Y",
+        version: str = "reading-v1",
+        base: int | None = None,
+    ) -> None:
         base = int(time.time()) // SEAL * SEAL if base is None else base
         sensor = sensor or "SENS-SYN-" + home[3:]
         with self.service.transaction() as db:
@@ -189,7 +200,7 @@ class Seed:
         )
         self.store.accept_quality(self.people["Quality Inspector"], "ZF-1", 0)
 
-    def clock(self, seconds):
+    def clock(self, seconds: float) -> Any:
         return patch.object(self.service, "now", side_effect=lambda db=None: time.time() + seconds)
 
     def quality_task(self) -> list[str]:
@@ -202,10 +213,10 @@ class Seed:
 
 
 class ReadModel(Seed, ta.Base):
-    def view(self):
+    def view(self) -> Any:
         return self.service.sensors(self.pm, "ZF-1")
 
-    def test_states_fail_closed(self):
+    def test_states_fail_closed(self) -> None:
         self.assertEqual(self.view()["state"], "unavailable")
         self.put(0, consent=None)
         self.assertEqual(self.view()["state"], "consent-withheld")
@@ -214,7 +225,7 @@ class ReadModel(Seed, ta.Base):
         self.put(0)
         self.assertEqual(self.view()["state"], "no-readings")
 
-    def test_bounded_synthetic_home_only_with_units_and_utc(self):
+    def test_bounded_synthetic_home_only_with_units_and_utc(self) -> None:
         self.put(40)
         self.add_readings(3, tag="X", source="WEATHER")
         self.add_readings(3, home="ZF-2", tag="O")
@@ -230,7 +241,7 @@ class ReadModel(Seed, ta.Base):
         self.assertEqual(v["freshness"], "stale")
         self.assertIn("older than 15 minutes", v["freshness_text"])
 
-    def test_live_contract_rows_are_weather_derived_and_not_calibrated(self):
+    def test_live_contract_rows_are_weather_derived_and_not_calibrated(self) -> None:
         self.put(2)
         live = self.add_live(10)
         self.add_readings(1, tag="U", scenario="odd", version="x-v9")
@@ -245,7 +256,7 @@ class ReadModel(Seed, ta.Base):
             self.assertIn("Not calibrated", label)
         self.assertNotIn("indoor-observation", json.dumps(v))
 
-    def test_latest_is_in_the_captured_source_and_citations(self):
+    def test_latest_is_in_the_captured_source_and_citations(self) -> None:
         self.put(4)
         newest = self.add_live(0)
         v = self.view()
@@ -260,7 +271,7 @@ class ReadModel(Seed, ta.Base):
             {k: sensors[k] for k in ("readings", "before", "after")},
         )
 
-    def test_capture_is_stable_across_clock_only_changes(self):
+    def test_capture_is_stable_across_clock_only_changes(self) -> None:
         self.put(4)
         with self.service.transaction() as db:
             first = self.service.snapshot(db, "quality-evidence", self.store.detail("ZF-1"))
@@ -268,7 +279,7 @@ class ReadModel(Seed, ta.Base):
             later = self.service.snapshot(db, "quality-evidence", self.store.detail("ZF-1"))
         self.assertEqual(digest(first), digest(later))
 
-    def test_same_reading_id_from_two_sensors_has_two_citations(self):
+    def test_same_reading_id_from_two_sensors_has_two_citations(self) -> None:
         self.put(2)
         self.set_consent("granted", sensor="SENS-SYN-1B")
         self.add_readings(2, sensor="SENS-SYN-1B")
@@ -283,12 +294,12 @@ class ReadModel(Seed, ta.Base):
         locators = {snap["citations"][k]["locator"] for k in keys}
         self.assertEqual(len(locators), 4)
 
-    def test_second_sensor_without_consent_withholds_the_home(self):
+    def test_second_sensor_without_consent_withholds_the_home(self) -> None:
         self.put(2)
         self.add_readings(1, sensor="SENS-SYN-1B", tag="B")
         self.assertEqual(self.view()["state"], "consent-withheld")
 
-    def test_retrofit_context_is_unavailable_and_anchor_is_not_retrofit(self):
+    def test_retrofit_context_is_unavailable_and_anchor_is_not_retrofit(self) -> None:
         self.put(5)
         v = self.view()
         self.assertIs(v["retrofit_context"]["available"], False)
@@ -305,10 +316,10 @@ class ReadModel(Seed, ta.Base):
         self.assertEqual(v["after"], [])
         self.assertIn("onward", v["after_absent"])
 
-    def test_read_is_side_effect_free_and_generates_nothing(self):
+    def test_read_is_side_effect_free_and_generates_nothing(self) -> None:
         self.put(5)
 
-        def count():
+        def count() -> Any:
             with self.service.transaction() as db:
                 return db.execute("SELECT COUNT(*) FROM sensor_reading").fetchone()[0]
 
@@ -317,16 +328,16 @@ class ReadModel(Seed, ta.Base):
         self.assertEqual(before, count())
         self.assertEqual(self.provider.calls, 0)
 
-    def test_controls_and_readings_are_read_by_key_not_by_table_scan(self):
+    def test_controls_and_readings_are_read_by_key_not_by_table_scan(self) -> None:
         self.put(3)
         self.set_consent("granted", home="ZF-2", sensor="SENS-SYN-2")
-        statements = []
+        statements: list[str] = []
 
         class Spy:
-            def __init__(self, db):
+            def __init__(self, db: Any) -> None:
                 self.db = db
 
-            def execute(self, sql, args=()):
+            def execute(self, sql: str, args: Any = ()) -> Any:
                 statements.append(" ".join(sql.split()))
                 return self.db.execute(sql, args)
 
@@ -360,30 +371,30 @@ class ReadModel(Seed, ta.Base):
                 ).fetchone()
         self.assertIsNotNone(row)
 
-    def capture(self, now, reference=None):
+    def capture(self, now: float, reference: datetime | None = None) -> Any:
         with self.service.transaction() as db:
             return sensor_view.capture_source(db, "ZF-1", reference, now, self.service.mssql)
 
-    def test_declined_unsampled_control_for_the_home_withholds(self):
+    def test_declined_unsampled_control_for_the_home_withholds(self) -> None:
         self.put(3)
         self.assertEqual(self.view()["state"], "ok")
         self.set_consent("declined", sensor="SENS-OTHER-9")
         self.assertEqual(self.view()["state"], "consent-withheld")
         self.assertEqual(self.view()["latest"], None)
 
-    def test_control_missing_from_the_home_index_fails_closed(self):
+    def test_control_missing_from_the_home_index_fails_closed(self) -> None:
         self.put(3)
         self.assertEqual(self.view()["state"], "ok")
         with self.service.transaction() as db:
             db.execute("DELETE FROM sensor_consumer_control_home")
         self.assertEqual(self.view()["state"], "consent-withheld")
 
-    def test_other_homes_declined_control_does_not_withhold_this_home(self):
+    def test_other_homes_declined_control_does_not_withhold_this_home(self) -> None:
         self.put(3)
         self.set_consent("declined", home="ZF-2", sensor="SENS-SYN-2")
         self.assertEqual(self.view()["state"], "ok")
 
-    def test_future_boundary_old_and_missing_readings(self):
+    def test_future_boundary_old_and_missing_readings(self) -> None:
         self.put(0)
         now = int(time.time())
         horizon = sensor_view.WINDOW_DAYS * 86400
@@ -403,7 +414,7 @@ class ReadModel(Seed, ta.Base):
         self.assertEqual(later["latest"]["reading_id"], "F-ZF-1-000")
         self.assertIs(later["future_dated_excluded"], False)
 
-    def test_future_reading_is_never_the_latest_or_fresh(self):
+    def test_future_reading_is_never_the_latest_or_fresh(self) -> None:
         self.put(2)
         self.add_readings(1, tag="F", base=int(time.time()), offset=-3600)
         v = self.view()
@@ -412,7 +423,7 @@ class ReadModel(Seed, ta.Base):
         self.assertTrue(v["future_dated_excluded"])
         self.assertIn("Current freshness is not asserted", v["as_of_rule"])
 
-    def test_context_rows_are_bounded_in_time_and_by_as_of(self):
+    def test_context_rows_are_bounded_in_time_and_by_as_of(self) -> None:
         self.put(0)
         now = int(time.time())
         ref = datetime.fromtimestamp(now - 3 * 86400, UTC).replace(microsecond=0)
@@ -424,7 +435,7 @@ class ReadModel(Seed, ta.Base):
         self.assertEqual([r["reading_id"] for r in cap["before"]], ["B-ZF-1-000"])
         self.assertEqual(cap["after"], [])
 
-    def test_context_change_outside_the_window_changes_the_capture_identity(self):
+    def test_context_change_outside_the_window_changes_the_capture_identity(self) -> None:
         self.put(0)
         now = int(time.time())
         ref = datetime.fromtimestamp(now - 3600, UTC).replace(microsecond=0)
@@ -437,13 +448,13 @@ class ReadModel(Seed, ta.Base):
         self.assertNotEqual(first["before"], second["before"])
         self.assertNotEqual(digest(first), digest(second))
 
-    def _old_anchor(self, days=500):
+    def _old_anchor(self, days: int = 500) -> tuple[int, datetime]:
         now = int(time.time())
         ref = datetime.fromtimestamp(now - days * 86400, UTC).replace(microsecond=0)
         self.add_readings(2, base=int(ref.timestamp()), offset=3600, tag="OLD")
         return now, ref
 
-    def test_context_only_capture_is_an_ok_capture_with_no_latest(self):
+    def test_context_only_capture_is_an_ok_capture_with_no_latest(self) -> None:
         self.put(0)
         now, ref = self._old_anchor()
         cap = self.capture(now, ref)
@@ -456,20 +467,20 @@ class ReadModel(Seed, ta.Base):
         self.assertEqual((v["state"], v["freshness"]), ("ok", "unknown"))
         self.assertEqual(v["before"], cap["before"])
 
-    def _control_state(self):
+    def _control_state(self) -> list[Any]:
         with self.service.transaction() as db:
             return [
                 db.execute(f"SELECT * FROM {t} ORDER BY 1").fetchall()
                 for t in ("sensor_consumer_policy", "sensor_consumer_control")
             ]
 
-    def _index(self):
+    def _index(self) -> Any:
         with self.service.transaction() as db:
             return db.execute(
                 "SELECT home_id,sensor_id FROM sensor_consumer_control_home ORDER BY 1,2"
             ).fetchall()
 
-    def test_migration_restores_a_missing_index_without_replacing_policy_or_controls(self):
+    def test_migration_restores_a_missing_index_without_replacing_policy_or_controls(self) -> None:
         self.put(3)
         self.set_consent("granted", sensor="SENS-OTHER-9")
         want, state = self._index(), self._control_state()
@@ -483,7 +494,7 @@ class ReadModel(Seed, ta.Base):
         SensorConsumer(self.store).migrate_control_index()
         self.assertEqual((self._index(), self._control_state()), (want, state))
 
-    def test_partial_index_fails_closed_until_migrated_and_then_sees_the_decline(self):
+    def test_partial_index_fails_closed_until_migrated_and_then_sees_the_decline(self) -> None:
         self.put(3)
         self.set_consent("declined", sensor="SENS-OTHER-9")
         with self.service.transaction() as db:
@@ -494,7 +505,7 @@ class ReadModel(Seed, ta.Base):
         self.assertIn(("ZF-1", "SENS-OTHER-9"), self._index())
         self.assertEqual(self.view()["state"], "consent-withheld")
 
-    def test_orphan_index_row_fails_closed_and_is_removed_by_migration(self):
+    def test_orphan_index_row_fails_closed_and_is_removed_by_migration(self) -> None:
         self.put(3)
         with self.service.transaction() as db:
             db.execute(
@@ -506,11 +517,11 @@ class ReadModel(Seed, ta.Base):
         self.assertNotIn(("ZF-1", "GONE-1"), self._index())
         self.assertEqual(self.view()["state"], "ok")
 
-    def _tamper(self, sql, *args):
+    def _tamper(self, sql: str, *args: Any) -> None:
         with self.service.transaction() as db:
             db.execute(sql, args)
 
-    def test_equal_count_wrong_home_index_fails_closed_and_migration_repairs_it(self):
+    def test_equal_count_wrong_home_index_fails_closed_and_migration_repairs_it(self) -> None:
         self.put(3)
         self.set_consent("declined", sensor="SENS-OTHER-9")
         want = self._index()
@@ -522,7 +533,7 @@ class ReadModel(Seed, ta.Base):
         self.service.migrate()
         self.assertEqual(self._index(), want)
 
-    def test_equal_count_missing_plus_orphan_fails_closed_until_migrated(self):
+    def test_equal_count_missing_plus_orphan_fails_closed_until_migrated(self) -> None:
         self.put(3)
         self.set_consent("granted", sensor="SENS-OTHER-9")
         want = self._index()
@@ -534,7 +545,7 @@ class ReadModel(Seed, ta.Base):
         self.service.migrate()
         self.assertEqual((self._index(), self.view()["state"]), (want, "ok"))
 
-    def test_failed_reconciliation_fails_all_consent_closed_until_repaired(self):
+    def test_failed_reconciliation_fails_all_consent_closed_until_repaired(self) -> None:
         self.put(3)
         self.set_consent("declined", sensor="SENS-OTHER-9")
         want, state = self._index(), self._control_state()
@@ -552,7 +563,7 @@ class ReadModel(Seed, ta.Base):
         self.service.migrate()
         self.assertEqual((self._index(), self._control_state()), (want, state))
 
-    def test_failed_reconciliation_does_not_grant_a_granted_home(self):
+    def test_failed_reconciliation_does_not_grant_a_granted_home(self) -> None:
         self.put(3)
         self._tamper("INSERT INTO sensor_consumer_control (sensor_id, body) VALUES ('BAD-1','x')")
         self._tamper(
@@ -561,7 +572,9 @@ class ReadModel(Seed, ta.Base):
         self.service.migrate()
         self.assertEqual(self.view()["state"], "consent-withheld")
 
-    def test_missing_state_marker_fails_closed_until_migrated_and_migration_is_idempotent(self):
+    def test_missing_state_marker_fails_closed_until_migrated_and_migration_is_idempotent(
+        self,
+    ) -> None:
         self.put(3)
         self._tamper("DROP TABLE IF EXISTS sensor_consumer_index_state")
         self.assertNotEqual(self.view()["state"], "ok")
@@ -571,7 +584,7 @@ class ReadModel(Seed, ta.Base):
         self.service.migrate()
         self.assertEqual((self.view()["state"], self._control_state()), ("ok", before))
 
-    def _move_control_home(self, sensor, home):
+    def _move_control_home(self, sensor: str, home: str) -> None:
         modify = (
             "JSON_MODIFY(body,'$.home_id',?)"
             if self.service.mssql
@@ -581,7 +594,7 @@ class ReadModel(Seed, ta.Base):
             f"UPDATE sensor_consumer_control SET body={modify} WHERE sensor_id=?", home, sensor
         )
 
-    def test_changed_control_home_with_a_valid_marker_fails_closed_until_migrated(self):
+    def test_changed_control_home_with_a_valid_marker_fails_closed_until_migrated(self) -> None:
         self.put(3)
         self.set_consent("declined", home="ZF-2", sensor="SENS-B1")
         self.assertEqual(self.view()["state"], "ok")
@@ -595,7 +608,7 @@ class ReadModel(Seed, ta.Base):
         self.service.migrate()
         self.assertEqual(self.view()["state"], "ok")
 
-    def test_previous_format_marker_or_missing_guard_fails_closed_until_migrated(self):
+    def test_previous_format_marker_or_missing_guard_fails_closed_until_migrated(self) -> None:
         self.put(3)
         drop = "JSON_MODIFY(body,'$.v',NULL)" if self.service.mssql else "json_remove(body,'$.v')"
         self._tamper(f"UPDATE sensor_consumer_index_state SET body={drop}")
@@ -624,7 +637,7 @@ class ReadModel(Seed, ta.Base):
             names = db.execute(catalog).fetchall()
         self.assertEqual(len(names), 1 if self.service.mssql else 3)
 
-    def test_future_readings_beyond_a_day_are_reported_not_absent(self):
+    def test_future_readings_beyond_a_day_are_reported_not_absent(self) -> None:
         self.put(0)
         now = int(time.time())
         for tag, ahead in (("A", 86400 + 60), ("B", 2 * 86400), ("C", 40 * 86400)):
@@ -637,7 +650,11 @@ class ReadModel(Seed, ta.Base):
 
 
 class Http(Seed, ta.ApiTests):
-    def proactive(self):
+    def request(self, path: str, body: Any = None) -> tuple[int, Any]:
+        base_request: Callable[..., tuple[int, Any]] = super().request
+        return base_request(path, body)
+
+    def proactive(self) -> tuple[str, Any]:
         scanned = self.service.scan()
         quality_ids = self.quality_task()
         self.assertTrue(set(quality_ids) & set(scanned["enqueued"]), scanned)
@@ -645,13 +662,13 @@ class Http(Seed, ta.ApiTests):
         self.assertTrue(self.service.execute(tid))
         return tid, self.service.detail(self.pm, tid)
 
-    def ready(self, **kw):
+    def ready(self, **kw: Any) -> None:
         self.mock(**kw)
         self.put(4)
         self.add_live(10)
         self.quality_ready()
 
-    def test_sensors_api_role_matrix(self):
+    def test_sensors_api_role_matrix(self) -> None:
         self.put(4)
         status, v = self.request("/api/cases/ZF-1/sensors")
         self.assertEqual((status, v["state"], v["case_id"]), (200, "ok", "ZF-1"))
@@ -669,7 +686,7 @@ class Http(Seed, ta.ApiTests):
         self.user = self.pm
         self.assertEqual(self.request("/api/cases/NOPE/sensors")[0], 404)
 
-    def test_same_ids_and_values_reach_model_and_proactive_flag(self):
+    def test_same_ids_and_values_reach_model_and_proactive_flag(self) -> None:
         # MOCK provider: proves the request content and flag shape, not real AI behaviour.
         self.ready()
         api = self.request("/api/cases/ZF-1/sensors")[1]
@@ -693,7 +710,7 @@ class Http(Seed, ta.ApiTests):
         self.assertIn("No named recipient", flag["delivery"])
         self.assertEqual({k for k in p["snapshot"]["citations"] if k.startswith("sensor:")}, keys)
 
-    def test_manual_request_is_not_an_autonomous_flag(self):
+    def test_manual_request_is_not_an_autonomous_flag(self) -> None:
         self.ready()
         tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
         self.service.execute(tid)
@@ -702,19 +719,19 @@ class Http(Seed, ta.ApiTests):
             (flag["status"], flag["autonomous"], flag["level"]), ("manual-proposal", False, None)
         )
 
-    def test_proactive_output_without_sensor_citation_is_not_a_sensor_flag(self):
+    def test_proactive_output_without_sensor_citation_is_not_a_sensor_flag(self) -> None:
         self.ready(cite=False)
         flag = self.proactive()[1]["review_flag"]
         self.assertEqual((flag["status"], flag["autonomous"]), ("uncited", False))
 
-    def test_rejected_proposal_is_not_a_flag(self):
+    def test_rejected_proposal_is_not_a_flag(self) -> None:
         self.ready()
         tid, p = self.proactive()
         self.service.review(self.pm, tid, "reject", p["revision"], note="Not needed.")
         flag = self.service.detail(self.pm, tid)["review_flag"]
         self.assertEqual((flag["status"], flag["autonomous"]), ("rejected", False))
 
-    def test_stale_proposal_is_not_a_flag(self):
+    def test_stale_proposal_is_not_a_flag(self) -> None:
         self.ready()
         tid, _ = self.proactive()
         self.add_live(0, base=int(time.time()) // SEAL * SEAL + SEAL)
@@ -724,7 +741,7 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(stale["review_flag"]["status"], "not-current")
         self.assertFalse(stale["review_flag"]["autonomous"])
 
-    def test_withdrawal_after_model_return_withholds_every_projection(self):
+    def test_withdrawal_after_model_return_withholds_every_projection(self) -> None:
         self.ready()
         tid, p = self.proactive()
         self.assertEqual(p["review_flag"]["status"], "review-suggested")
@@ -750,7 +767,9 @@ class Http(Seed, ta.ApiTests):
             stored = db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()[0]
         self.assertIn(reading, stored)
 
-    def test_same_bucket_arrival_is_new_evidence_for_the_model_and_stales_the_old_task(self):
+    def test_same_bucket_arrival_is_new_evidence_for_the_model_and_stales_the_old_task(
+        self,
+    ) -> None:
         self.ready()
         first = self.service.invoke(self.pm, "quality-evidence", "ZF-1")
         self.assertEqual(
@@ -781,7 +800,7 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(fresh["snapshot"]["sources"]["sensors"]["latest"], view["latest"])
         self.assertEqual(self.provider.calls, 2)
 
-    def test_scan_does_not_start_new_work_for_each_arrival_in_one_bucket(self):
+    def test_scan_does_not_start_new_work_for_each_arrival_in_one_bucket(self) -> None:
         self.ready()
         self.proactive()
         before = self.quality_task()
@@ -793,14 +812,14 @@ class Http(Seed, ta.ApiTests):
         self.add_live(0, base=bucket + SEAL)
         self.assertTrue(set(self.service.scan()["enqueued"]) - set(before))
 
-    def test_context_change_makes_the_old_task_stale(self):
+    def test_context_change_makes_the_old_task_stale(self) -> None:
         self.ready()
         tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
         self.service.execute(tid)
         self.add_live(60 * 5)
         self.assertTrue(self.service.detail(self.pm, tid)["stale"])
 
-    def test_manual_completion_then_proactive_scan_stays_manual(self):
+    def test_manual_completion_then_proactive_scan_stays_manual(self) -> None:
         self.ready()
         tid = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
         self.assertTrue(self.service.execute(tid))
@@ -814,7 +833,7 @@ class Http(Seed, ta.ApiTests):
             ("manual-proposal", "requested", False),
         )
 
-    def test_proactive_completion_then_manual_invocation_keeps_its_attribution(self):
+    def test_proactive_completion_then_manual_invocation_keeps_its_attribution(self) -> None:
         self.ready()
         tid, _ = self.proactive()
         self.assertEqual(self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"], tid)
@@ -822,7 +841,7 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual((flag["status"], flag["trigger"]), ("review-suggested", "proactive"))
         self.assertEqual(self.provider.calls, 1)
 
-    def test_person_request_queued_before_dispatch_wins_over_a_scan(self):
+    def test_person_request_queued_before_dispatch_wins_over_a_scan(self) -> None:
         self.ready()
         scanned = self.service.scan()["enqueued"]
         tid = self.quality_task()[0]
@@ -833,7 +852,7 @@ class Http(Seed, ta.ApiTests):
             self.service.detail(self.pm, tid)["review_flag"]["status"], "manual-proposal"
         )
 
-    def _after_withdrawal(self, tid):
+    def _after_withdrawal(self, tid: str) -> dict[str, Any]:
         return {
             "detail": self.request(f"/api/assistants/proposals/{tid}")[1],
             "list": self.request("/api/assistants/proposals?case_id=ZF-1")[1],
@@ -841,7 +860,7 @@ class Http(Seed, ta.ApiTests):
             "sensors": self.request("/api/cases/ZF-1/sensors")[1],
         }
 
-    def test_withdrawal_withholds_uncited_derived_text_and_edited_output(self):
+    def test_withdrawal_withholds_uncited_derived_text_and_edited_output(self) -> None:
         self.ready(cite=False, leak="23.7")
         tid, p = self.proactive()
         self.assertEqual(p["review_flag"]["status"], "uncited")
@@ -865,7 +884,7 @@ class Http(Seed, ta.ApiTests):
             all(not (e.get("edited_output") or {}).get("findings") for e in shown["provenance"])
         )
 
-    def test_declined_unsampled_control_withholds_every_historical_projection(self):
+    def test_declined_unsampled_control_withholds_every_historical_projection(self) -> None:
         self.ready()
         tid, p = self.proactive()
         reading = p["review_flag"]["readings"][0]["reading_id"]
@@ -876,14 +895,14 @@ class Http(Seed, ta.ApiTests):
             self.request(f"/api/assistants/proposals/{tid}")[1]["review_flag"]["status"], "withheld"
         )
 
-    def test_known_signature_is_not_proposed_again_by_scan(self):
+    def test_known_signature_is_not_proposed_again_by_scan(self) -> None:
         self.ready()
         first = set(self.service.scan()["enqueued"]) & set(self.quality_task())
         self.assertTrue(first)
         again = set(self.service.scan()["enqueued"]) & set(self.quality_task())
         self.assertFalse(again)
 
-    def _unchanged_for_three_seals(self, prepare):
+    def _unchanged_for_three_seals(self, prepare: Callable[[], object]) -> None:
         self.mock()
         prepare()
         self.quality_ready()
@@ -901,16 +920,16 @@ class Http(Seed, ta.ApiTests):
                 self.assertEqual(signature(detail["snapshot"]), sig)
         self.assertEqual(self.provider.calls, 0)
 
-    def test_empty_capture_is_stable_across_seals(self):
+    def test_empty_capture_is_stable_across_seals(self) -> None:
         self._unchanged_for_three_seals(lambda: self.put(0))
 
-    def test_withheld_capture_is_stable_across_seals(self):
+    def test_withheld_capture_is_stable_across_seals(self) -> None:
         self._unchanged_for_three_seals(lambda: self.put(3, consent="declined"))
 
-    def test_unavailable_capture_is_stable_across_seals(self):
+    def test_unavailable_capture_is_stable_across_seals(self) -> None:
         self._unchanged_for_three_seals(lambda: None)
 
-    def test_capture_without_sensors_keeps_prior_shape(self):
+    def test_capture_without_sensors_keeps_prior_shape(self) -> None:
         c = self.store.detail("ZF-1")
         self.assertNotIn("sensors", capture("quality-evidence", c)["sources"])
         self.assertEqual(
@@ -920,7 +939,7 @@ class Http(Seed, ta.ApiTests):
             "unavailable",
         )
 
-    def test_unavailable_model_gives_no_flag(self):
+    def test_unavailable_model_gives_no_flag(self) -> None:
         self.mock(bad="template")
         self.put(4)
         self.quality_ready()
@@ -928,13 +947,13 @@ class Http(Seed, ta.ApiTests):
         self.service.execute(tid)
         self.assertIsNone(self.service.detail(self.pm, tid).get("review_flag"))
 
-    def _roles(self):
+    def _roles(self) -> Any:
         return self.people["Quality Inspector"]
 
-    def _all_text(self, tid):
+    def _all_text(self, tid: str) -> dict[str, str]:
         return {k: json.dumps(v) for k, v in self._after_withdrawal(tid).items()}
 
-    def test_context_only_capture_reaches_the_model_and_is_withheld_after_withdrawal(self):
+    def test_context_only_capture_reaches_the_model_and_is_withheld_after_withdrawal(self) -> None:
         self.mock()
         self.put(0)
         now = int(time.time())
@@ -957,7 +976,7 @@ class Http(Seed, ta.ApiTests):
             self.assertTrue(shown["sensor_withheld"])
             self.assertEqual(shown["review_flag"]["status"], "withheld")
 
-    def _verified_note_flow(self):
+    def _verified_note_flow(self) -> Any:
         self.ready()
         tid, p = self.proactive()
         reading = p["review_flag"]["readings"][0]["reading_id"]
@@ -969,7 +988,7 @@ class Http(Seed, ta.ApiTests):
         self.service.review(qa, tid, "edit-accept", p["revision"], f"Accepted {reading}.", edited)
         return tid, reading, note
 
-    def test_review_notes_are_withheld_with_consent_and_return_when_it_does(self):
+    def test_review_notes_are_withheld_with_consent_and_return_when_it_does(self) -> None:
         tid, reading, note = self._verified_note_flow()
         self.assertIn(note, json.dumps(self.request(f"/api/assistants/proposals/{tid}")[1]))
         self.set_consent("declined")
@@ -981,7 +1000,7 @@ class Http(Seed, ta.ApiTests):
         self.assertIn(note, json.dumps(shown))
         self.assertEqual(shown["review"]["note"], f"Accepted {reading}.")
 
-    def test_reject_after_withdrawal_keeps_the_stored_snapshot_and_output(self):
+    def test_reject_after_withdrawal_keeps_the_stored_snapshot_and_output(self) -> None:
         self.ready()
         tid, p = self.proactive()
         reading = p["review_flag"]["readings"][0]["reading_id"]
@@ -1008,7 +1027,7 @@ class Http(Seed, ta.ApiTests):
         self.assertIn(reading, json.dumps(restored["snapshot"]))
         self.assertNotIn("sensor_withheld", restored)
 
-    def test_verification_and_acceptance_are_refused_while_consent_is_withheld(self):
+    def test_verification_and_acceptance_are_refused_while_consent_is_withheld(self) -> None:
         self.ready()
         tid, p = self.proactive()
         self.set_consent("declined")
@@ -1018,7 +1037,7 @@ class Http(Seed, ta.ApiTests):
                 self._roles(), tid, "verify", shown["revision"], "Looked.", source_verified=True
             )
 
-    def _scan_counts(self):
+    def _scan_counts(self) -> tuple[list[str], list[str], Any]:
         quality_ids = self.quality_task()
         bucket = int(time.time()) // SEAL * SEAL
         for minute in (1, 2, 3):
@@ -1027,7 +1046,7 @@ class Http(Seed, ta.ApiTests):
         forecast = {a["id"]: a for a in self.service.forecast(self.pm)["assistants"]}
         return quality_ids, self.quality_task(), forecast["quality-evidence"]["new_proposals"]
 
-    def _gap_case(self, prepare):
+    def _gap_case(self, prepare: Callable[[], object]) -> Any:
         self.mock()
         self.put(4)
         self.add_live(10)
@@ -1048,12 +1067,12 @@ class Http(Seed, ta.ApiTests):
         )
         return first
 
-    def _measures_only(self):
+    def _measures_only(self) -> None:
         with self.store.lock:
             supplied_resident_fixture(self.store._case("ZF-1"))
             self.store.save()
 
-    def _submitted_only(self):
+    def _submitted_only(self) -> None:
         self._measures_only()
         items = {
             label: "SYN current photo"
@@ -1069,18 +1088,18 @@ class Http(Seed, ta.ApiTests):
             context_revision=1,
         )
 
-    def test_throttle_applies_with_no_measures(self):
+    def test_throttle_applies_with_no_measures(self) -> None:
         self._gap_case(lambda: None)
 
-    def test_throttle_applies_with_measures_and_no_quality_record(self):
+    def test_throttle_applies_with_measures_and_no_quality_record(self) -> None:
         self._gap_case(self._measures_only)
 
-    def test_throttle_applies_with_an_unaccepted_quality_record(self):
+    def test_throttle_applies_with_an_unaccepted_quality_record(self) -> None:
         first = self._gap_case(self._submitted_only)
         self.store.accept_quality(self.people["Quality Inspector"], "ZF-1", 0)
         self.assertTrue(set(self.service.scan()["enqueued"]) - set(first))
 
-    def test_a_manual_request_after_many_events_is_not_labelled_proactive(self):
+    def test_a_manual_request_after_many_events_is_not_labelled_proactive(self) -> None:
         self.ready()
         self.service.scan()
         tid = self.quality_task()[0]
@@ -1093,7 +1112,7 @@ class Http(Seed, ta.ApiTests):
         flag = self.service.detail(self.pm, tid)["review_flag"]
         self.assertEqual((flag["status"], flag["trigger"]), ("manual-proposal", "requested"))
 
-    def test_unknown_dispatch_authority_is_requested_not_proactive(self):
+    def test_unknown_dispatch_authority_is_requested_not_proactive(self) -> None:
         self.ready()
         self.service.scan()
         tid = self.quality_task()[0]
@@ -1102,12 +1121,12 @@ class Http(Seed, ta.ApiTests):
                 db.execute("SELECT body FROM assistant_tasks WHERE id=?", (tid,)).fetchone()[0]
             )
             body.pop("manual_requested", None)
-            db.execute("UPDATE assistant_tasks SET body=? WHERE id=?", (ta.canonical(body), tid))
+            db.execute("UPDATE assistant_tasks SET body=? WHERE id=?", (canonical(body), tid))
         self.assertTrue(self.service.execute(tid))
         flag = self.service.detail(self.pm, tid)["review_flag"]
         self.assertEqual((flag["status"], flag["trigger"]), ("manual-proposal", "requested"))
 
-    def _tasks_of(self, cap):
+    def _tasks_of(self, cap: str) -> list[Any]:
         with self.service.transaction() as db:
             rows = db.execute(
                 "SELECT id FROM assistant_tasks WHERE capability=? AND case_id='ZF-1' ORDER BY id",
@@ -1115,18 +1134,18 @@ class Http(Seed, ta.ApiTests):
             ).fetchall()
         return [r[0] for r in rows]
 
-    def _new(self, cap):
+    def _new(self, cap: str) -> Any:
         found = {a["id"]: a for a in self.service.forecast(self.pm)["assistants"]}
         return found[cap]["new_proposals"]
 
-    def _release(self, name):
+    def _release(self, name: str) -> Any:
         return patch.object(
             self.service,
             "release_reference",
             side_effect=lambda db, cap: dict(id=name, capability=cap),
         )
 
-    def _epoch(self):
+    def _epoch(self) -> Any:
         """A later epoch with no suspension; only the epoch the schedule reads changes."""
         real = self.service.continuity
         stack = contextlib.ExitStack()
@@ -1140,10 +1159,14 @@ class Http(Seed, ta.ApiTests):
         stack.enter_context(patch.object(self.service, "suspended", return_value=None))
         return stack
 
-    def test_release_or_epoch_change_offers_fresh_work_for_an_unchanged_case(self):
+    def test_release_or_epoch_change_offers_fresh_work_for_an_unchanged_case(self) -> None:
         self.ready()
         caps = ("quality-evidence", "assessment-preparation")
-        for name, scope in (("release", lambda: self._release("REL-2")), ("epoch", self._epoch)):
+        scopes: list[tuple[str, Callable[[], Any]]] = [
+            ("release", lambda: self._release("REL-2")),
+            ("epoch", self._epoch),
+        ]
+        for name, scope in scopes:
             with self.subTest(change=name):
                 self.service.scan_cursor = ""
                 self.service.scan()
@@ -1161,12 +1184,14 @@ class Http(Seed, ta.ApiTests):
                         )
                     self.assertEqual([self._new(cap) for cap in caps], [0, 0])
 
-    def _set_epc(self, value):
+    def _set_epc(self, value: Any) -> None:
         with self.store.lock:
             self.store._case("ZF-1")["home"]["epc"] = value
             self.store.save()
 
-    def test_non_sensor_a_b_a_with_a_new_reading_is_new_work_but_sensor_only_is_throttled(self):
+    def test_non_sensor_a_b_a_with_a_new_reading_is_new_work_but_sensor_only_is_throttled(
+        self,
+    ) -> None:
         self.ready()
         original = self.store.detail("ZF-1")["home"].get("epc")
         self.service.scan()
@@ -1187,17 +1212,17 @@ class Http(Seed, ta.ApiTests):
             self.service.scan()
         self.assertEqual(len(self.quality_task()), 3)
 
-    def _used_calls(self):
+    def _used_calls(self) -> Any:
         with self.service.transaction() as db:
             row = db.execute("SELECT SUM(used_calls) FROM assistant_allowance").fetchone()
         return row[0] or 0
 
-    def _gated(self, **kw):
+    def _gated(self, **kw: Any) -> dict[str, Any]:
         gate = dict(entered=threading.Event(), proceed=threading.Event())
         self.mock(gate=gate, **kw)
         return gate
 
-    def test_a_request_during_an_in_flight_proactive_call_does_not_relabel_it(self):
+    def test_a_request_during_an_in_flight_proactive_call_does_not_relabel_it(self) -> None:
         gate = self._gated()
         self.put(4)
         self.add_live(10)
@@ -1218,7 +1243,9 @@ class Http(Seed, ta.ApiTests):
         claimed = [e for e in shown["provenance"] if e.get("kind") == "claimed"]
         self.assertEqual({e["trigger"] for e in claimed}, {"proactive"})
 
-    def test_a_request_before_claim_is_manual_and_a_retry_follows_the_flag_at_its_own_claim(self):
+    def test_a_request_before_claim_is_manual_and_a_retry_follows_the_flag_at_its_own_claim(
+        self,
+    ) -> None:
         self.mock(fail=1)
         self.put(4)
         self.add_live(10)
@@ -1240,7 +1267,7 @@ class Http(Seed, ta.ApiTests):
                 want = "manual-proposal" if requested else "review-suggested"
                 self.assertEqual(self.service.detail(self.pm, tid)["review_flag"]["status"], want)
 
-    def test_old_anchor_wording_names_both_horizons_in_the_ui_and_the_model(self):
+    def test_old_anchor_wording_names_both_horizons_in_the_ui_and_the_model(self) -> None:
         self.mock()
         self.put(0)
         now = int(time.time())
@@ -1263,16 +1290,16 @@ class Http(Seed, ta.ApiTests):
             sorted(sensor_view.citations(api)),
         )
 
-    def _ready_one(self, **kw):
+    def _ready_one(self, **kw: Any) -> None:
         self.mock(**kw)
         self.put(4)
         self.add_live(10)
         self.quality_ready()
 
-    def view_latest(self):
+    def view_latest(self) -> Any:
         return self.request("/api/cases/ZF-1/sensors")[1]["latest"]["reading_id"]
 
-    def test_exact_a_b_a_return_requeues_the_stale_task_within_the_allowance(self):
+    def test_exact_a_b_a_return_requeues_the_stale_task_within_the_allowance(self) -> None:
         self._ready_one()
         original = self.store.detail("ZF-1")["home"].get("epc")
         self.service.scan()
@@ -1289,7 +1316,9 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
         self.assertEqual(self.service.detail(self.pm, first)["state"], "ready")
 
-    def test_exact_a_b_a_return_is_requeued_by_a_manual_request_and_for_other_assistants(self):
+    def test_exact_a_b_a_return_is_requeued_by_a_manual_request_and_for_other_assistants(
+        self,
+    ) -> None:
         self._ready_one()
         original = self.store.detail("ZF-1")["home"].get("epc")
         first = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
@@ -1306,7 +1335,7 @@ class Http(Seed, ta.ApiTests):
         back = self.service.invoke(self.pm, other, "ZF-1")
         self.assertEqual((back["id"], back["state"]), (mine, "pending"))
 
-    def test_sensor_churn_before_claim_is_one_task_one_dispatch_and_survives_restart(self):
+    def test_sensor_churn_before_claim_is_one_task_one_dispatch_and_survives_restart(self) -> None:
         self._ready_one()
         self.service.scan()
         (first,) = self.quality_task()
@@ -1326,7 +1355,7 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(len(self.quality_task()), 2)
         self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
 
-    def test_a_new_reading_keeps_the_returned_flag_with_a_newer_readings_note(self):
+    def test_a_new_reading_keeps_the_returned_flag_with_a_newer_readings_note(self) -> None:
         self._ready_one()
         tid, p = self.proactive()
         self.assertEqual(p["review_flag"]["status"], "review-suggested")
@@ -1343,13 +1372,13 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(self.quality_task(), before)
         self.assertEqual(self.provider.calls, 1)
 
-    def test_withdrawal_between_claim_and_dispatch_sends_nothing(self):
+    def test_withdrawal_between_claim_and_dispatch_sends_nothing(self) -> None:
         self._ready_one()
         self.service.scan()
         (tid,) = self.quality_task()
         real = self.service.claim
 
-        def claim(task, owner):
+        def claim(task: Any, owner: Any) -> Any:
             got = real(task, owner)
             self.set_consent("declined")
             return got
@@ -1359,28 +1388,28 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(self.provider.calls, 0)
         self.assertEqual(self.provider.prompts, [])
 
-    def test_withdrawal_after_the_pre_dispatch_check_sends_nothing(self):
+    def test_withdrawal_after_the_pre_dispatch_check_sends_nothing(self) -> None:
         self._ready_one()
         self.service.scan()
         (tid,) = self.quality_task()
         outer = self
 
         class Barrier:
-            def __init__(self, real):
+            def __init__(self, real: Any) -> None:
                 self.real = real
 
-            def __enter__(self):
+            def __enter__(self) -> Any:
                 outer.set_consent("declined")
                 return self.real.__enter__()
 
-            def __exit__(self, *a):
+            def __exit__(self, *a: Any) -> Any:
                 return self.real.__exit__(*a)
 
         with patch.object(self.service, "dispatch_lock", Barrier(self.service.dispatch_lock)):
             self.service.execute(tid)
         self.assertEqual(self.provider.calls, 0)
 
-    def test_withdrawal_during_a_started_call_is_withheld_everywhere(self):
+    def test_withdrawal_during_a_started_call_is_withheld_everywhere(self) -> None:
         gate = self._gated()
         self.put(4)
         self.add_live(10)
@@ -1399,7 +1428,7 @@ class Http(Seed, ta.ApiTests):
         for name, body in self._after_withdrawal(tid).items():
             self.assertNotIn(reading, json.dumps(body), name)
 
-    def test_scan_reads_schedule_by_key_with_many_historical_tasks(self):
+    def test_scan_reads_schedule_by_key_with_many_historical_tasks(self) -> None:
         self._ready_one()
         self.service.scan()
         (first,) = self.quality_task()
@@ -1412,30 +1441,30 @@ class Http(Seed, ta.ApiTests):
                     " VALUES (?,?,?,?,?,'stale',0,'',0,0,0,1)",
                     (f"old{i:03d}", "quality-evidence", "ZF-1", f"s{i}", body),
                 )
-        seen = []
+        seen: list[str] = []
         real = self.store.assistant_connection
 
         class Recording:
             """Backend-neutral statement recorder; SQLite also traces natively."""
 
-            def __init__(self, db):
+            def __init__(self, db: Any) -> None:
                 self.db = db
 
-            def execute(self, sql, *args):
+            def execute(self, sql: str, *args: Any) -> Any:
                 seen.append(sql)
                 return self.db.execute(sql, *args)
 
-            def __enter__(self):
+            def __enter__(self) -> "Recording":
                 self.db.__enter__()
                 return self
 
-            def __exit__(self, *exc):
+            def __exit__(self, *exc: Any) -> Any:
                 return self.db.__exit__(*exc)
 
-            def __getattr__(self, name):
+            def __getattr__(self, name: str) -> Any:
                 return getattr(self.db, name)
 
-        def traced():
+        def traced() -> Any:
             return Recording(real())
 
         with patch.object(self.store, "assistant_connection", side_effect=traced):
@@ -1450,7 +1479,7 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(scans, [])
         self.assertEqual(self.quality_task().count(first), 1)
 
-    def test_request_carries_as_of_and_freshness_and_the_flag_repeats_them(self):
+    def test_request_carries_as_of_and_freshness_and_the_flag_repeats_them(self) -> None:
         self._ready_one()
         self.service.scan()
         (tid,) = self.quality_task()
@@ -1464,7 +1493,7 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(flag["freshness"], "stale")
         self.assertEqual(flag["evidence_as_of"], sent["request_as_of"])
 
-    def test_request_marks_missing_sensor_evidence_as_unknown(self):
+    def test_request_marks_missing_sensor_evidence_as_unknown(self) -> None:
         self.mock()
         self.put(0)
         self.quality_ready()
@@ -1474,10 +1503,10 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(sent["freshness"], "unknown")
 
     # C6: dispatch ordering, immutable identity, upgrade, manual slot, flag display.
-    def _withdraw_in_thread(self):
-        errors = []
+    def _withdraw_in_thread(self) -> tuple[threading.Thread, list[Exception]]:
+        errors: list[Exception] = []
 
-        def withdraw():
+        def withdraw() -> None:
             try:
                 self.set_consent("declined")
             except Exception as error:  # noqa: BLE001 - recorded and asserted by the caller
@@ -1487,11 +1516,11 @@ class Http(Seed, ta.ApiTests):
         thread.start()
         return thread, errors
 
-    def _consent_now(self):
+    def _consent_now(self) -> Any:
         with self.service.transaction() as db:
             return sensor_view.consent(db, "ZF-1", {DEFAULT}, self.service.mssql)
 
-    def test_withdrawal_cannot_commit_between_the_final_check_and_provider_transport(self):
+    def test_withdrawal_cannot_commit_between_the_final_check_and_provider_transport(self) -> None:
         gate = self._gated()
         self.put(4)
         self.add_live(10)
@@ -1520,7 +1549,7 @@ class Http(Seed, ta.ApiTests):
             held = db.execute("SELECT COUNT(*) FROM assistant_dispatch_gate").fetchone()[0]
         self.assertEqual(held, 0)
 
-    def test_provider_failure_releases_the_gate_and_an_expired_gate_does_not_block(self):
+    def test_provider_failure_releases_the_gate_and_an_expired_gate_does_not_block(self) -> None:
         self._ready_one(fail=1)
         self.service.scan()
         (tid,) = self.quality_task()
@@ -1538,7 +1567,7 @@ class Http(Seed, ta.ApiTests):
         self.set_consent("declined")
         self.assertLess(time.time() - started, 5)
 
-    def test_a_gate_that_cannot_be_written_sends_nothing(self):
+    def test_a_gate_that_cannot_be_written_sends_nothing(self) -> None:
         self._ready_one()
         self.service.scan()
         (tid,) = self.quality_task()
@@ -1547,14 +1576,16 @@ class Http(Seed, ta.ApiTests):
         self.service.execute(tid)
         self.assertEqual(self.provider.calls, 0)
 
-    def _two_tasks_after_arrival(self):
+    def _two_tasks_after_arrival(self) -> str:
         self._ready_one()
         self.service.scan()
         (first,) = self.quality_task()
         self.add_live(5)
         return first
 
-    def test_a_new_capture_in_the_same_schedule_is_its_own_task_and_a_request_reuses_it(self):
+    def test_a_new_capture_in_the_same_schedule_is_its_own_task_and_a_request_reuses_it(
+        self,
+    ) -> None:
         first = self._two_tasks_after_arrival()
         self.assertFalse(self.service.execute(first))
         tasks = self.quality_task()
@@ -1573,7 +1604,9 @@ class Http(Seed, ta.ApiTests):
         sent = self.provider.prompts[-1]["evidence"]["sources"]["sensors"]["latest"]
         self.assertEqual(sent["reading_id"], self.view_latest())
 
-    def test_a_request_during_the_lease_of_a_new_capture_reuses_it_and_keeps_provenance(self):
+    def test_a_request_during_the_lease_of_a_new_capture_reuses_it_and_keeps_provenance(
+        self,
+    ) -> None:
         gate = self._gated()
         self.put(4)
         self.add_live(10)
@@ -1597,7 +1630,7 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(done["dispatch"]["trigger"], "proactive")
         self.assertEqual((self.provider.calls, self._used_calls()), (1, 1))
 
-    def test_replacement_is_bounded_without_dispatch_and_recovers_when_stable(self):
+    def test_replacement_is_bounded_without_dispatch_and_recovers_when_stable(self) -> None:
         self._ready_one()
         self.service.scan()
         for minute in (9, 8, 7, 6, 5, 4, 3, 2, 1):
@@ -1641,12 +1674,14 @@ class Http(Seed, ta.ApiTests):
             [],
         )
 
-    def _legacy(self):
+    def _legacy(self) -> None:
         """A pre-upgrade store: tasks exist, the schedule table has no rows."""
         with self.service.transaction() as db:
             db.execute("DELETE FROM assistant_schedule")
 
-    def test_upgrade_adopts_the_serviced_legacy_task_and_does_not_call_again_in_the_bucket(self):
+    def test_upgrade_adopts_the_serviced_legacy_task_and_does_not_call_again_in_the_bucket(
+        self,
+    ) -> None:
         self._ready_one()
         tid, _ = self.proactive()
         self._legacy()
@@ -1666,7 +1701,7 @@ class Http(Seed, ta.ApiTests):
             ).fetchone()[0]
         self.assertEqual(rows, 1)
 
-    def test_upgrade_does_not_adopt_a_legacy_task_from_another_release(self):
+    def test_upgrade_does_not_adopt_a_legacy_task_from_another_release(self) -> None:
         self._ready_one()
         tid, _ = self.proactive()
         self._legacy()
@@ -1681,7 +1716,7 @@ class Http(Seed, ta.ApiTests):
         self.service.scan()
         self.assertEqual(len(self.quality_task()), 2)
 
-    def test_upgrade_makes_a_source_change_after_a_legacy_assessment_eligible(self):
+    def test_upgrade_makes_a_source_change_after_a_legacy_assessment_eligible(self) -> None:
         self._ready_one()
         cap = "assessment-preparation"
         first = self.service.invoke(self.pm, cap, "ZF-1")["id"]
@@ -1695,7 +1730,9 @@ class Http(Seed, ta.ApiTests):
         self.service.scan()
         self.assertEqual(len(self._tasks_of(cap)), len(quiet) + 1)
 
-    def test_a_manual_request_completed_before_a_scan_does_not_hide_the_autonomous_flag(self):
+    def test_a_manual_request_completed_before_a_scan_does_not_hide_the_autonomous_flag(
+        self,
+    ) -> None:
         self._ready_one()
         manual = self.service.invoke(self.pm, "quality-evidence", "ZF-1")["id"]
         self.assertTrue(self.service.execute(manual))
@@ -1718,7 +1755,9 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(len(self.quality_task()), 2)
         self.assertEqual((self.provider.calls, self._used_calls()), (2, 2))
 
-    def test_a_manual_request_before_claim_or_after_failure_is_not_autonomous_and_recovers(self):
+    def test_a_manual_request_before_claim_or_after_failure_is_not_autonomous_and_recovers(
+        self,
+    ) -> None:
         self._ready_one(fail=1)
         self.service.scan()
         (first,) = self.quality_task()
@@ -1735,7 +1774,7 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(self.service.detail(self.pm, auto)["dispatch"]["trigger"], "proactive")
         self.assertLessEqual(self._used_calls(), 2)
 
-    def test_flag_reports_matching_and_changed_readings_since_capture(self):
+    def test_flag_reports_matching_and_changed_readings_since_capture(self) -> None:
         self._ready_one()
         tid, p = self.proactive()
         flag = p["review_flag"]
@@ -1748,7 +1787,7 @@ class Http(Seed, ta.ApiTests):
         self.assertEqual(flag["newer_reading_count"], 1)
         self.assertEqual(flag["status"], "review-suggested")
 
-    def test_delayed_claim_flag_states_the_captured_as_of_and_unknown_is_explicit(self):
+    def test_delayed_claim_flag_states_the_captured_as_of_and_unknown_is_explicit(self) -> None:
         self._ready_one()
         self.service.scan()
         (tid,) = self.quality_task()
@@ -1767,7 +1806,7 @@ MSSQL = unittest.skipUnless(
 
 @MSSQL
 class MssqlReadModel(ta.MssqlFixture, ReadModel):
-    def test_actual_store_is_sql_server(self):
+    def test_actual_store_is_sql_server(self) -> None:
         from zava_forward.core.mssqlstore import MssqlStore
 
         self.assertIsInstance(self.store, MssqlStore)
@@ -1780,7 +1819,7 @@ class MssqlHttp(ta.MssqlFixture, Http):
 
 
 class AccountSummaryName(unittest.TestCase):
-    def test_account_summary_name_starts_with_visible_text(self):
+    def test_account_summary_name_starts_with_visible_text(self) -> None:
         from pathlib import Path
 
         web = Path(sensor_view.__file__).parents[4] / "api/src/zava_forward/api/web"
@@ -1792,19 +1831,19 @@ class AccountSummaryName(unittest.TestCase):
 class WebWording(unittest.TestCase):
     """Static checks of the shipped web source; a rendered browser check is a separate gate."""
 
-    def _web(self, name):
+    def _web(self, name: str) -> str:
         from pathlib import Path
 
         root = Path(sensor_view.__file__).parents[4] / "api/src/zava_forward/api/web"
         return (root / name).read_text(encoding="utf-8")
 
-    def test_sensor_panel_says_current_capture_not_the_models_capture(self):
+    def test_sensor_panel_says_current_capture_not_the_models_capture(self) -> None:
         js = self._web("ops.js")
         self.assertNotIn("The Quality evidence assistant reads these same readings", js)
         self.assertNotIn("in the same capture the assistant uses", js)
         self.assertIn("current authorised capture", js)
 
-    def test_flag_block_shows_captured_as_of_freshness_age_and_changes(self):
+    def test_flag_block_shows_captured_as_of_freshness_age_and_changes(self) -> None:
         js = self._web("assistants.js")
         for token in (
             "evidence_as_of",
@@ -1815,7 +1854,7 @@ class WebWording(unittest.TestCase):
         ):
             self.assertIn(token, js)
 
-    def test_stale_review_suggested_flag_stays_in_the_main_path_and_counts_as_waiting(self):
+    def test_stale_review_suggested_flag_stays_in_the_main_path_and_counts_as_waiting(self) -> None:
         js = self._web("assistants.js")
         self.assertIn('p.review_flag?.status === "review-suggested"', js)
         self.assertIn("review_flag", self._web("case-workspace.js"))

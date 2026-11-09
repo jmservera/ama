@@ -93,6 +93,26 @@ class Connection(Protocol):
     def close(self) -> None: ...
 
 
+def _json_text(value: object) -> str | bytes | bytearray:
+    if not isinstance(value, str | bytes | bytearray):
+        raise TypeError("expected JSON text")
+    return value
+
+
+def _scalar(cursor: Cursor) -> object:
+    row = cursor.fetchone()
+    if row is None:
+        raise TypeError("query returned no row")
+    return row[0]
+
+
+def _number(cursor: Cursor) -> float | Decimal:
+    value = _scalar(cursor)
+    if not isinstance(value, int | float | Decimal):
+        raise TypeError("query returned a non-numeric value")
+    return value
+
+
 class ConsumerError(RuntimeError):
     def __init__(self, code: str, reference: str | None = None) -> None:
         super().__init__(code)
@@ -319,7 +339,7 @@ def ensure_control_guard(db: Connection, mssql: bool) -> None:
 def ensure_control_home(db: Connection, mssql: bool) -> None:
     """Create the per-home index when absent and reconcile it, only if controls were ever stored."""
     if mssql:
-        present = db.execute("SELECT OBJECT_ID(N'sensor_consumer_control', N'U')").fetchone()[0]
+        present = _scalar(db.execute("SELECT OBJECT_ID(N'sensor_consumer_control', N'U')"))
         if present:
             db.execute(
                 "IF OBJECT_ID(N'sensor_consumer_control_home', N'U') IS NULL "
@@ -466,7 +486,7 @@ class SensorConsumer:
         if len(rows) > 100 or (old and old[0] != json.dumps(asdict(policy))):
             return None
         try:
-            homes = {str(r[0]): str(json.loads(r[1])["home_id"]) for r in rows}
+            homes = {str(r[0]): str(json.loads(_json_text(r[1]))["home_id"]) for r in rows}
         except (ValueError, KeyError, TypeError):
             return None
         before = {str(r[0]): str(r[1]) for r in rows}
@@ -499,21 +519,26 @@ class SensorConsumer:
             if self.mssql
             else "SELECT (julianday('now')-2440587.5)*86400.0"
         )
-        stamp = float(db.execute(now).fetchone()[0])
+        stamp = float(_number(db.execute(now)))
         if homes is None:
             return (
-                db.execute(
-                    "SELECT COUNT(*) FROM assistant_dispatch_gate WHERE expires_at>?", (stamp,)
-                ).fetchone()[0]
+                _number(
+                    db.execute(
+                        "SELECT COUNT(*) FROM assistant_dispatch_gate WHERE expires_at>?",
+                        (stamp,),
+                    )
+                )
                 > 0
             )
         marks = ",".join("?" * len(homes))
         return (
-            db.execute(
-                f"SELECT COUNT(*) FROM assistant_dispatch_gate WHERE expires_at>?"
-                f" AND home_id IN ({marks})",
-                (stamp, *sorted(homes)),
-            ).fetchone()[0]
+            _number(
+                db.execute(
+                    f"SELECT COUNT(*) FROM assistant_dispatch_gate WHERE expires_at>?"
+                    f" AND home_id IN ({marks})",
+                    (stamp, *sorted(homes)),
+                )
+            )
             > 0
         )
 
