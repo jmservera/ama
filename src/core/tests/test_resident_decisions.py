@@ -119,6 +119,13 @@ class JsonResidentDecisions(unittest.TestCase):
         self.store = self.open_store()
         self.store.technical_action(self.pam, "ZF-1", dict(action="design_submit", note="SYN"))
 
+    def reseed(self, data: dict[str, Any], name: str) -> None:
+        """Open a store over a new seed in test-owned storage; a seeded store ignores a new file."""
+        self.path = Path(self.tmp.name) / name / "synthetic.json"
+        self.path.parent.mkdir()
+        self.path.write_text(json.dumps(data))
+        self.store = self.open_store()
+
     def open_store(self) -> Store:
         if self.sql:
             store = SqlStore(str(self.path), str(self.path.with_suffix(".sqlite")))
@@ -1253,10 +1260,7 @@ class JsonResidentDecisions(unittest.TestCase):
             case = copy.deepcopy(self.store.cases["ZF-1"])
             case["id"] = f"SYN-EDIT-{index:02}"
             data["cases"].append(case)
-        self.path = Path(self.tmp.name) / "edited-in" / "synthetic.json"
-        self.path.parent.mkdir()
-        self.path.write_text(json.dumps(data))
-        self.store = self.open_store()
+        self.reseed(data, "edited-in")
         proposal = self.priority_fixture()
         original = copy.deepcopy(self.store.data["recommendations"][-1])
         self.assertEqual(len(original["case_ids"]), 40)
@@ -4158,23 +4162,32 @@ class MssqlResidentControls(SqlResidentDecisions):
         require_task_owned_loopback(os.environ)
         from zava_forward.core.mssqlstore import _Conn, connection_string
 
-        self.database = "zf_resident88_" + uuid.uuid4().hex
         environment = patch.dict(os.environ, ZF_SQL_DATABASE="master")
         environment.start()
         self.addCleanup(environment.stop)
-        admin = _Conn(connection_string())
-        self.addCleanup(admin.close)
-        admin.execute(f"CREATE DATABASE [{self.database}]")
+        self.admin = _Conn(connection_string())
+        self.addCleanup(self.admin.close)
+        self.create_owned_database()
+        super().setUp()
+
+    def create_owned_database(self) -> None:
+        database = "zf_resident88_" + uuid.uuid4().hex
+        self.database = database
 
         def drop_owned_database() -> None:
-            admin.execute(
-                f"ALTER DATABASE [{self.database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE"
+            self.admin.execute(
+                f"IF DB_ID(N'{database}') IS NOT NULL BEGIN "
+                f"ALTER DATABASE [{database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; "
+                f"DROP DATABASE [{database}]; END"
             )
-            admin.execute(f"DROP DATABASE [{self.database}]")
 
         self.addCleanup(drop_owned_database)
-        os.environ["ZF_SQL_DATABASE"] = self.database
-        super().setUp()
+        self.admin.execute(f"CREATE DATABASE [{database}]")
+        os.environ["ZF_SQL_DATABASE"] = database
+
+    def reseed(self, data: dict[str, Any], name: str) -> None:
+        self.create_owned_database()
+        super().reseed(data, name)
 
     def open_store(self) -> Any:
         from zava_forward.core.mssqlstore import MssqlStore

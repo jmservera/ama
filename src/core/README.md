@@ -1356,7 +1356,9 @@ PYTHONPATH=src/core/tests:src/api:src/api/tests:src/agents/tests \
 
 `ZF_RESIDENT_MSSQL=1` enables `MssqlResidentControls` against an explicitly
 task-owned loopback SQL Server configured through `ZF_SQL_*`. Each test creates/
-drops only its UUID-named `zf_resident88_*` database. Never use shared/live SQL.
+drops only its UUID-named `zf_resident88_*` database; a test that supplies its own
+seed through `reseed` gets a second such database, because a seeded SQL store
+ignores a new seed file. Never use shared/live SQL.
 ## Consultation records and confirmation holds (#92)
 
 The existing provider package is the contract/call-off reference record.

@@ -1399,7 +1399,7 @@ class MssqlBeginRecovery(unittest.TestCase):
                 state.log.append("CLOSE")
 
         conn = mssqlstore._Conn.__new__(mssqlstore._Conn)
-        conn.driver = types.SimpleNamespace(Error=self.Error)
+        conn.driver = types.SimpleNamespace(Error=self.Error)  # type: ignore[assignment]
         conn.conn_str, conn.raw, conn.in_tran, conn.attrs = "", Raw(), False, {}
         conn.state = state  # type: ignore[attr-defined]
         return conn
