@@ -469,6 +469,25 @@ class BlobPublicationWiring(QualityMatrix):
         self.assertIn("ranking archive", status["problems"][0])
         self.clean(status["problems"][0])
 
+    def test_structurally_invalid_200_listing_is_unreadable_status_not_healthy_empty(self):
+        bodies = (
+            b"<Error><Code>InternalError</Code></Error>",
+            b"<EnumerationResults/>",
+            b"<EnumerationResults><Blobs><Blob/></Blobs></EnumerationResults>",
+        )
+        for body in bodies:
+            with self.subTest(body=body):
+                self.fake.list_body = body
+                code, status = self.call(PM_EMAIL, "/api/ranking/publication")
+                self.assertEqual((code, status["count"], status["latest"], status["overdue"]), (200, 0, None, True))
+                self.assertEqual(len(status["problems"]), 1)
+                self.assertIn("ranking archive", status["problems"][0])
+                self.clean(status["problems"][0])
+        self.fake.list_body = b"<EnumerationResults><Blobs/></EnumerationResults>"
+        code, status = self.call(PM_EMAIL, "/api/ranking/publication")
+        self.assertEqual((code, status["count"], status["problems"]), (200, 0, []))
+        self.assertEqual(self.fake.requests("PUT"), [])
+
 
 if __name__ == "__main__":
     unittest.main()

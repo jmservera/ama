@@ -39,7 +39,10 @@ request was sent (lost response, timeout, 5xx) raises
 `ArchiveWriteUncertainError` (a `DurabilityUnconfirmedError`): the API answers 409
 `committed_unconfirmed`, the runner status is `committed_unconfirmed`, nothing is
 rolled back and nothing is claimed as written; repeating the same publication
-confirms it. An unreadable listing is an error, never an empty archive. Selecting
+confirms it. An unreadable listing is an error, never an empty archive: a
+non-200 status, invalid XML, a root other than `EnumerationResults`, a missing
+`Blobs` element or a `Blob` without one plain `Name` are all refused with a fixed
+message, while a valid empty `Blobs` is an empty archive. Selecting
 Blob never falls back to a folder; an unset selector keeps the local folder
 adapter, which is for development and tests only (its fsync is no evidence that a
 container persists a record). Evidence for the Blob path is a mock REST
