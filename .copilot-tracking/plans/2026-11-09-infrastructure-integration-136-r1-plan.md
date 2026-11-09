@@ -18,3 +18,7 @@ One critique executed 2026-11-09 (author, inline): scope is bounded; no conflict
 ## Details
 
 Files: the six artifacts plus `.copilot-tracking/rpi-sessions/2026-11-09/infrastructure-integration-136-r1-state.json`. Success: `git diff --name-only origin/main...HEAD` outside `.copilot-tracking/` is empty.
+
+## Superseded in part by R1C1 (2026-11-09)
+
+Current use: see the [R1C1 amendment](2026-11-09-infrastructure-integration-136-r1c1-amendment.md). R1 artifacts were recorded together in one operation; "Prospective" means intended scope only. The critique above was an author-inline scope assessment, not independent or separately evidenced. R1 adds six files (five Markdown plus one state JSON), not seven. The text above is preserved as history.

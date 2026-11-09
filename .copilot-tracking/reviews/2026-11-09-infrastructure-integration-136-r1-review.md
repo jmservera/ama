@@ -16,3 +16,7 @@ One author Review executed once 2026-11-09; not independent assessment. Original
 ## Outcome
 
 Conformant for a docs-only parent. Open: AC of #136 (stabilization, from-empty, child acceptance, current status) remain unmet; use `Refs #136`. Findings routed: #144 after #1141; #140 provisioning decision.
+
+## Superseded in part by R1C1 (2026-11-09)
+
+Current use: all five #136 criteria are unproven, none ticked: #440 scoped checkpoint, resource coverage with confirmed manual owners, children accepted, from-empty reproducibility, epic status current. See the [R1C1 amendment](../plans/2026-11-09-infrastructure-integration-136-r1c1-amendment.md) and the original [topic record matrix](../plans/2026-11-08-infrastructure-integration-136-topic-record.md). The outcome text above is preserved as history.
