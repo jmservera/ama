@@ -1228,3 +1228,13 @@ checklists but no dedicated retained-sensor fields; the selected tests did not e
 the full sensor-to-Quality-model journey (dated Qualification C1, 2026-11-09). Unmerged
 #1288, #1292, #144, #189, #1295 and #1296 work is excluded. No new defect, closure or
 approval is claimed; the recommendation is bounded continue with closure held.
+
+The [SQL feature-recovery wave checkpoint](../architecture/cutover-evidence-pack.md#sql-feature-recovery-wave-current-main-checkpoint-2026-11-09-refs-440)
+(2026-11-09, `main` `8d6f029c`, the PR 1308 squash, draft, not approved) proves by Git and
+hash that the retained real-SQL results (priority 142, resident 91) imported the same
+SQL implementation files as main, keeps them as historical observed, separates 18 hosted
+check runs plus one status on the PR head, and records fresh targeted local unit results
+at the current tree with one retained load-sensitive SQLite failure. No hosted check
+executing the priority suite on SQL Server was identified. Source SQL merge is not full
+demo acceptance; #1292, #81, #1240 and #440 criteria stay unclosed and the recommendation
+is bounded continue with closure held.

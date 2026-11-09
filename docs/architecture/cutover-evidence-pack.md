@@ -5338,3 +5338,105 @@ An independent readiness review of the candidate head `df4252e7` (verdict approv
 * Superseded scope: "None" for the employee UI, "None for sensors" for the attributed flag, "Quality records and checklists only" for the model snapshot and "no such path exists" for tests. The wording now reads: no employee retained-value UI or sensor-attributed model flag was identified in the inspected paths and a differently named path remains unverified; the registered quality-evidence snapshot contains permitted document metadata, Quality records and checklists but no dedicated retained-sensor fields; the selected tests did not exercise the full sensor-to-Quality-model journey.
 * The dated observation remains an observation of `df8e858b2` and is not rewritten. Later `main` additions (for example `4fcd1934f`, `ad679b96b` and `daf45a46c`) are not freshly observed by this historical record.
 * No approval, tick, closure, live, model, SQL or hosted evidence is added. BRD, PRD and decision record statuses are unchanged. This is correction cycle 1 of 5 for this candidate; no earlier review-correction cycle is recorded in the original records.
+
+## SQL feature-recovery wave current-main checkpoint (2026-11-09, Refs #440)
+
+DRAFT, not approved. This documentation-only record follows the merge of PR 1308, the completed SQL feature-recovery wave for #1292 (traceability references #81 and #440). It pins `main`, proves which source the retained real-SQL results ran, classifies current, historical and hosted evidence separately, records fresh targeted local observations of the current tree, compares findings with existing owners and bounds the recommendation. It changes no source, test, coordinator, workflow, infrastructure, tool or approved document and writes to no issue, board, pull request or remote. Every earlier section, the earlier checkpoints, the old merged #440 branch, `b270` and DF8 records and every historical adverse record are unchanged. A source SQL merge is not full demo acceptance.
+
+### Identities and trigger
+
+| Item | Pinned value (read 2026-11-09) |
+| --- | --- |
+| Working base | `main` `8d6f029cac004506953f36606862168bbe9d9412`, tree `4f3a11a1a42615de66d2e5fe1799a08867ad31c1`, the PR 1308 squash |
+| Later `origin/main` | `ef28d4da42d83b111d48f14df9b70e3c4932a477` at 15:47Z, a rubric-bot commit whose only change from the working base is `.github/rubric/scores/latest.json`; the candidate stays on the working base |
+| PR 1308 | `fix(core): preserve priority ordering and serialize SQL index bootstrap`, merged 2026-11-09T15:30:40Z, head `6ded235e2a7b8ca36edc4414bcd903be8690d4e3`, head tree `02c1a813cd73a3d29b62f0ce1a1143637d2bc5f1`, squash parent `ba5cc74b8b717957b046fd1d28804a989a7f3dd7` (rubric bot, previous checkpoint PR 1309 at `9f9aacc8b`), 311 changed paths, 12 source paths |
+| Hosted checks on the PR head | 19 rollup entries: 18 check runs COMPLETED SUCCESS (15:14:19Z to 15:26:06Z, including `src-core`, `src-api`, `src-agents`, `src-orchestrator`, `src-importer`, `src-namespace`, `mssql`) and the commit status `rubric/score` success (15:21:15Z). Workflow runs `42642580079` (Source projects CI) and `42642580067` (Capstone Rubric Scorer) |
+| Hosted checks on the squash | Source projects CI runs on `pull_request` and `workflow_dispatch` only (`.github/workflows/src-ci.yml:3-6`), so a push to `main` has no Source run. The squash has run `42645390735` (rubric scorer, push, success at the later read) and `42645402788` (graph update, success). That is not source CI for the squash |
+| Previous pin | `df8e858b2` (see the earlier checkpoint); main since then also gained `4fcd1934f` (#1141 queue adapter, Refs #144), `ad679b96b` (#1295), `06e3f2f45`, `daf45a46c` (paper), `9f9aacc8b` (PR 1309, the previous checkpoint). Those are present on main and are not examined here |
+| Documents | BRD 0.21.0 `draft` blob `34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD 0.21.0 `in-review` blob `c788b917bafaede215f326f0efc71e071a687f1c`; ADR 0001 Proposed (`d42fa5c4`), 0002 (`cbe21530`, owner-accepted staff identity decision 2026-10-24), 0003 (`d6064539`), 0004 (`9406c2e7`), 0005 (`4d610335`), 0006 (`956da1a3`), 0007 Proposed (`abb21088`); case study original `0aec2d80`, addendum `28c19242`. All blobs equal the previous pin; no approval is added |
+
+The trigger is the coordinator brief of 2026-11-09 after the merge. The latest #440 comment read is `6740015794` (2026-11-09T12:25:55Z); no newer comment exists. The coordinator's "all 19 hosted checks green" is confirmed here as 18 successful check runs plus one successful status.
+
+### Source equivalence (Git, read-only)
+
+| Command | Result |
+| --- | --- |
+| `git diff --stat 6ded235e2 8d6f029ca -- src infra tools .github/workflows pyproject.toml` | empty: the hosted PR head source equals main for those paths |
+| `git diff --stat 31464e65c 8d6f029ca -- src/core/src src/api/src` | empty: the production source at the E2 real-SQL frozen head equals main |
+| `git diff 31464e65c 6ded235e2 -- src/core/tests/test_priority_order.py` | 3 insertions and 1 deletion: the fake MSSQL driver in the `MssqlBeginRecovery` fixture became a `types.ModuleType`, a non-SQL fixture |
+| `sha256sum` of `sqlstore.py` and `mssqlstore.py` at `8d6f029ca` | `0b0caf62802d...` and `1825dc5f2c6d...`, equal to the import provenance recorded by the final real-SQL run |
+
+This proves which production source the retained SQL runs imported; it does not make their environment, logs or image current, and the changed test line and the tests, README and test guard are not claimed identical to the SQL-run tree beyond the commands above.
+
+### Requirement trace (document-qualified)
+
+| Concern | Source |
+| --- | --- |
+| Stock Prioritisation recommendation is advice for human review, no consequential ranking change | original case study Stock Prioritisation L2 and draft PRD `PR-007`, as cited by the #1292 issue body (attributed to the issue, not re-searched in the PRD here) |
+| An unconfirmed-order recommendation needs a named data owner before action; accept stays a named human decision | `src/core/src/zava_forward/core/store.py:939-947` (`ORDER_NOTE`, `_order_unresolved`), accept or edit raises `PermissionError(ORDER_NOTE)` at `store.py:1060`, reject and ordinary case controls stay available |
+| Real AI per record is proposed against reviewed, with a labelled rule fallback | BRD FR-044 and PRD FR-044 (as traced in the previous checkpoint); the priority panel labels "Written by AI" or "Written by rules" with the fallback reason (`src/api/src/zava_forward/api/web/app.js:694`) |
+
+BRD and PRD functional requirement numbers collide in this repository, so each trace names its document. The PRD `PR-007` identifier is attributed to the #1292 issue body.
+
+### SQL wave behavior read from source (at `8d6f029ca`)
+
+| Behavior | Where (source) | Not shown here |
+| --- | --- | --- |
+| Immutable creation ordinal, zero ordinals repaired under the write section and never cached; legacy heuristic ordinals assessed once, the newest record of an employee not provably latest flagged `order_confirmed=False`, not actionable | `sqlstore.py:350-393`, `595-`; `store.py:939-947`, `1035` | Behavior on a deployed or private database; deployment parity |
+| SQL Server: `created_ord BIGINT NOT NULL DEFAULT 0`, ordinal indexes, `_abandon_partial_begin` rolls back or discards the connection when BEGIN fails mid-way | `mssqlstore.py:46`, `181`, `199`, `314` | Lock duration at scale and Azure SQL behavior |
+| Index bootstrap serialized under the write transaction (fix for the reproduced `ix_recs_seq` race) | `mssqlstore.py:323` (check-then-create index statements under the write lock) | Production concurrency |
+| Committed or uncertain creation maps to HTTP 409 `outcome=committed`; the UI latches `pending` and `checkHistory`, hides the repeat control and shows a status note | `server.py:1242-1268`; `app.js:677-681`, `689`, `695-707` | A rendered browser observation in this checkpoint |
+
+Mocks, rules and fixtures are not actual AI: the SQL-wave tests use a database and fakes, and no provider answer is observed or claimed. The UI states whether the order was written by AI or by rules at runtime; which applies on a deployed service is unknown here.
+
+### Evidence by class
+
+| Class | Items |
+| --- | --- |
+| Local observed (this checkpoint, current tree `8d6f029ca`) | Git identities and equivalence; three Core and API unit selections below with import origins |
+| Local observed, historical (source-equivalent, environment not re-proved) | Real SQL Server 2022 (16.0.4305.5 RTM-CU27-GDR, image `sha256:cf8f0ab2ebe6...`, one nonqueued `flock -n` on the shared heavy lock): `test_priority_order` 142 OK with no skip in 536.659s (`e2-sql-admission2-140248-2867281`, head `a20472734`, stderr sha256 prefix `8093a31f`); `MssqlResidentControls` 91 OK with 1 pre-existing skip (`e2-sql-admission-134433-2845787`, head `fa74e8ed4`, `848b671c`; the same suite at `e1-sql-admission2-132322-2818937` also 91 OK, `e9321001`). The tested `mssqlstore.py` is byte-identical |
+| Retained adverse (kept, external raw files) | E1 unskipped out-of-tree rerun FAIL, `ix_recs_seq` already exists (`r2repro`, exit 1, `910cee9a`); first E2 priority run exit 1, 142 tests FAILED errors=1, `_Cursor` not iterable (`f576b906`) |
+| Hosted observed (PR head `6ded235e2`, source-equivalent to main) | `src-core` 2594 tests OK, 301 skips; `mssql` job `Ran 306 tests in 339.301s`, `OK (skipped=1)`; the other named checks success. The `mssql` job selects `test_mssqlstore`, `test_lawstore.MssqlStoreTests`, the five `test_assistants.Mssql*` classes and `test_resident_aoai_sql.AccountingSqlTests` (`.github/workflows/src-ci.yml:326-`) |
+| Author-reported, not reproduced here | E4 priority suite 142 with 65 opt-in skips, Core mypy 275 files, lint and the DOM history harness; independent Functional approve with zero findings on the 13 E4 incremental paths (earlier assessments requested changes, see below) |
+| Implemented, unverified | SQL index bootstrap, ordinal repair and BEGIN recovery on a deployed or Azure SQL database; lock duration at scale; the committed-creation UI in a rendered browser at this tree |
+| Deferred | Production compliance, legal and security hardening, WORM and migration approvals, live model use, named approvals |
+| Blocked | Unmerged #1288, #189, #1258, #1259, #136 and #1298 functionality (excluded) |
+| Unknown | Deployed service parity with main, real-provider behavior of the priority suggestion, and the named data owner process for unresolved-order records |
+
+Hosted limit found in the log and workflow: no test named for priority appears in the hosted `mssql` job selection or output, and the priority real-SQL tests need a task-owned manifest (`ZF_SQL_TASK_MANIFEST`, `src/core/tests/sqlguard.py`). No hosted check executing `test_priority_order` on SQL Server was identified in the inspected workflow selection and job log. The real-SQL evidence for the new suite is therefore the retained local record only. The hosted log also prints `Stock/technical SQL recovery failed` tracebacks that are injected-fault test output inside a run that reported OK, not a failed check. Whether `src-core` discovery includes the priority file was not read from the per-test list and remains unverified.
+
+### Current observations (this checkpoint)
+
+Commands ran at `8d6f029ca` on Python 3.12.3 in an owned virtual environment created with `mktemp -d` and editable installs of this worktree's `src/core`, `src/agents` and `src/api`, with `ZF_TEST_MSSQL` and `ZF_SQL_TASK_MANIFEST` unset and no Azure, model, credential or private input. Import origins (log prefix `e15167d5`): the three `zava_forward` packages are namespace packages (`__file__` is `None`); their `__path__` entries and `sqlstore`, `mssqlstore`, `server` and `queue_azure` module files are under this worktree; the SQL driver `mssql_python` resolves to the owned venv. Logs are outside the repository in `/home/azureuser/source/ama-demo-wt/logs-440-sqlwave/` and are not committed.
+
+| Command (working directory) | Producer exit | Result |
+| --- | --- | --- |
+| `PYTHONPATH=tests python -m unittest -v tests.test_priority_order tests.test_resident_decisions tests.test_sqlstore tests.test_journey_store` (`src/core`), first run, log prefix `f3b54e83` | 1 | 421 tests, 1 failure, 158 skipped: `SqliteLegacyEdges.test_large_legacy_backfill_is_linear_and_survives_concurrent_openers`, `AssertionError: [OperationalError('database is locked')] != []` (`test_priority_order.py:734`). Retained unchanged. It ran at the same time as the API selection on a host at load average 5.4 |
+| Same test alone, three runs (`core-sqlite-concurrent-r1..r3`, prefixes `7c26c5be`, `67834eb7`, `e70288eb`) | 0, 0, 0 | 1 test OK each |
+| Same four-module command, serial rerun, log prefix `3413ad0c` | 0 | 421 tests OK, 158 skipped (156 "opt-in owned loopback SQL Server", 1 "JSON file rollback only", 1 "Explicit isolated synthetic Azure SQL database required"); `test_priority_order` 77 OK and 65 skipped, matching the 142 reported in the PR 1308 body |
+| `PYTHONPATH=../core/tests:../agents/tests:tests python -m unittest -v tests.test_case_journey tests.test_auth tests.test_entra_authoritative tests.test_role_endpoint_inventory tests.test_role_matrix tests.test_assistants` (`src/api`), log prefix `8f630cfb` | 0 | 263 tests OK, 58 skipped ("needs disposable SQL Server (ZF_TEST_MSSQL=1)"); `test_case_journey` 31 OK |
+
+These runs show, at this exact tree, priority-order, resident-decision, store and journey mechanics on SQLite and fakes, the ingress-principal auth and role-matrix contracts, and the case-journey and assistant contract mechanics. They do not show SQL Server behavior: all 156 SQL-class skips and the 58 API skips are not SQL evidence, and no SQL admission was made because the production SQL source is byte-equal to the retained real-SQL runs and a missing or busy admission would only block a SQL row. They do not show a browser rendering, a live or model call, or any acceptance. No full gate, browser, Azure, provider, job or private-data run was made.
+
+### Findings, owners and gates
+
+| Finding | Severity and status | Existing owner and handling |
+| --- | --- | --- |
+| F1 Hosted CI does not execute the new priority real-SQL suite; its evidence is local and historical | Medium, gap, not a defect in behavior | #1292 criterion 3 (task-owned SQL, zero skips) and the open #1297 (skip and dispatch contract, sensor scope, adjacent not identical). No new issue; the owners decide whether a hosted or admitted rerun is required |
+| F2 One SQLite concurrent-opener test failed once ("database is locked") under parallel local load and passed four times in isolation or serial | Low, unproven cause: the store sets `PRAGMA busy_timeout=5000` (`sqlstore.py:224`, `258`) and the test also asserts under 20s | Existing #1292 test. A load-sensitive timing assertion is suspected, not shown. No fix or issue here; recorded so a recurrence on hosted or local runs is recognised |
+| F3 #1292 stays OPEN with its criteria unticked (read 2026-11-09, last updated 10:33Z); PR 1308 used `Refs` | Status | Merge is not closure. The independent history is retained: C2 requested changes (5 High, 4 Medium, 2026-11-08T21:57Z), C4 Revise (1 High, 11 Medium, 2026-11-08T23:29Z), `384d149ab` requested changes (1 High, 1 Medium, 2026-11-09T10:33Z) |
+| F4 No new defect reproduced, no source change proposed | n/a | If one were confirmed this record would need its reproduction, severity, minimum fix, test and requirement dependencies |
+
+The negative statements above are limited to the inspected paths: the workflow selection, the `mssql` job log, the Core and API test selections named here and the source files cited. A differently named path remains unverified.
+
+### Exclusions
+
+Unmerged and excluded: #1288, #189, #1258, #1259, #136 and #1298 functionality; any actual provider, dataset or private captured-readings path; WORM, migration and legal approval. Their heads and outcomes were not observed here. #1141 and #1295 are merged and present on main but are not examined.
+
+### Recommendation and resume conditions
+
+Proposed bounded CONTINUE through the existing owners with a HOLD on every closure claim. No fix, pivot, deferral or policy relaxation is inferred or granted; a bounded fix is proposed only if an owner confirms F1 or recurrence of F2 as a defect. Affected closure that stays unproven: #1292, the #81 epic and its #1240 integration, the #440 triage and HVE Builder behavior-change criteria, and the parent epic #123. Nothing is ticked or closed.
+
+Dependent expansion that relies on the SQL ordering wave (for example the #1240 lifecycle integration evidence) resumes when all hold: (1) an independent exact-head assessment of this record exists; (2) the owners decide whether hosted or one nonqueued owned SQL admission must execute `test_priority_order` for the current main, and any such run records exits, counts, skips and the source identity; (3) F2 is diagnosed or its recurrence is accepted by the owner; (4) the named data-owner confirmation of unresolved-order records is shown to exist as a process; (5) deployed parity and a rendered browser observation of the committed-creation notice are obtained under the existing cost and release controls.
+
+Limits: single-session authored record with no independent exact-head review and no hosted CI for the commit that carries it; the hosted state for the squash was read at 15:47Z; author-reported items are labelled; the check count came from the status rollup and the commit status API.
