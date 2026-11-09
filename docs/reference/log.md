@@ -11269,3 +11269,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Merged `main` `1a84b3b0054990262a0df0625d95e3f545d2739a` into the local candidate branch with an ordinary merge (Git and Markdown only). Both sides' pack sections, index paragraphs and log entries are kept; no row deleted, no earlier count rewritten. Added a dated current-target binding to the [priority SQL subsection](../architecture/cutover-evidence-pack.md#current-main-priority-sql-regression-validation-2026-11-09-refs-1292): `src`, `tools`, `infra` and workflow trees equal the executed source, so the earlier 148-test, 67-on-SQL-Server, 0-skip run is not repeated.
 * Not claimed: root cause of the unknown historical startup failure, the old-behavior-fails half of AC3, whole-SQL acceptance, a full-gate waiver, hosted CI, independent review of this commit, or any criterion tick or closure. The controls and photo observations and the #1314 qualification remain historical main records.
+
+## [2026-11-09] update | Issue 1292 current-main priority SQL Q1 qualification (Refs #1292)
+
+* Added a dated [Q1 qualification](../architecture/cutover-evidence-pack.md#current-main-priority-sql-regression-validation-2026-11-09-refs-1292) after the same-reviewer assessment: the verifier gates test outcomes only and cleanup was observed separately; limits on the timeout bound (C4) and local image and endpoint checks (C5); the seven Applied dispositions are prior record. Original claims are kept, not blessed.
+* Not claimed: a new defect or fix, an immutable runtime image, endpoint authentication, a universal timeout bound, the startup cause, whole-SQL acceptance, a full-gate waiver, or any criterion tick.

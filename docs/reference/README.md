@@ -1255,6 +1255,9 @@ validation on a disposable SQL Server: the priority module (142 tests) plus the 
 resident-control methods and their SQLite and in-memory parity, 148 tests, 67 on SQL Server,
 0 skips and 0 failures at main `ba71894bb`. It does not retire the unknown startup cause,
 accept SQL as a whole, waive a gate or tick any criterion; E5 stays unspent.
+A dated qualification (Q1) in that subsection corrects the attribution of cleanup checks
+(separately observed, not enforced by the verifier) and states the timeout-bound and local
+image or endpoint limits of the run, without rewriting the original claims.
 
 A dated #1314 comparison-count qualification in the same pack restates, from pinned Git
 ranges, the final C2 comparison (17 paths, 700 additions, 0 deletions against `ef28d4da4`,

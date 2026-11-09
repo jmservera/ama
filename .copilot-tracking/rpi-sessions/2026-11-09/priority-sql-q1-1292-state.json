@@ -1,25 +1,66 @@
 {
  "task_id": "1292-current-main-sql-q1-1109",
  "task_slug": "priority-sql-q1-1292",
- "parent_task": {"task_id": "1292-current-main-sql-mainprep-1109", "task_slug": "priority-sql-mainprep-1292"},
+ "parent_task": {
+  "task_id": "1292-current-main-sql-mainprep-1109",
+  "task_slug": "priority-sql-mainprep-1292"
+ },
  "mode": "automatic",
- "active_phase": "Implement",
- "status": "active",
+ "active_phase": "Follow-up",
+ "status": "completed",
  "session_status": "running",
  "artifact_paths": {
   "research": ".copilot-tracking/research/2026-11-09-priority-sql-q1-1292-research.md",
   "plan": ".copilot-tracking/plans/2026-11-09-priority-sql-q1-1292-plan.md",
   "details": ".copilot-tracking/details/2026-11-09-priority-sql-q1-1292-details.md",
   "critique": ".copilot-tracking/plans/2026-11-09-priority-sql-q1-1292-critique.md",
-  "changes": null,
-  "review": null
+  "changes": ".copilot-tracking/changes/2026-11-09-priority-sql-q1-1292-changes.md",
+  "review": ".copilot-tracking/reviews/2026-11-09-priority-sql-q1-1292-review.md"
  },
  "confirmed_decisions": [
-  {"decision": "Evidence-only docs addendum; no SQL rerun, source, harness, E5, push", "status": "done", "evidence": "coordinator brief"},
-  {"decision": "Research executed, Ready", "status": "done", "evidence": "research record"},
-  {"decision": "Critique executed once: Revise F1 to F3 applied", "status": "done", "evidence": "critique record"}
+  {
+   "decision": "Evidence-only docs addendum; no SQL rerun, source, harness, E5, push",
+   "status": "done",
+   "evidence": "coordinator brief"
+  },
+  {
+   "decision": "Research executed, Ready",
+   "status": "done",
+   "evidence": "research record"
+  },
+  {
+   "decision": "Critique executed once: Revise F1 to F3 applied",
+   "status": "done",
+   "evidence": "critique record"
+  },
+  {
+   "decision": "Implement executed: Q1 addendum, index sentence, log entry; docs only",
+   "status": "done",
+   "evidence": "changes record"
+  },
+  {
+   "decision": "Review executed once (authored, not independent): conformant, RV-1..4 routed",
+   "status": "done",
+   "evidence": "review record"
+  }
  ],
  "blockers": [],
- "next_action": {"phase": "Implement", "action": "Add dated qualification addendum, index sentence and log entry"},
- "prioritized_follow_ups": []
+ "next_action": {
+  "phase": "Follow-up",
+  "action": "Coordinator same-reviewer bounded read, AC mapping, publication decision; no rerun, no E5"
+ },
+ "prioritized_follow_ups": [
+  {
+   "rank": 1,
+   "task": "Same-reviewer bounded read of mainprep plus Q1 delta",
+   "rationale": "independent review required",
+   "evidence": "review RV-1"
+  },
+  {
+   "rank": 2,
+   "task": "Coordinator literal AC mapping",
+   "rationale": "nothing ticked here",
+   "evidence": "review RV-3"
+  }
+ ]
 }
