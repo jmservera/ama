@@ -84,9 +84,21 @@ function simulationPanel() {
     const proposal = s.proposal;
     if (proposal) {
       kids.push(h("h3", {}, "Last model proposal (unapproved)"));
-      kids.push(h("p", {}, `Request ${proposal.digest.slice(0, 16)}. It cited ${proposal.readings.length} stored readings. Status: unapproved proposal. It is not accepted and changes no case. Use the ordinary quality check.`));
+      const supplied = proposal.readings || [];
+      const cited = proposal.cited || [];
+      const findings = (proposal.output && proposal.output.findings) || [];
+      const citedText = cited.length === 0
+        ? "It cited no sensor readings."
+        : `It cited ${cited.length} of them: ${cited.map((r) => r[0]).join(", ")}.`;
+      kids.push(h("p", {}, `Request ${proposal.digest.slice(0, 16)}. It was given ${supplied.length} stored readings. ${citedText} Status: unapproved proposal. It is not accepted and changes no case. Use the ordinary quality check.`));
+      if (supplied.length) {
+        kids.push(h("details", {}, h("summary", {}, `Readings supplied with the request (${supplied.length})`),
+          h("ul", {}, supplied.map((r) => h("li", {}, r[0])))));
+      }
       kids.push(h("p", {}, proposal.output.summary));
-      kids.push(h("ul", {}, proposal.output.findings.map((f) => h("li", {}, `${f.text} (${f.citations.join(", ")})`))));
+      kids.push(findings.length === 0
+        ? h("p", { role: "status" }, "The model gave no findings.")
+        : h("ul", {}, findings.map((f) => h("li", {}, `${f.text} (${f.citations.join(", ")})`))));
     }
     body.replaceChildren(...kids, controls);
   };

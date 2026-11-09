@@ -16,6 +16,7 @@ import os
 import re
 import shutil
 import threading
+import time
 import uuid
 from http.server import ThreadingHTTPServer
 from pathlib import Path
@@ -286,6 +287,67 @@ def main(axe_path: Path | None = None, out: Path | None = None):
                 sim.get_by_role("button", name=re.compile("accept", re.I)).count() == 0,
             )
             scan(page, "simulation panel")
+
+            def seed(findings, name):
+                supplied = app.simulation.compose()["readings"]
+                body = dict(
+                    output=dict(summary="Seeded.", findings=findings, unknowns=[]),
+                    model="seed",
+                    request_digest=name * 16,
+                    readings=supplied,
+                )
+                with app.simulation._connect() as db:
+                    db.execute(
+                        "INSERT INTO sim_proposals (digest,state,body,created) VALUES (?,?,?,?)",
+                        (name * 16, simulation_lane.PROPOSAL_STATE, json.dumps(body), time.time()),
+                    )
+                return supplied
+
+            loads = iter(range(100))
+
+            def fresh_panel():
+                page.goto(base + f"/app?sim{next(loads)}#/case/ZF-1?tab=ai")
+                expect(sim).to_contain_text("Status: unapproved proposal")
+                return sim.inner_text()
+
+            first_cited = fresh_panel()
+            check(
+                "the stored proposal says how many readings it was given and how many it cited",
+                "It was given 12 stored readings." in first_cited
+                and re.search(r"It cited [12] of them", first_cited) is not None,
+            )
+            supplied = seed([dict(text="Only the home.", citations=["source:home"])], "a")
+            text = fresh_panel()
+            check(
+                "a proposal citing only the home reports zero cited sensor readings",
+                "It was given 12 stored readings. It cited no sensor readings." in text,
+            )
+            seed([], "b")
+            text = fresh_panel()
+            check(
+                "an empty finding list is stated, not shown as an empty list",
+                "The model gave no findings." in text and "It cited no sensor readings." in text,
+            )
+            one = f"sensor:{simulation_lane.SENSOR_ID}:{supplied[3][0]}"
+            seed([dict(text="One of twelve.", citations=[one])], "c")
+            text = fresh_panel()
+            check(
+                "one cited reading of twelve is reported as one of twelve",
+                "It was given 12 stored readings. It cited 1 of them: " + supplied[3][0] in text,
+            )
+            sim.locator("details summary").click()
+            expect(sim.locator("details li")).to_have_count(12)
+            before = sim.inner_text()
+            app.simulation.clock = lambda: time.time() + 3600
+            app.simulation.observe()
+            app.simulation.clock = time.time
+            rotated = fresh_panel()
+            check(
+                "the historic request keeps its supplied and cited readings after rotation",
+                "It was given 12 stored readings. It cited 1 of them: " + supplied[3][0] in rotated
+                and before.count(supplied[3][0]) >= 1,
+            )
+            scan(page, "simulation panel with supplied and cited readings")
             page = browser.new_page()
             page.on("pageerror", lambda e: errors.append(str(e)))
             page.route(

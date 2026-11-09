@@ -525,6 +525,29 @@ class DispatchGate:
             pass  # The row expires on the database clock and the send-by deadline has passed.
 
 
+class CallTicket:
+    """One admitted direct call. end() settles the durable reservation once and releases the physical slot once."""
+
+    def __init__(self, service, attempt, reason):
+        self.service, self.attempt, self.reason = service, attempt, reason
+        self.lock, self.done = threading.Lock(), attempt is None
+
+    def end(self, envelope):
+        with self.lock:
+            if self.done:
+                return
+            self.done = True
+            try:
+                with self.service.transaction() as db:
+                    actual, reserved = self.service._settle(db, self.attempt, envelope)
+                    self.service.event(db, self.attempt.split(":")[0], kind="direct-call-completed",
+                                       outcome=str(envelope.get("outcome", "unknown"))[:40], actual_tokens=actual,
+                                       reservation_liability=reserved if actual is None else actual)
+            finally:
+                # An unsettled attempt keeps its durable slot and reservation until its lease expires.
+                self.service.call_slots.release()
+
+
 class Affected(list):
     """Affected proposals with the full count, so a capped list is never mistaken for the whole set."""
 
@@ -1338,28 +1361,20 @@ class Assistants:
                                       (task["capability"], task["case_id"])).fetchone()
                     self._enqueue(db, task["capability"], json.loads(row[0]), "proactive", PURPOSE, (slot[0] if slot else 0) + 1)
                 return None
-            active = db.execute("SELECT COUNT(*) FROM assistant_attempts WHERE active_until>?", (now,)).fetchone()[0]
-            if active >= l.active_calls:
+            fence = task["fence"] + 1
+            refusal = self._reserve(db, now, f"{tid}:{fence}", tid, fence)
+            if refusal == "active":
                 reason = "Waiting for a shared active-call slot; ordinary manual case work remains available."
                 if task["reason"] != reason:
                     task["reason"] = reason
                     db.execute("UPDATE assistant_tasks SET body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
                     self.event(db, tid, kind="throttled", reason=reason)
                 return None
-            pool = db.execute("SELECT calls,tokens,expires,used_calls,reserved_tokens FROM assistant_allowance WHERE id=?", (l.pool,)).fetchone()
-            if pool is None:
-                db.execute("INSERT INTO assistant_allowance (id,calls,tokens,expires,used_calls,reserved_tokens) VALUES (?,?,?,?,0,0)",
-                           (l.pool, l.calls, l.tokens, l.expiry))
-                pool = (l.calls, l.tokens, l.expiry, 0, 0)
-            # Same authority cannot extend expiry or increase allowance by restarting/config changes.
-            calls, tokens, expiry = min(pool[0], l.calls), min(pool[1], l.tokens), min(pool[2], l.expiry)
-            db.execute("UPDATE assistant_allowance SET calls=?,tokens=?,expires=? WHERE id=?", (calls, tokens, expiry, l.pool))
-            if expiry <= now or pool[3] >= calls or pool[4] + l.reservation > tokens:
+            if refusal == "pool":
                 task["reason"] = "Shared durable allowance exhausted/expired; use manual route."
                 db.execute("UPDATE assistant_tasks SET state='disabled',body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
                 self.event(db, tid, kind="disabled", reason="Shared durable allowance exhausted/expired; use manual route.")
                 return None
-            fence = task["fence"] + 1
             task["reason"] = None
             task["claim_epoch"] = self.continuity(db)["epoch"]
             # Only an explicit absence of a person's request is proactive; legacy or unclear tasks are not.
@@ -1372,12 +1387,81 @@ class Assistants:
                                 (canonical(task), owner, fence, now + l.lease, now, tid, task["fence"], task["revision"]))
             if result.rowcount != 1:
                 raise ConflictError(tid)
-            db.execute("UPDATE assistant_allowance SET used_calls=used_calls+1,reserved_tokens=reserved_tokens+? WHERE id=?", (l.reservation, l.pool))
-            db.execute("INSERT INTO assistant_attempts (id,task_id,fence,pool,reserved,actual,outcome,active_until) VALUES (?,?,?,?,?,NULL,'reserved',?)",
-                       (f"{tid}:{fence}", tid, fence, l.pool, l.reservation, now + l.lease))
             self.event(db, tid, kind="claimed", owner=owner, fence=fence, reservation=l.reservation,
                        authority_reference=l.authority, trigger=task["dispatch"]["trigger"])
             return self._row(db, tid)
+
+    def _reserve(self, db, now, attempt, tid, fence):
+        """Inside the caller's transaction: take one durable active-call slot and debit one call plus its token
+        reservation from the shared allowance. Returns None on success, else "active" or "pool"."""
+        l = self.limits
+        active = db.execute("SELECT COUNT(*) FROM assistant_attempts WHERE active_until>?", (now,)).fetchone()[0]
+        if active >= l.active_calls:
+            return "active"
+        pool = db.execute("SELECT calls,tokens,expires,used_calls,reserved_tokens FROM assistant_allowance WHERE id=?", (l.pool,)).fetchone()
+        if pool is None:
+            db.execute("INSERT INTO assistant_allowance (id,calls,tokens,expires,used_calls,reserved_tokens) VALUES (?,?,?,?,0,0)",
+                       (l.pool, l.calls, l.tokens, l.expiry))
+            pool = (l.calls, l.tokens, l.expiry, 0, 0)
+        # Same authority cannot extend expiry or increase allowance by restarting/config changes.
+        calls, tokens, expiry = min(pool[0], l.calls), min(pool[1], l.tokens), min(pool[2], l.expiry)
+        db.execute("UPDATE assistant_allowance SET calls=?,tokens=?,expires=? WHERE id=?", (calls, tokens, expiry, l.pool))
+        if expiry <= now or pool[3] >= calls or pool[4] + l.reservation > tokens:
+            return "pool"
+        db.execute("UPDATE assistant_allowance SET used_calls=used_calls+1,reserved_tokens=reserved_tokens+? WHERE id=?", (l.reservation, l.pool))
+        db.execute("INSERT INTO assistant_attempts (id,task_id,fence,pool,reserved,actual,outcome,active_until) VALUES (?,?,?,?,?,NULL,'reserved',?)",
+                   (attempt, tid, fence, l.pool, l.reservation, now + l.lease))
+        return None
+
+    def _settle(self, db, attempt, envelope):
+        """Inside the caller's transaction: settle an attempt from its provider envelope. Known usage within the
+        reservation refunds the difference; otherwise the whole reservation stays as liability. The durable slot is
+        released unless the outcome is uncertain (timeout or provider unavailable). Returns (actual, reserved)."""
+        usage = envelope.get("usage")
+        actual = usage.get("total_tokens") if isinstance(usage, dict) else None
+        row = db.execute("SELECT pool,reserved FROM assistant_attempts WHERE id=?", (attempt,)).fetchone()
+        if type(actual) is int and 0 <= actual <= row[1]:
+            db.execute("UPDATE assistant_allowance SET reserved_tokens=reserved_tokens-? WHERE id=?", (row[1] - actual, row[0]))
+        else:
+            actual = None
+        db.execute("UPDATE assistant_attempts SET actual=?,outcome=? WHERE id=?",
+                   (actual, str(envelope.get("outcome", "unknown"))[:40], attempt))
+        if envelope.get("outcome") not in ("timeout", "provider-unavailable"):
+            db.execute("UPDATE assistant_attempts SET active_until=0 WHERE id=?", (attempt,))
+        return actual, row[1]
+
+    def begin_call(self, capability, chars, call_id):
+        """Admit one bounded direct provider call under the same operator authority, durable allowance and
+        active-call slots as ordinary assistant tasks. The physical slot is taken first without waiting; then one
+        transaction applies the disabled/expiry/schema/release checks and the atomic reserve and debit. A refusal
+        happens before any meter, token or socket and carries a reason; otherwise the ticket must be ended."""
+        if not self.call_slots.acquire(blocking=False):
+            return CallTicket(self, None, "Waiting for a shared active-call slot; use the manual route.")
+        attempt = f"{call_id}:1"
+        try:
+            with self.transaction() as db:
+                reason = self.disabled(db, capability)
+                if not reason and chars > self.limits.input_chars:
+                    reason = "Input exceeds limit; use the manual route."
+                if not reason:
+                    refusal = self._reserve(db, self.now(db), attempt, call_id, 1)
+                    reason = {
+                        "active": "Waiting for a shared active-call slot; use the manual route.",
+                        "pool": "Shared durable allowance exhausted/expired; use the manual route.",
+                    }.get(refusal)
+                if not reason:
+                    self.event(db, call_id, kind="direct-call-claimed", capability=capability,
+                               reservation=self.limits.reservation, authority_reference=self.limits.authority)
+        except (self.store.dberror, OSError):
+            self.call_slots.release()
+            return CallTicket(self, None, "Operator authority store unavailable; use the manual route.")
+        except BaseException:
+            self.call_slots.release()
+            raise
+        if reason:
+            self.call_slots.release()
+            return CallTicket(self, None, reason)
+        return CallTicket(self, attempt, None)
 
     REPLACEMENTS = 3
 
@@ -1464,20 +1548,9 @@ class Assistants:
                                 (canonical(current), state, now + delay, task["id"], task["owner"], task["fence"], now))
             if result.rowcount != 1:
                 return False
-            usage = envelope.get("usage")
-            actual = usage.get("total_tokens") if isinstance(usage, dict) else None
-            attempt = db.execute("SELECT pool,reserved FROM assistant_attempts WHERE id=?", (f"{task['id']}:{task['fence']}",)).fetchone()
-            if type(actual) is int and 0 <= actual <= attempt[1]:
-                db.execute("UPDATE assistant_allowance SET reserved_tokens=reserved_tokens-? WHERE id=?",
-                           (attempt[1] - actual, attempt[0]))
-            else:
-                actual = None
-            db.execute("UPDATE assistant_attempts SET actual=?,outcome=? WHERE id=?",
-                       (actual, str(envelope.get("outcome", "unknown"))[:40], f"{task['id']}:{task['fence']}"))
-            if envelope.get("outcome") not in ("timeout", "provider-unavailable"):
-                db.execute("UPDATE assistant_attempts SET active_until=0 WHERE id=?", (f"{task['id']}:{task['fence']}",))
+            actual, reserved = self._settle(db, f"{task['id']}:{task['fence']}", envelope)
             self.event(db, task["id"], kind="completed", state=state, fence=task["fence"], envelope=envelope,
-                       actual_tokens=actual, reservation_liability=attempt[1] if actual is None else actual,
+                       actual_tokens=actual, reservation_liability=reserved if actual is None else actual,
                        output=output, source_signature=task["source_signature"],
                        capability=task["capability"], version=task["version"],
                        financial_attribution=current.get("financial_attribution"))

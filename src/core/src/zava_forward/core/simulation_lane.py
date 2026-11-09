@@ -25,8 +25,9 @@ import tempfile
 import time
 from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
+from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
-from typing import Any
+from typing import Any, Protocol
 
 from . import ai_consumption, assistants, sensor_view
 from .sensor_consumer import ExercisePolicy, Observation, SensorConsumer, SensorControl
@@ -123,6 +124,23 @@ DDL = (
 )
 
 
+class Ticket(Protocol):
+    """One admitted call: a refusal reason, or an obligation to end it with the envelope."""
+
+    reason: str | None
+
+    def end(self, envelope: Mapping[str, Any]) -> None: ...
+
+
+@dataclass(frozen=True)
+class Admission:
+    """The operator authority the lane runs under: late hold check, bounds and call admission."""
+
+    hold: Callable[[], str | None]
+    bounds: Callable[[], tuple[int, int]]
+    begin: Callable[[int, str], Ticket]
+
+
 class Unavailable(RuntimeError):
     """The lane is not configured or its store or key is unsafe; callers show the manual route."""
 
@@ -151,8 +169,14 @@ def _read_key(path: str) -> bytes:
         raise Unavailable("key-unavailable") from error
     if not stat.S_ISREG(info.st_mode) or info.st_mode & 0o077 or info.st_size != KEY_BYTES:
         raise Unavailable("key-unsafe")
-    with open(path, "rb") as handle:
-        return handle.read(KEY_BYTES)
+    try:
+        with open(path, "rb") as handle:
+            key = handle.read(KEY_BYTES + 1)
+    except OSError as error:
+        raise Unavailable("key-unreadable") from error
+    if len(key) != KEY_BYTES:
+        raise Unavailable("key-unsafe")
+    return key
 
 
 def provision(store_path: str, key_path: str, working: tuple[str, ...] = ()) -> None:
@@ -199,11 +223,14 @@ class Lane:
 
     def __init__(self, store: SqlStore, key: bytes, clock: Callable[[], float] = time.time) -> None:
         self.store, self.key, self.clock = store, key, clock
-        db = store.assistant_connection()
         try:
-            meta = dict(db.execute("SELECT key,value FROM sim_meta").fetchall())
-        finally:
-            db.close()
+            db = store.assistant_connection()
+            try:
+                meta = dict(db.execute("SELECT key,value FROM sim_meta").fetchall())
+            finally:
+                db.close()
+        except sqlite3.Error as error:
+            raise Unavailable("store-not-simulation") from error
         if meta.get("namespace") != NAMESPACE or not meta.get("store_id"):
             raise Unavailable("store-not-simulation")
         self.store_id: str = meta["store_id"]
@@ -223,25 +250,33 @@ class Lane:
         if any(w and _same_path(path, w) for w in working) or _same_path(path, key_path):
             raise Unavailable("store-not-separate")
         key = _read_key(key_path)
-        probe = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
         try:
-            ids = [r[0] for r in probe.execute("SELECT id FROM cases")]
-            tables = {
-                r[0] for r in probe.execute("SELECT name FROM sqlite_master WHERE type='table'")
-            }
+            probe = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+            try:
+                ids = [r[0] for r in probe.execute("SELECT id FROM cases")]
+                tables = {
+                    r[0] for r in probe.execute("SELECT name FROM sqlite_master WHERE type='table'")
+                }
+            finally:
+                probe.close()
         except sqlite3.Error as error:
             raise Unavailable("store-not-simulation") from error
-        finally:
-            probe.close()
         if ids != [HOME_ID] or not {"sim_meta", "sim_seals", "sim_proposals"} <= tables:
             raise Unavailable("store-not-simulation")
-        store = SqlStore(
-            path,
-            path,
-            docs_dir=os.path.join(os.path.dirname(path), "sim-docs"),
-            digest_dir=os.path.join(os.path.dirname(path), "sim-digests"),
-        )
-        return cls(store, key, clock)
+        try:
+            store = SqlStore(
+                path,
+                path,
+                docs_dir=os.path.join(os.path.dirname(path), "sim-docs"),
+                digest_dir=os.path.join(os.path.dirname(path), "sim-digests"),
+            )
+        except (sqlite3.Error, OSError) as error:
+            raise Unavailable("store-unavailable") from error
+        try:
+            return cls(store, key, clock)
+        except Unavailable:
+            store.db.close()
+            raise
 
     def close(self) -> None:
         self.store.db.close()
@@ -379,37 +414,58 @@ class Lane:
             ).fetchone()
         if not row:
             return None
-        return dict(digest=row[0], state=row[1], created=row[3], **json.loads(row[2]))
+        stored = json.loads(row[2])
+        supplied = stored.get("readings") or []
+        named = {
+            c
+            for f in (stored.get("output") or {}).get("findings", [])
+            for c in f.get("citations", [])
+            if isinstance(c, str)
+        }
+        cited = [r for r in supplied if f"sensor:{SENSOR_ID}:{r[0]}" in named]
+        return dict(digest=row[0], state=row[1], created=row[3], cited=cited, **stored)
 
-    def request(self, ai: Any, hold: Callable[[], str | None]) -> dict[str, Any]:
-        """One sealed request over the composed public payload; the result is unapproved."""
+    def request(self, ai: Any, admission: Admission) -> dict[str, Any]:
+        """One sealed request over the composed public payload; the result is unapproved.
+
+        The call is admitted by the operator authority, durable allowance and active-call slots
+        before a seal is minted, so a declined request reaches no meter, token or socket.
+        """
         base: dict[str, Any] = dict(label=LABEL, manual_route=MANUAL, namespace=NAMESPACE)
         if not getattr(ai, "configured", False):
             return dict(base, status="unavailable", reason="model-not-configured")
-        held = hold()
-        if held:
-            return dict(base, status="held", reason=held)
-        composed = self.compose()
+        max_tokens, timeout = admission.bounds()
+        composed = self.compose(max_tokens)
         if not composed["readings"]:
             return dict(base, status="unavailable", reason="no-simulation-readings")
-        seal = self.mint(composed["body"])
-        nonce = seal["nonce"]
-        context = ai_consumption.CallContext(
-            ai_consumption.reference(nonce),
-            ai_consumption.reference(f"{nonce}:1"),
-            CAPABILITY,
-            "retrofit-case",
-            ai_consumption.reference(NAMESPACE),
-            ai_consumption.reference(composed["system"]),
+        ticket = admission.begin(
+            len(composed["system"]) + len(composed["prompt"]), secrets.token_hex(32)
         )
-        with (
-            ai_consumption.call_context(context),
-            ai_consumption.captured_readings(True),
-            ai_consumption.sealed_simulation(seal),
-        ):
-            envelope = ai.evidence(
-                composed["system"], composed["prompt"], composed["max_tokens"], 20
+        if ticket.reason:
+            return dict(base, status="held", reason=ticket.reason)
+        envelope: dict[str, Any] = dict(outcome="suspended-before-dispatch", usage=None)
+        try:
+            seal = self.mint(composed["body"])
+            nonce = seal["nonce"]
+            context = ai_consumption.CallContext(
+                ai_consumption.reference(nonce),
+                ai_consumption.reference(f"{nonce}:1"),
+                CAPABILITY,
+                "retrofit-case",
+                ai_consumption.reference(NAMESPACE),
+                ai_consumption.reference(composed["system"]),
             )
+            envelope = dict(outcome="provider-unavailable", usage=None)
+            with (
+                ai_consumption.call_context(context),
+                ai_consumption.captured_readings(True),
+                ai_consumption.sealed_simulation(seal),
+            ):
+                envelope = ai.evidence(
+                    composed["system"], composed["prompt"], composed["max_tokens"], timeout
+                )
+        finally:
+            ticket.end(envelope)
         sent = dict(request_digest=composed["digest"], readings=composed["readings"])
         if envelope.get("outcome") != "returned":
             return dict(
@@ -421,7 +477,7 @@ class Lane:
                 reason=envelope.get("reason") or envelope.get("outcome"),
                 **sent,
             )
-        if hold():
+        if admission.hold():
             return dict(
                 base, status="held", reason="Suspended after the request; output discarded.", **sent
             )

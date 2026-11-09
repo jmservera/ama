@@ -111,6 +111,15 @@ class App:
             return simulation_lane.unavailable_state(self.simulation_reason)
         return self.simulation.state()
 
+    def simulation_admission(self, service):
+        """The same operator authority, durable allowance and call slots the ordinary assistants use."""
+        capability = simulation_lane.CAPABILITY
+        return simulation_lane.Admission(
+            hold=lambda: service.dispatch_hold(capability),
+            bounds=lambda: (min(600, service.limits.output_tokens), service.limits.timeout),
+            begin=lambda chars, call_id: service.begin_call(capability, chars, call_id),
+        )
+
     def simulation_act(self, user, action):
         self.assistants.authorize_user(user, simulation_lane.CAPABILITY)
         lane = self.simulation
@@ -121,7 +130,7 @@ class App:
             return dict(lane.state(), added=lane.observe())
         if isinstance(ai, Ai):
             ai.simulation_verifier = lane.verify  # trusted composition owns the verifier
-        return dict(lane.request(ai, lambda: self.assistants.dispatch_hold(simulation_lane.CAPABILITY)),
+        return dict(lane.request(ai, self.simulation_admission(self.assistants)),
                     proposal_state=lane.state())
 
     def rule_engine(self):
