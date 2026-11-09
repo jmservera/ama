@@ -459,6 +459,30 @@ const defaultListState = () => {
   return filters;
 };
 const listState = {};
+// A coverage declaration is shape and version consistency checked only; no server produces one yet,
+// so an empty own queue is reported as unknown coverage unless a matching declaration is supplied.
+function trustedCoverage(coverage, ctx) {
+  const text = (value) => typeof value === "string" && value.trim() !== "";
+  if (!coverage || typeof coverage !== "object" || Array.isArray(coverage)) return null;
+  const bound = [
+    [coverage.contract, ctx.version], [coverage.as_of, ctx.asOf],
+    [coverage.policy_version, ctx.policyVersion], [coverage.perspective, ctx.role],
+  ];
+  if (coverage.status !== "unrepresented" || !text(coverage.fixture_version) || !text(coverage.source)) return null;
+  return bound.every(([declared, current]) => text(declared) && text(current) && declared === current) ? coverage : null;
+}
+function queueEmptyExplanation({ view, filtered, rowsLength, coverage, ctx }) {
+  if (rowsLength > 0) return null;
+  if (filtered) {
+    return { state: "no-match", text: "No cases match these filters. This is a search result, not a statement about scenario coverage. Reset my queue to try again." };
+  }
+  if (view !== "mine") return { state: "empty-all", text: "No permitted open cases are available." };
+  const declared = trustedCoverage(coverage, ctx);
+  if (declared) {
+    return { state: "declared-unrepresented", text: `No representative scenario is supplied for this perspective in fixture ${declared.fixture_version} (declared by ${declared.source}, as of ${declared.as_of}). This is a declared gap in the demonstration, not a search result and not a statement about other perspectives.` };
+  }
+  return { state: "coverage-unknown", text: "No open cases are assigned to you. This does not mean the programme has no work. Whether a demonstration scenario exists for this perspective is unknown: no verified coverage declaration is available." };
+}
 const queueHref = () => coordinatorOrigin || (queueOrigin === "all" ? "#/all" : "#/");
 const qs = (o) => Object.entries(o).filter(([, v]) => v).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
 const isManager = () => ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
@@ -778,7 +802,7 @@ async function listView(view) {
   const title = h("h1", {}, view === "mine" ? "My cases today" : "All open cases");
   const csv = h("a", { class: "btn alt", download: "cases.csv" }, "Download for Excel");
   let seq = 0;
-  let rows = [], total = 0, policy = "", cursor = null;
+  let rows = [], total = 0, policy = "", asOf = "", cursor = null;
   const PAGE = 50;
   const render = () => {
     workspaceStatus.textContent = `Perspective: ${me.user.role}. ${view === "mine" ? "My assigned cases" : "All permitted open cases"}. ${total} ${total === 1 ? "case" : "cases"}. Workflow stage: ${listState.stage || "any"}. Search: ${listState.q || "none"}. All-cases scope: ${view === "all" ? "on (permitted cases only)" : "off (my assigned cases)"}. Workflow stage narrows this perspective's own/all scope; it never changes your role or access. Area: ${listState.area || "any"}. Wave: ${listState.wave || "any"}. Owner: ${listState.owner || "any"}. Show only: ${listState.flag || "any"}. Work queue: ${listState.queue || "any"}. Order: ${fx.sorts[listState.sort]}. Default: ${me.work_queues.version}; selection: none.`;
@@ -797,7 +821,7 @@ async function listView(view) {
             view === "all" && h("div", { class: "muted" }, `Owner: ${r.owner}`),
             r.focus && h("dl", { class: "focus" }, r.focus.flatMap(([k, v]) => [h("dt", {}, k), h("dd", {}, /^\d{4}-\d\d-\d\d$/.test(v) ? fmtDate(v) : v)]))),
           h("div", { class: "meta" }, h("div", {}, r.stage), h("div", {}, `${r.days} days in this stage`), h("div", {}, `Last contact: ${ago(r.last_contact)}`),
-            r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "empty" }, Object.entries(listState).some(([key, value]) => key !== "sort" && value) ? "No cases match these filters. Reset my queue to try again." : view === "mine" ? "No open cases are assigned to you. This does not mean the programme has no work." : "No permitted open cases are available.")),
+            r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "empty" }, queueEmptyExplanation({ view, filtered: Object.entries(listState).some(([key, value]) => key !== "sort" && value), rowsLength: rows.length, coverage: me.work_queues.coverage, ctx: { role: me.user.role, version: me.work_queues.version, asOf, policyVersion: policy } }).text)),
       rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null].filter(Boolean));
   };
   const load = async (more) => {
@@ -818,6 +842,7 @@ async function listView(view) {
     rows = more ? rows.concat(d.items) : d.items;
     total = d.total;
     policy = d.policy_version;
+    asOf = d.as_of;
     render();
     if (resetFocus) { resetFocus = false; document.getElementById("reset-queue").focus(); }
   };

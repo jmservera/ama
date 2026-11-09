@@ -255,6 +255,21 @@ def run_browser(base: str) -> None:
                     "n => document.querySelectorAll('.item').length === n", arg=len(role["ids"])
                 )
                 check(f"{role['role']} independent own IDs/order", ids(page) == role["ids"])
+                if role["role"] != "Contractor":
+                    empty = page.locator("li.empty")
+                    if not role["ids"]:
+                        empty.wait_for()
+                    check(
+                        f"{role['role']} empty explanation only when the own queue is empty, "
+                        "unknown coverage never declared unrepresented",
+                        (empty.count() == 0)
+                        if role["ids"]
+                        else (
+                            empty.count() == 1
+                            and "unknown" in empty.inner_text()
+                            and "declared gap" not in empty.inner_text()
+                        ),
+                    )
                 check(
                     f"{role['role']} exact server-described navigation",
                     page.locator("#nav a").evaluate_all(
@@ -491,6 +506,11 @@ def run_browser(base: str) -> None:
                 )
                 page.locator("#f-q").fill("no-such-home")
                 page.get_by_text("No cases match these filters.", exact=False).wait_for()
+                check(
+                    "no-match is a search result, not a coverage statement",
+                    "not a statement about scenario coverage"
+                    in page.locator("li.empty").inner_text(),
+                )
                 page.locator("#f-sort").select_option("name")
                 page.locator("#reset-queue").focus()
                 page.keyboard.press("Enter")
