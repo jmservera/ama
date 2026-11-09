@@ -9,11 +9,15 @@ import os
 import re
 import shutil
 import sqlite3
+import subprocess
+import sys
 import tempfile
 import threading
 import time
 import unittest
 from collections.abc import Callable
+from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
 from unittest.mock import patch
 
@@ -526,6 +530,145 @@ class Lane(c7.Base):
         assert rotated is not None
         self.assertEqual(rotated["readings"], last["readings"])  # historic IDs and values survive
         self.assertEqual(rotated["cited"], last["cited"])
+
+    def until(self, condition: Callable[[], object], seconds: float) -> bool:
+        deadline = time.monotonic() + seconds
+        while time.monotonic() < deadline:
+            if condition():
+                return True
+            time.sleep(0.1)
+        return bool(condition())
+
+    def spawn(
+        self, peer: e2.TlsPeer, settings: dict[str, Any], signalled: bool = False
+    ) -> tuple[subprocess.Popen[str], Path, Path]:
+        """A second OS process over the same working database, simulation store and TLS peer."""
+        admitted, go = Path(self.dir, "admitted"), Path(self.dir, "go")
+        if signalled:
+            go.write_text("go")
+        spec = dict(
+            seed=str(self.seed),
+            db=str(self.dbpath),
+            endpoint=peer.endpoint,
+            settings=ta.config(**settings),
+            user=self.pm,
+            admitted=str(admitted),
+            go=str(go),
+            stall=0,
+        )
+        worker = Path(__file__).with_name("two_process_worker.py")
+        process = subprocess.Popen(
+            [sys.executable, str(worker), json.dumps(spec)],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            env=dict(os.environ),
+        )
+        self.addCleanup(process.kill)
+        self.addCleanup(process.communicate)
+        return process, admitted, go
+
+    def finish(self, process: subprocess.Popen[str]) -> dict[str, Any]:
+        out, err = process.communicate(timeout=60)
+        self.assertEqual(process.returncode, 0, err)
+        result: dict[str, Any] = json.loads(out.strip().splitlines()[-1])
+        return result
+
+    def test_a_caller_stalled_past_its_lease_cannot_send_after_another_caller_reused_its_slot(
+        self,
+    ) -> None:
+        peer, _ = self.start()
+        settings: dict[str, Any] = dict(active_calls=1, lease=10, timeout=5)
+        service = self.authority(**settings)
+        process, admitted, go = self.spawn(peer, settings)
+        self.assertTrue(self.until(admitted.exists, 60), "the second process was not admitted")
+        self.assertEqual(self.active_attempts(), 1)
+        self.assertEqual(self.post()["status"], "held")  # the live lease still holds the slot
+        self.assertTrue(self.until(lambda: self.active_attempts() == 0, 30), "lease never expired")
+        self.assertEqual(self.post()["status"], "proposal")  # caller B reuses the slot and sends
+        self.assertEqual(len(peer.bodies), 1)
+        go.write_text("go")  # caller A resumes after its lease ended and B sent
+        late = self.finish(process)
+        self.assertEqual((late["status"], late["reason"]), ("not-sent", "suspended-before-dispatch"))
+        self.assertEqual(len(peer.bodies), 1, "the stalled caller sent after its lease ended")
+        self.assertEqual(peer.bytes, len(peer.bodies[0]))
+        self.assertEqual((peer.accepts, late["reserved"], late["tokens"]), (1, 1, 1))
+        self.assertEqual(self.active_attempts(), 0)
+        calls, tokens = self.allowance()
+        self.assertEqual((calls, tokens), (2, 2 * service.limits.reservation))
+        self.assertTrue(service.call_slots.acquire(blocking=False))
+
+    def test_authority_that_expires_after_admission_stops_the_send(self) -> None:
+        peer, _ = self.start()
+        stamp = datetime.fromtimestamp(time.time() + 14, UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
+        settings: dict[str, Any] = dict(active_calls=1, lease=10, timeout=5, expires=stamp)
+        service = self.authority(**settings)
+        process, admitted, go = self.spawn(peer, settings)
+        self.assertTrue(self.until(admitted.exists, 60), "the second process was not admitted")
+        self.assertEqual(self.active_attempts(), 1)
+        expiry = datetime.fromisoformat(stamp.replace("Z", "+00:00")).timestamp()
+        self.assertTrue(self.until(lambda: time.time() > expiry + 1, 30))
+        go.write_text("go")
+        late = self.finish(process)
+        self.assertEqual((late["status"], late["reason"]), ("not-sent", "suspended-before-dispatch"))
+        self.assertEqual((len(peer.bodies), peer.accepts, peer.bytes), (0, 0, 0))
+        self.assertEqual((late["reserved"], late["checked"], late["tokens"]), (1, 1, 1))
+        self.assertEqual(self.allowance(), (1, service.limits.reservation))
+        self.assertEqual(self.active_attempts(), 0)
+        before = (self.meter.reserved, len(self.tokens))
+        self.assertEqual(self.post()["status"], "held")  # a new request is declined before the meter
+        self.assertEqual((self.meter.reserved, len(self.tokens), peer.accepts), (*before, 0))
+
+    def test_a_valid_request_in_a_second_process_still_sends_and_releases_its_slots(self) -> None:
+        peer, _ = self.start()
+        settings: dict[str, Any] = dict(active_calls=2, lease=10, timeout=5)
+        service = self.authority(**settings)
+        process, _, _ = self.spawn(peer, settings, signalled=True)
+        done = self.finish(process)
+        self.assertEqual((done["status"], done["reason"]), ("proposal", None))
+        self.assertEqual((len(peer.bodies), self.active_attempts()), (1, 0))
+        self.assertEqual(self.post()["status"], "proposal")
+        self.assertEqual(len(peer.bodies), 2)
+        self.assertEqual(self.active_attempts(), 0)
+        self.assertTrue(service.call_slots.acquire(blocking=False))
+
+    def test_a_client_that_cannot_fence_its_send_is_refused_before_admission(self) -> None:
+        begun: list[int] = []
+
+        class Unfenced:
+            configured = True
+
+        def begin(chars: int, call_id: str) -> Any:
+            begun.append(chars)
+            raise AssertionError("admission must not be reached")
+
+        admission = simulation_lane.Admission(
+            hold=lambda: None, bounds=lambda: (600, 20), begin=begin
+        )
+        self.lane.observe()
+        result = self.lane.request(Unfenced(), admission)
+        self.assertEqual((result["status"], result["reason"]), ("unavailable", "dispatch-fence-unavailable"))
+        self.assertEqual(begun, [])
+
+    def test_the_fence_runs_before_the_meter_before_connecting_and_before_the_first_byte(self) -> None:
+        peer, ai = self.tls_ai()
+        for refuse_at, accepts, reserved in ((1, 0, 0), (2, 0, 1), (3, 1, 1)):
+            calls: list[int] = []
+
+            def fence() -> None:
+                calls.append(1)
+                if len(calls) == refuse_at:
+                    raise ai_consumption.DispatchWithdrawn("fenced")
+
+            with self.subTest(refuse_at=refuse_at):
+                self.meter.reserved = self.meter.checked = 0
+                before = peer.accepts
+                with ai_consumption.send_fence(fence):
+                    envelope = ai.evidence("system", "x" * 100, 100, 5)
+                self.assertEqual(envelope["outcome"], "suspended-before-dispatch")
+                self.assertEqual(
+                    (peer.accepts - before, self.meter.reserved, len(peer.bodies)), (accepts, reserved, 0)
+                )
 
 
 if __name__ == "__main__":
