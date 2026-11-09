@@ -100,6 +100,7 @@ def refresh(page: Page, state: dict[str, Any], photo: bool, label: str) -> None:
     state["photo"] = photo
     page.evaluate("photoServiceCheckedAt = 0")
     page.locator("#photo-status").evaluate("el => { el.textContent = 'refresh pending'; }")
+    page.evaluate("window.__zfServices = me.services")
     check(
         f"{label}: page is visible for the re-check",
         page.evaluate("document.visibilityState") == "visible",
@@ -107,10 +108,37 @@ def refresh(page: Page, state: dict[str, Any], photo: bool, label: str) -> None:
     with page.expect_response("**/api/me") as pending:
         page.evaluate("document.dispatchEvent(new Event('visibilitychange'))")
     check(f"{label}: re-check /api/me answered", pending.value.status == 200)
-    # The handler runs after the response: the sentinel text changing proves it was processed.
-    page.wait_for_function(
-        "() => document.getElementById('photo-status').textContent !== 'refresh pending'"
+    # The handler always replaces me.services after the response, whatever the flag value, so the
+    # new object proves the response was consumed without depending on the flag or status text.
+    page.wait_for_function("() => me.services !== window.__zfServices")
+
+
+def false_refresh_proof(
+    page: Page,
+    state: dict[str, Any],
+    me_flags: list[bool | None],
+    photo_requests: list[int],
+    status: int,
+) -> None:
+    """Prove a real client true-to-false transition from a re-check, with no extra photo load."""
+    page.evaluate("me.services = {...me.services, photo: true}; photoFailed = false")
+    check(
+        f"{status}: client flag established true before the false refresh",
+        page.evaluate("me.services.photo") is True,
     )
+    check(f"{status}: establishing the flag made no photo request", len(photo_requests) == 1)
+    refresh(page, state, photo=False, label=f"{status} false refresh")
+    check(f"{status}: false refresh was served, flag false", me_flags == [True, False])
+    check(
+        f"{status}: client applied the served false (actual client flag false after refresh)",
+        page.evaluate("me.services.photo") is False,
+    )
+    check(
+        f"{status}: inline unavailable status shown after the false refresh",
+        "token-store" in (page.locator("#photo-status").text_content() or ""),
+    )
+    page.wait_for_timeout(500)
+    check(f"{status}: no photo request after a false refresh", len(photo_requests) == 1)
 
 
 def detector_self_test(browser: Any) -> None:
@@ -179,7 +207,9 @@ def detector_self_test(browser: Any) -> None:
     page.close()
 
 
-def observe(browser: Any, base: str, status: int, result: dict[str, Any]) -> None:
+def observe(
+    browser: Any, base: str, status: int, result: dict[str, Any], ignore_false: bool = False
+) -> None:
     page = browser.new_context(
         extra_http_headers={"X-MS-CLIENT-PRINCIPAL": principal(oid=OID_SAM)}
     ).new_page()
@@ -211,6 +241,9 @@ def observe(browser: Any, base: str, status: int, result: dict[str, Any]) -> Non
         body = real.json()
         body["services"] = {**(body.get("services") or {}), "photo": state["photo"]}
         me_flags.append(body["services"]["photo"])
+        if ignore_false and state["photo"] is False:
+            # Negative control: the false is served and recorded but the client never receives it.
+            body["services"].pop("photo")
         route.fulfill(status=200, content_type="application/json", body=json.dumps(body))
 
     def photo_route(route: Any) -> None:
@@ -254,10 +287,7 @@ def observe(browser: Any, base: str, status: int, result: dict[str, Any]) -> Non
         )
         result["fallback_text"] = fallback
 
-        refresh(page, state, photo=False, label=f"{status} false refresh")
-        check(f"{status}: false refresh was served, flag false", me_flags == [True, False])
-        page.wait_for_timeout(500)
-        check(f"{status}: no photo request after a false refresh", len(photo_requests) == 1)
+        false_refresh_proof(page, state, me_flags, photo_requests, status)
 
         refresh(page, state, photo=True, label=f"{status} true refresh")
         for _ in range(50):
@@ -298,6 +328,20 @@ def observe(browser: Any, base: str, status: int, result: dict[str, Any]) -> Non
             load_events=len(loads),
         )
         page.context.close()
+
+
+def false_refresh_negative_control(browser: Any, base: str) -> None:
+    """A client that ignores the served false must fail the proof at the client-flag assertion."""
+    expected = "503: client applied the served false (actual client flag false after refresh)"
+    try:
+        observe(browser, base, 503, {}, ignore_false=True)
+    except AssertionError as error:
+        check(
+            "negative control: ignored false response fails the client-flag assertion",
+            (str(error) == expected),
+        )
+        return
+    check("negative control: ignored false response was detected", False)
 
 
 def classify(item: dict[str, Any]) -> None:
@@ -349,6 +393,7 @@ def main() -> None:
                     browser = playwright.chromium.launch()
                     try:
                         detector_self_test(browser)
+                        false_refresh_negative_control(browser, base)
                         for status in STATUSES:
                             item: dict[str, Any] = {}
                             results.append(item)
