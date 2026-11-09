@@ -33,14 +33,25 @@ FENCE_MARGIN = 2.0
 
 
 class Window:
-    """The fence calls and the total send deadline of one connection."""
+    """The fence calls and the absolute deadline of one connection.
+
+    The deadline owns the connected socket handle captured at the first request byte, so it
+    keeps a live shutdown handle across headers and body regardless of what the HTTP layers do
+    to their own `sock` attribute. It is cancelled only by `finish`, when the whole response
+    completes or fails.
+    """
 
     def __init__(self, fence: Callable[[], None], deadline: float) -> None:
         self.fence, self.deadline = fence, deadline
         self.sent = False
+        self.adopted = False
+        self.done = False
+        self.expired = False
+        self.sock: socket.socket | None = None
         self.timer: threading.Timer | None = None
+        self.lock = threading.Lock()
 
-    def first_byte(self, expire: Callable[[], None]) -> None:
+    def first_byte(self, sock: socket.socket | None) -> None:
         if self.sent:
             return
         self.sent = True
@@ -48,14 +59,27 @@ class Window:
         self.fence()
         if time.monotonic() - started > FENCE_MARGIN:
             raise ai_consumption.DispatchWithdrawn("fence-stalled")
-        timer = threading.Timer(self.deadline, expire)
-        timer.daemon = True
-        timer.start()
-        self.timer = timer
+        with self.lock:
+            self.sock = sock
+            timer = threading.Timer(self.deadline, self.expire)
+            timer.daemon = True
+            self.timer = timer
+            timer.start()
 
-    def stop(self) -> None:
-        if self.timer is not None:
-            self.timer.cancel()
+    def expire(self) -> None:
+        with self.lock:
+            if self.done:
+                return
+            self.expired = True
+            sock = self.sock
+        _shutdown(sock)
+
+    def finish(self) -> None:
+        with self.lock:
+            self.done = True
+            timer = self.timer
+        if timer is not None:
+            timer.cancel()
 
 
 def _shutdown(sock: socket.socket | None) -> None:
@@ -66,12 +90,47 @@ def _shutdown(sock: socket.socket | None) -> None:
             pass
 
 
+class OwnedResponse(http.client.HTTPResponse):
+    """A response whose lifetime is the window: it ends only when the body is done or closed."""
+
+    window: Window  # bound per connection by `owned`
+
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        super().__init__(*args, **kwargs)
+        self.window.adopted = True
+
+    def _check(self) -> None:
+        if self.window.expired:
+            raise TimeoutError("absolute provider deadline reached")
+
+    def read(self, amt: int | None = None) -> bytes:
+        self._check()
+        try:
+            data = super().read(amt)
+        except OSError:
+            self._check()
+            raise
+        self._check()  # a shutdown can look like a clean end of stream
+        if self.isclosed():
+            self.window.finish()  # the whole body was read: the response is complete
+        return data
+
+    def close(self) -> None:
+        super().close()
+        self.window.finish()
+
+
+def owned(window: Window) -> type[OwnedResponse]:
+    return type("OwnedResponse", (OwnedResponse,), {"window": window})
+
+
 class FencedHTTPConnection(http.client.HTTPConnection):
     def __init__(
         self, *args: Any, fence: Callable[[], None], deadline: float, **kwargs: Any
     ) -> None:
         super().__init__(*args, **kwargs)
         self.window = Window(fence, deadline)
+        self.response_class = owned(self.window)
 
     def connect(self) -> None:
         self.window.fence()
@@ -80,11 +139,12 @@ class FencedHTTPConnection(http.client.HTTPConnection):
     def send(self, data: Any) -> None:
         if self.sock is None:
             self.connect()  # connect first, so the fence below runs on the live connection
-        self.window.first_byte(lambda: _shutdown(self.sock))
+        self.window.first_byte(self.sock)
         super().send(data)
 
     def close(self) -> None:
-        self.window.stop()
+        if not self.window.adopted:
+            self.window.finish()
         super().close()
 
 
@@ -94,6 +154,7 @@ class FencedHTTPSConnection(http.client.HTTPSConnection):
     ) -> None:
         super().__init__(*args, **kwargs)
         self.window = Window(fence, deadline)
+        self.response_class = owned(self.window)
 
     def connect(self) -> None:
         self.window.fence()
@@ -102,11 +163,12 @@ class FencedHTTPSConnection(http.client.HTTPSConnection):
     def send(self, data: Any) -> None:
         if self.sock is None:
             self.connect()  # connect first, so the fence below runs on the live connection
-        self.window.first_byte(lambda: _shutdown(self.sock))
+        self.window.first_byte(self.sock)
         super().send(data)
 
     def close(self) -> None:
-        self.window.stop()
+        if not self.window.adopted:
+            self.window.finish()
         super().close()
 
 
