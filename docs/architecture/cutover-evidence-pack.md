@@ -5639,6 +5639,22 @@ Bounded additive note. A second unchanged-source diagnosis (frozen head `f1f73d2
 
 Counts are not aggregated: the original series of one failure among five total executions, with the initial failure followed by four passes, the 0 of 6 earlier attempts (Q3 above) and this 0 of 2 pairs are separate denominators. The qualification addresses current claims only; it does not state the older records were accurate, authorizes no past amendment and does not authorize E5. The merged source equals main `2b6d80a25` (lifecycle source `3a9767d5c`); nothing was retested or accepted. All whole-issue #1292 criteria remain unticked and open. Not claimed: independent exact-head review of this commit, hosted CI, SQL, browser or cloud evidence, a full gate or approval.
 
+### Current-main priority SQL regression validation, 2026-11-09 (Refs #1292)
+
+Bounded, validation-only record on pinned `main` `ba71894bb1a94d6a24aabf9828312668f88f3ff5` (tree `83ab51163dd0d24f6a48ea1a329b1693881e8f38`; `src` tree `86bc00e19a167e517ae2955ad88d6e2f7b4eac26`, identical at the executed tracking-only commit `e208748cf`). It is the due earlier lifecycle and priority current-source SQL checkpoint; the controls and photo records (#1322) do not satisfy it. PR #1308 (`8d6f029ca`, merged 2026-11-09) is an ancestor and current main orders reloads by `created_ord`. Planning records were committed before execution; one independent critique (Revise) was applied before any SQL ran.
+
+One non-queued shared-heavy admission, one disposable SQL Server 2022 container (16.0.4305.5, image `sha256:cf8f0ab2ebe6...1718`, loopback only, removed afterwards, no leftover database), `mssql-python` 1.15.0, Python 3.12.3, own environment with imports verified under this worktree's `src` (blobs `sqlstore.py` `89f409ee0`, `mssqlstore.py` `c712ad4a8`).
+
+| Id | Process | Selection | Result |
+| --- | --- | --- | --- |
+| V1 | A | `test_priority_order`: JSON, SQLite and guard classes plus `MssqlPriorityOrder`, `MssqlLegacyMetadata`, `MssqlLegacyEdges`, `MssqlLockTimeoutBegin`, `MssqlBeginRecovery` | 108 ran, 108 ok, 0 skips, exit 0, 309.4 s, 31 on SQL Server |
+| V2 | B | `MssqlC3Corrections`, `MssqlC4Corrections` | 34 ran, 34 ok, 0 skips, exit 0, 201.2 s, 34 on SQL Server |
+| V3 | C | the two original `MssqlResidentControls` methods (`test_challenge_source_exact_dependency_manifest_and_original_reviews`, `test_failed_priority_accept_edit_remove_disposition_and_audit`) with SQLite and in-memory parity | 6 ran, 6 ok, 0 skips, exit 0, 10.4 s, 2 on SQL Server |
+
+Totals: 3 processes, 148 tests, 0 skips, 0 failures, 67 on SQL Server, 540 s campaign. A plus B equal the full 142-test module once (split by class only to stay under the 600 s per-process bound; earlier full runs took 536.7 s and 558.0 s). Raw outputs are external with a 30-member `SHA256SUMS` (digest `b6cec06e5c4075e5271747f188078a30e49e169255a7810a350475fc57798bc0`).
+
+Separate statements: source fulfillment, current observed behavior and root cause are not merged. At the pinned source, the selected existing tests passed once on SQL Server. This does not show the original unordered defect is absent from pre-fix source (the fails-against-old-behavior half of the third criterion is not re-proved here), and it does not explain, fix or retire the unknown historical startup failure, which remains UNKNOWN with the earlier 0 of 6, 0 of 2 and one-in-five denominators unaggregated. No whole-SQL acceptance, full-gate waiver, hosted CI, independent review, scale or lock-duration, Azure or live evidence, resident or professional approval, source correction or E5 is claimed or consumed. All whole-issue #1292, #81 and #440 criteria remain unticked and open. Records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-09-priority-sql-main-1292-*` and the state file.
+
 ### Comparison count qualification, 2026-11-09 (Refs #1314 #440)
 
 Dated wording qualification, a first pass of the separately scoped #1314 follow-up and not a new #440 correction cycle. It supersedes only the explanatory counts and ranges named below. The original C2 and current-main preparation records, their reviews and adverse findings are kept byte for byte, and no source, fixture, policy, SQL behavior or acceptance changed. Every number was reproduced with `git diff --name-only` and `git diff --numstat` between the pinned commits, never against a later `origin/main`. Records:
@@ -5741,19 +5757,3 @@ Continue the existing owners, with a HOLD on every closure claim. No fix, pivot 
 * Independent #189, #954, #159, #1288, #1258 and #144 source work may proceed. #954 is already closed on its literal criteria.
 
 Limits: single-session authored record with no independent exact-head review and no hosted CI for the commit that carries it; the witnesses are coordinator-held files read in this session, with their digests recorded here; PR check counts for 1313 and 1315 are coordinator-reported. Not claimed: approval, closure, acceptance of any criterion, whole #440, #81, #189 or #1292 acceptance, live, SQL, Azure, model, assistive-technology or production readiness, or any legal, resident or production approval.
-
-### Current-main priority SQL regression validation, 2026-11-09 (Refs #1292)
-
-Bounded, validation-only record on pinned `main` `ba71894bb1a94d6a24aabf9828312668f88f3ff5` (tree `83ab51163dd0d24f6a48ea1a329b1693881e8f38`; `src` tree `86bc00e19a167e517ae2955ad88d6e2f7b4eac26`, identical at the executed tracking-only commit `e208748cf`). It is the due earlier lifecycle and priority current-source SQL checkpoint; the controls and photo records (#1322) do not satisfy it. PR #1308 (`8d6f029ca`, merged 2026-11-09) is an ancestor and current main orders reloads by `created_ord`. Planning records were committed before execution; one independent critique (Revise) was applied before any SQL ran.
-
-One non-queued shared-heavy admission, one disposable SQL Server 2022 container (16.0.4305.5, image `sha256:cf8f0ab2ebe6...1718`, loopback only, removed afterwards, no leftover database), `mssql-python` 1.15.0, Python 3.12.3, own environment with imports verified under this worktree's `src` (blobs `sqlstore.py` `89f409ee0`, `mssqlstore.py` `c712ad4a8`).
-
-| Id | Process | Selection | Result |
-| --- | --- | --- | --- |
-| V1 | A | `test_priority_order`: JSON, SQLite and guard classes plus `MssqlPriorityOrder`, `MssqlLegacyMetadata`, `MssqlLegacyEdges`, `MssqlLockTimeoutBegin`, `MssqlBeginRecovery` | 108 ran, 108 ok, 0 skips, exit 0, 309.4 s, 31 on SQL Server |
-| V2 | B | `MssqlC3Corrections`, `MssqlC4Corrections` | 34 ran, 34 ok, 0 skips, exit 0, 201.2 s, 34 on SQL Server |
-| V3 | C | the two original `MssqlResidentControls` methods (`test_challenge_source_exact_dependency_manifest_and_original_reviews`, `test_failed_priority_accept_edit_remove_disposition_and_audit`) with SQLite and in-memory parity | 6 ran, 6 ok, 0 skips, exit 0, 10.4 s, 2 on SQL Server |
-
-Totals: 3 processes, 148 tests, 0 skips, 0 failures, 67 on SQL Server, 540 s campaign. A plus B equal the full 142-test module once (split by class only to stay under the 600 s per-process bound; earlier full runs took 536.7 s and 558.0 s). Raw outputs are external with a 30-member `SHA256SUMS` (digest `b6cec06e5c4075e5271747f188078a30e49e169255a7810a350475fc57798bc0`).
-
-Separate statements: source fulfillment, current observed behavior and root cause are not merged. At the pinned source, the selected existing tests passed once on SQL Server. This does not show the original unordered defect is absent from pre-fix source (the fails-against-old-behavior half of the third criterion is not re-proved here), and it does not explain, fix or retire the unknown historical startup failure, which remains UNKNOWN with the earlier 0 of 6, 0 of 2 and one-in-five denominators unaggregated. No whole-SQL acceptance, full-gate waiver, hosted CI, independent review, scale or lock-duration, Azure or live evidence, resident or professional approval, source correction or E5 is claimed or consumed. All whole-issue #1292, #81 and #440 criteria remain unticked and open. Records: `.copilot-tracking/{research,plans,details,changes,reviews}/2026-11-09-priority-sql-main-1292-*` and the state file.

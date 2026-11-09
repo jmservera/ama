@@ -1250,6 +1250,12 @@ diagnosis: 0 of 2 paired selections reproduced the failure, cause unknown, with 
 bounded qualifications (recorder limits, unittest versus process timings, a 26-member
 log manifest, and the observer-pair design). Counts are not aggregated with the earlier
 0 of 6 or the original single failure; all #1292 criteria stay open and E5 is not authorized.
+A further dated #1292 current-main note in the same pack records one bounded
+validation on a disposable SQL Server: the priority module (142 tests) plus the two original
+resident-control methods and their SQLite and in-memory parity, 148 tests, 67 on SQL Server,
+0 skips and 0 failures at main `ba71894bb`. It does not retire the unknown startup cause,
+accept SQL as a whole, waive a gate or tick any criterion; E5 stays unspent.
+
 A dated #1314 comparison-count qualification in the same pack restates, from pinned Git
 ranges, the final C2 comparison (17 paths, 700 additions, 0 deletions against `ef28d4da4`,
 the 15-path figure being an intermediate tree) and the composition of the current-main
@@ -1264,9 +1270,3 @@ negative control) browser runs exercised, and compares the BRD, PRD and ADR iden
 confirms no new defect or refactoring, excludes the open chat receipts PR 1320 and #159, does
 not satisfy the earlier lifecycle-wave trigger, and keeps closure holds, the live budget alert
 and the whole #440 behavior validation obligation open.
-
-A further dated #1292 current-main note in the same pack records one bounded
-validation on a disposable SQL Server: the priority module (142 tests) plus the two original
-resident-control methods and their SQLite and in-memory parity, 148 tests, 67 on SQL Server,
-0 skips and 0 failures at main `ba71894bb`. It does not retire the unknown startup cause,
-accept SQL as a whole, waive a gate or tick any criterion; E5 stays unspent.
