@@ -198,7 +198,7 @@ def main(axe_path: Path | None = None, out: Path | None = None):
                 bool(cited) and cited <= {i for i, _, _ in captured},
             )
             expect(flag).to_contain_text(
-                "still holds the readings this finding cited, with the same values"
+                "still includes the readings this finding cited, with the same values"
             )
             check("flag offers no approval control", flag.get_by_role("button").count() == 0)
             scan(page, "unapproved flag")
@@ -278,10 +278,20 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             )
             page.get_by_role("button", name="Request Simulation Proposal").click()
             expect(page.locator("#simulation [role=status]").last).to_contain_text(
-                "Proposal stored as unapproved"
+                "Not sent (real-provider-route-unavailable)"
             )
-            expect(sim).to_contain_text("Status: unapproved proposal")
-            check("proposal shown as unapproved", "Status: unapproved proposal" in sim.inner_text())
+            expect(page.locator("#simulation [role=status]").last).to_contain_text(
+                "nothing was sent to a model"
+            )
+            check(
+                "the guarded-off real-provider route refuses and points to the manual route",
+                "Use the ordinary quality check and the manual route"
+                in page.locator("#simulation [role=status]").last.inner_text(),
+            )
+            check(
+                "a refused simulation request stores no proposal",
+                "Status: unapproved proposal" not in sim.inner_text(),
+            )
             check(
                 "no accept control in the simulation",
                 sim.get_by_role("button", name=re.compile("accept", re.I)).count() == 0,
@@ -310,6 +320,16 @@ def main(axe_path: Path | None = None, out: Path | None = None):
                 expect(sim).to_contain_text("Status: unapproved proposal")
                 return sim.inner_text()
 
+            readings = app.simulation.compose()["readings"]
+            seed(
+                [
+                    dict(
+                        text="Fixture.",
+                        citations=[f"sensor:{simulation_lane.SENSOR_ID}:{readings[0][0]}"],
+                    )
+                ],
+                "z",
+            )
             first_cited = fresh_panel()
             check(
                 "the stored proposal says how many readings it was given and how many it cited",
