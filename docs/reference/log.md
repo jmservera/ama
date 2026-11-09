@@ -10944,3 +10944,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-05] update | Issue 144 poison-copy size correction (Refs #144)
 
 * Bounded the queue adapter poison copy by encoded bytes with an explicit truncation marker after an independent review found it could exceed the 64 KiB queue limit. Light unit, ruff and mypy checks only; the full gate and independent assessment are pending for the new head. Criteria 1 to 5 stay unmet. Evidence under `.copilot-tracking/` (2026-11-05 issue-144 poison size correction).
+
+## 2026-11-09
+
+* Issue 144 queue-slice recovery: merged main, applied the poison-size correction, recorded dated recovery RPI evidence under `.copilot-tracking/*/2026-11-09/` (Refs #144).
