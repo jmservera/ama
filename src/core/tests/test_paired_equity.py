@@ -113,6 +113,141 @@ class PairedEquityTests(unittest.TestCase):
             rec["dimensions"]["sensor_completeness"]["failures"][0]["problems"], ["pair_ids_differ"]
         )
 
+    def test_confounded_days_in_stage_change_is_rejected_not_passed(self) -> None:
+        p = pairs()
+        p[0]["subject"]["days_in_stage"] = 30
+        rec = paired_equity.evaluate(p, ANCHORS)
+        self.assertEqual(rec["status"], "blocked")
+        self.assertIn("s1:invalid_comparison:confounded", rec["blockers"])
+        self.assertIn("sensor_completeness:no_pairs", rec["blockers"])
+        self.assertEqual(rec["tested"], 2)
+        self.assertEqual(
+            rec["invalid_pairs"],
+            [{"pair": "s1", "dimension": "sensor_completeness", "reason": "confounded"}],
+        )
+        self.assertFalse(rec["activation_allowed"])
+        self.assertFalse(rec["fairness_evidence"])
+
+    def test_pair_without_contrast_is_rejected(self) -> None:
+        p = pairs()
+        p[2]["subject"] = copy.deepcopy(p[2]["reference"])
+        rec = paired_equity.evaluate(p, ANCHORS)
+        self.assertIn("h1:invalid_comparison:no_contrast", rec["blockers"])
+        self.assertEqual(rec["status"], "blocked")
+
+    def test_mislabeled_dimension_is_rejected(self) -> None:
+        p = pairs()
+        p[0]["dimension"] = "appointment_history"
+        rec = paired_equity.evaluate(p, ANCHORS)
+        self.assertIn("s1:invalid_comparison:wrong_contrast", rec["blockers"])
+        self.assertEqual(rec["dimensions"]["appointment_history"]["tested"], 1)
+
+    def test_unrelated_nested_change_is_rejected(self) -> None:
+        p = pairs()
+        p[1]["subject"]["resident"]["contact_preference"] = "phone"
+        rec = paired_equity.evaluate(p, ANCHORS)
+        self.assertIn("n1:invalid_comparison:confounded", rec["blockers"])
+
+    def test_partial_support_bundle_is_rejected(self) -> None:
+        p = pairs()
+        p[1]["subject"]["resident"]["adjustment"] = "None"
+        rec = paired_equity.evaluate(p, ANCHORS)
+        self.assertIn("n1:invalid_comparison:wrong_contrast", rec["blockers"])
+
+    def test_type_coerced_values_and_empty_nested_change_are_rejected(self) -> None:
+        p = pairs()
+        p[1]["subject"]["resident"]["priority_support"] = 1
+        p[0]["subject"]["extra"] = {}
+        rec = paired_equity.evaluate(p, ANCHORS)
+        self.assertIn("n1:invalid_comparison:wrong_contrast", rec["blockers"])
+        self.assertIn("s1:invalid_comparison:confounded", rec["blockers"])
+
+    def test_nested_type_change_is_rejected(self) -> None:
+        p = pairs()
+        p[0]["reference"]["resident"]["extra"] = [1]
+        p[0]["subject"]["resident"]["extra"] = [True]
+        rec = paired_equity.evaluate(p, ANCHORS)
+        self.assertIn("s1:invalid_comparison:confounded", rec["blockers"])
+        self.assertEqual(rec["tested"], 2)
+
+    def test_dotted_key_cannot_shadow_nested_change(self) -> None:
+        p = pairs()
+        p[0]["reference"]["resident"].update({"extra": {"x": 1}, "extra.x": 1})
+        p[0]["subject"]["resident"].update({"extra": {"x": 2}, "extra.x": 1})
+        rec = paired_equity.evaluate(p, ANCHORS)
+        self.assertIn("s1:invalid_comparison:confounded", rec["blockers"])
+        self.assertEqual(rec["invalid_pairs"][0]["reason"], "confounded")
+
+    def test_supported_support_and_adjustment_bundle_is_valid(self) -> None:
+        rec = paired_equity.evaluate(pairs(), ANCHORS)
+        self.assertEqual(rec["invalid_pairs"], [])
+        self.assertEqual(rec["dimensions"]["support_or_contact_need"]["tested"], 1)
+
+    def test_anchor_sharing_the_case_id_blocks_instead_of_passing(self) -> None:
+        anchors = [*ANCHORS, case("p1")]
+        for rank in (penalise_missing, None):
+            with self.subTest(rank=rank):
+                rec = paired_equity.evaluate(pairs(), anchors, rank=rank)
+                self.assertEqual(rec["status"], "blocked")
+                self.assertIn("s1:invalid_comparison:anchor_id_collision", rec["blockers"])
+                self.assertEqual(
+                    rec["invalid_pairs"],
+                    [
+                        {
+                            "pair": "s1",
+                            "dimension": "sensor_completeness",
+                            "reason": "anchor_id_collision",
+                        }
+                    ],
+                )
+                self.assertEqual(rec["dimensions"]["sensor_completeness"]["tested"], 0)
+                self.assertFalse(rec["fairness_evidence"])
+                self.assertFalse(rec["activation_allowed"])
+
+    def test_collision_with_several_anchors_and_a_seeded_defect_still_blocks(self) -> None:
+        anchors = [*ANCHORS, case("p1"), case("p1", 9)]
+        rec = paired_equity.evaluate(pairs(), anchors, ["s1"], rank=penalise_missing)
+        self.assertIn("s1:invalid_comparison:anchor_id_collision", rec["blockers"])
+        self.assertIn("s1:seeded_defect_undetected", rec["blockers"])
+        self.assertEqual(rec["detected_defects"], [])
+
+    def test_missing_or_non_string_case_id_is_blocked_not_an_error(self) -> None:
+        for bad_id in (None, "", 5):
+            with self.subTest(bad_id=bad_id):
+                p = pairs()
+                for side in ("reference", "subject"):
+                    if bad_id is None:
+                        del p[0][side]["id"]
+                    else:
+                        p[0][side]["id"] = bad_id
+                rec = paired_equity.evaluate(p, ANCHORS)
+                self.assertEqual(rec["status"], "blocked")
+                self.assertIn("s1:invalid_comparison:missing_case_id", rec["blockers"])
+
+    def test_confounded_collision_keeps_the_comparability_reason(self) -> None:
+        p = pairs()
+        p[0]["subject"]["days_in_stage"] = 7
+        rec = paired_equity.evaluate(p, [*ANCHORS, case("p1")])
+        self.assertIn("s1:invalid_comparison:confounded", rec["blockers"])
+        self.assertNotIn("s1:invalid_comparison:anchor_id_collision", rec["blockers"])
+
+    def test_differing_ids_keep_their_existing_failure_despite_an_anchor_match(self) -> None:
+        p = pairs()
+        p[0]["subject"] = dict(p[0]["subject"], id="other")
+        rec = paired_equity.evaluate(p, [*ANCHORS, case("p1")])
+        self.assertEqual(rec["invalid_pairs"], [])
+        self.assertEqual(
+            rec["dimensions"]["sensor_completeness"]["failures"][0]["problems"], ["pair_ids_differ"]
+        )
+
+    def test_distinct_anchor_ids_remain_a_valid_positive_control(self) -> None:
+        rec = paired_equity.evaluate(pairs(), [*ANCHORS, case("z4", 8)], rank=penalise_history)
+        self.assertEqual(rec["invalid_pairs"], [])
+        self.assertEqual(rec["dimensions"]["sensor_completeness"]["tested"], 1)
+        self.assertEqual(
+            paired_equity.evaluate(pairs(), [*ANCHORS, case("z4", 8)])["status"], "pass"
+        )
+
     def test_inputs_are_not_mutated(self) -> None:
         p, a = pairs(), copy.deepcopy(ANCHORS)
         before = copy.deepcopy(p)

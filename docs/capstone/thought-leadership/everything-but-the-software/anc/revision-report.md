@@ -1,9 +1,12 @@
 ---
 title: Everything but the Software - Revision Record
-description: Source-bound measurement clarification, execution/coauthorship provenance and retained historical revision evidence
-ms.date: 2026-11-08
+description: Prospective supplementary judging, source-bound measurement clarification and retained historical revision evidence
+ms.date: 2026-11-09
 ---
 
+The 9 November supplementary judging account adds prospective methods for
+a separate post-collection instrument. It preserves original endpoints,
+running sources, results TODOs and all earlier revision evidence.
 The 8 November measurement clarification supplements the execution and
 coauthorship record and corrects the earlier Ruff safeguard claim. It
 changes no running experiment or recorded outcomes.
@@ -15,6 +18,187 @@ The 5 November recovery/source check, 2 November allocation record and
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Supplementary Blind Judging 9 November
+
+### Scope, Assistance and Source
+
+The owner requested checking the blind post-run judging enhancement, adding
+it to the paper and obtaining a Data Science and Engineering Coach analysis.
+The clean current main `ad679b96` supplied the independent topic branch
+`docs/blind-post-run-judging`. Outputs are the existing article, additive
+Supplement, single PDF, source/evidence record, related index/log and focused
+authoring regressions. No experiment code, private data, running study,
+registration, visibility or paid judging action is included.
+
+The supplied branch resolved to
+[`b7973e200a6edbb1d19355badae3b7e03a066b09`](https://github.com/jmservera/ama-thought-mve/tree/b7973e200a6edbb1d19355badae3b7e03a066b09).
+The [judging README](https://github.com/jmservera/ama-thought-mve/blob/b7973e200a6edbb1d19355badae3b7e03a066b09/judging/README.md)
+was inspected in full; its Git blob is
+`6cc0c236e4ca093198d38909dceb80f850196faa`.
+This is a separate enhancement source, not evidence of a collection-source
+change from `e71037d9` or of completed judging.
+
+The user supplied the installed Data Science and Engineering Coach definition.
+The launchable agent list lacked that exact agent; a separate general-purpose
+context was instructed to use the supplied definition and its experiment/
+evaluation guidance for a read-only assessment, without impersonating the
+named specialist or changing customer/Coach state. Scientific-critical-
+thinking, experimental-design, statistical-analysis and SymPy informed the
+scoped measurement/design assessment. The existing `kassis2026skills`
+reference is retained: current arXiv metadata was checked on 9 November
+(same five authors/year; latest version v2, no published DOI shown).
+The citation records assistance, not evidence for the study outcomes.
+
+### Claims and Evidence States
+
+| Claim / manuscript locator | Inspected source locator | Evidence state and limit |
+| --- | --- | --- |
+| Separate supplementary exploratory assessment; main post-run subsection | Judging README, Purpose and status; Paper-ready methods text | Full-text support for the proposal; no completed assessment or preregistration verified |
+| Fixed panel, eligible P checkpoints and post-CR1; Supplement Table 16 | Judging README, Workflow panel; Snapshots and temporal interpretation | Full-text specification support; no candidate execution or private checkpoint history inspected |
+| Witnessed risk-set loss, undefined empty/missing density; Supplement Equation 7 | Judging README, What is measured; Snapshots and temporal interpretation | Full-text support for the described measure, distinct from hidden-contract H2; algebra/boundary checks are not outcome analysis |
+| Four ordinal dimensions, abstention and evidence citations | Judging README, What is measured; Generic command adapter contract | Full-text rubric/contract support; judge accuracy, calibration and real-user usability remain unverified |
+| Anonymised packets and residual blinding limitations | Judging README, Blinding and evidence controls; Validation and human calibration | Full-text design support; no proof that actual packets or reviewers were blinded |
+| Full allocated-frame, equal-model contrasts and nested observations | Judging README, Report and handoff | Full-text reporting-contract support; no intervals, formal verdicts or scheduling-block resolution supplied |
+| Separate costs, operator permission and hash-bound resume | Judging README, Freeze and prepare; Run the blinded judge | Full-text operator-contract support; no calls, billing or hard provider cap verified |
+
+The text uses prospective methods rather than copying the README's
+illustrative performed-methods paragraph. Final fulfilment, acquisition,
+endpoint loss and API-task ratings stay distinct. Treatment-dependent
+acquisition makes loss density conditional on the witnessed set: it cannot
+alone rank arms. Whole trajectories remain the experimental units; judges,
+repetitions, scenarios and snapshots are repeated measurements.
+Implementation epochs and scheduling/service dependence retain their
+existing unresolved scope rather than being silently corrected.
+
+### Coach-Guided Source Assessment
+
+The separate context inspected the pinned judging implementation, example
+configuration, test sources and relevant public isolation/transport contracts.
+It verified the supplied README Git-blob binding. This was static source
+review: no judging tests, reference/candidate execution, models, real
+packets, calibration or billing were run or inspected.
+
+| Priority / concern | Pinned implementation locator | Disposition in the paper |
+| --- | --- | --- |
+| Important: earlier witnesses/retention labels can anchor endpoint ratings; local evidence IDs repeat across checkpoints | `judging/judge.py:363-374,441-447,471-480`; `judging/copilot-judge.mjs:118-121`; `judging/scenarios.py:61-65` | Disclose historical context and nominal citation validation; endpoint-only packets or namespaced IDs require a separately versioned instrument, not an alleged current fix |
+| Important: treatment-dependent acquisition and missing earlier history change witnessed risk sets | `judging/judge.py:246-255,682-689` | Require final fulfilment, acquisition classifications, risk counts and missingness with conditional loss density |
+| Important: post-CR1 loss uses any earlier eligible P witness, not only P10 | `judging/judge.py:363-365`; `judging/scenarios.py:26-47`; `judging/tests/test_judge.py:108-126` | Distinguish endpoint loss from incremental CR1-induced loss; explain maxima of nine/eleven prior-witness scenarios |
+| Important: no scheduling-block/epoch fields in report rows | `judging/judge.py:291-308,322-323,379-381,694-710` | Require private trajectory/source/epoch/block linkage; retain descriptive and unresolved dependence limits |
+| Important: pooled ordinal means/ranges conflate between-judge and repeat variability | `judging/judge.py:659-681`; `judging/config.example.json:11-14` | Require judge-specific ledger inspection and blinded human calibration; no reliability or equal-interval claim |
+| Important: hashes/admission checks cannot prove prospective choices or full-frame affordability | `judging/judge.py:319-323,396-405,565-572,589-609` | Record exposure/choices and separate calibration costs; budget exhaustion can leave contrasts unavailable |
+
+Source-verified strengths include full allocated-cell checks, no last-successful
+endpoint substitution, undefined empty/missing risk-set density, exact recorded
+commit/runtime-asset replay, read-only/no-network evaluation and tool-free
+guarded judging transport. Evidence locators: `judging/judge.py:136-164,291-308,336-341,673-710`,
+`harness/isolation.py:251-267`, `judging/copilot-judge.mjs:24-49,105-144`.
+These are implementation-contract findings, not adversarial integrity,
+deployed-environment, scientific or accuracy certification. Actual anchoring,
+mis-citation, calibration and dependence remain untested.
+
+### Validation and Remaining Decisions
+
+The owner's later technical-flow request extends this same paper workstream.
+The flow labelled "Main experiment" in the supplied explanation depicts
+stopped-archive post-run replay/judging; the one labelled "Judging" depicts
+tool-enabled development. The added subsection and original paired figure
+use the corrected names. They separate host-side Python/JavaScript model
+transport from isolated candidate execution, including writable development
+state versus read-only replay inputs, fresh processes versus retained files/
+Git, and collected failures versus unavailable isolation/collection.
+Exact source-support and final figure/PDF validation are recorded with this
+continuation rather than claiming the earlier judging-only build covered it.
+
+The Coach-guided follow-up checked the supplied sources at `b7973e20` and
+compared relevant contracts at running source `e71037d9`.
+The source evidence corrects one supplied control claim: the entire
+container is not capability-free. Four capabilities are re-added for
+the protected supervisor; the UID/GID 1001 candidate child has cleared
+effective/permitted/inheritable capabilities and no-new-privileges.
+Development persistence is validated state replay, not a persistent
+container or writable host checkout. Committed regular content crosses
+feature/CR checkpoints with canonical host history; candidate process
+reset does not reset host/model conversation context.
+
+| Technical claim | Inspected source locator at `b7973e20` | Evidence state / limit |
+| --- | --- | --- |
+| Stopped-archive recorded-HEAD replay, read-only snapshot/evaluator | `judging/judge.py:203-222,258-272`; `harness/isolation.py:265-267` | Source support; no real archive or image qualification inspected |
+| Bounded evidence, host adapters, no-tool judge and report | `judging/judge.py:167-195,218-220,485-523,598-605,646-755`; `judging/copilot-judge.mjs:24-49,118-125` | Source support; no provider sessions or actual packets executed |
+| Host bridge, fresh development commands and logical state replay | `harness/isolated_runtime.py:275-301,487-494,556-574`; `harness/isolation.py:447-467`; `harness/isolation_helper.py:529-572` | Source support; no persistent host writable mount or candidate process continuity implied |
+| Committed checkpoint imports and separate scheduled validation/measurement | `harness/isolated_runtime.py:335-384,427-451`; `CONTRIBUTOR.md:335-349` | Source support; agent-requested tests remain distinct from controller-scheduled checks |
+| No-network/root/resource controls, constrained supervisor and unprivileged candidate | `harness/isolation.py:251-267`; `harness/isolation_helper.py:25-33,282-297,337-360` | Conflict with whole-container zero-capability claim; corrected, not newly enforced |
+| Isolation/collection unavailable versus ordinary candidate failure | `judging/judge.py:351-356`; `judging/scenarios.py:298-308` | Source-supported classification, not verified outcomes |
+
+The running source has corresponding network/root/resource/mount controls
+at `harness/isolation.py:198-214`, development replay at `333-345` and
+host routing at `harness/isolated_runtime.py:249-332,486-622`.
+The transport/runtime guard files match between the two source pins, but
+the isolation files do not wholly match: linked/special-file output
+rejection recovery is a later enhancement and is not attributed to the
+running source. There is no judging directory at `e71037d9`.
+Neither comparison verifies the deployed image/runtime or all three
+archived implementation epochs.
+
+SymPy 1.14.0 checked the new fraction's zero-loss, total-loss and one-of-four
+boundaries (0, 1 and 1/4) on a valid positive denominator. Empty or unavailable
+risk-set endpoints are excluded by definition, not imputed as zero.
+The two-endpoint session expression is dimensionally a count; the conditional
+example 2 x 315 x 1 x 3 = 1,890 is arithmetic, not observed judging activity,
+an actual configuration or an independent sample size.
+
+The initial judging-only 56-test suite and structural checker covered the added prospective-method,
+source binding, risk-set, ordinal-rating, aggregation and cost boundaries.
+Structural results retain 94 cited/105 reusable references and a
+1,806-character abstract. Approximate main-body words are 11,506 using the
+existing method; historical comparison `0d5dcb02` remains unavailable.
+These checks validate paper invariants, not the external judging pipeline.
+
+Tectonic 0.17.0 compiled that initial single **47-page** PDF, Supplement page **37**,
+main judging subsection page **21**, instrument detail pages **44-46**.
+The actual compiler log has no errors, unresolved references or overfull/
+underfull boxes; the inherited `inputenc` warning remains.
+All-page text bounds, 183 internal destinations, 51 outline entries and
+absence of blank pages pass. Changed pages 21/29/44-46, the intact B/C
+examples on 46/47 and an all-page layout proof were rendered and inspected.
+The optional pdfLaTeX-specific log-marker check was not claimed under
+Tectonic. Final PDF SHA-256 is
+`93f3b405fc0a9118787619be514d5c58eea1e99154bd4fdb5edc97bf050fb75b`.
+Build intermediates, visual proof and the exact scoped source assessment
+remain external session working files; lasting findings and provenance
+are preserved here and publication evidence belongs in the PR.
+
+The complete technical-flow continuation passes **57 authoring tests**,
+including six-figure native byte-identical re-export and current source/PDF
+bindings. Structural checks retain 94 cited/105 reusable references and
+the 1,806-character abstract; approximate main-body words are now 11,943.
+Historical comparison remains unavailable. The complete PDF has **49 pages**,
+Supplement **39**, execution-boundary text **17-18**, paired Figure 6 **19**,
+judging methods **21**, detailed rules **46-48**, and the intact C prompt **49**.
+All-page text bounds, 184 internal destinations, 52 outline entries and
+absence of blank pages pass. Changed pages, the original paired diagram,
+B/C prompt pages and an all-page layout proof were inspected.
+The actual Tectonic log retains only the inherited `inputenc` warning,
+with no errors, unresolved references or overfull/underfull boxes.
+Final PDF SHA-256 is
+`6847840ddbf3d49abc27ab52b626fad57728ebccb592c7e83c13bd11734abdb6`.
+The source/editable/SVG/PNG diagram bindings are in
+[diagram-exports.json](../diagram-exports.json); the current source/PDF
+bindings are in the `runtime_flow_revision` of
+[supplement-integration.json](./supplement-integration.json).
+The earlier judging-only binding and validation outcome remain historical,
+not the complete candidate's receipt.
+
+Author/operator decisions remain: actual archive/source epochs and availability;
+freeze timing and prior outcome exposure; chosen judge models/adapters,
+repetitions and separate authorised budget; blinded human-calibration sample,
+agreement/disagreements and reviewers; residual blinding; and any justified
+block-aware inference outside the descriptive instrument. The source/PDF
+bindings are refreshed in [supplement-integration.json](./supplement-integration.json),
+preserving the historical 8 November bindings.
+Component checks, independent exact-head review and publication evidence are
+recorded separately below and in the PR. None supplies scientific, human,
+ethics, venue or employer publication approval.
 
 ## Measurement Provenance Clarification 8 November
 

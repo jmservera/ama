@@ -1,0 +1,30 @@
+{
+  "task_id": "paired-equity-id-collision-123",
+  "task_slug": "paired-equity-id-collision-123",
+  "parent_task": {"task_id": "parent-refresh-123", "task_slug": "parent-refresh-123"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-08/paired-equity-id-collision-123-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-08/paired-equity-id-collision-123-plan.md",
+    "details": ".copilot-tracking/details/2026-11-08/paired-equity-id-collision-123-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-08/paired-equity-id-collision-123-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-08/paired-equity-id-collision-123-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-08/paired-equity-id-collision-123-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Reproduce red before any production edit; no patch without reproduction", "status": "owner-directed", "evidence": "task statement 2026-11-08 correction cycle 1"},
+    {"decision": "Tier FOCUSED; stop on full-tier scope", "status": "owner-directed", "evidence": "task statement"},
+    {"decision": "No push, PR mutation, merge, ticks, cleanup, cloud; f14 receipt preserved", "status": "owner-directed", "evidence": "task statement"},
+    {"decision": "Reproduced red before any production edit", "status": "done", "evidence": "red unittest run exit 1, status pass for colliding anchor"},
+    {"decision": "Critique once; IC-001 and IC-002 applied, IC-003 accepted; author Review once, CLEAN, gate Pending", "status": "done", "evidence": "critique and review records"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Run fresh --changed --jobs 2 gate to c123-f15-collision1-1108 externally and verify the partial receipt; coordinator independent exact-head assessment follows"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Run and verify the fresh selected-tier partial gate on the frozen head", "rationale": "f14 receipt does not cover the corrected source", "evidence": "changes record"},
+    {"rank": 2, "task": "Independent exact-head assessment and hosted checks", "rationale": "required before PR 1222 update", "evidence": "review record"}
+  ]
+}

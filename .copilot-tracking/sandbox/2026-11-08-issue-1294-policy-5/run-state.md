@@ -1,0 +1,10 @@
+# Run state: issue-1294 behavior attempt A1 (C4), sandbox 5
+
+* Run type: full (report 4 targeted an earlier source boundary; README hosted/receipt/focused-command/SQL rows changed; reuse equivalence does not hold). retain-sandbox requested.
+* Targets: src/README.md, .github/copilot-instructions.md, .github/agents/ama-backlog-delivery-coordinator.agent.md, docs/reference/log.md (appended entries only)
+* Target revision: HEAD 2f1aa2e4d42b79364b95622d6198975203c1417e plus uncommitted C4 edits (target-diff-vs-2f1aa2e.patch); identities in source-identities-pre-dispatch.txt. Static review (independent proxy) passed with M1/L1 closed before this run.
+* Profile: inferred Medium; host task tool has no model parameter: unresolved, PROXY. No intended-profile or native claim. Fidelity: simulation, read-only executor.
+* Purpose: issue #1294 owner policy: focused tier for small/doc changes (targeted checks plus applicable hosted CI, no blanket --changed); full exact-head gate and verified external full receipt for major, SQL, infra, deployment, security-sensitive, release; mixed takes strictest applicable tier (two focused stay focused, any full component makes full); doubt full; impact-based classification of workflow/tool/dependency/Dockerfile edits; absent/path-filtered/skipped/unobserved CI is not a pass; truthful shared/hosted-only/local-only coverage; direct employee-chat check preserves runner acceptance contract; acceptance command with runner PYTHONPATH and three tests zero skips; direct --out not subject to runner 58-byte limit; hosted selection claims (selected projects only, data guard unconditional, widening, markdown-only no-project); partial-receipt BASE RELAXED vs full exact-base; self-contained focused command with failed-run-only resume using the failed receipt base; real SQL path src/core.
+* Grading confined to this contract; cosmetic observations nonblocking.
+* Containment: executor read-only; synthetic scenarios; lead writes sandbox files.
+* Terminal rule: plan details P03-T01 (cap two attempts, freeze after the last attempt; any later edit needs targeted static closure).

@@ -9,7 +9,7 @@
       "x": 0,
       "y": 0,
       "width": 1920,
-      "height": 1260,
+      "height": 2010,
       "angle": 0,
       "strokeColor": "#faf9f6",
       "backgroundColor": "#faf9f6",
@@ -31,7 +31,10 @@
       "updated": 1791972000000,
       "link": null,
       "locked": true,
-      "customData": {}
+      "customData": {
+        "sources": [],
+        "evidence": []
+      }
     },
     {
       "id": "48cda3f995f7f317de9c",
@@ -39,7 +42,7 @@
       "x": 72,
       "y": 60,
       "width": 1780,
-      "height": 60.0,
+      "height": 60,
       "angle": 0,
       "strokeColor": "#173f35",
       "backgroundColor": "transparent",
@@ -75,7 +78,9 @@
           60,
           1780,
           78
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -84,7 +89,7 @@
       "x": 74,
       "y": 145,
       "width": 1760,
-      "height": 30.0,
+      "height": 30,
       "angle": 0,
       "strokeColor": "#173f35",
       "backgroundColor": "transparent",
@@ -104,8 +109,8 @@
       "updated": 1791972000000,
       "link": null,
       "locked": false,
-      "text": "Zava Forward / executive architecture / PR #68 / 14 October 2026",
-      "originalText": "Zava Forward / executive architecture / PR #68 / 14 October 2026",
+      "text": "Zava Forward / executive architecture / 8 November 2026 continuation / original PR #68 layout",
+      "originalText": "Zava Forward / executive architecture / 8 November 2026 continuation / original PR #68 layout",
       "fontSize": 24,
       "fontFamily": 2,
       "textAlign": "left",
@@ -120,7 +125,9 @@
           145,
           1760,
           36
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -151,7 +158,10 @@
       "updated": 1791972000000,
       "link": null,
       "locked": false,
-      "customData": {}
+      "customData": {
+        "sources": [],
+        "evidence": []
+      }
     },
     {
       "id": "eddd8173af1f30c2a4de",
@@ -159,7 +169,7 @@
       "x": 100,
       "y": 227,
       "width": 1710,
-      "height": 65.0,
+      "height": 65,
       "angle": 0,
       "strokeColor": "#ffffff",
       "backgroundColor": "transparent",
@@ -195,7 +205,9 @@
           227,
           1710,
           72
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -227,7 +239,9 @@
       "link": null,
       "locked": false,
       "customData": {
-        "role": "boundary"
+        "role": "boundary",
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -236,7 +250,7 @@
       "x": 92,
       "y": 350,
       "width": 1736,
-      "height": 30.0,
+      "height": 30,
       "angle": 0,
       "strokeColor": "#286b91",
       "backgroundColor": "transparent",
@@ -272,7 +286,9 @@
           350,
           1736,
           40
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -316,18 +332,38 @@
         "status": "configured",
         "sources": [
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/auth.py",
+          "src/api/src/zava_forward/api/auth.py",
           "infra/scripts/initialize-workbench-staff.py"
+        ],
+        "evidence": [
+          {
+            "path": "infra/modules/containerapps.bicep",
+            "line": 1,
+            "sha256": "15324c2326ca7c0b8f902ffca2e488cfa9f9708a1de97af8bed8d1d069625d3a",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 1,
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "infra/scripts/initialize-workbench-staff.py",
+            "line": 1,
+            "sha256": "b7ee124fe0691492c99f0afa3ce9cfc2d744e49e9035f07ffba403aa4d0ffaa9",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
     {
       "id": "525e91706fd27f381ab3",
       "type": "image",
-      "x": 580.0,
-      "y": 387.0,
-      "width": 46.0,
-      "height": 46.0,
+      "x": 580,
+      "y": 387,
+      "width": 46,
+      "height": 46,
       "angle": 0,
       "strokeColor": "#173f35",
       "backgroundColor": "transparent",
@@ -357,7 +393,9 @@
       ],
       "crop": null,
       "customData": {
-        "azureIcon": "entra"
+        "azureIcon": "entra",
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -404,7 +442,9 @@
           385,
           558,
           33
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -413,7 +453,7 @@
       "x": 580,
       "y": 424,
       "width": 620,
-      "height": 25.0,
+      "height": 25,
       "angle": 0,
       "strokeColor": "#50635d",
       "backgroundColor": "transparent",
@@ -451,7 +491,9 @@
           424,
           620,
           26
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -495,6 +537,14 @@
         "status": "human",
         "sources": [
           "docs/prds/zava-forward-retrofit-programme-demonstrator.md"
+        ],
+        "evidence": [
+          {
+            "path": "docs/prds/zava-forward-retrofit-programme-demonstrator.md",
+            "line": 1,
+            "sha256": "a6a0c7b96ccbc226feb0763c664889a147d5cbed7b5818033d998e95be57c9aa",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
@@ -542,7 +592,9 @@
           502,
           280,
           20
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -589,7 +641,9 @@
           522,
           280,
           74
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -620,8 +674,8 @@
       "updated": 1791972000000,
       "link": null,
       "locked": false,
-      "text": "Phone, letter, officer help\nRecord resident choice\nNo resident portal needed",
-      "originalText": "Phone, letter, officer help\nRecord resident choice\nNo resident portal needed",
+      "text": "Phone, letter, officer help\nRecord resident choice\nAssisted choice stays",
+      "originalText": "Phone, letter, officer help\nRecord resident choice\nAssisted choice stays",
       "fontSize": 22,
       "fontFamily": 2,
       "textAlign": "left",
@@ -636,7 +690,9 @@
           602,
           280,
           126
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -689,6 +745,10 @@
         {
           "id": "0c4aef2041d759667f4e",
           "type": "arrow"
+        },
+        {
+          "id": "nov08-shared-api",
+          "type": "arrow"
         }
       ],
       "updated": 1791972000000,
@@ -700,9 +760,35 @@
         "status": "observed",
         "sources": [
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/server.py",
-          "mvp/zavaforward_mvp/assistants.py",
+          "src/api/src/zava_forward/api/server.py",
+          "src/core/src/zava_forward/core/assistants.py",
           "docs/adrs/0002-pilot-readiness-architecture.md#five-assistant-exercise-runtime-2026-10-13"
+        ],
+        "evidence": [
+          {
+            "path": "infra/modules/containerapps.bicep",
+            "line": 1,
+            "sha256": "15324c2326ca7c0b8f902ffca2e488cfa9f9708a1de97af8bed8d1d069625d3a",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "src/api/src/zava_forward/api/server.py",
+            "line": 1,
+            "sha256": "b2ebe1452a69cb3b8bae71c2b97327d6db19f2e50beec3a460ad3783da7bac39",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "src/core/src/zava_forward/core/assistants.py",
+            "line": 1,
+            "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "docs/adrs/0002-pilot-readiness-architecture.md",
+            "line": 1,
+            "sha256": "7b6f4f89d97a60a6733cbedb745595d2de5507048a6d5cf4538bc127e711d335",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
@@ -750,16 +836,18 @@
           502,
           620,
           20
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
       "id": "62715023a4728c810dbb",
       "type": "image",
-      "x": 580.0,
-      "y": 524.0,
-      "width": 52.0,
-      "height": 52.0,
+      "x": 580,
+      "y": 524,
+      "width": 52,
+      "height": 52,
       "angle": 0,
       "strokeColor": "#173f35",
       "backgroundColor": "transparent",
@@ -789,7 +877,9 @@
       ],
       "crop": null,
       "customData": {
-        "azureIcon": "aca"
+        "azureIcon": "aca",
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -798,7 +888,7 @@
       "x": 642,
       "y": 522,
       "width": 558,
-      "height": 35.0,
+      "height": 35,
       "angle": 0,
       "strokeColor": "#173f35",
       "backgroundColor": "transparent",
@@ -836,7 +926,9 @@
           522,
           558,
           74
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -845,7 +937,7 @@
       "x": 580,
       "y": 602,
       "width": 620,
-      "height": 90.0,
+      "height": 90,
       "angle": 0,
       "strokeColor": "#50635d",
       "backgroundColor": "transparent",
@@ -883,7 +975,9 @@
           602,
           620,
           126
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -928,8 +1022,34 @@
         "sources": [
           "infra/modules/foundry.bicep",
           "infra/main.bicep",
-          "mvp/zavaforward_mvp/ai.py",
+          "src/core/src/zava_forward/core/ai.py",
           "infra/README.md#five-assistant-version-current-handover"
+        ],
+        "evidence": [
+          {
+            "path": "infra/modules/foundry.bicep",
+            "line": 1,
+            "sha256": "f5b87329335efb35e615936370ba657ff65bc950ffacd2ce7d8e0fa2b8ea9e05",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "infra/main.bicep",
+            "line": 1,
+            "sha256": "c3010ba3b6ef5c53cb744d79a0b66f37042062cbe5ad84ddb63548a69b8c2bc6",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "src/core/src/zava_forward/core/ai.py",
+            "line": 1,
+            "sha256": "3593be1ea5cdb4e091712a205fcab4983e96139cb9b3077d2e82210e5b47c6e9",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "infra/README.md",
+            "line": 1,
+            "sha256": "be99190c627ea3678eabf9e33637e3c34be5695d01e8fbd0c7d8c87a3159399c",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
@@ -977,16 +1097,18 @@
           502,
           370,
           20
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
       "id": "a89146502d9dcc42da09",
       "type": "image",
-      "x": 1400.0,
-      "y": 524.0,
-      "width": 52.0,
-      "height": 52.0,
+      "x": 1400,
+      "y": 524,
+      "width": 52,
+      "height": 52,
       "angle": 0,
       "strokeColor": "#173f35",
       "backgroundColor": "transparent",
@@ -1016,7 +1138,9 @@
       ],
       "crop": null,
       "customData": {
-        "azureIcon": "openai"
+        "azureIcon": "openai",
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -1063,7 +1187,9 @@
           522,
           308,
           74
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -1110,7 +1236,9 @@
           602,
           370,
           126
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -1154,6 +1282,14 @@
         "status": "human",
         "sources": [
           "docs/adrs/0002-pilot-readiness-architecture.md"
+        ],
+        "evidence": [
+          {
+            "path": "docs/adrs/0002-pilot-readiness-architecture.md",
+            "line": 1,
+            "sha256": "7b6f4f89d97a60a6733cbedb745595d2de5507048a6d5cf4538bc127e711d335",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
@@ -1201,7 +1337,9 @@
           812,
           280,
           20
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -1248,7 +1386,9 @@
           832,
           280,
           44
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -1295,7 +1435,9 @@
           882,
           280,
           56
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -1328,6 +1470,10 @@
         {
           "id": "5395764f763f83e55954",
           "type": "arrow"
+        },
+        {
+          "id": "nov08-same-sql",
+          "type": "arrow"
         }
       ],
       "updated": 1791972000000,
@@ -1339,8 +1485,28 @@
         "status": "observed",
         "sources": [
           "infra/modules/sql.bicep",
-          "mvp/zavaforward_mvp/mssqlstore.py",
+          "src/core/src/zava_forward/core/mssqlstore.py",
           "infra/README.md#five-assistant-version-current-handover"
+        ],
+        "evidence": [
+          {
+            "path": "infra/modules/sql.bicep",
+            "line": 1,
+            "sha256": "b3d90d793141cd937612c271423e6edc1d83b83fcdec24f7532f7c1c3599ac4e",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "src/core/src/zava_forward/core/mssqlstore.py",
+            "line": 1,
+            "sha256": "dca3b3f0276b39384520fb518849445f68af5c97df5e335f7e7a1fe82662babd",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "infra/README.md",
+            "line": 1,
+            "sha256": "be99190c627ea3678eabf9e33637e3c34be5695d01e8fbd0c7d8c87a3159399c",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
@@ -1388,16 +1554,18 @@
           812,
           270,
           20
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
       "id": "bc347a14aa6556cf9703",
       "type": "image",
-      "x": 580.0,
-      "y": 834.0,
-      "width": 46.0,
-      "height": 46.0,
+      "x": 580,
+      "y": 834,
+      "width": 46,
+      "height": 46,
       "angle": 0,
       "strokeColor": "#173f35",
       "backgroundColor": "transparent",
@@ -1427,7 +1595,9 @@
       ],
       "crop": null,
       "customData": {
-        "azureIcon": "sql"
+        "azureIcon": "sql",
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -1474,7 +1644,9 @@
           832,
           208,
           44
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -1521,7 +1693,9 @@
           882,
           270,
           56
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -1565,7 +1739,21 @@
         "status": "configured",
         "sources": [
           "infra/modules/storage.bicep",
-          "mvp/zavaforward_mvp/documents.py"
+          "src/core/src/zava_forward/core/documents.py"
+        ],
+        "evidence": [
+          {
+            "path": "infra/modules/storage.bicep",
+            "line": 1,
+            "sha256": "fa08533e606f2c5c7a3a13d3f7e0544f8f94554691bd4c2e26cce7b1effa65db",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "src/core/src/zava_forward/core/documents.py",
+            "line": 1,
+            "sha256": "d34928d21ca41588588c22afb389f94797c7e3073d36b28353677e061cc1991a",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
@@ -1613,16 +1801,18 @@
           812,
           270,
           20
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
       "id": "bfc7f455bf26e39ced80",
       "type": "image",
-      "x": 930.0,
-      "y": 834.0,
-      "width": 46.0,
-      "height": 46.0,
+      "x": 930,
+      "y": 834,
+      "width": 46,
+      "height": 46,
       "angle": 0,
       "strokeColor": "#173f35",
       "backgroundColor": "transparent",
@@ -1652,7 +1842,9 @@
       ],
       "crop": null,
       "customData": {
-        "azureIcon": "blob"
+        "azureIcon": "blob",
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -1699,7 +1891,9 @@
           832,
           208,
           44
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -1746,16 +1940,18 @@
           882,
           270,
           56
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
       "id": "49eb2c57b645018054c3",
       "type": "arrow",
       "x": 441,
-      "y": 615.0,
+      "y": 615,
       "width": 110,
-      "height": 0.0,
+      "height": 0,
       "angle": 0,
       "strokeColor": "#1d7563",
       "backgroundColor": "transparent",
@@ -1778,23 +1974,23 @@
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           110,
-          0.0
+          0
         ]
       ],
       "startArrowhead": null,
       "endArrowhead": "arrow",
       "startBinding": {
         "elementId": "0baa44e236185c39bc3b",
-        "focus": 0.0,
+        "focus": 0,
         "gap": 9
       },
       "endBinding": {
         "elementId": "2192f52cffdafe092336",
-        "focus": 0.0,
+        "focus": 0,
         "gap": 9
       },
       "elbowed": false,
@@ -1805,16 +2001,30 @@
         "status": "observed",
         "sources": [
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/server.py"
+          "src/api/src/zava_forward/api/server.py"
+        ],
+        "evidence": [
+          {
+            "path": "infra/modules/containerapps.bicep",
+            "line": 1,
+            "sha256": "15324c2326ca7c0b8f902ffca2e488cfa9f9708a1de97af8bed8d1d069625d3a",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "src/api/src/zava_forward/api/server.py",
+            "line": 1,
+            "sha256": "b2ebe1452a69cb3b8bae71c2b97327d6db19f2e50beec3a460ad3783da7bac39",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
     {
       "id": "e6eb29489d099f0f5f23",
       "type": "arrow",
-      "x": 890.0,
+      "x": 890,
       "y": 471,
-      "width": 0.0,
+      "width": 0,
       "height": 10,
       "angle": 0,
       "strokeColor": "#286b91",
@@ -1837,11 +2047,11 @@
       "locked": false,
       "points": [
         [
-          0.0,
+          0,
           0
         ],
         [
-          0.0,
+          0,
           10
         ]
       ],
@@ -1849,12 +2059,12 @@
       "endArrowhead": "arrow",
       "startBinding": {
         "elementId": "ec8e79bf2966e500bc4a",
-        "focus": 0.0,
+        "focus": 0,
         "gap": 9
       },
       "endBinding": {
         "elementId": "2192f52cffdafe092336",
-        "focus": 0.0,
+        "focus": 0,
         "gap": 9
       },
       "elbowed": false,
@@ -1865,8 +2075,28 @@
         "status": "configured",
         "sources": [
           "infra/modules/containerapps.bicep",
-          "mvp/zavaforward_mvp/auth.py",
+          "src/api/src/zava_forward/api/auth.py",
           "infra/scripts/initialize-workbench-staff.py"
+        ],
+        "evidence": [
+          {
+            "path": "infra/modules/containerapps.bicep",
+            "line": 1,
+            "sha256": "15324c2326ca7c0b8f902ffca2e488cfa9f9708a1de97af8bed8d1d069625d3a",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "src/api/src/zava_forward/api/auth.py",
+            "line": 1,
+            "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "infra/scripts/initialize-workbench-staff.py",
+            "line": 1,
+            "sha256": "b7ee124fe0691492c99f0afa3ce9cfc2d744e49e9035f07ffba403aa4d0ffaa9",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
@@ -1874,9 +2104,9 @@
       "id": "6d6081a84b6e7b457b07",
       "type": "arrow",
       "x": 1229,
-      "y": 615.0,
+      "y": 615,
       "width": 142,
-      "height": 0.0,
+      "height": 0,
       "angle": 0,
       "strokeColor": "#7053a0",
       "backgroundColor": "transparent",
@@ -1899,23 +2129,23 @@
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           142,
-          0.0
+          0
         ]
       ],
       "startArrowhead": "arrow",
       "endArrowhead": "arrow",
       "startBinding": {
         "elementId": "2192f52cffdafe092336",
-        "focus": 0.0,
+        "focus": 0,
         "gap": 9
       },
       "endBinding": {
         "elementId": "7cb08d201da6d6377180",
-        "focus": 0.0,
+        "focus": 0,
         "gap": 9
       },
       "elbowed": false,
@@ -1925,11 +2155,43 @@
         "target": "model",
         "status": "conditional",
         "sources": [
-          "mvp/zavaforward_mvp/assistants.py",
+          "src/core/src/zava_forward/core/assistants.py",
           "docs/adrs/0002-pilot-readiness-architecture.md#five-assistant-exercise-runtime-2026-10-13",
           "infra/modules/foundry.bicep",
           "infra/main.bicep",
-          "mvp/zavaforward_mvp/ai.py"
+          "src/core/src/zava_forward/core/ai.py"
+        ],
+        "evidence": [
+          {
+            "path": "src/core/src/zava_forward/core/assistants.py",
+            "line": 1,
+            "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "docs/adrs/0002-pilot-readiness-architecture.md",
+            "line": 1,
+            "sha256": "7b6f4f89d97a60a6733cbedb745595d2de5507048a6d5cf4538bc127e711d335",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "infra/modules/foundry.bicep",
+            "line": 1,
+            "sha256": "f5b87329335efb35e615936370ba657ff65bc950ffacd2ce7d8e0fa2b8ea9e05",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "infra/main.bicep",
+            "line": 1,
+            "sha256": "c3010ba3b6ef5c53cb744d79a0b66f37042062cbe5ad84ddb63548a69b8c2bc6",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "src/core/src/zava_forward/core/ai.py",
+            "line": 1,
+            "sha256": "3593be1ea5cdb4e091712a205fcab4983e96139cb9b3077d2e82210e5b47c6e9",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
@@ -1961,7 +2223,7 @@
       "locked": false,
       "points": [
         [
-          0.0,
+          0,
           0
         ],
         [
@@ -1978,7 +2240,7 @@
       },
       "endBinding": {
         "elementId": "69af7394ba72e9d4bff8",
-        "focus": 0.0,
+        "focus": 0,
         "gap": 9
       },
       "elbowed": false,
@@ -1989,7 +2251,21 @@
         "status": "observed",
         "sources": [
           "infra/modules/sql.bicep",
-          "mvp/zavaforward_mvp/mssqlstore.py"
+          "src/core/src/zava_forward/core/mssqlstore.py"
+        ],
+        "evidence": [
+          {
+            "path": "infra/modules/sql.bicep",
+            "line": 1,
+            "sha256": "b3d90d793141cd937612c271423e6edc1d83b83fcdec24f7532f7c1c3599ac4e",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "src/core/src/zava_forward/core/mssqlstore.py",
+            "line": 1,
+            "sha256": "dca3b3f0276b39384520fb518849445f68af5c97df5e335f7e7a1fe82662babd",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
@@ -2021,7 +2297,7 @@
       "locked": false,
       "points": [
         [
-          0.0,
+          0,
           0
         ],
         [
@@ -2038,7 +2314,7 @@
       },
       "endBinding": {
         "elementId": "59d36717a206823cf100",
-        "focus": 0.0,
+        "focus": 0,
         "gap": 9
       },
       "elbowed": false,
@@ -2049,7 +2325,21 @@
         "status": "configured",
         "sources": [
           "infra/modules/storage.bicep",
-          "mvp/zavaforward_mvp/documents.py"
+          "src/core/src/zava_forward/core/documents.py"
+        ],
+        "evidence": [
+          {
+            "path": "infra/modules/storage.bicep",
+            "line": 1,
+            "sha256": "fa08533e606f2c5c7a3a13d3f7e0544f8f94554691bd4c2e26cce7b1effa65db",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          },
+          {
+            "path": "src/core/src/zava_forward/core/documents.py",
+            "line": 1,
+            "sha256": "d34928d21ca41588588c22afb389f94797c7e3073d36b28353677e061cc1991a",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
@@ -2057,7 +2347,7 @@
       "id": "0c4aef2041d759667f4e",
       "type": "arrow",
       "x": 441,
-      "y": 875.0,
+      "y": 875,
       "width": 110,
       "height": 167.5,
       "angle": 0,
@@ -2082,11 +2372,11 @@
       "points": [
         [
           0,
-          0.0
+          0
         ],
         [
           51,
-          0.0
+          0
         ],
         [
           51,
@@ -2101,7 +2391,7 @@
       "endArrowhead": "arrow",
       "startBinding": {
         "elementId": "c06ccb8c6179f8aca2fa",
-        "focus": 0.0,
+        "focus": 0,
         "gap": 9
       },
       "endBinding": {
@@ -2117,6 +2407,14 @@
         "status": "observed",
         "sources": [
           "docs/adrs/0002-pilot-readiness-architecture.md"
+        ],
+        "evidence": [
+          {
+            "path": "docs/adrs/0002-pilot-readiness-architecture.md",
+            "line": 1,
+            "sha256": "7b6f4f89d97a60a6733cbedb745595d2de5507048a6d5cf4538bc127e711d335",
+            "classification": "Retained original core topology; current migrated source locator, not renewed live acceptance"
+          }
         ]
       }
     },
@@ -2164,7 +2462,9 @@
           708,
           620,
           27
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -2195,7 +2495,10 @@
       "updated": 1791972000000,
       "link": null,
       "locked": false,
-      "customData": {}
+      "customData": {
+        "sources": [],
+        "evidence": []
+      }
     },
     {
       "id": "e62aacf9b830ac1d46d6",
@@ -2239,7 +2542,9 @@
           1040,
           812,
           36
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -2248,7 +2553,7 @@
       "x": 94,
       "y": 1086,
       "width": 812,
-      "height": 75.0,
+      "height": 75,
       "angle": 0,
       "strokeColor": "#50635d",
       "backgroundColor": "transparent",
@@ -2284,7 +2589,9 @@
           1086,
           812,
           78
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -2315,7 +2622,10 @@
       "updated": 1791972000000,
       "link": null,
       "locked": false,
-      "customData": {}
+      "customData": {
+        "sources": [],
+        "evidence": []
+      }
     },
     {
       "id": "b6849df2741a80542b23",
@@ -2359,7 +2669,9 @@
           1040,
           846,
           36
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -2368,7 +2680,7 @@
       "x": 980,
       "y": 1086,
       "width": 846,
-      "height": 75.0,
+      "height": 75,
       "angle": 0,
       "strokeColor": "#50635d",
       "backgroundColor": "transparent",
@@ -2404,7 +2716,9 @@
           1086,
           846,
           78
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -2413,7 +2727,7 @@
       "x": 74,
       "y": 1195,
       "width": 1770,
-      "height": 25.0,
+      "height": 25,
       "angle": 0,
       "strokeColor": "#173f35",
       "backgroundColor": "transparent",
@@ -2449,7 +2763,9 @@
           1195,
           1770,
           32
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -2481,7 +2797,9 @@
       "link": null,
       "locked": false,
       "customData": {
-        "role": "flow-label-background"
+        "role": "flow-label-background",
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -2526,7 +2844,9 @@
           600,
           80,
           52
-        ]
+        ],
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -2558,7 +2878,9 @@
       "link": null,
       "locked": false,
       "customData": {
-        "role": "flow-label-background"
+        "role": "flow-label-background",
+        "sources": [],
+        "evidence": []
       }
     },
     {
@@ -2567,7 +2889,7 @@
       "x": 1238,
       "y": 596,
       "width": 120,
-      "height": 45.0,
+      "height": 45,
       "angle": 0,
       "strokeColor": "#7053a0",
       "backgroundColor": "transparent",
@@ -2603,8 +2925,2222 @@
           596,
           120,
           52
+        ],
+        "sources": [],
+        "evidence": []
+      }
+    },
+    {
+      "id": "nov08-heading",
+      "type": "text",
+      "x": 72,
+      "y": 1270,
+      "width": 1780,
+      "height": 32.199999999999996,
+      "angle": 0,
+      "strokeColor": "#0078D4",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 102,
+      "version": 1,
+      "versionNonce": 202,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": []
+      },
+      "text": "8 NOVEMBER SOURCE CONTINUATION / HOME TELEMETRY + AVERAGES + RESIDENT WEBSITE",
+      "originalText": "8 NOVEMBER SOURCE CONTINUATION / HOME TELEMETRY + AVERAGES + RESIDENT WEBSITE",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-homes",
+      "type": "rectangle",
+      "x": 72,
+      "y": 1340,
+      "width": 240,
+      "height": 168,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 103,
+      "version": 1,
+      "versionNonce": 203,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "nov08-sensor-ingress",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "sensors",
+            "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
+            "line": 31,
+            "anchor": "## Bounded streaming engineering",
+            "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
+            "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
+          }
         ]
       }
+    },
+    {
+      "id": "nov08-homes-title",
+      "type": "text",
+      "x": 92,
+      "y": 1354,
+      "width": 200,
+      "height": 32.199999999999996,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 104,
+      "version": 1,
+      "versionNonce": 204,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "sensors",
+            "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
+            "line": 31,
+            "anchor": "## Bounded streaming engineering",
+            "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
+            "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
+          }
+        ],
+        "container": "nov08-homes"
+      },
+      "text": "Home sensors",
+      "originalText": "Home sensors",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-homes-body",
+      "type": "text",
+      "x": 92,
+      "y": 1390.2,
+      "width": 200,
+      "height": 82.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 105,
+      "version": 1,
+      "versionNonce": 205,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "sensors",
+            "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
+            "line": 31,
+            "anchor": "## Bounded streaming engineering",
+            "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
+            "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
+          }
+        ],
+        "container": "nov08-homes"
+      },
+      "text": "Consent + checks\nSynthetic exercise\nLive use: gated",
+      "originalText": "Consent + checks\nSynthetic exercise\nLive use: gated",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-hub",
+      "type": "rectangle",
+      "x": 360,
+      "y": 1340,
+      "width": 270,
+      "height": 168,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 106,
+      "version": 1,
+      "versionNonce": 206,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "nov08-sensor-ingress",
+          "type": "arrow"
+        },
+        {
+          "id": "nov08-hub-route",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "deviceTransport",
+            "path": "infra/modules/iothub.bicep",
+            "line": 50,
+            "anchor": "resource telemetryNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {",
+            "sha256": "78ed8ea40c95608d07f6ef465805350d88c30f6c509b7edf3438a63a1a2f509e",
+            "classification": "B1 Hub/private Event Hub adapter; routing-ready, SDK wiring and live consumer acceptance separate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nov08-hub-title",
+      "type": "text",
+      "x": 380,
+      "y": 1354,
+      "width": 230,
+      "height": 32.199999999999996,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 107,
+      "version": 1,
+      "versionNonce": 207,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "deviceTransport",
+            "path": "infra/modules/iothub.bicep",
+            "line": 50,
+            "anchor": "resource telemetryNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {",
+            "sha256": "78ed8ea40c95608d07f6ef465805350d88c30f6c509b7edf3438a63a1a2f509e",
+            "classification": "B1 Hub/private Event Hub adapter; routing-ready, SDK wiring and live consumer acceptance separate"
+          }
+        ],
+        "container": "nov08-hub"
+      },
+      "text": "Azure IoT Hub",
+      "originalText": "Azure IoT Hub",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-hub-body",
+      "type": "text",
+      "x": 380,
+      "y": 1390.2,
+      "width": 230,
+      "height": 82.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 108,
+      "version": 1,
+      "versionNonce": 208,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "deviceTransport",
+            "path": "infra/modules/iothub.bicep",
+            "line": 50,
+            "anchor": "resource telemetryNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {",
+            "sha256": "78ed8ea40c95608d07f6ef465805350d88c30f6c509b7edf3438a63a1a2f509e",
+            "classification": "B1 Hub/private Event Hub adapter; routing-ready, SDK wiring and live consumer acceptance separate"
+          }
+        ],
+        "container": "nov08-hub"
+      },
+      "text": "B1 / private Hub\nHub MI route\nRouting-ready gate",
+      "originalText": "B1 / private Hub\nHub MI route\nRouting-ready gate",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-event-hubs",
+      "type": "rectangle",
+      "x": 680,
+      "y": 1340,
+      "width": 270,
+      "height": 168,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 109,
+      "version": 1,
+      "versionNonce": 209,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "nov08-hub-route",
+          "type": "arrow"
+        },
+        {
+          "id": "nov08-receive",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "deviceTransport",
+            "path": "infra/modules/iothub.bicep",
+            "line": 50,
+            "anchor": "resource telemetryNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {",
+            "sha256": "78ed8ea40c95608d07f6ef465805350d88c30f6c509b7edf3438a63a1a2f509e",
+            "classification": "B1 Hub/private Event Hub adapter; routing-ready, SDK wiring and live consumer acceptance separate"
+          },
+          {
+            "key": "stream",
+            "path": "src/api/src/zava_forward/api/iot_stream.py",
+            "line": 50,
+            "anchor": "class Activation:",
+            "sha256": "30cb7b5b1d313b3229ee9168237c3e754362086e8c8b5e9344717af8bf35054d",
+            "classification": "Source-coded finite Event Hubs SDK adapter; separate live activation"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nov08-event-hubs-title",
+      "type": "text",
+      "x": 700,
+      "y": 1354,
+      "width": 230,
+      "height": 32.199999999999996,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 110,
+      "version": 1,
+      "versionNonce": 210,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "deviceTransport",
+            "path": "infra/modules/iothub.bicep",
+            "line": 50,
+            "anchor": "resource telemetryNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {",
+            "sha256": "78ed8ea40c95608d07f6ef465805350d88c30f6c509b7edf3438a63a1a2f509e",
+            "classification": "B1 Hub/private Event Hub adapter; routing-ready, SDK wiring and live consumer acceptance separate"
+          },
+          {
+            "key": "stream",
+            "path": "src/api/src/zava_forward/api/iot_stream.py",
+            "line": 50,
+            "anchor": "class Activation:",
+            "sha256": "30cb7b5b1d313b3229ee9168237c3e754362086e8c8b5e9344717af8bf35054d",
+            "classification": "Source-coded finite Event Hubs SDK adapter; separate live activation"
+          }
+        ],
+        "container": "nov08-event-hubs"
+      },
+      "text": "Event Hubs",
+      "originalText": "Event Hubs",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-event-hubs-body",
+      "type": "text",
+      "x": 700,
+      "y": 1390.2,
+      "width": 230,
+      "height": 82.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 111,
+      "version": 1,
+      "versionNonce": 211,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "deviceTransport",
+            "path": "infra/modules/iothub.bicep",
+            "line": 50,
+            "anchor": "resource telemetryNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {",
+            "sha256": "78ed8ea40c95608d07f6ef465805350d88c30f6c509b7edf3438a63a1a2f509e",
+            "classification": "B1 Hub/private Event Hub adapter; routing-ready, SDK wiring and live consumer acceptance separate"
+          },
+          {
+            "key": "stream",
+            "path": "src/api/src/zava_forward/api/iot_stream.py",
+            "line": 50,
+            "anchor": "class Activation:",
+            "sha256": "30cb7b5b1d313b3229ee9168237c3e754362086e8c8b5e9344717af8bf35054d",
+            "classification": "Source-coded finite Event Hubs SDK adapter; separate live activation"
+          }
+        ],
+        "container": "nov08-event-hubs"
+      },
+      "text": "Dedicated transport\nAPI receives via PE\nNot a history store",
+      "originalText": "Dedicated transport\nAPI receives via PE\nNot a history store",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-service",
+      "type": "rectangle",
+      "x": 1000,
+      "y": 1340,
+      "width": 410,
+      "height": 168,
+      "angle": 0,
+      "strokeColor": "#C7D8CF",
+      "backgroundColor": "#FFFFFF",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 112,
+      "version": 1,
+      "versionNonce": 212,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "nov08-receive",
+          "type": "arrow"
+        },
+        {
+          "id": "nov08-retention",
+          "type": "arrow"
+        },
+        {
+          "id": "nov08-averages-read",
+          "type": "arrow"
+        },
+        {
+          "id": "nov08-shared-api",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "intake",
+            "path": "src/api/src/zava_forward/api/sensor_ingestion.py",
+            "line": 18,
+            "anchor": "class SensorIngestion:",
+            "sha256": "baae55f2e6dcdad25159838e53edeada7d4ed382023a01ca9495fac77bc015f2",
+            "classification": "API-owned finite intake composition, not an automatically running HTTP route"
+          },
+          {
+            "key": "consumer",
+            "path": "src/core/src/zava_forward/core/sensor_consumer.py",
+            "line": 219,
+            "anchor": "class SensorConsumer:",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
+          },
+          {
+            "key": "analysis",
+            "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
+            "line": 21,
+            "anchor": "def analyse_retained(",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
+            "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
+          },
+          {
+            "key": "averages",
+            "path": "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py",
+            "line": 350,
+            "anchor": "def retrofit_comparison(",
+            "sha256": "66786d3f86ce5a340443b9218e5ff590ee82be0404e51bc2cd7e1a98ea95958f",
+            "classification": "Exercise window means computed on read; not a persisted averages store or accepted causal method"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nov08-service-title",
+      "type": "text",
+      "x": 1020,
+      "y": 1354,
+      "width": 370,
+      "height": 32.199999999999996,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 113,
+      "version": 1,
+      "versionNonce": 213,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "intake",
+            "path": "src/api/src/zava_forward/api/sensor_ingestion.py",
+            "line": 18,
+            "anchor": "class SensorIngestion:",
+            "sha256": "baae55f2e6dcdad25159838e53edeada7d4ed382023a01ca9495fac77bc015f2",
+            "classification": "API-owned finite intake composition, not an automatically running HTTP route"
+          },
+          {
+            "key": "consumer",
+            "path": "src/core/src/zava_forward/core/sensor_consumer.py",
+            "line": 219,
+            "anchor": "class SensorConsumer:",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
+          },
+          {
+            "key": "analysis",
+            "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
+            "line": 21,
+            "anchor": "def analyse_retained(",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
+            "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
+          },
+          {
+            "key": "averages",
+            "path": "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py",
+            "line": 350,
+            "anchor": "def retrofit_comparison(",
+            "sha256": "66786d3f86ce5a340443b9218e5ff590ee82be0404e51bc2cd7e1a98ea95958f",
+            "classification": "Exercise window means computed on read; not a persisted averages store or accepted causal method"
+          }
+        ],
+        "container": "nov08-service"
+      },
+      "text": "API telemetry service",
+      "originalText": "API telemetry service",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-service-body",
+      "type": "text",
+      "x": 1020,
+      "y": 1390.2,
+      "width": 370,
+      "height": 82.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 114,
+      "version": 1,
+      "versionNonce": 214,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "intake",
+            "path": "src/api/src/zava_forward/api/sensor_ingestion.py",
+            "line": 18,
+            "anchor": "class SensorIngestion:",
+            "sha256": "baae55f2e6dcdad25159838e53edeada7d4ed382023a01ca9495fac77bc015f2",
+            "classification": "API-owned finite intake composition, not an automatically running HTTP route"
+          },
+          {
+            "key": "consumer",
+            "path": "src/core/src/zava_forward/core/sensor_consumer.py",
+            "line": 219,
+            "anchor": "class SensorConsumer:",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
+          },
+          {
+            "key": "analysis",
+            "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
+            "line": 21,
+            "anchor": "def analyse_retained(",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
+            "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
+          },
+          {
+            "key": "averages",
+            "path": "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py",
+            "line": 350,
+            "anchor": "def retrofit_comparison(",
+            "sha256": "66786d3f86ce5a340443b9218e5ff590ee82be0404e51bc2cd7e1a98ea95958f",
+            "classification": "Exercise window means computed on read; not a persisted averages store or accepted causal method"
+          }
+        ],
+        "container": "nov08-service"
+      },
+      "text": "Validate / deduplicate / append\nRead-only history + averages\nAnalysis read-only; no tasks",
+      "originalText": "Validate / deduplicate / append\nRead-only history + averages\nAnalysis read-only; no tasks",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-store",
+      "type": "rectangle",
+      "x": 1460,
+      "y": 1340,
+      "width": 388,
+      "height": 168,
+      "angle": 0,
+      "strokeColor": "#C7D8CF",
+      "backgroundColor": "#FFFFFF",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 115,
+      "version": 1,
+      "versionNonce": 215,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "nov08-retention",
+          "type": "arrow"
+        },
+        {
+          "id": "nov08-same-sql",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "consumer",
+            "path": "src/core/src/zava_forward/core/sensor_consumer.py",
+            "line": 219,
+            "anchor": "class SensorConsumer:",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
+          },
+          {
+            "key": "sql",
+            "path": "infra/modules/sql.bicep",
+            "line": 34,
+            "anchor": "resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {",
+            "sha256": "b3d90d793141cd937612c271423e6edc1d83b83fcdec24f7532f7c1c3599ac4e",
+            "classification": "Managed SQL service outside VNet; contained-user/grant initialization separate"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nov08-store-title",
+      "type": "text",
+      "x": 1480,
+      "y": 1354,
+      "width": 348,
+      "height": 32.199999999999996,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 116,
+      "version": 1,
+      "versionNonce": 216,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "consumer",
+            "path": "src/core/src/zava_forward/core/sensor_consumer.py",
+            "line": 219,
+            "anchor": "class SensorConsumer:",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
+          },
+          {
+            "key": "sql",
+            "path": "infra/modules/sql.bicep",
+            "line": 34,
+            "anchor": "resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {",
+            "sha256": "b3d90d793141cd937612c271423e6edc1d83b83fcdec24f7532f7c1c3599ac4e",
+            "classification": "Managed SQL service outside VNet; contained-user/grant initialization separate"
+          }
+        ],
+        "container": "nov08-store"
+      },
+      "text": "Azure SQL telemetry",
+      "originalText": "Azure SQL telemetry",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-store-body",
+      "type": "text",
+      "x": 1480,
+      "y": 1390.2,
+      "width": 348,
+      "height": 82.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 117,
+      "version": 1,
+      "versionNonce": 217,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "consumer",
+            "path": "src/core/src/zava_forward/core/sensor_consumer.py",
+            "line": 219,
+            "anchor": "class SensorConsumer:",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
+          },
+          {
+            "key": "sql",
+            "path": "infra/modules/sql.bicep",
+            "line": 34,
+            "anchor": "resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {",
+            "sha256": "b3d90d793141cd937612c271423e6edc1d83b83fcdec24f7532f7c1c3599ac4e",
+            "classification": "Managed SQL service outside VNet; contained-user/grant initialization separate"
+          }
+        ],
+        "container": "nov08-store"
+      },
+      "text": "Retained per-home readings\nRestricted delivery / DQ history\nNot an unrestricted AI feed",
+      "originalText": "Retained per-home readings\nRestricted delivery / DQ history\nNot an unrestricted AI feed",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-averages",
+      "type": "rectangle",
+      "x": 72,
+      "y": 1570,
+      "width": 810,
+      "height": 180,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 118,
+      "version": 1,
+      "versionNonce": 218,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "nov08-averages-read",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "analysis",
+            "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
+            "line": 21,
+            "anchor": "def analyse_retained(",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
+            "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
+          },
+          {
+            "key": "averages",
+            "path": "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py",
+            "line": 350,
+            "anchor": "def retrofit_comparison(",
+            "sha256": "66786d3f86ce5a340443b9218e5ff590ee82be0404e51bc2cd7e1a98ea95958f",
+            "classification": "Exercise window means computed on read; not a persisted averages store or accepted causal method"
+          },
+          {
+            "key": "qualityHelper",
+            "path": "src/core/src/zava_forward/core/assistants.py",
+            "line": 47,
+            "anchor": "    \"quality-evidence\": dict(",
+            "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+            "classification": "Current quality helper uses measure/checklist/document evidence; telemetry linkage is a gated proposal"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nov08-averages-title",
+      "type": "text",
+      "x": 92,
+      "y": 1584,
+      "width": 770,
+      "height": 32.199999999999996,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 119,
+      "version": 1,
+      "versionNonce": 219,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "analysis",
+            "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
+            "line": 21,
+            "anchor": "def analyse_retained(",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
+            "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
+          },
+          {
+            "key": "averages",
+            "path": "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py",
+            "line": 350,
+            "anchor": "def retrofit_comparison(",
+            "sha256": "66786d3f86ce5a340443b9218e5ff590ee82be0404e51bc2cd7e1a98ea95958f",
+            "classification": "Exercise window means computed on read; not a persisted averages store or accepted causal method"
+          },
+          {
+            "key": "qualityHelper",
+            "path": "src/core/src/zava_forward/core/assistants.py",
+            "line": 47,
+            "anchor": "    \"quality-evidence\": dict(",
+            "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+            "classification": "Current quality helper uses measure/checklist/document evidence; telemetry linkage is a gated proposal"
+          }
+        ],
+        "container": "nov08-averages"
+      },
+      "text": "Household history + averages responsibility",
+      "originalText": "Household history + averages responsibility",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-averages-body",
+      "type": "text",
+      "x": 92,
+      "y": 1620.2,
+      "width": 770,
+      "height": 82.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 120,
+      "version": 1,
+      "versionNonce": 220,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "analysis",
+            "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
+            "line": 21,
+            "anchor": "def analyse_retained(",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
+            "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
+          },
+          {
+            "key": "averages",
+            "path": "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py",
+            "line": 350,
+            "anchor": "def retrofit_comparison(",
+            "sha256": "66786d3f86ce5a340443b9218e5ff590ee82be0404e51bc2cd7e1a98ea95958f",
+            "classification": "Exercise window means computed on read; not a persisted averages store or accepted causal method"
+          },
+          {
+            "key": "qualityHelper",
+            "path": "src/core/src/zava_forward/core/assistants.py",
+            "line": 47,
+            "anchor": "    \"quality-evidence\": dict(",
+            "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+            "classification": "Current quality helper uses measure/checklist/document evidence; telemetry linkage is a gated proposal"
+          }
+        ],
+        "container": "nov08-averages"
+      },
+      "text": "Current: exercise means computed on read from retained readings.\nTARGET: stored per-home averages in existing SQL, separately gated.\nNo materialization worker, schema or quality-helper integration is built.",
+      "originalText": "Current: exercise means computed on read from retained readings.\nTARGET: stored per-home averages in existing SQL, separately gated.\nNo materialization worker, schema or quality-helper integration is built.",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-resident",
+      "type": "rectangle",
+      "x": 960,
+      "y": 1570,
+      "width": 410,
+      "height": 180,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 121,
+      "version": 1,
+      "versionNonce": 221,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "nov08-resident-data",
+          "type": "arrow"
+        },
+        {
+          "id": "nov08-resident-ai",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "src/core/src/zava_forward/core/resident_preview.py",
+            "line": 24,
+            "anchor": "FIELD_CATALOG =",
+            "sha256": "4d34049a99b9afcbd8d4e15032f831282aefe72693b3f944d2692a1e336e9250",
+            "classification": "Field-limited resident view; separate identity and own-case grants"
+          },
+          {
+            "key": "residentDeployment",
+            "path": "infra/resident-demo.bicep",
+            "line": 14,
+            "anchor": "@description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')",
+            "sha256": "389723779fe25ef927cf8a2bb99923a0850b545d69e7c1eed1b0a558341377a7",
+            "classification": "Separate synthetic resident showcase; its configured SQL dependency does not prove shared staff SQL"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nov08-resident-title",
+      "type": "text",
+      "x": 980,
+      "y": 1584,
+      "width": 370,
+      "height": 32.199999999999996,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 122,
+      "version": 1,
+      "versionNonce": 222,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "src/core/src/zava_forward/core/resident_preview.py",
+            "line": 24,
+            "anchor": "FIELD_CATALOG =",
+            "sha256": "4d34049a99b9afcbd8d4e15032f831282aefe72693b3f944d2692a1e336e9250",
+            "classification": "Field-limited resident view; separate identity and own-case grants"
+          },
+          {
+            "key": "residentDeployment",
+            "path": "infra/resident-demo.bicep",
+            "line": 14,
+            "anchor": "@description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')",
+            "sha256": "389723779fe25ef927cf8a2bb99923a0850b545d69e7c1eed1b0a558341377a7",
+            "classification": "Separate synthetic resident showcase; its configured SQL dependency does not prove shared staff SQL"
+          }
+        ],
+        "container": "nov08-resident"
+      },
+      "text": "Resident website",
+      "originalText": "Resident website",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-resident-body",
+      "type": "text",
+      "x": 980,
+      "y": 1620.2,
+      "width": 370,
+      "height": 82.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 123,
+      "version": 1,
+      "versionNonce": 223,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "resident",
+            "path": "src/core/src/zava_forward/core/resident_preview.py",
+            "line": 24,
+            "anchor": "FIELD_CATALOG =",
+            "sha256": "4d34049a99b9afcbd8d4e15032f831282aefe72693b3f944d2692a1e336e9250",
+            "classification": "Field-limited resident view; separate identity and own-case grants"
+          },
+          {
+            "key": "residentDeployment",
+            "path": "infra/resident-demo.bicep",
+            "line": 14,
+            "anchor": "@description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')",
+            "sha256": "389723779fe25ef927cf8a2bb99923a0850b545d69e7c1eed1b0a558341377a7",
+            "classification": "Separate synthetic resident showcase; its configured SQL dependency does not prove shared staff SQL"
+          }
+        ],
+        "container": "nov08-resident"
+      },
+      "text": "Separate from staff sign-in\nOwn-case + assisted choice\nShared-case / external ID: target",
+      "originalText": "Separate from staff sign-in\nOwn-case + assisted choice\nShared-case / external ID: target",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-resident-sql",
+      "type": "rectangle",
+      "x": 1460,
+      "y": 1570,
+      "width": 388,
+      "height": 180,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 124,
+      "version": 1,
+      "versionNonce": 224,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "nov08-resident-data",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "residentDeployment",
+            "path": "infra/resident-demo.bicep",
+            "line": 14,
+            "anchor": "@description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')",
+            "sha256": "389723779fe25ef927cf8a2bb99923a0850b545d69e7c1eed1b0a558341377a7",
+            "classification": "Separate synthetic resident showcase; its configured SQL dependency does not prove shared staff SQL"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nov08-resident-sql-title",
+      "type": "text",
+      "x": 1480,
+      "y": 1584,
+      "width": 348,
+      "height": 32.199999999999996,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 125,
+      "version": 1,
+      "versionNonce": 225,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "residentDeployment",
+            "path": "infra/resident-demo.bicep",
+            "line": 14,
+            "anchor": "@description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')",
+            "sha256": "389723779fe25ef927cf8a2bb99923a0850b545d69e7c1eed1b0a558341377a7",
+            "classification": "Separate synthetic resident showcase; its configured SQL dependency does not prove shared staff SQL"
+          }
+        ],
+        "container": "nov08-resident-sql"
+      },
+      "text": "Separate showcase SQL",
+      "originalText": "Separate showcase SQL",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-resident-sql-body",
+      "type": "text",
+      "x": 1480,
+      "y": 1620.2,
+      "width": 348,
+      "height": 82.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 126,
+      "version": 1,
+      "versionNonce": 226,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "residentDeployment",
+            "path": "infra/resident-demo.bicep",
+            "line": 14,
+            "anchor": "@description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')",
+            "sha256": "389723779fe25ef927cf8a2bb99923a0850b545d69e7c1eed1b0a558341377a7",
+            "classification": "Separate synthetic resident showcase; its configured SQL dependency does not prove shared staff SQL"
+          }
+        ],
+        "container": "nov08-resident-sql"
+      },
+      "text": "Dependency supplied separately\nSynthetic session today\nShared staff SQL not proved",
+      "originalText": "Dependency supplied separately\nSynthetic session today\nShared staff SQL not proved",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-resident-model",
+      "type": "rectangle",
+      "x": 1460,
+      "y": 1810,
+      "width": 388,
+      "height": 150,
+      "angle": 0,
+      "strokeColor": "#885500",
+      "backgroundColor": "#FFF1D6",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 127,
+      "version": 1,
+      "versionNonce": 227,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "nov08-resident-ai",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "residentModel",
+            "path": "infra/resident-assistant.bicep",
+            "line": 24,
+            "anchor": "resource account 'Microsoft.CognitiveServices/accounts@2025-06-01' = if (active) {",
+            "sha256": "ee16bc0dddc8b12df6175ef139cc4c4dd7bcd906891a9b26fcb017740717e085",
+            "classification": "Optional separate public Sweden Central Standard model; default off, not inside the UK/private core"
+          }
+        ]
+      }
+    },
+    {
+      "id": "nov08-resident-model-title",
+      "type": "text",
+      "x": 1480,
+      "y": 1824,
+      "width": 348,
+      "height": 32.199999999999996,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 128,
+      "version": 1,
+      "versionNonce": 228,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "residentModel",
+            "path": "infra/resident-assistant.bicep",
+            "line": 24,
+            "anchor": "resource account 'Microsoft.CognitiveServices/accounts@2025-06-01' = if (active) {",
+            "sha256": "ee16bc0dddc8b12df6175ef139cc4c4dd7bcd906891a9b26fcb017740717e085",
+            "classification": "Optional separate public Sweden Central Standard model; default off, not inside the UK/private core"
+          }
+        ],
+        "container": "nov08-resident-model"
+      },
+      "text": "Optional resident AI",
+      "originalText": "Optional resident AI",
+      "fontSize": 28,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-resident-model-body",
+      "type": "text",
+      "x": 1480,
+      "y": 1860.2,
+      "width": 348,
+      "height": 82.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 129,
+      "version": 1,
+      "versionNonce": 229,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "residentModel",
+            "path": "infra/resident-assistant.bicep",
+            "line": 24,
+            "anchor": "resource account 'Microsoft.CognitiveServices/accounts@2025-06-01' = if (active) {",
+            "sha256": "ee16bc0dddc8b12df6175ef139cc4c4dd7bcd906891a9b26fcb017740717e085",
+            "classification": "Optional separate public Sweden Central Standard model; default off, not inside the UK/private core"
+          }
+        ],
+        "container": "nov08-resident-model"
+      },
+      "text": "Public Sweden Central model\nOff by default; outside core\nNot a private/UK claim",
+      "originalText": "Public Sweden Central model\nOff by default; outside core\nNot a private/UK claim",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
+    },
+    {
+      "id": "nov08-sensor-ingress",
+      "type": "arrow",
+      "x": 312,
+      "y": 1424,
+      "width": 48,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#0078D4",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 130,
+      "version": 1,
+      "versionNonce": 230,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "deviceTransport",
+            "path": "infra/modules/iothub.bicep",
+            "line": 50,
+            "anchor": "resource telemetryNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {",
+            "sha256": "78ed8ea40c95608d07f6ef465805350d88c30f6c509b7edf3438a63a1a2f509e",
+            "classification": "B1 Hub/private Event Hub adapter; routing-ready, SDK wiring and live consumer acceptance separate"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          48,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "nov08-homes",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "nov08-hub",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "nov08-hub-route",
+      "type": "arrow",
+      "x": 630,
+      "y": 1424,
+      "width": 50,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#0078D4",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 131,
+      "version": 1,
+      "versionNonce": 231,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "deviceTransport",
+            "path": "infra/modules/iothub.bicep",
+            "line": 50,
+            "anchor": "resource telemetryNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {",
+            "sha256": "78ed8ea40c95608d07f6ef465805350d88c30f6c509b7edf3438a63a1a2f509e",
+            "classification": "B1 Hub/private Event Hub adapter; routing-ready, SDK wiring and live consumer acceptance separate"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          50,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "nov08-hub",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "nov08-event-hubs",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "nov08-receive",
+      "type": "arrow",
+      "x": 950,
+      "y": 1424,
+      "width": 50,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#0078D4",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 132,
+      "version": 1,
+      "versionNonce": 232,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "stream",
+            "path": "src/api/src/zava_forward/api/iot_stream.py",
+            "line": 50,
+            "anchor": "class Activation:",
+            "sha256": "30cb7b5b1d313b3229ee9168237c3e754362086e8c8b5e9344717af8bf35054d",
+            "classification": "Source-coded finite Event Hubs SDK adapter; separate live activation"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          50,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "nov08-event-hubs",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "nov08-service",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "nov08-retention",
+      "type": "arrow",
+      "x": 1410,
+      "y": 1424,
+      "width": 50,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 133,
+      "version": 1,
+      "versionNonce": 233,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "consumer",
+            "path": "src/core/src/zava_forward/core/sensor_consumer.py",
+            "line": 219,
+            "anchor": "class SensorConsumer:",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          50,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "nov08-service",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "nov08-store",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": "triangle",
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "nov08-averages-read",
+      "type": "arrow",
+      "x": 882,
+      "y": 1508,
+      "width": 323,
+      "height": 152,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 134,
+      "version": 1,
+      "versionNonce": 234,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "analysis",
+            "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
+            "line": 21,
+            "anchor": "def analyse_retained(",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
+            "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
+          },
+          {
+            "key": "averages",
+            "path": "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py",
+            "line": 350,
+            "anchor": "def retrofit_comparison(",
+            "sha256": "66786d3f86ce5a340443b9218e5ff590ee82be0404e51bc2cd7e1a98ea95958f",
+            "classification": "Exercise window means computed on read; not a persisted averages store or accepted causal method"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          152
+        ],
+        [
+          38,
+          152
+        ],
+        [
+          38,
+          27
+        ],
+        [
+          323,
+          27
+        ],
+        [
+          323,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "nov08-averages",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "nov08-service",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "nov08-resident-data",
+      "type": "arrow",
+      "x": 1370,
+      "y": 1660,
+      "width": 90,
+      "height": 0,
+      "angle": 0,
+      "strokeColor": "#0078D4",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 135,
+      "version": 1,
+      "versionNonce": 235,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "residentDeployment",
+            "path": "infra/resident-demo.bicep",
+            "line": 14,
+            "anchor": "@description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')",
+            "sha256": "389723779fe25ef927cf8a2bb99923a0850b545d69e7c1eed1b0a558341377a7",
+            "classification": "Separate synthetic resident showcase; its configured SQL dependency does not prove shared staff SQL"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          90,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "nov08-resident",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "nov08-resident-sql",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "nov08-resident-ai",
+      "type": "arrow",
+      "x": 1165,
+      "y": 1750,
+      "width": 295,
+      "height": 135,
+      "angle": 0,
+      "strokeColor": "#0078D4",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 136,
+      "version": 1,
+      "versionNonce": 236,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "residentModel",
+            "path": "infra/resident-assistant.bicep",
+            "line": 24,
+            "anchor": "resource account 'Microsoft.CognitiveServices/accounts@2025-06-01' = if (active) {",
+            "sha256": "ee16bc0dddc8b12df6175ef139cc4c4dd7bcd906891a9b26fcb017740717e085",
+            "classification": "Optional separate public Sweden Central Standard model; default off, not inside the UK/private core"
+          }
+        ]
+      },
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          135
+        ],
+        [
+          295,
+          135
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "nov08-resident",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "nov08-resident-model",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": "triangle",
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "nov08-shared-api",
+      "type": "arrow",
+      "x": 1200,
+      "y": 740,
+      "width": 695,
+      "height": 600,
+      "angle": 0,
+      "strokeColor": "#0078D4",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "dashed",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 137,
+      "version": 1,
+      "versionNonce": 237,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "intake",
+            "path": "src/api/src/zava_forward/api/sensor_ingestion.py",
+            "line": 18,
+            "anchor": "class SensorIngestion:",
+            "sha256": "baae55f2e6dcdad25159838e53edeada7d4ed382023a01ca9495fac77bc015f2",
+            "classification": "API-owned finite intake composition, not an automatically running HTTP route"
+          }
+        ]
+      },
+      "points": [
+        [
+          100,
+          600
+        ],
+        [
+          100,
+          580
+        ],
+        [
+          695,
+          580
+        ],
+        [
+          695,
+          35
+        ],
+        [
+          0,
+          35
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "nov08-service",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "2192f52cffdafe092336",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "nov08-same-sql",
+      "type": "arrow",
+      "x": 715,
+      "y": 950,
+      "width": 1165,
+      "height": 390,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 3,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 138,
+      "version": 1,
+      "versionNonce": 238,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "consumer",
+            "path": "src/core/src/zava_forward/core/sensor_consumer.py",
+            "line": 219,
+            "anchor": "class SensorConsumer:",
+            "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+            "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
+          },
+          {
+            "key": "sql",
+            "path": "infra/modules/sql.bicep",
+            "line": 34,
+            "anchor": "resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {",
+            "sha256": "b3d90d793141cd937612c271423e6edc1d83b83fcdec24f7532f7c1c3599ac4e",
+            "classification": "Managed SQL service outside VNet; contained-user/grant initialization separate"
+          }
+        ]
+      },
+      "points": [
+        [
+          1085,
+          390
+        ],
+        [
+          1165,
+          390
+        ],
+        [
+          1165,
+          25
+        ],
+        [
+          0,
+          25
+        ],
+        [
+          0,
+          0
+        ]
+      ],
+      "lastCommittedPoint": null,
+      "startBinding": {
+        "elementId": "nov08-store",
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "69af7394ba72e9d4bff8",
+        "focus": 0,
+        "gap": 0
+      },
+      "startArrowhead": null,
+      "endArrowhead": "triangle",
+      "elbowed": false
+    },
+    {
+      "id": "nov08-release",
+      "type": "text",
+      "x": 72,
+      "y": 1830,
+      "width": 1010,
+      "height": 59.8,
+      "angle": 0,
+      "strokeColor": "#173F35",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 0,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 139,
+      "version": 1,
+      "versionNonce": 239,
+      "isDeleted": false,
+      "boundElements": null,
+      "updated": 1794096000000,
+      "link": null,
+      "locked": false,
+      "customData": {
+        "evidence": [
+          {
+            "key": "analysis",
+            "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
+            "line": 21,
+            "anchor": "def analyse_retained(",
+            "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
+            "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
+          }
+        ]
+      },
+      "text": "Insufficient / stale / declined -> manual review.\nAverages are context, not diagnosis, consent, quality acceptance or safety release.",
+      "originalText": "Insufficient / stale / declined -> manual review.\nAverages are context, not diagnosis, consent, quality acceptance or safety release.",
+      "fontSize": 26,
+      "fontFamily": 2,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "lineHeight": 1.15,
+      "autoResize": false
     }
   ],
   "files": {
@@ -2654,8 +5190,8 @@
   "customData": {
     "sourceCommit": "062434a1fedbf6a87d1374c767c2bf0a11491ab6",
     "pr": 68,
-    "date": "2026-10-14",
-    "scope": "Static PR sources; not a fresh Azure inventory",
+    "date": "2026-11-08",
+    "scope": "8 November source continuation with retained original core layout; new source-coded telemetry and gated averages/resident targets, not a fresh live inventory",
     "flows": [
       {
         "id": "staff-work",
@@ -2726,6 +5262,294 @@
           "docs/adrs/0002-pilot-readiness-architecture.md"
         ]
       }
+    ],
+    "originalArtifactHead": "b671116d571b76ebbbc9e277a791e67f781609cd",
+    "source_basis_head": "b671116d571b76ebbbc9e277a791e67f781609cd",
+    "source_basis": "8 November authoring-start checkout; exact current source inputs are identified by embedded file hashes",
+    "sources": {
+      "identity": {
+        "path": "src/api/src/zava_forward/api/auth.py",
+        "line": 101,
+        "anchor": "class TrustedProxyProvider:",
+        "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+        "classification": "Source-coded employee principal checks; platform authentication is a separate dependency"
+      },
+      "roles": {
+        "path": "src/api/src/zava_forward/api/auth.py",
+        "line": 34,
+        "anchor": "DEFAULT_ROLE_MAP = {",
+        "sha256": "8fc34cc65775d051fd2d0aed56f34f308ea6bf933ac0f7aa0a6812da0f613870",
+        "classification": "Application role mapping, not unrestricted company-account access"
+      },
+      "gates": {
+        "path": "src/core/src/zava_forward/core/gates.py",
+        "line": 105,
+        "anchor": "def transition_allowed(",
+        "sha256": "00929abc74254296291f229871360d9ee50430676735ab5977cfa0dd92504059",
+        "classification": "Explicit coded state-flow; unknown gates do not pass"
+      },
+      "transition": {
+        "path": "src/core/src/zava_forward/core/store.py",
+        "line": 635,
+        "anchor": "    def advance(",
+        "sha256": "6b2236eb171e889c2ed652b86541740388ef8d3d08dd6db7c1b61a18af7c0b05",
+        "classification": "Controlled human case transition, not an AI action"
+      },
+      "advice": {
+        "path": "src/agents/README.md",
+        "line": 692,
+        "anchor": "### Five retrofit assistants",
+        "sha256": "41de4d35f6d40a2c58733aef143254d84744e26dc953469f614e340f9c6242d5",
+        "classification": "Five source-coded proposal helpers; activation/benefit acceptance separate"
+      },
+      "chat": {
+        "path": "src/api/README.md",
+        "line": 707,
+        "anchor": "## Employee chat with bounded skills",
+        "sha256": "d3e815ae45704ac2860eccff072ebb9dcaeebcd697f4d83b1944865b02e980cc",
+        "classification": "One selected skill and bounded call; no tools or case writes"
+      },
+      "files": {
+        "path": "src/importer/README.md",
+        "line": 13,
+        "anchor": "* Excel transition",
+        "sha256": "2a734d5800ae22526fdb6c1f2894737414cf90181e5b358c66ffd98316c26244",
+        "classification": "Read-only file tooling; live OneDrive connector not established"
+      },
+      "sensors": {
+        "path": "docs/reference/research/iot-sensor-analytics-research-plan.md",
+        "line": 31,
+        "anchor": "## Bounded streaming engineering",
+        "sha256": "243efdda03d31315d9417fe68ccda5d4d86c6b9d6489aff4f45a332ec493eaeb",
+        "classification": "Source/dated synthetic exercise; live device/consent/analysis acceptance separate"
+      },
+      "intake": {
+        "path": "src/api/src/zava_forward/api/sensor_ingestion.py",
+        "line": 18,
+        "anchor": "class SensorIngestion:",
+        "sha256": "baae55f2e6dcdad25159838e53edeada7d4ed382023a01ca9495fac77bc015f2",
+        "classification": "API-owned finite intake composition, not an automatically running HTTP route"
+      },
+      "consumer": {
+        "path": "src/core/src/zava_forward/core/sensor_consumer.py",
+        "line": 219,
+        "anchor": "class SensorConsumer:",
+        "sha256": "6237fc515415a81c3ed3fa742175c631aae0c57900f37e7726ef2a2aaf744846",
+        "classification": "Validated idempotent SQL append and restricted owned data-quality exceptions"
+      },
+      "analysis": {
+        "path": "src/core/src/zava_forward/core/sensor_analysis_store.py",
+        "line": 21,
+        "anchor": "def analyse_retained(",
+        "sha256": "c23cb33eaec02af2dba4d4d5d69fe042b549f1165a08dfd621903c8718a3ff09",
+        "classification": "Read-only retained analysis; no task, case write, ranking or diagnosis"
+      },
+      "averages": {
+        "path": "src/core/src/zava_forward/core/synthetic/sensor_scenarios.py",
+        "line": 350,
+        "anchor": "def retrofit_comparison(",
+        "sha256": "66786d3f86ce5a340443b9218e5ff590ee82be0404e51bc2cd7e1a98ea95958f",
+        "classification": "Exercise window means computed on read; not a persisted averages store or accepted causal method"
+      },
+      "qualityHelper": {
+        "path": "src/core/src/zava_forward/core/assistants.py",
+        "line": 47,
+        "anchor": "    \"quality-evidence\": dict(",
+        "sha256": "80fb9a5fdb4061581d2977cd48619be039507cb68d7c52cd5646db7278c41acc",
+        "classification": "Current quality helper uses measure/checklist/document evidence; telemetry linkage is a gated proposal"
+      },
+      "stream": {
+        "path": "src/api/src/zava_forward/api/iot_stream.py",
+        "line": 50,
+        "anchor": "class Activation:",
+        "sha256": "30cb7b5b1d313b3229ee9168237c3e754362086e8c8b5e9344717af8bf35054d",
+        "classification": "Source-coded finite Event Hubs SDK adapter; separate live activation"
+      },
+      "resident": {
+        "path": "src/core/src/zava_forward/core/resident_preview.py",
+        "line": 24,
+        "anchor": "FIELD_CATALOG =",
+        "sha256": "4d34049a99b9afcbd8d4e15032f831282aefe72693b3f944d2692a1e336e9250",
+        "classification": "Field-limited resident view; separate identity and own-case grants"
+      },
+      "infrastructure": {
+        "path": "infra/main.bicep",
+        "line": 70,
+        "anchor": "@description('Enable direct model calls from the existing MVP API. Leave false for the proposed separate agent-runner topology; true grants the API model invocation rights and configures AI_ENDPOINT.')",
+        "sha256": "c3010ba3b6ef5c53cb744d79a0b66f37042062cbe5ad84ddb63548a69b8c2bc6",
+        "classification": "Selected shared-API source realization; enableApiAi and background workloads have independent conditions"
+      },
+      "network": {
+        "path": "infra/modules/network.bicep",
+        "line": 27,
+        "anchor": "resource peNsg 'Microsoft.Network/networkSecurityGroups@2024-05-01' = {",
+        "sha256": "103f6b74710bfaf0c906d4506867617594d99e94f5f5e266d000e7bf7dc77866",
+        "classification": "Authored VNet/subnets/NSGs/private DNS; not an observed live allocation"
+      },
+      "compute": {
+        "path": "infra/modules/containerapps.bicep",
+        "line": 119,
+        "anchor": "resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {",
+        "sha256": "15324c2326ca7c0b8f902ffca2e488cfa9f9708a1de97af8bed8d1d069625d3a",
+        "classification": "Shared API/EasyAuth and conditional workloads; direct-demo and internal profiles are distinct"
+      },
+      "sql": {
+        "path": "infra/modules/sql.bicep",
+        "line": 34,
+        "anchor": "resource server 'Microsoft.Sql/servers@2024-05-01-preview' = {",
+        "sha256": "b3d90d793141cd937612c271423e6edc1d83b83fcdec24f7532f7c1c3599ac4e",
+        "classification": "Managed SQL service outside VNet; contained-user/grant initialization separate"
+      },
+      "storage": {
+        "path": "infra/modules/storage.bicep",
+        "line": 58,
+        "anchor": "var containers = ['evidence', 'imports', 'quarantine', 'exports', 'audit-archive', 'ledger-digests', 'staff-results']",
+        "sha256": "fa08533e606f2c5c7a3a13d3f7e0544f8f94554691bd4c2e26cce7b1effa65db",
+        "classification": "Authored Blob containers and queues; quarantine/retention configuration is not accepted scanner or erasure proof"
+      },
+      "model": {
+        "path": "infra/modules/foundry.bicep",
+        "line": 16,
+        "anchor": "resource account 'Microsoft.CognitiveServices/accounts@2025-06-01' = {",
+        "sha256": "f5b87329335efb35e615936370ba657ff65bc950ffacd2ce7d8e0fa2b8ea9e05",
+        "classification": "Foundry account/project/deployments; direct API inference conditional; GlobalStandard is not UK processing proof"
+      },
+      "deviceTransport": {
+        "path": "infra/modules/iothub.bicep",
+        "line": 50,
+        "anchor": "resource telemetryNamespace 'Microsoft.EventHub/namespaces@2024-01-01' = {",
+        "sha256": "78ed8ea40c95608d07f6ef465805350d88c30f6c509b7edf3438a63a1a2f509e",
+        "classification": "B1 Hub/private Event Hub adapter; routing-ready, SDK wiring and live consumer acceptance separate"
+      },
+      "workloadIdentity": {
+        "path": "infra/modules/identity.bicep",
+        "line": 6,
+        "anchor": "@description('One user-assigned identity per workload so each gets only the roles it needs.')",
+        "sha256": "a4dbddf68dd447c8ccd1ba59ccd0c98bd8fc7f4bdd4c632c7afc58e03014c66a",
+        "classification": "Four workload managed identities; not employee or resident sign-in"
+      },
+      "registry": {
+        "path": "infra/modules/registry.bicep",
+        "line": 15,
+        "anchor": "resource registry 'Microsoft.ContainerRegistry/registries@2025-04-01' = {",
+        "sha256": "a5dcd4ec8a9f756017b78109f5986234ff32aeb24b0e9f184efc36abe61513ec",
+        "classification": "Private registry and MI image pull; placeholder workload operation not established"
+      },
+      "vault": {
+        "path": "infra/modules/keyvault.bicep",
+        "line": 15,
+        "anchor": "resource vault 'Microsoft.KeyVault/vaults@2024-11-01' = {",
+        "sha256": "2b29f917a4155dd85cef35c8b053c0f0c7bb4913c4e0991f4068795aff763208",
+        "classification": "Private Key Vault; secret-reference resolution by workload identity"
+      },
+      "monitoring": {
+        "path": "infra/modules/monitoring.bicep",
+        "line": 14,
+        "anchor": "resource workspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {",
+        "sha256": "965834fe337c23697ea71ffa264a379ace04eddb684077f3b605ad6fdd8e7d93",
+        "classification": "Log Analytics/App Insights/AMPLS; platform diagnostics are not complete application tracing"
+      },
+      "alerts": {
+        "path": "infra/modules/operationalMonitoring.bicep",
+        "line": 17,
+        "anchor": "var runbookBase = 'https://github.com/jmservera/ama/blob/main/infra/monitoring-runbooks.md'",
+        "sha256": "4b904511e8bd8584719695ac76864a78d0d6a9483619bff4597240247eaba4cc",
+        "classification": "Candidate alerts gated; budgets notify rather than hard-stop spending"
+      },
+      "productionEdge": {
+        "path": "infra/modules/edge.bicep",
+        "line": 23,
+        "anchor": "resource profile 'Microsoft.Cdn/profiles@2024-09-01' = {",
+        "sha256": "05dca8f30af05646ee4d23b65d356702d3613ec8e3f8833c88ad90de71708b64",
+        "classification": "Alternative Front Door/WAF/private-origin entrance; connection acceptance per deployment"
+      },
+      "tokens": {
+        "path": "infra/modules/authTokenStore.bicep",
+        "line": 15,
+        "anchor": "resource maintenance 'Microsoft.ManagedIdentity/userAssignedIdentities@2024-11-30' = {",
+        "sha256": "adbea94e2e9d523622a001e69904071c49a0ac7e2781b160abd8dfa1b149d878",
+        "classification": "Optional separate token-only Blob/renewal job; requires ready state"
+      },
+      "residentDeployment": {
+        "path": "infra/resident-demo.bicep",
+        "line": 14,
+        "anchor": "@description('Existing SQL logical server FQDN and database; runtime access is the read-only view principal only.')",
+        "sha256": "389723779fe25ef927cf8a2bb99923a0850b545d69e7c1eed1b0a558341377a7",
+        "classification": "Separate synthetic resident showcase; its configured SQL dependency does not prove shared staff SQL"
+      },
+      "residentModel": {
+        "path": "infra/resident-assistant.bicep",
+        "line": 24,
+        "anchor": "resource account 'Microsoft.CognitiveServices/accounts@2025-06-01' = if (active) {",
+        "sha256": "ee16bc0dddc8b12df6175ef139cc4c4dd7bcd906891a9b26fcb017740717e085",
+        "classification": "Optional separate public Sweden Central Standard model; default off, not inside the UK/private core"
+      },
+      "simulator": {
+        "path": "infra/live-simulator-job.bicep",
+        "line": 18,
+        "anchor": "@description('Owner approval reference for sending synthetic readings to the hub. Empty refuses the deployment.')",
+        "sha256": "0847c5c1259d2e3414dc9950d9c32201f905948d43ebc1111b8bd494f2597b50",
+        "classification": "Conditional synthetic job and referenced existing certificate mount; not provisioned by main"
+      }
+    },
+    "originalElementIds": [
+      "ecb0c8b90ac096989f75",
+      "48cda3f995f7f317de9c",
+      "cc9181ac09dcbd5c7f3b",
+      "7bf7913973fa9b872f55",
+      "eddd8173af1f30c2a4de",
+      "0f07dce4d1bb09549157",
+      "c613f5b1f58d6e10a1d9",
+      "ec8e79bf2966e500bc4a",
+      "525e91706fd27f381ab3",
+      "548719af1d16aee7bbaa",
+      "326df100292fa4c4e356",
+      "0baa44e236185c39bc3b",
+      "57c1cf9d568aa047b37d",
+      "d141a4c9560b94149d10",
+      "ce81a01e7da9384eb778",
+      "2192f52cffdafe092336",
+      "a85d876d75d4289e54fb",
+      "62715023a4728c810dbb",
+      "0f59225645ab900e9d36",
+      "b3d7c1c755a9af3be985",
+      "7cb08d201da6d6377180",
+      "0828be74b45d70ee0834",
+      "a89146502d9dcc42da09",
+      "3585d6eff653af01c0a3",
+      "7fb23186fc09c7271bff",
+      "c06ccb8c6179f8aca2fa",
+      "36124f3f8cd79d1e10f2",
+      "84a45d84c818aba388bf",
+      "42555c8c727bf5473813",
+      "69af7394ba72e9d4bff8",
+      "fcf579ec44037ac6f6b2",
+      "bc347a14aa6556cf9703",
+      "6ae0f223b7ef95af16ef",
+      "fdfddd7896f65fb848e5",
+      "59d36717a206823cf100",
+      "de2754037c9df645d429",
+      "bfc7f455bf26e39ced80",
+      "bea12adddffcb77b67dc",
+      "0ba70a26a54773e3311d",
+      "49eb2c57b645018054c3",
+      "e6eb29489d099f0f5f23",
+      "6d6081a84b6e7b457b07",
+      "5395764f763f83e55954",
+      "67c47731b51938d553d0",
+      "0c4aef2041d759667f4e",
+      "38f9f49f535818bc239f",
+      "b5a79807ae63fb0e042f",
+      "e62aacf9b830ac1d46d6",
+      "2af2bdd44f9da665a14d",
+      "9aba1d6a8e6ecb2ccbd5",
+      "b6849df2741a80542b23",
+      "d39b27bc77c78c2f682a",
+      "1ec79a6c4e0383209316",
+      "e855bbeac553f10f651d",
+      "962d498671ba5a333878",
+      "50b0534dfced3e4c56ee",
+      "407c18ab032e4a1d406f"
     ]
   }
 }

@@ -62,27 +62,27 @@
           },
           "challenge": {
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 21,
+            "line": 33,
             "section": "Purpose and Method",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Eight role research instruments; not interviews",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L21"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L33"
           },
           "coordination": {
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           "quality": {
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 315,
+            "line": 327,
             "section": "Quality Verification Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis; no AI quality acceptance",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L327"
           },
           "atlas": {
             "path": "docs/reference/research/ux/customer-journeys/customer-journey-atlas.md",
@@ -120,7 +120,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -128,17 +128,17 @@
             "path": "docs/reference/research/ux/customer-journeys/finance.md",
             "line": 16,
             "section": "Evidence boundary and financial tensions",
-            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "sha256": "d28eefaf22520b1158a5141e0d76101c94bac87a1878b56d33ead3e20a0fb408",
             "classification": "Finance hypotheses; award, claim and cash remain distinct",
             "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
           },
           "addendum": {
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           },
           "delivery": {
             "path": "docs/reference/research/ux/customer-journeys/customer-journey-atlas.md",
@@ -160,7 +160,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 193,
             "section": "Quality control engineering continuation (2026-10-17, #91)",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Bounded synthetic engineering evidence; professional authority unverified",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
           },
@@ -216,7 +216,7 @@
             "path": "docs/reference/regulatory/README.md",
             "line": 35,
             "section": "Authority and Use",
-            "sha256": "c77b5041c4df71e53a79c703590e93a40717f7365d25cf8e6a055081c978ed4c",
+            "sha256": "588c95c085f6f9635cea4a45ecc63ab4b7af4084be6b4c81577c9c011b548cff",
             "classification": "Dated source hierarchy; no fresh legal-currentness check",
             "localLink": "../../../../reference/regulatory/README.md#L35"
           }
@@ -377,11 +377,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       }
@@ -435,11 +435,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       },
@@ -532,11 +532,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       },
@@ -605,11 +605,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       },
@@ -678,11 +678,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       },
@@ -745,11 +745,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       },
@@ -822,11 +822,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       }
@@ -880,11 +880,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       },
@@ -957,11 +957,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       }
@@ -1015,11 +1015,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       },
@@ -1092,11 +1092,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       }
@@ -1150,11 +1150,11 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           }
         ]
       },
@@ -1211,7 +1211,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -1269,7 +1269,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -1354,7 +1354,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -1439,7 +1439,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -1512,7 +1512,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -1585,7 +1585,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -1658,7 +1658,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -1725,7 +1725,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -1802,7 +1802,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -1860,7 +1860,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -1937,7 +1937,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -1995,7 +1995,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -2072,7 +2072,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -2130,7 +2130,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -2196,20 +2196,20 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           {
             "key": "addendum",
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           }
         ]
       }
@@ -2254,20 +2254,20 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           {
             "key": "addendum",
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           }
         ]
       },
@@ -2355,20 +2355,20 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           {
             "key": "addendum",
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           }
         ]
       },
@@ -2432,20 +2432,20 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           {
             "key": "addendum",
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           }
         ]
       },
@@ -2499,20 +2499,20 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           {
             "key": "addendum",
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           }
         ]
       },
@@ -2576,20 +2576,20 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           {
             "key": "addendum",
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           }
         ]
       }
@@ -2634,20 +2634,20 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           {
             "key": "addendum",
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           }
         ]
       },
@@ -2711,20 +2711,20 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           {
             "key": "addendum",
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           }
         ]
       }
@@ -2769,20 +2769,20 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           {
             "key": "addendum",
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           }
         ]
       },
@@ -2846,20 +2846,20 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           {
             "key": "addendum",
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           }
         ]
       }
@@ -2904,20 +2904,20 @@
           {
             "key": "coordination",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 241,
+            "line": 253,
             "section": "Contractor and Resident Coordination Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis and bounded design proposal",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L241"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L253"
           },
           {
             "key": "addendum",
             "path": "docs/case_study_48_addendum.md",
-            "line": 1131,
+            "line": 1141,
             "section": "Regulatory Evidence and Service Design",
-            "sha256": "24003266c4e2fb9c4b72e029366f333ddda1b67049ec75970d3bca527e6c0285",
+            "sha256": "27ff0f46868b72be9c272c363f308d08017221db4ffa5259c2e9f7eeb5e75391",
             "classification": "Maintained proposal; resident rights and bounded assistance",
-            "localLink": "../../../../case_study_48_addendum.md#L1131"
+            "localLink": "../../../../case_study_48_addendum.md#L1141"
           }
         ]
       },
@@ -2974,7 +2974,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3032,7 +3032,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3109,7 +3109,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3190,7 +3190,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3271,7 +3271,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3338,7 +3338,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3415,7 +3415,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3473,7 +3473,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3550,7 +3550,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3608,7 +3608,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3685,7 +3685,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3743,7 +3743,7 @@
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 50,
             "section": "Current-state journey hypotheses",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Professional-role hypotheses; distinct technical and QA decisions",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L50"
           },
@@ -3809,18 +3809,18 @@
           {
             "key": "quality",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 315,
+            "line": 327,
             "section": "Quality Verification Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis; no AI quality acceptance",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L327"
           },
           {
             "key": "independent-qa",
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 193,
             "section": "Quality control engineering continuation (2026-10-17, #91)",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Bounded synthetic engineering evidence; professional authority unverified",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
           },
@@ -3829,7 +3829,7 @@
             "path": "docs/reference/research/ux/customer-journeys/finance.md",
             "line": 16,
             "section": "Evidence boundary and financial tensions",
-            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "sha256": "d28eefaf22520b1158a5141e0d76101c94bac87a1878b56d33ead3e20a0fb408",
             "classification": "Finance hypotheses; award, claim and cash remain distinct",
             "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
           }
@@ -3876,18 +3876,18 @@
           {
             "key": "quality",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 315,
+            "line": 327,
             "section": "Quality Verification Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis; no AI quality acceptance",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L327"
           },
           {
             "key": "independent-qa",
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 193,
             "section": "Quality control engineering continuation (2026-10-17, #91)",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Bounded synthetic engineering evidence; professional authority unverified",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
           },
@@ -3896,7 +3896,7 @@
             "path": "docs/reference/research/ux/customer-journeys/finance.md",
             "line": 16,
             "section": "Evidence boundary and financial tensions",
-            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "sha256": "d28eefaf22520b1158a5141e0d76101c94bac87a1878b56d33ead3e20a0fb408",
             "classification": "Finance hypotheses; award, claim and cash remain distinct",
             "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
           }
@@ -3994,18 +3994,18 @@
           {
             "key": "quality",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 315,
+            "line": 327,
             "section": "Quality Verification Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis; no AI quality acceptance",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L327"
           },
           {
             "key": "independent-qa",
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 193,
             "section": "Quality control engineering continuation (2026-10-17, #91)",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Bounded synthetic engineering evidence; professional authority unverified",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
           },
@@ -4014,7 +4014,7 @@
             "path": "docs/reference/research/ux/customer-journeys/finance.md",
             "line": 16,
             "section": "Evidence boundary and financial tensions",
-            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "sha256": "d28eefaf22520b1158a5141e0d76101c94bac87a1878b56d33ead3e20a0fb408",
             "classification": "Finance hypotheses; award, claim and cash remain distinct",
             "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
           }
@@ -4070,18 +4070,18 @@
           {
             "key": "quality",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 315,
+            "line": 327,
             "section": "Quality Verification Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis; no AI quality acceptance",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L327"
           },
           {
             "key": "independent-qa",
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 193,
             "section": "Quality control engineering continuation (2026-10-17, #91)",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Bounded synthetic engineering evidence; professional authority unverified",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
           },
@@ -4090,7 +4090,7 @@
             "path": "docs/reference/research/ux/customer-journeys/finance.md",
             "line": 16,
             "section": "Evidence boundary and financial tensions",
-            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "sha256": "d28eefaf22520b1158a5141e0d76101c94bac87a1878b56d33ead3e20a0fb408",
             "classification": "Finance hypotheses; award, claim and cash remain distinct",
             "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
           }
@@ -4156,18 +4156,18 @@
           {
             "key": "quality",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 315,
+            "line": 327,
             "section": "Quality Verification Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis; no AI quality acceptance",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L327"
           },
           {
             "key": "independent-qa",
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 193,
             "section": "Quality control engineering continuation (2026-10-17, #91)",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Bounded synthetic engineering evidence; professional authority unverified",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
           },
@@ -4176,7 +4176,7 @@
             "path": "docs/reference/research/ux/customer-journeys/finance.md",
             "line": 16,
             "section": "Evidence boundary and financial tensions",
-            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "sha256": "d28eefaf22520b1158a5141e0d76101c94bac87a1878b56d33ead3e20a0fb408",
             "classification": "Finance hypotheses; award, claim and cash remain distinct",
             "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
           }
@@ -4223,18 +4223,18 @@
           {
             "key": "quality",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 315,
+            "line": 327,
             "section": "Quality Verification Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis; no AI quality acceptance",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L327"
           },
           {
             "key": "independent-qa",
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 193,
             "section": "Quality control engineering continuation (2026-10-17, #91)",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Bounded synthetic engineering evidence; professional authority unverified",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
           },
@@ -4243,7 +4243,7 @@
             "path": "docs/reference/research/ux/customer-journeys/finance.md",
             "line": 16,
             "section": "Evidence boundary and financial tensions",
-            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "sha256": "d28eefaf22520b1158a5141e0d76101c94bac87a1878b56d33ead3e20a0fb408",
             "classification": "Finance hypotheses; award, claim and cash remain distinct",
             "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
           }
@@ -4309,18 +4309,18 @@
           {
             "key": "quality",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 315,
+            "line": 327,
             "section": "Quality Verification Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis; no AI quality acceptance",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L327"
           },
           {
             "key": "independent-qa",
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 193,
             "section": "Quality control engineering continuation (2026-10-17, #91)",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Bounded synthetic engineering evidence; professional authority unverified",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
           },
@@ -4329,7 +4329,7 @@
             "path": "docs/reference/research/ux/customer-journeys/finance.md",
             "line": 16,
             "section": "Evidence boundary and financial tensions",
-            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "sha256": "d28eefaf22520b1158a5141e0d76101c94bac87a1878b56d33ead3e20a0fb408",
             "classification": "Finance hypotheses; award, claim and cash remain distinct",
             "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
           }
@@ -4376,18 +4376,18 @@
           {
             "key": "quality",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 315,
+            "line": 327,
             "section": "Quality Verification Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis; no AI quality acceptance",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L327"
           },
           {
             "key": "independent-qa",
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 193,
             "section": "Quality control engineering continuation (2026-10-17, #91)",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Bounded synthetic engineering evidence; professional authority unverified",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
           },
@@ -4396,7 +4396,7 @@
             "path": "docs/reference/research/ux/customer-journeys/finance.md",
             "line": 16,
             "section": "Evidence boundary and financial tensions",
-            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "sha256": "d28eefaf22520b1158a5141e0d76101c94bac87a1878b56d33ead3e20a0fb408",
             "classification": "Finance hypotheses; award, claim and cash remain distinct",
             "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
           }
@@ -4462,18 +4462,18 @@
           {
             "key": "quality",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 315,
+            "line": 327,
             "section": "Quality Verification Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis; no AI quality acceptance",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L327"
           },
           {
             "key": "independent-qa",
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 193,
             "section": "Quality control engineering continuation (2026-10-17, #91)",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Bounded synthetic engineering evidence; professional authority unverified",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
           },
@@ -4482,7 +4482,7 @@
             "path": "docs/reference/research/ux/customer-journeys/finance.md",
             "line": 16,
             "section": "Evidence boundary and financial tensions",
-            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "sha256": "d28eefaf22520b1158a5141e0d76101c94bac87a1878b56d33ead3e20a0fb408",
             "classification": "Finance hypotheses; award, claim and cash remain distinct",
             "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
           }
@@ -4529,18 +4529,18 @@
           {
             "key": "quality",
             "path": "docs/reference/research/company/agent-request-challenge.md",
-            "line": 315,
+            "line": 327,
             "section": "Quality Verification Agent",
-            "sha256": "358b5ca00015f45b85a371f9c32fb473f69e68de51f58454529af6607f13a42e",
+            "sha256": "825de34ba01d0bc12329592c28483663ef33579dcf92272ba1d0516a1252a284",
             "classification": "Sector-informed hypothesis; no AI quality acceptance",
-            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L315"
+            "localLink": "../../../../reference/research/company/agent-request-challenge.md#L327"
           },
           {
             "key": "independent-qa",
             "path": "docs/reference/research/ux/customer-journeys/programme.md",
             "line": 193,
             "section": "Quality control engineering continuation (2026-10-17, #91)",
-            "sha256": "71039c75ffd9b3ef5cea383af9acb7794408ea68eb9677d67560daf531b2cd5a",
+            "sha256": "3679996bf654d7809b2d3c634464d92bbae52f3672051f8203d49d603b5640d5",
             "classification": "Bounded synthetic engineering evidence; professional authority unverified",
             "localLink": "../../../../reference/research/ux/customer-journeys/programme.md#L193"
           },
@@ -4549,7 +4549,7 @@
             "path": "docs/reference/research/ux/customer-journeys/finance.md",
             "line": 16,
             "section": "Evidence boundary and financial tensions",
-            "sha256": "98efd4cb9656a36d78b34decb0b2b9271380591e5cd408bcab4c45892d519f0e",
+            "sha256": "d28eefaf22520b1158a5141e0d76101c94bac87a1878b56d33ead3e20a0fb408",
             "classification": "Finance hypotheses; award, claim and cash remain distinct",
             "localLink": "../../../../reference/research/ux/customer-journeys/finance.md#L16"
           }

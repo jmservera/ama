@@ -1,0 +1,21 @@
+{
+  "mode": "non-interactive workflow",
+  "currentPhase": "complete",
+  "headSha": "6465a90684b10882831a7e7fe1062c185003fe63",
+  "baseSha": "06e3f2f456ab008f8e41f013d9019c2d82ea05b9",
+  "reviewProfile": "standard",
+  "depthTier": "standard",
+  "selectionOrigin": "automation-derived",
+  "phaseGates": {
+    "targetBound": true,
+    "scopedIndependentAssessmentReceived": true,
+    "mainMergeRefreshVerified": true,
+    "humanApproval": false,
+    "scientificAcceptance": false,
+    "hostedCiApproval": false
+  },
+  "boardItems": [],
+  "nextActions": ["Verify focused publication receipt", "Publish one origin PR", "Await hosted checks and owner decision"],
+  "verdict": "approve",
+  "persistenceNote": "Parent recorded actual reviewer responses; reviewer filesystem was read-only"
+}

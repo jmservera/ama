@@ -18,6 +18,7 @@ STEMS = (
     "fig-contract-states",
     "fig-experiment-measures",
     "fig-refactoring-economics",
+    "fig-runtime-boundaries",
 )
 
 

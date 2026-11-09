@@ -1,6 +1,5 @@
 import { createHash } from "node:crypto";
-import { mkdtemp, mkdir, readFile, rm, writeFile } from "node:fs/promises";
-import { tmpdir } from "node:os";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { build } from "esbuild";
@@ -15,24 +14,27 @@ const stems = [
   "fig-contract-states",
   "fig-experiment-measures",
   "fig-refactoring-economics",
+  "fig-runtime-boundaries",
 ];
 const sha256 = (bytes) => createHash("sha256").update(bytes).digest("hex");
-const temporary = await mkdtemp(join(tmpdir(), "paper-excalidraw-"));
+const renderScript = join(here, ".diagram-export-render.js");
+const renderPage = join(here, ".diagram-export-render.html");
+const created = [];
 let browser;
 
 try {
-  await build({
+  const bundle = await build({
     stdin: {
       resolveDir: here,
       loader: "js",
       contents: `
         import { restore, exportToSvg, exportToBlob } from "@excalidraw/excalidraw";
-        window.exportScene = async (input, sourceHash) => {
+        window.exportScene = async (input, sourceHash, exportPadding) => {
           const scene = restore(input, null, null, { refreshDimensions: true, repairBindings: true });
           const options = {
             ...scene,
             appState: { ...scene.appState, exportBackground: true, exportWithDarkMode: false, exportEmbedScene: false },
-            exportPadding: 20,
+            exportPadding,
           };
           const canvas = document.createElement("canvas");
           const context = canvas.getContext("2d");
@@ -77,13 +79,17 @@ try {
     },
     bundle: true,
     format: "iife",
-    outfile: join(temporary, "render.js"),
+    write: false,
     define: { "process.env.NODE_ENV": '"production"' },
-    loader: { ".woff2": "file", ".woff": "file", ".ttf": "file" },
+    loader: { ".woff2": "dataurl", ".woff": "dataurl", ".ttf": "dataurl" },
     logLevel: "warning",
   });
-  await writeFile(join(temporary, "index.html"),
-    '<!doctype html><meta charset="utf-8"><script src="render.js"></script>');
+  await writeFile(renderScript, bundle.outputFiles[0].contents, { flag: "wx" });
+  created.push(renderScript);
+  await writeFile(renderPage,
+    '<!doctype html><meta charset="utf-8"><script src=".diagram-export-render.js"></script>',
+    { flag: "wx" });
+  created.push(renderPage);
   browser = await chromium.launch({
     headless: true,
     channel: process.env.PAPER_BROWSER_CHANNEL || undefined,
@@ -93,7 +99,7 @@ try {
   const page = await context.newPage();
   const errors = [];
   page.on("pageerror", error => errors.push(error.message));
-  await page.goto(pathToFileURL(join(temporary, "index.html")).href);
+  await page.goto(pathToFileURL(renderPage).href);
   await page.waitForFunction(() => typeof window.exportScene === "function");
   await mkdir(output, { recursive: true });
   const receipt = {
@@ -103,12 +109,13 @@ try {
     png_scale: 3,
     diagrams: [],
   };
+  const existingReceipt = JSON.parse(await readFile(join(paper, "diagram-exports.json"), "utf8"));
   for (const stem of stems) {
     const source = await readFile(join(paper, `${stem}.excalidraw`));
     const sourceHash = sha256(source);
     const rendered = await page.evaluate(
-      async ({ scene, hash }) => window.exportScene(scene, hash),
-      { scene: JSON.parse(source), hash: sourceHash },
+      async ({ scene, hash, padding }) => window.exportScene(scene, hash, padding),
+      { scene: JSON.parse(source), hash: sourceHash, padding: stem === "fig-runtime-boundaries" ? 10 : 20 },
     );
     if (errors.length) throw new Error(errors.join("\n"));
     const png = Buffer.from(rendered.png, "base64");
@@ -118,7 +125,10 @@ try {
     }
     await writeFile(join(output, `${stem}.svg`), rendered.svg);
     await writeFile(join(output, `${stem}.png`), png);
+    const qualification = stem === "fig-runtime-boundaries"
+      ? existingReceipt.diagrams.find(entry => entry.stem === stem) : {};
     receipt.diagrams.push({
+      ...qualification,
       stem, source_sha256: sourceHash,
       svg_sha256: sha256(rendered.svg), png_sha256: sha256(png),
       width: rendered.width, height: rendered.height, elements: rendered.elements,
@@ -128,5 +138,5 @@ try {
   await writeFile(join(output, "diagram-exports.json"), JSON.stringify(receipt, null, 2) + "\n");
 } finally {
   if (browser) await browser.close();
-  await rm(temporary, { recursive: true, force: true });
+  await Promise.all(created.map(path => rm(path)));
 }
