@@ -5005,3 +5005,9 @@ C4 changes: `capture` passes the work order's bound, still-current resident scop
 `context_revision` (409 if missing or changed, never waived); new evidence needs an explicit valid
 `pack_digest`; a replay of a stored `capture_ref` is matched on the stored receipt before any current-pack
 check; `correct` also updates the matching quality item so the latest correction is what review sees.
+C5 changes: new evidence is rejected when the worker value equals any registered staff email, code or
+oid (a name is still allowed and the real accept path denies that person); `capture` runs `submit_quality`
+under the existing procurement validation token, so on SQL a work order withdrawn or reissued by another
+store before the commit raises a conflict and no receipt is stored. An existing token is never replaced.
+Limits: receipts stored before C5 with a staff code as worker are not rewritten; the JSON store has no
+cross-process guard; escalation stays a gap; synthetic approvals are not QA, legal or resident consent.

@@ -9,10 +9,13 @@ resident consent or acceptance authority here.
 
 import os
 import re
+from collections.abc import Iterator
+from contextlib import contextmanager
 from copy import deepcopy
 from typing import Any, NoReturn
 
 from . import job_pack, projection, quality, resident_decisions, workflows
+from .change_provenance import _actor
 from .quality import SUBMITTED
 
 REF = re.compile(r"[A-Za-z0-9._-]{8,64}")
@@ -93,7 +96,7 @@ def _notes(value: Any, items: list[str]) -> dict[str, str]:
     return out
 
 
-def _worker(value: Any, store: Any, user: Any) -> str:
+def _worker(value: Any, store: Any, user: Any, new: bool = False) -> str:
     if not isinstance(value, str) or not value.strip():
         raise ValueError("Enter the worker's name.")
     name = value.strip()
@@ -104,7 +107,49 @@ def _worker(value: Any, store: Any, user: Any) -> str:
         raise ValueError(
             "The worker must be the person who did the work, not the staff member keying it in."
         )
+    if new:
+        registered = {
+            _norm(person.get(k))
+            for person in store._quality_staff()
+            for k in ("email", "code", "oid")
+        } - {""}
+        if _norm(name) in registered:
+            raise ValueError(
+                "Enter the worker's name, not a staff code or email. "
+                "Staff cannot be recorded as the worker by identifier."
+            )
     return name
+
+
+@contextmanager
+def _read_dependency(store: Any, user: Any) -> Iterator[None]:
+    """Make the SQL writer re-read the procurement row the pack was derived from.
+
+    The token is the existing procurement validation contract: it is checked inside
+    the writer's transaction and a changed row raises a conflict, so a work order
+    withdrawn or reissued by another store cannot be recorded against.
+    """
+    if not hasattr(store, "db"):
+        yield
+        return
+    local = store.local
+    if getattr(local, "procurement_validation", None) is not None:
+        _fail(409, "Another change is in progress. Reload the job pack and try again.")
+    snapshot = store._proc_snap.get("procurement")
+    local.procurement_validation = dict(
+        user=deepcopy(user),
+        actor=_actor(store, user),
+        authority=None,
+        cases={},
+        snapshot=snapshot,
+        authorities=[],
+        persisted=False,
+    )
+    try:
+        with store.dblock:
+            yield
+    finally:
+        local.procurement_validation = None
 
 
 def escalation_destination() -> dict[str, Any]:
@@ -265,7 +310,7 @@ def capture(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str, 
         if not isinstance(measure, str) or measure not in pack["checklists"]:
             raise ValueError("Choose one of the measures in this job pack.")
         notes = _notes(body.get("notes"), pack["checklists"][measure]["items"])
-        worker = _worker(body.get("confirmed_by"), store, user)
+        worker = _worker(body.get("confirmed_by"), store, user, new=True)
         mode = body.get("mode", "online")
         captured_at = body.get("captured_at") if mode == "offline" else None
         captured_at = (
@@ -297,16 +342,17 @@ def capture(store: Any, user: Any, wid: str, body: dict[str, Any]) -> dict[str, 
         if not pack["ready"]:
             raise ValueError(pack["not_ready_reason"])
         revision = _binding(c, w, measure)
-        store.submit_quality(
-            user,
-            w["case_id"],
-            measure,
-            worker,
-            SOURCE,
-            notes,
-            context_revision=revision,
-            field_receipt=dict(receipt, pack_digest=digest),
-        )
+        with _read_dependency(store, user):
+            store.submit_quality(
+                user,
+                w["case_id"],
+                measure,
+                worker,
+                SOURCE,
+                notes,
+                context_revision=revision,
+                field_receipt=dict(receipt, pack_digest=digest),
+            )
         return dict(outcome="recorded", receipt=_view_one(c, wid, ref, user))
 
 

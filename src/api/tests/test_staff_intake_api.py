@@ -8,7 +8,8 @@ from pathlib import Path
 from typing import Any
 from unittest import mock
 
-from dataset import supplied_appointment_fixture
+from dataset import RESIDENT_BINDINGS, supplied_appointment_fixture
+from zava_forward.core import staff_intake
 
 from test_procurement_api import ProcurementApiFixture
 
@@ -367,6 +368,90 @@ class StaffIntakeApi(ProcurementApiFixture):
         code, dup = self.capture(pack_digest=digest)
         self.assertEqual((code, dup["outcome"]), (200, "duplicate"), dup)
         self.assertEqual(len(self.view()["receipts"]), 1)
+
+    def test_staff_identifiers_are_not_accepted_as_the_worker(self) -> None:
+        for who in ("PM-01", "pm-01", "pam@example.test", "QI-02", "CON-1"):
+            code, out = self.capture("sam", confirmed_by=who)
+            self.assertEqual(code, 400, (who, out))
+        self.assertEqual(self.view()["receipts"], [])
+        record = self.capture("sam", confirmed_by="Wren Fictional")[1]["receipt"]["record"]
+        self.assertEqual(self.accept("pam", record)[0], 200)
+
+    def test_staff_name_as_worker_is_denied_by_the_real_accept_path(self) -> None:
+        record = self.capture("sam", confirmed_by="Pam Lead")[1]["receipt"]["record"]
+        code, out = self.accept("pam", record)
+        self.assertIn("independent", out["error"], (code, out))
+        self.assertEqual(self.accept("quil", record)[0], 200)
+
+    def test_replay_and_correction_still_work_after_the_worker_is_registered(self) -> None:
+        record = self.capture("sam", confirmed_by="Rae Fictional")[1]["receipt"]["record"]
+        self.store.staff["rae@example.test"] = dict(
+            code="RF-01", name="Rae Fictional", email="rae@example.test", role="Contractor"
+        )
+        self.store.data["staff"].append(self.store.staff["rae@example.test"])
+        code, out = self.capture("sam", confirmed_by="Rae Fictional")
+        self.assertEqual((code, out["outcome"]), (200, "duplicate"), out)
+        correction = self.correction(record)
+        correction["confirmed_by"] = "Rae Fictional"
+        self.assertEqual(self.call(ROUTE + "field-correct", correction, "sam")[0], 200)
+
+    def interleave(self, change: Any) -> tuple[int, Any]:
+        if not hasattr(self.store, "db"):
+            self.skipTest("the commit-time read dependency is an SQL store contract")
+        other = self.reopen_store()
+        self.addCleanup(other.db.close)
+        real = staff_intake._binding
+
+        def binding(*args: Any) -> Any:
+            out = real(*args)
+            change(other)
+            return out
+
+        with mock.patch.object(staff_intake, "_binding", binding):
+            return self.capture("sam")
+
+    def assert_no_receipt(self) -> None:
+        other = self.reopen_store()
+        self.addCleanup(other.db.close)
+        with other.lock:
+            self.assertEqual(other.cases["ZF-3"].get("quality") or [], [])
+            self.assertFalse(any("quality_submitted" in str(e) for e in other.audit_entries()))
+        self.assertEqual(self.store.cases["ZF-3"].get("quality") or [], [])
+
+    def test_withdrawal_between_validation_and_save_conflicts_without_receipt(self) -> None:
+        code, out = self.interleave(lambda b: b.withdraw_work_order(self.manager, "WO-0001", "SYN"))
+        self.assertEqual(code, 409, out)
+        self.assert_no_receipt()
+        self.assertIsNone(self.store.local.procurement_validation)
+
+    def test_reissue_between_validation_and_save_conflicts_without_receipt(self) -> None:
+        code, out = self.interleave(
+            lambda b: b.reissue_work_order(
+                self.manager, "WO-0001", "Loft", "SYN", resident_bindings=RESIDENT_BINDINGS
+            )
+        )
+        self.assertEqual(code, 409, out)
+        self.assert_no_receipt()
+
+    def test_unrelated_commit_between_validation_and_save_still_records(self) -> None:
+        code, out = self.interleave(lambda b: None)
+        self.assertEqual((code, out["outcome"]), (200, "recorded"), out)
+        self.assertIsNone(self.store.local.procurement_validation)
+
+    def test_an_existing_validation_token_is_never_replaced(self) -> None:
+        if not hasattr(self.store, "db"):
+            self.skipTest("the commit-time read dependency is an SQL store contract")
+        token: dict[str, Any] = dict(sentinel=True)
+        real = staff_intake._binding
+
+        def binding(*args: Any) -> Any:
+            self.store.local.procurement_validation = token
+            return real(*args)
+
+        with mock.patch.object(staff_intake, "_binding", binding):
+            code, out = self.capture("sam")
+        self.assertEqual(code, 409, out)
+        self.assert_no_receipt()
 
 
 class JsonStaffIntakeApi(StaffIntakeApi):
