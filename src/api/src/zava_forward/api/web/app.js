@@ -459,8 +459,6 @@ const defaultListState = () => {
   return filters;
 };
 const listState = {};
-// No authoritative runtime source of current fixture provenance exists, so no payload can establish that a
-// perspective is unrepresented; an empty own queue is always reported as unknown coverage.
 function queueEmptyExplanation({ view, filtered, rowsLength }) {
   if (rowsLength > 0) return null;
   if (filtered) {
