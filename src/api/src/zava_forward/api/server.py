@@ -79,7 +79,13 @@ class App:
         self.csp = "default-src 'self'; img-src 'self' data: blob:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
         self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
         # The provider call is agents code; the API composes it in process until the queue transport (#144) replaces it.
-        self.assistants = Assistants(store, provider=AgentWorker(lambda *args: store.ai.evidence(*args)).provider_call)
+        def fenced(*args):
+            ai = store.ai  # Resolved once: the object checked is the object called.
+            if ai_consumption.DISPATCH_GATE.get() is not None and not getattr(ai, "honours_dispatch_gate", False):
+                raise ai_consumption.DispatchWithdrawn("unfenced-provider")
+            return ai.evidence(*args)
+
+        self.assistants = Assistants(store, provider=AgentWorker(fenced).provider_call, transport=lambda: store.ai)
         self.chat = ChatIsolation(store)
         self.panel = ChatPanel(self.chat, ChatModel(
             AgentWorker(lambda *args: store.ai.evidence(*args)),

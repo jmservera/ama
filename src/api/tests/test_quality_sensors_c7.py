@@ -480,11 +480,15 @@ class Coalescing(Base):
         reasons = [self.service.detail(self.pm, t).get("reason") or "" for t in rows]
         self.assertTrue(any("paused" in r for r in reasons), reasons)
         restarted = self.other()
-        later = patch.object(restarted, "now", side_effect=lambda db=None: time.time() + 400)
-        with later:
-            restarted.scan_cursor = ""
-            restarted.scan()
-            self.assertLessEqual(len(self.quality_task()), len(rows) + 1)
+        # E1/F5: the quiet interval runs from the last OBSERVED change, so the first scan records
+        # the unobserved reading and a later unchanged scan recovers.
+        for offset in (400, 800):
+            clock = lambda db=None, o=offset: time.time() + o  # noqa: E731
+            with patch.object(restarted, "now", side_effect=clock):
+                restarted.scan_cursor = ""
+                restarted.scan()
+        self.assertLessEqual(len(self.quality_task()), len(rows) + 1)
+        with patch.object(restarted, "now", side_effect=lambda db=None: time.time() + 800):
             (recovery,) = self.pending(restarted)
             self.assertTrue(restarted.execute(recovery))
         self.assertEqual((self.provider.calls, self.used_calls()), (1, 1))

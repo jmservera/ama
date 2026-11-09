@@ -220,23 +220,76 @@ def _write_marker(db: Connection, controls: Iterable[tuple[str, str]]) -> None:
     )
 
 
-def ensure_control_guard(db: Connection, mssql: bool) -> None:
-    """Any control write outside a reconciled write deletes the index marker.
+GATE_DDL_SQLITE = (
+    "CREATE TABLE IF NOT EXISTS assistant_dispatch_gate (home_id TEXT NOT NULL,"
+    " task_id TEXT NOT NULL, fence INTEGER NOT NULL, expires_at REAL NOT NULL,"
+    " PRIMARY KEY (home_id, task_id, fence))"
+)
+GATE_DDL_MSSQL = (
+    "IF OBJECT_ID(N'assistant_dispatch_gate', N'U') IS NULL CREATE TABLE assistant_dispatch_gate"
+    " (home_id NVARCHAR(128) NOT NULL, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL,"
+    " expires_at FLOAT NOT NULL, PRIMARY KEY (home_id, task_id, fence))"
+)
+_SQLITE_LIVE = (
+    "EXISTS (SELECT 1 FROM assistant_dispatch_gate g"
+    " WHERE g.expires_at > (julianday('now')-2440587.5)*86400.0"
+    " AND (g.home_id IN ({homes}) OR {invalid}))"
+)
+_HOME_NEW = "CASE WHEN json_valid(NEW.body) THEN json_extract(NEW.body,'$.home_id') END"
+_HOME_OLD = "CASE WHEN json_valid(OLD.body) THEN json_extract(OLD.body,'$.home_id') END"
+_MSSQL_BODY = (
+    "AS BEGIN SET NOCOUNT ON; IF EXISTS (SELECT 1 FROM assistant_dispatch_gate g"
+    " WHERE g.expires_at >"
+    " DATEDIFF_BIG(MILLISECOND, CONVERT(datetime2,'1970-01-01'), SYSUTCDATETIME()) / 1000.0"
+    " AND (g.home_id IN (SELECT JSON_VALUE(body,'$.home_id') FROM inserted UNION"
+    " SELECT JSON_VALUE(body,'$.home_id') FROM deleted)"
+    " OR EXISTS (SELECT 1 FROM inserted WHERE ISJSON(body) <> 1)"
+    " OR EXISTS (SELECT 1 FROM deleted WHERE ISJSON(body) <> 1)))"
+    " BEGIN IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;"
+    " THROW 50002, 'dispatch-in-flight', 1; END DELETE FROM sensor_consumer_index_state; END"
+)
 
-    Readers then fail consent closed until the index is rebuilt. It never writes policy, controls
-    or consent.
+
+def ensure_control_guard(db: Connection, mssql: bool) -> None:
+    """Any control write outside a reconciled write deletes the index marker, and a write that
+    touches a home with a live assistant dispatch gate is rejected.
+
+    The gate check uses the database clock, so a direct SQL withdrawal cannot commit while a send of
+    that home's readings is authorised; the writer retries after the gate ends. Readers fail consent
+    closed until the index is rebuilt. It never writes policy, controls or consent.
     """
     if mssql:
+        db.execute(GATE_DDL_MSSQL)
+        body = (
+            "CREATE OR ALTER TRIGGER sensor_consumer_control_guard ON sensor_consumer_control"
+            " AFTER INSERT, UPDATE, DELETE " + _MSSQL_BODY
+        )
         db.execute(
-            "IF OBJECT_ID(N'sensor_consumer_control_guard', N'TR') IS NULL EXEC(N'CREATE TRIGGER"
-            " sensor_consumer_control_guard ON sensor_consumer_control AFTER INSERT, UPDATE, DELETE"
-            " AS DELETE FROM sensor_consumer_index_state')"
+            "IF OBJECT_ID(N'sensor_consumer_control_guard', N'TR') IS NULL OR"
+            " CHARINDEX(N'assistant_dispatch_gate', OBJECT_DEFINITION(OBJECT_ID("
+            "N'sensor_consumer_control_guard'))) = 0 EXEC(N'" + body.replace("'", "''") + "')"
         )
         return
-    for event, suffix in (("INSERT", "ins"), ("UPDATE", "upd"), ("DELETE", "del")):
+    db.execute(GATE_DDL_SQLITE)
+    # A body that is not JSON names no home, so it is rejected while any gate is live.
+    for event, suffix, homes, invalid in (
+        ("INSERT", "ins", _HOME_NEW, "NOT json_valid(NEW.body)"),
+        ("UPDATE", "upd", _HOME_NEW + ", " + _HOME_OLD,
+         "NOT json_valid(NEW.body) OR NOT json_valid(OLD.body)"),
+        ("DELETE", "del", _HOME_OLD, "NOT json_valid(OLD.body)"),
+    ):
+        name = f"sensor_consumer_control_guard_{suffix}"
+        stored = db.execute(
+            "SELECT sql FROM sqlite_master WHERE type='trigger' AND name=?", (name,)
+        ).fetchone()
+        if stored is not None and "assistant_dispatch_gate" in str(stored[0]):
+            continue
+        db.execute(f"DROP TRIGGER IF EXISTS {name}")
+        live = _SQLITE_LIVE.format(homes=homes, invalid=invalid)
         db.execute(
-            f"CREATE TRIGGER IF NOT EXISTS sensor_consumer_control_guard_{suffix} AFTER {event}"
-            " ON sensor_consumer_control BEGIN DELETE FROM sensor_consumer_index_state; END"
+            f"CREATE TRIGGER {name} AFTER {event} ON sensor_consumer_control BEGIN"
+            f" SELECT RAISE(ABORT, 'dispatch-in-flight') WHERE {live};"
+            " DELETE FROM sensor_consumer_index_state; END"
         )
 
 
@@ -449,12 +502,25 @@ class SensorConsumer:
             "INSERT INTO sensor_consumer_policy (id, body) VALUES (1, ?)",
             (json.dumps(asdict(policy)),),
         )
-        db.execute("DELETE FROM sensor_consumer_control")
-        for control in controls:
-            db.execute(
-                "INSERT INTO sensor_consumer_control (sensor_id, body) VALUES (?, ?)",
-                (control.sensor_id, json.dumps(asdict(control))),
-            )
+        # Only the controls that differ are written, so an unrelated home's live dispatch gate never
+        # blocks an unchanged control and the guard can reject a direct write for a home being sent.
+        stored = {
+            str(r[0]): str(r[1])
+            for r in db.execute("SELECT sensor_id, body FROM sensor_consumer_control").fetchall()
+        }
+        wanted = {c.sensor_id: json.dumps(asdict(c)) for c in controls}
+        for sensor_id in sorted(stored.keys() - wanted.keys()):
+            db.execute("DELETE FROM sensor_consumer_control WHERE sensor_id=?", (sensor_id,))
+        for sensor_id, body in wanted.items():
+            if sensor_id not in stored:
+                db.execute(
+                    "INSERT INTO sensor_consumer_control (sensor_id, body) VALUES (?, ?)",
+                    (sensor_id, body),
+                )
+            elif stored[sensor_id] != body:
+                db.execute(
+                    "UPDATE sensor_consumer_control SET body=? WHERE sensor_id=?", (body, sensor_id)
+                )
         db.execute("DELETE FROM sensor_consumer_control_home")
         for control in controls:
             db.execute(

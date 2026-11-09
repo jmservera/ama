@@ -290,7 +290,11 @@ def review_flag(task, provenance=(), actionable=True, withheld=False, newer_read
     as_of = (task.get("dispatch") or {}).get("as_of")
     timing = sensor_view.as_of_state(sensors, as_of) if isinstance(as_of, (int, float)) else {}
     newer = bool(newer_readings and autonomous)
-    now_rows = sensor_view.citations(((current or {}).get("sources") or {}).get("sensors") or {}) if current is not None else None
+    now_sensors = ((current or {}).get("sources") or {}).get("sensors") or {}
+    # Only a successful observation may call a cited reading missing; an unavailable or consent-withheld
+    # capture is unknown, never an empty one.
+    observed = current is not None and now_sensors.get("state") in ("ok", "no-readings")
+    now_rows = sensor_view.citations(now_sensors) if observed else None
     comparison = dict(state="unknown", changed_ids=[], missing_ids=[])
     if now_rows is not None and sensor_cited:
         # Content, not identity: a corrected row keeps its id. Only cited rows decide; extra rows are counted apart.
@@ -467,7 +471,7 @@ SQLITE_DDL = (
     "CREATE TABLE IF NOT EXISTS assistant_attempts (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, fence INTEGER NOT NULL, pool TEXT NOT NULL, reserved INTEGER NOT NULL, actual INTEGER, outcome TEXT NOT NULL, active_until REAL NOT NULL DEFAULT 0)",
     "CREATE TABLE IF NOT EXISTS assistant_events (id TEXT PRIMARY KEY, task_id TEXT NOT NULL, at REAL NOT NULL, body TEXT NOT NULL)",
     "CREATE INDEX IF NOT EXISTS ix_assistant_pending ON assistant_tasks (state, not_before, lease_until)",
-    "CREATE TABLE IF NOT EXISTS assistant_schedule (capability TEXT NOT NULL, case_id TEXT NOT NULL, scope TEXT NOT NULL, signature TEXT NOT NULL, task_id TEXT NOT NULL, at REAL NOT NULL, replaced INTEGER NOT NULL DEFAULT 0, PRIMARY KEY (capability, case_id))",
+    "CREATE TABLE IF NOT EXISTS assistant_schedule (capability TEXT NOT NULL, case_id TEXT NOT NULL, scope TEXT NOT NULL, signature TEXT NOT NULL, task_id TEXT NOT NULL, at REAL NOT NULL, replaced INTEGER NOT NULL DEFAULT 0, seen TEXT NOT NULL DEFAULT '', paused_at REAL NOT NULL DEFAULT 0, PRIMARY KEY (capability, case_id))",
     "CREATE INDEX IF NOT EXISTS ix_assistant_case ON assistant_tasks (capability, case_id)",
     "CREATE TABLE IF NOT EXISTS assistant_dispatch_gate (home_id TEXT NOT NULL, task_id TEXT NOT NULL, fence INTEGER NOT NULL, expires_at REAL NOT NULL, PRIMARY KEY (home_id, task_id, fence))",
 ) + rel.SQLITE_DDL
@@ -476,7 +480,7 @@ MSSQL_DDL = (
     "CREATE TABLE assistant_allowance (id VARCHAR(64) PRIMARY KEY, calls BIGINT NOT NULL, tokens BIGINT NOT NULL, expires FLOAT NOT NULL, used_calls BIGINT NOT NULL, reserved_tokens BIGINT NOT NULL)",
     "CREATE TABLE assistant_attempts (id VARCHAR(100) PRIMARY KEY, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL, pool VARCHAR(64) NOT NULL, reserved BIGINT NOT NULL, actual BIGINT NULL, outcome VARCHAR(40) NOT NULL, active_until FLOAT NOT NULL DEFAULT 0)",
     "CREATE TABLE assistant_events (id VARCHAR(64) PRIMARY KEY, task_id VARCHAR(64) NOT NULL, at FLOAT NOT NULL, body NVARCHAR(MAX) NOT NULL)",
-    "CREATE TABLE assistant_schedule (capability VARCHAR(64) NOT NULL, case_id NVARCHAR(64) NOT NULL, scope VARCHAR(64) NOT NULL, signature VARCHAR(64) NOT NULL, task_id VARCHAR(64) NOT NULL, at FLOAT NOT NULL, replaced INT NOT NULL DEFAULT 0, PRIMARY KEY (capability, case_id))",
+    "CREATE TABLE assistant_schedule (capability VARCHAR(64) NOT NULL, case_id NVARCHAR(64) NOT NULL, scope VARCHAR(64) NOT NULL, signature VARCHAR(64) NOT NULL, task_id VARCHAR(64) NOT NULL, at FLOAT NOT NULL, replaced INT NOT NULL DEFAULT 0, seen VARCHAR(64) NOT NULL DEFAULT '', paused_at FLOAT NOT NULL DEFAULT 0, PRIMARY KEY (capability, case_id))",
     "CREATE TABLE assistant_dispatch_gate (home_id NVARCHAR(128) NOT NULL, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL, expires_at FLOAT NOT NULL, PRIMARY KEY (home_id, task_id, fence))",
 ) + rel.MSSQL_DDL
 
@@ -487,8 +491,9 @@ class DispatchGate:
     Calling it commits the final consent check and a fenced gate row together, so a withdrawal for that home
     waits for the row, and returns a validity check. The check is a monotonic send-by deadline strictly inside
     the database expiry, so a stalled thread cannot send after the row could expire. Each attempt owns only
-    its own (home, task, fence) row, and release never touches another attempt's row. Not covered: direct SQL
-    writes that bypass the consumer, or a process suspended between the last check and the kernel send."""
+    its own (home, task, fence) row, and release never touches another attempt's row. Direct SQL control
+    writes for the home are rejected by the guard trigger while a row is live. Not covered: a process or VM
+    suspended between the last in-process check and the kernel send for longer than the margin."""
 
     def __init__(self, service, task):
         self.service, self.task, self.written = service, task, False
@@ -506,8 +511,7 @@ class DispatchGate:
                 self.written = True
         if not granted:
             raise ai_consumption.DispatchWithdrawn("consent-withdrawn")
-        deadline = started + service.limits.timeout + HOLD_GRACE / 2
-        return lambda: time.monotonic() < deadline
+        return ai_consumption.Deadline(started + service.limits.timeout + HOLD_GRACE / 2)
 
     def release(self):
         if not self.written:
@@ -530,8 +534,10 @@ class Affected(list):
 
 
 class Assistants:
-    def __init__(self, store, env=None, provider=None):
+    def __init__(self, store, env=None, provider=None, transport=None):
         self.store, self.limits = store, Limits(env)
+        # Resolves the object that physically carries the request bytes, when the provider hides it behind a wrapper.
+        self.transport = transport
         # The provider port: (system, prompt, max_tokens, timeout) -> raw envelope. The default late-binds to the store's AI client.
         self.provider = provider or self._default_provider
         self.sql = hasattr(store, "assistant_connection")
@@ -542,6 +548,7 @@ class Assistants:
         self.scan_lock = threading.Lock()
         self.call_slots = threading.BoundedSemaphore(self.limits.active_calls if self.limits.valid else 1)
         self.scan_cursor = ""
+        self.incomplete = set()
         self.approvers = {x.strip().lower() for x in (env or os.environ).get("ZF_ASSIST_RELEASE_APPROVERS", "").split(",") if x.strip()}
         self.schema_error = None
         if self.sql:
@@ -599,6 +606,8 @@ class Assistants:
         recorded claim events, so legacy serviced ordering is the actual claim time; unrecorded history
         stays 0 and is never treated as approved."""
         self._add_column(db, "assistant_schedule", "replaced", "INT NOT NULL DEFAULT 0" if self.mssql else "INTEGER NOT NULL DEFAULT 0")
+        self._add_column(db, "assistant_schedule", "seen", "VARCHAR(64) NOT NULL DEFAULT ''" if self.mssql else "TEXT NOT NULL DEFAULT ''")
+        self._add_column(db, "assistant_schedule", "paused_at", "FLOAT NOT NULL DEFAULT 0" if self.mssql else "REAL NOT NULL DEFAULT 0")
         if self._add_column(db, "assistant_tasks", "dispatched", "FLOAT NOT NULL DEFAULT 0" if self.mssql else "REAL NOT NULL DEFAULT 0"):
             db.execute("UPDATE assistant_tasks SET dispatched=COALESCE((SELECT MAX(e.at) FROM assistant_events e"
                        " WHERE e.task_id=assistant_tasks.id AND e.body LIKE '%\"kind\":\"claimed\"%'),0) WHERE attempts>0")
@@ -864,13 +873,27 @@ class Assistants:
                            (canonical(task), tid))
                 if was == "stale":
                     self.event(db, tid, kind="requeued", reason="The exact source evidence is current again.")
-        self._occupy(db, capability, c["id"], scheduling_signature(snapshot), tid, replaced, touch=mode == "proactive")
+        # A person's request for another exact capture never rewrites the autonomous Quality slot: the proactive
+        # call for this schedule was already made, and a later reading must not make a second one.
+        if mode == "proactive" or not self._serviced_proactive_slot(db, capability, c["id"]):
+            self._occupy(db, capability, c["id"], scheduling_signature(snapshot), tid, replaced, touch=mode == "proactive",
+                         seen=signature_ if mode == "proactive" else None)
         if row is not None and mode != "proactive":
             self._mark_requested(db, tid)
         denied = self.admission(db, capability)
         self.event(db, tid, kind="invocation", mode=mode, actor=actor, purpose=PURPOSE if mode == "proactive" else None,
                    rules=RULE_VERSION, release=release, release_denial=denied)
         return tid
+
+    def _serviced_proactive_slot(self, db, capability, case_id):
+        """True when a Quality slot of the current scope is held by a task the assistant already dispatched on its own."""
+        if capability != "quality-evidence":
+            return False
+        slot = db.execute("SELECT scope,task_id FROM assistant_schedule WHERE capability=? AND case_id=?", (capability, case_id)).fetchone()
+        if slot is None or slot[0] != self._scope(db, capability):
+            return False
+        held = db.execute("SELECT attempts,body FROM assistant_tasks WHERE id=?", (slot[1],)).fetchone()
+        return held is not None and held[0] > 0 and (json.loads(held[1]).get("dispatch") or {}).get("trigger") == "proactive"
 
     def _mark_requested(self, db, tid):
         """A person's request is durable on the task, so attribution never depends on an event window.
@@ -1072,7 +1095,7 @@ class Assistants:
                 eligible_now = new = 0
                 for c in scoped:
                     s = self.snapshot(db, cap, c)
-                    if self._due(db, cap, c, s, today):
+                    if self._due(db, cap, c, s, today, observe=False):
                         eligible_now += 1
                         found = db.execute("SELECT state,attempts FROM assistant_tasks WHERE id=?",
                                            (self._task_id(db, cap, c, signature(s)),)).fetchone()
@@ -1094,64 +1117,87 @@ class Assistants:
     def _scope(self, db, cap):
         return digest([self.release_reference(db, cap), self.continuity(db)["epoch"]])
 
-    def _occupy(self, db, cap, case_id, coarse, tid, replaced=None, touch=True):
+    def _occupy(self, db, cap, case_id, coarse, tid, replaced=None, touch=True, seen=None):
         """Record the task that holds this case's proactive schedule slot; one row per (assistant, case).
         `replaced` counts consecutive replacements without a dispatch; it is kept within one schedule and
-        reset when the schedule changes, when a proactive dispatch happens, or when a quiet interval has
-        passed after the limit was reached. A person's request does not refresh the slot time."""
+        reset when the schedule changes, when a proactive dispatch happens, or by `_due` when the evidence
+        stayed unchanged for a quiet interval or the pause reached its hard limit. `seen` is the full evidence
+        signature last observed, and `paused_at` when the limit was reached. A person's request does not
+        refresh the slot time."""
         scope = self._scope(db, cap)
-        slot = db.execute("SELECT scope,signature,replaced,at FROM assistant_schedule WHERE capability=? AND case_id=?", (cap, case_id)).fetchone()
+        slot = db.execute("SELECT scope,signature,replaced,at,seen,paused_at FROM assistant_schedule WHERE capability=? AND case_id=?", (cap, case_id)).fetchone()
         now = self.now(db)
         if replaced is None:
             replaced = slot[2] if slot is not None and slot[0] == scope and slot[1] == coarse else 0
-            if replaced >= self.REPLACEMENTS and now - slot[3] >= self.COALESCE_QUIET:
-                replaced = 0
+        paused_at = 0 if replaced < self.REPLACEMENTS else (slot[5] if slot is not None and slot[2] >= self.REPLACEMENTS and slot[5] else now)
         at = now if touch or slot is None else slot[3]
-        values = (scope, coarse, tid, at, replaced, cap, case_id)
+        seen = seen if seen is not None else (slot[4] if slot is not None else "")
+        values = (scope, coarse, tid, at, replaced, seen, paused_at, cap, case_id)
         if slot is None:
-            db.execute("INSERT INTO assistant_schedule (scope,signature,task_id,at,replaced,capability,case_id) VALUES (?,?,?,?,?,?,?)", values)
+            db.execute("INSERT INTO assistant_schedule (scope,signature,task_id,at,replaced,seen,paused_at,capability,case_id) VALUES (?,?,?,?,?,?,?,?,?)", values)
         else:
-            db.execute("UPDATE assistant_schedule SET scope=?,signature=?,task_id=?,at=?,replaced=? WHERE capability=? AND case_id=?", values)
+            db.execute("UPDATE assistant_schedule SET scope=?,signature=?,task_id=?,at=?,replaced=?,seen=?,paused_at=? WHERE capability=? AND case_id=?", values)
 
     ADOPT_ROWS = 5
+    ADOPT_PAGES = 20
     COALESCE_QUIET = 300.0
+    COALESCE_MAX = 1800.0
+    INCOMPLETE = "incomplete-history"
 
     def _adopt(self, db, cap, case_id, coarse):
         """Pre-upgrade stores have tasks but no schedule row. Adopt, once per case, the newest dispatched task
         of the current release and epoch that was not a person's request, recording that task's OWN schedule
         signature so a later assessment or funding change is still new work. Unrecorded history is never
-        treated as approved. The history read is bounded in the database by the dispatched-order index; an
-        empty slot is written when nothing qualifies so this runs once."""
-        scope = self._scope(db, cap)
+        treated as approved. The history is read in ordered pages of ADOPT_ROWS, at most ADOPT_PAGES; an
+        empty slot is written only when the whole history was read and nothing qualified. When the bound is
+        reached first, the slot is marked INCOMPLETE: that is not proof of no history, so no autonomous call
+        is made, and a later scan or a person's request resolves it."""
         epoch = self.continuity(db)["epoch"]
         release = self.release_reference(db, cap)
         query = ("SELECT id,body,signature FROM assistant_tasks WHERE capability=? AND case_id=? AND attempts>0"
-                 " ORDER BY dispatched DESC, revision DESC")
-        query += " OFFSET 0 ROWS FETCH NEXT ? ROWS ONLY" if self.mssql else " LIMIT ?"
-        for tid, raw, own in db.execute(query, (cap, case_id, self.ADOPT_ROWS)).fetchall():
-            task = json.loads(raw)
-            if task.get("release") != release or task.get("continuity_epoch") != epoch:
-                continue
-            trigger = (task.get("dispatch") or {}).get("trigger")
-            if trigger == "requested" or (trigger is None and task.get("manual_requested")):
-                continue
-            self._occupy(db, cap, case_id, own, tid, 0)
-            return True
-        values = ("", "", "", self.now(db), 0, cap, case_id)
+                 " ORDER BY dispatched DESC, revision DESC, id")
+        query += " OFFSET ? ROWS FETCH NEXT ? ROWS ONLY" if self.mssql else " LIMIT ? OFFSET ?"
+        complete = False
+        for page in range(self.ADOPT_PAGES):
+            args = (self.ADOPT_ROWS, page * self.ADOPT_ROWS) if not self.mssql else (page * self.ADOPT_ROWS, self.ADOPT_ROWS)
+            rows = db.execute(query, (cap, case_id, *args)).fetchall()
+            for tid, raw, own in rows:
+                task = json.loads(raw)
+                if task.get("release") != release or task.get("continuity_epoch") != epoch:
+                    continue
+                trigger = (task.get("dispatch") or {}).get("trigger")
+                if trigger == "requested" or (trigger is None and task.get("manual_requested")):
+                    continue
+                self._occupy(db, cap, case_id, own, tid, 0)
+                return True
+            if len(rows) < self.ADOPT_ROWS:
+                complete = True
+                break
+        marker = "" if complete else self.INCOMPLETE
+        # An empty slot has no scope, so a case with no serviced history is never treated as already serviced.
+        values = ("", marker, "", self.now(db), 0, cap, case_id)
         db.execute("INSERT INTO assistant_schedule (scope,signature,task_id,at,replaced,capability,case_id) VALUES (?,?,?,?,?,?,?)", values)
         return False
 
-    def _due(self, db, cap, c, snapshot, today):
+    def _due(self, db, cap, c, snapshot, today, observe=True):
         """Whether a proactive scan may start work. The coarse signature throttles every eligible branch,
         gaps included, only within the current release and continuity scope and only while the slot's task
         is serviced; any other change or a manual request is never suppressed. A dispatched task is a
         person's request only when its frozen dispatch says so. Reads are by primary key."""
         coarse = scheduling_signature(snapshot)
-        columns = "SELECT scope,signature,task_id,at,replaced FROM assistant_schedule WHERE capability=? AND case_id=?"
+        columns = "SELECT scope,signature,task_id,at,replaced,seen,paused_at FROM assistant_schedule WHERE capability=? AND case_id=?"
         slot = db.execute(columns, (cap, c["id"])).fetchone()
+        if slot is not None and slot[1] == self.INCOMPLETE:
+            if not observe:
+                return False
+            db.execute("DELETE FROM assistant_schedule WHERE capability=? AND case_id=?", (cap, c["id"]))
+            slot = None
         if slot is None:
             self._adopt(db, cap, c["id"], coarse)
             slot = db.execute(columns, (cap, c["id"])).fetchone()
+            if slot is not None and slot[1] == self.INCOMPLETE:
+                self.incomplete.add((cap, c["id"]))
+                return False
         scoped = slot is not None and slot[0] == self._scope(db, cap)
         known = False
         if scoped and slot[1] == coarse:
@@ -1161,15 +1207,37 @@ class Assistants:
                 dispatched = held[1] > 0
                 manual = ((body.get("dispatch") or {}).get("trigger") == "requested") if dispatched else bool(body.get("manual_requested"))
                 if held[0] == "stale" and not dispatched:
-                    if not manual and slot[4] >= self.REPLACEMENTS and self.now(db) - slot[3] < self.COALESCE_QUIET:
+                    if not manual and slot[4] >= self.REPLACEMENTS and not self._resumes(db, cap, c, snapshot, slot, observe):
                         return False
                 else:
                     # A person's request services a non-sensor schedule but never the autonomous Quality flag.
                     known = not manual or cap != "quality-evidence"
         if not eligible(cap, snapshot, today, scoped and not known, known):
             return False
-        exists = db.execute("SELECT 1 FROM assistant_tasks WHERE id=?", (self._task_id(db, cap, c, signature(snapshot)),)).fetchone()
+        exact = self._task_id(db, cap, c, signature(snapshot))
+        exists = db.execute("SELECT 1 FROM assistant_tasks WHERE id=?", (exact,)).fetchone()
+        if known and exists is not None and cap == "quality-evidence" and exact != slot[2]:
+            # The exact capture already belongs to a person's request; the serviced autonomous slot is not rewritten.
+            return False
         return exists is not None or not known
+
+    def _resumes(self, db, cap, c, snapshot, slot, observe):
+        """While the replacement limit holds a stale, undispatched slot, readings still arriving keep it paused
+        only until COALESCE_MAX after the pause began, so work is never starved. A change observed by a scan
+        restarts the quiet interval; automatic review resumes after COALESCE_QUIET without an observed change.
+        Changes that revert between two scans are not observed. Resuming resets the replacement count."""
+        now, full = self.now(db), signature(snapshot)
+        at, started = slot[3], slot[6] or slot[3]
+        if full != slot[5]:
+            at = now
+            if observe:
+                db.execute("UPDATE assistant_schedule SET seen=?,at=?,paused_at=? WHERE capability=? AND case_id=?",
+                           (full, now, started, cap, c["id"]))
+        if now - at < self.COALESCE_QUIET and now - started < self.COALESCE_MAX:
+            return False
+        if observe:
+            db.execute("UPDATE assistant_schedule SET replaced=0,paused_at=0 WHERE capability=? AND case_id=?", (cap, c["id"]))
+        return True
 
     def scan(self):
         if not self.sql or not self.limits.proactive:
@@ -1195,7 +1263,9 @@ class Assistants:
                         s = self.snapshot(db, cap, c)
                         if self._due(db, cap, c, s, today):
                             result.append(self._enqueue(db, cap, c, "proactive", PURPOSE))
-                return dict(enqueued=result, disabled=None)
+                held = sorted(f"{cap}:{cid}" for cap, cid in self.incomplete)
+                self.incomplete.clear()
+                return dict(enqueued=result, disabled=None, incomplete_history=held)
         finally:
             self.scan_lock.release()
 
@@ -1261,7 +1331,8 @@ class Assistants:
             # Only an explicit absence of a person's request is proactive; legacy or unclear tasks are not.
             task["dispatch"] = dict(trigger="proactive" if task.get("manual_requested") is False else "requested", fence=fence, as_of=now)
             if task["dispatch"]["trigger"] == "proactive":
-                db.execute("UPDATE assistant_schedule SET replaced=0 WHERE capability=? AND case_id=?", (task["capability"], task["case_id"]))
+                db.execute("UPDATE assistant_schedule SET replaced=0,paused_at=0 WHERE capability=? AND case_id=? AND task_id=?",
+                           (task["capability"], task["case_id"], tid))
             task["claim_binding"] = digest(runtime_binding(task["capability"], self.store.ai))
             result = db.execute("UPDATE assistant_tasks SET state='leased',body=?,owner=?,fence=?,lease_until=?,attempts=attempts+1,dispatched=?,revision=revision+1 WHERE id=? AND fence=? AND revision=?",
                                 (canonical(task), owner, fence, now + l.lease, now, tid, task["fence"], task["revision"]))
@@ -1279,19 +1350,20 @@ class Assistants:
     def _paused(self, db, task, current):
         """An unrequested proactive task whose schedule is unchanged but whose consecutive-replacement limit is
         reached: automatic review waits for a quiet interval, and a person can still request it."""
-        slot = db.execute("SELECT replaced FROM assistant_schedule WHERE capability=? AND case_id=?",
+        slot = db.execute("SELECT replaced,task_id FROM assistant_schedule WHERE capability=? AND case_id=?",
                           (task["capability"], task["case_id"])).fetchone()
         return (task.get("manual_requested") is False and scheduling_signature(current) == scheduling_signature(task["snapshot"])
-                and (slot[0] if slot else 0) >= self.REPLACEMENTS)
+                and slot is not None and slot[1] == task["id"] and slot[0] >= self.REPLACEMENTS)
 
     def _replaceable(self, db, task, current):
         """Only an unrequested proactive task whose coarse schedule is unchanged, within the input bound and
         within the consecutive no-dispatch replacement limit, which keeps churn from creating unbounded tasks."""
-        slot = db.execute("SELECT replaced FROM assistant_schedule WHERE capability=? AND case_id=?",
+        slot = db.execute("SELECT replaced,task_id FROM assistant_schedule WHERE capability=? AND case_id=?",
                           (task["capability"], task["case_id"])).fetchone()
+        # Only the task that owns the slot may spend its replacement budget; an older task goes stale alone.
         return (task.get("manual_requested") is False and scheduling_signature(current) == scheduling_signature(task["snapshot"])
                 and not (self.limits.valid and len(canonical(current)) > self.limits.input_chars - 1500)
-                and (slot[0] if slot else 0) < self.REPLACEMENTS)
+                and slot is not None and slot[1] == task["id"] and slot[0] < self.REPLACEMENTS)
 
     def renew(self, tid, owner, fence):
         with self.transaction() as db:
@@ -1377,12 +1449,19 @@ class Assistants:
                        financial_attribution=current.get("financial_attribution"))
             return True
 
+    def _carrier(self):
+        """The object that physically carries the request bytes."""
+        if self.transport is not None:
+            return self.transport()
+        owner = getattr(self.provider, "__self__", None)
+        return self.store.ai if owner is self else (owner if owner is not None else self.provider)
+
     def _provider_honours_gate(self):
-        provider = self.provider
-        owner = getattr(provider, "__self__", None)
-        if owner is self:
-            return bool(getattr(self.store.ai, "honours_dispatch_gate", False))
-        return bool(getattr(owner, "honours_dispatch_gate", False))
+        return bool(getattr(self._carrier(), "honours_dispatch_gate", False))
+
+    def _provider_sends_nothing(self):
+        """A test or manual double that is declared never to transmit captured readings."""
+        return bool(getattr(self._carrier(), "sends_no_bytes", False))
 
     def _default_provider(self, *args):
         return self.store.ai.evidence(*args)
@@ -1455,6 +1534,9 @@ class Assistants:
                 held = "Release changed before dispatch; use the manual route."
             if not held and not self._sensors_granted(db, task):
                 held = "Monitoring consent is not granted now; readings were not sent. Use the manual route."
+            if (not held and self._captured_sensors(task) and not self._provider_honours_gate()
+                    and not self._provider_sends_nothing()):
+                held = "This provider cannot be fenced at the physical send; captured readings were not sent. Use the manual route."
         if held:
             self.call_slots.release()
             return self.complete(task, dict(outcome="suspended-before-dispatch", usage=None, source="unverified"), None, held)

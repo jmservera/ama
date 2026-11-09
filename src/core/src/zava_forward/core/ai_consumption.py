@@ -6,6 +6,7 @@ import hashlib
 import json
 import logging
 import re
+import time
 import uuid
 from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
@@ -195,6 +196,19 @@ CURRENT: ContextVar[CallContext | None] = ContextVar("ai_consumption_context", d
 
 class DispatchWithdrawn(RuntimeError):
     """Consent or the dispatch window ended before the first request byte; nothing was sent."""
+
+
+class Deadline:
+    """A monotonic send-by time: truthy while it has not passed, with the seconds left."""
+
+    def __init__(self, at: float) -> None:
+        self.at = at
+
+    def remaining(self) -> float:
+        return self.at - time.monotonic()
+
+    def __call__(self) -> bool:
+        return self.remaining() > 0
 
 
 # Called by the transport once the connection is ready and immediately before request bytes leave.

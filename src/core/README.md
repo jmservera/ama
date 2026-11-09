@@ -86,6 +86,18 @@ The review flag compares cited reading content, reporting changed or missing cit
 extra uncited rows, or unknown. Residual limits: a direct SQL write that bypasses `configure` and a
 process suspension between the last monotonic check and the kernel send are not closed; SQL Server
 statements (gate table, `COL_LENGTH` ALTER, index, `OFFSET/FETCH`) and query plans are unexecuted.
+E1 (issue 1288, local candidate) supersedes the residual limits above: the control guard trigger now
+rejects any INSERT, UPDATE or DELETE (and an invalid JSON body) for a home with a live gate row on the
+database clock, so a direct SQL withdrawal cannot commit during a send; `Ai` sends in 16 KiB chunks and
+checks the gate and caps the socket timeout before every chunk; the API wires `store.ai` as a gate-aware
+transport and holds to the manual route when a provider neither honours the gate nor declares
+`sends_no_bytes`; adoption pages at most 5 rows by 20 pages and records an explicit `incomplete-history`
+marker rather than treating an unfinished search as no history; coalescing measures its quiet interval
+from the last observed change; an unavailable or withheld current capture compares as unknown, never
+as missing. The guard, schedule and adoption changes ran on a disposable SQL Server 2022 container.
+Still not closed: a process or VM suspension longer than the margin between the last in-process
+check and the kernel send, changes that revert between scans, and TLS (chunk-bounded, tested on plain
+loopback only).
 
 executed against SQL Server. A returned proactive flag stays a review-suggested flag in the case panel
 with its captured as-of, freshness and age, and whether the current authorised capture differs from the

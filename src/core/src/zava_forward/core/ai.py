@@ -12,6 +12,7 @@ import os
 import re
 import time
 import urllib.parse
+import ssl
 import urllib.request
 import uuid
 from dataclasses import replace
@@ -25,33 +26,60 @@ class DispatchDenied(RuntimeError):
     pass
 
 
+CHUNK = 16 * 1024
+
+
 def _gated_opener(gate):
     """An opener whose connections call the dispatch gate after connect/TLS and before the first request byte.
 
-    The gate is re-checked on every send, so bytes never leave after its send-by deadline. The exception
-    is not an OSError, so urllib does not rewrap it.
+    The body leaves in bounded chunks and the send-by deadline is re-checked, and the socket timeout is
+    capped to the time left, before every socket send, so no byte leaves after the deadline even when the
+    peer stalls or trickles. A body that is not bytes fails closed. The exception is not an OSError, so
+    urllib does not rewrap it.
     """
     state = {}
 
     def check():
         if "valid" not in state:
             state["valid"] = gate()
-        if not state["valid"]():
+        valid = state["valid"]
+        if not valid():
             raise ai_consumption.DispatchWithdrawn("dispatch-window-ended")
+        return valid
+
+    def bounded_send(connection, data):
+        if not isinstance(data, (bytes, bytearray, memoryview)):
+            raise ai_consumption.DispatchWithdrawn("unfenced-body")
+        view = memoryview(data).cast("B")
+        sock = connection.sock
+        original = sock.gettimeout()
+        try:
+            while len(view):
+                valid = check()
+                left = getattr(valid, "remaining", lambda: original)()
+                limit = left if original is None else min(original, left)
+                if limit is None or limit <= 0:
+                    raise ai_consumption.DispatchWithdrawn("dispatch-window-ended")
+                sock.settimeout(limit)
+                try:
+                    sent = sock.send(view[:CHUNK])
+                except (BlockingIOError, ssl.SSLWantWriteError, ssl.SSLWantReadError):
+                    continue
+                view = view[sent:]
+        finally:
+            sock.settimeout(original)
 
     class Plain(http.client.HTTPConnection):
         def send(self, data):
             if self.sock is None:
                 self.connect()
-            check()
-            super().send(data)
+            bounded_send(self, data)
 
     class Secure(http.client.HTTPSConnection):
         def send(self, data):
             if self.sock is None:
                 self.connect()
-            check()
-            super().send(data)
+            bounded_send(self, data)
 
     class PlainHandler(urllib.request.HTTPHandler):
         def http_open(self, req):

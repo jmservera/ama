@@ -45,6 +45,7 @@ def proposal(snapshot):
 
 class Provider:
     configured = True
+    sends_no_bytes = True
     provider, endpoint, fast = "local-test-double", "local-test", "test"
 
     def __init__(self, outcome="returned", bad=None, usage=True):
