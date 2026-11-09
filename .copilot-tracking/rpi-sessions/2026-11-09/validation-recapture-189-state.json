@@ -1,0 +1,26 @@
+{
+  "task_id": "issue-189-validation-recapture",
+  "task_slug": "validation-recapture-189",
+  "parent_task": {"task_id": "issue-189-sql-main-integration", "task_slug": "sql-main-integration-189"},
+  "mode": "manual",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09/validation-recapture-189-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09/validation-recapture-189-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09/validation-recapture-189-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09/validation-recapture-189-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; Planning Readiness Ready", "status": "confirmed", "evidence": "research artifact"},
+    {"decision": "Critique executed once: four blocking and two non-blocking findings, all applied", "status": "confirmed", "evidence": "critique artifact"},
+    {"decision": "Earlier raw logs of sql-main-integration-189 were removed; loss retained, not reconstructed", "status": "confirmed", "evidence": "research artifact"},
+    {"decision": "Validation only: no source edit; C1 one of five spent, four remain", "status": "confirmed", "evidence": "coordinator brief"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "Commit frozen records, then run the P2 preconditions and P3 capture"},
+  "prioritized_follow_ups": null
+}
