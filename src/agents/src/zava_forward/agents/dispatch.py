@@ -212,7 +212,10 @@ class AgentWorker:
                     ),
                     retry=max(0, task["fence"] - 1),
                 )
-                with call_context(context), captured_readings(assistants.Assistants._captured_sensors(task)):
+                with (
+                    call_context(context),
+                    captured_readings(assistants.Assistants._captured_sensors(task)),
+                ):
                     values.append(self.provider_call(system, prompt, max_tokens, timeout))
             finally:
                 # A timed-out physical call keeps its slot until it returns.
