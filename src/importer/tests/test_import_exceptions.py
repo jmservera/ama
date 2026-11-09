@@ -121,7 +121,7 @@ class ProducerTests(Base):
         ):
             result = submit_file(self.store, self.ledger, path, "Pat")
         self.assertEqual(must(result.refusal).source_sha256, "")
-        self.assertEqual(must(result.refusal).ref, "file:big.xlsx")
+        self.assertTrue(must(result.refusal).ref.startswith("source:"))
         self.assertIn("larger than the import limit", must(result.refusal).reason)
 
     def test_missing_file_is_a_refusal_not_a_crash(self) -> None:
@@ -149,6 +149,108 @@ class ProducerTests(Base):
             got = self.ledger.record("race.xlsx", "d" * 64, "case-list", "Refused: second.", "Sam")
         self.assertEqual(got.reason, "Refused: first.")
         self.assertEqual(len(self.ledger.all()), 1)
+
+
+class IdentityTests(Base):
+    """C2: unknown content gets an honest opaque identity; a digest is never borrowed."""
+
+    def oversized(self, path: Path) -> ex.Refusal:
+        with (
+            mock.patch.object(ex, "MAX_SOURCE_BYTES", 10),
+            mock.patch("zava_forward.importer.mapping.MAX_SOURCE_BYTES", 10),
+        ):
+            return must(submit_file(self.store, self.ledger, path, "Pat").refusal)
+
+    def test_same_basename_in_different_directories_stays_distinct(self) -> None:
+        first = self.source("big.xlsx")
+        other = self.tmp / "other"
+        other.mkdir()
+        second = other / "big.xlsx"
+        second.write_bytes(first.read_bytes())
+        a, b = self.oversized(first), self.oversized(second)
+        self.assertNotEqual(a.ref, b.ref)
+        self.assertEqual((a.source_sha256, b.source_sha256), ("", ""))
+        self.assertEqual(len(self.ledger.all()), 2)
+        queue = queue_for()
+        route(queue, self.store, self.ledger, STEWARD)
+        items = queue.queue(STEWARD)
+        self.assertEqual(len(items), 2)
+        self.assertEqual({i["original_source"]["source_sha256"] for i in items}, {None})
+        self.assertEqual(len({i["ref"] for i in items}), 2)
+
+    def test_replaced_oversized_file_is_a_new_refusal(self) -> None:
+        path = self.source("big.xlsx")
+        first = self.oversized(path)
+        path.write_bytes(b"replacement content that is longer than before")
+        second = self.oversized(path)
+        self.assertNotEqual(first.ref, second.ref)
+        self.assertEqual(len(self.ledger.all()), 2)
+
+    def test_unchanged_oversized_file_resubmitted_is_one_row(self) -> None:
+        path = self.source("big.xlsx")
+        self.assertEqual(self.oversized(path), self.oversized(path))
+        self.assertEqual(len(self.ledger.all()), 1)
+
+    def test_hashless_identity_is_opaque_not_the_basename(self) -> None:
+        ref = self.oversized(self.source("big.xlsx")).ref
+        self.assertTrue(ref.startswith("source:"))
+        self.assertNotIn("big.xlsx", ref)
+        self.assertNotIn(str(self.tmp), ref)
+
+    def test_unreadable_attempts_are_not_merged_by_name(self) -> None:
+        a = must(submit_file(self.store, self.ledger, self.tmp / "gone.xlsx", "Pat").refusal)
+        sub = self.tmp / "sub"
+        sub.mkdir()
+        b = must(submit_file(self.store, self.ledger, sub / "gone.xlsx", "Pat").refusal)
+        self.assertNotEqual(a.ref, b.ref)
+        self.assertEqual((a.source_sha256, b.source_sha256), ("", ""))
+
+    def replacing_scan(self, path: Path, replacement: bytes):  # type: ignore[no-untyped-def]
+        def scan(*_args: object, **_kwargs: object) -> tuple[str, str]:
+            path.write_bytes(replacement)
+            return "infected", "scan: infected"
+
+        return mock.patch(
+            "zava_forward.importer.mapping.LocalSignatureScanner.scan", side_effect=scan
+        )
+
+    def test_replacement_after_preview_failure_never_lends_its_digest(self) -> None:
+        path = self.source("bad.xlsx", raw=b"original bytes")
+        original = hashlib.sha256(b"original bytes").hexdigest()
+        replacement = b"different replacement bytes"
+        with self.replacing_scan(path, replacement):
+            refusal = must(submit_file(self.store, self.ledger, path, "Pat").refusal)
+        self.assertEqual(refusal.source_sha256, original)
+        self.assertNotEqual(refusal.source_sha256, hashlib.sha256(replacement).hexdigest())
+
+    def test_change_during_read_is_hashless_and_never_claims_replacement(self) -> None:
+        path = self.source("bad.xlsx", raw=b"original bytes")
+        real_open = Path.open
+
+        def open_then_replace(self_path: Path, *args: object, **kwargs: object):  # type: ignore[no-untyped-def]
+            handle = real_open(self_path, *args, **kwargs)  # type: ignore[call-overload]
+            with open(self_path, "wb") as replaced:
+                replaced.write(b"a replacement that is much longer than the original")
+            return handle
+
+        with mock.patch.object(Path, "open", open_then_replace):
+            refusal = must(submit_file(self.store, self.ledger, path, "Pat").refusal)
+        self.assertEqual(refusal.source_sha256, "")
+        self.assertTrue(refusal.ref.startswith("source:"))
+        self.assertIn("changed while it was being read", refusal.reason)
+
+    def test_file_that_grows_past_the_limit_while_read_is_refused_hashless(self) -> None:
+        path = self.source("grow.xlsx", raw=b"12345")
+        with (
+            mock.patch.object(ex, "MAX_SOURCE_BYTES", 8),
+            mock.patch("zava_forward.importer.mapping.MAX_SOURCE_BYTES", 8),
+            mock.patch.object(Path, "stat") as stat,
+        ):
+            stat.return_value = mock.Mock(st_size=5, st_mtime_ns=1, st_ino=1, st_dev=1)
+            path.write_bytes(b"123456789012")
+            refusal = must(submit_file(self.store, self.ledger, path, "Pat").refusal)
+        self.assertEqual(refusal.source_sha256, "")
+        self.assertIn("larger than the import limit", refusal.reason)
 
 
 class RoutingTests(Base):
@@ -292,6 +394,75 @@ class CliTests(unittest.TestCase):
         self.assertIn("UNROUTED", unowned.stdout)
         self.assertIn("items=0", unowned.stdout)
         self.assertEqual(hashlib.sha256(db.read_bytes()).hexdigest(), db_before)
+
+    def assert_clean_failure(self, result) -> None:  # type: ignore[no-untyped-def]
+        self.assertEqual(result.returncode, 2, result.stderr)
+        self.assertEqual(result.stdout, "")
+        self.assertNotIn("Traceback", result.stderr)
+        self.assertIn("Cannot", result.stderr)
+
+    def test_stage_connection_failure_exits_2_without_traceback(self) -> None:
+        tmp = Path(tempfile.mkdtemp())
+        bad = tmp / "bad.xlsx"
+        bad.write_bytes(b"not a workbook")
+        result = self.run_cli(
+            "stage", str(bad), "--db", str(tmp / "no-such-dir" / "x.db"), "--staged-by", "Pat"
+        )
+        self.assert_clean_failure(result)
+
+    def test_stage_write_failure_exits_2_not_recorded_refusal(self) -> None:
+        tmp = Path(tempfile.mkdtemp())
+        bad, db = tmp / "bad.xlsx", tmp / "import.db"
+        bad.write_bytes(b"not a workbook")
+        conn = sqlite3.connect(db)
+        QuarantineStore(conn).create_schema()
+        RefusalLedger(conn).create_schema()
+        conn.execute(
+            "CREATE TRIGGER block BEFORE INSERT ON import_refusals "
+            "BEGIN SELECT RAISE(ABORT, 'blocked'); END"
+        )
+        conn.commit()
+        conn.close()
+        result = self.run_cli("stage", str(bad), "--db", str(db), "--staged-by", "Pat")
+        self.assert_clean_failure(result)
+        check = sqlite3.connect(db)
+        self.addCleanup(check.close)
+        self.assertEqual(check.execute("SELECT COUNT(*) FROM import_refusals").fetchone()[0], 0)
+
+    def test_viewer_on_a_non_database_exits_2_without_traceback(self) -> None:
+        tmp = Path(tempfile.mkdtemp())
+        db = tmp / "junk.db"
+        db.write_bytes(b"this is not a sqlite database" * 20)
+        before = hashlib.sha256(db.read_bytes()).hexdigest()
+        result = self.run_cli("exceptions", str(db), staff={STEWARD: ["data_steward"]})
+        self.assert_clean_failure(result)
+        self.assertEqual(hashlib.sha256(db.read_bytes()).hexdigest(), before)
+
+    def test_close_failure_after_error_still_exits_2_once(self) -> None:
+        import contextlib
+        import io
+        import runpy
+
+        class Conn:
+            def execute(self, *_a: object) -> None:
+                raise sqlite3.OperationalError("boom")
+
+            def close(self) -> None:
+                raise sqlite3.ProgrammingError("close failed")
+
+        out, err = io.StringIO(), io.StringIO()
+        argv = ["x", "stage", __file__, "--db", "unused.db", "--staged-by", "Pat"]
+        with (
+            mock.patch.object(sys, "argv", argv),
+            mock.patch.object(sqlite3, "connect", return_value=Conn()),
+            contextlib.redirect_stdout(out),
+            contextlib.redirect_stderr(err),
+            self.assertRaises(SystemExit) as raised,
+        ):
+            runpy.run_module("zava_forward.importer", run_name="__main__")
+        self.assertEqual(raised.exception.code, 2)
+        self.assertEqual(out.getvalue(), "")
+        self.assertEqual(err.getvalue().count("Cannot"), 1)
 
     def test_missing_database_is_an_error(self) -> None:
         self.assertEqual(self.run_cli("exceptions", "/nonexistent/x.db").returncode, 2)

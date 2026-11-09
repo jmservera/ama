@@ -9,6 +9,7 @@ explicit select then insert, no upsert keywords.
 
 import hashlib
 import re
+import secrets
 import sqlite3
 from collections import Counter
 from collections.abc import Iterable
@@ -20,7 +21,7 @@ from typing import Any
 from zava_forward.core.exception_feeds import feed_failed_imports
 from zava_forward.core.exception_queue import ExceptionQueue, Record
 
-from .mapping import CASE_LIST, MAX_SOURCE_BYTES, Preview, Structure, preview_file
+from .mapping import CASE_LIST, MAX_SOURCE_BYTES, Preview, Structure, preview_bytes
 from .quarantine import (
     COLUMNS,
     INTEGRITY_ERRORS,
@@ -47,6 +48,8 @@ REASON_MAX = 400
 CHUNK = 1024 * 1024
 SCAN_VERDICT = re.compile(r"scan: ([a-z_-]{1,24})")
 REQUIRED_MISSING = re.compile(r"Required column (.+) is missing")
+_TOO_LARGE = WorkbookError("file is too large")
+_CHANGED = WorkbookError("the source file changed while it was being read")
 
 
 def _now() -> str:
@@ -95,22 +98,42 @@ def _conflict_reason(structure: Structure, conflicts: Iterable[str]) -> str:
     return f"Refused: mapping conflicts, nothing staged ({'; '.join(parts)})."[:REASON_MAX]
 
 
-def _stable_digest(path: Path) -> str:
-    """SHA-256 of a file at or under the size limit that did not change while read, else empty."""
+@dataclass(frozen=True)
+class Captured:
+    """One bounded read of a source. `data` and `digest` are set only for a stable snapshot."""
+
+    data: bytes | None
+    digest: str
+    identity: str
+    reason: str
+
+
+def _opaque(kind: str, *parts: object) -> str:
+    return f"{kind}:{hashlib.sha256('|'.join(map(str, parts)).encode()).hexdigest()[:24]}"
+
+
+def _capture(path: Path) -> Captured:
+    """Read a source once, bounded. The digest is of the bytes read, never of a later reopen.
+
+    When content identity cannot be established (too large, unreadable, changed or growing while
+    read) there is no digest. The identity is then an opaque token of the resolved path and file
+    state, or a fresh attempt token when even that is unavailable, so unlike files never collide.
+    """
     try:
         before = path.stat()
+        state = (path.resolve(), before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
         if before.st_size > MAX_SOURCE_BYTES:
-            return ""
-        digest = hashlib.sha256()
+            return Captured(None, "", _opaque("source", *state), _file_reason(_TOO_LARGE))
         with path.open("rb") as handle:
-            while chunk := handle.read(CHUNK):
-                digest.update(chunk)
+            data = handle.read(MAX_SOURCE_BYTES + 1)
         after = path.stat()
-    except OSError:
-        return ""
+    except OSError as exc:
+        return Captured(None, "", f"source:attempt-{secrets.token_hex(8)}", _file_reason(exc))
+    if len(data) > MAX_SOURCE_BYTES:
+        return Captured(None, "", _opaque("source", *state), _file_reason(_TOO_LARGE))
     if (after.st_size, after.st_mtime_ns) != (before.st_size, before.st_mtime_ns):
-        return ""
-    return digest.hexdigest()
+        return Captured(None, "", _opaque("source", *state), _file_reason(_CHANGED))
+    return Captured(data, hashlib.sha256(data).hexdigest(), "", "")
 
 
 @dataclass(frozen=True)
@@ -151,9 +174,18 @@ class RefusalLedger:
         return Refusal(*row) if row else None
 
     def record(
-        self, source_name: str, source_sha256: str, structure: str, reason: str, refused_by: str
+        self,
+        source_name: str,
+        source_sha256: str,
+        structure: str,
+        reason: str,
+        refused_by: str,
+        identity: str = "",
     ) -> Refusal:
-        ref = f"file:{source_sha256 or source_name}"
+        """`identity` is required when there is no digest: an opaque token, never a file name."""
+        if not source_sha256 and not identity:
+            raise ImportError_("A refusal needs a content digest or an opaque source identity.")
+        ref = f"file:{source_sha256}" if source_sha256 else identity
         existing = self._get(ref)
         if existing is not None:
             return existing
@@ -209,16 +241,22 @@ def submit_file(
     who = staged_by.strip()
     if not who:
         raise ImportError_("A named person must stage the import.")
+    captured = _capture(path)
     preview: Preview | None = None
-    try:
-        preview, _ = preview_file(path, structure)
-    except (WorkbookError, OSError) as exc:
-        reason, digest = _file_reason(exc), _stable_digest(path)
+    if captured.data is None:
+        reason = captured.reason
     else:
-        if not preview.blocking:
-            return Submission(batch=store.stage(preview, who), preview=preview)
-        reason, digest = _conflict_reason(structure, preview.conflicts), preview.source_sha256
-    refusal = ledger.record(path.name, digest, structure.name, reason, who)
+        try:
+            preview = preview_bytes(path.name, captured.data, structure)
+        except WorkbookError as exc:
+            reason = _file_reason(exc)
+        else:
+            if not preview.blocking:
+                return Submission(batch=store.stage(preview, who), preview=preview)
+            reason = _conflict_reason(structure, preview.conflicts)
+    refusal = ledger.record(
+        path.name, captured.digest, structure.name, reason, who, captured.identity
+    )
     return Submission(refusal=refusal, preview=preview)
 
 
@@ -231,13 +269,25 @@ def _rejected_batches(store: QuarantineStore) -> list[dict[str, Any]]:
     return [asdict(BatchRecord(*row)) for row in cur.fetchall()]
 
 
+def _feed_name(refusal: Refusal) -> str:
+    """The feed keys a refusal by digest, else by name; carry the opaque identity in the name so
+    hashless refusals of different sources stay distinct and the item shows no digest."""
+    if refusal.source_sha256:
+        return refusal.source_name
+    return f"{refusal.source_name} (unverified source {refusal.ref})"
+
+
+def _feed_ref(refusal: Refusal) -> str:
+    return f"file:{refusal.source_sha256 or _feed_name(refusal)}"
+
+
 def feed_inputs(
     store: QuarantineStore, ledger: RefusalLedger
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Rejected batches and refused files in the shapes `feed_failed_imports` reads."""
     refusals = [
         {
-            "source_name": r.source_name,
+            "source_name": _feed_name(r),
             "source_sha256": r.source_sha256,
             "reason": r.reason,
             "at": r.refused_at,
@@ -271,7 +321,7 @@ def route(
     batches, refusals = feed_inputs(store, ledger)
     routing = Routing(
         data_label=store.data_label,
-        structures={r.ref: r.structure for r in ledger.all()}
+        structures={_feed_ref(r): r.structure for r in ledger.all()}
         | {f"batch:{b['batch_id']}": str(b["structure"]) for b in batches},
     )
     count = len(batches) + len(refusals)

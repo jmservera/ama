@@ -16,27 +16,45 @@ from zava_forward.importer.xlsx import WorkbookError
 
 def _ensure_schema(conn: sqlite3.Connection) -> tuple[QuarantineStore, RefusalLedger]:
     store, ledger = QuarantineStore(conn), RefusalLedger(conn)
-    for table, create in (
-        ("import_batches", store.create_schema),
-        ("import_refusals", ledger.create_schema),
-    ):
-        try:
-            conn.execute(f"SELECT COUNT(*) FROM {table}")
-        except sqlite3.OperationalError:
-            create()
+    present = {
+        row[0]
+        for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'").fetchall()
+    }
+    if "import_batches" not in present:
+        store.create_schema()
+    if "import_refusals" not in present:
+        ledger.create_schema()
     return store, ledger
 
 
-def _stage(args: argparse.Namespace) -> int:
-    conn = sqlite3.connect(args.db)
+def _database_failure(exc: sqlite3.Error, action: str) -> int:
+    """Exit 2 is never a recorded refusal: the database could not be used, so nothing is claimed."""
+    print(f"Cannot {action}: the database failed ({exc}). Nothing was recorded.", file=sys.stderr)
+    return 2
+
+
+def _close(conn: sqlite3.Connection | None) -> None:
+    if conn is None:
+        return
     try:
+        conn.close()
+    except sqlite3.Error:
+        pass
+
+
+def _stage(args: argparse.Namespace) -> int:
+    conn: sqlite3.Connection | None = None
+    try:
+        conn = sqlite3.connect(args.db)
         store, ledger = _ensure_schema(conn)
         result = submit_file(store, ledger, args.file, args.staged_by, STRUCTURES[args.structure])
     except ImportError_ as exc:
         print(f"Cannot import: {exc}", file=sys.stderr)
         return 2
+    except sqlite3.Error as exc:
+        return _database_failure(exc, "stage")
     finally:
-        conn.close()
+        _close(conn)
     if result.batch:
         print(f"staged batch={result.batch.batch_id} version={result.batch.version} status=staged")
         return 0
@@ -53,8 +71,9 @@ def _exceptions(args: argparse.Namespace) -> int:
     if not args.db.is_file():
         print(f"Cannot read: {args.db} does not exist", file=sys.stderr)
         return 2
-    conn = sqlite3.connect(f"{args.db.resolve().as_uri()}?mode=ro", uri=True)
+    conn: sqlite3.Connection | None = None
     try:
+        conn = sqlite3.connect(f"{args.db.resolve().as_uri()}?mode=ro", uri=True)
         store, ledger = QuarantineStore(conn), RefusalLedger(conn)
         staff = staff_from_env(os.environ)
         owner = next((n for n in sorted(staff) if STEWARD in staff[n]), None)
@@ -62,10 +81,9 @@ def _exceptions(args: argparse.Namespace) -> int:
         routing = route(queue, store, ledger, owner)
         items = queue.queue(owner) if owner and not routing.unrouted else []
     except sqlite3.Error as exc:
-        print(f"Cannot read: {exc}", file=sys.stderr)
-        return 2
+        return _database_failure(exc, "read")
     finally:
-        conn.close()
+        _close(conn)
     print(
         f"local diagnostic, not access control; data={routing.data_label} "
         f"owner={routing.owner_label}"
