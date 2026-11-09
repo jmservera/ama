@@ -13,28 +13,46 @@ Two views explain the same product direction at different depths:
 | --- | --- | --- | --- |
 | CXOs: people, application responsibilities and trust | [CxO Excalidraw](./cxo-architecture.excalidraw) | [CxO SVG](./cxo-architecture.svg) | [CxO PNG](./cxo-architecture.png) |
 | Architects: complete Azure source topology and gated alternatives | [Azure Excalidraw](./azure-architecture.excalidraw) | [Full Azure SVG](./azure-architecture.svg) | [Full Azure PNG](./azure-architecture.png) |
-| Presentation projection of that full model, appendix B10/page 37 | `core` frame in the same Azure Excalidraw | [Core SVG](./azure-core.svg) | [Core PNG](./azure-core.png) |
+| Core projection, appendix B10/page 38; full-size source for detail | `core` frame in the same Azure Excalidraw | [Core SVG](./azure-core.svg) | [Core PNG](./azure-core.png) |
+| Complete wide deployment projection, main page 13 | `deployment` frame in the same Azure Excalidraw | [Deployment SVG](./azure-deployment.svg) | [Deployment PNG](./azure-deployment.png) |
 
 The [generator](./build-architecture.mjs) owns the diagram models and
 source-bound derivatives. Boxes, text, arrows and service icons remain
 editable. The SVG represents the same nodes and flows; editor frame chrome
 is omitted. The core projection is not a third architecture and intentionally
-does not shrink every alternative into slide 37.
+does not shrink every alternative into page 38. The new 2400 x 1170
+deployment frame is a compact, connected projection of the same complete
+source model, including support services and gated options, not a third
+contradictory architecture. All its labels are at least 34 native pixels,
+about 12.1 pt at the approved 5.8-inch-high slide contain size. The CxO
+1600 x 850 view has a 26-pixel minimum, about 12 pt at 5.45 inches high.
+The detailed core view points to main page 13 and the full-size editable
+map rather than claiming all small control labels are main-slide text.
 
 ```bash
 node docs/capstone/source/diagrams/architecture/build-architecture.mjs
 node docs/capstone/source/diagrams/architecture/build-architecture.mjs --check
-node --test docs/capstone/source/diagrams/architecture/test-architecture.mjs
-excalidraw render docs/capstone/source/diagrams/architecture/cxo-architecture.excalidraw --out /absolute/external/cxo.png --padding 0 --scale 1.5 --max-width 2400 --max-height 930 --fonts-url none
-excalidraw render docs/capstone/source/diagrams/architecture/azure-architecture.excalidraw --out /absolute/external/azure.png --padding 0 --scale 1.5 --max-width 3600 --max-height 2610 --fonts-url none --timeout 120000
+node docs/architecture/update-architecture.mjs --check
+EXCALIDRAW_BROWSER_PATH=/path/to/existing/chrome node --test docs/capstone/source/diagrams/architecture/test-architecture.mjs docs/capstone/source/diagrams/architecture/test-geometry.mjs
+excalidraw render docs/capstone/source/diagrams/architecture/cxo-architecture.excalidraw --out /absolute/external/cxo.png --padding 0 --scale 1.5 --max-width 2400 --max-height 1275 --fonts-url none
+node docs/capstone/source/diagrams/architecture/export-reference.mjs | excalidraw render - --out /absolute/external/azure.png --padding 0 --scale 1.5 --max-width 3600 --max-height 3090 --fonts-url none --timeout 120000
 excalidraw render docs/capstone/source/diagrams/architecture/azure-architecture.excalidraw --frame-id core --out /absolute/external/azure-core.png --padding 0 --scale 1.5 --max-width 3600 --max-height 1215 --fonts-url none --timeout 120000
+excalidraw render docs/capstone/source/diagrams/architecture/azure-architecture.excalidraw --frame-id deployment --out /absolute/external/azure-deployment.png --scale 1.5 --fonts-url none --timeout 120000
 ```
 
 Supply `--browser-path` for an existing Chromium/Chrome installation when
-needed. Excalidraw CLI 0.2.0 renders locally without an account or upload;
+needed. Excalidraw CLI 0.3.0 renders locally without an account or upload;
 this run used existing Chromium 1194. Do not install a new browser or
 overwrite delivery files as an implicit setup action. Review derivatives
 before deliberately updating the media catalog.
+For a local runtime directory, set `TMPDIR` to a short dedicated path
+before launching Chromium; long paths can exceed the browser's socket
+limit. The 8 November run staged exports in
+[dated tracking](../../../../../.copilot-tracking/architecture-diagrams/2026-11-08/zava-forward/validation.json),
+reviewed them before updating delivery copies and used no new dependency.
+`export-reference.mjs` is an ephemeral selection of the authoritative
+Azure scene: it omits the duplicate deployment projection and hides editor
+frame chrome. It changes no authoritative nodes, arrows or source claims.
 
 ## CxO Application Concept
 
@@ -61,8 +79,26 @@ Read the simple view left to right:
 7. Residents retain assisted service and may choose a separate own-case
    website/advice route. The existing synthetic resident showcase is separate;
    shared-case integration and managed external identity remain gated targets.
-8. Device readings are accepted only after validation. Real device/private
-   transport, calibration, consent and operational use remain separate gates.
+8. Home sensors feed Basic B1 IoT Hub, its MI trusted-service route and a
+   dedicated Event Hubs stream. The API initiates receive over the Event
+   Hubs private endpoint. The source-coded finite intake validates,
+   deduplicates and appends accepted readings into restricted SQL history;
+   rejected input creates an owned DQ exception. Live transport, calibration,
+   consent and operational use remain separate gates.
+9. The household telemetry/history/averages service is a capability of
+   the shared API backed by the existing SQL store, not a standalone
+   worker or a new Azure product. Retained analysis is read-only; exercise
+   baseline/early/late means are computed on read. The owner-requested
+   persisted per-home averages are a visible gated target, not an
+   implemented schema/materialization store. The current quality-evidence
+   helper uses measures, checklists and documents; post-retrofit sensor
+   linkage to Quality Verification remains proposed.
+   Retained analysis and comparison are reusable core functions; their
+   existence does not establish a served API analysis endpoint, scheduler
+   or Workbench sensor-aggregate integration.
+10. Insufficient, stale or declined telemetry preserves manual review with
+    no priority effect. Averages are context, not diagnosis, consent,
+    task creation, quality acceptance or safety release.
 
 The outer boundary is **logical application/data scope**, not a VNet, data
 residency guarantee or contractual provider boundary. Solid lines mean
@@ -73,7 +109,7 @@ The [full view](./azure-architecture.svg) makes the separate resident public
 Sweden Central model option visible; the simple view must not be read as
 "all inference is private and in the UK".
 
-Parent-verified sources:
+Source locators and limits:
 
 | Relationship | Source and limit |
 | --- | --- |
@@ -84,6 +120,9 @@ Parent-verified sources:
 | Existing Excel tooling | [Importer](../../../../../src/importer/README.md); read-only preview, lineage, quarantine and export, not a live OneDrive connector |
 | Resident field scope | [Resident preview catalog](../../../../../src/core/src/zava_forward/core/resident_preview.py#L24); separate identity and own-case grants are required |
 | Devices | [Bounded streaming record](../../../../reference/research/iot-sensor-analytics-research-plan.md#bounded-streaming-engineering-2026-10-27-refs-110-184); synthetic/source evidence, not live resident monitoring acceptance |
+| Telemetry/history storage and owned DQ | [SQL consumer](../../../../../src/core/src/zava_forward/core/sensor_consumer.py), [finite API intake](../../../../../src/api/src/zava_forward/api/sensor_ingestion.py), [SDK adapter](../../../../../src/api/src/zava_forward/api/iot_stream.py); validated idempotent SQL append, not an always-running service configured by main |
+| Retained analysis and averages | [Read-only entry](../../../../../src/core/src/zava_forward/core/sensor_analysis_store.py#L21), [exercise window means](../../../../../src/core/src/zava_forward/core/synthetic/sensor_scenarios.py#L350); current computed-on-read analysis, separately gated averages persistence target |
+| Quality-helper separation | [Quality-evidence categories](../../../../../src/core/src/zava_forward/core/assistants.py#L47) and [projection](../../../../../src/core/src/zava_forward/core/assistants.py#L156); no current telemetry aggregate integration |
 
 ## Full Azure Reference View
 
@@ -91,12 +130,15 @@ A bounded System Architecture Reviewer analysed Bicep at
 `c50e9f0b888e267d5949cab09069d31b6c740e3b`. It supplied a source topology,
 precision findings and exact locators; it did not adopt an ADR, query Azure,
 deploy, inspect credentials or certify current operation.
-The parent implements that model as an original reference drawing.
-The owner-approved normal main merge brings evidence to `fa7ae0c9`.
-No infrastructure declarations or deck inputs changed between those bases;
-the sole diagram-evidence file change was the API README, whose bounded-chat
-section is byte-unchanged. Native/SVG metadata refreshes its whole-file hash
-and records both the original model basis and current source base.
+That original model and its review remain historical evidence. The
+8 November continuation checks the current source files directly and
+embeds exact path, anchor/line and SHA-256 references in native/SVG
+metadata. `source_basis_head` records `b671116d`, the checkout at the
+8 November authoring start, while whole-file hashes identify the actual
+files used; an uncommitted authoring delta is
+not falsely described as already contained in that commit.
+No infrastructure declaration, runtime, service adoption or live
+deployment is changed by the diagrams.
 
 The selected main view is the **direct-demo shared-API realization**.
 Its corporate sign-in registration is configured separately. `enableApiAi`
@@ -124,13 +166,18 @@ Linked private DNS and NSGs are network controls, not model judgement.
 | 8 | Simulated/private-reachable devices use individual credentials and the Hub's private endpoint | [Device boundary](../../../../../infra/modules/iothub.bicep#L95), [simulator](../../../../../infra/live-simulator-job.bicep#L69); credential issue/private reachability separately authorised |
 | 9 | Hub system identity routes to the dedicated Event Hub using the trusted-service exception | [Hub route](../../../../../infra/modules/iothub.bicep#L112); routing-ready and sender-role propagation required, not a route through the consumer PE |
 | 10 | The API initiates receive through the Event Hub PE with entity-scoped Data Receiver | [Receiver grant](../../../../../infra/modules/iothub.bicep#L147), [Event Hub PE](../../../../../infra/modules/iothub.bicep#L202); SDK/configuration activation is not proved by IaC |
-| 11 | The same API intake capability validates and idempotently appends accepted sensor readings to SQL; bad input becomes owned DQ | [Ingestion contract](../../../../adrs/0003-journey-derived-capabilities-runtime-fit.md#L122); no automatic diagnosis, consent, quality acceptance or safety release |
+| 11 | The same API intake capability validates and idempotently appends accepted sensor readings to SQL; bad input becomes owned DQ | [API composition](../../../../../src/api/src/zava_forward/api/sensor_ingestion.py), [SQL consumer](../../../../../src/core/src/zava_forward/core/sensor_consumer.py); no automatic diagnosis, consent, quality acceptance or safety release |
+| Read / target | The telemetry/history/averages capability reads restricted retained history and trusted consent; exercise means are computed on read. Persisted per-home averages in existing API/SQL are a gated target, not implemented. | [Retained analysis](../../../../../src/core/src/zava_forward/core/sensor_analysis_store.py), [exercise comparator](../../../../../src/core/src/zava_forward/core/synthetic/sensor_scenarios.py); no separate worker, accepted causal method or current quality-helper linkage |
 
 Arrowheads show the initiating request; responses are implicit except the
 bidirectional 5/6 advice link. Receive is client-initiated, not an Event Hub
 push granting authority. Main exposes IoT outputs but does not configure the
 API consumer; the lower branch is conditional capability design, not a
-second deployed API or a live stream claim.
+second deployed API or a live stream claim. The wide projection shows both
+the Event Hubs-to-intake data direction and API-initiated receive direction;
+they do not imply server-push authority. The duplicated SQL node in the
+sensor lane refers to the same retained-reading case database, not an
+independently adopted telemetry product.
 
 ### Supporting Services And Conditional Profiles
 
@@ -149,6 +196,10 @@ second deployed API or a live stream claim.
 | Synthetic simulator | Separate job with an existing read-only certificate mount and SQL identity prerequisite | [Simulator](../../../../../infra/live-simulator-job.bicep#L18); Azure Files/certificates are referenced dependencies, not newly provisioned by main |
 
 Every main Bicep service family is represented or deliberately grouped.
+In the wide projection, the jobs-to-main-Blob arrow denotes the digest
+archive dependency only. Optional token-only Blob is explicitly separate;
+renewal readiness and simulator certificate mounts are independent
+dependencies, not all writes to the evidence account.
 Guards, locks, auditing, backup windows and individual alert resources are
 control/source detail rather than additional request-path boxes.
 No APIM, Cosmos DB, AI Search, Fabric, Power BI or Foundry Agent Service

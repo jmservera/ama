@@ -11,10 +11,16 @@ For the current 8 November capstone application and Bicep-grounded reference
 views, use the [new diagram package](../capstone/source/diagrams/architecture/text-equivalent.md):
 an original [CxO application concept](../capstone/source/diagrams/architecture/cxo-architecture.svg)
 and [full Azure reference](../capstone/source/diagrams/architecture/azure-architecture.svg).
-The full editable model includes a readable core frame for slide 37 and
+The full editable model includes a core frame for appendix B10/page 38 and
 separate device, operations, production/background and resident options.
+Its [wide deployment projection](../capstone/source/diagrams/architecture/azure-deployment.svg)
+is a second frame in the same model, used on new main slide 13. It includes
+the sensor-to-SQL chain, shared-API telemetry/averages responsibility,
+resident website, support services and gated options at presentation scale.
 It is source-grounded, not a fresh cloud inventory, adoption or compliance
-acceptance. The historical diagrams and evidence below remain unchanged.
+acceptance. The tagged diagrams below now include the same 8 November
+continuation; original 14 October generators and validation evidence are
+preserved unchanged.
 
 For issue #441, the separate
 [UNREGISTERED resident service proposal](../../.copilot-tracking/changes/2026-10-23/resident-portal-requirements-441/resident-service-unregistered-proposal.md)
@@ -25,9 +31,10 @@ numbered/finalized ADR, native PNG export or deployed portal. Registration
 acceptance remains UNMET, with supported allocator/bootstrap deferred.
 Named review is default; the selected bounded routine exception is proposed
 but OFF pending separate authority/evaluation/release. OD-52-55 remain open.
-Historical executive "no resident portal needed" and staff-assisted topology
-below describe their original baseline, not current proposal exclusion.
-No executive asset, existing ADR or runtime is changed.
+The original executive "no resident portal needed" and staff-assisted
+topology describe their historical baseline, not current proposal exclusion.
+No existing ADR or runtime is changed. The refreshed executive asset includes
+a separate website while preserving assisted choice and the proposal gates.
 
 For issues #200/#201, use the dated
 [cut-over evidence pack](./cutover-evidence-pack.md), its
@@ -37,15 +44,19 @@ The pack preserves the original failed bootstrap, later bounded continuations
 and unchecked historical gates. Its
 [2026-10-27 retirement record](./cutover-evidence-pack.md#owner-authorized-directory-retirement-2026-10-27)
 records the owner's later cut-over sign-off and archive `v0.21.0`, not a new
-deployment or whole-issue acceptance. The historical architecture views below
-remain unchanged.
+deployment or whole-issue acceptance. The original cut-over evidence remains historical; the diagram delivery
+views now add the dated source continuation without rewriting that evidence.
 
 These are two views of the same solution, not two alternative architectures.
-They describe the sources on [PR #68](https://github.com/jmservera/ama/pull/68)
-at commit `062434a1fedbf6a87d1374c767c2bf0a11491ab6`, using the dated
-14 October handover for the deployed exercise. They are static source
-representations, not a fresh Azure inventory, a new deployment or production
-approval.
+Their retained core layout describes the sources on
+[PR #68](https://github.com/jmservera/ama/pull/68) at
+`062434a1fedbf6a87d1374c767c2bf0a11491ab6`, using the dated 14 October
+handover for the exercise. The lower 8 November continuation adds
+source-coded telemetry and read-only analysis, plus explicitly gated
+averages persistence and resident integration targets. Current source
+paths and SHA-256 hashes are embedded; original layout IDs, icons and
+bindings are retained. These are not a fresh inventory, deployment or
+production approval.
 
 | Audience | Editable source | Vector preview | High-resolution image |
 | --- | --- | --- | --- |
@@ -70,14 +81,17 @@ adapts these materials into native editable PowerPoint architecture on
 slides 10, 19, 23 and 24. The executive view remains on the main route;
 runtime, operations and deferred topology use readable optional slides
 rather than a reduced full technical image.
-[Presentation handover and previews](../capstone/README.md#architecture-and-ux-refresh-2026-10-14)
+[Presentation handover and previews](../capstone/README.md)
 record the UX improvements, source mapping and remaining human checks.
-The Excalidraw sources here retain their original baseline and editing
-authority; a presentation adaptation is not a new deployment or decision.
+The Excalidraw sources retain their original core IDs and editing authority,
+with a dated continuation rather than a rewritten historical generator.
+The current 55-page deck uses the application concept on page 12, full
+deployment projection on page 13 and reference core on page 38.
+A presentation adaptation is not a new deployment or decision.
 
 ## Executive Architecture
 
-![Executive architecture: staff use a controlled Azure Container Apps workbench, backed by SQL and Blob, with conditional Azure OpenAI drafts and human approvals.](./zava-forward-executive-architecture.svg)
+![Executive architecture: staff Container Apps Workbench, SQL/Blob and conditional AI under human approval; a gated home sensor route via IoT Hub/Event Hubs into validated SQL telemetry/history and on-read exercise averages, with gated targets for persisted averages and Quality linkage; a separate resident showcase with separately supplied SQL, gated shared-case identity and optional public Sweden Central AI outside the core.](./zava-forward-executive-architecture.svg)
 
 ### Legend
 
@@ -89,7 +103,10 @@ authority; a presentation adaptation is not a new deployment or decision.
 
 ### Key Relationships
 
-Staff assist residents without requiring a resident portal. Microsoft sign-in
+Staff assist residents without requiring digital participation. A distinct
+resident website offers own-case access and assisted choice; its shared-case
+managed external identity is a gated target, not staff enrolment.
+Microsoft sign-in
 and service-side permissions protect the workbench. One API hosts the workflow
 and five bounded assistants; SQL retains controlled records and proposals,
 while Blob holds document files. AI returns drafts for review, not consent,
@@ -107,6 +124,20 @@ weakening resident choice or independent review. It is a value hypothesis:
 the operator model paths and persistence checks do not measure business
 benefit.
 
+Home sensors feed Basic B1 IoT Hub and the dedicated Event Hubs transport.
+The source-coded finite API intake validates and deduplicates accepted
+readings into restricted Azure SQL history; rejected input has owned DQ.
+The shared-API telemetry/averages responsibility reads retained rows and
+trusted consent. Exercise window means are computed on read. Persisted
+per-home averages in that existing API/SQL boundary are the owner-requested
+target, separately gated and not implemented. There is no new ADX, Fabric
+or standalone analytics worker. Averages support context/manual review,
+not diagnosis, consent, quality acceptance or safety release.
+The current quality-evidence helper uses measures, checklists and document
+evidence; sensor linkage to Quality Verification is proposed, not delivered.
+The retained-analysis/comparison functions are reusable core code, not proof
+of a served API analysis endpoint, scheduler or Workbench sensor integration.
+
 The following text topology preserves the executive drawing's component and
 relationship structure:
 
@@ -118,11 +149,19 @@ flowchart LR
     api --> sql[("Azure SQL: cases, audit, proposals")]
     api -. configured documents .-> blob[("Azure Blob: files")]
     api <-. conditional scoped drafts .-> model["Azure OpenAI"]
+    homes["Home sensors: live use gated"] -.-> hub["Basic B1 IoT Hub"]
+    hub -. Hub identity route .-> events["Dedicated Event Hubs"]
+    events -. finite receive adapter .-> telemetry["Shared-API telemetry / averages service"]
+    telemetry <--> history[("SQL readings / delivery / DQ history")]
+    telemetry --> analysis["Read-only history / exercise averages on read"]
+    analysis -. target persistence / quality linkage gated .-> api
+    resident["Separate resident website: own-case / assisted choice"] -.-> residentSql[("Independently supplied showcase SQL")]
+    resident -. optional / default OFF .-> residentAi["Public Sweden Central model: outside core"]
 ```
 
 ## Technical Architecture
 
-![Technical architecture: Entra and browser entry, the Container Apps API, SQL and Blob stores, Foundry models, token renewal, registry, network and monitoring controls, and a separately labelled deferred queue-worker topology.](./zava-forward-technical-architecture.svg)
+![Technical architecture: Entra/browser entry, shared API, SQL/Blob, Foundry, network/monitoring controls and deferred workloads; gated IoT Hub/Event Hubs sensor receipt into validated SQL telemetry/history and on-read exercise averages, with gated targets for persisted averages and Quality linkage; a separate resident site with independently supplied SQL, gated external identity/shared-case integration and optional public Sweden Central AI outside the core.](./zava-forward-technical-architecture.svg)
 
 ### Legend
 
@@ -155,6 +194,9 @@ flowchart LR
 | Budget -> notification | 80% actual and 100% forecast alerts notify the configured email; this is not a hard spending stop. Shared assistant reservations and effective scoped authority are separate controls. | [Budget](../../infra/main.bicep), [assistant limits](../../src/agents/README.md#operator-authority-and-finite-allowance) |
 | Deferred schedule/queues/workers | Five-minute orchestrator -> `agent-tasks` -> separate agents; `import-jobs` -> import job -> limited SQL role and Blob quarantine. Agent/model and API/checkpoint paths are proposed contracts, not working placeholder code. | [Deferred workload definitions](../../infra/modules/containerapps.bicep), [ADR 0001](../adrs/0001-azure-architecture.md#decisions) |
 | Conditional M365 -> workbench boundary | SharePoint/Excel imports are proposed, one-way and permission-gated. `Sites.Selected` plus a site grant is not the own-photo `User.Read` permission. Teams Workflows is an optional operations webhook, never an approval or safety-response path. | [M365 design](../adrs/0001-azure-architecture.md#m365-configuration-integration-and-use), [site grant](../../infra/scripts/grant-sharepoint-access.sh), [action group](../../infra/modules/monitoring.bicep) |
+| Home sensors -> IoT Hub -> Event Hubs -> shared-API intake | Basic B1/private Hub; Hub MI uses the trusted-service route to dedicated Event Hubs. The finite SDK adapter initiates receive over the Event Hubs PE. Live routing, mapping, calibration, consent and method acceptance remain separate. | [Hub and transport](../../infra/modules/iothub.bicep), [finite SDK adapter](../../src/api/src/zava_forward/api/iot_stream.py), [API intake](../../src/api/src/zava_forward/api/sensor_ingestion.py) |
+| Telemetry service -> SQL history / read-only averages | Validated idempotent readings and restricted delivery/DQ history are retained. Analysis reads trusted consent and rows; exercise means are computed on read. The named telemetry/history/averages service is a shared-API capability backed by existing SQL; persisted averages are a gated target, not a new schema or deployed worker. | [SQL consumer](../../src/core/src/zava_forward/core/sensor_consumer.py), [retained analysis](../../src/core/src/zava_forward/core/sensor_analysis_store.py), [exercise means](../../src/core/src/zava_forward/core/synthetic/sensor_scenarios.py), [current quality-helper categories](../../src/core/src/zava_forward/core/assistants.py#L47) |
+| Separate resident website -> independently supplied dependencies | Own-case scope and assisted choice are distinct from staff login. Showcase SQL is independently supplied, not proved to be shared staff SQL. Optional public Sweden Central AI is off by default and outside the core/private/UK inference claim. Managed external identity/shared-case integration remains a gated target. | [Resident deployment](../../infra/resident-demo.bicep), [resident preview fields](../../src/core/src/zava_forward/core/resident_preview.py), [optional model](../../infra/resident-assistant.bicep) |
 
 The reduced text topology below groups supporting resource declarations.
 The Excalidraw view carries the detailed service labels, statuses and routes.
@@ -199,11 +241,19 @@ flowchart TB
     end
     m365["SharePoint/Excel: proposed; Teams: optional"] -. snapshot import .-> importer
     ops -. optional Teams Workflows .-> m365
+    homes["Home sensors: synthetic today / live gates"] -.-> hub["Basic B1 IoT Hub"]
+    hub -. Hub MI trusted-service route .-> eventhub["Dedicated Event Hubs"]
+    telemetry["Shared-API finite telemetry intake"] -. API initiates receive via PE .-> eventhub
+    telemetry --> sql
+    analysis["Read-only retained history / averages on read"] --> sql
+    averageTarget["TARGET: persist per-home averages in existing API / SQL"] -. gated .-> sql
+    resident["Separate resident website: own-case / assisted choice"] -.-> residentSql[("Independently supplied showcase SQL")]
+    resident -. optional / default OFF .-> residentModel["Public Sweden Central AI: outside core"]
 ```
 
 ## State, Trade-Offs and Known Limits
 
-The latest recorded exercise revision is `ca-forward-test-api--0000012`,
+The retained 14 October exercise record names `ca-forward-test-api--0000012`,
 runtime source `cd14b3b379026a87ebfa3e9058ac10c0df7888eb`. The handover records
 five real operator model paths and independent SQL-content/restart proof,
 not a staff-browser acceptance session, calibrated semantic quality or benefit.
@@ -311,3 +361,20 @@ content to a third-party drawing service.
 [Authoring and validation evidence](../../.copilot-tracking/architecture-diagrams/2026-10-14/zava-forward/validation.md)
 records native group/arrow editing, browser layout checks, icon integrity,
 preview dimensions and delivery hashes.
+
+The [8 November continuation builder](./update-architecture.mjs) starts from
+the committed original artifacts at `b671116d`, not from a rewritten
+historical script. It keeps original element IDs, embedded icon bytes and
+existing arrow bindings, replaces retired source locators and adds native
+editable nodes/edges. The
+[current validation receipt](../../.copilot-tracking/architecture-diagrams/2026-11-08/zava-forward/validation.json)
+records local CLI 0.3.0 render dimensions/hashes and geometry checks. Current
+preview outputs were staged in that dated directory, visually reviewed and
+then copied to the delivery paths. No account, upload, live cloud lookup,
+infrastructure adoption or runtime change was used.
+
+After local native SVG export, run
+`node docs/architecture/annotate-previews.mjs <render-directory>` to attach
+the title, accessible text equivalent and exact native-file hash without
+changing render geometry. This restores the preview's accessible SVG
+semantics; it is not a new accessibility conformance acceptance.

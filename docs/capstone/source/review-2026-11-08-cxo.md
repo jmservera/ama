@@ -263,3 +263,204 @@ No new model run, recording, approval, price or accepted-value result follows.
 The original FAIL and exact corrective assessment are preserved in PR evidence.
 These shared authoring-guard changes require a fresh full local matrix; the
 earlier partial receipt is historical, not publication evidence for this head.
+
+## Later 8 November: IoT, Resident Site And Main Deployment Slide
+
+### Communication Job And Audience Map
+
+The owner explicitly selected an **added full Azure deployment slide on the
+main route**, including supporting services and gated options, rather than
+an appendix-only replacement. The mixed CxO/AMA panel setting retains the
+planned 30-minute presentation and separate ten-minute demo. Exact attendees,
+prior knowledge and actual projection conditions are unconfirmed. Seek the
+next bounded validation question and accountable owners, not deployment,
+service procurement, cost approval or increased autonomy.
+
+| Group / preference | Needs and strongest proof | Trust risk / intended action |
+| --- | --- | --- |
+| Sponsor: Sergeant primary, Scientist secondary | Recommendation first; one source-grounded deployment map, an explicit 45-second increment and unchanged cost arithmetic | Reading every Azure label obscures the decision; agree the validation scope, owner and missing evidence |
+| Technical/assurance: Scientist primary, Sergeant secondary | Receiving chain, SQL responsibilities, identity/network boundaries, source declarations and gates; exact mapping/link tests | Source existence is not accepted live integration or compliance; identify the next integration/control test |
+| Resident/service perspective: Therapist primary, Scientist secondary | Own-case access, separate identity, assisted continuity and independent safety; retained brief and permission contracts | Synthetic journeys are not resident testimony or real consent; retain resident agency and test actual needs |
+| Future-oriented sponsor: Evangelist secondary | Imagine reusable accepted history supporting reviewed quality decisions, after today's evidence | Materialized averages and sensor-linked L4 flags are not current functionality; approve a question, not an assumed benefit |
+
+Use a deliberate sequence: recommendation -> people and case scope (S11) ->
+deployment responsibility/gates (new S11A) -> resident journey (S12).
+Keep the one factual core while changing register, not the facts.
+
+### Narrative And Operative Route
+
+**S11A claim:** Azure connects home evidence to an owned action, with explicit
+integration and authority limits. The receiving chain is home sensors ->
+Azure IoT Hub -> Event Hubs -> validated/idempotent intake -> SQL accepted
+observations/history -> averages/analysis derived on read. No ADX/Fabric,
+new standalone stream worker or household telemetry in Log Analytics is added.
+The employee Workbench uses the case API; the separate synthetic resident
+site targets the shared contract, not a proved live integration.
+
+The main diagram includes SQL/Blob/conditional Foundry, private endpoints/
+DNS, registry, Vault and Monitor, plus separately gated edge/token/background/
+queue/model/simulator options. It distinguishes the five current evidence
+helpers from the brief's Quality Verification sensor-checking/L4 flag target.
+Sensor-to-helper linkage and persisted averages remain integration proposals.
+Existing analysis functions do not establish a served analysis API or
+Workbench integration; the service links are gated targets.
+Neither an average nor a model response is a safety diagnosis or acceptance.
+
+The new slide is **physical 13 / S11A / package part 55 / template 12**.
+Existing baseline parts/IDs stay stable. Main pages become 1-27; QX is 28;
+B01-B27 are 29-55; B10 is 38 and B19 is 47. Protected cost pages become
+6/11/22/33/37/53. Native fixed links target the same existing parts, so their
+physical destinations shift without retargeting the actions.
+Visible index/answer/topic page labels are incremented consistently, including
+the protected cost-page navigation footers. That exception changes no financial
+number, formula, price, currency, frame geometry or action target.
+
+The new 45-second slot is 11:40-12:25. Original narration slots and shared
+progressive-build durations remain unchanged. The revised total is **24:30**,
+leaving **5:30** in the planned 30-minute slot. Original `TIMING` windows
+remain baseline provenance; `CURRENT ROUTE TIMING` is operative. This is a
+budget, not a timed rehearsal or evidence that all reference notes can be spoken.
+
+### Evidence Register And Prepared Challenges
+
+| Claim | Evidence, inspected 8 November | Type / limit |
+| --- | --- | --- |
+| Required five business jobs, original L2-L4 and resident/professional/Finance rights | Original Case Study 48; addendum's later autonomy/optional resident qualifications | Case requirement and unsigned proposal, not present end-to-end acceptance |
+| One-way IoT receiving route | `infra/modules/iothub.bicep`, API `iot_stream.py` and `sensor_ingestion.py`; retained IoT research synthesis | Source declarations/adapters; live device identities, routing, SQL acceptance and calibration remain gates |
+| Accepted telemetry/history and derived averages | Core `store.py`, `sensor_analysis_store.py` and `sensor_analysis.py` | Retained observations and read-only analysis; no proved materialization service or automatic task from analysis |
+| Current quality helper is evidence preparation | Core `assistants.py` registry/projection | Home/measures/quality/checklists/documents; does not establish sensor aggregates wired into the helper |
+| Resident site and permission separation | Addendum optional service proposal; existing API/core/resident prototype contracts | Separate synthetic showcase; shared-case/managed identity, explicit grants/revocation, lawful basis, retention and real consent remain gates |
+| Supporting services/options | Bicep-grounded editable diagram and text equivalent | Declared topology, not cloud inventory, GDPR/PAS compliance or provider processing-geography acceptance |
+| Company/resident context | Company-profile research, including owner-confirmed not-for-profit status and labelled sector models | Unknown company details and modelled resident indicators are not findings from residents |
+
+Prepared concise answers:
+
+* **Why SQL rather than another telemetry platform?** The existing intake and
+  relational store already own accepted observations and history. Reuse those
+  contracts; a new analytics estate needs a measured workload and its own
+  cost/control justification.
+* **Are the averages stored today?** Observations are retained; averages and
+  quality/sufficiency analysis are derived on read. Persistent materialization
+  and helper integration remain proposals, not delivered functionality.
+* **Does Quality Verification already flag automatically?** The original
+  brief requests L4 raise-only flags. Today's quality helper prepares evidence;
+  sensor-linked autonomous flags and their critical-miss/reviewer-load evidence
+  remain separate scope and release gates.
+* **Does the resident website share staff login or see every home?** No.
+  External identity and explicit own-case/representative permission are
+  separate; login is not works consent. Shared-case wiring is still gated,
+  and assisted service remains available.
+* **Are the Azure boxes compliant and live?** This is source-backed design,
+  not acceptance evidence. Name the specific source/control, say what was
+  checked, and identify the owner/test still required.
+* **Can an average prove damp is resolved?** No. Aggregates do not replace
+  calibrated readings, sufficient evidence or competent inspection. Resident
+  hazard reports follow the independent human safety route.
+
+### Delivery: Seven Observables
+
+| Observable | Moment-specific adjustment |
+| --- | --- |
+| Posture | Face the room and settle before the S11A claim; do not deliver the decision while turned to the diagram |
+| Gestures | Trace the sensor chain once, then mark resident permission separately; distinguish source-backed paths from dashed gates |
+| Movement | Stay still for SQL responsibility and the authority limit; return toward the audience for the resident-journey transition |
+| Language | Say “retained observations”, “derived on read”, “separate synthetic showcase” and “gated integration”; avoid “already deployed” |
+| Voice | Slow briefly on the average/materialization distinction; finish the 45-second summary without reading the full service inventory |
+| Facial expression | Listen neutrally to a challenge; restate the actual concern before answering, conceding an accurate limitation |
+| Dress | Match the confirmed executive setting; avoid visual distractions competing with the dense deployment view |
+
+### Complete Assessment-Guide Review
+
+No new numeric score is assigned. Section floors remain A21/B21/C9/D9,
+no criterion may be 1, and artifact submission/attendance remain independent.
+The following is a preparation assessment, not a panel observation.
+
+| Criteria | Package support / remaining evidence |
+| --- | --- |
+| A1 architecture; A2 trade-offs | Main deployment, stable contracts and deliberate SQL reuse support explanation. Scaling, failure-domain and alternative workload evidence must still be demonstrated |
+| A3 security/compliance/RAI | Identity, permissions, private endpoints and separate decisions are visible; live isolation/threat-control tests and legal/privacy approval remain unproved |
+| A4 implementation | Source-coded intake/storage and partial helper breadth are disclosed; source gates do not establish complete live sensor/resident end-to-end functionality |
+| A5 operations/cost | Supporting Monitor and unchanged financial arithmetic remain; measured reliability, complete billing and accepted business-value denominators are still required |
+| A6 AI/evaluation; A7 autonomy | Current five-helper proposals are distinguished from original L2-L4 targets and deterministic state control; no measured model advantage or higher authority is invented |
+| B1 structure; B2 calibration; B6 written craft | Added main-route responsibility map follows the application concept and precedes resident experience; readable rendered assets/navigation remain delivery checks |
+| B3 demo/hook; B5 timing | Existing under-two-minute hook/recovery and revised 24:30 plan remain preparation; actual execution/time discipline needs rehearsal |
+| B4 Q&A; B7 evidence | Prepared answers and exact source/type limits support depth; live composure and action-ready measured results cannot be generated from a deck |
+| C1 discovery; C2 listening; C3 influence/honesty | Case stakeholders, resident agency and missing evidence are explicit; actual discovery/listening and the accountable human decision remain unobserved |
+| D1 substance; D2 publish-readiness; D3 dissemination | This architecture/deck change adds no experimental outcomes, reviewer acceptance, artifact submission or new dissemination evidence |
+
+### Focused Delivery Checks
+
+Source insertion checks, six refusal mutations, 32 native-shape checks,
+canonical hash semantics and ten PDF-navigation regressions pass. Build,
+Verify, final media bindings, Linux render and affected-page visual checks
+are recorded below after execution. No heavy publication gate is claimed by
+these component checks; the parent workflow owns exact-head publication.
+
+#### Final Delivery And Corrections
+
+The final Build/Verify passes with **55 slides and nonempty notes, 108
+unchanged fixed actions/destinations, 303 package members** (293 original
+baseline members, six declared PNGs and four new slide/notes members).
+The four exact structural metadata changes insert part 55 after physical
+12 and retain every original section/slide ID. Of the baseline members,
+186 remain byte-identical; all 107 expected revisions match the generated
+source contract. The baseline file itself remains pinned at
+`2bab9b79de4352a1915dab04d1846a4c4be90f6889a2b9b6af4807e48a33d5f8`.
+
+The insertion regression verifies all 27 visible answer numbers and
+extracts 30 required service/boundary terms from the actual new slide's notes
+and image alternative text. All six protected cost pages pass exact expected
+content checks and negative mutations for numbers, geometry, notes and
+unapproved status. Status-word exceptions remain on physical 22/53;
+navigation footer changes are on 33/37/53. Original duration slots,
+financial numbers/currencies, arithmetic and action objects remain unchanged.
+The operative route clock is 24:30, not a preserved 23:45 running clock.
+
+Local review of the first complete deck identified two diagram-copy issues:
+Quality was only named in notes rather than visibly among the five helpers,
+and “read-only” ambiguously covered intake that appends observations.
+The final diagram explicitly includes Quality, labels the existing API
+telemetry/averages responsibility, and limits read-only/no-task wording to
+analysis. Its footer labels sensor-to-Quality a gated target. The diagram
+owner also separated token-only Blob from the digest arrow to evidence Blob.
+No topology, new service adoption or runtime action follows those corrections.
+The final notes explicitly say existing functions do not establish a served
+analysis API or Workbench integration.
+
+LibreOffice 24.2.7.2 renders all 55 pages; every one of the 108 PDF
+destinations/hit regions is verified and unambiguous. Actual words are
+present in all 427 inspected revised/native navigation text frames.
+There are zero new non-native word-bbox hints; 128 deduplicated hints
+reproduce words/positions in prior delivered pages. These are not native
+PowerPoint bounds or accessibility acceptance. The first broad bbox check
+reported duplicated/inherited hints as failure; that raw result is retained
+outside the repository, not presented as a successful native bound test.
+
+After aligning the added page, 25 original pages are pixel-identical.
+The 29 changed existing pages are the CxO page, QX and all appendix pages
+with updated physical-number labels; the new deployment page is additive.
+Visual inspection covered 12/13/14/28/33/37/38/47/53/55. All 55 final PNGs
+are identical to the visually reviewed corrected preview: the last update
+changes notes only. The main full projection is approximately 12.1-point
+minimum text, and CxO approximately 12.0; the selected core directs readers
+to the full-size editable technical detail and main page 13.
+
+The final delivery is
+[PPTX](../deck/zava-forward-cowork-v2-draft.pptx) plus
+[PDF](../deck/zava-forward-cowork-v2-draft.pdf), regenerated
+[speaker notes](../pitch/speaker-script.md) and
+[27 answers](../pitch/questions-and-answers.md), with
+[compact source/delivery bindings](./validation.json).
+Final PPTX SHA-256:
+`7cf5abf93936aaa3b676c766479e91327a79c1746215a3a837be37b906acbc64`.
+Final PDF SHA-256:
+`09de4170ed89a845da9ffd61bc36e211a770f4d96944952e795e649187cf14cc`.
+
+The focused checks also include 32 native-shape checks, canonical source/
+receipt hashes, ten PDF regressions and the diagram owner's 14 final
+source/browser/geometry checks. `javaldx` emits its inherited startup warning
+but rendering succeeds. Native Windows PowerPoint, actual projector/
+keyboard/assistive-technology, rehearsal, resident/staff, legal/privacy and
+production acceptance remain separate. No numeric score, cloud change,
+paid inference, commit, push or heavy publication gate was performed by this
+presentation work.
