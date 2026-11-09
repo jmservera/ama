@@ -428,6 +428,20 @@ class ChatPanel:
         with self.iso.store.lock:
             self.iso.store.audit(user_key(user), "chat.turn.unstored", case_id, detail)
 
+    def record_validation_refused(self, user: dict[str, Any], tid: str | None = None) -> None:
+        """Receipt for an ask the route refused as malformed; takes no request content."""
+        try:
+            user = self.iso.current_user(user)
+        except (PermissionError, LookupError):
+            return
+        with self.iso.store.lock:
+            if tid is None:
+                detail = json.dumps(dict(outcome="rejected", model_calls=0), sort_keys=True)
+                self.iso.store.audit(user_key(user), "chat.turn.unstored", "", detail)
+            else:
+                receipt = json.dumps(self._receipt(tid), sort_keys=True)
+                self.iso.store.audit(user_key(user), "chat.turn", "", receipt)
+
     def ask(
         self, user: dict[str, Any], tid: str, question: object, *, skill: object = None
     ) -> dict[str, Any]:
