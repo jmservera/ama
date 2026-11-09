@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import base64
 import binascii
+import email.utils
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -120,6 +121,7 @@ class AzureTaskQueue:
             url += "?" + urllib.parse.urlencode(query)
         headers = {
             "Authorization": f"Bearer {self.token()}",
+            "x-ms-date": email.utils.formatdate(usegmt=True),
             "x-ms-version": API_VERSION,
             "Content-Type": "application/xml",
         }

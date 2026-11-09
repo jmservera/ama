@@ -1,4 +1,6 @@
 import base64
+import email.utils
+import time
 import unittest
 import urllib.parse
 from xml.sax.saxutils import escape
@@ -54,6 +56,54 @@ class Recorder:
     ) -> tuple[int, bytes]:
         self.calls.append((method, url, headers, body))
         return self.replies.pop(0)
+
+
+class DateContractTransport(Recorder):
+    """Refuses, like the service, any request without a current RFC 1123 UTC x-ms-date."""
+
+    def __call__(
+        self, method: str, url: str, headers: dict[str, str], body: bytes | None
+    ) -> tuple[int, bytes]:
+        self.calls.append((method, url, headers, body))
+        value = headers.get("x-ms-date") or headers.get("Date")
+        if value is None or not value.endswith(" GMT"):
+            return 403, b""
+        try:
+            moment = email.utils.parsedate_to_datetime(value).timestamp()
+        except (TypeError, ValueError):
+            return 403, b""
+        if abs(time.time() - moment) > 60:
+            return 403, b""
+        return self.replies.pop(0)
+
+
+class RequestDateTests(unittest.TestCase):
+    def test_every_operation_carries_a_current_utc_request_date(self) -> None:
+        rec = DateContractTransport(
+            (200, entry("not json")), (201, b""), (204, b""), (204, b""), (204, b"")
+        )
+        client = queue(rec)
+        self.assertIsNone(client.receive())
+        client.ack("m1\np1==")
+        client.release("m1\np1==")
+        self.assertEqual([c[0] for c in rec.calls], ["GET", "POST", "DELETE", "DELETE", "PUT"])
+        for _, _, headers, _ in rec.calls:
+            self.assertRegex(headers["x-ms-date"], r"^\w{3}, \d\d \w{3} \d{4} [\d:]{8} GMT$")
+
+    def test_contract_transport_refuses_a_missing_or_stale_date(self) -> None:
+        for headers in ({}, {"x-ms-date": "Wed, 06 Mar 2019 21:50:50 GMT"}):
+            with self.subTest(headers=headers):
+                status, _ = DateContractTransport((204, b""))("GET", ENDPOINT, headers, None)
+                self.assertEqual(status, 403)
+
+    def test_receive_without_date_would_be_rejected_by_the_service(self) -> None:
+        rec = DateContractTransport((200, entry("x")))
+        client = queue(rec)
+        client.transport = lambda m, u, h, b: rec(
+            m, u, {k: v for k, v in h.items() if k != "x-ms-date"}, b
+        )
+        with self.assertRaises(QueueError):
+            client.receive()
 
 
 def queue(recorder: Recorder, **kwargs: int) -> AzureTaskQueue:
