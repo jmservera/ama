@@ -1,0 +1,22 @@
+E501 Line too long (101 > 100)
+    --> tests/test_priority_order.py:1096:101
+     |
+1094 |         first, second = self.two_audited((EARLIER, SECOND))
+1095 |         self.make_legacy(
+1096 |             self.store, [(rid, 50, user, body, version) for rid, _, user, body, version in self.rows]
+     |                                                                                                     ^
+1097 |         )
+1098 |         reopened = self.open_store()
+     |
+
+E501 Line too long (103 > 100)
+    --> tests/test_priority_order.py:1369:101
+     |
+1368 | class MssqlBeginRecovery(unittest.TestCase):
+1369 |     """The SQL Server adapter must not leave a transaction open when its BEGIN batch fails part way."""
+     |                                                                                                     ^^^
+1370 |
+1371 |     class Error(Exception):
+     |
+
+Found 2 errors.

@@ -1,0 +1,888 @@
+E501 Line too long (104 > 100)
+  --> tests/sqlguard.py:8:101
+   |
+ 7 | def require_task_owned_loopback(env: Mapping[str, str]) -> None:
+ 8 |     """Raise before any connection or DDL unless ZF_SQL_* names a loopback server with password auth."""
+   |                                                                                                     ^^^^
+ 9 |     host = (env.get("ZF_SQL_SERVER") or "").strip().strip("[]")
+10 |     if host.lower() != "localhost":
+   |
+
+E501 Line too long (102 > 100)
+   --> tests/test_priority_order.py:345:101
+    |
+344 | class SqliteLegacyEdges(SqliteFixture):
+345 |     """SQLite only: needs trigger removal and a large table; SQL Server equivalents remain pending."""
+    |                                                                                                     ^^
+346 |
+347 |     def test_broken_audit_chain_is_not_trusted(self) -> None:
+    |
+
+E501 Line too long (109 > 100)
+   --> tests/test_priority_order.py:374:101
+    |
+372 |         for n in range(size):
+373 |             rid = f"{n:012x}"
+374 |             stamp = f"2026-01-{1 + n // 86400 % 28:02d}T{n // 3600 % 24:02d}:{n // 60 % 60:02d}:{n % 60:02d}"
+    |                                                                                                     ^^^^^^^^^
+375 |             rows.append((rid, 2 + n, user, json.dumps(dict(base, id=rid, created=stamp))))
+376 |         self.store.db.execute("BEGIN")
+    |
+
+Found 3 errors.
+ruff 1
+unformatted: File would be reformatted
+    --> src/zava_forward/core/sqlstore.py:21:1
+     |
+20   | """
+21   +
+22   | import json
+--------------------------------------------------------------------------------
+58   |
+     - INDEXES = "\n".join(
+     -     f"CREATE INDEX IF NOT EXISTS ix_cases_{col} ON cases ({col}, id);"
+     -     for col in QUEUE_COLS
+     - ) + """
+59   + INDEXES = (
+60   +     "\n".join(
+61   +         f"CREATE INDEX IF NOT EXISTS ix_cases_{col} ON cases ({col}, id);" for col in QUEUE_COLS
+62   +     )
+63   +     + """
+64   | CREATE INDEX IF NOT EXISTS ix_cases_filter ON cases (closed, stage, area, wave, owner_code);
+--------------------------------------------------------------------------------
+87   | """
+88   + )
+89   |
+90   |
+     - CASE_COLS = ("stage", "area", "wave", "owner_code", "closed", "hazard", "postcode", "address", "body", "support", "days", "rkey",
+     -              "contractor", "search", "search_c", "surname", "last_contact", "next_visit", "decision", "fstatus", "priority_correction")
+91   + CASE_COLS = (
+92   +     "stage",
+93   +     "area",
+94   +     "wave",
+95   +     "owner_code",
+96   +     "closed",
+97   +     "hazard",
+98   +     "postcode",
+99   +     "address",
+100  +     "body",
+101  +     "support",
+102  +     "days",
+103  +     "rkey",
+104  +     "contractor",
+105  +     "search",
+106  +     "search_c",
+107  +     "surname",
+108  +     "last_contact",
+109  +     "next_visit",
+110  +     "decision",
+111  +     "fstatus",
+112  +     "priority_correction",
+113  + )
+114  |
+     - SORT_SQL = {"urgent": "rkey", "waiting": "days DESC, rkey", "contact": "last_contact, rkey", "name": "surname, rkey", "visit": "next_visit, rkey"}
+     - FLAG_SQL = {"hazard": "hazard=1", "support": "support=1", "long": f"days>={insights.LONG_WAIT}",
+     -             "nodecision": "decision NOT IN ('Accepted','Declined')",
+     -             "fundingprog": "fstatus IN ('To prepare','Draft ready','Approved','Submitted')", "funding": "fstatus!='Confirmed'"}
+115  + SORT_SQL = {
+116  +     "urgent": "rkey",
+117  +     "waiting": "days DESC, rkey",
+118  +     "contact": "last_contact, rkey",
+119  +     "name": "surname, rkey",
+120  +     "visit": "next_visit, rkey",
+121  + }
+122  + FLAG_SQL = {
+123  +     "hazard": "hazard=1",
+124  +     "support": "support=1",
+125  +     "long": f"days>={insights.LONG_WAIT}",
+126  +     "nodecision": "decision NOT IN ('Accepted','Declined')",
+127  +     "fundingprog": "fstatus IN ('To prepare','Draft ready','Approved','Submitted')",
+128  +     "funding": "fstatus!='Confirmed'",
+129  + }
+130  |
+--------------------------------------------------------------------------------
+216  |         self.scanner = open_scanner(self.docstore)
+     -         self.digest_dir = digest_dir or os.environ.get("ZF_DIGEST_DIR") or os.path.join(os.path.dirname(db_path) or ".", "digests")
+217  +         self.digest_dir = (
+218  +             digest_dir
+219  +             or os.environ.get("ZF_DIGEST_DIR")
+220  +             or os.path.join(os.path.dirname(db_path) or ".", "digests")
+221  +         )
+222  |         self.ai = Ai()
+     -         self.ai.gate = lambda task, deployment=None: self.continuity_block(task) or self.release_block(task, deployment)
+223  +         self.ai.gate = lambda task, deployment=None: (
+224  +             self.continuity_block(task) or self.release_block(task, deployment)
+225  +         )
+226  |         self.ai.release = self.release_context
+--------------------------------------------------------------------------------
+237  |         self._seed(data_path)
+     -         self._insert_ignore("meta", ["key", "value"], ["as_of", os.environ.get("ZF_AS_OF") or datetime.now().date().isoformat()])
+238  +         self._insert_ignore(
+239  +             "meta",
+240  +             ["key", "value"],
+241  +             ["as_of", os.environ.get("ZF_AS_OF") or datetime.now().date().isoformat()],
+242  +         )
+243  |         self.as_of = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
+--------------------------------------------------------------------------------
+252  |         """Add a NOT NULL column with a default to an existing table. Names and defaults are module constants, never input."""
+     -         self.db.execute(f"ALTER TABLE {table} ADD COLUMN {col} {sqltype} NOT NULL DEFAULT {default}")
+253  +         self.db.execute(
+254  +             f"ALTER TABLE {table} ADD COLUMN {col} {sqltype} NOT NULL DEFAULT {default}"
+255  +         )
+256  |
+--------------------------------------------------------------------------------
+276  |         from .ai_registry import LEGACY, legacy_binding, legacy_deployment
+277  +
+278  |         if task not in LEGACY:
+--------------------------------------------------------------------------------
+289  |         from . import rai_release
+290  +
+291  |         selected, _ = self.release_assessment(task, deployment)
+--------------------------------------------------------------------------------
+327  |     def _insert_ignore(self, table, cols, vals):
+     -         self.db.execute(f"INSERT OR IGNORE INTO {table} ({', '.join(cols)}) VALUES ({','.join('?' * len(cols))})", vals)
+328  +         self.db.execute(
+329  +             f"INSERT OR IGNORE INTO {table} ({', '.join(cols)}) VALUES ({','.join('?' * len(cols))})",
+330  +             vals,
+331  +         )
+332  |
+--------------------------------------------------------------------------------
+348  |                 if col not in have:
+     -                     defaults = {"last_contact": "'0000'", "next_visit": "'9999'", "support": "0", "days": "0", "priority_correction": "0"}
+     -                     self._add_column_default("cases", col, "INTEGER" if col in ("support", "days", "priority_correction") else "TEXT", defaults.get(col, chr(39) * 2))
+349  +                     defaults = {
+350  +                         "last_contact": "'0000'",
+351  +                         "next_visit": "'9999'",
+352  +                         "support": "0",
+353  +                         "days": "0",
+354  +                         "priority_correction": "0",
+355  +                     }
+356  +                     self._add_column_default(
+357  +                         "cases",
+358  +                         col,
+359  +                         "INTEGER" if col in ("support", "days", "priority_correction") else "TEXT",
+360  +                         defaults.get(col, chr(39) * 2),
+361  +                     )
+362  |             want = ranking.CURRENT["version"]
+363  |             row = self.db.execute("SELECT value FROM meta WHERE key='rank_policy'").fetchone()
+     -             encoding = self.db.execute("SELECT value FROM meta WHERE key='support_encoding'").fetchone()
+     -             stale = ((row[0] if row else None) != want or (not have >= set(CASE_COLS))
+     -                      or (encoding[0] if encoding else None) != stock.SUPPORT_ENCODING)
+364  +             encoding = self.db.execute(
+365  +                 "SELECT value FROM meta WHERE key='support_encoding'"
+366  +             ).fetchone()
+367  +             stale = (
+368  +                 (row[0] if row else None) != want
+369  +                 or (not have >= set(CASE_COLS))
+370  +                 or (encoding[0] if encoding else None) != stock.SUPPORT_ENCODING
+371  +             )
+372  |             if stale and self.db.execute("SELECT COUNT(*) FROM cases").fetchone()[0]:
+373  |                 for cid, body in self.db.execute("SELECT id, body FROM cases").fetchall():
+374  |                     r = self._row(json.loads(body))
+     -                     self.db.execute("UPDATE cases SET " + ", ".join(f"{c}=?" for c in CASE_COLS) + " WHERE id=?", r[1:] + (cid,))
+375  +                     self.db.execute(
+376  +                         "UPDATE cases SET "
+377  +                         + ", ".join(f"{c}=?" for c in CASE_COLS)
+378  +                         + " WHERE id=?",
+379  +                         r[1:] + (cid,),
+380  +                     )
+381  |                 self._meta_set("rank_policy", want)
+--------------------------------------------------------------------------------
+405  |     def _has_rec_order(self):
+     -         return "created_ord" in {r[1] for r in self.db.execute("PRAGMA table_info(recommendations)")}
+406  +         return "created_ord" in {
+407  +             r[1] for r in self.db.execute("PRAGMA table_info(recommendations)")
+408  +         }
+409  |
+410  |     def _create_rec_order_index(self):
+     -         self.db.execute("CREATE INDEX IF NOT EXISTS ix_recs_created_ord ON recommendations (created_ord)")
+411  +         self.db.execute(
+412  +             "CREATE INDEX IF NOT EXISTS ix_recs_created_ord ON recommendations (created_ord)"
+413  +         )
+414  |
+--------------------------------------------------------------------------------
+435  |         ordinal is never served."""
+     -         if int(self.db.execute("SELECT COUNT(*) FROM recommendations WHERE created_ord = 0").fetchone()[0]) == 0:
+436  +         if (
+437  +             int(
+438  +                 self.db.execute(
+439  +                     "SELECT COUNT(*) FROM recommendations WHERE created_ord = 0"
+440  +                 ).fetchone()[0]
+441  +             )
+442  +             == 0
+443  +         ):
+444  |             return
+--------------------------------------------------------------------------------
+459  |         """Position of each priority proposal's creation event in a verified audit chain, or None when it cannot be trusted."""
+     -         rows = self.db.execute("SELECT at, who, action, case_id, detail, prev, hash FROM audit ORDER BY seq").fetchall()
+     -         chain = ledger.verify_entries([dict(at=a, who=w, action=ac, case=ci, detail=d, prev=p, hash=h)
+     -                                        for a, w, ac, ci, d, p, h in rows])
+460  +         rows = self.db.execute(
+461  +             "SELECT at, who, action, case_id, detail, prev, hash FROM audit ORDER BY seq"
+462  +         ).fetchall()
+463  +         chain = ledger.verify_entries(
+464  +             [
+465  +                 dict(at=a, who=w, action=ac, case=ci, detail=d, prev=p, hash=h)
+466  +                 for a, w, ac, ci, d, p, h in rows
+467  +             ]
+468  +         )
+469  |         head = self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone()
+     -         if not chain["intact"] or head is None or (chain["entries"], chain["head"]) != (head[0], head[1]):
+470  +         if (
+471  +             not chain["intact"]
+472  +             or head is None
+473  +             or (chain["entries"], chain["head"]) != (head[0], head[1])
+474  +         ):
+475  |             return None
+476  |         found, prefix = {}, "priority_recommendation "
+477  |         for position, (_, _, action, _, detail, _, _) in enumerate(rows):
+478  |             if action == "ai_run_end" and detail.startswith(prefix):
+     -                 found.setdefault(detail[len(prefix):].split(" ", 1)[0], position)
+479  +                 found.setdefault(detail[len(prefix) :].split(" ", 1)[0], position)
+480  |         return found
+--------------------------------------------------------------------------------
+488  |         records are never replaced, and bodies are never rewritten."""
+     -         rows = self.db.execute("SELECT id, seq, body FROM recommendations WHERE created_ord = 0").fetchall()
+489  +         rows = self.db.execute(
+490  +             "SELECT id, seq, body FROM recommendations WHERE created_ord = 0"
+491  +         ).fetchall()
+492  |         if not rows:
+--------------------------------------------------------------------------------
+496  |         keyed = sorted(
+     -             (json.loads(body).get("created") or "", 0 if rid in trusted else 1, trusted.get(rid, rseq), rid)
+     -             for rid, rseq, body in rows)
+     -         start = int(self.db.execute("SELECT COALESCE(MAX(created_ord), 0) FROM recommendations").fetchone()[0])
+     -         self.db.executemany("UPDATE recommendations SET created_ord=?, seq=? WHERE id=?",
+     -                             [(n, seq, k[3]) for n, k in enumerate(keyed, start + 1)])
+497  +             (
+498  +                 json.loads(body).get("created") or "",
+499  +                 0 if rid in trusted else 1,
+500  +                 trusted.get(rid, rseq),
+501  +                 rid,
+502  +             )
+503  +             for rid, rseq, body in rows
+504  +         )
+505  +         start = int(
+506  +             self.db.execute("SELECT COALESCE(MAX(created_ord), 0) FROM recommendations").fetchone()[
+507  +                 0
+508  +             ]
+509  +         )
+510  +         self.db.executemany(
+511  +             "UPDATE recommendations SET created_ord=?, seq=? WHERE id=?",
+512  +             [(n, seq, k[3]) for n, k in enumerate(keyed, start + 1)],
+513  +         )
+514  |         sizes = Counter(k[0] for k in keyed)
+--------------------------------------------------------------------------------
+519  |         batches = json.loads(row[0]) if row else []
+     -         batches.append(dict(
+     -             at=datetime.now().isoformat(timespec="seconds"), rows=len(keyed), first_ord=start + 1,
+     -             last_ord=start + len(keyed), audited=sum(1 for k in keyed if not k[1]), heuristic=sum(1 for k in keyed if k[1]),
+     -             same_second_groups=groups, ambiguous_total=len(ambiguous), ambiguous_ids=ambiguous[:REC_ORDER_IDS],
+     -             audit_chain=audit is not None, order="audit,created,seq,id"))
+520  +         batches.append(
+521  +             dict(
+522  +                 at=datetime.now().isoformat(timespec="seconds"),
+523  +                 rows=len(keyed),
+524  +                 first_ord=start + 1,
+525  +                 last_ord=start + len(keyed),
+526  +                 audited=sum(1 for k in keyed if not k[1]),
+527  +                 heuristic=sum(1 for k in keyed if k[1]),
+528  +                 same_second_groups=groups,
+529  +                 ambiguous_total=len(ambiguous),
+530  +                 ambiguous_ids=ambiguous[:REC_ORDER_IDS],
+531  +                 audit_chain=audit is not None,
+532  +                 order="audit,created,seq,id",
+533  +             )
+534  +         )
+535  |         self._meta_set("rec_order_backfills", json.dumps(batches))
+     -         if start == 0 and not self.db.execute("SELECT 1 FROM meta WHERE key='rec_order_legacy'").fetchone():
+     -             self._meta_set("rec_order_legacy", json.dumps(dict(rows=len(keyed), same_second_groups=groups,
+     -                                                                order="created,seq,id")))
+536  +         if (
+537  +             start == 0
+538  +             and not self.db.execute("SELECT 1 FROM meta WHERE key='rec_order_legacy'").fetchone()
+539  +         ):
+540  +             self._meta_set(
+541  +                 "rec_order_legacy",
+542  +                 json.dumps(
+543  +                     dict(rows=len(keyed), same_second_groups=groups, order="created,seq,id")
+544  +                 ),
+545  +             )
+546  |         return len(keyed)
+547  |
+548  |     def _queue_fingerprint(self):
+549  |         return json.dumps(
+     -             [taskqueues.VERSION, self.as_of, controls.today(), ranking.CURRENT,
+     -              taskqueues.MEMBERSHIP_REVISION],
+550  +             [
+551  +                 taskqueues.VERSION,
+552  +                 self.as_of,
+553  +                 controls.today(),
+554  +                 ranking.CURRENT,
+555  +                 taskqueues.MEMBERSHIP_REVISION,
+556  +             ],
+557  |             sort_keys=True,
+--------------------------------------------------------------------------------
+573  |             for start in range(0, len(ids), 500):
+     -                 batch = ids[start:start + 500]
+574  +                 batch = ids[start : start + 500]
+575  |                 marks = ",".join("?" * len(batch))
+     -                 rows.extend(self.db.execute(
+     -                     f"SELECT id, body FROM cases WHERE id IN ({marks})", batch
+     -                 ).fetchall())
+576  +                 rows.extend(
+577  +                     self.db.execute(
+578  +                         f"SELECT id, body FROM cases WHERE id IN ({marks})", batch
+579  +                     ).fetchall()
+580  +                 )
+581  |         cases = {cid: json.loads(body) for cid, body in rows}
+--------------------------------------------------------------------------------
+589  |             # Building validation checks all linked home IDs, not just changed homes.
+     -             cases = {cid: json.loads(body) for cid, body in
+     -                      self.db.execute("SELECT id, body FROM cases").fetchall()}
+590  +             cases = {
+591  +                 cid: json.loads(body)
+592  +                 for cid, body in self.db.execute("SELECT id, body FROM cases").fetchall()
+593  +             }
+594  |         values = []
+--------------------------------------------------------------------------------
+638  |                 if queue not in members:
+     -                     members[queue] = [r[0] for r in self.db.execute(
+     -                         f"SELECT id FROM cases WHERE queue_{queue}=1"
+     -                     ).fetchall()]
+639  +                     members[queue] = [
+640  +                         r[0]
+641  +                         for r in self.db.execute(
+642  +                             f"SELECT id FROM cases WHERE queue_{queue}=1"
+643  +                         ).fetchall()
+644  +                     ]
+645  |                 self.db.execute("COMMIT")
+--------------------------------------------------------------------------------
+660  |                         c.setdefault("documents", [])
+     -                         c.setdefault("funding", dict(route="Not decided", status="Not started", reference="", draft="", approved_by=None))
+     -                     self.db.executemany(f"INSERT INTO cases (id, rowversion, seq, {', '.join(CASE_COLS)}) VALUES (?,1,1,{','.join('?' * len(CASE_COLS))})",
+     -                                         [self._row(c) for c in src["cases"]])
+     -                     self._meta_set("rank_policy", ranking.CURRENT["version"])
+     -                     self._meta_set("support_encoding", stock.SUPPORT_ENCODING)
+     -                     for s in src["staff"]:
+     -                         self._insert_ignore("staff", ("email", "body"), (s["email"].lower(), json.dumps(s)))
+     -                     for doc in self.DOCS:
+     -                         if doc in src:
+     -                             self._meta_set(doc, json.dumps(src[doc]))
+     -                     if src.get("as_of") and not os.environ.get("ZF_AS_OF"):
+661  +                         c.setdefault(
+662  +                             "funding",
+663  +                             dict(
+664  +                                 route="Not decided",
+665  +                                 status="Not started",
+666  +                                 reference="",
+667  +                                 draft="",
+668  +                                 approved_by=None,
+669  +                             ),
+670  +                         )
+671  +                     self.db.executemany(
+672  +                         f"INSERT INTO cases (id, rowversion, seq, {', '.join(CASE_COLS)}) VALUES (?,1,1,{','.join('?' * len(CASE_COLS))})",
+673  +                         [self._row(c) for c in src["cases"]],
+674  +                     )
+675  +                     self._meta_set("rank_policy", ranking.CURRENT["version"])
+676  +                     self._meta_set("support_encoding", stock.SUPPORT_ENCODING)
+677  +                     for s in src["staff"]:
+678  +                         self._insert_ignore(
+679  +                             "staff", ("email", "body"), (s["email"].lower(), json.dumps(s))
+680  +                         )
+681  +                     for doc in self.DOCS:
+682  +                         if doc in src:
+683  +                             self._meta_set(doc, json.dumps(src[doc]))
+684  +                     if src.get("as_of") and not os.environ.get("ZF_AS_OF"):
+685  |                         self._meta_set("as_of", src["as_of"])
+686  |                     self._insert_ignore("meta", ("key", "value"), ("seq", "1"))
+     -                     self._insert_ignore("audit_head", ("id", "count", "hash"), (1, 0, ledger.GENESIS))
+     -                     self._insert_ignore("meta", ("key", "value"), (
+     -                         "as_of", os.environ.get("ZF_AS_OF") or datetime.now().date().isoformat()
+     -                     ))
+     -                     self.as_of = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
+687  +                     self._insert_ignore(
+688  +                         "audit_head", ("id", "count", "hash"), (1, 0, ledger.GENESIS)
+689  +                     )
+690  +                     self._insert_ignore(
+691  +                         "meta",
+692  +                         ("key", "value"),
+693  +                         ("as_of", os.environ.get("ZF_AS_OF") or datetime.now().date().isoformat()),
+694  +                     )
+695  +                     self.as_of = self.db.execute(
+696  +                         "SELECT value FROM meta WHERE key='as_of'"
+697  +                     ).fetchone()[0]
+698  |                     self._refresh_queue_membership()
+--------------------------------------------------------------------------------
+715  |         import hashlib
+716  +
+717  |         raw = Path(data_path).read_bytes()
+--------------------------------------------------------------------------------
+722  |             c.setdefault("documents", [])
+     -             c.setdefault("funding", dict(route="Not decided", status="Not started", reference="", draft="", approved_by=None))
+     -         report = dict(seed_cases=len(cases), existing_cases=0, to_insert=0, identical=0, conflicts=0,
+     -                       docs_inserted=[], docs_identical=[], docs_preserved=[], seed_as_of=src.get("as_of"),
+     -                       store_as_of=None, applied=False, audit_appended=False)
+723  +             c.setdefault(
+724  +                 "funding",
+725  +                 dict(
+726  +                     route="Not decided",
+727  +                     status="Not started",
+728  +                     reference="",
+729  +                     draft="",
+730  +                     approved_by=None,
+731  +                 ),
+732  +             )
+733  +         report = dict(
+734  +             seed_cases=len(cases),
+735  +             existing_cases=0,
+736  +             to_insert=0,
+737  +             identical=0,
+738  +             conflicts=0,
+739  +             docs_inserted=[],
+740  +             docs_identical=[],
+741  +             docs_preserved=[],
+742  +             seed_as_of=src.get("as_of"),
+743  +             store_as_of=None,
+744  +             applied=False,
+745  +             audit_appended=False,
+746  +         )
+747  |         with self.dblock:
+748  |             self.db.execute("BEGIN IMMEDIATE")
+749  |             try:
+     -                 rows = self.db.execute("SELECT at, who, action, case_id, detail, prev, hash FROM audit ORDER BY seq").fetchall()
+     -                 chain = ledger.verify_entries([dict(at=a, who=w, action=ac, case=ci, detail=d, prev=p, hash=h)
+     -                                                for a, w, ac, ci, d, p, h in rows])
+750  +                 rows = self.db.execute(
+751  +                     "SELECT at, who, action, case_id, detail, prev, hash FROM audit ORDER BY seq"
+752  +                 ).fetchall()
+753  +                 chain = ledger.verify_entries(
+754  +                     [
+755  +                         dict(at=a, who=w, action=ac, case=ci, detail=d, prev=p, hash=h)
+756  +                         for a, w, ac, ci, d, p, h in rows
+757  +                     ]
+758  +                 )
+759  |                 head = self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone()
+760  |                 if not chain["intact"] or (chain["entries"], chain["head"]) != (head[0], head[1]):
+     -                     raise SeedMergeError("Audit chain does not match its head; nothing was written.", report)
+     -                 stored = {cid: body for cid, body in self.db.execute("SELECT id, body FROM cases").fetchall()}
+761  +                     raise SeedMergeError(
+762  +                         "Audit chain does not match its head; nothing was written.", report
+763  +                     )
+764  +                 stored = {
+765  +                     cid: body
+766  +                     for cid, body in self.db.execute("SELECT id, body FROM cases").fetchall()
+767  +                 }
+768  |                 report["existing_cases"] = len(stored)
+--------------------------------------------------------------------------------
+779  |                 if len({c["id"] for c in cases}) != len(cases):
+     -                     raise SeedMergeError("Seed contains duplicate case ids; nothing was written.", report)
+780  +                     raise SeedMergeError(
+781  +                         "Seed contains duplicate case ids; nothing was written.", report
+782  +                     )
+783  |                 for key in self.DOCS:
+--------------------------------------------------------------------------------
+794  |                         report["conflicts"] += 1
+     -                 report["store_as_of"] = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
+795  +                 report["store_as_of"] = self.db.execute(
+796  +                     "SELECT value FROM meta WHERE key='as_of'"
+797  +                 ).fetchone()[0]
+798  |                 if report["conflicts"]:
+     -                     raise SeedMergeError("Seed conflicts with stored content; nothing was written.", report)
+799  +                     raise SeedMergeError(
+800  +                         "Seed conflicts with stored content; nothing was written.", report
+801  +                     )
+802  |                 if expect_added is not None and report["to_insert"] != expect_added:
+     -                     raise SeedMergeError("Cases to add differ from the expected count; nothing was written.", report)
+803  +                     raise SeedMergeError(
+804  +                         "Cases to add differ from the expected count; nothing was written.", report
+805  +                     )
+806  |                 report["total_after"] = report["existing_cases"] + report["to_insert"]
+--------------------------------------------------------------------------------
+811  |                             f"INSERT INTO cases (id, rowversion, seq, {', '.join(CASE_COLS)}) VALUES (?,1,?,{','.join('?' * len(CASE_COLS))})",
+     -                             [(r[0], new) + r[1:] for r in map(self._row, new_cases[start:start + self.MERGE_BATCH])])
+812  +                             [
+813  +                                 (r[0], new) + r[1:]
+814  +                                 for r in map(self._row, new_cases[start : start + self.MERGE_BATCH])
+815  +                             ],
+816  +                         )
+817  |                     for key in report["docs_inserted"]:
+818  |                         self._meta_set(key, json.dumps(src[key]))
+819  |                     self._refresh_queue_membership(None)
+     -                     detail = (f"cases_added={len(new_cases)}; docs_added={','.join(report['docs_inserted']) or 'none'}; "
+     -                               f"seed_sha256={hashlib.sha256(raw).hexdigest()}")
+     -                     self._append_audit([(actor, "seed_merge", "-", detail, datetime.now().isoformat(timespec="seconds"))])
+820  +                     detail = (
+821  +                         f"cases_added={len(new_cases)}; docs_added={','.join(report['docs_inserted']) or 'none'}; "
+822  +                         f"seed_sha256={hashlib.sha256(raw).hexdigest()}"
+823  +                     )
+824  +                     self._append_audit(
+825  +                         [
+826  +                             (
+827  +                                 actor,
+828  +                                 "seed_merge",
+829  +                                 "-",
+830  +                                 detail,
+831  +                                 datetime.now().isoformat(timespec="seconds"),
+832  +                             )
+833  +                         ]
+834  +                     )
+835  |                     self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
+--------------------------------------------------------------------------------
+848  |         name, home = c["resident"]["name"], c["home"]
+     -         return (c["id"], c["stage"], home["area"], c["wave"], c["owner_code"], int(bool(c["closed"])),
+     -                 int(any(not h["released"] for h in c["hazards"])), home["postcode"], home["address"], json.dumps(c),
+     -                 int(ranking._support(c)), int(c["days_in_stage"]), ranking.sql_key(c), c["contractor"]["name"],
+     -                 " ".join([name, home["address"], home["postcode"], c["id"]]).lower(), " ".join([home["address"], home["postcode"], c["id"]]).lower(),
+     -                 name.split(" ")[-1].lower(), (c["contacts"][-1]["at"] if c["contacts"] else None) or "0000", nxt or "9999",
+     -                 resident_status(c), c["funding"]["status"],
+     -                 int(any((record.get("resolution") or {}).get("outcome") == "Correction recorded"
+     -                         for record in c.get("affected_challenges", []))))
+849  +         return (
+850  +             c["id"],
+851  +             c["stage"],
+852  +             home["area"],
+853  +             c["wave"],
+854  +             c["owner_code"],
+855  +             int(bool(c["closed"])),
+856  +             int(any(not h["released"] for h in c["hazards"])),
+857  +             home["postcode"],
+858  +             home["address"],
+859  +             json.dumps(c),
+860  +             int(ranking._support(c)),
+861  +             int(c["days_in_stage"]),
+862  +             ranking.sql_key(c),
+863  +             c["contractor"]["name"],
+864  +             " ".join([name, home["address"], home["postcode"], c["id"]]).lower(),
+865  +             " ".join([home["address"], home["postcode"], c["id"]]).lower(),
+866  +             name.split(" ")[-1].lower(),
+867  +             (c["contacts"][-1]["at"] if c["contacts"] else None) or "0000",
+868  +             nxt or "9999",
+869  +             resident_status(c),
+870  +             c["funding"]["status"],
+871  +             int(
+872  +                 any(
+873  +                     (record.get("resolution") or {}).get("outcome") == "Correction recorded"
+874  +                     for record in c.get("affected_challenges", [])
+875  +                 )
+876  +             ),
+877  +         )
+878  |
+--------------------------------------------------------------------------------
+889  |             seq = self._db_seq()
+     -             for cid, rv, body in self.db.execute("SELECT id, rowversion, body FROM cases WHERE seq > ?", (self._seq,)).fetchall():
+890  +             for cid, rv, body in self.db.execute(
+891  +                 "SELECT id, rowversion, body FROM cases WHERE seq > ?", (self._seq,)
+892  +             ).fetchall():
+893  |                 self._load_case(cid, rv, body)
+894  |             loaded = False
+895  |             for rid, rv, body, created_ord in self.db.execute(
+     -                     "SELECT id, rowversion, body, created_ord FROM recommendations WHERE seq > ? ORDER BY created_ord, id",
+     -                     (self._seq,)).fetchall():
+896  +                 "SELECT id, rowversion, body, created_ord FROM recommendations WHERE seq > ? ORDER BY created_ord, id",
+897  +                 (self._seq,),
+898  +             ).fetchall():
+899  |                 loaded = True
+--------------------------------------------------------------------------------
+960  |         for cid in sorted(self.local.safety_clear | self.local.stock_clear):
+     -             row = self.db.execute("SELECT rowversion, body FROM cases WHERE id=?", (cid,)).fetchone()
+961  +             row = self.db.execute(
+962  +                 "SELECT rowversion, body FROM cases WHERE id=?", (cid,)
+963  +             ).fetchone()
+964  |             if row is None:
+--------------------------------------------------------------------------------
+974  |         for cid, bindings in self.local.resident_clear:
+     -             row = self.db.execute("SELECT rowversion, body FROM cases WHERE id=?", (cid,)).fetchone()
+975  +             row = self.db.execute(
+976  +                 "SELECT rowversion, body FROM cases WHERE id=?", (cid,)
+977  +             ).fetchone()
+978  |             if row is None:
+--------------------------------------------------------------------------------
+996  |                     if json.dumps(self.cases[cid]) != self._snap.get(cid):
+     -                         rv, body = self.db.execute("SELECT rowversion, body FROM cases WHERE id=?", (cid,)).fetchone()
+997  +                         rv, body = self.db.execute(
+998  +                             "SELECT rowversion, body FROM cases WHERE id=?", (cid,)
+999  +                         ).fetchone()
+1000 |                         self._load_case(cid, rv, body)
+--------------------------------------------------------------------------------
+1028 |                 from .change_provenance import validate_sql as validate_change
+1029 +
+1030 |                 validate_change(self)
+1031 |                 continuity.validate_sql(self)
+1032 |                 from .bulk_edits import validate_sql
+1033 +
+1034 |                 validate_sql(self)
+1035 |                 stock.validate_sql(self)
+1036 |                 from .hazard import mark_committed, validate_sql as validate_hazard
+1037 +
+1038 |                 validate_hazard(self)
+1039 |                 from .finance import validate_sql as validate_finance
+1040 +
+1041 |                 validate_finance(self)
+1042 |                 from .resident_decisions import validate_sql as validate_resident
+1043 +
+1044 |                 validate_resident(self)
+1045 |                 from .resident_decisions import validate_priority_sql
+1046 +
+1047 |                 validate_priority_sql(self)
+1048 |                 from .procurement import validate_sql as validate_procurement
+1049 +
+1050 |                 validate_procurement(self)
+--------------------------------------------------------------------------------
+1060 |                     r = self._row(c)
+     -                     n = self.db.execute("UPDATE cases SET rowversion=rowversion+1, seq=?, " + ", ".join(f"{c}=?" for c in CASE_COLS) +
+     -                                         " WHERE id=? AND rowversion=?", (new,) + r[1:] + (cid, self._rv[cid])).rowcount
+1061 +                     n = self.db.execute(
+1062 +                         "UPDATE cases SET rowversion=rowversion+1, seq=?, "
+1063 +                         + ", ".join(f"{c}=?" for c in CASE_COLS)
+1064 +                         + " WHERE id=? AND rowversion=?",
+1065 +                         (new,) + r[1:] + (cid, self._rv[cid]),
+1066 +                     ).rowcount
+1067 |                     if n != 1:
+--------------------------------------------------------------------------------
+1076 |                             self._backfill_zero_ordinals(new)
+     -                             top = int(self.db.execute("SELECT COALESCE(MAX(created_ord), 0) FROM recommendations").fetchone()[0])
+1077 +                             top = int(
+1078 +                                 self.db.execute(
+1079 +                                     "SELECT COALESCE(MAX(created_ord), 0) FROM recommendations"
+1080 +                                 ).fetchone()[0]
+1081 +                             )
+1082 |                         top += 1
+     -                         self.db.execute("INSERT INTO recommendations (id, rowversion, seq, user, body, created_ord) VALUES (?,1,?,?,?,?)",
+     -                                         (rid, new, rec["user"], body, top))
+1083 +                         self.db.execute(
+1084 +                             "INSERT INTO recommendations (id, rowversion, seq, user, body, created_ord) VALUES (?,1,?,?,?,?)",
+1085 +                             (rid, new, rec["user"], body, top),
+1086 +                         )
+1087 |                         new_ord[rid] = top
+1088 |                         recs.append((rid, 1, rec, body))
+1089 |                     elif known[2] != body:
+     -                         if self.db.execute("UPDATE recommendations SET rowversion=rowversion+1, seq=?, body=? WHERE id=? AND rowversion=?",
+     -                                            (new, body, rid, known[0])).rowcount != 1:
+1090 +                         if (
+1091 +                             self.db.execute(
+1092 +                                 "UPDATE recommendations SET rowversion=rowversion+1, seq=?, body=? WHERE id=? AND rowversion=?",
+1093 +                                 (new, body, rid, known[0]),
+1094 +                             ).rowcount
+1095 +                             != 1
+1096 +                         ):
+1097 |                             raise ConflictError(rid)
+--------------------------------------------------------------------------------
+1111 |                 from .governance import mark_committed as governance_committed
+1112 +
+1113 |                 governance_committed(self)
+1114 |                 from .appointments import mark_committed as appointment_committed
+1115 +
+1116 |                 appointment_committed(self)
+1117 |                 from .document_rescan import mark_committed as rescan_committed
+1118 +
+1119 |                 rescan_committed(self)
+1120 |                 mark_committed(self)
+1121 |                 from .resident_decisions import mark_committed as resident_committed
+1122 +
+1123 |                 resident_committed(self)
+--------------------------------------------------------------------------------
+1127 |                 self.db.execute("ROLLBACK")
+     -                 if (getattr(self.local, "stock_decision", None) is None
+     -                         and getattr(self.local, "hazard_decision", None) is None
+     -                         and getattr(self.local, "resident_validation", None) is None
+     -                         and getattr(self.local, "change_validation", None) is None
+     -                         and getattr(self.local, "document_rescan", None) is None
+     -                         and getattr(self.local, "procurement_validation", None) is None):
+1128 +                 if (
+1129 +                     getattr(self.local, "stock_decision", None) is None
+1130 +                     and getattr(self.local, "hazard_decision", None) is None
+1131 +                     and getattr(self.local, "resident_validation", None) is None
+1132 +                     and getattr(self.local, "change_validation", None) is None
+1133 +                     and getattr(self.local, "document_rescan", None) is None
+1134 +                     and getattr(self.local, "procurement_validation", None) is None
+1135 +                 ):
+1136 |                     try:
+--------------------------------------------------------------------------------
+1197 |         for cid in touched:
+     -             row = self.db.execute("SELECT rowversion, body FROM cases WHERE id=?", (cid,)).fetchone()
+1198 +             row = self.db.execute(
+1199 +                 "SELECT rowversion, body FROM cases WHERE id=?", (cid,)
+1200 +             ).fetchone()
+1201 |             if row:
+--------------------------------------------------------------------------------
+1206 |     # ---- procurement and governance data kept as checked documents
+     -     DOCS = ("procurement", "governance", "continuity", "buildings", "schemes", "form_schemas", "bulk_edits")
+1207 +     DOCS = (
+1208 +         "procurement",
+1209 +         "governance",
+1210 +         "continuity",
+1211 +         "buildings",
+1212 +         "schemes",
+1213 +         "form_schemas",
+1214 +         "bulk_edits",
+1215 +     )
+1216 |
+--------------------------------------------------------------------------------
+1252 |             e = ledger.make_entry(who, action, case_id, detail, head, at)
+     -             self.db.execute("INSERT INTO audit (at, who, action, case_id, detail, prev, hash) VALUES (?,?,?,?,?,?,?)",
+     -                             (e["at"], who, action, case_id, detail, head, e["hash"]))
+1253 +             self.db.execute(
+1254 +                 "INSERT INTO audit (at, who, action, case_id, detail, prev, hash) VALUES (?,?,?,?,?,?,?)",
+1255 +                 (e["at"], who, action, case_id, detail, head, e["hash"]),
+1256 +             )
+1257 |             head, count = e["hash"], count + 1
+--------------------------------------------------------------------------------
+1261 |         from datetime import datetime
+     -         item = (who, action, str(case_id), str(detail), datetime.now().isoformat(timespec="seconds"))
+1262 +
+1263 +         item = (
+1264 +             who,
+1265 +             action,
+1266 +             str(case_id),
+1267 +             str(detail),
+1268 +             datetime.now().isoformat(timespec="seconds"),
+1269 +         )
+1270 |         if self.lock.depth > 0:
+--------------------------------------------------------------------------------
+1289 |         with self.dblock:
+     -             rows = self.db.execute("SELECT at, who, action, case_id, detail, prev, hash FROM audit ORDER BY seq").fetchall()
+1290 +             rows = self.db.execute(
+1291 +                 "SELECT at, who, action, case_id, detail, prev, hash FROM audit ORDER BY seq"
+1292 +             ).fetchall()
+1293 |         for at, who, action, case_id, detail, prev, h in rows:
+     -             yield dict(at=at, who=who, action=action, case=case_id, detail=detail, prev=prev, hash=h)
+1294 +             yield dict(
+1295 +                 at=at, who=who, action=action, case=case_id, detail=detail, prev=prev, hash=h
+1296 +             )
+1297 |
+1298 |     def ledger_head(self):
+1299 |         with self.dblock:
+     -             return tuple(self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone())
+1300 +             return tuple(
+1301 +                 self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone()
+1302 +             )
+1303 |
+--------------------------------------------------------------------------------
+1311 |
+     -     def query_case_ids(self, stage=None, area=None, wave=None, owner_code=None, after=None, limit=50):
+1312 +     def query_case_ids(
+1313 +         self, stage=None, area=None, wave=None, owner_code=None, after=None, limit=50
+1314 +     ):
+1315 |         """Indexed SQL filter with keyset paging on the case id. Used by tests and the SQL plan; the API still pages in memory."""
+1316 |         sql, args = "SELECT id FROM cases WHERE closed=0", []
+     -         for col, val in (("stage", stage), ("area", area), ("wave", wave), ("owner_code", owner_code)):
+1317 +         for col, val in (
+1318 +             ("stage", stage),
+1319 +             ("area", area),
+1320 +             ("wave", wave),
+1321 +             ("owner_code", owner_code),
+1322 +         ):
+1323 |             if val:
+--------------------------------------------------------------------------------
+1330 |         with self.dblock:
+     -             return [r[0] for r in self.db.execute(sql + " ORDER BY id" + tail, args + targs).fetchall()]
+1331 +             return [
+1332 +                 r[0] for r in self.db.execute(sql + " ORDER BY id" + tail, args + targs).fetchall()
+1333 +             ]
+1334 |
+1335 |     # ---- SQL reads
+1336 |     def _where(self, user, view, q, f):
+1337 |         where, args = ["closed=0"], []
+     -         for col, key in (("stage", "stage"), ("area", "area"), ("wave", "wave"), ("owner_code", "owner"), ("contractor", "contractor")):
+1338 +         for col, key in (
+1339 +             ("stage", "stage"),
+1340 +             ("area", "area"),
+1341 +             ("wave", "wave"),
+1342 +             ("owner_code", "owner"),
+1343 +             ("contractor", "contractor"),
+1344 +         ):
+1345 |             if f.get(key):
+--------------------------------------------------------------------------------
+1361 |
+     -     def page_cases(self, user, view="mine", q="", filters=None, sort="urgent", limit=None, offset=0, after=None):
+1362 +     def page_cases(
+1363 +         self, user, view="mine", q="", filters=None, sort="urgent", limit=None, offset=0, after=None
+1364 +     ):
+1365 |         """Same result as Store.page_cases, answered by SQL. `after` is a keyset cursor (the last rkey seen) for the default order."""
+1366 |         # Authority can expire without a row write; never filter current consent on a cached column.
+     -         if limit is None or view == "closed" or (filters or {}).get("flag") == "nodecision" or (filters or {}).get("queue"):
+1367 +         if (
+1368 +             limit is None
+1369 +             or view == "closed"
+1370 +             or (filters or {}).get("flag") == "nodecision"
+1371 +             or (filters or {}).get("queue")
+1372 +         ):
+1373 |             return super().page_cases(user, view, q, filters, sort, limit, offset, after)
+--------------------------------------------------------------------------------
+1381 |             total = self.db.execute(f"SELECT COUNT(*) FROM cases WHERE {where}", args).fetchone()[0]
+     -             ranked_total = self.db.execute("SELECT COUNT(*) FROM cases WHERE closed=0").fetchone()[0]
+     -             page_where, page_args = (where + " AND rkey>?", args + [keyset]) if keyset else (where, args)
+1382 +             ranked_total = self.db.execute("SELECT COUNT(*) FROM cases WHERE closed=0").fetchone()[
+1383 +                 0
+1384 +             ]
+1385 +             page_where, page_args = (
+1386 +                 (where + " AND rkey>?", args + [keyset]) if keyset else (where, args)
+1387 +             )
+1388 |             tail, targs = self._limit(limit, 0 if keyset else offset)
+     -             rows = self.db.execute(f"SELECT id, rkey, body FROM cases WHERE {page_where} ORDER BY {order}{tail}", page_args + targs).fetchall()
+1389 +             rows = self.db.execute(
+1390 +                 f"SELECT id, rkey, body FROM cases WHERE {page_where} ORDER BY {order}{tail}",
+1391 +                 page_args + targs,
+1392 +             ).fetchall()
+1393 |             ranks = {}
+1394 |             if rows:
+1395 |                 marks = ",".join("?" * len(rows))
+     -                 ranks = dict(self.db.execute(f"SELECT id, rk FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY rkey) AS rk FROM cases WHERE closed=0) AS r "
+     -                                              f"WHERE id IN ({marks})", [r[0] for r in rows]).fetchall())
+1396 +                 ranks = dict(
+1397 +                     self.db.execute(
+1398 +                         f"SELECT id, rk FROM (SELECT id, ROW_NUMBER() OVER (ORDER BY rkey) AS rk FROM cases WHERE closed=0) AS r "
+1399 +                         f"WHERE id IN ({marks})",
+1400 +                         [r[0] for r in rows],
+1401 +                     ).fetchall()
+1402 +                 )
+1403 |         out = []
+--------------------------------------------------------------------------------
+1418 |         nxt = rows[-1][1] if rows and sort == "urgent" and len(rows) == limit else None
+     -         return dict(items=out, total=total, limit=limit, offset=offset, sort=asked, policy_version=ranking.CURRENT["version"],
+     -                     policy_hash=ranking.CURRENT["content_hash"], as_of=self.as_of, ranked_total=ranked_total, next_cursor=nxt)
+1419 +         return dict(
+1420 +             items=out,
+1421 +             total=total,
+1422 +             limit=limit,
+1423 +             offset=offset,
+1424 +             sort=asked,
+1425 +             policy_version=ranking.CURRENT["version"],
+1426 +             policy_hash=ranking.CURRENT["content_hash"],
+1427 +             as_of=self.as_of,
+1428 +             ranked_total=ranked_total,
+1429 +             next_cursor=nxt,
+1430 +         )
+1431 |
+1432 |     def counts(self, user):
+1433 |         with self.lock, self.dblock:
+     -             mine, hazards = self.db.execute("SELECT COUNT(*), COALESCE(SUM(hazard),0) FROM cases WHERE closed=0 AND owner_code=?", (user["code"],)).fetchone()
+1434 +             mine, hazards = self.db.execute(
+1435 +                 "SELECT COUNT(*), COALESCE(SUM(hazard),0) FROM cases WHERE closed=0 AND owner_code=?",
+1436 +                 (user["code"],),
+1437 +             ).fetchone()
+1438 |             open_ = self.db.execute("SELECT COUNT(*) FROM cases WHERE closed=0").fetchone()[0]
+     |
+
+unformatted: File would be reformatted
+   --> tests/test_priority_order.py:279:38
+    |
+278 |         self.store.resolve_priority(self.sam, first, "accept", "SYN review of the older proposal")
+    -         rows = self.store.db.execute(
+    -             "SELECT id, seq, user, body FROM recommendations"
+    -         ).fetchall()
+279 +         rows = self.store.db.execute("SELECT id, seq, user, body FROM recommendations").fetchall()
+280 |         same_second = []
+--------------------------------------------------------------------------------
+413 |         case = case_type("setUp")
+    -         with patch.dict(os.environ, env), patch.dict(
+    -             sys.modules, {"zava_forward.core.mssqlstore": fake}
+414 +         with (
+415 +             patch.dict(os.environ, env),
+416 +             patch.dict(sys.modules, {"zava_forward.core.mssqlstore": fake}),
+417 |         ):
+    |
+
+2 files would be reformatted, 1 file already formatted
+fmt 1

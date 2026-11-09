@@ -2106,8 +2106,27 @@ python -m zava_forward.api.live_control stop --file control.json
 
 A start must expire in the future and within 14 days. The file holds no credential. Admin-only
 control is Azure RBAC: only holders of write access to the certificate file share (and of the
-job) can start, stop or change the cohort; the job mounts the share read-only. An in-app admin
-screen for these controls is not delivered (unmet #189 detail; no UI was changed).
+job) can start, stop or change the cohort; the job mounts the share read-only.
+
+An application-administrator-only screen (`#/simulator`, API `/api/admin/simulator-control`
+status, `/start`, `/stop`) edits this same control file when `ZF_SIM_CONTROL_FILE` names a
+writable file (Refs #189). It reuses `live_control` parsing, the 14-day window, the 100-home
+cap and `live_simulator.check_capacity`; a start needs an explicit confirmation and the
+revision the screen loaded, refuses a second start while sending is permitted, and writes
+under an advisory `flock` on `<file>.lock` shared with the CLI (busy gives `CONTROL_BUSY`).
+Status is deliberately modest: "Permitted" does not show that a job is running, owner and
+approval reference are declared and unverified, and the budget alert is always "not recorded,
+not verified live" because the control schema has no alert reference. The service reports
+unavailable when the file is not configured or not writable and makes no infrastructure
+change; the share is mounted read-only into the job and may not be mounted into the API.
+`flock` behaviour on an Azure Files SMB mount is unproven. A start or stop also needs the
+existing write authority: an administrator with no staff role is view-only, may read the
+status, and is refused every start and stop by the existing view-only gate and again inside the
+module; no new permission or allowlist exists. The screen offers a confirmed Stop for every
+readable, writable control, including an expired, invalid-window or already stopped one. Local
+proof is synthetic only
+(`tests/test_simulator_admin.py`, `checks/simulator_control_browser_check.py`); no deployed
+job was started and live acceptance remains open.
 
 `python -m zava_forward.api.live_receiver --control-file control.json` is the bounded host
 entry for the existing `HubReceiver` (#110): it binds the same cohort (`SYN-<sensor key>`),

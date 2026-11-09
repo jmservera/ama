@@ -18,11 +18,13 @@ Case detail, the map, statistics, visits and writes still use
 the in-memory copy kept in step with the change sequence; the full-list export
 and the closed list also fall back to it.
 """
+import hashlib
 import json
 import logging
 import os
 import sqlite3
 import threading
+from collections import Counter
 from datetime import datetime
 from pathlib import Path
 
@@ -51,6 +53,9 @@ CREATE TABLE IF NOT EXISTS cases (
   queue_overdue INTEGER NOT NULL DEFAULT 0, queue_unowned INTEGER NOT NULL DEFAULT 0);
 """
 
+REC_ORDER_IDS = 100  # identifiers kept per backfill batch record
+REC_REVIEW = "3"  # version of the one-time review of every heuristic ordinal (#1292)
+SYNC_RETRIES = 8  # bounded retries of an optimistic reload or queue transaction
 QUEUE_COLS = tuple(f"queue_{name}" for name, _, _ in taskqueues.DEFINITIONS)
 
 INDEXES = "\n".join(
@@ -71,7 +76,7 @@ CREATE INDEX IF NOT EXISTS ix_cases_postcode ON cases (postcode);
 CREATE INDEX IF NOT EXISTS ix_cases_address ON cases (address);
 CREATE TABLE IF NOT EXISTS recommendations (
   id TEXT PRIMARY KEY, rowversion INTEGER NOT NULL DEFAULT 1, seq INTEGER NOT NULL,
-  user TEXT NOT NULL, body TEXT NOT NULL);
+  user TEXT NOT NULL, body TEXT NOT NULL, created_ord INTEGER NOT NULL DEFAULT 0);
 CREATE INDEX IF NOT EXISTS ix_recs_seq ON recommendations (seq);
 CREATE TABLE IF NOT EXISTS audit (
   seq INTEGER PRIMARY KEY AUTOINCREMENT, at TEXT NOT NULL, who TEXT NOT NULL, action TEXT NOT NULL,
@@ -148,6 +153,12 @@ class _SyncLock:
         return False
 
 
+class CommittedReloadError(RuntimeError):
+    """The write committed but the reload afterwards did not settle; the change must not be repeated."""
+
+    committed = True
+
+
 class SqlStore(Store):
     def __init__(self, data_path, db_path, docs_dir=None, digest_dir=None):
         try:
@@ -168,15 +179,17 @@ class SqlStore(Store):
         self.dblock = threading.RLock()
         self.local = threading.local()
         self.lock = _SyncLock(self)
+        self._audit_ev = None
+        self.digest_dir = digest_dir or os.environ.get("ZF_DIGEST_DIR") or os.path.join(os.path.dirname(db_path) or ".", "digests")
         self._open(db_path)
         self._create_schema()
         self._migrate()
         self._migrate_queues()
         self._create_indexes()
+        self._migrate_recommendations()
         self.docs_dir = docs_dir or os.path.join(os.path.dirname(db_path) or ".", "docs")
         self.docstore = open_document_store(self.docs_dir)
         self.scanner = open_scanner(self.docstore)
-        self.digest_dir = digest_dir or os.environ.get("ZF_DIGEST_DIR") or os.path.join(os.path.dirname(db_path) or ".", "digests")
         self.ai = Ai()
         self.ai.gate = lambda task, deployment=None: self.continuity_block(task) or self.release_block(task, deployment)
         self.ai.release = self.release_context
@@ -189,6 +202,7 @@ class SqlStore(Store):
         self._rv, self._snap = {}, {}
         self._proc_snap = {}
         self._recs = {}
+        self._rec_ord = {}
         self._seed(data_path)
         self._insert_ignore("meta", ["key", "value"], ["as_of", os.environ.get("ZF_AS_OF") or datetime.now().date().isoformat()])
         self.as_of = self.db.execute("SELECT value FROM meta WHERE key='as_of'").fetchone()[0]
@@ -325,6 +339,425 @@ class SqlStore(Store):
             self.db.execute("ROLLBACK")
             raise
 
+    def _has_rec_order(self):
+        return "created_ord" in {r[1] for r in self.db.execute("PRAGMA table_info(recommendations)")}
+
+    def _create_rec_order_index(self):
+        self.db.execute("CREATE INDEX IF NOT EXISTS ix_recs_created_ord ON recommendations (created_ord)")
+        self.db.execute("CREATE INDEX IF NOT EXISTS ix_recs_user_ord ON recommendations (user, created_ord)")
+
+    def _migrate_recommendations(self):
+        """Give every recommendation an immutable creation ordinal (#1292).
+
+        Adds the column and index, then repairs every zero ordinal through the same fenced path a running store uses
+        and reviews a database already backfilled by the earlier candidate."""
+        if self._rec_order_pending():
+            self._audit_evidence()
+        self.db.execute("BEGIN IMMEDIATE")
+        try:
+            if not self._has_rec_order():
+                self._add_column_default("recommendations", "created_ord", "BIGINT", "0")
+            self._create_rec_order_index()
+            self._adopt_unresolved_index()
+            self._review_priority_order()
+            new = self._db_seq() + 1
+            if self._backfill_zero_ordinals(new):
+                self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
+            self.db.execute("COMMIT")
+        except BaseException:
+            self.db.execute("ROLLBACK")
+            raise
+
+    def _meta_value(self, key):
+        row = self.db.execute("SELECT value FROM meta WHERE key=?", (key,)).fetchone()
+        return None if row is None else row[0]
+
+    def _rec_order_pending(self):
+        if not self._has_rec_order():
+            return self.db.execute("SELECT 1 FROM recommendations").fetchone() is not None
+        return (self.db.execute("SELECT 1 FROM recommendations WHERE created_ord = 0").fetchone() is not None
+                or (self._meta_value("rec_order_review") != REC_REVIEW
+                    and self.db.execute("SELECT 1 FROM recommendations").fetchone() is not None))
+
+    def _repair_zero_ordinals(self):
+        """Fence for mixed-version writers: a zero ordinal is never cached and never followed by a new ordinal.
+
+        A pre-fix writer inserts the column default 0 at any time, including after startup. Repair runs under the same
+        write section as every writer and bumps meta seq so running readers reload. The audit evidence is verified before
+        the section is entered; only entries appended since are read under it. Failure propagates, so a zero ordinal is
+        never served."""
+        self._audit_evidence()
+        self.db.execute("BEGIN IMMEDIATE")
+        try:
+            new = self._db_seq() + 1
+            if self._backfill_zero_ordinals(new):
+                self.db.execute("UPDATE meta SET value=? WHERE key='seq'", (str(new),))
+            self.db.execute("COMMIT")
+        except BaseException:
+            self.db.execute("ROLLBACK")
+            raise
+
+    def _audit_rows(self, after):
+        """Audit rows after an audit seq with the head they belong to; retried until no writer interleaved."""
+        for _ in range(5):
+            before = self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone()
+            rows = self.db.execute("SELECT seq, at, who, action, case_id, detail, prev, hash FROM audit "
+                                   "WHERE seq > ? ORDER BY seq", (after,)).fetchall()
+            if before is not None and tuple(before) == tuple(self.db.execute(
+                    "SELECT count, hash FROM audit_head WHERE id=1").fetchone()):
+                return rows, (int(before[0]), before[1])
+        raise RuntimeError("The audit ledger kept changing while its creation events were read.")
+
+    @staticmethod
+    def _audit_positions(rows):
+        found, prefix = {}, "priority_recommendation "
+        for seq, _, _, action, _, detail, _, _ in rows:
+            if action == "ai_run_end" and detail.startswith(prefix):
+                found.setdefault(detail[len(prefix):].split(" ", 1)[0], int(seq))
+        return found
+
+    def _audit_evidence(self):
+        """Creation events of priority proposals in a verified audit chain, cached per process by chain head.
+
+        Trusted only when the chain verifies from genesis against audit_head and every available independent digest
+        and sealed year digest still matches. Unreadable or mismatching digests make the evidence unusable. Later calls
+        verify only the entries appended since."""
+        with self.dblock:
+            head = self.db.execute("SELECT count, hash FROM audit_head WHERE id=1").fetchone()
+            cached = self._audit_ev
+            if head is None:
+                return dict(ok=False, reason="the audit ledger has no head", anchored=False, positions={},
+                            key=None, last_seq=0, head=ledger.GENESIS, hashes=[])
+            key = (int(head[0]), head[1])
+            self._anchor_now = anchor = self._anchor_fingerprint()
+            if cached is not None and cached["key"] == key and cached.get("anchor") == anchor:
+                return cached
+            try:
+                digests, years = ledger.read_digests(self.digest_dir), ledger.read_year_digests(self.digest_dir)
+            except (OSError, ValueError):
+                return self._cache_evidence(dict(ok=False, reason="independent digests are unreadable", anchored=True,
+                                                 positions={}, key=key, last_seq=0, head=ledger.GENESIS, hashes=[]))
+            anchored = bool(digests or years)
+            malformed = self._malformed_anchor(digests, years)
+            if malformed or any(h is None for _, h in anchor):
+                return self._cache_evidence(dict(ok=False, anchored=anchored, positions={}, key=key, last_seq=0,
+                                                 head=ledger.GENESIS, hashes=[],
+                                                 reason=malformed or "independent digests are unreadable"))
+            if (cached is not None and cached["ok"] and cached["key"][0] < key[0]
+                    and cached.get("anchor") == anchor):
+                rows, key = self._audit_rows(cached["last_seq"])
+                entries = [dict(at=a, who=w, action=ac, case=ci, detail=d, prev=p, hash=h)
+                           for _, a, w, ac, ci, d, p, h in rows]
+                report = ledger.verify_entries(entries, start=cached["head"])
+                hashes = cached["hashes"]
+                hashes.extend(e["hash"] for e in entries)
+                reason = None
+                if not report["intact"] or (cached["key"][0] + len(rows), report["head"]) != key:
+                    reason = "the audit chain no longer verifies"
+                elif any(d.get("count", 0) > len(hashes) or (d.get("count") and hashes[d["count"] - 1] != d.get("head"))
+                         for d in digests):
+                    reason = "the chain differs from an independent digest"
+                elif any(isinstance(y, dict) and str(y.get("year")) == str(e["at"])[:4] for y in years for e in entries):
+                    reason = "the chain differs from a sealed year digest"
+                if reason is None:
+                    positions = cached["positions"]
+                    for rid, pos in self._audit_positions(rows).items():
+                        positions.setdefault(rid, pos)
+                    return self._cache_evidence(dict(ok=True, reason=None, anchored=anchored, positions=positions, key=key,
+                                                     last_seq=int(rows[-1][0]) if rows else cached["last_seq"],
+                                                     head=key[1], hashes=hashes))
+            rows, key = self._audit_rows(0)
+            entries = [dict(at=a, who=w, action=ac, case=ci, detail=d, prev=p, hash=h)
+                       for _, a, w, ac, ci, d, p, h in rows]
+            report = ledger.verify_entries(entries, digests)
+            reason = None
+            if report["problem"] is not None:
+                reason = "the audit chain is broken"
+            elif report["digest_mismatches"]:
+                reason = "the chain differs from an independent digest"
+            elif (report["entries"], report["head"]) != key:
+                reason = "the chain differs from audit_head"
+            elif years and not ledger.verify_years(entries, years)["intact"]:
+                reason = "the chain differs from a sealed year digest"
+            if reason is not None:
+                return self._cache_evidence(dict(ok=False, reason=reason, anchored=anchored, positions={}, key=key,
+                                                 last_seq=0, head=ledger.GENESIS, hashes=[]))
+            return self._cache_evidence(dict(ok=True, reason=None, anchored=anchored, positions=self._audit_positions(rows),
+                                             key=key, last_seq=int(rows[-1][0]) if rows else 0, head=key[1],
+                                             hashes=[e["hash"] for e in entries]))
+
+    def _anchor_fingerprint(self):
+        """Name and content hash of each independent digest file (None when unreadable); any change re-verifies."""
+        found = []
+        try:
+            with os.scandir(self.digest_dir) as entries:
+                for e in entries:
+                    if e.name.startswith(("digest-", "year-")) and e.name.endswith(".json"):
+                        try:
+                            with open(e.path, "rb") as f:
+                                found.append((e.name, hashlib.sha256(f.read()).hexdigest()))
+                        except OSError:
+                            found.append((e.name, None))
+        except OSError:
+            return ()
+        return tuple(sorted(found, key=lambda x: x[0]))
+
+    @staticmethod
+    def _malformed_anchor(digests, years):
+        """A reason when an independent anchor cannot be interpreted; such an anchor is never silently ignored."""
+        for d in digests:
+            count = d.get("count") if isinstance(d, dict) else None
+            if (not isinstance(d, dict) or isinstance(count, bool) or not isinstance(count, int) or count < 1
+                    or not isinstance(d.get("head"), str) or not d["head"]
+                    or d.get("algorithm", "sha256") != "sha256"):
+                return "independent digests are malformed"
+        if any(not isinstance(y, dict) or "unreadable" in y for y in years):
+            return "independent digests are unreadable"
+        return None
+
+    def _cache_evidence(self, evidence):
+        evidence["anchor"] = self._anchor_now
+        self._audit_ev = evidence
+        return evidence
+
+    @staticmethod
+    def _contradicted(audited):
+        """Unedited rows keep their insertion seq, so audit order and seq order must agree; return the rows that do not."""
+        rows = sorted((r for r in audited if r["version"] == 1), key=lambda r: r["pos"])
+        low, bad, top = [], set(), 0
+        running = float("inf")
+        for r in reversed(rows):
+            low.append(running)
+            running = min(running, r["seq"])
+        low.reverse()
+        for r, later in zip(rows, low):
+            if r["seq"] < top or r["seq"] > later:
+                bad.add(r["id"])
+            top = max(top, r["seq"])
+        return bad
+
+    def _flag_unresolved(self, ids):
+        """One meta row per record, written once and read by primary key, so a batch costs only its own flags."""
+        for rid in ids:
+            if self._meta_value(f"rec_unres:{rid}") is None:
+                self._meta_set(f"rec_unres:{rid}", "1")
+
+    def _adopt_unresolved_index(self):
+        """Copy the earlier single-list index once into per-record rows; the list itself is left untouched."""
+        if self._meta_value("rec_unres_index") is not None:
+            return
+        row = self._meta_value("rec_order_unresolved")
+        try:
+            known = json.loads(row) if row else []
+        except ValueError:
+            known = []
+        self._flag_unresolved([rid for rid in known if isinstance(rid, str)])
+        self._meta_set("rec_unres_index", "1")
+
+    @staticmethod
+    def _sign(a, b):
+        return (b > a) - (b < a)
+
+    @classmethod
+    def _proven_later(cls, earlier, later):
+        """Whether `later` is provably created after `earlier` inside one batch.
+
+        Both rows must be unedited (their insertion seq is intact), carry a trusted audit position, and the audit
+        and seq orders must agree and differ. The wall clock proves nothing: it can step back, and ties, edits,
+        orphan or missing events leave the pair unproven."""
+        if earlier["pos"] is None or later["pos"] is None or earlier["seq"] is None or later["seq"] is None:
+            return False
+        return cls._sign(earlier["pos"], later["pos"]) > 0 and cls._sign(earlier["seq"], later["seq"]) > 0
+
+    @classmethod
+    def _unproven_latest(cls, recs, only=None):
+        """Per employee, the newest eligible record if it is not provably later than every other eligible one.
+
+        `recs` are in ordinal order; AI tasks are excluded. Ordinals are never changed. Linear per employee."""
+        by = {}
+        for r in recs:
+            if not r["task"]:
+                by.setdefault(r["user"], []).append(r)
+        out = []
+        for rows in by.values():
+            last = rows[-1]
+            if only is not None and not only(last):
+                continue
+            if any(not cls._proven_later(r, last) for r in rows[:-1]):
+                out.append(last["id"])
+        return out
+
+    def _record_batch(self, detail):
+        count = int(self._meta_value("rec_order_batches") or 0) + 1
+        self._meta_set(f"rec_order_batch:{count}", json.dumps(detail))
+        self._meta_set("rec_order_batches", str(count))
+
+    def _backfill_zero_ordinals(self, seq):
+        """Order rows with no ordinal after every existing one; the caller holds the write section and commits (#1292).
+
+        A row with a creation event in verified audit evidence is ordered by that event, which also settles a backward
+        wall-clock step, unless its unedited insertion seq contradicts the event. Other rows are ordered by body created
+        (seconds), then seq (last write, not creation), then id, and placed among the audited rows by created. Any such
+        row that shares a second with another record of the same employee, contradicts its creation event, or follows a
+        timestamp inversion is listed in meta rec_order_unresolved for the named data owner; nothing is invented. One
+        batch record is written per call and earlier records are never read or rewritten."""
+        rows = self.db.execute("SELECT id, seq, user, body, rowversion FROM recommendations WHERE created_ord = 0").fetchall()
+        if not rows:
+            return 0
+        evidence = self._audit_evidence()
+        usable = evidence["positions"] if evidence["ok"] else {}
+        recs = []
+        for rid, rseq, user, body, version in rows:
+            rec = json.loads(body)
+            recs.append(dict(id=rid, seq=int(rseq) if int(version) == 1 else None, last_write=int(rseq), user=user,
+                             created=rec.get("created") or "", task=rec.get("kind") == "ai_task",
+                             version=int(version), pos=usable.get(rid)))
+        contradicted = self._contradicted([r for r in recs if r["pos"] is not None and r["seq"] is not None])
+        for r in recs:
+            if r["id"] in contradicted:
+                r["pos"] = None
+        audited = sorted((r for r in recs if r["pos"] is not None), key=lambda r: r["pos"])
+        rest = sorted((r for r in recs if r["pos"] is None), key=lambda r: (r["created"], r["last_write"], r["id"]))
+        inversions = sum(1 for a, b in zip(audited, audited[1:]) if a["created"] > b["created"])
+        keyed, i, j = [], 0, 0
+        while i < len(audited) and j < len(rest):
+            if rest[j]["created"] < audited[i]["created"]:
+                keyed.append(rest[j])
+                j += 1
+            else:
+                keyed.append(audited[i])
+                i += 1
+        keyed += audited[i:] + rest[j:]
+        start = int(self.db.execute("SELECT COALESCE(MAX(created_ord), 0) FROM recommendations").fetchone()[0])
+        self.db.executemany("UPDATE recommendations SET created_ord=?, seq=? WHERE id=?",
+                            [(n, seq, r["id"]) for n, r in enumerate(keyed, start + 1)])
+        sizes = Counter((r["user"], r["created"]) for r in recs if not r["task"])
+        ambiguous = self._ambiguous_latest(keyed, start)
+        groups = sum(1 for n in sizes.values() if n > 1)
+        self._flag_unresolved(ambiguous)
+        self._record_batch(dict(
+            source="repair", at=datetime.now().isoformat(timespec="seconds"), rows=len(keyed), first_ord=start + 1,
+            last_ord=start + len(keyed), audited=len(audited), corroborated=sum(1 for r in audited if r["version"] == 1),
+            audit_only=sum(1 for r in audited if r["version"] > 1), heuristic=len(rest), contradicted=len(contradicted),
+            same_second_groups=groups, timestamp_inversions=inversions, ambiguous_total=len(ambiguous),
+            ambiguous_ids=ambiguous[:REC_ORDER_IDS], audit_chain=evidence["ok"], audit_reason=evidence["reason"],
+            anchored=evidence["anchored"], order="audit position, then created, seq and id for rows without evidence"))
+        if start == 0 and self._meta_value("rec_order_legacy") is None:
+            self._meta_set("rec_order_legacy", json.dumps(dict(rows=len(keyed), same_second_groups=groups,
+                                                               order="created,seq,id")))
+        return len(keyed)
+
+    def _ambiguous_latest(self, keyed, start):
+        """Per employee of a batch, the batch's newest eligible record when it is not provably the latest.
+
+        Every row that already had an ordinal committed before this repair, because save and sync repair before they
+        publish, so a provably ordered batch follows them provided that employee's previous newest record is not
+        itself unresolved. Within the batch every other row must be provably earlier. Only a small page of the
+        employee's newest rows is read, never the whole history."""
+        by = {}
+        for r in keyed:
+            if not r["task"]:
+                by.setdefault(r["user"], []).append(r)
+        out = []
+        for user, rows in by.items():
+            last = rows[-1]
+            if any(not self._proven_later(r, last) for r in rows[:-1]) or self._previous_unresolved(user, start):
+                out.append(last["id"])
+        return out
+
+    def _previous_unresolved(self, user, start):
+        """Whether the employee's newest eligible record before this batch is unresolved (indexed, paged by ordinal)."""
+        if start == 0:
+            return False
+        page, offset = 5, 0
+        while True:
+            tail, args = self._limit(page, offset)
+            rows = self.db.execute("SELECT id, body FROM recommendations WHERE user=? AND created_ord BETWEEN 1 AND ? "
+                                   "ORDER BY created_ord DESC" + tail, [user, start] + args).fetchall()
+            for rid, body in rows:
+                if json.loads(body).get("kind") != "ai_task":
+                    return self._meta_value(f"rec_unres:{rid}") is not None
+            if len(rows) < page:
+                return False
+            offset += page
+
+    def _suspect_ranges(self):
+        """Coalesced ordinal ranges assigned by a heuristic backfill rather than at insert, from every known format.
+
+        Reads the earlier candidates' single legacy row, the C1 list rec_order_backfills and the per-batch rows in one
+        query. Anything unreadable makes every ordinal suspect; no history is trusted by default."""
+        everything, ranges = (1, 1 << 62), []
+
+        def span(entry):
+            lo, hi = entry["first_ord"], entry["last_ord"]
+            if (not all(isinstance(v, int) and not isinstance(v, bool) for v in (lo, hi)) or lo < 1 or hi < lo):
+                raise ValueError
+            return lo, hi
+
+        present = self.db.execute("SELECT value FROM meta WHERE key='rec_order_legacy'").fetchone()
+        if present is not None:
+            # The producer writes an object with a positive integer row count; anything else is unreadable.
+            try:
+                entry = json.loads(present[0])
+                legacy = entry["rows"] if isinstance(entry, dict) else None
+                if not isinstance(legacy, int) or isinstance(legacy, bool) or legacy < 1:
+                    raise ValueError
+            except (ValueError, TypeError, KeyError):
+                return [everything]
+            ranges.append((1, legacy))
+        try:
+            raw = self._meta_value("rec_order_backfills")
+            for entry in json.loads(raw) if raw else []:
+                ranges.append(span(entry))
+        except (ValueError, TypeError, KeyError, AttributeError):
+            return [everything]
+        for (value,) in self.db.execute("SELECT value FROM meta WHERE key LIKE 'rec_order_batch:%'").fetchall():
+            try:
+                batch = json.loads(value or "{}")
+                if batch.get("ordinals_changed") is not False:
+                    ranges.append(span(batch))
+            except (ValueError, TypeError, KeyError, AttributeError):
+                return [everything]
+        merged = []
+        for lo, hi in sorted(ranges):
+            if merged and lo <= merged[-1][1] + 1:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], hi))
+            else:
+                merged.append((lo, hi))
+        return merged
+
+    def _review_priority_order(self):
+        """Once, assess every heuristic ordinal of earlier candidates without changing any, whatever batch metadata exists.
+
+        The newest eligible record of each employee that is not provably later than that employee's other records is
+        listed for the named data owner; the seq column is not used because these rows were restamped by backfill."""
+        if self._meta_value("rec_order_review") == REC_REVIEW:
+            return
+        ranges = self._suspect_ranges()
+        rows = self.db.execute("SELECT id, user, body, created_ord FROM recommendations WHERE created_ord > 0 "
+                               "ORDER BY created_ord").fetchall()
+        evidence = self._audit_evidence()
+        usable = evidence["positions"] if evidence["ok"] else {}
+        suspect, recs, at = set(), [], 0
+        for rid, user, body, ordinal in rows:
+            rec = json.loads(body)
+            while at < len(ranges) and ranges[at][1] < ordinal:
+                at += 1
+            if at < len(ranges) and ranges[at][0] <= ordinal:
+                suspect.add(rid)
+            recs.append(dict(id=rid, user=user, task=rec.get("kind") == "ai_task", created=rec.get("created") or "",
+                             pos=usable.get(rid), seq=None))
+        flagged = self._unproven_latest(recs, only=lambda r: r["id"] in suspect)
+        self._flag_unresolved(flagged)
+        if rows:
+            self._record_batch(dict(
+                source="review", at=datetime.now().isoformat(timespec="seconds"), rows=len(rows), first_ord=1,
+                last_ord=int(rows[-1][3]), heuristic=len(suspect), ambiguous_total=len(flagged),
+                ambiguous_ids=flagged[:REC_ORDER_IDS], audit_chain=evidence["ok"], audit_reason=evidence["reason"],
+                anchored=evidence["anchored"], ordinals_changed=False,
+                order="existing ordinals kept; the newest record of an employee not provably latest is listed"))
+        self._meta_set("rec_order_review", REC_REVIEW)
+
     def _queue_fingerprint(self):
         return json.dumps(
             [taskqueues.VERSION, self.as_of, controls.today(), ranking.CURRENT,
@@ -391,26 +824,33 @@ class SqlStore(Store):
         """SQL supplies IDs on a miss; permissions and projection remain downstream."""
         taskqueues.validate_queue(queue)
         with self.dblock:
-            self.db.execute("BEGIN IMMEDIATE")
-            try:
-                # Synchronise under the same writer lock as the membership generation.
+            for _ in range(SYNC_RETRIES):
+                # Synchronise before the transaction so no cache state is ever published from uncommitted SQL.
                 self._sync()
-                self._refresh_queue_membership([])
-                generation = self.db.execute(
-                    "SELECT value FROM meta WHERE key='queue_generation'"
-                ).fetchone()[0]
-                key = (self.version, generation, self._queue_fingerprint())
-                cached = getattr(self, "_queue_index", None)
-                members = cached[1] if cached is not None and cached[0] == key else {}
-                if queue not in members:
-                    members[queue] = [r[0] for r in self.db.execute(
-                        f"SELECT id FROM cases WHERE queue_{queue}=1"
-                    ).fetchall()]
-                self.db.execute("COMMIT")
-            except BaseException:
-                self.db.execute("ROLLBACK")
-                raise
-            self._queue_index = (key, members)
+                self.db.execute("BEGIN IMMEDIATE")
+                try:
+                    if self._db_seq() != self._seq:
+                        self.db.execute("ROLLBACK")
+                        continue
+                    self._refresh_queue_membership([])
+                    generation = self.db.execute(
+                        "SELECT value FROM meta WHERE key='queue_generation'"
+                    ).fetchone()[0]
+                    key = (self.version, generation, self._queue_fingerprint())
+                    cached = getattr(self, "_queue_index", None)
+                    members = cached[1] if cached is not None and cached[0] == key else {}
+                    if queue not in members:
+                        members[queue] = [r[0] for r in self.db.execute(
+                            f"SELECT id FROM cases WHERE queue_{queue}=1"
+                        ).fetchall()]
+                    self.db.execute("COMMIT")
+                except BaseException:
+                    self.db.execute("ROLLBACK")
+                    raise
+                self._queue_index = (key, members)
+                break
+            else:
+                raise RuntimeError("Queue lookup could not settle against concurrent writers; retry.")
         return (self.cases[cid] for cid in members[queue])
 
     def _seed(self, data_path):
@@ -549,30 +989,55 @@ class SqlStore(Store):
         return int(row[0]) if row else 0
 
     def _sync(self):
+        """Reload changed rows from one interleaving-free read.
+
+        Every writer, old or new, bumps meta seq in the same atomic commit as its rows, so a fetch bracketed by two equal
+        sequence reads saw no commit. A fetched zero ordinal is repaired under the writer lock and the read retried, so
+        no zero ordinal is ever cached or published."""
         with self.dblock:
-            seq = self._db_seq()
-            if seq == self._seq and self.cases:
+            for _ in range(SYNC_RETRIES):
+                seq = self._db_seq()
+                if seq == self._seq and self.cases:
+                    return
+                changed = self.db.execute("SELECT id, rowversion, body FROM cases WHERE seq > ?", (self._seq,)).fetchall()
+                recs = self.db.execute(
+                    "SELECT id, rowversion, body, created_ord FROM recommendations WHERE seq > ? ORDER BY created_ord, id",
+                    (self._seq,)).fetchall()
+                if self._db_seq() != seq:
+                    continue
+                if any(int(r[3]) == 0 for r in recs):
+                    self._repair_zero_ordinals()
+                    continue
+                for cid, rv, body in changed:
+                    self._load_case(cid, rv, body)
+                for rid, rv, body, created_ord in recs:
+                    self._rec_ord[rid] = int(created_ord)
+                    rec = json.loads(body)
+                    old = self._recs.get(rid)
+                    if old is not None:
+                        old[1].clear()
+                        old[1].update(rec)
+                        rec = old[1]
+                    else:
+                        self.data["recommendations"].append(rec)
+                    self._recs[rid] = [rv, rec, body]
+                if recs:
+                    self._order_recs()
+                self._proc_sync()
+                if not self.staff:
+                    for (body,) in self.db.execute("SELECT body FROM staff").fetchall():
+                        s = json.loads(body)
+                        self.staff[s["email"].lower()] = s
+                        self.data["staff"].append(s)
+                self._seq = seq
+                self.version = seq
                 return
-            for cid, rv, body in self.db.execute("SELECT id, rowversion, body FROM cases WHERE seq > ?", (self._seq,)).fetchall():
-                self._load_case(cid, rv, body)
-            for rid, rv, body in self.db.execute("SELECT id, rowversion, body FROM recommendations WHERE seq > ?", (self._seq,)).fetchall():
-                rec = json.loads(body)
-                old = self._recs.get(rid)
-                if old is not None:
-                    old[1].clear()
-                    old[1].update(rec)
-                    rec = old[1]
-                else:
-                    self.data["recommendations"].append(rec)
-                self._recs[rid] = [rv, rec, body]
-            self._proc_sync()
-            if not self.staff:
-                for (body,) in self.db.execute("SELECT body FROM staff").fetchall():
-                    s = json.loads(body)
-                    self.staff[s["email"].lower()] = s
-                    self.data["staff"].append(s)
-            self._seq = seq
-            self.version = seq
+            raise RuntimeError("Reload could not settle against concurrent writers; retry.")
+
+    def _order_recs(self):
+        """Keep the cached list in persisted creation order; edits never move a row and unsaved rows stay last."""
+        end = float("inf")
+        self.data["recommendations"].sort(key=lambda r: self._rec_ord.get(r["id"], end))
 
     def _load_case(self, cid, rv, body):
         c = json.loads(body)
@@ -668,7 +1133,11 @@ class SqlStore(Store):
     def save(self):
         touched, pending = self._touched(), self.local.pending
         with self.dblock:
-            self.db.execute("BEGIN IMMEDIATE")
+            try:
+                self.db.execute("BEGIN IMMEDIATE")
+            except BaseException:
+                self._drop_unsaved_recommendations()
+                raise
             try:
                 from .change_provenance import validate_sql as validate_change
                 validate_change(self)
@@ -701,12 +1170,18 @@ class SqlStore(Store):
                     if n != 1:
                         raise ConflictError(cid)
                     changed.append((cid, body))
-                recs = []
+                recs, new_ord, top = [], {}, None
                 for rid, rec in ((r["id"], r) for r in self.data["recommendations"]):
                     body = json.dumps(rec)
                     known = self._recs.get(rid)
                     if known is None:
-                        self.db.execute("INSERT INTO recommendations (id, rowversion, seq, user, body) VALUES (?,1,?,?,?)", (rid, new, rec["user"], body))
+                        if top is None:
+                            self._backfill_zero_ordinals(new)
+                            top = int(self.db.execute("SELECT COALESCE(MAX(created_ord), 0) FROM recommendations").fetchone()[0])
+                        top += 1
+                        self.db.execute("INSERT INTO recommendations (id, rowversion, seq, user, body, created_ord) VALUES (?,1,?,?,?,?)",
+                                        (rid, new, rec["user"], body, top))
+                        new_ord[rid] = top
                         recs.append((rid, 1, rec, body))
                     elif known[2] != body:
                         if self.db.execute("UPDATE recommendations SET rowversion=rowversion+1, seq=?, body=? WHERE id=? AND rowversion=?",
@@ -738,6 +1213,7 @@ class SqlStore(Store):
                 if (getattr(self.local, "rai_evidence_write", None) or {}).get("persisted"):
                     raise
                 self.db.execute("ROLLBACK")
+                self._drop_unsaved_recommendations()
                 if (getattr(self.local, "stock_decision", None) is None
                         and getattr(self.local, "hazard_decision", None) is None
                         and getattr(self.local, "resident_validation", None) is None
@@ -761,6 +1237,7 @@ class SqlStore(Store):
                 rai = getattr(self.local, "rai_evidence_write", None)
                 if not (context and context.get("persisted") or rai and rai.get("persisted")):
                     self.db.execute("ROLLBACK")
+                    self._drop_unsaved_recommendations()
                 raise
             self._proc_snap.update(proc_body)
             for cid, body in changed:
@@ -768,6 +1245,9 @@ class SqlStore(Store):
                 self._snap[cid] = body
             for rid, rv, rec, body in recs:
                 self._recs[rid] = [rv, rec, body]
+            if new_ord:
+                self._rec_ord.update(new_ord)
+                self._order_recs()
             pending.clear()
             touched.clear()
             self.local.safety_clear.clear()
@@ -778,7 +1258,34 @@ class SqlStore(Store):
                 self._seq = new
                 self.version = new
             else:
-                self._sync()
+                try:
+                    self._sync()
+                except RuntimeError as error:
+                    self._seq = -1
+                    raise CommittedReloadError(
+                        "The change was saved, but the refresh afterwards did not settle. Reload before doing "
+                        "anything else; do not repeat the change."
+                    ) from error
+
+    def _drop_unsaved_recommendations(self):
+        """A rolled-back save must neither keep its new recommendations for a later save nor flush their creation events."""
+        recs = self.data["recommendations"]
+        unsaved = {r["id"] for r in recs if r["id"] not in self._recs}
+        if not unsaved:
+            return
+        recs[:] = [r for r in recs if r["id"] in self._recs]
+        pending = self.local.pending
+
+        def creation_event(entry):
+            words = entry[3].split(" ", 2)
+            return entry[1] in ("ai_run_end", "ai_record") and len(words) > 1 and words[1] in unsaved
+
+        pending[:] = [p for p in pending if not creation_event(p)]
+
+    def rec_order_unresolved(self, rec_id):
+        with self.dblock:
+            row = self.db.execute("SELECT 1 FROM meta WHERE key=?", (f"rec_unres:{rec_id}",)).fetchone()
+        return row is not None
 
     def _discard(self, pending=()):
         """Restore snapshots, retain supplied prior audit, then reload persisted records."""

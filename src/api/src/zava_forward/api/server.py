@@ -19,7 +19,7 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine
-from zava_forward.api import auth
+from zava_forward.api import auth, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
@@ -446,6 +446,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(401, {"error": "Please sign in."})
             q = parse_qs(url.query)
             s = app.store
+            if simulator_admin.handles(url.path):
+                return self._json(*simulator_admin.handle(s, u, "GET", url.path))
             if url.path == "/api/governance":
                 try:
                     result = s.governance_view(u)
@@ -1013,6 +1015,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, c.privacy.memory_status(c.current_user(user), (parse_qs(urlparse(self.path).query).get("task") or [""])[0]))
                 if post and parts == ["unstored-ask"]:
                     if set(body) - {"content", "skill", "case_id"}:
+                        app.panel.record_validation_refused(user)
                         raise ValueError("Only content, skill and case_id are accepted.")
                     u = c.current_user(user)
                     if c.privacy.decision()["approved"]:
@@ -1048,8 +1051,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(200, dict(answer, withheld=answer["kind"] == "withheld"))
                     if parts[2] == "ask":
                         if set(body) - {"content", "skill"}:
+                            app.panel.record_validation_refused(u, tid)
                             raise ValueError("Only content and skill are accepted.")
                         if "skill" in body and body["skill"] is None:
+                            app.panel.record_validation_refused(u, tid)
                             raise ValueError("Choose a listed skill or omit skill for legacy chat.")
                         return self._json(200, app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")))
                     if parts[2] == "proposals":
@@ -1187,6 +1192,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(403, {"error": "Missing request header."})
             if u.get("view_only") and url.path != "/api/logout":
                 return self._json(403, {"error": "Administrator access shows every option but changes nothing; a staff role is needed to act."})
+            if simulator_admin.handles(url.path):
+                return self._json(*simulator_admin.handle(app.store, u, "POST", url.path, body))
             if url.path == "/api/logout":
                 if app.provider.name == "trusted-proxy":
                     if body.get("switchAccount") is True:
@@ -1299,7 +1306,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 if url.path == "/api/import-check":
                     return self._json(200, s.import_check(body.get("text", "")))
                 if url.path == "/api/ai/priority":
-                    return self._json(200, s.ai_priority(u, body.get("n", 5), body.get("mode")))
+                    from zava_forward.core.sqlstore import CommittedReloadError
+                    try:
+                        return self._json(200, s.ai_priority(u, body.get("n", 5), body.get("mode")))
+                    except CommittedReloadError as error:
+                        return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "review"]:
                     return self._json(200, s.review_ai(u, parts[3], parts[4], body.get("reason", ""), body.get("text")))
                 if parts[:2] == ["api", "packages"] or parts[:2] == ["api", "workorders"]:
@@ -1318,9 +1329,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._send(200, raw)
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "priority"]:
                     from zava_forward.core.resident_decisions import ResidentCommittedError
+                    from zava_forward.core.sqlstore import CommittedReloadError
                     try:
                         return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
-                    except ResidentCommittedError as error:
+                    except (ResidentCommittedError, CommittedReloadError) as error:
                         return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]
