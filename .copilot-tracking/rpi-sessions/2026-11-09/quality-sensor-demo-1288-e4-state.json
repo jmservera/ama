@@ -37,34 +37,27 @@
       "decision": "Review executed once (code-review subagent, not independent); outcome conformant, no findings; owned SQL blocked by 1292 holder (flock -n rc=1, no retry)",
       "status": "recorded",
       "evidence": "review artifact"
-    }
-  ],
-  "blockers": [
+    },
     {
-      "id": "sql-busy",
-      "summary": "Owned SQL not run; 1292 holds /tmp/ama-rpi-heavy.lock",
-      "resolution": "Single flock -n admission once the holder is free, then independent exact-head review"
+      "decision": "Owned SQL validation run once on 287c70ecc: API 509 OK skipped=1, core 53 OK, both exit 0, container removed",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-09-quality-sensor-demo-1288-e4-sql-validation.md"
     }
   ],
+  "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Owner selects follow-up; independent exact-head review and SQL before publication"
+    "action": "Independent exact-head review; then 1292 E2 integration boundary"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Run owned SQL (single flock -n) on the final head",
-      "rationale": "Blocks publication",
-      "evidence": "sql-134532/holder.txt"
-    },
-    {
-      "rank": 2,
       "task": "Independent exact-head review",
       "rationale": "Required before publication",
       "evidence": "review artifact"
     },
     {
-      "rank": 3,
+      "rank": 2,
       "task": "Finite LIVE simulation step compared byte for byte (unperformed)",
       "rationale": "Closes live criterion",
       "evidence": "handoff-1288-e4.md"
