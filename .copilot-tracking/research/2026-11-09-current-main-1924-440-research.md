@@ -56,3 +56,8 @@ BRD and PRD functional requirement numbers collide, so every trace names its doc
 ## Findings candidates and owners
 
 No defect is confirmed at research time. Existing owners for known gaps: #1288 (employee retained values and Quality AI grounding), #1258 and #1259 (ranking archive), #1292 and #81 (SQL ordering, lifecycle), #189 (live run owner, time limit, budget alert), #144 (hosting and load), #159 (chat), #891 (per-call chat activation), #146 (monitoring alert), #185 (device provisioning), #1297 (skip contract). Any defect observed in the checks will be compared to these before proposing a new issue.
+
+## Qualification Q1 (appended 2026-11-09 after the frozen head; original rows unchanged)
+
+* The original row joining PRD FR-008 with FR-016 and FR-017 for resident decisions and the complaints route is preserved as an error. PRD FR-008 governs controlled gates. PRD FR-016 and FR-017 are provider-package and quality-disposition records. This checkpoint asserts no resident or complaints requirement ID and invents no replacement or approval.
+* The original native Review verified the correction in the evidence pack only, not in all tracking records.

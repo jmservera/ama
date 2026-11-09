@@ -1277,8 +1277,8 @@ and the whole #440 behavior validation obligation open.
 The [integrated current-main journey checkpoint](../architecture/cutover-evidence-pack.md#integrated-current-main-journey-checkpoint-2026-11-09-refs-440-81-123-184-136)
 (2026-11-09, `main` `2be660e9`, draft, not approved) pins the document identities and the
 merged PRs through 1326 (now including the queue adapter 1141 and the chat receipts 1320),
-records four targeted local test processes in a sanitized task-owned environment (1205 ran in total, including the 108 SQL Server run, no
-final failure, one retained environment-fault run) and one nonqueued disposable SQL Server run
-of the resident-decision class (108 ran), reuses the #1326 priority SQL campaign by source
+records four final test processes A1, A2b, A3 and S1 (1205 discovered, 171 skipped; S1 is one nonqueued
+disposable SQL Server run of the resident-decision class, 108 discovered, one by-design skip; the first failed A2
+is separate), reuses the #1326 priority SQL campaign by source
 identity with its limits, and maps each gap to its existing owner. It confirms no defect,
-excludes #1288 and the #1258, #1259 and #136 Blob work, and keeps every closure hold.
+excludes #1288 and the #1258, #1259 and #136 Blob work, and keeps every closure hold. A same-day Q1 qualification appended to the pack states that S1 was selected without a prospective amendment, that S1 raw retention is unverified, that absence statements are bounded to inspected paths, and that PRD FR-016 and FR-017 are not resident or complaints IDs.
