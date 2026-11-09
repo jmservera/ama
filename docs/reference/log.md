@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-29
+ms.date: 2026-11-09
 ms.topic: reference
 ---
 
@@ -11072,6 +11072,74 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Issue 144 queue-slice recovery: merged main, applied the poison-size correction, recorded dated recovery RPI evidence under `.copilot-tracking/*/2026-11-09/` (Refs #144).
 
+## [2026-11-08] update | CxO application story and full Azure reference views
+
+* Updated existing main pages 9/12/14/16 with the recommendation, CxO
+  application/data map, coded workflow/optional AI branch and exact autonomy
+  reasoning. Appendix B03/B10/B14/B27 provides depth, not first disclosure.
+  The graph is a conceptual state-flow, not a deployed LangGraph loop.
+* Added original editable CxO and Bicep-grounded Azure Excalidraw/SVG/PNG views,
+  a readable core-frame projection for B10 and source/icon-rights/text trace.
+  System Architecture Reviewer source analysis distinguishes PaaS/private
+  endpoints, shared API/deferred workers, conditional devices and separate
+  resident/public Sweden Central model options. One receiver-grant citation
+  is corrected from the entity line to 147; original findings are retained.
+* Reconciled B04/B10/B19/B20 question/headline/index wording and corrected
+  B27's stale designed-only financial-bound description. Current source
+  admission does not prove actual prices, approvals, billing reconciliation
+  or accepted value. Existing cost arithmetic is unchanged.
+* Local Build/Verify/preview preserves 54 slides/notes, 108 actual actions,
+  timing and six protected cost pages. Seven Node source-contract tests,
+  32 native-shape checks and nine navigation tests pass. All 349 revised
+  frames retain text at 1.5-point tolerance; 44 page renders remain identical.
+  New overflow was corrected, and a retained study caveat's box enlarged
+  without changing content/pixels. LibreOffice has a `javaldx` warning;
+  native PowerPoint, human/keyboard/AT and rehearsal acceptance remain separate.
+* The owner approved a normal main merge, completed at `b2009737` over
+  `fa7ae0c9`. No diagram-referenced infrastructure or deck source changed;
+  the API README's relevant chat section is unchanged, and its evidence
+  hash is refreshed. Original model basis remains `c50e9f0b`.
+* The [story/rubric review](../capstone/source/review-2026-11-08-cxo.md)
+  separates written improvements from live B1/B4/C2/C3 behaviour. Independent
+  exact-head assessment and the focused publication gate are recorded in
+  the PR separately. No paper/results, runtime/infra, private data, model
+  experiment, deployment, regulatory activation or new approval is changed.
+
+## [2026-11-08] update | CxO story review consistency corrections
+
+* Preserved the original independent story FAIL at `08e4d3ca`: three Medium
+  findings, for stale proposed cost-control status, overbroad historical
+  binary-support observation and a recording/evidence fallback mismatch.
+* Accepted the bounded corrections. The owner approved only status wording
+  and narration on protected cost pages, preserving all financial numbers,
+  calculations, currencies, timing and navigation. A closed, explicitly
+  named authoring exception and negative number/geometry/note/approval tests
+  retain protection; all remaining cost bytes must match.
+* The historical Decision 1 claim is EPC-selection observation versus
+  specified binary support; B18's fallback is repository evidence. This
+  adds no real run, recording, financial/operational approval or benefit.
+  Current source and exact-head assessment/full gate are required after
+  the shared guard change; the earlier partial receipt remains historical.
+
+## [2026-11-08] update | IoT, resident site and full main-route architecture
+
+* The owner requested updates to both executive/technical Excalidraw views
+  and the current capstone architecture package: home sensors, IoT receipt,
+  telemetry/history and averages, and the separate optional resident site.
+  Supporting Azure services and gated options belong on a new main-route
+  deployment slide, not only in the appendix.
+* Updated the knowledge-base index to route readers to the architecture
+  sources, current slide mapping and the communications strategist's
+  review. Earlier dated slide references and adverse evidence remain
+  historical; the original case study and ADR decisions are unchanged.
+* The owner installed the Excalidraw skill and explicitly authorized its
+  inclusion with the skill lock in this PR. Local Excalidraw CLI rendering
+  uses an installed browser without an account or upload.
+* This is a source/presentation update, not deployment acceptance,
+  real-home monitoring consent, approved averages methodology, resident
+  shared-case identity activation or a new database/platform adoption.
+  Source, render, navigation and publication evidence is recorded in the
+  current architecture text equivalent, communications review and PR.
 ## [2026-11-08] update | Local validation policy reconciliation (Refs #1294, #470)
 
 * Reconciled the local validation tiers: targeted local checks during development; focused tier (planned relevant local checks plus applicable hosted CI, no blanket `--changed` run) for small and documentation-only candidates; complete gate and verified external full receipt for major, SQL, infrastructure, deployment, security-sensitive and release work and for workflow, gate-tool, dependency and Dockerfile changes, strictest tier for mixed changes. Added a hosted-versus-local coverage comparison, the local-only checks (employee-chat axe harness, exact-count zero-skip chat-panel selector, extra SQL selector) and policy examples to the source guide, aligned the repository instructions, coordinator profile and retention policy wording. Absent, path-filtered, skipped or unobserved CI is stated not to be a pass. No workflow, tool, application, security-control or branch-protection change; the #470 full-gate timing measurement remains open. Records: `.copilot-tracking/*/2026-11-08/issue-1294-validation-policy-*`.
@@ -11105,6 +11173,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Under the owner's authorization of up to two extra focused cycles, current `main` (which added the retained sensor MSSQL suite, #1299) was merged. `src/README.md` now lists that suite as local-only (hosted `mssql` does not run it), gives its non-inert `--changed` selection rule and extends the SQL example; the rubric publication runbook, the coordinator refresh and base-change rules and the instruction wording are qualified by selected tier; a dated supersession note was added to D4 of the 2026-10-31 delivery bottleneck analysis.
 * Supersession, not erasure: the original C1-C4 evidence, the C4 lead review (Residual work) and the exhausted-cycles outcome stand. The independent C4 exact-head review (two High, three Medium, two Low) is known only from the 2026-11-08 issue comment; no durable copy was found, so its exact text is missing evidence. Static review of all current targets and a labelled proxy behavior simulation were repeated; neither is native, intended-profile or qualified-human proof. Hosted CI is unobserved.
 
+## [2026-11-09] update | PR 1295 C3 navigation numbers and current-text corrections (Refs #1295)
+
+* `tools/capstone/Invoke-Capstone.ps1` now applies one baseline-to-physical mapping (baseline slides 13 to 54 move up one for the inserted page 13) to `page`, `pages`, `slide`, `slides` and `index` references, including no-space forms (`page40`), plural ranges (`pages 23-24`) and slash ranges (`pages 9/16`), while leaving numbers below 13 and part 55 notes unchanged. Five notes changed (QX, B13, B20, B26, B27); the deck, both generated pitch files, the preview PDF and the receipt were regenerated, and all other package members, protected cost slides and the 55 page images are unchanged. `Test-DeckInsertion.ps1` gained a literal independent table.
+* `docs/architecture/README.md` now separates the 14 October baseline diagrams (no sensor ingestion) from the 8 November continuation (source-coded finite sensor chain; no live deployment claimed). This index now states 55 slides with current physical page numbers; the dated 2026-10-29 54-slide entry is historical and kept. The discovery-journey R09 anchors now point to the actual headings (`#L33`, `#L253`, `#L327`).
+* Not changed, frozen for owner decision: current baseline page numbers in `docs/capstone/demo/runbook.md` and the QX manifest sentence "All 54 page numbers". No native, visual, assistive-technology, rehearsal or live approval is claimed.
 ## [2026-11-09] update | Issue 144 hosted-conflict main reconciliation (Refs #144)
 
 * Merged current `origin/main` d4d6827f (PR 1222) into the issue 144 branch with an ordinary merge, after recording a prospective plan. Both append-only entry sets in this log are retained (the issue 144 entries and main's later entries); the only overlapping path was this log. The cause of the hosted CONFLICTING report was not established; local merge-tree prediction is not hosted mergeability.
