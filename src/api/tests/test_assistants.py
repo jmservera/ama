@@ -1325,7 +1325,8 @@ class MssqlFixture:
             master.close()
         db = _Conn(connection_string(self.sql_env))
         try:
-            for name in ("assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance",
+            for name in ("assistant_dispatch_gate", "assistant_schedule",
+                         "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance",
                          "audit_head", "audit", "recommendations", "cases", "staff", "meta"):
                 db.execute(f"IF OBJECT_ID(N'{name}', N'U') IS NOT NULL DROP TABLE {name}")
         finally:
