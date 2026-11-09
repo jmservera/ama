@@ -31,6 +31,7 @@ from collections.abc import Mapping
 from typing import Any
 
 from . import ranking
+from . import ranking_archive_blob as rab
 
 SCHEDULE: dict[str, Any] = {
     "cadence": "daily",
@@ -44,6 +45,7 @@ _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 _DIR_FD_OK = {os.open, os.link, os.unlink, os.stat} <= os.supports_dir_fd
 _PUBLISHED_ON = re.compile(r"[0-9]{4}-[0-9]{2}-[0-9]{2}")
 Path = str | os.PathLike[str]
+Archive = Path | rab.BlobRankingArchive
 
 
 class PublicationError(Exception):
@@ -74,6 +76,29 @@ class DurabilityUnconfirmedError(OSError):
         self.path = path
         self.published_on = published_on
         self.written = written
+
+
+class ArchiveWriteUncertainError(DurabilityUnconfirmedError):
+    """A Blob create was sent and its outcome is unknown: the record may or may not exist.
+
+    Nothing is rolled back and nothing is claimed as written (written is None). Retrying the
+    same snapshot confirms the record: it is created or reported as already published.
+    """
+
+    def __init__(self, path: str, published_on: str) -> None:
+        OSError.__init__(
+            self,
+            errno.EIO,
+            f"{path} may or may not be stored; the write outcome is unconfirmed and nothing "
+            "was rolled back. Retry the same publication to confirm.",
+        )
+        self.path = path
+        self.published_on = published_on
+        self.written = None
+
+
+class _MetadataMismatch(ValueError):
+    """A Blob record does not match its stored verification metadata."""
 
 
 def _valid_date(value: Any) -> bool:
@@ -189,8 +214,10 @@ def _same_folder(archive_dir: Path, held: int, name: str, ino: int) -> None:
         raise OSError(errno.ESTALE, "The record changed during confirmation.")
 
 
-def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> dict[str, Any]:
-    """Archive a snapshot. published_on is an ISO date supplied by the caller.
+def publish(snap: Mapping[str, Any], archive_dir: Archive, published_on: str) -> dict[str, Any]:
+    """Archive a snapshot. A BlobRankingArchive takes a single conditional create (see
+    _publish_blob); the rest of this docstring describes the local folder adapter.
+    published_on is an ISO date supplied by the caller.
 
     Returns path, written (False when the identical snapshot was already archived)
     and the original published_on. The archive folder is opened once and the stage, link,
@@ -212,6 +239,8 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
         raise PublicationError("published_on must be an ISO date, YYYY-MM-DD.")
     if not _DATE.match(str(snap.get("as_of"))) or snapshot_hash(snap) != snap.get("snapshot_hash"):
         raise PublicationError("Snapshot is incomplete or does not match its hash; refused.")
+    if isinstance(archive_dir, rab.BlobRankingArchive):
+        return _publish_blob(snap, archive_dir, published_on)
     if not _DIR_FD_OK:
         raise OSError(errno.ENOSYS, "This platform cannot publish through an open folder.")
     os.makedirs(archive_dir, exist_ok=True)
@@ -220,6 +249,57 @@ def publish(snap: Mapping[str, Any], archive_dir: Path, published_on: str) -> di
         return _publish_held(snap, archive_dir, published_on, held)
     finally:
         os.close(held)
+
+
+def _blob_record(raw: bytes, meta: Mapping[str, str]) -> dict[str, Any]:
+    rec = json.loads(raw)
+    expected = rab.metadata_for(rec["snapshot"], rec["published_on"], raw)
+    if any(meta.get(k) != v for k, v in expected.items()):
+        raise _MetadataMismatch("metadata does not match the record")
+    return dict(rec)
+
+
+def _publish_blob(
+    snap: Mapping[str, Any], archive: rab.BlobRankingArchive, published_on: str
+) -> dict[str, Any]:
+    """One conditional create. The create-only request is the idempotence and concurrency check:
+    the first writer wins and a repeat or a loser reads back and validates the existing record.
+    An unknown outcome after the request was sent is raised as ArchiveWriteUncertainError and
+    never as a success or a rollback. The returned path is the opaque record name."""
+    name = _name(snap)
+    raw = _canonical({"published_on": published_on, "snapshot": snap}).encode("utf-8")
+    uncertain = False
+    try:
+        created = archive.create(name, raw, rab.metadata_for(snap, published_on, raw))
+    except rab.BlobArchiveUncertain:
+        uncertain = True
+    if uncertain:
+        raise ArchiveWriteUncertainError(name, published_on)
+    if created:
+        return {"path": name, "written": True, "published_on": published_on}
+    stored, meta = archive.read(name)
+    try:
+        rec = _blob_record(stored, meta)
+        stored_snap = rec["snapshot"]
+        published = rec["published_on"]
+        ok = (
+            _canonical(stored_snap) == _canonical(snap)
+            and snapshot_hash(stored_snap) == stored_snap["snapshot_hash"]
+            and name == _name(stored_snap)
+            and _valid_date(published)
+        )
+    except (ValueError, KeyError, TypeError, AttributeError) as e:
+        raise PublicationError(
+            f"{name} exists but cannot be read as this snapshot "
+            f"({type(e).__name__}); not overwritten. A named owner must review the archive."
+        ) from None
+    if not ok:
+        raise PublicationError(
+            f"{name} exists but does not match this snapshot, its hash, "
+            "its name or a valid publication date; not overwritten. "
+            "A named owner must review the archive."
+        )
+    return {"path": name, "written": False, "published_on": published}
 
 
 def _publish_held(
@@ -307,16 +387,26 @@ def _names(archive_dir: Path) -> list[str]:
     return sorted(n for n in names if n.startswith("ranking-") and n.endswith(".json"))
 
 
-def verify(archive_dir: Path, registry: Mapping[str, Any] | None = None) -> dict[str, Any]:
-    """Check every archived record. Returns count, problems and latest publication date."""
+def verify(archive_dir: Archive, registry: Mapping[str, Any] | None = None) -> dict[str, Any]:
+    """Check every archived record. Returns count, problems and latest publication date.
+
+    For a Blob archive each record is also checked against its stored metadata, and a listing
+    that cannot be read raises OSError instead of reporting an empty archive."""
     reg = ranking.POLICIES if registry is None else registry
     problems: list[str] = []
     dates: list[str] = []
-    names = _names(archive_dir)
+    names = (
+        archive_dir.names()
+        if isinstance(archive_dir, rab.BlobRankingArchive)
+        else _names(archive_dir)
+    )
     for n in names:
         try:
-            with open(os.path.join(archive_dir, n), encoding="utf-8") as f:
-                rec = json.load(f)
+            if isinstance(archive_dir, rab.BlobRankingArchive):
+                rec = _blob_record(*archive_dir.read(n))
+            else:
+                with open(os.path.join(archive_dir, n), encoding="utf-8") as f:
+                    rec = json.load(f)
             snap = rec["snapshot"]
             known = reg.get(snap["policy_version"])
             if snapshot_hash(snap) != snap["snapshot_hash"]:
@@ -329,12 +419,14 @@ def verify(archive_dir: Path, registry: Mapping[str, Any] | None = None) -> dict
                 problems.append(f"{n}: publication date is not a valid calendar date.")
             else:
                 dates.append(rec["published_on"])
+        except _MetadataMismatch:
+            problems.append(f"{n}: stored metadata does not match the record.")
         except (OSError, ValueError, KeyError, TypeError):
             problems.append(f"{n}: unreadable or incomplete.")
     return {"count": len(names), "problems": problems, "latest": max(dates) if dates else None}
 
 
-def overdue(archive_dir: Path, today: str) -> bool:
+def overdue(archive_dir: Archive, today: str) -> bool:
     """True when nothing is published or the latest is before today (supplied by the caller)."""
     latest = verify(archive_dir)["latest"]
     return latest is None or bool(latest < today)
