@@ -1,7 +1,7 @@
 <!-- markdownlint-disable-file -->
 # Critique: Blob plus Quality merged-main qualification plan (2026-11-09)
 
-Executed once, 2026-11-09T22:54Z, by the author against the final candidate plan and details (self-critique; the independent reviewer assesses afterwards). Verdict: Proceed with applied amendments.
+Executed once, 2026-11-09T22:53Z (an earlier draft of this line said 22:54Z, a minute ahead of the clock; corrected at 22:53Z), by the author against the final candidate plan and details (self-critique; the independent reviewer assesses afterwards). Verdict: Proceed with applied amendments.
 
 | ID | Finding | Disposition |
 | --- | --- | --- |
