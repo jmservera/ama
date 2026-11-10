@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-11-09
+ms.date: 2026-11-10
 ms.topic: reference
 ---
 
@@ -5980,3 +5980,86 @@ Raw evidence (coordinator session files `observed-440-bq-main/`, `SHA256SUMS` ve
 | Priority-order recurrence, startup cause | Unknown | #1292 |
 
 No new defect was confirmed: the original O1 red was a stale check, corrected on main by E9, and M1 observed the corrected successor green. Recommendation: CONTINUE. Affected closure of #1288, #136 and #440, dependent expansion, and the Major HVE criterion stay on hold for the unmet criteria above; independent lanes may continue. No pivot, deferral, requirement relaxation or document approval is inferred. Source corrections need their own scoped route; this lane consumed no cycle of any other issue.
+
+## Quality M2 current-main qualification (2026-11-10, Refs #440 #1288 #891 #184)
+
+Separate dated continuation of the merged-main Blob and Quality qualification above, which is preserved unchanged. It is a documentation-only record: it qualifies merged Quality persistence (PR 1331) and the merged #891 transport-accounting correction (PR 1339) at current `main`, and classifies the already executed H0, H1 and H2 SQL observations. It runs nothing, repeats no finance #1234 checkpoint, ticks no criterion and approves no document. Records: [research](../../.copilot-tracking/research/2026-11-10-quality-m2-record-440-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-quality-m2-record-440-plan.md), [details](../../.copilot-tracking/details/2026-11-10-quality-m2-record-440-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-quality-m2-record-440-plan-critique.md), [changes](../../.copilot-tracking/changes/2026-11-10-quality-m2-record-440-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-quality-m2-record-440-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/quality-m2-record-440-state.json). The observations it relies on are in the merged records for [H0 and H1](../../.copilot-tracking/changes/2026-11-09-issue-1288-merged-sql-proof-changes.md) ([review](../../.copilot-tracking/reviews/2026-11-09-issue-1288-merged-sql-proof-review.md)) and [H2](../../.copilot-tracking/changes/2026-11-10-issue-1288-h2-matching-context-changes.md) ([review](../../.copilot-tracking/reviews/2026-11-10-issue-1288-h2-matching-context-review.md)).
+
+### Identities and covered changes
+
+| Item | Identity |
+| --- | --- |
+| Current `main` (fetched) and start of this record | `32221a8459ff5c42d45be1dd86adccb5fcb4c1d6`, tree `74107550f69ce77108f15961d16e1e80f363338d`; squash of PR 1342 at 2026-11-10T01:01:55Z |
+| PR 1331 Quality retained-sensor evidence and guarded AI request (merged, trigger) | `1b7a1719bee088ce2823bff45242e319bc928295`, 2026-11-09T22:47:40Z; head `f995774ca2415f6ae8903b6f45683dd55432eff1` |
+| PR 1339 #891 witnessed transport-attempt accounting (merged) | `ddeebd01694ddb46b456451d9ac6390347e51aaa`, 2026-11-10T00:17:56Z; head `1692b2315b59b6275a35a467af366c47ae72dfaa`; tree `b917297ef34bc3e7e7948f9e46ffe6b7e66e6c88` |
+| PR 1341 importer refusal CLI (merged, unrelated) | `5318f738f6bc58a10a9d4df1ca18ae51c1547a79`, 2026-11-10T00:54:31Z; changes `src/importer` and tracking records (the rubric score file moves via separate later bot commits); excluded from this qualification (surface identified, not assessed) |
+| PR 1342 tracking-only H0, H1 and H2 evidence (merged) | `32221a8459ff5c42d45be1dd86adccb5fcb4c1d6`; head `d41195a274b921e320f94b65e8483b6022103c85`; records only, no hosted checks because of path filters |
+| Excluded, not merged | PR 1338 (aftercare, open, stacked base `feat/demo-quality-workflows-89-1109`) and parent epic #149 (open); no functionality of either is accepted here. Shared hooks of #132 and resident-decision modules of #1238 untouched |
+
+Hosted CI was read with `gh` and not rerun. PR 1339 head `1692b2315` passed src-core, src-api, src-agents, src-importer and mssql; PR 1341 head `80cc8363c` passed too. Neither head tree equals the merged tree (the 1339 head predates the independently merged #1332 `resident_decisions` change; the 1341 head predates the #1339 files), and merges to `main` ran only the rubric scorer, so no exact-head hosted `src-ci` success exists for current `main` and none is claimed. The hosted `mssql` job selects `test_mssqlstore`, `test_lawstore`, `test_assistants.Mssql*` and `test_resident_aoai_sql`; it selects no `test_quality_sensors*` class, so the Quality SQL contracts are local-only evidence.
+
+### Source equivalence and classification of H2
+
+H2 ran at a head that was `ddeebd01` plus tracking-only records: merge `5d0460dd6c05312d0a905e69774d561c7ab8fc59`, tree `230c976d5ceaedea7515683f1746f685cc71d096`, two tracking timestamp corrections uncommitted (dirty 2). Read-only Git comparison on 2026-11-10:
+
+* `src/core` is `7a83bae4adfa`, `src/api` is `ea090b15e073` and `src/agents` is `db7717006298` at `ddeebd01`, at `5d0460dd6` and at current `main`: identical subtrees.
+* `git diff ddeebd01 HEAD` and `git diff 5d0460dd6 HEAD` over `src`, `infra`, `tools` and `.github` show only the importer files of PR 1341 and `.github/rubric/scores/latest.json`. No Core, API, Agents, orchestrator, infrastructure, tool or workflow byte changed.
+* No Core, API or Agents file imports `zava_forward.importer`; core imports neither agents nor api; agents import neither api, orchestrator nor importer (package boundary of ADR-0006 holds).
+
+Classification: H2 is a dated local observation that applies to the identical Core, API and Agents surface at current `main`. It is not a new runtime, Azure or hosted observation, and it gives no freshness to anything outside that surface. No relevant code drift was found, so no acceptance stops for drift and no heavy check was rerun.
+
+### Errata (original records unchanged)
+
+* The merged H2 research, H2 review and the coordinator handoff say "unmerged 891 excluded". For source `ddeebd01` that is wrong: #891 (PR 1339) is included. It was true for the older H0 and H1 base `a8593a7a8`.
+* H2 had no stub peer. The earlier research mention of a peer and 0 bytes was superseded by the applied plan amendment. There is no H2 measured byte or bytes-saved claim.
+* The existing Quality selectors ran 30 tests with 29 passes and one SQLite-only skip; they are not 30 SQL passes. The earlier review phrase "30 existing tests ok" overstates this.
+* Label correction (2026-11-10, correction C2): the first version of this section and the original research record called `b4791e0c22b1f1be` the task body digest. In raw `h2.json` it is `binding_sha`; the task body fingerprint is the distinct `task_body_sha` `cfc0f0a9922fd69f`. The raw file is VM-local and was read, not re-executed. No source, persistence or runtime defect follows.
+* The H2 SQL admission was 2026-11-10T00:23:08Z, not 23:23 on 2026-11-09. The first two readbacks were wrong and the correction commits are additive history.
+
+### Observed commands
+
+Raw runtime artifacts are VM-local in the coordinator session files, are not committed and are not required to read the findings below. Hashes are recorded so the bundle can be matched if it is kept.
+
+| Run | Source | Command identity | Result |
+| --- | --- | --- | --- |
+| H0 | `a8593a7a8`, tree `5113adcb2` | merged-SQL-proof selectors (33 selected) | 31 ok, 1 skip, 1 failure (`after == before`, flag status `not-current`): failed, inconclusive, preserved |
+| H1 | `a8593a7a8` | one restart-context test, default-provider variant A then B | FAILED: A gave `release-denied`; the synthetic `fx-quality-evidence` row went from active revision 1 to revoked revision 2 and variant B then ran after the revoke. Which call revoked is unestablished; it is not classified as a bug or as intended; the A-then-B ordering is a harness confound |
+| H2 test | merge `5d0460dd6` (equivalent surface) | `test_h2_matching_context`, harness `harness_h2_matching_context.py` sha256 `698c13ec5188f24e18d0d607331e1441beaf60e5b269fa83242bef4418f96ac4`, wrapper `sql-run-h2.sh` sha256 `68851d83f02127446b1d7c8c3d88ad5fee0b74fedff1dc832686df0f3a2940fe` | exit 0, Ran 1, OK, no skips, 3.7 s; one `flock -n /tmp/ama-rpi-heavy.lock` admission, exit 0 |
+| H2 companion | same | 30 existing Quality MSSQL selectors | exit 0, Ran 30, OK, skipped=1, 29 passes plus one SQLite-only skip, 70.9 s |
+
+Environment: SQL Server 2022 RTM-CU27-GDR 16.0.4305.5 container, image `sha256:cf8f0ab2ebe61feec2eed2629061a07d247f791c2a8ddda74a4ac9f06a291718`, Python 3.12.3, localhost only, container removed. `h2.json` sha256 `1285e610f60ea9595b4de48a3af8de55eb4d4d872692352ef8bb328bebbc44e6` (recomputed on 2026-11-10).
+
+H2 values: the first service and independently constructed B and C (own matching-context providers, fresh stores, services and connections, same process reopen) all read flag `review-suggested`, actionable, no release denial, the same cited IDs (`sensor:SENS-SYN-1:LIVE-SENS-SYN-1-20261109T2350Z`, `sensor:SENS-SYN-1:R-ZF-1-000`), the same five reading pairs for Quality Inspector and Retrofit Programme Manager (other role labels refused), the same task state. Two distinct fingerprints are equal across them: the binding fingerprint `b4791e0c22b1f1be` (`binding_sha` of the first, B and C reads) and the stored task body fingerprint `cfc0f0a9922fd69f` (`task_body_sha` of the three raw reads). Eleven synthetic release rows stayed unchanged across 47 snapshots. B and C made zero provider calls and zero prompts. Both are truncated 16-hex fingerprints, not cryptographic byte identity; the equality result is unchanged by the label correction below.
+
+Limits: same-process reopen, not an OS or VM restart; synthetic capturing provider, not a model; no Azure SQL, IoT Hub or hosted run. H0 and H1 stay adverse observations: H2 did not reproduce them under a matching context, but that does not disprove a defect or explain them (cross-base inference only). E11 succeeded; E12 and E13 are unused; no extra code correction, model grant or counter reset is made here.
+
+### Document identities and trace
+
+Draft and in-review are not approval. BRD 0.21.0 draft (`34d88395`), PRD for Zava Forward 0.21.0 in-review (`c788b917`), PRD proper-warm 0.13.0 in-review (`f7f9b767`), addendum `28c19242`, original case study `0aec2d80`, parity matrix `91b5d33d` (proposal for owner review). ADR-0001 and ADR-0002 Proposed (only the staff identity and role decision of 0002 is owner-accepted, 2026-10-24); ADR-0003 accepted with amendment, ADR-0004 and ADR-0006 accepted (2026-10-15); ADR-0005 accepted for synthetic development only (2026-10-16); ADR-0007 Proposed (2026-11-04), not accepted. Requirement numbers of the BRD and PRDs collide, so every ID is document-qualified.
+
+| Requirement or decision | Architecture and contract | Tested code and journey | Class |
+| --- | --- | --- | --- |
+| PRD FR-050 simulated sensor monitoring creating only a human review task; BRD FR-048 consented in-use monitoring with provenance | `core/sensor_view.py`, `core/assistants.py`, `core/sensor_consumer.py`, API `GET /api/cases/{id}/sensors`, `web/assistants.js`, `web/ops.js` | `test_quality_sensors*` unit, SQLite, SQL and the browser check, plus H2 | Local observed (synthetic data); PRD AC-066 live IoT Hub, Azure SQL and real AI task is not run |
+| Persistence and replay: retained readings, flag, task, withdrawal | SQL control index, guard triggers, dispatch hold, per-attempt gate before the first byte | H2 matching-context test and 29 companion passes; the one SQLite-only withdrawal test is skipped on SQL | Local observed on SQL Server 2022 container; Azure SQL and OS restart unknown |
+| Auth and roles (PRD FR-003, FR-072, AC-144; ADR-0002 identity decision) | Role projection refuses all but Quality Inspector and Retrofit Programme Manager | H2 projection per role label; fixtures are synthetic | Local observed; synthetic release and role rows establish no real person, resident or model authority; real role enforcement in a deployment is implemented-unverified |
+| Sensor consent and withdrawal (BRD FR-048, RULE-025) | Control index; withdrawal withholds values, citations, derived output and flags; absent index fails closed | Quality sensor suites | Local observed (unit, SQLite, SQL); no real consent evidence |
+| Human approval (PRD FR-008, AC-010, AC-011) | A returned finding is a `review-suggested` flag that requests human review and approves nothing | Quality sensor suites, H2 | Local observed; the per-measure quality-disposition record (PRD FR-017, AC-020, AC-042) is not established by the advisory display |
+| AI use and unavailable-AI paths (PRD FR-044, CON-009) | Real-provider simulation route code-off; private readings are never given to a real AI by the Agents worker or API composition; manual route remains when AI, store or release is unavailable | E2 tests and unavailable-AI tests | Local observed with synthetic provider; actual UI-to-model Quality proof is blocked |
+| AI metering (PRD NFR-017, AC-109, AC-110; BRD NFR-012) | PR 1339 `DispatchWitness` and `count_dispatches()`: calls counted from the witnessed transport attempt; unwitnessed providers are an unverified assumption of one | `test_ai_dispatch_marker`, `test_chat_model` | Local observed accounting only; #891 criterion 2 (per-call gate, token and cost, privacy, retention and refusal conjunction) remains unticked |
+| RAI release, suspension and restart authority (PRD FR-051, FR-053, AC-069 to AC-072, OQ-017) | Synthetic release rows only | H1 and H2 synthetic rows | Blocked: owner release, budget and role decisions are unassigned; the $700 transport authority of #184 is not a paid-model grant |
+| Package layout (ADR-0006) | Import boundaries listed above | Git comparison | Local observed |
+
+Evidence classes: local observed is the SQL Server container and unit rows above; Azure observed is none new; implemented-unverified is deployed role enforcement and the 1339 provenance fallback; not run (admission pending, no owner-approved deferral) are the actual-model walkthrough, IoT Hub, Azure SQL and OS restart; blocked is release authority and budget; unknown is the cause of the H1 revoke and exact-head hosted `src-ci`. Relevant blobs at current `main`: `core/ai.py` `7699f8509d4f`, `ai_consumption.py` `abd24acd4887`, `ai_transport.py` `4508686c6957`, `assistant_release.py` `c8ae720aed94`, `assistants.py` `4cb575163a49`, `sensor_consumer.py` `134d5d516c5a`, `sensor_view.py` `9937817472b9`, `simulation_lane.py` `5c26cfb06838`; `api/server.py` `187c3648fb13`, `web/assistants.js` `4312f85723cc`, `web/ops.js` `e3e56191bbe3`; `agents/chat.py` `ae03ad5f25e5`, `dispatch.py` `2e2306c62790`.
+
+### Gaps, owners and recommendation
+
+| Gap | State | Owner |
+| --- | --- | --- |
+| H0 default-provider denial and H1 revoke side effect, classification unestablished | Adverse, unreproduced under a matching context | #1288 with release machinery under #107; needs an owner-authorised read-only diagnostic first |
+| Actual UI-to-model autonomous Quality walkthrough (IoT Hub, SQL, UI, model, flag) | Not run; blocked on admission and owner decisions (no requirement deferral approved) | #1288 criterion 8, #891 criterion 2, #184 |
+| Release owner, budget and role decisions (OQ-017) | Blocked, not invented | owner |
+| Quality SQL classes outside hosted CI; no exact-head hosted `src-ci` | Local-only evidence | #440 later criteria and #1288 |
+| #891 receipt provenance for the unwitnessed fallback and test hygiene from the PR 1339 review | Routed later work | #891 |
+| Azure SQL, OS restart, assistive technology, human acceptance, Major HVE, whole #440 | Open | #440 and existing owners; no new issue filed, no issue or board written |
+
+No new defect is confirmed and none is asserted. Recommendation: CONTINUE. The affected closures of #1288, #891, #184 and #440 stay on hold, and so do expansions that depend on the actual-model proof; independent lanes (importer, finance, aftercare once merged) may continue. Resume conditions: the owner assigns release authority, budget and role decisions; a separately admitted finite live walkthrough is approved under #1288; a read-only diagnostic of the H1 revoke is authorised before any source fix; any later source change after current `main` requires comparing the Core, API and Agents subtree ids above and restarts the classification. Proposed fix route, not decided: only after that diagnostic, scoped under #1288 or #107. No pivot, deferral, requirement relaxation, approval or production acceptance is inferred.
