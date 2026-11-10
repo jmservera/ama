@@ -274,6 +274,50 @@ class Command(unittest.TestCase):
                 self.refused(json.dumps(envelope([good, bad])).encode(), "observation 1")
                 self.refused(json.dumps(envelope([bad])).encode(), fragment)
 
+    def refused_untouched(self, payload: bytes, fragment: str) -> None:
+        target = self.tmp / "numeric-record.json"
+        target.write_text("sentinel")
+        done = self.submit(payload, "--record", str(target))
+        self.assertEqual(done.returncode, 1, done.stderr)
+        self.assertEqual(done.stdout, "")
+        self.assertIn(f"{OPTION}: ", done.stderr)
+        self.assertIn(fragment, done.stderr)
+        self.assertNotIn("Traceback", done.stderr)
+        self.assertEqual(target.read_text(), "sentinel")
+
+    def test_negative_seconds_are_refused_for_both_fields_including_huge_integers(self) -> None:
+        for key in ("elapsed_seconds", "review_seconds"):
+            for text in ("-1", "-0.5", "-" + "1" * 401):
+                with self.subTest(key=key, value=text[:6]):
+                    rows = [
+                        observation("repairs", 0, "cards"),
+                        observation("repairs", 1, "chat", **{key: 987654321.0}),
+                    ]
+                    raw = json.dumps(envelope(rows)).replace("987654321.0", text)
+                    self.assertIn(text, raw)
+                    self.refused_untouched(
+                        raw.encode(), f"observation 1: {key} must not be negative"
+                    )
+
+    def test_derived_ratio_overflow_is_refused_before_report_or_record(self) -> None:
+        rows = [
+            observation("repairs", 0, "cards", elapsed_seconds=5e-324),
+            observation("repairs", 0, "chat", elapsed_seconds=31536000),
+        ]
+        self.refused_untouched(json.dumps(envelope(rows)).encode(), "derived values are not finite")
+
+    def test_seconds_upper_bound_is_exact_for_both_fields(self) -> None:
+        for key in ("elapsed_seconds", "review_seconds"):
+            with self.subTest(key=key):
+                over = [observation("repairs", 0, "cards", **{key: 31536001})]
+                self.refused_untouched(
+                    json.dumps(envelope(over)).encode(), f"{key} exceeds 31536000"
+                )
+        both = [
+            observation("repairs", 0, "cards", elapsed_seconds=31536000, review_seconds=31536000)
+        ]
+        self.assertEqual(self.section(both)["input"]["observations"], 1)
+
     def test_refusal_happens_before_any_record_write(self) -> None:
         target = self.tmp / "must-not-exist.json"
         done = self.submit(b"{", "--record", str(target))

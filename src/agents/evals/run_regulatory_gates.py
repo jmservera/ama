@@ -82,8 +82,11 @@ def _check_observation(index: int, row: Any) -> None:
             )
     for key in SECONDS:
         value = row[key]
-        if isinstance(value, int | float) and not isinstance(value, bool) and value > MAX_SECONDS:
-            refuse(f"observation {index}: {key} exceeds {MAX_SECONDS} seconds")
+        if isinstance(value, int | float) and not isinstance(value, bool):
+            if value < 0:
+                refuse(f"observation {index}: {key} must not be negative")
+            if value > MAX_SECONDS:
+                refuse(f"observation {index}: {key} exceeds {MAX_SECONDS} seconds")
     reason = valid_observation(row)
     if reason:
         refuse(f"observation {index}: {reason}")
@@ -120,12 +123,14 @@ def load_constructed_observations(path: Path) -> tuple[list[dict[str, Any]], dic
 
 
 def constructed_section(rows: list[dict[str, Any]], info: dict[str, Any]) -> dict[str, Any]:
-    return dict(
-        schema=SCHEMA,
-        input=info,
-        qualification=QUALIFICATION,
-        result=evaluate_paired_trial(rows, thresholds=None, cost_inputs=None, now=NOW),
-    )
+    result = evaluate_paired_trial(rows, thresholds=None, cost_inputs=None, now=NOW)
+    try:
+        json.dumps(result, allow_nan=False)
+    except ValueError:
+        refuse(
+            "derived values are not finite (for example an elapsed ratio from a near-zero duration)"
+        )
+    return dict(schema=SCHEMA, input=info, qualification=QUALIFICATION, result=result)
 
 
 def main() -> None:
@@ -140,12 +145,14 @@ def main() -> None:
         help=f"bounded local JSON of caller-declared constructed observations ({SCHEMA})",
     )
     args = parser.parse_args()
-    constructed = (
-        None if args.constructed is None else load_constructed_observations(args.constructed)
+    section = (
+        None
+        if args.constructed is None
+        else constructed_section(*load_constructed_observations(args.constructed))
     )
     report = run(args.homes)
-    if constructed is not None:
-        report["constructed_paired_observations"] = constructed_section(*constructed)
+    if section is not None:
+        report["constructed_paired_observations"] = section
     text = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.record:
         args.record.write_text(text)

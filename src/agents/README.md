@@ -362,8 +362,10 @@ scorer fields (`participant`, `task`, `role`, `arm`, `completed`, `comprehension
 `accepted`, `hazard_missed`, `elapsed_seconds`, `review_seconds`); `participant` and `task`
 are pseudonymous ids (letters, digits, `.`, `_`, `-`, at most 64 characters) and seconds are
 finite, non-negative and at most one year. Malformed, oversize, non-finite, duplicate-key,
-unknown-schema or invalid input exits 1 with the reason on stderr before the report is
-generated or `--record` writes anything, so `invalid_observations` is always empty here.
+unknown-schema or invalid input, and a result whose derived values are not finite (a
+near-zero cards duration against a large chat duration), exits 1 with the reason on stderr
+before the report is generated or `--record` writes anything, so `invalid_observations` is
+always empty here.
 Unpaired, partial-role, empty and hazard-miss inputs are valid and reported by the scorer.
 
 ```bash
