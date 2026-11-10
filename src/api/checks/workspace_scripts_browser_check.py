@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from functools import partial
 from urllib.parse import urlsplit
 
 from playwright.sync_api import (
@@ -12,9 +13,15 @@ from playwright.sync_api import (
 
 from checks.asset_urls import asset_url
 from checks.design_system_browser_check import main
+from checks.script_retry import (
+    MISSING_GLOBAL_REQUESTS, Mutation, assert_requests, exhausted_requests, expect_detected,
+    serve_mutated_app,
+)
 from checks.workbench_browser_check import synthetic_data
 
 LEAFLET = "/vendor/leaflet.js"
+TERMINAL = "Terminal attempts must match the declared script-retry contract"
+REVISIT = "Route revisit must not reset the retry budget"
 
 
 def local_context(browser: Browser, base: str) -> BrowserContext:
@@ -126,7 +133,10 @@ def recovery(browser: Browser, base: str, path: str, failures: int, hash_: str) 
         context.close()
 
 
-def exhaustion(browser: Browser, base: str, missing_global: bool = False) -> None:
+def exhaustion(
+    browser: Browser, base: str, missing_global: bool = False,
+    mutation: Mutation | None = None,
+) -> None:
     context = local_context(browser, base)
     try:
         page = context.new_page()
@@ -142,16 +152,18 @@ def exhaustion(browser: Browser, base: str, missing_global: bool = False) -> Non
                 route.abort()
 
         page.route(asset_url(LEAFLET, base), intercept)
+        if mutation:
+            serve_mutated_app(page, base, mutation)
         sign_in(page, base, "#/overview")
         expect_failure(page, LEAFLET)
-        count = 2 if missing_global else 3
-        assert len(requests) == count
+        count = MISSING_GLOBAL_REQUESTS if missing_global else exhausted_requests()
+        assert_requests(len(requests), count, TERMINAL)
         page.get_by_role("link", name="My cases", exact=True).click()
         expect(page.get_by_role("heading", name="My cases today", exact=True)).to_be_visible()
         page.get_by_role("link", name="Overview", exact=True).click()
         expect_failure(page, LEAFLET)
         page.wait_for_timeout(800)
-        assert len(requests) == count, "Route revisit must not reset the retry budget"
+        assert_requests(len(requests), count, REVISIT)
         reload_button = page.get_by_role("button", name="Reload workspace", exact=True)
         page.locator("#app").focus()
         page.keyboard.press("Tab")
@@ -165,6 +177,22 @@ def exhaustion(browser: Browser, base: str, missing_global: bool = False) -> Non
         print(f"PASS terminal {scenario}, native reload")
     finally:
         context.close()
+
+
+def exhaustion_controls(browser: Browser, base: str) -> None:
+    total = exhausted_requests()
+    controls: list[tuple[Mutation, bool, str, int, int]] = [
+        ("extra", False, TERMINAL, total, total + 1),
+        ("early", False, TERMINAL, total, total - 1),
+        ("reset", False, REVISIT, total, total + total - 1),
+        ("continue", True, TERMINAL, MISSING_GLOBAL_REQUESTS, total),
+    ]
+    for mutation, missing_global, message, expected, observed in controls:
+        expect_detected(
+            partial(exhaustion, browser, base, missing_global, mutation),
+            message, expected, observed,
+            f"{mutation} ({'missing global' if missing_global else 'exhaustion'})",
+        )
 
 
 def observe_companion(page: Page, base: str) -> CDPSession:
@@ -343,6 +371,7 @@ def run_browser(base: str) -> None:
                 recovery(browser, base, path, failures, hash_)
             exhaustion(browser, base)
             exhaustion(browser, base, missing_global=True)
+            exhaustion_controls(browser, base)
             delayed_companion(browser, base)
             delayed_companion(browser, base, timed_out=True)
             delayed_companion(browser, base, sign_out=True)

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from functools import partial
 from typing import Any
 from urllib.parse import urlparse
 
@@ -9,11 +10,15 @@ from playwright.sync_api import Browser, Page, Route, sync_playwright
 
 from checks.design_system_browser_check import check, main
 from checks.asset_urls import asset_url
+from checks.script_retry import (
+    Mutation, assert_requests, exhausted_requests, expect_detected, serve_mutated_app,
+)
 from checks.workbench_browser_check import synthetic_data
 
 CASE = "ZF-2026-0597"
 CASE_PATH = f"/app?synthetic=employee-recovery#/case/{CASE}?tab=quality"
 QUALITY = "Quality checks and defects"
+EXHAUSTION = "missing ops exhausts the bounded initial/retry attempts"
 
 
 def employee_data() -> dict[str, Any]:
@@ -88,13 +93,17 @@ def healthy_and_api_retry(browser: Browser, base: str) -> None:
         page.context.close()
 
 
-def missing_ops_recovery(browser: Browser, base: str) -> None:
+def missing_ops_recovery(
+    browser: Browser, base: str, mutation: Mutation | None = None
+) -> None:
     page, errors, documents = new_page(browser, base)
 
     def missing(route: Route) -> None:
         route.fulfill(status=404, content_type="text/plain", body="Synthetic missing ops.js")
 
     page.route(asset_url("/ops.js", base), missing)
+    if mutation:
+        serve_mutated_app(page, base, mutation)
     try:
         sign_in(page, base)
         page.get_by_role("heading", name="Workspace unavailable", exact=True).wait_for()
@@ -108,7 +117,8 @@ def missing_ops_recovery(browser: Browser, base: str) -> None:
                   page.evaluate("document.documentElement.scrollWidth <= innerWidth"))
         original_url, original_count = page.url, len(documents)
         original_ops = sum(bool(asset_url("/ops.js", base).search(url)) for url in documents)
-        check("missing ops exhausts the bounded initial/retry attempts", original_ops == 3)
+        assert_requests(original_ops, exhausted_requests(), EXHAUSTION)
+        check(EXHAUSTION, True)
         page.unroute(asset_url("/ops.js", base), missing)
         reload_button = page.get_by_role("button", name="Reload workspace", exact=True)
         reload_button.focus()
@@ -123,6 +133,16 @@ def missing_ops_recovery(browser: Browser, base: str) -> None:
         check("missing dependency uses handled feedback, not ReferenceError", not errors)
     finally:
         page.context.close()
+
+
+def missing_ops_controls(browser: Browser, base: str) -> None:
+    total = exhausted_requests()
+    controls: list[tuple[Mutation, int]] = [("extra", total + 1), ("early", total - 1)]
+    for mutation, observed in controls:
+        expect_detected(
+            partial(missing_ops_recovery, browser, base, mutation),
+            EXHAUSTION, total, observed, f"{mutation} (missing ops)",
+        )
 
 
 def unrelated_script_failure(browser: Browser, base: str) -> None:
@@ -151,6 +171,7 @@ def run_browser(base: str) -> None:
         try:
             healthy_and_api_retry(browser, base)
             missing_ops_recovery(browser, base)
+            missing_ops_controls(browser, base)
             unrelated_script_failure(browser, base)
             print(f"Chromium {browser.version}; synthetic loopback only; no live AI or Azure.")
         finally:
