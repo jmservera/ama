@@ -28,3 +28,8 @@ Changes record opened at tool clock 2026-11-10T03:25:07.885814+00:00, before the
 * After: external script 4 tests OK (0.859s); rename config probe OK; `python3 -m unittest tools.test_rpi_phase_witness` 24 tests OK; ruff check and format --check on the two files pass. Earlier mid-run external failures (1 fail, 1 error) were my fixture rename collision, fixed by keeping `full_run()` unchanged.
 * HVE: see `.copilot-tracking/hve-builder/2026-11-10/issue-1300-c1-behavior-report-1.md` (static Pass, behavior simulation Revise with Low gaps, native not available).
 * Not run: full gate, `rpi-checks`, AC3 native exercise (Deferred to coordinator).
+
+## Errata: proof continuation (additive, source unchanged)
+
+* No source, test or agent edits. Records added: HVE behavior report 2, proof qualification review, state decision entry. Earlier outcomes are unchanged.
+* HVE campaign 2 (full fresh, Medium, simulation): Revise, two Medium evidence gaps, no target defect. AC3 observed by Root: verify exit 1, untracked witness log, `/tmp/x` scope deviation preserved.
