@@ -114,13 +114,13 @@ module dns 'envDns.bicep' = if (!externalEnvironment) {
 var authEnabled = !empty(entraClientId)
 var publicSimulationStore = '/state/public-simulation/store.sqlite'
 var publicSimulationKey = '/state/public-simulation/hmac.key'
-// Fixed trusted startup recipe: initialise only an empty pair, validate, then run the ordinary API module. Faults leave the files untouched and the API starts with the lane unavailable.
+// Fixed trusted startup recipe: initialise only an empty pair, validate, then run the ordinary API module. Faults, including a missing module in an older image, leave the files untouched and the API starts with the lane unavailable.
 var publicSimulationRecipe = '''
 import os, sys
-from zava_forward.core import simulation_lane as lane
 store = "/state/public-simulation/store.sqlite"
 key = "/state/public-simulation/hmac.key"
 try:
+    from zava_forward.core import simulation_lane as lane
     if not os.path.lexists(store) and not os.path.lexists(key):
         os.makedirs(os.path.dirname(store), mode=0o700, exist_ok=True)
         lane.provision(store, key)

@@ -36,14 +36,35 @@ for name in ("store.sqlite", "hmac.key"):
 out["dir"] = stat.S_IMODE(os.stat("/state/public-simulation").st_mode)
 print(json.dumps(out))
 """
+# The probe pins one slot-aligned instant (the consumer rejects stale or future readings) so a
+# legitimate 300 second slot crossing cannot change the result; the rendered startup command never
+# sees this clock.
 LANE = """
-import json, os
+import hashlib, json, os
 from zava_forward.core import simulation_lane as lane
-opened = lane.Lane.open(os.environ)
+instant = float(os.environ["ZF_TEST_CLOCK"])
+opened = lane.Lane.open(os.environ, clock=lambda: instant)
 added = opened.observe()
 view = opened.view()
+digest = hashlib.sha256(json.dumps(view, sort_keys=True, default=str).encode()).hexdigest()
+store_id = opened.store_id
 opened.close()
-print(json.dumps({"added": added, "keys": sorted(view)}))
+print(json.dumps({"added": added, "store_id": store_id, "view": digest, "keys": sorted(view)}))
+"""
+# Harness-only input that makes the recipe's own `python -c` import fail and leaves the
+# `python -m zava_forward.api` process that it then execs untouched.
+SHADOW = """
+import sys
+from importlib.abc import MetaPathFinder
+
+
+class Block(MetaPathFinder):
+    def find_spec(self, name, path=None, target=None):
+        if name == "zava_forward.core.simulation_lane" and sys.argv == ["-c"]:
+            raise ImportError("blocked by test harness")
+
+
+sys.meta_path.insert(0, Block())
 """
 
 
@@ -59,6 +80,13 @@ def docker(*args: str, check: bool = True) -> subprocess.CompletedProcess[str]:
     "Docker, Azure CLI with Bicep and ZF_API_IMAGE are needed to execute the recipe",
 )
 class PublicSimulationStartupTests(unittest.TestCase):
+    command: list[str]
+    env: list[str]
+    instant: float
+    run_id: str
+    created: list[str]
+    data: tempfile.TemporaryDirectory[str]
+
     @classmethod
     def setUpClass(cls) -> None:
         container = render_api_container(
@@ -70,8 +98,9 @@ class PublicSimulationStartupTests(unittest.TestCase):
             for e in container["env"]
             if e["name"].startswith("ZF_SIM_")
         ]
+        cls.instant = float(int(time.time()) // 300 * 300 - 300)
         cls.run_id = uuid.uuid4().hex[:8]
-        cls.created: list[str] = []
+        cls.created = []
         cls.data = tempfile.TemporaryDirectory()
         cls.addClassCleanup(cls.data.cleanup)
         dataset = os.path.join(cls.data.name, "zavaforward.json")
@@ -88,16 +117,24 @@ class PublicSimulationStartupTests(unittest.TestCase):
 
     def seed(self, script: str) -> None:
         docker(
-            "run", "--rm", *CONTROLS, f"--volume={self.volume}:/state", IMAGE, "python", "-c", script
+            "run",
+            "--rm",
+            *CONTROLS,
+            f"--volume={self.volume}:/state",
+            IMAGE,
+            "python",
+            "-c",
+            script,
         )
 
-    def start(self) -> str:
+    def start(self, *extra: str) -> str:
         """Start the rendered command with no entrypoint override and wait for the ordinary API."""
         name = f"{self.volume}-api"
         docker(
             "run", "-d", "--name", name, *CONTROLS, f"--volume={self.volume}:/state",
             "--env=ZF_AI=off", "--publish=127.0.0.1::8088",
-            f"--mount=type=bind,source={self.data.name},target=/data,readonly", *self.env, IMAGE, *self.command,
+            f"--mount=type=bind,source={self.data.name},target=/data,readonly", *self.env,
+            *extra, IMAGE, *self.command,
         )  # fmt: skip
         self.addCleanup(docker, "rm", "-f", name, check=False)
         port = docker("port", name, "8088").stdout.strip().rsplit(":", 1)[1]
@@ -117,6 +154,10 @@ class PublicSimulationStartupTests(unittest.TestCase):
         docker("rm", "-f", name)
         return logs
 
+    def probe(self, name: str, instant: float) -> dict:
+        env = ["env", *[e[6:] for e in self.env], f"ZF_TEST_CLOCK={instant}"]
+        return json.loads(docker("exec", name, *env, "python", "-c", LANE).stdout)
+
     def inspect(self, name: str) -> dict:
         return json.loads(docker("exec", name, "python", "-c", INSPECT).stdout)
 
@@ -128,25 +169,61 @@ class PublicSimulationStartupTests(unittest.TestCase):
         self.assertEqual(state["dir"], 0o700)
         user = docker("exec", name, "python", "-c", "import os; print(os.getuid(), os.getgid())")
         self.assertEqual(user.stdout.strip(), "10001 10001")
-        first = json.loads(docker("exec", name, *["env", *[e[6:] for e in self.env]],
-                                  "python", "-c", LANE).stdout)  # fmt: skip
+        first = self.probe(name, self.instant)
         self.assertEqual(first["added"], 12)
         self.assertEqual(self.stop(name), "")
 
         again = self.start()
         self.assertEqual(self.inspect(again)["hmac.key"], state["hmac.key"])
-        second = json.loads(docker("exec", again, *["env", *[e[6:] for e in self.env]],
-                                   "python", "-c", LANE).stdout)  # fmt: skip
+        second = self.probe(again, self.instant)
         self.assertEqual(second["added"], 0)
+        self.assertEqual(second["store_id"], first["store_id"])
+        self.assertEqual(second["view"], first["view"])
         self.assertEqual(self.stop(again), "")
 
+    def test_slot_crossing_between_restarts_adds_one_without_any_reset(self) -> None:
+        """Negative control: a real-clock probe can legitimately cross a slot, so only a pinned
+        clock makes added == 0 a valid reset check."""
+        name = self.start()
+        first = self.probe(name, self.instant)
+        self.assertEqual(self.stop(name), "")
+        again = self.start()
+        crossed = self.probe(again, self.instant + 300)
+        self.assertEqual(crossed["store_id"], first["store_id"])
+        self.assertEqual(crossed["added"], 1)
+        self.assertNotEqual(crossed["view"], first["view"])
+        self.assertEqual(self.stop(again), "")
+
+    def test_unimportable_lane_module_still_starts_the_ordinary_api(self) -> None:
+        shadow = os.path.join(self.data.name, "shadow")
+        os.makedirs(shadow, exist_ok=True)
+        with open(os.path.join(shadow, "sitecustomize.py"), "w", encoding="utf-8") as handle:
+            handle.write(SHADOW)
+        os.chmod(shadow, 0o755)
+        os.chmod(os.path.join(shadow, "sitecustomize.py"), 0o644)
+        name = self.start(
+            "--env=PYTHONPATH=/shadow",
+            f"--mount=type=bind,source={shadow},target=/shadow,readonly",
+        )
+        missing = docker(
+            "exec",
+            name,
+            "python",
+            "-c",
+            "import os; print(os.path.lexists('/state/public-simulation'))",
+        )
+        self.assertEqual(missing.stdout.strip(), "False")
+        logs = self.stop(name)
+        self.assertIn("public simulation lane unavailable: ImportError", logs)
+
     def test_partial_and_corrupt_state_are_untouched_and_the_api_still_starts(self) -> None:
+        mkdir = "import os; os.makedirs('/state/public-simulation', mode=0o700, exist_ok=True);"
+        key = "open('/state/public-simulation/hmac.key','wb').write(b'k'*32)"
         cases = {
-            "key-only": "import os; os.makedirs('/state/public-simulation', mode=0o700, exist_ok=True);"
-            "open('/state/public-simulation/hmac.key','wb').write(b'k'*32)",
-            "corrupt-store": "import os; os.makedirs('/state/public-simulation', mode=0o700, exist_ok=True);"
-            "open('/state/public-simulation/store.sqlite','wb').write(b'not sqlite');"
-            "open('/state/public-simulation/hmac.key','wb').write(b'k'*32)",
+            "key-only": mkdir + key,
+            "corrupt-store": mkdir
+            + "open('/state/public-simulation/store.sqlite','wb').write(b'not sqlite');"
+            + key,
         }
         for label, script in cases.items():
             with self.subTest(label):

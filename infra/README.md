@@ -3903,7 +3903,10 @@ deployment approval. No model call was made.
   capabilities): when neither path exists it creates the 0700 directory and calls `provision`;
   it then validates with `Lane.open` and runs the ordinary `python -m zava_forward.api`. A valid
   pair is reused without reset. A partial or corrupt pair is left untouched, the error code is
-  printed to stderr and the API starts with the lane unavailable (manual). No key is generated
+  printed to stderr and the API starts with the lane unavailable (manual). The module import is
+  inside that same guard, so an older image that lacks `simulation_lane` also starts the ordinary
+  API with the lane unavailable. The `apiImage` guard rejects only the known placeholder and does
+  not validate that an arbitrary image is compatible. No key is generated
   or printed at template compile time, and no observation or model request is made at startup.
 * Accounting is unchanged: the working store stays `ZF_STORE=mssql`, so allowance, attempts, send
   fence and release or model holds remain in Azure SQL and a lost simulation store cannot mint,
@@ -3919,7 +3922,12 @@ deployment approval. No model call was made.
 * Offline checks: `az bicep build` and `lint`, `tests.test_bicep_policy` (default off, guards,
   OFF-versus-ON render differences, mutation rejection) and
   `tests/test_public_simulation_startup.py`, which runs the rendered recipe in the API image when
-  `ZF_API_IMAGE` names a locally built image.
+  `ZF_API_IMAGE` names a locally built image. Its readback probes pin one slot-aligned test clock
+  (the rendered command never sees it), so a restart is judged by retained store identity and
+  readings rather than a real-clock slot count; a negative control shows a 300 second crossing adds
+  one reading without any reset, and an import-failure case shows the ordinary API still starts.
+  These local runs use the default JSON working store and are not MSSQL, browser-authentication or
+  Azure evidence.
 
 ## Validate locally
 
