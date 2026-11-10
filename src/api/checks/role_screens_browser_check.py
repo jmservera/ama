@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import os
 import re
+import runpy
 import sys
 from pathlib import Path
 from typing import Any
@@ -40,6 +41,43 @@ SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
             "Awaiting independent reinspection",
             "No evidence",
             "SYN photo 14",
+        ),
+    ),
+    # Declared positive states on a constructed synthetic home. The negative 231 and 231q
+    # selectors above stay the only ones that must refuse readiness wording.
+    "231p": (
+        "quality@example.test",
+        "Technical queue",
+        (
+            "Recorded evidence is complete",
+            "This screen does not approve the stage",
+            "Read-only reader view. It gives no sign-off and changes no record.",
+            "Current design version",
+            "SYN Designer",
+            "SYN-STOCK-A v1",
+            "SYN-STOCK-B v2",
+            "Reconciled (recorded by a named person)",
+            "Signed off on design version 1",
+            "SYN Assessment Person",
+            "SYN Coordination Person",
+            "No returned sign-offs recorded. This does not establish readiness.",
+        ),
+    ),
+    "231qp": (
+        "quality@example.test",
+        "Quality queue",
+        (
+            "Every measure has accepted evidence and no open defect",
+            "This screen does not record the handover",
+            "Read-only reader view. It accepts, returns and hands over nothing.",
+            "Loft insulation: Accepted",
+            "Loft insulation QC-LOFT v1",
+            "SYN Installer",
+            "SYN Inspector",
+            "Evidence noted",
+            "SYN evidence 5",
+            "Handover to be recorded by a person",
+            "No defect recorded.",
         ),
     ),
     "226": (
@@ -94,9 +132,74 @@ SCENARIOS: dict[str, tuple[str, str, tuple[str, ...]]] = {
 
 AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
 STORY_231 = ("231", "231q")
-STORY_ACCESSIBLE = ("231", "231q", "226", "232", "232s")
+STORY_POSITIVE = ("231p", "231qp")
+STORY_ACCESSIBLE = ("231", "231q", "231p", "231qp", "226", "232", "232s")
 STORY_RESIDENT = ("232", "232s")
 DESIGN_SYSTEM = ROOT / "docs/reference/research/ux/design-system.md"
+
+
+def positive_technical_quality_data() -> dict[str, Any]:
+    """Constructed synthetic home whose real server projection has no technical or quality blockers.
+
+    Every name, sign-off and acceptance below is a test input, not a named professional approval,
+    and no runtime gate is cleared: the server still computes the empty blocker lists itself.
+    """
+    data = synthetic_data()
+    c = data["cases"][0]
+    runpy.run_path(str(ROOT / "src/core/tests/dataset.py"))["supplied_resident_fixture"](c)
+    c["measures"] = "Loft insulation"
+    c["hazards"] = []
+    c["technical"] = dict(
+        design_version=1,
+        design_name="SYN Designer",
+        design_at="2026-10-20T09:00:00Z",
+        versions=[dict(note="SYN loft depth recorded")],
+        signoffs={
+            key: dict(
+                status="Signed off", version=1, by=f"SYN {key.capitalize()} Person", history=[]
+            )
+            for key in ("assessment", "design", "building", "coordination")
+        },
+    )
+    c["stock_reconciliation_events"] = [
+        dict(
+            query_id="SQ-1",
+            action="resolve",
+            status="Reconciled",
+            reason="SYN source review",
+            by="SYN Reviewer",
+            at="2026-10-26T09:00:00Z",
+        )
+    ]
+    labels = (
+        "Depth measured and photo taken",
+        "Ventilation at the eaves kept clear",
+        "Hatch insulated and sealed",
+        "Pipes and tanks protected",
+        "Cables and lights checked",
+    )
+    c["quality"] = [
+        dict(
+            measure="Loft insulation",
+            state="Accepted",
+            checklist="Loft insulation",
+            checklist_version="QC-LOFT v1",
+            evidence_version=1,
+            source="Installer",
+            submitted_by="SYN Installer",
+            accepted_by="SYN Inspector",
+            items=[
+                dict(label=label, evidence=f"SYN evidence {n}") for n, label in enumerate(labels, 1)
+            ],
+            history=[],
+            defect=None,
+            handover=None,
+            aftercare=[],
+            supersedes=[],
+            resident_binding=dict(measure="Loft insulation", context_revision=1),
+        )
+    ]
+    return data
 
 
 def check_design_system_use(page: Page, story: str) -> None:
@@ -125,6 +228,60 @@ def check_design_system_use(page: Page, story: str) -> None:
     )
 
 
+def positive_text(page: Page) -> str:
+    evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
+    parts = [evidence.inner_text()]
+    for panel in evidence.locator("section.screen-record").all():
+        panel.scroll_into_view_if_needed()
+        parts.append(panel.inner_text())
+    return "\n".join(parts)
+
+
+def check_positive_state(page: Page, story: str) -> None:
+    """Declared positive states: textual record-not-approval wording and no blocked state."""
+    evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
+    text = positive_text(page)
+    status = evidence.locator('p.ok[role="status"]')
+    check(f"{story} exactly one textual ready-state record", status.count() == 1)
+    stated = status.first.inner_text()
+    boundary = "does not approve the stage" if story == "231p" else "does not record the handover"
+    check(f"{story} record states it is not an approval or handover: {stated}", boundary in stated)
+    check(
+        f"{story} shows no blocked state or unresolved reason",
+        evidence.locator(".blocked-title").count() == 0
+        and "Cannot confirm readiness" not in text
+        and "is unresolved" not in text
+        and "No evidence" not in text,
+    )
+    check(f"{story} retains the selected home", "Selected home ZF-1" in text)
+
+
+def reach_table_regions(page: Page, story: str, width: int) -> None:
+    """Tab reaches every labelled table region at the given viewport width."""
+    page.set_viewport_size({"width": width, "height": 900})
+    evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
+    check(
+        f"{story} {width}px reader view has no write controls",
+        evidence.locator("button, form, input, select, textarea").count() == 0,
+    )
+    expected = evidence.locator('div.table-scroll[role="region"]').evaluate_all(
+        "els => els.map(el => el.getAttribute('aria-label'))"
+    )
+    page.evaluate("() => { document.activeElement.blur(); window.scrollTo(0, 0); }")
+    reached: list[str] = []
+    for _ in range(80):
+        page.keyboard.press("Tab")
+        label = page.evaluate("() => document.activeElement.getAttribute('aria-label') || ''")
+        if label in expected and label not in reached:
+            reached.append(label)
+        if len(reached) == len(expected):
+            break
+    check(
+        f"{story} {width}px keyboard Tab reaches every table region: {reached}",
+        bool(expected) and len(reached) == len(expected),
+    )
+
+
 def check_readonly_accessibility(page: Page, story: str) -> None:
     """Keyboard reachability, text-only state meaning and optional pinned axe scan."""
     evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
@@ -148,6 +305,8 @@ def check_readonly_accessibility(page: Page, story: str) -> None:
             or "No resident contact" in text
             or "nothing is sent" in text.lower(),
         )
+    elif story in STORY_POSITIVE:
+        check_positive_state(page, story)
     else:
         check(
             f"{story} state is stated in text, not colour alone",
@@ -582,10 +741,15 @@ def run_browser(base: str) -> None:
                         "232s queue has no contact links or controls",
                         queue.locator('a[href^="tel:"], a[href^="mailto:"], button').count() == 0,
                     )
+                before = (
+                    page.request.get(base + "/api/cases/ZF-1").json()
+                    if selected in STORY_POSITIVE
+                    else None
+                )
                 page.locator('a.item[href*="case=ZF-1"]').click()
                 evidence = page.get_by_role("region", name="Evidence for ZF-1", exact=True)
                 evidence.wait_for()
-                if selected in ("226", "231", "231q", "232", "232s"):
+                if selected in ("226", "231", "231q", "231p", "231qp", "232", "232s"):
                     parts = [evidence.inner_text()]
                     for panel in evidence.locator("section.screen-record").all():
                         panel.scroll_into_view_if_needed()
@@ -598,6 +762,15 @@ def run_browser(base: str) -> None:
                 check("same home remains ZF-1", "Selected home ZF-1" in text)
                 if selected in STORY_ACCESSIBLE:
                     check_readonly_accessibility(page, selected)
+                if selected in STORY_POSITIVE:
+                    reach_table_regions(page, selected, 320)
+                    page.set_viewport_size({"width": 1280, "height": 900})
+                    after = page.request.get(base + "/api/cases/ZF-1").json()
+                    check(
+                        f"{selected} reading the screen leaves the case record unchanged",
+                        before == after,
+                    )
+                    check(f"{selected} made no POSTs: {writes}", not writes)
                 check(
                     "no contact actions",
                     evidence.locator('a[href^="tel:"], a[href^="mailto:"]').count() == 0,
@@ -747,7 +920,9 @@ if __name__ == "__main__":
     story = sys.argv[1] if len(sys.argv) > 1 else None
     main(
         run_browser,
-        technical_quality_data
+        positive_technical_quality_data
+        if story in STORY_POSITIVE
+        else technical_quality_data
         if story in STORY_231
         else programme_data
         if story == "230"

@@ -38,3 +38,8 @@ files = ["src", "tests"]
 module = ["zava_forward.core.*"]
 ignore_missing_imports = true
 follow_imports = "skip"
+
+# Optional SQL driver (the sql extra); importer CI installs core without it.
+[[tool.mypy.overrides]]
+module = ["mssql_python"]
+ignore_missing_imports = true

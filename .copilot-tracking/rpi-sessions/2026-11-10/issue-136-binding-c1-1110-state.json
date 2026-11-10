@@ -1,0 +1,61 @@
+{
+  "task_id": "issue-136-binding-c1-1110",
+  "task_slug": "issue-136-binding-c1-1110",
+  "parent_task": {
+    "task_id": "issue-136-simulation-binding-1110",
+    "task_slug": "issue-136-simulation-binding-1110"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-issue-136-binding-c1-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-issue-136-binding-c1-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-issue-136-binding-c1-1110-details.md",
+    "critique": ".copilot-tracking/challenges/2026-11-10-issue-136-binding-c1-1110-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-issue-136-binding-c1-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-issue-136-binding-c1-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "One bounded C1; no push, PR, deployment or model call",
+      "status": "confirmed",
+      "evidence": "coordinator brief"
+    },
+    {
+      "decision": "Critique executed once, author-inline, verdict proceed",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/challenges/2026-11-10-issue-136-binding-c1-1110-critique.md"
+    },
+    {
+      "decision": "Review executed once, author-inline; outcome conformant for F1 and F2 with residuals",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-issue-136-binding-c1-1110-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Commit-complete, verify, hand off to Root independent review"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Fix introduced ruff and mypy findings in infra/tests/test_bicep_policy.py",
+      "rationale": "workflow-pinned lint fails on lines from the original candidate",
+      "evidence": "proof/ruff-check-policy.out, lint-baseline-classification.txt"
+    },
+    {
+      "rank": 2,
+      "task": "Prove startup on a genuinely older image",
+      "rationale": "harness simulates the missing module",
+      "evidence": "review artifact residuals"
+    }
+  ]
+}

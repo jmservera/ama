@@ -246,6 +246,43 @@ class FinanceGrantsScreens(unittest.TestCase):
                 self.assertNotIn("Form schema catalogue", json.dumps(funding))
                 self.assertNotIn("form-schemas.csv", json.dumps(funding))
 
+    def test_held_download_link_only_for_an_enabled_readable_available_draft(self) -> None:
+        href = "/api/cases/C-1/form-review/FD-1/held-export"
+        enabled: dict[str, Any] = {**REVIEW, "held_download_enabled": True}
+        funding = run(review=enabled)["finance-funding"]["tree"]
+        held = [a for a in anchors(funding) if a["attrs"].get("href") == href]
+        self.assertEqual(len(held), 1)
+        self.assertEqual(
+            held[0]["attrs"],
+            {"class": "btn alt", "href": href, "download": "held-form-draft-export.json"},
+        )
+        self.assertEqual(node_text(held[0]), "Download Held draft (unreviewed)")
+        text = node_text(funding)
+        self.assertIn("Not submitted; eligibility Not assessed.", text)
+        self.assertIn("may be newer than input version", text)
+        for control in CONTROLS:
+            self.assertNotIn(control, tags(funding))
+        offs = (
+            REVIEW,
+            {**REVIEW, "held_download_enabled": False},
+            {**REVIEW, "held_download_enabled": "true"},
+        )
+        for off in offs:
+            with self.subTest(review=off):
+                tree = json.dumps(run(review=off)["finance-funding"]["tree"])
+                self.assertNotIn("held-export", tree)
+        unavailable = {
+            **enabled,
+            "drafts": [
+                {"draft_id": "FD-1", "status": "Unavailable", "notice": "Recover the source."}
+            ],
+        }
+        tree = json.dumps(run(review=unavailable)["finance-funding"]["tree"])
+        self.assertNotIn("held-export", tree)
+        unreadable = {**enabled, "drafts": None}
+        tree = json.dumps(run(review=unreadable)["finance-funding"]["tree"])
+        self.assertNotIn("held-export", tree)
+
     def test_invoice_lines_compare_scope_quantity_budget_milestone(self) -> None:
         text = json.dumps(run()["finance-invoices"]["tree"])
         for expected in (

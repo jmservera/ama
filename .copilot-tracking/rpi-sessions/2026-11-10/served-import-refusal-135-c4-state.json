@@ -1,0 +1,88 @@
+{
+  "task_id": "issue-135-served-c4-1110",
+  "task_slug": "served-import-refusal-135-c4",
+  "parent_task": {
+    "task_id": "issue-135-served-c3-1110",
+    "task_slug": "served-import-refusal-135-c3"
+  },
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "running",
+  "opened_utc": "2026-11-10T04:04:22Z",
+  "frozen_head_at_open": "67ad4680b82ebdb7c7c650842853992670c540fe",
+  "source_edits_started": true,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10/served-import-refusal-135-c4-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10/served-import-refusal-135-c4-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10/served-import-refusal-135-c4-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-10/served-import-refusal-135-c4-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10/served-import-refusal-135-c4-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c4-review.md",
+    "independent_review_record": ".copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c4-independent-review-record.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Budget C4/5, one correction remains afterwards",
+      "status": "confirmed",
+      "evidence": "coordinator task"
+    },
+    {
+      "decision": "C3 adverse preserved: implementation was written before research/plan; retrospective artifacts do not cure it (publication blocker)",
+      "status": "confirmed",
+      "evidence": "coordinator task; C3 changes and research artifacts"
+    },
+    {
+      "decision": "Research disposition executed; plan, details, one self-critique complete before any source edit; changes record opened before first source edit",
+      "status": "recorded",
+      "evidence": "artifact paths"
+    },
+    {
+      "decision": "Critique executed once, self-critique, verdict proceed",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-10/served-import-refusal-135-c4-plan-critique.md"
+    },
+    {
+      "decision": "Review executed once (self-review, not independent), outcome conformant for scoped items with open adverse items",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c4-review.md"
+    },
+    {
+      "decision": "Budget C4/5 spent; one correction (C5) remains",
+      "status": "confirmed",
+      "evidence": "coordinator task"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "c3-order",
+      "summary": "C3 process order adverse, publication blocker",
+      "resolution": "cannot be cured by C4"
+    },
+    {
+      "id": "independent-review",
+      "summary": "Independent review APPROVE 0 findings recorded; C3 order adverse preserved, not cured",
+      "resolution": "coordinator"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator final metadata assessment and hosted checks; no push or PR from this session"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator exact-head independent review",
+      "rationale": "required before any publication",
+      "evidence": "review artifact"
+    },
+    {
+      "rank": 2,
+      "task": "Wider SQL-gated suites on disposable MSSQL",
+      "rationale": "only projection tests ran on MSSQL",
+      "evidence": "review open items"
+    }
+  ],
+  "plan_critique_done_utc": "2026-11-10T04:06:31Z",
+  "source_edits_started_note": "first source edit about 04:07Z, after plan, critique and changes record; flag not flipped at that time"
+}

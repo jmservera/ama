@@ -51,6 +51,8 @@ var blobEndpoint = 'https://${storageAccountName}.blob.${environment().suffixes.
 param allowPublicNetworkAccess bool = false
 @description('Use a separate external demo environment; backing-service network access is controlled independently in main.')
 param demoDirectIngress bool = false
+@description('Demo-only default-off public simulation lane startup binding (volatile, replica-local, one replica). Guarded in main.')
+param enablePublicSimulationLane bool = false
 @description('True when Front Door fronts the app; EasyAuth then builds callback URLs from the forwarded edge host.')
 param behindPublicEdge bool = false
 @description('Map tile URL template (https). Empty means no map background in production.')
@@ -110,6 +112,23 @@ module dns 'envDns.bicep' = if (!externalEnvironment) {
 }
 
 var authEnabled = !empty(entraClientId)
+var publicSimulationStore = '/state/public-simulation/store.sqlite'
+var publicSimulationKey = '/state/public-simulation/hmac.key'
+// Fixed trusted startup recipe: initialise only an empty pair, validate, then run the ordinary API module. Faults, including a missing module in an older image, leave the files untouched and the API starts with the lane unavailable.
+var publicSimulationRecipe = '''
+import os, sys
+store = "/state/public-simulation/store.sqlite"
+key = "/state/public-simulation/hmac.key"
+try:
+    from zava_forward.core import simulation_lane as lane
+    if not os.path.lexists(store) and not os.path.lexists(key):
+        os.makedirs(os.path.dirname(store), mode=0o700, exist_ok=True)
+        lane.provision(store, key)
+    lane.Lane.open({"ZF_SIM_STORE": store, "ZF_SIM_KEY_FILE": key}).close()
+except Exception as error:
+    print("public simulation lane unavailable: " + str(getattr(error, "code", type(error).__name__)), file=sys.stderr)
+os.execv(sys.executable, [sys.executable, "-m", "zava_forward.api"])
+'''
 var chatDemoActive = demoDirectIngress && chatDemoActivation == 'approved-2026-11-03'
 var chatEnabled = !empty(trim(chatDpiaRef)) && !empty(trim(chatLawfulBasisRef)) && !empty(trim(chatNoticeRef)) && !empty(trim(chatRetentionRef)) && chatRetentionDays > 0
 
@@ -150,6 +169,7 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
         {
           name: 'api'
           image: apiImage
+          command: enablePublicSimulationLane ? ['python', '-c', publicSimulationRecipe] : null
           resources: { cpu: json('0.5'), memory: '1Gi' }
           env: concat(commonEnv, [
             { name: 'AZURE_CLIENT_ID', value: identityClientIds.api }
@@ -202,6 +222,9 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
             { name: 'ZF_DEPLOYMENT_PROFILE', value: 'demo' }
           ], empty(entraRoleMap) ? [] : [
             { name: 'ZF_ROLE_MAP', value: string(entraRoleMap) }
+          ], !enablePublicSimulationLane ? [] : [
+            { name: 'ZF_SIM_STORE', value: publicSimulationStore }
+            { name: 'ZF_SIM_KEY_FILE', value: publicSimulationKey }
           ])
           // Startup holds traffic until the app listens, so the Easy Auth sidecar never forwards to a closed port (#691).
           probes: [
@@ -213,7 +236,7 @@ resource api 'Microsoft.App/containerApps@2025-07-01' = if (deployWorkloads) {
       ]
       scale: {
         minReplicas: apiMinReplicas
-        maxReplicas: 4
+        maxReplicas: enablePublicSimulationLane ? 1 : 4
         rules: [
           { name: 'http', http: { metadata: { concurrentRequests: '50' } } }
         ]
