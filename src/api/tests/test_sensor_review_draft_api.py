@@ -60,7 +60,9 @@ class DraftApi(unittest.TestCase):
         path.write_text(json.dumps(data))
         self.store = SqlStore(str(path), str(path.with_suffix(".sqlite")))
         self.addCleanup(self.store.db.close)
-        self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(self.store, PASSWORD)))
+        # The legacy App constructor is deliberately untyped; this exemption covers only this call.
+        app = App(self.store, PASSWORD)  # type: ignore[no-untyped-call]
+        self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
         threading.Thread(target=self.httpd.serve_forever, daemon=True).start()
         self.addCleanup(self.httpd.server_close)
         self.addCleanup(self.httpd.shutdown)
