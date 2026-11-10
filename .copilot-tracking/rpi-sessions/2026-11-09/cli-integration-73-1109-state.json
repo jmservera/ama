@@ -1,0 +1,68 @@
+{
+  "task_id": "issue-73-cli-integration-1109",
+  "task_slug": "cli-integration-73-1109",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09/cli-integration-73-1109-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09/cli-integration-73-1109-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09/cli-integration-73-1109-phase-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-09/cli-integration-73-1109-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09/cli-integration-73-1109-changes.md",
+    "review": ".copilot-tracking/reviews/logs/2026-11-09/cli-integration-73-1109-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Parent #73 integration cycle 1 of 5 (0/5 before); child #135 C2 of 5 stays separate and unreset",
+      "status": "confirmed",
+      "evidence": "coordinator brief"
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-09/cli-integration-73-1109-research.md"
+    },
+    {
+      "decision": "Critique executed once (Complete), verdict Revise, all 8 findings applied directly; no user decision",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/plans/2026-11-09/cli-integration-73-1109-plan-critique.md"
+    },
+    {
+      "decision": "Dependencies #80/#84/#122 retained, not waived; component-only scope",
+      "status": "confirmed",
+      "evidence": "coordinator brief and research"
+    },
+    {
+      "decision": "Implement: ordinary merge f83040d5d6d3a490db663766949840cb75ec4042 (tree 97ce8c10653e51413c58a35843c5aed10b6edb7f); 71 importer tests, mypy, Ruff, 11 CLI scenarios green",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-09/cli-integration-73-1109-changes.md"
+    },
+    {
+      "decision": "Review executed once, outcome Conformant, 0 defects, 2 Low and 1 Info residual",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/logs/2026-11-09/cli-integration-73-1109-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Independent exact-head review, then hosted CI and owner merge gate before publication"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Independent exact-head review of the frozen head",
+      "rationale": "required before publication",
+      "evidence": "RV-001"
+    },
+    {
+      "rank": 2,
+      "task": "Served queue hook under #132 shared integration",
+      "rationale": "register remains NOT_CONNECTED",
+      "evidence": "RV-003"
+    }
+  ]
+}
