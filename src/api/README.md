@@ -658,6 +658,16 @@ empty results have page 1 of 1. Hash URL queries retain filters/page through
 reload and browser history, and applying filters resets pagination.
 The legacy case/CSV endpoints are unchanged.
 
+`GET /api/closed-cases.csv` accepts the same parameters, authorization and
+validation as `GET /api/closed-cases` and exports only the current page of that
+read as an attachment (`closed-cases-page.csv`) with a fixed set of summary
+columns (id, resident, address, town, postcode, hazard, status, team,
+closed_on). The header row is kept when there are no rows; a blank `closed_on`
+means the closure date is unknown. Cells use the shared formula-safe escaping.
+The page offers it as "Download this page for Excel" after a successful load.
+It is a read-only copy of constructed demonstration data; a fresh read may
+differ from the rows displayed, and Closed does not mean completed or approved.
+
 Invalid date ranges show inline errors linked to both date fields and focus the
 start date so the range can be corrected. Service read failures retain a separate
 page alert and retry action without marking valid dates as invalid.
