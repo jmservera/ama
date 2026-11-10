@@ -208,6 +208,15 @@ Remaining uncertainty:
   that needs a design change is an owner question and would need a separately
   authorized correction.
 
+Process qualification (2026-11-10): the local phase witness for the original
+record above logged six `ok` boundaries, but its last event, `commit-complete`,
+was refused because the caller passed the non-hex string `HEAD` as the commit
+claim. That refusal, the original evidence and commit
+`5c8a856c2dbee53d1aa8f7030524afa9569e7451` are kept unchanged. A separately
+recorded one-time operational retry does not repair or extend that chain, and
+neither record is host or model attestation. The incident findings and limits
+above are unchanged.
+
 ## Files
 
 | Path                                                 | Purpose                                                     |
