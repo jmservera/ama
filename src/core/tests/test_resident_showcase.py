@@ -1,9 +1,12 @@
 import base64
+import hmac
 import sys
 import threading
 import unittest
 from datetime import UTC, datetime, timedelta
+from types import SimpleNamespace
 from typing import Any
+from unittest import mock
 
 from zava_forward.core import resident_preview as preview
 from zava_forward.core import resident_showcase as rs
@@ -226,11 +229,47 @@ class SessionTests(unittest.TestCase):
         self.key = b"k" * 32
         self.codec = rs.SessionCodec(self.key, rs.AUTHORITY_END, self.clock)
 
+    # Frozen offline: with FAKE key b"k" * 32, the NOW clock and this nonce, the genuine MAC of the
+    # token for case C-1 with this sid contains "C-1". No search or retry happens at run time.
+    NONCE = b"synthetic-nonce!"
+    COLLIDING_SID = "0000000000000024"
+
+    @staticmethod
+    def _issue_with_sid(codec: rs.SessionCodec, case_id: str, sid: str) -> tuple[str, int]:
+        with mock.patch.object(rs, "secrets", SimpleNamespace(token_hex=lambda _n: sid)):
+            return codec.issue(case_id)
+
     def test_round_trip_and_handle_is_opaque(self) -> None:
         token, expiry = self.codec.issue("C-1")
-        self.assertNotIn("C-1", token)
-        self.assertEqual((self.codec.verify(token) or ("", ""))[0], self.codec.handle("C-1"))
+        version, handle, expiry_part, sid, _mac = token.split(".")
+        self.assertEqual(version, "v1")
+        self.assertRegex(handle, r"^[0-9a-f]{24}$")
+        self.assertEqual(handle, self.codec.handle("C-1"))
+        # The signature uses an independent alphabet, so only the structural parts are checked.
+        self.assertNotIn("C-1", ".".join((version, handle, expiry_part, sid)))
+        self.assertNotEqual(handle, self.codec.handle("C-2"))
+        other_key = rs.SessionCodec(b"z" * 32, rs.AUTHORITY_END, self.clock)
+        self.assertNotEqual(handle, other_key.handle("C-1"))
+        self.assertEqual(self.codec.verify(token), (handle, sid))
         self.assertEqual(expiry, int(NOW.timestamp()) + rs.SESSION_SECONDS)
+        self.assertEqual(int(expiry_part), expiry)
+
+    def test_valid_signature_may_contain_case_id_substring(self) -> None:
+        codec = rs.SessionCodec(self.key, rs.AUTHORITY_END, self.clock, nonce=self.NONCE)
+        token, expiry = self._issue_with_sid(codec, "C-1", self.COLLIDING_SID)
+        version, handle, expiry_part, sid, mac = token.split(".")
+        # Booleans keep the token out of any failure message.
+        self.assertTrue("C-1" in mac)
+        self.assertFalse("C-1" in ".".join((version, handle, expiry_part, sid)))
+        body = f"{handle}.{expiry_part}.{sid}"
+        message = b"session|" + self.NONCE + b"|" + body.encode()
+        expected = hmac.new(self.key, message, "sha256").digest()
+        self.assertTrue(mac == base64.urlsafe_b64encode(expected).rstrip(b"=").decode())
+        self.assertEqual(sid, self.COLLIDING_SID)
+        self.assertEqual(codec.verify(token), (codec.handle("C-1"), self.COLLIDING_SID))
+        self.assertEqual(expiry, int(NOW.timestamp()) + rs.SESSION_SECONDS)
+        swap = "A" if mac[-1] != "A" else "B"
+        self.assertIsNone(codec.verify(token[:-1] + swap))
 
     def test_tamper_expiry_and_garbage_denied(self) -> None:
         token, _ = self.codec.issue("C-1")
