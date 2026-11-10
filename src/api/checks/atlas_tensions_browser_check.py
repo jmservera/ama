@@ -1,4 +1,4 @@
-"""Rendered check of the atlas tension sequence on three installed specialist screens (#233).
+"""Rendered check of the atlas tension sequence on five installed specialist screens (#233).
 
 Signs in through the real /app as a synthetic Retrofit Programme Manager and opens
 Programme queue, Resident choice and Package queue for the same synthetic home. It
@@ -6,7 +6,10 @@ checks what Chromium actually shows, not the source text: the "Not shown for thi
 role" panel next to permitted same-home context, the resident choice and withdrawal
 panels before "Choice comes before offered capacity", the explanation before the
 capacity table, and package rows in reference order although the browser receives them
-in another order and utilisation and headroom point elsewhere.
+in another order and utilisation and headroom point elsewhere. It then opens Technical
+queue and Quality queue for the same home and checks the returned, unknown and open
+evidence, the "Not shown for this role" panel and that no blocked state is shown as
+ready.
 
 Run from src/api with the src packages and Playwright/Chromium installed:
 python -m checks.atlas_tensions_browser_check
@@ -29,7 +32,7 @@ from typing import Any
 from playwright.sync_api import Page, Route, sync_playwright
 
 from checks.design_system_browser_check import ROOT, check, main
-from checks.role_screens_fixtures import synthetic_data
+from checks.role_screens_fixtures import synthetic_data, technical_quality_data
 
 SAFE_METHODS = ("GET", "HEAD", "OPTIONS")
 MANAGER = "pam@example.test"
@@ -37,6 +40,8 @@ HOME = "ZF-1"
 PROGRAMME = "Programme queue and connected home view"
 RESIDENT = "Resident choice and update queue"
 PACKAGES = "Package queue"
+TECHNICAL = "Technical queue"
+QUALITY = "Quality queue"
 WITHHELD = "Not shown for this role"
 PRECEDENCE = "Choice comes before offered capacity"
 CAPACITY_PANEL = "Package queue"
@@ -63,15 +68,36 @@ WITHHELD_ITEMS = {
         "Contract rates, prices and invoice values",
         "Contractor submissions and acknowledgements, which are recorded outside this screen",
     ),
+    TECHNICAL: (
+        "Resident choices, consent wording and contact history "
+        "(see resident-choice for the measure-specific choice)",
+        "Household and vulnerability details beyond what a design check needs",
+        "Funding amounts and claim values",
+    ),
+    QUALITY: (
+        "Resident contact details and access history "
+        "(use the safe route reference in the case workspace)",
+        "Household and vulnerability details beyond what an inspection needs",
+        "Funding amounts and claim values",
+    ),
 }
+TECHNICAL_READY = "Recorded evidence is complete"
+QUALITY_READY = "Every measure has accepted evidence and no open defect"
 
 
 def tension_data() -> dict[str, Any]:
     """The shared synthetic home plus three packages.
 
-    Headroom and use conflict with reference order.
+    Headroom and use conflict with reference order. The same home also carries the
+    returned technical and open quality evidence the existing fixture port supplies.
     """
     data = synthetic_data()
+    evidence = technical_quality_data()["cases"][0]
+    # The resident choice and scope are bound to design version 1, so the overlay keeps that version.
+    evidence["technical"]["design_version"] = 1
+    evidence["technical"]["signoffs"]["assessment"]["version"] = 1
+    data["cases"][0]["technical"] = evidence["technical"]
+    data["cases"][0]["quality"] = evidence["quality"]
     dataset = runpy.run_path(str(ROOT / "src/core/tests/dataset.py"))
     # Another contractor's home with no safety stop lets one real work order raise utilisation.
     dataset["supplied_resident_fixture"](data["cases"][2])
@@ -366,6 +392,104 @@ def check_packages(
     check_readonly(page, evidence, detail, where)
 
 
+def check_technical(
+    page: Page, evidence: Any, detail: dict[str, Any], where: str, prefix: str | None
+) -> None:
+    titles, texts, tops = panels(evidence, prefix)
+    check(f"{where}: selected home is {HOME}", f"Selected home {HOME}" in evidence.inner_text())
+    context = ["Technical readiness", "Design version", "Separate sign-offs"]
+    context += ["Returns and routing", "Missing references"]
+    check(f"{where}: same-home technical panels shown", all(t in titles for t in context))
+    for title in context:
+        precedes(titles, tops, title, WITHHELD, where)
+    check_withheld(texts, TECHNICAL, where)
+    technical = detail["technical"]
+    design = texts["Design version"]
+    for text in (
+        str(technical["design_version"]),
+        technical["design_name"],
+        technical["versions"][-1]["note"],
+    ):
+        check(f"{where}: design panel shows fixture value '{text}'", text in design)
+    signoffs = texts["Separate sign-offs"]
+    version = technical["signoffs"]["assessment"]["version"]
+    for text in (
+        f"Signed off on design version {version}",
+        "Returned",
+        "Needs reassessment",
+        "Not given",
+        technical["signoffs"]["design"]["reason"],
+    ):
+        check(f"{where}: sign-off panel shows '{text}'", text in signoffs)
+    check(
+        f"{where}: returns panel routes to the competent reviewer",
+        "Retrofit Coordinator (competent reviewer for this sign-off"
+        in texts["Returns and routing"],
+    )
+    check(
+        f"{where}: unresolved source conflict stays visible",
+        "Stock conflict SQ-1 (epc) is unresolved" in texts["Missing references"],
+    )
+    check(
+        f"{where}: blocked evidence is not shown as readiness",
+        TECHNICAL_READY not in texts["Technical readiness"],
+    )
+    funding = f"{detail['finance']['budget']['amount']}"
+    check(
+        f"{where}: withheld funding amount is not displayed", funding not in evidence.inner_text()
+    )
+    check_readonly(page, evidence, detail, where)
+
+
+def check_quality(
+    page: Page, evidence: Any, detail: dict[str, Any], where: str, prefix: str | None
+) -> None:
+    titles, texts, tops = panels(evidence, prefix)
+    check(f"{where}: selected home is {HOME}", f"Selected home {HOME}" in evidence.inner_text())
+    records = detail["quality"]
+    names = [f"{r['measure']}: {r['state']}" for r in records]
+    check(
+        f"{where}: one panel per quality record: {names}",
+        len(names) == 2 and all(name in titles for name in names),
+    )
+    check(f"{where}: handover readiness panel shown", "Handover readiness" in titles)
+    precedes(titles, tops, "Handover readiness", WITHHELD, where)
+    check_withheld(texts, QUALITY, where)
+    check(
+        f"{where}: open defects are not shown as handover readiness",
+        QUALITY_READY not in texts["Handover readiness"]
+        and "Returned" in texts["Handover readiness"],
+    )
+    for record, name in zip(records, names, strict=True):
+        precedes(titles, tops, name, WITHHELD, where)
+        panel = texts[name]
+        defect = record["defect"]
+        for text in (
+            record["source"],
+            record["submitted_by"],
+            defect["description"],
+            defect["reason"],
+            defect["owner"],
+            "Nobody yet",
+        ):
+            check(f"{where}: '{name}' shows '{text}'", text in panel)
+    loft, cavity = (texts[name] for name in names)
+    check(f"{where}: unfixed defect says so", "Not yet fixed" in loft and "Not supplied" in loft)
+    check(
+        f"{where}: fixed defect awaits independent reinspection",
+        "Awaiting independent reinspection" in cavity and "SYN photo 14" in cavity,
+    )
+    check(
+        f"{where}: a check without evidence stays 'No evidence'",
+        "No evidence" in loft and "No evidence" in cavity,
+    )
+    funding = f"{detail['finance']['budget']['amount']}"
+    check(
+        f"{where}: withheld funding amount is not displayed", funding not in evidence.inner_text()
+    )
+    check_readonly(page, evidence, detail, where)
+
+
 def rank_by(rows: list[list[str]], column: int, descending: bool) -> list[str]:
     return [r[0][:7] for r in sorted(rows, key=lambda r: int(r[column]), reverse=descending)]
 
@@ -505,6 +629,31 @@ def run_browser(base: str) -> None:
                         path=str(Path(shots) / f"procurement-packages-{width}.png"), full_page=True
                     )
 
+            for title, screen_id, run_screen in (
+                (TECHNICAL, "technical-queue", check_technical),
+                (QUALITY, "quality-queue", check_quality),
+            ):
+                evidence = open_screen(page, title)
+                evidence.wait_for()
+                check(
+                    f"screen menu keeps {HOME} selected on {screen_id}", f"case={HOME}" in page.url
+                )
+                for width in VIEWPORTS:
+                    page.set_viewport_size({"width": width, "height": 900})
+                    where = f"{screen_id} {width}px"
+                    prefix = f"{shots}/{screen_id}-{width}" if shots else None
+                    run_screen(page, evidence, detail, where, prefix)
+                    check_regions_and_keys(page, evidence, where)
+                    check(
+                        f"{where}: no horizontal scroll",
+                        page.evaluate("() => document.documentElement.scrollWidth <= innerWidth"),
+                    )
+                    if shots:
+                        page.screenshot(
+                            path=str(Path(shots) / f"{screen_id}-{width}.png"), full_page=True
+                        )
+                page.set_viewport_size({"width": 1280, "height": 900})
+
             page.unroute("**/api/packages", reorder)
             check(
                 "case and package state are unchanged by the walk",
@@ -518,7 +667,8 @@ def run_browser(base: str) -> None:
                 f"one shared synthetic home {HOME}"
             )
             print(
-                "COMPLETE: rendered tension sequence on three screens at 1280px and 320px; "
+                "COMPLETE: rendered tension sequence on three screens and the technical and "
+                "quality withheld panels at 1280px and 320px; "
                 "not the eight-stage walk, WCAG, assistive-technology or user acceptance"
             )
         finally:

@@ -158,6 +158,7 @@ def evaluate(expression, parameters: dict, variables: dict, context: dict | None
         "null": lambda: None,
         "format": lambda pattern, *args: pattern.format(*args),
         "replace": lambda value, old, new: value.replace(old, new),
+        "contains": lambda value, item: item in value,
         "createArray": lambda *values: list(values),
         "concat": lambda *values: reduce(lambda left, right: left + right, values),
         "mul": lambda left, right: left * right,
@@ -197,6 +198,37 @@ def unguarded_resources(template: dict, guard_name: str) -> set[str]:
         for identifier, item in by_id.items()
         if identifier != guard_id and not waits(identifier, frozenset())
     }
+
+
+def render_api_container(main: dict, **overrides) -> dict:
+    """Evaluate the compiled API container app of the containerapps module."""
+
+    class Attr(dict):
+        def __getattr__(self, name):
+            return self.get(name, "fixture")
+
+    apps = module_template(main, "containerapps")
+    api = next(
+        r
+        for r in resources(apps)
+        if r["type"] == "Microsoft.App/containerApps"
+        and r["properties"]["template"]["containers"][0]["name"] == "api"
+    )
+    fill = {"string": "fixture", "int": 1, "bool": False, "array": []}
+    values = {
+        name: spec.get("defaultValue", fill.get(spec["type"], Attr()))
+        for name, spec in apps["parameters"].items()
+    }
+    values.update(apiImage="registry.example/api:fixture", **overrides)
+    values = {k: Attr(v) if isinstance(v, dict) else v for k, v in values.items()}
+    suffixes = Attr(storage="core.windows.net")
+    context = {
+        "tenant": lambda: Attr(tenantId="tenant"),
+        "environment": lambda: Attr(suffixes=suffixes),
+        "json": float,
+        "string": str,
+    }
+    return evaluate(api["properties"]["template"], values, apps["variables"], context)
 
 
 @unittest.skipUnless(
@@ -730,7 +762,10 @@ class BicepPolicyTests(unittest.TestCase):
         api = next(r for r in resources(apps) if r["type"] == "Microsoft.App/containerApps")
         template = api["properties"]["template"]
         self.assertEqual(template["scale"]["minReplicas"], "[parameters('apiMinReplicas')]")
-        self.assertEqual(template["scale"]["maxReplicas"], 4)
+        self.assertEqual(
+            template["scale"]["maxReplicas"], "[if(parameters('enablePublicSimulationLane'), 1, 4)]"
+        )
+        self.assertEqual(self.render_api_container()["scale"]["maxReplicas"], 4)
         self.assertEqual(
             template["scale"]["rules"],
             [{"name": "http", "http": {"metadata": {"concurrentRequests": "50"}}}],
@@ -2145,6 +2180,136 @@ class BicepPolicyTests(unittest.TestCase):
 
     def test_unsupported_parameter_combinations_are_rejected_with_a_named_check(self) -> None:
         self.assert_parameter_controls(self.main)
+
+    def render_api_container(self, **overrides) -> dict:
+        return render_api_container(self.main, **overrides)
+
+    def test_public_simulation_lane_binding_is_default_off_guarded_and_keeps_accounting(
+        self,
+    ) -> None:
+        apps = module_template(self.main, "containerapps")
+        for template in (self.main, apps):
+            self.assertIs(
+                template["parameters"]["enablePublicSimulationLane"]["defaultValue"], False
+            )
+        self.assertEqual(
+            module(self.main, "containerapps")["properties"]["parameters"][
+                "enablePublicSimulationLane"
+            ],
+            {"value": "[parameters('enablePublicSimulationLane')]"},
+        )
+        sim_guards = {n for n in self.guard["parameters"] if n.startswith("publicSimulation")}
+        self.assertEqual(len(sim_guards), 5)
+
+        passed = module(self.main, "parameter-guard")["properties"]["parameters"]
+        defaults = {
+            k: v["defaultValue"] for k, v in self.main["parameters"].items() if "defaultValue" in v
+        }
+
+        def failures(**overrides) -> set[str]:
+            values = {
+                **defaults,
+                "location": "uksouth",
+                "sqlLocation": "offline-sql-region",
+                "regionCheckReference": "synthetic-region-check",
+                "quotaCheckReference": "synthetic-quota-check",
+                **overrides,
+            }
+            return {
+                name
+                for name, arg in passed.items()
+                if not evaluate(arg, values, self.main["variables"])["value"]
+            }
+
+        valid = {
+            "enablePublicSimulationLane": True,
+            "demoDirectIngress": True,
+            "deploymentProfile": "development",
+            "entraClientId": "synthetic-client",
+            "apiImage": "registry.example/api:fixture",
+        }
+        self.assertEqual(failures(), set())
+        self.assertEqual(failures(**valid), set())
+        self.assertEqual(failures(**valid, apiMinReplicas=1), set())
+        self.assertEqual(failures(**valid, enableApiAi=True), set())
+        refusals: dict[str, tuple[dict[str, object], str]] = {
+            "production": (
+                {"deploymentProfile": "production"},
+                "publicSimulationRequiresDirectDemo",
+            ),
+            "non-demo": ({"demoDirectIngress": False}, "publicSimulationRequiresDirectDemo"),
+            "unauthenticated": (
+                {"entraClientId": ""},
+                "publicSimulationRequiresBrowserAuthentication",
+            ),
+            "bearer-only": (
+                {"entraBearerOnly": True},
+                "publicSimulationRequiresBrowserAuthentication",
+            ),
+            "no applications": (
+                {"deployApplications": False},
+                "publicSimulationRequiresApplications",
+            ),
+            "placeholder image": (
+                {"apiImage": defaults["apiImage"]},
+                "publicSimulationRequiresRealApiImage",
+            ),
+            "two replicas": ({"apiMinReplicas": 2}, "publicSimulationRequiresSingleReplica"),
+            "four replicas": ({"apiMinReplicas": 4}, "publicSimulationRequiresSingleReplica"),
+        }
+        for label, (override, expected) in refusals.items():
+            with self.subTest(label):
+                self.assertIn(expected, failures(**{**valid, **override}))
+                self.assertNotIn(
+                    expected, failures(**{**valid, **override, "enablePublicSimulationLane": False})
+                )
+
+        off = self.render_api_container(enableApiAi=True)
+        on = self.render_api_container(enablePublicSimulationLane=True, enableApiAi=True)
+        off_container, on_container = off["containers"][0], on["containers"][0]
+        self.assertIsNone(off_container["command"])
+        self.assertEqual(off["scale"]["maxReplicas"], 4)
+        self.assertFalse([e for e in off_container["env"] if e["name"].startswith("ZF_SIM_")])
+        self.assertEqual(
+            {k: v for k, v in on_container.items() if k not in ("command", "env")},
+            {k: v for k, v in off_container.items() if k not in ("command", "env")},
+        )
+        self.assertEqual(
+            {k: v for k, v in on["scale"].items() if k != "maxReplicas"},
+            {k: v for k, v in off["scale"].items() if k != "maxReplicas"},
+        )
+        self.assertEqual(on["scale"]["maxReplicas"], 1)
+        added = [e for e in on_container["env"] if e not in off_container["env"]]
+        self.assertEqual(
+            added,
+            [
+                {"name": "ZF_SIM_STORE", "value": "/state/public-simulation/store.sqlite"},
+                {"name": "ZF_SIM_KEY_FILE", "value": "/state/public-simulation/hmac.key"},
+            ],
+        )
+        self.assertEqual(len(on_container["env"]), len(off_container["env"]) + 2)
+        env = {e["name"]: e.get("value") for e in on_container["env"]}
+        self.assertEqual(env["ZF_STORE"], "mssql")
+        self.assertIn("AI_ENDPOINT", env)
+        self.assertFalse(env["ZF_SIM_STORE"].startswith("/state/mssql"))
+        command = on_container["command"]
+        self.assertEqual(command[:2], ["python", "-c"])
+        self.assertEqual(len(command), 3)
+        recipe = command[2]
+        for literal in (env["ZF_SIM_STORE"], env["ZF_SIM_KEY_FILE"]):
+            self.assertIn(f'"{literal}"', recipe)
+        self.assertIn("os.path.lexists(store) and not os.path.lexists(key)", recipe)
+        for forbidden in (
+            "os.environ",
+            "getenv",
+            "urandom",
+            "token_bytes",
+            "secrets",
+            "observe",
+            "request",
+        ):
+            self.assertNotIn(forbidden, recipe)
+        self.assertNotIn("listKeys", json.dumps(self.main))
 
     def assert_parameter_controls(self, template: dict) -> None:
         guard_parameters = self.guard["parameters"]

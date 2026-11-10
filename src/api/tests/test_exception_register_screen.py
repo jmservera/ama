@@ -183,6 +183,8 @@ class ExceptionRegisterScreen(unittest.TestCase):
             "No source conflicts were returned",
         ):
             self.assertIn(phrase, body)
+        self.assertNotIn("failed imports are not connected", text(self.out["full"]["out"]))
+        self.assertNotIn("failed imports are not connected", body)
         self.assertNotIn("table", [n["tag"] for n in walk(self.out["empty"]["out"])])
 
     def test_returned_markup_is_text_not_elements(self) -> None:
