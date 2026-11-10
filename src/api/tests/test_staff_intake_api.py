@@ -63,13 +63,16 @@ class StaffIntakeApi(ProcurementApiFixture):
             "/api/cases/ZF-3/quality-accept", dict(index=record, note="Synthetic"), actor
         )
 
-    def correction(self, record: int, label: str = LOFT[0], note: str = "Corrected") -> dict:
+    def correction(
+        self, record: int, label: str = LOFT[0], note: str = "Corrected"
+    ) -> dict[str, Any]:
         return dict(record=record, label=label, note=note, confirmed_by=WORKER, confirmed=True)
 
     def view(self, actor: str = "sam") -> dict[str, Any]:
         code, out = self.call(ROUTE + "field-intake", actor=actor)
         self.assertEqual(code, 200, out)
-        return out
+        result: dict[str, Any] = out
+        return result
 
     def restart(self) -> None:
         self.store.save()
