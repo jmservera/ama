@@ -1,0 +1,30 @@
+{
+  "task_id": "issue-89-final-main-integration-1110",
+  "task_slug": "issue-89-final-main-integration",
+  "parent_task": {"task_id": "issue-89-main-integration-1110", "task_slug": "issue-89-main-integration"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-issue-89-final-main-integration-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-issue-89-final-main-integration-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-issue-89-final-main-integration-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-issue-89-final-main-integration-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-issue-89-final-main-integration-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-issue-89-final-main-integration-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Adoption of reviewed merged inputs only; no source correction; no push/PR", "status": "done", "evidence": "brief-89-final-main-integration-1314.txt"},
+    {"decision": "Research executed, Planning Readiness Ready", "status": "done", "evidence": "research artifact"},
+    {"decision": "Critique executed once (Proceed, PC-001..005 applied)", "status": "done", "evidence": "critique artifact"},
+    {"decision": "Review executed once; outcome conformant for bounded scope, no new findings", "status": "done", "evidence": ".copilot-tracking/reviews/2026-11-10-issue-89-final-main-integration-review.md; boundary merge 03d06a1a"},
+    {"decision": "SQL 36/0-skip is a source-qualified carry-forward only; local SQL skips not counted as passes", "status": "done", "evidence": "changes artifact"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Root independent f730 review; consume 440 record before publication"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Consume the 440 nomination and UX stabilization record before affected publication", "rationale": "Required gate, parallel input", "evidence": "brief-89-final-main-integration-1314.txt"},
+    {"rank": 2, "task": "Route inherited Mediums (1000-key order, raw blank FileStateStore) to their owners", "rationale": "Open, unrepaired", "evidence": "checks-89-persistence-diagnosis-1204"}
+  ]
+}
