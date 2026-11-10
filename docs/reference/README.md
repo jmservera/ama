@@ -1342,3 +1342,11 @@ It pins `main` `65c2ab9d9` after PR 1381 and PR 1376, consumes two Root local ru
 statuses without approving any. Azure observed is none; hosted exact-commit CI, assistive-technology, human, HVE and
 whole-epic gates stay unmet. It is separate from the CSV-learning record; #130, #149, #440, #1360, #1362, #1383 and
 #1384 stay open.
+
+A Bicep public-simulation current-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#bicep-public-simulation-current-main-checkpoint-2026-11-10-refs-440-136-1288).
+It pins `main` `0a6dc0b3f` after PR 1380, consumes Root local runs and a later image admission on a source-equal
+auxiliary composition (tree difference only in the rubric score file), and traces the default-off, guarded,
+one-replica, volatile opt-in lane against document statuses without approving any. Azure observed is none; the three
+baseline policy typing errors stay unwaived; whole #136, #1288 and #440, live SQL, authentication, resident, model,
+human and HVE gates stay unmet. The nomination and UX section stays historical and unchanged.

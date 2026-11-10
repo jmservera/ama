@@ -6433,3 +6433,71 @@ CONTINUE for this integration scope. The read-only nomination view and the UX co
 
 * First attempt (same task, slug `nomination-ux-main-440-1110`): the witness refused `plan-done` because of a missing comma in the worker's own state edit; `verify` exited 1; log sha256 `17a6744678fd59bc6a5bf98fb16bb3f393364e70b47d927a371966a6446b5466`. Its research, plan, details and critique are unchanged. The invalid state was archived byte-exact (sha256 `ee52a75c7c4ccc82a2e997807caeae9b910ac4291a5f74a009be1910ae81379e`) at `.copilot-tracking/evidence/2026-11-10-440-nom-ux-first-refusal/original-state.json.invalid`. The retry is the one Root-authorized operational retry of the same observation and is not healing of the first record.
 * The witness is a locally writable record, not host or model attestation; the model label is asserted. The critique and review of this retry are author-executed, not independent. No push, pull request or GitHub write was made.
+
+## Bicep public-simulation current-main checkpoint (2026-11-10, Refs #440 #136 #1288)
+
+Draft, local-only, not approved. This is a new recurring observation and documentation checkpoint after PR 1380 reached `main`. It is not a retry of the nomination and UX record above (which stays unchanged and historical at `65c2ab9d9`), not the old #440 C6, and spends no source repair budget; it makes no source fix and opens no issue. It is the focused documentation tier: no gate, `--changed`, test, image, SQL, browser, cloud, model, live or private-data run was made by this task. It neither includes nor republishes the separate #440 CSV-learning record, whose frozen independent review is unchanged. Records: [research](../../.copilot-tracking/research/2026-11-10-bicep-observation-440-1110-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-bicep-observation-440-1110-plan.md), [details](../../.copilot-tracking/details/2026-11-10-bicep-observation-440-1110-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-bicep-observation-440-1110-plan-critique.md), [changes](../../.copilot-tracking/changes/2026-11-10-bicep-observation-440-1110-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-bicep-observation-440-1110-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/issue-440-bicep-observation-1110-state.json).
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-10) |
+| --- | --- |
+| Pinned source | `origin/main` `0a6dc0b3f0b3ecf098536369a8308b02226b98b8`, tree `55e6b6a36b9e53378f2c0cc8d7172d307fd2b8e4`, read through read-only git. Subtrees `src` `70d956b06f31cabfd8321b4ee9c203ae8b21d89c`, `infra` `f7f31c0934cfe0bafb4505408706e55aa8ab61e7`, `tools` `432a4e8f7d74f26e88a55dd937c9c6f193016da9`. This topic branch stays on base `65c2ab9d9` by explicit choice, so the pin is observed, not merged here |
+| Trigger | PR 1380 (`Refs #136`, published head `1752260338f519a79cb427448bd7c45c34ae80ff`) merged 13:29:38Z as the pin; parent `83503b74e0e5f555382436c0ae27f64cd200971f` is a rubric bot commit. The diff from the parent is 54 files (1882 insertions, 8 deletions), `src` unchanged and no `docs/` change |
+| Hosted checks | 19 reported checks all SUCCESS and MERGEABLE on the published head before merge, as reported by Root and in the durable PR comment 6768612559. That is PR-head metadata, not a result for the merge commit |
+| Source blobs at the pin | `infra/main.bicep` `7074af59dbc8`, `infra/modules/guard.bicep` `f08d8b235078`, `infra/modules/containerapps.bicep` `da71bef970a9`, `infra/README.md` `b4a2a2c49a3d`, `infra/tests/test_bicep_policy.py` `751afd16a69c`, `infra/tests/test_public_simulation_startup.py` `c68c04cfcc8f`, `infra/tests/test_resident_demo_deploy.py` `77237ef15d76` |
+| Documents (blob at pin) | BRD 0.21.0 `draft` `34d88395de86`; PRD Zava Forward 0.21.0 `in-review` `c788b917bafa`; PRD Proper Warm 0.13.0 `in-review` `f7f9b7675e60`; ADR-0006 `956da1a3b804`; ADR-0007 Proposed `abb21088a9bb`; unchanged by PR 1380. Draft, in-review and proposed are not approval and none changes here |
+| Issue states (read live) | #136, #1288, #440, #89, #133, #132, #1384 and #1388 OPEN; nothing is ticked or closed. Number 1400 does not resolve to an issue or pull request |
+| Local aftercare candidate | The #89 aftercare candidate `c6c0e4d2590eab632238e45cfec0c009d15691e1` (`src` subtree `3ad519b53426`) is a local branch, not an ancestor of `origin/main` and not main. It awaits Root consumption of the nomination and UX gate and is only named here |
+| Excluded | The #89 aftercare parent and #133 as main content, held #132 and contractor identities, the #1384 and #1388 checker work, the old C6, the CSV-learning record, any deployment, Azure, live, model, resident or professional step, and whole #136, #1288 or #440 acceptance |
+
+### Consumed evidence (Root local runs, not re-run here)
+
+Both Root runs used a detached auxiliary composition and an owned environment. Their raw `.cmd`, `.out`, `.err` and `.exit` files are in the Root session folder, not in the repository. Neither is a GitHub merge preview, an observation on `0a6dc0b3f` or an Azure run.
+
+| Record | Tested composition | Result as retained |
+| --- | --- | --- |
+| Current-main verification (`handoff-136-current-main-verification-1314`) | local merge `b9bae9f2b51c67e2edc0fbe0d4ccdc7aaa856e63`, tree `fd357610b99e9c14461e6de9a50150fc9a9d9770`, the published head merged with then-main `65c2ab9d9` (equal to the `git merge-tree` prediction) | policy 60, container contract 7, resident demo 17, resident secrets 16, IoT Hub 23, API simulation 30, live control 34 and Core resident 41, all OK with exit 0; ruff check and format and resident-module mypy exit 0; six offline Bicep build and lint commands (main, guard, containerapps) exit 0 with upgrade warnings only |
+| Later image admission (`handoff-136-image-later-admission-1324`) | the same auxiliary head | one non-queued API image build exit 0, image id `sha256:38361713e1856ab6ae0b749b542ee0f99717e60fd55985b8445e7aa8eccd1d98` (the manifest-list identity, not the config digest); the four startup tests (fresh start and reuse, partial or corrupt pair untouched, slot crossing, unimportable lane module) `Ran 4`, OK, exit 0 |
+
+* Tree equivalence (Root proof `136-current-main-prediction-1332.json`, read here and checked against the actual tree id): main `83503b74e` plus the published head predicts tree `55e6b6a3...`, which differs from the tested auxiliary tree only at `.github/rubric/scores/latest.json`, with `src`, `infra` and `tools` subtree ids equal. The actual merged main tree equals that prediction. The API runtime `src` tree `70d956b0...` is unchanged by this infrastructure merge. This is current-metadata and tree equivalence for the source, not a rerun on the pin.
+* Adverse history retained: two earlier image attempts exited 1 because the shared heavy lock was busy (held by another worker's job) and are not relabeled; the old `d6d6` image is not current-composition proof. The supplemental mypy run over the policy and startup tests exits 1 with three known baseline errors in `test_bicep_policy.py` (lines 2023, 2024, 2047) and is unwaived, so there is no all-infrastructure typing or all-process pass claim. The published-head review chronology (C1 to C5 adverse and chronology qualifications) is unchanged and not healed.
+* Independent records (Root): Functional and Readiness reviews of the full 54-file, 2423-line composition packet are approve with 0 findings each, supplement and do not replace the original published reviews, and grant no merge authorization or unqualified process acceptance. The local-store startup tests use the default JSON working store; they are not MSSQL, browser-authentication or Azure evidence.
+
+### Requirement trace (Bicep contract)
+
+| Contract | Source (blob at pin) | Observation | Class |
+| --- | --- | --- | --- |
+| Default off, ordinary commands unchanged | `main.bicep` `7074af59dbc8`, `containerapps.bicep` `da71bef970a9` | `enablePublicSimulationLane` defaults to false; the API `command` is null, the two `ZF_SIM_*` variables are absent and `maxReplicas` stays 4 when off | Static read plus Root offline render and policy tests; not deployed |
+| Opt-in guards | `main.bicep`, `guard.bicep` `f08d8b235078` | Five guards refuse the lane outside the development direct-ingress demo, without browser authentication (client id set, not bearer-only), without deployed applications, with the placeholder API image and with `apiMinReplicas` above 1 | Static read plus Root policy tests (60) and mutation rejection; not deployed |
+| Maximum one replica when on | `containerapps.bicep` | `maxReplicas` is 1 when enabled | Static read plus Root compiled-render tests |
+| Fixed startup recipe | `containerapps.bicep` | A fixed `python -c` recipe provisions only when neither the store nor the key exists, validates with `Lane.open`, then runs the ordinary API module | Static read plus the four Root image startup tests (local image, local JSON store) |
+| Absent, partial and corrupt fixtures | recipe, `infra/README.md` `b4a2a2c49a3d` | Only an absent pair is provisioned; a partial or corrupt pair is left untouched, an error code goes to stderr and the API starts with the lane unavailable, so the manual API fallback remains; an older image lacking the lane module also starts the ordinary API | Local observed in the Root startup tests, source qualified; not on Azure |
+| Replica-local, volatile, non-durable | README | State under `/state/public-simulation` is lost on replica replacement and scale to zero; it is not durable history | Static read; durability not observed |
+| Accounting boundary | README, `containerapps.bicep` | `ZF_STORE=mssql` is unchanged, so allowance, attempts and holds stay in Azure SQL and a lost simulation store cannot mint or reset them; budgets, chat and model settings are not changed | Static read; SQL not observed |
+| Seal lifetime | README | A restart that retains the valid key and store pair does not itself revoke seals; losing or replacing the pair invalidates prior seals; expiry and single-use checks still apply | Static read only; no cross-restart seal runtime test is claimed |
+| Image guard scope | `guard.bicep` | The guard rejects only the quickstart placeholder; it does not validate that an arbitrary image is compatible | Static read; limit stated |
+
+### Evidence classes
+
+* Local observed, source qualified: only the Root runs above on the auxiliary composition `b9bae9f2`.
+* Current-metadata equivalence: the pin tree equals the prediction and differs from the tested tree only in the rubric score file; `src`, `infra` and `tools` ids equal.
+* Azure observed: NONE.
+* Implemented, unverified: the enabled path on a real deployment, MSSQL accounting with the lane on, browser authentication, a real selected-home reading path, live IoT Hub ingestion, replica replacement and scale-to-zero behaviour, and cross-restart seal behaviour.
+* Deferred or blocked: an actual Azure rollout and what-if, whole #136 closure, deployment-dependent expansion, and any live SQL, authentication, resident or model acceptance. They await separately authorized live inputs and evidence.
+* Unknown: behaviour of an arbitrary non-placeholder API image, and the actual GitHub merge-preview trees.
+
+### Findings, owners and gates
+
+* No new defect, no new issue and no source fix. The three baseline policy typing errors are known and tracked under the existing owner and are not newly fixed here; no duplicate issue is opened.
+* Whole #136, #1288 and #440 criteria 7 and 8 stay unmet, and human and HVE approval stay unmet and are not invented. No #132 or #133 budget is added and no requirement is relaxed.
+* The Bicep wave gate (awaiting any later live evidence and independent exact-head assessment) is distinct from the nomination and UX gate that affects #89 UI-dependent publication. The local #89 candidate stays awaiting Root consumption of the nomination and UX record and is not main. #1384 and #1388 are separate checker work and grant no source waiver.
+
+### Recommendation
+
+CONTINUE bounded offline source qualification of the infrastructure lane; it can proceed independently of the nomination and UX gate. No fix or pivot is indicated by this evidence. An actual Azure rollout, whole #136 closure and any deployment-dependent expansion should wait for separately authorized live inputs and evidence. Publication of this record needs independent exact-head assessment and applicable hosted checks; Root qualifies the actual publication composition later. No approval, requirement relaxation or issue closure is proposed or inferred.
+
+### Process record and limits
+
+* The nomination and UX section above and this section ship in one documentation batch so hosted CI runs once; each has its own heading, index paragraph and log entry, and neither edits the other.
+* The witness is a locally writable record, not host or model attestation; the model label is asserted. The critique and review are author-executed, not independent. No push, pull request or GitHub write was made.
