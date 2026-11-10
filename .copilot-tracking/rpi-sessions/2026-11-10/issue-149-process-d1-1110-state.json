@@ -1,0 +1,43 @@
+{
+  "task_id": "issue-149-process-d1",
+  "task_slug": "issue-149-process-d1-1110",
+  "parent_task": {
+    "task_id": "issue-149-coverage-integration",
+    "task_slug": "issue-149-coverage-integration-1110"
+  },
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10/issue-149-process-d1-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10/issue-149-process-d1-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10/issue-149-process-d1-1110-details.md",
+    "critique": ".copilot-tracking/reviews/2026-11-10/issue-149-process-d1-1110-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10/issue-149-process-d1-1110-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "One metadata and provenance process D1 only; no source, existing docs, old tracking or checker, design or authentication repair; local only",
+      "status": "user-confirmed",
+      "evidence": "brief-149-process-d1-1110.md sha256 41b83fb214153376ad3621a141e4d9548dbb1908391e09cfc791afbb614cb886"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-11-10/issue-149-process-d1-1110-research.md"
+    },
+    {
+      "decision": "Critique executed once by primary agent (self, not independent); verdict proceed with changes; applied directly; not repeated",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-10/issue-149-process-d1-1110-critique.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Write provenance qualification, prove equality, commit"
+  },
+  "prioritized_follow_ups": []
+}
