@@ -1062,7 +1062,7 @@ async function caseView(id) {
       regulatoryAlertsPanel(id), !c.closed && returned, stockPanel(c)]],
     ["survey", "Survey and assessment", [technicalPanel(c, id, refresh), documentsPanel(c, id, refresh)]],
     ["funding", "Funding", [fundingPanel(c, id, refresh, savedFields, session), financePanel(c, id, refresh), grantPanel(c, id, refresh)]],
-    ["resident", "Resident", [residentPanel(c, id, refresh), call, write, affectedChallengePanel(c, id, refresh)]],
+    ["resident", "Resident", [residentPanel(c, id, refresh), nominationPanel(c), call, write, affectedChallengePanel(c, id, refresh)]],
     ["contractor", "Contractor and works", [h("section", { class: "card" }, h("h2", {}, "Contractor and appointments"),
       h("p", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
       h("p", {}, `Next visit: ${fmtDate((c.appointments.find(a => a.outcome === "Booked") || {}).date)}`),
