@@ -1260,7 +1260,7 @@ class SqlStore(Store):
             else:
                 try:
                     self._sync()
-                except RuntimeError as error:
+                except (RuntimeError, OSError, ValueError) as error:  # COMMIT already returned
                     self._seq = -1
                     raise CommittedReloadError(
                         "The change was saved, but the refresh afterwards did not settle. Reload before doing "

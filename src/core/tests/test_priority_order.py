@@ -1217,6 +1217,31 @@ class SqliteC4Corrections(SqliteFixture):
         self.assertEqual(ids.count("bbb000000005"), 1)
         self.assertEqual(self.latest(self.store), "bbb000000005")
 
+    def test_post_commit_reload_oserror_or_valueerror_is_a_committed_outcome(self) -> None:
+        from zava_forward.core import sqlstore as sqlmod
+
+        for n, error in enumerate((OSError("disk"), ValueError("row"))):
+            with self.subTest(error=type(error).__name__):
+                other = self.open_store()
+                self.add(other, f"ooo00000010{n}", self.pam)
+                other.save()
+                rid = f"bbb00000010{n}"
+                self.add(self.store, rid, self.sam)
+
+                def failing(error: BaseException = error) -> None:
+                    raise error
+
+                with patch.object(self.store, "_sync", failing):
+                    with self.assertRaises(sqlmod.CommittedReloadError) as caught:
+                        self.store.save()
+                self.assertTrue(caught.exception.committed)
+                self.assertIs(caught.exception.__cause__, error)
+                ids = [r[0] for r in self.store.db.execute("SELECT id FROM recommendations")]
+                self.assertEqual(ids.count(rid), 1)
+                self.store.save()
+                ids = [r[0] for r in self.store.db.execute("SELECT id FROM recommendations")]
+                self.assertEqual(ids.count(rid), 1)
+
     def test_server_reports_a_committed_priority_outcome(self) -> None:
         server = (Path(__file__).parents[2] / "api/src/zava_forward/api/server.py").read_text()
         at = server.rindex('if url.path == "/api/ai/priority":')
