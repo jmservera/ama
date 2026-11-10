@@ -7,4 +7,4 @@ Prospective skeleton written before `implement-start`.
 
 ## Completed changes
 
-* None yet.
+* Appended the 9-line dated qualification to the original changes record. The original content (equal to its `3a6d57be` blob) is a byte-for-byte prefix; relative links resolve; leak scan clean. No Azure, runtime, source or KB edit.
