@@ -34,7 +34,7 @@ RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_recor
                     "nomination_record", "nomination_correct", "nomination_review", "tenure_intake",
                     "tenure_legal_position", "tenure_verify", "tenure_question_pack",
                     "tenure_question_pack_review",
-                    "tenure_review_trigger", "tenure_trigger_resolve")
+                    "tenure_review_trigger", "tenure_trigger_resolve", "tenure_inventory_record")
 NOT_RECORDED = "Not recorded"
 AUTHORITY_TASKS = ("Receive information", "Communicate", "Attend", "Works decision")
 AUTHORITY_STATUSES = ("Confirmed", "Unclear", "Disputed", "Revoked")
@@ -42,10 +42,10 @@ RESIDENT_RETENTION_YEARS = 5
 RESIDENT_RETENTION_ID = "resident-decisions"
 RESIDENT_FIELDS = ("resident_scopes", "measure_decisions", "representative_authorities",
                    "resident_safe_contact", "resident_contact_history", "resident_reviews",
-                   "nomination_records", "tenure_reports")
+                   "nomination_records", "tenure_reports", "tenure_household_inventories")
 INTAKE_ACTIONS = ("nomination_record", "nomination_correct", "nomination_review", "tenure_intake", "tenure_legal_position",
                   "tenure_verify", "tenure_question_pack", "tenure_question_pack_review",
-                  "tenure_review_trigger", "tenure_trigger_resolve")
+                  "tenure_review_trigger", "tenure_trigger_resolve", "tenure_inventory_record")
 REVIEW_TRIGGERS = ("Changed scope", "Dispute", "Defect", "Charge query", "Ambiguous lease identity")
 TENURE_ROUTES = {
     "Tenant": "Tenant",
@@ -57,7 +57,14 @@ TENURE_ROUTES = {
 }
 NOMINATION_OUTCOMES = ("Accepted for human eligibility review", "More evidence needed",
                        "Not progressed; resident may challenge")
-INTAKE_FIELDS = ("nomination_records", "tenure_reports")
+INTAKE_FIELDS = ("nomination_records", "tenure_reports", "tenure_household_inventories",
+                 "tenure_inventory_view")
+# Transport safety bound for one caller-supplied list. It is not a policy limit on households.
+INVENTORY_MAX_ROWS = 100
+INVENTORY_QUALIFICATION = (
+    "Caller supplied. Completeness, household identity and authority are not verified here; "
+    "this is not a roster, an approval or a release."
+)
 INTAKE_CHANNELS = ("Digital", "Phone", "Letter", "In person", "Trusted intermediary")
 TENURE_HOLD = (
     "Tenure and lease identity are unverified. Owner: Home Ownership data owner and Legal "
@@ -237,6 +244,125 @@ def _open_triggers(report):
     return [t for t in report.get("review_triggers", []) if t["resolution"] is None]
 
 
+def _inventory_managed(c):
+    """Presence, not truthiness, so a null or corrupted field cannot opt a case out."""
+    reports = c.get("tenure_reports")
+    return bool("tenure_household_inventories" in c or c.get("tenure_review_required") or reports
+                or ("tenure_reports" in c and not isinstance(reports, list)))
+
+
+def _inventory_fill(view, case):
+    reports = case.get("tenure_reports", [])
+    if not isinstance(reports, list) or not all(isinstance(r, dict) for r in reports):
+        raise TypeError("reports")
+    if "tenure_household_inventories" not in case:
+        view["reasons"].append("No expected-household inventory has been recorded for this case.")
+        return
+    inventories = case["tenure_household_inventories"]
+    if not isinstance(inventories, list) or not inventories or not all(isinstance(i, dict) for i in inventories):
+        raise TypeError("inventories")
+    latest = inventories[-1]
+    if type(latest["version"]) is not int or latest["version"] != len(inventories):
+        raise ValueError("version")
+    view["version"] = latest["version"]
+    households = latest["households"]
+    if households is None:
+        view.update(status="Unknown")
+        view["reasons"].append("The expected-household inventory is Unknown.")
+        return
+    if not isinstance(households, list) or not households:
+        raise ValueError("households")
+    view.update(status="Declared", expected_count=len(households))
+    entries = []
+    for row in households:
+        ref, link, digest = row["household_ref"], row["report_version"], row["report_digest"]
+        if not isinstance(ref, str):
+            raise TypeError("household_ref")
+        entry = dict(household_ref=ref, report_version=link, linkage="Not linked", binding="Not linked")
+        if link is not None:
+            if type(link) is not int or not isinstance(digest, str):
+                raise TypeError("link")
+            report = reports[link - 1] if 1 <= link <= len(reports) else None
+            entry["linkage"] = "Linked"
+            if report is None or report["household_ref"] != ref:
+                entry["binding"] = "Stale: linked report is missing"
+            elif any(r["household_ref"] == ref for r in reports[link:]):
+                entry["binding"] = "Stale: a newer report exists for this reference"
+            elif _digest(report) != digest:
+                entry["binding"] = "Stale: the linked report changed"
+            else:
+                entry["binding"] = "Current"
+            if report is not None and report["household_ref"] == ref:
+                entry.update(verification=report["verification"], identity_state=report["identity_state"],
+                             decision_route=report["decision_route"], open_triggers=len(_open_triggers(report)))
+        entries.append(entry)
+    view["households"] = entries
+    unlinked = sum(e["linkage"] == "Not linked" for e in entries)
+    stale = sum(e["binding"].startswith("Stale") for e in entries)
+    unverified = sum(e["linkage"] == "Linked" and not str(e.get("verification")).startswith("Verified")
+                     for e in entries)
+    triggers = sum(bool(e.get("open_triggers")) for e in entries)
+    view.update(linked=len(entries) - unlinked, not_linked=unlinked, stale=stale)
+    for count, text in (
+        (unlinked, f"{unlinked} of {len(entries)} expected households have no linked tenure report."),
+        (stale, f"{stale} linked tenure reports changed or were replaced since this inventory. Record a new inventory version."),
+        (unverified, f"{unverified} linked tenure reports are not verified by the data owner."),
+        (triggers, f"{triggers} linked tenure reports have an open review trigger."),
+    ):
+        if count:
+            view["reasons"].append(text)
+
+
+def tenure_inventory_view(case):
+    """Pure read of the caller-declared inventory. It never mutates, permits or releases."""
+    view = dict(status="Missing", version=None, expected_count="Unknown", households=[], linked=0,
+                not_linked=0, stale=0, reasons=[], qualification=INVENTORY_QUALIFICATION,
+                release="Not available here: the case-wide tenure hold remains")
+    try:
+        _inventory_fill(view, case)
+    except (AttributeError, KeyError, TypeError, ValueError):
+        view.update(status="Malformed", version=None, expected_count="Unknown", households=[],
+                    linked=0, not_linked=0, stale=0,
+                    reasons=["The stored expected-household inventory is malformed. Ask the data owner to reconcile it."])
+    return view
+
+
+def _inventory_rows(households, reports):
+    if households is None:
+        return None
+    if not isinstance(households, list) or not households:
+        raise ValueError("List the expected households, or record the inventory as Unknown with null. An empty list is not accepted.")
+    if len(households) > INVENTORY_MAX_ROWS:
+        raise ValueError(f"The list is over the {INVENTORY_MAX_ROWS} household transport limit and is never truncated. Record the inventory as Unknown and ask the data owner how to proceed.")
+    rows, seen = [], set()
+    for row in households:
+        if not isinstance(row, dict) or set(row) != {"household_ref", "report_version"}:
+            raise ValueError("Each household needs exactly household_ref and report_version, which is null when no report is linked.")
+        ref = row["household_ref"]
+        if not isinstance(ref, str) or not ref.strip() or len(ref) > 100 or ref != ref.strip():
+            raise ValueError("Supply each household reference as reported: not blank, no surrounding spaces, at most 100 characters.")
+        if ref.casefold() in seen:
+            raise ValueError("Each household reference may appear once. Duplicates are ambiguous and are never merged.")
+        seen.add(ref.casefold())
+        link, digest = row["report_version"], None
+        if link is not None:
+            if type(link) is not int or not 1 <= link <= len(reports) or reports[link - 1]["household_ref"] != ref:
+                raise ValueError("Link only an existing tenure report version of this case with exactly the same household reference, or null.")
+            if any(r["household_ref"] == ref for r in reports[link:]):
+                raise ValueError("Link the latest tenure report for that household reference. A later report never closes an earlier dispute.")
+            digest = _digest(reports[link - 1])
+        rows.append(dict(household_ref=ref, report_version=link, report_digest=digest))
+    return rows
+
+
+def _inventory_refusal(c):
+    """Specific refusal reasons only once an inventory field exists; the hold itself is separate."""
+    if not _inventory_managed(c):
+        return []
+    view = tenure_inventory_view(c)
+    return [] if view["status"] == "Missing" else view["reasons"]
+
+
 def _pack_is_current(report, pack):
     if _open_triggers(report):
         return False
@@ -357,6 +483,8 @@ def followup_view(case):
         update.setdefault("version", 0)
         update.setdefault("status", "Unknown")
         update.setdefault("safe_contact_ref", "Unknown")
+    if _inventory_managed(case):
+        case["tenure_inventory_view"] = tenure_inventory_view(case)
     return case
 
 
@@ -817,8 +945,8 @@ def authority_for(c, ref, task, measure, context, version=None):
 
 def resident_gate(c, bindings=None):
     """Case advance checks all measures; scoped work checks only explicit bindings."""
-    if c.get("tenure_review_required") or c.get("tenure_reports"):
-        return [TENURE_HOLD]
+    if _inventory_managed(c):
+        return [*_inventory_refusal(c), TENURE_HOLD]
     return _resident_decision_gate(c, bindings)
 
 
@@ -1056,6 +1184,30 @@ class ResidentDecisionMixin:
         c.setdefault("tenure_reports", []).append(report)
         c["tenure_review_required"] = True
         return f"tenure intake version {report['version']} recorded; case-wide hold remains"
+
+    def _res_tenure_inventory_record(self, user, c, body):
+        _intake_fields(user, c, body, {
+            "case_id", "expected_version", "source", "source_version", "owner", "next_update", "households",
+        })
+        inventories = c.get("tenure_household_inventories", [])
+        reports = c.get("tenure_reports", [])
+        if (not isinstance(inventories, list) or not all(isinstance(i, dict) for i in inventories)
+                or not isinstance(reports, list) or not all(isinstance(r, dict) for r in reports)):
+            raise ValueError("The stored tenure records are malformed. Ask the data owner to reconcile them; nothing was recorded.")
+        _version(body, inventories[-1] if inventories else None)
+        record = dict(
+            version=len(inventories) + 1, case_id=c["id"],
+            source=_intake_text(body["source"], "the household list source reference"),
+            source_version=_intake_text(body["source_version"], "the household list version", 100),
+            owner=_intake_owner(self, body["owner"]), next_update=_day(body["next_update"]),
+            households=_inventory_rows(body["households"], reports),
+        )
+        record.update(status="Unknown" if record["households"] is None else "Declared",
+                      qualification=INVENTORY_QUALIFICATION, recorded_by=_identity(user), at=_time())
+        c.setdefault("tenure_household_inventories", []).append(record)
+        c["tenure_review_required"] = True
+        count = "Unknown" if record["households"] is None else len(record["households"])
+        return f"household inventory version {record['version']} recorded; expected {count}; caller supplied; case-wide hold remains"
 
     def _res_tenure_legal_position(self, user, c, body):
         _intake_fields(user, c, body, {
@@ -1341,8 +1493,8 @@ class ResidentDecisionMixin:
         return f"{record['id']} supplied resolution recorded"
 
     def _res_scope_record(self, user, c, body):
-        if c.get("tenure_review_required") or c.get("tenure_reports"):
-            raise ValueError(TENURE_HOLD)
+        if _inventory_managed(c):
+            raise ValueError(" ".join([*_inventory_refusal(c), TENURE_HOLD]))
         measure = body.get("measure")
         if not isinstance(measure, str) or measure not in case_measures(c):
             raise ValueError("Choose one of this home's measures.")

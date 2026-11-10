@@ -470,6 +470,22 @@ and routes to the Home Ownership data owner (appointment still required).
 `tenure_trigger_resolve` is recorded by a named person other than the recorder
 (the data owner for ambiguous identity); the route stays Unknown until the data
 owner verifies again. Triggers are per report, so the case-wide hold remains.
+`tenure_inventory_record` is an explicitly partial, opt-in primitive: staff
+record a versioned, caller-supplied list of the households expected for the
+case (`households` of `household_ref` plus an existing `report_version` or
+null, or null when the list is Unknown), with `source`, `source_version`,
+`owner` and `next_update`. The server derives and stores a digest of each linked
+report; later changes to a report make its link stale until a new revision is
+recorded. Revisions append, an empty, duplicate or over-100-row list is
+rejected (the cap is transport safety, not a household maximum) and the list is
+never truncated or generated. A pure read, `tenure_inventory_view`, reports the
+declared coverage and link currentness only; it does not state that all actual
+households are covered. Once a case has an inventory, a missing, Unknown, stale
+or malformed link refuses `resident_gate` and `scope_record` before the
+unchanged tenure hold; a fully linked, current inventory releases nothing.
+Cases without an inventory keep current behaviour, so this is not universal
+coverage. The actual roster, authority appointments and Legal interpretation
+remain outside the code.
 Prior homes without intake are unchanged: this does not prove complete tenure
 coverage or an all-offer gate across the programme.
 

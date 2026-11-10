@@ -411,6 +411,337 @@ class JsonResidentDecisions(unittest.TestCase):
             resident_gate(self.store.cases["ZF-2"]) == [resident_decisions.TENURE_HOLD]
         )
 
+    def inventory(self, **changes: Any) -> dict[str, Any]:
+        return dict(
+            dict(
+                action="tenure_inventory_record",
+                case_id="ZF-1",
+                expected_version=0,
+                source="SYN-INV-SOURCE-CANARY",
+                source_version="SYN-INV-v1",
+                owner=self.sam["email"],
+                next_update="2099-01-01",
+                households=[
+                    dict(household_ref="SYN-HH-A", report_version=1),
+                    dict(household_ref="SYN-HH-B", report_version=None),
+                ],
+            ),
+            **changes,
+        )
+
+    def two_reports(self) -> None:
+        self.store.resident_action(self.sam, "ZF-1", self.tenure(household_ref="SYN-HH-A"))
+        self.store.resident_action(
+            self.sam, "ZF-1", self.tenure(expected_version=1, household_ref="SYN-HH-B")
+        )
+
+    def verify_report(self, number: int) -> None:
+        self.store.resident_action(
+            self.sam, "ZF-1", self.legal_position(report_version=number)
+        )
+        self.store.resident_action(
+            self.sam, "ZF-1", self.verification(report_version=number)
+        )
+
+    def inventory_view(self) -> dict[str, Any]:
+        return resident_decisions.tenure_inventory_view(self.open_store().cases["ZF-1"])
+
+    def test_inventory_revisions_digest_reopen_and_pure_read(self) -> None:
+        self.scope()
+        self.two_reports()
+        self.store.resident_action(self.sam, "ZF-1", self.inventory())
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.inventory(
+                expected_version=1,
+                source_version="SYN-INV-v2",
+                households=[
+                    dict(household_ref="SYN-HH-A", report_version=1),
+                    dict(household_ref="SYN-HH-B", report_version=2),
+                ],
+            ),
+        )
+        current = self.open_store().cases["ZF-1"]
+        first, second = current["tenure_household_inventories"]
+        self.assertEqual((first["version"], second["version"]), (1, 2))
+        self.assertEqual(first["source_version"], "SYN-INV-v1")
+        self.assertIsNone(first["households"][1]["report_digest"])
+        self.assertEqual(
+            first["households"][0]["report_digest"],
+            resident_decisions._digest(current["tenure_reports"][0]),
+        )
+        self.assertIn("not verified", first["qualification"])
+        self.assertTrue(current["tenure_review_required"])
+        before = copy.deepcopy(current)
+        audit = list(self.store.audit_entries())
+        view = resident_decisions.tenure_inventory_view(current)
+        self.assertEqual(view["status"], "Declared")
+        self.assertEqual((view["expected_count"], view["not_linked"], view["stale"]), (2, 0, 0))
+        self.assertEqual(self.store.detail("ZF-1", self.sam)["tenure_inventory_view"], view)
+        self.assertNotIn("ready", json.dumps(view).casefold().replace("verified", ""))
+        self.assertEqual(self.open_store().cases["ZF-1"], before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+
+    def test_inventory_one_of_two_households_missing_link_refuses_at_gate_and_scope(self) -> None:
+        self.scope()
+        self.two_reports()
+        self.store.resident_action(self.sam, "ZF-1", self.inventory())
+        view = self.inventory_view()
+        self.assertEqual((view["expected_count"], view["linked"], view["not_linked"]), (2, 1, 1))
+        self.assertEqual(
+            [h["linkage"] for h in view["households"]], ["Linked", "Not linked"]
+        )
+        reason = "1 of 2 expected households have no linked tenure report."
+        self.assertIn(reason, view["reasons"])
+        gate = resident_gate(self.store.cases["ZF-1"])
+        self.assertIn(reason, gate)
+        self.assertEqual(gate[-1], resident_decisions.TENURE_HOLD)
+        self.assertNotIn("SYN-HH", json.dumps(gate))
+        with self.assertRaisesRegex(ValueError, "no linked tenure report"):
+            self.scope(MEASURES[1])
+        self.assertNotIn(MEASURES[1], self.store.cases["ZF-1"].get("resident_scopes", {}))
+
+    def test_inventory_unknown_is_valid_and_held(self) -> None:
+        self.two_reports()
+        self.store.resident_action(self.sam, "ZF-1", self.inventory(households=None))
+        view = self.inventory_view()
+        self.assertEqual((view["status"], view["expected_count"]), ("Unknown", "Unknown"))
+        self.assertIn("The expected-household inventory is Unknown.", view["reasons"])
+        self.assertEqual(
+            resident_gate(self.store.cases["ZF-1"])[-1], resident_decisions.TENURE_HOLD
+        )
+        self.store.resident_action(
+            self.sam, "ZF-1", self.inventory(expected_version=1, households=None)
+        )
+        self.assertEqual(len(self.store.cases["ZF-1"]["tenure_household_inventories"]), 2)
+
+    def test_inventory_strict_input_rejects_without_mutation(self) -> None:
+        self.two_reports()
+        self.store.resident_action(
+            self.sam, "ZF-1", self.tenure(expected_version=2, household_ref="SYN-HH-A")
+        )
+        ok = dict(household_ref="SYN-HH-B", report_version=2)
+        rows = [dict(household_ref=f"SYN-HH-{n}", report_version=None) for n in range(101)]
+        bad = (
+            dict(expected_version=True),
+            dict(expected_version=1),
+            dict(expected_version="0"),
+            dict(case_id="ZF-2"),
+            dict(approved=True),
+            dict(report_digest="SYN"),
+            dict(households=[]),
+            dict(households=rows),
+            dict(households="SYN-HH-A"),
+            dict(households=[ok, ok]),
+            dict(households=[ok, dict(household_ref="syn-hh-b", report_version=None)]),
+            dict(households=[dict(household_ref=" SYN-HH-B", report_version=None)]),
+            dict(households=[dict(household_ref="  ", report_version=None)]),
+            dict(households=[dict(household_ref="SYN-HH-B", report_version=True)]),
+            dict(households=[dict(household_ref="SYN-HH-B", report_version=0)]),
+            dict(households=[dict(household_ref="SYN-HH-B", report_version=99)]),
+            dict(households=[dict(household_ref="SYN-HH-B", report_version=1)]),
+            dict(households=[dict(household_ref="SYN-HH-A", report_version=1)]),
+            dict(households=[dict(household_ref="SYN-HH-B", report_version=2, digest="SYN")]),
+            dict(households=[dict(household_ref="SYN-HH-B")]),
+            dict(source=" "),
+            dict(source_version="x" * 101),
+            dict(next_update="2099-13-01"),
+            dict(owner="nobody@example.test"),
+        )
+        for changes in bad:
+            with self.subTest(changes=list(changes)):
+                body = self.inventory(**changes)
+                self.unchanged_failure(partial(self.store.resident_action, self.sam, "ZF-1", body))
+        self.assertNotIn("tenure_household_inventories", self.open_store().cases["ZF-1"])
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.inventory(households=[dict(household_ref="SYN-HH-A", report_version=3), ok]),
+        )
+        self.assertEqual(len(self.open_store().cases["ZF-1"]["tenure_household_inventories"]), 1)
+
+    def test_inventory_report_changes_make_the_link_stale_until_rerecorded(self) -> None:
+        self.two_reports()
+        both = [
+            dict(household_ref="SYN-HH-A", report_version=1),
+            dict(household_ref="SYN-HH-B", report_version=2),
+        ]
+        self.store.resident_action(self.sam, "ZF-1", self.inventory(households=both))
+        self.assertEqual({h["binding"] for h in self.inventory_view()["households"]}, {"Current"})
+        for version, change in enumerate(
+            (self.legal_position(report_version=1), self.trigger(report_version=2)), start=1
+        ):
+            self.store.resident_action(self.sam, "ZF-1", change)
+            view = self.inventory_view()
+            self.assertEqual(view["stale"], 1)
+            self.assertTrue(any("changed or were replaced" in r for r in view["reasons"]))
+            self.assertEqual(
+                resident_gate(self.store.cases["ZF-1"])[-1], resident_decisions.TENURE_HOLD
+            )
+            self.store.resident_action(
+                self.sam, "ZF-1", self.inventory(expected_version=version, households=both)
+            )
+            self.assertEqual(self.inventory_view()["stale"], 0)
+        self.store.resident_action(
+            self.sam, "ZF-1", self.tenure(expected_version=2, household_ref="SYN-HH-A")
+        )
+        view = self.inventory_view()
+        self.assertEqual(
+            view["households"][0]["binding"], "Stale: a newer report exists for this reference"
+        )
+        self.unchanged_failure(
+            partial(
+                self.store.resident_action,
+                self.sam,
+                "ZF-1",
+                self.inventory(expected_version=3, households=both),
+            )
+        )
+        relinked = [dict(both[0], report_version=3), both[1]]
+        self.store.resident_action(
+            self.sam, "ZF-1", self.inventory(expected_version=3, households=relinked)
+        )
+        self.assertEqual({h["binding"] for h in self.inventory_view()["households"]}, {"Current"})
+
+    def test_inventory_refreshed_data_never_releases_scope_or_work(self) -> None:
+        self.scope()
+        self.answer()
+        self.two_reports()
+        self.verify_report(1)
+        self.verify_report(2)
+        both = [
+            dict(household_ref="SYN-HH-A", report_version=1),
+            dict(household_ref="SYN-HH-B", report_version=2),
+        ]
+        self.store.resident_action(self.sam, "ZF-1", self.inventory(households=both))
+        view = self.inventory_view()
+        self.assertEqual(view["reasons"], [])
+        self.assertEqual([h["verification"][:8] for h in view["households"]], ["Verified"] * 2)
+        self.assertEqual(
+            resident_gate(self.store.cases["ZF-1"]), [resident_decisions.TENURE_HOLD]
+        )
+        self.assertEqual(
+            resident_gate(self.store.cases["ZF-1"], self.bind(MEASURES[0])),
+            [resident_decisions.TENURE_HOLD],
+        )
+        self.unchanged_failure(self.scope)
+        self.store.resident_action(
+            self.sam,
+            "ZF-1",
+            self.trigger(report_version=1, trigger="Ambiguous lease identity", expected_version=0),
+        )
+        self.store.resident_action(
+            self.sam, "ZF-1", self.inventory(expected_version=1, households=both)
+        )
+        reasons = self.inventory_view()["reasons"]
+        self.assertIn("1 linked tenure reports are not verified by the data owner.", reasons)
+        self.assertIn("1 linked tenure reports have an open review trigger.", reasons)
+        self.assertEqual(
+            resident_gate(self.store.cases["ZF-1"])[-1], resident_decisions.TENURE_HOLD
+        )
+
+    def test_inventory_unmanaged_legacy_and_reports_only_cases_keep_behaviour(self) -> None:
+        for measure in MEASURES:
+            self.scope(measure)
+            self.answer(measure)
+        self.assertEqual(resident_gate(self.store.cases["ZF-1"]), [])
+        detail = self.store.detail("ZF-1", self.sam)
+        self.assertNotIn("tenure_inventory_view", detail)
+        self.assertNotIn("tenure_household_inventories", detail)
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        self.assertEqual(
+            resident_gate(self.store.cases["ZF-1"]), [resident_decisions.TENURE_HOLD]
+        )
+        view = self.store.detail("ZF-1", self.sam)["tenure_inventory_view"]
+        self.assertEqual(view["status"], "Missing")
+        self.assertEqual(
+            view["reasons"], ["No expected-household inventory has been recorded for this case."]
+        )
+
+    def test_inventory_malformed_field_fails_closed_without_blocking_manual_answers(self) -> None:
+        self.scope()
+        self.answer()
+        self.two_reports()
+        self.store.resident_action(self.sam, "ZF-1", self.inventory())
+        for broken in (None, "SYN", [], [1], [dict(version=1, households=[dict(household_ref=1)])]):
+            with self.subTest(broken=broken):
+                with self.store.lock:
+                    self.store._case("ZF-1")["tenure_household_inventories"] = broken
+                    self.store.save()
+                self.assertEqual(self.inventory_view()["status"], "Malformed")
+                gate = resident_gate(self.store.cases["ZF-1"])
+                self.assertIn("malformed", gate[0])
+                self.assertEqual(gate[-1], resident_decisions.TENURE_HOLD)
+                self.assertEqual(
+                    self.store.detail("ZF-1", self.sam)["tenure_inventory_view"]["status"],
+                    "Malformed",
+                )
+                if broken != []:
+                    self.unchanged_failure(
+                        partial(self.store.resident_action, self.sam, "ZF-1", self.inventory())
+                    )
+        self.answer(status="Declined")
+        self.assertEqual(list(self.store.audit_entries())[-1]["action"], "resident_decision_record")
+
+    def test_inventory_deletion_removes_resident_data_and_keeps_the_hold(self) -> None:
+        self.two_reports()
+        self.store.resident_action(self.sam, "ZF-1", self.inventory())
+        with self.store.lock:
+            self.store._case("ZF-1")["resident"]["first_contact_at"] = "2020-01-01"
+            self.store.save()
+        self.store.delete_resident_records(self.pam, "ZF-1", "2040-01-01")
+        c = self.open_store().cases["ZF-1"]
+        self.assertNotIn("tenure_household_inventories", c)
+        self.assertNotIn("tenure_reports", c)
+        self.assertTrue(c["tenure_review_required"])
+        self.assertEqual(resident_gate(c), [resident_decisions.TENURE_HOLD])
+        self.assertNotIn("SYN-INV-SOURCE-CANARY", json.dumps(self.store.detail("ZF-1", self.sam)))
+        with self.assertRaises(ValueError):
+            self.scope()
+
+    def test_inventory_private_projection_and_generic_text_leak_nothing(self) -> None:
+        self.two_reports()
+        self.store.resident_action(self.sam, "ZF-1", self.inventory())
+        canaries = ("SYN-INV-SOURCE-CANARY", "SYN-HH-A", "SYN-HH-B", "SYN-INV-v1")
+        digest = self.store.cases["ZF-1"]["tenure_household_inventories"][0]["households"][0][
+            "report_digest"
+        ]
+        public = json.dumps(
+            [resident_gate(self.store.cases["ZF-1"]), list(self.store.audit_entries())]
+        )
+        for canary in (*canaries, digest):
+            self.assertNotIn(canary, public)
+        for actor in (self.rex, self.kim):
+            detail = self.store.detail("ZF-1", actor)
+            output = json.dumps(detail)
+            for canary in (*canaries, digest):
+                self.assertNotIn(canary, output)
+            for field in resident_decisions.INTAKE_FIELDS:
+                self.assertNotIn(field, detail)
+            self.unchanged_failure(
+                partial(
+                    self.store.resident_action, actor, "ZF-1", self.inventory(expected_version=1)
+                )
+            )
+        sam = self.store.detail("ZF-1", self.sam)
+        self.assertEqual(len(sam["tenure_household_inventories"]), 1)
+        self.assertIn("SYN-HH-A", json.dumps(sam["tenure_inventory_view"]))
+        for capability in assistants.REGISTRY:
+            prompt = json.dumps(assistants.capture(capability, self.store.cases["ZF-1"]))
+            for canary in (*canaries, digest):
+                self.assertNotIn(canary, prompt)
+
+    def test_inventory_failure_races_and_committed_acknowledgement(self) -> None:
+        self.two_reports()
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        audit = list(self.store.audit_entries())
+        with patch.object(self.store, "save", side_effect=RuntimeError("SYN precommit")):
+            with self.assertRaises(RuntimeError):
+                self.store.resident_action(self.sam, "ZF-1", self.inventory())
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+
     def test_intake_sensitive_deletion_never_releases_tenure_hold(self) -> None:
         self.store.resident_action(self.sam, "ZF-1", self.nomination())
         self.store.resident_action(self.sam, "ZF-1", self.tenure())
@@ -4276,6 +4607,57 @@ class SqlResidentDecisions(JsonResidentDecisions):
             sum(e["action"] == "resident_tenure_intake" for e in current.audit_entries()), 1
         )
 
+    def test_inventory_competing_writer_and_report_race_commit_one_durable_state(self) -> None:
+        self.two_reports()
+        other = self.open_store()
+        save = self.store.save
+        body = self.inventory()
+
+        def compete() -> None:
+            other.resident_action(self.sam, "ZF-1", body)
+            save()
+
+        with patch.object(self.store, "save", side_effect=compete):
+            with self.assertRaises(ConflictError):
+                self.store.resident_action(self.sam, "ZF-1", body)
+        current = self.open_store()
+        self.assertEqual(len(current.cases["ZF-1"]["tenure_household_inventories"]), 1)
+        self.assertEqual(
+            sum(e["action"] == "resident_tenure_inventory_record" for e in current.audit_entries()),
+            1,
+        )
+        other = self.open_store()
+
+        def change_report() -> None:
+            other.resident_action(self.sam, "ZF-1", self.trigger(report_version=1))
+            save()
+
+        stale = self.inventory(expected_version=1)
+        with patch.object(self.store, "save", side_effect=change_report):
+            with self.assertRaises(ConflictError):
+                self.store.resident_action(self.sam, "ZF-1", stale)
+        current = self.open_store().cases["ZF-1"]
+        self.assertEqual(len(current["tenure_household_inventories"]), 1)
+        self.assertEqual(len(current["tenure_reports"][0]["review_triggers"]), 1)
+
+    def test_inventory_revoked_owner_right_is_denied_at_writer_replay(self) -> None:
+        self.two_reports()
+        other = self.open_store()
+        save = self.store.save
+
+        def revoke() -> None:
+            other.db.execute(
+                "UPDATE staff SET body=? WHERE email=?",
+                (json.dumps(dict(self.sam, code="SYN-revoked")), self.sam["email"]),
+            )
+            save()
+
+        before = copy.deepcopy(self.open_store().cases["ZF-1"])
+        with patch.object(self.store, "save", side_effect=revoke):
+            with self.assertRaises(PermissionError):
+                self.store.resident_action(self.sam, "ZF-1", self.inventory())
+        self.assertEqual(self.open_store().cases["ZF-1"], before)
+
     def test_intake_committed_acknowledgement_failure_is_truthful(self) -> None:
         save = self.store.save
 
@@ -4293,6 +4675,24 @@ class SqlResidentDecisions(JsonResidentDecisions):
         self.assertEqual(len(current.cases["ZF-1"]["nomination_records"]), 1)
         self.assertEqual(
             sum(e["action"] == "resident_nomination_record" for e in current.audit_entries()), 1
+        )
+
+    def test_inventory_committed_acknowledgement_failure_is_truthful(self) -> None:
+        self.two_reports()
+        save = self.store.save
+
+        def committed() -> None:
+            save()
+            raise OSError("SYN postcommit acknowledgement")
+
+        with (
+            patch.object(self.store, "save", side_effect=committed),
+            self.assertLogs("zava_forward.core.resident_decisions", level="ERROR"),
+            self.assertRaises(resident_decisions.ResidentCommittedError),
+        ):
+            self.store.resident_action(self.sam, "ZF-1", self.inventory(households=None))
+        self.assertEqual(
+            len(self.open_store().cases["ZF-1"]["tenure_household_inventories"]), 1
         )
 
     store: SqlStore
