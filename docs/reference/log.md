@@ -11316,6 +11316,25 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Erratum to the entry "Merged-wave checkpoint on pinned main da4f52abb" above, which is left intact: its "132 distinct SQL opt-in skips" is inaccurate. The 137 skipped executions are 5 browser skips later executed in R6, 129 SQL Server opt-in, 1 Azure SQL opt-in, 1 SQL-replay-only exclusion on the JSON class and 1 JSON-rollback-only exclusion on the SQLite-backed class. SQLite ran; no external SQL Server or Azure SQL service ran. The 699 run, 562 pass and 137 skip are execution totals only: at least nine are known repeats (five browser, four orchestrator version and dependency-rule cases), and the earlier "694 distinct" claim is withdrawn without a replacement unique total.
 * Appended a dated C3 [addendum](../architecture/cutover-evidence-pack.md#c3-addendum-corrections-and-pr-1351-empty-queue-observation-2026-11-10-refs-440-152) after an ordinary merge of `main` `bcc99405c` (PR 1351, the entry above on the recipe digest): the seven queue-empty cases, 19 Core scenario-manifest and needs-inventory tests and the served synthetic Chromium workbench check pass on the merged source with the recipe digest matching the manifest. Partial PRD AC-034 and AC-043 only; no runtime coverage producer, Unknown is not zero work. The da4f52abb rows are not retconned. Not claimed: actual-model, trusted resident binding, live rebuild, SQL Server or Azure SQL, assistive-technology or human approval, closure, or any counter reset (#440 correction ledger C3 of five used, two remain).
 
+## [2026-11-10] review | Issue 135 C4 independent review recorded (Refs #135)
+
+* Added a dated [independent review record](../../.copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c4-independent-review-record.md) for frozen source head `5a63544c`: APPROVE, no findings, C3 order adverse preserved. No source change.
+
+## [2026-11-10] correction | Issue 135 C5 importer optional-driver mypy override (Refs #135)
+
+* Added a `mssql_python` mypy override to the Importer project, mirroring Core, after hosted `src-importer` failed on PR 1357 at `25946393`. Failed hosted evidence and the C3 order adverse are preserved. See the C5 [review](../../.copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c5-review.md).
+
+## [2026-11-10] review | Issue 135 C5 independent review recorded (Refs #135)
+
+* Added the C5 [independent review record](../../.copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c5-independent-review-record.md): APPROVE, no findings; hosted new-head CI not yet observed. No source change.
+
+## [2026-11-10] integration | Issue 73 parent integrates main 4244e84e with merged child #1357 (Refs #73, #135)
+
+* Ordinary merge of main `4244e84e` (discovery-demo CLI from #1355, phase witness from #1358) into the served-exceptions parent holding child #1357. No file overlap and no conflict; both command-line entry points, the scoped register, rollback/idempotency and the Importer optional-driver typing override are preserved. See the [changes](../../.copilot-tracking/changes/2026-11-10-issue-73-served-parent-integration-1110-changes.md) and [review](../../.copilot-tracking/reviews/2026-11-10-issue-73-served-parent-integration-1110-review.md) records. Owner demo targeted tier only: not the full gate, no hosted CI observed, no push. Whole #135 and #73 stay open; no appointment, eligibility, production or assistive-technology claim.
+
+## [2026-11-10] review | Issue 73 independent review qualification and follow-up #1360 (Refs #73, #135, #1360)
+
+* Added a record-only [independent review qualification](../../.copilot-tracking/reviews/2026-11-10-issue-73-independent-record-1110-independent-qualification.md) for head `af7b20a3`: approve with comments, 0 Critical or High, one non-blocking Medium diagnostic finding, filed as follow-up #1360 ([record](../../.copilot-tracking/github-issues/issue-1360.md)) under owner decision D5 with no repair allowance. Root targeted checks and the original witness verification are recorded; no source change and no hosted CI claim. Original records are unchanged.
 ## [2026-11-10] update | Discovery CLI feature-increment checkpoint on pinned main 0d262beee (Refs #440 #125)
 
 * Appended a dated [checkpoint](../architecture/cutover-evidence-pack.md#discovery-cli-feature-increment-checkpoint-2026-11-10-refs-440-125) to the cut-over evidence pack after the completed #125 increment (PR 1355, `a0f7cf182`). `main` `0d262beee` adds only a rubric score file. A bounded local matrix passed: 14 demo cases, 46 helper cases, 5 version and dependency-rule cases, a twice-run byte-identical CLI readback, extra-argument exit 2, a poisoned-environment comparison, an `strace` with no connect call and no write-mode open, and clean ruff and mypy (tool versions differ from the pins).
@@ -11324,3 +11343,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-10] correction | Discovery CLI checkpoint D6 open list qualified (Refs #440 #125)
 
 * Additive qualification of the entry "Discovery CLI feature-increment checkpoint on pinned main 0d262beee", left intact. An independent review (approve_with_comments, zero blocking) found the pack's D6 list of opens outside source omitted `/usr/lib/ssl/openssl.cnf` (read-only, in the retained trace); the list is now stated as non-exhaustive. No connect call or write-mode open is contradicted, no run was repeated and the observation stays pinned at `0d262beee`. Correction C4 of five spent, one remains; no acceptance, closure or tick.
+
+## [2026-11-10] integration | Issue 73 parent refreshed onto main 736561ba (Refs #73, #135, #1360)
+
+* Ordinary merge (no rebase or rewrite) of main `736561ba` into the parent branch after the published PR 1361 state read CONFLICTING. The local merge was clean; it does not prove hosted mergeability or CI. Source, infra, tools and workflows are byte-identical to `27dab9b5`. See the [research](../../.copilot-tracking/research/2026-11-10-issue-73-current-base-1110-research.md) and [review](../../.copilot-tracking/reviews/2026-11-10-issue-73-current-base-1110-review.md) records. Both earlier log histories are preserved. No change to the #1360 follow-up or the exhausted C5 budget.
