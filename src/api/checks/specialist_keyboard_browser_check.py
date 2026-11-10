@@ -111,6 +111,19 @@ def width_px(value: str | None) -> float:
     return float(match.group(1)) if match else 0.0
 
 
+SHADOW_RING = re.compile(r"^rgba?\(([^)]*)\) 0px 0px 0px ([0-9.]+)px$")
+
+
+def ring_shadow(value: str) -> bool:
+    """Only the supported computed ring shape: one coloured, centred, blur-free shadow of 2px+."""
+    match = SHADOW_RING.match(value.strip())
+    if not match:
+        return False
+    channels = [part.strip() for part in match.group(1).split(",")]
+    alpha = float(channels[3]) if len(channels) == 4 else 1.0
+    return alpha > 0 and float(match.group(2)) >= 2
+
+
 def focus_failures(style: dict[str, str]) -> list[str]:
     """A visible indicator is a non-transparent outline of 2px or more, or a coloured shadow."""
     outline = (
@@ -118,9 +131,7 @@ def focus_failures(style: dict[str, str]) -> list[str]:
         and width_px(style.get("outlineWidth")) >= 2
         and not transparent(style.get("outlineColor") or "transparent")
     )
-    shadow = style.get("boxShadow") not in (None, "", "none") and not (
-        style["boxShadow"].startswith("rgba(0, 0, 0, 0)")
-    )
+    shadow = ring_shadow(style.get("boxShadow") or "")
     return [] if outline or shadow else [f"no measured visible focus indicator: {style}"]
 
 
@@ -160,6 +171,14 @@ def region_failures(screen_id: str, found: Sequence[Mapping[str, str | None]]) -
 # Inline CSSOM edits on the focused element; an injected <style> is not applied under the page CSP.
 FOCUS_SCRIPT = """kind => {
   const style = document.activeElement.style;
+  if (kind === 'transparent-shadow') {
+    style.setProperty('box-shadow', 'rgba(0, 90, 158, 0) 0px 0px 0px 2px', 'important');
+    style.setProperty('outline', 'none', 'important');
+    const now = getComputedStyle(document.activeElement);
+    if (now.boxShadow !== 'rgba(0, 90, 158, 0) 0px 0px 0px 2px' || now.outlineStyle !== 'none')
+      throw new Error('transparent-shadow mutation not in effect: ' + now.boxShadow);
+    return;
+  }
   style.setProperty('box-shadow', 'none', 'important');
   if (kind === 'transparent') style.setProperty('outline-color', 'transparent', 'important');
   else style.setProperty('outline', 'none', 'important');
@@ -300,6 +319,7 @@ def walk_screen(
     assert_focus(page, label, "reset", sabotage)
     page.keyboard.press("Enter")
     wait_status(page, expected_status(role, title, None))
+    assert_status(page, role, title, None, "reset-status", sabotage)
     check(f"{label} reset clears the selected home", page.locator(".screen-evidence").count() == 0)
     return obs
 
@@ -331,7 +351,13 @@ def negative_controls(page: Page, base: str, role: str, screens: list[tuple[str,
         ("focus style removed on the handoff link", two, focus_off("handoff")),
         ("focus style removed on the reset link", two, focus_off("reset")),
         ("focus made transparent on a screen link", two, focus_off("screen", "transparent")),
+        (
+            "focus shadow transparent, not none, on a home link",
+            two,
+            focus_off("home", "transparent-shadow"),
+        ),
         ("status role removed, text kept", two, status_off("unselected", "role")),
+        ("status role removed at reset, text kept", two, status_off("reset-status", "role")),
         ("status aria-live removed, text kept", two, status_off("selected", "aria-live")),
         ("status aria-atomic removed, text kept", two, status_off("selected", "aria-atomic")),
         (
@@ -411,7 +437,10 @@ def run_browser(base: str) -> None:
                     negatives = negative_controls(page, base, name, screens)
                 context.close()
             check(f"no uncaught JavaScript errors in the keyboard walk ({errors})", not errors)
-            check("negative controls ran against real two-region and one-region screens", negatives > 0)
+            check(
+                "negative controls ran against real two-region and one-region screens",
+                negatives > 0,
+            )
             report(served, observations, negatives)
         finally:
             browser.close()

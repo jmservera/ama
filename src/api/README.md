@@ -4133,9 +4133,10 @@ focus visibility at each reached target, the exact `#workspace-status` text plus
 `role=status`, `aria-live=polite` and `aria-atomic=true` after each state, and
 that the evidence tables, enumerated by tag, match the declared per-screen fixture
 labels with a label and `tabindex=0`; screens with no table on the fixture are
-declared gaps, not passes. Thirteen run-only mutations (focus removal at the home,
-region, handoff and reset targets, transparent focus at a screen link, each status
-attribute removed with the text kept, label removed, region made unfocusable, one or all regions removed, recovery link
+declared gaps, not passes. Fifteen run-only mutations (focus removal at the home,
+region, handoff and reset targets, transparent focus at a screen link, a transparent non-black shadow kept instead of
+none, each status attribute removed with the text kept including at the reset
+state, label removed, region made unfocusable, one or all regions removed, recovery link
 removed) must fail the same walk assertions; the entry target is asserted but has no
 negative. Fixture-role selection is not
 authentication; the status text is DOM evidence, not screen-reader output; endpoint

@@ -46,6 +46,20 @@ class SpecialistKeyboardCheckHelpers(unittest.TestCase):
         self.assertEqual(focus_failures(RING), [])
         shadow = {**RING, "outlineStyle": "none", "boxShadow": "rgb(0, 90, 158) 0px 0px 0px 2px"}
         self.assertEqual(focus_failures(shadow), [])
+        ring = "rgb(242, 169, 0) 0px 0px 0px 2px"
+        self.assertEqual(focus_failures({**RING, "outlineStyle": "none", "boxShadow": ring}), [])
+        for bad_shadow in (
+            "rgba(0, 90, 158, 0) 0px 0px 0px 2px",
+            "rgb(0, 90, 158) 0px 0px 0px 0px",
+            "rgb(0, 90, 158) 400px 0px 0px 2px",
+            "rgb(0, 90, 158) 0px 0px 8px 2px",
+            "rgb(0, 90, 158) 0px 0px 0px 2px inset",
+            f"{ring}, {ring}",
+        ):
+            self.assertTrue(
+                focus_failures({**RING, "outlineStyle": "none", "boxShadow": bad_shadow}),
+                bad_shadow,
+            )
         for bad in (
             {**RING, "outlineStyle": "none"},
             {**RING, "outlineWidth": "1px"},
