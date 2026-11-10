@@ -315,6 +315,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.parse_args(argv)
     try:
+        if sys.stdin is None:
+            raise ValueError(
+                "standard input is closed; pipe one constructed JSON object on standard input."
+            )
         if sys.stdin.isatty():
             raise ValueError("pipe one constructed JSON object on standard input.")
         data = sys.stdin.buffer.read(MAX_INPUT_BYTES + 1)

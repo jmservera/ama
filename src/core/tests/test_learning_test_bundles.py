@@ -335,6 +335,23 @@ class ConstructedReportCommand(unittest.TestCase):
         self.assertEqual(command(many)[0], 0)
         self.assertLess(len(json.dumps(many)), ltb.MAX_INPUT_BYTES)
 
+    def test_closed_standard_input_is_one_line_refusal(self) -> None:
+        with tempfile.TemporaryDirectory() as cwd:
+            done = subprocess.run(
+                [sys.executable, "-m", "zava_forward.core.learning_test_bundles"],
+                capture_output=True,
+                cwd=cwd,
+                env={**os.environ, "ZF_DATA": os.path.join(cwd, "must-not-exist")},
+                preexec_fn=lambda: os.close(0),  # noqa: PLW1509
+                timeout=30,
+            )
+            left = os.listdir(cwd)
+        err = done.stderr.decode()
+        self.assertEqual((done.returncode, done.stdout, left), (1, b"", []))
+        self.assertTrue(err.startswith("Learning report refused: "), err)
+        self.assertEqual(len(err.splitlines()), 1, err)
+        self.assertNotIn("Traceback", err)
+
     def test_importing_and_help_have_no_side_effects(self) -> None:
         with tempfile.TemporaryDirectory() as cwd:
             done = subprocess.run(
