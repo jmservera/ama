@@ -3847,6 +3847,59 @@ class JsonResidentDecisions(unittest.TestCase):
                     ]["supersession"]
                     self.store.save()
 
+    def edit_supersession(self, **changes: Any) -> None:
+        with self.store.lock:
+            attempt = self.store._case("ZF-1")["service_requests"][0]["formal_route"]["attempts"][0]
+            attempt["supersession"].update(changes)
+            self.store.save()
+
+    def assert_first_approval_withdrawn(self) -> None:
+        attempt = self.route()["attempts"][0]
+        self.assertEqual(attempt["status"], "Pending")
+        self.assertEqual(
+            [a["role"] for a in attempt["supersession"]["authorizations"]], ["reviewer"]
+        )
+        self.assertEqual(
+            [a["role"] for a in attempt["supersession"]["withdrawn"]], ["control_owner"]
+        )
+
+    def test_supersede_evidence_substituted_after_a_genuine_approval_does_not_count(self) -> None:
+        receiver = self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        audit = list(self.store.audit_entries())
+        self.assertNotIn("SYN-VERIFIED-OUTCOME-1", json.dumps(audit))
+        self.edit_supersession(evidence_ref="SYN-OTHER-EVIDENCE-2")
+        self.supersede(self.rae, "reviewer", evidence_ref="SYN-OTHER-EVIDENCE-2")
+        self.assert_first_approval_withdrawn()
+        self.assertEqual(list(self.store.audit_entries())[: len(audit)], audit)
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_supersede_restamped_binding_digest_on_an_old_approval_does_not_count(self) -> None:
+        receiver = self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        self.synthetic_binding(self.sam, self.rae, "SYN-BINDING-B")
+        digest = cast(Any, self.store).supersession_binding.digest
+        with self.store.lock:
+            attempt = self.store._case("ZF-1")["service_requests"][0]["formal_route"]["attempts"][0]
+            given = attempt["supersession"]["authorizations"][0]
+            given.update(binding_id="SYN-BINDING-B", binding_digest=digest)
+            self.store.save()
+        self.supersede(self.rae, "reviewer")
+        self.assert_first_approval_withdrawn()
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_supersede_legacy_generic_audit_entry_is_not_proof(self) -> None:
+        self.pending_attempt()
+        self.forged_supersession(cast(Any, self.store).supersession_binding.digest)
+        self.store.audit(
+            self.sam["email"],
+            "resident_service_supersede_authorize",
+            "ZF-1",
+            "SR-1 formal-route attempt 1 supersession authorized by the control owner",
+        )
+        self.supersede(self.rae, "reviewer")
+        self.assert_first_approval_withdrawn()
+
     def test_supersede_changed_binding_withdraws_earlier_authorization(self) -> None:
         self.pending_attempt()
         self.supersede(self.sam, "control_owner")

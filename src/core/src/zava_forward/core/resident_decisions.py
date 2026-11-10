@@ -174,13 +174,23 @@ def _same_owner(recorded, current):
     return bool(keys) and all(_identity_value(recorded, key) == _identity_value(current, key) for key in keys)
 
 
-def _authorization_holds(store, binding, case_id, req_id, number, given):
-    """A stored approval counts only under this binding, for the bound person, with its audit entry."""
+def _approval_detail(binding, case_id, req_id, reservation_id, number, role, evidence_ref):
+    """Audit detail carrying a digest of the exact approval payload; the evidence text is never logged."""
+    payload = dict(case=case_id, request=req_id, reservation=reservation_id, attempt=number, role=role,
+                   identity=binding.identity(role), binding_id=binding.binding_id, binding_digest=binding.digest,
+                   evidence_sha256=hashlib.sha256(str(evidence_ref).encode()).hexdigest())
+    digest = hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    return f"{req_id} formal-route attempt {number} supersession authorized by the {role.replace('_', ' ')} [approval {digest}]"
+
+
+def _authorization_holds(store, binding, case_id, req, number, evidence_ref, given):
+    """A stored approval counts only under this binding, for the bound person, if the audit holds its exact payload."""
     if not isinstance(given, dict) or given.get("role") not in _BINDING_ROLES or not isinstance(given.get("identity"), dict):
         return False
     role = given["role"]
     bound = binding.identity(role)
-    detail = f"{req_id} formal-route attempt {number} supersession authorized by the {role.replace('_', ' ')}"
+    detail = _approval_detail(binding, case_id, req["id"], req["formal_route"]["attempts"][number - 1].get("reservation_id"),
+                              number, role, evidence_ref)
     return (given.get("binding_digest") == binding.digest
             and _identity_value(given["identity"], "email") == _identity_value(bound, "email")
             and _same_owner(bound, given["identity"])
@@ -1544,7 +1554,7 @@ class ResidentDecisionMixin:
                 or not isinstance(record.get("withdrawn"), list)):
             raise ValueError("The recorded supersession is not in a usable state. Resolve it before authorizing.")
         for given in list(record["authorizations"]):
-            if not _authorization_holds(self, binding, c.get("id"), req["id"], number, given):
+            if not _authorization_holds(self, binding, c.get("id"), req, number, record.get("evidence_ref"), given):
                 record["authorizations"].remove(given)
                 record["withdrawn"].append(given)
         if not record["authorizations"]:
@@ -1559,8 +1569,9 @@ class ResidentDecisionMixin:
                                              binding_id=binding.binding_id, binding_digest=binding.digest))
         if len(record["authorizations"]) == 2:
             attempt.update(status="Superseded", superseded_from="Pending", superseded_at=_time())
-            return f"{req['id']} formal-route attempt {number} superseded; receipt, key and history kept"
-        return f"{req['id']} formal-route attempt {number} supersession authorized by the {role.replace('_', ' ')}"
+            detail = _approval_detail(binding, c.get("id"), req["id"], attempt.get("reservation_id"), number, role, evidence)
+            return f"{detail}; attempt superseded, receipt, key and history kept"
+        return _approval_detail(binding, c.get("id"), req["id"], attempt.get("reservation_id"), number, role, evidence)
 
     def _res_service_update(self, user, c, body):
         req = k.find(c.get("service_requests", []), body.get("id"), "request")

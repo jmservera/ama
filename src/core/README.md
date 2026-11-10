@@ -547,7 +547,12 @@ a human gate. Both people must be registered persisted identities matching the
 binding, different people, with no manager bypass; on an Independent review the
 reviewer must also not be the contested decision maker. A stored approval
 counts only when it carries the digest of the binding now in force, names the
-bound person and has its matching hash-chained audit entry; otherwise it moves
+bound person and has its matching hash-chained audit entry, whose detail holds
+a digest of the exact approval payload (case, request, reservation, attempt,
+role, bound identity, binding id and digest, and a hash of the evidence
+reference; the evidence text is never logged). Changing the stored evidence
+reference or restamping the binding digest on an earlier approval therefore
+stops it counting, as do legacy generic audit entries; otherwise it moves
 to `withdrawn`. Changing the binding therefore withdraws earlier approvals, but
 restoring an earlier binding revalidates approvals that carry its digest, so
 rotation and restoration are unsupported (use a new `binding_id`); a writer who
