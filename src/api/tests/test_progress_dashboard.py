@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import copy
+import csv
+import io
 import json
 import tempfile
 import threading
@@ -1040,6 +1042,167 @@ class ProgressDashboard(unittest.TestCase):
                 (empty["total"], empty["pages"], empty["page"], empty["limit"], empty["items"]),
                 (0, 1, 1, 3, []),
             )
+
+    def csv_page(self, **values: str) -> tuple[list[str], list[dict[str, str]]]:
+        text = progress.closed_csv(self.archive(**values))
+        rows = list(csv.reader(io.StringIO(text, newline="")))
+        return rows[0], [dict(zip(rows[0], row, strict=True)) for row in rows[1:]]
+
+    @staticmethod
+    def csv_cells(item: dict[str, Any]) -> dict[str, str]:
+        def cell(value: Any) -> str:
+            return "Yes" if value is True else "No" if value is False else value or ""
+
+        return {name: cell(item[name]) for name in progress.CLOSED_EXPORT_FIELDS}
+
+    def cohort(self, count: int) -> list[str]:
+        with self.store.lock:
+            template = copy.deepcopy(self.store.cases["ZF-1"])
+            template.update(stage="Completed", owner_role="Quality Inspector")
+            self.store.cases.clear()
+            identifiers = [f"SYN-CSV-{index:03}" for index in range(count)]
+            for identifier in reversed(identifiers):
+                case = copy.deepcopy(template)
+                case["id"] = identifier
+                self.store.cases[identifier] = case
+            return identifiers
+
+    def test_closed_csv_equals_the_json_current_page(self) -> None:
+        fields = list(progress.CLOSED_EXPORT_FIELDS)
+        for values in (
+            {},
+            {"status": "Withdrawn"},
+            {"team": "Quality Inspector"},
+            {"status": "Withdrawn", "team": "Quality Inspector", "q": "pat TEST"},
+            {"start": "2026-10-07", "end": "2026-10-07"},
+            {"start": "2026-10-04", "end": "2026-10-04", "q": "ZF-3"},
+            {"q": "ZF-4"},
+            {"q": "No matching fictional resident"},
+        ):
+            with self.subTest(values=values):
+                header, rows = self.csv_page(**values)
+                self.assertEqual(header, fields)
+                self.assertEqual(rows, [self.csv_cells(i) for i in self.archive(**values)["items"]])
+        self.assertEqual(self.csv_page()[1][-1]["closed_on"], "")
+        self.assertEqual(self.csv_page(q="ZF-4")[1][0]["hazard"], "Yes")
+        self.assertNotIn("ZF-5", [row["id"] for row in self.csv_page()[1]])
+
+    def test_closed_csv_pages_limits_and_empty_header(self) -> None:
+        identifiers = self.cohort(7)
+        for values, expected in (
+            ({"limit": "3", "page": "1"}, identifiers[:3]),
+            ({"limit": "3", "page": "2"}, identifiers[3:6]),
+            ({"limit": "3", "page": "999999"}, identifiers[6:]),
+            ({"limit": "100"}, identifiers),
+            ({}, identifiers),
+        ):
+            with self.subTest(values=values):
+                _, rows = self.csv_page(**values)
+                self.assertEqual([row["id"] for row in rows], expected)
+                self.assertEqual(rows, [self.csv_cells(i) for i in self.archive(**values)["items"]])
+        text = progress.closed_csv(self.archive(q="No matching fictional resident"))
+        self.assertEqual(text, ",".join(progress.CLOSED_EXPORT_FIELDS) + "\r\n")
+
+    def test_closed_csv_neutralises_formulas_and_keeps_awkward_text(self) -> None:
+        identifiers = self.cohort(8)
+        names = [
+            "=1+1",
+            "+SUM(A1)",
+            "-2",
+            "@cmd",
+            "\tTabbed",
+            "\rReturned",
+            'Zo\u00eb "quoted", comma\nsecond line',
+            "Plain name",
+        ]
+        with self.store.lock:
+            for identifier, name in zip(identifiers, names, strict=True):
+                case = self.store.cases[identifier]
+                case["resident"]["name"] = name
+                case["home"]["address"] = name
+        _, rows = self.csv_page()
+        for row, name in zip(rows, names, strict=True):
+            expected = "'" + name if name.startswith(("=", "+", "-", "@", "\t", "\r")) else name
+            self.assertEqual((row["resident"], row["address"]), (expected, expected))
+
+    def test_closed_csv_refuses_non_primitive_cells(self) -> None:
+        result = self.archive()
+        result["items"][0]["resident"] = {"nested": "value"}
+        with self.assertRaises(TypeError):
+            progress.closed_csv(result)
+
+    def test_closed_csv_read_does_not_mutate_cases_or_audit(self) -> None:
+        with self.store.lock:
+            before = copy.deepcopy(self.store.cases)
+            audit = list(self.store.audit_entries())
+            self.csv_page()
+            self.assertEqual(self.store.cases, before)
+            self.assertEqual(list(self.store.audit_entries()), audit)
+
+    def test_http_closed_csv_roles_attachment_and_rejection_parity(self) -> None:
+        app = App(self.store, "synthetic-check")
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
+        thread = threading.Thread(target=httpd.serve_forever, daemon=True)
+        thread.start()
+        self.addCleanup(thread.join, 5)
+        self.addCleanup(httpd.server_close)
+        self.addCleanup(httpd.shutdown)
+        base = f"http://127.0.0.1:{httpd.server_address[1]}"
+
+        def fetch(path: str, cookie: str = "", body: bytes | None = None) -> Any:
+            req = urllib.request.Request(base + path, body, headers={"Cookie": cookie})
+            try:
+                with urllib.request.urlopen(req) as response:
+                    return response.status, response.headers, response.read()
+            except urllib.error.HTTPError as error:
+                return error.code, error.headers, error.read()
+
+        cookies = {}
+        for who in ("pam", "sam", "contractor"):
+            body = json.dumps(dict(email=f"{who}@example.test", password="synthetic-check"))
+            cookies[who] = fetch("/api/login", body=body.encode())[1]["Set-Cookie"].split(";")[0]
+        code, headers, body = fetch("/api/closed-cases.csv")
+        self.assertEqual(code, 401)
+        self.assertIsNone(headers["Content-Disposition"])
+        for who in ("sam", "contractor"):
+            code, headers, body = fetch("/api/closed-cases.csv", cookies[who])
+            self.assertEqual(code, 403)
+            self.assertIsNone(headers["Content-Disposition"])
+            self.assertEqual(headers["Content-Type"], "application/json")
+            self.assertNotIn(b"ZF-", body)
+        for values in (
+            {},
+            {"status": "Withdrawn", "team": "Quality Inspector", "q": "ZF-3"},
+            {"start": "2026-10-07", "end": "2026-10-07", "limit": "1", "page": "9"},
+            {"q": "No matching fictional resident"},
+        ):
+            query = ("?" + urlencode(values)) if values else ""
+            code, headers, body = fetch("/api/closed-cases.csv" + query, cookies["pam"])
+            self.assertEqual(code, 200)
+            self.assertEqual(headers["Content-Type"], "text/csv; charset=utf-8")
+            self.assertEqual(
+                headers["Content-Disposition"], 'attachment; filename="closed-cases-page.csv"'
+            )
+            expected = progress.closed_csv(self.archive(**values))
+            self.assertEqual(body.decode(), expected)
+        for query in (
+            "?page=0",
+            "?page=",
+            "?page=1&page=2",
+            "?limit=101",
+            "?unknown=value",
+            "?q=" + "x" * 201,
+            "?start=2026-10-08&end=2026-10-07",
+            "?end=not-a-date",
+            "?status=a&status=b",
+        ):
+            with self.subTest(query=query):
+                expected_response = fetch("/api/closed-cases" + query, cookies["pam"])
+                code, headers, body = fetch("/api/closed-cases.csv" + query, cookies["pam"])
+                self.assertEqual(code, 400)
+                self.assertEqual((code, body), (expected_response[0], expected_response[2]))
+                self.assertIsNone(headers["Content-Disposition"])
+                self.assertEqual(headers["Content-Type"], "application/json")
 
     def test_existing_60000_home_fixture_progress_and_filtered_page_boundaries(self) -> None:
         data = scale_data(case_templates=[self.store.cases[f"ZF-{index}"] for index in range(1, 5)])

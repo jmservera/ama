@@ -1277,7 +1277,7 @@ const fundingFieldRows = (draft) => Object.entries(draft.fields || {}).map(([id,
     source ? `${screenValue(source.id)} v${screenValue(source.version)} (${screenValue(source.kind)})` : "Unknown. No reviewed evidence bound.",
     issue.length ? issue.map((i) => `${i.status}: ${i.reason}`).join(" ") : "None recorded"];
 });
-function fundingDraftPanel(draft) {
+function fundingDraftPanel(draft, caseId, downloadEnabled) {
   if (draft.status === "Unavailable") return screenPanel(`Field draft ${screenValue(draft.draft_id)}`,
     screenUnknown(draft.notice, "Document owner", "Recover the source document before reading this draft"));
   const conflicts = (draft.issues || []).filter((i) => i.status === "Conflict");
@@ -1292,7 +1292,10 @@ function fundingDraftPanel(draft) {
       ["Unit and currency verification", screenValue(draft.unit_currency_verification)]]),
     screenTable(`Fields and reviewed evidence for ${draft.draft_id}`,
       ["Field", "State", "Value", "Reviewed evidence", "Issues"], fundingFieldRows(draft)),
-    h("p", {}, screenValue(draft.notice)));
+    h("p", {}, screenValue(draft.notice)),
+    downloadEnabled && draft.draft_id ? h("p", {},
+      h("a", { class: "btn alt", href: `/api/cases/${encodeURIComponent(caseId)}/form-review/${encodeURIComponent(draft.draft_id)}/held-export`, download: "held-form-draft-export.json" }, "Download Held draft (unreviewed)"),
+      ` Not submitted; eligibility Not assessed. The file is built when you ask for it and may be newer than input version ${screenValue(draft.input_version)} shown here. Check the version and hash inside the file. A read-only copy for reading, not a reviewed pack.`) : null);
 }
 registerRoleScreen({
   id: "finance-funding",
@@ -1323,7 +1326,7 @@ registerRoleScreen({
             g.pending ? `${screenValue(g.pending.to)}, proposed by ${screenValue(g.pending.name)}. Evidence: ${screenValue(g.pending.source)}` : "Nothing waiting",
             (g.history || []).length ? g.history.map((x) => `${screenValue(x.state)}: ${screenValue(x.source)} (approved by ${screenValue(x.approved_by)}, ${screenValue(x.source_status)})`).join("; ") : "Unknown. No approved stage."]))
           : h("p", { class: "empty" }, "No grant recorded. This does not establish that no funding is available.")),
-      drafts ? (drafts.length ? drafts.map(fundingDraftPanel)
+      drafts ? (drafts.length ? drafts.map((d) => fundingDraftPanel(d, c.id, extra.review.held_download_enabled === true))
         : screenPanel("Constructed field draft", h("p", { class: "empty" }, "No field draft recorded for this home. Template, fields and evidence are Unknown.")))
         : screenPanel("Constructed field draft", h("p", { class: "empty" }, "Unknown. The field review could not be read for your role.")),
       readable && screenPanel("Form schema catalogue",

@@ -5103,3 +5103,32 @@ is refused before any inspection. A manifest alone, loopback or a password alone
 `src/core/tests/test_priority_order.py` (in-memory, SQLite, and SQL Server with `ZF_RESIDENT_MSSQL=1`).
 SQL Server behaviour of the C4 source (lock timeout, `@@TRANCOUNT`, cross-connection writes), the real
 Docker provisioning path, the ledger-enabled migration and SQL Server scale are not yet proven.
+
+## Constructed learning-test report command (#129, Refs #123)
+
+`learning_test_bundles` can print one bundle's existing stop-first report from caller-constructed
+numbers. It adds only an input boundary: `run_report` and `render_report`, the five bundles,
+comparators, six effort components and zero-target counts are unchanged.
+
+```bash
+python -m zava_forward.core.learning_test_bundles < constructed-run.json
+```
+
+Standard input only, one JSON object, at most 65,536 bytes, one bundle per invocation:
+`schema_version` `learning-bundle-constructed-input-v1`, integer `run` and unique integer `case`
+numbers (1 to 1,000,000, 1 to 50 cases), `bundle`, `representative_data_retained` explicitly
+`false`, and `o16_counted_under` only for the two O16 bundles. Each case has `comparator` and
+`workflow` arms with exactly the six `effort` minutes (finite numbers, 0 to 100,000) and exactly
+that bundle's zero-target `counts` (integers, 0 to 1,000,000). Unknown keys, booleans or strings as
+numbers, nonfinite values, duplicate keys, text fields, a terminal on standard input and oversize
+input are refused with one `Learning report refused:` line on standard error, exit 1 and no report.
+A STOP is a valid report with exit 0; read the STOP line, not the exit status.
+
+The output begins `CONSTRUCTED, UNVERIFIED INPUT` and ends with fixed qualifications: the input is
+caller-declared and not verified synthetic provenance, a real experiment or measured benefit; the
+Atlas owner mapping is unconfirmed (an `o16_counted_under` choice is the caller's accounting, not
+ratification); the representative-data retention decision is unsatisfied; saved minutes are capacity
+until Finance validates them. It stores nothing: no file, run record, database, network, AI or
+`ZF_DATA` access. Tests: `python -m unittest discover -s tests -p 'test_learning_test_bundles.py' -q`.
+This is not a real experiment, screen wiring, stored runs or multi-run aggregation; those stay held
+by the [protocol](../../docs/reference/research/ux/journey-learning-test-bundles.md).

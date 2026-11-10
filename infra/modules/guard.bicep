@@ -96,6 +96,26 @@ param serverlessAutoPauseDelayMustBeSupported string
 @description('Must not be empty. Empty means environmentName=pilot enabled the ranking archive Blob container without a positive rankingArchiveImmutabilityDays; configure a duration first. This checks only that a duration is set, not that it is approved or locked.')
 param pilotRankingArchiveRequiresConfiguredRetention string
 
+@minLength(1)
+@description('Must not be empty. Empty means enablePublicSimulationLane=true outside demoDirectIngress with deploymentProfile=development.')
+param publicSimulationRequiresDirectDemo string
+
+@minLength(1)
+@description('Must not be empty. Empty means enablePublicSimulationLane=true without entraClientId or with entraBearerOnly=true; the lane needs the browser-authenticated demo.')
+param publicSimulationRequiresBrowserAuthentication string
+
+@minLength(1)
+@description('Must not be empty. Empty means enablePublicSimulationLane=true with deployApplications=false; there is no API to bind.')
+param publicSimulationRequiresApplications string
+
+@minLength(1)
+@description('Must not be empty. Empty means enablePublicSimulationLane=true with the placeholder apiImage; supply the real API image built from src/api/Dockerfile.')
+param publicSimulationRequiresRealApiImage string
+
+@minLength(1)
+@description('Must not be empty. Empty means enablePublicSimulationLane=true with apiMinReplicas above 1; the volatile replica-local lane allows at most one replica.')
+param publicSimulationRequiresSingleReplica string
+
 output checked array = [
   resourceGroupMustBeAma
   primaryLocationMustBeUKSouth
@@ -121,4 +141,9 @@ output checked array = [
   appCredentialBlocksApplicationDeployment
   serverlessAutoPauseDelayMustBeSupported
   pilotRankingArchiveRequiresConfiguredRetention
+  publicSimulationRequiresDirectDemo
+  publicSimulationRequiresBrowserAuthentication
+  publicSimulationRequiresApplications
+  publicSimulationRequiresRealApiImage
+  publicSimulationRequiresSingleReplica
 ]

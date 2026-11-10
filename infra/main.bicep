@@ -154,6 +154,8 @@ param chatRetentionRef string = ''
 param chatRetentionDays int = 0
 @description('Provision the private ranking-archive Blob container and configure the API with ZF_RANKING_ARCHIVE and ZF_RANKING_BLOB_CONTAINER (Refs #136, #1258). Source definition only: not provisioning, a role grant, WORM enforcement or deployment approval. Default false leaves every existing resource and API setting unchanged.')
 param enableRankingArchiveBlob bool = false
+@description('Demo-only, default-off opt-in (Refs #136, #1288): start the API with the public fixture simulation lane at ZF_SIM_STORE/ZF_SIM_KEY_FILE under /state/public-simulation, replica-local and VOLATILE (lost on replica replacement or scale to zero), at most one API replica. Requires demoDirectIngress, the development profile, browser authentication, deployed applications and a real API image. Not durable history, live IoT Hub ingestion, a real selected-home reading path, whole-issue acceptance or a deployment approval; it never changes the durable SQL admission, budgets or model settings.')
+param enablePublicSimulationLane bool = false
 @description('Days ranking archive records stay immutable. 0 (unset) creates no policy: the duration and its approval are a manual prerequisite and no immutable release may be claimed. A positive value creates an unlocked policy; locking is an owner action.')
 @minValue(0)
 param rankingArchiveImmutabilityDays int = 0
@@ -210,6 +212,11 @@ module guard 'modules/guard.bicep' = {
     demoRequiresBrowserAuthentication: !demoDirectIngress || !deployApplications || (!empty(entraClientId) && !entraBearerOnly) ? 'ok' : ''
     appCredentialRequiresDirectDemo: entraCredentialStore != 'app' || (demoDirectIngress && !entraBearerOnly && !empty(entraClientId)) ? 'ok' : ''
     appCredentialBlocksApplicationDeployment: entraCredentialStore != 'app' || !deployApplications ? 'ok' : ''
+    publicSimulationRequiresDirectDemo: !enablePublicSimulationLane || (demoDirectIngress && isDev) ? 'ok' : ''
+    publicSimulationRequiresBrowserAuthentication: !enablePublicSimulationLane || (!empty(entraClientId) && !entraBearerOnly) ? 'ok' : ''
+    publicSimulationRequiresApplications: !enablePublicSimulationLane || deployApplications ? 'ok' : ''
+    publicSimulationRequiresRealApiImage: !enablePublicSimulationLane || !contains(apiImage, 'k8se/quickstart') ? 'ok' : ''
+    publicSimulationRequiresSingleReplica: !enablePublicSimulationLane || apiMinReplicas <= 1 ? 'ok' : ''
     pilotRankingArchiveRequiresConfiguredRetention: environmentName != 'pilot' || !enableRankingArchiveBlob || rankingArchiveImmutabilityDays > 0 ? 'ok' : ''
     serverlessAutoPauseDelayMustBeSupported: sqlTier != 'serverless' || sqlAutoPauseDelayMinutes == -1 || (sqlAutoPauseDelayMinutes >= 15 && sqlAutoPauseDelayMinutes <= 10080) ? 'ok' : ''
   }
@@ -381,6 +388,7 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     allowPublicNetworkAccess: publicAccess
     behindPublicEdge: enablePublicEdge
     demoDirectIngress: demoDirectIngress
+    enablePublicSimulationLane: enablePublicSimulationLane
     prefix: applicationPrefix
     location: location
     tags: allTags
