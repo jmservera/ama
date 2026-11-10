@@ -14,7 +14,7 @@ from datetime import date, datetime
 from functools import partial
 from pathlib import Path
 from threading import Barrier, Event
-from typing import Any
+from typing import Any, cast
 from unittest.mock import patch
 
 from dataset import DATA, supplied_appointment_fixture, supplied_contract_fixture
@@ -3638,6 +3638,7 @@ class JsonResidentDecisions(unittest.TestCase):
         """Leave one acknowledged-but-unrecorded attempt Pending, as a failed outcome write does."""
         receiver = SyntheticReceiver("ack")
         self.store.complaints_receiver = receiver
+        self.synthetic_binding(self.sam, self.rae)
         if route == "Complaint":
             self.request()
         else:
@@ -3653,6 +3654,18 @@ class JsonResidentDecisions(unittest.TestCase):
                 with self.assertRaises(resident_decisions.ResidentCommittedError):
                     self.forward(self.rae if route != "Complaint" else None)
         return receiver
+
+    def synthetic_binding(
+        self, control: dict[str, Any], reviewer: dict[str, Any], binding_id: str = "SYN-BINDING-A"
+    ) -> None:
+        """SYNTHETIC trusted fixture; not an actual named approval-role binding."""
+
+        def who(user: dict[str, Any]) -> dict[str, Any]:
+            return dict(email=user["email"], code=user.get("code"), oid=user.get("oid"))
+
+        cast(Any, self.store).supersession_binding = resident_decisions.SupersessionBinding(
+            binding_id, who(control), who(reviewer)
+        )
 
     def supersede(self, user: dict[str, Any], role: str, **kw: Any) -> None:
         reservation = self.route()["attempts"][0]["reservation_id"]
@@ -3754,12 +3767,137 @@ class JsonResidentDecisions(unittest.TestCase):
                 self.store._case("ZF-1")["service_requests"][0]["service_identity"], code="SYN-X"
             )
             self.store.save()
+        self.synthetic_binding(self.pam, self.rae)
         self.supersede(self.pam, "control_owner")
         self.supersede(self.rae, "reviewer")
         self.assertEqual(self.route()["attempts"][0]["status"], "Superseded")
         self.assertEqual(len(receiver.envelopes), 1)
 
-    def test_supersede_authorization_ends_when_its_owner_is_reassigned(self) -> None:
+    def forged_supersession(self, digest: str | None) -> None:
+        stamp = dict(binding_id="SYN-BINDING-A", binding_digest=digest) if digest else {}
+        with self.store.lock:
+            attempt = self.store._case("ZF-1")["service_requests"][0]["formal_route"]["attempts"][0]
+            attempt["supersession"] = dict(
+                evidence_ref="SYN-VERIFIED-OUTCOME-1",
+                withdrawn=[],
+                authorizations=[
+                    dict(
+                        role="control_owner",
+                        identity=resident_decisions._identity(self.sam),
+                        at="2026-11-10T00:00:00+00:00",
+                        **stamp,
+                    )
+                ],
+            )
+            self.store.save()
+
+    def test_supersede_default_unconfigured_rejects_inferred_roles_and_forged_rows(self) -> None:
+        receiver = self.pending_attempt()
+        del cast(Any, self.store).supersession_binding
+        self.forged_supersession(None)
+        for user, role in (
+            (self.sam, "control_owner"),
+            (self.rae, "reviewer"),
+            (self.pam, "reviewer"),
+        ):
+            with self.subTest(user=user["name"], role=role):
+                with self.assertRaisesRegex(PermissionError, "approval-role binding"):
+                    self.supersede(user, role)
+        with self.assertRaisesRegex(PermissionError, "approval-role binding"):
+            self.supersede(self.rae, "reviewer")
+        for forged in (None, dict(email=self.rae["email"], code=self.rae.get("code"))):
+            cast(Any, self.store).supersession_binding = forged
+            self.unchanged_failure(partial(self.supersede, self.rae, "reviewer"))
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_supersede_binding_not_created_from_staff_requests_or_body(self) -> None:
+        self.pending_attempt()
+        self.synthetic_binding(self.kim, self.rex)
+        for user, role in ((self.sam, "control_owner"), (self.rae, "reviewer")):
+            self.unchanged_failure(partial(self.supersede, user, role))
+        self.unchanged_failure(
+            partial(
+                self.supersede,
+                self.sam,
+                "control_owner",
+                binding=dict(control_owner=self.sam["email"], reviewer=self.rae["email"]),
+            )
+        )
+        self.assertNotIn("supersession", self.route()["attempts"][0])
+
+    def test_supersede_forged_stored_authorization_is_withdrawn_not_counted(self) -> None:
+        self.pending_attempt()
+        digest = cast(Any, self.store).supersession_binding.digest
+        for stamp in (None, "0" * 64, digest):
+            with self.subTest(stamp=stamp):
+                self.forged_supersession(stamp)
+                self.supersede(self.rae, "reviewer")
+                attempt = self.route()["attempts"][0]
+                self.assertEqual(attempt["status"], "Pending")
+                self.assertEqual(
+                    [a["role"] for a in attempt["supersession"]["authorizations"]], ["reviewer"]
+                )
+                self.assertEqual(
+                    [a["role"] for a in attempt["supersession"]["withdrawn"]], ["control_owner"]
+                )
+                with self.store.lock:
+                    del self.store._case("ZF-1")["service_requests"][0]["formal_route"]["attempts"][
+                        0
+                    ]["supersession"]
+                    self.store.save()
+
+    def test_supersede_changed_binding_withdraws_earlier_authorization(self) -> None:
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        self.synthetic_binding(self.sam, self.rae, "SYN-BINDING-B")
+        self.supersede(self.rae, "reviewer")
+        attempt = self.route()["attempts"][0]
+        self.assertEqual(attempt["status"], "Pending")
+        self.assertEqual(
+            [a["role"] for a in attempt["supersession"]["withdrawn"]], ["control_owner"]
+        )
+        self.supersede(self.sam, "control_owner")
+        self.assertEqual(self.route()["attempts"][0]["status"], "Superseded")
+        stamped = {
+            a["binding_id"] for a in self.route()["attempts"][0]["supersession"]["authorizations"]
+        }
+        self.assertEqual(stamped, {"SYN-BINDING-B"})
+
+    def test_supersede_binding_changed_during_sql_replay_is_refused(self) -> None:
+        if not self.sql:
+            self.skipTest("SQL replay only")
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        original = resident_decisions.validate_sql
+
+        def swap(store: Any) -> None:
+            self.synthetic_binding(self.sam, self.rae, "SYN-BINDING-C")
+            original(store)
+
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        with patch.object(resident_decisions, "validate_sql", swap):
+            with self.assertRaises(PermissionError):
+                self.supersede(self.rae, "reviewer")
+        self.assertEqual(self.store.cases["ZF-1"], before)
+
+    def test_supersede_binding_is_validated_and_immutable(self) -> None:
+        binding = resident_decisions.SupersessionBinding
+        sam = dict(email=self.sam["email"], code=self.sam.get("code"))
+        rae = dict(email=self.rae["email"], code=self.rae.get("code"))
+        with self.assertRaises(ValueError):
+            binding("SYN", sam, dict(rae, code=sam["code"]))
+        with self.assertRaises(ValueError):
+            binding("SYN", sam, dict(email=self.rae["email"]))
+        with self.assertRaises(ValueError):
+            binding("", sam, rae)
+        good = binding("SYN", sam, rae)
+        with self.assertRaises(AttributeError):
+            good.binding_id = "OTHER"  # type: ignore[misc]
+        sam["code"] = "CHANGED"
+        self.assertNotEqual(good.identity("control_owner")["code"], "CHANGED")
+
+    def test_supersede_owner_reassignment_does_not_change_the_bound_authority(self) -> None:
         self.pending_attempt()
         self.supersede(self.sam, "control_owner")
         req = self.store.cases["ZF-1"]["service_requests"][0]
@@ -3775,17 +3913,8 @@ class JsonResidentDecisions(unittest.TestCase):
                 note="SYN reassignment",
             ),
         )
+        self.unchanged_failure(partial(self.supersede, self.rex, "control_owner"))
         self.supersede(self.rae, "reviewer")
-        attempt = self.route()["attempts"][0]
-        self.assertEqual(attempt["status"], "Pending")
-        self.assertEqual(
-            [a["role"] for a in attempt["supersession"]["authorizations"]], ["reviewer"]
-        )
-        self.assertEqual(
-            [a["role"] for a in attempt["supersession"]["withdrawn"]], ["control_owner"]
-        )
-        self.unchanged_failure(partial(self.supersede, self.sam, "control_owner"))
-        self.supersede(self.rex, "control_owner")
         self.assertEqual(self.route()["attempts"][0]["status"], "Superseded")
 
     def test_supersede_failure_is_atomic_and_can_be_replayed(self) -> None:
@@ -3805,6 +3934,7 @@ class JsonResidentDecisions(unittest.TestCase):
     def test_supersede_is_refused_while_the_send_is_in_flight(self) -> None:
         receiver = SyntheticReceiver("block")
         self.store.complaints_receiver = receiver
+        self.synthetic_binding(self.sam, self.rae)
         self.request()
         with ThreadPoolExecutor(max_workers=1) as pool:
             sending = pool.submit(self.forward)

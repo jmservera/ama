@@ -111,14 +111,83 @@ def _require_independent_reviewer(reviewer, historical):
         raise PermissionError("Choose a reviewer who did not make the contested decision.")
 
 
-# Control owner is the registered service owner and reviewer the registered redress owner: the existing
-# distinct pair on a formal route. No role, grant or account is added.
-_SUPERSEDE_ROLES = dict(control_owner="service", reviewer="redress")
+_BINDING_ROLES = ("control_owner", "reviewer")
+
+
+class SupersessionBinding:
+    """Immutable, explicit approval-role binding for manual_verified supersession (issue 1238, Q6).
+
+    Set by trusted composition as ``store.supersession_binding``; unset by default, so supersession
+    fails closed. It is never derived from staff roles, requests, stored rows or request bodies. Its
+    actual named content is a human gate; changing it withdraws approvals given under the old value.
+    """
+
+    __slots__ = ("_binding_id", "_roles", "_digest")
+
+    def __init__(self, binding_id, control_owner, reviewer):
+        if not isinstance(binding_id, str) or not 1 <= len(binding_id.strip()) <= 60:
+            raise ValueError("A binding needs an identifier of at most 60 characters.")
+        roles = []
+        for name, given in zip(_BINDING_ROLES, (control_owner, reviewer)):
+            identity = {key: given.get(key).strip() for key in ("email", "code", "oid")
+                        if isinstance(given, dict) and isinstance(given.get(key), str) and given.get(key).strip()}
+            if "email" not in identity or not (identity.get("code") or identity.get("oid")):
+                raise ValueError(f"The {name.replace('_', ' ')} needs a known identity: an email and a code or oid.")
+            roles.append(tuple(sorted(identity.items())))
+        if _same_person(dict(roles[0]), dict(roles[1])):
+            raise ValueError("The control owner and reviewer must be different people.")
+        object.__setattr__(self, "_binding_id", binding_id.strip())
+        object.__setattr__(self, "_roles", dict(zip(_BINDING_ROLES, roles)))
+        object.__setattr__(self, "_digest", hashlib.sha256(
+            json.dumps([self._binding_id, roles], separators=(",", ":")).encode()).hexdigest())
+
+    def __setattr__(self, name, value):
+        raise AttributeError("An approval-role binding is immutable.")
+
+    @property
+    def binding_id(self):
+        return self._binding_id
+
+    @property
+    def digest(self):
+        return self._digest
+
+    def identity(self, role):
+        return {key: dict(self._roles[role]).get(key) for key in ("email", "code", "oid")}
+
+
+def _supersession_binding(store):
+    binding = getattr(store, "supersession_binding", None)
+    if not isinstance(binding, SupersessionBinding):
+        raise PermissionError("No approval-role binding is configured, so no one can authorize this supersession. "
+                              "A governed configuration step is required first.")
+    context = getattr(getattr(store, "local", store), "resident_validation", None)
+    if context is not None:
+        if context["validating"] and context.get("binding_digest") != binding.digest:
+            raise PermissionError("The approval-role binding changed. Reload before continuing.")
+        context["binding_digest"] = binding.digest
+    return binding
 
 
 def _same_owner(recorded, current):
     keys = [key for key in ("code", "oid") if _identity_value(recorded, key)]
     return bool(keys) and all(_identity_value(recorded, key) == _identity_value(current, key) for key in keys)
+
+
+def _authorization_holds(store, binding, case_id, req_id, number, given):
+    """A stored approval counts only under this binding, for the bound person, with its audit entry."""
+    if not isinstance(given, dict) or given.get("role") not in _BINDING_ROLES or not isinstance(given.get("identity"), dict):
+        return False
+    role = given["role"]
+    bound = binding.identity(role)
+    detail = f"{req_id} formal-route attempt {number} supersession authorized by the {role.replace('_', ' ')}"
+    return (given.get("binding_digest") == binding.digest
+            and _identity_value(given["identity"], "email") == _identity_value(bound, "email")
+            and _same_owner(bound, given["identity"])
+            and any(entry.get("who", "").casefold() == _identity_value(bound, "email")
+                    and entry.get("action") == "resident_service_supersede_authorize"
+                    and entry.get("case") == case_id and entry.get("detail") == detail
+                    for entry in store.audit_entries()))
 
 
 def _day(value):
@@ -1451,7 +1520,8 @@ class ResidentDecisionMixin:
         return f"{req['id']} formal-route attempt {attempt}: {body['status']}"
 
     def _res_service_supersede_authorize(self, user, c, body):
-        """Owner-approved manual_verified step (issue 1238 Q6): two named owners, never age, never a resend."""
+        """Owner-approved manual_verified step (issue 1238 Q6): two explicitly bound people, never age, never a resend."""
+        binding = _supersession_binding(self)
         req = k.find(c.get("service_requests", []), body.get("id"), "request")
         attempts = (req.get("formal_route") or {}).get("attempts", [])
         number = body.get("attempt")
@@ -1460,19 +1530,21 @@ class ResidentDecisionMixin:
             raise ValueError("There is no pending formal-route attempt to supersede.")
         if in_flight(self, c.get("id"), req["id"]):
             raise ValueError("A send for this request is still in progress on this system. Wait for its outcome.")
-        role = k.choice(body.get("authorize_as"), tuple(_SUPERSEDE_ROLES), "the authorizing role")
+        role = k.choice(body.get("authorize_as"), _BINDING_ROLES, "the authorizing role")
         evidence = k.text(body.get("evidence_ref"), "the reference to the verified outcome evidence", 100)
-        owner_key = _SUPERSEDE_ROLES[role]
-        if user["email"].lower() != req[owner_key + "_owner_email"].lower():
-            raise PermissionError(f"Only the named {role.replace('_', ' ')} can authorize this supersession.")
-        _require_named_reviewer(user, req.get(owner_key + "_identity"))
+        bound = binding.identity(role)
+        if _identity_value(user, "email") != _identity_value(bound, "email") or not _same_owner(bound, user):
+            raise PermissionError(f"Only the configured {role.replace('_', ' ')} can authorize this supersession.")
+        _require_named_reviewer(user, bound)
         if role == "reviewer" and req["route"] == "Independent review":
             _require_independent_reviewer(user, req.get("reviewed_identity"))
         attempt = attempts[number - 1]
         record = attempt.setdefault("supersession", dict(evidence_ref=evidence, authorizations=[], withdrawn=[]))
-        current = {name: req.get(key + "_identity") for name, key in _SUPERSEDE_ROLES.items()}
+        if (not isinstance(record, dict) or not isinstance(record.get("authorizations"), list)
+                or not isinstance(record.get("withdrawn"), list)):
+            raise ValueError("The recorded supersession is not in a usable state. Resolve it before authorizing.")
         for given in list(record["authorizations"]):
-            if not _same_owner(given["identity"], current[given["role"]]):
+            if not _authorization_holds(self, binding, c.get("id"), req["id"], number, given):
                 record["authorizations"].remove(given)
                 record["withdrawn"].append(given)
         if not record["authorizations"]:
@@ -1480,10 +1552,11 @@ class ResidentDecisionMixin:
         if any(a["role"] == role for a in record["authorizations"]):
             raise ValueError("This role has already authorized the supersession. Reload to see its state.")
         if record["evidence_ref"] != evidence:
-            raise ValueError("Both owners must authorize the same verified outcome evidence reference.")
+            raise ValueError("Both authorizers must authorize the same verified outcome evidence reference.")
         if any(_same_person(user, a["identity"]) for a in record["authorizations"]):
             raise PermissionError("A different named person must give the other authorization.")
-        record["authorizations"].append(dict(role=role, identity=_identity(user), at=_time()))
+        record["authorizations"].append(dict(role=role, identity=_identity(user), at=_time(),
+                                             binding_id=binding.binding_id, binding_digest=binding.digest))
         if len(record["authorizations"]) == 2:
             attempt.update(status="Superseded", superseded_from="Pending", superseded_at=_time())
             return f"{req['id']} formal-route attempt {number} superseded; receipt, key and history kept"
