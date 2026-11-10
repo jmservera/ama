@@ -757,7 +757,10 @@ function pendingHandoffs() {
   api("/api/handoffs").then((rows) => {
     if (!rows.length) { box.hidden = true; return; }
     box.hidden = false;
-    box.replaceChildren(h("h2", {}, "Handoffs waiting for you"), h("a", { class: "btn alt", href: "/api/handoffs.csv", download: "handoffs.csv" }, "Download for Excel"), h("ul", { class: "list" }, rows.map((x) => h("li", {},
+    box.replaceChildren(h("h2", {}, "Handoffs waiting for you"), h("a", { class: "btn alt", href: "/api/handoffs.csv", download: "handoffs.csv" }, "Download for Excel"),
+      h("p", {}, h("a", { class: "btn alt", href: "/api/handoffs/unaccepted.csv", download: "unaccepted-handoffs.csv" }, "Download handoff waiting times for Excel"),
+        " This file is not the list on this card. It has every handoff you can see that has not been accepted yet, with how long each has waited. It has no resident contact details. It is a read-only copy; changes in it are not imported back. No waiting-time limit is set for the whole queue, so a handoff is marked as needing escalation only when its own due time has passed. An empty file has no column names."),
+      h("ul", { class: "list" }, rows.map((x) => h("li", {},
       h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, `${x.resident}, ${x.address}`),
       h("div", { class: "muted" }, `${x.status}. Current owner: ${x.accountable_owner}; proposed receiver: ${x.proposed_receiver || "Unassigned"}; confirmed receiver: ${x.confirmed_receiver || "Unconfirmed"}; destination: ${x.destination || "Unknown"}; chase: ${x.chase_owner || "Unassigned"}.`),
       h("div", { class: "muted" }, `Urgency: ${x.urgency || "Unknown"}; due: ${x.due_at || "Unknown"}; next action: ${x.next_action || "Unknown"}. Resident update: ${x.resident_update_owner || "Unassigned"}, ${x.resident_update_due_at || "Unknown"}.`),
