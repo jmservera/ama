@@ -891,6 +891,36 @@ python -m zava_forward.core.synthetic.device_provision --register register.csv \
   --homes 30 --run-id run-185 --owner "<named owner>"
 ```
 
+### Keyless IoT Hub `Registry` adapter (source only, default off)
+
+`synthetic.device_registry_azure.AzureIotHubRegistry` implements the existing injected
+`Registry` protocol over the `azure-iot-hub` SDK. Install the `iothub` extra (the `dev`
+extra includes it so the SDK tests run in Core CI); Core imports without it and reports
+`SDK_MISSING` only at first use. Nothing is imported, read, requested or acquired at import,
+construction, dry run or close. The command line does not use it and `--apply` still refuses.
+
+* Inputs are an injected token credential (or client), the exact Hub host name, and a finite
+  `EnrollmentSpec` of known `SYN-` device IDs, the run ID and public X509 thumbprints.
+  Missing or ambiguous input is refused before any SDK call. No connection string or
+  service key is accepted. The spec is not certificate issuance or approval.
+* `create` is create-only (`If-None-Match: *`), disabled, and carries the run marker in
+  `statusReason`. An existing identity is `IDENTITY_CONFLICT`; it is never adopted or
+  overwritten. A timeout is `WRITE_OUTCOME_UNKNOWN` with a readback and no retry.
+* `run_of` returns `None` only for a 404. Unmarked or other-run devices are never reported as
+  the run; 401, 403, 5xx and timeouts raise distinct fixed codes.
+* `delete` requires a current exact marker match and deletes with the exact snapshot ETag
+  (never `*`); drift is `PRECONDITION_FAILED`.
+* `list_run` is complete or raises `LIST_INCOMPLETE`: the SDK lists at most 1000 devices with
+  no continuation, so a full page is incomplete.
+* Errors are fixed codes without SDK response text.
+
+Limits. Tests run the real SDK against a simulator of the documented REST conditional-header
+table; Azure behaviour (412, status codes, ETag format, list limits, RBAC) is unobserved.
+One process per run ID; cross-process contention is not fenced. An injected client may keep
+its own transport retries. The Registry-before-credential order and the lack of an
+authentication update remain unresolved, and credential issuance, storage, rotation and
+teardown for the whole of #185 remain open.
+
 ## Journey ownership register and human-review routing (#128)
 
 `journey_register.draft()` lists journeys J1 to J6 and R1 against the eight AC-071

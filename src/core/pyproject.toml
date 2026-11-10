@@ -12,7 +12,9 @@ dependencies = []
 [project.optional-dependencies]
 sql = ["mssql-python==1.15.0"]
 blob = ["azure-storage-blob==12.31.0"]
-dev = ["ruff==0.17.1", "mypy==2.4.0"]
+# Keyless IoT Hub identity registry adapter (default off). azure-iot-hub imports six without declaring it.
+iothub = ["azure-iot-hub==2.7.0", "six==1.17.0"]
+dev = ["ruff==0.17.1", "mypy==2.4.0", "azure-iot-hub==2.7.0", "six==1.17.0"]
 
 [tool.setuptools.dynamic]
 version = { attr = "zava_forward.core.version.__version__" }
