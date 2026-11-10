@@ -1,0 +1,39 @@
+---
+title: Issue 108 regional model metadata observation changes
+description: Prospective changes record for the read-only model metadata observation
+ms.date: 2026-11-10
+---
+
+## Status
+
+Implemented 2026-11-10. Four of eight budgeted read-only queries run; knowledge base updated; validation below.
+
+## Planned files
+
+* `docs/reference/resources/ai-tokenomics.md` (changed): dated metadata subsection under the configured demo model section, and `ms.date`.
+* `docs/reference/README.md`: index sentence for the page.
+* `docs/reference/log.md`: appended entry.
+* `.copilot-tracking/` research, plan, details, critique, changes, review and state for `issue-108-model-metadata-1110`.
+
+## Query ledger
+
+| Q | UTC start | Exit | Result | External locator (private) |
+| --- | --- | --- | --- | --- |
+| 1 container app env projection | 2026-11-10T17:50:46Z | 0 | one container, `AI_ENDPOINT` and `AI_DEPLOYMENT` plain values, no secret reference | `evidence-108-model-metadata-1110/q1.*` |
+| 2 account show | 2026-11-10T17:50:53Z | 0 | `AIServices`, `S0`, `uksouth`; same account label, different endpoint domain | `q2.*` |
+| 3 deployment show | 2026-11-10T17:50:54Z | 0 | `GlobalStandard` 10, `gpt-4.1-nano` `2025-04-14`, `NoAutoUpgrade`, `Succeeded` | `q3.*` |
+| 4 regional usage projection | 2026-11-10T17:50:59Z | 0 | `[]`: quota limit and unit unknown | `q4.*` |
+
+Budget spent 4 of 8; no retry. Local `az --version` (not a metadata query) ran once before the pass. Stderr held only a containerapp extension warning.
+
+## Divergences from the plan
+
+None. Q4 used both quota-name spellings in one query as planned; no second quota attempt was made, so limit and unit are unknown.
+
+## Validation (focused tier)
+
+Provenance and scope reviewed; relative links and anchors checked; no subscription id, identity, secret or aggregate usage in the diff; Git diff scoped to three knowledge base files plus RPI tracking. No runtime, test, provider or hosted check ran.
+
+## Limitations
+
+Read-only configured metadata; not serving attestation, not reserved capacity, not an evaluation. Whole #108, RAI and Tokenomics remain open.
