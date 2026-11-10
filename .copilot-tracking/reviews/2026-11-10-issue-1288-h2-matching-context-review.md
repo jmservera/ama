@@ -1,7 +1,7 @@
 <!-- markdownlint-disable-file -->
 # Review: issue 1288 H2 matching-context observation
 
-Readback `date -u` 2026-11-10T00:26Z. One Review, by the author; independent exact-head evidence assessment is still required before any publication. Changes: `.copilot-tracking/changes/2026-11-10-issue-1288-h2-matching-context-changes.md`.
+Readback `date -u` 2026-11-10T00:25Z. One Review, by the author; independent exact-head evidence assessment is still required before any publication. Changes: `.copilot-tracking/changes/2026-11-10-issue-1288-h2-matching-context-changes.md`.
 
 ## Outcome
 

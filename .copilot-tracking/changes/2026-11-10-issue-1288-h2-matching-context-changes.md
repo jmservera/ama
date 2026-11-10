@@ -1,7 +1,7 @@
 <!-- markdownlint-disable-file -->
 # Changes and observation: issue 1288 H2 matching-context
 
-Readback `date -u` 2026-11-10T00:26Z. Plan: `.copilot-tracking/plans/2026-11-10-issue-1288-h2-matching-context-plan.md` (one critique applied before observation). Verification only; E11 success, E12 and E13 unused. H0 and H1 records are unchanged and remain the historical a859 observations.
+Readback `date -u` 2026-11-10T00:25Z. Plan: `.copilot-tracking/plans/2026-11-10-issue-1288-h2-matching-context-plan.md` (one critique applied before observation). Verification only; E11 success, E12 and E13 unused. H0 and H1 records are unchanged and remain the historical a859 observations.
 
 ## Change manifest
 
@@ -23,3 +23,5 @@ Readback `date -u` 2026-11-10T00:26Z. Plan: `.copilot-tracking/plans/2026-11-10-
 * All 11 `assistant_releases` rows (id, status, body hash, revision) were identical at all 47 recorded snapshots (before and after open_store, attach, construct, detail, release_reference and each sensors role call); `fx-quality-evidence` stayed active revision 1. No revoke occurred under the matching context.
 * Provider counters: B and C 0 calls and 0 prompts before and after; the first provider served `proactive()` once (1 call) and its counters did not change during the observation. No stub peer in H2, so no byte claim is made for H2. 0 real provider, model or cloud calls.
 * Existing 30 Quality MSSQL cases: 29 pass, 1 skip, no failure; the earlier H0 selectors that ran before H0 are the same set.
+
+* Timestamp note: the readback preceding this record was 00:25:19Z; the first commit of this record carried 00:26Z in error, corrected here.
