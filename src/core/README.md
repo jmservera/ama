@@ -483,6 +483,11 @@ declared coverage and link currentness only; it does not state that all actual
 households are covered. Once a case has an inventory, a missing, Unknown, stale
 or malformed link refuses `resident_gate` and `scope_record` before the
 unchanged tenure hold; a fully linked, current inventory releases nothing.
+A corrupt stored inventory history reads as malformed and is never extended.
+Linked reports with an unresolved or ambiguous household identity, or with no
+valid decision route, add count-only refusal reasons; no action changes the
+intake identity, so a linked inventory always lists that reason until a later
+approved process exists.
 Cases without an inventory keep current behaviour, so this is not universal
 coverage. The actual roster, authority appointments and Legal interpretation
 remain outside the code.

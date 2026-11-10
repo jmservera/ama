@@ -61,6 +61,8 @@ INTAKE_FIELDS = ("nomination_records", "tenure_reports", "tenure_household_inven
                  "tenure_inventory_view")
 # Transport safety bound for one caller-supplied list. It is not a policy limit on households.
 INVENTORY_MAX_ROWS = 100
+_IDENTITY_UNRESOLVED = ("Unknown", "Ambiguous")
+_KNOWN_ROUTES = frozenset(TENURE_ROUTES.values())
 INVENTORY_QUALIFICATION = (
     "Caller supplied. Completeness, household identity and authority are not verified here; "
     "this is not a roster, an approval or a release."
@@ -251,6 +253,43 @@ def _inventory_managed(c):
                 or ("tenure_reports" in c and not isinstance(reports, list)))
 
 
+def _household_ref_ok(ref):
+    return isinstance(ref, str) and bool(ref.strip()) and ref == ref.strip() and len(ref) <= 100
+
+
+def _history_rows_ok(rows):
+    if rows is None:
+        return True
+    if not isinstance(rows, list) or not 1 <= len(rows) <= INVENTORY_MAX_ROWS:
+        return False
+    seen = set()
+    for row in rows:
+        if not isinstance(row, dict) or set(row) != {"household_ref", "report_version", "report_digest"}:
+            return False
+        ref, link, digest = row["household_ref"], row["report_version"], row["report_digest"]
+        if not _household_ref_ok(ref) or ref.casefold() in seen:
+            return False
+        seen.add(ref.casefold())
+        if link is None:
+            if digest is not None:
+                return False
+        elif type(link) is not int or link < 1 or not isinstance(digest, str):
+            return False
+    return True
+
+
+def _inventory_history_ok(inventories, case_id):
+    """Non-mutating check of every stored revision. Old digests may differ from current reports."""
+    if not isinstance(inventories, list) or not inventories:
+        return False
+    for number, revision in enumerate(inventories, 1):
+        if (not isinstance(revision, dict) or type(revision.get("version")) is not int
+                or revision["version"] != number or revision.get("case_id") != case_id
+                or not _history_rows_ok(revision.get("households"))):
+            return False
+    return True
+
+
 def _inventory_fill(view, case):
     reports = case.get("tenure_reports", [])
     if not isinstance(reports, list) or not all(isinstance(r, dict) for r in reports):
@@ -259,29 +298,21 @@ def _inventory_fill(view, case):
         view["reasons"].append("No expected-household inventory has been recorded for this case.")
         return
     inventories = case["tenure_household_inventories"]
-    if not isinstance(inventories, list) or not inventories or not all(isinstance(i, dict) for i in inventories):
-        raise TypeError("inventories")
+    if not _inventory_history_ok(inventories, case.get("id")):
+        raise ValueError("history")
     latest = inventories[-1]
-    if type(latest["version"]) is not int or latest["version"] != len(inventories):
-        raise ValueError("version")
     view["version"] = latest["version"]
     households = latest["households"]
     if households is None:
         view.update(status="Unknown")
         view["reasons"].append("The expected-household inventory is Unknown.")
         return
-    if not isinstance(households, list) or not households:
-        raise ValueError("households")
     view.update(status="Declared", expected_count=len(households))
     entries = []
     for row in households:
         ref, link, digest = row["household_ref"], row["report_version"], row["report_digest"]
-        if not isinstance(ref, str):
-            raise TypeError("household_ref")
         entry = dict(household_ref=ref, report_version=link, linkage="Not linked", binding="Not linked")
         if link is not None:
-            if type(link) is not int or not isinstance(digest, str):
-                raise TypeError("link")
             report = reports[link - 1] if 1 <= link <= len(reports) else None
             entry["linkage"] = "Linked"
             if report is None or report["household_ref"] != ref:
@@ -302,11 +333,21 @@ def _inventory_fill(view, case):
     unverified = sum(e["linkage"] == "Linked" and not str(e.get("verification")).startswith("Verified")
                      for e in entries)
     triggers = sum(bool(e.get("open_triggers")) for e in entries)
+    # No existing action changes identity_state, so the intake value stands; a later verification is not
+    # inferred to supersede it. Counts only: no reference, owner, source or digest enters a reason.
+    identity = sum("identity_state" in e and (not isinstance(e["identity_state"], str)
+                                              or e["identity_state"] in _IDENTITY_UNRESOLVED)
+                   for e in entries)
+    routes = sum("decision_route" in e and not (isinstance(e["decision_route"], str)
+                                                and e["decision_route"] in _KNOWN_ROUTES)
+                 for e in entries)
     view.update(linked=len(entries) - unlinked, not_linked=unlinked, stale=stale)
     for count, text in (
         (unlinked, f"{unlinked} of {len(entries)} expected households have no linked tenure report."),
         (stale, f"{stale} linked tenure reports changed or were replaced since this inventory. Record a new inventory version."),
         (unverified, f"{unverified} linked tenure reports are not verified by the data owner."),
+        (identity, f"{identity} linked tenure reports still have an unresolved or ambiguous household identity."),
+        (routes, f"{routes} linked tenure reports have no recorded decision route or an invalid one."),
         (triggers, f"{triggers} linked tenure reports have an open review trigger."),
     ):
         if count:
@@ -339,7 +380,7 @@ def _inventory_rows(households, reports):
         if not isinstance(row, dict) or set(row) != {"household_ref", "report_version"}:
             raise ValueError("Each household needs exactly household_ref and report_version, which is null when no report is linked.")
         ref = row["household_ref"]
-        if not isinstance(ref, str) or not ref.strip() or len(ref) > 100 or ref != ref.strip():
+        if not _household_ref_ok(ref):
             raise ValueError("Supply each household reference as reported: not blank, no surrounding spaces, at most 100 characters.")
         if ref.casefold() in seen:
             raise ValueError("Each household reference may appear once. Duplicates are ambiguous and are never merged.")
@@ -1191,7 +1232,7 @@ class ResidentDecisionMixin:
         })
         inventories = c.get("tenure_household_inventories", [])
         reports = c.get("tenure_reports", [])
-        if (not isinstance(inventories, list) or not all(isinstance(i, dict) for i in inventories)
+        if (("tenure_household_inventories" in c and not _inventory_history_ok(inventories, c["id"]))
                 or not isinstance(reports, list) or not all(isinstance(r, dict) for r in reports)):
             raise ValueError("The stored tenure records are malformed. Ask the data owner to reconcile them; nothing was recorded.")
         _version(body, inventories[-1] if inventories else None)
