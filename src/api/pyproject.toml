@@ -77,6 +77,11 @@ disallow_untyped_calls = false
 "zava_forward.api.resident_preview" = ["web/*"]
 "zava_forward.api.resident_demo" = ["web/*"]
 
+# The aftercare served tests construct the existing untyped App; all other strict checks stay on.
+[[tool.mypy.overrides]]
+module = ["test_aftercare_served", "tests.test_aftercare_served"]
+disallow_untyped_calls = false
+
 [[tool.mypy.overrides]]
 module = ["test_progress_report_api", "tests.test_progress_report_api"]
 disallow_untyped_calls = false

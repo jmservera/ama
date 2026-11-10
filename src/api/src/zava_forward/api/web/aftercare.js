@@ -1,7 +1,8 @@
 "use strict";
-// Synthetic staff-assisted aftercare screens (issue 133, Stage A). Not wired into any route yet.
+// Synthetic staff-assisted aftercare screens (issue 133). Stage A builders and submission are
+// unchanged; the workspace route at the end connects them to the signed-in session.
 // Shares h and api with app.js. Every function renders a returned contract or posts to it; nothing
-// here reads storage, calls a model or decides anything on the server's behalf.
+// here reads browser storage, calls a model or decides anything on the server's behalf.
 const AFTERCARE_API = "/api/aftercare";
 
 const AFTERCARE_LABELS = {
@@ -219,7 +220,7 @@ function acUnconfirmed(outcome, message = AC_UNCONFIRMED) {
   return { ok: false, outcome, message, errors: {}, retainRequestId: true, unresolved: true };
 }
 
-// The shared api() must copy data.errors onto the thrown error (paused hook item). The caller owns requestId and keeps it across retries; opts.unresolved says an earlier attempt is still unconfirmed.
+// The shared api() copies data.errors onto the thrown error. The caller owns requestId and keeps it across retries; opts.unresolved says an earlier attempt is still unconfirmed.
 async function aftercareSubmit(api, values, requestId, signal, opts = {}) {
   const earlier = Boolean(opts.unresolved);
   const body = { ...values, request_id: requestId };
@@ -244,10 +245,156 @@ async function aftercareSubmit(api, values, requestId, signal, opts = {}) {
   }
 }
 
+// Draft and request reference live only in memory: they survive validation errors, failed saves,
+// route changes and an ended session, and are dropped on sign-out or when another person signs in.
+let acDraftState = null;
+
+function acActor() {
+  const user = typeof me === "object" && me && me.user;
+  return user ? String(user.email || user.name || "") : "";
+}
+
+function acDraft() {
+  const actor = acActor();
+  if (!acDraftState || acDraftState.actor !== actor) {
+    acDraftState = { actor, requestId: null, values: {}, unresolved: false, message: "", edited: false };
+  }
+  return acDraftState;
+}
+
+// Hash-route changes keep the draft on purpose; only leaving the document (reload, full link, closing the tab) loses it.
+let acGuardInstalled = false;
+function acInstallUnloadGuard() {
+  if (acGuardInstalled) return;
+  acGuardInstalled = true;
+  window.addEventListener("beforeunload", (event) => {
+    if (acDraftState && (acDraftState.edited || acDraftState.unresolved)) {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+  });
+}
+
+let acViewToken = 0;
+
+function acNewRequestId() {
+  const bytes = crypto.getRandomValues(new Uint8Array(16));
+  return "req-" + Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function acReadValues(form) {
+  const values = {};
+  for (const el of form.elements) if (el.name && typeof el.value === "string") values[el.name] = el.value;
+  return values;
+}
+
+function acHomeChoices(form) {
+  if (!Array.isArray(form.homes)) return form;
+  const options = form.homes.map((home) => ({ value: home, label: home }));
+  const fields = (form.fields || []).map((f) => (f.name === "home_ref" ? { ...f, options } : f));
+  return { ...form, fields };
+}
+
+function acSecondaryHeading(section) {
+  const first = section.querySelector("h1");
+  if (first) {
+    const heading = h("h2", { id: first.id, tabindex: "-1" }, first.textContent);
+    first.replaceWith(heading);
+  }
+  return section;
+}
+
+function acFocus(node) {
+  if (!node) return;
+  node.tabIndex = -1;
+  node.focus();
+}
+
+async function aftercareWorkspaceView() {
+  const read = (path) => api(`${AFTERCARE_API}/${path}`);
+  const [formResult, concerns, evaluator] = await Promise.all([
+    read("form").catch((error) => (error.status === 403 ? null : Promise.reject(error))),
+    read("concerns"),
+    read("evaluator"),
+  ]);
+  const form = formResult && acHomeChoices(formResult);
+  acInstallUnloadGuard();
+  const draft = acDraft();
+  const session = me;
+  const token = ++acViewToken;
+  // Render or focus only while this view still owns the page: same session, newest view, form mounted.
+  const owned = () => me === session && acViewToken === token && Boolean(document.getElementById("ac-form"));
+  let sending = false;
+  const page = (extra = {}) => {
+    const state = {
+      values: draft.values, requestId: draft.requestId || "", sending, errors: extra.errors || {},
+      message: extra.message || draft.message,
+    };
+    const parts = [];
+    if (form) parts.push(aftercareFormView(form, state));
+    else {
+      parts.push(h("h1", { id: "ac-title", tabindex: "-1" }, "Aftercare concerns"),
+        h("p", { class: "notice" }, acText(concerns.synthetic_notice)),
+        h("p", { role: "status" }, "Your role can read these concerns but cannot record one. Ask a colleague who can."));
+    }
+    parts.push(h("section", { "aria-labelledby": "ac-list-title" },
+      h("h2", { id: "ac-list-title" }, `Recorded concerns (${acText(concerns.count)})`),
+      concerns.items.length
+        ? concerns.items.map((c) => aftercareConcernView(c))
+        : h("p", {}, "No concerns have been recorded yet.")));
+    parts.push(acSecondaryHeading(aftercareEvaluatorView(evaluator)));
+    show(...parts);
+    wire();
+    return state;
+  };
+  const showReceipt = (receipt, replay) => {
+    const view = aftercareReceiptView(receipt, replay);
+    show(view, h("p", {}, h("button", { type: "button", onclick: () => aftercareWorkspaceView() }, "Back to aftercare concerns")));
+    acFocus(document.getElementById("ac-receipt-title"));
+  };
+  const wire = () => {
+    const el = document.getElementById("ac-form");
+    if (!el) return;
+    el.addEventListener("input", () => { draft.values = acReadValues(el); draft.edited = true; });
+    const raised = document.getElementById("ac-raised_by");
+    if (raised) raised.addEventListener("change", () => { draft.values = acReadValues(el); page(); acFocus(document.getElementById("ac-raised_by")); });
+    el.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (sending) return;
+      draft.values = acReadValues(el);
+      if (!draft.requestId) draft.requestId = acNewRequestId();
+      sending = true;
+      el.querySelector("button[type=submit]").disabled = true;
+      let result;
+      try {
+        result = await aftercareSubmit(api, draft.values, draft.requestId, undefined, { unresolved: draft.unresolved });
+      } catch (error) {
+        if (error && error.name === "AbortError") { draft.unresolved = true; draft.message = AC_EARLIER; return; }
+        throw error;
+      } finally { sending = false; }
+      draft.unresolved = Boolean(result.unresolved);
+      if (result.ok) {
+        if (acDraftState === draft) acDraftState = null;
+        return owned() ? showReceipt(result.receipt, result.replay) : undefined;
+      }
+      draft.message = result.message;
+      if (!owned()) return;
+      page({ errors: result.errors, message: result.message });
+      acFocus(Object.keys(result.errors).length ? document.getElementById("ac-error-summary") : document.getElementById("ac-status"));
+    });
+  };
+  if (draft.unresolved && !draft.message) draft.message = AC_EARLIER;
+  page();
+  acFocus(document.getElementById("ac-title"));
+}
+
 globalThis.aftercareScreens = {
   formView: aftercareFormView,
   receiptView: aftercareReceiptView,
   concernView: aftercareConcernView,
   evaluatorView: aftercareEvaluatorView,
   submit: aftercareSubmit,
+  workspaceView: aftercareWorkspaceView,
+  reset: () => { acDraftState = null; },
 };
+globalThis.aftercareWorkspaceView = aftercareWorkspaceView;

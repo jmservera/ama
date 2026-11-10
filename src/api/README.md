@@ -1210,6 +1210,32 @@ This is a synthetic local engineering slice, not approved-template binding,
 full reviewed application/claim export, live financial authority, a Board
 envelope or complete issue acceptance.
 
+## Staff aftercare concern journey (#133, Refs only, hook integration C4 and C5)
+
+The staff workbench serves `/aftercare.js` and the route `#/aftercare` (listed in
+`checks/workbench-manifest.json` for Residents Liaison Officer, Retrofit Coordinator, Project Manager
+and Programme Support Officer; contractor and Quality Inspector get no entry and receive 403).
+`/api/aftercare` delegates to the unchanged `AftercareService` through
+`zava_forward.core.aftercare_store.DocumentStateStore`. The actor is `{name, role}` from the session
+only. The home allowlist is the constructed retrofit exercise scenarios (SCENARIO-08 to SCENARIO-11),
+never unrestricted; the records are synthetic and unverified and do not name real households. Only the
+Residents Liaison Officer and Retrofit Coordinator can record; the other roles read. The service
+`actions` log inside the document is the audit record, because a separate audit queue entry would not
+be atomic with the document write. Statuses: 201 created, 200 replay, 400 validation, 403, 404, 409
+conflict, 503 not saved or not confirmed. `api()` copies `data.errors` onto the thrown error so the form
+links field errors; the draft, request id and an unconfirmed outcome survive validation failures and
+route changes and are cleared on sign-out. A reply that arrives after the session or view has
+changed (including a real 401 that returned the user to sign-in) updates the stored draft and request
+id but does not render or take focus, so it cannot overwrite the sign-in screen or another route; the
+same actor signing in again sees the original draft and request id, and a different actor does not.
+Because the draft lives only in memory, an aftercare `beforeunload` guard warns on reload, full
+navigation or tab close while the draft is edited or its save is unconfirmed; safe hash-route changes
+do not prompt, and the guard clears on a confirmed receipt, sign-out or actor change. Nothing is
+written to browser storage. No evaluator or resident account, portal or closure is
+added; the quality-note action is not offered as concern intake. Tests: `tests/test_aftercare_served.py`,
+`tests/test_role_endpoint_inventory.py`; browser check `checks/aftercare_browser_check.py` (constructed
+keyboard and axe observations, not assistive-technology or WCAG acceptance).
+
 ## Specialist screen delivery (#149)
 
 The existing workbench includes a **Specialist screens** destination. Installed
