@@ -37,3 +37,7 @@ Changes record opened at tool clock 2026-11-10T03:25:07.885814+00:00, before the
 ## Errata: design-input repair campaign 3 (additive, source unchanged)
 
 * Records only: HVE report 3, design-repair qualification, state entry. Campaign 3 simulation Pass; reports 1 and 2 remain Revise. No source edit.
+
+## Errata: host validation (additive, source unchanged)
+
+* Records only: validation log 1 and host-validation qualification. Corrects the earlier "host validation not requested" wording; mechanical validation Pass with check 7 Deferred; hosted CI Pending CI.
