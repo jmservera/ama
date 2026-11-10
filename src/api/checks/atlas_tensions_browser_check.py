@@ -393,16 +393,19 @@ def check_packages(
 
 
 DESIGN_VERSION_FIELDS = """
-section => [...section.querySelectorAll('dt')]
-  .filter(dt => dt.textContent.trim() === 'Current design version')
-  .map(dt => {
-    const dd = dt.nextElementSibling;
-    const paired = dd !== null && dd.tagName === 'DD';
-    return {
-      value: paired ? dd.textContent.trim() : null,
-      visible: paired && dt.checkVisibility() && dd.checkVisibility(),
-    };
-  })
+section => {
+  const shown = {visibilityProperty: true, opacityProperty: true};
+  return [...section.querySelectorAll('dt')]
+    .filter(dt => dt.textContent.trim() === 'Current design version')
+    .map(dt => {
+      const dd = dt.nextElementSibling;
+      const paired = dd !== null && dd.tagName === 'DD';
+      return {
+        value: paired ? dd.textContent.trim() : null,
+        visible: paired && dt.checkVisibility(shown) && dd.checkVisibility(shown),
+      };
+    });
+}
 """
 
 

@@ -1,10 +1,12 @@
 """Regression cases for the region, Tab-reach, design version and withheld-panel helpers.
 
-Lightweight doubles stand in for the page; no browser is launched.
+Lightweight doubles stand in for the page; the real-DOM class launches Chromium only when
+ZF_BROWSER_TESTS=1.
 """
 
 from __future__ import annotations
 
+import os
 import unittest
 from typing import Any
 
@@ -17,6 +19,7 @@ from checks.atlas_tensions_browser_check import (
     check_regions_and_keys,
     check_withheld,
 )
+from playwright.sync_api import sync_playwright
 
 
 class _Regions:
@@ -146,6 +149,38 @@ class DesignVersionFieldTests(unittest.TestCase):
     def test_invisible_field_fails(self) -> None:
         with self.assertRaises(AssertionError):
             self._run([_field("1", visible=False)])
+
+
+@unittest.skipUnless(os.environ.get("ZF_BROWSER_TESTS") == "1", "opt-in local Chromium")
+class DesignVersionBrowserTests(unittest.TestCase):
+    """The real in-page extraction, run against a real DOM."""
+
+    MARKUP = '<section><dl><dt id="t">Current design version</dt><dd id="d">1</dd></dl></section>'
+
+    def _run(self, style: str | None = None, expected: Any = 1) -> None:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            try:
+                page = browser.new_page()
+                page.set_content(self.MARKUP)
+                if style:
+                    page.add_style_tag(content=style)
+                check_design_version(page.locator("section"), expected, "browser")
+            finally:
+                browser.close()
+
+    def test_visible_exact_value_passes(self) -> None:
+        self._run()
+
+    def test_hidden_or_transparent_field_fails(self) -> None:
+        for selector in ("#t", "#d", "section"):
+            for rule in ("visibility: hidden", "opacity: 0"):
+                with self.subTest(selector=selector, rule=rule), self.assertRaises(AssertionError):
+                    self._run(f"{selector} {{ {rule} }}")
+
+    def test_wrong_value_fails(self) -> None:
+        with self.assertRaises(AssertionError):
+            self._run(expected=2)
 
 
 class WithheldPanelTests(unittest.TestCase):
