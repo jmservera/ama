@@ -3912,7 +3912,9 @@ deployment approval. No model call was made.
   fence and release or model holds remain in Azure SQL and a lost simulation store cannot mint,
   reset or replenish them. `enableApiAi`, chat, budgets and provider settings are not changed or
   copied; the template cannot select a non-durable working store, so no combination needs a
-  separate refusal. A seal minted before a restart cannot be verified after it.
+  separate refusal. Losing or replacing the simulation store or key (replica replacement or scale
+  to zero) invalidates prior seals; a restart that retains the valid pair does not itself revoke
+  them, and expiry and single-use checks still apply.
 * Not provided: live IoT Hub ingestion, a real selected-home reading path, durable simulation
   history, whole-issue #136 acceptance, production, retention or model acceptance, or Azure
   runtime evidence.
