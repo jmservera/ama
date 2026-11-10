@@ -9,21 +9,15 @@ import urllib.request
 from typing import Any
 from unittest.mock import patch
 
-from tests import test_form_staging_api as staging
 from zava_forward.core import form_export
 
-from zava_forward.api import server
+import test_form_staging_api as staging
 
 ON = {"ZF_FORM_HELD_DOWNLOAD": "synthetic-demo-only", "ZF_DEPLOYMENT_PROFILE": "demo"}
 FILENAME = "held-form-draft-export.json"
 
 
-class HeldDownload(unittest.TestCase):
-    setUp = staging.FormApi.setUp
-    shutdown = staging.FormApi.shutdown
-    call = staging.FormApi.call
-    working_review = staging.FormApi.working_review
-
+class HeldDownload(staging.FormApiFixture):
     def prepare(self) -> tuple[Any, str]:
         draft, request = self.working_review()
         self.assertEqual(self.call("pam", "/api/cases/ZF-1/form-review", request)[0], 201)
@@ -73,8 +67,18 @@ class HeldDownload(unittest.TestCase):
                 self.assertNotIn(b"content_sha256", body)
                 view = self.call("pam", "/api/cases/ZF-1/form-review")[1]
                 self.assertNotIn("held_download_enabled", view)
-        self.assertFalse(server.held_download_enabled("trusted-proxy", ON))
-        self.assertTrue(server.held_download_enabled("password", ON))
+
+    def test_trusted_proxy_provider_never_serves_even_with_both_switches(self) -> None:
+        _, path = self.prepare()
+        with patch.dict(os.environ, ON), patch.object(self.app.provider, "name", "trusted-proxy"):
+            code, headers, body = self.fetch("pam", path)
+            self.assertEqual(code, 404, body)
+            self.assertNotIn("attachment", headers.get("Content-Disposition", ""))
+            self.assertNotIn(b"content_sha256", body)
+            view = self.call("pam", "/api/cases/ZF-1/form-review")[1]
+            self.assertNotIn("held_download_enabled", view)
+        with patch.dict(os.environ, ON):
+            self.assertEqual(self.fetch("pam", path)[0], 200)
 
     def test_served_body_equals_core_export_with_safe_headers(self) -> None:
         draft, path = self.prepare()
