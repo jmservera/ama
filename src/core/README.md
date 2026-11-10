@@ -531,6 +531,45 @@ DPO/Legal decision for. Resident-facing text still says nothing is sent to a
 live service; this adds no web control and does not prove resident access
 without detriment.
 
+Pending supersession (#1238, owner decision Q6 `manual_verified`, 2026-11-08):
+the `service_supersede_authorize` action marks a `Pending` attempt `Superseded`
+only after two separate authorizations on the same verified-outcome evidence
+reference (at most 100 characters; a reference, not resident detail), one by
+the control owner and one by the reviewer. Who holds those two roles comes only
+from an explicit, immutable `SupersessionBinding` that trusted composition sets
+as `store.supersession_binding` (the same instance-level seam as
+`complaints_receiver`). It is unset by default, so the action fails closed with
+a `PermissionError` and writes nothing. A binding is never created from staff
+roles, a request's owners, persisted rows, references or a request body, and
+there is no environment switch or route to set one. This change populates no
+binding: its actual named content, and any activation or rotation process, is
+a human gate. Both people must be registered persisted identities matching the
+binding, different people, with no manager bypass; on an Independent review the
+reviewer must also not be the contested decision maker. A stored approval
+counts only when it carries the digest of the binding now in force, names the
+bound person and has its matching hash-chained audit entry, whose detail holds
+a digest of the exact approval payload (case, request, reservation, attempt,
+role, bound identity, binding id and digest, and a hash of the evidence
+reference; the evidence text is never logged). Changing the stored evidence
+reference or restamping the binding digest on an earlier approval therefore
+stops it counting, as do legacy generic audit entries; otherwise it moves
+to `withdrawn`. Changing the binding therefore withdraws earlier approvals, but
+restoring an earlier binding revalidates approvals that carry its digest, so
+rotation and restoration are unsupported (use a new `binding_id`); a writer who
+also forges audit entries breaks the audit chain, which this action does not
+re-verify per call. The evidence is a reference the two people vouch for; the
+code cannot verify it, and synthetic tests show the gate, not human approval.
+The original attempt record, reservation, receipt reference, route idempotency key and audit
+entries are kept. Age is never an input and no timeout exists: an aged
+`Pending` attempt stays `Pending`. Supersession sends nothing and does not
+authorize a resend: a later send still needs `retry_unresolved` and the usual
+owner or named-reviewer rights, and a `Superseded` attempt still counts as
+unresolved. A late outcome for a superseded attempt is refused and its
+`receipt_ref` logged. Limits: the in-flight check is per store instance;
+a receipt found by verification has no manual recording path (do not
+supersede, reconcile with the receiver); the evidence reference is kept
+by retention deletion.
+
 Focused command: from `src/core`, `PYTHONPATH=src:tests python3 -m unittest
 test_resident_decisions -q`.
 

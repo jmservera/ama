@@ -30,7 +30,7 @@ ACCESS_CODES = ("None", "Unknown", "Large print", "Phone only", "Plain language"
 RESIDENT_ACTIONS = ("scope_record", "safe_contact_record", "representative_record", "disclosure_check",
                     "decision_record", "service_open", "service_update", "service_close",
                     "service_reopen", "service_reassign", "update_record", "remedy_confirm", "remedy_update",
-                    "challenge_open", "challenge_resolve", "service_forward",
+                    "challenge_open", "challenge_resolve", "service_forward", "service_supersede_authorize",
                     "nomination_record", "nomination_correct", "nomination_review", "tenure_intake",
                     "tenure_legal_position", "tenure_verify", "tenure_question_pack",
                     "tenure_question_pack_review",
@@ -67,7 +67,8 @@ TENURE_HOLD = (
 MANAGERS = ("Retrofit Programme Manager", "Programme Support Officer")
 FORMAL_ROUTES = ("Complaint", "Independent review")
 FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen", "service_reassign",
-                    "update_record", "remedy_confirm", "remedy_update", "challenge_open", "challenge_resolve")
+                    "update_record", "remedy_confirm", "remedy_update", "challenge_open", "challenge_resolve",
+                    "service_supersede_authorize")
 
 
 class ResidentCommittedError(RuntimeError):
@@ -108,6 +109,95 @@ def _require_independent_reviewer(reviewer, historical):
         raise PermissionError("The historical recorder identity is Unknown. Resolve the original evidence before assigning independent review.")
     if _same_person(reviewer, historical):
         raise PermissionError("Choose a reviewer who did not make the contested decision.")
+
+
+_BINDING_ROLES = ("control_owner", "reviewer")
+
+
+class SupersessionBinding:
+    """Immutable, explicit approval-role binding for manual_verified supersession (issue 1238, Q6).
+
+    Set by trusted composition as ``store.supersession_binding``; unset by default, so supersession
+    fails closed. It is never derived from staff roles, requests, stored rows or request bodies. Its
+    actual named content is a human gate; changing it withdraws approvals given under the old value.
+    """
+
+    __slots__ = ("_binding_id", "_roles", "_digest")
+
+    def __init__(self, binding_id, control_owner, reviewer):
+        if not isinstance(binding_id, str) or not 1 <= len(binding_id.strip()) <= 60:
+            raise ValueError("A binding needs an identifier of at most 60 characters.")
+        roles = []
+        for name, given in zip(_BINDING_ROLES, (control_owner, reviewer)):
+            identity = {key: given.get(key).strip() for key in ("email", "code", "oid")
+                        if isinstance(given, dict) and isinstance(given.get(key), str) and given.get(key).strip()}
+            if "email" not in identity or not (identity.get("code") or identity.get("oid")):
+                raise ValueError(f"The {name.replace('_', ' ')} needs a known identity: an email and a code or oid.")
+            roles.append(tuple(sorted(identity.items())))
+        if _same_person(dict(roles[0]), dict(roles[1])):
+            raise ValueError("The control owner and reviewer must be different people.")
+        object.__setattr__(self, "_binding_id", binding_id.strip())
+        object.__setattr__(self, "_roles", dict(zip(_BINDING_ROLES, roles)))
+        object.__setattr__(self, "_digest", hashlib.sha256(
+            json.dumps([self._binding_id, roles], separators=(",", ":")).encode()).hexdigest())
+
+    def __setattr__(self, name, value):
+        raise AttributeError("An approval-role binding is immutable.")
+
+    @property
+    def binding_id(self):
+        return self._binding_id
+
+    @property
+    def digest(self):
+        return self._digest
+
+    def identity(self, role):
+        return {key: dict(self._roles[role]).get(key) for key in ("email", "code", "oid")}
+
+
+def _supersession_binding(store):
+    binding = getattr(store, "supersession_binding", None)
+    if not isinstance(binding, SupersessionBinding):
+        raise PermissionError("No approval-role binding is configured, so no one can authorize this supersession. "
+                              "A governed configuration step is required first.")
+    context = getattr(getattr(store, "local", store), "resident_validation", None)
+    if context is not None:
+        if context["validating"] and context.get("binding_digest") != binding.digest:
+            raise PermissionError("The approval-role binding changed. Reload before continuing.")
+        context["binding_digest"] = binding.digest
+    return binding
+
+
+def _same_owner(recorded, current):
+    keys = [key for key in ("code", "oid") if _identity_value(recorded, key)]
+    return bool(keys) and all(_identity_value(recorded, key) == _identity_value(current, key) for key in keys)
+
+
+def _approval_detail(binding, case_id, req_id, reservation_id, number, role, evidence_ref):
+    """Audit detail carrying a digest of the exact approval payload; the evidence text is never logged."""
+    payload = dict(case=case_id, request=req_id, reservation=reservation_id, attempt=number, role=role,
+                   identity=binding.identity(role), binding_id=binding.binding_id, binding_digest=binding.digest,
+                   evidence_sha256=hashlib.sha256(str(evidence_ref).encode()).hexdigest())
+    digest = hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    return f"{req_id} formal-route attempt {number} supersession authorized by the {role.replace('_', ' ')} [approval {digest}]"
+
+
+def _authorization_holds(store, binding, case_id, req, number, evidence_ref, given):
+    """A stored approval counts only under this binding, for the bound person, if the audit holds its exact payload."""
+    if not isinstance(given, dict) or given.get("role") not in _BINDING_ROLES or not isinstance(given.get("identity"), dict):
+        return False
+    role = given["role"]
+    bound = binding.identity(role)
+    detail = _approval_detail(binding, case_id, req["id"], req["formal_route"]["attempts"][number - 1].get("reservation_id"),
+                              number, role, evidence_ref)
+    return (given.get("binding_digest") == binding.digest
+            and _identity_value(given["identity"], "email") == _identity_value(bound, "email")
+            and _same_owner(bound, given["identity"])
+            and any(entry.get("who", "").casefold() == _identity_value(bound, "email")
+                    and entry.get("action") == "resident_service_supersede_authorize"
+                    and entry.get("case") == case_id and entry.get("detail") == detail
+                    for entry in store.audit_entries()))
 
 
 def _day(value):
@@ -1400,7 +1490,7 @@ class ResidentDecisionMixin:
         if any(a["status"] == "Acknowledged" for a in attempts):
             raise ValueError("The formal route has already acknowledged this request.")
         # A legacy Failed attempt has no not_sent evidence, so its "not received" claim is not trusted.
-        unresolved = [a for a in attempts if a["status"] in ("Pending", "Unconfirmed")
+        unresolved = [a for a in attempts if a["status"] in ("Pending", "Unconfirmed", "Superseded")
                       or (a["status"] == "Failed" and a.get("not_sent") is not True)]
         if unresolved and body.get("retry_unresolved") is not True:
             raise ValueError("An earlier send has no confirmed outcome. Check with the receiver, then retry explicitly.")
@@ -1438,6 +1528,50 @@ class ResidentDecisionMixin:
         if body["status"] == "Acknowledged":
             attempts[attempt - 1].update(receipt_ref=body["receipt_ref"], received_at=body.get("received_at"))
         return f"{req['id']} formal-route attempt {attempt}: {body['status']}"
+
+    def _res_service_supersede_authorize(self, user, c, body):
+        """Owner-approved manual_verified step (issue 1238 Q6): two explicitly bound people, never age, never a resend."""
+        binding = _supersession_binding(self)
+        req = k.find(c.get("service_requests", []), body.get("id"), "request")
+        attempts = (req.get("formal_route") or {}).get("attempts", [])
+        number = body.get("attempt")
+        if (type(number) is not int or not 1 <= number <= len(attempts) or attempts[number - 1]["status"] != "Pending"
+                or attempts[number - 1].get("reservation_id") != body.get("reservation_id")):
+            raise ValueError("There is no pending formal-route attempt to supersede.")
+        if in_flight(self, c.get("id"), req["id"]):
+            raise ValueError("A send for this request is still in progress on this system. Wait for its outcome.")
+        role = k.choice(body.get("authorize_as"), _BINDING_ROLES, "the authorizing role")
+        evidence = k.text(body.get("evidence_ref"), "the reference to the verified outcome evidence", 100)
+        bound = binding.identity(role)
+        if _identity_value(user, "email") != _identity_value(bound, "email") or not _same_owner(bound, user):
+            raise PermissionError(f"Only the configured {role.replace('_', ' ')} can authorize this supersession.")
+        _require_named_reviewer(user, bound)
+        if role == "reviewer" and req["route"] == "Independent review":
+            _require_independent_reviewer(user, req.get("reviewed_identity"))
+        attempt = attempts[number - 1]
+        record = attempt.setdefault("supersession", dict(evidence_ref=evidence, authorizations=[], withdrawn=[]))
+        if (not isinstance(record, dict) or not isinstance(record.get("authorizations"), list)
+                or not isinstance(record.get("withdrawn"), list)):
+            raise ValueError("The recorded supersession is not in a usable state. Resolve it before authorizing.")
+        for given in list(record["authorizations"]):
+            if not _authorization_holds(self, binding, c.get("id"), req, number, record.get("evidence_ref"), given):
+                record["authorizations"].remove(given)
+                record["withdrawn"].append(given)
+        if not record["authorizations"]:
+            record["evidence_ref"] = evidence
+        if any(a["role"] == role for a in record["authorizations"]):
+            raise ValueError("This role has already authorized the supersession. Reload to see its state.")
+        if record["evidence_ref"] != evidence:
+            raise ValueError("Both authorizers must authorize the same verified outcome evidence reference.")
+        if any(_same_person(user, a["identity"]) for a in record["authorizations"]):
+            raise PermissionError("A different named person must give the other authorization.")
+        record["authorizations"].append(dict(role=role, identity=_identity(user), at=_time(),
+                                             binding_id=binding.binding_id, binding_digest=binding.digest))
+        if len(record["authorizations"]) == 2:
+            attempt.update(status="Superseded", superseded_from="Pending", superseded_at=_time())
+            detail = _approval_detail(binding, c.get("id"), req["id"], attempt.get("reservation_id"), number, role, evidence)
+            return f"{detail}; attempt superseded, receipt, key and history kept"
+        return _approval_detail(binding, c.get("id"), req["id"], attempt.get("reservation_id"), number, role, evidence)
 
     def _res_service_update(self, user, c, body):
         req = k.find(c.get("service_requests", []), body.get("id"), "request")
