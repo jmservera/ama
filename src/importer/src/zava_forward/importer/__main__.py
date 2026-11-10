@@ -6,8 +6,9 @@ from pathlib import Path
 
 from zava_forward.core.exception_queue import STEWARD, ExceptionQueue
 from zava_forward.core.exception_register import staff_from_env
+from zava_forward.core.factory import open_store
 
-from zava_forward.importer.exceptions import RefusalLedger, route, submit_file
+from zava_forward.importer.exceptions import RefusalLedger, route, submit_file, transfer
 from zava_forward.importer.mapping import STRUCTURES, preview_file
 from zava_forward.importer.quarantine import ImportError_, QuarantineStore
 from zava_forward.importer.version import __version__
@@ -101,6 +102,34 @@ def _exceptions(args: argparse.Namespace) -> int:
     return 0
 
 
+def _transfer(args: argparse.Namespace) -> int:
+    """Copy refused files into the served store named by ZF_STORE, ZF_DATA and ZF_STATE."""
+    if not args.db.is_file():
+        print(f"Cannot read: {args.db} does not exist", file=sys.stderr)
+        return 2
+    conn: sqlite3.Connection | None = None
+    try:
+        conn = sqlite3.connect(f"{args.db.resolve().as_uri()}?mode=ro", uri=True)
+        ledger = RefusalLedger(conn)
+        refusals = ledger.all()
+        result = transfer(ledger, open_store(os.environ))
+    except sqlite3.Error as exc:
+        return _database_failure(exc, "read")
+    except (OSError, ValueError, SystemExit) as exc:
+        print(
+            f"Cannot transfer: the served store refused it ({exc}). Nothing was recorded.",
+            file=sys.stderr,
+        )
+        return 2
+    finally:
+        _close(conn)
+    print(
+        f"transferred added={result['added']} already_present={result['already_present']} "
+        f"stored={result['total']} of ledger={len(refusals)}. Nothing was retried or approved."
+    )
+    return 0
+
+
 def main(argv: list[str]) -> int:
     if not argv:
         print(f"zava-forward-import {__version__}")
@@ -123,11 +152,17 @@ def main(argv: list[str]) -> int:
         "exceptions", help="read-only: show failed imports as steward-owned exception items"
     )
     ex.add_argument("db", type=Path)
+    tr = sub.add_parser(
+        "transfer", help="copy refused files from a ledger into the served store; repeat is safe"
+    )
+    tr.add_argument("db", type=Path)
     args = parser.parse_args(argv)
     if args.command == "stage":
         return _stage(args)
     if args.command == "exceptions":
         return _exceptions(args)
+    if args.command == "transfer":
+        return _transfer(args)
     try:
         prev, _ = preview_file(args.file, STRUCTURES[args.structure])
     except (WorkbookError, OSError) as exc:
