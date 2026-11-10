@@ -23,7 +23,7 @@ from zava_forward.api import auth, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
-from zava_forward.core import simulation_lane
+from zava_forward.core import sensor_review_draft, simulation_lane
 from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
@@ -847,6 +847,23 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(400, {"error": str(e)})
                 except Exception:
                     return self._json(503, {"error": "Sensor readings unavailable; continue the ordinary quality check manually."})
+            if url.path.startswith("/api/cases/") and url.path.endswith("/sensor-drafts"):
+                parts = url.path.strip("/").split("/")
+                if len(parts) != 4:
+                    return self._json(404, {"error": "Case not found."})
+                try:
+                    return self._json(200, sensor_review_draft.read_drafts(s, u, unquote(parts[2])))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except KeyError:
+                    return self._json(404, {"error": "Case not found."})
+                except Exception:
+                    return self._json(
+                        503,
+                        {
+                            "error": "Sensor review drafts unavailable; use the manual route: manual-sensor-review."
+                        },
+                    )
             if url.path.startswith("/api/cases/") and url.path.endswith("/home-case"):
                 parts = url.path.strip("/").split("/")
                 if len(parts) != 4:
@@ -1386,6 +1403,21 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]
+                    if act == "sensor-draft":
+                        from zava_forward.core.sqlstore import CommittedReloadError
+
+                        try:
+                            return self._json(
+                                200, sensor_review_draft.draft_from_request(s, u, cid, body)
+                            )
+                        except CommittedReloadError:
+                            return self._json(
+                                409,
+                                {
+                                    "error": "The draft change committed. Reload; do not repeat it.",
+                                    "outcome": "committed",
+                                },
+                            )
                     with s.lock:
                         prior_stage = s._case(cid)["stage"]
                     if act == "call":

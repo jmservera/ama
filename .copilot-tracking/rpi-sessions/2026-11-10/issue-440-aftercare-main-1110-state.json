@@ -1,0 +1,58 @@
+{
+  "task_id": "440-aftercare-main-1110",
+  "task_slug": "aftercare-main-440-1110",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-aftercare-main-440-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-aftercare-main-440-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-aftercare-main-440-1110-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-aftercare-main-440-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-aftercare-main-440-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-aftercare-main-440-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "New due #440 current-main observation of the merged aftercare integration (PR 1400, main 64c3f9191); documentation only, no runtime rerun, no source/test/config/dependency change, no fix, no new agent, no push or PR",
+      "status": "confirmed",
+      "evidence": "ROOT/brief-440-aftercare-main-1110.txt"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready; src, infra and dependency inputs of 64c3f9191 compared directly equal to tested b7e46b3be, .github preserved from main",
+      "status": "recorded",
+      "evidence": "research record"
+    },
+    {
+      "decision": "Critique executed once by the author (self-executed, not independent); amendments A1-A8 applied directly; no user decision needed",
+      "status": "recorded",
+      "evidence": "plan critique record"
+    },
+    {
+      "decision": "Review executed once by the author (self-executed, not independent) after implement-done; outcome conformant with stated limits; recommendation bounded CONTINUE for local #134 screen walkthroughs of the staff-assisted surface only",
+      "status": "recorded",
+      "evidence": "review record"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Commit locally, then commit-complete"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Root consumes the bounded CONTINUE and, if it chooses, plans #134 current-main local screen walkthroughs of the staff-assisted aftercare surface",
+      "rationale": "Source is equal to the tested tree and the constructed browser checks passed on the candidate",
+      "evidence": "cutover-evidence-pack aftercare section, Recommendation"
+    },
+    {
+      "rank": 2,
+      "task": "Owner grants finite correction authority for #1401 and #1402, then a separately admitted RPI loop",
+      "rationale": "Two inherited Mediums remain open and unfixed",
+      "evidence": "issues 1401 and 1402"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+{
+  "task_id": "109-actual-parent-main-1110",
+  "task_slug": "sensor-review-109-actual-parent-main-1110",
+  "parent_task": {
+    "task_id": "109-prospective-integration-1110",
+    "task_slug": "sensor-review-109-prospective-integration-1110"
+  },
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-sensor-review-109-actual-parent-main-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-sensor-review-109-actual-parent-main-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-sensor-review-109-actual-parent-main-1110-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-sensor-review-109-actual-parent-main-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-sensor-review-109-actual-parent-main-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-sensor-review-109-actual-parent-main-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Root brief: adopt actual remote parent squash bd2a64944 and fresh main 64c3f9191 (PR 1400) by one ordinary local merge batch; no push, PR or GitHub write; no source-correction authority; stop on conflict or bug; Refs only",
+      "status": "confirmed",
+      "evidence": "ROOT brief-109-actual-parent-main-1958.txt"
+    },
+    {
+      "decision": "Original preparation (3 events, verify exit 1) and prospective (20addb9ae) chains and records are preserved unaltered",
+      "status": "confirmed",
+      "evidence": "ROOT handoff-109-prospective-integration-1110.md"
+    },
+    {
+      "decision": "FOCUSED demo tier selected; critique executed once (self, not independent), verdict proceed; compatible findings applied",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/critiques/2026-11-10-sensor-review-109-actual-parent-main-1110-plan-critique.md"
+    },
+    {
+      "decision": "Implementation: ordinary local merge of squash bd2a64944 and main 64c3f9191, staged tree d45426bd; selected checks passed (Core 65/22 skips, API 6/0, MSSQL 22/0, browser 33, mypy green); implemented-unverified",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-10-sensor-review-109-actual-parent-main-1110-changes.md"
+    },
+    {
+      "decision": "Review executed once (self-review, not independent); conformant for bounded scope, open work routed; no repeat",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-sensor-review-109-actual-parent-main-1110-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Record review-done, commit, then commit-complete with literal HEAD"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Root independent exact-head review, hosted CI and current evidence before any publication",
+      "rationale": "gates publication",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-sensor-review-109-actual-parent-main-1110-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Route the due 440 sensor-integration checkpoint through issue 440 RPI",
+      "rationale": "required before epic closure or dependent expansion",
+      "evidence": ".copilot-tracking/research/2026-11-10-sensor-review-109-actual-parent-main-1110-research.md"
+    }
+  ]
+}
