@@ -6757,3 +6757,88 @@ CONTINUE, bounded. The evidence permits #134 current-main local screen walkthrou
 ### Process record and limits
 
 * Added as a distinct section; no earlier section, log entry or original adverse result was altered. The witness is a locally writable record, not host or model attestation; the model label is asserted. The critique and review are author-executed, not independent. No push, pull request or GitHub write was made, and the only commands run were read-only git, read-only GitHub queries and reads of the Root session files.
+
+## Specialist keyboard probe current-main checkpoint (2026-11-10, Refs #440 #134 #73 #108 #184)
+
+Draft, local-only, not approved. This is a new scoped observation and documentation checkpoint after the specialist keyboard and evidence probe (PR 1414, a child of #134) reached `main`. It is distinct from every earlier section above (all unchanged), is not a source repair cycle or reset, spends none of the #134 correction allowance (C4 of five spent, one left, untouched), and adds no QA campaign, cloud, transport or model budget. A merged child is not whole journey acceptance. It records scoped current-main integration before any closure of whole #134, #73 or #440 or any dependent expansion. It is the focused owner-demo tier: only the existing selectors and one existing synthetic browser walk named below ran; no gate, `--changed`, image, SQL, scanner, model, live, Azure or private-data run was made. Records: [research](../../.copilot-tracking/research/2026-11-10-profile-main-440-1110-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-profile-main-440-1110-plan.md), [details](../../.copilot-tracking/details/2026-11-10-profile-main-440-1110-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-profile-main-440-1110-plan-critique.md), [changes](../../.copilot-tracking/changes/2026-11-10-profile-main-440-1110-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-profile-main-440-1110-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/profile-main-440-1110-state.json).
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-10) |
+| --- | --- |
+| Trigger | PR 1414 `test: add bounded specialist keyboard and evidence probe`, MERGED 2026-11-10T17:58:44Z as `main` `b23c08e33e4ebdb0aaa1dfd8fa586999448d8ca6`, tree `0bdc704b78b9a3ed95926b5915ae93ae9148032d` (parent `4d8443d44`). PR head `124af0b63b727d3d8889d6900a0bca7d6b70578c`. No closing references |
+| Pinned source of this observation | Worktree HEAD and merge base `b23c08e33`, branch `docs/profile-main-checkpoint-440-1110`, clean source at every observation (only own `.copilot-tracking` files untracked) |
+| Current origin/main | After a fetch at 2026-11-10T18:07:12Z, `88a17f8b6d3da6dcfcb8b0db19f481f9e257f61e`, one commit past `b23c08e33` that changes only `.github/rubric/scores/latest.json`. No `src`, `docs` or `infra` path differs, so the observed source equals current main source. This is currency as of that fetch, not a later one |
+| Hosted checks | All 19 reported PR-head contexts read SUCCESS, including Source projects CI run 42867523237 and Capstone Rubric Scorer run 42867523337 on `124af0b63`. The scorer on `b23c08e33` (run 42870426563, completed success) recorded 78/100 with B6 at 4 in `latest.json`. The earlier 77/78 B6 failure on the same PR (run 42864188813) is preserved as an adverse record. No Source projects CI run for the main head was among the latest four main runs read, so none is claimed |
+| Documents (blob at `b23c08e33`) | BRD Agentic Retrofit Programme 0.21.0 `draft` `34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD Zava Forward Retrofit Programme Workbench 0.21.0 `in-review`, `exercise_status` author-complete-unsigned-pending-review-and-owner-acceptance, `c788b917bafaede215f326f0efc71e071a687f1c`; ADR 0003 accepted with amendment 2026-10-15 `d60645397b20fb70ac3d1dc47c7a6c8671201306`; ADR 0006 accepted 2026-10-15 `956da1a3b804c803041fe2e8a312bd9f400273ae`. Draft and in-review are not approval. The BRD AC-034 is a Finance grant criterion and is not the PRD AC-034 used below |
+| Issue states (read live) | #134 OPEN `status:not-started`; #73, #440, #108 and #184 OPEN `status:partially-delivered`. Nothing is ticked or closed here |
+| Covered | The bounded specialist keyboard and evidence probe, its API helper test, and the Core journey acceptance, perspective walkthrough and scenario manifest registers, on the constructed synthetic fixture |
+| Excluded | Whole #134 and #73 acceptance, assistive-technology, voice, user, professional and resident acceptance, the Sensor C2 chain (PR 1412, current chain recorded elsewhere) and the Quality checkpoints (PR 1331 and the 2026-11-09 Quality-main record), which are not duplicated here and need no new live call; any live, Azure, IoT, SQL, model, provider, private-data or deployment observation. The independent #108 (AI) and #184 (IoT) lanes may do read-only metadata work and have no functional dependency on this record |
+
+### Source identity proof (direct comparison)
+
+Compared with `git rev-parse <commit>:<path>`. The four source blobs equal those validated in correction C2 at `cb01c33c42ceef31ee699649ecceedadc487945d`. Commit ancestry and green CI were not used as proof.
+
+| Path | Blob at `b23c08e33` (equal to `cb01c33c`) |
+| --- | --- |
+| `src/api/checks/specialist_keyboard_browser_check.py` | `e8b7d9f16200896373c86d6b31d728c0d773c28a` |
+| `src/api/tests/test_specialist_keyboard_check.py` | `228a5390221b64d9ffb0bd3ecb286308a5e50c7d` |
+| `src/core/src/zava_forward/core/journey_acceptance.py` | `e3466b6eafc07d319ce3f2ee835d832b58f34032` |
+| `src/core/src/zava_forward/core/perspective_walkthroughs.py` | `f1828b2eb805078421731170c91a3218cc56a411` |
+
+Trees at `b23c08e33`: `src` `901a74c62a8b980b3cbe0b925db2e69f00003a91`, `src/api` `ed94d555101aa9b1be04be32787576a3bbb46960`, `src/core` `0d3caa315d9194e2551de5a95b0d76a75958dd5d`, `infra` `f7f31c0934cfe0bafb4505408706e55aa8ab61e7`. Outside `.copilot-tracking`, the path difference between `cb01c33c42` and `b23c08e33` is the rubric score file, this pack, the knowledge base index and log, and `src/api/README.md`; the only `src` change is the README rewrite of C4. C3 and C4 changed README and RPI records only.
+
+### Observed this checkpoint (local, raw outputs outside the repository)
+
+Raw directory: `/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files/profile-main-440-observation-1110/` (files `01-identity.txt` to `08-post-run.txt`). Host: Linux, Python 3.12.3, 4 CPUs, 15.6 GiB memory with about 2.8 GiB available at the browser run, no swap. Chromium 1248 from the existing Playwright cache; no browser was installed.
+
+| Step and command (from the worktree root) | Exit and result | Class and limit |
+| --- | --- | --- |
+| A1 `cd src/api && python3 -m unittest tests.test_specialist_keyboard_check`, system Python | Exit 0, 6 tests OK. The imported `zava_forward.core` resolved to the separate primary checkout `/home/azureuser/source/ama/src/core` (an editable install of that checkout, `03-provenance-A.txt`) | Not current-main proof: the Core source was outside this worktree. Preserved, not discarded |
+| A2 `cd src/core && python3 -m unittest tests.test_perspective_walkthroughs tests.test_journey_acceptance tests.test_scenario_manifest`, system Python | Exit 0, 16 tests OK, same out-of-worktree Core path | Not current-main proof, same reason |
+| Restore `python3 -m venv /tmp/ama-440-profile-venv-1110`; `/tmp/ama-440-profile-venv-1110/bin/python -m pip install -e src/core -e src/agents -e src/api playwright==1.64.0` | Both exit 0 (`04-restore-venv.txt`). Private environment only; the three `zava-forward-*` packages resolve to this worktree's `src`, Playwright 1.64.0 as pinned by `src/api/pyproject.toml`. The system Playwright was 1.64.1 | Environment restore after the wrong-source finding above, not a product defect. No global install and no network use by the checks |
+| B1 `cd src/api && /tmp/ama-440-profile-venv-1110/bin/python -m unittest tests.test_specialist_keyboard_check -q` | Exit 0, 6 tests OK. Core modules and `checks` resolve inside this worktree (`05-attemptB-api.txt`) | Local observed on current-main source, helper level only |
+| B2 `cd src/core && /tmp/ama-440-profile-venv-1110/bin/python -m unittest tests.test_perspective_walkthroughs tests.test_journey_acceptance tests.test_scenario_manifest -q` | Exit 0, 16 tests OK, modules inside this worktree (`05-attemptB-core.txt`) | Local observed. The registers are recorded as partial or deferred with none passed, so this shows register integrity, not acceptance |
+| Admission before the browser walk | No holder of `/tmp/ama-rpi-heavy.lock` (`fuser` exit 1), `MemAvailable` 2,884,556 kB, the cached `chrome` present (`06-admission.txt`). The 1.5 GiB memory floor was an engineering threshold chosen for this record, not a repository rule | Admission met; no queueing |
+| C1 `cd src/api && ZF_BROWSER_SCRATCH=/tmp/z440p PYTHONDONTWRITEBYTECODE=1 flock -n /tmp/ama-rpi-heavy.lock timeout 900 /tmp/ama-440-profile-venv-1110/bin/python -m checks.specialist_keyboard_browser_check` | Exit 0 in about 29 seconds (2026-11-10T18:08:11Z to 18:08:40Z). 714 printed `PASS` lines, 0 `FAIL`, 38 role-screen walks (Resident Liaison Officer 3, Retrofit Coordinator 5, Retrofit Programme Manager 11, Programme Support Officer 11, Building Safety Liaison 2, Quality Inspector 3, Grants and Evidence Officer 2, Contractor 1), 15 deliberate negatives rejected, 15 declared no-table walks, case `ZF-4` only (`07-browser-run.txt`) | Local observed on a loopback owned server with constructed synthetic data. The 714 is a count of printed checks, not of acceptance criteria |
+
+Cleanup: after the run no process of the check remained (`08-post-run.txt`); the empty scratch directory `/tmp/z440p` was removed; the private environment `/tmp/ama-440-profile-venv-1110` and its ignored editable-install metadata were left in place for inspection. No foreign process, lock or data was touched. No tool or admission was missing, so no blocked row arose in this run.
+
+### Historical retained observations (not re-run as new proof)
+
+* C2 on `cb01c33c` (Root `134-keyboard-c2-evidence-1110/`): API helper 6 and Core 16 OK, one walk with 714 PASS, 15 negatives and 15 no-table walks. This checkpoint's counts match it, which is consistent but is a separate observation on a later head, not a new proof of the C2 result. Class: historical.
+* C4 (Root `phase134-keyboard-c4-evidence-1110/`): seven canonical witness records, verify exit 0 with disclosed timing notes; README-only change. Original, C1 and C2 witness chains keep their refused or qualified outcomes. Class: historical, preserved, not waived.
+* The hosted B6 failure at 77 of 78 and its repair by README only are preserved above. Class: historical adverse record.
+
+### Requirement trace (document-qualified; bounded probe to partial journey requirements)
+
+| Requirement (document, status) | Probe evidence | Class |
+| --- | --- | --- |
+| PRD AC-034 (in-review): scope, reset and selection-focus announcement | `journey_acceptance` registers it `partial`: keyboard reach, focus visibility and DOM status text for the first listed home plus the workbench check. The 714 PASS lines, 38 role-screen walks and 15 negatives are partial coverage for the first listed home only | Local observed, partial; the full criterion and no-match behaviour are not shown |
+| PRD AC-036 (in-review) | Registered `deferred`; the walk observes only that owner or next-action text exists, not that owner, destination, receiver and chase-owner labels agree | Not shown |
+| PRD AC-035, AC-038, AC-041 | Registered `deferred`; no probe evidence | Not shown |
+| PRD AC-037, AC-039, AC-040, AC-042 | Registered `partial` from existing Core evidence (resident decisions, procurement, exception queue, quality and invoices); the probe adds no evidence for these | Implemented, unverified by this probe |
+| PRD AC-043 (in-review) | Perspective register: eleven perspectives, five elements each, zero met; Asset, Procurement and Auditor have no fixture login role | Partial; whole AC-043 unmet |
+| BRD (draft), ADR 0003 and ADR 0006 (accepted) | No BRD requirement is approved or met by this probe. ADR 0003 and ADR 0006 constrain journey-derived scope and source layout; nothing here amends or satisfies them | Context only |
+
+### Gaps (exact)
+
+* Roles: Asset, Procurement and Auditor have no fixture login role, so those perspectives stay proxy or deferred; the 38 walks cover eight role names.
+* Homes: only the first listed home (`ZF-4`) stands in for all homes.
+* Screens: 15 walks reach screens with no evidence table on this fixture, so table-level checks are declared gaps, not passes.
+* Endpoint and handoff wording is checked as text presence only, so end-to-end handoff behaviour is not shown.
+* Fixture role selection is not Entra authentication or any identity-provider proof. DOM status text and attributes are not screen-reader or other assistive-technology output. No voice, user, professional or resident acceptance exists.
+* Not run and therefore Unknown: the workbench baseline and other browser checks, the fourteen-command checklist, images, scanners, SQL, the complete gate, `--changed`, live, Azure, IoT, model and private-data checks, and any run on a later main head. Source projects CI for the main head was not observed.
+
+### Findings, owners and gates
+
+* No new defect, refactor or source repair is claimed or reproduced. The focused observations all passed on current-main source. Existing owners were compared first: #134 owns the walkthrough and AC-034 to AC-043 coverage, #73 the case workbench epic, #440 the stabilization cadence; the independent #108 and #184 lanes are metadata-only. No new issue is opened.
+* Whole #134, #73 and #440 closure, genuine end-to-end journey proof and assistive-technology or human acceptance remain open and gated on the remaining evidence and approvals above. Independent exact-head review and applicable hosted checks of this record remain required.
+
+### Recommendation
+
+CONTINUE, bounded. Continue only independent bounded engineering that needs none of the gated surfaces (for example the #108 and #184 read-only metadata lanes). Keep the affected whole #134, #73 and #440 closure and any genuine end-to-end or assistive-technology expansion waiting on the remaining evidence and approvals. This is a recommendation for Root to consume, not permission, not an approval of any requirement, and not a tick of #134, #73 or #440.
+
+### Process record and limits
+
+* Added as a distinct section; no earlier section, log entry or original adverse result was altered. No shared knowledge base file was edited: the pack is already indexed and the index and log are owned by the #108 and then #184 lanes. The witness is a locally writable record, not host or model attestation; the model label is asserted. The plan critique was one read-only subagent pass at plan time and is not an independent assessment of the final pack. The review is author-executed and not independent, and independent exact-head review remains required. No push, pull request, issue or board write was made. Commands were read-only git and GitHub queries, the checks above and one dependency restore into the private environment.
