@@ -1361,3 +1361,13 @@ HVE gate is approved. The declared parent (PR 1396) has since merged as `main` `
 historical pin, notes equal `src`, `infra` and `tools` subtree ids on `eff05737`, and is a main-target candidate after an ordinary
 merge. It is separate from the nomination and UX, Bicep and CSV-learning records;
 #185, #110, #109, #184, #111 and #1288 stay open.
+
+An aftercare integration current-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#aftercare-integration-current-main-checkpoint-2026-11-10-refs-440-89-133-134-1401-1402).
+It observes PR 1400 merged as `main` `64c3f9191` (tree `8fbdaec7`), proves by direct tree comparison that the `src`, `infra`
+and dependency inputs equal the tested candidate `b7e46b3be` while `.github` and main-only documents stay as on main, and
+attributes the retained Core, API, SQL, static and browser results to the author's original commands, not to new runs on
+main. The 77 authored paths are qualified against the 98-path review superset. Two inherited Mediums stay open, unfixed and
+unwaived as #1401 and #1402; whole #89, #133 and #134 stay open and #132 is excluded. The recommendation is a bounded
+CONTINUE for local #134 screen walkthroughs of the implemented staff-assisted surface only; it is not an approval, a tick or
+live, model, resident, professional or release proof.
