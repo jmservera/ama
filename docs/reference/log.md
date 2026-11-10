@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-11-09
+ms.date: 2026-11-10
 ms.topic: reference
 ---
 
@@ -11294,3 +11294,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a dated draft [qualification](../architecture/cutover-evidence-pack.md#merged-main-blob-and-quality-qualification-2026-11-09-refs-440-1288-1258-1259-136) after PR 1331 merged: `main` `1b7a1719b` (squash, tree equal to `f995774`), merge of main into the local checkpoint with source identical to main, one corrected browser observation M1 (exit 0, 30 checks, axe 0 violations, serious contrast incompletes remain), three failed invocation attempts preserved, historical reuse limits, and gap owners.
 * The parent-topic entry above, the original adverse O1 and all earlier entries are unchanged. Not claimed: whole #1288, #136 or #440 closure, live Blob, actual-model AI, assistive-technology, consent, human or Major HVE acceptance, Azure SQL or the refusal-event second-connection contract.
+
+## [2026-11-10] update | Quality M2 current-main qualification (Refs #440 #1288 #891 #184)
+
+* Appended a dated draft [qualification](../architecture/cutover-evidence-pack.md#quality-m2-current-main-qualification-2026-11-10-refs-440-1288-891-184) at `main` `32221a845` after PRs 1331, 1339, 1341 and 1342: merged identities, the Core, API and Agents subtree equivalence to the H2 observed source (importer PR 1341 qualified and excluded), commands with exits and the one SQLite-only skip, a document-qualified trace with evidence classes, gaps with existing owners and a CONTINUE recommendation with resume conditions.
+* Errata recorded without rewriting earlier entries: #891 is included in source `ddeebd01`, H2 had no peer and no byte claim, and the companion run is 29 passes plus one skip. Earlier entries, the adverse H0 and H1 records and the VM-local raw logs are unchanged or uncommitted. Not claimed: whole #440, #1288, #891 or #184 closure, Azure SQL, actual-model AI, human or resident authority, exact-head hosted CI, or any approval.

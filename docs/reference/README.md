@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-09
+ms.date: 2026-11-10
 ms.topic: overview
 ---
 
@@ -1297,3 +1297,10 @@ A separate [merged-main qualification](../architecture/cutover-evidence-pack.md#
 corrected Quality check with its axe stage (exit 0, 30 checks, 0 axe violations, serious contrast
 incompletes remain). The original red observation is preserved. Closure, live, model, assistive-technology
 and human acceptance holds stand.
+
+A further [Quality M2 qualification](../architecture/cutover-evidence-pack.md#quality-m2-current-main-qualification-2026-11-10-refs-440-1288-891-184)
+(2026-11-10, draft, documentation only) records `main` `32221a845` after PRs 1331, 1339 (#891 accounting),
+1341 (importer, unrelated, excluded) and 1342 (tracking-only evidence). It classifies the executed H2 SQL
+observation as a dated local observation of the identical Core, API and Agents source, carries the errata
+(#891 is included, no H2 peer or bytes, 29 passes plus one skip), keeps the adverse H0 and H1 results, and
+holds closure, actual-model, Azure, human and release-authority gates open.
