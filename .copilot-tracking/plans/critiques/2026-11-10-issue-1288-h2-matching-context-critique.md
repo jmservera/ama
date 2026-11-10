@@ -1,7 +1,7 @@
 <!-- markdownlint-disable-file -->
 # Critique: issue 1288 H2 plan (one critique, before any observation)
 
-Readback `date -u` 2026-11-10T00:24Z. Reviewer: rubber-duck, read-only. Verdict: Revise (3 blocking, 2 non-blocking). All applied in the plan amendment of the same date.
+Readback `date -u` 2026-11-10T00:22Z. Reviewer: rubber-duck, read-only. Verdict: Revise (3 blocking, 2 non-blocking). All applied in the plan amendment of the same date.
 
 * Blocking: snapshots could miss the revoking call (`detail`/`release_reference` can assess and invalidate). Applied: separate before/after snapshots for each step.
 * Blocking: later fixtures drop tables and reinstall releases, so they could overwrite H2 evidence. Applied: H2 runs in a first separate process and persists its verdict before the selectors run.

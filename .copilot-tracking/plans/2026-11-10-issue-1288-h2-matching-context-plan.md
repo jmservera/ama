@@ -29,7 +29,7 @@ Readback `date -u` 2026-11-10T00:21Z. Research: `.copilot-tracking/research/2026
 * Existing MSSQL selectors: report actual counts and skips; any failure is preserved as observed, not retried.
 * Harness error is inconclusive, never a pass.
 
-## Amendment after the one critique (readback 2026-11-10T00:24Z)
+## Amendment after the one critique (readback 2026-11-10T00:22Z)
 
 * Snapshots are taken through a fresh raw connection separately before and after each of: `open_store()`, provider attach, `Assistants(...)` construction, `detail`, `release_reference`, and each `sensors` role call, for B and C. `detail` is never called only to collect a "before" value; the first release-assessing call on B follows a baseline snapshot.
 * The H2 test runs in its OWN unittest process first and writes `h2.json` (atexit) with the verdict before the second process starts the existing selectors, so later fixtures (which drop tables and reinstall releases) cannot overwrite H2 evidence. Both processes share the one admission and one container.
