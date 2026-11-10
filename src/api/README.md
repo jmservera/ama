@@ -1214,7 +1214,16 @@ queue) and `231q` (Quality queue) sign in as a Quality Inspector, open the
 read-only screens on a synthetic home with returned, stale and missing
 evidence, and check text-only blocked state, no write controls, keyboard
 reach of every table region and no readiness over missing evidence. Story `231`
-also checks that no readiness shows over an unresolved source conflict. Set
+also checks that no readiness shows over an unresolved source conflict. Stories
+`231p` (technical complete) and `231qp` (quality accepted) are the declared
+positive states: a private checker-local synthetic home whose real server
+projection has no technical or quality blockers (no stubbed response; its names,
+sign-offs and acceptance are test inputs, not professional approval). They check
+that the read-only text records, but does not approve or hand over, the source,
+checklist and person evidence, the same home, no write controls or POSTs, an
+unchanged case record and Tab reach of every table region at 1280 and 320 px;
+only these two stories may show the positive wording, and `231` and `231q` still
+reject it. Set
 `ZF_AXE_JS` to the pinned axe 4.10.3 file to add an axe WCAG 2.2 A/AA scan.
 These are engineering checks, not assistive-technology or WCAG acceptance (#155).
 Stories `232` (Resident choice and update queue) and `232s` (Resident service
