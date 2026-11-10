@@ -351,6 +351,41 @@ a staff trial, an independently graded set or an owner-authorised live run
 remain unmet. Run `python3 -m unittest test_paired_trial` with the usual
 core/agents test paths.
 
+#### Constructed paired observations in the report (2026-11-10)
+
+`run_regulatory_gates.py` accepts one optional `--constructed-paired-observations PATH`
+so an operator can read the existing `evaluate_paired_trial` result for a prepared
+comparison dataset. The file is bounded local JSON,
+`{"schema": "constructed-paired-observations-v1", "observations": [...]}` with exactly those
+two keys, at most 262144 bytes and 1000 observations. Each observation has exactly the nine
+scorer fields (`participant`, `task`, `role`, `arm`, `completed`, `comprehension_correct`,
+`accepted`, `hazard_missed`, `elapsed_seconds`, `review_seconds`); `participant` and `task`
+are pseudonymous ids (letters, digits, `.`, `_`, `-`, at most 64 characters) and seconds are
+finite, non-negative and at most one year. Malformed, oversize, non-finite, duplicate-key,
+unknown-schema or invalid input exits 1 with the reason on stderr before the report is
+generated or `--record` writes anything, so `invalid_observations` is always empty here.
+Unpaired, partial-role, empty and hazard-miss inputs are valid and reported by the scorer.
+
+```bash
+PYTHONPATH="$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python3 src/agents/evals/run_regulatory_gates.py \
+  --constructed-paired-observations /path/to/constructed.json
+```
+
+The report gains a distinct `constructed_paired_observations` section with the schema, the
+input sha256, byte and observation counts, a qualification and the unchanged scorer result.
+The scorer runs with no thresholds and no cost inputs, so the result is always cards only,
+threshold `unset_pending_owner_agreement` and AI cost per accepted check `Unknown` with the
+missing inputs named, even for favourable observations. The input is caller-declared
+constructed data: independent human participation, synthetic origin and the supplied
+`accepted` flags are unverified, so it is not a staff trial and not human acceptance. All
+other report keys, including the structural `comparison` and `not_evaluated` staff checks,
+are unchanged, and without the option the output is byte-identical to the committed report.
+Do not point `--record` at `evals/regulatory_gates_results.json` when using the option.
+No model, network or data-store access is added. Tests:
+`tests/test_paired_report_command.py`. The staff trial, owner thresholds, graded set,
+tokenomics and live-run criteria of #216 remain unmet.
+
 ### Staff alert precision and acknowledgement scoring (2026-11-03)
 
 `alert_triage.evaluate_alert_triage` scores recorded staff classifications
