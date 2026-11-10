@@ -217,6 +217,95 @@ recorded one-time operational retry does not repair or extend that chain, and
 neither record is host or model attestation. The incident findings and limits
 above are unchanged.
 
+### Run 42838857558 criterion-set rejection (2026-11-10, Refs #1397, #1383)
+
+This is a dated historical record from direct job log, submitted-input and
+repository evidence. It is documentation only: it changes no scorer, workflow,
+prompt, adapter, test or configuration, repairs no score, and is neither a live
+acceptance of the scorer nor a grant to change the scoring source. The bot
+report on #1397 is preserved as the first record of the failure. The #1383
+record above diagnosed a different incident and is unchanged. Closing #1397 is
+a separate owner decision.
+
+[Run 42838857558](https://github.com/jmservera/ama/actions/runs/42838857558)
+(attempt 1, push to `main`, commit
+`6cc59776666620309fb6b67ad2fdafb343d40998`) concluded `success` and all eight
+jobs succeeded, yet it recorded no score. Its `Run deterministic gate` step
+printed `valid: false`, `total: null`, baseline 78 and error `details must
+contain exactly the 20 rubric criterion IDs`. The refresh step noted that there
+was no passing score to record, so the baseline stayed at 78 and #1397 was
+opened at 15:03:33Z.
+
+The retained submitted tool inputs hold two `record_rubric_score` calls, in
+file order (the file carries no timestamps):
+
+* Call 1 had the summary `placeholder - will be replaced` and `details` of `{}`:
+  valid JSON with no keys, so all 20 registry IDs were missing and none were
+  extra. Nine of its score strings differ from the trusted template, so it is
+  not a copy of it.
+* Call 2 had a 20-key `details` object whose key set equals the registry
+  (A1 to A7, B1 to B7, C1 to C3, D1 to D3) and 20 score strings equal to the
+  template. Only its key set was compared here; the gate did not judge it.
+
+No grade was reconstructed. The gate counts items before it calls the adapter,
+and its count message did not appear, so exactly one item reached the adapter.
+Only call 1 can raise the key-set message, so the judged item is deduced to be
+the placeholder. This is a deduction from the job log, the code and the
+submitted inputs: the consumed accepted-item file was not read. The record does
+not show whether call 2 was refused at submission or dropped. The scorer prompt
+says the pinned handler does not enforce a one-call quota, while the #1383
+record shows a second call refused with `Maximum allowed: 1`. That difference
+is not reconciled here.
+
+Consumed identities, by Git blob: registry `rubric.json` `059efb2e`, `gate.py`
+`5ca9ad44`, `scorecard_adapter.py` `7d496f30`, `prepare.py` `53641ee8`, workflow
+source `af87853f` and compiled lock `1667c08e`. They are identical at
+`901fea60` (the #1383 failing commit), `6cc59776` and `eff05737`. A push run
+sets `BASE_REF` to `HEAD`, so the gate tools came from the scored checkout. The
+baseline consumed was `latest.json` blob `3bb822e0`: scored commit `11184719`,
+run 42830696796, total 78.
+
+Diagnosis: a valid fail-closed rejection of invalid model input. It recurs the
+#1383 class, a placeholder first call that became the only judged call, on the
+same day and with a different payload: an empty object reaches the key-set rule
+that non-JSON text in #1383 did not. It is not a new adapter, gate or transport
+defect, because the source is byte-identical and the rule rejected an input
+with no keys as designed. The #1383 documentation changed no source and the
+prompt is unchanged, so this recurrence neither shows nor refutes that it
+helped. It shows only that the producer can still submit a placeholder as the
+sole judged call. Why it did so is not shown.
+
+Publication and recovery: this run published nothing and `6cc59776` never
+received a score of its own. A later push run,
+[42841391974](https://github.com/jmservera/ama/actions/runs/42841391974)
+(attempt 1, commit `eff05737e8eaed584f3c269754d45bc5e44d0168`), succeeded, and
+baseline refresh pull request
+[#1398](https://github.com/jmservera/ama/pull/1398) merged at 15:16:43Z as
+`c66370042eb08f07839d054433f4483078703cf2`. That `latest.json` records commit
+`eff05737`, that run URL and total 78. This is successor baseline publication,
+not recovery of `6cc59776`. Its criteria content is identical to the previous
+baseline (only `scored_at`, commit, run URL and the solution-code fingerprint
+changed), so whether the `6cc59776` solution-code changes were freshly assessed
+or carried forward is UNKNOWN.
+
+Smallest future engineering action, an owner question that needs a separately
+authorized correction and is not granted here: retain the accepted-item list and
+the gate `decision.json` as run artifacts, since their absence forced this
+diagnosis to rely on deduction (as for #1383). Whether to refuse placeholder
+`details` before append or to reconcile the prompt's quota statement is a
+separate design question. No waiver, grade repair or validation relaxation is
+proposed.
+
+Remaining uncertainty:
+
+* The consumed accepted-item bytes and the decision of run 42841391974 were not
+  read; the gate decision and report are not uploaded artifacts.
+* Whether call 2 was refused or dropped, and the cause of the placeholder, are
+  not shown.
+* Recurrence beyond #1383 and #1397 was not searched.
+* Recovery of `6cc59776` itself and the freshness of the successor score are
+  UNKNOWN.
+
 ## Files
 
 | Path                                                 | Purpose                                                     |
