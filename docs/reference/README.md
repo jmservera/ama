@@ -1362,6 +1362,15 @@ historical pin, notes equal `src`, `infra` and `tools` subtree ids on `eff05737`
 merge. It is separate from the nomination and UX, Bicep and CSV-learning records;
 #185, #110, #109, #184, #111 and #1288 stay open.
 
+A sensor-review wave actual-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#sensor-review-wave-actual-main-checkpoint-2026-11-10-refs-440-109-111-184-1288).
+It pins `main` `4c1b4099` (tree `75158203`) after PR 1404, which carried the #111 child (PR 1395, merged into the declared
+parent, not main) into main, and traces the default-off, proposed-only, role- and consent-bounded sensor-review drafts
+against document statuses without approving any. Root local runs executed on a staged tree, not a post-commit checkout or
+main; `src`, `infra` and `tools` ids are equal and the only other difference is main's rubric score file. Azure, provider,
+model and resident observed is none; whole #109 and #111 stay open, #132, #144 and inherited #1401 and #1402 are excluded,
+and the recommendation is to continue. The aftercare checkpoint in PR 1405 is separate and was not on main when read (the original snapshot statement; PR 1405 merged as `ac962fe6` at 16:44:27Z, and its own section follows). A dated qualification in the pack section records the later ordinary merge of `main` `d79180309`, equal `src`, `infra` and `tools` ids, no fresh runtime claim and the preserved first witness `verify` exit 1. The publication hold stays: both witness chains (original `80643f6b`, `verify` exit 1; qualification `c21849e0`, `verify` exit 1 for a refused `research-open`) are QUALIFIED, as the dated publication qualification (C2) in the pack records with its external locators.
+
 An aftercare integration current-main checkpoint (2026-11-10) is recorded in
 [the cutover evidence pack](../architecture/cutover-evidence-pack.md#aftercare-integration-current-main-checkpoint-2026-11-10-refs-440-89-133-134-1401-1402).
 It observes PR 1400 merged as `main` `64c3f9191` (tree `8fbdaec7`), proves by direct tree comparison that the `src`, `infra`
