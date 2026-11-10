@@ -1110,6 +1110,35 @@ drafter is absent or fails, a plain deterministic sentence is used. Output is
 always `DRAFT_FOR_HUMAN_REVIEW` and never a validated finding. No model is
 bundled and nothing needs one.
 
+Slice 4 adds `discovery_assistant_demo`, one fixed, credential-free command that
+composes the helpers above over an explicitly fictional in-module fixture
+(two properties, timezone-aware events, an incomplete final stage and one
+unusable event):
+
+```bash
+python -m zava_forward.core discovery-demo
+```
+
+It takes no arguments, paths, URL, standard input, dataset, provider or
+credential and reads no environment, `ZF_DATA` or store; any extra argument
+exits 2. The JSON report shows `NOT_READY` with all ten missing readiness items,
+company connection `DENY`, the unapproved design-hypothesis status,
+`model_used=false` and the empty human comparison (`criterion_met=false`). Tool
+decisions are policy results only: nothing is registered, dispatched or
+attempted, and a prohibited write appears only as a refused decision. Hours,
+references and gaps are compared with independently authored expected constants
+for the fixture; a mismatch or repeatability failure exits 1. Those constants
+are constructed expectations, not an analyst's observed results, the
+conventional table reuses the same calculation, and the fallback text is
+deterministic code output, not AI. Running the command with no argument still
+prints the package version. This is an illustration of the design hypothesis and
+does not prove any whole-#125 criterion, approve a connection or replace the
+Phase 0, privacy, access and human approvals.
+
+```bash
+python -m unittest discover -s tests -p 'test_discovery_assistant_demo.py' -q
+```
+
 ### Phase 0 discovery register slice (124)
 
 `discovery_register` is a pure, in-memory rule layer for the retrofit-flow
