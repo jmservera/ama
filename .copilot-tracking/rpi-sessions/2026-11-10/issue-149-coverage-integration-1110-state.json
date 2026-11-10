@@ -3,8 +3,8 @@
   "task_slug": "issue-149-coverage-integration-1110",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Review",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-10/issue-149-coverage-integration-1110-research.md",
@@ -38,8 +38,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Correct R1, commit, record review-done and commit-complete, verify"
+    "phase": "Follow-up",
+    "action": "Root independent exact-head assessment; no publication before it"
   },
   "prioritized_follow_ups": [
     {
