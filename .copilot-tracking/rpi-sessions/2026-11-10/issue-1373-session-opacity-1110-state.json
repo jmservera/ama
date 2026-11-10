@@ -1,0 +1,79 @@
+{
+  "task_id": "1373-session-opacity-1110",
+  "task_slug": "issue-1373-session-opacity-1110",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-session-opacity-1373-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-session-opacity-1373-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-session-opacity-1373-1110-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-session-opacity-1373-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-session-opacity-1373-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-session-opacity-1373-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready; no existing owned or exhausted attempt found",
+      "status": "recorded",
+      "evidence": "research record, ownership check"
+    },
+    {
+      "decision": "One initial bounded newly observed test-oracle repair admitted; no transferred or reset #189/#462/#80 allowance; no automatic post-review extension",
+      "status": "confirmed",
+      "evidence": "owner brief; issue 1373 body"
+    },
+    {
+      "decision": "Stacked child of feat/demo-closed-page-csv-80-1110 at 9e71736bc09984b07d77c122747483548b580c7d; target that parent, not main; no closing keyword",
+      "status": "confirmed",
+      "evidence": "owner brief"
+    },
+    {
+      "decision": "Source scope only src/core/tests/test_resident_showcase.py; production codec, authentication, RNG and encoding unchanged; no authentication bypass or security acceptance claimed",
+      "status": "confirmed",
+      "evidence": "owner brief"
+    },
+    {
+      "decision": "Critique executed once (same-agent self-critique; no nested agents; not independent); proceed with amendments applied directly; no finding conflicts with a confirmed decision",
+      "status": "recorded",
+      "evidence": "critique record"
+    },
+    {
+      "decision": "Implementation complete: one test file; red-before and green-after evidenced; targeted tier checks pass; production source unchanged",
+      "status": "recorded",
+      "evidence": "changes record"
+    },
+    {
+      "decision": "Review executed once (same-agent, not independent exact-head); outcome accepted, no blocking finding; one Low finding routed to later work",
+      "status": "recorded",
+      "evidence": "review record"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Root independent exact-head review before publication; then actual child CI and parent 1371 refresh"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Independent exact-head review, then publish child to feat/demo-closed-page-csv-80-1110 and read hosted Core CI",
+      "rationale": "Required gates before integration",
+      "evidence": "review record; issue 1373 criteria"
+    },
+    {
+      "rank": 2,
+      "task": "Refresh PR 1371 candidate validation after the child merges",
+      "rationale": "Parent required Core CI failed on this oracle",
+      "evidence": "issue 1373 body"
+    },
+    {
+      "rank": 3,
+      "task": "Strengthen the vacuous-case tamper step (token[:-2] + 'xx') in a separately admitted task",
+      "rationale": "Low residual; no extension of this repair allowance",
+      "evidence": "review findings"
+    }
+  ]
+}

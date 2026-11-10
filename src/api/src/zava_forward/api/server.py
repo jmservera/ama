@@ -195,7 +195,7 @@ def list_rows(s, u, path, q):
 def get_kind(path):
     if path == "/api/progress":
         return "stats"
-    if path == "/api/closed-cases":
+    if path in ("/api/closed-cases", "/api/closed-cases.csv"):
         return "cases"
     if path == "/api/coordinator":
         return "coordinator"
@@ -483,12 +483,16 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(403, {"error": str(e)})
                 return self._send(200, list_export.to_csv(rows), "text/csv; charset=utf-8",
                                   {"Content-Disposition": f'attachment; filename="{url.path.rsplit("/", 1)[-1]}"'})
-            if url.path in ("/api/progress", "/api/closed-cases"):
+            if url.path in ("/api/progress", "/api/closed-cases", "/api/closed-cases.csv"):
                 from zava_forward.api import progress
                 try:
                     read = progress.dashboard if url.path == "/api/progress" else progress.closed_cases
                     values = parse_qs(url.query, keep_blank_values=True)
-                    return self._json(200, read(s, u, values))
+                    result = read(s, u, values)
+                    if url.path == "/api/closed-cases.csv":
+                        return self._send(200, progress.closed_csv(result), "text/csv; charset=utf-8",
+                                          {"Content-Disposition": 'attachment; filename="closed-cases-page.csv"'})
+                    return self._json(200, result)
                 except progress.DateRangeError as error:
                     return self._json(400, {"error": str(error), "reasons": {"fields": ["start", "end"]}})
                 except ValueError as error:
