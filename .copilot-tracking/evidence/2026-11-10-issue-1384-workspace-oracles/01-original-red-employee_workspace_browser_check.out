@@ -1,0 +1,12 @@
+PASS owned server is running and responsive on loopback
+PASS case renders without partial-workspace error
+PASS all actual shell scripts return JavaScript 200
+PASS ops executes before app with no service worker
+PASS case renders without partial-workspace error
+PASS ordinary API retry does not reload document/scripts
+PASS healthy and API retry produce no pageerrors
+PASS missing ops names the actual dependency
+PASS case controls are not silently omitted
+PASS asset error reflows at 320px
+PASS asset error reflows at 390px
+PASS asset error reflows at 1280px

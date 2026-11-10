@@ -1210,6 +1210,32 @@ This is a synthetic local engineering slice, not approved-template binding,
 full reviewed application/claim export, live financial authority, a Board
 envelope or complete issue acceptance.
 
+## Staff aftercare concern journey (#133, Refs only, hook integration C4 and C5)
+
+The staff workbench serves `/aftercare.js` and the route `#/aftercare` (listed in
+`checks/workbench-manifest.json` for Residents Liaison Officer, Retrofit Coordinator, Project Manager
+and Programme Support Officer; contractor and Quality Inspector get no entry and receive 403).
+`/api/aftercare` delegates to the unchanged `AftercareService` through
+`zava_forward.core.aftercare_store.DocumentStateStore`. The actor is `{name, role}` from the session
+only. The home allowlist is the constructed retrofit exercise scenarios (SCENARIO-08 to SCENARIO-11),
+never unrestricted; the records are synthetic and unverified and do not name real households. Only the
+Residents Liaison Officer and Retrofit Coordinator can record; the other roles read. The service
+`actions` log inside the document is the audit record, because a separate audit queue entry would not
+be atomic with the document write. Statuses: 201 created, 200 replay, 400 validation, 403, 404, 409
+conflict, 503 not saved or not confirmed. `api()` copies `data.errors` onto the thrown error so the form
+links field errors; the draft, request id and an unconfirmed outcome survive validation failures and
+route changes and are cleared on sign-out. A reply that arrives after the session or view has
+changed (including a real 401 that returned the user to sign-in) updates the stored draft and request
+id but does not render or take focus, so it cannot overwrite the sign-in screen or another route; the
+same actor signing in again sees the original draft and request id, and a different actor does not.
+Because the draft lives only in memory, an aftercare `beforeunload` guard warns on reload, full
+navigation or tab close while the draft is edited or its save is unconfirmed; safe hash-route changes
+do not prompt, and the guard clears on a confirmed receipt, sign-out or actor change. Nothing is
+written to browser storage. No evaluator or resident account, portal or closure is
+added; the quality-note action is not offered as concern intake. Tests: `tests/test_aftercare_served.py`,
+`tests/test_role_endpoint_inventory.py`; browser check `checks/aftercare_browser_check.py` (constructed
+keyboard and axe observations, not assistive-technology or WCAG acceptance).
+
 ## Specialist screen delivery (#149)
 
 The existing workbench includes a **Specialist screens** destination. Installed
@@ -4098,6 +4124,30 @@ This is first-page request evidence, not a three-case multipage test.
 No real model, private stock, SQL Server or Azure is exercised. Full scenario
 workflow coverage, operational definition ratification, human/screen-reader
 acceptance and mandatory live-platform application acceptance remain unmet.
+
+Keyboard walkthrough check (Refs #134). Run it from `src/api` with
+`python -m checks.specialist_keyboard_browser_check`, using a short
+`ZF_BROWSER_SCRATCH` path, the shared heavy-job lock and your own environment. It
+uses only synthetic data. It starts a browser and presses only Tab, Shift+Tab and
+Enter from the case list to each specialist screen served to each fixture login,
+to the first listed home, to every evidence table, the workspace link and Reset.
+At each stop it checks that the focus indicator is visible (an outline or ring of at
+least 2px; removed, transparent or zero-size styles fail, and an unusual ring shape
+needs a deliberate update of the check), that the
+status message has the right text and is announced politely, and that each
+evidence table has a label and can take focus. It also breaks 15 controls on
+purpose, such as removing a ring, a label or a status attribute, and each break must
+make the check fail. The output has about 714 PASS lines; that is a count of checks
+printed, not of acceptance criteria.
+
+What it does not show: picking a fixture login is not authentication; the status
+text is read from the page, not from a screen reader; endpoint and handoff wording
+is only checked as text; five screens have no evidence table on the fixture; Asset,
+Procurement and Auditor have no login; the first listed home stands in for all
+homes. It records no acceptance criterion as met and no human or assistive
+technology approval. Dated notes on how the check was built and verified, including
+earlier failed steps, are in the
+[validation record](../../.copilot-tracking/research/2026-11-10-keyboard-c4-134-1110-research.md).
 
 This is a bounded offline extension of the existing role workbench, not a new
 identity provider, role simulator, permission policy or operational acceptance.

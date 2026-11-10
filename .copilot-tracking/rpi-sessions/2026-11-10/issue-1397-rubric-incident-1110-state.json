@@ -1,0 +1,69 @@
+{
+  "task_id": "1397-rubric-incident-1110",
+  "task_slug": "issue-1397-rubric-incident-1110",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-issue-1397-rubric-incident-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-issue-1397-rubric-incident-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-issue-1397-rubric-incident-1110-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-10-issue-1397-rubric-incident-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-issue-1397-rubric-incident-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-issue-1397-rubric-incident-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Root authorized ONE initial bounded documentary diagnosis of incident 1397 (run 42838857558, commit 6cc5977); documentation only inside the existing .github/rubric/README.md incident section; no scorer, workflow, prompt, adapter, test or config edit, no score repair, no model or provider call, no workflow rerun, no weakened validation, no shared-pack or docs/reference change",
+      "status": "done",
+      "evidence": "brief-1397-rubric-incident-1914.txt"
+    },
+    {
+      "decision": "Research executed from permitted evidence; Planning Readiness Ready; gate judged the placeholder first call (deduced), successor baseline publication observed (#1398), recovery of the failing commit itself UNKNOWN",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-10-issue-1397-rubric-incident-1110-research.md"
+    },
+    {
+      "decision": "Plan, details and ONE self critique executed (approve with changes); C1-C5 applied directly, C6 artifact download or successor log read rejected as out of scope; no user decision required",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-10-issue-1397-rubric-incident-1110-plan-critique.md"
+    },
+    {
+      "decision": "Implement done: one README subsection (89 added lines, none removed); documentation only, pure-docs tier, no runtime gate",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-11-10-issue-1397-rubric-incident-1110-changes.md"
+    },
+    {
+      "decision": "Single self Review executed, outcome conformant for scoped documentation, not independent; no open material finding; incident closure not asserted",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-issue-1397-rubric-incident-1110-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Commit scoped records, then Root independently assesses the exact candidate; no push or PR by worker"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner decision whether to authorize retaining the accepted-item list and gate decision.json as run artifacts",
+      "rationale": "Smallest change that removes the deduction gap for the next incident; separately authorized correction only",
+      "evidence": ".copilot-tracking/research/2026-11-10-issue-1397-rubric-incident-1110-research.md"
+    },
+    {
+      "rank": 2,
+      "task": "Reconcile the scorer prompt one-call quota statement with the observed Maximum allowed: 1 behaviour",
+      "rationale": "Contradiction between prompt and the 1383 record; not resolved by this documentation",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-issue-1397-rubric-incident-1110-review.md"
+    },
+    {
+      "rank": 3,
+      "task": "Read-only recurrence search of rubric-score incident issues and failed scorer runs",
+      "rationale": "Recurrence beyond 1383 and 1397 not searched",
+      "evidence": ".copilot-tracking/research/2026-11-10-issue-1397-rubric-incident-1110-research.md"
+    }
+  ]
+}

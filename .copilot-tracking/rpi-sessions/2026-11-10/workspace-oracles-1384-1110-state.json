@@ -1,0 +1,51 @@
+{
+  "task_id": "1384-workspace-oracles-1110",
+  "task_slug": "workspace-oracles-1384-1110",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-workspace-oracles-1384-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-workspace-oracles-1384-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-workspace-oracles-1384-1110-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-workspace-oracles-1384-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-workspace-oracles-1384-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-workspace-oracles-1384-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed on pinned main caaf989148aff21ed8ecb5b71eb0be75b29c16de; current-main red reproduced and instrumented; Planning Readiness Ready",
+      "status": "done",
+      "evidence": "research record and .copilot-tracking/evidence/2026-11-10-issue-1384-workspace-oracles"
+    },
+    {
+      "decision": "One initial checker-only attempt; no product change, no reset of other allowances",
+      "status": "confirmed",
+      "evidence": "owner brief and issue 1384"
+    },
+    {
+      "decision": "Critique executed once, verdict approve-with-changes, four significant findings applied directly, no user decision",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/critiques/2026-11-10-workspace-oracles-1384-1110-plan-critique.md"
+    },
+    {
+      "decision": "Review executed once, outcome conformant for oracle scope, no blocking findings; scripts check delayed_companion race held as distinct finding",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-workspace-oracles-1384-1110-review.md"
+    }
+  ],
+  "next_action": {
+    "phase": "Review",
+    "action": "Record review-done, commit, record commit-complete"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Optionally align loading_briefing_browser_check.script_attempts with the strict shared helper",
+      "rationale": "removes a lenient duplicate parser",
+      "evidence": "research record, Prior Art"
+    }
+  ]
+}

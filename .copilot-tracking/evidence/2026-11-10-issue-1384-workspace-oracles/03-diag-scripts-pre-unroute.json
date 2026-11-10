@@ -1,0 +1,1317 @@
+{
+  "which": "scripts",
+  "scenarios": [
+    {
+      "scenario": "exhaustion (repeated aborted loads)",
+      "started_ms": 953,
+      "original_assertions": "FAILED",
+      "exception": "AssertionError()",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/azureuser/source/ama-demo-wt/issue-1384-workspace-oracles-1110/src/api/../../.copilot-tracking/evidence/2026-11-10-issue-1384-workspace-oracles/diag_script_requests.py\", line 131, in run\n    function(*args, **kwargs)\n  File \"/home/azureuser/source/ama-demo-wt/issue-1384-workspace-oracles-1110/src/api/checks/workspace_scripts_browser_check.py\", line 148, in exhaustion\n    assert len(requests) == count\n           ^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n",
+      "contexts": [
+        {
+          "network": [
+            {
+              "event": "request",
+              "t_ms": 1131,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "request",
+              "t_ms": 1135,
+              "url": "http://127.0.0.1:39839/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "request",
+              "t_ms": 1152,
+              "url": "http://127.0.0.1:39839/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "requestfailed",
+              "t_ms": 1186,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "failure": "net::ERR_FAILED"
+            },
+            {
+              "event": "response",
+              "t_ms": 1239,
+              "url": "http://127.0.0.1:39839/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            },
+            {
+              "event": "response",
+              "t_ms": 1241,
+              "url": "http://127.0.0.1:39839/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            },
+            {
+              "event": "request",
+              "t_ms": 1821,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "requestfailed",
+              "t_ms": 1823,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "failure": "net::ERR_FAILED"
+            },
+            {
+              "event": "request",
+              "t_ms": 2325,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "requestfailed",
+              "t_ms": 2326,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "failure": "net::ERR_FAILED"
+            },
+            {
+              "event": "request",
+              "t_ms": 3828,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "requestfailed",
+              "t_ms": 3830,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "failure": "net::ERR_FAILED"
+            }
+          ],
+          "pre_unroute_pages": null,
+          "pages": [
+            {
+              "url": "http://127.0.0.1:39839/app#/overview",
+              "script_log": [
+                {
+                  "t": 48,
+                  "ev": "added",
+                  "src": "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 157,
+                  "ev": "load",
+                  "src": "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 167,
+                  "ev": "added",
+                  "src": "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 167,
+                  "ev": "load",
+                  "src": "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 167,
+                  "ev": "added",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 167,
+                  "ev": "error",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 167,
+                  "ev": "added",
+                  "src": "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 168,
+                  "ev": "load",
+                  "src": "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 168,
+                  "ev": "added",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 168,
+                  "ev": "load",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 168,
+                  "ev": "added",
+                  "src": "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 168,
+                  "ev": "load",
+                  "src": "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 168,
+                  "ev": "added",
+                  "src": "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 168,
+                  "ev": "load",
+                  "src": "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 168,
+                  "ev": "added",
+                  "src": "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 169,
+                  "ev": "load",
+                  "src": "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 169,
+                  "ev": "added",
+                  "src": "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 187,
+                  "ev": "load",
+                  "src": "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 189,
+                  "ev": "added",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 224,
+                  "ev": "load",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 226,
+                  "ev": "added",
+                  "src": "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 226,
+                  "ev": "load",
+                  "src": "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 226,
+                  "ev": "added",
+                  "src": "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 227,
+                  "ev": "load",
+                  "src": "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 227,
+                  "ev": "added",
+                  "src": "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 227,
+                  "ev": "load",
+                  "src": "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 227,
+                  "ev": "added",
+                  "src": "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 230,
+                  "ev": "load",
+                  "src": "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 744,
+                  "ev": "added",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 748,
+                  "ev": "removed",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 748,
+                  "ev": "error",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 1248,
+                  "ev": "added",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 1251,
+                  "ev": "removed",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 1251,
+                  "ev": "error",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 2752,
+                  "ev": "added",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 2755,
+                  "ev": "removed",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 2756,
+                  "ev": "error",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                }
+              ],
+              "workspace_status": "Workspace unavailable: Required workspace files did not load: /vendor/leaflet.js. Reload this page to try again. If this continues, ask application support to check these files.",
+              "alert": [
+                "Required workspace files did not load: /vendor/leaflet.js. Reload this page to try again. If this continues, ask application support to check these files."
+              ],
+              "headings": [
+                "Workspace unavailable"
+              ],
+              "ready": {
+                "ops": true,
+                "leaflet": false,
+                "roleScreens": true
+              },
+              "head_script_srcs": [
+                "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "exhaustion missing_global",
+      "started_ms": 4338,
+      "original_assertions": "passed",
+      "contexts": [
+        {
+          "network": [
+            {
+              "event": "request",
+              "t_ms": 4395,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "request",
+              "t_ms": 4397,
+              "url": "http://127.0.0.1:39839/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "request",
+              "t_ms": 4404,
+              "url": "http://127.0.0.1:39839/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "requestfailed",
+              "t_ms": 4408,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "failure": "net::ERR_FAILED"
+            },
+            {
+              "event": "response",
+              "t_ms": 4422,
+              "url": "http://127.0.0.1:39839/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            },
+            {
+              "event": "response",
+              "t_ms": 4462,
+              "url": "http://127.0.0.1:39839/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            },
+            {
+              "event": "request",
+              "t_ms": 4981,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "response",
+              "t_ms": 4984,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            },
+            {
+              "event": "request",
+              "t_ms": 6463,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "request",
+              "t_ms": 6466,
+              "url": "http://127.0.0.1:39839/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "request",
+              "t_ms": 6470,
+              "url": "http://127.0.0.1:39839/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "response",
+              "t_ms": 6500,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            },
+            {
+              "event": "response",
+              "t_ms": 6531,
+              "url": "http://127.0.0.1:39839/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            },
+            {
+              "event": "response",
+              "t_ms": 6534,
+              "url": "http://127.0.0.1:39839/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            }
+          ],
+          "pre_unroute_pages": [
+            {
+              "url": "http://127.0.0.1:39839/app#/overview",
+              "script_log": [
+                {
+                  "t": 16,
+                  "ev": "added",
+                  "src": "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 68,
+                  "ev": "load",
+                  "src": "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 72,
+                  "ev": "added",
+                  "src": "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 83,
+                  "ev": "load",
+                  "src": "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 84,
+                  "ev": "added",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 84,
+                  "ev": "error",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 84,
+                  "ev": "added",
+                  "src": "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 84,
+                  "ev": "load",
+                  "src": "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 84,
+                  "ev": "added",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 85,
+                  "ev": "load",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 85,
+                  "ev": "added",
+                  "src": "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 86,
+                  "ev": "load",
+                  "src": "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 86,
+                  "ev": "added",
+                  "src": "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 87,
+                  "ev": "load",
+                  "src": "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 87,
+                  "ev": "added",
+                  "src": "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 89,
+                  "ev": "load",
+                  "src": "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 89,
+                  "ev": "added",
+                  "src": "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 109,
+                  "ev": "load",
+                  "src": "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 110,
+                  "ev": "added",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 120,
+                  "ev": "load",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 120,
+                  "ev": "added",
+                  "src": "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 123,
+                  "ev": "load",
+                  "src": "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 123,
+                  "ev": "added",
+                  "src": "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 125,
+                  "ev": "load",
+                  "src": "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 125,
+                  "ev": "added",
+                  "src": "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 126,
+                  "ev": "load",
+                  "src": "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 126,
+                  "ev": "added",
+                  "src": "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 128,
+                  "ev": "load",
+                  "src": "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 604,
+                  "ev": "added",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 608,
+                  "ev": "removed",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 610,
+                  "ev": "load",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": false,
+                    "roleScreens": true
+                  }
+                }
+              ],
+              "workspace_status": "Workspace unavailable: Required workspace files did not load: /vendor/leaflet.js. Reload this page to try again. If this continues, ask application support to check these files.",
+              "alert": [
+                "Required workspace files did not load: /vendor/leaflet.js. Reload this page to try again. If this continues, ask application support to check these files."
+              ],
+              "headings": [
+                "Workspace unavailable"
+              ],
+              "ready": {
+                "ops": true,
+                "leaflet": false,
+                "roleScreens": true
+              },
+              "head_script_srcs": [
+                "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+              ]
+            }
+          ],
+          "pages": [
+            {
+              "url": "http://127.0.0.1:39839/app#/overview",
+              "script_log": [
+                {
+                  "t": 17,
+                  "ev": "added",
+                  "src": "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 69,
+                  "ev": "load",
+                  "src": "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 70,
+                  "ev": "added",
+                  "src": "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 70,
+                  "ev": "load",
+                  "src": "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 70,
+                  "ev": "added",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 85,
+                  "ev": "load",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 89,
+                  "ev": "added",
+                  "src": "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 89,
+                  "ev": "load",
+                  "src": "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 90,
+                  "ev": "added",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 90,
+                  "ev": "load",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 90,
+                  "ev": "added",
+                  "src": "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 91,
+                  "ev": "load",
+                  "src": "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 95,
+                  "ev": "added",
+                  "src": "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 96,
+                  "ev": "load",
+                  "src": "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 96,
+                  "ev": "added",
+                  "src": "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 96,
+                  "ev": "load",
+                  "src": "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 96,
+                  "ev": "added",
+                  "src": "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 109,
+                  "ev": "load",
+                  "src": "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 109,
+                  "ev": "added",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 109,
+                  "ev": "load",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 109,
+                  "ev": "added",
+                  "src": "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 127,
+                  "ev": "load",
+                  "src": "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 127,
+                  "ev": "added",
+                  "src": "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 127,
+                  "ev": "load",
+                  "src": "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 127,
+                  "ev": "added",
+                  "src": "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 133,
+                  "ev": "load",
+                  "src": "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 133,
+                  "ev": "added",
+                  "src": "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 134,
+                  "ev": "load",
+                  "src": "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": true
+                  }
+                }
+              ],
+              "workspace_status": "Resident Liaison Officer. Programme overview.",
+              "alert": [],
+              "headings": [
+                "Overview",
+                "Map of open cases",
+                "Cases by stage",
+                "Cases by local authority",
+                "How long cases have waited",
+                "Cases by wave",
+                "Funding status",
+                "Contractors",
+                "Team workload"
+              ],
+              "ready": {
+                "ops": true,
+                "leaflet": true,
+                "roleScreens": true
+              },
+              "head_script_srcs": [
+                "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "scenario": "delayed companion timed_out",
+      "started_ms": 6845,
+      "original_assertions": "passed",
+      "contexts": [
+        {
+          "network": [
+            {
+              "event": "request",
+              "t_ms": 6946,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "request",
+              "t_ms": 6949,
+              "url": "http://127.0.0.1:39839/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "request",
+              "t_ms": 6955,
+              "url": "http://127.0.0.1:39839/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "requestfailed",
+              "t_ms": 6965,
+              "url": "http://127.0.0.1:39839/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "failure": "net::ERR_FAILED"
+            },
+            {
+              "event": "response",
+              "t_ms": 6976,
+              "url": "http://127.0.0.1:39839/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            },
+            {
+              "event": "response",
+              "t_ms": 7018,
+              "url": "http://127.0.0.1:39839/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            },
+            {
+              "event": "request",
+              "t_ms": 7554,
+              "url": "http://127.0.0.1:39839/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "response",
+              "t_ms": 13022,
+              "url": "http://127.0.0.1:39839/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            }
+          ],
+          "pre_unroute_pages": null,
+          "pages": [
+            {
+              "url": "http://127.0.0.1:39839/app#/screens",
+              "script_log": [
+                {
+                  "t": 23,
+                  "ev": "added",
+                  "src": "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 81,
+                  "ev": "load",
+                  "src": "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 82,
+                  "ev": "added",
+                  "src": "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 83,
+                  "ev": "load",
+                  "src": "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 83,
+                  "ev": "added",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 97,
+                  "ev": "load",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 100,
+                  "ev": "added",
+                  "src": "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 100,
+                  "ev": "load",
+                  "src": "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 100,
+                  "ev": "added",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 100,
+                  "ev": "load",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 100,
+                  "ev": "added",
+                  "src": "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 100,
+                  "ev": "load",
+                  "src": "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 100,
+                  "ev": "added",
+                  "src": "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 107,
+                  "ev": "load",
+                  "src": "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 107,
+                  "ev": "added",
+                  "src": "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 120,
+                  "ev": "load",
+                  "src": "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 120,
+                  "ev": "added",
+                  "src": "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 121,
+                  "ev": "load",
+                  "src": "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 121,
+                  "ev": "added",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 121,
+                  "ev": "error",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 121,
+                  "ev": "added",
+                  "src": "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 133,
+                  "ev": "load",
+                  "src": "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 133,
+                  "ev": "added",
+                  "src": "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 139,
+                  "ev": "load",
+                  "src": "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 139,
+                  "ev": "added",
+                  "src": "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 139,
+                  "ev": "load",
+                  "src": "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 139,
+                  "ev": "added",
+                  "src": "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 141,
+                  "ev": "load",
+                  "src": "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 637,
+                  "ev": "added",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 5637,
+                  "ev": "removed",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 6106,
+                  "ev": "load",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": true,
+                    "leaflet": true,
+                    "roleScreens": true
+                  }
+                }
+              ],
+              "workspace_status": "Resident Liaison Officer. Installed role screens.",
+              "alert": [],
+              "headings": [
+                "Specialist screens"
+              ],
+              "ready": {
+                "ops": true,
+                "leaflet": true,
+                "roleScreens": true
+              },
+              "head_script_srcs": [
+                "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+PASS owned server is running and responsive on loopback
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: navigation
+ok 0 {}
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: timeout and late load
+ok 0 {'timed_out': True}
+FAIL 0 {'sign_out': True}
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: same-document 401/login
+ok 0 {'session_ended': True}
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: navigation
+ok 1 {}
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: timeout and late load
+ok 1 {'timed_out': True}
+PASS delayed lexical companion: sign-out
+ok 1 {'sign_out': True}
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: same-document 401/login
+ok 1 {'session_ended': True}
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: navigation
+ok 2 {}
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: timeout and late load
+ok 2 {'timed_out': True}
+PASS delayed lexical companion: sign-out
+ok 2 {'sign_out': True}
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: same-document 401/login
+ok 2 {'session_ended': True}
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: navigation
+ok 3 {}
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: timeout and late load
+ok 3 {'timed_out': True}
+PASS delayed lexical companion: sign-out
+ok 3 {'sign_out': True}
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: same-document 401/login
+ok 3 {'session_ended': True}

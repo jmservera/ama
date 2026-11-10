@@ -23,7 +23,7 @@ from zava_forward.api import auth, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
-from zava_forward.core import simulation_lane
+from zava_forward.core import sensor_review_draft, simulation_lane
 from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
@@ -39,6 +39,9 @@ from zava_forward.core.factory import open_store
 from zava_forward.api.timecapture import TimeCapture
 from zava_forward.api.static_assets import StaticAssets
 from zava_forward.core.store import MANAGER_ROLES, ConflictError, GateError
+from zava_forward.core.aftercare_intake import AftercareService
+from zava_forward.core.aftercare_store import DocumentStateStore
+from zava_forward.core.synthetic import sensor_scenarios
 
 WEB = Path(__file__).resolve().parent / "web"
 TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=utf-8",
@@ -108,6 +111,10 @@ class App:
         except simulation_lane.Unavailable as error:
             self.simulation_reason = error.code
         self.law = law
+        # Constructed synthetic allowlist only: never homes=None and never live case binding.
+        scenarios = sensor_scenarios.retrofit_exercise_scenarios()
+        scenario_homes = sorted({str(x["rows"][0]["home_id"]) for x in scenarios})
+        self.aftercare = AftercareService(DocumentStateStore(store), homes=scenario_homes, cohort=scenario_homes, scenarios=scenarios)
         self.regulatory = RegulatoryChat(
             self.chat, law, regulatory_chat.answer, regulatory_chat.purpose, regulatory_chat.refusal
         )
@@ -193,6 +200,8 @@ def list_rows(s, u, path, q):
 
 
 def get_kind(path):
+    if path == "/api/aftercare" or path.startswith("/api/aftercare/"):
+        return "aftercare"
     if path == "/api/progress":
         return "stats"
     if path in ("/api/closed-cases", "/api/closed-cases.csv"):
@@ -396,6 +405,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     identity.link(app.store, user)
             return user
 
+        def _aftercare(self, method, user, path, body, query):
+            # The actor is the signed-in staff member; nothing in the request body can name one.
+            actor = {"name": user.get("name"), "role": user.get("role")}
+            status, payload = app.aftercare.handle(method, path, actor, body, query)
+            return self._json(status, payload)
+
         def _body(self):
             try:
                 n = int(self.headers.get("Content-Length") or 0)
@@ -540,6 +555,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(400, {"error": str(error)})
                 except PermissionError as error:
                     return self._json(403, {"error": str(error)})
+            if url.path == "/api/aftercare" or url.path.startswith("/api/aftercare/"):
+                return self._aftercare("GET", u, url.path, None, {k: v[0] for k, v in q.items() if v})
             if url.path.startswith("/api/chat"):
                 return self._chat(u, url.path, None)
             form_parts = url.path.strip("/").split("/")
@@ -830,6 +847,23 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(400, {"error": str(e)})
                 except Exception:
                     return self._json(503, {"error": "Sensor readings unavailable; continue the ordinary quality check manually."})
+            if url.path.startswith("/api/cases/") and url.path.endswith("/sensor-drafts"):
+                parts = url.path.strip("/").split("/")
+                if len(parts) != 4:
+                    return self._json(404, {"error": "Case not found."})
+                try:
+                    return self._json(200, sensor_review_draft.read_drafts(s, u, unquote(parts[2])))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except KeyError:
+                    return self._json(404, {"error": "Case not found."})
+                except Exception:
+                    return self._json(
+                        503,
+                        {
+                            "error": "Sensor review drafts unavailable; use the manual route: manual-sensor-review."
+                        },
+                    )
             if url.path.startswith("/api/cases/") and url.path.endswith("/home-case"):
                 parts = url.path.strip("/").split("/")
                 if len(parts) != 4:
@@ -1243,6 +1277,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._rule_alerts(u, url.path, body)
             if url.path == "/api/law/cards" or url.path.startswith("/api/law/cards/"):
                 return self._rulecards(u, url.path, body)
+            if url.path == "/api/aftercare" or url.path.startswith("/api/aftercare/"):
+                return self._aftercare("POST", u, url.path, body, {})
             if url.path.startswith("/api/chat"):
                 return self._chat(u, url.path, body)
             parts = url.path.strip("/").split("/")
@@ -1367,6 +1403,21 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]
+                    if act == "sensor-draft":
+                        from zava_forward.core.sqlstore import CommittedReloadError
+
+                        try:
+                            return self._json(
+                                200, sensor_review_draft.draft_from_request(s, u, cid, body)
+                            )
+                        except CommittedReloadError:
+                            return self._json(
+                                409,
+                                {
+                                    "error": "The draft change committed. Reload; do not repeat it.",
+                                    "outcome": "committed",
+                                },
+                            )
                     with s.lock:
                         prior_stage = s._case(cid)["stage"]
                     if act == "call":
