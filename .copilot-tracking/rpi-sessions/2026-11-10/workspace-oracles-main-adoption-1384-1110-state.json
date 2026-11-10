@@ -1,0 +1,48 @@
+{
+  "task_id": "1384-main-adoption-1110",
+  "task_slug": "workspace-oracles-main-adoption-1384-1110",
+  "parent_task": {
+    "task_id": "1384-workspace-oracles-1110",
+    "task_slug": "workspace-oracles-1384-1110"
+  },
+  "mode": "automatic",
+  "active_phase": "Plan",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-workspace-oracles-main-adoption-1384-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-workspace-oracles-main-adoption-1384-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-workspace-oracles-main-adoption-1384-1110-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-workspace-oracles-main-adoption-1384-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-workspace-oracles-main-adoption-1384-1110-changes.md",
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed on fetched origin/main 111847191d1fde5e8ea18c30c999e99f33721aff; one conflicted file with two additive hunks; Planning Readiness Ready",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-10-workspace-oracles-main-adoption-1384-1110-research.md"
+    },
+    {
+      "decision": "Ordinary --no-ff merge only; no oracle, production or retry-policy change; stop for Root on any substantive conflict",
+      "status": "confirmed",
+      "evidence": "owner brief"
+    },
+    {
+      "decision": "Critique executed once, verdict Revise, four findings applied directly, no user decision",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/critiques/2026-11-10-workspace-oracles-main-adoption-1384-1110-plan-critique.md"
+    },
+    {
+      "decision": "Original baseline sign_out empty failure stays UNKNOWN; whole workspace exhaustion red remains 1384 ownership",
+      "status": "confirmed",
+      "evidence": "owner brief; original evidence 04-after-workspace_scripts"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Record witness launch, research-open, plan-done, strict parse, then implement-start in separate calls; then merge origin/main"
+  },
+  "prioritized_follow_ups": []
+}
