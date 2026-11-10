@@ -6,7 +6,7 @@ task_id: 149-copy-main-integration-1110
 
 ## Disposition and scope
 
-Research executed 2026-11-10T00:38Z to 00:44Z, before any merge. Planning Readiness: Ready.
+Research executed 2026-11-10T00:38Z to 00:39Z, before any merge. Planning Readiness: Ready.
 
 Scope is only the existing reviewed staff-time plain-language disclosure component (child 153, merged into the owned parent by PR 1335) plus necessary own tracking. This is a component-only integration of pinned current main into the owned parent. It does not claim the whole UX epic 149 or the whole of 153. No new feature, copy or redesign, and no Core, API server, app, roles, store, procurement or SQL-store hook, schema, security, cost or live-authority change. Issue 132 keeps its shared hooks. Existing consent, human, manual and accessibility limits stay. Production and assistive-technology acceptance is not established.
 
@@ -34,7 +34,7 @@ Scope is only the existing reviewed staff-time plain-language disclosure compone
 ## Findings that constrain the plan
 
 * No meaningful product conflict and no reserved shared-hook overlap exist in the changed-path sets, so the merge is an ordinary merge of the pinned commit. STOP conditions are not met; they remain armed for the merge itself.
-* The previously installed `zava-forward-*` editable distributions point at the primary checkout `/home/azureuser/source/ama`, not this worktree, and the global tools are Ruff 0.17.3, mypy 2.4.1, Playwright 1.64.1. The declared dev extras pin Ruff 0.17.1, mypy 2.4.0, Playwright 1.64.0. Validation therefore uses a new venv outside the checkout, `/tmp/zf-149-1110/venv`, with `pip install -e src/core -e src/agents -e "src/api[dev]"` from this worktree (done 00:40Z, versions verified, Chromium 1248 present in the Playwright cache).
+* The previously installed `zava-forward-*` editable distributions point at the primary checkout `/home/azureuser/source/ama`, not this worktree, and the global tools are Ruff 0.17.3, mypy 2.4.1, Playwright 1.64.1. The declared dev extras pin Ruff 0.17.1, mypy 2.4.0, Playwright 1.64.0. Validation therefore uses a new venv outside the checkout, `/tmp/zf-149-1110/venv`, with `pip install -e src/core -e src/agents -e "src/api[dev]"` from this worktree (done 00:38Z to 00:39Z, versions verified, Chromium 1248 present in the Playwright cache).
 * Heavy lock `/tmp/ama-rpi-heavy.lock` was free at 00:38Z by a non-blocking probe. Browser admission is one `flock -n`, never queued or killed.
 * Child 153 evidence is frozen and is not re-litigated: frozen at `eea9` (C1) as reported by the owner brief, independent assessment `4c52` approve with 0 findings, exact API project 204 passed, 12 actual tests including 5 browser with 0 skips, all published-head CI passed. Core CI's single 6141 ms outlier had the same Core tree `66fdcd8` as a prior green run, one controlled local repro passed (max 196.9 ms), and one failed-job rerun passed. The original failure is preserved. C1 budget: four of five remaining; this task consumes none.
 

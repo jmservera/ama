@@ -4,7 +4,7 @@ ms.date: 2026-11-10
 task_id: 149-copy-main-integration-1110
 ---
 
-## Plan (authored 2026-11-10T00:45Z, before the merge)
+## Plan (authored 2026-11-10T00:39Z, before the merge)
 
 Objective: ordinary-merge pinned main `ddeebd01694ddb46b456451d9ac6390347e51aaa` into the owned parent `feat/demo-content-workflows-149-1109` (head `befe28e48`), then verify the staff-time component still passes on the merged tree and record the evidence.
 
