@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from time import monotonic
 from urllib.parse import urlsplit
 
 from playwright.sync_api import (
@@ -15,6 +16,7 @@ from checks.design_system_browser_check import main
 from checks.workbench_browser_check import synthetic_data
 
 LEAFLET = "/vendor/leaflet.js"
+ROUTE_DELIVERY_DEADLINE_S = 5.0
 
 
 def local_context(browser: Browser, base: str) -> BrowserContext:
@@ -243,7 +245,14 @@ def delayed_companion(
                 script => new RegExp(pattern).test(script.src)).length === 1""",
             arg=asset_url("/role-screens.js", base).pattern,
         )
-        assert len(pending) == 1
+        # Playwright delivers the route to this callback after the DOM changes; pump it, bounded.
+        deadline = monotonic() + ROUTE_DELIVERY_DEADLINE_S
+        while not pending and monotonic() < deadline:
+            page.wait_for_timeout(10)
+        assert len(pending) == 1, (
+            f"Expected exactly one retry route delivered within {ROUTE_DELIVERY_DEADLINE_S:g}s "
+            f"of DOM-ready, saw {len(pending)}"
+        )
         if sign_out:
             page.locator("#account > summary").click()
             page.get_by_role("button", name="Sign out", exact=True).click()
