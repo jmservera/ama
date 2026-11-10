@@ -4125,51 +4125,29 @@ No real model, private stock, SQL Server or Azure is exercised. Full scenario
 workflow coverage, operational definition ratification, human/screen-reader
 acceptance and mandatory live-platform application acceptance remain unmet.
 
-`python -m checks.specialist_keyboard_browser_check` (Refs #134) walks, with Tab,
-Shift+Tab and Enter only, from the case list to every specialist screen served to
-each constructed fixture login, then to the first listed home, every evidence
-region, the existing-workspace link and Reset screen view. It asserts measured
-focus visibility at each reached target, the exact `#workspace-status` text plus
-`role=status`, `aria-live=polite` and `aria-atomic=true` after each state, and
-that the evidence tables, enumerated by tag, match the declared per-screen fixture
-labels with a label and `tabindex=0`; screens with no table on the fixture are
-declared gaps, not passes. Fifteen run-only mutations (focus removal at the home,
-region, handoff and reset targets, transparent focus at a screen link, a transparent non-black shadow kept instead of
-none, each status attribute removed with the text kept including at the reset
-state, label removed, region made unfocusable, one or all regions removed, recovery link
-removed) must fail the same walk assertions; the entry target is asserted but has no
-negative. Fixture-role selection is not
-authentication; the status text is DOM evidence, not screen-reader output; endpoint
-and handoff wording is reported as text presence only. Use a short
-`ZF_BROWSER_SCRATCH`, the heavy lock and an owned environment; it marks no
-acceptance criterion as passing.
+Keyboard walkthrough check (Refs #134). Run it from `src/api` with
+`python -m checks.specialist_keyboard_browser_check`, using a short
+`ZF_BROWSER_SCRATCH` path, the shared heavy-job lock and your own environment. It
+uses only synthetic data. It starts a browser and presses only Tab, Shift+Tab and
+Enter from the case list to each specialist screen served to each fixture login,
+to the first listed home, to every evidence table, the workspace link and Reset.
+At each stop it checks that the focus indicator is visible (an outline or ring of at
+least 2px; removed, transparent or zero-size styles fail, and an unusual ring shape
+needs a deliberate update of the check), that the
+status message has the right text and is announced politely, and that each
+evidence table has a label and can take focus. It also breaks 15 controls on
+purpose, such as removing a ring, a label or a status attribute, and each break must
+make the check fail. The output has about 714 PASS lines; that is a count of checks
+printed, not of acceptance criteria.
 
-Publication and evidence status (dated 2026-11-10, documentation only; the text
-above stays as the historical description). The observed source head is
-`cb01c33c42ceef31ee699649ecceedadc487945d` (not this paragraph's own commit); at
-the publication snapshot its four validated source and test files are identical
-to it. On that head, in the owner's pinned environment, ruff 0.17.1 and mypy
-2.4.0 were clean on those files, the probe helper tests (6) and the core register
-tests (16) passed, and one browser run on owned synthetic data exited 0 with 714
-PASS lines, 15 negatives and 15 declared no-table walks. These are bounded
-synthetic observations only. They are not whole #134, AC-034 to AC-043,
-authentication, assistive-technology or human acceptance; the known limits above
-and the open #1401 and #1402 findings stand.
-
-The witness chains for this probe are all qualified, none waived. The original
-chain (8 records) and the correction C1 chain (9 records) verify with exit 1. The
-correction C2 chain (8 records) also verifies with exit 1: launch (seq 1) was
-refused for a missing `--brief`, plan-done (seq 4) was refused because a state
-update ran from the wrong directory and the preflight exit was not propagated
-through `tee`, and the later markers carry a missing plan-done predecessor. A
-docs-only correction C3 has its own prospective chain; its post-commit result is
-reported only in the external handoff. External session files, not repository
-links, under
-`/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files/`:
-`phase134-walkthrough-plan-evidence-1110`, `phase134-keyboard-c1-evidence-1110`,
-`phase134-keyboard-c2-evidence-1110`, C2 logs in `134-keyboard-c2-evidence-1110`,
-`phase134-keyboard-c3-evidence-1110` and the handoffs
-`handoff-134-keyboard-c2-1110.md` and `handoff-134-keyboard-c3-1110.md`.
+What it does not show: picking a fixture login is not authentication; the status
+text is read from the page, not from a screen reader; endpoint and handoff wording
+is only checked as text; five screens have no evidence table on the fixture; Asset,
+Procurement and Auditor have no login; the first listed home stands in for all
+homes. It records no acceptance criterion as met and no human or assistive
+technology approval. Dated notes on how the check was built and verified, including
+earlier failed steps, are in the
+[validation record](../../.copilot-tracking/research/2026-11-10-keyboard-c4-134-1110-research.md).
 
 This is a bounded offline extension of the existing role workbench, not a new
 identity provider, role simulator, permission policy or operational acceptance.
