@@ -581,19 +581,50 @@ def _forward(store, user, case_id, body):
         else:
             outcome = _send(receiver, envelope)
         outcome.update(action="service_forward_outcome", id=req["id"], attempt=attempt, reservation_id=reservation)
+        _record_outcome(store, user, case_id, outcome)
+    finally:
+        _IN_FLIGHT.get(store, set()).discard(key)
+
+
+def _record_outcome(store, user, case_id, outcome):
+    """Record a send outcome with one bounded retry of the same write; the receiver is never contacted again."""
+    last = None
+    for _ in range(2):
         try:
             with _operation(store, user, case_id, outcome):
                 pass
+            return
         except ResidentCommittedError:
             raise
         except Exception as error:
-            logging.getLogger(__name__).warning("Formal-route outcome not recorded: %s", type(error).__name__)
-            raise ResidentCommittedError(
-                "The formal-route send was reserved, but its outcome was not recorded. Reload: the attempt shows Pending. "
-                "Check with the receiver before retrying."
-            ) from error
-    finally:
-        _IN_FLIGHT.get(store, set()).discard(key)
+            last = error
+            if any(mark in note.lower() for note in getattr(error, "__notes__", ()) for mark in _UNVERIFIED):
+                break
+            try:
+                if _outcome_recorded(store, case_id, outcome):
+                    return
+            except Exception:
+                break
+    logging.getLogger(__name__).warning(
+        "Formal-route outcome not recorded: %s; case %s request %s attempt %s status %s receipt_ref %r",
+        type(last).__name__, case_id, outcome["id"], outcome["attempt"], outcome["status"], outcome.get("receipt_ref"))
+    raise ResidentCommittedError(
+        "The formal-route send was reserved, but its outcome may not be recorded. Reload to establish the attempt's "
+        "state and check with the receiver before retrying."
+    ) from last
+
+
+_UNVERIFIED = ("recovery failed", "restoration failed")
+
+
+def _outcome_recorded(store, case_id, outcome):
+    """True when a lost commit acknowledgement already left this exact outcome on its reserved attempt."""
+    with store.lock:
+        req = k.find(store.cases[case_id].get("service_requests", []), outcome["id"], "request")
+        attempts = (req.get("formal_route") or {}).get("attempts", [])
+        found = attempts[outcome["attempt"] - 1] if 1 <= outcome["attempt"] <= len(attempts) else {}
+    return (found.get("reservation_id") == outcome["reservation_id"] and found.get("status") == outcome["status"]
+            and found.get("receipt_ref") == outcome.get("receipt_ref"))
 
 
 def _send(receiver, envelope):
