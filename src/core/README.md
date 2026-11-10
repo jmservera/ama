@@ -531,6 +531,45 @@ DPO/Legal decision for. Resident-facing text still says nothing is sent to a
 live service; this adds no web control and does not prove resident access
 without detriment.
 
+Pending supersession (#1238, owner decision Q6 `manual_verified`, 2026-11-08):
+the `service_supersede_authorize` action marks a `Pending` attempt `Superseded`
+only after two separate authorizations on the same verified-outcome evidence
+reference (at most 100 characters; a reference, not resident detail), one by
+the control owner and one by the reviewer. Who holds those two roles comes only
+from an explicit, immutable `SupersessionBinding` that trusted composition sets
+as `store.supersession_binding` (the same instance-level seam as
+`complaints_receiver`). It is unset by default, so the action fails closed with
+a `PermissionError` and writes nothing. A binding is never created from staff
+roles, a request's owners, persisted rows, references or a request body, and
+there is no environment switch or route to set one. This change populates no
+binding: its actual named content, and any activation or rotation process, is
+a human gate. Both people must be registered persisted identities matching the
+binding, different people, with no manager bypass; on an Independent review the
+reviewer must also not be the contested decision maker. A stored approval
+counts only when it carries the digest of the binding now in force, names the
+bound person and has its matching hash-chained audit entry, whose detail holds
+a digest of the exact approval payload (case, request, reservation, attempt,
+role, bound identity, binding id and digest, and a hash of the evidence
+reference; the evidence text is never logged). Changing the stored evidence
+reference or restamping the binding digest on an earlier approval therefore
+stops it counting, as do legacy generic audit entries; otherwise it moves
+to `withdrawn`. Changing the binding therefore withdraws earlier approvals, but
+restoring an earlier binding revalidates approvals that carry its digest, so
+rotation and restoration are unsupported (use a new `binding_id`); a writer who
+also forges audit entries breaks the audit chain, which this action does not
+re-verify per call. The evidence is a reference the two people vouch for; the
+code cannot verify it, and synthetic tests show the gate, not human approval.
+The original attempt record, reservation, receipt reference, route idempotency key and audit
+entries are kept. Age is never an input and no timeout exists: an aged
+`Pending` attempt stays `Pending`. Supersession sends nothing and does not
+authorize a resend: a later send still needs `retry_unresolved` and the usual
+owner or named-reviewer rights, and a `Superseded` attempt still counts as
+unresolved. A late outcome for a superseded attempt is refused and its
+`receipt_ref` logged. Limits: the in-flight check is per store instance;
+a receipt found by verification has no manual recording path (do not
+supersede, reconcile with the receiver); the evidence reference is kept
+by retention deletion.
+
 Focused command: from `src/core`, `PYTHONPATH=src:tests python3 -m unittest
 test_resident_decisions -q`.
 
@@ -561,7 +600,13 @@ SQLite additionally protects independent writers with database rowversions.
 `form_export.draft_export(store, user, case_id, draft_id)` is a read-only,
 held export of one working review: field values with source ID, version,
 document hash and locator, template/schema/input versions, attachments, stale
-fields and open issues, plus a content hash. It is always `Held`, `reviewed`
+fields, open issues and the recorded per-field working-review history (ordered
+detached copy with reviewer email, prior and new values and evidence, decision,
+reason, time and input version), plus a content hash covering all of them. The
+history is exercised only with synthetic data for now; it is field review, not
+Finance pack approval, and the hash is not a signature. Saved copies without
+`history` are `Invalid` and must be regenerated as a new Held export; they are
+never backfilled. It is always `Held`, `reviewed`
 false, `Not submitted` and eligibility `Not assessed`; it writes nothing and a
 reviewed pack stays blocked on Finance and template authority. The manual path
 is the working review itself, and unavailable evidence returns `Unavailable`.
@@ -571,8 +616,9 @@ saved held export with the current working review, read-only. It returns
 `Current`, `Stale` (naming only the fields whose value, state or bound source
 changed or are now stale, and the unaffected fields), `Invalid` (the copy is
 incomplete or its content hash no longer matches) or `Unavailable`. A changed
-schema or rule reference changes the schema digest and stales every
-schema-bound field. It never marks anything reviewed.
+rule reference in a newer schema version stales every field; other schema
+changes stale only dependent fields (see dependency propagation below). It
+never marks anything reviewed.
 
 `view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
 diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
@@ -597,14 +643,39 @@ at most once per distinct document across current fields, history, snapshots
 and alternative checks; missing-byte results are also reused locally.
 Action preflight shares these reads with its resulting report. Later reports
 check afresh; no cross-request cache is retained. A source change marks only its
-bound working fields stale; a new schema version affects all fields bound to that schema. Historical
+bound working fields stale; a newer schema version stales only the fields it affects (below). Historical
 reviews/values and recorded diagnostic snapshots remain intact. `view` also
 returns `diagnostic_freshness`, one entry per saved manifest: `Stale` when
 reviewed inputs changed after it (`changed_fields` lists only the fields whose
 reviewed value or state differ from the manifest), a bound source changed
 (`stale_fields` lists only those fields) or a newer schema version exists, with a re-run action; otherwise
-`Current`. This is not full FR-043/AC-051 rule/calculation/approval stale
-propagation: no approved rules, calculations or reviewed packs exist yet.
+`Current`. Approved rules, calculations and reviewed packs still do not exist.
+
+Dependency propagation (#96, FR-043 part) is derived on read from the immutable
+schema registry; nothing is written and history is kept. `forms.schema_impact`
+compares the bound version with the latest registered one. Staleness narrows only
+when the registry lineage verifies (contiguous versions, matching digests, bound
+digest present). A changed `template`, `rule_refs`, `funding`, `reviewer` or
+`form_type` stales every field (rule-to-field links are undeclared). Otherwise
+only a field whose definition changed or was removed is stale, plus fields whose
+`required_when` names an affected field (transitively) and fields with a
+`calculation_ref` (their inputs are undeclared) while any other field is
+affected. Fields added by the newer version raise Unknown issues and are
+reported as `new_fields`. Missing or malformed lineage reports `Unknown` and
+stales every field. A byte-identical successor (`Superseded`) affects nothing.
+Reports carry `dependency_impact` (`schema`, `approvals`); manifests carry
+`schema_dependent_fields`; held exports return `schema_impact` outside the hashed
+body and `export_freshness` reports a changed form even when no field is stale.
+`form_review.proposal_freshness(store, user, case_id, draft_id)` is read-only and
+reports each staged candidate as `Current`, `Stale` (source or dependent schema
+change), `Unavailable` or `Unknown` (unknown field, malformed record). Approvals
+are never created here: a draft-scoped hold that carries approval fields is
+`Current` only with a well-formed `bound` (`schema_digest`, `input_version`,
+`field_ids`) whose listed fields are not stale, removed, unknown or reviewed
+after that input version; otherwise `Review required`. A plain Held record stays
+`Held`, other drafts' records are ignored and a malformed ledger entry is
+`Review required`. Approved schemas, rules, Finance review and reviewed exports
+remain unmet.
 Already-clean evidence is required: reads/reviews never scan or save a source.
 Missing, pending, quarantined or deleted retained evidence blocks disclosure of
 the entire affected draft/history, including recorded diagnostics. On `view`,
@@ -635,7 +706,7 @@ figures, approved thresholds or restart authority are invented.
 From `src/core`, after pip editable installation:
 
 ```bash
-PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging -q
+PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging test_form_dependencies -q
 ```
 
 Tests use the public tiny synthetic fixture with temporary JSON/SQLite storage.
@@ -1038,6 +1109,35 @@ it quotes was calculated and it cites a source reference; otherwise, or if the
 drafter is absent or fails, a plain deterministic sentence is used. Output is
 always `DRAFT_FOR_HUMAN_REVIEW` and never a validated finding. No model is
 bundled and nothing needs one.
+
+Slice 4 adds `discovery_assistant_demo`, one fixed, credential-free command that
+composes the helpers above over an explicitly fictional in-module fixture
+(two properties, timezone-aware events, an incomplete final stage and one
+unusable event):
+
+```bash
+python -m zava_forward.core discovery-demo
+```
+
+It takes no arguments, paths, URL, standard input, dataset, provider or
+credential and reads no environment, `ZF_DATA` or store; any extra argument
+exits 2. The JSON report shows `NOT_READY` with all ten missing readiness items,
+company connection `DENY`, the unapproved design-hypothesis status,
+`model_used=false` and the empty human comparison (`criterion_met=false`). Tool
+decisions are policy results only: nothing is registered, dispatched or
+attempted, and a prohibited write appears only as a refused decision. Hours,
+references and gaps are compared with independently authored expected constants
+for the fixture; a mismatch or repeatability failure exits 1. Those constants
+are constructed expectations, not an analyst's observed results, the
+conventional table reuses the same calculation, and the fallback text is
+deterministic code output, not AI. Running the command with no argument still
+prints the package version. This is an illustration of the design hypothesis and
+does not prove any whole-#125 criterion, approve a connection or replace the
+Phase 0, privacy, access and human approvals.
+
+```bash
+python -m unittest discover -s tests -p 'test_discovery_assistant_demo.py' -q
+```
 
 ### Phase 0 discovery register slice (124)
 

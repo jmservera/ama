@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-09T23:00:51+00:00",
-  "commit": "1b7a1719bee088ce2823bff45242e319bc928295",
+  "scored_at": "2026-11-10T11:38:16+00:00",
+  "commit": "e951c523b9e0a3f306e97ba90a9b65056bea904f",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/42715028030",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/42808162325",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
-    "solution-code": "68b5567134f3793d8d58ca9c8275dcc903fb93043b63255aca112f72cdfdebc4",
+    "solution-code": "bebad35df7b19e83d32a066aab753f9fa2fc7b8d367122cb3ed9f9abb55a2823",
     "infrastructure": "7c74c76598ba4b6302fd325e88da5abc4ca3489696d813db42d117c4bd1cf1fd",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "5b414b81c3cc0512d987acd669648d14eb85eae2af031105e39dd8bd5054fbe7",
@@ -54,10 +54,12 @@
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/chat_panel.py:431-444",
-        "src/core/tests/test_chat_panel.py:314-353"
+        "src/core/src/zava_forward/core/import_refusals.py:1-109",
+        "src/importer/src/zava_forward/importer/exceptions.py:284-307",
+        "src/importer/src/zava_forward/importer/__main__.py:109-170",
+        "src/core/tests/test_import_refusals.py:1-249"
       ],
-      "rationale": "Adds tested receipt-writing for a previously unrecorded rejection path (malformed body, null skill), reinforcing implementation completeness at ceiling 5."
+      "rationale": "Completes previously partial #\u200b135 failed-import feature: durable served-store projection, transfer CLI, and full rollback/idempotency tests across JSON/SQLite. Reinforces, does not exceed, existing ceiling 5."
     },
     "A5": {
       "score": 5,
@@ -117,7 +119,7 @@
         "src/core/README.md:72",
         "src/core/README.md:102"
       ],
-      "rationale": "New capstone documentation (src/core/README.md) has a sentence split across non-adjacent paragraphs, hurting navigability. Deck untouched. Lowered from Excellent(5) to Good(4)."
+      "rationale": "Capstone documentation has a sentence split across non-adjacent paragraphs, hurting navigability. Deck untouched. Lowered from Excellent(5) to Good(4)."
     },
     "B7": {
       "score": 5,

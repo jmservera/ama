@@ -49,6 +49,17 @@ class FakeAzure:
         self.cases = "3"
         self.entra_stdout: str | None = None
         self.health_codes: list[int] = []
+        self.tags: dict[str, list[str]] = {}
+        self.build_fail: str | None = None
+        self.skip_push: set[str] = set()
+
+    def _build(self, args: list[str]) -> str:
+        repository, _, tag = args[args.index("--image") + 1].partition(":")
+        if repository == self.build_fail:
+            raise ScriptExit("az acr build failed (1)", 1, "build log")
+        if repository not in self.skip_push:
+            self.tags.setdefault(repository, []).append(tag)
+        return ""
 
     def health_for(self, url: str) -> int:
         if url.endswith("/healthz"):
@@ -98,7 +109,9 @@ class FakeAzure:
             if not self.pool_exists:
                 raise ScriptExit("az acr agentpool failed (3)", 3, "")
             return "{}"
-        if "resource wait" in text or "acr build" in text or "revision restart" in text:
+        if "acr build" in text:
+            return self._build(args)
+        if "resource wait" in text or "revision restart" in text:
             return ""
         if "acr list" in text:
             return json.dumps(["zfreg"])
@@ -109,7 +122,10 @@ class FakeAzure:
         if "acr show" in text:
             return "zfreg.azurecr.io"
         if "show-tags" in text:
-            return json.dumps(["t1"])
+            repository = args[args.index("--repository") + 1]
+            if repository not in self.tags:
+                raise ScriptExit("az acr repository failed (3)", 3, "")
+            return json.dumps(self.tags[repository])
         if "keyvault secret list" in text:
             return json.dumps([self.secret_name] if self.secret_present else [])
         if "containerapp list" in text and "provisioningState" in text:
@@ -361,8 +377,111 @@ class RebuildTests(Fixture):
     def test_image_build_uses_the_approved_pool(self) -> None:
         fake = FakeAzure()
         run_rebuild(self.backend(fake), SUB)
-        build = next(c for c in fake.calls if "build" in c and "acr" in c)
-        self.assertEqual(build[build.index("--agent-pool") + 1], "pool1")
+        builds = self.builds(fake)
+        self.assertEqual(len(builds), 4)
+        for build in builds:
+            self.assertEqual(build[build.index("--agent-pool") + 1], "pool1")
+
+    @staticmethod
+    def builds(fake: FakeAzure) -> list[list[str]]:
+        return [c for c in fake.calls if c[:3] == ["az", "acr", "build"]]
+
+    @staticmethod
+    def deploys(fake: FakeAzure) -> list[list[str]]:
+        return [c for c in fake.calls if c[0] == "python3" and c[1].endswith("deploy.py")]
+
+    def test_all_four_workloads_build_from_their_source_contexts(self) -> None:
+        fake = FakeAzure()
+        run_rebuild(self.backend(fake), SUB, "images")
+        got = [(b[b.index("--image") + 1], b[b.index("-f") + 1], b[-1]) for b in self.builds(fake)]
+        self.assertEqual(
+            got,
+            [
+                ("zava-forward-mvp:t1", "src/api/Dockerfile", "/repo/src"),
+                ("zava-forward-agents:t1", "src/agents/Dockerfile", "/repo/src"),
+                ("zava-forward-orchestrator:t1", "src/orchestrator/Dockerfile", "/repo/src"),
+                ("zava-forward-importer:t1", "src/importer/Dockerfile", "/repo/src"),
+            ],
+        )
+
+    def test_application_deploy_maps_every_tag_and_passes_the_orchestrator_explicitly(
+        self,
+    ) -> None:
+        fake = FakeAzure()
+        run_rebuild(self.backend(fake), SUB)
+        apps = self.deploys(fake)[1]
+        reg = "zfreg.azurecr.io"
+        for parameter, repository in (
+            ("apiImage", "zava-forward-mvp"),
+            ("agentImage", "zava-forward-agents"),
+            ("importImage", "zava-forward-importer"),
+        ):
+            self.assertIn(f"{parameter}={reg}/{repository}:t1", apps)
+        self.assertEqual(
+            apps[apps.index("--orchestrator-image") + 1], f"{reg}/zava-forward-orchestrator:t1"
+        )
+        text = " ".join(apps)
+        self.assertNotIn("orchestratorImage=", text)
+        self.assertNotIn("quickstart", text)
+        self.assertNotIn(":latest", text)
+
+    def test_build_failure_stops_before_later_builds_and_deployment(self) -> None:
+        fake = FakeAzure()
+        fake.build_fail = "zava-forward-orchestrator"
+        with self.assertRaisesRegex(RebuildError, "orchestrator.*az acr build failed"):
+            run_rebuild(self.backend(fake), SUB)
+        self.assertEqual(len(self.builds(fake)), 3)
+        self.assertEqual(len(self.deploys(fake)), 1)
+
+    def test_unpublished_image_fails_verification_before_deployment(self) -> None:
+        fake = FakeAzure()
+        fake.skip_push = {"zava-forward-importer"}
+        with self.assertRaisesRegex(RebuildError, "importer"):
+            run_rebuild(self.backend(fake), SUB)
+        self.assertEqual(len(self.deploys(fake)), 1)
+
+    def test_resume_never_treats_the_api_tag_as_four_image_readiness(self) -> None:
+        fake = FakeAzure()
+        fake.tags = {"zava-forward-mvp": ["t1"]}
+        with self.assertRaisesRegex(RebuildError, "agents.*orchestrator.*importer"):
+            run_rebuild(self.backend(fake), SUB, "applications")
+        self.assertEqual(self.deploys(fake), [])
+
+    def test_resume_deploys_when_all_four_tags_exist(self) -> None:
+        fake = FakeAzure()
+        fake.tags = {
+            r: ["t1"]
+            for r in (
+                "zava-forward-mvp",
+                "zava-forward-agents",
+                "zava-forward-orchestrator",
+                "zava-forward-importer",
+            )
+        }
+        run_rebuild(self.backend(fake), SUB, "applications")
+        (apps,) = self.deploys(fake)
+        self.assertIn("--orchestrator-image", apps)
+        self.assertIn("agentImage=zfreg.azurecr.io/zava-forward-agents:t1", apps)
+
+    def test_workload_images_cannot_be_overridden(self) -> None:
+        for name in ("agentImage", "importImage", "orchestratorImage"):
+            with self.subTest(name=name), self.assertRaises(RebuildError):
+                self.config(overrides=(f"{name}=x.io/y:1",)).validate()
+
+    def test_dry_run_lists_the_four_images_without_io(self) -> None:
+        fake = FakeAzure()
+        _, out, _ = self.run_main(self.argv("rebuild"), fake)
+        self.assertEqual(fake.calls, [])
+        images = json.loads(out)["images"]
+        self.assertEqual(
+            [(i["project"], i["repository"]) for i in images],
+            [
+                ("api", "zava-forward-mvp"),
+                ("agents", "zava-forward-agents"),
+                ("orchestrator", "zava-forward-orchestrator"),
+                ("importer", "zava-forward-importer"),
+            ],
+        )
 
     def test_staff_only_entra_gap_is_tolerated_and_roster_forwarded(self) -> None:
         fake = FakeAzure()

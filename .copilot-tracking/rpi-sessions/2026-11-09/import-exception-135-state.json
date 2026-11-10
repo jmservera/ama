@@ -1,0 +1,31 @@
+{
+  "task_id": "issue-135-import-exception-1109",
+  "task_slug": "import-exception-135",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09/import-exception-135-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09/import-exception-135-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09/import-exception-135-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-09/import-exception-135-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09/import-exception-135-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09/import-exception-135-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed, Planning Readiness Ready for component scope", "status": "confirmed", "evidence": "research artifact, 2026-11-09T22:28Z"},
+    {"decision": "Critique executed once, verdict revise, all items dispositioned directly", "status": "confirmed", "evidence": "critique artifact, 22:30Z"},
+    {"decision": "Review executed once, Pass with non-blocking findings, routed to later work", "status": "confirmed", "evidence": "review artifact, 22:33Z, boundary commit 0de418e34"},
+    {"decision": "Shared register/store hook paused for coordinator serialisation", "status": "confirmed", "evidence": "details file Contract section"}
+  ],
+  "blockers": [
+    {"id": "shared-hook", "summary": "Served detail needs register/store/schema hook owned by the shared integrator", "resolution": "Coordinator admits hook continuation using the contract"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Independent exact-head review, then coordinator decides hook continuation; no publication from this task"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Shared register/store hook per contract with actual SQL and browser evidence", "rationale": "Only route to a served exception detail", "evidence": "details Contract"},
+    {"rank": 2, "task": "Review findings 1-4 (README wording, name-fallback ref, sqlite error handling)", "rationale": "Cheap hardening", "evidence": "review artifact"}
+  ]
+}

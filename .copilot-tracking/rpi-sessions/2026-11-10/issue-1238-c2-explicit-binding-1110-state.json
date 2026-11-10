@@ -1,0 +1,35 @@
+{
+  "task_id": "issue-1238-c2-explicit-binding-1110",
+  "task_slug": "issue-1238-c2-explicit-binding-1110",
+  "parent_task": {
+    "task_id": "issue-1238-manual-verified-1109",
+    "task_slug": "issue-1238-manual-verified-1109"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10/issue-1238-c2-explicit-binding-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10/issue-1238-c2-explicit-binding-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10/issue-1238-c2-explicit-binding-1110-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-10/issue-1238-c2-explicit-binding-1110-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10/issue-1238-c2-explicit-binding-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10/issue-1238-c2-explicit-binding-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; Planning Readiness Ready", "status": "recorded", "evidence": "research file 2026-11-10T00:34Z"},
+    {"decision": "Critique executed once; verdict Revise; PC-001..004 dispositioned directly before any test or source edit", "status": "recorded", "evidence": "critique file 2026-11-10T00:36Z"},
+    {"decision": "Q6 manual_verified approved; not re-asked; no binding or approval populated", "status": "confirmed", "evidence": "task brief"},
+    {"decision": "Review-correction counter C2 of 5 spent; three remain; no reset", "status": "confirmed", "evidence": "task brief"},
+    {"decision": "Red 27 errors, green focused 45 OK, module 362 OK, MSSQL selected 105 OK (1 JSON-only skip), ruff, Core and API mypy pass", "status": "recorded", "evidence": "changes file"},
+    {"decision": "Review executed once; outcome Conformant; RV-1 and RV-2 Low routed to later work", "status": "recorded", "evidence": "review file 2026-11-10T00:46Z"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "coordinator independent exact-head assessment (17da); Refs-only"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Human establishment of the real approval-role binding content and activation/rotation process", "rationale": "Whole F3 stays unmet without it", "evidence": "research limits"},
+    {"rank": 2, "task": "Read-only mapping and subclass-proof SupersessionBinding (RV-1)", "rationale": "Low hardening, small", "evidence": "review RV-1"},
+    {"rank": 3, "task": "Filtered audit accessor in the shared store (RV-2; reserved to 132)", "rationale": "Performance only", "evidence": "review RV-2"}
+  ]
+}

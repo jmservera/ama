@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-11-09
+ms.date: 2026-11-10
 ms.topic: reference
 ---
 
@@ -5853,3 +5853,452 @@ These statements qualify the section above and take precedence over it where the
 * Requirement IDs. PRD FR-008 governs controlled gates. PRD FR-016 and FR-017 are provider-package and quality-disposition records, not resident-decision or complaints IDs; no resident or complaints requirement ID is asserted by this checkpoint, and none is invented. The original native Review corrected this pack only, not every tracking record.
 * Process count. The four final processes are A1, A2b, A3 and S1, including one nonqueued disposable SQL run: 1205 discovered, 171 skipped. The first failed A2 is separate and not a fifth final process. The 108 S1 discoveries are not all actual SQL executions (one by-design skip).
 * Unchanged: the document approval statuses, the #440 closure and Major HVE holds, pin `2be660e9`, and the exclusions of unmerged Quality and Blob work, which remain a historical current-main observation and not later acceptance. Refs #440 #81 #123 #184 #136 only.
+
+## Parent-topic Blob and Quality checkpoint (2026-11-09, Refs #440 #1288 #1258 #1259 #136)
+
+Draft, local-only, not approved. It qualifies the 2026-11-09 current-main checkpoint above, which observed `main` `2be660e9` and excluded Blob and Quality; that record is unchanged and remains a historical observation. This section records two separately labelled source scopes and is neither final merged-main acceptance nor Quality merged-main functionality. Records: [research](../../.copilot-tracking/research/2026-11-09-blob-quality-2055-440-research.md), [plan](../../.copilot-tracking/plans/2026-11-09-blob-quality-2055-440-plan.md), [details](../../.copilot-tracking/details/2026-11-09-blob-quality-2055-440-details.md), [changes](../../.copilot-tracking/changes/2026-11-09-blob-quality-2055-440-changes.md) and [review](../../.copilot-tracking/reviews/2026-11-09-blob-quality-2055-440-review.md).
+
+### Source identities
+
+| Item | Identity |
+| --- | --- |
+| Merged main (fetched) | `a04668ae94b5c2f38e6c55ed789db245e8c71d16`: Blob and Bicep #1328, historical checkpoint #1329, bot score metadata #1330 |
+| Quality parent topic | `feat/demo-recovery-quality-1288-1109`, PR 1331 OPEN against `main`; published head `581207e18fedd66d9e24704a663dbb5f7b870d50` (hosted `src-agents` FAILURE on E501, `src-api` in progress at read time) |
+| Checkpoint source | local `3483815492f331b1254d46bee7be783584977ef2`, tree `3aebb1da13c452da48f49da1b8d063a3df1fbdd0`: the parent head plus two unpublished commits (E8 plan and the E8 line wrap, AST-equal); contains main `a04668ae` and is 0 commits behind it; E8 is under independent assessment and no hosted success is assumed |
+| Documents (unchanged, statuses not promoted) | BRD 0.21.0 draft `34d88395`; PRD (Zava Forward) 0.21.0 in-review `c788b917`; PRD (proper-warm) `f7f9b767`; addendum `28c19242`; original `0aec2d80`; ADRs 0001 `d42fa5c4`, 0002 `cbe21530`, 0003 `d6064539`, 0004 `9406c2e7`, 0005 `4d610335`, 0006 `956da1a3`, 0007 `abb21088` (identical at HEAD and `origin/main`) |
+
+### Merged-main Blob observations (source-qualified, historical reuse)
+
+* The Blob archive wave adds the ranking archive Blob adapter, publication and runner, store wiring, the `/api/ranking/publish` uncertain-write handling and Bicep policy tests. Main's own unit tests exercise it with fakes; no live or emulated Blob service, immutability policy, remote atomicity or from-empty deployment was observed here (owners #1258, #1259, #136).
+* Retained raw logs from the Quality parent's main-integration run at the tree of `2aa038043` (session files `logs-1288-main-integration/`): Core `ranking_archive_blob` 26, `ranking_publication` 57, `ranking_publication_runner` 53; API `ranking_publication_wiring` 36; infra `test_bicep_policy` 59; all OK, no skips. These are historical, not fresh at this head: `git diff 2aa038043 HEAD -- src infra tools .github '*.toml'` changes only `dispatch.py` (E8) and bot score data.
+
+### Parent-topic Quality observations (not main)
+
+* The Quality delta against main is 144 files and touches no ranking, Blob, infra or Bicep file. The only shared file is `server.py`, where both intents were preserved by the recorded ordinary merge.
+* Historical reuse from the same retained logs: assistants 120 OK (58 skipped, disposable SQL Server needed), assistant release 54 (4 skipped), sensor c7 45 (7 skipped), sensor e2 62 (31 skipped), simulation lane 30, transport deadline 7, inventories 29, consumption 17 and 42, input bounds 6, sensor consumer 47. Summed from the retained logs: 761 discovered, 100 skipped. A figure of 861 discovered appeared in a task statement; it is not reproducible from the retained logs (difference exactly 100) and is not used here. Agents 303 OK at the E8 wrap (`logs-1288-e8/unittest-after.log`) is a local result for that one line wrap, not a hosted result.
+* SQL Server legs remain historical (605 with one skip at `5827ebede`); no SQL was rerun here. The real-provider simulation route is code-disabled; the ordinary-assistant post-fence suspension risk, local-only socket cancellation and final SQL refusal-audit persistence remain unproven.
+
+### Observation O1 (one local run, adverse)
+
+Selected before running (plan committed `1b1c3f73`): `python -m checks.quality_sensors_browser_check --out results.json` from an owned `mktemp` directory under one nonqueued `flock -n /tmp/ama-rpi-heavy.lock` (the lock was free; the holder was this run), in an `env -i` sanitized environment, with an owned `mktemp` venv (editable `src/core`, `src/agents`, `src/api`; Playwright 1.64.1 installed in that venv only after a real `ModuleNotFoundError`; Chromium from the existing user cache; Python 3.12.3). Constructed synthetic fixture, mock provider, SQLite store, loopback only; no model, Azure, credential, private data or default `ZF_DATA`. Axe was not run (bytes not supplied). Window 2026-11-09T20:56:52Z to 20:57:05Z.
+
+* Exit 1. Twelve checks passed before the failure: the authorised Quality request reaches the mock provider; the captured snapshot holds retained readings; displayed reading ids and values equal the captured snapshot; the attributed unapproved flag cites readings the model was given and offers no approval control; withheld consent shows no readings table and is not reported as missing; stale readings are labelled stale, not live; unavailable readings and unavailable capture are explicit; the simulation panel is labelled synthetic and its readings equal the stored simulation readings.
+* The step "Request Simulation Proposal" failed: the check expects `Proposal stored as unapproved`, but the panel shows `Not sent (real-provider-route-unavailable) ... nothing was sent to a model`. This is the intended guarded-off behavior of commit `cf3f84692` (E7, newer than the check's last change `c8afa77bb`), which updated the lane unit tests but not this browser check. Cause confirmed by the source, the panel text and the unit-test expectation; it is a stale check, not a product defect. The later checks (stored-proposal counts, rotation, role denials, manual path) did not run, so they are unobserved at this head.
+* Raw stdout, stderr, exit, window, versions and install logs are retained in the coordinator session files `observed-440-bq-2055/` with `SHA256SUMS`, and the owned scratch directory is preserved, not deleted. No owned process remained afterwards. The run is local synthetic engineering evidence only: no assistive-technology, actual-model, human, Fluent or merged-main claim.
+
+### Document-qualified trace
+
+| Statement | Document-qualified link | Status |
+| --- | --- | --- |
+| Controlled gates before transitions; human approval, consent and quality decision stay with named humans | PRD (Zava Forward) FR-008 | Fixture and unit observed on the parent topic; no actual-model or human acceptance |
+| Independent per-measure quality-disposition record linking checklist evidence, provider submission and reviewer acceptance | PRD (Zava Forward) FR-017 (quality-disposition record); FR-016 is the provider-package record | The retained-sensor journey is advisory display of synthetic readings against a mock model snapshot; it does not establish FR-017 |
+| Resident or complaints requirement IDs | none asserted | Earlier join mistakes are preserved and not copied |
+| Src layout and distributions | ADR-0006 | Editable installs resolve to this worktree |
+
+### Unmet matrix and owners
+
+| Gap | State | Owner |
+| --- | --- | --- |
+| Quality browser journey after the simulation step; browser check stale versus code-off route | Observed adverse, minimal fix is to update the check expectation to the unavailable and manual-route outcome and keep a stored-proposal seed path, with a regression run of the same command | #1288 (existing parent, within its recorded finite correction grant; owner authorization to use it is not inferred); no new issue proposed |
+| Quality merged-main status | Not merged; PR 1331 hosted checks incomplete; E8 unpublished | #1288 |
+| Live Blob, immutability, remote atomicity, from-empty deployment | Unknown, deferred | #1258, #1259, #136 |
+| Actual-model AI, real-provider route, ordinary post-fence risk, final SQL audit | Code-off, unproven | #1288 |
+| Priority-order recurrence, startup cause | Unknown | #1292 |
+| Axe, assistive technology, human acceptance | Not run | #440 later criteria |
+
+Recommendation: CONTINUE; hold Quality merged-main claims, #1288 closure and dependent expansion, and the whole #440 and Major HVE criteria; no pivot, deferral or requirement relaxation is inferred. Independent repairs may continue.
+
+Final merged-main resume requirement: after PR 1331 actually merges, fetch `main`, prove the merged source tree and its hosted checks, rerun the O1 command once (or its corrected successor) at that tree through one nonqueued admission, and then re-evaluate this checkpoint as a separate merged-main qualification. Until then every Quality statement here is parent-topic only.
+
+## Merged-main Blob and Quality qualification (2026-11-09, Refs #440 #1288 #1258 #1259 #136)
+
+Separate dated continuation of the parent-topic checkpoint above, which is preserved unchanged, including its original exit 1 observation O1. It qualifies only what is implemented on merged `main` after PR 1331 and records one new observation M1. Records: [research](../../.copilot-tracking/research/2026-11-09-blob-quality-main-440-research.md), [plan](../../.copilot-tracking/plans/2026-11-09-blob-quality-main-440-plan.md), [details](../../.copilot-tracking/details/2026-11-09-blob-quality-main-440-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-09-blob-quality-main-440-critique.md), [changes](../../.copilot-tracking/changes/2026-11-09-blob-quality-main-440-changes.md), [review](../../.copilot-tracking/reviews/2026-11-09-blob-quality-main-440-review.md). LOCAL ONLY, documentation only, no source, check or test change by this lane.
+
+### Source identities and provenance
+
+| Item | Identity |
+| --- | --- |
+| Merged `main` (fetched 2026-11-09T22:52:08Z) | `1b7a1719bee088ce2823bff45242e319bc928295`, tree `dd2bedcb8f4e73266e143be09bf72474c62db9fd`; squash merge of PR 1331 at 2026-11-09T22:47:40Z |
+| PR 1331 final head | `f995774ca2415f6ae8903b6f45683dd55432eff1`; its tree equals the main tree (empty diff) |
+| Former parent-topic head (E8 wrap) | `348381549`; not an ancestor of main (squash provenance) |
+| Prior local checkpoint head | `6c2173dc3f5c6e35c7b30512f637f329fc883ddc`, preserved as an ancestor; the merge's first parent is `dbce15bc2a626e25c9e9aa869500ea9ba8c950aa` (the timestamp-correction commit above it) |
+| Prospective records commit | `0a6f5a605f41a90d2aa67e36e52ed5b7b8473f03` (plus timestamp correction), recorded before the merge and M1 |
+| Merge commit | `d0f806c9467fe0fe2f7d8b737567dd9e59315d01` (parents: the local checkpoint and main) |
+
+The declared target of this local child is now `main` (the Quality parent topic has merged as a squash). The ordinary merge of `origin/main` conflicted in two source files because the local branch carried the parent's unsquashed commits and main the squashed result; the conflict intent was unambiguous (main is the reviewed final tree), both were resolved to main, and `git diff origin/main HEAD -- src infra tools .github` is empty. No rebase, force or remote write. The candidate therefore differs from main by documentation and tracking files only. Hosted checks at PR 1331 head, read with `gh`: all listed checks SUCCESS (src-api, src-agents, mssql, src-core, src-orchestrator, src-importer, rubric and the framework jobs). Durations, the independent APPROVE and the c160 MSSQL job (319 tests, 1 skip) are coordinator-reported or historical figures, not re-read by this lane.
+
+### Source change since the original O1
+
+Between the parent-topic head `348381549` and main the src delta is five files, +117/-10: `quality_sensors_browser_check.py` (E9: expect the guarded-off refusal and its manual-route text, assert that a refused request stores no proposal, then seed a proposal for the later steps), one line of `assistants.js`, and three API tests (journey pin, web copy audit, resident demo shed). No Blob, ranking, infra or Bicep file changed. The Blob wave (#1328) was already on main at `a04668ae`; Blob observations from the parent-topic section remain valid historical reuse. Original O1 stays exit 1 at `348381549` (12 checks, then the stale expectation; later assertions and axe not reached) and is not relabelled green.
+
+### Observation M1 (new, source-qualified, local synthetic)
+
+Selected before running (plan and details committed first). Environment: the owned venv of the parent-topic checkpoint (editable `src/core`, `src/agents`, `src/api` resolve to this worktree, whose `src` equals main; Python 3.12.3, Playwright 1.64.1, azure-storage-blob 12.31.0; `pip freeze` retained), Chromium from the existing user cache, `env -i` with `PYTHONPATH` to `src/api`, `src/api/tests`, `src/core/tests` and `src/agents/tests`, constructed synthetic fixture with a mock provider, SQLite in an owned `mktemp` directory and a loopback server, and the pinned axe 4.10.3 bytes (sha256 `880970c0...a68bb`, verified by the check). No private data, `ZF_DATA`, model, Azure, SQL campaign or credential.
+
+Command (nonqueued, one heavy-resource admission each): `flock -n /tmp/ama-rpi-heavy.lock python -m checks.quality_sensors_browser_check --axe axe-4.10.3.min.js --out results.json`.
+
+| Attempt | Time (UTC) | Outcome |
+| --- | --- | --- |
+| 1 | 22:53:43 | Harness error, exit 1: `ModuleNotFoundError: checks` (no `PYTHONPATH`); the check did not start |
+| 2 | 22:53:53 | Harness error, exit 1: `ModuleNotFoundError: release_support` (test helper path missing); the check did not start |
+| 3 | 22:54:02 | Admission refused, exit 1, no output: lock held by another lane (holder named from a live `fuser` and `ps` read at 22:54:04Z, `flock` PID 3349620 running `unittest ... test_timecapture_copy.py` in the issue 153 worktree; that read was not saved to a file, only the empty log and exit 1 are retained); not queued, not killed |
+| 4 | 22:54:17 to 22:54:31 | Lock free; this run was the holder. Exit 0, 30 checks passed |
+
+Attempts 1 to 3 are harness or admission failures of the invocation, not observations of the product, and their logs are retained. No owned process remained after attempt 4.
+
+Observed behavior labels (attempt 4): the authorised Quality request reaches the mock provider; the captured snapshot holds retained readings and the displayed reading ids and values equal it; the attributed flag is unapproved with no approval control; withheld consent shows no readings table and is not reported as missing; stale readings are labelled stale not live; unavailable readings and capture are explicit; the simulation panel is labelled synthetic; the guarded-off real-provider route refuses and points to the manual route, and a refused request stores no proposal; with a seeded (synthetic, fixture) proposal the panel says how many readings it was given and cited, including one of twelve and zero cited, keeps them after rotation; the denied role sees no readings and the sensor API denies it too; no page errors. The seeded proposal is a fixture rendering, not model output, and is labelled separately from the refusal path.
+
+Axe, separate from the labels (WCAG rule set of axe 4.10.3, scripted states): 0 violations in all seven scans. Incomplete results remain: `color-contrast` (impact serious) needs manual review in five of the seven scans (unapproved flag 3 nodes, withheld 3, unavailable 3, simulation panel 2, and simulation panel with supplied and cited readings 2). Zero violations with serious contrast incompletes is not WCAG conformance, not an assistive-technology result and not Fluent 2 or human acceptance.
+
+Raw evidence (coordinator session files `observed-440-bq-main/`, `SHA256SUMS` verified; scratch preserved, path in `scratch-path.txt`): stdout, stderr, exit and start and end times per attempt, `m1-results.json`, `pip-freeze.txt`, `axe.sha256`. The `http-error ... client-disconnect` stderr lines are server-side teardown notices from the loopback fixture, not check failures.
+
+### Reuse of historical evidence
+
+| Evidence | Basis for reuse |
+| --- | --- |
+| Hosted Core, API, Agents, orchestrator, importer, MSSQL, rubric at `f995774` | Main tree equals the `f995774` tree, so hosted results at that exact head cover identical executable inputs; read via `gh`, not rerun here |
+| c160 MSSQL 319 tests, 1 skip | Historical, qualified: it does not by itself prove a specific unexamined refusal-event transaction or second-connection contract, or Azure SQL |
+| Parent-topic local logs (761 discovered, 100 skipped) and Blob suites | Historical for their trees; the 861 figure remains unreproducible; no local broad rerun |
+
+### Document-qualified trace (statuses not promoted)
+
+| Statement | Document-qualified link | Status after M1 |
+| --- | --- | --- |
+| Controlled gates; human approval, consent and quality decision stay with named humans | PRD (Zava Forward) 0.21.0 in review, FR-008 | Fixture and local browser observed on main source: no approval control on flags or simulation, consent withheld and role denial. No actual-model, human or live acceptance |
+| Per-measure quality-disposition record; provider package | PRD (Zava Forward) FR-017 and FR-016 | Not established by the advisory retained-sensor display |
+| No resident or complaints requirement ID asserted | BRD 0.21.0 draft and PRD (documents' numbers collide, so always document-qualified) | Earlier join mistakes preserved, not copied |
+| src distributions and layout | ADR-0006 | Editable installs resolve to this worktree |
+| Blob configuration and ranking publication | ADR set as listed in the parent-topic trace | Merged-main source and historical suites only; live Blob not observed |
+
+### Gaps, owners and recommendation
+
+| Gap | State | Owner |
+| --- | --- | --- |
+| Actual-model demo, ordinary post-fence suspension risk, local-only or remote cancellation, final SQL refusal-audit persistence, Azure SQL | Unproven, unchanged | #1288 (no closure claimed) |
+| Live Blob, immutability, remote atomicity, from-empty deployment | Unknown, deferred | #1258, #1259, #136 |
+| Serious `color-contrast` incompletes; assistive technology, consent, human acceptance, Major HVE, whole #440 | Open | #440 later criteria and existing accessibility owners; no new issue |
+| Priority-order recurrence, startup cause | Unknown | #1292 |
+
+No new defect was confirmed: the original O1 red was a stale check, corrected on main by E9, and M1 observed the corrected successor green. Recommendation: CONTINUE. Affected closure of #1288, #136 and #440, dependent expansion, and the Major HVE criterion stay on hold for the unmet criteria above; independent lanes may continue. No pivot, deferral, requirement relaxation or document approval is inferred. Source corrections need their own scoped route; this lane consumed no cycle of any other issue.
+
+## Quality M2 current-main qualification (2026-11-10, Refs #440 #1288 #891 #184)
+
+Separate dated continuation of the merged-main Blob and Quality qualification above, which is preserved unchanged. It is a documentation-only record: it qualifies merged Quality persistence (PR 1331) and the merged #891 transport-accounting correction (PR 1339) at current `main`, and classifies the already executed H0, H1 and H2 SQL observations. It runs nothing, repeats no finance #1234 checkpoint, ticks no criterion and approves no document. Records: [research](../../.copilot-tracking/research/2026-11-10-quality-m2-record-440-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-quality-m2-record-440-plan.md), [details](../../.copilot-tracking/details/2026-11-10-quality-m2-record-440-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-quality-m2-record-440-plan-critique.md), [changes](../../.copilot-tracking/changes/2026-11-10-quality-m2-record-440-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-quality-m2-record-440-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/quality-m2-record-440-state.json). The observations it relies on are in the merged records for [H0 and H1](../../.copilot-tracking/changes/2026-11-09-issue-1288-merged-sql-proof-changes.md) ([review](../../.copilot-tracking/reviews/2026-11-09-issue-1288-merged-sql-proof-review.md)) and [H2](../../.copilot-tracking/changes/2026-11-10-issue-1288-h2-matching-context-changes.md) ([review](../../.copilot-tracking/reviews/2026-11-10-issue-1288-h2-matching-context-review.md)).
+
+### Identities and covered changes
+
+| Item | Identity |
+| --- | --- |
+| Current `main` (fetched) and start of this record | `32221a8459ff5c42d45be1dd86adccb5fcb4c1d6`, tree `74107550f69ce77108f15961d16e1e80f363338d`; squash of PR 1342 at 2026-11-10T01:01:55Z |
+| PR 1331 Quality retained-sensor evidence and guarded AI request (merged, trigger) | `1b7a1719bee088ce2823bff45242e319bc928295`, 2026-11-09T22:47:40Z; head `f995774ca2415f6ae8903b6f45683dd55432eff1` |
+| PR 1339 #891 witnessed transport-attempt accounting (merged) | `ddeebd01694ddb46b456451d9ac6390347e51aaa`, 2026-11-10T00:17:56Z; head `1692b2315b59b6275a35a467af366c47ae72dfaa`; tree `b917297ef34bc3e7e7948f9e46ffe6b7e66e6c88` |
+| PR 1341 importer refusal CLI (merged, unrelated) | `5318f738f6bc58a10a9d4df1ca18ae51c1547a79`, 2026-11-10T00:54:31Z; changes `src/importer` and tracking records (the rubric score file moves via separate later bot commits); excluded from this qualification (surface identified, not assessed) |
+| PR 1342 tracking-only H0, H1 and H2 evidence (merged) | `32221a8459ff5c42d45be1dd86adccb5fcb4c1d6`; head `d41195a274b921e320f94b65e8483b6022103c85`; records only, no hosted checks because of path filters |
+| Excluded, not merged | PR 1338 (aftercare, open, stacked base `feat/demo-quality-workflows-89-1109`) and parent epic #149 (open); no functionality of either is accepted here. Shared hooks of #132 and resident-decision modules of #1238 untouched |
+
+Hosted CI was read with `gh` and not rerun. PR 1339 head `1692b2315` passed src-core, src-api, src-agents, src-importer and mssql; PR 1341 head `80cc8363c` passed too. Neither head tree equals the merged tree (the 1339 head predates the independently merged #1332 `resident_decisions` change; the 1341 head predates the #1339 files), and merges to `main` ran only the rubric scorer, so no exact-head hosted `src-ci` success exists for current `main` and none is claimed. The hosted `mssql` job selects `test_mssqlstore`, `test_lawstore`, `test_assistants.Mssql*` and `test_resident_aoai_sql`; it selects no `test_quality_sensors*` class, so the Quality SQL contracts are local-only evidence.
+
+### Source equivalence and classification of H2
+
+H2 ran at a head that was `ddeebd01` plus tracking-only records: merge `5d0460dd6c05312d0a905e69774d561c7ab8fc59`, tree `230c976d5ceaedea7515683f1746f685cc71d096`, two tracking timestamp corrections uncommitted (dirty 2). Read-only Git comparison on 2026-11-10:
+
+* `src/core` is `7a83bae4adfa`, `src/api` is `ea090b15e073` and `src/agents` is `db7717006298` at `ddeebd01`, at `5d0460dd6` and at current `main`: identical subtrees.
+* `git diff ddeebd01 HEAD` and `git diff 5d0460dd6 HEAD` over `src`, `infra`, `tools` and `.github` show only the importer files of PR 1341 and `.github/rubric/scores/latest.json`. No Core, API, Agents, orchestrator, infrastructure, tool or workflow byte changed.
+* No Core, API or Agents file imports `zava_forward.importer`; core imports neither agents nor api; agents import neither api, orchestrator nor importer (package boundary of ADR-0006 holds).
+
+Classification: H2 is a dated local observation that applies to the identical Core, API and Agents surface at current `main`. It is not a new runtime, Azure or hosted observation, and it gives no freshness to anything outside that surface. No relevant code drift was found, so no acceptance stops for drift and no heavy check was rerun.
+
+### Errata (original records unchanged)
+
+* The merged H2 research, H2 review and the coordinator handoff say "unmerged 891 excluded". For source `ddeebd01` that is wrong: #891 (PR 1339) is included. It was true for the older H0 and H1 base `a8593a7a8`.
+* H2 had no stub peer. The earlier research mention of a peer and 0 bytes was superseded by the applied plan amendment. There is no H2 measured byte or bytes-saved claim.
+* The existing Quality selectors ran 30 tests with 29 passes and one SQLite-only skip; they are not 30 SQL passes. The earlier review phrase "30 existing tests ok" overstates this.
+* Label correction (2026-11-10, correction C2): the first version of this section and the original research record called `b4791e0c22b1f1be` the task body digest. In raw `h2.json` it is `binding_sha`; the task body fingerprint is the distinct `task_body_sha` `cfc0f0a9922fd69f`. The raw file is VM-local and was read, not re-executed. No source, persistence or runtime defect follows.
+* The H2 SQL admission was 2026-11-10T00:23:08Z, not 23:23 on 2026-11-09. The first two readbacks were wrong and the correction commits are additive history.
+
+### Observed commands
+
+Raw runtime artifacts are VM-local in the coordinator session files, are not committed and are not required to read the findings below. Hashes are recorded so the bundle can be matched if it is kept.
+
+| Run | Source | Command identity | Result |
+| --- | --- | --- | --- |
+| H0 | `a8593a7a8`, tree `5113adcb2` | merged-SQL-proof selectors (33 selected) | 31 ok, 1 skip, 1 failure (`after == before`, flag status `not-current`): failed, inconclusive, preserved |
+| H1 | `a8593a7a8` | one restart-context test, default-provider variant A then B | FAILED: A gave `release-denied`; the synthetic `fx-quality-evidence` row went from active revision 1 to revoked revision 2 and variant B then ran after the revoke. Which call revoked is unestablished; it is not classified as a bug or as intended; the A-then-B ordering is a harness confound |
+| H2 test | merge `5d0460dd6` (equivalent surface) | `test_h2_matching_context`, harness `harness_h2_matching_context.py` sha256 `698c13ec5188f24e18d0d607331e1441beaf60e5b269fa83242bef4418f96ac4`, wrapper `sql-run-h2.sh` sha256 `68851d83f02127446b1d7c8c3d88ad5fee0b74fedff1dc832686df0f3a2940fe` | exit 0, Ran 1, OK, no skips, 3.7 s; one `flock -n /tmp/ama-rpi-heavy.lock` admission, exit 0 |
+| H2 companion | same | 30 existing Quality MSSQL selectors | exit 0, Ran 30, OK, skipped=1, 29 passes plus one SQLite-only skip, 70.9 s |
+
+Environment: SQL Server 2022 RTM-CU27-GDR 16.0.4305.5 container, image `sha256:cf8f0ab2ebe61feec2eed2629061a07d247f791c2a8ddda74a4ac9f06a291718`, Python 3.12.3, localhost only, container removed. `h2.json` sha256 `1285e610f60ea9595b4de48a3af8de55eb4d4d872692352ef8bb328bebbc44e6` (recomputed on 2026-11-10).
+
+H2 values: the first service and independently constructed B and C (own matching-context providers, fresh stores, services and connections, same process reopen) all read flag `review-suggested`, actionable, no release denial, the same cited IDs (`sensor:SENS-SYN-1:LIVE-SENS-SYN-1-20261109T2350Z`, `sensor:SENS-SYN-1:R-ZF-1-000`), the same five reading pairs for Quality Inspector and Retrofit Programme Manager (other role labels refused), the same task state. Two distinct fingerprints are equal across them: the binding fingerprint `b4791e0c22b1f1be` (`binding_sha` of the first, B and C reads) and the stored task body fingerprint `cfc0f0a9922fd69f` (`task_body_sha` of the three raw reads). Eleven synthetic release rows stayed unchanged across 47 snapshots. B and C made zero provider calls and zero prompts. Both are truncated 16-hex fingerprints, not cryptographic byte identity; the equality result is unchanged by the label correction below.
+
+Limits: same-process reopen, not an OS or VM restart; synthetic capturing provider, not a model; no Azure SQL, IoT Hub or hosted run. H0 and H1 stay adverse observations: H2 did not reproduce them under a matching context, but that does not disprove a defect or explain them (cross-base inference only). E11 succeeded; E12 and E13 are unused; no extra code correction, model grant or counter reset is made here.
+
+### Document identities and trace
+
+Draft and in-review are not approval. BRD 0.21.0 draft (`34d88395`), PRD for Zava Forward 0.21.0 in-review (`c788b917`), PRD proper-warm 0.13.0 in-review (`f7f9b767`), addendum `28c19242`, original case study `0aec2d80`, parity matrix `91b5d33d` (proposal for owner review). ADR-0001 and ADR-0002 Proposed (only the staff identity and role decision of 0002 is owner-accepted, 2026-10-24); ADR-0003 accepted with amendment, ADR-0004 and ADR-0006 accepted (2026-10-15); ADR-0005 accepted for synthetic development only (2026-10-16); ADR-0007 Proposed (2026-11-04), not accepted. Requirement numbers of the BRD and PRDs collide, so every ID is document-qualified.
+
+| Requirement or decision | Architecture and contract | Tested code and journey | Class |
+| --- | --- | --- | --- |
+| PRD FR-050 simulated sensor monitoring creating only a human review task; BRD FR-048 consented in-use monitoring with provenance | `core/sensor_view.py`, `core/assistants.py`, `core/sensor_consumer.py`, API `GET /api/cases/{id}/sensors`, `web/assistants.js`, `web/ops.js` | `test_quality_sensors*` unit, SQLite, SQL and the browser check, plus H2 | Local observed (synthetic data); PRD AC-066 live IoT Hub, Azure SQL and real AI task is not run |
+| Persistence and replay: retained readings, flag, task, withdrawal | SQL control index, guard triggers, dispatch hold, per-attempt gate before the first byte | H2 matching-context test and 29 companion passes; the one SQLite-only withdrawal test is skipped on SQL | Local observed on SQL Server 2022 container; Azure SQL and OS restart unknown |
+| Auth and roles (PRD FR-003, FR-072, AC-144; ADR-0002 identity decision) | Role projection refuses all but Quality Inspector and Retrofit Programme Manager | H2 projection per role label; fixtures are synthetic | Local observed; synthetic release and role rows establish no real person, resident or model authority; real role enforcement in a deployment is implemented-unverified |
+| Sensor consent and withdrawal (BRD FR-048, RULE-025) | Control index; withdrawal withholds values, citations, derived output and flags; absent index fails closed | Quality sensor suites | Local observed (unit, SQLite, SQL); no real consent evidence |
+| Human approval (PRD FR-008, AC-010, AC-011) | A returned finding is a `review-suggested` flag that requests human review and approves nothing | Quality sensor suites, H2 | Local observed; the per-measure quality-disposition record (PRD FR-017, AC-020, AC-042) is not established by the advisory display |
+| AI use and unavailable-AI paths (PRD FR-044, CON-009) | Real-provider simulation route code-off; private readings are never given to a real AI by the Agents worker or API composition; manual route remains when AI, store or release is unavailable | E2 tests and unavailable-AI tests | Local observed with synthetic provider; actual UI-to-model Quality proof is blocked |
+| AI metering (PRD NFR-017, AC-109, AC-110; BRD NFR-012) | PR 1339 `DispatchWitness` and `count_dispatches()`: calls counted from the witnessed transport attempt; unwitnessed providers are an unverified assumption of one | `test_ai_dispatch_marker`, `test_chat_model` | Local observed accounting only; #891 criterion 2 (per-call gate, token and cost, privacy, retention and refusal conjunction) remains unticked |
+| RAI release, suspension and restart authority (PRD FR-051, FR-053, AC-069 to AC-072, OQ-017) | Synthetic release rows only | H1 and H2 synthetic rows | Blocked: owner release, budget and role decisions are unassigned; the $700 transport authority of #184 is not a paid-model grant |
+| Package layout (ADR-0006) | Import boundaries listed above | Git comparison | Local observed |
+
+Evidence classes: local observed is the SQL Server container and unit rows above; Azure observed is none new; implemented-unverified is deployed role enforcement and the 1339 provenance fallback; not run (admission pending, no owner-approved deferral) are the actual-model walkthrough, IoT Hub, Azure SQL and OS restart; blocked is release authority and budget; unknown is the cause of the H1 revoke and exact-head hosted `src-ci`. Relevant blobs at current `main`: `core/ai.py` `7699f8509d4f`, `ai_consumption.py` `abd24acd4887`, `ai_transport.py` `4508686c6957`, `assistant_release.py` `c8ae720aed94`, `assistants.py` `4cb575163a49`, `sensor_consumer.py` `134d5d516c5a`, `sensor_view.py` `9937817472b9`, `simulation_lane.py` `5c26cfb06838`; `api/server.py` `187c3648fb13`, `web/assistants.js` `4312f85723cc`, `web/ops.js` `e3e56191bbe3`; `agents/chat.py` `ae03ad5f25e5`, `dispatch.py` `2e2306c62790`.
+
+### Gaps, owners and recommendation
+
+| Gap | State | Owner |
+| --- | --- | --- |
+| H0 default-provider denial and H1 revoke side effect, classification unestablished | Adverse, unreproduced under a matching context | #1288 with release machinery under #107; needs an owner-authorised read-only diagnostic first |
+| Actual UI-to-model autonomous Quality walkthrough (IoT Hub, SQL, UI, model, flag) | Not run; blocked on admission and owner decisions (no requirement deferral approved) | #1288 criterion 8, #891 criterion 2, #184 |
+| Release owner, budget and role decisions (OQ-017) | Blocked, not invented | owner |
+| Quality SQL classes outside hosted CI; no exact-head hosted `src-ci` | Local-only evidence | #440 later criteria and #1288 |
+| #891 receipt provenance for the unwitnessed fallback and test hygiene from the PR 1339 review | Routed later work | #891 |
+| Azure SQL, OS restart, assistive technology, human acceptance, Major HVE, whole #440 | Open | #440 and existing owners; no new issue filed, no issue or board written |
+
+No new defect is confirmed and none is asserted. Recommendation: CONTINUE. The affected closures of #1288, #891, #184 and #440 stay on hold, and so do expansions that depend on the actual-model proof; independent lanes (importer, finance, aftercare once merged) may continue. Resume conditions: the owner assigns release authority, budget and role decisions; a separately admitted finite live walkthrough is approved under #1288; a read-only diagnostic of the H1 revoke is authorised before any source fix; any later source change after current `main` requires comparing the Core, API and Agents subtree ids above and restarts the classification. Proposed fix route, not decided: only after that diagnostic, scoped under #1288 or #107. No pivot, deferral, requirement relaxation, approval or production acceptance is inferred.
+
+## Merged-wave checkpoint (2026-11-10, Refs #440 #149 #153 #1238 #93 #96 #148)
+
+Draft, local-only, not approved. This is the required completed-feature-wave checkpoint for four merged features, an actual local observation of one pinned merged source with a small targeted matrix. It is not a blanket full gate, not a repeat of the historical Quality M2 record above (inherited, not new runtime validation), and not a SQL, Azure, model, live or browser-accessibility acceptance. Earlier sections, their adverse outcomes and their original source-qualified limits are unchanged. Records: [research](../../.copilot-tracking/research/2026-11-10-merged-wave-440-1110-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-merged-wave-440-1110-plan.md), [details](../../.copilot-tracking/details/2026-11-10-merged-wave-440-1110-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-merged-wave-440-1110-plan-critique.md), [changes and execution](../../.copilot-tracking/changes/2026-11-10-merged-wave-440-1110-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-merged-wave-440-1110-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/merged-wave-440-1110-state.json).
+
+### Identities, covered changes and exclusions
+
+| Item | Identity (read 2026-11-10) |
+| --- | --- |
+| Pinned source | `da4f52abb5bfdc50acc9b9b8aa84cc42babc77fe` (PR 1348, squash 02:00:25Z), tree `823c9cba2e219c5810f4e289145cb4ebe5c7c6cf`; subtrees `src` `f8cf2443b124c0e8e089ea4f49ed6ef1eeebd6f3`, `tools` `74ad3cb586db`, `infra` `d94040329d54`, `.github/workflows` `29eb03ea759e`. Branch `docs/demo-merged-wave-440-1110`, clean at start; `src` tree unchanged after the runs |
+| Fresh `main` at start | `git ls-remote origin refs/heads/main` at 02:04:16Z: `da4f52abb` (same as the pin) |
+| Fresh `main` at end of runs | 02:10:18Z: `6f24e554aa22da67756006c5185a329c14101ec3`, a rubric bot commit (02:06:46Z) that changes only `.github/rubric/scores/latest.json`. `src`, `tools`, `infra`, `.github/workflows`, this pack and the reference index are identical to the pin. The bot commit is not merged here; nothing below applies to a later main or implies approval |
+| Covered feature PRs (merged) | PR 1343 staff-time copy `a740072d1` (01:23:03Z); 1346 resident default-deny approval binding `0385ad6a5` (01:41:47Z); 1345 finance retained history and dependency integration `96afce427` (01:45:21Z); 1348 four-image rebuild adapter `da4f52abb` (02:00:25Z) |
+| Inherited, not re-run | Quality M2 record PR 1347 `e9c98eb20` (documentation); scorer bot commits PR 1349 `933416991` and 1350 `5861d6d3e` (rubric score file only; applicable metadata, not feature delivery) |
+| Hosted CI | The owner brief reports independent bounded review and 19 passing actual checks across the four source PRs. They were not re-read or re-run here; no exact-head hosted `src-ci` for the merged tree is claimed |
+| Excluded, not in the observed source | PR 1351 (open; empty-queue helper and recipe change, #152), parent #89 aftercare component, blocked #132 intake hooks, the old a482 and R15 worker. The queue producer and CLI components already on main are not extended; the real queue-worker `serve` still fails closed and is not operational. No function of an unmerged sibling is observed or accepted |
+| Issue states (read live) | #440, #149, #153, #1238, #93, #96 and #148 OPEN; no criterion is ticked and no issue is closed by this record |
+| Documents (blob at pin) | BRD 0.21.0 `draft` `34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD Zava Forward 0.21.0 `in-review` `c788b917bafaede215f326f0efc71e071a687f1c`; PRD proper-warm 0.13.0 `in-review` `f7f9b7675e60e49006127a374e1106ff18aae282`; addendum `28c1924285eed255e53c1e359e0ad98eedab1d22`; original case study `0aec2d8070117a647574b1fadc8cfbdd2af68598`; ADR-0006 package layout accepted 2026-10-15. Draft and in-review are not approval and none changes here |
+
+### Actual local observation
+
+Python 3.12.3 and node v24.21.0 in an owned virtual environment with editable installs of this worktree's `src/core`, `src/agents`, `src/api`, `src/orchestrator` and `src/importer` plus the declared `playwright==1.64.0` pin; import origins were printed under each run's path and lie inside this worktree (API runs list `tests` first so API and Core modules with the same name are not confused). Each run used `env -i` with only `PATH`, `HOME`, `TMPDIR`, `LANG`, `ZF_DATA` (owned scratch) and `PYTHONPATH` (plus `ZF_BROWSER_TESTS=1` for R6), so no SQL, Azure, model, provider or credential switch existed; no private data, real user, image build or push. Raw logs stay outside the repository and are not committed (`SHA256SUMS` of the 13 logs `bf60e679516048770d27feac96f02d3f7deb8424b7b72c15cdfe7acdb4ebe599`). Times are tool `date -u` readings, 02:06:02Z to 02:07:53Z.
+
+| Id | Selection | Exit | RUN | PASS | SKIP |
+| --- | --- | --- | --- | --- | --- |
+| R1 | Core finance: `test_form_dependencies` 10, `test_form_review` 23, `test_form_review_pack` 8, `test_form_export` 9, `test_form_staging` 17 | 0 | 67 | 67 | 0 |
+| R2 | API `test_form_staging_api` (14 tests in the module at this source: staging, held review and seven schema-CSV cases) | 0 | 14 | 14 | 0 |
+| R3 | Core `test_resident_decisions` (JSON 110, SQLite-backed 129, SQL Server class 129, fake Azure 1, complaints route 1, priority query 1) | 0 | 371 | 239 | 132 |
+| R4 | Orchestrator first invocation (`-v` before `discover`, my argument-order fault, usage error) | 2 | 0 | 0 | 0 |
+| R4b | Orchestrator `discover -v -s tests`: `test_rebuild_azure` 39, `test_rebuild` 23 and five other modules | 0 | 112 | 112 | 0 |
+| R5 | API `test_timecapture` 26 and `test_timecapture_copy` 7 plus 5 browser skips (no opt-in) | 0 | 38 | 33 | 5 |
+| R6 | API `StaffTimeGuidanceBrowser` with opt-in, loopback Chromium, external requests aborted | 0 | 5 | 5 | 0 |
+| R7 | API synthetic served staff journey: `test_case_journey` 31, `test_role_matrix` 13, `test_workbench` 5 | 0 | 49 | 49 | 0 |
+| R8 | Core `test_scenario_manifest` 8, `test_needs_inventory` 11, `test_version` 3, `test_dependency_rule` 2 | 0 | 24 | 24 | 0 |
+| R9 | `test_version` and `test_dependency_rule` in API (5), agents (6), orchestrator (4) and importer (4), one process each | 0 | 19 | 19 | 0 |
+
+Totals of the final processes: RUN 699, PASS 562, SKIP 137, failures and errors 0. These are execution counts of the final processes, not a unique-test total (corrected in C3, 2026-11-10; an earlier wording here claimed 694 distinct tests and 562 distinct passes and is withdrawn). Known repeated executions: the five R5 browser skips are the tests R6 executed, and R4b and R9c both ran the same four orchestrator version and dependency-rule cases. No project-qualified deduplication of every log was done, so no aggregate unique total is asserted. Of the 137 skipped executions, 5 are those browser skips and 132 are in R3: 129 "opt-in owned loopback SQL Server", 1 "Explicit isolated synthetic Azure SQL database required", 1 "JSON file rollback only" (a backend exclusion on the SQLite-backed class) and 1 "SQL replay only" (a backend exclusion on the JSON class, executed and passed by the SQLite-backed class). Only 130 are opt-in skips of external SQL services, and none is a SQL Server or Azure SQL pass: SQLite ran, and no external SQL Server or Azure SQL service ran. Nothing here is all-backend acceptance. R4 is retained as an adverse invocation fault of this run (zero tests, no product failure) and is not counted; R4b is the same selection with the order corrected. R7 prints 24 handled fail-closed tracebacks "Rule evaluation unavailable ... law store is not loaded" from fixtures without a law store, the same pattern recorded on 2026-11-09 (37 then); no defect is asserted and its absence is not proven.
+
+### Requirement trace (document-qualified)
+
+BRD and PRD requirement numbers collide (for example FR-045 means different things), so each row names its document. Draft and in-review documents stay unapproved.
+
+| Feature and contract | Requirement reference (document) | Tests and observed journey | Class |
+| --- | --- | --- | --- |
+| Finance held form report, dependency evidence, retained history, legacy copy Invalid-and-regenerate, schema CSV (PR 1345) | PRD 0.21.0 FR-038 to FR-041 (assisted form schema, staged candidates, individual accept/correct/reject, deterministic validation); no BRD row asserted | R1 67 and R2 14; named cases `test_history_is_integrity_covered_and_legacy_copy_is_invalid`, `test_edited_or_incomplete_saved_export_is_invalid_not_trusted`, `test_export_carries_ordered_detached_review_history`, `test_missing_bytes_block_stale_rejected_and_replaced_retained_history`, API `test_schema_csv_*` (denials, formula neutralisation, empty list, revocation) | Local observed (JSON and SQLite temp stores, constructed data). The earlier 67 Core and 14 API counts are historical context only; they match the actual current counts here. Finance sign-off, funder acceptance and a live funder return are not observed |
+| Resident forwarding default-unconfigured DENY, supersession approval bound to evidence, binding mutation rejection (PR 1346) | PRD 0.21.0 FR-045 (resident-owned decision, task-limited authority) and BRD 0.21.0 FR-045 (representative authority) are different requirements; neither is asserted to be satisfied. No named activation requirement ID is asserted | R3 named cases (list in the changes record) ok on JSON and on the SQLite-backed store; SQL Server class skipped by design | Local observed (JSON, SQLite) for default-unconfigured denial, forged, substituted, restamped and legacy generic audit evidence not counted, changed binding withdrawn and immutable binding. Not observed: SQL Server, named human activation or approval, trusted resident binding, a real send (the receiver is synthetic) |
+| Four-image rebuild adapter: build, tag, verification, explicit mapping, failure and resume, no-I/O dry run (PR 1348) | PRD 0.21.0 CON-009 (actual Azure hosting for accepted exercise builds); #58 owner cap override applies to that rebuild only | R4b 112 with `FakeAzure`: all four workloads from their source contexts, every tag mapped and passed explicitly, build failure stops before later builds and deployment, resume never treats the API tag as four-image readiness, unpublished image fails before deployment, default is a dry run with no Azure call, dry run lists four images without I/O | Local observed against a fake only. Implemented-unverified for a real build, registry, deployment and health. Blocked: no live rebuild admission (owner authority, all-in cost headroom, finite plan) |
+| Staff time capture default off, DPIA and notice gates, manager-only audited activation, copy states (PR 1343) | PRD 0.21.0 PR-004 (staff time capture only with staff knowledge and a completed DPIA; off until the DPIA exists; not a performance rating); BRD 0.21.0 RULE-019 (OD-36 DPIA before event capture) | R5 33 pass and R6 5 browser pass; named `test_off_by_default_and_nothing_is_written`, `test_dpia_alone_does_not_switch_it_on`, `test_notice_must_be_acknowledged_before_recording_or_listing`, `test_enabling_is_manager_only_and_audited_through_the_api`, `test_report_suppresses_small_groups_and_lists_no_person` | Local observed on constructed staff and temporary stores. A real DPIA, DPO approval, staff notice acknowledgement and any live capture are not observed; accessible-copy review by people is not claimed |
+| Synthetic served staff journey: boot, role projection, denials, error and manual paths | PRD 0.21.0 FR-003 and FR-072 (staff identity and roles), ADR-0002 staff identity decision | R7 49 (`test_case_journey` 31, `test_role_matrix` 13, `test_workbench` 5); R6 browser copy journey | Local observed with constructed users and the fixture login; ingress trust, tenant, assistive technology and real identities are not observed |
+| Public scenario manifest, needs inventory, package and version boundary | ADR-0006 package layout | R8 24 and R9 19 in separate project processes | Local observed |
+
+Evidence classes. Local observed: every row above on the fixtures named. Historical: the 2026-11-09 and 2026-11-10 SQL, browser and Quality records (H0, H1, H2, S1, #1326 campaign), the prior 67 and 14 finance counts, the earlier SQL38 C3 observation, and the 19 hosted checks reported in the brief; none was re-run. Implemented-unverified: the resident SQL Server leg of PR 1346, the real image build, registry and deployment path of PR 1348, deployed role enforcement. Blocked or not run: live rebuild, SQL Server and Azure SQL legs, IoT Hub, any model or provider call, hosted CI for the exact head, assistive technology, human approvals. Unknown: the H1 revoke cause and later-main behaviour.
+
+### Preserved adverse results and limits
+
+* The Quality M2 H0 failure and H1 revoke observations stay adverse and unclassified; H2 did not reproduce them under a matching context and does not disprove a defect. This checkpoint adds no Quality observation and takes no part in them.
+* The earlier source-qualified limits stand: SQL runs observe only the classes they selected; fake builders, fake providers, constructed users and SQLite do not prove deployed workloads, auth, model behaviour, financial acceptance, resident consent or human approval.
+* Model, release and budget gates are unproven: actual-model Quality proof (#1288, #891 criterion 2) still needs owner release, budget and role decisions (OQ-017) and an admitted live walkthrough; the USD 700 transport authority is not a paid-model grant.
+* Trusted resident binding is unproven: the default is deny and the unconfigured route sends nothing, but no named activation, trusted binding source or human approval was shown. A passing denial test is not an approval.
+* Live rebuild gates are unproven: the four-image adapter is only exercised against a fake; no image was built, pushed or deployed.
+* No new defect was reproduced. The only adverse item is R4, a wrong argument order in this run's own command, corrected as R4b with its log kept.
+
+### Gaps, owners and recommendation
+
+| Gap | State | Owner and dependent gate |
+| --- | --- | --- |
+| Resident forwarding activation, trusted binding, human approval; SQL Server legs of PR 1346 | Not observed | #1238 and the resident-decision epic; holds any resident-facing live claim and closure of #1238 |
+| Real four-image build, registry, deployment, health | Not run, blocked on owner authority and cost headroom | #148 and #440 rung 4; holds live rebuild and Azure-dependent acceptance |
+| Staff time capture DPIA, DPO approval, notice, live capture | Not observed | #149 and #153; holds time-capture activation and closure |
+| Finance live funder return, sign-off, SQL Server finance legs | Not observed | #93 and #96; holds closure only |
+| Actual-model Quality walkthrough, release authority, budget | Blocked | #1288, #891, #184 and OQ-017 |
+| Exact-head hosted CI for the merged tree, assistive technology, human acceptance, Major HVE, whole #440 | Open | #440 and existing owners |
+| Queue-worker `serve` fail-closed and not operational; PR 1351, #89 and #132 | Excluded | their own owners |
+
+Recommendation: CONTINUE. The affected epics stay open and only the dependent gates above stay on hold: #1238 resident live claims, #148 live rebuild, #149 and #153 activation, #1288 and #184 actual-model and live-dependent expansion, and #440 closure. Independent lanes (importer, finance without live funder acceptance, documentation, tooling, the excluded PR 1351, #89 and #132 once merged and assessed) may proceed. No fix, pivot, deferral, requirement relaxation or approval is proposed or granted. Resume conditions: the owner assigns release, budget and role decisions and approves a finite live admission; named humans activate and approve resident controls; a DPIA and DPO approval exist for time capture; a later source change after this pin restarts the classification by comparing the subtree ids above. This observation does not reset the #440 correction ledger (C2 of 5 spent, three remain) and grants no source correction.
+
+Limits: single-session authored record; the producer reviewed it once natively and an independent exact-head assessment, hosted CI, human review and push are not part of it. Not claimed: approval of any document, closure or tick of any criterion, whole #440, #149, #1238, #93, #96, #148 or Major HVE acceptance, SQL Server, Azure, IoT Hub, actual-model, real-build, assistive-technology, production, legal, resident or professional approval, or a full gate.
+
+### C3 addendum: corrections and PR 1351 empty-queue observation (2026-11-10, Refs #440 #152)
+
+Draft, local-only, not approved. Correction C3 of five on the #440 ledger (two remain, no reset). The da4f52abb rows above stay historical local observations at their pin and are not retconned to the newer source. The original wave observation ended 2026-11-10T02:12:36Z, before PR 1351 merged at 02:15:38Z, so 1351 was correctly excluded then.
+
+Corrections (append-only, original records unchanged): (1) the "694 distinct, 562 distinct passes" claim in the original table note and in the original changes record line 27 is withdrawn: 699 RUN, 562 PASS, 137 SKIP remain execution totals, at least nine executions are known repeats (five R5/R6 browser, four R4b/R9c orchestrator version and dependency-rule cases) and no unique total is asserted. (2) The log and index wording that called all 132 resident skips SQL opt-in is corrected to 129 SQL Server opt-in, 1 Azure SQL opt-in, 1 SQL-replay-only JSON exclusion and 1 JSON-rollback-only SQLite exclusion, plus the 5 browser skips later executed in R6. SQLite ran; no external SQL Server or Azure SQL service ran. The original raw logs and manifest `SHA256SUMS` (`bf60e679...e599`) were re-verified unchanged (all entries OK).
+
+| Item | Value |
+| --- | --- |
+| Integrated source | merge commit `da842ed19` (parents `807c5ea67` the C2 candidate and `bcc99405c` main after PR 1351), tree `7d287ebd`; `src/` tree `e6d4e656`, identical to `origin/main` at `bcc99405c` |
+| Main at start and end | `bcc99405c` at 2026-11-10T02:20Z; at 02:21:48Z `origin/main` is `2bfd5e075`, a rubric-bot commit touching only `.github/rubric/scores/latest.json`; not merged, source after the pin is not observed |
+| Blobs | `workbench_browser_check.py` `b9241811`, `app.js` `6cb8ee4d`, `test_queue_empty_state.py` `e1f6c429`, `scenario-manifest.json` `27a1d3e6`, `needs-inventory.json` `cf20a635` |
+| Environment | owned venv `/tmp/i440-1110-PIVEGs/venv` (Python 3.12.3, Node v24.21.0, Chromium 156.0.8078.4) with module origins proven under this worktree `src/` for core, agents, api, orchestrator and importer; `env -i`, synthetic loopback only; logs and manifest in `/tmp/i440-c3-1110-obs` (`SHA256SUMS` `63e6cb50...a1e9`), separate from the original logs |
+
+| Run | Command | Start to end (UTC, tool output) | Result |
+| --- | --- | --- | --- |
+| C1 | `src/api` `python -m unittest -v test_queue_empty_state` | 02:21:12 to 02:21:12 | exit 0; 7 RUN, 7 PASS, 0 SKIP |
+| C2 | `src/core` `python -m unittest -v test_scenario_manifest test_needs_inventory` | 02:21:12 to 02:21:13 | exit 0; 19 RUN, 19 PASS, 0 SKIP (Core classes only) |
+| C3 | `src/api` `ZF_BROWSER_TESTS=1 python -m checks.workbench_browser_check` | 02:21:13 to 02:21:25 | exit 0; 108 PASS lines, 0 FAIL; seven non-Contractor roles each pass the "empty explanation only when the own queue is empty, unknown coverage never declared unrepresented" check; no-match search passes "not a statement about scenario coverage"; reflow lines at 320, 390 and 1280 CSS pixels pass; no uncaught JavaScript errors |
+| C4 | SHA-256 of `workbench_browser_check.py` | at 02:21 | `56409ec2...ac7df9` equals the `recipe` digest in `scenario-manifest.json` |
+
+These counts are this addendum's own and are not added to the 699. The C3 browser check is a larger served journey than the empty-text assertions, which this record attributes to the issue 152 change; which viewports each assertion uses was taken from that record and the log, not separately instrumented.
+
+Trace join (document-qualified; the BRD 0.21.0 draft `34d88395`, PRD Zava Forward 0.21.0 in-review `c788b917` and PRD proper-warm 0.13.0 in-review `f7f9b767` are unchanged and unapproved): PRD Zava Forward AC-034 and AC-043 stay PARTIAL. Local observed: an empty own queue explains that coverage for the perspective is Unknown, a search or filter with no result is a search result, a populated queue has no explanation, an unverified coverage payload is ignored and the all-cases scope keeps its own wording, on constructed synthetic cases. Implemented-unverified or absent: no runtime coverage producer or trusted current-fixture provenance exists, so declared-gap statements are deferred to an owner-approved producer outside this change. Unknown stays Unknown; it is not zero programme work.
+
+Adverse and limits: no failure and no new defect was reproduced. The tests do not prove real assistive technology, representative-user research, a WCAG audit or accepted role mapping. Still unproven and not claimed: actual-model release and budget, trusted resident binding, a DPIA, a live four-image rebuild, SQL Server or Azure SQL, hosted CI for the merge head and any named professional approval. Still excluded: #89 aftercare, blocked #132 and #133 hooks, and the old a482/R15 worker; real queue-worker `serve` stays fail-closed. Recommendation unchanged: CONTINUE, with the same dependent gates on hold. No closure, deferral, pivot or requirement relaxation. Records: `.copilot-tracking/*/2026-11-10-merged-wave-440-c3-1110-*` and the C3 state.
+
+## Discovery CLI feature-increment checkpoint (2026-11-10, Refs #440 #125)
+
+Draft, local-only, not approved. This is the recurring checkpoint after one completed feature increment: the read-only synthetic `discovery-demo` command (#125, PR 1355 `a0f7cf182`). It is a new periodic observation, not a correction: the #440 ledger stays at C3 of five (two left, no reset, none spent here). It is not a repeat of the earlier broad merged-wave record above and not a blanket gate. Earlier sections and their adverse results are unchanged. Records: [research](../../.copilot-tracking/research/2026-11-10-discovery-checkpoint-440-1110-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-discovery-checkpoint-440-1110-plan.md), [details](../../.copilot-tracking/details/2026-11-10-discovery-checkpoint-440-1110-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-discovery-checkpoint-440-1110-plan-critique.md), [changes and execution](../../.copilot-tracking/changes/2026-11-10-discovery-checkpoint-440-1110-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-discovery-checkpoint-440-1110-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/discovery-checkpoint-440-1110-state.json).
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-10) |
+| --- | --- |
+| Pinned source | `origin/main` `0d262beee2dfa6feca27680aa1d596111154c8d9` (confirmed by `git fetch` and `git ls-remote` at 04:27:31Z), tree `9679e7a97cfd`; subtrees `src` `b4349401011b`, `src/core` `148b928864ba`, `tools` `74ad3cb586db`, `infra` `d94040329d54`, `.github/workflows` `29eb03ea759e`. Branch `docs/demo-discovery-checkpoint-440-1110`, clean at start |
+| Delivered change | PR 1355 squash `a0f7cf182` (merged 03:42:37Z), 12 paths: three Core source and test files, a README section and the 125 RPI records. `0d262beee` above it is a rubric bot commit that changes only `.github/rubric/scores/latest.json`; it is not product source and is not observed as a feature |
+| Source blobs | `discovery_assistant_demo.py` `ff27c7a4ca6e`, `__main__.py` `a258a2abf15f`, `test_discovery_assistant_demo.py` `acc532c32c8c`, Core `README.md` `1cc9a1c7a09f`; helpers `discovery_assistant_boundary.py` `b2d036f03150`, `_drafting.py` `0ef21b8a7198`, `_evaluation.py` `a5e2b0476516` |
+| Documents (blob at pin) | Discovery brief (ms.date 2026-11-04, no version field) `fee5a6e4895d`; BRD 0.21.0 `draft` `34d88395de86`; PRD Zava Forward 0.21.0 `in-review` `c788b917bafa`; addendum `28c1924285ee`; original case study `0aec2d807011`; ADR-0006 source layout, accepted 2026-10-15, `956da1a3b804`. Draft and in-review are not approval and none changes here |
+| Hosted CI | PR 1355 metadata read, not re-run: independent exact-head review APPROVED by `github-actions`, `src-core`, `src-api`, `src-agents`, `src-orchestrator`, `src-importer`, `mssql` and the guard checks SUCCESS on the PR head. No hosted `src-ci` for the exact `0d262beee` is claimed |
+| Issue states (read live) | #440 and #125 OPEN; #125's three criteria unticked, #440 criteria 7 and 8 open; this record ticks and closes nothing |
+| Excluded | Unmerged 135 C4 and 1300 C2, retained 185 and 132, the current-live R10 and 4 November image (not current-main acceptance), the broad merged-wave surface, and any model, Azure, SQL or UI check |
+
+### Actual local observation
+
+Python 3.12.3 in a new owned virtual environment `/tmp/i440-disc-1110/venv` with an editable install of this worktree `src/core` only; `zava_forward.core.version` and `discovery_assistant_demo` import from this worktree `src/core/src`. Every run used `env -i` with `PATH`, `HOME` (an empty scratch home), `TMPDIR` and `LANG`, from `src/core` (unit runs) or an empty scratch directory (CLI runs); no `ZF_DATA`, SQL, Azure, model or credential setting, no private data, no network use by the product. Tool `date -u` readings 04:28:51Z to 04:29:23Z. Raw logs stay outside the repository (26 files; manifest `SHA256SUMS` `c81aa583a2f706601c97cb2ba639236938842f3fc80abd21c591ea2625ba3675`).
+
+| Id | Selection | Exit | Result |
+| --- | --- | --- | --- |
+| D1 | Core `discover -s tests -p test_discovery_assistant_demo.py -v` (README command; includes the real-subprocess `InstalledCommandTests`) | 0 | 14 RUN, 14 pass, 0 skip |
+| D2 | Core affected helper suites: boundary, drafting, evaluation, `test_discovery_register`, `test_discovery_flow` | 0 | 46 RUN, 46 pass, 0 skip |
+| D3 | Core `test_version`, `test_dependency_rule` | 0 | 5 RUN, 5 pass, 0 skip |
+| D4 | `python -m zava_forward.core discovery-demo` twice, JSON read back by a constructed assertion over the captured stdout only | 0, 0 | byte-identical (7995 bytes, sha256 `dd47e232...0a8e`), empty stderr. `NOT_READY`, 10 missing, 0 satisfied; `company_connection` `DENY`; connection not permitted; `query_approved_analytical_store` allowed as read-only policy; `write_source_system`, `contact_resident` and `rank_properties` `DENIED_BY_AUTHORITY_BOUNDARY`; `read_company_dataset` `NOT_ON_READ_ONLY_ALLOWLIST`; all five `dispatched` and `attempted` false; `model_used` false, `NO_DRAFTER` fallback, draft status `DRAFT_FOR_HUMAN_REVIEW`, no validated finding; `criterion_met` false with no human result pointer; `approved_solution` false, `UNAPPROVED_DESIGN_HYPOTHESIS`; hours design 60, install 12, survey 36.5 and the one unusable-timestamp gap match the constructed expectation (0 mismatches); three identical repeat digests; `overall_passed` true; `manual_path` present |
+| D5 | No argument; `discovery-demo extra`; `discovery-demo --path x`; unknown subcommand `other` | 0; 2; 2; 0 | version line `zava-forward-core 0.1.0` for no argument and `other`; the two extra-argument runs print the explicit usage message to stderr and nothing to stdout |
+| D6 | Same command under constructed marker environment (`ZF_DATA` to a nonexistent path, marker connection and key values, an unreachable proxy), plus a scratch listing before and after, plus `strace -f` of the clean run | 0; 0 | stdout byte-identical to D4 in both; scratch unchanged; the trace holds 118 lines with no `connect` or `socket` call and no write-mode open; the opens outside the interpreter, standard library, venv and worktree source are the dynamic-linker cache, a FIPS flag probe (not found), locale files, `/etc/localtime` and the scratch directory read for module search (C4 qualification, 2026-11-10: the retained trace also records `/usr/lib/ssl/openssl.cnf` opened read-only, so the list above is not exhaustive; no connect call or write-mode open is contradicted, the trace covers only the selected syscalls `openat`, `connect`, `socket`, `execve`, `unlink`, `rename`, `mkdir` and `write`, so it is not universal confinement evidence, and no new run was made) |
+| D7 | `ruff check`, `ruff format --check`, `mypy` on the three delivered Python files | 0; 0; 0 | clean. Tool versions are ruff 0.17.3 and mypy 2.4.1, not the Core pins 0.17.1 and 2.4.0. The first mypy attempt under `env -i` failed to import (user-site not visible, `D7c-first-fault.log`, kept) and was rerun with the real `HOME`; no product failure |
+
+Totals of the unit processes: 65 RUN, 65 pass, 0 skip, 0 failure or error. The 14 demo cases and the 46 helper cases are distinct modules; D3 is the project version and dependency-rule boundary only. There is no skipped case in this selection, and no SQL, Azure, browser, API, agents, orchestrator or importer suite was selected, so no result here extends to them. The D6 poisoning shows no dependence on those markers only; it does not prove the absence of every possible read.
+
+### Requirement trace (document-qualified)
+
+The PRD and BRD carry no requirement ID for the discovery assistant, so none is asserted; the BRD only links the discovery brief. The trace names the brief sections.
+
+| Contract | Source (document) | Observation | Class |
+| --- | --- | --- | --- |
+| Deterministic code calculates, a model only drafts; calculation repeatable and traceable | Discovery brief, Proposed Assistant Concept and Evaluation Criteria (calculation repeatability, traceability) | D1, D4: constructed hours, references and one gap match; three identical digests; model absent | Local observed on one fictional fixture. Constructed expectation, not an analyst result; the conventional table reuses the same calculation, so no independent comparator |
+| Read-only, no write authority | Discovery brief, Authority and Safety Boundary | D4, D6: write, contact and ranking decisions refused, nothing registered, dispatched or attempted, no write-mode open | Local observed policy decisions. Not observed: any real operational system, because none is connected; "no write access to operational systems" is unmet as a whole-#125 criterion |
+| Readiness before any company-data connection | Discovery brief, Readiness Before Writing the Agent (ten items) | D4: `NOT_READY`, ten missing, `DENY` | Local observed that the gate refuses. Readiness is not satisfied; no accountable owner, approved access or reviewer exists |
+| Compare with manual and conventional reporting; manual path remains | Discovery brief, Evaluation Criteria and Readiness (manual analysis and export remain possible) | D4: empty comparison, `criterion_met` false; `manual_path` present; works with no model or service | Local observed that the comparison is empty by design. The actual comparison is not performed |
+| Entry point, version and package boundary | ADR-0006 package layout; Core README slice 4 | D3, D5: no-argument version line unchanged, extra arguments exit 2, no dependency-rule failure | Local observed |
+
+Evidence classes. Local observed: every row above on the stated fixture. Historical, not re-run: PR 1355 hosted checks and its independent review, the earlier 60 discovery suite count recorded in the 125 review, all earlier checkpoint results. Implemented-unverified: any use of the helpers against company data. Blocked: Phase 0 sponsor nomination, owner validation and an approved extract, privacy and access approval. Unknown: later-main behaviour after this pin.
+
+### Adverse results, limits and findings
+
+* No product failure, no defect reproduced and no new issue filed. The one adverse item is a fault in this run's own command (D7c under `env -i`), kept as `D7c-first-fault.log` and rerun.
+* Reading note, not a defect: the demo prints `allowed: true` for `query_approved_analytical_store` while the company connection is `DENY`. The field is a read-only allowlist policy decision with no tool registered, as the README states; a reader may still misread it, which is a wording risk for the human reviewer and not a reproduced fault.
+* Deduplicated prerequisite: the subprocess cases need the package installed (the 125 review R2). This run installed `src/core` as the repository requires, and Core CI installs it; no `PYTHONPATH` workaround was used. No issue filed.
+* Constructed-only evidence: the fixture is fictional, the expected constants are authored from it, and the fallback text is deterministic code, not AI. The CLI does not read an environment, path or store, so these runs say nothing about any approved company dataset.
+* Not observed, still unmet: whole #125 (readiness list satisfied, no write access to a real operational system, actual manual and conventional comparison), Phase 0 and every named human approval, a current Azure model or UI acceptance, hosted CI for the exact main head, independent exact-head assessment, whole #440. Source artifact unchanged here, so no new Major coordinator HVE mutation.
+
+### Recommendation
+
+CONTINUE. The delivered CLI conforms to its documented boundaries on the pinned source for this focused matrix, and no fix or pivot is indicated. #125 and #440 stay open with no criterion ticked; dependent expansion that needs company data, an actual model or a human comparison stays on hold until the accountable owner, access approvals and a real comparison exist. Independent lanes may proceed. No approval, requirement relaxation, deferral or issue closure is proposed or inferred. Resume conditions: sponsor and data-owner decisions under #124, approved extract and access, then an owner-approved comparison under #125; any later source change after this pin restarts the classification by comparing the subtree ids above.
+
+## Served import-refusal and exception-register post-integration checkpoint (2026-11-10, Refs #440 #73 #135 #1360)
+
+Draft, local-only, not approved. This is a new bounded checkpoint after PR 1361 reached `main`. It is not a repair or reset of the Discovery checkpoint above: the #440 correction ledger stays at C4 of five spent with one remaining, none is spent here, no new corrective budget exists and no source fix is made. It is a focused documentation and evidence tier record, not the full or `--changed` gate and not a repeat of the earlier broad matrices. Earlier sections and their adverse results are unchanged. Records: [research](../../.copilot-tracking/research/2026-11-10-served-checkpoint-440-1110-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-served-checkpoint-440-1110-plan.md), [details](../../.copilot-tracking/details/2026-11-10-served-checkpoint-440-1110-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-served-checkpoint-440-1110-plan-critique.md), [changes and execution](../../.copilot-tracking/changes/2026-11-10-served-checkpoint-440-1110-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-served-checkpoint-440-1110-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/issue-440-served-checkpoint-1110-state.json).
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-10) |
+| --- | --- |
+| Pinned source | `origin/main` `1ee56da3a27ad39eb53eaede0b66dc4905f0d820` (confirmed by `git fetch` at the start of this task and equal to the worktree head; a fetch before commit showed `origin/main` `fe59ef56a0`, 2026-11-10T06:59:58Z, which adds only the rubric score file `.github/rubric/scores/latest.json`, with `src`, `infra`, `tools` and `.github/workflows` subtree ids unchanged, so the observations stay valid for that source and this branch is not rebased), tree `b56e2bc2165149f23a2ec31e31d4d648e04da4de`; subtrees `src` `4d7dc17fad54`, `src/core` `973b78bacab3`, `src/api` `1dc8eb03b13f`, `src/importer` `c6e324d1c3a0`, `tools` `432a4e8f7d74`, `infra` `d94040329d54`, `.github/workflows` `29eb03ea759e`. Branch `docs/demo-served-checkpoint-440-1110`, clean at start |
+| Main acceptance | PR 1361 (`feat/demo-served-exceptions-73-1110` to `main`) merged 06:51:12Z as squash `1ee56da3a`; its tree equals the tree of the PR head `1fab5d04` and `git diff` of `src`, `infra`, `tools` and `.github` against the independently reviewed product head `af7b20a3` is empty |
+| Contributing declared parent | PR 1357 (`feat/demo-served-import-refusal-135-1110` to the declared parent branch above) merged 05:17:41Z as `b0af68a3` into that parent branch, not into `main`. It is contributing history only; its hosted Importer run failed on mypy (`mssql_python` import-not-found, log kept in the Root folder) and the optional-driver override that cleared it travelled in the 1361 history. `main` acceptance is the 1361 merge and nothing earlier |
+| Changed by 1361 (13 source paths against `736561ba`) | Core `exception_register.py`, `import_refusals.py` (new), `sqlstore.py`, `store.py`; Importer `__main__.py`, `exceptions.py`, `pyproject.toml`, README; API `role-screens.js` (empty-state wording) and `test_exception_register*.py`; Core `test_import_refusals.py` and Importer `test_import_exceptions.py`. Documentation and original RPI records of 73 and 135 also arrived and are not re-read as product evidence |
+| Documents (blob at pin) | BRD 0.21.0 `draft` `34d88395de86`; PRD Zava Forward 0.21.0 `in-review` `c788b917bafa` (FR-066, AC-120 marked "Not run", NFR-019, AC-135); addendum `28c1924285ee`; original case study `0aec2d807011`; ADR-0006 source layout; this pack before this entry `abdecf2ee74f`. No ADR changes the exception contract. Draft and in-review are not approval and none changes here |
+| Hosted CI | The guard `1361-final-merge-guard-1110.json` read 19 reported checks SUCCESS on the PR head `1fab5d04` (base `736561ba`), no closing references. That is PR-head metadata, not a run of the merge commit: commit-scoped runs read for `1ee56da3a` showed only a Dependabot graph run and a queued Capstone Rubric Scorer push run, so no Source projects CI is claimed for the exact main commit |
+| Issue states (read live) | #440, #73, #135 and #1360 OPEN; #440 criteria 7 and 8 open; nothing is ticked or closed by this record |
+| Excluded | Unmerged siblings 130, 111, the 149 children and 132, #144 container hosting, #185 IoT identity, the Discovery CLI observations (pinned at `0d262beee`, later Core subtree change, not re-run here), the earlier merged-wave surface, any live, Azure, model, resident or professional step, and whole-demo, whole-73, whole-135 or whole-440 acceptance |
+
+### Actual local observation
+
+Python 3.12.3 in a new owned virtual environment `/tmp/i440-served-1110/venv` created only after the first Importer test run failed (`E0`, kept; the missing-package cause is author-attributed, see the C5 qualification below). It holds editable installs of this worktree `core[dev]`, `agents`, `api[dev]` and `importer[dev]` (ruff 0.17.1, mypy 2.4.0, `mssql_python` present as a package dependency but no SQL Server running). `zava_forward.core`, `zava_forward.importer` and `zava_forward.api` resolve to `src/*/src` of this worktree; the shared checkout's installs were not used. Every run used `env -i` with `PATH`, `HOME` (an empty scratch home), `TMPDIR`, `LANG` and the explicit owned `ZF_DATA=/tmp/i440-served-1110/zfdata/zavaforward.json` (plus `ZF_STORE=sqlite` and an owned `ZF_SQLITE` in S1 only). Readings from `date -u` 07:01:15Z to 07:02:09Z. No real dataset, credential, cloud, provider, model or network use by the product. Raw logs stay outside the repository (15 files; manifest `SHA256SUMS` `4d7822b2730da2cbe8e0a0657b46228e5fe57a402a33cfad18de0b7225154430`; the two scratch scripts have sha256 `71aaa41a...ffb6` and `9b36c247...9149`).
+
+| Id | Selection | Exit | Result |
+| --- | --- | --- | --- |
+| T1 | Core `discover -s tests -p test_import_refusals.py -v` | 0 | 21 RUN, 14 pass, 7 skip (the `MssqlProjection` class, reason `opt-in task-owned loopback SQL`); JSON and SQLite projection, rollback, retry, audit and repeat cases pass |
+| T2 | Core `test_dependency_rule.py` | 0 | 2 RUN, 2 pass, 0 skip |
+| T3 | Importer full `discover -s tests -v` (includes `test_import_exceptions.py` stage, view, transfer and `TransferFailureTests`) | 0 | 79 RUN, 79 pass, 0 skip |
+| T4 | API `test_exception_register*.py` with `PYTHONPATH=../core/tests:../agents/tests` as the project README documents (register, operator, steward, unnamed manager, import-refusal register on SQLite and JSON, HTTP endpoint on the matrix server) | 0 | 51 RUN, 51 pass, 0 skip |
+| T5 | API `test_role_screens*.py` | 0 | 19 RUN, 19 pass, 0 skip |
+| T6 | `node --check` of `role-screens.js`, the one API source file 1361 changed | 0 | Syntax only; no browser rendering |
+| T7, T8 | Importer `ruff check src` and `ruff format --check src tests` | 0, 0 | clean, 12 files formatted |
+| T9, T10 | Importer `mypy src` (7 files) and plain `mypy`, the Source CI selector (12 files) | 0, 0 | no issues |
+| S1 | Constructed served story: a synthetic non-workbook file staged with `python -m zava_forward.importer stage`, then `transfer` twice into a SQLite served store, the store reopened, then the register read for a named steward, a named operator and an unnamed manager | 1, 0, 0 | `stage` refused (exit 1, durable ledger entry); first `transfer` `added=1 already_present=0 stored=1 of ledger=1`, repeat `added=0 already_present=1`; source file and ledger hashes unchanged; steward sees one `failed_import` with the owner as configured, `Unknown` eligibility and the source hash matching; operator sees the source text "1 refused import file(s) are stored here ... and 0 are shown in this view" and no item; the unnamed manager is refused with `PermissionError`; the register states that rejected batches and other failures are not connected |
+| S2 | `transfer` with `ZF_STORE=nonsense` | 2 | `Cannot transfer: the served store could not be opened ... Nothing was recorded.`, stdout empty, no traceback |
+
+Totals of the unit processes: 172 RUN, 165 pass, 7 skip, 0 failure or error. The skips are the opt-in SQL Server class only. Tool versions are as pinned by the Importer `dev` extra. T1 to T5 overlap in subject with the historical Root selections (21 with 7 skips, 79 and an 80-test API group); T1 and T3 repeat the historical counts, but T4 and T5 are a different selection from the 80-test API group, so no equality is claimed.
+
+### Historical observations (retain date and source; not re-run)
+
+* `af7b20a3` (2026-11-10, parent 73): affected full-project suites (Core 2864 RUN with 347 skips, API 2584 with 542 skips), disposable MSSQL `ZF_IMPORT135_MSSQL=1 test_import_refusals` 21 OK and 0 skipped (first attempt refused by the sql guard with 7 setup errors, kept), JSON and SQLite restart and idempotency stories and ad hoc Chromium register screenshots (first run failed on a wrong URL, kept). Root did not repeat the MSSQL or browser runs.
+* `27dab9b5` and `1fab5d04`: record-only and base-refresh commits whose source is byte-identical to `af7b20a3`; the independent Functional review (approve with comments, 0 Critical or High, one non-blocking Medium, now #1360) was of `af7b20a3`. Byte-identical code does not make those runs fresh evidence for the pin; only T1 to S2 above are.
+* PR 1361 hosted checks (19 SUCCESS on the PR head, including `mssql`, `src-api`, `src-importer`, `src-core`) are read metadata, not repeated and not a result for `1ee56da3a`.
+
+### Requirement trace (document-qualified)
+
+| Contract | Source (document, blob at pin) | Observation | Class |
+| --- | --- | --- | --- |
+| Owned staff exception queue shows reason, case or reference, owner and next step; a handoff is not closed by delivery alone | PRD FR-066 and AC-120 (`c788b917bafa`, in-review, AC-120 "Not run"); BRD exception and staff-queue text (`34d88395de86`, draft) | S1 and T4: one refused import appears for the configured steward with reason, time, source hash, owner and manual next step; the operator sees a stored-versus-shown count; no approval or retry is performed | Local observed on a synthetic ledger and SQLite or JSON store. Document status unchanged; AC-120 is not satisfied as a whole (failed contact, overdue work and unaccepted handoffs are other sources) |
+| No silent loss; absence is not an all clear | PRD AC-120, PRD exception wording and the register source text | S1, T1, T4: unconnected sources and not-yet-transferred refusals are stated; repeat transfer adds nothing twice | Local observed |
+| Role scope and denial of unnamed staff, no cross-role disclosure | PRD NFR-019 and AC-135 (denial and privacy), role text at the pin | S1 and T4: unnamed manager refused and the refusal audited, other staff emails not exposed to the operator, unauthenticated refused | Local observed for the seeded fictional roles; real roles are not nominated (open decision on #135), so no real staff, resident or case access is observed |
+| Manual path and no automation of approvals | Exception wording in the PRD and the register's placeholder runbook | S1: `transfer` prints "Nothing was retried or approved"; the register guidance is labelled a placeholder, not an approved runbook | Local observed text and behaviour; no human or professional approval observed |
+| Unavailable and error paths | PRD AC-120 and Importer README | S2, T3: unopenable store exits 2 with "Nothing was recorded"; competing writer rolled back; committed-but-unconfirmed, partial and driver outcomes use distinct messages | Local observed for those injected cases. The generic `(OSError, ValueError)` branch is not exercised after a commit (see findings) |
+| Source layout and dependency boundary | ADR-0006 | T2, T3, T4: no dependency-rule failure; Importer typing passed (T9, T10); Core typing not run in this checkpoint | Local observed |
+
+Evidence classes. Local observed: every row above on the stated synthetic fixtures. Historical, not re-run: the af7b, 27dab and 1fab observations, the MSSQL 21-test run, the ad hoc Chromium stories and the PR 1361 hosted checks. Implemented-unverified: SQL Server persistence at the pin (T1 skipped its class), the register rendering in a served browser at the pin, the served HTTP path beyond the unit matrix server, and any real source ledger. Deferred: those same MSSQL and browser runs; the shared heavy lock `/tmp/ama-rpi-heavy.lock` was probed with a non-blocking `flock -n` and read free, but no exact maintained scoped served-browser harness for the register exists (the earlier browser story was an ad hoc script) and no SQL Server service is required merely for this documentation, so neither was started. Resume only on an explicit later coordination event with a maintained harness and nonqueued admission. Blocked: any step that needs a named steward or operator, a real ledger, an approved runbook, resident consent or a professional approval. Unknown: hosted CI of the exact `1ee56da3a` merge commit and later-main behaviour after this pin.
+
+### Findings, owners and gates
+
+* No product failure, no defect reproduced and no new issue proposed. Two first-attempt faults are this run's own and are kept: the importer suite reported `FAILED (errors=1)` before the editable install (`E0`, qualified below: only the tailed summary is retained), and `mypy src` checks 7 files while the Source CI selector checks 12 (`T9` then `T10`), so the CI-selector result is the one used.
+* #1360 (OPEN, Medium, non-blocking, static, unreproduced, unfixed) is the existing owner of the generic transfer message: at the pin `src/importer/src/zava_forward/importer/__main__.py:160-161` reports "the served store refused it (...). Nothing was recorded." for any `OSError` or `ValueError`, while `SqlStore.save` commits before its final refresh. The selected tests exercise a pre-commit `ValueError` and the explicit committed-reload, partial and driver outcomes, but none injects an `OSError` or `ValueError` after the commit, so this run neither reproduces nor refutes it. It is not duplicated, waived or reset here, and creates no budget: the #135 correction C5 stays spent at zero left and any repair needs its own finite grant.
+* Compared and unrelated to this path: #144 (container hosting), #185 (IoT identity), #111 (sensor analysis, unmerged) and #132 (contractor pack, unmerged). No finding of this run belongs to them.
+* Reading notes, not defects: the refusal reason for a non-workbook file reads "did not pass the content scan (mismatch)", which is the importer's own scan-gate wording; the operator view shows only a count, by design, and a reader may misread it as an empty queue, which the source text explicitly counters.
+* Limits: fictional bytes, SQLite and JSON only, in-process register reads for S1 (the HTTP endpoint is covered only by the unit matrix server), no resident, professional, legal, human or live approval observed, no assistive-technology or browser result, the model label of the witness is asserted and the witness is a writable local record, not attestation. Not observed and still unmet: whole #73, #135 and #440, SQL Server at this pin, hosted CI for the exact main commit, independent exact-head assessment of this documentation candidate, actual role nominations.
+
+### Recommendation
+
+CONTINUE for this integration scope. The served import-refusal path and its operator and steward presentation behave as documented on the pinned source for this focused matrix, and no fix or pivot is indicated. The only open product item is the non-blocking #1360, which blocks no dependent work. Gates: closing #73, #135 or #440 needs the remaining criteria with their own evidence (named role nominations, an actual served-browser and SQL Server observation at the then-current main, hosted CI and independent exact-head review, human and resident approvals), none of which this record supplies; a repair of #1360 needs a dated finite correction grant. Independent lanes #230, #231 and #153 may proceed. No requirement change, deferral, waiver, approval or issue closure is proposed or inferred, and required epic and human criteria stay unticked. Resume conditions: an owner decision on the roles and on any #1360 repair grant, and a maintained served-browser harness with nonqueued heavy-lock admission; any source change after this pin restarts the classification by comparing the subtree ids above.
+
+### Independent review and C5 qualification (2026-11-10)
+
+Draft, local-only, additive. Earlier text, the original review and all adverse records stay as written.
+
+* Independent assessment: reviewer 19f0152 read the complete supplied diff and all ten changed records of `c4ed9f64b7f2c14d4c5d1a34e0a3b4d0111d3616` against `1ee56da3a27ad39eb53eaede0b66dc4905f0d820` and returned approve_with_comments: zero Critical, zero High, two nonblocking Medium documentation findings. It is a bounded documentation assessment, not publication, merge, hosted CI, whole #440 or product acceptance. The earlier self-executed review is not withdrawn or replaced.
+* Finding 1 corrected: the dependency row said Core and Importer were typed clean. Only Importer was type checked (T9, T10). The Core observation is the dependency-rule test T2, which is not a type check. Core typing was not run in this checkpoint and is not claimed. No check was run to justify the old wording.
+* Finding 2 qualified: `E0` retains only the tailed five-line unittest summary (`Ran 1 test`, `FAILED (errors=1)`) followed by `exit=0`. The command was piped through `tail -5`, so the printed `exit=0` is the `tail` pipeline status, not a producer pass. The producer exit, the exception text and the missing package name were not retained; the missing-package cause is author-attributed only. The `E0` file is preserved byte for byte, was not reconstructed or rerun, and is not reclassified. The later T1 to T5 direct exits and counts stand.
+* Ledger: the earlier Discovery state C4 of five spent with one remaining was historical and is not changed by this record. This current #440 documentation correction uses the one remaining allowance under the standing owner five total, so C5 is consumed and zero remain. It is not five extra, a new pool or a reset, and nothing is transferred from #132 or #135 (the #135 C5 stays zero). No further source or correction cycle is authorized.
+* Unchanged: 172 cases run, 165 pass, 7 opt-in SQL Server skips, 0 failures; the S1 and S2 observations are CLI and SQLite only, not browser; af7b, 27dab and 1fab stay historical and byte-identical code is not fresh execution; #1360 stays static, unreproduced and unfixed; no human, model or live acceptance; #73, #135 and #440 stay open.
+* Conclusion: CONTINUE applies only to this bounded integration observation and the independent lanes #230, #231 and #153. It relaxes no requirement or permission and is not universal current-main proof. The independent reviewer must assess the complete C5 delta before publication; if a blocking finding remains after C5, stop and do not retry.

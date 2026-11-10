@@ -14,7 +14,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, unquote, urlparse
 
-from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, controls, form_review, forms, profile
+from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, controls, form_export, form_review, forms, profile
 
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
@@ -49,6 +49,16 @@ TYPES = {".html": "text/html; charset=utf-8", ".js": "text/javascript; charset=u
 OSM_URL = "https://tile.openstreetmap.org/{z}/{x}/{y}.png"
 OSM_ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 SECURITY = {"X-Content-Type-Options": "nosniff", "Referrer-Policy": "strict-origin-when-cross-origin", "Cache-Control": "no-store", "Strict-Transport-Security": "max-age=31536000"}
+
+
+HELD_EXPORT_FILENAME = "held-form-draft-export.json"
+
+
+def held_download_enabled(provider_name, env=None):
+    """Default-OFF, synthetic-demo-only Held draft download. The switch is an operator attestation, not a data check."""
+    env = os.environ if env is None else env
+    return (env.get("ZF_FORM_HELD_DOWNLOAD") or "") == "synthetic-demo-only" \
+        and (env.get("ZF_DEPLOYMENT_PROFILE") or "") == "demo" and provider_name != "trusted-proxy"
 
 
 def chat_admission(store):
@@ -194,7 +204,7 @@ def get_kind(path):
         return "aftercare"
     if path == "/api/progress":
         return "stats"
-    if path == "/api/closed-cases":
+    if path in ("/api/closed-cases", "/api/closed-cases.csv"):
         return "cases"
     if path == "/api/coordinator":
         return "coordinator"
@@ -488,12 +498,16 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(403, {"error": str(e)})
                 return self._send(200, list_export.to_csv(rows), "text/csv; charset=utf-8",
                                   {"Content-Disposition": f'attachment; filename="{url.path.rsplit("/", 1)[-1]}"'})
-            if url.path in ("/api/progress", "/api/closed-cases"):
+            if url.path in ("/api/progress", "/api/closed-cases", "/api/closed-cases.csv"):
                 from zava_forward.api import progress
                 try:
                     read = progress.dashboard if url.path == "/api/progress" else progress.closed_cases
                     values = parse_qs(url.query, keep_blank_values=True)
-                    return self._json(200, read(s, u, values))
+                    result = read(s, u, values)
+                    if url.path == "/api/closed-cases.csv":
+                        return self._send(200, progress.closed_csv(result), "text/csv; charset=utf-8",
+                                          {"Content-Disposition": 'attachment; filename="closed-cases-page.csv"'})
+                    return self._json(200, result)
                 except progress.DateRangeError as error:
                     return self._json(400, {"error": str(error), "reasons": {"fields": ["start", "end"]}})
                 except ValueError as error:
@@ -548,7 +562,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             form_parts = url.path.strip("/").split("/")
             if url.path == "/api/form-schemas" or (
                     len(form_parts) == 4 and form_parts[:2] == ["api", "cases"]
-                    and form_parts[3] in ("form-candidates", "form-review")):
+                    and form_parts[3] in ("form-candidates", "form-review")) or (
+                    len(form_parts) == 6 and form_parts[:2] == ["api", "cases"]
+                    and form_parts[3] == "form-review" and form_parts[5] == "held-export"):
                 return self._forms(u, url.path, None)
             if url.path.startswith("/api/buildings/"):
                 try:
@@ -1137,9 +1153,21 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     if body is None:
                         return self._json(200, {"schemas": forms.list_schemas(app.store, user)})
                     return self._json(201, forms.register_schema(app.store, user, body))
+                if len(parts) == 6:
+                    if not held_download_enabled(app.provider.name):
+                        return self._json(404, {"error": "Not found."})
+                    export = form_export.draft_export(app.store, user, unquote(parts[2]), unquote(parts[4]))
+                    if export.get("status") != "Held":
+                        return self._json(409, {"error": export.get("notice") or "The Held draft is unavailable."})
+                    return self._send(200, json.dumps(export), "application/json; charset=utf-8", {
+                        "Content-Disposition": f'attachment; filename="{HELD_EXPORT_FILENAME}"',
+                        "Cache-Control": "private, no-store"})
                 if parts[3] == "form-review":
                     if body is None:
-                        return self._json(200, form_review.view(app.store, user, parts[2]))
+                        view = form_review.view(app.store, user, parts[2])
+                        if held_download_enabled(app.provider.name):
+                            view["held_download_enabled"] = True
+                        return self._json(200, view)
                     return self._json(201, form_review.action(app.store, user, parts[2], body))
                 if body is None:
                     return self._json(200, {"batches": forms.list_candidates(app.store, user, parts[2])})

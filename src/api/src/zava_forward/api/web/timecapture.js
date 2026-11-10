@@ -6,11 +6,11 @@ async function timeView() {
     const status = h("p", { role: "status" });
     const save = async (path, body) => {
       try { await api(path, body); await timeView(); }
-      catch (error) { status.textContent = error.message; }
+      catch (error) { if (error.status !== 401) status.textContent = timeActionFailureText(error, timeActionKind(path)); }
     };
     const check = (ok, text) => h("li", {}, `${ok ? "Done" : "Missing"}: ${text}`);
     const body = [h("h1", {}, "Staff time capture"),
-      h("p", { role: "status" }, st.enabled ? "Time capture is on." : st.reason), status,
+      h("p", { role: "status" }, st.enabled ? "Time capture is on." : timeBlockedText(st, isManager())), status,
       h("ul", {}, check(st.flag_on, "feature switched on"), check(st.dpia_recorded, "DPIA reference recorded"),
         check(st.consultation_recorded, "staff consultation recorded"), check(st.notice_approved, "staff notice approved"),
         check(st.requested, st.requested ? `enabling requested by ${st.requested_by} (${st.requested_role}, audited)` : "enabling request by a manager (audited)"),
@@ -45,6 +45,74 @@ async function timeView() {
     show(...body);
   } catch (e) {
     if (e.name === "AbortError" || !me) return;
-    show(h("h1", {}, "Staff time capture"), h("p", { role: "alert" }, e.message));
+    show(h("h1", {}, "Staff time capture"), h("p", { role: "alert" }, timeLoadFailureText(e)));
   }
+}
+
+// Reason, owner and next action are written here from status flags and HTTP outcomes; server text is never shown, because it can carry internal detail.
+function timeGuidance(reason, owner, next) { return `${reason} Owner: ${owner}. Next action: ${next}`; }
+
+function timeManagers() { return "a manager (Retrofit Programme Manager or Programme Support Officer)"; }
+
+function timeBlockedText(st, manager) {
+  const support = "application support";
+  const notReady = (what, fix) => timeGuidance(`Time capture cannot start until ${what} is recorded.`, support, `ask application support to record ${fix} in the service settings. It cannot be recorded on this screen.`);
+  if (!st.flag_on) return timeGuidance("Time capture is switched off, so nothing can be recorded.", support, "ask application support to switch it on when the programme agrees to start staff time capture.");
+  if (!st.dpia_recorded) return notReady("a data protection impact assessment (DPIA) reference", "the DPIA reference");
+  if (!st.consultation_recorded) return notReady("the staff consultation", "the staff consultation reference");
+  if (!st.notice_approved) return notReady("an approval reference that covers the current staff notice wording", "the approval reference for the current notice");
+  if (!st.requested) return timeGuidance("A manager has not yet asked for time capture to be enabled.", timeManagers(),
+    manager ? "choose Request enabling (audited) below." : "ask a manager to request enabling.");
+  if (!st.activated) return timeGuidance(`Enabling was requested by ${st.requested_role} and now needs a manager in a different role.`, "a manager in a different role from the requester",
+    manager ? "if that is you and your role differs, choose Enable time capture (audited) below." : "ask that manager to enable it.");
+  return timeGuidance("Time capture is not available and the reason is not shown here.", support, "refresh this page, then contact application support if it continues.");
+}
+
+function timeActionKind(path) {
+  return { "/api/time": "record", "/api/time/acknowledge": "notice" }[path] || "enabling";
+}
+
+// Only refusals the server raises before it writes anything; any other 403 can follow a write and stays an unknown outcome.
+function timeRefusal(message) {
+  const text = String(message || "");
+  if (/acknowledge the staff notice/i.test(text)) return "notice";
+  if (/^Only a manager/.test(text)) return "manager";
+  if (/^Enabling needs a request first/.test(text)) return "norequest";
+  if (/enabling request was made by/.test(text)) return "samerole";
+  if (/^Time capture /.test(text)) return "off";
+  return null;
+}
+
+function timeActionFailureText(error, kind) {
+  const status = error.status, message = String(error.message || "");
+  const you = (reason, next) => timeGuidance(reason, "you", next);
+  const refusal = status === 403 ? timeRefusal(message) : null;
+  if (status === 400 && kind === "record") {
+    const reason = /whole number/.test(message) ? "Minutes must be a whole number, for example 15."
+      : /between 1 and/.test(message) ? "Minutes must be from 1 to 600."
+      : /activity/i.test(message) ? "Choose an activity from the list." : "Some details were not accepted.";
+    return you(`${reason} Nothing was saved.`, "correct it and choose Save again.");
+  }
+  if (status === 404 && kind === "record") return you("That case reference was not found, so nothing was saved.", "copy the case reference from the case page and choose Save again.");
+  if (refusal === "notice") return you("Nothing was saved because you have not confirmed that you read the staff notice.", "refresh this page, read the notice and choose I have read the notice.");
+  if (refusal === "manager") return timeGuidance("Nothing was changed because this step is for a manager.", timeManagers(), "ask a manager to do it.");
+  if (refusal === "norequest") return timeGuidance("Nothing was changed because enabling needs a request first.", timeManagers(), "ask a manager to request enabling, then ask a manager in a different role to enable it.");
+  if (refusal === "samerole") return timeGuidance("Nothing was changed because a manager in a different role must enable it.", "a manager in a different role from the requester", "ask that manager to enable it.");
+  if (refusal === "off") return timeGuidance("Nothing was saved because time capture is not available yet.", "see the checklist on this page", "refresh this page and follow the checklist.");
+  if (status === 409) return you("Another save is still in progress or its result is not known.", "wait for it to finish, then refresh this page and check My entries before you save again.");
+  if (!status || status >= 500 || status === 403 || error.outcome === "uncertain" || error.outcome === "committed") {
+    return kind === "record"
+      ? you("We cannot tell whether this entry was saved.", "refresh this page and check My entries (it lists only your latest 200 entries) before you save again, then contact application support if it continues.")
+      : timeGuidance("We cannot tell whether this change was saved.", "application support", "refresh this page and read the checklist before you try again, then contact application support if it continues.");
+  }
+  return timeGuidance("This could not be completed and the reason is not shown here.", "application support", "refresh this page and check the checklist and My entries before you try again.");
+}
+
+function timeLoadFailureText(error) {
+  if (error.status === 403) {
+    return timeRefusal(error.message) === "notice"
+      ? timeGuidance("You have not confirmed that you read the staff notice.", "you", "refresh this page, read the notice and choose I have read the notice.")
+      : timeGuidance("Time capture is not available to you right now.", "a manager or application support", "refresh this page, then contact application support if it continues.");
+  }
+  return timeGuidance("Staff time capture could not load.", "application support", "refresh to try again, then contact application support if it continues.");
 }

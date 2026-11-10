@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-09
+ms.date: 2026-11-10
 ms.topic: overview
 ---
 
@@ -1282,3 +1282,48 @@ disposable SQL Server run of the resident-decision class, 108 discovered, one by
 is separate), reuses the #1326 priority SQL campaign by source
 identity with its limits, and maps each gap to its existing owner. It confirms no defect,
 excludes #1288 and the #1258, #1259 and #136 Blob work, and keeps every closure hold. A same-day Q1 qualification appended to the pack states that S1 was selected without a prospective amendment, that S1 raw retention is unverified, that absence statements are bounded to inspected paths, and that PRD FR-016 and FR-017 are not resident or complaints IDs.
+
+The [parent-topic Blob and Quality checkpoint](../architecture/cutover-evidence-pack.md#parent-topic-blob-and-quality-checkpoint-2026-11-09-refs-440-1288-1258-1259-136)
+(2026-11-09, draft, local only) separates merged-main Blob observations at `main` `a04668ae` from
+parent-topic Quality observations at local head `34838154` (PR 1331 unmerged, E8 unpublished),
+reuses retained logs as historical (761 discovered, 100 skipped, the 861 figure is not
+reproducible), and records one adverse local browser run of the Quality retained-sensor journey
+(a stale check after the real-provider route was made unavailable in code). Quality is not merged-main
+functionality; closure holds and the later merged-main requalification requirement stand.
+
+A separate [merged-main qualification](../architecture/cutover-evidence-pack.md#merged-main-blob-and-quality-qualification-2026-11-09-refs-440-1288-1258-1259-136)
+(2026-11-09, draft, local only) records `main` `1b7a1719b` (PR 1331 squash; tree equal to its final head
+`f995774`), the five-file source delta since the parent topic, and one new local browser observation of the
+corrected Quality check with its axe stage (exit 0, 30 checks, 0 axe violations, serious contrast
+incompletes remain). The original red observation is preserved. Closure, live, model, assistive-technology
+and human acceptance holds stand.
+
+A further [Quality M2 qualification](../architecture/cutover-evidence-pack.md#quality-m2-current-main-qualification-2026-11-10-refs-440-1288-891-184)
+(2026-11-10, draft, documentation only) records `main` `32221a845` after PRs 1331, 1339 (#891 accounting),
+1341 (importer, unrelated, excluded) and 1342 (tracking-only evidence). It classifies the executed H2 SQL
+observation as a dated local observation of the identical Core, API and Agents source, carries the errata
+(#891 is included, no H2 peer or bytes, 29 passes plus one skip), keeps the adverse H0 and H1 results, and
+holds closure, actual-model, Azure, human and release-authority gates open.
+
+A [merged-wave checkpoint](../architecture/cutover-evidence-pack.md#merged-wave-checkpoint-2026-11-10-refs-440-149-153-1238-93-96-148)
+(2026-11-10, draft, local) observes pinned `main` `da4f52abb` after PRs 1343 (staff-time copy), 1346 (resident
+default-deny approval binding), 1345 (finance retained history and dependencies) and 1348 (four-image rebuild
+adapter, fake builder): 699 targeted tests run, 562 pass, 137 skip executions (5 browser skips later run, 129 SQL Server opt-in, 1 Azure SQL opt-in, 2 backend exclusions; no external SQL service ran; counts corrected in C3, no unique total), none fail. A C3 addendum observes the later-merged PR 1351 empty-queue explanation. It
+joins them to document-qualified BRD and PRD rows and keeps SQL Server, live rebuild, trusted resident binding,
+actual-model and human approval gates unproven. Closure and approval holds stand.
+
+A [discovery CLI checkpoint](../architecture/cutover-evidence-pack.md#discovery-cli-feature-increment-checkpoint-2026-11-10-refs-440-125)
+(2026-11-10, draft, local) observes pinned `main` `0d262beee` after PR 1355 (#125 read-only synthetic
+`discovery-demo` command): 65 focused Core tests pass, the command's JSON readback shows `NOT_READY`, company
+connection `DENY`, `model_used` false and an empty human comparison, and no connect call or write-mode open was
+traced. It is constructed-fixture evidence only; whole #125, Phase 0, actual comparison, model and human approval
+gates stay unmet, and #440 and #125 stay open.
+
+A [served import-refusal post-integration checkpoint](../architecture/cutover-evidence-pack.md#served-import-refusal-and-exception-register-post-integration-checkpoint-2026-11-10-refs-440-73-135-1360)
+(2026-11-10, draft, local) observes pinned `main` `1ee56da3a` after PR 1361: 172 focused Core, Importer and API
+cases run (165 pass, 7 opt-in SQL Server skips), clean static checks and a constructed served story in which a
+refused file transfers once, reaches only the configured steward and is counted but not shown to the operator. Earlier
+af7b, 27dab and 1fab observations stay historical, the non-blocking #1360 stays unreproduced, and SQL Server,
+served-browser, named-role, hosted exact-commit and human approval gates stay unmet; #73, #135 and #440 stay open.
+An independent-review qualification (C5, 2026-11-10) states that only Importer typing ran (Core typing was not run) and
+that the retained `E0` is a tailed summary with an author-attributed cause.

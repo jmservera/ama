@@ -465,6 +465,14 @@ const defaultListState = () => {
   return filters;
 };
 const listState = {};
+function queueEmptyExplanation({ view, filtered, rowsLength }) {
+  if (rowsLength > 0) return null;
+  if (filtered) {
+    return { state: "no-match", text: "No cases match these filters. This is a search result, not a statement about scenario coverage. Reset my queue to try again." };
+  }
+  if (view !== "mine") return { state: "empty-all", text: "No permitted open cases are available." };
+  return { state: "coverage-unknown", text: "No open cases are assigned to you. This does not mean the programme has no work. Whether a demonstration scenario exists for this perspective is unknown: no verified coverage declaration is available." };
+}
 const queueHref = () => coordinatorOrigin || (queueOrigin === "all" ? "#/all" : "#/");
 const qs = (o) => Object.entries(o).filter(([, v]) => v).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
 const isManager = () => ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
@@ -812,7 +820,7 @@ async function listView(view) {
             view === "all" && h("div", { class: "muted" }, `Owner: ${r.owner}`),
             r.focus && h("dl", { class: "focus" }, r.focus.flatMap(([k, v]) => [h("dt", {}, k), h("dd", {}, /^\d{4}-\d\d-\d\d$/.test(v) ? fmtDate(v) : v)]))),
           h("div", { class: "meta" }, h("div", {}, r.stage), h("div", {}, `${r.days} days in this stage`), h("div", {}, `Last contact: ${ago(r.last_contact)}`),
-            r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "empty" }, Object.entries(listState).some(([key, value]) => key !== "sort" && value) ? "No cases match these filters. Reset my queue to try again." : view === "mine" ? "No open cases are assigned to you. This does not mean the programme has no work." : "No permitted open cases are available.")),
+            r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "empty" }, queueEmptyExplanation({ view, filtered: Object.entries(listState).some(([key, value]) => key !== "sort" && value), rowsLength: rows.length }).text)),
       rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null].filter(Boolean));
   };
   const load = async (more) => {

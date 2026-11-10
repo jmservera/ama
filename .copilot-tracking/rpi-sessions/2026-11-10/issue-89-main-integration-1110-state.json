@@ -1,0 +1,63 @@
+{
+  "task_id": "issue-89-main-integration-1110",
+  "task_slug": "issue-89-main-integration",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-issue-89-main-integration-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-issue-89-main-integration-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-issue-89-main-integration-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-issue-89-main-integration-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-issue-89-main-integration-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-issue-89-main-integration-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Bounded parent 89 main-adoption preparation only; no new product work or correction pool; no push, PR or GitHub write",
+      "status": "done",
+      "evidence": "brief-89-main-integration-1149.txt (Root)"
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready",
+      "status": "done",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once (Proceed, PC-001..006 applied directly)",
+      "status": "done",
+      "evidence": "critique artifact"
+    },
+    {
+      "decision": "Implement executed: FF-only to a05, ordinary merge of a600 (8fe3416d5, tree 08fb66ce7), zero conflicts, targeted tier green",
+      "status": "done",
+      "evidence": "changes artifact; checks-89-main-integration-1110"
+    },
+    {
+      "decision": "Review executed once (authored, not independent); outcome conformant for bounded adoption, R1-R4 routed",
+      "status": "done",
+      "evidence": "review artifact"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Root independently assesses the exact head, then explicitly selects child 133 adoption of the advanced parent"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Root explicit adoption of advanced parent into child 133, test actual combined tree",
+      "rationale": "Unblocks child PR to parent",
+      "evidence": "route packet; review R1"
+    },
+    {
+      "rank": 2,
+      "task": "Independent exact-head review and hosted CI of the parent before any parent PR",
+      "rationale": "Required publication gates",
+      "evidence": "review R2, R4"
+    }
+  ]
+}

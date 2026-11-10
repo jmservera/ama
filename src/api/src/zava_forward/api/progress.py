@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import csv
+import io
 import math
 import re
 from collections import Counter
@@ -10,6 +12,7 @@ from itertools import groupby
 from typing import Any, Literal
 
 from zava_forward.core import insights, projection, taskqueues
+from zava_forward.core.list_export import safe_cell
 from zava_forward.core.workflows import MANAGER_ROLES, handoff_view
 
 DAY = timedelta(days=1)
@@ -33,6 +36,17 @@ JOURNEY = {
 }
 STEP = {stage: name for name, stages in JOURNEY.items() for stage in stages}
 CLOSE_ACTIONS = {"Accepted handover", "Withdrawn", "Excluded"}
+CLOSED_EXPORT_FIELDS = (
+    "id",
+    "resident",
+    "address",
+    "town",
+    "postcode",
+    "hazard",
+    "status",
+    "team",
+    "closed_on",
+)
 LifecycleKind = Literal["identified", "accepted", "closure", "reopened", "returned"]
 
 
@@ -399,3 +413,18 @@ def closed_cases(store: Any, user: dict[str, Any], query: dict[str, list[str]]) 
             facets=dict(statuses=statuses, teams=teams),
             unknown_closure_dates=unknown_dates,
         )
+
+
+def closed_csv(result: dict[str, Any]) -> str:
+    """The rows of one closed_cases page as a one-way CSV with a fixed set of summary columns."""
+    buffer = io.StringIO()
+    writer = csv.writer(buffer)
+    writer.writerow([safe_cell(name) for name in CLOSED_EXPORT_FIELDS])
+    for row in result["items"]:
+        values = [row[name] for name in CLOSED_EXPORT_FIELDS]
+        if not all(
+            value is None or isinstance(value, str | bool | int | float) for value in values
+        ):
+            raise TypeError("A closed case export cell must be a primitive value.")
+        writer.writerow([safe_cell(value) for value in values])
+    return buffer.getvalue()
