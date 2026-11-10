@@ -392,9 +392,20 @@ def check(store: Any, axe: str | None = None) -> None:
                             ).to_be_visible()
                     elif href == "#/time":
                         status = payloads["/api/time/status"]
-                        expect(page.locator("#app [role=status]").first).to_have_text(
-                            "Time capture is on." if status["enabled"] else status["reason"]
-                        )
+                        banner = page.locator("#app [role=status]").first
+                        if status["enabled"]:
+                            expect(banner).to_have_text("Time capture is on.")
+                        elif not status["flag_on"]:
+                            expect(banner).to_have_text(
+                                "Time capture is switched off, so nothing can be recorded. "
+                                "Owner: application support. Next action: ask application "
+                                "support to switch it on when the programme agrees to start "
+                                "staff time capture."
+                            )
+                        else:
+                            expect(banner).to_have_text(
+                                re.compile(r"\S\. Owner: .+\. Next action: .+")
+                            )
                     elif href == "#/screens":
                         expect(
                             page.get_by_role("link", name="Back to my work", exact=True)
