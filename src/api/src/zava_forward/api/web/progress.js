@@ -173,6 +173,9 @@ const ProgressViews = (() => {
       return enabled ? h("a", { class: "btn alt", href: href("#/closed", next) }, label)
         : h("span", { class: "progress-unavailable" }, `${label} (unavailable)`);
     };
+    const download = new URLSearchParams(values);
+    download.set("page", String(data.page));
+    download.set("limit", String(data.limit));
     show(h("div", { class: "progress-page" }, h("h1", {}, "Closed cases"),
       h("p", { class: "flag" }, "Demonstration data - fictional cases."),
       h("p", {}, "Closed does not necessarily mean works completed. Filter the recorded case status. " +
@@ -183,6 +186,13 @@ const ProgressViews = (() => {
         "They appear without date filters and are excluded when either date is set."),
       h("p", { role: "status", id: "closed-results" },
         `${number(data.total)} matching closed cases. Page ${number(data.page)} of ${number(data.pages)}.`),
+      h("p", {}, h("a", { class: "btn alt", id: "closed-download", href: `/api/closed-cases.csv?${download}`,
+        "aria-describedby": "closed-download-note" }, "Download this page for Excel")),
+      h("p", { id: "closed-download-note" },
+        `Constructed demonstration data. The file holds only this page, up to ${number(data.limit)} cases, ` +
+        "not every page. It is a read-only copy: editing it changes no records in the application. " +
+        "A blank Closed on means the closure date is unknown. Closed does not mean works are completed or approved. " +
+        "The file is read again when you download, so it may differ from the rows shown."),
       table("Matching closed cases", ["Case", "Recorded case status", "Closed on", "Team"],
         data.items.map(row => [
           h("span", {}, h("a", { href: `#/case/${encodeURIComponent(row.id)}` }, `${row.id}: ${row.resident}`),
