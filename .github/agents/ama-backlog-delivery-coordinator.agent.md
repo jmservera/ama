@@ -709,8 +709,9 @@ remains subject to the tracking retention policy.
    command failure). Treat each reported
    qualification (refused or missing boundary including launch, out-of-order
    record, dirty or committed source change before start, backward clock, stale
-   review source, revised critique or review, artifact or log path outside the
-   tracking root) as an observation to carry into the review and report, not as a
+   review source, revised critique or review, artifact path outside the
+   tracking root, log path outside its evidence directory, evidence bound to
+   another worktree or issue, HEAD moved past commit-complete) as an observation to carry into the review and report, not as a
    waiver; never edit or delete witness records, record the log sha256 in
    session SQL before the worktree is removed, and say plainly which boundaries
    were witnessed and which were only reported. A PR without them

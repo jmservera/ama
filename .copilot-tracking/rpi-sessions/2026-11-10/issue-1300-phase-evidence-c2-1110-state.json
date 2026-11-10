@@ -37,6 +37,11 @@
    "decision": "Review executed once: 1 Medium, fixed as un-re-reviewed amendment 2026-11-10T04:17:16.282983+00:00",
    "status": "done",
    "evidence": "review record"
+  },
+  {
+   "decision": "Source committed 617afd56; HVE downstream (static closure, one fresh behavior campaign, host validation) opened 2026-11-10T04:17:37.587409+00:00",
+   "status": "active",
+   "evidence": "commit 617afd56"
   }
  ],
  "blockers": [],
