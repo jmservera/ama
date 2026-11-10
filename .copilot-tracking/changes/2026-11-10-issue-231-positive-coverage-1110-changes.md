@@ -22,4 +22,3 @@ Task `issue-231-positive-coverage-1110`; Refs #231 and parent #149. FOCUSED tier
 ## Divergences
 
 None from the plan. One formatting-only edit after the first final run, followed by a re-run of static checks and all four browser scenarios.
-
