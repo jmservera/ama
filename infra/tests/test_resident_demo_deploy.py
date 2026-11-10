@@ -34,14 +34,14 @@ OWNED = [
 ]
 
 
-def compiled() -> dict:
+def compiled(bicep: str = "resident-demo.bicep") -> dict:
     result = subprocess.run(
         [
             "az",
             "bicep",
             "build",
             "--file",
-            str(INFRA / "resident-demo.bicep"),
+            str(INFRA / bicep),
             "--stdout",
         ],
         capture_output=True,
@@ -165,7 +165,16 @@ class TemplateTests(unittest.TestCase):
         main = (INFRA / "modules" / "containerapps.bicep").read_text()
         self.assertIn("param apiMinReplicas int = 0", main)
         self.assertIn("minReplicas: apiMinReplicas", main)
-        self.assertIn("maxReplicas: 4", main)
+        apps = compiled("modules/containerapps.bicep")
+        api = next(r for r in apps["resources"] if r["type"] == "Microsoft.App/containerApps")
+        scale = api["properties"]["template"]["scale"]
+        self.assertEqual(scale["minReplicas"], "[parameters('apiMinReplicas')]")
+        # Default cap 4; only the opt-in public simulation lane lowers it to 1.
+        self.assertEqual(
+            scale["maxReplicas"], "[if(parameters('enablePublicSimulationLane'), 1, 4)]"
+        )
+        self.assertIs(apps["parameters"]["enablePublicSimulationLane"]["defaultValue"], False)
+        self.assertNotIn("resident", json.dumps(apps).lower())
         self.assertNotIn("resident", (INFRA / "main.bicep").read_text().lower())
         self.assertNotIn("resident", (INFRA / "scripts" / "deploy.py").read_text().lower())
 
