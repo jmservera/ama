@@ -481,6 +481,39 @@ class ExternalEvidenceTests(WitnessCase):
     def log(self) -> Path:
         return witness.log_paths(self.repo, "1300", self.evidence)[0]
 
+    def test_ancestor_evidence_root_with_derived_destination_inside_candidate_refused(
+        self,
+    ) -> None:
+        owned = Path(self.tmp.name) / "owned"
+        owned.mkdir()
+        candidate = owned / "issue-1300"
+        self.repo.rename(candidate)
+        self.repo = candidate
+        self.evidence = owned
+        brief = Path(self.tmp.name) / "brief.md"
+        brief.write_text("synthetic brief\n")
+        code, result = self.record("launch", "--brief", str(brief))
+        self.assertEqual(code, 2)
+        self.assertIn("derived witness log destination", result["reasons"][0])
+        self.assertNotIn(
+            "events", run_git(candidate, "status", "--porcelain", "--ignored", "-uall")
+        )
+        self.assertFalse((candidate / "events.jsonl").exists())
+        self.assertFalse((candidate / "events.lock").exists())
+
+    def test_disjoint_sibling_evidence_root_still_succeeds(self) -> None:
+        owned = Path(self.tmp.name) / "owned"
+        candidate = owned / "issue-1300"
+        owned.mkdir()
+        self.repo.rename(candidate)
+        self.repo = candidate
+        self.evidence = owned / "evidence"
+        self.observe_launch()
+        self.assertNotIn(
+            "events", run_git(candidate, "status", "--porcelain", "--ignored", "-uall")
+        )
+        self.assertTrue(self.log().exists())
+
     def test_launch_to_commit_complete_leaves_candidate_entirely_clean(self) -> None:
         self.launched_run()
         self.assertEqual(self.commit_all()[0], 0)

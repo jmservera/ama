@@ -1,0 +1,3 @@
+# C3 details
+Helper: in the external branch after `root` computed, loop over (path.parent, path, lock_path) resolved; if equal to repo.resolve() or repo.resolve() in item.parents return "derived witness log destination must be outside the candidate worktree". Must run before the mkdir/open in record; verify too (read-only refuse is acceptable).
+Tests (existing test file): add to ExternalEvidenceTests an ancestor-layout test (rename repo to `<tmp>/owned/issue-1300`, evidence `<tmp>/owned`) asserting record launch exit 2, `git status --porcelain --ignored` empty, and no events files under candidate; and a sibling-root success.

@@ -180,6 +180,13 @@ def log_contained(
             item.resolve().relative_to(root)
     except ValueError:
         return "witness log path escapes the evidence directory"
+    top_resolved = repo.resolve()
+    for item in (path.parent, path, lock_path):
+        resolved = item.resolve()
+        if resolved == top_resolved or top_resolved in resolved.parents:
+            return (
+                "derived witness log destination must be outside the candidate worktree"
+            )
     return None
 
 
