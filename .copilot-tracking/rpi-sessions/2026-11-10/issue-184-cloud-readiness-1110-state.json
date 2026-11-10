@@ -3,7 +3,7 @@
   "task_slug": "issue-184-cloud-readiness-1110",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Plan",
+  "active_phase": "Implement",
   "status": "active",
   "session_status": null,
   "artifact_paths": {
@@ -11,7 +11,7 @@
     "plan": ".copilot-tracking/plans/2026-11-10/issue-184-cloud-readiness-1110-plan.md",
     "details": ".copilot-tracking/details/2026-11-10/issue-184-cloud-readiness-1110-details.md",
     "critique": ".copilot-tracking/plans/2026-11-10/issue-184-cloud-readiness-1110-critique.md",
-    "changes": null,
+    "changes": ".copilot-tracking/changes/2026-11-10/issue-184-cloud-readiness-1110-changes.md",
     "review": null
   },
   "confirmed_decisions": [
@@ -34,18 +34,23 @@
       "decision": "Critique executed once, independent read-only rubber-duck; verdict as returned Revise (2 blocking, 3 significant, 2 minor); all 7 findings applied directly, no user decision needed, not repeated",
       "status": "confirmed",
       "evidence": ".copilot-tracking/plans/2026-11-10/issue-184-cloud-readiness-1110-critique.md"
+    },
+    {
+      "decision": "Root re-evaluated the shared-file dependency: ordinary local merge of docs/demo-model-metadata-108-1110 at f241a3681 into the 184 topic (merge 7f9070e8), planned PR target that parent topic, no push or remote write; 108 AI Tokenomics row and log entries immutable; 184 owns only the IoT synthesis subsection, its index row clause, the For #110/#184 paragraph and its own log entry; no further Azure queries",
+      "status": "confirmed",
+      "evidence": "Root resume instruction 2026-11-10; .copilot-tracking/plans/2026-11-10/issue-184-cloud-readiness-1110-amendment.md"
     }
   ],
   "blockers": [
     {
       "id": "kb-ownership-108",
-      "summary": "docs/reference/README.md and docs/reference/log.md are owned by the 108 workstream until merged or an explicit no-KB-change blocked disposition; Implement may not start before Root releases them",
-      "resolution": "Root written release plus exact file ownership, then Phase 1 resume gate in the details"
+      "summary": "Resolved by Root's local declared-stack admission; parent 108 independent review pending",
+      "resolution": "If parent review requires changes, wait for Root's updated parent reconciliation; if parent merges first Root re-evaluates target main"
     }
   ],
   "next_action": {
-    "phase": "Plan",
-    "action": "plan-done recorded (witness seq 3); stage stopped. Wait for Root's 108 shared-KB-file-ownership disposition; do not record implement-start until the details Phase 1 resume gate passes"
+    "phase": "Implement",
+    "action": "record implement-start then make the three KB edits; review only after implement-done"
   },
   "prioritized_follow_ups": [
     {
