@@ -580,16 +580,19 @@ remains subject to the tracking retention policy.
    or a stale `/tmp` template. Write it to a unique
    `/tmp/brief-{number}-{timestamp}.md`, record its path and sha256 in
    session SQL, then record the launch with the local phase witness, run from the root of
-   this checkout (the worker gets its absolute path) with the absolute worktree path:
-   `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --brief /tmp/brief-{number}-{timestamp}.md --session rpi-{number} --actor coordinator --claim-model claude-sonnet-5.5`.
+   this checkout (the worker gets its absolute path) with the absolute worktree path and
+   an absolute evidence directory outside every worktree that you own and create for this
+   launch (`{evidence-dir}`, for example under `~/.local/share/ama/phase-witness/`), so the
+   runtime log and lock never dirty the candidate:
+   `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --brief /tmp/brief-{number}-{timestamp}.md --session rpi-{number} --actor coordinator --claim-model claude-sonnet-5.5`.
    A refusal (exit 2) blocks that launch until its reason is fixed. The
    witness observes its own UTC clock, Git HEAD and tree, dirty source and,
    at later boundaries, the canonical artifacts; it accepts no caller-supplied times, and its record is
    a local writable observation, not tamperproof, not host or model
    attestation and not proof of unobserved reasoning. The brief gives the
    worker the absolute path of this helper, the same `--repo` and `--issue`,
-   and the exact path of the issue's canonical state file (passed as
-   `--state`), and tells it to call
+   the same `--evidence-dir`, and the exact path of the issue's canonical state file
+   (passed as `--state`), and tells it to call
    `record research-open` after persisting the opening state and before
    substantive search, `plan-done`, `implement-start` (changes record
    persisted before any source edit), `implement-done`, `review-done`, and
@@ -698,8 +701,10 @@ remains subject to the tracking retention policy.
    research, plan, changes and review artifacts
    (`gh pr diff {n} --name-only | grep .copilot-tracking`), and the session
    log must show the research, plan and review phases ran. Also run
-   `python3 tools/rpi_phase_witness.py verify --repo {worktree} --issue {number}`
-   and keep its output with the capture of the tmux pane (exit 1 means it
+   `python3 tools/rpi_phase_witness.py verify --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --json`
+   and record its `final.head`, `final.tree` and `final.log_sha256` in session SQL; the log
+   stays in the evidence directory, is never committed, edited or deleted, and may be
+   archived only under the tracking retention policy. Keep its output with the capture of the tmux pane (exit 1 means it
    reported qualifications, including any boundary not yet observed; it is not a
    command failure). Treat each reported
    qualification (refused or missing boundary including launch, out-of-order

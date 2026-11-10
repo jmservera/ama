@@ -79,19 +79,26 @@ def record_hash(record: dict) -> str:
     return hashlib.sha256(blob.encode()).hexdigest()
 
 
-def log_paths(repo: Path, issue: str) -> tuple[Path, Path]:
-    directory = repo / TRACKING / "phase-witness" / f"issue-{issue}"
+def log_paths(
+    repo: Path, issue: str, evidence_dir: Path | None = None
+) -> tuple[Path, Path]:
+    if evidence_dir is not None:
+        directory = evidence_dir / f"issue-{issue}"
+    else:
+        directory = repo / TRACKING / "phase-witness" / f"issue-{issue}"
     return directory / "events.jsonl", directory / "events.lock"
 
 
-def read_log(path: Path) -> tuple[list[dict], list[str]]:
+def read_log(path: Path, data: bytes | None = None) -> tuple[list[dict], list[str]]:
     """Return valid records and structural problems (torn lines, chain breaks)."""
     records: list[dict] = []
     problems: list[str] = []
-    if not path.exists():
-        return records, problems
+    if data is None:
+        if not path.exists():
+            return records, problems
+        data = path.read_bytes()
     previous = ""
-    for number, raw in enumerate(path.read_bytes().split(b"\n"), start=1):
+    for number, raw in enumerate(data.split(b"\n"), start=1):
         if not raw.strip():
             continue
         try:
@@ -152,9 +159,28 @@ def inside_tracking(repo: Path, candidate: Path) -> bool:
     return True
 
 
-def log_contained(repo: Path, issue: str) -> bool:
-    path, lock_path = log_paths(repo, issue)
-    return all(inside_tracking(repo, item) for item in (path.parent, path, lock_path))
+def log_contained(
+    repo: Path, issue: str, evidence_dir: Path | None = None
+) -> str | None:
+    """Return None when the log and lock are acceptable, else the refusal reason."""
+    path, lock_path = log_paths(repo, issue, evidence_dir)
+    if evidence_dir is None:
+        ok = all(inside_tracking(repo, item) for item in (path.parent, path, lock_path))
+        return None if ok else "witness log path escapes the repository tracking root"
+    if not evidence_dir.is_absolute():
+        return "evidence directory must be an absolute path"
+    top = git(repo, "rev-parse", "--show-toplevel", check=False).strip()
+    if not top or Path(top).resolve() != repo.resolve():
+        return "--repo must be the Git worktree root when using an evidence directory"
+    root = evidence_dir.resolve()
+    if root == repo.resolve() or repo.resolve() in root.parents:
+        return "evidence directory must be outside the candidate worktree"
+    try:
+        for item in (path.parent, path, lock_path):
+            item.resolve().relative_to(root)
+    except ValueError:
+        return "witness log path escapes the evidence directory"
+    return None
 
 
 def early_source_changes(repo: Path, records: list[dict], head: str) -> list[str]:
@@ -294,23 +320,34 @@ def check_commit_claim(
         )
 
 
+class Mismatch(Exception):
+    pass
+
+
+def bound_elsewhere(
+    records: list[dict], repo: Path, issue: str, external: bool
+) -> bool:
+    """An in-tree log is bound by its path; only an external log needs the check."""
+    return external and any(
+        r.get("worktree") != str(repo) or r.get("issue") != issue for r in records
+    )
+
+
 def append(path: Path, lock_path: Path, build) -> tuple[dict, bool]:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with lock_path.open("a") as lock:
+    lock_fd = os.open(lock_path, os.O_WRONLY | os.O_CREAT | os.O_NOFOLLOW, 0o644)
+    with os.fdopen(lock_fd, "a") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         records, _ = read_log(path)
         record = build(records)
         data = (
             json.dumps(record, sort_keys=True, separators=(",", ":")) + "\n"
         ).encode()
-        fd = os.open(path, os.O_WRONLY | os.O_APPEND | os.O_CREAT, 0o644)
+        fd = os.open(path, os.O_RDWR | os.O_APPEND | os.O_CREAT | os.O_NOFOLLOW, 0o644)
         try:
             size = os.fstat(fd).st_size
-            if size:
-                with path.open("rb") as handle:
-                    handle.seek(size - 1)
-                    if handle.read(1) != b"\n":
-                        data = b"\n" + data
+            if size and os.pread(fd, 1, size - 1) != b"\n":
+                data = b"\n" + data
             os.write(fd, data)
             os.fsync(fd)
         finally:
@@ -323,21 +360,16 @@ def record_event(args: argparse.Namespace) -> int:
     state_path = Path(args.state) if args.state else None
     if state_path is not None and not state_path.is_absolute():
         state_path = repo / state_path
-    path, lock_path = log_paths(repo, args.issue)
-    if not log_contained(repo, args.issue):
-        print(
-            json.dumps(
-                {
-                    "outcome": "refused",
-                    "reasons": [
-                        "witness log path escapes the repository tracking root"
-                    ],
-                }
-            )
-        )
+    evidence_dir = Path(args.evidence_dir) if args.evidence_dir else None
+    path, lock_path = log_paths(repo, args.issue, evidence_dir)
+    reason = log_contained(repo, args.issue, evidence_dir)
+    if reason:
+        print(json.dumps({"outcome": "refused", "reasons": [reason]}))
         return 2
 
     def build(records: list[dict]) -> dict:
+        if bound_elsewhere(records, repo, args.issue, evidence_dir is not None):
+            raise Mismatch
         now = datetime.now(UTC)
         reasons: list[str] = []
         qualifications: list[str] = []
@@ -413,7 +445,20 @@ def record_event(args: argparse.Namespace) -> int:
         record["record_hash"] = record_hash(record)
         return record
 
-    record, ok = append(path, lock_path, build)
+    try:
+        record, ok = append(path, lock_path, build)
+    except Mismatch:
+        print(
+            json.dumps(
+                {
+                    "outcome": "refused",
+                    "reasons": [
+                        "evidence log is bound to a different worktree or issue"
+                    ],
+                }
+            )
+        )
+        return 2
     print(
         json.dumps(
             {
@@ -431,17 +476,26 @@ def record_event(args: argparse.Namespace) -> int:
 
 def verify(args: argparse.Namespace) -> int:
     repo = Path(args.repo).resolve()
-    path, _ = log_paths(repo, args.issue)
+    evidence_dir = Path(args.evidence_dir) if args.evidence_dir else None
+    path, _ = log_paths(repo, args.issue, evidence_dir)
     notes: list[str] = []
-    contained = log_contained(repo, args.issue)
-    if contained:
-        records, problems = read_log(path)
+    reason = log_contained(repo, args.issue, evidence_dir)
+    log_sha = None
+    if reason is None:
+        data = path.read_bytes() if path.is_file() else b""
+        log_sha = hashlib.sha256(data).hexdigest() if data else None
+        records, problems = read_log(path, data)
         findings: list[str] = list(problems)
         if not records:
             findings.append("no witness records found")
+        findings.extend(
+            f"seq {r.get('seq')} {r.get('event')}: record is bound to a different worktree or issue"
+            for r in records
+            if bound_elsewhere([r], repo, args.issue, evidence_dir is not None)
+        )
     else:
         records = []
-        findings = ["witness log path escapes the repository tracking root; not read"]
+        findings = [f"{reason}; not read"]
     seen: list[str] = []
     previous_utc = None
     for record in records:
@@ -497,8 +551,17 @@ def verify(args: argparse.Namespace) -> int:
             findings.append(
                 "review source is stale: the current source differs from the reviewed source"
             )
+    final = {
+        "head": git(repo, "rev-parse", "HEAD", check=False).strip(),
+        "tree": git(repo, "rev-parse", "HEAD^{tree}", check=False).strip(),
+        "log_sha256": log_sha,
+    }
+    done = last_ok(records, "commit-complete")
+    if done and done["git"]["head"] != final["head"]:
+        findings.append("HEAD differs from the head claimed at commit-complete")
     report = {
         "issue": args.issue,
+        "final": final,
         "records": len(records),
         "findings": findings,
         "notes": notes,
@@ -508,6 +571,7 @@ def verify(args: argparse.Namespace) -> int:
         print(json.dumps(report, indent=2))
     else:
         print(f"records: {len(records)}")
+        print(f"final: head {final['head']} tree {final['tree']} log {log_sha}")
         for line in findings:
             print("QUALIFIED: " + line)
         for line in notes:
@@ -533,6 +597,7 @@ def main(argv: list[str] | None = None) -> int:
     for item in (rec, ver):
         item.add_argument("--repo", required=True)
         item.add_argument("--issue", required=True)
+        item.add_argument("--evidence-dir")
     rec.add_argument("--state")
     rec.add_argument("--brief")
     rec.add_argument("--session")

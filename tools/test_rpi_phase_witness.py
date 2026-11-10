@@ -439,6 +439,141 @@ class IsolationTests(WitnessCase):
         self.assertEqual(records[-1]["brief"]["sha256"], witness.sha256_file(brief))
 
 
+class InTreeBindingTests(WitnessCase):
+    def test_in_tree_log_read_from_a_moved_checkout_is_not_refused(self) -> None:
+        self.observe_launch()
+        moved = Path(self.tmp.name) / "moved"
+        self.repo.rename(moved)
+        self.repo = moved
+        self.assertEqual(self.verify()[0], 1)
+        self.assertNotIn("different worktree", self.verify()[1])
+        self.assertEqual(self.record("research-open")[0], 2)
+
+
+class ExternalEvidenceTests(WitnessCase):
+    """Synthetic automated regressions, not native RPI or HVE fidelity."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        self.evidence = Path(self.tmp.name) / "evidence"
+
+    def record(self, event: str, *extra: str) -> tuple[int, dict]:
+        return super().record(event, "--evidence-dir", str(self.evidence), *extra)
+
+    def verify_json(self, repo: Path | None = None, *extra: str) -> tuple[int, dict]:
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = witness.main(
+                [
+                    "verify",
+                    "--repo",
+                    str(repo or self.repo),
+                    "--issue",
+                    "1300",
+                    "--evidence-dir",
+                    str(self.evidence),
+                    "--json",
+                    *extra,
+                ]
+            )
+        return code, json.loads(out.getvalue())
+
+    def log(self) -> Path:
+        return witness.log_paths(self.repo, "1300", self.evidence)[0]
+
+    def test_launch_to_commit_complete_leaves_candidate_entirely_clean(self) -> None:
+        self.launched_run()
+        self.assertEqual(self.commit_all()[0], 0)
+        self.assertEqual(run_git(self.repo, "status", "--porcelain", "--ignored"), "")
+        code, report = self.verify_json()
+        self.assertEqual((code, report["findings"]), (0, []))
+        self.assertEqual(
+            report["final"]["head"], run_git(self.repo, "rev-parse", "HEAD")
+        )
+        self.assertEqual(
+            report["final"]["tree"], run_git(self.repo, "rev-parse", "HEAD^{tree}")
+        )
+        self.assertEqual(report["final"]["log_sha256"], witness.sha256_file(self.log()))
+        self.assertFalse((self.repo / ".copilot-tracking/phase-witness").exists())
+        self.assertTrue(self.log().with_name("events.lock").is_file())
+
+    def test_head_moving_past_commit_complete_is_qualified(self) -> None:
+        self.launched_run()
+        self.assertEqual(self.commit_all()[0], 0)
+        (self.repo / "later.md").write_text("metadata\n")
+        run_git(self.repo, "add", "later.md")
+        run_git(self.repo, "commit", "-qm", "later")
+        code, report = self.verify_json()
+        self.assertEqual(code, 1)
+        self.assertTrue(any("HEAD differs" in f for f in report["findings"]))
+
+    def test_evidence_directory_inside_or_relative_is_refused_without_writing(
+        self,
+    ) -> None:
+        for bad in (self.repo / "ev", Path("relative-ev")):
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = witness.main(
+                    ["record", "launch", "--repo", str(self.repo), "--issue", "1300"]
+                    + ["--evidence-dir", str(bad), "--brief", "x"]
+                )
+            self.assertEqual(code, 2)
+            self.assertFalse(bad.exists())
+        status = run_git(self.repo, "status", "--porcelain", "-uall").splitlines()
+        self.assertFalse([line for line in status if line.split("/")[0].endswith("ev")])
+
+    def test_substituted_issue_directory_symlink_is_refused_before_any_open(
+        self,
+    ) -> None:
+        self.evidence.mkdir()
+        inside = self.repo / "inside"
+        inside.mkdir()
+        (self.evidence / "issue-1300").symlink_to(inside)
+        brief = Path(self.tmp.name) / "brief.md"
+        brief.write_text("synthetic brief\n")
+        self.assertEqual(self.record("launch", "--brief", str(brief))[0], 2)
+        self.assertEqual(list(inside.iterdir()), [])
+        code, report = self.verify_json()
+        self.assertEqual(code, 1)
+        self.assertIsNone(report["final"]["log_sha256"])
+
+    def test_repo_subdirectory_is_not_accepted_as_the_worktree(self) -> None:
+        sub = self.repo / "sub"
+        sub.mkdir()
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = witness.main(
+                ["record", "launch", "--repo", str(sub), "--issue", "1300"]
+                + ["--evidence-dir", str(self.evidence), "--brief", "x"]
+            )
+        self.assertEqual(code, 2)
+        self.assertFalse(self.evidence.exists())
+
+    def test_log_bound_to_another_worktree_is_not_extended_and_verify_flags_it(
+        self,
+    ) -> None:
+        self.observe_launch()
+        before = witness.sha256_file(self.log())
+        other = Path(self.tmp.name) / "other"
+        other.mkdir()
+        run_git(other, "init", "-q")
+        (other / "a.txt").write_text("a\n")
+        run_git(other, "add", "a.txt")
+        run_git(other, "commit", "-qm", "init")
+        brief = Path(self.tmp.name) / "brief.md"
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = witness.main(
+                ["record", "launch", "--repo", str(other), "--issue", "1300"]
+                + ["--evidence-dir", str(self.evidence), "--brief", str(brief)]
+            )
+        self.assertEqual(code, 2)
+        self.assertEqual(witness.sha256_file(self.log()), before)
+        code, report = self.verify_json(other)
+        self.assertEqual(code, 1)
+        self.assertTrue(any("different worktree" in f for f in report["findings"]))
+
+
 class AdoptionTests(unittest.TestCase):
     def test_coordinator_step_five_invokes_the_helper(self) -> None:
         text = (
@@ -450,6 +585,7 @@ class AdoptionTests(unittest.TestCase):
         for needle in (
             "tools/rpi_phase_witness.py record launch",
             "tools/rpi_phase_witness.py verify",
+            "--evidence-dir",
         ):
             self.assertIn(needle, text)
 
