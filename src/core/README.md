@@ -911,11 +911,17 @@ construction, dry run or close. The command line does not use it and `--apply` s
 * `delete` requires a current exact marker match and deletes with the exact snapshot ETag
   (never `*`); drift is `PRECONDITION_FAILED`.
 * `list_run` is complete or raises `LIST_INCOMPLETE`: the SDK lists at most 1000 devices with
-  no continuation, so a full page is incomplete.
-* Errors are fixed codes without SDK response text.
+  no continuation, so a full page is incomplete. Every listed entry without a string
+  `statusReason`, enrolled or not, is confirmed by one metadata read, at most 100 per call;
+  an exactly marked identity is returned even if it is not enrolled, so whole-run teardown
+  refuses before deleting. An unreadable confirmation or an exhausted budget refuses.
+* Errors are fixed codes without SDK response text. A refusal raised inside a caller's
+  `except` block hides that caller's exception from the printed traceback
+  (`__suppress_context__`); the context object stays reachable to code that walks it.
 
 Limits. Tests run the real SDK against a simulator of the documented REST conditional-header
 table; Azure behaviour (412, status codes, ETag format, list limits, RBAC) is unobserved.
+A hub with more than 100 unmarked devices in one listing makes `list_run` refuse, not guess.
 One process per run ID; cross-process contention is not fenced. An injected client may keep
 its own transport retries. The Registry-before-credential order and the lack of an
 authentication update remain unresolved, and credential issuance, storage, rotation and

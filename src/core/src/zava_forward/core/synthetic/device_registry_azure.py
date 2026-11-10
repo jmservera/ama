@@ -39,6 +39,8 @@ class RegistryError(RuntimeError):
 
     def __init__(self, code: str, readback: str | None = None) -> None:
         super().__init__(code)
+        # A raise inside a caller's except block would otherwise print the caller's exception.
+        self.__suppress_context__ = True
         self.code = code
         self.readback = readback
 
@@ -303,7 +305,7 @@ class AzureIotHubRegistry:
             raise RegistryError("DELETE_OUTCOME_UNKNOWN", readback)
 
     def list_run(self, run_id: str) -> Sequence[str]:
-        """Every enrolled-or-listed identity carrying the run marker, or an explicit refusal."""
+        """Every identity carrying the exact run marker, or an explicit refusal; never a subset."""
         self._run(run_id)
         outcome = self._invoke(lambda devices: devices.get_devices(top=MAX_LIST))
         if outcome.failed:
@@ -314,6 +316,7 @@ class AzureIotHubRegistry:
         if len(listed) >= MAX_LIST:
             raise RegistryError("LIST_INCOMPLETE")
         found: set[str] = set()
+        confirmations = 0
         for item in listed:
             device_id = getattr(item, "device_id", None)
             reason = getattr(item, "status_reason", None)
@@ -321,8 +324,11 @@ class AzureIotHubRegistry:
                 raise RegistryError("UNAVAILABLE")
             if reason == self._spec.marker:
                 found.add(device_id)
-            elif not isinstance(reason, str) and self._spec.enrollment(device_id) is not None:
-                # A payload that omits the marker cannot prove absence of ownership.
+            elif not isinstance(reason, str):
+                # A payload without the marker cannot prove absence of ownership, enrolled or not.
+                confirmations += 1
+                if confirmations > device_identity.MAX_DEVICES:
+                    raise RegistryError("LIST_INCOMPLETE")
                 read = self._read(device_id)
                 if read.state == "present":
                     if _owner(getattr(read.device, "status_reason", None)) == run_id:

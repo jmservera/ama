@@ -593,8 +593,9 @@ class ListTests(HubCase):
         self.hub.put_device("SYN-B1", dra.MARKER_PREFIX + "other-run")
         self.hub.put_device("SYN-B2", None)
         self.assertEqual(self.registry().list_run(RUN), ["SYN-A1", "SYN-A2"])
-        (get,) = self.hub.requests
-        self.assertEqual(parse_qs(urlsplit(get.url).query)["top"], ["1000"])
+        list_request, *confirmations = self.hub.requests
+        self.assertEqual(parse_qs(urlsplit(list_request.url).query)["top"], ["1000"])
+        self.assertEqual([c.path for c in confirmations], ["/devices/SYN-B2"])
 
     def test_list_below_the_cap_is_complete_and_saturation_is_refused(self) -> None:
         self.hub.put_device("SYN-A1", MARKER)
@@ -613,12 +614,35 @@ class ListTests(HubCase):
         self.hub.put_device("SYN-A1", MARKER)
         self.hub.put_device("SYN-A2", "someone else")
         self.hub.put_device("SYN-B1", MARKER)
+        self.hub.put_device("SYN-B2", None)
+        self.hub.put_device("SYN-B3", dra.MARKER_PREFIX + "other-run")
         self.hub.list_omits_reason = True
-        self.assertEqual(self.registry().list_run(RUN), ["SYN-A1"])
-        self.assertEqual(len(self.hub.seen("GET")), 3)
+        self.assertEqual(self.registry().list_run(RUN), ["SYN-A1", "SYN-B1"])
+        self.assertEqual(len(self.hub.seen("GET")), 6)
         self.hub.faults.append(Fault("GET", "before", 500))
         self.hub.faults.insert(0, Fault("GET", "before", "timeout"))
         self.assertEqual(self.refused(lambda: self.registry().list_run(RUN)).code, "UNAVAILABLE")
+
+    def test_unreadable_confirmation_of_a_non_enrolled_entry_refuses(self) -> None:
+        self.hub.put_device("SYN-B1", MARKER)
+        self.hub.list_omits_reason = True
+        for effect, code in ((403, "ACCESS_DENIED"), (500, "UNAVAILABLE")):
+            self.hub.faults.append(Fault("GET", "before", effect, device="SYN-B1"))
+            self.assertEqual(self.refused(lambda: self.registry().list_run(RUN)).code, code)
+
+    def test_confirmation_budget_is_bounded_and_exhaustion_refuses(self) -> None:
+        budget = di.MAX_DEVICES
+        for n in range(budget):
+            self.hub.put_device(f"SYN-C{n}", None)
+        self.hub.list_omits_reason = True
+        self.assertEqual(self.registry().list_run(RUN), [])
+        self.assertEqual(len(self.hub.seen("GET")), budget + 1)
+        self.hub.requests.clear()
+        self.hub.put_device("SYN-CX", MARKER)
+        refusal = self.refused(lambda: self.registry().list_run(RUN))
+        self.assertEqual(refusal.code, "LIST_INCOMPLETE")
+        self.assertEqual(len(self.hub.seen("GET")), budget + 1)
+        self.assertEqual(self.hub.seen("PUT") + self.hub.seen("DELETE"), [])
 
     def test_list_failures_are_explicit(self) -> None:
         for effect, code in (
@@ -665,6 +689,50 @@ class SanitisedErrorTests(HubCase):
                 self.assertIsNone(error.__context__)
                 self.assertEqual(str(error), error.code)
         self.assertNotIn(SECRET, repr(registry))
+
+    def test_refusals_raised_inside_a_caller_handler_do_not_print_the_callers_exception(
+        self,
+    ) -> None:
+        caller = "CALLER-PRIVATE-SENTINEL-185"
+        self.hub.put_device("SYN-A2", MARKER)
+        registry = self.registry()
+        failing = Credential(fail=True)
+        thumb_a = thumb(1)
+
+        def fault(
+            method: str, effect: str | int, call: Callable[[], object]
+        ) -> Callable[[], object]:
+            def run() -> object:
+                self.hub.faults.append(Fault(method, "before", effect))
+                return call()
+
+            return run
+
+        scenarios: dict[str, Callable[[], object]] = {
+            "invalid configuration": lambda: dra.AzureIotHubRegistry("bad", make_spec()),
+            "invalid enrolment": lambda: dra.X509Enrollment("bad", thumb_a),
+            "invalid spec": lambda: dra.EnrollmentSpec("", ()),
+            "not enrolled": lambda: registry.create("SYN-ZZ", RUN),
+            "wrong run": lambda: registry.list_run("other"),
+            "create 403": fault("PUT", 403, lambda: registry.create("SYN-A1", RUN)),
+            "create timeout": fault("PUT", "timeout", lambda: registry.create("SYN-A1", RUN)),
+            "conflict": lambda: registry.create("SYN-A2", RUN),
+            "read denied": fault("GET", 403, lambda: registry.run_of("SYN-A1")),
+            "read unavailable": fault("GET", 500, lambda: registry.run_of("SYN-A1")),
+            "delete 412": fault("DELETE", 412, lambda: registry.delete("SYN-A2", RUN)),
+            "list unavailable": fault("GET", "timeout", lambda: registry.list_run(RUN)),
+            "credential": lambda: self.registry(credential=failing).run_of("SYN-A1"),
+        }
+        for label, run in scenarios.items():
+            with self.subTest(scenario=label):
+                try:
+                    raise RuntimeError(caller)
+                except RuntimeError:
+                    error = self.refused(run)
+                text = "".join(traceback.format_exception(error)) + repr(error)
+                self.assertNotIn(caller, text)
+                self.assertTrue(error.__suppress_context__)
+                self.assertIsNone(error.__cause__)
 
 
 class ClientOwnershipTests(HubCase):
@@ -750,6 +818,20 @@ class ExistingProtocolIntegrationTests(HubCase):
         registry = self.registry(self.spec_for(manifest))
         error = self.refused_identity(lambda: di.provision(manifest, registry, FakeStore()))
         self.assertEqual(str(error), "PROVISION_FAILED_ROLLED_BACK")
+        self.assertEqual(json.dumps(self.hub.devices, sort_keys=True), before)
+
+    def test_whole_run_teardown_refuses_with_a_hidden_marked_identity_and_deletes_nothing(
+        self,
+    ) -> None:
+        manifest = self.manifest()
+        registry, store = self.registry(self.spec_for(manifest)), FakeStore()
+        issued = di.provision(manifest, registry, store)
+        self.hub.put_device("SYN-HIDDEN-1", MARKER)
+        self.hub.list_omits_reason = True
+        before = json.dumps(self.hub.devices, sort_keys=True)
+        error = self.refused_identity(lambda: di.teardown(issued, registry, store))
+        self.assertEqual(str(error), "TEARDOWN_MANIFEST_INCOMPLETE:1")
+        self.assertEqual(self.hub.seen("DELETE"), [])
         self.assertEqual(json.dumps(self.hub.devices, sort_keys=True), before)
 
     def refused_identity(self, call: Callable[[], object]) -> di.DeviceIdentityError:
