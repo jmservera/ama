@@ -1,0 +1,1 @@
+cd src/core && HOME=/tmp/ama-1292-scratch ZF_DATA=/tmp/ama-1292-scratch/none.json PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src:tests python3 -m unittest -k priority test_sqlstore test_sqlqueues test_sqlreads -q

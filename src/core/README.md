@@ -6,6 +6,114 @@ ms.date: 2026-10-31
 ms.topic: reference
 ---
 
+## Retained sensor readings for employees and Quality evidence (Refs #1288, #107)
+
+`sensor_view` is a read-only, bounded view of retained synthetic `sensor_reading`
+rows for one home (`home_id`, indexed with `observed_at`). `Assistants.sensors`
+(API `GET /api/cases/{id}/sensors`) shows values, units (degC, %RH), UTC times,
+freshness and provenance to Quality Inspector and Retrofit Programme Manager
+only; the Programme Support Officer keeps the ordinary quality panel and manual
+route. `capture_source` holds the newest 12 readings (so the displayed latest is
+always inside the capture) plus at most 4 before and 4 after the first quality
+evidence record. The capture takes an as-of time only as a filter (it is not stored): readings
+dated after it are excluded and reported as `future_dated_excluded`, never shown
+as latest or fresh; the window is bounded to 366 days and context to 30 days
+around the anchor. The same exact capture feeds the snapshot, the UI, the
+citations `sensor:{sensor_id}:{reading_id}` (the retained composite key) and the
+task identity and staleness, so a new reading or context change in the same
+six-hour bucket stales the old proposal. Only proactive scan scheduling uses the
+coarse six-hour signature, so arrivals do not enqueue work each time, and empty,
+withheld or unavailable captures stay stable.
+
+Provenance is classified from the retained schema and scenario:
+`live-sim-reading*` with scenario `live-simulator` is synthetic and
+weather-derived; `reading-v1` and `sensor-fault-input-v1` are synthetic modelled
+indoor; anything else is synthetic and unclassified. None is calibrated. No
+installation date or marker exists, so pre/post-retrofit context is stated as
+unavailable; the first quality evidence record time is a separately named
+`quality_record_anchor`, not a retrofit effect. Consent is read from the indexed
+`sensor_consumer_control_home` table (at most 100 controls for the home); any
+declined control wins, and an absent, incomplete or unindexed set is unknown. When current consent is withdrawn, values,
+citations, derived output (including uncited text and `edited_output`) and flags are withheld from the detail, list and
+export projections (the stored record is kept). C3: a capture holding only old
+before/after context is still a sensor capture, so withdrawal withholds it. Verification,
+review and event notes are withheld too, verify/accept are refused while withheld, and
+rejecting keeps the stored snapshot and output (the original returns with consent). A task
+records whether a person requested it (`manual_requested`); only an explicit `false` makes a
+dispatch proactive, so a missing or unclear value is "requested". The coarse schedule throttles
+every proactive branch, including quality gaps, never a manual request or a non-sensor change.
+`Assistants.migrate()` and `SensorConsumer.migrate_control_index()` reconcile the control index
+from the stored controls (adds missing rows, removes orphans, never writes policy, controls or
+consent). C4: each reconcile also rewrites a marker (`sensor_consumer_index_state`: total count and a
+digest of every home's sensor set); readers withhold consent unless the marker, both counts and the
+home's digest agree, so an equal-count wrong-home, missing-plus-orphan or failed reconcile fails
+closed. A residual out-of-band edit that restores counts and the home digest is not detectable.
+The proactive schedule is scoped to the current release and continuity epoch and compares the
+latest serviced task, so a release or epoch change, or a non-sensor A-to-B-to-A change, is new
+work; a task that went stale before any model call does not throttle its replacement. A request
+sets only the durable `manual_requested` flag and never rewrites a dispatch already claimed. The
+evidence rule states both horizons: newest readings within 366 days, and context readings within
+30 days of the quality record time, which may be older.
+C5: SQL guard triggers on `sensor_consumer_control` delete the index marker on any control write
+outside `configure` or reconcile, and the marker carries `v: 2`, so a changed control home, an older
+marker or a missing guard fails consent closed until `migrate()`. Scheduling reads one compact
+`assistant_schedule` row and the exact task by primary key (no task-body scans). C6: a queued
+proactive task is never refreshed in place; if newer same-schedule readings arrive before its claim it
+is marked stale and the current capture becomes its own task (at most three replacements without a
+dispatch, reset by a dispatch), so evidence identity always matches the task and a later request reuses
+it. A manual request never services the autonomous Quality flag. Pre-upgrade tasks are adopted once per
+case from the newest dispatched, non-requested task of the same release and epoch (index
+`ix_assistant_case`); unrecorded history is never treated as approved. Before readings leave for the
+provider, the final consent check and an `assistant_dispatch_hold` row commit in one transaction;
+`SensorConsumer.configure` (a withdrawal) waits for a live hold, bounded by the provider timeout plus a
+5 second grace on the database clock, then fails with `SENSOR_DISPATCH_IN_FLIGHT`. The hold covers one
+home and one call, not a global lock; a hold that cannot be written sends nothing. A direct SQL write
+that bypasses `configure` is outside this guarantee (the guard trigger invalidates the marker but
+cannot recall a call). The SQL Server DDL for the hold, schedule and index is written but not yet
+C7: the dispatch authorisation is now a per-attempt fence row in `assistant_dispatch_gate`
+(home, task, fence) written in the same transaction as the final consent check. The shipped `Ai`
+transport calls the gate after connect and before the first request byte, and refuses to send once a
+monotonic send-by deadline inside the database expiry has passed, so a stalled thread cannot send
+after the row could lapse. An attempt releases only its own fence. A provider that does not honour
+the gate (a test double or foreign provider) is covered only by a check immediately before the call.
+`SensorConsumer.configure` waits only for gates of the homes whose controls actually change (old and
+new home of a moved sensor). `migrate()` adds `assistant_schedule.replaced` and
+`assistant_tasks.dispatched` to existing C5/C6 tables idempotently on both backends and backfills
+`dispatched` from claim events. Adoption reads at most five rows by `dispatched`. After three
+replacements a stale task pauses (truthful message, manual request still available) until a quiet
+period; a late manual request does not refresh the slot or reattribute the frozen proactive call.
+The review flag compares cited reading content, reporting changed or missing cited rows apart from
+extra uncited rows, or unknown. Residual limits: a direct SQL write that bypasses `configure` and a
+process suspension between the last monotonic check and the kernel send are not closed; SQL Server
+statements (gate table, `COL_LENGTH` ALTER, index, `OFFSET/FETCH`) and query plans are unexecuted.
+E1 (issue 1288, local candidate) supersedes the residual limits above: the control guard trigger now
+rejects any INSERT, UPDATE or DELETE (and an invalid JSON body) for a home with a live gate row on the
+database clock, so a direct SQL withdrawal cannot commit during a send; `Ai` sends in 16 KiB chunks and
+checks the gate and caps the socket timeout before every chunk; the API wires `store.ai` as a gate-aware
+transport and holds to the manual route when a provider neither honours the gate nor declares
+`sends_no_bytes`; adoption pages at most 5 rows by 20 pages and records an explicit `incomplete-history`
+marker rather than treating an unfinished search as no history; coalescing measures its quiet interval
+from the last observed change; an unavailable or withheld current capture compares as unknown, never
+as missing. The guard, schedule and adoption changes ran on a disposable SQL Server 2022 container.
+Still not closed: a process or VM suspension longer than the margin between the last in-process
+check and the kernel send, changes that revert between scans, and TLS (chunk-bounded, tested on plain
+loopback only).
+
+executed against SQL Server. A returned proactive flag stays a review-suggested flag in the case panel
+with its captured as-of, freshness and age, and whether the current authorised capture differs from the
+readings it cited. Consent is checked again before dispatch and
+immediately before the provider call. The request carries the as-of time and a fresh, stale or unknown
+freshness state; readings dated beyond the next day are reported as future-dated, not absent.
+
+`review_flag` names the state of a returned model output. Only a proactive,
+current, returned finding that cites a captured reading is an automatic L4
+review flag (`review-suggested`); manual, uncited, rejected, reviewed,
+not-current and withheld states are shown as such. A flag is an unapproved
+request for human review, with no recorded recipient or delivery, and is not
+acceptance, payment, defect closure, consent, hazard diagnosis or a ranking
+change. The quality-evidence rule hash changed, so activation needs a matching
+release.
+
 ## Ranking snapshot publication (Refs #79)
 
 `ranking_publication.publish(snapshot, archive_dir, published_on)` archives a
@@ -22,6 +130,33 @@ message, not 403, and writes no record or audit entry. If the record is committe
 its staging file cannot be removed, the result still reports the record and the
 retained file (`stage_retained`, runner warning `stage_not_removed`, a `warning` in the
 manual response); an operator removes it. No clock is read: dates are inputs. `SCHEDULE` states the daily contract the deployment must meet.
+
+Blob JSON persistence (owner decision on #1258, 2026-11-08; Refs #1258): setting
+`ZF_RANKING_ARCHIVE=azure-blob` with `ZF_BLOB_ACCOUNT_URL`,
+`ZF_RANKING_BLOB_CONTAINER` and either `ZF_BLOB_SAS` or the managed identity
+(`ZF_BLOB_CLIENT_ID` optional) selects `ranking_archive_blob.BlobRankingArchive`
+for the Store, the API routes and the runner (`--blob`). `publish` is one
+create-only Put Blob (`If-None-Match: *`) of the dated record with verifiable
+metadata (policy version, as-of date, publication date, snapshot hash and the
+SHA-256 of the stored bytes); a conflict reads the existing record back and
+reports it as already published, so concurrent writers keep one record. The adapter
+can only create, read and list; there is no overwrite or delete, and the location
+is configuration, never caller input. Errors name an HTTP status only, never the
+account, container, URL or credential. A write whose outcome is unknown after the
+request was sent (lost response, timeout, 5xx) raises
+`ArchiveWriteUncertainError` (a `DurabilityUnconfirmedError`): the API answers 409
+`committed_unconfirmed`, the runner status is `committed_unconfirmed`, nothing is
+rolled back and nothing is claimed as written; repeating the same publication
+confirms it. An unreadable listing is an error, never an empty archive: a
+non-200 status, invalid XML, a root other than `EnumerationResults`, a missing
+`Blobs` element or a `Blob` without one plain `Name` are all refused with a fixed
+message, while a valid empty `Blobs` is an empty archive. Selecting
+Blob never falls back to a folder; an unset selector keeps the local folder
+adapter, which is for development and tests only (its fsync is no evidence that a
+container persists a record). Evidence for the Blob path is a mock REST
+transport, not an emulator or a storage account. Not covered here: the container,
+immutability policy and role grant, the deployment setting, and existing folder
+records, which are not migrated (a Blob archive starts empty).
 
 Wiring (slice 2): `Store.publish_ranking_snapshot` (API `POST /api/ranking/publish`)
 archives today's snapshot under the current policy into `ranking-archive/` beside
@@ -365,6 +500,79 @@ Focused local constructed tests:
 python3 -m unittest discover -s tests -p test_resident_decisions.py -q
 ```
 
+## Formal-complaints route boundary (#86)
+
+`complaints_route.py` defines a small receiver boundary and the
+`service_forward` resident action. It is a human-invoked step on one Complaint
+or Independent review request, never sent automatically. The default
+`ZF_COMPLAINTS_ROUTE=unconfigured` (the only accepted value) sends nothing and
+records an `Unconfigured` attempt. No real receiver, destination, appointment
+or transport exists; tests inject a synthetic receiver.
+
+Each attempt is appended to `formal_route.attempts` and the local request is not
+changed. Local recording and a receiver receipt stay separate: only a non-empty
+`receipt_ref` from the receiver gives `Acknowledged`; a receiver error or
+malformed reply gives `Unconfirmed` (receipt unknown, not proof of non-receipt),
+and only a receiver that raises `NotSent` gives `Failed` with `not_sent`. A send
+whose outcome could not be saved stays `Pending`. `Pending`, `Unconfirmed` and
+legacy `Failed` attempts without `not_sent` are unresolved: a resend needs
+`retry_unresolved` after reconciliation, and the in-flight check is per store
+instance only. The outcome is bound to the reservation id the send committed.
+Independent review forwarding needs the named reviewer's own identity (code or
+oid continuity), with no manager bypass; unknown identity fails closed.
+All attempts share one `route_key` idempotency key. The caller must supply
+`resident_request_ref`, the staff reference showing the resident asked for the
+send; consent is never inferred. Only the redress owner or a manager can send a
+complaint, and only the named, independent reviewer can send an independent
+review. Holds do not block the route. Retention deletion clears the resident
+reference and requester identity. The envelope is an allow-list of existing
+staff-entered fields; free text is not screened, which a real receiver needs a
+DPO/Legal decision for. Resident-facing text still says nothing is sent to a
+live service; this adds no web control and does not prove resident access
+without detriment.
+
+Pending supersession (#1238, owner decision Q6 `manual_verified`, 2026-11-08):
+the `service_supersede_authorize` action marks a `Pending` attempt `Superseded`
+only after two separate authorizations on the same verified-outcome evidence
+reference (at most 100 characters; a reference, not resident detail), one by
+the control owner and one by the reviewer. Who holds those two roles comes only
+from an explicit, immutable `SupersessionBinding` that trusted composition sets
+as `store.supersession_binding` (the same instance-level seam as
+`complaints_receiver`). It is unset by default, so the action fails closed with
+a `PermissionError` and writes nothing. A binding is never created from staff
+roles, a request's owners, persisted rows, references or a request body, and
+there is no environment switch or route to set one. This change populates no
+binding: its actual named content, and any activation or rotation process, is
+a human gate. Both people must be registered persisted identities matching the
+binding, different people, with no manager bypass; on an Independent review the
+reviewer must also not be the contested decision maker. A stored approval
+counts only when it carries the digest of the binding now in force, names the
+bound person and has its matching hash-chained audit entry, whose detail holds
+a digest of the exact approval payload (case, request, reservation, attempt,
+role, bound identity, binding id and digest, and a hash of the evidence
+reference; the evidence text is never logged). Changing the stored evidence
+reference or restamping the binding digest on an earlier approval therefore
+stops it counting, as do legacy generic audit entries; otherwise it moves
+to `withdrawn`. Changing the binding therefore withdraws earlier approvals, but
+restoring an earlier binding revalidates approvals that carry its digest, so
+rotation and restoration are unsupported (use a new `binding_id`); a writer who
+also forges audit entries breaks the audit chain, which this action does not
+re-verify per call. The evidence is a reference the two people vouch for; the
+code cannot verify it, and synthetic tests show the gate, not human approval.
+The original attempt record, reservation, receipt reference, route idempotency key and audit
+entries are kept. Age is never an input and no timeout exists: an aged
+`Pending` attempt stays `Pending`. Supersession sends nothing and does not
+authorize a resend: a later send still needs `retry_unresolved` and the usual
+owner or named-reviewer rights, and a `Superseded` attempt still counts as
+unresolved. A late outcome for a superseded attempt is refused and its
+`receipt_ref` logged. Limits: the in-flight check is per store instance;
+a receipt found by verification has no manual recording path (do not
+supersede, reconcile with the receiver); the evidence reference is kept
+by retention deletion.
+
+Focused command: from `src/core`, `PYTHONPATH=src:tests python3 -m unittest
+test_resident_decisions -q`.
+
 ## Unapproved working field review (#96, #98, #99)
 
 `form_review.action(store, user, case_id, body)` supports `open`, `review` and
@@ -535,6 +743,16 @@ duplicate, incomplete or irregular series raise explicit errors, not a pass.
 Use explicit SQL observation queries plus trusted persisted control units, not
 relabelled incoming units, when constructing the observed input.
 
+`weather_report(observed, reference, handover=..., cadence_minutes=5)` is the separate
+`synthetic-weather-continuity-v1` check for `live-sim-reading-v1` rows: live simulated
+weather against synthetic weather history from `live_readings.Generator` with another seed
+and scenario `weather-backfill-v1` (same homes, slots, units and three channels, no
+`calibrated` field). Tolerances are engineering bounds from the declared generator constants,
+not an approved operational tolerance, and the output is a constructed distribution check, not
+witnessed Azure continuity, physical accuracy or calibration. It never accepts indoor rows, and
+equal declared seeds are refused (`HANDOVER_REFERENCE_NOT_DISTINCT`); distinct seeds still do not
+authenticate independent generator provenance.
+
 The JSON-compatible result includes `passed`, declared tolerances and per-home
 before/after counts, channel means and population standard deviations.
 `Tolerance(point=0, mean_step=0, stddev=0)` is the default for each of the
@@ -630,6 +848,17 @@ offline and secret-free. Retrying `rotate` after `ROTATION_REVOKE_FAILED` or
 supported recovery is `teardown(error.new_manifest, ...)` using the non-secret
 manifest carried by `DeviceIdentityError`.
 
+`synthetic.device_provision` is a dry-run-by-default command that maps each consenting
+stock home to one `SYN-` device ID and prints non-secret references only. `--apply` is
+refused unless a real credential owner is named and trusted code supplies a `Registry`
+and `CredentialStore`; this repository ships neither, so the command line cannot touch
+Azure and creates no credential. Declined and unknown-consent homes get no identity.
+
+```bash
+python -m zava_forward.core.synthetic.device_provision --register register.csv \
+  --homes 30 --run-id run-185 --owner "<named owner>"
+```
+
 ## Journey ownership register and human-review routing (#128)
 
 `journey_register.draft()` lists journeys J1 to J6 and R1 against the eight AC-071
@@ -644,7 +873,10 @@ data only; no usability, accessibility or fairness evidence. See the
 `paired_equity.evaluate(pairs, anchors, seeded_defects, rank)` checks constructed pairs that
 differ in one attribute (sensor completeness, support or contact need, appointment history) and
 requires the subject to rank no lower than the reference and its review route to have no rank
-effect. It reports tested and failed counts per dimension, never averages a failing dimension
+effect. Each dimension has a fixture-local predeclared contrast (not a production mapping or
+approved policy); confounded, no-contrast or mislabeled pairs, and pairs whose case ID is missing or
+shared with an anchor, are listed in `invalid_pairs`,
+block the record and are not counted as tested. It reports tested and failed counts per dimension, never averages a failing dimension
 away, and blocks on a missing dimension or an undetected seeded defect. It uses the deterministic
 policy by default, approves nothing and is not fairness evidence; AI task cohorts are not covered.
 
@@ -670,9 +902,16 @@ Current SQL controls and mapped-home existence are checked within each database
 writer transaction. A payload's home, source label or `calibrated=true` never grants
 mapping, consent or calibration authority.
 
-Input is the closed `sensor-fault-input-v1` observation shape from
-`synthetic.sensor_faults.READING_FIELDS`, not Packet labels/clean rows/evaluator
-truth. The [shared field reference and measured daily accounting](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
+Input is one of two separately validated closed branches selected by
+`schema_version`, each refusing the other's key set, never Packet labels/clean
+rows/evaluator truth: the 13-field indoor `sensor-fault-input-v1` shape from
+`synthetic.sensor_faults.READING_FIELDS`, and the 16-field synthetic-weather
+`live-sim-reading-v1` envelope from `sensor_consumer.LIVE_FIELDS` (version in
+`synthetic/live_readings.py`; no `calibrated` field; outdoor weather, not indoor
+evidence, authenticated provenance or calibrated continuity). The field rules
+below describe the indoor branch; the live branch keeps sunlight and the original
+fields in the lossless `retained_envelopes` witness, not a new reading column.
+The [shared field reference and measured daily accounting](../../docs/reference/research/iot-sensor-analytics-research-plan.md#shared-observation-contract-and-volume-2026-10-18-refs-186)
 describe this imported authority without another schema: three paired records/
 home/day gives 3N records, not a selected wire-message count. Stock-derived
 73-character lowercase-hex sensor IDs are incompatible with this consumer;
@@ -774,8 +1013,12 @@ method sign-off and R3 limits that gate any measure beyond an exercise rule.
 
 `sensor_analysis_store.analyse_retained(consumer, home_id, window, as_of)` runs
 the derivation over readings retained in the SQL store. It uses only read-only
-`SensorConsumer` methods: `observed_series` for the window and `home_consent`
-for trusted consent (any declined control declines the home; anything other
+`SensorConsumer` methods: `retained_envelopes` for the window and `home_consent`
+for trusted consent. `live-sim-reading-v1` rows are climate-shaped outdoor
+readings, not indoor measurements: they are never passed to the indoor
+derivation, and a window holding only such rows is `INSUFFICIENT` with reason
+`WEATHER_INPUT_NOT_INDOOR_MEASUREMENT`. A weather-to-indoor model is separate,
+versioned and approved scope (any declined control declines the home; anything other
 than all-granted is unknown). If the store cannot be read, the result is
 `INSUFFICIENT` with reason `RETAINED_READINGS_UNAVAILABLE` and priority effect
 `NONE`; the manual review route is unchanged. It writes nothing and creates no
@@ -1356,7 +1599,9 @@ PYTHONPATH=src/core/tests:src/api:src/api/tests:src/agents/tests \
 
 `ZF_RESIDENT_MSSQL=1` enables `MssqlResidentControls` against an explicitly
 task-owned loopback SQL Server configured through `ZF_SQL_*`. Each test creates/
-drops only its UUID-named `zf_resident88_*` database. Never use shared/live SQL.
+drops only its UUID-named `zf_resident88_*` database; a test that supplies its own
+seed through `reseed` gets a second such database, because a seeded SQL store
+ignores a new seed file. Never use shared/live SQL.
 ## Consultation records and confirmation holds (#92)
 
 The existing provider package is the contract/call-off reference record.
@@ -4699,3 +4944,85 @@ Manual path: staff print or read the pack and key the worker's notes through the
 `submit_quality` form; no AI is involved. Not delivered: persistence, API and screens, the provider
 identity decision (#116), the owner decision on staff-mediated intake versus a provider portal, and
 accessibility proof. Tests: `src/core/tests/test_job_pack.py`.
+
+## Priority recommendation creation order (#1292)
+
+`Store.latest_priority` returns the newest eligible proposal for the requesting user, excluding
+`ai_task` rows: the last such row in creation order. The in-memory store appends, so list order is
+creation order. The SQL stores persist that order in `recommendations.created_ord`, an immutable
+ordinal assigned once at insert (current maximum plus one inside the serialised write; rows saved
+together get consecutive values in creation order) and never updated. Reload reads
+`ORDER BY created_ord, id`, cold or incremental, and the cached list is re-sorted by ordinal after a
+load or a save, so a later edit or a concurrent commit cannot move a proposal. `seq` (last write) and
+the second-resolution `created` text are not used for ordering. Ordering is data only: review,
+approval, consent and ranking policy are unchanged and a proposal never becomes a decision.
+
+Legacy rows have no stored creation order, so the migration derives one and records what it could
+not establish. Audit evidence is trusted only when the chain verifies, matches the retained audit
+head and any retained daily or year digests (re-checked when the digest files change, and for any
+entry appended to a sealed year), and the `ai_run_end priority_recommendation <id>` event is not
+contradicted by the insertion `seq` of an unedited row. Rows without usable evidence fall back to
+body `created`, then `seq`, then `id`, merged among audited rows by `created`.
+
+Order is never proven by absence of contradiction. For an employee, the newest eligible record is
+confirmed only if, inside its backfill batch, every other eligible record is provably earlier: both
+rows unedited, both audit positions present, and the audit order and the distinct insertion `seq`
+agree. The wall clock proves nothing, because it can step back. Ties, edited rows, orphan or late
+creation events (an event does not prove it committed with its row), a missing audit and a timestamp
+alone are unproven and the newest record is flagged. The batch also follows every row that already had
+an ordinal, because save and reload repair before they publish, so it is confirmed only when the
+employee's previous newest record is not itself unresolved; that check reads a small indexed page
+(`ix_recs_user_ord`), never the history. Ordinals are never changed to resolve this.
+
+Ambiguity is visible. Every backfill batch writes its own `meta` key `rec_order_batch:<n>` (counter
+`rec_order_batches`; counts, ordinal range, audit flags and up to 100 ambiguous ids), and
+one `rec_unres:<id>` row per unresolved newest record (primary-key lookup, written once, so a batch
+costs only its own flags; the earlier single `rec_order_unresolved` list is copied once and left
+untouched). When the newest eligible proposal of an employee is unresolved, the store marks it
+`order_confirmed` false, `actionable` false, `relied_on` false and adds an `order_note` naming the
+data owner. This holds for `latest_priority` and every other view of that record, and the server
+refuses direct accept and edit requests with a permission error; rejecting stays available, as do
+the ordinary case controls. The same projection applies to the full and limited continuity exports
+(`order_confirmed`, `actionable`, `relied_on` for proposed, accepted and edited records), and the
+priority panel shows the note for reviewed records after a reload too. Other employees and `ai_task` rows
+are unaffected. The original `rec_order_legacy` and `rec_order_backfills` records are never
+rewritten. The C1 list `rec_order_backfills`, the single `rec_order_legacy` row and every
+`rec_order_batch:<n>` row are read, validated and coalesced into ordinal ranges in one pass; any
+malformed entry makes every ordinal suspect. A present `rec_order_legacy` row is valid only as a
+JSON object whose `rows` is a positive integer (the only producer writes it solely when rows were
+backfilled); invalid JSON, an empty value, a non-object, a missing, zero, negative, string, boolean
+or fractional count is malformed, while an absent row means no legacy backfill. Every database without the `rec_order_review` marker is reviewed once at migration (batch
+source `review`, whatever batch metadata exists): ordinals assigned by a heuristic backfill are
+assessed without changing any, so earlier-candidate and cross-timestamp inversions are found. The
+named data owner decides how flagged records are resolved; this change adds no resolution mechanism
+and invents no order.
+
+Mixed-version fence: a pre-fix binary can insert ordinal 0 at any time, because every writer bumps
+`meta.seq` in the same commit as its rows. Reload therefore reads the sequence, fetches, and reads the
+sequence again; a changed sequence retries (bounded) and a fetched zero ordinal is repaired under the
+writer lock and re-read, so a zero ordinal is never cached or served and exhaustion fails the read.
+Queue lookups synchronise before their transaction and re-check the sequence inside it, so a rolled
+back transaction publishes no cache state. A save repairs zero rows before allocating its own ordinal
+and drops unsaved proposals and their pending creation events when it rolls back or when its
+transaction cannot begin (no rollback is attempted for a transaction that never opened), including
+their `ai_task` and priority creation events; unrelated audit entries are kept. If the reload after a
+commit does not settle, `CommittedReloadError` reports the change as saved (HTTP 409, `outcome`
+`committed`) and must not be repeated. On SQL Server a partly failed BEGIN batch is rolled back on the
+same connection, or the connection is discarded, so no transaction stays open. The audit evidence
+is cached per process by chain head and the content hash of each independent digest, which must be
+readable and well formed (positive integer `count`, non-empty `head`, `sha256`); a malformed or
+unreadable anchor makes the evidence unusable. It is extended incrementally, so repeated repairs do not
+rescan the chain. This
+is a fence, not a substitute for draining older writers before a release.
+
+SQL fixtures (`tests/sqlguard.py`) refuse to connect unless `ZF_SQL_TASK_MANIFEST` names a private
+(0600, owned by the user, under 24 hours old) manifest whose host, port and password digest match
+`ZF_SQL_SERVER` (a literal loopback address, never a name), `ZF_SQL_PORT` and `ZF_SQL_PASSWORD` and
+whose container id is confirmed by
+`docker inspect` metadata (no listener contact): running, labelled `zf.task=1292-sql-disposable`,
+created within 24 hours, `1433/tcp` published on the connecting loopback address at `ZF_SQL_PORT`, and
+provisioned with that password. A remote `DOCKER_HOST`, TLS endpoint or non-default `DOCKER_CONTEXT`
+is refused before any inspection. A manifest alone, loopback or a password alone are refused. Tests:
+`src/core/tests/test_priority_order.py` (in-memory, SQLite, and SQL Server with `ZF_RESIDENT_MSSQL=1`).
+SQL Server behaviour of the C4 source (lock timeout, `@@TRANCOUNT`, cross-connection writes), the real
+Docker provisioning path, the ledger-enabled migration and SQL Server scale are not yet proven.

@@ -1895,7 +1895,13 @@ class BicepPolicyTests(unittest.TestCase):
 
     def assert_retention_controls(self, template: dict) -> None:
         storage = module_template(template, "storage")
-        policies = [r for r in resources(storage) if r["type"].endswith("/immutabilityPolicies")]
+        policies = [
+            r
+            for r in resources(storage)
+            if r["type"].endswith("/immutabilityPolicies")
+            and "condition" not in r
+            and "ranking-archive" not in r["name"]
+        ]
         self.assertEqual(len(policies), 2)
         names = {}
         for policy in policies:
@@ -1916,6 +1922,126 @@ class BicepPolicyTests(unittest.TestCase):
             spec = storage["parameters"][param]
             self.assertGreaterEqual(spec.get("minValue", 0), 1, param)
             self.assertGreaterEqual(spec["defaultValue"], spec["minValue"], param)
+
+    def test_ranking_archive_blob_wiring_is_opt_in_private_and_matches_the_provider(self) -> None:
+        provider = (
+            Path(__file__).resolve().parents[2]
+            / "src/core/src/zava_forward/core/ranking_archive_blob.py"
+        ).read_text(encoding="utf-8")
+        selector = re.search(r'^SELECTOR = "(\w+)"', provider, re.MULTILINE)
+        container_var = re.search(r'^CONTAINER_VAR = "(\w+)"', provider, re.MULTILINE)
+        self.assertTrue(selector and container_var)
+        storage = module_template(self.main, "storage")
+        apps = module_template(self.main, "containerapps")
+        for template, flag in (
+            (self.main, "enableRankingArchiveBlob"),
+            (storage, "enableRankingArchive"),
+        ):
+            self.assertIs(template["parameters"][flag]["defaultValue"], False)
+        for template, name in (
+            (self.main, "rankingArchiveImmutabilityDays"),
+            (storage, "rankingArchiveImmutabilityDays"),
+        ):
+            self.assertEqual(template["parameters"][name]["defaultValue"], 0)
+            self.assertEqual(template["parameters"][name]["minValue"], 0)
+        self.assertEqual(apps["parameters"]["rankingArchiveContainer"]["defaultValue"], "")
+        main_args = module(self.main, "storage")["properties"]["parameters"]
+        self.assertEqual(
+            main_args["enableRankingArchive"], {"value": "[parameters('enableRankingArchiveBlob')]"}
+        )
+        self.assertEqual(
+            module(self.main, "containerapps")["properties"]["parameters"][
+                "rankingArchiveContainer"
+            ]["value"],
+            "[reference(resourceId('Microsoft.Resources/deployments', 'storage'), "
+            "'2025-04-01').outputs.rankingArchiveContainer.value]",
+        )
+        kind = "Microsoft.Storage/storageAccounts/blobServices/containers"
+        by_name = {
+            evaluate(r["name"], {"name": "fixture"}, storage["variables"]): r
+            for r in resources(storage)
+            if r["type"] == kind and "condition" in r
+        }
+        container = by_name["fixture/default/ranking-archive"]
+        self.assertEqual(container["properties"], {"publicAccess": "None"})
+        policy = next(
+            r
+            for r in resources(storage)
+            if r["type"].endswith("/immutabilityPolicies") and "condition" in r
+        )
+        self.assertEqual(policy["properties"].get("allowProtectedAppendWrites"), False)
+        self.assertNotIn("state", policy["properties"])
+        self.assertEqual(
+            policy["properties"]["immutabilityPeriodSinceCreationInDays"],
+            "[parameters('rankingArchiveImmutabilityDays')]",
+        )
+        output = storage["outputs"]["rankingArchiveContainer"]["value"]
+        env = next(
+            r
+            for r in resources(apps)
+            if r["type"] == "Microsoft.App/containerApps"
+            and r["properties"]["template"]["containers"][0]["name"] == "api"
+        )["properties"]["template"]["containers"][0]["env"]
+        piece = re.search(r"if\(empty\(parameters\('rankingArchiveContainer'\)\).*?\)\)\)\)", env)
+        self.assertIsNotNone(piece)
+        self.assertEqual(env.count("ZF_RANKING"), 2)
+        ranking_env = "[" + piece.group(0) + "]"
+        for flag, days, container_on, policy_on in (
+            (False, 0, False, False),
+            (False, 30, False, False),
+            (True, 0, True, False),
+            (True, 30, True, True),
+        ):
+            with self.subTest(flag=flag, days=days):
+                values = {
+                    "enableRankingArchive": flag,
+                    "rankingArchiveImmutabilityDays": days,
+                }
+                self.assertIs(
+                    evaluate(container["condition"], values, storage["variables"]), container_on
+                )
+                self.assertIs(
+                    evaluate(policy["condition"], values, storage["variables"]), policy_on
+                )
+                name = evaluate(output, values, storage["variables"])
+                self.assertEqual(name, "ranking-archive" if flag else "")
+                evaluated = evaluate(ranking_env, {"rankingArchiveContainer": name}, {})
+                ranking = {e["name"]: e["value"] for e in evaluated}
+                self.assertEqual(
+                    ranking,
+                    {selector.group(1): "azure-blob", container_var.group(1): "ranking-archive"}
+                    if flag
+                    else {},
+                )
+        text = json.dumps([container, policy, env])
+        for forbidden in (
+            "ZF_BLOB_SAS",
+            "connectionString",
+            "AccountKey",
+            *FORBIDDEN_KEY_FUNCTIONS,
+        ):
+            self.assertNotIn(forbidden, text)
+        self.assertIs(self.main["parameters"]["allowPublicNetworkAccess"]["defaultValue"], False)
+
+    def test_pilot_ranking_archive_requires_a_configured_retention_duration(self) -> None:
+        guard = "pilotRankingArchiveRequiresConfiguredRetention"
+        expression = module(self.main, "parameter-guard")["properties"]["parameters"][guard]
+        for environment, flag, days, ok in (
+            ("pilot", True, 0, False),
+            ("pilot", True, 1, True),
+            ("pilot", False, 0, True),
+            ("test", True, 0, True),
+            ("dev", True, 0, True),
+        ):
+            with self.subTest(environment=environment, flag=flag, days=days):
+                values = {
+                    "environmentName": environment,
+                    "enableRankingArchiveBlob": flag,
+                    "rankingArchiveImmutabilityDays": days,
+                }
+                self.assertIs(
+                    bool(evaluate(expression, values, self.main["variables"])["value"]), ok
+                )
 
     def test_each_data_service_has_a_private_endpoint(self) -> None:
         self.assert_endpoint_controls(self.main)

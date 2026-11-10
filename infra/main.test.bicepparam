@@ -26,3 +26,8 @@ param chatLawfulBasisRef = 'docs/reference/research/chat-demo-storage-approval-2
 param chatNoticeRef = 'docs/reference/research/chat-demo-storage-approval-2026-11-01.md#notice'
 param chatRetentionRef = 'docs/reference/research/chat-demo-storage-approval-2026-11-01.md#retention'
 param chatRetentionDays = 30
+// Ranking archive Blob container (Refs #136, #1258): source definition, not provisioning or a deploy approval.
+// Set enableRankingArchiveBlob = true in the private copy to wire the demo. 0 days creates no immutability
+// policy; the retention duration and its approval are a manual prerequisite, so no immutable release is claimed.
+param enableRankingArchiveBlob = false
+param rankingArchiveImmutabilityDays = 0

@@ -340,7 +340,8 @@ are unchanged. Movement after the last API read remains a non-atomic limitation.
 
 A finite publication sequence separates scoring from final-head validation:
 
-1. Obtain the required independent source/RPI/full-receipt assessment and
+1. Obtain the required independent source/RPI assessment, the selected tier's
+   evidence (a verified external full receipt only for the full tier) and
    publication authority for a clean frozen candidate before pushing it.
    One ordinary source push triggers legitimate scoring; do not dispatch paid
    scoring merely to diagnose this lifecycle.
@@ -350,10 +351,12 @@ A finite publication sequence separates scoring from final-head validation:
    score's `commit`: it names the scored source, not the metadata commit.
 3. Fetch and fast-forward the clean local topic to that final remote head.
    Every earlier receipt/review is insufficient for this new exact HEAD.
-   Run the [complete local gate](../../src/README.md#local-rpi-gate) in a fresh
-   external directory, verify against freshly fetched main, and obtain independent
-   exact-head assessment again. No new commit is needed to validate this head;
-   keep its receipt external.
+   For a full-tier candidate, run the
+   [complete local gate](../../src/README.md#local-rpi-gate) in a fresh
+   external directory and verify against freshly fetched main; for a focused-tier
+   candidate, refresh the planned relevant local checks (hosted checks follow in
+   step 4). Obtain independent exact-head assessment again. No new
+   commit is needed to validate this head; keep any receipt external.
 4. Run required hosted checks on that same final head using their existing
    supported mechanism, not a source/empty commit or a rubric rescore. For the
    existing non-deploying Source CI workflow, an authorized operator can use

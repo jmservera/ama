@@ -1,0 +1,8 @@
+# Review: C5 parent integration (Refs #136, #1258)
+
+* Executed once by an independent read-only code-review agent on exact head `95fcaf561a9f046671d2cdf1bac8a6619f703610` (tree `364431a5a1afe063fa4cfb17f7e4e01f8deae8e9`). Boundary: merge `c245c8782` plus fix `95fcaf561`. Not repeated. This is a native authored Review and does NOT replace the independent coordinator review.
+* Outcome: Approve. No Blocking, Significant or Minor findings.
+* Confirmed: merge tree `2e47aa63...`, parents `a23f5d3c6` and `52f9b61bb`, only the parent's 13-file delta (no main or sibling content), both README intents kept, four formatting hunks all on child-added lines, wording matches `store.py` `_ranking_archive`, Bicep env names match `SELECTOR` and `CONTAINER_VAR`, `az bicep build` exit 0, records honest about the failed first API run and the format baseline.
+* Reviewer limits: ran no unit tests; did not verify the runner `--blob` refusal claim (own evidence: `ranking_publication_runner.py` prints "Blob archive is not configured" and returns `EXIT_REFUSED`, read in research); noted plain repo-config `ruff check` reports RUF100 on the untouched `# noqa: S307` line, which is outside the CI command and not changed here.
+* Review-correction count for this child: 1 productive (original review F1, applied in `a23f5d3c6`) of the 5-per-issue default; this integration review produced no correction, so the count stays 1. No reset, no extra grant.
+* Not proved: provisioning, role grant, WORM enforcement or lock, approved retention duration, migration, emulator or real-account behaviour, deployment, runtime; account-scope delete permission remains. #136 and #1258 criteria stay unticked.

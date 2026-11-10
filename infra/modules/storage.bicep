@@ -11,6 +11,11 @@ param auditImmutabilityDays int = 365
 @description('Days ledger digests stay immutable. Must be no shorter than the legal audit retention period (open owner decision). The policy is created unlocked; locking is irreversible and is done by the owner.')
 @minValue(1)
 param ledgerDigestImmutabilityDays int = 365
+@description('Provision the private ranking-archive container for the Blob JSON ranking publication archive (Refs #1258, #136). Source definition only; default false keeps the existing container set.')
+param enableRankingArchive bool = false
+@description('Days ranking archive records stay immutable. 0 means no policy is created: the retention duration and its approval are a manual prerequisite and no immutable release may be claimed. A positive value creates an UNLOCKED time-based policy; locking is irreversible and is an owner action.')
+@minValue(0)
+param rankingArchiveImmutabilityDays int = 0
 @description('Array of { principalId, roleDefinitionId, scope } where scope is blob or queue.')
 param roleAssignments array
 param zoneRedundant bool = false
@@ -78,6 +83,21 @@ resource digestRetention 'Microsoft.Storage/storageAccounts/blobServices/contain
   name: 'default'
   properties: {
     immutabilityPeriodSinceCreationInDays: ledgerDigestImmutabilityDays
+    allowProtectedAppendWrites: false
+  }
+}
+
+resource rankingArchive 'Microsoft.Storage/storageAccounts/blobServices/containers@2024-01-01' = if (enableRankingArchive) {
+  parent: blobService
+  name: 'ranking-archive'
+  properties: { publicAccess: 'None' }
+}
+
+resource rankingArchiveRetention 'Microsoft.Storage/storageAccounts/blobServices/containers/immutabilityPolicies@2024-01-01' = if (enableRankingArchive && rankingArchiveImmutabilityDays > 0) {
+  parent: rankingArchive
+  name: 'default'
+  properties: {
+    immutabilityPeriodSinceCreationInDays: rankingArchiveImmutabilityDays
     allowProtectedAppendWrites: false
   }
 }
@@ -180,3 +200,4 @@ module queueEndpoint 'privateEndpoint.bicep' = {
 
 output id string = account.id
 output name string = account.name
+output rankingArchiveContainer string = enableRankingArchive ? rankingArchive.name : ''

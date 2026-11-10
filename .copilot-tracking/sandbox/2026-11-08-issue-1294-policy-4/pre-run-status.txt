@@ -1,0 +1,8 @@
+ M docs/reference/log.md
+ M src/README.md
+?? .copilot-tracking/details/2026-11-08/issue-1294-validation-policy-correction-c3-phase-details.md
+?? .copilot-tracking/plans/2026-11-08/issue-1294-validation-policy-correction-c3-plan.md
+?? .copilot-tracking/plans/critiques/2026-11-08/issue-1294-validation-policy-correction-c3-plan-critique.md
+?? .copilot-tracking/research/2026-11-08/issue-1294-validation-policy-correction-c3-research.md
+?? .copilot-tracking/sandbox/2026-11-08-issue-1294-policy-4/
+!! tools/__pycache__/

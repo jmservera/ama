@@ -1,0 +1,411 @@
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 105, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 96, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 105, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/server.py", line 96, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+======================================================================
+ERROR: test_atlas_tensions_checker (unittest.loader._FailedTest.test_atlas_tensions_checker)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_atlas_tensions_checker
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_atlas_tensions_checker.py", line 11, in <module>
+    from checks.atlas_tensions_browser_check import check_regions_and_keys
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/atlas_tensions_browser_check.py", line 29, in <module>
+    from playwright.sync_api import Page, Route, sync_playwright
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_browser_asset_urls (unittest.loader._FailedTest.test_browser_asset_urls)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_browser_asset_urls
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_browser_asset_urls.py", line 8, in <module>
+    from checks.chat_widget_browser_check import recovery_case
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/chat_widget_browser_check.py", line 12, in <module>
+    from playwright.sync_api import Browser, Page, Route, expect, sync_playwright
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_browser_harness_scratch (unittest.loader._FailedTest.test_browser_harness_scratch)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_browser_harness_scratch
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_browser_harness_scratch.py", line 9, in <module>
+    from checks import design_system_browser_check as harness
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/design_system_browser_check.py", line 26, in <module>
+    from playwright.sync_api import sync_playwright
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_employee_acceptance_check (unittest.loader._FailedTest.test_employee_acceptance_check)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_employee_acceptance_check
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_employee_acceptance_check.py", line 12, in <module>
+    from checks import employee_acceptance_check as check
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/employee_acceptance_check.py", line 13, in <module>
+    from playwright.sync_api import Error as BrowserError
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_employee_live_acceptance (unittest.loader._FailedTest.test_employee_live_acceptance)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_employee_live_acceptance
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_employee_live_acceptance.py", line 12, in <module>
+    from checks import employee_live_acceptance as live
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/employee_live_acceptance.py", line 15, in <module>
+    from playwright.sync_api import Error as BrowserError
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_iot_credential_hygiene (unittest.loader._FailedTest.test_iot_credential_hygiene)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_iot_credential_hygiene
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_iot_credential_hygiene.py", line 18, in <module>
+    from azure.iot.device import X509
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_iot_stream (unittest.loader._FailedTest.test_iot_stream)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_iot_stream
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_iot_stream.py", line 16, in <module>
+    from azure.eventhub import EventData
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_listen_backlog (unittest.loader._FailedTest.test_listen_backlog)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_listen_backlog
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_listen_backlog.py", line 11, in <module>
+    from zava_forward.api.resident_demo import app as demo
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/app.py", line 41, in <module>
+    from .aoai import resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_live_simulator (unittest.loader._FailedTest.test_live_simulator)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_live_simulator
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_live_simulator.py", line 16, in <module>
+    from zava_forward.api import live_simulator as ls
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/live_simulator.py", line 34, in <module>
+    from .iot_stream import DeviceActivation
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/iot_stream.py", line 13, in <module>
+    from azure.eventhub import EventData
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_production_config_a11y_check (unittest.loader._FailedTest.test_production_config_a11y_check)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_production_config_a11y_check
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_production_config_a11y_check.py", line 5, in <module>
+    from checks.production_config_a11y_browser_check import PRODUCTION_ENV, principal_header
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/production_config_a11y_browser_check.py", line 19, in <module>
+    from playwright.sync_api import Page, expect, sync_playwright
+ModuleNotFoundError: No module named 'playwright'
+
+
+======================================================================
+ERROR: test_resident_aoai (unittest.loader._FailedTest.test_resident_aoai)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_aoai
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_aoai.py", line 10, in <module>
+    from zava_forward.api.resident_demo.aoai import (
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_aoai_sql (unittest.loader._FailedTest.test_resident_aoai_sql)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_aoai_sql
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_aoai_sql.py", line 12, in <module>
+    from zava_forward.api.resident_demo.aoai import SqlAccounting, resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_assistant_api (unittest.loader._FailedTest.test_resident_assistant_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_assistant_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_assistant_api.py", line 12, in <module>
+    from test_resident_aoai import ENDPOINT, reply
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_aoai.py", line 10, in <module>
+    from zava_forward.api.resident_demo.aoai import (
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_callbacks_page (unittest.loader._FailedTest.test_resident_callbacks_page)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_callbacks_page
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_callbacks_page.py", line 15, in <module>
+    from resident_demo_fixture import DemoTestCase
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/resident_demo_fixture.py", line 17, in <module>
+    from zava_forward.api.resident_demo import app as demo
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/app.py", line 41, in <module>
+    from .aoai import resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_chat_api (unittest.loader._FailedTest.test_resident_chat_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_chat_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_chat_api.py", line 22, in <module>
+    from test_resident_aoai import ENDPOINT, question_reply, reply
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_aoai.py", line 10, in <module>
+    from zava_forward.api.resident_demo.aoai import (
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_demo_api (unittest.loader._FailedTest.test_resident_demo_api)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_demo_api
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_demo_api.py", line 19, in <module>
+    from zava_forward.api.resident_demo import app as demo
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/app.py", line 41, in <module>
+    from .aoai import resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_ledger_meter (unittest.loader._FailedTest.test_resident_ledger_meter)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_ledger_meter
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_ledger_meter.py", line 20, in <module>
+    from zava_forward.api.resident_demo.aoai import AzureAdvisor, resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_resident_summary_ai_ui (unittest.loader._FailedTest.test_resident_summary_ai_ui)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_resident_summary_ai_ui
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_summary_ai_ui.py", line 14, in <module>
+    from test_resident_demo_api import FAKE_PASSWORD, KEY, NOW, Clock, FakeReader, make_row
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_demo_api.py", line 19, in <module>
+    from zava_forward.api.resident_demo import app as demo
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/app.py", line 41, in <module>
+    from .aoai import resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_sensor_consistency (unittest.loader._FailedTest.test_sensor_consistency)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_sensor_consistency
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_sensor_consistency.py", line 16, in <module>
+    from azure.eventhub import EventData
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_sensor_handover_demo (unittest.loader._FailedTest.test_sensor_handover_demo)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_sensor_handover_demo
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_sensor_handover_demo.py", line 14, in <module>
+    import sensor_handover_demo as demo  # type: ignore[import-not-found]  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/sensor_handover_demo.py", line 27, in <module>
+    from azure.eventhub import EventData
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_static_assets (unittest.loader._FailedTest.test_static_assets)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_static_assets
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_static_assets.py", line 11, in <module>
+    from test_resident_demo_api import DemoTestCase
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_resident_demo_api.py", line 19, in <module>
+    from zava_forward.api.resident_demo import app as demo
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/app.py", line 41, in <module>
+    from .aoai import resident_key
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/src/zava_forward/api/resident_demo/aoai.py", line 13, in <module>
+    from azure.core.exceptions import AzureError
+ModuleNotFoundError: No module named 'azure'
+
+
+======================================================================
+ERROR: test_workbench_live_defaults (unittest.loader._FailedTest.test_workbench_live_defaults)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_workbench_live_defaults
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/unittest/loader.py", line 394, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/unittest/loader.py", line 337, in _get_module_from_name
+    __import__(name)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/tests/test_workbench_live_defaults.py", line 12, in <module>
+    from checks import workbench_browser_check as workbench
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/api/checks/workbench_browser_check.py", line 12, in <module>
+    from playwright.sync_api import Page, Route, sync_playwright
+ModuleNotFoundError: No module named 'playwright'
+
+
+----------------------------------------------------------------------
+Ran 44 tests in 11.656s
+
+FAILED (errors=22, skipped=3)

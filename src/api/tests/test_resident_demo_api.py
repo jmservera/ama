@@ -533,6 +533,36 @@ class SessionTests(DemoTestCase):
         self.assertEqual(c.call("GET", "/healthz")[0], 503)
 
 
+SLOT_WAIT_SECONDS = 5.0
+
+
+class DelayedReleaseSlots(threading.BoundedSemaphore):
+    """Test double: holds handler-thread releases until the gate opens."""
+
+    def __init__(self, value: int) -> None:
+        super().__init__(value)
+        self.test_thread = threading.get_ident()
+        self.gate = threading.Event()
+        self.reached = threading.Event()
+        self.contended = threading.Event()
+
+    def acquire(self, blocking: bool = True, timeout: float | None = None) -> bool:
+        if timeout is None or super().acquire(blocking=False):
+            return super().acquire(blocking, timeout) if timeout is None else True
+        self.contended.set()
+        return super().acquire(timeout=timeout)
+
+    def release(self, n: int = 1) -> None:
+        if threading.get_ident() != self.test_thread:
+            self.reached.set()
+            self.gate.wait(SLOT_WAIT_SECONDS)
+        super().release(n)
+
+    def open_after_contention(self) -> None:
+        if self.contended.wait(SLOT_WAIT_SECONDS):
+            self.gate.set()
+
+
 class AbuseAndHardeningTests(DemoTestCase):
     def test_limiter_blocks_after_five_failures_and_recovers(self) -> None:
         c = self.client()
@@ -701,17 +731,72 @@ class AbuseAndHardeningTests(DemoTestCase):
             for _ in held:
                 self.app.slots.release()
 
+    def own_every_slot(self, owned: list[bool], wait: float = SLOT_WAIT_SECONDS) -> None:
+        # A just-finished request may still be releasing its slot after the client has the response.
+        for _ in range(demo.MAX_CONCURRENT):
+            self.assertTrue(self.app.slots.acquire(timeout=wait), "could not own every slot")
+            owned.append(True)
+
     def test_shed_signed_in_view_carries_retry_guidance(self) -> None:
         client = self.client()
         self.assertEqual(client.login("one@example.com"), 200)
-        held = [self.app.slots.acquire(blocking=False) for _ in range(demo.MAX_CONCURRENT)]
+        owned: list[bool] = []
         try:
+            self.own_every_slot(owned)
             status, body, response = client.call("GET", "/demo/view")
             self.assertEqual(status, 503)
             self.assertEqual(body["retry_after"], demo.RETRY_AFTER_SECONDS)
             self.assertEqual(response.getheader("Retry-After"), str(demo.RETRY_AFTER_SECONDS))
         finally:
-            for _ in held:
+            for _ in owned:
+                self.app.slots.release()
+
+    def test_shed_view_owns_every_slot_despite_delayed_login_release(self) -> None:
+        slots = DelayedReleaseSlots(demo.MAX_CONCURRENT)
+        self.app.slots = slots
+        owned: list[bool] = []
+        client = self.client()
+        releaser = threading.Thread(target=slots.open_after_contention, daemon=True)
+        try:
+            self.assertEqual(client.login("one@example.com"), 200)
+            self.assertTrue(slots.reached.wait(SLOT_WAIT_SECONDS), "no worker release was delayed")
+            releaser.start()
+            self.own_every_slot(owned)
+            self.assertEqual(len(owned), demo.MAX_CONCURRENT)
+            self.assertTrue(slots.contended.is_set(), "acquisition never met a held worker slot")
+            status, body, _ = client.call("GET", "/demo/view")
+            self.assertEqual((status, body["error"]), (503, demo.BUSY))
+        finally:
+            slots.gate.set()
+            for _ in owned:
+                slots.release()
+            if releaser.is_alive():
+                releaser.join(SLOT_WAIT_SECONDS)
+        again: list[bool] = []
+        try:
+            self.own_every_slot(again)
+        finally:
+            for _ in again:
+                slots.release()
+
+    def test_slot_ownership_helper_releases_only_what_it_acquired(self) -> None:
+        outsider = self.app.slots.acquire(blocking=False)
+        self.assertTrue(outsider)
+        owned: list[bool] = []
+        try:
+            with self.assertRaises(AssertionError):
+                self.own_every_slot(owned, wait=0.05)
+            self.assertEqual(len(owned), demo.MAX_CONCURRENT - 1)
+        finally:
+            for _ in owned:
+                self.app.slots.release()
+            self.app.slots.release()
+        again: list[bool] = []
+        try:
+            self.own_every_slot(again)
+            self.assertEqual(len(again), demo.MAX_CONCURRENT)
+        finally:
+            for _ in again:
                 self.app.slots.release()
 
 

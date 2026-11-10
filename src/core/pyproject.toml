@@ -68,6 +68,7 @@ module = ["zava_forward.core.chat_panel", "test_chat_panel", "tests.test_chat_pa
           "test_job_pack", "tests.test_job_pack",
           "zava_forward.core.source_monitor", "zava_forward.core.forms",
           "zava_forward.core.ranking_publication_runner",
+          "zava_forward.core.simulation_lane",
           "test_ranking_publication_runner", "tests.test_ranking_publication_runner"]
 disallow_untyped_calls = false
 
@@ -88,7 +89,8 @@ module = ["test_stock_reconciliation", "tests.test_stock_reconciliation",
           "test_sensor_stock", "tests.test_sensor_stock",
           "test_sensor_privacy", "tests.test_sensor_privacy",
           "test_sensor_faults", "tests.test_sensor_faults",
-          "test_resident_decisions", "tests.test_resident_decisions"]
+          "test_resident_decisions", "tests.test_resident_decisions",
+          "test_priority_order", "tests.test_priority_order"]
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]

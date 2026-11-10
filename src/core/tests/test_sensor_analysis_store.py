@@ -94,6 +94,31 @@ class RetainedAnalysisTests(unittest.TestCase):
                 )
                 self.assertEqual(signal.valid, 0)
 
+    def test_live_weather_rows_are_not_indoor_input(self) -> None:
+        from test_sensor_consumer_live import live
+
+        self.consumer.process(live(START + timedelta(hours=1, minutes=5)), RECEIVED)
+        with_weather = store.analyse_retained(self.consumer, HOME, WINDOW, AS_OF)
+        indoor_only = sa.derive_signal(
+            HOME, self.consumer.observed_series([HOME]), WINDOW, AS_OF, "granted"
+        )
+        self.assertEqual(with_weather, indoor_only)
+        self.assertNotIn("SCHEMA_FIELDS", with_weather.reasons)
+
+    def test_weather_only_window_is_insufficient_with_explicit_reason(self) -> None:
+        from test_sensor_consumer_live import live
+
+        self.store.db.execute("DELETE FROM sensor_reading")
+        self.store.db.execute("DELETE FROM sensor_delivery")
+        self.consumer.process(live(START + timedelta(hours=1, minutes=5)), RECEIVED)
+        signal = store.analyse_retained(self.consumer, HOME, WINDOW, AS_OF)
+        self.assertEqual(
+            (signal.sufficiency, signal.outcome, signal.reasons, signal.priority_effect),
+            (sa.INSUFFICIENT, sa.INSUFFICIENT, (store.WEATHER_NOT_INDOOR,), "NONE"),
+        )
+        self.assertFalse(signal.diagnoses_hazard)
+        self.assertEqual(signal.valid, 0)
+
 
 if __name__ == "__main__":
     unittest.main()

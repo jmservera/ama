@@ -1,0 +1,35 @@
+unformatted: File would be reformatted
+   --> tests/sqlguard.py:105:39
+    |
+104 |     if not any(
+    -         str(b.get("HostPort")) == port and ipaddress.ip_address(b["HostIp"]) == ipaddress.ip_address(host)
+105 +         str(b.get("HostPort")) == port
+106 +         and ipaddress.ip_address(b["HostIp"]) == ipaddress.ip_address(host)
+107 |         for b in bindings
+    |
+
+unformatted: File would be reformatted
+    --> tests/test_priority_order.py:1095:24
+     |
+1094 |         self.make_legacy(
+     -             self.store, [(rid, 50, user, body, version) for rid, _, user, body, version in self.rows]
+1095 +             self.store,
+1096 +             [(rid, 50, user, body, version) for rid, _, user, body, version in self.rows],
+1097 |         )
+--------------------------------------------------------------------------------
+1232 |     def assert_quarantined(self, store: Any) -> None:
+     -         self.assertEqual(
+     -             [p[3] for p in store.local.pending], ["SYN unrelated tsk000000001x"]
+     -         )
+1233 +         self.assertEqual([p[3] for p in store.local.pending], ["SYN unrelated tsk000000001x"])
+1234 |         store.save()
+--------------------------------------------------------------------------------
+1259 |     def test_repeated_singleton_repairs_read_a_bounded_number_of_history_rows(self) -> None:
+     -         history = [
+     -             (f"h{n:011d}", n + 1, self.body(f"h{n:011d}", SECOND), 1) for n in range(60)
+     -         ]
+1260 +         history = [(f"h{n:011d}", n + 1, self.body(f"h{n:011d}", SECOND), 1) for n in range(60)]
+1261 |         self.ordinal_db(history, rec_order_review="3")
+     |
+
+2 files would be reformatted

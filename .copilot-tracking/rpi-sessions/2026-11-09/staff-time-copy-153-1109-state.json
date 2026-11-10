@@ -1,0 +1,68 @@
+{
+  "task_id": "153-staff-time-copy-1109",
+  "task_slug": "staff-time-copy-153",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-staff-time-copy-153-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-staff-time-copy-153-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-staff-time-copy-153-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-staff-time-copy-153-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09-staff-time-copy-153-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09-staff-time-copy-153-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed, Ready (2026-11-09T22:49Z)",
+      "status": "done",
+      "evidence": "research record, repro-before.log exit 0"
+    },
+    {
+      "decision": "Plan and details authored (22:50Z)",
+      "status": "done",
+      "evidence": "plan and details records"
+    },
+    {
+      "decision": "Critique executed once, verdict revise, seven findings all applied (22:51Z)",
+      "status": "done",
+      "evidence": "critique record"
+    },
+    {
+      "decision": "Implement completed 22:56Z, no source edit after validation",
+      "status": "done",
+      "evidence": "changes record"
+    },
+    {
+      "decision": "Review executed once by author 22:56Z, no open material finding, independent review still required",
+      "status": "done",
+      "evidence": "review record"
+    },
+    {
+      "decision": "Correction cycles used 0 of 5",
+      "status": "done",
+      "evidence": "changes record"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator independent exact-head assessment, then hosted CI"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Independent exact-head assessment",
+      "rationale": "required before publication",
+      "evidence": "handoff"
+    },
+    {
+      "rank": 2,
+      "task": "Update content-standard audit row after owner admits docs path",
+      "rationale": "documentation deferred",
+      "evidence": "changes record"
+    }
+  ]
+}

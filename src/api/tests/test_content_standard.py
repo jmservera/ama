@@ -9,9 +9,9 @@ ROOT = Path(__file__).resolve().parents[3]
 WEB = ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web"
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "content-standard.md").read_text()
 BANNED = re.compile(r"\b(gates?|holds?|provenance|traces?|snapshots?|envelopes?)\b", re.I)
-AUDITED_FILES = ("app.js", "assistants.js", "panels.js", "ops.js", "chat.js", "timecapture.js", "role-screens.js", "law.js", "law.html", "index.html", "welcome.html")
+AUDITED_FILES = ("app.js", "assistants.js", "panels.js", "ops.js", "chat.js", "timecapture.js", "role-screens.js", "simulator-control.js", "law.js", "law.html", "index.html", "welcome.html")
 # Exact identifiers, raw technical JSON key and legacy stored finance value only.
-ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "i.hold", "x.hold", "h.hold", "inv.hold", "Keep on hold", 'category("holds",', 'shared("holds",', "envelope: p.envelope", "p.snapshot")
+ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "v.provenance", "i.hold", "x.hold", "h.hold", "inv.hold", "Keep on hold", 'category("holds",', 'shared("holds",', "envelope: p.envelope", "p.snapshot")
 
 
 def copy_violations(text):
@@ -35,7 +35,7 @@ class CopyAudit(unittest.TestCase):
                 self.assertTrue(list(copy_violations(f'h("p", {{}}, "{word.upper()}");')))
 
     def test_identifier_exceptions_do_not_hide_adjacent_bad_copy(self):
-        for identifier in ("c.gate", "p.provenance", "earlier.provenance", "i.hold",
+        for identifier in ("c.gate", "p.provenance", "earlier.provenance", "v.provenance", "i.hold",
                            "x.hold", "envelope: p.envelope", "p.snapshot"):
             with self.subTest(identifier=identifier):
                 self.assertEqual(list(copy_violations(identifier)), [])

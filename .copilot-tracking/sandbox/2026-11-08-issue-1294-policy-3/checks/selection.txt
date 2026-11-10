@@ -1,0 +1,12 @@
+['src/README.md'] 
+ local: ['preflight', 'namespace', 'static'] 
+ ci-affected: {'projects': set(), 'namespace': False, 'mssql': False}
+['src/README.md', 'src/api/src/zava_forward/api/web/app.js'] 
+ local: ['preflight', 'project-api', 'namespace', 'static', 'browser', 'image-api', 'logo-0600'] 
+ ci-affected: {'projects': {'api'}, 'namespace': True, 'mssql': True}
+['docs/README.md', 'infra/main.bicep'] 
+ local: ['preflight', 'namespace', 'static', 'infra'] 
+ ci-affected: {'projects': {'agents', 'api', 'orchestrator', 'importer', 'core'}, 'namespace': True, 'mssql': True}
+['.github/workflows/src-ci.yml'] 
+ local: ['preflight', 'project-core', 'project-agents', 'project-api', 'project-orchestrator', 'project-importer', 'namespace', 'static', 'infra', 'migration', 'browser', 'mssql', 'image-api', 'image-agents', 'image-orchestrator', 'image-importer', 'logo-0600'] 
+ ci-affected: {'projects': {'agents', 'api', 'orchestrator', 'importer', 'core'}, 'namespace': True, 'mssql': True}

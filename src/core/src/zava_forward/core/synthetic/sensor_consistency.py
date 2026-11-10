@@ -3,12 +3,13 @@
 import math
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from datetime import timedelta
+from datetime import datetime, timedelta
 from decimal import Decimal
 from fractions import Fraction
 from statistics import mean, pstdev, pvariance
 
-from ..sensor_consumer import SensorConsumer, utc
+from ..sensor_consumer import LIVE_FIELDS, SensorConsumer, utc
+from . import live_readings
 from .sensor_faults import READING_FIELDS
 
 CHANNELS = ("temperature_c", "humidity_pct")
@@ -30,6 +31,42 @@ class Tolerance:
 
 ZERO_TOLERANCE = Tolerance()
 
+WEATHER_CHANNELS = ("temperature_c", "humidity_pct", "sunlight_wm2")
+WEATHER_UNITS = ("degC", "percent", live_readings.SUNLIGHT_UNIT)
+WEATHER_VERSION = "synthetic-weather-continuity-v1"
+WEATHER_TOLERANCE_STATUS = (
+    "engineering bound derived from declared generator constants; "
+    "not an approved operational tolerance"
+)
+_ROUNDING = 0.02  # two reading values, each rounded to 2 decimals
+_SUNLIGHT_CAP = 1400.0
+
+
+def _weather_tolerance(point: float) -> "Tolerance":
+    # Triangle inequality: mean-step <= 2*point and stddev difference <= point. Clamps are
+    # 1-Lipschitz, so the bounds still hold at the 0..100 and non-negative limits.
+    return Tolerance(point=point, mean_step=2 * point, stddev=point)
+
+
+WEATHER_TOLERANCES = {
+    "temperature_c": _weather_tolerance(
+        2 * (live_readings.OFFSET_TEMPERATURE_C + live_readings.NOISE_TEMPERATURE_C) + _ROUNDING
+    ),
+    "humidity_pct": _weather_tolerance(
+        2 * (live_readings.OFFSET_HUMIDITY_PCT + live_readings.NOISE_HUMIDITY_PCT) + _ROUNDING
+    ),
+    "sunlight_wm2": _weather_tolerance(
+        _SUNLIGHT_CAP
+        * (
+            (1 + live_readings.OFFSET_SUNLIGHT_FRACTION)
+            * (1 + live_readings.NOISE_SUNLIGHT_FRACTION)
+            - (1 - live_readings.OFFSET_SUNLIGHT_FRACTION)
+            * (1 - live_readings.NOISE_SUNLIGHT_FRACTION)
+        )
+        + _ROUNDING
+    ),
+}
+
 
 def _stddev_within_limit(
     values: Sequence[Decimal], baseline: Sequence[Decimal], limit: float
@@ -47,11 +84,16 @@ def _index(
 ) -> dict[tuple[str, str, str], dict[str, str]]:
     result: dict[tuple[str, str, str], dict[str, str]] = {}
     for row in rows:
-        if SensorConsumer._shape(dict(row)) is not None or (
-            row["temperature_unit"],
-            row["humidity_unit"],
-            row["calibrated"],
-        ) != ("degC", "percent", "true"):
+        if (
+            set(row) != set(READING_FIELDS)
+            or SensorConsumer._shape(dict(row)) is not None
+            or (
+                row["temperature_unit"],
+                row["humidity_unit"],
+                row["calibrated"],
+            )
+            != ("degC", "percent", "true")
+        ):
             raise ValueError("INVALID_HANDOVER_OBSERVATION")
         key = (row["home_id"], row["sensor_id"], row["observed_at"])
         if key in result:
@@ -65,40 +107,14 @@ def _index(
     return result
 
 
-def report(
-    observed: Sequence[Mapping[str, str]],
-    reference: Sequence[Mapping[str, str]],
-    *,
-    handover: str,
-    cadence_minutes: int = 480,
-    temperature: Tolerance = ZERO_TOLERANCE,
-    humidity: Tolerance = ZERO_TOLERANCE,
-) -> dict[str, object]:
-    """Compare complete per-home windows with an independently generated reference.
-
-    Mean-step error subtracts the reference's expected seasonal/works step.
-    Point and per-side population-standard-deviation errors prevent cancellation.
-    All thresholds are inclusive, in C or relative-humidity percentage points.
-    """
-    boundary = utc(handover)
-    if (
-        type(cadence_minutes) is not int
-        or cadence_minutes <= 0
-        or 1440 % cadence_minutes
-        or not isinstance(temperature, Tolerance)
-        or not isinstance(humidity, Tolerance)
-    ):
-        raise ValueError("INVALID_HANDOVER_CONFIGURATION")
-    actual, expected = _index(observed), _index(reference)
-    if actual.keys() != expected.keys():
-        raise ValueError("HANDOVER_COVERAGE_MISMATCH")
-    for key in expected:
-        if any(
-            actual[key][field] != expected[key][field]
-            for field in READING_FIELDS
-            if field not in CHANNELS
-        ):
-            raise ValueError("HANDOVER_METADATA_MISMATCH")
+def _compare(
+    actual: Mapping[tuple[str, str, str], Mapping[str, str]],
+    expected: Mapping[tuple[str, str, str], Mapping[str, str]],
+    channels: Sequence[str],
+    tolerances: Sequence[Tolerance],
+    boundary: datetime,
+    cadence_minutes: int,
+) -> tuple[list[dict[str, object]], bool]:
     groups = sorted({key[:2] for key in expected})
     homes = [home for home, _ in groups]
     if len(set(homes)) != len(homes) or len({sensor for _, sensor in groups}) != len(groups):
@@ -120,7 +136,7 @@ def report(
         if split < 2 or len(keys) - split < 2:
             raise ValueError("INSUFFICIENT_HANDOVER_SAMPLES")
         metrics: dict[str, object] = {}
-        for channel, tolerance in zip(CHANNELS, (temperature, humidity), strict=True):
+        for channel, tolerance in zip(channels, tolerances, strict=True):
             values = [Decimal(actual[key][channel]) for key in keys]
             baseline = [Decimal(expected[key][channel]) for key in keys]
             means = [mean(part) for part in (values[:split], values[split:])]
@@ -172,6 +188,46 @@ def report(
                 "metrics": metrics,
             }
         )
+    return series, passed
+
+
+def report(
+    observed: Sequence[Mapping[str, str]],
+    reference: Sequence[Mapping[str, str]],
+    *,
+    handover: str,
+    cadence_minutes: int = 480,
+    temperature: Tolerance = ZERO_TOLERANCE,
+    humidity: Tolerance = ZERO_TOLERANCE,
+) -> dict[str, object]:
+    """Compare complete per-home windows with an independently generated reference.
+
+    Mean-step error subtracts the reference's expected seasonal/works step.
+    Point and per-side population-standard-deviation errors prevent cancellation.
+    All thresholds are inclusive, in C or relative-humidity percentage points.
+    """
+    boundary = utc(handover)
+    if (
+        type(cadence_minutes) is not int
+        or cadence_minutes <= 0
+        or 1440 % cadence_minutes
+        or not isinstance(temperature, Tolerance)
+        or not isinstance(humidity, Tolerance)
+    ):
+        raise ValueError("INVALID_HANDOVER_CONFIGURATION")
+    actual, expected = _index(observed), _index(reference)
+    if actual.keys() != expected.keys():
+        raise ValueError("HANDOVER_COVERAGE_MISMATCH")
+    for key in expected:
+        if any(
+            actual[key][field] != expected[key][field]
+            for field in READING_FIELDS
+            if field not in CHANNELS
+        ):
+            raise ValueError("HANDOVER_METADATA_MISMATCH")
+    series, passed = _compare(
+        actual, expected, CHANNELS, (temperature, humidity), boundary, cadence_minutes
+    )
     return {
         "version": "synthetic-handover-v1",
         "source_type": "SYNTHETIC",
@@ -187,6 +243,99 @@ def report(
             for channel, tolerance, unit in zip(
                 CHANNELS, (temperature, humidity), ("degC", "percent"), strict=True
             )
+        },
+        "passed": passed,
+        "series": series,
+    }
+
+
+def _weather_index(
+    rows: Sequence[Mapping[str, str]], scenario: str
+) -> dict[tuple[str, str, str], dict[str, str]]:
+    result: dict[tuple[str, str, str], dict[str, str]] = {}
+    for row in rows:
+        if (
+            set(row) != set(LIVE_FIELDS)
+            or SensorConsumer._live_shape(dict(row)) is not None
+            or row["schema_version"] != live_readings.SCHEMA_VERSION
+            or (row["temperature_unit"], row["humidity_unit"], row["sunlight_unit"])
+            != WEATHER_UNITS
+            or row["scenario"] != scenario
+        ):
+            raise ValueError("INVALID_HANDOVER_OBSERVATION")
+        key = (row["home_id"], row["sensor_id"], row["observed_at"])
+        if key in result:
+            raise ValueError("DUPLICATE_HANDOVER_SLOT")
+        result[key] = dict(row)
+    if not result:
+        raise ValueError("EMPTY_HANDOVER_SERIES")
+    identities = [(row["sensor_id"], row["reading_id"]) for row in result.values()]
+    if len(set(identities)) != len(identities):
+        raise ValueError("DUPLICATE_HANDOVER_IDENTITY")
+    return result
+
+
+def weather_report(
+    observed: Sequence[Mapping[str, str]],
+    reference: Sequence[Mapping[str, str]],
+    *,
+    handover: str,
+    cadence_minutes: int = live_readings.SLOT_SECONDS // 60,
+) -> dict[str, object]:
+    """Constructed continuity check of live simulated weather against synthetic weather history.
+
+    Both sides are live-sim-reading-v1 rows for the same homes and slots; only the seed and the
+    scenario (live-simulator versus weather-backfill-v1) differ; equal declared seeds are refused.
+    Distinct seeds do not authenticate independent generator provenance. Tolerances are
+    engineering bounds from the declared generator constants, not an approved tolerance, and the
+    result is not witnessed Azure continuity, physical accuracy, indoor evidence or calibration.
+    """
+    boundary = utc(handover)
+    if type(cadence_minutes) is not int or cadence_minutes <= 0 or 1440 % cadence_minutes:
+        raise ValueError("INVALID_HANDOVER_CONFIGURATION")
+    actual = _weather_index(observed, live_readings.SCENARIO)
+    expected = _weather_index(reference, live_readings.WEATHER_REFERENCE_SCENARIO)
+    if actual.keys() != expected.keys():
+        raise ValueError("HANDOVER_COVERAGE_MISMATCH")
+    if any(int(actual[key]["seed"]) == int(expected[key]["seed"]) for key in expected):
+        raise ValueError("HANDOVER_REFERENCE_NOT_DISTINCT")
+    provenance = {"scenario", "seed"}
+    for key in expected:
+        if any(
+            actual[key][field] != expected[key][field]
+            for field in LIVE_FIELDS
+            if field not in WEATHER_CHANNELS and field not in provenance
+        ):
+            raise ValueError("HANDOVER_METADATA_MISMATCH")
+    series, passed = _compare(
+        actual,
+        expected,
+        WEATHER_CHANNELS,
+        [WEATHER_TOLERANCES[channel] for channel in WEATHER_CHANNELS],
+        boundary,
+        cadence_minutes,
+    )
+    return {
+        "version": WEATHER_VERSION,
+        "source_type": "SYNTHETIC",
+        "evidence": "constructed-distribution-check",
+        "handover": handover,
+        "cadence_minutes": cadence_minutes,
+        "tolerance_status": WEATHER_TOLERANCE_STATUS,
+        "generator": {
+            "version": live_readings.VERSION,
+            "reference_scenario": live_readings.WEATHER_REFERENCE_SCENARIO,
+            "live_scenario": live_readings.SCENARIO,
+            "same_anchors_assumed": True,
+        },
+        "tolerances": {
+            channel: {
+                "point": WEATHER_TOLERANCES[channel].point,
+                "mean_step": WEATHER_TOLERANCES[channel].mean_step,
+                "stddev": WEATHER_TOLERANCES[channel].stddev,
+                "unit": unit,
+            }
+            for channel, unit in zip(WEATHER_CHANNELS, WEATHER_UNITS, strict=True)
         },
         "passed": passed,
         "series": series,

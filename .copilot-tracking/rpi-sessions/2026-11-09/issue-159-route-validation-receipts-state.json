@@ -1,0 +1,35 @@
+{
+  "task_id": "issue-159-route-validation-receipts",
+  "task_slug": "issue-159-route-validation-receipts",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "blocked",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09/issue-159-route-validation-receipts-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09/issue-159-route-validation-receipts-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09/issue-159-route-validation-receipts-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-09/issue-159-route-validation-receipts-plan-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "PARTIAL preparation only: Research executed, Plan complete; Implement and Review NOT started", "status": "recorded", "evidence": "owner handoff brief 2026-11-09"},
+    {"decision": "Critique executed once, self-conducted, not independent; verdict Approve with dispositions", "status": "done", "evidence": ".copilot-tracking/reviews/plans/2026-11-09/issue-159-route-validation-receipts-plan-critique.md"},
+    {"decision": "Correction ledger: no numeric grant on issue 159; evidenced spent 1 (PR 661), possibly 2 (PR 927); 2026-11-09 five-cycle default retroactivity unstated; no new cycle approved", "status": "recorded", "evidence": "research Correction ledger"},
+    {"decision": "Owner demo-targeted validation tier; 7 Nov FULL wording conflict flagged for reviewer", "status": "recorded", "evidence": "plan Validation and budget notes"},
+    {"decision": "Review: not executed", "status": "pending", "evidence": null}
+  ],
+  "blockers": [
+    {"id": "B1", "summary": "Parent PR 1313 head d3810ffe489a6ceb048bfb35a14fca1f504bd1e7 is RED (src-namespace FAILURE) and unfrozen", "resolution": "Wait for a local clean qualified C4 head, integrate ordinarily, re-research the base"},
+    {"id": "B2", "summary": "No confirmed #159 correction ledger or issue-specific authority", "resolution": "Coordinator or owner confirms ledger and that initial implementation consumes no correction cycle"},
+    {"id": "B3", "summary": "Nonqueued resource admission not obtained (needed only if SQL is triggered)", "resolution": "Coordinator admission at implementation time"}
+  ],
+  "next_action": {"phase": "Implement", "action": "Blocked until B1 to B3 clear; then re-check base research and implement the plan prospectively"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Implement the three-branch validation receipt slice after parent freeze", "rationale": "Smallest approved code gap for the every-turn tokenomics criterion", "evidence": "research Current handlers"},
+    {"rank": 2, "task": "Owner decision on adjacent unreceipted 400s and no-actor 401 policy", "rationale": "Outside approved scope", "evidence": "research Adjacent unreceipted 400s"},
+    {"rank": 3, "task": "Named screen-reader and announcement acceptance", "rationale": "Only other unmet criterion; human tester needed", "evidence": "issue 159 comments"}
+  ]
+}

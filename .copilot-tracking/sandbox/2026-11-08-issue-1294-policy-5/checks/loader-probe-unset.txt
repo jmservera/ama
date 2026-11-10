@@ -1,0 +1,4 @@
+mode unset
+loader.errors 3
+ids ['unittest.loader._FailedTest.test_employee_acceptance_check', 'unittest.loader._FailedTest.test_employee_acceptance_check', 'unittest.loader._FailedTest.test_employee_acceptance_check']
+exact three flattened ids and no loader errors: False

@@ -1,0 +1,21 @@
+<!-- markdownlint-disable-file -->
+# Research: post-policy validation of recovered #123 on current main (2026-11-09)
+
+Parent: [pinned-validation-123](pinned-validation-123-research.md). Refs #123, #128, #440. Tier: owner-selected demo-targeted (no `rpi-checks --all`). Task slug `postpolicy-validation-123`.
+
+## Evidence
+
+* Frozen candidate HEAD `572fc4729b59e6d41c831536e3841251b860f263`, tree `aa0168c6034eeb4a8613bcde0784744733c9ea00`, branch `fix/demo-recovery-123-1109`, clean at start (`git status --short` empty).
+* Fetched `origin/main` (read-only fetch) is `9814cf6b236be1f2e86c4401973b8e834be927bc`, commit "docs(validation): streamline local checks while preserving coverage (#1301)". It is one commit past the candidate's recorded base `b46a9ad9a9619db535368d1b2cbbddec8110e122`, which is an ancestor of the candidate. The candidate does not yet contain `9814cf6b2`.
+* Old remote PR head `cfd1bca86d8e3566ec0d43e87a9bf6f62203d4f9` (PR #1222, open, mergeable status UNKNOWN at query time) is an ancestor of the candidate. Its earlier green CI belongs to that head and base, not to this candidate or current main.
+* Main's changed non-tracking paths between old base and current main (`git diff --name-status b46a9ad9a origin/main`, excluding `.copilot-tracking/`): `.github/agents/ama-backlog-delivery-coordinator.agent.md`, `.github/copilot-instructions.md`, `.github/rubric/README.md`, `docs/reference/log.md`, `docs/reference/method/tracking-retention-policy.md`, `docs/reference/research/delivery-bottleneck-analysis-2026-10-31.md`, `src/README.md`. A filter for dependency manifests, workflows, Dockerfiles, `infra/`, `tools/` and `src/**/*.py|sql` returned nothing. Main therefore changes no source, test or dependency path.
+* Candidate's non-tracking diff against the old base: `docs/architecture/cutover-evidence-pack.md`, `docs/reference/README.md`, `docs/reference/log.md`, `src/core/README.md`, `src/core/src/zava_forward/core/paired_equity.py`, `src/core/tests/test_paired_equity.py`. Overlap with main: only `docs/reference/log.md` (both append). `git merge-tree --write-tree HEAD origin/main` completes with exit 0 and a tree id (`5e71e6989f958e50d69e79e637df8119dbf5cee4`) and no conflict list, so a local merge is clean.
+* Main's new policy (`.github/copilot-instructions.md`, `src/README.md` "Local RPI gate", refined by #1294) keeps the focused tier for small issues, requires the planned relevant checks, and does not make a blanket `--changed` run the default. The owner-selected demo-targeted tier for this lane is consistent with it and stricter than docs-only. Source classification here: the candidate carries a core Python change (`paired_equity.py`), so planned unit tests plus lint/format/type on the merged result are required; no SQL, API, browser or infrastructure path is touched by candidate or main, so those are not required.
+* Independent functional assessment `593e5812` of the frozen HEAD returned verdict `approve`, 0 findings of any severity, over the complete 9158-line, 196-path diff against `b46a9ad9a`; report at `independent-123/functional-findings.json` in the coordinator folder, attached to an issue comment. That assessment covers the pre-merge head. It is original evidence and is not re-labelled for the merged head.
+* Earlier records preserved unchanged: first lint/type run under non-pinned ruff 0.17.3 and mypy 2.4.1 (version-mismatch outcome), and an earlier missing-helper failure record. The pinned venv `~/.venvs/zf123-pinned` (outside the repository) reports ruff 0.17.1 and mypy 2.4.0, matching `src/core/pyproject.toml` pins.
+* Prior pinned run on the pre-merge head: 146 tests OK, 0 skips; ruff check, format (216 files) and mypy (269 files) pass.
+* Authoritative-state: issue #123 open (epic). No acceptance is claimed by this lane.
+
+## Disposition
+
+Research executed. Planning Readiness: Ready. Scope: a local merge of current `origin/main` into the candidate preserving the candidate's and old remote head's ancestry (no rebase, reset, force), then rerun the selected tier on the merged result. No source change unless a confirmed regression appears. Missing prerequisites: none for the selected tier; hosted CI for the merged head and any publication are outside this lane.

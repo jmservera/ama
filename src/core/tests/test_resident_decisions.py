@@ -7,16 +7,18 @@ import sqlite3
 import tempfile
 import unittest
 import uuid
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import contextmanager
 from datetime import date, datetime
 from functools import partial
 from pathlib import Path
-from threading import Barrier
-from typing import Any
+from threading import Barrier, Event
+from typing import Any, cast
 from unittest.mock import patch
 
 from dataset import DATA, supplied_appointment_fixture, supplied_contract_fixture
+from sqlguard import require_task_owned_loopback
 from zava_forward.core import ai_tasks, assistants, controls, projection, resident_decisions
 from zava_forward.core.quality import checklist_for
 from zava_forward.core.resident_decisions import resident_gate
@@ -117,6 +119,13 @@ class JsonResidentDecisions(unittest.TestCase):
         self.path.write_text(json.dumps(data))
         self.store = self.open_store()
         self.store.technical_action(self.pam, "ZF-1", dict(action="design_submit", note="SYN"))
+
+    def reseed(self, data: dict[str, Any], name: str) -> None:
+        """Open a store over a new seed in test-owned storage; a seeded store ignores a new file."""
+        self.path = Path(self.tmp.name) / name / "synthetic.json"
+        self.path.parent.mkdir()
+        self.path.write_text(json.dumps(data))
+        self.store = self.open_store()
 
     def open_store(self) -> Store:
         if self.sql:
@@ -1245,17 +1254,17 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(after[idx]["aware_at"], "2026-01-01T09:00+00:00")
         self.assertEqual(after[idx]["hold"]["status"], "Active")
 
-    def test_challenge_edited_in_case_outside_generation_candidates(self) -> None:
+    def seed_extra_cases(self, count: int) -> None:
         data = copy.deepcopy(DATA)
         data["staff"] = copy.deepcopy(self.store.data["staff"])
-        for index in range(41):
+        for index in range(count):
             case = copy.deepcopy(self.store.cases["ZF-1"])
             case["id"] = f"SYN-EDIT-{index:02}"
             data["cases"].append(case)
-        self.path = Path(self.tmp.name) / "edited-in" / "synthetic.json"
-        self.path.parent.mkdir()
-        self.path.write_text(json.dumps(data))
-        self.store = self.open_store()
+        self.reseed(data, "edited-in")
+
+    def test_challenge_edited_in_case_outside_generation_candidates(self) -> None:
+        self.seed_extra_cases(41)
         proposal = self.priority_fixture()
         original = copy.deepcopy(self.store.data["recommendations"][-1])
         self.assertEqual(len(original["case_ids"]), 40)
@@ -3223,6 +3232,863 @@ class JsonResidentDecisions(unittest.TestCase):
             self.assertEqual(service.call_count, 2)
         self.assertEqual(self.store.cases["ZF-1"], before)
 
+    def forward(self, user: dict[str, Any] | None = None, **kw: Any) -> None:
+        body = dict(
+            action="service_forward",
+            id="SR-1",
+            expected_version=1,
+            resident_request_ref="SYN-RESIDENT-ASKED-REF",
+        )
+        body.update(kw)
+        self.store.resident_action(user or self.rae, "ZF-1", body)
+
+    def route(self) -> dict[str, Any]:
+        found: dict[str, Any] = self.store.cases["ZF-1"]["service_requests"][0].get(
+            "formal_route", {}
+        )
+        return found
+
+    def request_without_route(self) -> dict[str, Any]:
+        req: dict[str, Any] = copy.deepcopy(self.store.cases["ZF-1"]["service_requests"][0])
+        req.pop("formal_route", None)
+        return req
+
+    def test_forward_defaults_unconfigured_and_keeps_local_request(self) -> None:
+        self.request()
+        before = self.request_without_route()
+        self.forward()
+        attempt = self.route()["attempts"][0]
+        self.assertEqual(attempt["status"], "Unconfigured")
+        self.assertNotIn("receipt_ref", attempt)
+        self.assertEqual(attempt["request_id"], "SR-1")
+        self.assertEqual(attempt["resident_request_ref"], "SYN-RESIDENT-ASKED-REF")
+        self.assertEqual(self.request_without_route(), before)
+        reopened = self.open_store().detail("ZF-1", self.sam)["service_requests"][0]
+        self.assertEqual(reopened["formal_route"]["attempts"][0]["status"], "Unconfigured")
+
+    def test_forward_failed_then_acknowledged_with_stable_identity(self) -> None:
+        self.request()
+        before = self.request_without_route()
+        for mode in ("raise", "malformed"):
+            receiver = SyntheticReceiver(mode)
+            self.store.complaints_receiver = receiver
+            self.forward(retry_unresolved=True)
+            attempt = self.route()["attempts"][-1]
+            self.assertEqual(attempt["status"], "Unconfirmed")
+            self.assertNotIn("not been received", attempt["reason"])
+            self.assertNotIn("not_sent", attempt)
+            self.assertNotIn("receipt_ref", attempt)
+            self.assertNotIn("SECRET", json.dumps(self.route()))
+            self.assertEqual(len(receiver.envelopes), 1)
+        self.assertEqual(self.request_without_route(), before)
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.forward(retry_unresolved=True)
+        attempts = self.route()["attempts"]
+        self.assertEqual(
+            [a["status"] for a in attempts], ["Unconfirmed", "Unconfirmed", "Acknowledged"]
+        )
+        self.assertEqual(attempts[2]["receipt_ref"], "SYN-RCPT-1")
+        self.assertEqual(receiver.envelopes[0]["idempotency_key"], self.route()["route_key"])
+        self.assertEqual(
+            set(receiver.envelopes[0]),
+            {
+                "idempotency_key",
+                "case_ref",
+                "request_id",
+                "route",
+                "summary",
+                "desired_outcome",
+                "accessibility",
+                "review_reference",
+                "attempt",
+            },
+        )
+        self.assertEqual(self.request_without_route(), before)
+        self.unchanged_failure(self.forward)
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_forward_refusals_record_nothing_and_send_nothing(self) -> None:
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.request()
+        self.request("Repair")
+        for user, kw in (
+            (self.kim, {}),
+            (self.rex, {}),
+            (self.rae, dict(expected_version=9)),
+            (self.rae, dict(resident_request_ref="")),
+            (self.rae, dict(id="SR-2", expected_version=1)),
+        ):
+            self.unchanged_failure(partial(self.forward, user, **kw))
+        self.assertEqual(receiver.envelopes, [])
+
+    def test_forward_independent_review_needs_the_named_reviewer(self) -> None:
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.scope()
+        self.answer()
+        self.store.resident_action(self.sam, "ZF-1", self.review_body())
+        for user in (self.sam, self.pam, self.kim):
+            self.unchanged_failure(partial(self.forward, user))
+        self.assertEqual(receiver.envelopes, [])
+        self.forward(self.rae)
+        self.assertEqual(self.route()["attempts"][0]["status"], "Acknowledged")
+        self.assertEqual(receiver.envelopes[0]["route"], "Independent review")
+        self.assertEqual(receiver.envelopes[0]["review_reference"], "SYN recorded decision")
+
+    def test_forward_reviewer_who_made_the_decision_is_refused(self) -> None:
+        self.scope()
+        self.answer()
+        self.store.resident_action(self.sam, "ZF-1", self.review_body())
+        with self.store.lock:
+            req = self.store._case("ZF-1")["service_requests"][0]
+            req["reviewed_identity"] = dict(req["redress_identity"])
+            self.store.save()
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.unchanged_failure(partial(self.forward, self.rae))
+        self.assertEqual(receiver.envelopes, [])
+
+    def test_forward_stays_reachable_under_authority_and_tenure_holds(self) -> None:
+        self.scope()
+        self.action("safe_contact_record", safe_contact_ref="SYN-SAFE-CANARY", source="SYN")
+        self.authority()
+        self.answer(answered_by="Their representative", representative_ref="SYN-REP-A")
+        self.answer(status="Withdrawn", note="SYN in their words")
+        self.authority(status="Disputed")
+        self.store.resident_action(self.sam, "ZF-1", self.tenure())
+        self.assertTrue(resident_gate(self.store.cases["ZF-1"], self.bind(MEASURES[0])))
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.request()
+        self.forward()
+        self.assertEqual(self.route()["attempts"][0]["status"], "Acknowledged")
+        text = json.dumps(receiver.envelopes)
+        for private in ("SYN-REP-A", "SYN-SAFE-CANARY", "SYN-WISHES-CANARY"):
+            self.assertNotIn(private, text)
+
+    @contextmanager
+    def after_reservation(self, inject: Callable[[dict[str, Any]], None]) -> Iterator[None]:
+        """Run inject once, after the reservation commits and before the send reads it."""
+        original = resident_decisions._operation
+        done: list[bool] = []
+
+        @contextmanager
+        def seam(store: Any, user: Any, case_id: str, body: dict[str, Any]) -> Iterator[None]:
+            with original(store, user, case_id, body):
+                yield
+            if body["action"] == "service_forward" and not done:
+                done.append(True)
+                with store.lock:
+                    inject(store._case(case_id)["service_requests"][0])
+                    store.save()
+
+        with patch.object(resident_decisions, "_operation", seam):
+            yield
+
+    def competing_attempt(self, req: dict[str, Any]) -> None:
+        route = req["formal_route"]
+        route["attempts"].append(
+            dict(
+                attempt=2,
+                status="Pending",
+                request_id=req["id"],
+                request_version=req["version"],
+                resident_request_ref="SYN-COMPETING",
+                reason="Sending. No outcome is recorded yet.",
+                reservation_id="SYN-OTHER-RESERVATION",
+            )
+        )
+
+    def test_forward_send_is_bound_to_the_attempt_it_reserved(self) -> None:
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.request()
+        with self.after_reservation(self.competing_attempt):
+            self.forward()
+        attempts = self.route()["attempts"]
+        self.assertEqual([e["attempt"] for e in receiver.envelopes], [1])
+        self.assertEqual([a["status"] for a in attempts], ["Acknowledged", "Pending"])
+        self.assertEqual(attempts[0]["receipt_ref"], "SYN-RCPT-1")
+        self.assertNotIn("receipt_ref", attempts[1])
+
+    def test_forward_guard_sends_nothing_when_request_changed_after_reservation(self) -> None:
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.request()
+
+        def change(req: dict[str, Any]) -> None:
+            req["version"] += 1
+
+        with self.after_reservation(change):
+            self.forward()
+        attempt = self.route()["attempts"][0]
+        self.assertEqual(receiver.envelopes, [])
+        self.assertEqual((attempt["status"], attempt["not_sent"]), ("Failed", True))
+        self.assertNotIn("receipt_ref", attempt)
+        self.forward(expected_version=2)
+        self.assertEqual(self.route()["attempts"][1]["status"], "Acknowledged")
+
+    def test_forward_in_flight_attempt_refuses_unresolved_retry_on_this_store(self) -> None:
+        receiver = SyntheticReceiver("block")
+        self.store.complaints_receiver = receiver
+        self.request()
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            sending = pool.submit(self.forward)
+            try:
+                self.assertTrue(receiver.entered.wait(20))
+                with self.assertRaises(ValueError):
+                    self.forward(retry_unresolved=True)
+                self.assertEqual(len(self.route()["attempts"]), 1)
+            finally:
+                receiver.release.set()
+            sending.result(timeout=20)
+        self.assertEqual([a["status"] for a in self.route()["attempts"]], ["Acknowledged"])
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_forward_receiver_that_records_then_raises_is_unconfirmed(self) -> None:
+        receiver = SyntheticReceiver("raise")
+        self.store.complaints_receiver = receiver
+        self.request()
+        self.forward()
+        self.assertEqual(self.route()["attempts"][0]["status"], "Unconfirmed")
+        self.unchanged_failure(self.forward)
+        receiver.mode = "ack"
+        self.forward(retry_unresolved=True)
+        self.assertEqual(
+            [a["status"] for a in self.route()["attempts"]], ["Unconfirmed", "Acknowledged"]
+        )
+        self.assertEqual(
+            receiver.envelopes[0]["idempotency_key"], receiver.envelopes[1]["idempotency_key"]
+        )
+        self.assertEqual([e["attempt"] for e in receiver.envelopes], [1, 2])
+
+    def test_forward_declared_non_send_is_failed_and_retries_ordinarily(self) -> None:
+        receiver = SyntheticReceiver("not-sent")
+        self.store.complaints_receiver = receiver
+        self.request()
+        self.forward()
+        attempt = self.route()["attempts"][0]
+        self.assertEqual((attempt["status"], attempt["not_sent"]), ("Failed", True))
+        receiver.mode = "ack"
+        self.forward()
+        self.assertEqual(self.route()["attempts"][1]["status"], "Acknowledged")
+
+    def test_forward_legacy_failed_attempt_needs_reconciliation_after_reopen(self) -> None:
+        self.request()
+        with self.store.lock:
+            req = self.store._case("ZF-1")["service_requests"][0]
+            req["formal_route"] = dict(
+                route_key="SYN-LEGACY-KEY",
+                attempts=[
+                    dict(
+                        attempt=1,
+                        status="Failed",
+                        request_id="SR-1",
+                        request_version=1,
+                        reason="The receiver did not acknowledge this request. "
+                        "It has not been received.",
+                    )
+                ],
+            )
+            self.store.save()
+        self.store = self.open_store()
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.unchanged_failure(self.forward)
+        self.assertEqual(receiver.envelopes, [])
+        self.forward(retry_unresolved=True)
+        attempts = self.route()["attempts"]
+        self.assertEqual([a["status"] for a in attempts], ["Failed", "Acknowledged"])
+        self.assertIn("It has not been received.", attempts[0]["reason"])
+        self.assertNotIn("not_sent", attempts[0])
+
+    def named_reviewer_setup(self) -> "SyntheticReceiver":
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.scope()
+        self.answer()
+        self.store.resident_action(self.sam, "ZF-1", self.review_body())
+        return receiver
+
+    def test_forward_named_reviewer_email_reassigned_to_a_manager_is_refused(self) -> None:
+        receiver = self.named_reviewer_setup()
+        manager = dict(self.pam, email=self.rae["email"])
+        self.register_followup_actor(manager)
+        self.unchanged_failure(partial(self.forward, manager))
+        self.assertEqual(receiver.envelopes, [])
+        self.register_followup_actor(self.rae)
+        self.forward(self.rae)
+        self.assertEqual(self.route()["attempts"][0]["status"], "Acknowledged")
+
+    def test_forward_independent_review_without_known_persisted_identity_fails_closed(self) -> None:
+        receiver = self.named_reviewer_setup()
+        with self.store.lock:
+            req = self.store._case("ZF-1")["service_requests"][0]
+            req["redress_identity"] = dict(email=self.rae["email"], code=None, oid=None)
+            self.store.save()
+        self.unchanged_failure(partial(self.forward, self.rae))
+        self.assertEqual(receiver.envelopes, [])
+
+    def test_forward_complaint_route_keeps_manager_rights(self) -> None:
+        self.store.complaints_receiver = SyntheticReceiver("ack")
+        self.request()
+        self.forward(self.pam)
+        self.assertEqual(self.route()["attempts"][0]["status"], "Acknowledged")
+
+    def test_forward_outcome_save_failure_leaves_pending_and_blocks_silent_resend(self) -> None:
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.request()
+        with patch.object(
+            resident_decisions.ResidentDecisionMixin,
+            "_res_service_forward_outcome",
+            side_effect=RuntimeError("SYN outcome save failed"),
+        ) as handler:
+            with self.assertLogs(resident_decisions.__name__, "WARNING") as logged:
+                with self.assertRaises(resident_decisions.ResidentCommittedError):
+                    self.forward()
+        self.assertEqual(handler.call_count, 2)
+        self.assertEqual(len(receiver.envelopes), 1)
+        self.assertIn("'SYN-RCPT-1'", "\n".join(logged.output))
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        reopened = self.open_store().cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(reopened["formal_route"]["attempts"][0]["status"], "Pending")
+        self.unchanged_failure(self.forward)
+        self.assertEqual(len(receiver.envelopes), 1)
+        self.forward(retry_unresolved=True)
+        self.assertEqual(
+            [a["status"] for a in self.route()["attempts"]], ["Pending", "Acknowledged"]
+        )
+        self.assertEqual(
+            receiver.envelopes[0]["idempotency_key"], receiver.envelopes[1]["idempotency_key"]
+        )
+
+    @contextmanager
+    def outcome_save_fault(self, *, committed: bool) -> Iterator[list[int]]:
+        """Fail the first outcome save only; a committed fault loses just its acknowledgement."""
+        real = self.store.save
+        calls: list[int] = []
+
+        def save() -> None:
+            outcome = (self.route().get("attempts") or [{}])[-1].get("status") == "Acknowledged"
+            if not outcome or calls:
+                real()
+                return
+            calls.append(1)
+            if committed:
+                real()
+                holder: Any = getattr(self.store, "local", self.store)
+                holder.resident_validation["persisted"] = False
+            raise RuntimeError("SYN outcome save failed")
+
+        with patch.object(self.store, "save", save):
+            yield calls
+
+    def check_outcome_write_retried_once(self, *, committed: bool) -> None:
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.request()
+        found: list[bool] = []
+        check = resident_decisions._outcome_recorded
+
+        def spy(*args: Any) -> bool:
+            found.append(check(*args))
+            return found[-1]
+
+        with patch.object(resident_decisions, "_outcome_recorded", spy):
+            with self.outcome_save_fault(committed=committed) as calls:
+                self.forward()
+        self.assertEqual(calls, [1])
+        # SQL reconciles a committed outcome; JSON restores the pre-image and its retry rewrites it.
+        self.assertEqual(found, [committed and hasattr(self.store, "db")])
+        self.assertEqual(len(receiver.envelopes), 1)
+        attempts = self.route()["attempts"]
+        self.assertEqual([a["status"] for a in attempts], ["Acknowledged"])
+        self.assertEqual(attempts[0]["receipt_ref"], "SYN-RCPT-1")
+        reopened = self.open_store().cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(reopened["formal_route"]["attempts"], attempts)
+
+    def test_forward_failed_outcome_write_is_retried_once_without_resending(self) -> None:
+        self.check_outcome_write_retried_once(committed=False)
+
+    def test_forward_lost_commit_acknowledgement_is_reconciled_without_duplicate(self) -> None:
+        self.check_outcome_write_retried_once(committed=True)
+
+    def test_forward_unverified_recovery_is_not_retried_and_logs_the_receipt(self) -> None:
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.request()
+        failure = RuntimeError("SYN outcome save failed")
+        failure.add_note("Resident record recovery failed; reload to establish the outcome.")
+        with patch.object(
+            resident_decisions.ResidentDecisionMixin,
+            "_res_service_forward_outcome",
+            side_effect=failure,
+        ) as handler:
+            with self.assertLogs(resident_decisions.__name__, "WARNING") as logged:
+                with self.assertRaises(resident_decisions.ResidentCommittedError):
+                    self.forward()
+        self.assertEqual(handler.call_count, 1)
+        self.assertEqual(len(receiver.envelopes), 1)
+        self.assertIn("'SYN-RCPT-1'", "\n".join(logged.output))
+
+    def pending_attempt(self, route: str = "Complaint") -> "SyntheticReceiver":
+        """Leave one acknowledged-but-unrecorded attempt Pending, as a failed outcome write does."""
+        receiver = SyntheticReceiver("ack")
+        self.store.complaints_receiver = receiver
+        self.synthetic_binding(self.sam, self.rae)
+        if route == "Complaint":
+            self.request()
+        else:
+            self.scope()
+            self.answer()
+            self.store.resident_action(self.sam, "ZF-1", self.review_body())
+        with patch.object(
+            resident_decisions.ResidentDecisionMixin,
+            "_res_service_forward_outcome",
+            side_effect=RuntimeError("SYN outcome save failed"),
+        ):
+            with self.assertLogs(resident_decisions.__name__, "WARNING"):
+                with self.assertRaises(resident_decisions.ResidentCommittedError):
+                    self.forward(self.rae if route != "Complaint" else None)
+        return receiver
+
+    def synthetic_binding(
+        self, control: dict[str, Any], reviewer: dict[str, Any], binding_id: str = "SYN-BINDING-A"
+    ) -> None:
+        """SYNTHETIC trusted fixture; not an actual named approval-role binding."""
+
+        def who(user: dict[str, Any]) -> dict[str, Any]:
+            return dict(email=user["email"], code=user.get("code"), oid=user.get("oid"))
+
+        cast(Any, self.store).supersession_binding = resident_decisions.SupersessionBinding(
+            binding_id, who(control), who(reviewer)
+        )
+
+    def supersede(self, user: dict[str, Any], role: str, **kw: Any) -> None:
+        reservation = self.route()["attempts"][0]["reservation_id"]
+        body = dict(
+            action="service_supersede_authorize",
+            id="SR-1",
+            attempt=1,
+            reservation_id=reservation,
+            authorize_as=role,
+            evidence_ref="SYN-VERIFIED-OUTCOME-1",
+        )
+        body.update(kw)
+        self.store.resident_action(user, "ZF-1", body)
+
+    def test_supersede_needs_both_owners_and_keeps_receipt_key_and_audit(self) -> None:
+        receiver = self.pending_attempt()
+        before = copy.deepcopy(self.route()["attempts"][0])
+        key = self.route()["route_key"]
+        self.supersede(self.sam, "control_owner")
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.supersede(self.rae, "reviewer")
+        attempt = self.route()["attempts"][0]
+        self.assertEqual(attempt["status"], "Superseded")
+        self.assertEqual(attempt["superseded_from"], "Pending")
+        for field in ("reservation_id", "reason", "request_id", "request_version", "reserved_at"):
+            self.assertEqual(attempt[field], before[field])
+        self.assertEqual(self.route()["route_key"], key)
+        self.assertEqual(attempt["supersession"]["evidence_ref"], "SYN-VERIFIED-OUTCOME-1")
+        self.assertEqual(
+            [a["role"] for a in attempt["supersession"]["authorizations"]],
+            ["control_owner", "reviewer"],
+        )
+        actions = [e["action"] for e in self.store.audit_entries()]
+        self.assertEqual(actions.count("resident_service_supersede_authorize"), 2)
+        self.assertTrue(self.store.verify_audit())
+        self.assertEqual(len(receiver.envelopes), 1)
+        reopened = self.open_store().cases["ZF-1"]["service_requests"][0]
+        self.assertEqual(reopened["formal_route"]["attempts"][0], attempt)
+        self.unchanged_failure(self.forward)
+        self.unchanged_failure(partial(self.supersede, self.sam, "control_owner"))
+        self.assertEqual(len(receiver.envelopes), 1)
+        self.forward(retry_unresolved=True)
+        self.assertEqual(len(receiver.envelopes), 2)
+        self.assertEqual(receiver.envelopes[1]["idempotency_key"], key)
+
+    def test_supersede_refusals_record_nothing_and_send_nothing(self) -> None:
+        receiver = self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        reservation = self.route()["attempts"][0]["reservation_id"]
+        for user, role, kw in (
+            (self.sam, "reviewer", {}),
+            (self.rae, "control_owner", {}),
+            (self.pam, "reviewer", {}),
+            (self.kim, "control_owner", {}),
+            (self.rae, "reviewer", dict(evidence_ref="")),
+            (self.rae, "reviewer", dict(evidence_ref="SYN-OTHER-EVIDENCE")),
+            (self.rae, "reviewer", dict(evidence_ref="x" * 101)),
+            (self.rae, "reviewer", dict(attempt=2)),
+            (self.rae, "reviewer", dict(reservation_id="SYN-OTHER")),
+            (self.rae, "reviewer", dict(authorize_as="manager")),
+            (self.sam, "control_owner", {}),
+        ):
+            with self.subTest(user=user["name"], role=role, kw=kw):
+                self.unchanged_failure(partial(self.supersede, user, role, **kw))
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.assertEqual(self.route()["attempts"][0]["reservation_id"], reservation)
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_supersede_refuses_aged_pending_and_non_pending_attempts(self) -> None:
+        receiver = self.pending_attempt()
+        with self.store.lock:
+            self.store._case("ZF-1")["service_requests"][0]["formal_route"]["attempts"][0][
+                "reserved_at"
+            ] = "2000-01-01T00:00:00+00:00"
+            self.store.save()
+        self.unchanged_failure(self.forward)
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.assertNotIn("supersession", self.route()["attempts"][0])
+        self.forward(retry_unresolved=True)
+        self.assertEqual(self.route()["attempts"][1]["status"], "Acknowledged")
+        reservation = self.route()["attempts"][1]["reservation_id"]
+        self.unchanged_failure(
+            partial(
+                self.supersede, self.sam, "control_owner", attempt=2, reservation_id=reservation
+            )
+        )
+        self.assertEqual(len(receiver.envelopes), 2)
+
+    def test_supersede_independent_review_needs_the_named_independent_reviewer(self) -> None:
+        receiver = self.pending_attempt("Independent review")
+        self.unchanged_failure(partial(self.supersede, self.sam, "reviewer"))
+        with self.store.lock:
+            req = self.store._case("ZF-1")["service_requests"][0]
+            req["reviewed_identity"] = dict(req["redress_identity"])
+            self.store.save()
+        self.unchanged_failure(partial(self.supersede, self.rae, "reviewer"))
+        with self.store.lock:
+            self.store._case("ZF-1")["service_requests"][0]["reviewed_identity"] = dict(
+                self.store._case("ZF-1")["service_requests"][0]["service_identity"], code="SYN-X"
+            )
+            self.store.save()
+        self.synthetic_binding(self.pam, self.rae)
+        self.supersede(self.pam, "control_owner")
+        self.supersede(self.rae, "reviewer")
+        self.assertEqual(self.route()["attempts"][0]["status"], "Superseded")
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def forged_supersession(self, digest: str | None) -> None:
+        stamp = dict(binding_id="SYN-BINDING-A", binding_digest=digest) if digest else {}
+        with self.store.lock:
+            attempt = self.store._case("ZF-1")["service_requests"][0]["formal_route"]["attempts"][0]
+            attempt["supersession"] = dict(
+                evidence_ref="SYN-VERIFIED-OUTCOME-1",
+                withdrawn=[],
+                authorizations=[
+                    dict(
+                        role="control_owner",
+                        identity=resident_decisions._identity(self.sam),
+                        at="2026-11-10T00:00:00+00:00",
+                        **stamp,
+                    )
+                ],
+            )
+            self.store.save()
+
+    def test_supersede_default_unconfigured_rejects_inferred_roles_and_forged_rows(self) -> None:
+        receiver = self.pending_attempt()
+        del cast(Any, self.store).supersession_binding
+        self.forged_supersession(None)
+        for user, role in (
+            (self.sam, "control_owner"),
+            (self.rae, "reviewer"),
+            (self.pam, "reviewer"),
+        ):
+            with self.subTest(user=user["name"], role=role):
+                with self.assertRaisesRegex(PermissionError, "approval-role binding"):
+                    self.supersede(user, role)
+        with self.assertRaisesRegex(PermissionError, "approval-role binding"):
+            self.supersede(self.rae, "reviewer")
+        for forged in (None, dict(email=self.rae["email"], code=self.rae.get("code"))):
+            cast(Any, self.store).supersession_binding = forged
+            self.unchanged_failure(partial(self.supersede, self.rae, "reviewer"))
+        self.assertEqual(self.route()["attempts"][0]["status"], "Pending")
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_supersede_binding_not_created_from_staff_requests_or_body(self) -> None:
+        self.pending_attempt()
+        self.synthetic_binding(self.kim, self.rex)
+        for user, role in ((self.sam, "control_owner"), (self.rae, "reviewer")):
+            self.unchanged_failure(partial(self.supersede, user, role))
+        self.unchanged_failure(
+            partial(
+                self.supersede,
+                self.sam,
+                "control_owner",
+                binding=dict(control_owner=self.sam["email"], reviewer=self.rae["email"]),
+            )
+        )
+        self.assertNotIn("supersession", self.route()["attempts"][0])
+
+    def test_supersede_forged_stored_authorization_is_withdrawn_not_counted(self) -> None:
+        self.pending_attempt()
+        digest = cast(Any, self.store).supersession_binding.digest
+        for stamp in (None, "0" * 64, digest):
+            with self.subTest(stamp=stamp):
+                self.forged_supersession(stamp)
+                self.supersede(self.rae, "reviewer")
+                attempt = self.route()["attempts"][0]
+                self.assertEqual(attempt["status"], "Pending")
+                self.assertEqual(
+                    [a["role"] for a in attempt["supersession"]["authorizations"]], ["reviewer"]
+                )
+                self.assertEqual(
+                    [a["role"] for a in attempt["supersession"]["withdrawn"]], ["control_owner"]
+                )
+                with self.store.lock:
+                    del self.store._case("ZF-1")["service_requests"][0]["formal_route"]["attempts"][
+                        0
+                    ]["supersession"]
+                    self.store.save()
+
+    def edit_supersession(self, **changes: Any) -> None:
+        with self.store.lock:
+            attempt = self.store._case("ZF-1")["service_requests"][0]["formal_route"]["attempts"][0]
+            attempt["supersession"].update(changes)
+            self.store.save()
+
+    def assert_first_approval_withdrawn(self) -> None:
+        attempt = self.route()["attempts"][0]
+        self.assertEqual(attempt["status"], "Pending")
+        self.assertEqual(
+            [a["role"] for a in attempt["supersession"]["authorizations"]], ["reviewer"]
+        )
+        self.assertEqual(
+            [a["role"] for a in attempt["supersession"]["withdrawn"]], ["control_owner"]
+        )
+
+    def test_supersede_evidence_substituted_after_a_genuine_approval_does_not_count(self) -> None:
+        receiver = self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        audit = list(self.store.audit_entries())
+        self.assertNotIn("SYN-VERIFIED-OUTCOME-1", json.dumps(audit))
+        self.edit_supersession(evidence_ref="SYN-OTHER-EVIDENCE-2")
+        self.supersede(self.rae, "reviewer", evidence_ref="SYN-OTHER-EVIDENCE-2")
+        self.assert_first_approval_withdrawn()
+        self.assertEqual(list(self.store.audit_entries())[: len(audit)], audit)
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_supersede_restamped_binding_digest_on_an_old_approval_does_not_count(self) -> None:
+        receiver = self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        self.synthetic_binding(self.sam, self.rae, "SYN-BINDING-B")
+        digest = cast(Any, self.store).supersession_binding.digest
+        with self.store.lock:
+            attempt = self.store._case("ZF-1")["service_requests"][0]["formal_route"]["attempts"][0]
+            given = attempt["supersession"]["authorizations"][0]
+            given.update(binding_id="SYN-BINDING-B", binding_digest=digest)
+            self.store.save()
+        self.supersede(self.rae, "reviewer")
+        self.assert_first_approval_withdrawn()
+        self.assertEqual(len(receiver.envelopes), 1)
+
+    def test_supersede_legacy_generic_audit_entry_is_not_proof(self) -> None:
+        self.pending_attempt()
+        self.forged_supersession(cast(Any, self.store).supersession_binding.digest)
+        self.store.audit(
+            self.sam["email"],
+            "resident_service_supersede_authorize",
+            "ZF-1",
+            "SR-1 formal-route attempt 1 supersession authorized by the control owner",
+        )
+        self.supersede(self.rae, "reviewer")
+        self.assert_first_approval_withdrawn()
+
+    def test_supersede_changed_binding_withdraws_earlier_authorization(self) -> None:
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        self.synthetic_binding(self.sam, self.rae, "SYN-BINDING-B")
+        self.supersede(self.rae, "reviewer")
+        attempt = self.route()["attempts"][0]
+        self.assertEqual(attempt["status"], "Pending")
+        self.assertEqual(
+            [a["role"] for a in attempt["supersession"]["withdrawn"]], ["control_owner"]
+        )
+        self.supersede(self.sam, "control_owner")
+        self.assertEqual(self.route()["attempts"][0]["status"], "Superseded")
+        stamped = {
+            a["binding_id"] for a in self.route()["attempts"][0]["supersession"]["authorizations"]
+        }
+        self.assertEqual(stamped, {"SYN-BINDING-B"})
+
+    def test_supersede_binding_changed_during_sql_replay_is_refused(self) -> None:
+        if not self.sql:
+            self.skipTest("SQL replay only")
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        original = resident_decisions.validate_sql
+
+        def swap(store: Any) -> None:
+            self.synthetic_binding(self.sam, self.rae, "SYN-BINDING-C")
+            original(store)
+
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        with patch.object(resident_decisions, "validate_sql", swap):
+            with self.assertRaises(PermissionError):
+                self.supersede(self.rae, "reviewer")
+        self.assertEqual(self.store.cases["ZF-1"], before)
+
+    def test_supersede_binding_is_validated_and_immutable(self) -> None:
+        binding = resident_decisions.SupersessionBinding
+        sam = dict(email=self.sam["email"], code=self.sam.get("code"))
+        rae = dict(email=self.rae["email"], code=self.rae.get("code"))
+        with self.assertRaises(ValueError):
+            binding("SYN", sam, dict(rae, code=sam["code"]))
+        with self.assertRaises(ValueError):
+            binding("SYN", sam, dict(email=self.rae["email"]))
+        with self.assertRaises(ValueError):
+            binding("", sam, rae)
+        good = binding("SYN", sam, rae)
+        with self.assertRaises(AttributeError):
+            good.binding_id = "OTHER"  # type: ignore[misc]
+        sam["code"] = "CHANGED"
+        self.assertNotEqual(good.identity("control_owner")["code"], "CHANGED")
+
+    def test_supersede_owner_reassignment_does_not_change_the_bound_authority(self) -> None:
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        req = self.store.cases["ZF-1"]["service_requests"][0]
+        self.store.resident_action(
+            self.pam,
+            "ZF-1",
+            dict(
+                action="service_reassign",
+                id="SR-1",
+                expected_version=req["version"],
+                responsibility="service",
+                owner=self.rex["email"],
+                note="SYN reassignment",
+            ),
+        )
+        self.unchanged_failure(partial(self.supersede, self.rex, "control_owner"))
+        self.supersede(self.rae, "reviewer")
+        self.assertEqual(self.route()["attempts"][0]["status"], "Superseded")
+
+    def test_supersede_failure_is_atomic_and_can_be_replayed(self) -> None:
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        before = copy.deepcopy(self.store.cases["ZF-1"])
+        audit = list(self.store.audit_entries())
+        with patch.object(self.store, "audit", side_effect=RuntimeError("SYN audit fault")):
+            with self.assertRaises(RuntimeError):
+                self.supersede(self.rae, "reviewer")
+        self.assertEqual(self.store.cases["ZF-1"], before)
+        self.assertEqual(list(self.store.audit_entries()), audit)
+        self.assertEqual(self.open_store().cases["ZF-1"], before)
+        self.supersede(self.rae, "reviewer")
+        self.assertEqual(self.route()["attempts"][0]["status"], "Superseded")
+
+    def test_supersede_is_refused_while_the_send_is_in_flight(self) -> None:
+        receiver = SyntheticReceiver("block")
+        self.store.complaints_receiver = receiver
+        self.synthetic_binding(self.sam, self.rae)
+        self.request()
+        with ThreadPoolExecutor(max_workers=1) as pool:
+            sending = pool.submit(self.forward)
+            try:
+                self.assertTrue(receiver.entered.wait(20))
+                reservation = self.route()["attempts"][0]["reservation_id"]
+                with self.assertRaisesRegex(ValueError, "still in progress"):
+                    self.supersede(self.sam, "control_owner", reservation_id=reservation)
+            finally:
+                receiver.release.set()
+            sending.result(timeout=20)
+        self.assertEqual([a["status"] for a in self.route()["attempts"]], ["Acknowledged"])
+
+    def test_late_outcome_for_a_superseded_attempt_is_refused_and_logs_the_receipt(self) -> None:
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        self.supersede(self.rae, "reviewer")
+        before = copy.deepcopy(self.route())
+        outcome = dict(
+            action="service_forward_outcome",
+            id="SR-1",
+            attempt=1,
+            reservation_id=before["attempts"][0]["reservation_id"],
+            status="Acknowledged",
+            reason="SYN",
+            receipt_ref="SYN-RCPT-LATE",
+        )
+        with self.assertLogs(resident_decisions.__name__, "WARNING") as logged:
+            with self.assertRaises(resident_decisions.ResidentCommittedError):
+                resident_decisions._record_outcome(self.store, self.rae, "ZF-1", outcome)
+        self.assertIn("'SYN-RCPT-LATE'", "\n".join(logged.output))
+        self.assertEqual(self.route(), before)
+
+    def test_supersede_retention_deletion_keeps_the_disposition(self) -> None:
+        self.pending_attempt()
+        self.supersede(self.sam, "control_owner")
+        self.supersede(self.rae, "reviewer")
+        with self.store.lock:
+            self.store._case("ZF-1")["resident"]["first_contact_at"] = "2020-01-01"
+            self.store.save()
+        self.store.delete_resident_records(self.pam, "ZF-1", "2040-01-01")
+        attempt = self.open_store().cases["ZF-1"]["service_requests"][0]["formal_route"][
+            "attempts"
+        ][0]
+        self.assertEqual(attempt["status"], "Superseded")
+        self.assertNotIn("resident_request_ref", attempt)
+        self.assertEqual(len(attempt["supersession"]["authorizations"]), 2)
+
+    def test_forward_retention_deletion_clears_resident_reference_only(self) -> None:
+        self.store.complaints_receiver = SyntheticReceiver("ack")
+        self.request()
+        self.forward()
+        with self.store.lock:
+            self.store._case("ZF-1")["resident"]["first_contact_at"] = "2020-01-01"
+            self.store.save()
+        self.store.delete_resident_records(self.pam, "ZF-1", "2040-01-01")
+        reopened = self.open_store().cases["ZF-1"]["service_requests"][0]
+        attempt = reopened["formal_route"]["attempts"][0]
+        self.assertNotIn("resident_request_ref", attempt)
+        self.assertNotIn("requested_by", attempt)
+        self.assertEqual(attempt["receipt_ref"], "SYN-RCPT-1")
+
+
+class SyntheticReceiver:
+    """Constructed receiver: records envelopes, never touches a network."""
+
+    def __init__(self, mode: str) -> None:
+        self.mode = mode
+        self.envelopes: list[dict[str, Any]] = []
+        self.entered = Event()
+        self.release = Event()
+
+    def submit(self, envelope: dict[str, Any]) -> dict[str, Any]:
+        self.envelopes.append(copy.deepcopy(envelope))
+        if self.mode == "block" and len(self.envelopes) == 1:
+            self.entered.set()
+            self.release.wait(20)
+        if self.mode == "raise":
+            raise RuntimeError("SYN-RECEIVER-SECRET unavailable")
+        if self.mode == "not-sent":
+            from zava_forward.core import complaints_route
+
+            raise complaints_route.NotSent("SYN-RECEIVER-SECRET refused before sending")
+        if self.mode == "malformed":
+            return {"status": "ok"}
+        return {"receipt_ref": "SYN-RCPT-1", "received_at": "2099-01-01T10:00:00+00:00"}
+
+
+class ComplaintsRouteConfiguration(unittest.TestCase):
+    def test_only_unconfigured_is_known_and_it_sends_nothing(self) -> None:
+        from zava_forward.core import complaints_route
+
+        for env in ({}, {"ZF_COMPLAINTS_ROUTE": "unconfigured"}):
+            with self.assertRaises(complaints_route.NotConfigured):
+                complaints_route.receiver_from_env(env).submit({})
+        with self.assertRaises(ValueError):
+            complaints_route.receiver_from_env({"ZF_COMPLAINTS_ROUTE": "https://example.test"})
+        for bad in (None, {}, {"receipt_ref": ""}, {"receipt_ref": 7}, {"receipt_ref": "x" * 101}):
+            with self.assertRaises(ValueError):
+                complaints_route.parse_acknowledgement(bad)
+
 
 @unittest.skipUnless(
     os.environ.get("ZF_RESIDENT_AZURE_TEST") == "1",
@@ -4154,25 +5020,48 @@ class SqlResidentDecisions(JsonResidentDecisions):
 @unittest.skipUnless(os.environ.get("ZF_RESIDENT_MSSQL") == "1", "opt-in owned loopback SQL Server")
 class MssqlResidentControls(SqlResidentDecisions):
     def setUp(self) -> None:
+        require_task_owned_loopback(os.environ)
         from zava_forward.core.mssqlstore import _Conn, connection_string
 
-        self.database = "zf_resident88_" + uuid.uuid4().hex
         environment = patch.dict(os.environ, ZF_SQL_DATABASE="master")
         environment.start()
         self.addCleanup(environment.stop)
-        admin = _Conn(connection_string())
-        self.addCleanup(admin.close)
-        admin.execute(f"CREATE DATABASE [{self.database}]")
+        self.admin = _Conn(connection_string())
+        self.addCleanup(self.admin.close)
+        self.create_owned_database()
+        super().setUp()
+
+    def create_owned_database(self) -> None:
+        database = "zf_resident88_" + uuid.uuid4().hex
+        self.database = database
 
         def drop_owned_database() -> None:
-            admin.execute(
-                f"ALTER DATABASE [{self.database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE"
+            self.admin.execute(
+                f"IF DB_ID(N'{database}') IS NOT NULL BEGIN "
+                f"ALTER DATABASE [{database}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; "
+                f"DROP DATABASE [{database}]; END"
             )
-            admin.execute(f"DROP DATABASE [{self.database}]")
 
         self.addCleanup(drop_owned_database)
-        os.environ["ZF_SQL_DATABASE"] = self.database
-        super().setUp()
+        self.admin.execute(f"CREATE DATABASE [{database}]")
+        os.environ["ZF_SQL_DATABASE"] = database
+
+    def reseed(self, data: dict[str, Any], name: str) -> None:
+        self.create_owned_database()
+        super().reseed(data, name)
+
+    def seed_extra_cases(self, count: int) -> None:
+        cases = []
+        for index in range(count):
+            case = copy.deepcopy(self.store.cases["ZF-1"])
+            case["id"] = f"SYN-EDIT-{index:02}"
+            cases.append(case)
+        seed = Path(self.tmp.name) / "extra-cases-seed.json"
+        seed.write_text(json.dumps(dict(cases=cases)))
+        report = self.store.merge_seed(seed, apply=True, expect_added=count)
+        self.assertEqual(report["to_insert"], count)
+        self.assertTrue(report["applied"])
+        self.store = self.open_store()
 
     def open_store(self) -> Any:
         from zava_forward.core.mssqlstore import MssqlStore

@@ -152,6 +152,11 @@ param chatNoticeRef string = ''
 param chatRetentionRef string = ''
 @minValue(0)
 param chatRetentionDays int = 0
+@description('Provision the private ranking-archive Blob container and configure the API with ZF_RANKING_ARCHIVE and ZF_RANKING_BLOB_CONTAINER (Refs #136, #1258). Source definition only: not provisioning, a role grant, WORM enforcement or deployment approval. Default false leaves every existing resource and API setting unchanged.')
+param enableRankingArchiveBlob bool = false
+@description('Days ranking archive records stay immutable. 0 (unset) creates no policy: the duration and its approval are a manual prerequisite and no immutable release may be claimed. A positive value creates an unlocked policy; locking is an owner action.')
+@minValue(0)
+param rankingArchiveImmutabilityDays int = 0
 @description('Demo-only chat model activation (Refs #891). Effective only with demoDirectIngress; the exact value approved-2026-11-03 enables it.')
 param chatDemoActivation string = ''
 param tags object = {}
@@ -205,6 +210,7 @@ module guard 'modules/guard.bicep' = {
     demoRequiresBrowserAuthentication: !demoDirectIngress || !deployApplications || (!empty(entraClientId) && !entraBearerOnly) ? 'ok' : ''
     appCredentialRequiresDirectDemo: entraCredentialStore != 'app' || (demoDirectIngress && !entraBearerOnly && !empty(entraClientId)) ? 'ok' : ''
     appCredentialBlocksApplicationDeployment: entraCredentialStore != 'app' || !deployApplications ? 'ok' : ''
+    pilotRankingArchiveRequiresConfiguredRetention: environmentName != 'pilot' || !enableRankingArchiveBlob || rankingArchiveImmutabilityDays > 0 ? 'ok' : ''
     serverlessAutoPauseDelayMustBeSupported: sqlTier != 'serverless' || sqlAutoPauseDelayMinutes == -1 || (sqlAutoPauseDelayMinutes >= 15 && sqlAutoPauseDelayMinutes <= 10080) ? 'ok' : ''
   }
 }
@@ -267,6 +273,8 @@ module storage 'modules/storage.bicep' = {
     zoneIds: network.outputs.zoneIds
     enableLock: enableLocks
     zoneRedundant: zoneRedundant
+    enableRankingArchive: enableRankingArchiveBlob
+    rankingArchiveImmutabilityDays: rankingArchiveImmutabilityDays
     roleAssignments: [
       { principalId: identity.outputs.principalIds.api, roleDefinitionId: storageBlobDataContributor, scope: 'blob' }
       { principalId: identity.outputs.principalIds.api, roleDefinitionId: storageQueueDataSender, scope: 'queue' }
@@ -415,6 +423,7 @@ module apps 'modules/containerapps.bicep' = if (deployApplications || deployEnvi
     zoneRedundant: zoneRedundant
     evidenceStore: evidenceStore
     sharePointSiteId: sharePointSiteId
+    rankingArchiveContainer: storage.outputs.rankingArchiveContainer
     apiImage: apiImage
     enableApiAi: enableApiAi
     agentImage: agentImage

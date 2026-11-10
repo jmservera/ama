@@ -1,0 +1,4 @@
+<!-- markdownlint-disable-file -->
+# Execution record: issue 1288 H1 restart-context (resumption)
+
+Phase activation readback `date -u` 2026-11-09T23:53Z, before any observation. Successor to the H1 plan (`2026-11-09-issue-1288-h1-restart-context-plan.md`, critique applied); the six H0 and six original H1 records are unchanged. Resumption after a proven resource change (issue-1238 holder finished, `fuser` of `/tmp/ama-rpi-heavy.lock` empty at 23:53:02Z), not a correction cycle. E11 success; E12 and E13 unused. Frozen start `e7e8da28c`, base `a8593a7a8`. One holder inspection, one `flock -n` admission; if busy, pending again with no further attempt. Harness `harness_h1_restart_context.py` sha256 `fbec7186270b...` and `sql-run-h1.sh` sha256 `2e9f7f832b22...` run as approved: variant B reuses the same durable rows, writes nothing, and uses an independent provider.

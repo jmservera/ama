@@ -189,20 +189,24 @@ SENSOR_MSSQL_REQUIRED_TESTS = _sql_tests(
     "MssqlRetainedAnalysisTests",
     "test_any_declined_control_wins",
     "test_declined_unknown_and_unmapped_consent_fail_closed",
+    "test_live_weather_rows_are_not_indoor_input",
     "test_matches_pure_derivation_over_retained_rows_and_is_reproducible",
     "test_read_only_and_no_task_without_approved_rule",
     "test_reopened_store_reproduces_signal_without_writes",
     "test_stale_and_missing_readings_are_insufficient",
     "test_unmapped_or_invalid_home_is_insufficient",
     "test_unreadable_store_is_insufficient_with_no_priority_effect",
+    "test_weather_only_window_is_insufficient_with_explicit_reason",
 )
 # Opt-in discovery skips tolerated only in project-core; the SQL group must run them instead.
 SENSOR_MSSQL_DISCOVERY_SKIPS = frozenset(
     (name, SENSOR_MSSQL_SKIP_REASON) for name in SENSOR_MSSQL_REQUIRED_TESTS
 )
-# Direct or exercised sensor MSSQL suite dependencies no path keyword selects (not transitive).
+# Explicit sensor MSSQL suite imports or exercised store-initialization definitions no path
+# keyword selects. Not exhaustive or transitive.
 SENSOR_MSSQL_DIRECT_DEPENDENCIES = frozenset(
     (
+        "src/core/src/zava_forward/core/chatthreads.py",
         "src/core/tests/dataset.py",
         "src/core/src/zava_forward/core/synthetic/__init__.py",
         "src/core/src/zava_forward/core/synthetic/indoor_projection.py",

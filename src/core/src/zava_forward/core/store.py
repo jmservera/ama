@@ -11,9 +11,9 @@ import threading
 import uuid
 from copy import deepcopy
 from datetime import datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_publication, stock, taskqueues
+from . import ai_tasks, ai_prompts, buildings, change_provenance, controls, export_fields, gates, identity, insights, ledger, projection, ranking, ranking_archive_blob, ranking_publication, stock, taskqueues
 from .finance import FinanceMixin
 from .list_export import safe_cell
 from .continuity import ContinuityMixin
@@ -27,8 +27,11 @@ from .doc_controls import DocControlsMixin, open_scanner
 from .exception_register import ExceptionRegisterMixin
 from .documents import ACCEPTED, MAX_BYTES, open_document_store
 from .procurement import ProcurementMixin
-from .quality import QualityMixin, handover_blockers
+from .quality import QualityMixin, handover_blockers, quality_evidence_gate
 from .workflows import MANAGER_ROLES, WorkflowMixin, handoff_view, hazard_view
+
+if TYPE_CHECKING:
+    from .complaints_route import ComplaintsReceiver
 
 DECISIONS = ("Not yet asked", "Waiting", "Accepted", "Declined")
 READY_STAGE = "Final checks before ordering"
@@ -46,6 +49,10 @@ class ConflictError(Exception):
 
 
 class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMixin, GrantMixin, SignoffMixin, ResidentDecisionMixin, GovernanceMixin, ContinuityMixin, DocControlsMixin, ExceptionRegisterMixin):
+    if TYPE_CHECKING:
+        # Injection point for tests and a future approved receiver; absent means the configured default.
+        complaints_receiver: ComplaintsReceiver | None
+
     def __init__(self, data_path, live_path=None, audit_path=None):
         self.lock = threading.RLock()
         base = os.path.dirname(data_path)
@@ -234,15 +241,25 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return snap
 
     def _ranking_archive(self):
+        """The ranking archive: Azure Blob when ZF_RANKING_ARCHIVE=azure-blob (owner decision,
+        issue 1258), else a local folder. The folder is a dev/test adapter only; its fsync is
+        not evidence that a container persists a record. Blob selection never falls back."""
+        blob = ranking_archive_blob.from_environment()
+        if blob is not None:
+            return blob
         return os.path.join(os.path.dirname(getattr(self, "live_path", None) or self.db_path) or ".", "ranking-archive")
 
     def ranking_publication_status(self, user):
         """Retained-snapshot check for managers: count, problems, latest date, overdue flag and the stated schedule."""
         if user["role"] not in MANAGER_ROLES:
             raise PermissionError("Only a manager can see the ranking publication record. Owner: your manager. Next action: ask a manager to open it.")
-        archive = self._ranking_archive()
         try:
+            archive = self._ranking_archive()
             out = ranking_publication.verify(archive)
+        except ranking_archive_blob.BlobArchiveError as e:
+            out = {"count": 0, "latest": None, "problems": [
+                f"The ranking archive cannot be read: {e}. "
+                "Owner: your operator. Next action: ask them to check the Blob archive configuration and access."]}
         except OSError as e:
             out = {"count": 0, "latest": None, "problems": [
                 f"The archive folder cannot be read: {type(e).__name__}: {e.strerror or e}. "
@@ -277,11 +294,19 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 try:
                     self.audit(user["email"], "ranking_snapshot_publication_unconfirmed", "-",
                                f"policy {snap['policy_version']} ({'signed' if signed else 'unsigned'}); as of {snap['as_of']}; hash {snap['snapshot_hash'][:12]}; "
-                               "record written, archive folder sync unconfirmed")
+                               + ("Blob write outcome unconfirmed; the record may or may not be stored, nothing rolled back"
+                                  if isinstance(e, ranking_publication.ArchiveWriteUncertainError)
+                                  else "record written, archive folder sync unconfirmed"))
                 except OSError:
                     logging.getLogger(__name__).exception("Ranking record written, directory sync unconfirmed and its audit entry failed")
                     raise
                 raise e
+            except ranking_archive_blob.BlobArchiveError as e:
+                logging.getLogger(__name__).error("Ranking archive could not be written: %s", e)
+                raise ranking_publication.ArchiveStorageError(
+                    f"The ranking archive cannot be written ({e}). Publication could not be confirmed; "
+                    "a record already archived is reported as already published on retry. "
+                    "Owner: your operator. Next action: ask them to check the Blob archive configuration and access.") from None
             except OSError as e:
                 logging.getLogger(__name__).error("Ranking archive could not be written: %s", e)
                 retained = self._log_retained_stage(e)
@@ -602,6 +627,12 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         results.append(gates.evidence_gate(self._evidence_missing(c), "Grants and Evidence Officer"))
         if not gates.transition_allowed(results):
             raise GateError([f"{r.reason} Owner: {r.owner}. Next action: {r.correction}" for r in gates.unmet(results)])
+
+    def require_quality_evidence(self, rec):
+        """Fail closed: acceptance and handover need an explicit pass on the stored checklist evidence."""
+        result = quality_evidence_gate(rec)
+        if not result.passed:
+            raise GateError([f"{result.reason} Owner: {result.owner}. Next action: {result.correction}"])
 
     def log_call(self, user, case_id, outcome, note, channel="Phone"):
         outcome = (outcome or "").strip()[:80]
@@ -926,12 +957,26 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
             return r
         denied = rec["source"] == "ai" and not self.release_current("priority", rec.get("release"), rec.get("model"))
         current = rec["source"] != "ai" or (self.ai_epoch_current(rec) and not self.continuity_suspension("priority"))
-        return dict(rec, label=self.REC_LABEL, actionable=current and not denied and not challenge["stale"], release_denied=denied,
+        view = dict(rec, label=self.REC_LABEL, actionable=current and not denied and not challenge["stale"], release_denied=denied,
                     **challenge,
                     epoch_current=current, relied_on=current and not denied and not challenge["stale"] and rec["status"] in ("Accepted", "Edited"),
                     items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["items"]],
                     final_items=[row(i["case_id"], i["reason"], i.get("cites")) for i in rec["final_items"]] if rec.get("final_items") is not None else None,
                     deterministic=[row(cid) for cid in rec["deterministic"]])
+        if self._order_unresolved(rec):
+            view.update(order_confirmed=False, actionable=False, relied_on=False, order_note=self.ORDER_NOTE)
+        return view
+
+    ORDER_NOTE = ("After a database upgrade the order of this record could not be proven, so it may not be your newest. "
+                  "The named data owner must confirm it before it is acted on. You can still reject it or use the "
+                  "ordinary case controls.")
+
+    def _order_unresolved(self, rec):
+        """The employee's newest eligible record whose creation order the upgrade could not prove (#1292)."""
+        if rec.get("kind") == "ai_task" or not self.rec_order_unresolved(rec["id"]):
+            return False
+        mine = [r for r in self.data["recommendations"] if r["user"] == rec["user"] and r.get("kind") != "ai_task"]
+        return bool(mine) and mine[-1]["id"] == rec["id"]
 
     def ai_priority(self, user, n=5, mode=None):
         n = max(1, min(10, int(n)))
@@ -1018,10 +1063,15 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                             cites=ai_tasks.cites_for(c, "Open safety issues:", "Extra support:", "Resident decision:", "Days in stage:", "Stage:", reason_ok=ok)))
         return out
 
+    def rec_order_unresolved(self, rec_id):
+        return False
+
     def latest_priority(self, user):
         with self.lock:
             mine = [r for r in self.data["recommendations"] if r["user"] == user["email"] and r.get("kind") != "ai_task"]
-            return self._rec_view(mine[-1], user) if mine else None
+            if not mine:
+                return None
+            return self._rec_view(mine[-1], user)
 
     def resolve_priority(self, user, rec_id, action, reason="", items=None):
         if action not in self.REC_ACTIONS:
@@ -1037,6 +1087,8 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
                 raise KeyError(rec_id)
             if rec["user"] != user["email"]:
                 raise PermissionError("This suggestion was made for someone else.")
+            if action != "reject" and rec["status"] == "Proposed" and self._order_unresolved(rec):
+                raise PermissionError(self.ORDER_NOTE)
             if rec["status"] != "Proposed":
                 repaired = self._repair_ai_review(rec, action, self.REC_ACTIONS[action])
                 if repaired is not None:

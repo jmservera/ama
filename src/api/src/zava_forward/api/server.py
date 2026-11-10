@@ -19,10 +19,12 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
 from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine
-from zava_forward.api import auth
+from zava_forward.api import auth, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
 from zava_forward.agents.dispatch import AgentWorker
+from zava_forward.core import simulation_lane
+from zava_forward.core.ai import Ai, may_carry_captured_readings
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.chat_isolation import ChatForbidden, ChatIsolation
 from zava_forward.core.chat_privacy import ChatNotApproved, WARNING as CHAT_WARNING
@@ -79,17 +81,57 @@ class App:
         self.csp = "default-src 'self'; img-src 'self' data: blob:" + (f" {self.tiles['host']}" if self.tiles["host"] else "") + "; frame-ancestors 'none'"
         self.provider = provider or auth.make_provider(store, password or secrets.token_urlsafe(9))
         # The provider call is agents code; the API composes it in process until the queue transport (#144) replaces it.
-        self.assistants = Assistants(store, provider=AgentWorker(lambda *args: store.ai.evidence(*args)).provider_call)
+        def fenced(*args):
+            ai = store.ai  # Resolved once: the object checked is the object called.
+            if ai_consumption.CAPTURED_READINGS.get() and not may_carry_captured_readings(ai):
+                raise ai_consumption.DispatchWithdrawn("captured-readings-transmission-unavailable")
+            return ai.evidence(*args)
+
+        self.assistants = Assistants(store, provider=AgentWorker(fenced).provider_call, transport=lambda: store.ai)
         self.chat = ChatIsolation(store)
         self.panel = ChatPanel(self.chat, ChatModel(
             AgentWorker(lambda *args: store.ai.evidence(*args)),
             admission=lambda: chat_admission(store)))
+        self.simulation, self.simulation_reason = None, "not-configured"
+        try:
+            self.simulation = simulation_lane.Lane.open(os.environ, working=(getattr(store, "db_path", ""),))
+        except simulation_lane.Unavailable as error:
+            self.simulation_reason = error.code
         self.law = law
         self.regulatory = RegulatoryChat(
             self.chat, law, regulatory_chat.answer, regulatory_chat.purpose, regulatory_chat.refusal
         )
         self.law_lock = threading.Lock()
         self.engine = None
+
+    def simulation_state(self, user):
+        """Public synthetic lane state for a role that owns the quality assistant; default deny otherwise."""
+        self.assistants.authorize_user(user, simulation_lane.CAPABILITY)
+        if self.simulation is None:
+            return simulation_lane.unavailable_state(self.simulation_reason)
+        return self.simulation.state()
+
+    def simulation_admission(self, service):
+        """The same operator authority, durable allowance and call slots the ordinary assistants use."""
+        capability = simulation_lane.CAPABILITY
+        return simulation_lane.Admission(
+            hold=lambda: service.dispatch_hold(capability),
+            bounds=lambda: (min(600, service.limits.output_tokens), service.limits.timeout),
+            begin=lambda chars, call_id: service.begin_call(capability, chars, call_id),
+        )
+
+    def simulation_act(self, user, action):
+        self.assistants.authorize_user(user, simulation_lane.CAPABILITY)
+        lane = self.simulation
+        if lane is None:
+            return simulation_lane.unavailable_state(self.simulation_reason)
+        ai = self.store.ai
+        if action == "observe":
+            return dict(lane.state(), added=lane.observe())
+        if isinstance(ai, Ai):
+            ai.simulation_verifier = lane.verify  # trusted composition owns the verifier
+        return dict(lane.request(ai, self.simulation_admission(self.assistants)),
+                    proposal_state=lane.state())
 
     def rule_engine(self):
         if self.law is None:
@@ -404,6 +446,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(401, {"error": "Please sign in."})
             q = parse_qs(url.query)
             s = app.store
+            if simulator_admin.handles(url.path):
+                return self._json(*simulator_admin.handle(s, u, "GET", url.path))
             if url.path == "/api/governance":
                 try:
                     result = s.governance_view(u)
@@ -524,6 +568,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(404, {"error": "Not found."})
             if url.path.startswith("/api/assistants"):
                 try:
+                    if url.path == "/api/assistants/simulation/quality":
+                        return self._json(200, app.simulation_state(u))
                     if url.path == "/api/assistants":
                         return self._json(200, app.assistants.registry(u))
                     if url.path == "/api/assistants/forecast":
@@ -754,6 +800,20 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(502, {"error": "The document store is not available. Try again shortly."})
                 safe = "".join(ch for ch in name if ch.isalnum() or ch in " ._-")
                 return self._send(200, raw, mime, {"Content-Disposition": f'attachment; filename="{safe}"'})
+            if url.path.startswith("/api/cases/") and url.path.endswith("/sensors"):
+                parts = url.path.strip("/").split("/")
+                if len(parts) != 4:
+                    return self._json(404, {"error": "Case not found."})
+                try:
+                    return self._json(200, app.assistants.sensors(u, unquote(parts[2])))
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                except KeyError:
+                    return self._json(404, {"error": "Case not found."})
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+                except Exception:
+                    return self._json(503, {"error": "Sensor readings unavailable; continue the ordinary quality check manually."})
             if url.path.startswith("/api/cases/") and url.path.endswith("/home-case"):
                 parts = url.path.strip("/").split("/")
                 if len(parts) != 4:
@@ -955,6 +1015,7 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, c.privacy.memory_status(c.current_user(user), (parse_qs(urlparse(self.path).query).get("task") or [""])[0]))
                 if post and parts == ["unstored-ask"]:
                     if set(body) - {"content", "skill", "case_id"}:
+                        app.panel.record_validation_refused(user)
                         raise ValueError("Only content, skill and case_id are accepted.")
                     u = c.current_user(user)
                     if c.privacy.decision()["approved"]:
@@ -990,8 +1051,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(200, dict(answer, withheld=answer["kind"] == "withheld"))
                     if parts[2] == "ask":
                         if set(body) - {"content", "skill"}:
+                            app.panel.record_validation_refused(u, tid)
                             raise ValueError("Only content and skill are accepted.")
                         if "skill" in body and body["skill"] is None:
+                            app.panel.record_validation_refused(u, tid)
                             raise ValueError("Choose a listed skill or omit skill for legacy chat.")
                         return self._json(200, app.panel.ask(u, tid, body.get("content"), skill=body.get("skill")))
                     if parts[2] == "proposals":
@@ -1129,6 +1192,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._json(403, {"error": "Missing request header."})
             if u.get("view_only") and url.path != "/api/logout":
                 return self._json(403, {"error": "Administrator access shows every option but changes nothing; a staff role is needed to act."})
+            if simulator_admin.handles(url.path):
+                return self._json(*simulator_admin.handle(app.store, u, "POST", url.path, body))
             if url.path == "/api/logout":
                 if app.provider.name == "trusted-proxy":
                     if body.get("switchAccount") is True:
@@ -1159,9 +1224,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 return self._forms(u, url.path, body)
             try:
                 if url.path == "/api/ranking/publish":
-                    from zava_forward.core.ranking_publication import DurabilityUnconfirmedError
+                    from zava_forward.core.ranking_publication import ArchiveWriteUncertainError, DurabilityUnconfirmedError
                     try:
                         return self._json(200, s.publish_ranking_snapshot(u))
+                    except ArchiveWriteUncertainError:
+                        return self._json(409, {"error": "The ranking record may or may not be stored: the archive did not confirm the write and nothing was rolled back. It has been audited as unconfirmed; publish again to confirm it, or ask a named owner to check the archive before relying on it.",
+                                                "outcome": "committed_unconfirmed"})
                     except DurabilityUnconfirmedError:
                         return self._json(409, {"error": "The ranking record was written but its archive folder could not be confirmed as durable. It has been audited as unconfirmed; ask a named owner to check the archive before relying on it.",
                                                 "outcome": "committed_unconfirmed"})
@@ -1171,6 +1239,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(200, s.bulk_edit_apply(u, body))
                 if len(parts) == 4 and parts[:2] == ["api", "assistants"] and parts[3] == "invoke":
                     return self._json(202, app.assistants.invoke(u, parts[2], body.get("case_id")))
+                if url.path in ("/api/assistants/simulation/quality/observe", "/api/assistants/simulation/quality/request"):
+                    return self._json(200, app.simulation_act(u, url.path.rsplit("/", 1)[1]))
                 if url.path == "/api/assistants/releases":
                     return self._json(201, app.assistants.record_release(u, body))
                 if len(parts) == 5 and parts[:3] == ["api", "assistants", "releases"] and parts[4] in ("suspend", "revoke"):
@@ -1239,7 +1309,11 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                 if url.path == "/api/import-check":
                     return self._json(200, s.import_check(body.get("text", "")))
                 if url.path == "/api/ai/priority":
-                    return self._json(200, s.ai_priority(u, body.get("n", 5), body.get("mode")))
+                    from zava_forward.core.sqlstore import CommittedReloadError
+                    try:
+                        return self._json(200, s.ai_priority(u, body.get("n", 5), body.get("mode")))
+                    except CommittedReloadError as error:
+                        return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "review"]:
                     return self._json(200, s.review_ai(u, parts[3], parts[4], body.get("reason", ""), body.get("text")))
                 if parts[:2] == ["api", "packages"] or parts[:2] == ["api", "workorders"]:
@@ -1258,9 +1332,10 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._send(200, raw)
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "priority"]:
                     from zava_forward.core.resident_decisions import ResidentCommittedError
+                    from zava_forward.core.sqlstore import CommittedReloadError
                     try:
                         return self._json(200, s.resolve_priority(u, parts[3], parts[4], body.get("reason", ""), body.get("items")))
-                    except ResidentCommittedError as error:
+                    except (ResidentCommittedError, CommittedReloadError) as error:
                         return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 4 and parts[:2] == ["api", "cases"]:
                     cid, act = parts[2], parts[3]

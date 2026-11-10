@@ -92,6 +92,10 @@ param appCredentialBlocksApplicationDeployment string
 @description('Must not be empty. Empty means sqlTier=serverless with an auto-pause delay other than -1 or 15 to 10080 minutes, which Azure SQL General Purpose serverless rejects at database deployment.')
 param serverlessAutoPauseDelayMustBeSupported string
 
+@minLength(1)
+@description('Must not be empty. Empty means environmentName=pilot enabled the ranking archive Blob container without a positive rankingArchiveImmutabilityDays; configure a duration first. This checks only that a duration is set, not that it is approved or locked.')
+param pilotRankingArchiveRequiresConfiguredRetention string
+
 output checked array = [
   resourceGroupMustBeAma
   primaryLocationMustBeUKSouth
@@ -116,4 +120,5 @@ output checked array = [
   appCredentialRequiresDirectDemo
   appCredentialBlocksApplicationDeployment
   serverlessAutoPauseDelayMustBeSupported
+  pilotRankingArchiveRequiresConfiguredRetention
 ]

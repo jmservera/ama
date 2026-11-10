@@ -1,0 +1,53 @@
+{
+  "task_id": "issue-189-type-applicability-c3",
+  "task_slug": "type-applicability-189-c3",
+  "parent_task": {
+    "task_id": "issue-189-browser-check-c2",
+    "task_slug": "browser-check-189-c2"
+  },
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09/type-applicability-189-c3-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09/type-applicability-189-c3-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09/type-applicability-189-c3-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09/type-applicability-189-c3-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09/type-applicability-189-c3-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09/type-applicability-189-c3-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed; Planning Readiness Ready; 8 mypy errors are in files added by #189, main mypy exit 0 (199 files), CI runs mypy over tests and checks",
+      "status": "confirmed",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once: no blocking finding",
+      "status": "confirmed",
+      "evidence": "critique artifact"
+    },
+    {
+      "decision": "C3 authorised by coordinator for typed remediation only; two of five remain after",
+      "status": "confirmed",
+      "evidence": "coordinator brief"
+    },
+    {
+      "decision": "Implemented typed helpers 66ceb71f9; mypy exit 0 (202 files), ruff 0/0, unit 27 and 34 OK, browser 5 of 5 exit 0, delayed probe old 1 new 0",
+      "status": "confirmed",
+      "evidence": "changes artifact; capture-189-type-applicability"
+    },
+    {
+      "decision": "Review executed once: no significant finding; independent review pending",
+      "status": "confirmed",
+      "evidence": "review artifact"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Independent exact-head review by the Functional reviewer; hosted CI; coordinator decision"
+  },
+  "prioritized_follow_ups": []
+}

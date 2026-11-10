@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-10-29
+ms.date: 2026-11-10
 ms.topic: reference
 ---
 
@@ -10420,6 +10420,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Rechecked merged PRs 505, 588, 700, 996, 1032 and 1082 and open PR 1087. Criteria 1 and 2 are delivered. Criterion 3 stays unmet: tests drive the scenarios through production #111 and #133 code, but no consumer reads retrofit deltas, and R3 limits and owner tick or deferral are outstanding. Nothing was ticked or closed. Docs-only record; evidence under `.copilot-tracking/` (2026-11-04 issue-193 r7).
 
+## [2026-11-04] update | Issue 144 queue adapter slice (Refs #144)
+
+* Added a stdlib Azure Queue adapter for the agents `TaskQueue` port with poison-queue handling, tested with a scripted transport only. Criteria 1 to 5 stay unmet or partial; `serve` still refuses to start until the API post-back and token source exist. Evidence under `.copilot-tracking/` (2026-11-04 issue-144 queue adapter).
 ## [2026-11-04] update | Issue 146 monitoring declaration check (Refs #146)
 
 * Added an offline `check_monitoring_declaration` to the monitoring coverage module and noted it in `infra/monitoring-runbooks.md`. It reports Blocked or Declared per task release, never green, and shows owners and manual-route status for disabled tasks. All four issue criteria and the unmet RAI and tokenomics criteria stay unmet; nothing was ticked. Evidence under `.copilot-tracking/` (2026-11-04 monitoring-declaration-146).
@@ -10579,6 +10582,25 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * Corrects the entry above: `--active none` is removed and omission from `--active` never demotes. Demotion of an In Progress issue with no open PR needs per-issue negative evidence through a separate validated `--inactive N,N`; everything else stays In Progress and is listed as activity unverified. Overlapping, unknown, closed or malformed input stops the run before any write, and error text does not echo the rejected value.
 * `tools/test_backlog_sync.py` now runs in the existing Source CI "Local gate orchestration contracts and strict checks" step. Mock evidence only; no live board claim.
 
+## [2026-11-05] update | Current-main sensor contract, retention and handover checkpoint (Refs #440 #184 #110)
+
+* Appended a fifth stabilization checkpoint to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110) against `origin/main` `c6d5a8f3`, with document-qualified BRD/PRD IDs, ADR 0002/0003 identities and a classified evidence table. Documentation only; no code, coordinator or issue change.
+* Records that the main `live-sim-reading-v1` wire message (with `sunlight_wm2`) is not admitted by the `sensor-fault-input-v1` consumer, that retained weather/wire and the indoor observed series are distinct, and that no calibration, threshold or live handover evidence exists. Unmerged #1203 and #1205 are excluded. No criterion is ticked and no issue is closed; #440 criteria 7 and 8 stay open.
+
+## [2026-11-05] update | Parent-topic paired comparability integration checkpoint (Refs #440 #128 #123)
+
+* Appended a sixth stabilization checkpoint to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#sixth-stabilization-checkpoint-parent-topic-paired-comparability-integration-2026-11-05-refs-440-128-123) recording the parent-topic head `ad1ee026` and `origin/main` `c6d5a8f3` identities and trees, document-qualified BRD/PRD IDs with ADR and document versions, statuses and blobs, and a map of the paired diagnostic to the journey register, ranking and publication, release and invalidation, and cohort evaluation boundaries. Documentation only; no code, schema, coordinator, workflow or issue change, and no approval or pivot.
+* Records one light local observation on the parent topic only (74 coupled core tests, exit 0, candidate module paths asserted) and keeps the original NOT CLEAN review, the historical confound fixes and the later published assessment as separate outcomes. No defect confirmed; the earlier sensor checkpoint is not extended to this surface. #128, #123 and #440 criteria 7 and 8 stay open; no fairness, threshold, lawful-field, assistive-technology or human acceptance is claimed.
+
+## [2026-11-05] update | Current-main UI and cache recovery checkpoint (Refs #440 #96)
+
+* Appended a seventh stabilization checkpoint to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#seventh-stabilization-checkpoint-current-main-ui-and-cache-recovery-2026-11-05-refs-440-96) pinning `origin/main` `bb3a3b03` (rubric commit after #1219 `2edba50b7`), the parent `23cdae38` and BRD/PRD/ADR blob and status identities, with document-qualified traceability for the #1214 320px reflow and #1215 bytecode fixes. Documentation only; no code, coordinator, workflow or issue change.
+* The planned focused main observation (bytecode regression and the case-journey browser check) was not run because the exclusive heavy lock was held by an issue #233 gate session; it is recorded as blocked with a resume point, not as passed. No defect confirmed; #440 stays open.
+
+## [2026-11-05] update | Required focused main observations completed (Refs #440 #96)
+
+* Appended a dated continuation under the seventh checkpoint in the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#seventh-stabilization-checkpoint-current-main-ui-and-cache-recovery-2026-11-05-refs-440-96). On a clean detached exact-main auxiliary at `bb3a3b03`, the real-producer bytecode regression passed (exit 0) and the unchanged case-journey browser check passed (exit 0; 407 PASS, 0 FAIL, 320x800 summary bottom 1592.4 against the unchanged 1600 bound), both under one non-blocking hold of the heavy lock. The earlier unrun record is unchanged.
+* Focused observation only: not a full receipt, not #96 feature acceptance, not C7 or C8. No defect confirmed; no issue closed or ticked.
 ## [2026-11-02] query | Prospective whitepaper replication choices
 
 * Revised the [paper protocol](../capstone/thought-leadership/everything-but-the-software/anc/experiment-protocol.tex)
@@ -10658,6 +10680,110 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 * `tools/rpi-checks.py` now writes the existing policy files from `Runner._install` for the api venv (both `project-api` and `setup-api`), and the later browser-group copy is removed. Environment scrubbing, the harness, the dirty-snapshot guard, cleanup and receipt acceptance are unchanged.
 * `tools/test_rpi_checks.py` adds a regression that runs the real api install step and the real harness server launch from a scratch source copy; it failed before (core, agents and api `__pycache__` created) and passes after. Focused tier only; the complete gate and a fresh full receipt were not run. Evidence under `.copilot-tracking/` (2026-11-05 api-discovery-bytecode-1215).
 
+## [2026-11-05] update | Issue 188 synthetic weather continuity (Refs #188)
+
+* Added `weather_report` and a weather path in the operator handover verifier: live simulated weather against a separately versioned synthetic weather backfill (scenario `weather-backfill-v1`), with engineering bounds derived from the declared generator constants and labelled as not an approved tolerance. Mixed windows, mixed or cross-schema references and wrong scenario or units are refused, never dropped. Indoor behavior and the earlier refusal are unchanged. Constructed local evidence only; no live Azure continuity, calibration or acceptance claimed. Updated `src/api/README.md`, `src/core/README.md` and the IoT sensor research plan. Evidence under `.copilot-tracking/*/2026-11-05-live-sim-weather-continuity-188-*`.
+
+## [2026-11-06] update | Dual-schema sensor input contract documentation (Refs #188)
+
+* Qualifies the 2026-10-18 shared observation contract synthesis: the consumer validates two separately closed input branches selected by `schema_version`, the 13-field indoor `sensor-fault-input-v1` and the 16-field synthetic-weather `live-sim-reading-v1`. Added a dated current-use note before the preserved historical section and aligned `src/core/README.md`, `src/api/README.md` and the index. Historical measurements and the section anchor are unchanged.
+* Weather and sunlight originals stay in the lossless retained envelope witness, not indoor observed series. No authenticated provenance, indoor calibration, statistical, live or approval claim; distinct seeds do not authenticate generator provenance; no criterion changes. Documentation only; fresh FULL on the resulting head is separate. Evidence under `.copilot-tracking/*/2026-11-06-doc-dual-schema-188-*`.
+## [2026-11-05] update | Integrated parent topic preparation checkpoint (Refs #123 #440 #128)
+
+* Appended an eighth stabilization checkpoint to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-integrated-parent-topic-preparation-2026-11-05-refs-123-440-128) recording the ordinary merge of remote parent `63dd5798` and fresh main `bb3a3b03` into the local parent topic (merge commit `6703b0b1`), the covered #1211, #1212, #1213 and #1221 children, document-qualified BRD, PRD and ADR identities, the final fresh-main-relative scope (39 files, bounded metric tooling, tests and documentation, not documentation only) and a FOCUSED tier recommendation pending coordinator admission.
+* Records light local observations on the parent topic only (74 coupled core tests, Ruff check and format on two files, `git diff --check`, all exit 0). Complete parent validation, independent review and hosted checks are pending; no main observation exists. No defect confirmed; no criterion ticked, no issue closed; #123 AC1 and AC2 and #440 criteria 7 and 8 stay open.
+
+## [2026-11-05] update | Finance parent held-export manifest checkpoint (Refs #440 #96)
+
+* Appended an eighth stabilization checkpoint to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#eighth-stabilization-checkpoint-finance-parent-held-export-manifest-contract-2026-11-05-refs-440-96) for `feat/finance-integration-93` `0472fd5d` (main plus #1223 only) against main `bb3a3b03`, with document-qualified PRD FR-040/042/043 traceability and a disposition of the proposed required-history manifest key (legacy copies become Invalid and are regenerated; no in-repository consumer found).
+* Light observation: 40 form tests pass on the pinned finance source (JSON and SQLite fixtures). Documentation only; no approval, no defect, no issue change; #96 and whole #440 stay open.
+
+## [2026-11-05] update | Correct finance checkpoint ordinal, process and evidence qualification (Refs #440 #96)
+
+* Correction to the preceding finance log entry: its "eighth" label is corrected to "ninth", because the baseline eighth checkpoint is the integrated parent topic preparation. The current anchor is [ninth stabilization checkpoint](../architecture/cutover-evidence-pack.md#ninth-stabilization-checkpoint-finance-parent-held-export-manifest-contract-2026-11-05-refs-440-96); the old anchor is retained in the pack so the earlier log link keeps resolving.
+* Process qualification: the original finance checkpoint commit `d26791065` wrote its phase artifacts after the documentation edits and is not claimed compliant. A separate prospective r2 correction loop added the process qualification, removed an unsupported hosted-status claim on main, marked the #1223 hosted checks, approval and receipt `07ae` as coordinator-supplied and unverified here, and made the recommendation conditional.
+* The record is a local draft pending coordinator consumption. It does not release or resume #96, approves nothing, changes no source and leaves whole #440 and #96 C1, C5 and C6 unchanged.
+
+## [2026-11-05] update | Correct failed archive-attempt evidence statement in the ninth finance checkpoint (Refs #440 #96)
+
+* Correction to the preceding correction entry: the statement that the failed initial archive-root attempt's output "was not preserved" was wrong. The native session log `/tmp/rpi-440-finance-export-checkpoint-20261105.log` retains its wrapper error (`cd: /tmp/f440fin/src/core: No such file or directory`) and exit 1; the failure preceded any Python or test command, so no test ran and no dedicated per-test output file exists. The [ninth stabilization checkpoint](../architecture/cutover-evidence-pack.md#ninth-stabilization-checkpoint-finance-parent-held-export-manifest-contract-2026-11-05-refs-440-96) now says so; its old anchor is retained.
+* The repaired 40-test exit 0 stays historical and was not rerun. No other recommendation, source, approval or compatibility change; #96 stays paused pending coordinator acceptance.
+
+## [2026-11-05] update | Tenth stabilization checkpoint: lifecycle parent quality evidence gate (Refs #440 #82 #81)
+
+* Appended the tenth checkpoint to [the cutover evidence pack](../architecture/cutover-evidence-pack.md#tenth-stabilization-checkpoint-lifecycle-parent-quality-evidence-gate-2026-11-05-refs-440-82-81) and indexed it in the README. It records three separate pins (governance target `1faadaa3`, lifecycle source `cd271cfa` containing PR 1226, main `bb3a3b03`), document-qualified traceability (PRD FR-008 versus BRD FR-008) and a light 183-test core run on an immutable export (exit 0, 1 skip, no SQL Server).
+* Local draft pending coordinator consumption. Coordinator-supplied receipt, SQL and hosted evidence is labelled historical for source `10161`. #82, #81 and #440 stay open; the quality rule reviewer is unnamed; no approval, closure or tick. The finance ninth and baseline eighth records are unchanged.
+
+## [2026-11-05] update | Tenth checkpoint wording follow-up (Refs #440 #82)
+
+* Follow-up to the preceding tenth-checkpoint entry after its single Review (RV-001): the pack now states that `QUALITY_RULE.source` cites BRD FR-008 while PRD FR-008 governs, as an observation for #82's owner. Wording only; no source, approval or recommendation change.
+
+## [2026-11-06] update | Eleventh stabilization checkpoint: lifecycle parent capacity booking gate (Refs #440 #82 #81)
+
+* Appended the eleventh checkpoint to [the cutover evidence pack](../architecture/cutover-evidence-pack.md#eleventh-stabilization-checkpoint-lifecycle-parent-capacity-booking-gate-2026-11-06-refs-440-82-81) and indexed it in the README. It records three separate pins (governance target `a97bea15`, lifecycle source `af891a5cc` containing PR 1229, main `bb3a3b03`), document-qualified traceability (PRD FR-008, FR-016, FR-017) and a light 193-test core run on an immutable export (exit 0, 1 skip, no SQL Server).
+* Local candidate pending coordinator consumption. Candidate `272146f4e` receipt, SQL and hosted evidence is labelled coordinator-supplied and historical. #82, #81 and #440 stay open; exercise rules have no named reviewer; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Twelfth stabilization checkpoint: archive helper filesystem contract (Refs #440 #79 #1231)
+
+* Appended the twelfth checkpoint to [the cutover evidence pack](../architecture/cutover-evidence-pack.md#twelfth-stabilization-checkpoint-archive-helper-filesystem-contract-2026-11-06-refs-440-79-1231) and indexed it in the README. It records four separate pins (governance `dce6498cf`, main `bb3a3b03`, unmerged #79 candidate `397419724`, unmerged child #1231 `57b3b6a09`), document-qualified traceability and a classification of the child's retained RED and GREEN results (read, not rerun here).
+* Local candidate pending coordinator consumption. HOLD on #79 archive delivery and #73 expansion until hard-link compatibility disposition, final validation and independent assessment; no filesystem is approved; #79, #73, #1231 and #440 stay open; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Archive filesystem checkpoint correction 1 (Refs #440 #79 #1231)
+
+* Corrected one classification row in the [twelfth checkpoint](../architecture/cutover-evidence-pack.md#twelfth-stabilization-checkpoint-archive-helper-filesystem-contract-2026-11-06-refs-440-79-1231) (coordinator consumption is attribution, classified unknown), added a document-qualified traceability table (BRD NFR-006 and NFR-002, PRD PR-006, DH-002, DH-003, PR-003, ADR 0006), and qualified the original Research timing (research, plan and details were created in one parallel batch and committed before any target edit).
+* Local candidate pending coordinator consumption. The owner was unavailable on the hard-link question, so the disposition stays blocked and the HOLD on #79 archive delivery and #73 expansion is unchanged; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Thirteenth stabilization checkpoint: finance parent history export (Refs #440 #96 #93)
+
+* Appended the thirteenth checkpoint to [the cutover evidence pack](../architecture/cutover-evidence-pack.md#thirteenth-stabilization-checkpoint-finance-parent-history-export-2026-11-06-refs-440-96-93) and indexed it in the README. It records three separate pins (governance `7ed4a33f5`, finance source `4642b55fd`, main `bb3a3b03`), the history key in Held exports, Invalid regeneration without backfill, document-qualified traceability and a classification table. Child FULL, SQL and hosted evidence is source-qualified and not re-executed.
+* Local candidate pending coordinator consumption. HOLD on #93 and #96 closure and dependent expansion; #188, #80 and #1204 independent; no new defect confirmed; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Finance history checkpoint correction 1 (Refs #440 #96 #93)
+
+* Corrected the [thirteenth checkpoint](../architecture/cutover-evidence-pack.md#thirteenth-stabilization-checkpoint-finance-parent-history-export-2026-11-06-refs-440-96-93): observed disk is split from the coordinator-supplied heavy-resource admission, "paths not accessible" became "not inspected by this author" (the child receipt identity block was read: head `abeb022ba`, 205 commands), the pins heading was fixed, and the original creation order and check timing are qualified.
+* Local candidate pending coordinator consumption. Holds unchanged; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Fourteenth stabilization checkpoint: queue dispatch permit protocol (Refs #440 #144 #107 #118 #122)
+
+* Appended the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122) to the cutover evidence pack. It pins governance `119828353`, main `bb3a3b03` and the read-only candidate `4c878d664`, shows the queue slice is candidate-only, corrects the candidate's ADR 0002 anchor (ADR 0001 and 0002 are Proposed; ADR 0003 decision 1 tension recorded), and lists seven design gaps and two open decisions (second route authority, liability-unknown operator path).
+* Recommendation FIX with #144 implementation held; the owner-approved background goal stays in force. Local candidate pending coordinator consumption. No code or test ran; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Queue dispatch checkpoint correction 1 (Refs #440 #144)
+
+* Added a dated correction subsection to the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122): the r8 Plan and Details creates were parallel (identical 08:18:22.940Z start in the native events), superseding the coordinator-supplied serial order; parent 136 is a local unpublished ref at `bb3a3b03` with no remote branch.
+* Second-route authority, operator disposition and the seven design gaps stay open; FIX unchanged. Local candidate pending coordinator consumption; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Queue dispatch checkpoint correction 2 (Refs #440 #144)
+
+* Added a dated Correction 2 subsection to the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122): correction 1's Plan and Details creates overlapped (identical 08:55:24.371Z start in the native events; the common pre-edit commit `6d9a8818d` stands), its heading count was 3 pack-wide and one within the fourteenth checkpoint (not a global uniqueness pass), and the owner approved the Application-only AgentsWorker second permit route (issue 144 comment `6681120797`, 08:57:53Z), which is not a live grant, ADR acceptance or operator decision.
+* Operator disposition for liability-unknown and the seven design gaps stay open; FIX unchanged. Local candidate pending coordinator reassessment; no closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Post-integration status checkpoints (Refs #440 #144 #96 #184 #188)
+
+* Added a dated current-status subsection to the [fourteenth checkpoint](../architecture/cutover-evidence-pack.md#fourteenth-stabilization-checkpoint-queue-dispatch-permit-protocol-2026-11-06-refs-440-144-107-118-122): the Finance-role reconciliation code approval (issue 144 comment `6685915140`, 13:26:36Z) alongside the permit-route approval, the draft R9 design (`323abba2e`) with root outcome Revise, and the Correction 2 locator clarification (4300, not 4285). Not a live grant, spend, ADR acceptance or operator clearing.
+* Added the [fifteenth](../architecture/cutover-evidence-pack.md#fifteenth-stabilization-checkpoint-finance-parent-integration-2026-11-06-refs-440-96-93) (finance parent `4642b55f`) and [sixteenth](../architecture/cutover-evidence-pack.md#sixteenth-stabilization-checkpoint-sensor-parent-integration-2026-11-06-refs-440-184-185-188-110) (sensor parent `9476dc96`) checkpoints. Historical child receipts are source-qualified and not replayed; no new defect established; CONTINUE independent lanes, HOLD closures and dependent expansion.
+* Local candidate pending coordinator reassessment; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Post-integration provenance qualification (Refs #440 #144)
+
+* Added a dated qualification to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#provenance-qualifications-2026-11-06-post-integration-correction-1): the batch "13:50Z" and "observed 13:55Z" labels were not observations then (the focused checks ran 13:49:06.882 to 13:49:07.721 per native tool boundaries), and "no runtime defect is confirmed" means no new runtime defect by this checkpoint, not that the original two High findings are removed.
+* R9 Revise, R10 pending and independent, the two resolved code decisions and FIX are unchanged. Local candidate pending coordinator reassessment; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Seventeenth checkpoint, #144 R10 dispatch design (Refs #440 #144)
+
+* Added the [seventeenth checkpoint](../architecture/cutover-evidence-pack.md#seventeenth-stabilization-checkpoint-queue-dispatch-r10-design-2026-11-06-refs-440-144-107-118-122) recording the #144 R10 design (`1e19209985d9`, blob `de776799`) as an unapproved DRAFT proposal with an independent read assessment, a merged-versus-candidate source split, document-qualified trace (PRD FR-061, NFR-017; BRD FR-052, NFR-012, OD-51; ADR 0001 to 0003, 0006) and owners 107, 144, 118 and 122.
+* Observed: a local `feat/infra-hosting-integration-136` label at main `bb3a3b03` with no remote branch or PR; the eventual code parent is unknown. The design's PR-005 and ADR 0002 decision 6 citations are not carried forward. No new runtime defect is established; the original two High findings stay open. Recommendation CONTINUE after coordinator consumption, with FULL, real SQL, independent exact-head review and hosted CI before publication; HOLD enablement, spend, live acceptance and closure.
+* Local candidate pending coordinator reassessment; no approval, closure or tick. Earlier records are unchanged.
+
+## [2026-11-06] update | Index pin correction for the seventeenth checkpoint (Refs #440 #144)
+
+* Corrected one short commit pin in the [reference index](README.md): the seventeenth checkpoint paragraph printed `1e199209`; the R10 design commit is `1e19209985d93e053dd449e873e792f214dd110c`, so the correct short pin is `1e192099`.
+* The cutover evidence pack, this log and the tracking records already carried correct identities. No checkpoint, numbering, source, requirement, ADR or design change; all earlier records are unchanged. Local candidate pending coordinator reassessment; no approval, closure or tick.
+
+## [2026-11-06] update | Sensor retained-evidence verification (Refs #440 #184 #185 #188)
+
+* Appended a [retained-evidence verification](../architecture/cutover-evidence-pack.md#retained-evidence-verification-of-the-sixteenth-checkpoint-2026-11-06-refs-440-184-185-188) that qualifies the sixteenth checkpoint with figures read from the child r20 receipt (sha256 `e5751469...`, head `6887377`, 205 commands, 192 exit 0 and 13 exit 1), the maintained SQL log (285 tests, one declared skip), the separate 68-test supplement and the image scans (42 instances per image, 17 unique IDs, fixable 0, not security-clean).
+* No new defect, issue or runtime run. CONTINUE independent lanes; HOLD closure of #184, #185 and #188. Live, credential, consent, calibration, validity and approval items stay unproven. Earlier records are unchanged. Local candidate pending coordinator reassessment.
 ## [2026-11-05] update | Rendered Chromium check of the #233 atlas tensions (Refs #233, Refs #149)
 
 * Adds `src/api/checks/atlas_tensions_browser_check.py` and documents it in `src/api/README.md`. One synthetic home is opened on Programme queue, Resident choice and Package queue through the real `/app`; the check asserts rendered "Not shown for this role" panels with same-home context, choice and withdrawal panels before "Choice comes before offered capacity", the explanation before the capacity table and package rows in reference order against a different delivered order and conflicting headroom, offered and use. No application, CSS, policy or data change.
@@ -10936,3 +11062,240 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-08] update | Issue 440 visible-demo checkpoint correction 2 (Refs #440, #149, #229, #891)
 
 * Made the stored-route model-call sentence in the visible-demo section of the cut-over evidence pack conditional and at most once (`chat_panel.py` 583-591), qualified the BRD and PRD trace row to distinguish the one observed generic model answer from unproven case-grounded provider behavior and human acceptance, and added a compact note that the C1 research wall-clock claim conflicts with Git commit times (cause unknown, record preserved). Documentation only; no approval, closure or new evidence.
+* Prospective continuation of the 2026-11-04 slice: merged current main locally (ordinary merge) for the maintained gate fixes, kept the adapter unchanged, and ran only lightweight unit, ruff and mypy checks. The tier is full (bearer-token transport); the complete gate is unrun and pending the heavy lock. Criteria 1 to 5 stay unmet. Nothing pushed, ticked or closed. Evidence under `.copilot-tracking/` (2026-11-05 issue-144 queue recovery).
+
+## [2026-11-05] update | Issue 144 poison-copy size correction (Refs #144)
+
+* Bounded the queue adapter poison copy by encoded bytes with an explicit truncation marker after an independent review found it could exceed the 64 KiB queue limit. Light unit, ruff and mypy checks only; the full gate and independent assessment are pending for the new head. Criteria 1 to 5 stay unmet. Evidence under `.copilot-tracking/` (2026-11-05 issue-144 poison size correction).
+
+## 2026-11-09
+
+* Issue 144 queue-slice recovery: merged main, applied the poison-size correction, recorded dated recovery RPI evidence under `.copilot-tracking/*/2026-11-09/` (Refs #144).
+
+## [2026-11-08] update | CxO application story and full Azure reference views
+
+* Updated existing main pages 9/12/14/16 with the recommendation, CxO
+  application/data map, coded workflow/optional AI branch and exact autonomy
+  reasoning. Appendix B03/B10/B14/B27 provides depth, not first disclosure.
+  The graph is a conceptual state-flow, not a deployed LangGraph loop.
+* Added original editable CxO and Bicep-grounded Azure Excalidraw/SVG/PNG views,
+  a readable core-frame projection for B10 and source/icon-rights/text trace.
+  System Architecture Reviewer source analysis distinguishes PaaS/private
+  endpoints, shared API/deferred workers, conditional devices and separate
+  resident/public Sweden Central model options. One receiver-grant citation
+  is corrected from the entity line to 147; original findings are retained.
+* Reconciled B04/B10/B19/B20 question/headline/index wording and corrected
+  B27's stale designed-only financial-bound description. Current source
+  admission does not prove actual prices, approvals, billing reconciliation
+  or accepted value. Existing cost arithmetic is unchanged.
+* Local Build/Verify/preview preserves 54 slides/notes, 108 actual actions,
+  timing and six protected cost pages. Seven Node source-contract tests,
+  32 native-shape checks and nine navigation tests pass. All 349 revised
+  frames retain text at 1.5-point tolerance; 44 page renders remain identical.
+  New overflow was corrected, and a retained study caveat's box enlarged
+  without changing content/pixels. LibreOffice has a `javaldx` warning;
+  native PowerPoint, human/keyboard/AT and rehearsal acceptance remain separate.
+* The owner approved a normal main merge, completed at `b2009737` over
+  `fa7ae0c9`. No diagram-referenced infrastructure or deck source changed;
+  the API README's relevant chat section is unchanged, and its evidence
+  hash is refreshed. Original model basis remains `c50e9f0b`.
+* The [story/rubric review](../capstone/source/review-2026-11-08-cxo.md)
+  separates written improvements from live B1/B4/C2/C3 behaviour. Independent
+  exact-head assessment and the focused publication gate are recorded in
+  the PR separately. No paper/results, runtime/infra, private data, model
+  experiment, deployment, regulatory activation or new approval is changed.
+
+## [2026-11-08] update | CxO story review consistency corrections
+
+* Preserved the original independent story FAIL at `08e4d3ca`: three Medium
+  findings, for stale proposed cost-control status, overbroad historical
+  binary-support observation and a recording/evidence fallback mismatch.
+* Accepted the bounded corrections. The owner approved only status wording
+  and narration on protected cost pages, preserving all financial numbers,
+  calculations, currencies, timing and navigation. A closed, explicitly
+  named authoring exception and negative number/geometry/note/approval tests
+  retain protection; all remaining cost bytes must match.
+* The historical Decision 1 claim is EPC-selection observation versus
+  specified binary support; B18's fallback is repository evidence. This
+  adds no real run, recording, financial/operational approval or benefit.
+  Current source and exact-head assessment/full gate are required after
+  the shared guard change; the earlier partial receipt remains historical.
+
+## [2026-11-08] update | IoT, resident site and full main-route architecture
+
+* The owner requested updates to both executive/technical Excalidraw views
+  and the current capstone architecture package: home sensors, IoT receipt,
+  telemetry/history and averages, and the separate optional resident site.
+  Supporting Azure services and gated options belong on a new main-route
+  deployment slide, not only in the appendix.
+* Updated the knowledge-base index to route readers to the architecture
+  sources, current slide mapping and the communications strategist's
+  review. Earlier dated slide references and adverse evidence remain
+  historical; the original case study and ADR decisions are unchanged.
+* The owner installed the Excalidraw skill and explicitly authorized its
+  inclusion with the skill lock in this PR. Local Excalidraw CLI rendering
+  uses an installed browser without an account or upload.
+* This is a source/presentation update, not deployment acceptance,
+  real-home monitoring consent, approved averages methodology, resident
+  shared-case identity activation or a new database/platform adoption.
+  Source, render, navigation and publication evidence is recorded in the
+  current architecture text equivalent, communications review and PR.
+## [2026-11-08] update | Local validation policy reconciliation (Refs #1294, #470)
+
+* Reconciled the local validation tiers: targeted local checks during development; focused tier (planned relevant local checks plus applicable hosted CI, no blanket `--changed` run) for small and documentation-only candidates; complete gate and verified external full receipt for major, SQL, infrastructure, deployment, security-sensitive and release work and for workflow, gate-tool, dependency and Dockerfile changes, strictest tier for mixed changes. Added a hosted-versus-local coverage comparison, the local-only checks (employee-chat axe harness, exact-count zero-skip chat-panel selector, extra SQL selector) and policy examples to the source guide, aligned the repository instructions, coordinator profile and retention policy wording. Absent, path-filtered, skipped or unobserved CI is stated not to be a pass. No workflow, tool, application, security-control or branch-protection change; the #470 full-gate timing measurement remains open. Records: `.copilot-tracking/*/2026-11-08/issue-1294-validation-policy-*`.
+
+## [2026-11-08] update | Correction C1 to the local validation policy (Refs #1294)
+
+* Independent review of the first candidate found four defects, corrected as wording only. The direct employee-chat check now states the runner's full acceptance contract (pinned axe digest, three ordered states, positive integer `passes`, `PASS employee chat:` marker, no skips or violations; selector exactly one test and zero skips). The coverage comparison now separates Shared checks from Local-only verification and genuinely hosted-only artifact upload and hosted execution, and no longer lists locally executed Trivy, SPDX, Bicep, migration and data-guard checks as hosted-only. The categorical full-tier rule for workflow, gate-tool, dependency-manifest and Dockerfile edits was replaced with impact-based classification that keeps the full tier for security-sensitive, infrastructure, deployment, SQL, major, release, mixed and unresolved-risk changes. The behavior test was repeated with independent design and grading. The earlier behavior report and log entry are preserved unchanged. Hosted CI remains unobserved.
+
+## [2026-11-08] update | Correction C2 to the local validation policy (Refs #1294)
+
+* A second independent review found two wording defects, corrected in `src/README.md`: the guide no longer says every mixed change takes the full tier (a mixed change takes the strictest applicable tier, so two focused components stay focused and any full-tier component makes the candidate full), and the runner-specific 58-byte `--out` limit is no longer attributed to the direct employee-chat harness, whose `--out` only receives the results file and whose scratch directory is set by `ZF_BROWSER_SCRATCH`. The behavior test was repeated as a fresh full run on the final wording; earlier reports and the retained sandboxes are preserved. Hosted CI remains unobserved.
+
+## [2026-11-08] correction | Tested revision of the C2 validation-policy behavior run (Refs #1294)
+
+* The C2 entry above says the behavior test was repeated "on the final wording". That is inaccurate. The run tested HEAD 7260826 plus the pre-grade C2 working-tree edits and returned Revise (nine scenarios Pass, three Revise, four findings). Four wording edits were then applied after grading and were not re-simulated, so the committed C2 wording was not behavior-tested. The earlier entry is preserved unchanged; a fresh full run on the corrected wording follows in correction C3.
+
+## [2026-11-08] update | Correction C3 to the local validation policy (Refs #1294)
+
+* The direct `python -m checks.employee_acceptance_check` command in `src/README.md` now carries the runner's `PYTHONPATH` from `src/api` and its three-test, zero-skip acceptance contract (discovery was verified read-only; no browser run). A fresh full, independently designed, simulated and graded behavior run (report 4, sandbox `2026-11-08-issue-1294-policy-4`) tested the final guide wording, with no edit after grading, and returned Pass with no confirmed contract defects. It is a proxy run: the host cannot bind the target profile, so no intended-profile or native claim is made. Earlier reports and sandboxes are preserved. Hosted CI remains unobserved.
+
+## [2026-11-08] correction | C3 evidence provenance for the validation-policy behavior run (Refs #1294)
+
+* The C3 entry above and report 4 overstate the tested state. The report 4 run tested HEAD bd63b22 plus the uncommitted C3 working-tree patch to `src/README.md` and this log (retained as `target-diff-vs-bd63b22.patch`), not a committed revision. The sandbox 4 pre-run status was not clean: it lists the two modified files, the untracked C3 research, plan, details and critique, and the sandbox itself. The C3 outcome entry above and the C3 tracking records were added after grading and were not simulated, so "no edit after grading" holds only for the guide wording. The C3 discovery probe counted tests only, which would also count three import failures; correction C4 replaced it with a probe that fails on loader errors and checks the three exact test IDs. Earlier entries, report 4 and the raw sandbox files are preserved unchanged. Hosted CI remains unobserved.
+
+## [2026-11-08] update | Correction C4 to the local validation policy (Refs #1294)
+
+* `src/README.md` was corrected against the workflow, selector and runner: project checks run only for selected projects, the `src-no-working-data` guard runs whenever Source CI starts, accompanying non-`src/` or unknown paths widen selection, the SQL example names the real `src/core` path, the focused command example is self-contained with a failed-run-only resume that reuses the failed receipt's base, and partial receipts may stay valid under `BASE RELAXED` while full and `--exact-base` receipts need the exact base. The hosted behavior is inferred from files, not observed. Static and behavior evidence for this revision is recorded in the C4 tracking artifacts.
+
+## [2026-11-09] update | Priority recovery E1 of the local validation policy (Refs #1294)
+
+* Under the owner's authorization of up to two extra focused cycles, current `main` (which added the retained sensor MSSQL suite, #1299) was merged. `src/README.md` now lists that suite as local-only (hosted `mssql` does not run it), gives its non-inert `--changed` selection rule and extends the SQL example; the rubric publication runbook, the coordinator refresh and base-change rules and the instruction wording are qualified by selected tier; a dated supersession note was added to D4 of the 2026-10-31 delivery bottleneck analysis.
+* Supersession, not erasure: the original C1-C4 evidence, the C4 lead review (Residual work) and the exhausted-cycles outcome stand. The independent C4 exact-head review (two High, three Medium, two Low) is known only from the 2026-11-08 issue comment; no durable copy was found, so its exact text is missing evidence. Static review of all current targets and a labelled proxy behavior simulation were repeated; neither is native, intended-profile or qualified-human proof. Hosted CI is unobserved.
+
+## [2026-11-09] update | Demo stabilization current-main checkpoint (Refs #440 #123 #184 #136)
+
+* Appended a dated draft section to [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#demo-stabilization-current-main-checkpoint-2026-11-09-refs-440-123-184-136) and updated its `ms.date` and the [index](README.md). It pins `main` `df8e858b`, qualifies BRD and PRD identifiers and decision record status, reads the demo path from source, classifies evidence and records three tiny local test runs (two earlier harness-import failures retained). Retained 184 results are historical observed with proven Git source equivalence.
+* Not claimed: approval, issue closure, acceptance ticks, live or Azure evidence, a new defect, a full gate, independent review or hosted CI. Unmerged #1288, #1292, #144, #189, #1295 and #1296 work is excluded and the #1296 REVISE result is not a current-main outcome. No earlier entry or record changed.
+
+## [2026-11-09] update | Demo stabilization checkpoint C1 evidence qualification (Refs #440)
+
+* Qualified the dated 2026-11-09 checkpoint in [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#qualification-c1-2026-11-09-refs-440) and the [index](README.md) after an independent readiness review: absence statements now read "not identified in the inspected paths", a differently named path remains unverified, the quality-evidence snapshot also holds permitted document metadata, and the selected tests did not exercise the sensor-to-Quality-model journey. The DF8 observation, the original research, plan, critique, changes, review and state are preserved with appended dated qualifications. Correction cycle 1 of 5; no earlier review-correction cycle recorded.
+* Not claimed: a runtime defect, approval, closure, tick, live, model or SQL evidence, hosted CI or merge readiness. No earlier entry changed.
+## [2026-11-09] update | PR 1295 C3 navigation numbers and current-text corrections (Refs #1295)
+
+* `tools/capstone/Invoke-Capstone.ps1` now applies one baseline-to-physical mapping (baseline slides 13 to 54 move up one for the inserted page 13) to `page`, `pages`, `slide`, `slides` and `index` references, including no-space forms (`page40`), plural ranges (`pages 23-24`) and slash ranges (`pages 9/16`), while leaving numbers below 13 and part 55 notes unchanged. Five notes changed (QX, B13, B20, B26, B27); the deck, both generated pitch files, the preview PDF and the receipt were regenerated, and all other package members, protected cost slides and the 55 page images are unchanged. `Test-DeckInsertion.ps1` gained a literal independent table.
+* `docs/architecture/README.md` now separates the 14 October baseline diagrams (no sensor ingestion) from the 8 November continuation (source-coded finite sensor chain; no live deployment claimed). This index now states 55 slides with current physical page numbers; the dated 2026-10-29 54-slide entry is historical and kept. The discovery-journey R09 anchors now point to the actual headings (`#L33`, `#L253`, `#L327`).
+* Not changed, frozen for owner decision: current baseline page numbers in `docs/capstone/demo/runbook.md` and the QX manifest sentence "All 54 page numbers". No native, visual, assistive-technology, rehearsal or live approval is claimed.
+## [2026-11-09] update | Issue 144 hosted-conflict main reconciliation (Refs #144)
+
+* Merged current `origin/main` d4d6827f (PR 1222) into the issue 144 branch with an ordinary merge, after recording a prospective plan. Both append-only entry sets in this log are retained (the issue 144 entries and main's later entries); the only overlapping path was this log. The cause of the hosted CONFLICTING report was not established; local merge-tree prediction is not hosted mergeability.
+* `src/agents` is byte-identical to the approved 63d7f8c1; main's source delta is `paired_equity` in core only. Demo-targeted local checks are in the dated changes record under `.copilot-tracking/`. Hosted CI and independent review of the new head are pending; all five issue 144 acceptance criteria stay unproven live.
+
+## [2026-11-09] update | Issue 144 current-main integration (Refs #144)
+
+* Merged current `origin/main` df8e858b (contains PR 1304 IoT source and a rubric score commit) into the issue 144 branch with an ordinary merge, after recording a prospective plan. Both append-only entry sets in this log and the `2026-11-09` issue 144 headers are retained; the only textual overlaps (this log and one `infra/README.md` row) merged cleanly. The hosted CONFLICTING cause stays unestablished.
+* `src/agents` is unchanged from the approved 63d7f8c1; main changed no Agents file. Demo-targeted checks and the Date positive and mutation-negative results are in the dated changes record under `.copilot-tracking/`. Independent exact-head review and hosted CI of the new head are pending; all five issue 144 acceptance criteria stay unproven live.
+
+## [2026-11-09] query | Supplementary blind post-run judging in the paper
+
+* Added prospective supplementary judging methods to the existing paper and
+  additive Supplement from the full supplied README at `b7973e20`, with
+  fixed workflow panel, witnessed endpoint-loss definition, separate ordinal
+  API-task ratings, allocated-frame missingness, nested measurement units,
+  blinding/calibration and separate judging costs/authorisation.
+* Updated the paper source guide, revision/evidence record, focused authoring
+  regressions, active digest bindings and this index. The supplied Data
+  Science and Engineering Coach definition guided a separate agent context;
+  the exact named agent was not exposed by the launcher.
+* Preserved the running experiment, original endpoints and treatment budgets,
+  false results switch, historical/adverse evidence and registration/
+  amendment provenance. No private outcome data, paid judging, candidate
+  repair, OSF or visibility action; scientific/human approval remains separate.
+
+## [2026-11-09] query | Development and post-run execution boundaries
+
+* Integrated the owner's follow-up technical explanation in the same paper
+  workstream: the stopped-archive flow is post-run replay/judging, while the
+  model-requested command flow is development. The paper distinguishes
+  host Python/JavaScript/model transport from fresh candidate containers,
+  persistent writable development files/Git from read-only replay inputs,
+  tool-enabled builders from evidence-only judges and collected failures
+  from isolation/collection unavailability.
+* Added one original editable paired runtime diagram with local exports and
+  provenance, without rewriting historical figures. Source descriptions do
+  not establish observed execution, judge accuracy or security certification.
+
+## [2026-11-09] update | SQL feature-recovery wave current-main checkpoint (Refs #440)
+
+* Appended a dated draft section to [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#sql-feature-recovery-wave-current-main-checkpoint-2026-11-09-refs-440) and an entry to the [index](README.md) after PR 1308 merged at `8d6f029c`. Recorded Git and hash source equivalence for the retained real-SQL results, hosted checks on the PR head, fresh targeted local unit observations with one retained failure, existing-owner comparison and bounded resume conditions.
+* Not claimed: approval, issue closure, acceptance ticks, fresh SQL, browser, live, Azure or model evidence, a hosted run of the priority suite on SQL Server, full demo acceptance, independent review or hosted CI for this commit. No earlier entry changed.
+
+## [2026-11-09] update | SQL wave checkpoint C2 qualification (Refs #440)
+
+* Appended a dated C2 qualification to [the SQL-wave checkpoint](../architecture/cutover-evidence-pack.md#sql-feature-recovery-wave-current-main-checkpoint-2026-11-09-refs-440) after a partial independent Readiness assessment: committed-reload (HTTP 409) versus uncertain or transport outcomes narrowed from source reads, the SQLite failure restated as one in five executions then four passes (cause unknown, no waiver), and a cross-reference to the later #1292 diagnosis (0 of 6 reproductions, timing hypothesis unconfirmed). Original text, Review and earlier entries unchanged.
+* Not claimed: approval, closure, independent exact-head review, hosted CI, SQL, browser, live, Azure or model evidence.
+
+## [2026-11-09] update | SQL wave checkpoint current-main preparation (Refs #440)
+
+* Merged `main` `3a9767d5c` (PR 1240 lifecycle integration, plus #1312) into the branch with an ordinary merge and appended a dated [current-main preparation note](../architecture/cutover-evidence-pack.md#current-main-preparation-2026-11-09-refs-440-81) to the SQL-wave section: observed source stays `8d6f029ca`; lifecycle source in main was not retested or accepted by that record; whole #81 and #440 stay open; the next lifecycle-wave checkpoint trigger and closure hold are recorded.
+* Not claimed: a completed lifecycle checkpoint, approval, closure, independent exact-head review, hosted CI for this branch, SQL, browser, live, Azure or model evidence. Earlier entries and the open Low scope finding (#1314) are unchanged.
+
+## [2026-11-09] update | Issue 1292 original-load diagnostic record qualification (Refs #1292)
+
+* Appended a dated bounded note to [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#original-load-1292-diagnostic-and-record-qualification-2026-11-09-refs-1292) and an entry to the [index](README.md): the second unchanged-source diagnosis had 0 of 2 paired reproductions with cause unknown, qualified by four additive notes (observer recorder limits, unittest versus process timings, a 26-member log manifest, the observer-pair design). Merged `main` `2b6d80a25` with an ordinary merge.
+* Not claimed: a cause, flake, load necessity, source fix, E5 authorization, ticked criteria, independent exact-head review, hosted CI, retest, SQL, browser or cloud evidence, a full gate or approval. The 0 of 2 pairs, the earlier 0 of 6 and the original failure are not aggregated. Earlier entries and records are unchanged.
+
+## [2026-11-09] update | Issue 1292 chronology correction (Refs #1292)
+
+* Corrected one clause in the [original-load note](../architecture/cutover-evidence-pack.md#original-load-1292-diagnostic-and-record-qualification-2026-11-09-refs-1292): the original series is one failure among five total executions, with the initial failure followed by four passes, not a failure in the fifth execution. A dated qualification was appended to the tracking record; no count, cause or proof boundary changed.
+* Not claimed: E5 or source correction, ticked criteria, independent review of this delta, hosted CI or any retest. Earlier entries unchanged.
+
+## [2026-11-09] update | Issue 1292 current-main priority SQL validation (Refs #1292)
+
+* Appended a dated bounded subsection to [the cut-over evidence pack](../architecture/cutover-evidence-pack.md#current-main-priority-sql-regression-validation-2026-11-09-refs-1292) and an entry to the [index](README.md): at pinned `main` `ba71894bb`, one non-queued admission on a disposable SQL Server 2022 ran the 142-test priority module (split A 108 and B 34) and the two original resident-control methods with SQLite and in-memory parity (6): 148 tests, 67 on SQL Server, 0 skips, 0 failures, 540 s. Genuine prospective RPI records, one independent critique (Revise, applied) and the planning commit preceded execution.
+* Not claimed: root cause or fix of the unknown historical startup failure, a pre-fix failing-test re-proof, whole-SQL acceptance, a full-gate waiver, hosted CI, independent review, scale, lock-duration, Azure or live evidence, E5 or any source correction, or ticked or closed criteria for #1292, #81 or #440. Earlier entries unchanged.
+## [2026-11-09] update | Lifecycle and simulator controls current-main checkpoint (Refs #440)
+
+* Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#lifecycle-and-simulator-controls-current-main-checkpoint-2026-11-09-refs-440-81-189-954-1292) for `main` `48350983` covering merged PRs 1240, 1313, 1315, 1317 and 1318 (issues #81, #189, #954, #1292), with an index sentence. Runtime source equivalence to the 189 and 954 browser runs is shown by tree identity and a 642-file manifest; document identities are compared; PR 1320 and #159 are excluded.
+* No new defect or refactoring confirmed. Not claimed: approval, closure, live budget alert, SQL, model or assistive-technology evidence, hosted CI or independent review of this commit, or satisfaction of the earlier lifecycle-wave trigger. Earlier entries unchanged.
+
+## [2026-11-09] update | SQL wave checkpoint comparison count qualification (Refs #1314 #440)
+
+* Appended a dated [comparison count qualification](../architecture/cutover-evidence-pack.md#comparison-count-qualification-2026-11-09-refs-1314-440) to the cut-over evidence pack and one sentence to the index entry of the SQL-wave checkpoint. It restates, from pinned Git ranges, the final C2 comparison against `ef28d4da4` (17 paths, 700 additions, 0 deletions; the 15-path figure is an intermediate tree and the index re-wrap belongs to the `06f408dd7` comparison), the composition of the current-main preparation additions, and the limit of the byte-prefix wording.
+* Not claimed: a SQL fix, new live, SQL, browser or model evidence, closure of #1314, #440 or #81, a third #440 correction cycle or budget renewal, independent exact-head review, hosted CI or approval. Original records unchanged; earlier entries unchanged.
+
+## [2026-11-09] update | Issue 1292 current-main priority SQL candidate main preparation (Refs #1292)
+
+* Merged `main` `1a84b3b0054990262a0df0625d95e3f545d2739a` into the local candidate branch with an ordinary merge (Git and Markdown only). Both sides' pack sections, index paragraphs and log entries are kept; no row deleted, no earlier count rewritten. Added a dated current-target binding to the [priority SQL subsection](../architecture/cutover-evidence-pack.md#current-main-priority-sql-regression-validation-2026-11-09-refs-1292): `src`, `tools`, `infra` and workflow trees equal the executed source, so the earlier 148-test, 67-on-SQL-Server, 0-skip run is not repeated.
+* Not claimed: root cause of the unknown historical startup failure, the old-behavior-fails half of AC3, whole-SQL acceptance, a full-gate waiver, hosted CI, independent review of this commit, or any criterion tick or closure. The controls and photo observations and the #1314 qualification remain historical main records.
+
+## [2026-11-09] update | Issue 1292 current-main priority SQL Q1 qualification (Refs #1292)
+
+* Added a dated [Q1 qualification](../architecture/cutover-evidence-pack.md#current-main-priority-sql-regression-validation-2026-11-09-refs-1292) after the same-reviewer assessment: the verifier gates test outcomes only and cleanup was observed separately; limits on the timeout bound (C4) and local image and endpoint checks (C5); the seven Applied dispositions are prior record. Original claims are kept, not blessed.
+* Not claimed: a new defect or fix, an immutable runtime image, endpoint authentication, a universal timeout bound, the startup cause, whole-SQL acceptance, a full-gate waiver, or any criterion tick.
+
+## [2026-11-09] update | Integrated current-main journey checkpoint (Refs #440 #81 #123 #184 #136)
+
+* Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#integrated-current-main-journey-checkpoint-2026-11-09-refs-440-81-123-184-136) for `main` `2be660e9` with an index sentence: document identities and statuses, covered and excluded PRs and issues, a document-qualified trace, four targeted local test processes (one retained environment-fault run, `node` missing from a sanitized `PATH`) and one nonqueued disposable SQL Server run of the resident-decision class, the #1326 priority SQL evidence reused by source identity with its limits, and gaps mapped to existing owners.
+* No defect or refactoring confirmed. Not claimed: approval of any document, closure or tick of any criterion, whole #440 or Major HVE acceptance, live, Azure, actual-model, assistive-technology or browser evidence, hosted CI or independent review of this commit. Earlier entries unchanged.
+
+## [2026-11-09] update | Qualification Q1 of the integrated current-main journey checkpoint (Refs #440)
+
+* Appended a [qualification](../architecture/cutover-evidence-pack.md#qualification-q1-2026-11-09-appended-after-the-frozen-checkpoint-3965fa489d8f07d0180b94d3fdfd7db16441790d-originals-above-unchanged) to the checkpoint entry above: S1 was selected without a recorded prospective amendment, S1 raw retention is unverified after the scratch directory was removed (A-series originals survive with the coordinator), the absence statement is bounded to inspected paths, PRD FR-016 and FR-017 are not resident or complaints IDs, and the four final processes include one SQL run (1205 discovered, 171 skipped).
+* The earlier entry is unchanged. No approval, closure or acceptance is claimed.
+
+## [2026-11-09] update | Parent-topic Blob and Quality checkpoint (Refs #440 #1288 #1258 #1259 #136)
+
+* Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#parent-topic-blob-and-quality-checkpoint-2026-11-09-refs-440-1288-1258-1259-136) with an index paragraph: merged-main Blob identities and historical reuse kept separate from parent-topic Quality observations at local `34838154` (PR 1331 unmerged), one adverse local browser run (exit 1 at the simulation step, stale check versus the code-off route), the unreproducible 861 count, an unmet matrix with existing owners, and the merged-main resume requirement.
+* Earlier entries and the 2026-11-09 current-main checkpoint are unchanged. Not claimed: Quality merged-main functionality, live Blob, actual-model AI, assistive-technology or Major HVE acceptance, hosted success of the unpublished E8 commit, or any closure.
+
+## [2026-11-09] update | Merged-main Blob and Quality qualification (Refs #440 #1288 #1258 #1259 #136)
+
+* Appended a dated draft [qualification](../architecture/cutover-evidence-pack.md#merged-main-blob-and-quality-qualification-2026-11-09-refs-440-1288-1258-1259-136) after PR 1331 merged: `main` `1b7a1719b` (squash, tree equal to `f995774`), merge of main into the local checkpoint with source identical to main, one corrected browser observation M1 (exit 0, 30 checks, axe 0 violations, serious contrast incompletes remain), three failed invocation attempts preserved, historical reuse limits, and gap owners.
+* The parent-topic entry above, the original adverse O1 and all earlier entries are unchanged. Not claimed: whole #1288, #136 or #440 closure, live Blob, actual-model AI, assistive-technology, consent, human or Major HVE acceptance, Azure SQL or the refusal-event second-connection contract.
+
+## [2026-11-10] update | Quality M2 current-main qualification (Refs #440 #1288 #891 #184)
+
+* Appended a dated draft [qualification](../architecture/cutover-evidence-pack.md#quality-m2-current-main-qualification-2026-11-10-refs-440-1288-891-184) at `main` `32221a845` after PRs 1331, 1339, 1341 and 1342: merged identities, the Core, API and Agents subtree equivalence to the H2 observed source (importer PR 1341 qualified and excluded), commands with exits and the one SQLite-only skip, a document-qualified trace with evidence classes, gaps with existing owners and a CONTINUE recommendation with resume conditions.
+* Errata recorded without rewriting earlier entries: #891 is included in source `ddeebd01`, H2 had no peer and no byte claim, and the companion run is 29 passes plus one skip. Earlier entries, the adverse H0 and H1 records and the VM-local raw logs are unchanged or uncommitted. Not claimed: whole #440, #1288, #891 or #184 closure, Azure SQL, actual-model AI, human or resident authority, exact-head hosted CI, or any approval.
