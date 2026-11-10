@@ -1311,3 +1311,10 @@ default-deny approval binding), 1345 (finance retained history and dependencies)
 adapter, fake builder): 699 targeted tests run, 562 pass, 137 skip executions (5 browser skips later run, 129 SQL Server opt-in, 1 Azure SQL opt-in, 2 backend exclusions; no external SQL service ran; counts corrected in C3, no unique total), none fail. A C3 addendum observes the later-merged PR 1351 empty-queue explanation. It
 joins them to document-qualified BRD and PRD rows and keeps SQL Server, live rebuild, trusted resident binding,
 actual-model and human approval gates unproven. Closure and approval holds stand.
+
+A [discovery CLI checkpoint](../architecture/cutover-evidence-pack.md#discovery-cli-feature-increment-checkpoint-2026-11-10-refs-440-125)
+(2026-11-10, draft, local) observes pinned `main` `0d262beee` after PR 1355 (#125 read-only synthetic
+`discovery-demo` command): 65 focused Core tests pass, the command's JSON readback shows `NOT_READY`, company
+connection `DENY`, `model_used` false and an empty human comparison, and no connect call or write-mode open was
+traced. It is constructed-fixture evidence only; whole #125, Phase 0, actual comparison, model and human approval
+gates stay unmet, and #440 and #125 stay open.
