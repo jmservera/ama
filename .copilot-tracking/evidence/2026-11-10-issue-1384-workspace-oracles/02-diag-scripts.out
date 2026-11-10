@@ -1,0 +1,7 @@
+PASS owned server is running and responsive on loopback
+DIAG exhaustion (repeated aborted loads): FAILED
+PASS terminal missing global, native reload
+DIAG exhaustion missing_global: passed
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: timeout and late load
+DIAG delayed companion timed_out: passed

@@ -1,0 +1,74 @@
+{
+  "task_id": "1388-delayed-route-1110",
+  "task_slug": "issue-1388-delayed-route-1110",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-delayed-route-1388-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-delayed-route-1388-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-delayed-route-1388-1110-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-delayed-route-1388-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-delayed-route-1388-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-delayed-route-1388-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready; no ownership conflict; intended request identity distinguishable (route only for companion asset, request 1 aborted, later requests held), so no contract gap",
+      "status": "recorded",
+      "evidence": "research record"
+    },
+    {
+      "decision": "Distinct initial bounded checker repair admitted for #1388 on pinned main 83503b74e0e5f555382436c0ae27f64cd200971f; not #133 C6, not #1384 C1, no budget transfer; scope only delayed_companion synchronization plus direct regression",
+      "status": "confirmed",
+      "evidence": "Root brief; issue 1388 body"
+    },
+    {
+      "decision": "Focused demo tier; not the full or --changed gate; whole workspace checker retains the independently owned #1384 exhaustion failure and is not reported green",
+      "status": "confirmed",
+      "evidence": "Root brief; issue 1388 validation boundary"
+    },
+    {
+      "decision": "Critique executed once (same-agent self-critique, not independent); verdict proceed; amendments applied directly; no finding conflicts with a confirmed decision",
+      "status": "recorded",
+      "evidence": "critique record"
+    },
+    {
+      "decision": "Implementation complete: checker bounded pump plus direct regression; red on original (16 failures), green after; selectors, ruff, format, mypy pass; four delayed variants pass isolated and in sequence; whole checker stops at the #1384 exhaustion oracle and is not called green; zero corrections spent",
+      "status": "recorded",
+      "evidence": "changes record"
+    },
+    {
+      "decision": "Review executed once (same-agent, not independent exact-head); outcome accepted, no blocking finding; two Low findings routed to later work; assessed boundary two source files plus RPI artifacts",
+      "status": "recorded",
+      "evidence": "review record"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Root independent exact-head assessment before publication; then hosted CI and #1384 adoption"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Root independent exact-head assessment, then publish to main and read hosted CI",
+      "rationale": "Required gates before integration",
+      "evidence": "review record; issue 1388 criteria"
+    },
+    {
+      "rank": 2,
+      "task": "Adopt this fix into held #1384 and require its BOTH browser checks",
+      "rationale": "Whole checker still stops at the #1384 exhaustion oracle",
+      "evidence": "changes record; issue 1388 body"
+    },
+    {
+      "rank": 3,
+      "task": "Only if a duplicate-timing defect is observed, harden the late-duplicate case in a separately admitted task",
+      "rationale": "Low residual",
+      "evidence": "review findings"
+    }
+  ]
+}

@@ -162,6 +162,61 @@ encoded details remain rejected by the adapter. No hosted rerun or score
 recovery is implied by these local tests. Deck registration and size support
 on trusted base `main` remain separate from this submission repair.
 
+### Run 42812941091 placeholder submission and recovery (2026-11-10, Refs #1383)
+
+This is a dated historical record from direct job and artifact evidence. It is
+documentation only: it changes no scorer, workflow or test, and it is not a
+live acceptance of the scorer. The original bot report on #1383 is preserved
+as the first record of the failure, and closing the issue is a separate owner
+decision.
+
+[Run 42812941091](https://github.com/jmservera/ama/actions/runs/42812941091)
+(attempt 1, push to `main`, commit
+`901fea60e06348fa11915c8cc0cebc56a2d78216`) concluded `success` although it
+recorded no score. Its gate decision was `valid: false`, `total: null`,
+baseline 78, error `details is not valid JSON: Expecting value: line 1 column
+1 (char 0)`. The gate, refresh and publish steps ran as designed: the baseline
+was unchanged and the incident issue was opened. The retained agent output
+shows why. The first `record_rubric_score` call, the only one accepted, held
+the literal text `PLACEHOLDER_WILL_BE_REPLACED` (28 characters) as `details`.
+It was non-empty and not JSON. A second, complete call was rejected with
+`Maximum allowed: 1`. An empty payload, truncation, a transport or schema
+fault and an adapter defect are not shown. Rejecting that input is the
+intended fail-closed behaviour.
+
+[Run 42815865163](https://github.com/jmservera/ama/actions/runs/42815865163)
+(attempt 1, push to `main`, commit
+`caaf989148aff21ed8ecb5b71eb0be75b29c16de`) made one call. Its gate decision
+was `valid: true`, `passed: true`, total 78 against baseline 78, the scored
+commit check passed and the workflow merged baseline refresh pull request
+[#1386](https://github.com/jmservera/ama/pull/1386). `latest.json` at
+`9724a471f69b4545a051047b58d9e0e9d8326755` records scored commit `caaf9891`,
+that run URL, total 78 and 20 criteria whose scores sum to 78. The content
+differs from the previous baseline, so it is a fresh score, not a carry-forward.
+The workflow, compiled lock, adapter and gate are byte-identical at `901fea60`,
+`caaf9891` and `06374dfca`, so no source change separates the failure from the
+recovery and no persistent source defect is established.
+
+Remaining uncertainty:
+
+* The decisions are evidenced from retained job logs; `decision.json` and
+  `report.md` were not uploaded as artifacts.
+* `901fea60` never received a score of its own. The recovery scored its
+  descendant `caaf9891`.
+* Recurrence beyond these two runs was not searched.
+* The scorer accepts one call and cannot correct a mistaken first one. Whether
+  that needs a design change is an owner question and would need a separately
+  authorized correction.
+
+Process qualification (2026-11-10): the local phase witness for the original
+record above logged six `ok` boundaries, but its last event, `commit-complete`,
+was refused because the caller passed the non-hex string `HEAD` as the commit
+claim. That refusal, the original evidence and commit
+`5c8a856c2dbee53d1aa8f7030524afa9569e7451` are kept unchanged. A separately
+recorded one-time operational retry does not repair or extend that chain, and
+neither record is host or model attestation. The incident findings and limits
+above are unchanged.
+
 ## Files
 
 | Path                                                 | Purpose                                                     |
