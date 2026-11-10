@@ -4,7 +4,8 @@ import hashlib
 import json
 import math
 import re
-from collections.abc import Iterator, Mapping, Sequence
+import time
+from collections.abc import Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -12,10 +13,15 @@ from decimal import Decimal
 from typing import Protocol, cast
 
 from .mssqlstore import MssqlStore
+from .sensor_sql import SensorMssqlConnector
+from .sensor_view import home_digest
 from .sqlstore import SqlStore
+from .synthetic.live_readings import SCHEMA_VERSION as LIVE_SCHEMA_VERSION
+from .synthetic.live_readings import SUNLIGHT_UNIT
 from .synthetic.sensor_faults import READING_FIELDS, SCHEMA_VERSION
 from .synthetic.sensor_identity import home_key
 
+DISPATCH_WAIT_SECONDS = 45.0
 IDENTITY = re.compile(r"[A-Z0-9][A-Z0-9_-]*\Z")
 NUMBER = re.compile(r"-?(?:0|[1-9][0-9]{0,2})(?:\.[0-9]{1,2})?\Z")
 STAMP = re.compile(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ\Z")
@@ -31,6 +37,26 @@ READING_COLUMNS = (
     "seed",
     "schema_version",
     "injected_fault",
+)
+SUNLIGHT_NUMBER = re.compile(r"(?:0|[1-9][0-9]{0,3})(?:\.[0-9]{1,2})?\Z")
+SUNLIGHT_MAX = 1400.0
+LIVE_FIELDS = (
+    "sensor_id",
+    "reading_id",
+    "home_id",
+    "observed_at",
+    "temperature_c",
+    "humidity_pct",
+    "sunlight_wm2",
+    "temperature_unit",
+    "humidity_unit",
+    "sunlight_unit",
+    "source_type",
+    "scenario",
+    "seed",
+    "schema_version",
+    "injected_fault",
+    "label",
 )
 Primitive = str | int | float | bool | None
 Observation = dict[str, Primitive]
@@ -65,6 +91,26 @@ class Cursor(Protocol):
 class Connection(Protocol):
     def execute(self, sql: str, args: Sequence[object] = ()) -> Cursor: ...
     def close(self) -> None: ...
+
+
+def _json_text(value: object) -> str | bytes | bytearray:
+    if not isinstance(value, str | bytes | bytearray):
+        raise TypeError("expected JSON text")
+    return value
+
+
+def _scalar(cursor: Cursor) -> object:
+    row = cursor.fetchone()
+    if row is None:
+        raise TypeError("query returned no row")
+    return row[0]
+
+
+def _number(cursor: Cursor) -> float | Decimal:
+    value = _scalar(cursor)
+    if not isinstance(value, int | float | Decimal):
+        raise TypeError("query returned a non-numeric value")
+    return value
 
 
 class ConsumerError(RuntimeError):
@@ -193,12 +239,180 @@ def preflight(batch: object) -> list[Observation]:
     return result
 
 
+def _control_home_ddl(mssql: bool) -> str:
+    key = "VARCHAR(64) COLLATE Latin1_General_100_BIN2" if mssql else "TEXT"
+    home = "NVARCHAR(128) COLLATE Latin1_General_100_BIN2" if mssql else "TEXT"
+    return f"(home_id {home} NOT NULL, sensor_id {key} NOT NULL, PRIMARY KEY (home_id, sensor_id))"
+
+
+def _state_ddl(mssql: bool) -> str:
+    return f"(id INT NOT NULL PRIMARY KEY, body {'NVARCHAR(MAX)' if mssql else 'TEXT'} NOT NULL)"
+
+
+def _write_marker(db: Connection, controls: Iterable[tuple[str, str]]) -> None:
+    homes: dict[str, list[str]] = {}
+    count = 0
+    for home_id, sensor_id in controls:
+        homes.setdefault(home_id, []).append(sensor_id)
+        count += 1
+    body = {"v": 2, "count": count, "homes": {h: home_digest(s) for h, s in homes.items()}}
+    db.execute("DELETE FROM sensor_consumer_index_state")
+    db.execute(
+        "INSERT INTO sensor_consumer_index_state (id, body) VALUES (1, ?)",
+        (json.dumps(body, sort_keys=True),),
+    )
+
+
+GATE_DDL_SQLITE = (
+    "CREATE TABLE IF NOT EXISTS assistant_dispatch_gate (home_id TEXT NOT NULL,"
+    " task_id TEXT NOT NULL, fence INTEGER NOT NULL, expires_at REAL NOT NULL,"
+    " PRIMARY KEY (home_id, task_id, fence))"
+)
+GATE_DDL_MSSQL = (
+    "IF OBJECT_ID(N'assistant_dispatch_gate', N'U') IS NULL CREATE TABLE assistant_dispatch_gate"
+    " (home_id NVARCHAR(128) NOT NULL, task_id VARCHAR(64) NOT NULL, fence BIGINT NOT NULL,"
+    " expires_at FLOAT NOT NULL, PRIMARY KEY (home_id, task_id, fence))"
+)
+_SQLITE_LIVE = (
+    "EXISTS (SELECT 1 FROM assistant_dispatch_gate g"
+    " WHERE g.expires_at > (julianday('now')-2440587.5)*86400.0"
+    " AND (g.home_id IN ({homes}) OR {invalid}))"
+)
+_HOME_NEW = "CASE WHEN json_valid(NEW.body) THEN json_extract(NEW.body,'$.home_id') END"
+_HOME_OLD = "CASE WHEN json_valid(OLD.body) THEN json_extract(OLD.body,'$.home_id') END"
+_MSSQL_BODY = (
+    "AS BEGIN SET NOCOUNT ON; IF EXISTS (SELECT 1 FROM assistant_dispatch_gate g"
+    " WHERE g.expires_at >"
+    " DATEDIFF_BIG(MILLISECOND, CONVERT(datetime2,'1970-01-01'), SYSUTCDATETIME()) / 1000.0"
+    " AND (g.home_id IN (SELECT JSON_VALUE(body,'$.home_id') FROM inserted UNION"
+    " SELECT JSON_VALUE(body,'$.home_id') FROM deleted)"
+    " OR EXISTS (SELECT 1 FROM inserted WHERE ISJSON(body) <> 1)"
+    " OR EXISTS (SELECT 1 FROM deleted WHERE ISJSON(body) <> 1)))"
+    " BEGIN IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;"
+    " THROW 50002, 'dispatch-in-flight', 1; END DELETE FROM sensor_consumer_index_state; END"
+)
+
+
+def ensure_control_guard(db: Connection, mssql: bool) -> None:
+    """Any control write outside a reconciled write deletes the index marker, and a write that
+    touches a home with a live assistant dispatch gate is rejected.
+
+    The gate check uses the database clock, so a direct SQL withdrawal cannot commit while a send of
+    that home's readings is authorised; the writer retries after the gate ends. Readers fail consent
+    closed until the index is rebuilt. It never writes policy, controls or consent.
+    """
+    if mssql:
+        db.execute(GATE_DDL_MSSQL)
+        body = (
+            "CREATE OR ALTER TRIGGER sensor_consumer_control_guard ON sensor_consumer_control"
+            " AFTER INSERT, UPDATE, DELETE " + _MSSQL_BODY
+        )
+        db.execute(
+            "IF OBJECT_ID(N'sensor_consumer_control_guard', N'TR') IS NULL OR"
+            " CHARINDEX(N'assistant_dispatch_gate', OBJECT_DEFINITION(OBJECT_ID("
+            "N'sensor_consumer_control_guard'))) = 0 EXEC(N'" + body.replace("'", "''") + "')"
+        )
+        return
+    db.execute(GATE_DDL_SQLITE)
+    # A body that is not JSON names no home, so it is rejected while any gate is live.
+    for event, suffix, homes, invalid in (
+        ("INSERT", "ins", _HOME_NEW, "NOT json_valid(NEW.body)"),
+        (
+            "UPDATE",
+            "upd",
+            _HOME_NEW + ", " + _HOME_OLD,
+            "NOT json_valid(NEW.body) OR NOT json_valid(OLD.body)",
+        ),
+        ("DELETE", "del", _HOME_OLD, "NOT json_valid(OLD.body)"),
+    ):
+        name = f"sensor_consumer_control_guard_{suffix}"
+        stored = db.execute(
+            "SELECT sql FROM sqlite_master WHERE type='trigger' AND name=?", (name,)
+        ).fetchone()
+        if stored is not None and "assistant_dispatch_gate" in str(stored[0]):
+            continue
+        db.execute(f"DROP TRIGGER IF EXISTS {name}")
+        live = _SQLITE_LIVE.format(homes=homes, invalid=invalid)
+        db.execute(
+            f"CREATE TRIGGER {name} AFTER {event} ON sensor_consumer_control BEGIN"
+            f" SELECT RAISE(ABORT, 'dispatch-in-flight') WHERE {live};"
+            " DELETE FROM sensor_consumer_index_state; END"
+        )
+
+
+def ensure_control_home(db: Connection, mssql: bool) -> None:
+    """Create the per-home index when absent and reconcile it, only if controls were ever stored."""
+    if mssql:
+        present = _scalar(db.execute("SELECT OBJECT_ID(N'sensor_consumer_control', N'U')"))
+        if present:
+            db.execute(
+                "IF OBJECT_ID(N'sensor_consumer_control_home', N'U') IS NULL "
+                f"CREATE TABLE sensor_consumer_control_home {_control_home_ddl(True)}"
+            )
+            db.execute(
+                "IF OBJECT_ID(N'sensor_consumer_index_state', N'U') IS NULL "
+                f"CREATE TABLE sensor_consumer_index_state {_state_ddl(True)}"
+            )
+    else:
+        present = db.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='sensor_consumer_control'"
+        ).fetchone()
+        if present:
+            ddl = _control_home_ddl(False)
+            db.execute(f"CREATE TABLE IF NOT EXISTS sensor_consumer_control_home {ddl}")
+            db.execute(
+                f"CREATE TABLE IF NOT EXISTS sensor_consumer_index_state {_state_ddl(False)}"
+            )
+    if present:
+        try:
+            ensure_control_guard(db, mssql)
+            reconcile_control_home(db)
+        except Exception:
+            # Without a marker the readers withhold consent until an operator repairs the controls.
+            db.execute("DELETE FROM sensor_consumer_index_state")
+            raise
+
+
+def reconcile_control_home(db: Connection) -> None:
+    """Derive the per-home control index from the stored controls.
+
+    Every control is parsed before anything is written, so a malformed control or home raises with
+    the index untouched. It then adds missing rows, removes orphans and rewrites the marker that
+    readers verify. It never writes policy, controls or consent.
+    """
+    controls: dict[tuple[str, str], None] = {}
+    for sensor_id, body in db.execute(
+        "SELECT sensor_id, body FROM sensor_consumer_control"
+    ).fetchall():
+        home_id = json.loads(str(body)).get("home_id")
+        if not isinstance(home_id, str) or not home_key(home_id):
+            raise ValueError("CONTROL_HOME_INVALID")
+        controls[(home_id, str(sensor_id))] = None
+    indexed = {
+        (str(h), str(sensor))
+        for h, sensor in db.execute(
+            "SELECT home_id, sensor_id FROM sensor_consumer_control_home"
+        ).fetchall()
+    }
+    for home_id, sensor_id in sorted(set(controls) - indexed):
+        db.execute(
+            "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES (?, ?)",
+            (home_id, sensor_id),
+        )
+    for home_id, sensor_id in sorted(indexed - set(controls)):
+        db.execute(
+            "DELETE FROM sensor_consumer_control_home WHERE home_id=? AND sensor_id=?",
+            (home_id, sensor_id),
+        )
+    _write_marker(db, controls)
+
+
 class SensorConsumer:
     def __init__(self, store: object) -> None:
-        if not isinstance(store, SqlStore):
+        if not isinstance(store, SqlStore | SensorMssqlConnector):
             raise ConsumerError("UNSUPPORTED_STORE_SQL_REQUIRED")
         self.store = store
-        self.mssql = isinstance(store, MssqlStore)
+        self.mssql = isinstance(store, MssqlStore | SensorMssqlConnector)
 
     def _connect(self) -> Connection:
         try:
@@ -250,19 +464,124 @@ class SensorConsumer:
             raise ValueError("INVALID_CONTROL_BATCH")
         for control in controls:
             control.validate()
-        with self._write() as db:
-            self._schema(db)
-            db.execute("DELETE FROM sensor_consumer_policy")
-            db.execute(
-                "INSERT INTO sensor_consumer_policy (id, body) VALUES (1, ?)",
-                (json.dumps(asdict(policy)),),
+        deadline = time.monotonic() + DISPATCH_WAIT_SECONDS
+        while True:
+            with self._write() as db:
+                self._schema(db)
+                if not self._dispatch_in_flight(db, self._changed_homes(db, policy, controls)):
+                    self._replace_controls(db, policy, controls)
+                    return
+            # A control change waits only for a started provider call on a home whose effective
+            # controls change, bounded by its timeout and grace, outside the write transaction
+            # so the call can release its gate.
+            if time.monotonic() >= deadline:
+                raise ConsumerError("SENSOR_DISPATCH_IN_FLIGHT")
+            time.sleep(0.05)
+
+    def _changed_homes(
+        self, db: Connection, policy: ExercisePolicy, controls: Sequence[SensorControl]
+    ) -> set[str] | None:
+        """Homes whose effective controls change; None means any home (policy change or unreadable
+        prior controls), which keeps the wait conservative."""
+        top = "TOP 101 " if self.mssql else ""
+        tail = "" if self.mssql else " LIMIT 101"
+        rows = db.execute(
+            f"SELECT {top}sensor_id, body FROM sensor_consumer_control{tail}"
+        ).fetchall()
+        old = db.execute("SELECT body FROM sensor_consumer_policy").fetchone()
+        if len(rows) > 100 or (old and old[0] != json.dumps(asdict(policy))):
+            return None
+        try:
+            homes = {str(r[0]): str(json.loads(_json_text(r[1]))["home_id"]) for r in rows}
+        except (ValueError, KeyError, TypeError):
+            return None
+        before = {str(r[0]): str(r[1]) for r in rows}
+        after = {c.sensor_id: json.dumps(asdict(c)) for c in controls}
+        changed: set[str] = set()
+        for sensor in before.keys() | after.keys():
+            if before.get(sensor) != after.get(sensor):
+                if sensor in homes:
+                    changed.add(homes[sensor])
+        for control in controls:
+            if before.get(control.sensor_id) != after[control.sensor_id]:
+                changed.add(control.home_id)
+        return changed
+
+    def _dispatch_in_flight(self, db: Connection, homes: set[str] | None = None) -> bool:
+        """True while an assistant holds a live dispatch gate for a changing home. The gate uses the
+        database clock, commits with the final consent check, and expires on its own."""
+        if homes is not None and not homes:
+            return False
+        exists = (
+            "SELECT OBJECT_ID(N'assistant_dispatch_gate')"
+            if self.mssql
+            else "SELECT 1 FROM sqlite_master WHERE type='table' AND name='assistant_dispatch_gate'"
+        )
+        if db.execute(exists).fetchone() in (None, (None,)):
+            return False
+        now = (
+            "SELECT DATEDIFF_BIG(MILLISECOND, CONVERT(datetime2,'1970-01-01'),"
+            " SYSUTCDATETIME()) / 1000.0"
+            if self.mssql
+            else "SELECT (julianday('now')-2440587.5)*86400.0"
+        )
+        stamp = float(_number(db.execute(now)))
+        if homes is None:
+            return (
+                _number(
+                    db.execute(
+                        "SELECT COUNT(*) FROM assistant_dispatch_gate WHERE expires_at>?",
+                        (stamp,),
+                    )
+                )
+                > 0
             )
-            db.execute("DELETE FROM sensor_consumer_control")
-            for control in controls:
+        marks = ",".join("?" * len(homes))
+        return (
+            _number(
+                db.execute(
+                    f"SELECT COUNT(*) FROM assistant_dispatch_gate WHERE expires_at>?"
+                    f" AND home_id IN ({marks})",
+                    (stamp, *sorted(homes)),
+                )
+            )
+            > 0
+        )
+
+    def _replace_controls(
+        self, db: Connection, policy: ExercisePolicy, controls: Sequence[SensorControl]
+    ) -> None:
+        db.execute("DELETE FROM sensor_consumer_policy")
+        db.execute(
+            "INSERT INTO sensor_consumer_policy (id, body) VALUES (1, ?)",
+            (json.dumps(asdict(policy)),),
+        )
+        # Only the controls that differ are written, so an unrelated home's live dispatch gate never
+        # blocks an unchanged control and the guard can reject a direct write for a home being sent.
+        stored = {
+            str(r[0]): str(r[1])
+            for r in db.execute("SELECT sensor_id, body FROM sensor_consumer_control").fetchall()
+        }
+        wanted = {c.sensor_id: json.dumps(asdict(c)) for c in controls}
+        for sensor_id in sorted(stored.keys() - wanted.keys()):
+            db.execute("DELETE FROM sensor_consumer_control WHERE sensor_id=?", (sensor_id,))
+        for sensor_id, body in wanted.items():
+            if sensor_id not in stored:
                 db.execute(
                     "INSERT INTO sensor_consumer_control (sensor_id, body) VALUES (?, ?)",
-                    (control.sensor_id, json.dumps(asdict(control))),
+                    (sensor_id, body),
                 )
+            elif stored[sensor_id] != body:
+                db.execute(
+                    "UPDATE sensor_consumer_control SET body=? WHERE sensor_id=?", (body, sensor_id)
+                )
+        db.execute("DELETE FROM sensor_consumer_control_home")
+        for control in controls:
+            db.execute(
+                "INSERT INTO sensor_consumer_control_home (home_id, sensor_id) VALUES (?, ?)",
+                (control.home_id, control.sensor_id),
+            )
+        _write_marker(db, [(c.home_id, c.sensor_id) for c in controls])
 
     def _schema(self, db: Connection) -> None:
         text = "NVARCHAR(MAX)" if self.mssql else "TEXT"
@@ -272,6 +591,8 @@ class SensorConsumer:
             "sensor_consumer_control": (
                 f"(sensor_id {key} NOT NULL PRIMARY KEY, body {text} NOT NULL)"
             ),
+            "sensor_consumer_control_home": _control_home_ddl(self.mssql),
+            "sensor_consumer_index_state": _state_ddl(self.mssql),
             "sensor_delivery": (
                 f"(reference {key} NOT NULL PRIMARY KEY, status VARCHAR(12) NOT NULL,"
                 " reason VARCHAR(40) NOT NULL, received_at VARCHAR(20) NOT NULL,"
@@ -308,7 +629,25 @@ class SensorConsumer:
                 db.execute(f"IF OBJECT_ID(N'{name}', N'U') IS NULL {ddl}")
             else:
                 db.execute(ddl.replace("CREATE TABLE", "CREATE TABLE IF NOT EXISTS", 1))
+        ensure_control_guard(db, self.mssql)
+        if self.mssql:
+            db.execute(
+                "IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE name='ix_sensor_reading_home_time'"
+                " AND object_id=OBJECT_ID(N'sensor_reading')) CREATE INDEX"
+                " ix_sensor_reading_home_time ON sensor_reading (home_id, observed_at)"
+            )
+        else:
+            db.execute(
+                "CREATE INDEX IF NOT EXISTS ix_sensor_reading_home_time"
+                " ON sensor_reading (home_id, observed_at)"
+            )
+        reconcile_control_home(db)
         self._check_reading_schema(db)
+
+    def migrate_control_index(self) -> None:
+        """Idempotent, non-destructive bootstrap for stores configured before the index existed."""
+        with self._write() as db:
+            self._schema(db)
 
     _collation = "COLLATE Latin1_General_100_BIN2"
 
@@ -348,7 +687,9 @@ class SensorConsumer:
             ).fetchall()
             if [r[0] for r in keys] != ["sensor_id", "reading_id"]:
                 raise ConsumerError("SENSOR_SCHEMA_UNSUPPORTED")
-            if int(str(columns["schema_version"][2])) < len(SCHEMA_VERSION):
+            if int(str(columns["schema_version"][2])) < max(
+                len(SCHEMA_VERSION), len(LIVE_SCHEMA_VERSION)
+            ):
                 db.execute(
                     "ALTER TABLE sensor_reading ALTER COLUMN schema_version VARCHAR(32) NOT NULL"
                 )
@@ -374,6 +715,8 @@ class SensorConsumer:
 
     @staticmethod
     def _shape(row: Observation) -> str | None:
+        if row.get("schema_version") == LIVE_SCHEMA_VERSION:
+            return SensorConsumer._live_shape(row)
         if set(row) != set(READING_FIELDS) or any(type(v) is not str for v in row.values()):
             return "SCHEMA"
         if row["schema_version"] != SCHEMA_VERSION or row["source_type"] != "SYNTHETIC":
@@ -397,6 +740,40 @@ class SensorConsumer:
                 return "NUMBER"
         if row["calibrated"] not in ("true", "false"):
             return "CALIBRATION"
+        return None
+
+    @staticmethod
+    def _live_shape(row: Observation) -> str | None:
+        """live-sim-reading-v1: one reading per sensor and 5-minute UTC slot, no calibrated flag."""
+        if set(row) != set(LIVE_FIELDS) or any(type(v) is not str for v in row.values()):
+            return "SCHEMA"
+        if row["source_type"] != "SYNTHETIC" or row["injected_fault"] != "none":
+            return "SCHEMA"
+        if not _text(row["label"], 120):
+            return "SCHEMA"
+        for name, length in (("sensor_id", 20), ("reading_id", 40)):
+            if not _identity(row[name], length):
+                return "IDENTITY"
+        if not home_key(row["home_id"]):
+            return "IDENTITY"
+        if not re.fullmatch(r"[a-z0-9][a-z0-9_-]{0,19}", str(row["scenario"])):
+            return "PROVENANCE"
+        seed = str(row["seed"])
+        if not re.fullmatch(r"-?(?:0|[1-9][0-9]{0,18})", seed) or abs(int(seed)) > 2**63 - 1:
+            return "PROVENANCE"
+        try:
+            observed = utc(str(row["observed_at"]))
+        except ValueError:
+            return "UTC_TIME"
+        if observed.minute % 5 or observed.second:
+            return "UTC_TIME"
+        if row["reading_id"] != f"LIVE-{row['sensor_id']}-{observed:%Y%m%dT%H%M}Z":
+            return "IDENTITY"
+        for name in ("temperature_c", "humidity_pct"):
+            if not NUMBER.fullmatch(str(row[name])) or abs(Decimal(str(row[name]))) > 999.99:
+                return "NUMBER"
+        if not SUNLIGHT_NUMBER.fullmatch(str(row["sunlight_wm2"])):
+            return "NUMBER"
         return None
 
     @staticmethod
@@ -557,8 +934,11 @@ class SensorConsumer:
             control.humidity_unit,
         ):
             return "UNIT"
+        live = row["schema_version"] == LIVE_SCHEMA_VERSION
+        if live and row["sunlight_unit"] != SUNLIGHT_UNIT:
+            return "UNIT"
         if (
-            row["calibrated"] != "true"
+            (not live and row["calibrated"] != "true")
             or not control.calibration_confirmed
             or not utc(control.calibration_start) <= observed < utc(control.calibration_end)
         ):
@@ -566,6 +946,8 @@ class SensorConsumer:
         if not policy.temperature_min <= float(str(row["temperature_c"])) <= policy.temperature_max:
             return "RANGE"
         if not policy.humidity_min <= float(str(row["humidity_pct"])) <= policy.humidity_max:
+            return "RANGE"
+        if live and float(str(row["sunlight_wm2"])) > SUNLIGHT_MAX:
             return "RANGE"
         latest = self._latest_observed(db, row["sensor_id"])
         if latest is not None and observed <= latest:
@@ -670,8 +1052,25 @@ class SensorConsumer:
         home_ids: Sequence[str],
         windows: Mapping[str, tuple[str, str]] | None = None,
     ) -> list[dict[str, str]]:
-        """Read stored readings per home as canonical rows with trusted control units.
+        """Indoor-contract rows (reading-v2) for comparison and indoor analysis.
 
+        Live-sim rows are a different, climate-shaped schema with no calibration flag. They are
+        excluded here, never reshaped; use retained_envelopes for their exact retained form.
+        """
+        return [
+            row
+            for row in self.retained_envelopes(home_ids, windows)
+            if row["schema_version"] != LIVE_SCHEMA_VERSION
+        ]
+
+    def retained_envelopes(
+        self,
+        home_ids: Sequence[str],
+        windows: Mapping[str, tuple[str, str]] | None = None,
+    ) -> list[dict[str, str]]:
+        """Read stored readings per home as exact retained wire envelopes with trusted units.
+
+        Live-sim rows are returned as the original accepted witness; nothing is added or dropped.
         windows optionally bounds each home to an inclusive (first, last) UTC slot range.
         """
         if (
@@ -730,6 +1129,9 @@ class SensorConsumer:
                     if witness is None:
                         raise ConsumerError("SENSOR_OUTCOME_MALFORMED")
                     self._retained_reading(record, witness)
+                    if witness["schema_version"] == LIVE_SCHEMA_VERSION:
+                        rows.append({k: str(witness[k]) for k in LIVE_FIELDS})
+                        continue
                     rows.append({key: str(witness[key]) for key in READING_FIELDS})
                     continue
                 if sensor not in units:

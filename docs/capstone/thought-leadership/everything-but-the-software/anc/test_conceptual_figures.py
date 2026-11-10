@@ -18,6 +18,7 @@ STEMS = (
     "fig-contract-states",
     "fig-experiment-measures",
     "fig-refactoring-economics",
+    "fig-runtime-boundaries",
 )
 
 
@@ -146,6 +147,7 @@ class ConceptualFigureTests(unittest.TestCase):
         expected = {
             "anc/additional-evidence.tex",
             "anc/case-audits.tex", "anc/deferred-measures.tex",
+            "anc/measurement-provenance.tex",
         }
         self.assertEqual(set(manifest["files"]), expected)
         for name, entry in manifest["files"].items():

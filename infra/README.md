@@ -431,6 +431,10 @@ All six live issue criteria remain unchecked. Local checks:
 `actionlint -config-file infra/tests/actionlint.yaml .github/workflows/infra-plan.yml .github/workflows/src-deploy.yml .github/workflows/src-ci.yml`
 checks real workflow syntax when actionlint is installed. Source CI persists
 the structure/permission/pinning/no-echo mutation tests and helper Ruff/mypy.
+Source CI installs actionlint 1.7.7 with `python3 tools/install-actionlint.py
+<dir>`, which retrieves the official release assets with bounded retries (browser
+download URL, then the official release asset API), requires the pinned SHA-256
+digests and fails closed without installing on exhaustion.
 
 `deploymentProfile` defaults to `production`. Development alone relaxes
 nothing: public access, purge protection and registry quarantine each require
@@ -1326,7 +1330,7 @@ or deployment approval is inferred.
 
 | Criterion | Status | Evidence |
 | --- | --- | --- |
-| Worker and job images real, versioned, deployed through the pipeline | Unmet | Images and the `src-deploy.yml` digest pipeline are real. The agents entrypoint now has a tested run loop (`zava_forward.agents.worker`, 2026-11-04) but `serve` refuses to start: the queue adapter and API post-back are not built, and the orchestrator entrypoint still only prints a version |
+| Worker and job images real, versioned, deployed through the pipeline | Unmet | Images and the `src-deploy.yml` digest pipeline are real. The agents entrypoint now has a tested run loop (`zava_forward.agents.worker`, 2026-11-04) and a stdlib Azure Queue adapter (`zava_forward.agents.queue_azure`, 2026-11-04, unit-tested with a scripted transport only, not run against Azure) but `serve` still refuses to start: the managed-identity token source, the API post-back and the wiring are not built, and the orchestrator entrypoint still only prints a version |
 | Scale rules, probes, limits, rollback | Defined and compile-tested | `test_api_replicas_probes_and_private_edge_contract` asserts the API http rule (50 concurrent, 0 to 4 replicas), Startup, Liveness and Readiness probes, 0.5 vCPU/1 GiB limits, Single revision mode, the agents queue rule and job limits. No live rollout was run |
 | Hardening enforced in the deployed app | Partial, platform-blocked | See the hosted hardening note above; CI Docker checks only |
 | Load test on the declared fixture | Run locally, not at declared scale | [`scale-load-2026-11-01.json`](../docs/architecture/scale-load-2026-11-01.json) |
@@ -3833,6 +3837,7 @@ documentation record, not machine-checked and not live Azure evidence.
 | Log Analytics, Application Insights, private link scope, action group, alerts, workbook | `modules/monitoring.bicep`, `operationalMonitoring.bicep` | In Bicep |
 | Key Vault and secret definitions | `modules/keyvault.bicep` | In Bicep; secret values are set outside the repository (see `secret-inventory.json`) |
 | Storage (blob, immutable audit container, queues, lifecycle) | `modules/storage.bicep` | In Bicep |
+| Ranking archive Blob container and API settings (#1258) | `modules/storage.bicep`, `modules/containerapps.bicep`, `main.bicep` | Source definition, opt-in (`enableRankingArchiveBlob`, default false); immutability duration and lock are manual prerequisites; see [Ranking archive Blob wiring](#ranking-archive-blob-wiring-refs-136-1258-2026-11-09) |
 | Container Registry | `modules/registry.bicep` | In Bicep; image builds use `az acr build` or the release workflow |
 | Azure SQL server, database, auditing, threat protection, PITR | `modules/sql.bicep` | In Bicep |
 | SQL database users and grants | `scripts/create-sql-users.*` | Scripted, run by the in-VNet initializer; owner runs it |
@@ -3856,6 +3861,25 @@ open: #137, #138, #140, #142, #143, #144, #145, #146, #148), 4 (from-empty
 deployment observed on 2026-10-12 but not reproven since) and 5 (status kept
 current in the epic). Criterion 2 is recorded here but its manual rows still
 need owner confirmation.
+
+## Ranking archive Blob wiring (Refs #136, #1258, 2026-11-09)
+
+Source wiring only for the Blob JSON ranking publication archive chosen on #1258
+(2026-11-08). It is a source candidate and compiled template, not resource
+provisioning, a role grant, WORM enforcement, a migration or a deployment
+approval. No Azure call, what-if or deployment was made.
+
+| Parameter | Default | Effect |
+| --- | --- | --- |
+| `enableRankingArchiveBlob` | `false` | `true` adds the private `ranking-archive` container (`publicAccess` None, same private account and endpoints) and sets `ZF_RANKING_ARCHIVE=azure-blob` and `ZF_RANKING_BLOB_CONTAINER=ranking-archive` on the API app. `false` leaves every existing resource and setting unchanged; the API store then selects the local folder archive (a dev/test adapter whose fsync is not evidence of durable storage), and only the operator CLI `--blob` mode refuses when the variables are missing. |
+| `rankingArchiveImmutabilityDays` | `0` (unset) | `0` creates no immutability policy. A positive value creates an unlocked time-based policy on that container only. |
+
+* The API already has `ZF_BLOB_ACCOUNT_URL` and `ZF_BLOB_CLIENT_ID` (managed identity). The wiring adds no key, SAS, connection string, secret or public access, and no role: the existing API storage-account `Storage Blob Data Contributor` assignment covers the adapter's create, read and list. Residual: that role also permits delete at account scope; the adapter has no delete path, but a container-scoped assignment is a later platform decision, not made here.
+* No retention duration is approved for ranking records, so none is chosen. Until the owner sets and approves a duration and locks the policy, nothing may claim immutable or durable release of ranking records. The existing 365-day audit and digest values are not an approved schedule either.
+* `environmentName=pilot` with the flag on and a zero duration fails the named guard `pilotRankingArchiveRequiresConfiguredRetention`. It checks only that a duration is set, not that it is approved or locked.
+* Existing folder records are not migrated, deleted or read: Blob starts empty. The runner (`ranking_publication_runner --blob`) is an operator CLI and needs the same variables; no job is deployed for it.
+* `main.test.bicepparam` records both parameters explicitly as `false` and `0`. Set the flag in the private parameter copy to wire the demo.
+* Offline checks: `az bicep build` of `main.bicep`, `tests.test_bicep_policy` (flag-off identity, container privacy, optional policy, compiled output-to-env chain, provider constant match, pilot guard) and `tests.test_identity_rbac`. Real-account, emulator and role behaviour are not established.
 
 ## Validate locally
 
@@ -3900,6 +3924,54 @@ Contributor for the operator and registration of one `SYN-` device per home with
 certificate (#185 manifest, 100 device cap in `device_identity`); a certificate file share;
 the minimal SQL grant for the job identity, `GRANT SELECT ON OBJECT::dbo.cases TO [<job identity>]` and nothing else (the job runs only `SELECT id FROM cases WHERE closed = 0 ORDER BY id`, with no DDL, seeding, migration, write or other table, and mounts no `/data`); AcrPull; image push by digest; a hub-side route and
 consumer that accept `live-sim-reading-v1` (#110, #140).
+
+#### Finite demo deployment plan (source handoff 2026-11-08, nothing executed)
+
+Existing authority (#184 comment 6652226413): five-minute synthetic readings within the USD700
+cap; job identity roles IoT Hub Registry Contributor, AcrPull and read-only SQL. The receiver
+binds at most 100 devices, so the demo cohort is at most 100 homes (28,800 messages per day, 7 %
+of the B1 400,000 per day). Existing hub `iot-cutover-test-rzsrg` (uksouth, `ama`); no new hub,
+tier or unit. The current job inventory has only Manual jobs, so nothing sends today. The B1
+figure in the table above (recalled list price) differs from the owner-checked USD10 per month
+of 2026-10-29; confirm the current rate before activation. Either figure plus the job (under
+USD1) stays far inside the cap.
+
+The executor, under separate admission, runs these in order and stops at the first failure:
+
+1. Confirm the live state: hub SKU and units, daily message usage, budget alert (#146), and no
+   existing scheduled simulator job.
+2. Choose at most 100 homes and a named owner; `python -m zava_forward.api.live_control start`
+   with `--expires-at` at most 14 days away writes `control.json` to the certificate share.
+   This is the single admin start; `stop` is the single admin stop.
+3. Plan devices with `python -m zava_forward.core.synthetic.device_provision` (dry run), then,
+   with a named credential owner, register the `SYN-` devices and put `<device>.pem` and `.key`
+   on the share. Do not print or commit them.
+4. Verify the identity grants (Registry Contributor for the operator, AcrPull, `SELECT` on
+   `dbo.cases` only), the hub route, the `api-consumer` group and the consumer identity.
+5. Build and push the image by digest, run `az deployment group what-if`, deploy
+   `live-simulator-job.bicep`, trigger one manual execution and check one slot end to end.
+6. Deploy `live-receiver-job.bicep` (Manual trigger, same image digest, its own receiver
+   identity; `routingReady` stays `false` until step 4 verified the route). Its command is
+   `python -m zava_forward.api.live_receiver --control-file /certs/control.json --seconds 240`,
+   with `ZF_SIM_CLIENT_ID` and `ZF_SQL_CLIENT_ID` set to the receiver identity, `ZF_STORE=mssql`
+   and the control share mounted read-only. The receiver identity needs AcrPull, Azure Event Hubs
+   Data Receiver on `sensor-readings`, `SELECT` on `dbo.cases`,
+   `dbo.sensor_consumer_control` and `dbo.sensor_consumer_policy`, and `SELECT, INSERT` on
+   `dbo.sensor_reading`, `dbo.sensor_delivery` and `dbo.sensor_data_quality_exception`; the
+   list was checked against the statements `SensorConsumer.process` runs (no `sensor_register`
+   read, no DDL, seeding or metadata write) and nothing wider may be granted. The tables must
+   already exist: a setup or admin identity provisions them separately, and the receiver
+   refuses rather than creating schema. The
+   simulator identity stays read-only on `dbo.cases`. Start one execution per window; the receiver
+   refuses a stopped or expired control before it opens any SQL connection, and stops at once on a
+   control stop, expiry, cohort change or unreadable file. Then check the
+   retained rows for the cohort.
+7. Finish: `live_control stop` (or let it expire), delete the job, revoke the certificates
+   (#185 teardown) and record actual cost. The simulator sends nothing after expiry even if
+   this step is late; the schedule still ticks and exits, so delete the job.
+
+Not delivered or proven: any of these steps, the real throttle, current prices, the in-app admin
+screen and the budget alert.
 
 ### Bounded existing-hub exercise (2026-10-29, Refs #140 #184 #137)
 

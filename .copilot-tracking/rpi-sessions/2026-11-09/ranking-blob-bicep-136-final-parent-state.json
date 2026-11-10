@@ -1,0 +1,88 @@
+{
+  "task_id": "136-ranking-blob-final-parent",
+  "task_slug": "ranking-blob-bicep-136-final-parent",
+  "parent_task": {
+    "task_id": "136-ranking-blob-validation-capture",
+    "task_slug": "ranking-blob-bicep-136-validation-capture"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09-ranking-blob-bicep-136-final-parent-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09-ranking-blob-bicep-136-final-parent-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09-ranking-blob-bicep-136-final-parent-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09-ranking-blob-bicep-136-final-parent-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09-ranking-blob-bicep-136-final-parent-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09-ranking-blob-bicep-136-final-parent-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "research executed, Planning Readiness Ready",
+      "status": "done",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "critique executed once, Revise, four findings applied directly",
+      "status": "done",
+      "evidence": "critique artifact"
+    },
+    {
+      "decision": "no parent source fix; parent C5 budget zero; API wiring-test lint stays adverse; no main merge (main moved to ef28d4da, parent carries 8d6f029c)",
+      "status": "confirmed",
+      "evidence": "brief, parent handoff"
+    },
+    {
+      "decision": "child productive review cycles stay 1 of 5",
+      "status": "confirmed",
+      "evidence": "validation-capture review"
+    },
+    {
+      "decision": "merge 8c83062fb (tree b5472c0c) of parent 9b1e2567 clean, #136 delta over parent = 7 infra files",
+      "status": "done",
+      "evidence": "changes artifact"
+    },
+    {
+      "decision": "all selected checks exit 0 (bicep 0, 4 params 0, infra 109, core 137 and 398/158 opt-in skips, API 97, ruff 0.17.1 isolated 0); adverse diagnostic ruff on parent-owned API wiring test exit 1, 11 errors, retained, not fixed",
+      "status": "done",
+      "evidence": "external logs run-fEkThh, changes artifact"
+    },
+    {
+      "decision": "review executed once, Approve with findings (4 Minor, 1 Low), applied in records; no source edit; child productive cycles 1 of 5",
+      "status": "done",
+      "evidence": "review artifact"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "parent-api-wiring-lint",
+      "summary": "parent-owned test_ranking_publication_wiring.py fails isolated ruff; parent C5 budget zero",
+      "resolution": "separate owner authorization required"
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "coordinator independent exact-head review of the local freeze; no publication from this lane"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Independent exact-head coordinator review and hosted checks after a publication decision",
+      "rationale": "Native review does not replace it",
+      "evidence": "review artifact"
+    },
+    {
+      "rank": 2,
+      "task": "Owner decision on parent API wiring-test lint fix and on integrating fetched main ef28d4da",
+      "rationale": "Blocks clean publication of the parent chain",
+      "evidence": "changes artifact"
+    },
+    {
+      "rank": 3,
+      "task": "Owner: retention, lock, container-scoped role, migration, deployment and runtime evidence",
+      "rationale": "Archive not durable or immutable until set",
+      "evidence": "prior reviews"
+    }
+  ]
+}

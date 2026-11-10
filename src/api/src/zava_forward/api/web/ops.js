@@ -1,6 +1,7 @@
 "use strict";
 // Quality checks, defects, capacity and work orders. Shares h, api, post, me, show and isManager with app.js.
 const QUALITY_ROLES = ["Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer"];
+const SENSOR_ROLES = ["Quality Inspector", "Retrofit Programme Manager"];
 const QUALITY_SOURCES = ["Installer", "Contractor", "Provider submission", "Our own inspection"];
 const WO_OUTCOMES = ["Booked", "Declined by provider", "Resident not available", "No access", "Rebooking needed"];
 let capacityHistoryBarrier = null;
@@ -18,6 +19,108 @@ function residentBindings(text) {
     }
     return { measure: parts[0].trim(), context_revision: Number(parts[1].trim()) };
   });
+}
+
+function sensorTable(title, rows, absent, labels = {}) {
+  const box = h("div", {}, h("h3", {}, title));
+  if (!rows || !rows.length) return box.append(h("p", {}, absent || "No retained readings.")), box;
+  const head = ["Reading ID", "Sensor ID", "Observed (UTC)", "Temperature (degC)", "Relative humidity (%RH)", "Source"];
+  box.append(h("table", { "aria-label": title },
+    h("thead", {}, h("tr", {}, head.map((t) => h("th", { scope: "col" }, t)))),
+    h("tbody", {}, rows.map((r) => h("tr", {}, h("th", { scope: "row" }, r.reading_id), h("td", {}, r.sensor_id),
+      h("td", {}, h("time", { datetime: r.observed_at }, r.observed_at)), h("td", {}, r.temperature_c), h("td", {}, r.humidity_pct),
+      h("td", {}, labels[r.provenance_class] || "Synthetic reading, not calibrated"))))));
+  return box;
+}
+
+function sensorPanel(id) {
+  const body = h("div", {}, h("p", { role: "status" }, "Loading retained readings..."));
+  const box = h("section", { class: "card", id: "sensors" }, h("h2", {}, "Retained sensor readings (synthetic demonstration)"), body);
+  if (!SENSOR_ROLES.includes(me.user.role)) {
+    body.replaceChildren(h("p", {}, "Your role does not include indoor readings. Ask the quality team."));
+    return box;
+  }
+  api(`/api/cases/${encodeURIComponent(id)}/sensors`).then((v) => {
+    const kids = [
+      h("p", { role: "status" }, `${v.freshness_text} Generated ${v.generated_at}.`),
+      h("p", { class: "muted" }, "Synthetic temperature and relative humidity retained for this home only. They are not calibrated, not a measure of comfort or hazard, and live demonstration readings are weather-derived rather than measured indoors. This is the current authorised capture. A suggestion shows the readings it cited when it ran, which may be older."),
+    ];
+    if (v.latest) kids.push(h("p", {}, `Latest: ${v.latest.temperature_c} degC and ${v.latest.humidity_pct} %RH at ${v.latest.observed_at} (sensor ${v.latest.sensor_id}, reading ${v.latest.reading_id}). Freshness: ${v.freshness}. Source: ${(v.provenance || {})[v.latest.provenance_class] || "synthetic, not calibrated"}`));
+    if (v.as_of_rule) kids.push(h("p", { class: "muted" }, `${v.as_of_rule}${v.future_dated_excluded ? " Readings dated after this time exist and are not shown or used." : ""}`));
+    if (v.retrofit_context) kids.push(h("p", { class: "muted" }, v.retrofit_context.text));
+    if (v.state !== "ok") {
+      kids.push(h("p", {}, `${v.detail || v.freshness_text} Use the manual route: ${v.manual_route}`));
+    } else {
+      const labels = v.provenance || {};
+      kids.push(sensorTable(`Newest readings, up to ${v.max_readings.window}, in the current authorised capture`, v.readings, v.window_absent, labels));
+      kids.push(h("p", { class: "muted" }, `Comparison anchor "${v.anchor.name}"${v.anchor.at ? ` (${v.anchor.at})` : ""}: ${v.anchor.meaning}`));
+      kids.push(sensorTable("Before the first quality evidence record", v.before, v.before_absent, labels));
+      kids.push(sensorTable("From the first quality evidence record", v.after, v.after_absent, labels));
+    }
+    body.replaceChildren(...kids);
+  }).catch((error) => {
+    body.replaceChildren(h("p", { class: "err", role: "alert" }, `${error.message || "Readings are unavailable."} Use the manual route: manual-sensor-review.`));
+  });
+  return box;
+}
+
+function simulationPanel() {
+  const body = h("div", {}, h("p", { role: "status" }, "Loading simulation…"));
+  const box = h("section", { class: "card", id: "simulation" }, h("h2", {}, "Public synthetic simulation (not this home)"), body);
+  if (!SENSOR_ROLES.includes(me.user.role)) {
+    body.replaceChildren(h("p", {}, "Your role does not include this simulation. Ask the quality team."));
+    return box;
+  }
+  const feedback = h("p", { role: "status", "aria-live": "polite" });
+  const render = (s) => {
+    const kids = [h("p", { class: "muted" }, s.label)];
+    if (s.status === "unavailable") {
+      kids.push(h("p", { role: "status" }, `The simulation is unavailable (${s.reason}). ${s.manual_route}`));
+      return body.replaceChildren(...kids);
+    }
+    const v = s.view || {};
+    kids.push(h("p", {}, `${v.freshness_text || ""} Fixture home: ${s.home.address}, ${s.home.town}.`));
+    kids.push(sensorTable("Simulated readings stored in the separate simulation store", v.readings, "No simulated readings yet.", v.provenance || {}));
+    const proposal = s.proposal;
+    if (proposal) {
+      kids.push(h("h3", {}, "Last model proposal (unapproved)"));
+      const supplied = proposal.readings || [];
+      const cited = proposal.cited || [];
+      const findings = (proposal.output && proposal.output.findings) || [];
+      const citedText = cited.length === 0
+        ? "It cited no sensor readings."
+        : `It cited ${cited.length} of them: ${cited.map((r) => r[0]).join(", ")}.`;
+      kids.push(h("p", {}, `Request ${proposal.digest.slice(0, 16)}. It was given ${supplied.length} stored readings. ${citedText} Status: unapproved proposal. It is not accepted and changes no case. Use the ordinary quality check.`));
+      if (supplied.length) {
+        kids.push(h("details", {}, h("summary", {}, `Readings supplied with the request (${supplied.length})`),
+          h("ul", {}, supplied.map((r) => h("li", {}, r[0])))));
+      }
+      kids.push(h("p", {}, proposal.output.summary));
+      kids.push(findings.length === 0
+        ? h("p", { role: "status" }, "The model gave no findings.")
+        : h("ul", {}, findings.map((f) => h("li", {}, `${f.text} (${f.citations.join(", ")})`))));
+    }
+    body.replaceChildren(...kids, controls);
+  };
+  const run = async (action, label) => {
+    feedback.textContent = `${label}…`;
+    try {
+      const r = await api(`/api/assistants/simulation/quality/${action}`, {});
+      feedback.textContent = r.status === "proposal" ? "Proposal stored as unapproved." : r.status === "ready" ? `Stored ${r.added || 0} new simulated readings.` : `Not sent (${r.reason || r.status}). ${r.manual_route || ""}`;
+      render(await api("/api/assistants/simulation/quality"));
+    } catch (error) {
+      feedback.textContent = `${error.message || "Simulation unavailable."} Use the manual route.`;
+    }
+  };
+  const observe = h("button", { type: "button", class: "btn" }, "Add Simulated Readings");
+  const ask = h("button", { type: "button", class: "btn" }, "Request Simulation Proposal");
+  observe.addEventListener("click", () => run("observe", "Adding readings"));
+  ask.addEventListener("click", () => run("request", "Requesting proposal"));
+  const controls = h("div", {}, observe, " ", ask, feedback);
+  api("/api/assistants/simulation/quality").then(render).catch((error) => {
+    body.replaceChildren(h("p", { class: "err", role: "alert" }, `${error.message || "Simulation unavailable."} Use the manual route.`));
+  });
+  return box;
 }
 
 function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
@@ -110,7 +213,8 @@ function qualityPanel(c, id, refresh, savedFields = [], session = caseSession) {
             "data-case-field-key": JSON.stringify(["checklist", m, list.version, lab]) });
           input.caseBinding = { kind: "checklist", id: `${m}, checklist ${list.version}` };
           return h("div", {}, h("label", { for: input.id }, lab), input);
-        }));
+        }),
+        h("p", {}, h("a", { class: "btn alt", href: "/api/checklists.csv", download: "checklists.csv" }, "Download for Excel"), " The file is a read-only copy; changes in it are not imported back."));
       restoreBoundFields(savedFields, form, "checklist", session);
     };
     measure.addEventListener("change", () => {

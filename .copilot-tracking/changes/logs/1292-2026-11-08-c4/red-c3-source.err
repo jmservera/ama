@@ -1,0 +1,406 @@
+======================================================================
+ERROR: test_malformed_c1_history_is_treated_as_wholly_suspect (test_priority_order.SqliteC4Corrections.test_malformed_c1_history_is_treated_as_wholly_suspect) (bad='[{"first_ord": "x"}]')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1133, in test_malformed_c1_history_is_treated_as_wholly_suspect
+    self.ordinal_db(rows, rec_order_backfills=bad)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1077, in ordinal_db
+    db.execute("INSERT INTO meta (key, value) VALUES (?, ?)", (key, value))
+sqlite3.IntegrityError: UNIQUE constraint failed: meta.key
+
+======================================================================
+ERROR: test_malformed_c1_history_is_treated_as_wholly_suspect (test_priority_order.SqliteC4Corrections.test_malformed_c1_history_is_treated_as_wholly_suspect) (bad='{"a": 1}')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1133, in test_malformed_c1_history_is_treated_as_wholly_suspect
+    self.ordinal_db(rows, rec_order_backfills=bad)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1077, in ordinal_db
+    db.execute("INSERT INTO meta (key, value) VALUES (?, ?)", (key, value))
+sqlite3.IntegrityError: UNIQUE constraint failed: meta.key
+
+======================================================================
+ERROR: test_malformed_digest_does_not_stop_startup_and_leaves_order_unresolved (test_priority_order.SqliteC4Corrections.test_malformed_digest_does_not_stop_startup_and_leaves_order_unresolved)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1353, in test_malformed_digest_does_not_stop_startup_and_leaves_order_unresolved
+    (Path(self.store.digest_dir) / "digest-0000000001.json").write_text("[]")
+  File "/usr/lib/python3.12/pathlib.py", line 1049, in write_text
+    with self.open(mode='w', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/pathlib.py", line 1015, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tmpuijy_yru/digests/digest-0000000001.json'
+
+======================================================================
+ERROR: test_malformed_independent_digests_are_unusable_evidence (test_priority_order.SqliteC4Corrections.test_malformed_independent_digests_are_unusable_evidence) (content=[])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1346, in test_malformed_independent_digests_are_unusable_evidence
+    evidence = store._audit_evidence()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/src/zava_forward/core/sqlstore.py", line 459, in _audit_evidence
+    report = ledger.verify_entries(entries, digests)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/src/zava_forward/core/ledger.py", line 50, in verify_entries
+    cnt = d.get("count", 0)
+          ^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+======================================================================
+ERROR: test_malformed_independent_digests_are_unusable_evidence (test_priority_order.SqliteC4Corrections.test_malformed_independent_digests_are_unusable_evidence) (content='text')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1346, in test_malformed_independent_digests_are_unusable_evidence
+    evidence = store._audit_evidence()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/src/zava_forward/core/sqlstore.py", line 459, in _audit_evidence
+    report = ledger.verify_entries(entries, digests)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/src/zava_forward/core/ledger.py", line 50, in verify_entries
+    cnt = d.get("count", 0)
+          ^^^^^
+AttributeError: 'str' object has no attribute 'get'
+
+======================================================================
+ERROR: test_malformed_independent_digests_are_unusable_evidence (test_priority_order.SqliteC4Corrections.test_malformed_independent_digests_are_unusable_evidence) (content={'algorithm': 'sha256', 'chain': 'main', 'count': '1', 'head': '21c60fb8acd19c1d4cec4f389add313f563d37a3e8f79d5ac1e5c4e026de17d4'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1346, in test_malformed_independent_digests_are_unusable_evidence
+    evidence = store._audit_evidence()
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/src/zava_forward/core/sqlstore.py", line 459, in _audit_evidence
+    report = ledger.verify_entries(entries, digests)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/src/zava_forward/core/ledger.py", line 51, in verify_entries
+    if problem is None and (cnt > len(hashes) or (cnt and hashes[cnt - 1] != d.get("head"))):
+                            ^^^^^^^^^^^^^^^^^
+TypeError: '>' not supported between instances of 'str' and 'int'
+
+======================================================================
+ERROR: test_post_commit_reload_exhaustion_is_a_committed_outcome (test_priority_order.SqliteC4Corrections.test_post_commit_reload_exhaustion_is_a_committed_outcome)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1206, in test_post_commit_reload_exhaustion_is_a_committed_outcome
+    with self.assertRaises(sqlmod.CommittedReloadError) as caught:
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'zava_forward.core.sqlstore' has no attribute 'CommittedReloadError'
+
+======================================================================
+ERROR: test_priority_panel_keeps_the_order_note_for_every_status (test_priority_order.SqliteC4Corrections.test_priority_panel_keeps_the_order_note_for_every_status)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1360, in test_priority_panel_keeps_the_order_note_for_every_status
+    shared = text.index("rec?.order_note")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: substring not found
+
+======================================================================
+ERROR: test_admitted_loopback_endpoint_is_accepted_only_for_its_own_published_address (test_priority_order.LoopbackGuard.test_admitted_loopback_endpoint_is_accepted_only_for_its_own_published_address)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1538, in test_admitted_loopback_endpoint_is_accepted_only_for_its_own_published_address
+    require_task_owned_loopback(env, self.bound(host))
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/sqlguard.py", line 153, in require_task_owned_loopback
+    _verify_container(
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/sqlguard.py", line 90, in _verify_container
+    raise _refuse("the container must publish its SQL port on loopback only")
+RuntimeError: Refusing to run SQL fixtures: the container must publish its SQL port on loopback only. Only the disposable task-owned server created by admitted setup may be used, and it must be declared in a ZF_SQL_TASK_MANIFEST file.
+
+======================================================================
+FAIL: test_c1_shaped_rollback_history_is_reviewed_without_rewriting_ordinals (test_priority_order.SqliteC4Corrections.test_c1_shaped_rollback_history_is_reviewed_without_rewriting_ordinals)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1118, in test_c1_shaped_rollback_history_is_reviewed_without_rewriting_ordinals
+    self.assertEqual(self.unresolved(reopened), ["c1r000000003"])
+AssertionError: Lists differ: [] != ['c1r000000003']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'c1r000000003'
+
+- []
++ ['c1r000000003']
+
+======================================================================
+FAIL: test_continuity_exports_apply_the_unresolved_projection (test_priority_order.SqliteC4Corrections.test_continuity_exports_apply_the_unresolved_projection) (status='Proposed', limited=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1162, in test_continuity_exports_apply_the_unresolved_projection
+    self.assertIs(record["actionable"], False)
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_continuity_exports_apply_the_unresolved_projection (test_priority_order.SqliteC4Corrections.test_continuity_exports_apply_the_unresolved_projection) (status='Proposed', limited=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1162, in test_continuity_exports_apply_the_unresolved_projection
+    self.assertIs(record["actionable"], False)
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_continuity_exports_apply_the_unresolved_projection (test_priority_order.SqliteC4Corrections.test_continuity_exports_apply_the_unresolved_projection) (status='Accepted', limited=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1163, in test_continuity_exports_apply_the_unresolved_projection
+    self.assertIs(record["relied_on"], False)
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_continuity_exports_apply_the_unresolved_projection (test_priority_order.SqliteC4Corrections.test_continuity_exports_apply_the_unresolved_projection) (status='Accepted', limited=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1163, in test_continuity_exports_apply_the_unresolved_projection
+    self.assertIs(record["relied_on"], False)
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_continuity_exports_apply_the_unresolved_projection (test_priority_order.SqliteC4Corrections.test_continuity_exports_apply_the_unresolved_projection) (status='Edited', limited=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1163, in test_continuity_exports_apply_the_unresolved_projection
+    self.assertIs(record["relied_on"], False)
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_continuity_exports_apply_the_unresolved_projection (test_priority_order.SqliteC4Corrections.test_continuity_exports_apply_the_unresolved_projection) (status='Edited', limited=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1163, in test_continuity_exports_apply_the_unresolved_projection
+    self.assertIs(record["relied_on"], False)
+AssertionError: True is not False
+
+======================================================================
+FAIL: test_digest_readability_and_content_changes_invalidate_the_cache (test_priority_order.SqliteC4Corrections.test_digest_readability_and_content_changes_invalidate_the_cache)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1309, in test_digest_readability_and_content_changes_invalidate_the_cache
+    self.assertFalse(store._audit_evidence()["ok"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_failed_begin_quarantines_the_ai_task_creation_event_too (test_priority_order.SqliteC4Corrections.test_failed_begin_quarantines_the_ai_task_creation_event_too)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1250, in test_failed_begin_quarantines_the_ai_task_creation_event_too
+    self.assert_quarantined(store)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1232, in assert_quarantined
+    self.assertEqual(
+AssertionError: Lists differ: ['SYN[14 chars]000000001x', 'plan tsk000000001 mode=x source=y verified=True'] != ['SYN[14 chars]000000001x']
+
+First list contains 1 additional elements.
+First extra element 1:
+'plan tsk000000001 mode=x source=y verified=True'
+
+- ['SYN unrelated tsk000000001x',
+?                               ^
+
++ ['SYN unrelated tsk000000001x']
+?                               ^
+
+-  'plan tsk000000001 mode=x source=y verified=True']
+
+======================================================================
+FAIL: test_failure_after_begin_quarantines_the_ai_task_creation_event_too (test_priority_order.SqliteC4Corrections.test_failure_after_begin_quarantines_the_ai_task_creation_event_too)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1258, in test_failure_after_begin_quarantines_the_ai_task_creation_event_too
+    self.assert_quarantined(store)
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1232, in assert_quarantined
+    self.assertEqual(
+AssertionError: Lists differ: ['SYN[14 chars]000000001x', 'plan tsk000000001 mode=x source=y verified=True'] != ['SYN[14 chars]000000001x']
+
+First list contains 1 additional elements.
+First extra element 1:
+'plan tsk000000001 mode=x source=y verified=True'
+
+- ['SYN unrelated tsk000000001x',
+?                               ^
+
++ ['SYN unrelated tsk000000001x']
+?                               ^
+
+-  'plan tsk000000001 mode=x source=y verified=True']
+
+======================================================================
+FAIL: test_malformed_c1_history_is_treated_as_wholly_suspect (test_priority_order.SqliteC4Corrections.test_malformed_c1_history_is_treated_as_wholly_suspect) (bad='not json')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1135, in test_malformed_c1_history_is_treated_as_wholly_suspect
+    self.assertEqual(self.unresolved(reopened), ["c1m000000011"])
+AssertionError: Lists differ: [] != ['c1m000000011']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'c1m000000011'
+
+- []
++ ['c1m000000011']
+
+======================================================================
+FAIL: test_malformed_independent_digests_are_unusable_evidence (test_priority_order.SqliteC4Corrections.test_malformed_independent_digests_are_unusable_evidence) (content={})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1347, in test_malformed_independent_digests_are_unusable_evidence
+    self.assertFalse(evidence["ok"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_independent_digests_are_unusable_evidence (test_priority_order.SqliteC4Corrections.test_malformed_independent_digests_are_unusable_evidence) (content={'algorithm': 'sha256', 'chain': 'main', 'count': 0, 'head': '21c60fb8acd19c1d4cec4f389add313f563d37a3e8f79d5ac1e5c4e026de17d4'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1347, in test_malformed_independent_digests_are_unusable_evidence
+    self.assertFalse(evidence["ok"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_malformed_independent_digests_are_unusable_evidence (test_priority_order.SqliteC4Corrections.test_malformed_independent_digests_are_unusable_evidence) (content={'algorithm': 'md5', 'chain': 'main', 'count': 6, 'head': '21c60fb8acd19c1d4cec4f389add313f563d37a3e8f79d5ac1e5c4e026de17d4'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1347, in test_malformed_independent_digests_are_unusable_evidence
+    self.assertFalse(evidence["ok"])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_many_singleton_batches_are_reviewed_with_bounded_statements (test_priority_order.SqliteC4Corrections.test_many_singleton_batches_are_reviewed_with_bounded_statements)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1295, in test_many_singleton_batches_are_reviewed_with_bounded_statements
+    self.assertLess(probe.statements, 60)
+AssertionError: 1516 not less than 60
+
+======================================================================
+FAIL: test_orphan_event_then_later_insert_and_edit_does_not_confirm_the_newest (test_priority_order.SqliteC4Corrections.test_orphan_event_then_later_insert_and_edit_does_not_confirm_the_newest)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1089, in test_orphan_event_then_later_insert_and_edit_does_not_confirm_the_newest
+    self.assertEqual(self.unresolved(reopened), [second])
+AssertionError: Lists differ: [] != ['bf46fc214e8d']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'bf46fc214e8d'
+
+- []
++ ['bf46fc214e8d']
+
+======================================================================
+FAIL: test_repeated_singleton_repairs_read_a_bounded_number_of_history_rows (test_priority_order.SqliteC4Corrections.test_repeated_singleton_repairs_read_a_bounded_number_of_history_rows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1274, in test_repeated_singleton_repairs_read_a_bounded_number_of_history_rows
+    self.assertLessEqual(max(reads), 8, reads)
+AssertionError: 64 not less than or equal to 8 : [61, 62, 63, 64]
+
+======================================================================
+FAIL: test_server_reports_a_committed_priority_outcome (test_priority_order.SqliteC4Corrections.test_server_reports_a_committed_priority_outcome)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1217, in test_server_reports_a_committed_priority_outcome
+    self.assertIn("CommittedReloadError", server[at - 400 : at + 700])
+AssertionError: 'CommittedReloadError' not found in 'th.startswith("/api/workorders/") and path.endswith("/job-pack"):\n        return "job_pack"\n    if path.startswith("/api/time/"):\n        return "time"\n    if path in EXPORT_KINDS:\n        return EXPORT_KINDS[path]\n    if path in LIST_EXPORTS:\n        return path[len("/api/"):]\n    return {"/api/ranking/policy": "ranking", "/api/ranking/snapshot": "ranking", "/api/ranking/publication": "ranking", "/api/ai/priority": "ai_priority", "/api/facets": "facets", "/api/stats": "stats",\n            "/api/map": "map", "/api/visits": "visits", "/api/funding": "funding", "/api/briefing": "briefing",\n            "/api/audit-check": "audit", "/api/handoffs": "handoffs", "/api/handoffs/unaccepted": "handoffs", "/api/packages": "packages",\n            "/api/workorders": "workorders", "/api/checklists": "checklists", "/api/ai/report": "ai_report", "/api/asset/stock-queue": "stock_queue", "/api/resident/choice-queue": "resident_choice_queue", "/api/finance": "finance_queue", "/api/finance/exposure": "finance_queue", "/api/governance": "governance", "/api/continuity": "continuity", "/api/exceptions": "'
+
+======================================================================
+FAIL: test_singleton_rollback_write_after_native_records_stays_confirmed (test_priority_order.SqliteC4Corrections.test_singleton_rollback_write_after_native_records_stays_confirmed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1182, in test_singleton_rollback_write_after_native_records_stays_confirmed
+    self.assertEqual(self.unresolved(reopened), [])
+AssertionError: Lists differ: ['bbb000000002'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'bbb000000002'
+
+- ['bbb000000002']
++ []
+
+======================================================================
+FAIL: test_tied_sequence_with_different_timestamps_is_not_confirmed (test_priority_order.SqliteC4Corrections.test_tied_sequence_with_different_timestamps_is_not_confirmed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1099, in test_tied_sequence_with_different_timestamps_is_not_confirmed
+    self.assertEqual(self.unresolved(reopened), [second])
+AssertionError: Lists differ: [] != ['144593fccc06']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'144593fccc06'
+
+- []
++ ['144593fccc06']
+
+======================================================================
+FAIL: test_failed_begin_batch_leaves_no_open_transaction (test_priority_order.MssqlBeginRecovery.test_failed_begin_batch_leaves_no_open_transaction)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1412, in test_failed_begin_batch_leaves_no_open_transaction
+    self.assertEqual((conn.state.open, conn.in_tran), (0, False))
+AssertionError: Tuples differ: (1, False) != (0, False)
+
+First differing element 0:
+1
+0
+
+- (1, False)
+?  ^
+
++ (0, False)
+?  ^
+
+
+======================================================================
+FAIL: test_failed_rollback_discards_the_connection_and_keeps_the_original_error (test_priority_order.MssqlBeginRecovery.test_failed_rollback_discards_the_connection_and_keeps_the_original_error)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1423, in test_failed_rollback_discards_the_connection_and_keeps_the_original_error
+    self.assertEqual((conn.state.open, conn.in_tran), (0, False))
+AssertionError: Tuples differ: (1, False) != (0, False)
+
+First differing element 0:
+1
+0
+
+- (1, False)
+?  ^
+
++ (0, False)
+?  ^
+
+
+======================================================================
+FAIL: test_connecting_host_must_equal_the_address_the_container_publishes (test_priority_order.LoopbackGuard.test_connecting_host_must_equal_the_address_the_container_publishes) (host='127.0.0.2', published='127.0.0.1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1551, in test_connecting_host_must_equal_the_address_the_container_publishes
+    with self.assertRaises(RuntimeError):
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_connecting_host_must_equal_the_address_the_container_publishes (test_priority_order.LoopbackGuard.test_connecting_host_must_equal_the_address_the_container_publishes) (host='127.0.0.1', published='::1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1551, in test_connecting_host_must_equal_the_address_the_container_publishes
+    with self.assertRaises(RuntimeError):
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_connecting_host_must_equal_the_address_the_container_publishes (test_priority_order.LoopbackGuard.test_connecting_host_must_equal_the_address_the_container_publishes) (host='::1', published='127.0.0.1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1551, in test_connecting_host_must_equal_the_address_the_container_publishes
+    with self.assertRaises(RuntimeError):
+AssertionError: RuntimeError not raised
+
+======================================================================
+FAIL: test_connecting_host_must_equal_the_address_the_container_publishes (test_priority_order.LoopbackGuard.test_connecting_host_must_equal_the_address_the_container_publishes) (host='localhost', published='127.0.0.1')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-wt/issue-1292-priority-order/src/core/tests/test_priority_order.py", line 1551, in test_connecting_host_must_equal_the_address_the_container_publishes
+    with self.assertRaises(RuntimeError):
+AssertionError: RuntimeError not raised
+
+----------------------------------------------------------------------
+Ran 28 tests in 18.790s
+
+FAILED (failures=26, errors=9)

@@ -1,13 +1,750 @@
 ---
 title: Everything but the Software - Revision Record
-description: Author review dispositions, equation audit and retained historical revision evidence
-ms.date: 2026-11-01
+description: Prospective supplementary judging, source-bound measurement clarification and retained historical revision evidence
+ms.date: 2026-11-09
 ---
 
-The author-review record below describes the current revision. The sections
+The 9 November supplementary judging account adds prospective methods for
+a separate post-collection instrument. It preserves original endpoints,
+running sources, results TODOs and all earlier revision evidence.
+The 8 November measurement clarification supplements the execution and
+coauthorship record and corrects the earlier Ruff safeguard claim. It
+changes no running experiment or recorded outcomes.
+The 8 November execution and coauthorship record supersedes earlier
+then-current implementation and pre-collection status. It does not
+overwrite historical scientific findings or certify current execution.
+The 5 November recovery/source check, 2 November allocation record and
+1 November disposition retain their original evidence and limits. The sections
 from Scope and Outcome through Title Assessment retain the original
 24 October report, and the 25 October addendum remains historical. Their
 earlier word counts, TODO locations and protocol choices are unchanged.
+
+## Supplementary Blind Judging 9 November
+
+### Scope, Assistance and Source
+
+The owner requested checking the blind post-run judging enhancement, adding
+it to the paper and obtaining a Data Science and Engineering Coach analysis.
+The clean current main `ad679b96` supplied the independent topic branch
+`docs/blind-post-run-judging`. Outputs are the existing article, additive
+Supplement, single PDF, source/evidence record, related index/log and focused
+authoring regressions. No experiment code, private data, running study,
+registration, visibility or paid judging action is included.
+
+The supplied branch resolved to
+[`b7973e200a6edbb1d19355badae3b7e03a066b09`](https://github.com/jmservera/ama-thought-mve/tree/b7973e200a6edbb1d19355badae3b7e03a066b09).
+The [judging README](https://github.com/jmservera/ama-thought-mve/blob/b7973e200a6edbb1d19355badae3b7e03a066b09/judging/README.md)
+was inspected in full; its Git blob is
+`6cc0c236e4ca093198d38909dceb80f850196faa`.
+This is a separate enhancement source, not evidence of a collection-source
+change from `e71037d9` or of completed judging.
+
+The user supplied the installed Data Science and Engineering Coach definition.
+The launchable agent list lacked that exact agent; a separate general-purpose
+context was instructed to use the supplied definition and its experiment/
+evaluation guidance for a read-only assessment, without impersonating the
+named specialist or changing customer/Coach state. Scientific-critical-
+thinking, experimental-design, statistical-analysis and SymPy informed the
+scoped measurement/design assessment. The existing `kassis2026skills`
+reference is retained: current arXiv metadata was checked on 9 November
+(same five authors/year; latest version v2, no published DOI shown).
+The citation records assistance, not evidence for the study outcomes.
+
+### Claims and Evidence States
+
+| Claim / manuscript locator | Inspected source locator | Evidence state and limit |
+| --- | --- | --- |
+| Separate supplementary exploratory assessment; main post-run subsection | Judging README, Purpose and status; Paper-ready methods text | Full-text support for the proposal; no completed assessment or preregistration verified |
+| Fixed panel, eligible P checkpoints and post-CR1; Supplement Table 16 | Judging README, Workflow panel; Snapshots and temporal interpretation | Full-text specification support; no candidate execution or private checkpoint history inspected |
+| Witnessed risk-set loss, undefined empty/missing density; Supplement Equation 7 | Judging README, What is measured; Snapshots and temporal interpretation | Full-text support for the described measure, distinct from hidden-contract H2; algebra/boundary checks are not outcome analysis |
+| Four ordinal dimensions, abstention and evidence citations | Judging README, What is measured; Generic command adapter contract | Full-text rubric/contract support; judge accuracy, calibration and real-user usability remain unverified |
+| Anonymised packets and residual blinding limitations | Judging README, Blinding and evidence controls; Validation and human calibration | Full-text design support; no proof that actual packets or reviewers were blinded |
+| Full allocated-frame, equal-model contrasts and nested observations | Judging README, Report and handoff | Full-text reporting-contract support; no intervals, formal verdicts or scheduling-block resolution supplied |
+| Separate costs, operator permission and hash-bound resume | Judging README, Freeze and prepare; Run the blinded judge | Full-text operator-contract support; no calls, billing or hard provider cap verified |
+
+The text uses prospective methods rather than copying the README's
+illustrative performed-methods paragraph. Final fulfilment, acquisition,
+endpoint loss and API-task ratings stay distinct. Treatment-dependent
+acquisition makes loss density conditional on the witnessed set: it cannot
+alone rank arms. Whole trajectories remain the experimental units; judges,
+repetitions, scenarios and snapshots are repeated measurements.
+Implementation epochs and scheduling/service dependence retain their
+existing unresolved scope rather than being silently corrected.
+
+### Coach-Guided Source Assessment
+
+The separate context inspected the pinned judging implementation, example
+configuration, test sources and relevant public isolation/transport contracts.
+It verified the supplied README Git-blob binding. This was static source
+review: no judging tests, reference/candidate execution, models, real
+packets, calibration or billing were run or inspected.
+
+| Priority / concern | Pinned implementation locator | Disposition in the paper |
+| --- | --- | --- |
+| Important: earlier witnesses/retention labels can anchor endpoint ratings; local evidence IDs repeat across checkpoints | `judging/judge.py:363-374,441-447,471-480`; `judging/copilot-judge.mjs:118-121`; `judging/scenarios.py:61-65` | Disclose historical context and nominal citation validation; endpoint-only packets or namespaced IDs require a separately versioned instrument, not an alleged current fix |
+| Important: treatment-dependent acquisition and missing earlier history change witnessed risk sets | `judging/judge.py:246-255,682-689` | Require final fulfilment, acquisition classifications, risk counts and missingness with conditional loss density |
+| Important: post-CR1 loss uses any earlier eligible P witness, not only P10 | `judging/judge.py:363-365`; `judging/scenarios.py:26-47`; `judging/tests/test_judge.py:108-126` | Distinguish endpoint loss from incremental CR1-induced loss; explain maxima of nine/eleven prior-witness scenarios |
+| Important: no scheduling-block/epoch fields in report rows | `judging/judge.py:291-308,322-323,379-381,694-710` | Require private trajectory/source/epoch/block linkage; retain descriptive and unresolved dependence limits |
+| Important: pooled ordinal means/ranges conflate between-judge and repeat variability | `judging/judge.py:659-681`; `judging/config.example.json:11-14` | Require judge-specific ledger inspection and blinded human calibration; no reliability or equal-interval claim |
+| Important: hashes/admission checks cannot prove prospective choices or full-frame affordability | `judging/judge.py:319-323,396-405,565-572,589-609` | Record exposure/choices and separate calibration costs; budget exhaustion can leave contrasts unavailable |
+
+Source-verified strengths include full allocated-cell checks, no last-successful
+endpoint substitution, undefined empty/missing risk-set density, exact recorded
+commit/runtime-asset replay, read-only/no-network evaluation and tool-free
+guarded judging transport. Evidence locators: `judging/judge.py:136-164,291-308,336-341,673-710`,
+`harness/isolation.py:251-267`, `judging/copilot-judge.mjs:24-49,105-144`.
+These are implementation-contract findings, not adversarial integrity,
+deployed-environment, scientific or accuracy certification. Actual anchoring,
+mis-citation, calibration and dependence remain untested.
+
+### Validation and Remaining Decisions
+
+The owner's later technical-flow request extends this same paper workstream.
+The flow labelled "Main experiment" in the supplied explanation depicts
+stopped-archive post-run replay/judging; the one labelled "Judging" depicts
+tool-enabled development. The added subsection and original paired figure
+use the corrected names. They separate host-side Python/JavaScript model
+transport from isolated candidate execution, including writable development
+state versus read-only replay inputs, fresh processes versus retained files/
+Git, and collected failures versus unavailable isolation/collection.
+Exact source-support and final figure/PDF validation are recorded with this
+continuation rather than claiming the earlier judging-only build covered it.
+
+The Coach-guided follow-up checked the supplied sources at `b7973e20` and
+compared relevant contracts at running source `e71037d9`.
+The source evidence corrects one supplied control claim: the entire
+container is not capability-free. Four capabilities are re-added for
+the protected supervisor; the UID/GID 1001 candidate child has cleared
+effective/permitted/inheritable capabilities and no-new-privileges.
+Development persistence is validated state replay, not a persistent
+container or writable host checkout. Committed regular content crosses
+feature/CR checkpoints with canonical host history; candidate process
+reset does not reset host/model conversation context.
+
+| Technical claim | Inspected source locator at `b7973e20` | Evidence state / limit |
+| --- | --- | --- |
+| Stopped-archive recorded-HEAD replay, read-only snapshot/evaluator | `judging/judge.py:203-222,258-272`; `harness/isolation.py:265-267` | Source support; no real archive or image qualification inspected |
+| Bounded evidence, host adapters, no-tool judge and report | `judging/judge.py:167-195,218-220,485-523,598-605,646-755`; `judging/copilot-judge.mjs:24-49,118-125` | Source support; no provider sessions or actual packets executed |
+| Host bridge, fresh development commands and logical state replay | `harness/isolated_runtime.py:275-301,487-494,556-574`; `harness/isolation.py:447-467`; `harness/isolation_helper.py:529-572` | Source support; no persistent host writable mount or candidate process continuity implied |
+| Committed checkpoint imports and separate scheduled validation/measurement | `harness/isolated_runtime.py:335-384,427-451`; `CONTRIBUTOR.md:335-349` | Source support; agent-requested tests remain distinct from controller-scheduled checks |
+| No-network/root/resource controls, constrained supervisor and unprivileged candidate | `harness/isolation.py:251-267`; `harness/isolation_helper.py:25-33,282-297,337-360` | Conflict with whole-container zero-capability claim; corrected, not newly enforced |
+| Isolation/collection unavailable versus ordinary candidate failure | `judging/judge.py:351-356`; `judging/scenarios.py:298-308` | Source-supported classification, not verified outcomes |
+
+The running source has corresponding network/root/resource/mount controls
+at `harness/isolation.py:198-214`, development replay at `333-345` and
+host routing at `harness/isolated_runtime.py:249-332,486-622`.
+The transport/runtime guard files match between the two source pins, but
+the isolation files do not wholly match: linked/special-file output
+rejection recovery is a later enhancement and is not attributed to the
+running source. There is no judging directory at `e71037d9`.
+Neither comparison verifies the deployed image/runtime or all three
+archived implementation epochs.
+
+SymPy 1.14.0 checked the new fraction's zero-loss, total-loss and one-of-four
+boundaries (0, 1 and 1/4) on a valid positive denominator. Empty or unavailable
+risk-set endpoints are excluded by definition, not imputed as zero.
+The two-endpoint session expression is dimensionally a count; the conditional
+example 2 x 315 x 1 x 3 = 1,890 is arithmetic, not observed judging activity,
+an actual configuration or an independent sample size.
+
+The initial judging-only 56-test suite and structural checker covered the added prospective-method,
+source binding, risk-set, ordinal-rating, aggregation and cost boundaries.
+Structural results retain 94 cited/105 reusable references and a
+1,806-character abstract. Approximate main-body words are 11,506 using the
+existing method; historical comparison `0d5dcb02` remains unavailable.
+These checks validate paper invariants, not the external judging pipeline.
+
+Tectonic 0.17.0 compiled that initial single **47-page** PDF, Supplement page **37**,
+main judging subsection page **21**, instrument detail pages **44-46**.
+The actual compiler log has no errors, unresolved references or overfull/
+underfull boxes; the inherited `inputenc` warning remains.
+All-page text bounds, 183 internal destinations, 51 outline entries and
+absence of blank pages pass. Changed pages 21/29/44-46, the intact B/C
+examples on 46/47 and an all-page layout proof were rendered and inspected.
+The optional pdfLaTeX-specific log-marker check was not claimed under
+Tectonic. Final PDF SHA-256 is
+`93f3b405fc0a9118787619be514d5c58eea1e99154bd4fdb5edc97bf050fb75b`.
+Build intermediates, visual proof and the exact scoped source assessment
+remain external session working files; lasting findings and provenance
+are preserved here and publication evidence belongs in the PR.
+
+The complete technical-flow continuation passes **57 authoring tests**,
+including six-figure native byte-identical re-export and current source/PDF
+bindings. Structural checks retain 94 cited/105 reusable references and
+the 1,806-character abstract; approximate main-body words are now 11,943.
+Historical comparison remains unavailable. The complete PDF has **49 pages**,
+Supplement **39**, execution-boundary text **17-18**, paired Figure 6 **19**,
+judging methods **21**, detailed rules **46-48**, and the intact C prompt **49**.
+All-page text bounds, 184 internal destinations, 52 outline entries and
+absence of blank pages pass. Changed pages, the original paired diagram,
+B/C prompt pages and an all-page layout proof were inspected.
+The actual Tectonic log retains only the inherited `inputenc` warning,
+with no errors, unresolved references or overfull/underfull boxes.
+Final PDF SHA-256 is
+`6847840ddbf3d49abc27ab52b626fad57728ebccb592c7e83c13bd11734abdb6`.
+The source/editable/SVG/PNG diagram bindings are in
+[diagram-exports.json](../diagram-exports.json); the current source/PDF
+bindings are in the `runtime_flow_revision` of
+[supplement-integration.json](./supplement-integration.json).
+The earlier judging-only binding and validation outcome remain historical,
+not the complete candidate's receipt.
+
+Author/operator decisions remain: actual archive/source epochs and availability;
+freeze timing and prior outcome exposure; chosen judge models/adapters,
+repetitions and separate authorised budget; blinded human-calibration sample,
+agreement/disagreements and reviewers; residual blinding; and any justified
+block-aware inference outside the descriptive instrument. The source/PDF
+bindings are refreshed in [supplement-integration.json](./supplement-integration.json),
+preserving the historical 8 November bindings.
+Component checks, independent exact-head review and publication evidence are
+recorded separately below and in the PR. None supplies scientific, human,
+ethics, venue or employer publication approval.
+
+## Measurement Provenance Clarification 8 November
+
+### Scope, Assistance and Source
+
+The owner explicitly requested paper explanations, tables and relevant example
+prompts after the read-only measurement audit. Work continues directly on
+`docs/capstone-autonomy-story`, from clean `836093cf`, with PR #1283 open.
+The authorized outputs are the existing paper/source record and additive
+Supplement, plus directly related documentation and focused authoring tests.
+The slides and the running experiment are not revised in this scope.
+
+The active public source is
+[`e71037d961cb80fc5c659437796de7736820f6c9`](https://github.com/jmservera/ama-thought-mve/tree/e71037d961cb80fc5c659437796de7736820f6c9).
+The default `baf58b4f` inspected during the audit contains it; the supplied
+execution has no tag. The source files below were inspected directly.
+No private run records, hidden oracle bodies or paid model calls were used.
+This is implementation-source verification, not verification of collected
+outcomes or actual per-session tool/provider conditions.
+
+Copilot-assisted clarification used scientific-critical-thinking, the
+scientific-writing reference, existing tests and PDF tooling. The existing
+`kassis2026skills` citation and prior metadata-verification limit are retained;
+the manuscript records the actual added assistance. No new algebra/design
+audit, venue policy check or claim of independent human peer review is made.
+
+### Claims, Locators and Evidence States
+
+| Claim / paper locator | Inspected active source | Evidence state and limit |
+| --- | --- | --- |
+| No separate numerical AI judge; Outcomes and retained-contract loss | `harness/measure.py:342-374`, `harness/pilot_analysis.py:53-154`, `harness/runner.py:387-433` | Full-text/source support for the described code path, not proof of every private execution |
+| Functional coverage is hidden-contract pass fraction, not line/branch coverage | `harness/measure.py:205-320`, `harness/pilot_analysis.py:157-307` and public panel/config metadata | Source support for scoring and completeness rules; no hidden test contents or outcome data inspected |
+| Complexity/duplication/lint/size are structural proxies; field table in additive Supplement | `skeleton/tools/metrics_core.py:126-292`, `skeleton/tools/quality.py:8-39` | Source support for actual fields, scales, backend settings and lack of a general quality/maintainability-index score |
+| Earlier Ruff suppression safeguard is false; final Measures paragraph | `skeleton/tools/metrics_core.py:217-250,255-292` | Conflict: actual call has `--isolated`, not `--ignore-noqa`, and no suppression count; corrected, not fixed in the running kit |
+| AI credits/tokens/time are recorded resource observations, not AI scores | `harness/analyze.py:74-184`, `harness/runner.py:222-263` | Source support for parsing and observations; full all-attempt cost needs the journal and complete usage, neither newly inspected |
+| B/C text is treatment instruction, not a scoring rubric; Active prompt examples | Both `harness/prompts/*-step.prompt.md` templates, `harness/runner.py:51-69,222-263,387-433` | Exact template bytes retained and SHA/Git-blob checked; actual private `prompt.md` and full provider/system context not inspected |
+| Conservative loss/CR1 reporting remains narrower than the planned specification | `harness/pilot_analysis.py:53-154,157-307` and failure-attribution module | Source support for conservative unavailable summaries and composite CR1; richer graded/stratified exports remain gaps |
+
+The main table distinguishes outcomes, structural proxies, resource observations
+and explicit annotation/integrity records. The Supplement gives raw field names,
+units, denominators, backend/pin and missingness limits. Empty denominators
+remain undefined; zero complexity summaries on an empty function set are
+described as source-emitted sentinels, not a valid measured mean/share.
+
+The active prompt snapshots are:
+
+* [B](./consolidation-active-e71037d9.prompt.txt): 1,471 bytes, SHA-256
+  `1ee3da712fcb787a7843d1270aabf61b55abb7c8b7df2534d4adc078b0241494`,
+  Git blob `fe00defa94b65eeb319e24256e425942247e0a14`.
+* [C](./review-only-active-e71037d9.prompt.txt): 719 bytes, SHA-256
+  `06a8dfcaee30ab52c243c771844619cf08f23854ef866f1bfde5277362391725`,
+  Git blob `706d15d3c7e1615d58c0902a050b0e80d163e929`.
+
+All retained bytes include the Markdown heading/comment. The PDF explains how
+the runner strips these and substitutes the 900-second budget as `15 minutes`.
+The current C source's `optional placebo` heading is retained, but the paper
+continues to classify it as information-bearing review. The old frozen v4
+prompt and its checksum remain unchanged. Matching measurement-module/C-prompt
+blobs across the three disclosed epochs do not make all data or execution
+conditions uniform.
+
+### Validation and Assessment Boundary
+
+The 50-test authoring suite and structural checker pass: 94 cited entries,
+105 reusable entries and a 1,806-character abstract. The approximate main-body
+count is 11,156 using the existing method (tables included; abstract,
+bibliography and appendices excluded); historical baseline `0d5dcb02` is
+unavailable, so no before/after comparison is claimed.
+Six focused documentation regressions guard template byte
+bindings, active Supplement includes, field names and instrument classification,
+the Ruff limitation, and the distinction between AI review and outcome scoring.
+They validate authoring invariants, not experimental correctness or efficacy.
+
+Tectonic 0.17.0 compiled the single 45-page PDF, Supplement page 37. Its log has
+no TeX errors, unresolved references or overfull/underfull boxes; the inherited
+`inputenc` compatibility warning remains. The optional checker still expects
+a pdfLaTeX marker and is not used as evidence of Tectonic failure.
+All-page word bounds, 180 internal named destinations and 49 outline
+destinations pass; no blank pages or invalid internal targets were found.
+Tables 7/15, explanation pages and both prompt listings were rendered and
+inspected, along with an all-page layout proof. The final short C example is
+kept intact on page 45. The complete B/C display text matches after NFKC/
+whitespace normalization and exclusion of page-number footers; that check
+does not claim byte identity of PDF text. The retained source templates are
+separately byte/hash-bound as specified above.
+
+Final PDF SHA-256:
+`58287cefefb4d0b10b6db6bac086a23c329597fe356211a88cda3ac144fea52f`.
+Current source, normalized additive-body and literal-input bindings are in
+[supplement-integration.json](./supplement-integration.json); earlier
+authorship/historical bindings are preserved. The external component build
+is under this session's `files/paper-measurement-2026-11-08/`. Independent
+exact-head review and a fresh focused local publication gate remain separate
+steps; their outcomes/receipts are retained in PR #1283 rather than making
+component checks stand in for approval.
+
+The existing title, coauthors, case claims, original/adverse reviews, historical
+figures, source epochs, pending result TODOs and false results switch are
+preserved. No experiment code/configuration, results, OSF registration or
+amendment, repository visibility or slides are changed. The inspection cannot
+certify scientific, human, employer, ethics or venue approval.
+
+## Execution, Registration and Coauthorship 8 November
+
+### Authorized Scope and Assistance
+
+Mode: scoped revision and existing local tests/build, not a new study-design
+or research audit. After an explicit owner override, authoring moved to the
+existing `/home/jmservera/source/ama` branch `docs/capstone-autonomy-story`.
+Its checked starting HEAD was `d3edf91039872e8e6d8548ea0387d371cca34ac7`,
+including `80fc5ba8`'s author-affiliation change. Both original and child
+paper packages were clean and byte-identical before editing. No child edits
+had been made or transferred; `/tmp/ama-study-authorship-1108` remains
+untouched. No branch switch, stash, commit, remote write or parent
+slide/index/log edit belongs to this revision.
+
+The named inputs were the package README, manuscript, current `review.md`,
+relevant revision dispositions, active TeX inputs and existing local tooling,
+plus the supplied exact-commit public `pilot-estimation.json` and narrow
+public README/CONTRIBUTOR passages. The scientific-writing reference was
+read; capstone Section D was kept separate from generic scholarly criteria.
+No target venue or current employer publication policy was inspected.
+No private experimental data, study launch or actual outcome analysis was
+requested or performed.
+
+Copilot-assisted revision used the scientific-critical-thinking skill for
+bias/source qualification, not a new equation or design audit. The existing
+`kassis2026skills` citation, DOI `10.48550/arXiv.2609.00065` without a
+version suffix, and earlier four-skill disclosure are retained. The parent
+supplied a latest-v2 arXiv metadata check; its simplified page did not verify
+the full author list. No new author-list verification is claimed.
+The manuscript adds the actual 8 November assistance scope.
+
+### Authorship and Current Registration
+
+The owner explicitly selected **COAUTHOR** and confirmed that Isabel
+Cabezas Martin agrees to the credit and stated affiliation, **Software
+Engineer, Frontier Company at Microsoft**. The author list/PDF metadata
+and contribution statement add her, preserving Juan Manuel Servera
+Bondroit's current name and **Senior Partner Solution Architect,
+Microsoft EMEA, Zurich** affiliation. No location, email, ORCID,
+credential, manuscript review or final-author approval is inferred.
+
+Servera Bondroit conceived the study, designed methodology, defined
+evaluation criteria, analysed the historical case and wrote the manuscript.
+Experimental analysis remains a responsibility as collection proceeds.
+Cabezas Martin conducts ongoing execution/data collection independently
+under the predefined exploratory protocol and disclosed amendments.
+Operational separation is intended to minimise potential experimenter bias;
+both authors remain Microsoft employees. It supplies neither institutional
+independence nor independent scientific review/analysis, and does not
+demonstrate elimination of bias. Views/competing interests are plural.
+Employer external-publication clearance and final-author approval are separate.
+
+The owner confirms **registered base** `https://osf.io/xcpt4`, dated
+**7 November 2026**. The supplied displayed time is `Nov 7, 2026 4:46 PM`,
+with no timezone; the manuscript uses the date only. Access evidence
+supplied for this task reports an app shell on the public page and HTTP 401
+from `https://api.osf.io/v2/registrations/xcpt4/`. Registration/date are
+owner-confirmed, not independently verified OSF metadata. No approval,
+embargo, DOI or prospective timing for all observations is inferred.
+
+Current execution includes **disclosed unregistered amendments** for short
+calibration, parallel execution and VM restarts. The public source describes
+the changed path as unregistered; its false/null amendment-registration
+fields do not mean there is no registered base. Neither public source
+disclosure nor an older freeze makes this a homogeneous preregistered
+confirmatory dataset. No new OSF amendment is asserted or created.
+
+### Implementation Epochs and Evidence States
+
+Active source: `jmservera/ama-thought-mve` commit
+`e71037d961cb80fc5c659437796de7736820f6c9`, tree
+`e7ec1561d4ecee921e7c9eba3711a1ab7e9f4058`, **no tag**.
+Profile: `protocol/pilot-estimation.json`, analysis design
+`model-stratified-v2-five-arm`, suite `s1-retrofit`, exploratory
+pilot-estimation, `formal_hypotheses=[]`. Owner-supplied runtime selection:
+GPT 6.1 Sol / Claude Sonnet 5.5 / Gemini 4 Argon, medium effort, A–E,
+21 replicates per model/arm despite file default 12, F1–F10 plus CR1,
+seed 2027. Planned trajectories are `3*5*21=315`; completed trajectories
+and an independent observed n were not supplied.
+
+| Epoch | Exact execution source | Public commit time supplied as checked metadata | Owner-reported completed steps as of 8 November |
+| --- | --- | --- | ---: |
+| E1, pinned CLI fix | `99a1ed170d7c71acb428b52e0e24be8856cc3ea3` | `2026-11-07T22:12:45Z` | 651 |
+| E2, source-bound estimation recovery | `3c2ce89b00fe583c1f0715e8ccd3510419d5e734` | `2026-11-08T08:36:43Z` | 227 |
+| E3, failed-request charging fix | `e71037d961cb80fc5c659437796de7736820f6c9` | `2026-11-08T13:01:01Z` | 369 |
+
+Total **1,247 completed steps**, including possible measured nonpasses.
+These are owner-reported progress, not inspected private data, independent
+replicates or completed trajectories. Commit times are not collection times.
+Preserve each step's actual source epoch, failures, unknowns and model/arm/time
+assignments. Temporal/arm/model confounding limits pooling evolving-source
+data. No post-hoc sensitivity analysis/result is invented.
+
+| Claim and manuscript locator | Source and inspected locator | Evidence state and limit |
+| --- | --- | --- |
+| Coauthor identity, affiliation and roles; title block, Author contributions and Competing interests | Explicit owner instructions for this revision | **User-supplied unchecked**, owner-confirmed credit agreement; not a manuscript approval or credential check |
+| Registered base/date; Section 7.1 (PDF p. 15) and Data availability (pp. 27–28) | Owner confirmation of OSF xcpt4 and supplied page/API access results | **User-supplied unchecked** confirmation; OSF metadata **Unavailable** to independent verification in this task |
+| Declared current design/default/models/features; Section 7.1 and Data availability | Retained `pilot-estimation-e71037d9.json`, `study`/`runtime`/`analysis`/`registration` objects; exact public commit identity supplied | **Full-text support** for inspected declared fields, not saved runtime identity or actual execution |
+| Unregistered short calibration/parallel/restart path; Section 7.1 and Data availability | Read-only `gh api` at `e71037d9`, README lines 9–17, 129–154, and CONTRIBUTOR lines 1–17, 74–81 | **Full-text support** for the disclosed changes; historical readiness prose is not evidence of current operational approval |
+| Current SHA/tree and epoch commit times; Data availability and this table | Public commit metadata supplied as previously verified by the parent task | **Metadata-only**, supplied prior check, not re-queried here; times identify commits rather than run events |
+| Selected n21, ongoing collection and 651/227/369 steps; abstract, Section 7.1 and Data availability | Owner-supplied runtime choice and progress account as of 8 November | **User-supplied unchecked**; no dataset, trajectory completion, cost reconciliation or efficacy result inspected |
+
+The retained protocol input is
+`/home/jmservera/.copilot/session-state/a94bf42c-3cbc-40ed-936a-62702b3fce6f/files/paper-study-update-2026-11-08/pilot-estimation-e71037d9.json`.
+Pinned source locators:
+[protocol](https://github.com/jmservera/ama-thought-mve/blob/e71037d961cb80fc5c659437796de7736820f6c9/protocol/pilot-estimation.json),
+[README](https://github.com/jmservera/ama-thought-mve/blob/e71037d961cb80fc5c659437796de7736820f6c9/README.md),
+[CONTRIBUTOR](https://github.com/jmservera/ama-thought-mve/blob/e71037d961cb80fc5c659437796de7736820f6c9/CONTRIBUTOR.md).
+Read-only source retrieval checked the relevant passages, not the entire
+execution implementation, release image or study data.
+
+### Applied Changes and Preservation
+
+Updated the abstract, protocol/current execution, conclusion, author list
+and metadata, contributions, plural views/competing interests, data
+availability and assistance disclosure. The existing Supplement receives
+only cross-reference/provenance corrections, without a parallel supplement
+or duplicated case narrative. The retained v6 design/measurement diagrams
+are unchanged and labelled historical in captions; no new diagram is needed.
+
+Historical v4/v6/v7 records, registered materials, original adverse reviews,
+case data, numerical observations, frozen consolidation prompt and
+`\resultsfalse` remain. Power/resource tables, thresholds, planned analyses,
+budgets and economic assumptions were not recalculated or silently revised.
+Earlier source-inspection reporting/inference gaps remain explicit, without
+pretending to re-audit their active implementation or backdating a remedy.
+
+### Local Validation and Delivery
+
+All new compiler intermediates/logs, caches and inspection PNGs are in
+the external run:
+`/home/jmservera/.copilot/session-state/a94bf42c-3cbc-40ed-936a-62702b3fce6f/files/paper-study-update-2026-11-08/paper-build/authorship-revision-GQAxhZ`.
+Only the verified `main.pdf` was copied into the paper package after
+confirming that the original delivery had no conflicting tracked or staged
+edit and still matched the starting child delivery.
+
+* `python3 -B -m unittest discover -s anc -p 'test_*.py' -q`: **44 tests
+  pass**, no test failures/errors. These are existing authoring/planning
+  regressions, including all 39 historical resource cells and five native
+  diagram source/export bindings, not executed-study validation.
+* `python3 -B anc/check_paper.py`: **PASS**, 94 cited/embedded entries,
+  105 reusable entries, 1,806 abstract source characters, unique resolved
+  labels and a false results switch. Approximate body words: 10,487.
+  The configured historical baseline `0d5dcb02` remains **UNAVAILABLE**;
+  no baseline reduction is claimed.
+* Tectonic **0.17.0**, `--untrusted --keep-logs --keep-intermediates` with
+  an external output directory and task-local HOME/XDG caches: **exit 0**.
+  Actual final log: **0 TeX errors**, **0 unresolved references/rerun
+  warnings**, **0 overfull boxes**, **0 underfull boxes**. One inherited
+  warning remains: `Package inputenc Warning: inputenc package ignored
+  with utf8 based engines.` No pdfLaTeX output-marker check is claimed.
+  The normal automatic rerun completed; `main.log` and
+  `tectonic-console.txt` are retained in the run's `compiler/` directory.
+* PyMuPDF **2.0**: **40 pages**, one additive Supplement starting at
+  **page 35** (Appendix A). All-page word bounds checked 17,370 extracted
+  words at a 0.5-point boundary tolerance: **0 out-of-page words**, **0
+  blank extracted pages**. **174 named internal links**, **254 destination
+  page bindings** and **47 outline destinations** resolve within the
+  document, with **0 invalid destinations**. The 83 external URI
+  annotations were enumerated, not live-access validated.
+* Full 125-dpi renders inspected on pages **1–3, 8–9, 15–22, 25–28,
+  35–37 and 40** (21 pages), covering changed authorship, status, historical
+  figure/table labels, conclusion, disclosure, availability and Supplement
+  corrections. All 40 pages were also inspected in layout proofs.
+  Renders/proofs remain in `inspection/`; no scientific figure was changed.
+  An optional Pillow contact-sheet attempt failed to import `PIL`.
+  No dependency was installed; the existing PyMuPDF renderer then produced
+  the inspected all-page layout proofs successfully.
+* Source comparison confirms unchanged equation bodies, bibliography,
+  `review.md`, original adverse review, case data/evidence index, native
+  diagrams and literal frozen prompt. Active normalized Supplement digests
+  are refreshed with prior digests retained; current source/PDF digests are
+  in `supplement-integration.json`.
+* Checked delivered PDF SHA-256:
+  `1a39c104c7e6ae0bb2075cceffe54b3ed8cdb037effe8d6efa223f3b84a47cda`.
+  PDF metadata lists **Juan Manuel Servera Bondroit; Isabel Cabezas Martin**.
+  Title and current Juan Manuel affiliation were preserved.
+* Scoped `git diff --check` passes. Pre-existing ignored checkout compiler
+  remnants were observed and left untouched (the `main.log`/`main.aux`
+  timestamps precede this task; historical `supplement.*` remnants also
+  remain). They were not this revision's outputs. No dirty-input exclusion,
+  stash or commit was used. The child worktree has **no task changes**.
+
+There is **no blocking component validation**. Exact-head independent
+assessment, the focused repository publication gate, hosted checks and
+human publication/author approvals were not run or inferred; the parent
+owns those steps and its slide/index/log synchronization.
+
+Work execution: **Complete** for the scoped revision and local validation.
+Assessment: evidence-bounded assisted revision with owner-confirmed
+registration/runtime/progress facts and independently unavailable OSF
+metadata, not independent review, statistical certification, scientific
+acceptance or publication approval. No new experimental result,
+experiment-source/configuration or registration change, or actual model run.
+
+## Recovery and Scientific Alignment 5 November
+
+Work execution covers the owner-authorized recovery and bounded source
+corrections. Assessment is an independent agent-assisted scientific
+consistency review plus parent numerical/authoring checks, not independent
+human peer review, statistical certification or collection approval.
+Validation and publication are recorded separately below.
+
+### Recovery and Current Source
+
+Closed PR #1206 without deleting its branch. PR #746 already contained the
+four scientific skills, reviewer and prior manuscript changes, with exact
+tree/blob equality verified. The current-main paper package was identical
+to the parent of `3ef395b8`. Replayed only that final amendment with
+`--no-commit` on fresh topic `docs/paper-scientific-reconciliation`,
+based on `c6d5a8f3`. The actual replay was conflict-free; the new log record
+was appended after all existing main history.
+
+The [original scientific review](../../../../../.copilot-tracking/reviews/2026-11-05-paper-scientific-reconciliation.json)
+is retained unchanged, including its three major findings, one minor
+finding and adverse assessment. It inspected the active article and TeX
+inputs, disclosure, allocation figures' text and current kit source.
+It did not re-audit the case or systematically verify external citations.
+
+The review inspected current public MVE default
+`5ab24be4556876500a40e56201f6efc3930cc8b8`, a manifest-only child of
+`7de2f0d42955c62b52906747de480df2b3f1e0ca`, which the published
+`protocol-frozen-v6` tag identifies as execution source. Current source
+contains A/B/C/D/E and the immutable selector. The existing local checkout
+at `1fee4535` and its `origin/main` at `03c50856` were stale, and were
+neither updated nor used as current implementation evidence.
+Release/tag identity and source bodies were checked; release attachments,
+the complete fingerprint, runtime image and declared harness/SDK/canary
+test totals were not independently reproduced.
+
+### Findings and Dispositions
+
+| Finding | Source correction | Scientific boundary |
+| --- | --- | --- |
+| EBTS-SCI-01, major | Replaced current A/B/C-only assertions with the dated full-SHA v6 implementation account in protocol, disclosure, availability, current README and design-figure source. Kept historical v4 and 2 November inspections. | Implemented source is not executed study evidence, scientific approval or a completed prospective record. |
+| EBTS-SCI-02, major | Marked observed-subset loss/missing bounds and graded/prerequisite CR1 panels as prospective reporting requirements. Added the inspected analyzer's conservative unavailable-result rule and explicit uncertainty in prior acquisition/risk membership. | Author must separately authorize implementation or prospectively amend reporting before collection. No kit or estimand was silently changed. |
+| EBTS-SCI-03, major | Described independent arm/model draws as the implemented candidate and made the required scientific choice explicit. Added the inspected primary-frame availability rule without accepting or replacing it silently. | OPEN before collection: justify scheduling-only blocks with independent inference, or approve block-aware inference and aligned variance/planning, bound to exact source and prospective recording. A scheduling label establishes neither pairing nor independence. |
+| EBTS-SCI-04, minor | Corrected the Introduction to make matched-ceiling B-D primary and extra-allowance B-A secondary. | Equal ceilings do not ensure equal realized spending or isolate refactoring. |
+
+The review's source-body probes used synthetic in-memory inputs only,
+including schedule balance, immutable selection, admission, missingness and
+independent-arm resampling. They did not instantiate the launcher, create
+or resume a saved study, invoke providers or establish inferential coverage.
+The parent did not repeat the delegated external-kit source investigation.
+
+Other explicit pre-collection decisions remain allocation/rationale,
+primary-frame eligibility, additional CR1 reporting and E's external
+semantic adjudication. Full-allocation affordability requires a dated
+researcher forecast/approval; the current launcher's attempt/aggregate
+admission and nonempty calibration note do not establish that forecast.
+Public configuration values and unknown-usage holds are declarations, not
+reconciled bills or proof of remaining spending authority.
+The inspected manifest has a null registration date,
+`prospective_osf_update_recorded=false` and `collection_authorized=false`.
+No date, authorization or OSF state is invented here.
+
+### Numerical and Authoring Checks
+
+The recovered candidate passed all 34 existing authoring tests. Nine new
+stdlib regressions independently derive all 39 resource cells from the arm
+schedules and CR1, verify all three conditional sample-size rows, nine
+economic cells and discrete payback, and check matched ceilings/allocation
+labels. All 43 passed before the source reconciliation. A further regression
+now protects the current source pins and explicit reporting/inference gates.
+
+An isolated pip environment supplied Python 3.12.3, SymPy 1.14.0 and
+mpmath 1.3.0. The final isolated `runpy.run_path` invocation passed after
+direct script invocations failed to import SymPy; the failed attempts are
+not reported as passes. Exact symbolic checks reproduce
+`2*sigma**2/(M*n)` under independent balanced cells and
+`delta*N*(N-1)/2-k*N` for cumulative cost. A covariance-aware illustration
+reduces to the independent expression only under the corresponding zero-
+covariance/common-variance assumptions; it selects no actual dependence model.
+Conditional normal planning reproduces 12/21/33 per cell for assumed SDs
+15/20/25 and 131 for SD 50.
+
+| n per model per arm | Hypothetical normal power at assumed SD 25 |
+| --- | ---: |
+| 12 | 0.3964384390 |
+| 21 | 0.6122026489 |
+| 33 | 0.8035274845 |
+
+These are pre-data sensitivities, not observed power, actual variance,
+bootstrap-coverage validation or scientific acceptance. The actual
+300,000-credit envelope and 270,000 admission ceiling are unchanged.
+No study, calibration, paid model call, private dataset, Azure, freeze,
+registration or visibility action was performed.
+
+### Final Local Validation
+
+* `python3 -B anc/check_paper.py` passes with 94 matching cited/embedded
+  entries, 105 reusable entries, a false results switch and a 1,719-character
+  abstract. The approximate body count is 9,999; its configured historical
+  baseline is unavailable, so no baseline reduction is claimed.
+* `python3 -B -m unittest discover -s anc -p 'test_*.py' -q` passes all
+  44 tests, including the ten new planning/source-fidelity regressions.
+  These numerical and authoring checks are not scientific acceptance.
+* The native figure authoring script and offline exporter complete. All five
+  source/export bindings pass; only the two revised conceptual figures change.
+  The design footer identifies v6's five-arm implementation, and the
+  measurement figure marks additional retention/CR1 reporting as planned.
+  Both revised diagrams were visually inspected.
+* `./tools/update-pdf.sh` completes with Tectonic. The delivered PDF has
+  38 pages and one Supplement beginning on page 33. All-page extracted text
+  bounds and internal destinations pass; revised power/resource pages 19
+  and 21 were rendered and inspected. No TeX error, unresolved reference or
+  overfull box was found. One inherited `inputenc` compatibility warning
+  remains. No pdfLaTeX-specific output-marker pass or accessibility
+  acceptance is claimed.
+* Checked PDF SHA-256:
+  `6f822964e6031d9f14c05c8a94b3f26353af440e8e6851e5441082a1ff827dc4`.
+  The original review copy matches its independently written JSON at
+  `e4107b4847b1918f4f1b91d46ab56f3dd62a328d50a64a726d0001ab273fbc63`.
+  New review links and heading fragments resolve; tracked/untracked
+  whitespace checks pass.
+* The focused repository gate, independent exact-head correction assessment
+  and hosted checks follow the committed candidate. Their receipts and
+  verdicts are publication evidence to be recorded with the replacement PR,
+  not passes inferred by this pre-commit record. Collection and scientific
+  approval remain separately blocked by the decisions above.
+
+## Prospective Allocation Revision 2 November
+
+Work execution is complete for the requested manuscript allocation revision
+and compiled PDF. Assessment consists of scoped assisted numerical, structural
+and rendering checks, not independent scientific review or collection approval.
+The title, three selected models, A/B/C/D/E proposal, false results switch,
+original v4 prompt and historical disclosures remain unchanged.
+
+### Selection and Power
+
+The [protocol](./experiment-protocol.tex) now offers 12 (default), 21 or 33
+independent repository trajectories per model per arm. The researcher records
+the choice and rationale, assumed SD, power/precision trade-off, date and
+source-bound saved configuration before study collection. The selected
+allocation is immutable on resume. Outcome-driven resizing, additions,
+replacements and automatic budget-driven sample reductions are prohibited.
+Features, tests and agent sessions are not independent replicates.
+
+Python's standard-library NormalDist reproduces the existing approximation
+for three equally weighted models, a ten-percentage-point B-D contrast,
+two-sided alpha .05 and target power .80:
+
+| Assumed within-cell SD, percentage points | Unrounded planning minimum | Ceiling per model per arm |
+| ----------------------------------------: | --------------------------: | -------------------------: |
+|                                       15 |                11.77331960 |                        12 |
+|                                       20 |                20.93034596 |                        21 |
+|                                       25 |                32.70366556 |                        33 |
+
+These are conditional planning assumptions, not measured variances or
+interchangeable guarantees. With SD 25 and n=12, the same normal model gives
+approximately 0.396438 power, not .80. This is a hypothetical sensitivity
+calculation, not observed power. Worst-case bounded-score SD 50 requires 131
+per cell under that approximation, outside the offered choices. Scheduling
+blocks still need reconciliation with the independent-trajectory planning
+variance and within-model/arm bootstrap before the new freeze.
+
+### Schedules and Resource Audit
+
+Read-only inspection of the earlier
+[candidate protocol](https://github.com/jmservera/ama-thought-mve/blob/7c3802d1f010bb03e9005e89b51abf730c15b776/protocol/pilot-estimation.json)
+and its README confirms the proposed arm schedules, 45-minute/300-credit
+CR1 in every arm, excluded calibration without CR1, and aggregate controls.
+Its fixed-33 allocation is an earlier proposal, not the selection adopted here.
+
+For each study trajectory, A/D have eleven sessions and B/C/E twenty-one.
+A has 5.75 maximum hours and 3,300 nominal credits; B/C/D/E have 8.25 hours
+and 6,300 credits. Multiplying each arm by three models and selected n gives
+`15*n` trajectories, `255*n` sessions, `116.25*n` maximum hours and
+`85500*n` nominal session credits. Exact Fraction arithmetic independently
+reproduces these coefficients.
+
+Calibration retains one ten-feature trajectory per model per arm, no CR1:
+15 trajectories, 240 sessions, 105 hours and 81,000 nominal credits.
+The protocol table now presents all three choices, with the default column
+bold. All 39 numerical cells match the independent calculation. Default 12
+gives 180 study trajectories, 3,060 study sessions, 3,300 sessions including
+calibration, 1,500 maximum hours including calibration and 1,107,000 summed
+nominal credits. The package README presents all three summary scenarios too.
+The two allocation-bearing figures and their authoring script now show the
+selectable allocation, default 180 study trajectories, shared CR1 selection
+and A/B/C-only implementation boundary. Native SVG/PNG exports and their
+source/export hashes were refreshed; historical figures remain in Git.
+
+Nominal session sums do not enlarge the actual 300,000-credit aggregate
+envelope or 270,000-credit local admission ceiling. The inspected older
+candidate records 21.79019 known prior credits and a distinct 1,200-credit
+unknown-usage hold; those are historical ledger entries, not newly reconciled
+billing or free headroom. The manuscript preserves prior spending,
+unknown-usage holds, all-attempt accounting and full-selected-allocation
+affordability/deadline gates. Infeasibility halts collection; it does not
+silently change n. A different allocation needs a separately authorized
+prospective amendment and new saved study. An interrupted or unaffordable
+study remains incomplete at its original selected allocation.
+
+### Implementation and Evidence Limits
+
+The owner supplies the current MVE capability: `--replicates` accepts
+12/21/33, defaults to 12 and preserves an immutable saved selection, but
+only A/B/C are implemented. The paper retains all five arms, so D/E
+implementation and qualification remain required before its primary B-D
+study can run. This revision corrects the earlier five-arm implementation
+wording without deleting its dated record.
+
+Read-only inspection found the public default at `03c50856`, the earlier
+five-arm proposal at `7c3802d1`, and the local default checkout at `1fee4535`.
+These inspected versions do not source-bind the newer selector update;
+its capability remains owner-supplied, not independently exercised or
+certified by this paper revision. The earlier candidate's runtime claims
+are not treated as evidence that the owner's current A/B/C implementation
+includes D/E. No MVE source, saved study or dataset was modified or used.
+No study, smoke, calibration, model session, OSF action or freeze change
+was launched. These changes are not part of the published v4 freeze.
+
+### Focused Validation
+
+* All 34 existing paper-authoring tests pass. Active Supplement hashes and
+  the literal frozen prompt remain unchanged. The two revised native figures
+  pass overflow checks and all nine figure/integration tests; their refreshed
+  SVG/PNG bindings pass, and both exports were visually inspected.
+* The structural checker passes with 94 cited entries, 105 reusable entries,
+  a 1,707-character normalized abstract and a false results switch. The
+  historical body-word baseline is unavailable, not reconstructed.
+* Independent arithmetic checks pass for every resource-table cell and the
+  three sample-size rows. No measured variance or study result is inferred.
+* Tectonic compiles the 38-page PDF; the Supplement starts on page 33.
+  Direct log/PDF checks find no TeX errors, unresolved references, overfull
+  boxes, blank extracted pages or out-of-page words. The power and resource
+  table pages 19 and 20 were rendered and visually inspected. One inherited
+  inputenc compatibility warning remains. No pdfLaTeX-specific output-marker
+  check is represented as passing under Tectonic.
+* The required focused repository gate was attempted with `--changed`, an
+  explicit base and external output after fetching `origin/main` at
+  `a56df549`. It stopped with `Candidate has tracked modifications or
+  untracked inputs`. No gate test groups ran or passing receipt was produced.
+  No commit, stash, exclusion, branch change or remote write bypassed that
+  precondition.
+
+Remaining alignment gates are a source-bound selector update and D/E
+implementation, resolution of scheduling-block dependence, a new exact-source
+review/freeze and prospective OSF amendment, full-allocation affordability
+and deadline evidence, collection authorization, and the clean-candidate
+repository gate. No independent review, hosted approval or publication
+readiness is claimed.
 
 ## Author Review Disposition 1 November
 

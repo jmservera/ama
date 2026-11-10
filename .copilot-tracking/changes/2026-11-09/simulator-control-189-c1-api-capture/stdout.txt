@@ -1,0 +1,196 @@
+PASS double: every table is a labelled focusable region with a caption
+PASS double: Tab reaches every table region: 2 of 2
+PASS double: every table is a labelled focusable region with a caption
+PASS double: every table is a labelled focusable region with a caption
+PASS double: every table is a labelled focusable region with a caption
+PASS double: Tab reaches every table region: 1 of 1
+auth flow: account-picker-started
+auth flow: account-picker-started
+auth flow: sign-in-started
+auth flow: sign-in-started
+auth flow: sign-in-started
+auth flow: sign-in-started
+auth flow: sign-in-started
+auth flow: sign-in-started
+auth flow: sign-in-started
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth flow: workbench-entered
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth flow: workbench-entered
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth flow: workbench-entered
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth flow: sign-out-requested
+auth flow: account-switch-requested
+auth denied: no aad principal: None
+auth flow: sign-in-started
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth denied: no aad principal: None
+auth denied: need one mapped staff role or the application admin role: ['agent']
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.RuleAuthor']
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.LiaisonOfficer', 'ZavaForward.ProgrammeManager', 'ZavaForward.RuleAuthor']
+auth denied: need exactly one valid object id: None
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.ApplicationAdmin', 'ZavaForward.Coordinator', 'ZavaForward.ProgrammeManager']
+auth denied: need exactly one valid object id: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: google
+auth denied: tenant mismatch: ['99999999-2222-3333-4444-555555555555']
+auth denied: tenant mismatch: []
+auth denied: need one mapped staff role or the application admin role: []
+auth denied: need one mapped staff role or the application admin role: ['Unmapped.Role']
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.RuleAuthor']
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.LiaisonOfficer', 'ZavaForward.ProgrammeManager']
+auth denied: need exactly one valid object id: None
+auth denied: need exactly one valid object id: None
+auth denied: no aad principal: None
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.RegulatoryChat']
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.RuleAuthor']
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.RuleOwner']
+auth denied: tenant mismatch: []
+auth denied: tenant mismatch: ['99999999-2222-3333-4444-555555555555']
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth denied: no aad principal: None
+auth flow: sign-out-requested
+auth denied: no aad principal: None
+auth denied: need one mapped staff role or the application admin role: []
+auth denied: need one mapped staff role or the application admin role: ['Unmapped.Role']
+auth denied: tenant mismatch: ['99999999-2222-3333-4444-555555555555']
+auth denied: need exactly one valid object id: None
+auth denied: need exactly one valid object id: None
+auth flow: sign-out-requested
+auth denied: no aad principal: None
+auth denied: need one mapped staff role or the application admin role: []
+auth denied: need one mapped staff role or the application admin role: ['Unmapped.Role']
+auth denied: tenant mismatch: ['99999999-2222-3333-4444-555555555555']
+auth denied: need exactly one valid object id: None
+auth denied: need exactly one valid object id: None
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+auth flow: workbench-entered
+{
+  "intact": true,
+  "entries": 1,
+  "head": "ba451f14eedd8fa036d11dd4ef9d10725189d50f9dcf6713dc06299062ce8952",
+  "problem": null,
+  "digests_checked": 0,
+  "digest_mismatches": []
+}
+digest written: /tmp/tmpj9v3fek5/digests/digest-0000000001.json
+{
+  "intact": true,
+  "entries": 1,
+  "head": "ba451f14eedd8fa036d11dd4ef9d10725189d50f9dcf6713dc06299062ce8952",
+  "problem": null,
+  "digests_checked": 1,
+  "digest_mismatches": []
+}
+{"approval_reference": "ref-1", "cohort_size": 2, "enabled": true, "expires_at": "2026-11-10T10:00:00Z", "homes": ["HOME-000", "HOME-001"], "owner": "demo owner", "state": "send", "version": "live-sim-control-v1"}
+{"approval_reference": "ref-1", "cohort_size": 2, "enabled": false, "expires_at": "2026-11-10T10:00:00Z", "homes": ["HOME-000", "HOME-001"], "owner": "demo owner", "state": "stopped", "version": "live-sim-control-v1"}
+{"approval_reference": "ref-1", "cohort_size": 2, "enabled": false, "expires_at": "2026-11-10T10:00:00Z", "homes": ["HOME-000", "HOME-001"], "owner": "demo owner", "state": "stopped", "version": "live-sim-control-v1"}
+receipts=3
+
+[timing] filtered paged list, 60,000 in-memory cases: 68 ms (12252 matches)
+[timing] map clusters, 60,000 cases: 673 ms
+PASS sign out retains the original session cookie
+PASS retained signed-out token cannot authenticate
+PASS sign out retains the original session cookie
+PASS retained signed-out token cannot authenticate
+PASS signed-out session status succeeds
+PASS sign out retains the original session cookie
+PASS retained signed-out token cannot authenticate
+PASS signed-out session status succeeds
+PASS sign out retains the original session cookie
+PASS retained signed-out token cannot authenticate
+PASS signed-out session status succeeds
+PASS sign out retains the original session cookie
+PASS retained signed-out token cannot authenticate
+PASS signed-out session status succeeds
+PASS sign out retains the original session cookie
+PASS retained signed-out token cannot authenticate
+PASS signed-out session status succeeds
+PASS sign out retains the original session cookie
+PASS sign out retains the original session cookie
+PASS sign out retains the original session cookie
+PASS sign out retains the original session cookie
+PASS retained signed-out token cannot authenticate
+PASS signed-out session status succeeds
+PASS session reports signed out without an active session ID
+{"passed": false, "refused": "[Errno 2] No such file or directory: '/tmp/tmp9s6n8f8o/absent.csv'"}
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: no aad principal: None
+auth denied: tenant mismatch: ['99999999-2222-3333-4444-555555555555']
+auth denied: tenant mismatch: ['99999999-2222-3333-4444-555555555555']
+auth denied: tenant mismatch: ['99999999-2222-3333-4444-555555555555']
+auth denied: need exactly one valid object id: None
+auth denied: need exactly one valid object id: None
+auth denied: need exactly one valid object id: None
+auth denied: tenant mismatch: []
+auth denied: tenant mismatch: []
+auth denied: tenant mismatch: []
+auth denied: no aad principal: saml
+auth denied: no aad principal: saml
+auth denied: no aad principal: saml
+auth denied: a contractor cannot hold the application administrator role: None
+auth denied: a contractor cannot hold the application administrator role: None
+auth denied: a contractor cannot hold the application administrator role: None
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.Nope']
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.Nope']
+auth denied: need one mapped staff role or the application admin role: ['ZavaForward.Nope']
+{"approval_reference": "ref", "cohort_size": 1, "enabled": true, "expires_at": "2026-11-10T10:00:00Z", "homes": ["HOME-001"], "owner": "cli owner", "state": "send", "version": "live-sim-control-v1"}

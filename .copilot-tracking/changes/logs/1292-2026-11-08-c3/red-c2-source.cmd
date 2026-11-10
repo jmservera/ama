@@ -1,0 +1,1 @@
+python3 -m unittest test_priority_order.SqliteC3Corrections test_priority_order.LoopbackGuard test_priority_order.SqlitePriorityOrder test_priority_order.SqliteLegacyEdges -q  (source tree = HEAD f8e9ea7da, new tests)

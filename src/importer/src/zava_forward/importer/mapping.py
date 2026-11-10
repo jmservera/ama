@@ -189,6 +189,15 @@ def build_preview(
     return prev
 
 
+def preview_bytes(source_name: str, data: bytes, structure: Structure = CASE_LIST) -> Preview:
+    """Scan, hash and preview workbook bytes already read; nothing is read from disk."""
+    digest = hashlib.sha256(data).hexdigest()
+    verdict, detail = LocalSignatureScanner().scan("import", digest[:12], source_name, data, "")
+    if verdict != "clean":
+        raise WorkbookError(f"file did not pass the content scan: {verdict} ({detail})")
+    return build_preview(structure, source_name, digest, read_workbook(data))
+
+
 def preview_file(path: Path, structure: Structure = CASE_LIST) -> tuple[Preview, bytes]:
     """Scan, hash and preview a workbook; the source is read once and never written."""
     before = path.stat()
@@ -196,11 +205,7 @@ def preview_file(path: Path, structure: Structure = CASE_LIST) -> tuple[Preview,
         raise WorkbookError("file is too large")
     with path.open("rb") as handle:
         data = handle.read()
-    digest = hashlib.sha256(data).hexdigest()
-    verdict, detail = LocalSignatureScanner().scan("import", digest[:12], path.name, data, "")
-    if verdict != "clean":
-        raise WorkbookError(f"file did not pass the content scan: {verdict} ({detail})")
-    prev = build_preview(structure, path.name, digest, read_workbook(data))
+    prev = preview_bytes(path.name, data, structure)
     after = path.stat()
     if (after.st_size, after.st_mtime_ns) != (before.st_size, before.st_mtime_ns):
         raise WorkbookError("the source file changed while it was being read")

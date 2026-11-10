@@ -13,8 +13,9 @@ import os
 import re
 from contextlib import contextmanager
 from copy import deepcopy
+from typing import Any
 
-from . import change_provenance, rai_release
+from . import change_provenance, gates, rai_release
 from .stock import decision_scope
 from .workflows import MANAGER_ROLES, _now
 from .resident_decisions import require_context, resident_gate
@@ -48,10 +49,38 @@ def policy_fingerprint() -> str:
     return rai_release.digest([CHECKLISTS, _KEYWORDS])
 
 
+def checklist_rows() -> list[dict[str, Any]]:
+    """One row per check, in the order the quality form shows them; the same lists as the checklists endpoint."""
+    return [dict(measure=name, version=lst["version"], step=n, check=label)
+            for name, lst in CHECKLISTS.items() for n, label in enumerate(lst["items"], 1)]
+
+
 def checklist_for(measure):
     low = (measure or "").lower()
     key = next((name for word, name in _KEYWORDS if word in low), "General")
     return dict(CHECKLISTS[key], name=key)
+
+
+QUALITY_OWNER = "Quality Inspector"
+
+
+def evidence_gaps(rec):
+    """Checklist items without evidence, or None when the stored items cannot be read."""
+    items = rec.get("items")
+    if not isinstance(items, list) or not all(isinstance(i, dict) and isinstance(i.get("label"), str) for i in items):
+        return None
+    name = rec.get("checklist")
+    if name is not None and not isinstance(name, str):
+        return None
+    if name not in CHECKLISTS and rec.get("measure") is not None and not isinstance(rec["measure"], str):
+        return None
+    have = {i["label"]: isinstance(i.get("evidence"), str) and bool(i["evidence"].strip()) for i in items}
+    required = CHECKLISTS.get(name) or checklist_for(rec.get("measure"))
+    return [lab for lab in required["items"] if not have.get(lab)]
+
+
+def quality_evidence_gate(rec):
+    return gates.quality_gate(evidence_gaps(rec), QUALITY_OWNER)
 
 
 def handover_blockers(c):
@@ -62,11 +91,9 @@ def handover_blockers(c):
         if rec.get("state") not in (ACCEPTED, HANDED):
             continue
         measure, why = rec.get("measure"), []
-        have = {i.get("label"): _clean(i.get("evidence")) for i in rec.get("items") or []}
-        required = CHECKLISTS.get(rec.get("checklist")) or checklist_for(measure)
-        gaps = [lab for lab in required["items"] if not have.get(lab)]
-        if gaps:
-            why.append("Checks without evidence: " + "; ".join(gaps) + ".")
+        evidence = quality_evidence_gate(rec)
+        if not evidence.passed:
+            why.append(evidence.reason)
         if rec["state"] == ACCEPTED:
             if held:
                 why.append("Retrofit work is stopped for safety review.")
@@ -231,8 +258,13 @@ class QualityMixin:
             if measure not in self._measures(c):
                 raise ValueError("Choose one of this case's measures.")
             previous = [(i, r) for i, r in enumerate(self._quality(c)) if r["measure"] == measure]
-            if any(r["state"] not in (ACCEPTED, HANDED, SUPERSEDED) for _, r in previous):
-                raise ValueError("This measure already has a quality record in progress.")
+            in_progress = [r for _, r in previous if r["state"] not in (ACCEPTED, HANDED, SUPERSEDED)]
+            if in_progress:
+                # Owner decision 2026-11-05: only corrupted stored evidence may be replaced, by a quality role.
+                corrupted = all(evidence_gaps(r) != [] for r in in_progress)
+                if not corrupted:
+                    raise ValueError("This measure already has a quality record in progress.")
+                self._need_quality_role(user, "replace corrupted quality evidence")
             cl = checklist_for(measure)
             items = items if isinstance(items, dict) else {}
             missing = [lab for lab in cl["items"] if not _clean(items.get(lab), 200)]
@@ -279,6 +311,7 @@ class QualityMixin:
             self.require_resident_clear(c, [rec["resident_binding"]] if rec.get("resident_binding") else [])
             if rec["state"] not in (SUBMITTED, FIXED):
                 raise ValueError(f"This work is '{rec['state']}'. It can only be accepted after it is submitted or reinspected.")
+            self.require_quality_evidence(rec)
             self._independent(rec, user, "accept this work")
             if rec["state"] == FIXED and not _clean((rec.get("defect") or {}).get("remediation_evidence")):
                 raise ValueError("Remediation evidence is missing. Record the correction evidence before independent reinspection.")
@@ -339,6 +372,8 @@ class QualityMixin:
             self.require_safety_clear(c)
             rec = self._qrec(c, idx)
             self.require_resident_clear(c, [rec["resident_binding"]] if rec.get("resident_binding") else [])
+            if rec["state"] == ACCEPTED:
+                self.require_quality_evidence(rec)
             self._qmove(c, rec, HANDED, user, note)
             rec["handover"] = dict(by=user["name"], at=rec["history"][-1]["at"], note=note, resident_told=True)
             self.audit(user["email"], "quality_handover", case_id, f"{rec['measure']} handed over to resident. {note}")

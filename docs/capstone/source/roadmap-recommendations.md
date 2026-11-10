@@ -78,7 +78,7 @@ not selected for this baseline does not mean universally inferior.
 | Separate queue workers / Service Bus: defer topology until needed | Isolation, long-running work or stronger recovery | Existing maintenance/CLI jobs are not five autonomous workers. Prove an operating requirement, idempotency, poison handling and ownership | [ADR 0001](../../adrs/0001-azure-architecture.md), [orchestrator guide](../../../src/orchestrator/README.md) |
 | AI Search / Content Understanding / Spark or learned forecasts: scoped alternatives | Better retrieval or justified transformation/model capability | Retrieval/scale failure and evaluation must justify adoption. Content Understanding is not now; synthetic history cannot validate a housing predictor | [ADR 0001](../../adrs/0001-azure-architecture.md), [Fabric assessment](../../reference/research/microsoft-fabric-fit-assessment.md) |
 | Jev/Kev, other hosting or platform substitutions: contingencies | Potential portability, processing-location or task economics fit | Fresh provider/control/whole-life appraisal needed. Do not present PostgreSQL, AKS, Cosmos, low-code or a bought product as inevitable maturity stages | [Model alternatives](../../ideas/typesafe-system-one-agent-fit.md), [decision register](./README.md#technology-decisions) |
-| Delivery consolidation experiment: separate paused research | Potentially stronger feedback in agent-assisted development | Registration, controlled execution and results needed. Not a customer platform capability or proof of a product benefit | [Current delivery-learning story](../pitch/speaker-script.md) |
+| Delivery consolidation experiment: exploratory pilot underway | Test whether consolidation preserves useful inherited software | OSF base registered according to the owner; current amendments unregistered/exploratory, with coauthor execution and three implementation epochs. No experimental outcome results reported; not a customer platform capability or proof of benefit | [Current paper status](../thought-leadership/everything-but-the-software/README.md), [delivery-learning story](../pitch/speaker-script.md) |
 
 ## Review Crosswalk
 
@@ -112,7 +112,7 @@ are dispositions, not a commitment to implement every option.
 | Platform substitutions | Same contingency row; no inevitable AKS/Cosmos/PostgreSQL/Fabric-SQL migration |
 | Production / pilot readiness | Required-readiness section, not optional future capability |
 | Operations / full AI cost controls | Required-readiness and monitoring gap matrix; no hard-stop claim from alerts |
-| Delivery consolidation experiment | Separate paused-research row and shortened page-22 lesson, not product scope |
+| Delivery consolidation experiment | Separate ongoing exploratory research row and page-22 coauthor/status update; not product scope or new outcome evidence |
 
 ## Future History And Agent Context
 
