@@ -1334,3 +1334,30 @@ af7b, 27dab and 1fab observations stay historical, the non-blocking #1360 stays 
 served-browser, named-role, hosted exact-commit and human approval gates stay unmet; #73, #135 and #440 stay open.
 An independent-review qualification (C5, 2026-11-10) states that only Importer typing ran (Core typing was not run) and
 that the retained `E0` is a tailed summary with an author-attributed cause.
+
+A nomination and UX integration wave checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#nomination-and-ux-integration-wave-checkpoint-2026-11-10-refs-440-130-149-153-156-1360-1362).
+It pins `main` `65c2ab9d9` after PR 1381 and PR 1376, consumes two Root local runs on source-equal predicted trees
+(tree differences only in the rubric score file), and traces the read-only nomination view against BRD, PRD and ADR
+statuses without approving any. Azure observed is none; hosted exact-commit CI, assistive-technology, human, HVE and
+whole-epic gates stay unmet. It is separate from the CSV-learning record; #130, #149, #440, #1360, #1362, #1383 and
+#1384 stay open.
+
+A Bicep public-simulation current-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#bicep-public-simulation-current-main-checkpoint-2026-11-10-refs-440-136-1288).
+It pins `main` `0a6dc0b3f` after PR 1380, consumes Root local runs and a later image admission on a source-equal
+auxiliary composition (tree difference only in the rubric score file), and traces the default-off, guarded,
+one-replica, volatile opt-in lane against document statuses without approving any. Azure observed is none; the three
+baseline policy typing errors stay unwaived; whole #136, #1288 and #440, live SQL, authentication, resident, model,
+human and HVE gates stay unmet. The nomination and UX section stays historical and unchanged.
+
+A Registry wave current-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#registry-wave-current-main-checkpoint-2026-11-10-refs-440-185-110-109-184-111-1288).
+It pins `main` `6cc59776` (tree `eaf44bcd`) after PR 1393, reads the bounded keyless Azure IoT Hub identity-registry
+adapter by read-only git at that pin, and carries forward the Root local runs on the reviewed candidate with
+component-subtree equivalence only. Azure observed is none; actual device issuance, credential owner, secure storage,
+teardown and live Hub, SQL, UI and model acceptance stay unproved; no Draft, in-review or proposed document, human or
+HVE gate is approved. The declared parent (PR 1396) has since merged as `main` `eff05737`; this record keeps `6cc59776` as its
+historical pin, notes equal `src`, `infra` and `tools` subtree ids on `eff05737`, and is a main-target candidate after an ordinary
+merge. It is separate from the nomination and UX, Bicep and CSV-learning records;
+#185, #110, #109, #184, #111 and #1288 stay open.

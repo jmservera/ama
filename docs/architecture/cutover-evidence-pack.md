@@ -6364,3 +6364,211 @@ Evidence classes. Local observed: every M row on synthetic loopback data. Parent
 ### Recommendation
 
 CONTINUE. The merged tree integrates both histories without conflict and the focused local set passes with the parent baseline reproduced unchanged. No fix or pivot is indicated by this evidence. Publication stays blocked behind independent exact-head assessment of the final head and applicable hosted checks. Any change after this record (including a later main or rubric commit) restarts the comparison of the subtree identities above. No approval, deferral, requirement relaxation or issue closure is proposed or inferred.
+
+## Nomination and UX integration wave checkpoint (2026-11-10, Refs #440 #130 #149 #153 #156 #1360 #1362)
+
+Draft, local-only, not approved. This is a new recurring observation and documentation checkpoint after PR 1381 and PR 1376 reached `main`. It is not the old #440 C6 and spends no source repair budget; it makes no source fix and opens no issue. It is the focused documentation tier: no full or `--changed` gate, no heavy, SQL, image, model, cloud or private-data run, and no command was run by this task. It neither includes nor republishes the separate #440 CSV-learning record, whose frozen independent review is unchanged; this section, its index paragraph and its log entry are owned only by this record. Records: [research](../../.copilot-tracking/research/2026-11-10-nom-ux-retry-440-1110-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-nom-ux-retry-440-1110-plan.md), [details](../../.copilot-tracking/details/2026-11-10-nom-ux-retry-440-1110-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-nom-ux-retry-440-1110-plan-critique.md), [changes](../../.copilot-tracking/changes/2026-11-10-nom-ux-retry-440-1110-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-nom-ux-retry-440-1110-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/issue-440-nom-ux-retry-1110-state.json).
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-10) |
+| --- | --- |
+| Pinned source | `origin/main` `65c2ab9d947d1498dafd37e24a377d1ff503e86f`, tree `520d12561000e9dc596ed0b03f9f862a9240b32f`, equal to the worktree head at launch. Subtrees `src` `70d956b06f31`, `infra` `d94040329d54`, `tools` `432a4e8f7d74`. Branch `docs/demo-nomination-ux-checkpoint-440-1110` |
+| Later main | A fetch during the task shows `83503b74e0e5f555382436c0ae27f64cd200971f` (tree `696c4acbe2ee`), a `github-actions[bot]` rubric commit whose only changed path against the pin is `.github/rubric/scores/latest.json`; `src`, `infra` and `tools` subtree ids are the same as at the pin. It is not merged here and no full-tree equality with the pin is claimed |
+| Nomination wave | PR 1381 (`Refs #130 #81`, published head `210161bdc1779953c349049565312d6983e160fb`) merged 12:58:55Z as `0376606dc97a14ebd0cbc81bb8fe136e836a3d1b`, tree `0368d5e6689cb58be2606d255b7d20bd9e5d6011` |
+| UX wave | PR 1376 (`Refs #149 #440 #233 #231 #230 #153 #156 #152`, head `621f29d29b363dfd25729079180bb33f94ba0b20`) merged 13:02:24Z as the pin `65c2ab9d9`. Child PR 1382 merged earlier (12:20:13Z) into the parent branch as `621f29d29`, not into `main` |
+| Hosted checks | Each PR head showed 19 reported checks all SUCCESS (18 check runs and the `rubric/score` status), no closing reference. That is PR-head metadata. Commit-scoped runs read for `65c2ab9d9` were only 7 (one still in progress, the rest skipped or the agent activation set), so no Source projects CI result is claimed for the exact main commit |
+| Product blobs at the pin | `app.js` `c735acad6350`, `panels.js` `5f37f2a71b4a`, `style.css` `32234917f66e`, `test_nomination_screen.py` `4d0481a27961`, `nomination_browser_check.py` `81cafcb4d434`, `workbench_browser_check.py` `0fbe0be3b0c3`, `src/api/README.md` `b117333c3e1d`, `scenario-manifest.json` `e6624d6d0c71` |
+| Documents (blob at pin) | BRD 0.21.0 `draft` `34d88395de86` (FR-037, AC-065, RULE-005); PRD Zava Forward 0.21.0 `in-review` `c788b917bafa`; PRD Proper Warm 0.13.0 `in-review` `f7f9b7675e60`; ADR-0006 source layout `956da1a3b804`; ADR-0007 Proposed `abb21088a9bb`; this pack before the section `5f223b53b7ed`, index `28b3ec408855`, log `058338f4903c`. Draft, in-review and proposed are not approval and none changes here |
+| Issue states (read live) | #130, #149, #156, #440, #1360, #1362, #1383 and #1384 OPEN; nothing is ticked or closed by this record |
+| Excluded | Unmerged 136 and 175 Bicep; the #89 aftercare parent and its child #133 (merged into the parent, not `main`); held #132 and contractor identities; the #1384 checker fix; the old C6 and the CSV-learning record; any live, Azure, model, resident or professional step; whole-demo, whole-130, whole-149 or whole-440 acceptance |
+
+### Consumed evidence (Root local runs, not re-run here)
+
+Both Root runs used source-qualified local predictions, made before the merges, and an owned environment. The raw logs, versions and `SHA256SUMS` are in the Root session folder, not in the repository. Neither is a GitHub merge preview, an observation on `65c2ab9d9` or an Azure run.
+
+| Record | Tested composition | Result as retained |
+| --- | --- | --- |
+| Nomination only (`handoff-130-current-main-caaf-1240`) | local merge of the published head `210161bd` into the then-main `caaf98914`, tree `36b16ae74700e3745e180106aed1931a2cf7352e`, equal to the `git merge-tree` prediction | API 11 selectors 120 OK with 1 skip, simulator admin 30, Core learning 21, Agents paired-command 21, API ruff, format (137 files) and mypy (217 files), `node --check` of the web scripts; the nomination and challenge browser checks passed with 3 nomination axe scans, zero violations, zero incomplete, and no non-GET request while viewing (six GET paths listed) |
+| UX combined (`handoff-149-combined-verification-1230`) | parent `621f29d29` plus nomination `210161bd` plus `caaf98914`, tree `bb90e4d3ef9123696117523d7c47261f17968365`, `src` `70d956b06f31cabfd8321b4ee9c203ae8b21d89c` | API unit 379 run with 16 skips, nomination and resident API 25 with 1 skip, Core 88 with 7 opt-in SQL skips, Core integrity 35, six static runs exit 0, one non-queued heavy-lock acquisition; browser: handoff 9, role variants 47, 70, 36, 36, 47 and 46, atlas 362, paging 89, Held 31, workbench 124, progress 58, nomination three scans |
+
+* Tree equivalence (Root proofs, read and not recomputed here): the actual main tree `520d1256...` differs from the tested UX tree `bb90e4d3...` only at `.github/rubric/scores/latest.json`, with equal `src` ids `70d956b0...`; the actual nomination-main tree `0368d5e6...` differs from the tested `36b16ae7...` only at the same file, with equal `src` `e1b868d2...` and `infra` `d9404032...`. This is current-metadata and tree equivalence for the source, not a rerun on the pin.
+* Axe ran only in the named selectors: role variants 230, 231, 231q, 231p and 231qp, the progress states, and the nomination scans. Default roles, atlas, paging, Held and workbench ran no axe. Screen reader and human acceptance are "Not run" in the nomination output.
+* The split of the 21 role-width observations into 15 empty-queue (five roles) and 6 populated-queue (two roles) observations was not independently re-derived by Root or by this task. The passing nomination browser output still contains law-store-unavailable tracebacks, assistants 503 and client-disconnect lines, so no zero-server-error claim is made.
+* Independent records (Root): the UX combined review is approve_with_comments with zero new findings, the inherited Mediums #1362 and #1360 and the #156 M1 proposal still unapproved, with a fresh-guideline addendum; the nomination-only review is approve with zero new findings and the known Low heading hierarchy (h2 to h4 in `panels.js`, lines 326, 353, 369 and 385) OPEN. The fresh rules retrieval `web-interface-guidelines-fresh-1257.md` has SHA-256 `d246b026f4f29b5823a9cc857f9edf3d2507002e055e32040cadeaf3b38e0234`, re-hashed here and equal. No complete conformance, assistive-technology, WCAG or human content acceptance is claimed.
+
+### Requirement trace (document-qualified)
+
+| Contract | Source (document, blob at pin) | Observation | Class |
+| --- | --- | --- | --- |
+| Nomination and self-referral keep the original account with correctable identity, each with a named human owner; unknown is never "none"; a correction does not change priority automatically (FR-037, AC-065, RULE-005) | BRD `34d88395de86` (draft); PRD `c788b917bafa` (in-review); #130 body | The read-only `nominationPanel` in `panels.js` shows original and corrected accounts separately, "Not recorded" or "Unknown" for missing values, the named owner and review state by version, and states it does not contact a resident, decide eligibility, change priority or assign an owner | Static read of source at the pin plus Root local observation on a constructed synthetic fixture. Document status unchanged; #130 criteria 2 to 4 and 5 stay open |
+| Read-only, no non-GET | #130 scope | The Root nomination browser run recorded zero non-GET requests while viewing; monitoring starts after the initial navigation and ends before the current-review navigation | Local observed on the predicted tree; scoped, not whole-system |
+| Manual and non-AI route | PRD and BRD staffed-route text | The "Staffed non-digital route" and acknowledgement fields come from server record fields only; acknowledgement reads "Delivery unverified" and no assistant call renders them. The record states a recorded review is a staff record, not an approval or eligibility decision | Static read plus local observed; no staffed delivery or human approval observed |
+| Roles and denial | PRD role text | `nominationPanel` returns nothing for a role without the fields and shows "No nomination or self-referral is recorded for this home." for an authorised empty list; unit test `test_authorised_empty_and_role_denied_differ` | Local observed on constructed fixtures; real role nominations are not observed |
+| Resident and handoff read paths | #153 and PR 1376 scope | The disjoint `app.js` hunks (handoff read guidance and the Resident tab) compose; handoff browser 9 OK | Local observed on the predicted tree |
+| Paging, empty and negative cases | #230, #231, #233, #152 scope | Paging 89, Held 31, workbench 124 (hidden-explanation and vertical-clipping constructed negatives) and progress 58 passed | Local observed; #156 M1 empty-page versus empty-set ambiguity stays an unapproved proposal |
+| Source layout | ADR-0006 | No dependency-rule failure in the Core selections | Local observed |
+
+### Evidence classes
+
+* Local observed: only the Root runs above on the two predicted trees.
+* Historic source-qualified: those runs, because the tested trees are not the pin; the source subtree equality is current-metadata equivalence read from Root proofs.
+* Azure observed: NONE.
+* Implemented, unverified: the nomination view and UX coverage on the exact merge commit, SQL Server persistence for nomination records, a served browser run on `65c2ab9d9`, trusted role binding, staffed acknowledgement delivery.
+* Deferred or blocked: hosted CI for the exact main commit, device, screen reader and human acceptance, whole #130 criteria, the #156 M1 decision, the heading Low fix and any source correction. Their owners are named below.
+* Unknown: the exact count of source corrections left on the nomination work and the actual GitHub merge-preview trees.
+
+### Findings, owners and gates
+
+* No new defect, no new issue and no source fix. Existing owners checked before any new issue: #1362 (atlas version assertion false positive) and #1360 (served transfer message) remain open and unwaived; #156 M1 remains an unapproved proposal; the heading hierarchy Low has no separate issue (an open-issue search found none) and is recorded in the #130 independent record, not duplicated.
+* #1384 (workspace exhaustion checker alignment) stays with its owner. Root's ongoing diagnostic states current exhaustion proven for 4 and the missing-global case for 2, with the whole workspace browser check not green (delayed companion); this task did not reproduce it, and no whole-workspace acceptance follows. Its fix is excluded from this record.
+* #1383 (rubric scorer failed on `901fea60e`) is OPEN with no comments. A later overall SUCCESS alone does not prove incident recovery, and no closure is invented. Rubric-only commits on `main` do not change the product source.
+* Gates: the affected #89 UI-dependent publication and the whole epic gates remain awaiting Root consumption of this record. Whole #440 criteria 7 and 8, human and HVE approval stay unmet; no #132 or #133 budget is added; no requirement is relaxed.
+
+### Recommendation
+
+CONTINUE for this integration scope. The read-only nomination view and the UX coverage behave as retained on source-equal predicted trees, and no fix or pivot is indicated. Independent Bicep, backend and checker lanes may continue. Publication of this record needs independent exact-head assessment and applicable hosted checks; any later change restarts the subtree comparison. No approval, requirement relaxation or issue closure is proposed or inferred.
+
+### Process record and limits
+
+* First attempt (same task, slug `nomination-ux-main-440-1110`): the witness refused `plan-done` because of a missing comma in the worker's own state edit; `verify` exited 1; log sha256 `17a6744678fd59bc6a5bf98fb16bb3f393364e70b47d927a371966a6446b5466`. Its research, plan, details and critique are unchanged. The invalid state was archived byte-exact (sha256 `ee52a75c7c4ccc82a2e997807caeae9b910ac4291a5f74a009be1910ae81379e`) at `.copilot-tracking/evidence/2026-11-10-440-nom-ux-first-refusal/original-state.json.invalid`. The retry is the one Root-authorized operational retry of the same observation and is not healing of the first record.
+* The witness is a locally writable record, not host or model attestation; the model label is asserted. The critique and review of this retry are author-executed, not independent. No push, pull request or GitHub write was made.
+
+## Bicep public-simulation current-main checkpoint (2026-11-10, Refs #440 #136 #1288)
+
+Draft, local-only, not approved. This is a new recurring observation and documentation checkpoint after PR 1380 reached `main`. It is not a retry of the nomination and UX record above (which stays unchanged and historical at `65c2ab9d9`), not the old #440 C6, and spends no source repair budget; it makes no source fix and opens no issue. It is the focused documentation tier: no gate, `--changed`, test, image, SQL, browser, cloud, model, live or private-data run was made by this task. It neither includes nor republishes the separate #440 CSV-learning record, whose frozen independent review is unchanged. Records: [research](../../.copilot-tracking/research/2026-11-10-bicep-observation-440-1110-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-bicep-observation-440-1110-plan.md), [details](../../.copilot-tracking/details/2026-11-10-bicep-observation-440-1110-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-bicep-observation-440-1110-plan-critique.md), [changes](../../.copilot-tracking/changes/2026-11-10-bicep-observation-440-1110-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-bicep-observation-440-1110-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/issue-440-bicep-observation-1110-state.json).
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-10) |
+| --- | --- |
+| Pinned source | `origin/main` `0a6dc0b3f0b3ecf098536369a8308b02226b98b8`, tree `55e6b6a36b9e53378f2c0cc8d7172d307fd2b8e4`, read through read-only git. Subtrees `src` `70d956b06f31cabfd8321b4ee9c203ae8b21d89c`, `infra` `f7f31c0934cfe0bafb4505408706e55aa8ab61e7`, `tools` `432a4e8f7d74f26e88a55dd937c9c6f193016da9`. This topic branch stays on base `65c2ab9d9` by explicit choice, so the pin is observed, not merged here |
+| Trigger | PR 1380 (`Refs #136`, published head `1752260338f519a79cb427448bd7c45c34ae80ff`) merged 13:29:38Z as the pin; parent `83503b74e0e5f555382436c0ae27f64cd200971f` is a rubric bot commit. The diff from the parent is 54 files (1882 insertions, 8 deletions), `src` unchanged and no `docs/` change |
+| Hosted checks | 19 reported checks all SUCCESS and MERGEABLE on the published head before merge, as reported by Root and in the durable PR comment 6768612559. That is PR-head metadata, not a result for the merge commit |
+| Source blobs at the pin | `infra/main.bicep` `7074af59dbc8`, `infra/modules/guard.bicep` `f08d8b235078`, `infra/modules/containerapps.bicep` `da71bef970a9`, `infra/README.md` `b4a2a2c49a3d`, `infra/tests/test_bicep_policy.py` `751afd16a69c`, `infra/tests/test_public_simulation_startup.py` `c68c04cfcc8f`, `infra/tests/test_resident_demo_deploy.py` `77237ef15d76` |
+| Documents (blob at pin) | BRD 0.21.0 `draft` `34d88395de86`; PRD Zava Forward 0.21.0 `in-review` `c788b917bafa`; PRD Proper Warm 0.13.0 `in-review` `f7f9b7675e60`; ADR-0006 `956da1a3b804`; ADR-0007 Proposed `abb21088a9bb`; unchanged by PR 1380. Draft, in-review and proposed are not approval and none changes here |
+| Issue states (read live) | #136, #1288, #440, #89, #133, #132, #1384 and #1388 OPEN; nothing is ticked or closed. Number 1400 does not resolve to an issue or pull request |
+| Local aftercare candidate | The #89 aftercare candidate `c6c0e4d2590eab632238e45cfec0c009d15691e1` (`src` subtree `3ad519b53426`) is a local branch, not an ancestor of `origin/main` and not main. It awaits Root consumption of the nomination and UX gate and is only named here |
+| Excluded | The #89 aftercare parent and #133 as main content, held #132 and contractor identities, the #1384 and #1388 checker work, the old C6, the CSV-learning record, any deployment, Azure, live, model, resident or professional step, and whole #136, #1288 or #440 acceptance |
+
+### Consumed evidence (Root local runs, not re-run here)
+
+Both Root runs used a detached auxiliary composition and an owned environment. Their raw `.cmd`, `.out`, `.err` and `.exit` files are in the Root session folder, not in the repository. Neither is a GitHub merge preview, an observation on `0a6dc0b3f` or an Azure run.
+
+| Record | Tested composition | Result as retained |
+| --- | --- | --- |
+| Current-main verification (`handoff-136-current-main-verification-1314`) | local merge `b9bae9f2b51c67e2edc0fbe0d4ccdc7aaa856e63`, tree `fd357610b99e9c14461e6de9a50150fc9a9d9770`, the published head merged with then-main `65c2ab9d9` (equal to the `git merge-tree` prediction) | policy 60, container contract 7, resident demo 17, resident secrets 16, IoT Hub 23, API simulation 30, live control 34 and Core resident 41, all OK with exit 0; ruff check and format and resident-module mypy exit 0; six offline Bicep build and lint commands (main, guard, containerapps) exit 0 with upgrade warnings only |
+| Later image admission (`handoff-136-image-later-admission-1324`) | the same auxiliary head | one non-queued API image build exit 0, image id `sha256:38361713e1856ab6ae0b749b542ee0f99717e60fd55985b8445e7aa8eccd1d98` (the manifest-list identity, not the config digest); the four startup tests (fresh start and reuse, partial or corrupt pair untouched, slot crossing, unimportable lane module) `Ran 4`, OK, exit 0 |
+
+* Tree equivalence (Root proof `136-current-main-prediction-1332.json`, read here and checked against the actual tree id): main `83503b74e` plus the published head predicts tree `55e6b6a3...`, which differs from the tested auxiliary tree only at `.github/rubric/scores/latest.json`, with `src`, `infra` and `tools` subtree ids equal. The actual merged main tree equals that prediction. The API runtime `src` tree `70d956b0...` is unchanged by this infrastructure merge. This is current-metadata and tree equivalence for the source, not a rerun on the pin.
+* Adverse history retained: two earlier image attempts exited 1 because the shared heavy lock was busy (held by another worker's job) and are not relabeled; the old `d6d6` image is not current-composition proof. The supplemental mypy run over the policy and startup tests exits 1 with three known baseline errors in `test_bicep_policy.py` (lines 2023, 2024, 2047) and is unwaived, so there is no all-infrastructure typing or all-process pass claim. The published-head review chronology (C1 to C5 adverse and chronology qualifications) is unchanged and not healed.
+* Independent records (Root): Functional and Readiness reviews of the full 54-file, 2423-line composition packet are approve with 0 findings each, supplement and do not replace the original published reviews, and grant no merge authorization or unqualified process acceptance. The local-store startup tests use the default JSON working store; they are not MSSQL, browser-authentication or Azure evidence.
+
+### Requirement trace (Bicep contract)
+
+| Contract | Source (blob at pin) | Observation | Class |
+| --- | --- | --- | --- |
+| Default off, ordinary commands unchanged | `main.bicep` `7074af59dbc8`, `containerapps.bicep` `da71bef970a9` | `enablePublicSimulationLane` defaults to false; the API `command` is null, the two `ZF_SIM_*` variables are absent and `maxReplicas` stays 4 when off | Static read plus Root offline render and policy tests; not deployed |
+| Opt-in guards | `main.bicep`, `guard.bicep` `f08d8b235078` | Five guards refuse the lane outside the development direct-ingress demo, without browser authentication (client id set, not bearer-only), without deployed applications, with the placeholder API image and with `apiMinReplicas` above 1 | Static read plus Root policy tests (60) and mutation rejection; not deployed |
+| Maximum one replica when on | `containerapps.bicep` | `maxReplicas` is 1 when enabled | Static read plus Root compiled-render tests |
+| Fixed startup recipe | `containerapps.bicep` | A fixed `python -c` recipe provisions only when neither the store nor the key exists, validates with `Lane.open`, then runs the ordinary API module | Static read plus the four Root image startup tests (local image, local JSON store) |
+| Absent, partial and corrupt fixtures | recipe, `infra/README.md` `b4a2a2c49a3d` | Only an absent pair is provisioned; a partial or corrupt pair is left untouched, an error code goes to stderr and the API starts with the lane unavailable, so the manual API fallback remains; an older image lacking the lane module also starts the ordinary API | Local observed in the Root startup tests, source qualified; not on Azure |
+| Replica-local, volatile, non-durable | README | State under `/state/public-simulation` is lost on replica replacement and scale to zero; it is not durable history | Static read; durability not observed |
+| Accounting boundary | README, `containerapps.bicep` | `ZF_STORE=mssql` is unchanged, so allowance, attempts and holds stay in Azure SQL and a lost simulation store cannot mint or reset them; budgets, chat and model settings are not changed | Static read; SQL not observed |
+| Seal lifetime | README | A restart that retains the valid key and store pair does not itself revoke seals; losing or replacing the pair invalidates prior seals; expiry and single-use checks still apply | Static read only; no cross-restart seal runtime test is claimed |
+| Image guard scope | `guard.bicep` | The guard rejects only the quickstart placeholder; it does not validate that an arbitrary image is compatible | Static read; limit stated |
+
+### Evidence classes
+
+* Local observed, source qualified: only the Root runs above on the auxiliary composition `b9bae9f2`.
+* Current-metadata equivalence: the pin tree equals the prediction and differs from the tested tree only in the rubric score file; `src`, `infra` and `tools` ids equal.
+* Azure observed: NONE.
+* Implemented, unverified: the enabled path on a real deployment, MSSQL accounting with the lane on, browser authentication, a real selected-home reading path, live IoT Hub ingestion, replica replacement and scale-to-zero behaviour, and cross-restart seal behaviour.
+* Deferred or blocked: an actual Azure rollout and what-if, whole #136 closure, deployment-dependent expansion, and any live SQL, authentication, resident or model acceptance. They await separately authorized live inputs and evidence.
+* Unknown: behaviour of an arbitrary non-placeholder API image, and the actual GitHub merge-preview trees.
+
+### Findings, owners and gates
+
+* No new defect, no new issue and no source fix. The three baseline policy typing errors are known and tracked under the existing owner and are not newly fixed here; no duplicate issue is opened.
+* Whole #136, #1288 and #440 criteria 7 and 8 stay unmet, and human and HVE approval stay unmet and are not invented. No #132 or #133 budget is added and no requirement is relaxed.
+* The Bicep wave gate (awaiting any later live evidence and independent exact-head assessment) is distinct from the nomination and UX gate that affects #89 UI-dependent publication. The local #89 candidate stays awaiting Root consumption of the nomination and UX record and is not main. #1384 and #1388 are separate checker work and grant no source waiver.
+
+### Recommendation
+
+CONTINUE bounded offline source qualification of the infrastructure lane; it can proceed independently of the nomination and UX gate. No fix or pivot is indicated by this evidence. An actual Azure rollout, whole #136 closure and any deployment-dependent expansion should wait for separately authorized live inputs and evidence. Publication of this record needs independent exact-head assessment and applicable hosted checks; Root qualifies the actual publication composition later. No approval, requirement relaxation or issue closure is proposed or inferred.
+
+### Process record and limits
+
+* The nomination and UX section above and this section ship in one documentation batch so hosted CI runs once; each has its own heading, index paragraph and log entry, and neither edits the other.
+* The witness is a locally writable record, not host or model attestation; the model label is asserted. The critique and review are author-executed, not independent. No push, pull request or GitHub write was made.
+
+## Registry wave current-main checkpoint (2026-11-10, Refs #440 #185 #110 #109 #184 #111 #1288)
+
+Draft, local-only, not approved. This is a new recurring observation and documentation checkpoint after the Registry wave (PR 1393, `Refs #185`) reached `main`. It is distinct from the nomination and UX record and the Bicep record above (both unchanged), not the old #440 C6, not a retry, and spends no source repair budget; it makes no product, test or configuration fix and opens no issue. It is the focused documentation tier: no gate, `--changed`, test, install, image, SQL, browser, cloud, model, live or private-data run was made by this task. It neither includes nor republishes the separate #440 CSV-learning record, whose frozen independent review is unchanged. This branch was a declared child of `docs/demo-nomination-ux-checkpoint-440-1110` at `6119b7aa3858c35fd4964d4f54dc7f8ef27ca2fa`. That parent was published as PR 1396 and squash-merged into `main` as `eff05737e8eaed584f3c269754d45bc5e44d0168` (tree `d486dc8837a7d765438500813feab227d5b574f3`) at 15:09:16Z; at Root's explicit direction this topic then took main by an ordinary merge, keeping its earlier commit, and is now an independent main-target candidate (no PR open, nothing pushed). The pin below stays the historical `6cc59776`; between `6cc59776` and `eff05737` only documentation and tracking files changed, and the `src` (`af889a4f05a2`), `infra` (`f7f31c0934cf`), `tools` (`432a4e8f7d74`) and `.github` (`220ca5404c8a`) subtree ids are identical, so the Registry source read at the pin is unchanged on `eff05737`. That is source identity only: the consumed tests ran on the reviewed candidate, not on either main commit. Records: [research](../../.copilot-tracking/research/2026-11-10-registry-source-observation-440-1110-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-registry-source-observation-440-1110-plan.md), [details](../../.copilot-tracking/details/2026-11-10-registry-source-observation-440-1110-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-registry-source-observation-440-1110-plan-critique.md), [changes](../../.copilot-tracking/changes/2026-11-10-registry-source-observation-440-1110-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-registry-source-observation-440-1110-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/issue-440-registry-source-observation-1110-state.json).
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-10) |
+| --- | --- |
+| Pinned source | `origin/main` `6cc59776666620309fb6b67ad2fdafb343d40998`, tree `eaf44bcdec8bdf5e9dfab2e73b1ded5459d8ff3c` (equals the Root prediction), fetched and resolved fresh, read through read-only `git show` only. The local branch source (base `65c2ab9d9`) is older, has no Registry adapter and is not current-main source; nothing here is merged into it |
+| Trigger | PR 1393 merged 2026-11-10T14:54:22Z as `6cc59776`, after #1392 (`57d32c0d0`, workspace oracle repair) and #1394 (`15516ff3d`, documentation). The merge changes 25 files (2012 insertions, 1 deletion) against `57d32c0d0`: the adapter and its tests, the Core README, `pyproject.toml` and the PR's own tracking records |
+| Source blobs at the pin | `src/core/src/zava_forward/core/synthetic/device_registry_azure.py` `5add5e34d4d4` (418 lines), `src/core/tests/test_device_registry_azure.py` `954c8a206c9d` (844 lines), `src/core/README.md` `e4619c34a8f8`, `src/core/pyproject.toml` `1c2d73533df4`; the four equal the independently reviewed candidate `7085213b969c` blobs |
+| Documents (blob at pin) | BRD Agentic Retrofit Programme 0.21.0 `draft` `34d88395de86`; PRD Zava Forward 0.21.0 `in-review` `c788b917bafa`; ADR 0003 `d60645397b20` (owner-accepted with amendment 2026-10-15, `ms.date` 2026-10-29). The wave changes none of them; draft and in-review are not approval and none changes here |
+| Hosted checks | The reviewed head `7085213b9` reported all 19 contexts SUCCESS (PR 1393 text, Root guard text). For main `6cc59776` the run list read here shows Capstone Rubric Scorer (push) success, Graph Update pip in `/src/core` success and Infrastructure PR what-if skipped, and no other push run; that is reported, not inferred green for the source, and the 19 are PR-head metadata |
+| Issue and PR states (read live) | #185, #110, #109, #184, #111, #1288 and #440 OPEN; nothing is ticked or closed here. PR 1395 (the #109 sensor-review draft child, base `feat/demo-sensor-review-109-1110`, head `2b050647bff5`) is OPEN and not merged into main |
+| Excluded | PR 1395 and the local #109 integration preparation (research and plan only, `a3d5e615f`, not implemented integration), the #89 aftercare candidate, #132 and #133, the #1384 and #1388 checker work, the old C6, the CSV-learning record, Bicep and nomination and UX content except by name, any deployment, Azure, live, model, resident or professional step, and whole #185, #110, #109, #440 acceptance |
+
+### Consumed evidence (Root local runs, not re-run here)
+
+The Root handoff `handoff-185-main-integration-1110`, its raw `.log` and `.exit` files (`checks-185-main-integration-1110`), the independent Functional verdict (`independent-185-main-integration-1433`), the PR text and the Root equivalence proof are in the Root session folder, not in the repository. They were run on the reviewed candidate `7085213b9` (tree `2cd50a62147c`, an ordinary adoption of main `06374dfca` into the approved E1 `105d479ae`) in an owned environment with the pinned SDK. None is an observation on `6cc59776` and none is an Azure run.
+
+| Record | Result as retained |
+| --- | --- |
+| Targeted selectors (adapter, identity, provisioning, dependency rule) | 89 tests OK, no skips, exit 0 |
+| Root reproductions of the original findings | 2 OK, exit 0; four regressions fail on the frozen old source and pass fixed (PR text) |
+| Configured Core static checks | Ruff check passed, format 237 files, mypy 290 files with no issues, `tomllib` parse of `pyproject.toml`, all exit 0 |
+| SDK identity | `azure-iot-hub` 2.7.0 and `six` 1.17.0 in an own environment; adapter imported from the candidate worktree (provenance log) |
+| Independent Functional review | approve, 0 findings (functional-findings.json), no E2, no waiver, limits restated |
+| Witness for the source run | seven records, verify exit 0, log hash `c1c091859a51f3250dd4f1e177268031c55c185bc0d3b1963e86cf8622b30d35`; local writable record, not attestation |
+
+* Current-main equivalence scope: the prospective and actual main tree `eaf44bcd` has Core, Agents, Orchestrator, Importer and API product-source subtrees and the API dependency manifest exactly equal to the reviewed and tested candidate, per the Root proof; remaining differences are rubric documentation and the independently reviewed workspace checker helper, two checkers and their tests. This is component-source equivalence, not full-tree equality, and I did not recompute the candidate subtree ids here. The four Registry blobs above were read directly at the pin.
+* Adverse and qualified items retained: an earlier extra full Core discovery timed out and is NOT a pass and was not re-run; no API selector was identified or claimed; `__context__` stays programmatically reachable (suppression is for formatted tracebacks only); in the source run `research-open` and `plan-done` were recorded in one call after one preflight and the review file was drafted just before `implement-done`. The original adverse reports (incomplete-inventory High and formatted-traceback Medium, closed on the candidate, not erased) are unchanged and not healed.
+
+### Requirement trace (Registry contract)
+
+| Contract | Source (blob at pin) | Observation | Class |
+| --- | --- | --- | --- |
+| BRD FR-048, AC-090, OD-43 (in-use monitoring inventory and ownership) | BRD 0.21.0 `draft` | Documents the monitoring need and the open ownership decision; the adapter does not satisfy or approve OD-43 | Document-qualified, draft; not approved |
+| PRD FR-050, AC-066 to AC-068 | PRD 0.21.0 `in-review` | AC-066 (simulator identities through Azure IoT Hub) and AC-067 and AC-068 are all "Not run"; the adapter supplies a bounded part of identity enrolment only | Document-qualified; whole AC-066 unmet |
+| ADR 0003 decision 6 | ADR 0003 `d60645397b20` | Per-device X.509 or symmetric keys, managed identity for services, named credential owner; its implementation status says no live Hub identity, provisioning, SDK use or deployment follows from an accepted ADR | Owner-accepted with amendment; no live approval |
+| Keyless and default off | `device_registry_azure.py` `5add5e34d4d4` | Import, construction, dry run and `close()` do not import the SDK, acquire a token or connect; one injected Entra token credential or pre-built client; no connection string, key or ambient discovery | Static read plus consumed tests; not run on main |
+| Bounded inputs | same | Hub host must match `*.azure-devices.net`; a finite `EnrollmentSpec` of 1 to 100 `SYN-` device ids with public X.509 thumbprints; timeout 1 to 60 seconds; invalid input refused before any SDK call | Static read plus consumed tests |
+| Create-only and conditional writes | same, README `e4619c34a8f8` | Create sends `If-None-Match: *`, disabled, with the exact run marker; delete uses the exact snapshot ETag, never a wildcard, and refuses drift; uncertain writes return a readback and are not retried | Local observed against an SDK-level simulator of the documented REST conditions; Azure behaviour unobserved |
+| Complete or refused enumeration | same | A full 1000-device page is `LIST_INCOMPLETE`; entries without a string marker are confirmed by bounded individual reads (at most 100 per call); an unreadable confirmation or exhausted budget refuses, so whole-run teardown refuses before any delete; more than 100 unmarked devices in one listing refuses | Static read plus consumed tests |
+| Safe errors | same | Fixed codes without SDK response text; `__suppress_context__` set; context object remains reachable | Static read plus consumed regression tests; reachability qualified |
+| Packaging | `pyproject.toml` `1c2d73533df4` | `iothub` extra and `dev` extra pin `azure-iot-hub==2.7.0` and `six==1.17.0`; runtime `dependencies` stay empty; Core imports without the SDK | Static read, TOML parse in consumed run |
+| Out of source scope | README | No certificate or key issuance, storage, rotation, activation, Device Provisioning Service, Registry-before-credential ordering or authentication update; the command line does not use the adapter and `--apply` still refuses | Static read; deferred or open |
+
+### Evidence classes
+
+* Local observed, source-qualified carry-forward: only the Root runs above on the reviewed candidate `7085213b9`, tied to the pin by component-subtree equivalence.
+* Current-metadata equivalence: main tree `eaf44bcd` equals the Root prediction; the four Registry blobs equal the reviewed candidate blobs.
+* Azure observed: NONE.
+* Implemented, unverified: the adapter against a real IoT Hub (status codes, 412 behaviour, ETag format, list limits, RBAC), Entra token acquisition, any live enrolment or teardown, and hosted CI on main for the source.
+* Deferred or blocked: actual device identity issuance, credential owner choice and secure credential storage, whole-run teardown criteria, Registry-before-credential ordering, authentication update, live Hub, SQL, UI and model acceptance, and the Registry choice and credentials decision. These stay human or live gates and are neither approved nor silently deferred by this record.
+* Unknown: how the adapter behaves with more than 100 unmarked devices on a real hub beyond its refusal, the behaviour of a real SDK response shape not covered by the simulator, and the unrun full Core discovery result.
+
+### Findings, owners and gates
+
+* No new confirmed defect, no confirmed refactoring and no source fix. The stale "not implemented" wording in older issue text is not copied as current source truth; the pin shows the bounded adapter, and the issue criteria stay open.
+* Remaining gaps by owner: #185 (credential owner, issuance and storage without leaking, teardown of all simulated identities, Registry-before-credential, authentication update); #110 and #184 (live Hub identities, live ingestion and streaming acceptance); #109 and #111 (integration of the sensor-review child, analysis and review task, reproducibility and acceptance, local preparation only); #1288 (retained sensor values and Quality AI review-flag UI). No duplicate issue is opened.
+* Whole #185, #110, #109 and #440 criteria 7 and 8 stay unmet, and human and HVE approval stay unmet and are not invented. The affected gates (live identity, credential, secure storage, teardown, Hub, SQL, UI and model acceptance) await Root consumption after independent review of this record.
+
+### Recommendation
+
+CONTINUE bounded local #109 integration and testing against current main, using the existing owners; PR 1395 and the local preparation remain unmerged and are not integration until Root records an actual merged head. Do not expand dependent features, close an epic, start live provisioning or treat this as approval of the Registry choice, credentials or any live decision; those remain named human gates. No fix or pivot is indicated by this evidence. Publication of this record needs independent exact-head assessment and applicable hosted checks.
+
+### Process record and limits
+
+* Added as a distinct section; the nomination and UX and Bicep sections above are unchanged. The old CSV-learning record is independent and unchanged.
+* The witness is a locally writable record, not host or model attestation; the model label is asserted. The critique and review are author-executed, not independent. No push, pull request or GitHub write was made, and no command in this task ran on `6cc59776` beyond read-only git and read-only GitHub queries.

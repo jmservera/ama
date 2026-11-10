@@ -146,6 +146,7 @@ def hold_notes(c):
 
 
 def redact_staff_detail(user, d):
+    d.pop("sensor_review_drafts", None)
     resident_view = user.get("role") in RESIDENT_VIEW_ROLES
     resident_data = {key: deepcopy(d[key]) for key in RESIDENT_FIELDS + ("decision",)
                      if key in d} if resident_view else {}
