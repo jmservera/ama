@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-10T06:59:48+00:00",
-  "commit": "1ee56da3a27ad39eb53eaede0b66dc4905f0d820",
+  "scored_at": "2026-11-10T08:58:25+00:00",
+  "commit": "3d708c5882cc0fd2e1c74360e1ff44eeaf367def",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/42771290532",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/42785856104",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
-    "solution-code": "5a16ad3ad1ce22c75fcd220c8877062a7866b0ed07699e711583dbc37f306731",
+    "solution-code": "8ff0a8502da33f12aa07e8bc3f9130193bb9b0543cd74bfc5d14cc2e668c5a9f",
     "infrastructure": "7c74c76598ba4b6302fd325e88da5abc4ca3489696d813db42d117c4bd1cf1fd",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "5b414b81c3cc0512d987acd669648d14eb85eae2af031105e39dd8bd5054fbe7",
@@ -119,7 +119,7 @@
         "src/core/README.md:72",
         "src/core/README.md:102"
       ],
-      "rationale": "New capstone documentation (src/core/README.md) has a sentence split across non-adjacent paragraphs, hurting navigability. Deck untouched. Lowered from Excellent(5) to Good(4)."
+      "rationale": "Capstone documentation has a sentence split across non-adjacent paragraphs, hurting navigability. Deck untouched. Lowered from Excellent(5) to Good(4)."
     },
     "B7": {
       "score": 5,
