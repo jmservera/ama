@@ -750,6 +750,7 @@ function priorityPanel() {
   return box;
 }
 
+const HANDOFF_READ_ERROR = "The handoffs waiting for you could not load, so we cannot tell whether any are waiting. Owner: application support. Next action: refresh to try again, then contact application support if it continues.";
 function pendingHandoffs() {
   const box = h("section", { class: "card", "aria-label": "Handoffs waiting for you" },
     h("p", { role: "status" }, "Loading handoffs..."));
@@ -761,7 +762,11 @@ function pendingHandoffs() {
       h("div", { class: "muted" }, `${x.status}. Current owner: ${x.accountable_owner}; proposed receiver: ${x.proposed_receiver || "Unassigned"}; confirmed receiver: ${x.confirmed_receiver || "Unconfirmed"}; destination: ${x.destination || "Unknown"}; chase: ${x.chase_owner || "Unassigned"}.`),
       h("div", { class: "muted" }, `Urgency: ${x.urgency || "Unknown"}; due: ${x.due_at || "Unknown"}; next action: ${x.next_action || "Unknown"}. Resident update: ${x.resident_update_owner || "Unassigned"}, ${x.resident_update_due_at || "Unknown"}.`),
       h("div", {}, x.to_code === me.user.code ? "Open to record receipt, accept or decline." : "Open to chase, escalate or withdraw.")))));
-  }).catch((e) => { box.hidden = false; box.replaceChildren(h("p", { role: "alert" }, `Could not load handoffs: ${e.message}`)); });
+  }).catch((e) => {
+    if (e.name === "AbortError") return;
+    box.hidden = false;
+    box.replaceChildren(h("p", { role: "alert" }, e.status ? `Could not load handoffs: ${e.message}` : HANDOFF_READ_ERROR));
+  });
   return box;
 }
 
@@ -1064,7 +1069,7 @@ async function caseView(id) {
       regulatoryAlertsPanel(id), !c.closed && returned, stockPanel(c)]],
     ["survey", "Survey and assessment", [technicalPanel(c, id, refresh), documentsPanel(c, id, refresh)]],
     ["funding", "Funding", [fundingPanel(c, id, refresh, savedFields, session), financePanel(c, id, refresh), grantPanel(c, id, refresh)]],
-    ["resident", "Resident", [residentPanel(c, id, refresh), call, write, affectedChallengePanel(c, id, refresh)]],
+    ["resident", "Resident", [residentPanel(c, id, refresh), nominationPanel(c), call, write, affectedChallengePanel(c, id, refresh)]],
     ["contractor", "Contractor and works", [h("section", { class: "card" }, h("h2", {}, "Contractor and appointments"),
       h("p", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
       h("p", {}, `Next visit: ${fmtDate((c.appointments.find(a => a.outcome === "Booked") || {}).date)}`),

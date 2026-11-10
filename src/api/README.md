@@ -1272,7 +1272,16 @@ queue) and `231q` (Quality queue) sign in as a Quality Inspector, open the
 read-only screens on a synthetic home with returned, stale and missing
 evidence, and check text-only blocked state, no write controls, keyboard
 reach of every table region and no readiness over missing evidence. Story `231`
-also checks that no readiness shows over an unresolved source conflict. Set
+also checks that no readiness shows over an unresolved source conflict. Stories
+`231p` (technical complete) and `231qp` (quality accepted) are the declared
+positive states: a private checker-local synthetic home whose real server
+projection has no technical or quality blockers (no stubbed response; its names,
+sign-offs and acceptance are test inputs, not professional approval). They check
+that the read-only text records, but does not approve or hand over, the source,
+checklist and person evidence, the same home, no write controls or POSTs, an
+unchanged case record and Tab reach of every table region at 1280 and 320 px;
+only these two stories may show the positive wording, and `231` and `231q` still
+reject it. Set
 `ZF_AXE_JS` to the pinned axe 4.10.3 file to add an axe WCAG 2.2 A/AA scan.
 These are engineering checks, not assistive-technology or WCAG acceptance (#155).
 Stories `232` (Resident choice and update queue) and `232s` (Resident service
@@ -1298,6 +1307,16 @@ Without `ZF_AXE_JS` the axe scan is skipped and the run prints `PARTIAL`; a
 skip is not a pass. A scan with axe 4.10.3 covers `main` only, at 1280 px, on
 the programme overview and the connected home view for both roles; it is not a
 statement about other views, widths or roles.
+Programme queue paging has its own manual check,
+`PYTHONDONTWRITEBYTECODE=1 python -m checks.programme_paging_browser_check`
+(heavy; run under the shared heavy lock). As a Programme Manager at 1280 and
+320 px, with a private 60-case synthetic fixture, it loads the real first page of
+50, reaches Next and Previous by keyboard, checks unique page 2 and returned
+page 1 records, the page-local scope filter and Reset, the retained rows and
+home after one constructed (intercepted) paging GET failure, retry to page 2,
+no writes and no horizontal overflow. The injected failure is not a real
+network incident or backend proof. It does not run axe and is not a WCAG, usability
+or assistive-technology test.
 Checks own a synthetic
 loopback server and do not read the normal working dataset or call Azure.
 The parent's scoped receipt covers its exact foundation head, not unmerged
@@ -1406,7 +1425,12 @@ by a test route, values untouched). It also checks that no non-GET/HEAD/OPTIONS
 request, contact link, evidence write control or JavaScript error appears after
 sign-in, that the case and package state are unchanged, labelled table regions,
 Tab reach and reflow at 1280 px and 320 px, and that the served
-`role-screens.js` is this checkout's file. Set `ZF_TENSIONS_SCREENSHOTS` to a new
+`role-screens.js` is this checkout's file. Since 2026-11-10 it also opens Technical
+queue and Quality queue for the same home (the fixture overlays the existing
+`technical_quality_data` returned, unknown and open-defect evidence at design
+version 1) and checks the "Not shown for this role" panel, fixture-derived
+sign-off, defect and evidence values, that blocked evidence is never shown as
+readiness, no funding amount, labelled regions and Tab reach at both widths. Set `ZF_TENSIONS_SCREENSHOTS` to a new
 directory to keep full-page and per-panel screenshots. This is an engineering
 check on one synthetic home, not the connected eight-stage walk, assistive
 technology, WCAG, Fluent 2 or user acceptance (#150, #151, #155).
@@ -4028,6 +4052,21 @@ owner-approved trusted producer with a current fixture and provenance binding
 exists; that producer is not part of this change. The all-cases scope keeps its
 own wording. The check is `tests/test_queue_empty_state.py` (Node, partial
 AC-034/043 evidence only).
+
+The served workbench browser check observes that explanation, per role, at 320,
+390 and 1280 px on the constructed data: one visible, contained, wrapped
+explanation that says coverage is unknown, and none for a nonempty queue. A
+constructed test-page mutation that hides it at 320 px is shown to be caught.
+These are engineering observations on constructed fixtures, not a device
+matrix, assistive-technology or user evidence.
+
+Correction to the count above: the seven non-Contractor roles give 21 role-width
+observations, of which five roles (15 observations) have an empty own queue and
+check the explanation, and two roles (6 observations) have a populated queue and
+check that none is shown. The check also rejects an explanation clipped
+vertically by its own or an ancestor's overflow (the page may still scroll), and
+a second constructed test-page mutation (small height with hidden overflow) at
+320 px is shown to be caught for that reason, with the original style restored.
 From `src/api`, using the installed src packages and `.[dev]`:
 
 ```bash

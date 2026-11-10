@@ -299,6 +299,94 @@ function restoreChallengeDrafts(drafts) {
   }
 }
 
+// Read-only view of recorded nominations. It renders only fields the server supplied and never writes.
+function nominationPanel(c) {
+  if (!c.challenge_targets && !Array.isArray(c.nomination_records)) return null;
+  const records = Array.isArray(c.nomination_records) ? c.nomination_records : [];
+  const text = (value) => (typeof value === "string" && value.trim() ? value : "Not recorded");
+  const unknown = (value) => {
+    const shown = Array.isArray(value) ? value.filter((item) => typeof item === "string" && item.trim()).join(", ") : value;
+    return typeof shown === "string" && shown.trim() ? shown : "Unknown";
+  };
+  const person = (who) => (who && typeof who === "object" && typeof who.name === "string" && who.name.trim()
+    ? (who.role ? `${who.name} (${who.role})` : who.name) : "Unknown");
+  const stamp = (value) => {
+    const date = value ? new Date(value) : null;
+    return date && !Number.isNaN(date.getTime())
+      ? new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" }).format(date) + " UTC"
+      : "Unknown";
+  };
+  const day = (value) => {
+    const date = typeof value === "string" ? new Date(`${value}T00:00:00Z`) : null;
+    return date && !Number.isNaN(date.getTime())
+      ? new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "UTC" }).format(date) : "Unknown";
+  };
+  const fields = (rows) => h("dl", {}, rows.map(([label, value]) => h("div", {}, h("dt", {}, label), h("dd", {}, value))));
+  const supplied = (title, item) => h("div", {},
+    h("h4", {}, title),
+    fields([
+      ["Unverified subject reference", text(item.reported_subject_ref)],
+      ["Account as supplied", text(item.account)],
+      ["Source", text(item.source)],
+      ["Channel", text(item.channel)],
+      ["Recorded by", person(item.recorded_by)],
+      ["Recorded at", stamp(item.at)],
+    ]));
+  const overdue = (value) => (value === true ? "Overdue" : value === false ? "Not overdue" : "Unknown");
+  const reviewState = (review, record) => {
+    if (review.stale_from_version !== undefined && review.stale_from_version !== null) {
+      return `Stale: recorded for version ${review.record_version}; the record changed at version ${review.stale_from_version}`;
+    }
+    return review.record_version === record.version
+      ? `Current for version ${review.record_version}` : `Not current: recorded for version ${review.record_version}, record is at version ${record.version}`;
+  };
+  const card = (record, index) => {
+    const follow = record.follow_up && typeof record.follow_up === "object" ? record.follow_up : null;
+    const ack = record.acknowledgement && typeof record.acknowledgement === "object" ? record.acknowledgement : null;
+    const corrections = Array.isArray(record.corrections) ? record.corrections : [];
+    const reviews = Array.isArray(record.reviews) ? record.reviews : [];
+    const original = record.original && typeof record.original === "object" ? record.original : {};
+    const missing = follow && Array.isArray(follow.missing) ? follow.missing : null;
+    return h("details", { class: "nomination-record", open: index < 5, "data-nomination": text(record.id) },
+      h("summary", {}, `${text(record.kind)} ${text(record.id)}, version ${record.version ?? "Unknown"}. ${unknown(record.review_status)}`),
+      supplied("Original supplied account", original),
+      corrections.map((item) => supplied(`Corrected account, version ${item.version ?? "Unknown"} (competing evidence; the original is kept)`, item)),
+      h("div", {}, h("h4", {}, "Follow-up"), fields([
+        ["Named owner", person(record.owner)],
+        ["Next update", `${day(record.next_update)}. ${overdue(follow ? follow.next_update_overdue : undefined)}`],
+        ["Staffed non-digital route", text(record.non_digital_route)],
+        ["Staff-recorded acknowledgement", ack && typeof ack.reference === "string" && ack.reference.trim()
+          ? `${ack.reference}. Delivery unverified: this system has not confirmed it reached anyone.`
+          : "Not recorded. Delivery unverified."],
+        ["Identity status", unknown(record.identity_status)],
+        ["Support needs", unknown(record.support_needs)],
+        ["Risk flags", unknown(record.risk_flags)],
+        ["Missing from this record", missing ? (missing.length ? missing.join(", ") : "Nothing listed") : "Unknown"],
+        ["Review owner", unknown(follow && follow.review_owner)],
+      ]),
+      h("p", { class: "muted" }, `This view does not infer: ${follow && Array.isArray(follow.not_inferred) && follow.not_inferred.length
+        ? follow.not_inferred.join(", ") : "Unknown"}.`)),
+      h("div", {}, h("h4", {}, "Human review"),
+        follow && follow.re_review_pending ? h("p", {}, "Correction awaiting human re-review.") : null,
+        reviews.length ? reviews.map((review) => h("div", {},
+          h("p", {}, h("strong", {}, reviewState(review, record))),
+          fields([
+            ["Outcome recorded", text(review.outcome)],
+            ["Reviewer reasons", text(review.rationale)],
+            ["Evidence considered", text(review.evidence_ref)],
+            ["Corrections seen (versions)", Array.isArray(review.competing_evidence_versions) && review.competing_evidence_versions.length
+              ? review.competing_evidence_versions.join(", ") : "None recorded"],
+            ["Reviewer", person(review.reviewer)],
+            ["Reviewed at", stamp(review.at)],
+          ]))) : h("p", {}, "No human review recorded."),
+        h("p", { class: "muted" }, "A recorded review is a staff record, not an approval or an eligibility decision.")));
+  };
+  return h("section", { id: "nominations", class: "card nominations", "aria-labelledby": "nominations-title" },
+    h("h2", { id: "nominations-title" }, "Nominations and self-referrals"),
+    h("p", {}, "Read only. This view shows what was supplied and recorded. It does not contact a resident, decide eligibility, change priority or assign an owner."),
+    records.length ? records.map(card) : h("p", {}, "No nomination or self-referral is recorded for this home."));
+}
+
 function affectedChallengePanel(c, id, refresh) {
   if (!c.challenge_targets) return null;
   const targets = c.challenge_targets;
