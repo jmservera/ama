@@ -34,3 +34,13 @@ The line above, "Review is not run: parent 108 has not merged ...", is the imple
 * The original chain remains QUALIFIED and `verify` exits 1: seq 4 `implement-start` ran after an inherited parent merge changed non-tracking files. Seq 6 and 7 do not repair it, and this note is not a clean original loop.
 * Parent, integration and publication holds remain, and the local parent reconciliation is not a merge to `main`.
 * An independent focused assessment of `3a6d57be` raised this as its one Low finding (approve with comments, no Critical, High or Medium). This append is correction C1 of five total, run as its own chain ([research](../../research/2026-11-10/issue-184-parent-c1-1110-research.md)); that chain does not retroheal the original.
+
+## Closeout and target-status qualification (appended 2026-11-10, correction C2 of five)
+
+The earlier "Review is not run ..." line and the C1 statement that parent, integration and publication holds remain are historical; this section is their dated transition.
+
+* Parent PR 1417 (the #108 work) was reported by Root as merged into `main` on 2026-11-10T19:30:30Z as `583d4fbd58662e7ac9be71f5f2a8ae3021cd8078`. Whole #108 stays open. The local parent `964ac1d3` is preserved and remains an ancestor of this branch.
+* Root released the eventual child target `main`, replacing the deleted remote parent topic. This was local reconciliation only: `main` `583d4fbd` was merged into this branch by an ordinary merge (`a6c9ce7d`), with no conflict and no rewrite.
+* The original chain stays QUALIFIED with `verify` exit 1. The separate C1 chain (`verify` exit 0) and its independent approval do not heal it, and neither does this C2 chain ([research](../../research/2026-11-10/issue-184-main-c2-1110-research.md)).
+* Remaining holds: Root independent exact-head review, hosted checks, any push or PR, and any live or Azure step. This is not whole #184, #110, #140 or #440 acceptance.
+* The five configuration observations are unchanged and remain five. The two job `ResourceNotFound` results are for those exact names only. The hub cost authority expired on 2026-10-31 and is not renewed; serving, runtime flow, image-to-build mapping, usage and cost remain unknown.

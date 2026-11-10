@@ -5,4 +5,4 @@ Prospective skeleton before `implement-start`. Planned: append one dated section
 
 ## Completed changes
 
-* None yet.
+* Appended 10 lines (including blank and heading) to the original changes record; prior bytes are a prefix; links resolve; leak scan clean; no other tracked file edited.
