@@ -6338,7 +6338,7 @@ Python 3.12.3; owned virtual environment `/tmp/i149-1110/venv` with editable ins
 | M5 | API, Core and importer `ruff check .`, `ruff format --check .` and configured file-less `mypy` | 0, 0, 0 | API 138 files formatted, 217 sources typed; Core 235 and 288; importer 13 and 12; no issue |
 | M1 | `role_screens_browser_check` default, `230`, `231`, `231q`, `231p`, `231qp`; `atlas_tensions_browser_check`; `programme_paging_browser_check`; main-owned `held_form_download_browser_check`, one admission, `ZF_AXE_JS` set | all 0 | PASS counts 47, 70, 36, 36, 47, 46; atlas 362 COMPLETE; paging 89; Held download 31 COMPLETE; zero FAIL. The six role-screen and atlas pass sets equal the baseline; the paging set differs only by the ephemeral port and the new `role-screens.js` blob |
 
-Axe: ran in the six role-screen stories (the programme stories at 1280 px on `main` only, no violations, `incomplete` empty where reported). It did not run in the atlas, paging or Held download checks, which state so. Automation is engineering evidence only.
+Axe: axe-core 4.10.3 ran only in five role-screen selectors, 230, 231, 231q, 231p and 231qp (the programme stories at 1280 px on `main` only, no violations, `incomplete` empty where reported). It did not run in the default role-screens selector, the atlas, paging or Held download checks, which state so. Automation is engineering evidence only; it is not human, assistive-technology or WCAG acceptance.
 
 ### Requirement trace (document-qualified)
 
