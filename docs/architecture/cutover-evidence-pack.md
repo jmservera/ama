@@ -6501,3 +6501,74 @@ CONTINUE bounded offline source qualification of the infrastructure lane; it can
 
 * The nomination and UX section above and this section ship in one documentation batch so hosted CI runs once; each has its own heading, index paragraph and log entry, and neither edits the other.
 * The witness is a locally writable record, not host or model attestation; the model label is asserted. The critique and review are author-executed, not independent. No push, pull request or GitHub write was made.
+
+## Registry wave current-main checkpoint (2026-11-10, Refs #440 #185 #110 #109 #184 #111 #1288)
+
+Draft, local-only, not approved. This is a new recurring observation and documentation checkpoint after the Registry wave (PR 1393, `Refs #185`) reached `main`. It is distinct from the nomination and UX record and the Bicep record above (both unchanged), not the old #440 C6, not a retry, and spends no source repair budget; it makes no product, test or configuration fix and opens no issue. It is the focused documentation tier: no gate, `--changed`, test, install, image, SQL, browser, cloud, model, live or private-data run was made by this task. It neither includes nor republishes the separate #440 CSV-learning record, whose frozen independent review is unchanged. This branch is a declared child of `docs/demo-nomination-ux-checkpoint-440-1110` at `6119b7aa3858c35fd4964d4f54dc7f8ef27ca2fa` (published as PR 1396, observed open and mergeable with that head); it is not retargeted, rebased or merged, and the parent is not edited. Records: [research](../../.copilot-tracking/research/2026-11-10-registry-source-observation-440-1110-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-registry-source-observation-440-1110-plan.md), [details](../../.copilot-tracking/details/2026-11-10-registry-source-observation-440-1110-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-registry-source-observation-440-1110-plan-critique.md), [changes](../../.copilot-tracking/changes/2026-11-10-registry-source-observation-440-1110-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-registry-source-observation-440-1110-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/issue-440-registry-source-observation-1110-state.json).
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-10) |
+| --- | --- |
+| Pinned source | `origin/main` `6cc59776666620309fb6b67ad2fdafb343d40998`, tree `eaf44bcdec8bdf5e9dfab2e73b1ded5459d8ff3c` (equals the Root prediction), fetched and resolved fresh, read through read-only `git show` only. The local branch source (base `65c2ab9d9`) is older, has no Registry adapter and is not current-main source; nothing here is merged into it |
+| Trigger | PR 1393 merged 2026-11-10T14:54:22Z as `6cc59776`, after #1392 (`57d32c0d0`, workspace oracle repair) and #1394 (`15516ff3d`, documentation). The merge changes 25 files (2012 insertions, 1 deletion) against `57d32c0d0`: the adapter and its tests, the Core README, `pyproject.toml` and the PR's own tracking records |
+| Source blobs at the pin | `src/core/src/zava_forward/core/synthetic/device_registry_azure.py` `5add5e34d4d4` (418 lines), `src/core/tests/test_device_registry_azure.py` `954c8a206c9d` (844 lines), `src/core/README.md` `e4619c34a8f8`, `src/core/pyproject.toml` `1c2d73533df4`; the four equal the independently reviewed candidate `7085213b969c` blobs |
+| Documents (blob at pin) | BRD Agentic Retrofit Programme 0.21.0 `draft` `34d88395de86`; PRD Zava Forward 0.21.0 `in-review` `c788b917bafa`; ADR 0003 `d60645397b20` (owner-accepted with amendment 2026-10-15, `ms.date` 2026-10-29). The wave changes none of them; draft and in-review are not approval and none changes here |
+| Hosted checks | The reviewed head `7085213b9` reported all 19 contexts SUCCESS (PR 1393 text, Root guard text). For main `6cc59776` the run list read here shows Capstone Rubric Scorer (push) success, Graph Update pip in `/src/core` success and Infrastructure PR what-if skipped, and no other push run; that is reported, not inferred green for the source, and the 19 are PR-head metadata |
+| Issue and PR states (read live) | #185, #110, #109, #184, #111, #1288 and #440 OPEN; nothing is ticked or closed here. PR 1395 (the #109 sensor-review draft child, base `feat/demo-sensor-review-109-1110`, head `2b050647bff5`) is OPEN and not merged into main |
+| Excluded | PR 1395 and the local #109 integration preparation (research and plan only, `a3d5e615f`, not implemented integration), the #89 aftercare candidate, #132 and #133, the #1384 and #1388 checker work, the old C6, the CSV-learning record, Bicep and nomination and UX content except by name, any deployment, Azure, live, model, resident or professional step, and whole #185, #110, #109, #440 acceptance |
+
+### Consumed evidence (Root local runs, not re-run here)
+
+The Root handoff `handoff-185-main-integration-1110`, its raw `.log` and `.exit` files (`checks-185-main-integration-1110`), the independent Functional verdict (`independent-185-main-integration-1433`), the PR text and the Root equivalence proof are in the Root session folder, not in the repository. They were run on the reviewed candidate `7085213b9` (tree `2cd50a62147c`, an ordinary adoption of main `06374dfca` into the approved E1 `105d479ae`) in an owned environment with the pinned SDK. None is an observation on `6cc59776` and none is an Azure run.
+
+| Record | Result as retained |
+| --- | --- |
+| Targeted selectors (adapter, identity, provisioning, dependency rule) | 89 tests OK, no skips, exit 0 |
+| Root reproductions of the original findings | 2 OK, exit 0; four regressions fail on the frozen old source and pass fixed (PR text) |
+| Configured Core static checks | Ruff check passed, format 237 files, mypy 290 files with no issues, `tomllib` parse of `pyproject.toml`, all exit 0 |
+| SDK identity | `azure-iot-hub` 2.7.0 and `six` 1.17.0 in an own environment; adapter imported from the candidate worktree (provenance log) |
+| Independent Functional review | approve, 0 findings (functional-findings.json), no E2, no waiver, limits restated |
+| Witness for the source run | seven records, verify exit 0, log hash `c1c091859a51f3250dd4f1e177268031c55c185bc0d3b1963e86cf8622b30d35`; local writable record, not attestation |
+
+* Current-main equivalence scope: the prospective and actual main tree `eaf44bcd` has Core, Agents, Orchestrator, Importer and API product-source subtrees and the API dependency manifest exactly equal to the reviewed and tested candidate, per the Root proof; remaining differences are rubric documentation and the independently reviewed workspace checker helper, two checkers and their tests. This is component-source equivalence, not full-tree equality, and I did not recompute the candidate subtree ids here. The four Registry blobs above were read directly at the pin.
+* Adverse and qualified items retained: an earlier extra full Core discovery timed out and is NOT a pass and was not re-run; no API selector was identified or claimed; `__context__` stays programmatically reachable (suppression is for formatted tracebacks only); in the source run `research-open` and `plan-done` were recorded in one call after one preflight and the review file was drafted just before `implement-done`. The original adverse reports (incomplete-inventory High and formatted-traceback Medium, closed on the candidate, not erased) are unchanged and not healed.
+
+### Requirement trace (Registry contract)
+
+| Contract | Source (blob at pin) | Observation | Class |
+| --- | --- | --- | --- |
+| BRD FR-048, AC-090, OD-43 (in-use monitoring inventory and ownership) | BRD 0.21.0 `draft` | Documents the monitoring need and the open ownership decision; the adapter does not satisfy or approve OD-43 | Document-qualified, draft; not approved |
+| PRD FR-050, AC-066 to AC-068 | PRD 0.21.0 `in-review` | AC-066 (simulator identities through Azure IoT Hub) and AC-067 and AC-068 are all "Not run"; the adapter supplies a bounded part of identity enrolment only | Document-qualified; whole AC-066 unmet |
+| ADR 0003 decision 6 | ADR 0003 `d60645397b20` | Per-device X.509 or symmetric keys, managed identity for services, named credential owner; its implementation status says no live Hub identity, provisioning, SDK use or deployment follows from an accepted ADR | Owner-accepted with amendment; no live approval |
+| Keyless and default off | `device_registry_azure.py` `5add5e34d4d4` | Import, construction, dry run and `close()` do not import the SDK, acquire a token or connect; one injected Entra token credential or pre-built client; no connection string, key or ambient discovery | Static read plus consumed tests; not run on main |
+| Bounded inputs | same | Hub host must match `*.azure-devices.net`; a finite `EnrollmentSpec` of 1 to 100 `SYN-` device ids with public X.509 thumbprints; timeout 1 to 60 seconds; invalid input refused before any SDK call | Static read plus consumed tests |
+| Create-only and conditional writes | same, README `e4619c34a8f8` | Create sends `If-None-Match: *`, disabled, with the exact run marker; delete uses the exact snapshot ETag, never a wildcard, and refuses drift; uncertain writes return a readback and are not retried | Local observed against an SDK-level simulator of the documented REST conditions; Azure behaviour unobserved |
+| Complete or refused enumeration | same | A full 1000-device page is `LIST_INCOMPLETE`; entries without a string marker are confirmed by bounded individual reads (at most 100 per call); an unreadable confirmation or exhausted budget refuses, so whole-run teardown refuses before any delete; more than 100 unmarked devices in one listing refuses | Static read plus consumed tests |
+| Safe errors | same | Fixed codes without SDK response text; `__suppress_context__` set; context object remains reachable | Static read plus consumed regression tests; reachability qualified |
+| Packaging | `pyproject.toml` `1c2d73533df4` | `iothub` extra and `dev` extra pin `azure-iot-hub==2.7.0` and `six==1.17.0`; runtime `dependencies` stay empty; Core imports without the SDK | Static read, TOML parse in consumed run |
+| Out of source scope | README | No certificate or key issuance, storage, rotation, activation, Device Provisioning Service, Registry-before-credential ordering or authentication update; the command line does not use the adapter and `--apply` still refuses | Static read; deferred or open |
+
+### Evidence classes
+
+* Local observed, source-qualified carry-forward: only the Root runs above on the reviewed candidate `7085213b9`, tied to the pin by component-subtree equivalence.
+* Current-metadata equivalence: main tree `eaf44bcd` equals the Root prediction; the four Registry blobs equal the reviewed candidate blobs.
+* Azure observed: NONE.
+* Implemented, unverified: the adapter against a real IoT Hub (status codes, 412 behaviour, ETag format, list limits, RBAC), Entra token acquisition, any live enrolment or teardown, and hosted CI on main for the source.
+* Deferred or blocked: actual device identity issuance, credential owner choice and secure credential storage, whole-run teardown criteria, Registry-before-credential ordering, authentication update, live Hub, SQL, UI and model acceptance, and the Registry choice and credentials decision. These stay human or live gates and are neither approved nor silently deferred by this record.
+* Unknown: how the adapter behaves with more than 100 unmarked devices on a real hub beyond its refusal, the behaviour of a real SDK response shape not covered by the simulator, and the unrun full Core discovery result.
+
+### Findings, owners and gates
+
+* No new confirmed defect, no confirmed refactoring and no source fix. The stale "not implemented" wording in older issue text is not copied as current source truth; the pin shows the bounded adapter, and the issue criteria stay open.
+* Remaining gaps by owner: #185 (credential owner, issuance and storage without leaking, teardown of all simulated identities, Registry-before-credential, authentication update); #110 and #184 (live Hub identities, live ingestion and streaming acceptance); #109 and #111 (integration of the sensor-review child, analysis and review task, reproducibility and acceptance, local preparation only); #1288 (retained sensor values and Quality AI review-flag UI). No duplicate issue is opened.
+* Whole #185, #110, #109 and #440 criteria 7 and 8 stay unmet, and human and HVE approval stay unmet and are not invented. The affected gates (live identity, credential, secure storage, teardown, Hub, SQL, UI and model acceptance) await Root consumption after independent review of this record.
+
+### Recommendation
+
+CONTINUE bounded local #109 integration and testing against current main, using the existing owners; PR 1395 and the local preparation remain unmerged and are not integration until Root records an actual merged head. Do not expand dependent features, close an epic, start live provisioning or treat this as approval of the Registry choice, credentials or any live decision; those remain named human gates. No fix or pivot is indicated by this evidence. Publication of this record needs independent exact-head assessment and applicable hosted checks.
+
+### Process record and limits
+
+* Added as a distinct section; the nomination and UX and Bicep sections above are unchanged. The old CSV-learning record is independent and unchanged.
+* The witness is a locally writable record, not host or model attestation; the model label is asserted. The critique and review are author-executed, not independent. No push, pull request or GitHub write was made, and no command in this task ran on `6cc59776` beyond read-only git and read-only GitHub queries.
