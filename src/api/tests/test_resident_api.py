@@ -373,6 +373,56 @@ class ResidentApi(unittest.TestCase):
         for canary in ("SYN-ACCOUNT-PRIVATE", "SYN-LEASE-PRIVATE", "SYN-INTAKE-SOURCE-PRIVATE"):
             self.assertNotIn(canary, csv)
 
+    def test_http_household_inventory_is_opt_in_refusal_only_and_hidden(self) -> None:
+        def inventory(**changes: Any) -> dict[str, Any]:
+            body = dict(
+                action="tenure_inventory_record",
+                case_id="ZF-1",
+                expected_version=0,
+                source="SYN-INVENTORY-SOURCE-CANARY",
+                source_version="SYN-INV-V1",
+                owner="sam@example.test",
+                next_update="2099-01-01",
+                households=[
+                    dict(household_ref="SYN-HH-A", report_version=1),
+                    dict(household_ref="SYN-HH-B", report_version=None),
+                ],
+            )
+            return dict(body, **changes)
+
+        path = "/api/cases/ZF-1/resident"
+        for ref in ("SYN-HH-A", "SYN-HH-B"):
+            payload = self.intake_payload(tenure=True, household_ref=ref)
+            payload["expected_version"] = 0 if ref == "SYN-HH-A" else 1
+            self.assertEqual(self.call(path, "sam", payload)[0], 200)
+        for actor in ("rex", "kim", "bea"):
+            self.assertEqual(self.call(path, actor, inventory())[0], 403)
+        for bad in (
+            inventory(households=[]),
+            inventory(expected_version=True),
+            inventory(report_digest="SYN-CLIENT-DIGEST"),
+            inventory(approved=True),
+        ):
+            self.assertEqual(self.call(path, "sam", bad)[0], 400)
+        code, detail = self.call(path, "sam", inventory())
+        self.assertEqual(code, 200, detail)
+        view = detail["tenure_inventory_view"]
+        self.assertEqual(view["status"], "Declared")
+        self.assertEqual(self.call(path, "sam", inventory())[0], 409)
+        code, refused = self.call(
+            path, "sam", dict(action="scope_record", case_id="ZF-1", expected_version=0)
+        )
+        self.assertNotEqual(code, 200, refused)
+        for actor in ("rex", "kim", "bea"):
+            code, other = self.call("/api/cases/ZF-1", actor)
+            text = json.dumps(other)
+            self.assertNotIn("tenure_inventory_view", text)
+            self.assertNotIn("tenure_household_inventories", text)
+            self.assertNotIn("SYN-INVENTORY-SOURCE-CANARY", text)
+            self.assertNotIn("SYN-HH-A", text)
+        code, csv = self.call("/api/cases.csv", "pam")
+        self.assertNotIn("SYN-INVENTORY-SOURCE-CANARY", csv)
+
     def context(self) -> None:
         self.assertEqual(
             self.call(
