@@ -27,3 +27,12 @@ ms.date: 2026-11-10
 ## Planning Readiness
 
 Blocked on a Root decision: either admit the expected-403 handling for the aftercare form read in the check, or direct another approach. No implementation or browser run was started.
+
+## Amendment 2026-11-10: Root decision and contract research (same C2 chain, not a reset or C3)
+
+* Root decision (consumed stop `919d721c`, tree `a0068c9228be`): the manager 403 on `GET /api/aftercare/form` is correct authorization denial and is to be asserted. Admitted: minimum checker-only expected-denial handling plus the `MANAGER_ROUTES` entry. Planning Readiness becomes Ready; the earlier "blocked" disposition above is superseded, not rewritten. No new preparation merge; `origin/main` re-fetched is still `6d4cd624`.
+* Role contract (source): `RECORD_ROLES` = Resident Liaison Officer, Retrofit Coordinator; `VIEW_ROLES` adds Retrofit Programme Manager and Programme Support Officer (`controls.py`). `AftercareIntake.form` calls `_staff(user, RECORD_ROLES, "record a concern")`, which raises `PermissionError("Your role cannot record a concern. Ask a colleague who can.")`; the handler maps it to `403 {"error": ...}` (`aftercare_intake.py:384-390, 851`). `concerns` and `evaluator` use `VIEW_ROLES` and return 200 for the manager.
+* UI contract (source): `aftercareWorkspaceView` maps a 403 on `form` to no form, then renders `h1#ac-title` "Aftercare concerns", a notice, `p[role=status]` "Your role can read these concerns but cannot record one. Ask a colleague who can.", and `section[aria-labelledby=ac-list-title]` "Recorded concerns (N)". No `#ac-form` and no submit is rendered in that state.
+* Existing precise-correlation pattern in the check: `expected_failures: set[Request]` excludes a request from the `failures` listener and from the console-error filter (which matches on the message location URL equal to a registered request URL). The new allowlist reuses it.
+* Console attribution: the console filter drops only errors whose location URL equals the registered request URL (here exactly `<base>/api/aftercare/form`); any other console error stays fatal. If the browser's denial console event lacks that location, the run fails and is reported rather than loosened.
+* Not admitted: other routes, app/UI/API/core/auth/role changes, fixtures, held #1401/#1402 mapping.

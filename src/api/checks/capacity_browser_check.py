@@ -54,6 +54,11 @@ MANAGER_ROUTES = {
         "#app button",
     ),
     "#/time": ("Staff time capture", ("/api/time/status",), "#app ul"),
+    "#/aftercare": (
+        "Aftercare concerns",
+        ("/api/aftercare/concerns", "/api/aftercare/evaluator"),
+        "#app section[aria-labelledby='ac-list-title']",
+    ),
     "#/screens": ("Specialist screens", (), "#app > a[href='#/']"),
 }
 
@@ -241,6 +246,24 @@ def check(store: Any, axe: str | None = None) -> None:
                         )
 
                 page.on("request", lambda request: origins.update({request: scenario}))
+                form_denials: list[Response] = []
+                form_url = base + "/api/aftercare/form"
+
+                def expect_form_denial(request: Request) -> None:
+                    if (
+                        scenario == "#/aftercare"
+                        and request.method == "GET"
+                        and request.url == form_url
+                    ):
+                        expected_failures.add(request)
+
+                page.on("request", expect_form_denial)
+                page.on(
+                    "response",
+                    lambda response: (
+                        form_denials.append(response) if response.url == form_url else None
+                    ),
+                )
                 page.on("pageerror", lambda error: errors.append(str(error)))
                 page.on(
                     "response",
@@ -406,6 +429,18 @@ def check(store: Any, axe: str | None = None) -> None:
                             expect(banner).to_have_text(
                                 re.compile(r"\S\. Owner: .+\. Next action: .+")
                             )
+                    elif href == "#/aftercare":
+                        # A manager may read but not record concerns, so the form read is denied.
+                        assert [d.status for d in form_denials] == [403], form_denials
+                        assert form_denials[0].json() == {
+                            "error": "Your role cannot record a concern. Ask a colleague who can."
+                        }
+                        expect(page.locator("#app [role=status]")).to_have_text(
+                            "Your role can read these concerns but cannot record one. "
+                            "Ask a colleague who can."
+                        )
+                        expect(page.locator("#ac-form")).to_have_count(0)
+                        expect(page.locator("#app button[type=submit]")).to_have_count(0)
                     elif href == "#/screens":
                         expect(
                             page.get_by_role("link", name="Back to my work", exact=True)
@@ -517,8 +552,11 @@ def check(store: Any, axe: str | None = None) -> None:
                     assert href in MANAGER_ROUTES, ("Unchecked manager route", href)
                     scenario = href
                     reads.clear()
+                    route_posts = len(posts)
                     page.goto(base + f"/app?check={uuid.uuid4().hex}" + href)
                     verify_route(href)
+                    if href == "#/aftercare":
+                        assert len(posts) == route_posts, posts[route_posts:]
                     print(
                         f"Manager route {href}: PASS; heading={MANAGER_ROUTES[href][0]}; "
                         f"reads={MANAGER_ROUTES[href][1]}",
