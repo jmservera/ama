@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Prototype Profile Review
 description: Company-role critique, dated owner usability feedback and proposed next-prototype acceptance checks
-ms.date: 2026-11-04
+ms.date: 2026-11-10
 ms.topic: reference
 ---
 
@@ -346,6 +346,18 @@ The last column adds the domain-specific missing evidence/action.
 | [#349](https://github.com/jmservera/ama/issues/349#acceptance-criteria) O: sign-in callback/session, logout/account switch and denial | NOT SUPPLIED for authenticated account journey | NOT SUPPLIED for account switching and unknown/wrong-role recovery | NOT SUPPLIED | Tenant/identity + design / supply user-facing recovery designs; actual tenant authority remains separate |
 | [#350](https://github.com/jmservera/ama/issues/350#acceptance-criteria) O: deployed feature parity across roles, profile/session, maps, chat and law | [Profile journeys][bc-profile]; account/photo journey NOT SUPPLIED | [Existing profile flows][bc-profile] partial; [dated parity audit](../../../architecture/mvp-to-src-parity-matrix.md#public-deployment-feature-audit-2026-10-16) is engineering inventory, not task flow | NOT SUPPLIED; historical asset presence is not rendered/authorized parity | Workbench/deployment + design / map missing current account/photo and other parity-state designs; no whole-UI validation claimed |
 | [#360](https://github.com/jmservera/ama/issues/360#acceptance-criteria) O: direct demo HTTPS welcome/sign-in/role entry | NOT SUPPLIED for direct-ingress entry journey; [operator context][bc-operator] | NOT SUPPLIED for direct entry/auth/error recovery | NOT SUPPLIED | Deployment/identity + design / supply direct entry states; no live migration, deletion or spend authorized here |
+
+Dated note (2026-11-10, Refs #156 #230 #149): a PROPOSED textual state and
+recovery design for one surface, the Programme case queue and paging screen,
+now exists at
+[programme-queue-paging-v1](./customer-journeys/programme.md#programme-case-queue-and-paging-proposed-v1-state-and-recovery-design-2026-11-10-refs-156-230-149).
+Exact partial scope: the installed `programme-queue` screen at pin
+`b471c56a066d678b50106d9051cfb788e2c9e573`, supporting the C01, C02 and #230
+context. It is pending named review and is not approved. It does not supply
+designs for the other #230 roles, the other individual traces or whole
+criterion 1. The rows above keep their recorded NOT SUPPLIED text and
+the register stays Blocked: the trace check cannot represent a partial
+proposed design for one screen, and no label was changed to make it pass.
 
 ### Reviewed ambiguities requiring only explicit surface decisions
 

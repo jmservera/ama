@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1384-workspace-oracles-1110/src/api/checks/employee_workspace_browser_check.py", line 161, in <module>
+    main(run_browser, employee_data)
+  File "/home/azureuser/source/ama-demo-wt/issue-1384-workspace-oracles-1110/src/api/checks/design_system_browser_check.py", line 308, in main
+    browser_check(base)
+  File "/home/azureuser/source/ama-demo-wt/issue-1384-workspace-oracles-1110/src/api/checks/employee_workspace_browser_check.py", line 153, in run_browser
+    missing_ops_recovery(browser, base)
+  File "/home/azureuser/source/ama-demo-wt/issue-1384-workspace-oracles-1110/src/api/checks/employee_workspace_browser_check.py", line 111, in missing_ops_recovery
+    check("missing ops exhausts the bounded initial/retry attempts", original_ops == 3)
+  File "/home/azureuser/source/ama-demo-wt/issue-1384-workspace-oracles-1110/src/api/checks/design_system_browser_check.py", line 33, in check
+    raise AssertionError(name)
+AssertionError: missing ops exhausts the bounded initial/retry attempts

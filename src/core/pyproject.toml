@@ -12,7 +12,9 @@ dependencies = []
 [project.optional-dependencies]
 sql = ["mssql-python==1.15.0"]
 blob = ["azure-storage-blob==12.31.0"]
-dev = ["ruff==0.17.1", "mypy==2.4.0"]
+# Keyless IoT Hub identity registry adapter (default off). azure-iot-hub imports six without declaring it.
+iothub = ["azure-iot-hub==2.7.0", "six==1.17.0"]
+dev = ["ruff==0.17.1", "mypy==2.4.0", "azure-iot-hub==2.7.0", "six==1.17.0"]
 
 [tool.setuptools.dynamic]
 version = { attr = "zava_forward.core.version.__version__" }
@@ -114,9 +116,11 @@ module = ["zava_forward.core.bulk_edits", "zava_forward.core.change_provenance",
           "test_grant_lifecycle_controls", "tests.test_grant_lifecycle_controls"]
 disallow_untyped_calls = false
 
-# Typed seed-merge CLI and tests call the existing untyped SQL store.
+# Typed seed-merge CLI and tests call the existing untyped SQL store; the aftercare adapter
+# tests construct the same untyped Store, SqlStore and MssqlStore (all other strict checks stay on).
 [[tool.mypy.overrides]]
-module = ["zava_forward.core.seed_merge", "test_seed_merge", "tests.test_seed_merge"]
+module = ["zava_forward.core.seed_merge", "test_seed_merge", "tests.test_seed_merge",
+          "test_aftercare_store", "tests.test_aftercare_store"]
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]
@@ -138,4 +142,10 @@ module = ["zava_forward.core.sensor_consumer", "sensor_consumer_fixture",
           "tests.test_sensor_stream", "test_sensor_handover", "tests.test_sensor_handover",
           "test_sensor_consumer", "tests.sensor_consumer_fixture", "tests.test_sensor_consumer",
           "test_historical_backfill", "tests.test_historical_backfill"]
+disallow_untyped_calls = false
+
+# Typed sensor review draft calls the existing untyped Store/SqlStore save, audit and case helpers.
+[[tool.mypy.overrides]]
+module = ["zava_forward.core.sensor_review_draft", "test_sensor_review_draft",
+          "tests.test_sensor_review_draft"]
 disallow_untyped_calls = false

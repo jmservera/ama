@@ -324,6 +324,11 @@ Outstanding #185/#187/#188/#189 live criteria and OD-43 remain explicit.
 For the 2026-11-05 current-main contract, retention and handover boundary, see the
 [fifth stabilization checkpoint](../architecture/cutover-evidence-pack.md#fifth-stabilization-checkpoint-current-main-sensor-contract-retention-and-handover-2026-11-05-refs-440-184-110)
 (documentation only; the live-sim wire schema is not admitted by the main consumer and nothing is accepted).
+The [2026-11-10 Azure configuration observation](./research/iot-sensor-analytics-research-plan.md#current-azure-configuration-observation-2026-11-10-refs-184-440)
+records five read-only ARM metadata reads of the existing hub, consumer group, demo app and the two
+Bicep-declared job names (both `ResourceNotFound`). It is configuration only: it shows no ingestion,
+runtime or build proof, no execution, no budget or transport authority and no cost measurement, and
+the whole #110, #140, #184 and #440 criteria stay open.
 The [2026-10-30 composed local handover contract](./research/iot-sensor-analytics-research-plan.md#composed-local-handover-evidence-2026-10-30-refs-188)
 adds same-model replay, strict reference-adjusted statistical tolerances and
 whole-window SQL replay checks. It does not establish actual Hub-to-Azure SQL
@@ -929,10 +934,11 @@ or infra acceptance claimed.
 | Retire a draft experiment or decide what to carry forward | [PM/UX draft closure review](./research/gap-analysis-next-build.md#draft-experiment-closure-review-2026-10-13) | Pinned #19/#24/#27 learning-only retirement recommendations, unresolved #58 capability queue, [UX evidence](./research/ux/prototype-learnings-and-simplicity-review.md#draft-ux-closure-review-2026-10-13) and [ADR regressions](../adrs/0002-pilot-readiness-architecture.md#retained-draft-architecture-learning-2026-10-13); owner-authorized PR closure is not product acceptance or resource teardown |
 | Refine prototype usability from owner feedback | [Owner Usability Feedback (2026-10-07)](./research/ux/zava-forward-prototype-profile-review.md#owner-usability-feedback-2026-10-07) | [Zava Forward Workbench PRD](../prds/zava-forward-retrofit-programme-demonstrator.md); reported impressions and proposed checks are not verified implementation or acceptance |
 | Navigate or reset the shared role workbench (#152) | [Shared workbench IA](../../src/api/README.md#shared-workbench-information-architecture-152) | [Dated UX implementation boundary](./research/ux/zava-forward-prototype-profile-review.md#shared-workbench-ia-engineering-slice-2026-10-15); server-described existing rights, own-queue reset, expanded safety and partial manifest. Supported devices and complete eleven-profile/nine-workflow acceptance remain open |
+| Review the proposed Programme case queue and paging state design (#156, #230) | [Programme queue and paging proposed v1 design](./research/ux/customer-journeys/programme.md#programme-case-queue-and-paging-proposed-v1-state-and-recovery-design-2026-11-10-refs-156-230-149) | Dated 2026-11-10 textual wireframes and state/recovery design for one screen at pin `b471c56a0`; PROPOSED, pending named review, not approved. Partial scope only: not other #230 roles, the other individual traces or whole #156 criterion 1; the [design-trace register](./research/ux/zava-forward-prototype-profile-review.md#known-screen-features-and-exact-trace-or-gap) stays Blocked |
 | Inspect role task queues, shared case context and versioned reset (#76) | [Definitions and API contract](../../src/api/README.md#role-task-queues-and-shared-case-context-76) | [Before/after parity audit](../architecture/mvp-to-src-parity-matrix.md#role-task-queue-offline-slice-2026-10-16), [core read model](../../src/core/README.md#derived-role-task-queues-76) and [generated 60k queue timings (#327)](../../src/core/README.md#generated-60000-case-queue-timing-327-2026-10-16); indexed SQL membership maintained with writes/backfill, retained hot IDs and request-time authorisation/projection. Cold post-write medians 1.06-1.24 s versus 2.85-3.49 s; global ranking and full shared/clock/policy refresh costs remain. Draft priority policy, owner queue/role/redaction ratification, human and live-platform acceptance remain open |
 | Understand all users' motivations, pains, gains and agent-assisted journeys | [Customer Journey Atlas](./research/ux/customer-journeys/customer-journey-atlas.md) | Nine linked company-role contributions, 28 stage-based maps, nomination/source-change subjourneys and 24 bounded opportunities; research hypotheses with current-delivery reconciliation, not observed user validation or approved features |
 | Run the five journey learning-test bundles against non-AI comparators (#129) | [Journey learning-test bundles protocol](./research/ux/journey-learning-test-bundles.md) | Protocol (2026-11-03) plus a deterministic net-effort comparison helper in `src/core` (2026-11-04) tested on constructed inputs only: comparators, six-component net-effort measure, stop rules, O10/O18-O20 exclusion; no experiment run; atlas-owner mapping confirmation, including O16 overlap, unmet |
-| Trace atlas themes and the eleven role journeys to screens (#233) | [Atlas findings and role journeys traced to screens](./research/ux/atlas-screen-trace.md) | Hypotheses until #155; all twelve screens are registered on main (2026-11-02 refresh); checker `src/core` `zava_forward.core.atlas_screen_trace`; static source guardrail test added 2026-11-02; bounded Chromium check of the tension sequence on one synthetic home added 2026-11-05 (`src/api/checks/atlas_tensions_browser_check.py`, engineering evidence only; connected walkthrough not shown); rendered accessibility, design-system acceptance and user validation unproven |
+| Trace atlas themes and the eleven role journeys to screens (#233) | [Atlas findings and role journeys traced to screens](./research/ux/atlas-screen-trace.md) | Hypotheses until #155; all twelve screens are registered on main (2026-11-02 refresh); checker `src/core` `zava_forward.core.atlas_screen_trace`; static source guardrail test added 2026-11-02; bounded Chromium check of the tension sequence on one synthetic home added 2026-11-05 (`src/api/checks/atlas_tensions_browser_check.py`, engineering evidence only; extended 2026-11-10 to the technical and quality per-home screens; connected walkthrough not shown); rendered accessibility, design-system acceptance and user validation unproven |
 | Compare Azure development with M365 and business-platform implementation | [Implementation Options and Provisional Platform Recommendation](../case_study_48_addendum.md#implementation-options-and-provisional-platform-recommendation) | [Agentic Retrofit Programme BRD](../brds/agentic-retrofit-programme-brd.md) and [Capstone Assessment Guide](./method/ama-capstone-assessment-guide.md) |
 | Evaluate a new idea | [Idea Register](../ideas/idea-register.md) | [Case Study 48 Addendum](../case_study_48_addendum.md) |
 | Migrate company/programme branding to Zava North Homes / Zava Forward | [One-off migration script and guide](../../tools/rename-zava.md) | Dry-run inventory, tracked text/paths, PPTX/YAML/logo handling, readable image assets and historical exceptions; [observed from-empty Azure rebuild](../../infra/README.md#from-empty-rebuild-observed-on-2026-10-12), real SQL/model checks, [callback-only initialization](../../infra/README.md#post-deployment-api-authentication-initialization) and [tenant provisioning consent boundary](../../infra/README.md#api-registration-management-with-the-existing-m365-session) |
@@ -1005,7 +1011,7 @@ or infra acceptance claimed.
 | [ADR 0004 Per-User Agent Chat and Memory](../adrs/0004-per-user-agent-chat-and-memory.md) | Accepted by the owner 2026-10-15 (OD-44); live personal data gated on OD-45 to OD-49: staff-only case-linked threads on the five existing assistants, then opt-in per-user memory in Azure SQL behind a DPIA gate; compares no chat, shared case memory and preview managed memory; open decisions for the owner, DPO and Legal (BRD OD-44 to OD-49; backlog #157 to #164) | 2026-10-15 |
 | [ADR 0005 Regulatory Compliance Assistant](../adrs/0005-regulatory-compliance-assistant.md) | Operational proposal; owner permits synthetic development with labelled fictional roles, simulated approvals and original contract/grant fixtures (2026-10-15). No fabricated law, real sign-off or operational authority; versioned sources, deterministic alerts and cited home chat remain subject to qualified review. BRD FR-051, PRD FR-060. Phase 1 law store and read-only viewer implemented in `mvp/` (#210), seeded from the local snapshots; owners and review still unnamed |
 | [ADR 0006 Source Layout and Cut-Over Policy](../adrs/0006-src-layout-and-cutover.md) | Accepted 2026-10-15: standard `src` layout with one isolated `zava_forward` package per ADR 0001 workload plus a shared core, module mapping from `mvp/`, move-not-copy rule, phases, cut-over gate, rubric counting and private `mvp/data/` relocation. M1 and M2 (#199) moved the leaves and the core hub (store layer, ledger, domain modules, registry and assistants, ranking policy) into `src/core` with their tests; M5 moved the API server, auth, time capture, web assets, law store, jobs, image build and the remaining tests into `src/api`, `src/core` and `src/orchestrator`, leaving only `mvp/README.md` for M6, which split it into the per-project READMEs under `src/` and left a pointer in `mvp/`; epic #195. Registry excludes for `src/` added in #198; phase 1 skeleton projects, images and per-project CI in #290, indexed in [src/README.md](../../src/README.md) | 2026-10-15 |
-| [In-Use Monitoring Analytics Research Plan](./research/iot-sensor-analytics-research-plan.md) | R1-R5 indoor-method leads remain unvalidated. Adds official historical climate comparison/register, conditional regional HadUK-Grid recommendation and quality-filtered Durham monthly temperature evidence; humidity/access and owner reuse gates remain unmet | 2026-10-17 |
+| [In-Use Monitoring Analytics Research Plan](./research/iot-sensor-analytics-research-plan.md) | R1-R5 indoor-method leads remain unvalidated. Adds official historical climate comparison/register, conditional regional HadUK-Grid recommendation and quality-filtered Durham monthly temperature evidence; humidity/access and owner reuse gates remain unmet. Includes the dated [Azure configuration observation](./research/iot-sensor-analytics-research-plan.md#current-azure-configuration-observation-2026-11-10-refs-184-440) of the existing hub, app and demo job names (ARM configuration only, no ingestion or acceptance proof) | 2026-11-10 |
 | [Executive and technical solution architecture](../architecture/README.md) | Two editable Excalidraw views with official Azure SVG icons and SVG/PNG previews, grounded in #68. Executive view explains accountable workflow/value; technical view maps service, identity, storage, model, network, token, operational and deferred interactions. Sensor proposal is documented separately and not depicted as deployed. Static source snapshot, not new deployment or production acceptance | 2026-10-14 |
 | [MVP and prototype to src parity matrix](../architecture/mvp-to-src-parity-matrix.md) | Proposal for #197 on the accepted ADR 0006 mapping: per-file outcome for all 128 tracked `mvp/` and `prototype/` files plus 450 retired sandbox files, proposed ADR amendments A1 to A5, review of PRs 235 to 287 (reopen #151 and #175, rebuild assistant dispatch under #107), baseline of 719 tests (92 skipped) and migration order for #199. `prototype/` removed in #202 step 1 | 2026-10-15 |
 | [Capstone Rubric Review of the Agentic Retrofit Programme BRD](./research/company/capstone-brd-rubric-review.md) | Criterion-by-criterion readiness assessment of the BRD against the FY27 AMA capstone rubric, with floor analysis and a four-gate remediation plan | 2026-09-30 |
@@ -1079,7 +1085,7 @@ official links for every snapshot. Check it before relying on any file below.
 | Document | Summary | Updated |
 | --- | --- | --- |
 | [Microsoft Industry Hub](./resources/microsoft-industry-hub.md) | Internal hub entry points, nonprofit hero use cases, patterns mapped to each Zava Forward agent, customer evidence and lessons | 2026-09-25 |
-| [AI Tokenomics](./resources/ai-tokenomics.md) | Public Tokenomics Foundation framing (draft v0.5.2): Total Cost of AI, unit economics above a quality floor, booked value destinations and Big-T notation; mapped to rubric A5, A6, B7, C1 and C3 and to existing Zava Forward evidence; gaps, with an internal Microsoft pointer that must not be quoted. The mentor's meaning is unconfirmed. Includes the dated configured demo-model, limits and evidence-gap record for #108 (configuration only, no serving, region or evaluation proof) | 2026-11-07 |
+| [AI Tokenomics](./resources/ai-tokenomics.md) | Public Tokenomics Foundation framing (draft v0.5.2): Total Cost of AI, unit economics above a quality floor, booked value destinations and Big-T notation; mapped to rubric A5, A6, B7, C1 and C3 and to existing Zava Forward evidence; gaps, with an internal Microsoft pointer that must not be quoted. The mentor's meaning is unconfirmed. Includes the dated configured demo-model, limits and evidence-gap record for #108 (configuration only, no serving, region or evaluation proof) and its [2026-11-10 regional metadata pass](./resources/ai-tokenomics.md#regional-metadata-observation-2026-11-10-refs-108) (live app settings and deployment re-read; regional quota limit and unit unknown, even for the catalog-resolved usage name `OpenAI.GlobalStandard.gpt4.1-nano`) | 2026-11-10 |
 
 ### Method and Memory
 
@@ -1318,3 +1324,64 @@ A [discovery CLI checkpoint](../architecture/cutover-evidence-pack.md#discovery-
 connection `DENY`, `model_used` false and an empty human comparison, and no connect call or write-mode open was
 traced. It is constructed-fixture evidence only; whole #125, Phase 0, actual comparison, model and human approval
 gates stay unmet, and #440 and #125 stay open.
+
+A [parent 149 coverage integration checkpoint](../architecture/cutover-evidence-pack.md#parent-149-coverage-integration-checkpoint-2026-11-10-refs-149-440-153-156-230-231-233-96)
+(2026-11-10, draft, local) records a normal merge of `main` `d52f20a51` into the reviewed parent `ae4b20007`
+with no conflict, and focused local API, Core, importer, static and Chromium checks that pass on the combined
+source. It is constructed-fixture engineering evidence only; whole UX, WCAG, assistive-technology, human and
+design acceptance, #156 M1, #1362 and PR 1371 stay with their owners, and #149 and #440 stay open.
+
+A [served import-refusal post-integration checkpoint](../architecture/cutover-evidence-pack.md#served-import-refusal-and-exception-register-post-integration-checkpoint-2026-11-10-refs-440-73-135-1360)
+(2026-11-10, draft, local) observes pinned `main` `1ee56da3a` after PR 1361: 172 focused Core, Importer and API
+cases run (165 pass, 7 opt-in SQL Server skips), clean static checks and a constructed served story in which a
+refused file transfers once, reaches only the configured steward and is counted but not shown to the operator. Earlier
+af7b, 27dab and 1fab observations stay historical, the non-blocking #1360 stays unreproduced, and SQL Server,
+served-browser, named-role, hosted exact-commit and human approval gates stay unmet; #73, #135 and #440 stay open.
+An independent-review qualification (C5, 2026-11-10) states that only Importer typing ran (Core typing was not run) and
+that the retained `E0` is a tailed summary with an author-attributed cause.
+
+A nomination and UX integration wave checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#nomination-and-ux-integration-wave-checkpoint-2026-11-10-refs-440-130-149-153-156-1360-1362).
+It pins `main` `65c2ab9d9` after PR 1381 and PR 1376, consumes two Root local runs on source-equal predicted trees
+(tree differences only in the rubric score file), and traces the read-only nomination view against BRD, PRD and ADR
+statuses without approving any. Azure observed is none; hosted exact-commit CI, assistive-technology, human, HVE and
+whole-epic gates stay unmet. It is separate from the CSV-learning record; #130, #149, #440, #1360, #1362, #1383 and
+#1384 stay open.
+
+A Bicep public-simulation current-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#bicep-public-simulation-current-main-checkpoint-2026-11-10-refs-440-136-1288).
+It pins `main` `0a6dc0b3f` after PR 1380, consumes Root local runs and a later image admission on a source-equal
+auxiliary composition (tree difference only in the rubric score file), and traces the default-off, guarded,
+one-replica, volatile opt-in lane against document statuses without approving any. Azure observed is none; the three
+baseline policy typing errors stay unwaived; whole #136, #1288 and #440, live SQL, authentication, resident, model,
+human and HVE gates stay unmet. The nomination and UX section stays historical and unchanged.
+
+A Registry wave current-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#registry-wave-current-main-checkpoint-2026-11-10-refs-440-185-110-109-184-111-1288).
+It pins `main` `6cc59776` (tree `eaf44bcd`) after PR 1393, reads the bounded keyless Azure IoT Hub identity-registry
+adapter by read-only git at that pin, and carries forward the Root local runs on the reviewed candidate with
+component-subtree equivalence only. Azure observed is none; actual device issuance, credential owner, secure storage,
+teardown and live Hub, SQL, UI and model acceptance stay unproved; no Draft, in-review or proposed document, human or
+HVE gate is approved. The declared parent (PR 1396) has since merged as `main` `eff05737`; this record keeps `6cc59776` as its
+historical pin, notes equal `src`, `infra` and `tools` subtree ids on `eff05737`, and is a main-target candidate after an ordinary
+merge. It is separate from the nomination and UX, Bicep and CSV-learning records;
+#185, #110, #109, #184, #111 and #1288 stay open.
+
+A sensor-review wave actual-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#sensor-review-wave-actual-main-checkpoint-2026-11-10-refs-440-109-111-184-1288).
+It pins `main` `4c1b4099` (tree `75158203`) after PR 1404, which carried the #111 child (PR 1395, merged into the declared
+parent, not main) into main, and traces the default-off, proposed-only, role- and consent-bounded sensor-review drafts
+against document statuses without approving any. Root local runs executed on a staged tree, not a post-commit checkout or
+main; `src`, `infra` and `tools` ids are equal and the only other difference is main's rubric score file. Azure, provider,
+model and resident observed is none; whole #109 and #111 stay open, #132, #144 and inherited #1401 and #1402 are excluded,
+and the recommendation is to continue. The aftercare checkpoint in PR 1405 is separate and was not on main when read (the original snapshot statement; PR 1405 merged as `ac962fe6` at 16:44:27Z, and its own section follows). A dated qualification in the pack section records the later ordinary merge of `main` `d79180309`, equal `src`, `infra` and `tools` ids, no fresh runtime claim and the preserved first witness `verify` exit 1. The publication hold stays: both witness chains (original `80643f6b`, `verify` exit 1; qualification `c21849e0`, `verify` exit 1 for a refused `research-open`) are QUALIFIED, as the dated publication qualification (C2) in the pack records with its external locators.
+
+An aftercare integration current-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#aftercare-integration-current-main-checkpoint-2026-11-10-refs-440-89-133-134-1401-1402).
+It observes PR 1400 merged as `main` `64c3f9191` (tree `8fbdaec7`), proves by direct tree comparison that the `src`, `infra`
+and dependency inputs equal the tested candidate `b7e46b3be` while `.github` and main-only documents stay as on main, and
+attributes the retained Core, API, SQL, static and browser results to the author's original commands, not to new runs on
+main. The 77 authored paths are qualified against the 98-path review superset. Two inherited Mediums stay open, unfixed and
+unwaived as #1401 and #1402; whole #89, #133 and #134 stay open and #132 is excluded. The recommendation is a bounded
+CONTINUE for local #134 screen walkthroughs of the implemented staff-assisted surface only; it is not an approval, a tick or
+live, model, resident, professional or release proof.

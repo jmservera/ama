@@ -1,0 +1,34 @@
+PASS owned server is running and responsive on loopback
+PASS case renders without partial-workspace error
+PASS all actual shell scripts return JavaScript 200
+PASS ops executes before app with no service worker
+PASS case renders without partial-workspace error
+PASS ordinary API retry does not reload document/scripts
+PASS healthy and API retry produce no pageerrors
+PASS missing ops names the actual dependency
+PASS case controls are not silently omitted
+PASS asset error reflows at 320px
+PASS asset error reflows at 390px
+PASS asset error reflows at 1280px
+PASS missing ops exhausts the bounded initial/retry attempts
+PASS case renders without partial-workspace error
+PASS keyboard document reload keeps full case URL and session
+PASS reload refetches the previously failed ops file
+PASS missing dependency uses handled feedback, not ReferenceError
+PASS missing ops names the actual dependency
+PASS case controls are not silently omitted
+PASS asset error reflows at 320px
+PASS asset error reflows at 390px
+PASS asset error reflows at 1280px
+PASS negative control extra (missing ops) detected: missing ops exhausts the bounded initial/retry attempts: expected 4, observed 5
+PASS missing ops names the actual dependency
+PASS case controls are not silently omitted
+PASS asset error reflows at 320px
+PASS asset error reflows at 390px
+PASS asset error reflows at 1280px
+PASS negative control early (missing ops) detected: missing ops exhausts the bounded initial/retry attempts: expected 4, observed 3
+PASS case renders without partial-workspace error
+PASS missing specialist module leaves ordinary case and queue usable
+PASS affected specialist route names its dependency
+PASS unrelated and affected routes produce no pageerrors
+Chromium 156.0.8078.4; synthetic loopback only; no live AI or Azure.

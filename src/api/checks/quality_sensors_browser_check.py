@@ -19,6 +19,7 @@ import threading
 import time
 import uuid
 from http.server import ThreadingHTTPServer
+from datetime import timedelta
 from pathlib import Path
 from urllib.error import HTTPError
 from urllib.request import Request, urlopen
@@ -31,7 +32,8 @@ import test_mvp
 import test_quality_sensors as qs
 from checks.regulatory_ux_check import AXE_SHA256
 from zava_forward.api.server import App, make_handler
-from zava_forward.core import projection, simulation_lane
+from zava_forward.core import projection, sensor_analysis, sensor_review_draft, simulation_lane
+from zava_forward.core.synthetic import sensor_scenarios
 from zava_forward.core.assistants import Assistants
 from zava_forward.core.sqlstore import SqlStore
 
@@ -183,6 +185,98 @@ def main(axe_path: Path | None = None, out: Path | None = None):
                 shown == captured,
             )
             scan(page, "retained readings")
+
+            def drafts_of(tag):
+                open_quality(page, tag)
+                page.wait_for_load_state("networkidle")
+                return page.locator("#sensors #sensor-drafts")
+
+            os.environ.pop(sensor_review_draft.FLAG, None)
+            off = drafts_of("draft-off")
+            check(
+                "draft section is absent while the default-off flag is unset",
+                off.locator("h3").count() == 0 and off.inner_text().strip() == "",
+            )
+            os.environ[sensor_review_draft.FLAG] = "1"
+            empty = drafts_of("draft-empty")
+            expect(
+                empty.get_by_role("heading", name="Sensor review draft (proposed, not approved)")
+            ).to_be_visible()
+            expect(empty).to_contain_text("No review draft exists for this home")
+            check(
+                "empty draft state has no write control", empty.get_by_role("button").count() == 0
+            )
+            scan(page, "sensor draft empty")
+
+            window = sensor_scenarios.Window(
+                sensor_scenarios.START,
+                sensor_scenarios.START + timedelta(days=sensor_scenarios.DAYS),
+            )
+            damp = next(
+                c for c in sensor_scenarios.generate() if c.truth.label == "sustained_high_humidity"
+            )
+            synthetic = sensor_analysis.AnalysisPolicy(
+                approval=sensor_analysis.RuleApproval(
+                    sensor_analysis.RULE_ID,
+                    sensor_analysis.ANALYSIS_VERSION,
+                    "SYNTHETIC TEST ONLY",
+                    "SYNTHETIC-TEST-SENTINEL",
+                )
+            )
+            signal = sensor_analysis.derive_signal(
+                "ZF-1",
+                [dict(r, home_id="ZF-1", sensor_id="SENS-SYN-1") for r in damp.rows],
+                window,
+                window.end,
+                "granted",
+                synthetic,
+            )
+            made = sensor_review_draft._record_draft_synthetic(
+                fx.store, fx.store.staff[inspector["email"]], "ZF-1", signal, synthetic
+            )
+            check("synthetic-approval draft is stored for the check", made["created"])
+            with fx.store.lock:
+                record = fx.store._case("ZF-1")[sensor_review_draft.CASE_KEY][0]
+                record["candidate"]["summary"] = "<b>bold</b> & text"
+                record["draft_digest"] = sensor_review_draft._digest(record)
+                fx.store.save()
+            seeded = drafts_of("draft-seeded")
+            expect(seeded).to_contain_text("Not an approved task")
+            expect(seeded).to_contain_text("<b>bold</b> & text")
+            check("draft markup renders as text", seeded.locator("b").count() == 0)
+            check("draft shows no write control", seeded.get_by_role("button").count() == 0)
+            check(
+                "draft screen shows no sentinel approval reference",
+                "SYNTHETIC-TEST" not in seeded.inner_text(),
+            )
+            check(
+                "draft has semantic list and time elements",
+                seeded.locator("ul li").count() == 1 and seeded.locator("time").count() == 3,
+            )
+            scan(page, "sensor draft seeded")
+
+            fx.set_consent("declined")
+            held = drafts_of("draft-withheld")
+            expect(held).to_contain_text("manual-sensor-review")
+            check("withheld consent hides the saved draft content", "bold" not in held.inner_text())
+            fx.set_consent("granted")
+
+            other = browser.new_page()
+            other.on("pageerror", lambda e: errors.append(str(e)))
+            login(other, liaison)
+            other.goto(base + "/app?draft-liaison#/case/ZF-1?tab=quality")
+            other.wait_for_load_state("networkidle")
+            check(
+                "unauthorised role sees no draft section",
+                other.locator("#sensor-drafts").count() == 0,
+            )
+            check(
+                "unauthorised role read is denied",
+                other.evaluate("fetch('/api/cases/ZF-1/sensor-drafts').then((r) => r.status)")
+                == 403,
+            )
+            other.close()
+            os.environ.pop(sensor_review_draft.FLAG, None)
 
             proposal = open_flag(page, "flag")
             flag = proposal.get_by_role("group", name="Review flag status")

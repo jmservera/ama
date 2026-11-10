@@ -1,0 +1,55 @@
+{
+  "task_id": "185-iot-registry-azure-main-integration",
+  "task_slug": "iot-registry-azure-185-main-integration-1110",
+  "parent_task": {
+    "task_id": "185-iot-registry-azure-e1",
+    "task_slug": "iot-registry-azure-185-e1-1110"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-iot-registry-azure-185-main-integration-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-iot-registry-azure-185-main-integration-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-iot-registry-azure-185-main-integration-1110-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-iot-registry-azure-185-main-integration-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-iot-registry-azure-185-main-integration-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-iot-registry-azure-185-main-integration-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Integration only of frozen E1 105d479a with origin/main 06374dfc by ordinary --no-ff merge; E1 spent, extension remaining 4, no E2, no new grant, no source or SDK repair",
+      "status": "confirmed",
+      "evidence": "Root brief-185-main-integration-1421.txt"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; merge-tree clean; no main change references the adapter",
+      "status": "recorded",
+      "evidence": "research record"
+    },
+    {
+      "decision": "Critique executed once (self); proceed; 5 findings applied or accepted; not repeated",
+      "status": "recorded",
+      "evidence": "critique record"
+    },
+    {
+      "decision": "Merge 01a5e642 (ordinary --no-ff, clean, tree 4c9bfbbc) validated: 89 selector, 2 Root regressions, Ruff, full Core mypy all exit 0; Review executed once (self), conformant, no new finding; no E2, extension remaining 4",
+      "status": "recorded",
+      "evidence": "changes and review records; ROOT/checks-185-main-integration-1110"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Local records commit, commit-complete witness, handoff; Root SAME0483 assessment of final composition before publication"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Root SAME0483 assessment of final composition before publication",
+      "rationale": "required gate",
+      "evidence": "Root brief"
+    }
+  ]
+}

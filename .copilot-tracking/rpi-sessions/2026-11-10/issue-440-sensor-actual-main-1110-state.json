@@ -1,0 +1,64 @@
+{
+  "task_id": "440-sensor-actual-main-1110",
+  "task_slug": "sensor-actual-main-440-1110",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-sensor-actual-main-440-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-sensor-actual-main-440-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-sensor-actual-main-440-1110-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-sensor-actual-main-440-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-sensor-actual-main-440-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-sensor-actual-main-440-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Due actual-main sensor feature-wave checkpoint (PR 1404 on main 4c1b4099); docs only, no implementation, runtime, gate, cloud, model, data or counter grant; no push, rebase, PR, issue or board change",
+      "status": "confirmed",
+      "evidence": "ROOT/brief-440-sensor-actual-main-2014.txt"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": "research record"
+    },
+    {
+      "decision": "Critique executed once by the author (self-executed, not independent); compatible amendments C1-C6 applied directly; no user decision needed",
+      "status": "recorded",
+      "evidence": "plan critique record"
+    },
+    {
+      "decision": "Review executed once by the author after implement-done (self-executed, not independent); outcome conformant with stated limits",
+      "status": "recorded",
+      "evidence": "review record"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Record review-done, commit locally, then commit-complete"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Bind sensor MSSQL skips to required SQL execution (#1297, #1298)",
+      "rationale": "Opt-in skips are not SQL passes; smallest existing-owner gap",
+      "evidence": "pack section, raw skip counts 22 and 13"
+    },
+    {
+      "rank": 2,
+      "task": "#111 reproducibility from retained readings and R1 to R3 research",
+      "rationale": "Unticked #111 criteria",
+      "evidence": "issue 111 body, PRD AC-067 and AC-068 Not run"
+    },
+    {
+      "rank": 3,
+      "task": "Live ingestion and Quality flag work (#110, #184, #1288)",
+      "rationale": "Needs live or human gates",
+      "evidence": "pack section out-of-scope row"
+    }
+  ]
+}

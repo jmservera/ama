@@ -658,6 +658,16 @@ empty results have page 1 of 1. Hash URL queries retain filters/page through
 reload and browser history, and applying filters resets pagination.
 The legacy case/CSV endpoints are unchanged.
 
+`GET /api/closed-cases.csv` accepts the same parameters, authorization and
+validation as `GET /api/closed-cases` and exports only the current page of that
+read as an attachment (`closed-cases-page.csv`) with a fixed set of summary
+columns (id, resident, address, town, postcode, hazard, status, team,
+closed_on). The header row is kept when there are no rows; a blank `closed_on`
+means the closure date is unknown. Cells use the shared formula-safe escaping.
+The page offers it as "Download this page for Excel" after a successful load.
+It is a read-only copy of constructed demonstration data; a fresh read may
+differ from the rows displayed, and Closed does not mean completed or approved.
+
 Invalid date ranges show inline errors linked to both date fields and focus the
 start date so the range can be corrected. Service read failures retain a separate
 page alert and retry action without marking valid dates as invalid.
@@ -1128,6 +1138,28 @@ keys are refused. Existing authentication and Finance/resident/reason-view
 checks apply on the server. No UI, model call, approval, submission or
 reviewed-export path is added.
 
+### Held draft download (#96, demo only, default OFF)
+
+`GET /api/cases/{case_id}/form-review/{draft_id}/held-export` serves the
+existing `form_export.draft_export` result unchanged as the attachment
+`held-form-draft-export.json` (`Cache-Control: private, no-store`). Every
+request re-checks the signed-in actor's Finance, resident-record and reason-view
+rights; there is no new role, override, POST or reviewed export. An unavailable
+or non-Held export returns 409 JSON with no attachment, and the file is built
+when requested, so it can be newer than the screen: read its `input_version`
+and `content_sha256`. It states Held, unreviewed, Not submitted and eligibility
+Not assessed.
+
+The route answers 404 unless the operator sets both
+`ZF_FORM_HELD_DOWNLOAD=synthetic-demo-only` and `ZF_DEPLOYMENT_PROFILE=demo`,
+and never with the `trusted-proxy` provider. The Funding screen then shows
+"Download Held draft (unreviewed)" only for a readable, available draft. The
+switch is an operator attestation that the data is synthetic: the store has no
+provenance marker, so the code cannot prove it. Real templates, real data and
+operational submission stay unapproved.
+`python -m checks.held_form_download_browser_check` checks it in Chromium with
+Tab and Enter (no axe scan, not assistive-technology or WCAG acceptance).
+
 ```json
 {"action":"open","schema_id":"SYN-TECH","schema_version":1}
 ```
@@ -1178,6 +1210,32 @@ This is a synthetic local engineering slice, not approved-template binding,
 full reviewed application/claim export, live financial authority, a Board
 envelope or complete issue acceptance.
 
+## Staff aftercare concern journey (#133, Refs only, hook integration C4 and C5)
+
+The staff workbench serves `/aftercare.js` and the route `#/aftercare` (listed in
+`checks/workbench-manifest.json` for Residents Liaison Officer, Retrofit Coordinator, Project Manager
+and Programme Support Officer; contractor and Quality Inspector get no entry and receive 403).
+`/api/aftercare` delegates to the unchanged `AftercareService` through
+`zava_forward.core.aftercare_store.DocumentStateStore`. The actor is `{name, role}` from the session
+only. The home allowlist is the constructed retrofit exercise scenarios (SCENARIO-08 to SCENARIO-11),
+never unrestricted; the records are synthetic and unverified and do not name real households. Only the
+Residents Liaison Officer and Retrofit Coordinator can record; the other roles read. The service
+`actions` log inside the document is the audit record, because a separate audit queue entry would not
+be atomic with the document write. Statuses: 201 created, 200 replay, 400 validation, 403, 404, 409
+conflict, 503 not saved or not confirmed. `api()` copies `data.errors` onto the thrown error so the form
+links field errors; the draft, request id and an unconfirmed outcome survive validation failures and
+route changes and are cleared on sign-out. A reply that arrives after the session or view has
+changed (including a real 401 that returned the user to sign-in) updates the stored draft and request
+id but does not render or take focus, so it cannot overwrite the sign-in screen or another route; the
+same actor signing in again sees the original draft and request id, and a different actor does not.
+Because the draft lives only in memory, an aftercare `beforeunload` guard warns on reload, full
+navigation or tab close while the draft is edited or its save is unconfirmed; safe hash-route changes
+do not prompt, and the guard clears on a confirmed receipt, sign-out or actor change. Nothing is
+written to browser storage. No evaluator or resident account, portal or closure is
+added; the quality-note action is not offered as concern intake. Tests: `tests/test_aftercare_served.py`,
+`tests/test_role_endpoint_inventory.py`; browser check `checks/aftercare_browser_check.py` (constructed
+keyboard and axe observations, not assistive-technology or WCAG acceptance).
+
 ## Specialist screen delivery (#149)
 
 The existing workbench includes a **Specialist screens** destination. Installed
@@ -1214,7 +1272,16 @@ queue) and `231q` (Quality queue) sign in as a Quality Inspector, open the
 read-only screens on a synthetic home with returned, stale and missing
 evidence, and check text-only blocked state, no write controls, keyboard
 reach of every table region and no readiness over missing evidence. Story `231`
-also checks that no readiness shows over an unresolved source conflict. Set
+also checks that no readiness shows over an unresolved source conflict. Stories
+`231p` (technical complete) and `231qp` (quality accepted) are the declared
+positive states: a private checker-local synthetic home whose real server
+projection has no technical or quality blockers (no stubbed response; its names,
+sign-offs and acceptance are test inputs, not professional approval). They check
+that the read-only text records, but does not approve or hand over, the source,
+checklist and person evidence, the same home, no write controls or POSTs, an
+unchanged case record and Tab reach of every table region at 1280 and 320 px;
+only these two stories may show the positive wording, and `231` and `231q` still
+reject it. Set
 `ZF_AXE_JS` to the pinned axe 4.10.3 file to add an axe WCAG 2.2 A/AA scan.
 These are engineering checks, not assistive-technology or WCAG acceptance (#155).
 Stories `232` (Resident choice and update queue) and `232s` (Resident service
@@ -1240,6 +1307,16 @@ Without `ZF_AXE_JS` the axe scan is skipped and the run prints `PARTIAL`; a
 skip is not a pass. A scan with axe 4.10.3 covers `main` only, at 1280 px, on
 the programme overview and the connected home view for both roles; it is not a
 statement about other views, widths or roles.
+Programme queue paging has its own manual check,
+`PYTHONDONTWRITEBYTECODE=1 python -m checks.programme_paging_browser_check`
+(heavy; run under the shared heavy lock). As a Programme Manager at 1280 and
+320 px, with a private 60-case synthetic fixture, it loads the real first page of
+50, reaches Next and Previous by keyboard, checks unique page 2 and returned
+page 1 records, the page-local scope filter and Reset, the retained rows and
+home after one constructed (intercepted) paging GET failure, retry to page 2,
+no writes and no horizontal overflow. The injected failure is not a real
+network incident or backend proof. It does not run axe and is not a WCAG, usability
+or assistive-technology test.
 Checks own a synthetic
 loopback server and do not read the normal working dataset or call Azure.
 The parent's scoped receipt covers its exact foundation head, not unmerged
@@ -1348,7 +1425,12 @@ by a test route, values untouched). It also checks that no non-GET/HEAD/OPTIONS
 request, contact link, evidence write control or JavaScript error appears after
 sign-in, that the case and package state are unchanged, labelled table regions,
 Tab reach and reflow at 1280 px and 320 px, and that the served
-`role-screens.js` is this checkout's file. Set `ZF_TENSIONS_SCREENSHOTS` to a new
+`role-screens.js` is this checkout's file. Since 2026-11-10 it also opens Technical
+queue and Quality queue for the same home (the fixture overlays the existing
+`technical_quality_data` returned, unknown and open-defect evidence at design
+version 1) and checks the "Not shown for this role" panel, fixture-derived
+sign-off, defect and evidence values, that blocked evidence is never shown as
+readiness, no funding amount, labelled regions and Tab reach at both widths. Set `ZF_TENSIONS_SCREENSHOTS` to a new
 directory to keep full-page and per-panel screenshots. This is an engineering
 check on one synthetic home, not the connected eight-stage walk, assistive
 technology, WCAG, Fluent 2 or user acceptance (#150, #151, #155).
@@ -3970,6 +4052,21 @@ owner-approved trusted producer with a current fixture and provenance binding
 exists; that producer is not part of this change. The all-cases scope keeps its
 own wording. The check is `tests/test_queue_empty_state.py` (Node, partial
 AC-034/043 evidence only).
+
+The served workbench browser check observes that explanation, per role, at 320,
+390 and 1280 px on the constructed data: one visible, contained, wrapped
+explanation that says coverage is unknown, and none for a nonempty queue. A
+constructed test-page mutation that hides it at 320 px is shown to be caught.
+These are engineering observations on constructed fixtures, not a device
+matrix, assistive-technology or user evidence.
+
+Correction to the count above: the seven non-Contractor roles give 21 role-width
+observations, of which five roles (15 observations) have an empty own queue and
+check the explanation, and two roles (6 observations) have a populated queue and
+check that none is shown. The check also rejects an explanation clipped
+vertically by its own or an ancestor's overflow (the page may still scroll), and
+a second constructed test-page mutation (small height with hidden overflow) at
+320 px is shown to be caught for that reason, with the original style restored.
 From `src/api`, using the installed src packages and `.[dev]`:
 
 ```bash
@@ -4027,6 +4124,30 @@ This is first-page request evidence, not a three-case multipage test.
 No real model, private stock, SQL Server or Azure is exercised. Full scenario
 workflow coverage, operational definition ratification, human/screen-reader
 acceptance and mandatory live-platform application acceptance remain unmet.
+
+Keyboard walkthrough check (Refs #134). Run it from `src/api` with
+`python -m checks.specialist_keyboard_browser_check`, using a short
+`ZF_BROWSER_SCRATCH` path, the shared heavy-job lock and your own environment. It
+uses only synthetic data. It starts a browser and presses only Tab, Shift+Tab and
+Enter from the case list to each specialist screen served to each fixture login,
+to the first listed home, to every evidence table, the workspace link and Reset.
+At each stop it checks that the focus indicator is visible (an outline or ring of at
+least 2px; removed, transparent or zero-size styles fail, and an unusual ring shape
+needs a deliberate update of the check), that the
+status message has the right text and is announced politely, and that each
+evidence table has a label and can take focus. It also breaks 15 controls on
+purpose, such as removing a ring, a label or a status attribute, and each break must
+make the check fail. The output has about 714 PASS lines; that is a count of checks
+printed, not of acceptance criteria.
+
+What it does not show: picking a fixture login is not authentication; the status
+text is read from the page, not from a screen reader; endpoint and handoff wording
+is only checked as text; five screens have no evidence table on the fixture; Asset,
+Procurement and Auditor have no login; the first listed home stands in for all
+homes. It records no acceptance criterion as met and no human or assistive
+technology approval. Dated notes on how the check was built and verified, including
+earlier failed steps, are in the
+[validation record](../../.copilot-tracking/research/2026-11-10-keyboard-c4-134-1110-research.md).
 
 This is a bounded offline extension of the existing role workbench, not a new
 identity provider, role simulator, permission policy or operational acceptance.

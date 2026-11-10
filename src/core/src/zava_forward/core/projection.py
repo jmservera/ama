@@ -35,7 +35,7 @@ STAFF_ROLES = ("Retrofit Coordinator", "Resident Liaison Officer", "Building Saf
                "Quality Inspector", "Retrofit Programme Manager", "Programme Support Officer")
 FINANCE_VIEW = ("Grants and Evidence Officer", "Retrofit Programme Manager", "Programme Support Officer")
 STAFF_GET = ("coordinator", "finance_queue", "me", "cases", "cases.csv", "case", "ranking", "ai_priority", "facets", "stats", "map", "visits",
-             "funding", "briefing", "doc", "audit", "handoffs", "time", "packages", "workorders", "job_pack", "checklists", "ai_report", "assistants", "law", "retention", "data_protection", "chat", "building", "forms", "continuity", "continuity_export", "stock_queue", "resident_choice_queue", "exceptions",
+             "funding", "briefing", "doc", "audit", "handoffs", "time", "packages", "workorders", "job_pack", "checklists", "ai_report", "assistants", "law", "retention", "data_protection", "chat", "building", "forms", "continuity", "continuity_export", "stock_queue", "resident_choice_queue", "exceptions", "aftercare",
              "packages.csv", "workorders.csv", "handoffs.csv", "visits.csv", "funding.csv", "checklists.csv")
 CONTRACTOR_GET = ("me", "cases", "case", "workorders")
 CONTRACTOR_POST = ("logout",)
@@ -146,6 +146,7 @@ def hold_notes(c):
 
 
 def redact_staff_detail(user, d):
+    d.pop("sensor_review_drafts", None)
     resident_view = user.get("role") in RESIDENT_VIEW_ROLES
     resident_data = {key: deepcopy(d[key]) for key in RESIDENT_FIELDS + ("decision",)
                      if key in d} if resident_view else {}

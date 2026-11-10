@@ -1,0 +1,12 @@
+PASS owned server is running and responsive on loopback
+PASS /vendor/leaflet.js: 1 failed request(s), automatic actual-script recovery
+PASS /vendor/leaflet.js: 2 failed request(s), automatic actual-script recovery
+PASS /role-screens.js: 1 failed request(s), automatic actual-script recovery
+PASS terminal exhaustion, native reload
+PASS terminal missing global, native reload
+PASS negative control extra (exhaustion) detected: Terminal attempts must match the declared script-retry contract: expected 4, observed 5
+PASS negative control early (exhaustion) detected: Terminal attempts must match the declared script-retry contract: expected 4, observed 3
+PASS negative control reset (exhaustion) detected: Route revisit must not reset the retry budget: expected 4, observed 7
+PASS negative control continue (missing global) detected: Terminal attempts must match the declared script-retry contract: expected 2, observed 4
+PASS real companion settlement: {'outcome': 'load', 'ready': True}, evaluations=1
+PASS delayed lexical companion: navigation
