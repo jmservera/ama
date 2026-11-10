@@ -10,13 +10,13 @@ Tier: owner DEMO TARGETED. No full local gate, no push, PR, issue or board write
 
 ## Phases
 
-* [ ] Phase 1: prospective records. Commit research, plan, details, critique and state before any merge or test.
-* [ ] Phase 2: ordinary merge of `test/demo-finance-parent-440-1110` (`ef63d180`), preserving its seven records; then ordinary merge of main `5318f738`. Resolve only append-style conflicts in `src/core/README.md` and `docs/reference/log.md`, preserving both histories.
-* [ ] Phase 3: byte guards on the merged tree. Seven product blobs equal the finance `4642b55f` blobs; `server.py`, `test_form_staging_api.py` and every other non-documentation path equal the main pin; the seven verification records are byte-identical to `ef63d180`.
-* [ ] Phase 4: isolated environment `/tmp/issue93-finance-main-1110/venv` with hashed pinned build tools and `--no-deps` editable installs of this worktree's `core`, `agents`, `api`; prove `direct_url.json`, module `__file__` and test blob identities.
-* [ ] Phase 5: observations in order. A: two history tests. B: five Core modules. C: complete main `tests.test_form_staging_api`. D: strict mypy for Core and API with the project configuration. E: Ruff check and format check on the seven product paths.
-* [ ] Phase 6: SQL evidence determination. Re-run the contract search on the merged tree; report absent MSSQL form or history contracts; no admission unless critique or a new finding shows material SQL impact.
-* [ ] Phase 7: changes record with commands, exits, counts, skips and identities; one Review; final state; handoff to the coordinator path.
+* [x] Phase 1: prospective records. Commit research, plan, details, critique and state before any merge or test.
+* [x] Phase 2: ordinary merge of `test/demo-finance-parent-440-1110` (`ef63d180`), preserving its seven records; then ordinary merge of main `5318f738`. Resolve only append-style conflicts in `src/core/README.md` and `docs/reference/log.md`, preserving both histories.
+* [x] Phase 3: byte guards on the merged tree. Seven product blobs equal the finance `4642b55f` blobs; `server.py`, `test_form_staging_api.py` and every other non-documentation path equal the main pin; the seven verification records are byte-identical to `ef63d180`.
+* [x] Phase 4: isolated environment `/tmp/issue93-finance-main-1110/venv` with hashed pinned build tools and `--no-deps` editable installs of this worktree's `core`, `agents`, `api`; prove `direct_url.json`, module `__file__` and test blob identities.
+* [x] Phase 5: observations in order. A: two history tests. B: five Core modules. C: complete main `tests.test_form_staging_api`. D: strict mypy for Core and API with the project configuration. E: Ruff check and format check on the seven product paths.
+* [x] Phase 6: SQL evidence determination. Re-run the contract search on the merged tree; report absent MSSQL form or history contracts; no admission unless critique or a new finding shows material SQL impact.
+* [x] Phase 7: changes record with commands, exits, counts, skips and identities; one Review; final state; handoff to the coordinator path.
 
 ## Critique amendments applied (C1 to C8)
 
