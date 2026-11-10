@@ -4127,10 +4127,16 @@ acceptance and mandatory live-platform application acceptance remain unmet.
 
 `python -m checks.specialist_keyboard_browser_check` (Refs #134) walks, with Tab,
 Shift+Tab and Enter only, from the case list to every specialist screen served to
-each constructed fixture login, then to the first listed home's labelled evidence
-region, the existing-workspace link and Reset screen view, asserting the exact
-`#workspace-status` text after each state. It includes negative controls (removed
-recovery link, blank status, unfocusable region). Fixture-role selection is not
+each constructed fixture login, then to the first listed home, every evidence
+region, the existing-workspace link and Reset screen view. It asserts measured
+focus visibility at each reached target, the exact `#workspace-status` text plus
+`role=status`, `aria-live=polite` and `aria-atomic=true` after each state, and
+that the evidence tables, enumerated by tag, match the declared per-screen fixture
+labels with a label and `tabindex=0`; screens with no table on the fixture are
+declared gaps, not passes. Thirteen run-only mutations (focus removal or
+transparency per target, each status attribute removed with the text kept, label
+removed, region made unfocusable, one or all regions removed, recovery link
+removed) must fail the same walk assertions. Fixture-role selection is not
 authentication; the status text is DOM evidence, not screen-reader output; endpoint
 and handoff wording is reported as text presence only. Use a short
 `ZF_BROWSER_SCRATCH`, the heavy lock and an owned environment; it marks no
