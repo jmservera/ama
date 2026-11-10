@@ -11343,3 +11343,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-10] correction | Discovery CLI checkpoint D6 open list qualified (Refs #440 #125)
 
 * Additive qualification of the entry "Discovery CLI feature-increment checkpoint on pinned main 0d262beee", left intact. An independent review (approve_with_comments, zero blocking) found the pack's D6 list of opens outside source omitted `/usr/lib/ssl/openssl.cnf` (read-only, in the retained trace); the list is now stated as non-exhaustive. No connect call or write-mode open is contradicted, no run was repeated and the observation stays pinned at `0d262beee`. Correction C4 of five spent, one remains; no acceptance, closure or tick.
+
+## [2026-11-10] integration | Issue 73 parent refreshed onto main 736561ba (Refs #73, #135, #1360)
+
+* Ordinary merge (no rebase or rewrite) of main `736561ba` into the parent branch after the published PR 1361 state read CONFLICTING. The local merge was clean; it does not prove hosted mergeability or CI. Source, infra, tools and workflows are byte-identical to `27dab9b5`. See the [research](../../.copilot-tracking/research/2026-11-10-issue-73-current-base-1110-research.md) and [review](../../.copilot-tracking/reviews/2026-11-10-issue-73-current-base-1110-review.md) records. Both earlier log histories are preserved. No change to the #1360 follow-up or the exhausted C5 budget.
