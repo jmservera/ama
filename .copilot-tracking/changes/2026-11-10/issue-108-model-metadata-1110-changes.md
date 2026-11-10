@@ -37,3 +37,11 @@ Provenance and scope reviewed; relative links and anchors checked; no subscripti
 ## Limitations
 
 Read-only configured metadata; not serving attestation, not reserved capacity, not an evaluation. Whole #108, RAI and Tokenomics remain open.
+
+## Erratum (2026-11-10, correction C1)
+
+Appended after a focused independent Readiness assessment; the text above is preserved unchanged as the historical record. The statement "None" under "Divergences from the plan" is qualified as follows.
+
+* The Q2 account metadata reported the account's advertised endpoint domain as `cognitiveservices.azure.com`, while the configured `AI_ENDPOINT` host used `openai.azure.com`. Literal endpoint-string equality between the configured endpoint and the queried account therefore did not hold.
+* Q3 proceeded on the same account label inside resource group `ama`. That is a label match only: no endpoint equivalence, network identity or serving attestation was established.
+* Q1 to Q4 raw observations, the exit codes and the unknown regional quota limit and unit are unchanged. The criterion stays unticked.
