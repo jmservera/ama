@@ -13,6 +13,7 @@ import tempfile
 import unittest
 from datetime import UTC, datetime
 from pathlib import Path
+from unittest import mock
 
 SCRIPT = Path(__file__).with_name("rpi_phase_witness.py")
 SPEC = importlib.util.spec_from_file_location("rpi_phase_witness", SCRIPT)
@@ -101,6 +102,21 @@ class WitnessCase(unittest.TestCase):
     def log(self) -> Path:
         return witness.log_paths(self.repo, "1300")[0]
 
+    def observe_launch(self) -> None:
+        brief = Path(self.tmp.name) / "brief.md"
+        brief.write_text("synthetic brief\n")
+        self.assertEqual(self.record("launch", "--brief", str(brief))[0], 0)
+
+    def commit_all(self) -> tuple[int, dict]:
+        run_git(self.repo, "add", "-A", ".")
+        run_git(self.repo, "commit", "-qm", "work")
+        head = run_git(self.repo, "rev-parse", "HEAD")
+        return self.record("commit-complete", "--claim-commit", head)
+
+    def launched_run(self) -> None:
+        self.observe_launch()
+        self.full_run()
+
     def full_run(self) -> None:
         self.persist("research")
         self.assertEqual(self.record("research-open")[0], 0)
@@ -179,14 +195,14 @@ class ObservationTests(WitnessCase):
         self.assertIn("src.txt", records[0]["git"]["dirty_source"])
 
     def test_clean_run_verifies_and_artifact_evolution_is_only_a_note(self) -> None:
-        self.full_run()
+        self.launched_run()
         (self.repo / PATHS["plan"]).write_text("plan record, later checklist tick\n")
         code, text = self.verify()
         self.assertIn("note:", text)
         records, _ = witness.read_log(self.log())
-        self.assertEqual(code, 1)  # no observed launch or commit-complete yet
+        self.assertEqual(code, 1)  # no observed commit-complete yet
         self.assertEqual(sum("QUALIFIED" in line for line in text.splitlines()), 1)
-        self.assertEqual(len(records), 5)
+        self.assertEqual(len(records), 6)
 
     def test_guarded_review_revision_is_qualified(self) -> None:
         self.full_run()
@@ -208,12 +224,53 @@ class CommitTests(WitnessCase):
         self.assertTrue(result["reasons"])
 
     def test_commit_with_reviewed_content_is_accepted_and_not_stale(self) -> None:
+        self.launched_run()
+        self.assertEqual(self.commit_all()[0], 0)
+        code, text = self.verify()
+        self.assertEqual(code, 0, text)
+        self.assertNotIn("stale", text)
+
+    def test_complete_run_without_launch_is_qualified(self) -> None:
         self.full_run()
+        self.assertEqual(self.commit_all()[0], 0)
+        records, _ = witness.read_log(self.log())
+        self.assertTrue(
+            any("launch" in q for q in records[0]["qualifications"]), records[0]
+        )
+        code, text = self.verify()
+        self.assertEqual(code, 1)
+        self.assertIn("no successful observation of launch", text)
+
+    def test_clean_source_commit_before_implement_start_is_qualified(self) -> None:
+        self.observe_launch()
+        self.persist("research")
+        self.assertEqual(self.record("research-open")[0], 0)
+        (self.repo / "src.txt").write_text("early commit\n")
+        run_git(self.repo, "add", "src.txt")
+        run_git(self.repo, "commit", "-qm", "early")
+        self.persist("plan", "details", "critique", "changes")
+        self.assertEqual(self.record("plan-done")[0], 0)
+        _, opening = self.record("implement-start")
+        self.assertTrue(any("src.txt" in q for q in opening["qualifications"]), opening)
+        self.assertEqual(self.verify()[0], 1)
+
+    def test_tracking_only_commit_and_unrelated_head_are_handled(self) -> None:
+        self.observe_launch()
+        self.persist("research")
+        self.assertEqual(self.record("research-open")[0], 0)
         run_git(self.repo, "add", "-A", ".")
-        run_git(self.repo, "commit", "-qm", "work")
-        head = run_git(self.repo, "rev-parse", "HEAD")
-        self.assertEqual(self.record("commit-complete", "--claim-commit", head)[0], 0)
-        self.assertNotIn("stale", self.verify()[1])
+        run_git(self.repo, "commit", "-qm", "records only")
+        self.persist("plan", "details", "critique", "changes")
+        self.assertEqual(self.record("plan-done")[0], 0)
+        _, opening = self.record("implement-start")
+        self.assertEqual(opening["qualifications"], [])
+        # A first HEAD that is not an ancestor cannot be compared.
+        records, _ = witness.read_log(self.log())
+        records[0]["git"]["head"] = "0" * 40
+        self.assertIn(
+            "unable to compare",
+            witness.early_source_changes(self.repo, records, "HEAD")[0],
+        )
 
     def test_wrong_claim_and_unrelated_commit_are_refused(self) -> None:
         self.full_run()
@@ -305,6 +362,57 @@ class IsolationTests(WitnessCase):
         self.state["artifact_paths"]["research"] = PATHS["research"]
         self.write_state()
         self.assertEqual(self.record("research-open")[0], 2)
+
+    def test_verify_does_not_read_a_substituted_external_artifact(self) -> None:
+        self.full_run()
+        review = self.repo / PATHS["review"]
+        dummy = Path(self.tmp.name) / "owned-dummy.md"
+        dummy.write_text("review record\n")
+        review.unlink()
+        review.symlink_to(dummy)
+        real = witness.sha256_file
+
+        def guarded(path: Path) -> str:
+            if Path(path).resolve() == dummy.resolve():
+                raise AssertionError("read outside")
+            return real(path)
+
+        with mock.patch.object(witness, "sha256_file", side_effect=guarded):
+            code, text = self.verify()
+        self.assertEqual(code, 1)
+        self.assertIn("escapes the tracking root", text)
+
+    def test_replaced_tracking_root_is_refused_before_any_open(self) -> None:
+        self.full_run()
+        outside = Path(self.tmp.name) / "outside-tracking"
+        (self.repo / witness.TRACKING).rename(outside)
+        (self.repo / witness.TRACKING).symlink_to(outside)
+        before = (outside / "phase-witness/issue-1300/events.jsonl").read_bytes()
+        with mock.patch.object(
+            witness, "sha256_file", side_effect=AssertionError("read outside")
+        ):
+            code, text = self.verify()
+            self.assertEqual(code, 1)
+            self.assertIn("not read", text)
+            code, result = self.record(
+                "research-open"
+            )  # state resolves outside tracking, so refused
+        self.assertEqual(code, 2, result)
+        after = (outside / "phase-witness/issue-1300/events.jsonl").read_bytes()
+        self.assertEqual(before, after)
+
+    def test_log_and_lock_symlink_targets_are_not_opened(self) -> None:
+        self.persist("research")
+        log, lock = witness.log_paths(self.repo, "1300")
+        log.parent.mkdir(parents=True)
+        target = Path(self.tmp.name) / "outside.log"
+        target.write_text("untouched\n")
+        log.symlink_to(target)
+        self.assertEqual(self.record("research-open")[0], 2)
+        log.unlink()
+        lock.symlink_to(target)
+        self.assertEqual(self.record("research-open")[0], 2)
+        self.assertEqual(target.read_text(), "untouched\n")
 
     def test_launch_requires_a_brief_and_captures_no_environment(self) -> None:
         self.assertEqual(self.record("launch")[0], 2)

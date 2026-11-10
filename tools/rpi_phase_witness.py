@@ -126,20 +126,65 @@ def dirty_identities(repo: Path) -> tuple[dict, dict]:
         if "R" in status or "C" in status:
             index += 1  # skip the origin path of a rename or copy
         path = repo / rel
-        identity = (
-            sha256_file(path) if path.is_file() and not path.is_symlink() else "deleted"
-        )
-        target = artifacts if rel.startswith(TRACKING + "/") else source
+        is_artifact = rel.startswith(TRACKING + "/")
+        if is_artifact and not inside_tracking(repo, path):
+            identity = "outside-tracking-not-read"
+        elif path.is_file() and not path.is_symlink():
+            identity = sha256_file(path)
+        else:
+            identity = "deleted"
+        target = artifacts if is_artifact else source
         target[rel] = identity
     return dict(sorted(source.items())), dict(sorted(artifacts.items()))
 
 
 def inside_tracking(repo: Path, candidate: Path) -> bool:
+    """True only if the tracking root stays under the repo and the target under the root.
+
+    Resolution follows symlinks but never opens or reads the target.
+    """
     try:
-        candidate.resolve().relative_to((repo / TRACKING).resolve())
+        tracking = (repo / TRACKING).resolve()
+        tracking.relative_to(repo.resolve())
+        candidate.resolve().relative_to(tracking)
     except ValueError:
         return False
     return True
+
+
+def log_contained(repo: Path, issue: str) -> bool:
+    path, lock_path = log_paths(repo, issue)
+    return all(inside_tracking(repo, item) for item in (path.parent, path, lock_path))
+
+
+def early_source_changes(repo: Path, records: list[dict], head: str) -> list[str]:
+    """Qualify committed source changes between the earliest observed HEAD and now."""
+    first = next((r["git"]["head"] for r in records if r["outcome"] == "ok"), None)
+    if not first or first == head:
+        return []
+    ancestor = subprocess.run(
+        ["git", "-C", str(repo), "merge-base", "--is-ancestor", first, head],
+        capture_output=True,
+        check=False,
+    )
+    diff = subprocess.run(
+        ["git", "-C", str(repo), "diff", "--name-only", "-z", first, head],
+        capture_output=True,
+        check=False,
+    )
+    if ancestor.returncode != 0 or diff.returncode != 0:
+        return ["unable to compare the earliest observed HEAD with the opening HEAD"]
+    changed = [
+        p
+        for p in diff.stdout.decode(errors="replace").split("\0")
+        if p and not p.startswith(TRACKING + "/")
+    ]
+    if not changed:
+        return []
+    return [
+        "source changed in committed history before implement-start: "
+        + ", ".join(changed)
+    ]
 
 
 def load_artifacts(repo: Path, state_path: Path | None, event: str) -> dict:
@@ -279,6 +324,18 @@ def record_event(args: argparse.Namespace) -> int:
     if state_path is not None and not state_path.is_absolute():
         state_path = repo / state_path
     path, lock_path = log_paths(repo, args.issue)
+    if not log_contained(repo, args.issue):
+        print(
+            json.dumps(
+                {
+                    "outcome": "refused",
+                    "reasons": [
+                        "witness log path escapes the repository tracking root"
+                    ],
+                }
+            )
+        )
+        return 2
 
     def build(records: list[dict]) -> dict:
         now = datetime.now(UTC)
@@ -311,18 +368,20 @@ def record_event(args: argparse.Namespace) -> int:
                 check_commit_claim(repo, args.claim_commit, records, source)
             seen = [r["event"] for r in records if r["outcome"] == "ok"]
             order = ORDER[args.event]
-            if args.event not in ("launch", "research-open") and ORDER[args.event] > 1:
-                missing = [e for e in EVENTS[1:order] if e not in seen]
+            if order > 0:
+                missing = [e for e in EVENTS[:order] if e not in seen]
                 if missing:
                     qualifications.append(
                         "missing observed predecessor: " + ", ".join(missing)
                     )
             if any(ORDER[e] > order for e in seen):
                 qualifications.append("recorded after a later boundary")
-            if args.event == "implement-start" and source:
-                qualifications.append(
-                    "source was already dirty at implement-start; edits predate this witness"
-                )
+            if args.event == "implement-start":
+                if source:
+                    qualifications.append(
+                        "source was already dirty at implement-start; edits predate this witness"
+                    )
+                qualifications.extend(early_source_changes(repo, records, head))
             if records and now < datetime.fromisoformat(records[-1]["utc"]):
                 qualifications.append("clock earlier than the previous record")
         except Refusal as error:
@@ -373,11 +432,16 @@ def record_event(args: argparse.Namespace) -> int:
 def verify(args: argparse.Namespace) -> int:
     repo = Path(args.repo).resolve()
     path, _ = log_paths(repo, args.issue)
-    records, problems = read_log(path)
-    findings: list[str] = list(problems)
     notes: list[str] = []
-    if not records:
-        findings.append("no witness records found")
+    contained = log_contained(repo, args.issue)
+    if contained:
+        records, problems = read_log(path)
+        findings: list[str] = list(problems)
+        if not records:
+            findings.append("no witness records found")
+    else:
+        records = []
+        findings = ["witness log path escapes the repository tracking root; not read"]
     seen: list[str] = []
     previous_utc = None
     for record in records:
@@ -391,7 +455,7 @@ def verify(args: argparse.Namespace) -> int:
             findings.append(f"{label}: clock earlier than the previous record")
         previous_utc = utc
         seen.append(record["event"])
-    for event in EVENTS[1:]:
+    for event in EVENTS:
         if event not in seen:
             findings.append(f"no successful observation of {event}")
     for record in records:
@@ -399,6 +463,12 @@ def verify(args: argparse.Namespace) -> int:
             continue
         for key, info in record["artifacts"].items():
             current = repo / info["path"]
+            if not inside_tracking(repo, current):
+                findings.append(
+                    f"seq {record['seq']} {record['event']}: {key} artifact path "
+                    "escapes the tracking root; not read"
+                )
+                continue
             if not current.is_file() or sha256_file(current) != info["sha256"]:
                 target = findings if key in GUARDED else notes
                 target.append(

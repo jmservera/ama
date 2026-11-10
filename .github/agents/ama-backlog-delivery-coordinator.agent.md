@@ -583,8 +583,8 @@ remains subject to the tracking retention policy.
    this checkout (the worker gets its absolute path) with the absolute worktree path:
    `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --brief /tmp/brief-{number}-{timestamp}.md --session rpi-{number} --actor coordinator --claim-model claude-sonnet-5.5`.
    A refusal (exit 2) blocks that launch until its reason is fixed. The
-   witness observes its own UTC clock, Git HEAD and tree, dirty source and the
-   canonical artifacts; it accepts no caller-supplied times, and its record is
+   witness observes its own UTC clock, Git HEAD and tree, dirty source and,
+   at later boundaries, the canonical artifacts; it accepts no caller-supplied times, and its record is
    a local writable observation, not tamperproof, not host or model
    attestation and not proof of unobserved reasoning. The brief gives the
    worker the absolute path of this helper, the same `--repo` and `--issue`,
@@ -702,9 +702,10 @@ remains subject to the tracking retention policy.
    and keep its output with the capture of the tmux pane (exit 1 means it
    reported qualifications, including any boundary not yet observed; it is not a
    command failure). Treat each reported
-   qualification (refused or missing boundary, out-of-order record, dirty
-   source at start, backward clock, stale review source, revised critique or
-   review) as an observation to carry into the review and report, not as a
+   qualification (refused or missing boundary including launch, out-of-order
+   record, dirty or committed source change before start, backward clock, stale
+   review source, revised critique or review, artifact or log path outside the
+   tracking root) as an observation to carry into the review and report, not as a
    waiver; never edit or delete witness records, record the log sha256 in
    session SQL before the worktree is removed, and say plainly which boundaries
    were witnessed and which were only reported. A PR without them
