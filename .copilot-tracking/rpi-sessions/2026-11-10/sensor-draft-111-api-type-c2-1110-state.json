@@ -1,0 +1,44 @@
+{
+  "task_id": "111-api-type-c2-1110",
+  "task_slug": "sensor-draft-111-api-type-c2-1110",
+  "parent_task": {
+    "task_id": "111-parent-adoption-1855",
+    "task_slug": "sensor-draft-111-parent-adoption-1855"
+  },
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-sensor-draft-111-api-type-c2-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-sensor-draft-111-api-type-c2-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-sensor-draft-111-api-type-c2-1110-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-sensor-draft-111-api-type-c2-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-sensor-draft-111-api-type-c2-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-sensor-draft-111-api-type-c2-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Root selects ONE remaining inherited batch for the API no-untyped-call error; minimum 0 afterwards; no fresh five",
+      "status": "confirmed",
+      "evidence": "Root request 2026-11-10T15:10Z"
+    },
+    {
+      "decision": "Plan critique executed once; findings applied (exact-call ignore, no config edit)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/critiques/2026-11-10-sensor-draft-111-api-type-c2-1110-plan-critique.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "browser-launch-path-length",
+      "summary": "quality_sensors_browser_check failed to launch Chrome: Socket path too long from the cwd-based fixture root; no UI assertion ran",
+      "resolution": "Root decision: short-path synthetic copy run or shorter checkout path; no retry here"
+    }
+  ],
+  "next_action": {
+    "phase": "Review",
+    "action": "Review done; record review-done, commit, then commit-complete"
+  },
+  "prioritized_follow_ups": null
+}
