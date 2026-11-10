@@ -4144,6 +4144,33 @@ and handoff wording is reported as text presence only. Use a short
 `ZF_BROWSER_SCRATCH`, the heavy lock and an owned environment; it marks no
 acceptance criterion as passing.
 
+Publication and evidence status (dated 2026-11-10, documentation only; the text
+above stays as the historical description). The observed source head is
+`cb01c33c42ceef31ee699649ecceedadc487945d` (not this paragraph's own commit); at
+the publication snapshot its four validated source and test files are identical
+to it. On that head, in the owner's pinned environment, ruff 0.17.1 and mypy
+2.4.0 were clean on those files, the probe helper tests (6) and the core register
+tests (16) passed, and one browser run on owned synthetic data exited 0 with 714
+PASS lines, 15 negatives and 15 declared no-table walks. These are bounded
+synthetic observations only. They are not whole #134, AC-034 to AC-043,
+authentication, assistive-technology or human acceptance; the known limits above
+and the open #1401 and #1402 findings stand.
+
+The witness chains for this probe are all qualified, none waived. The original
+chain (8 records) and the correction C1 chain (9 records) verify with exit 1. The
+correction C2 chain (8 records) also verifies with exit 1: launch (seq 1) was
+refused for a missing `--brief`, plan-done (seq 4) was refused because a state
+update ran from the wrong directory and the preflight exit was not propagated
+through `tee`, and the later markers carry a missing plan-done predecessor. A
+docs-only correction C3 has its own prospective chain; its post-commit result is
+reported only in the external handoff. External session files, not repository
+links, under
+`/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files/`:
+`phase134-walkthrough-plan-evidence-1110`, `phase134-keyboard-c1-evidence-1110`,
+`phase134-keyboard-c2-evidence-1110`, C2 logs in `134-keyboard-c2-evidence-1110`,
+`phase134-keyboard-c3-evidence-1110` and the handoffs
+`handoff-134-keyboard-c2-1110.md` and `handoff-134-keyboard-c3-1110.md`.
+
 This is a bounded offline extension of the existing role workbench, not a new
 identity provider, role simulator, permission policy or operational acceptance.
 The [parity audit](../../docs/architecture/mvp-to-src-parity-matrix.md#role-task-queue-offline-slice-2026-10-16)
