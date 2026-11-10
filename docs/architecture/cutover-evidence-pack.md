@@ -6364,3 +6364,72 @@ Evidence classes. Local observed: every M row on synthetic loopback data. Parent
 ### Recommendation
 
 CONTINUE. The merged tree integrates both histories without conflict and the focused local set passes with the parent baseline reproduced unchanged. No fix or pivot is indicated by this evidence. Publication stays blocked behind independent exact-head assessment of the final head and applicable hosted checks. Any change after this record (including a later main or rubric commit) restarts the comparison of the subtree identities above. No approval, deferral, requirement relaxation or issue closure is proposed or inferred.
+
+## Nomination and UX integration wave checkpoint (2026-11-10, Refs #440 #130 #149 #153 #156 #1360 #1362)
+
+Draft, local-only, not approved. This is a new recurring observation and documentation checkpoint after PR 1381 and PR 1376 reached `main`. It is not the old #440 C6 and spends no source repair budget; it makes no source fix and opens no issue. It is the focused documentation tier: no full or `--changed` gate, no heavy, SQL, image, model, cloud or private-data run, and no command was run by this task. It neither includes nor republishes the separate #440 CSV-learning record, whose frozen independent review is unchanged; this section, its index paragraph and its log entry are owned only by this record. Records: [research](../../.copilot-tracking/research/2026-11-10-nom-ux-retry-440-1110-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-nom-ux-retry-440-1110-plan.md), [details](../../.copilot-tracking/details/2026-11-10-nom-ux-retry-440-1110-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-nom-ux-retry-440-1110-plan-critique.md), [changes](../../.copilot-tracking/changes/2026-11-10-nom-ux-retry-440-1110-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-nom-ux-retry-440-1110-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/issue-440-nom-ux-retry-1110-state.json).
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-10) |
+| --- | --- |
+| Pinned source | `origin/main` `65c2ab9d947d1498dafd37e24a377d1ff503e86f`, tree `520d12561000e9dc596ed0b03f9f862a9240b32f`, equal to the worktree head at launch. Subtrees `src` `70d956b06f31`, `infra` `d94040329d54`, `tools` `432a4e8f7d74`. Branch `docs/demo-nomination-ux-checkpoint-440-1110` |
+| Later main | A fetch during the task shows `83503b74e0e5f555382436c0ae27f64cd200971f` (tree `696c4acbe2ee`), a `github-actions[bot]` rubric commit whose only changed path against the pin is `.github/rubric/scores/latest.json`; `src`, `infra` and `tools` subtree ids are the same as at the pin. It is not merged here and no full-tree equality with the pin is claimed |
+| Nomination wave | PR 1381 (`Refs #130 #81`, published head `210161bdc1779953c349049565312d6983e160fb`) merged 12:58:55Z as `0376606dc97a14ebd0cbc81bb8fe136e836a3d1b`, tree `0368d5e6689cb58be2606d255b7d20bd9e5d6011` |
+| UX wave | PR 1376 (`Refs #149 #440 #233 #231 #230 #153 #156 #152`, head `621f29d29b363dfd25729079180bb33f94ba0b20`) merged 13:02:24Z as the pin `65c2ab9d9`. Child PR 1382 merged earlier (12:20:13Z) into the parent branch as `621f29d29`, not into `main` |
+| Hosted checks | Each PR head showed 19 reported checks all SUCCESS (18 check runs and the `rubric/score` status), no closing reference. That is PR-head metadata. Commit-scoped runs read for `65c2ab9d9` were only 7 (one still in progress, the rest skipped or the agent activation set), so no Source projects CI result is claimed for the exact main commit |
+| Product blobs at the pin | `app.js` `c735acad6350`, `panels.js` `5f37f2a71b4a`, `style.css` `32234917f66e`, `test_nomination_screen.py` `4d0481a27961`, `nomination_browser_check.py` `81cafcb4d434`, `workbench_browser_check.py` `0fbe0be3b0c3`, `src/api/README.md` `b117333c3e1d`, `scenario-manifest.json` `e6624d6d0c71` |
+| Documents (blob at pin) | BRD 0.21.0 `draft` `34d88395de86` (FR-037, AC-065, RULE-005); PRD Zava Forward 0.21.0 `in-review` `c788b917bafa`; PRD Proper Warm 0.13.0 `in-review` `f7f9b7675e60`; ADR-0006 source layout `956da1a3b804`; ADR-0007 Proposed `abb21088a9bb`; this pack before the section `5f223b53b7ed`, index `28b3ec408855`, log `058338f4903c`. Draft, in-review and proposed are not approval and none changes here |
+| Issue states (read live) | #130, #149, #156, #440, #1360, #1362, #1383 and #1384 OPEN; nothing is ticked or closed by this record |
+| Excluded | Unmerged 136 and 175 Bicep; the #89 aftercare parent and its child #133 (merged into the parent, not `main`); held #132 and contractor identities; the #1384 checker fix; the old C6 and the CSV-learning record; any live, Azure, model, resident or professional step; whole-demo, whole-130, whole-149 or whole-440 acceptance |
+
+### Consumed evidence (Root local runs, not re-run here)
+
+Both Root runs used source-qualified local predictions, made before the merges, and an owned environment. The raw logs, versions and `SHA256SUMS` are in the Root session folder, not in the repository. Neither is a GitHub merge preview, an observation on `65c2ab9d9` or an Azure run.
+
+| Record | Tested composition | Result as retained |
+| --- | --- | --- |
+| Nomination only (`handoff-130-current-main-caaf-1240`) | local merge of the published head `210161bd` into the then-main `caaf98914`, tree `36b16ae74700e3745e180106aed1931a2cf7352e`, equal to the `git merge-tree` prediction | API 11 selectors 120 OK with 1 skip, simulator admin 30, Core learning 21, Agents paired-command 21, API ruff, format (137 files) and mypy (217 files), `node --check` of the web scripts; the nomination and challenge browser checks passed with 3 nomination axe scans, zero violations, zero incomplete, and no non-GET request while viewing (six GET paths listed) |
+| UX combined (`handoff-149-combined-verification-1230`) | parent `621f29d29` plus nomination `210161bd` plus `caaf98914`, tree `bb90e4d3ef9123696117523d7c47261f17968365`, `src` `70d956b06f31cabfd8321b4ee9c203ae8b21d89c` | API unit 379 run with 16 skips, nomination and resident API 25 with 1 skip, Core 88 with 7 opt-in SQL skips, Core integrity 35, six static runs exit 0, one non-queued heavy-lock acquisition; browser: handoff 9, role variants 47, 70, 36, 36, 47 and 46, atlas 362, paging 89, Held 31, workbench 124, progress 58, nomination three scans |
+
+* Tree equivalence (Root proofs, read and not recomputed here): the actual main tree `520d1256...` differs from the tested UX tree `bb90e4d3...` only at `.github/rubric/scores/latest.json`, with equal `src` ids `70d956b0...`; the actual nomination-main tree `0368d5e6...` differs from the tested `36b16ae7...` only at the same file, with equal `src` `e1b868d2...` and `infra` `d9404032...`. This is current-metadata and tree equivalence for the source, not a rerun on the pin.
+* Axe ran only in the named selectors: role variants 230, 231, 231q, 231p and 231qp, the progress states, and the nomination scans. Default roles, atlas, paging, Held and workbench ran no axe. Screen reader and human acceptance are "Not run" in the nomination output.
+* The split of the 21 role-width observations into 15 empty-queue (five roles) and 6 populated-queue (two roles) observations was not independently re-derived by Root or by this task. The passing nomination browser output still contains law-store-unavailable tracebacks, assistants 503 and client-disconnect lines, so no zero-server-error claim is made.
+* Independent records (Root): the UX combined review is approve_with_comments with zero new findings, the inherited Mediums #1362 and #1360 and the #156 M1 proposal still unapproved, with a fresh-guideline addendum; the nomination-only review is approve with zero new findings and the known Low heading hierarchy (h2 to h4 in `panels.js`, lines 326, 353, 369 and 385) OPEN. The fresh rules retrieval `web-interface-guidelines-fresh-1257.md` has SHA-256 `d246b026f4f29b5823a9cc857f9edf3d2507002e055e32040cadeaf3b38e0234`, re-hashed here and equal. No complete conformance, assistive-technology, WCAG or human content acceptance is claimed.
+
+### Requirement trace (document-qualified)
+
+| Contract | Source (document, blob at pin) | Observation | Class |
+| --- | --- | --- | --- |
+| Nomination and self-referral keep the original account with correctable identity, each with a named human owner; unknown is never "none"; a correction does not change priority automatically (FR-037, AC-065, RULE-005) | BRD `34d88395de86` (draft); PRD `c788b917bafa` (in-review); #130 body | The read-only `nominationPanel` in `panels.js` shows original and corrected accounts separately, "Not recorded" or "Unknown" for missing values, the named owner and review state by version, and states it does not contact a resident, decide eligibility, change priority or assign an owner | Static read of source at the pin plus Root local observation on a constructed synthetic fixture. Document status unchanged; #130 criteria 2 to 4 and 5 stay open |
+| Read-only, no non-GET | #130 scope | The Root nomination browser run recorded zero non-GET requests while viewing; monitoring starts after the initial navigation and ends before the current-review navigation | Local observed on the predicted tree; scoped, not whole-system |
+| Manual and non-AI route | PRD and BRD staffed-route text | The "Staffed non-digital route" and acknowledgement fields come from server record fields only; acknowledgement reads "Delivery unverified" and no assistant call renders them. The record states a recorded review is a staff record, not an approval or eligibility decision | Static read plus local observed; no staffed delivery or human approval observed |
+| Roles and denial | PRD role text | `nominationPanel` returns nothing for a role without the fields and shows "No nomination or self-referral is recorded for this home." for an authorised empty list; unit test `test_authorised_empty_and_role_denied_differ` | Local observed on constructed fixtures; real role nominations are not observed |
+| Resident and handoff read paths | #153 and PR 1376 scope | The disjoint `app.js` hunks (handoff read guidance and the Resident tab) compose; handoff browser 9 OK | Local observed on the predicted tree |
+| Paging, empty and negative cases | #230, #231, #233, #152 scope | Paging 89, Held 31, workbench 124 (hidden-explanation and vertical-clipping constructed negatives) and progress 58 passed | Local observed; #156 M1 empty-page versus empty-set ambiguity stays an unapproved proposal |
+| Source layout | ADR-0006 | No dependency-rule failure in the Core selections | Local observed |
+
+### Evidence classes
+
+* Local observed: only the Root runs above on the two predicted trees.
+* Historic source-qualified: those runs, because the tested trees are not the pin; the source subtree equality is current-metadata equivalence read from Root proofs.
+* Azure observed: NONE.
+* Implemented, unverified: the nomination view and UX coverage on the exact merge commit, SQL Server persistence for nomination records, a served browser run on `65c2ab9d9`, trusted role binding, staffed acknowledgement delivery.
+* Deferred or blocked: hosted CI for the exact main commit, device, screen reader and human acceptance, whole #130 criteria, the #156 M1 decision, the heading Low fix and any source correction. Their owners are named below.
+* Unknown: the exact count of source corrections left on the nomination work and the actual GitHub merge-preview trees.
+
+### Findings, owners and gates
+
+* No new defect, no new issue and no source fix. Existing owners checked before any new issue: #1362 (atlas version assertion false positive) and #1360 (served transfer message) remain open and unwaived; #156 M1 remains an unapproved proposal; the heading hierarchy Low has no separate issue (an open-issue search found none) and is recorded in the #130 independent record, not duplicated.
+* #1384 (workspace exhaustion checker alignment) stays with its owner. Root's ongoing diagnostic states current exhaustion proven for 4 and the missing-global case for 2, with the whole workspace browser check not green (delayed companion); this task did not reproduce it, and no whole-workspace acceptance follows. Its fix is excluded from this record.
+* #1383 (rubric scorer failed on `901fea60e`) is OPEN with no comments. A later overall SUCCESS alone does not prove incident recovery, and no closure is invented. Rubric-only commits on `main` do not change the product source.
+* Gates: the affected #89 UI-dependent publication and the whole epic gates remain awaiting Root consumption of this record. Whole #440 criteria 7 and 8, human and HVE approval stay unmet; no #132 or #133 budget is added; no requirement is relaxed.
+
+### Recommendation
+
+CONTINUE for this integration scope. The read-only nomination view and the UX coverage behave as retained on source-equal predicted trees, and no fix or pivot is indicated. Independent Bicep, backend and checker lanes may continue. Publication of this record needs independent exact-head assessment and applicable hosted checks; any later change restarts the subtree comparison. No approval, requirement relaxation or issue closure is proposed or inferred.
+
+### Process record and limits
+
+* First attempt (same task, slug `nomination-ux-main-440-1110`): the witness refused `plan-done` because of a missing comma in the worker's own state edit; `verify` exited 1; log sha256 `17a6744678fd59bc6a5bf98fb16bb3f393364e70b47d927a371966a6446b5466`. Its research, plan, details and critique are unchanged. The invalid state was archived byte-exact (sha256 `ee52a75c7c4ccc82a2e997807caeae9b910ac4291a5f74a009be1910ae81379e`) at `.copilot-tracking/evidence/2026-11-10-440-nom-ux-first-refusal/original-state.json.invalid`. The retry is the one Root-authorized operational retry of the same observation and is not healing of the first record.
+* The witness is a locally writable record, not host or model attestation; the model label is asserted. The critique and review of this retry are author-executed, not independent. No push, pull request or GitHub write was made.
