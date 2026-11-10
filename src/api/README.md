@@ -1249,6 +1249,16 @@ Without `ZF_AXE_JS` the axe scan is skipped and the run prints `PARTIAL`; a
 skip is not a pass. A scan with axe 4.10.3 covers `main` only, at 1280 px, on
 the programme overview and the connected home view for both roles; it is not a
 statement about other views, widths or roles.
+Programme queue paging has its own manual check,
+`PYTHONDONTWRITEBYTECODE=1 python -m checks.programme_paging_browser_check`
+(heavy; run under the shared heavy lock). As a Programme Manager at 1280 and
+320 px, with a private 60-case synthetic fixture, it loads the real first page of
+50, reaches Next and Previous by keyboard, checks unique page 2 and returned
+page 1 records, the page-local scope filter and Reset, the retained rows and
+home after one constructed (intercepted) paging GET failure, retry to page 2,
+no writes and no horizontal overflow. The injected failure is not a real
+network incident or backend proof. It does not run axe and is not a WCAG, usability
+or assistive-technology test.
 Checks own a synthetic
 loopback server and do not read the normal working dataset or call Azure.
 The parent's scoped receipt covers its exact foundation head, not unmerged
