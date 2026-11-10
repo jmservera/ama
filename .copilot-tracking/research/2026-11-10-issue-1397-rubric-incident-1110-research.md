@@ -64,6 +64,7 @@ Not shown by the permitted evidence: whether call 2 was rejected at submission (
 * `scorecard_adapter.from_inputs` parses `details` with duplicate-key rejection and requires `set(details) == set(criterion_ids)`; `{}` is a valid JSON object, so it passes the JSON and object checks and fails the key-set rule. This differs from #1383, where the literal text failed JSON parsing. Existing adapter tests cover missing-ID and extra-ID mutations; the all-missing `{}` case is the same set inequality and is not a separate test.
 * `rubric-score.md` (identical blob at `901fea60`) says the pinned custom-job handler validates required parameters, string type and choices before append, does not validate `details` contents, and "does not enforce a one-call quota", while also telling the agent not to submit a second card after a call succeeds. The README's #1383 record reports the second call there was rejected with `Maximum allowed: 1`. These statements are not reconciled by the evidence here; flag, do not resolve.
 * Because only the first schema-valid call is the accepted one and contents are validated downstream, a placeholder first call cannot be corrected afterwards.
+* Superseding qualification (2026-11-10, Readiness finding 1; see `2026-11-10-issue-1397-documentary-qualification-1110-research.md`): the preceding sentence is an unsupported general rule and is retained only as the original record. For this incident only, the placeholder is deduced to have been the sole judged item and no successful correction is evidenced. Whether the second call was refused or appended and dropped, and the runtime acceptance policy responsible, remain UNKNOWN. No acceptance or quota policy is claimed.
 
 ## Publication and recovery (read-only GitHub metadata and git)
 
@@ -76,7 +77,7 @@ Not shown by the permitted evidence: whether call 2 was rejected at submission (
 ## Classification
 
 * Causal failure: a model-produced first `record_rubric_score` call carrying a placeholder summary and empty `details` object became the sole item the gate judged; the trusted adapter correctly rejected it. Fail-closed rejection of invalid input is the intended behaviour.
-* Recurrence of the #1383 class (placeholder first call accepted as the single call), same day, with a different payload and adapter branch. It is not a new adapter defect: gate, adapter, registry, workflow source and lock are byte-identical to the #1383 failing commit. It does not show that the #1383 documentation fixed the producer; that change was documentation only and the prompt blob is unchanged.
+* Recurrence of the #1383 class (placeholder first call accepted as the single call; read as a deduction per the 2026-11-10 superseding qualification above), same day, with a different payload and adapter branch. It is not a new adapter defect: gate, adapter, registry, workflow source and lock are byte-identical to the #1383 failing commit. It does not show that the #1383 documentation fixed the producer; that change was documentation only and the prompt blob is unchanged.
 * Not established: why the placeholder was submitted, whether the second call was rejected or dropped, and recurrence beyond #1383 and #1397.
 
 ## Smallest future engineering action (owner question, not authorized here)

@@ -266,7 +266,7 @@ baseline consumed was `latest.json` blob `3bb822e0`: scored commit `11184719`,
 run 42830696796, total 78.
 
 Diagnosis: a valid fail-closed rejection of invalid model input. It recurs the
-#1383 class, a placeholder first call that became the only judged call, on the
+#1383 class, a placeholder first call that is deduced to have been the only judged call, on the
 same day and with a different payload: an empty object reaches the key-set rule
 that non-JSON text in #1383 did not. It is not a new adapter, gate or transport
 defect, because the source is byte-identical and the rule rejected an input
