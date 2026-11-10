@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-10T11:38:16+00:00",
-  "commit": "e951c523b9e0a3f306e97ba90a9b65056bea904f",
+  "scored_at": "2026-11-10T12:38:28+00:00",
+  "commit": "caaf989148aff21ed8ecb5b71eb0be75b29c16de",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/42808162325",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/42815865163",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
-    "solution-code": "bebad35df7b19e83d32a066aab753f9fa2fc7b8d367122cb3ed9f9abb55a2823",
+    "solution-code": "9218a34967645a07f27958848d122770f21ac49826d051a6ac4a4e55cf6ccc2f",
     "infrastructure": "7c74c76598ba4b6302fd325e88da5abc4ca3489696d813db42d117c4bd1cf1fd",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "5b414b81c3cc0512d987acd669648d14eb85eae2af031105e39dd8bd5054fbe7",
@@ -73,7 +73,7 @@
       "evidence": [
         "src/agents/src/zava_forward/agents/heldout_freeze.py:1-136"
       ],
-      "rationale": "Not touched by this diff. Baseline ceiling unchanged."
+      "rationale": "New constructed-paired-observations CLI option feeds the existing paired-trial scorer with caller-declared data (cards-only, unset thresholds); it is a bounded input harness, not a new evaluation method or model-choice justification. Ceiling unchanged."
     },
     "A7": {
       "score": 5,
@@ -117,9 +117,11 @@
       "score": 4,
       "evidence": [
         "src/core/README.md:72",
-        "src/core/README.md:102"
+        "src/core/README.md:102",
+        "src/agents/README.md:354-393",
+        "src/core/README.md:5090-5118"
       ],
-      "rationale": "Capstone documentation has a sentence split across non-adjacent paragraphs, hurting navigability. Deck untouched. Lowered from Excellent(5) to Good(4)."
+      "rationale": "New README sections (agents and core) are clear and well-structured, but the pre-existing sentence split across non-adjacent paragraphs (lines 72/102) remains uncorrected, and the deck is untouched. Good(4) retained."
     },
     "B7": {
       "score": 5,
