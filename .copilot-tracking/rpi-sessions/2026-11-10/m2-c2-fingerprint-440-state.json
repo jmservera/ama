@@ -1,0 +1,24 @@
+{
+  "task_id": "440-m2-c2-fingerprint",
+  "task_slug": "m2-c2-fingerprint-440",
+  "parent_task": {"task_id": "440-quality-m2-record", "task_slug": "quality-m2-record-440"},
+  "mode": "automatic",
+  "active_phase": "Implement",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/plans/critiques/2026-11-10-m2-c2-fingerprint-440-prospective.md",
+    "plan": ".copilot-tracking/plans/critiques/2026-11-10-m2-c2-fingerprint-440-prospective.md",
+    "details": ".copilot-tracking/plans/critiques/2026-11-10-m2-c2-fingerprint-440-prospective.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-m2-c2-fingerprint-440-prospective.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; critique executed once inline; compatible findings applied", "status": "recorded", "evidence": "prospective record"},
+    {"decision": "C2 of 5 spent; no other counter reset", "status": "confirmed", "evidence": "owner brief"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "Correct the H2 values paragraph and deferred wording, then changes and one review"},
+  "prioritized_follow_ups": null
+}
