@@ -1,9 +1,12 @@
 {
   "task_id": "issue-152-mobile-empty-c4-1110",
   "task_slug": "issue-152-mobile-empty-c4-1110",
-  "parent_task": {"task_id": "issue-152-empty-queue-coverage-correction-3", "task_slug": "issue-152-empty-queue-coverage-correction-3"},
+  "parent_task": {
+    "task_id": "issue-152-empty-queue-coverage-correction-3",
+    "task_slug": "issue-152-empty-queue-coverage-correction-3"
+  },
   "mode": "automatic",
-  "active_phase": "Plan",
+  "active_phase": "Review",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {
@@ -12,14 +15,41 @@
     "details": ".copilot-tracking/details/2026-11-10/issue-152-mobile-empty-c4-1110-phase-details.md",
     "critique": ".copilot-tracking/challenges/2026-11-10/issue-152-mobile-empty-c4-1110-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-10/issue-152-mobile-empty-c4-1110-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/logs/2026-11-10/issue-152-mobile-empty-c4-1110-review.md"
   },
   "confirmed_decisions": [
-    {"decision": "C4 of 5 authorized; C1-C3 spent; no automatic C5", "status": "confirmed", "evidence": "coordinator direction"},
-    {"decision": "Research executed, Planning Readiness Ready", "status": "confirmed", "evidence": "research artifact"},
-    {"decision": "Critique executed once, Revise, PC-001..003 applied directly", "status": "confirmed", "evidence": "plan Critique Disposition"}
+    {
+      "decision": "C4 of 5 authorized; C1-C3 spent; no automatic C5",
+      "status": "confirmed",
+      "evidence": "coordinator direction"
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once, Revise, PC-001..003 applied directly",
+      "status": "confirmed",
+      "evidence": "plan Critique Disposition"
+    },
+    {
+      "decision": "Implemented; targeted checks pass; Review once, Residual work",
+      "status": "confirmed",
+      "evidence": "changes and review artifacts"
+    }
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "Record implement-start, then edit the harness, recipe SHA and README"},
-  "prioritized_follow_ups": []
+  "next_action": {
+    "phase": "Review",
+    "action": "Record review-done, commit, record commit-complete, hand off"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Independent review and Root assessment",
+      "rationale": "required",
+      "evidence": "review RV-004"
+    }
+  ]
 }

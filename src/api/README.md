@@ -4016,6 +4016,13 @@ owner-approved trusted producer with a current fixture and provenance binding
 exists; that producer is not part of this change. The all-cases scope keeps its
 own wording. The check is `tests/test_queue_empty_state.py` (Node, partial
 AC-034/043 evidence only).
+
+The served workbench browser check observes that explanation, per role, at 320,
+390 and 1280 px on the constructed data: one visible, contained, wrapped
+explanation that says coverage is unknown, and none for a nonempty queue. A
+constructed test-page mutation that hides it at 320 px is shown to be caught.
+These are engineering observations on constructed fixtures, not a device
+matrix, assistive-technology or user evidence.
 From `src/api`, using the installed src packages and `.[dev]`:
 
 ```bash

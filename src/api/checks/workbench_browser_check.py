@@ -110,6 +110,40 @@ def reflow(page: Page, label: str) -> None:
     )
 
 
+EMPTY_WIDTHS = (320, 390, 1280)
+
+
+def own_queue_empty_failures(page: Page, *, expect_empty: bool) -> list[str]:
+    """Observe the own-queue empty explanation at the page's current viewport."""
+    empty = page.locator("li.empty")
+    if not expect_empty:
+        return [] if empty.count() == 0 else ["empty explanation shown for a nonempty queue"]
+    failures: list[str] = []
+    empty.wait_for(state="attached")
+    if empty.count() != 1:
+        return [f"expected one empty explanation, found {empty.count()}"]
+    if not empty.is_visible():
+        return ["empty explanation is not visible"]
+    text = empty.inner_text()
+    if "No open cases are assigned to you" not in text:
+        failures.append("assigned-queue explanation missing")
+    if "unknown" not in text:
+        failures.append("unknown coverage not stated")
+    if "declared gap" in text:
+        failures.append("coverage gap invented")
+    box = empty.bounding_box()
+    viewport = page.viewport_size
+    if box is None or viewport is None or box["width"] <= 0 or box["height"] <= 0:
+        failures.append("empty explanation has no rendered size")
+    elif box["x"] < 0 or box["x"] + box["width"] > viewport["width"]:
+        failures.append("empty explanation extends outside the viewport")
+    if not empty.evaluate("el => el.scrollWidth <= el.clientWidth"):
+        failures.append("empty explanation overflows its box")
+    if not page.evaluate("() => document.documentElement.scrollWidth <= innerWidth"):
+        failures.append("page scrolls horizontally")
+    return failures
+
+
 def queue_signal_checks(page: Page, base: str) -> None:
     failures: list[str] = []
     page.get_by_text("Queue definitions", exact=True).click()
@@ -231,6 +265,7 @@ def run_browser(base: str) -> None:
         browser = playwright.chromium.launch()
         errors: list[str] = []
         held: list[Route] = []
+        negative_done = False
         try:
             for role in MANIFEST["roles"]:
                 context = browser.new_context(viewport={"width": 1280, "height": 900})
@@ -256,20 +291,28 @@ def run_browser(base: str) -> None:
                 )
                 check(f"{role['role']} independent own IDs/order", ids(page) == role["ids"])
                 if role["role"] != "Contractor":
-                    empty = page.locator("li.empty")
-                    if not role["ids"]:
-                        empty.wait_for()
-                    check(
-                        f"{role['role']} empty explanation only when the own queue is empty, "
-                        "unknown coverage never declared unrepresented",
-                        (empty.count() == 0)
-                        if role["ids"]
-                        else (
-                            empty.count() == 1
-                            and "unknown" in empty.inner_text()
-                            and "declared gap" not in empty.inner_text()
-                        ),
-                    )
+                    for width in EMPTY_WIDTHS:
+                        page.set_viewport_size({"width": width, "height": 900})
+                        failures = own_queue_empty_failures(page, expect_empty=not role["ids"])
+                        check(
+                            f"{role['role']} empty explanation only when the own queue is empty, "
+                            f"unknown coverage never declared unrepresented, visible and wrapped "
+                            f"at {width}px; failures={failures}",
+                            not failures,
+                        )
+                    if not role["ids"] and not negative_done:
+                        negative_done = True
+                        page.set_viewport_size({"width": 320, "height": 900})
+                        mutation = page.locator("li.empty")
+                        mutation.evaluate("el => el.style.setProperty('display', 'none')")
+                        mutated = own_queue_empty_failures(page, expect_empty=True)
+                        mutation.evaluate("el => el.style.removeProperty('display')")
+                        page.set_viewport_size({"width": 1280, "height": 900})
+                        check(
+                            "constructed test-page mutation hiding the narrow empty explanation "
+                            f"is caught; failures={mutated}",
+                            bool(mutated) and not own_queue_empty_failures(page, expect_empty=True),
+                        )
                 check(
                     f"{role['role']} exact server-described navigation",
                     page.locator("#nav a").evaluate_all(
