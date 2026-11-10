@@ -1,4 +1,4 @@
-"""Regression cases for the region, Tab-reach and withheld-panel helpers of the #233 check.
+"""Regression cases for the region, Tab-reach, design version and withheld-panel helpers.
 
 Lightweight doubles stand in for the page; no browser is launched.
 """
@@ -13,6 +13,7 @@ from checks.atlas_tensions_browser_check import (
     TECHNICAL,
     WITHHELD,
     WITHHELD_ITEMS,
+    check_design_version,
     check_regions_and_keys,
     check_withheld,
 )
@@ -103,6 +104,48 @@ class RegionLabelTests(unittest.TestCase):
 
     def test_duplicate_names_both_reached_passes(self) -> None:
         _run(["Capacity", "Capacity"], [-1, 0, 1])
+
+
+class _Section:
+    def __init__(self, fields: list[dict[str, Any]]) -> None:
+        self.fields = fields
+
+    def evaluate(self, script: str) -> list[dict[str, Any]]:
+        return self.fields
+
+
+def _field(value: Any, visible: bool = True) -> dict[str, Any]:
+    return {"value": value, "visible": visible}
+
+
+class DesignVersionFieldTests(unittest.TestCase):
+    def _run(self, fields: list[dict[str, Any]], expected: Any = 1) -> None:
+        check_design_version(_Section(fields), expected, "double")
+
+    def test_exact_value_passes(self) -> None:
+        self._run([_field("1")])
+
+    def test_wrong_value_fails(self) -> None:
+        for value in ("2", "Unknown", "10", "v1", "1 (draft)"):
+            with self.subTest(value=value), self.assertRaises(AssertionError):
+                self._run([_field(value)])
+
+    def test_blank_value_fails(self) -> None:
+        for value in ("", "   ", None):
+            with self.subTest(value=value), self.assertRaises(AssertionError):
+                self._run([_field(value)])
+
+    def test_missing_label_fails(self) -> None:
+        with self.assertRaises(AssertionError):
+            self._run([])
+
+    def test_duplicate_label_fails_even_when_one_value_is_correct(self) -> None:
+        with self.assertRaises(AssertionError):
+            self._run([_field("1"), _field("2")])
+
+    def test_invisible_field_fails(self) -> None:
+        with self.assertRaises(AssertionError):
+            self._run([_field("1", visible=False)])
 
 
 class WithheldPanelTests(unittest.TestCase):
