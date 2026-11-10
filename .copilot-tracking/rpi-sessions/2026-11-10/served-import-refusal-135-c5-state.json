@@ -17,7 +17,8 @@
     "details": ".copilot-tracking/details/2026-11-10/served-import-refusal-135-c5-details.md",
     "critique": ".copilot-tracking/reviews/plans/2026-11-10/served-import-refusal-135-c5-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-10/served-import-refusal-135-c5-changes.md",
-    "review": ".copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c5-review.md"
+    "review": ".copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c5-review.md",
+    "independent_review_record": ".copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c5-independent-review-record.md"
   },
   "confirmed_decisions": [
     {
@@ -45,7 +46,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Root independent review, one batched push, new-head CI; C5/5 exhausted"
+    "action": "Root publication and new-head hosted CI; C5/5 exhausted"
   },
   "prioritized_follow_ups": []
 }

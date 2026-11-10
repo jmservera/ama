@@ -11323,3 +11323,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-10] correction | Issue 135 C5 importer optional-driver mypy override (Refs #135)
 
 * Added a `mssql_python` mypy override to the Importer project, mirroring Core, after hosted `src-importer` failed on PR 1357 at `25946393`. Failed hosted evidence and the C3 order adverse are preserved. See the C5 [review](../../.copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c5-review.md).
+
+## [2026-11-10] review | Issue 135 C5 independent review recorded (Refs #135)
+
+* Added the C5 [independent review record](../../.copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c5-independent-review-record.md): APPROVE, no findings; hosted new-head CI not yet observed. No source change.
