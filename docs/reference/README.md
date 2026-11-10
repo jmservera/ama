@@ -1325,3 +1325,5 @@ cases run (165 pass, 7 opt-in SQL Server skips), clean static checks and a const
 refused file transfers once, reaches only the configured steward and is counted but not shown to the operator. Earlier
 af7b, 27dab and 1fab observations stay historical, the non-blocking #1360 stays unreproduced, and SQL Server,
 served-browser, named-role, hosted exact-commit and human approval gates stay unmet; #73, #135 and #440 stay open.
+An independent-review qualification (C5, 2026-11-10) states that only Importer typing ran (Core typing was not run) and
+that the retained `E0` is a tailed summary with an author-attributed cause.
