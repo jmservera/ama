@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import argparse
 import copy
+import csv
 import hashlib
+import io
 import json
 from pathlib import Path
 from typing import Any
@@ -104,6 +106,52 @@ def run(axe: Path, out: Path, *, scale: bool = False) -> None:
                         f"dashboard reflows at {width}",
                         page.evaluate("() => document.documentElement.scrollWidth <= innerWidth"),
                     )
+                link_name = "Download this page for Excel"
+
+                def check_download(label: str) -> tuple[str, list[list[str]]]:
+                    link = page.get_by_role("link", name=link_name, exact=True)
+                    expect(link).to_have_count(1)
+                    expect(page.locator("#closed-download-note")).to_contain_text(
+                        "only this page"
+                    )
+                    href = link.get_attribute("href") or ""
+                    expected = page.request.get(
+                        base + "/api/closed-cases?" + href.partition("?")[2]
+                    ).json()
+                    page.keyboard.press("Shift")
+                    link.focus()
+                    check(
+                        label + " link focus is visible",
+                        link.evaluate("el => getComputedStyle(el).outlineStyle !== 'none'"),
+                    )
+                    with page.expect_download() as pending:
+                        link.press("Enter")
+                    download = pending.value
+                    rows = list(
+                        csv.reader(
+                            io.StringIO(
+                                Path(download.path()).read_text(encoding="utf-8"), newline=""
+                            )
+                        )
+                    )
+                    names = ["id", "resident", "address", "town", "postcode", "hazard"]
+                    names += ["status", "team", "closed_on"]
+                    wanted = [
+                        [
+                            "Yes" if item[name] is True else "No" if item[name] is False
+                            else item[name] or ""
+                            for name in names
+                        ]
+                        for item in expected["items"]
+                    ]
+                    check(
+                        label + " downloaded bytes equal the JSON page",
+                        download.suggested_filename == "closed-cases-page.csv"
+                        and rows[0] == names
+                        and rows[1:] == wanted,
+                    )
+                    return href, rows[1:]
+
                 page.emulate_media(reduced_motion="reduce")
                 scan("dashboard")
                 page.get_by_role("link", name="Closed cases", exact=True).click()
@@ -114,10 +162,17 @@ def run(axe: Path, out: Path, *, scale: bool = False) -> None:
                 expect(page.get_by_role("link", name="Previous page", exact=True)).to_have_count(0)
                 expect(page.get_by_text("Previous page (unavailable)", exact=True)).to_be_visible()
                 expect(page.locator("tbody tr")).to_have_count(20)
+                href, body = check_download("first page")
+                check(
+                    "first page download is the normalized twenty-row page",
+                    len(body) == 20 and href.endswith("?page=1&limit=20"),
+                )
                 page.get_by_role("link", name="Next page", exact=True).click()
                 page.wait_for_url("**#/closed?page=2")
                 expect(page.locator("#closed-results")).to_contain_text("Page 2 of 2")
                 check("last page has four cases", page.locator("tbody tr").count() == 4)
+                href, body = check_download("page two")
+                check("page two download has four rows", len(body) == 4 and "page=2" in href)
                 expect(page.get_by_role("link", name="Next page", exact=True)).to_have_count(0)
                 expect(page.get_by_text("Next page (unavailable)", exact=True)).to_be_visible()
                 page.reload()
@@ -150,6 +205,21 @@ def run(axe: Path, out: Path, *, scale: bool = False) -> None:
                 page.reload()
                 expect(page.locator("#progress-q")).to_have_value("ZF-3")
                 expect(page.locator("tbody")).to_contain_text("Withdrawn")
+                href, body = check_download("filtered page")
+                check(
+                    "filtered download keeps every filter",
+                    [row[0] for row in body] == ["ZF-3"]
+                    and all(
+                        part in href
+                        for part in (
+                            "status=Withdrawn",
+                            "team=Quality+Inspector",
+                            "start=2026-10-04",
+                            "end=2026-10-04",
+                            "q=ZF-3",
+                        )
+                    ),
+                )
                 page.locator("#progress-q").fill("No such fictional case")
                 page.get_by_role("button", name="Apply filters").click()
                 expect(page.locator("#closed-results")).to_contain_text("0 matching closed cases")
@@ -157,6 +227,7 @@ def run(axe: Path, out: Path, *, scale: bool = False) -> None:
                 expect(page.get_by_role("navigation", name="Closed case pages").get_by_role("link")).to_have_count(0)
                 expect(page.get_by_text("Previous page (unavailable)", exact=True)).to_be_visible()
                 expect(page.get_by_text("Next page (unavailable)", exact=True)).to_be_visible()
+                check("empty page keeps the header only", check_download("empty page")[1] == [])
                 empty_url = page.url + "&page=999"
                 page.goto(empty_url)
                 expect(page.locator("#closed-results")).to_have_text(
@@ -170,6 +241,12 @@ def run(axe: Path, out: Path, *, scale: bool = False) -> None:
                 expect(page.locator("#progress-q")).to_have_value("No such fictional case")
                 page.get_by_role("link", name="Reset filters", exact=True).click()
                 page.get_by_role("table", name="Matching closed cases", exact=True).wait_for()
+                expect(page.locator("#closed-results")).to_contain_text("24 matching closed cases")
+                href, body = check_download("reset")
+                check(
+                    "reset download has no filters",
+                    href.endswith("?page=1&limit=20") and len(body) == 20,
+                )
                 # The safety fixture is on page two in stable reference order.
                 page.get_by_role("link", name="Next page", exact=True).click()
                 expect(page.locator("tbody")).to_contain_text("Safety issue open")
@@ -292,6 +369,30 @@ def run(axe: Path, out: Path, *, scale: bool = False) -> None:
                 check(
                     "late progress response cannot overwrite another route", "#/closed" in page.url
                 )
+                def fail_closed(route: Route) -> None:
+                    route.fulfill(status=503, json={"error": "Synthetic closed read unavailable."})
+
+                page.route("**/api/closed-cases?*", fail_closed)
+                page.goto(base + "/app#/closed?q=read-error")
+                expect(page.get_by_role("alert")).to_have_text("Synthetic closed read unavailable.")
+                expect(page.get_by_role("link", name=link_name, exact=True)).to_have_count(0)
+                page.unroute("**/api/closed-cases?*", fail_closed)
+                check("read error offers no download link", True)
+                reader = browser.new_context().new_page()
+                reader.goto(base + "/app#/closed")
+                reader.locator("#email").fill("sam@example.test")
+                reader.locator("#pw").fill("synthetic-check")
+                reader.get_by_role("button", name="Sign in", exact=True).click()
+                expect(reader.locator("main")).to_contain_text("Only a manager sees closed cases.")
+                expect(reader.get_by_role("link", name=link_name, exact=True)).to_have_count(0)
+                denied = reader.request.get(base + "/api/closed-cases.csv")
+                check(
+                    "nonmanager gets no attachment or content",
+                    denied.status == 403
+                    and "content-disposition" not in denied.headers
+                    and b"ZF-" not in denied.body(),
+                )
+                reader.context.close()
                 check(f"no uncaught JavaScript errors ({errors})", not errors)
                 (out / "browser.json").write_text(
                     json.dumps(

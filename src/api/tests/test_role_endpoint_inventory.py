@@ -16,7 +16,7 @@ SERVER_SRC = (Path(server.__file__)).read_text()
 
 GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api/account/photo", "/api/cases?view=all", "/api/cases?view=all&q=Quentin", "/api/cases?view=all&q=" + REASON,
                  "/api/cases.csv?view=all", "/api/cases/ZF-1", "/api/ranking/policy", "/api/ranking/snapshot", "/api/ranking/publication", "/api/ai/priority",
-                 "/api/facets", "/api/stats", "/api/progress", "/api/closed-cases",
+                 "/api/facets", "/api/stats", "/api/progress", "/api/closed-cases", "/api/closed-cases.csv",
                  "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing",
                  "/api/audit-check",
                  "/api/handoffs", "/api/handoffs/unaccepted", "/api/packages", "/api/workorders", "/api/workorders/WO-0001/job-pack", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv", "/api/form-schemas.csv", "/api/checklists", "/api/ai/report", "/api/finance", "/api/finance/exposure", "/api/asset/stock-queue", "/api/resident/choice-queue",
