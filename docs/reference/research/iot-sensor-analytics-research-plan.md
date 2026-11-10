@@ -829,6 +829,53 @@ run on 2026-11-04 of that module with `test_retrofit_scenario_consumers` and
 
 No issue was ticked or closed by this note.
 
+### Current Azure configuration observation (2026-11-10, Refs #184 #440)
+
+Five read-only Azure Resource Manager (ARM) configuration reads were taken on
+2026-11-10 between 17:54Z and 17:55Z (Azure CLI metadata invocations, five of
+a budget of eight, no retry) of the existing development hub, its consumer
+group, the demo API app and the two job names declared in the Bicep templates,
+all in resource group `ama`. No cloud write, secret, log, metric, SQL, device,
+message or model operation occurred. This is not a renewed budget, a transport
+authority or an acceptance step, and no new billable operation is requested.
+
+| Target | Observed configuration (2026-11-10) |
+| --- | --- |
+| Hub `iot-cutover-test-rzsrg` | `uksouth`, B1 Basic x 1 unit, `Active`, `Succeeded`, identity `None`, public network `Disabled`, local auth disabled, 2 partitions, 1 day retention, 0 custom routes, fallback route enabled, 1 private endpoint connection |
+| Consumer group | `api-consumer` present |
+| App `ca-cutover-test-demo-api` | `Running`, revision `--0000027`, `UserAssigned` identity, ingress `Http`, digest-pinned image (`sha256:1605ca20f...bcca0f64`), `ZF_SENSOR_REVIEW_DRAFTS` not configured |
+| `job-live-simulator`, `job-live-receiver` | ARM `ResourceNotFound` for each exact name |
+
+Reading:
+
+* The hub fields that both records carry equal the
+  [2026-10-29 hub record](../../../infra/README.md#bounded-existing-hub-exercise-2026-10-29-refs-140-184-137).
+* The two authored job templates are not deployed under those exact names, as
+  their headers state. This says nothing about other or unnamed jobs,
+  including the Manual jobs in the
+  [2026-11-08 source handoff](../../../infra/README.md#finite-demo-deployment-plan-source-handoff-2026-11-08-nothing-executed),
+  which are historical and unverified. Actual job identity, runtime flow and
+  image-to-build mapping stay unknown; absence is not inferred.
+* A resource that exists does not show ingestion works. A configured digest is
+  not build provenance or runtime proof. A schedule would not be an execution.
+  The hub is not a current authorized transport budget: the cost scope in
+  `infra/iot-hub-live.bicepparam` ended 2026-10-31 and is not renewed.
+  Existing Azure costs were not measured, so this does not mean all costs are
+  zero.
+
+Not observed and not claimed: device registration, certificates, routes to
+`sensor-readings`, receiver grants, SQL tables, usage, budget, other jobs, any
+live, serving, model or Azure acceptance, and any whole #184, #110, #140 or
+#440 criterion, all of which stay open. Raw minimal outputs are external
+(Root session folder `38e61c82-3c44-4b97-af59-9eed5c151ac7`, folder
+`evidence-184-cloud-readiness-1110`) and no Azure identifier is published.
+The #440 context is the
+[sensor-review wave checkpoint](../../architecture/cutover-evidence-pack.md#sensor-review-wave-actual-main-checkpoint-2026-11-10-refs-440-109-111-184-1288),
+merged by PR 1412; it records no Azure observation, and its older qualified
+witness chains are described there. Per the coordinator, the current canonical
+chain verified clean and no current hold applies; this was not re-verified
+here.
+
 ## Constraints
 
 * Derived signals only create a human condition-review task. They never
