@@ -1,0 +1,4 @@
+PASS owned server is running and responsive on loopback
+PASS /vendor/leaflet.js: 1 failed request(s), automatic actual-script recovery
+PASS /vendor/leaflet.js: 2 failed request(s), automatic actual-script recovery
+PASS /role-screens.js: 1 failed request(s), automatic actual-script recovery

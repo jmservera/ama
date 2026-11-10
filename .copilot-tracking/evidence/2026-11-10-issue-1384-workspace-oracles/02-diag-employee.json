@@ -1,0 +1,409 @@
+{
+  "which": "employee",
+  "scenarios": [
+    {
+      "scenario": "missing_ops_recovery (404 on /ops.js)",
+      "started_ms": 881,
+      "original_assertions": "FAILED",
+      "exception": "AssertionError('missing ops exhausts the bounded initial/retry attempts')",
+      "traceback": "Traceback (most recent call last):\n  File \"/home/azureuser/source/ama-demo-wt/issue-1384-workspace-oracles-1110/src/api/../../.copilot-tracking/evidence/2026-11-10-issue-1384-workspace-oracles/diag_script_requests.py\", line 119, in run\n    function(*args, **kwargs)\n  File \"/home/azureuser/source/ama-demo-wt/issue-1384-workspace-oracles-1110/src/api/checks/employee_workspace_browser_check.py\", line 111, in missing_ops_recovery\n    check(\"missing ops exhausts the bounded initial/retry attempts\", original_ops == 3)\n  File \"/home/azureuser/source/ama-demo-wt/issue-1384-workspace-oracles-1110/src/api/checks/design_system_browser_check.py\", line 33, in check\n    raise AssertionError(name)\nAssertionError: missing ops exhausts the bounded initial/retry attempts\n",
+      "contexts": [
+        {
+          "network": [
+            {
+              "event": "request",
+              "t_ms": 988,
+              "url": "http://127.0.0.1:60347/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "request",
+              "t_ms": 990,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "request",
+              "t_ms": 993,
+              "url": "http://127.0.0.1:60347/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "response",
+              "t_ms": 1008,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 404
+            },
+            {
+              "event": "requestfailed",
+              "t_ms": 1010,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "failure": "net::ERR_ABORTED"
+            },
+            {
+              "event": "response",
+              "t_ms": 1021,
+              "url": "http://127.0.0.1:60347/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            },
+            {
+              "event": "response",
+              "t_ms": 1064,
+              "url": "http://127.0.0.1:60347/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 200
+            },
+            {
+              "event": "request",
+              "t_ms": 1574,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "response",
+              "t_ms": 1577,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 404
+            },
+            {
+              "event": "requestfailed",
+              "t_ms": 1578,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "failure": "net::ERR_ABORTED"
+            },
+            {
+              "event": "request",
+              "t_ms": 2079,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "response",
+              "t_ms": 2083,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 404
+            },
+            {
+              "event": "requestfailed",
+              "t_ms": 2083,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "failure": "net::ERR_ABORTED"
+            },
+            {
+              "event": "request",
+              "t_ms": 3584,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script"
+            },
+            {
+              "event": "response",
+              "t_ms": 3592,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "status": 404
+            },
+            {
+              "event": "requestfailed",
+              "t_ms": 3592,
+              "url": "http://127.0.0.1:60347/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+              "resource_type": "script",
+              "failure": "net::ERR_ABORTED"
+            }
+          ],
+          "pages": [
+            {
+              "url": "http://127.0.0.1:60347/app?synthetic=employee-recovery#/case/ZF-2026-0597?tab=quality",
+              "script_log": [
+                {
+                  "t": 30,
+                  "ev": "added",
+                  "src": "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 88,
+                  "ev": "load",
+                  "src": "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 89,
+                  "ev": "added",
+                  "src": "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 89,
+                  "ev": "load",
+                  "src": "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": false,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 89,
+                  "ev": "added",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 105,
+                  "ev": "load",
+                  "src": "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 115,
+                  "ev": "added",
+                  "src": "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 117,
+                  "ev": "load",
+                  "src": "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 117,
+                  "ev": "added",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 117,
+                  "ev": "error",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 117,
+                  "ev": "added",
+                  "src": "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 120,
+                  "ev": "load",
+                  "src": "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 120,
+                  "ev": "added",
+                  "src": "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 120,
+                  "ev": "load",
+                  "src": "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 120,
+                  "ev": "added",
+                  "src": "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 120,
+                  "ev": "load",
+                  "src": "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 121,
+                  "ev": "added",
+                  "src": "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 123,
+                  "ev": "load",
+                  "src": "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": false
+                  }
+                },
+                {
+                  "t": 123,
+                  "ev": "added",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 138,
+                  "ev": "load",
+                  "src": "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 139,
+                  "ev": "added",
+                  "src": "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 139,
+                  "ev": "load",
+                  "src": "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 139,
+                  "ev": "added",
+                  "src": "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 150,
+                  "ev": "load",
+                  "src": "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 151,
+                  "ev": "added",
+                  "src": "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 151,
+                  "ev": "load",
+                  "src": "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 151,
+                  "ev": "added",
+                  "src": "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 157,
+                  "ev": "load",
+                  "src": "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                  "ready": {
+                    "ops": false,
+                    "leaflet": true,
+                    "roleScreens": true
+                  }
+                },
+                {
+                  "t": 623,
+                  "ev": "added",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 629,
+                  "ev": "removed",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 629,
+                  "ev": "error",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 1129,
+                  "ev": "added",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 1134,
+                  "ev": "removed",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 1134,
+                  "ev": "error",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 2635,
+                  "ev": "added",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 2642,
+                  "ev": "removed",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                },
+                {
+                  "t": 2643,
+                  "ev": "error",
+                  "src": "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+                }
+              ],
+              "workspace_status": "Workspace unavailable: Required workspace files did not load: /ops.js. Reload this page to try again. If this continues, ask application support to check these files.",
+              "alert": [
+                "Required workspace files did not load: /ops.js. Reload this page to try again. If this continues, ask application support to check these files."
+              ],
+              "headings": [
+                "Workspace unavailable"
+              ],
+              "ready": {
+                "ops": false,
+                "leaflet": true,
+                "roleScreens": true
+              },
+              "head_script_srcs": [
+                "/workspace-shell.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/async-action.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/vendor/leaflet.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/panels.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/ops.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/assistants.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/chat-widget.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/chat.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/timecapture.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/role-screens.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/simulator-control.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/case-workspace.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/progress.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982",
+                "/app.js?v=c6c356ded294d734bd2857ed68484676dcf8cec09c864dd69e1c658208bd1982"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
