@@ -11375,3 +11375,11 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Normal merge `0e5758da2` of `main` `d52f20a51` into the reviewed parent `ae4b20007` (tree `a9b51381c57e`, no conflict). Added the dated section "Parent 149 coverage integration checkpoint" to the cutover evidence pack and its index paragraph; no earlier entry or source was changed.
 * Focused DEMO-tier local checks pass on the combined source (194 API unit, handoff browser 9, Core 38 with 7 opt-in SQL skips, importer 79, ruff, format, file-less mypy, role-screens, atlas, paging and Held download Chromium). Axe ran in the role-screens stories only. Recommendation CONTINUE; #1362, #1371 and #156 M1 stay with their owners; draft, local, no approval, no hosted CI, no acceptance; #149 and #440 stay open.
+
+## [2026-11-10] correction | Scenario manifest recipe digest refreshed for narrow-width empty-queue checks (Refs #152)
+
+* Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) to the `src/api/checks/workbench_browser_check.py` bytes (`56409ec2...df9` to `f649f27e...6e7`) after the own-queue empty-explanation check was extended from 1280 px to 320, 390 and 1280 px. Digest only: version, fixture case IDs, scenario semantics and the validator are unchanged, and no observed coverage is claimed. No index change. Evidence under `.copilot-tracking/` (2026-11-10 issue-152 C4).
+
+## [2026-11-10] correction | Scenario manifest recipe digest refreshed for vertical-clipping empty-queue check (Refs #152)
+
+* Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) (`f649f27e...6e7` to `9a975543...fe4`) after the own-queue empty-explanation check also rejected vertical clipping (C5). Digest only: no version, fixture or semantics change, no observed coverage claimed. Corrects the C4 wording: the 21 role-width observations are 15 empty-queue (five roles) and 6 populated-queue (two roles) observations. No index change. Evidence under `.copilot-tracking/` (2026-11-10 issue-152 C5).
