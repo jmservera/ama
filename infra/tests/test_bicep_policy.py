@@ -2189,7 +2189,9 @@ class BicepPolicyTests(unittest.TestCase):
     ) -> None:
         apps = module_template(self.main, "containerapps")
         for template in (self.main, apps):
-            self.assertIs(template["parameters"]["enablePublicSimulationLane"]["defaultValue"], False)
+            self.assertIs(
+                template["parameters"]["enablePublicSimulationLane"]["defaultValue"], False
+            )
         self.assertEqual(
             module(self.main, "containerapps")["properties"]["parameters"][
                 "enablePublicSimulationLane"
@@ -2230,8 +2232,11 @@ class BicepPolicyTests(unittest.TestCase):
         self.assertEqual(failures(**valid), set())
         self.assertEqual(failures(**valid, apiMinReplicas=1), set())
         self.assertEqual(failures(**valid, enableApiAi=True), set())
-        refusals = {
-            "production": ({"deploymentProfile": "production"}, "publicSimulationRequiresDirectDemo"),
+        refusals: dict[str, tuple[dict[str, object], str]] = {
+            "production": (
+                {"deploymentProfile": "production"},
+                "publicSimulationRequiresDirectDemo",
+            ),
             "non-demo": ({"demoDirectIngress": False}, "publicSimulationRequiresDirectDemo"),
             "unauthenticated": (
                 {"entraClientId": ""},
@@ -2241,7 +2246,10 @@ class BicepPolicyTests(unittest.TestCase):
                 {"entraBearerOnly": True},
                 "publicSimulationRequiresBrowserAuthentication",
             ),
-            "no applications": ({"deployApplications": False}, "publicSimulationRequiresApplications"),
+            "no applications": (
+                {"deployApplications": False},
+                "publicSimulationRequiresApplications",
+            ),
             "placeholder image": (
                 {"apiImage": defaults["apiImage"]},
                 "publicSimulationRequiresRealApiImage",
@@ -2291,7 +2299,15 @@ class BicepPolicyTests(unittest.TestCase):
         for literal in (env["ZF_SIM_STORE"], env["ZF_SIM_KEY_FILE"]):
             self.assertIn(f'"{literal}"', recipe)
         self.assertIn("os.path.lexists(store) and not os.path.lexists(key)", recipe)
-        for forbidden in ("os.environ", "getenv", "urandom", "token_bytes", "secrets", "observe", "request"):
+        for forbidden in (
+            "os.environ",
+            "getenv",
+            "urandom",
+            "token_bytes",
+            "secrets",
+            "observe",
+            "request",
+        ):
             self.assertNotIn(forbidden, recipe)
         self.assertNotIn("listKeys", json.dumps(self.main))
 
