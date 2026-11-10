@@ -6309,7 +6309,7 @@ Draft, local-only, not approved. This is parent 149's own integration candidate 
 
 ### Identities, scope and exclusions
 
-| Item | Identity (read 2026-11-10, 09:13Z to 09:35Z) |
+| Item | Identity (read 2026-11-10, 09:13Z to 09:25Z) |
 | --- | --- |
 | Input parent | `ae4b20007ec9bc1d4bd5dd3eef91445f29f5e50f`, tree `c3e755d07edf`, reached by a normal fast-forward from the clean local head `736561ba0cccb9beb69eea3ae0d3a997bd0dd9bd` (an ancestor); the same branch carries #1363 (#233), #1365 (#231), #1366 (#230), #1367 (#153) and #1372 (#156) |
 | Input main | `d52f20a5198de7269f39daf794911545aee01ced`, tree `a817c8480a08`, confirmed by `git fetch` and `git ls-remote` at 09:18Z; no difference from the reviewed input of the brief. Merge base `736561ba0` |
