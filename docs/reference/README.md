@@ -1318,3 +1318,10 @@ A [discovery CLI checkpoint](../architecture/cutover-evidence-pack.md#discovery-
 connection `DENY`, `model_used` false and an empty human comparison, and no connect call or write-mode open was
 traced. It is constructed-fixture evidence only; whole #125, Phase 0, actual comparison, model and human approval
 gates stay unmet, and #440 and #125 stay open.
+
+A [served import-refusal post-integration checkpoint](../architecture/cutover-evidence-pack.md#served-import-refusal-and-exception-register-post-integration-checkpoint-2026-11-10-refs-440-73-135-1360)
+(2026-11-10, draft, local) observes pinned `main` `1ee56da3a` after PR 1361: 172 focused Core, Importer and API
+cases run (165 pass, 7 opt-in SQL Server skips), clean static checks and a constructed served story in which a
+refused file transfers once, reaches only the configured steward and is counted but not shown to the operator. Earlier
+af7b, 27dab and 1fab observations stay historical, the non-blocking #1360 stays unreproduced, and SQL Server,
+served-browser, named-role, hosted exact-commit and human approval gates stay unmet; #73, #135 and #440 stay open.
