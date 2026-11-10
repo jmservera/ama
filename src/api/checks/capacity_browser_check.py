@@ -727,7 +727,16 @@ def check(store: Any, axe: str | None = None) -> None:
                     held.clear()
                     page.evaluate("window.capacityHeldReads = 0")
 
+                    startup_retry_failure = False
+
                     def hold_capacity_read(route: Route) -> None:
+                        # The non-JSON 503 is a startup failure, so the app retries it; answer
+                        # those retries with the same 503 until the failure text is asserted.
+                        if startup_retry_failure and urlsplit(route.request.url).path == (
+                            "/api/" + endpoint
+                        ):
+                            route.fulfill(status=503, body="Unavailable")
+                            return
                         inject(route, status=None)
                         page.evaluate("window.capacityHeldReads += 1")
 
@@ -749,12 +758,14 @@ def check(store: Any, axe: str | None = None) -> None:
                         if urlsplit(route.request.url).path == "/api/" + endpoint
                     )
                     sibling = next(route for route in held if route is not failed)
+                    startup_retry_failure = True
                     failed.fulfill(status=503, body="Unavailable")
                     status = page.locator("#app > [role=status]")
                     expect(status).to_contain_text(
                         "We could not load "
                         + ("work orders" if endpoint == "workorders" else endpoint)
                     )
+                    startup_retry_failure = False
                     retry = status.get_by_role("button", name="Try again", exact=True)
                     retry_button = retry.element_handle()
                     assert retry_button is not None
