@@ -1348,7 +1348,12 @@ by a test route, values untouched). It also checks that no non-GET/HEAD/OPTIONS
 request, contact link, evidence write control or JavaScript error appears after
 sign-in, that the case and package state are unchanged, labelled table regions,
 Tab reach and reflow at 1280 px and 320 px, and that the served
-`role-screens.js` is this checkout's file. Set `ZF_TENSIONS_SCREENSHOTS` to a new
+`role-screens.js` is this checkout's file. Since 2026-11-10 it also opens Technical
+queue and Quality queue for the same home (the fixture overlays the existing
+`technical_quality_data` returned, unknown and open-defect evidence at design
+version 1) and checks the "Not shown for this role" panel, fixture-derived
+sign-off, defect and evidence values, that blocked evidence is never shown as
+readiness, no funding amount, labelled regions and Tab reach at both widths. Set `ZF_TENSIONS_SCREENSHOTS` to a new
 directory to keep full-page and per-panel screenshots. This is an engineering
 check on one synthetic home, not the connected eight-stage walk, assistive
 technology, WCAG, Fluent 2 or user acceptance (#150, #151, #155).
