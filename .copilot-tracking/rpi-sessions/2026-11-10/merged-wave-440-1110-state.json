@@ -1,0 +1,84 @@
+{
+  "task_id": "440-merged-wave-1110",
+  "task_slug": "merged-wave-440-1110",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-merged-wave-440-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-merged-wave-440-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-merged-wave-440-1110-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-merged-wave-440-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-merged-wave-440-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-merged-wave-440-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": "research record"
+    },
+    {
+      "decision": "Targeted local tier; no SQL, Azure, model, provider, real build, private data; no push, PR, issue or board write",
+      "status": "confirmed",
+      "evidence": "owner brief"
+    },
+    {
+      "decision": "Critique executed once; verdict proceed with amendments F1-F6 applied directly",
+      "status": "recorded",
+      "evidence": "critique record"
+    },
+    {
+      "decision": "Only canonical docs and own RPI records may be written; no product, test, tool, infra or policy edit",
+      "status": "confirmed",
+      "evidence": "owner brief"
+    },
+    {
+      "decision": "Correction ledger #440 C2 of 5 spent, three remain; unchanged by this checkpoint",
+      "status": "confirmed",
+      "evidence": "owner brief"
+    },
+    {
+      "decision": "Observation executed: 699 RUN, 562 PASS, 137 SKIP (132 distinct, SQL opt-in/by-design), 0 failures; R4 invocation fault adverse, kept",
+      "status": "recorded",
+      "evidence": "changes record"
+    },
+    {
+      "decision": "Review executed once; conformant with qualifications RV1-RV3",
+      "status": "recorded",
+      "evidence": "review record"
+    },
+    {
+      "decision": "origin/main moved to 6f24e554 (rubric bot only) after runs; qualified, not merged",
+      "status": "recorded",
+      "evidence": "changes record"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator independent exact-head assessment before any publication"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner release/budget/role decisions (OQ-017) and admitted live walkthrough under #1288/#184",
+      "rationale": "Unblocks actual-model proof",
+      "evidence": "evidence pack gaps"
+    },
+    {
+      "rank": 2,
+      "task": "Named human activation and approval of resident controls and trusted binding (#1238)",
+      "rationale": "Default-deny observed only; activation absent",
+      "evidence": "R3 named cases"
+    },
+    {
+      "rank": 3,
+      "task": "Authorised live four-image rebuild admission (#148) with cost headroom",
+      "rationale": "Adapter observed against a fake only",
+      "evidence": "R4b"
+    }
+  ]
+}

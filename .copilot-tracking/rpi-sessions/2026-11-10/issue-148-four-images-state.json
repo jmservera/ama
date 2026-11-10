@@ -1,0 +1,77 @@
+{
+  "task_id": "issue-148-four-images-1110",
+  "task_slug": "issue-148-four-images",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-issue-148-four-images-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-issue-148-four-images-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-issue-148-four-images-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-issue-148-four-images-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-issue-148-four-images-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-issue-148-four-images-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once, verdict proceed with direct amendments, no user decision",
+      "status": "confirmed",
+      "evidence": "critique artifact"
+    },
+    {
+      "decision": "Scope: exactly two owned files; existing parameter names plus --orchestrator-image; legacy zava-forward-mvp kept",
+      "status": "confirmed",
+      "evidence": "task instruction and research"
+    },
+    {
+      "decision": "Review executed once; outcome conformant locally, independent exact-head review pending",
+      "status": "confirmed",
+      "evidence": "review artifact"
+    },
+    {
+      "decision": "C1 of five total (four remain): documentation-only clock erratum; original records and adverse finding preserved",
+      "status": "confirmed",
+      "evidence": "c1 research and critique"
+    },
+    {
+      "decision": "C1 review executed once; erratum conformant locally; independent reassessment pending; C1 of five used, four remain",
+      "status": "confirmed",
+      "evidence": "c1 review"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Coordinator reassesses erratum and unchanged product; no publication here"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Digest-pin the four rebuild images",
+      "rationale": "tag-only verification can accept a stale same-tag image",
+      "evidence": "review artifact open items"
+    },
+    {
+      "rank": 2,
+      "task": "Update infra/orchestrator READMEs for four images",
+      "rationale": "docs outside owned files",
+      "evidence": "review artifact"
+    }
+  ],
+  "c1_clock": {
+    "research": ".copilot-tracking/research/2026-11-10-issue-148-c1-clock-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-issue-148-c1-clock-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-issue-148-c1-clock-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-issue-148-c1-clock-critique.md",
+    "erratum": ".copilot-tracking/changes/2026-11-10-issue-148-c1-clock-erratum.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-issue-148-c1-clock-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-issue-148-c1-clock-review.md"
+  }
+}
