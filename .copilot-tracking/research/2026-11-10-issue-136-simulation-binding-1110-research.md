@@ -1,0 +1,47 @@
+---
+title: Issue 136 public simulation lane deployment binding research
+description: Research for one initial, default-off, demo-only startup binding of the already-merged public simulation lane in the API container app
+ms.date: 2026-11-10
+---
+
+## Execution and boundary
+
+Research executed 2026-11-10 against frozen HEAD `d52f20a5198de7269f39daf794911545aee01ced` (actual fetched `origin/main`, unchanged at the end of research). Branch `feat/demo-public-simulation-binding-136-1110`, target `main`. The issue reference is `Refs #136` and `Refs #1288` only. Research disposition: `executed`.
+
+Sources read in full: the coordinator consumer report (`demo-next-source-consumers-1110.md`), the full #136 body and six comments (`issue136-public-simulation-admission-1110.json`), and the actual current source named below. No private dataset, working-store record, Blob archive, key source, cloud resource or model endpoint was read or called.
+
+## Admission facts (from the coordinator, not re-derived)
+
+* Prior #136 contributions on the issue are documentation recovery R1/R1C1 and the scoped ranking-archive Blob child (#1327, #1328). None is this startup binding or a spent repair for it. This is one initial, narrowly bounded scope. The whole-issue historical allowance is not reset and no automatic correction is granted.
+* The earlier priority #1301 hold is satisfied (merged 2026-11-09T08:17:37Z). The #1288 source is merged on main (#1331, `1b7a1719b`, an ancestor of this HEAD) and the bounded checkpoint #1336 is merged. No stale "wait for #1331" claim is inherited. #1288 E11 succeeded; E12 and E13 are unused and no source, spend or release grant is borrowed.
+* The five #136 acceptance criteria are all unmet on the issue and stay unticked.
+
+## Findings
+
+* R1 Consumer exists and is complete. `server.App.__init__` (`src/api/src/zava_forward/api/server.py:106-110`) calls `simulation_lane.Lane.open(os.environ, working=(db_path,))` and records an explicit unavailable reason otherwise. `simulation_state` and `simulation_act` serve the existing role-checked Quality UI and guarded proposal transport. This is not a missing UI, generator, AI engine, live IoT Hub bridge or real selected-home reading path.
+* R2 Runtime contract. `Lane.open` needs both `ZF_SIM_STORE` and `ZF_SIM_KEY_FILE` (`simulation_lane.py` constants `STORE_ENV`, `KEY_ENV`). It never creates files: a missing environment is `not-configured`, a missing store `store-unavailable`, a key that is not a regular 32-byte file with no group or other bits is `key-unsafe`, and a store whose single case is not `SIM-PUBLIC-1` or whose tables are missing is `store-not-simulation`.
+* R3 Primitive exists. `provision(store_path, key_path, working=())` refuses overlapping or already existing paths (`already-provisioned`), creates the key with `O_EXCL` mode 0600 and the public fixture store mode 0600. A failure after the key is written leaves a partial pair, which `Lane.open` then refuses. This is the only needed initializer; no new CLI is justified.
+* R4 Gap confirmed in IaC. `infra/main.bicep` and `infra/modules/containerapps.bicep` contain no `ZF_SIM_STORE` or `ZF_SIM_KEY_FILE` for the API app, no startup command for it and no initializer. The only `ZF_SIM_*` names in `infra/` belong to the different live Hub simulator jobs (`live-simulator-job.bicep`) and do not satisfy this contract. Exporting two nonexistent paths would leave the lane `store-unavailable`, so a startup step is required.
+* R5 Image. `src/api/Dockerfile` (blob `a7dfb2e4e`): UID/GID 10001, no `ENTRYPOINT`, `CMD ["python","-m","zava_forward.api"]`, `/state` created and owned by 10001, `ZF_STATE=/state`, no baked dataset. `src/check-container.py` and `infra/tests/test_container_contract.py` retain the controls `--read-only --cap-drop=ALL --security-opt=no-new-privileges` with a writable `/state` and forbid `--entrypoint` and a container-entrypoint script. An ACA `command` with no image entrypoint is the equivalent of `docker run image python -c ...` and needs no entrypoint override.
+* R6 Container app shape. `containerapps.bicep` API app: single active revision, no `command`, no volume, `maxReplicas: 4`, `minReplicas: apiMinReplicas` (default 0), `ZF_STORE=mssql` fixed. The container file system is the writable `/state`, so state there is replica-local and lost on replica replacement or scale to zero. That is the selected volatile lifetime, not a discovered durable store.
+* R7 Existing guards. `main.bicep` holds the named guard module (`modules/guard.bicep`) with demo guards: `demoRequiresDevelopmentProfile`, `demoForbidsPublicEdge`, `demoRequiresPrivateBackingServices`, `demoRequiresBrowserAuthentication` (applications deployed need `entraClientId` and not bearer-only). They must be preserved and reused. The compiled-template test machinery (`infra/tests/test_bicep_policy.py`: `compile_bicep`, `evaluate`, `module`, `resources`, `failures(**overrides)`) is the reuse target; `evaluate` supports `if`, `and`, `or`, `not`, `empty`, `concat`, `union`, `createArray` and takes a `context` for further functions.
+* R8 Dispatch and accounting trace (critical). `App.simulation_admission` passes `Assistants.dispatch_hold(capability)`, `Assistants.limits` bounds and `Assistants.begin_call(...)`. `begin_call` takes the physical call slot then, in one transaction on the working store (`self.transaction()`), applies the disabled, expiry, schema and release checks and the atomic `_reserve`/debit on `assistant_allowance` and `assistant_attempts`. `fence_send` re-checks authority, suspension, release and expiry before a request byte, and `_settle` records the outcome. `Lane.request` refuses before any seal, meter, token or socket unless `ai.configured` and `ai.send_fence_supported` and the admission ticket is granted. All allowance, attempt and release rows live in the working store, which the container app fixes to `ZF_STORE=mssql` (Azure SQL). The simulation SQLite file holds only fixture readings (`sensor_*` tables), seals (120 second TTL, bound to the key) and unapproved proposals. Losing it and its key together on replica loss therefore cannot mint, reset or replenish allowance, cannot bypass the send fence, release, role or model holds, and cannot lose durable call accounting. A seal minted before a restart cannot be replayed because the regenerated key invalidates it, and an attempt in flight stays a durable reserved or sending liability in SQL.
+* R9 Combination with live AI settings. No template parameter can select a non-durable working store: `ZF_STORE=mssql` is constant. Therefore enabling the recipe next to `enableApiAi=true` keeps the existing durable admission guarantee, and it needs no refusal. The recipe still must not copy or alter any `AI_*` value, budget, chat activation or credential. Refusal is needed only for the conditions that make the binding meaningless or unsafe: no API deployed, placeholder image, non-demo or non-authenticated deployment, or more than one replica.
+* R10 Baseline observations. Existing parameter sets (`main.bicepparam`, `main.test.bicepparam`, `main.pilot.example.bicepparam`) never set the new flag, so they remain unchanged. No baseline fault was found that falls outside this scope; if one is found during validation it is reported with its owning issue and not repaired here.
+
+## Selected approach
+
+* A1 One typed `enablePublicSimulationLane bool = false` in `main.bicep`, passed to a guard module (named checks) and to `containerapps.bicep`.
+* A2 Enabled-only: env `ZF_SIM_STORE=/state/public-simulation/store.sqlite` and `ZF_SIM_KEY_FILE=/state/public-simulation/hmac.key` on the API container; `command: ["python","-c", <fixed recipe>]`; `maxReplicas: 1`. `minReplicas` stays `apiMinReplicas`, which the guard bounds to at most 1.
+* A3 Recipe (fixed trusted code, double-quoted literals, no environment-derived paths): if neither file exists, create the 0700 directory and call `simulation_lane.provision`; then validate through `Lane.open` and close; any failure prints only an error code to stderr and never touches the files; finally `os.execv` the ordinary `python -m zava_forward.api`. No key is generated at compile time, printed or logged. No observation and no model request is made.
+* A4 Rejected alternatives: init container or root `chown` (relaxes the nonroot contract), Azure Files or Blob state (new storage framework and durability claim), a new CLI or installed helper (not allowed), `args` only (cannot run a pre-step), a Python wrapper script copied into the image (Dockerfile change), reading the paths from the environment inside the recipe (generic environment dependence).
+
+## Risks and unknowns
+
+* The enabled template is not deployed. ACA runtime behaviour of the `command` form, the `/state` writable layer and replica replacement are established only through the local Docker equivalent (UID 10001, read-only root, dropped capabilities, no new privileges, no `--entrypoint`), not on Azure.
+* The first start of a fresh disposable volume depends on Docker copying the image `/state` ownership; the harness uses an owned disposable named volume and states that arrangement.
+* Whole-issue acceptance is not advanced beyond this initial source binding. No production, WORM, retention, human or model acceptance is claimed.
+
+## Planning readiness
+
+Planning Readiness: `Ready`. Scope is three Bicep files, the existing compiled-template tests and the existing infra README. No further research is required.
