@@ -11,7 +11,7 @@ Correct the browser PASS count by dated supplement and record, for planning only
 * [x] Phase 1: count the original raw browser lines directly and confirm core and API counts (done in research).
 * [x] Phase 2: write the supplement matrix (correction, outcome tuple mapping, observed versus unknown fields and roles, proof slices).
 * [x] Phase 3: append a dated pointer line to the original matrix without removing its text; leave original state, review, raw evidence and external handoff unchanged.
-* [ ] Phase 4: reconcile, write the single review, final state and the new Root handoff.
+* [x] Phase 4: reconcile, write the single review, final state and the new Root handoff.
 
 ## Constraints
 
@@ -19,3 +19,13 @@ Correct the browser PASS count by dated supplement and record, for planning only
 * No claim of a new browser run or a fresh current-main audit; observations stay attributed to `c66370042eb08f07839d054433f4483078703cf2`.
 * No tick, narrowing or closure of criterion 2; no invented approval.
 * Validation tier: focused, documentation only (link, ASCII and diff review).
+
+> Note 2026-11-10: Phase 4 deliverables (review, final state, handoff) exist; Phase 4 was checked on 2026-11-10 as a delivered-phase reconciliation only; its original unchecked state is in commit cb400d61. No human or PR-review checkbox exists or was changed.
+
+## Addendum 2026-11-10: provenance qualification plan (task `issue-74-provenance-qualification`)
+
+* [x] Phase A: add a dated additive qualifier to the qualified-audit self-review (ordering claim unsupported) and to the changes record (validator-order assertions unsupported by original logs).
+* [x] Phase B: reconcile only the delivered Phase 4 checkbox above, as a dated note; no human or PR-review checkbox.
+* [ ] Phase C: after implement-done, perform one real review and create the new review artifact; then final state, commit, handoff.
+
+Constraints: documentary only; originals, prior events and commits preserved; no retrohealing; no criterion tick; no source, test, config, dependency, runtime, push, rebase or main adoption.

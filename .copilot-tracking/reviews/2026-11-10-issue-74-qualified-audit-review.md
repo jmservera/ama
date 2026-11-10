@@ -14,3 +14,7 @@ Outcome: conformant for the supplement scope; no material finding open.
 | Relative links and ASCII punctuation | Pass |
 
 Routed to later user-selected work: G1-G3 assertions; owner confirmation of outcome fields and G5 display; manual keyboard and screen-reader review and SQL Server acceptance. The review is not repeated in this task.
+
+## Qualification 2026-11-10 (additive; original text above preserved)
+
+The statement above that this review was executed "after implement-done" is not supported by the retained record. The qualified-chain log (`phase74-qualified-audit-evidence-1110/issue-74/events.jsonl`) lists this review artifact in `dirty_artifacts` at implement-done (seq 5) with the same SHA-256 (`c3ea235e48b1af4ea22f7140f719fbb049b6564b7b4388e539a778528111443c`) it has at review-done (seq 6). The record therefore does not establish post-marker review execution. The seven-event verifier and its exit 0 attest only the recorded observations, not unobserved reasoning or the order of work. No rerun is simulated. The original review of the first chain (`2026-11-10-issue-74-main-acceptance-audit-review.md`) is unchanged; a separate new review covers this qualification.

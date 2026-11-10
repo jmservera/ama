@@ -21,3 +21,14 @@ See the supplement matrix for the table. Gaps G1-G6 are unchanged in status.
 ## Planning Readiness
 
 Ready.
+
+## Addendum 2026-11-10 (provenance qualification research, task `issue-74-provenance-qualification`)
+
+Disposition: executed (reading only). Input: independent qualification assessment of `cb400d618ec08e1afad9d88a15dee6dcc5e5c2b8` (Medium 1, Low 1, verdict approve with comments; `independent-74-qualified-1983/readiness/readiness-findings.json`).
+
+* Medium: the qualified-audit review says it was executed "after implement-done". The qualified chain (`phase74-qualified-audit-evidence-1110/issue-74/events.jsonl`) lists the review in `dirty_artifacts` at implement-done (seq 5) with the same hash as at review-done (seq 6). The recorded chain does not support the categorical ordering claim. The seven-event verifier and exit 0 do not attest unobserved reasoning or order of work. For contrast, the original chain (f6621435) shows its review first appearing at review-done (seq 6), not at implement-done.
+* Medium extension: statements that state validation succeeded as its own call before the first marker (original and qualified handoffs, qualified plan chain) are not established by the retained original logs; the qualified author response disclosed one combined validator plus marker call at implement-start.
+* Low: qualified plan Phase 4 is unchecked though its deliverables exist. Only that delivered phase checkbox may be reconciled; no human or PR-review acceptance checkbox is touched.
+* Unchanged limits: 16 PASS plus COMPLETE count, c663 attribution, G1-G6 planning mapping, criterion 2 unticked, #74 and #73 open. New execution here does not establish what happened previously.
+
+Planning Readiness: Ready.

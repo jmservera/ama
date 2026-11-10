@@ -15,3 +15,9 @@ Append one dated line under the original matrix pointing to the supplement. No e
 ## Phase 4
 
 One review over the candidate; state set to Follow-up, completed, session running.
+
+## Addendum 2026-11-10 (provenance qualification)
+
+* Phase A: append "Qualification 2026-11-10" under the original review text, stating the review artifact existed with an identical hash at implement-done (seq 5) and review-done (seq 6), so "after implement-done" is unsupported; the verifier does not attest unobserved reasoning. Append to the changes record a qualifier that "validator before first marker / own call" assertions are not established by the original logs.
+* Phase B: Phase 4 line is left as written; a dated note beneath states Phase 4 deliverables exist. The `[ ]` text is not rewritten.
+* Phase C: new review file `2026-11-10-issue-74-provenance-qualification-review.md`, created only after implement-done.
