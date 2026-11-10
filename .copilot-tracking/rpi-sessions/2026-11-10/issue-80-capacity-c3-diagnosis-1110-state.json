@@ -6,7 +6,7 @@
     "task_slug": "issue-80-capacity-c2-1110"
   },
   "mode": "manual",
-  "active_phase": "Plan",
+  "active_phase": "Review",
   "status": "active",
   "session_status": null,
   "artifact_paths": {
@@ -14,8 +14,8 @@
     "plan": ".copilot-tracking/plans/2026-11-10/issue-80-capacity-c3-diagnosis-1110-plan.md",
     "details": ".copilot-tracking/details/2026-11-10/issue-80-capacity-c3-diagnosis-1110-details.md",
     "critique": ".copilot-tracking/plans/2026-11-10/issue-80-capacity-c3-diagnosis-1110-critique.md",
-    "changes": null,
-    "review": null
+    "changes": ".copilot-tracking/changes/2026-11-10/issue-80-capacity-c3-diagnosis-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10/issue-80-capacity-c3-diagnosis-1110-review.md"
   },
   "confirmed_decisions": [
     {
@@ -37,29 +37,55 @@
       "decision": "Plan, details and one native critique executed (plan-only; no implement or review in C3; correction proposed for Root, not admitted)",
       "status": "done",
       "evidence": ".copilot-tracking/plans/2026-11-10/issue-80-capacity-c3-diagnosis-1110-critique.md"
+    },
+    {
+      "decision": "Root admits the stage-local checker-only correction (continuation of the same C3 chain, no C4): serve further retries of the failing endpoint with the same 503 until the failure assertion, hold the sibling until its original release; one whole capacity_browser_check --axe run; review only after implement-done",
+      "status": "confirmed",
+      "evidence": "ROOT brief of 2026-11-10 continuation"
+    },
+    {
+      "decision": "Implement executed: stage-local checker flag (+11 lines); focused checks Ruff 0/0, node 0, API11 0, static60 0; ONE whole browser run exit 1 at earlier stage line 571 'initial packages 503/retry' (not the edited stage), cause unknown, correction unexercised; no retry",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-11-10/issue-80-capacity-c3-diagnosis-1110-changes.md"
+    },
+    {
+      "decision": "Native review executed once after implement-done: OPEN FINDINGS (C3-R1 High: expected_failures not updated in new 503 branch, source-read; C3-R2 Medium: whole run red at earlier line 571, cause unknown); native, not independent",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-10/issue-80-capacity-c3-diagnosis-1110-review.md"
     }
   ],
   "blockers": [
     {
-      "id": "root-admission-needed",
-      "summary": "Any checker correction needs a separate Root admission; none is admitted in C3",
-      "resolution": "Root decides"
+      "id": "c3-r1-expected-failures",
+      "summary": "New 503 branch does not register retries in expected_failures (source-read defect, unrun)",
+      "resolution": "Root decides admission of one-line fix"
+    },
+    {
+      "id": "browser-run-red-earlier-stage",
+      "summary": "Whole run exit 1 at line 571 before the edited stage",
+      "resolution": "Root decides diagnosis; no retry admitted"
     }
   ],
   "next_action": {
-    "phase": "Plan",
-    "action": "Await Root decision; no implementation or automatic C4"
+    "phase": "Review",
+    "action": "Record review-done and commit; Root decides follow-ups; no automatic C4"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Root decides whether to admit the stage-local checker correction (answer startup retries of the failing endpoint with 503 until the failure assertion) and one whole capacity_browser_check --axe run",
-      "rationale": "Smallest check-only fix for a proved cause; unblocks later stages",
-      "evidence": "research Observations and Proposed correction"
+      "task": "Admit one-line expected_failures registration in the new 503 branch",
+      "rationale": "Source-read defect would fail the stage",
+      "evidence": "review C3-R1"
     },
     {
       "rank": 2,
-      "task": "Independent exact-head assessment only after a genuine targeted pass",
+      "task": "Diagnose line-571 initial packages 503/retry failure (passed in C2)",
+      "rationale": "Blocks reaching the edited stage",
+      "evidence": "browser-run1.log"
+    },
+    {
+      "rank": 3,
+      "task": "Independent exact-head assessment after a genuine whole-run pass",
       "rationale": "Required before publication",
       "evidence": "Root brief"
     }
