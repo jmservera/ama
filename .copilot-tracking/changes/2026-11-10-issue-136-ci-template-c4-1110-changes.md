@@ -21,4 +21,3 @@ ms.date: 2026-11-10
 ## Divergences
 
 The edits were issued in the same batch as `implement-start`, so the witness recorded a dirty source at that event (qualification retained).
-

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib
 import io
 import json
 import re
@@ -11,10 +12,11 @@ import tempfile
 import unittest
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 
 INFRA = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(INFRA / "scripts"))
-import resident_demo_deploy as DEPLOY  # noqa: E402
+DEPLOY = importlib.import_module("resident_demo_deploy")
 
 SUB = "11111111-2222-3333-4444-555555555555"
 ROOT = f"/subscriptions/{SUB}/resourceGroups/ama/providers/"
@@ -34,7 +36,7 @@ OWNED = [
 ]
 
 
-def compiled(bicep: str = "resident-demo.bicep") -> dict:
+def compiled(bicep: str = "resident-demo.bicep") -> dict[str, Any]:
     result = subprocess.run(
         [
             "az",
@@ -54,8 +56,12 @@ def compiled(bicep: str = "resident-demo.bicep") -> dict:
 
 
 class TemplateTests(unittest.TestCase):
+    template: dict[str, Any]
+    resources: list[dict[str, Any]]
+    app: dict[str, Any]
+
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.template = compiled()
         cls.resources = cls.template["resources"]
         cls.app = next(r for r in cls.resources if r["type"] == "Microsoft.App/containerApps")
@@ -130,7 +136,9 @@ class TemplateTests(unittest.TestCase):
         for name, (param, value) in expected.items():
             self.assertEqual(env[name]["value"], f"[parameters('{param}')]")
             self.assertEqual(params[param]["defaultValue"], value)
-        self.assertEqual(env["CHAT_RETENTION_DAYS"]["value"], "[string(parameters('chatRetentionDays'))]")
+        self.assertEqual(
+            env["CHAT_RETENTION_DAYS"]["value"], "[string(parameters('chatRetentionDays'))]"
+        )
         self.assertEqual(params["chatRetentionDays"]["defaultValue"], 30)
         self.assertEqual(
             self.app["properties"]["template"]["scale"], {"minReplicas": 0, "maxReplicas": 1}
