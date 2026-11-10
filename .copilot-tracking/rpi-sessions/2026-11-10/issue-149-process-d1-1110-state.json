@@ -36,8 +36,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Write provenance qualification, prove equality, commit"
+    "phase": "Review",
+    "action": "Run single review after implement-done"
   },
   "prioritized_follow_ups": []
 }
