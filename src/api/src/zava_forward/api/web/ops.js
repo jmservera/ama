@@ -33,6 +33,34 @@ function sensorTable(title, rows, absent, labels = {}) {
   return box;
 }
 
+function sensorDraftSection(id) {
+  const body = h("div", {});
+  const box = h("section", { id: "sensor-drafts" }, body);
+  api(`/api/cases/${encodeURIComponent(id)}/sensor-drafts`).then((v) => {
+    if (v.state === "disabled") return;
+    box.setAttribute("aria-labelledby", "sensor-drafts-h");
+    const kids = [h("h3", { id: "sensor-drafts-h" }, "Sensor review draft (proposed, not approved)")];
+    if (v.state === "consent-withheld") {
+      kids.push(h("p", { role: "status" }, `${v.note} Use the manual route: manual-sensor-review.`));
+    } else if (!v.drafts.length) {
+      kids.push(h("p", { class: "muted" }, "No review draft exists for this home. Use the manual route: manual-sensor-review."));
+    } else {
+      kids.push(h("ul", {}, v.drafts.map((d) => {
+        if (d.state !== "PROPOSED_UNAPPROVED") return h("li", {}, "A saved draft failed its integrity check and is withheld. Use the manual route: manual-sensor-review.");
+        const c = d.candidate, l = d.lineage;
+        return h("li", {},
+          h("p", {}, d.label),
+          h("p", {}, c.summary),
+          h("p", { class: "muted" }, `Rule ${c.rule_id}, policy ${c.policy_version}, analysis ${c.analysis_version}. Readings from `, h("time", { datetime: l.window_start }, l.window_start), " to ", h("time", { datetime: l.window_end }, l.window_end), `. ${d.approval_note} Draft ${d.digest_prefix}. Created by ${d.created_by.name} (${d.created_by.role}) at `, h("time", { datetime: d.created_at }, d.created_at), "."));
+      })));
+    }
+    body.replaceChildren(...kids);
+  }).catch(() => {
+    body.replaceChildren(h("p", { class: "err", role: "alert" }, "Sensor review drafts are unavailable. Use the manual route: manual-sensor-review."));
+  });
+  return box;
+}
+
 function sensorPanel(id) {
   const body = h("div", {}, h("p", { role: "status" }, "Loading retained readings..."));
   const box = h("section", { class: "card", id: "sensors" }, h("h2", {}, "Retained sensor readings (synthetic demonstration)"), body);
@@ -57,6 +85,7 @@ function sensorPanel(id) {
       kids.push(sensorTable("Before the first quality evidence record", v.before, v.before_absent, labels));
       kids.push(sensorTable("From the first quality evidence record", v.after, v.after_absent, labels));
     }
+    kids.push(sensorDraftSection(id));
     body.replaceChildren(...kids);
   }).catch((error) => {
     body.replaceChildren(h("p", { class: "err", role: "alert" }, `${error.message || "Readings are unavailable."} Use the manual route: manual-sensor-review.`));
