@@ -207,6 +207,27 @@ class AftercareScreens(unittest.TestCase):
                 self.assertIn("Unresolved concerns: Unknown", text)
                 self.assertNotIn("[object Object]", text)
 
+    def test_evaluator_table_is_named_scoped_and_scrolls_inside_a_region(self) -> None:
+        nodes = walk(self.out["evaluator"])
+        tables = [n for n in nodes if n["tag"] == "table"]
+        self.assertEqual(len(tables), 1)
+        table = tables[0]
+        caption = table["kids"][0]
+        self.assertEqual(caption["tag"], "caption")
+        name = caption["kids"][0]
+        wrappers = [n for n in nodes if table in n.get("kids", []) and n["tag"] == "div"]
+        self.assertEqual(len(wrappers), 1)
+        attrs = wrappers[0]["attrs"]
+        self.assertEqual(attrs["class"], "table-scroll")
+        self.assertEqual((attrs["role"], attrs["tabindex"]), ("region", "0"))
+        self.assertTrue(name and attrs["aria-label"] == name)
+        cells = walk(table)
+        self.assertTrue(all(n["attrs"].get("scope") for n in cells if n["tag"] == "th"))
+        columns = [n for n in cells if n["tag"] == "th" and n["attrs"]["scope"] == "col"]
+        self.assertEqual(len(columns), 6)
+        rows = [n for n in cells if n["tag"] == "th" and n["attrs"]["scope"] == "row"]
+        self.assertEqual(len(rows), len(real_payloads()["evaluator"]["rows"]))
+
     def test_saved_and_replayed_outcomes_clear_uncertainty(self) -> None:
         self.assertEqual(self.out["saved"]["outcome"], "saved")
         self.assertEqual(self.out["replayed"]["outcome"], "replayed")

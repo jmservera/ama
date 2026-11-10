@@ -11294,3 +11294,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Fixed four Medium independent Functional findings in the dedicated Stage A modules only: replay after `next_update` passes, sensor-context privacy guard and limits, unresolved-concern fraction rendering, and unconfirmed-save wording. No server, store, route, inventory or shared fixture changed.
 * Not claimed: connected API, persistence, restart or browser evidence, evaluator role, DPO or lawful-basis position, closure or tick of any criterion, independent review of the corrected head. Earlier entries unchanged.
+
+## [2026-11-10] update | Aftercare evaluator table audit and inventory count 12 (Refs #133)
+
+* Audited the new Stage A aftercare evaluator table, wrapped it in the existing `table-scroll` region, raised the table inventory in `test_accessibility_baseline.py` from 11 to 12 and added a dated note to the Tables row of the [WCAG baseline](research/ux/wcag-conformance-baseline.md). Earlier entries unchanged.
+* Not claimed: WCAG conformance, assistive-technology, browser, served or human acceptance.

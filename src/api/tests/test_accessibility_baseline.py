@@ -127,7 +127,7 @@ class Wcag22Baseline(unittest.TestCase):
             for match in re.finditer(r'h\("table", \{\},\s*(.{0,60})', text):
                 tables += 1
                 self.assertIn('h("caption"', match.group(1), f"{path.name}: {match.group(1)}")
-        self.assertEqual(tables, 11, "new table: audit it and update this check and the record")
+        self.assertEqual(tables, 12, "new table: audit it and update this check and the record")
 
     def test_audit_record_names_target_gaps_and_makes_no_conformance_claim(self):
         self.assertIn("WCAG 2.2", DOC)

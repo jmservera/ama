@@ -42,6 +42,8 @@ function acNumber(value, digits = 1) {
     : "Unknown";
 }
 
+const AC_TABLE_CAPTION = "Observed baseline and late means, with concerns by home";
+
 function acFraction(value) {
   const ok = (n) => typeof n === "number" && Number.isInteger(n) && n >= 0;
   if (!value || typeof value !== "object" || !ok(value.count) || !ok(value.denominator) || value.count > value.denominator) {
@@ -185,11 +187,12 @@ function aftercareEvaluatorView(v) {
     h("p", {}, `${acText(usable.count)} of ${acText(usable.denominator)} homes have a usable comparison. Concerns raised: ${acText(totals.concerns_raised)}.`),
     h("p", {}, acFraction(totals.concerns_unresolved)),
     rows.length
-      ? h("table", {},
-        h("caption", {}, "Observed baseline and late means, with concerns by home"),
+      ? h("div", { class: "table-scroll", role: "region", tabindex: "0", "aria-label": AC_TABLE_CAPTION },
+        h("table", {},
+        h("caption", {}, AC_TABLE_CAPTION),
         h("thead", {}, h("tr", {},
           ...["Home", "Comparison", "Baseline mean", "Late mean", "Concerns", "Unresolved"].map((t) => h("th", { scope: "col" }, t)))),
-        h("tbody", {}, ...rows))
+        h("tbody", {}, ...rows)))
       : h("p", {}, "No homes are in the synthetic cohort."),
     h("h2", {}, "What is not known"),
     h("ul", {}, ...(v.unknowns || []).map((u) => h("li", {}, acText(u)))),
