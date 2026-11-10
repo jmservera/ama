@@ -33,3 +33,7 @@ Changes record opened at tool clock 2026-11-10T03:25:07.885814+00:00, before the
 
 * No source, test or agent edits. Records added: HVE behavior report 2, proof qualification review, state decision entry. Earlier outcomes are unchanged.
 * HVE campaign 2 (full fresh, Medium, simulation): Revise, two Medium evidence gaps, no target defect. AC3 observed by Root: verify exit 1, untracked witness log, `/tmp/x` scope deviation preserved.
+
+## Errata: design-input repair campaign 3 (additive, source unchanged)
+
+* Records only: HVE report 3, design-repair qualification, state entry. Campaign 3 simulation Pass; reports 1 and 2 remain Revise. No source edit.
