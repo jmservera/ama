@@ -27,7 +27,7 @@ Registry tags or digests, ACR build, Azure inventory, whole rebuild or teardown 
 
 ## Critique dispositions applied
 
-* Image IDs are run observations, not source-derived or registry digests (no `RepoDigests`); images are not reproducible because of the in-image `apt-get upgrade`.
+* Image IDs are run observations, not source-derived. Local `docker image inspect` populated `RepoDigests` (equal to each image ID); that is local metadata, not registry publication, resolution or deployment evidence. Reproducibility was not assessed; the in-image `apt-get upgrade` and `--no-cache` make a bit-identical rebuild untested, not shown impossible. (Corrected 2026-11-10; earlier wording said no `RepoDigests` and not reproducible.)
 * The smoke does not technically block container egress (default Docker network, no edit authorised); the claim is "no outbound call made by the smoke code", not network isolation.
 * Container IDs not captured by the events watcher are reported as unobserved. If the network namespace is unavailable, the dry-run claim is reduced to no `az` on PATH and an empty credential environment.
 * `git status` of `src/` and `infra/` is checked before and after; pip installs from an archive copy.
