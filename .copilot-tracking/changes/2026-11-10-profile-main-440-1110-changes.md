@@ -28,3 +28,17 @@ Plan: [plan](../plans/2026-11-10-profile-main-440-1110-plan.md). Details: [detai
 * Divergence from the details plan: A1 and A2 were not missing-dependency failures. They passed but imported another checkout, so the wrong-path restore condition added by the critique applied. No other divergence.
 * The pre-existing primary-checkout editable install was not used as source proof and was not modified.
 * No failure, retry or repair occurred. Nothing was waived.
+
+## Erratum 2026-11-10 (correction chain `profile-correction-440-1110`)
+
+Prompted by independent Readiness `aa570f67` (approve_with_comments, one Medium). The quoted original line above, "No failure, retry or repair occurred. Nothing was waived.", is INACCURATE HISTORICAL as written at head `2df576f7879ca05d9296013ff07d36fc54ed9cc9`. It is kept unchanged for traceability. This erratum is based on existing raw outputs only; no check, test, browser walk, install or gate was run or rerun to write it. Raw root `ROOT` is `/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files`.
+
+Corrected account:
+
+* Product checks: no product-check failure and no repeat of the browser walk. A1 and A2 (wrong checkout, not current-main proof), B1, B2 and the single C1 browser producer each exited 0 (C1 in `ROOT/profile-main-440-observation-1110/07-browser-run.txt`: exit 0, 714 PASS, 0 FAIL). No repair was made and no check was waived by a test, probe or source change.
+* Adverse harness result 1: `ROOT/profile-main-440-observation-1110/06-admission.txt`, section "chromium load check (version only)", printed `AttributeError: module 'playwright' has no attribute '__version__'` and then the cached chromium path. It was an admission version probe, not a product check and not the browser walk.
+* Adverse reporting result 2: `ROOT/rpi-440-profile-main-2102.log` lines 264-265, `tail: option used in invalid context -- 4` then `Failed with exit code 1`. It was a shell reporting command printed in log order right after the C1 summary lines, not the browser producer, whose exit 0 stands separate in `07-browser-run.txt`.
+* Further wrapper entries in the same native log, so the two results above are not read as exhaustive: line 475 `Failed with exit code 1` after the venv restore reporting command (the restore printed `exit=0` in `ROOT/profile-main-440-observation-1110/04-restore-venv.txt`), and a failed-marker entry at line 150 on a research-phase read-only reading command whose exit code text was not retained. Both are harness or reporting, not product checks.
+* Distinction: harness or reporting failures are not product failures and are not evidence that C1 failed.
+
+Root-attributed, not author reruns: fresh canonical witness `ROOT/root-440-profile-prepublication-witness-2112.json` (seven records, final head `2df576f7879ca05d9296013ff07d36fc54ed9cc9`, tree `f3b21ffc2a7ffcce01bd19b41a0fc3f78fab86c3`) and merge preview `ROOT/merge-preview-440-profile-2112.txt` (`a8c361af23fae3dc3b2432e94e88f4a69a12cdb0`). As of the C0 fetch at 2026-11-10T18:07:12Z, origin/main `88a17f8b6d3da6dcfcb8b0db19f481f9e257f61e` changed only the rubric `latest.json` over `b23c08e33`, so no rebase or merge was needed; this is not a claim about main at publication time. The C0 witness chain, review, state and logs are unchanged and keep their original outcome.
