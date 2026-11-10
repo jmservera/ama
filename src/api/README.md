@@ -3958,6 +3958,18 @@ IDs, count and order with the real `/api/cases?view=mine` result for that login
 on the constructed fixtures, the all-cases scope with the declared fixture set,
 and the declared case endpoints. It is not full AC-034/043, accepted role mapping or validated user
 research.
+
+An empty My cases list is explained by three distinct states. A search or filter
+with no result says it is a search result and not a coverage statement. An empty
+unfiltered own queue says coverage for the perspective is unknown, because no
+authoritative runtime source of current fixture provenance exists: the server
+supplies no coverage declaration and the static manifest above is test evidence,
+not runtime provenance. The client ignores any `work_queues.coverage` value, so
+no payload can produce a declared-gap statement. That state is deferred until an
+owner-approved trusted producer with a current fixture and provenance binding
+exists; that producer is not part of this change. The all-cases scope keeps its
+own wording. The check is `tests/test_queue_empty_state.py` (Node, partial
+AC-034/043 evidence only).
 From `src/api`, using the installed src packages and `.[dev]`:
 
 ```bash
