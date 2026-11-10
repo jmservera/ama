@@ -1,0 +1,63 @@
+{
+  "task_id": "issue-233-two-screen-coverage",
+  "task_slug": "issue-233-two-screen-coverage-1110",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10/issue-233-two-screen-coverage-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10/issue-233-two-screen-coverage-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10/issue-233-two-screen-coverage-1110-details.md",
+    "critique": ".copilot-tracking/reviews/2026-11-10/issue-233-two-screen-coverage-1110-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10/issue-233-two-screen-coverage-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10/issue-233-two-screen-coverage-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Initial two-screen coverage increment only; no correction budget minted; correction authority UNKNOWN; no product/app/auth fix",
+      "status": "user-confirmed",
+      "evidence": "brief-233-two-screen-coverage-1110.md sha256 fdc9dc04..."
+    },
+    {
+      "decision": "Research executed; baseline unit tests 8/8 and unchanged checker 194 PASS; two screens inspected, no defect",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-11-10/issue-233-two-screen-coverage-1110-research.md"
+    },
+    {
+      "decision": "Critique executed once by primary agent; verdict proceed; dispositions applied directly",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-10/issue-233-two-screen-coverage-1110-critique.md"
+    },
+    {
+      "decision": "Implementation complete; unit 11/11, Chromium 362 PASS incl. all 194 baseline, ruff/mypy pinned clean",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-11-10/issue-233-two-screen-coverage-1110-changes.md"
+    },
+    {
+      "decision": "Review executed once; outcome conformant with qualifications, no blocking finding; no repair granted",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-10/issue-233-two-screen-coverage-1110-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Root independent assessment of the local candidate before any publication; no repair granted, correction balance UNKNOWN"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Independent exact-head assessment and hosted CI before publication",
+      "rationale": "Required gate for every tier",
+      "evidence": "review artifact"
+    },
+    {
+      "rank": 2,
+      "task": "Optional Quality Inspector sign-in assertion of the technical change-note omission",
+      "rationale": "Role-specific omission observed only externally",
+      "evidence": "research baseline inspection"
+    }
+  ]
+}
