@@ -19,6 +19,8 @@ SCHEMA = "ai-consumption-v1"
 PARTITION = "ai-consumption"
 MAX_EVENTS = 10000
 UNKNOWN = "Unknown"
+DISPATCH_START_CAP_SECONDS = 8.0
+DISPATCH_DRIFT_MARGIN_SECONDS = 1.0
 COMPONENTS = ("hosting", "review", "correction", "assurance", "support")
 QUALITY = ("critical_misses", "unsupported_claims", "overrides", "reopened_cases")
 EVENT_FIELDS = {
@@ -519,6 +521,15 @@ class Consumption:
                 + Decimal(count(used["completion_tokens"])) * amount(price["output_rate"])
             ) / Decimal(1000000)
 
+    @contextmanager
+    def _scope(self, db: Any) -> Iterator[Any]:
+        """Join the caller's transaction, or own one."""
+        if db is not None:
+            yield db
+            return
+        with self.port.transaction() as conn:
+            yield conn
+
     def reserve(
         self,
         context: CallContext,
@@ -528,12 +539,30 @@ class Consumption:
         *,
         live: bool = False,
     ) -> str:
+        rid, held = self.reserve_in(None, context, model, input_bound, output, live=live)
+        if held or rid is None:
+            raise DispatchHeld(held or "liability-unknown")
+        return rid
+
+    def reserve_in(
+        self,
+        db: Any,
+        context: CallContext,
+        model: str,
+        input_bound: int | None,
+        output: int,
+        *,
+        live: bool = False,
+        min_window: float = 0.0,
+    ) -> tuple[str | None, str | None]:
+        """Reserve inside the caller's transaction (or an owned one); a hold is returned."""
         metadata = context.metadata()
         count(output)
         if input_bound is not None:
             count(input_bound)
         held = None
-        with self.port.transaction() as db:
+        rid = None
+        with self._scope(db) as db:
             records, now = self._read(db), self.port.now(db)
             authorities = [
                 r
@@ -572,6 +601,8 @@ class Consumption:
                 held = "authority-expired" if authorities else "authority-unknown"
             elif not price or (live and price["synthetic"]):
                 held = "price-unknown"
+            elif min_window and now >= min(authority["end"], price["end"]) - min_window:
+                held = "authority-expiring"
             elif input_bound is None:
                 held = "liability-unknown"
             elif context.depth > authority["max_depth"]:
@@ -652,9 +683,22 @@ class Consumption:
                     output_bound=output,
                     liability=format(cost, "f"),
                 )
-        if held:
-            raise DispatchHeld(held)
-        return rid
+        return rid, held
+
+    def dispatch_window_ms(self, db: Any, rid: str) -> int:
+        """Whole milliseconds, on database time, in which dispatch may still start.
+
+        The shortest of the authority end, the price end and an eight second start cap, less a
+        one second drift margin; zero when nothing usable remains.
+        """
+        records, now = self._read(db), self.port.now(db)
+        reserved = next(r for r in records if r["kind"] == "reserved" and r["id"] == rid)
+        authority = next(
+            r for r in records if r["kind"] == "authority" and r["id"] == reserved["authority"]
+        )
+        price = next(r for r in records if r["kind"] == "price" and r["id"] == reserved["price"])
+        remaining = min(authority["end"] - now, price["end"] - now, DISPATCH_START_CAP_SECONDS)
+        return int(max(0.0, remaining - DISPATCH_DRIFT_MARGIN_SECONDS) * 1000)
 
     def dispatch_check(self, rid: str) -> None:
         """Recheck exclusive expiry after credential acquisition, before the network."""
@@ -705,10 +749,14 @@ class Consumption:
             raise DispatchHeld(held)
 
     def complete(self, rid: str, value: object, model: object, outcome: str) -> None:
+        self.complete_in(None, rid, value, model, outcome)
+
+    def complete_in(self, db: Any, rid: str, value: object, model: object, outcome: str) -> None:
+        """Settle once in the caller's transaction (or an owned one); the first completion wins."""
         if outcome not in ("returned", "timeout", "provider-unavailable"):
             raise ValueError("Closed provider outcome required.")
         opaque(rid)
-        with self.port.transaction() as db:
+        with self._scope(db) as db:
             records = self._read(db)
             reservation = next(
                 (r for r in records if r["kind"] == "reserved" and r["id"] == rid), None

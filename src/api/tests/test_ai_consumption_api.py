@@ -8,7 +8,7 @@ import threading
 import unittest
 import urllib.error
 import urllib.request
-from contextlib import nullcontext
+from contextlib import ExitStack, contextmanager, nullcontext
 from dataclasses import replace
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -1625,6 +1625,332 @@ class ConsumptionApi(unittest.TestCase):
                         unavailable = json.load(response)["consumption"]
                     self.assertEqual(unavailable["coverage"], "unavailable")
                     self.assertEqual(unavailable["token_cost"], "Unknown")
+
+    def permit_setup(self, authority_seconds: float | None = None) -> dict[str, Any]:
+        self.inner.fast = "test"
+        extra: dict[str, Any] = {}
+        if authority_seconds is not None:
+            with self.service.transaction() as db:
+                end = datetime.fromtimestamp(self.service.now(db) + authority_seconds, UTC)
+            extra["end"] = end.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+        self.authority("assessment-preparation", deployment="test", **extra)
+        for name, value in (
+            ("request_plan", self.inner.request_plan),
+            ("is_live", self.inner.is_live),
+        ):
+            patched = patch.object(self.provider, name, value, create=True)
+            patched.start()
+            self.addCleanup(patched.stop)
+        task = self.service.invoke(self.pm, "assessment-preparation", "ZF-1")
+        claimed = self.service.claim(task["id"], "permit-worker")
+        assert claimed is not None
+        leased: dict[str, Any] = claimed
+        return leased
+
+    def permit_request(self, task: dict[str, Any]) -> dict[str, Any]:
+        system, prompt = build_request(task)
+        plan: dict[str, Any] = self.inner.request_plan(
+            system, prompt, self.inner.fast, 0, self.service.limits.output_tokens
+        )
+        return plan
+
+    def reserved(self) -> list[dict[str, Any]]:
+        return [r for r in self.records() if r["kind"] == "reserved"]
+
+    def kinds(self, tid: str) -> list[str]:
+        with self.service.transaction() as db:
+            rows = db.execute(
+                "SELECT body FROM assistant_events WHERE task_id=? ORDER BY at", (tid,)
+            ).fetchall()
+        return [json.loads(r[0])["kind"] for r in rows]
+
+    def lease(self, tid: str, seconds: float) -> None:
+        with self.service.transaction() as db:
+            db.execute(
+                "UPDATE assistant_tasks SET lease_until=? WHERE id=?",
+                (self.service.now(db) + seconds, tid),
+            )
+
+    def used_calls(self) -> int:
+        with self.service.transaction() as db:
+            return int(db.execute("SELECT used_calls FROM assistant_allowance").fetchone()[0])
+
+    def after_blocking_update(self, jump: float) -> list[str]:
+        """Database time moves by `jump` seconds only after the task-row UPDATE returns.
+
+        Returns the ordered log of that UPDATE and every later clock read.
+        """
+        log: list[str] = []
+        original_now, original_transaction = self.service.now, self.service.transaction
+
+        class Locked:
+            def __init__(self, db: Any) -> None:
+                self.db = db
+
+            def execute(self, sql: str, *args: Any) -> Any:
+                result = self.db.execute(sql, *args)
+                if sql.startswith("UPDATE assistant_tasks SET revision=revision+1 WHERE id=?"):
+                    log.append("update")
+                return result
+
+            def __getattr__(self, name: str) -> Any:
+                return getattr(self.db, name)
+
+        @contextmanager
+        def transaction() -> Any:
+            with original_transaction() as db:
+                yield Locked(db)
+
+        def now(db: Any) -> float:
+            crossed = "update" in log
+            log.append("now-after" if crossed else "now-before")
+            return float(original_now(db.db if isinstance(db, Locked) else db)) + (
+                jump if crossed else 0.0
+            )
+
+        for name, value in (("transaction", transaction), ("now", now)):
+            patched = patch.object(self.service, name, value)
+            patched.start()
+            self.addCleanup(patched.stop)
+        return log
+
+    def test_permit_reserves_once_marks_and_fences_the_attempt(self) -> None:
+        task = self.permit_setup()
+        request = self.permit_request(task)
+        permit = self.service.issue_permit(task["id"], task["owner"], task["fence"], request)
+        self.assertTrue(permit["permit"])
+        held = self.reserved()
+        self.assertEqual([r["id"] for r in held], [permit["meter_id"]])
+        self.assertEqual(held[0]["attempt"], reference(f"{task['id']}:{task['fence']}"))
+        self.assertIn("permitted", self.kinds(task["id"]))
+        with self.service.transaction() as db:
+            outcome = db.execute(
+                "SELECT outcome FROM assistant_attempts WHERE id=?",
+                (f"{task['id']}:{task['fence']}",),
+            ).fetchone()[0]
+        self.assertEqual(outcome, "sending")
+        again = self.service.issue_permit(task["id"], task["owner"], task["fence"], request)
+        self.assertEqual(again, dict(permit=False, reason="duplicate-permit"))
+        self.assertEqual(len(self.reserved()), 1)
+
+    def test_permit_denials_reserve_nothing(self) -> None:
+        task = self.permit_setup()
+        request = self.permit_request(task)
+        cases: list[tuple[str, str, int, dict[str, Any], str]] = [
+            ("digest", task["owner"], task["fence"], {"body_sha256": "0" * 64}, "request-mismatch"),
+            ("tokens", task["owner"], task["fence"], {"max_tokens": 601}, "request-mismatch"),
+            ("owner", "intruder", task["fence"], {}, "task-not-leased"),
+            ("fence", task["owner"], task["fence"] + 1, {}, "task-not-leased"),
+        ]
+        for name, owner, fence, change, reason in cases:
+            with self.subTest(name):
+                result = self.service.issue_permit(task["id"], owner, fence, {**request, **change})
+                self.assertEqual(result, dict(permit=False, reason=reason))
+        self.lease(task["id"], 10)
+        result = self.service.issue_permit(task["id"], task["owner"], task["fence"], request)
+        self.assertEqual(result, dict(permit=False, reason="lease-expiring"))
+        self.assertEqual(self.reserved(), [])
+        self.assertNotIn("permitted", self.kinds(task["id"]))
+
+    def test_permit_reads_database_time_after_the_blocking_update_for_every_use(self) -> None:
+        task = self.permit_setup()
+        request = self.permit_request(task)
+        self.lease(task["id"], 120)
+        with self.service.transaction() as db:
+            before = self.service.now(db)
+        log = self.after_blocking_update(5.0)
+        permit = self.service.issue_permit(task["id"], task["owner"], task["fence"], request)
+        self.assertTrue(permit["permit"])
+        self.assertEqual(log[0], "update")
+        self.assertNotIn("now-before", log)
+        self.assertGreaterEqual(permit["issued_at"], before + 5.0)
+        self.assertLessEqual(permit["lease_remaining"], 115.5)
+        self.assertEqual(len(self.reserved()), 1)
+
+    def test_a_lock_wait_that_crosses_the_lease_margin_refuses_without_a_reservation(self) -> None:
+        task = self.permit_setup()
+        request = self.permit_request(task)
+        self.lease(task["id"], 120)
+        log = self.after_blocking_update(100.0)
+        log.clear()
+        result = self.service.issue_permit(task["id"], task["owner"], task["fence"], request)
+        self.assertEqual(result, dict(permit=False, reason="lease-expiring"))
+        self.assertEqual(log[0], "update")
+        self.assertEqual(self.reserved(), [])
+        self.assertNotIn("permitted", self.kinds(task["id"]))
+
+    def test_a_lock_wait_that_crosses_authority_expiry_refuses_without_a_reservation(self) -> None:
+        task = self.permit_setup(authority_seconds=20)
+        request = self.permit_request(task)
+        self.lease(task["id"], 120)
+        before = self.used_calls()
+        log = self.after_blocking_update(19.0)
+        log.clear()
+        result = self.service.issue_permit(task["id"], task["owner"], task["fence"], request)
+        self.assertEqual(result, dict(permit=False, reason="authority-expiring"))
+        self.assertEqual(log[0], "update")
+        self.assertEqual(self.reserved(), [])
+        self.assertNotIn("permitted", self.kinds(task["id"]))
+        self.assertEqual(self.used_calls(), before - 1)
+
+    def test_a_short_authority_shortens_the_window_and_too_short_is_refused_unreserved(
+        self,
+    ) -> None:
+        far = self.permit_setup()
+        permit = self.service.issue_permit(
+            far["id"], far["owner"], far["fence"], self.permit_request(far)
+        )
+        self.assertEqual(permit["dispatch_within_ms"], 7000)
+        short = self.fresh()
+        task = short.permit_setup(authority_seconds=5)
+        granted = short.service.issue_permit(
+            task["id"], task["owner"], task["fence"], short.permit_request(task)
+        )
+        self.assertTrue(granted["permit"])
+        self.assertGreaterEqual(granted["dispatch_within_ms"], 2500)
+        self.assertLessEqual(granted["dispatch_within_ms"], 4000)
+        tiny = self.fresh()
+        task = tiny.permit_setup(authority_seconds=1.5)
+        denied = tiny.service.issue_permit(
+            task["id"], task["owner"], task["fence"], tiny.permit_request(task)
+        )
+        self.assertEqual(denied, dict(permit=False, reason="authority-expiring"))
+        self.assertEqual(tiny.reserved(), [])
+
+    def test_suspension_after_claim_denies_the_permit_and_refunds_once(self) -> None:
+        task = self.permit_setup()
+        request = self.permit_request(task)
+        before = self.used_calls()
+        with patch.object(self.service, "suspended", return_value="suspended"):
+            result = self.service.issue_permit(task["id"], task["owner"], task["fence"], request)
+        self.assertEqual(result, dict(permit=False, reason="suspended"))
+        self.assertEqual(self.reserved(), [])
+        with self.service.transaction() as db:
+            self.assertEqual(self.service._row(db, task["id"])["state"], "disabled")
+        self.assertEqual(self.used_calls(), before - 1)
+        again = self.service.issue_permit(task["id"], task["owner"], task["fence"], request)
+        self.assertFalse(again["permit"])
+        self.assertEqual(self.used_calls(), before - 1)
+
+    def test_consent_withdrawal_and_captured_readings_fail_closed_to_manual(self) -> None:
+        for name, patched, reason in (
+            ("no consent", dict(_sensors_granted=False), "consent-not-granted"),
+            ("captured", dict(_captured_sensors=True), "captured-readings"),
+        ):
+            with self.subTest(name):
+                case = self.fresh()
+                task = case.permit_setup()
+                request = case.permit_request(task)
+                before = case.used_calls()
+                with ExitStack() as stack:
+                    for method, value in patched.items():
+                        stack.enter_context(patch.object(case.service, method, return_value=value))
+                    result = case.service.issue_permit(
+                        task["id"], task["owner"], task["fence"], request
+                    )
+                self.assertEqual(result, dict(permit=False, reason=reason))
+                self.assertEqual(case.reserved(), [])
+                self.assertNotIn("permitted", case.kinds(task["id"]))
+                with case.service.transaction() as db:
+                    self.assertEqual(case.service._row(db, task["id"])["state"], "disabled")
+                self.assertEqual(case.used_calls(), before - 1)
+        control = self.fresh()
+        task = control.permit_setup()
+        with (
+            patch.object(control.service, "_sensors_granted", return_value=True),
+            patch.object(control.service, "_captured_sensors", return_value=False),
+        ):
+            granted = control.service.issue_permit(
+                task["id"], task["owner"], task["fence"], control.permit_request(task)
+            )
+        self.assertTrue(granted["permit"])
+
+    def test_an_unavailable_send_fence_refuses_without_a_reservation_or_a_marker(self) -> None:
+        for name in ("attempt-ended", "operator-disabled"):
+            with self.subTest(name):
+                case = self.fresh()
+                task = case.permit_setup()
+                request = case.permit_request(task)
+                before = case.used_calls()
+                if name == "attempt-ended":
+                    with case.service.transaction() as db:
+                        db.execute(
+                            "UPDATE assistant_attempts SET active_until=0 WHERE id=?",
+                            (f"{task['id']}:{task['fence']}",),
+                        )
+                    result = case.service.issue_permit(
+                        task["id"], task["owner"], task["fence"], request
+                    )
+                else:
+                    with patch.object(case.service, "disabled", return_value="Operator disabled"):
+                        result = case.service.issue_permit(
+                            task["id"], task["owner"], task["fence"], request
+                        )
+                self.assertEqual(result, dict(permit=False, reason="send-fence-refused"))
+                self.assertEqual(case.reserved(), [])
+                kinds = case.kinds(task["id"])
+                self.assertIn("send-refused", kinds)
+                self.assertNotIn("permitted", kinds)
+                self.assertEqual(case.used_calls(), before - 1)
+
+    def test_marker_blocks_reclaim(self) -> None:
+        task = self.permit_setup()
+        permit = self.service.issue_permit(
+            task["id"], task["owner"], task["fence"], self.permit_request(task)
+        )
+        self.assertTrue(permit["permit"])
+        self.lease(task["id"], -1)
+        self.assertIsNone(self.service.claim(task["id"], "second-worker"))
+        with self.service.transaction() as db:
+            self.assertEqual(self.service._row(db, task["id"])["state"], "failed")
+        self.assertIn("blocked-reclaim", self.kinds(task["id"]))
+        self.assertEqual(len(self.reserved()), 1)
+
+    def test_settlement_binds_to_the_marker_and_late_results_settle_the_meter_only(self) -> None:
+        task = self.permit_setup()
+        permit = self.service.issue_permit(
+            task["id"], task["owner"], task["fence"], self.permit_request(task)
+        )
+        envelope = dict(
+            outcome="returned",
+            source="ai",
+            model="test-model",
+            usage=dict(prompt_tokens=100, completion_tokens=20, total_tokens=120, cached_tokens=10),
+        )
+        self.assertFalse(
+            self.service.complete_result(task["id"], "intruder", task["fence"], envelope, None, "x")
+        )
+        self.assertEqual([r for r in self.records() if r["kind"] == "completed"], [])
+        self.assertIn("result-rejected", self.kinds(task["id"]))
+        self.lease(task["id"], -1)
+        self.assertFalse(
+            self.service.complete_result(
+                task["id"], task["owner"], task["fence"], envelope, None, "late"
+            )
+        )
+        settled = [r for r in self.records() if r["kind"] == "completed"]
+        self.assertEqual([r["id"] for r in settled], [permit["meter_id"]])
+        self.assertEqual(settled[0]["tokens"]["total_tokens"], 120)
+        self.service.complete_result(
+            task["id"], task["owner"], task["fence"], envelope, None, "late"
+        )
+        self.assertEqual(len([r for r in self.records() if r["kind"] == "completed"]), 1)
+
+    def test_result_without_a_permit_closes_the_task_against_a_later_permit(self) -> None:
+        task = self.permit_setup()
+        request = self.permit_request(task)
+        envelope = dict(outcome="provider-unavailable", source="unverified", usage=None)
+        self.lease(task["id"], -1)
+        self.assertFalse(
+            self.service.complete_result(
+                task["id"], task["owner"], task["fence"], envelope, None, "x"
+            )
+        )
+        self.assertIn("closed-without-permit", self.kinds(task["id"]))
+        self.lease(task["id"], 60)
+        result = self.service.issue_permit(task["id"], task["owner"], task["fence"], request)
+        self.assertEqual(result, dict(permit=False, reason="task-closed"))
+        self.assertEqual(self.reserved(), [])
 
 
 if __name__ == "__main__":
