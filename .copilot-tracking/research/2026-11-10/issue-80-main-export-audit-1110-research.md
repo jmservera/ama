@@ -1,6 +1,8 @@
 <!-- markdownlint-disable-file -->
 # Issue #80 current-main export acceptance and inventory audit: research
 
+> Qualification 2026-11-10: partly superseded by the authoritative [supplement](../../audits/2026-11-10/issue-80-qualified-audit-1110-supplement.md). The claims below of 13 routes, 10 controls and grep-based absence of controls are superseded by eleven CSV paths plus the progress variant (twelve entries), nine controls located, three not located, with a static-search limit. The historical body is unchanged.
+
 * Task: `issue-80-main-export-audit-1110`; parent task: none; parent issue #73 is hierarchy only.
 * Date: 2026-11-10. Qualified agent: hve-core-all:rpi-agent, claude-sonnet-5.5.
 * Mode: manual; phases advanced one by one only because the Root brief orders the full loop. Planning Readiness: Ready.

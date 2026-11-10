@@ -35,7 +35,7 @@ Eleven distinct paths (rows 1 and 2 share `cases.csv`), nine controls located, t
 ## Control construction trace (bounded, source-only)
 
 * No generic export helper exists in `web/`; each control spells its own `/api/...csv` path. Other dynamic hrefs (`app.js:417,1839`, `case-workspace.js:128`, `role-screens.js:278`) build hash navigation; `app.js:1708-1709` is login redirect.
-* `packages.csv`, `workorders.csv`: capacity screen reads paged JSON through `pagedPath`; remaining calls are mutating. No anchor to the CSV path was found in the files read.
+* `packages.csv`, `workorders.csv`: inspected scope is the `ops.js` capacity screen (paged JSON through `pagedPath`; mutating calls) plus `role-screens.js` JSON reads (`/api/packages` at 1062; `/api/workorders?case=` at 516, 1063, 1118). No anchor to either CSV path was found in those reads or the literal/href searches. This does not establish UI absence; other files were covered only by those searches.
 * `cases.csv?report=progress`: the sole `cases.csv` anchor builds `view` plus `qs(listState)`; `listState` is seeded from `me.work_queues.default` (`app.js:461-463`) and user filters. Server-supplied defaults injecting `report` were not exhaustively excluded; no evidence suggests it.
 * Limitation: files read are the pinned `web/*.js` and `index.html`; no browser or runtime was used.
 

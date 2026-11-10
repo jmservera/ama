@@ -20,3 +20,11 @@ No fetch, merge, rebase, source, test, dependency or config change; no runtime o
 ## Success criteria
 
 Totals stated as eleven distinct CSV paths plus progress variant (twelve entries), nine controls located, three not located; "not located by static literal search and bounded construction trace; generic/dynamic controls not ruled out" used consistently; seven genuine records and a verify exit 0.
+
+## Additive plan 2026-11-10 (provenance qualification)
+
+* [ ] Add dated qualification notices (insert after the title only; bodies untouched) to the original matrix, research and review, linking the supplement `.copilot-tracking/audits/2026-11-10/issue-80-qualified-audit-1110-supplement.md`.
+* [ ] Correct the "only web consumers" statements in the qualified research and supplement to the inspected scope, listing `role-screens.js` consumers.
+* [ ] Qualify "no GH operation" in the qualified changes file to no GH mutation, disclosing read-only `gh api user` lookups.
+* [ ] Order: implement-start, edits, standalone validation, implement-done, then the single Review creates a new review artifact, review-done, commit, commit-complete, verify.
+* Constraints: documentation only; no source, runtime, fetch, push or GH mutation; C2, C4 open; M1-M4 unchanged.

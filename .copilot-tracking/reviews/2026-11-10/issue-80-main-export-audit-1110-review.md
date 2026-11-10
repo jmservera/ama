@@ -1,6 +1,8 @@
 <!-- markdownlint-disable-file -->
 # Review: issue #80 current-main export audit (single pass)
 
+> Qualification 2026-11-10: partly superseded by the authoritative [supplement](../../audits/2026-11-10/issue-80-qualified-audit-1110-supplement.md). A literal grep was treated below as proof that controls do not exist; that is withdrawn: controls are not located by static literal search, generic or dynamic controls are not ruled out. Totals are eleven CSV paths plus the progress variant (twelve entries), nine located, three not located. The historical body is unchanged.
+
 Executed once, after implementation. Boundary assessed: the matrix, changes file, research and check logs of `issue-80-main-export-audit-1110` against the Root brief.
 
 ## Outcome

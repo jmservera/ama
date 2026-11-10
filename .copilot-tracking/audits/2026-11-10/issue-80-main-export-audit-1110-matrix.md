@@ -1,6 +1,8 @@
 <!-- markdownlint-disable-file -->
 # Issue #80 C2 current-main acceptance and inventory matrix
 
+> Qualification 2026-11-10: partly superseded by the authoritative [supplement](issue-80-qualified-audit-1110-supplement.md). The claims below of 13 routes, 10 controls and grep-based absence of controls are superseded by eleven CSV paths plus the progress variant (twelve entries), nine controls located, three not located, with a static-search limit (generic or dynamic controls not ruled out). The historical body is unchanged.
+
 Base `c66370042eb08f07839d054433f4483078703cf2` (= fetched `origin/main`). Research: `.copilot-tracking/research/2026-11-10/issue-80-main-export-audit-1110-research.md`. Audit only; no source change; no tick; no allowance.
 
 ## Verdict

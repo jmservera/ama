@@ -19,3 +19,8 @@ Plan: `.copilot-tracking/plans/2026-11-10/issue-80-qualified-audit-1110-plan.md`
 ## Phase 3
 
 One Review artifact; commit tracking only with noreply identity and Copilot trailer; `verify` exit code recorded.
+
+## Additive details 2026-11-10 (provenance qualification)
+
+* Notice text (original three files): "Qualification 2026-11-10: superseded in part by the authoritative supplement (link). Old claims of 13 routes, 10 controls and grep-based absence are superseded by eleven CSV paths plus the progress variant (twelve entries), nine controls located, three not located, with a static-search limit. Historical body below is unchanged."
+* Insert after the first heading line only. Verify with `git diff` that only added lines appear.

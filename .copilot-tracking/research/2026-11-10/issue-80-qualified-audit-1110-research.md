@@ -16,8 +16,8 @@ Search of all `web/*.js` and `index.html` for `csv`, `download`, `.href =`, `set
 
 * Nine located controls, all anchors with a literal or templated `/api/...csv` href: `app.js:758` handoffs, `app.js:805,843` cases (href assigned dynamically as `/api/cases.csv?view=${view}&${qs(listState)}`), `app.js:2206` visits, `app.js:2216` funding, `ops.js:217` checklists, `panels.js:575` finance, `progress.js:189` closed cases (href `/api/closed-cases.csv?${download}`), `role-screens.js:225` stock queue, `role-screens.js:1334` form schemas.
 * No generic export helper exists: no shared function builds a CSV URL from a route name. Each control spells its own path. Other dynamic `href` assignments (`app.js:417,1839`, `case-workspace.js:128`, `role-screens.js:278`) build hash navigation links, and `app.js:1708-1709` is login redirect.
-* `packages.csv`: the only web consumers of `/api/packages` are `ops.js:366` (paged JSON via `pagedPath`, limit/offset) and mutating calls `ops.js:404,430`. No anchor. Not located by static literal search or by trace of the capacity screen; generic/dynamic controls not ruled out beyond the files read.
-* `workorders.csv`: consumers `ops.js:278,367` (JSON) and mutating calls `ops.js:437-453`. No anchor. Same limitation.
+* `packages.csv`: (corrected 2026-11-10, see additive section below) inspected scope was the `ops.js` capacity screen (`ops.js:366` paged JSON; mutations `ops.js:404,430`) plus `role-screens.js:1062` JSON read. No anchor. Not located by static literal search; generic/dynamic controls not ruled out beyond the files read.
+* `workorders.csv`: (corrected) `ops.js:278,367` (JSON), mutations `ops.js:437-453`, and `role-screens.js:516,1063,1118` JSON reads. No anchor. Same limitation.
 * `cases.csv?report=progress`: the only `cases.csv` anchor is `app.js:843`, whose query is `view` plus `qs(listState)`. `listState` holds filters seeded from `me.work_queues.default` (`app.js:461-463`) and user selections (stage, q, area, wave, owner, flag, queue, sort). No code sets `report`. The server reads `report` for `/api/cases.csv` (`server.py:513,535-537`). Whether a server-supplied default could inject `report` was not exhaustively excluded; no evidence suggests it. So the progress variant has no located control, with that limitation.
 
 Conclusion wording used everywhere: "not located by static literal search and a bounded construction trace; generic/dynamic controls not ruled out". No UI defect is asserted, and no runtime or browser check was run to confirm absence.
@@ -44,3 +44,13 @@ API 11/24/14 OK, schema 21 PASS, progress 58 PASS (and the preserved attempt-1 s
 ## Boundaries
 
 C2 (criterion 2, not a source-correction debit), C4 and #73 stay open. Thresholds stay human/open. No source, test, dependency or config change, no missing control or route implemented, no retention approved, no requirement changed. This work creates no source allowance. Original handoff, matrix, review, raw logs and canonical chain are preserved.
+
+## Additive research 2026-11-10 (provenance qualification, task `issue-80-provenance-qualification-1110`)
+
+Reviewer Readiness at `e5bd929c` (approve_with_comments: 2 Medium, 1 Low). Pinned source lines verified by reading `web/role-screens.js`:
+
+* `packages`: `ops.js:366` (paged JSON), `ops.js:404,430` (mutations), and `role-screens.js:1062` (`api("/api/packages")`, JSON read). The earlier "only web consumers" claim is superseded: inspected scope is `ops.js` capacity screen plus these `role-screens.js` reads; other files were covered only by the literal and href-construction searches.
+* `workorders`: `ops.js:278,367` (JSON), `ops.js:437-453` (mutations), and `role-screens.js:516,1063,1118` (`/api/workorders?case=...`, JSON reads). 
+* These JSON consumers do not establish any export control, nor its absence. Limitations stay: generic or dynamic controls and server-seeded `listState` defaults not ruled out; no UI defect asserted.
+* Finding 1: original matrix, research and review still show superseded verdicts; additive dated notices will link the authoritative supplement and name the superseded claims (13 routes, 10 controls, grep-absence) versus eleven CSV paths plus variant (twelve entries), nine located, three not located, static limit.
+* Finding 3: `gh api user` was used for read-only identity lookups before commits; the claim is qualified to no GH mutation. Runtime and browser results remain original-session observations at `c66370042`.
