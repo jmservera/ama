@@ -1,0 +1,43 @@
+{
+  "task_id": "440-sensor-c2-1110",
+  "task_slug": "sensor-c2-440-1110",
+  "parent_task": {
+    "task_id": "440-sensor-qualification-1110",
+    "task_slug": "sensor-qualification-440-1110"
+  },
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-sensor-c2-440-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-sensor-c2-440-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-sensor-c2-440-1110-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-sensor-c2-440-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-sensor-c2-440-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-sensor-c2-440-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "One bounded docs-only correction C2 of the sensor checkpoint on c21849e0; fix the 1 Medium and 1 Low independent findings; preserve C1 and the original chains; no source, runtime, gate, cloud, model or counter grant",
+      "status": "confirmed",
+      "evidence": "Root brief 2026-11-10T17:02Z"
+    },
+    {
+      "decision": "Research executed, Ready; critique executed once by the author (self-executed), amendments C1-C6 applied directly",
+      "status": "recorded",
+      "evidence": "research and critique records"
+    },
+    {
+      "decision": "Review executed once by the author after implement-done, finalized before review-done (self-executed); final metadata external",
+      "status": "recorded",
+      "evidence": "review record"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Record review-done, commit, commit-complete, verify into distinct files"
+  },
+  "prioritized_follow_ups": null
+}

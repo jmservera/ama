@@ -3,6 +3,7 @@
 from typing import TypedDict
 
 from zava_forward.core import projection
+from zava_forward.core.aftercare_intake import VIEW_ROLES
 from zava_forward.core.workflows import MANAGER_ROLES
 
 
@@ -48,6 +49,13 @@ def navigation(user: dict[str, str]) -> list[Destination]:
         ("#/closed", "Closed cases", "Closed case directory", "cases", manager),
         ("#/assistants", "Assistant proposals", "My permitted proposals", "assistants", True),
         ("#/time", "Time capture", "My time records", "time", True),
+        (
+            "#/aftercare",
+            "Aftercare concerns",
+            "Synthetic assisted aftercare concerns",
+            "aftercare",
+            user.get("role") in VIEW_ROLES,
+        ),
         ("#/screens", "Specialist screens", "Installed role screens", "cases", True),
     ]
     out = []

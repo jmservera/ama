@@ -912,6 +912,42 @@ python -m zava_forward.core.synthetic.device_provision --register register.csv \
   --homes 30 --run-id run-185 --owner "<named owner>"
 ```
 
+### Keyless IoT Hub `Registry` adapter (source only, default off)
+
+`synthetic.device_registry_azure.AzureIotHubRegistry` implements the existing injected
+`Registry` protocol over the `azure-iot-hub` SDK. Install the `iothub` extra (the `dev`
+extra includes it so the SDK tests run in Core CI); Core imports without it and reports
+`SDK_MISSING` only at first use. Nothing is imported, read, requested or acquired at import,
+construction, dry run or close. The command line does not use it and `--apply` still refuses.
+
+* Inputs are an injected token credential (or client), the exact Hub host name, and a finite
+  `EnrollmentSpec` of known `SYN-` device IDs, the run ID and public X509 thumbprints.
+  Missing or ambiguous input is refused before any SDK call. No connection string or
+  service key is accepted. The spec is not certificate issuance or approval.
+* `create` is create-only (`If-None-Match: *`), disabled, and carries the run marker in
+  `statusReason`. An existing identity is `IDENTITY_CONFLICT`; it is never adopted or
+  overwritten. A timeout is `WRITE_OUTCOME_UNKNOWN` with a readback and no retry.
+* `run_of` returns `None` only for a 404. Unmarked or other-run devices are never reported as
+  the run; 401, 403, 5xx and timeouts raise distinct fixed codes.
+* `delete` requires a current exact marker match and deletes with the exact snapshot ETag
+  (never `*`); drift is `PRECONDITION_FAILED`.
+* `list_run` is complete or raises `LIST_INCOMPLETE`: the SDK lists at most 1000 devices with
+  no continuation, so a full page is incomplete. Every listed entry without a string
+  `statusReason`, enrolled or not, is confirmed by one metadata read, at most 100 per call;
+  an exactly marked identity is returned even if it is not enrolled, so whole-run teardown
+  refuses before deleting. An unreadable confirmation or an exhausted budget refuses.
+* Errors are fixed codes without SDK response text. A refusal raised inside a caller's
+  `except` block hides that caller's exception from the printed traceback
+  (`__suppress_context__`); the context object stays reachable to code that walks it.
+
+Limits. Tests run the real SDK against a simulator of the documented REST conditional-header
+table; Azure behaviour (412, status codes, ETag format, list limits, RBAC) is unobserved.
+A hub with more than 100 unmarked devices in one listing makes `list_run` refuse, not guess.
+One process per run ID; cross-process contention is not fenced. An injected client may keep
+its own transport retries. The Registry-before-credential order and the lack of an
+authentication update remain unresolved, and credential issuance, storage, rotation and
+teardown for the whole of #185 remain open.
+
 ## Journey ownership register and human-review routing (#128)
 
 `journey_register.draft()` lists journeys J1 to J6 and R1 against the eight AC-071
@@ -4932,6 +4968,43 @@ non-human basis, or orphan a pack.
 Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), evaluator role access
 and the DPO position on outcome data (both open), a model route for the pack summary (needs
 release evidence and owner approval), and a pack screen. Tests: `src/core/tests/test_aftercare.py`.
+
+Stage A of the connected slice (#133, Refs only, unwired) adds
+`zava_forward.core.aftercare_intake.AftercareService`, a synthetic staff-assisted layer over the
+register above. It does not reimplement the register. It adds a role-gated intake (existing staff
+roles only), a durable receipt that keeps the raw statement and representative basis, an idempotent
+`request_id`, owner actions limited to the named synthetic scenario owner (a missing owner is
+`Unknown`, and only a manager can name one afterwards), manager-only closure that never alters a
+concern, and a joined baseline, outcome and unresolved view with denominators and Unknowns. State is
+one validated JSON document behind an atomic `StateStore.update`; `FileStateStore` is a
+demonstration store only. `handle(method, path, user, body, query)` is the route contract for a later
+thin hook. Not delivered: server, store, UI route or endpoint-inventory wiring; served, persistence,
+restart and browser evidence; evaluator role; DPO or lawful-basis position. The unwired screen module
+is `src/api/src/zava_forward/api/web/aftercare.js`. Tests: `src/core/tests/test_aftercare_intake.py`
+and `src/api/tests/test_aftercare_screen.py`. Corrective cycle C2: an exact replay returns the
+original receipt even after `next_update` has passed (the time check applies to new records only),
+sensor-context keys and values pass the same best-effort synthetic privacy guard and length limits
+as free text before anything is stored (a guard, not privacy proof), and the screen module says
+that saving could not be confirmed, keeps the same request reference, and renders the unresolved
+count as a fraction with its denominator.
+
+Runtime hook integration (#133, Refs only, corrective cycles C4 and C5 of 5; C1 to C5 spent, no
+automatic C6). `zava_forward.core.aftercare_store.DocumentStateStore(store, key="aftercare")` is the
+narrow `StateStore` adapter over the existing `Store` / `SqlStore` document mechanism. `aftercare` is
+the only document added to `SqlStore.DOCS` and to `projection.STAFF_GET`. The receipt, register and
+request index stay one whole document, so one `update` is one atomic write. The mutator runs once,
+under the store lock, and is never rerun. After a failure the adapter re-reads the persisted value
+and restores memory while still holding the lock that performed the save (corrective cycle C5), so
+recovery cannot restore an older snapshot over another writer's commit. If only the outer lock exit
+fails, it reacquires the lock first and then reads. Classification:
+an unreadable value or a committed-but-unconfirmed write raises `UnconfirmedWriteError` (never "not
+saved"), a different persisted value is a conflict, and an unchanged value with no commit is a plain
+persistence error. A refresh error is attached to the raised error, not swallowed. A client retries
+with the same `request_id`; the unchanged service replays the committed receipt, and a changed payload
+under that id is a conflict. The JSON `Store` is single-process: a second instance on the same file is
+not protected, so cross-instance protection is SQL only. `FileStateStore` is not used at runtime.
+Tests: `src/core/tests/test_aftercare_store.py` (JSON, SQLite and, with `ZF_RESIDENT_MSSQL=1` on an
+owned disposable server, MSSQL).
 
 ## Data steward and digital operator exception queue (#135)
 

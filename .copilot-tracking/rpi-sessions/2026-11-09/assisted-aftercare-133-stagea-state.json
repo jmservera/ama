@@ -1,0 +1,68 @@
+{
+  "task_id": "issue-133-assisted-aftercare-stagea",
+  "task_slug": "assisted-aftercare-133-stagea",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-09/assisted-aftercare-133-stagea-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-09/assisted-aftercare-133-stagea-plan.md",
+    "details": ".copilot-tracking/details/2026-11-09/assisted-aftercare-133-stagea-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-09/assisted-aftercare-133-stagea-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-09/assisted-aftercare-133-stagea-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-09/assisted-aftercare-133-stagea-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Mode automatic for this bounded Stage A: owner directed a full prospective RPI loop and a handoff; session stops at handoff",
+      "status": "confirmed",
+      "evidence": "task instruction 2026-11-09T22:26Z"
+    },
+    {
+      "decision": "Admission: dedicated adapter/UI/test modules and isolated synthetic service contracts only; no server.py, role-screens.js, store/sqlstore, shared endpoint inventory or common browser fixtures",
+      "status": "confirmed",
+      "evidence": "task instruction; demo-capacity-rpi-common.md"
+    },
+    {
+      "decision": "Refs #133 only; no push, PR, issue or board write; five total correction cycles, no resets",
+      "status": "confirmed",
+      "evidence": "task instruction"
+    },
+    {
+      "decision": "Research executed, Planning Readiness Ready for Stage A",
+      "status": "confirmed",
+      "evidence": "research artifact, commit aebfe6f40"
+    },
+    {
+      "decision": "Critique executed once (independent rubber-duck): Revise, seven findings applied directly, no user decision",
+      "status": "confirmed",
+      "evidence": "critique artifact, commit aebfe6f40"
+    },
+    {
+      "decision": "Review executed once; outcome no significant issues; reviewer did not read tests",
+      "status": "confirmed",
+      "evidence": "review artifact"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "hook-continuation",
+      "summary": "Connected API, persistence, UI wiring and browser checks need the shared hooks owned by the staff-intake sibling (#132)",
+      "resolution": "Coordinator merges sibling 132 into parent, then admits the hook continuation"
+    }
+  ],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Coordinator merges sibling 132, then admits the hook continuation"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Hook continuation after sibling 132: server delegation, store update, nav wiring, connected checks",
+      "rationale": "Only way to meet C1-C6",
+      "evidence": "handoff-133-aftercare-stageA-1109.md"
+    }
+  ]
+}

@@ -1,8 +1,23 @@
 """Exercise the actual workspace loader and route guard with Node's VM."""
 
+import contextlib
+import io
+import json
 import subprocess
 import unittest
+from collections.abc import Callable
 from pathlib import Path
+
+from checks.script_retry import (
+    MISSING_GLOBAL_REQUESTS,
+    Mutation,
+    assert_requests,
+    exhausted_requests,
+    expect_detected,
+    mutate_app,
+    parse_retry_delays,
+    retry_delays,
+)
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -540,6 +555,117 @@ function harness(outcomes = []) {
         )
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("PASS recovery", result.stdout)
+
+
+LOADER_REQUESTS = r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const source = fs.readFileSync(0, "utf8");
+const loader = source.slice(source.indexOf("const STARTUP_RETRY_DELAYS"),
+  source.indexOf("function missingWorkspaceScripts"));
+(async () => {
+  const requests = [];
+  const context = vm.createContext({
+    setTimeout(fn, delay) { if (delay < 5000) queueMicrotask(fn); return 1; },
+    clearTimeout() {},
+    document: {
+      querySelectorAll: () => [],
+      createElement: () => ({remove() {}}),
+      head: {append(script) {
+        requests.push(script.src);
+        queueMicrotask(() => process.argv[1] === "error" ? script.onerror() : script.onload());
+      }}
+    }
+  });
+  vm.runInContext(loader, context);
+  await vm.runInContext('retryWorkspaceScript("/vendor/leaflet.js")', context);
+  const first = requests.length;
+  await vm.runInContext('retryWorkspaceScript("/vendor/leaflet.js")', context);
+  console.log(JSON.stringify({first, second: requests.length - first}));
+})().catch(error => { console.error(error); process.exitCode = 1; });
+"""
+
+
+def loader_requests(source: str, outcome: str) -> tuple[int, int]:
+    """Retry requests of the first and of an immediate second call, run through the real loader."""
+    result = subprocess.run(
+        ["node", "-e", LOADER_REQUESTS, outcome],
+        input=source,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    counts = json.loads(result.stdout)
+    return int(counts["first"]), int(counts["second"])
+
+
+def declaration(items: str) -> str:
+    return f"const OTHER = [1];\nconst SCRIPT_RETRY_DELAYS = [{items}];\n"
+
+
+class ScriptRetryOracle(unittest.TestCase):
+    app = (WEB / "app.js").read_text(encoding="utf-8")
+
+    def test_declaration_parser_fails_loudly_on_absent_or_malformed_input(self) -> None:
+        self.assertEqual(parse_retry_delays(declaration("250, 500, 1500")), (250, 500, 1500))
+        self.assertEqual(parse_retry_delays(declaration("7")), (7,))
+        for items in ("", "250,", "250, 0", "250, '5'", "250, BASE", "-5", "2.5"):
+            with self.subTest(items=items), self.assertRaisesRegex(ValueError, "malformed"):
+                parse_retry_delays(declaration(items))
+        for source in (
+            "const OTHER = [1];",
+            "  const SCRIPT_RETRY_DELAYS = [250];",
+            declaration("250") + declaration("500"),
+        ):
+            with self.subTest(source=source), self.assertRaisesRegex(ValueError, "exactly one"):
+                parse_retry_delays(source)
+
+    def test_derived_totals_equal_the_real_loader(self) -> None:
+        retries = exhausted_requests() - 1
+        self.assertEqual(retries, len(retry_delays()))
+        self.assertEqual(loader_requests(self.app, "error"), (retries, 0))
+        self.assertEqual(loader_requests(self.app, "load"), (MISSING_GLOBAL_REQUESTS - 1, 0))
+
+    def test_each_controlled_loader_diverges_from_the_derived_contract(self) -> None:
+        retries = exhausted_requests() - 1
+        expected: dict[Mutation, tuple[str, tuple[int, int]]] = {
+            "extra": ("error", (retries + 1, 0)),
+            "early": ("error", (retries - 1, 0)),
+            "reset": ("error", (retries, retries)),
+            "continue": ("load", (retries, 0)),
+        }
+        for kind, (outcome, counts) in expected.items():
+            with self.subTest(kind=kind):
+                mutated = mutate_app(self.app, kind)
+                self.assertNotEqual(mutated, self.app)
+                self.assertEqual(loader_requests(mutated, outcome), counts)
+
+    def test_controlled_transformations_refuse_unsafe_or_vacuous_input(self) -> None:
+        with self.assertRaisesRegex(ValueError, "margin"):
+            mutate_app(declaration("3500, 500"), "extra")
+        with self.assertRaisesRegex(ValueError, "at least two"):
+            mutate_app(declaration("250"), "continue")
+        for kind in ("reset", "continue"):
+            with self.subTest(kind=kind), self.assertRaisesRegex(ValueError, "exactly one"):
+                mutate_app(declaration("250, 500"), kind)
+
+    def test_control_passes_only_for_the_exact_expected_failure(self) -> None:
+        def fail(observed: int) -> Callable[[], None]:
+            return lambda: assert_requests(observed, 4, "oracle")
+
+        with contextlib.redirect_stdout(io.StringIO()):
+            expect_detected(fail(5), "oracle", 4, 5, "extra")
+        for run, message in (
+            (lambda: None, "was not detected"),
+            (fail(3), "wrong assertion"),
+            (lambda: assert_requests(5, 4, "another"), "wrong assertion"),
+        ):
+            with self.subTest(message=message), self.assertRaisesRegex(AssertionError, message):
+                expect_detected(run, "oracle", 4, 5, "extra")
+        with self.assertRaisesRegex(ValueError, "cannot be told apart"):
+            expect_detected(fail(4), "oracle", 4, 4, "vacuous")
+        assert_requests(4, 4, "oracle")
 
 
 if __name__ == "__main__":

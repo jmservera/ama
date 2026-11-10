@@ -1,0 +1,7 @@
+PASS owned server is running and responsive on loopback
+PASS missing ops names the actual dependency
+PASS case controls are not silently omitted
+PASS asset error reflows at 320px
+PASS asset error reflows at 390px
+PASS asset error reflows at 1280px
+DIAG missing_ops_recovery (404 on /ops.js): FAILED
