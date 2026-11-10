@@ -21,3 +21,7 @@ Planned edits, none made yet at the time this record was written:
 ## Amendment after static closure (2026-11-10T04:20Z)
 
 Independent static review (Pass, one Medium) found step 5 still said a log path outside the tracking root is a qualification, which contradicts external evidence. Step 5 qualification list now names the artifact path, the log path outside its evidence directory, evidence bound to another worktree or issue, and HEAD moved past commit-complete. Wording only; behaviour tests unchanged. Static review of the final wording was not repeated; the behavior campaign runs on the final blob.
+
+## Errata: HVE and host outcomes (2026-11-10)
+
+Behavior report 4: Revise (S1 evidence gap from the lead's condensed log, no target defect). Host validation log 2: checks Pass, scope-in-step-5 by lead inspection, YAML lint not performed. Sandbox removed after evidence was summarised in the reports. Source unchanged since eef054c; no further source edit. Counter C2/5, three left.
