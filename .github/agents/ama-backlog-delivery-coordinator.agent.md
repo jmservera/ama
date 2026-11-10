@@ -579,7 +579,24 @@ remains subject to the tracking retention policy.
    and the explicit target branch and dependency. Never copy an earlier brief
    or a stale `/tmp` template. Write it to a unique
    `/tmp/brief-{number}-{timestamp}.md`, record its path and sha256 in
-   session SQL, then run:
+   session SQL, then record the launch with the local phase witness, run from the root of
+   this checkout (the worker gets its absolute path) with the absolute worktree path and
+   an absolute evidence directory outside every worktree that you own and create for this
+   launch (`{evidence-dir}`, for example under `~/.local/share/ama/phase-witness/`), so the
+   runtime log and lock never dirty the candidate:
+   `python3 tools/rpi_phase_witness.py record launch --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --brief /tmp/brief-{number}-{timestamp}.md --session rpi-{number} --actor coordinator --claim-model claude-sonnet-5.5`.
+   A refusal (exit 2) blocks that launch until its reason is fixed. The
+   witness observes its own UTC clock, Git HEAD and tree, dirty source and,
+   at later boundaries, the canonical artifacts; it accepts no caller-supplied times, and its record is
+   a local writable observation, not tamperproof, not host or model
+   attestation and not proof of unobserved reasoning. The brief gives the
+   worker the absolute path of this helper, the same `--repo` and `--issue`,
+   the same `--evidence-dir`, and the exact path of the issue's canonical state file
+   (passed as `--state`), and tells it to call
+   `record research-open` after persisting the opening state and before
+   substantive search, `plan-done`, `implement-start` (changes record
+   persisted before any source edit), `implement-done`, `review-done`, and
+   `commit-complete --claim-commit {sha}` only after the commit exists. Then run:
    `tmux new-session -d -s rpi-{number} -c ../ama-wt/issue-{number} "echo --- launch {timestamp} >> /tmp/rpi-{number}.log; copilot --agent hve-core-all:rpi-agent --model claude-sonnet-5.5 --allow-all-tools --allow-all-paths --deny-tool 'shell(git push --force)' -p \"\$(cat /tmp/brief-{number}-{timestamp}.md)\" 2>&1 | tee -a /tmp/rpi-{number}.log; echo exit=\$? >> /tmp/rpi-{number}.log"`.
    Logs are preserved across retries: each launch appends a
    `--- launch {timestamp}` line and never truncates or deletes an earlier log.
@@ -683,7 +700,21 @@ remains subject to the tracking retention policy.
    Verify RPI use before review: the PR diff must contain that issue's
    research, plan, changes and review artifacts
    (`gh pr diff {n} --name-only | grep .copilot-tracking`), and the session
-   log must show the research, plan and review phases ran. A PR without them
+   log must show the research, plan and review phases ran. Also run
+   `python3 tools/rpi_phase_witness.py verify --repo {worktree} --issue {number} --evidence-dir {evidence-dir} --json`
+   and record its `final.head`, `final.tree` and `final.log_sha256` in session SQL; the log
+   stays in the evidence directory, is never committed, edited or deleted, and may be
+   archived only under the tracking retention policy. Keep its output with the capture of the tmux pane (exit 1 means it
+   reported qualifications, including any boundary not yet observed; it is not a
+   command failure). Treat each reported
+   qualification (refused or missing boundary including launch, out-of-order
+   record, dirty or committed source change before start, backward clock, stale
+   review source, revised critique or review, artifact path outside the
+   tracking root, log path outside its evidence directory, evidence bound to
+   another worktree or issue, HEAD moved past commit-complete) as an observation to carry into the review and report, not as a
+   waiver; never edit or delete witness records, record the log sha256 in
+   session SQL before the worktree is removed, and say plainly which boundaries
+   were witnessed and which were only reported. A PR without them
    goes back to its loop once to produce a frozen local correction with the
    missing phases and artifacts; the coordinator alone verifies, assesses and
    publishes it and workers never push. If it still lacks them, record it as a ledgered blocker. Do not fabricate
