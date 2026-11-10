@@ -6572,3 +6572,100 @@ CONTINUE bounded local #109 integration and testing against current main, using 
 
 * Added as a distinct section; the nomination and UX and Bicep sections above are unchanged. The old CSV-learning record is independent and unchanged.
 * The witness is a locally writable record, not host or model attestation; the model label is asserted. The critique and review are author-executed, not independent. No push, pull request or GitHub write was made, and no command in this task ran on `6cc59776` beyond read-only git and read-only GitHub queries.
+
+## Aftercare integration current-main checkpoint (2026-11-10, Refs #440 #89 #133 #134 #1401 #1402)
+
+Draft, local-only, not approved. This is a new recurring observation and documentation checkpoint after the delivery-quality and aftercare persistence integration (PR 1400) reached `main`. It is distinct from every earlier section above (all unchanged, including the Registry wave section of PR 1399), not the old #440 C6, not a retry, and spends no source repair budget; it makes no product, test, configuration or dependency fix and opens no issue. It is the focused documentation tier and pure documentation: no gate, `--changed`, test, install, image, SQL, browser, cloud, model, live or private-data run was made by this task, and no reviewed result below is a new execution on `main`. It observes proven source composition and retained evidence, not new runtime acceptance. Records: [research](../../.copilot-tracking/research/2026-11-10-aftercare-main-440-1110-research.md), [plan](../../.copilot-tracking/plans/2026-11-10-aftercare-main-440-1110-plan.md), [details](../../.copilot-tracking/details/2026-11-10-aftercare-main-440-1110-details.md), [critique](../../.copilot-tracking/plans/critiques/2026-11-10-aftercare-main-440-1110-plan-critique.md), [changes](../../.copilot-tracking/changes/2026-11-10-aftercare-main-440-1110-changes.md), [review](../../.copilot-tracking/reviews/2026-11-10-aftercare-main-440-1110-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-10/issue-440-aftercare-main-1110-state.json).
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-10) |
+| --- | --- |
+| Trigger | PR 1400 `feat(demo): integrate delivery-quality aftercare persistence`, MERGED 2026-11-10T15:56:55Z as `main` `64c3f9191a2ffa97ef2dc07245422333ad4d6585`, tree `8fbdaec7d138e360e9e460ad714742cb78b4d621` (parent `1290aa557`, the PR 1399 Registry checkpoint). The actual tree equals the guarded Root prediction. Head `b7e46b3be3d34734f49f0397c8c8022e920c1781`, tree `06ab5118310b662b57414772f7ba157e7bdec559`, branch `feat/demo-quality-workflows-89-1109`. No closing references; `Refs #89`, `Refs #133`, `Refs #134` only |
+| Authored paths | The actual PR diff is 77 paths (21 under `src`, 53 tracking records, 3 documentation files), exactly the local diff from merge-base `6cc59776`. The reviewer's cumulative two-dot packet of 98 paths and 6,586 lines is a SUPERSET: 21 further paths are main-only documents that appear removed only because `b7e46b3be` predates later main. They are qualified as not authored deletions; main-only documents, including the 1396 and 1399 checkpoint sections and log entries, are retained in the merged tree |
+| Hosted checks | All 19 PR contexts read SUCCESS (PR-head observations, a separate observation from the local runs). For main `64c3f9191` the run list read here shows Graph Update pip in `/src/api, /src/core` completed with success and Capstone Rubric Scorer (push) still in progress; nothing more is claimed green for main |
+| Documents (blob at `64c3f9191`) | BRD Agentic Retrofit Programme 0.21.0 `draft` `34d88395de86`; PRD Zava Forward Retrofit Programme Workbench `in-review`, `exercise_status` author-complete-unsigned-pending-review-and-owner-acceptance, `c788b917bafa`. Neither is changed by PR 1400; draft and in-review are not approval and no requirement or decision is approved here |
+| Issue states (read live) | #89, #133, #134, #132, #440, #1401 and #1402 OPEN; #89 carries `status:partially-delivered`, #132 `status:not-started`. Nothing is ticked or closed here |
+| Excluded | The unmerged #109 and #111 sensor-draft parent (child PR 1395 merged only into its parent branch `bd2a649`; local #109 integration still running), the #144 legacy worker, #132 contractor job pack and fieldwork evidence capture (not delivered by PR 1400 and separately blocked; whole #89 acceptance does not depend on it), real-provider activation, any actual Azure dispatch, and any actual resident or professional acceptance |
+
+### Source identity proof (direct tree comparison)
+
+Compared with `git rev-parse <commit>:<path>` for the tested commit `b7e46b3be` and actual main `64c3f9191`. Commit ancestry and green CI were not used as proof.
+
+| Tree | Tested `b7e46b3be` | Actual `64c3f9191` | Equal |
+| --- | --- | --- | --- |
+| `src` | `c322b0f7a710c7f121fcd75b6685683ff57fa893` | `c322b0f7a710c7f121fcd75b6685683ff57fa893` | Yes |
+| `src/core`, `src/api`, `src/agents`, `src/orchestrator`, `src/importer` | `bc095465f75d`, `5bc36cda619b`, `a35f7e1d7fa9`, `d06c99144364`, `c6e324d1c3a0` | identical ids | Yes |
+| `infra` | `f7f31c0934cfe0bafb4505408706e55aa8ab61e7` | `f7f31c0934cfe0bafb4505408706e55aa8ab61e7` | Yes |
+| `.github` | `220ca5404c8a` | `e2ecbb8ea5b2` | No: `64c3f9191` equals its parent `1290aa557`, so current main workflow and rubric state is preserved, not replaced by the candidate |
+
+The dependency manifests are inside `src` (`src/core/pyproject.toml` `663adeb012ba`, `src/api/pyproject.toml` `1ae6604c812f`, identical in both). Outside `docs/`, `git diff --name-only b7e46b3be 64c3f9191` lists only main's tracking records and `.github/rubric/scores/latest.json`. The runtime, test and dependency inputs of `64c3f9191` are therefore exactly the tested inputs. This is source identity only: the tests below ran on the author's candidate, not on `64c3f9191`. Aftercare blobs equal in both commits: `aftercare_intake.py` `96674907da90`, `aftercare_store.py` `e5bd737c6d9b`, `aftercare.py` `115f639bc782`, `web/aftercare.js` `682457e40fd6`.
+
+### Consumed evidence (original commands on `b7e46b3be`, not re-run here)
+
+Root session sources, outside the repository: `handoff-89-current-main-adoption-1110`, raw `checks-89-current-main-adoption-1110/` (exit files, outputs, `SHA256SUMS`), the bounded handoff and qualified PR text, and the independent Functional report (`independent-89-main-final-1913`, reviewer `f73048c6`). Each result was observed by the author's original commands on the adopted merge composition (`a664e316`, tree `7af3d7fc`) and the tracking-only head `b7e46b3be`, which has identical runtime and dependency inputs.
+
+| Original result (author commands on `b7e46b3be`) | Retained outcome and limit |
+| --- | --- |
+| Core nine targeted modules, API 16 targeted modules | Exit 0 per module; aftercare_intake 39, aftercare_store 36 with 13 SQL-gated skips, resident_decisions 371 with 132 skips, handoff read guidance 9 with 4 skips. Skips are not passes |
+| Registry SDK dependent module | First run exit 1 (39 tests, 34 failures and 16 errors) because the author's owned environment lacked the newly pinned SDK; after installing `azure-iot-hub` 2.7.0 and `six` 1.17.0 into that environment only, the single rerun passed 39 tests. Original red and install log retained; not a product defect |
+| Fresh affected persistence SQL | 36 tests OK, zero skips, disposable MSSQL, worktree imports and source hashes recorded, container removed, no leftover databases; a fresh run because Core pins changed, not a carry-forward. Not a high-volume or long-lived proof |
+| Static checks | Ruff check and format clean; configured Core mypy 294 files and API mypy 223 files clean; `node --check` 15 files clean. Infrastructure is not covered |
+| Browser checks | aftercare, workbench, workspace_scripts, employee_workspace, nomination and progress: 207 PASS, 0 FAIL. Progress first failed with `FileExistsError` on the author's own existing output directory; one justified rerun with a fresh output directory passed. Both outputs retained. Pinned axe execution is not WCAG, assistive-technology or human acceptance |
+| Independent Functional report | `approve_with_comments` on the complete 164-file adoption packet and then the 98-path two-dot packet: 0 Critical, 0 High, 2 inherited Medium OPEN, no new functional blocker; bounded synthetic-demo scope only; no infrastructure or `.github` candidate delta |
+| Witness for the source run | Seven records, verify exit 0, log hash `1a43156483ef5f21dc252244496818ff3f8b71a0eba82fd304f434ca80bbee9f`; a locally writable record, not host or model attestation |
+
+* Not run and therefore Unknown: any test on `64c3f9191` itself, infrastructure tests of main's delta, full Core or API discovery, the full gate, `--changed`, all-image build, live, model, accessibility-tool beyond the pinned axe checks, assistive-technology, WCAG and release proof. The SDK-missing and progress output-directory first failures are preserved and not healed.
+* Where a selected input identity could not be proven equal (for example the `.github` tree above), the limitation is stated rather than assumed.
+
+### Requirement trace (document-qualified)
+
+| Requirement (document, status) | Source at `64c3f9191` | Observation | Class |
+| --- | --- | --- | --- |
+| PRD FR-049, AC-063 (in-review; AC-063 Not run): complaint, remedy, package, handover and financial closure stay distinct | `aftercare.py` `record_closure`, `aftercare_intake.py` manager-only closure | Handover and financial closure never change a concern or remedy; unresolved concerns stay visible. Age bands owned by Housing/Complaints, lease evidence and leasehold text are not implemented on this surface | Local observed for constructed data, document-qualified; whole AC-063 unmet |
+| BRD FR-047, AC-089 (draft): closure cannot close a remedy, defect or dispute | same | Remedy status is separate and completion needs evidence | Implemented for the constructed register; document-qualified |
+| BRD FR-029, FR-030, RULE-013 (draft): reopened defects, severity, independent closure | Earlier defect and quality delivery, not changed by PR 1400 | Not re-observed in this wave; the aftercare route is a concern route, not defect closure | Not observed here |
+| BRD RULE-014 (draft): a missing sensor alert is not acceptance or closure evidence | register and store restore refusals | A sensor reading is context only, never a human basis and never dismisses a report; a restore marking a concern sensor-dismissed is refused | Local observed for constructed data |
+| PRD FR-014, AC-017 (in-review; Not run): type, desired outcome, owner, accessible or representative route, contact is not consent | `aftercare.py` `intake_form`, `aftercare_intake.py` `record_concern` | Digital and staff-recorded routes (phone, in person, paper, assisted visit); a missing owner is Unknown; a synthetic scenario owner is labelled | Local observed for constructed data; whole AC-017 unmet |
+| PRD FR-036 (in-review): AI tasks registered, unapproved tasks use manual handling | `ai_registry` task `aftercare-concern-pack` | Registered unapproved and disabled, manual route, no model binding | Static read; no model route delivered |
+| #133 acceptance criteria (OPEN, all unticked) | whole feature | Staff-assisted intake, owner, outcome, remedy, closure and denominators exist for synthetic data. A household or representative self-service route, evaluator role access, the DPO position on outcome data and an AI concern pack are not delivered | Partially delivered; criteria unmet |
+| #134 acceptance criteria (OPEN) | whole feature | PR 1400 adds one staff screen route and a browser check; no eleven-perspective walkthrough, AC-034 to AC-043, keyboard or status-announcement acceptance is claimed | Not delivered by this PR |
+
+### Boundaries observed (static read of `64c3f9191`)
+
+* Contract and package boundary: `AftercareService.handle(method, path, user, body, query)` is the route contract. Core owns the register, service and `DocumentStateStore`; API owns `/api/aftercare` (GET and POST through `server.py` `_aftercare`), the `#/aftercare` screen `web/aftercare.js`, the workbench manifest entry and the endpoint inventory. `aftercare` is the only document added to `SqlStore.DOCS` and `projection.STAFF_GET`. Agents, Orchestrator and Importer are unchanged.
+* Roles, consent and human decisions: existing staff role tuples only; the Residents Liaison Officer and Retrofit Coordinator record and the other listed roles read; contractors and the Quality Inspector receive 403. The actor comes from the session, never the request body. Owner actions are limited to the named synthetic owner, closure is manager-only, no consent is read or written, and no evaluator or resident account, portal or approval is added.
+* Persistence: one validated JSON document per update and one atomic save; the mutator runs once under the store lock; a failed save is classified by re-reading under that lock; an unconfirmed write is never reported as not saved; the same `request_id` replays the committed receipt and a changed payload under it is a conflict. The JSON `Store` is single-process; cross-instance protection is SQL only.
+* Refusal, manual path and recovery: field errors link to inputs and move focus to the summary; the draft, request id and unconfirmed state survive validation failures and route changes and clear on sign-out; a late reply after sign-out or a route change does not render or take focus; a `beforeunload` guard protects the in-memory draft; the paper and phone routes are the manual path; AI stays off. These are source reads and the retained constructed checks, not human or assistive-technology acceptance.
+
+### Inherited open findings (read from the actual issues; not waived, not fixed)
+
+| Issue | Severity and status | Reproduction evidence as recorded | Bounded demo limitation |
+| --- | --- | --- | --- |
+| #1401 `fix(aftercare): restore numerically ordered concern identifiers at 1000` | Medium, OPEN | `aftercare_intake.py:378-379` sorts JSON keys so `AC-1000` precedes `AC-101`; restoration in `aftercare.py:195-198` relies on insertion order, so self-produced state becomes invalid at 1,000 concerns (StateInvalid, 503); the adapter also sorts (`aftercare_store.py:40-41`). Static read plus the reviewer report; not run here | Valid only for registers below 1,000 concerns; no high-volume or long-lived persistence is approved |
+| #1402 `fix(aftercare): refuse existing blank FileStateStore documents` | Medium, OPEN | `aftercare_intake.py:267-269` treats an existing blank or whitespace `FileStateStore` document as fresh, so a later write can restart identifiers. Scope is the standalone `FileStateStore`, which the runtime does not use; the connected adapter is not shown to behave the same. Static read plus the reviewer report; not run here | Do not rely on `FileStateStore` for damaged-state refusal; the runtime uses `DocumentStateStore` |
+
+Both issues state that source-repair authority is BLOCKED pending a finite owner correction grant (minimum remaining UNKNOWN, 0, no fresh five, nothing inferred from issue creation). This record claims no new fix, grant or waiver.
+
+### Evidence classes
+
+* Local observed, source-qualified carry-forward: only the author's original runs listed above on `b7e46b3be`, tied to `64c3f9191` by the direct `src` and `infra` tree equality. Constructed synthetic data only.
+* Current-metadata observation: PR 1400 merge identity, 19 hosted PR checks, live issue states and the two issue bodies, read 2026-11-10.
+* Azure observed: NONE. No resident, professional, human, live, model or release observation.
+* Implemented, unverified: the aftercare route on `64c3f9191` itself (no run on that commit), behaviour above 999 concerns, and hosted CI of main beyond the single completed run read.
+* Deferred or blocked: #1401 and #1402 source repair (finite owner grant), household or representative self-service and resident accounts, evaluator access and the DPO position, an AI concern pack route, the #132 contractor pack, whole #89, #133, #134 and #440 criteria, and every human, HVE and legal approval.
+* Unknown: backlog behaviour at scale, accessibility with assistive technology, and which age bands Housing/Complaints will set.
+
+### Findings, owners and gates
+
+* No new confirmed defect, no confirmed refactoring and no source fix. The two inherited Mediums are already deduplicated as #1401 and #1402; no further issue is opened.
+* Remaining backlog by owner: #133 (self-service route, evaluator role, DPO position, AI pack); #134 (perspective walkthroughs and AC-034 to AC-043); #89 (whole delivery-quality epic); #1401 and #1402 (blocked corrections); #132 (separate, blocked); #109 and #111 (sensor-draft parent, excluded).
+* Whole #89, #133, #134 and #440 criteria stay unmet. Independent exact-head review and applicable hosted checks of this record remain required.
+
+### Recommendation
+
+CONTINUE, bounded. The evidence permits #134 current-main local screen walkthroughs of the implemented staff-assisted aftercare surface only (constructed synthetic data, existing staff roles, the `#/aftercare` screen on source equal to the tested tree), preserving the two inherited Mediums as stated limitations (keep scenarios below 1,000 concerns and the runtime adapter, not `FileStateStore`) and every exclusion above. This is a recommendation for Root to consume, not permission, not an approval of any requirement, and not a tick of #440, #89, #133 or #134. No fix or pivot is indicated: a confirmed correction is available only through a separately authorized #1401 or #1402 RPI, and any new confirmed defect needs deduplication and its own issue.
+
+### Process record and limits
+
+* Added as a distinct section; no earlier section, log entry or original adverse result was altered. The witness is a locally writable record, not host or model attestation; the model label is asserted. The critique and review are author-executed, not independent. No push, pull request or GitHub write was made, and the only commands run were read-only git, read-only GitHub queries and reads of the Root session files.
