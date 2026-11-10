@@ -1304,3 +1304,10 @@ A further [Quality M2 qualification](../architecture/cutover-evidence-pack.md#qu
 observation as a dated local observation of the identical Core, API and Agents source, carries the errata
 (#891 is included, no H2 peer or bytes, 29 passes plus one skip), keeps the adverse H0 and H1 results, and
 holds closure, actual-model, Azure, human and release-authority gates open.
+
+A [merged-wave checkpoint](../architecture/cutover-evidence-pack.md#merged-wave-checkpoint-2026-11-10-refs-440-149-153-1238-93-96-148)
+(2026-11-10, draft, local) observes pinned `main` `da4f52abb` after PRs 1343 (staff-time copy), 1346 (resident
+default-deny approval binding), 1345 (finance retained history and dependencies) and 1348 (four-image rebuild
+adapter, fake builder): 699 targeted tests run, 562 pass, 137 skip (132 distinct, SQL opt-in), none fail. It
+joins them to document-qualified BRD and PRD rows and keeps SQL Server, live rebuild, trusted resident binding,
+actual-model and human approval gates unproven. Closure and approval holds stand.
