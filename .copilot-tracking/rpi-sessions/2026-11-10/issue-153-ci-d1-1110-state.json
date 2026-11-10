@@ -6,7 +6,7 @@
     "task_slug": "issue-153-independent-record-1110"
   },
   "mode": "manual",
-  "active_phase": "Implement",
+  "active_phase": "Review",
   "status": "active",
   "session_status": null,
   "artifact_paths": {
@@ -15,7 +15,7 @@
     "details": ".copilot-tracking/details/2026-11-10-issue-153-ci-d1-1110-details.md",
     "critique": ".copilot-tracking/plans/2026-11-10-issue-153-ci-d1-1110-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-10-issue-153-ci-d1-1110-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/2026-11-10-issue-153-ci-d1-1110-review.md"
   },
   "confirmed_decisions": [
     {
@@ -36,8 +36,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "plan-done, commit, changes stub, implement-start, edit test"
+    "phase": "Follow-up",
+    "action": "commit, commit-complete, independent delta assessment before push"
   },
   "prioritized_follow_ups": null
 }

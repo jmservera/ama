@@ -13,9 +13,10 @@ import subprocess
 import tempfile
 import threading
 import unittest
+from collections.abc import Callable
 from http.server import ThreadingHTTPServer
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 from dataset import change_metadata
 from zava_forward.core.store import Store
@@ -24,6 +25,8 @@ import test_mvp
 from zava_forward.api.server import App, make_handler
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
+# App.__init__ is untyped; this is the verified (store, password) construction contract.
+build_app = cast(Callable[[Store, str], App], App)
 SAM = test_mvp.DATA["staff"][0]
 CANARY = "CANARY_TRANSPORT_7f3 TypeError at /srv/x.py"
 BANNED = re.compile(r"\b(gate|hold|provenance|trace)\b", re.I)
@@ -154,7 +157,7 @@ class Served:
                 "synthetic note",
                 metadata=change_metadata(self.store, "ZF-1"),
             )
-        app = App(self.store, "zf-test")
+        app = build_app(self.store, "zf-test")
         self.httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
         threading.Thread(target=self.httpd.serve_forever, daemon=True).start()
         self.base = f"http://127.0.0.1:{self.httpd.server_address[1]}"
