@@ -1361,3 +1361,12 @@ HVE gate is approved. The declared parent (PR 1396) has since merged as `main` `
 historical pin, notes equal `src`, `infra` and `tools` subtree ids on `eff05737`, and is a main-target candidate after an ordinary
 merge. It is separate from the nomination and UX, Bicep and CSV-learning records;
 #185, #110, #109, #184, #111 and #1288 stay open.
+
+A sensor-review wave actual-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#sensor-review-wave-actual-main-checkpoint-2026-11-10-refs-440-109-111-184-1288).
+It pins `main` `4c1b4099` (tree `75158203`) after PR 1404, which carried the #111 child (PR 1395, merged into the declared
+parent, not main) into main, and traces the default-off, proposed-only, role- and consent-bounded sensor-review drafts
+against document statuses without approving any. Root local runs executed on a staged tree, not a post-commit checkout or
+main; `src`, `infra` and `tools` ids are equal and the only other difference is main's rubric score file. Azure, provider,
+model and resident observed is none; whole #109 and #111 stay open, #132, #144 and inherited #1401 and #1402 are excluded,
+and the recommendation is to continue. The aftercare checkpoint in PR 1405 is separate and was not on main when read.
