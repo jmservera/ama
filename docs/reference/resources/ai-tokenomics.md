@@ -1,7 +1,7 @@
 ---
 title: AI Tokenomics (Total Cost of AI and Value Realised)
 description: What the mentor clue on Tokenomics points to, the public Tokenomics Foundation framing, how it maps to the capstone rubric and the Zava Forward evidence, and what remains unmeasured
-ms.date: 2026-11-07
+ms.date: 2026-11-10
 ms.topic: reference
 ---
 
@@ -334,7 +334,41 @@ az cognitiveservices account list-models -g ama -n aif-cutover-test-rzsrg --quer
   -> Legacy; inference 2027-04-14
 ```
 
+### Regional metadata observation (2026-11-10, Refs #108)
+
+Evidence class: one read-only Azure CLI metadata pass by the signed-in account on 2026-11-10 (UTC 17:50:46 to 17:50:59), four invocations, against the demo app and the one account in `ama` that it names. Repository base `origin/main` `4d8443d442fa8f1c47fa0749e5b8ba7c2bdd23ff`. These are dated queried-time observations, not a standing assertion about the current deployment. No inference, key, token, mutation or other resource was touched.
+
+| Field | Observed 2026-11-10 | What it does not show |
+| --- | --- | --- |
+| Live demo app `ca-cutover-test-demo-api` (resource group `ama`), one container | `AI_ENDPOINT` `https://aif-cutover-test-rzsrg.openai.azure.com/` and `AI_DEPLOYMENT` `standard`, both plain values, no secret reference | Any other setting; the call path or that a call has succeeded. Fills the "live app environment not re-read" gap of the 2026-11-07 readback for these two settings only |
+| Account | `aif-cutover-test-rzsrg` found in `ama` by name, kind `AIServices`, SKU `S0`, location `uksouth`. Its advertised endpoint host (`cognitiveservices.azure.com`) differs from the configured `openai.azure.com` host but carries the same account label | Exact endpoint-string equality; identity rests on the matching account name in the approved group |
+| Deployment `standard` | `GlobalStandard`, capacity 10, `gpt-4.1-nano`, version `2025-04-14`, `NoAutoUpgrade`, `Succeeded` | Serving version or region, reserved throughput, latency or quality. A deployment name is an alias, not an immutable model |
+| Regional quota limit and unit for `gpt-4.1-nano` `GlobalStandard` in `uksouth` | Unknown. The projected usage query for the two plausible name spellings returned an empty list, so no limit or unit was reported | Zero quota, absence of the model or a permission outcome. An empty list is an unexplained absence, as on 2026-10-18 |
+
+Commands (resource names only; no subscription argument was needed; values below are the exact projections used):
+
+```text
+az containerapp show -g ama -n ca-cutover-test-demo-api --query "properties.template.containers[].{container:name,env:env[?name=='AI_ENDPOINT'||name=='AI_DEPLOYMENT'].{name:name,value:value,hasSecretRef:secretRef!=null}}" -o json   -> exit 0
+az cognitiveservices account show -g ama -n aif-cutover-test-rzsrg --query "{kind:kind,location:location,sku:sku.name,endpoint:properties.endpoint}" -o json   -> exit 0
+az cognitiveservices account deployment show -g ama -n aif-cutover-test-rzsrg --deployment-name standard --query "{sku:sku,model:properties.model.name,version:properties.model.version,upgrade:properties.versionUpgradeOption,state:properties.provisioningState,cap:properties.currentCapacity}" -o json   -> exit 0
+az cognitiveservices usage list -l uksouth --query "[?starts_with(name.value,'OpenAI.GlobalStandard.gpt-4.1-nano')||starts_with(name.value,'OpenAI.GlobalStandard.gpt4.1-nano')].{n:name.value,limit:limit,unit:unit}" -o json   -> exit 0, []
+```
+
+The Azure CLI filters the usage list client-side, so the regional list was fetched in memory and only the projected rows were kept; current usage, other models and other workloads were never written or published. Raw minimal outputs are private and not committed (`evidence-108-model-metadata-1110` in the session store). Quota remains per subscription, region, model and deployment type, and a limit would not be reserved capacity, remaining budget or headroom; no token-rate conversion is asserted.
+
+#### Quota usage-name mapping continuation (2026-11-10, Refs #108)
+
+The Q4 filter above used guessed name prefixes, so its empty result was inconclusive, not evidence that the quota is missing. A second read-only pass (queries 5 and 6 of the original budget of eight; 6 spent in total, no retry) resolved the provider identifier from the regional model catalog and read only that exact name.
+
+| Query | Queried (UTC) | Outcome |
+| --- | --- | --- |
+| 5: `az cognitiveservices model list -l uksouth`, projected to `gpt-4.1-nano` `2025-04-14` and its `GlobalStandard` SKU `usageName` | 2026-11-10T17:59:53Z | Exit 0. Both `OpenAI` and `AIServices` catalog entries list `OpenAI.GlobalStandard.gpt4.1-nano` (inference) and a separate `...-finetune` name. The inference identifier is `OpenAI.GlobalStandard.gpt4.1-nano`; the fine-tune name was not read |
+| 6: `az cognitiveservices usage list -l uksouth`, projected to that exact name's `limit` and `unit` | 2026-11-10T18:00:08Z | Exit 0, empty list. No row for the exact provider name, so limit and unit remain **unknown** (not zero, not proof the quota is absent) |
+
+The earlier Q4 prefix filter already covered this spelling, so the exact-name read adds mapping evidence, not a new figure. The `usage list` command has no server-side name selector and was not given an unverified `--filter`; the regional list was fetched in memory and only the projected rows kept. The unreturned row is unexplained: possible causes (no per-subscription usage row for this deployment type, or a read-surface limitation) were not tested and are not asserted. The Azure CLI metadata avenue is exhausted for this deployment; any further read surface (for example a different API) would need separate authority. Raw outputs are private and not committed.
+
 ### Historical and comparison observations
+
 
 * The 2026-10-28 readback recorded the same `standard` deployment at capacity
   1; the earlier renewed QA exercise above used a different deployment
@@ -350,7 +384,9 @@ az cognitiveservices account list-models -g ama -n aif-cutover-test-rzsrg --quer
 * Model names, versions and quotas in the chosen region: configured values for
   this one deployment are now recorded, but actual serving version
   confirmation, serving region or data-residency attestation, a subscription
-  quota total and any other candidate remain unconfirmed. Keep the criterion
+  quota total and any other candidate remain unconfirmed. The 2026-11-10
+  regional pass re-read the configured values and the live app settings, but the
+  regional quota limit and unit stayed unknown (empty usage result, also for the catalog-resolved exact name). Keep the criterion
   unticked until the owner decides the evidence suffices.
 * Real-model evidence: no actual call is recorded here. A call needs separate
   finite call, token, budget and expiry authority and approved payload
