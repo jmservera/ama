@@ -916,7 +916,7 @@ function exceptionRegisterPanel(data) {
       ["Reference", "Kind", "State", "Configured owner", "What happened and reason", "Manual next step", "Source or run reference", "Eligibility"],
       items.map((item) => [item.id, exceptionKinds[item.kind] || exceptionText(item.kind), exceptionText(item.status), exceptionOwner(item),
         exceptionHappened(item), `Placeholder guidance, not an approved runbook: ${exceptionText(item.runbook)}`, exceptionReference(item), exceptionText(item.eligibility)]), Infinity)
-      : h("p", { class: "empty" }, "No exception items were returned. This is not an all clear: failed imports are not connected, service health is Unknown and unrouted records are listed above."),
+      : h("p", { class: "empty" }, "No exception items were returned. This is not an all clear: the Sources list shows which sources are not connected, service health is Unknown and unrouted records are listed above."),
     h("h3", {}, "Source conflicts: both values"),
     conflicts.length ? screenTable("Source conflicts with every returned value",
       ["Reference", "First value, source, version, date", "Second value, source, version, date", "Further values", "Resolution owner", "Eligibility"],
