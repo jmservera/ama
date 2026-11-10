@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import fcntl
 import hashlib
 import importlib
@@ -457,6 +458,49 @@ def check(store: Any, axe: str | None = None) -> None:
                 assert not errors, errors
                 assert not failures, failures
 
+                def export_download(name: str, endpoint: str, label: str, expected_id: str) -> None:
+                    link = page.locator(f"#app a[download='{name}'][href='{endpoint}']")
+                    expect(link).to_have_count(1)
+                    expect(link).to_have_text(label)
+                    expect(link.locator("xpath=..")).to_contain_text(
+                        "read-only copy; changes in it are not imported back"
+                    )
+                    expect(link.locator("xpath=..")).to_contain_text(
+                        "not only the ones on this page"
+                    )
+                    before_url, before_posts = page.url, len(posts)
+                    link.focus()
+                    with page.expect_download() as download_info:
+                        page.keyboard.press("Enter")
+                    download = download_info.value
+                    assert download.suggested_filename == name, download.suggested_filename
+                    saved = download.path()
+                    assert saved is not None
+                    table = list(csv.reader(saved.read_text(encoding="utf-8").splitlines(True)))
+                    unpaged = context.request.get(base + endpoint.removesuffix(".csv")).json()
+                    assert len(table) - 1 == len(unpaged) > 0, (name, len(table), len(unpaged))
+                    assert expected_id in {cell for row in table[1:] for cell in row}, name
+                    assert page.url == before_url and len(posts) == before_posts, (name, "mutated")
+                    print(
+                        f"Capacity export {name}: PASS; {len(table) - 1} rows, keyboard Enter",
+                        flush=True,
+                    )
+
+                export_download(
+                    "packages.csv",
+                    "/api/packages.csv",
+                    "Download all packages for Excel",
+                    "PKG-SYN-001",
+                )
+                export_download(
+                    "workorders.csv",
+                    "/api/workorders.csv",
+                    "Download all work orders for Excel",
+                    "WO-SYN-0001",
+                )
+                assert not errors, errors
+                assert not failures, failures
+
                 for destination in me["navigation"]:
                     href = destination["href"]
                     assert href in MANAGER_ROUTES, ("Unchecked manager route", href)
@@ -795,6 +839,7 @@ def check(store: Any, axe: str | None = None) -> None:
                 page.wait_for_load_state("networkidle")
                 expect(page.get_by_text("No packages yet.", exact=True)).to_be_visible()
                 expect(page.get_by_text("No work orders yet.", exact=True)).to_be_visible()
+                expect(page.locator("#app a[download$='.csv']")).to_have_count(0)
                 scan_capacity(page, axe, "empty capacity")
                 page.route(pattern, lambda route: inject(route, status=401))
                 page.reload()

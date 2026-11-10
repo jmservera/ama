@@ -482,11 +482,16 @@ async function capacityView() {
         w.state === "Completed" && h("button", { class: "alt", onclick: () => go(() => api(`/api/workorders/${w.id}/correct`, { reason: note.value, resident_bindings: residentBindings(bindings.value) })) }, "Record a correction (add the reason)")));
   });
   const drafts = appointmentDrafts();
+  const exportLink = (path, file, label, what) => h("p", {}, h("a", { class: "btn alt", href: path, download: file }, label),
+    ` The file has every ${what} you can see, not only the ones on this page. It is a read-only copy; changes in it are not imported back.`);
   show(h("h1", {}, "Capacity and work orders"),
     h("p", { class: "muted" }, "Work orders are controlled: every change is a new version with who issued it, and nothing is issued beyond a contractor's evidenced commitment."),
-    msg, create, h("h2", {}, "Packages"), pagerControls("packages", "packages", shown.packages, pkgPage.total, pkgs.length, () => go(), () => saving || Boolean(capacityHistoryBarrier)),
+    msg, create, h("h2", {}, "Packages"),
+    pkgPage.total ? exportLink("/api/packages.csv", "packages.csv", "Download all packages for Excel", "package") : null,
+    pagerControls("packages", "packages", shown.packages, pkgPage.total, pkgs.length, () => go(), () => saving || Boolean(capacityHistoryBarrier)),
     ...(cards.length ? cards : [h("p", {}, "No packages yet.")]),
     h("section", { class: "card" }, h("h2", {}, "Work orders"),
+      orderPage.total ? exportLink("/api/workorders.csv", "workorders.csv", "Download all work orders for Excel", "work order") : null,
       pagerControls("orders", "work orders", shown.orders, orderPage.total, orders.length, () => go(), () => saving || Boolean(capacityHistoryBarrier)),
       orders.length ? h("ul", { class: "list" }, actions) : h("p", {}, "No work orders yet.")));
   RENDERED_OFFSETS.packages = shown.packages.offset; RENDERED_OFFSETS.orders = shown.orders.offset;
