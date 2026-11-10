@@ -356,6 +356,17 @@ az cognitiveservices usage list -l uksouth --query "[?starts_with(name.value,'Op
 
 The Azure CLI filters the usage list client-side, so the regional list was fetched in memory and only the projected rows were kept; current usage, other models and other workloads were never written or published. Raw minimal outputs are private and not committed (`evidence-108-model-metadata-1110` in the session store). Quota remains per subscription, region, model and deployment type, and a limit would not be reserved capacity, remaining budget or headroom; no token-rate conversion is asserted.
 
+#### Quota usage-name mapping continuation (2026-11-10, Refs #108)
+
+The Q4 filter above used guessed name prefixes, so its empty result was inconclusive, not evidence that the quota is missing. A second read-only pass (queries 5 and 6 of the original budget of eight; 6 spent in total, no retry) resolved the provider identifier from the regional model catalog and read only that exact name.
+
+| Query | Queried (UTC) | Outcome |
+| --- | --- | --- |
+| 5: `az cognitiveservices model list -l uksouth`, projected to `gpt-4.1-nano` `2025-04-14` and its `GlobalStandard` SKU `usageName` | 2026-11-10T17:59:53Z | Exit 0. Both `OpenAI` and `AIServices` catalog entries list `OpenAI.GlobalStandard.gpt4.1-nano` (inference) and a separate `...-finetune` name. The inference identifier is `OpenAI.GlobalStandard.gpt4.1-nano`; the fine-tune name was not read |
+| 6: `az cognitiveservices usage list -l uksouth`, projected to that exact name's `limit` and `unit` | 2026-11-10T18:00:08Z | Exit 0, empty list. No row for the exact provider name, so limit and unit remain **unknown** (not zero, not proof the quota is absent) |
+
+The earlier Q4 prefix filter already covered this spelling, so the exact-name read adds mapping evidence, not a new figure. The `usage list` command has no server-side name selector and was not given an unverified `--filter`; the regional list was fetched in memory and only the projected rows kept. The unreturned row is unexplained: possible causes (no per-subscription usage row for this deployment type, or a read-surface limitation) were not tested and are not asserted. The Azure CLI metadata avenue is exhausted for this deployment; any further read surface (for example a different API) would need separate authority. Raw outputs are private and not committed.
+
 ### Historical and comparison observations
 
 
@@ -375,7 +386,7 @@ The Azure CLI filters the usage list client-side, so the regional list was fetch
   confirmation, serving region or data-residency attestation, a subscription
   quota total and any other candidate remain unconfirmed. The 2026-11-10
   regional pass re-read the configured values and the live app settings, but the
-  regional quota limit and unit stayed unknown (empty usage result). Keep the criterion
+  regional quota limit and unit stayed unknown (empty usage result, also for the catalog-resolved exact name). Keep the criterion
   unticked until the owner decides the evidence suffices.
 * Real-model evidence: no actual call is recorded here. A call needs separate
   finite call, token, budget and expiry authority and approved payload
