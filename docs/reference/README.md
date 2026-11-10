@@ -1350,3 +1350,14 @@ auxiliary composition (tree difference only in the rubric score file), and trace
 one-replica, volatile opt-in lane against document statuses without approving any. Azure observed is none; the three
 baseline policy typing errors stay unwaived; whole #136, #1288 and #440, live SQL, authentication, resident, model,
 human and HVE gates stay unmet. The nomination and UX section stays historical and unchanged.
+
+A Registry wave current-main checkpoint (2026-11-10) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#registry-wave-current-main-checkpoint-2026-11-10-refs-440-185-110-109-184-111-1288).
+It pins `main` `6cc59776` (tree `eaf44bcd`) after PR 1393, reads the bounded keyless Azure IoT Hub identity-registry
+adapter by read-only git at that pin, and carries forward the Root local runs on the reviewed candidate with
+component-subtree equivalence only. Azure observed is none; actual device issuance, credential owner, secure storage,
+teardown and live Hub, SQL, UI and model acceptance stay unproved; no Draft, in-review or proposed document, human or
+HVE gate is approved. The declared parent (PR 1396) has since merged as `main` `eff05737`; this record keeps `6cc59776` as its
+historical pin, notes equal `src`, `infra` and `tools` subtree ids on `eff05737`, and is a main-target candidate after an ordinary
+merge. It is separate from the nomination and UX, Bicep and CSV-learning records;
+#185, #110, #109, #184, #111 and #1288 stay open.
