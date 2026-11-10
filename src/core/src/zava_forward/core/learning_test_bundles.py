@@ -3,11 +3,19 @@
 Deterministic and pure: it sums recorded effort minutes per arm, reports the median and range,
 applies each bundle's stop rule to its "target zero" counts and labels saved minutes as capacity.
 It runs no experiment, uses no AI and holds no representative data; inputs are constructed cases.
+
+Command: ``python -m zava_forward.core.learning_test_bundles < input.json`` reads one bounded
+``learning-bundle-constructed-input-v1`` JSON object from standard input, scores it with
+``run_report`` and prints ``render_report`` plus constructed/unverified qualifications. It stores
+nothing and reads no file, dataset or network; any refusal exits 1 with no report.
 """
 
 from __future__ import annotations
 
+import argparse
+import json
 import statistics
+import sys
 from dataclasses import dataclass
 from typing import Any
 
@@ -202,3 +210,133 @@ def render_report(report: dict[str, Any]) -> str:
     if report.get("o16_counted_under"):
         lines.append(f"O16 counted under: {report['o16_counted_under']}.")
     return "\n".join(lines)
+
+
+SCHEMA_VERSION = "learning-bundle-constructed-input-v1"
+MAX_INPUT_BYTES = 65536
+MAX_CASES = 50
+MAX_ID = 1_000_000
+MAX_MINUTES = 100_000
+MAX_COUNT = 1_000_000
+_REQUIRED = ("schema_version", "run", "bundle", "cases")
+_ALLOWED = frozenset((*_REQUIRED, "representative_data_retained", "o16_counted_under"))
+QUALIFICATIONS = (
+    "Constructed input declared by the caller: not verified synthetic provenance, "
+    "not a real experiment and not measured user benefit.",
+    "Atlas owner bundle-to-opportunity mapping is unconfirmed.",
+    "Representative-data retention decision is unsatisfied; none is retained here.",
+    "Nothing is stored: no run record, file or database is written.",
+)
+O16_QUALIFICATION = (
+    "O16 counted-under is the caller's constructed accounting choice, "
+    "not owner mapping ratification."
+)
+
+
+def _unique_pairs(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in out:
+            raise ValueError(f"Duplicate key {key[:40]!r}.")
+        out[key] = value
+    return out
+
+
+def _reject_constant(name: str) -> Any:
+    raise ValueError("Non-finite numbers are not accepted.")
+
+
+def _exact(value: Any, keys: tuple[str, ...], label: str) -> dict[str, Any]:
+    if not isinstance(value, dict) or set(value) != set(keys):
+        raise ValueError(f"{label} needs exactly: {', '.join(keys)}.")
+    return value
+
+
+def _identifier(value: Any, label: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int) or not 1 <= value <= MAX_ID:
+        raise ValueError(f"{label} must be an integer from 1 to {MAX_ID}.")
+    return value
+
+
+def _validate_input(raw: Any) -> dict[str, Any]:
+    """Check the closed numeric envelope; bundle, retention and O16 rules stay in run_report."""
+    if not isinstance(raw, dict):
+        raise ValueError("Input must be one JSON object.")
+    if set(raw) - _ALLOWED:
+        raise ValueError("Unknown input key.")
+    missing = [key for key in _REQUIRED if key not in raw]
+    if missing:
+        raise ValueError(f"Input needs {', '.join(missing)}.")
+    if raw["schema_version"] != SCHEMA_VERSION:
+        raise ValueError(f"schema_version must be {SCHEMA_VERSION}.")
+    _identifier(raw["run"], "run")
+    bundle = BUNDLES.get(raw["bundle"]) if isinstance(raw["bundle"], str) else None
+    if bundle is None:
+        raise ValueError(f"Unknown bundle {raw['bundle']!r}.")
+    cases = raw["cases"]
+    if not isinstance(cases, list) or not 1 <= len(cases) <= MAX_CASES:
+        raise ValueError(f"cases must hold 1 to {MAX_CASES} constructed cases.")
+    seen: set[int] = set()
+    for item in cases:
+        item = _exact(item, ("case", "arms"), "Each case")
+        if _identifier(item["case"], "case") in seen:
+            raise ValueError("Case numbers must be unique.")
+        seen.add(item["case"])
+        arms = _exact(item["arms"], ARMS, "arms")
+        for arm in ARMS:
+            data = _exact(arms[arm], ("effort", "counts"), f"{arm} arm")
+            effort = _exact(data["effort"], COMPONENTS, f"{arm} effort")
+            for name, minutes in effort.items():
+                if (
+                    isinstance(minutes, bool)
+                    or not isinstance(minutes, int | float)
+                    or not 0 <= minutes <= MAX_MINUTES
+                ):
+                    raise ValueError(f"{name} must be a number from 0 to {MAX_MINUTES} minutes.")
+            counts = _exact(data["counts"], bundle.zero_measures, f"{arm} counts")
+            for name, count in counts.items():
+                if (
+                    isinstance(count, bool)
+                    or not isinstance(count, int)
+                    or not 0 <= count <= MAX_COUNT
+                ):
+                    raise ValueError(f"{name} must be an integer from 0 to {MAX_COUNT}.")
+    return {
+        key: raw[key]
+        for key in ("bundle", "representative_data_retained", "o16_counted_under", "cases")
+        if key in raw
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Read one constructed envelope from stdin and print the existing report; store nothing."""
+    parser = argparse.ArgumentParser(
+        prog="python -m zava_forward.core.learning_test_bundles", description=__doc__
+    )
+    parser.parse_args(argv)
+    try:
+        if sys.stdin.isatty():
+            raise ValueError("pipe one constructed JSON object on standard input.")
+        data = sys.stdin.buffer.read(MAX_INPUT_BYTES + 1)
+        if len(data) > MAX_INPUT_BYTES:
+            raise ValueError(f"Input is larger than {MAX_INPUT_BYTES} bytes.")
+        raw = json.loads(
+            data.decode("utf-8"),
+            object_pairs_hook=_unique_pairs,
+            parse_constant=_reject_constant,
+        )
+        number = raw.get("run") if isinstance(raw, dict) else None
+        report = run_report(_validate_input(raw))
+    except (ValueError, RecursionError) as error:
+        sys.stderr.write(f"Learning report refused: {str(error)[:200]}\n")
+        return 1
+    qualifications = list(QUALIFICATIONS)
+    if report.get("o16_counted_under"):
+        qualifications.append(O16_QUALIFICATION)
+    print("\n".join([f"CONSTRUCTED, UNVERIFIED INPUT (run {number}).", render_report(report)]))
+    print("\n".join(qualifications))
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
