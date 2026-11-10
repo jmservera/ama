@@ -46,13 +46,13 @@ Correction 3 of 5 total (two remain). The retained branch holds an honest empty-
 ## Phase Checklist
 
 <!-- P01 -->
-### [ ] P01: Integrate, bind and validate
+### [x] P01: Integrate, bind and validate
 
-* [ ] P01-T01 Persist state, fetch and record origin/main, web guidelines pre-implementation; ordinary merge.
-* [ ] P01-T02 Verify both intents survive (grep/diff against main and branch); stop on overlap.
-* [ ] P01-T03 Read the scenario-manifest integrity code and correct the recipe hash by the existing mechanism; minimal index/log only if required.
-* [ ] P01-T04 Prepare owned venv; run targeted tests, Node, mypy, Ruff, Core integrity, served browser harness.
-* [ ] P01-T05 Commit with local noreply identity and Copilot trailer; review once; final handoff.
+* [x] P01-T01 Persist state, fetch and record origin/main, web guidelines pre-implementation; ordinary merge.
+* [x] P01-T02 Verify both intents survive (grep/diff against main and branch); stop on overlap.
+* [x] P01-T03 Read the scenario-manifest integrity code and correct the recipe hash by the existing mechanism; minimal index/log only if required.
+* [x] P01-T04 Prepare owned venv; run targeted tests, Node, mypy, Ruff, Core integrity, served browser harness.
+* [x] P01-T05 Commit with local noreply identity and Copilot trailer; review once; final handoff.
 
 ## Dependencies and Risks
 

@@ -6,8 +6,8 @@
     "task_slug": "issue-152-empty-queue-coverage-correction-2"
   },
   "mode": "automatic",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-10/issue-152-empty-queue-coverage-correction-3-research.md",
@@ -18,19 +18,59 @@
     "review": ".copilot-tracking/reviews/logs/2026-11-10/issue-152-empty-queue-coverage-correction-3-review.md"
   },
   "confirmed_decisions": [
-    {"decision": "Recover issue152 on retained branch at e4f77fa75; correction 3 of 5 total, two remain", "status": "confirmed", "evidence": "caller direction"},
-    {"decision": "Research executed; Planning Readiness Ready", "status": "confirmed", "evidence": "research artifact, started 2026-11-10T01:41:52Z (date -u)"},
-    {"decision": "Critique executed once, verdict Revise, PC-001..PC-003 applied directly", "status": "confirmed", "evidence": "plan Critique Disposition"},
-    {"decision": "Ordinary merge of fetched origin/main 0385ad6a50d25c98cc902f199186c4fd1b50eca7; no rebase/reset/cherry-pick", "status": "confirmed", "evidence": "caller direction; research"},
-    {"decision": "Original failed API receipt /tmp/ama-g152-c1-1109/0024-project-api.log preserved as adverse, not a Pass", "status": "confirmed", "evidence": "C2 changes and review"}
+    {
+      "decision": "Recover issue152 on retained branch at e4f77fa75; correction 3 of 5 total, two remain",
+      "status": "confirmed",
+      "evidence": "caller direction"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": "research artifact, started 2026-11-10T01:41:52Z (date -u)"
+    },
+    {
+      "decision": "Critique executed once, verdict Revise, PC-001..PC-003 applied directly",
+      "status": "confirmed",
+      "evidence": "plan Critique Disposition"
+    },
+    {
+      "decision": "Ordinary merge of fetched origin/main 0385ad6a50d25c98cc902f199186c4fd1b50eca7; no rebase/reset/cherry-pick",
+      "status": "confirmed",
+      "evidence": "caller direction; research"
+    },
+    {
+      "decision": "Original failed API receipt /tmp/ama-g152-c1-1109/0024-project-api.log preserved as adverse, not a Pass",
+      "status": "confirmed",
+      "evidence": "C2 changes and review"
+    },
+    {
+      "decision": "Review once, Residual work",
+      "status": "confirmed",
+      "evidence": "review artifact; recorded 2026-11-10T01:44:56Z"
+    },
+    {
+      "decision": "Merge 01e3824ef clean; recipe sha 56409ec2 bound; targeted validation and served browser harness exit 0",
+      "status": "confirmed",
+      "evidence": "changes artifact"
+    }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Commit these pre-merge records, then merge origin/main, bind recipe hash, run targeted validation and served browser harness"
+    "phase": "Follow-up",
+    "action": "Coordinator independent exact-head assessment and hosted checks; two corrections remain of five total, none inferred"
   },
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Coordinator independent exact-head assessment and hosted checks", "rationale": "required for every tier", "evidence": "repository instructions"},
-    {"rank": 2, "task": "Owner decision on a trusted coverage producer", "rationale": "only route to a declared state", "evidence": "C2 review RV-004"}
+    {
+      "rank": 1,
+      "task": "Coordinator independent exact-head assessment and hosted checks",
+      "rationale": "required for every tier",
+      "evidence": "repository instructions"
+    },
+    {
+      "rank": 2,
+      "task": "Owner decision on a trusted coverage producer",
+      "rationale": "only route to a declared state",
+      "evidence": "C2 review RV-004"
+    }
   ]
 }
