@@ -116,9 +116,11 @@ module = ["zava_forward.core.bulk_edits", "zava_forward.core.change_provenance",
           "test_grant_lifecycle_controls", "tests.test_grant_lifecycle_controls"]
 disallow_untyped_calls = false
 
-# Typed seed-merge CLI and tests call the existing untyped SQL store.
+# Typed seed-merge CLI and tests call the existing untyped SQL store; the aftercare adapter
+# tests construct the same untyped Store, SqlStore and MssqlStore (all other strict checks stay on).
 [[tool.mypy.overrides]]
-module = ["zava_forward.core.seed_merge", "test_seed_merge", "tests.test_seed_merge"]
+module = ["zava_forward.core.seed_merge", "test_seed_merge", "tests.test_seed_merge",
+          "test_aftercare_store", "tests.test_aftercare_store"]
 disallow_untyped_calls = false
 
 [[tool.mypy.overrides]]

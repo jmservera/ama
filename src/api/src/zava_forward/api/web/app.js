@@ -78,7 +78,7 @@ async function api(path, body, signal) {
       me = null; login("Your session has ended. Sign in again.");
       const error = new Error("Your session has ended. Sign in again."); error.status = 401; throw error;
     }
-    if (!res.ok) { const e = new Error(data.error || (body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR)); e.generic = !data.error; e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; throw e; }
+    if (!res.ok) { const e = new Error(data.error || (body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR)); e.generic = !data.error; e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; e.errors = data.errors; throw e; }
     return data;
   } finally {
     if (key) pendingMutations.delete(key);
@@ -342,6 +342,7 @@ function missingWorkspaceScripts(hash, caseRoute) {
     ["/panels.js", staffCase || (staffDestination && hash === "#/finance"), typeof financePanel === "function"],
     ["/assistants.js", staffCase || (staffDestination && hash === "#/assistants"), typeof assistantCasePanel === "function"],
     ["/chat.js", Boolean(me) && !contractor, typeof chatCasePanel === "function" && typeof employeeChat !== "undefined"],
+    ["/aftercare.js", staffDestination && destination === "#/aftercare", typeof aftercareWorkspaceView === "function"],
     ["/timecapture.js", staffDestination && hash === "#/time", typeof timeView === "function"],
     ["/role-screens.js", Boolean(me) && destination === "#/screens", typeof roleScreensView === "function"],
     ["/simulator-control.js", Boolean(me) && destination === "#/simulator", typeof simulatorControlView === "function"],
@@ -437,6 +438,7 @@ async function route() {
   if (building) return await buildingView(decodeURIComponent(building[1]));
   if (hash === "#/assistants") return await assistantQueueView();
   if (hash === "#/time") return await timeView();
+  if (hash === "#/aftercare") return await aftercareWorkspaceView();
   if (hash.split("?")[0] === "#/closed") return await ProgressViews.closed();
   if (hash.split("?")[0] === "#/progress") return await ProgressViews.dashboard();
   if (hash === "#/capacity") return await capacityView();
@@ -1704,6 +1706,7 @@ async function signOut(switchAccount) {
   try {
     const r = await api("/api/logout", { switchAccount });
     me = null; briefingBox = null; clearPhoto();
+    if (typeof aftercareScreens !== "undefined") aftercareScreens.reset();
     if (typeof employeeChat !== "undefined") employeeChat.reset(true);
     if (r && r.redirect) { location.href = r.redirect; return; }
     location.href = "/";
