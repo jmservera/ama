@@ -11,6 +11,7 @@ import hashlib
 import json
 import os
 import re
+from collections.abc import Mapping
 from datetime import UTC, datetime
 from typing import Any
 
@@ -25,7 +26,14 @@ from .sensor_analysis import (
 )
 from .sensor_analysis_store import analyse_retained
 from .sensor_consumer import ConsumerError, SensorConsumer
+from .sqlstore import CommittedReloadError, SqlStore
+from .store import Store
 from .synthetic.sensor_scenarios import Window
+
+# JSON-shaped payloads: stored drafts, projections and route results have no fixed schema type.
+Json = dict[str, Any]
+User = Mapping[str, object]
+DraftStore = Store | SqlStore
 
 FLAG = "ZF_SENSOR_REVIEW_DRAFTS"
 CASE_KEY = "sensor_review_drafts"
@@ -72,7 +80,18 @@ _VIEW_LINEAGE = (
 )
 
 
-def enabled(env=None) -> bool:
+class DraftAuditError(RuntimeError):
+    """The draft was committed but its audit entry could not be written (JSON store)."""
+
+    def __init__(self, draft: Json) -> None:
+        super().__init__(
+            "The draft was saved, but its audit record could not be written. "
+            "Do not enter it again. Tell the programme manager."
+        )
+        self.draft = draft
+
+
+def enabled(env: Mapping[str, str] | None = None) -> bool:
     return (os.environ if env is None else env).get(FLAG) == "1"
 
 
@@ -81,30 +100,45 @@ def server_policy() -> AnalysisPolicy:
     return AnalysisPolicy()
 
 
-def _sql(store) -> bool:
+def _sql(store: DraftStore) -> bool:
     return hasattr(store, "dblock")
 
 
-def _role_gate(user) -> None:
+def _role_gate(user: User) -> None:
     if (user or {}).get("role") not in DRAFT_ROLES:
         raise PermissionError(
             "Your role does not include sensor review drafts. Use the manual route."
         )
 
 
-def _current_staff(store, user) -> dict | None:
-    email = (user.get("email") or "").lower()
-    if not _sql(store):
-        return store.staff.get(email)
+def _current_staff(store: DraftStore, user: User) -> Json | None:
+    email = str(user.get("email") or "").lower()
+    if not isinstance(store, SqlStore):
+        staff: Json | None = store.staff.get(email)
+        return staff
     db = store.assistant_connection()
     try:
         row = db.execute("SELECT body FROM staff WHERE email=?", (email,)).fetchone()
     finally:
         db.close()
-    return json.loads(row[0]) if row else None
+    loaded = json.loads(row[0]) if row else None
+    return loaded if isinstance(loaded, dict) else None
 
 
-def _gate(store, user, case_id: str, env=None) -> bool:
+def _scope(current: Json, field: str) -> list[str] | None:
+    values = current.get(field)
+    if values is None:
+        return None
+    if (
+        not isinstance(values, list)
+        or len(values) > 1000
+        or any(not isinstance(x, str) or not 1 <= len(x) <= 128 for x in values)
+    ):
+        raise PermissionError("Current staff scope is malformed; resolve it manually.")
+    return [str(x) for x in values]
+
+
+def _gate(store: DraftStore, user: User, case_id: str, env: Mapping[str, str] | None) -> bool:
     """Role, then flag, then current staff and case scope. Returns False when disabled."""
     _role_gate(user)
     if not enabled(env):
@@ -117,15 +151,7 @@ def _gate(store, user, case_id: str, env=None) -> bool:
         or current.get("active") is False
     ):
         raise PermissionError("Current staff role has changed or been revoked.")
-    for field in ("case_ids", "areas"):
-        values = current.get(field)
-        if values is not None and (
-            not isinstance(values, list)
-            or len(values) > 1000
-            or any(not isinstance(x, str) or not 1 <= len(x) <= 128 for x in values)
-        ):
-            raise PermissionError("Current staff scope is malformed; resolve it manually.")
-    ids, areas = current.get("case_ids"), current.get("areas")
+    ids, areas = _scope(current, "case_ids"), _scope(current, "areas")
     if ids is not None and case_id not in ids:
         raise PermissionError("Case is outside your current scope.")
     with store.lock:
@@ -137,20 +163,20 @@ def _gate(store, user, case_id: str, env=None) -> bool:
     return True
 
 
-def _consent_granted(store, case_id: str) -> bool:
+def _consent_granted(store: DraftStore, case_id: str) -> bool:
     try:
         return SensorConsumer(store).home_consent(case_id) == "granted"
     except ConsumerError:
         return False
 
 
-def _digest(record: dict) -> str:
+def _digest(record: Json) -> str:
     body = {k: v for k, v in record.items() if k != "draft_digest"}
     raw = json.dumps(body, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
     return hashlib.sha256(raw.encode("ascii")).hexdigest()
 
 
-def _view(record: Any) -> dict:
+def _view(record: object) -> Json:
     """Allowlisted projection; a draft that fails its digest is withheld except for its key."""
     if not isinstance(record, dict) or record.get("draft_digest") != _digest(record):
         key = record.get("task_key") if isinstance(record, dict) else None
@@ -168,12 +194,14 @@ def _view(record: Any) -> dict:
         "manual_review_only": True,
         "created_by": {"name": by.get("name"), "role": by.get("role")},
         "created_at": record["created_at"],
-        "digest_prefix": record["draft_digest"][:12],
+        "digest_prefix": str(record["draft_digest"])[:12],
         "manual_route": MANUAL_ROUTE,
     }
 
 
-def read_drafts(store, user, case_id: str, *, env=None) -> dict:
+def read_drafts(
+    store: DraftStore, user: User, case_id: str, *, env: Mapping[str, str] | None = None
+) -> Json:
     if not _gate(store, user, case_id, env):
         return {"state": "disabled"}
     if not _consent_granted(store, case_id):
@@ -188,7 +216,7 @@ def read_drafts(store, user, case_id: str, *, env=None) -> dict:
     return {"state": "ok", "case_id": case_id, "drafts": [_view(r) for r in reversed(stored)]}
 
 
-def _refusal(code: str, signal: Signal | None = None) -> dict:
+def _refusal(code: str, signal: Signal | None = None) -> Json:
     return {
         "created": False,
         "refusal": code,
@@ -197,7 +225,9 @@ def _refusal(code: str, signal: Signal | None = None) -> dict:
     }
 
 
-def _propose(store, user, case_id: str, signal: Signal, policy: AnalysisPolicy, at: str) -> dict:
+def _propose(
+    store: DraftStore, user: User, case_id: str, signal: Signal, policy: AnalysisPolicy, at: str
+) -> Json:
     if signal.home_id != case_id:
         return _refusal("SIGNAL_HOME_MISMATCH", signal)
     if signal.sufficiency != SUFFICIENT:
@@ -213,8 +243,13 @@ def _propose(store, user, case_id: str, signal: Signal, policy: AnalysisPolicy, 
 
 
 def _persist(
-    store, user, case_id: str, signal: Signal, candidate: ReviewTaskCandidate, at: str
-) -> dict:
+    store: DraftStore,
+    user: User,
+    case_id: str,
+    signal: Signal,
+    candidate: ReviewTaskCandidate,
+    at: str,
+) -> Json:
     sql = _sql(store)
     with store.lock:
         case = store._case(case_id)
@@ -241,42 +276,49 @@ def _persist(
         had_key = CASE_KEY in case
         pending = getattr(getattr(store, "local", None), "pending", None)
         mark = len(pending) if pending is not None else 0
-        case[CASE_KEY] = existing + [record]
+        case[CASE_KEY] = [*existing, record]
+        committed = False
         try:
             if sql:
                 store.audit(
                     user["email"], "sensor_review_draft_proposed", case_id, candidate.task_key
                 )
-                store.save()
+                try:
+                    store.save()
+                except CommittedReloadError:
+                    committed = True
+                    raise
+                committed = True
             else:
                 store.save()
-                store.audit(
-                    user["email"], "sensor_review_draft_proposed", case_id, candidate.task_key
-                )
-        except BaseException as error:
-            from .sqlstore import CommittedReloadError
-
-            if not isinstance(error, CommittedReloadError):
+                committed = True
+                try:
+                    store.audit(
+                        user["email"], "sensor_review_draft_proposed", case_id, candidate.task_key
+                    )
+                except OSError as error:
+                    raise DraftAuditError(_view(record)) from error
+        finally:
+            if not committed:
                 if had_key:
                     case[CASE_KEY] = existing
                 else:
                     case.pop(CASE_KEY, None)
                 if pending is not None:
                     del pending[mark:]
-            raise
         return {"created": True, "existing": False, "draft": _view(record)}
 
 
 def _record_draft_synthetic(
-    store,
-    user,
+    store: DraftStore,
+    user: User,
     case_id: str,
     signal: Signal,
     policy: AnalysisPolicy,
     *,
-    env=None,
+    env: Mapping[str, str] | None = None,
     at: str | None = None,
-) -> dict:
+) -> Json:
     """Test seam only: accepts a caller-built signal and policy. No served route reaches it."""
     if not _gate(store, user, case_id, env):
         raise PermissionError("Sensor review drafts are not enabled.")
@@ -288,14 +330,28 @@ def _now() -> str:
 
 
 def draft_from_retained(
-    store, user, case_id: str, window: Window, as_of: datetime, *, env=None, at: str | None = None
-) -> dict:
+    store: DraftStore,
+    user: User,
+    case_id: str,
+    window: Window,
+    as_of: datetime,
+    *,
+    env: Mapping[str, str] | None = None,
+    at: str | None = None,
+) -> Json:
     if not _gate(store, user, case_id, env):
         raise PermissionError("Sensor review drafts are not enabled.")
     return _from_retained(store, user, case_id, window, as_of, at)
 
 
-def _from_retained(store, user, case_id, window, as_of, at) -> dict:
+def _from_retained(
+    store: DraftStore,
+    user: User,
+    case_id: str,
+    window: Window,
+    as_of: datetime,
+    at: str | None,
+) -> Json:
     try:
         consumer = SensorConsumer(store)
         signal = analyse_retained(consumer, case_id, window, as_of, server_policy())
@@ -304,10 +360,10 @@ def _from_retained(store, user, case_id, window, as_of, at) -> dict:
     return _propose(store, user, case_id, signal, server_policy(), at or _now())
 
 
-def _parse_window(body: Any) -> Window:
+def _parse_window(body: object) -> Window:
     if not isinstance(body, dict) or set(body) != {"window_start", "window_end"}:
         raise ValueError("Send exactly window_start and window_end.")
-    stamps = []
+    stamps: list[datetime] = []
     for key in ("window_start", "window_end"):
         value = body[key]
         if not isinstance(value, str) or not _STAMP.fullmatch(value):
@@ -317,8 +373,14 @@ def _parse_window(body: Any) -> Window:
 
 
 def draft_from_request(
-    store, user, case_id: str, body: Any, *, env=None, now: datetime | None = None
-) -> dict:
+    store: DraftStore,
+    user: User,
+    case_id: str,
+    body: object,
+    *,
+    env: Mapping[str, str] | None = None,
+    now: datetime | None = None,
+) -> Json:
     """Served write: authorize, then validate the window, then analyse with the server policy."""
     if not _gate(store, user, case_id, env):
         raise PermissionError("Sensor review drafts are not enabled.")

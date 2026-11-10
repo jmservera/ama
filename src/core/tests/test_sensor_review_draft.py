@@ -10,8 +10,11 @@ import os
 import tempfile
 import threading
 import unittest
+from collections.abc import Callable, Mapping
+from contextlib import AbstractContextManager
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
+from typing import TYPE_CHECKING, Any
 from unittest import mock
 
 import dataset
@@ -41,15 +44,28 @@ PEOPLE = {
 QI = PEOPLE["Quality Inspector"]
 PM = PEOPLE["Retrofit Programme Manager"]
 ON = {srd.FLAG: "1"}
+Json = srd.Json
+
+# The mixins below are not TestCase subclasses, so discovery skips them; type them as TestCase.
+if TYPE_CHECKING:
+    _Base = unittest.TestCase
+else:
+    _Base = object
 
 
-def signal(label="sustained_high_humidity", *, consent="granted", as_of=None, **changes):
+def signal(
+    label: str = "sustained_high_humidity",
+    *,
+    consent: str = "granted",
+    as_of: datetime | None = None,
+    **changes: Any,
+) -> sa.Signal:
     rows = [dict(r, home_id=CID, sensor_id="SENS-SYN-1") for r in SCENARIOS[label].rows]
     value = sa.derive_signal(CID, rows, WINDOW, as_of or WINDOW.end, consent, APPROVED)
     return replace(value, **changes) if changes else value
 
 
-def seed(directory):
+def seed(directory: str) -> str:
     data = copy.deepcopy(dataset.DATA)
     data["staff"] = list(PEOPLE.values())
     path = os.path.join(directory, "seed.json")
@@ -58,13 +74,23 @@ def seed(directory):
     return path
 
 
-class DraftCases:
+class DraftCases(_Base):
     """Backend-neutral cases. Subclasses set `sql` and implement open()."""
 
     sql = False
     env = ON
+    store: srd.DraftStore
 
-    def setUp(self):
+    def open(self, reset: bool = False) -> srd.DraftStore:
+        raise NotImplementedError
+
+    def version(self) -> int:
+        raise NotImplementedError
+
+    def read(self) -> Json:
+        raise NotImplementedError
+
+    def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
         patch = mock.patch.dict(os.environ, self.env)
@@ -74,34 +100,42 @@ class DraftCases:
         self.addCleanup(self.close, self.store)
         self.base_audits = len(list(self.store.audit_entries()))
 
-    def close(self, store):
-        if hasattr(store, "db"):
+    def close(self, store: srd.DraftStore) -> None:
+        if isinstance(store, SqlStore):
             store.db.close()
 
-    def case(self, store=None):
-        return (store or self.store).cases[CID]
+    def case(self, store: srd.DraftStore | None = None) -> Json:
+        cases: Json = (store or self.store).cases[CID]
+        return cases
 
-    def audits(self, store=None):
+    def audits(self, store: srd.DraftStore | None = None) -> int:
         return len(list((store or self.store).audit_entries())) - self.base_audits
 
-    def set_staff(self, person, **changes):
+    def set_staff(self, person: Json, **changes: object) -> None:
         updated = dict(person, **changes)
-        if self.sql:
+        if isinstance(self.store, SqlStore):
             self.store.db.execute(
                 "UPDATE staff SET body=? WHERE email=?", (json.dumps(updated), person["email"])
             )
         else:
             self.store.staff[person["email"]] = updated
 
-    def tamper(self, change):
+    def tamper(self, change: Callable[[Json], object]) -> None:
         with self.store.lock:
             change(self.store._case(CID)[srd.CASE_KEY][0])
             self.store.save()
 
-    def propose(self, sig=None, policy=APPROVED, user=QI, **kw):
-        return srd._record_draft_synthetic(self.store, user, CID, sig or signal(), policy, **kw)
+    def propose(
+        self,
+        sig: sa.Signal | None = None,
+        policy: sa.AnalysisPolicy = APPROVED,
+        user: Mapping[str, object] = QI,
+        *,
+        at: str | None = None,
+    ) -> Json:
+        return srd._record_draft_synthetic(self.store, user, CID, sig or signal(), policy, at=at)
 
-    def test_default_off_changes_nothing(self):
+    def test_default_off_changes_nothing(self) -> None:
         before, audits = json.dumps(self.case(), sort_keys=True), self.audits()
         with mock.patch.dict(os.environ, {srd.FLAG: ""}):
             self.assertEqual(srd.read_drafts(self.store, QI, CID), {"state": "disabled"})
@@ -111,7 +145,7 @@ class DraftCases:
                 srd.draft_from_retained(self.store, QI, CID, WINDOW, WINDOW.end)
         self.assertEqual((json.dumps(self.case(), sort_keys=True), self.audits()), (before, audits))
 
-    def test_role_gate_precedes_flag_and_matches_the_sensor_screen_roles(self):
+    def test_role_gate_precedes_flag_and_matches_the_sensor_screen_roles(self) -> None:
         self.assertEqual(srd.DRAFT_ROLES, tuple(REGISTRY["quality-evidence"]["roles"]))
         for flag in ("1", ""):
             for role, person in PEOPLE.items():
@@ -127,7 +161,7 @@ class DraftCases:
                         self.propose(user=person)
         self.assertEqual(self.audits(), 0)
 
-    def test_current_staff_and_scope_are_rechecked(self):
+    def test_current_staff_and_scope_are_rechecked(self) -> None:
         cases = (
             ("disabled", QI, dict(disabled=True)),
             ("inactive", QI, dict(active=False)),
@@ -148,15 +182,15 @@ class DraftCases:
         with self.assertRaises(KeyError):
             srd.read_drafts(self.store, QI, "ZF-MISSING")
 
-    def test_default_denial_without_an_approved_rule(self):
+    def test_default_denial_without_an_approved_rule(self) -> None:
         wrong = replace(SYNTHETIC_APPROVAL, rule_id="OTHER")
         for policy in (sa.AnalysisPolicy(), replace(APPROVED, approval=wrong)):
-            result = self.propose(signal(policy=None) if False else signal(), policy)
+            result = self.propose(signal(), policy)
             self.assertEqual(result["refusal"], "NO_APPROVED_RULE")
         self.assertNotIn(srd.CASE_KEY, self.case())
         self.assertEqual(self.audits(), 0)
 
-    def test_refusals_write_nothing(self):
+    def test_refusals_write_nothing(self) -> None:
         future = signal(as_of=WINDOW.end - timedelta(days=1))
         cases = (
             (signal(consent="unknown"), "SIGNAL_INSUFFICIENT"),
@@ -173,9 +207,10 @@ class DraftCases:
         self.assertNotIn(srd.CASE_KEY, self.case())
         self.assertEqual(self.audits(), 0)
 
-    def test_exact_candidate_lineage_and_no_side_effects(self):
+    def test_exact_candidate_lineage_and_no_side_effects(self) -> None:
         sig = signal()
         expected = sa.review_task_candidate(sig, APPROVED)
+        assert expected is not None
         before = copy.deepcopy(self.case())
         recs = json.dumps(self.store.data["recommendations"], sort_keys=True)
         result = self.propose(sig, at="2026-11-10T05:00:00Z")
@@ -206,7 +241,7 @@ class DraftCases:
         self.assertEqual(json.dumps(self.store.data["recommendations"], sort_keys=True), recs)
         self.assertEqual(self.audits(), 1)
 
-    def test_idempotent_reopen_and_immutable_provenance(self):
+    def test_idempotent_reopen_and_immutable_provenance(self) -> None:
         first = self.propose(at="2026-11-10T05:00:00Z")
         stored = json.dumps(self.case()[srd.CASE_KEY][0], sort_keys=True)
         audits, version = self.audits(), self.version()
@@ -222,7 +257,7 @@ class DraftCases:
         self.assertEqual(len(self.case()[srd.CASE_KEY]), 2)
         self.assertEqual(json.dumps(self.case()[srd.CASE_KEY][0], sort_keys=True), stored)
 
-    def test_bound_without_eviction(self):
+    def test_bound_without_eviction(self) -> None:
         for i in range(srd.MAX_DRAFTS):
             self.assertTrue(self.propose(signal(input_digest=f"{i:064d}"))["created"])
         over = self.propose(signal(input_digest="f" * 64))
@@ -231,7 +266,7 @@ class DraftCases:
         self.assertTrue(replay["existing"])
         self.assertEqual(len(self.case()[srd.CASE_KEY]), srd.MAX_DRAFTS)
 
-    def test_restart_durability(self):
+    def test_restart_durability(self) -> None:
         self.propose()
         stored = json.dumps(self.case()[srd.CASE_KEY], sort_keys=True)
         self.close(self.store)
@@ -241,7 +276,7 @@ class DraftCases:
         self.assertTrue(self.propose()["existing"])
         self.assertEqual(len(self.case()[srd.CASE_KEY]), 1)
 
-    def test_tampered_draft_is_withheld_and_never_overwritten(self):
+    def test_tampered_draft_is_withheld_and_never_overwritten(self) -> None:
         self.propose()
         self.tamper(lambda r: r["candidate"].__setitem__("summary", "tampered"))
         key = self.case()[srd.CASE_KEY][0]["task_key"]
@@ -249,7 +284,7 @@ class DraftCases:
         self.assertEqual(again["draft"], {"state": "INTEGRITY_MISMATCH", "task_key": key})
         self.assertEqual(self.case()[srd.CASE_KEY][0]["candidate"]["summary"], "tampered")
 
-    def test_generic_staff_and_contractor_detail_never_carry_drafts(self):
+    def test_generic_staff_and_contractor_detail_never_carry_drafts(self) -> None:
         self.propose()
         for role, person in PEOPLE.items():
             with self.subTest(role=role):
@@ -258,10 +293,10 @@ class DraftCases:
                 self.assertNotIn("SYNTHETIC-TEST-SENTINEL", detail)
         self.assertIn(srd.CASE_KEY, self.store.detail(CID))
 
-    def test_read_is_allowlisted_and_never_shows_the_digest_or_unknown_keys(self):
+    def test_read_is_allowlisted_and_never_shows_the_digest_or_unknown_keys(self) -> None:
         self.propose()
         self.tamper(lambda r: r.__setitem__("resident_phone", "07000"))
-        if self.sql:
+        if isinstance(self, SqlDraftCases):
             self.grant()
         read = self.read()
         if self.sql:
@@ -271,7 +306,7 @@ class DraftCases:
             self.assertNotIn(self.case()[srd.CASE_KEY][0]["draft_digest"], text)
             self.assertEqual(read["drafts"][0]["state"], "INTEGRITY_MISMATCH")
 
-    def test_write_failure_restores_the_list_and_retry_creates_one(self):
+    def test_write_failure_restores_the_list_and_retry_creates_one(self) -> None:
         audits = self.audits()
         with mock.patch.object(self.store, "save", side_effect=RuntimeError("disk")):
             with self.assertRaises(RuntimeError):
@@ -281,20 +316,22 @@ class DraftCases:
         self.assertTrue(self.propose()["created"])
         self.assertEqual((len(self.case()[srd.CASE_KEY]), self.audits()), (1, audits + 1))
 
-    def test_concurrent_same_key_creates_exactly_one(self):
-        results = []
+    def test_concurrent_same_key_creates_exactly_one(self) -> None:
+        results: list[bool] = []
         threads = [
             threading.Thread(target=lambda: results.append(self.propose()["created"]))
             for _ in range(4)
         ]
-        [t.start() for t in threads]
-        [t.join() for t in threads]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
         self.assertEqual(
             (sorted(results), len(self.case()[srd.CASE_KEY]), self.audits()),
             ([False] * 3 + [True], 1, 1),
         )
 
-    def test_synthetic_label_is_not_an_approval(self):
+    def test_synthetic_label_is_not_an_approval(self) -> None:
         view = self.propose()["draft"]
         self.assertFalse(view["approval_verified"])
         self.assertIn("Not an approved task", view["label"])
@@ -302,37 +339,101 @@ class DraftCases:
 
 
 class JsonDraftCases(DraftCases, unittest.TestCase):
-    def open(self, reset=False):
+    store: Store
+
+    def open(self, reset: bool = False) -> Store:
         return Store(seed(self.tmp.name))
 
-    def version(self):
-        return self.store.version
+    def version(self) -> int:
+        version: int = self.store.version
+        return version
 
-    def read(self):
+    def read(self) -> Json:
         return srd.read_drafts(self.store, QI, CID)
 
-    def test_read_fails_closed_without_a_consent_source(self):
+    def test_read_fails_closed_without_a_consent_source(self) -> None:
         self.propose()
         read = self.read()
         self.assertEqual((read["state"], read["drafts"]), ("consent-withheld", []))
         self.assertNotIn("summary", json.dumps(read))
 
-    def test_served_write_is_unavailable_without_retained_sql(self):
+    def test_served_write_is_unavailable_without_retained_sql(self) -> None:
         result = srd.draft_from_retained(self.store, QI, CID, WINDOW, WINDOW.end)
         self.assertEqual(result["refusal"], "RETAINED_READINGS_UNAVAILABLE")
         self.assertNotIn(srd.CASE_KEY, self.case())
 
+    def disk_drafts(self) -> list[dict[str, object]]:
+        with open(self.store.live_path, encoding="utf-8") as f:
+            cases = {c["id"]: c for c in json.load(f)["cases"]}
+        drafts: list[dict[str, object]] = cases[CID].get(srd.CASE_KEY, [])
+        return drafts
+
+    def memory_drafts(self) -> list[dict[str, object]]:
+        drafts: list[dict[str, object]] = self.case().get(srd.CASE_KEY, [])
+        return drafts
+
+    def fail_audit(self, error: Exception) -> AbstractContextManager[mock.MagicMock]:
+        return mock.patch.object(self.store, "audit", side_effect=error)
+
+    def test_audit_failure_after_committed_save_keeps_memory_and_disk(self) -> None:
+        audits = self.audits()
+        with self.fail_audit(OSError("audit disk full")):
+            with self.assertRaises((OSError, RuntimeError)) as raised:
+                self.propose(at="2026-11-10T05:00:00Z")
+        self.assertEqual(len(self.memory_drafts()), 1)
+        self.assertEqual(self.disk_drafts(), self.memory_drafts())
+        self.assertEqual(self.audits(), audits)
+        error = raised.exception
+        assert isinstance(error, srd.DraftAuditError)
+        self.assertEqual(error.draft["state"], "PROPOSED_UNAPPROVED")
+        self.assertIn("saved", str(error))
+        self.assertIn("audit", str(error))
+
+    def test_unrelated_save_and_reload_keep_the_draft_after_audit_failure(self) -> None:
+        with self.fail_audit(OSError("audit disk full")):
+            with self.assertRaises((OSError, RuntimeError)):
+                self.propose(at="2026-11-10T05:00:00Z")
+        stored = json.dumps(self.memory_drafts(), sort_keys=True)
+        self.store.save()
+        self.assertEqual(json.dumps(self.disk_drafts(), sort_keys=True), stored)
+        reopened = self.open().cases[CID].get(srd.CASE_KEY, [])
+        self.assertEqual(json.dumps(reopened, sort_keys=True), stored)
+        self.assertEqual(len(reopened), 1)
+
+    def test_retry_after_audit_failure_is_idempotent_and_keeps_provenance(self) -> None:
+        with self.fail_audit(OSError("audit disk full")):
+            with self.assertRaises((OSError, RuntimeError)):
+                self.propose(at="2026-11-10T05:00:00Z")
+        first = json.dumps(self.memory_drafts(), sort_keys=True)
+        audits = self.audits()
+        again = self.propose(at="2027-01-01T00:00:00Z", user=PM)
+        self.assertEqual((again["created"], again["existing"]), (False, True))
+        self.assertEqual(again["draft"]["created_at"], "2026-11-10T05:00:00Z")
+        self.assertEqual(again["draft"]["created_by"]["role"], "Quality Inspector")
+        self.assertEqual(json.dumps(self.memory_drafts(), sort_keys=True), first)
+        self.assertEqual(json.dumps(self.disk_drafts(), sort_keys=True), first)
+        self.assertEqual(self.audits(), audits)
+
+    def test_non_io_audit_failure_still_keeps_the_committed_draft(self) -> None:
+        with self.fail_audit(ValueError("ledger")):
+            with self.assertRaises(ValueError):
+                self.propose(at="2026-11-10T05:00:00Z")
+        self.assertEqual(len(self.memory_drafts()), 1)
+        self.assertEqual(self.disk_drafts(), self.memory_drafts())
+
 
 class SqlDraftCases(DraftCases):
     sql = True
+    store: SqlStore
 
-    def version(self):
-        return self.store._rv[CID]
+    def version(self) -> int:
+        version: int = self.store._rv[CID]
+        return version
 
-    def read(self, user=QI):
+    def read(self, user: Mapping[str, object] = QI) -> Json:
         return srd.read_drafts(self.store, user, CID)
 
-    def grant(self, store=None, consent="granted"):
+    def grant(self, store: SqlStore | None = None, consent: str = "granted") -> SensorConsumer:
         consumer = SensorConsumer(store or self.store)
         policy = replace(
             POLICY,
@@ -351,13 +452,13 @@ class SqlDraftCases(DraftCases):
         consumer.configure(policy, [control])
         return consumer
 
-    def load(self, consumer, label="sustained_high_humidity"):
+    def load(self, consumer: SensorConsumer, label: str = "sustained_high_humidity") -> None:
         rows = [dict(r, home_id=CID, sensor_id="SENS-SYN-1") for r in SCENARIOS[label].rows]
         for i in range(0, len(rows), 100):
             for row in preflight(rows[i : i + 100]):
                 self.assertEqual(consumer.process(row, "2024-01-29T00:00:00Z").status, "accepted")
 
-    def test_read_follows_current_consent_and_withholds_derived_content(self):
+    def test_read_follows_current_consent_and_withholds_derived_content(self) -> None:
         self.propose()
         for consent in ("unknown", "declined"):
             self.grant(consent=consent)
@@ -371,7 +472,7 @@ class SqlDraftCases(DraftCases):
         self.assertNotIn(self.case()[srd.CASE_KEY][0]["draft_digest"], text)
         self.assertNotIn("home", read["drafts"][0])
 
-    def test_read_allowlist_drops_unknown_keys(self):
+    def test_read_allowlist_drops_unknown_keys(self) -> None:
         self.propose()
         self.grant()
         stored = self.case()[srd.CASE_KEY][0]
@@ -381,7 +482,7 @@ class SqlDraftCases(DraftCases):
         self.assertNotIn("07000", text)
         self.assertIn(stored["task_key"], text)
 
-    def test_retained_readings_refusals_and_approved_synthetic_draft(self):
+    def test_retained_readings_refusals_and_approved_synthetic_draft(self) -> None:
         consumer = self.grant()
         self.load(consumer)
         served = srd.draft_from_retained(self.store, QI, CID, WINDOW, WINDOW.end)
@@ -403,13 +504,14 @@ class SqlDraftCases(DraftCases):
             )
             self.assertTrue(again["existing"])
             expected = sa.review_task_candidate(signal(), APPROVED)
+            assert expected is not None
             self.assertEqual(made["draft"]["task_key"], expected.task_key)
             self.grant(consent="declined")
             declined = srd.draft_from_retained(self.store, QI, CID, WINDOW, WINDOW.end)
             self.assertEqual(declined["refusal"], "SIGNAL_DECLINED")
         self.assertEqual(len(self.case()[srd.CASE_KEY]), 1)
 
-    def test_weather_only_window_is_refused(self):
+    def test_weather_only_window_is_refused(self) -> None:
         from test_sensor_consumer_live import live
 
         consumer = self.grant()
@@ -419,8 +521,8 @@ class SqlDraftCases(DraftCases):
         self.assertFalse(result["created"])
         self.assertNotIn(srd.CASE_KEY, self.case())
 
-    def test_request_window_validation_follows_authorization(self):
-        bad = (
+    def test_request_window_validation_follows_authorization(self) -> None:
+        bad: tuple[object, ...] = (
             None,
             {},
             {"window_start": "2024-01-01T00:00:00Z"},
@@ -440,11 +542,10 @@ class SqlDraftCases(DraftCases):
         self.grant()
         self.assertEqual(srd.draft_from_request(self.store, PM, CID, good)["created"], False)
 
-    def test_sql_failure_after_audit_leaves_no_orphan_audit(self):
+    def test_sql_failure_after_audit_leaves_no_orphan_audit(self) -> None:
         audits = self.audits()
-        real = self.store.save
 
-        def failing():
+        def failing() -> None:
             raise RuntimeError("before commit")
 
         with mock.patch.object(self.store, "save", side_effect=failing):
@@ -454,9 +555,8 @@ class SqlDraftCases(DraftCases):
         self.assertEqual(self.audits(), audits)
         self.assertTrue(self.propose()["created"])
         self.assertEqual(self.audits(), audits + 1)
-        del real
 
-    def test_conflict_rolls_back_and_retry_creates_exactly_one(self):
+    def test_conflict_rolls_back_and_retry_creates_exactly_one(self) -> None:
         other = self.open()
         self.addCleanup(self.close, other)
         srd._record_draft_synthetic(other, QI, CID, signal("repeated_overnight_peaks"), APPROVED)
@@ -478,7 +578,7 @@ class SqlDraftCases(DraftCases):
 
 
 class SqliteDraftCases(SqlDraftCases, unittest.TestCase):
-    def open(self, reset=False):
+    def open(self, reset: bool = False) -> SqlStore:
         base = self.tmp.name
         path = (
             seed(base)
@@ -494,7 +594,7 @@ class SqliteDraftCases(SqlDraftCases, unittest.TestCase):
 class MssqlDraftCases(SqlDraftCases, unittest.TestCase):
     env = dict(ON, ZF_SENSOR_MSSQL="1")
 
-    def open(self, reset=False):
+    def open(self, reset: bool = False) -> SqlStore:
         from zava_forward.core.mssqlstore import MssqlStore, _Conn, connection_string
 
         base = self.tmp.name
