@@ -11327,3 +11327,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-10] review | Issue 135 C5 independent review recorded (Refs #135)
 
 * Added the C5 [independent review record](../../.copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c5-independent-review-record.md): APPROVE, no findings; hosted new-head CI not yet observed. No source change.
+
+## [2026-11-10] integration | Issue 73 parent integrates main 4244e84e with merged child #1357 (Refs #73, #135)
+
+* Ordinary merge of main `4244e84e` (discovery-demo CLI from #1355, phase witness from #1358) into the served-exceptions parent holding child #1357. No file overlap and no conflict; both command-line entry points, the scoped register, rollback/idempotency and the Importer optional-driver typing override are preserved. See the [changes](../../.copilot-tracking/changes/2026-11-10-issue-73-served-parent-integration-1110-changes.md) and [review](../../.copilot-tracking/reviews/2026-11-10-issue-73-served-parent-integration-1110-review.md) records. Owner demo targeted tier only: not the full gate, no hosted CI observed, no push. Whole #135 and #73 stay open; no appointment, eligibility, production or assistive-technology claim.
