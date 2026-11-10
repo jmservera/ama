@@ -74,3 +74,5 @@ Everything above marked LO is constructed local fixture behaviour on JSON/SQLite
 ## Suggestion for Root
 
 Literal criterion: dependencies, holds, works and costs (LO), decision and cost allocation (LO) hold in constructed local evidence for the finance role. Shared systems, own-home evidence and quality outcome, and non-finance rendering do not have maintained assertions, and "outcome" has no owner definition. A tick is therefore not recommended on this evidence alone; Root decides after independent review. Do not close #74.
+
+> Correction 2026-11-10: the browser output in the Browser row above has 16 PASS lines plus one COMPLETE line, not 17 PASS lines; see [the qualified audit supplement](2026-11-10-issue-74-qualified-audit-matrix.md). The original text above is preserved.
