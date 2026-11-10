@@ -1,0 +1,44 @@
+{
+  "task_id": "issue-80-capacity-c2-1110",
+  "task_slug": "issue-80-capacity-c2-1110",
+  "parent_task": {
+    "task_id": "issue-80-capacity-c1-1110",
+    "task_slug": "issue-80-capacity-c1-1110"
+  },
+  "mode": "manual",
+  "active_phase": "Research",
+  "status": "blocked",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10/issue-80-capacity-c2-1110-research.md",
+    "plan": null,
+    "details": null,
+    "critique": null,
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Root admits ONE checker correction C2 (#/aftercare in MANAGER_ROUTES); any further gap found pre-execution returns to Root",
+      "status": "confirmed",
+      "evidence": "ROOT brief-80-capacity-c2-1110.txt"
+    },
+    {
+      "decision": "Research executed; nav vs inventory differ only by #/aftercare; second gap predicted (manager 403 on /api/aftercare/form trips the failures guard); Planning Readiness blocked pending Root",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-10/issue-80-capacity-c2-1110-research.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "aftercare-form-403-guard",
+      "summary": "Adding #/aftercare alone is predicted to fail on the manager 403 for /api/aftercare/form; fix needs expected-failure handling beyond the admitted scope",
+      "resolution": "Root decides whether to admit that handling; no execution until then"
+    }
+  ],
+  "next_action": {
+    "phase": "Research",
+    "action": "Return to Root; no plan, implement or browser run until a decision"
+  },
+  "prioritized_follow_ups": null
+}
