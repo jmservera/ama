@@ -658,6 +658,16 @@ empty results have page 1 of 1. Hash URL queries retain filters/page through
 reload and browser history, and applying filters resets pagination.
 The legacy case/CSV endpoints are unchanged.
 
+`GET /api/closed-cases.csv` accepts the same parameters, authorization and
+validation as `GET /api/closed-cases` and exports only the current page of that
+read as an attachment (`closed-cases-page.csv`) with a fixed set of summary
+columns (id, resident, address, town, postcode, hazard, status, team,
+closed_on). The header row is kept when there are no rows; a blank `closed_on`
+means the closure date is unknown. Cells use the shared formula-safe escaping.
+The page offers it as "Download this page for Excel" after a successful load.
+It is a read-only copy of constructed demonstration data; a fresh read may
+differ from the rows displayed, and Closed does not mean completed or approved.
+
 Invalid date ranges show inline errors linked to both date fields and focus the
 start date so the range can be corrected. Service read failures retain a separate
 page alert and retry action without marking valid dates as invalid.
@@ -1127,6 +1137,28 @@ unrelated available drafts remain readable in the same 200 response.
 keys are refused. Existing authentication and Finance/resident/reason-view
 checks apply on the server. No UI, model call, approval, submission or
 reviewed-export path is added.
+
+### Held draft download (#96, demo only, default OFF)
+
+`GET /api/cases/{case_id}/form-review/{draft_id}/held-export` serves the
+existing `form_export.draft_export` result unchanged as the attachment
+`held-form-draft-export.json` (`Cache-Control: private, no-store`). Every
+request re-checks the signed-in actor's Finance, resident-record and reason-view
+rights; there is no new role, override, POST or reviewed export. An unavailable
+or non-Held export returns 409 JSON with no attachment, and the file is built
+when requested, so it can be newer than the screen: read its `input_version`
+and `content_sha256`. It states Held, unreviewed, Not submitted and eligibility
+Not assessed.
+
+The route answers 404 unless the operator sets both
+`ZF_FORM_HELD_DOWNLOAD=synthetic-demo-only` and `ZF_DEPLOYMENT_PROFILE=demo`,
+and never with the `trusted-proxy` provider. The Funding screen then shows
+"Download Held draft (unreviewed)" only for a readable, available draft. The
+switch is an operator attestation that the data is synthetic: the store has no
+provenance marker, so the code cannot prove it. Real templates, real data and
+operational submission stay unapproved.
+`python -m checks.held_form_download_browser_check` checks it in Chromium with
+Tab and Enter (no axe scan, not assistive-technology or WCAG acceptance).
 
 ```json
 {"action":"open","schema_id":"SYN-TECH","schema_version":1}

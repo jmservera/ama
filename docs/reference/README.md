@@ -1311,3 +1311,19 @@ default-deny approval binding), 1345 (finance retained history and dependencies)
 adapter, fake builder): 699 targeted tests run, 562 pass, 137 skip executions (5 browser skips later run, 129 SQL Server opt-in, 1 Azure SQL opt-in, 2 backend exclusions; no external SQL service ran; counts corrected in C3, no unique total), none fail. A C3 addendum observes the later-merged PR 1351 empty-queue explanation. It
 joins them to document-qualified BRD and PRD rows and keeps SQL Server, live rebuild, trusted resident binding,
 actual-model and human approval gates unproven. Closure and approval holds stand.
+
+A [discovery CLI checkpoint](../architecture/cutover-evidence-pack.md#discovery-cli-feature-increment-checkpoint-2026-11-10-refs-440-125)
+(2026-11-10, draft, local) observes pinned `main` `0d262beee` after PR 1355 (#125 read-only synthetic
+`discovery-demo` command): 65 focused Core tests pass, the command's JSON readback shows `NOT_READY`, company
+connection `DENY`, `model_used` false and an empty human comparison, and no connect call or write-mode open was
+traced. It is constructed-fixture evidence only; whole #125, Phase 0, actual comparison, model and human approval
+gates stay unmet, and #440 and #125 stay open.
+
+A [served import-refusal post-integration checkpoint](../architecture/cutover-evidence-pack.md#served-import-refusal-and-exception-register-post-integration-checkpoint-2026-11-10-refs-440-73-135-1360)
+(2026-11-10, draft, local) observes pinned `main` `1ee56da3a` after PR 1361: 172 focused Core, Importer and API
+cases run (165 pass, 7 opt-in SQL Server skips), clean static checks and a constructed served story in which a
+refused file transfers once, reaches only the configured steward and is counted but not shown to the operator. Earlier
+af7b, 27dab and 1fab observations stay historical, the non-blocking #1360 stays unreproduced, and SQL Server,
+served-browser, named-role, hosted exact-commit and human approval gates stay unmet; #73, #135 and #440 stay open.
+An independent-review qualification (C5, 2026-11-10) states that only Importer typing ran (Core typing was not run) and
+that the retained `E0` is a tailed summary with an author-attributed cause.

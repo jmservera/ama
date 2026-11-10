@@ -12,11 +12,11 @@ import re
 import secrets
 import sqlite3
 from collections import Counter
-from collections.abc import Iterable
+from collections.abc import Iterable, Mapping
 from dataclasses import asdict, dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 
 from zava_forward.core.exception_feeds import feed_failed_imports
 from zava_forward.core.exception_queue import ExceptionQueue, Record
@@ -281,11 +281,8 @@ def _feed_ref(refusal: Refusal) -> str:
     return f"file:{refusal.source_sha256 or _feed_name(refusal)}"
 
 
-def feed_inputs(
-    store: QuarantineStore, ledger: RefusalLedger
-) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Rejected batches and refused files in the shapes `feed_failed_imports` reads."""
-    refusals = [
+def _feed_refusals(ledger: RefusalLedger) -> list[dict[str, Any]]:
+    return [
         {
             "source_name": _feed_name(r),
             "source_sha256": r.source_sha256,
@@ -294,7 +291,26 @@ def feed_inputs(
         }
         for r in ledger.all()
     ]
-    return _rejected_batches(store), refusals
+
+
+class RefusalTarget(Protocol):
+    def record_import_refusals(self, refusals: Iterable[Mapping[str, Any]]) -> dict[str, int]: ...
+
+
+def transfer(ledger: RefusalLedger, target: RefusalTarget) -> dict[str, int]:
+    """Hand a bounded copy of each refused file to the served store, which keeps it durably.
+
+    Only source name (carrying the opaque identity when hashless), digest, reason and time cross.
+    Repeating it adds nothing. The ledger and the refused files are only read.
+    """
+    return target.record_import_refusals(_feed_refusals(ledger))
+
+
+def feed_inputs(
+    store: QuarantineStore, ledger: RefusalLedger
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Rejected batches and refused files in the shapes `feed_failed_imports` reads."""
+    return _rejected_batches(store), _feed_refusals(ledger)
 
 
 @dataclass

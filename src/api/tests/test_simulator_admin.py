@@ -9,10 +9,10 @@ import unittest
 import urllib.error
 import urllib.request
 from collections.abc import Callable, Mapping
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta, tzinfo
 from http.server import ThreadingHTTPServer
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, ClassVar, Protocol, Self
 from unittest.mock import patch
 
 from zava_forward.core import identity
@@ -28,6 +28,7 @@ STAFF = "ZavaForward.LiaisonOfficer"
 CONTRACTOR = "ZavaForward.Contractor"
 NOW = datetime(2026, 11, 9, 10, 0, tzinfo=UTC)
 EXPIRES = "2026-11-10T10:00:00Z"
+EXPIRY = datetime(2026, 11, 10, 10, 0, tzinfo=UTC)
 PATH = "/api/admin/simulator-control"
 HOMES = [f"HOME-{i:03d}" for i in range(5)]
 Provider: Any = auth.TrustedProxyProvider
@@ -60,6 +61,23 @@ def start_body(**changes: Any) -> dict[str, Any]:
 
 def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+class SimulatorClock(datetime):
+    """A datetime whose now() reads a test instant; construction and typing stay unchanged."""
+
+    current: ClassVar[datetime] = NOW
+
+    @classmethod
+    def now(cls, tz: tzinfo | None = None) -> Self:
+        return cls.fromtimestamp(cls.current.timestamp(), tz)
+
+
+def scoped_clock(moment: datetime) -> type[SimulatorClock]:
+    class ScopedClock(SimulatorClock):
+        current = moment
+
+    return ScopedClock
 
 
 class FakeStore:
@@ -471,13 +489,27 @@ class AdminHttpTests(Base):
         patcher = patch.dict(os.environ, {simulator_admin.ENV: str(self.file)})
         patcher.start()
         self.addCleanup(patcher.stop)
+        self.clock = scoped_clock(NOW)
+        self.bind_clock()
         self.httpd = ThreadingHTTPServer(
             ("127.0.0.1", 0), handler(Application(self.store, provider=Provider(self.store, ENV)))
         )
-        threading.Thread(target=self.httpd.serve_forever, daemon=True).start()
+        self.server_thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
+        self.server_thread.start()
+        self.addCleanup(self.join_server)
         self.addCleanup(self.httpd.server_close)
         self.addCleanup(self.httpd.shutdown)
         self.base = f"http://127.0.0.1:{self.httpd.server_address[1]}"
+
+    def bind_clock(self) -> None:
+        """Bind only simulator_admin's module-local clock; cleanups run after the server stops."""
+        patcher = patch.object(simulator_admin, "datetime", self.clock)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def join_server(self) -> None:
+        self.server_thread.join(5)
+        self.assertFalse(self.server_thread.is_alive())
 
     def request(
         self,
@@ -633,6 +665,7 @@ class AdminHttpTests(Base):
     def test_start_stop_round_trip_over_http_with_audit(self) -> None:
         both = (ADMIN, STAFF)
         code, started = self.request("POST", PATH + "/start", start_body(), roles=both)
+        self.assertEqual(code, 200, started)
         self.assertEqual((code, started["changed"]), (200, True))
         revision = started["status"]["revision"]
         code, second = self.request(
@@ -645,6 +678,47 @@ class AdminHttpTests(Base):
         self.assertEqual((code, stopped["status"]["state"]), (200, "stopped"))
         actions = [e["action"] for e in self.store.audit_entries()]
         self.assertEqual(actions[-2:], ["sim_control_start", "sim_control_stop"])
+
+    def test_fixture_clock_replaces_only_the_module_now_and_keeps_datetime_behaviour(self) -> None:
+        bound: Any = simulator_admin.__dict__["datetime"]
+        moment = bound.now(UTC)
+        self.assertEqual((moment, moment.tzinfo), (NOW, UTC))
+        built = bound(2026, 1, 2, tzinfo=UTC)
+        self.assertIsInstance(built, datetime)
+        self.assertEqual(built, datetime(2026, 1, 2, tzinfo=UTC))
+        self.assertIs(bound, self.clock)
+        self.assertTrue(issubclass(bound, datetime))
+
+    def test_expiry_boundary_is_valid_before_expired_at_and_refuses_a_start(self) -> None:
+        both = (ADMIN, STAFF)
+        self.clock.current = EXPIRY - timedelta(seconds=1)
+        code, started = self.request("POST", PATH + "/start", start_body(), roles=both)
+        self.assertEqual(code, 200, started)
+        self.assertTrue(started["changed"])
+        self.assertEqual(self.request("GET", PATH, roles=both)[1]["state"], "send")
+        self.clock.current = EXPIRY
+        status = self.request("GET", PATH, roles=both)[1]
+        self.assertEqual(status["state"], "expired")
+        self.assertEqual(status["time_limit"]["remaining_seconds"], 0)
+        before = digest(self.file)
+        entries = list(self.store.audit_entries())
+        code, refused = self.request(
+            "POST", PATH + "/start", start_body(expected_revision=before), roles=both
+        )
+        self.assertEqual((code, refused["code"]), (400, "CONTROL_WINDOW_INVALID"))
+        self.assertNotIn("changed", refused)
+        self.assertEqual(digest(self.file), before)
+        self.assertEqual(list(self.store.audit_entries()), entries)
+
+    def test_start_after_the_expiry_writes_no_control_and_no_audit(self) -> None:
+        self.clock.current = datetime(2026, 11, 10, 10, 4, 47, tzinfo=UTC)
+        code, refused = self.request("POST", PATH + "/start", start_body(), roles=(ADMIN, STAFF))
+        self.assertEqual((code, refused["code"]), (400, "CONTROL_WINDOW_INVALID"))
+        self.assertNotIn("changed", refused)
+        self.assertFalse(self.file.exists())
+        self.assertEqual(
+            [e for e in self.store.audit_entries() if e["action"] == "sim_control_start"], []
+        )
 
     def test_password_provider_user_cannot_use_the_surface(self) -> None:
         provider = make_password_provider(self.store, "synthetic")
