@@ -70,7 +70,39 @@ _SAFE_PARAM_LINE = re.compile(
     r"\s*param\s+(entraClientSecretName|enableEntraTokenStore|entraTokenStoreReady)\b"
 )
 # Stage-controlled names and secure Bicep parameters that must never come from an override.
-RESERVED_PARAMETERS = frozenset({"deployApplications", "deployEnvironmentOnly", "apiImage"})
+RESERVED_PARAMETERS = frozenset(
+    {
+        "deployApplications",
+        "deployEnvironmentOnly",
+        "apiImage",
+        "agentImage",
+        "importImage",
+        "orchestratorImage",
+    }
+)
+ORCHESTRATOR_OPTION = "--orchestrator-image"
+
+
+@dataclass(frozen=True)
+class WorkloadImage:
+    """One source workload image; ``parameter`` is None where deploy.py takes an option."""
+
+    project: str
+    repository: str
+    parameter: str | None
+
+    @property
+    def dockerfile(self) -> str:
+        return f"src/{self.project}/Dockerfile"
+
+
+# Pipeline order and parameter names (infra/scripts/pipeline.py); the API keeps its legacy name.
+WORKLOAD_IMAGES = (
+    WorkloadImage("api", "zava-forward-mvp", "apiImage"),
+    WorkloadImage("agents", "zava-forward-agents", "agentImage"),
+    WorkloadImage("orchestrator", "zava-forward-orchestrator", None),
+    WorkloadImage("importer", "zava-forward-importer", "importImage"),
+)
 SECURE_PARAMETERS = frozenset({"teamsWebhookUrl"})
 _GRANTS = re.compile(r"Roster: \d+ principal\(s\); (\d+) missing assignment\(s\)")
 _ITEMS = re.compile(r"Summary: (?:read-only; )?(\d+) reconciliation item")
@@ -311,6 +343,45 @@ class AzureBackend:
         script = self.config.repo_root / "infra" / "scripts" / name
         return self.run(["python3", str(script), *args], None)
 
+    def _image_ref(self, image: WorkloadImage) -> str:
+        if not self.found.get("registry"):
+            raise RebuildError("Discovery incomplete")
+        return f"{self.found['registry']}/{image.repository}:{self.config.image_tag}"
+
+    def _missing_images(self) -> list[str]:
+        """Projects whose exact tag is not listed; an unreadable repository counts as missing."""
+        missing: list[str] = []
+        for image in WORKLOAD_IMAGES:
+            self._image_ref(image)
+            try:
+                tags = self._json(
+                    "acr",
+                    "repository",
+                    "show-tags",
+                    "-n",
+                    self.config.registry,
+                    "--repository",
+                    image.repository,
+                    "--query",
+                    "[]",
+                )
+            except ScriptExit as exc:
+                missing.append(f"{image.project} (az exited {exc.code})")
+                continue
+            if not isinstance(tags, list):
+                raise RebuildError("Registry tags were not a list")
+            if self.config.image_tag not in tags:
+                missing.append(image.project)
+        return missing
+
+    def _require_images(self) -> None:
+        missing = self._missing_images()
+        if missing:
+            raise RebuildError(
+                f"Image tag {self.config.image_tag} is missing or unreadable for: "
+                f"{', '.join(missing)}. Stopped before deployment; resume with --from-stage images"
+            )
+
     def _deploy(self, applications: bool) -> None:
         c = self.config
         args = [
@@ -328,10 +399,12 @@ class AzureBackend:
             f"deployApplications={'true' if applications else 'false'}",
         ]
         if applications:
-            args += [
-                "--parameter",
-                f"apiImage={self.found['registry']}/zava-forward-mvp:{c.image_tag}",
-            ]
+            self._require_images()
+            for image in WORKLOAD_IMAGES:
+                if image.parameter:
+                    args += ["--parameter", f"{image.parameter}={self._image_ref(image)}"]
+                else:
+                    args += [ORCHESTRATOR_OPTION, self._image_ref(image)]
         for override in c.overrides:
             args += ["--parameter", override]
         self._script("deploy.py", *args, "--apply")
@@ -402,18 +475,22 @@ class AzureBackend:
                         f"Build pool {c.build_pool} does not exist in {c.registry}. Operator: "
                         "create the approved agent pool, then resume with --from-stage images"
                     ) from exc
-            self._az(
-                "acr",
-                "build",
-                "--registry",
-                c.registry,
-                *pool,
-                "--image",
-                f"zava-forward-mvp:{c.image_tag}",
-                "-f",
-                "src/api/Dockerfile",
-                str(c.repo_root / "src"),
-            )
+            for image in WORKLOAD_IMAGES:
+                try:
+                    self._az(
+                        "acr",
+                        "build",
+                        "--registry",
+                        c.registry,
+                        *pool,
+                        "--image",
+                        f"{image.repository}:{c.image_tag}",
+                        "-f",
+                        image.dockerfile,
+                        str(c.repo_root / "src"),
+                    )
+                except RebuildError as exc:
+                    raise RebuildError(f"Image build failed for {image.project}: {exc}") from exc
         elif name == "sql-users":
             self._script("create-sql-users.py", GROUP, self.found["sql"], c.sql_database, c.prefix)
         elif name == "seed":
@@ -515,19 +592,7 @@ class AzureBackend:
             if not all(self.found.get(k) for k in ("registry", "sql", "vault")):
                 raise RebuildError("Discovery incomplete")
         elif name == "images":
-            tags = self._json(
-                "acr",
-                "repository",
-                "show-tags",
-                "-n",
-                c.registry,
-                "--repository",
-                "zava-forward-mvp",
-                "--query",
-                "[]",
-            )
-            if c.image_tag not in tags:
-                raise RebuildError("Built image tag not found in the registry")
+            self._require_images()
         elif name == "credential":
             names = self._json(
                 "keyvault",
@@ -611,6 +676,15 @@ def plan(config_summary: Mapping[str, str]) -> dict[str, object]:
     report["operator_gated"] = list(GATED_STAGES)
     report["synthetic_only"] = "seed and roster inputs are scanned for non-synthetic addresses"
     report["config"] = dict(config_summary)
+    report["images"] = [
+        {
+            "project": image.project,
+            "repository": image.repository,
+            "dockerfile": image.dockerfile,
+            "deploy_input": image.parameter or ORCHESTRATOR_OPTION,
+        }
+        for image in WORKLOAD_IMAGES
+    ]
     return report
 
 
