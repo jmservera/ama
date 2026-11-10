@@ -3,16 +3,16 @@
   "task_slug": "walkthrough-plan-134-1110",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Plan",
-  "status": "blocked",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-10-walkthrough-plan-134-1110-research.md",
     "plan": ".copilot-tracking/plans/2026-11-10-walkthrough-plan-134-1110-plan.md",
     "details": ".copilot-tracking/details/2026-11-10-walkthrough-plan-134-1110-details.md",
     "critique": ".copilot-tracking/plans/critiques/2026-11-10-walkthrough-plan-134-1110-plan-critique.md",
-    "changes": null,
-    "review": null
+    "changes": ".copilot-tracking/changes/2026-11-10-walkthrough-plan-134-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-walkthrough-plan-134-1110-review.md"
   },
   "confirmed_decisions": [
     {
@@ -34,30 +34,45 @@
       "decision": "Review not executed; implement-start, implement-done, review-done and commit-complete not observed; partial witness verifier exit 1 expected",
       "status": "pending",
       "evidence": "witness log"
-    }
-  ],
-  "blockers": [
+    },
     {
-      "id": "root-admission",
-      "summary": "Implementation needs Root consumption of independent exact-head review of the native 440 aftercare checkpoint (64c3/main/b7source equivalence) and explicit admission of the next phase",
-      "resolution": "Root admits P0 and P1; separate scope admission is required for any P2 probe or P3 edit"
+      "decision": "Root admitted P0, bounded P1, P2, P3 (test-only edits; no product/API/UI fixes; no status-enum change or pass); P0 imports owned venv /tmp/z134-venv resolved to worktree; P1 workbench_browser_check exit 0 (log /tmp/z134-logs/p1-workbench.log)",
+      "status": "confirmed",
+      "evidence": "Root message; aftercare checkpoint 5450b07a"
+    },
+    {
+      "decision": "P2 probe and P3 register edits implemented; first probe run failed on a probe bug and was fixed; final probe 236 PASS exit 0; Review not yet executed",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-11-10-walkthrough-plan-134-1110-changes.md"
+    },
+    {
+      "decision": "Review executed once; outcome Conformant, three Low wording findings, 1 and 3 applied, 2 routed as later work; no second Review",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-walkthrough-plan-134-1110-review.md"
     }
   ],
+  "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Paused before implement-start until Root admission; then resume at P0 preflight of the plan"
+    "phase": "Follow-up",
+    "action": "Commit, record commit-complete, hand off to Root for independent exact-head assessment"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "P1 run existing maintained browser checks and fill the per-row evidence table (no new code)",
-      "rationale": "Lowest effort, converts source-inspection cells to observed evidence",
-      "evidence": ".copilot-tracking/details/2026-11-10-walkthrough-plan-134-1110-details.md"
+      "task": "Generate PROBE_OBSERVED from probe output or add a test tying them (needs Root scope admission)",
+      "rationale": "Removes hand-recorded drift risk",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-walkthrough-plan-134-1110-review.md"
     },
     {
       "rank": 2,
-      "task": "P2 owned keyboard-only and status-text probe, after Root scope admission",
-      "rationale": "Only way to cover C5 gaps found in research (no specialist-screen status assertion)",
+      "task": "Triage the 0/N endpoint/handoff wording gaps with the owning issues (no product fix here)",
+      "rationale": "Largest C1 evidence gap",
+      "evidence": ".copilot-tracking/changes/2026-11-10-walkthrough-plan-134-1110-changes.md"
+    },
+    {
+      "rank": 3,
+      "task": "Second-home and AC-035/037/041 fixture probes if admitted",
+      "rationale": "Unproven criteria",
       "evidence": ".copilot-tracking/research/2026-11-10-walkthrough-plan-134-1110-research.md"
     }
   ]

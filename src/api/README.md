@@ -4125,6 +4125,17 @@ No real model, private stock, SQL Server or Azure is exercised. Full scenario
 workflow coverage, operational definition ratification, human/screen-reader
 acceptance and mandatory live-platform application acceptance remain unmet.
 
+`python -m checks.specialist_keyboard_browser_check` (Refs #134) walks, with Tab,
+Shift+Tab and Enter only, from the case list to every specialist screen served to
+each constructed fixture login, then to the first listed home's labelled evidence
+region, the existing-workspace link and Reset screen view, asserting the exact
+`#workspace-status` text after each state. It includes negative controls (removed
+recovery link, blank status, unfocusable region). Fixture-role selection is not
+authentication; the status text is DOM evidence, not screen-reader output; endpoint
+and handoff wording is reported as text presence only. Use a short
+`ZF_BROWSER_SCRATCH`, the heavy lock and an owned environment; it marks no
+acceptance criterion as passing.
+
 This is a bounded offline extension of the existing role workbench, not a new
 identity provider, role simulator, permission policy or operational acceptance.
 The [parity audit](../../docs/architecture/mvp-to-src-parity-matrix.md#role-task-queue-offline-slice-2026-10-16)

@@ -2,8 +2,9 @@
 
 For each perspective the PRD "Profile Journey Contract" needs five elements: entry, evidence
 inspection, safe endpoint, recovery route and accountable handoff over linked records. This
-register records each element as `partial` (a named constructed-fixture record module exists but no
-screen walkthrough is proven) or `unmet`. Nothing is recorded as met, and nothing here is user
+register records each element as `partial` (a named constructed-fixture record module or a bounded
+keyboard-and-status browser observation exists but no complete walkthrough is proven) or `unmet`.
+Nothing is recorded as met, and nothing here is user
 validation or owner approval. `check` reads only the repository files it is pointed at.
 """
 
@@ -19,9 +20,32 @@ MANIFEST = "docs/reference/research/retrofit-synthetic-data/scenario-manifest.js
 ELEMENTS = ("entry", "evidence", "safe_endpoint", "recovery", "handoff")
 NOTICE = (
     "Constructed-fixture evidence, not user validation. No element is recorded as met; partial "
-    "means a record module exists but no screen walkthrough, keyboard or announcement run "
-    "proves it."
+    "means a record module or a bounded keyboard-and-status browser observation exists but no "
+    "complete walkthrough, owner approval, assistive-technology or resident run proves it."
 )
+PROBE = "src/api/checks/specialist_keyboard_browser_check.py"
+# Observed 2026-11-10 on constructed fixture logins (role selection, not authentication), first
+# listed permitted home only, keyboard operation and DOM status text only. Endpoint and handoff
+# wording is text presence on every screen of that perspective in the 2026-11-10 run (hand
+# recorded from the probe output in the RPI changes file), not label agreement.
+PROXY_ONLY = frozenset({"asset-investment", "procurement-contracts", "digital-auditor"})
+PROXY_NOTE = (
+    " The keyboard observation reached this perspective only through a manager fixture role "
+    "(proxy); no login role exists for it."
+)
+PROBE_OBSERVED: dict[str, tuple[str, ...]] = {
+    "asset-investment": ("entry", "evidence", "safe_endpoint", "recovery", "handoff"),
+    "programme-coordinator": ("entry", "evidence", "safe_endpoint", "recovery", "handoff"),
+    "retrofit-case-team": ("entry", "evidence", "safe_endpoint", "recovery", "handoff"),
+    "assessor-designer": ("entry", "evidence", "safe_endpoint", "recovery", "handoff"),
+    "housing-resident-engagement": ("entry", "evidence", "recovery"),
+    "repairs-building-safety": ("entry", "evidence", "recovery", "handoff"),
+    "procurement-contracts": ("entry", "safe_endpoint", "recovery"),
+    "provider-contractor": ("entry", "evidence", "safe_endpoint", "recovery"),
+    "quality-assurance": ("entry", "safe_endpoint", "recovery", "handoff"),
+    "finance-grants": ("entry", "recovery"),
+    "digital-auditor": ("entry", "evidence", "safe_endpoint", "recovery", "handoff"),
+}
 CORE = "src/core/src/zava_forward/core/"
 TESTS = "src/core/tests/"
 UNMET = "No linked-record walkthrough is mapped for this element yet."
@@ -119,9 +143,14 @@ def register() -> dict[str, dict[str, dict[str, Any]]]:
             el: dict(
                 status="partial" if files else "unmet",
                 evidence=list(files),
-                reason=NOTICE if files else UNMET,
+                reason=(NOTICE + (PROXY_NOTE if PROBE in files and pid in PROXY_ONLY else ""))
+                if files
+                else UNMET,
             )
-            for el, files in ((e, elements.get(e, [])) for e in ELEMENTS)
+            for el, files in (
+                (e, [*elements.get(e, []), *([PROBE] if e in PROBE_OBSERVED.get(pid, ()) else [])])
+                for e in ELEMENTS
+            )
         }
         for pid, elements in EVIDENCE.items()
     }
