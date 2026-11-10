@@ -1320,6 +1320,12 @@ connection `DENY`, `model_used` false and an empty human comparison, and no conn
 traced. It is constructed-fixture evidence only; whole #125, Phase 0, actual comparison, model and human approval
 gates stay unmet, and #440 and #125 stay open.
 
+A [parent 149 coverage integration checkpoint](../architecture/cutover-evidence-pack.md#parent-149-coverage-integration-checkpoint-2026-11-10-refs-149-440-153-156-230-231-233-96)
+(2026-11-10, draft, local) records a normal merge of `main` `d52f20a51` into the reviewed parent `ae4b20007`
+with no conflict, and focused local API, Core, importer, static and Chromium checks that pass on the combined
+source. It is constructed-fixture engineering evidence only; whole UX, WCAG, assistive-technology, human and
+design acceptance, #156 M1, #1362 and PR 1371 stay with their owners, and #149 and #440 stay open.
+
 A [served import-refusal post-integration checkpoint](../architecture/cutover-evidence-pack.md#served-import-refusal-and-exception-register-post-integration-checkpoint-2026-11-10-refs-440-73-135-1360)
 (2026-11-10, draft, local) observes pinned `main` `1ee56da3a` after PR 1361: 172 focused Core, Importer and API
 cases run (165 pass, 7 opt-in SQL Server skips), clean static checks and a constructed served story in which a
