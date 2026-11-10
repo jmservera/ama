@@ -1,6 +1,9 @@
+import contextlib
 import hashlib
+import io
 import json
 import os
+import runpy
 import sqlite3
 import subprocess
 import sys
@@ -10,9 +13,18 @@ from pathlib import Path
 from unittest import mock
 
 from zava_forward.core.exception_queue import ExceptionQueue
+from zava_forward.core.import_refusals import PartiallyRecordedError
+from zava_forward.core.sqlstore import CommittedReloadError, SqlStore
+from zava_forward.core.store import Store
 
 from zava_forward.importer import exceptions as ex
-from zava_forward.importer.exceptions import RefusalLedger, feed_inputs, route, submit_file
+from zava_forward.importer.exceptions import (
+    RefusalLedger,
+    feed_inputs,
+    route,
+    submit_file,
+    transfer,
+)
 from zava_forward.importer.quarantine import ImportError_, QuarantineStore
 from zava_forward.importer.xlsx import write_workbook
 
@@ -357,9 +369,61 @@ class RoutingTests(Base):
         self.assertEqual(hashlib.sha256(self.db.read_bytes()).hexdigest(), digest)
 
 
+def served_store(root: Path) -> Store:
+    seed = root / "seed.json"
+    if not seed.exists():
+        seed.write_text(json.dumps({"cases": [], "staff": []}))
+    return Store(str(seed), str(root / "state" / "live.json"), str(root / "state" / "audit.jsonl"))
+
+
+class TransferTests(Base):
+    def test_refusals_reach_the_served_store_once_and_survive_restart(self) -> None:
+        bad = self.source("bad.xlsx", raw=b"not a workbook")
+        before = self.snapshot(bad)
+        self.assertIsNotNone(submit_file(self.store, self.ledger, bad, "Pat").refusal)
+        served = served_store(self.tmp)
+        self.assertEqual(
+            transfer(self.ledger, served), {"added": 1, "already_present": 0, "total": 1}
+        )
+        self.assertEqual(
+            transfer(self.ledger, served), {"added": 0, "already_present": 1, "total": 1}
+        )
+        view = served_store(self.tmp).exception_register(
+            {"email": STEWARD, "role": "Retrofit Programme Manager"}, {STEWARD: ("data_steward",)}
+        )
+        (item,) = [i for i in view["items"] if i["kind"] == "failed_import"]
+        self.assertEqual(item["ref"], f"file:{before[0]}")
+        self.assertEqual(item["original_source"]["source_sha256"], before[0])
+        self.assertEqual(item["eligibility"], "Unknown")
+        self.assertEqual(self.snapshot(bad), before)
+        self.assertEqual(len(self.ledger.all()), 1)
+
+    def test_hashless_refusals_stay_distinct_in_the_served_store(self) -> None:
+        for folder in ("a", "b"):
+            (self.tmp / folder).mkdir()
+            big = self.tmp / folder / "big.xlsx"
+            big.write_bytes(b"x" * 10)
+            with mock.patch("zava_forward.importer.exceptions.MAX_SOURCE_BYTES", 5):
+                submit_file(self.store, self.ledger, big, "Pat")
+        served = served_store(self.tmp)
+        self.assertEqual(transfer(self.ledger, served)["added"], 2)
+        view = served.exception_register(
+            {"email": STEWARD, "role": "Retrofit Programme Manager"}, {STEWARD: ("data_steward",)}
+        )
+        items = [i for i in view["items"] if i["kind"] == "failed_import"]
+        self.assertEqual(len({i["ref"] for i in items}), 2)
+        self.assertTrue(all(i["original_source"]["source_sha256"] is None for i in items))
+
+
 class CliTests(unittest.TestCase):
-    def run_cli(self, *args: str, staff: dict[str, list[str]] | None = None):  # type: ignore[no-untyped-def]
+    def run_cli(  # type: ignore[no-untyped-def]
+        self,
+        *args: str,
+        staff: dict[str, list[str]] | None = None,
+        extra: dict[str, str] | None = None,
+    ):
         env = {k: v for k, v in os.environ.items() if k != "ZF_EXCEPTION_STAFF"}
+        env.update(extra or {})
         if staff is not None:
             env["ZF_EXCEPTION_STAFF"] = json.dumps(staff)
         return subprocess.run(
@@ -466,6 +530,111 @@ class CliTests(unittest.TestCase):
 
     def test_missing_database_is_an_error(self) -> None:
         self.assertEqual(self.run_cli("exceptions", "/nonexistent/x.db").returncode, 2)
+        self.assertEqual(self.run_cli("transfer", "/nonexistent/x.db").returncode, 2)
+
+    def test_transfer_command_is_idempotent_and_reports_a_refused_store(self) -> None:
+        tmp = Path(tempfile.mkdtemp())
+        bad, db = tmp / "bad.xlsx", tmp / "import.db"
+        bad.write_bytes(b"not a workbook")
+        self.assertEqual(
+            self.run_cli("stage", str(bad), "--db", str(db), "--staged-by", "Pat").returncode, 1
+        )
+        served_store(tmp)
+        env = {
+            "ZF_STORE": "json",
+            "ZF_DATA": str(tmp / "seed.json"),
+            "ZF_STATE": str(tmp / "state"),
+        }
+        first = self.run_cli("transfer", str(db), extra=env)
+        again = self.run_cli("transfer", str(db), extra=env)
+        self.assertEqual((first.returncode, again.returncode), (0, 0), first.stderr + again.stderr)
+        self.assertIn("added=1", first.stdout)
+        self.assertIn("added=0 already_present=1", again.stdout)
+        broken = self.run_cli("transfer", str(db), extra={**env, "ZF_STORE": "nonsense"})
+        self.assertEqual(broken.returncode, 2)
+        self.assertEqual(broken.stdout, "")
+        self.assertIn("Nothing was recorded", broken.stderr)
+
+
+class TransferFailureTests(Base):
+    """The transfer command keeps exit 2 and a truthful message for each supported store failure."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        bad = self.source("bad.xlsx", raw=b"not a workbook")
+        self.assertIsNotNone(submit_file(self.store, self.ledger, bad, "Pat").refusal)
+        served_store(self.tmp)
+        env = {
+            "ZF_STORE": "sqlite",
+            "ZF_DATA": str(self.tmp / "seed.json"),
+            "ZF_STATE": str(self.tmp / "state"),
+        }
+        patcher = mock.patch.dict(os.environ, env)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def run_transfer(self) -> tuple[int, str, str]:
+        out, err = io.StringIO(), io.StringIO()
+        argv = ["zava_forward.importer", "transfer", str(self.db)]
+        with (
+            mock.patch.object(sys, "argv", argv),
+            contextlib.redirect_stdout(out),
+            contextlib.redirect_stderr(err),
+            self.assertRaises(SystemExit) as raised,
+        ):
+            runpy.run_module("zava_forward.importer", run_name="__main__")
+        return int(str(raised.exception.code)), out.getvalue(), err.getvalue()
+
+    def refused(self, error: BaseException) -> str:
+        with mock.patch.object(SqlStore, "record_import_refusals", side_effect=error):
+            code, out, err = self.run_transfer()
+        self.assertEqual((code, out), (2, ""))
+        self.assertNotIn("Traceback", err)
+        return err
+
+    def test_real_competing_writer_is_exit_2_and_rolled_back(self) -> None:
+        original, seen = SqlStore.save, {"n": 0}
+        other = {
+            "source_name": "other.xlsx",
+            "source_sha256": "e" * 64,
+            "reason": "Refused: synthetic competitor.",
+            "at": "2026-11-10T00:00:00Z",
+        }
+
+        def compete(store: SqlStore) -> None:
+            if not seen["n"]:
+                seen["n"] = 1
+                SqlStore(
+                    str(self.tmp / "seed.json"), str(self.tmp / "state" / "zavaforward.sqlite")
+                ).record_import_refusals([other])
+            original(store)
+
+        with mock.patch.object(SqlStore, "save", compete):
+            code, out, err = self.run_transfer()
+        self.assertEqual((code, out), (2, ""))
+        self.assertIn("another writer", err)
+        self.assertIn("nothing was recorded", err)
+        self.assertNotIn("Traceback", err)
+
+    def test_committed_but_unconfirmed_is_not_reported_as_nothing_recorded(self) -> None:
+        err = self.refused(CommittedReloadError("refresh did not settle"))
+        self.assertIn("may be recorded", err)
+        self.assertNotIn("Nothing was recorded", err)
+
+    def test_partial_outcome_is_reported_as_saved(self) -> None:
+        err = self.refused(
+            PartiallyRecordedError("The refused imports were saved, but audit failed.")
+        )
+        self.assertIn("were saved", err)
+        self.assertNotIn("Nothing was recorded", err)
+
+    def test_driver_failure_is_uncertain_not_nothing_recorded(self) -> None:
+        err = self.refused(sqlite3.OperationalError("disk I/O error"))
+        self.assertIn("not known whether", err)
+        self.assertNotIn("Nothing was recorded", err)
+
+    def test_refused_before_commit_says_nothing_was_recorded(self) -> None:
+        self.assertIn("Nothing was recorded", self.refused(ValueError("too many")))
 
 
 if __name__ == "__main__":

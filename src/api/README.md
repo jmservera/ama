@@ -1128,6 +1128,28 @@ keys are refused. Existing authentication and Finance/resident/reason-view
 checks apply on the server. No UI, model call, approval, submission or
 reviewed-export path is added.
 
+### Held draft download (#96, demo only, default OFF)
+
+`GET /api/cases/{case_id}/form-review/{draft_id}/held-export` serves the
+existing `form_export.draft_export` result unchanged as the attachment
+`held-form-draft-export.json` (`Cache-Control: private, no-store`). Every
+request re-checks the signed-in actor's Finance, resident-record and reason-view
+rights; there is no new role, override, POST or reviewed export. An unavailable
+or non-Held export returns 409 JSON with no attachment, and the file is built
+when requested, so it can be newer than the screen: read its `input_version`
+and `content_sha256`. It states Held, unreviewed, Not submitted and eligibility
+Not assessed.
+
+The route answers 404 unless the operator sets both
+`ZF_FORM_HELD_DOWNLOAD=synthetic-demo-only` and `ZF_DEPLOYMENT_PROFILE=demo`,
+and never with the `trusted-proxy` provider. The Funding screen then shows
+"Download Held draft (unreviewed)" only for a readable, available draft. The
+switch is an operator attestation that the data is synthetic: the store has no
+provenance marker, so the code cannot prove it. Real templates, real data and
+operational submission stay unapproved.
+`python -m checks.held_form_download_browser_check` checks it in Chromium with
+Tab and Enter (no axe scan, not assistive-technology or WCAG acceptance).
+
 ```json
 {"action":"open","schema_id":"SYN-TECH","schema_version":1}
 ```
