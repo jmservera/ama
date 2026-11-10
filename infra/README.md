@@ -3881,6 +3881,46 @@ approval. No Azure call, what-if or deployment was made.
 * `main.test.bicepparam` records both parameters explicitly as `false` and `0`. Set the flag in the private parameter copy to wire the demo.
 * Offline checks: `az bicep build` of `main.bicep`, `tests.test_bicep_policy` (flag-off identity, container privacy, optional policy, compiled output-to-env chain, provider constant match, pilot guard) and `tests.test_identity_rbac`. Real-account, emulator and role behaviour are not established.
 
+## Public simulation lane startup binding (Refs #136, #1288, 2026-11-10)
+
+Source wiring only, for the already merged public simulation lane
+(`ZF_SIM_STORE` and `ZF_SIM_KEY_FILE`, `simulation_lane.provision` and `Lane.open`). It is a
+compiled template and a local container check, not an Azure deployment, a what-if or a
+deployment approval. No model call was made.
+
+| Parameter | Default | Effect |
+| --- | --- | --- |
+| `enablePublicSimulationLane` | `false` | `true` sets `ZF_SIM_STORE=/state/public-simulation/store.sqlite` and `ZF_SIM_KEY_FILE=/state/public-simulation/hmac.key` on the API app, starts it with `command: python -c <fixed recipe>` and sets `maxReplicas` to 1. `false` leaves every existing env value, startup, scale and resource setting unchanged. |
+
+* Initial opt-in only: no existing parameter set enables it and no deployment or auth profile is added.
+  Five named guards (`publicSimulationRequires...`) refuse it outside the development direct-ingress
+  demo, without browser authentication (`entraClientId`, not `entraBearerOnly`), without
+  `deployApplications`, with the placeholder `apiImage` and with `apiMinReplicas` above 1.
+* Lifetime is demo-only, replica-local and volatile: the SQLite store, its sibling document
+  directories and the HMAC key sit on the container writable `/state` layer and are lost on replica
+  replacement and scale to zero. This is not durable operational history.
+* Startup recipe (rendered from the template, no entrypoint override, UID 10001, read-only root, no
+  capabilities): when neither path exists it creates the 0700 directory and calls `provision`;
+  it then validates with `Lane.open` and runs the ordinary `python -m zava_forward.api`. A valid
+  pair is reused without reset. A partial or corrupt pair is left untouched, the error code is
+  printed to stderr and the API starts with the lane unavailable (manual). No key is generated
+  or printed at template compile time, and no observation or model request is made at startup.
+* Accounting is unchanged: the working store stays `ZF_STORE=mssql`, so allowance, attempts, send
+  fence and release or model holds remain in Azure SQL and a lost simulation store cannot mint,
+  reset or replenish them. `enableApiAi`, chat, budgets and provider settings are not changed or
+  copied; the template cannot select a non-durable working store, so no combination needs a
+  separate refusal. A seal minted before a restart cannot be verified after it.
+* Not provided: live IoT Hub ingestion, a real selected-home reading path, durable simulation
+  history, whole-issue #136 acceptance, production, retention or model acceptance, or Azure
+  runtime evidence.
+* Pins at `d52f20a51`: `simulation_lane.py` blob `5c26cfb06`, `src/api/Dockerfile` blob `a7dfb2e4e`
+  (base `python@sha256:34386ef0...a07258`, UID 10001, no entrypoint), `server.py` blob `40cc6313d`,
+  #1288 source merged in #1331 (`1b7a1719b`).
+* Offline checks: `az bicep build` and `lint`, `tests.test_bicep_policy` (default off, guards,
+  OFF-versus-ON render differences, mutation rejection) and
+  `tests/test_public_simulation_startup.py`, which runs the rendered recipe in the API image when
+  `ZF_API_IMAGE` names a locally built image.
+
 ## Validate locally
 
 Use the complete offline commands in [Quality gates](#quality-gates), including
