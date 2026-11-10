@@ -735,7 +735,7 @@ def check(store: Any, axe: str | None = None) -> None:
                         if startup_retry_failure and urlsplit(route.request.url).path == (
                             "/api/" + endpoint
                         ):
-                            route.fulfill(status=503, body="Unavailable")
+                            inject(route)
                             return
                         inject(route, status=None)
                         page.evaluate("window.capacityHeldReads += 1")
