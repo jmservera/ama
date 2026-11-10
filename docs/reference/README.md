@@ -1282,3 +1282,18 @@ disposable SQL Server run of the resident-decision class, 108 discovered, one by
 is separate), reuses the #1326 priority SQL campaign by source
 identity with its limits, and maps each gap to its existing owner. It confirms no defect,
 excludes #1288 and the #1258, #1259 and #136 Blob work, and keeps every closure hold. A same-day Q1 qualification appended to the pack states that S1 was selected without a prospective amendment, that S1 raw retention is unverified, that absence statements are bounded to inspected paths, and that PRD FR-016 and FR-017 are not resident or complaints IDs.
+
+The [parent-topic Blob and Quality checkpoint](../architecture/cutover-evidence-pack.md#parent-topic-blob-and-quality-checkpoint-2026-11-09-refs-440-1288-1258-1259-136)
+(2026-11-09, draft, local only) separates merged-main Blob observations at `main` `a04668ae` from
+parent-topic Quality observations at local head `34838154` (PR 1331 unmerged, E8 unpublished),
+reuses retained logs as historical (761 discovered, 100 skipped, the 861 figure is not
+reproducible), and records one adverse local browser run of the Quality retained-sensor journey
+(a stale check after the real-provider route was made unavailable in code). Quality is not merged-main
+functionality; closure holds and the later merged-main requalification requirement stand.
+
+A separate [merged-main qualification](../architecture/cutover-evidence-pack.md#merged-main-blob-and-quality-qualification-2026-11-09-refs-440-1288-1258-1259-136)
+(2026-11-09, draft, local only) records `main` `1b7a1719b` (PR 1331 squash; tree equal to its final head
+`f995774`), the five-file source delta since the parent topic, and one new local browser observation of the
+corrected Quality check with its axe stage (exit 0, 30 checks, 0 axe violations, serious contrast
+incompletes remain). The original red observation is preserved. Closure, live, model, assistive-technology
+and human acceptance holds stand.

@@ -1,0 +1,28 @@
+{
+  "task_id": "1288-c1",
+  "task_slug": "quality-sensor-demo-1288-c1",
+  "parent_task": {"task_id": "1288", "task_slug": "quality-sensor-demo-1288"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-08-quality-sensor-demo-1288-c1-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-08-quality-sensor-demo-1288-c1-plan.md",
+    "details": ".copilot-tracking/details/2026-11-08-quality-sensor-demo-1288-c1-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-08-quality-sensor-demo-1288-c1-plan.md",
+    "changes": ".copilot-tracking/changes/2026-11-08-quality-sensor-demo-1288-c1-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-08-quality-sensor-demo-1288-c1-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Critique executed once, verdict proceed", "status": "done", "evidence": "plan artifact"},
+    {"decision": "Review executed once (self-review), outcome conformant for nine findings with routed follow-ups", "status": "done", "evidence": "review artifact"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independent exact-head assessment; no push/PR from this task"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Re-exercise with #184 live-envelope admission once merged", "rationale": "Owner visible journey", "evidence": "research artifact"},
+    {"rank": 2, "task": "Matching quality release and serving-model attestation, finite allowance, at most 100 bindings", "rationale": "Rule hash changed", "evidence": "changes artifact"},
+    {"rank": 3, "task": "Tabular numerals and account summary label", "rationale": "Guideline and axe findings", "evidence": "review artifact"}
+  ]
+}

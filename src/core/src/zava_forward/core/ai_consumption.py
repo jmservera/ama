@@ -7,7 +7,7 @@ import json
 import logging
 import re
 import uuid
-from collections.abc import Iterator, Mapping
+from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
@@ -191,6 +191,64 @@ class CallContext:
 
 
 CURRENT: ContextVar[CallContext | None] = ContextVar("ai_consumption_context", default=None)
+
+
+class DispatchWithdrawn(RuntimeError):
+    """Consent or the dispatch window ended before the first request byte; nothing was sent."""
+
+
+# True while a captured-readings request is being prepared. A real Ai refuses it before any
+# reservation, credential or socket, so no captured IoT value is transmitted to a model.
+CAPTURED_READINGS: ContextVar[bool] = ContextVar("ai_captured_readings", default=False)
+
+
+class SimulationRefused(DispatchWithdrawn):
+    """A sealed public-simulation request failed verification at the client; nothing was sent."""
+
+    def __init__(self, code: str) -> None:
+        super().__init__(code)
+        self.code = code
+
+
+# The seal minted by the trusted simulation lane for the exact request bytes. It is only a
+# claim: the real Ai client verifies it against the bytes it serialized before any meter, token
+# or socket.
+SIMULATION_SEAL: ContextVar[Mapping[str, Any] | None] = ContextVar(
+    "ai_simulation_seal", default=None
+)
+
+
+# The durable send decision of the admitting authority. A real Ai client that honours it calls it at
+# the start, before connecting and before the first request byte; it raises DispatchWithdrawn to
+# refuse.
+SEND_FENCE: ContextVar[Callable[[], None] | None] = ContextVar("ai_send_fence", default=None)
+
+
+@contextmanager
+def send_fence(fence: Callable[[], None]) -> Iterator[None]:
+    token = SEND_FENCE.set(fence)
+    try:
+        yield
+    finally:
+        SEND_FENCE.reset(token)
+
+
+@contextmanager
+def sealed_simulation(seal: Mapping[str, Any]) -> Iterator[None]:
+    token = SIMULATION_SEAL.set(seal)
+    try:
+        yield
+    finally:
+        SIMULATION_SEAL.reset(token)
+
+
+@contextmanager
+def captured_readings(active: bool = True) -> Iterator[None]:
+    token = CAPTURED_READINGS.set(active)
+    try:
+        yield
+    finally:
+        CAPTURED_READINGS.reset(token)
 
 
 @contextmanager

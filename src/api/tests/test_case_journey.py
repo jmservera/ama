@@ -1268,7 +1268,9 @@ const api = async (path, body) => {
         self.assertIn("PASS", result.stdout)
         source = (WEB / "app.js").read_text()
         self.assertIn("session.chatPanel ||= chatCasePanel(id)", source)
-        self.assertIn('["ai", "AI assistance", [assistantPanel, chatPanel,', source)
+        self.assertIn(
+            '["ai", "AI assistance", [assistantPanel, simulationPanel(), chatPanel,', source
+        )
 
     def test_all_proposal_accept_controls_share_readiness_and_own_verification(self) -> None:
         script = (

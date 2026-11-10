@@ -16,7 +16,7 @@ const CaseWorkspace = (() => {
   };
   const blockerIndex = (blocker, current) => blockerSteps[blocker.step] ?? current;
   const currentIndex = c => stageStep[c.stage] ?? -1;
-  const waiting = p => p.state === "ready" && Boolean(p.output) && !p.stale;
+  const waiting = p => p.state === "ready" && Boolean(p.output) && (!p.stale || p.review_flag?.status === "review-suggested");
   function journey(c) {
     const current = currentIndex(c);
     return steps.map((step, index) => {

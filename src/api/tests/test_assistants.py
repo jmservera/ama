@@ -13,6 +13,7 @@ import urllib.request
 import uuid
 from http.server import ThreadingHTTPServer
 from pathlib import Path
+from typing import Any
 from unittest.mock import patch
 from unittest.mock import Mock
 
@@ -44,7 +45,11 @@ def proposal(snapshot):
 
 
 class Provider:
+    # Set by the capturing subclass; declared here so a shared `provider` attribute has one type.
+    prompts: list[dict[str, Any]]
+    fail: int
     configured = True
+    sends_no_bytes = True
     provider, endpoint, fast = "local-test-double", "local-test", "test"
 
     def __init__(self, outcome="returned", bad=None, usage=True):
@@ -73,6 +78,8 @@ class Provider:
 
 
 class Base(unittest.TestCase):
+    provider: Provider
+
     def setUp(self):
         self.root = Path(tempfile.mkdtemp(prefix="assistant-test-"))
         self.addCleanup(shutil.rmtree, self.root, ignore_errors=True)
@@ -87,7 +94,7 @@ class Base(unittest.TestCase):
         self.pm = self.people["Retrofit Programme Manager"]
         for c in data["cases"]:
             c["resident"]["adjustment"] = "PRIVATE-VULNERABILITY-REASON"
-            c["finance"] = dict(budget=dict(amount=93417, status="Approved"), commitments=[], invoices=[])
+            c["finance"] = dict(budget=dict(amount=9183461, status="Approved"), commitments=[], invoices=[])
             c["handoff"] = dict(state="Offered", to_code="ROLE-0", note="PRIVATE-HANDOFF-NOTE")
             c["documents"] = [dict(id="SURVEY-1", kind="Survey", name="PRIVATE-DOCUMENT-NAME",
                                     summary="PRIVATE-AI-SUMMARY", content_sha256="abc", version=1)]
@@ -102,7 +109,7 @@ class Base(unittest.TestCase):
         self.service.stop()
         self.store.db.close()
 
-    def other(self, **cfg):
+    def other(self, **cfg: Any) -> Assistants:
         store = self.open_store()
         store.ai = self.provider
         service = Assistants(store, config(**cfg))
@@ -327,7 +334,7 @@ class ContractTests(Base):
             for private in ("PRIVATE-VULNERABILITY-REASON", "PRIVATE-DOCUMENT-NAME", "PRIVATE-AI-SUMMARY", "PRIVATE-HANDOFF-NOTE"):
                 self.assertNotIn(private, stored)
             if cap != "funding-evidence":
-                self.assertNotIn("93417", stored)
+                self.assertNotIn("9183461", stored)
                 self.assertNotIn("source:finance", stored)
             if cap == "stock-prioritisation":
                 self.assertEqual({r["code"] for r in p["snapshot"]["sources"]["ranking"]["reasons"]},
@@ -1119,7 +1126,7 @@ class DialectConnection:
             return self.raw.execute("SELECT 0")
         if sql.startswith("SET TRANSACTION ISOLATION LEVEL"):
             return self.raw.execute("SELECT 1")
-        if "N'TR'" in sql or "sys.indexes" in sql:
+        if "N'TR'" in sql or "sys.indexes" in sql or "COL_LENGTH" in sql:
             return self.raw.execute("SELECT 1")
         if sql.startswith("IF OBJECT_ID"):
             sql = sql[sql.index("CREATE TABLE"):]
@@ -1158,7 +1165,7 @@ class DialectTests(Base):
         self.assertIn("SET TRANSACTION ISOLATION LEVEL SERIALIZABLE", statements)
         self.assertTrue(any("OFFSET 0 ROWS FETCH NEXT" in s for s in statements))
         self.assertTrue(any("fence=?" in s and "lease_until>?" in s for s in statements))
-        self.assertEqual(len(MSSQL_DDL), 5)
+        self.assertEqual(len(MSSQL_DDL), 7)
 
 
 class ConfigurationTests(unittest.TestCase):
@@ -1325,7 +1332,8 @@ class MssqlFixture:
             master.close()
         db = _Conn(connection_string(self.sql_env))
         try:
-            for name in ("assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance",
+            for name in ("assistant_dispatch_gate", "assistant_schedule",
+                         "assistant_events", "assistant_attempts", "assistant_tasks", "assistant_allowance",
                          "audit_head", "audit", "recommendations", "cases", "staff", "meta"):
                 db.execute(f"IF OBJECT_ID(N'{name}', N'U') IS NOT NULL DROP TABLE {name}")
         finally:

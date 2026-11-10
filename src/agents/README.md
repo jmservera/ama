@@ -14,6 +14,31 @@ bounds. Assistant result shaping retains the consumption IDs and separately
 validated cached-token count. Chat keeps cached usage and successful meter IDs;
 chat answers are not human-accepted proposal denominators.
 
+Chat reports the provider calls the transport was handed, from a per-invocation
+witness that core `Ai` writes at the dispatch boundary
+(`zava_forward.core.ai.count_dispatches`). `ChatModel` opens one witness around
+each provider call; core `Ai.evidence` marks it and records an attempt directly
+before the request is given to the transport. Every earlier exit reports zero:
+disabled, input refusal, missing meter, a reservation hold, a prompt-output
+guard denial, a token failure, a hold at the pre-dispatch recheck after
+reservation and a failure to build the opener. A provider failure, refusal or
+timeout after hand-off and a financial hold after the transport are counted as
+one call. The witness is a context variable per invocation, not a shared flag or
+counter, and no provider-supplied field, reservation or `meter_id` is used.
+
+Known limits. A provider that is not core `Ai.evidence`, or that runs on another
+thread without the copied context, leaves no witness: the adapter logs that the
+count is unverified and keeps the legacy assumption of one call. That assumption
+is not exact, not a bound (an arbitrary provider may make more calls) and not a
+billing estimate, and the receipt does not show it as unverified (a receipt
+provenance field needs the shared chat panel). The count is the number of
+requests handed to the transport, not wire or billing exactness, and holds for
+the trusted synchronous composition where the provider is core `Ai.evidence`; calls a provider makes outside `Ai` are not seen. A send
+fence withdrawn inside the opener, before the first request byte, still counts
+as one attempt, and redirects followed inside `urlopen` are not counted
+separately. This is a receipt-accounting rule, not evidence of admission, spend,
+retention or refusal acceptance for #891 criterion 2.
+
 Financial admission and immutable recording remain with core/API, not a second
 worker database. See the [core ledger](../core/README.md#ai-consumption-ledger-432).
 An absent price, authority or known maximum liability keeps workflow-only.
