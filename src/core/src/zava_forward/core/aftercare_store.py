@@ -6,9 +6,11 @@ document with the snapshot it loaded inside the save transaction and refuses a s
 JSON Store replaces its single live file under its process lock and does not protect against a
 second Store instance on the same file. The mutator is called once and is never rerun.
 
-A failed save is classified by re-reading the persisted document. Only a proven unchanged
-document reports "nothing was saved". A matching, different or unreadable document reports an
-unconfirmed write so the caller sends the same request reference again and the service replays it.
+A failed save is classified by re-reading the persisted document while the store lock that
+performed the save is still held, so recovery never restores over another writer's commit.
+Only a proven unchanged document reports "nothing was saved". A matching, different or
+unreadable document reports an unconfirmed write so the caller sends the same request
+reference again and the service replays it.
 """
 
 from __future__ import annotations
@@ -68,6 +70,7 @@ class DocumentStateStore:
     def update(self, mutator: Callable[[str | None], tuple[str, T]]) -> T:
         previous: str | None = None
         attempted: str | None = None
+        failure: tuple[Exception, Exception] | None = None
         result: T
         try:
             with self.store.lock:
@@ -77,15 +80,47 @@ class DocumentStateStore:
                     return result
                 attempted = _canon(json.loads(text))
                 self.store.data[self.key] = json.loads(text)
-                self.store.save()
-        except Exception as exc:
+                try:
+                    self.store.save()
+                except Exception as exc:
+                    # Read and restore while this exclusion is still held, so no other writer can
+                    # commit between the read and the restore.
+                    failure = (self._classify(exc, previous, attempted), exc)
+        except Exception as exit_error:
             if attempted is None:
                 raise
-            error = self._classify(exc, previous, attempted)
-            raise error from (error.__cause__ or exc)
+            if failure is not None:
+                error, cause = failure
+                error.add_note(
+                    f"Lock exit also failed ({type(exit_error).__name__}) after recovery."
+                )
+                raise error from (error.__cause__ or cause)
+            error = self._recover_after_exit(exit_error, previous, attempted)
+            raise error from (error.__cause__ or exit_error)
+        if failure is not None:
+            error, cause = failure
+            raise error from (error.__cause__ or cause)
         return result
 
+    def _recover_after_exit(
+        self, exc: Exception, previous: str | None, attempted: str | None
+    ) -> Exception:
+        """The save call returned but the outermost lock exit failed. Reacquire exclusion first and
+        read only after that, so an earlier snapshot is never restored over a later write."""
+        try:
+            with self.store.lock:
+                return self._classify(exc, previous, attempted)
+        except Exception as lock_error:
+            error = UnconfirmedWriteError(UNCONFIRMED)
+            error.add_note(
+                f"Recovery lock failed ({type(lock_error).__name__}); "
+                f"lock exit failure was {type(exc).__name__}."
+            )
+            error.__cause__ = lock_error
+            return error
+
     def _classify(self, exc: Exception, previous: str | None, attempted: str | None) -> Exception:
+        """Called with the store lock held: read the persisted document, restore memory, map it."""
         try:
             persisted = self._persisted()
         except Exception as reload_error:
@@ -98,8 +133,7 @@ class DocumentStateStore:
             return error
         refresh: Exception | None = None
         try:
-            with self.store.lock:
-                self._restore(persisted)
+            self._restore(persisted)
         except Exception as restore_error:
             refresh = restore_error
         committed = persisted == attempted or bool(getattr(exc, "committed", False))

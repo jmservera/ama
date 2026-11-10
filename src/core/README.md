@@ -4831,12 +4831,15 @@ as free text before anything is stored (a guard, not privacy proof), and the scr
 that saving could not be confirmed, keeps the same request reference, and renders the unresolved
 count as a fraction with its denominator.
 
-Runtime hook integration (#133, Refs only, corrective cycle C4 of 5; C1 to C3 spent, C5 not
-automatic). `zava_forward.core.aftercare_store.DocumentStateStore(store, key="aftercare")` is the
+Runtime hook integration (#133, Refs only, corrective cycles C4 and C5 of 5; C1 to C5 spent, no
+automatic C6). `zava_forward.core.aftercare_store.DocumentStateStore(store, key="aftercare")` is the
 narrow `StateStore` adapter over the existing `Store` / `SqlStore` document mechanism. `aftercare` is
 the only document added to `SqlStore.DOCS` and to `projection.STAFF_GET`. The receipt, register and
 request index stay one whole document, so one `update` is one atomic write. The mutator runs once,
-under the store lock, and is never rerun. After a failure the adapter re-reads the persisted value:
+under the store lock, and is never rerun. After a failure the adapter re-reads the persisted value
+and restores memory while still holding the lock that performed the save (corrective cycle C5), so
+recovery cannot restore an older snapshot over another writer's commit. If only the outer lock exit
+fails, it reacquires the lock first and then reads. Classification:
 an unreadable value or a committed-but-unconfirmed write raises `UnconfirmedWriteError` (never "not
 saved"), a different persisted value is a conflict, and an unchanged value with no commit is a plain
 persistence error. A refresh error is attached to the raised error, not swallowed. A client retries

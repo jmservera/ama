@@ -257,10 +257,25 @@ function acActor() {
 function acDraft() {
   const actor = acActor();
   if (!acDraftState || acDraftState.actor !== actor) {
-    acDraftState = { actor, requestId: null, values: {}, unresolved: false, message: "" };
+    acDraftState = { actor, requestId: null, values: {}, unresolved: false, message: "", edited: false };
   }
   return acDraftState;
 }
+
+// Hash-route changes keep the draft on purpose; only leaving the document (reload, full link, closing the tab) loses it.
+let acGuardInstalled = false;
+function acInstallUnloadGuard() {
+  if (acGuardInstalled) return;
+  acGuardInstalled = true;
+  window.addEventListener("beforeunload", (event) => {
+    if (acDraftState && (acDraftState.edited || acDraftState.unresolved)) {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+  });
+}
+
+let acViewToken = 0;
 
 function acNewRequestId() {
   const bytes = crypto.getRandomValues(new Uint8Array(16));
@@ -303,7 +318,12 @@ async function aftercareWorkspaceView() {
     read("evaluator"),
   ]);
   const form = formResult && acHomeChoices(formResult);
+  acInstallUnloadGuard();
   const draft = acDraft();
+  const session = me;
+  const token = ++acViewToken;
+  // Render or focus only while this view still owns the page: same session, newest view, form mounted.
+  const owned = () => me === session && acViewToken === token && Boolean(document.getElementById("ac-form"));
   let sending = false;
   const page = (extra = {}) => {
     const state = {
@@ -335,7 +355,7 @@ async function aftercareWorkspaceView() {
   const wire = () => {
     const el = document.getElementById("ac-form");
     if (!el) return;
-    el.addEventListener("input", () => { draft.values = acReadValues(el); });
+    el.addEventListener("input", () => { draft.values = acReadValues(el); draft.edited = true; });
     const raised = document.getElementById("ac-raised_by");
     if (raised) raised.addEventListener("change", () => { draft.values = acReadValues(el); page(); acFocus(document.getElementById("ac-raised_by")); });
     el.addEventListener("submit", async (event) => {
@@ -354,10 +374,11 @@ async function aftercareWorkspaceView() {
       } finally { sending = false; }
       draft.unresolved = Boolean(result.unresolved);
       if (result.ok) {
-        acDraftState = null;
-        return showReceipt(result.receipt, result.replay);
+        if (acDraftState === draft) acDraftState = null;
+        return owned() ? showReceipt(result.receipt, result.replay) : undefined;
       }
       draft.message = result.message;
+      if (!owned()) return;
       page({ errors: result.errors, message: result.message });
       acFocus(Object.keys(result.errors).length ? document.getElementById("ac-error-summary") : document.getElementById("ac-status"));
     });

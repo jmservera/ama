@@ -8,11 +8,12 @@ import copy
 import json
 import os
 import tempfile
+import threading
 import unittest
 import uuid
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 from unittest.mock import patch
 
 from dataset import DATA
@@ -26,7 +27,15 @@ from zava_forward.core.synthetic import sensor_scenarios as ss
 NOW = datetime(2026, 11, 9, 12, 0, tzinfo=UTC)
 LIAISON = {"name": "Synthetic Liaison", "role": "Resident Liaison Officer"}
 MANAGER = {"name": "Synthetic Manager", "role": "Retrofit Programme Manager"}
-HOMES = [str(s["rows"][0]["home_id"]) for s in ss.retrofit_exercise_scenarios()]
+
+
+def _first_home(scenario: dict[str, object]) -> str:
+    rows = scenario["rows"]
+    assert isinstance(rows, (list, tuple))
+    return str(rows[0]["home_id"])
+
+
+HOMES = [_first_home(s) for s in ss.retrofit_exercise_scenarios()]
 
 
 def body(
@@ -43,7 +52,18 @@ def body(
     }
 
 
-class Contract:
+# Type checkers see the mixin as a TestCase; at runtime it stays a plain mixin so only concrete
+# subclasses are collected.
+if TYPE_CHECKING:
+
+    class _Base(unittest.TestCase): ...
+
+else:
+
+    class _Base: ...
+
+
+class Contract(_Base):
     """Shared behaviour; each subclass supplies open_store()."""
 
     def setUp(self) -> None:
@@ -62,7 +82,7 @@ class Contract:
         )
 
     def count(self, store: Any = None) -> int:
-        return self.service(store).concerns(MANAGER)["count"]
+        return int(self.service(store).concerns(MANAGER)["count"])
 
     def test_first_read_is_empty_and_namespace_is_explicit(self) -> None:
         self.assertIsNone(DocumentStateStore(self.store).read())
@@ -174,6 +194,68 @@ class Contract:
 class JsonStoreAdapter(Contract, unittest.TestCase):
     def open_store(self) -> Any:
         return Store(str(self.path))
+
+    def test_failed_save_recovery_cannot_restore_over_another_threads_committed_write(self) -> None:
+        a_read, release = threading.Event(), threading.Event()
+        real_persisted = DocumentStateStore._persisted
+        real_save = self.store.save
+        outcome: dict[str, Any] = {}
+
+        def paused(adapter: DocumentStateStore) -> str | None:
+            value = real_persisted(adapter)
+            if threading.current_thread().name == "A":
+                a_read.set()
+                self.assertTrue(release.wait(10))
+            return value
+
+        def save(*_: Any) -> None:
+            if threading.current_thread().name == "A":
+                raise OSError("A disk full")
+            real_save()
+
+        def run(name: str, request_id: str, text: str) -> None:
+            try:
+                outcome[name] = self.service().record_concern(LIAISON, body(request_id, text))
+            except Exception as error:
+                outcome[name] = error
+
+        a = threading.Thread(target=run, name="A", args=("A", "req-00000a01", "A statement."))
+        b = threading.Thread(target=run, name="B", args=("B", "req-00000b01", "B statement."))
+        with (
+            patch.object(DocumentStateStore, "_persisted", paused),
+            patch.object(self.store, "save", save),
+        ):
+            a.start()
+            self.assertTrue(a_read.wait(10))
+            held_elsewhere = not self.store.lock.acquire(blocking=False)
+            if not held_elsewhere:
+                self.store.lock.release()
+            b.start()
+            b.join(1)
+            release.set()
+            a.join(10)
+            b.join(10)
+        self.assertTrue(held_elsewhere, "recovery must keep the store lock until it has restored")
+        self.assertIsInstance(outcome["A"], ai.PersistenceError)
+        self.assertNotIsInstance(outcome["A"], UnconfirmedWriteError)
+        self.assertIn("Nothing was saved", str(outcome["A"]))
+        receipt, replay = outcome["B"]
+        self.assertFalse(replay)
+
+        def requests(store: Any) -> set[str]:
+            return set(json.loads(DocumentStateStore(store).read() or "{}")["requests"])
+
+        self.assertEqual(requests(self.store), {"req-00000b01"})
+        self.assertEqual(requests(self.open_store()), {"req-00000b01"})
+        self.service().record_concern(LIAISON, body("req-00000c01", "C statement."))
+        self.assertEqual(requests(self.open_store()), {"req-00000b01", "req-00000c01"})
+        again, replayed = self.service().record_concern(
+            LIAISON, body("req-00000b01", "B statement.")
+        )
+        self.assertTrue(replayed)
+        self.assertEqual(again["receipt_id"], receipt["receipt_id"])
+        self.service().record_concern(LIAISON, body("req-00000a01", "A statement."))
+        self.assertEqual(self.count(self.open_store()), 3)
 
 
 class SqliteAdapter(Contract, unittest.TestCase):
