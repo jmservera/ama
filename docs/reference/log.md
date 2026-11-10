@@ -11319,3 +11319,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-10] review | Issue 135 C4 independent review recorded (Refs #135)
 
 * Added a dated [independent review record](../../.copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c4-independent-review-record.md) for frozen source head `5a63544c`: APPROVE, no findings, C3 order adverse preserved. No source change.
+
+## [2026-11-10] correction | Issue 135 C5 importer optional-driver mypy override (Refs #135)
+
+* Added a `mssql_python` mypy override to the Importer project, mirroring Core, after hosted `src-importer` failed on PR 1357 at `25946393`. Failed hosted evidence and the C3 order adverse are preserved. See the C5 [review](../../.copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c5-review.md).
