@@ -4023,6 +4023,14 @@ explanation that says coverage is unknown, and none for a nonempty queue. A
 constructed test-page mutation that hides it at 320 px is shown to be caught.
 These are engineering observations on constructed fixtures, not a device
 matrix, assistive-technology or user evidence.
+
+Correction to the count above: the seven non-Contractor roles give 21 role-width
+observations, of which five roles (15 observations) have an empty own queue and
+check the explanation, and two roles (6 observations) have a populated queue and
+check that none is shown. The check also rejects an explanation clipped
+vertically by its own or an ancestor's overflow (the page may still scroll), and
+a second constructed test-page mutation (small height with hidden overflow) at
+320 px is shown to be caught for that reason, with the original style restored.
 From `src/api`, using the installed src packages and `.[dev]`:
 
 ```bash
