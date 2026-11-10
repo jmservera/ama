@@ -1308,6 +1308,6 @@ holds closure, actual-model, Azure, human and release-authority gates open.
 A [merged-wave checkpoint](../architecture/cutover-evidence-pack.md#merged-wave-checkpoint-2026-11-10-refs-440-149-153-1238-93-96-148)
 (2026-11-10, draft, local) observes pinned `main` `da4f52abb` after PRs 1343 (staff-time copy), 1346 (resident
 default-deny approval binding), 1345 (finance retained history and dependencies) and 1348 (four-image rebuild
-adapter, fake builder): 699 targeted tests run, 562 pass, 137 skip (132 distinct, SQL opt-in), none fail. It
+adapter, fake builder): 699 targeted tests run, 562 pass, 137 skip executions (5 browser skips later run, 129 SQL Server opt-in, 1 Azure SQL opt-in, 2 backend exclusions; no external SQL service ran; counts corrected in C3, no unique total), none fail. A C3 addendum observes the later-merged PR 1351 empty-queue explanation. It
 joins them to document-qualified BRD and PRD rows and keeps SQL Server, live rebuild, trusted resident binding,
 actual-model and human approval gates unproven. Closure and approval holds stand.
