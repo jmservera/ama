@@ -1,6 +1,9 @@
+import contextlib
 import hashlib
+import io
 import json
 import os
+import runpy
 import sqlite3
 import subprocess
 import sys
@@ -10,6 +13,8 @@ from pathlib import Path
 from unittest import mock
 
 from zava_forward.core.exception_queue import ExceptionQueue
+from zava_forward.core.import_refusals import PartiallyRecordedError
+from zava_forward.core.sqlstore import CommittedReloadError, SqlStore
 from zava_forward.core.store import Store
 
 from zava_forward.importer import exceptions as ex
@@ -549,6 +554,87 @@ class CliTests(unittest.TestCase):
         self.assertEqual(broken.returncode, 2)
         self.assertEqual(broken.stdout, "")
         self.assertIn("Nothing was recorded", broken.stderr)
+
+
+class TransferFailureTests(Base):
+    """The transfer command keeps exit 2 and a truthful message for each supported store failure."""
+
+    def setUp(self) -> None:
+        super().setUp()
+        bad = self.source("bad.xlsx", raw=b"not a workbook")
+        self.assertIsNotNone(submit_file(self.store, self.ledger, bad, "Pat").refusal)
+        served_store(self.tmp)
+        env = {
+            "ZF_STORE": "sqlite",
+            "ZF_DATA": str(self.tmp / "seed.json"),
+            "ZF_STATE": str(self.tmp / "state"),
+        }
+        patcher = mock.patch.dict(os.environ, env)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def run_transfer(self) -> tuple[int, str, str]:
+        out, err = io.StringIO(), io.StringIO()
+        argv = ["zava_forward.importer", "transfer", str(self.db)]
+        with (
+            mock.patch.object(sys, "argv", argv),
+            contextlib.redirect_stdout(out),
+            contextlib.redirect_stderr(err),
+            self.assertRaises(SystemExit) as raised,
+        ):
+            runpy.run_module("zava_forward.importer", run_name="__main__")
+        return int(str(raised.exception.code)), out.getvalue(), err.getvalue()
+
+    def refused(self, error: BaseException) -> str:
+        with mock.patch.object(SqlStore, "record_import_refusals", side_effect=error):
+            code, out, err = self.run_transfer()
+        self.assertEqual((code, out), (2, ""))
+        self.assertNotIn("Traceback", err)
+        return err
+
+    def test_real_competing_writer_is_exit_2_and_rolled_back(self) -> None:
+        original, seen = SqlStore.save, {"n": 0}
+        other = {
+            "source_name": "other.xlsx",
+            "source_sha256": "e" * 64,
+            "reason": "Refused: synthetic competitor.",
+            "at": "2026-11-10T00:00:00Z",
+        }
+
+        def compete(store: SqlStore) -> None:
+            if not seen["n"]:
+                seen["n"] = 1
+                SqlStore(
+                    str(self.tmp / "seed.json"), str(self.tmp / "state" / "zavaforward.sqlite")
+                ).record_import_refusals([other])
+            original(store)
+
+        with mock.patch.object(SqlStore, "save", compete):
+            code, out, err = self.run_transfer()
+        self.assertEqual((code, out), (2, ""))
+        self.assertIn("another writer", err)
+        self.assertIn("nothing was recorded", err)
+        self.assertNotIn("Traceback", err)
+
+    def test_committed_but_unconfirmed_is_not_reported_as_nothing_recorded(self) -> None:
+        err = self.refused(CommittedReloadError("refresh did not settle"))
+        self.assertIn("may be recorded", err)
+        self.assertNotIn("Nothing was recorded", err)
+
+    def test_partial_outcome_is_reported_as_saved(self) -> None:
+        err = self.refused(
+            PartiallyRecordedError("The refused imports were saved, but audit failed.")
+        )
+        self.assertIn("were saved", err)
+        self.assertNotIn("Nothing was recorded", err)
+
+    def test_driver_failure_is_uncertain_not_nothing_recorded(self) -> None:
+        err = self.refused(sqlite3.OperationalError("disk I/O error"))
+        self.assertIn("not known whether", err)
+        self.assertNotIn("Nothing was recorded", err)
+
+    def test_refused_before_commit_says_nothing_was_recorded(self) -> None:
+        self.assertIn("Nothing was recorded", self.refused(ValueError("too many")))
 
 
 if __name__ == "__main__":

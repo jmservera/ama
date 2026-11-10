@@ -18,6 +18,10 @@ AT_MAX = 32
 DIGEST = re.compile(r"[0-9a-f]{64}")
 
 
+class PartiallyRecordedError(RuntimeError):
+    """The refusals are durable but the success audit entry is not."""
+
+
 def ref_of(refusal: Mapping[str, Any]) -> str:
     """The feed's own key for a refusal, so the register and the transfer agree on identity."""
     return f"file:{refusal['source_sha256'] or refusal['source_name']}"
@@ -78,7 +82,28 @@ class ImportRefusalsMixin:
                     f"At most {MAX_REFUSALS} refused imports are kept here; nothing was recorded."
                 )
             if added:
-                self.data[KEY] = {"refusals": kept}
-                self.audit("importer", "recorded_import_refusals", "-", f"added={added}")  # type: ignore[attr-defined]
-                self.save()  # type: ignore[attr-defined]
+                self._persist_import_refusals({"refusals": kept}, f"added={added}")
             return {"added": added, "already_present": len(clean) - added, "total": len(kept)}
+
+    def _persist_import_refusals(self, document: dict[str, Any], detail: str) -> None:
+        """Publish the document only once it is saved, then audit. SqlStore replaces this.
+
+        A failed save restores the previous document and writes no success audit. The JSON
+        store keeps its document and audit in two files, so a failed audit after a durable save
+        is reported as a partial outcome, not as nothing recorded."""
+        previous = self.data.get(KEY)
+        self.data[KEY] = document
+        try:
+            self.save()  # type: ignore[attr-defined]
+        except BaseException:
+            if previous is None:
+                self.data.pop(KEY, None)
+            else:
+                self.data[KEY] = previous
+            raise
+        try:
+            self.audit("importer", "recorded_import_refusals", "-", detail)  # type: ignore[attr-defined]
+        except Exception as error:
+            raise PartiallyRecordedError(
+                "The refused imports were saved, but their audit entry was not written."
+            ) from error

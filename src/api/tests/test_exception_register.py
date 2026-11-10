@@ -280,6 +280,26 @@ class ImportRefusalRegister(unittest.TestCase):
         with self.assertRaises(PermissionError):
             self.store.exception_register(dict(self.pm, email="human9@example.test"), STAFF)
 
+    def test_source_text_separates_stored_from_shown_per_scope(self) -> None:
+        self.store.record_import_refusals([REFUSAL])
+        both = {
+            self.steward["email"]: ("data_steward",),
+            self.operator["email"]: ("digital_operator",),
+        }
+        operator_only = {self.operator["email"]: ("digital_operator",)}
+        cases = [
+            (self.steward, both, "1 are shown"),
+            (self.operator, both, "0 are shown"),
+            (self.operator, operator_only, "0 are shown"),
+            (self.pm, {}, "0 are shown"),
+        ]
+        for who, staff, shown in cases:
+            source = self.store.exception_register(who, staff)["sources"][0]
+            self.assertIn("1 refused import file(s) are stored here", source)
+            self.assertIn(shown, source)
+            self.assertNotIn("not connected", source.split("Rejected")[0])
+        self.assertNotIn("1 refused import file(s) are shown", source)
+
     def test_no_named_steward_reports_the_count_unrouted(self) -> None:
         self.store.record_import_refusals([REFUSAL])
         view = self.store.exception_register(
