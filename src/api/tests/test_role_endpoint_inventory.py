@@ -23,6 +23,7 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
                  "/api/governance", "/api/continuity", "/api/continuity/export", "/api/exceptions", "/api/retention", "/api/data-protection", "/api/docs/ZF-1/none",
                  "/api/time/status", "/api/time/mine", "/api/time/report", "/api/law/sources", "/api/law/search?q=x",
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",
+                 "/api/aftercare/form", "/api/aftercare/concerns", "/api/aftercare/evaluator",
                  "/api/assistants", "/api/assistants/forecast", "/api/assistants/proposals", "/api/assistants/simulation/quality", "/api/chat/status", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
                  "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/nothing"]
 POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}),
@@ -46,6 +47,7 @@ POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/bulk-edits/preview", {}),
                   ("/api/ledger/digest", {}), ("/api/assistants/stock-prioritisation/invoke", {"case_id": "ZF-1"}),
                   ("/api/continuity/suspend", {}), ("/api/assistants/releases", {}),
                   ("/api/assistants/simulation/quality/observe", {}), ("/api/assistants/simulation/quality/request", {}),
+                  ("/api/aftercare/concerns", {}),
                   ("/api/law/cards", {}), ("/api/law/cards/hazard-awareness-clock/1/approve", {}),
                   ("/api/law/checks/ZF-1", {}), ("/api/law/alerts/none/acknowledge", {"note": "SYN"})]
 
