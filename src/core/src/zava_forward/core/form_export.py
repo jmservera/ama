@@ -27,6 +27,7 @@ BODY_KEYS = (
     "template",
     "rule_refs",
     "fields",
+    "history",
     "attachments",
     "stale_fields",
     "open_issues",
@@ -83,6 +84,7 @@ def draft_export(store: Any, user: Record, case_id: str, draft_id: str) -> Recor
             template=report["template"],
             rule_refs=report["rule_refs"],
             fields=fields,
+            history=report["history"],
             attachments=report["attachments"],
             stale_fields=report["stale_fields"],
             open_issues=report["issues"],
@@ -90,6 +92,7 @@ def draft_export(store: Any, user: Record, case_id: str, draft_id: str) -> Recor
         return dict(
             body,
             content_sha256=_digest(body),
+            schema_impact=report["dependency_impact"]["schema"],
             status="Held",
             reviewed=False,
             submission="Not submitted",
@@ -139,6 +142,10 @@ def export_freshness(store: Any, user: Record, case_id: str, saved: Record) -> R
         reasons = []
         if body["schema_digest"] != current["schema_digest"]:
             reasons.append("The form schema or its rule references changed.")
+        elif current["schema_impact"]["status"] == "Unknown":
+            reasons.append("Schema lineage is missing or malformed.")
+        elif current["schema_impact"]["affects_draft"]:
+            reasons.append("A newer schema version changes this form.")
         if body["input_version"] != current["input_version"]:
             reasons.append("Reviewed field inputs changed after this export.")
         changed = {

@@ -78,7 +78,7 @@ async function api(path, body, signal) {
       me = null; login("Your session has ended. Sign in again.");
       const error = new Error("Your session has ended. Sign in again."); error.status = 401; throw error;
     }
-    if (!res.ok) { const e = new Error(data.error || (body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR)); e.generic = !data.error; e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; throw e; }
+    if (!res.ok) { const e = new Error(data.error || (body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR)); e.generic = !data.error; e.reasons = data.reasons; e.status = res.status; e.outcome = data.outcome; e.errors = data.errors; throw e; }
     return data;
   } finally {
     if (key) pendingMutations.delete(key);
@@ -342,6 +342,7 @@ function missingWorkspaceScripts(hash, caseRoute) {
     ["/panels.js", staffCase || (staffDestination && hash === "#/finance"), typeof financePanel === "function"],
     ["/assistants.js", staffCase || (staffDestination && hash === "#/assistants"), typeof assistantCasePanel === "function"],
     ["/chat.js", Boolean(me) && !contractor, typeof chatCasePanel === "function" && typeof employeeChat !== "undefined"],
+    ["/aftercare.js", staffDestination && destination === "#/aftercare", typeof aftercareWorkspaceView === "function"],
     ["/timecapture.js", staffDestination && hash === "#/time", typeof timeView === "function"],
     ["/role-screens.js", Boolean(me) && destination === "#/screens", typeof roleScreensView === "function"],
     ["/simulator-control.js", Boolean(me) && destination === "#/simulator", typeof simulatorControlView === "function"],
@@ -437,6 +438,7 @@ async function route() {
   if (building) return await buildingView(decodeURIComponent(building[1]));
   if (hash === "#/assistants") return await assistantQueueView();
   if (hash === "#/time") return await timeView();
+  if (hash === "#/aftercare") return await aftercareWorkspaceView();
   if (hash.split("?")[0] === "#/closed") return await ProgressViews.closed();
   if (hash.split("?")[0] === "#/progress") return await ProgressViews.dashboard();
   if (hash === "#/capacity") return await capacityView();
@@ -463,6 +465,14 @@ const defaultListState = () => {
   return filters;
 };
 const listState = {};
+function queueEmptyExplanation({ view, filtered, rowsLength }) {
+  if (rowsLength > 0) return null;
+  if (filtered) {
+    return { state: "no-match", text: "No cases match these filters. This is a search result, not a statement about scenario coverage. Reset my queue to try again." };
+  }
+  if (view !== "mine") return { state: "empty-all", text: "No permitted open cases are available." };
+  return { state: "coverage-unknown", text: "No open cases are assigned to you. This does not mean the programme has no work. Whether a demonstration scenario exists for this perspective is unknown: no verified coverage declaration is available." };
+}
 const queueHref = () => coordinatorOrigin || (queueOrigin === "all" ? "#/all" : "#/");
 const qs = (o) => Object.entries(o).filter(([, v]) => v).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join("&");
 const isManager = () => ["Retrofit Programme Manager", "Programme Support Officer"].includes(me.user.role);
@@ -740,6 +750,7 @@ function priorityPanel() {
   return box;
 }
 
+const HANDOFF_READ_ERROR = "The handoffs waiting for you could not load, so we cannot tell whether any are waiting. Owner: application support. Next action: refresh to try again, then contact application support if it continues.";
 function pendingHandoffs() {
   const box = h("section", { class: "card", "aria-label": "Handoffs waiting for you" },
     h("p", { role: "status" }, "Loading handoffs..."));
@@ -751,7 +762,11 @@ function pendingHandoffs() {
       h("div", { class: "muted" }, `${x.status}. Current owner: ${x.accountable_owner}; proposed receiver: ${x.proposed_receiver || "Unassigned"}; confirmed receiver: ${x.confirmed_receiver || "Unconfirmed"}; destination: ${x.destination || "Unknown"}; chase: ${x.chase_owner || "Unassigned"}.`),
       h("div", { class: "muted" }, `Urgency: ${x.urgency || "Unknown"}; due: ${x.due_at || "Unknown"}; next action: ${x.next_action || "Unknown"}. Resident update: ${x.resident_update_owner || "Unassigned"}, ${x.resident_update_due_at || "Unknown"}.`),
       h("div", {}, x.to_code === me.user.code ? "Open to record receipt, accept or decline." : "Open to chase, escalate or withdraw.")))));
-  }).catch((e) => { box.hidden = false; box.replaceChildren(h("p", { role: "alert" }, `Could not load handoffs: ${e.message}`)); });
+  }).catch((e) => {
+    if (e.name === "AbortError") return;
+    box.hidden = false;
+    box.replaceChildren(h("p", { role: "alert" }, e.status ? `Could not load handoffs: ${e.message}` : HANDOFF_READ_ERROR));
+  });
   return box;
 }
 
@@ -810,7 +825,7 @@ async function listView(view) {
             view === "all" && h("div", { class: "muted" }, `Owner: ${r.owner}`),
             r.focus && h("dl", { class: "focus" }, r.focus.flatMap(([k, v]) => [h("dt", {}, k), h("dd", {}, /^\d{4}-\d\d-\d\d$/.test(v) ? fmtDate(v) : v)]))),
           h("div", { class: "meta" }, h("div", {}, r.stage), h("div", {}, `${r.days} days in this stage`), h("div", {}, `Last contact: ${ago(r.last_contact)}`),
-            r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "empty" }, Object.entries(listState).some(([key, value]) => key !== "sort" && value) ? "No cases match these filters. Reset my queue to try again." : view === "mine" ? "No open cases are assigned to you. This does not mean the programme has no work." : "No permitted open cases are available.")),
+            r.next_visit && h("div", {}, `Visit: ${fmtDate(r.next_visit)}`))))) : h("li", { class: "empty" }, queueEmptyExplanation({ view, filtered: Object.entries(listState).some(([key, value]) => key !== "sort" && value), rowsLength: rows.length }).text)),
       rows.length < total ? h("p", {}, h("button", { class: "alt", onclick: () => load(true) }, `Show more (${rows.length} of ${total} shown)`)) : null].filter(Boolean));
   };
   const load = async (more) => {
@@ -1054,7 +1069,7 @@ async function caseView(id) {
       regulatoryAlertsPanel(id), !c.closed && returned, stockPanel(c)]],
     ["survey", "Survey and assessment", [technicalPanel(c, id, refresh), documentsPanel(c, id, refresh)]],
     ["funding", "Funding", [fundingPanel(c, id, refresh, savedFields, session), financePanel(c, id, refresh), grantPanel(c, id, refresh)]],
-    ["resident", "Resident", [residentPanel(c, id, refresh), call, write, affectedChallengePanel(c, id, refresh)]],
+    ["resident", "Resident", [residentPanel(c, id, refresh), nominationPanel(c), call, write, affectedChallengePanel(c, id, refresh)]],
     ["contractor", "Contractor and works", [h("section", { class: "card" }, h("h2", {}, "Contractor and appointments"),
       h("p", {}, `${c.contractor.name}, ${c.contractor.contact}, ${c.contractor.phone}`),
       h("p", {}, `Next visit: ${fmtDate((c.appointments.find(a => a.outcome === "Booked") || {}).date)}`),
@@ -1691,6 +1706,7 @@ async function signOut(switchAccount) {
   try {
     const r = await api("/api/logout", { switchAccount });
     me = null; briefingBox = null; clearPhoto();
+    if (typeof aftercareScreens !== "undefined") aftercareScreens.reset();
     if (typeof employeeChat !== "undefined") employeeChat.reset(true);
     if (r && r.redirect) { location.href = r.redirect; return; }
     location.href = "/";

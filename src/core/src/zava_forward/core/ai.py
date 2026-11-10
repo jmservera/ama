@@ -6,6 +6,8 @@ fields it needs, output is checked before it is shown, every run is recorded in
 the audit log, and a plain template is used if the model is unavailable.
 """
 import base64
+import contextlib
+import contextvars
 import json
 import os
 import re
@@ -38,6 +40,34 @@ IMAGE_TYPES = ("image/png", "image/jpeg")
 
 class InputRefused(ValueError):
     """The request is outside the approved input bounds; no provider call is made."""
+
+
+class DispatchWitness:
+    """Core-written record of one `Ai.evidence` invocation's transport hand-offs.
+
+    Only this module changes it. `attempts` counts requests handed to the transport (a send-fence
+    withdrawal inside the opener or a redirect inside `urlopen` is not counted separately).
+    """
+
+    def __init__(self):
+        self.witnessed = False
+        self.attempts = 0
+        self.closed = False
+
+
+DISPATCH = contextvars.ContextVar("ai_dispatch_witness", default=None)
+
+
+@contextlib.contextmanager
+def count_dispatches():
+    """Open one witness for the invocations the caller makes inside this scope on this context."""
+    witness = DispatchWitness()
+    token = DISPATCH.set(witness)
+    try:
+        yield witness
+    finally:
+        witness.closed = True
+        DISPATCH.reset(token)
 
 
 class ModelMismatch(ValueError):
@@ -146,6 +176,9 @@ class Ai:
                                          data=body, headers={"Authorization": f"Bearer {self._token()}", "Content-Type": "application/json"})
             self.consumption.dispatch_check(rid)
             open_request = urllib.request.urlopen if fence is None else ai_transport.opener(fence, timeout).open
+            witness = DISPATCH.get()
+            if witness is not None and not witness.closed:
+                witness.attempts += 1  # the provider request is handed to the transport here and only here
             with open_request(req, timeout=timeout) as response:
                 raw = response.read(256001)
                 if len(raw) > 256000:
@@ -172,6 +205,9 @@ class Ai:
         """No fallback, raw output or exception text in the durable usage envelope."""
         envelope = dict(provider="azure-openai", deployment=self.fast, model=None,
                         usage=None, outcome="disabled", source="unverified", text=None)
+        witness = DISPATCH.get()
+        if witness is not None and not witness.closed:
+            witness.witnessed = True
         if not self.configured:
             return envelope
         try:

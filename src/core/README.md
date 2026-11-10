@@ -531,6 +531,45 @@ DPO/Legal decision for. Resident-facing text still says nothing is sent to a
 live service; this adds no web control and does not prove resident access
 without detriment.
 
+Pending supersession (#1238, owner decision Q6 `manual_verified`, 2026-11-08):
+the `service_supersede_authorize` action marks a `Pending` attempt `Superseded`
+only after two separate authorizations on the same verified-outcome evidence
+reference (at most 100 characters; a reference, not resident detail), one by
+the control owner and one by the reviewer. Who holds those two roles comes only
+from an explicit, immutable `SupersessionBinding` that trusted composition sets
+as `store.supersession_binding` (the same instance-level seam as
+`complaints_receiver`). It is unset by default, so the action fails closed with
+a `PermissionError` and writes nothing. A binding is never created from staff
+roles, a request's owners, persisted rows, references or a request body, and
+there is no environment switch or route to set one. This change populates no
+binding: its actual named content, and any activation or rotation process, is
+a human gate. Both people must be registered persisted identities matching the
+binding, different people, with no manager bypass; on an Independent review the
+reviewer must also not be the contested decision maker. A stored approval
+counts only when it carries the digest of the binding now in force, names the
+bound person and has its matching hash-chained audit entry, whose detail holds
+a digest of the exact approval payload (case, request, reservation, attempt,
+role, bound identity, binding id and digest, and a hash of the evidence
+reference; the evidence text is never logged). Changing the stored evidence
+reference or restamping the binding digest on an earlier approval therefore
+stops it counting, as do legacy generic audit entries; otherwise it moves
+to `withdrawn`. Changing the binding therefore withdraws earlier approvals, but
+restoring an earlier binding revalidates approvals that carry its digest, so
+rotation and restoration are unsupported (use a new `binding_id`); a writer who
+also forges audit entries breaks the audit chain, which this action does not
+re-verify per call. The evidence is a reference the two people vouch for; the
+code cannot verify it, and synthetic tests show the gate, not human approval.
+The original attempt record, reservation, receipt reference, route idempotency key and audit
+entries are kept. Age is never an input and no timeout exists: an aged
+`Pending` attempt stays `Pending`. Supersession sends nothing and does not
+authorize a resend: a later send still needs `retry_unresolved` and the usual
+owner or named-reviewer rights, and a `Superseded` attempt still counts as
+unresolved. A late outcome for a superseded attempt is refused and its
+`receipt_ref` logged. Limits: the in-flight check is per store instance;
+a receipt found by verification has no manual recording path (do not
+supersede, reconcile with the receiver); the evidence reference is kept
+by retention deletion.
+
 Focused command: from `src/core`, `PYTHONPATH=src:tests python3 -m unittest
 test_resident_decisions -q`.
 
@@ -561,7 +600,13 @@ SQLite additionally protects independent writers with database rowversions.
 `form_export.draft_export(store, user, case_id, draft_id)` is a read-only,
 held export of one working review: field values with source ID, version,
 document hash and locator, template/schema/input versions, attachments, stale
-fields and open issues, plus a content hash. It is always `Held`, `reviewed`
+fields, open issues and the recorded per-field working-review history (ordered
+detached copy with reviewer email, prior and new values and evidence, decision,
+reason, time and input version), plus a content hash covering all of them. The
+history is exercised only with synthetic data for now; it is field review, not
+Finance pack approval, and the hash is not a signature. Saved copies without
+`history` are `Invalid` and must be regenerated as a new Held export; they are
+never backfilled. It is always `Held`, `reviewed`
 false, `Not submitted` and eligibility `Not assessed`; it writes nothing and a
 reviewed pack stays blocked on Finance and template authority. The manual path
 is the working review itself, and unavailable evidence returns `Unavailable`.
@@ -571,8 +616,9 @@ saved held export with the current working review, read-only. It returns
 `Current`, `Stale` (naming only the fields whose value, state or bound source
 changed or are now stale, and the unaffected fields), `Invalid` (the copy is
 incomplete or its content hash no longer matches) or `Unavailable`. A changed
-schema or rule reference changes the schema digest and stales every
-schema-bound field. It never marks anything reviewed.
+rule reference in a newer schema version stales every field; other schema
+changes stale only dependent fields (see dependency propagation below). It
+never marks anything reviewed.
 
 `view` and `diagnose` provide field-specific Unknown/Conflict/Fail draft
 diagnostics and source-linked diagnostic manifests. Conditions use confirmed,
@@ -597,14 +643,39 @@ at most once per distinct document across current fields, history, snapshots
 and alternative checks; missing-byte results are also reused locally.
 Action preflight shares these reads with its resulting report. Later reports
 check afresh; no cross-request cache is retained. A source change marks only its
-bound working fields stale; a new schema version affects all fields bound to that schema. Historical
+bound working fields stale; a newer schema version stales only the fields it affects (below). Historical
 reviews/values and recorded diagnostic snapshots remain intact. `view` also
 returns `diagnostic_freshness`, one entry per saved manifest: `Stale` when
 reviewed inputs changed after it (`changed_fields` lists only the fields whose
 reviewed value or state differ from the manifest), a bound source changed
 (`stale_fields` lists only those fields) or a newer schema version exists, with a re-run action; otherwise
-`Current`. This is not full FR-043/AC-051 rule/calculation/approval stale
-propagation: no approved rules, calculations or reviewed packs exist yet.
+`Current`. Approved rules, calculations and reviewed packs still do not exist.
+
+Dependency propagation (#96, FR-043 part) is derived on read from the immutable
+schema registry; nothing is written and history is kept. `forms.schema_impact`
+compares the bound version with the latest registered one. Staleness narrows only
+when the registry lineage verifies (contiguous versions, matching digests, bound
+digest present). A changed `template`, `rule_refs`, `funding`, `reviewer` or
+`form_type` stales every field (rule-to-field links are undeclared). Otherwise
+only a field whose definition changed or was removed is stale, plus fields whose
+`required_when` names an affected field (transitively) and fields with a
+`calculation_ref` (their inputs are undeclared) while any other field is
+affected. Fields added by the newer version raise Unknown issues and are
+reported as `new_fields`. Missing or malformed lineage reports `Unknown` and
+stales every field. A byte-identical successor (`Superseded`) affects nothing.
+Reports carry `dependency_impact` (`schema`, `approvals`); manifests carry
+`schema_dependent_fields`; held exports return `schema_impact` outside the hashed
+body and `export_freshness` reports a changed form even when no field is stale.
+`form_review.proposal_freshness(store, user, case_id, draft_id)` is read-only and
+reports each staged candidate as `Current`, `Stale` (source or dependent schema
+change), `Unavailable` or `Unknown` (unknown field, malformed record). Approvals
+are never created here: a draft-scoped hold that carries approval fields is
+`Current` only with a well-formed `bound` (`schema_digest`, `input_version`,
+`field_ids`) whose listed fields are not stale, removed, unknown or reviewed
+after that input version; otherwise `Review required`. A plain Held record stays
+`Held`, other drafts' records are ignored and a malformed ledger entry is
+`Review required`. Approved schemas, rules, Finance review and reviewed exports
+remain unmet.
 Already-clean evidence is required: reads/reviews never scan or save a source.
 Missing, pending, quarantined or deleted retained evidence blocks disclosure of
 the entire affected draft/history, including recorded diagnostics. On `view`,
@@ -635,7 +706,7 @@ figures, approved thresholds or restart authority are invented.
 From `src/core`, after pip editable installation:
 
 ```bash
-PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging -q
+PYTHONPATH=tests python3 -m unittest test_form_review test_form_staging test_form_dependencies -q
 ```
 
 Tests use the public tiny synthetic fixture with temporary JSON/SQLite storage.
@@ -819,6 +890,42 @@ Azure and creates no credential. Declined and unknown-consent homes get no ident
 python -m zava_forward.core.synthetic.device_provision --register register.csv \
   --homes 30 --run-id run-185 --owner "<named owner>"
 ```
+
+### Keyless IoT Hub `Registry` adapter (source only, default off)
+
+`synthetic.device_registry_azure.AzureIotHubRegistry` implements the existing injected
+`Registry` protocol over the `azure-iot-hub` SDK. Install the `iothub` extra (the `dev`
+extra includes it so the SDK tests run in Core CI); Core imports without it and reports
+`SDK_MISSING` only at first use. Nothing is imported, read, requested or acquired at import,
+construction, dry run or close. The command line does not use it and `--apply` still refuses.
+
+* Inputs are an injected token credential (or client), the exact Hub host name, and a finite
+  `EnrollmentSpec` of known `SYN-` device IDs, the run ID and public X509 thumbprints.
+  Missing or ambiguous input is refused before any SDK call. No connection string or
+  service key is accepted. The spec is not certificate issuance or approval.
+* `create` is create-only (`If-None-Match: *`), disabled, and carries the run marker in
+  `statusReason`. An existing identity is `IDENTITY_CONFLICT`; it is never adopted or
+  overwritten. A timeout is `WRITE_OUTCOME_UNKNOWN` with a readback and no retry.
+* `run_of` returns `None` only for a 404. Unmarked or other-run devices are never reported as
+  the run; 401, 403, 5xx and timeouts raise distinct fixed codes.
+* `delete` requires a current exact marker match and deletes with the exact snapshot ETag
+  (never `*`); drift is `PRECONDITION_FAILED`.
+* `list_run` is complete or raises `LIST_INCOMPLETE`: the SDK lists at most 1000 devices with
+  no continuation, so a full page is incomplete. Every listed entry without a string
+  `statusReason`, enrolled or not, is confirmed by one metadata read, at most 100 per call;
+  an exactly marked identity is returned even if it is not enrolled, so whole-run teardown
+  refuses before deleting. An unreadable confirmation or an exhausted budget refuses.
+* Errors are fixed codes without SDK response text. A refusal raised inside a caller's
+  `except` block hides that caller's exception from the printed traceback
+  (`__suppress_context__`); the context object stays reachable to code that walks it.
+
+Limits. Tests run the real SDK against a simulator of the documented REST conditional-header
+table; Azure behaviour (412, status codes, ETag format, list limits, RBAC) is unobserved.
+A hub with more than 100 unmarked devices in one listing makes `list_run` refuse, not guess.
+One process per run ID; cross-process contention is not fenced. An injected client may keep
+its own transport retries. The Registry-before-credential order and the lack of an
+authentication update remain unresolved, and credential issuance, storage, rotation and
+teardown for the whole of #185 remain open.
 
 ## Journey ownership register and human-review routing (#128)
 
@@ -1038,6 +1145,35 @@ it quotes was calculated and it cites a source reference; otherwise, or if the
 drafter is absent or fails, a plain deterministic sentence is used. Output is
 always `DRAFT_FOR_HUMAN_REVIEW` and never a validated finding. No model is
 bundled and nothing needs one.
+
+Slice 4 adds `discovery_assistant_demo`, one fixed, credential-free command that
+composes the helpers above over an explicitly fictional in-module fixture
+(two properties, timezone-aware events, an incomplete final stage and one
+unusable event):
+
+```bash
+python -m zava_forward.core discovery-demo
+```
+
+It takes no arguments, paths, URL, standard input, dataset, provider or
+credential and reads no environment, `ZF_DATA` or store; any extra argument
+exits 2. The JSON report shows `NOT_READY` with all ten missing readiness items,
+company connection `DENY`, the unapproved design-hypothesis status,
+`model_used=false` and the empty human comparison (`criterion_met=false`). Tool
+decisions are policy results only: nothing is registered, dispatched or
+attempted, and a prohibited write appears only as a refused decision. Hours,
+references and gaps are compared with independently authored expected constants
+for the fixture; a mismatch or repeatability failure exits 1. Those constants
+are constructed expectations, not an analyst's observed results, the
+conventional table reuses the same calculation, and the fallback text is
+deterministic code output, not AI. Running the command with no argument still
+prints the package version. This is an illustration of the design hypothesis and
+does not prove any whole-#125 criterion, approve a connection or replace the
+Phase 0, privacy, access and human approvals.
+
+```bash
+python -m unittest discover -s tests -p 'test_discovery_assistant_demo.py' -q
+```
 
 ### Phase 0 discovery register slice (124)
 
@@ -4812,6 +4948,43 @@ Not delivered: persistence in the stores, API and UI wiring (Fluent 2, WCAG), ev
 and the DPO position on outcome data (both open), a model route for the pack summary (needs
 release evidence and owner approval), and a pack screen. Tests: `src/core/tests/test_aftercare.py`.
 
+Stage A of the connected slice (#133, Refs only, unwired) adds
+`zava_forward.core.aftercare_intake.AftercareService`, a synthetic staff-assisted layer over the
+register above. It does not reimplement the register. It adds a role-gated intake (existing staff
+roles only), a durable receipt that keeps the raw statement and representative basis, an idempotent
+`request_id`, owner actions limited to the named synthetic scenario owner (a missing owner is
+`Unknown`, and only a manager can name one afterwards), manager-only closure that never alters a
+concern, and a joined baseline, outcome and unresolved view with denominators and Unknowns. State is
+one validated JSON document behind an atomic `StateStore.update`; `FileStateStore` is a
+demonstration store only. `handle(method, path, user, body, query)` is the route contract for a later
+thin hook. Not delivered: server, store, UI route or endpoint-inventory wiring; served, persistence,
+restart and browser evidence; evaluator role; DPO or lawful-basis position. The unwired screen module
+is `src/api/src/zava_forward/api/web/aftercare.js`. Tests: `src/core/tests/test_aftercare_intake.py`
+and `src/api/tests/test_aftercare_screen.py`. Corrective cycle C2: an exact replay returns the
+original receipt even after `next_update` has passed (the time check applies to new records only),
+sensor-context keys and values pass the same best-effort synthetic privacy guard and length limits
+as free text before anything is stored (a guard, not privacy proof), and the screen module says
+that saving could not be confirmed, keeps the same request reference, and renders the unresolved
+count as a fraction with its denominator.
+
+Runtime hook integration (#133, Refs only, corrective cycles C4 and C5 of 5; C1 to C5 spent, no
+automatic C6). `zava_forward.core.aftercare_store.DocumentStateStore(store, key="aftercare")` is the
+narrow `StateStore` adapter over the existing `Store` / `SqlStore` document mechanism. `aftercare` is
+the only document added to `SqlStore.DOCS` and to `projection.STAFF_GET`. The receipt, register and
+request index stay one whole document, so one `update` is one atomic write. The mutator runs once,
+under the store lock, and is never rerun. After a failure the adapter re-reads the persisted value
+and restores memory while still holding the lock that performed the save (corrective cycle C5), so
+recovery cannot restore an older snapshot over another writer's commit. If only the outer lock exit
+fails, it reacquires the lock first and then reads. Classification:
+an unreadable value or a committed-but-unconfirmed write raises `UnconfirmedWriteError` (never "not
+saved"), a different persisted value is a conflict, and an unchanged value with no commit is a plain
+persistence error. A refresh error is attached to the raised error, not swallowed. A client retries
+with the same `request_id`; the unchanged service replays the committed receipt, and a changed payload
+under that id is a conflict. The JSON `Store` is single-process: a second instance on the same file is
+not protected, so cross-instance protection is SQL only. `FileStateStore` is not used at runtime.
+Tests: `src/core/tests/test_aftercare_store.py` (JSON, SQLite and, with `ZF_RESIDENT_MSSQL=1` on an
+owned disposable server, MSSQL).
+
 ## Data steward and digital operator exception queue (#135)
 
 `zava_forward.core.exception_queue.ExceptionQueue` is a store-independent register (FR-012, FR-029,
@@ -5011,3 +5184,32 @@ under the existing procurement validation token, so on SQL a work order withdraw
 store before the commit raises a conflict and no receipt is stored. An existing token is never replaced.
 Limits: receipts stored before C5 with a staff code as worker are not rewritten; the JSON store has no
 cross-process guard; escalation stays a gap; synthetic approvals are not QA, legal or resident consent.
+
+## Constructed learning-test report command (#129, Refs #123)
+
+`learning_test_bundles` can print one bundle's existing stop-first report from caller-constructed
+numbers. It adds only an input boundary: `run_report` and `render_report`, the five bundles,
+comparators, six effort components and zero-target counts are unchanged.
+
+```bash
+python -m zava_forward.core.learning_test_bundles < constructed-run.json
+```
+
+Standard input only, one JSON object, at most 65,536 bytes, one bundle per invocation:
+`schema_version` `learning-bundle-constructed-input-v1`, integer `run` and unique integer `case`
+numbers (1 to 1,000,000, 1 to 50 cases), `bundle`, `representative_data_retained` explicitly
+`false`, and `o16_counted_under` only for the two O16 bundles. Each case has `comparator` and
+`workflow` arms with exactly the six `effort` minutes (finite numbers, 0 to 100,000) and exactly
+that bundle's zero-target `counts` (integers, 0 to 1,000,000). Unknown keys, booleans or strings as
+numbers, nonfinite values, duplicate keys, text fields, a terminal on standard input and oversize
+input are refused with one `Learning report refused:` line on standard error, exit 1 and no report.
+A STOP is a valid report with exit 0; read the STOP line, not the exit status.
+
+The output begins `CONSTRUCTED, UNVERIFIED INPUT` and ends with fixed qualifications: the input is
+caller-declared and not verified synthetic provenance, a real experiment or measured benefit; the
+Atlas owner mapping is unconfirmed (an `o16_counted_under` choice is the caller's accounting, not
+ratification); the representative-data retention decision is unsatisfied; saved minutes are capacity
+until Finance validates them. It stores nothing: no file, run record, database, network, AI or
+`ZF_DATA` access. Tests: `python -m unittest discover -s tests -p 'test_learning_test_bundles.py' -q`.
+This is not a real experiment, screen wiring, stored runs or multi-run aggregation; those stay held
+by the [protocol](../../docs/reference/research/ux/journey-learning-test-bundles.md).

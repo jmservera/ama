@@ -1,0 +1,45 @@
+{
+  "task_id": "issue-130-nomination-view-1110",
+  "task_slug": "issue-130-nomination-view-1110",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10/issue-130-nomination-view-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10/issue-130-nomination-view-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10/issue-130-nomination-view-1110-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-10/issue-130-nomination-view-1110-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10/issue-130-nomination-view-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10/issue-130-nomination-view-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-10/issue-130-nomination-view-1110-research.md"
+    },
+    {
+      "decision": "Critique executed once; verdict Proceed with changes; 6 findings applied directly",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-10/issue-130-nomination-view-1110-critique.md"
+    },
+    {
+      "decision": "No post-review correction batch authorised; read-only, no backend change",
+      "status": "confirmed",
+      "evidence": "user brief"
+    },
+    {
+      "decision": "Review executed once; outcome no blocking findings; one Low heading-level note left open",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-10/issue-130-nomination-view-1110-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Commit candidate and record commit-complete"
+  },
+  "prioritized_follow_ups": null
+}

@@ -1,0 +1,66 @@
+{
+  "task_id": "1397-documentary-qualification-1110",
+  "task_slug": "issue-1397-documentary-qualification-1110",
+  "parent_task": {
+    "task_id": "1397-rubric-incident-1110",
+    "task_slug": "issue-1397-rubric-incident-1110"
+  },
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-issue-1397-documentary-qualification-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-issue-1397-documentary-qualification-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-issue-1397-documentary-qualification-1110-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-10-issue-1397-documentary-qualification-1110-plan-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-issue-1397-documentary-qualification-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-issue-1397-documentary-qualification-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Root authorized ONE bounded documentary correction of the original ac4177b5 record after independent Readiness (approve_with_comments, one Medium at research line 66); original records and report preserved; no source repair, no fresh grant, no push, PR, GitHub write or closure",
+      "status": "done",
+      "evidence": "brief-1397-documentary-qualification-1958.txt"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; permitted safeoutputs SHA equals the prior fallback copy so no new proof; acceptance policy, second-call refusal or drop, recovery and fresh-versus-carried scoring stay UNKNOWN",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-10-issue-1397-documentary-qualification-1110-research.md"
+    },
+    {
+      "decision": "Plan, details and ONE self critique executed (approve with changes); C1-C4 applied, C5 artifact payload read rejected as outside the permitted evidence; prospective changes record written",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-10-issue-1397-documentary-qualification-1110-plan-critique.md"
+    },
+    {
+      "decision": "Implement done: additive dated superseding qualification in original research plus one README wording line; docs-only focused tier, no runtime check",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-11-10-issue-1397-documentary-qualification-1110-changes.md"
+    },
+    {
+      "decision": "Single self Review executed, conformant for the scoped correction, not independent; no open material finding; closure not asserted",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-issue-1397-documentary-qualification-1110-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Commit locally; Root same-reviewer exact-head reassessment and hosted CI; no push or PR by worker"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Owner decision whether to authorize retaining the accepted-item list and gate decision.json as run artifacts",
+      "rationale": "Smallest action that settles acceptance and fresh-versus-carried questions next time; separately authorized only",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-issue-1397-documentary-qualification-1110-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Reconcile the scorer prompt one-call quota statement with observed behaviour",
+      "rationale": "Prompt and README #1383 record disagree; unresolved",
+      "evidence": ".copilot-tracking/research/2026-11-10-issue-1397-documentary-qualification-1110-research.md"
+    }
+  ]
+}

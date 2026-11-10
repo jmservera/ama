@@ -13,6 +13,7 @@ from __future__ import annotations
 import logging
 from collections.abc import Callable
 
+from zava_forward.core.ai import count_dispatches
 from zava_forward.core.chat_panel import ModelReply, ModelUnavailable, valid_usage
 
 from zava_forward.agents.dispatch import AgentWorker
@@ -48,9 +49,16 @@ class ChatModel:
             raise ModelUnavailable("admission-check-failed") from None
         if denied:
             raise ModelUnavailable("activation-not-approved")
-        envelope = self.worker.provider_call(system, prompt, self.max_tokens, self.timeout)
+        with count_dispatches() as witness:
+            envelope = self.worker.provider_call(system, prompt, self.max_tokens, self.timeout)
         usage = valid_usage(envelope.get("usage"))
-        calls = 0 if envelope.get("outcome") == "disabled" else 1
+        calls = witness.attempts
+        if not witness.witnessed:
+            # The provider is not core `Ai.evidence` here, so no trusted dispatch record exists.
+            logging.getLogger(__name__).warning(
+                "Employee chat provider dispatch count is unverified; assuming one call"
+            )
+            calls = 1
         try:
             denied = self.admission()
         except Exception as error:

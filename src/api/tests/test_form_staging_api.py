@@ -23,7 +23,7 @@ from zava_forward.core.sqlstore import SqlStore
 from zava_forward.api.server import App, make_handler
 
 
-class FormApi(unittest.TestCase):
+class FormApiFixture(unittest.TestCase):
     def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
@@ -75,6 +75,39 @@ class FormApi(unittest.TestCase):
         except urllib.error.HTTPError as error:
             return error.code, json.loads(error.read())
 
+    def working_review(self) -> tuple[Any, Any]:
+        self.assertEqual(self.call("pam", "/api/form-schemas", schema())[0], 201)
+        actor = self.store.staff["pam@example.test"]
+        doc = self.store.add_document(
+            actor,
+            "ZF-1",
+            "synthetic.txt",
+            "EPC",
+            b"EPC D",
+            metadata=change_metadata(self.store, "ZF-1"),
+        )
+        staged = self.call("pam", "/api/cases/ZF-1/form-candidates", batch(doc["id"]))[1]
+        code, draft = self.call(
+            "pam",
+            "/api/cases/ZF-1/form-review",
+            dict(action="open", schema_id="SYN-TECH", schema_version=1),
+        )
+        self.assertEqual(code, 201, draft)
+        request = dict(
+            action="review",
+            draft_id=draft["draft_id"],
+            expected_version=draft["input_version"],
+            field_id="epc",
+            decision="accept",
+            batch_id=staged["id"],
+            candidate_id=staged["candidates"][0]["id"],
+            value=None,
+            reason="SYN field review reason",
+        )
+        return draft, request
+
+
+class FormApi(FormApiFixture):
     def test_registry_stage_read_and_no_source_or_controlled_writes(self) -> None:
         with urllib.request.urlopen(self.base + "/healthz") as response:
             self.assertEqual(response.status, 200)
@@ -175,37 +208,6 @@ class FormApi(unittest.TestCase):
             self.assertEqual(code, 503, result)
             self.assertNotIn("private raw", json.dumps(result))
         self.assertEqual(self.call("pam", path)[1]["batches"], [])
-
-    def working_review(self) -> tuple[Any, Any]:
-        self.assertEqual(self.call("pam", "/api/form-schemas", schema())[0], 201)
-        actor = self.store.staff["pam@example.test"]
-        doc = self.store.add_document(
-            actor,
-            "ZF-1",
-            "synthetic.txt",
-            "EPC",
-            b"EPC D",
-            metadata=change_metadata(self.store, "ZF-1"),
-        )
-        staged = self.call("pam", "/api/cases/ZF-1/form-candidates", batch(doc["id"]))[1]
-        code, draft = self.call(
-            "pam",
-            "/api/cases/ZF-1/form-review",
-            dict(action="open", schema_id="SYN-TECH", schema_version=1),
-        )
-        self.assertEqual(code, 201, draft)
-        request = dict(
-            action="review",
-            draft_id=draft["draft_id"],
-            expected_version=draft["input_version"],
-            field_id="epc",
-            decision="accept",
-            batch_id=staged["id"],
-            candidate_id=staged["candidates"][0]["id"],
-            value=None,
-            reason="SYN field review reason",
-        )
-        return draft, request
 
     def test_working_field_review_and_manifest_are_held_and_isolated(self) -> None:
         with urllib.request.urlopen(self.base + "/healthz") as response:

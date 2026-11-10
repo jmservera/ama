@@ -14,6 +14,31 @@ bounds. Assistant result shaping retains the consumption IDs and separately
 validated cached-token count. Chat keeps cached usage and successful meter IDs;
 chat answers are not human-accepted proposal denominators.
 
+Chat reports the provider calls the transport was handed, from a per-invocation
+witness that core `Ai` writes at the dispatch boundary
+(`zava_forward.core.ai.count_dispatches`). `ChatModel` opens one witness around
+each provider call; core `Ai.evidence` marks it and records an attempt directly
+before the request is given to the transport. Every earlier exit reports zero:
+disabled, input refusal, missing meter, a reservation hold, a prompt-output
+guard denial, a token failure, a hold at the pre-dispatch recheck after
+reservation and a failure to build the opener. A provider failure, refusal or
+timeout after hand-off and a financial hold after the transport are counted as
+one call. The witness is a context variable per invocation, not a shared flag or
+counter, and no provider-supplied field, reservation or `meter_id` is used.
+
+Known limits. A provider that is not core `Ai.evidence`, or that runs on another
+thread without the copied context, leaves no witness: the adapter logs that the
+count is unverified and keeps the legacy assumption of one call. That assumption
+is not exact, not a bound (an arbitrary provider may make more calls) and not a
+billing estimate, and the receipt does not show it as unverified (a receipt
+provenance field needs the shared chat panel). The count is the number of
+requests handed to the transport, not wire or billing exactness, and holds for
+the trusted synchronous composition where the provider is core `Ai.evidence`; calls a provider makes outside `Ai` are not seen. A send
+fence withdrawn inside the opener, before the first request byte, still counts
+as one attempt, and redirects followed inside `urlopen` are not counted
+separately. This is a receipt-accounting rule, not evidence of admission, spend,
+retention or refusal acceptance for #891 criterion 2.
+
 Financial admission and immutable recording remain with core/API, not a second
 worker database. See the [core ledger](../core/README.md#ai-consumption-ledger-432).
 An absent price, authority or known maximum liability keeps workflow-only.
@@ -325,6 +350,43 @@ the recorded report is unchanged, and the criteria that need owner thresholds,
 a staff trial, an independently graded set or an owner-authorised live run
 remain unmet. Run `python3 -m unittest test_paired_trial` with the usual
 core/agents test paths.
+
+#### Constructed paired observations in the report (2026-11-10)
+
+`run_regulatory_gates.py` accepts one optional `--constructed-paired-observations PATH`
+so an operator can read the existing `evaluate_paired_trial` result for a prepared
+comparison dataset. The file is bounded local JSON,
+`{"schema": "constructed-paired-observations-v1", "observations": [...]}` with exactly those
+two keys, at most 262144 bytes and 1000 observations. Each observation has exactly the nine
+scorer fields (`participant`, `task`, `role`, `arm`, `completed`, `comprehension_correct`,
+`accepted`, `hazard_missed`, `elapsed_seconds`, `review_seconds`); `participant` and `task`
+are pseudonymous ids (letters, digits, `.`, `_`, `-`, at most 64 characters) and seconds are
+finite, non-negative and at most one year. Malformed, oversize, non-finite, duplicate-key,
+unknown-schema or invalid input, and a result whose derived values are not finite (a
+near-zero cards duration against a large chat duration), exits 1 with the reason on stderr
+before the report is generated or `--record` writes anything, so `invalid_observations` is
+always empty here.
+Unpaired, partial-role, empty and hazard-miss inputs are valid and reported by the scorer.
+
+```bash
+PYTHONPATH="$PWD/src/core/tests:$PWD/src/agents/tests" \
+  python3 src/agents/evals/run_regulatory_gates.py \
+  --constructed-paired-observations /path/to/constructed.json
+```
+
+The report gains a distinct `constructed_paired_observations` section with the schema, the
+input sha256, byte and observation counts, a qualification and the unchanged scorer result.
+The scorer runs with no thresholds and no cost inputs, so the result is always cards only,
+threshold `unset_pending_owner_agreement` and AI cost per accepted check `Unknown` with the
+missing inputs named, even for favourable observations. The input is caller-declared
+constructed data: independent human participation, synthetic origin and the supplied
+`accepted` flags are unverified, so it is not a staff trial and not human acceptance. All
+other report keys, including the structural `comparison` and `not_evaluated` staff checks,
+are unchanged, and without the option the output is byte-identical to the committed report.
+Do not point `--record` at `evals/regulatory_gates_results.json` when using the option.
+No model, network or data-store access is added. Tests:
+`tests/test_paired_report_command.py`. The staff trial, owner thresholds, graded set,
+tokenomics and live-run criteria of #216 remain unmet.
 
 ### Staff alert precision and acknowledgement scoring (2026-11-03)
 

@@ -1,0 +1,55 @@
+{
+  "task_id": "issue-136-binding-c3r1-doc-1110",
+  "task_slug": "issue-136-binding-c3r1-doc-1110",
+  "parent_task": {
+    "task_id": "issue-136-binding-c2-1110",
+    "task_slug": "issue-136-binding-c2-1110"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-issue-136-binding-c3r1-doc-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-issue-136-binding-c3r1-doc-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-issue-136-binding-c3r1-doc-1110-details.md",
+    "critique": ".copilot-tracking/challenges/2026-11-10-issue-136-binding-c3r1-doc-1110-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-issue-136-binding-c3r1-doc-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-issue-136-binding-c3r1-doc-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-11-10-issue-136-binding-c3r1-doc-1110-research.md"
+    },
+    {
+      "decision": "One documentation-only C3-R1; no push, PR, cloud or model",
+      "status": "recorded",
+      "evidence": "brief-136-binding-c3r1-doc-cli-1110.txt"
+    },
+    {
+      "decision": "Critique executed once, author-inline, proceed",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/challenges/2026-11-10-issue-136-binding-c3r1-doc-1110-critique.md"
+    },
+    {
+      "decision": "Review executed once, author-inline; conformant for the one README sentence",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-issue-136-binding-c3r1-doc-1110-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "await Root exact-head review"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Repair the three baseline mypy diagnostics in test_bicep_policy.py",
+      "rationale": "baseline typing remains exit 1",
+      "evidence": "phase136-binding-c2-evidence-1110/proof/mypy-base.out"
+    }
+  ]
+}

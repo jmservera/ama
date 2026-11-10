@@ -218,6 +218,110 @@ def _schema(value: object, store: FormStore) -> Record:
     return deepcopy(row)
 
 
+FORM_WIDE = ("template", "rule_refs", "funding", "reviewer", "form_type")
+
+
+def _lineage(registry: object, bound: Record, digest: str) -> Record | None:
+    """The latest registered definition when the bound version's lineage verifies, else None."""
+    if not isinstance(registry, list):
+        return None
+    try:
+        rows = []
+        for row in registry:
+            try:
+                same = row["definition"]["id"] == bound["id"]
+            except (KeyError, TypeError):
+                continue
+            if same:
+                rows.append(row)
+        versions = sorted(r["definition"]["version"] for r in rows)
+        if (
+            not rows
+            or versions != list(range(1, len(rows) + 1))
+            or any(r["digest"] != ai_registry.digest(r["definition"]) for r in rows)
+        ):
+            return None
+        match = next(r for r in rows if r["definition"]["version"] == bound["version"])
+        if match["digest"] != digest:
+            return None
+        latest: Record = max(rows, key=lambda r: r["definition"]["version"])["definition"]
+        for definition in (bound, latest):
+            if len({f["id"] for f in definition["fields"]}) != len(definition["fields"]):
+                return None
+        return latest
+    except (KeyError, TypeError, StopIteration, ValueError):
+        return None
+
+
+def schema_impact(registry: object, bound: Record, digest: str) -> Record:
+    """Which fields of a bound schema depend on what changed in its latest version.
+
+    Narrowing happens only when lineage verifies and a form-wide reference, a field
+    definition or a declared condition is exactly compared; anything undeclared
+    (rule-to-field links, calculation inputs) or unverifiable stays stale or Unknown.
+    """
+    ids = [f["id"] for f in bound["fields"]]
+    latest = _lineage(registry, bound, digest)
+    if latest is None:
+        return dict(
+            status="Unknown",
+            latest_version=None,
+            causes={fid: ["schema-lineage-unknown"] for fid in ids},
+            form_wide=["schema-lineage-unknown"],
+            new_fields=[],
+            affects_draft=True,
+        )
+    if latest["version"] == bound["version"]:
+        return dict(
+            status="Current",
+            latest_version=latest["version"],
+            causes={},
+            form_wide=[],
+            new_fields=[],
+            affects_draft=False,
+        )
+    old = {f["id"]: f for f in bound["fields"]}
+    new = {f["id"]: f for f in latest["fields"]}
+    form_wide = sorted(
+        f"{key}-changed"
+        for key in FORM_WIDE
+        if ai_registry.digest(bound[key]) != ai_registry.digest(latest[key])
+    )
+    causes: dict[str, set[str]] = {}
+    if form_wide:
+        causes = {fid: {"form-wide-change"} for fid in ids}
+    for fid in ids:
+        if fid not in new:
+            causes.setdefault(fid, set()).add("field-removed")
+        elif ai_registry.digest(old[fid]) != ai_registry.digest(new[fid]):
+            causes.setdefault(fid, set()).add("field-definition-changed")
+    grew = True
+    while grew:
+        grew = False
+        for fid in ids:
+            definitions = [d[fid] for d in (old, new) if fid in d]
+            depends = any(c["field_id"] in causes for d in definitions for c in d["required_when"])
+            calculated = any(d["calculation_ref"] is not None for d in definitions) and any(
+                other != fid for other in causes
+            )
+            for flag, code in (
+                (depends, "condition-depends-on-changed-field"),
+                (calculated, "calculation-inputs-undeclared"),
+            ):
+                if flag and code not in causes.get(fid, set()):
+                    causes.setdefault(fid, set()).add(code)
+                    grew = True
+    added = sorted(set(new) - set(old))
+    return dict(
+        status="Impacted" if causes or form_wide or added else "Superseded",
+        latest_version=latest["version"],
+        causes={fid: sorted(codes) for fid, codes in sorted(causes.items())},
+        form_wide=form_wide,
+        new_fields=added,
+        affects_draft=bool(causes or form_wide or added),
+    )
+
+
 def _commit(
     store: FormStore,
     actor: Record,

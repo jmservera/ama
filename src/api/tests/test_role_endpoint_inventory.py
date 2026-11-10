@@ -16,15 +16,16 @@ SERVER_SRC = (Path(server.__file__)).read_text()
 
 GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api/account/photo", "/api/cases?view=all", "/api/cases?view=all&q=Quentin", "/api/cases?view=all&q=" + REASON,
                  "/api/cases.csv?view=all", "/api/cases/ZF-1", "/api/ranking/policy", "/api/ranking/snapshot", "/api/ranking/publication", "/api/ai/priority",
-                 "/api/facets", "/api/stats", "/api/progress", "/api/closed-cases",
+                 "/api/facets", "/api/stats", "/api/progress", "/api/closed-cases", "/api/closed-cases.csv",
                  "/api/map", "/api/visits?view=all", "/api/funding", "/api/briefing",
                  "/api/audit-check",
                  "/api/handoffs", "/api/handoffs/unaccepted", "/api/packages", "/api/workorders", "/api/workorders/WO-0001/job-pack", "/api/workorders/WO-0001/field-intake", "/api/handoffs.csv", "/api/packages.csv", "/api/workorders.csv", "/api/visits.csv", "/api/funding.csv", "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv", "/api/form-schemas.csv", "/api/checklists", "/api/ai/report", "/api/finance", "/api/finance/exposure", "/api/asset/stock-queue", "/api/resident/choice-queue",
                  "/api/governance", "/api/continuity", "/api/continuity/export", "/api/exceptions", "/api/retention", "/api/data-protection", "/api/docs/ZF-1/none",
                  "/api/time/status", "/api/time/mine", "/api/time/report", "/api/law/sources", "/api/law/search?q=x",
                  "/api/law/cards", "/api/law/cards/reviews", "/api/law/cards/hazard-awareness-clock", "/api/law/alerts",
+                 "/api/aftercare/form", "/api/aftercare/concerns", "/api/aftercare/evaluator",
                  "/api/assistants", "/api/assistants/forecast", "/api/assistants/proposals", "/api/assistants/simulation/quality", "/api/chat/status", "/api/chat/threads", "/api/chat/memory", "/api/buildings/SYN-B1",
-                 "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/nothing"]
+                 "/api/form-schemas", "/api/cases/ZF-1/form-candidates", "/api/cases/ZF-1/form-review", "/api/cases/ZF-1/form-review/SYN-DRAFT/held-export", "/api/nothing"]
 POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/workorders/WO-0001/field-capture", {}), ("/api/workorders/WO-0001/field-correct", {}), ("/api/workorders/WO-0001/field-acknowledge", {}), ("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}),
                   ("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
                   ("/api/form-schemas", {}), ("/api/cases/ZF-1/form-candidates", {}), ("/api/cases/ZF-1/form-review", {}),
@@ -46,6 +47,7 @@ POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/workorders/WO-0001/field-
                   ("/api/ledger/digest", {}), ("/api/assistants/stock-prioritisation/invoke", {"case_id": "ZF-1"}),
                   ("/api/continuity/suspend", {}), ("/api/assistants/releases", {}),
                   ("/api/assistants/simulation/quality/observe", {}), ("/api/assistants/simulation/quality/request", {}),
+                  ("/api/aftercare/concerns", {}),
                   ("/api/law/cards", {}), ("/api/law/cards/hazard-awareness-clock/1/approve", {}),
                   ("/api/law/checks/ZF-1", {}), ("/api/law/alerts/none/acknowledge", {"note": "SYN"})]
 
@@ -87,6 +89,10 @@ class RoleEndpointInventory(Matrix):
                     self.assertEqual(code, 403, (role, path))
                 for canary in (REASON, PHONE, RESIDENT, NOTE_CANARY, OUTCOME_CANARY):
                     self.assertNotIn(canary, text, (role, path, canary))
+
+    def test_inventory_covers_held_export_route(self):
+        self.assertIn("/api/cases/ZF-1/form-review/SYN-DRAFT/held-export", GET_ENDPOINTS)
+        self.assertIn('form_parts[5] == "held-export"', SERVER_SRC)
 
     def test_inventory_covers_dynamic_workorder_job_pack_route(self):
         self.assertIn("/api/workorders/WO-0001/job-pack", GET_ENDPOINTS)

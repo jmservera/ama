@@ -1267,6 +1267,25 @@ class SqlStore(Store):
                         "anything else; do not repeat the change."
                     ) from error
 
+    def _persist_import_refusals(self, document, detail):
+        """Save the projection with its audit in one transaction; any failure before commit restores it."""
+        pending_before = list(self.local.pending)
+        self.data["import_exceptions"] = document
+        self.audit("importer", "recorded_import_refusals", "-", detail)
+        try:
+            self.save()
+        except CommittedReloadError:
+            raise
+        except BaseException as error:
+            try:
+                self._discard(pending_before)
+            except Exception as recovery_error:
+                error.add_note(
+                    f"SQL write recovery failed ({type(recovery_error).__name__}); "
+                    "original operation failure retained. Reload persisted records before retrying."
+                )
+            raise
+
     def _drop_unsaved_recommendations(self):
         """A rolled-back save must neither keep its new recommendations for a later save nor flush their creation events."""
         recs = self.data["recommendations"]
@@ -1317,7 +1336,7 @@ class SqlStore(Store):
         self._sync()
 
     # ---- procurement and governance data kept as checked documents
-    DOCS = ("procurement", "governance", "continuity", "buildings", "schemes", "form_schemas", "bulk_edits")
+    DOCS = ("procurement", "governance", "continuity", "buildings", "schemes", "form_schemas", "bulk_edits", "import_exceptions", "aftercare")
 
     def _proc_sync(self):
         snapshots, loaded = {}, {}

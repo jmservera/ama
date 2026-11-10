@@ -18,7 +18,12 @@ NOTICE = (
     "Constructed-fixture evidence, not user validation. No criterion is recorded as passing; "
     "partial means related evidence exists but the full criterion is not proven."
 )
-BROWSER = "No browser run in this slice; live reset, focus and announcement are unverified."
+BROWSER = (
+    "Observed 2026-11-10 on constructed fixtures (role selection, not authentication): the "
+    "workbench check (own queue, reset, status) and a keyboard-only walk of the served "
+    "specialist screens for the first listed home, with DOM status text. Not assistive-"
+    "technology output; unrepresented versus zero-match coverage is unproven."
+)
 CORE = "src/core/src/zava_forward/core/"
 
 REGISTER: dict[str, dict[str, Any]] = {
@@ -28,6 +33,7 @@ REGISTER: dict[str, dict[str, Any]] = {
         evidence=[
             "src/api/checks/workbench_browser_check.py",
             "src/api/checks/workbench-manifest.json",
+            "src/api/checks/specialist_keyboard_browser_check.py",
         ],
     ),
     "AC-035": dict(
@@ -37,7 +43,8 @@ REGISTER: dict[str, dict[str, Any]] = {
     ),
     "AC-036": dict(
         status="deferred",
-        reason="Owner, destination, receiver and chase-owner label agreement is not mapped yet.",
+        reason="Owner, destination, receiver and chase-owner label agreement is not mapped yet; "
+        "the keyboard walk observed only that owner or next-action text is present, not agreement.",
         evidence=[],
     ),
     "AC-037": dict(

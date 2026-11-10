@@ -5,7 +5,7 @@ author: Housing Retrofit Programme Manager
 status: complete-bounded-contribution
 mode: research-only
 
-ms.date: 2026-10-17
+ms.date: 2026-11-10
 ms.topic: reference
 ---
 
@@ -396,3 +396,284 @@ Unmet: the WCAG 2.2 baseline criterion (#151). Conformance needs assistive
 technology testing and human review under #151 and #155, which are open.
 Engineering checks do not establish accessibility acceptance. Assessor, designer
 and inspector professional sign-off stays with named humans.
+
+## Programme case queue and paging: proposed v1 state and recovery design (2026-11-10, Refs #156 #230 #149)
+
+Version `programme-queue-paging-v1`. Status: PROPOSED, pending named review.
+It is a textual wireframe and state design, not an implemented or approved
+visual redesign, and no human has reviewed it. It matching the source or being
+indexed does not approve it. Companion tracking: [#156](https://github.com/jmservera/ama/issues/156)
+(design traceability), [#230](https://github.com/jmservera/ama/issues/230)
+(Programme queues), parent [#149](https://github.com/jmservera/ama/issues/149).
+
+### Scope and source pin
+
+* Partial scope: the installed `programme-queue` screen only. The source
+  installs it for Retrofit Programme Manager, Programme Support Officer and
+  Retrofit Coordinator; this design specifies no role-specific fields or
+  authority beyond that installed list.
+* It does not supply designs for the other #230 roles or screens, the other 73
+  individual traces, or whole #156 criterion 1.
+* Source pin `b471c56a066d678b50106d9051cfb788e2c9e573` (integration topic
+  `feat/demo-ux-coverage-parent-149-1110`, not MAIN acceptance), read only, not
+  executed. Files: `src/api/src/zava_forward/api/web/role-screens.js`
+  (screen at lines 498-504, queue at 259-346, generic list at 56-100),
+  `app.js` (error routing 448-456, focus 99-108), `style.css` (layout 257-264).
+* The #230 paging engineering is a frozen local candidate (head
+  `3b54035d662b066985842050bdcaa4c19c158e33`, not in the pin, not accepted
+  MAIN or assistive-technology proof). It is cited only as a source-qualified
+  statement that its author's constructed check covered keyboard paging, a
+  page-local filter, a retained selected home, an interrupted page request and
+  320 px width; this design does not rely on it.
+
+### User and task goal
+
+A programme user (Programme Manager, Support Officer or Coordinator) wants to
+find returned or handed-off work among the cases their role may see, keep the
+home they chose in view, and carry on after a failed or empty result without
+losing their place or mistaking a page-only view for a programme total. This
+follows [journey 1](#1-programme-manager--planner), where the sender keeps the
+chase until a receiver accepts, and the candidate checks UX-02, UX-03 and UX-07
+in the [profile review](../zava-forward-prototype-profile-review.md#proposed-acceptance-checks-for-the-next-prototype).
+Decisions honoured: D01 Fluent 2 and native semantics, D02 visible context and
+recoverable return, D04 honest partial recovery
+([register](../zava-forward-prototype-profile-review.md#design-decisions-and-open-questions)).
+
+### Current behaviour at the pin versus proposal
+
+Current behaviour is from reading the source. Items marked (P) are proposals
+only and change nothing until the owner decides.
+
+| Topic | Current at the pin | Proposed v1 (P) |
+| --- | --- | --- |
+| Lists | Side list "Choose a home" pages 20 rows by link (`page=`); main "Shared queue" pages 50 rows by buttons, offset not in the URL | Keep both; label each with its own page size and position so they are not confused (owner decision O2 on merging) |
+| Selecting a home while on shared-queue page 2 | Route change; the queue appears to reload at page 1 (inference from code, not run) | Shared-queue position survives home selection and return (owner decision O1) |
+| Opening a case from the shared queue | Home cell is plain text; case opens from the side list | Home cell link text "Open ZF-5 home view" (owner decision O3) |
+| Pager at ends | Buttons stay active; presses are no-ops | Native disabled plus a visible reason, "First page" or "Last page" |
+| Page failure | Text says "Try again" but offers no retry control; failure shares the status paragraph | Separate failure message with a "Try again" button for the same page; rows kept |
+| Filtered to zero | Table says "No records supplied. This does not establish readiness." beside "0 of N shown" | Distinct filtered-empty wording; "No records supplied" kept only for a genuinely empty result |
+| Narrow order | Side list (up to 20 rows) comes before the shared queue | "Skip to shared queue" link at the top of the screen (owner decision O2 on reordering) |
+| Selected-home context | Shown in the workspace status line and in the evidence panel below | One visible context line near the top of the main area |
+
+### Components and labels
+
+| Id | Component | Native element and label | Status or context text it carries |
+| --- | --- | --- | --- |
+| A | Screen heading | `h1` "Programme queue and connected home view" | none |
+| B | Screen links | `nav` "Specialist screens" | current screen marked with `aria-current` |
+| C | Context line (P) | paragraph | "Selected home: ZF-1" or "No home selected" plus "Page filter: <scope>" |
+| D | Side list | `section` "Choose a home" | "20 records on page N; T permitted cases"; Previous/Next links; Reset screen view |
+| E | Evidence boundary | `section` | read-only, nothing is sent, assigned or changed |
+| F | Page position | `p role=status` | "Showing cases a to b of T permitted cases. The scope filter applies to this page only. Not a portfolio total." |
+| G | Pager | `div role=group` "Queue pages" | Previous page, Next page buttons |
+| H | Scope filter | `form` "Scope filter", `label` Scope, Apply filter, Reset to default view | filter changes the view only |
+| I | Filter status | `p role=status` | "n of m records on this page shown. Scope: <name>." |
+| J | Table | named focusable region, `table` with caption "Shared queue: returned and handed-off work" | column headers per source; empty text per state |
+| K | Failure block (P) | `div role=alert` | what failed, rows kept, Try again |
+
+Scope names (source): Returned and handed-off work (default), Returned work
+only, Pending handoffs only, Blocked work, All permitted cases on this page.
+
+### State inventory and wireframes
+
+All wireframes are PROPOSED low-fidelity text, not rendered output. `[ ]` is a
+control, `<..>` is a placeholder for recorded data, `(P)` marks a proposal.
+Status is always text; no state depends on colour or an icon alone.
+
+Desktop, ready state, page 2 of 2 (T = 60 permitted cases):
+
+```text
+Programme queue and connected home view                          (h1)
+Specialist screens: [Programme queue...] [Technical queue] [...]  (nav)
+(P) Selected home: ZF-1 | Page filter: Returned and handed-off work (default)
++-------------------------------+---------------------------------------------+
+| Choose a home                 | Evidence boundary                           |
+| Cases your role may see. A    |  Read-only view of recorded work. Nothing   |
+| bounded page, not a portfolio |  here sends, assigns or changes a record.   |
+| total.                        |                                             |
+| 20 records on page 1; 60      | Shared queue                                |
+| permitted cases.              |  Showing cases 51 to 60 of 60 permitted     |
+|  ZF-1: <address>  (current)   |  cases. The scope filter applies to this    |
+|  ZF-2: <address>              |  page only. Not a portfolio total.          |
+|  ...                          |  [Previous page] [Next page - disabled:     |
+| [Next page] [Reset screen view]|   Last page]                                |
+|                               |  Scope [Returned and handed-off v][Apply]   |
+|                               |  [Reset to default view]                    |
+|                               |  3 of 10 records on this page shown.        |
+|                               |  Scope: Returned and handed-off work. No    |
+|                               |  record is changed.                         |
+|                               |  +----------------------------------------+ |
+|                               |  | Home | Return reason | Sender | Owner..| |
+|                               |  | ZF-52: <address> | <reason> | ...      | |
+|                               |  +----------------------------------------+ |
+|                               | Lifecycle and funnel (its own as-of)        |
+|                               | Not shown for this role                     |
+|                               | Selected home ZF-1 (evidence panel)         |
++-------------------------------+---------------------------------------------+
+```
+
+Narrow (320 px reflow, one column) in the order proposed:
+
+```text
+Programme queue and connected home view
+[Specialist screens: Programme queue, Technical queue, ...]
+(P) [Skip to shared queue]
+(P) Selected home: ZF-1 | Page filter: <scope>
+Choose a home (20 rows, own pager)          <- current order places this first
+Evidence boundary
+Shared queue: page position, pager, filter, status
+[ table in a named, focusable, horizontally scrollable region ]
+Lifecycle and funnel
+Not shown for this role
+Selected home ZF-1 evidence
+```
+
+Loading next page (rows stay; the user can keep reading):
+
+```text
+Loading page. The current rows stay until it arrives.     (role=status)
+(P) [Previous page] [Next page]   (controls remain; guarding a second press is proposed, the pin has no guard)
+```
+
+Page failure (P):
+
+```text
+That page could not be loaded. The rows shown are unchanged.   (role=alert)
+Reason: <server message, or the existing generic read error with owner and
+next action>
+[Try again]   (re-requests the same page)   or open a case from Choose a home
+Showing cases 1 to 50 of 60 permitted cases. ...             (position unchanged)
+```
+
+Filtered to zero on this page (P):
+
+```text
+0 of 10 records on this page shown. Scope: Blocked work.
+No records on this page match this scope. This filter looks at this page only;
+other pages may match. [Reset to default view] or use Next page / Previous page.
+```
+
+Genuinely empty (total 0, or page returned no rows):
+
+```text
+No permitted cases were returned. No records supplied. This does not establish
+readiness. Reset the view or return to your work list.   [Back to my work]
+```
+
+First-load failure, denial and session states (source behaviour retained):
+
+```text
+Workspace unavailable                                          (role=alert)
+<server message or the generic read error>      [Try again]   [Back to my work]
+```
+
+```text
+Screen unavailable. This screen is not installed for your signed-in role.
+Your access has not changed.       [Back to specialist screens]
+```
+
+```text
+Your session has ended. Sign in again.        (sign-in screen; no queue data shown)
+```
+
+```text
+Invalid screen page. Choose a page from the queue.   [Reset screen view]
+```
+
+### Task flow
+
+1. Open Programme queue. Loading text shows ("Loading recorded evidence."), then
+   the ready state with the default scope.
+2. Read the page position text. Understand that rows, counts and any filter
+   refer to this page of permitted cases, not a programme total.
+3. Optionally choose a scope and Apply, or Reset to default view. The status
+   line states the count of rows shown on this page and that no record changes.
+4. Use Previous page or Next page. Rows stay while the next page loads; the
+   chosen scope and the selected home stay; the page text updates.
+5. Choose a home. The evidence panel shows that home. Return to the queue keeps
+   the filter and, if owner decision O1 is accepted, the queue position.
+6. Recovery branch: on failure keep reading the rows already shown, use Try
+   again, or open the case workspace or your work list. Nothing is sent or
+   changed by any step on this screen.
+
+### Reading and focus order
+
+* Desktop (above 900 px): heading, screen links, context line (P), side list
+  with its pager links, evidence boundary, page position, pager, scope select,
+  Apply, Reset, filter status, table region, selected-home evidence link. Source
+  order puts the side list first; the sticky side column is visually left.
+* Narrow: the same order in one column; the skip link (P) moves to the shared
+  queue. Wide table content scrolls inside its own named, focusable region, not
+  the page.
+* Paging, filtering and Reset do not move focus away from the control used;
+  the status line announces the result politely. A failure is announced as an
+  alert and the user's focus stays on the control they used (P: Try again
+  follows in tab order). Route changes, as in the source, focus the application
+  region once.
+* Ends of the list: a disabled Previous or Next (P) leaves the tab order, and
+  the reason is visible text, so no one meets a control that silently does
+  nothing.
+
+### Page-local versus portfolio semantics
+
+| Number or label | What it means | What it must not be read as |
+| --- | --- | --- |
+| "20 records on page N; T permitted cases" (side list) | 20-row page; T is the count the API reports for this role | a programme or portfolio total |
+| "Showing cases a to b of T permitted cases" (shared queue) | 50-row page of the same permitted set | a count of all cases in the organisation |
+| "n of m records on this page shown" | rows of the loaded page that match the scope | matches across other pages |
+| Lifecycle and funnel counts | the funnel report's own as-of and denominator column | a total derived from the queue list |
+| Empty or "No recorded blocker" | nothing recorded for this view | readiness or no work elsewhere |
+
+### Safe error, recovery and manual boundary
+
+* The screen is read-only. Every consequential decision (handoff acceptance,
+  readiness, approval, resident contact) stays with named people in the
+  existing case workspace and their own processes.
+* A failed or empty queue must never look like zero work. Failure, filtered
+  empty, genuinely empty, denied and session ended each have their own
+  sentence.
+* Denial and unavailable messages state that access has not changed and do not
+  reveal another case or role's content.
+* Manual route: Back to my work, the existing case workspace, and the existing
+  generic read error wording (owner: application support; next action: refresh,
+  then contact application support). No telephone number, address or named
+  contact is specified here; any help route needs an owner-supplied contact.
+
+### Content and accessibility considerations
+
+* Use the [content standard](../content-standard.md) pattern: what happened,
+  who owns it, what to do next, in plain language; sentences begin with the
+  state, not a code.
+* Keep the existing Fluent 2 native semantics ([design system](../design-system.md#decision-adopt-fluent-ui-fluent-2)):
+  native `button`, `a`, `select`, `label`, `table` with `caption` and
+  `th scope=col`, `role=status` and `role=alert` regions, textual state in
+  every row. No new component library or framework.
+* Link text carries the case id so links are distinguishable in a link list
+  (WCAG 2.4.4 candidate); target-size and focus-visible rely on existing styles
+  and are not measured here.
+* Candidate checks for a reviewer: keyboard-only walk of every state above at
+  320 and 1280 px and 200% text; screen-reader announcement of page, failure
+  and recovery text; confirm disabled-end behaviour; confirm that selecting a
+  home does or does not keep queue position against owner decision O1.
+  Supported devices are not decided
+  ([proposal](../supported-devices-proposal.md)); this design commits to none.
+
+### Evidence, approval gaps and owner decisions
+
+| Id | Gap or decision | Needed from |
+| --- | --- | --- |
+| G1 | No named human design review of this version has been recorded | Programme and design owners (named) |
+| G2 | No assistive-technology, usability or user evidence for this surface; the WCAG baseline records no screen-reader, zoom, reflow or target-size test | accessibility and user-research owners |
+| G3 | Role and field contracts for Support Officer and Coordinator are not specified here | role owners |
+| G4 | The F3 queue-reset behaviour is a code-reading inference, not executed | independent run against the pin by a reviewer |
+| G5 | The #230 candidate is not accepted MAIN or AT proof; it does not approve this design | independent exact-head review |
+| O1 | Should the shared-queue position be kept in the URL and survive home selection and return? | owner and Workbench design owner |
+| O2 | Merge the 20-row side list and 50-row queue, reorder for narrow, or only add labels and a skip link? | design owner |
+| O3 | Should each shared-queue row link to its home view? | design and Programme owners |
+| O4 | Is the 50-row page size the intended size, or should the two lists share one? | owner |
+| O5 | Which devices and assistive technologies are supported ([proposal](../supported-devices-proposal.md))? | owner |
+| O6 | Is a help contact for persistent failure wanted, and who owns it? | owner |
+
+The register keeps the dated [#230 row](../zava-forward-prototype-profile-review.md#known-screen-features-and-exact-trace-or-gap)
+as supplied-gap text; this design is additive and does not change that row,
+whole-register status or any prior source or gap statement.

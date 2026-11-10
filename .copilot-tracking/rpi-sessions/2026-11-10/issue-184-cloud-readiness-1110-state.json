@@ -1,0 +1,79 @@
+{
+  "task_id": "issue-184-cloud-readiness-1110",
+  "task_slug": "issue-184-cloud-readiness-1110",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10/issue-184-cloud-readiness-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10/issue-184-cloud-readiness-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10/issue-184-cloud-readiness-1110-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-10/issue-184-cloud-readiness-1110-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10/issue-184-cloud-readiness-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10/issue-184-cloud-readiness-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Read-only ARM configuration observation only: exact hub, demo app and the two Bicep-declared job names in resource group ama; at most eight Azure CLI metadata invocations incl. one transient retry; no cloud write, inventory, secret, log, metric, SQL, model call or renewed budget",
+      "status": "confirmed",
+      "evidence": "user brief .../brief-184-cloud-readiness-research-1110.txt"
+    },
+    {
+      "decision": "Stage stops after Plan; Implement and Review are not started; implementation waits for Root disposition of the 108 shared KB index/log ownership (write ordering only, no functional dependency)",
+      "status": "confirmed",
+      "evidence": "user brief"
+    },
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready; 5 of 8 Azure CLI metadata invocations used, 0 retries (hub, consumer group, demo app found; job-live-simulator and job-live-receiver ResourceNotFound)",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/research/2026-11-10/issue-184-cloud-readiness-1110-research.md"
+    },
+    {
+      "decision": "Critique executed once, independent read-only rubber-duck; verdict as returned Revise (2 blocking, 3 significant, 2 minor); all 7 findings applied directly, no user decision needed, not repeated",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-10/issue-184-cloud-readiness-1110-critique.md"
+    },
+    {
+      "decision": "Root re-evaluated the shared-file dependency: ordinary local merge of docs/demo-model-metadata-108-1110 at f241a3681 into the 184 topic (merge 7f9070e8), planned PR target that parent topic, no push or remote write; 108 AI Tokenomics row and log entries immutable; 184 owns only the IoT synthesis subsection, its index row clause, the For #110/#184 paragraph and its own log entry; no further Azure queries",
+      "status": "confirmed",
+      "evidence": "Root resume instruction 2026-11-10; .copilot-tracking/plans/2026-11-10/issue-184-cloud-readiness-1110-amendment.md"
+    },
+    {
+      "decision": "Implement complete for the three planned KB files; validation documentation-only; no tests, gates or Azure calls. Review not run: parent 108 not merged on origin/main, so the candidate stays a local implemented partial awaiting Root's parent disposition",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/changes/2026-11-10/issue-184-cloud-readiness-1110-changes.md"
+    },
+    {
+      "decision": "Review executed once (same worker, scoped local review of f241a3681..0aa6dbc1, not independent); outcome conformant for the child diff with minor open R5-R7; chain stays QUALIFIED because implement-start is qualified; no whole-loop Pass; Root released LOCAL REVIEW ONLY, not push, PR, merge, target or parent reconciliation",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/reviews/2026-11-10/issue-184-cloud-readiness-1110-review.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "kb-ownership-108",
+      "summary": "Resolved by Root's local declared-stack admission; parent 108 independent review pending",
+      "resolution": "If parent review requires changes, wait for Root's updated parent reconciliation; if parent merges first Root re-evaluates target main"
+    }
+  ],
+  "next_action": {
+    "phase": "Review",
+    "action": "record review-done, commit, record commit-complete, then stop for Root independent assessment; publication hold remains"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Admission input list for any later live transport: device registration and certificates, receiver identity grants, SQL tables and grants, hub route and Entra receive limitation, image provenance, usage and a renewed finite budget, each under separate explicit authorization",
+      "rationale": "Research Part B gaps; nothing in this slice authorizes transport",
+      "evidence": ".copilot-tracking/research/2026-11-10/issue-184-cloud-readiness-1110-research.md"
+    },
+    {
+      "rank": 2,
+      "task": "Identify the existing Manual jobs of the 2026-11-08 handoff by exact name from project records before any later job-level query",
+      "rationale": "Q4 and Q5 not found; the historical inventory is unnamed",
+      "evidence": "infra/README.md Finite demo deployment plan; Research Part B"
+    }
+  ]
+}

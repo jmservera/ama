@@ -18,6 +18,14 @@ from zava_forward.core.sqlstore import SqlStore
 from zava_forward.core.store import ConflictError, Store
 
 
+def rule_successor() -> dict[str, Any]:
+    """Version 2 with a changed rule reference, which every field of the form depends on."""
+    definition = schema()
+    definition["version"] = 2
+    definition["rule_refs"][0]["version"] = "2"
+    return definition
+
+
 class FormReview(unittest.TestCase):
     def setUp(self) -> None:
         self.tmp = tempfile.TemporaryDirectory()
@@ -778,7 +786,7 @@ class FormReview(unittest.TestCase):
             self.assertEqual(result["history"], history)
             with self.assertRaises(ValueError):
                 self.review(store, result, epc)
-            forms.register_schema(store, self.actor, dict(schema(), version=2))
+            forms.register_schema(store, self.actor, rule_successor())
             result = form_review.view(self.reopen(store), self.actor, "ZF-1")["drafts"][0]
             self.assertEqual(result["stale_fields"], ["area", "epc"])
             self.assertEqual(result["history"], history)
@@ -833,7 +841,7 @@ class FormReview(unittest.TestCase):
             self.assertEqual(entry["reasons"], ["Reviewed inputs changed after this manifest."])
             self.assertEqual(entry["stale_fields"], [])
             self.assertEqual(entry["changed_fields"], ["area"])
-            forms.register_schema(store, self.actor, dict(schema(), version=2))
+            forms.register_schema(store, self.actor, rule_successor())
             entry = form_review.view(store, self.actor, "ZF-1")["drafts"][0][
                 "diagnostic_freshness"
             ][0]

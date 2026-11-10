@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-11-09
+ms.date: 2026-11-10
 ms.topic: reference
 ---
 
@@ -10571,6 +10571,9 @@ Moved the resident demo authority end to the exclusive 2026-11-01T00:00Z cutoff 
 
 * Added the "Not shown for this role" text panel to the per-home technical-queue and quality-queue screens and recorded it in the atlas trace. Source-level test only; criteria 2, 4 and 5 stay unmet and nothing was ticked. Evidence under `.copilot-tracking/` (2026-11-04 issue-233 withheld-evidence-screens).
 
+## [2026-11-05] update | Issue 96 dependency stale propagation (Refs #96)
+
+* Core `forms.schema_impact`, `form_review.proposal_freshness`, `dependency_impact` and export/manifest freshness now stale only the fields, staged proposals and approval references that depend on a source or schema change, and report malformed or missing lineage as Unknown or Review required. Read-only; no approval, schema approval, reviewed export or AI use. The 2026-11-04 r5 "no slice" record is kept as dated evidence and rejected for this sub-criterion only. Criteria 1 and 5 and whole-issue completion stay unmet. Evidence under `.copilot-tracking/` (2026-11-05 issue-96-r6-dependency-invalidation).
 ## [2026-11-05] update | Backlog sync preserves confirmed active delivery (Refs #1207)
 
 * `tools/backlog-sync.py` gained `--active N,N|none`, a validated list of open issues with a coordinator-confirmed live RPI session or frozen unpublished candidate; they are kept or proposed In Progress even when earlier merged PRs exist and no PR is open.
@@ -11284,3 +11287,166 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Appended a [qualification](../architecture/cutover-evidence-pack.md#qualification-q1-2026-11-09-appended-after-the-frozen-checkpoint-3965fa489d8f07d0180b94d3fdfd7db16441790d-originals-above-unchanged) to the checkpoint entry above: S1 was selected without a recorded prospective amendment, S1 raw retention is unverified after the scratch directory was removed (A-series originals survive with the coordinator), the absence statement is bounded to inspected paths, PRD FR-016 and FR-017 are not resident or complaints IDs, and the four final processes include one SQL run (1205 discovered, 171 skipped).
 * The earlier entry is unchanged. No approval, closure or acceptance is claimed.
+
+## [2026-11-09] update | Stage A synthetic assisted aftercare service and screen module (Refs #133)
+
+* Added a dedicated core service, an unwired screen module and focused tests, and a README paragraph in `src/core/README.md` that states what is and is not delivered. No server, store, route, inventory or shared fixture was changed.
+* Not claimed: connected API, persistence, restart or browser evidence, evaluator role, DPO or lawful-basis position, closure or tick of any criterion. Earlier entries unchanged.
+
+## [2026-11-09] update | Stage A corrective cycle C2: replay, sensor-context guard and unconfirmed-save wording (Refs #133)
+
+* Fixed four Medium independent Functional findings in the dedicated Stage A modules only: replay after `next_update` passes, sensor-context privacy guard and limits, unresolved-concern fraction rendering, and unconfirmed-save wording. No server, store, route, inventory or shared fixture changed.
+* Not claimed: connected API, persistence, restart or browser evidence, evaluator role, DPO or lawful-basis position, closure or tick of any criterion, independent review of the corrected head. Earlier entries unchanged.
+
+## [2026-11-10] update | Aftercare evaluator table audit and inventory count 12 (Refs #133)
+
+* Audited the new Stage A aftercare evaluator table, wrapped it in the existing `table-scroll` region, raised the table inventory in `test_accessibility_baseline.py` from 11 to 12 and added a dated note to the Tables row of the [WCAG baseline](research/ux/wcag-conformance-baseline.md). Earlier entries unchanged.
+* Not claimed: WCAG conformance, assistive-technology, browser, served or human acceptance.
+## [2026-11-09] update | Parent-topic Blob and Quality checkpoint (Refs #440 #1288 #1258 #1259 #136)
+
+* Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#parent-topic-blob-and-quality-checkpoint-2026-11-09-refs-440-1288-1258-1259-136) with an index paragraph: merged-main Blob identities and historical reuse kept separate from parent-topic Quality observations at local `34838154` (PR 1331 unmerged), one adverse local browser run (exit 1 at the simulation step, stale check versus the code-off route), the unreproducible 861 count, an unmet matrix with existing owners, and the merged-main resume requirement.
+* Earlier entries and the 2026-11-09 current-main checkpoint are unchanged. Not claimed: Quality merged-main functionality, live Blob, actual-model AI, assistive-technology or Major HVE acceptance, hosted success of the unpublished E8 commit, or any closure.
+
+## [2026-11-09] update | Merged-main Blob and Quality qualification (Refs #440 #1288 #1258 #1259 #136)
+
+* Appended a dated draft [qualification](../architecture/cutover-evidence-pack.md#merged-main-blob-and-quality-qualification-2026-11-09-refs-440-1288-1258-1259-136) after PR 1331 merged: `main` `1b7a1719b` (squash, tree equal to `f995774`), merge of main into the local checkpoint with source identical to main, one corrected browser observation M1 (exit 0, 30 checks, axe 0 violations, serious contrast incompletes remain), three failed invocation attempts preserved, historical reuse limits, and gap owners.
+* The parent-topic entry above, the original adverse O1 and all earlier entries are unchanged. Not claimed: whole #1288, #136 or #440 closure, live Blob, actual-model AI, assistive-technology, consent, human or Major HVE acceptance, Azure SQL or the refusal-event second-connection contract.
+
+## [2026-11-10] update | Quality M2 current-main qualification (Refs #440 #1288 #891 #184)
+
+* Appended a dated draft [qualification](../architecture/cutover-evidence-pack.md#quality-m2-current-main-qualification-2026-11-10-refs-440-1288-891-184) at `main` `32221a845` after PRs 1331, 1339, 1341 and 1342: merged identities, the Core, API and Agents subtree equivalence to the H2 observed source (importer PR 1341 qualified and excluded), commands with exits and the one SQLite-only skip, a document-qualified trace with evidence classes, gaps with existing owners and a CONTINUE recommendation with resume conditions.
+* Errata recorded without rewriting earlier entries: #891 is included in source `ddeebd01`, H2 had no peer and no byte claim, and the companion run is 29 passes plus one skip. Earlier entries, the adverse H0 and H1 records and the VM-local raw logs are unchanged or uncommitted. Not claimed: whole #440, #1288, #891 or #184 closure, Azure SQL, actual-model AI, human or resident authority, exact-head hosted CI, or any approval.
+
+## [2026-11-10] update | Merged-wave checkpoint on pinned main da4f52abb (Refs #440 #149 #153 #1238 #93 #96 #148)
+
+* Appended a dated draft [checkpoint](../architecture/cutover-evidence-pack.md#merged-wave-checkpoint-2026-11-10-refs-440-149-153-1238-93-96-148) and one index paragraph: an actual local targeted observation of `main` `da4f52abb` after PRs 1343, 1346, 1345 and 1348 (699 tests run, 562 pass, 137 skip of which 132 distinct SQL opt-in skips, 0 failures; one adverse run-command fault kept), document-qualified BRD and PRD trace rows, fresh `main` at start and end (`6f24e554a` is a rubric-only bot commit) and the exclusions of PR 1351, #89 and #132.
+* Not claimed: SQL Server, Azure, live rebuild, actual-model, trusted resident binding, human approval, hosted CI, document approval, a correction-ledger change, or closure of any issue. Earlier entries unchanged.
+## [2026-11-10] correction | Scenario manifest recipe digest refreshed for the empty-queue browser check (Refs #152)
+
+* Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) to the `src/api/checks/workbench_browser_check.py` bytes (`4bd825e9...a320` to `56409ec2...df9`) after the issue 152 empty-queue checks were added, because the validator compares recorded source digests with literal current bytes. Digest only: version, fixture case IDs, unavailable profiles and workflows, approval and evidence status, scenario semantics and the validator are unchanged, and no observed coverage is claimed. No index change. Evidence under `.copilot-tracking/` (2026-11-10 issue-152 correction 3).
+
+## [2026-11-10] correction | Merged-wave checkpoint counts and skip wording corrected, PR 1351 observed (Refs #440 #152)
+
+* Erratum to the entry "Merged-wave checkpoint on pinned main da4f52abb" above, which is left intact: its "132 distinct SQL opt-in skips" is inaccurate. The 137 skipped executions are 5 browser skips later executed in R6, 129 SQL Server opt-in, 1 Azure SQL opt-in, 1 SQL-replay-only exclusion on the JSON class and 1 JSON-rollback-only exclusion on the SQLite-backed class. SQLite ran; no external SQL Server or Azure SQL service ran. The 699 run, 562 pass and 137 skip are execution totals only: at least nine are known repeats (five browser, four orchestrator version and dependency-rule cases), and the earlier "694 distinct" claim is withdrawn without a replacement unique total.
+* Appended a dated C3 [addendum](../architecture/cutover-evidence-pack.md#c3-addendum-corrections-and-pr-1351-empty-queue-observation-2026-11-10-refs-440-152) after an ordinary merge of `main` `bcc99405c` (PR 1351, the entry above on the recipe digest): the seven queue-empty cases, 19 Core scenario-manifest and needs-inventory tests and the served synthetic Chromium workbench check pass on the merged source with the recipe digest matching the manifest. Partial PRD AC-034 and AC-043 only; no runtime coverage producer, Unknown is not zero work. The da4f52abb rows are not retconned. Not claimed: actual-model, trusted resident binding, live rebuild, SQL Server or Azure SQL, assistive-technology or human approval, closure, or any counter reset (#440 correction ledger C3 of five used, two remain).
+
+## [2026-11-10] review | Issue 135 C4 independent review recorded (Refs #135)
+
+* Added a dated [independent review record](../../.copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c4-independent-review-record.md) for frozen source head `5a63544c`: APPROVE, no findings, C3 order adverse preserved. No source change.
+
+## [2026-11-10] correction | Issue 135 C5 importer optional-driver mypy override (Refs #135)
+
+* Added a `mssql_python` mypy override to the Importer project, mirroring Core, after hosted `src-importer` failed on PR 1357 at `25946393`. Failed hosted evidence and the C3 order adverse are preserved. See the C5 [review](../../.copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c5-review.md).
+
+## [2026-11-10] review | Issue 135 C5 independent review recorded (Refs #135)
+
+* Added the C5 [independent review record](../../.copilot-tracking/reviews/2026-11-10/served-import-refusal-135-c5-independent-review-record.md): APPROVE, no findings; hosted new-head CI not yet observed. No source change.
+
+## [2026-11-10] integration | Issue 73 parent integrates main 4244e84e with merged child #1357 (Refs #73, #135)
+
+* Ordinary merge of main `4244e84e` (discovery-demo CLI from #1355, phase witness from #1358) into the served-exceptions parent holding child #1357. No file overlap and no conflict; both command-line entry points, the scoped register, rollback/idempotency and the Importer optional-driver typing override are preserved. See the [changes](../../.copilot-tracking/changes/2026-11-10-issue-73-served-parent-integration-1110-changes.md) and [review](../../.copilot-tracking/reviews/2026-11-10-issue-73-served-parent-integration-1110-review.md) records. Owner demo targeted tier only: not the full gate, no hosted CI observed, no push. Whole #135 and #73 stay open; no appointment, eligibility, production or assistive-technology claim.
+
+## [2026-11-10] review | Issue 73 independent review qualification and follow-up #1360 (Refs #73, #135, #1360)
+
+* Added a record-only [independent review qualification](../../.copilot-tracking/reviews/2026-11-10-issue-73-independent-record-1110-independent-qualification.md) for head `af7b20a3`: approve with comments, 0 Critical or High, one non-blocking Medium diagnostic finding, filed as follow-up #1360 ([record](../../.copilot-tracking/github-issues/issue-1360.md)) under owner decision D5 with no repair allowance. Root targeted checks and the original witness verification are recorded; no source change and no hosted CI claim. Original records are unchanged.
+## [2026-11-10] update | Discovery CLI feature-increment checkpoint on pinned main 0d262beee (Refs #440 #125)
+
+* Appended a dated [checkpoint](../architecture/cutover-evidence-pack.md#discovery-cli-feature-increment-checkpoint-2026-11-10-refs-440-125) to the cut-over evidence pack after the completed #125 increment (PR 1355, `a0f7cf182`). `main` `0d262beee` adds only a rubric score file. A bounded local matrix passed: 14 demo cases, 46 helper cases, 5 version and dependency-rule cases, a twice-run byte-identical CLI readback, extra-argument exit 2, a poisoned-environment comparison, an `strace` with no connect call and no write-mode open, and clean ruff and mypy (tool versions differ from the pins).
+* New periodic observation, not a correction: the #440 ledger stays at C3 of five. Constructed fixture only; whole #125, Phase 0, actual comparison, model and UI acceptance, hosted CI for the exact head and human approvals stay unmet. Recommendation CONTINUE; no issue ticked or closed, no new issue filed. Earlier entries and original adverse records are unchanged. Index paragraph added.
+
+## [2026-11-10] correction | Discovery CLI checkpoint D6 open list qualified (Refs #440 #125)
+
+* Additive qualification of the entry "Discovery CLI feature-increment checkpoint on pinned main 0d262beee", left intact. An independent review (approve_with_comments, zero blocking) found the pack's D6 list of opens outside source omitted `/usr/lib/ssl/openssl.cnf` (read-only, in the retained trace); the list is now stated as non-exhaustive. No connect call or write-mode open is contradicted, no run was repeated and the observation stays pinned at `0d262beee`. Correction C4 of five spent, one remains; no acceptance, closure or tick.
+
+## [2026-11-10] update | Tension browser check extended to technical and quality screens (Refs #233 #149)
+
+* Extended `src/api/checks/atlas_tensions_browser_check.py` so the same synthetic home ZF-1 is also checked on Technical queue and Quality queue at 1280 px and 320 px as the Programme Manager: withheld panel and items, fixture-derived sign-off, defect and evidence values, no blocked state shown as ready, labelled regions and Tab reach. The shared fixture overlays the existing `technical_quality_data` evidence at design version 1. Updated the atlas screen trace tension row, the API README paragraph and the index row. Engineering coverage for part of the #233 criteria C2 and C5 only; not the eight-stage walk, WCAG, assistive-technology, usability or live acceptance. No correction budget is minted or reset; the issue's correction balance stays unknown.
+
+## [2026-11-10] update | Independent qualification of the tension coverage candidate recorded (Refs #233 #149 #1362)
+
+* Recorded an independent functional assessment of the candidate at `6725ba504` (approve_with_comments, no Critical, High or Low, one nonblocking Medium) as follow-up #1362: the current design version assertion is a substring match that a recorded timestamp can satisfy (static counterexample, not a product defect), so current-version coverage is PARTIAL. Root re-ran the 11 focused unit tests with concrete module origins confirmed; browser, axe and assistive-technology results stay producer observations. A first recording attempt stopped at a refused implement-start (missing changes artifact) and is preserved with this recovery. No source, test or assertion change; no correction budget is minted or reset and the balance stays unknown. See `.copilot-tracking/changes/2026-11-10/issue-233-record-recovery-1110-changes.md`.
+
+## [2026-11-10] update | Proposed v1 state and recovery design for the Programme case queue and paging screen (Refs #156 #230 #149)
+
+* Added a dated, PROPOSED section "Programme case queue and paging: proposed v1 state and recovery design" to [`customer-journeys/programme.md`](./research/ux/customer-journeys/programme.md#programme-case-queue-and-paging-proposed-v1-state-and-recovery-design-2026-11-10-refs-156-230-149): goal, current-versus-proposed table from a read-only reading of pin `b471c56a066d678b50106d9051cfb788e2c9e573`, text wireframes (desktop, narrow, loading, failure, filtered-empty, empty, denied), task flow, reading/focus order, page-local versus portfolio semantics, recovery and manual boundary, content/accessibility notes and owner decisions O1-O6. The #230 paging engineering is cited only as a source-qualified local candidate.
+* Added one additive dated note to the [design-trace register](./research/ux/zava-forward-prototype-profile-review.md#known-screen-features-and-exact-trace-or-gap) and an index row. Register rows, the original fifteen-row and 74-row findings and prior statuses are unchanged; the trace check stays blocked because it cannot represent a partial proposed design for one screen, and no label was altered.
+* Not approved: no named human review, assistive-technology, usability, device or live evidence; not the other #230 roles, the other individual traces or whole #156 criterion 1. No source, checker, tooling or correction-allowance change; historical balance stays unknown. Original RPI evidence: `.copilot-tracking/*/2026-11-10/issue-156-programme-design-1110-*`.
+## [2026-11-10] integration | Issue 73 parent refreshed onto main 736561ba (Refs #73, #135, #1360)
+
+* Ordinary merge (no rebase or rewrite) of main `736561ba` into the parent branch after the published PR 1361 state read CONFLICTING. The local merge was clean; it does not prove hosted mergeability or CI. Source, infra, tools and workflows are byte-identical to `27dab9b5`. See the [research](../../.copilot-tracking/research/2026-11-10-issue-73-current-base-1110-research.md) and [review](../../.copilot-tracking/reviews/2026-11-10-issue-73-current-base-1110-review.md) records. Both earlier log histories are preserved. No change to the #1360 follow-up or the exhausted C5 budget.
+
+## [2026-11-10] update | Served import-refusal post-integration checkpoint on pinned main 1ee56da3a (Refs #440 #73 #135 #1360)
+
+* Appended a dated [checkpoint](../architecture/cutover-evidence-pack.md#served-import-refusal-and-exception-register-post-integration-checkpoint-2026-11-10-refs-440-73-135-1360) to the cut-over evidence pack after PR 1361 reached `main` (merge `1ee56da3a`, tree `b56e2bc2`, equal to the 1361 PR head tree). A focused local matrix in an owned environment passed: 172 unit cases run, 165 pass, 7 opt-in SQL Server skips, 0 failures; `node --check`, ruff and both mypy selectors clean; a constructed served story (refused file, idempotent transfer, steward, operator and unnamed-manager reads) and a refused-store exit 2.
+* New periodic observation, not a repair or reset of the Discovery checkpoint: the #440 ledger stays at C4 of five spent with one remaining, no source fix, no new corrective budget. Historical af7b, 27dab and 1fab observations stay dated and are not re-run; byte-identical source is not fresh evidence. PR 1357 is a contributing declared-parent merge, not main acceptance. The existing non-blocking #1360 stays unreproduced and unfixed; no new issue. MSSQL, served-browser, named role, hosted CI of the exact main commit and human approvals stay deferred, blocked or unknown. Recommendation CONTINUE; no criterion ticked or closed. Earlier entries and adverse records are unchanged. Index paragraph added.
+
+## [2026-11-10] correction | Served import-refusal checkpoint independent review qualification C5 (Refs #440 #73 #135 #1360)
+
+* Additive qualification of the entry "Served import-refusal post-integration checkpoint on pinned main 1ee56da3a", left intact. Independent review 19f0152 (approve_with_comments, zero Critical or High, two nonblocking Medium) found the pack claimed Core typing that was not run (only Importer mypy ran; Core had the dependency-rule test) and described the retained `E0` as a raw missing-package failure when only a tailed five-line summary and the `tail` pipeline status are retained. The pack now says Core typing was not run and that the `E0` cause is author-attributed; raw logs and original records are unchanged. This entry's earlier phrase "ruff and both mypy selectors clean" refers to the Importer only.
+* Ledger: the earlier Discovery C4 of five with one remaining was historical; this current #440 correction uses the one remaining allowance, so C5 is consumed and zero remain, with nothing transferred from #132 or #135. No source change, rerun, tick or closure; #1360 unchanged.
+
+## [2026-11-10] integration | Parent 149 coverage integration with main d52f20a51 (Refs #149 #440 #153 #156 #230 #231 #233 #96)
+
+* Normal merge `0e5758da2` of `main` `d52f20a51` into the reviewed parent `ae4b20007` (tree `a9b51381c57e`, no conflict). Added the dated section "Parent 149 coverage integration checkpoint" to the cutover evidence pack and its index paragraph; no earlier entry or source was changed.
+* Focused DEMO-tier local checks pass on the combined source (194 API unit, handoff browser 9, Core 38 with 7 opt-in SQL skips, importer 79, ruff, format, file-less mypy, role-screens, atlas, paging and Held download Chromium). Axe ran in the role-screens stories only. Recommendation CONTINUE; #1362, #1371 and #156 M1 stay with their owners; draft, local, no approval, no hosted CI, no acceptance; #149 and #440 stay open.
+
+## [2026-11-10] correction | Scenario manifest recipe digest refreshed for narrow-width empty-queue checks (Refs #152)
+
+* Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) to the `src/api/checks/workbench_browser_check.py` bytes (`56409ec2...df9` to `f649f27e...6e7`) after the own-queue empty-explanation check was extended from 1280 px to 320, 390 and 1280 px. Digest only: version, fixture case IDs, scenario semantics and the validator are unchanged, and no observed coverage is claimed. No index change. Evidence under `.copilot-tracking/` (2026-11-10 issue-152 C4).
+
+## [2026-11-10] correction | Scenario manifest recipe digest refreshed for vertical-clipping empty-queue check (Refs #152)
+
+* Updated the `recipe` source SHA-256 in [scenario-manifest.json](./research/retrofit-synthetic-data/scenario-manifest.json) (`f649f27e...6e7` to `9a975543...fe4`) after the own-queue empty-explanation check also rejected vertical clipping (C5). Digest only: no version, fixture or semantics change, no observed coverage claimed. Corrects the C4 wording: the 21 role-width observations are 15 empty-queue (five roles) and 6 populated-queue (two roles) observations. No index change. Evidence under `.copilot-tracking/` (2026-11-10 issue-152 C5).
+
+## [2026-11-10] update | Nomination and UX integration wave checkpoint (Refs #440 #130 #149 #153 #156 #1360 #1362)
+
+* Appended a dated draft section to [cutover-evidence-pack.md](../architecture/cutover-evidence-pack.md) for `main` `65c2ab9d9` (PR 1381 and PR 1376), with identities, document-qualified requirement trace, evidence classes and owners, and indexed it in [README.md](./README.md). It consumes Root local runs on source-equal predicted trees; nothing was run on the exact main commit, Azure observed is none, and no Draft, proposal, human or HVE item is approved. A first attempt was refused by the witness (malformed state, archived byte-exact) and this is the single authorised retry. Separate from the CSV-learning record. Evidence under `.copilot-tracking/` (2026-11-10 nom-ux-retry-440-1110).
+
+## [2026-11-10] update | Bicep public-simulation current-main checkpoint (Refs #440 #136 #1288)
+
+* Appended a dated draft section to [cutover-evidence-pack.md](../architecture/cutover-evidence-pack.md) for `main` `0a6dc0b3f` (PR 1380), with identities, a Bicep contract trace, evidence classes, owners and gates, and indexed it in [README.md](./README.md). It consumes Root local runs and a later image admission on an auxiliary composition whose tree differs from the pin only in the rubric score file; nothing was run on the exact main commit, Azure observed is none, the three baseline policy typing errors stay unwaived, and no Draft, proposal, human or HVE item is approved. The earlier nomination and UX entry and the CSV-learning record are unchanged. Evidence under `.copilot-tracking/` (2026-11-10 bicep-observation-440-1110).
+
+## [2026-11-10] update | Registry wave current-main checkpoint (Refs #440 #185 #110 #109 #184 #111 #1288)
+
+* Appended a distinct dated draft section to [cutover-evidence-pack.md](../architecture/cutover-evidence-pack.md) for `main` `6cc59776` (PR 1393), with identities, a Registry contract trace, evidence classes, owners and gates, and indexed it in [README.md](./README.md). It consumes Root local runs on the reviewed candidate with component-subtree equivalence only (not full-tree equality); no command was run on the exact main commit, Azure observed is none, the full Core discovery timeout stays not a pass, and no Draft, in-review, proposed, human or HVE item is approved. No new defect or issue is recorded and the recommendation is bounded local #109 integration and testing. The nomination and UX and Bicep entries and the CSV-learning record are unchanged. Its declared parent (PR 1396) later merged as `main` `eff05737`; the topic then took main by an ordinary merge (see the parent-transition entry in the evidence below), with `6cc59776` kept as the historical pin and equal `src`, `infra` and `tools` ids. Evidence under `.copilot-tracking/` (2026-11-10 registry-source-observation-440-1110).
+
+## [2026-11-10] update | Sensor-review wave actual-main checkpoint (Refs #440 #109 #111 #184 #1288)
+
+* Appended a distinct dated draft section to [cutover-evidence-pack.md](../architecture/cutover-evidence-pack.md) for `main` `4c1b4099` (PR 1404, tree `75158203`), with identities, the PR 1395 to parent and PR 1404 to main lineage, a sensor-review contract trace, evidence classes, owners and gates, and indexed it in [README.md](./README.md). It consumes Root local runs on a staged tree (not a post-commit checkout and not main); `src`, `infra` and `tools` ids equal the reviewed head and the only other difference is main's rubric score file. Nothing was run on the exact main commit, Azure, provider, model and resident observed is none, the role-inventory first failure and the opt-in skips stay not passes, and no Draft, in-review, proposed, human or HVE item is approved. No new defect or issue is recorded and the recommendation is to continue; whole #109 and #111 stay open and #132, #144, #1401 and #1402 are excluded. The aftercare checkpoint in PR 1405 was not on main when read and is not part of this entry. Evidence under `.copilot-tracking/` (2026-11-10 sensor-actual-main-440-1110).
+
+## [2026-11-10] update | Aftercare integration current-main checkpoint (Refs #440 #89 #133 #134 #1401 #1402)
+
+* Appended a distinct dated draft section to [cutover-evidence-pack.md](../architecture/cutover-evidence-pack.md) for PR 1400 merged as `main` `64c3f9191` (tree `8fbdaec7`), and indexed it in [README.md](./README.md). Direct tree comparison shows the `src`, `infra` and dependency inputs equal the tested candidate `b7e46b3be`; `.github` and main-only documents stay as on main. The 77 authored paths are qualified against the 98-path review superset.
+* Core, API, SQL, static and browser results are attributed to the author's original commands on the candidate, with the SDK-missing and progress output-directory first failures preserved; nothing was run on main and Azure observed is none. #1401 and #1402 stay open, unfixed and unwaived with source-repair authority blocked; whole #89, #133 and #134 stay open and #132 is excluded.
+* Recommendation: bounded CONTINUE for local #134 screen walkthroughs of the implemented staff-assisted surface only; no approval, tick or closure. Evidence under `.copilot-tracking/` (2026-11-10 aftercare-main-440-1110).
+
+## [2026-11-10] update | Sensor-review checkpoint qualification (Refs #440 #109 #111)
+
+* Added a dated qualification to the sensor-review section of [cutover-evidence-pack.md](../architecture/cutover-evidence-pack.md) and the [README.md](./README.md) index paragraph, after PR 1405 merged as `main` `ac962fe6` (16:44:27Z) and this topic took `main` `d79180309` by an ordinary merge. The earlier statement that PR 1405 was open is kept as the `4c1b4099` snapshot, not rewritten. `src`, `infra` and `tools` ids still equal `4c1b4099`; the candidate-stage runs remain on the staged tree `d45426bd`, the rubric score file exception stands, and no fresh runtime run on any `main` is claimed. The first checkpoint's witness `verify` exit 1 (review edited after `review-done`) is preserved; the correction has its own chain. Both the sensor and aftercare sections stay append-only; no earlier entry changed. Evidence under `.copilot-tracking/` (2026-11-10 sensor-qualification-440-1110).
+
+## [2026-11-10] update | Sensor-review checkpoint publication qualification C2 (Refs #440 #109 #111)
+
+* Added a dated publication qualification to the sensor-review section of [cutover-evidence-pack.md](../architecture/cutover-evidence-pack.md) and one sentence to the [README.md](./README.md) index paragraph. Both witness chains stay QUALIFIED and publication stays on HOLD: the original chain (`80643f6b`) `verify` exit 1 for a review edited after `review-done`, and the qualification chain (`c21849e0`) `verify` exit 1 for a refused `research-open`. Exact external handoff, verify and native-log locators and the overwritten exit 64 command history are in the pack section. Earlier claims of strict state validation before each marker are qualified as JSON parsing only.
+* Labelled the earlier "aftercare section not present" process sentence as the `4c1b4099` snapshot and added a dated clarification that the ordinary merge preserves both sections. No earlier entry or witnessed record changed; the C2 chain outcome is external. Evidence under `.copilot-tracking/` (2026-11-10 sensor-c2-440-1110).
+
+## [2026-11-10] update | Regional model metadata observation (Refs #108)
+
+* Added a dated subsection to [AI Tokenomics](./resources/ai-tokenomics.md#regional-metadata-observation-2026-11-10-refs-108) and updated its index row in [README.md](./README.md). One bounded read-only Azure CLI pass (four invocations of a budget of eight) re-read the live demo app's `AI_ENDPOINT` and `AI_DEPLOYMENT` (plain values, no secret reference) and the matching account and deployment in `ama`: `uksouth`, `GlobalStandard` capacity 10, `gpt-4.1-nano` `2025-04-14`, `NoAutoUpgrade`, `Succeeded`. The regional quota limit and unit for that model and SKU stayed unknown (empty projected usage result), not zero.
+* Configured version is not serving attestation, the deployment name is an alias and any quota limit would not be reserved capacity or budget. Raw outputs stay private; no subscription identifier, identity, other resource, secret or aggregate usage is published. No call, inference, mutation or approval occurred and no #108, RAI or Tokenomics criterion was ticked. Evidence under `.copilot-tracking/` (2026-11-10 issue-108-model-metadata-1110).
+
+## [2026-11-10] update | Quota usage-name mapping continuation (Refs #108)
+
+* Appended a supplementary paragraph to the [regional metadata subsection](./resources/ai-tokenomics.md#regional-metadata-observation-2026-11-10-refs-108) of AI Tokenomics and adjusted its index row. Using unspent queries 5 and 6 of the original eight (six spent, no retry), the regional model catalog gave the provider usage name `OpenAI.GlobalStandard.gpt4.1-nano` for `gpt-4.1-nano` `2025-04-14` `GlobalStandard` in `uksouth`; the exact-name usage read returned no row, so limit and unit stay unknown, not zero.
+* The earlier empty Q4 result and its inconclusive guessed filter are retained unchanged. No call, mutation, approval or criterion tick; whole #108, RAI and Tokenomics stay open and no further observation is automatic. Evidence under `.copilot-tracking/` (2026-11-10 issue-108-quota-mapping-1110).
+
+## [2026-11-10] correction | Regional metadata wording and erratum (Refs #108)
+
+* Corrected one sentence in the [regional metadata subsection](./resources/ai-tokenomics.md#regional-metadata-observation-2026-11-10-refs-108): the fine-tune usage identifier was observed in the Q5 catalog projection but was not used for a quota usage query.
+* Appended a dated erratum to the original metadata changes record, qualifying its no-divergence statement: the configured endpoint host and the account's advertised endpoint domain differed, and the account was matched by label within the approved resource group, without endpoint equivalence or serving attestation.
+* No new observation: six of the original eight reads remain spent, regional quota limit and unit stay unknown, the Q5 uniqueness-rule divergence stays disclosed and the criterion stays unticked. Whole #108, RAI and Tokenomics stay open.
+
+## [2026-11-10] update | IoT demo Azure configuration observation (Refs #184 #440)
+
+* Added a dated subsection to the [IoT sensor analytics research plan](./research/iot-sensor-analytics-research-plan.md#current-azure-configuration-observation-2026-11-10-refs-184-440) and updated the "For #110/#184" paragraph and the plan's index row in [README.md](./README.md). Evidence class: ARM configuration only. Five read-only Azure CLI metadata invocations (five of a budget of eight, no retry) on 2026-11-10 between 17:54Z and 17:55Z: the existing hub is `uksouth` B1 x 1, `Active`, `Succeeded`, private (public network `Disabled`, local auth disabled), consumer group `api-consumer` is present, the demo app is `Running` with a digest-pinned image, and `job-live-simulator` and `job-live-receiver` returned `ResourceNotFound` for those exact names.
+* Not observed: ingestion, device registration, certificates, routes, receiver grants, SQL, runtime or build provenance, schedule execution, other or unnamed jobs, usage, cost and budget (the hub cost scope ended 2026-10-31 and is not renewed). Not found does not mean no other job exists, and existing Azure costs were not measured. No new billable operation was requested; no further Azure query is planned. Whole #110, #140, #184 and #440 stay open and no issue, board or PR write occurred.
+* Ordering: written after an ordinary merge of the frozen local 108 parent `f241a3681`; the 108 AI Tokenomics row and log entries are unchanged. Evidence under `.copilot-tracking/` (2026-11-10 issue-184-cloud-readiness-1110); raw minimal outputs are external.

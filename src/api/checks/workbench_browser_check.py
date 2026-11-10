@@ -110,6 +110,55 @@ def reflow(page: Page, label: str) -> None:
     )
 
 
+EMPTY_WIDTHS = (320, 390, 1280)
+
+
+EMPTY_UNCLIPPED_JS = """el => {
+    if (el.scrollHeight > el.clientHeight + 1) return false;
+    const r = el.getBoundingClientRect();
+    for (let a = el.parentElement; a && a !== document.body && a !== document.documentElement;
+         a = a.parentElement) {
+        if (getComputedStyle(a).overflowY === 'visible') continue;
+        const p = a.getBoundingClientRect();
+        if (r.top < p.top - 1 || r.bottom > p.bottom + 1) return false;
+    }
+    return true;
+}"""
+
+
+def own_queue_empty_failures(page: Page, *, expect_empty: bool) -> list[str]:
+    """Observe the own-queue empty explanation at the page's current viewport."""
+    empty = page.locator("li.empty")
+    if not expect_empty:
+        return [] if empty.count() == 0 else ["empty explanation shown for a nonempty queue"]
+    failures: list[str] = []
+    empty.wait_for(state="attached")
+    if empty.count() != 1:
+        return [f"expected one empty explanation, found {empty.count()}"]
+    if not empty.is_visible():
+        return ["empty explanation is not visible"]
+    text = empty.inner_text()
+    if "No open cases are assigned to you" not in text:
+        failures.append("assigned-queue explanation missing")
+    if "unknown" not in text:
+        failures.append("unknown coverage not stated")
+    if "declared gap" in text:
+        failures.append("coverage gap invented")
+    box = empty.bounding_box()
+    viewport = page.viewport_size
+    if box is None or viewport is None or box["width"] <= 0 or box["height"] <= 0:
+        failures.append("empty explanation has no rendered size")
+    elif box["x"] < 0 or box["x"] + box["width"] > viewport["width"]:
+        failures.append("empty explanation extends outside the viewport")
+    if not empty.evaluate("el => el.scrollWidth <= el.clientWidth"):
+        failures.append("empty explanation overflows its box")
+    if not empty.evaluate(EMPTY_UNCLIPPED_JS):
+        failures.append("empty explanation is clipped vertically")
+    if not page.evaluate("() => document.documentElement.scrollWidth <= innerWidth"):
+        failures.append("page scrolls horizontally")
+    return failures
+
+
 def queue_signal_checks(page: Page, base: str) -> None:
     failures: list[str] = []
     page.get_by_text("Queue definitions", exact=True).click()
@@ -226,11 +275,34 @@ def queue_signal_checks(page: Page, base: str) -> None:
     check(f"issue 77 exact behavioral criteria; failures={failures}", not failures)
 
 
+def mutated_empty_failures(
+    page: Page, prop: str, value: str, *, clip: bool = False
+) -> list[str]:
+    """Observe a constructed test-page mutation of the empty explanation, then restore its style."""
+    empty = page.locator("li.empty")
+    original = empty.evaluate("el => el.getAttribute('style')")
+    try:
+        empty.evaluate(
+            "(el, [prop, value, clip]) => {"
+            " el.style.setProperty(prop, value);"
+            " if (clip) el.style.setProperty('overflow', 'hidden'); }",
+            [prop, value, clip],
+        )
+        return own_queue_empty_failures(page, expect_empty=True)
+    finally:
+        empty.evaluate(
+            "(el, original) => original === null ? el.removeAttribute('style')"
+            " : el.setAttribute('style', original)",
+            original,
+        )
+
+
 def run_browser(base: str) -> None:
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         errors: list[str] = []
         held: list[Route] = []
+        negative_done = False
         try:
             for role in MANIFEST["roles"]:
                 context = browser.new_context(viewport={"width": 1280, "height": 900})
@@ -255,6 +327,33 @@ def run_browser(base: str) -> None:
                     "n => document.querySelectorAll('.item').length === n", arg=len(role["ids"])
                 )
                 check(f"{role['role']} independent own IDs/order", ids(page) == role["ids"])
+                if role["role"] != "Contractor":
+                    for width in EMPTY_WIDTHS:
+                        page.set_viewport_size({"width": width, "height": 900})
+                        failures = own_queue_empty_failures(page, expect_empty=not role["ids"])
+                        check(
+                            f"{role['role']} empty explanation only when the own queue is empty, "
+                            f"unknown coverage never declared unrepresented, visible and wrapped "
+                            f"at {width}px; failures={failures}",
+                            not failures,
+                        )
+                    if not role["ids"] and not negative_done:
+                        negative_done = True
+                        page.set_viewport_size({"width": 320, "height": 900})
+                        hidden = mutated_empty_failures(page, "display", "none")
+                        clipped = mutated_empty_failures(page, "height", "12px", clip=True)
+                        page.set_viewport_size({"width": 1280, "height": 900})
+                        check(
+                            "constructed test-page mutation hiding the narrow empty explanation "
+                            f"is caught; failures={hidden}",
+                            bool(hidden) and not own_queue_empty_failures(page, expect_empty=True),
+                        )
+                        check(
+                            "constructed test-page mutation clipping the narrow empty explanation "
+                            f"vertically is caught for the clipping reason; failures={clipped}",
+                            "empty explanation is clipped vertically" in clipped
+                            and not own_queue_empty_failures(page, expect_empty=True),
+                        )
                 check(
                     f"{role['role']} exact server-described navigation",
                     page.locator("#nav a").evaluate_all(
@@ -491,6 +590,11 @@ def run_browser(base: str) -> None:
                 )
                 page.locator("#f-q").fill("no-such-home")
                 page.get_by_text("No cases match these filters.", exact=False).wait_for()
+                check(
+                    "no-match is a search result, not a coverage statement",
+                    "not a statement about scenario coverage"
+                    in page.locator("li.empty").inner_text(),
+                )
                 page.locator("#f-sort").select_option("name")
                 page.locator("#reset-queue").focus()
                 page.keyboard.press("Enter")

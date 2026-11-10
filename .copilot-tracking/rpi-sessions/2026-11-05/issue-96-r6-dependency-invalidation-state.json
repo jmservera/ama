@@ -1,0 +1,27 @@
+{
+  "task_id": "issue-96-r6",
+  "task_slug": "issue-96-r6-dependency-invalidation",
+  "parent_task": {"task_id": "93", "task_slug": "finance-integration-93"},
+  "mode": "automatic",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-05/issue-96-r6-dependency-invalidation-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-05/issue-96-r6-dependency-invalidation-plan.md",
+    "details": ".copilot-tracking/details/2026-11-05/issue-96-r6-dependency-invalidation-details.md",
+    "critique": ".copilot-tracking/reviews/plans/2026-11-05/issue-96-r6-dependency-invalidation-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-05/issue-96-r6-dependency-invalidation-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-05/issue-96-r6-dependency-invalidation-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; Planning Readiness Ready", "status": "recorded", "evidence": "research artifact"},
+    {"decision": "Critique executed once; compatible findings applied", "status": "recorded", "evidence": "critique artifact"},
+    {"decision": "Review executed once; conformant for the slice", "status": "recorded", "evidence": "review artifact"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Independent exact-head assessment; the full-gate receipt is external and reported in the final return"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Approval record design and named Finance review (C1, C5)", "rationale": "Needs human authority", "evidence": "review artifact"}
+  ]
+}
