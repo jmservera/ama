@@ -6,7 +6,7 @@
     "task_slug": "workspace-oracles-1384-1110"
   },
   "mode": "automatic",
-  "active_phase": "Plan",
+  "active_phase": "Review",
   "status": "active",
   "session_status": "running",
   "artifact_paths": {
@@ -15,7 +15,7 @@
     "details": ".copilot-tracking/details/2026-11-10-workspace-oracles-main-adoption-1384-1110-details.md",
     "critique": ".copilot-tracking/plans/critiques/2026-11-10-workspace-oracles-main-adoption-1384-1110-plan-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-10-workspace-oracles-main-adoption-1384-1110-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/2026-11-10-workspace-oracles-main-adoption-1384-1110-review.md"
   },
   "confirmed_decisions": [
     {
@@ -41,8 +41,8 @@
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Record witness launch, research-open, plan-done, strict parse, then implement-start in separate calls; then merge origin/main"
+    "phase": "Review",
+    "action": "Commit the staged merge, then record commit-complete and verify"
   },
   "prioritized_follow_ups": []
 }

@@ -1,0 +1,29 @@
+{
+  "task_id": "issue-231-positive-coverage-1110",
+  "task_slug": "issue-231-positive-coverage-1110",
+  "parent_task": {"task_id": null, "task_slug": null},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-issue-231-positive-coverage-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-issue-231-positive-coverage-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-issue-231-positive-coverage-1110-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-10-issue-231-positive-coverage-1110-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-issue-231-positive-coverage-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-issue-231-positive-coverage-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed, Ready; unchanged baseline passed (unit 16/8/12 OK; browser 231 and 231q exit 0, pinned axe ran)", "status": "done", "evidence": "research record; external evidence231 logs"},
+    {"decision": "Critique executed once by the implementing agent, approve, eight direct dispositions, no user decision", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-10-issue-231-positive-coverage-1110-critique.md"},
+    {"decision": "Implemented 231p and 231qp; final browser 231, 231q, 231p, 231qp exit 0; ruff, mypy, unit OK; negative controls preserved by mutation proof", "status": "done", "evidence": ".copilot-tracking/changes/2026-11-10-issue-231-positive-coverage-1110-changes.md"},
+    {"decision": "Review executed once (author), conformant for FOCUSED tier, residuals only; independent exact-head assessment pending; correction balance UNKNOWN", "status": "done", "evidence": ".copilot-tracking/reviews/2026-11-10-issue-231-positive-coverage-1110-review.md"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Independent exact-head assessment of the local commit before any publication; Refs 231 and 149 only"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent exact-head assessment of the frozen local commit", "rationale": "required before publication", "evidence": "review record residuals"},
+    {"rank": 2, "task": "Optional broader positive combinations (several measures, handed-over records) as a separate owner-admitted increment", "rationale": "single constructed home covered only", "evidence": "review record residuals"}
+  ]
+}

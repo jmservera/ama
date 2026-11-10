@@ -1,4 +1,4 @@
-"""Regression cases for the region-label and Tab-reach helper of the #233 tension check.
+"""Regression cases for the region, Tab-reach and withheld-panel helpers of the #233 check.
 
 Lightweight doubles stand in for the page; no browser is launched.
 """
@@ -8,7 +8,14 @@ from __future__ import annotations
 import unittest
 from typing import Any
 
-from checks.atlas_tensions_browser_check import check_regions_and_keys
+from checks.atlas_tensions_browser_check import (
+    QUALITY,
+    TECHNICAL,
+    WITHHELD,
+    WITHHELD_ITEMS,
+    check_regions_and_keys,
+    check_withheld,
+)
 
 
 class _Regions:
@@ -96,6 +103,26 @@ class RegionLabelTests(unittest.TestCase):
 
     def test_duplicate_names_both_reached_passes(self) -> None:
         _run(["Capacity", "Capacity"], [-1, 0, 1])
+
+
+class WithheldPanelTests(unittest.TestCase):
+    def _panel(self, screen: str, drop: str | None = None) -> dict[str, str]:
+        items = [i for i in WITHHELD_ITEMS[screen] if i != drop]
+        return {WITHHELD: "Withholding is not authorisation. " + " ".join(items)}
+
+    def test_complete_technical_and_quality_lists_pass(self) -> None:
+        for screen in (TECHNICAL, QUALITY):
+            check_withheld(self._panel(screen), screen, "double")
+
+    def test_missing_item_fails(self) -> None:
+        for screen in (TECHNICAL, QUALITY):
+            with self.assertRaises(AssertionError):
+                check_withheld(self._panel(screen, WITHHELD_ITEMS[screen][2]), screen, "double")
+
+    def test_missing_authorisation_statement_fails(self) -> None:
+        panel = {WITHHELD: " ".join(WITHHELD_ITEMS[QUALITY])}
+        with self.assertRaises(AssertionError):
+            check_withheld(panel, QUALITY, "double")
 
 
 if __name__ == "__main__":

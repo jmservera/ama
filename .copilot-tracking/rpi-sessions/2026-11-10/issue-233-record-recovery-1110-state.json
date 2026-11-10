@@ -1,0 +1,66 @@
+{
+  "task_id": "issue-233-record-recovery",
+  "task_slug": "issue-233-record-recovery-1110",
+  "parent_task": {
+    "task_id": "issue-233-independent-record",
+    "task_slug": "issue-233-independent-record-1110"
+  },
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10/issue-233-record-recovery-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10/issue-233-record-recovery-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10/issue-233-record-recovery-1110-details.md",
+    "critique": ".copilot-tracking/reviews/2026-11-10/issue-233-record-recovery-1110-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10/issue-233-record-recovery-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10/issue-233-record-recovery-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "One coordinator-authorised recovery of the stopped metadata recording attempt; pure docs; no source correction; correction balance UNKNOWN; do not fix the assertion",
+      "status": "user-confirmed",
+      "evidence": "brief-233-record-recovery-1110.md sha256 4212a9d8..."
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/research/2026-11-10/issue-233-record-recovery-1110-research.md"
+    },
+    {
+      "decision": "Critique executed once by primary agent; verdict proceed",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-10/issue-233-record-recovery-1110-critique.md"
+    },
+    {
+      "decision": "Implementation complete: issue-1362 record, changes record, log entry; src/infra/tools/.github equal 6725 (empty diff)",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/changes/2026-11-10/issue-233-record-recovery-1110-changes.md"
+    },
+    {
+      "decision": "Review executed once; conformant with qualifications, no blocking finding; no repair granted; correction balance UNKNOWN",
+      "status": "recorded",
+      "evidence": ".copilot-tracking/reviews/2026-11-10/issue-233-record-recovery-1110-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Same independent reviewer and Root assess the frozen local metadata candidate before publication; no source repair granted"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Independent exact-head review of this metadata record",
+      "rationale": "Required gate before publication",
+      "evidence": ".copilot-tracking/reviews/2026-11-10/issue-233-record-recovery-1110-review.md"
+    },
+    {
+      "rank": 2,
+      "task": "Root reconciles finite correction authority, then human decision on #1362 exact-field assertion and negative control",
+      "rationale": "Medium nonblocking finding; balance UNKNOWN",
+      "evidence": ".copilot-tracking/github-issues/issue-1362.md"
+    }
+  ]
+}
