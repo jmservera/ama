@@ -681,6 +681,39 @@ class JsonResidentDecisions(unittest.TestCase):
                 body = self.inventory(expected_version=current)
                 self.unchanged_failure(partial(self.store.resident_action, self.sam, "ZF-1", body))
 
+    def test_inventory_missing_households_key_is_malformed_but_null_is_unknown(self) -> None:
+        self.scope()
+        self.two_reports()
+        self.store.resident_action(self.sam, "ZF-1", self.inventory())
+        good = copy.deepcopy(self.store.cases["ZF-1"]["tenure_household_inventories"][0])
+        keyless = {key: value for key, value in good.items() if key != "households"}
+        corrupt: dict[str, list[dict[str, Any]]] = {
+            "missing key singleton": [keyless],
+            "missing key earlier revision": [keyless, dict(good, version=2)],
+        }
+        for label, history in corrupt.items():
+            with self.subTest(label):
+                with self.store.lock:
+                    self.store._case("ZF-1")["tenure_household_inventories"] = copy.deepcopy(
+                        history
+                    )
+                    self.store.save()
+                self.assertEqual(self.inventory_view()["status"], "Malformed")
+                gate = resident_gate(self.store.cases["ZF-1"])
+                self.assertIn("malformed", gate[0])
+                self.assertEqual(gate[-1], resident_decisions.TENURE_HOLD)
+                self.unchanged_failure(self.scope)
+                body = self.inventory(expected_version=len(history))
+                self.unchanged_failure(partial(self.store.resident_action, self.sam, "ZF-1", body))
+
+        with self.store.lock:
+            self.store._case("ZF-1")["tenure_household_inventories"] = [dict(good, households=None)]
+            self.store.save()
+        self.assertEqual(self.inventory_view()["status"], "Unknown")
+        self.store.resident_action(self.sam, "ZF-1", self.inventory(expected_version=1))
+        view = self.inventory_view()
+        self.assertEqual((view["status"], view["version"]), ("Declared", 2))
+
     def test_inventory_identity_and_route_are_count_only_refusal_reasons(self) -> None:
         self.scope()
         self.two_reports()

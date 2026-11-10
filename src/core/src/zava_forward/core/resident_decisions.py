@@ -285,7 +285,7 @@ def _inventory_history_ok(inventories, case_id):
     for number, revision in enumerate(inventories, 1):
         if (not isinstance(revision, dict) or type(revision.get("version")) is not int
                 or revision["version"] != number or revision.get("case_id") != case_id
-                or not _history_rows_ok(revision.get("households"))):
+                or "households" not in revision or not _history_rows_ok(revision["households"])):
             return False
     return True
 

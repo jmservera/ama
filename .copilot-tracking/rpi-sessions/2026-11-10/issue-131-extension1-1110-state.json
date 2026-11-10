@@ -1,0 +1,45 @@
+{
+  "task_id": "131-extension1-1110",
+  "task_slug": "extension1-131",
+  "parent_task": {"task_id": "131-inherited-repair-1110", "task_slug": "inherited-repair-131"},
+  "mode": "automatic",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10-extension1-131-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-extension1-131-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-extension1-131-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-10-extension1-131-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10-extension1-131-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10-extension1-131-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Owner authorized up to five additional corrections for the existing issue 131 scope (finite E1 to E5); this task is E1; spent history and previous minimum 0 preserved; not a reset; no automatic E2 after the frozen handoff",
+      "status": "done",
+      "evidence": "Root brief brief-131-extension1-2311.txt"
+    },
+    {
+      "decision": "Research executed; origin/main 6d4cd624 researched, dry-run merge clean; baseline Core 416 OK and API 21 OK on 61e95201; Planning Readiness Ready",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-10-extension1-131-research.md"
+    },
+    {
+      "decision": "Critique executed once (authored, not independent); verdict Proceed; PC-001..005 applied directly; not repeated",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-10-extension1-131-critique.md"
+    },
+    {
+      "decision": "Review executed once (authored, not independent); conformant for the single residual; E1 used, four remain subject to Root, no automatic E2; not repeated",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-10-extension1-131-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Root routes independent exact-head assessment by reviewer 8f078 before publication; any further correction needs Root"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Stronger API scope_record assertion for the refusal reasons (RV-001)", "rationale": "Cheap test hardening", "evidence": ".copilot-tracking/reviews/2026-11-10-extension1-131-review.md"},
+    {"rank": 2, "task": "Approved process to resolve identity_state (RV-002)", "rationale": "Identity reason otherwise permanent", "evidence": ".copilot-tracking/reviews/2026-11-10-extension1-131-review.md"}
+  ]
+}
