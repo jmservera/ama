@@ -4125,6 +4125,30 @@ No real model, private stock, SQL Server or Azure is exercised. Full scenario
 workflow coverage, operational definition ratification, human/screen-reader
 acceptance and mandatory live-platform application acceptance remain unmet.
 
+Keyboard walkthrough check (Refs #134). Run it from `src/api` with
+`python -m checks.specialist_keyboard_browser_check`, using a short
+`ZF_BROWSER_SCRATCH` path, the shared heavy-job lock and your own environment. It
+uses only synthetic data. It starts a browser and presses only Tab, Shift+Tab and
+Enter from the case list to each specialist screen served to each fixture login,
+to the first listed home, to every evidence table, the workspace link and Reset.
+At each stop it checks that the focus indicator is visible (an outline or ring of at
+least 2px; removed, transparent or zero-size styles fail, and an unusual ring shape
+needs a deliberate update of the check), that the
+status message has the right text and is announced politely, and that each
+evidence table has a label and can take focus. It also breaks 15 controls on
+purpose, such as removing a ring, a label or a status attribute, and each break must
+make the check fail. The output has about 714 PASS lines; that is a count of checks
+printed, not of acceptance criteria.
+
+What it does not show: picking a fixture login is not authentication; the status
+text is read from the page, not from a screen reader; endpoint and handoff wording
+is only checked as text; five screens have no evidence table on the fixture; Asset,
+Procurement and Auditor have no login; the first listed home stands in for all
+homes. It records no acceptance criterion as met and no human or assistive
+technology approval. Dated notes on how the check was built and verified, including
+earlier failed steps, are in the
+[validation record](../../.copilot-tracking/research/2026-11-10-keyboard-c4-134-1110-research.md).
+
 This is a bounded offline extension of the existing role workbench, not a new
 identity provider, role simulator, permission policy or operational acceptance.
 The [parity audit](../../docs/architecture/mvp-to-src-parity-matrix.md#role-task-queue-offline-slice-2026-10-16)
