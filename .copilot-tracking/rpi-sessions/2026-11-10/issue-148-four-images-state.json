@@ -3,8 +3,8 @@
   "task_slug": "issue-148-four-images",
   "parent_task": null,
   "mode": "automatic",
-  "active_phase": "Follow-up",
-  "status": "completed",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": "running",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-10-issue-148-four-images-research.md",
@@ -34,12 +34,17 @@
       "decision": "Review executed once; outcome conformant locally, independent exact-head review pending",
       "status": "confirmed",
       "evidence": "review artifact"
+    },
+    {
+      "decision": "C1 of five total (four remain): documentation-only clock erratum; original records and adverse finding preserved",
+      "status": "confirmed",
+      "evidence": "c1 research and critique"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Follow-up",
-    "action": "Coordinator independent exact-head review; no publication from this task"
+    "phase": "Implement",
+    "action": "Add additive erratum, verify, record changes and review"
   },
   "prioritized_follow_ups": [
     {
@@ -54,5 +59,11 @@
       "rationale": "docs outside owned files",
       "evidence": "review artifact"
     }
-  ]
+  ],
+  "c1_clock": {
+    "research": ".copilot-tracking/research/2026-11-10-issue-148-c1-clock-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10-issue-148-c1-clock-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10-issue-148-c1-clock-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-10-issue-148-c1-clock-critique.md"
+  }
 }
