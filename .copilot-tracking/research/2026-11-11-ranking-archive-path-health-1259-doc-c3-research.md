@@ -19,3 +19,7 @@ ms.date: 2026-11-11
 ## Limits
 
 No new observation, rerun, script, manifest or runtime is authorized. Missing facts stay missing. The native log shows collapsed outputs, so a forensic list of every touched file is not available beyond the 13 listed in `git status`.
+
+## Superseded in part (2026-11-11 documentary C4)
+
+The "13 other tasks" count and the first-chain `json.tool` stop above are the author's account, not exposed native output; see [the C4 changes record](../changes/2026-11-11-ranking-archive-path-health-1259-doc-c4-changes.md). The text above is otherwise preserved.

@@ -49,3 +49,7 @@ Deviations from the plan and the owner's boundaries, from the native log:
 | Changes: "6 tests and 7 failures", "Counts agree" | Section 2 |
 | Plan and details: raw logs and `manifest.txt` copied | Section 3 |
 | Review: "only deviation (AST parse ...)", conformant | Section 4 and the C3 review |
+
+## Superseded in part (2026-11-11 documentary C4)
+
+The "13 other tasks" count and the first-chain `json.tool` stop above are the author's account, not exposed native output; see [the C4 changes record](../changes/2026-11-11-ranking-archive-path-health-1259-doc-c4-changes.md). The text above is otherwise preserved.
