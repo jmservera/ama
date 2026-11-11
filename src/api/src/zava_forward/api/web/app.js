@@ -416,7 +416,7 @@ async function route() {
     else link.removeAttribute("aria-current");
   });
   const destination = me.navigation.find((item) => item.href === active);
-  const routeStatus = `${me.user.role}. ${destination?.scope || "Case workspace"}.`;
+  const routeStatus = `${me.user.role}. ${destination?.scope || (hash === "#/handoff-waiting" ? "Handoff waiting times" : "Case workspace")}.`;
   workspaceStatus.textContent = routeStatus;
   try {
   await requireWorkspaceScripts(hash, Boolean(m));
@@ -436,6 +436,7 @@ async function route() {
   if (homeCase) return await homeCaseView(decodeURIComponent(homeCase[1]));
   const building = location.hash.match(/^#\/building\/(.+)$/);
   if (building) return await buildingView(decodeURIComponent(building[1]));
+  if (hash === "#/handoff-waiting") return await handoffWaitingView();
   if (hash === "#/assistants") return await assistantQueueView();
   if (hash === "#/time") return await timeView();
   if (hash === "#/aftercare") return await aftercareWorkspaceView();
@@ -799,6 +800,68 @@ function workSteps(work) {
         `${item.kind}: ${item.status}; record date: ${item.recorded_at}; evidence: ${item.evidence}; source: ${item.source}; version: ${item.version}.`)))));
 }
 
+const WAITING_READ_ERROR = "Handoff waiting times could not load, so we cannot tell which handoffs are waiting. Owner: application support. Next action: check again, then contact application support if it continues.";
+const WAITING_DENIED = "This account cannot view handoff waiting times. Owner: a programme owner. Next action: ask a programme owner if you need access.";
+function waitingRows(data) {
+  const text = (v) => typeof v === "string" && v !== "";
+  const textOrNull = (v) => v === null || typeof v === "string";
+  if (!Array.isArray(data)) return null;
+  const valid = data.every((x) => x && typeof x === "object" && text(x.case_id) && text(x.status)
+    && text(x.as_of) && !Number.isNaN(Date.parse(x.as_of)) && Number.isFinite(x.age_hours)
+    && textOrNull(x.due_at) && textOrNull(x.chase_owner) && textOrNull(x.proposed_receiver)
+    && typeof x.escalated === "boolean" && typeof x.needs_escalation === "boolean"
+    && Array.isArray(x.reasons) && x.reasons.every(text) && x.approved_limit_hours === null);
+  return valid ? data : null;
+}
+
+const waitingTime = (s) => {
+  if (s == null) return "Unknown";
+  const d = new Date(s);
+  return Number.isNaN(d.getTime()) ? String(s)
+    : `${d.toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "UTC" })} UTC`;
+};
+
+// The server truncates timestamps to the minute, so a just-offered handoff can read slightly below zero.
+const waitingHours = (n) => `${Math.max(0, n).toLocaleString("en-GB", { maximumFractionDigits: 2 })} ${n === 1 ? "hour" : "hours"}`;
+
+async function handoffWaitingView() {
+  const back = h("a", { class: "back", href: queueHref() }, "Back to the list");
+  const title = h("h1", {}, "Handoff waiting times");
+  show(back, title, h("p", { role: "status" }, "Loading handoff waiting times..."));
+  let rows = null;
+  let message = WAITING_READ_ERROR;
+  try { rows = waitingRows(await api("/api/handoffs/unaccepted")); }
+  catch (e) {
+    if (e.name === "AbortError" || e.status === 401) return;
+    if (e.status === 403) message = WAITING_DENIED;
+  }
+  const recheck = h("p", {}, h("button", { type: "button", class: "alt", onclick: () => handoffWaitingView() }, "Check again"));
+  if (!rows) return show(back, title, h("p", { role: "alert", class: "err" }, message), recheck);
+  const scope = h("section", { class: "card", "aria-label": "Scope of this screen" },
+    h("p", {}, "This screen lists every handoff that has not been accepted yet and that your role can see. It is not the list called Handoffs waiting for you. It is read-only: nothing here changes a handoff."),
+    h("p", {}, "No approved waiting-time limit is set for the whole queue (OD-09 is not decided). A long wait alone does not mean a handoff is late, and nothing is escalated automatically. A handoff is marked as needing escalation only when its own due time has passed. Open the case to chase, escalate or withdraw."));
+  if (!rows.length) return show(back, title, scope,
+    h("p", { role: "status" }, "No unaccepted handoffs are visible to your role."), recheck);
+  const heads = ["Case", "Status", "Waiting", "Due", "Chase owner", "Proposed receiver", "Escalation"];
+  const escalation = (x) => [x.escalated ? "Already escalated." : x.needs_escalation ? "Needs escalation." : "No escalation reason recorded.",
+    x.reasons.length ? ` Reason: ${x.reasons.join("; ")}.` : ""].join("");
+  show(back, title, scope,
+    h("p", { class: "muted" }, `Recorded as of ${waitingTime(rows[0].as_of)}. Longest wait first.`),
+    h("section", { class: "card", "aria-label": "Unaccepted handoffs" },
+      h("div", { class: "table-scroll", tabindex: "0", role: "region", "aria-label": "Unaccepted handoffs table" },
+        h("table", {}, h("caption", { class: "sr-only" }, "Unaccepted handoffs and how long each has waited"),
+          h("thead", {}, h("tr", {}, heads.map((x) => h("th", { scope: "col" }, x)))),
+          h("tbody", {}, rows.map((x) => h("tr", {},
+            h("th", { scope: "row" }, h("a", { href: `#/case/${encodeURIComponent(x.case_id)}` }, x.case_id)),
+            h("td", {}, x.status),
+            h("td", {}, waitingHours(x.age_hours)),
+            h("td", {}, waitingTime(x.due_at)),
+            h("td", {}, x.chase_owner || "Unassigned"),
+            h("td", {}, x.proposed_receiver || "Unassigned"),
+            h("td", {}, escalation(x)))))))),
+    recheck);
+}
+
 async function listView(view) {
   coordinatorOrigin = null;
   queueOrigin = view;
@@ -898,6 +961,7 @@ async function listView(view) {
     view === "mine" && priorityPanel(),
     h("div", { class: "row between" }, title, h("div", { class: "row" },
       h("a", { class: "btn alt", href: view === "mine" ? "#/all" : "#/" }, view === "mine" ? "See all cases" : "See my cases"),
+      h("a", { class: "btn alt", href: "#/handoff-waiting" }, "Handoff waiting times"),
       h("a", { class: "btn alt", href: "#/import" }, "Check a spreadsheet"), csv)),
     results)));
   await load();

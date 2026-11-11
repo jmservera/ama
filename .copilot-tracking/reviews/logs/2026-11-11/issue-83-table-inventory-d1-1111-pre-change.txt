@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_every_table_has_a_caption_and_column_headers (test_accessibility_baseline.Wcag22Baseline.test_every_table_has_a_caption_and_column_headers)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-83-waiting-view-1111/src/api/tests/test_accessibility_baseline.py", line 130, in test_every_table_has_a_caption_and_column_headers
+    self.assertEqual(tables, 12, "new table: audit it and update this check and the record")
+AssertionError: 13 != 12 : new table: audit it and update this check and the record
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (failures=1)
