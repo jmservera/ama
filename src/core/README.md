@@ -5182,6 +5182,30 @@ is refused before any inspection. A manifest alone, loopback or a password alone
 SQL Server behaviour of the C4 source (lock timeout, `@@TRANCOUNT`, cross-connection writes), the real
 Docker provisioning path, the ledger-enabled migration and SQL Server scale are not yet proven.
 
+## Staff-mediated field evidence intake (#132, slice 3)
+
+`zava_forward.core.staff_intake` orchestrates `job_pack.py` and the existing `submit_quality`; it is not a new
+engine. `capture` records worker-confirmed notes against the current checklist version as an ordinary quality
+submission carrying a `field_receipt` (the one keyword added to `submit_quality`). `correct` appends a worker
+correction while the original notes are kept. `acknowledge` records a distinct receipt acknowledgement that
+leaves the quality state `Submitted` and the status "Receipt acknowledged - not accepted". The keying-in staff
+member, corrector and acknowledger join the record participants, so the existing independence rule bars them
+from accepting. A repeated `capture_ref` replays without a second record, and a changed pack digest is
+rejected as stale. The configured escalation destination comes from `ZF_STAFF_INTAKE_ESCALATION_OWNER`,
+`_ROLE` and `_CONTACT`; anything missing shows "Unknown - not configured". Nothing here is a contract
+instruction, resident consent or acceptance, and there is no escalation write path (gap kept). Persistence
+reuses the case body, so there is no schema change. Tests: `src/api/tests/test_staff_intake_api.py`.
+C4 changes: `capture` passes the work order's bound, still-current resident scope revision as
+`context_revision` (409 if missing or changed, never waived); new evidence needs an explicit valid
+`pack_digest`; a replay of a stored `capture_ref` is matched on the stored receipt before any current-pack
+check; `correct` also updates the matching quality item so the latest correction is what review sees.
+C5 changes: new evidence is rejected when the worker value equals any registered staff email, code or
+oid (a name is still allowed and the real accept path denies that person); `capture` runs `submit_quality`
+under the existing procurement validation token, so on SQL a work order withdrawn or reissued by another
+store before the commit raises a conflict and no receipt is stored. An existing token is never replaced.
+Limits: receipts stored before C5 with a staff code as worker are not rewritten; the JSON store has no
+cross-process guard; escalation stays a gap; synthetic approvals are not QA, legal or resident consent.
+
 ## Constructed learning-test report command (#129, Refs #123)
 
 `learning_test_bundles` can print one bundle's existing stop-first report from caller-constructed

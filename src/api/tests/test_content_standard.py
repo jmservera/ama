@@ -9,7 +9,7 @@ ROOT = Path(__file__).resolve().parents[3]
 WEB = ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web"
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "content-standard.md").read_text()
 BANNED = re.compile(r"\b(gates?|holds?|provenance|traces?|snapshots?|envelopes?)\b", re.I)
-AUDITED_FILES = ("app.js", "assistants.js", "panels.js", "ops.js", "chat.js", "timecapture.js", "role-screens.js", "simulator-control.js", "law.js", "law.html", "index.html", "welcome.html")
+AUDITED_FILES = ("app.js", "assistants.js", "panels.js", "ops.js", "chat.js", "timecapture.js", "role-screens.js", "simulator-control.js", "staff-intake.js", "law.js", "law.html", "index.html", "welcome.html")
 # Exact identifiers, raw technical JSON key and legacy stored finance value only.
 ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "v.provenance", "i.hold", "x.hold", "h.hold", "inv.hold", "Keep on hold", 'category("holds",', 'shared("holds",', "envelope: p.envelope", "p.snapshot")
 

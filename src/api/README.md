@@ -5707,3 +5707,22 @@ read for signed-in staff only: contractor identities get 403, an unknown order
 gets 404, and nothing is written, so it grants no contractor access and is not
 a provider portal. Worker evidence capture, acknowledgement, no-show recovery
 and escalation are still pure rules in the core with no route or persistence.
+
+## Staff job pack intake (#132, slice 3)
+
+Existing authenticated staff only; contractor identities get 403. `GET /api/workorders/{id}/field-intake`
+returns the job pack, receipts, independent-review state, visit recovery rows and the escalation destination.
+`POST /api/workorders/{id}/field-capture`, `/field-correct` and `/field-acknowledge` are handled by
+`zava_forward.core.staff_intake` (409 for a stale pack, duplicate acknowledgement or late correction).
+The screen `staff-job-pack-intake` (`web/staff-intake.js`) is registered through `registerRoleScreen`.
+Browser capture (opt-in, `ZF_STAFF_INTAKE_BROWSER=1` and the pinned `ZF_AXE_PATH`) ran axe on four states;
+SQL Server tests are opt-in with `ZF_STAFF_INTAKE_MSSQL=1`. This is not a provider portal and not assistive
+technology, named quality, legal or live acceptance. Slice 2 text above predates these routes.
+
+Corrective cycle C4: capture needs the explicit job pack reference the worker wrote against (400 if
+missing or malformed, 409 if the pack changed); a retry with the same capture reference replays the stored
+receipt even after the pack changed, and the screen shows it as already recorded, not as an error. The
+resident scope revision comes from the work order bindings and must still be current (409 otherwise), so
+independent quality review can accept or replace the evidence. A correction also updates the current quality
+item; the original notes and earlier corrections stay. Evidence recorded before C4 without a scope binding
+shows a blocker and cannot be accepted. A stale check and the save are atomic within one process only.
