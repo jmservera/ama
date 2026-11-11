@@ -11476,3 +11476,15 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#resident-choice-csv-feature-wave-integrated-main-checkpoint-2026-11-11-refs-440-1420-1432-80-73) for PR 1435 on main `e09b21f1d`. Seven non-browser selectors (counts 4, 30, 9, 24, 11, 11, 18 equal the static expectation), four merged inventory and QA cases and one real Chromium story 232 run (42 PASS, axe no violations) exited 0, with one preserved environment error (`node` missing from PATH) on the first screen-test attempt.
 * Evidence class: local synthetic only; main CI outcome not read; whole #80, #73 and #440 stay open and no acceptance is inferred.
 * Evidence under `.copilot-tracking/` (2026-11-11 choice-wave-main-440-1111); raw outputs are external.
+
+## [2026-11-11] update | Keyboard probe compatibility integrated-main checkpoint (Refs #440 #132 #134)
+
+* Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#keyboard-probe-compatibility-integrated-main-checkpoint-2026-11-11-refs-440-132-134) for merged PR 1438 on main `74e63363bdcb6f9d420ff9c71b8332a9baf0044b` (tree `e89381c5fa93d093ca8ab90f95812a023c1d3e7a`). It records document-qualified BRD, PRD and ADR blob and status rows, a zero-behaviour product delta, a dated source-equivalent local browser output (805 assertions, not a fresh main run, axe not run), merged local typing and lint exits, hosted CI as hosted only, and the exclusions (unpublished #134 candidate `468bdd3`, whole #132, #134, #149, #233, #80, #73, #440).
+* Evidence class: documentary; no runtime, source, test, CI or requirement change, no new issue, no criterion tick, no approval. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-11 keyboard-checkpoint-440-1111).
+
+## [2026-11-11] update | Staff-mediated contractor intake owner direction recorded in ADR 0007 (Refs #132)
+
+* Amended the Proposed [ADR 0007](../adrs/0007-contractor-intake-staff-mediated-proposal.md#owner-direction-reported-for-the-synthetic-demonstrator-2026-11-09-refs-132) in place: a bounded section quotes issue 132 comment 6753054374 in full as an owner direction reported for the synthetic demonstrator only, with relayed-source provenance (the original owner message was not found, so it is not independently authenticated). The earlier "owner has not decided", "Not delivered" and next-slice text is kept as dated snapshots with a current delta. Added one task row to the index.
+* Evidence class: documentary; no runtime, source, test, CI or requirement change. ADR 0007 stays Proposed; no formal acceptance of option A, provider portal, #116 resolution, real worker authentication, Legal, Compliance, DPO or identity-owner approval, or production claim; ADR 0002 staff identity authority and gates are unchanged; the escalation write path and named owner stay undelivered; no criterion tick or issue closure.
+* Evidence under `.copilot-tracking/` (2026-11-11 issue-132-channel-decision-1111).
