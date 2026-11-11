@@ -42,7 +42,10 @@ from checks.specialist_keyboard_browser_check import (
     wait_status,
 )
 
-sys.path.insert(0, str(ROOT / "src/core/tests"))
+# Append only when absent, so unittest discovery keeps its own tests directory first.
+CORE_TESTS = str(ROOT / "src/core/tests")
+if CORE_TESTS not in sys.path:
+    sys.path.append(CORE_TESTS)
 
 HOME_ID = "ZF-1"
 SIBLING_ID = "ZF-2"

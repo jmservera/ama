@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import copy
+import os
 import re
+import subprocess
+import sys
 import unittest
 from pathlib import Path
 from typing import Any
@@ -223,6 +226,26 @@ class ConnectedHomeCheck(unittest.TestCase):
                         self.assertIn("c.id", span)
                     else:
                         self.assertNotIn("c.id", span)
+
+    def test_importing_the_check_keeps_api_tests_first_for_discovery(self) -> None:
+        # A fresh process discovers this module, then the duplicate-named dependency-rule test.
+        api = SCREENS.parents[4]
+        script = (
+            "import sys, unittest\n"
+            "loader = unittest.TestLoader()\n"
+            "loader.discover('tests', pattern='test_connected_home_check.py')\n"
+            "suite = loader.discover('tests', pattern='test_dependency_rule.py')\n"
+            "import test_dependency_rule as rule\n"
+            "print('RECEIPT', rule.__file__, sys.path[0])\n"
+            "print('FAILED', [t.id() for t in suite._tests if 'Failed' in type(t).__name__])\n"
+        )
+        run = subprocess.run(
+            [sys.executable, "-c", script], cwd=api, env=os.environ, capture_output=True, text=True
+        )
+        self.assertEqual(run.returncode, 0, run.stderr)
+        receipt = next(x for x in run.stdout.splitlines() if x.startswith("RECEIPT")).split()
+        self.assertEqual(Path(receipt[1]).resolve(), api / "tests/test_dependency_rule.py")
+        self.assertIn("FAILED []", run.stdout)
 
     def test_portfolio_panels_with_other_homes_data_are_not_rejected(self) -> None:
         seen = observed_from(list(self.own["asset-board"]), "ZF-2")
