@@ -61,6 +61,9 @@ RULES = {
 MODEL_CALLS_PER_ATTEMPT = 1
 AGENT_DEPTH = 1
 ATTEMPT_CEILING = 3
+PERMIT_LEASE_MARGIN = 38.0  # seconds of lease a permit needs: 2 permit + 8 dispatch + 15 provider + 10 post, plus margin
+PERMIT_WINDOW = 2.0  # price and authority must stay valid this long after the permit
+PERMIT_REQUEST = ("body_sha256", "model", "deployment", "temperature", "configuration", "max_tokens", "input_bound")
 OUTPUT_SCHEMA = dict(required=("summary", "findings", "unknowns"), summary_chars=1200,
                      findings_count=12, finding_chars=800, citations_per_finding=8,
                      unknowns_count=80, unknown_chars=240, absolute_output_chars=16000,
@@ -1337,6 +1340,11 @@ class Assistants:
             task, now, l = self._row(db, tid), self.now(db), self.limits
             if task["state"] not in ("pending", "leased") or task["not_before"] > now or (task["state"] == "leased" and task["lease_until"] > now):
                 return None
+            if "permitted" in self._markers(db, tid):
+                task["reason"] = "A provider call may already have been permitted for this task; Finance or the manual route resolves it."
+                db.execute("UPDATE assistant_tasks SET state='failed',body=?,lease_until=0,revision=revision+1 WHERE id=?", (canonical(task), tid))
+                self.event(db, tid, kind="blocked-reclaim", reason="permitted-marker")
+                return None
             if task["attempts"] >= l.attempts:
                 task["reason"] = "Attempts exhausted; use the manual owner route."
                 db.execute("UPDATE assistant_tasks SET state='failed',body=?,revision=revision+1 WHERE id=?", (canonical(task), tid))
@@ -1475,20 +1483,25 @@ class Assistants:
         then restamps the attempt to cover the bounded send, so another caller cannot reuse the slot while this
         send is in flight. A refusal raises DispatchWithdrawn and sends nothing. A process suspended after this
         returns, outside user space, can still transmit late; the send window and socket deadline bound it."""
-        window = self.limits.timeout + HOLD_GRACE
-        refused = None
         with self.transaction() as db:
-            now = self.now(db)
-            held = self.disabled(db, capability, capacity=False)
-            row = db.execute("SELECT outcome,active_until FROM assistant_attempts WHERE id=?", (attempt,)).fetchone()
-            if held or row is None or row[0] not in ("reserved", "sending") or row[1] <= now:
-                refused = held or "The admission lease ended before the request was sent."
-                self.event(db, attempt.split(":")[0], kind="send-refused", reason=refused[:120])
-            else:
-                db.execute("UPDATE assistant_attempts SET outcome='sending',active_until=? WHERE id=?",
-                           (max(row[1], now + window), attempt))
+            refused = self._fence_in(db, attempt, capability)
         if refused:
             raise ai_consumption.DispatchWithdrawn(refused)
+
+    def _fence_in(self, db, attempt, capability):
+        """The fence decision in the caller's transaction: a refusal reason (after a `send-refused` event),
+        or None after restamping the attempt to `sending`. Shared by `fence_send` and `issue_permit`."""
+        window = self.limits.timeout + HOLD_GRACE
+        now = self.now(db)
+        held = self.disabled(db, capability, capacity=False)
+        row = db.execute("SELECT outcome,active_until FROM assistant_attempts WHERE id=?", (attempt,)).fetchone()
+        if held or row is None or row[0] not in ("reserved", "sending") or row[1] <= now:
+            refused = held or "The admission lease ended before the request was sent."
+            self.event(db, attempt.split(":")[0], kind="send-refused", reason=refused[:120])
+            return refused
+        db.execute("UPDATE assistant_attempts SET outcome='sending',active_until=? WHERE id=?",
+                   (max(row[1], now + window), attempt))
+        return None
 
     REPLACEMENTS = 3
 
@@ -1518,6 +1531,152 @@ class Assistants:
             if renewed:
                 db.execute("UPDATE assistant_attempts SET active_until=? WHERE id=?", (now + self.limits.lease, f"{tid}:{fence}"))
             return renewed
+
+    def complete_result(self, tid, owner, fence, envelope, output, failure=None):
+        """Post-back completion: the stored task, not the caller, supplies the snapshot and release.
+
+        Returns False for an unknown, unleased, wrong-owner or wrong-fence task, without any mutation.
+        `complete` then re-checks lease, release, epoch, admission and source binding under the transaction.
+        """
+        if not isinstance(envelope, dict) or not isinstance(tid, str) or not isinstance(owner, str) or type(fence) is not int:
+            raise ValueError("Malformed result.")
+        if (output is not None and not isinstance(output, dict)) or (failure is not None and not isinstance(failure, str)):
+            raise ValueError("Malformed result.")
+        if not self.sql:
+            raise ValueError(self.disabled())
+        with self.transaction() as db:
+            try:
+                task = self._row(db, tid)
+            except KeyError:
+                return False
+            marker = self._markers(db, tid).get("permitted")
+            matches = task["owner"] == owner and task["fence"] == fence
+            if marker is not None:
+                root = self._permitted_root(db, marker["meter_id"])
+                if (marker["owner"] != owner or marker["fence"] != fence or root is None
+                        or envelope.get("meter_id") not in (None, marker["meter_id"])
+                        or envelope.get("meter_root") not in (None, root)):
+                    self.event(db, tid, kind="result-rejected", reason="not-the-permitted-attempt")
+                    return False
+                envelope = dict(envelope, meter_id=marker["meter_id"], meter_root=root)
+                self._settle_meter(db, marker, envelope)
+            elif matches:
+                self.event(db, tid, kind="closed-without-permit", fence=fence)
+        if task["state"] != "leased" or not matches:
+            return False
+        return self.complete(task, envelope, output, failure)
+
+    def _permitted_root(self, db, meter_id):
+        """The attribution root the server reserved under; the caller never supplies it."""
+        return next((r["root"] for r in self.consumption._read(db) if r["kind"] == "reserved" and r["id"] == meter_id), None)
+
+    def _settle_meter(self, db, marker, envelope):
+        usage, outcome = envelope.get("usage"), envelope.get("outcome")
+        if outcome in ("returned", "model-mismatch") and ai_consumption.usage(usage):
+            self.consumption.complete_in(db, marker["meter_id"], usage, envelope.get("model"), "returned")
+        else:
+            self.consumption.complete_in(db, marker["meter_id"], None, None,
+                                         "timeout" if outcome == "timeout" else "provider-unavailable")
+
+    def _markers(self, db, tid):
+        found = {}
+        for (body,) in db.execute("SELECT body FROM assistant_events WHERE task_id=? ORDER BY at", (tid,)).fetchall():
+            event = json.loads(body)
+            if event.get("kind") in ("permitted", "closed-without-permit"):
+                found.setdefault(event["kind"], event)
+        return found
+
+    def _permit_block(self, db, task):
+        """Why a permit must not be issued now; every unresolved or unreadable condition fails closed to manual."""
+        capability = task["capability"]
+        epoch = self.continuity(db)
+        if self.suspended(db, capability):
+            return "suspended"
+        if self.admission(db, capability):
+            return "not-admitted"
+        if not continuity.epoch_current(task, epoch) or not continuity.epoch_current(
+                dict(capability=capability, continuity_epoch=task.get("claim_epoch")), epoch):
+            return "epoch-changed"
+        if digest(runtime_binding(capability, self.store.ai)) != task.get("claim_binding"):
+            return "binding-changed"
+        if task.get("release") != self.release_reference(db, capability):
+            return "release-changed"
+        row = db.execute("SELECT body FROM cases WHERE id=?", (task["case_id"],)).fetchone()
+        if row is None or digest(self.snapshot(db, capability, json.loads(row[0]))) != task["source_signature"]:
+            return "source-changed"
+        if not self._sensors_granted(db, task):
+            return "consent-not-granted"
+        if self._captured_sensors(task):
+            # A queued worker is not the in-process carrier, so no existing contract lets it carry captured readings.
+            return "captured-readings"
+        return None
+
+    def _refuse_attempt(self, db, task, state, reason):
+        now = self.now(db)
+        task["reason"] = f"Permit denied ({reason}); use the manual route."
+        db.execute("UPDATE assistant_tasks SET state=?,body=?,lease_until=0,revision=revision+1 WHERE id=? AND owner=? AND fence=?",
+                   (state, canonical(task), task["id"], task["owner"], task["fence"]))
+        attempt = db.execute("SELECT pool,reserved,outcome FROM assistant_attempts WHERE id=?", (f"{task['id']}:{task['fence']}",)).fetchone()
+        # Nothing was sent: a refusal in this transaction also releases an attempt the fence had restamped to sending.
+        if attempt is not None and attempt[2] in ("reserved", "sending"):
+            db.execute("UPDATE assistant_allowance SET used_calls=used_calls-1,reserved_tokens=reserved_tokens-? WHERE id=?", (attempt[1], attempt[0]))
+            db.execute("UPDATE assistant_attempts SET outcome='permit-denied',actual=0,active_until=0 WHERE id=?", (f"{task['id']}:{task['fence']}",))
+        self.event(db, task["id"], kind="permit-denied", fence=task["fence"], reason=reason, at_time=now)
+
+    def issue_permit(self, tid, owner, fence, request):
+        """One transaction: task-first lock, DB time after the lock, exact request, send fence, ledger reservation,
+        never-overwritten marker.
+
+        A deadlock or storage error propagates and rolls everything back; a refusal commits at most one task outcome and one refund.
+        """
+        if not isinstance(tid, str) or not isinstance(owner, str) or type(fence) is not int or not isinstance(request, dict):
+            raise ValueError("Malformed permit request.")
+        if not self.sql or not self.limits.valid:
+            raise ValueError(self.disabled())
+
+        def deny(reason):
+            return dict(permit=False, reason=reason)
+        with self.transaction() as db:
+            if db.execute("UPDATE assistant_tasks SET revision=revision+1 WHERE id=? AND owner=? AND fence=? AND state='leased'",
+                          (tid, owner, fence)).rowcount != 1:
+                return deny("task-not-leased")
+            now = self.now(db)  # read after the possibly blocking update, never before it
+            task, marks = self._row(db, tid), self._markers(db, tid)
+            if "closed-without-permit" in marks:
+                return deny("task-closed")
+            if task["lease_until"] <= now + PERMIT_LEASE_MARGIN:
+                return deny("lease-expiring")
+            attempt = ai_consumption.reference(f"{tid}:{fence}")
+            if "permitted" in marks or any(r["kind"] == "reserved" and r["attempt"] == attempt for r in self.consumption._read(db)):
+                return deny("duplicate-permit")
+            blocked = self._permit_block(db, task)
+            if blocked:
+                self._refuse_attempt(db, task, "disabled", blocked)
+                return deny(blocked)
+            ai, system_prompt = self.store.ai, build_request(task)
+            planner = getattr(ai, "request_plan", None)
+            plan = planner(*system_prompt, ai.fast, 0, self.limits.output_tokens) if planner and sum(map(len, system_prompt)) <= self.limits.input_chars else None
+            if plan is None or any(request.get(key) != plan[key] for key in PERMIT_REQUEST):
+                return deny("request-mismatch")
+            fenced = self._fence_in(db, f"{tid}:{fence}", task["capability"])
+            if fenced:
+                self._refuse_attempt(db, task, "disabled", "send-fence-refused")
+                return deny("send-fence-refused")
+            context = ai_consumption.CallContext(
+                ai_consumption.reference(tid), attempt, task["capability"], "retrofit-case", plan["configuration"],
+                ai_consumption.reference(runtime_binding(task["capability"], ai)["prompt_version"]), retry=task["attempts"] - 1)
+            meter, held = self.consumption.reserve_in(db, context, plan["model"], plan["input_bound"], plan["max_tokens"],
+                                                      live=ai.is_live(task["capability"]), min_window=PERMIT_WINDOW)
+            if meter is None or held:
+                self._refuse_attempt(db, task, "failed", held or "permit-held")
+                return deny(held or "permit-held")
+            self.event(db, tid, kind="permitted", owner=owner, fence=fence, attempt=attempt, meter_id=meter,
+                       body_sha256=plan["body_sha256"], issued_at=now)
+            window = self.consumption.dispatch_window_ms(db, meter)
+            if window < 1:
+                raise ValueError("A permit without a dispatch window cannot be issued.")
+            return dict(permit=True, meter_id=meter, issued_at=now, lease_remaining=task["lease_until"] - now,
+                        dispatch_within_ms=window)
 
     def complete(self, task, envelope, output, failure=None):
         if output is not None:
