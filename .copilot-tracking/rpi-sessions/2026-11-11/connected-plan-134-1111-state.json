@@ -1,0 +1,33 @@
+{
+  "task_id": "134-connected-plan-1111",
+  "task_slug": "connected-plan-134-1111",
+  "parent_task": {"task_id": "134-keyboard-c4-1110", "task_slug": "keyboard-c4-134-1110"},
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11-connected-plan-134-1111-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11-connected-plan-134-1111-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11-connected-plan-134-1111-details.md",
+    "critique": ".copilot-tracking/plans/critiques/2026-11-11-connected-plan-134-1111-plan-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research and Plan only; implementation, runtime, browser, install, push, issue/PR writes not admitted", "status": "confirmed", "evidence": "Root launch 2026-11-11"},
+    {"decision": "Keyboard correction history C1-C4 spent, one remains of original five; this launch consumes none and authorises no C5", "status": "confirmed", "evidence": "Root launch 2026-11-11"},
+    {"decision": "Research executed; Planning Readiness Ready", "status": "done", "evidence": ".copilot-tracking/research/2026-11-11-connected-plan-134-1111-research.md"},
+    {"decision": "Critique executed once; verdict Revise; six findings applied directly, none rejected, no user decision required", "status": "done", "evidence": ".copilot-tracking/plans/critiques/2026-11-11-connected-plan-134-1111-plan-critique.md"},
+    {"decision": "Review not run: planning-only launch, no implementation to review", "status": "not-applicable", "evidence": "Root launch 2026-11-11"}
+  ],
+  "blockers": [
+    {"id": "root-admission", "summary": "Implementation slice S1 needs Root admission and Root classification against the remaining original correction allowance", "resolution": null}
+  ],
+  "next_action": {"phase": "Implement", "action": "Root decides admission of S1 (connected_home_browser_check plus pure test); no agent action without it"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Admit and implement S1 connected same-home checker (seven perspective rows, six screens, ZF-1)", "rationale": "Source already permits the walk; only a served Store-journey fixture and a check are missing", "evidence": "research findings 1 to 3"},
+    {"rank": 2, "task": "Separately owned: probe undeclared-screen expectation for staff-job-pack-intake (unobserved)", "rationale": "Source-derived drift after PR 1425", "evidence": "research finding 6"},
+    {"rank": 3, "task": "Fixtures for deferred rows 6, 7, 8, 11", "rationale": "Journey holds no hazard, package, contractor or operator step", "evidence": "research subset table"}
+  ]
+}
