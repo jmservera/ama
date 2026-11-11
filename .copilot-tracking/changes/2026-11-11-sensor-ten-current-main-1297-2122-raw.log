@@ -1,0 +1,30 @@
+START 2026-11-11T21:27:19Z head=077ad5ad20293a1d79932ea14e9f639dd11e5a22 tree=d1dde25bc3476772bd9d97711558ed87d1f7a035 origin/main=077ad5ad20293a1d79932ea14e9f639dd11e5a22
+LOCK acquired nonblocking flock on /tmp/ama-rpi-heavy.lock
+RESOURCES MemAvailableMiB=6773 cpus=4 load=3.02 2.34 1.23
+CONTAINER 01a45974db047bae8957caa0e84b9dc6a10363c70cf09e136f1922d416e2e0e1 image=sha256:cf8f0ab2ebe61feec2eed2629061a07d247f791c2a8ddda74a4ac9f06a291718
+OWNERSHIP proven: label token set, running, binding 127.0.0.1:32773
+READY attempt=7
+SOURCE /home/azureuser/source/ama-demo-wt/issue-1297-current-ten-2122/src/core/src/zava_forward/core/mssqlstore.py
+SOURCE /home/azureuser/source/ama-demo-wt/issue-1297-current-ten-2122/src/core/src/zava_forward/core/sensor_analysis_store.py
+SOURCE /home/azureuser/source/ama-demo-wt/issue-1297-current-ten-2122/src/core/tests/test_sensor_analysis_mssql.py
+RUN cwd=src/api ZF_SENSOR_MSSQL=1 python3 -m unittest -v test_sensor_analysis_mssql
+test_any_declined_control_wins (test_sensor_analysis_mssql.MssqlRetainedAnalysisTests.test_any_declined_control_wins) ... ok
+test_declined_unknown_and_unmapped_consent_fail_closed (test_sensor_analysis_mssql.MssqlRetainedAnalysisTests.test_declined_unknown_and_unmapped_consent_fail_closed) ... ok
+test_live_weather_rows_are_not_indoor_input (test_sensor_analysis_mssql.MssqlRetainedAnalysisTests.test_live_weather_rows_are_not_indoor_input) ... ok
+test_matches_pure_derivation_over_retained_rows_and_is_reproducible (test_sensor_analysis_mssql.MssqlRetainedAnalysisTests.test_matches_pure_derivation_over_retained_rows_and_is_reproducible) ... ok
+test_read_only_and_no_task_without_approved_rule (test_sensor_analysis_mssql.MssqlRetainedAnalysisTests.test_read_only_and_no_task_without_approved_rule) ... ok
+test_reopened_store_reproduces_signal_without_writes (test_sensor_analysis_mssql.MssqlRetainedAnalysisTests.test_reopened_store_reproduces_signal_without_writes) ... ok
+test_stale_and_missing_readings_are_insufficient (test_sensor_analysis_mssql.MssqlRetainedAnalysisTests.test_stale_and_missing_readings_are_insufficient) ... ok
+test_unmapped_or_invalid_home_is_insufficient (test_sensor_analysis_mssql.MssqlRetainedAnalysisTests.test_unmapped_or_invalid_home_is_insufficient) ... ok
+test_unreadable_store_is_insufficient_with_no_priority_effect (test_sensor_analysis_mssql.MssqlRetainedAnalysisTests.test_unreadable_store_is_insufficient_with_no_priority_effect) ... ok
+test_weather_only_window_is_insufficient_with_explicit_reason (test_sensor_analysis_mssql.MssqlRetainedAnalysisTests.test_weather_only_window_is_insufficient_with_explicit_reason) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 6.402s
+
+OK
+UNITTEST_EXIT 0
+END 2026-11-11T21:27:42Z
+CLEANUP rm -f 01a45974db047bae8957caa0e84b9dc6a10363c70cf09e136f1922d416e2e0e1 exit=0
+CLEANUP_VERIFY container id absent
+CLEANUP_VERIFY label residue: []
