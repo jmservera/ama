@@ -23,8 +23,8 @@ Register the audited thirteenth script-built table (the #83 waiting table) in th
 * [x] P02 Update `src/api/tests/test_accessibility_baseline.py` count 12 to 13 with the comment naming the waiting table and the record
 * [x] P03 Update the baseline Tables row (and G-4 context if needed), `docs/reference/README.md` entry and append `docs/reference/log.md` entry
 * [x] P04 Focused validation and product byte-equality proof
-* [ ] P05 Original D1 Review
-* [ ] P06 Local identity, one Conventional Commit, clean tree and byte-equality proof on the committed head
+* [x] P05 Original D1 Review
+* [x] P06 Local identity, one Conventional Commit, clean tree and byte-equality proof on the committed head
 
 ## Validation
 
