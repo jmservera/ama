@@ -1,0 +1,146 @@
+{
+  "summary": "ONE independent, read-only Readiness review of docs/bounded-live-demo-plan-184-1111 at supplied frozen HEAD 76e21e9a78bd7d90996361237b2e63e8717bf29f, tree a798c6493c873fbd978f521c5ed8f2fe6602634f, against base e691255ff7aae111ef32d585900cf82c3789a78c. Entire supplied diff, all five changed planning artifacts, handoff, original seven-point Revise output and narrow source dependencies were consumed. Request changes to the exact bounded plan, not implementation. Source-guard and missing receive-path blockers are real; financial approval cannot clear them. Correct explicit Unknowns are not findings or acceptance. This review grants no execution, model calls, spend, publication, scope relaxation or whole-issue closure.",
+  "verdict": "request_changes",
+  "severity_counts": { "critical": 0, "high": 2, "medium": 4, "low": 0 },
+  "changed_files": [
+    { "file": ".copilot-tracking/plans/2026-11-11/issue-184-bounded-live-plan-1111-plan.md", "lines_changed": "New, 68 lines; read in full", "risk": "Low", "issue_count": 1 },
+    { "file": ".copilot-tracking/details/2026-11-11/issue-184-bounded-live-plan-1111-details.md", "lines_changed": "New, 53 lines; read in full", "risk": "Low", "issue_count": 2 },
+    { "file": ".copilot-tracking/research/2026-11-11/issue-184-bounded-live-plan-1111-research.md", "lines_changed": "New, 112 lines; read in full", "risk": "Low", "issue_count": 2 },
+    { "file": ".copilot-tracking/plans/2026-11-11/issue-184-bounded-live-plan-1111-critique.md", "lines_changed": "New, 16 lines; read in full", "risk": "Low", "issue_count": 1 },
+    { "file": ".copilot-tracking/rpi-sessions/2026-11-11/issue-184-bounded-live-plan-1111-state.json", "lines_changed": "New, 34 lines; read in full as deliverable metadata", "risk": "Low", "issue_count": 0 }
+  ],
+  "findings": [
+    {
+      "number": 1,
+      "title": "Receiver strategy contradicts both its start position and finite-window exit behavior",
+      "severity": "High",
+      "category": "Documentation",
+      "skill": "code-review",
+      "file": ".copilot-tracking/details/2026-11-11/issue-184-bounded-live-plan-1111-details.md",
+      "lines": "41-43",
+      "problem": "The latest-only premise is false: src/api/src/zava_forward/api/iot_stream.py:300 sets starting_position='-1', the Event Hubs beginning-of-retained-stream position, not '@latest'. Repeated windows can replay retained events; starting before a selected send does not isolate this run. More importantly, HubReceiver.run raises RUN_DEADLINE when the deadline expires without max_events receipts. live_receiver defaults to 1000 events and maps StreamError to exit 2. A one-home window with one or two new messages does not normally finish successfully on time alone. The instructions to stop at first failure and never re-run a failed execution therefore conflict with the proposed four-window journey. Counts alone also cannot prove that replayed or pre-existing rows came from this run.",
+      "current_code": "Receiver reads from the latest position. Start each receiver window before the sends it must retain; each window is at most 360 s and covers at most one or two 5-minute slots, so the plan retains only the readings the owner designates (at least those the flag cites), not all 13.",
+      "suggested_fix": "Correct the retained-stream start semantics in details, plan and critique. Before any execution approval, document an owner-approved receive design with an explicit event limit, replay handling, exact selected slot/reading IDs, expected exits and stop conditions, and how each designated window completes. If the required finite-window behavior needs source changes, mark a separately scoped design/source prerequisite rather than redefining failures as success. Require synthetic/redacted run-specific ID linkage through send, receipt, retained row, UI, captured snapshot/request witness and attributed flag; counts are supplementary."
+    },
+    {
+      "number": 2,
+      "title": "Expiry and monitoring do not establish the advertised transport hard stop",
+      "severity": "High",
+      "category": "Documentation",
+      "skill": "code-review",
+      "file": ".copilot-tracking/plans/2026-11-11/issue-184-bounded-live-plan-1111-plan.md",
+      "lines": "23-33",
+      "problem": "The table calls these hard maxima, and research Part D asserts no send after expiry or stop. live_simulator.run checks gate only before send_slot; send_slot's four-attempt loop never reloads control or checks expiry. An admitted slot can continue attempting after the 60-minute expiry or an enabled=false write. The original critique explicitly raised this, but its final disposition only adds expiry and monitoring. The scheduled job also has no global 13-execution/52-attempt counter; --once bounds one process, not all triggers. A 60-minute cron window is a scheduling assumption, not a durable count fence or immediate cancellation. Retry acknowledgements also do not establish unique service-side successful messages.",
+      "current_code": "| Sends | 13 successful messages, 52 attempts (4 per send), 1 message per 5-minute slot |\n| Transport window | 60 minutes, then control stop |",
+      "suggested_fix": "Distinguish at most 13 designated logical slots, application send attempts, acknowledged sends and unique retained readings. State that expiry prevents new slot admission, not in-flight retry cancellation. Specify exact UTC slot/trigger assumptions, no manual/replacement executions, monitoring threshold, deletion deadline and bounded drain allowance within the three-hour envelope. If the owner requires an absolute no-send-after-expiry or durable global attempt fence, record that as a separate source/design prerequisite; do not claim the existing control provides it."
+    },
+    {
+      "number": 3,
+      "title": "Token/call arithmetic does not match the actual reservation basis",
+      "severity": "Medium",
+      "category": "Documentation",
+      "skill": "code-review",
+      "file": ".copilot-tracking/research/2026-11-11/issue-184-bounded-live-plan-1111-research.md",
+      "lines": "85-89",
+      "problem": "The caveat correctly says characters are not provider tokens, but this section still calls 12,000 characters a conservative token bound and the resulting USD0.00576 a worst case. ai.py:145-184 instead reserves input_bound=len(provider_body(...)), an ASCII JSON byte count including serialization overhead and escapes, plus output tokens. ai_consumption.py:625-655 counts reservations against the call budget and includes prior actual usage or outstanding reservations. Thus 4 x (12,000+600) does not prove four admissible full-size calls or their worst-case price. The details allow two attempts without expressly saying retries consume the SAME four-call budget, which could be read as four proposals with eight physical requests.",
+      "current_code": "* Model: at most 4 calls, token allowance 50,400 (4 x 12,600). Worst case per call at the conservative char-as-token bound: 12,000 x USD0.0001/1K = USD0.0012 plus 600 x USD0.0004/1K = USD0.00024, total USD0.00144. Four calls: USD0.00576, at list price.",
+      "suggested_fix": "Label USD0.00576 an illustrative calculation only. Describe the actual serialized-byte reservation and the possibility that the 50,400 allowance admits fewer than four calls. Explicitly cap all reservations/physical attempts, including retries, at four total under one authority and aggregate token budget; never multiply the four-call ceiling by the two-attempt setting. Any future separately approved source revision must re-establish provider token bounds, timeout liabilities and financial-meter semantics."
+    },
+    {
+      "number": 4,
+      "title": "Costed plan lacks reproducible price evidence and understates receiver timeout compute",
+      "severity": "Medium",
+      "category": "Documentation",
+      "skill": "code-review",
+      "file": ".copilot-tracking/research/2026-11-11/issue-184-bounded-live-plan-1111-research.md",
+      "lines": "59-89",
+      "problem": "The table supplies USD units, retrieval date and three model meter IDs, but no exact official retrieval URLs or retained response records. Most compute/infrastructure rows omit meter/SKU identities and effective dates. The original log shows public prices.azure.com query commands, not durable response payloads proving those rates; the handoff reports temporary response files removed. This review cannot independently certify the claimed retail values from commands alone. Separately, the receiver compute 'worst case' uses 360 seconds per execution while infra/live-receiver-job.bicep sets replicaTimeout=windowSeconds+120: a 360-second receive setting permits a 480-second replica. Four such replicas allow 1,920 seconds, approximately USD0.02016 at the stated rates, not the 1,440-second assumption. This does not invalidate Unknown cost status, but it does invalidate the worst-case label.",
+      "current_code": "* Compute worst case: receiver 1,440 s x (0.25 x 0.000034 + 0.5 x 0.000004) = about USD0.0155; simulator 13 runs x 240 s = 3,120 s at the same rate, about USD0.0336. Sum about USD0.05 before any free grant, at list price.",
+      "suggested_fix": "Retain or cite reproducible public official price records with query URL, UTC retrieval date, meter/product/SKU, region, currency, unit, price type and effective date; do not invent original payloads. Treat unverified rates as provisional. Distinguish receive duration from replica timeout and cost the latter (or reduce the configured receive window if 360 seconds is intended as the whole execution maximum). Continue separating incremental estimates, existing fixed spend, newly activated ongoing resources and unresolved liabilities; budget alerts are not stops."
+    },
+    {
+      "number": 5,
+      "title": "Plan provenance overstates final-candidate independence and native run identity",
+      "severity": "Medium",
+      "category": "Documentation",
+      "skill": "code-review",
+      "file": ".copilot-tracking/plans/2026-11-11/issue-184-bounded-live-plan-1111-critique.md",
+      "lines": "4-16",
+      "problem": "The retained original log supports one rubber-duck invocation and the seven Revise findings, followed by author revisions. It does not show an independent re-review of frozen HEAD 76e21e9a. Calling that review 'on the final candidate' is inaccurate. Independence is a recorded invocation claim, not independently established isolation. Plan/research/handoff use d7c3b05b-1d90-41d2-80b2-ee64088929e2 as a run UUID, whereas the native final CLI Resume at rpi-live-plan-184-1111.log:468 is 053b0ad3-0c8d-46d8-b30c-e3b1f3fcdb3f; the log also shows generation of a UUID before artifact writing. These identifiers must not be conflated. Per supplied process evidence the wrapper .log.exit is missing, despite final output and a gone session, and the shared launcher was edited while other bash instances were running, so exit 0 and unconfounded capture cannot be inferred.",
+      "current_code": "Executed once by an independent read-only `rubber-duck` agent on the final candidate; not repeated.",
+      "suggested_fix": "Qualify the original critique as a single recorded pre-revision invocation, seven author-applied dispositions and no independent final-head reconfirmation. Label the d7c3b05b value as an artifact/task identifier unless its native relationship is proved; record the actual native Resume separately. Preserve the original trace and explicitly record missing wrapper exit and possible capture artifact. Do not recreate an exit file, infer exit 0 or silently repair frozen metadata. The current review is a separate exact-head readiness assessment, not retrospective proof of original independence."
+    },
+    {
+      "number": 6,
+      "title": "Combined approval question permits premature blanket acceptance of unpriced liabilities",
+      "severity": "Medium",
+      "category": "Documentation",
+      "skill": "code-review",
+      "file": ".copilot-tracking/details/2026-11-11/issue-184-bounded-live-plan-1111-details.md",
+      "lines": "49-53",
+      "problem": "Decision A correctly offers a separately commissioned source change, but B immediately bundles transport, conditional future model execution, resource/role changes, a monetary ceiling and acceptance of unresolved potentially continuing charges into one yes/no. This is inconsistent with an exact bounded costed execution request: a nominal incremental ceiling plus unspecified liabilities is not a finite total financial authorization. Cleanup deletes jobs and revokes the certificate but does not establish teardown or continuing ownership/expiry for a newly activated Event Hubs route/namespace or other billable resources. Commissioning a source change cannot pre-authorize that unknown revision's later model execution. Earlier 'source change or waiver' wording must not suggest spending approval can bypass either assistants.py or ai.py.",
+      "current_code": "an incremental ceiling of `<amount and subscription currency>` (software cannot enforce it; you accept the unpriced liabilities Log Analytics, SQL tier, ACR, Azure Files, Private Link and post-expiry job ticks)",
+      "suggested_fix": "Ask only the next design question now: 'The current source cannot meet the live-model criterion. Shall this remain a non-executable plan with that criterion unproved, or shall a separate narrowly scoped source/design proposal be prepared for your review? No execution or spend is included.' After that decision and receive-path design, present a separate exact execution request with current identities, approved price evidence, finite limits, accountable cleanup/escalation, and explicit ongoing-resource ownership, duration and financial boundary. Unknown liability remains a hold, not an accepted implicit cap or future blanket model approval."
+    }
+  ],
+  "positive_changes": [
+    "Planning-only scope is explicit throughout; no source, infrastructure or SQL change appears in the supplied diff.",
+    "The captured-reading guard is confirmed directly in assistants.py:1820 and ai.py:151-154; no bypass, mock, renamed carrier, simulation seal or financial approval can be inferred as authority to remove it.",
+    "The proactive scanner really traverses open cases and REGISTRY (assistants.py:1308-1330); proving case/capability isolation or holding activation is a legitimate prerequisite, not a newly invented defect.",
+    "Historical resource identities match the narrow prior repository observations and declared templates. The plan generally preserves their dates, unknown current state, missing image provenance, unproven serving region and quota-unit limitations.",
+    "Expired 2026-10-31 hub authority is not renewed; subscription currency/offer, aggregate headroom, alert and OD-51 remain explicit Unknowns. Approximately USD0.06 is expressly not an enforced cap or actual cost.",
+    "Named human release, Finance, credential owner Juan Manuel Servera, resident/consent/legal/safety/professional authority and #440 gates remain separate. Human review checkboxes and whole-issue criteria are not completed by this review.",
+    "Original seven Revise dispositions were read in the native log, not inferred only from the handoff; several useful clarifications were applied, but dispositions 2, 4 and 5 do not yet establish the claimed exact envelope."
+  ],
+  "testing_recommendations": [
+    "No runtime gate is required for this documentation-only candidate; supplied root git diff --check pass is acknowledged as supplied evidence, not rerun or expanded into runtime acceptance.",
+    "For a future separately scoped design, reconcile Event Hubs beginning/latest semantics, replay identity, max_events and deadline exits against exact source before proposing any live receiver windows.",
+    "Require a future run manifest linking exact synthetic slot/device/message/reading IDs through acknowledged transport, receiver receipt, SQL row, same-home UI, captured snapshot, privacy-compatible provider-request witness and visible unapproved flag with model/version/time. Do not log raw readings, secrets or private identifiers to obtain this linkage.",
+    "After any separately authorized source change, re-review that exact revision's dispatch guard, case isolation, aggregate physical attempts, serialized reservation, expiry/drain and cleanup behavior before seeking finite execution approval."
+  ],
+  "recommended_actions": [
+    "Correct the six documentation defects in a separate owner-directed revision; this reviewer has not edited candidate files or metadata.",
+    "Keep execution on HOLD. Source/design decisions (guard, receiver completion/replay semantics, case isolation) precede and are distinct from financial approval.",
+    "Keep current-resource verification, private reachability, device/grants, image attestation, SQL schema/control/index/consent/policy/view state, human release, provider handling/region, price approval and #440 as explicit later prerequisites under separately granted authority.",
+    "Minimal next owner question: Shall this remain a non-executable plan with the live-model criterion unproved, or shall a separate narrowly scoped source/design proposal be prepared for review? Neither choice authorizes execution or spend."
+  ],
+  "out_of_scope_observations": [
+    {
+      "file": "prContext",
+      "observation": "No PR context supplied; PR description, linked-issue, checkbox, and mergeable-state checks were skipped."
+    },
+    {
+      "file": "diff-state.json",
+      "observation": "No task-specific diff-state.json was supplied or found in the candidate worktree/session search. Unrelated historical review states were not substituted. Scope is the user-supplied exact-head five-file complete diff; comprehensive readiness rigor was applied to the named safety/financial hotspots. HEAD/tree/clean status are supplied frozen identities, not independently recomputed with unavailable shell tooling."
+    },
+    {
+      "file": "src/api/src/zava_forward/api/live_simulator.py",
+      "observation": "Any implementation of per-attempt expiry, durable global count enforcement or stronger cancellation is Functional-owned and requires separate source authority. This review only flags documentation claims inconsistent with existing source, and implements nothing."
+    },
+    {
+      "file": "src/api/src/zava_forward/api/iot_stream.py",
+      "observation": "Changes to receiver checkpoint/start position, deadline-success behavior or event-limit handling belong to a separately scoped Functional design review. No workaround or live test was performed."
+    },
+    {
+      "file": "prices.azure.com",
+      "observation": "No independent public HTTP retrieval capability was exposed in this review's tool set. Original native log query commands, table metadata and arithmetic were inspected; official live price responses, current billing offers and model lifecycle metadata were not independently certified. No cloud API/account, model, SQL or live application endpoint was called."
+    },
+    {
+      "file": "issue requirements #184/#1288/#108",
+      "observation": "Acceptance intent was checked against the supplied brief, exact candidate and narrow repository checkpoint/research references. No current issue bodies or remote checkbox state were supplied; their current state is not independently asserted. No new issues, remote writes, nested agents, credentials or private datasets were used."
+    },
+    {
+      "file": "rpi-live-plan-184-1111.log",
+      "observation": "Final native output and Resume UUID are observed. Original wrapper exit is missing per supplied process qualification; session disappearance is not exit 0. Shared-launcher editing during other running bash instances leaves a possible capture artifact. No original exit was fabricated or recreated."
+    }
+  ],
+  "risk_assessment": "The candidate is safe to retain as a non-executable planning record but is not yet a semantically exact bounded costed execution plan. Two High documentation defects affect causal evidence and hard-stop claims; four Medium defects affect budget semantics, price reproducibility, provenance and approval staging. Correct explicit Unknowns are execution prerequisites, not failures to implement this planning-only slice. Actual cost remains Unknown. No live acceptance, publication, whole-issue closure, production approval, source-guard relaxation or human sign-off is granted.",
+  "acceptance_criteria_coverage": [
+    { "ac": "Owner-authorized research and exact bounded costed plan only; ask before execution", "status": "Partial", "notes": "Planning boundary preserved; exact limits, receiver strategy and approval staging need the documented corrections. Nothing executed." },
+    { "ac": "One synthetic same-home transport -> retained SQL -> employee UI -> actual Quality model consuming the same readings -> attributed unapproved flag", "status": "Not found", "notes": "No actual live evidence is claimed or present. Both dispatch guards prevent the model step unchanged. No spend approval, synthetic label or display-only result establishes acceptance." },
+    { "ac": "Model name/version/quota confirmed in chosen region (#108)", "status": "Partial", "notes": "Historical deployment metadata is documented; current quota units, serving region, released configuration and actual returned-model evidence remain unproved." },
+    { "ac": "Finite 13 logical sends / 52 attempts, four receiver windows, four model attempts / 50,400 allowance and three-hour cleanup envelope", "status": "Partial", "notes": "Useful proposed limits, not demonstrated global hard enforcement; receiver completion, in-flight retries, serialized reservation basis and execution-versus-window timeout require correction. Retries must share, not multiply, the four-call ceiling." },
+    { "ac": "Financial honesty and incremental-versus-ongoing liability", "status": "Partial", "notes": "USD list estimates and Unknown actual cost are honestly separated, but worst-case arithmetic, reproducible official price records and bounded ownership of newly ongoing resources are incomplete." },
+    { "ac": "Preserve human/resident/consent/professional authority, #440 and no whole-issue closure", "status": "Implemented", "notes": "Preserved as planning constraints only, not evidence that any gate has been passed." }
+  ]
+}
