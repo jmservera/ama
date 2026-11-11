@@ -108,6 +108,34 @@ class ConnectedHomeCheck(unittest.TestCase):
                     walk.sibling_failures(screen, {**seen, "panels": []}, self.own, self.leaks)
                 )
 
+    def test_leak_in_actual_record_panel_is_rejected_without_a_positive_panel(self) -> None:
+        # Record panels the positive sibling expectations do not name must still be scanned.
+        for screen, titles in walk.RECORD_PANELS.items():
+            named = {w.panel for w in self.own[screen]}
+            for title in [t for t in titles if t not in named]:
+                with self.subTest(screen=screen, panel=title):
+                    seen = observed_from(list(self.own[screen]), "ZF-2")
+                    clean = walk.sibling_failures(screen, seen, self.own, self.leaks)
+                    self.assertEqual(clean, [])
+                    seen["panels"].append(
+                        {"title": title, "text": self.leaks[0], "rows": [], "fields": []}
+                    )
+                    self.assertTrue(walk.sibling_failures(screen, seen, self.own, self.leaks))
+        seen = observed_from(list(self.own["quality-queue"]), "ZF-2")
+        seen["panels"].append(
+            {"title": "Loft insulation: Handed over", "text": "x", "rows": [], "fields": []}
+        )
+        self.assertTrue(walk.sibling_failures("quality-queue", seen, self.own, self.leaks))
+
+    def test_portfolio_panels_with_other_homes_data_are_not_rejected(self) -> None:
+        seen = observed_from(list(self.own["asset-board"]), "ZF-2")
+        for title in (
+            "Stock conflict queue across homes (portfolio scope, not this home)",
+            "Portfolio scope",
+        ):
+            seen["panels"].append({"title": title, "text": self.leaks[0], "rows": [], "fields": []})
+        self.assertEqual(walk.sibling_failures("asset-board", seen, self.own, self.leaks), [])
+
     def test_generic_values_are_not_used_as_home_markers(self) -> None:
         sibling = str(walk.case_of(self.data, walk.SIBLING_ID))
         self.assertFalse([m for m in self.leaks if m in sibling])

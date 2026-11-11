@@ -379,6 +379,25 @@ def home_failures(screen_id: str, observed: Mapping[str, Any], expected: Mapping
     return base_failures(HOME_ID, observed, True) + expect_failures(observed, expected[screen_id])
 
 
+# Selected-home domain-record panels per screen, scanned for sibling leakage whatever the positive
+# expectations name. Portfolio panels (all homes, ledger-wide, waiting queues) are deliberately absent.
+RECORD_PANELS: dict[str, tuple[str, ...]] = {
+    "asset-board": ("Stock conflict comparison",),
+    "programme-queue": (),
+    "technical-queue": ("Design version", "Separate sign-offs"),
+    "resident-choice": ("Choice for each measure",),
+    "quality-queue": ("Handover readiness", "Quality evidence"),
+    "finance-invoices": ("Invoice line comparison",),
+}
+
+
+def is_record_panel(screen_id: str, title: str) -> bool:
+    """Record panels are the inventory above, the programme Connected view, and quality record panels."""
+    if title in RECORD_PANELS.get(screen_id, ()) or title.startswith("Connected view for"):
+        return True
+    return screen_id == "quality-queue" and ": " in title
+
+
 def sibling_failures(
     screen_id: str,
     observed: Mapping[str, Any],
@@ -389,7 +408,8 @@ def sibling_failures(
     failures = base_failures(SIBLING_ID, observed, True) + expect_failures(observed, own[screen_id])
     scoped = {want.panel for want in own[screen_id]}
     for panel in observed.get("panels") or []:
-        if panel.get("title") in scoped or str(panel.get("title")).startswith("Connected view"):
+        title = str(panel.get("title"))
+        if title in scoped or is_record_panel(screen_id, title):
             body = f"{panel.get('title')}\n{panel.get('text')}"
             failures += [f"{HOME_ID} marker {m!r} leaked into {SIBLING_ID}" for m in leaks if m in body]
     return failures
@@ -539,6 +559,22 @@ def run_sibling_mutations(
         reload_selected(page, role, screen_id, SIBLING_ID)
 
 
+def run_record_leak(
+    page: Page, role: str, screen_id: str, own: Mapping[str, Sequence[Expect]], leaks: Sequence[str]
+) -> None:
+    """Inject a ZF-1 marker into the sibling's actual record panel, not its evidence boundary."""
+    titles = [str(p["title"]) for p in observe(page)["panels"] if is_record_panel(screen_id, str(p["title"]))]
+    check(f"{role}: {screen_id} sibling shows a record panel to challenge; found={titles}", bool(titles))
+    find = "[...document.querySelectorAll('.screen-evidence .screen-record')].find(p => p.querySelector(':scope > h2')?.textContent === t)"
+    edit = Mutation(
+        f"a ZF-1 marker leaks into the sibling record panel {titles[0]!r}",
+        f"([t, m]) => {{ {find}.append(m); }}",
+        [titles[0], leaks[0]],
+    )
+    rejected(page, edit, lambda seen: sibling_failures(screen_id, seen, own, leaks))
+    reload_selected(page, role, screen_id, SIBLING_ID)
+
+
 def walk_visit(
     page: Page,
     visit: Visit,
@@ -581,11 +617,13 @@ def walk_visit(
     failures = sibling_failures(last, seen, own, leaks)
     check(f"{role}: {last} sibling {SIBLING_ID} control; failures={failures}", not failures)
     observations.append({"role": role, "screen": last, "home": SIBLING_ID, "panels": [p["title"] for p in seen["panels"]]})
+    run_record_leak(page, role, last, own, leaks)
     for screen_id in reversed(visit.screens[:-1]):
         seen = carry_home(page, role, screen_id, SIBLING_ID)
         failures = sibling_failures(screen_id, seen, own, leaks)
         check(f"{role}: {screen_id} sibling {SIBLING_ID} control; failures={failures}", not failures)
         observations.append({"role": role, "screen": screen_id, "home": SIBLING_ID, "panels": [p["title"] for p in seen["panels"]]})
+        run_record_leak(page, role, screen_id, own, leaks)
         if visit.mutate:
             run_sibling_mutations(page, role, screen_id, own, leaks)
     title = menu_title(page, visit.screens[0])
