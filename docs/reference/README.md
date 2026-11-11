@@ -1390,3 +1390,14 @@ main. The 77 authored paths are qualified against the 98-path review superset. T
 unwaived as #1401 and #1402; whole #89, #133 and #134 stay open and #132 is excluded. The recommendation is a bounded
 CONTINUE for local #134 screen walkthroughs of the implemented staff-assisted surface only; it is not an approval, a tick or
 live, model, resident, professional or release proof.
+
+An aftercare numeric-order integrated-main checkpoint (2026-11-11) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#aftercare-numeric-order-integrated-main-checkpoint-2026-11-11-refs-440-1401-1402-134).
+It observes merged PR 1456 (#1401, `a3862eed4`) on `main` `077ad5ad2` (`src` equal to the merged source), with 110 focused
+core and API tests executed and 15 SQL Server variants skipped (not passes), and traces document-qualified BRD, PRD and ADR
+rows for numeric restore order, intake persistence, manual path and human boundaries. The blank-document gap of #1402 is read
+from source only, is not repaired on `main` and is owned by the unmerged PR 1458; whole #133, #134, #89 and #440 stay open.
+The recommendation is a bounded CONTINUE; it is not an approval, a tick or SQL Server, HTTP-volume, live or release proof.
+A dated follow-up in that section observes PR 1458 (#1402, `bc123235`) after merge on an exported `src` equal to current main
+`97ec3f3c8` (91 focused JSON and SQLite tests, 15 SQL Server skips, 0 failures); the blank-document boundary is now observed
+on main for constructed data, while the earlier pin text stays unchanged and whole #133, #134, #89 and #440 stay open.
