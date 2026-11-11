@@ -7144,3 +7144,68 @@ Recommendation (proposed for Root, not a decision): CONTINUE, bounded, only for 
 
 * One original plan critique (conformant after one non-blocking fix, applied) and one author Review, recorded under `.copilot-tracking/` (2026-11-11 keyboard-checkpoint-440-1111). The review is author-executed, not independent; independent exact-head review and hosted checks of this record remain required.
 * Documentary checkpoint only: Git and `gh` read-only, Markdown and diff review. No push, PR, issue or board write was made.
+
+## Handoff waiting screen integrated-main checkpoint (2026-11-11, Refs #440 #83)
+
+Draft, not approved. This is a narrow local observation on constructed synthetic fixtures after merged PR 1444 reached `main`. It runs only existing tests and light checks listed below, changes no source, configuration, test, workflow, requirement or ADR, and opens no issue. Every earlier section is unchanged. It is not user acceptance, not an OD-09 result and not an Azure result.
+
+### Trigger and pin provenance
+
+* Trigger: the recurring checkpoint criterion of issue #440 after the feature wave PR 1444 (issue #83, the staff handoff waiting screen at `#/handoff-waiting`). The previous checkpoint is the [keyboard probe compatibility section](#keyboard-probe-compatibility-integrated-main-checkpoint-2026-11-11-refs-440-132-134) (PR 1440, `main` `b7d66e42`; the PR 1441 ADR 0007 decision record stays Proposed). No earlier Quality campaign is rerun and no correction authority is created; unknown historical product-correction balances stay unknown.
+* Pin: PR 1444 squash-merged 2026-11-11T09:02:15Z as `ef3e00ad05a78c3a0fd3b342b860fb3d43796223`, root tree `513c3f9d8f7ae7c0c78672aa9f1650e23f7451cd`. A fetch before the first test showed `origin/main` unchanged from the pin. Trees: `src` `f82975dfc345f1a3705d62e08819383f6dd7bfd5`, `docs` `8a9d7693f8b3e880e84614fb40a8a88dcccc9c78`, `infra` `f7f31c0934cfe0bafb4505408706e55aa8ab61e7`, `tools` `432a4e8f7d74f26e88a55dd937c9c6f193016da9`, `.github` `0fc8e7647628658093899f132499e08e8ec4df7d`.
+* The root tree equals the independently assessed and PR-gated candidate `441fd7edf8597972f79c8100caafc39d9afcd844`; the squash has a new commit identity, so this record does not claim the reviewer assessed the new SHA. The planning branch merged the pin with an ordinary merge; `src` at HEAD equals the pin's `src` tree and only `.copilot-tracking/` files differ from the pin.
+* Hosted state read at the pin: main scorer run `42991793134` was `in_progress` and no Source CI run on the pin was observed, so neither is called passing. Root admitted this local-only observation while scoring is pending, from the PR gates passed on the identical tree. It permits no publication or downstream source admission. The earlier failed PR run `42984858029` (table inventory 13 versus 12, fixed by metadata-only change D1) stays historical adverse evidence.
+* Issues #83 and #440 were open at read time, with no closing reference. The #153 planning head `99f01d7` and the #521 fixture candidate `1587f4baa` are excluded.
+
+### Requirement-qualified traceability
+
+| Requirement or contract (document, status) | Evidence in the pinned tree | Class |
+| --- | --- | --- |
+| PRD FR-011, AC-014, AC-036 (`in-review`): staff view of unaccepted handoffs and its scope | W1 text and browser cases show the explicit scope text, the read-only table, elapsed time and the server supplied as-of and owner, distinct from the personal pending card | Local observed, synthetic |
+| PRD FR-066, AC-120 (`in-review`) | The screen has no urgency, next-update or accountable-reviewer column | Implemented but unverified; partial gap recorded for #83, not a defect finding |
+| PRD FR-004 | Existing role guard and `RoleEndpointInventory` (W6) pass with the new route | Local observed, synthetic |
+| BRD FR-018, AC-024, BG-010, NFR-009, AC-071 (`draft`) | Read-only view, manual case links, WCAG baseline table inventory (W7) | Local observed only for the listed tests; no BRD item is approved or met |
+| BRD OD-09 | No approved global threshold times; the screen has no threshold and no automatic escalation | Blocked; #83 criterion 3 stays open |
+| ADR 0003 and 0006 (Accepted); ADR 0007 (Proposed) | Not amended. ADR 0007 stays Proposed and is not exercised | Context only |
+| Staff `#/handoff-waiting` versus personal pending card | W1, W2 | Local observed, synthetic |
+| Guarded route and projection | One unscoped read; `approved_limit_hours` must be null; W5, W6 | Local observed, synthetic |
+| Valid zero versus unavailable, malformed, 403 and abort | A valid empty list states the scope without a table; abort and 401 render nothing; 403 shows a fixed denied alert; other errors and malformed payloads show a fixed read-error alert with no table (W1, text and browser) | Local observed, synthetic |
+| Manual case links and recheck | Case links and the Check again button re-run the read (W1) | Local observed, synthetic |
+| Existing CSV and JSON | W3, W4 and W5 pass unchanged | Local observed, synthetic |
+
+Source-reference drift: issue #83 cites BRD FR-009 to FR-011, while BRD 0.21.0 has the handoff rows at FR-016 to FR-018 (AC-022 to AC-024). It is recorded for #83 and not corrected here. Azure observed is empty.
+
+### Commands, environment and results
+
+Environment: Python 3.12.3, Node v24.21.0, Ruff 0.17.3, existing user-site Playwright and the existing Chromium cache, an owned temporary HOME, `ZF_DATA` unset, worktree source imports, the shared non-queued lock free at start, 8.5 GB memory available. No install, pull, service, Docker, SQL or cloud. Run from `src/api` with `PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests`.
+
+| Id | Selector | Exit | Ran | Skips | Failures |
+| --- | --- | --- | --- | --- | --- |
+| W4 | `tests.test_unaccepted_handoff_csv_api` | 0 | 13 | 0 | 0 |
+| W5 | `tests.test_handoff_api` | 0 | 7 | 0 | 0 |
+| W6 | `tests.test_role_endpoint_inventory.RoleEndpointInventory` | 0 | 24 | 0 | 0 |
+| W7 | `tests.test_accessibility_baseline` | 0 | 12 | 0 | 0 |
+| W8 | `tests.test_workbench.WorkbenchNavigation` | 0 | 5 | 0 | 0 |
+| W2 | `tests.test_handoff_read_guidance` (browser, `ZF_BROWSER_TESTS=1`, shared lock held around this module only) | 0 | 9 | 0 | 0 |
+| W3 | `tests.test_unaccepted_handoff_download_ui` (browser) | 0 | 6 | 0 | 0 |
+| W1 | `tests.test_handoff_waiting_view` (4 browser, 6 text) | 0 | 10 | 0 | 0 |
+| S1 | `node --check` of `app.js` (blob `7eb700fe`); Ruff check and format check of `test_handoff_waiting_view.py` | 0 | n/a | n/a | n/a |
+
+Total 86 tests, zero skips, zero failures; each selector ran once on the final run. The count differs from the coordinator's 81-test combined command (which runs all of `test_role_screens` and not the CSV API module); no reconciliation is forced. W9 and the whole-suite gate were not run, and no mypy run was made here.
+
+First raw failure, preserved: the first attempt of W2, W3 and W1 ran with an isolated HOME that hid the user-site Playwright, so each browser class errored in `setUpClass` with `ModuleNotFoundError: No module named 'playwright'` (W1 text cases passed; zero product assertions ran). That is an environment error, not a product failure. After pointing the existing user-site directory back in, with no install, each was run once more and passed. The first logs are kept locally.
+
+### Exclusions and residuals
+
+* Unproved: actual OD-09 times and operational acceptance, manual assistive-technology testing, reflow and zoom, large-queue performance (no open issue owns it), the urgency, next-update and accountable-reviewer columns of AC-120, Azure, identity, human and resident acceptance.
+* Whole #83 (criterion 3), root #81 and whole #440 are not closed by this record or by merged children.
+* The unmerged #153 plan `99f01d7` is excluded. No fresh web-interface review was performed; no web file changed.
+
+### Recommendation (proposed for Root, not a decision)
+
+CONTINUE, bounded. No new product defect is found and no fix, refactor or new issue is proposed. Affected gates: main scorer run `42991793134` and any Source CI on the pin must be read before downstream admission; the independent exact-head review of this record is required. #153 source work may continue as an independent lane only after Root's own admission, not by this record. Exact resume: the OD-09 owner decision for #83 criterion 3, then the next #440 wave checkpoint.
+
+### Process record and limits
+
+* One plan critique (conformant after fixes WC-01 to WC-05) and one original Review under `.copilot-tracking/` (2026-11-11 waiting-checkpoint-440-1111), plus Root's admission amendment. The review is author-executed, not independent.
+* Raw logs stay local outside the repository. No push, PR, issue or board write, no criterion tick.
