@@ -5,6 +5,7 @@ import subprocess
 import unittest
 from collections.abc import Mapping
 from pathlib import Path
+from typing import Any
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -145,8 +146,8 @@ def tags(node: object) -> list[str]:
     return found
 
 
-def anchors_of(node: object) -> list[dict[str, object]]:
-    found: list[dict[str, object]] = []
+def anchors_of(node: object) -> list[dict[str, Any]]:
+    found: list[dict[str, Any]] = []
     if isinstance(node, dict):
         if node.get("tag") == "a":
             found.append(node)

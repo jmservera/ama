@@ -31,6 +31,7 @@ NO_CHOICES = "No measure choices recorded"
 NONE_RECORDED = "None recorded"
 NO_COMMITMENT = "No commitment recorded"
 REVIEW = "Needs human review"
+REVIEW_STATUSES = (REVIEW, "Reviewed with supplied acceptance")
 STOP_STATUSES = ("Paused", "Withdrawn")
 # "Not recorded" is accepted only because the projection supplies it for a current answer.
 STATUSES = ("Waiting", "Accepted", "Declined", "Paused", "Withdrawn")
@@ -65,7 +66,9 @@ def _complete(measure: dict[str, Any]) -> bool:
     return (
         isinstance(measure.get("versions"), list)
         and all(isinstance(v, dict) and v.get("status") in STATUSES for v in measure["versions"])
-        and (review is None or (isinstance(review, dict) and isinstance(review.get("status"), str)))
+        and (
+            review is None or (isinstance(review, dict) and review.get("status") in REVIEW_STATUSES)
+        )
     )
 
 

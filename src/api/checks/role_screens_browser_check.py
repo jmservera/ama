@@ -731,7 +731,7 @@ def run_browser(base: str) -> None:
                         == "/api/resident/choice-queue.csv?limit=100&offset=0"
                         and link.get_attribute("download") is None,
                     )
-                    download = page.request.get(base + link.get_attribute("href"))
+                    download = page.request.get(base + (link.get_attribute("href") or ""))
                     csv_text = download.text()
                     check(
                         "232 download is a CSV attachment with the page summary only",

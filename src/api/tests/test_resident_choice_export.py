@@ -44,14 +44,14 @@ ROLES = {
 
 
 def version(
-    number: int, status: str, revision: int = 2, design: int = 3, **extra: Any
+    number: Any, status: Any, revision: Any = 2, design: Any = 3, **extra: Any
 ) -> dict[str, Any]:
     return dict(
         version=number, status=status, context_revision=revision, design_version=design, **extra
     )
 
 
-def measure(name: str, status: str, versions: Any, review: Any = None) -> dict[str, Any]:
+def measure(name: Any, status: Any, versions: Any, review: Any = None) -> dict[str, Any]:
     return dict(measure=name, status=status, versions=versions, review=review, context=None)
 
 
@@ -200,7 +200,8 @@ class Serializer(unittest.TestCase):
             self.assertNotEqual(
                 row["Paused, withdrawn or retained human review"], "None recorded", m
             )
-        for broken in (None, "x", ["x"], {}):
+        broken_homes: tuple[Any, ...] = (None, "x", ["x"], {})
+        for broken in broken_homes:
             row = self.one(home("A", broken))
             self.assertEqual(
                 row["Measure choices (latest recorded version)"], "Unknown (evidence unavailable)"
@@ -230,6 +231,29 @@ class Serializer(unittest.TestCase):
             row["Paused, withdrawn or retained human review"],
             "Heat pump: Unknown (evidence unavailable), needs human review",
         )
+
+    def test_unrecognised_review_status_is_unknown_never_none_recorded(self) -> None:
+        for status in ("", "garbled", "needs human review", "Needs human review "):
+            review = dict(status=status, decision_version=1)
+            versions = [version(1, "Declined"), version(2, "Waiting")]
+            row = self.one(home("A", [measure("Solar panels", "Waiting", versions, review)]))
+            self.assertEqual(
+                row["Paused, withdrawn or retained human review"],
+                "Solar panels: Unknown (evidence unavailable)",
+                status,
+            )
+
+    def test_known_review_states_and_explicit_none_keep_their_meaning(self) -> None:
+        versions = [version(1, "Declined"), version(2, "Waiting")]
+        label = "Paused, withdrawn or retained human review"
+        row = self.one(home("A", [measure("Solar panels", "Waiting", versions, None)]))
+        self.assertEqual(row[label], "None recorded")
+        accepted = dict(status="Reviewed with supplied acceptance", decision_version=1)
+        row = self.one(home("A", [measure("Solar panels", "Waiting", versions, accepted)]))
+        self.assertEqual(row[label], "None recorded")
+        retained = dict(status="Needs human review", decision_version=1)
+        row = self.one(home("A", [measure("Solar panels", "Waiting", versions, retained)]))
+        self.assertIn("human review retained after a Declined answer", row[label])
 
     def test_update_status_is_closed_vocabulary_and_detail_never_enters(self) -> None:
         update = dict(
@@ -341,9 +365,8 @@ class Http(unittest.TestCase):
         path = Path(tmp.name) / "synthetic.json"
         path.write_text(json.dumps(data))
         self.store: Any = Store(str(path))
-        httpd = ThreadingHTTPServer(
-            ("127.0.0.1", 0), make_handler(App(self.store, "synthetic-check"))
-        )
+        app = App(self.store, "synthetic-check")  # type: ignore[no-untyped-call]
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
         thread = threading.Thread(target=httpd.serve_forever, daemon=True)
         thread.start()
         self.addCleanup(thread.join, 5)
@@ -525,6 +548,35 @@ class Http(unittest.TestCase):
         self.assertNotIn("CANARY", text)
         self.assertNotIn("Test Road", text)
         self.assertEqual(rows(text)[0]["Update commitment status"], "Outstanding")
+
+    def test_unrecognised_review_status_in_the_projection_downloads_as_unknown(self) -> None:
+        real = self.store.detail
+
+        def seeded(cid: str, user: Any) -> Any:
+            d = real(cid, user)
+            if d is not None:
+                versions = [version(1, "Declined"), version(2, "Waiting")]
+                d["measure_decisions"] = [
+                    measure(
+                        "Solar panels",
+                        "Waiting",
+                        versions,
+                        dict(status=status, decision_version=1),
+                    )
+                    for status in ("", "garbled")
+                ]
+            return d
+
+        with patch.object(self.store, "detail", side_effect=seeded):
+            code, _, body = self.fetch("/api/resident/choice-queue.csv", "sam")
+        self.assertEqual(code, 200)
+        label = "Paused, withdrawn or retained human review"
+        for row in rows(body.decode()):
+            self.assertEqual(
+                row[label],
+                "Solar panels: Unknown (evidence unavailable); "
+                "Solar panels: Unknown (evidence unavailable)",
+            )
 
     def test_loader_failure_is_json_without_attachment_or_header_only_success(self) -> None:
         with (

@@ -1,0 +1,55 @@
+{
+  "summary": "FAIL (static functional/contract assessment): one High admission-contract defect. Target candidate fa497143cf9653b6bf3de1d5c11bff7a922b0aaf, declared tree ac6e906cc20e31eb2af426cd55802a48cf482705, integrated base a853cce16fafdfe32c7a5fe90f3b0c8b544eef0b; supplied comparison main 064f42f83d8881afc439821f248c75dc46411a72. Read the complete supplied frozen source diff in three non-overlapping ranges, admission and final handoff, and relevant actual implementations. Assessment anchors findings to that frozen diff, not subsequent worktree HEAD. IMPORTANT limitation: the named worktree is no longer at the requested candidate: its branch ref reads 23a26e139386b0c9d79953edca818deed6a6c4cb and its HEAD reflog records subsequent documentation/main-integration commits. The serializer and route inspected still match the reviewed hunks, but exact candidate tree/object identity and cleanliness were not independently verified. No task-specific diff-state.json was found in the session files/worktree search; explicit user scope supplied the review inputs and standard depth was applied. No source was changed and no tests or browser were executed by this reviewer. Only this report was written.",
+  "verdict": "request_changes",
+  "severity_counts": {"critical": 0, "high": 1, "medium": 0, "low": 0},
+  "changed_files": [
+    {"file": "src/api/README.md", "lines_changed": "16 added", "risk": "Low", "issue_count": 0},
+    {"file": "src/api/checks/role_screens_browser_check.py", "lines_changed": "19 added", "risk": "Low", "issue_count": 0},
+    {"file": "src/api/src/zava_forward/api/resident_choice_export.py", "lines_changed": "170 added", "risk": "High", "issue_count": 1},
+    {"file": "src/api/src/zava_forward/api/server.py", "lines_changed": "13 added", "risk": "High", "issue_count": 0},
+    {"file": "src/api/src/zava_forward/api/web/role-screens.js", "lines_changed": "14 added", "risk": "Medium", "issue_count": 0},
+    {"file": "src/api/tests/test_resident_choice_export.py", "lines_changed": "571 added", "risk": "Low", "issue_count": 0},
+    {"file": "src/api/tests/test_resident_choice_screen.py", "lines_changed": "55 added, 2 removed", "risk": "Low", "issue_count": 0},
+    {"file": "src/api/tests/test_role_endpoint_inventory.py", "lines_changed": "1 added", "risk": "Low", "issue_count": 0}
+  ],
+  "findings": [
+    {
+      "number": 1,
+      "title": "Malformed review status becomes a successful 'None recorded' claim",
+      "severity": "High",
+      "category": "Contract",
+      "skill": null,
+      "file": "src/api/src/zava_forward/api/resident_choice_export.py",
+      "lines": "63-70",
+      "problem": "The completeness check accepts every string as a review status. For a measure with status Waiting, versions [{version: 1, status: Declined, context_revision: 2, design_version: 3}, {version: 2, status: Waiting, context_revision: 2, design_version: 3}], and review {status: 'garbled', decision_version: 1}, _complete returns True, _review_version returns None because the status is not exactly 'Needs human review', _held returns None, and _summaries writes 'None recorded' in the retained-review column. This is a deterministic static trace, not an executed reproduction. Existing measure_decision_view deep-copies resident_reviews into the projection without validating this status (resident_decisions.py:1058), so the malformed value can reach this serializer. The existing writer supplies 'Needs human review' or 'Reviewed with supplied acceptance' (resident_decisions.py:1619-1624); arbitrary strings do not establish that no review is retained. Admission Q6 explicitly forbids incomplete evidence becoming None recorded, and the UI note makes that an absence claim. Existing malformed-evidence tests cover a non-dict review and a dict missing status, but not an unrecognized string status. This defeats one of the explicit fail-closed admission conditions.",
+      "current_code": "        and (review is None or (isinstance(review, dict) and isinstance(review.get(\"status\"), str)))",
+      "suggested_fix": "Validate review.status against the actual existing projection vocabulary ('Needs human review', 'Reviewed with supplied acceptance') rather than accepting every string. Preserve explicit None as no review. Route missing/unknown/non-string statuses in a review object to UNAVAILABLE, not None recorded. Add serializer and HTTP projection tests with empty/unknown review-status strings and a retained Declined followed by Waiting; assert Unknown and no false None recorded, while valid reviewed acceptance still works. Do not change Core."
+    }
+  ],
+  "positive_changes": [
+    "Exact route, filename and ordered eight header labels match admission. JSON and CSV dispatch use identical num defaults/clamps and the same store role gate. Store uses sorted open-home IDs, lock-protected projection and page counts without a write.",
+    "Serializer explicitly selects primitive fields; exact quality.CHECKLISTS display membership withholds unknown names without aliases, and every data cell goes through the shared safe_cell. No prohibited nested/free-text fields are serialized.",
+    "Current status and latest recorded version/binding remain separate, and valid retained Declined review after Waiting is handled explicitly.",
+    "CSV construction completes before the successful attachment response; the existing outer handler supplies JSON 500 for unexpected failures. The new native anchor has no download attribute and is absent on the failed queue branch.",
+    "Tests cover four allowed roles, denied/signed-out parity, query defaults/clamps/blanks/repeated parameters, header-only empty pages, projection omissions, sensitive canaries, formula escaping, error responses and no case/audit mutation."
+  ],
+  "testing_recommendations": [
+    "Add the malformed review-status regression described in finding 1; current tests would not detect that absence-claim regression.",
+    "The available author browser log at /home/azureuser/.copilot/session-state/ebc76a27-350f-41ac-b774-1e034db7091b/files/priv1420/browser232.log was independently read: it records passing attachment/link checks, pinned axe 4.10.3 with zero violations, Chromium 156.0.8078.4, no POSTs and no uncaught JavaScript errors for story 232. It is author-produced evidence, not an independently repeated or cryptographically head-bound run.",
+    "The 124 focused-test result, new-module mypy result and pre-existing checker-format explanation remain author-reported for this frozen candidate. Later final-main logs were discovered but not used to substantiate fa497. No executable test runner is exposed by this review's tool set; no fresh tests, lint, typing, browser or full gate were run."
+  ],
+  "recommended_actions": [
+    "Address finding 1 before accepting the admitted fail-closed contract, preserving the original adverse RPI history.",
+    "Root should verify the immutable candidate/base/tree and handle subsequent main integration separately; this review does not certify the now-advanced worktree HEAD or publication."
+  ],
+  "out_of_scope_observations": [],
+  "risk_assessment": "High at the CSV contract boundary because malformed review evidence is converted to an absence claim. This is bounded synthetic-demo review, not production/privacy/retention approval. All eight supplied source-file diffs were reviewed; no Core/schema/role/LIST_EXPORTS/Capacity changes appear in that diff. RPI provenance, main integration and publication remain with Root. Human validation remains required.",
+  "acceptance_criteria_coverage": [
+    {"ac": "Exact CSV route, attachment filename and eight ordered contract columns", "status": "Implemented", "notes": "Static inspection and dedicated assertions match admission."},
+    {"ac": "Same four roles and exact JSON paging/query semantics; header-only empty; no mutation; JSON errors without successful attachment", "status": "Implemented", "notes": "Shared store/num paths and existing outer error handler inspected; broad synthetic tests present but not rerun."},
+    {"ac": "Closed names, Unknown for malformed evidence, explicit Not recorded only, retained Declined review after Waiting", "status": "Partial", "notes": "Valid paths implemented, but malformed review string statuses falsely become None recorded; finding 1."},
+    {"ac": "Exclude private/free-text/nested fields and formula-safe cells", "status": "Implemented", "notes": "Explicit field selection and shared safe_cell on all data cells; fixed headers contain no formula prefixes."},
+    {"ac": "Successful-page-only native anchor, no download attribute, truthful scope and failure state", "status": "Implemented", "notes": "Success/failure render branches inspected; tests present and author browser log read."},
+    {"ac": "No schema/Core/role/LIST_EXPORTS/Capacity changes", "status": "Implemented", "notes": "None in supplied eight-file source diff; broader provenance and immutable tree verification not independently established."}
+  ]
+}
