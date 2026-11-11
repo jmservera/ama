@@ -1,0 +1,74 @@
+{
+  "task_id": "waiting-checkpoint-440-1111",
+  "task_slug": "waiting-checkpoint-440-1111",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11/waiting-checkpoint-440-1111-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11/waiting-checkpoint-440-1111-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11/waiting-checkpoint-440-1111-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-11/waiting-checkpoint-440-1111-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Plan-only launch: prospective research, plan, details and one independent critique, then stop before implementation, tests, changes, Review and publication",
+      "status": "confirmed",
+      "evidence": "Launch brief 2026-11-11 and issue 440 admission comment issuecomment-6791287080"
+    },
+    {
+      "decision": "Research executed (read-only); Planning Readiness Ready; reused the keyboard, closure-wave and resident-choice checkpoint method",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-11/waiting-checkpoint-440-1111-research.md"
+    },
+    {
+      "decision": "Execution dependency: PR 1444 actually merged, matching tested feature tree and coordinator confirmation; candidate 441fd7ed (tree 513c3f9d) is unpublished, unmerged and excluded from main acceptance; 153 candidate 99f01d7 excluded",
+      "status": "confirmed",
+      "evidence": "Launch brief; PR 1444 OPEN at published head dd3c32910 when read"
+    },
+    {
+      "decision": "No API, store, permission, architecture, ADR or requirement change; ADR 0007 stays Proposed; unknown historical correction balances stay unknown; no new correction batch granted",
+      "status": "confirmed",
+      "evidence": "Launch brief"
+    },
+    {
+      "decision": "Critique executed once (rubber-duck, claude-sonnet-5.5); verdict conformant after fixes WC-01 to WC-05, all applied; no repeat",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-11/waiting-checkpoint-440-1111-critique.md"
+    },
+    {
+      "decision": "Tests NOT RUN; no changes or Review artifacts created; planning frozen pending dependency",
+      "status": "confirmed",
+      "evidence": "Plan phase 0 only"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "dep-1444-merge",
+      "summary": "Implementation cannot start until PR 1444 merges and the coordinator admits a pinned merged-main execution",
+      "resolution": null
+    }
+  ],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Wait for PR 1444 merge and Root admission amendment, then execute plan Phase 1 onward (do not start before admission)"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Root admission amendment and Phase 1 integration after PR 1444 merges",
+      "rationale": "Hard dependency of the observation",
+      "evidence": "Plan, execution dependency and admission"
+    },
+    {
+      "rank": 2,
+      "task": "Execute the admitted selectors once and append the pack section",
+      "rationale": "Delivers the feature-wave checkpoint for this wave only",
+      "evidence": "Details, selectors W1 to W9"
+    }
+  ]
+}
