@@ -5,6 +5,7 @@ import subprocess
 import unittest
 from collections.abc import Mapping
 from pathlib import Path
+from typing import Any
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -116,7 +117,12 @@ def run_queue(queue: object) -> dict[str, object]:
 
 def page(*items: object, total: int | None = None) -> dict[str, object]:
     rows = [{"address": "1 Test Road", "town": "Testville", **dict(i)} for i in items]  # type: ignore[call-overload]
-    return {"items": rows, "total": len(items) if total is None else total}
+    return {
+        "items": rows,
+        "total": len(items) if total is None else total,
+        "limit": 100,
+        "offset": 0,
+    }
 
 
 def run(case: Mapping[str, object]) -> dict[str, object]:
@@ -137,6 +143,16 @@ def tags(node: object) -> list[str]:
         found.append(node.get("tag", ""))
         for kid in node.get("kids", []):
             found += tags(kid)
+    return found
+
+
+def anchors_of(node: object) -> list[dict[str, Any]]:
+    found: list[dict[str, Any]] = []
+    if isinstance(node, dict):
+        if node.get("tag") == "a":
+            found.append(node)
+        for kid in node.get("kids", []):
+            found += anchors_of(kid)
     return found
 
 
@@ -328,8 +344,46 @@ class ResidentChoiceScreen(unittest.TestCase):
             "No commitment recorded",
         ):
             self.assertIn(expected, text)
-        for control in ("button", "form", "input", "select", "textarea", "a"):
+        for control in ("button", "form", "input", "select", "textarea"):
             self.assertNotIn(control, tags(tree))
+        anchors = anchors_of(tree)
+        self.assertEqual(len(anchors), 1)
+        self.assertEqual(
+            anchors[0]["attrs"]["href"], "/api/resident/choice-queue.csv?limit=100&offset=0"
+        )
+        self.assertNotIn("download", anchors[0]["attrs"])
+        self.assertEqual(anchors[0]["attrs"]["aria-describedby"], "choice-queue-download-note")
+        for expected in (
+            "only the homes shown on this page, not every page or every open home",
+            "read again when you download, so it may differ from the rows shown",
+            "do not show consent or readiness",
+            "An empty file does not show that nothing needs attention",
+        ):
+            self.assertIn(expected, text)
+        self.assertLess(
+            text.index("Download this page for Excel"),
+            text.index("Choice and update commitments by home"),
+        )
+
+    def test_download_follows_the_loaded_page_and_never_a_bad_or_failed_one(self) -> None:
+        shown = page(CASE, total=300)
+        shown.update(limit=25, offset=50)
+        link = anchors_of(run_queue(shown)["tree"])
+        self.assertEqual(
+            link[0]["attrs"]["href"], "/api/resident/choice-queue.csv?limit=25&offset=50"
+        )
+        empty = page(total=0)
+        empty.update(limit=100, offset=0)
+        self.assertEqual(len(anchors_of(run_queue(empty)["tree"])), 1)
+        for bad in (
+            {**page(CASE), "limit": "100", "offset": 0},
+            {**page(CASE), "limit": 1.5, "offset": 0},
+        ):
+            self.assertEqual(anchors_of(run_queue(bad)["tree"]), [])
+        self.assertEqual(
+            anchors_of(run_queue({"items": None, "total": 1, "limit": 100, "offset": 0})["tree"]),
+            [],
+        )
 
     def test_queue_failure_is_unknown_not_empty(self) -> None:
         text = json.dumps(run_queue(None)["tree"])

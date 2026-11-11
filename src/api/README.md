@@ -668,6 +668,22 @@ The page offers it as "Download this page for Excel" after a successful load.
 It is a read-only copy of constructed demonstration data; a fresh read may
 differ from the rows displayed, and Closed does not mean completed or approved.
 
+`GET /api/resident/choice-queue.csv` accepts the same `limit`/`offset` parsing,
+clamps, role gate (four staff roles) and 400/403 errors as
+`GET /api/resident/choice-queue` and exports only that current page as an
+attachment (`resident-choice-queue-page.csv`). It has eight columns: home
+reference, measure choices (current status plus latest recorded version and its
+revision/design binding), paused, withdrawn or retained human review, update
+commitment status, and the page counts (skipped, limit, in this file, open homes
+in total). The header row is kept when the page is empty, which does not show
+that nothing needs attention. Missing or malformed evidence reads `Unknown`,
+never consent, readiness or approval. Notes, identities, address, contact,
+scope, purpose, owner, history, evidence and retention details are not written.
+Cells use the shared formula-safe escaping. The resident-choice screen offers
+it as "Download this page for Excel" after a successful load; it covers only
+that page, a fresh read may differ from the rows shown, and it is not an
+operational export approval.
+
 Invalid date ranges show inline errors linked to both date fields and focus the
 start date so the range can be corrected. Service read failures retain a separate
 page alert and retry action without marking valid dates as invalid.

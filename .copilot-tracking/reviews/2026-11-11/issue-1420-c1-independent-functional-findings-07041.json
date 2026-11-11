@@ -1,0 +1,45 @@
+{
+  "summary": "PASS: C1 functional/contract reassessment of candidate 07041ce04c11a4d88c0fd5123704c5736390e8d8, declared tree e9e3105f09bf208322b18940d08bc29b40723a04, against integrated/current-main base 1b169fe7d4f9b5a005123c8eb1825028ea431612. The previously reported High is resolved; no remaining concrete functional blocker identified. This supersedes neither the historical adverse assessment of fa497143cf9653b6bf3de1d5c11bff7a922b0aaf nor its evidence. Reused the initial full eight-file assessment and relevant existing implementation analysis, read the entire four-file correction delta and complete final eight-file source diff, C1 handoff and author Review, inspected actual corrected serializer/checker context and available raw validation evidence. Branch ref independently reads the requested final candidate. Root supplies clean status, tree identity, base integration and untouched-blob verification; those were not recomputed by this reviewer. No tests or tools were executed beyond read/search and writing this separate report.",
+  "verdict": "approve",
+  "severity_counts": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+  "changed_files": [
+    {"file": "src/api/README.md", "lines_changed": "Final feature diff; unchanged by C1", "risk": "Low", "issue_count": 0},
+    {"file": "src/api/checks/role_screens_browser_check.py", "lines_changed": "Final feature assertions plus C1 Optional href guard", "risk": "Low", "issue_count": 0},
+    {"file": "src/api/src/zava_forward/api/resident_choice_export.py", "lines_changed": "New serializer; C1 closes review-status vocabulary", "risk": "High", "issue_count": 0},
+    {"file": "src/api/src/zava_forward/api/server.py", "lines_changed": "Final route/kind additions; unchanged by C1", "risk": "High", "issue_count": 0},
+    {"file": "src/api/src/zava_forward/api/web/role-screens.js", "lines_changed": "Final overview anchor/note; unchanged by C1", "risk": "Medium", "issue_count": 0},
+    {"file": "src/api/tests/test_resident_choice_export.py", "lines_changed": "New serializer/HTTP suite; C1 adds three regressions and typing adjustments", "risk": "Low", "issue_count": 0},
+    {"file": "src/api/tests/test_resident_choice_screen.py", "lines_changed": "Final link tests; C1 annotates test tree helper", "risk": "Low", "issue_count": 0},
+    {"file": "src/api/tests/test_role_endpoint_inventory.py", "lines_changed": "Final CSV inventory entry; unchanged by C1", "risk": "Low", "issue_count": 0}
+  ],
+  "findings": [],
+  "positive_changes": [
+    "Historical High resolved at resident_choice_export.py:34 and 66-73: review dictionaries are complete only for exact 'Needs human review' or 'Reviewed with supplied acceptance'. Empty, unknown, wrong-case and whitespace-suffixed statuses now take _held's unavailable branch rather than disappearing into None recorded. The allowlist matches the actual existing writer vocabulary inspected during the initial assessment, without changing Core.",
+    "Explicit None still means no review. Reviewed-with-supplied-acceptance still means no retained review, not inferred resident consent or readiness. Needs-human-review still resolves the bound historical decision; Declined remains explicitly retained after later Waiting. Current paused/withdrawn summaries and current-versus-latest distinctions are unchanged.",
+    "New tests at test_resident_choice_export.py:235-256 and 552-579 are meaningful: serializer tests assert exact Unknown output for four malformed strings; the valid-state test separates explicit None, reviewed acceptance and retained Declined. The HTTP test patches detail, not the route or serializer, then authenticates and requests the actual CSV endpoint through the existing threaded HTTP server/store projection path. The before-fix red log demonstrates actual sensitivity: serializer and HTTP assertions failed on false None recorded, while the valid-state test passed.",
+    "C1 typing changes alter only test annotations, not executed assertions or fixtures. Any permits deliberately malformed test values; anchors_of still traverses the same tree. The App-specific no-untyped-call suppression is confined to the test constructor, with no new server suppression or configuration change.",
+    "The checker href fallback does not weaken acceptance: the preceding assertion still requires the exact CSV href and no download attribute, and the next assertion still requires the CSV attachment, filename and content. A missing href cannot pass those checks by fetching the base page.",
+    "Final composition preserves the exact route, filename, ordered eight columns, shared JSON query parsing and four-role gate, header-only empty behavior, JSON errors without successful attachment, read-only projection, exact checklist-key display allowlist, private-field exclusions and formula-safe data cells. Overview remains a native successful-page-only anchor with truthful adjacent scope/failure wording.",
+    "No Core/server/UI/role/schema/registry/Capacity/config changes occur in the C1 correction delta. Server/UI changes in the final feature diff remain the originally reviewed bounded additions."
+  ],
+  "testing_recommendations": [
+    "No additional correction or broad production acceptance exercise is requested by this functional reassessment.",
+    "Independently read c1/red.log: three tests, two actual failures showing None recorded instead of Unknown before the fix. Read the focused.log result lines: 127 tests in 30.583s, OK. Read intake4.log: four named StaffIntakeApi/JsonStaffIntakeApi tests, OK, with no skip reported. Expected unavailable-law-service diagnostics appear in these synthetic logs and do not change the recorded unittest outcomes.",
+    "Read c1/mypy-pinned.log: existing pinned-environment command, no issues in 232 source files. Mypy version 2.4.0 is supplied by handoff/Root, not independently invoked here. This does not imply server.py is fully typed; its existing ignore_errors baseline remains.",
+    "Read fresh c1/browser232.log: 42 PASS entries, Chromium 156.0.8078.4, pinned axe 4.10.3, zero violations, empty incomplete list, no POSTs and no uncaught JavaScript errors. This is author-run evidence independently inspected, not a reviewer browser rerun.",
+    "Limitations: no reviewer execution capability, so tests, browser, typing, lint, exit codes, clean status, immutable tree hashing and lock acquisition were not independently rerun. Earlier failed imports/selectors/type checks and historical browser evidence remain historical; their preservation and byte-exact historical report comparison are Root's provenance checks, not revalidated here."
+  ],
+  "recommended_actions": [
+    "Return this final-head-qualified Pass to Root for provenance, integration and publication handling. Leave the initial adverse report untouched. Qualified human review remains required."
+  ],
+  "out_of_scope_observations": [],
+  "risk_assessment": "The original contract blocker is closed with a narrow fail-closed change and executable red/green regression evidence. No remaining concrete functional blocker was found within this same-task C1 assessment. Approval applies only to the stated final candidate/base and admitted synthetic local feature scope; it is not hosted-CI, whole-parent, live/privacy/retention or production acceptance.",
+  "acceptance_criteria_coverage": [
+    {"ac": "Exact CSV route, attachment filename and eight ordered contract columns", "status": "Implemented", "notes": "Final source diff retains exact admitted contract."},
+    {"ac": "Same four roles and JSON paging/query semantics; header-only empty; no mutation; JSON errors without successful attachment", "status": "Implemented", "notes": "Initial implementation assessment carries forward; route and store use unchanged by C1, existing tests retained."},
+    {"ac": "Closed names; Unknown for malformed status; explicit Not recorded only; retained Declined after Waiting", "status": "Implemented", "notes": "Original High resolved by exact review-status allowlist. Added malformed serializer and real HTTP regression paths have before-fix failures and recorded after-fix focused success; valid-state semantics preserved."},
+    {"ac": "Exclude private/free-text/nested fields; formula safety on every cell", "status": "Implemented", "notes": "Explicit primitive selection and shared safe_cell unchanged. Fixed headers have no formula prefixes."},
+    {"ac": "Current-page native anchor only on successful portfolio load, no download attribute, truthful scope and failure state", "status": "Implemented", "notes": "UI unchanged from initial assessment; assertions retained and fresh browser log inspected."},
+    {"ac": "No schema/Core/role/LIST_EXPORTS/Capacity changes", "status": "Implemented", "notes": "No such feature changes in final supplied source diff or C1 delta. Main integration/provenance independently handled by Root."}
+  ]
+}
