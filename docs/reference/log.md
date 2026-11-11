@@ -11460,3 +11460,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-11] update | Inventory and staff intake checkpoint readiness correction (Refs #440 #132)
 
 * Added an additive follow-up to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#follow-up-observation-and-readiness-correction-2026-11-11-additive): the staff intake browser and axe selector ran once (2 tests, exit 0, five states without violations, pinned axe 4.10.3 digest verified, existing tests only) and a committed-range whitespace finding was corrected. The combined inventory-to-QA gap stays unverified pending the separately routed #132 test. No source change, issue write or approval.
+
+## [2026-11-11] update | Store classification correction for the inventory and staff intake checkpoint (Refs #440 #132)
+
+* Corrected the O4 classification in the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#store-classification-correction-2026-11-11-additive) from JSON only to SQLite and JSON (still not MSSQL), after Root's independent review verified the fixture inheritance and the raw class names. Counts unchanged (90 run, 56 ok, 34 skipped). Earlier records stay as history. No test rerun, source change or issue write.

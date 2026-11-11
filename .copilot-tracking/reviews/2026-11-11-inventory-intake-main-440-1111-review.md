@@ -37,3 +37,7 @@ Review executed once, after `implement-done` (witness seq 5, 00:22:32Z). Author-
 * Added a dated follow-up observation O7b (staff intake browser and axe, 2 tests, exit 0, five states without violations, pinned axe 4.10.3 digest verified, lock free by nonqueued admission). O7 original blocked result stays. Sample limits are in the changes record.
 * The owner-pending routing above is historical; Root routed one test-only E2 under #132 separately. That test is not run or read here, so the combined acceptance gap stays unverified.
 * Outcome: conformant with the same qualifications. The final committed-range check result is in ROOT/handoff-440-readiness-followup-1111.md.
+
+## Amendment 2: store classification (2026-11-11, additive)
+
+* One author-executed review of this small records-only correction, once; the independent finding came from Root. Verified against the raw O4 log and `test_procurement_api.py` (`sql = True`, `make_store` uses `SqlStore` with SQLite) that the pack's JSON-only classification was too narrow; the pack now says SQLite and JSON, not MSSQL, with a dated correction. Counts unchanged. Original review claims stay as history. Outcome: conformant with the same qualifications; independent exact-head assessment still required.
