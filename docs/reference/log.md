@@ -11500,3 +11500,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Updated the Tables row of the [WCAG baseline](./research/ux/wcag-conformance-baseline.md) and the index entry: the regex-counted script-built table inventory is 13, the new one being the read-only handoff waiting screen, read from source (caption, scoped headers, named keyboard-focusable scroll region, text-only status). The 11 and 12 observations are kept.
 * Evidence class: source audit plus constructed-browser rendering tests; no screen-reader, reflow, zoom or assistive-technology test, no conformance claim, no approved global OD-09 times, no criterion tick; whole #83 criterion 3 stays unmet. The `ops.js` sensor table is outside the count and not audited here.
 * Evidence under `.copilot-tracking/` (2026-11-11 issue-83-table-inventory-d1-1111).
+
+## [2026-11-11] update | Handoff waiting screen integrated-main checkpoint (Refs #440 #83)
+
+* Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#handoff-waiting-screen-integrated-main-checkpoint-2026-11-11-refs-440-83) for merged PR 1444 on main `ef3e00ad05a78c3a0fd3b342b860fb3d43796223` (tree `513c3f9d8f7ae7c0c78672aa9f1650e23f7451cd`): 86 existing tests across eight selectors, zero skips, zero failures, plus Node and Ruff checks.
+* Evidence class: local observed on constructed synthetic fixtures; no source, test, requirement or ADR change, no new issue, no criterion tick, no acceptance. Main scoring was pending at read time. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-11 waiting-checkpoint-440-1111).
