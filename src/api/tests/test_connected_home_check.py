@@ -127,6 +127,30 @@ class ConnectedHomeCheck(unittest.TestCase):
         )
         self.assertTrue(walk.sibling_failures("quality-queue", seen, self.own, self.leaks))
 
+    def test_technical_source_facts_with_home_conflict_is_rejected(self) -> None:
+        # Literal title and the real ZF-1 query id, independent of the inventory.
+        query = walk.case_of(self.data, walk.HOME_ID)["stock_reconciliation"][0]["id"]
+        seen = observed_from(list(self.own["technical-queue"]), "ZF-2")
+        self.assertEqual(walk.sibling_failures("technical-queue", seen, self.own, self.leaks), [])
+        seen["panels"].append(
+            {"title": "Source facts", "text": f"{query} epc", "rows": [], "fields": []}
+        )
+        self.assertTrue(walk.sibling_failures("technical-queue", seen, self.own, self.leaks))
+
+    def test_inventory_covers_every_panel_the_six_renderers_declare(self) -> None:
+        source = SCREENS.read_text(encoding="utf-8")
+        blocks = source.split("registerRoleScreen({")
+        for screen, record in walk.RECORD_PANELS.items():
+            block = next(b for b in blocks if f'id: "{screen}"' in b[:60])
+            block = block.split("function hazardScreen")[0]
+            titles = set(re.findall(r'screenPanel\(\s*"([^"]+)"', block))
+            if screen == "finance-invoices":
+                titles.add("Invoice line comparison")
+            audited = set(record) | set(walk.AUDITED_OTHER[screen])
+            with self.subTest(screen=screen):
+                self.assertEqual(titles - audited, set())
+                self.assertTrue(set(record) <= titles | {"Quality evidence"})
+
     def test_portfolio_panels_with_other_homes_data_are_not_rejected(self) -> None:
         seen = observed_from(list(self.own["asset-board"]), "ZF-2")
         for title in (

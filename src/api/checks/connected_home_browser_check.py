@@ -382,12 +382,42 @@ def home_failures(screen_id: str, observed: Mapping[str, Any], expected: Mapping
 # Selected-home domain-record panels per screen, scanned for sibling leakage whatever the positive
 # expectations name. Portfolio panels (all homes, ledger-wide, waiting queues) are deliberately absent.
 RECORD_PANELS: dict[str, tuple[str, ...]] = {
-    "asset-board": ("Stock conflict comparison",),
+    "asset-board": ("Stock conflict comparison", "Eligibility"),
     "programme-queue": (),
-    "technical-queue": ("Design version", "Separate sign-offs"),
-    "resident-choice": ("Choice for each measure",),
+    "technical-queue": ("Source facts", "Design version", "Separate sign-offs", "Returns and routing", "Missing references"),
+    "resident-choice": (
+        "Choice for each measure",
+        "Paused or withdrawn by the resident",
+        "Linked update commitment",
+        "Service requests and access needs (separate from choice)",
+    ),
     "quality-queue": ("Handover readiness", "Quality evidence"),
     "finance-invoices": ("Invoice line comparison",),
+}
+# Panels audited against the renderers and judged not to carry the selected home's record data.
+AUDITED_OTHER: dict[str, tuple[str, ...]] = {
+    "asset-board": (
+        "Evidence boundary",
+        "Stock conflict queue across homes (portfolio scope, not this home)",
+        "Missing investment inputs",
+        "Benefits and phase check",
+        "Portfolio scope (separate from this home)",
+        "Ledger-wide AI cohort (all homes, not this home)",
+        "Ledger-wide AI usage, alerts and cost components (all homes, not this home)",
+    ),
+    "programme-queue": ("Evidence boundary", "Shared queue", "Lifecycle and funnel"),
+    "technical-queue": ("Evidence boundary", "Technical readiness"),
+    "resident-choice": (
+        "Evidence boundary",
+        "Choice and update commitments across open homes (portfolio scope, not this home)",
+        "Choice comes before offered capacity",
+    ),
+    "quality-queue": ("Evidence boundary",),
+    "finance-invoices": (
+        "Evidence boundary",
+        "Invoices waiting for Finance (all homes your role can see)",
+        "AI economics (ledger-wide, all homes)",
+    ),
 }
 
 
@@ -565,6 +595,9 @@ def run_record_leak(
     """Inject a ZF-1 marker into the sibling's actual record panel, not its evidence boundary."""
     titles = [str(p["title"]) for p in observe(page)["panels"] if is_record_panel(screen_id, str(p["title"]))]
     check(f"{role}: {screen_id} sibling shows a record panel to challenge; found={titles}", bool(titles))
+    if screen_id == "technical-queue":
+        check(f"{role}: Source facts is shown for the sibling and scanned", "Source facts" in titles)
+        titles = ["Source facts"]
     find = "[...document.querySelectorAll('.screen-evidence .screen-record')].find(p => p.querySelector(':scope > h2')?.textContent === t)"
     edit = Mutation(
         f"a ZF-1 marker leaks into the sibling record panel {titles[0]!r}",
@@ -663,6 +696,7 @@ def run_browser(base: str) -> None:
 
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
+        print(f"BROWSER VERSION {browser.version}")
         try:
             for visit in JOURNEY:
                 context = browser.new_context(viewport={"width": 1280, "height": 900})
