@@ -14,6 +14,23 @@ from checks import connected_home_browser_check as walk
 SCREENS = Path(walk.__file__).resolve().parents[1] / "src/zava_forward/api/web/role-screens.js"
 
 
+def screen_block(source: str, screen: str) -> str:
+    blocks = source.split("registerRoleScreen({")
+    block = next(b for b in blocks if f'id: "{screen}"' in b[:60])
+    return block.split("function hazardScreen")[0]
+
+
+def panel_span(block: str, source: str, title: str) -> str:
+    """The renderer text of the panel with this title, to the next panel or function end."""
+    if f'screenPanel("{title}"' not in block:
+        block = source
+    source = block
+    start = source.index(f'screenPanel("{title}"')
+    rest = source[start + 1 :]
+    stops = [m.start() for m in re.finditer(r"screenPanel\(|screenWithheld\(|\n\}\)?;?\n", rest)]
+    return source[start : start + 1 + (min(stops) if stops else len(rest))]
+
+
 def observed_from(expected: list[walk.Expect], home: str) -> dict[str, Any]:
     """A page observation holding exactly the markers a screen must show for the home."""
     panels: dict[str, dict[str, Any]] = {}
@@ -127,29 +144,85 @@ class ConnectedHomeCheck(unittest.TestCase):
         )
         self.assertTrue(walk.sibling_failures("quality-queue", seen, self.own, self.leaks))
 
-    def test_technical_source_facts_with_home_conflict_is_rejected(self) -> None:
-        # Literal title and the real ZF-1 query id, independent of the inventory.
-        query = walk.case_of(self.data, walk.HOME_ID)["stock_reconciliation"][0]["id"]
+    def test_literal_home_data_destinations_each_reject_a_home_record(self) -> None:
+        # Titles are listed here from the renderers, not taken from walk.RECORD_PANELS.
+        destinations = {
+            "asset-board": ("Stock conflict comparison", "Eligibility"),
+            "programme-queue": ("Connected view for ZF-2",),
+            "technical-queue": (
+                "Technical readiness",
+                "Source facts",
+                "Design version",
+                "Separate sign-offs",
+                "Returns and routing",
+                "Missing references",
+            ),
+            "resident-choice": (
+                "Choice for each measure",
+                "Paused or withdrawn by the resident",
+                "Linked update commitment",
+                "Service requests and access needs (separate from choice)",
+            ),
+            "quality-queue": (
+                "Handover readiness",
+                "Quality evidence",
+                "Loft insulation: Handed over",
+            ),
+            "finance-invoices": ("Invoice line comparison",),
+        }
+        for screen, titles in destinations.items():
+            for title in titles:
+                with self.subTest(screen=screen, panel=title):
+                    seen = observed_from(list(self.own[screen]), "ZF-2")
+                    self.assertEqual(walk.sibling_failures(screen, seen, self.own, self.leaks), [])
+                    seen["panels"].append(
+                        {"title": title, "text": self.leaks[0], "rows": [], "fields": []}
+                    )
+                    self.assertTrue(walk.sibling_failures(screen, seen, self.own, self.leaks))
+
+    def test_technical_readiness_with_home_source_conflict_is_rejected(self) -> None:
+        home = walk.case_of(self.data, walk.HOME_ID)["stock_reconciliation"][0]
+        text = f"Source conflict {home['id']} ({home['field']}) is unresolved."
         seen = observed_from(list(self.own["technical-queue"]), "ZF-2")
+        seen["panels"].append({"title": "Technical readiness", "text": "Missing items are listed."})
         self.assertEqual(walk.sibling_failures("technical-queue", seen, self.own, self.leaks), [])
-        seen["panels"].append(
-            {"title": "Source facts", "text": f"{query} epc", "rows": [], "fields": []}
-        )
-        self.assertTrue(walk.sibling_failures("technical-queue", seen, self.own, self.leaks))
+        seen["panels"][-1]["text"] = text
+        failures = walk.sibling_failures("technical-queue", seen, self.own, self.leaks)
+        self.assertTrue([f for f in failures if "leaked" in f], failures)
+        sibling = walk.case_of(self.data, walk.SIBLING_ID)
+        self.assertNotIn(home["id"], str(sibling))
 
     def test_inventory_covers_every_panel_the_six_renderers_declare(self) -> None:
         source = SCREENS.read_text(encoding="utf-8")
-        blocks = source.split("registerRoleScreen({")
         for screen, record in walk.RECORD_PANELS.items():
-            block = next(b for b in blocks if f'id: "{screen}"' in b[:60])
-            block = block.split("function hazardScreen")[0]
-            titles = set(re.findall(r'screenPanel\(\s*"([^"]+)"', block))
+            titles = set(re.findall(r'screenPanel\(\s*"([^"]+)"', screen_block(source, screen)))
             if screen == "finance-invoices":
                 titles.add("Invoice line comparison")
-            audited = set(record) | set(walk.AUDITED_OTHER[screen])
+            audited = set(record) | set(walk.EXCLUDED[screen])
             with self.subTest(screen=screen):
                 self.assertEqual(titles - audited, set())
+                self.assertEqual(set(record) & set(walk.EXCLUDED[screen]), set())
                 self.assertTrue(set(record) <= titles | {"Quality evidence"})
+
+    def test_every_exclusion_rests_on_its_source_anchor_and_reads_no_home_field(self) -> None:
+        source = SCREENS.read_text(encoding="utf-8")
+        for screen, excluded in walk.EXCLUDED.items():
+            for title, why in excluded.items():
+                with self.subTest(screen=screen, panel=title):
+                    self.assertIn(why.kind, ("portfolio-call", "constant", "home-id-only"))
+                    block = screen_block(source, screen)
+                    self.assertTrue(why.why)
+                    self.assertTrue(why.anchor in block or why.anchor in source, why.anchor)
+                    span = panel_span(block, source, title)
+                    # Aliases of the selected home's record in the renderers' render(c) bodies.
+                    fields = set(re.findall(r"\bc\??\.(\w+)", span))
+                    aliases = r"\b(queries|reasons|states|requests)\b\s*[.\[)]"
+                    self.assertFalse(re.search(aliases, span), span)
+                    self.assertEqual(fields - {"id"}, set(), span)
+                    if why.kind == "home-id-only":
+                        self.assertIn("c.id", span)
+                    else:
+                        self.assertNotIn("c.id", span)
 
     def test_portfolio_panels_with_other_homes_data_are_not_rejected(self) -> None:
         seen = observed_from(list(self.own["asset-board"]), "ZF-2")

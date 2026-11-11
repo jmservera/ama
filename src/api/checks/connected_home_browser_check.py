@@ -22,7 +22,7 @@ import importlib
 import sys
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, NamedTuple
 
 from playwright.sync_api import Page, Request, sync_playwright
 
@@ -384,7 +384,14 @@ def home_failures(screen_id: str, observed: Mapping[str, Any], expected: Mapping
 RECORD_PANELS: dict[str, tuple[str, ...]] = {
     "asset-board": ("Stock conflict comparison", "Eligibility"),
     "programme-queue": (),
-    "technical-queue": ("Source facts", "Design version", "Separate sign-offs", "Returns and routing", "Missing references"),
+    "technical-queue": (
+        "Technical readiness",
+        "Source facts",
+        "Design version",
+        "Separate sign-offs",
+        "Returns and routing",
+        "Missing references",
+    ),
     "resident-choice": (
         "Choice for each measure",
         "Paused or withdrawn by the resident",
@@ -394,31 +401,73 @@ RECORD_PANELS: dict[str, tuple[str, ...]] = {
     "quality-queue": ("Handover readiness", "Quality evidence"),
     "finance-invoices": ("Invoice line comparison",),
 }
-# Panels audited against the renderers and judged not to carry the selected home's record data.
-AUDITED_OTHER: dict[str, tuple[str, ...]] = {
-    "asset-board": (
-        "Evidence boundary",
-        "Stock conflict queue across homes (portfolio scope, not this home)",
-        "Missing investment inputs",
-        "Benefits and phase check",
-        "Portfolio scope (separate from this home)",
-        "Ledger-wide AI cohort (all homes, not this home)",
-        "Ledger-wide AI usage, alerts and cost components (all homes, not this home)",
-    ),
-    "programme-queue": ("Evidence boundary", "Shared queue", "Lifecycle and funnel"),
-    "technical-queue": ("Evidence boundary", "Technical readiness"),
-    "resident-choice": (
-        "Evidence boundary",
-        "Choice and update commitments across open homes (portfolio scope, not this home)",
-        "Choice comes before offered capacity",
-    ),
-    "quality-queue": ("Evidence boundary",),
-    "finance-invoices": (
-        "Evidence boundary",
-        "Invoices waiting for Finance (all homes your role can see)",
-        "AI economics (ledger-wide, all homes)",
-    ),
+
+
+class Excluded(NamedTuple):
+    """A panel deliberately not scanned, with the reviewed source reason it carries no home record."""
+
+    kind: str  # portfolio-call, constant or home-id-only
+    anchor: str  # exact role-screens.js text the judgement was made from
+    why: str
+
+
+EVIDENCE_ID_ONLY = Excluded(
+    "home-id-only", "Home scope: ${c.id} only", "literals plus the home id; heading and links bind the id"
+)
+EVIDENCE_CONSTANT = Excluded("constant", "Read-only", "literal text only; no case field is read")
+# Reviewed manifest of every other panel the six renderers emit. It is a reviewed dependency
+# judgement from the source anchors, not a proof of JavaScript data flow.
+EXCLUDED: dict[str, dict[str, Excluded]] = {
+    "asset-board": {
+        "Evidence boundary": EVIDENCE_ID_ONLY,
+        "Stock conflict queue across homes (portfolio scope, not this home)": Excluded(
+            "portfolio-call", "/api/asset/stock-queue", "built from the all-homes stock queue call"
+        ),
+        "Missing investment inputs": Excluded("constant", "assetInputs.map", "module constant rows"),
+        "Benefits and phase check": Excluded("constant", "assetGates.map", "module constant rows"),
+        "Portfolio scope (separate from this home)": Excluded(
+            "portfolio-call", "/api/cases?view=all&limit=1", "role-scoped total of an all-homes call"
+        ),
+        "Ledger-wide AI cohort (all homes, not this home)": Excluded(
+            "portfolio-call", "/api/ai/report", "ledger-wide AI report"
+        ),
+        "Ledger-wide AI usage, alerts and cost components (all homes, not this home)": Excluded(
+            "portfolio-call", "/api/ai/report", "ledger-wide AI report"
+        ),
+    },
+    "programme-queue": {
+        "Evidence boundary": EVIDENCE_CONSTANT,
+        "Shared queue": Excluded(
+            "portfolio-call", "loadPage(0)", "paged queue of all homes the role may see"
+        ),
+        "Lifecycle and funnel": Excluded(
+            "portfolio-call", "/api/coordinator?view=all", "all-homes coordinator report"
+        ),
+    },
+    "technical-queue": {"Evidence boundary": EVIDENCE_ID_ONLY},
+    "resident-choice": {
+        "Evidence boundary": EVIDENCE_ID_ONLY,
+        "Choice and update commitments across open homes (portfolio scope, not this home)": Excluded(
+            "portfolio-call", "queue.items", "summary rows from the all-open-homes choice queue"
+        ),
+        "Choice comes before offered capacity": Excluded(
+            "constant", "A recorded choice, pause or withdrawal takes precedence", "literal policy text"
+        ),
+    },
+    "quality-queue": {"Evidence boundary": EVIDENCE_ID_ONLY},
+    "finance-invoices": {
+        "Evidence boundary": Excluded(
+            "home-id-only", "Home scope: ${c.id} only, except the queue below", "literals plus the home id"
+        ),
+        "Invoices waiting for Finance (all homes your role can see)": Excluded(
+            "portfolio-call", "financeQueueRows(queue)", "rows of the all-homes finance queue"
+        ),
+        "AI economics (ledger-wide, all homes)": Excluded(
+            "portfolio-call", "financeEconomicsPanel(extra?.report)", "ledger-wide AI report and literals"
+        ),
+    },
 }
+AUDITED_OTHER: dict[str, tuple[str, ...]] = {s: tuple(m) for s, m in EXCLUDED.items()}
 
 
 def is_record_panel(screen_id: str, title: str) -> bool:
@@ -596,16 +645,18 @@ def run_record_leak(
     titles = [str(p["title"]) for p in observe(page)["panels"] if is_record_panel(screen_id, str(p["title"]))]
     check(f"{role}: {screen_id} sibling shows a record panel to challenge; found={titles}", bool(titles))
     if screen_id == "technical-queue":
-        check(f"{role}: Source facts is shown for the sibling and scanned", "Source facts" in titles)
-        titles = ["Source facts"]
+        for required in ("Technical readiness", "Source facts"):
+            check(f"{role}: {required} is shown for the sibling and scanned", required in titles)
+        titles = ["Technical readiness", "Source facts"]
     find = "[...document.querySelectorAll('.screen-evidence .screen-record')].find(p => p.querySelector(':scope > h2')?.textContent === t)"
-    edit = Mutation(
-        f"a ZF-1 marker leaks into the sibling record panel {titles[0]!r}",
-        f"([t, m]) => {{ {find}.append(m); }}",
-        [titles[0], leaks[0]],
-    )
-    rejected(page, edit, lambda seen: sibling_failures(screen_id, seen, own, leaks))
-    reload_selected(page, role, screen_id, SIBLING_ID)
+    for title in titles[: 2 if screen_id == "technical-queue" else 1]:
+        edit = Mutation(
+            f"a ZF-1 marker leaks into the sibling record panel {title!r}",
+            f"([t, m]) => {{ {find}.append(m); }}",
+            [title, leaks[0]],
+        )
+        rejected(page, edit, lambda seen: sibling_failures(screen_id, seen, own, leaks))
+        reload_selected(page, role, screen_id, SIBLING_ID)
 
 
 def walk_visit(
