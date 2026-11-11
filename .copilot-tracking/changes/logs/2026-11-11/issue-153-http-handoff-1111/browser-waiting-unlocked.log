@@ -1,0 +1,15 @@
+test_constructed_old_escalated_and_empty_queue (tests.test_handoff_waiting_view.WaitingViewBrowser.test_constructed_old_escalated_and_empty_queue) ... ok
+test_reachable_when_personal_list_is_empty_or_its_load_fails_constructed (tests.test_handoff_waiting_view.WaitingViewBrowser.test_reachable_when_personal_list_is_empty_or_its_load_fails_constructed) ... ok
+test_real_backend_rows_by_keyboard_without_mutation (tests.test_handoff_waiting_view.WaitingViewBrowser.test_real_backend_rows_by_keyboard_without_mutation) ... ok
+test_rejected_and_malformed_responses_are_visible_failures_and_recheck_works (tests.test_handoff_waiting_view.WaitingViewBrowser.test_rejected_and_malformed_responses_are_visible_failures_and_recheck_works) ... ok
+test_abort_and_ended_session_render_nothing_beyond_loading (tests.test_handoff_waiting_view.WaitingViewText.test_abort_and_ended_session_render_nothing_beyond_loading) ... ok
+test_empty_queue_is_stated_without_a_table_or_as_of (tests.test_handoff_waiting_view.WaitingViewText.test_empty_queue_is_stated_without_a_table_or_as_of) ... ok
+test_failures_and_malformed_payloads_are_a_visible_alert_without_table_or_raw_text (tests.test_handoff_waiting_view.WaitingViewText.test_failures_and_malformed_payloads_are_a_visible_alert_without_table_or_raw_text) ... ok
+test_one_read_only_unscoped_get_and_no_new_route_or_limit (tests.test_handoff_waiting_view.WaitingViewText.test_one_read_only_unscoped_get_and_no_new_route_or_limit) ... ok
+test_rows_show_elapsed_as_of_owner_and_only_server_supplied_reasons (tests.test_handoff_waiting_view.WaitingViewText.test_rows_show_elapsed_as_of_owner_and_only_server_supplied_reasons) ... ok
+test_scope_is_explicit_and_distinct_from_the_personal_list (tests.test_handoff_waiting_view.WaitingViewText.test_scope_is_explicit_and_distinct_from_the_personal_list) ... ok
+
+----------------------------------------------------------------------
+Ran 10 tests in 8.814s
+
+OK

@@ -54,6 +54,15 @@ const out = {};
     transport: new TypeError("Failed to fetch CANARY"),
     abort: Object.assign(new Error("signal is aborted"), {name: "AbortError"}),
     http: Object.assign(new Error("Handoff service said no"), {status: 500}),
+    denied: Object.assign(new Error("Your role does not include this. CANARY"), {status: 403}),
+    missing: Object.assign(new Error("CANARY not found"), {status: 404}),
+    limited: Object.assign(new Error("CANARY slow down"), {status: 429}),
+    generic: Object.assign(new Error("This could not load and the cause is not known. CANARY"),
+      {status: 502, generic: true}),
+    emptyObject: {},
+    zero: 0,
+    text: "x",
+    nothing: null,
     ended: Object.assign(new Error("Your session has ended. Sign in again."), {status: 401}),
     rows: [row],
     empty: [],
@@ -115,16 +124,50 @@ class HandoffReadGuidanceText(unittest.TestCase):
             with self.subTest(name=name):
                 self.assertEqual(case["calls"], [["/api/handoffs"]])
 
-    def test_abort_paints_nothing_and_http_paths_keep_their_text(self) -> None:
+    def test_abort_paints_nothing_and_session_ended_keeps_its_text(self) -> None:
         self.assertEqual(self.out["abort"]["text"], "Loading handoffs...")
         self.assertFalse(self.out["abort"]["alert"])
-        self.assertEqual(
-            self.out["http"]["text"], "Could not load handoffs: Handoff service said no"
-        )
         self.assertEqual(
             self.out["ended"]["text"],
             "Could not load handoffs: Your session has ended. Sign in again.",
         )
+
+    def test_refusal_names_owner_and_manual_path_without_retry_or_raw_text(self) -> None:
+        case = self.out["denied"]
+        text = case["text"]
+        self.assertTrue(case["alert"])
+        self.assertFalse(case["hidden"])
+        self.assertIn("so we cannot tell whether any are waiting.", text)
+        self.assertIn("Refreshing will not change this.", text)
+        self.assertIn("Owner: your Retrofit Programme Manager or Programme Support Officer.", text)
+        self.assertIn("Next action: ask them to check your role.", text)
+        self.assertIn("ask the sender or open a case you already know", text)
+        self.assertIn("may not show every handoff waiting for you", text)
+        self.assertNotRegex(text, r"(?i)try again|retry|refresh to")
+        self.assertNotIn("CANARY", text)
+        self.assertNotIn("Your role does not include this", text)
+        self.assertNotIn("Could not load handoffs", text)
+        self.assertTrue(text.isascii())
+        self.assertIsNone(BANNED.search(text), text)
+        self.assertNotRegex(text, r"\b(no handoffs|nothing waiting|all clear)\b")
+
+    def test_other_http_failures_show_fixed_load_failure_not_server_text(self) -> None:
+        for name in ("http", "missing", "limited", "generic"):
+            with self.subTest(name=name):
+                case = self.out[name]
+                self.assertTrue(case["alert"])
+                self.assertFalse(case["hidden"])
+                self.assertEqual(case["text"], self.out["transport"]["text"])
+                self.assertNotRegex(case["text"], r"CANARY|said no|Could not load handoffs")
+
+    def test_malformed_success_is_unknown_not_empty(self) -> None:
+        # "x" and null already reached the fixed text through the catch: preservation checks.
+        for name in ("emptyObject", "zero", "text", "nothing"):
+            with self.subTest(name=name):
+                case = self.out[name]
+                self.assertTrue(case["alert"])
+                self.assertFalse(case["hidden"])
+                self.assertEqual(case["text"], self.out["transport"]["text"])
 
     def test_success_lists_rows_and_empty_hides_the_card(self) -> None:
         self.assertFalse(self.out["rows"]["hidden"])
@@ -136,8 +179,11 @@ class HandoffReadGuidanceText(unittest.TestCase):
         source = (WEB / "app.js").read_text()
         body = source[source.index("const HANDOFF_READ_ERROR") : source.index(END)]
         self.assertEqual(body.count('role: "alert"'), 1)
-        self.assertEqual(body.count("HANDOFF_READ_ERROR"), 2)
-        self.assertNotIn("e.message}`)", body.split("}).catch")[1].split("HANDOFF_READ_ERROR")[0])
+        self.assertEqual(body.count("HANDOFF_READ_ERROR"), 3)
+        self.assertEqual(body.count("const HANDOFF_DENIED"), 1)
+        self.assertLess(body.index("const HANDOFF_DENIED"), body.index("function pendingHandoffs"))
+        self.assertEqual(body.count("e.message"), 1)
+        self.assertIn("e.status === 401 ? `Could not load handoffs: ${e.message}`", body)
         self.assertNotIn("setTimeout", body)
 
 
@@ -199,7 +245,9 @@ class HandoffReadGuidanceBrowser(unittest.TestCase):
         cls.browser.close()
         cls.pw.stop()
 
-    def open(self, offer: bool, init: str = "") -> tuple[Any, list[Any]]:
+    def open(
+        self, offer: bool, init: str = "", handoffs: Callable[[Any], None] | None = None
+    ) -> tuple[Any, list[Any]]:
         served = Served(offer)
         self.addCleanup(served.close)
         page = self.browser.new_page()
@@ -221,9 +269,33 @@ class HandoffReadGuidanceBrowser(unittest.TestCase):
               body: JSON.stringify({email: 'sam@example.test', password: 'zf-test'})})).status"""
         )
         self.assertEqual(status, 200)
+        if handoffs:
+            # Installed before the first app navigation so the very first read is constructed.
+            page.route("**/api/handoffs", handoffs)
         page.goto(served.base + "/app#/")
         page.get_by_role("heading", name="My cases today").wait_for()
         return page, requests
+
+    @staticmethod
+    def reads(requests: list[Any]) -> list[Any]:
+        return [r for r in requests if r.method == "GET" and r.url.endswith("/api/handoffs")]
+
+    def constructed(self, status: int, body: str, ctype: str = "application/json") -> Any:
+        """Constructed (not backend-produced) response to the first personal handoff read."""
+        page, requests = self.open(
+            True,
+            handoffs=lambda route: route.fulfill(status=status, content_type=ctype, body=body),
+        )
+        card = self.card(page)
+        card.get_by_role("alert").wait_for()
+        page.wait_for_timeout(600)
+        self.assertEqual(len(self.reads(requests)), 1)
+        self.assertEqual([r for r in requests if r.method == "POST" and "login" not in r.url], [])
+        main = page.locator("main").inner_text()
+        for leaked in ("CANARY", "Could not load handoffs"):
+            self.assertNotIn(leaked, main)
+        self.assertNotIn("Pat Test", card.inner_text())
+        return page, card
 
     @staticmethod
     def card(page: Any) -> Any:
@@ -257,6 +329,47 @@ class HandoffReadGuidanceBrowser(unittest.TestCase):
         self.assertEqual(page.evaluate("window.__attempts"), 1)
         self.assertEqual([r for r in requests if r.url.endswith("/api/handoffs")], [])
         self.assertEqual([r for r in requests if r.method == "POST" and "login" not in r.url], [])
+
+    def test_constructed_403_shows_refusal_without_retry_advice(self) -> None:
+        from playwright.sync_api import expect
+
+        _, card = self.constructed(403, '{"error": "CANARY refusal text"}')
+        expect(card).to_be_visible()
+        expect(card.get_by_role("alert")).to_contain_text("Refreshing will not change this.")
+        expect(card).to_contain_text("Owner: your Retrofit Programme Manager")
+        expect(card).to_contain_text("ask the sender or open a case you already know")
+        self.assertNotRegex(card.inner_text(), r"(?i)try again|retry")
+
+    def test_constructed_500_and_malformed_success_stay_unknown_not_empty(self) -> None:
+        from playwright.sync_api import expect
+
+        cases = (
+            (500, '{"error": "CANARY server text"}', "application/json"),
+            (200, "oops", "text/plain"),
+            (200, "{}", "application/json"),
+        )
+        for status, body, ctype in cases:
+            with self.subTest(status=status, body=body):
+                _, card = self.constructed(status, body, ctype)
+                expect(card).to_be_visible()
+                expect(card.get_by_role("alert")).to_contain_text(
+                    "could not load, so we cannot tell whether any are waiting."
+                )
+                expect(card).to_contain_text("Owner: application support")
+
+    def test_manual_refresh_after_failure_recovers_real_rows(self) -> None:
+        from playwright.sync_api import expect
+
+        page, card = self.constructed(500, '{"error": "CANARY server text"}')
+        requests: list[Any] = []
+        page.on("request", lambda request: requests.append(request))
+        page.unroute("**/api/handoffs")
+        page.wait_for_timeout(600)
+        self.assertEqual(self.reads(requests), [])
+        page.reload()
+        page.get_by_role("heading", name="My cases today").wait_for()
+        expect(self.card(page)).to_contain_text("Pat Test, 1 Test Road")
+        self.assertEqual(len(self.reads(requests)), 1)
 
     def test_session_ended_read_keeps_sign_in_path_and_no_load_guidance(self) -> None:
         page, _ = self.open(True)
