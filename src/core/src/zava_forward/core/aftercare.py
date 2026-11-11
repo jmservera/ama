@@ -7,6 +7,7 @@ financial closure are recorded separately and never change a concern. A sensor r
 only and never dismisses a resident report. It reads or writes no consent, sanction or hazard state.
 """
 
+import re
 from collections.abc import Iterable, Mapping
 from copy import deepcopy
 from datetime import date
@@ -169,6 +170,13 @@ def _present(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
 
+def _concern_number(cid: object) -> int:
+    """Numeric part of an `AC-nnn` identifier; anything else is -1 and fails `from_state` checks."""
+    if isinstance(cid, str) and re.fullmatch(r"AC-\d{3,}", cid):
+        return int(cid[3:])
+    return -1
+
+
 def _fraction(count: int, denominator: int | None) -> dict[str, Any]:
     return {"count": count, "denominator": denominator}
 
@@ -189,9 +197,11 @@ class AftercareRegister:
     def from_state(cls, state: Mapping[str, Any]) -> "AftercareRegister":
         """Restore a snapshot, refusing one that would lose or weaken a recorded concern."""
         reg = cls()
-        reg.concerns = deepcopy(dict(state.get("concerns", {})))
+        stored = deepcopy(dict(state.get("concerns", {})))
         reg.closures = deepcopy(list(state.get("closures", [])))
         reg.packs = deepcopy(dict(state.get("packs", {})))
+        # Canonical JSON sorts keys as text, so AC-1000 precedes AC-101: restore in numeric order.
+        reg.concerns = dict(sorted(stored.items(), key=lambda item: _concern_number(item[0])))
         for n, (cid, rec) in enumerate(reg.concerns.items(), start=1):
             outcome = rec.get("outcome")
             if (
