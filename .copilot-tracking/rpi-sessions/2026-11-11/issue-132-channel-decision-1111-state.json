@@ -1,0 +1,33 @@
+{
+  "task_id": "issue-132-channel-decision-1111",
+  "task_slug": "issue-132-channel-decision",
+  "parent_task": {"task_id": "issue-132-keyboard-compat-1111", "task_slug": "issue-132-keyboard-compat"},
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11/issue-132-channel-decision-1111-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11/issue-132-channel-decision-1111-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11/issue-132-channel-decision-1111-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-11/issue-132-channel-decision-1111-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Scope: Research and Plan only; Implement and Review need Root's later explicit prospective admission", "status": "confirmed", "evidence": "owner task statement 2026-11-11 (relayed by Root)"},
+    {"decision": "Research disposition", "status": "executed; Planning Readiness Ready", "evidence": ".copilot-tracking/research/2026-11-11/issue-132-channel-decision-1111-research.md"},
+    {"decision": "Existing accepted decision meets literal criterion", "status": "no; owner direction of 2026-11-09 exists only as issue comment 6753054374, ADR 0007 is Proposed and stale, staff identity is the bounded ADR 0002 owner decision", "evidence": "research artifact"},
+    {"decision": "Critique execution and verdict", "status": "executed once; verdict revise (0 blocking, 3 significant, 1 minor)", "evidence": ".copilot-tracking/plans/2026-11-11/issue-132-channel-decision-1111-critique.md"},
+    {"decision": "Critique dispositions", "status": "all four applied directly; none conflicted with a confirmed decision", "evidence": "critique table"},
+    {"decision": "Review execution", "status": "not executed; belongs to a later admitted implementation", "evidence": null},
+    {"decision": "Correction authority", "status": "consumes none; C1-C5 and E1-E4 spent, E5 unadmitted, one remains; no reset, new five or 134 transfer; no criterion tick authorized", "evidence": "owner task statement 2026-11-11"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "Root decides whether to admit the docs-only ADR 0007 amendment, index row and log entry, and its classification; otherwise stop."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Record the owner 2026-11-09 direction in ADR 0007 as owner-directed for the synthetic demonstrator only (docs-only, three files)", "rationale": "smallest change that removes the repository contradiction with the issue thread", "evidence": "research artifact"},
+    {"rank": 2, "task": "Owner question: is the demonstrator-scoped record sufficient for the unscoped criterion wording, and who owns the #116 provider-identity decision", "rationale": "the tick and production identity are human decisions", "evidence": "plan, focused question"},
+    {"rank": 3, "task": "Named variation and escalation owner (other criterion, out of scope)", "rationale": "whole issue closure needs a company fact not in evidence", "evidence": "research dependency section"}
+  ]
+}
