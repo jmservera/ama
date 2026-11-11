@@ -6927,3 +6927,72 @@ CONTINUE, bounded. Continue independent engineering that does not depend on the 
 ### Store classification correction (2026-11-11, additive)
 
 * Root's independent review found that O4 was classified too narrowly as "JSON store only" in the O4 row, the requirement trace row for PRD FR-016 and FR-017, and the earlier research, changes and review wording; those older records are kept as history. Raw check of `o4-api-staff-intake.err`: the 90 tests split as 30 `StaffIntakeApi`, 30 `JsonStaffIntakeApi` and 30 `MssqlStaffIntakeApi`. `StaffIntakeApi` inherits `ProcurementApiFixture`, whose `sql = True` makes `make_store` build an owned SQLite `SqlStore`; `JsonStaffIntakeApi` sets `sql = False`; the MSSQL class is opt-in. So O4 covered SQLite and JSON, not MSSQL. The counts 90 run, 56 ok and 34 skipped (30 MSSQL, 4 JSON) are unchanged. SQLite is a store double, not MSSQL, live, an actual worker or QA, legal or resident approval. The O7b statement "JSON store" refers to the browser fixture as recorded and is unchanged. No test was rerun and no source changed.
+
+## Closure-wave integrated-main checkpoint (2026-11-11, Refs #440 #80 #144 #1360 #1419)
+
+Draft, local-only, not approved. One bounded observation of existing focused selectors after the feature wave PR 1428 (permit timing and attribution, issue 144), PR 1426 (committed transfer reload errors, issue 1360), PR 1423 (Capacity and handoff CSV downloads including child PR 1424, issues 80 and 1419) and documentary PR 1430 reached `main`. It is not a Quality campaign, not a full gate and not acceptance.
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-11) |
+| --- | --- |
+| Pin of the planned work | `8aedb56b5909903abd6c6f84777b49f237c1cbb0`, tree `9e0e8efda1145ea4c990d0208e8cf6d07f0f8af4` |
+| Observed main | `e0dec207dab2cce2e2bf9d0084e1cdea9d10ec1d`, tree `4fcaac76dca4c6dd5cb252fe676a0dad20d2d7d4`. Fetch verified the only movement from the pin is `.github/rubric/scores/latest.json` (one rubric commit). Merged into the topic with an ordinary no-ff commit `04973ebf2ffc5a63954bfbaeb727d555662e3710` before any test; no conflict, rebase or reset |
+| Observed candidate | Merge commit `04973ebf2`, tree `552970ba51936533bf7401d74ec2120b46e09006`. `src` `84f7b054e66db107edf5753151dce23912da4bac`, `docs` `f3d6a06c66566ea572d64db16f988da4d2f93fcb`, `infra` `f7f31c0934cfe0bafb4505408706e55aa8ab61e7`, `tools` `432a4e8f7d74f26e88a55dd937c9c6f193016da9` and `.github` `ae8da14e60c30758b90462553f51f6ba08d974c0` equal main's; the only differences from main are `.copilot-tracking/` files. Clean source at every observation |
+| Merged increments | PR 1428 `05f11ebe9`, PR 1426 `01f461dd7`, PR 1423 `3dbb79e90`, PR 1430 `8aedb56b5` (documentary) |
+| Source blobs | `server.py` `9227eb9842c81aead8f8f14587f6a5ac118b3f0e`, `app.js` `734aab48bbf32292fb5d6668cbecfe7fff8b757a`, `ops.js` `4ef77471a07949858901dc00254c63eeccf23ef0`, `capacity_browser_check.py` `6a4487eb9e31898c8931dede4e0bc568b8f8dba8`, `sqlstore.py` `01a3a44c926981fbf02ba26e91fc23b9fc710225`, `assistants.py` `7057beaefd4c60ef36942c21996e701ba2247baa`, `ai.py` `580838fe73ea18533291ebead4db0db7273097f2`, `ai_consumption.py` `4ff3848d4d3025c79aebc0a986da319155f37d48` |
+| Documents and status | BRD 0.21.0 `draft` `34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD 0.21.0 `in-review`, author-complete-unsigned-pending-review-and-owner-acceptance, `c788b917bafaede215f326f0efc71e071a687f1c`; ADR 0001 Proposed `d42fa5c4615f4107cee83e07555dba6985c1f53e`; ADR 0006 Accepted 2026-10-15 `956da1a3b804c803041fe2e8a312bd9f400273ae`; ADR 0007 Proposed, not accepted, `abb21088a9bb9771234a305b8052c3bcdd181b33`. Only ADR 0006 is approved |
+| Issue states (read live) | #1360 and #1419 CLOSED with 4 of 4 and 7 of 7 criteria ticked (earlier closures, unchanged); PR 1424 MERGED; #80, #73, #144, #131, #132, #440 and #1420 OPEN. Nothing is ticked, closed or opened here |
+| Hosted checks | Not read or claimed for this exact head |
+| Excluded | PR 1425 (staff intake) and PR 1422 (household inventory) are on the tree but have no selector here; this result says nothing about them. Whole importer suite (82 tests, N4) omitted by Root: `TransferFailureTests` covers the modified error-contract surface; this is a scope omission, not a skipped or passed full suite. SQL Server, Docker, the full gate and Core 3057 were not used. The #132 candidate `fdf0d3beb` is unpublished, under separate independent review and excluded, see below |
+
+### Observed this checkpoint (local, raw outputs outside the repository)
+
+Raw directory: `/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files/closure-wave-main-440-observation-1111/` (one `.out` and `.err` per id). Host Linux, Python 3.12.3. Private venv `/tmp/ama-440-closure-venv-1111`, new owned private HOME (never the real HOME), `ZF_DATA` unset, `~/.zava-forward` absent before and after, no `.env` or private data read. All commands ran under `env -i`, existing tests only, once each, none retried.
+
+Dependency path (preserved): the import preflight `import zava_forward.core ... playwright` in the fresh venv failed with `ModuleNotFoundError: No module named 'zava_forward'` (exit 1). Only then were the local `src/core`, `src/agents`, `src/api`, `src/importer` and declared `playwright==1.64.0` installed (exit 0); every module and the `dataset` helper origin was proven under this worktree. Prerequisites read: cached Chromium 1248 reached through a new symlink in the private `HOME/.cache` to the existing cache (not modified), `node` v24.21.0, the lock free (`fuser` exit 1), about 9 GiB available, axe asset sha256 `880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb` (equal to the pin, reused, not refetched).
+
+| Id and selector | Exit and result | Class and limit |
+| --- | --- | --- |
+| N1 `src/core` `tests.test_priority_order.SqliteC4Corrections` | 0; ran 21, OK, 0 skipped | Local observed on an owned SQLite store double (PR 1426 reload contract). Not MSSQL; the `Mssql*` subclasses were not selected |
+| N2 `src/core` `tests.test_ai_consumption.ConsumptionTests` | 0; ran 34, OK | Local observed on the in-memory port (`mssql = False`) |
+| N3 `src/importer` `tests.test_import_exceptions.TransferFailureTests` | 0; ran 8, OK | Local observed, owned SQLite and JSON fixtures |
+| N5 `src/api` `tests.test_ai_consumption_api.ConsumptionApi` | 0; ran 32, OK (59 s) | Local observed permit timing and attribution on owned fixtures; no model or cloud call |
+| N6 `tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv` | 0; ran 13, OK | Local observed CSV bytes, read-only and role boundaries on a loopback fixture |
+| N7 `tests.test_handoff_api.HandoffApi` and `tests.test_list_export_api.ListExportApi` | 0; ran 18 (7 and 11), OK | Local observed |
+| N8 `tests.test_role_endpoint_inventory.RoleEndpointInventory` | 0; ran 24 (14 own and 10 inherited from `Matrix`), OK | Local observed: every role against the endpoint inventory |
+| N9 `tests.test_case_journey` | 0; ran 31, OK | Local observed, Node subprocess DOM double, no browser |
+| N10 `tests.test_content_standard`, `tests.test_static_assets`, `tests.test_capacity_browser_check` | 0; ran 28 (18, 5 and 5), OK | Local observed copy audit of changed `app.js` and `ops.js`, static assets, scanner unit checks |
+| B2 `tests.test_handoff_read_guidance`, `ZF_BROWSER_TESTS=1`, one external `flock -n -E 99` | 0 (not 99, lock acquired); ran 9, OK, 0 skipped | Local observed in real Chromium, constructed data, loopback server |
+| B1 `tests.test_unaccepted_handoff_download_ui`, `ZF_BROWSER_TESTS=1`, self-locking, no outer lock | 0; ran 6, OK, 0 skipped | Local observed real download, read-only and role boundaries in Chromium; the class took the lock itself |
+| B3 `python -m checks.capacity_browser_check --axe /tmp/axepk/package/axe.min.js` (no `--mssql`), self-locking, ONE run | 0; seeded, empty, failure and retry, transport, 403, abort and 401 scenarios PASS; four axe states (seeded capacity, packages unavailable, workorders unavailable, empty capacity), each `violations: []`, none "NOT RUN" | Local observed on a generated synthetic seed in an owned store and a loopback server. One server-side `BrokenPipeError` client-disconnect line during the injected abort scenario is preserved in `B3.err` and was the harness's own scenario, not a failure |
+
+Expected counts equalled actual counts for every selector; no skip appeared in any selector. No failure, blocked resource or busy lock occurred.
+
+### Requirement trace (document-qualified)
+
+| Requirement (document, status) | Code and test | Class | Remaining owner |
+| --- | --- | --- | --- |
+| PRD FR-066 and AC-120 (`in-review`, AC-120 previously "Not run"); BRD FR-057 and AC-112 (`draft`): owned staff exception queue including unaccepted handoffs | Read-only CSV copy and download of unaccepted handoffs (`server.py`, `app.js`, `ops.js`); N6, N7, N8, N9, B1, B2 | Local observed (partial): the read-only copy and its role and download boundaries on synthetic data. The queue's ownership, escalation and handling are not shown | #1419 (closed, criteria unchanged), #73 and #440 |
+| PRD FR-008 and AC-010, AC-011 (capacity gate, `in-review`) | Capacity page and downloads; B3 | Local observed (partial) for the page, downloads, failure states and four axe states. The deterministic capacity gate itself is not exercised by these selectors; the CSV control is not the gate | #80 and #73 (open) |
+| BRD NFR-012 (`draft`) and PRD NFR-017 with AC-109 and AC-110 (`in-review`): metering, attribution and bounds. PRD AC-100 and AC-101 are a conversation requirement and are not these | Permit timing and server-bound attribution (`ai.py`, `ai_consumption.py`, `assistants.py`); N2, N5 | Local observed on in-memory and owned-SQLite fixtures; no model call, no MSSQL, no cost run | #144 (open) |
+| Issue 1360 criteria only (no BRD or PRD requirement cited): truthful committed-reload outcome | `sqlstore.py`; N1, N3 | Local observed on SQLite and owned fixtures; MSSQL cases not run | #1360 (closed), #80 for the importer, #440 |
+| ADR 0001 (Proposed) for the Excel transition and hosting | Not exercised beyond the above | Not shown | #80 and #144 |
+
+Local observed here means constructed synthetic fixtures, owned temporary SQLite or JSON stores and loopback servers on one host. Azure observed: none. Implemented but unverified: MSSQL variants of N1, N2 and N3, deployed hosting, the actual queue handling. Blocked: none. Unknown: assistive-technology behaviour.
+
+### Separately owned gap and resume point (issue 132)
+
+The combined inventory-managed staff intake to independent QA journey stays implemented but unverified on main. Its test-only forward adoption candidate is the local, unpublished branch `test/demo-inventory-intake-qa-132-1111`, head `fdf0d3beb`, not an ancestor of main, under independent exact-final review owned by #132. Its tests are excluded and not duplicated here. Resume condition: Root's #132 disposition of that candidate, then a refresh against the then-current main.
+
+### Findings, gates and recommendation
+
+* No defect, necessary refactor or source repair is observed or reproduced. No new issue, no correction budget drawn: #80 C5 stays spent with no C6; #1360 and #144 E1 and E2 stay spent with three remaining each. No criterion is ticked.
+* Human and legal boundaries remain: no consent, Legal, identity, QA, resident, production, live or deployed acceptance, and no accessibility acceptance or WCAG conformance is inferred from axe, fixtures, SQLite or loopback runs. No fresh web-interface-guidelines review was performed.
+* Affected gates: whole #80, #73, #144, #131, #132 and #440 stay open. Independent lanes that need none of the gated surfaces may continue.
+
+Recommendation (proposed for the owner, not a decision or approval): CONTINUE, bounded. The merged increments show no regression on the selected local selectors. The #1420 resident-choice CSV expansion is no longer waiting on this checkpoint: its disposition here is that the selected selectors passed with no blocking finding, so planning may proceed under its own independent scope, while the #132 combined gap, whole-issue closure and every human or accessibility acceptance remain open and independent of it.
+
+### Process record and limits
+
+* Added as a distinct section; no earlier section or adverse record was altered. Root's admission amendment was committed before the merge and any observation. The witness and model label are locally asserted, not attested. The plan critique was one subagent pass at plan time. The review is author-executed and not independent; independent exact-head review, human approval and applicable hosted checks remain required. No push, pull request, issue or board write was made. Commands were read-only git and GitHub queries, the existing tests above and one dependency restore into the private venv after an actual import failure.
