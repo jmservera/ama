@@ -40,5 +40,5 @@ No change to `src/`, tests, tools, workflows, knowledge base or cutover files. O
 ## Checkpoints
 
 * [x] Research and plan written before observation.
-* [ ] Replay executed and raw logs captured.
-* [ ] Changes record, single review, state and handoff written.
+* [x] Replay executed and raw logs captured.
+* [x] Changes record, single review and state written (handoff outside repo).

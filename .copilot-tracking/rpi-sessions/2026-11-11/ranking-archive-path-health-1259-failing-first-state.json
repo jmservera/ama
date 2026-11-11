@@ -1,0 +1,31 @@
+{
+  "task_id": "1259-ranking-archive-path-health-failing-first",
+  "task_slug": "ranking-archive-path-health-1259-failing-first",
+  "parent_task": {"task_id": "1259-ranking-archive-path-health-final-parent", "task_slug": "ranking-archive-path-health-1259-final-parent"},
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11-ranking-archive-path-health-1259-failing-first-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11-ranking-archive-path-health-1259-failing-first-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11-ranking-archive-path-health-1259-failing-first-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-11-ranking-archive-path-health-1259-failing-first-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-11-ranking-archive-path-health-1259-failing-first-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Research executed; existing evidence was summary-only with external raw logs, so a source-unchanged replay was admitted", "status": "done", "evidence": "research record"},
+    {"decision": "Critique not executed: owner-bounded evidence-only increment with no source change", "status": "done", "evidence": "plan"},
+    {"decision": "Replay: current green 8/8 exit 0; pre-fix main parent 2be660e9d red 7 failures exit 1; absent-directory controls green on both", "status": "done", "evidence": ".copilot-tracking/evidence/2026-11-11-1259-failing-first/"},
+    {"decision": "Review executed once, author, outcome conformant for the bounded increment with residual gates", "status": "done", "evidence": "review record"}
+  ],
+  "blockers": [
+    {"id": "AC5", "summary": "Current FULL receipt, independent exact-head assessment and hosted checks are unperformed and not waived", "resolution": null}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Independent exact-head review; owner decides whether to tick criterion 4"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent exact-head review of this evidence record", "rationale": "Required for every tier", "evidence": "review record"},
+    {"rank": 2, "task": "FULL receipt and hosted checks for criterion 5 when the heavy resource is admitted", "rationale": "Remaining literal criterion", "evidence": "issue 1259 comment 2026-11-09"}
+  ]
+}
