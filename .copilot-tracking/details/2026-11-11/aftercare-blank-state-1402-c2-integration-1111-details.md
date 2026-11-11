@@ -1,0 +1,9 @@
+<!-- markdownlint-disable-file -->
+# Details: #1402 C2 integration
+
+* Ref: `git tag evidence/1402-c1-e8468 e8468bcc3` before rebase; verify it resolves to the original head.
+* Rebase: `git rebase --onto origin/main 2f7465c57`, from the current head that includes this prospective commit (so four commits move, the fourth being this C2 prospective commit). Abort and report on any conflict.
+* Pin `origin/main` to `a3862eed4a324b13715eeebf0c98053d9079dec1` and assert it before rebase. Before: `git log --oneline 2f7465c57..HEAD` must list exactly four commits. After: same count, `git range-diff` of the old and new ranges, and `git diff --stat origin/main HEAD` showing only the two issue files plus `.copilot-tracking` additions (CK-02).
+* Identity checks run from the repository root with full paths, comparing `git rev-parse <rev>:<path>` blob SHAs explicitly and asserting each exists (CK-01; no `diff --quiet` from a subdirectory). Pairs: e8468 vs HEAD for the two issue files; `origin/main` vs HEAD for `src/core/src/zava_forward/core/aftercare.py`, `src/core/tests/test_aftercare.py`, `src/core/tests/test_aftercare_store.py`.
+* Commands (core: `PYTHONPATH=$PWD/src:$PWD/tests`; api: explicit worktree api/core/agents src and tests): `python3 -m unittest tests.test_aftercare_intake tests.test_aftercare`; `python3 -m unittest tests.test_aftercare_screen`; `python3 -m ruff check` and `ruff format --check` on the two files; `python3 -m mypy src/zava_forward/core/aftercare_intake.py`. Each writes stdout, stderr, exit and an `imports.txt` (module `__file__` plus SHA256) without pipelines masking status.
+* Skips: store and served suites, SQL, browsers N/A as in C1 (unreachable branch via `DocumentStateStore`; not universal raw-blank acceptance). Restart means service/store recreation; HTTP 503 is the pure handler contract.
