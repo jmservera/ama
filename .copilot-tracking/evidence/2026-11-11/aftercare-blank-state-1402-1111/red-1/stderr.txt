@@ -1,0 +1,109 @@
+EFFFFFFFFFE
+======================================================================
+ERROR: test_absent_state_initialises_and_replays (tests.test_aftercare_intake.BlankStateTests.test_absent_state_initialises_and_replays)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/tests/test_aftercare_intake.py", line 301, in test_absent_state_initialises_and_replays
+    self.assertEqual(receipt["id"], "AC-001")
+                     ~~~~~~~^^^^^^
+KeyError: 'id'
+
+======================================================================
+ERROR: test_existing_nonempty_document_is_not_reset (tests.test_aftercare_intake.BlankStateTests.test_existing_nonempty_document_is_not_reset)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/tests/test_aftercare_intake.py", line 339, in test_existing_nonempty_document_is_not_reset
+    second, _ = restarted.record_concern(LIAISON, values(statement="A second, different note."))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/src/zava_forward/core/aftercare_intake.py", line 487, in record_concern
+    return self._txn(work, writes=lambda outcome: not outcome[1])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/src/zava_forward/core/aftercare_intake.py", line 381, in _txn
+    return self.store.update(mutator)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/src/zava_forward/core/aftercare_intake.py", line 159, in update
+    text, result = mutator(current)
+                   ^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/src/zava_forward/core/aftercare_intake.py", line 375, in mutator
+    result = fn(doc)
+             ^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/src/zava_forward/core/aftercare_intake.py", line 459, in work
+    raise ConflictError(
+zava_forward.core.aftercare_intake.ConflictError: This request reference was already used for a different concern. Start a new record.
+
+======================================================================
+FAIL: test_blank_state_http_is_503_and_survives_restart (tests.test_aftercare_intake.BlankStateTests.test_blank_state_http_is_503_and_survives_restart) (text="''")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/tests/test_aftercare_intake.py", line 331, in test_blank_state_http_is_503_and_survives_restart
+    self.assertEqual(status, 503)
+AssertionError: 201 != 503
+
+======================================================================
+FAIL: test_blank_state_http_is_503_and_survives_restart (tests.test_aftercare_intake.BlankStateTests.test_blank_state_http_is_503_and_survives_restart) (text="'   '")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/tests/test_aftercare_intake.py", line 331, in test_blank_state_http_is_503_and_survives_restart
+    self.assertEqual(status, 503)
+AssertionError: 201 != 503
+
+======================================================================
+FAIL: test_blank_state_http_is_503_and_survives_restart (tests.test_aftercare_intake.BlankStateTests.test_blank_state_http_is_503_and_survives_restart) (text="'\\n\\t \\n'")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/tests/test_aftercare_intake.py", line 331, in test_blank_state_http_is_503_and_survives_restart
+    self.assertEqual(status, 503)
+AssertionError: 201 != 503
+
+======================================================================
+FAIL: test_blank_state_read_is_refused_and_bytes_preserved (tests.test_aftercare_intake.BlankStateTests.test_blank_state_read_is_refused_and_bytes_preserved) (text="''")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/tests/test_aftercare_intake.py", line 311, in test_blank_state_read_is_refused_and_bytes_preserved
+    with self.assertRaises(ai.StateInvalid):
+AssertionError: StateInvalid not raised
+
+======================================================================
+FAIL: test_blank_state_read_is_refused_and_bytes_preserved (tests.test_aftercare_intake.BlankStateTests.test_blank_state_read_is_refused_and_bytes_preserved) (text="'   '")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/tests/test_aftercare_intake.py", line 311, in test_blank_state_read_is_refused_and_bytes_preserved
+    with self.assertRaises(ai.StateInvalid):
+AssertionError: StateInvalid not raised
+
+======================================================================
+FAIL: test_blank_state_read_is_refused_and_bytes_preserved (tests.test_aftercare_intake.BlankStateTests.test_blank_state_read_is_refused_and_bytes_preserved) (text="'\\n\\t \\n'")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/tests/test_aftercare_intake.py", line 311, in test_blank_state_read_is_refused_and_bytes_preserved
+    with self.assertRaises(ai.StateInvalid):
+AssertionError: StateInvalid not raised
+
+======================================================================
+FAIL: test_blank_state_write_is_refused_and_bytes_preserved (tests.test_aftercare_intake.BlankStateTests.test_blank_state_write_is_refused_and_bytes_preserved) (text="''")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/tests/test_aftercare_intake.py", line 319, in test_blank_state_write_is_refused_and_bytes_preserved
+    with self.assertRaises(ai.StateInvalid):
+AssertionError: StateInvalid not raised
+
+======================================================================
+FAIL: test_blank_state_write_is_refused_and_bytes_preserved (tests.test_aftercare_intake.BlankStateTests.test_blank_state_write_is_refused_and_bytes_preserved) (text="'   '")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/tests/test_aftercare_intake.py", line 319, in test_blank_state_write_is_refused_and_bytes_preserved
+    with self.assertRaises(ai.StateInvalid):
+AssertionError: StateInvalid not raised
+
+======================================================================
+FAIL: test_blank_state_write_is_refused_and_bytes_preserved (tests.test_aftercare_intake.BlankStateTests.test_blank_state_write_is_refused_and_bytes_preserved) (text="'\\n\\t \\n'")
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-1402-blank-state-1111/src/core/tests/test_aftercare_intake.py", line 319, in test_blank_state_write_is_refused_and_bytes_preserved
+    with self.assertRaises(ai.StateInvalid):
+AssertionError: StateInvalid not raised
+
+----------------------------------------------------------------------
+Ran 5 tests in 1.686s
+
+FAILED (failures=9, errors=2)

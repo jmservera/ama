@@ -285,6 +285,63 @@ class PersistenceTests(Base):
                 self.assertEqual(self.path.read_text(encoding="utf-8"), text)
 
 
+BLANK_TEXTS = ("", "   ", "\n\t \n")
+
+
+class BlankStateTests(Base):
+    """Issue 1402: only an absent document starts a register; blank bytes are refused."""
+
+    def blank(self, text: str) -> None:
+        self.path.write_bytes(text.encode("utf-8"))
+
+    def test_absent_state_initialises_and_replays(self) -> None:
+        self.assertFalse(self.path.exists())
+        self.assertEqual(self.svc.concerns(MANAGER)["count"], 0)
+        receipt = self.record()
+        self.assertEqual(receipt["receipt_id"], "RC-AC-001")
+        again = self.service()
+        replay, _ = again.record_concern(LIAISON, values())
+        self.assertEqual(replay["receipt_id"], "RC-AC-001")
+        self.assertEqual(again.concerns(MANAGER)["count"], 1)
+
+    def test_blank_state_read_is_refused_and_bytes_preserved(self) -> None:
+        for text in BLANK_TEXTS:
+            with self.subTest(text=repr(text)):
+                self.blank(text)
+                with self.assertRaises(ai.StateInvalid):
+                    self.service().concerns(MANAGER)
+                self.assertEqual(self.path.read_bytes(), text.encode("utf-8"))
+
+    def test_blank_state_write_is_refused_and_bytes_preserved(self) -> None:
+        for text in BLANK_TEXTS:
+            with self.subTest(text=repr(text)):
+                self.blank(text)
+                with self.assertRaises(ai.StateInvalid):
+                    self.service().record_concern(LIAISON, values())
+                self.assertEqual(self.path.read_bytes(), text.encode("utf-8"))
+
+    def test_blank_state_http_is_503_and_survives_restart(self) -> None:
+        for text in BLANK_TEXTS:
+            with self.subTest(text=repr(text)):
+                self.blank(text)
+                for _ in range(2):
+                    status, payload = self.service().handle(
+                        "POST", "/api/aftercare/concerns", LIAISON, values()
+                    )
+                    self.assertEqual(status, 503)
+                    self.assertIn("left unchanged", payload["error"])
+                    self.assertEqual(self.path.read_bytes(), text.encode("utf-8"))
+
+    def test_existing_nonempty_document_is_not_reset(self) -> None:
+        self.record()
+        restarted = self.service()
+        self.assertEqual(restarted.concerns(MANAGER)["count"], 1)
+        second, _ = restarted.record_concern(
+            LIAISON, values(request_id="req-0000002", statement="A second, different note.")
+        )
+        self.assertEqual(second["receipt_id"], "RC-AC-002")
+
+
 class OwnerLifecycleTests(Base):
     def setUp(self) -> None:
         super().setUp()

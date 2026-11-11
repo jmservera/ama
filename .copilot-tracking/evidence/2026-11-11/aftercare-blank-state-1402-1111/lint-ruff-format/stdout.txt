@@ -1,0 +1,12 @@
+unformatted: File would be reformatted
+   --> tests/test_aftercare_intake.py:339:46
+    |
+338 |         self.assertEqual(restarted.concerns(MANAGER)["count"], 1)
+    -         second, _ = restarted.record_concern(LIAISON, values(request_id="req-0000002", statement="A second, different note."))
+339 +         second, _ = restarted.record_concern(
+340 +             LIAISON, values(request_id="req-0000002", statement="A second, different note.")
+341 +         )
+342 |         self.assertEqual(second["receipt_id"], "RC-AC-002")
+    |
+
+1 file would be reformatted, 1 file already formatted
