@@ -1,0 +1,68 @@
+{
+  "task_id": "http-handoff-checkpoint-440-1111",
+  "task_slug": "http-handoff-checkpoint-440-1111",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "blocked",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11/http-handoff-checkpoint-440-1111-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11/http-handoff-checkpoint-440-1111-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11/http-handoff-checkpoint-440-1111-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-11/http-handoff-checkpoint-440-1111-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Plan-only admission: Research, Plan and one independent critique, then stop before Implement, tests, canonical evidence and the original Review",
+      "status": "confirmed",
+      "evidence": "Launch brief 2026-11-11 and issue 440 comment issuecomment-6793077295"
+    },
+    {
+      "decision": "Research executed (read-only); Planning Readiness Ready",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-11/http-handoff-checkpoint-440-1111-research.md"
+    },
+    {
+      "decision": "Candidate PR 1449 (head 2db08d8e2141d60a52d688b731f192972ca8293b, tree e328d3eb18d69cc58293e2200eb9a0b51f377322, src tree bb7a461f0acc9ccff0cde8ddb16df3717c552c50) is UNMERGED and excluded from main acceptance; hosted checks pending when read, not green",
+      "status": "confirmed",
+      "evidence": "gh pr view 1449 at research time; launch brief"
+    },
+    {
+      "decision": "Selection H1 to H6 plus S1 by default (75 tests); H7 CopyAudit optional only if Root admits; H1 under an outer non-queued heavy lock, H2 and H3 with no outer lock; explicit pause rule with no automatic rerun, assertion, format, environment or source repair",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-11/http-handoff-checkpoint-440-1111-plan.md"
+    },
+    {
+      "decision": "Critique executed once (rubber-duck, claude-sonnet-5.5); conformant after fixes HC-01 to HC-03, all applied; no repeat",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-11/http-handoff-checkpoint-440-1111-critique.md"
+    },
+    {
+      "decision": "No test, install, canonical pack or log edit, changes or Review artifact; no issue, PR, branch, remote or board action",
+      "status": "confirmed",
+      "evidence": "Plan phase 0 only"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "pr-1449-unmerged-and-no-root-amendment",
+      "summary": "Implementation requires PR 1449 actually merged and a Root pinned-main amendment committed before any test",
+      "resolution": null
+    }
+  ],
+  "next_action": {
+    "phase": "Implement",
+    "action": "Wait for PR 1449 merged and the Root pinned-main amendment; then commit the amendment, merge the pinned main ordinarily and start details Phase 1"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Run the admitted focused observation on pinned merged main and record one pack section",
+      "rationale": "Delivers the #440 recurring checkpoint criterion for the personal handoff wave",
+      "evidence": ".copilot-tracking/plans/2026-11-11/http-handoff-checkpoint-440-1111-plan.md"
+    }
+  ]
+}
