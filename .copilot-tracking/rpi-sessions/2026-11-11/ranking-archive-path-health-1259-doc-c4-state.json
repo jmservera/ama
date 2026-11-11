@@ -1,0 +1,27 @@
+{
+  "task_id": "1259-ranking-archive-path-health-doc-c4",
+  "task_slug": "ranking-archive-path-health-1259-doc-c4",
+  "parent_task": {"task_id": "1259-ranking-archive-path-health-doc-c3", "task_slug": "ranking-archive-path-health-1259-doc-c3"},
+  "mode": "manual",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11-ranking-archive-path-health-1259-doc-c4-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11-ranking-archive-path-health-1259-doc-c4-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11-ranking-archive-path-health-1259-doc-c4-details.md",
+    "critique": null,
+    "changes": ".copilot-tracking/changes/2026-11-11-ranking-archive-path-health-1259-doc-c4-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-11-ranking-archive-path-health-1259-doc-c4-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "Documentary C4 of five; C1-C3 spent; at most one remains; no automatic C5", "status": "done", "evidence": "owner direction"},
+    {"decision": "Count and json.tool stop attributed to author's account", "status": "done", "evidence": "C4 changes record"}
+  ],
+  "blockers": [
+    {"id": "AC4", "summary": "Partial and unticked", "resolution": null},
+    {"id": "AC5", "summary": "Current FULL receipt unmet", "resolution": null}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Retained reviewer rechecks the exact delta"},
+  "prioritized_follow_ups": []
+}

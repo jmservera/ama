@@ -1,0 +1,19 @@
+date 2026-11-11T21:27:36Z export=cur cwd=/home/azureuser/.local/share/ama/gates/g1259-ff-2122/cur/src/core
+/home/azureuser/.local/share/ama/gates/g1259-ff-2122/cur/src/core/src/zava_forward/core/ranking_publication.py
+/home/azureuser/.local/share/ama/gates/g1259-ff-2122/cur/src/core/src/zava_forward/core/ranking_publication_runner.py
+/home/azureuser/.local/share/ama/gates/g1259-ff-2122/cur/src/core/src/zava_forward/core/store.py
+origin_exit=0
+test_absent_directory_stays_creatable_for_first_run (test_ranking_publication_runner.UnusableArchivePathTests.test_absent_directory_stays_creatable_for_first_run) ... ok
+test_absent_folder_below_a_link_to_a_real_folder_is_creatable (test_ranking_publication_runner.UnusableArchivePathTests.test_absent_folder_below_a_link_to_a_real_folder_is_creatable) ... ok
+test_oserror_without_a_reason_is_reported_without_the_path (test_ranking_publication_runner.UnusableArchivePathTests.test_oserror_without_a_reason_is_reported_without_the_path) ... ok
+test_regular_file_archive_exits_nonzero_through_main (test_ranking_publication_runner.UnusableArchivePathTests.test_regular_file_archive_exits_nonzero_through_main) ... ok
+test_store_status_is_a_problem_for_a_regular_file_archive (test_ranking_publication_runner.UnusableArchivePathTests.test_store_status_is_a_problem_for_a_regular_file_archive) ... ok
+test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing (test_ranking_publication_runner.UnusableArchivePathTests.test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing) ... ok
+test_unreadable_archive_is_a_problem_never_empty_or_healthy (test_ranking_publication_runner.StorageAndDuplicateFindingTests.test_unreadable_archive_is_a_problem_never_empty_or_healthy) ... ok
+test_unreadable_archive_exits_nonzero_through_main (test_ranking_publication_runner.StorageAndDuplicateFindingTests.test_unreadable_archive_exits_nonzero_through_main) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.061s
+
+OK
+unittest_exit=0

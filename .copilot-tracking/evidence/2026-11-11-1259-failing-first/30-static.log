@@ -1,0 +1,9 @@
+ruff ruff 0.17.3
+All checks passed!
+ruff_check_exit=0
+3 files already formatted
+ruff_format_exit=0
+ast parse ok
+parse_exit=0
+diffcheck_exit=0
+!! src/core/.ruff_cache/
