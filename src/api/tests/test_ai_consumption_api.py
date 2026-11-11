@@ -1936,6 +1936,73 @@ class ConsumptionApi(unittest.TestCase):
         )
         self.assertEqual(len([r for r in self.records() if r["kind"] == "completed"]), 1)
 
+    def permitted_result(self, task: dict[str, Any], **extra: Any) -> bool:
+        envelope = dict(
+            outcome="returned",
+            source="ai",
+            model="test-model",
+            usage=dict(prompt_tokens=100, completion_tokens=20, total_tokens=120, cached_tokens=10),
+            **extra,
+        )
+        output = json.loads(canonical(proposal(task["snapshot"])))
+        return bool(
+            self.service.complete_result(task["id"], task["owner"], task["fence"], envelope, output)
+        )
+
+    def test_permitted_result_binds_attribution_to_the_stored_reservation_root(self) -> None:
+        task = self.permit_setup()
+        permit = self.service.issue_permit(
+            task["id"], task["owner"], task["fence"], self.permit_request(task)
+        )
+        self.assertTrue(self.permitted_result(task))
+        root = self.reserved()[0]["root"]
+        outputs = [r for r in self.records() if r["kind"] == "output"]
+        self.assertEqual(
+            [(r["root"], r["output"], r["eligible"]) for r in outputs],
+            [(root, reference(task["id"]), True)],
+        )
+        stored = self.service.detail(self.pm, task["id"])
+        self.assertEqual(stored["state"], "ready")
+        self.assertEqual(stored["envelope"]["meter_root"], root)
+        self.assertEqual(stored["envelope"]["meter_id"], permit["meter_id"])
+        verified = self.fixture.verify(stored)
+        self.service.review(
+            self.pm, task["id"], "accept", verified["revision"], "Constructed review."
+        )
+        self.assertEqual(
+            [r["output"] for r in self.records() if r["kind"] == "review"], [reference(task["id"])]
+        )
+        self.assertEqual(
+            self.service.consumption.report(start=START, end=END, as_of=END)["accepted_proposals"],
+            1,
+        )
+
+    def test_permitted_result_rejects_conflicting_attribution_without_settling(self) -> None:
+        task = self.permit_setup()
+        permit = self.service.issue_permit(
+            task["id"], task["owner"], task["fence"], self.permit_request(task)
+        )
+        for key in ("meter_root", "meter_id"):
+            self.assertFalse(self.permitted_result(task, **{key: "a" * 64}))
+        self.assertEqual([r for r in self.records() if r["kind"] in ("completed", "output")], [])
+        self.assertEqual(self.kinds(task["id"]).count("result-rejected"), 2)
+        with self.service.transaction() as db:
+            self.assertEqual(self.service._row(db, task["id"])["state"], "leased")
+        self.assertTrue(self.permitted_result(task, meter_id=permit["meter_id"]))
+        self.assertEqual(len([r for r in self.records() if r["kind"] == "completed"]), 1)
+
+    def test_permitted_failure_without_root_settles_the_meter_and_publishes_no_output(self) -> None:
+        task = self.permit_setup()
+        self.service.issue_permit(
+            task["id"], task["owner"], task["fence"], self.permit_request(task)
+        )
+        envelope = dict(outcome="provider-unavailable", source="unverified", usage=None)
+        self.service.complete_result(
+            task["id"], task["owner"], task["fence"], envelope, None, "Provider unavailable."
+        )
+        self.assertEqual(len([r for r in self.records() if r["kind"] == "completed"]), 1)
+        self.assertEqual([r for r in self.records() if r["kind"] == "output"], [])
+
     def test_result_without_a_permit_closes_the_task_against_a_later_permit(self) -> None:
         task = self.permit_setup()
         request = self.permit_request(task)

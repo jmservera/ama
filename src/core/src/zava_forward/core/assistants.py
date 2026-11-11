@@ -1552,15 +1552,23 @@ class Assistants:
             marker = self._markers(db, tid).get("permitted")
             matches = task["owner"] == owner and task["fence"] == fence
             if marker is not None:
-                if marker["owner"] != owner or marker["fence"] != fence or envelope.get("meter_id") not in (None, marker["meter_id"]):
+                root = self._permitted_root(db, marker["meter_id"])
+                if (marker["owner"] != owner or marker["fence"] != fence or root is None
+                        or envelope.get("meter_id") not in (None, marker["meter_id"])
+                        or envelope.get("meter_root") not in (None, root)):
                     self.event(db, tid, kind="result-rejected", reason="not-the-permitted-attempt")
                     return False
+                envelope = dict(envelope, meter_id=marker["meter_id"], meter_root=root)
                 self._settle_meter(db, marker, envelope)
             elif matches:
                 self.event(db, tid, kind="closed-without-permit", fence=fence)
         if task["state"] != "leased" or not matches:
             return False
         return self.complete(task, envelope, output, failure)
+
+    def _permitted_root(self, db, meter_id):
+        """The attribution root the server reserved under; the caller never supplies it."""
+        return next((r["root"] for r in self.consumption._read(db) if r["kind"] == "reserved" and r["id"] == meter_id), None)
 
     def _settle_meter(self, db, marker, envelope):
         usage, outcome = envelope.get("usage"), envelope.get("outcome")
