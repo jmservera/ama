@@ -29,3 +29,11 @@ Review executed once, after `implement-done` (witness seq 5, 00:22:32Z). Author-
 ## Routing
 
 * No new defect or necessary refactor confirmed. Follow-up for the owner (not decided): whether one existing-test addition for the combined QA guard is authorised under #131, #132 or #440.
+
+## Amendment: bounded readiness correction (2026-11-11, additive; the original review above is not replaced)
+
+* Execution: one bounded author-executed check of the correction only. Not independent; a new exact-head independent assessment is required.
+* Root found that `git diff --check 0509ddce HEAD` failed at the changes record (new blank line at EOF). The original "diff check clean" row covered tracked diffs before the new files were staged, so it was incomplete for that file. Correction: blank line removed in a follow-up commit, with an additive note in the changes record; no amend or rebase.
+* Added a dated follow-up observation O7b (staff intake browser and axe, 2 tests, exit 0, five states without violations, pinned axe 4.10.3 digest verified, lock free by nonqueued admission). O7 original blocked result stays. Sample limits are in the changes record.
+* The owner-pending routing above is historical; Root routed one test-only E2 under #132 separately. That test is not run or read here, so the combined acceptance gap stays unverified.
+* Outcome: conformant with the same qualifications. The final committed-range check result is in ROOT/handoff-440-readiness-followup-1111.md.

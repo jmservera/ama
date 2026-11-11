@@ -19,11 +19,12 @@
     {"decision": "Local only; no push, PR, GitHub write, source fix, new regression test or new issue", "status": "confirmed", "evidence": "owner brief"},
     {"decision": "Research executed, disposition executed, Planning Readiness Ready", "status": "done", "evidence": "research record; witness seq 2 research-open"},
     {"decision": "Critique executed once by rubber-duck subagent, verdict revise, five findings all applied directly, no user decision", "status": "done", "evidence": ".copilot-tracking/plans/critiques/2026-11-11-inventory-intake-main-440-1111-plan-critique.md"},
-    {"decision": "Review executed once (author-executed), outcome conformant with disclosed qualifications, boundary: two docs diffs plus dated RPI records", "status": "done", "evidence": ".copilot-tracking/reviews/2026-11-11-inventory-intake-main-440-1111-review.md"}
+    {"decision": "Review executed once (author-executed), outcome conformant with disclosed qualifications, boundary: two docs diffs plus dated RPI records", "status": "done", "evidence": ".copilot-tracking/reviews/2026-11-11-inventory-intake-main-440-1111-review.md"},
+    {"decision": "Bounded readiness correction (EOF blank line, O7b browser/axe follow-up, E2 routing note) recorded as additive amendment; original Review not replaced; no replay", "status": "done", "evidence": "changes record Readiness correction section; review Amendment section"}
   ],
   "blockers": [],
   "next_action": {"phase": "Follow-up", "action": "Root independent exact-head review; owner selects follow-up"},
   "prioritized_follow_ups": [
-    {"rank": 1, "task": "Owner decision: authorise one existing-test addition for the inventory-managed QA guard after staff intake under #131, #132 or #440", "rationale": "Only unverified combined-journey gap; closure-first, no new issue", "evidence": "research and pack section Combined-journey gap"}
+    {"rank": 1, "task": "Superseded by Root routing of one test-only E2 under #132 (not yet run): original wording: authorise one existing-test addition for the inventory-managed QA guard after staff intake under #131, #132 or #440", "rationale": "Only unverified combined-journey gap; closure-first, no new issue", "evidence": "research and pack section Combined-journey gap"}
   ]
 }
