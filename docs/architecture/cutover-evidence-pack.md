@@ -7209,3 +7209,67 @@ CONTINUE, bounded. No new product defect is found and no fix, refactor or new is
 
 * One plan critique (conformant after fixes WC-01 to WC-05) and one original Review under `.copilot-tracking/` (2026-11-11 waiting-checkpoint-440-1111), plus Root's admission amendment. The review is author-executed, not independent.
 * Raw logs stay local outside the repository. No push, PR, issue or board write, no criterion tick.
+
+## Personal handoff HTTP guidance integrated-main checkpoint (2026-11-11, Refs #440 #153)
+
+Draft, not approved. This is a narrow local observation on constructed synthetic fixtures after merged PR 1449 reached `main`. It runs only existing tests and light checks listed below, changes no source, configuration, test, workflow, requirement or ADR, and opens no issue. Every earlier section is unchanged. It is not user acceptance, not an OD-09 result and not an Azure result.
+
+### Trigger and pin provenance
+
+* Trigger: the recurring checkpoint criterion of issue #440 after the feature wave PR 1449 (issue #153, refusal and load-failure guidance on the personal pending-handoff card). The previous checkpoint is the [handoff waiting screen section](#handoff-waiting-screen-integrated-main-checkpoint-2026-11-11-refs-440-83) (PR 1448, observation pin `ef3e00ad`, 86 tests). No earlier Quality campaign is rerun and no correction authority is created; unknown historical product-correction balances stay unknown.
+* Pin: PR 1449 squash-merged 2026-11-11T10:39:52Z as `f0eb928f8abe17c512fba2e564837e97c0c5e655`, root tree `a0a4aea03f400f2f1c0a3cd347bebd76c8f9350c`, admitted by Root's amendment. Trees: `src` `bb7a461f0acc9ccff0cde8ddb16df3717c552c50`, `docs` `435e0b50828a6928fc0f78cf6ce2a08ac248c5a2`, `infra` `a022907662e2a98374f36d8f641eefd29d0dc798`, `tools` `432a4e8f7d74f26e88a55dd937c9c6f193016da9`, `.github` `48577d6868c72b11eb872133064883dc10c63cee`. Only that exact main was merged into the planning topic by an ordinary merge; after it all five directory trees equal the pin and the only topic-only paths are `.copilot-tracking/` files.
+* Tree equality, stated separately from execution: the pin's `src` tree equals the frozen candidate `2db08d8e2141d60a52d688b731f192972ca8293b` `src` tree. That equality is not integrated-main execution evidence. The candidate root tree `e328d3eb18d69cc58293e2200eb9a0b51f377322` differs because of earlier documentation integration. Base main `ab44d42fa` had `src` tree `f6d487b51ce3314d732cab87a91844fe221a6e38`; between it and the pin only PR 1449 changed source (`app.js` and `test_handoff_read_guidance.py`).
+* Hosted state: at admission the main scorer run `43005506332` was queued (in progress when re-read) and no main Source CI run was listed, so neither is called passing. Root permitted this local observation while scoring is pending; it is not publication or downstream acceptance. The PR 1449 contexts (19) were reported passing by Root before merge; this record did not re-read them as main evidence.
+* Included and excluded: PR 1449 is the only source merge since the previous base. The #521 fixture candidate and any unmerged branch are excluded. Issues #153 and #440 were open at read time, with no closing reference.
+* Candidate history, not main evidence: Root's raw candidate observations (149 tests with 13 opt-in skips, then 15 with zero skips and 16 with zero skips) and the independent bounded approvals with zero findings (comment `pull/1449#issuecomment-6793048206`) belong to the unmerged candidate. They are not relabelled as main execution.
+
+### Requirement-qualified traceability
+
+| Requirement or contract (document, version, status, blob) | Evidence in the pinned tree | Class |
+| --- | --- | --- |
+| PRD FR-011, AC-014, AC-036 (`docs/prds/zava-forward-retrofit-programme-demonstrator.md`, 0.21.0, `in-review`, `c788b917`) | H1 cases show that a refused, failed or malformed read of the personal card is stated as unknown, not as an empty list; the scope is the personal card only | Local observed, synthetic |
+| PRD FR-004 and the role guard | H4 and H6 pass for the guarded `/api/handoffs` route and the role inventory | Local observed, synthetic |
+| PRD FR-066, AC-120 | Not touched by this wave; urgency, next-update and accountable-reviewer columns stay a gap owned by #83 | Implemented but unverified; partial gap carried forward |
+| BRD FR-018, AC-024, BG-010, NFR-009, AC-071 (`docs/brds/agentic-retrofit-programme-brd.md`, 0.21.0, `draft`, `34d88395`) | The refusal copy keeps manual paths (ask the sender or open a known case) | Local observed only for the listed tests; no BRD item is approved or met |
+| BRD OD-09 | No approved global threshold; the card sets none | Blocked; unchanged |
+| ADR 0003 (`d6064539`) and 0006 (`956da1a3`) Accepted; ADR 0007 (`541e0f72`) Proposed | Not amended and not exercised | Context only |
+| Personal card versus staff `#/handoff-waiting` and existing CSV links | H3 (10) and H2 (6) pass unchanged beside the new card behaviour | Local observed, synthetic |
+| Guarded route, projection and CSV | H4 (7), H5 (13), H6 (24) | Local observed, synthetic |
+| Card 403, 500 and malformed states | H1 browser cases use constructed `page.route` responses; they are not backend permission statuses and not live acceptance | Local observed, synthetic, constructed |
+
+Additive correction dated 2026-11-11: the historical research row for issue #153 called this slice C1. The assessed increment is the personal-handoff C3 refusal and load-failure guidance slice, not proof of C1 and not proof of universal C2, C3 or C5. The 403 owner-role wording is an internal interpretation; named-human wording review and owner-role validation are unproved. Source-reference drift for #83 (BRD FR-009 to FR-011 versus FR-016 to FR-018) is carried forward unchanged. Azure observed is empty.
+
+### Commands, environment and results
+
+Environment: Python 3.12.3, Node v24.21.0, Ruff 0.17.3, Playwright 1.64.1 (read with `importlib.metadata`), the existing user-site and the existing Chromium cache (`chromium-1248`) exposed explicitly, an owned temporary `HOME` under `env -i`, `ZF_DATA` unset, 8.4 GB memory available, the shared lock free at start. No install, pull, service, Docker, SQL or cloud. Run from `src/api` with `PYTHONPATH=src:tests:../core/src:../agents/src:../core/tests:../agents/tests` plus the user-site path. Preflight proved the `zava_forward.api.server`, `core.store`, `agents.chat` and test module origins lie under this worktree. The first preflight printed `None` for the `zava_forward.agents` namespace package; a read-only probe resolved its search location and `chat` module to this worktree (log `preflight2-agents-origin.log`).
+
+| Id | Selector | Exit | Ran | Skips | Failures |
+| --- | --- | --- | --- | --- | --- |
+| H4 | `tests.test_handoff_api` | 0 | 7 | 0 | 0 |
+| H5 | `tests.test_unaccepted_handoff_csv_api` | 0 | 13 | 0 | 0 |
+| H6 | `tests.test_role_endpoint_inventory.RoleEndpointInventory` | 0 | 24 | 0 | 0 |
+| H1 | `tests.test_handoff_read_guidance` (browser, `ZF_BROWSER_TESTS=1`, under outer non-queued `flock -n`) | 0 | 15 | 0 | 0 |
+| H2 | `tests.test_unaccepted_handoff_download_ui` (browser, internal lock, no outer lock) | 0 | 6 | 0 | 0 |
+| H3 | `tests.test_handoff_waiting_view` (browser, internal lock, no outer lock) | 0 | 10 | 0 | 0 |
+| S1 | `node --check` of `app.js` (blob `7971ac3a`); Ruff check and format check of `test_handoff_read_guidance.py` | 0 | n/a | n/a | n/a |
+
+Total 75 tests, zero skips, zero failures, one run each, no rerun. H1 lock holder was recorded inside the held wrapper before and after the test (the same `/proc/locks` entry, holder `flock` pid 304261 with the wrapper child 304262 running the test). Raw logs, one file per command and never overwritten, are local at `/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files/http-handoff-checkpoint-440-observation-1111/` (`preflight.log`, `H4.log` to `H3.log`, `S1.log`, `run.sh`). Other blobs at the pin: `test_handoff_read_guidance.py` `0ac5639b`, `test_handoff_waiting_view.py` `db0e3c64`, `test_unaccepted_handoff_download_ui.py` `d43d82a2`, `test_handoff_api.py` `08e0ed90`, `test_unaccepted_handoff_csv_api.py` `49f982f2`, `test_role_endpoint_inventory.py` `b563c91c`. The optional copy audit, mypy, the 149-module set and the whole-suite gate were not run.
+
+### Exclusions and residuals
+
+* Unproved: named-human wording and owner-role validation, actual OD-09 times and operational acceptance, manual assistive-technology testing, reflow and zoom, large-queue performance, the urgency, next-update and accountable-reviewer columns of AC-120, Azure, identity, human and resident acceptance, and #153 slices C2, universal C3 and C5.
+* Whole #83, #81, #153 and #440 are not closed by this record or by merged children. A real non-staff 500 from an uncaught `PermissionError` in `pending_handoffs` is existing server behaviour, unchanged by scope.
+* No fresh web-interface review was performed; no web file changed.
+
+### Recommendation (proposed for Root, not a decision)
+
+CONTINUE, bounded. No new product defect is found and no fix, refactor or new issue is proposed. Affected gates: main scorer run `43005506332` and any Source CI on the pin must be read before downstream admission, and an independent exact-head review of this record is required. Exact resume: named-human wording review for #153 and its remaining slices, the OD-09 owner decision for #83 criterion 3, then the next #440 wave checkpoint.
+
+### Process record and limits
+
+* Historical qualifications, not rewritten: the native #153 session corrected its test after five assertion failures and reran its lock, format and `PYTHONPATH` steps without a Root pause; the earlier #440 waiting checkpoint made an unauthorized native browser-environment retry, and Root's publication sequencing and end-of-file check error stands as a qualified outcome. Root's fresh candidate verification (149 with 13 skips, 15 and 16 with zero skips) was separately authorized and is not retroactive permission.
+* Pause-rule qualification (correction D1, 2026-11-11): all 75 selector tests succeeded, with no skips, no busy lock and no reruns. However, the diagnostic `grep -c` for skips that followed H1 matched nothing, printed 0 and returned 1; the native shell tool reported exit 1, and the author continued to H2 and H3 without a Root pause. That is a command-level deviation from the plan's pause rule, not an H1 failure: H1's recorded selector exit 0 and 15 tests OK stand. `run.sh` ends with `tail` and does not propagate selector status as its own exit, so the result rests on the individually recorded selector exits, the actual Ran and OK lines and S1's individual exit records, not on outer harness success. There was no rerun and no retroactive permission.
+* Editing-rule deviation (correction D1): the author first appended its own new log entry with a shell heredoc, contrary to the file-change rule, reverted that own uncommitted append with `git checkout`, and reapplied it with the edit tool before commit; the final content is unchanged. The recovery does not erase the deviation and does not authorize `git checkout` generally. The original author Review and changes record are preserved as history.
+* Data-isolation evidence limit (correction D1): the retained raw preflight proves the original-user `~/.zava-forward` directory was absent and `ZF_DATA` unset before the run. `env -i`, an owned temporary `HOME` and `TMPDIR`, and synthetic fixture sources support isolation. The execution log records an after-run probe of the original-user directory but its output was not retained, and no before or after absence output for the owned `HOME` is retained. No private or default data access is inferred, and no fresh probe is offered as historical proof.
+* One plan critique (conformant after fixes HC-01 to HC-03) and one original Review under `.copilot-tracking/` (2026-11-11 http-handoff-checkpoint-440-1111), plus Root's admission amendment. The review is author-executed, not independent.
+* No push, PR, issue or board write, no criterion tick.
