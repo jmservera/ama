@@ -11506,3 +11506,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#handoff-waiting-screen-integrated-main-checkpoint-2026-11-11-refs-440-83) for merged PR 1444 on main `ef3e00ad05a78c3a0fd3b342b860fb3d43796223` (tree `513c3f9d8f7ae7c0c78672aa9f1650e23f7451cd`): 86 existing tests across eight selectors, zero skips, zero failures, plus Node and Ruff checks.
 * Evidence class: local observed on constructed synthetic fixtures; no source, test, requirement or ADR change, no new issue, no criterion tick, no acceptance. Main scoring was pending at read time. Recommendation: continue, bounded (proposed, not a decision).
 * Evidence under `.copilot-tracking/` (2026-11-11 waiting-checkpoint-440-1111).
+
+## [2026-11-11] update | Personal handoff HTTP guidance integrated-main checkpoint (Refs #440 #153)
+
+* Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#personal-handoff-http-guidance-integrated-main-checkpoint-2026-11-11-refs-440-153) for merged PR 1449 on main `f0eb928f8abe17c512fba2e564837e97c0c5e655` (tree `a0a4aea03f400f2f1c0a3cd347bebd76c8f9350c`): 75 existing tests across six selectors, zero skips, zero failures, plus Node and Ruff checks. Tree equality with the tested candidate is stated separately from execution.
+* Evidence class: local observed on constructed synthetic fixtures; no source, test, requirement or ADR change, no new issue, no criterion tick, no acceptance. Main scoring was pending at read time. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-11 http-handoff-checkpoint-440-1111).
