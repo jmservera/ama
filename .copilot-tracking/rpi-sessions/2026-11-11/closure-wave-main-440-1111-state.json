@@ -3,16 +3,16 @@
   "task_slug": "closure-wave-main-440-1111",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": null,
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-11/closure-wave-main-440-1111-research.md",
     "plan": ".copilot-tracking/plans/2026-11-11/closure-wave-main-440-1111-plan.md",
     "details": ".copilot-tracking/details/2026-11-11/closure-wave-main-440-1111-details.md",
     "critique": ".copilot-tracking/plans/2026-11-11/closure-wave-main-440-1111-critique.md",
-    "changes": null,
-    "review": null
+    "changes": ".copilot-tracking/changes/2026-11-11/closure-wave-main-440-1111-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-11/closure-wave-main-440-1111-review.md"
   },
   "confirmed_decisions": [
     {
@@ -44,12 +44,41 @@
       "decision": "Root prospective admission with amendment; main e0dec207 (rubric-only) merged no-ff before tests; N4 omitted",
       "status": "confirmed",
       "evidence": ".copilot-tracking/plans/2026-11-11/closure-wave-main-440-1111-admission-amendment.md"
+    },
+    {
+      "decision": "Implement executed: all admitted selectors exit 0, counts equal, zero skips; pack section and log entry appended",
+      "status": "done",
+      "evidence": "changes record"
+    },
+    {
+      "decision": "Review executed once (author, not independent): conformant with open limits",
+      "status": "done",
+      "evidence": "review record"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Implement",
-    "action": "Merge e0dec207 no-ff, preflight, run admitted selectors once, record pack and log"
+    "phase": "Follow-up",
+    "action": "Root independent exact-head assessment; #132 candidate disposition; #1420 may plan"
   },
-  "prioritized_follow_ups": null
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Independent exact-head assessment of this checkpoint",
+      "rationale": "Required before any publication",
+      "evidence": "review record limits"
+    },
+    {
+      "rank": 2,
+      "task": "#132 candidate disposition, then main refresh",
+      "rationale": "Combined inventory to QA gap stays unverified",
+      "evidence": "pack section"
+    },
+    {
+      "rank": 3,
+      "task": "#1420 bounded planning under its own scope",
+      "rationale": "Checkpoint showed no blocking finding",
+      "evidence": "pack recommendation"
+    }
+  ]
 }
