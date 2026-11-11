@@ -11,11 +11,13 @@ from __future__ import annotations
 
 import json
 import os
+import stat
 import tempfile
 import threading
 import time
+import traceback
 import unittest
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from contextlib import ExitStack
 from pathlib import Path
 from typing import Any
@@ -83,19 +85,60 @@ def close_quietly(conn: Any, label: str, errors: list[str]) -> None:
         errors.append(f"{label} close failed: {error!r}")
 
 
-def assert_isolated() -> None:
-    """Scratch, temp, data, state and cwd must be under the owned scratch parent of TMPDIR."""
-    configured = os.environ.get("TMPDIR")
-    if not configured:
-        raise InvalidWitness("INVALID-SETUP: TMPDIR must name the owned scratch temp directory")
-    temp = Path(configured).resolve()
-    if Path(tempfile.gettempdir()).resolve() != temp:
-        raise InvalidWitness("INVALID-SETUP: tempfile does not use TMPDIR")
-    scratch = temp.parent
-    owned = [Path.cwd()] + [Path(os.environ.get(n, "/")) for n in ("HOME", "ZF_DATA", "ZF_STATE")]
-    for name, path in zip(("cwd", "HOME", "ZF_DATA", "ZF_STATE"), owned, strict=True):
-        if not path.resolve().is_relative_to(scratch):
-            raise InvalidWitness(f"INVALID-SETUP: {name} is outside the owned scratch")
+SCRATCH_SCHEMA = "zf-scratch/1"
+GENERAL_PURPOSE = {
+    "/", "/tmp", "/var", "/var/tmp", "/dev/shm", "/home", "/root", "/usr", "/opt", "/mnt", "/srv",
+}  # fmt: skip
+
+
+def private_owned(path: Path, kind: str) -> os.stat_result:
+    status = os.lstat(path)
+    wanted = stat.S_ISDIR if kind == "dir" else stat.S_ISREG
+    if not wanted(status.st_mode) or status.st_uid != os.getuid() or status.st_mode & 0o077:
+        raise InvalidWitness(f"INVALID-SETUP: {path} is not a private owned {kind}")
+    return status
+
+
+def assert_isolated(environ: Mapping[str, str] | None = None, cwd: Path | None = None) -> None:
+    """Every working path must equal the exact scratch identity the launcher wrote beforehand.
+
+    A caller-chosen TMPDIR is never ownership evidence: the private manifest names the exact root
+    and each exact path, and every actual value must resolve to it.
+    """
+    env = os.environ if environ is None else environ
+    given = env.get("ZF_SCRATCH_MANIFEST")
+    if not given or not Path(given).is_absolute():
+        raise InvalidWitness("INVALID-SETUP: ZF_SCRATCH_MANIFEST must be an absolute path")
+    private_owned(Path(given), "file")
+    manifest = json.loads(Path(given).read_text())
+    if manifest.get("schema") != SCRATCH_SCHEMA:
+        raise InvalidWitness("INVALID-SETUP: unknown scratch manifest schema")
+    root = Path(str(manifest.get("root")))
+    if not root.is_absolute() or root.resolve() != root:
+        raise InvalidWitness("INVALID-SETUP: the scratch root is not an exact resolved path")
+    if str(root) in GENERAL_PURPOSE or len(root.parts) < 4:
+        raise InvalidWitness("INVALID-SETUP: the scratch root is a general-purpose directory")
+    status = private_owned(root, "dir")
+    if manifest.get("root_id") != f"{status.st_dev}:{status.st_ino}":
+        raise InvalidWitness("INVALID-SETUP: the scratch root identity does not match")
+    actual = {
+        "tmp": tempfile.gettempdir(),
+        "home": env.get("HOME", ""),
+        "data": env.get("ZF_DATA", ""),
+        "state": env.get("ZF_STATE", ""),
+        "cwd": str(Path.cwd() if cwd is None else cwd),
+    }
+    for name, value in actual.items():
+        expected = Path(str(manifest.get(name)))
+        if not value or not expected.is_absolute() or expected.resolve() != expected:
+            raise InvalidWitness(f"INVALID-SETUP: the {name} scratch path is not exact")
+        if (
+            Path(value).resolve() != expected
+            or expected == root
+            or not expected.is_relative_to(root)
+        ):
+            raise InvalidWitness(f"INVALID-SETUP: {name} is not the manifest scratch path")
+        private_owned(expected, "dir")
 
 
 @unittest.skipUnless(
@@ -221,15 +264,18 @@ class MssqlPermitBoundary(unittest.TestCase):
         errors: list[str] = []
         outcome: list[Any] = []
         failure: list[BaseException] = []
-        thread: threading.Thread | None = None
+        running: threading.Thread | None = None
         primary: BaseException | None = None
         witness: dict[str, Any] = {}
 
         def finish_worker() -> None:
-            if thread is None:
+            if running is None:
                 return
-            thread.join(JOIN_SECONDS)
-            if thread.is_alive():
+            try:
+                running.join(JOIN_SECONDS)
+            except Exception as error:
+                errors.append(f"worker join failed: {error!r}")
+            if running.is_alive():
                 errors.append("WORKER-STILL-LIVE")
 
         def claimant() -> None:
@@ -266,6 +312,7 @@ class MssqlPermitBoundary(unittest.TestCase):
 
                 thread = threading.Thread(target=claimant, name=CLAIMANT, daemon=True)
                 thread.start()
+                running = thread
                 row = self.observe_block(observer, witness)
                 witness["blocked"] = dict(
                     session=int(row[0]),
@@ -298,16 +345,22 @@ class MssqlPermitBoundary(unittest.TestCase):
                 thread.join(JOIN_SECONDS)
                 if thread.is_alive():
                     raise InvalidWitness("WORKER-STILL-LIVE: the claimant did not finish")
-                if failure:
-                    raise failure[0]
         except BaseException as error:
             primary = error
-        if primary is not None:
-            if errors:
-                primary.add_note("CLEANUP-ERRORS: " + "; ".join(errors))
-            raise primary
+        worker = failure[0] if failure else None
+        if worker is not None and worker is not primary:
+            if primary is None:
+                primary = worker
+            else:
+                primary.add_note("WORKER-ERROR: " + "".join(traceback.format_exception(worker)))
         if errors:
-            raise InvalidWitness("CLEANUP-ERRORS: " + "; ".join(errors))
+            text = "CLEANUP-ERRORS: " + "; ".join(errors)
+            if primary is None:
+                raise InvalidWitness(text)
+            primary.add_note(text)
+            raise InvalidWitness(text) from primary
+        if primary is not None:
+            raise primary
         witness["result"] = outcome[0]
         witness["reads"] = [value for name, value in self.clock if name == CLAIMANT]
         return witness
@@ -416,11 +469,14 @@ class MssqlPermitBoundary(unittest.TestCase):
         self.assertEqual([r["id"] for r in held], [permit["meter_id"]], "E1-ISSUED-AT")
         self.assertIn("permitted", self.kinds(task["id"]), "E1-ISSUED-AT")
         with self.service.transaction() as db:
+            marker = self.service._markers(db, task["id"]).get("permitted")
             stored = scalar(
                 db,
                 "SELECT outcome FROM assistant_attempts WHERE id=?",
                 f"{task['id']}:{task['fence']}",
             )
+        self.assertIsNotNone(marker, "E1-ISSUED-AT")
+        self.assertEqual(marker["issued_at"], permit["issued_at"], "E1-ISSUED-AT")
         self.assertEqual(stored, "sending", "E1-ISSUED-AT")
         again = self.service.issue_permit(task["id"], task["owner"], task["fence"], request)
         self.assertEqual(again, dict(permit=False, reason="duplicate-permit"), "E1-ISSUED-AT")
