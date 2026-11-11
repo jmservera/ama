@@ -11494,3 +11494,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Appended a dated subsection to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#priority-ordering-before-fix-paired-validation-2026-11-11-refs-1292): one paired run of unchanged maintained regression methods on a disposable SQL Server. The original source `e2ecee25` failed 4 of 5 selected methods with the wrong-newest recommendation (exit 1); the current head passed 14 of 14 with 0 skips (5 on SQL Server). It includes a literal AC1 to AC5 mapping with open items. Added one index sentence.
 * Evidence class: bounded local validation, evidence only; no source, test or fixture change, no Source E5, no criterion tick or closure, startup cause stays unknown, no whole-SQL, gate, Azure, live or approval claim.
 * Evidence under `.copilot-tracking/` (2026-11-11 priority-before-fix-1292).
+
+## [2026-11-11] update | WCAG table inventory registers the handoff waiting table (Refs #83)
+
+* Updated the Tables row of the [WCAG baseline](./research/ux/wcag-conformance-baseline.md) and the index entry: the regex-counted script-built table inventory is 13, the new one being the read-only handoff waiting screen, read from source (caption, scoped headers, named keyboard-focusable scroll region, text-only status). The 11 and 12 observations are kept.
+* Evidence class: source audit plus constructed-browser rendering tests; no screen-reader, reflow, zoom or assistive-technology test, no conformance claim, no approved global OD-09 times, no criterion tick; whole #83 criterion 3 stays unmet. The `ops.js` sensor table is outside the count and not audited here.
+* Evidence under `.copilot-tracking/` (2026-11-11 issue-83-table-inventory-d1-1111).
