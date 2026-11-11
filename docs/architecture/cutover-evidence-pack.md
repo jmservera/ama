@@ -7017,7 +7017,7 @@ Draft, local-only, not approved. One bounded observation of existing focused sel
 
 Raw directory: `/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files/choice-wave-main-440-observation-1111/`. Linux, Python 3.12.3, task-private venv `/tmp/ama-440-choice-venv-1111`, owned private HOME with the existing Chromium cache linked, `ZF_DATA` unset, `~/.zava-forward` absent, no `.env` or private data. Commands ran under `env -i`.
 
-Adverse and dependency record (preserved): the import preflight in the fresh venv failed with `ModuleNotFoundError: No module named 'zava_forward'` (exit 1); only then were `src/core`, `src/agents`, `src/api` (editable) and `playwright==1.64.0` installed (exit 0). The importer was not installed. Module origins for core and api resolve under this worktree (agents is a namespace package with no `__file__`; its tests path is the worktree's). First C2 attempt failed 9 of 9 with `FileNotFoundError: 'node'` because my `env -i` PATH omitted it, before any test logic ran; it is kept as `C2-attempt1-node-missing.*` and C2 was rerun once with `node` on PATH. Other selectors had already passed and were not rerun.
+Adverse and dependency record (preserved): the import preflight in the fresh venv failed with `ModuleNotFoundError: No module named 'zava_forward'` (exit 1); only then were `src/core`, `src/agents`, `src/api` (editable) and `playwright==1.64.0` installed (exit 0). The importer was not installed. Module origins for core and api resolve under this worktree (agents is a namespace package with no `__file__`; its tests path is the worktree's). First C2 attempt failed 9 of 9 with `FileNotFoundError: 'node'` because my `env -i` PATH omitted it. The error arose inside test execution: the nine tests errored before their Node child programs could run. It is kept as `C2-attempt1-node-missing.*` and C2 was rerun once with `node` on PATH (see the process qualification at the end of this section). Other selectors had already passed and were not rerun.
 
 | Id and selector | Exit and result | Class and limit |
 | --- | --- | --- |
@@ -7055,3 +7055,10 @@ Recommendation (proposed for the owner, not a decision): CONTINUE, bounded. Resu
 ### Process record and limits
 
 * Added as a distinct section; no earlier section or adverse record was altered. The admission amendment was committed before the merge and any test. The single plan critique is the original one (conformant after CW-01 to CW-06); no second critique ran. The review is author-executed, not independent; independent exact-head review, human approval and hosted CI remain required. Model label locally asserted. No push, PR, issue or board write was made.
+
+### Dated process qualification (2026-11-11)
+
+* The plan required Root direction before any rerun of a failed selector. C2 was rerun after the omitted-`node` PATH error without that direction. This is a process exception, not retrospectively authorized and not fully conformant execution.
+* The successful C2 (9 OK) is an environment-corrected observation, not a pristine once-only campaign. The first attempt is retained raw: it errored 9 of 9 with `FileNotFoundError: 'node'` inside test execution, before the Node child programs could run. It is not evidence that no test logic ran.
+* The original plan and author Review are unchanged. No source correction cycle is spent.
+* Later Root observation (not an original runtime read): `origin/main` was `22a30cd92b9a3e1b436dc94cf747a3fc147fb51a`, differing from observed `e09b21f1d` only in `.github/rubric/scores/latest.json`. Main Capstone Rubric Scorer 42947632230 completed SUCCESS on `e09b21f1d`. No separate main Source CI run was observed and none is claimed green. The tested pin and source are unchanged; no integration or rerun was done. No broad acceptance or closure is inferred.
