@@ -1,0 +1,51 @@
+{
+  "type": "coordinator-evidence-assessment",
+  "date": "2026-11-11",
+  "reviewed_head": "093868dd30a99fc5dd91831289ec9385d004bf96",
+  "reviewed_tree": "68641dd2ae6a92a94bc32a715922cdf27750cc45",
+  "base": "cea1cee5b20f63d7bb134fb7cb87a1bbc7d8618f",
+  "scope": "Complete ten-path documentary delta, original native execution and critique, paired raw SQL results, orchestration, redaction helper, verifier and source-import identity evidence.",
+  "verdict": "pass-for-bounded-evidence-with-qualifications",
+  "observed": {
+    "prospective_commit": "0ba32c2c227f6b46119b37946d0810414bc9ea05",
+    "prospective_commit_time": "2026-11-11T06:31:46Z",
+    "sql_started": "2026-11-11T06:32:52Z",
+    "old_tests": 5,
+    "old_wrong_newest_failures": 4,
+    "old_errors": 0,
+    "old_exit": 1,
+    "current_tests": 14,
+    "current_sql_tests": 5,
+    "current_skips": 0,
+    "current_exit": 0,
+    "admission_elapsed_seconds": 75,
+    "raw_manifest_members_verified": 19,
+    "cleanup_id_matched": true,
+    "leftover_query_exit": 0,
+    "leftover_databases": 0,
+    "post_cleanup_labelled_containers": 0
+  },
+  "identity_evidence": {
+    "native_session": "ef0650bc-ed2a-4cbd-83c9-550256ef939a",
+    "native_hash_verification_call": "toolu_016yczHRZgqsZA8vvyTE3jcz",
+    "native_hash_verification_result": "d57dffcf-9ba6-4663-9c73-81e87a739ba6",
+    "native_hash_verification_time": "2026-11-11T06:32:22.851Z",
+    "result": "Coordinator consumed the actual successful tool result: installed store/sqlstore/mssqlstore hashes match all six respective old/current Git blobs. Both test processes subsequently reported the corresponding isolated site-packages paths."
+  },
+  "qualifications": [
+    "The old incremental-named method failed at its initial cold-load assertion. No old incremental execution is inferred.",
+    "The verifier's PASS alone is insufficient: the coordinator separately consumed every actual selector, assertion, count, exit and cleanup receipt.",
+    "The author calls timeout coverage outer-only. The actual script also invokes run-redacted.py with a nominal 500-second process budget; both arms completed in approximately 22 and 24 seconds. No timeout or kill-path execution was observed, and no universal hard-bound guarantee is asserted.",
+    "Image identity and local Docker context are observed, not registry or daemon authentication attestations.",
+    "The original critique, author Review and their limits remain unchanged. Critique formatting is not claimed to satisfy repository frontmatter conventions.",
+    "Legacy uncertainty is not resolved by these tests. The existing Core README documents unresolved order flags and refusal of accept/edit; deciding actual flagged records remains with the named data owner."
+  ],
+  "acceptance": {
+    "ac3": "Actual before-fix wrong-newest failures and current passing SQL/SQLite/in-memory focused regressions are observed. The issue asks for a focused regression, not the complete old-source 142-test module.",
+    "other_criteria": "Independent assessment must map the literal issue criteria against merged source and original reviews. Do not equate documenting a conservative legacy transition with approving actual legacy records.",
+    "ticks_or_closure": "None authorized by this record alone; any decision waits for independent exact-head assessment and reviewed main integration."
+  },
+  "source_e5": "Neither granted nor spent.",
+  "publication": "Requires independent assessment of the complete final candidate and actual applicable hosted checks.",
+  "original_and_adverse_records_preserved": true
+}

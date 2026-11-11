@@ -1265,6 +1265,10 @@ accept SQL as a whole, waive a gate or tick any criterion; E5 stays unspent.
 A dated qualification (Q1) in that subsection corrects the attribution of cleanup checks
 (separately observed, not enforced by the verifier) and states the timeout-bound and local
 image or endpoint limits of the run, without rewriting the original claims.
+A dated #1292 before-fix subsection in the same pack records one paired run of unchanged
+regression methods on a disposable SQL Server: the original source failed 4 of 5 selected methods
+with the wrong-newest recommendation, and the current head passed 14 of 14 with 0 skips. It maps
+the five literal criteria with open items, keeps the startup cause unknown, and ticks or closes nothing.
 
 A dated #1314 comparison-count qualification in the same pack restates, from pinned Git
 ranges, the final C2 comparison (17 paths, 700 additions, 0 deletions against `ef28d4da4`,
