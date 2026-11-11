@@ -7273,3 +7273,74 @@ CONTINUE, bounded. No new product defect is found and no fix, refactor or new is
 * Data-isolation evidence limit (correction D1): the retained raw preflight proves the original-user `~/.zava-forward` directory was absent and `ZF_DATA` unset before the run. `env -i`, an owned temporary `HOME` and `TMPDIR`, and synthetic fixture sources support isolation. The execution log records an after-run probe of the original-user directory but its output was not retained, and no before or after absence output for the owned `HOME` is retained. No private or default data access is inferred, and no fresh probe is offered as historical proof.
 * One plan critique (conformant after fixes HC-01 to HC-03) and one original Review under `.copilot-tracking/` (2026-11-11 http-handoff-checkpoint-440-1111), plus Root's admission amendment. The review is author-executed, not independent.
 * No push, PR, issue or board write, no criterion tick.
+
+## Aftercare numeric-order integrated-main checkpoint (2026-11-11, Refs #440 #1401 #1402 #134)
+
+Draft, local-only, not approved. This is a new, narrow recurring-checkpoint record after merged PR 1456 (issue #1401, numeric restore order for aftercare concerns) reached `main`. It is distinct from the earlier [aftercare integration checkpoint of PR 1400](#aftercare-integration-current-main-checkpoint-2026-11-10-refs-440-89-133-134-1401-1402), whose text is unchanged and whose "#1401 OPEN" rows are history now superseded for #1401 only. It is not the old #440 C6, not a retry and not the personal-handoff campaign; it changes no source, test, tool, workflow, configuration, requirement or ADR, makes no fix, opens no issue and resets no finite correction allowance of #1401, #1402, #134 or #440. It runs only the focused checks listed below, not the complete local gate, `--changed`, SQL, browser, Azure, model or private-data runs. Records: [research](../../.copilot-tracking/research/2026-11-11/aftercare-wave-checkpoint-440-2119-research.md), [plan](../../.copilot-tracking/plans/2026-11-11/aftercare-wave-checkpoint-440-2119-plan.md), [details](../../.copilot-tracking/details/2026-11-11/aftercare-wave-checkpoint-440-2119-details.md), [critique](../../.copilot-tracking/plans/2026-11-11/aftercare-wave-checkpoint-440-2119-critique.md), [changes](../../.copilot-tracking/changes/2026-11-11/aftercare-wave-checkpoint-440-2119-changes.md), [review](../../.copilot-tracking/reviews/2026-11-11/aftercare-wave-checkpoint-440-2119-review.md) and [state](../../.copilot-tracking/rpi-sessions/2026-11-11/aftercare-wave-checkpoint-440-2119-state.json).
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-11) |
+| --- | --- |
+| Start pin and fresh main | `origin/main` fetched 2026-11-11T21:21Z is `077ad5ad20293a1d79932ea14e9f639dd11e5a22`, equal to the start pin and to the worktree HEAD (branch `docs/aftercare-wave-checkpoint-2119`). Root tree `d1dde25bc3476772bd9d97711558ed87d1f7a035`; `src` `51feb8eaaed8d83d578164cebd06bb89861924e3`, `infra` `a022907662e2a98374f36d8f641eefd29d0dc798`, `tools` `432a4e8f7d74f26e88a55dd937c9c6f193016da9`, `.github` `56e251c7cd6762cd4f344fa393150649ae020875` |
+| Trigger | PR 1456 `fix(core): restore aftercare concerns in numeric identifier order`, MERGED 2026-11-11T20:04:04Z as `a3862eed4a324b13715eeebf0c98053d9079dec1`, an ancestor of the pin; `Closes #1401` (now CLOSED) and `Refs #133`, `Refs #89`. Since that merge only `.github/rubric/scores/latest.json` changed, so the pin `src` equals the merged source |
+| Source blobs at the pin | `aftercare.py` `59b66dd1eed0` (changed by PR 1456), `aftercare_intake.py` `96674907da90` and `aftercare_store.py` `e5bd737c6d9b` (both unchanged since PR 1400), `test_aftercare.py` `9ef75fe6abce`, `test_aftercare_store.py` `eebba62b0f19`, `test_aftercare_intake.py` `b3f220bb1e11` |
+| Documents (blob at the pin) | BRD 0.21.0 `draft` `34d88395de86`; PRD 0.21.0 `in-review` `c788b917bafa`; ADR 0003 `d60645397b20` and ADR 0006 `956da1a3b804` Accepted. None is changed by PR 1456; draft and in-review are not approval |
+| Hosted state of main | `Capstone Rubric Scorer` for `a3862eed4` completed success; for the pin only `Infrastructure PR what-if` is listed and it was skipped. A skipped or absent workflow is not a successful check, and no Source CI result for the pin is claimed |
+| Issue states (read live) | #440, #133, #134, #89, #132 and #1402 OPEN; #1401 CLOSED by the merge. Nothing is ticked, closed or opened by this record |
+| Pending, unmerged, not counted as main | PR 1458 `fix(aftercare): refuse existing blank intake state` (closes #1402), OPEN at head `ff6c181ea7921ace9d1704c6890b3beda1d5cd3b`, base `main`; PR 1455 `test(api): verify connected-home specialist screens` (#134), OPEN. Neither is on `main` and no result of either is relabelled as main evidence |
+| Excluded | The personal-handoff and other earlier campaigns, #132 job pack, #109 and #111, deployment, Azure, real providers and models, resident or professional acceptance, private data |
+
+### Observed on current main (local, constructed synthetic data)
+
+Environment: Python 3.12.3, Ruff 0.17.3, mypy 2.4.1, Node v24.21.0, `env -i` with an owned temporary `HOME`, `ZF_DATA` and `ZF_RESIDENT_MSSQL` unset. The installed `zava-forward-*` distributions are editable installs of the owner's primary checkout, so an explicit `PYTHONPATH` of this worktree's `src/*/src` and test folders (not `mvp`) was set and a preflight proved that the `aftercare`, `aftercare_intake`, `aftercare_store` and `zava_forward.api.server` modules import from this worktree. HEAD equalled the pin, `git status --porcelain -- src` was empty before and after, and the disk hash of each tested file equalled its pin blob. No install, service, Docker, SQL or cloud use. Each selector ran once; raw logs and exit codes are local outside the repository at `/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files/aftercare-checkpoint-440-2119/`.
+
+| Id | Selector | Exit | Ran | Skipped | Notes |
+| --- | --- | --- | --- | --- | --- |
+| A1 | `src/core` `test_aftercare` | 0 | 23 | 0 | Includes `test_restore_is_numeric_whatever_the_json_key_order` (999, 1000, 1001; text-sorted and reversed key order) and `test_restore_still_refuses_gaps_and_non_canonical_identifiers_past_999` |
+| A2 | `src/core` `test_aftercare_store` | 0 | 42 | 15 | The 15 skips are the SQL Server variants (`opt-in owned loopback SQL Server`). The 27 executed tests include the 1000-record restart read and the 999/1000/1001 write, restart and replay tests on the JSON `Store` and SQLite adapters |
+| A3 | `src/core` `test_aftercare_intake` | 0 | 39 | 0 | Intake roles, persistence, replay and routes; it has no blank or whitespace document case |
+| A4 | `src/api` `test_aftercare_served`, `test_aftercare_screen` | 0 | 21 | 0 | Route contract and staff screen; the screen module runs in a node vm and is not a served-browser or keyboard check |
+| S1 | Ruff check and `ruff format --check` on `aftercare.py`, `test_aftercare.py`, `test_aftercare_store.py` | 0, 0 | n/a | n/a | All checks passed, 3 files already formatted |
+| S1 | mypy on the same three files | 1, then 0 | n/a | n/a | The first invocation failed with `ModuleNotFoundError: No module named 'mypy'` because the `env -i` command hid the user site where mypy is installed; it is an invocation error, not a product finding and not a pass. One rerun with the user site exposed read `Success: no issues found in 3 source files`, exit 0 |
+
+Totals: 125 tests discovered, 110 executed and passing, 15 skipped (SQL Server), 0 failures. Skips are not passes: SQL Server persistence at 999/1000/1001 is NOT observed on main here. PR 1456's own text reports an independent disposable SQL Server inspection of 15 tests on its candidate; that is candidate evidence on the pre-merge head, was not re-run here and is not carried into this observation. Not run, therefore Unknown: full Core or API discovery, browser suites, an HTTP journey above 999 concerns, concurrency or volume behaviour, hosted Source CI of the pin, the full gate.
+
+### Requirement trace (document-qualified, proposed)
+
+BRD and PRD both use the FR-049 label for different topics, so each row names its document. Classes follow the repository separation of local observed, implemented but unverified, blocked and unknown.
+
+| Requirement (document, status) | Evidence at the pin | Class |
+| --- | --- | --- |
+| PRD FR-014, AC-017 (in-review; AC-017 Not run): intake records type, owner and route; contact is not consent | A3 intake persistence, replay and role tests pass on constructed data; A2 shows records survive a store reopen at 999, 1000 and 1001 on the JSON and SQLite adapters | Local observed, constructed synthetic; whole AC-017 unmet |
+| PRD FR-049, AC-063 (in-review; AC-063 Not run): complaint, remedy, package, handover and financial closure stay distinct | A1 and A3 closure and refusal tests pass; the ordering fix keeps every concern visible after restore past 999 | Local observed, constructed synthetic; age bands, lease evidence and leasehold text remain a gap, so whole AC-063 is unmet |
+| BRD FR-047, AC-089 (draft): closure cannot close an outstanding remedy, defect or dispute | A1 `ClosureTests` pass; restore still refuses a snapshot that would weaken a recorded concern (gap, unpadded and foreign identifiers refused) | Local observed, constructed synthetic; document-qualified |
+| BRD RULE-014 (draft): a sensor signal is context, never closure evidence | A1 `SensorContextTests` and the restore refusals pass; unchanged by PR 1456 | Local observed, constructed synthetic |
+| PRD FR-036 (in-review): AI tasks registered, unapproved tasks use the manual route | Not touched; `aftercare-concern-pack` stays unapproved and disabled | Static, unchanged |
+| ADR 0006 (Accepted) `src` layout; ADR 0003 (Accepted) runtime fit | The change is inside `src/core` and its tests; no amendment | Context only |
+| Persistence integrity of the stored register (supporting the above, not a separate requirement) | Canonical JSON sorts `AC-1000` before `AC-101` (`json.dumps(..., sort_keys=True)` in `aftercare_intake.py` `_txn` and `_canon` in `aftercare_store.py`); `from_state` now restores in numeric order. Observed by A1 and A2 on the JSON and SQLite adapters | Local observed for the listed adapters; SQL Server not observed here; an HTTP journey above 999 not run |
+| #133, #134, #89 and #440 acceptance criteria | Unchanged, all OPEN | Partially delivered; criteria unmet |
+
+### Boundaries observed
+
+* Ordering: restore order is numeric (`AC-\d{3,}` identifiers), independent of JSON key order, and the existing gap, uniqueness and key checks are kept; the next identifier after 999 and 1000 continues the sequence (A1, A2).
+* Intake persistence and manual path: one validated JSON document per update, replay by the same request id and a changed payload as a conflict remain as read in the earlier section; the paper and phone routes remain the manual path, the draft and request reference survive failures. These are tested on constructed data only and are not human or assistive-technology acceptance.
+* Human, consent and resident boundaries: no consent is read or written; actors come from the session; closure remains manager-only; a missing owner stays Unknown; no resident account, portal, approval or AI route is added. PR 1456 does not widen any of these and no requirement is relaxed or deferred by this record.
+
+### Pending gap owned by #1402 (not repaired on main)
+
+* Static read of `aftercare_intake.py` `_parse` at the pin: `if text is None or not text.strip(): return _blank()`. A present but blank or whitespace-only `FileStateStore` document is therefore still treated as fresh, so a later write can restart identifiers. This is NOT corrected on `main`, and PR 1456 does not claim it is. The gap is stated from source only: no probe or reproduction was run here, and A3 passing is not blank-state verification because it has no such case.
+* The runtime adapter `DocumentStateStore` returns `None` or serialized JSON, so a raw blank string does not reach `_parse` through it (a source reading, not proof for every deployment). The existing limitation therefore stands at any register size and independently of numeric ordering: do not rely on the standalone `FileStateStore` for damaged-state refusal.
+* PR 1458 (OPEN, unmerged, head `ff6c181ea7921ace9d1704c6890b3beda1d5cd3b`) proposes the repair. Its text (a one-predicate parser change, 67 intake and register tests, 13 API screen tests, an independent exact-head approval) is candidate policy and evidence, not observed on `main`. #1402 stays OPEN until that PR is merged under its own guarded gates; this record neither depends on nor assesses it.
+
+### Findings, owners and recommendation (proposed for Root, not a decision)
+
+* No new product defect is found and none is asserted. #1401's recorded finding is delivered on `main` for the JSON and SQLite adapters and constructed data; #1402 is the only remaining inherited aftercare finding and its owner is #1402 and PR 1458. No fix, refactor or new issue is proposed.
+* Affected gates: closure of whole #133, #134, #89 and #440 stays held; #1402 closure, and any aftercare expansion that would rely on `FileStateStore` damaged-state refusal, stay held until PR 1458 is merged and observed on main; SQL Server persistence at 999/1000/1001 and any 1000-concern HTTP, browser or volume claim stay unverified until separately run; independent exact-head review of this record and applicable hosted checks of its exact head remain required.
+* Recommendation: CONTINUE, bounded. The #134 local walkthrough of the staff-assisted aftercare surface, on constructed data and the runtime adapter, may proceed with the #1402 limitation stated. This is not a tick of any criterion, an approval of any requirement or ADR, or a deferral decision.
+
+### Process record and limits
+
+* One plan critique by an independent read-only subagent (five findings; two rejected with reasons, three applied) and one original author Review are under `.copilot-tracking/`; the Review is author-executed, not independent. The critique's original text is preserved.
+* The mypy first-run failure above is retained as adverse evidence. No other command failed, no test was rerun and no dependency was installed.
+* Counts are those printed by each selector in this run. The model label is asserted and no witness or host attestation exists. Raw logs stay local outside the repository. No push, PR, issue or board write was made.

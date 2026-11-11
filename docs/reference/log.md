@@ -11516,3 +11516,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 ## [2026-11-11] update | HTTP checkpoint documentation qualification D1 (Refs #440)
 
 * Qualified the same checkpoint section in the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#personal-handoff-http-guidance-integrated-main-checkpoint-2026-11-11-refs-440-153) after an independent Readiness report (approve with comments, two Medium findings): the H1 follow-up `grep -c` exit 1 and continuation without a Root pause, the author's own shell heredoc, `git checkout` and edit-tool recovery of this log entry, and the retained-evidence limit for the `~/.zava-forward` absence claim. Test results, the original Review and earlier entries are unchanged. Documentation only; no rerun, source change or acceptance.
+
+## [2026-11-11] update | Aftercare numeric-order integrated-main checkpoint (Refs #440 #1401 #1402 #134)
+
+* Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#aftercare-numeric-order-integrated-main-checkpoint-2026-11-11-refs-440-1401-1402-134) for merged PR 1456 (#1401, `a3862eed4a324b13715eeebf0c98053d9079dec1`) on main `077ad5ad20293a1d79932ea14e9f639dd11e5a22`: document-qualified trace, 125 focused tests selected (110 executed, 15 SQL Server skips, 0 failures), static checks, and the first mypy invocation failure retained as an invocation error. Added an index paragraph; the earlier 2026-11-10 aftercare section is unchanged.
+* The blank-document gap of #1402 is stated from source only and is not repaired on main; PR 1458 and PR 1455 are OPEN and excluded from main evidence.
+* Evidence class: local observed on constructed synthetic data; no source, test, requirement or ADR change, no new issue, no criterion tick, no acceptance. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-11 aftercare-wave-checkpoint-440-2119).
