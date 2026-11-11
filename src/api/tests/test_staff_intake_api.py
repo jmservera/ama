@@ -10,6 +10,7 @@ from unittest import mock
 
 from dataset import RESIDENT_BINDINGS, supplied_appointment_fixture
 from zava_forward.core import staff_intake
+from zava_forward.core.resident_decisions import TENURE_HOLD
 
 from test_procurement_api import ProcurementApiFixture
 
@@ -265,6 +266,58 @@ class StaffIntakeApi(ProcurementApiFixture):
         self.assertEqual(self.accept("quil", record)[0], 200)
         self.restart()
         self.assertEqual(self.view("quil")["receipts"][0]["quality_state"], "Accepted")
+
+    def declare_inventory(self) -> None:
+        body = dict(
+            action="tenure_inventory_record",
+            case_id="ZF-3",
+            expected_version=0,
+            source="SYN-INVENTORY-SOURCE",
+            source_version="SYN-INV-V1",
+            owner="sam@example.test",
+            next_update="2099-01-01",
+            households=None,
+        )
+        code, out = self.call("/api/cases/ZF-3/resident", body, "sam")
+        self.assertEqual(code, 200, out)
+        self.assertEqual(out["tenure_inventory_view"]["status"], "Unknown")
+
+    def assert_held(self, code: int, out: Any) -> None:
+        self.assertEqual(code, 409, out)
+        self.assertIn("The expected-household inventory is Unknown.", out["reasons"])
+        self.assertIn(TENURE_HOLD, out["reasons"])
+
+    def test_inventory_hold_after_capture_is_not_cleared_by_acknowledgement_or_qa(self) -> None:
+        record = self.capture("sam")[1]["receipt"]["record"]
+        self.declare_inventory()
+        code, ack = self.call(ROUTE + "field-acknowledge", dict(record=record), "pam")
+        self.assertEqual(code, 200, ack)
+        self.assertEqual(ack["receipt"]["quality_state"], "Submitted")
+        self.assert_held(*self.accept("quil", record))
+        self.restart()
+        self.assert_held(*self.accept("quil", record))
+        self.assertEqual(self.view("quil")["receipts"][0]["quality_state"], "Submitted")
+        self.assertEqual(self.store.cases["ZF-3"]["quality"][record]["state"], "Submitted")
+        self.assertEqual(
+            self.call("/api/cases/ZF-3", actor="sam")[1]["tenure_inventory_view"]["status"],
+            "Unknown",
+        )
+
+    def test_inventory_hold_after_acceptance_refuses_handover_and_a_later_capture_stays_held(
+        self,
+    ) -> None:
+        record = self.capture("sam")[1]["receipt"]["record"]
+        self.assertEqual(self.accept("quil", record)[0], 200)
+        self.declare_inventory()
+        handover = dict(index=record, note="Synthetic guarantee given", resident_told=True)
+        self.assert_held(*self.call("/api/cases/ZF-3/quality-handover", handover, "quil"))
+        self.assertEqual(self.store.cases["ZF-3"]["quality"][record]["state"], "Accepted")
+        code, out = self.capture("sam", capture_ref="SYN-CAPTURE-0002", notes=notes("Later"))
+        self.assertEqual((code, out["outcome"]), (200, "recorded"), out)
+        later = out["receipt"]["record"]
+        self.assertEqual(self.store.cases["ZF-3"]["quality"][later]["state"], "Submitted")
+        self.assert_held(*self.accept("pam", later))
+        self.assertEqual(self.store.cases["ZF-3"]["quality"][later]["state"], "Submitted")
 
     def test_corrector_is_denied_by_the_real_accept_path(self) -> None:
         record = self.capture("sam")[1]["receipt"]["record"]
