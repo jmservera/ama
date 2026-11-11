@@ -1260,18 +1260,26 @@ class SqlStore(Store):
             else:
                 try:
                     self._sync()
-                except (RuntimeError, OSError, ValueError) as error:  # COMMIT already returned
+                except self._committed_sync_errors() as error:  # COMMIT already returned
                     self._seq = -1
                     raise CommittedReloadError(
                         "The change was saved, but the refresh afterwards did not settle. Reload before doing "
                         "anything else; do not repeat the change."
                     ) from error
 
+    def _committed_sync_errors(self):
+        """Post-commit refresh errors reported as a committed outcome; other callers keep the original error."""
+        if getattr(self.local, "translate_committed_sync", False):
+            return (RuntimeError, OSError, ValueError)
+        return RuntimeError
+
     def _persist_import_refusals(self, document, detail):
         """Save the projection with its audit in one transaction; any failure before commit restores it."""
         pending_before = list(self.local.pending)
         self.data["import_exceptions"] = document
         self.audit("importer", "recorded_import_refusals", "-", detail)
+        previous = getattr(self.local, "translate_committed_sync", False)
+        self.local.translate_committed_sync = True
         try:
             self.save()
         except CommittedReloadError:
@@ -1285,6 +1293,8 @@ class SqlStore(Store):
                     "original operation failure retained. Reload persisted records before retrying."
                 )
             raise
+        finally:
+            self.local.translate_committed_sync = previous
 
     def _drop_unsaved_recommendations(self):
         """A rolled-back save must neither keep its new recommendations for a later save nor flush their creation events."""
