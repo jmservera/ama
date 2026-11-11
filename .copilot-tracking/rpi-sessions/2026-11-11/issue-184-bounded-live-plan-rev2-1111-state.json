@@ -1,0 +1,34 @@
+{
+  "task_id": "issue-184-bounded-live-plan-rev2-1111",
+  "task_slug": "issue-184-bounded-live-plan-rev2-1111",
+  "parent_task": {"task_id": "issue-184-bounded-live-plan-1111", "task_slug": "issue-184-bounded-live-plan-1111"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11/issue-184-bounded-live-plan-rev2-1111-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11/issue-184-bounded-live-plan-rev2-1111-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11/issue-184-bounded-live-plan-rev2-1111-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-11/issue-184-bounded-live-plan-rev2-1111-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-11/issue-184-bounded-live-plan-rev2-1111-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-11/issue-184-bounded-live-plan-rev2-1111-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "One documentation-only revision under the same planning scope; no execution, source, guard bypass or spend; no automatic further revision", "status": "confirmed", "evidence": "Root resume instruction 2026-11-11"},
+    {"decision": "Research executed (source reads and new public price retrieval 2026-11-11T17:03:14Z)", "status": "confirmed", "evidence": ".copilot-tracking/research/2026-11-11/issue-184-bounded-live-plan-rev2-1111-research.md"},
+    {"decision": "Critique executed once by the author, not independent; compatible gaps applied directly", "status": "confirmed", "evidence": ".copilot-tracking/plans/2026-11-11/issue-184-bounded-live-plan-rev2-1111-critique.md"},
+    {"decision": "Review executed once by the author, not independent; outcome conformant as non-executable plan with open design prerequisites", "status": "confirmed", "evidence": ".copilot-tracking/reviews/2026-11-11/issue-184-bounded-live-plan-rev2-1111-review.md"},
+    {"decision": "Independent adverse report preserved byte-identical", "status": "confirmed", "evidence": ".copilot-tracking/reviews/2026-11-11/issue-184-bounded-live-plan-1111-independent-76e21-report.json"}
+  ],
+  "blockers": [
+    {"id": "source-guard-ai", "summary": "Captured-reading dispatch guards remain", "resolution": "Owner design decision"},
+    {"id": "receive-design", "summary": "No finite-window receive design or authorised receive path", "resolution": "Separate design proposal if owner chooses"},
+    {"id": "cost-unknown", "summary": "Currency, headroom, alert, OD-51, ongoing-resource ownership unknown", "resolution": "Later exact execution request"},
+    {"id": "independent-review", "summary": "Independent exact-head review of this revision pending", "resolution": "Root's same independent reviewer"}
+  ],
+  "next_action": {"phase": "Review", "action": "Stop for Root's independent review before publication or any owner execution question"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Owner answers the single design question", "rationale": "Lowest effort; unlocks or retires the live-model criterion", "evidence": ".copilot-tracking/details/2026-11-11/issue-184-bounded-live-plan-rev2-1111-details.md"}
+  ]
+}

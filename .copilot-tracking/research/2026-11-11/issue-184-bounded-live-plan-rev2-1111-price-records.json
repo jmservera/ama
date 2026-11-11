@@ -1,0 +1,30 @@
+{
+  "label": "NEW retrieval for revision 2; NOT the original 2026-11-11 retrieval, whose temporary payloads were removed and are not reconstructed",
+  "retrieved_utc": "2026-11-11T17:03:14Z",
+  "method": "unauthenticated HTTP GET of the public Azure Retail Prices API; no Azure account, subscription, control-plane or az call",
+  "base_url": "https://prices.azure.com/api/retail/prices",
+  "common_query": "currencyCode=USD",
+  "status": "List retail prices only. Not a quote, not the subscription offer or currency, not an OD-51 approved record. Subscription billing currency remains Unknown.",
+  "queries": [
+    {"id": "Q1", "filter": "armRegionName eq 'uksouth' and serviceName eq 'IoT Hub' and skuName eq 'B1'", "http": 200, "items": 1},
+    {"id": "Q2", "filter": "serviceName eq 'Foundry Models' and contains(productName,'4.1 nano') and armRegionName eq 'uksouth'", "http": 200, "items": 0, "note": "empty; service/product naming differs"},
+    {"id": "Q3", "filter": "contains(productName,'4.1 nano') and armRegionName eq 'uksouth'", "http": 200, "items": 0, "note": "empty"},
+    {"id": "Q4", "filter": "contains(meterName,'4.1-nano') or contains(meterName,'4.1 nano')", "http": 200, "items": 609, "note": "all regions; uksouth rows kept below"},
+    {"id": "Q5", "filter": "serviceName eq 'Azure Container Apps' and armRegionName eq 'uksouth'", "http": 200, "items": 17},
+    {"id": "Q6", "filter": "serviceName eq 'Event Hubs' and armRegionName eq 'uksouth' and skuName eq 'Standard'", "http": 200, "items": 4}
+  ],
+  "records": [
+    {"q": "Q1", "service": "IoT Hub", "product": "IoT Hub", "sku": "B1", "meter": "B1 Unit", "meterId": "b639605e-822b-4c37-aced-7505f2272819", "region": "uksouth", "price": 10.0, "currency": "USD", "unit": "1/Month", "type": "Consumption", "effective": "2018-04-02"},
+    {"q": "Q4", "service": "Foundry Models", "product": "Azure OpenAI", "sku": "gpt 4.1 nano Inp glbl", "meter": "gpt 4.1 nano Inp glbl Tokens", "meterId": "5a96380c-2dbe-5b68-b0da-e71db0e00147", "region": "uksouth", "price": 0.0001, "currency": "USD", "unit": "1K", "type": "Consumption", "effective": "2025-04-01"},
+    {"q": "Q4", "service": "Foundry Models", "product": "Azure OpenAI", "sku": "gpt 4.1 nano Outp glbl", "meter": "gpt 4.1 nano Outp glbl Tokens", "meterId": "0af08775-3bab-5db5-ac98-5ddb9fbd3c30", "region": "uksouth", "price": 0.0004, "currency": "USD", "unit": "1K", "type": "Consumption", "effective": "2025-04-01"},
+    {"q": "Q4", "service": "Foundry Models", "product": "Azure OpenAI", "sku": "gpt 4.1 nano cached Inp glbl", "meter": "gpt 4.1 nano cached Inp glbl Tokens", "meterId": "6d8d7eb1-7495-546e-8763-3721f356b797", "region": "uksouth", "price": 0.000025, "currency": "USD", "unit": "1K", "type": "Consumption", "effective": "2025-04-01"},
+    {"q": "Q5", "service": "Azure Container Apps", "product": "Azure Container Apps", "sku": "Standard", "meter": "Standard vCPU Active Usage", "meterId": "2c27faec-4865-58a4-9bca-4c64327315d3", "region": "uksouth", "price": 0.000034, "currency": "USD", "unit": "1 Second", "type": "Consumption", "effective": "2022-06-01"},
+    {"q": "Q5", "service": "Azure Container Apps", "product": "Azure Container Apps", "sku": "Standard", "meter": "Standard Memory Active Usage", "meterId": "edbe3fc7-4303-5495-a104-88c166efe547", "region": "uksouth", "price": 0.000004, "currency": "USD", "unit": "1 GiB Second", "type": "Consumption", "effective": "2022-06-01"},
+    {"q": "Q5", "service": "Azure Container Apps", "product": "Azure Container Apps", "sku": "Environment", "meter": "Environment Planned Maintenance Hour", "meterId": "04d82868-04b7-5b24-ab4e-4a514597c027", "region": "uksouth", "price": 0.1, "currency": "USD", "unit": "1 Hour", "type": "Consumption", "effective": "2026-11-01"},
+    {"q": "Q5", "service": "Azure Container Apps", "product": "Azure Container Apps", "sku": "Environment", "meter": "Environment Private Endpoint", "meterId": "56fc71a5-793d-5be3-9b47-24ff4b813819", "region": "uksouth", "price": 0.1, "currency": "USD", "unit": "1 Hour", "type": "Consumption", "effective": "2026-11-01"},
+    {"q": "Q5", "service": "Azure Container Apps", "product": "Azure Container Apps", "sku": "Environment", "meter": "Environment Management Hour", "meterId": "5e45d155-a05b-5dd8-9121-9175ee4aef1d", "region": "uksouth", "price": 0.1, "currency": "USD", "unit": "1 Hour", "type": "Consumption", "effective": "2026-11-01"},
+    {"q": "Q6", "service": "Event Hubs", "product": "Event Hubs", "sku": "Standard", "meter": "Standard Throughput Unit", "meterId": "62d94a65-9300-48a6-8c15-0e70fc41eb44", "region": "uksouth", "price": 0.03, "currency": "USD", "unit": "1 Hour", "type": "Consumption", "effective": "2014-12-01"},
+    {"q": "Q6", "service": "Event Hubs", "product": "Event Hubs", "sku": "Standard", "meter": "Standard Ingress Events", "meterId": "d0a685ee-f093-4c5c-ba76-3ec342a75de7", "region": "uksouth", "price": 0.028, "currency": "USD", "unit": "1M", "type": "Consumption", "effective": "2014-12-01"}
+  ],
+  "unverified_unknown": ["Log Analytics ingestion", "Private Link endpoint", "Azure SQL tier", "ACR build or push", "Azure Files", "free monthly Container Apps grant", "subscription offer and billing currency", "whether the new Container Apps environment meters apply to the existing consumption environment"]
+}
