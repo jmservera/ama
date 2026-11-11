@@ -4269,6 +4269,18 @@ default time limit: pass `max_age_hours` (a positive number) only for an approve
 limit, otherwise the row says the approved time is not set (OD-09). It changes no
 owner, state or approval; escalation stays the manual `escalate-handoff` act.
 
+`GET /api/handoffs/unaccepted.csv` is a read-only CSV copy of that same view
+(issue 1419). It shares the access check, the optional `max_age_hours` parsing,
+the 400 and 403 answers and the rows with the JSON route, and has the same 13
+fields in the same order. Handoffs that are Sent, Received or Escalated are
+listed; Accepted, Completed, Declined and Withdrawn ones are not. It is not the
+pending list behind `/api/handoffs.csv`, which exports a different projection,
+and it carries no resident, address, contact, note or evidence fields. An empty
+result is the serializer's blank record with no column names. The file is named
+`unaccepted-handoffs.csv`. The handoffs card links to it as "Download handoff
+waiting times for Excel", shown only while the card itself lists pending
+handoffs. It sets no time limit, escalates nothing and changes no record.
+
 BG-010's approved-time escalation criterion stays unmet: due dates are
 human-selected and escalation is manual; OD-09 policy and operational acceptance
 are not available. No timer, automatic resident contact, live model effectiveness,
@@ -5678,7 +5690,9 @@ fixed reference text, so no query selector changes it) and
 `/api/form-schemas.csv` (the immutable form-schema catalogue: one row per
 retained version with `definition` as JSON text, `digest`, `approval`,
 `approval_evidence`, `source_policy_status`, `recorded_by` and `recorded_at`),
-in addition to `/api/cases.csv`. The schema export calls `forms.list_schemas`
+in addition to `/api/cases.csv`. `/api/handoffs/unaccepted.csv` (the ageing
+view of unaccepted handoffs, see the handoff section) is a separate route that
+does not use this list registry; it is not a copy of `/api/handoffs.csv`. The schema export calls `forms.list_schemas`
 unchanged, so it needs the same current Finance, resident-record, reason-view
 and document-read rights as the JSON list, re-read on every request; other
 roles get 403. Versions are `Unapproved` with empty evidence until a person

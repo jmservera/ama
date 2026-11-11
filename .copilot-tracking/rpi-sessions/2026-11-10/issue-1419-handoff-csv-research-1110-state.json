@@ -1,0 +1,79 @@
+{
+  "task_id": "1419-handoff-csv-research-1110",
+  "task_slug": "issue-1419-handoff-csv-research-1110",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10/issue-1419-handoff-csv-research-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10/issue-1419-handoff-csv-research-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10/issue-1419-handoff-csv-research-1110-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-10/issue-1419-handoff-csv-research-1110-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Admission is research plus plan, details and critique only; Implement and Review are not executed and no changes or review artifact is created",
+      "status": "confirmed",
+      "evidence": "owner brief"
+    },
+    {
+      "decision": "Static source research only; no tests, browser, application, fixture driver, installs or source edits",
+      "status": "confirmed",
+      "evidence": "owner brief"
+    },
+    {
+      "decision": "No push, pull request, GitHub or board write; no fetch, merge, rebase or source adoption during the chain",
+      "status": "confirmed",
+      "evidence": "owner brief"
+    },
+    {
+      "decision": "Research executed; Planning Readiness Ready; nothing was run and no source was edited",
+      "status": "recorded",
+      "evidence": "research artifact, Planning Readiness"
+    },
+    {
+      "decision": "Critique executed once (Complete); verdict Revise with 5 findings (3 Medium, 2 Low); all applied directly by the planner, no user decision needed; no second critique",
+      "status": "recorded",
+      "evidence": "critique artifact; plan Critique Disposition"
+    },
+    {
+      "decision": "Plan of record: shared server.py branch with one blank-retaining parser and EXPORT_KINDS mapping; registry design rejected; full validation tier by default. Implement and Review NOT executed; changes and review artifacts do not exist",
+      "status": "proposed",
+      "evidence": "plan, critique PC-001 and PC-002, owner brief"
+    },
+    {
+      "decision": "Proposed acceptance is not observed evidence; export purpose, retention, actual-record use and BG-010 thresholds are not approved; whole 80 and 73 remain open",
+      "status": "confirmed",
+      "evidence": "owner brief"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Plan",
+    "action": "Stop. Return handoff to the coordinator; any Implement needs explicit admission, parent pin reconciliation and Root decisions"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Coordinator decides on admitting implementation (P01 pre-flight, then P02 to P05)",
+      "rationale": "Plan ready as a candidate; Root decisions on filename, wording owner, inventory hunk and tier are open",
+      "evidence": "plan Handoff; research Unresolved Decisions"
+    },
+    {
+      "rank": 2,
+      "task": "Correct fourteen fields to thirteen and add Withdrawn exclusion in issue text",
+      "rationale": "Source has 13 keys and excludes Withdrawn",
+      "evidence": "research C11, C12"
+    },
+    {
+      "rank": 3,
+      "task": "Separate documentation issue for stale core README line on the ageing route",
+      "rationale": "Contradicts route and API README",
+      "evidence": "research C1, C25, C26"
+    }
+  ]
+}

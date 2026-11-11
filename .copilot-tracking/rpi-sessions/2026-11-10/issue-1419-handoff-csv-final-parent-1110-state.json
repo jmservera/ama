@@ -1,0 +1,43 @@
+{
+  "task_id": "1419-handoff-csv-final-parent-1110",
+  "task_slug": "issue-1419-handoff-csv-final-parent-1110",
+  "parent_task": {
+    "task_id": "1419-handoff-csv-implementation-1110",
+    "task_slug": "issue-1419-handoff-csv-implementation-1110"
+  },
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10/issue-1419-handoff-csv-final-parent-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10/issue-1419-handoff-csv-final-parent-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10/issue-1419-handoff-csv-final-parent-1110-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-10/issue-1419-handoff-csv-final-parent-1110-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10/issue-1419-handoff-csv-final-parent-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10/issue-1419-handoff-csv-final-parent-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Ordinary merge of pinned parent cc210fa4460c into own branch as a8acaba5d3 before this chain; old RPI evidence preserved",
+      "status": "confirmed",
+      "evidence": "git log a8acaba5d3; owner brief 2026-11-10T23:19Z"
+    },
+    {
+      "decision": "Targeted validation tier by owner demo policy; not a waiver nor full receipt; original PC-001 critique preserved",
+      "status": "confirmed",
+      "evidence": "owner brief; prior plan override"
+    },
+    {
+      "decision": "Critique executed once, verdict Revise (3 blocking, 1 non-blocking); all applied directly",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-10/issue-1419-handoff-csv-final-parent-1110-plan.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Review",
+    "action": "Record review-done, commit, handoff"
+  },
+  "prioritized_follow_ups": []
+}
