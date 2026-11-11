@@ -3,8 +3,8 @@
   "task_slug": "closure-wave-main-440-1111",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Plan",
-  "status": "blocked",
+  "active_phase": "Implement",
+  "status": "active",
   "session_status": null,
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-11/closure-wave-main-440-1111-research.md",
@@ -39,18 +39,17 @@
       "decision": "Review not executed; no implementation or observation run",
       "status": "pending",
       "evidence": "Awaiting Root admission"
-    }
-  ],
-  "blockers": [
+    },
     {
-      "id": "B-ADMISSION",
-      "summary": "Root prospective admission is required before any test, pip, browser or documentation outcome",
-      "resolution": "Root admits the details commands and the private venv pip step, or amends them"
+      "decision": "Root prospective admission with amendment; main e0dec207 (rubric-only) merged no-ff before tests; N4 omitted",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-11/closure-wave-main-440-1111-admission-amendment.md"
     }
   ],
+  "blockers": [],
   "next_action": {
     "phase": "Implement",
-    "action": "After Root admission, run Phase 1 preflight, then the details selectors once, then append one pack section and one log entry"
+    "action": "Merge e0dec207 no-ff, preflight, run admitted selectors once, record pack and log"
   },
   "prioritized_follow_ups": null
 }
