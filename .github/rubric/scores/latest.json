@@ -2,14 +2,14 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-11T04:49:35+00:00",
-  "commit": "74e63363bdcb6f9d420ff9c71b8332a9baf0044b",
+  "scored_at": "2026-11-11T05:48:02+00:00",
+  "commit": "b7d66e425310f3b0b051025bff580b8dca3879dd",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/42961105179",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/42967535094",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
-    "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
+    "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
     "solution-code": "a2cb49561427f0a67433148c58113267775ad08747a46836e79afee589ec3bed",
     "infrastructure": "41598b222e77cf518fe2c6499a9abebb34a7396f5614a41a13d821533773dd66",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
@@ -119,7 +119,7 @@
         "src/api/README.md:1097",
         "src/core/README.md:473-495"
       ],
-      "rationale": "New README rows/sections documenting the resident-choice CSV export are clear and well-bounded, but the deck is untouched. Good(4) retained."
+      "rationale": "ADR 0007 changed, not deck/README; no new documentation evidence this run, deck still untouched. Good(4) retained."
     },
     "B7": {
       "score": 5,
