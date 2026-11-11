@@ -724,6 +724,25 @@ def run_browser(base: str) -> None:
                         "232 queue summary has no contact links",
                         summary.locator('a[href^="tel:"], a[href^="mailto:"], button').count() == 0,
                     )
+                    link = page.get_by_role("link", name="Download this page for Excel", exact=True)
+                    check(
+                        "232 download link names the fixed page",
+                        link.get_attribute("href")
+                        == "/api/resident/choice-queue.csv?limit=100&offset=0"
+                        and link.get_attribute("download") is None,
+                    )
+                    download = page.request.get(base + link.get_attribute("href"))
+                    csv_text = download.text()
+                    check(
+                        "232 download is a CSV attachment with the page summary only",
+                        download.status == 200
+                        and download.headers["content-type"].startswith("text/csv")
+                        and "resident-choice-queue-page.csv"
+                        in download.headers["content-disposition"]
+                        and csv_text.startswith("Home reference,")
+                        and "ZF-1" in csv_text
+                        and "SYN-SAFE-232" not in csv_text,
+                    )
                 if selected == "232s":
                     queue = page.get_by_role(
                         "region", name="Open service issues by home", exact=True
