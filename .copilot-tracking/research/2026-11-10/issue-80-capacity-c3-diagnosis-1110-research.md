@@ -1,0 +1,51 @@
+---
+title: Issue 80 capacity browser check line-754 stage diagnosis, research
+description: Source-only research into why the delayed sibling 401 stage shows no packages failure (diagnostic C3)
+ms.date: 2026-11-10
+---
+
+## Scope and disposition
+
+* Task `issue-80-capacity-c3-diagnosis-1110`, parent `issue-80-capacity-c2-1110`. Source pin: clean HEAD `1836a559`, current main `6d4cd624` (contained in HEAD, not re-fetched in this chain). Research disposition `executed` (source reading, no browser observation yet).
+* Root admits diagnosis only: no source or checker edit, no implement or review, at most two narrow observations. Preserved unchanged: C2 chain and its Review, C1 batched-preflight qualification, run 3 log, and the C2 early review draft (copied byte-for-byte to `phase80-capacity-c2-evidence-1110/c2-review-premature-draft.md`; sha256 `191d1caa...cf570` equals the `/tmp` original; file mtime 20:11:00Z precedes the C2 `implement-done` marker at 20:11:08Z, consistent with the disclosure).
+* Observed (run 3): the stage `delayed sibling 401 after packages refresh failure` (first loop iteration) timed out at `capacity_browser_check.py:754` after 60 s with `#app > [role=status]` present but empty. Cause not yet known.
+
+## Source facts
+
+* The stage (`capacity_browser_check.py:716-780`) routes both paged read patterns to `hold_capacity_read`, which calls `inject(route, status=None)` (appends to `held`, adds the request to `expected_failures`) and increments `window.capacityHeldReads`. It clicks "Record provisional threshold", waits for exactly two held reads, then calls `failed.fulfill(status=503, body="Unavailable")` on the packages read and expects the status text "We could not load packages" with the sibling still held.
+* The earlier `draft-safe` stages route only the failing endpoint with `inject` (default status 503), so every request to it, including any retry, is answered 503 at once. Those stages passed in run 3. The delayed stage differs: the handler is `hold_capacity_read` and stays registered after the first `fulfill`.
+* `capacityView` (`ops.js:~392`) loads both pages with `Promise.all(load(...))`, so a rejection of either read surfaces without waiting for the sibling. `load` wraps errors as "We could not load ..." and `go` writes them into `msg` (`div[role=status]`).
+* `api()` reads through `fetchReadRetrying` (`app.js:284`). It retries a read up to three times, after 500, 1500 and 3000 ms, when the response status is 500, 502, 503 or 504 and the content type is not JSON (`startupFailure`, `app.js:279-282`). A string body with no content type, as in `fulfill(status=503, body="Unavailable")`, qualifies by source reading. The retry changed the same file in `45f950db1` (#764) after the stage was added in `1dde6a908` (#528).
+* Hypothesis H1 (leading, unverified): the first 503 is retried by the application after 500 ms. The retry request matches the still-registered paged route, enters `hold_capacity_read` and is held with no response, so the read never rejects and no error is rendered. Under H1 the checker's `capacityHeldReads` and `held` would grow to 3 after the 503, and the `draft-safe` stages pass only because their handler answers every retry.
+* Other hypotheses, not assumed: H2 literal-versus-paged matching (the `paged()` regex requires `?limit=N&offset=N` and matches the retry URL identically, so by reading it does not distinguish); H3 response release order (the sibling is held until after the status assertion, and `Promise.all` does not wait for it); H4 the status element being replaced by a later render (`go` and `capacityView` create a new `msg` only after both loads succeed).
+* Not touched by this branch: `git diff 6d4cd624 HEAD` shows `app.js` identical and `ops.js` changed only by the two export anchors. A pinned-main counterfactual would therefore exercise identical retry and load code; it is held in reserve and run only if the first observation is ambiguous.
+
+## Observation plan inputs
+
+* Setup reuse: import `capacity_browser_check` (read-only) for `generated`, `owned_store`, `fixtures`, `server`; same seed arguments, synthetic store in an owned temp directory, loopback server, cleared environment, nonblocking heavy lock as `main()`.
+* Limitation: a focused driver does not replay the earlier checker stages; the store lacks their prior POSTs and the contract fixture is applied once. A run that fails or passes there is evidence about the stage mechanism, not a replay of run 3.
+* Skip or removal of the race assertions, ignoring 401, widening accepted errors, dropping the packages failure assertion and pre-releasing the held 401 to pass are out of scope for any later correction unless Root decides otherwise.
+
+## Observations (amendment, after the research-open marker)
+
+Evidence: `ROOT/phase80-capacity-c3-evidence-1110/` (`driver-obs1.py`, `driver-obs2.py` with sha256, `obs*-events.jsonl`, `obs*.log`, `obs*.exit`, `obs*.head`). Both ran on HEAD `1836a559`, owned temporary synthetic store, `ZF_DATA` absent from the cleared environment, loopback server, nonblocking heavy lock acquired (not busy), Playwright 1.64.0, no credentials or request headers logged. Two observations used; the pinned-main counterfactual was not run.
+
+* Observation 1: driver exit 1 at stage `capacity-load`, before the target stage. Driver defect: it navigated to `#/capacity` right after clicking Sign in without waiting for the navigation to render, so the in-flight login was cancelled (server `BrokenPipeError` on `/api/login`, then 401 on `/api/me`). It says nothing about the target stage. Counted against the two-observation budget; driver and logs preserved unmodified.
+* Observation 2 (driver corrected only by waiting for `#nav` and network idle after sign-in and after the capacity render; exit 0): reached the target stage with the checker's helper semantics (same paged regexes, same `hold_capacity_read` hold, same non-JSON 503 body).
+  * t=5.27 s the refresh issued GET `/api/packages?limit=5&offset=0` and `/api/workorders?limit=20&offset=0`; both were matched by `hold_capacity_read` (2 held). t=5.293 the packages read was fulfilled 503 `Unavailable` (no content type); the browser logged the 503.
+  * At the same instant `#workspace-status` read "The service is still starting. Trying again, this can take a few seconds." and `#app > [role=status]` was present but empty (as at the run 3 timeout).
+  * t=5.795 (about 0.5 s later) the page issued a second GET `/api/packages?limit=5&offset=0`. The same still-registered `hold_capacity_read` matched and held it (`held_count` 3, `capacityHeldReads` 3). Nothing answered it. Phase A (12 s, checker ordering, sibling still held) never showed "We could not load packages".
+  * Phase B (observation-only, labelled): releasing each newly held packages request with 503 produced, in turn, retries at t=18.95 and t=22.0 (delays about 1.5 s and 3 s after each release, matching `STARTUP_RETRY_DELAYS` 500, 1500, 3000), held count reaching 5. After the third retry was answered, at t=22.097 the status read "Reload and check work order or package history before another action. We could not load packages. Try again. ...Try again" with a Try again button and workspace status restored.
+  * Phase C (observation-only): fulfilling the original sibling work orders read 401 produced the Sign in page (`h1` "Sign in") by t=25.1.
+* Verdict: **proved for the packages iteration on the frozen source in this focused setup**: the stage's 503 is a non-JSON 503, so `fetchReadRetrying` retries it three times; each retry matches the still-registered hold handler and is never answered, so the load never rejects and the failure text cannot appear. This is a checker/application-interaction defect in how the stage answers retries, not evidence of an app defect: the retry on a non-JSON 503 is the designed cold-start behaviour (`45f950db1`, #764), and the stage predates it (`1dde6a908`, #528).
+* H2 (route matching) and H4 (status replaced): not supported; the paged regex matched the retry URL as designed and the status element was never replaced. H3 (sibling release order): not the cause, because `Promise.all` rejection does not wait for the sibling and the empty status was explained by the unanswered retry alone.
+* Not proved: that the stage ever passed after #764 on any commit; that the workorders iteration behaves identically (by source reading only, symmetric code); that the later steps of the stage in the checker's own ordering (retry click, delayed 401, settle) pass, since phases B and C deviated from it; the exact prior-state replay of the earlier checker stages (the focused store lacked their prior POSTs). Pinned main `6d4cd624` was not observed; `app.js` is byte-identical to HEAD and `ops.js` differs only by the export anchors, so a counterfactual would exercise the same retry and load code.
+
+## Proposed smallest correction (not implemented; Root decides)
+
+* Checker-only, in this stage: keep the held sibling, the delayed 401 and every assertion; after the first `failed.fulfill(503)` answer further reads of the failing endpoint with the same 503 until the packages/work orders failure text is asserted, then hold the failing endpoint again for the retry-click phase (for example a flag consulted by `hold_capacity_read`, switched on before the first fulfil and off after the failure assertion). The sibling stays held; no pre-release of the 401, no widened accepted errors, no skipped assertion, no application change. The failure text then appears after about 5 s of retries, inside the existing 60 s expect timeout. Alternative, not preferred: a JSON 503 body, which changes the failure being exercised.
+* Regression selector: none smaller exists, because `check()` is one function; the selector is the single whole `capacity_browser_check --axe` run under the nonblocking heavy lock plus Ruff check and format on the checker. Reaching the later stages (retry click, delayed 401, settle, empty capacity zero-anchor assertion, export links) is unproven until that run.
+
+## Planning Readiness
+
+`Ready` for a bounded diagnostic plan that records the proved cause and the proposed correction for Root; no implementation is admitted in this chain.
