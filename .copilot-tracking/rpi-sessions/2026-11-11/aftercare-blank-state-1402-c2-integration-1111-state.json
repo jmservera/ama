@@ -1,0 +1,23 @@
+{
+  "task_id": "aftercare-blank-state-1402-c2-integration-1111",
+  "task_slug": "aftercare-blank-state-1402-c2-integration-1111",
+  "parent_task": {"task_id": "aftercare-blank-state-1402-1111", "task_slug": "aftercare-blank-state-1402-1111"},
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11/aftercare-blank-state-1402-c2-integration-1111-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11/aftercare-blank-state-1402-c2-integration-1111-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11/aftercare-blank-state-1402-c2-integration-1111-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-11/aftercare-blank-state-1402-c2-integration-1111-critique.md", "changes": null, "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Critique executed once (rubber-duck); needs changes; CK-01..03 applied directly", "status": "done", "evidence": "critique file"},
+    {"decision": "Research executed; Ready", "status": "done", "evidence": "research file"},
+    {"decision": "C2 admitted for integration only; C3 unadmitted; target main", "status": "confirmed", "evidence": "owner brief"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Implement", "action": "Preserve ref, rebase, verify identities, requalify"},
+  "prioritized_follow_ups": []
+}
