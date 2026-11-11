@@ -1,0 +1,11 @@
+test_link_downloads_the_unaccepted_rows_by_mouse_and_keyboard_without_mutation (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadBrowser.test_link_downloads_the_unaccepted_rows_by_mouse_and_keyboard_without_mutation) ... ok
+test_no_download_is_offered_when_nothing_is_pending (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadBrowser.test_no_download_is_offered_when_nothing_is_pending) ... ok
+test_helper_text_is_truthful_plain_and_ascii (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadText.test_helper_text_is_truthful_plain_and_ascii) ... ok
+test_no_new_link_while_loading_on_error_or_when_empty (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadText.test_no_new_link_while_loading_on_error_or_when_empty) ... ok
+test_still_one_read_only_pending_request (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadText.test_still_one_read_only_pending_request) ... ok
+test_success_has_both_links_and_the_existing_one_is_unchanged (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadText.test_success_has_both_links_and_the_existing_one_is_unchanged) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 2.152s
+
+OK

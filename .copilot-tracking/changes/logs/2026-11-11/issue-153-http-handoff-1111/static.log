@@ -1,0 +1,16 @@
+node-ok
+All checks passed!
+unformatted: File would be reformatted
+   --> tests/test_handoff_read_guidance.py:142:23
+    |
+141 |         self.assertIn("Refreshing will not change this.", text)
+    -         self.assertIn(
+    -             "Owner: your Retrofit Programme Manager or Programme Support Officer.", text
+    -         )
+142 +         self.assertIn("Owner: your Retrofit Programme Manager or Programme Support Officer.", text)
+143 |         self.assertIn("Next action: ask them to check your role.", text)
+    |
+
+1 file would be reformatted
+Success: no issues found in 1 source file
+diffcheck-ok

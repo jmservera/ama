@@ -1,0 +1,784 @@
+test_actual_success_and_empty_projection_are_unchanged (tests.test_handoff_read_guidance.HandoffReadGuidanceBrowser.test_actual_success_and_empty_projection_are_unchanged) ... skipped 'opt-in local Chromium'
+test_constructed_403_shows_refusal_without_retry_advice (tests.test_handoff_read_guidance.HandoffReadGuidanceBrowser.test_constructed_403_shows_refusal_without_retry_advice) ... skipped 'opt-in local Chromium'
+test_constructed_500_and_malformed_success_stay_unknown_not_empty (tests.test_handoff_read_guidance.HandoffReadGuidanceBrowser.test_constructed_500_and_malformed_success_stay_unknown_not_empty) ... skipped 'opt-in local Chromium'
+test_constructed_transport_rejection_shows_guidance_not_empty (tests.test_handoff_read_guidance.HandoffReadGuidanceBrowser.test_constructed_transport_rejection_shows_guidance_not_empty) ... skipped 'opt-in local Chromium'
+test_manual_refresh_after_failure_recovers_real_rows (tests.test_handoff_read_guidance.HandoffReadGuidanceBrowser.test_manual_refresh_after_failure_recovers_real_rows) ... skipped 'opt-in local Chromium'
+test_navigation_during_pending_read_paints_nothing_in_the_new_view (tests.test_handoff_read_guidance.HandoffReadGuidanceBrowser.test_navigation_during_pending_read_paints_nothing_in_the_new_view) ... skipped 'opt-in local Chromium'
+test_session_ended_read_keeps_sign_in_path_and_no_load_guidance (tests.test_handoff_read_guidance.HandoffReadGuidanceBrowser.test_session_ended_read_keeps_sign_in_path_and_no_load_guidance) ... skipped 'opt-in local Chromium'
+test_abort_paints_nothing_and_session_ended_keeps_its_text (tests.test_handoff_read_guidance.HandoffReadGuidanceText.test_abort_paints_nothing_and_session_ended_keeps_its_text) ... ok
+test_malformed_success_is_unknown_not_empty (tests.test_handoff_read_guidance.HandoffReadGuidanceText.test_malformed_success_is_unknown_not_empty) ... ok
+test_one_read_only_request_and_no_retry_or_mutation (tests.test_handoff_read_guidance.HandoffReadGuidanceText.test_one_read_only_request_and_no_retry_or_mutation) ... ok
+test_other_http_failures_show_fixed_load_failure_not_server_text (tests.test_handoff_read_guidance.HandoffReadGuidanceText.test_other_http_failures_show_fixed_load_failure_not_server_text) ... ok
+test_refusal_names_owner_and_manual_path_without_retry_or_raw_text (tests.test_handoff_read_guidance.HandoffReadGuidanceText.test_refusal_names_owner_and_manual_path_without_retry_or_raw_text) ... ok
+test_source_keeps_the_alert_element_and_the_constant_is_the_only_new_text (tests.test_handoff_read_guidance.HandoffReadGuidanceText.test_source_keeps_the_alert_element_and_the_constant_is_the_only_new_text) ... ok
+test_success_lists_rows_and_empty_hides_the_card (tests.test_handoff_read_guidance.HandoffReadGuidanceText.test_success_lists_rows_and_empty_hides_the_card) ... ok
+test_transport_rejection_states_reason_owner_and_next_action (tests.test_handoff_read_guidance.HandoffReadGuidanceText.test_transport_rejection_states_reason_owner_and_next_action) ... ok
+test_link_downloads_the_unaccepted_rows_by_mouse_and_keyboard_without_mutation (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadBrowser.test_link_downloads_the_unaccepted_rows_by_mouse_and_keyboard_without_mutation) ... skipped 'opt-in local Chromium'
+test_no_download_is_offered_when_nothing_is_pending (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadBrowser.test_no_download_is_offered_when_nothing_is_pending) ... skipped 'opt-in local Chromium'
+test_helper_text_is_truthful_plain_and_ascii (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadText.test_helper_text_is_truthful_plain_and_ascii) ... ok
+test_no_new_link_while_loading_on_error_or_when_empty (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadText.test_no_new_link_while_loading_on_error_or_when_empty) ... ok
+test_still_one_read_only_pending_request (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadText.test_still_one_read_only_pending_request) ... ok
+test_success_has_both_links_and_the_existing_one_is_unchanged (tests.test_unaccepted_handoff_download_ui.UnacceptedDownloadText.test_success_has_both_links_and_the_existing_one_is_unchanged) ... ok
+test_explicit_change_sources_are_required_and_reopen_from_http (tests.test_handoff_api.HandoffApi.test_explicit_change_sources_are_required_and_reopen_from_http) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_new_actions_are_denied_to_contractors_and_wrong_staff (tests.test_handoff_api.HandoffApi.test_new_actions_are_denied_to_contractors_and_wrong_staff) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_queue_and_detail_hold_notes_for_roles_without_need (tests.test_handoff_api.HandoffApi.test_queue_and_detail_hold_notes_for_roles_without_need) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_rejection_withdrawal_and_escalation_permissions_over_http (tests.test_handoff_api.HandoffApi.test_rejection_withdrawal_and_escalation_permissions_over_http) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_return_reopen_require_provenance_and_use_authenticated_authority (tests.test_handoff_api.HandoffApi.test_return_reopen_require_provenance_and_use_authenticated_authority) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-2
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_synthetic_app_states_sender_receiver_manager_views (tests.test_handoff_api.HandoffApi.test_synthetic_app_states_sender_receiver_manager_views) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_unaccepted_handoff_ageing_route_is_scoped_read_only_and_never_defaults_a_limit (tests.test_handoff_api.HandoffApi.test_unaccepted_handoff_ageing_route_is_scoped_read_only_and_never_defaults_a_limit) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_denied_and_signed_out_before_query_parse (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_denied_and_signed_out_before_query_parse) ... ok
+test_due_age_and_both_reasons_with_a_supplied_limit (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_due_age_and_both_reasons_with_a_supplied_limit) ... ok
+test_empty_result_keeps_the_serializer_blank_record_without_column_names (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_empty_result_keeps_the_serializer_blank_record_without_column_names) ... ok
+test_formula_quote_comma_and_newline_cells_round_trip (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_formula_quote_comma_and_newline_cells_round_trip) ... ok
+test_literal_rows_order_and_null_limit_semantics (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_literal_rows_order_and_null_limit_semantics) ... ok
+test_method_behaviour_and_near_miss_paths_are_unchanged (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_method_behaviour_and_near_miss_paths_are_unchanged) ... http-response PUT /api/handoffs/unaccepted status=501
+http-response PUT /api/handoffs/unaccepted.csv status=501
+http-response DELETE /api/handoffs/unaccepted status=501
+http-response DELETE /api/handoffs/unaccepted.csv status=501
+ok
+test_only_the_thirteen_fields_and_no_private_values (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_only_the_thirteen_fields_and_no_private_values) ... ok
+test_only_unaccepted_states_are_listed (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_only_unaccepted_states_are_listed) ... ok
+test_pending_list_and_its_download_are_unchanged (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_pending_list_and_its_download_are_unchanged) ... ok
+test_query_matrix_matches_json_status_and_error_body (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_query_matrix_matches_json_status_and_error_body) ... ok
+test_reads_never_change_stored_state (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_reads_never_change_stored_state) ... ok
+test_route_uses_shared_branch_not_the_generic_registry (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_route_uses_shared_branch_not_the_generic_registry) ... ok
+test_visibility_follows_json_for_each_allowed_role (tests.test_unaccepted_handoff_csv_api.UnacceptedHandoffCsv.test_visibility_follows_json_for_each_allowed_role) ... ok
+test_all_proposal_accept_controls_share_readiness_and_own_verification (tests.test_case_journey.CaseJourney.test_all_proposal_accept_controls_share_readiness_and_own_verification) ... ok
+test_all_stages_mapped_once_in_shipped_module (tests.test_case_journey.CaseJourney.test_all_stages_mapped_once_in_shipped_module) ... ok
+test_api_preserves_outcome_before_http_status_classification (tests.test_case_journey.CaseJourney.test_api_preserves_outcome_before_http_status_classification) ... ok
+test_blocker_mapping_current_and_unknown (tests.test_case_journey.CaseJourney.test_blocker_mapping_current_and_unknown) ... ok
+test_blocker_popovers_keep_full_safe_reasons_and_separate_controls (tests.test_case_journey.CaseJourney.test_blocker_popovers_keep_full_safe_reasons_and_separate_controls) ... ok
+test_both_chat_submissions_clear_only_successful_unchanged_raw_questions (tests.test_case_journey.CaseJourney.test_both_chat_submissions_clear_only_successful_unchanged_raw_questions) ... ok
+test_closed_overrides_blockers_unknown_stage_does_not_invent_step (tests.test_case_journey.CaseJourney.test_closed_overrides_blockers_unknown_stage_does_not_invent_step) ... ok
+test_count_live_text_is_atomic_and_only_mutates_for_changed_counts (tests.test_case_journey.CaseJourney.test_count_live_text_is_atomic_and_only_mutates_for_changed_counts) ... ok
+test_file_recovery_and_other_session_are_not_confused_with_submitted_values (tests.test_case_journey.CaseJourney.test_file_recovery_and_other_session_are_not_confused_with_submitted_values) ... ok
+test_fixed_slide_order_and_evidence_exceptions (tests.test_case_journey.CaseJourney.test_fixed_slide_order_and_evidence_exceptions) ... ok
+test_journey_icons_are_declared_as_package_data (tests.test_case_journey.CaseJourney.test_journey_icons_are_declared_as_package_data) ... ok
+test_journey_icons_are_exact_six_step_presentation_assets (tests.test_case_journey.CaseJourney.test_journey_icons_are_exact_six_step_presentation_assets) ... ok
+test_journey_links_keep_non_tab_query_values_when_resynchronized (tests.test_case_journey.CaseJourney.test_journey_links_keep_non_tab_query_values_when_resynchronized) ... ok
+test_live_field_identity_wins_over_stale_recovery_in_either_dom_order (tests.test_case_journey.CaseJourney.test_live_field_identity_wins_over_stale_recovery_in_either_dom_order) ... ok
+test_panels_mounted_once_and_tab_only_navigation_precedes_guard (tests.test_case_journey.CaseJourney.test_panels_mounted_once_and_tab_only_navigation_precedes_guard) ... ok
+test_priority_creation_after_a_real_committed_outcome_offers_no_repeat (tests.test_case_journey.CaseJourney.test_priority_creation_after_a_real_committed_outcome_offers_no_repeat) ... ok
+test_priority_invocation_and_procurement_preserve_history_barriers (tests.test_case_journey.CaseJourney.test_priority_invocation_and_procurement_preserve_history_barriers) ... ok
+test_proposal_validation_pending_refresh_and_success_reload_failure (tests.test_case_journey.CaseJourney.test_proposal_validation_pending_refresh_and_success_reload_failure) ... ok
+test_quality_errors_and_manual_action_pending_siblings (tests.test_case_journey.CaseJourney.test_quality_errors_and_manual_action_pending_siblings) ... ok
+test_queue_drafts_survive_old_failed_and_changed_revision_listings (tests.test_case_journey.CaseJourney.test_queue_drafts_survive_old_failed_and_changed_revision_listings) ... ok
+test_raw_resident_and_challenge_outcomes_exclude_repeat_posts (tests.test_case_journey.CaseJourney.test_raw_resident_and_challenge_outcomes_exclude_repeat_posts) ... ok
+test_refresh_clears_only_explicit_submission_after_success (tests.test_case_journey.CaseJourney.test_refresh_clears_only_explicit_submission_after_success) ... ok
+test_regulatory_answer_releases_form_before_usage_refresh_settles (tests.test_case_journey.CaseJourney.test_regulatory_answer_releases_form_before_usage_refresh_settles) ... ok
+test_review_dispatch_preserves_newer_values_and_completes_only_once (tests.test_case_journey.CaseJourney.test_review_dispatch_preserves_newer_values_and_completes_only_once) ... ok
+test_reviewable_count_states (tests.test_case_journey.CaseJourney.test_reviewable_count_states) ... ok
+test_shared_dirty_guard_reconciles_pending_and_unload (tests.test_case_journey.CaseJourney.test_shared_dirty_guard_reconciles_pending_and_unload) ... ok
+test_shared_mutation_lock_survives_reconstruction_and_response_parsing (tests.test_case_journey.CaseJourney.test_shared_mutation_lock_survives_reconstruction_and_response_parsing) ... ok
+test_submission_reconciles_semantic_live_recovery_and_cached_values (tests.test_case_journey.CaseJourney.test_submission_reconciles_semantic_live_recovery_and_cached_values) ... ok
+test_summary_empty_values_handoff_and_overdue (tests.test_case_journey.CaseJourney.test_summary_empty_values_handoff_and_overdue) ... ok
+test_summary_jump_targets_record_actions (tests.test_case_journey.CaseJourney.test_summary_jump_targets_record_actions) ... ok
+test_upload_preparation_and_guarded_dispatch_outcomes (tests.test_case_journey.CaseJourney.test_upload_preparation_and_guarded_dispatch_outcomes) ... ok
+test_ai_label_is_exact_and_never_implies_approval (tests.test_content_standard.CopyAudit.test_ai_label_is_exact_and_never_implies_approval) ... ok
+test_all_standard_vocabulary_families_are_guarded (tests.test_content_standard.CopyAudit.test_all_standard_vocabulary_families_are_guarded) ... ok
+test_blocked_reasons_have_reason_owner_and_next_action (tests.test_content_standard.CopyAudit.test_blocked_reasons_have_reason_owner_and_next_action) ... ok
+test_chat_safety_and_copy_contract (tests.test_content_standard.CopyAudit.test_chat_safety_and_copy_contract) ... ok
+test_consultation_and_restart_gate_refusals_use_plain_wording (tests.test_content_standard.CopyAudit.test_consultation_and_restart_gate_refusals_use_plain_wording) ... ok
+test_document_control_refusals_use_plain_wording (tests.test_content_standard.CopyAudit.test_document_control_refusals_use_plain_wording) ... ok
+test_finance_and_ai_review_refusals_use_plain_wording (tests.test_content_standard.CopyAudit.test_finance_and_ai_review_refusals_use_plain_wording) ... ok
+test_finance_decision_sources_contain_display_mapping (tests.test_content_standard.CopyAudit.test_finance_decision_sources_contain_display_mapping) ... ok
+test_generic_error_and_ranking_error_state_reason_owner_next_action (tests.test_content_standard.CopyAudit.test_generic_error_and_ranking_error_state_reason_owner_next_action) ... ok
+test_identifier_exceptions_do_not_hide_adjacent_bad_copy (tests.test_content_standard.CopyAudit.test_identifier_exceptions_do_not_hide_adjacent_bad_copy) ... ok
+test_no_internal_terms_in_web_copy (tests.test_content_standard.CopyAudit.test_no_internal_terms_in_web_copy) ... ok
+test_proposal_review_copy_is_not_decision_approval (tests.test_content_standard.CopyAudit.test_proposal_review_copy_is_not_decision_approval) ... ok
+test_resident_draft_and_representative_copy_boundaries (tests.test_content_standard.CopyAudit.test_resident_draft_and_representative_copy_boundaries) ... ok
+test_restored_bad_chat_labels_fail_the_actual_guard (tests.test_content_standard.CopyAudit.test_restored_bad_chat_labels_fail_the_actual_guard) ... ok
+test_role_screens_use_phase_check_wording (tests.test_content_standard.CopyAudit.test_role_screens_use_phase_check_wording) ... ok
+test_safety_restart_refusals_use_plain_wording (tests.test_content_standard.CopyAudit.test_safety_restart_refusals_use_plain_wording) ... ok
+test_standard_documents_glossary_and_review (tests.test_content_standard.CopyAudit.test_standard_documents_glossary_and_review) ... ok
+test_time_capture_copy_is_guarded (tests.test_content_standard.CopyAudit.test_time_capture_copy_is_guarded) ... ok
+test_front_end_wires_the_list_alternative_and_tile_config (tests.test_ui_support.MapListAndTiles.test_front_end_wires_the_list_alternative_and_tile_config) ... ok
+test_map_list_data_points_then_clusters (tests.test_ui_support.MapListAndTiles.test_map_list_data_points_then_clusters) ... ok
+test_me_payload_carries_server_rendered_tile_config_and_csp_follows (tests.test_ui_support.MapListAndTiles.test_me_payload_carries_server_rendered_tile_config_and_csp_follows) ... ok
+test_tile_failure_note_is_written_once_and_clears_after_a_clean_load (tests.test_ui_support.MapListAndTiles.test_tile_failure_note_is_written_once_and_clears_after_a_clean_load) ... ok
+test_tile_load_failure_is_announced_and_points_to_the_list (tests.test_ui_support.MapListAndTiles.test_tile_load_failure_is_announced_and_points_to_the_list) ... ok
+test_production_without_url_loads_no_tiles (tests.test_ui_support.ProductionTiles.test_production_without_url_loads_no_tiles) ... ok
+test_closed_list_is_manager_only_and_reopen_works (tests.test_ui_support.ScreensApi.test_closed_list_is_manager_only_and_reopen_works) ... Rule evaluation unavailable for ZF-9
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_contractor_cannot_search_by_resident_name (tests.test_ui_support.ScreensApi.test_contractor_cannot_search_by_resident_name) ... ok
+test_contractor_sees_only_notice_and_contact_never_the_reason (tests.test_ui_support.ScreensApi.test_contractor_sees_only_notice_and_contact_never_the_reason) ... ok
+test_document_endpoints_audit_and_refuse_contractor (tests.test_ui_support.ScreensApi.test_document_endpoints_audit_and_refuse_contractor) ... Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_employee_shell_aliases_serve_all_scripts_with_security_headers (tests.test_ui_support.ScreensApi.test_employee_shell_aliases_serve_all_scripts_with_security_headers) ... ok
+test_handoff_and_hazard_states_reach_the_case_card (tests.test_ui_support.ScreensApi.test_handoff_and_hazard_states_reach_the_case_card) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-5
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_ai_citations_and_assistant_source_hold_outcomes_without_need (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_ai_citations_and_assistant_source_hold_outcomes_without_need) ... ok
+test_ai_prompt_never_carries_reason_without_need (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_ai_prompt_never_carries_reason_without_need) ... ok
+test_assistant_capture_never_carries_reason_or_notes (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_assistant_capture_never_carries_reason_or_notes) ... ok
+test_contractor_audit_view_and_export_are_denied (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_contractor_audit_view_and_export_are_denied) ... ok
+test_contractor_scope_search_and_denials (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_contractor_scope_search_and_denials) ... ok
+test_contractor_sees_only_notice_and_named_contact (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_contractor_sees_only_notice_and_named_contact) ... ok
+test_every_role_against_every_endpoint (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_every_role_against_every_endpoint) ... http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+http-response GET /api/law/sources status=503
+http-response GET /api/law/search status=503
+http-response GET /api/law/cards status=503
+http-response GET /api/law/cards/reviews status=503
+http-response GET /api/law/cards/hazard-awareness-clock status=503
+http-response GET /api/law/alerts status=503
+http-response GET /api/assistants/simulation/quality status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+http-response GET /api/account/photo status=503
+ok
+test_exceptions_route_outcome_is_specific_to_role_and_naming (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_exceptions_route_outcome_is_specific_to_role_and_naming) ... ok
+test_finance_and_resident_endpoints_for_every_role (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_finance_and_resident_endpoints_for_every_role) ... Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-3
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_integrated_case_actions_deny_contractors_and_unknown_roles (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_integrated_case_actions_deny_contractors_and_unknown_roles) ... ok
+test_inventory_covers_dynamic_case_actions_added_by_integration (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_inventory_covers_dynamic_case_actions_added_by_integration) ... ok
+test_inventory_covers_dynamic_workorder_job_pack_route (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_inventory_covers_dynamic_workorder_job_pack_route) ... ok
+test_inventory_covers_every_route_in_the_server (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_inventory_covers_every_route_in_the_server) ... ok
+test_inventory_covers_held_export_route (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_inventory_covers_held_export_route) ... ok
+test_job_pack_per_role_with_an_existing_work_order (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_job_pack_per_role_with_an_existing_work_order) ... ok
+test_new_endpoints_for_every_role (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_new_endpoints_for_every_role) ... ok
+test_no_role_other_than_those_with_a_need_sees_the_reason (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_no_role_other_than_those_with_a_need_sees_the_reason) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+ok
+test_notes_held_in_list_export_search_and_case_for_roles_without_need (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_notes_held_in_list_export_search_and_case_for_roles_without_need) ... ok
+test_other_contractor_sees_only_theirs (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_other_contractor_sees_only_theirs) ... ok
+test_provider_never_called_for_contractor_and_prompts_carry_no_free_text (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_provider_never_called_for_contractor_and_prompts_carry_no_free_text) ... Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+Rule evaluation unavailable for ZF-1
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 164, in check_case
+    self.rule_engine().run(self.store, case_id, trigger)
+    ^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-153-http-handoff-1111/src/api/src/zava_forward/api/server.py", line 155, in rule_engine
+    raise ValueError("The law store is not loaded; rule checks are unknown.")
+ValueError: The law store is not loaded; rule checks are unknown.
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response POST /api/law/checks/ZF-1 status=503
+http-response POST /api/law/alerts/none/acknowledge status=503
+ok
+test_reason_roles_can_be_configured (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_reason_roles_can_be_configured) ... ok
+test_simulation_routes_refuse_before_any_work_and_expose_nothing_private (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_simulation_routes_refuse_before_any_work_and_expose_nothing_private) ... http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+http-response GET /api/assistants/simulation/quality status=503
+http-response POST /api/assistants/simulation/quality/observe status=503
+http-response POST /api/assistants/simulation/quality/request status=503
+ok
+test_staff_without_need_see_notes_held_but_need_roles_see_them (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_staff_without_need_see_notes_held_but_need_roles_see_them) ... ok
+test_unknown_role_is_denied (tests.test_role_endpoint_inventory.RoleEndpointInventory.test_unknown_role_is_denied) ... ok
+test_closed_queue_retains_projected_safety_without_work (tests.test_role_screens.RoleScreens.test_closed_queue_retains_projected_safety_without_work) ... ok
+test_host_reads_existing_scoped_endpoints_without_post (tests.test_role_screens.RoleScreens.test_host_reads_existing_scoped_endpoints_without_post) ... ok
+test_host_requires_explicit_selection_and_retains_abort_boundary (tests.test_role_screens.RoleScreens.test_host_requires_explicit_selection_and_retains_abort_boundary) ... ok
+test_queue_renders_projected_safety_and_optional_work (tests.test_role_screens.RoleScreens.test_queue_renders_projected_safety_and_optional_work) ... ok
+test_resident_choice_states_choice_precedence_after_choice_panels (tests.test_role_screens.RoleScreens.test_resident_choice_states_choice_precedence_after_choice_panels) ... ok
+test_route_supports_contractor_screens_before_contractor_case_dispatch (tests.test_role_screens.RoleScreens.test_route_supports_contractor_screens_before_contractor_case_dispatch) ... ok
+test_screens_use_only_documented_design_system_classes_and_no_simulator (tests.test_role_screens.RoleScreens.test_screens_use_only_documented_design_system_classes_and_no_simulator) ... ok
+test_staff_and_contractor_navigation_retains_scoped_screen_link (tests.test_role_screens.RoleScreens.test_staff_and_contractor_navigation_retains_scoped_screen_link) ... ok
+test_existing_roles_have_exact_manifest_destinations (tests.test_workbench.WorkbenchNavigation.test_existing_roles_have_exact_manifest_destinations) ... ok
+test_manifest_preserves_all_perspectives_and_defers_missing_evidence (tests.test_workbench.WorkbenchNavigation.test_manifest_preserves_all_perspectives_and_defers_missing_evidence) ... ok
+test_profile_defaults_match_own_queues_and_declare_empty_reason (tests.test_workbench.WorkbenchNavigation.test_profile_defaults_match_own_queues_and_declare_empty_reason) ... ok
+test_supported_devices_stay_proposed_and_match_checked_widths (tests.test_workbench.WorkbenchNavigation.test_supported_devices_stay_proposed_and_match_checked_widths) ... ok
+test_unknown_role_has_no_navigation (tests.test_workbench.WorkbenchNavigation.test_unknown_role_has_no_navigation) ... ok
+test_constructed_old_escalated_and_empty_queue (tests.test_handoff_waiting_view.WaitingViewBrowser.test_constructed_old_escalated_and_empty_queue) ... skipped 'opt-in local Chromium'
+test_reachable_when_personal_list_is_empty_or_its_load_fails_constructed (tests.test_handoff_waiting_view.WaitingViewBrowser.test_reachable_when_personal_list_is_empty_or_its_load_fails_constructed) ... skipped 'opt-in local Chromium'
+test_real_backend_rows_by_keyboard_without_mutation (tests.test_handoff_waiting_view.WaitingViewBrowser.test_real_backend_rows_by_keyboard_without_mutation) ... skipped 'opt-in local Chromium'
+test_rejected_and_malformed_responses_are_visible_failures_and_recheck_works (tests.test_handoff_waiting_view.WaitingViewBrowser.test_rejected_and_malformed_responses_are_visible_failures_and_recheck_works) ... skipped 'opt-in local Chromium'
+test_abort_and_ended_session_render_nothing_beyond_loading (tests.test_handoff_waiting_view.WaitingViewText.test_abort_and_ended_session_render_nothing_beyond_loading) ... ok
+test_empty_queue_is_stated_without_a_table_or_as_of (tests.test_handoff_waiting_view.WaitingViewText.test_empty_queue_is_stated_without_a_table_or_as_of) ... ok
+test_failures_and_malformed_payloads_are_a_visible_alert_without_table_or_raw_text (tests.test_handoff_waiting_view.WaitingViewText.test_failures_and_malformed_payloads_are_a_visible_alert_without_table_or_raw_text) ... ok
+test_one_read_only_unscoped_get_and_no_new_route_or_limit (tests.test_handoff_waiting_view.WaitingViewText.test_one_read_only_unscoped_get_and_no_new_route_or_limit) ... ok
+test_rows_show_elapsed_as_of_owner_and_only_server_supplied_reasons (tests.test_handoff_waiting_view.WaitingViewText.test_rows_show_elapsed_as_of_owner_and_only_server_supplied_reasons) ... ok
+test_scope_is_explicit_and_distinct_from_the_personal_list (tests.test_handoff_waiting_view.WaitingViewText.test_scope_is_explicit_and_distinct_from_the_personal_list) ... ok
+
+----------------------------------------------------------------------
+Ran 149 tests in 33.794s
+
+OK (skipped=13)
