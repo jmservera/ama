@@ -1,0 +1,48 @@
+{
+  "task_id": "issue-80-capacity-c5-1110",
+  "task_slug": "issue-80-capacity-c5-1110",
+  "parent_task": {
+    "task_id": "issue-80-c4-validation-1110",
+    "task_slug": "issue-80-c4-validation-1110"
+  },
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "active",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-10/issue-80-capacity-c5-1110-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-10/issue-80-capacity-c5-1110-plan.md",
+    "details": ".copilot-tracking/details/2026-11-10/issue-80-capacity-c5-1110-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-10/issue-80-capacity-c5-1110-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-10/issue-80-capacity-c5-1110-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-10/issue-80-capacity-c5-1110-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Root admits C5/5 final default correction: reproduce test_case_journey priority/procurement failure, inspect production response contract, smallest root-cause fix, no app fallback or assertion weakening, no C6",
+      "status": "confirmed",
+      "evidence": "ROOT brief-80-c5-casejourney-2315.txt"
+    },
+    {
+      "decision": "Research executed: failure reproduced (exit 1); cause is test show stub missing production null filter; plan, details and one native critique executed",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-10/issue-80-capacity-c5-1110-critique.md"
+    },
+    {
+      "decision": "Implement executed: test stub aligned; targeted checks exit 0 after one Ruff E501 fix",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-11-10/issue-80-capacity-c5-1110-changes.md"
+    },
+    {
+      "decision": "Review executed once (native, not independent): conformant with open limits",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-10/issue-80-capacity-c5-1110-review.md"
+    }
+  ],
+  "blockers": [],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Commit, handoff to Root; no C6"
+  },
+  "prioritized_follow_ups": null
+}

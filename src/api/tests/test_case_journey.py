@@ -432,7 +432,8 @@ const me = {user: {email: "reviewer@example.test", role: "Retrofit Programme Man
 const routeController = new AbortController(), location = {hash: "#/case/SYN"};
 const workspaceStatus = {}, aiMode = {};
 const modeBody = body => body, isManager = () => true, fmtDate = value => value;
-const restoreBoundFields = () => {}, show = (...nodes) => app.replaceChildren(...nodes);
+const restoreBoundFields = () => {};
+const show = (...nodes) => app.replaceChildren(...nodes.flat().filter(n => n && n.nodeType));
 document.querySelectorAll = () => [];
 let pathCalls = [], failure, finish, caseLoads = 0, deferProcurement = false, oldReads = [];
 const caseView = async () => {caseLoads++;};

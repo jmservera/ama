@@ -470,6 +470,27 @@ and routes to the Home Ownership data owner (appointment still required).
 `tenure_trigger_resolve` is recorded by a named person other than the recorder
 (the data owner for ambiguous identity); the route stays Unknown until the data
 owner verifies again. Triggers are per report, so the case-wide hold remains.
+`tenure_inventory_record` is an explicitly partial, opt-in primitive: staff
+record a versioned, caller-supplied list of the households expected for the
+case (`households` of `household_ref` plus an existing `report_version` or
+null, or null when the list is Unknown), with `source`, `source_version`,
+`owner` and `next_update`. The server derives and stores a digest of each linked
+report; later changes to a report make its link stale until a new revision is
+recorded. Revisions append, an empty, duplicate or over-100-row list is
+rejected (the cap is transport safety, not a household maximum) and the list is
+never truncated or generated. A pure read, `tenure_inventory_view`, reports the
+declared coverage and link currentness only; it does not state that all actual
+households are covered. Once a case has an inventory, a missing, Unknown, stale
+or malformed link refuses `resident_gate` and `scope_record` before the
+unchanged tenure hold; a fully linked, current inventory releases nothing.
+A corrupt stored inventory history reads as malformed and is never extended.
+Linked reports with an unresolved or ambiguous household identity, or with no
+valid decision route, add count-only refusal reasons; no action changes the
+intake identity, so a linked inventory always lists that reason until a later
+approved process exists.
+Cases without an inventory keep current behaviour, so this is not universal
+coverage. The actual roster, authority appointments and Legal interpretation
+remain outside the code.
 Prior homes without intake are unchanged: this does not prove complete tenure
 coverage or an all-offer gate across the programme.
 
@@ -5160,6 +5181,30 @@ is refused before any inspection. A manifest alone, loopback or a password alone
 `src/core/tests/test_priority_order.py` (in-memory, SQLite, and SQL Server with `ZF_RESIDENT_MSSQL=1`).
 SQL Server behaviour of the C4 source (lock timeout, `@@TRANCOUNT`, cross-connection writes), the real
 Docker provisioning path, the ledger-enabled migration and SQL Server scale are not yet proven.
+
+## Staff-mediated field evidence intake (#132, slice 3)
+
+`zava_forward.core.staff_intake` orchestrates `job_pack.py` and the existing `submit_quality`; it is not a new
+engine. `capture` records worker-confirmed notes against the current checklist version as an ordinary quality
+submission carrying a `field_receipt` (the one keyword added to `submit_quality`). `correct` appends a worker
+correction while the original notes are kept. `acknowledge` records a distinct receipt acknowledgement that
+leaves the quality state `Submitted` and the status "Receipt acknowledged - not accepted". The keying-in staff
+member, corrector and acknowledger join the record participants, so the existing independence rule bars them
+from accepting. A repeated `capture_ref` replays without a second record, and a changed pack digest is
+rejected as stale. The configured escalation destination comes from `ZF_STAFF_INTAKE_ESCALATION_OWNER`,
+`_ROLE` and `_CONTACT`; anything missing shows "Unknown - not configured". Nothing here is a contract
+instruction, resident consent or acceptance, and there is no escalation write path (gap kept). Persistence
+reuses the case body, so there is no schema change. Tests: `src/api/tests/test_staff_intake_api.py`.
+C4 changes: `capture` passes the work order's bound, still-current resident scope revision as
+`context_revision` (409 if missing or changed, never waived); new evidence needs an explicit valid
+`pack_digest`; a replay of a stored `capture_ref` is matched on the stored receipt before any current-pack
+check; `correct` also updates the matching quality item so the latest correction is what review sees.
+C5 changes: new evidence is rejected when the worker value equals any registered staff email, code or
+oid (a name is still allowed and the real accept path denies that person); `capture` runs `submit_quality`
+under the existing procurement validation token, so on SQL a work order withdrawn or reissued by another
+store before the commit raises a conflict and no receipt is stored. An existing token is never replaced.
+Limits: receipts stored before C5 with a staff code as worker are not rewritten; the JSON store has no
+cross-process guard; escalation stays a gap; synthetic approvals are not QA, legal or resident consent.
 
 ## Constructed learning-test report command (#129, Refs #123)
 

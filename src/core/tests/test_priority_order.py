@@ -1217,6 +1217,54 @@ class SqliteC4Corrections(SqliteFixture):
         self.assertEqual(ids.count("bbb000000005"), 1)
         self.assertEqual(self.latest(self.store), "bbb000000005")
 
+    def test_post_commit_reload_oserror_or_valueerror_is_a_committed_outcome(self) -> None:
+        from zava_forward.core import sqlstore as sqlmod
+
+        def failing_with(error: BaseException) -> Any:
+            def failing() -> None:
+                raise error
+
+            return failing
+
+        for n, error in enumerate((OSError("disk"), ValueError("row"))):
+            with self.subTest(error=type(error).__name__):
+                other = self.open_store()
+                self.add(other, f"ooo00000010{n}", self.pam)
+                other.save()
+                rid = f"bbb00000010{n}"
+                self.add(self.store, rid, self.sam)
+
+                with patch.object(self.store, "_sync", failing_with(error)):
+                    with self.assertRaises(sqlmod.CommittedReloadError) as caught:
+                        self.store._persist_import_refusals({"refusals": []}, "added=0")
+                self.assertTrue(caught.exception.committed)
+                self.assertIs(caught.exception.__cause__, error)
+                ids = [r[0] for r in self.store.db.execute("SELECT id FROM recommendations")]
+                self.assertEqual(ids.count(rid), 1)
+                self.store.save()
+                ids = [r[0] for r in self.store.db.execute("SELECT id FROM recommendations")]
+                self.assertEqual(ids.count(rid), 1)
+
+                # Scoped: a plain save on the same store keeps the original error.
+                other = self.open_store()
+                self.add(other, f"ooo00000020{n}", self.pam)
+                other.save()
+                self.add(self.store, f"bbb00000020{n}", self.sam)
+                with patch.object(self.store, "_sync", failing_with(error)):
+                    with self.assertRaises(type(error)) as plain:
+                        self.store.save()
+                self.assertIs(plain.exception, error)
+
+    def test_import_refusal_marker_is_cleared_after_a_failed_precommit_write(self) -> None:
+        from zava_forward.core import sqlstore as sqlmod
+
+        self.add(self.store, "bbb000000300", self.sam)
+        with patch.object(self.store, "save", side_effect=OSError("disk")):
+            with self.assertRaises(OSError) as caught:
+                self.store._persist_import_refusals({"refusals": []}, "added=0")
+        self.assertNotIsInstance(caught.exception, sqlmod.CommittedReloadError)
+        self.assertFalse(getattr(self.store.local, "translate_committed_sync", False))
+
     def test_server_reports_a_committed_priority_outcome(self) -> None:
         server = (Path(__file__).parents[2] / "api/src/zava_forward/api/server.py").read_text()
         at = server.rindex('if url.path == "/api/ai/priority":')

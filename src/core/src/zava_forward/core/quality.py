@@ -130,6 +130,8 @@ class QualityMixin:
     def _quality_operation(self, user, case_id):
         with self.lock:
             sql = hasattr(self, "db")
+            if sql:
+                self._touched()  # a request thread may reach here before any case access
             prior = list(self.local.pending) if sql else None
             before = None
             committed = False
@@ -246,7 +248,7 @@ class QualityMixin:
         people.extend(_identity(p) for p in self._quality_staff() if _norm(p.get("name")) == _norm(supplied_name))
         rec.setdefault("participants", []).extend(deepcopy(people))
 
-    def submit_quality(self, user, case_id, measure, submitted_by, source, items, context_revision=None):
+    def submit_quality(self, user, case_id, measure, submitted_by, source, items, context_revision=None, field_receipt=None):
         submitted_by, source = _clean(submitted_by, 80), _clean(source, 40)
         if not submitted_by:
             raise ValueError("Say who carried out or submitted the work.")
@@ -286,6 +288,8 @@ class QualityMixin:
                        submitted_by=submitted_by, source=source, recorded_by=user["name"], recorded_by_code=user["code"], recorded_at=_now(),
                        history=[],
                        defect=None, defects=[], handover=None, aftercare=[])
+            if field_receipt is not None:
+                rec["field_receipt"] = deepcopy(field_receipt)
             self._quality_participants(rec, user, submitted_by)
             for old_idx in supersedes:
                 old = self._quality(c)[old_idx]

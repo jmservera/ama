@@ -18,7 +18,7 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
-from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine
+from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine, staff_intake
 from zava_forward.api import auth, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
@@ -172,7 +172,17 @@ class App:
 LIST_EXPORTS = frozenset({"/api/packages.csv", "/api/workorders.csv", "/api/handoffs.csv", "/api/visits.csv", "/api/funding.csv",
                           "/api/finance.csv", "/api/asset/stock-queue.csv", "/api/checklists.csv", "/api/form-schemas.csv"})
 EXPORT_KINDS = {"/api/finance.csv": "finance_queue", "/api/asset/stock-queue.csv": "stock_queue",
-                "/api/form-schemas.csv": "forms"}
+                "/api/form-schemas.csv": "forms",
+                "/api/handoffs/unaccepted.csv": "handoffs"}
+
+
+def _max_age_hours(url):
+    """Optional ageing limit shared by the unaccepted-handoff JSON and CSV routes; the first value wins, blank means none."""
+    raw = parse_qs(url.query, keep_blank_values=True).get("max_age_hours", [None])[0]
+    limit = float(raw) if raw not in (None, "") else None
+    if limit is not None and not 0 < limit < 1e6:
+        raise ValueError
+    return limit
 
 
 SCHEMA_EXPORT_FIELDS = ("definition", "digest", "approval", "approval_evidence", "source_policy_status", "recorded_by", "recorded_at")
@@ -232,6 +242,8 @@ def get_kind(path):
         return "doc"
     if path.startswith("/api/workorders/") and path.endswith("/job-pack"):
         return "job_pack"
+    if path.startswith("/api/workorders/") and path.endswith("/field-intake"):
+        return "field_intake"
     if path.startswith("/api/time/"):
         return "time"
     if path in EXPORT_KINDS:
@@ -721,18 +733,19 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(403, {"error": str(e)})
             if url.path == "/api/handoffs":
                 return self._json(200, s.pending_handoffs(u))
-            if url.path == "/api/handoffs/unaccepted":
-                raw = parse_qs(url.query, keep_blank_values=True).get("max_age_hours", [None])[0]
+            if url.path in ("/api/handoffs/unaccepted", "/api/handoffs/unaccepted.csv"):
                 try:
-                    limit = float(raw) if raw not in (None, "") else None
-                    if limit is not None and not 0 < limit < 1e6:
-                        raise ValueError
+                    limit = _max_age_hours(url)
                 except ValueError:
                     return self._json(400, {"error": "max_age_hours must be a positive number of hours."})
                 try:
-                    return self._json(200, s.unaccepted_handoffs(u, max_age_hours=limit))
+                    rows = s.unaccepted_handoffs(u, max_age_hours=limit)
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
+                if url.path.endswith(".csv"):
+                    return self._send(200, list_export.to_csv(rows), "text/csv; charset=utf-8",
+                                      {"Content-Disposition": 'attachment; filename="unaccepted-handoffs.csv"'})
+                return self._json(200, rows)
             if url.path in ("/api/packages", "/api/workorders"):
                 try:
                     limit = offset = None
@@ -763,6 +776,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(403, {"error": str(e)})
                 except ValueError as e:
                     return self._json(404, {"error": str(e)})
+            if get_kind(url.path) == "field_intake":
+                return self._json(*staff_intake.handle(s, u, "GET", url.path.strip("/").split("/")[2:], None))
             if url.path == "/api/checklists":
                 return self._json(200, quality.CHECKLISTS)
             if url.path == "/api/facets":
@@ -1380,6 +1395,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "review"]:
                     return self._json(200, s.review_ai(u, parts[3], parts[4], body.get("reason", ""), body.get("text")))
+                if len(parts) == 4 and parts[:2] == ["api", "workorders"] and parts[3] in staff_intake.ACTIONS:
+                    return self._json(*staff_intake.handle(s, u, "POST", parts[2:], body))
                 if parts[:2] == ["api", "packages"] or parts[:2] == ["api", "workorders"]:
                     from zava_forward.core.appointments import AppointmentCommittedError
                     try:
