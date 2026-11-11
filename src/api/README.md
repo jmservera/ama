@@ -1094,6 +1094,7 @@ including after a cached session's staff registration changes.
 | `tenure_question_pack_review` | `case_id`, `report_version`, `expected_version` (latest pack version), `outcome` (`Approved`/`Returned`), `reviewer_name` (home ownership or leasehold team member, not the drafter or recorder), `reviewer_role`, `reviewed_on` (YYYY-MM-DD, not future), `note`. Refused when the pack is stale or already reviewed; the hold remains |
 | `tenure_review_trigger` | `case_id`, `report_version`, `expected_version` (0 initially, latest trigger version thereafter), `trigger` (`Changed scope`/`Dispute`/`Defect`/`Charge query`/`Ambiguous lease identity`), `source`, `owner` (named follow-up staff), `next_update` (YYYY-MM-DD). Keeps the report review open and the pack stale; ambiguous identity sets `reuse_blocked`, returns the route to Unknown and routes to the data owner |
 | `tenure_trigger_resolve` | `case_id`, `report_version`, `expected_version` (latest trigger version), `trigger_version`, `resolver_name` (not the recorder), `resolver_role` (home ownership or leasehold team; data owner for ambiguous identity), `resolved_on` (YYYY-MM-DD, not future), `note`. Does not restore a route or approve anything; the hold remains |
+| `tenure_inventory_record` | `case_id`, `expected_version` (0 initially, latest inventory version thereafter), `source`, `source_version`, `owner` (named staff), `next_update` (YYYY-MM-DD), `households` (null for Unknown, else 1 to 100 rows of `household_ref` and `report_version` (existing latest report for that ref, or null)). Closed schema: client digests, approval and extra keys are rejected without a write. Appends a revision with a server-derived digest; refuses `scope_record` and the gate for links that are missing, Unknown, stale or malformed, but never releases the hold. Staff-only; hidden from other roles and exports |
 
 Channels: `Digital`, `Phone`, `Letter`, `In person`, `Trusted intermediary`.
 Reported tenure: `Tenant`, `Shared owner`, `Right to buy leaseholder`,
@@ -5720,3 +5721,22 @@ read for signed-in staff only: contractor identities get 403, an unknown order
 gets 404, and nothing is written, so it grants no contractor access and is not
 a provider portal. Worker evidence capture, acknowledgement, no-show recovery
 and escalation are still pure rules in the core with no route or persistence.
+
+## Staff job pack intake (#132, slice 3)
+
+Existing authenticated staff only; contractor identities get 403. `GET /api/workorders/{id}/field-intake`
+returns the job pack, receipts, independent-review state, visit recovery rows and the escalation destination.
+`POST /api/workorders/{id}/field-capture`, `/field-correct` and `/field-acknowledge` are handled by
+`zava_forward.core.staff_intake` (409 for a stale pack, duplicate acknowledgement or late correction).
+The screen `staff-job-pack-intake` (`web/staff-intake.js`) is registered through `registerRoleScreen`.
+Browser capture (opt-in, `ZF_STAFF_INTAKE_BROWSER=1` and the pinned `ZF_AXE_PATH`) ran axe on four states;
+SQL Server tests are opt-in with `ZF_STAFF_INTAKE_MSSQL=1`. This is not a provider portal and not assistive
+technology, named quality, legal or live acceptance. Slice 2 text above predates these routes.
+
+Corrective cycle C4: capture needs the explicit job pack reference the worker wrote against (400 if
+missing or malformed, 409 if the pack changed); a retry with the same capture reference replays the stored
+receipt even after the pack changed, and the screen shows it as already recorded, not as an error. The
+resident scope revision comes from the work order bindings and must still be current (409 otherwise), so
+independent quality review can accept or replace the evidence. A correction also updates the current quality
+item; the original notes and earlier corrections stay. Evidence recorded before C4 without a scope binding
+shows a blocker and cannot be accepted. A stale check and the save are atomic within one process only.

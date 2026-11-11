@@ -392,6 +392,43 @@ def check_packages(
     check_readonly(page, evidence, detail, where)
 
 
+DESIGN_VERSION_FIELDS = """
+section => {
+  const shown = {visibilityProperty: true, opacityProperty: true};
+  return [...section.querySelectorAll('dt')]
+    .filter(dt => dt.textContent.trim() === 'Current design version')
+    .map(dt => {
+      const dd = dt.nextElementSibling;
+      const paired = dd !== null && dd.tagName === 'DD';
+      return {
+        value: paired ? dd.textContent.trim() : null,
+        visible: paired && dt.checkVisibility(shown) && dd.checkVisibility(shown),
+      };
+    });
+}
+"""
+
+
+def check_design_version(section: Any, expected: Any, where: str) -> None:
+    """The one visible dd paired with 'Current design version' is exactly the expected version."""
+    fields = section.evaluate(DESIGN_VERSION_FIELDS)
+    check(
+        f"{where}: design panel has exactly one 'Current design version' field: {len(fields)}",
+        len(fields) == 1,
+    )
+    field = fields[0]
+    check(f"{where}: 'Current design version' value is visible", bool(field["visible"]))
+    value = field["value"]
+    check(
+        f"{where}: 'Current design version' value is not blank",
+        isinstance(value, str) and bool(value.strip()),
+    )
+    check(
+        f"{where}: 'Current design version' value is exactly '{expected}', not '{value}'",
+        value == str(expected),
+    )
+
+
 def check_technical(
     page: Page, evidence: Any, detail: dict[str, Any], where: str, prefix: str | None
 ) -> None:
@@ -405,11 +442,13 @@ def check_technical(
     check_withheld(texts, TECHNICAL, where)
     technical = detail["technical"]
     design = texts["Design version"]
-    for text in (
-        str(technical["design_version"]),
-        technical["design_name"],
-        technical["versions"][-1]["note"],
-    ):
+    design_panel = evidence.locator("section.screen-record").filter(
+        has=page.get_by_role("heading", name="Design version", exact=True)
+    )
+    check(f"{where}: exactly one Design version panel", design_panel.count() == 1)
+    design_panel.scroll_into_view_if_needed()
+    check_design_version(design_panel, technical["design_version"], where)
+    for text in (technical["design_name"], technical["versions"][-1]["note"]):
         check(f"{where}: design panel shows fixture value '{text}'", text in design)
     signoffs = texts["Separate sign-offs"]
     version = technical["signoffs"]["assessment"]["version"]

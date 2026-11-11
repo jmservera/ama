@@ -18,7 +18,7 @@ from zava_forward.core import ai_consumption, ai_registry, chat_demo_meter, cont
 
 from zava_forward.core import identity, list_export, projection, quality, ranking, taskqueues
 
-from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine
+from zava_forward.core import data_protection, exception_register, lawstore, rulecards, rule_engine, staff_intake
 from zava_forward.api import auth, simulator_admin
 from zava_forward.api.workbench import navigation
 from zava_forward.agents.chat import CHAT_MAX_TOKENS, ChatModel
@@ -242,6 +242,8 @@ def get_kind(path):
         return "doc"
     if path.startswith("/api/workorders/") and path.endswith("/job-pack"):
         return "job_pack"
+    if path.startswith("/api/workorders/") and path.endswith("/field-intake"):
+        return "field_intake"
     if path.startswith("/api/time/"):
         return "time"
     if path in EXPORT_KINDS:
@@ -774,6 +776,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(403, {"error": str(e)})
                 except ValueError as e:
                     return self._json(404, {"error": str(e)})
+            if get_kind(url.path) == "field_intake":
+                return self._json(*staff_intake.handle(s, u, "GET", url.path.strip("/").split("/")[2:], None))
             if url.path == "/api/checklists":
                 return self._json(200, quality.CHECKLISTS)
             if url.path == "/api/facets":
@@ -1391,6 +1395,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(409, {"error": str(error), "outcome": "committed"})
                 if len(parts) == 5 and parts[:3] == ["api", "ai", "review"]:
                     return self._json(200, s.review_ai(u, parts[3], parts[4], body.get("reason", ""), body.get("text")))
+                if len(parts) == 4 and parts[:2] == ["api", "workorders"] and parts[3] in staff_intake.ACTIONS:
+                    return self._json(*staff_intake.handle(s, u, "POST", parts[2:], body))
                 if parts[:2] == ["api", "packages"] or parts[:2] == ["api", "workorders"]:
                     from zava_forward.core.appointments import AppointmentCommittedError
                     try:
