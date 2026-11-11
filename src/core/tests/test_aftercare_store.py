@@ -190,6 +190,49 @@ class Contract(_Base):
         self.assertIsInstance(raised.exception.__cause__, RuntimeError)
         self.assertIn("OSError", " ".join(getattr(raised.exception, "__notes__", [])))
 
+    def seed(self, count: int) -> None:
+        """Store `count` valid concerns by cloning the first one, as a restart would find them."""
+        self.service().record_concern(LIAISON, body("req-0000001"))
+        adapter = DocumentStateStore(self.store)
+        doc = json.loads(adapter.read() or "{}")
+        concern, receipt = doc["register"]["concerns"]["AC-001"], doc["receipts"]["AC-001"]
+        request = doc["requests"]["req-0000001"]
+        for n in range(2, count + 1):
+            cid, rid = f"AC-{n:03d}", f"req-{n:07d}"
+            doc["register"]["concerns"][cid] = {**copy.deepcopy(concern), "id": cid}
+            doc["receipts"][cid] = {
+                **copy.deepcopy(receipt),
+                "concern_id": cid,
+                "receipt_id": f"RC-{cid}",
+                "request_id": rid,
+            }
+            doc["requests"][rid] = {**request, "concern_id": cid}
+        adapter.update(lambda _: (json.dumps(doc, sort_keys=True), None))
+
+    def assert_listed(self, store: Any, count: int) -> None:
+        ids = list(ai._register(self.service(store)._load()).concerns)
+        self.assertEqual(ids, [f"AC-{n:03d}" for n in range(1, count + 1)])
+
+    def test_register_at_1000_reads_after_restart(self) -> None:
+        self.seed(1000)
+        reopened = self.open_store()
+        self.assert_listed(reopened, 1000)
+        self.assertEqual(self.count(reopened), 1000)
+
+    def test_writes_across_999_1000_1001_survive_restart_and_replay(self) -> None:
+        self.seed(999)
+        self.assert_listed(self.open_store(), 999)
+        for n in (1000, 1001):
+            receipt, replay = self.service().record_concern(LIAISON, body(f"req-{n:07d}"))
+            self.assertFalse(replay)
+            self.assertEqual(receipt["concern_id"], f"AC-{n:03d}")
+            reopened = self.open_store()
+            self.assert_listed(reopened, n)
+            again, replay = self.service(reopened).record_concern(LIAISON, body(f"req-{n:07d}"))
+            self.assertTrue(replay)
+            self.assertEqual(again["receipt_id"], receipt["receipt_id"])
+        self.assertEqual(self.count(self.open_store()), 1001)
+
 
 class JsonStoreAdapter(Contract, unittest.TestCase):
     def open_store(self) -> Any:
