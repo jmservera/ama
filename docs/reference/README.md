@@ -1398,3 +1398,6 @@ core and API tests executed and 15 SQL Server variants skipped (not passes), and
 rows for numeric restore order, intake persistence, manual path and human boundaries. The blank-document gap of #1402 is read
 from source only, is not repaired on `main` and is owned by the unmerged PR 1458; whole #133, #134, #89 and #440 stay open.
 The recommendation is a bounded CONTINUE; it is not an approval, a tick or SQL Server, HTTP-volume, live or release proof.
+A dated follow-up in that section observes PR 1458 (#1402, `bc123235`) after merge on an exported `src` equal to current main
+`97ec3f3c8` (91 focused JSON and SQLite tests, 15 SQL Server skips, 0 failures); the blank-document boundary is now observed
+on main for constructed data, while the earlier pin text stays unchanged and whole #133, #134, #89 and #440 stay open.

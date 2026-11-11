@@ -11523,3 +11523,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * The blank-document gap of #1402 is stated from source only and is not repaired on main; PR 1458 and PR 1455 are OPEN and excluded from main evidence.
 * Evidence class: local observed on constructed synthetic data; no source, test, requirement or ADR change, no new issue, no criterion tick, no acceptance. Recommendation: continue, bounded (proposed, not a decision).
 * Evidence under `.copilot-tracking/` (2026-11-11 aftercare-wave-checkpoint-440-2119).
+
+## [2026-11-11] update | Aftercare post-1458 current-main follow-up (Refs #440 #1402 #1401)
+
+* Appended a dated subsection to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#aftercare-numeric-order-integrated-main-checkpoint-2026-11-11-refs-440-1401-1402-134) after PR 1458 (#1402, `bc123235af30b63de9808c97a430860f1e00dcc8`) merged. Observed an exported `src` equal to current main `97ec3f3c82a4aeeace7709f2f5a8766f4c638dfa` (rubric-only successor): 91 focused tests ran (44 intake, 5 snapshot, 42 store), 15 SQL Server skips, 0 failures. The earlier text at pin `077ad5ad2` and the retained mypy invocation failure are unchanged.
+* Evidence class: local observed, constructed synthetic, JSON and SQLite only; no source, test, requirement or ADR change, no new issue, no criterion tick, no acceptance. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-11 aftercare-bc-followup-440-2140).
