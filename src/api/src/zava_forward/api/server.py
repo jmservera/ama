@@ -246,6 +246,8 @@ def get_kind(path):
         return "field_intake"
     if path.startswith("/api/time/"):
         return "time"
+    if path == "/api/resident/choice-queue.csv":
+        return "resident_choice_queue"
     if path in EXPORT_KINDS:
         return EXPORT_KINDS[path]
     if path in LIST_EXPORTS:
@@ -809,6 +811,17 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     return self._json(400, {"error": str(e)})
                 except PermissionError as e:
                     return self._json(403, {"error": str(e)})
+            if url.path == "/api/resident/choice-queue.csv":
+                from zava_forward.api import resident_choice_export
+                try:
+                    page = s.resident_choice_queue(u, num(q, "limit", 50, 1, 100), num(q, "offset", 0, 0, 10**9))
+                except ValueError as e:
+                    return self._json(400, {"error": str(e)})
+                except PermissionError as e:
+                    return self._json(403, {"error": str(e)})
+                body = resident_choice_export.choice_queue_csv(page)
+                return self._send(200, body, "text/csv; charset=utf-8",
+                                  {"Content-Disposition": f'attachment; filename="{resident_choice_export.FILENAME}"'})
             if url.path == "/api/ai/report":
                 if u["role"] not in MANAGER_ROLES:
                     return self._json(403, {"error": "Only a manager can see the AI evaluation report."})

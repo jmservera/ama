@@ -694,6 +694,19 @@ function choiceQueueRow(c) {
     stopped.length ? stopped.join("; ") : "None recorded",
     u ? `${screenValue(u.status)}: ${screenValue(u.purpose)}. Owner ${screenPerson(u.owner_identity || u.owner)}, due ${screenStamp(u.due_at)}, safe route ${screenValue(u.safe_contact_ref)}` : "No commitment recorded"];
 }
+function choiceDownload(queue) {
+  const { limit, offset } = queue;
+  if (!Number.isInteger(limit) || !Number.isInteger(offset)) return null;
+  return h("div", {},
+    h("p", {}, h("a", { class: "btn alt", id: "choice-queue-download", href: `/api/resident/choice-queue.csv?limit=${limit}&offset=${offset}`,
+      "aria-describedby": "choice-queue-download-note" }, "Download this page for Excel")),
+    h("p", { id: "choice-queue-download-note" },
+      "Constructed demonstration data. The file has only the homes shown on this page, not every page or every open home. " +
+      "It is a read-only copy: editing it changes no records. It summarises choices, pauses, retained human reviews and the update commitment status " +
+      "without answer notes, names, contact or address details. Not recorded, None recorded and No commitment recorded mean nothing is recorded; " +
+      "they do not show consent or readiness. Unknown means the evidence could not be read. An empty file does not show that nothing needs attention. " +
+      "The file is read again when you download, so it may differ from the rows shown."));
+}
 registerRoleScreen({
   id: "resident-choice",
   title: "Resident choice and update queue",
@@ -712,6 +725,7 @@ registerRoleScreen({
         items
           ? h("div", {},
             h("p", {}, `Read-only. Shows ${items.length} of ${screenValue(queue.total)} open homes, in home ID order, as your role may see them. A paused or withdrawn measure is listed separately from contact and access. Open a home for the full version history.`),
+            choiceDownload(queue),
             screenTable("Choice and update commitments by home",
               ["Home", "Measure choices (latest version)", "Paused or withdrawn", "Update commitment"],
               items.map(choiceQueueRow), Infinity))
