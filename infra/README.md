@@ -4617,3 +4617,35 @@ window is the earlier, narrower value. Moving the live SQL constraint, rows and
 app expiry to 2028-01-01 remains **Pending** a separate owner confirmation of
 that exact value. The live SQL constraint was not re-probed, and no external
 HTTP sign-in check was run.
+
+#### Rollback test fixture correction (2026-11-11, Refs #521)
+
+Source and test evidence only; no Azure or live SQL access. The #877 review comments
+[r4458006989](https://github.com/jmservera/ama/pull/877#discussion_r4458006989) and
+[r4458275275](https://github.com/jmservera/ama/pull/877#discussion_r4458275275) reported that
+`test_failed_migration_rolls_back_original_check_and_leaves_no_transaction` inserted a row ending
+exactly at the new shared maximum (`2028-01-01T00:00:00`), so the migration would succeed and not
+exercise rollback. They stayed unanswered after merge: the historical #877 checks (source, image and
+MSSQL-context groups succeeded; rubric activation failed and later stages were skipped), the
+three reviewer reports and the missing independent pass are unchanged by this entry, and merged is not
+approval. One bounded diagnostic (D1) ran on 2026-11-11 from `main` `7880b95b1`:
+
+* Environment: one owned, labelled, loopback-only SQL Server 2022 container from the already cached
+  image `sha256:cf8f0ab2ebe6...`, run under the shared heavy lock (non-queued, holder probe refused a second
+  admission), pinned `mssql-python==1.15.0` in a task venv with editable `src/core`, no `PYTHONPATH`,
+  no pull, no private data. Cleaned up after each run.
+* Red (unchanged fixture), from `src/core/tests`:
+  `python -m unittest -v test_resident_showcase_sql.SqlBoundaryTests.test_failed_migration_rolls_back_original_check_and_leaves_no_transaction`
+  failed with `AssertionError: Error not raised`, confirming the static finding on real SQL.
+* Correction: the fixture row now ends `rs.AUTHORITY_END + timedelta(seconds=1)`, derived from the
+  shared policy. All rollback, original-check, row and no-open-transaction assertions are unchanged.
+  A separate probe on the corrected data recorded the expected check-constraint conflict on
+  `ck_allowed_case_window`.
+* Green: the same test passed, and the full `test_resident_showcase_sql` module ran 40 tests, all OK, no skips,
+  on real SQL. Without SQL, `test_resident_showcase` and the same module ran 81 tests, 27 SQL opt-in skips
+  (those 27 are the real-SQL run above). `infra/tests/test_resident_demo_deploy.py` and
+  `test_resident_demo_secrets.py` (fake CLI, source) ran 33 tests, OK. `ruff check`, `ruff format --check`
+  and `mypy` on the changed file reported no findings.
+* Not shown: the complete local gate, hosted CI for the follow-up PR, an independent exact-head
+  review, live SQL, row expiry, cost or headroom, and live Azure alignment. Issue #521 criteria 1 and 4
+  stay unmet; no closure is claimed. The D1 allowance is consumed.
