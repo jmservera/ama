@@ -28,3 +28,7 @@ ms.date: 2026-11-11
 * Copy raw logs and `manifest.txt` into `.copilot-tracking/evidence/2026-11-11-1259-failing-first/`.
 * Write changes, one review and state. Label every result as executed 2026-11-11, after the implementation, never as prospective historical red then green.
 * Commit with the privacy noreply identity for author and committer and the Copilot trailer. Write the handoff outside the repository.
+
+## Superseded in part (2026-11-11 documentary C3)
+
+Qualified additively by [the C3 changes record](../changes/2026-11-11-ranking-archive-path-health-1259-doc-c3-changes.md) and [the C3 review](../reviews/2026-11-11-ranking-archive-path-health-1259-doc-c3-review.md). The text above is preserved as originally written; where it differs, the C3 record governs (old-red reach, run counts, run.sh and manifest, process conformance).

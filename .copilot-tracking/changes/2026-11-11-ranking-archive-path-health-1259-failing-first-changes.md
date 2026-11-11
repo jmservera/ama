@@ -48,3 +48,7 @@ Old-source passes: both absent-directory controls (first run creatable, absent f
 * No prospective historical red or green: this is today's replay. The original external `red.log` files were not retrieved or relied on.
 * Mocked stat failure remains a mock; check/use race, Store overdue fallback and the 226 unanalysed skips from the earlier full run are not addressed here. Only 8 selected tests were run; no Blob, full Core, API or agents suite.
 * Criterion 4 evidence is supplied for review; it is not ticked here. Criterion 5 (current FULL receipt, independent exact-head assessment, hosted checks) is unmet and not waived. Issue stays open.
+
+## Superseded in part (2026-11-11 documentary C3)
+
+Qualified additively by [the C3 changes record](../changes/2026-11-11-ranking-archive-path-health-1259-doc-c3-changes.md) and [the C3 review](../reviews/2026-11-11-ranking-archive-path-health-1259-doc-c3-review.md). The text above is preserved as originally written; where it differs, the C3 record governs (old-red reach, run counts, run.sh and manifest, process conformance).

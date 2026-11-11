@@ -14,3 +14,7 @@ Review execution: Complete (author, single pass, not independent). Outcome: Conf
 * R3 (Low) Residuals unchanged: mocked stat failure, check/use race, Store overdue/fallback, 226 unanalysed skips, only selected tests run.
 
 Routing: independent exact-head review; the owner decides on ticking criterion 4. Correction count: none consumed; finite counts untouched. Refs 1259, 1258, 79, 1231; nothing closes.
+
+## Superseded in part (2026-11-11 documentary C3)
+
+Qualified additively by [the C3 changes record](../changes/2026-11-11-ranking-archive-path-health-1259-doc-c3-changes.md) and [the C3 review](../reviews/2026-11-11-ranking-archive-path-health-1259-doc-c3-review.md). The text above is preserved as originally written; where it differs, the C3 record governs (old-red reach, run counts, run.sh and manifest, process conformance).
