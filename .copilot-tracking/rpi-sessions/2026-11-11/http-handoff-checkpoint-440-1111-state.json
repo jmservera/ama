@@ -59,6 +59,11 @@
       "decision": "Review executed once (author), conformant, no open material findings; no correction batch",
       "status": "done",
       "evidence": ".copilot-tracking/reviews/2026-11-11/http-handoff-checkpoint-440-1111-review.md"
+    },
+    {
+      "decision": "Correction D1 (Root-authorized, documentation only): applied independent Readiness findings 1 and 2 plus the data-isolation evidence limit to the pack section and log; original Review, plan, critique, raw logs and commit fa8507465577 preserved; not a new Review",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-11-11/http-handoff-checkpoint-440-1111-d1-correction.md"
     }
   ],
   "blockers": [
@@ -70,7 +75,7 @@
   ],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Root independent exact-head assessment and hosted CI before any publication; no automatic correction batch"
+    "action": "Root independent exact-head delta assessment of D1, then hosted CI before any publication; no automatic D2"
   },
   "prioritized_follow_ups": [
     {
