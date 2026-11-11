@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import csv
 import fcntl
 import hashlib
 import importlib
@@ -53,6 +54,11 @@ MANAGER_ROUTES = {
         "#app button",
     ),
     "#/time": ("Staff time capture", ("/api/time/status",), "#app ul"),
+    "#/aftercare": (
+        "Aftercare concerns",
+        ("/api/aftercare/concerns", "/api/aftercare/evaluator"),
+        "#app section[aria-labelledby='ac-list-title']",
+    ),
     "#/screens": ("Specialist screens", (), "#app > a[href='#/']"),
 }
 
@@ -240,6 +246,24 @@ def check(store: Any, axe: str | None = None) -> None:
                         )
 
                 page.on("request", lambda request: origins.update({request: scenario}))
+                form_denials: list[Response] = []
+                form_url = base + "/api/aftercare/form"
+
+                def expect_form_denial(request: Request) -> None:
+                    if (
+                        scenario == "#/aftercare"
+                        and request.method == "GET"
+                        and request.url == form_url
+                    ):
+                        expected_failures.add(request)
+
+                page.on("request", expect_form_denial)
+                page.on(
+                    "response",
+                    lambda response: (
+                        form_denials.append(response) if response.url == form_url else None
+                    ),
+                )
                 page.on("pageerror", lambda error: errors.append(str(error)))
                 page.on(
                     "response",
@@ -391,9 +415,32 @@ def check(store: Any, axe: str | None = None) -> None:
                             ).to_be_visible()
                     elif href == "#/time":
                         status = payloads["/api/time/status"]
-                        expect(page.locator("#app [role=status]").first).to_have_text(
-                            "Time capture is on." if status["enabled"] else status["reason"]
+                        banner = page.locator("#app [role=status]").first
+                        if status["enabled"]:
+                            expect(banner).to_have_text("Time capture is on.")
+                        elif not status["flag_on"]:
+                            expect(banner).to_have_text(
+                                "Time capture is switched off, so nothing can be recorded. "
+                                "Owner: application support. Next action: ask application "
+                                "support to switch it on when the programme agrees to start "
+                                "staff time capture."
+                            )
+                        else:
+                            expect(banner).to_have_text(
+                                re.compile(r"\S\. Owner: .+\. Next action: .+")
+                            )
+                    elif href == "#/aftercare":
+                        # A manager may read but not record concerns, so the form read is denied.
+                        assert [d.status for d in form_denials] == [403], form_denials
+                        assert form_denials[0].json() == {
+                            "error": "Your role cannot record a concern. Ask a colleague who can."
+                        }
+                        expect(page.locator("#app [role=status]")).to_have_text(
+                            "Your role can read these concerns but cannot record one. "
+                            "Ask a colleague who can."
                         )
+                        expect(page.locator("#ac-form")).to_have_count(0)
+                        expect(page.locator("#app button[type=submit]")).to_have_count(0)
                     elif href == "#/screens":
                         expect(
                             page.get_by_role("link", name="Back to my work", exact=True)
@@ -457,13 +504,59 @@ def check(store: Any, axe: str | None = None) -> None:
                 assert not errors, errors
                 assert not failures, failures
 
+                def export_download(name: str, endpoint: str, label: str, expected_id: str) -> None:
+                    link = page.locator(f"#app a[download='{name}'][href='{endpoint}']")
+                    expect(link).to_have_count(1)
+                    expect(link).to_have_text(label)
+                    expect(link.locator("xpath=..")).to_contain_text(
+                        "read-only copy; changes in it are not imported back"
+                    )
+                    expect(link.locator("xpath=..")).to_contain_text(
+                        "not only the ones on this page"
+                    )
+                    before_url, before_posts = page.url, len(posts)
+                    link.focus()
+                    with page.expect_download() as download_info:
+                        page.keyboard.press("Enter")
+                    download = download_info.value
+                    assert download.suggested_filename == name, download.suggested_filename
+                    saved = download.path()
+                    assert saved is not None
+                    table = list(csv.reader(saved.read_text(encoding="utf-8").splitlines(True)))
+                    unpaged = context.request.get(base + endpoint.removesuffix(".csv")).json()
+                    assert len(table) - 1 == len(unpaged) > 0, (name, len(table), len(unpaged))
+                    assert expected_id in {cell for row in table[1:] for cell in row}, name
+                    assert page.url == before_url and len(posts) == before_posts, (name, "mutated")
+                    print(
+                        f"Capacity export {name}: PASS; {len(table) - 1} rows, keyboard Enter",
+                        flush=True,
+                    )
+
+                export_download(
+                    "packages.csv",
+                    "/api/packages.csv",
+                    "Download all packages for Excel",
+                    "PKG-SYN-001",
+                )
+                export_download(
+                    "workorders.csv",
+                    "/api/workorders.csv",
+                    "Download all work orders for Excel",
+                    "WO-SYN-0001",
+                )
+                assert not errors, errors
+                assert not failures, failures
+
                 for destination in me["navigation"]:
                     href = destination["href"]
                     assert href in MANAGER_ROUTES, ("Unchecked manager route", href)
                     scenario = href
                     reads.clear()
+                    route_posts = len(posts)
                     page.goto(base + f"/app?check={uuid.uuid4().hex}" + href)
                     verify_route(href)
+                    if href == "#/aftercare":
+                        assert len(posts) == route_posts, posts[route_posts:]
                     print(
                         f"Manager route {href}: PASS; heading={MANAGER_ROUTES[href][0]}; "
                         f"reads={MANAGER_ROUTES[href][1]}",
@@ -634,7 +727,16 @@ def check(store: Any, axe: str | None = None) -> None:
                     held.clear()
                     page.evaluate("window.capacityHeldReads = 0")
 
+                    startup_retry_failure = False
+
                     def hold_capacity_read(route: Route) -> None:
+                        # The non-JSON 503 is a startup failure, so the app retries it; answer
+                        # those retries with the same 503 until the failure text is asserted.
+                        if startup_retry_failure and urlsplit(route.request.url).path == (
+                            "/api/" + endpoint
+                        ):
+                            inject(route)
+                            return
                         inject(route, status=None)
                         page.evaluate("window.capacityHeldReads += 1")
 
@@ -656,12 +758,14 @@ def check(store: Any, axe: str | None = None) -> None:
                         if urlsplit(route.request.url).path == "/api/" + endpoint
                     )
                     sibling = next(route for route in held if route is not failed)
+                    startup_retry_failure = True
                     failed.fulfill(status=503, body="Unavailable")
                     status = page.locator("#app > [role=status]")
                     expect(status).to_contain_text(
                         "We could not load "
                         + ("work orders" if endpoint == "workorders" else endpoint)
                     )
+                    startup_retry_failure = False
                     retry = status.get_by_role("button", name="Try again", exact=True)
                     retry_button = retry.element_handle()
                     assert retry_button is not None
@@ -795,6 +899,7 @@ def check(store: Any, axe: str | None = None) -> None:
                 page.wait_for_load_state("networkidle")
                 expect(page.get_by_text("No packages yet.", exact=True)).to_be_visible()
                 expect(page.get_by_text("No work orders yet.", exact=True)).to_be_visible()
+                expect(page.locator("#app a[download$='.csv']")).to_have_count(0)
                 scan_capacity(page, axe, "empty capacity")
                 page.route(pattern, lambda route: inject(route, status=401))
                 page.reload()

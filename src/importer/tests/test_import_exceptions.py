@@ -636,6 +636,66 @@ class TransferFailureTests(Base):
     def test_refused_before_commit_says_nothing_was_recorded(self) -> None:
         self.assertIn("Nothing was recorded", self.refused(ValueError("too many")))
 
+    def state_db(self) -> Path:
+        return self.tmp / "state" / "zavaforward.sqlite"
+
+    def stored(self) -> tuple[int, list[str]]:
+        """Committed refusal count and audit actions from a separate read-only connection."""
+        con = sqlite3.connect(f"{self.state_db().resolve().as_uri()}?mode=ro", uri=True)
+        try:
+            row = con.execute("SELECT value FROM meta WHERE key='import_exceptions'").fetchone()
+            audit = [r[0] for r in con.execute("SELECT action FROM audit ORDER BY rowid")]
+        finally:
+            con.close()
+        return len(json.loads(row[0])["refusals"]) if row else 0, audit
+
+    def test_real_precommit_failure_still_says_nothing_was_recorded_and_retries_once(self) -> None:
+        with mock.patch.object(SqlStore, "_append_audit", side_effect=OSError("disk full")):
+            code, out, err = self.run_transfer()
+        self.assertEqual((code, out), (2, ""))
+        self.assertIn("Nothing was recorded", err)
+        self.assertEqual(self.stored(), (0, []))
+        code, out, _ = self.run_transfer()
+        self.assertEqual(code, 0)
+        self.assertIn("added=1 already_present=0", out)
+        self.assertEqual(self.stored(), (1, ["recorded_import_refusals"]))
+
+    def test_committed_save_then_oserror_reload_is_not_nothing_recorded(self) -> None:
+        self.assert_committed_then_reload_failure(OSError("reload failed"))
+
+    def test_committed_save_then_valueerror_reload_is_not_nothing_recorded(self) -> None:
+        self.assert_committed_then_reload_failure(ValueError("reload failed"))
+
+    def assert_committed_then_reload_failure(self, error: BaseException) -> None:
+        seed, original = str(self.tmp / "seed.json"), SqlStore.save
+        before = (self.snapshot(self.db), self.snapshot(self.tmp / "bad.xlsx"))
+        probe: dict[str, object] = {}
+
+        def save_then_fail_reload(store: SqlStore) -> None:
+            def reload() -> None:
+                probe["committed"] = self.stored()
+                raise error
+
+            other = SqlStore(seed, str(self.state_db()))
+            other.data["form_schemas"] = {"synthetic": "independent writer"}
+            original(other)
+            with mock.patch.object(SqlStore, "_sync", lambda _store: reload()):
+                original(store)
+
+        with mock.patch.object(SqlStore, "save", save_then_fail_reload):
+            code, out, err = self.run_transfer()
+        self.assertEqual(probe["committed"], (1, ["recorded_import_refusals"]))
+        self.assertEqual((code, out), (2, ""))
+        self.assertNotIn("Nothing was recorded", err)
+        self.assertIn("may be recorded", err)
+        self.assertNotIn("Traceback", err)
+        self.assertEqual(self.stored(), (1, ["recorded_import_refusals"]))
+        code, out, _ = self.run_transfer()
+        self.assertEqual(code, 0)
+        self.assertIn("added=0 already_present=1", out)
+        self.assertEqual(self.stored(), (1, ["recorded_import_refusals"]))
+        self.assertEqual((self.snapshot(self.db), self.snapshot(self.tmp / "bad.xlsx")), before)
+
 
 if __name__ == "__main__":
     unittest.main()

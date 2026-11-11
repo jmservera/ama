@@ -8,6 +8,7 @@ the audit log, and a plain template is used if the model is unavailable.
 import base64
 import contextlib
 import contextvars
+import hashlib
 import json
 import os
 import re
@@ -133,6 +134,20 @@ class Ai:
         return json.dumps({"messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
                            "max_tokens": max_tokens, "temperature": temperature}, ensure_ascii=True).encode("ascii")
 
+    def is_live(self, capability):
+        endpoint = urllib.parse.urlparse(self.endpoint)
+        nonbillable = endpoint.scheme == "http" and endpoint.hostname in ("127.0.0.1", "localhost", "::1")
+        return not nonbillable and capability not in self.synthetic_price_capabilities
+
+    def request_plan(self, system, user, deployment, temperature, max_tokens):
+        """The exact request facts a permit binds: final body digest, model, configuration and bounds."""
+        body = self.provider_body(system, user, max_tokens, temperature)
+        return dict(body_sha256=hashlib.sha256(body).hexdigest(),
+                    model=self.model_version_strong if deployment == self.strong else self.model_version,
+                    deployment=deployment, temperature=temperature, max_tokens=max_tokens,
+                    configuration=self.configuration(deployment, temperature, max_tokens),
+                    input_bound=len(body) if isinstance(user, str) else None)
+
     def _request(self, deployment, system, user, max_tokens, timeout, temperature, receipt):
         seal = ai_consumption.SIMULATION_SEAL.get()
         if ai_consumption.CAPTURED_READINGS.get() and seal is None:
@@ -166,9 +181,7 @@ class Ai:
             )
         context = replace(context, configuration=self.configuration(deployment, temperature, max_tokens))
         bound = len(body) if isinstance(user, str) else None
-        parsed_endpoint = urllib.parse.urlparse(self.endpoint)
-        nonbillable_loopback = parsed_endpoint.scheme == "http" and parsed_endpoint.hostname in ("127.0.0.1", "localhost", "::1")
-        rid = self.consumption.reserve(context, model, bound, max_tokens, live=not nonbillable_loopback and context.capability not in self.synthetic_price_capabilities)
+        rid = self.consumption.reserve(context, model, bound, max_tokens, live=self.is_live(context.capability))
         receipt.update(meter_id=rid, meter_root=context.root,
                        configuration=context.configuration, prompt_hash=context.prompt, usage=None)
         try:

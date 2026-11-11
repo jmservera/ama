@@ -248,6 +248,37 @@ class ConsumptionTests(unittest.TestCase):
             with self.subTest(changes=changes), self.assertRaises(ValueError):
                 self.authorize(**changes)
 
+    def test_joined_reservation_window_and_first_completion_inside_one_transaction(self) -> None:
+        self.authorize()
+        with self.port.transaction() as db:
+            rid, held = self.ledger.reserve_in(
+                db, self.context("joined"), MODEL, 1000, 100, min_window=2.0
+            )
+            self.assertIsNone(held)
+            assert rid is not None
+            self.assertEqual(self.ledger.dispatch_window_ms(db, rid), 7000)
+            self.ledger.complete_in(
+                db,
+                rid,
+                dict(prompt_tokens=1, completion_tokens=1, total_tokens=2, cached_tokens=0),
+                MODEL,
+                "returned",
+            )
+            self.ledger.complete_in(db, rid, None, None, "timeout")
+        self.assertEqual(
+            [r["outcome"] for r in self.records() if r["kind"] == "completed"], ["returned"]
+        )
+        self.port.clock = timestamp(END) - 1.5
+        with self.port.transaction() as db:
+            self.assertEqual(
+                self.ledger.reserve_in(db, self.context("late"), MODEL, 1000, 100, min_window=2.0),
+                (None, "authority-expiring"),
+            )
+            rid, held = self.ledger.reserve_in(db, self.context("late"), MODEL, 1000, 100)
+            self.assertIsNone(held)
+            assert rid is not None
+            self.assertEqual(self.ledger.dispatch_window_ms(db, rid), 500)
+
     def test_expiry_unknown_price_and_image_liability_stop(self) -> None:
         self.authorize()
         with self.assertRaisesRegex(DispatchHeld, "price-unknown"):
