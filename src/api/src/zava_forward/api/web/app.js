@@ -752,10 +752,13 @@ function priorityPanel() {
 }
 
 const HANDOFF_READ_ERROR = "The handoffs waiting for you could not load, so we cannot tell whether any are waiting. Owner: application support. Next action: refresh to try again, then contact application support if it continues.";
+const HANDOFF_DENIED = "Your account cannot see the handoffs waiting for you, so we cannot tell whether any are waiting. Refreshing will not change this. Owner: your Retrofit Programme Manager or Programme Support Officer. Next action: ask them to check your role. Until then, ask the sender or open a case you already know, because the case list may not show every handoff waiting for you.";
 function pendingHandoffs() {
   const box = h("section", { class: "card", "aria-label": "Handoffs waiting for you" },
     h("p", { role: "status" }, "Loading handoffs..."));
+  const fail = (message) => { box.hidden = false; box.replaceChildren(h("p", { role: "alert" }, message)); };
   api("/api/handoffs").then((rows) => {
+    if (!Array.isArray(rows)) return fail(HANDOFF_READ_ERROR);
     if (!rows.length) { box.hidden = true; return; }
     box.hidden = false;
     box.replaceChildren(h("h2", {}, "Handoffs waiting for you"), h("a", { class: "btn alt", href: "/api/handoffs.csv", download: "handoffs.csv" }, "Download for Excel"),
@@ -768,8 +771,7 @@ function pendingHandoffs() {
       h("div", {}, x.to_code === me.user.code ? "Open to record receipt, accept or decline." : "Open to chase, escalate or withdraw.")))));
   }).catch((e) => {
     if (e.name === "AbortError") return;
-    box.hidden = false;
-    box.replaceChildren(h("p", { role: "alert" }, e.status ? `Could not load handoffs: ${e.message}` : HANDOFF_READ_ERROR));
+    fail(e.status === 401 ? `Could not load handoffs: ${e.message}` : e.status === 403 ? HANDOFF_DENIED : HANDOFF_READ_ERROR);
   });
   return box;
 }
