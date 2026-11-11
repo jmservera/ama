@@ -1,7 +1,7 @@
 ---
 title: Knowledge Base Log
 description: Append-only record of ingests, restructures, filed answers and lint passes for the project knowledge base
-ms.date: 2026-11-10
+ms.date: 2026-11-11
 ms.topic: reference
 ---
 
@@ -11450,3 +11450,17 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated subsection to the [IoT sensor analytics research plan](./research/iot-sensor-analytics-research-plan.md#current-azure-configuration-observation-2026-11-10-refs-184-440) and updated the "For #110/#184" paragraph and the plan's index row in [README.md](./README.md). Evidence class: ARM configuration only. Five read-only Azure CLI metadata invocations (five of a budget of eight, no retry) on 2026-11-10 between 17:54Z and 17:55Z: the existing hub is `uksouth` B1 x 1, `Active`, `Succeeded`, private (public network `Disabled`, local auth disabled), consumer group `api-consumer` is present, the demo app is `Running` with a digest-pinned image, and `job-live-simulator` and `job-live-receiver` returned `ResourceNotFound` for those exact names.
 * Not observed: ingestion, device registration, certificates, routes, receiver grants, SQL, runtime or build provenance, schedule execution, other or unnamed jobs, usage, cost and budget (the hub cost scope ended 2026-10-31 and is not renewed). Not found does not mean no other job exists, and existing Azure costs were not measured. No new billable operation was requested; no further Azure query is planned. Whole #110, #140, #184 and #440 stay open and no issue, board or PR write occurred.
 * Ordering: written after an ordinary merge of the frozen local 108 parent `f241a3681`; the 108 AI Tokenomics row and log entries are unchanged. Evidence under `.copilot-tracking/` (2026-11-10 issue-184-cloud-readiness-1110); raw minimal outputs are external.
+
+## [2026-11-11] update | Household inventory and staff intake current-main checkpoint (Refs #440 #131 #132 #1362)
+
+* Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#household-inventory-and-staff-intake-current-main-checkpoint-2026-11-11-refs-440-131-132-1362) and updated its `ms.date`. It records pinned main `0509ddcef14d9c2046791b283fad65229f536202` and fresh origin/main `7e2744cf7774825b21c73fffbc075b95755239cc` (rubric score file only), the merged PR 1421, 1422 and 1425 identities, document-qualified BRD and PRD requirements (BRD FR-015 tenure kept separate from PRD FR-015 hazard) and the exclusions (PR 1423, PR 1426, worker issue 144).
+* Evidence class: existing targeted local tests only, on JSON and SQLite stores and constructed synthetic fixtures; one adverse import error (Playwright missing from the private venv) preserved and restored from the declared pin; the staff intake browser and axe journey and all MSSQL cases not run. No existing selector exercises an inventory-managed case through staff capture to independent QA; this is recorded as an implemented but unverified gap, not a defect. No new defect, issue or source change; no criterion ticked, no approval claimed, whole #131, #132 and #440 stay open.
+* Evidence under `.copilot-tracking/` (2026-11-11 inventory-intake-main-440-1111); raw outputs are external.
+
+## [2026-11-11] update | Inventory and staff intake checkpoint readiness correction (Refs #440 #132)
+
+* Added an additive follow-up to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#follow-up-observation-and-readiness-correction-2026-11-11-additive): the staff intake browser and axe selector ran once (2 tests, exit 0, five states without violations, pinned axe 4.10.3 digest verified, existing tests only) and a committed-range whitespace finding was corrected. The combined inventory-to-QA gap stays unverified pending the separately routed #132 test. No source change, issue write or approval.
+
+## [2026-11-11] update | Store classification correction for the inventory and staff intake checkpoint (Refs #440 #132)
+
+* Corrected the O4 classification in the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#store-classification-correction-2026-11-11-additive) from JSON only to SQLite and JSON (still not MSSQL), after Root's independent review verified the fixture inheritance and the raw class names. Counts unchanged (90 run, 56 ok, 34 skipped). Earlier records stay as history. No test rerun, source change or issue write.
