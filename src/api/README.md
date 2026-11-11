@@ -4345,6 +4345,18 @@ the screen is read-only, reflows at 320 px and, with `ZF_AXE_JS` set to the
 pinned axe 4.10.3 file, has no automated WCAG 2.2 AA violations. Automated
 checks do not replace manual accessibility review.
 
+`python -m checks.connected_home_browser_check` (from `src/api`, with Playwright
+and Chromium installed) serves the data written by the core journey test and
+follows home ZF-1 with the keyboard across six specialist screens: Asset (read
+through a Programme Manager login, not an Asset sign-in), Programme, Technical,
+Resident choice, Quality and Finance. It checks that each screen shows that
+home's own records, that a second home keeps its own data without the first
+home's records, and that the browser sends no write. A missing record or
+marker fails the run. It does not cover the Repairs, Procurement, Provider or
+Digital perspectives, intake or aftercare, event order, assistive technology
+or user and human approval, and it passes no acceptance criterion.
+`tests/test_connected_home_check.py` holds its fast checks.
+
 `tests/test_buildings.py` starts the real application on loopback with a
 wholly fictional two-home SQLite fixture. It checks health/static serving,
 authenticated navigation, role/amount isolation, scoped blocked advancement,

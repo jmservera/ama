@@ -1,0 +1,129 @@
+"""Regression tests for the pure rules of the connected same-home check (Refs #134)."""
+
+from __future__ import annotations
+
+import copy
+import re
+import unittest
+from pathlib import Path
+from typing import Any
+
+import dataset
+from checks import connected_home_browser_check as walk
+
+SCREENS = Path(walk.__file__).resolve().parents[1] / "src/zava_forward/api/web/role-screens.js"
+
+
+def observed_from(expected: list[walk.Expect], home: str) -> dict[str, Any]:
+    """A page observation holding exactly the markers a screen must show for the home."""
+    panels: dict[str, dict[str, Any]] = {}
+    links: list[str] = []
+    for want in expected:
+        panel = panels.setdefault(
+            want.panel, {"title": want.panel, "text": "", "rows": [], "fields": []}
+        )
+        if want.row:
+            panel["rows"].append(list(want.row))
+        if want.field:
+            panel["fields"].append(list(want.field))
+        panel["text"] += want.text + "\n"
+        links += want.links
+    menu = [walk.screen_href("asset-board", home), walk.screen_href("programme-queue", home)]
+    return {
+        "heading": f"Selected home {home}",
+        "panels": list(panels.values()),
+        "links": links,
+        "handoff": f"#/case/{home}",
+        "menu": menu,
+    }
+
+
+class ConnectedHomeCheck(unittest.TestCase):
+    data: dict[str, Any]
+    expected: dict[str, tuple[walk.Expect, ...]]
+    own: dict[str, tuple[walk.Expect, ...]]
+    leaks: list[str]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.data = walk.journey_snapshot()
+        cls.expected = walk.home_expectations(cls.data)
+        cls.own = walk.sibling_expectations(cls.data)
+        cls.leaks = walk.leak_markers(cls.data)
+
+    def test_real_journey_snapshot_is_usable_and_empty_or_seed_only_is_not(self) -> None:
+        self.assertEqual(walk.snapshot_failures(self.data), [])
+        self.assertTrue(walk.snapshot_failures({}))
+        self.assertTrue(walk.snapshot_failures(copy.deepcopy(dataset.DATA)))
+        partial = copy.deepcopy(self.data)
+        partial["cases"] = [
+            {**c, "quality": []} if c["id"] == walk.HOME_ID else c for c in partial["cases"]
+        ]
+        self.assertTrue(walk.snapshot_failures(partial))
+        home_quality = walk.case_of(self.data, walk.HOME_ID)["quality"]
+        indistinct = copy.deepcopy(self.data)
+        indistinct["cases"] = [
+            {**c, "quality": home_quality} if c["id"] == walk.SIBLING_ID else c
+            for c in indistinct["cases"]
+        ]
+        self.assertTrue(walk.snapshot_failures(indistinct))
+
+    def test_every_screen_needs_its_markers_and_names_the_missing_one(self) -> None:
+        for screen, expected in self.expected.items():
+            with self.subTest(screen=screen):
+                self.assertEqual(
+                    walk.home_failures(
+                        screen, observed_from(list(expected), "ZF-1"), self.expected
+                    ),
+                    [],
+                )
+                for index, dropped in enumerate(expected):
+                    rest = [w for i, w in enumerate(expected) if i != index]
+                    seen = observed_from(rest, "ZF-1")
+                    self.assertTrue(walk.home_failures(screen, seen, self.expected), dropped)
+
+    def test_wrong_home_heading_handoff_and_menu_are_rejected(self) -> None:
+        screen = "technical-queue"
+        good = observed_from(list(self.expected[screen]), "ZF-1")
+        changes: tuple[dict[str, Any], ...] = (
+            {"heading": "Selected home ZF-2"},
+            {"handoff": "#/case/ZF-2"},
+            {"menu": [walk.screen_href("asset-board", "ZF-1"), "#/screens?screen=programme-queue"]},
+            {"menu": []},
+        )
+        for change in changes:
+            with self.subTest(change=change):
+                self.assertTrue(walk.home_failures(screen, {**good, **change}, self.expected))
+
+    def test_sibling_must_show_own_data_without_home_records(self) -> None:
+        self.assertTrue(self.leaks)
+        for screen, expected in self.own.items():
+            with self.subTest(screen=screen):
+                seen = observed_from(list(expected), "ZF-2")
+                self.assertEqual(walk.sibling_failures(screen, seen, self.own, self.leaks), [])
+                leaked = copy.deepcopy(seen)
+                leaked["panels"][0]["text"] += self.leaks[0]
+                self.assertTrue(walk.sibling_failures(screen, leaked, self.own, self.leaks))
+                self.assertTrue(
+                    walk.sibling_failures(screen, {**seen, "panels": []}, self.own, self.leaks)
+                )
+
+    def test_generic_values_are_not_used_as_home_markers(self) -> None:
+        sibling = str(walk.case_of(self.data, walk.SIBLING_ID))
+        self.assertFalse([m for m in self.leaks if m in sibling])
+
+    def test_declared_screens_and_required_labels_exist_in_the_page_source(self) -> None:
+        source = SCREENS.read_text(encoding="utf-8")
+        for screen in self.expected:
+            self.assertRegex(source, rf"[\"']{re.escape(screen)}[\"']")
+        for label in (
+            "Evidence boundary",
+            "Connected view for",
+            "Invoice line comparison",
+            "Choice for each measure",
+        ):
+            self.assertIn(label, source)
+
+
+if __name__ == "__main__":
+    unittest.main()
