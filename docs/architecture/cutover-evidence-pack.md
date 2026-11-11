@@ -6996,3 +6996,62 @@ Recommendation (proposed for the owner, not a decision or approval): CONTINUE, b
 ### Process record and limits
 
 * Added as a distinct section; no earlier section or adverse record was altered. Root's admission amendment was committed before the merge and any observation. The witness and model label are locally asserted, not attested. The plan critique was one subagent pass at plan time. The review is author-executed and not independent; independent exact-head review, human approval and applicable hosted checks remain required. No push, pull request, issue or board write was made. Commands were read-only git and GitHub queries, the existing tests above and one dependency restore into the private venv after an actual import failure.
+
+## Resident-choice CSV feature-wave integrated-main checkpoint (2026-11-11, Refs #440 #1420 #1432 #80 #73)
+
+Draft, local-only, not approved. One bounded observation of existing focused selectors on main after PR 1435 (resident-choice page CSV, issue 1420) was squash-merged, together with the four inventory and QA cases merged by PR 1432. It is not a Quality campaign, not a full gate and not acceptance.
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-11) |
+| --- | --- |
+| Planning pin | `1b169fe7d4f9b5a005123c8eb1825028ea431612` (before PR 1435) |
+| Observed main | `e09b21f1d7effb6f5a4bfff8315db99bf59c2372`, tree `9a52f75ea5bc4ac39f0e7f468c45ed2301e931a6`, PR 1435 squash-merged 2026-11-11T02:40:30Z. Fresh `origin/main` equalled it. Merged into the topic with an ordinary no-ff commit `1b3d178d37449b6ce1940ff17d4042cdbea048dd` before any test; no conflict, rebase or reset |
+| Observed candidate | `src` `87ea0ed8db9f180aec258eed42ca6232a7c97b6a` (equal to the reviewed PR candidate head `1febb4b0` and tested `07041ce0`), `docs` `9a33d247`, `infra` `f7f31c09`, `tools` `432a4e8f`, `.github` `8ee22819`, all equal to main; only own `.copilot-tracking/` files differ. Clean at every run |
+| Source blobs | `server.py` `749d3d3ac8492a081610d3082cdfd1bd9bf818bf`, `resident_choice_export.py` `86b6c75a6a0d8f40355391d8758fdb5606a1dbe6`, `role-screens.js` `77f15dc72f1bf26233214122086e87e05570c728`, `role_screens_browser_check.py` `b5bf1ceaadb4dc46b04aae66676e22c01bc9b62c` |
+| Documents and status | BRD `BRD-2026-AMA48-001` `docs/brds/agentic-retrofit-programme-brd.md` v0.21.0 `draft`, blob `34d88395`; PRD `PRD-2026-AMA48-001` `docs/prds/zava-forward-retrofit-programme-demonstrator.md` v0.21.0 `in-review` (`author-complete-unsigned-pending-review-and-owner-acceptance`), blob `c788b917`. A second PRD file, `docs/prds/proper-warm-retrofit-programme-demonstrator.md` (same `prd_id`, v0.13.0), reuses numbers and is not cited. ADR 0001 and 0007 Proposed; only ADR 0006 is Accepted |
+| Issue and hosted states | #1420 CLOSED by Root's read (six criteria ticked); #80, #73 and #440 OPEN. PR 1435's 19 hosted checks were reported SUCCESS by Root before merge. Main's own scorer run 42947632230 was in progress and no main Source CI run was seen at Root's observation: pending or unobserved is not claimed as passed |
+| Excluded | Whole Capacity, importer suite, SQL Server, Docker, `test_case_journey`, story 232s, the full gate, model, cloud and private data. This is a scope choice, not a skipped or passed suite. The earlier PR 1433 checkpoint was observed on `e0dec207`, before the CSV integration, and is historical |
+
+### Observed this checkpoint (local, raw outputs outside the repository)
+
+Raw directory: `/home/azureuser/.copilot/session-state/38e61c82-3c44-4b97-af59-9eed5c151ac7/files/choice-wave-main-440-observation-1111/`. Linux, Python 3.12.3, task-private venv `/tmp/ama-440-choice-venv-1111`, owned private HOME with the existing Chromium cache linked, `ZF_DATA` unset, `~/.zava-forward` absent, no `.env` or private data. Commands ran under `env -i`.
+
+Adverse and dependency record (preserved): the import preflight in the fresh venv failed with `ModuleNotFoundError: No module named 'zava_forward'` (exit 1); only then were `src/core`, `src/agents`, `src/api` (editable) and `playwright==1.64.0` installed (exit 0). The importer was not installed. Module origins for core and api resolve under this worktree (agents is a namespace package with no `__file__`; its tests path is the worktree's). First C2 attempt failed 9 of 9 with `FileNotFoundError: 'node'` because my `env -i` PATH omitted it, before any test logic ran; it is kept as `C2-attempt1-node-missing.*` and C2 was rerun once with `node` on PATH. Other selectors had already passed and were not rerun.
+
+| Id and selector | Exit and result | Class and limit |
+| --- | --- | --- |
+| C7 `src/core` `tests.test_resident_choice_queue` | 0; ran 4, OK | Local observed; the unchanged JSON queue projection the CSV copies |
+| C1 `src/api` `tests.test_resident_choice_export` | 0; ran 30, OK | Local observed: serializer and HTTP route on owned fixtures, including the three review-status regressions |
+| C2 `tests.test_resident_choice_screen` | 0 on rerun; ran 9, OK (first attempt environment error above) | Local observed, Node vm double |
+| C3 `tests.test_role_endpoint_inventory.RoleEndpointInventory` | 0; ran 24, OK | Local observed, roles against the inventory |
+| C4 `tests.test_list_export_api.ListExportApi` | 0; ran 11, OK | Local observed |
+| C5 `tests.test_role_screens_conformance.RoleScreenConformance` | 0; ran 11, OK | Local observed |
+| C6 `tests.test_content_standard.CopyAudit` | 0; ran 18, OK | Local observed copy audit |
+| I1 four named `test_inventory_hold_*` cases on `StaffIntakeApi` and `JsonStaffIntakeApi` | 0; ran 4, OK | Local observed on SQLite or JSON stores; MSSQL class not selected. Co-observation only: no new combined journey and not whole #132 |
+| B1 `python -m checks.role_screens_browser_check 232`, `ZF_AXE_JS` pinned (sha256 `880970c0...` verified), one `flock -n -E 99`, `timeout 900` | 0; 42 PASS lines including the download link and CSV attachment checks, axe 4.10.3 no violations, incomplete empty, Chromium 156.0.8078.4 | Local observed on a synthetic loopback server, one role |
+
+Static expectation 107 plus 4 equalled actual counts for every selector (4, 30, 9, 24, 11, 11, 18 and 4); no skip appeared. The B1 PASS count equals the candidate's earlier 42, which remains candidate history, not main evidence.
+
+### Requirement trace (document-qualified, proposed)
+
+| Requirement (document, status) | Code and test | Class |
+| --- | --- | --- |
+| PRD FR-046, AC-037, AC-056 (`in-review`): pause or withdrawal per measure; no consent or sanction inferred | `resident_choice_export.py`, `server.py`, `role-screens.js`; C1, C2, B1 | Local observed (partial): read-only copy of recorded state on constructed fixtures |
+| BRD FR-013 and FR-014 (`draft`) | same | Local observed (partial): display only; no consent, readiness or approval inferred |
+| PRD FR-048, AC-065 | same | Weak, partial link for human confirmation: the CSV carries only a bounded update status, no named owner |
+| ADR 0006 (Accepted) | route and tests in `src/api` | Layout only |
+
+Azure observed: none. Implemented but unverified: MSSQL variants, deployed hosting, actual-record export, retention, privacy review. Unknown: assistive-technology behaviour. The trace links are proposals of this checkpoint; issue 1420 cites none.
+
+### Findings, gates and recommendation
+
+* No defect or source repair observed; no new issue, no correction budget drawn, no criterion ticked here.
+* Remaining boundaries: whole #80, #73 and #440 stay open; no production, real-data, privacy, retention, resident consent, human or assistive-technology acceptance is inferred. Axe, fixtures and loopback runs do not show WCAG conformance. No fresh web-interface review was done; no web file changed.
+* Affected gates: acceptance of the merged feature waits on main's own CI outcome, not read here. Independent lanes that do not need the CSV surface may continue.
+
+Recommendation (proposed for the owner, not a decision): CONTINUE, bounded. Resume conditions: main CI and scorer outcome for `e09b21f1d` read and green; a combined inventory to QA journey claim needs its own owner review under #132.
+
+### Process record and limits
+
+* Added as a distinct section; no earlier section or adverse record was altered. The admission amendment was committed before the merge and any test. The single plan critique is the original one (conformant after CW-01 to CW-06); no second critique ran. The review is author-executed, not independent; independent exact-head review, human approval and hosted CI remain required. Model label locally asserted. No push, PR, issue or board write was made.
