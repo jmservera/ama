@@ -11,7 +11,7 @@ import os
 import unittest
 import uuid
 from collections.abc import Callable
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -683,7 +683,8 @@ class SqlBoundaryTests(unittest.TestCase):
         self.q(
             "ALTER TABLE resident_showcase.allowed_case NOCHECK CONSTRAINT ck_allowed_case_window"
         )
-        self.allow("C-1", end="2028-01-01T00:00:00")
+        beyond_cap = rs.AUTHORITY_END + timedelta(seconds=1)
+        self.allow("C-1", end=beyond_cap.strftime("%Y-%m-%dT%H:%M:%S"))
         query = (
             "SELECT definition, is_disabled, is_not_trusted FROM sys.check_constraints "
             "WHERE parent_object_id = OBJECT_ID(N'resident_showcase.allowed_case') "

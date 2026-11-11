@@ -120,6 +120,7 @@ class Wcag22Baseline(unittest.TestCase):
     def test_every_table_has_a_caption_and_column_headers(self) -> None:
         # WCAG 1.3.1 and 4.1.2: each script-built table is named by a caption and every header cell
         # declares its scope. The count forces a new table to be audited and added here.
+        # 13 on 2026-11-11: the handoff waiting table (#83) was audited from source and added.
         tables = 0
         for path in sorted(WEB.glob("*.js")):
             text = path.read_text()
@@ -127,7 +128,7 @@ class Wcag22Baseline(unittest.TestCase):
             for match in re.finditer(r'h\("table", \{\},\s*(.{0,60})', text):
                 tables += 1
                 self.assertIn('h("caption"', match.group(1), f"{path.name}: {match.group(1)}")
-        self.assertEqual(tables, 12, "new table: audit it and update this check and the record")
+        self.assertEqual(tables, 13, "new table: audit it and update this check and the record")
 
     def test_audit_record_names_target_gaps_and_makes_no_conformance_claim(self):
         self.assertIn("WCAG 2.2", DOC)
