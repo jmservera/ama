@@ -1,8 +1,11 @@
 """Pure-helper coverage for the specialist keyboard browser check (Refs #134)."""
 
+import re
 import unittest
+from pathlib import Path
 
 from checks.specialist_keyboard_browser_check import (
+    EXPECTED_REGIONS,
     NO_REGION_GAPS,
     expected_status,
     focus_failures,
@@ -91,6 +94,24 @@ class SpecialistKeyboardCheckHelpers(unittest.TestCase):
         gap = sorted(NO_REGION_GAPS)[0]
         self.assertEqual(region_failures(gap, []), [])
         self.assertTrue(region_failures(gap, [REGION]))
+
+    def test_every_registered_screen_is_declared_and_unknown_screens_still_fail(self) -> None:
+        self.assertEqual(region_failures("staff-job-pack-intake", []), [])
+        self.assertTrue(region_failures("staff-job-pack-intake", [REGION]))
+        self.assertTrue(region_failures("unlisted-screen", []))
+        web = Path(__file__).parents[1] / "src/zava_forward/api/web"
+        registered: set[str] = set()
+        calls = 0
+        for script in web.glob("*.js"):
+            source = script.read_text(encoding="utf-8")
+            calls += len(re.findall(r"(?<!function )registerRoleScreen\(", source))
+            registered |= set(
+                re.findall(r'registerRoleScreen\(\{\s*id:\s*"([A-Za-z0-9_-]+)"', source)
+            )
+        self.assertIn("staff-job-pack-intake", registered)
+        self.assertEqual(len(registered), calls, "unsupported registration syntax")
+        undeclared = registered - set(EXPECTED_REGIONS) - set(NO_REGION_GAPS)
+        self.assertEqual(undeclared, set())
 
 
 if __name__ == "__main__":

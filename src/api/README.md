@@ -4159,7 +4159,7 @@ printed, not of acceptance criteria.
 
 What it does not show: picking a fixture login is not authentication; the status
 text is read from the page, not from a screen reader; endpoint and handoff wording
-is only checked as text; five screens have no evidence table on the fixture; Asset,
+is only checked as text; six screens have no evidence table on the fixture; Asset,
 Procurement and Auditor have no login; the first listed home stands in for all
 homes. It records no acceptance criterion as met and no human or assistive
 technology approval. Dated notes on how the check was built and verified, including

@@ -59,6 +59,7 @@ NO_REGION_GAPS: dict[str, str] = {
         "procurement-packages",
         "finance-invoices",
         "finance-funding",
+        "staff-job-pack-intake",
     )
 }
 
