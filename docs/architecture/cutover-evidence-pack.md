@@ -7062,3 +7062,60 @@ Recommendation (proposed for the owner, not a decision): CONTINUE, bounded. Resu
 * The successful C2 (9 OK) is an environment-corrected observation, not a pristine once-only campaign. The first attempt is retained raw: it errored 9 of 9 with `FileNotFoundError: 'node'` inside test execution, before the Node child programs could run. It is not evidence that no test logic ran.
 * The original plan and author Review are unchanged. No source correction cycle is spent.
 * Later Root observation (not an original runtime read): `origin/main` was `22a30cd92b9a3e1b436dc94cf747a3fc147fb51a`, differing from observed `e09b21f1d` only in `.github/rubric/scores/latest.json`. Main Capstone Rubric Scorer 42947632230 completed SUCCESS on `e09b21f1d`. No separate main Source CI run was observed and none is claimed green. The tested pin and source are unchanged; no integration or rerun was done. No broad acceptance or closure is inferred.
+
+## Keyboard probe compatibility integrated-main checkpoint (2026-11-11, Refs #440 #132 #134)
+
+Draft, documentary only, not approved. This is a small checkpoint after merged PR 1438 reached `main`. It runs no test, browser, SQL, Docker, model, provider or cloud check, changes no source, configuration, test, workflow or requirement, and opens no issue. Every earlier section is unchanged.
+
+### Identities, scope and exclusions
+
+| Item | Value (read 2026-11-11 by read-only Git and `gh`) |
+| --- | --- |
+| Pinned and fresh `origin/main` | `74e63363bdcb6f9d420ff9c71b8332a9baf0044b`, tree `e89381c5fa93d093ca8ab90f95812a023c1d3e7a`; a fetch before edits showed no movement from the pin |
+| PR 1438 | Merged 2026-11-11T04:43:41Z by squash into `74e63363`, zero closing references; assessed head `f62d4b66ed96d54ace8b42343c30cdea2140a614` with the same tree as the merged tree |
+| Covered | PR 1438 (bounded repair of the existing keyboard probe for the staff intake screen), under existing issue 132 and the 440 cadence |
+| Excluded | The unpublished #134 connected-home candidate `468bdd3` (a High checker false pass, no correction authority; see the existing [#134 blocker comment](https://github.com/jmservera/ama/issues/134#issuecomment-6786645682)); `main` is not claimed to contain it. Also issues 149, 233, 80 and 73 |
+| Documents (blob at the pin) | BRD 0.21.0 `draft` `34d88395de861e9799eb9e24121a21c92c7a5adc`; PRD 0.21.0 `in-review`, author-complete-unsigned-pending-review-and-owner-acceptance, `c788b917bafaede215f326f0efc71e071a687f1c`; ADR 0003 Accepted with amendment (2026-10-15) `d60645397b20fb70ac3d1dc47c7a6c8671201306`; ADR 0006 Accepted (2026-10-15) `956da1a3b804c803041fe2e8a312bd9f400273ae`; ADR 0007 Proposed 2026-11-04, not accepted, `abb21088a9bb9771234a305b8052c3bcdd181b33` |
+
+Product delta is zero in behaviour: one `NO_REGION_GAPS` entry for `staff-job-pack-intake` in the existing probe, a seventh unit test and a README count change from five to six. The unknown-screen and unexpected-table fail-closed predicate is unchanged. The fixture has no work orders, so the screen renders no table for the seven staff intake roles; the entry declares that gap and is not a pass. Root and the independent reviewer read the supplied change diff; the PR touched 24 paths including tracking evidence.
+
+### Evidence, origins and classes
+
+| Evidence | Origin and date | Class |
+| --- | --- | --- |
+| Original RPI categories (research, plan, critique, changes, review) and the independent assessment, in the merged tree under `.copilot-tracking/` (2026-11-11 issue-132-keyboard-compat-1111) | Committed, preserved with the original adverse records | Committed record |
+| Independent published review `3e182ded-9135-47cc-a341-58186013ee67`: approve, zero findings; [durable PR comment](https://github.com/jmservera/ama/pull/1438#issuecomment-6786933451) | Root-read 2026-11-11 | Independent review of the PR 1438 scope only; not whole-issue acceptance |
+| Retained original browser log (`/tmp/zf132-e4/browser.log`, 863 lines, not copied here): one non-queued run on source candidate `f8939a5a438b3fac62c548d2a42c50f36f8a2778`, 805 printed assertions, 15 negatives, 46 OBS lines, 22 declared gap walks, seven staff intake roles with no regions | Local, before merge; `git diff f8939a5a 74e63363 -- src` is empty (verified 2026-11-11) | Dated, source-equivalent local observed output. Not a fresh main run, not acceptance testing, not Azure. Axe not run; the order-read HTTP status and the cause of the empty order state were not observed |
+| Merged compact validation: seven helper tests, full API `mypy` over 232 files, Ruff check and Ruff format over 149 files, each exit 0 after a CI-style private install | Merged tree validation record | Local observed. The original missing tool, the 24, 4 and 2 error configurations, the additional classification run, the limited pipeline exit and the critic runtime and scripted-edit exceptions remain explicit adverse history; this is not pristine conformance |
+| Hosted Source projects CI run 42958485921 on head `f62d4b66`: success for the api, core, importer, orchestrator, agents, namespace, image-paths, changes, no-working-data and MSSQL jobs; Root read all 19 PR checks as success, including the rubric score (78 of 78) | `gh api` and Root read 2026-11-11 | Hosted CI only. Four jobs show 12 skipped steps each (causes not examined); test-level skips are not known and no zero-skip claim is made |
+
+Hosted success is not a deployed Azure result, a real SQL lock crossing, a provider or identity check, resident or professional consent, human acceptance or production acceptance.
+
+### Requirement trace (document-qualified, proposed)
+
+| Requirement (document, status) | Evidence | Class |
+| --- | --- | --- |
+| PRD AC-043 (`in-review`): perspective and workflow coverage declared or explicitly unrepresented | The probe walks the screens its fixture roles are served and now declares the intake screen's empty table state | Local observed (partial); the Asset, Procurement and Auditor perspectives still lack a fixture login role |
+| PRD AC-034 (`in-review`): scope, reset and selection focus | Existing partial keyboard coverage is unchanged | Not advanced by this change |
+| PRD FR-016, FR-017, AC-039, AC-042 (`in-review`), partial via issue 132 | Intake screen reachability only; no recovery, receipt or acceptance behaviour is exercised by the probe | Not shown here; separately owned by issue 132 |
+| BRD (`draft`) | No BRD requirement is approved or met | Context only |
+| ADR 0003 and ADR 0006 (Accepted); ADR 0007 (Proposed, not accepted) | ADR 0003 and 0006 constrain journey scope and layout and are not amended. ADR 0007 does not close criterion 6 of issue 132 | Context only; no approval inferred |
+
+### Affected boundaries and gaps
+
+* Fixture roles only: the seven staff intake roles are a synthetic fixture, not Entra or any identity-provider proof. No device, resident or professional consent, screen-reader or other assistive-technology output exists.
+* Whole #132 stays 4 checked and 2 unmet: the variation named owner and the delivery channel and identity decision. #134 all-perspective, assistive-technology and whole-journey criteria are untouched. #149, #233, #80, #73 and #440 stay open; no live, human or approval gate is closed.
+* The populated intake states stay covered only by the existing opt-in staff intake browser test, which was not run here.
+
+### Findings, owners and recommendation
+
+* No new confirmed product defect and no required refactor is inferred. No new issue, source change, correction budget or criterion tick.
+* Existing owners remain: #132 (variation owner and channel decision), #134 (the walkthrough and its unpublished candidate), #440 (cadence). The pending #132 channel-decision lane is planning-only, independent of this record, with no source implementation.
+* Pending, not decided here: whether the owner of #134 grants a finite allowance for its unpublished candidate or leaves it unpublished; any named human, device, identity or variation owner decision is requested only where actually required. No new proposal or waiver is made.
+
+Recommendation (proposed for Root, not a decision): CONTINUE, bounded, only for unrelated authorized work and for the existing bounded probe compatibility. No epic closure and no dependent claim beyond this evidence.
+
+### Process record and limits
+
+* One original plan critique (conformant after one non-blocking fix, applied) and one author Review, recorded under `.copilot-tracking/` (2026-11-11 keyboard-checkpoint-440-1111). The review is author-executed, not independent; independent exact-head review and hosted checks of this record remain required.
+* Documentary checkpoint only: Git and `gh` read-only, Markdown and diff review. No push, PR, issue or board write was made.
