@@ -5,6 +5,8 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import tempfile
+import time
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -203,8 +205,9 @@ def check_register(page: Page) -> None:
         check(f"{label} row keeps owner as configuration, eligibility Unknown and placeholder recovery",
               "not an appointment" in row and "Unknown" in row and "Placeholder guidance" in row)
     check("workflow-only record is not listed as a failure", ai.WORKFLOW_ID not in text)
-    check("no controls in the register panel",
-          panel.locator("button, form, input, select, textarea").count() == 0)
+    check("the only control in the register panel is the summary download button",
+          panel.locator("button, form, input, select, textarea").count() == 1
+          and panel.get_by_role("button", name=SUMMARY_BUTTON, exact=True).count() == 1)
     # The running app records its own "AI is not configured" fallback, so other rows may exist.
     cells = panel.get_by_role("region", name=ai.REGISTER_TABLES[0], exact=True).locator("tbody tr").evaluate_all(
         "rows => rows.map(row => [...row.cells].map(cell => cell.textContent || ''))")
@@ -224,6 +227,133 @@ def check_register(page: Page) -> None:
     for width in (320, 1280):
         page.set_viewport_size({"width": width, "height": 900})
         check(f"register reflow {width}px",
+              page.evaluate("() => document.documentElement.scrollWidth <= innerWidth"))
+
+
+SUMMARY_BUTTON = "Download visible summary (CSV)"
+SUMMARY_FILE = "exception-register-visible-summary.csv"
+# Independent restatement of the reviewed contract vocabularies, so the saved bytes are not compared with the script's own output.
+SUMMARY_KINDS = {
+    "source_conflict": "Source conflict",
+    "identity_conflict": "Identity conflict",
+    "failed_import": "Failed import",
+    "failed_ai_run": "Requested AI help did not deliver a model result",
+    "failed_integration": "Failed integration run",
+    "stranded_task": "Stranded work",
+}
+
+
+def expected_summary(register: dict[str, Any]) -> bytes:
+    rows = ["Reference in this view,Kind,State,Configured owner role"]
+    for item in register["items"]:
+        role = (
+            item["owner_role"]
+            if item["owner_role"] in ("data_steward", "digital_operator")
+            else "Unknown"
+        )
+        rows.append(
+            ",".join(
+                (
+                    item["id"],
+                    SUMMARY_KINDS.get(item["kind"], "Unknown"),
+                    "open" if item["status"] == "open" else "Unknown",
+                    role,
+                )
+            )
+        )
+    return ("\r\n".join(rows) + "\r\n").encode("utf-8")
+
+
+def check_summary_download(
+    page: Page, register: dict[str, Any], seen: list[str], scratch: Path
+) -> None:
+    panel = register_panel(page)
+    button = panel.get_by_role("button", name=SUMMARY_BUTTON, exact=True)
+    note = panel.locator("#exception-summary-note")
+    check(
+        "the button is a native button that follows the table heading and precedes the table",
+        button.evaluate("el => el.tagName === 'BUTTON' && el.type === 'button'")
+        and button.evaluate("""el => {
+            const table = el.closest('section').querySelector('div.table-scroll');
+            return !!(el.compareDocumentPosition(table) & Node.DOCUMENT_POSITION_FOLLOWING);
+          }"""),
+    )
+    check(
+        "the button is described by the note, which says demo only, per-view reference and not complete",
+        button.get_attribute("aria-describedby") == "exception-summary-note"
+        and all(
+            phrase in (note.text_content() or "")
+            for phrase in (
+                "no operational or real-record use is approved",
+                "valid only in this view",
+                "not a stable identity",
+                "not a complete exception list",
+                "would not mean all clear",
+                "not decided or managed here",
+            )
+        ),
+    )
+    page.evaluate("""() => { window.__urls = {made: 0, revoked: 0};
+      const make = URL.createObjectURL.bind(URL), revoke = URL.revokeObjectURL.bind(URL);
+      URL.createObjectURL = (b) => { window.__urls.made += 1; return make(b); };
+      URL.revokeObjectURL = (u) => { window.__urls.revoked += 1; return revoke(u); };
+    }""")
+    page.evaluate("() => { document.activeElement.blur(); window.scrollTo(0, 0); }")
+    for _ in range(200):
+        page.keyboard.press("Tab")
+        if button.evaluate("el => document.activeElement === el"):
+            break
+    check("Tab reaches the summary button", button.evaluate("el => document.activeElement === el"))
+    check(
+        "the focused button has a visible focus outline",
+        button.evaluate(
+            "el => { const s = getComputedStyle(el); return s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) > 0; }"
+        ),
+    )
+    before = len(seen)
+    expected = expected_summary(register)
+    for key in ("Enter", "Space"):
+        with page.expect_download() as pending:
+            page.keyboard.press(key)
+        download = pending.value
+        saved = scratch / f"{key}.csv"
+        download.save_as(saved)
+        check(
+            f"{key} starts a download with the fixed file name",
+            download.suggested_filename == SUMMARY_FILE,
+        )
+        body = saved.read_bytes()
+        check(
+            f"{key} saved bytes equal the four-column projection of the returned JSON",
+            body == expected,
+        )
+        check(
+            f"{key} file is UTF-8 without a BOM, CRLF terminated, header plus {len(register['items'])} rows",
+            not body.startswith(b"\xef\xbb\xbf")
+            and body.endswith(b"\r\n")
+            and body.count(b"\r\n") == len(register["items"]) + 1
+            and b"\n" not in body.replace(b"\r\n", b""),
+        )
+        check(
+            f"{key} file has no owner address, free text or identifier columns",
+            b"@" not in body and body.split(b"\r\n")[0].count(b",") == 3,
+        )
+        check(
+            f"{key} status says the download started, not that it was saved",
+            (page.locator("#exception-summary-status").text_content() or "")
+            == f"Download started: {len(register['items'])} rows, {SUMMARY_FILE}",
+        )
+    time.sleep(1.5)
+    urls = page.evaluate("() => window.__urls")
+    check(
+        f"each activation revoked its object URL: {urls}",
+        urls["made"] == 2 and urls["revoked"] == 2,
+    )
+    check("activation made zero requests (blob and data URLs excluded)", len(seen) == before)
+    check("activation left no anchor behind", page.locator("a[download]").count() == 0)
+    for width in (320, 1280):
+        page.set_viewport_size({"width": width, "height": 900})
+        check(f"summary control reflow {width}px",
               page.evaluate("() => document.documentElement.scrollWidth <= innerWidth"))
 
 
@@ -250,6 +380,12 @@ def check_unavailable_and_empty(page: Page) -> None:
     text = intercepted_register(page, 200, ai.EMPTY_CONTRACT)
     check("an empty register is not an all-clear", ai.EMPTY_TEXT in text)
     check("an empty register still says service state is Unknown", "Service state Unknown" in text)
+    item = {"id": "EX-001", "kind": "stranded_task", "status": "open", "owner_role": "data_steward"}
+    text = intercepted_register(page, 200, dict(ai.EMPTY_CONTRACT, items=[item, 7]))
+    check("a partly unreadable register says it is not complete and offers no file",
+          "could not be read" in text and "not complete" in text)
+    text = intercepted_register(page, 200, dict(ai.EMPTY_CONTRACT, state="roles_not_named", items=[item]))
+    check("an inconsistent roles-not-named reply offers no file", "roles_not_named" in text)
 
 
 def run_browser(base: str) -> None:
@@ -270,6 +406,11 @@ def run_browser(base: str) -> None:
                 # Registered after sign-in so the sign-in POST is excluded. These are
                 # browser-observed requests: they cannot show what the server did.
                 page.on("request", lambda r: requests.append((r.method, urlparse(r.url).path)))
+                seen: list[str] = []
+                page.on("request", lambda r: seen.append(r.url) if r.url.startswith("http") else None)
+                register_json: list[dict[str, Any]] = []
+                page.on("response", lambda r: register_json.append(json.loads(r.body()))
+                        if urlparse(r.url).path == "/api/exceptions" and r.status == 200 else None)
                 open_screen(page)
                 # The landing view reads its own priority data; only count what follows.
                 page.wait_for_load_state("networkidle")
@@ -281,6 +422,10 @@ def run_browser(base: str) -> None:
                     check(f"page queue reflow {width}px",
                           page.evaluate("() => document.documentElement.scrollWidth <= innerWidth"))
                 check_register(page)
+                registers = [urlparse(u).path for u in seen].count("/api/exceptions")
+                check(f"the populated register was requested exactly once: {registers}", registers == 1)
+                with tempfile.TemporaryDirectory(prefix="zf-exception-csv-") as scratch:
+                    check_summary_download(page, register_json[0], seen, Path(scratch))
                 check_unavailable_and_empty(page)
                 page.set_viewport_size({"width": 1280, "height": 900})
                 open_screen(page)

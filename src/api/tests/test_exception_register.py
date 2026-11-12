@@ -95,6 +95,16 @@ class Register(SqlStoreCase):
         )
         self.assertEqual(before, after)
 
+    def test_one_view_adds_one_ledger_entry_and_leaves_the_data_unchanged(self) -> None:
+        data = json.dumps(self.store.data, sort_keys=True, default=str)
+        ledger = list(self.store.audit_entries())
+        self.store.exception_register(self.steward, STAFF)
+        after = list(self.store.audit_entries())
+        views = [e for e in after if e["action"] == "viewed_exception_register"]
+        self.assertEqual(len(after), len(ledger) + 1)
+        self.assertEqual(len(views), 1)
+        self.assertEqual(json.dumps(self.store.data, sort_keys=True, default=str), data)
+
     def test_unnamed_staff_are_refused_and_the_refusal_is_audited(self) -> None:
         stranger = dict(self.steward, email="other@example.test")
         with self.assertRaises(PermissionError):

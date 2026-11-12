@@ -22,7 +22,7 @@ const vm = require("node:vm");
 const host = fs.readFileSync(process.argv[1] + "/role-screens.js", "utf8");
 const data = JSON.parse(process.argv[2]);
 const h = (tag, attrs, ...kids) => {
-  return {tag, attrs, kids: kids.flat(Infinity).filter(
+  return {tag, attrs, addEventListener() {}, kids: kids.flat(Infinity).filter(
     kid => kid !== false && kid !== null && kid !== undefined)};
 };
 const controller = new AbortController();

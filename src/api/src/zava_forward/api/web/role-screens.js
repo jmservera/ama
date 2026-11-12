@@ -904,9 +904,61 @@ function exceptionUnavailable(error) {
     screenFields([["Owner", denied ? "Programme owner names the data steward and digital operator" : "Application support"],
       ["Next action", denied ? "Ask the programme owner whether you should be named" : "Refresh to try again, then contact application support if it continues"]]));
 }
+const exceptionSummaryFile = "exception-register-visible-summary.csv";
+const exceptionSummaryHeader = ["Reference in this view", "Kind", "State", "Configured owner role"];
+// Frozen allowlists: a value or kind added later exports as Unknown until a new contract admits it.
+const exceptionSummaryKinds = ["source_conflict", "identity_conflict", "failed_import", "failed_ai_run", "failed_integration", "stranded_task"];
+const exceptionSummaryRoles = ["data_steward", "digital_operator"];
+// Fail closed: null means no file is offered, so a partial or empty list is never exported as a complete one.
+function exceptionSummaryRows(data, items, unreadable) {
+  if (data.state !== "ok" || unreadable > 0 || !items.length) return null;
+  if (!items.every((item) => /^EX-[0-9]{3,}$/.test(item.id))) return null;
+  return items.map((item) => [
+    item.id,
+    exceptionSummaryKinds.includes(item.kind) ? exceptionKinds[item.kind] : "Unknown",
+    item.status === "open" ? "open" : "Unknown",
+    exceptionSummaryRoles.includes(item.owner_role) ? item.owner_role : "Unknown"
+  ]);
+}
+// Same neutralisation as list_export.safe_cell for strings, then minimal CSV quoting.
+function exceptionSummaryCell(value) {
+  const text = /^[=+\-@\t\r]/.test(value) ? `'${value}` : value;
+  return /[",\r\n]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+}
+const exceptionSummaryCsv = (rows) => [exceptionSummaryHeader, ...rows]
+  .map((row) => `${row.map(exceptionSummaryCell).join(",")}\r\n`).join("");
+function exceptionSummaryControl(rows) {
+  const button = h("button", { type: "button", class: "alt", "aria-describedby": "exception-summary-note" }, "Download visible summary (CSV)");
+  const status = h("p", { role: "status", id: "exception-summary-status" });
+  button.addEventListener("click", () => {
+    let url = null;
+    let link = null;
+    try {
+      url = URL.createObjectURL(new Blob([exceptionSummaryCsv(rows)], { type: "text/csv;charset=utf-8" }));
+      link = document.createElement("a");
+      link.href = url;
+      link.download = exceptionSummaryFile;
+      document.body.append(link);
+      link.click();
+      status.textContent = `Download started: ${rows.length} ${rows.length === 1 ? "row" : "rows"}, ${exceptionSummaryFile}`;
+      const started = url;
+      url = null;
+      setTimeout(() => URL.revokeObjectURL(started), 1000);
+    } catch {
+      status.textContent = "No file was created or the download did not start. Nothing was changed. Try again, or read the table on this page.";
+    } finally {
+      link?.remove();
+      if (url) URL.revokeObjectURL(url);
+    }
+  });
+  return h("div", {}, button,
+    h("p", { id: "exception-summary-note" }, "Demonstrator feature only: no operational or real-record use is approved. The file copies four columns for the items listed here, within your role scope, as they were when this page loaded. It changes nothing. It is not a complete exception list, and an empty or short file would not mean all clear. The reference is valid only in this view and is not a stable identity. Owners, free text, record, source, case, batch and query identifiers and conflict values are not included. How a downloaded copy is kept or handled is not decided or managed here."),
+    status);
+}
 function exceptionRegisterPanel(data) {
   const items = data.items.filter(exceptionItem);
   const unreadable = data.items.length - items.length;
+  const summary = exceptionSummaryRows(data, items, unreadable);
   const conflicts = items.filter((item) => Array.isArray(item.values));
   const banner = data.banner;
   const roles = exceptionRecord(data.access.roles) ? Object.entries(data.access.roles) : [];
@@ -926,10 +978,10 @@ function exceptionRegisterPanel(data) {
     list("Unrouted", data.unrouted),
     h("h3", {}, "Open exception items"),
     unreadable ? h("p", { role: "status" }, `${unreadable} returned entries could not be read and are not shown. This list is not complete.`) : null,
-    items.length ? screenTable("Exception items returned for you",
+    items.length ? [summary && exceptionSummaryControl(summary), screenTable("Exception items returned for you",
       ["Reference", "Kind", "State", "Configured owner", "What happened and reason", "Manual next step", "Source or run reference", "Eligibility"],
       items.map((item) => [item.id, exceptionKinds[item.kind] || exceptionText(item.kind), exceptionText(item.status), exceptionOwner(item),
-        exceptionHappened(item), `Placeholder guidance, not an approved runbook: ${exceptionText(item.runbook)}`, exceptionReference(item), exceptionText(item.eligibility)]), Infinity)
+        exceptionHappened(item), `Placeholder guidance, not an approved runbook: ${exceptionText(item.runbook)}`, exceptionReference(item), exceptionText(item.eligibility)]), Infinity)]
       : h("p", { class: "empty" }, "No exception items were returned. This is not an all clear: the Sources list shows which sources are not connected, service health is Unknown and unrouted records are listed above."),
     h("h3", {}, "Source conflicts: both values"),
     conflicts.length ? screenTable("Source conflicts with every returned value",
