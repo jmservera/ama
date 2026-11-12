@@ -11591,3 +11591,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Corrected wording in the post-fix-wave section of the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115): pin time qualification, test-helper PYTHONPATH, ADR 0002 Audit row, AC-051 and AC-073 Not run. Documentation only; nothing rerun; no approval or tick.
 * Evidence under `.copilot-tracking/` (2026-11-12 post-fix-wave-440-1112-correction).
+
+## [2026-11-12] update | Demo IoT-to-UI source trace rows (Refs #156 #184 #187 #189 #134)
+
+* Added a dated, additive section to the [prototype profile review](research/ux/zava-forward-prototype-profile-review.md#demo-iot-to-ui-source-trace-update-2026-11-12-refs-156-184-187-189-134) and an index row in the [index](./README.md): #189 now has a source screen `#/simulator` with a local browser check, #187 is a partial control surface, the employee Quality sensor panel design is Not supplied, source cadence is five minutes against the owner one-minute target, and the five-home scope of Quality AI is not verified by a bounded, nonexhaustive trace.
+* Documentation only; earlier rows and the executable register (74 screen issues, 0 designs supplied, blocked) are unchanged; no approval, tick, source or Bicep change, model call or live run; criterion 1 stays unticked.
+* Evidence under `.copilot-tracking/` (2026-11-12 iot-trace-docs-156-1112).

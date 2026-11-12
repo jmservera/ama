@@ -539,6 +539,33 @@ versioned design, detailed flow, named human design review, assistive-technology
 content or user evidence is supplied. Fluent 2, the WCAG baseline and the
 [content standard](./content-standard.md) are unchanged.
 
+### Demo IoT-to-UI source trace update (2026-11-12, Refs #156, #184, #187, #189, #134)
+
+This dated update is additive. It reads current source at `main` `e4854bd7e`.
+It leaves the 2026-10-18 rows above unchanged (their #187 and #189 "interface
+unspecified" wording was true at that date) and leaves the executable register
+unchanged (74 screen issues, 0 supplied designs, blocked). It records what
+static source shows, not a design, a test result, an observation or an
+approval. Issue states were read from GitHub on 2026-11-12. The trace was
+bounded and not a whole-repository audit.
+
+| Item | Source-read finding (static source, not observed) | Design artefact and remaining gap |
+| --- | --- | --- |
+| #189 (O) start, stop and run limits | An administrator screen `#/simulator` now exists: route in [`web/app.js`](../../../../src/api/src/zava_forward/api/web/app.js), view in [`web/simulator-control.js`](../../../../src/api/src/zava_forward/api/web/simulator-control.js), API in [`simulator_admin.py`](../../../../src/api/src/zava_forward/api/simulator_admin.py) (PR 1313, merged 2026-11-09), with a local browser check [`simulator_control_browser_check.py`](../../../../src/api/checks/simulator_control_browser_check.py) on a synthetic store. The screen edits the control file only and cannot see or start a job; its budget alert is always "not recorded, not verified live" and [the API README](../../../../src/api/README.md#live-simulator-container-184-owner-requirement-2026-11-04) states no deployed job was started. The cutover pack holds a coordinator-held synthetic browser and axe witness for this screen in its [byte witnesses table](../../../architecture/cutover-evidence-pack.md), not reproduced here | Design Not supplied. Issue criterion 3 (owner, time limit, budget alert) is unticked. Named design review, human accessibility, content and live acceptance are not supplied; the automated synthetic witness is not that acceptance |
+| #187 (C) replay, speed and pause | Partial control surface. Start and stop, a 100-home cap and a 14-day window are in [`live_control.py`](../../../../src/api/src/zava_forward/api/live_control.py) and the #189 screen. Replay, speed and pause exist as library code ([`sensor_stream.py`](../../../../src/core/src/zava_forward/core/synthetic/sensor_stream.py), [`iot_stream.py`](../../../../src/api/src/zava_forward/api/iot_stream.py)). No operator-facing replay, speed, pause or fault control was found in the bounded trace. The public issue reads closed with all criteria ticked; that state and this source reading are not reconciled here | Design Not supplied; the 2026-10-18 row remains the historical record. Whether a screen is wanted is an owner surface decision, not made here |
+| Employee Quality sensor panel | The "Quality and handover" tab composes `sensorPanel` with `qualityPanel` and `handoffPanel` in [`web/app.js`](../../../../src/api/src/zava_forward/api/web/app.js), with a local check [`quality_sensors_browser_check.py`](../../../../src/api/checks/quality_sensors_browser_check.py) using a mock provider | Design Not supplied. The [employee case workspace note](./employee-case-workspace-redesign.md) names `qualityPanel` and `handoffPanel` but supplies no sensor-panel design or IoT-to-UI flow; no other specification was ruled out beyond that note |
+| Reading cadence against the owner target | Source cadence is five minutes: `SLOT_SECONDS = 300` in [`live_readings.py`](../../../../src/core/src/zava_forward/core/synthetic/live_readings.py), the [`live_simulator.py`](../../../../src/api/src/zava_forward/api/live_simulator.py) docstring and `*/5 * * * *` in [`live-simulator-job.bicep`](../../../../infra/live-simulator-job.bicep). The [runbook](../../../capstone/demo/runbook.md#demo-operating-mode-and-five-homes-owner-selected-target-2026-11-12) records one reading per minute as an owner-selected target, unverified | Gap between source and target recorded only. No source change, and no reopened cadence work, is proposed here |
+| Five-home scope of Quality AI | Not verified by this bounded, nonexhaustive trace. The five homes are the owner-selected target cohort in the runbook, not an enforced limit; the control cap is 100. In [`assistants.py`](../../../../src/core/src/zava_forward/core/assistants.py) the proactive scan is bounded by `scan_interval` and `scan_size` over a case cursor, and neither it, [`sensor_view.py`](../../../../src/core/src/zava_forward/core/sensor_view.py) nor [`main.bicep`](../../../../infra/main.bicep) was found to reference the simulator cohort. `enableApiAi` defaults to false. Orchestrator, agent and other background paths were not traced | The scope stays unverified; this is not a claim that no guard exists anywhere. Any enforcement or evidence is separate implementation or owner work needing its own plan |
+
+Boundaries. No new design approval is recorded, issue #156 criterion 1 stays
+unticked, and the design, accessibility, human and live approval gaps stand.
+The Programme queue design stays proposed and not approved, the recorded D1
+history and the unknown source-correction balance are unaffected, and this
+documentation trace is current-source evidence, not a code-correction grant or
+a fresh pool. No model, deployment or live run was made. Fluent 2, the WCAG
+baseline, the [content standard](./content-standard.md), resident consent and
+the manual paths are unchanged.
+
 [bc-prd]: ../../../prds/zava-forward-retrofit-programme-demonstrator.md
 [bc-connected]: ./customer-journeys/customer-journey-atlas.md#one-connected-service-journey
 [bc-programme]: ./customer-journeys/programme.md#1-programme-manager--planner
