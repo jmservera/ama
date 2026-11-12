@@ -10,10 +10,10 @@ Add one end-to-end boundary test to the existing `ApiTests` harness in `src/api/
 
 ## Phases
 
-* [ ] Phase 1: one independent critique of the final candidate plan; apply compatible findings.
-* [ ] Phase 2: add the test method (and only the imports it needs) to `ApiTests`.
-* [ ] Phase 3: focused validation: the new test, `test_assistants`, `test_chat_isolation`, `test_chat_panel`, core `test_chat_memory`; ruff check, ruff format --check and mypy on the touched test file as the repository configures them.
-* [ ] Phase 4: changes record, one original Review, local commit with repo-local privacy-safe identity.
+* [x] Phase 1: one independent critique of the final candidate plan; apply compatible findings.
+* [x] Phase 2: add the test method (and only the imports it needs) to `ApiTests`.
+* [x] Phase 3: focused validation: the new test, `test_assistants`, `test_chat_isolation`, `test_chat_panel`, core `test_chat_memory`; ruff check, ruff format --check and mypy on the touched test file as the repository configures them.
+* [x] Phase 4: changes record, one original Review, local commit with repo-local privacy-safe identity.
 
 ## Boundaries and stop rules
 

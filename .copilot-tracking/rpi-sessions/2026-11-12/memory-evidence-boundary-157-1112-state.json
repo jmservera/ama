@@ -3,23 +3,50 @@
   "task_slug": "memory-evidence-boundary-157-1112",
   "parent_task": null,
   "mode": "manual",
-  "active_phase": "Implement",
-  "status": "active",
-  "session_status": "running",
+  "active_phase": "Follow-up",
+  "status": "completed",
+  "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-12-memory-evidence-boundary-157-1112-research.md",
     "plan": ".copilot-tracking/plans/2026-11-12-memory-evidence-boundary-157-1112-plan.md",
     "details": ".copilot-tracking/details/2026-11-12-memory-evidence-boundary-157-1112-details.md",
     "critique": ".copilot-tracking/plans/critiques/2026-11-12-memory-evidence-boundary-157-1112-plan-critique.md",
-    "changes": null,
-    "review": null
+    "changes": ".copilot-tracking/changes/2026-11-12-memory-evidence-boundary-157-1112-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-12-memory-evidence-boundary-157-1112-review.md"
   },
   "confirmed_decisions": [
-    {"decision": "Research disposition executed; Planning Readiness Ready for one tests-only slice (gap: no end-to-end test of the chat proposals success path with active memory; no promotion path in code)", "status": "recorded", "evidence": "research artifact"},
-    {"decision": "Critique executed once, verdict Revise, PC-001 to PC-005 applied to details", "status": "recorded", "evidence": "plan critique artifact"},
-    {"decision": "Tests-only; local only; no push, PR, tick or board change; files owned by 107, 153 and 82 untouched", "status": "owner-directed", "evidence": "task brief"}
+    {
+      "decision": "Research disposition executed; Planning Readiness Ready for one tests-only slice (gap: no end-to-end test of the chat proposals success path with active memory; no promotion path in code)",
+      "status": "recorded",
+      "evidence": "research artifact"
+    },
+    {
+      "decision": "Critique executed once, verdict Revise, PC-001 to PC-005 applied to details",
+      "status": "recorded",
+      "evidence": "plan critique artifact"
+    },
+    {
+      "decision": "Review executed once, outcome Findings (1 Low, RF-001), routed to later optional tidy; no re-review",
+      "status": "recorded",
+      "evidence": "review artifact"
+    },
+    {
+      "decision": "Tests-only; local only; no push, PR, tick or board change; files owned by 107, 153 and 82 untouched",
+      "status": "owner-directed",
+      "evidence": "task brief"
+    }
   ],
   "blockers": [],
-  "next_action": {"phase": "Implement", "action": "Add the boundary test to ApiTests in src/api/tests/test_assistants.py and run focused checks"},
-  "prioritized_follow_ups": []
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Independent exact-head coordinator assessment of the local commits; no automatic correction renewal"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Drop or strengthen the vacuous canonical(refused output) assertion (RF-001)",
+      "rationale": "Low-risk tidy; proof already holds via state and mutation",
+      "evidence": "review artifact"
+    }
+  ]
 }
