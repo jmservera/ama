@@ -1,0 +1,24 @@
+{
+  "task_id": "153-blocked-copy-readiness-1112",
+  "task_slug": "employee-denial-copy-153-1112",
+  "parent_task": null,
+  "mode": "automatic",
+  "active_phase": "Research",
+  "status": "completed",
+  "session_status": "stopped",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-12-employee-denial-copy-153-1112-research.md",
+    "plan": null,
+    "details": null,
+    "critique": null,
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed; Planning Readiness Not ready (NOT_READY research-only)", "status": "recorded", "evidence": "No literal criterion 3 gap in the traced advance/safety-stop denial; API and Chromium trace in the research file"},
+    {"decision": "Plan, critique, Implement and Review did not run", "status": "recorded", "evidence": "No distinct authorized gap; no filler phases"}
+  ],
+  "blockers": [],
+  "next_action": {"phase": "Follow-up", "action": "Independent coordinator assessment of the research-only record; owner decides whether any wording of the safety-stop decision authority is wanted"},
+  "prioritized_follow_ups": []
+}
