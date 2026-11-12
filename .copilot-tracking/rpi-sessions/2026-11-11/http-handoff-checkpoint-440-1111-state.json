@@ -1,0 +1,88 @@
+{
+  "task_id": "http-handoff-checkpoint-440-1111",
+  "task_slug": "http-handoff-checkpoint-440-1111",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11/http-handoff-checkpoint-440-1111-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11/http-handoff-checkpoint-440-1111-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11/http-handoff-checkpoint-440-1111-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-11/http-handoff-checkpoint-440-1111-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-11/http-handoff-checkpoint-440-1111-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-11/http-handoff-checkpoint-440-1111-review.md"
+  },
+  "confirmed_decisions": [
+    {
+      "decision": "Plan-only admission: Research, Plan and one independent critique, then stop before Implement, tests, canonical evidence and the original Review",
+      "status": "confirmed",
+      "evidence": "Launch brief 2026-11-11 and issue 440 comment issuecomment-6793077295"
+    },
+    {
+      "decision": "Research executed (read-only); Planning Readiness Ready",
+      "status": "done",
+      "evidence": ".copilot-tracking/research/2026-11-11/http-handoff-checkpoint-440-1111-research.md"
+    },
+    {
+      "decision": "Candidate PR 1449 (head 2db08d8e2141d60a52d688b731f192972ca8293b, tree e328d3eb18d69cc58293e2200eb9a0b51f377322, src tree bb7a461f0acc9ccff0cde8ddb16df3717c552c50) is UNMERGED and excluded from main acceptance; hosted checks pending when read, not green",
+      "status": "confirmed",
+      "evidence": "gh pr view 1449 at research time; launch brief"
+    },
+    {
+      "decision": "Selection H1 to H6 plus S1 by default (75 tests); H7 CopyAudit optional only if Root admits; H1 under an outer non-queued heavy lock, H2 and H3 with no outer lock; explicit pause rule with no automatic rerun, assertion, format, environment or source repair",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-11/http-handoff-checkpoint-440-1111-plan.md"
+    },
+    {
+      "decision": "Critique executed once (rubber-duck, claude-sonnet-5.5); conformant after fixes HC-01 to HC-03, all applied; no repeat",
+      "status": "done",
+      "evidence": ".copilot-tracking/plans/2026-11-11/http-handoff-checkpoint-440-1111-critique.md"
+    },
+    {
+      "decision": "No test, install, canonical pack or log edit, changes or Review artifact; no issue, PR, branch, remote or board action",
+      "status": "confirmed",
+      "evidence": "Plan phase 0 only"
+    },
+    {
+      "decision": "Root admission consumed: main f0eb928f8abe17c512fba2e564837e97c0c5e655 (root tree a0a4aea0, src bb7a461f equals candidate src); local observation allowed while main scorer 43005506332 queued",
+      "status": "confirmed",
+      "evidence": ".copilot-tracking/plans/2026-11-11/http-handoff-checkpoint-440-1111-admission-amendment.md"
+    },
+    {
+      "decision": "Implement executed: H4,H5,H6,H1,H2,H3,S1 once each; 75 tests, 0 skips, 0 failures; H7 not admitted",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-11-11/http-handoff-checkpoint-440-1111-changes.md"
+    },
+    {
+      "decision": "Review executed once (author), conformant, no open material findings; no correction batch",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-11/http-handoff-checkpoint-440-1111-review.md"
+    },
+    {
+      "decision": "Correction D1 (Root-authorized, documentation only): applied independent Readiness findings 1 and 2 plus the data-isolation evidence limit to the pack section and log; original Review, plan, critique, raw logs and commit fa8507465577 preserved; not a new Review",
+      "status": "done",
+      "evidence": ".copilot-tracking/changes/2026-11-11/http-handoff-checkpoint-440-1111-d1-correction.md"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "main-scorer-and-independent-review-pending",
+      "summary": "Main scorer run 43005506332 queued at admission, no main Source CI; independent exact-head review and new-head hosted CI are Root gates",
+      "resolution": null
+    }
+  ],
+  "next_action": {
+    "phase": "Follow-up",
+    "action": "Root independent exact-head delta assessment of D1, then hosted CI before any publication; no automatic D2"
+  },
+  "prioritized_follow_ups": [
+    {
+      "rank": 1,
+      "task": "Named-human wording and owner-role review for the 403 guidance (#153 remaining slices)",
+      "rationale": "Review finding R3",
+      "evidence": ".copilot-tracking/reviews/2026-11-11/http-handoff-checkpoint-440-1111-review.md"
+    }
+  ]
+}

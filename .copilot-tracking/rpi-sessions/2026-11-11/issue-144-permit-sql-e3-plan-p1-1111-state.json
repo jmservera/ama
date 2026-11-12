@@ -1,0 +1,37 @@
+{
+  "task_id": "issue-144-permit-sql-e3-plan-p1-1111",
+  "task_slug": "issue-144-permit-sql-e3-plan-p1-1111",
+  "parent_task": {"task_id": "issue-144-permit-sql-1111", "task_slug": "issue-144-permit-sql-1111"},
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11-issue-144-permit-sql-e3-plan-p1-1111-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11/issue-144-permit-sql-e3-plan-p1-1111-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11/issue-144-permit-sql-e3-plan-p1-1111-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-11/issue-144-permit-sql-e3-plan-p1-1111-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed; Planning Readiness Ready for corrected plan", "status": "recorded", "evidence": "P1 research artifact"},
+    {"decision": "Independent prospective report REQUEST_CHANGES (3 High, 4 Medium) consumed by reference; R1-R7 dispositions recorded; no finding regraded", "status": "recorded", "evidence": "independent-144-permit-sql-plan-1111.json; P1 plan disposition matrix"},
+    {"decision": "Critique executed once, authored not independent, verdict ready for independent prospective review, no clearance", "status": "recorded", "evidence": "P1 critique artifact"},
+    {"decision": "One E3 of the Nov 10 five admitted and counted from this plan correction; E1/E2 spent; two unadmitted; no new five, no E4, no reset", "status": "confirmed", "evidence": "Root launch brief 2026-11-11T12:42"},
+    {"decision": "Option T selected, only after independent prospective clearance and Root admission of implementation and execution; direct-only local SQL scope, no workflow/gate/pyproject/requirement/helper edit", "status": "confirmed", "evidence": "Root launch brief 2026-11-11T12:42"},
+    {"decision": "Conditional future pip install into a fresh own environment only after a preserved missing-dependency probe; not authorised during plan correction", "status": "confirmed", "evidence": "Root launch brief 2026-11-11T12:42"},
+    {"decision": "This launch authorizes Research and Plan correction only; no Implement, source or test edit, runtime, database, container, install or GitHub action", "status": "confirmed", "evidence": "Root launch brief 2026-11-11T12:42"},
+    {"decision": "Parent frozen plan 1a29cfd674b959872548e6dd5a1ad6ddcc3f767d tree 950ee178c90d71d12d91c32e5fcee3196df2ee13 base e691255ff7aae111ef32d585900cf82c3789a78c; five parent tracking blobs unchanged", "status": "verified", "evidence": "git rev-parse; clean status asserted before writes"},
+    {"decision": "No canonical phase-witness chain requested or created; not backfilled", "status": "recorded", "evidence": "P1 phase details pause section"}
+  ],
+  "blockers": [
+    {"id": "G1", "summary": "Independent prospective clearance of the corrected plan by the same reviewer is pending", "resolution": "Root sends the actual P1 delta to the reviewer"},
+    {"id": "G2", "summary": "Root has not admitted Implement, the conditional pip install or the heavy-resource run", "resolution": "Explicit Root admission after G1"}
+  ],
+  "next_action": {"phase": "Plan", "action": "Pause before implement-start. Root forwards the P1 delta to the independent reviewer; Implement, pip and SQL execution need G1 clearance and explicit Root admission."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent prospective review of P1, then, if cleared and admitted, one test-only implementation and real-MSSQL run with controls N1 and N2 inside the same E3", "rationale": "Closes the retained validation gap on fixed source", "evidence": "P1 plan sections R1-R7"},
+    {"rank": 2, "task": "Decide separately whether the module is ever wired into hosted CI or the gate (full tier)", "rationale": "Direct-only scope means hosted MSSQL does not select it", "evidence": "parent research F1/F4; Root direct-only decision"}
+  ]
+}

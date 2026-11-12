@@ -1,0 +1,131 @@
+date 2026-11-11T21:27:39Z export=oldA cwd=/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core
+/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/src/zava_forward/core/ranking_publication.py
+/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/src/zava_forward/core/ranking_publication_runner.py
+/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/src/zava_forward/core/store.py
+origin_exit=0
+test_absent_directory_stays_creatable_for_first_run (test_ranking_publication_runner.UnusableArchivePathTests.test_absent_directory_stays_creatable_for_first_run) ... ok
+test_absent_folder_below_a_link_to_a_real_folder_is_creatable (test_ranking_publication_runner.UnusableArchivePathTests.test_absent_folder_below_a_link_to_a_real_folder_is_creatable) ... ok
+test_oserror_without_a_reason_is_reported_without_the_path (test_ranking_publication_runner.UnusableArchivePathTests.test_oserror_without_a_reason_is_reported_without_the_path) ... FAIL
+test_regular_file_archive_exits_nonzero_through_main (test_ranking_publication_runner.UnusableArchivePathTests.test_regular_file_archive_exits_nonzero_through_main) ... FAIL
+test_store_status_is_a_problem_for_a_regular_file_archive (test_ranking_publication_runner.UnusableArchivePathTests.test_store_status_is_a_problem_for_a_regular_file_archive) ... FAIL
+test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing (test_ranking_publication_runner.UnusableArchivePathTests.test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing) ...
+  test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing (test_ranking_publication_runner.UnusableArchivePathTests.test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing) [regular_file] ... FAIL
+  test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing (test_ranking_publication_runner.UnusableArchivePathTests.test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing) [dangling_link] ... FAIL
+  test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing (test_ranking_publication_runner.UnusableArchivePathTests.test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing) [dangling_ancestor] ... FAIL
+  test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing (test_ranking_publication_runner.UnusableArchivePathTests.test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing) [stat_failure] ... FAIL
+test_unreadable_archive_is_a_problem_never_empty_or_healthy (test_ranking_publication_runner.StorageAndDuplicateFindingTests.test_unreadable_archive_is_a_problem_never_empty_or_healthy) ... ok
+test_unreadable_archive_exits_nonzero_through_main (test_ranking_publication_runner.StorageAndDuplicateFindingTests.test_unreadable_archive_exits_nonzero_through_main) ... ok
+
+======================================================================
+FAIL: test_oserror_without_a_reason_is_reported_without_the_path (test_ranking_publication_runner.UnusableArchivePathTests.test_oserror_without_a_reason_is_reported_without_the_path)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/tests/test_ranking_publication_runner.py", line 755, in test_oserror_without_a_reason_is_reported_without_the_path
+    self.assertNotIn(str(self.root), json.dumps(ver))
+AssertionError: '/home/azureuser/.local/share/ama/gates/g1259-ff-2122/tmp/tmpqg3kglol' unexpectedly found in '{"operation": "verify", "today": "2026-11-05", "status": "problem", "refusals": [], "warnings": [], "schedule": {"status": "proposed, not an approved operational rule", "cadence": "daily", "minimum_frequency_hours": 24, "window": "one calendar day, starting on the supplied date", "runner": "ranking_publication_runner module; scheduler not yet configured", "owner": "to be named", "retention": "not set; archive keeps every snapshot until a named owner approves a purge"}, "policy": null, "run_key": null, "window": {"start": "2026-11-05", "end": "2026-11-06"}, "retention_note": "Retention is a separate Legal decision; nothing is purged here.", "count": 0, "latest": null, "problems": ["The archive cannot be read: OSError: /home/azureuser/.local/share/ama/gates/g1259-ff-2122/tmp/tmpqg3kglol/archive."], "overdue": null}'
+
+======================================================================
+FAIL: test_regular_file_archive_exits_nonzero_through_main (test_ranking_publication_runner.UnusableArchivePathTests.test_regular_file_archive_exits_nonzero_through_main)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/tests/test_ranking_publication_runner.py", line 745, in test_regular_file_archive_exits_nonzero_through_main
+    self.assertEqual(self.cli("schedule", *base)[0], 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_store_status_is_a_problem_for_a_regular_file_archive (test_ranking_publication_runner.UnusableArchivePathTests.test_store_status_is_a_problem_for_a_regular_file_archive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/tests/test_ranking_publication_runner.py", line 785, in test_store_status_is_a_problem_for_a_regular_file_archive
+    self.assertTrue(status["problems"])
+AssertionError: [] is not true
+
+======================================================================
+FAIL: test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing (test_ranking_publication_runner.UnusableArchivePathTests.test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing) [regular_file]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/tests/test_ranking_publication_runner.py", line 737, in test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing
+    self.check_unknown(make)
+  File "/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/tests/test_ranking_publication_runner.py", line 712, in check_unknown
+    self.assertEqual(
+AssertionError: Tuples differ: ('problem', None, True) != ('problem', None, None)
+
+First differing element 2:
+True
+None
+
+- ('problem', None, True)
+?                   ^^^
+
++ ('problem', None, None)
+?                   ^^^
+ : regular_file
+
+======================================================================
+FAIL: test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing (test_ranking_publication_runner.UnusableArchivePathTests.test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing) [dangling_link]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/tests/test_ranking_publication_runner.py", line 737, in test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing
+    self.check_unknown(make)
+  File "/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/tests/test_ranking_publication_runner.py", line 712, in check_unknown
+    self.assertEqual(
+AssertionError: Tuples differ: ('problem', None, True) != ('problem', None, None)
+
+First differing element 2:
+True
+None
+
+- ('problem', None, True)
+?                   ^^^
+
++ ('problem', None, None)
+?                   ^^^
+ : dangling_link
+
+======================================================================
+FAIL: test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing (test_ranking_publication_runner.UnusableArchivePathTests.test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing) [dangling_ancestor]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/tests/test_ranking_publication_runner.py", line 737, in test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing
+    self.check_unknown(make)
+  File "/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/tests/test_ranking_publication_runner.py", line 712, in check_unknown
+    self.assertEqual(
+AssertionError: Tuples differ: ('problem', None, True) != ('problem', None, None)
+
+First differing element 2:
+True
+None
+
+- ('problem', None, True)
+?                   ^^^
+
++ ('problem', None, None)
+?                   ^^^
+ : dangling_ancestor
+
+======================================================================
+FAIL: test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing (test_ranking_publication_runner.UnusableArchivePathTests.test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing) [stat_failure]
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/tests/test_ranking_publication_runner.py", line 737, in test_unusable_archive_is_unknown_for_every_operation_and_writes_nothing
+    self.check_unknown(make)
+  File "/home/azureuser/.local/share/ama/gates/g1259-ff-2122/oldA/src/core/tests/test_ranking_publication_runner.py", line 712, in check_unknown
+    self.assertEqual(
+AssertionError: Tuples differ: ('problem', None, True) != ('problem', None, None)
+
+First differing element 2:
+True
+None
+
+- ('problem', None, True)
+?                   ^^^
+
++ ('problem', None, None)
+?                   ^^^
+ : stat_failure
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.051s
+
+FAILED (failures=7)
+unittest_exit=1

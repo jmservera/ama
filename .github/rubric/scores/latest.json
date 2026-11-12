@@ -2,16 +2,16 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-11T02:47:31+00:00",
-  "commit": "e09b21f1d7effb6f5a4bfff8315db99bf59c2372",
+  "scored_at": "2026-11-11T21:40:47+00:00",
+  "commit": "bc123235af30b63de9808c97a430860f1e00dcc8",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/42947632230",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43104179879",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
-    "adr": "2eb3b14058a3ef3157cffdfedf1bdc54675681f70fc4006e896e760491828883",
-    "solution-code": "3b1c36868eb28dc1897c41465432f39e399728ce67c9d7d88001a448a6b945ff",
-    "infrastructure": "41598b222e77cf518fe2c6499a9abebb34a7396f5614a41a13d821533773dd66",
+    "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
+    "solution-code": "ebb337bc7eb128224f3dc1a0b946857a72e12150d3575d97fc68b77d22bb4fe4",
+    "infrastructure": "d1cfb7538e8361300e8766c1e0c2d777cac8beac7cad61e0f728330d8fd93c6f",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "5b414b81c3cc0512d987acd669648d14eb85eae2af031105e39dd8bd5054fbe7",
     "thought-leadership": "f7f2adc273905a84d848d54be0a77abc3550013fd1c9ea9e2fedb743bdacf70a"
@@ -32,7 +32,7 @@
         "src/api/src/zava_forward/api/server.py:690-699",
         "src/api/src/zava_forward/api/web/app.js:1223-1265"
       ],
-      "rationale": "Not materially touched; dispatch gate/ai_transport additions are operations/security, not architecture. Ceiling unchanged."
+      "rationale": "Not materially touched; diff is a one-line bugfix plus tests in core aftercare_intake, not architecture. Ceiling unchanged."
     },
     "A2": {
       "score": 5,
@@ -44,45 +44,40 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/ai_transport.py:1-60",
-        "src/core/src/zava_forward/core/ai.py:28-31",
-        "src/core/src/zava_forward/core/assistants.py:492-515",
-        "src/core/README.md:95-100"
+        "src/core/src/zava_forward/core/aftercare_intake.py:267-270",
+        "src/core/tests/test_aftercare_intake.py:288-340"
       ],
-      "rationale": "New fenced transport + per-attempt dispatch gate + SQL guard triggers enforce fail-closed boundary: captured IoT readings never carried by a real Ai client. Threat model and residual limits explicitly disclosed."
+      "rationale": "Fail-closed fix: blank stored bytes now raise StateInvalid (503, bytes preserved) instead of silently resetting the record, closing a data-integrity gap. Reinforces existing responsible-AI/fail-closed ceiling, already at 5."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/import_refusals.py:1-109",
-        "src/importer/src/zava_forward/importer/exceptions.py:284-307",
-        "src/importer/src/zava_forward/importer/__main__.py:109-170",
-        "src/core/tests/test_import_refusals.py:1-249"
+        "src/core/src/zava_forward/core/aftercare_intake.py:267-270",
+        "src/core/tests/test_aftercare_intake.py:288-340"
       ],
-      "rationale": "Completes previously partial failed-import feature: durable served-store projection, transfer CLI, and full rollback/idempotency tests across JSON/SQLite. Reinforces, does not exceed, existing ceiling 5."
+      "rationale": "Narrow, well-tested completeness fix (issue 1402): four new test methods cover read/write/HTTP/restart paths with bytes assertions; full RPI evidence (red/green/lint/mypy) committed. Reinforces, does not exceed, existing ceiling 5."
     },
     "A5": {
       "score": 5,
       "evidence": [
         "src/api/checks/photo_flag_stale_browser_check.py:300-380"
       ],
-      "rationale": "New check verifies quiet, non-disruptive handling of 503/403 denials and correct retry-on-refresh, reinforcing operational reliability evidence already at ceiling. Ceiling 5 retained unchanged."
+      "rationale": "Not touched by this change; operations evidence unchanged. Ceiling 5 retained."
     },
     "A6": {
       "score": 5,
       "evidence": [
         "src/agents/src/zava_forward/agents/heldout_freeze.py:1-136"
       ],
-      "rationale": "New constructed-paired-observations CLI option feeds the existing paired-trial scorer with caller-declared data (cards-only, unset thresholds); it is a bounded input harness, not a new evaluation method or model-choice justification. Ceiling unchanged."
+      "rationale": "Not touched by this change. Ceiling unchanged."
     },
     "A7": {
       "score": 5,
       "evidence": [
         "src/core/src/zava_forward/core/assistants.py:262-300",
-        "src/core/src/zava_forward/core/assistants.py:1243-1300",
-        "src/core/src/zava_forward/core/assistants.py:492-515"
+        "src/core/src/zava_forward/core/assistants.py:1243-1300"
       ],
-      "rationale": "New bounded proactive-scheduling state machine (coalescing, replacement/pause, legacy adoption) and a named autonomous-vs-manual review-flag projection show deliberate guarded autonomy beyond prior Good(4) baseline."
+      "rationale": "Not touched by this change; proactive-scheduling and autonomy evidence unchanged. Baseline retained."
     },
     "B1": {
       "score": 3,
@@ -119,7 +114,7 @@
         "src/api/README.md:1097",
         "src/core/README.md:473-495"
       ],
-      "rationale": "New README rows/sections documenting the resident-choice CSV export are clear and well-bounded, but the deck is untouched. Good(4) retained."
+      "rationale": "No deck or README documentation change this run; deck untouched. Good(4) retained."
     },
     "B7": {
       "score": 5,

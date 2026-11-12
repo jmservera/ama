@@ -1,0 +1,12 @@
+test_declared_gaps_allow_no_table_but_not_an_invented_one (tests.test_specialist_keyboard_check.SpecialistKeyboardCheckHelpers.test_declared_gaps_allow_no_table_but_not_an_invented_one) ... ok
+test_every_registered_screen_is_declared_and_unknown_screens_still_fail (tests.test_specialist_keyboard_check.SpecialistKeyboardCheckHelpers.test_every_registered_screen_is_declared_and_unknown_screens_still_fail) ... ok
+test_focus_needs_a_measured_visible_indicator (tests.test_specialist_keyboard_check.SpecialistKeyboardCheckHelpers.test_focus_needs_a_measured_visible_indicator) ... ok
+test_regions_must_match_the_declared_screen_expectation (tests.test_specialist_keyboard_check.SpecialistKeyboardCheckHelpers.test_regions_must_match_the_declared_screen_expectation) ... ok
+test_status_must_name_role_screen_and_selection_exactly (tests.test_specialist_keyboard_check.SpecialistKeyboardCheckHelpers.test_status_must_name_role_screen_and_selection_exactly) ... ok
+test_status_semantics_are_asserted_independently_of_text (tests.test_specialist_keyboard_check.SpecialistKeyboardCheckHelpers.test_status_semantics_are_asserted_independently_of_text) ... ok
+test_text_markers_report_presence_not_a_pass (tests.test_specialist_keyboard_check.SpecialistKeyboardCheckHelpers.test_text_markers_report_presence_not_a_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.008s
+
+OK

@@ -1,0 +1,36 @@
+{
+  "task_id": "issue-144-permit-sql-e4-plan-p2-1111",
+  "task_slug": "issue-144-permit-sql-e4-plan-p2-1111",
+  "parent_task": {"task_id": "issue-144-permit-sql-e3-plan-p1-1111", "task_slug": "issue-144-permit-sql-e3-plan-p1-1111"},
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "active",
+  "session_status": "running",
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11-issue-144-permit-sql-e4-plan-p2-1111-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11/issue-144-permit-sql-e4-plan-p2-1111-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11/issue-144-permit-sql-e4-plan-p2-1111-phase-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-11/issue-144-permit-sql-e4-plan-p2-1111-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Research disposition executed; Planning Readiness Ready for P2 plan", "status": "recorded", "evidence": "P2 research artifact"},
+    {"decision": "Independent P1 report REQUEST_CHANGES (1 High, 3 Medium) consumed by reference; P2-F1..F4 dispositions recorded; no finding regraded; both independent reports and both prior authored critiques preserved", "status": "recorded", "evidence": "independent-144-permit-sql-plan-p1-1111.json; P2 plan disposition matrix"},
+    {"decision": "Critique executed once, authored not independent, no clearance", "status": "recorded", "evidence": "P2 critique artifact"},
+    {"decision": "E4 admitted by Root and counted from this correction separately from E3; E1/E2/E3 counted; one unadmitted cycle remains; no E5, no new five, no reset; later implementation belongs to this E4", "status": "confirmed", "evidence": "Root launch brief 2026-11-11T12:55"},
+    {"decision": "Option T direct-only local scope retained; no CI/workflow/SQL_SELECTORS/gate/source/helper/requirement/pyproject change", "status": "confirmed", "evidence": "Root launch brief 2026-11-11T12:55"},
+    {"decision": "This launch authorizes Research and Plan correction only; no Implement, edit of source/test/helper, runtime, install, download, database, container or GitHub action", "status": "confirmed", "evidence": "Root launch brief 2026-11-11T12:55"},
+    {"decision": "Frozen P1 523ea4977e58befcc6c2a2ea86da225c6bb5f473 tree 0a75c016937f3bb2dac0484467f8d770ed80c594 base e691255ff7aae111ef32d585900cf82c3789a78c; clean including ignored files asserted before writes", "status": "verified", "evidence": "git rev-parse; git status --short --ignored empty"},
+    {"decision": "No canonical phase-witness chain requested or created; not backfilled", "status": "recorded", "evidence": "P2 phase details pause section"}
+  ],
+  "blockers": [
+    {"id": "G1", "summary": "Independent prospective clearance of the P2 delta by reviewer 9e2e122a is pending", "resolution": "Root sends the actual P2 delta"},
+    {"id": "G2", "summary": "Root has not admitted implementation, conditional pip or the heavy-resource SQL run", "resolution": "Explicit Root admission after G1"}
+  ],
+  "next_action": {"phase": "Plan", "action": "Pause before implement-start. Root forwards the P2 delta to the independent reviewer; implementation, pip and SQL execution need G1 clearance and explicit Root admission."},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent prospective review of P2, then if cleared and admitted one test-only implementation and real-MSSQL run with controls N1 and N2 inside the same E4", "rationale": "Closes the retained validation gap on fixed source", "evidence": "P2 plan F1-F4"},
+    {"rank": 2, "task": "Separately decide whether the module is ever wired into hosted CI or the gate (full tier)", "rationale": "Direct-only scope means hosted MSSQL does not select it", "evidence": "Root direct-only decision"}
+  ]
+}

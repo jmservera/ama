@@ -1,0 +1,34 @@
+{
+  "task_id": "issue-184-bounded-live-plan-1111",
+  "task_slug": "issue-184-bounded-live-plan-1111",
+  "parent_task": null,
+  "mode": "manual",
+  "active_phase": "Plan",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-11/issue-184-bounded-live-plan-1111-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-11/issue-184-bounded-live-plan-1111-plan.md",
+    "details": ".copilot-tracking/details/2026-11-11/issue-184-bounded-live-plan-1111-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-11/issue-184-bounded-live-plan-1111-critique.md",
+    "changes": null,
+    "review": null
+  },
+  "confirmed_decisions": [
+    {"decision": "Plan only; no execution, activation, az, model, SQL, spend or credential action", "status": "confirmed", "evidence": "owner selection 2026-11-11 and coordinator brief"},
+    {"decision": "Research executed; Planning Readiness Ready with cost status Unknown", "status": "confirmed", "evidence": ".copilot-tracking/research/2026-11-11/issue-184-bounded-live-plan-1111-research.md"},
+    {"decision": "Critique executed once, independent rubber-duck, verdict Revise (2 blocking, 4 significant, 1 minor), all applied directly, not repeated", "status": "confirmed", "evidence": ".copilot-tracking/plans/2026-11-11/issue-184-bounded-live-plan-1111-critique.md"},
+    {"decision": "Implement and Review not started; Review not run", "status": "confirmed", "evidence": "stage boundary in brief"}
+  ],
+  "blockers": [
+    {"id": "source-guard-ai", "summary": "Merged source refuses to send captured sensor readings to a real model", "resolution": "Owner decision on source change or waiver"},
+    {"id": "receive-path", "summary": "No authorised receive path known", "resolution": "Owner chooses and prices the path"},
+    {"id": "cost-unknown", "summary": "Currency, headroom, alert and OD-51 price record unknown", "resolution": "Owner and finance supply them"}
+  ],
+  "next_action": {"phase": "Plan", "action": "Owner answers the approval question in the details; no execution until then"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Owner answers the approval question", "rationale": "Clears the plan at the lowest effort", "evidence": "details approval question"},
+    {"rank": 2, "task": "Decide the captured-readings AI guard", "rationale": "Gates the #1288 live criterion", "evidence": "assistants.py and ai.py"},
+    {"rank": 3, "task": "Supply currency, headroom, alert and OD-51 record", "rationale": "Needed before any cost claim", "evidence": "research Part G"}
+  ]
+}

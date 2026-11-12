@@ -11476,3 +11476,56 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#resident-choice-csv-feature-wave-integrated-main-checkpoint-2026-11-11-refs-440-1420-1432-80-73) for PR 1435 on main `e09b21f1d`. Seven non-browser selectors (counts 4, 30, 9, 24, 11, 11, 18 equal the static expectation), four merged inventory and QA cases and one real Chromium story 232 run (42 PASS, axe no violations) exited 0, with one preserved environment error (`node` missing from PATH) on the first screen-test attempt.
 * Evidence class: local synthetic only; main CI outcome not read; whole #80, #73 and #440 stay open and no acceptance is inferred.
 * Evidence under `.copilot-tracking/` (2026-11-11 choice-wave-main-440-1111); raw outputs are external.
+
+## [2026-11-11] update | Keyboard probe compatibility integrated-main checkpoint (Refs #440 #132 #134)
+
+* Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#keyboard-probe-compatibility-integrated-main-checkpoint-2026-11-11-refs-440-132-134) for merged PR 1438 on main `74e63363bdcb6f9d420ff9c71b8332a9baf0044b` (tree `e89381c5fa93d093ca8ab90f95812a023c1d3e7a`). It records document-qualified BRD, PRD and ADR blob and status rows, a zero-behaviour product delta, a dated source-equivalent local browser output (805 assertions, not a fresh main run, axe not run), merged local typing and lint exits, hosted CI as hosted only, and the exclusions (unpublished #134 candidate `468bdd3`, whole #132, #134, #149, #233, #80, #73, #440).
+* Evidence class: documentary; no runtime, source, test, CI or requirement change, no new issue, no criterion tick, no approval. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-11 keyboard-checkpoint-440-1111).
+
+## [2026-11-11] update | Staff-mediated contractor intake owner direction recorded in ADR 0007 (Refs #132)
+
+* Amended the Proposed [ADR 0007](../adrs/0007-contractor-intake-staff-mediated-proposal.md#owner-direction-reported-for-the-synthetic-demonstrator-2026-11-09-refs-132) in place: a bounded section quotes issue 132 comment 6753054374 in full as an owner direction reported for the synthetic demonstrator only, with relayed-source provenance (the original owner message was not found, so it is not independently authenticated). The earlier "owner has not decided", "Not delivered" and next-slice text is kept as dated snapshots with a current delta. Added one task row to the index.
+* Evidence class: documentary; no runtime, source, test, CI or requirement change. ADR 0007 stays Proposed; no formal acceptance of option A, provider portal, #116 resolution, real worker authentication, Legal, Compliance, DPO or identity-owner approval, or production claim; ADR 0002 staff identity authority and gates are unchanged; the escalation write path and named owner stay undelivered; no criterion tick or issue closure.
+* Evidence under `.copilot-tracking/` (2026-11-11 issue-132-channel-decision-1111).
+
+## [2026-11-11] update | Priority ordering before-fix paired SQL validation recorded (Refs #1292)
+
+* Appended a dated subsection to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#priority-ordering-before-fix-paired-validation-2026-11-11-refs-1292): one paired run of unchanged maintained regression methods on a disposable SQL Server. The original source `e2ecee25` failed 4 of 5 selected methods with the wrong-newest recommendation (exit 1); the current head passed 14 of 14 with 0 skips (5 on SQL Server). It includes a literal AC1 to AC5 mapping with open items. Added one index sentence.
+* Evidence class: bounded local validation, evidence only; no source, test or fixture change, no Source E5, no criterion tick or closure, startup cause stays unknown, no whole-SQL, gate, Azure, live or approval claim.
+* Evidence under `.copilot-tracking/` (2026-11-11 priority-before-fix-1292).
+
+## [2026-11-11] update | WCAG table inventory registers the handoff waiting table (Refs #83)
+
+* Updated the Tables row of the [WCAG baseline](./research/ux/wcag-conformance-baseline.md) and the index entry: the regex-counted script-built table inventory is 13, the new one being the read-only handoff waiting screen, read from source (caption, scoped headers, named keyboard-focusable scroll region, text-only status). The 11 and 12 observations are kept.
+* Evidence class: source audit plus constructed-browser rendering tests; no screen-reader, reflow, zoom or assistive-technology test, no conformance claim, no approved global OD-09 times, no criterion tick; whole #83 criterion 3 stays unmet. The `ops.js` sensor table is outside the count and not audited here.
+* Evidence under `.copilot-tracking/` (2026-11-11 issue-83-table-inventory-d1-1111).
+
+## [2026-11-11] update | Handoff waiting screen integrated-main checkpoint (Refs #440 #83)
+
+* Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#handoff-waiting-screen-integrated-main-checkpoint-2026-11-11-refs-440-83) for merged PR 1444 on main `ef3e00ad05a78c3a0fd3b342b860fb3d43796223` (tree `513c3f9d8f7ae7c0c78672aa9f1650e23f7451cd`): 86 existing tests across eight selectors, zero skips, zero failures, plus Node and Ruff checks.
+* Evidence class: local observed on constructed synthetic fixtures; no source, test, requirement or ADR change, no new issue, no criterion tick, no acceptance. Main scoring was pending at read time. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-11 waiting-checkpoint-440-1111).
+
+## [2026-11-11] update | Personal handoff HTTP guidance integrated-main checkpoint (Refs #440 #153)
+
+* Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#personal-handoff-http-guidance-integrated-main-checkpoint-2026-11-11-refs-440-153) for merged PR 1449 on main `f0eb928f8abe17c512fba2e564837e97c0c5e655` (tree `a0a4aea03f400f2f1c0a3cd347bebd76c8f9350c`): 75 existing tests across six selectors, zero skips, zero failures, plus Node and Ruff checks. Tree equality with the tested candidate is stated separately from execution.
+* Evidence class: local observed on constructed synthetic fixtures; no source, test, requirement or ADR change, no new issue, no criterion tick, no acceptance. Main scoring was pending at read time. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-11 http-handoff-checkpoint-440-1111).
+
+## [2026-11-11] update | HTTP checkpoint documentation qualification D1 (Refs #440)
+
+* Qualified the same checkpoint section in the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#personal-handoff-http-guidance-integrated-main-checkpoint-2026-11-11-refs-440-153) after an independent Readiness report (approve with comments, two Medium findings): the H1 follow-up `grep -c` exit 1 and continuation without a Root pause, the author's own shell heredoc, `git checkout` and edit-tool recovery of this log entry, and the retained-evidence limit for the `~/.zava-forward` absence claim. Test results, the original Review and earlier entries are unchanged. Documentation only; no rerun, source change or acceptance.
+
+## [2026-11-11] update | Aftercare numeric-order integrated-main checkpoint (Refs #440 #1401 #1402 #134)
+
+* Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#aftercare-numeric-order-integrated-main-checkpoint-2026-11-11-refs-440-1401-1402-134) for merged PR 1456 (#1401, `a3862eed4a324b13715eeebf0c98053d9079dec1`) on main `077ad5ad20293a1d79932ea14e9f639dd11e5a22`: document-qualified trace, 125 focused tests selected (110 executed, 15 SQL Server skips, 0 failures), static checks, and the first mypy invocation failure retained as an invocation error. Added an index paragraph; the earlier 2026-11-10 aftercare section is unchanged.
+* The blank-document gap of #1402 is stated from source only and is not repaired on main; PR 1458 and PR 1455 are OPEN and excluded from main evidence.
+* Evidence class: local observed on constructed synthetic data; no source, test, requirement or ADR change, no new issue, no criterion tick, no acceptance. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-11 aftercare-wave-checkpoint-440-2119).
+
+## [2026-11-11] update | Aftercare post-1458 current-main follow-up (Refs #440 #1402 #1401)
+
+* Appended a dated subsection to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#aftercare-numeric-order-integrated-main-checkpoint-2026-11-11-refs-440-1401-1402-134) after PR 1458 (#1402, `bc123235af30b63de9808c97a430860f1e00dcc8`) merged. Observed an exported `src` equal to current main `97ec3f3c82a4aeeace7709f2f5a8766f4c638dfa` (rubric-only successor): 91 focused tests ran (44 intake, 5 snapshot, 42 store), 15 SQL Server skips, 0 failures. The earlier text at pin `077ad5ad2` and the retained mypy invocation failure are unchanged.
+* Evidence class: local observed, constructed synthetic, JSON and SQLite only; no source, test, requirement or ADR change, no new issue, no criterion tick, no acceptance. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-11 aftercare-bc-followup-440-2140).

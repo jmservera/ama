@@ -265,7 +265,7 @@ def _validate(doc: object) -> Doc:
 
 
 def _parse(text: str | None) -> Doc:
-    if text is None or not text.strip():
+    if text is None:
         return _blank()
     try:
         return _validate(json.loads(text))

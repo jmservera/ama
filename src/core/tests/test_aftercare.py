@@ -298,6 +298,48 @@ class SnapshotTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             AftercareRegister.from_state(bad)
 
+    def _register_of(self, count: int) -> AftercareRegister:
+        reg = AftercareRegister()
+        for _ in range(count):
+            raised(reg)
+        return reg
+
+    def test_restore_is_numeric_whatever_the_json_key_order(self) -> None:
+        for count in (999, 1000, 1001):
+            with self.subTest(count=count):
+                state = self._register_of(count).to_state()
+                text_sorted = json.loads(json.dumps(state, sort_keys=True))
+                restored = AftercareRegister.from_state(text_sorted)
+                self.assertEqual(
+                    list(restored.concerns), [f"AC-{n:03d}" for n in range(1, count + 1)]
+                )
+                self.assertEqual(raised(restored), f"AC-{count + 1:03d}")
+                reversed_state = deepcopy(state)
+                reversed_state["concerns"] = dict(reversed(list(state["concerns"].items())))
+                self.assertEqual(
+                    list(AftercareRegister.from_state(reversed_state).concerns),
+                    list(restored.concerns)[:count],
+                )
+
+    def test_restore_still_refuses_gaps_and_non_canonical_identifiers_past_999(self) -> None:
+        state = self._register_of(1001).to_state()
+        for label, drop, rename in (
+            ("gap", "AC-500", None),
+            ("unpadded", "AC-501", "AC-0501"),
+            ("foreign", "AC-1001", "AC-X"),
+        ):
+            with self.subTest(label):
+                bad = deepcopy(state)
+                moved = bad["concerns"].pop(drop)
+                if rename:
+                    bad["concerns"][rename] = moved
+                with self.assertRaises(ValueError):
+                    AftercareRegister.from_state(bad)
+        bad = deepcopy(state)
+        bad["concerns"]["AC-1000"]["id"] = "AC-1001"
+        with self.assertRaises(ValueError):
+            AftercareRegister.from_state(bad)
+
 
 if __name__ == "__main__":
     unittest.main()

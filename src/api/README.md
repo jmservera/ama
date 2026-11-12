@@ -6,6 +6,23 @@ ms.date: 2026-10-31
 ms.topic: reference
 ---
 
+## Handoff waiting times screen (2026-11-11, Refs #83)
+
+The "Handoff waiting times" link in the My cases and All cases headers opens
+`#/handoff-waiting`, a read-only table of the existing scoped
+`GET /api/handoffs/unaccepted` projection: elapsed hours, recorded as-of, status,
+due time, chase owner, proposed receiver and the escalation state and reasons the
+server supplies. It is not the "Handoffs waiting for you" list and does not depend
+on it. The screen sends no limit, so no approved global waiting time exists (OD-09
+is not decided): a long wait alone is not shown as late, nothing is escalated
+automatically and cases are opened by hand. A failed, refused or malformed load
+shows a fixed alert and no table. No API, core, permission or CSV change.
+
+The focused tests are `tests/test_handoff_waiting_view.py` (Node source cases and
+opt-in `ZF_BROWSER_TESTS=1` Chromium cases on synthetic data). They are not human,
+assistive-technology, live or operational acceptance, and whole #83 stays
+unaccepted until OD-09 times and operational acceptance exist.
+
 ## Complete local gate baseline repair (2026-10-31, Refs #572)
 
 The strict case-journey browser check binds iteration-specific route callback
@@ -4159,7 +4176,7 @@ printed, not of acceptance criteria.
 
 What it does not show: picking a fixture login is not authentication; the status
 text is read from the page, not from a screen reader; endpoint and handoff wording
-is only checked as text; five screens have no evidence table on the fixture; Asset,
+is only checked as text; six screens have no evidence table on the fixture; Asset,
 Procurement and Auditor have no login; the first listed home stands in for all
 homes. It records no acceptance criterion as met and no human or assistive
 technology approval. Dated notes on how the check was built and verified, including
