@@ -50,9 +50,16 @@ M0 main; M1 74; M2 176; M3 134 (union resolution); then optional wave B: M4 215;
 * Union: both #1492 and #134 section headings present exactly once.
 * log.md: no deleted lines versus the parent plus main.
 
-## 6. Focused development checks (not a gate)
+## 6. Required exact-candidate checks (publication gates beyond the full runner)
 
-`project-core`, `project-api` unit modules listed in the research file, `home_case_browser_check`, `regulatory_ux_check`, `programme_paging_browser_check`, `role_screens_browser_check 230`, Held download check when 96 UI is in, ruff, mypy, `node --check`, `git diff --check`, docs link review. Editable pip installs only.
+Commands run from `src/api` in the isolated venv with test-helper dirs only, each at the frozen candidate SHA, results stored externally with that SHA:
+
+* Core units: `test_gates`, `test_home_case`, `test_chat_case_answers`, `test_sqlqueues`, `test_taskqueues`, `test_generated_dataset`, `test_form_export` (`python3 -m unittest discover -s tests -p '<module>.py' -q` from `src/core`).
+* API units: `test_home_case_api`, `test_mvp`, `test_programme_screen`, `test_form_held_download_api`, `test_role_endpoint_inventory`, `test_role_screens_conformance` plus the regulatory and chat.js modules.
+* Browser checks, required: `home_case_browser_check` (24 PASS), `regulatory_ux_check` (21 states), `programme_paging_browser_check`, `role_screens_browser_check 230`, the Held download check. Each records the pinned axe 4.10.3 file hash (`880970c0...a68bb`); a missing browser or axe blocks publication.
+* Static: ruff 0.17.1, mypy 2.4.0, `node --check`, `git diff --check`, docs link review.
+
+The 96 Held-download methods are exactly the 16 in `test_form_held_download_api.py` at `94760af7d` (6 original: `test_default_off_and_each_guard_condition_alone_serve_nothing`, `test_trusted_proxy_provider_never_serves_even_with_both_switches`, `test_served_body_equals_core_export_with_safe_headers`, `test_unauthorised_revoked_and_unknown_requests_get_no_artifact`, `test_unavailable_working_evidence_is_a_non_success_without_attachment`, `test_each_request_rechecks_current_state_not_the_screen_version`; 10 saved-check methods named in the research history). Every one must be present and pass, plus whatever the accepted 96 UI head adds. Exact full paths are the repository paths in Section 1 prefixed `src/core/` or `src/api/` as listed by `git diff --name-only <input-base>..<head>` at G3; that file list is frozen into the assembly manifest and any difference is a G3 failure. The 96 UI manifest rows are filled only from its accepted frozen head.
 
 ## 7. Full gate
 
