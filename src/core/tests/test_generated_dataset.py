@@ -36,7 +36,42 @@ def register():
     return rows
 
 
+RUNBOOK = Path(__file__).resolve().parents[3] / "docs/capstone/demo/runbook.md"
+
+
+def runbook_five_homes(text):
+    """(case id, property type, stage) rows of the runbook's named five-home table."""
+    section = text.split("\n### The five homes\n", 1)[1].split("\n### ", 1)[0].split("\n## ", 1)[0]
+    lines = [ln for ln in section.splitlines() if ln.startswith("|")]
+    header = [c.strip() for c in lines[0].strip("|").split("|")]
+    assert header[:5] == ["#", "Case id", "Archetype", "Property type", "Stage in the replayed seed"], header
+    rows = [[c.strip() for c in ln.strip("|").split("|")] for ln in lines[2:]]
+    assert all(len(r) == len(header) and r[1] and r[3] and r[4] for r in rows), rows
+    return [(r[1], r[3], r[4]) for r in rows]
+
+
 class GeneratedDatasetTests(unittest.TestCase):
+    def test_runbook_five_home_table_parser_rejects_malformed_tables(self):
+        good = RUNBOOK.read_text(encoding="utf-8")
+        self.assertEqual(len(runbook_five_homes(good)), 5)
+        with self.assertRaises(AssertionError):
+            runbook_five_homes(good.replace("| Stage in the replayed seed |", "| Stage |"))
+        with self.assertRaises(AssertionError):
+            runbook_five_homes(good.replace("| Quality check | [Open ZF-2025-0355]", "|  | [Open ZF-2025-0355]"))
+
+    def test_runbook_five_home_cohort_is_reproduced_by_seed_and_as_of(self):
+        # Source replay with this fictional register only: it does not verify the archetype rule,
+        # direct links, sensors, the simulator cohort, AI scope or the private deployed store.
+        homes = runbook_five_homes(RUNBOOK.read_text(encoding="utf-8"))
+        self.assertEqual(len(homes), 5)
+        self.assertEqual(len({h[0] for h in homes}), 5)
+        by_id = {c["id"]: c for c in self.data["cases"]}
+        for case_id, prop_type, stage in homes:
+            case = by_id[case_id]
+            self.assertFalse(case["closed"], case_id)
+            self.assertEqual(case["hazards"], [], case_id)
+            self.assertEqual((case["home"]["type"], case["stage"]), (prop_type, stage), case_id)
+
     def test_default_output_preserves_the_runtime_zf_data_filename(self):
         parser = argparse.ArgumentParser()
         with patch.dict(os.environ, {"ZF_DATA": "/tmp/zf200-custom.json"}):

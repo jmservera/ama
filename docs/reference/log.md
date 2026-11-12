@@ -11580,3 +11580,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * `paired_equity` now checks a constructed source-completeness pair (`source_record` complete versus missing) as a fourth required dimension, and reports a ranker that leaves the subject out as an `excluded` failure instead of raising. Updated the [core README](../../src/core/README.md) and the [equity journey test plan](research/ux/equity-journey-test-plan.md).
 * Constructed fixture only: `fairness_evidence` and `activation_allowed` stay false; no ranking policy or threshold change; no criterion ticked.
 * Evidence under `.copilot-tracking/` (2026-11-12 issue-128-cohort-trace-1112).
+
+## [2026-11-12] update | Demo cohort replay regression (Refs #176)
+
+* Added a local test that reads the [demo runbook](../capstone/demo/runbook.md#the-five-homes) five-home table and checks the seed 20260901, as-of 2026-10-13 synthetic build with the tests' fictional register reproduces each id (open, no hazard record, published property type and stage). Added a provenance bullet to the runbook and a section to the [synthetic data README](research/retrofit-synthetic-data/README.md#demo-cohort-replay-regression-2026-11-12-refs-176).
+* Test-only: no generator, manifest or scenario recipe source changed. Fictional inputs only; deployed-store, sensor, simulator and AI-scope checks are not covered. Criteria 1 and 2 of #176 stay unmet and unticked (original private register boundary).
+* Evidence under `.copilot-tracking/` (2026-11-12 issue-176-demo-cohort-replay-2236).
