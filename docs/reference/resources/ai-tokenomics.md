@@ -76,11 +76,14 @@ section below supersedes its code-path descriptions, not operational acceptance.
 * The five-assistant path validates prompt, completion and total tokens and keeps
   them with the append-only ledger event when the provider supplies them
   ([assistants](../../../src/core/src/zava_forward/core/assistants.py)). This is
-  partial coverage: the legacy `Ai.run()` and `look_at()` paths use `_chat()`,
-  which returns text only and discards usage
-  ([core `ai.py`](../../../src/core/src/zava_forward/core/ai.py)), and usage can
-  remain unknown for an assistant call, in which case the reservation is
-  retained. Complete per-call metering is what NFR-012 proposes.
+  partial coverage: the legacy `Ai.run()` and `look_at()` paths already return
+  validated usage with the meter id and root through the request receipt, and
+  the text-draft path joins its output and review to the ledger (2026-11-12
+  source reading of [core `ai.py`](../../../src/core/src/zava_forward/core/ai.py));
+  only the resident chat host's direct `_chat` call keeps no receipt. Usage can
+  remain unknown for an assistant or legacy call, in which case the reservation
+  is retained. This is source and synthetic-spy evidence only, not a cost.
+  Complete per-call metering is what NFR-012 proposes.
 * Operator-authorised exercises carry finite call and token allowances and an
   expiry per authority reference, and proactive generation is off by default
   ([ADR 0002](../../adrs/0002-pilot-readiness-architecture.md),

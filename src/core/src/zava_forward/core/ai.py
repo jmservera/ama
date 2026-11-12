@@ -197,9 +197,10 @@ class Ai:
                 if len(raw) > 256000:
                     raise ValueError("Oversized provider envelope.")
                 result = json.loads(raw)
+            self.consumption.complete(rid, result.get("usage"), result.get("model"), "returned")
+            # Usage is reported only after the ledger settled it, so a result never states tokens the ledger lacks.
             receipt.update(usage=ai_consumption.usage(result.get("usage")),
                            returned_model=ai_consumption.bounded_model(result.get("model")))
-            self.consumption.complete(rid, result.get("usage"), result.get("model"), "returned")
         except Exception as error:
             if isinstance(error, urllib.error.HTTPError):
                 error.close()  # releases the absolute deadline that owns the connection

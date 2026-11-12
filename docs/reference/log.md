@@ -11535,3 +11535,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated subsection to the [IoT research plan](./research/iot-sensor-analytics-research-plan.md#narrow-engineering-design-proposal-2026-11-12-refs-184) and an index pointer: run correlation and receive semantics, expiry and attempt fence, finite model admission, staged minimal changes with tests, and separate future approval handoffs. Owner-selected 2026-11-12; PROPOSED only.
 * Evidence class: documentation only; no source, test, infrastructure or guard change, no Azure, model, SQL or credential action, no spend, no approval granted, no criterion tick. 2026-11-11 plan records unchanged.
 * Evidence under `.copilot-tracking/` (2026-11-12 issue-184-narrow-design-proposal-1112).
+## [2026-11-12] update | Legacy AI usage attribution initial slice (Refs #432)
+
+* Corrected the stale statement in [AI tokenomics](./resources/ai-tokenomics.md) that legacy `Ai.run()` and `look_at()` discard provider usage: current source returns validated usage and the meter id and root, and the text-draft path joins its output and review. One ordering defect was fixed (usage is reported only after the ledger settles it) and the legacy text-draft join, missing and malformed usage as Unknown, provider failure and workflow-only no dispatch gained synthetic local tests. The resident chat host, `look_at` and priority proofs, price, billing and authority are excluded.
+* Evidence class: local observed on a synthetic loopback provider spy; no cost, price, billing or model claim, no criterion tick, no acceptance. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-12 legacy-ai-usage-attribution-432-1112).
