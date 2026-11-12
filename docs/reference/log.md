@@ -11592,3 +11592,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Corrected the [AC-034 to AC-043 section](../architecture/cutover-evidence-pack.md#ac-034-to-ac-043-disposition-reconciliation-2026-11-12-refs-134) after an independent review: closed #83, #85 and #90 are historical evidence and not live owners (#134 is the only open owner recorded); the #85 closing review and PR 388 and the JSON-only skip are reconciled; the AC-043 probe is cited and the #1029 and #1152 tests are labelled related isolation, not manifest coverage; the unanchored fixture count is dropped and the 231, 231q, 231p and 231qp selector names are no longer a story count; the earlier `origin/main` identity is qualified as read-time history.
 * Documentation only. Six partial and four deferred are unchanged, no criterion passes, and there is no owner approval, tick or acceptance. The original `43b2187b9` entry above is not edited.
 * Evidence under `.copilot-tracking/` (2026-11-12 ac-dispositions-134-1112, correction 1 files).
+
+## [2026-11-12] update | AC-034 to AC-043 disposition correction 2 (Refs #134)
+
+* Fixed an error in correction 1 above: #83 is open, not closed. The [AC-034 to AC-043 section](../architecture/cutover-evidence-pack.md#ac-034-to-ac-043-disposition-reconciliation-2026-11-12-refs-134) restores #83 and #134 as the open owners for AC-036; only #85 and #90 (closed 2026-10-17) are historical evidence and not live owners. The correction 1 entry is not edited.
+* Documentation only. Six partial and four deferred are unchanged; no tick, acceptance or approval.

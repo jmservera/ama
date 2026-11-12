@@ -47,6 +47,11 @@
       "decision": "Correction 1 (R-1..R-5) applied as doc-only batch; targeted independent closure review: R-1,2,4,5 closed, R-3 fixed after review without re-review",
       "status": "complete",
       "evidence": ".copilot-tracking/reviews/2026-11-12/ac-dispositions-134-1112-correction1-closure.md"
+    },
+    {
+      "decision": "Correction 2: #83 restored as open owner; only #85 and #90 closed",
+      "status": "applied, closure review pending",
+      "evidence": ".copilot-tracking/plans/2026-11-12/ac-dispositions-134-1112-correction2-amendment.md"
     }
   ],
   "blockers": [
