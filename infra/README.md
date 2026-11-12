@@ -714,7 +714,11 @@ command uses the ARM handoff and fails on vault failure, with no app fallback.
 Its worker image/scoped IAM prerequisites remain explicit; `--dry-run` cannot
 create a worker to obtain unavailable private SQL evidence and reports that
 limit rather than claiming success. Retain the resulting Key Vault secret
-reference on subsequent Bicep redeploys. Use the existing tenant authority/
+reference on subsequent Bicep redeploys by passing `entraClientSecretName`
+equal to the `zava-forward-credential-name` tag that a successful setup
+recorded on the API app (read the name from the tag, never a value); the
+default `entra-client-secret` would replace the generated name. This keeps the
+secret name, not proof of sign-in. Use the existing tenant authority/
 roster instructions, not Azure RG ownership as a substitute for Entra consent.
 
 Run the strict public probes from an HTTPS-capable client, using installed
