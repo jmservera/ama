@@ -1,7 +1,7 @@
 ---
 title: Project Knowledge Base
 description: Entry point and index for the AMA Case Study 48 second brain, routing agents and people to the right evidence for each task
-ms.date: 2026-11-10
+ms.date: 2026-11-12
 ms.topic: overview
 ---
 
@@ -208,7 +208,10 @@ and three-test, zero-skip evidence in both execution and receipt verification.
 For capstone work, start with the [current working set](../capstone/README.md),
 [complete native/JSON source guide](../capstone/source/README.md),
 [pitch preparation](../capstone/pitch/README.md) and
-[demo runbook](../capstone/demo/runbook.md). The
+[demo runbook](../capstone/demo/runbook.md), which now carries the
+[owner-selected five-home demo target](../capstone/demo/runbook.md#demo-operating-mode-and-five-homes-owner-selected-target-2026-11-12)
+(Refs #134, #184): five replay-selected synthetic case ids with direct Workbench links, labelled a target, not
+implemented or deployed evidence. The
 [8 November autonomy and product-story review](../capstone/source/review-2026-11-08.md)
 corrects the original-versus-built framing, maps exact L2-L4 requests to
 current preparation, distinguishes historical Decision 1 from current

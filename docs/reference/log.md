@@ -11545,3 +11545,10 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Updated the assistant proposal card note in the [content standard](research/ux/content-standard.md): technical evidence (permitted sources, versions, hashes, AI usage and change record) moved into one native details disclosure and the edit field relabelled. Owner approval 2026-11-12; no audit removal, permission or approval change.
 * Evidence class: local observed on constructed synthetic fixtures (desktop and 360 px); no human resident-wording review, no assistive-technology acceptance, no criterion tick. Whole C2/C3/C5 remain unproven.
 * Evidence under `.copilot-tracking/` (2026-11-12 proposal-card-plain-language-153-1112).
+
+## [2026-11-12] update | Five-home demo target in the demo runbook (Refs #134 #184)
+
+* Added a section to the [demo runbook](../capstone/demo/runbook.md#demo-operating-mode-and-five-homes-owner-selected-target-2026-11-12) and an index pointer: the owner-selected simplified operating mode (single-instance start/stop, five homes, one reading per minute, Quality AI limited to the same five, operator-triggered analysis; eight-hour limit a later recommendation) labelled as a TARGET, plus five synthetic case ids with direct Workbench links and a preflight.
+* The ids come from a local read-only replay of the committed generator simulation (seed 20260901, as-of 2026-10-13; 980 cases and 443 open reproduced) chosen by a stated mechanical rule. No private data was read. Not deployed acceptance; sensor existence, open state and effective AI scope need preflight. The link origin is the host documented from a 2026-10-31 observation; availability is not claimed.
+* Evidence class: documentation only; no source, test, infrastructure, guard, permission or issue change, no Azure, model, SQL or spend action, no approval or criterion tick.
+* Evidence under `.copilot-tracking/` (2026-11-12 five-home-script-134-1112).
