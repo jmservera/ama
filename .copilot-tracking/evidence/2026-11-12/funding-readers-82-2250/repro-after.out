@@ -1,0 +1,7 @@
+funding_ok=True       home=True                   chat='confirmed'     queue_funding_blocker=False
+funding_ok=False      home=False                  chat='not confirmed' queue_funding_blocker=True
+funding_ok=None       home=False                  chat='not confirmed' queue_funding_blocker=True
+funding_ok='yes'      home=False                  chat='not confirmed' queue_funding_blocker=True
+funding_ok=1          home=False                  chat='not confirmed' queue_funding_blocker=True
+funding_ok='false'    home=False                  chat='not confirmed' queue_funding_blocker=True
+funding_ok=<absent>   home=False                  chat=None            queue_funding_blocker=True

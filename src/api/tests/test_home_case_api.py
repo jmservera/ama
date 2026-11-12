@@ -87,6 +87,13 @@ class HomeCaseApiTests(unittest.TestCase):
             403,
         )
 
+    def test_absent_funding_reads_as_not_confirmed_not_missing_case(self) -> None:
+        pam = self.login("pam@example.test")
+        self.store.cases["ZF-2"].pop("funding_ok")
+        code, view, _ = self.call("/api/cases/ZF-2/home-case", pam)
+        self.assertEqual(code, 200)
+        self.assertIs(view["home"]["funding_confirmed"], False)
+
     def test_version_recorded_through_http_and_retained(self) -> None:
         pam = self.login("pam@example.test")
         meta = {

@@ -4,7 +4,7 @@ from datetime import UTC, datetime, time
 from typing import Any
 
 VERSION = "work-queues-1"
-MEMBERSHIP_REVISION = 2
+MEMBERSHIP_REVISION = 3
 UNKNOWN = "Unknown"
 HELD = "Held for roles with a recorded need"
 PENDING = ("Offered", "Received", "Escalated")
@@ -292,7 +292,7 @@ def context(
             "building",
         )
     final_checks = case["stage"] == "Final checks before ordering"
-    if not case.get("funding_ok"):
+    if case.get("funding_ok") is not True:
         block(
             "Final checks: funding",
             "Funding has not been confirmed.",
