@@ -1509,6 +1509,24 @@ real register contract without a browser. These fixtures prove no serving model,
 employee effectiveness, accessibility acceptance, resident consent or named
 approval.
 
+The register also offers a synthetic-demo "Download visible summary (CSV)"
+button (#80, `Refs` only). The browser builds the file from the one
+`/api/exceptions` response already rendered, with no second request, endpoint or
+domain write; the existing view and denial audit lines are unchanged and no
+zero-audit claim is made. It has four columns: Reference in this view (a
+per-view `EX-` reference, not a stable identity), Kind, State and Configured
+owner role, each limited to a closed vocabulary or `Unknown`. Owners, free
+text, record, source, case, batch and query identifiers and conflict values are
+never copied. UTF-8, CRLF, formula-neutralised cells, file name
+`exception-register-visible-summary.csv`. No button appears for an empty,
+partly unreadable, roles-not-named, denied, unavailable or malformed register,
+so no header-only file can be read as all clear. It is a copy as loaded, is not
+a complete exception list, and approves no operational or real-record use; how
+a downloaded copy is retained is not decided. `tests/test_exception_register_screen.py`
+holds the byte and negative cases and `checks/data_operator_browser_check.py`
+the browser download, keyboard, request-count and no-button cases (axe runs only
+when `ZF_AXE_JS` is set).
+
 ## Resident chat and synthetic callback agenda (#520, building on #469)
 
 The resident showcase has one bottom-right Chat launcher on its sign-in,

@@ -3,11 +3,15 @@
 All data below is constructed synthetic text. Nothing reads ZF_DATA or calls a service.
 """
 
+import csv
+import io
 import json
 import subprocess
 import unittest
 from pathlib import Path
 from typing import Any
+
+from zava_forward.core.list_export import safe_cell
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
 
@@ -65,8 +69,9 @@ async function scenario(name, reply, opts = {}) {
       calls.push({path, write: body !== undefined});
       return reply(controller, signal);
     },
-    h: (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat(Infinity).filter(
-      kid => kid !== false && kid !== null && kid !== undefined)})
+    h: (tag, attrs, ...kids) => ({tag, attrs, addEventListener() {},
+      kids: kids.flat(Infinity).filter(
+        kid => kid !== false && kid !== null && kid !== undefined)})
   });
   vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('data-operator');", context);
   let out, error = null;
@@ -231,6 +236,108 @@ class ExceptionRegisterScreen(unittest.TestCase):
             self.assertEqual(region["attrs"]["tabindex"], 0)
 
 
+CSV_SCRIPT = r"""
+const fs = require("node:fs");
+const vm = require("node:vm");
+const host = fs.readFileSync(process.argv[1] + "/role-screens.js", "utf8");
+const marker = {owner: "marker.owner@example.test", summary: "MARK-SUMMARY", error: "MARK-ERROR",
+  runbook: "MARK-RUNBOOK", eligibility: "MARK-ELIGIBILITY", ref: "MARK-REF",
+  original_source: {record_id: "MARK-RECORD", batch_id: "MARK-BATCH", case_id: "MARK-CASE",
+    query_id: "MARK-QUERY", source: "MARK-SOURCE", status: "MARK-STATUS"}};
+const item = (extra) => ({id: "EX-001", kind: "source_conflict", status: "open",
+  owner_role: "data_steward", ...marker, ...extra});
+const clean = [item({values: [{value: "MARK-VALUE-A"}, {value: "MARK-VALUE-B"}]}),
+  item({id: "EX-002", kind: "failed_ai_run", owner_role: "digital_operator"}),
+  item({id: "EX-010", kind: "stranded_task"})];
+const base = (items, extra = {}) => ({state: "ok", items, unrouted: [], sources: [],
+  banner: {state: "unknown", text: "x"}, access: {roles: {}, scope: {}}, note: "n", ...extra});
+const odd = [
+  item({id: "EX-001", kind: "constructor", status: "closed", owner_role: "a@b.test"}),
+  item({id: "EX-002", kind: "future_kind", status: 5, owner_role: {}}),
+  item({id: "EX-003", kind: "__proto__", status: null, owner_role: null}),
+  item({id: "EX-004", kind: "identity_conflict", status: "open", owner_role: "data_steward"})];
+
+async function scenario(name, data, opts = {}) {
+  const calls = [], made = [], revoked = [], clicks = [], timers = [];
+  let removed = 0, appended = 0;
+  const listeners = {};
+  const controller = new AbortController();
+  const context = vm.createContext({
+    URLSearchParams, Intl, AbortController, Date,
+    location: {hash: "#/screens?screen=data-operator&exceptions=1"},
+    routeController: controller, me: {user: {role: "Retrofit Programme Manager"}},
+    api: async (path, body) => { calls.push({path, write: body !== undefined}); return data; },
+    Blob: class {
+      constructor(parts, o) {
+        if (opts.blobFails) throw new Error("no blob");
+        this.text = parts.join("");
+        this.type = o.type;
+      }
+    },
+    URL: {createObjectURL: (b) => {
+        made.push({text: b.text, type: b.type});
+        return "blob:synthetic-" + made.length;
+      },
+      revokeObjectURL: (u) => revoked.push(u)},
+    document: {createElement: () => ({
+        click() {
+          if (opts.clickFails) throw new Error("blocked");
+          clicks.push(this.download + "|" + this.href);
+        },
+        remove() { removed += 1; }}),
+      body: {append() { appended += 1; }}},
+    setTimeout: (fn) => timers.push(fn),
+    h: (tag, attrs, ...kids) => {
+      const node = {tag, attrs, kids: kids.flat(Infinity).filter(
+        kid => kid !== false && kid !== null && kid !== undefined)};
+      Object.defineProperty(node, "addEventListener",
+        {value: (type, fn) => { listeners[type] = fn; }});
+      return node;
+    }
+  });
+  vm.runInContext(host + "\n;globalThis.__s = roleScreens.get('data-operator');", context);
+  const out = await context.__s.overview(controller.signal, [], null);
+  const find = (n, tag, found = []) => {
+    if (n && typeof n === "object") {
+      if (n.tag === tag) found.push(n);
+      (n.kids || []).forEach(k => find(k, tag, found));
+    }
+    return found;
+  };
+  const buttons = find(out, "button");
+  const statusNode = find(out, "p").find(p => p.attrs && p.attrs.id === "exception-summary-status");
+  const beforeCalls = calls.length;
+  if (buttons.length && listeners.click) listeners.click();
+  const afterClick = {calls: calls.length - beforeCalls, made: made.length,
+    revoked: revoked.length};
+  timers.forEach(fn => fn());
+  return {name, buttons: buttons.length, button: buttons[0] && buttons[0].attrs,
+    status: statusNode ? (statusNode.textContent ?? "") : null,
+    made, clicks, removed, appended, revoked, afterClick,
+    statusAttrs: statusNode && statusNode.attrs, host: context};
+}
+(async () => {
+  const results = await Promise.all([
+    scenario("clean", base(clean)),
+    scenario("odd", base(odd)),
+    scenario("empty", base([])),
+    scenario("roles", base(clean, {state: "roles_not_named"})),
+    scenario("unreadable", base([...clean, 7])),
+    scenario("badid1", base([item({id: "EX-1"})])),
+    scenario("badid2", base([item({id: "=EX-001"})])),
+    scenario("badid3", base([item({id: "EX-001\n"})])),
+    scenario("blobfail", base(clean), {blobFails: true}),
+    scenario("clickfail", base(clean), {clickFails: true}),
+  ]);
+  const ctx = vm.createContext({h: () => ({}), Date});
+  vm.runInContext(host, ctx);
+  const strings = JSON.parse(process.argv[2]);
+  const cells = strings.map((s) => vm.runInContext("exceptionSummaryCell", ctx)(s));
+  console.log(JSON.stringify({results: results.map(({host, ...r}) => r), cells}));
+})();
+"""
+
+
 HOST_SCRIPT = r"""
 const fs = require("node:fs");
 const vm = require("node:vm");
@@ -257,8 +364,9 @@ async function scenario(name, role, hash, exceptions) {
       if (path.startsWith("/api/cases?")) return {items: rows, total: 1};
       return {id: "C-1", stock_reconciliation_events: [], stock_queries: []};
     },
-    h: (tag, attrs, ...kids) => ({tag, attrs, kids: kids.flat(Infinity).filter(
-      kid => kid !== false && kid !== null && kid !== undefined)})
+    h: (tag, attrs, ...kids) => ({tag, attrs, addEventListener() {},
+      kids: kids.flat(Infinity).filter(
+        kid => kid !== false && kid !== null && kid !== undefined)})
   });
   vm.runInContext(host + "\n;globalThis.__view = roleScreensView;", context);
   let error = null;
@@ -340,6 +448,111 @@ class HostIntegration(unittest.TestCase):
         page = text(self.out["denied"]["shown"][-1])
         self.assertIn("Access denied. Only a named data steward", page)
         self.assertNotIn("EX-900", page)
+
+
+CSV_STRINGS = [
+    "=1+1",
+    "+1",
+    "-1",
+    "@x",
+    "\tx",
+    "\rx",
+    "a,b",
+    'say "hi"',
+    "line\nbreak",
+    "a\r\nb",
+    "plain",
+    "'=already",
+    " lead",
+    "EX-001",
+    "Source conflict",
+]
+FILE = "exception-register-visible-summary.csv"
+CLEAN_CSV = (
+    "Reference in this view,Kind,State,Configured owner role\r\n"
+    "EX-001,Source conflict,open,data_steward\r\n"
+    "EX-002,Requested AI help did not deliver a model result,open,digital_operator\r\n"
+    "EX-010,Stranded work,open,data_steward\r\n"
+)
+ODD_CSV = (
+    "Reference in this view,Kind,State,Configured owner role\r\n"
+    "EX-001,Unknown,Unknown,Unknown\r\n"
+    "EX-002,Unknown,Unknown,Unknown\r\n"
+    "EX-003,Unknown,Unknown,Unknown\r\n"
+    "EX-004,Identity conflict,open,data_steward\r\n"
+)
+
+
+def run_csv() -> dict[str, Any]:
+    result = subprocess.run(
+        ["node", "-e", CSV_SCRIPT, str(WEB), json.dumps(CSV_STRINGS)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, result.stderr
+    parsed: dict[str, Any] = json.loads(result.stdout)
+    return parsed
+
+
+class ExceptionSummaryCsv(unittest.TestCase):
+    """Browser-built four-column summary: exact bytes, fail-closed offers, no request (#80)."""
+
+    scenarios: dict[str, dict[str, Any]]
+    cells: list[str]
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        parsed = run_csv()
+        cls.scenarios = {r["name"]: r for r in parsed["results"]}
+        cls.cells = parsed["cells"]
+
+    def test_clean_list_offers_one_native_button_and_exact_bytes(self) -> None:
+        clean = self.scenarios["clean"]
+        self.assertEqual(clean["buttons"], 1)
+        self.assertEqual(clean["button"]["type"], "button")
+        self.assertEqual(clean["button"]["aria-describedby"], "exception-summary-note")
+        self.assertEqual(clean["statusAttrs"]["role"], "status")
+        self.assertEqual(len(clean["made"]), 1)
+        self.assertEqual(clean["made"][0], {"text": CLEAN_CSV, "type": "text/csv;charset=utf-8"})
+        self.assertFalse(clean["made"][0]["text"].startswith("\ufeff"))
+        self.assertEqual(clean["status"], f"Download started: 3 rows, {FILE}")
+
+    def test_no_excluded_field_reaches_the_file(self) -> None:
+        body = self.scenarios["clean"]["made"][0]["text"]
+        self.assertNotIn("MARK", body)
+        self.assertNotIn("example.test", body)
+
+    def test_activation_makes_no_request_and_cleans_up(self) -> None:
+        clean = self.scenarios["clean"]
+        self.assertEqual(clean["afterClick"], {"calls": 0, "made": 1, "revoked": 0})
+        self.assertEqual(clean["clicks"], [f"{FILE}|blob:synthetic-1"])
+        self.assertEqual((clean["appended"], clean["removed"]), (1, 1))
+        self.assertEqual(clean["revoked"], ["blob:synthetic-1"])
+
+    def test_values_outside_the_allowlists_export_as_unknown(self) -> None:
+        self.assertEqual(self.scenarios["odd"]["made"][0]["text"], ODD_CSV)
+
+    def test_unsafe_or_incomplete_views_offer_no_file(self) -> None:
+        for name in ("empty", "roles", "unreadable", "badid1", "badid2", "badid3"):
+            result = self.scenarios[name]
+            self.assertEqual((result["buttons"], result["made"]), (0, []), name)
+
+    def test_failure_reports_no_file_and_releases_everything(self) -> None:
+        for name in ("blobfail", "clickfail"):
+            result = self.scenarios[name]
+            self.assertTrue(
+                result["status"].startswith("No file was created or the download"), name
+            )
+            self.assertIn("Nothing was changed.", result["status"], name)
+            self.assertEqual(result["removed"], result["appended"], name)
+        self.assertEqual(self.scenarios["clickfail"]["revoked"], ["blob:synthetic-1"])
+
+    def test_cell_escaping_matches_the_repository_helper(self) -> None:
+        for value, got in zip(CSV_STRINGS, self.cells, strict=True):
+            buf = io.StringIO()
+            csv.writer(buf).writerow([safe_cell(value), "x"])
+            self.assertEqual(got, buf.getvalue()[: -len(",x\r\n")], repr(value))
 
 
 if __name__ == "__main__":

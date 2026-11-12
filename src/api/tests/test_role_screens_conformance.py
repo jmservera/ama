@@ -55,7 +55,12 @@ class RoleScreenConformance(unittest.TestCase):
         self.assertTrue(rules)
         for rule in rules:
             self.assertNotRegex(rule, r"animation|transition")
-        self.assertNotRegex(SCREENS, r"setTimeout|setInterval|requestAnimationFrame|\.animate\(")
+        self.assertNotRegex(SCREENS, r"setInterval|requestAnimationFrame|\.animate\(")
+        # The only timer is the delayed object-URL release of the exception summary download.
+        self.assertEqual(
+            re.findall(r"setTimeout\([^;]*;", SCREENS),
+            ["setTimeout(() => URL.revokeObjectURL(started), 1000);"],
+        )
 
     def test_screens_state_no_action_is_taken(self) -> None:
         self.assertIn("No message, approval or record change is made from this screen.", SCREENS)
