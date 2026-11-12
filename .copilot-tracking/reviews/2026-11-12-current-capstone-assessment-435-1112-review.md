@@ -23,3 +23,7 @@ Review executed once on the final candidate (working tree before commit; head re
 * R4 (confirmation): a coordinator spot check of the A-section page citations against the PPTX is advisable.
 
 No material finding remains open inside this task; no second Review or correction loop was run.
+
+## Correction 1 bounded closure (2026-11-12, added; original outcome above preserved)
+
+Original adverse observation: T12 mislabelled the page 44 source (independent coordinator finding). Closure check, performed once and limited to that finding: page 44 visible and notes cite only E06, E07, E13; the corrected row matches. No new finding. Not re-run: a broad review. The correction commit is verified against the current main base only for qualification; no rebase was made.

@@ -22,3 +22,8 @@ task_id: current-capstone-assessment-435-1112
 * Working-file `git hash-object` equals the identities in the research for the PPTX, PDF, manifest, generated script and answers; the builder file is unchanged (`git status` shows no modification).
 * `git status --short` shows only the two edited docs plus untracked RPI artifacts and the new assessment.
 * Not run: deck build or render, native PowerPoint, rehearsal, runtime tests, complete gate, hosted CI (nothing published).
+
+## Correction 1 (after original commit 9dd2c2427e46)
+
+* Defect introduced by this assessment: register row T12 attributed page 44 (B16) to E05. The delivered PPTX shows `Sources: E06 · E07 · E13` on the slide and only E06, E07 and E13 in its notes (page identified by B16 content; E-codes read with standard-library XML extraction). Row T12 now cites E06, E07, E13 and notes that E05 is not cited there; class "Designed control, not live". Row T4 (page 22, E05) and finding F3 are unchanged.
+* Validation: only the assessment file differs in the working tree; protected deck, PDF, manifest, builder and notes hashes unchanged; guide coverage rows unchanged; no link added.

@@ -34,12 +34,17 @@
       "decision": "Review executed once, outcome conformant offline candidate with residual R1-R4",
       "status": "recorded",
       "evidence": "review artifact"
+    },
+    {
+      "decision": "Correction 1 of this assessment only: T12 label E05 corrected to E06/E07/E13; original 9dd2c2427e46 preserved; old campaign counters unchanged",
+      "status": "coordinator-directed",
+      "evidence": "changes and review addenda"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Independent coordinator review of the local commit before any publication; no push or PR made"
+    "action": "Independent coordinator assessment of the correction commit; no push or PR made"
   },
   "prioritized_follow_ups": [
     {

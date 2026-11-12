@@ -34,3 +34,7 @@ No rebuild, render, rehearsal simulation, mentor refresh, model or cloud call, i
 ## Validation tier
 
 Focused documentation tier (docs-only, non-gate). Local checks: link review, ASCII scan, `git diff --stat`, blob hash comparison. Hosted CI is not read before publication and nothing is published. Complete gate not required: no source, workflow, dependency, infrastructure, SQL or security change.
+
+## Correction 1 (prospective amendment, 2026-11-12)
+
+Scope: correct only the T12 evidence-label citation in the assessment (page 44 cites E06, E07 and E13 in its visible source line and notes; E05 was wrong). Authority: the initial scoped task and its normal correction allowance, per coordinator classification; the original task carried no spent correction budget and the old deck and source campaign counters are untouched. Original commit `9dd2c2427e46`, critique and Review outcomes are preserved unchanged. Closure check: one bounded re-read of page 44 and a diff scope check. No deck, source, price, claim or placement change.
