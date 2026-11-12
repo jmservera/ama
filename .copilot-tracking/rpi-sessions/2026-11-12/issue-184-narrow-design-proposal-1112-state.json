@@ -1,0 +1,33 @@
+{
+  "task_id": "issue-184-narrow-design-proposal-1112",
+  "task_slug": "issue-184-narrow-design-proposal-1112",
+  "parent_task": {"task_id": "issue-184-bounded-live-plan-rev2-1111", "task_slug": "issue-184-bounded-live-plan-rev2-1111"},
+  "mode": "manual",
+  "active_phase": "Review",
+  "status": "completed",
+  "session_status": null,
+  "artifact_paths": {
+    "research": ".copilot-tracking/research/2026-11-12/issue-184-narrow-design-proposal-1112-research.md",
+    "plan": ".copilot-tracking/plans/2026-11-12/issue-184-narrow-design-proposal-1112-plan.md",
+    "details": ".copilot-tracking/details/2026-11-12/issue-184-narrow-design-proposal-1112-details.md",
+    "critique": ".copilot-tracking/plans/2026-11-12/issue-184-narrow-design-proposal-1112-critique.md",
+    "changes": ".copilot-tracking/changes/2026-11-12/issue-184-narrow-design-proposal-1112-changes.md",
+    "review": ".copilot-tracking/reviews/2026-11-12/issue-184-narrow-design-proposal-1112-review.md"
+  },
+  "confirmed_decisions": [
+    {"decision": "One newly authorized narrow documentation-only design proposal; no implementation, live execution, Azure, model, SQL, credential, resource or spend; not a renewal of any exhausted campaign", "status": "confirmed", "evidence": "Owner selection 2026-11-12 relayed in the task instruction"},
+    {"decision": "Local-only frozen candidate; no push, pull request or issue edit", "status": "confirmed", "evidence": "Task instruction"},
+    {"decision": "Research executed", "status": "done", "evidence": "research artifact; Planning Readiness Ready"},
+    {"decision": "Critique executed once (rubber-duck, not independent); verdict 7 significant and 2 minor findings, all compatible and applied directly; no owner decision required", "status": "done", "evidence": ".copilot-tracking/plans/2026-11-12/issue-184-narrow-design-proposal-1112-critique.md"},
+    {"decision": "Review executed once (author, not independent); outcome: candidate complete with open items, no blocking defect found by author", "status": "done", "evidence": ".copilot-tracking/reviews/2026-11-12/issue-184-narrow-design-proposal-1112-review.md"}
+  ],
+  "blockers": [
+    {"id": "independent-review", "summary": "Independent exact-head review and human approvals not yet performed", "resolution": "Coordinator independent exact-head review before any publication"}
+  ],
+  "next_action": {"phase": "Follow-up", "action": "Coordinator independent exact-head review; owner decisions D1-D6; then separate implementation permission"},
+  "prioritized_follow_ups": [
+    {"rank": 1, "task": "Independent exact-head review of the proposal candidate", "rationale": "Required gate; author review is not independent", "evidence": "review artifact open items"},
+    {"rank": 2, "task": "Owner decisions D1-D6", "rationale": "Unlock any stage scoping", "evidence": "proposal section 4"},
+    {"rank": 3, "task": "Stage A receiver implementation permission request", "rationale": "Smallest behavior-preserving stage", "evidence": "proposal section 4 and 5"}
+  ]
+}

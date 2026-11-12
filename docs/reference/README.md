@@ -329,6 +329,10 @@ records five read-only ARM metadata reads of the existing hub, consumer group, d
 Bicep-declared job names (both `ResourceNotFound`). It is configuration only: it shows no ingestion,
 runtime or build proof, no execution, no budget or transport authority and no cost measurement, and
 the whole #110, #140, #184 and #440 criteria stay open.
+The [2026-11-12 narrow engineering design proposal](./research/iot-sensor-analytics-research-plan.md#narrow-engineering-design-proposal-2026-11-12-refs-184)
+proposes run-specific correlation, receive semantics, an attempt fence, finite model admission and staged
+minimal changes with approval handoffs; it is design only, changes no source, grants no approval and
+ticks no criterion.
 The [2026-10-30 composed local handover contract](./research/iot-sensor-analytics-research-plan.md#composed-local-handover-evidence-2026-10-30-refs-188)
 adds same-model replay, strict reference-adjusted statistical tolerances and
 whole-window SQL replay checks. It does not establish actual Hub-to-Azure SQL

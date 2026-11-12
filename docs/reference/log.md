@@ -11529,3 +11529,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Appended a dated subsection to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#aftercare-numeric-order-integrated-main-checkpoint-2026-11-11-refs-440-1401-1402-134) after PR 1458 (#1402, `bc123235af30b63de9808c97a430860f1e00dcc8`) merged. Observed an exported `src` equal to current main `97ec3f3c82a4aeeace7709f2f5a8766f4c638dfa` (rubric-only successor): 91 focused tests ran (44 intake, 5 snapshot, 42 store), 15 SQL Server skips, 0 failures. The earlier text at pin `077ad5ad2` and the retained mypy invocation failure are unchanged.
 * Evidence class: local observed, constructed synthetic, JSON and SQLite only; no source, test, requirement or ADR change, no new issue, no criterion tick, no acceptance. Recommendation: continue, bounded (proposed, not a decision).
 * Evidence under `.copilot-tracking/` (2026-11-11 aftercare-bc-followup-440-2140).
+
+## [2026-11-12] update | Narrow #184 live-demo engineering design proposal (Refs #184)
+
+* Added a dated subsection to the [IoT research plan](./research/iot-sensor-analytics-research-plan.md#narrow-engineering-design-proposal-2026-11-12-refs-184) and an index pointer: run correlation and receive semantics, expiry and attempt fence, finite model admission, staged minimal changes with tests, and separate future approval handoffs. Owner-selected 2026-11-12; PROPOSED only.
+* Evidence class: documentation only; no source, test, infrastructure or guard change, no Azure, model, SQL or credential action, no spend, no approval granted, no criterion tick. 2026-11-11 plan records unchanged.
+* Evidence under `.copilot-tracking/` (2026-11-12 issue-184-narrow-design-proposal-1112).

@@ -2,7 +2,7 @@
 title: In-Use Monitoring Analytics Research Plan (Dew Point and Trend Risks)
 description: Research phase plan for analysing humidity and temperature sensor data received through Azure IoT Hub, including dew point and surface condensation risk, with leads, unknowns, evidence rules and exit criteria
 author: AMA programme
-ms.date: 2026-11-06
+ms.date: 2026-11-12
 ms.topic: reference
 ---
 
@@ -875,6 +875,218 @@ merged by PR 1412; it records no Azure observation, and its older qualified
 witness chains are described there. Per the coordinator, the current canonical
 chain verified clean and no current hold applies; this was not re-verified
 here.
+
+### Narrow engineering design proposal (2026-11-12, Refs #184)
+
+Status: PROPOSED design only, documentation only. It was prepared after the
+owner selected "Prepare the narrow engineering proposal (no implementation or
+live execution)" on 2026-11-12, as one newly authorized proposal and not a
+renewal of any exhausted implementation campaign. It changes no application,
+test, infrastructure or guard file, performs no Azure, device, model, SQL or
+credential action and spends nothing. It grants and claims no approval, ticks no
+criterion and leaves the whole #184 acceptance open. The merged simulator and
+receiver (PR 1304) are the baseline, not something to rebuild. The 2026-11-11
+bounded-plan records (original plan `76e21`, the additive corrected `7e310a`
+record and the original adverse independent review) are historical and are
+neither rewritten nor regraded; the stream-chronology discrepancy stays Medium
+and qualified, as there. Source anchors are at base `b6f61b12`, which contains
+PR 1454 (`ba65039c`). Plan evidence is under
+`.copilot-tracking/*/2026-11-12/issue-184-narrow-design-proposal-1112-*`.
+
+Source anchors used below (paths under `src/`):
+
+| Short name | File and lines | Fact |
+| --- | --- | --- |
+| Receiver start | [iot_stream.py](../../../src/api/src/zava_forward/api/iot_stream.py) 255, 300-301 | No checkpoint store; `starting_position="-1"` (non-inclusive), so every window re-reads the retained stream from its beginning |
+| Receiver completion | `iot_stream.py` 224-229, 268, 322 | `max_seconds` 1-3600, `max_events` 1-100000; success only when receipts reach `max_events`, else `RUN_DEADLINE` and the tally is discarded |
+| Receiver CLI and job | [live_receiver.py](../../../src/api/src/zava_forward/api/live_receiver.py) 50-91, 128-129, 154; [live-receiver-job.bicep](../../../infra/live-receiver-job.bicep) 74 | Control file polled every 2 s; `--events` defaults to 1000 and the job passes only `--control-file` and `--seconds`; exit 2 for any stream error; stdout is only `receipts=N` |
+| Reading identity | [sensor_consumer.py](../../../src/core/src/zava_forward/core/sensor_consumer.py) 746-770, 780, 998-1003; [live_readings.py](../../../src/core/src/zava_forward/core/synthetic/live_readings.py) 175 | `reading_id = LIVE-{sensor}-{YYYYmmddTHHMM}Z` on a 5-minute slot with no seed; idempotency key is a hash of the row; an existing `(sensor_id, reading_id)` is `IDENTITY_CONFLICT`; a receipt may be `rejected` |
+| Simulator | [live_simulator.py](../../../src/api/src/zava_forward/api/live_simulator.py) 109-124, 268-279, 341-348, 374, 437, 474-482; [live-simulator-job.bicep](../../../infra/live-simulator-job.bicep) 27, 65-67, 75 | Up to `attempts` (default 4, 1-10) tries per slot with backoff; the gate is read once per slot, not per attempt; the sink has no application timeout; cohort is the control homes intersected with the store; default seed 184; job cron `*/5`, replica timeout 240, retry limit 0, parallelism 1 |
+| Control document | [live_control.py](../../../src/api/src/zava_forward/api/live_control.py) 30, 107-121 | Closed field set; advisory file lock, whose cross-replica behavior on the mounted share is unverified |
+| Model admission | [ai.py](../../../src/core/src/zava_forward/core/ai.py) 31-34, 132-135, 153-154, 183-184; [ai_consumption.py](../../../src/core/src/zava_forward/core/ai_consumption.py) 547-660, 771-785 | Real `Ai` refused without a simulation seal (the guard); reservation bound is provider-body bytes plus `max_tokens`; unknown input bound or late or unmatched usage is a `liability-unknown` hold |
+| Assistant limits and flag | [assistants.py](../../../src/core/src/zava_forward/core/assistants.py) 265-330, 361-398, 1005-1007, 1308, 1939; [sensor_view.py](../../../src/core/src/zava_forward/core/sensor_view.py) 20-36, 300-330 | Defaults input 12000 characters, output 600 tokens, 2 attempts (ceiling 3); the proactive scanner covers open cases, not one home; capture takes the newest 12 readings in 366 days plus context, so it can mix historical rows |
+
+#### 1. Run-specific correlation and receive semantics
+
+Problem. A "run" has no identity in the receiver. Historical retained messages
+and current-run messages are indistinguishable by the stream, a deadline
+discards partial progress, and a count of receipts is not a count of ingested
+readings (a receipt can be `rejected`, and a replay is a receipt). A fixed 1000
+target therefore proves nothing about one run.
+
+Proposed run identity (no schema change, no change to the closed
+`live-sim-reading-v1` wire format):
+
+* A run manifest created before any send, kept outside the repository and the
+  Hub: run id, never-before-used seed, the exact cohort (homes and device
+  bindings from the control document), the exact slot list, and so the exact
+  expected set of `(sensor_id, reading_id)` pairs. The seed is carried in the
+  retained reading row; `scenario` is the only run tag also visible to the
+  Quality projection (decision D1 below); `label` lives only in the delivery
+  observation body.
+* The reading id omits the seed, so the id alone is not run identity. A pre-run
+  read-only check that no expected pair is already retained is a prerequisite
+  (otherwise a send is a replay or an `IDENTITY_CONFLICT`, not a new reading).
+* Correlation chain, every link named by manifest pair: simulator send record,
+  Hub message id (equal to the reading id), receiver observation, accepted
+  receipt, retained row, same-home UI view, Quality snapshot, privacy-compatible
+  request witness and attributed flag. Same-home means the sensor's home equals
+  the home of the Quality proposal. A flag whose cited sensor ids include no
+  manifest pair is not run evidence, because capture can mix older rows.
+
+Proposed receive semantics:
+
+* Start. Keep the current default unchanged. Add an optional run start instant
+  and use the Hub enqueued time, inclusive, with a stated skew margin, as a
+  filter on what is counted. Rejected alternatives: `@latest` (races a send that
+  started just before the receiver attached) and a checkpoint store (adds a
+  shared mutable store and permission for no run isolation, since a checkpoint
+  records position, not run membership). Whether the live service enqueued-time
+  clock matches the sender within the margin is not established.
+* Expected set. An optional expected-pair set makes the receiver skip, and
+  count, anything not in it. Skipped messages are never ingested.
+* Completion. Success is when every expected pair has an accepted receipt
+  (an identical replay of an accepted row also counts, reported separately).
+  Rejected receipts are a non-pass and are listed. A deadline stays exit 2 with
+  a fixed-code summary of expected, accepted, replayed, rejected, skipped and
+  missing counts. The deadline is never redefined as success, and the summary
+  must not carry message bodies or secrets.
+* Bounded receive. The window stays `min(seconds, expiry - now)`; an optional
+  expected set also lets the receiver stop early once complete.
+* Not claimed: that every historical message is excluded (clock skew and
+  retention remain), or that completion proves Quality or model behavior.
+
+#### 2. Expiry, total attempts and the durable fence
+
+Problem. Retries multiply sends: slots times `attempts` times replicas. The
+gate is read once per slot (`live_simulator.py` 374), so an in-flight slot can
+retry after expiry, disable or cohort removal, and a per-process counter cannot
+bound a second replica. A unique attempt key does not bound the total either.
+
+Proposed, in two stages:
+
+* Stage B1, in-process only. Re-read and re-validate the control document before
+  every attempt, fail closed on any read error, require the home to be a current
+  cohort member, stop when `expires_at` has passed, and cap total attempts per
+  process. It does not stop another replica; it is stated as that.
+* Stage B2, durable and cross-replica. A finite pool of attempt tickets created
+  before the run (size is the authorized slot, home and attempt total, so the
+  bound is the pool and not a key scheme) and claimed by atomic compare-and-set
+  in a shared substrate. An exhausted pool, an unreadable pool or an expired
+  fence fails closed. An uncertain attempt (sent, outcome unknown) is not
+  refunded. A restart does not refill the pool. The substrate (for example a
+  table, blob lease or the existing share) and the write permission of the
+  simulator identity are not chosen here: the simulator is read-only on SQL by
+  the owner's 2026-11-05 approval, and advisory file locks on the mounted share
+  are unverified across replicas (decision D3).
+* Failure and manual path. On a fence failure the run stops, no further send is
+  attempted, the reason is a fixed code, and the manual path is the existing
+  ordinary quality check with no sensor values. Disabling the control document
+  and removing the schedule remain the operator stop.
+* Not claimed. A send already handed to the Hub cannot be recalled, so expiry
+  stops later attempts only, not an in-flight or delivered message; there is no
+  remote cancellation. Attempts and delivery are not exactly-once and nothing
+  here supports an exactly-once billing claim: the Hub receipt count and the
+  bill are separate, uncertain quantities.
+
+#### 3. Finite call, token, reservation and compute admission
+
+Existing enforcement to pin by tests, not to rebuild: per-budget calls, tokens
+and amount, per-root `max_calls`, duplicate-attempt refusal, and a hold for
+liability that is unknown or overrun after the call (`ai_consumption.py`
+547-660, 771-785). Retries count as calls, so the call allowance must cover
+attempts times calls per attempt (defaults 2 and 1) for the cohort case set.
+
+Proposed envelope rules:
+
+* Every authorization states finite integers: reserved calls, reserved tokens
+  and a call ceiling per root, chosen from a bounded case set; unknown liability
+  is a hold, never an allowance.
+* The reservation bound is provider-body bytes plus output tokens. Bytes are a
+  conservative heuristic for provider tokens, not proven to upper-bound them.
+  The `Limits.reservation` check in characters is a validity check, not that
+  bound. The proposal does not claim a token limit from a byte limit.
+* A money cap is an admission control, not a billed ceiling: usage can exceed a
+  reservation and is then a hold (`liability-overrun`). Money enforcement needs
+  an issued authority and a non-synthetic price record, both currently absent.
+* An optional proactive-scanner allow-list (cohort cases only) is proposed so
+  the scan covers the demo home rather than all open cases (stage C).
+* Compute (simulator and receiver jobs) is an arithmetic envelope: executions
+  times replica timeout times the stated job size, bounded by the schedule
+  deletion deadline. It is enforceable only through that deadline, the finite
+  ticket pool and the retry limit, not by a spend cap.
+* Illustration only. If a named authorization used the 2026-11-11 recorded list
+  rates for a small model (USD 0.0001 per 1K input and USD 0.0004 per 1K output
+  tokens), then 50,400 output tokens would be about USD 0.020. That is a
+  worked arithmetic example of an envelope, not a cap, not a current price (no
+  current source was retrieved on 2026-11-12), not a currency or free-grant
+  statement and not a financial authorization. Every figure must be re-sourced
+  and dated before use.
+* Guard. The captured-readings guard (`ai.py` 153-154, `assistants.py`
+  1005-1007) refuses a real `Ai` without a simulation seal, and neither a seal
+  nor a mock is a route to a real model. This proposal does not weaken, bypass
+  or stage a change to it. The live-model criterion therefore stays unreachable
+  in this release; reaching it needs a separate owner decision with a privacy
+  and consent design and independent review (decision D2).
+
+#### 4. Proposed minimal source changes, stages and tests (none made)
+
+Each stage is behavior-preserving by default (new options absent means current
+behavior), separately reviewable and separately authorized.
+
+| Stage | Proposed change and anchor | Focused tests (regression first, then negative) |
+| --- | --- | --- |
+| A, receiver | Optional start instant, optional expected-pair set and richer fixed-code summary in `iot_stream.py` (around 255-322) and `live_receiver.py` (128-154); defaults unchanged | Regression: defaults still start at `-1`, still need `max_events`, same exit codes. Negative: historical event skipped and counted; rejected receipt not counted; missing pair gives exit 2 with counts; duplicate pair counted once; deadline never success |
+| B1, transport | Gate re-read and cohort check before every attempt and a per-process attempt cap in `live_simulator.py` (268-279, 374, 474-482) | Regression: single attempt send unchanged. Negative: expiry, disable, cohort removal and unreadable control between attempts each stop sends |
+| B2, ledger | Durable ticket pool and claim before each attempt; needs D3 | Negative: pool exhaustion, concurrent claim, restart, uncertain attempt not refunded, unreachable substrate fails closed |
+| C, model | Tests pinning existing meter behavior; optional scanner cohort allow-list (`assistants.py` 1308, 1939) | Existing cases extended: retries counted, bytes versus `max_tokens`, unknown liability hold, overrun hold. Guard test unchanged |
+| D, verifier | Read-only manifest verification tool listing expected, accepted, replayed, rejected and missing pairs against the retained store | Fixtures only: missing, extra, rejected, replayed and prior-collision pairs |
+| E, evidence | Immutable evidence plan (below); no source change | Review of the plan only |
+
+Existing tests to extend rather than duplicate: `api/tests/test_iot_stream.py`,
+`api/tests/test_live_control.py`, `api/tests/test_live_simulator.py`,
+`core/tests/test_ai_consumption.py` and `core/tests/test_quality_sensors_e2.py`.
+
+Immutable evidence plan (proposed): a pre-run manifest with its digest, the
+external run record (commands, window, counts, exit codes), per-stage digests of
+fixed-code outputs, and an exact-head review of each stage. Records are
+append-only and external to the repository; an adverse or partial result is
+kept, not replaced.
+
+External prerequisites and owner decisions that stay explicit:
+
+* D1: which field marks a run visible to the Quality projection (`scenario`
+  versus manifest only).
+* D2: whether a real-model route is ever wanted, which needs its own design and
+  review, and is not part of this proposal.
+* D3: the durable fence substrate and the simulator identity's write permission.
+* D4: whether the scanner allow-list (stage C) is wanted.
+* D5: the cohort, slot count, attempt total and call and token budgets.
+* D6: the schedule-deletion deadline, accountable owner and teardown for the
+  compute envelope.
+* Unverified: live Hub enqueued-time behavior and retention, mounted-share lock
+  semantics across replicas, current prices and free grants, and whether bytes
+  bound provider tokens.
+
+#### 5. Future approval handoffs (not granted here)
+
+Two separate handoffs are required, in this order, and this proposal grants
+neither and claims no actual approval:
+
+1. Implementation permission, by the owner, per stage (A, B1, B2, C, D), after
+   D1, D3 and D4 are decided. It covers source and test edits and the existing
+   documentation-tier local checks only, and it authorizes no deployment, live
+   action, model call or spend.
+2. A named, finite deployment, live, model and spending authorization, separate
+   and later, naming: the accountable owner, the cohort, slot and attempt totals,
+   the call, token and reservation limits, a currency-stated and dated price
+   source if money is involved, the run window, the schedule-deletion deadline,
+   teardown, and the unpriced liabilities (which stay a hold, not accepted by a
+   named spend). It must follow an exact-head independent review and fresh
+   hosted checks of the implemented stages.
+
+Nothing here supplies either authorization, and a real-model call stays
+blocked by the guard until D2 is separately resolved.
 
 ## Constraints
 
