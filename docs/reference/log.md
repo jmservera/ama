@@ -11586,3 +11586,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Added a dated post-fix-wave checkpoint to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115) for merged PRs 1481, 1483 and 1482 on `main` `e155c88ed`, with an index paragraph in the [index](./README.md).
 * Local focused evidence only (151 tests executed, 0 skipped; lint and mypy clean; one invocation error retained); no source change, no new issue, no criterion ticked, no approval; recommendation is a bounded CONTINUE.
 * Evidence under `.copilot-tracking/` (2026-11-12 post-fix-wave-440-1112).
+
+## [2026-11-12] update | Post-fix-wave checkpoint correction (Refs #440)
+
+* Corrected wording in the post-fix-wave section of the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115): pin time qualification, test-helper PYTHONPATH, ADR 0002 Audit row, AC-051 and AC-073 Not run. Documentation only; nothing rerun; no approval or tick.
+* Evidence under `.copilot-tracking/` (2026-11-12 post-fix-wave-440-1112-correction).
