@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-11T21:40:47+00:00",
-  "commit": "bc123235af30b63de9808c97a430860f1e00dcc8",
+  "scored_at": "2026-11-12T14:23:05+00:00",
+  "commit": "139176fa0382add781b1830b1ac9db785ed086fe",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43104179879",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43235206659",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
-    "solution-code": "ebb337bc7eb128224f3dc1a0b946857a72e12150d3575d97fc68b77d22bb4fe4",
+    "solution-code": "c21969b4413b2a4d83bfefc246d83f6cd64e7192df863a3a5a58b4b92bc0de8b",
     "infrastructure": "d1cfb7538e8361300e8766c1e0c2d777cac8beac7cad61e0f728330d8fd93c6f",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "5b414b81c3cc0512d987acd669648d14eb85eae2af031105e39dd8bd5054fbe7",
@@ -29,10 +29,9 @@
     "A1": {
       "score": 5,
       "evidence": [
-        "src/api/src/zava_forward/api/server.py:690-699",
-        "src/api/src/zava_forward/api/web/app.js:1223-1265"
+        "src/api/checks/connected_home_browser_check.py:1-50"
       ],
-      "rationale": "Not materially touched; diff is a one-line bugfix plus tests in core aftercare_intake, not architecture. Ceiling unchanged."
+      "rationale": "New check reuses existing modular helpers; adds test coverage, not new architecture. Ceiling 5 unchanged."
     },
     "A2": {
       "score": 5,
@@ -44,18 +43,18 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/aftercare_intake.py:267-270",
-        "src/core/tests/test_aftercare_intake.py:288-340"
+        "src/api/checks/connected_home_browser_check.py:30-45",
+        "src/api/tests/test_connected_home_check.py:104-118"
       ],
-      "rationale": "Fail-closed fix: blank stored bytes now raise StateInvalid (503, bytes preserved) instead of silently resetting the record, closing a data-integrity gap. Reinforces existing responsible-AI/fail-closed ceiling, already at 5."
+      "rationale": "New browser check adds DOM-level negative controls proving no cross-home (tenant) data leakage across six specialist screens, with no write requests from the browser. Reinforces existing isolation/security ceiling 5."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/aftercare_intake.py:267-270",
-        "src/core/tests/test_aftercare_intake.py:288-340"
+        "src/api/checks/connected_home_browser_check.py:760-784",
+        "src/api/tests/test_connected_home_check.py:1-277"
       ],
-      "rationale": "Narrow, well-tested completeness fix (issue 1402): four new test methods cover read/write/HTTP/restart paths with bytes assertions; full RPI evidence (red/green/lint/mypy) committed. Reinforces, does not exceed, existing ceiling 5."
+      "rationale": "Adds a thorough, well-tested completeness check (unittest coverage plus a documented browser walk) covering six specialist screens end to end with disclosed deferrals. Reinforces existing ceiling 5."
     },
     "A5": {
       "score": 5,
@@ -111,10 +110,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "src/api/README.md:1097",
-        "src/core/README.md:473-495"
+        "src/api/README.md:4365-4376"
       ],
-      "rationale": "No deck or README documentation change this run; deck untouched. Good(4) retained."
+      "rationale": "Added a short technical usage note for the new browser check to src/api/README.md; no capstone deck or presentation documentation changed. Good (4) retained."
     },
     "B7": {
       "score": 5,
