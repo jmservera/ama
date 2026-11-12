@@ -1225,6 +1225,21 @@ is re-checked on every request. It does not approve a pack, submit anything,
 establish eligibility or prove the issue criterion for dependent-only
 invalidation; approved templates and rules stay with named Finance approval.
 
+The Funding screen offers this check under the download link, in the same
+switch-gated branch. A person chooses a saved `held-form-draft-export.json` and
+presses "Check saved Held copy (read-only)"; one press sends one POST and
+nothing runs on load or on choosing a file. The panel posts the original file
+text unchanged (a panel-local raw text transport, not the shared `api()`
+helper) so values such as `12.0` and integers above 2^53 keep the digest the
+server computed; the file is not stored or shown. It reuses the CSRF header,
+session sign-in return, route abort and duplicate-press guard. `Current` is
+worded as "the details checked in this file match the working review now",
+not as authenticity, review, approval, eligibility or submission. A failed
+check (400, 403, 404, 409, 502, 503, network or unreadable reply) is shown as
+"could not run" or the matching plain sentence with a next action, never as
+`Invalid`, `Stale` or `Current`. The browser check covers this with real
+downloaded synthetic copies, including the float and large integer cases.
+
 ```json
 {"action":"open","schema_id":"SYN-TECH","schema_version":1}
 ```
