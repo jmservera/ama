@@ -1418,7 +1418,7 @@ defect. The recommendation is a bounded CONTINUE; it is not an approval, a tick 
 
 A post-153 integration checkpoint (2026-11-12) is recorded in
 [the cutover evidence pack](../architecture/cutover-evidence-pack.md#post-153-integration-checkpoint-2026-11-12-refs-440-153-134-184).
-It covers merged PR 1470 (proposal cards) and PR 1475 (five-home runbook) on `main` `4074b44f3`, which the previous checkpoint
-excluded: 145 focused tests executed, 92 SQL Server skips (not passes), a string-level runbook link check, no confirmed defect,
+It covers merged PR 1470 (proposal cards) and PR 1475 (five-home runbook) on `main` `4074b44f3`, which the previous checkpoint's 281 tests excluded
+(both merged after its tested pin and before its publication, see the accuracy note in the section): 145 focused tests executed, 92 SQL Server skips (not passes), a string-level runbook link check, no confirmed defect,
 one static accessibility concern and two omissions routed to existing owners, and a bounded CONTINUE. It is local only and is
 not browser, live, resident or approval evidence.
