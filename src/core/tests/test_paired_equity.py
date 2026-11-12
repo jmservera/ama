@@ -31,6 +31,9 @@ def pairs() -> list[dict[str, Any]]:
     appt = case("p3", 6)
     appt_subject = copy.deepcopy(appt)
     appt_subject["appointment_history"] = "prior_no_access"
+    src = case("p4", 6)
+    src_subject = copy.deepcopy(src)
+    src_subject["source_record"] = "missing"
     return [
         {"id": "s1", "dimension": "sensor_completeness", "reference": base, "subject": sensor},
         {
@@ -45,6 +48,7 @@ def pairs() -> list[dict[str, Any]]:
             "reference": appt,
             "subject": appt_subject,
         },
+        {"id": "r1", "dimension": "source_completeness", "reference": src, "subject": src_subject},
     ]
 
 
@@ -61,11 +65,16 @@ def penalise_history(cases: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]
     return [{"id": c["id"], "rank": n} for n, c in enumerate(ordered, start=1)]
 
 
+def penalise_source(cases: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    ordered = sorted(cases, key=lambda c: (c.get("source_record") == "missing", c["id"]))
+    return [{"id": c["id"], "rank": n} for n, c in enumerate(ordered, start=1)]
+
+
 class PairedEquityTests(unittest.TestCase):
     def test_current_policy_never_lowers_priority_for_any_dimension(self) -> None:
         rec = paired_equity.evaluate(pairs(), ANCHORS)
         self.assertEqual(rec["status"], "pass")
-        self.assertEqual((rec["tested"], rec["failed"]), (3, 0))
+        self.assertEqual((rec["tested"], rec["failed"]), (4, 0))
         self.assertFalse(rec["fairness_evidence"])
         self.assertFalse(rec["activation_allowed"])
         self.assertEqual(
@@ -85,6 +94,36 @@ class PairedEquityTests(unittest.TestCase):
         self.assertEqual(rec["dimensions"]["appointment_history"]["failed"], 0)
         self.assertIn("sensor_completeness:unjustified_deprioritisation", rec["blockers"])
         self.assertEqual(rec["status"], "blocked")
+
+    def test_seeded_source_defect_is_detected_in_its_dimension_only(self) -> None:
+        rec = paired_equity.evaluate(pairs(), ANCHORS, ["r1"], rank=penalise_source)
+        self.assertEqual(rec["detected_defects"], ["r1"])
+        self.assertEqual(rec["dimensions"]["source_completeness"]["failed"], 1)
+        self.assertEqual(rec["dimensions"]["sensor_completeness"]["failed"], 0)
+        self.assertIn("source_completeness:unjustified_deprioritisation", rec["blockers"])
+
+    def test_seeded_exclusion_is_detected_not_a_crash(self) -> None:
+        def drop_missing_source(cases: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+            kept = [c for c in cases if c.get("source_record") != "missing"]
+            return [{"id": c["id"], "rank": n} for n, c in enumerate(kept, start=1)]
+
+        rec = paired_equity.evaluate(pairs(), ANCHORS, ["r1"], rank=drop_missing_source)
+        self.assertEqual(rec["detected_defects"], ["r1"])
+        self.assertEqual(
+            rec["dimensions"]["source_completeness"]["failures"],
+            [{"pair": "r1", "problems": ["excluded"]}],
+        )
+        self.assertEqual(rec["status"], "blocked")
+
+    def test_source_dimension_is_required_and_rejects_a_confounded_pair(self) -> None:
+        without = [p for p in pairs() if p["dimension"] != "source_completeness"]
+        rec = paired_equity.evaluate(without, ANCHORS)
+        self.assertIn("source_completeness:no_pairs", rec["blockers"])
+        p = pairs()
+        p[3]["subject"]["days_in_stage"] = 30
+        rec = paired_equity.evaluate(p, ANCHORS)
+        self.assertIn("r1:invalid_comparison:confounded", rec["blockers"])
+        self.assertEqual(rec["dimensions"]["source_completeness"]["tested"], 0)
 
     def test_failing_dimension_is_not_averaged_away(self) -> None:
         many = pairs() + [dict(p, id=f"{p['id']}x{i}") for i in range(20) for p in pairs()[1:]]
@@ -120,7 +159,7 @@ class PairedEquityTests(unittest.TestCase):
         self.assertEqual(rec["status"], "blocked")
         self.assertIn("s1:invalid_comparison:confounded", rec["blockers"])
         self.assertIn("sensor_completeness:no_pairs", rec["blockers"])
-        self.assertEqual(rec["tested"], 2)
+        self.assertEqual(rec["tested"], 3)
         self.assertEqual(
             rec["invalid_pairs"],
             [{"pair": "s1", "dimension": "sensor_completeness", "reason": "confounded"}],
@@ -168,7 +207,7 @@ class PairedEquityTests(unittest.TestCase):
         p[0]["subject"]["resident"]["extra"] = [True]
         rec = paired_equity.evaluate(p, ANCHORS)
         self.assertIn("s1:invalid_comparison:confounded", rec["blockers"])
-        self.assertEqual(rec["tested"], 2)
+        self.assertEqual(rec["tested"], 3)
 
     def test_dotted_key_cannot_shadow_nested_change(self) -> None:
         p = pairs()

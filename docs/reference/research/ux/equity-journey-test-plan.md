@@ -36,7 +36,7 @@ Related evidence that already exists:
   The route carries no score and has no effect on rank or service. It counts
   review burden per reason, in aggregate.
 * `zava_forward.core.paired_equity` (second slice) checks constructed pairs that
-  differ in one attribute only: sensor completeness, support or contact need, or
+  differ in one attribute only: source completeness, sensor completeness, support or contact need, or
   appointment history. A pair passes when the subject is ranked no lower than the
   reference under the deterministic policy and its review route has no rank
   effect. Results are per dimension, never averaged; a dimension with no pairs or

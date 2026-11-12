@@ -11574,3 +11574,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added an accuracy note to the post-153 section of the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-153-integration-checkpoint-2026-11-12-refs-440-153-134-184) and corrected its wording; documentation only, no rerun, counts (145 executed, 92 skipped) and the `4074b44f3` pin unchanged. It corrects the entry above and the index sentence: PR 1470 and PR 1475 merged (17:38:13Z, 17:46:55Z) after the tested pin `bbb1d20cc` but before PR 1478 (18:00:25Z), so they were excluded from the 281-test evidence but did not merge after the PR 1478 publication; the five ids also appear in one tracked historical research record, so the earlier "no other tracked file" sentence was wrong; tracking-file counts for PR 1470 are 20 (not 16 or 19) and for PR 1475 are 7; and the "role-less `pre`" accessibility wording is narrowed to an unverified implicit-generic-role accessible-name question, not a standard-based or confirmed defect claim. The original artifacts keep these errors unchanged.
 * Evidence under `.copilot-tracking/` (2026-11-12 post153-integration-440-1112-accuracy).
+
+## [2026-11-12] update | Source-completeness paired dimension (Refs #128)
+
+* `paired_equity` now checks a constructed source-completeness pair (`source_record` complete versus missing) as a fourth required dimension, and reports a ranker that leaves the subject out as an `excluded` failure instead of raising. Updated the [core README](../../src/core/README.md) and the [equity journey test plan](research/ux/equity-journey-test-plan.md).
+* Constructed fixture only: `fairness_evidence` and `activation_allowed` stay false; no ranking policy or threshold change; no criterion ticked.
+* Evidence under `.copilot-tracking/` (2026-11-12 issue-128-cohort-trace-1112).
