@@ -13,7 +13,7 @@ ms.date: 2026-11-12
 
 ## Failing-first evidence
 
-Before the route change (head `bad131ff2` plus the new tests only), the three targeted tests ran 3 tests with 6 failures: the internal `TypeError` answered 200 `Invalid` instead of 503, and the malformed ids answered `Unavailable` or a non-`Invalid` result. Log: session files `m1-failing-first-2312.log`. After the change all 16 tests of the module pass.
+Before the route change (head `bad131ff2` plus the new tests only), three tests were selected (the two new ones and the existing forged-copy control) and the 6 failures were all in the two new tests (1 internal fault, 5 malformed-id subtests); the control passed: the internal `TypeError` answered 200 `Invalid` instead of 503, and the malformed ids answered `Unavailable` or a non-`Invalid` result. Log: session files `m1-failing-first-2312.log`. After the change all 16 tests of the module pass.
 
 ## Divergences and limits
 
