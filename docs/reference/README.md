@@ -1408,3 +1408,10 @@ The recommendation is a bounded CONTINUE; it is not an approval, a tick or SQL S
 A dated follow-up in that section observes PR 1458 (#1402, `bc123235`) after merge on an exported `src` equal to current main
 `97ec3f3c8` (91 focused JSON and SQLite tests, 15 SQL Server skips, 0 failures); the blank-document boundary is now observed
 on main for constructed data, while the earlier pin text stays unchanged and whole #133, #134, #89 and #440 stay open.
+
+A demo wave integrated-main checkpoint (2026-11-12) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#demo-wave-integrated-main-checkpoint-2026-11-12-refs-440-99-116-80-432-184).
+It observes merged PRs 1465 to 1469 and 1473 (pin `bbb1d20cc`, `src` equal to fresh `main` `5ee8ac14c`) with 281 focused core
+and API tests executed, 0 skipped and 0 failures after retained environment and invocation failures, records that the task
+labels of the PRs do not match their actual content, keeps the 1465 proposal as draft candidate policy, and confirms no
+defect. The recommendation is a bounded CONTINUE; it is not an approval, a tick or browser, Azure, live or release proof.

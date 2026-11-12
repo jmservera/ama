@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-11-11
+ms.date: 2026-11-12
 ms.topic: reference
 ---
 
@@ -7383,3 +7383,94 @@ Remaining unproved: SQL Server numeric restore and blank behaviour (the blank br
 Recommendation (proposed for Root, not a decision): CONTINUE, bounded. No new defect is found and no fix, refactor or issue is proposed. Affected gates: the aftercare ordering and blank-state holds of the original observation are lifted for constructed JSON and SQLite data only; closure of whole #133, #134, #89 and #440, expansion that relies on SQL Server persistence at 1000 concerns, and any live, resident or professional claim stay held; independent exact-head review of this delta and applicable hosted checks remain required.
 
 Process limits: the plan critique found two blocking items (stdout versus stderr capture, a premature claim) and one stale-main item, all applied. The author wrote the first three tracking files with a shell heredoc, contrary to the file-change rule, before switching to the edit tools; the content is unchanged. The Review is author-executed, not independent.
+
+## Demo wave integrated-main checkpoint (2026-11-12, Refs #440 #99 #116 #80 #432 #184)
+
+Draft, local-only, not approved. This is a bounded recurring checkpoint after the merged source wave of PRs 1465, 1466, 1467, 1468, 1469 and 1473 reached `main`. It is not a new issue, feature, approval or correction pool; it changes no source, test, tool, workflow, configuration, requirement or ADR, makes no fix, opens no issue, writes no issue, board or acceptance-criterion state and resets no correction allowance. It does not complete the last two open acceptance criteria of #440 (triage into independent issues, and the Major HVE behavior-tested coordinator change) and does not retroactively complete original HVE behavior testing.
+
+### Identities, scope and exclusions
+
+| Item | Identity (read 2026-11-12) |
+| --- | --- |
+| Start pin and fresh main | Worktree HEAD (branch `docs/demo-wave-checkpoint-440-1112`) `bbb1d20cc984d7c4107459485712d4b618a17afe`, the expected pin and the merge of PR 1473. `origin/main` fetched 2026-11-12 is `5ee8ac14c70f457925f3333321094e46b93373b9`, one rubric-only commit later (only `.github/rubric/scores/latest.json` differs). Root trees `f0cc063601781108c1554a73e40165f7f595dd80` and `f5348aa9b4a2062c6f7982ab776f8d1abadd5798`; `src` `60d841010c4ad5551e530c2b4e67b717fc063648` equal at both, `infra` `a022907662e2`, `tools` `432a4e8f7d74`, `docs` `629b84683280` at the pin. The tested source therefore equals the source of fresh main; nothing was rebased or merged to refresh |
+| Documents (blob at the pin) | BRD 0.21.0 `draft` `34d88395de86`; PRD 0.21.0 `in-review` `c788b917bafa`; ADR 0003 `d60645397b20` and ADR 0006 `956da1a3b804` Accepted; ADR 0007 `541e0f72dd2c` Proposed. None of the six PRs changes any of them; draft, in-review and Proposed are not approval |
+| Hosted state | The only workflow run listed for the pin is `Capstone Rubric Scorer` (push, completed, success); none is listed for `5ee8ac14`. No Source CI result is claimed for either; an absent workflow is not a successful check |
+| Issue states (read live) | #440, #99, #116, #80, #432, #184 and #134 OPEN. Nothing is ticked, closed or opened here |
+| Excluded | Unmerged PR 1470 (proposal cards) and PR 1475 (five-home script), the local #184 minute and cohort commit `6819456`, all other siblings, SQL Server, Docker, the browser harness, scanners, hosted CI, deployment, Azure, real providers and models, resident or professional acceptance, private data |
+
+### Wave identity: the task labels do not match the merged PRs
+
+Merged commits and diffs were read, not the task labels. The mismatches are recorded as an adverse qualification.
+
+| PR (merge commit) | Actual content | Task label | Match |
+| --- | --- | --- | --- |
+| 1465 (`5df20e639821`) | Documentation only: PROPOSED narrow #184 engineering design for bounded run and cost controls in `iot-sensor-analytics-research-plan.md`; no source | "#116 weather and provider spy" | No |
+| 1466 (`04e2620556b0`) | Tests only: `test_ai_provider_payload_spy.py`, offline AI provider payload boundaries (#116) | not named under its number | Label shifted |
+| 1467 (`e3339de62b19`) | Core fix: `exposure_limits.py` treats a NaN or infinite committed or tolerance observation as an Unknown finding for that limit (existing pause behaviour), not Within limits; finite values, including arbitrarily large integers, are compared normally when the currency matches, with no `isfinite` overflow (#99); no CSV, no HTTP route, no UI | "finite household finance CSV" and "target-mode proposal" | No: no CSV and no target-mode proposal exists in the wave |
+| 1468 (`f0896869d437`) | `ai.py` settles the ledger before the receipt reports usage; API tests; tokenomics text corrected (#432) | "legacy usage settlement" | Yes |
+| 1469 (`71fabf00957a`) | `role-screens.js` browser-built four-column exception summary CSV with formula neutralisation and fail-closed export (#80) | "exception CSV" | Yes |
+| 1473 (`bbb1d20cc984`) | `live_simulator.py`, `live_control.py`: run control re-read before every send attempt including retries, `RUN_CONTROL_FENCED`, single instance only; B2 cross-process fence deferred (#184) | "simulator stop and retry B1" | Yes |
+
+Consequences: the only candidate policy in the wave is the 1465 PROPOSED design; it stays Draft and proposed and is not executable acceptance. The task's "target-mode proposal" and "finance CSV" are not in any merged diff and are recorded as not applicable, not as passed. No weather path and no `src/orchestrator` or `src/importer` file is changed by any merged PR, so no such test is run.
+
+### Commands, environment and results (local, constructed synthetic data)
+
+Environment: Python 3.12.3, Node v24.21.0, `env -i` with an owned empty `HOME`, `ZF_DATA` and `ZF_RESIDENT_MSSQL` unset, `PYTHONDONTWRITEBYTECODE=1`, run from an owned external working directory with `python -m unittest discover -s <worktree tests dir> -p <file> -q`; API selectors used `PYTHONPATH=<worktree>/src/core/tests:<worktree>/src/agents/tests:<worktree>/src/api` (not `mvp`). The pre-installed `zava-forward-*` distributions are editable installs of the owner's primary checkout and a preflight import resolved `zava_forward.core.ai` there, so they were not used. An owned venv outside the repository (`--system-site-packages`) took `pip install --no-deps -e src/core -e src/agents -e src/api` from this worktree (no uv). Preflight imports resolved `ai`, `exposure_limits`, `finance`, `live_simulator`, `live_control` and `server` from this worktree, and `git hash-object` equalled `git rev-parse HEAD:<path>` for 14 changed or tested files; `git status --porcelain --ignored -- src` was identical before and after (6 ignored build and cache folders). HEAD equalled the pin. No Docker, SQL Server, browser, scanner, external service, Azure, model or telemetry was used; T3 and T5 start ephemeral loopback HTTP fixtures and T6 uses Node, neither is an external service. The shared heavy-resource lock `/tmp/ama-rpi-heavy.lock` exists and was not taken because no heavy resource was needed.
+
+| Id | Selector | Exit | Ran | Skipped | Covers |
+| --- | --- | --- | --- | --- | --- |
+| T1 | core `test_ai_provider_payload_spy` | 0 | 14 | 0 | PR 1466: exact provider wire bodies and closed field sets, no provider call when not permitted, unreadable inputs stop before a request (manual path) |
+| T2 | core `test_exposure_limits` | 0 | 16 | 0 | PR 1467: non-finite observation is Unknown and pauses, huge integer still breaches, finite behaviour unchanged |
+| T3 | api `test_finance_exposure_api` | 0 | 4 | 0 | Consumer regression of `finance.py` only; it has no non-finite case, so non-finite behaviour is attributed to T2 alone |
+| T4 | core `test_ai_consumption` | 0 | 34 | 0 | Neighbour of the `ai.py` change (ledger) |
+| T5 | api `test_ai_consumption_api` | 0 | 37 | 0 | PR 1468: legacy draft joins returned usage, missing or malformed usage is Unknown, provider failure stays manual with no usage, settlement failure never reports unsettled usage, workflow-only reserves nothing |
+| T6 | api `test_exception_register`, `test_exception_register_screen`, `test_role_screens_conformance`, `test_data_operator_ai_state` | 0, 0, 0, 0 | 37, 22, 11, 7 | 0 | PR 1469: four-column contract, exact bytes, excluded fields absent, no second request, allowlists to Unknown, no file for unsafe or incomplete views, failure releases resources, escaping equal to the repository helper; node vm, not a served browser |
+| T7 | api `test_live_control`, `test_live_simulator` | 0, 0 | 42, 37 | 0 | PR 1473: permit needs a sending control and a cohort home, unreadable or corrupt control is not a permit, stop, expiry or cohort removal mid-slot, stop before a retry or after backoff or a pacing delay, a raising gate fails closed, an open gate changes nothing, run ends after a fenced slot |
+| T8 | core `test_live_readings` | 0 | 20 | 0 | Provider-independent simulator reading generator that the permit gate feeds |
+
+Totals as printed by each final run: 281 tests ran, 281 passed, 0 skipped, 0 failures. Raw stdout, stderr, exit files, the preflight and pip logs and the failed attempts are local and outside the repository at `/home/azureuser/.copilot/session-state/676885f4-85ba-42d8-929c-40f438e5190f/files/checkpoint-440-1112/`.
+
+Adverse and intermediate results, retained: `test_data_operator_ai_state` first failed at import (`No module named 'checks'`, an invocation error: `src/api` was missing from `PYTHONPATH`) and passed with 7 tests after the path was added. `test_live_control` and `test_live_simulator` failed at import four times, three of them after dependency installs, with `No module named 'azure'`, then `azure.identity`, then `azure.iot` (declared dependencies `azure-eventhub==5.15.1`, `azure-identity==1.26.0` and `azure-iot-device==2.14.0` of `src/api/pyproject.toml` were absent from the owned environment; an earlier pip run reported eventhub as already satisfied from the hidden user site, so it did not help the isolated run). Each was installed with pip into the owned venv only and both modules then passed. A preflight one-liner had a syntax error and was rerun. These are environment and invocation failures, not product findings and not passes.
+
+### Requirement trace (document-qualified, proposed)
+
+BRD and PRD both use the FR-049 label for different topics, so each row names its document. Classes: local observed (constructed synthetic), Azure observed (none here), implemented but unverified, deferred, blocked, unknown.
+
+| Boundary or requirement | Contract, code and test | Class |
+| --- | --- | --- |
+| PRD FR-036 (in-review): AI tasks registered, unapproved or unavailable tasks use the manual route | `ai.py` (1468) and T1, T5: provider failure, malformed usage and workflow-only paths keep a manual or Unknown outcome and report no unsettled usage | Local observed on a loopback provider spy; no real model or cost claim; whole requirement unmet |
+| BRD BG-012 (draft): whole-life cost, Total Cost of AI and AI cost per accepted outcome | T4 and T5 ledger behaviour; usage is attribution, not billing | Local observed; price, billing and cap enforcement not claimed; Azure usage unknown. Nearest requirement by inspection, not an authoritative mapping |
+| PRD FR-018 (in-review): budgets, commitments and Finance disposition; #99 | `exposure_limits.py` (1467) with T2; `finance.py` consumer T3. Nearest requirement by inspection, not an authoritative mapping | Local observed for the finite guard; no Finance-screen false all-clear journey demonstrated; no Board or Finance input change; whole #99 unmet |
+| PRD FR-012 (in-review): review exceptions expose both values; #80 | `role-screens.js` (1469) with T6: demonstrator-only CSV of the already-rendered `/api/exceptions` view, role-scoped, formula-neutralised, no complete-list or all-clear claim. Nearest requirement by inspection, not an authoritative mapping | Local observed in a node vm; browser download behaviour and assistive-technology use are not observed (browser harness not run); whole #80 unmet |
+| #184 run-control stop and retry (stage B1); ADR 0003 IoT ingestion (Accepted) | `live_simulator.py`, `live_control.py` (1473) with T7 and T8: fail-closed permit before every attempt | Local observed on an in-process fake sink; a send already handed to the sink is not recalled (documented); cross-process fence B2, receiver start position, real Event Hub or device, and any cost or live run are deferred or unknown; Azure not observed |
+| ADR 0006 `src` layout (Accepted); ADR 0003 runtime fit | All changes are inside `src/api` and `src/core` and their tests; no amendment | Context only |
+| 1465 PROPOSED #184 design | Documentation proposal | Draft and proposed, candidate policy, not accepted and not executable acceptance |
+| #440, #99, #116, #80, #432, #184 acceptance criteria | Unchanged, all OPEN | Partially delivered; criteria unmet |
+
+### Boundaries observed
+
+* Persistence: no persistence code changed in the wave; the ledger settlement order (1468) changes only what the receipt reports after settlement. SQL Server persistence is not observed here.
+* Auth and roles: the exception CSV is built from the role-scoped view the API already returned and adds no route or request (T6); the run control remains admin-written, and no auth, role or access rule is widened. Role gating of the live control file (Azure RBAC on the share) is not observed locally.
+* Resident, human, manual and AI-unavailable: no consent is read or written and no resident account, approval or AI route is added. A provider failure or Unknown usage leaves the human or manual outcome (T1, T5). The simulator stop is a fail-closed demonstrator control, not a human approval, and `live_control` approval references are not evaluated or granted by this record.
+* Confidence limits: tests use synthetic loopback and in-process fakes; no deployed case, live telemetry, tenant or private generator was read.
+
+### Findings, gates and recommendation (proposed for Root, not a decision)
+
+* No defect is confirmed and none is asserted; no fix, refactor or new issue is proposed. The only failures were environment and invocation failures of this checkpoint, listed above. The task labels that do not match the merged PRs are a documentation qualification, not a product defect.
+* Static observation, not a defect: a fenced slot ends the whole simulator run (`run` returns after a slot with `RUN_CONTROL_FENCED`), including when only one home left the cohort; this is the documented B1 behaviour and is covered by `test_run_ends_after_a_fenced_slot_without_waiting_for_the_next_one`.
+* Affected gates: closure of whole #440, #99, #116, #80, #432 and #184 stays held. Any expansion that relies on cross-process run control (B2), a live or Azure simulator run, a real-model provider payload, billing or cost claims, the browser download of the exception CSV, or the 1465 proposal being treated as accepted stays held until separately evidenced and approved by the named human owners. Independent exact-head review of this record and applicable hosted checks remain required, and its publication waits for the #134 log and pack append and conflict resolution so both append-only entries are preserved.
+* Independent lanes: (1) browser-served exception CSV download and keyboard or assistive-technology check under the existing admitted browser harness; (2) #184 B2 or Azure-only residuals after the owner admits spend and cleanup boundaries; (3) #99 Finance-screen journey with non-finite input. Resume condition for any lane: a named owner scope and, for Azure or browser, the existing admission and lock.
+* Recommendation: CONTINUE, bounded. This is not a tick of any criterion, an approval of any requirement or ADR, or a deferral decision. Human decisions still open: acceptance of the 1465 proposal, owner admission for Azure or live runs, and legal, professional and resident acceptance of any resident-facing use.
+
+### Process limits
+
+* Original dated RPI evidence is under `.copilot-tracking/` (`demo-wave-checkpoint-440-1112`): research, plan, details, one independent read-only critique (two blocking, three significant, one minor finding, all applied), changes and one author Review (author-executed, not independent). Model label asserted; no witness or host attestation exists.
+* The case study addendum (158 KB) was read by section, not end to end. Counts are as printed in this run. No push, PR, issue or board write was made.
+
+### Accuracy follow-up (2026-11-12, documentation only, after frozen head `26cb3968`)
+
+This is a bounded accuracy correction of this record, not a source, HVE or coordinator-code correction, not a reopening of the old #440 campaign and not a new correction pool. The text above is otherwise unchanged and the original is preserved at commit `26cb3968`; original research and Review files are not rewritten and carry additive follow-up files instead.
+
+* 1467 wording: the wave-table row first said "non-finite or huge-integer-unsafe ... observation as Unknown". That wrongly implied huge integers become Unknown. `_finite_observation` accepts every `int` and only a finite `float`; NaN and infinite observations give an Unknown finding for that limit, and huge integers still breach (`test_huge_integer_observation_still_breaches`). No product defect is implied or asserted.
+* Preflight qualification: the original `02b` preflight printed `None` for the namespace `zava_forward.agents`, which proves no concrete origin and is preserved unchanged. Later, after the freeze and with no repository change, the author ran one import trace in the same owned environment, working directory and `PYTHONPATH` and compared each loaded module `__file__` hash with `git hash-object` against `HEAD:<path>`: 14 of 14 matched and no loaded module came from the primary checkout. Concrete agents modules `chat` `ae03ad5f25e5`, `dispatch` `2e2306c62790` and `regulatory_chat` `d8937e62df1a`; helpers `release_support`, `test_assistants`, `test_mvp` and `checks.data_operator_ai_state` are all under this worktree. Limitation: this is a fresh trace of the same selectors, not instrumentation of the original 281 tests; only T5 imports `zava_forward.agents` directly and transitive imports of the other modules were not traced; the environment and procedure are as reported by the author and not independently attested. Raw output: `/home/azureuser/.copilot/session-state/676885f4-85ba-42d8-929c-40f438e5190f/files/checkpoint-440-1112/diag/agents-origin.out` and `.err`.
+* Scope: the tested source pin remains `bbb1d20cc984` and the source-equal fresh main `5ee8ac14c70f`. Later main `088e8c3` (it includes PR 1470) is outside the tested wave; no current-main acceptance is claimed for it. Nothing was rerun or installed.
