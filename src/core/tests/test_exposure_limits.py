@@ -1,6 +1,7 @@
 """Synthetic test values only; they are not company figures or Board approvals."""
 
 import json
+import math
 import tempfile
 import threading
 import unittest
@@ -70,6 +71,27 @@ class ExposureLimits(unittest.TestCase):
             self.assertEqual((result["status"], result["signal"]), ("Unknown", limits.UNAPPROVED))
         partial = limits.assess(self.record(), dict(committed=1, currency="GBP", tolerances={}))
         self.assertEqual(partial["status"], "Unknown")
+
+    def test_nonfinite_observation_is_unknown_not_within(self) -> None:
+        for bad in (float("-inf"), float("inf"), float("nan")):
+            for exposure in (
+                dict(committed=bad, currency="GBP", tolerances=dict(capital=1, safety=0)),
+                dict(committed=1, currency="GBP", tolerances=dict(capital=bad, safety=bad)),
+                dict(committed=bad, currency="GBP", tolerances=dict(capital=bad, safety=bad)),
+            ):
+                result = limits.assess(self.record(), exposure)
+                self.assertEqual(
+                    (result["status"], result["signal"]), ("Unknown", limits.UNAPPROVED), exposure
+                )
+                self.assertFalse(
+                    [f for f in result["findings"] if not math.isfinite(f.get("observed", 0))]
+                )
+
+    def test_huge_integer_observation_still_breaches(self) -> None:
+        exposure = dict(committed=10**400, currency="GBP", tolerances=dict(capital=1, safety=0))
+        self.assertEqual(limits.assess(self.record(), exposure)["status"], "Breach")
+        exposure = dict(committed=1, currency="GBP", tolerances=dict(capital=10**400, safety=0))
+        self.assertEqual(limits.assess(self.record(), exposure)["status"], "Breach")
 
 
 class LiveSignal(unittest.TestCase):

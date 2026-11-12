@@ -1,0 +1,17 @@
+...E............
+======================================================================
+ERROR: test_huge_integer_observation_still_breaches (tests.test_exposure_limits.ExposureLimits.test_huge_integer_observation_still_breaches)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-99-finite-1112/src/core/tests/test_exposure_limits.py", line 92, in test_huge_integer_observation_still_breaches
+    self.assertEqual(limits.assess(self.record(), exposure)["status"], "Breach")
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-99-finite-1112/src/core/src/zava_forward/core/exposure_limits.py", line 139, in assess
+    or not math.isfinite(committed)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.009s
+
+FAILED (errors=1)

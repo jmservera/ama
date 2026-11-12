@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+  File "/home/azureuser/source/ama-demo-wt/issue-99-finite-1112/src/core/src/zava_forward/core/exposure_limits.py", line 139, in assess
+    or not math.isfinite(committed)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+OverflowError: int too large to convert to float
