@@ -157,6 +157,30 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(store.cases["ZF-3"]["stage"], "Install booked")
         self.assertEqual(len(store.cases["ZF-3"]["returns"]), events)
 
+    def test_advance_with_missing_funding_is_a_funding_conflict_not_a_missing_case(self):
+        import copy
+
+        data = copy.deepcopy(DATA)
+        for c in data["cases"]:
+            if c["id"] == "ZF-3":
+                del c["funding_ok"]
+        p = Path(self.tmp.name) / "missing-funding.json"
+        p.write_text(json.dumps(data))
+        store = Store(str(p))
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(store, "zf-test")))
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        self.addCleanup(httpd.server_close)
+        self.addCleanup(httpd.shutdown)
+        self.base = f"http://127.0.0.1:{httpd.server_address[1]}"
+        _, _, hdr = self.call("/api/login", {"email": "sam@example.test", "password": "zf-test"})
+        cookie = hdr["Set-Cookie"].split(";")[0]
+        code, body, _ = self.call("/api/cases/ZF-3/advance", {}, cookie)
+        self.assertEqual(code, 409)
+        out = json.loads(body)
+        self.assertEqual(out["error"], "Not ready yet.")
+        self.assertTrue(any("Funding has not been confirmed" in r for r in out["reasons"]))
+        self.assertEqual(store.cases["ZF-3"]["stage"], "Final checks before ordering")
+
     def test_static_path_traversal_blocked(self):
         self.assertEqual(self.call("/..%2f..%2fREADME.md")[0], 404)
 

@@ -1,0 +1,50 @@
+.FFE
+======================================================================
+ERROR: test_unconfirmed_funding_reads_as_denied_with_reason (test_gates.FundingReadinessTests.test_unconfirmed_funding_reads_as_denied_with_reason) (funding=None, absent=True)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/core/tests/test_gates.py", line 173, in test_unconfirmed_funding_reads_as_denied_with_reason
+    self.assertEqual(len(self.funding_reasons(store)), 1)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/core/tests/test_gates.py", line 161, in funding_reasons
+    return [r for r in Store.gate_reasons(store.cases["ZF-3"]) if "Funding" in r]
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/core/src/zava_forward/core/store.py", line 171, in gate_reasons
+    if not c["funding_ok"]:
+           ~^^^^^^^^^^^^^^
+KeyError: 'funding_ok'
+
+======================================================================
+FAIL: test_unconfirmed_funding_reads_as_denied_with_reason (test_gates.FundingReadinessTests.test_unconfirmed_funding_reads_as_denied_with_reason) (funding='yes', absent=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/core/tests/test_gates.py", line 173, in test_unconfirmed_funding_reads_as_denied_with_reason
+    self.assertEqual(len(self.funding_reasons(store)), 1)
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_unconfirmed_funding_reads_as_denied_with_reason (test_gates.FundingReadinessTests.test_unconfirmed_funding_reads_as_denied_with_reason) (funding=1, absent=False)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/core/tests/test_gates.py", line 173, in test_unconfirmed_funding_reads_as_denied_with_reason
+    self.assertEqual(len(self.funding_reasons(store)), 1)
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.009s
+
+FAILED (failures=2, errors=1)
+F
+======================================================================
+FAIL: test_advance_with_missing_funding_is_a_funding_conflict_not_a_missing_case (tests.test_mvp.ApiTests.test_advance_with_missing_funding_is_a_funding_conflict_not_a_missing_case)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-82-gate-readiness-1112/src/api/tests/test_mvp.py", line 144, in test_advance_with_missing_funding_is_a_funding_conflict_not_a_missing_case
+    self.assertEqual(code, 409)
+AssertionError: 404 != 409
+
+----------------------------------------------------------------------
+Ran 1 test in 0.885s
+
+FAILED (failures=1)
+http-exit=1

@@ -1,0 +1,6 @@
+All checks passed!
+ruff-check-exit=0
+1 file already formatted
+ruff-format-exit=0
+Success: no issues found in 1 source file
+mypy-exit=0
