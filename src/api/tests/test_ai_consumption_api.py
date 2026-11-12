@@ -43,6 +43,7 @@ from zava_forward.core.store import ConflictError, Store
 from test_assistants import Base, proposal
 from zava_forward.api.server import App, make_handler
 
+OMIT = object()
 START = "2026-10-01T00:00:00Z"
 END = "2099-01-01T00:00:00Z"
 
@@ -68,6 +69,12 @@ class ConsumptionApi(unittest.TestCase):
         self.response_text: str | None = None
         self.response_status = 200
         self.response_model: object = "test-model"
+        self.response_usage: object = dict(
+            prompt_tokens=100,
+            completion_tokens=20,
+            total_tokens=120,
+            prompt_tokens_details=dict(cached_tokens=10),
+        )
         test = self
 
         class Handler(BaseHTTPRequestHandler):
@@ -80,18 +87,13 @@ class ConsumptionApi(unittest.TestCase):
                 user = payload["messages"][1]["content"]
                 snapshot = json.loads(user).get("evidence", {}) if user.startswith("{") else {}
                 text = test.response_text or canonical(proposal(snapshot))
-                body = json.dumps(
-                    dict(
-                        model=test.response_model,
-                        usage=dict(
-                            prompt_tokens=100,
-                            completion_tokens=20,
-                            total_tokens=120,
-                            prompt_tokens_details=dict(cached_tokens=10),
-                        ),
-                        choices=[dict(message=dict(content=text))],
-                    )
-                ).encode()
+                answer: dict[str, Any] = dict(
+                    model=test.response_model,
+                    choices=[dict(message=dict(content=text))],
+                )
+                if test.response_usage is not OMIT:
+                    answer["usage"] = test.response_usage
+                body = json.dumps(answer).encode()
                 self.send_response(test.response_status)
                 self.send_header("Content-Length", str(len(body)))
                 self.end_headers()
@@ -456,6 +458,124 @@ class ConsumptionApi(unittest.TestCase):
                 for a in held["owned_alerts"]
             )
         )
+
+    def legacy_draft(self, store: Any, mode: str | None = None) -> dict[str, Any]:
+        with store.lock:
+            label = next(
+                s
+                for s in ai_tasks.source_labels(store._case("ZF-1"), True)
+                if s.startswith("Stage:")
+            )
+        self.response_text = f"Check supplied facts [[ZF-1: {label}]]."
+        return dict(
+            ai_tasks.run_text_task(
+                store,
+                self.pm,
+                "briefing",
+                [store._case("ZF-1")],
+                "Constructed legacy system",
+                "Constructed legacy input",
+                "Manual text",
+                [f"ZF-1: {label}"],
+                mode=mode,
+            )
+        )
+
+    def legacy_ledger(self, result: dict[str, Any]) -> dict[str, Any]:
+        records = self.records()
+        envelope = result["envelope"]
+        reserved = [r for r in records if r["kind"] == "reserved"]
+        completed = [r for r in records if r["kind"] == "completed"]
+        self.assertEqual([r["id"] for r in reserved], [envelope["meter_id"]])
+        self.assertEqual(reserved[0]["root"], envelope["meter_root"])
+        self.assertEqual(len(completed), 1)
+        self.assertNotIn("Constructed legacy input", json.dumps(records))
+        self.assertNotIn("Check supplied facts", json.dumps(records))
+        return dict(completed=completed[0], output=[r for r in records if r["kind"] == "output"])
+
+    def test_legacy_draft_joins_returned_usage_to_ledger_and_output(self) -> None:
+        store = self.publication_store("sql")
+        self.authority("briefing", temperature=0.3, output=700)
+        result = self.legacy_draft(store)
+        ledger = self.legacy_ledger(result)
+        self.assertEqual(result["source"], "ai")
+        self.assertEqual(result["envelope"]["usage"], ledger["completed"]["tokens"])
+        self.assertEqual(result["envelope"]["usage"]["total_tokens"], 120)
+        self.assertEqual(result["envelope"]["usage"]["cached_tokens"], 10)
+        self.assertEqual(len(ledger["output"]), 1)
+        self.assertEqual(ledger["output"][0]["output"], reference(result["record_id"]))
+        self.assertTrue(ledger["output"][0]["eligible"])
+        self.assertEqual(len(self.requests), 1)
+
+    def test_legacy_draft_missing_or_malformed_usage_is_unknown(self) -> None:
+        for label, usage in (
+            ("omitted", OMIT),
+            ("total-mismatch", dict(prompt_tokens=100, completion_tokens=20, total_tokens=7)),
+            (
+                "cached-above-prompt",
+                dict(prompt_tokens=5, completion_tokens=1, total_tokens=6, cached_tokens=9),
+            ),
+        ):
+            with self.subTest(usage=label):
+                fixture = self.fresh()
+                store = fixture.publication_store("sql")
+                fixture.authority("briefing", temperature=0.3, output=700)
+                fixture.response_usage = usage
+                result = fixture.legacy_draft(store)
+                ledger = fixture.legacy_ledger(result)
+                self.assertIsNone(result["envelope"]["usage"])
+                self.assertIsNone(ledger["completed"]["tokens"])
+                self.assertTrue(ledger["completed"]["held"])
+                self.assertEqual(len(ledger["output"]), 1)
+                report = fixture.service.consumption.report(start=START, end=END, as_of=END)
+                self.assertEqual(report["unknown_liabilities"], 1)
+                self.assertEqual(report["token_cost"], "Unknown")
+                self.assertEqual(report["accepted_proposals"], 0)
+
+    def test_legacy_draft_provider_failure_has_no_usage_and_stays_manual(self) -> None:
+        store = self.publication_store("sql")
+        self.authority("briefing", temperature=0.3, output=700)
+        self.response_status = 500
+        result = self.legacy_draft(store)
+        ledger = self.legacy_ledger(result)
+        self.assertEqual(result["source"], "template")
+        self.assertEqual(result["text"], "Manual text")
+        self.assertIsNone(result["envelope"]["usage"])
+        self.assertIsNone(ledger["completed"]["tokens"])
+        self.assertEqual(ledger["completed"]["outcome"], "provider-unavailable")
+        self.assertFalse(any(o["eligible"] for o in ledger["output"]))
+
+    def test_legacy_draft_settlement_failure_never_reports_unsettled_usage(self) -> None:
+        store = self.publication_store("sql")
+        self.authority("briefing", temperature=0.3, output=700)
+        meter = self.service.consumption
+        real = meter.complete
+        calls: list[str] = []
+
+        def settle_once_then_fail(*args: Any, **kwargs: Any) -> None:
+            calls.append(args[3])
+            if len(calls) == 1:
+                raise RuntimeError("constructed settlement fault")
+            real(*args, **kwargs)
+
+        with patch.object(meter, "complete", side_effect=settle_once_then_fail):
+            result = self.legacy_draft(store)
+        self.assertEqual(calls, ["returned", "provider-unavailable"])
+        ledger = self.legacy_ledger(result)
+        self.assertEqual(result["source"], "template")
+        self.assertIsNone(ledger["completed"]["tokens"])
+        self.assertIsNone(result["envelope"]["usage"])
+
+    def test_legacy_draft_workflow_only_dispatches_and_reserves_nothing(self) -> None:
+        store = self.publication_store("sql")
+        self.authority("briefing", temperature=0.3, output=700)
+        result = self.legacy_draft(store, mode="workflow-only")
+        self.assertEqual(result["mode"], "workflow-only")
+        self.assertEqual(result["source"], "template")
+        self.assertEqual(self.requests, [])
+        self.assertIsNone(result["envelope"]["meter_root"])
+        self.assertIsNone(result["envelope"]["usage"])
+        self.assertFalse(any(r["kind"] in ("reserved", "completed") for r in self.records()))
 
     def test_legacy_and_priority_reviews_recover_only_committed_matching_links(self) -> None:
         meter = self.service.consumption
