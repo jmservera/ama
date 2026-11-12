@@ -93,6 +93,8 @@ class ExposureLimits(unittest.TestCase):
         exposure = dict(committed=1, currency="GBP", tolerances=dict(capital=10**400, safety=0))
         self.assertEqual(limits.assess(self.record(), exposure)["status"], "Breach")
 
+
+class LiveSignal(unittest.TestCase):
     USER = dict(role="Retrofit Programme Manager", email="t@example.test")
 
     def store(self, *amounts: float) -> SimpleNamespace:

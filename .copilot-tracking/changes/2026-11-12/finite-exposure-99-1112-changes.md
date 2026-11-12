@@ -15,6 +15,8 @@ ms.date: 2026-11-12
 * Divergence D1: reproduction and first edits preceded writing of the plan artifacts; recorded openly in the plan. Plan, critique and Review were each executed once.
 * Behaviour change to note: positive infinity previously reported Breach with an infinite observed value; it now reports Unknown. Both pause for a human decision.
 
+* Post-review correction C1: Review finding RV-01 (the test edit had dropped the `LiveSignal` class header) fixed in a second commit; not re-reviewed.
+
 ## Validation
 
 Focused tier only; see [exit codes and outputs](../../evidence/2026-11-12/finite-exposure-99-1112/exit-codes.md). Final: unit module 16 tests OK, ruff check and format check 0, mypy 0 on the two files, neighbouring finance tests 78 OK (19 skipped by the runner, not claimed as passes). Not run: full local gate, other core/api/agents suites, hosted CI.

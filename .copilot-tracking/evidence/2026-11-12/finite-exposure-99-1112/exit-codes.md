@@ -26,3 +26,5 @@ Run from `src/core` with venv `/tmp/f99/venv` (outside the repository). Commands
 | neighbouring finance tests | `python -m unittest discover -s tests -p "test_finance*.py" -q` | 0 (78 tests, skipped=19, skip reasons not examined) | test-finance.out |
 
 The earlier test-after.out from the first (pre-helper) fix was overwritten by the final run.
+
+Post-review re-run after restoring the `LiveSignal` class header (files `*-post-review.out`): unit module 0 (16 tests), ruff check 0, ruff format check 0, mypy 0, finance tests 0 (skipped=19, reasons not examined).
