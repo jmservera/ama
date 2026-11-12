@@ -634,8 +634,8 @@ is the working review itself, and unavailable evidence returns `Unavailable`.
 
 `form_export.export_freshness(store, user, case_id, saved_export)` compares a
 saved held export with the current working review, read-only. It returns
-`Current`, `Stale` (naming only the fields whose value, state or bound source
-changed or are now stale, and the unaffected fields), `Invalid` (the copy is
+`Current`, `Stale` (naming only the fields whose value, state, open validation
+issues or bound source changed or are now stale, and the unaffected fields), `Invalid` (the copy is
 incomplete or its content hash no longer matches) or `Unavailable`. A changed
 rule reference in a newer schema version stales every field; other schema
 changes stale only dependent fields (see dependency propagation below). It

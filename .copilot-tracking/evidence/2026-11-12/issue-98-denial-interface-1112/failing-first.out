@@ -1,0 +1,28 @@
+FF
+======================================================================
+FAIL: test_changed_open_issue_stales_only_its_field (test_form_export.FormExport.test_changed_open_issue_stales_only_its_field) (store='Store')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-98-denial-interface-1112/src/core/tests/test_form_export.py", line 179, in test_changed_open_issue_stales_only_its_field
+    self.assertEqual(out["status"], "Stale")
+AssertionError: 'Current' != 'Stale'
+- Current
++ Stale
+
+
+======================================================================
+FAIL: test_changed_open_issue_stales_only_its_field (test_form_export.FormExport.test_changed_open_issue_stales_only_its_field) (store='SqlStore')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-98-denial-interface-1112/src/core/tests/test_form_export.py", line 179, in test_changed_open_issue_stales_only_its_field
+    self.assertEqual(out["status"], "Stale")
+AssertionError: 'Current' != 'Stale'
+- Current
++ Stale
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.350s
+
+FAILED (failures=2)
+exit=1

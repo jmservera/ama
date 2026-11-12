@@ -11597,3 +11597,18 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Fixed an error in correction 1 above: #83 is open, not closed. The [AC-034 to AC-043 section](../architecture/cutover-evidence-pack.md#ac-034-to-ac-043-disposition-reconciliation-2026-11-12-refs-134) restores #83 and #134 as the open owners for AC-036; only #85 and #90 (closed 2026-10-17) are historical evidence and not live owners. The correction 1 entry is not edited.
 * Documentation only. Six partial and four deferred are unchanged; no tick, acceptance or approval.
+## [2026-11-12] update | Post-fix-wave checkpoint (Refs #440 #128 #98 #115)
+
+* Added a dated post-fix-wave checkpoint to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115) for merged PRs 1481, 1483 and 1482 on `main` `e155c88ed`, with an index paragraph in the [index](./README.md).
+* Local focused evidence only (151 tests executed, 0 skipped; lint and mypy clean; one invocation error retained); no source change, no new issue, no criterion ticked, no approval; recommendation is a bounded CONTINUE.
+* Evidence under `.copilot-tracking/` (2026-11-12 post-fix-wave-440-1112).
+
+## [2026-11-12] update | Post-fix-wave checkpoint correction (Refs #440)
+
+* Corrected wording in the post-fix-wave section of the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115): pin time qualification, test-helper PYTHONPATH, ADR 0002 Audit row, AC-051 and AC-073 Not run. Documentation only; nothing rerun; no approval or tick.
+* Evidence under `.copilot-tracking/` (2026-11-12 post-fix-wave-440-1112-correction).
+
+## [2026-11-12] add | Current capstone deck assessment and Tokenomics statement audit (Refs #435)
+
+* Added an [offline, content-only assessment](../capstone/pitch/current-deck-assessment-2026-11-12.md) of the delivered 55-slide capstone deck and notes (PPTX blob `3da73fd2dd`, main `cd81888e4`) against every Capstone Assessment Guide criterion, with a statement-by-statement Tokenomics source, label and class register. It is not an assessor score, floor pass or approval; it flags the unresolved criterion 6 price-figure tension, price and model basis, control wording and stale page-count text for owner decision. Issue #435 criteria 1-4 stay unmet and no deck, source or placement file changed.
+* Evidence under `.copilot-tracking/` (2026-11-12 current-capstone-assessment-435-1112).

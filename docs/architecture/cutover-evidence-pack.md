@@ -7595,3 +7595,91 @@ The register status is authoritative for the code check and is not changed here.
 * The remaining literal #134 criteria stay open: all eleven perspectives with entry, evidence, safe endpoint, recovery and handoff (1), this criterion (2) and keyboard, text and status announcements (5). Criteria 3, 4 and 6 are already ticked and unchanged. Whole #134, the original A4 and E1 to E4 corrections (spent) and the unadmitted E5 and E6 are untouched.
 * Correction 1 (2026-11-12, independent review R-1 to R-5) amended this section after publication review, and correction 2 restored #83 as an open owner (it had been wrongly called closed); the original adverse critique and review stay preserved in their artifacts.
 * Original RPI evidence is under `.copilot-tracking/` (`ac-dispositions-134-1112`): research, plan, details, one independent critique (Revise, eight findings, all applied), changes, state and one Review. The model label `claude-sonnet-5.5` is asserted by the launcher; no witness or host attestation exists.
+
+## Post-fix-wave checkpoint (2026-11-12, Refs #440 #128 #98 #115)
+
+Draft, local-only, not approved. This is the recurring checkpoint under existing issue #440 that is due because one specific fix wave completed: PR 1481 (#128), PR 1483 (#115) and PR 1482 (#98). It is not a whole-product audit, epic closure, new issue, new feature or approval, and it resets no earlier correction budget. The preceding checkpoint (post-153 section above, PR 1480, merge `cd81888e4a81cf4c712d50b357ca900fd5c8c06b`) is the baseline and is not a fresh result. The unmerged candidates 107, 134, 153, 157, 435 and 82 and their sibling functionality are excluded. No source, test, tool, workflow, configuration, requirement or ADR is changed, no issue is opened and no criterion is ticked. The last two acceptance criteria of #440 (triage into independent issues; Major HVE behavior-tested coordinator change) are not completed here.
+
+### Identities and exclusions
+
+| Item | Identity (read 2026-11-12) |
+| --- | --- |
+| Pin | Worktree HEAD (branch `docs/demo-fix-wave-checkpoint-440-1112`) equaled `origin/main` `e155c88ed6357259a11520e7150b7ad9d349b9f8` when freshly fetched at the time of the checks (2026-11-12). A later fetch shows `origin/main` at `eac1206c6ca08bd551e3d0d2384bb87a1f05c24f` (tree `ff26901294f2`), which differs from the checked base only by the rubric score record `.github/rubric/scores/latest.json` (a `chore(rubric)` commit); the checked base is its ancestor and nothing here was rerun at the later commit. Checked-base identities: root tree `82eea54a212bbb442e7c2257e1349480faa18505`; `src` `7b61d44bc705`, `docs` `8fe82ba5b637`, `infra` `be7fa0b2502e`, `tools` `432a4e8f7d74` (unchanged from the baseline). Delta from `cd81888e4`: 11 files, 216 insertions, 28 deletions outside `.copilot-tracking` and the rubric score record `.github/rubric/scores/latest.json` (a `chore(rubric)` commit, 5 insertions and 5 deletions) |
+| PR 1481 (#128) | Merged 2026-11-12T21:38:04Z as `59eac895112ebb97cfa6c27413b3d398e6f056e4`, tree `8fcebb38afee`. The PR title says `fix` and the squash commit subject says `feat`; the content is the one change below |
+| PR 1483 (#115) | Merged 21:50:20Z as `43b2187b918206666c63cb25d8b338be09791118`, tree `67cbe8ede92d` |
+| PR 1482 (#98) | Merged 22:00:46Z as `e155c88ed6357259a11520e7150b7ad9d349b9f8` (two squashed commits: the fix and a hosted-typing correction) |
+| Blobs at the pin | `paired_equity.py` `23e553ab982a`; `test_paired_equity.py` `15dce2f3dfa5`; `form_export.py` `51b9a4af9d68`; `test_form_export.py` `18e582573670`; `digest_blob.py` `03544499a722`; `test_digest_blob.py` `9f55c0a65a18`; `infra/tests/test_bicep_policy.py` `0d482ae35238`; `test_form_held_download_api.py` `1c9b900f33df` |
+| Documents | PRD `zava-forward-retrofit-programme-demonstrator.md` 0.21.0 `in-review` `c788b917bafa`; BRD `agentic-retrofit-programme-brd.md` 0.21.0 `draft` `34d88395de86`; ADR 0002 `cbe21530043f` Status Proposed; ADR 0003 `d60645397b20` and ADR 0006 `956da1a3b804` Accepted. None is changed by the wave; draft, in-review and Proposed are not approval |
+| Issue states (live `gh`) | #440, #128, #98, #115 OPEN; the three merges use `Refs` and no closing keyword |
+
+What changed, read at the pin: #128 adds `source_completeness` (constructed `source_record` complete versus missing) as a fourth required `paired_equity` dimension and reports a ranker that leaves the subject out as `excluded` instead of raising (`fairness_evidence` and `activation_allowed` stay false). #115 makes the scheduled ledger job print `LEDGER_DIGEST_ALERT ledger verification could not run: <exception type>` and exit 1 for any unexpected store, container, publish or verify failure, with a static test binding both alert queries in Bicep to the marker constants. #98 makes `export_freshness` compare each saved field's digest-covered open validation issues, so a held pack is no longer `Current` after an issue changes, and treats a malformed issue list as `Invalid`.
+
+### Environment, commands and results (local, constructed synthetic data)
+
+Python 3.12.3 in an owned venv outside the repository, `/home/azureuser/.venvs/postwave-440-1112` (`--system-site-packages`), with `pip install --no-deps -e src/core -e src/agents -e src/api -e src/orchestrator` from this worktree (exit 0; no uv). Origin proof: the loaded `__file__` of `paired_equity`, `form_export`, `digest_blob` and `api.server` equals this worktree and its `git hash-object` equals `HEAD:<path>` (4 of 4). Tracked tree clean before and after the runs; untracked paths were limited to this task's artifacts. Installed tools differ from the pinned ones (ruff 0.17.3 versus 0.17.1, mypy 2.4.1 versus 2.4.0), so no hosted-parity claim is made. In-process SQLite test stores (for example `test_form_review.py:31`) ran as local synthetic coverage; SQL Server (`ZF_TEST_MSSQL`), Docker, the browser harness, scanners, hosted CI, Azure, models, the live endpoint, private data and `support/` were not run or used.
+
+| Id | Command (from the named directory) | Exit | Ran | Skipped | Covers |
+| --- | --- | --- | --- | --- | --- |
+| T1 | `src/core`: `unittest discover -s tests -p test_paired_equity.py -q` | 0 | 26 | 0 | #128: four dimensions, seeded defects, exclusion without crash |
+| T2 | `src/core`: `-p test_journey_register.py` | 0 | 7 | 0 | Dependency of the paired check |
+| T3 | `src/core`: `-p test_form_export.py` | 0 | 11 | 0 | #98: changed, removed and malformed open issues |
+| T4 | `src/core`: `-p test_form_dependencies.py` | 0 | 10 | 0 | Stale propagation consumer |
+| T5 | `src/orchestrator`, `PYTHONPATH=../core/tests`: `-p test_digest_blob.py` | 0 | 30 | 0 | #115: unexpected-failure marker, exit codes, no secret leak |
+| T6 | `src/api`, `PYTHONPATH=../core/tests:../agents/tests`: `-p test_form_held_download_api.py` | 0 | 6 | 0 | Local HTTP held-download regression, synthetic fixture |
+| T7 | `infra`, `REQUIRE_AZ_BICEP=1`: `unittest tests.test_bicep_policy.BicepPolicyTests.test_ledger_alert_queries_match_the_verifier_markers -v` | 0 | 1 | 0 | Alert queries contain `ALERT_MARKER` and `OK_MARKER` (local `az bicep` compile, no cloud call) |
+| T8 | `infra`, `REQUIRE_AZ_BICEP=1`: `unittest tests.test_bicep_policy -q` | 0 | 61 | 0 | Whole Bicep policy module |
+| T9 | `src/core` and `src/orchestrator`: `python -m ruff check` and `ruff format --check` on `src tests` | 0, 0, 0, 0 | not applicable | not applicable | Lint and format |
+| T10 | `src/core`: `python -m mypy` (configured scope, 298 files); `src/orchestrator`: `python -m mypy src tests` (16 files) | 0, 0 | not applicable | not applicable | Types; the #98 hosted failure was in this core scope |
+
+Executed and passing: 90 unit and HTTP tests in T1 to T6 plus the 61-test infra module (T8, which includes T7), 151 in total, with 0 failures and 0 skips in the final runs. Raw stdout, stderr, `preflight.out`, `origin-trace.out` and `sha256-manifest.txt` are outside the repository at `/home/azureuser/.copilot/session-state/f9385f39-ed8d-41ab-b9b0-67f1574db2fe/files/checkpoint-440-postwave-1112/`.
+
+Adverse and intermediate results, retained: the first static run called `ruff` and `mypy` by bare entry-point name from the venv `bin` directory and exited 127 for all six commands (the tools are in the system site, not in the venv); it was an invocation error, preserved under `attempt1-exit127/`, and the checks were rerun with `python -m`. The T1 to T6 runs were not repeated at the baseline, so failing-first proof of the new tests is the feature artifacts' claim and was not reproduced here.
+
+### Original feature-wave qualifications (preserved, not re-observed)
+
+* #128 (PR 1481): the independent critique ran after the draft plan and implementation draft existed; its High finding (exclusion crash) was added to scope and fixed failing-first. Review CLEAN with one non-defect note: a ranker that excludes only the reference while ranking the subject passes under the stated rule.
+* #98 (PR 1482): the first focused mypy covered `form_export.py` only, not the configured scope; hosted SourceCI run 43308748514 then failed configured `mypy` with two `attr-defined` errors at `test_form_export.py:170,172`, corrected in the same PR by importing helpers from their defining modules. T10 now passes the configured scope locally.
+* #115 (PR 1483): initial wrong-tool and configuration checks occurred (recorded in its changes file); the review agent could not run the orchestrator tests in its own environment and the author's runs are the execution evidence; one Low note stayed open and routed (a `DocumentStoreError` raised while opening the store would print its message; no store module raises it).
+* 1483 merge process, as reported by the coordinator: an immediate GraphQL `UNKNOWN` merge-state response preceded a normal guarded accepted merge. It was not re-observed here; live `gh` shows the PR `MERGED`.
+
+### Cross-package contracts
+
+* Orchestrator to infra: the marker constants in `digest_blob.py` equal the strings in the two ledger alert queries (T7, static compile). The alert rules are candidates with a proposed owner and an actual appointment pending (`operationalMonitoring.bicep` description text); no hosted alert, scheduler run or notification delivery was observed.
+* Core to API: the API server calls `draft_export` for the held download (`server.py:1204`) and does not call `export_freshness`. T6 is therefore regression evidence for the held download only; no HTTP freshness surface exists or is demonstrated, and the #98 fix is evidenced by core tests T3 and T4 alone.
+* Paired check: `paired_equity` has no production consumer; it is a test-only diagnostic over constructed fixtures, so the new dimension affects no ranking, queue or resident outcome.
+
+### Requirement trace (document-qualified, proposed)
+
+Classes: local observed (constructed synthetic), implemented but unverified, deferred, blocked, unknown. Requirement rows are nearest by inspection, not an authoritative mapping.
+
+| Boundary or requirement | Source and test | Class |
+| --- | --- | --- |
+| PRD 0.21.0 FR-054 (versioned evaluation record with cohort definitions and subgroup results) and AC-073 (paired constructed cohorts differing in sensor/source completeness, contact need or appointment history; AC-073 is `Not run` in the PRD); the 'missing data never lowers priority' rule is the repository check's own pair rule and #128 criterion; #128 | `paired_equity.py` `DIMENSIONS`, T1, T2 | Local observed for the constructed source pair and exclusion path only. Population fairness, approved expected-outcome manifest, AI-task evaluation, small-sample handling and human disparity disposition are not evidenced; `fairness_evidence` and `activation_allowed` stay false. BRD 0.21.0 NFR-008, NFR-009 and RULE-005 (cited by #128) unverified. #128 criteria unmet |
+| PRD 0.21.0 FR-043 and AC-051 (exact stale propagation; AC-051 is `Not run` in the PRD); FR-042 (export is not submission); #98 | `form_export.py` `export_freshness`, `_issues_by_field`, T3, T4 | Local observed for open-issue changes on a saved held pack in SQLite fixtures. The fixture-owned exact-affected manifest of AC-051 is not claimed. Held status, no submission, Finance human review and the manual route are unchanged by the diff. #98 criteria 2 and 3 stay unproven |
+| ADR 0002 (Proposed) Audit row of its decision table (append-only SQL ledger, digests to an immutable Blob container with a time-based retention lock, scheduled verification; the row states it meets PRD DH-007, which concerns retaining audit entries in full for the legal period); not a numbered decision; #115 | `digest_blob.py` `main`, `_publish_and_verify`, T5, T7 | Local observed for marker emission, exit codes and the static alert binding with fake stores. Retention lock, immutable container, real scheduler run, hosted alert delivery and second-person reconciliation are implemented-unverified or unknown; #115 criteria unmet |
+| Human, consent and AI-unavailable boundaries | Unchanged by the diff | The diff adds no permission, consent, approval, send or AI call path. Fixture providers, approvals and users are synthetic. A failed ledger check alerts and exits non-zero; it never degrades silently to success |
+| ADR 0003 and ADR 0006 (Accepted) | No change | Context only |
+| #440, #128, #98, #115 acceptance criteria | Unchanged | All OPEN and unmet or partially delivered |
+
+### Findings, owners and risks (reported, no issue created)
+
+No refactoring is confirmed necessary and no new defect was found by the checks run. Remaining risks, each routed to an existing owner:
+
+* R1 (#115, residual from the feature review, not re-tested): `SystemExit` from SQL configuration bypasses the marker, and tracebacks are no longer printed for unexpected errors, which can reduce operator diagnosis. Whether the candidate absence alert (`OK_MARKER` missing) covers a `SystemExit` was not run and is unknown.
+* R2 (#115, Low, theoretical): a `DocumentStoreError` raised while opening the store would print its message. No store module raises it today.
+* R3 (#128): a ranker that excludes only the reference passes the paired rule; confirmed by the original reviewer as a stated-rule note, owner #128.
+* R4 (#98): the freshness fix has no HTTP or browser surface; a user-visible stale indicator for held packs, if required, belongs to the existing #98 and #134 work and is unverified.
+* R5 (omission): no hosted CI result for this head, no SQL Server run (the #98 and form tests ran on SQLite), no browser, scanner or Docker run, and the independent exact-head review of this record is outstanding.
+
+### Gates and recommendation (proposed, not a decision)
+
+* Recommendation: CONTINUE, bounded. The wave is locally consistent at `e155c88ed`; no fix or pivot is indicated by this evidence. It is not a tick of any criterion, an approval of any requirement, BRD, PRD or ADR, or an acceptance of PRs 1481, 1482 or 1483.
+* Affected gates: closure of #128, #98 and #115 and whole #440 stay held (retention lock and hosted scheduler evidence for #115; AC-051 manifest and SQL Server evidence for #98; population or AI-task cohort evidence and human disparity disposition for #128). Dependent lanes: any use of the paired result as fairness evidence, any claim of an alerting ledger in a deployed environment, and any resident-facing stale-export behaviour. Independent lanes that this record does not block: unmerged source work on 107, 134, 153, 157, 435 and 82, and documentation work.
+* Human decisions still open: owner appointment for the ledger alert, owner admission for any Azure, hosted or SQL lane, legal and professional acceptance of any resident-facing use.
+
+### Process limits
+
+* Original dated RPI evidence is under `.copilot-tracking/` (`post-fix-wave-440-1112`): research, plan and details, one independent read-only critique (verdict Revise, four findings, all applied; the critique worker could not write its file, so the coordinator persisted its findings), changes, state and one Review. The model label (Claude Sonnet 5.5) is asserted; no host attestation exists.
+* The case study addendum was read by headings and relevant sections only, not end to end. No push, PR, issue, criterion or board write was made.
+* Correction batch (2026-11-12, documentation only, after independent review RV2-1 to RV2-4 of frozen head `5244265c8`): qualified the pin identity at observation time, added the test-helper `PYTHONPATH` to T5 and T6, named the ADR 0002 Audit row accurately and stated that both AC-051 and AC-073 are `Not run` in the PRD. Original results, counts and adverse outcomes are unchanged and nothing was rerun.
+* Evidence under `.copilot-tracking/` (`post-fix-wave-440-1112`, `post-fix-wave-440-1112-correction`).

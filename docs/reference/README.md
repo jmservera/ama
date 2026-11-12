@@ -1428,3 +1428,11 @@ An [AC-034 to AC-043 disposition reconciliation](../architecture/cutover-evidenc
 existing evidence, the unproven remainder, the work owner and a resume check. No criterion passes: six are partial and four
 deferred, the register source is unchanged, and the record is not an owner-approved deferral, human or assistive-technology
 acceptance, or a tick.
+
+A post-fix-wave checkpoint (2026-11-12) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115).
+It covers merged PRs 1481 (#128 paired source-completeness), 1483 (#115 ledger verifier failure marker) and 1482 (#98 held-export
+open-issue freshness) on `main` `e155c88ed`: 90 focused unit and local HTTP tests plus the 61-test infra policy module executed,
+0 skipped, lint and configured mypy clean, an invocation error retained, the original adverse qualifications preserved, no
+confirmed defect, remaining risks routed to existing owners, and a bounded CONTINUE. It is local and synthetic only and is not
+SQL Server, browser, hosted, Azure, retention-lock or approval evidence.

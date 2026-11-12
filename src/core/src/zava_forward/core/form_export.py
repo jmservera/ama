@@ -39,6 +39,17 @@ def _digest(body: Record) -> str:
     return hashlib.sha256(text.encode()).hexdigest()
 
 
+def _issues_by_field(issues: object) -> dict[str, list[Record]]:
+    if not isinstance(issues, list):
+        raise ValueError("Open issues must be a list.")
+    grouped: dict[str, list[Record]] = {}
+    for issue in issues:
+        if not isinstance(issue, dict) or not isinstance(issue.get("field_id"), str):
+            raise ValueError("Each open issue needs a field identifier.")
+        grouped.setdefault(issue["field_id"], []).append(issue)
+    return grouped
+
+
 def draft_export(store: Any, user: Record, case_id: str, draft_id: str) -> Record:
     """Return field values, evidence links and versions with a fixed Held status.
 
@@ -114,6 +125,7 @@ def export_freshness(store: Any, user: Record, case_id: str, saved: Record) -> R
             body = {key: saved[key] for key in BODY_KEYS}
             intact = saved["content_sha256"] == _digest(body)
             saved_rows = {row["field_id"]: row for row in body["fields"]}
+            saved_issues = _issues_by_field(body["open_issues"])
         except (KeyError, TypeError, ValueError):
             intact = False
         if not intact:
@@ -151,9 +163,14 @@ def export_freshness(store: Any, user: Record, case_id: str, saved: Record) -> R
         changed = {
             row["field_id"] for row in current["fields"] if saved_rows.get(row["field_id"]) != row
         }
-        stale = sorted(changed | set(current["stale_fields"]))
+        now_issues = _issues_by_field(current["open_issues"])
+        issue_changed = {fid for fid in saved_rows if saved_issues.get(fid) != now_issues.get(fid)}
+        stale = sorted(changed | set(current["stale_fields"]) | issue_changed)
         if stale and not reasons:
-            reasons.append("A bound source or field state changed.")
+            if changed or current["stale_fields"]:
+                reasons.append("A bound source or field state changed.")
+            else:
+                reasons.append("An open validation issue changed.")
         return dict(
             status="Stale" if reasons else "Current",
             stale_fields=stale,
