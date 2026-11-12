@@ -5,6 +5,7 @@ import unittest
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
 from zava_forward.core.synthetic import live_readings as lr
 from zava_forward.core.synthetic.sensor_stream import StreamError
@@ -248,6 +249,100 @@ class ReceiverTests(unittest.TestCase):
 
     def test_main_without_control_file_is_refused(self) -> None:
         self.assertEqual(rx.main([], {}), 2)
+
+
+class AttemptPermitTests(unittest.TestCase):
+    def _path(self, directory: str, **changes: Any) -> Path:
+        path = Path(directory) / "control.json"
+        lc.write(path, lc.parse(document(**changes)))
+        return path
+
+    def test_permit_requires_a_sending_control_and_a_cohort_home(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = self._path(directory)
+            self.assertTrue(ls.attempt_permitted(path, HOMES[0], NOW))
+            self.assertFalse(ls.attempt_permitted(path, HOMES[5], NOW))
+            self.assertFalse(ls.attempt_permitted(path, HOMES[0], NOW + timedelta(days=1)))
+            lc.write(path, lc.parse(document(enabled=False)))
+            self.assertFalse(ls.attempt_permitted(path, HOMES[0], NOW))
+            lc.write(path, lc.parse(document(expires_at="2026-11-30T10:00:00Z")))
+            self.assertFalse(ls.attempt_permitted(path, HOMES[0], NOW))
+
+    def test_unreadable_or_corrupt_control_is_not_a_permit(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = self._path(directory)
+            self.assertFalse(ls.attempt_permitted(Path(directory) / "gone.json", HOMES[0], NOW))
+            path.write_text("{not json", encoding="utf-8")
+            self.assertFalse(ls.attempt_permitted(path, HOMES[0], NOW))
+
+
+def _rewriter(**changes: Any) -> Any:
+    def rewrite(path: Path, far: str) -> None:
+        lc.write(path, lc.parse(document(expires_at=far) | changes))
+
+    return rewrite
+
+
+class MainAttemptFenceTests(unittest.TestCase):
+    """Through `main`: the real control file is rewritten by the sink during the run."""
+
+    def _run(self, directory: str, rewrite: Any, homes: list[str], fail_first: bool = False) -> Any:
+        far = (datetime.now(UTC) + timedelta(days=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        path = Path(directory) / "control.json"
+        lc.write(path, lc.parse(document(homes=homes, expires_at=far)))
+
+        class Sink(ls.MemorySink):
+            async def send(self, device_id: str, message_id: str, body: bytes) -> None:
+                first = self.attempts == 0
+                if first and rewrite is not None:
+                    rewrite(path, far)
+                if first and fail_first:
+                    self.attempts += 1
+                    raise ls.SinkError("FAKE_TRANSIENT")
+                await super().send(device_id, message_id, body)
+
+        sink = Sink()
+        env = {"ZF_STORE": "json", "ZF_DATA": str(Path(directory) / "none.json")}
+        with (
+            patch.object(ls, "_sink", lambda args, env: sink),
+            patch.object(ls, "store_home_ids", lambda env=None: HOMES),
+        ):
+            code = ls.main(["--once", "--control-file", str(path)], env)
+        return code, sink
+
+    def test_unchanged_control_sends_every_cohort_home(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._run(directory, None, HOMES[:3])
+        self.assertEqual((code, len(sink.messages)), (0, 3))
+
+    def test_stop_during_the_slot_prevents_the_remaining_sends(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._run(directory, _rewriter(enabled=False), HOMES[:3])
+        self.assertEqual((code, sink.attempts, len(sink.messages)), (0, 1, 1))
+
+    def test_stop_between_a_failed_attempt_and_its_retry_prevents_the_retry(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._run(directory, _rewriter(enabled=False), HOMES[:1], fail_first=True)
+        self.assertEqual((code, sink.attempts, sink.messages), (0, 1, []))
+
+    def test_cohort_removal_during_the_slot_stops_the_removed_homes(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._run(directory, _rewriter(homes=HOMES[:1]), HOMES[:3])
+        self.assertEqual((code, sink.attempts, len(sink.messages)), (0, 1, 1))
+
+    def test_expiry_during_the_slot_prevents_the_remaining_sends(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            soon = (datetime.now(UTC) - timedelta(seconds=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+            code, sink = self._run(directory, _rewriter(expires_at=soon), HOMES[:3])
+        self.assertEqual((code, sink.attempts, len(sink.messages)), (0, 1, 1))
+
+    def test_unreadable_control_during_the_slot_prevents_the_remaining_sends(self) -> None:
+        def corrupt(path: Path, far: str) -> None:
+            path.write_text("{", encoding="utf-8")
+
+        with tempfile.TemporaryDirectory() as directory:
+            code, sink = self._run(directory, corrupt, HOMES[:3])
+        self.assertEqual((code, sink.attempts, len(sink.messages)), (0, 1, 1))
 
 
 class RefreshRegressionTests(unittest.TestCase):

@@ -151,6 +151,142 @@ class SendSlotTests(unittest.TestCase):
         self.assertEqual(summary.codes, {"INVALID_HOME_ID": 1})
 
 
+class AttemptGateTests(unittest.TestCase):
+    def _device(self, home: str) -> str:
+        return str(lr.Generator(184).reading(home, SLOT).device_id)
+
+    def test_gate_closed_before_the_first_attempt_sends_nothing(self) -> None:
+        sink, clock = ls.MemorySink(), Clock()
+        summary = run_async(
+            ls.send_slot(
+                HOMES[:3],
+                SLOT,
+                lr.Generator(184),
+                sink,
+                FAST,
+                sleep=clock.sleep,
+                clock=clock.monotonic,
+                attempt_gate=lambda home: False,
+            )
+        )
+        self.assertEqual((sink.attempts, sink.messages), (0, []))
+        self.assertEqual((summary.sent, summary.failed), (0, 3))
+        self.assertEqual(summary.codes, {"RUN_CONTROL_FENCED": 3})
+
+    def test_stop_after_a_failed_attempt_prevents_the_retry_after_backoff(self) -> None:
+        home, clock, open_gate = HOMES[0], Clock(), {"open": True}
+        sink = ls.MemorySink({self._device(home): 1})
+        real_send = sink.send
+
+        async def send(device_id: str, message_id: str, body: bytes) -> None:
+            try:
+                await real_send(device_id, message_id, body)
+            finally:
+                open_gate["open"] = False
+
+        sink.send = send  # type: ignore[method-assign]
+        summary = run_async(
+            ls.send_slot(
+                [home],
+                SLOT,
+                lr.Generator(184),
+                sink,
+                FAST,
+                sleep=clock.sleep,
+                clock=clock.monotonic,
+                attempt_gate=lambda h: open_gate["open"],
+            )
+        )
+        self.assertEqual((sink.attempts, sink.messages), (1, []))
+        self.assertEqual(len(clock.sleeps), 1)
+        self.assertEqual((summary.sent, summary.failed, summary.retries), (0, 1, 1))
+        self.assertEqual(summary.codes, {"FAKE_TRANSIENT": 1, "RUN_CONTROL_FENCED": 1})
+
+    def test_stop_during_a_pacing_delay_is_seen_after_the_delay(self) -> None:
+        sink, clock, state = ls.MemorySink(), Clock(), {"open": True}
+
+        async def sleep(seconds: float) -> None:
+            await clock.sleep(seconds)
+            state["open"] = False
+
+        summary = run_async(
+            ls.send_slot(
+                HOMES[:2],
+                SLOT,
+                lr.Generator(184),
+                sink,
+                ls.Limits(max_per_second=1.0, batch_size=5, attempts=3),
+                sleep=sleep,
+                clock=clock.monotonic,
+                attempt_gate=lambda h: state["open"],
+            )
+        )
+        self.assertEqual(len(sink.messages), 1)
+        self.assertEqual((summary.sent, summary.failed), (1, 1))
+        self.assertEqual(summary.codes, {"RUN_CONTROL_FENCED": 1})
+
+    def test_a_gate_that_raises_fails_closed(self) -> None:
+        sink, clock = ls.MemorySink(), Clock()
+
+        def gate(home: str) -> bool:
+            raise RuntimeError("boom")
+
+        summary = run_async(
+            ls.send_slot(
+                HOMES[:2],
+                SLOT,
+                lr.Generator(184),
+                sink,
+                FAST,
+                sleep=clock.sleep,
+                clock=clock.monotonic,
+                attempt_gate=gate,
+            )
+        )
+        self.assertEqual((sink.attempts, summary.failed), (0, 2))
+        self.assertEqual(summary.codes, {"RUN_CONTROL_FENCED": 2})
+
+    def test_an_open_gate_changes_nothing_including_retry_and_backoff(self) -> None:
+        results = []
+        for gate in (None, lambda home: True):
+            sink, clock = ls.MemorySink({self._device(HOMES[1]): 2}), Clock()
+            summary = run_async(
+                ls.send_slot(
+                    HOMES[:4],
+                    SLOT,
+                    lr.Generator(184),
+                    sink,
+                    FAST,
+                    sleep=clock.sleep,
+                    clock=clock.monotonic,
+                    rng=random.Random(5),
+                    attempt_gate=gate,
+                )
+            )
+            results.append((sink.messages, sink.attempts, clock.sleeps, summary))
+        self.assertEqual(results[0], results[1])
+        self.assertEqual((results[0][1], results[0][3].sent, results[0][3].retries), (6, 4, 2))
+
+    def test_run_ends_after_a_fenced_slot_without_waiting_for_the_next_one(self) -> None:
+        sink, clock = ls.MemorySink(), Clock()
+        summaries = run_async(
+            ls.run(
+                lambda: HOMES[:2],
+                lr.Generator(184),
+                sink,
+                FAST,
+                max_slots=5,
+                now=lambda: SLOT,
+                sleep=clock.sleep,
+                clock=clock.monotonic,
+                attempt_gate=lambda home: False,
+            )
+        )
+        self.assertEqual((len(summaries), sink.messages), (1, []))
+        self.assertLess(max(clock.sleeps, default=0.0), 1.0)
+        self.assertTrue(sink.closed)
+
+
 class CapacityTests(unittest.TestCase):
     def test_within_b1_budget(self) -> None:
         plan = ls.check_capacity(1000, ls.Limits(max_per_second=10.0))

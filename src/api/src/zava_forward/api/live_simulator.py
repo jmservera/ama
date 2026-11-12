@@ -40,6 +40,7 @@ LOG = logging.getLogger("zava_forward.live_simulator")
 DAILY_MESSAGE_BUDGET = B1_DAILY_MESSAGES - RESERVED_HEADROOM
 DEVICE_FILE = re.compile(r"SYN-[A-Z0-9][A-Z0-9_-]{0,19}\Z")
 Sleep = Callable[[float], Awaitable[None]]
+FENCED = "RUN_CONTROL_FENCED"
 
 
 class SinkError(RuntimeError):
@@ -241,6 +242,22 @@ class Pacer:
                 await self._sleep(wait)
 
 
+def attempt_permitted(control_path: Path, home: str, moment: datetime) -> bool:
+    """Fresh control read: sending, unexpired and the home still in the cohort; else False."""
+    try:
+        control = live_control.load(control_path)
+        return live_control.decide(control, moment) == live_control.SEND and home in control.homes
+    except StreamError:
+        return False
+
+
+def _permitted(attempt_gate: Callable[[str], bool], home: str) -> bool:
+    try:
+        return attempt_gate(home)
+    except Exception:  # noqa: BLE001 - any gate failure is a refusal
+        return False
+
+
 async def send_slot(
     homes: Sequence[str],
     slot: datetime,
@@ -251,8 +268,14 @@ async def send_slot(
     sleep: Sleep = asyncio.sleep,
     clock: Callable[[], float] = time.monotonic,
     rng: random.Random | None = None,
+    attempt_gate: Callable[[str], bool] | None = None,
 ) -> Summary:
-    """Send one reading per home for the slot in batches, throttled, with exponential backoff."""
+    """Send one reading per home for the slot in batches, throttled, with exponential backoff.
+
+    `attempt_gate(home)` is asked after pacing and right before every send attempt, retries
+    included. A False or an error stops that home with `RUN_CONTROL_FENCED`; a send already handed
+    to the sink is not recalled.
+    """
     check_capacity(len(homes), limits)
     jitter = rng or random.Random(generator.seed)
     pacer = Pacer(limits.max_per_second, sleep, clock)
@@ -267,6 +290,10 @@ async def send_slot(
             return
         for attempt in range(limits.attempts):
             await pacer.admit()
+            if attempt_gate is not None and not _permitted(attempt_gate, home):
+                summary.codes[FENCED] = summary.codes.get(FENCED, 0) + 1
+                summary.failed += 1
+                return
             try:
                 await sink.send(reading.device_id, reading.reading_id, reading.body())
             except SinkError as error:
@@ -361,10 +388,12 @@ async def run(
     clock: Callable[[], float] = time.monotonic,
     report: Callable[[Summary], None] | None = None,
     gate: Callable[[datetime], bool] | None = None,
+    attempt_gate: Callable[[str], bool] | None = None,
 ) -> list[Summary]:
     """Send the current slot, then (unless `once`) one every 5 minutes; missed slots are skipped.
 
     `gate` is asked before every slot and a False ends the run, so a stop or an expiry is final.
+    `attempt_gate` is also asked before every send attempt; a slot it fenced ends the run.
     """
     summaries: list[Summary] = []
     homes: Sequence[str] = []
@@ -384,11 +413,21 @@ async def run(
                 LOG.error("home enumeration failed; reusing the previous list")
             if homes:
                 summary = await send_slot(
-                    homes, slot, generator, sink, limits, sleep=sleep, clock=clock
+                    homes,
+                    slot,
+                    generator,
+                    sink,
+                    limits,
+                    sleep=sleep,
+                    clock=clock,
+                    attempt_gate=attempt_gate,
                 )
                 summaries.append(summary)
                 if report:
                     report(summary)
+                if FENCED in summary.codes:
+                    LOG.warning("run control: stopped or expired during the slot")
+                    return summaries
             else:
                 LOG.error("no homes available for slot %s", slot.isoformat())
             if once or (max_slots is not None and len(summaries) >= max_slots):
@@ -482,6 +521,9 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
             except StreamError:
                 return False
 
+        def permit(home: str) -> bool:
+            return attempt_permitted(Path(args.control_file), home, datetime.now(UTC))
+
         if not gate(datetime.now(UTC)):
             LOG.warning("run control: stopped or expired; nothing sent")
             return 0
@@ -496,6 +538,7 @@ def main(argv: Sequence[str], env: Mapping[str, str] | None = None) -> int:
                 once=args.once,
                 report=_report,
                 gate=gate,
+                attempt_gate=permit if control_path is not None else None,
                 refresh_slots=1,
             )
         )

@@ -2,8 +2,10 @@
 
 An admin-written JSON control document names the bounded demo cohort, an owner, an approval
 reference and a hard expiry. The simulator and the receiver host both read it, so a stop or an
-expiry takes effect at the next slot without a redeploy. Write access to the document is the admin
-boundary (Azure RBAC on the file share); this module holds no secret and makes no network call.
+expiry takes effect at the next slot, and the simulator also rechecks before each send attempt,
+without a redeploy. A send already handed to the sink is not recalled. Write access to the document
+is the admin boundary (Azure RBAC on the file share); this module holds no secret and makes no
+network call.
 """
 
 import argparse
