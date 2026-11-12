@@ -20,7 +20,7 @@ Core stays frozen. Delete the `try/except TypeError`. Add one narrow route-level
 
 * New: with a valid saved copy, `form_export.draft_export` patched to raise `TypeError`, the check answers 503, logs at ERROR, never reports `Invalid`, and leaves state unchanged. Fails on `7f3386ddd` (returns 200 `Invalid`).
 * Existing malformed-copy control (mixed `str` and `int` ids) stays and must pass with the guard.
-* One added control: all-integer field ids (sortable, so the core alone would report `Current`) answer `Invalid`.
+* One added control: all-integer field ids (sortable, so the core alone would not report `Invalid`) answer `Invalid`.
 * No general L1 test expansion.
 
 ## README
@@ -34,7 +34,7 @@ Replace the fallback description: malformed field ids are `Invalid`; an internal
 
 ## Phases
 
-* [ ] Phase 1: independent critique of this plan in a separate context; record verdict and dispositions.
+* [x] Phase 1: independent critique in a separate context: Revise, CR-1 and CR-2 accepted (see critique record); malformed copies are Invalid before case and draft binding, disclosed; the 503 claim is limited to faults escaping the frozen core.
 * [ ] Phase 2: failing-first test, then route fix, README and focused verification.
 * [ ] Phase 3: ruff, mypy, format and focused tests on the final tree; commit with the privacy-safe identity.
 * [ ] Phase 4: independent final Review in a separate context of the local frozen head; record outcome without repeating Review.
