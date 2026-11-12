@@ -11580,3 +11580,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * `paired_equity` now checks a constructed source-completeness pair (`source_record` complete versus missing) as a fourth required dimension, and reports a ranker that leaves the subject out as an `excluded` failure instead of raising. Updated the [core README](../../src/core/README.md) and the [equity journey test plan](research/ux/equity-journey-test-plan.md).
 * Constructed fixture only: `fairness_evidence` and `activation_allowed` stay false; no ranking policy or threshold change; no criterion ticked.
 * Evidence under `.copilot-tracking/` (2026-11-12 issue-128-cohort-trace-1112).
+
+## [2026-11-12] update | AC-034 to AC-043 disposition reconciliation (Refs #134)
+
+* Appended a dated section to the [cut-over evidence pack](../architecture/cutover-evidence-pack.md#ac-034-to-ac-043-disposition-reconciliation-2026-11-12-refs-134) that reconciles the ten PRD 0.21.0 (in-review) criteria of the second #134 criterion against the existing register and the pack's scattered traces: register status, qualified evidence with its source and date, the unproven remainder, work owner and a resume check. It adds candidate source evidence for AC-035 and AC-038 labelled implemented but unverified. No row passes (six partial, four deferred).
+* Documentation only at `origin/main` `43b2187b9`: the register source is unchanged, and only the register check and 15 existing Core tests were run, as register integrity. It is not an owner-approved deferral, an epic acceptance or a pivot; no keyboard, assistive-technology, human, resident or live acceptance, no tick and no issue or board change. Original A4 and E1 to E4 stay spent, E5 and E6 unadmitted.
+* Evidence under `.copilot-tracking/` (2026-11-12 ac-dispositions-134-1112).

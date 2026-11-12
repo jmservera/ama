@@ -1422,3 +1422,9 @@ It covers merged PR 1470 (proposal cards) and PR 1475 (five-home runbook) on `ma
 (both merged after its tested pin and before its publication, see the accuracy note in the section): 145 focused tests executed, 92 SQL Server skips (not passes), a string-level runbook link check, no confirmed defect,
 one static accessibility concern and two omissions routed to existing owners, and a bounded CONTINUE. It is local only and is
 not browser, live, resident or approval evidence.
+
+An [AC-034 to AC-043 disposition reconciliation](../architecture/cutover-evidence-pack.md#ac-034-to-ac-043-disposition-reconciliation-2026-11-12-refs-134)
+(2026-11-12) gives the ten document-qualified PRD criteria of #134 criterion 2 one table with the register status, qualified
+existing evidence, the unproven remainder, the work owner and a resume check. No criterion passes: six are partial and four
+deferred, the register source is unchanged, and the record is not an owner-approved deferral, human or assistive-technology
+acceptance, or a tick.
