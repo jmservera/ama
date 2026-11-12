@@ -1415,3 +1415,10 @@ It observes merged PRs 1465 to 1469 and 1473 (pin `bbb1d20cc`, `src` equal to fr
 and API tests executed, 0 skipped and 0 failures after retained environment and invocation failures, records that the task
 labels of the PRs do not match their actual content, keeps the 1465 proposal as draft candidate policy, and confirms no
 defect. The recommendation is a bounded CONTINUE; it is not an approval, a tick or browser, Azure, live or release proof.
+
+A post-153 integration checkpoint (2026-11-12) is recorded in
+[the cutover evidence pack](../architecture/cutover-evidence-pack.md#post-153-integration-checkpoint-2026-11-12-refs-440-153-134-184).
+It covers merged PR 1470 (proposal cards) and PR 1475 (five-home runbook) on `main` `4074b44f3`, which the previous checkpoint
+excluded: 145 focused tests executed, 92 SQL Server skips (not passes), a string-level runbook link check, no confirmed defect,
+one static accessibility concern and two omissions routed to existing owners, and a bounded CONTINUE. It is local only and is
+not browser, live, resident or approval evidence.
