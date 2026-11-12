@@ -20,7 +20,9 @@ Use the [current PPTX](../deck/zava-forward-cowork-v2-draft.pptx) and
 [generated appendix answers](./questions-and-answers.md) and
 [demo runbook](../demo/runbook.md). The
 [DRAFT Tokenomics placement and rehearsal outline](./tokenomics-placement-draft.md)
-awaits owner review. Edit the
+awaits owner review, and the
+[offline current-deck assessment and Tokenomics statement audit](./current-deck-assessment-2026-11-12.md)
+records an unscored guide challenge (not a panel score or approval). Edit the
 [source manifest](../source/slides.json), not these generated notes.
 
 ## Deliberate Audience Sequence

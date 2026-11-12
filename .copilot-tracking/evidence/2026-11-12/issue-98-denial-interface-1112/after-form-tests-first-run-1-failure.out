@@ -1,0 +1,19 @@
+======================================================================
+FAIL: test_new_schema_field_needs_review_even_when_no_field_is_stale (test_form_dependencies.FormDependencies.test_new_schema_field_needs_review_even_when_no_field_is_stale)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-98-denial-interface-1112/src/core/tests/test_form_dependencies.py", line 355, in test_new_schema_field_needs_review_even_when_no_field_is_stale
+    self.assertEqual(fresh["stale_fields"], [])
+AssertionError: Lists differ: ['extra'] != []
+
+First list contains 1 additional elements.
+First extra element 0:
+'extra'
+
+- ['extra']
++ []
+
+----------------------------------------------------------------------
+Ran 69 tests in 30.238s
+
+FAILED (failures=1)
