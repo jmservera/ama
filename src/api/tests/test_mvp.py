@@ -124,6 +124,39 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(code, 409)
         self.assertEqual(len(json.loads(body)["reasons"]), 2)
 
+    def test_stale_advance_refusal_names_case_owner_and_next_action(self):
+        from dataset import RESIDENT_BINDINGS, supplied_contract_fixture
+        store = Store(str(Path(self.tmp.name) / "zavaforward.json"))
+        pam = DATA["staff"][1]
+        pid = store.create_package(pam, "SYN", "2026-01-01", "2099-12-31", "Loft", "SYN", "SYN-1")
+        details = supplied_contract_fixture(store, pid, pam)
+        store.set_capacity(pam, pid, "Test Ltd", 1, 1, "SYN-CAPACITY", details)
+        wid = store.issue_work_order(pam, pid, "ZF-3", resident_bindings=RESIDENT_BINDINGS)
+        supplied_appointment_fixture(store, pam, wid)
+        store.record_wo_appointment(pam, wid, "Booked", "2099-01-01")
+        httpd = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(App(store, "zf-test")))
+        threading.Thread(target=httpd.serve_forever, daemon=True).start()
+        self.addCleanup(httpd.server_close)
+        self.addCleanup(httpd.shutdown)
+        self.base = f"http://127.0.0.1:{httpd.server_address[1]}"
+
+        def sign_in(email):
+            return self.call("/api/login", {"email": email, "password": "zf-test"})[2]["Set-Cookie"].split(";")[0]
+
+        first, second = sign_in("sam@example.test"), sign_in("pam@example.test")
+        self.assertEqual(self.call("/api/cases/ZF-3/advance", {}, second)[0], 200)
+        events = len(store.cases["ZF-3"]["returns"])
+        for case_id, owner in (("ZF-3", "Sam Example"), ("ZF-1", "Sam Example")):
+            code, body, _ = self.call(f"/api/cases/{case_id}/advance", {}, first)
+            payload = json.loads(body)
+            self.assertEqual(code, 400)
+            self.assertNotIn("reasons", payload)
+            self.assertTrue(payload["error"].startswith("This case is not at the final checks. It may have changed since you opened it."))
+            self.assertIn(f"Case owner: {owner}.", payload["error"])
+            self.assertIn("Next action: copy any unsaved notes, then reload the case and check its current stage", payload["error"])
+        self.assertEqual(store.cases["ZF-3"]["stage"], "Install booked")
+        self.assertEqual(len(store.cases["ZF-3"]["returns"]), events)
+
     def test_static_path_traversal_blocked(self):
         self.assertEqual(self.call("/..%2f..%2fREADME.md")[0], 404)
 

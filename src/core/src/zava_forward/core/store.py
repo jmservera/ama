@@ -668,7 +668,7 @@ class Store(ChatMixin, WorkflowMixin, QualityMixin, ProcurementMixin, FinanceMix
         with change_provenance.controlled(self, user, case_id) as (c, user):
             self.guard_case_event(c)
             if c["stage"] != READY_STAGE:
-                raise ValueError("This case is not at the final checks.")
+                raise ValueError(f"This case is not at the final checks. It may have changed since you opened it. Case owner: {c['owner']}. Next action: copy any unsaved notes, then reload the case and check its current stage before taking further action.")
             why = self.gate_reasons(c)
             why += buildings.blockers(self.data, self.cases, c)
             if why:
