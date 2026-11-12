@@ -1,7 +1,7 @@
 ---
 title: Zava Forward Workbench Content Standard, Glossary and Copy Audit
 description: Plain-language content standard, status and next-action glossary, blocked-message pattern, AI label wording and the copy audit of the core flow (issue #153)
-ms.date: 2026-11-06
+ms.date: 2026-11-12
 ms.topic: reference
 ---
 
@@ -191,7 +191,7 @@ are candidate copy, not approved communications.
 | --- | --- | --- |
 | `app.js`, `index.html`, `welcome.html`: entry, account, work lists, case, overview | Signed-out/session-ended, loading/error/empty queues, recorded task owner/reason/action, safety text, manual path | Core statuses use words; safety remains independent. Long task/source explanations need comprehension testing. Welcome is a research demonstrator, not a resident service |
 | `app.js`: resident drafts, document reading, briefing, priority and funding | Exact AI label, optional templates/rules, unreviewed and reviewed drafts, failed requests | Draft-only heading and named-review/no-send explanation clarified. Priority review status and funding approval terminology need a separate end-to-end review; not globally certified |
-| `assistants.js`, `chat.js`: proposal, source check, review, chat and alerts | Proposed/ready/stale/failed/reviewed, exact AI warning, unknown source coverage, historical lookup | "Requested using" replaces technical "Invocation"; proposal review now explicitly excludes approval, consent and safety decisions. Quotes, source titles and user/model text remain verbatim |
+| `assistants.js`, `chat.js`: proposal, source check, review, chat and alerts | Proposed/ready/stale/failed/reviewed, exact AI warning, unknown source coverage, historical lookup | "Requested using" replaces technical "Invocation"; proposal review now explicitly excludes approval, consent and safety decisions. Quotes, source titles and user/model text remain verbatim. 2026-11-12 (owner-approved): the card's default view stays task-focused; the permitted-source record and the AI usage and change record now sit together under one native details disclosure, "Suggestion details (technical, for audit and support)", unchanged and keyboard reachable. The edit field is labelled "Edited proposal (technical JSON format)". Warnings, reasons, unknowns, consent and review controls remain outside it. Constructed-fixture browser checks only; no human wording or assistive-technology acceptance |
 | `panels.js`: resident measure/representative, updates and complaints | Not recorded/paused/withdrawn decisions, scoped source/date checks, update owner/due/basis, separate response and remedy | Review-date label now says authority is unavailable from that date. Complaint response closure never promises remedy completion or live dispatch |
 | `ops.js`: quality, appointments and capacity | Independent acceptance/defect/reinspection/handover, offer and three separate confirmations, provider failure | Offer, consent and confirmation remain separate. Existing instructions are staff-facing, not resident-ready text; no live contact |
 | `panels.js`: finance, grants, technical and stock; `app.js`: documents/import/building | Payment pause, grant stages, sign-offs, competing sources, missing files, CSV errors, shared-work restrictions | The stored finance value "Keep on hold" is now displayed as "Keep payment paused" (2026-11-03); the stored value is unchanged and no migration was performed. Lexical allowance does not mean plain-language compliance |

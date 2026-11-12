@@ -1296,7 +1296,7 @@ for (const override of [{}, {stale: true}, {state: "queued"}, {state: "accepted"
     assert.equal(buttons.find(button => button.textContent === label).disabled, !ready, label);
   }
   const editor = card.querySelectorAll("textarea")
-    .find(field => field.attrs["aria-label"] === "Edited evidence proposal JSON");
+    .find(field => field.attrs["aria-label"] === "Edited proposal (technical JSON format)");
   assert.equal(editor.disabled, false, "edited JSON stays copyable");
   assert.equal(buttons.find(button => button.textContent === "Reject").disabled, false);
 }

@@ -44,6 +44,15 @@ class CopyAudit(unittest.TestCase):
         for expression in ("source.quote", "fact.text", "answer.reply", "turn.content"):
             self.assertEqual(list(copy_violations(f'h("blockquote", {{}}, {expression});')), [])
 
+    def test_proposal_card_keeps_technical_evidence_in_one_labelled_disclosure(self):
+        js = (WEB / "assistants.js").read_text()
+        disclosure = js[js.index('h("details", { "data-proposal-technical"'):js.index('h("fieldset"')]
+        for text in ("Suggestion details (technical, for audit and support)", "JSON.stringify(p.snapshot, null, 2)", "history,", "moreHistory"):
+            self.assertIn(text, disclosure)
+        self.assertNotIn("Edited evidence proposal JSON", js)
+        for text in ("AI suggestion, not approved", "Accept proposal only", "Nothing is sent, booked, paid"):
+            self.assertNotIn(text, disclosure)
+
     def test_chat_safety_and_copy_contract(self):
         js = (WEB / "chat.js").read_text()
         for text in ("AI suggestion, not approved", "only an authorised human can make a restart decision for stopped retrofit work",

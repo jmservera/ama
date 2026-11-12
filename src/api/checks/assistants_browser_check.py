@@ -61,7 +61,7 @@ def review_pending_cleanup(page, base, check, scan):
             page.goto(base + f"/app?review-round6={queue}-{change}" + destination)
             card = page.locator(f'article[data-proposal-id="{proposal["id"]}"]')
             reason = card.get_by_label("Reason", exact=True)
-            editing = card.get_by_label("Edited evidence proposal JSON", exact=True)
+            editing = card.get_by_label("Edited proposal (technical JSON format)", exact=True)
             card.get_by_role("button", name="Edit", exact=True).click()
             editing.fill("{")
             save = card.get_by_role("button", name=re.compile(r"^Save edited proposal"))
@@ -170,12 +170,12 @@ def review_pending_cleanup(page, base, check, scan):
                         "Later review reason")
                     expect(page.get_by_label("Earlier Reason", exact=True)).to_be_visible()
                     expect(page.get_by_label(
-                        "Earlier Edited evidence proposal JSON", exact=True
+                        "Earlier Edited proposal (technical JSON format)", exact=True
                     )).to_have_value(json.dumps(output) + " ")
                 elif change == "verify":
                     page.locator("[data-case-recovery] > summary").click()
                     expect(page.get_by_label(
-                        "Earlier Edited evidence proposal JSON", exact=True
+                        "Earlier Edited proposal (technical JSON format)", exact=True
                     )).to_have_value(json.dumps(output))
                     check("verified checkbox recovery was consumed",
                           page.get_by_label("Earlier verified-", exact=False).count() == 0)
@@ -231,7 +231,7 @@ def review_outcome_history(page, base, check, scan):
                 reason = card.get_by_label("Reason", exact=True)
                 reason.fill("Retained supplied review reason")
                 card.get_by_role("button", name="Edit", exact=True).click()
-                editing = card.get_by_label("Edited evidence proposal JSON", exact=True)
+                editing = card.get_by_label("Edited proposal (technical JSON format)", exact=True)
                 edited = json.dumps(dict(proposal["output"], summary="Unsubmitted queue JSON"))
                 editing.fill(edited)
                 reject = card.get_by_role("button", name=re.compile(r"^Reject"))
@@ -290,7 +290,7 @@ def review_outcome_history(page, base, check, scan):
                     expect(page.get_by_label("Earlier Reason", exact=True)).to_have_value(
                         "Later retained review reason")
                     expect(page.get_by_label(
-                        "Earlier Edited evidence proposal JSON", exact=True
+                        "Earlier Edited proposal (technical JSON format)", exact=True
                     )).to_have_value(edited + " ")
                 else:
                     expect(reject).to_be_enabled()
@@ -307,7 +307,7 @@ def review_outcome_history(page, base, check, scan):
                     expect(page.get_by_label("Earlier Reason", exact=True)).to_have_value(
                         "Later retained review reason")
                     expect(page.get_by_label(
-                        "Earlier Edited evidence proposal JSON", exact=True
+                        "Earlier Edited proposal (technical JSON format)", exact=True
                     )).to_have_value(edited + " ")
                     check("queue recovery is copy-only", recovery.locator(
                         "textarea:not([readonly])").count() == 0)
@@ -318,6 +318,57 @@ def review_outcome_history(page, base, check, scan):
                 page.unroute("**/api/assistants/proposals", listing)
                 page.unroute("**/api/assistants/proposals/*/review")
     page.remove_listener("dialog", accept_leave)
+
+
+def plain_default_card(page, base, check, scan):
+    proposal = {
+        "id": "SYN-PLAIN-DEFAULT", "revision": 1, "version": 3, "case_id": "ZF-1",
+        "capability": "stock-prioritisation", "state": "ready", "display_state": "ready",
+        "manual": "Continue ordinary case work.", "attempts": 1,
+        "provenance": [{"kind": "invocation", "mode": "live"}],
+        "snapshot": {"sources": [{"id": "SYN-SRC-1", "hash": "abc123"}]},
+        "envelope": {"meter_id": "SYN-METER"},
+        "output": {"summary": "Constructed plain fixture", "findings": [], "unknowns": ["Constructed unknown"]},
+        "verification": {"by": "pam@example.test", "note": "Constructed verification"},
+    }
+    listing = lambda route: route.fulfill(json={"proposals": [proposal], "next_after": None})
+    page.route("**/api/assistants/proposals?**", listing)
+    page.route("**/api/assistants/proposals", listing)
+    for width, label in ((1280, "desktop"), (360, "narrow")):
+        page.set_viewport_size({"width": width, "height": 900})
+        page.goto(base + f"/app?plain-default={width}#/assistants")
+        card = page.locator('article[data-proposal-id="SYN-PLAIN-DEFAULT"]')
+        expect(card).to_be_visible()
+        details = card.locator("details[data-proposal-technical]")
+        summary = details.locator("summary")
+        check(f"plain default hides technical JSON/{label}",
+              not card.get_by_role("heading", name="Permitted sources, versions and hashes").is_visible()
+              and not card.get_by_label("Edited proposal (technical JSON format)", exact=True).is_visible())
+        for text in ("AI suggestion, not approved", "Constructed plain fixture", "Constructed unknown",
+                     "Nothing is sent, booked, paid, ranked, signed off or released",
+                     "This is not an approval, consent or safety decision", "Accept proposal only"):
+            expect(card).to_contain_text(text)
+        summary.focus()
+        page.keyboard.press("Enter")
+        expect(details).to_have_attribute("open", "")
+        snapshot = card.get_by_label("Permitted sources, versions and hashes, technical record", exact=True)
+        history = card.get_by_label("Changes to this suggestion, technical record", exact=True)
+        check(f"technical evidence intact and focusable/{label}",
+              json.loads(snapshot.inner_text()) == proposal["snapshot"]
+              and json.loads(history.inner_text()) == {"envelope": proposal["envelope"], "history": proposal["provenance"]}
+              and snapshot.get_attribute("tabindex") == "0")
+        page.keyboard.press("Space")
+        expect(details).not_to_have_attribute("open", "")
+        check(f"no horizontal overflow/{label}",
+              page.evaluate("document.documentElement.scrollWidth <= document.documentElement.clientWidth"))
+        card.get_by_role("button", name="Edit", exact=True).click()
+        editing = card.get_by_label("Edited proposal (technical JSON format)", exact=True)
+        expect(editing).to_be_focused()
+        check(f"edit field keeps full proposal JSON/{label}", json.loads(editing.input_value()) == proposal["output"])
+        scan(page, f"plain-default-card/{label}")
+    page.set_viewport_size({"width": 1280, "height": 720})
+    page.unroute("**/api/assistants/proposals?**")
+    page.unroute("**/api/assistants/proposals")
 
 
 def main(axe_path: Path | None = None, out: Path | None = None):
@@ -408,6 +459,7 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             check("shared role-owned queue link", page.get_by_role("link", name="Shared role-owned review queue").count() == 1)
             review_pending_cleanup(page, base, check, scan)
             review_outcome_history(page, base, check, scan)
+            plain_default_card(page, base, check, scan)
             page.goto(base + "/app?round6-existing=1#/case/ZF-1?tab=ai")
             expect(page.locator("article")).to_have_count(5)
             card = page.locator("article").filter(has=page.locator("h3", has_text="Stock facts and prioritisation"))
@@ -418,7 +470,7 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             card.get_by_role("button", name="Record human source verification").click()
             expect(card.get_by_role("button", name="Accept", exact=True)).to_be_enabled()
             card.get_by_role("button", name="Edit", exact=True).click()
-            editing = card.get_by_label("Edited evidence proposal JSON", exact=True)
+            editing = card.get_by_label("Edited proposal (technical JSON format)", exact=True)
             pending_output = json.loads(editing.input_value())
             pending_output["summary"] = "Unsubmitted synthetic review wording"
             editing.fill(json.dumps(pending_output))
@@ -568,7 +620,7 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             card.get_by_label("I checked the cited sources", exact=False).check()
             card.get_by_role("button", name="Record human source verification").click()
             expect(recovery.get_by_label(
-                "Earlier Edited evidence proposal JSON", exact=True
+                "Earlier Edited proposal (technical JSON format)", exact=True
             )).to_have_value(json.dumps(own_pending))
             check(
                 "source verification retains unsent JSON against its earlier revision",
@@ -577,7 +629,7 @@ def main(axe_path: Path | None = None, out: Path | None = None):
             )
             page.get_by_role("button", name="Refresh proposals", exact=True).click()
             expect(recovery.get_by_label(
-                "Earlier Edited evidence proposal JSON", exact=True
+                "Earlier Edited proposal (technical JSON format)", exact=True
             )).to_have_value(json.dumps(own_pending))
             recovery.locator("summary").click()
             recovery.get_by_role("button", name="Discard earlier review edits").click()
