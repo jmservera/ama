@@ -4,6 +4,8 @@ import unittest
 from typing import Any
 
 import test_form_review
+from dataset import change_metadata
+from test_form_staging import batch
 from zava_forward.core import form_export, forms
 
 
@@ -167,9 +169,9 @@ class FormExport(unittest.TestCase):
                 "second.txt",
                 "EPC",
                 b"99",
-                metadata=test_form_review.change_metadata(store, "ZF-1"),
+                metadata=change_metadata(store, "ZF-1"),
             )
-            request = test_form_review.batch(doc["id"])
+            request = batch(doc["id"])
             request["candidates"] = [
                 dict(field_id="area", raw_value="99", locator=dict(start=0, end=2))
             ]
