@@ -30,6 +30,7 @@ GET_ENDPOINTS = ["/api/coordinator?as_of=2026-10-10T12:00:00Z", "/api/me", "/api
 POST_ENDPOINTS = [("/api/ranking/publish", {}), ("/api/workorders/WO-0001/field-capture", {}), ("/api/workorders/WO-0001/field-correct", {}), ("/api/workorders/WO-0001/field-acknowledge", {}), ("/api/bulk-edits/preview", {}), ("/api/bulk-edits/apply", {}),
                   ("/api/ai/priority", {"n": 3}), ("/api/cases/ZF-1/ai", {"task": "summary"}), ("/api/cases/ZF-1/ai", {"task": "message"}),
                   ("/api/form-schemas", {}), ("/api/cases/ZF-1/form-candidates", {}), ("/api/cases/ZF-1/form-review", {}),
+                  ("/api/cases/ZF-1/form-review/SYN-DRAFT/held-export/freshness", {"draft_id": "SYN-DRAFT"}),
                   ("/api/cases/ZF-1/resident", {"action": "decision_record"}),
                   ("/api/cases/ZF-1/technical", {"action": "signoff_give", "type": "design"}),
                   ("/api/cases/ZF-1/stock-reconciliation", {}),
@@ -94,6 +95,8 @@ class RoleEndpointInventory(Matrix):
     def test_inventory_covers_held_export_route(self):
         self.assertIn("/api/cases/ZF-1/form-review/SYN-DRAFT/held-export", GET_ENDPOINTS)
         self.assertIn('form_parts[5] == "held-export"', SERVER_SRC)
+        self.assertIn(("/api/cases/ZF-1/form-review/SYN-DRAFT/held-export/freshness", {"draft_id": "SYN-DRAFT"}), POST_ENDPOINTS)
+        self.assertIn('parts[5:] == ["held-export", "freshness"]', SERVER_SRC)
 
     def test_inventory_covers_dynamic_workorder_job_pack_route(self):
         self.assertIn("/api/workorders/WO-0001/job-pack", GET_ENDPOINTS)

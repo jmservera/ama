@@ -1194,6 +1194,22 @@ operational submission stay unapproved.
 `python -m checks.held_form_download_browser_check` checks it in Chromium with
 Tab and Enter (no axe scan, not assistive-technology or WCAG acceptance).
 
+#### Saved Held export freshness check (#96, demo only, default OFF)
+
+`POST /api/cases/{case_id}/form-review/{draft_id}/held-export/freshness` takes a
+previously downloaded Held export as the JSON body and returns the existing
+`form_export.export_freshness` result: `Current`, `Stale`, `Invalid` or
+`Unavailable`, the stale and unaffected field identifiers, the reasons and the
+next action. It is a read-only comparison: it writes nothing, never edits the
+saved copy, returns no field values and keeps `reviewed: false`. A body that is
+not an object, or whose `draft_id` differs from the path, answers 400. Edited,
+incomplete or history-less copies are `Invalid` and must be regenerated. It
+answers 404 under the same operator switches as the download and never with the
+`trusted-proxy` provider, and re-checks the signed-in actor on every request.
+It does not approve a pack, submit anything, establish eligibility or prove the
+issue criterion for dependent-only invalidation; approved templates and rules
+stay with named Finance approval.
+
 ```json
 {"action":"open","schema_id":"SYN-TECH","schema_version":1}
 ```

@@ -1198,6 +1198,13 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                     if body is None:
                         return self._json(200, {"schemas": forms.list_schemas(app.store, user)})
                     return self._json(201, forms.register_schema(app.store, user, body))
+                if len(parts) == 7:
+                    if not held_download_enabled(app.provider.name):
+                        return self._json(404, {"error": "Not found."})
+                    if not isinstance(body, dict) or body.get("draft_id") != unquote(parts[4]):
+                        return self._json(400, {"error": "Supply the saved Held export of this working review."})
+                    return self._send(200, json.dumps(form_export.export_freshness(app.store, user, unquote(parts[2]), body)),
+                                      "application/json; charset=utf-8", {"Cache-Control": "private, no-store"})
                 if len(parts) == 6:
                     if not held_download_enabled(app.provider.name):
                         return self._json(404, {"error": "Not found."})
@@ -1312,7 +1319,9 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
             parts = url.path.strip("/").split("/")
             if url.path == "/api/form-schemas" or (
                     len(parts) == 4 and parts[:2] == ["api", "cases"]
-                    and parts[3] in ("form-candidates", "form-review")):
+                    and parts[3] in ("form-candidates", "form-review")) or (
+                    len(parts) == 7 and parts[:2] == ["api", "cases"]
+                    and parts[3] == "form-review" and parts[5:] == ["held-export", "freshness"]):
                 return self._forms(u, url.path, body)
             try:
                 if url.path == "/api/ranking/publish":

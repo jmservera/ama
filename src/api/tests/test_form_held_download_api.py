@@ -1,5 +1,6 @@
 """Served Held draft download of the existing core export; synthetic, default OFF."""
 
+import copy
 import hashlib
 import json
 import os
@@ -9,6 +10,7 @@ import urllib.request
 from typing import Any
 from unittest.mock import patch
 
+from dataset import change_metadata
 from zava_forward.core import form_export
 
 import test_form_staging_api as staging
@@ -192,6 +194,138 @@ class HeldDownload(staging.FormApiFixture):
             ).encode()
         ).hexdigest()
         self.assertEqual(served["content_sha256"], expected)
+
+    def saved(self) -> tuple[str, dict[str, Any]]:
+        draft, path = self.prepare()
+        with patch.dict(os.environ, ON):
+            code, _, body = self.fetch("pam", path)
+        self.assertEqual(code, 200, body)
+        return path + "/freshness", json.loads(body)
+
+    def check(self, actor: str, path: str, body: object) -> tuple[int, Any, bytes]:
+        self.call(actor, "/api/me")
+        request = urllib.request.Request(
+            self.base + path,
+            json.dumps(body).encode(),
+            headers={"Cookie": self.cookies[actor], "X-ZF-CSRF": "1"},
+        )
+        try:
+            with urllib.request.urlopen(request) as response:
+                return response.status, response.headers, response.read()
+        except urllib.error.HTTPError as error:
+            return error.code, error.headers, error.read()
+
+    def test_default_off_and_trusted_proxy_serve_nothing(self) -> None:
+        path, saved = self.saved()
+        for env in (
+            {},
+            {"ZF_FORM_HELD_DOWNLOAD": "synthetic-demo-only"},
+            {"ZF_DEPLOYMENT_PROFILE": "demo"},
+        ):
+            with self.subTest(env=env), patch.dict(os.environ, env):
+                for key in ON:
+                    if key not in env:
+                        os.environ.pop(key, None)
+                code, _, body = self.check("pam", path, saved)
+                self.assertEqual(code, 404, body)
+                self.assertNotIn(b"stale_fields", body)
+        with patch.dict(os.environ, ON), patch.object(self.app.provider, "name", "trusted-proxy"):
+            self.assertEqual(self.check("pam", path, saved)[0], 404)
+
+    def test_fresh_copy_is_current_and_the_check_writes_nothing(self) -> None:
+        path, saved = self.saved()
+        with patch.dict(os.environ, ON):
+            before = self.state()
+            code, headers, body = self.check("pam", path, saved)
+            self.assertEqual(self.state(), before)
+        result = json.loads(body)
+        self.assertEqual(code, 200, body)
+        self.assertEqual(
+            (result["status"], result["stale_fields"], result["reviewed"]), ("Current", [], False)
+        )
+        self.assertEqual(headers["Cache-Control"], "private, no-store")
+        self.assertEqual(
+            result,
+            form_export.export_freshness(
+                self.store, self.store.staff["pam@example.test"], "ZF-1", saved
+            ),
+        )
+
+    def test_changed_source_stales_dependents_and_unrelated_change_stays_current(self) -> None:
+        path, saved = self.saved()
+        actor = self.store.staff["pam@example.test"]
+        other = self.store.add_document(
+            actor,
+            "ZF-1",
+            "unrelated.txt",
+            "EPC",
+            b"EPC E",
+            metadata=change_metadata(self.store, "ZF-1"),
+        )
+        bound = {row["source_id"] for row in saved["fields"] if row["source_id"]}
+        self.assertTrue(bound)
+        self.assertNotIn(other["id"], bound)
+
+        def bump(ids: set[str]) -> None:
+            with self.store.lock:
+                for document in self.store._case("ZF-1")["documents"]:
+                    if document["id"] in ids:
+                        document["version"] += 1
+                self.store.save()
+
+        with patch.dict(os.environ, ON):
+            bump({other["id"]})
+            self.assertEqual(json.loads(self.check("pam", path, saved)[2])["status"], "Current")
+            bump(bound)
+            code, _, body = self.check("pam", path, saved)
+        result = json.loads(body)
+        self.assertEqual(code, 200, body)
+        self.assertEqual(result["status"], "Stale")
+        direct = form_export.export_freshness(
+            self.store, self.store.staff["pam@example.test"], "ZF-1", saved
+        )
+        self.assertEqual(result, direct)
+        self.assertIn("epc", result["stale_fields"])
+        self.assertEqual(
+            sorted(result["stale_fields"] + result["unaffected_fields"]),
+            sorted(row["field_id"] for row in saved["fields"]),
+        )
+        self.assertFalse(result["reviewed"])
+        for row in saved["fields"]:
+            if isinstance(row["value"], str) and row["value"]:
+                self.assertNotIn(row["value"].encode(), body)
+
+    def test_edited_or_legacy_copy_is_invalid_and_never_repaired(self) -> None:
+        path, saved = self.saved()
+        edited = copy.deepcopy(saved)
+        edited["fields"][0]["value"] = "tampered"
+        legacy = {key: value for key, value in saved.items() if key != "history"}
+        with patch.dict(os.environ, ON):
+            for name, copy_ in (("edited", edited), ("legacy", legacy)):
+                with self.subTest(copy=name):
+                    code, _, body = self.check("pam", path, copy_)
+                    result = json.loads(body)
+                    self.assertEqual(code, 200, body)
+                    self.assertEqual((result["status"], result["stale_fields"]), ("Invalid", []))
+                    self.assertIn("Create a new held export", result["action"])
+
+    def test_wrong_draft_non_object_and_unauthorised_requests_are_refused(self) -> None:
+        path, saved = self.saved()
+        other = dict(saved, draft_id="OTHER")
+        with patch.dict(os.environ, ON):
+            for bad in (other, [saved], "x", None):
+                with self.subTest(body=type(bad).__name__):
+                    code, _, body = self.check("pam", path, bad)
+                    self.assertEqual(code, 400, body)
+                    self.assertNotIn(b"stale_fields", body)
+            for actor in ("sam", "kim"):
+                code, _, body = self.check(actor, path, saved)
+                self.assertEqual(code, 403, actor)
+                self.assertNotIn(b"stale_fields", body)
+            missing = path.replace("ZF-1", "NOPE")
+            code, _, body = self.check("pam", missing, saved)
+            self.assertEqual((code, json.loads(body)["status"]), (200, "Unavailable"))
+            self.assertNotEqual(self.fetch("pam", path)[0], 200)
 
 
 if __name__ == "__main__":
