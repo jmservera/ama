@@ -18,7 +18,11 @@
     {"decision": "Research disposition executed; planning only", "status": "recorded", "evidence": "research file"},
     {"decision": "Critique executed once, verdict Revise, PC-01..05 applied", "status": "recorded", "evidence": "critique file"},
     {"decision": "Review not applicable; belongs to later implementation task", "status": "recorded", "evidence": "plan Phase 6"},
-    {"decision": "One assembly into UX parent then one parent-to-main PR, FULL tier", "status": "proposed", "evidence": "plan"}
+    {"decision": "One assembly into UX parent then one parent-to-main PR, FULL tier", "status": "superseded in part by A1: topology proposed; FULL tier incorrect", "evidence": "plan; original text preserved"},
+    {"decision": "A1 validation tier: FOCUSED modified and impacted checks, no default full gate; Python MEMBERSHIP_REVISION is not an SQL schema change; SQL Server evidence separate and unobserved unless prerequisite present; real SQL acceptance of 82 is later live acceptance", "status": "recorded (plan only)", "evidence": "plans/2026-11-12/issue-149-parent-plan-2333-policy-amendment.md; delivery schedule 13 and delivery_policy"},
+    {"decision": "A1 merge wording: guarded merges are coordinator-owned under standing process; not fresh owner permission; human, hosted CI, exact-head assessment and consent boundaries remain", "status": "recorded (plan only)", "evidence": "policy amendment"},
+    {"decision": "A1 cut line: wave A 1490c,74,176,134; wave B 215,233,96 backend, 96 UI (unfrozen real dependency, R-UI-1 root contract, raw JSON panel-local transport, not Finance approval); 233 page-context not added; 156 docs d8fe60017407f3f7df4b339dfa0bfaff06dfacbd optional later docs input only", "status": "recorded (plan only)", "evidence": "policy amendment; 96-independent-m1-closure-2332.json"},
+    {"decision": "Amended plan independent critique", "status": "PENDING, not run; must execute once before any assembly", "evidence": "policy amendment"}
   ],
   "blockers": [
     {"id": "G1", "summary": "1490 combined not merged into parent (coordinator assessment, force-with-lease publication, hosted CI pending)", "resolution": "coordinator records parent merge SHA"},
@@ -26,7 +30,7 @@
     {"id": "G6", "summary": "233 independent assessment running; 96 UI implementation running; R-UI-1 root decision", "resolution": "independent Pass at frozen heads"},
     {"id": "G4", "summary": "SQL Server docker prerequisite unverified", "resolution": "probe at assembly time"}
   ],
-  "next_action": {"phase": "Plan", "action": "Coordinator satisfies G1 and G2, then resume at plan Phase 0 re-binding pins (G3)"},
+  "next_action": {"phase": "Plan", "action": "Run the pending independent critique of amendment A1 once; coordinator satisfies G1 and G2 and the cut line; then plan Phase 0 re-binding pins (G3). No assembly before 1490 is merged and the root authorizes"},
   "prioritized_follow_ups": [
     {"rank": 1, "task": "Assembly implementation task once G1 and G2 hold", "rationale": "single coherent adoption", "evidence": "plan"},
     {"rank": 2, "task": "Independent targeted closure of 134 union resolution", "rationale": "only conflict", "evidence": "research merge simulation"}

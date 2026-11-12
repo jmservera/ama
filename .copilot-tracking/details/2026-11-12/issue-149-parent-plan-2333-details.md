@@ -61,7 +61,9 @@ Commands run from `src/api` in the isolated venv with test-helper dirs only, eac
 
 The 96 Held-download methods are exactly the 16 in `test_form_held_download_api.py` at `94760af7d` (6 original: `test_default_off_and_each_guard_condition_alone_serve_nothing`, `test_trusted_proxy_provider_never_serves_even_with_both_switches`, `test_served_body_equals_core_export_with_safe_headers`, `test_unauthorised_revoked_and_unknown_requests_get_no_artifact`, `test_unavailable_working_evidence_is_a_non_success_without_attachment`, `test_each_request_rechecks_current_state_not_the_screen_version`; 10 saved-check methods named in the research history). Every one must be present and pass, plus whatever the accepted 96 UI head adds. Exact full paths are the repository paths in Section 1 prefixed `src/core/` or `src/api/` as listed by `git diff --name-only <input-base>..<head>` at G3; that file list is frozen into the assembly manifest and any difference is a G3 failure. The 96 UI manifest rows are filled only from its accepted frozen head.
 
-## 7. Full gate
+## 7. Full gate (SUPERSEDED by amendment A1, kept as history)
+
+Superseded: the corrected focused impacted-check plan, SQL evidence separation and merge-authority wording are in [the policy amendment](../../plans/2026-11-12/issue-149-parent-plan-2333-policy-amendment.md). No default full gate applies.
 
 `python3 tools/rpi-checks.py --all --jobs 3 --base <fetched origin/main> --out /tmp/rpi-149-ux`, on committed, clean source with evidence committed, under `/tmp/ama-rpi-heavy.lock`; then `--verify-receipt <receipt.json> --base <current origin/main>` just before push and assessment. Any later commit, rebase, base or tool change invalidates it. Missing SQL, browser or scanner prerequisite blocks publication; no cloud fallback, skip token or fabricated status. Hosted CI for the assembly head and the parent to main head is read, not assumed.
 

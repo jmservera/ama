@@ -19,3 +19,7 @@ One independent read-only rubber-duck critique ran once on commit `ba5b50211` (n
 | PC-05 | Manifest incomplete | Applied in part: 16 exact 96 backend methods listed, paths frozen from `git diff --name-only` at G3; the 96 UI rows remain unfrozen and are filled only from its accepted head (honest limit, not invented) |
 
 No finding conflicted with a confirmed decision.
+
+## Amendment note (A1)
+
+The verdict and dispositions above are unchanged history. The amended plan has NOT been critiqued; a genuine independent critique must run once before any assembly (see the policy amendment).

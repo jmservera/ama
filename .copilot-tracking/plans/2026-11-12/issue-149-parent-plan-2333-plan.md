@@ -8,6 +8,8 @@ ms.date: 2026-11-12
 
 Prospective PLAN ONLY, written before the independent critique. No source, publication, cutover pack, ref, PR, issue or tick is changed. The plan binds inputs to exact heads and trees recorded in the research file; any different head amends the plan and is re-critiqued only if a decision changes. Nothing here accepts an unmerged sibling as integrated.
 
+Amendment A1 (2026-11-12, after the critique): the FULL tier, the full receipt and merge-to-owner wording below are historical and incorrect against the actual current owner policy. See [policy amendment](issue-149-parent-plan-2333-policy-amendment.md), which supersedes the Objective gate sentence, G4 SQL Server blocker, Phases 7 and 8 gate text and "Validation tier". Original text is kept unedited as history.
+
 ## Objective
 
 Adopt the independently passed inputs 74 (`467a0cf5`), 176 (`da436be3`) and 134 (`cc7e3c3a`) together with the combined 1490 funding correction (`ff40e50c`), plus the later-accepted 215, 233 and 96 UI when ready, as ONE coherent UX integration: one assembly into the declared parent `feat/demo-ux-integration-1112`, one independent final Review, one native #440 checkpoint, one full-tier gate on the final tip, and ONE parent to main PR. No per-input main PR.
