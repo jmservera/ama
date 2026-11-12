@@ -1,7 +1,7 @@
 ---
 title: Capstone Demo and Recovery Runbook
-description: Current v2 same-home story, under-two-minute hook, ten-minute route and honest live/evidence preflight
-ms.date: 2026-11-08
+description: Current v2 same-home story, under-two-minute hook, ten-minute route, owner-selected five-home demo target and honest live/evidence preflight
+ms.date: 2026-11-12
 ms.topic: how-to
 ---
 
@@ -44,6 +44,78 @@ the resident's explicit confirmation; it is not an operational appointment.
 Decision 1 is historical scoring evidence with a pending current rebuild,
 not the current five-helper engine. Refresh the progress and activation
 snapshot before the final demo.
+
+## Demo Operating Mode And Five Homes (Owner-Selected Target, 2026-11-12)
+
+Refs #134 and #184. On 2026-11-12 the owner accepted a simplified demo
+operating mode. It is a target. Nothing below is implemented, activated or
+observed unless the Status column says otherwise, and it grants no model,
+deployment or spend authority.
+
+| Element | Status | What the source says today |
+| --- | --- | --- |
+| Single-instance simulator start and stop, no SQL tickets | OWNER-SELECTED TARGET | Not verified; the earlier ticket-based design is a proposal only |
+| Five synthetic demo homes | OWNER-SELECTED TARGET | The simulator reads every open case id and refreshes the list hourly; a control cohort of listed homes exists |
+| One new reading every minute | OWNER-SELECTED TARGET | Not verified against the current simulator cadence |
+| Quality AI restricted to the same five homes | OWNER-SELECTED TARGET | Supersedes the earlier every-open-case scan scope as the selected target; the current source scope is unchanged and unverified |
+| Deterministic eligibility is separate from paid analysis | OWNER-SELECTED TARGET | Eligibility does not by itself start a model call |
+| Analysis is operator-triggered during the presentation, not per reading | OWNER-SELECTED TARGET | Not verified |
+| Eight-hour background limit | LATER RECOMMENDATION | Not implemented and not a timer or authority |
+
+Earlier dated statements of the every-open-case scope and the ticket design
+remain historical. The observed and blocked histories in the
+[cut-over evidence pack](../../architecture/cutover-evidence-pack.md) stand.
+
+### The five homes
+
+Open each case from the Workbench after authorised staff sign-in. The route is
+`/app#/case/<id>?tab=quality`; the Quality and handover tab holds the sensor
+panel. Case ids are fictional constructed records. Open these only on the
+chosen build, and follow the preflight below first.
+
+| # | Case id | Archetype | Property type | Stage in the replayed seed | Direct link |
+| --- | --- | --- | --- | --- | --- |
+| 1 | ZF-2025-0355 | ARC-01 | End terrace | Quality check | [Open ZF-2025-0355](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0355?tab=quality) |
+| 2 | ZF-2025-0382 | ARC-02 | Mid terrace | Quality check | [Open ZF-2025-0382](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0382?tab=quality) |
+| 3 | ZF-2025-0286 | ARC-04 | Bungalow | Quality check | [Open ZF-2025-0286](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2025-0286?tab=quality) |
+| 4 | ZF-2026-0829 | ARC-05 | Mid terrace | Quality check | [Open ZF-2026-0829](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2026-0829?tab=quality) |
+| 5 | ZF-2026-0892 | ARC-06 | Semi-detached | Funding check | [Open ZF-2026-0892](https://ca-cutover-test-demo-api.happyriver-ace49996.uksouth.azurecontainerapps.io/app#/case/ZF-2026-0892?tab=quality) |
+
+Provenance and limits:
+
+* The ids come from a local read-only replay of the committed simulation in
+  `support/synthetic-data/retrofit-flow/zava-forward-year-one/generator`, run
+  with the documented exercise baseline inputs, seed 20260901 and as-of
+  2026-10-13 (see the
+  [data pack README](../../reference/research/retrofit-synthetic-data/README.md#mvp-operational-coverage-2026-10-13)).
+  The replay reproduced the documented 980 cases and 443 open. That count
+  match supports the replay; it does not independently verify these five ids.
+  The replay read no private stock register, dataset, roster, credential or
+  tenant record. Two local runs were byte identical.
+* The ids were chosen by a mechanical rule, not by the owner: open, stand-alone
+  building, no safety hazard record, at least one damp report in 24 months, not
+  paused, on hold or in aftercare, then the lowest id for each of the archetypes
+  ARC-01, ARC-02, ARC-04, ARC-05 and ARC-06 (ARC-03 had none). Home 5 is at
+  Funding check, the weakest Quality fit, kept to avoid hand curation.
+* The deployed store is a private seed output. These ids, their open state and
+  their sensor readings may differ there. Source selection is not deployed
+  acceptance, and it does not show that any sensor exists for a home.
+* The origin is the employee host documented in the
+  [cut-over evidence pack](../../architecture/cutover-evidence-pack.md) from a
+  2026-10-31 observation. This runbook does not claim it is available now.
+  Sign-in is required, and an unauthenticated visit lands on sign-in, not the
+  case. If the origin is wrong for the chosen build, use the route
+  `#/case/<id>?tab=quality` on that build's `/app` page.
+
+Preflight before any live use (record Pass, Fail, Blocked or Not run as above):
+
+* Each of the five ids exists in the chosen build and is open.
+* The simulator control cohort lists exactly these five homes, and readings
+  for each exist in the chosen build's sensor store.
+* The effective AI scan scope is evidenced as these five homes only before
+  any analysis is triggered; otherwise use route E (see the route table below), not a live trigger.
+* Each direct link opens the right case and tab for the signed-in role.
+* Current task-specific authority covers any model call; this section grants none.
 
 ## Choose The Route Beforehand
 
