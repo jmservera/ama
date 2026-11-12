@@ -2,10 +2,10 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-12T17:45:16+00:00",
-  "commit": "088e8c3c031be45b22422b91b3195b0988583ebd",
+  "scored_at": "2026-11-12T17:55:45+00:00",
+  "commit": "38d3ed18703ee05c6795f715b6e62600d36225ec",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43271538091",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43273038750",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
@@ -13,14 +13,14 @@
     "solution-code": "4965c3dc56b7358ee9dc37b564e46f31f8989ab031144ec67608b2137ea13064",
     "infrastructure": "d1cfb7538e8361300e8766c1e0c2d777cac8beac7cad61e0f728330d8fd93c6f",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
-    "pitch": "5b414b81c3cc0512d987acd669648d14eb85eae2af031105e39dd8bd5054fbe7",
+    "pitch": "32f651fc1e2b5de9810180555c17d82033c47514bcb1b973383e0e4f94fb831d",
     "thought-leadership": "f7f2adc273905a84d848d54be0a77abc3550013fd1c9ea9e2fedb743bdacf70a"
   },
-  "total": 78,
+  "total": 79,
   "sections": {
     "A": 35,
     "B": 23,
-    "C": 11,
+    "C": 12,
     "D": 9
   },
   "floors_met": true,
@@ -80,7 +80,7 @@
     "B1": {
       "score": 3,
       "evidence": [],
-      "rationale": "Live readiness; no rehearsal evidence in this diff. Rewritten S08/S09 narration (docs/capstone/pitch/speaker-script.md) is stronger written argument only. Baseline retained."
+      "rationale": "Live readiness; no rehearsal evidence in this diff. New runbook section is procedural demo-scope documentation, not narrative/argument structure evidence. Baseline retained."
     },
     "B2": {
       "score": 4,
@@ -92,19 +92,17 @@
     "B3": {
       "score": 2,
       "evidence": [],
-      "rationale": "docs/capstone/demo/runbook.md is not changed in this diff; no new live or rehearsal evidence. Needs Improvement retained."
+      "rationale": "runbook.md gains a five-home target section but adds no rehearsed demo evidence or recovery-from-failure proof; this is pre-live scoping, not an executed or rehearsed demo. Needs Improvement retained."
     },
     "B4": {
       "score": 3,
-      "evidence": [
-        "docs/capstone/pitch/questions-and-answers.md:98-124"
-      ],
-      "rationale": "B03/B04/B13/B14 Q&A further sharpened (new title/REVERSAL/EVALUATE framing on B04) with deeper source trails, but this is prepared material; no live-challenge transcript exists. Readiness unchanged at 3."
+      "evidence": [],
+      "rationale": "No Q&A transcript or live-challenge evidence changed in this diff. Readiness unchanged at 3."
     },
     "B5": {
       "score": 2,
       "evidence": [],
-      "rationale": "docs/capstone/pitch/speaker-script.md timing cues updated (CURRENT ROUTE TIMING added) but remain a written plan, not observed paced delivery. Unrehearsed pacing retained."
+      "rationale": "No pacing/delivery evidence changed. Unrehearsed pacing retained."
     },
     "B6": {
       "score": 4,
@@ -134,9 +132,13 @@
       "rationale": "New 'Strengthening The Four Challenged Criteria' section gives written advice for C2 (restate the concern, concede sound points) but is preparation, not a transcript or live exchange demonstrating the behaviour under challenge. Readiness unchanged."
     },
     "C3": {
-      "score": 4,
-      "evidence": [],
-      "rationale": "docs/capstone/pitch/tokenomics-placement-draft.md is unchanged in this diff; no new unprompted risk-surfacing evidence for the pitch/C3. Baseline Excellent (4) retained."
+      "score": 5,
+      "evidence": [
+        "docs/capstone/demo/runbook.md:49-53",
+        "docs/capstone/demo/runbook.md:90-93",
+        "docs/capstone/demo/runbook.md:100-102"
+      ],
+      "rationale": "Runbook addition is unprompted, explicit risk/limitation disclosure (every claim tagged unverified or target-only) paired with a defended, mechanically-justified recommendation; raised from Good to Excellent."
     },
     "D1": {
       "score": 4,
