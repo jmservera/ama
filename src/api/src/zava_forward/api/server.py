@@ -1203,8 +1203,12 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(404, {"error": "Not found."})
                     if not isinstance(body, dict) or body.get("draft_id") != unquote(parts[4]):
                         return self._json(400, {"error": "Supply the saved Held export of this working review."})
-                    return self._send(200, json.dumps(form_export.export_freshness(app.store, user, unquote(parts[2]), body)),
-                                      "application/json; charset=utf-8", {"Cache-Control": "private, no-store"})
+                    try:
+                        checked = form_export.export_freshness(app.store, user, unquote(parts[2]), body)
+                    except TypeError:
+                        # A self-consistent forged copy with mixed field id types cannot be compared; the core Invalid answer for an unusable copy keeps the response controlled.
+                        checked = form_export.export_freshness(app.store, user, unquote(parts[2]), {})
+                    return self._send(200, json.dumps(checked), "application/json; charset=utf-8", {"Cache-Control": "private, no-store"})
                 if len(parts) == 6:
                     if not held_download_enabled(app.provider.name):
                         return self._json(404, {"error": "Not found."})

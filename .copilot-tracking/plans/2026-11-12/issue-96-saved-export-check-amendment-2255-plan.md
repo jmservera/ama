@@ -30,9 +30,9 @@ Decide, under independent critique, whether to adopt the candidate unchanged or 
 
 ## Phases
 
-* [ ] Phase 1: independent critique of this plan in a separate agent context; record verdict and dispositions.
-* [ ] Phase 2: adopt unchanged or apply critique-approved corrections limited to `src/api/tests/test_form_held_download_api.py`, `src/api/src/zava_forward/api/server.py` and `src/api/README.md`.
-* [ ] Phase 3: focused verification with the owned pip venv (`files/venv-96-refill-2236`), no uv, no full gate.
+* [x] Phase 1: independent critique of this plan in a separate agent context; record verdict and dispositions.
+* [x] Phase 2: adopt unchanged or apply critique-approved corrections limited to `src/api/tests/test_form_held_download_api.py`, `src/api/src/zava_forward/api/server.py` and `src/api/README.md`.
+* [x] Phase 3: focused verification with the owned pip venv (`files/venv-96-refill-2236`), no uv, no full gate.
 * [ ] Phase 4: independent final Review in a separate agent context of the exact head; record outcome and routed findings without repeating Review.
 
 ## Validation (owner demo focused tier)

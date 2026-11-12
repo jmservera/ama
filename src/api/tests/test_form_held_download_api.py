@@ -327,6 +327,75 @@ class HeldDownload(staging.FormApiFixture):
             self.assertEqual((code, json.loads(body)["status"]), (200, "Unavailable"))
             self.assertNotEqual(self.fetch("pam", path)[0], 200)
 
+    def forge(self, saved: dict[str, Any], **changes: Any) -> dict[str, Any]:
+        forged = {**copy.deepcopy(saved), **changes}
+        forged["content_sha256"] = form_export._digest(
+            {k: forged[k] for k in form_export.BODY_KEYS}
+        )
+        return forged
+
+    def test_forged_self_consistent_copy_is_controlled_and_digest_is_not_provenance(self) -> None:
+        path, saved = self.saved()
+        mixed = copy.deepcopy(saved["fields"])
+        mixed[0]["field_id"] = 5
+        extra = saved["fields"] + [dict(saved["fields"][0], field_id="fabricated")]
+        with patch.dict(os.environ, ON):
+            before = self.state()
+            code, headers, body = self.check("pam", path, self.forge(saved, fields=mixed))
+            self.assertEqual(code, 200, body)
+            self.assertEqual(json.loads(body)["status"], "Invalid")
+            self.assertEqual(headers["Cache-Control"], "private, no-store")
+            code, _, body = self.check("pam", path, self.forge(saved, fields=extra))
+            result = json.loads(body)
+            self.assertEqual(code, 200, body)
+            self.assertFalse(result["reviewed"])
+            # The digest detects accidental edits only, so a recomputed one is compared as supplied.
+            self.assertEqual(result["status"], "Current")
+            self.assertEqual(self.state(), before)
+
+    def test_binding_to_the_path_case_and_draft_discloses_and_writes_nothing(self) -> None:
+        path, saved = self.saved()
+        missing = self.forge(saved, draft_id="NOPE")
+        with patch.dict(os.environ, ON):
+            before = self.state()
+            cases = (
+                (path.replace("ZF-1", "ZF-2"), saved),
+                (path.replace(saved["draft_id"], "NOPE"), missing),
+            )
+            for target, copy_ in cases:
+                with self.subTest(path=target):
+                    code, _, body = self.check("pam", target, copy_)
+                    result = json.loads(body)
+                    self.assertEqual((code, result["status"]), (200, "Unavailable"), body)
+                    self.assertEqual((result["stale_fields"], result["reviewed"]), ([], False))
+                    self.assertNotIn("unaffected_fields", result)
+            self.assertEqual(
+                self.check("pam", path.replace(saved["draft_id"], "NOPE"), saved)[0], 400
+            )
+            self.assertEqual(self.state(), before)
+
+    def test_anonymous_revoked_empty_and_error_responses_are_not_served_or_cached(self) -> None:
+        path, saved = self.saved()
+        with patch.dict(os.environ, ON):
+            anonymous = urllib.request.Request(self.base + path, json.dumps(saved).encode())
+            with self.assertRaises(urllib.error.HTTPError) as caught:
+                urllib.request.urlopen(anonymous)
+            self.assertEqual(caught.exception.code, 401)
+            self.assertNotIn(b"stale_fields", caught.exception.read())
+            code, headers, body = self.check("pam", path, {})
+            self.assertEqual(code, 400, body)
+            self.assertEqual(headers["Cache-Control"], "no-store")
+            self.assertEqual(self.check("pam", path, saved)[0], 200)
+            staff = self.store.staff["pam@example.test"]
+            original = staff["role"]
+            staff["role"] = "Contractor"
+            try:
+                code, _, body = self.check("pam", path, saved)
+                self.assertIn(code, (401, 403))
+                self.assertNotIn(b"stale_fields", body)
+            finally:
+                staff["role"] = original
+
 
 if __name__ == "__main__":
     unittest.main()

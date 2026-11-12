@@ -1200,15 +1200,25 @@ Tab and Enter (no axe scan, not assistive-technology or WCAG acceptance).
 previously downloaded Held export as the JSON body and returns the existing
 `form_export.export_freshness` result: `Current`, `Stale`, `Invalid` or
 `Unavailable`, the stale and unaffected field identifiers, the reasons and the
-next action. It is a read-only comparison: it writes nothing, never edits the
-saved copy, returns no field values and keeps `reviewed: false`. A body that is
-not an object, or whose `draft_id` differs from the path, answers 400. Edited,
-incomplete or history-less copies are `Invalid` and must be regenerated. It
-answers 404 under the same operator switches as the download and never with the
-`trusted-proxy` provider, and re-checks the signed-in actor on every request.
-It does not approve a pack, submit anything, establish eligibility or prove the
-issue criterion for dependent-only invalidation; approved templates and rules
-stay with named Finance approval.
+next action. It is a read-only comparison: the check itself changes no form,
+draft or audit record (shared sign-in can still link an identity before the
+switch is read), never edits the saved copy, returns no field values and keeps
+`reviewed: false`. The body is untrusted input. A body that is not an object
+(including an empty or malformed one), or whose `draft_id` differs from the
+path, answers 400, and these checks run after the shared body parser. Copies
+that are incomplete, history-less, edited without recomputing the digest or
+unusable for comparison are `Invalid` and must be regenerated. The digest
+detects accidental edits only; it is not a signature or provenance, so a copy
+rebuilt with a matching digest is compared as supplied and `Current` means only
+that the supplied copy matches the current working review. A draft missing from
+the path case, or belonging to another case, is `Unavailable` without field
+details. Precedence is the shared one: unreadable body 400, sign-in 401,
+trusted-proxy request without the CSRF header 403, administrator view-only 403,
+role projection 403, then the switches (404 under the same operator switches as
+the download and never with the `trusted-proxy` provider). The signed-in actor
+is re-checked on every request. It does not approve a pack, submit anything,
+establish eligibility or prove the issue criterion for dependent-only
+invalidation; approved templates and rules stay with named Finance approval.
 
 ```json
 {"action":"open","schema_id":"SYN-TECH","schema_version":1}
