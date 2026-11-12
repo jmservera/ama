@@ -62,7 +62,7 @@
 | ID | Severity | Finding | Route |
 |---|---|---|---|
 | RV-001 | Medium, corrected during review | The pack requirement row first mapped PRD FR-036 (versioned AI task registry) to the proposal-card label; FR-036 is not exercised by the checks (PRD line 1411). The row was reworded to say it is not exercised. No number or class changed. This is a review-time edit to a deliverable, not to a plan or critique artifact | Residual: none |
-| RV-002 | Low | The 92 skips are attributed to the SQL gate by source inspection, not captured per test | Disclosed in the pack; optional rerun with `-v` | 
+| RV-002 | Low | The 92 skips are attributed to the SQL gate by source inspection, not captured per test | Disclosed in the pack; optional rerun with `-v` |
 | RV-003 | Low | The static runbook check proves string-level coherence only; ids, availability and sign-in behaviour are unverified | Disclosed; live preflight blocked (FU-4) |
 | RV-004 | Low | F1 is a static ARIA reading with no assistive-technology observation and a dedupe search that cannot prove absence | Disclosed; owner decision |
 | RV-005 | Low | The author executed the Review; model label asserted, no attestation | Coordinator independent exact-head review required |
