@@ -1,0 +1,10 @@
+E501 Line too long (101 > 100)
+  --> tests/assistant_process_worker.py:22:101
+   |
+21 | # Constructed runtime-binding differences for one capability, confined to this process. They are
+22 | # not an old image or a real serving change; each moves exactly one bound version of that capability.
+   |                                                                                                     ^
+23 | VARIATIONS = ("rule", "purpose", "roles")
+   |
+
+Found 1 error.

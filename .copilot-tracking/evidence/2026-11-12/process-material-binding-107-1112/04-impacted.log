@@ -1,0 +1,7 @@
+.............sssssss.........................................http-response GET /api/assistants/proposals status=503
+.............................Sensor consent index could not be reconciled; retained readings stay withheld.
+........................ssssssssssssssssssssssssssssssssssssssssssssssssssssssssss..........
+----------------------------------------------------------------------
+Ran 182 tests in 92.187s
+
+OK (skipped=65)
