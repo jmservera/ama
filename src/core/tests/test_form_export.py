@@ -137,8 +137,8 @@ class FormExport(unittest.TestCase):
                     store.save()
                 stale = form_export.export_freshness(store, self.actor, "ZF-1", saved)
                 self.assertEqual(stale["status"], "Stale")
-                self.assertEqual(stale["stale_fields"], ["epc"])
-                self.assertIn("area", stale["unaffected_fields"])
+                self.assertEqual(stale["stale_fields"], ["area", "epc"])
+                self.assertEqual(stale["unaffected_fields"], [])
 
     def test_input_and_schema_changes_stale_saved_export(self) -> None:
         store = self.stores[0]
@@ -155,6 +155,48 @@ class FormExport(unittest.TestCase):
         newer = form_export.export_freshness(store, self.actor, "ZF-1", saved)
         self.assertEqual(newer["status"], "Stale")
         self.assertEqual(newer["stale_fields"], ["area", "epc"])
+
+    def test_changed_open_issue_stales_only_its_field(self) -> None:
+        for store in self.stores:
+            draft, epc, _area = self.prepare(store)
+            draft = self.review(store, draft, epc)
+            saved = self.export(store, draft)
+            doc = store.add_document(
+                self.actor,
+                "ZF-1",
+                "second.txt",
+                "EPC",
+                b"99",
+                metadata=test_form_review.change_metadata(store, "ZF-1"),
+            )
+            request = test_form_review.batch(doc["id"])
+            request["candidates"] = [
+                dict(field_id="area", raw_value="99", locator=dict(start=0, end=2))
+            ]
+            forms.stage_candidates(store, self.actor, "ZF-1", request)
+            with self.subTest(store=type(store).__name__):
+                out = form_export.export_freshness(store, self.actor, "ZF-1", saved)
+                self.assertEqual(out["status"], "Stale")
+                self.assertEqual(out["stale_fields"], ["area"])
+                self.assertEqual(out["unaffected_fields"], ["epc"])
+                self.assertEqual(out["reasons"], ["An open validation issue changed."])
+                self.assertIs(out["reviewed"], False)
+
+    def test_removed_open_issue_stales_and_malformed_issues_are_invalid(self) -> None:
+        store = self.stores[0]
+        draft, epc, _area = self.prepare(store)
+        saved = self.export(store, draft)
+        draft = self.review(store, draft, epc)
+        gone = form_export.export_freshness(store, self.actor, "ZF-1", saved)
+        self.assertEqual(gone["status"], "Stale")
+        for bad_issues in ("none", [None], [dict(field_id=None, status="Unknown", reason="x")]):
+            bad = dict(saved, open_issues=bad_issues)
+            bad["content_sha256"] = form_export._digest(
+                {key: bad[key] for key in form_export.BODY_KEYS}
+            )
+            out = form_export.export_freshness(store, self.actor, "ZF-1", bad)
+            self.assertEqual(out["status"], "Invalid")
+            self.assertEqual(out["stale_fields"], [])
 
     def test_edited_or_incomplete_saved_export_is_invalid_not_trusted(self) -> None:
         store = self.stores[0]
