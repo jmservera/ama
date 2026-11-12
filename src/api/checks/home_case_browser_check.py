@@ -23,6 +23,9 @@ AXE_SHA256 = "880970c081707360e64f34cea25ff91892f5bc95675b0776925b9709dd8a68bb"
 SAFE_METHODS = ("GET", "HEAD", "OPTIONS")
 # Sibling home ZF-3 evidence must never appear on the view of ZF-2.
 SIBLING_ONLY = ("Synthetic survey metadata only", "Loft insulation", "SIBLING-EVIDENCE")
+# ZF-2 own evidence, seeded below, must never appear on the view of ZF-3.
+OWN_ONLY = ("Synthetic own-home survey", "Ventilation extract")
+SYSTEM_ITEM = "SYS-1: Shared ventilation Source: SYN-SURVEY"
 
 
 def home_case_data() -> dict[str, Any]:
@@ -43,6 +46,24 @@ def home_case_data() -> dict[str, Any]:
         }
     ]
     building["holds"] = [hold()]
+    own, sibling = data["cases"]
+    own["documents"].append(
+        {
+            "id": "OWN-EVIDENCE",
+            "name": "Synthetic own-home survey",
+            "kind": "Survey",
+            "source": "SYN-EVIDENCE",
+            "at": "2026-10-16",
+            "by": "Synthetic surveyor",
+        }
+    )
+    own["quality"] = [
+        {**sibling["quality"][0], "measure": "Ventilation extract", "source": "SYN-QA-OWN"}
+    ]
+    own["quality"][0]["resident_binding"] = {
+        "measure": "Ventilation extract",
+        "context_revision": 1,
+    }
     return data
 
 
@@ -92,6 +113,14 @@ def run_browser(base: str) -> None:
                 not any(token in main_text for token in SIBLING_ONLY),
             )
             check(
+                "ZF-2 shows its own document and quality in the home panel only",
+                all(t in home_text and t not in shared_text for t in OWN_ONLY),
+            )
+            check(
+                "shared system item is in the building panel only on ZF-2",
+                SYSTEM_ITEM in shared_text and "SYS-1" not in home_text,
+            )
+            check(
                 "version status and no-transfer notice are shown",
                 "No version recorded yet" in main_text and "does not transfer" in main_text,
             )
@@ -129,6 +158,42 @@ def run_browser(base: str) -> None:
                 print("COMPLETE: all checks ran, including axe 4.10.3")
             else:
                 print("PARTIAL: axe scan SKIPPED; set ZF_AXE_JS. No automated accessibility result")
+            page.evaluate("() => { location.hash = '#/case-home/ZF-3'; }")
+            page.get_by_role("heading", name="Home case ZF-3", exact=True).wait_for()
+            home = page.get_by_role("region", name="This home only", exact=False)
+            shared = page.get_by_role("region", name="Shared at building level", exact=False)
+            home_text = home.inner_text()
+            shared_text = shared.inner_text()
+            main_text = page.locator("main").inner_text()
+            check(
+                "ZF-3 has its own labelled home and building panels",
+                home.count() == shared.count() == 1,
+            )
+            check(
+                "ZF-3 shows its own document and quality in the home panel only",
+                all(
+                    t in home_text and t not in shared_text
+                    for t in ("Synthetic survey metadata only", "Loft insulation")
+                ),
+            )
+            check(
+                "ZF-3 view carries none of ZF-2's own document or quality",
+                not any(token in main_text for token in OWN_ONLY),
+            )
+            check(
+                "shared system item is in the building panel only on ZF-3",
+                SYSTEM_ITEM in shared_text and "SYS-1" not in home_text,
+            )
+            check(
+                "ZF-3 shows its own GBP 6000.00 allocation at home and GBP 12000.00 only in the building panel",
+                "GBP 6000.00" in home_text
+                and "GBP 12000.00" in shared_text
+                and "GBP 12000.00" not in home_text,
+            )
+            check(
+                "ZF-3 has one h1 then four h2 panels",
+                len(page.locator("main h1, main h2").all_inner_texts()) == 5,
+            )
             check(f"made no non-GET/HEAD/OPTIONS requests: {writes}", not writes)
             check(f"no JavaScript errors: {errors}", not errors)
             context.close()

@@ -119,3 +119,40 @@ class HomeCaseApiTests(unittest.TestCase):
         self.assertIn("Use the case and building screens instead", script)
         self.assertIn("This home's share of shared cost", script)
         self.assertNotIn("JSON.stringify(x)", script)
+
+    def test_non_finance_staff_get_no_cost_amounts_over_http(self) -> None:
+        sam = self.login("sam@example.test")
+        for case_id in ("ZF-2", "ZF-3"):
+            code, view, _ = self.call(f"/api/cases/{case_id}/home-case", sam)
+            self.assertEqual(code, 200)
+            self.assertIs(view["home"]["cost_allocation_restricted"], True)
+            self.assertIsNone(view["home"]["cost_allocation"])
+            self.assertIs(view["building"]["costs_restricted"], True)
+            self.assertIsNone(view["building"].get("costs"))
+            body = json.dumps(view)
+            for amount in ("6000.00", "12000.00", "SYN-ALLOCATION", "SYN-ESTIMATE"):
+                self.assertNotIn(amount, body)
+
+    def test_finance_staff_get_building_cost_and_own_home_allocation_over_http(self) -> None:
+        pam = self.login("pam@example.test")
+        for case_id in ("ZF-2", "ZF-3"):
+            code, view, _ = self.call(f"/api/cases/{case_id}/home-case", pam)
+            self.assertEqual(code, 200)
+            self.assertIs(view["home"]["cost_allocation_restricted"], False)
+            self.assertEqual(
+                view["home"]["cost_allocation"],
+                [{"shared_cost_id": "COST-1", "amount_gbp": "6000.00", "source": "SYN-ALLOCATION"}],
+            )
+            self.assertFalse(view["building"].get("costs_restricted"))
+            self.assertEqual(
+                view["building"]["costs"],
+                [
+                    {
+                        "id": "COST-1",
+                        "work_id": "WORK-1",
+                        "amount_gbp": "12000.00",
+                        "source": "SYN-ESTIMATE",
+                    }
+                ],
+            )
+            self.assertNotIn("cost_allocation", view["building"])
