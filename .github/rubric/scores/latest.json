@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-12T16:07:13+00:00",
-  "commit": "04e2620556b09c2f2ad61bdc2bbc281d1b0f1828",
+  "scored_at": "2026-11-12T16:26:40+00:00",
+  "commit": "71fabf00957a5e69edae7bfc9fe3ef26b101297f",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43253778256",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43256982242",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "f121312a4cb037b14b9d0531dee345304b317c8d24ae1ac99a7327d541d5510e",
     "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
-    "solution-code": "4a8f7a59967b855f6af2cb468e70389f62293a30639deb503ad94eafcfe52490",
+    "solution-code": "d8230ec81df9174f737e8e3b86a386c1038c7f8e44b7b24166be389b45c84c26",
     "infrastructure": "d1cfb7538e8361300e8766c1e0c2d777cac8beac7cad61e0f728330d8fd93c6f",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "5b414b81c3cc0512d987acd669648d14eb85eae2af031105e39dd8bd5054fbe7",
@@ -43,18 +43,18 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/api/checks/connected_home_browser_check.py:30-45",
-        "src/api/tests/test_connected_home_check.py:104-118"
+        "src/api/src/zava_forward/api/web/role-screens.js:907-960",
+        "src/api/tests/test_exception_register_screen.py:239-345"
       ],
-      "rationale": "New browser check adds DOM-level negative controls proving no cross-home (tenant) data leakage across six specialist screens, with no write requests from the browser. Reinforces existing isolation/security ceiling 5."
+      "rationale": "CSV export adds allowlist-based, fail-closed field selection and formula-injection neutralisation, reinforcing existing security posture. Ceiling 5 unchanged."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/api/checks/connected_home_browser_check.py:760-784",
-        "src/api/tests/test_connected_home_check.py:1-277"
+        "src/api/checks/data_operator_browser_check.py:230-360",
+        "src/api/tests/test_exception_register_screen.py:239-345"
       ],
-      "rationale": "Adds a thorough, well-tested completeness check (unittest coverage plus a documented browser walk) covering six specialist screens end to end with disclosed deferrals. Reinforces existing ceiling 5."
+      "rationale": "Adds thorough browser/unit tests for odd data, unreadable/roles_not_named states, bad ids and failure cleanup, reinforcing completeness. Ceiling 5 unchanged."
     },
     "A5": {
       "score": 5,
@@ -73,8 +73,7 @@
     "A7": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/assistants.py:262-300",
-        "src/core/src/zava_forward/core/assistants.py:1243-1300"
+        "src/core/src/zava_forward/core/assistants.py:262-300"
       ],
       "rationale": "Not touched by this change; proactive-scheduling and autonomy evidence unchanged. Baseline retained."
     },
@@ -110,9 +109,9 @@
     "B6": {
       "score": 4,
       "evidence": [
-        "src/api/README.md:4365-4376"
+        "src/api/README.md:1512-1531"
       ],
-      "rationale": "Added a short technical usage note for the new browser check to src/api/README.md; no capstone deck or presentation documentation changed. Good (4) retained."
+      "rationale": "Added a short technical usage note for the CSV export to src/api/README.md; no capstone deck or presentation documentation changed. Good (4) retained."
     },
     "B7": {
       "score": 5,
