@@ -10,3 +10,4 @@ ms.date: 2026-11-12
 * Amendments and divergences: critique C1 to C5 applied; no plan divergence. Two import-origin probe errors and a format-exclusion artefact are recorded as adverse results in the pack.
 * Not run: MSSQL, broad or full gate, browser, mypy, hosted CI, provider, cloud. No criterion ticked.
 * Follow-ups: none admitted beyond the existing owners (#107, #157, #216, `parent-base-preflight-2300`).
+* Review correction: the pack section was rebuilt once after Review F1 (accidental duplication by a scripted edit) and F2 (main row); P05 complete.
