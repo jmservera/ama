@@ -11591,6 +11591,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Corrected wording in the post-fix-wave section of the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115): pin time qualification, test-helper PYTHONPATH, ADR 0002 Audit row, AC-051 and AC-073 Not run. Documentation only; nothing rerun; no approval or tick.
 * Evidence under `.copilot-tracking/` (2026-11-12 post-fix-wave-440-1112-correction).
+
 ## [2026-11-12] add | Current capstone deck assessment and Tokenomics statement audit (Refs #435)
 
 * Added an [offline, content-only assessment](../capstone/pitch/current-deck-assessment-2026-11-12.md) of the delivered 55-slide capstone deck and notes (PPTX blob `3da73fd2dd`, main `cd81888e4`) against every Capstone Assessment Guide criterion, with a statement-by-statement Tokenomics source, label and class register. It is not an assessor score, floor pass or approval; it flags the unresolved criterion 6 price-figure tension, price and model basis, control wording and stale page-count text for owner decision. Issue #435 criteria 1-4 stay unmet and no deck, source or placement file changed.
