@@ -253,7 +253,10 @@ schedule, Legal/DPO or owner approval acceptance.
   verifies the ledger against the digests read back from the container, not local
   files. A broken chain is never anchored. Any mismatch, absence of recognized
   remote head or year digest anchors, or unreachable container prints
-  `LEDGER_DIGEST_ALERT` and exits 1. Unrelated blobs do not count as anchors and
+  `LEDGER_DIGEST_ALERT` and exits 1. An unexpected failure opening the ledger store
+  or digest container, publishing or verifying also prints `LEDGER_DIGEST_ALERT`
+  with the exception type name only and exits 1, so the hourly alert fires instead
+  of waiting for the 26-hour missing-success alert. Unrelated blobs do not count as anchors and
   do not affect verification alongside valid head or year digest evidence.
   Prefixed `digest-`/`year-` objects must have the publisher's canonical filename
   matching the payload count/year, `chain: main`, `algorithm: sha256`, an integer

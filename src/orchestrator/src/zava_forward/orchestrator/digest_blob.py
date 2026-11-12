@@ -228,6 +228,18 @@ record. Exit 1 and alert on mismatch."""
             out("--reconcile needs the path of the independent record")
             return 2
         return _reconcile_main(argv[i + 1], env, blob, out)
+    try:
+        return _publish_and_verify(argv, env, store, blob, out)
+    except DocumentStoreError as e:
+        out(f"{ALERT_MARKER} digest container unavailable: {e}")
+        return 1
+    except Exception as e:
+        # Type name only: store and driver messages can carry connection details.
+        out(f"{ALERT_MARKER} ledger verification could not run: {type(e).__name__}")
+        return 1
+
+
+def _publish_and_verify(argv, env, store, blob, out):
     if store is None:
         from zava_forward.core.factory import open_store
         store = open_store(env)
@@ -235,13 +247,9 @@ record. Exit 1 and alert on mismatch."""
     if blob is None:
         out("ZF_DIGEST_ACCOUNT_URL is not set")
         return 2
-    try:
-        if "--publish" in argv:
-            out("published: " + json.dumps(publish(store, blob)))
-        rep = verify(store, blob)
-    except DocumentStoreError as e:
-        out(f"{ALERT_MARKER} digest container unavailable: {e}")
-        return 1
+    if "--publish" in argv:
+        out("published: " + json.dumps(publish(store, blob)))
+    rep = verify(store, blob)
     out(json.dumps(rep, indent=2))
     if not rep["intact"]:
         out(f"{ALERT_MARKER} ledger does not match the immutable digests")
