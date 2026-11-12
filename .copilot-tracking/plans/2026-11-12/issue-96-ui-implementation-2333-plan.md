@@ -34,18 +34,29 @@ The browser check uses real downloaded synthetic copies: (a) a number field `are
 
 ## Scope of edits (owned paths)
 
-* `src/api/src/zava_forward/api/web/role-screens.js`: `fundingDraftPanel` and one panel-local function above it only (about L1340 onward). Not touched: the programme, `screenTable` and top-of-file regions owned by the 233 work, `app.js`, `async-action.js`, `style.css` unless an existing class cannot express a state.
+* `src/api/src/zava_forward/api/web/role-screens.js`: `fundingDraftPanel` and one panel-local function above it only (about L1340 onward). Not touched: the programme, `screenTable` and top-of-file regions owned by the 233 work, `app.js`, `async-action.js`, `style.css`.
 * `src/api/checks/held_form_download_browser_check.py`: extended, existing assertions retained except the writes assertion, narrowed to the exact freshness path counted per action.
-* `src/api/README.md`: one short paragraph; `docs/reference/log.md`: one appended entry. No index change.
+* `src/api/README.md`: one short paragraph. No `docs/reference/log.md`, index or `style.css` edit (existing classes only; no knowledge-base file changes).
 
 ## Phases
 
 * [ ] Phase 1: failing-first browser additions (matrix in the parent details plus the numeric fidelity cases) and a focused unit check of the 16 canonical API tests.
 * [ ] Phase 2: implement `fundingCheckSavedCopy` and panel changes.
 * [ ] Phase 3: focused verification: extended browser check, 16 API tests, `test_role_endpoint_inventory`, pinned ruff and mypy on changed Python, `node --check`, `git diff --check`, pinned axe check if the repository already has one for this screen, README diff review. No full gate.
-* [ ] Phase 4: README paragraph and log entry.
+* [ ] Phase 4: README paragraph.
 * [ ] Phase 5: one independent read-only Review of the exact head; record outcome; no repeat.
 
 ## Validation tier
 
 Focused tier (small synthetic-demo UI, no workflow, dependency, Dockerfile, permission, secret, deployment, SQL or security-control change; the server contract is unchanged and read-only). Raw-text transport adds no new server surface. Independent exact-head review, human approvals and hosted CI remain required and are not claimed. The eventual publication is the same #96 backend plus UI candidate, not a separate unrelated PR. Local freeze only.
+
+## Amendments after independent re-critique (PC-1 to PC-6, applied directly, none rejected)
+
+Critique: [issue-96-ui-implementation-2333-critique.md](issue-96-ui-implementation-2333-critique.md). Executed once, verdict Revise, not repeated.
+
+* PC-1: the pending guard uses `mutationKey(path, {})`, acquired before the file read and released in `finally` only when this call acquired it; a second press while held makes no request; tests cover retry after failure and after abort.
+* PC-2: the route signal and session identity are captured at press, before the read; abort, panel connection and file selection are rechecked immediately before the POST and after the response; navigation during the read sends nothing.
+* PC-3: the fixture stages an `area` candidate from a source span in the uploaded text (`12.0` at its offsets), corrects it through the real review API to the float `12.0`, downloads and checks; then stages a second `area` candidate for `9007199254740993`, corrects, downloads and checks. No mocking.
+* PC-4: a 401 for the still-current session is handled (sign-in return) before obsolete-selection filtering; an old session's response never replaces a newer login; tested.
+* PC-5: `file.size` over 8,000,000 is refused before reading; the text is read with a fatal UTF-8 decoder (malformed bytes refused with the plain "could not read that file" sentence); the encoded request size is checked too; boundary and malformed-byte cases tested.
+* PC-6: log, index and CSS edits removed from scope (above).
