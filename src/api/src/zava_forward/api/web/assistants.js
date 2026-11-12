@@ -42,7 +42,7 @@ function assistantProposal(p, reload, recoverable = new Map(), session = caseSes
   const note = h("textarea", { id: `proposal-reason-${p.id}`, name: "review-reason", autocomplete: "off", "aria-label": "Reason", maxlength: "1000" });
   const error = h("p", { id: `proposal-error-${p.id}`, class: "field-error", role: "status" });
   const verified = h("input", { type: "checkbox", id: `verified-${p.id}` });
-  const editing = h("textarea", { name: "edited-proposal", autocomplete: "off", "aria-label": "Edited evidence proposal JSON", maxlength: "16000" },
+  const editing = h("textarea", { name: "edited-proposal", autocomplete: "off", "aria-label": "Edited proposal (technical JSON format)", maxlength: "16000" },
     JSON.stringify(p.output, null, 2));
   const clearError = () => {
     error.textContent = "";
@@ -100,7 +100,7 @@ function assistantProposal(p, reload, recoverable = new Map(), session = caseSes
   const ready = p.state === "ready" && !p.stale && p.actionable !== false
     && !p.release_denial && p.epoch_current !== false;
   const ownVerification = p.verification && p.verification.by === me.user.email;
-  const history = h("pre", {}, JSON.stringify({ envelope: p.envelope, history: p.provenance }, null, 2));
+  const history = h("pre", { tabindex: "0", "aria-label": "Changes to this suggestion, technical record" }, JSON.stringify({ envelope: p.envelope, history: p.provenance }, null, 2));
   let offset = p.history_next_offset;
   const moreHistory = h("button", { class: "alt", hidden: offset == null, onclick: async () => {
     try {
@@ -110,7 +110,8 @@ function assistantProposal(p, reload, recoverable = new Map(), session = caseSes
       moreHistory.hidden = offset == null;
     } catch (e) { status.textContent = e.message; }
   } }, "Earlier changes to this suggestion");
-  const editBox = h("div", { hidden: true, "data-proposal-edit": "" }, h("label", {}, "Edited evidence proposal JSON", editing),
+  const editBox = h("div", { hidden: true, "data-proposal-edit": "" }, h("p", { class: "muted" }, "This is the full proposal in a technical format. Change the values and keep the structure. A reason is required."),
+    h("label", {}, "Edited proposal (technical JSON format)", editing),
     h("button", { disabled: !ready || !ownVerification, onclick: () => act("edit-accept") }, "Save edited proposal"));
   const card = h("article", { class: "card ai-suggestion", "data-proposal-id": p.id, "data-proposal-revision": p.revision },
     h("h3", {}, `${assistantNames[p.capability]} v${p.version}`),
@@ -126,9 +127,11 @@ function assistantProposal(p, reload, recoverable = new Map(), session = caseSes
     p.output && h("div", {}, h("p", {}, p.output.summary),
       h("ul", {}, p.output.findings.map((f) => h("li", {}, `${f.text}. Sources: ${f.citations.join(", ") || "Not provided"}`))),
       h("h4", {}, "Unknowns"), h("ul", {}, p.output.unknowns.map((u) => h("li", {}, u)))),
-    h("details", {}, h("summary", {}, "Permitted sources, versions and hashes"),
-      h("pre", {}, JSON.stringify(p.snapshot, null, 2))),
-    h("details", {}, h("summary", {}, "AI usage and changes to this suggestion"),
+    h("details", { "data-proposal-technical": "" }, h("summary", {}, "Suggestion details (technical, for audit and support)"),
+      h("p", { class: "muted" }, "The full technical record of this suggestion is kept here unchanged. The reasons, warnings and review choices on this card do not depend on it."),
+      h("h4", {}, "Permitted sources, versions and hashes"),
+      h("pre", { tabindex: "0", "aria-label": "Permitted sources, versions and hashes, technical record" }, JSON.stringify(p.snapshot, null, 2)),
+      h("h4", {}, "AI usage and changes to this suggestion"),
       history, moreHistory),
     h("fieldset", {}, h("legend", {}, "Your review"), h("label", { for: note.id }, "Reason"), note, error,
     ready && h("div", {}, h("label", { for: `verified-${p.id}` }, verified,

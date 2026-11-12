@@ -11540,3 +11540,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Corrected the stale statement in [AI tokenomics](./resources/ai-tokenomics.md) that legacy `Ai.run()` and `look_at()` discard provider usage: current source returns validated usage and the meter id and root, and the text-draft path joins its output and review. One ordering defect was fixed (usage is reported only after the ledger settles it) and the legacy text-draft join, missing and malformed usage as Unknown, provider failure and workflow-only no dispatch gained synthetic local tests. The resident chat host, `look_at` and priority proofs, price, billing and authority are excluded.
 * Evidence class: local observed on a synthetic loopback provider spy; no cost, price, billing or model claim, no criterion tick, no acceptance. Recommendation: continue, bounded (proposed, not a decision).
 * Evidence under `.copilot-tracking/` (2026-11-12 legacy-ai-usage-attribution-432-1112).
+## [2026-11-12] update | Proposal card plain-language default with technical evidence retained (Refs #153)
+
+* Updated the assistant proposal card note in the [content standard](research/ux/content-standard.md): technical evidence (permitted sources, versions, hashes, AI usage and change record) moved into one native details disclosure and the edit field relabelled. Owner approval 2026-11-12; no audit removal, permission or approval change.
+* Evidence class: local observed on constructed synthetic fixtures (desktop and 360 px); no human resident-wording review, no assistive-technology acceptance, no criterion tick. Whole C2/C3/C5 remain unproven.
+* Evidence under `.copilot-tracking/` (2026-11-12 proposal-card-plain-language-153-1112).
