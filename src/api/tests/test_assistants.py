@@ -1316,6 +1316,68 @@ class ApiTests(Base):
             self.assertIn("ordinary case work manually", body["error"])
         self.assertEqual(self.request("/api/cases/ZF-1")[0], 200)
 
+    def test_active_chat_memory_is_never_evidence_for_a_chat_proposal(self):
+        """Issue 157: synthetic opted-in memory cannot reach the proposal's evidence or be cited. Simulated provider, no human review."""
+        canary = "MEMORY-CANARY-SYNTHETIC-ONLY"
+        cap = "funding-evidence"
+        seen = []
+        original = self.provider.evidence
+
+        def spy(system, prompt, *args):
+            seen.append(system + prompt)
+            return original(system, prompt, *args)
+
+        refs = dict(CHAT_DPIA_REF="SYNTH-DPIA-1", CHAT_LAWFUL_BASIS_REF="SYNTH-LB-1", CHAT_NOTICE_REF="SYNTH-NOTICE-1")
+        with patch.dict(os.environ, refs), patch.object(self.provider, "evidence", spy):
+            self.assertEqual(self.request("/api/chat/memory/opt-in", {"acknowledged": True})[0], 200)
+            status, item = self.request("/api/chat/memory", {"content": canary, "task": cap})
+            self.assertEqual(status, 200, item)
+            memory_id = item["id"]
+            self.assertTrue(memory_id.startswith("CM-"))
+            held = self.request("/api/chat/memory")[1]
+            self.assertEqual([m["content"] for m in held], [canary])
+            self.assertEqual(self.request(f"/api/chat/memory/status?task={cap}")[1]["active"], True)
+            tid = self.request("/api/chat/threads", {"case_id": "ZF-1", "task": cap})[1]["id"]
+            cases_before = [self.domain()[i] for i in (0, 1, 2, 4)]
+            status, p = self.request(f"/api/chat/threads/{tid}/proposals", {"capability": cap})
+            self.assertEqual(status, 202, p)
+            self.assertTrue(self.service.execute(p["id"]))
+            ready = self.service.detail(self.pm, p["id"])
+            self.assertEqual((ready["state"], self.provider.calls), ("ready", 1))
+            self.assertIs(ready["envelope"]["approved"], False)
+            self.assertFalse(ready["relied_on"])
+            self.assertEqual([self.domain()[i] for i in (0, 1, 2, 4)], cases_before)
+
+            self.assertEqual(len(seen), 1)
+            self.assertNotIn(canary, seen[0])
+            self.assertNotIn(memory_id, seen[0])
+            self.assertNotIn(canary, canonical(ready))
+            self.assertNotIn(memory_id, canonical(ready))
+            self.assertTrue(all(k.startswith(("source:", "sensor_reading/")) for k in ready["snapshot"]["citations"]))
+            thread = self.request(f"/api/chat/threads/{tid}")[1]
+            requested = thread["messages"][-1]
+            self.assertEqual(requested["evidence"], [p["id"]])
+            self.assertNotIn(canary, json.dumps(thread))
+            with self.assertRaisesRegex(ValueError, "never evidence"):
+                self.store.chat_add_message(self.pm, tid, "assistant", "x", evidence=[memory_id])
+
+            # A model output that cites the memory item is refused like any citation outside the captured sources.
+            def cites_memory(system, prompt, *args):
+                value = proposal(json.loads(prompt)["evidence"])
+                value["findings"][0]["citations"] = [memory_id]
+                return dict(text=canonical(value), provider="local-test-double", deployment="test", model="test-model",
+                            source="ai", outcome="returned", usage=dict(prompt_tokens=100, completion_tokens=30, total_tokens=130))
+
+            self.provider.evidence = cites_memory
+            self.case(lambda c: c["home"].update(address=uuid.uuid4().hex))
+            status, q = self.request(f"/api/chat/threads/{tid}/proposals", {"capability": cap})
+            self.assertEqual(status, 202, q)
+            self.service.execute(q["id"])
+            refused = self.service.detail(self.pm, q["id"])
+        self.assertEqual((refused["state"], refused["output"]), ("failed", None))
+        self.assertNotIn(memory_id, canonical(refused["output"]))
+        self.assertFalse(refused["relied_on"])
+
 
 class MssqlFixture:
     """Actual disposable SQL, with the same nonbillable provider and contracts."""
