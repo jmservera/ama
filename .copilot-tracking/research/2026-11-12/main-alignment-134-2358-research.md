@@ -17,6 +17,8 @@ Research executed (new increment) after the parent integration merge-tree proved
 * Issue states, live `gh` on 2026-11-12: #83 OPEN, #134 OPEN. PR 1495 is OPEN and unmerged (head `bbdacadcb`), so it is not merged here.
 * Mandatory context read: case study original and addendum, the knowledge-base index and memory, `src/README.md` validation tiers. No private data, `support/`, `.env`, cloud, model or deploy input is used.
 
+Correction note (critique AC-01, [critique](../../plans/2026-11-12/main-alignment-134-2358-critique.md)): the "no trailing newline" statement holds only on main's side. The #134 side ends with a newline, and main's change adds that newline before its own section. The resolution rule is in the critique.
+
 ## Process defect and spent corrections (preserved, not edited)
 
 * Original #134 process defect: the original RPI artifacts record that edits to the pack were applied before the plan and critique files were written (ordering disclosure). It stays recorded in [the original plan](../../plans/2026-11-12/ac-dispositions-134-1112-plan.md) and its critique.
