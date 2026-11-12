@@ -11580,3 +11580,14 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * `paired_equity` now checks a constructed source-completeness pair (`source_record` complete versus missing) as a fourth required dimension, and reports a ranker that leaves the subject out as an `excluded` failure instead of raising. Updated the [core README](../../src/core/README.md) and the [equity journey test plan](research/ux/equity-journey-test-plan.md).
 * Constructed fixture only: `fairness_evidence` and `activation_allowed` stay false; no ranking policy or threshold change; no criterion ticked.
 * Evidence under `.copilot-tracking/` (2026-11-12 issue-128-cohort-trace-1112).
+
+## [2026-11-12] update | Post-fix-wave checkpoint (Refs #440 #128 #98 #115)
+
+* Added a dated post-fix-wave checkpoint to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115) for merged PRs 1481, 1483 and 1482 on `main` `e155c88ed`, with an index paragraph in the [index](./README.md).
+* Local focused evidence only (151 tests executed, 0 skipped; lint and mypy clean; one invocation error retained); no source change, no new issue, no criterion ticked, no approval; recommendation is a bounded CONTINUE.
+* Evidence under `.copilot-tracking/` (2026-11-12 post-fix-wave-440-1112).
+
+## [2026-11-12] update | Post-fix-wave checkpoint correction (Refs #440)
+
+* Corrected wording in the post-fix-wave section of the [cutover evidence pack](../architecture/cutover-evidence-pack.md#post-fix-wave-checkpoint-2026-11-12-refs-440-128-98-115): pin time qualification, test-helper PYTHONPATH, ADR 0002 Audit row, AC-051 and AC-073 Not run. Documentation only; nothing rerun; no approval or tick.
+* Evidence under `.copilot-tracking/` (2026-11-12 post-fix-wave-440-1112-correction).
