@@ -1,0 +1,50 @@
+test_changed_policy_process_revokes_and_fresh_process_stays_denied (test_assistant_release.SqliteUnleasedRevocation.test_changed_policy_process_revokes_and_fresh_process_stays_denied) ... ok
+test_changed_prompt_process_revokes_and_fresh_process_stays_denied (test_assistant_release.SqliteUnleasedRevocation.test_changed_prompt_process_revokes_and_fresh_process_stays_denied) ... FAIL
+test_changed_permission_process_revokes_and_fresh_process_stays_denied (test_assistant_release.SqliteUnleasedRevocation.test_changed_permission_process_revokes_and_fresh_process_stays_denied) ... FAIL
+
+======================================================================
+FAIL: test_changed_prompt_process_revokes_and_fresh_process_stays_denied (test_assistant_release.SqliteUnleasedRevocation.test_changed_prompt_process_revokes_and_fresh_process_stays_denied)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-107-process-binding-1112/src/api/tests/test_assistant_release.py", line 1256, in test_changed_prompt_process_revokes_and_fresh_process_stays_denied
+    self.check_changed_binding_process("purpose", "prompt")
+  File "/home/azureuser/source/ama-demo-wt/issue-107-process-binding-1112/src/api/tests/test_assistant_release.py", line 1227, in check_changed_binding_process
+    self.assertEqual(revoked["invalidated"]["triggers"], [trigger])
+AssertionError: Lists differ: ['intended_use', 'prompt', 'evidence'] != ['prompt']
+
+First differing element 0:
+'intended_use'
+'prompt'
+
+First list contains 2 additional elements.
+First extra element 1:
+'prompt'
+
+- ['intended_use', 'prompt', 'evidence']
++ ['prompt']
+
+======================================================================
+FAIL: test_changed_permission_process_revokes_and_fresh_process_stays_denied (test_assistant_release.SqliteUnleasedRevocation.test_changed_permission_process_revokes_and_fresh_process_stays_denied)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-107-process-binding-1112/src/api/tests/test_assistant_release.py", line 1259, in test_changed_permission_process_revokes_and_fresh_process_stays_denied
+    self.check_changed_binding_process("roles", "permissions")
+  File "/home/azureuser/source/ama-demo-wt/issue-107-process-binding-1112/src/api/tests/test_assistant_release.py", line 1227, in check_changed_binding_process
+    self.assertEqual(revoked["invalidated"]["triggers"], [trigger])
+AssertionError: Lists differ: ['evidence', 'permissions'] != ['permissions']
+
+First differing element 0:
+'evidence'
+'permissions'
+
+First list contains 1 additional elements.
+First extra element 1:
+'permissions'
+
+- ['evidence', 'permissions']
++ ['permissions']
+
+----------------------------------------------------------------------
+Ran 3 tests in 5.827s
+
+FAILED (failures=2)

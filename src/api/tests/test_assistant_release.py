@@ -1014,10 +1014,11 @@ class ProcessRaces(UnleasedRevocation):
                 self.assertIsNone(child.poll(), "worker exited early")
             time.sleep(0.02)
 
-    def spawn(self, label, tasks, wave, gate=False, **cfg):
+    def spawn(self, label, tasks, wave, gate=False, variation=None, **cfg):
         wave.mkdir(exist_ok=True)
         spec = dict(
             label=label,
+            variation=variation,
             kind="mssql" if hasattr(self, "sql_env") else "sqlite",
             seed=str(self.seed),
             db=str(self.dbpath),
@@ -1191,6 +1192,71 @@ class ProcessRaces(UnleasedRevocation):
             self.assertEqual(
                 [r["status"] for r in rel.releases(db, CAP) if r["id"] == f"fx-{CAP}"], ["revoked"]
             )
+
+    def stored_release(self, capability):
+        with self.service.transaction() as db:
+            return next(r for r in rel.releases(db, capability) if r["id"] == f"fx-{capability}")
+
+    def check_changed_binding_process(self, kind, trigger, field):
+        """A process with a constructed runtime-binding variation, then fresh original-binding processes."""
+        others = [cap for cap in assistants.REGISTRY if cap != CAP]
+        p, held = (self.service.invoke(self.pm, CAP, case)["id"] for case in ("ZF-1", "ZF-2"))
+        c1, c2, c3 = (self.service.invoke(self.pm, cap, "ZF-1")["id"] for cap in others[:3])
+        self.assertEqual(len({p, held, c1, c2, c3}), 5)
+
+        wave = self.work / "control"
+        self.spawn("control", [c1], wave)
+        self.release(wave, [])
+        self.assertEqual(self.finish(["control"])[0]["results"], [True])
+        self.assertEqual(len(self.provider_calls()), 1)
+        self.assertEqual(self.stored_release(CAP)["status"], "active")
+
+        wave = self.work / "changed"
+        self.spawn("changed", [p, c2], wave, variation=[kind, CAP])
+        self.release(wave, [])
+        self.assertEqual(self.finish(["changed"])[0]["results"], [False, True])
+        self.assertEqual(len(self.provider_calls()), 2)
+        task, _, disabled, _ = self.snapshot(self.service, p)
+        self.assertEqual((task["state"], task["owner"], task["attempts"]), ("disabled", "", 0))
+        self.assertTrue(task["reason"].startswith("Release admission denied"), task["reason"])
+        self.assertEqual([e["reason"] for e in disabled], [task["reason"]])
+        self.assertEqual(self.snapshot(self.service, held)[0]["state"], "pending")
+        revoked = self.stored_release(CAP)
+        self.assertEqual(revoked["status"], "revoked")
+        self.assertIn(trigger, revoked["invalidated"]["triggers"])
+        self.assertIn(field, revoked["invalidated"]["fields"])
+        for cap in others[:3]:
+            kept = self.stored_release(cap)
+            self.assertEqual(kept["status"], "active", cap)
+            self.assertNotIn("invalidated", kept)
+        stored, attempts = self.pool(self.service)
+        self.assertEqual((stored[3], attempts), (2, 2))
+
+        wave = self.work / "fresh"
+        larger = dict(call_allowance=1000, token_allowance=9000000, expires="2100-01-01T00:00:00Z")
+        self.spawn("fresh", [held, c3], wave, **larger)
+        self.release(wave, [])
+        self.assertEqual(self.finish(["fresh"])[0]["results"], [False, True])
+        self.assertEqual(len(self.provider_calls()), 3)
+        again, _, disabled, _ = self.snapshot(self.service, held)
+        self.assertEqual((again["state"], again["owner"], again["attempts"]), ("disabled", "", 0))
+        self.assertTrue(again["reason"].startswith("Release admission denied"), again["reason"])
+        self.assertIn(field, again["reason"])
+        self.assertEqual(len(disabled), 1)
+        self.assertEqual(self.snapshot(self.service, c3)[0]["state"], "ready")
+        self.assertEqual(self.stored_release(CAP), revoked)
+        final, total = self.pool(self.service)
+        self.assertEqual(final[:3], stored[:3])
+        self.assertEqual((final[3], total), (3, 3))
+
+    def test_changed_policy_process_revokes_and_fresh_process_stays_denied(self):
+        self.check_changed_binding_process("rule", "policy", "policy_version")
+
+    def test_changed_prompt_process_revokes_and_fresh_process_stays_denied(self):
+        self.check_changed_binding_process("purpose", "prompt", "prompt_version")
+
+    def test_changed_permission_process_revokes_and_fresh_process_stays_denied(self):
+        self.check_changed_binding_process("roles", "permissions", "permission_version")
 
 
 class SqliteUnleasedRevocation(ProcessRaces, Base):
