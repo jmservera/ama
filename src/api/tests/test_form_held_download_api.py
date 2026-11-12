@@ -353,6 +353,44 @@ class HeldDownload(staging.FormApiFixture):
             self.assertEqual(result["status"], "Current")
             self.assertEqual(self.state(), before)
 
+    def test_malformed_field_ids_are_invalid_for_any_binding_and_write_nothing(self) -> None:
+        path, saved = self.saved()
+        ints = [dict(row, field_id=index) for index, row in enumerate(saved["fields"])]
+        mixed = copy.deepcopy(saved["fields"])
+        mixed[0]["field_id"] = 5
+        with patch.dict(os.environ, ON):
+            before = self.state()
+            targets = (
+                path,
+                path.replace("ZF-1", "ZF-2"),
+                path.replace(saved["draft_id"], "NOPE"),
+            )
+            for target in targets:
+                for name, fields in (("integers", ints), ("mixed", mixed)):
+                    with self.subTest(path=target, ids=name):
+                        draft_id = "NOPE" if target.count("NOPE") else saved["draft_id"]
+                        code, _, body = self.check(
+                            "pam", target, self.forge(saved, fields=fields, draft_id=draft_id)
+                        )
+                        result = json.loads(body)
+                        self.assertEqual((code, result["status"]), (200, "Invalid"), body)
+                        self.assertEqual(result["stale_fields"], [])
+                        self.assertNotIn("unaffected_fields", result)
+            self.assertEqual(self.state(), before)
+
+    def test_internal_type_error_is_a_logged_503_never_an_invalid_copy(self) -> None:
+        path, saved = self.saved()
+        with patch.dict(os.environ, ON):
+            before = self.state()
+            fault = TypeError("private internal defect")
+            with patch.object(form_export, "draft_export", side_effect=fault):
+                with self.assertLogs("zava_forward.api.server", level="ERROR"):
+                    code, _, body = self.check("pam", path, saved)
+            self.assertEqual(code, 503, body)
+            self.assertNotIn(b"Invalid", body)
+            self.assertNotIn(b"private internal defect", body)
+            self.assertEqual(self.state(), before)
+
     def test_binding_to_the_path_case_and_draft_discloses_and_writes_nothing(self) -> None:
         path, saved = self.saved()
         missing = self.forge(saved, draft_id="NOPE")

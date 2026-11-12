@@ -1207,7 +1207,12 @@ switch is read), never edits the saved copy, returns no field values and keeps
 (including an empty or malformed one), or whose `draft_id` differs from the
 path, answers 400, and these checks run after the shared body parser. Copies
 that are incomplete, history-less, edited without recomputing the digest or
-unusable for comparison are `Invalid` and must be regenerated. The digest
+carrying field identifiers that are not text are `Invalid` and must be
+regenerated; this answer is given before the case and draft are looked up, so a
+malformed copy never discloses whether the draft exists. The core still treats
+its own digest and row-parsing faults as `Invalid` (frozen, unchanged); any other
+internal fault, including a `TypeError` while loading the draft, answers the
+shared logged 503 and is never reported as an invalid copy. The digest
 detects accidental edits only; it is not a signature or provenance, so a copy
 rebuilt with a matching digest is compared as supplied and `Current` means only
 that the supplied copy matches the current working review. A draft missing from

@@ -35,8 +35,8 @@ Replace the fallback description: malformed field ids are `Invalid`; an internal
 ## Phases
 
 * [x] Phase 1: independent critique in a separate context: Revise, CR-1 and CR-2 accepted (see critique record); malformed copies are Invalid before case and draft binding, disclosed; the 503 claim is limited to faults escaping the frozen core.
-* [ ] Phase 2: failing-first test, then route fix, README and focused verification.
-* [ ] Phase 3: ruff, mypy, format and focused tests on the final tree; commit with the privacy-safe identity.
+* [x] Phase 2: failing-first test, then route fix, README and focused verification.
+* [x] Phase 3: ruff, mypy, format and focused tests on the final tree; commit with the privacy-safe identity.
 * [ ] Phase 4: independent final Review in a separate context of the local frozen head; record outcome without repeating Review.
 
 ## Boundaries

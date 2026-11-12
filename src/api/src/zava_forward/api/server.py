@@ -61,6 +61,12 @@ def held_download_enabled(provider_name, env=None):
         and (env.get("ZF_DEPLOYMENT_PROFILE") or "") == "demo" and provider_name != "trusted-proxy"
 
 
+def saved_export_ids_are_text(saved):
+    """A saved copy whose field ids are not text cannot be compared; the core answers it as Invalid."""
+    fields = saved.get("fields")
+    return not isinstance(fields, list) or all(isinstance(row, dict) and isinstance(row.get("field_id"), str) for row in fields)
+
+
 def chat_admission(store):
     """Synthetic privacy references cannot authorize a conversational model call."""
     if not ai_registry.authorizes_live(CHAT_TASK) or store.ai.gate is None:
@@ -1203,11 +1209,8 @@ def make_handler(app: App) -> type[BaseHTTPRequestHandler]:
                         return self._json(404, {"error": "Not found."})
                     if not isinstance(body, dict) or body.get("draft_id") != unquote(parts[4]):
                         return self._json(400, {"error": "Supply the saved Held export of this working review."})
-                    try:
-                        checked = form_export.export_freshness(app.store, user, unquote(parts[2]), body)
-                    except TypeError:
-                        # A self-consistent forged copy with mixed field id types cannot be compared; the core Invalid answer for an unusable copy keeps the response controlled.
-                        checked = form_export.export_freshness(app.store, user, unquote(parts[2]), {})
+                    saved = body if saved_export_ids_are_text(body) else {}
+                    checked = form_export.export_freshness(app.store, user, unquote(parts[2]), saved)
                     return self._send(200, json.dumps(checked), "application/json; charset=utf-8", {"Cache-Control": "private, no-store"})
                 if len(parts) == 6:
                     if not held_download_enabled(app.provider.name):
