@@ -1153,6 +1153,23 @@ class BicepPolicyTests(unittest.TestCase):
             self.assertNotIn("_CL", query)
             self.assertNotIn("Log_s", query)
 
+    def test_ledger_alert_queries_match_the_verifier_markers(self) -> None:
+        from zava_forward.orchestrator import digest_blob
+
+        queries = {
+            item["name"]: item["properties"]["criteria"]["allOf"][0]["query"]
+            for item in self.main["resources"]
+            if item["type"] == "Microsoft.Insights/scheduledQueryRules"
+            and "ledger-" in item["name"]
+        }
+        by_kind = {
+            kind: next(q for n, q in queries.items() if f"ledger-{kind}" in n)
+            for kind in ("digest-mismatch", "verify-missing")
+        }
+        self.assertEqual(len(queries), 2)
+        self.assertIn(f'Log has "{digest_blob.ALERT_MARKER}"', by_kind["digest-mismatch"])
+        self.assertIn(f'Log has "{digest_blob.OK_MARKER}"', by_kind["verify-missing"])
+
     def test_environment_only_does_not_start_workloads(self) -> None:
         apps = module(self.main, "containerapps")
         self.assertEqual(

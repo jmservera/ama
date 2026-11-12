@@ -118,6 +118,46 @@ class BlobDigestTests(unittest.TestCase):
         self.assertEqual(self.run_job(), 1)
         self.assertTrue(any("unavailable" in line for line in self.out))
 
+    def assert_unexpected_failure_alerts(self, rc):
+        self.assertEqual(rc, 1)
+        text = "\n".join(self.out)
+        self.assertIn(digest_blob.ALERT_MARKER, text)
+        self.assertNotIn(digest_blob.OK_MARKER, text)
+        self.assertNotIn("SECRET-SENTINEL", text)
+
+    def test_unexpected_store_failures_alert_without_leaking_detail(self):
+        class Boom(Exception):
+            pass
+
+        def fail(*a, **k):
+            raise Boom("SECRET-SENTINEL")
+
+        self.assertEqual(self.run_job("--publish"), 0)
+        self.out.clear()
+        self.store.audit_entries = fail
+        self.assert_unexpected_failure_alerts(self.run_job("--publish"))
+        self.assertIn("Boom", "\n".join(self.out))
+        self.out.clear()
+        self.assert_unexpected_failure_alerts(self.run_job())
+
+    def test_unexpected_upload_failure_alerts(self):
+        def fail(*a, **k):
+            raise RuntimeError("SECRET-SENTINEL")
+
+        self.blob.put_digest = fail
+        self.assert_unexpected_failure_alerts(self.run_job("--publish"))
+
+    def test_store_or_blob_initialisation_failure_alerts(self):
+        from unittest import mock
+
+        with mock.patch("zava_forward.core.factory.open_store", side_effect=OSError("SECRET-SENTINEL")):
+            rc = digest_blob.main(["--publish"], env={"ZF_DIGEST_ACCOUNT_URL": URL}, out=self.out.append)
+        self.assert_unexpected_failure_alerts(rc)
+        self.out.clear()
+        with mock.patch.object(digest_blob, "open_digest_store", side_effect=ValueError("SECRET-SENTINEL")):
+            rc = digest_blob.main(["--publish"], store=self.store, out=self.out.append)
+        self.assert_unexpected_failure_alerts(rc)
+
     def test_unrelated_json_is_not_a_remote_anchor(self):
         self.container.blobs["unrelated.json"] = b"not a digest or even JSON"
         rep = digest_blob.verify(self.store, self.blob)
