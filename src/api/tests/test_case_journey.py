@@ -557,7 +557,7 @@ const api = async (path, body) => {
         path.write_text(json.dumps(copy.deepcopy(DATA)))
         store = SqlStore(str(path), os.path.join(tmp.name, "synthetic.sqlite"))
         self.addCleanup(store.db.close)
-        app = App(store, "synthetic-only")  # type: ignore[no-untyped-call]
+        app = App(store, "synthetic-only")
         server = ThreadingHTTPServer(("127.0.0.1", 0), make_handler(app))
         thread = threading.Thread(target=server.serve_forever, daemon=True)
         thread.start()

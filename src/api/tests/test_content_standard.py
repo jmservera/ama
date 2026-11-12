@@ -1,4 +1,5 @@
 """Copy audit: banned internal terms absent from visible web copy, labels and blocked messages follow the content standard."""
+
 import re
 import unittest
 from pathlib import Path
@@ -9,9 +10,37 @@ ROOT = Path(__file__).resolve().parents[3]
 WEB = ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web"
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "content-standard.md").read_text()
 BANNED = re.compile(r"\b(gates?|holds?|provenance|traces?|snapshots?|envelopes?)\b", re.I)
-AUDITED_FILES = ("app.js", "assistants.js", "panels.js", "ops.js", "chat.js", "timecapture.js", "role-screens.js", "simulator-control.js", "staff-intake.js", "law.js", "law.html", "index.html", "welcome.html")
+AUDITED_FILES = (
+    "app.js",
+    "assistants.js",
+    "panels.js",
+    "ops.js",
+    "chat.js",
+    "timecapture.js",
+    "role-screens.js",
+    "simulator-control.js",
+    "staff-intake.js",
+    "law.js",
+    "law.html",
+    "index.html",
+    "welcome.html",
+)
 # Exact identifiers, raw technical JSON key and legacy stored finance value only.
-ALLOWED = ("c.gate", "p.provenance", "earlier.provenance", "v.provenance", "i.hold", "x.hold", "h.hold", "inv.hold", "Keep on hold", 'category("holds",', 'shared("holds",', "envelope: p.envelope", "p.snapshot")
+ALLOWED = (
+    "c.gate",
+    "p.provenance",
+    "earlier.provenance",
+    "v.provenance",
+    "i.hold",
+    "x.hold",
+    "h.hold",
+    "inv.hold",
+    "Keep on hold",
+    'category("holds",',
+    'shared("holds",',
+    "envelope: p.envelope",
+    "p.snapshot",
+)
 
 
 def copy_violations(text):
@@ -29,39 +58,75 @@ class CopyAudit(unittest.TestCase):
             self.assertEqual(list(copy_violations((WEB / f).read_text())), [], f)
 
     def test_all_standard_vocabulary_families_are_guarded(self):
-        for word in ("gate", "gates", "hold", "holds", "provenance", "trace", "traces",
-                     "snapshot", "snapshots", "envelope", "envelopes"):
+        for word in (
+            "gate",
+            "gates",
+            "hold",
+            "holds",
+            "provenance",
+            "trace",
+            "traces",
+            "snapshot",
+            "snapshots",
+            "envelope",
+            "envelopes",
+        ):
             with self.subTest(word=word):
                 self.assertTrue(list(copy_violations(f'h("p", {{}}, "{word.upper()}");')))
 
     def test_identifier_exceptions_do_not_hide_adjacent_bad_copy(self):
-        for identifier in ("c.gate", "p.provenance", "earlier.provenance", "v.provenance", "i.hold",
-                           "x.hold", "envelope: p.envelope", "p.snapshot"):
+        for identifier in (
+            "c.gate",
+            "p.provenance",
+            "earlier.provenance",
+            "v.provenance",
+            "i.hold",
+            "x.hold",
+            "envelope: p.envelope",
+            "p.snapshot",
+        ):
             with self.subTest(identifier=identifier):
                 self.assertEqual(list(copy_violations(identifier)), [])
-                self.assertTrue(list(copy_violations(f'{identifier}; h("dt", {{}}, "Check snapshot");')))
+                self.assertTrue(
+                    list(copy_violations(f'{identifier}; h("dt", {{}}, "Check snapshot");'))
+                )
         # Dynamic quotations, facts and user/model text are not application-owned literals.
         for expression in ("source.quote", "fact.text", "answer.reply", "turn.content"):
             self.assertEqual(list(copy_violations(f'h("blockquote", {{}}, {expression});')), [])
 
     def test_proposal_card_keeps_technical_evidence_in_one_labelled_disclosure(self):
         js = (WEB / "assistants.js").read_text()
-        disclosure = js[js.index('h("details", { "data-proposal-technical"'):js.index('h("fieldset"')]
-        for text in ("Suggestion details (technical, for audit and support)", "JSON.stringify(p.snapshot, null, 2)", "history,", "moreHistory"):
+        disclosure = js[
+            js.index('h("details", { "data-proposal-technical"') : js.index('h("fieldset"')
+        ]
+        for text in (
+            "Suggestion details (technical, for audit and support)",
+            "JSON.stringify(p.snapshot, null, 2)",
+            "history,",
+            "moreHistory",
+        ):
             self.assertIn(text, disclosure)
         self.assertNotIn("Edited evidence proposal JSON", js)
-        for text in ("AI suggestion, not approved", "Accept proposal only", "Nothing is sent, booked, paid"):
+        for text in (
+            "AI suggestion, not approved",
+            "Accept proposal only",
+            "Nothing is sent, booked, paid",
+        ):
             self.assertNotIn(text, disclosure)
 
     def test_chat_safety_and_copy_contract(self):
         js = (WEB / "chat.js").read_text()
-        for text in ("AI suggestion, not approved", "only an authorised human can make a restart decision for stopped retrofit work",
-                     "This panel cannot acknowledge, decide compliance or restart stopped retrofit work.",
-                     "Check recorded at", "These are historical records; ask again for a fresh lookup.",
-                     "Use the existing human emergency or hazard service now.",
-                     "Evidence is missing or cannot be relied on. Do not treat this as clear.",
-                     "Licensed PAS 2035 text and contract incorporation are unverified.",
-                     "it can only request a proposal that someone else reviews"):
+        for text in (
+            "AI suggestion, not approved",
+            "only an authorised human can make a restart decision for stopped retrofit work",
+            "This panel cannot acknowledge, decide compliance or restart stopped retrofit work.",
+            "Check recorded at",
+            "These are historical records; ask again for a fresh lookup.",
+            "Use the existing human emergency or hazard service now.",
+            "Evidence is missing or cannot be relied on. Do not treat this as clear.",
+            "Licensed PAS 2035 text and contract incorporation are unverified.",
+            "it can only request a proposal that someone else reviews",
+        ):
             self.assertIn(text, js)
 
     def test_restored_bad_chat_labels_fail_the_actual_guard(self):
@@ -79,14 +144,23 @@ class CopyAudit(unittest.TestCase):
 
     def test_ai_label_is_exact_and_never_implies_approval(self):
         self.assertEqual(Store.REC_LABEL, "AI suggestion, not approved")
-        for f in (*(ROOT / "src" / "api" / "src" / "zava_forward" / "api").glob("*.py"), *(ROOT / "src" / "core" / "src" / "zava_forward" / "core").glob("*.py")):
-            self.assertNotIn("human-approved", f.read_text().replace("human-approved by", ""), f.name)
+        for f in (
+            *(ROOT / "src" / "api" / "src" / "zava_forward" / "api").glob("*.py"),
+            *(ROOT / "src" / "core" / "src" / "zava_forward" / "core").glob("*.py"),
+        ):
+            self.assertNotIn(
+                "human-approved", f.read_text().replace("human-approved by", ""), f.name
+            )
         js = (WEB / "app.js").read_text()
         self.assertIn("This is not an approval, consent or safety decision", js)
 
     def test_blocked_reasons_have_reason_owner_and_next_action(self):
-        c = {"decision": {"status": "Asked"}, "funding_ok": False, "owner": "Sam Officer",
-             "hazards": [{"released": False, "owner": "Hazard Lead"}]}
+        c = {
+            "decision": {"status": "Asked"},
+            "funding_ok": False,
+            "owner": "Sam Officer",
+            "hazards": [{"released": False, "owner": "Hazard Lead"}],
+        }
         reasons = Store.gate_reasons(c)
         self.assertEqual(len(reasons), 3)
         for r in reasons:
@@ -94,15 +168,28 @@ class CopyAudit(unittest.TestCase):
             self.assertIn("Next action:", r)
 
     def test_standard_documents_glossary_and_review(self):
-        for text in ("## Glossary", "## Copy audit of the core flow", "AI suggestion, not approved", "named human", "Reason", "Owner", "Next action"):
+        for text in (
+            "## Glossary",
+            "## Copy audit of the core flow",
+            "AI suggestion, not approved",
+            "named human",
+            "Reason",
+            "Owner",
+            "Next action",
+        ):
             self.assertIn(text, DOC)
 
     def test_resident_draft_and_representative_copy_boundaries(self):
         js = (WEB / "app.js").read_text()
         self.assertIn("Draft a message for review", js)
         self.assertNotIn('"Write to the resident"', js)
-        self.assertIn("Draft only. Nothing is sent here. A named human must review the exact wording before any resident use.", js)
-        self.assertIn("Reviewing a draft is not approval of works, resident consent or a safety decision.", js)
+        self.assertIn(
+            "Draft only. Nothing is sent here. A named human must review the exact wording before any resident use.",
+            js,
+        )
+        self.assertIn(
+            "Reviewing a draft is not approval of works, resident consent or a safety decision.", js
+        )
         panels = (WEB / "panels.js").read_text()
         self.assertIn("Review due date (authority unavailable from this date)", panels)
         self.assertNotIn("authority held from this date", panels)
@@ -110,12 +197,17 @@ class CopyAudit(unittest.TestCase):
     def test_proposal_review_copy_is_not_decision_approval(self):
         js = (WEB / "assistants.js").read_text()
         self.assertIn("AI suggestion, not approved", js)
-        self.assertIn("Accepting or editing this proposal records a draft review. This is not an approval, consent or safety decision.", js)
+        self.assertIn(
+            "Accepting or editing this proposal records a draft review. This is not an approval, consent or safety decision.",
+            js,
+        )
         self.assertIn("Requested using:", js)
         self.assertNotIn("Invocation:", js)
         self.assertIn("Accept proposal only", js)
         self.assertIn('onclick: () => act("edit-accept") }, "Save edited proposal"', js)
-        self.assertIn("as a draft by a person. This is not an approval, consent or safety decision.", js)
+        self.assertIn(
+            "as a draft by a person. This is not an approval, consent or safety decision.", js
+        )
         self.assertIn("Confidence: not provided. Confidence is not accuracy.", js)
 
     def test_generic_error_and_ranking_error_state_reason_owner_next_action(self):
@@ -126,7 +218,9 @@ class CopyAudit(unittest.TestCase):
         self.assertIn("body === undefined ? GENERIC_READ_ERROR : GENERIC_CHANGE_ERROR", js)
         self.assertIn("refresh to try again", js)
         self.assertNotIn("This did not complete", js)
-        self.assertIn("Owner: application support. Next action: try All sources", (WEB / "law.js").read_text())
+        self.assertIn(
+            "Owner: application support. Next action: try All sources", (WEB / "law.js").read_text()
+        )
         with self.assertRaises(PermissionError) as ctx:
             Store.ranking_snapshot(object(), {"role": "Resident"})
         for part in ("Only a manager", "Owner:", "Next action:"):
@@ -136,13 +230,17 @@ class CopyAudit(unittest.TestCase):
     def test_role_screens_use_phase_check_wording(self):
         js = (WEB / "role-screens.js").read_text()
         self.assertIn("Benefits and phase check", js)
-        self.assertTrue(list(copy_violations(js.replace("phase check evidence", "gate evidence", 1))))
+        self.assertTrue(
+            list(copy_violations(js.replace("phase check evidence", "gate evidence", 1)))
+        )
 
     def test_finance_decision_sources_contain_display_mapping(self):
         panels = (WEB / "panels.js").read_text()
         self.assertIn('{ value: "Keep on hold", label: "Keep payment paused" }', panels)
         self.assertIn("Finance decision: ${financeDecisionLabel(i.disposition)}", panels)
-        self.assertIn("screenFinanceDecision(inv.disposition)", (WEB / "role-screens.js").read_text())
+        self.assertIn(
+            "screenFinanceDecision(inv.disposition)", (WEB / "role-screens.js").read_text()
+        )
 
     def test_finance_and_ai_review_refusals_use_plain_wording(self):
         core = ROOT / "src" / "core" / "src" / "zava_forward" / "core"
@@ -160,7 +258,13 @@ class CopyAudit(unittest.TestCase):
         for name in ("workflows.py", "hazard.py"):
             for literal in pattern.findall((core / name).read_text()):
                 with self.subTest(name=name, literal=literal):
-                    self.assertFalse(re.search(r"retrofit hold|hold release|release (?:a|the|this)\b[^\"]*hold", literal), literal)
+                    self.assertFalse(
+                        re.search(
+                            r"retrofit hold|hold release|release (?:a|the|this)\b[^\"]*hold",
+                            literal,
+                        ),
+                        literal,
+                    )
 
     def test_consultation_and_restart_gate_refusals_use_plain_wording(self):
         core = ROOT / "src" / "core" / "src" / "zava_forward" / "core"
@@ -168,14 +272,24 @@ class CopyAudit(unittest.TestCase):
             text = (core / name).read_text()
             for literal in re.findall(r'"[^"\n]*"', text):
                 with self.subTest(name=name, literal=literal):
-                    self.assertFalse(re.search(r"(?:release|releases|released) (?:this|the) hold", literal), literal)
-        self.assertIn("Next action: ask Legal to verify the decision.", (core / "procurement.py").read_text())
+                    self.assertFalse(
+                        re.search(r"(?:release|releases|released) (?:this|the) hold", literal),
+                        literal,
+                    )
+        self.assertIn(
+            "Next action: ask Legal to verify the decision.", (core / "procurement.py").read_text()
+        )
 
     def test_document_control_refusals_use_plain_wording(self):
-        text = (ROOT / "src" / "core" / "src" / "zava_forward" / "core" / "doc_controls.py").read_text()
+        text = (
+            ROOT / "src" / "core" / "src" / "zava_forward" / "core" / "doc_controls.py"
+        ).read_text()
         self.assertNotIn("A legal hold blocks deletion on this case.", text)
         self.assertNotIn("is not past its retention trigger", text)
-        self.assertIn("A legal hold is in place on this case (its documents must be kept for a legal reason)", text)
+        self.assertIn(
+            "A legal hold is in place on this case (its documents must be kept for a legal reason)",
+            text,
+        )
         self.assertIn("This document is not due for deletion, so nothing was deleted.", text)
 
     def test_time_capture_copy_is_guarded(self):
@@ -183,7 +297,9 @@ class CopyAudit(unittest.TestCase):
         js = (WEB / "timecapture.js").read_text()
         corrected = "have the same role as the requester"
         self.assertIn(corrected, js)
-        self.assertTrue(list(copy_violations(js.replace(corrected, "hold the same role as the requester"))))
+        self.assertTrue(
+            list(copy_violations(js.replace(corrected, "hold the same role as the requester")))
+        )
 
 
 if __name__ == "__main__":
