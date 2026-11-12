@@ -1,11 +1,11 @@
 """Pure paired-cohort check: missing data or need must never lower priority (#128, AC-073).
 
-Each constructed pair holds every relevant fact constant and changes one attribute: sensor
-completeness, support or contact need, or appointment history. The fixture-local contrast for
+Each constructed pair holds every relevant fact constant and changes one attribute: source or
+sensor completeness, support or contact need, or appointment history. The fixture-local contrast for
 each dimension is predeclared below; a pair that is confounded, has no contrast or differs in
 another dimension is rejected as invalid and is never counted as comparative evidence. This is
 not a production field mapping or an approved policy. A pair passes only when the
-subject case is ranked no lower than its reference and its human-review route has no rank effect.
+subject case is ranked, no lower than its reference, and its human-review route has no rank effect.
 Results are kept per dimension and are never averaged. Seeded defects that go undetected are
 reported. Constructed pairs are not population fairness evidence. No store, clock or network.
 """
@@ -19,9 +19,15 @@ from zava_forward.core import journey_register, ranking
 from zava_forward.core.rai_release import digest
 
 RECORD_VERSION = "paired-equity-check-v1"
-DIMENSIONS = ("sensor_completeness", "support_or_contact_need", "appointment_history")
+DIMENSIONS = (
+    "source_completeness",
+    "sensor_completeness",
+    "support_or_contact_need",
+    "appointment_history",
+)
 # Fixture-local, independently predeclared contrasts: dotted path -> (reference, subject).
 CONTRASTS: dict[str, dict[str, tuple[Any, Any]]] = {
+    "source_completeness": {"source_record": ("complete", "missing")},
     "sensor_completeness": {"sensor_data": ("present", "declined")},
     "support_or_contact_need": {
         "resident.priority_support": (False, True),
@@ -94,9 +100,12 @@ def _identity_problem(pair: Mapping[str, Any], anchors: Sequence[Mapping[str, An
     return None
 
 
-def _position(case: Mapping[str, Any], anchors: Sequence[Mapping[str, Any]], rank: Ranker) -> int:
+def _position(
+    case: Mapping[str, Any], anchors: Sequence[Mapping[str, Any]], rank: Ranker
+) -> int | None:
+    """Return the case's rank, or None when the ranker leaves it out."""
     ordered = rank([*anchors, case])
-    return next(int(e["rank"]) for e in ordered if e["id"] == case["id"])
+    return next((int(e["rank"]) for e in ordered if e["id"] == case["id"]), None)
 
 
 def _check_pair(
@@ -106,8 +115,12 @@ def _check_pair(
     problems = []
     if reference.get("id") != subject.get("id"):
         problems.append("pair_ids_differ")
-    elif _position(subject, anchors, rank) > _position(reference, anchors, rank):
-        problems.append("priority_lowered")
+    else:
+        sub_pos, ref_pos = _position(subject, anchors, rank), _position(reference, anchors, rank)
+        if sub_pos is None:
+            problems.append("excluded")
+        elif ref_pos is not None and sub_pos > ref_pos:
+            problems.append("priority_lowered")
     if journey_register.human_review_route(subject)["rank_effect"] != "none":
         problems.append("review_route_changes_rank")
     return problems

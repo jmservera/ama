@@ -960,8 +960,9 @@ data only; no usability, accessibility or fairness evidence. See the
 [test plan](../../docs/reference/research/ux/equity-journey-test-plan.md).
 
 `paired_equity.evaluate(pairs, anchors, seeded_defects, rank)` checks constructed pairs that
-differ in one attribute (sensor completeness, support or contact need, appointment history) and
-requires the subject to rank no lower than the reference and its review route to have no rank
+differ in one attribute (source completeness, sensor completeness, support or contact need,
+appointment history) and
+requires the subject to be ranked (not excluded) no lower than the reference and its review route to have no rank
 effect. Each dimension has a fixture-local predeclared contrast (not a production mapping or
 approved policy); confounded, no-contrast or mislabeled pairs, and pairs whose case ID is missing or
 shared with an anchor, are listed in `invalid_pairs`,
