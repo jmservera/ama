@@ -1,0 +1,35 @@
+test_envelope_breach_pauses_for_human (tests.test_exposure_limits.ExposureLimits.test_envelope_breach_pauses_for_human) ... ok
+test_inputs_must_be_approved_and_valid (tests.test_exposure_limits.ExposureLimits.test_inputs_must_be_approved_and_valid) ... ok
+test_missing_or_mismatched_exposure_is_unknown_not_within (tests.test_exposure_limits.ExposureLimits.test_missing_or_mismatched_exposure_is_unknown_not_within) ... ok
+test_nonfinite_observation_is_unknown_not_within (tests.test_exposure_limits.ExposureLimits.test_nonfinite_observation_is_unknown_not_within) ... FAIL
+test_tolerance_breach_pauses_for_human (tests.test_exposure_limits.ExposureLimits.test_tolerance_breach_pauses_for_human) ... ok
+test_unrecorded_limits_hold_and_pause (tests.test_exposure_limits.ExposureLimits.test_unrecorded_limits_hold_and_pause) ... ok
+test_within_limits_gives_no_pause_and_no_approval (tests.test_exposure_limits.ExposureLimits.test_within_limits_gives_no_pause_and_no_approval) ... ok
+test_envelope_breach_from_recorded_commitments (tests.test_exposure_limits.LiveSignal.test_envelope_breach_from_recorded_commitments) ... ok
+test_finance_roles_only (tests.test_exposure_limits.LiveSignal.test_finance_roles_only) ... ok
+test_malformed_file_holds_not_within (tests.test_exposure_limits.LiveSignal.test_malformed_file_holds_not_within) ... ok
+test_no_file_holds_and_pauses (tests.test_exposure_limits.LiveSignal.test_no_file_holds_and_pauses) ... ok
+test_non_numeric_commitment_amount_holds (tests.test_exposure_limits.LiveSignal.test_non_numeric_commitment_amount_holds) ... ok
+test_non_utf8_file_holds (tests.test_exposure_limits.LiveSignal.test_non_utf8_file_holds) ... ok
+test_stale_file_holds (tests.test_exposure_limits.LiveSignal.test_stale_file_holds) ... ok
+test_within_envelope_still_unknown_while_tolerances_unobserved (tests.test_exposure_limits.LiveSignal.test_within_envelope_still_unknown_while_tolerances_unobserved) ... ok
+
+======================================================================
+FAIL: test_nonfinite_observation_is_unknown_not_within (tests.test_exposure_limits.ExposureLimits.test_nonfinite_observation_is_unknown_not_within)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/azureuser/source/ama-demo-wt/issue-99-finite-1112/src/core/tests/test_exposure_limits.py", line 83, in test_nonfinite_observation_is_unknown_not_within
+    self.assertEqual(
+AssertionError: Tuples differ: ('Within limits', 'No pause signal') != ('Unknown', 'Pause for human decision')
+
+First differing element 0:
+'Within limits'
+'Unknown'
+
+- ('Within limits', 'No pause signal')
++ ('Unknown', 'Pause for human decision') : {'committed': -inf, 'currency': 'GBP', 'tolerances': {'capital': 1, 'safety': 0}}
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.011s
+
+FAILED (failures=1)

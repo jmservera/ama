@@ -1,0 +1,13 @@
+unformatted: File would be reformatted
+   --> src/zava_forward/core/exposure_limits.py:141:8
+    |
+140 |     envelope = limits["envelope"]
+    -     if (
+    -         not _finite_observation(committed)
+    -         or exposure.get("currency") != envelope["currency"]
+    -     ):
+141 +     if not _finite_observation(committed) or exposure.get("currency") != envelope["currency"]:
+142 |         findings.append(dict(limit="envelope", state="Unknown"))
+    |
+
+1 file would be reformatted, 1 file already formatted

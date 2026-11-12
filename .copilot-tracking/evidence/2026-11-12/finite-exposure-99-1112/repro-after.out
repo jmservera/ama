@@ -1,0 +1,7 @@
+committed=-inf,tol ok    -> Unknown | Pause for human decision | ['Unknown', 'Within', 'Within']
+committed ok,tol=-inf    -> Unknown | Pause for human decision | ['Within', 'Unknown', 'Unknown']
+all -inf                 -> Unknown | Pause for human decision | ['Unknown', 'Unknown', 'Unknown']
+committed=+inf           -> Unknown | Pause for human decision | ['Unknown', 'Within', 'Within']
+tol=+inf                 -> Unknown | Pause for human decision | ['Within', 'Unknown', 'Within']
+committed=nan            -> Unknown | Pause for human decision | ['Unknown', 'Within', 'Within']
+tol=nan                  -> Unknown | Pause for human decision | ['Within', 'Unknown', 'Within']

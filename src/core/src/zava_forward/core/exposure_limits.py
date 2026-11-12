@@ -11,7 +11,7 @@ from collections.abc import Iterable
 from copy import deepcopy
 from datetime import date
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeGuard
 
 type Record = dict[str, Any]
 
@@ -41,6 +41,11 @@ def _number(value: object, field: str) -> float:
     if value < 0:
         raise LimitsError(f"{field} must not be negative.")
     return float(value)
+
+
+def _finite_observation(value: object) -> TypeGuard[int | float]:
+    # Integers are always finite; isfinite would overflow on very large ones.
+    return type(value) is int or (type(value) is float and math.isfinite(value))
 
 
 def _approval(value: object) -> Record:
@@ -133,11 +138,7 @@ def assess(limits: Record | None, exposure: Record | None, today: date | None = 
     findings: list[Record] = []
     committed = exposure.get("committed")
     envelope = limits["envelope"]
-    if (
-        type(committed) not in (int, float)
-        or committed != committed
-        or exposure.get("currency") != envelope["currency"]
-    ):
+    if not _finite_observation(committed) or exposure.get("currency") != envelope["currency"]:
         findings.append(dict(limit="envelope", state="Unknown"))
     else:
         findings.append(
@@ -153,7 +154,7 @@ def assess(limits: Record | None, exposure: Record | None, today: date | None = 
     observed = observed if isinstance(observed, dict) else {}
     for name, limit in limits["tolerances"].items():
         value = observed.get(name)
-        if type(value) not in (int, float) or value != value:
+        if not _finite_observation(value):
             findings.append(dict(limit=name, state="Unknown"))
             continue
         findings.append(

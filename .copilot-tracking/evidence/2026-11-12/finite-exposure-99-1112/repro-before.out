@@ -1,0 +1,7 @@
+committed=-inf,tol ok    -> Within limits | No pause signal | ['Within', 'Within', 'Within']
+committed ok,tol=-inf    -> Within limits | No pause signal | ['Within', 'Within', 'Within']
+all -inf                 -> Within limits | No pause signal | ['Within', 'Within', 'Within']
+committed=+inf           -> Breach | Pause for human decision | ['Breach', 'Within', 'Within']
+tol=+inf                 -> Breach | Pause for human decision | ['Within', 'Breach', 'Within']
+committed=nan            -> Unknown | Pause for human decision | ['Unknown', 'Within', 'Within']
+tol=nan                  -> Unknown | Pause for human decision | ['Within', 'Unknown', 'Within']
