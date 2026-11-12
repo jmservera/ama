@@ -11558,3 +11558,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * Appended a draft, local-only checkpoint to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#demo-wave-integrated-main-checkpoint-2026-11-12-refs-440-99-116-80-432-184) for merged PRs 1465, 1466, 1467, 1468, 1469 and 1473 at pin `bbb1d20cc` (`src` equal to fresh `main` `5ee8ac14c`): 281 focused core and API tests, 0 skipped, 0 failures, with retained environment and invocation failures; no defect confirmed; the PR labels in the request did not match the merged content and the 1465 proposal stays draft candidate policy.
 * Evidence class: local observed on constructed synthetic data; no Azure, browser, SQL Server, model or hosted-CI claim, no criterion tick or closure. Recommendation: continue, bounded (proposed, not a decision).
 * Evidence under `.copilot-tracking/` (2026-11-12 demo-wave-checkpoint-440-1112).
+
+## [2026-11-12] update | Demo wave checkpoint accuracy follow-up (Refs #440)
+
+* Corrected two statements in the 2026-11-12 demo wave section of the [cutover evidence pack](../architecture/cutover-evidence-pack.md#demo-wave-integrated-main-checkpoint-2026-11-12-refs-440-99-116-80-432-184): the 1467 row no longer implies huge integers become Unknown (NaN and infinite observations do; huge integers are assessed normally), and the agents namespace `None` preflight is qualified by a later same-environment import trace with hashes. No source, test, requirement or ADR change, no rerun, no new correction pool.
+* Tested pin stays `bbb1d20cc` (source-equal `5ee8ac14c`); later main `088e8c3` is outside the tested wave. Evidence under `.copilot-tracking/` (2026-11-12 demo-wave-checkpoint-440-1112-accuracy).
