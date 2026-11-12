@@ -11552,3 +11552,9 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 * The ids come from a local read-only replay of the committed generator simulation (seed 20260901, as-of 2026-10-13; 980 cases and 443 open reproduced) chosen by a stated mechanical rule. No private data was read. Not deployed acceptance; sensor existence, open state and effective AI scope need preflight. The link origin is the host documented from a 2026-10-31 observation; availability is not claimed.
 * Evidence class: documentation only; no source, test, infrastructure, guard, permission or issue change, no Azure, model, SQL or spend action, no approval or criterion tick.
 * Evidence under `.copilot-tracking/` (2026-11-12 five-home-script-134-1112).
+
+## [2026-11-12] update | Demo wave integrated-main checkpoint (Refs #440)
+
+* Appended a draft, local-only checkpoint to the [cutover evidence pack](../architecture/cutover-evidence-pack.md#demo-wave-integrated-main-checkpoint-2026-11-12-refs-440-99-116-80-432-184) for merged PRs 1465, 1466, 1467, 1468, 1469 and 1473 at pin `bbb1d20cc` (`src` equal to fresh `main` `5ee8ac14c`): 281 focused core and API tests, 0 skipped, 0 failures, with retained environment and invocation failures; no defect confirmed; the PR labels in the request did not match the merged content and the 1465 proposal stays draft candidate policy.
+* Evidence class: local observed on constructed synthetic data; no Azure, browser, SQL Server, model or hosted-CI claim, no criterion tick or closure. Recommendation: continue, bounded (proposed, not a decision).
+* Evidence under `.copilot-tracking/` (2026-11-12 demo-wave-checkpoint-440-1112).
