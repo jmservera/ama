@@ -27,3 +27,7 @@ No material finding remains open inside this task; no second Review or correctio
 ## Correction 1 bounded closure (2026-11-12, added; original outcome above preserved)
 
 Original adverse observation: T12 mislabelled the page 44 source (independent coordinator finding). Closure check, performed once and limited to that finding: page 44 visible and notes cite only E06, E07, E13; the corrected row matches. No new finding. Not re-run: a broad review. The correction commit is verified against the current main base only for qualification; no rebase was made.
+
+## Correction 2 bounded closure (2026-11-12; earlier outcomes preserved)
+
+Findings closed: N1 (T14) and the related T13 label, checked once against pages 54 and 55 (visible and notes). No broad re-review; R4 remains open and N2 stands.

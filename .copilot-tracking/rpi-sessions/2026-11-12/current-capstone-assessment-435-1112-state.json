@@ -39,12 +39,17 @@
       "decision": "Correction 1 of this assessment only: T12 label E05 corrected to E06/E07/E13; original 9dd2c2427e46 preserved; old campaign counters unchanged",
       "status": "coordinator-directed",
       "evidence": "changes and review addenda"
+    },
+    {
+      "decision": "Correction 2: T14 (and related T13) evidence labels corrected; correction 1 and originals preserved; no renewal",
+      "status": "coordinator-directed",
+      "evidence": "changes and review addenda"
     }
   ],
   "blockers": [],
   "next_action": {
     "phase": "Follow-up",
-    "action": "Independent coordinator assessment of the correction commit; no push or PR made"
+    "action": "Independent coordinator review of correction 2 head; no push or PR"
   },
   "prioritized_follow_ups": [
     {

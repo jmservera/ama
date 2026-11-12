@@ -88,8 +88,8 @@ Inventory method: a case-insensitive scan for token, USD, price, cost, saving, p
 | T10 | 45 notes | Same USD 700, USD 535.33 and USD 450/month guardrails | Source lines for E11 and cost options | Same as T9 | Notes state not a production price or current bill |
 | T11 | 35, 39, 49 | 6,884 tokens is not a price, quality result or denominator; token allowances are not currency caps; no accepted-outcome saving claim | E19 | Negation of a claim | Supported |
 | T12 | 44 | Finite allowance; budget alerts warn, hard stops designed | E06, E07, E13 (page 44 visible source line and notes; no E05 is cited there) | Designed control, not live | Wording differs from pages 22 and 55 (F3) |
-| T13 | 54 | Cache or cheapest model; cheaper tokens do not imply cheaper accepted outcome | Unlabelled in extracted text | Method reasoning | Not a measured claim |
-| T14 | 55 | Bounded one-call chat; money, call and depth bounds source-coded; live activation, billing reconciliation and per-journey cost unproved | E05 | Source-coded control, not live | Supported |
+| T13 | 54 | Cache or cheapest model; cheaper tokens do not imply cheaper accepted outcome | E19, E04, E09 (page 54 source line; none in notes) | Method reasoning | Not a measured claim |
+| T14 | 55 | Bounded one-call chat; money, call and depth bounds source-coded; live activation, billing reconciliation and per-journey cost unproved | No E-code on page 55; source line names the API bounded-skills and core consumption guides (8 Nov 2026) | Source-coded control, not live | Supported as a source-contract statement; not an E05 requirement citation |
 | T15 | 36, 48, 17, 32, 25 | "No saving established", "not a proven saving", full-cost comparison to be made | Various | Negation or method | No saving, payback or price figure asserted |
 | T16 | 1, 18-20, 27 | No spending authority is granted; no deployment or spending authorised | none required | Boundary statement | Supported |
 

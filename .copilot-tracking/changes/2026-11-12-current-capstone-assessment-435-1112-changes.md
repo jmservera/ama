@@ -27,3 +27,9 @@ task_id: current-capstone-assessment-435-1112
 
 * Defect introduced by this assessment: register row T12 attributed page 44 (B16) to E05. The delivered PPTX shows `Sources: E06 · E07 · E13` on the slide and only E06, E07 and E13 in its notes (page identified by B16 content; E-codes read with standard-library XML extraction). Row T12 now cites E06, E07, E13 and notes that E05 is not cited there; class "Designed control, not live". Row T4 (page 22, E05) and finding F3 are unchanged.
 * Validation: only the assessment file differs in the working tree; protected deck, PDF, manifest, builder and notes hashes unchanged; guide coverage rows unchanged; no link added.
+
+## Correction 2 (after d65c72cc0ab9)
+
+* N1 from the independent assessment: T14 cited E05; page 55 visible text and notes carry no E-code. Row now cites the source line (API bounded-skills and core consumption guides) and class "source-contract statement, not an E05 citation".
+* Same defect class, found while verifying: T13 (page 54) said unlabelled; the source line cites E19, E04, E09. Corrected. No other row re-audited (no broad audit).
+* Validation: only the assessment file differs among protected/docs paths; PPTX and other protected hashes unchanged; no link added.

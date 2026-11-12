@@ -38,3 +38,7 @@ Focused documentation tier (docs-only, non-gate). Local checks: link review, ASC
 ## Correction 1 (prospective amendment, 2026-11-12)
 
 Scope: correct only the T12 evidence-label citation in the assessment (page 44 cites E06, E07 and E13 in its visible source line and notes; E05 was wrong). Authority: the initial scoped task and its normal correction allowance, per coordinator classification; the original task carried no spent correction budget and the old deck and source campaign counters are untouched. Original commit `9dd2c2427e46`, critique and Review outcomes are preserved unchanged. Closure check: one bounded re-read of page 44 and a diff scope check. No deck, source, price, claim or placement change.
+
+## Correction 2 (prospective amendment, 2026-11-12)
+
+Scope: initial task's normal correction allowance (correction 1 spent on T12; no renewal). Correct register labels T14 (page 55 carries no E-code; source line names API bounded-skills and core consumption guides) and, as the same defect class in one batch, T13 (page 54 source line carries E19, E04, E09, not "unlabelled"). Original commits, critique, Review, T12 correction and R4 preserved. Closure: targeted re-read of pages 54 and 55 only.
