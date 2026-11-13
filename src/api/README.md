@@ -5216,6 +5216,8 @@ with pinned axe 4.10.3: 21 states, zero violations, zero incompletes. This close
 the automated contrast gap only; manual screen-reader and keyboard assessment by
 role is still unperformed, so the WCAG criterion stays unmet.
 
+Update 2026-11-12 (#215): the harness now also checks by keyboard that "Refresh alerts" returns focus to itself after a successful, failed or law-store-unavailable refresh, and that focus is not pulled back when the person has moved elsewhere. This is an engineering check, not WCAG conformance or staff comprehension evidence.
+
 The `src-api` job in [source CI](../../.github/workflows/src-ci.yml) now runs
 this UX regression check next to `checks.design_system_browser_check`, using
 the same installed Chromium and an absolute API/core/agents test path.

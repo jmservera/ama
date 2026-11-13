@@ -280,12 +280,25 @@ function regulatoryAlertsPanel(caseId) {
   };
   const refresh = h("button", { type: "button", class: "alt", onclick: load }, "Refresh alerts");
   async function load() {
+    // Disabling a focused button drops focus to the page; give it back only if nobody took it.
+    const held = document.activeElement === refresh;
+    let moved = false;
+    const claim = (event) => { if (event.target !== refresh) moved = true; };
+    document.addEventListener("focusin", claim, true);
+    document.addEventListener("pointerdown", claim, true);
     refresh.disabled = true;
+    try { await showAlerts(); } finally {
+      refresh.disabled = false;
+      document.removeEventListener("focusin", claim, true);
+      document.removeEventListener("pointerdown", claim, true);
+      if (held && !moved && document.activeElement === document.body) refresh.focus();
+    }
+  }
+  async function showAlerts() {
     status.textContent = "Loading role-scoped alerts. Coverage is unknown.";
     if (me.services?.law_alerts === false) {
       list.replaceChildren();
       status.textContent = "Alert coverage unknown: the law store is not loaded, so no rule checks have run. Use the existing human emergency or hazard service; do not wait for checks.";
-      refresh.disabled = false;
       return;
     }
     try {
@@ -310,7 +323,7 @@ function regulatoryAlertsPanel(caseId) {
     } catch (e) {
       list.replaceChildren();
       status.textContent = `Alert coverage unknown: ${e.message} Use the existing human emergency or hazard service; do not wait for checks.`;
-    } finally { refresh.disabled = false; }
+    }
   }
   root.append(h("h2", { id: "regulatory-alerts-title" }, "Regulatory alerts for this home"),
     h("p", { class: "notice" }, "Possible emergency or hazard? Use the existing human emergency or hazard service now. Do not wait for alerts, chat or this application. No resident message is sent."),
