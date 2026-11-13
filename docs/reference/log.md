@@ -11748,3 +11748,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Audit only, no tick or closure. The cut-over audit test passes (9 tests) and the inventory has no unclassified row. A relative-link scan of tracked Markdown found broken targets under `docs/reference/` only in earlier, immutable entries of this log; none in the index, research, regulatory, method or resources files.
 * Criteria 1 and 2 stay pending owner review. Criterion 3 is unproven: the last Source projects CI run on `main` is a green manual dispatch of 2026-11-08, the workflow is path-filtered with no run on the current head, no deployment workflow run exists on `main`, and the `ca-cutover-test-demo-api` status could not be read (Azure authorization denied). Not a failure, not a pass.
+## [2026-11-13] update | Case safety panel usability (Closes #1530)
+
+* Added a safety issue card row to the component inventory in [design-system.md](research/ux/design-system.md) for the reworked case safety panel: labelled per-action forms, hints, a next-step callout and compact key facts.
+* No backend rule changed. Browser, screen-reader and housing-officer comprehension checks remain unperformed.
