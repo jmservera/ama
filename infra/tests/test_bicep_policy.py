@@ -1466,9 +1466,11 @@ class BicepPolicyTests(unittest.TestCase):
                     for key in identity["userAssignedIdentities"]
                 ]
                 role = item["properties"]["template"]["containers"][0]["name"]
-                expected_role = {"auth-renewal": "token-maintenance", "ledger-verify": "api", "ranking-publish": "api"}.get(
-                    role, role
-                )
+                expected_role = {
+                    "auth-renewal": "token-maintenance",
+                    "ledger-verify": "api",
+                    "ranking-publish": "api",
+                }.get(role, role)
                 self.assertEqual(keys, ["existing-" + expected_role])
 
     def test_demo_names_fit_platform_bounds_and_ledger_alerts_match(self) -> None:

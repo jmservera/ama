@@ -160,6 +160,38 @@ class ScheduledPublicationTests(JobBase):
         self.assertIn("RANKING_PUBLISH_ALERT", self.text())
         self.assertEqual(self.fake.blobs, {})
 
+    def test_sql_backed_store_selected_by_zf_store_publishes_open_cases(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            data = Path(tmp) / "zavaforward.json"
+            data.write_text(
+                json.dumps(
+                    {
+                        "as_of": DAY1,
+                        "staff": [],
+                        "cases": [case("ZF-A", 3, False), case("ZF-C", 9, True)],
+                    }
+                )
+            )
+            env = {
+                **SELECTOR_ENV,
+                "ZF_STORE": "sqlite",
+                "ZF_DATA": str(data),
+                "ZF_STATE": tmp,
+                "ZF_AS_OF": DAY1,
+            }
+            code = job.main(
+                ["--today", DAY1],
+                env=env,
+                archive=self.archive,
+                registry=signed_registry(),
+                out=self.lines.append,
+            )
+        self.assertEqual(code, 0)
+        self.assertIn("RANKING_PUBLISH_OK status=published", self.text())
+        (name,) = self.fake.blobs
+        record = json.loads(self.fake.blobs[name])
+        self.assertEqual([e["id"] for e in record["snapshot"]["entries"]], ["ZF-A"])
+
     def test_published_record_verifies_against_the_signed_registry(self) -> None:
         reg = signed_registry()
         self.go(registry=reg)
