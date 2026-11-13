@@ -247,6 +247,56 @@ class ConsumptionApi(unittest.TestCase):
         self.assertEqual(completed["tokens"]["cached_tokens"], 10)
         self.assertEqual(completed["tokens"], envelope["usage"])
 
+    def call_join(
+        self,
+        meter_id: str,
+        *,
+        capability: str,
+        outcome: str,
+        tokens: dict[str, int] | None,
+        held: bool,
+        eligible: bool,
+        output: str | None,
+        configuration: str,
+        prompt: str,
+        root: str,
+        attempt: str,
+        retry: int = 0,
+    ) -> dict[str, Any]:
+        """Assert one call joins to every Criterion 6 field and returns its reserved row.
+
+        The call binds to its reserved row (root, attempt, configuration, prompt, model, case
+        type, retry) and to its settlement by meter id. A successful or revoked call also joins
+        to exactly one output under its root; a failed or fenced call has no output yet.
+        """
+        records = self.records()
+        (reserved,) = [r for r in records if r["kind"] == "reserved" and r["id"] == meter_id]
+        (completed,) = [r for r in records if r["kind"] == "completed" and r["id"] == meter_id]
+        outputs = [r for r in records if r["kind"] == "output" and r["root"] == root]
+        self.assertEqual(
+            [reserved[k] for k in ("capability", "case_type", "model", "retry")],
+            [capability, "retrofit-case", "test-model", retry],
+        )
+        self.assertEqual(
+            [reserved[k] for k in ("root", "attempt", "configuration", "prompt")],
+            [root, attempt, configuration, prompt],
+        )
+        self.assertEqual(
+            [completed["tokens"], completed["outcome"], completed["held"]],
+            [tokens, outcome, held],
+        )
+        if output is None:
+            self.assertEqual(outputs, [])
+        else:
+            (joined,) = outputs
+            self.assertEqual([joined["output"], joined["eligible"]], [output, eligible])
+        return reserved
+
+    def assert_content_free(self, *canaries: str) -> None:
+        serialized = json.dumps(self.records())
+        for canary in canaries:
+            self.assertNotIn(canary, serialized)
+
     def test_assistant_thread_preserves_usage_metadata_and_review_join(self) -> None:
         self.authority("assessment-preparation")
         task = self.fixture.run_ready("assessment-preparation")
@@ -261,6 +311,25 @@ class ConsumptionApi(unittest.TestCase):
             self.inner.configuration("standard", 0, 600),
             reference(runtime_binding("assessment-preparation", self.provider)["prompt_version"]),
         )
+        self.call_join(
+            envelope["meter_id"],
+            capability="assessment-preparation",
+            outcome="returned",
+            tokens=dict(
+                prompt_tokens=100, completion_tokens=20, total_tokens=120, cached_tokens=10
+            ),
+            held=False,
+            eligible=True,
+            output=reference(task["id"]),
+            configuration=self.inner.configuration("standard", 0, 600),
+            prompt=reference(
+                runtime_binding("assessment-preparation", self.provider)["prompt_version"]
+            ),
+            root=reference(task["id"]),
+            attempt=reference(f"{task['id']}:{task['fence']}"),
+            retry=task["attempts"] - 1,
+        )
+        self.assertEqual(task["attempts"], 1)
         before = self.fixture.domain()
         verified = self.fixture.verify(task)
         accepted = self.service.review(
@@ -489,8 +558,9 @@ class ConsumptionApi(unittest.TestCase):
         self.assertEqual([r["id"] for r in reserved], [envelope["meter_id"]])
         self.assertEqual(reserved[0]["root"], envelope["meter_root"])
         self.assertEqual(len(completed), 1)
-        self.assertNotIn("Constructed legacy input", json.dumps(records))
-        self.assertNotIn("Check supplied facts", json.dumps(records))
+        self.assert_content_free(
+            "Constructed legacy system", "Constructed legacy input", "Check supplied facts"
+        )
         return dict(completed=completed[0], output=[r for r in records if r["kind"] == "output"])
 
     def test_legacy_draft_joins_returned_usage_to_ledger_and_output(self) -> None:
@@ -505,6 +575,21 @@ class ConsumptionApi(unittest.TestCase):
         self.assertEqual(len(ledger["output"]), 1)
         self.assertEqual(ledger["output"][0]["output"], reference(result["record_id"]))
         self.assertTrue(ledger["output"][0]["eligible"])
+        root = result["envelope"]["meter_root"]
+        self.assertRegex(root, r"^[0-9a-f]{64}$")
+        self.call_join(
+            result["envelope"]["meter_id"],
+            capability="briefing",
+            outcome="returned",
+            tokens=result["envelope"]["usage"],
+            held=False,
+            eligible=True,
+            output=reference(result["record_id"]),
+            configuration=self.inner.configuration("standard", 0.3, 700),
+            prompt=reference(ai_prompts.version("briefing")),
+            root=root,
+            attempt=root,
+        )
         self.assertEqual(len(self.requests), 1)
 
     def test_legacy_draft_missing_or_malformed_usage_is_unknown(self) -> None:
@@ -909,9 +994,15 @@ class ConsumptionApi(unittest.TestCase):
         for mode in ("returned", "revoked", "provider-failure"):
             with self.subTest(mode=mode):
                 admission = [None, "revoked"] if mode == "revoked" else [None, None]
-                with patch.object(
-                    self.inner, "_token", return_value="constructed-not-a-credential"
-                ):
+                contexts: list[Any] = []
+
+                def token(contexts: list[Any] = contexts) -> str:
+                    from zava_forward.core.ai_consumption import CURRENT
+
+                    contexts.append(CURRENT.get())
+                    return "constructed-not-a-credential"
+
+                with patch.object(self.inner, "_token", side_effect=token):
                     model = ChatModel(
                         worker, admission=lambda admission=admission: admission.pop(0)
                     )
@@ -988,6 +1079,29 @@ class ConsumptionApi(unittest.TestCase):
                         self.assertIsNone(receipt["tokens"])
                         self.assertEqual(report["unknown_liabilities"], 1)
                         self.assertEqual(report["coverage"], "incomplete")
+                last = self.store.chat_resume(self.pm, thread["id"])["messages"][-1]
+                failed = mode == "provider-failure"
+                self.call_join(
+                    latest["id"],
+                    capability=TASK,
+                    outcome="provider-unavailable" if failed else "returned",
+                    tokens=None
+                    if failed
+                    else dict(
+                        prompt_tokens=100, completion_tokens=20, total_tokens=120, cached_tokens=10
+                    ),
+                    held=failed,
+                    eligible=False,
+                    output=reference(f"chat:{thread['id']}:{last['seq']}"),
+                    configuration=self.inner.configuration("standard", 0, 600),
+                    prompt=reference(SYSTEM),
+                    root=contexts[0].root,
+                    attempt=contexts[0].root,
+                )
+                self.assertEqual(contexts[0].attempt, contexts[0].root)
+                self.assertRegex(contexts[0].root, r"^[0-9a-f]{64}$")
+                self.assertEqual(report["failures"], report_before["failures"] + failed)
+                self.assert_content_free("Tell me a story.", "Check the case stage.")
         self.assertEqual(before[:3], self.fixture.domain()[:3])
 
     def test_actual_worker_thread_settlement_survives_failure_revocation_and_fence(self) -> None:
@@ -1004,7 +1118,7 @@ class ConsumptionApi(unittest.TestCase):
                 message = TaskMessage.from_json(
                     TaskMessage.from_task(task, self.service.limits).to_json()
                 )
-                system, _ = build_request(task)
+                system, user_prompt = build_request(task)
                 self.response_status = 500 if mode == "provider-failure" else 200
                 calls = len(self.requests)
                 observed: list[tuple[str, Any]] = []
@@ -1097,14 +1211,95 @@ class ConsumptionApi(unittest.TestCase):
                     self.assertGreater(report["unjoined_outputs"], 0)
                     self.assertEqual(report["coverage"], "incomplete")
                     self.assertEqual(report["cost_per_accepted_proposal"], "Unknown")
-                self.assertTrue(
-                    any(
-                        r["kind"] == "completed" and r["id"] == latest["id"] for r in self.records()
-                    )
+                failed = mode == "provider-failure"
+                self.assertEqual(task["fence"], 1)
+                self.call_join(
+                    latest["id"],
+                    capability="assessment-preparation",
+                    outcome="provider-unavailable" if failed else "returned",
+                    tokens=None
+                    if failed
+                    else dict(
+                        prompt_tokens=100, completion_tokens=20, total_tokens=120, cached_tokens=10
+                    ),
+                    held=failed,
+                    eligible=mode == "returned",
+                    output=reference(task["id"]) if mode in ("returned", "revoked") else None,
+                    configuration=self.inner.configuration("standard", 0, 600),
+                    prompt=reference(
+                        canonical(
+                            [system, REGISTRY[task["capability"]]["purpose"], task["version"]]
+                        )
+                    ),
+                    root=reference(task["id"]),
+                    attempt=reference(f"{task['id']}:{task['fence']}"),
+                    retry=task["fence"] - 1,
                 )
+                self.assertIn("Constructed " + mode, user_prompt)
+                self.assert_content_free(system, user_prompt, "Constructed " + mode)
                 self.assertEqual(report["accepted_proposals"], 0)
-                if mode == "provider-failure":
+                if failed:
                     self.assertEqual(report["unknown_liabilities"], 1)
+
+    def test_worker_retry_joins_every_attempt_to_one_root_and_its_output(self) -> None:
+        self.authority("assessment-preparation")
+        worker = AgentWorker(foundry_provider(self.inner))
+        self.fixture.case(lambda c: c["home"].update(address="Constructed retry"))
+        before = self.service.consumption.report(start=START, end=END, as_of=END)
+        invoked = self.service.invoke(self.pm, "assessment-preparation", "ZF-1")
+        results = []
+        for fence in (1, 2):
+            task = self.service.claim(invoked["id"], f"constructed-worker-{fence}")
+            self.assertIsNotNone(task)
+            self.assertEqual([task["fence"], task["attempts"]], [fence, fence])
+            message = TaskMessage.from_json(
+                TaskMessage.from_task(task, self.service.limits).to_json()
+            )
+            system, user_prompt = build_request(task)
+            with patch.object(self.inner, "_token", return_value="constructed-not-a-credential"):
+                result = worker.handle(message, self.service.limits)
+            assert result is not None
+            result = ResultMessage.from_json(result.to_json())
+            results.append((task, system, user_prompt, result))
+            if fence == 1:
+                self.assertEqual(
+                    [r for r in self.records() if r["kind"] == "output"],
+                    [],
+                )
+                self.fixture.expire(task["id"])
+            else:
+                self.assertTrue(
+                    self.service.complete(task, result.envelope, result.output, result.failure)
+                )
+        root = reference(invoked["id"])
+        attempts = [reference(f"{invoked['id']}:{fence}") for fence in (1, 2)]
+        self.assertNotEqual(*attempts)
+        for retry, (task, system, user_prompt, result) in enumerate(results):
+            self.call_join(
+                result.envelope["meter_id"],
+                capability="assessment-preparation",
+                outcome="returned",
+                tokens=dict(
+                    prompt_tokens=100, completion_tokens=20, total_tokens=120, cached_tokens=10
+                ),
+                held=False,
+                eligible=True,
+                output=reference(invoked["id"]),
+                configuration=self.inner.configuration("standard", 0, 600),
+                prompt=reference(
+                    canonical([system, REGISTRY[task["capability"]]["purpose"], task["version"]])
+                ),
+                root=root,
+                attempt=attempts[retry],
+                retry=retry,
+            )
+            self.assertIn("Constructed retry", user_prompt)
+            self.assert_content_free(system, user_prompt, "Constructed retry")
+        self.assertEqual(len({r[3].envelope["meter_id"] for r in results}), 2)
+        report = self.service.consumption.report(start=START, end=END, as_of=END)
+        self.assertEqual(report["calls"], before["calls"] + 2)
+        self.assertEqual(report["retries"], before["retries"] + 1)
+        self.assertEqual(report["unjoined_outputs"], before["unjoined_outputs"])
 
     def test_document_calls_preserve_shared_call_and_depth_limits(self) -> None:
         self.authority(
