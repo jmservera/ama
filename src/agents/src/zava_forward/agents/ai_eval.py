@@ -88,14 +88,82 @@ def _own_labels(case):
     return {" ".join(x.split()).casefold() for x in ai_tasks.source_labels(case, True)}
 
 
-def run_scenario(sc, workdir):
-    """Returns (failures, measures)."""
+def run_scenario(sc, workdir, observed=None):
+    """Returns (failures, measures). observed, when given, collects the dispatch and final-outcome records."""
     fails, measures = [], {}
     try:
-        _run(sc, workdir, fails, measures)
+        _run(sc, workdir, fails, measures, observed)
     except Exception as e:  # an unexpected error is itself a failed check
         fails.append(f"unexpected {type(e).__name__}: {e}")
     return fails, measures
+
+
+# Per-task coverage statuses. They describe what this offline harness exercised with a scripted provider (dispatch
+# plus control checks), never held-out semantic accuracy or live-model behaviour.
+EXERCISED = "exercised offline (scripted provider; dispatch and control checks only)"
+FALLBACK_ONLY = "template fallback only (no accepted scripted model output)"
+NOT_EVALUATED = "not evaluated by this harness"
+COVERAGE_NOTE = ("Offline dispatch and control checks with a scripted provider only; not held-out semantic accuracy, "
+                 "not a live model, not human review. The five assistants dispatch through the core assistant planner, "
+                 "not Ai.run or Ai.look_at, so this harness does not evaluate them; chat and the concern pack are likewise not evaluated here.")
+
+
+def observe(store, observed):
+    """Record each Ai.run and Ai.look_at call: the task it returned and whether the scripted model was reached.
+
+    The spy sees only those two retained-path entry points; it cannot see the assistant planner.
+    """
+    if observed is None:
+        return
+    ai = store.ai
+
+    def traced(real, via):
+        def call(*args, **kwargs):
+            reached = []
+            chat = ai._chat
+            ai._chat = lambda *a, **k: reached.append(1) or chat(*a, **k)
+            try:
+                result = real(*args, **kwargs)
+            finally:
+                ai._chat = chat
+            task = args[0] if via == "run" and args else (result.get("task") or "read_document")
+            observed.append(dict(kind="dispatch", task=task, via=via, source=result.get("source"), model_called=bool(reached)))
+            return result
+        return call
+    ai.run = traced(ai.run, "run")
+    ai.look_at = traced(ai.look_at, "look_at")
+
+
+def _final(observed, task, view):
+    """Record the outcome a person would see, so a late quarantine or hold cannot count as coverage."""
+    if observed is not None:
+        observed.append(dict(kind="final", task=task, source=view.get("source"), mode=view.get("mode"),
+                             status=view.get("approval") or view.get("status"),
+                             held=bool(view.get("financial_attribution"))))
+
+
+def _eligible(f):
+    return f["source"] == "ai" and f["mode"] == "ai" and f["status"] not in ("Quarantined", "Hold") and not f["held"]
+
+
+def task_coverage(observed):
+    """Per-task record derived from ai_registry.tasks(), so a registered task cannot be left out unstated."""
+    observed = observed or []
+    registry = ai_registry.tasks()
+    retained = {k for k, v in registry.items() if v["kind"] == "retained-path"}
+    tasks = {}
+    for task_id, entry in registry.items():
+        seen = [o for o in observed if o["task"] == task_id] if task_id in retained else []
+        ran = any(o["kind"] == "dispatch" and o["model_called"] for o in seen)
+        shown = any(o["kind"] == "final" and _eligible(o) for o in seen)
+        status = EXERCISED if ran and shown else FALLBACK_ONLY if seen else NOT_EVALUATED
+        tasks[task_id] = dict(kind=entry["kind"], status=status,
+                              dispatches=sum(o["kind"] == "dispatch" for o in seen),
+                              model_calls=sum(o["kind"] == "dispatch" and o["model_called"] for o in seen))
+    return dict(
+        tasks=tasks, note=COVERAGE_NOTE, namespace_errors=sorted({o["task"] for o in observed} - retained),
+        failures=[f"{t}: {tasks[t]['status']}" for t in sorted(retained) if tasks[t]["status"] != EXERCISED],
+        counts={s: sum(r["status"] == s for r in tasks.values()) for s in (EXERCISED, FALLBACK_ONLY, NOT_EVALUATED)})
 
 
 def _scripted(store, outputs):
@@ -113,12 +181,13 @@ def _scripted(store, outputs):
     store.ai._chat = lambda *a, **k: outputs[next(seq) % len(outputs)]
 
 
-def _run(sc, workdir, fails, measures):
+def _run(sc, workdir, fails, measures, observed=None):
     data = dict(staff=[OWNER, OTHER], cases=[build_case(c) for c in sc["cases"]])
     p = Path(workdir) / "eval.json"
     p.write_text(json.dumps(data))
     store = Store(str(p), os.path.join(workdir, "live.json"), os.path.join(workdir, "audit.jsonl"))
     outs = sc.get("model_outputs") or ([sc["model_output"]] if sc.get("model_output") is not None else None)
+    observe(store, observed)
     _scripted(store, outs)
     rank0, state0 = _ranking(store), _state(store)
     ids = {c["id"] for c in sc["cases"]}
@@ -133,6 +202,7 @@ def _run(sc, workdir, fails, measures):
     for _ in range(sc.get("runs", len(outs) if outs and sc.get("model_outputs") else 1)):
         t0 = time.perf_counter()
         rec = store.ai_priority(OWNER, n)
+        _final(observed, "priority", rec)
         latencies.append(round((time.perf_counter() - t0) * 1000, 2))
         recs.append(rec)
         runs.append([i["case_id"] for i in rec["items"]])
@@ -232,8 +302,13 @@ def _run(sc, workdir, fails, measures):
 TASK_CASE = dict(id="T-1", days=12, hazard=True, support=True)
 
 
-def run_task_checks(workdir):
-    """Citation, Unverified and workflow-only checks for the text tasks (catch-me-up, message, briefing, funding)."""
+def run_task_checks(workdir, observed=None):
+    """Citation, Unverified, workflow-only, comparison-record and review checks, scripted provider only.
+
+    Covers catch-me-up (summary), message and briefing here, and funding draft and document reading in their own
+    isolated stores. It does not cover priority (the golden scenarios do), the five assistants, chat or the concern
+    pack. It proves control behaviour on constructed input, not held-out semantic accuracy.
+    """
     fails = []
 
     def check(ok, what):
@@ -244,6 +319,7 @@ def run_task_checks(workdir):
         p = Path(workdir) / "eval.json"
         p.write_text(json.dumps(data))
         store = Store(str(p), os.path.join(workdir, "live.json"), os.path.join(workdir, "audit.jsonl"))
+        observe(store, observed)
         state0, rank0 = _state(store), _ranking(store)
         _scripted(store, [""])
         script = {}
@@ -253,6 +329,7 @@ def run_task_checks(workdir):
         r = store.ai_run(OWNER, "T-1", "summary")
         check(r["source"] == "ai" and r["verified"] and r["approval"] == "Not reviewed", "a cited summary is verified and not yet reviewed")
         check("[[" not in r["text"] and len(r["citations"]) == 2, "citation markers are removed and listed")
+        _final(observed, "summary", r)
         script["out"] = "- Stage is Survey booked [[Stage: Survey booked]]\n- Open safety issue [[Open safety issues: 1]]"
         r2 = store.ai_run(OWNER, "T-1", "summary")
         check(r2["dropped_uncited"] == 1 and "Survey booked" not in r2["text"], "a bullet citing a fact the case does not have is dropped")
@@ -267,14 +344,25 @@ def run_task_checks(workdir):
         check(r5["source"] == "template" and r5["mode"] == "workflow-only" and r5["verified"], "workflow-only returns the verified template")
         for x in (r, r2, r3, r4, r5):
             check(x["record_id"] and x["prompt_version"], "every output points to its comparison record")
+        r6 = store.ai_run(OWNER, "T-1", "message")
+        check(r6["source"] == "ai" and r6["verified"] and r6["mode"] == "ai" and r6["citations"] == ["Stage: Contacting resident"],
+              "a cited message draft is verified, shown as the model's and not yet reviewed")
+        _final(observed, "message", r6)
         recs = {x["id"]: x for x in store.data["recommendations"] if x.get("kind") == "ai_task"}
         rec5 = recs[r5["record_id"]]
         check(rec5["ai_output"] is None and rec5["workflow_output"] and rec5["fallback_reason"] == "workflow-only mode selected",
               "comparison record keeps the workflow-only output and the reason")
         check(recs[r3["record_id"]]["ai_output"] and recs[r3["record_id"]]["workflow_output"] and not recs[r3["record_id"]]["verified"],
               "comparison record keeps both outputs")
+        script["out"] = "Briefing: ticket T-1 needs a visit today [[T-1: Stage: Contacting resident]]"
         b = store.briefing(OWNER)
-        check(b["verified"] and b["citations"], "briefing carries citations")
+        rec_of = lambda x: next((y for y in store.data["recommendations"] if y["id"] == x["record_id"]), {})
+        check(b["source"] == "ai" and b["mode"] == "ai" and b["verified"] and "needs a visit today" in b["text"]
+              and b["citations"] == ["T-1: Stage: Contacting resident"] and rec_of(b).get("ai_output"),
+              "briefing shows the cited model answer and keeps it in its comparison record")
+        _final(observed, "briefing", b)
+        bw = store.briefing(OWNER, mode="workflow")
+        check(bw["source"] == "template" and bw["mode"] == "workflow-only", "workflow-only briefing is the rules-based summary")
         try:
             store.review_ai(OTHER, r["record_id"], "accept")
             check(False, "another user must not review someone else's AI output")
@@ -291,8 +379,158 @@ def run_task_checks(workdir):
         check(recs[r["record_id"]]["override_text"] == "My version" and recs[r["record_id"]]["reviewer_reason"] == "tone", "override and reason recorded")
         check(_state(store) == state0 and _ranking(store) == rank0, "text tasks must not change cases or ranking")
         check(store.verify_audit(), "audit chain must verify")
+        for name, runner in (("funding", run_funding_checks), ("document", run_document_checks)):
+            with tempfile.TemporaryDirectory(dir=workdir) as sub:
+                fails.extend(runner(sub, observed))
     except Exception as e:
         fails.append(f"unexpected {type(e).__name__}: {e}")
+    return fails
+
+
+PUBLIC_DOCUMENT = dict(
+    name="public-guidance-note.txt", kind="Other",
+    data=b"Constructed public fixture: a short note on loft insulation depth for a mid terrace home. It names no person and holds no private data.",
+    metadata=dict(source="constructed public fixture", source_version="v1", reason="offline harness document"))
+UNREAD_DOCUMENT = dict(name="constructed-register.xlsx", kind="Other", data=b"PK\x03\x04 constructed placeholder",
+                       metadata=dict(source="constructed public fixture", source_version="v1", reason="offline harness document"))
+
+
+def _isolated_store(workdir, observed):
+    """A fresh one-case store with the scripted provider; returns (store, script) where script holds the next answer."""
+    p = Path(workdir) / "eval.json"
+    p.write_text(json.dumps(dict(staff=[OWNER, OTHER], cases=[build_case(TASK_CASE)])))
+    store = Store(str(p), os.path.join(workdir, "live.json"), os.path.join(workdir, "audit.jsonl"))
+    observe(store, observed)
+    _scripted(store, [""])
+    script = dict(out="", calls=0, sent=None)
+
+    def chat(*args, **kwargs):
+        script["calls"] += 1
+        script["sent"] = args
+        return script["out"]
+    store.ai._chat = chat
+    return store, script
+
+
+def _without(store, field):
+    return json.dumps({k: {f: v for f, v in c.items() if f != field} for k, c in store.cases.items()}, sort_keys=True)
+
+
+def _record(store, view):
+    return next((r for r in store.data["recommendations"] if r["id"] == view["record_id"]), {})
+
+
+def run_funding_checks(workdir, observed=None):
+    """Funding draft on constructed input: citation, Unverified, workflow-only, comparison record and review controls.
+
+    The draft is wording for a person; nothing is approved, submitted or decided. Only the funding draft and status change.
+    """
+    fails = []
+
+    def check(ok, what):
+        if not ok:
+            fails.append(f"funding draft: {what}")
+    try:
+        store, script = _isolated_store(workdir, observed)
+        rank0, rest0 = _ranking(store), _without(store, "funding")
+        script["out"] = ("Needs: costs from the contractor [[Address: T-1 Eval Road]] [[Home type: Mid terrace]] "
+                         "[[Built: 1950]]")
+        r = store.funding_draft(OWNER, "T-1")
+        check(r["source"] == "ai" and r["mode"] == "ai" and r["verified"] and r["approval"] == "Not reviewed",
+              "a cited draft is verified, shown as the model's and not yet reviewed")
+        check("[[" not in r["text"] and len(r["citations"]) == 3 and not r["unresolved"], "citation markers are removed and listed")
+        check("nothing is submitted" in r["label"], "the label says nothing is submitted until a person approves and submits it")
+        _final(observed, "funding_draft", r)
+        rec = _record(store, r)
+        check(rec.get("ai_output") and rec.get("workflow_output") and rec.get("task") == "funding_draft",
+              "the comparison record keeps both outputs")
+        funding = store.cases["T-1"]["funding"]
+        check(funding["draft"] == r["text"] and funding["status"] == "Draft ready" and not funding.get("reference"),
+              "the draft is saved as Draft ready and nothing is approved or submitted")
+        script["out"] = "Needs: costs [[Address: 99 Elsewhere Road]]"
+        wrong = store.funding_draft(OWNER, "T-1")
+        check(not wrong["verified"] and wrong["unresolved"] and "Unverified" in wrong["label"],
+              "a citation the case does not have leaves the draft Unverified")
+        script["out"] = "Needs: costs from the contractor"
+        bare = store.funding_draft(OWNER, "T-1")
+        check(not bare["verified"] and "Unverified" in bare["label"], "a draft with no citation is Unverified")
+        script["out"] = "A free-form note with no list of what is needed"
+        refused = store.funding_draft(OWNER, "T-1")
+        check(refused["source"] == "template" and refused["text"].startswith("Funding application draft"),
+              "an answer that fails the draft check falls back to the template")
+        calls = script["calls"]
+        script["out"] = "Needs: costs [[Address: T-1 Eval Road]]"
+        wf = store.funding_draft(OWNER, "T-1", mode="workflow")
+        wrec = _record(store, wf)
+        check(script["calls"] == calls, "workflow-only mode must not call the model")
+        check(wf["source"] == "template" and wf["mode"] == "workflow-only" and wf["verified"],
+              "workflow-only returns the verified template")
+        check(wrec.get("ai_output") is None and wrec.get("workflow_output") and wrec.get("fallback_reason") == "workflow-only mode selected",
+              "the comparison record keeps the workflow-only output and the reason")
+        latest = wf["record_id"]  # an earlier draft is stale once a later draft changes the case's funding facts
+        try:
+            store.review_ai(OTHER, latest, "accept")
+            check(False, "another user must not review someone else's draft")
+        except PermissionError:
+            pass
+        try:
+            store.review_ai(OWNER, latest, "reject", "")
+            check(False, "reject without a reason must be refused")
+        except ValueError:
+            pass
+        store.review_ai(OWNER, latest, "accept")
+        check(_record(store, wf).get("status") == "Accepted", "the owner's answer is recorded")
+        check(store.cases["T-1"]["funding"]["status"] != "Submitted" and not store.cases["T-1"]["funding"].get("reference"),
+              "accepting the review does not submit anything")
+        check(_ranking(store) == rank0 and _without(store, "funding") == rest0, "a funding draft must not change ranking or any other case data")
+        check(store.verify_audit(), "audit chain must verify")
+    except Exception as e:
+        fails.append(f"funding draft: unexpected {type(e).__name__}: {e}")
+    return fails
+
+
+def run_document_checks(workdir, observed=None):
+    """Document reading on a constructed public text fixture: cited note, comparison record, workflow-only and unread types.
+
+    The note is a filing aid; nothing is extracted into the case. Only the stored document summary changes.
+    """
+    fails = []
+
+    def check(ok, what):
+        if not ok:
+            fails.append(f"document reading: {what}")
+    try:
+        store, script = _isolated_store(workdir, observed)
+        doc = store.add_document(OWNER, "T-1", PUBLIC_DOCUMENT["name"], PUBLIC_DOCUMENT["kind"], PUBLIC_DOCUMENT["data"],
+                                 metadata=dict(PUBLIC_DOCUMENT["metadata"]))
+        unread = store.add_document(OWNER, "T-1", UNREAD_DOCUMENT["name"], UNREAD_DOCUMENT["kind"], UNREAD_DOCUMENT["data"],
+                                    metadata=dict(UNREAD_DOCUMENT["metadata"]))
+        rank0, rest0 = _ranking(store), _without(store, "documents")
+        script["out"] = "A constructed public note about loft insulation depth for a mid terrace home."
+        r = store.read_document(OWNER, "T-1", doc["id"])
+        check(r["source"] == "ai" and r["mode"] == "ai" and r["verified"] and r["approval"] == "Not reviewed",
+              "a note on a clean text file is verified, shown as the model's and not yet reviewed")
+        check(r["citations"] == [f"Document: {doc['name']}"], "the note cites the document it describes")
+        check(script["sent"] and PUBLIC_DOCUMENT["data"].decode() in script["sent"][2],
+              "the scripted model received the constructed document text")
+        _final(observed, "read_document", r)
+        rec = _record(store, r)
+        check(rec.get("ai_output") and rec.get("workflow_output") and rec.get("task") == "read_document",
+              "the comparison record keeps both outputs")
+        stored = next(d for d in store.cases["T-1"]["documents"] if d["id"] == doc["id"])
+        check(stored["summary"] == r["text"], "the note is stored as the document summary only")
+        calls = script["calls"]
+        wf = store.read_document(OWNER, "T-1", doc["id"], mode="workflow")
+        check(script["calls"] == calls, "workflow-only mode must not call the model")
+        check(wf["source"] == "template" and wf["mode"] == "workflow-only", "workflow-only returns the template note")
+        skipped = store.read_document(OWNER, "T-1", unread["id"])
+        check(script["calls"] == calls and skipped["source"] == "template" and "not read" in skipped["text"],
+              "a file type that is not read stays a template note and never reaches the model")
+        check(_ranking(store) == rank0 and _without(store, "documents") == rest0,
+              "reading a document must not change ranking or any other case data")
+        check(store.verify_audit(), "audit chain must verify")
+    except Exception as e:
+        fails.append(f"document reading: unexpected {type(e).__name__}: {e}")
     return fails
 
 
@@ -345,8 +583,8 @@ OPEN_ITEMS = (
 )
 
 
-def evidence_gate(raw, summary, scripted=True):
-    """Frozen-input hashes and the claims this run may and may not support."""
+def evidence_gate(raw, summary, scripted=True, coverage=None):
+    """Frozen-input hashes, per-task coverage and the claims this run may and may not support."""
     ms = summary["models"]
     live = bool(ms) and not scripted
     return dict(
@@ -356,6 +594,7 @@ def evidence_gate(raw, summary, scripted=True):
         human_effectiveness="not evaluated (no authorised participants)",
         calibration="not applicable (no meaningful scored predictions)",
         benefit_claim="not permitted (no calibrated actual-model or human results)",
+        task_coverage=coverage if coverage is not None else task_coverage([]),
         critical_misses=summary["critical_misses"], open_items=list(OPEN_ITEMS))
 
 
@@ -377,18 +616,21 @@ def run_eval(golden=GOLDEN):
         raw = f.read()
     spec = json.loads(raw.decode("utf-8"))
     results = []
+    observed = []
     for sc in spec["scenarios"]:
         with tempfile.TemporaryDirectory() as tmp:
-            fails, measures = run_scenario(copy.deepcopy(sc), tmp)
+            fails, measures = run_scenario(copy.deepcopy(sc), tmp, observed)
         results.append(dict(name=sc["name"], passed=not fails, failures=fails, measures=measures))
     with tempfile.TemporaryDirectory() as tmp:
-        fails = run_task_checks(tmp)
-    results.append(dict(name="text tasks: citations, Unverified, workflow-only, comparison record, review", passed=not fails,
-                        failures=fails, measures=None))
+        fails = run_task_checks(tmp, observed)
+    results.append(dict(name="text tasks: citations, Unverified, workflow-only, comparison record, review, funding draft, document reading",
+                        passed=not fails, failures=fails, measures=None))
     summary = summarise(results)
+    coverage = task_coverage(observed)
     return dict(version=spec["version"], prompt_version=ai_tasks.PROMPT_VERSION, scenarios=len(results),
-                passed=all(r["passed"] for r in results) and summary["critical_misses"] == 0,
-                results=results, summary=summary, evidence=evidence_gate(raw, summary), cohorts=cohort_report())
+                passed=all(r["passed"] for r in results) and summary["critical_misses"] == 0
+                and not coverage["failures"] and not coverage["namespace_errors"],
+                results=results, summary=summary, evidence=evidence_gate(raw, summary, coverage=coverage), cohorts=cohort_report())
 
 
 def main(argv=None):
@@ -415,6 +657,11 @@ def main(argv=None):
     ev = rep["evidence"]
     print(f"golden sha256 {ev['golden_sha256'][:12]}; actual model: {ev['actual_model_evaluation']}; calibration: {ev['calibration']}")
     print(f"benefit claim: {ev['benefit_claim']}")
+    tc = ev["task_coverage"]
+    print(f"task coverage ({len(tc['tasks'])} registered): " + "; ".join(f"{n} {s.split(' (')[0]}" for s, n in tc["counts"].items()))
+    for task_id, row in tc["tasks"].items():
+        print(f"   {task_id}: {row['status'].split(' (')[0]}")
+    print("task coverage note: " + tc["note"])
     co = rep["cohorts"]
     print(f"cohorts (ranking, synthetic): status {co['status']}, activation allowed {co['activation_allowed']}, fairness evidence {co['fairness_evidence']}; AI-task cohorts {co['ai_task_cohorts']}")
     for o in ev["open_items"]:
