@@ -2,15 +2,15 @@
   "schema_version": 1,
   "rubric_version": 2,
   "source": "workflow",
-  "scored_at": "2026-11-13T17:24:42+00:00",
-  "commit": "31c31b2e1c5bba0ea4ce0dd84829e8fc4a979521",
+  "scored_at": "2026-11-13T17:50:38+00:00",
+  "commit": "3a6362008de236e47820074fe7424104192dc6a9",
   "model": "claude-sonnet-5",
-  "run_url": "https://github.com/jmservera/ama/actions/runs/43470863464",
+  "run_url": "https://github.com/jmservera/ama/actions/runs/43475748594",
   "fingerprints": {
     "brd": "167c32e15ae05f06882ab55a1d65e653b5657715cf5e5cb3c88e4ac257615283",
     "prd": "11fe0160a47c2ee2ac0fbab89e659a3867d928531b08367b03329afbcf02e8d8",
     "adr": "a0004921843db2b041b1e8a0c28a107f22d55d544d06084f2cdaa628ccbcc8e1",
-    "solution-code": "29affcc98f09335de4ef4dbe7c20387a386896c13ad50478f6a66ec1c7b061be",
+    "solution-code": "ef9f7daa00f093fa85a771a7142f1ea383bb91c593acfdafc0bf7482f037dff0",
     "infrastructure": "e664514befe5bce42fb1a4ae7b3fd71fca52c887bec8fd92174a1cd156142c1a",
     "capstone-deck": "8dc040934862a59a6acd2aa52f2b41526206d64a16d4d485b24322a3d8965797",
     "pitch": "3b1ad575bcb303c981844fd6c915f3059a8f06ac5b939af8e64c6687924ae121",
@@ -43,38 +43,39 @@
     "A3": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/runtime.py:88-130"
+        "src/core/src/zava_forward/core/ai_consumption.py:324-350",
+        "src/core/tests/test_assistants_identity.py:1-127"
       ],
-      "rationale": "New runtime wiring adds fail-closed identity-token handling, TLS-only endpoints, no-redirect opener and secret redaction; reinforces but does not exceed the existing ceiling (5)."
+      "rationale": "Diff adds safe_identity/_SECRET redaction applied uniformly to provider/deployment/model fields with new dedicated test coverage; reinforces existing fail-closed identity handling at the same ceiling (5)."
     },
     "A4": {
       "score": 5,
       "evidence": [
-        "src/core/src/zava_forward/core/form_export.py:42-50,128,163-171",
-        "src/core/tests/test_form_export.py:161-200"
+        "src/core/src/zava_forward/core/assistants.py:448-472",
+        "src/core/tests/test_assistants_identity.py:1-127"
       ],
-      "rationale": "Fixes stale-field detection to track open validation issues per field, with new malformed-input and per-field-issue tests. Reinforces completeness; ceiling 5 unchanged."
+      "rationale": "shape_result/sanitize_identity now consistently bound provider, deployment and model via one helper, closing an inconsistency; reinforces completeness, ceiling 5 unchanged."
     },
     "A5": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/runtime.py:150-183"
+        "src/agents/src/zava_forward/agents/heldout_batch.py:1-374"
       ],
-      "rationale": "New heartbeat/health-check wiring (worker.py, runtime.py) adds reliability instrumentation; reinforces but does not exceed the existing ceiling (5)."
+      "rationale": "New held-out token/cost-cap measurement harness is strong evaluation evidence, but baseline already at ceiling (5), unchanged."
     },
     "A6": {
       "score": 5,
       "evidence": [
-        "src/agents/src/zava_forward/agents/heldout_batch.py:1-374"
+        "src/core/src/zava_forward/core/ai.py:217-230"
       ],
-      "rationale": "New held-out token/cost-cap measurement harness with defined metrics (min/p50/mean/p90/max, USD totals) and fail-closed authorization is strong evaluation evidence, but the baseline was already at ceiling (5), so the score is unchanged."
+      "rationale": "Evidence/consumption paths route model identifiers through the shared safe_identity bound; reinforces AI design safety, does not exceed existing ceiling (5)."
     },
     "A7": {
       "score": 5,
       "evidence": [
         "src/agents/src/zava_forward/agents/worker.py:60-121"
       ],
-      "rationale": "Worker now enforces fail-closed guardrails (ZF_AGENT_RESULT_ROUTE, ZF_ASSIST_* allowance expiry, standby mode) around autonomous task processing; reinforces but does not exceed the existing ceiling (5)."
+      "rationale": "No orchestration-specific change in this diff beyond identity sanitization shared helpers; baseline reliability behavior retained at ceiling (5)."
     },
     "B1": {
       "score": 3,
@@ -108,7 +109,7 @@
       "evidence": [
         "src/agents/README.md:607-626"
       ],
-      "rationale": "README edits document component wiring (standalone queue worker, held-out runner) status, not deck/capstone documentation completeness; still explicitly gated and incomplete. Good (4) retained."
+      "rationale": "Diff is code/tests only, no README or deck documentation changes beyond baseline; Good (4) retained."
     },
     "B7": {
       "score": 5,
