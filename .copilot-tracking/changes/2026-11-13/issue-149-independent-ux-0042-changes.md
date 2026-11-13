@@ -43,3 +43,28 @@ First-parent chain after the plan commit `585021fad`: `0bc3d077b`, `c7763486f`, 
 * Source-frozen head before this record `0ea6b004d022994eb4e493ef77b39af6f4ff3c4a`; `src` tree `1f4ac07f3985a99e7c71af8d24fd84c20dea7028`. This record and the state file touch only `.copilot-tracking/`, so the `src` tree is unchanged at the final head.
 * Module trees: `src/api` `db70ee2ce18b`, `src/core` `93de8839f422`, `src/agents` `a35f7e1d7fa9`, `src/orchestrator` `f29cc12760a4`, `src/importer` `887e665146ca`.
 * Blobs: `role-screens.js` `3dd3fc729dda`, `server.py` `559dafde45f1`, `store.py` `c4c893e69c02`, `cutover-evidence-pack.md` `5bb0897b370b`, `log.md` `146a82402515`, `docs/reference/README.md` `095c03ab6f96`.
+
+## C3 and current main integration (2026-11-13, task issue-149-c3-integration-0101, source integration only)
+
+Plan: prospective partial plan `3862d97b390a74dac1d103b5c24bfce8bebda871` with its executed independent amendment critique (A55C-01 to A55C-04, all four dispositions preserved, not repeated). Branch `feat/demo-149-c3-integration-0101` from `3862d97b3`, `src` tree `1f4ac07f3985a99e7c71af8d24fd84c20dea7028`. Normal `git merge --no-ff` only; no rebase, retarget, rewrite, amend, push, publication, issue or tick; no application or test source fix and no new test.
+
+| Step | Input | Pin | First parent | Merge commit | Result |
+| --- | --- | --- | --- | --- | --- |
+| M0 | reviewed C3 (96 impact tests-only candidate, root accepted for integration only) | `ec25487e2b9503b8497a480a6e7e5ab5fed82fe6` (src `bf90280b779378b595a184261a36254f9750357b`) | `3862d97b3` | `d4f0c92fccc2082c08ee99976d3f3144317fc41e` | no conflict |
+| M1 | fresh actual `origin/main` after fetch | `c401e5d56446b5752e8d91af6a45f3f06269c4bd` | `d4f0c92fc` | `b705b61f149430517fa753ce9d63da0f809b19a1` | no conflict |
+
+* Main movement: the root-known main `c5bfac6ee` (1498 merge, 00:53:04Z) is an ancestor of the fetched main; the only later commit `c401e5d56` changes `.github/rubric/scores/latest.json` (score record, not a source input). The 1498 merged content (agents `ai_eval.py`, its test and README, 108 offline coverage records) arrives only through this normal main merge; it is merged main, not adoption of an unmerged sibling. No unexpected material main change; no stop.
+* C3 hunks (two test files only, 118 insertions and 7 deletions against `9085e85c6`): `src/api/tests/test_role_screens.py` (blob `176ae1d016a2`) and `src/api/tests/test_role_screens_conformance.py` (blob `ff1da56aa9a8`); product `role-screens.js` is unchanged (blob `3dd3fc729dda`). No product, CSS, control, SQL, workflow, manifest, Dockerfile, infra or 233 change and no blanket test deletion.
+* 233: `aebd381d9` and `837da4fde` are not ancestors of the head; the entire 233 feature and the original d790 candidate and Review stay excluded and immutable. 233 is neither admitted nor deferred; no complete A2 or epic claim. Eventual Refs-only wording, empty closing references, open #83, the 134 six-partial/four-deferred dispositions and the `ca14b1523` amend qualification are preserved.
+* Correction history: 96 has three of five corrections spent and two left; older whole-96 history is unknown and preserved; 233 five spent and held.
+
+### Pins at this source freeze
+
+* Source-frozen head before this record and the state update: `b705b61f149430517fa753ce9d63da0f809b19a1`; `src` tree `6915b96c8ededf363b76c8fb4700153eb18ff588`. This record and the state touch only `.copilot-tracking/`, so the `src` tree is unchanged at the final head.
+* Module trees: `src/api` `0786923447a54a5bb2ac4e9ac7dd261f61522dca`, `src/core` `93de8839f422d3d502f7f6197bedaf68e45f12a7`, `src/agents` `ce54d120cc1c22177d7fd9f464cc89d39f92c2cb`, `src/orchestrator` `f29cc12760a42a3be2c3d0f854d42b2ce3ada666`, `src/importer` `887e665146ca1720dbb1074e79065bcd48c89810`.
+* Blobs: `server.py` `559dafde45f1`, `store.py` `c4c893e69c02`, `ai_eval.py` `63e009089555`, `test_ai_eval.py` `83cbaedb6976`, `cutover-evidence-pack.md` `5bb0897b370b`, `docs/reference/README.md` `095c03ab6f96`, `docs/reference/log.md` `043f5a6644ac` (log differs from the earlier `146a82402515` because main's 108 entries merged).
+* Against `3862d97b3`, `src` differs by five files (449 insertions, 22 deletions): the two C3 tests and the main-borne `ai_eval.py`, `test_ai_eval.py` and agents README. Against main `c401e5d56`, `src` differs by 24 files (1374 insertions, 38 deletions), the non-RPI set being the 134/82/74/176/215/96/156 subset already recorded, plus the two C3 tests; the changed non-RPI docs are the same set as before. No workflow, manifest, Dockerfile, infra, SQL DDL, migration or gate-tool path changed relative to main; the focused-tier classification and its actual triggers are preserved for validators and the Review to reassess.
+
+### Checks run (minimum only)
+
+`git diff --check` against main, a conflict-marker search, `node --check` on every tracked `src` JavaScript file and `compileall` of `src` pass. Not run, by instruction: unit, browser, mypy, ruff, axe, full gate; standalone MSSQL, human, assistive-technology, Finance, live and full-gate coverage are unobserved. Old `9085e85c6` results are historical, not a pass for this head; the role/conformance lane is now 21 tests (not 19) and the six-method ApiTests class is not the whole project suite; core 72 reuse needs exact all-archive-input re-proof, with synthetic, form and browser out-of-`src` reads pinned too. Original Review, checkpoint, independent exact-head assessment, hosted checks and human acceptance remain required before publication.

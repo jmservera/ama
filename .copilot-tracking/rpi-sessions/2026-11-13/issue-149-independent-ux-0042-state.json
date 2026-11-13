@@ -42,23 +42,28 @@
       "decision": "Source-only assembly M0..M7 done without any 233 code; one keep-both conflict (134 pack); no product code, tests, push or publication",
       "status": "recorded; source frozen, not accepted",
       "evidence": "changes record"
+    },
+    {
+      "decision": "C3 (ec25487e2, src bf90280b7) and fresh main c401e5d56 merged normally (M0 d4f0c92fc, M1 b705b61f1) onto prospective plan 3862d97b3; source frozen at b705b61f1 src tree 6915b96c8ede; no source fix, no 233, no push",
+      "status": "recorded; source frozen, validation pending",
+      "evidence": "changes record section 'C3 and current main integration'"
     }
   ],
   "blockers": [
     {
-      "id": "validation-pending",
-      "summary": "New subset has no test evidence; fresh mypy, focused unit and browser checks and an original independent Review are required before any publication",
-      "resolution": "Root dispatches validators after the source freeze"
-    },
-    {
       "id": "233-held",
       "summary": "233 remains human-held and open; neither admitted nor deferred here; subset cannot be published as complete A2 cut line",
       "resolution": "Root records scope or deferral decision; validators and original Review first"
+    },
+    {
+      "id": "validation-pending",
+      "summary": "Impact validators (core72 input re-proof, forms74, home/ApiTests 6-method class, role/conformance 21, synthetic51, browsers, lint/types) not run on b705b61f1; old 9085 results historical",
+      "resolution": "Root dispatches fresh impact checks and identity-qualified reuses; original Review, checkpoint, independent exact-head assessment and hosted checks follow"
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Root dispatches fresh configured mypy, focused unit and browser validators and an original independent Review against the frozen head; no publication before then"
+    "action": "Stop. Root dispatches fresh impact validators on the frozen head; no checkpoint, final Review or publication before then"
   },
   "prioritized_follow_ups": null
 }
