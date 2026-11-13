@@ -76,8 +76,54 @@ SYSTEM = (
     "approve, decide, certify, record consent, contact a resident or change a "
     "record; you may only suggest. Reply with one JSON object "
     '{"answer": string, "citations": [source ids]} and cite only ids listed in '
-    "the sources block. If the sources do not answer the question reply "
-    '{"answer": "", "citations": []}.'
+    "the sources block. Cite the exact CASE-ID/path ids of the blockers, owners and "
+    "next steps you use. Write lists with * bullets, never numbered lists. Do not "
+    "use the words approved, confirmed, resolved, safe, complete, verified, cleared, "
+    "passed, funded or consented unless a cited source contains that word. If the "
+    'sources do not answer the question reply {"answer": "", "citations": []}.'
+)
+FALLBACK_NOTE = (
+    "This answer comes from the recorded case rules because the generative draft "
+    "included wording that no cited source supports. No record was changed. "
+    "A person decides next steps."
+)
+SOURCE_LABELS = {
+    "decision-rules": (
+        "Answered from the case rules and recorded case facts. No generative AI model "
+        "wrote this reply."
+    ),
+    "decision-rules-fallback": (
+        "Answered from the case rules and recorded case facts, because the generative AI "
+        "draft used wording that the case record does not support."
+    ),
+    "generative-grounded": (
+        "Written by a generative AI model from the recorded case facts and case rules, "
+        "then checked against the sources it cites."
+    ),
+    "withheld": "No answer was shown. The draft was stopped by the reply checks.",
+    "refused": "No answer was given. This is a decision for a person.",
+    "fallback": "No answer was drafted. Use the ordinary case workflow.",
+    "abstain": "No answer was given. The permitted sources do not cover the question.",
+}
+PRIORITY_KEYS = (
+    "id",
+    "stage",
+    "status",
+    "owner",
+    "waiting_on",
+    "reason",
+    "work",
+    "blockers",
+    "gate",
+    "hazards",
+    "funding",
+    "funding_ok",
+    "checklist",
+    "technical_missing",
+    "documents",
+    "appointments",
+    "decision",
+    "resident",
 )
 REFUSED = "That is a decision for a person, so the assistant cannot do it. "
 _LEAD = r"\b"
@@ -273,9 +319,17 @@ class ModelUnavailable(RuntimeError):
     """The model could not answer; the panel falls back to workflow-only handling."""
 
     def __init__(
-        self, outcome: str, *, calls: int = 0, usage: dict[str, int] | None = None
+        self,
+        outcome: str,
+        *,
+        calls: int = 0,
+        usage: dict[str, int] | None = None,
+        meter_id: str | None = None,
+        meter_root: str | None = None,
     ) -> None:
         super().__init__(outcome)
+        self.meter_id = meter_id
+        self.meter_root = meter_root
         self.calls = calls
         self.usage = usage
         self.outcome = outcome
@@ -315,7 +369,8 @@ def permitted_sources(case_id: str, ctx: dict[str, Any]) -> dict[str, str]:
         if len(found) >= MAX_SOURCES or value in (None, "", [], {}):
             return
         if isinstance(value, dict):
-            for key in sorted(value):
+            first = [k for k in PRIORITY_KEYS if k in value] if not path else []
+            for key in [*first, *(k for k in sorted(value) if k not in first)]:
                 walk(f"{path}.{key}" if path else str(key), value[key])
         elif isinstance(value, list):
             for i, item in enumerate(value[:10]):
@@ -374,13 +429,37 @@ class ChatPanel:
         self.iso = isolation
         self.model = model
 
+    @staticmethod
+    def _source_kind(cite: str) -> str:
+        if cite.startswith("workflow/"):
+            return "workflow-rule"
+        path = cite.split("/", 1)[-1]
+        if path.startswith(("gate.", "work.", "waiting_on", "hazards.")):
+            return "decision-rule"
+        return "case-record"
+
     def _reply(
-        self, kind: str, text: str, citations: list[str], model: str, sources: dict[str, str]
+        self,
+        kind: str,
+        text: str,
+        citations: list[str],
+        model: str,
+        sources: dict[str, str],
+        source: str | None = None,
     ) -> dict[str, Any]:
+        if kind != "answer":
+            source = kind
+        elif source is None:
+            source = "decision-rules" if model == "workflow-only" else "generative-grounded"
         return dict(
             kind=kind,
             reply=text,
-            citations=[dict(id=c, text=sources.get(c, "")) for c in citations],
+            answer_source=source,
+            answer_source_label=SOURCE_LABELS.get(source, ""),
+            citations=[
+                dict(id=c, text=sources.get(c, ""), source_kind=self._source_kind(c))
+                for c in citations
+            ],
             label=LABEL,
             model=model,
             workflow_only=kind in ("fallback", "refused"),
@@ -545,7 +624,13 @@ class ChatPanel:
         with store.lock:
             question_seq = store.chat_add_message(user, tid, "user", masked)["seq"]
 
-        def finish(kind: str, text: str, cites: list[str], model_name: str) -> dict[str, Any]:
+        def finish(
+            kind: str,
+            text: str,
+            cites: list[str],
+            model_name: str,
+            source: str | None = None,
+        ) -> dict[str, Any]:
             def finalize(message: dict[str, Any], db: Any = None) -> None:
                 nonlocal kind, text, cites, model_name
                 if not receipt.get("meter_root"):
@@ -589,7 +674,7 @@ class ChatPanel:
                     ),
                 )
             return dict(
-                self._reply(kind, text, cites, model_name, sources),
+                self._reply(kind, text, cites, model_name, sources, source),
                 skill=skill,
                 context=case_id or "general",
             )
@@ -658,6 +743,8 @@ class ChatPanel:
                     model_calls=exc.calls,
                     tokens=valid_usage(exc.usage),
                     provider_outcome=exc.outcome,
+                    meter_id=exc.meter_id,
+                    meter_root=exc.meter_root,
                 )
                 raw, kind, text = "", "fallback", FALLBACK
             except Exception as error:
@@ -692,6 +779,23 @@ class ChatPanel:
                             kind, (text, cites) = "answer", (redact(parsed[0])[0], parsed[1])
         elif sources:
             kind, text = "fallback", FALLBACK
+        source = None
+        ungrounded = kind == "withheld" and text == UNGROUNDED
+        if case_id and receipt["model_calls"] and (kind == "abstain" or ungrounded):
+            current = iso.current_user(user)
+            found = iso.case_facts(current, case_id)
+            if found:
+                scoped = {f"{case_id}/{path}": value for path, value in found.items()}
+                if isinstance(skill, str):
+                    scoped = {k: v for k, v in skill_sources(skill, scoped).items() if k in scoped}
+                allowed = {k.split("/", 1)[1]: v for k, v in scoped.items()}
+                g_kind, body, g_cites = grounded_answer(
+                    case_id, normalise_policy_text(masked), allowed
+                )
+                if g_kind == "answer" and g_cites:
+                    kind, text, cites = "answer", redact(body)[0] + "\n" + FALLBACK_NOTE, g_cites
+                    sources = {k: v for k, v in scoped.items() if k in g_cites}
+                    model_name, source = "workflow-only", "decision-rules-fallback"
         if kind == "fallback" and text == FALLBACK and case_id:
             facts = iso.case_facts(iso.current_user(user), case_id)
             if facts:
@@ -699,7 +803,7 @@ class ChatPanel:
                 kind, body, cites = grounded_answer(case_id, normalise_policy_text(masked), facts)
                 text = redact(body)[0] + "\n" + RULES_NOTE
                 sources = {key: value for key, value in grounded.items() if key in cites}
-        return finish(kind, text, cites, model_name)
+        return finish(kind, text, cites, model_name, source)
 
 
 __all__ = [

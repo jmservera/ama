@@ -8,7 +8,7 @@ from functools import partial
 from pathlib import Path
 from threading import Barrier, BrokenBarrierError
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import dataset
 import test_sqlstore
@@ -23,6 +23,7 @@ from zava_forward.core.chat_panel import (
     MAX_QUESTION_CHARS,
     WITHHELD,
     ChatPanel,
+    ModelUnavailable,
     normalise_policy_text,
     out_of_scope,
     parse_reply,
@@ -874,6 +875,99 @@ class StoredRulesFallbackTests(unittest.TestCase):
         tid = self.store.chat_create_thread(self.user, case_id="ZF-4")["id"]
         reply = panel.ask(self.user, tid, "approve the funding for this case", skill="general")
         self.assertEqual(reply["kind"], "refused")
+
+
+class HybridAttributionTests(unittest.TestCase):
+    ENV = StoredRulesFallbackTests.ENV
+    UNGROUNDED_DRAFT = json.dumps(
+        dict(answer="The work is safe and complete.", citations=["ZF-4/stage"])
+    )
+
+    def setUp(self) -> None:
+        work = tempfile.TemporaryDirectory()
+        self.addCleanup(work.cleanup)
+        path = Path(work.name) / "synthetic.json"
+        path.write_text(json.dumps(dataset.DATA))
+        self.store = Store(str(path))
+        self.user = self.store.data["staff"][0]
+
+    def panel(self, model: Any) -> ChatPanel:
+        return ChatPanel(ChatIsolation(self.store, env=self.ENV), model)
+
+    def ask(
+        self, model: Any, question: str = "why is this case blocked?", **kw: Any
+    ) -> dict[str, Any]:
+        tid = self.store.chat_create_thread(self.user, case_id="ZF-4")["id"]
+        return self.panel(model).ask(self.user, tid, question, skill=kw.get("skill", "general"))
+
+    def test_sources_keep_priority_facts_on_rich_cases(self) -> None:
+        ctx: dict[str, Any] = {f"a{i:03d}": f"filler {i}" for i in range(100)}
+        ctx.update(stage="Survey", work=dict(next_action="Book survey", blockers=[dict(step="S")]))
+        found = permitted_sources("ZF-9", ctx)
+        self.assertLessEqual(len(found), 60)
+        for key in ("ZF-9/stage", "ZF-9/work.next_action", "ZF-9/work.blockers.0.step"):
+            self.assertIn(key, found)
+
+    def test_ungrounded_draft_falls_back_to_decision_rules(self) -> None:
+        reply = self.ask(lambda s, p: self.UNGROUNDED_DRAFT)
+        self.assertEqual(reply["kind"], "answer")
+        self.assertEqual(reply["answer_source"], "decision-rules-fallback")
+        self.assertIn("Retrofit work is stopped", reply["reply"])
+        self.assertIn("generative", reply["reply"])
+        self.assertEqual(reply["consumption"]["model_calls"], 1)
+        self.assertTrue(reply["citations"])
+        for c in reply["citations"]:
+            self.assertTrue(c["text"], c)
+            self.assertIn(c["source_kind"], ("decision-rule", "case-record", "workflow-rule"))
+        for word in GroundedUnstoredTests.BANNED:
+            self.assertNotIn(word, (reply["reply"] + reply["answer_source_label"]).casefold())
+
+    def test_abstain_with_case_falls_back_but_general_chat_does_not(self) -> None:
+        self.assertEqual(self.ask(lambda s, p: "{}")["answer_source"], "decision-rules-fallback")
+
+    def test_no_fallback_for_withheld_actions_or_refusals(self) -> None:
+        action = json.dumps(dict(answer="I have approved it.", citations=["ZF-4/stage"]))
+        reply = self.ask(lambda s, p: action)
+        self.assertEqual((reply["kind"], reply["answer_source"]), ("withheld", "withheld"))
+        refused = self.ask(lambda s, p: "{}", "approve the funding for this case")
+        self.assertEqual((refused["kind"], refused["answer_source"]), ("refused", "refused"))
+
+    def test_fallback_respects_skill_scope(self) -> None:
+        reply = self.ask(lambda s, p: self.UNGROUNDED_DRAFT, skill="funding-evidence")
+        self.assertFalse([c for c in reply["citations"] if "/hazards" in c["id"]])
+
+    def test_grounded_generative_answer_is_attributed(self) -> None:
+        ctx = ChatIsolation(self.store, env=self.ENV).case_context(self.user, "ZF-4")
+        assert ctx is not None
+        draft = json.dumps(dict(answer=f"Stage: {ctx['stage']}", citations=["ZF-4/stage"]))
+        reply = self.ask(lambda s, p: draft)
+        self.assertEqual(reply["kind"], "answer")
+        self.assertEqual(reply["answer_source"], "generative-grounded")
+        self.assertIn("generative", reply["answer_source_label"])
+        self.assertEqual(reply["citations"][0]["source_kind"], "case-record")
+
+    def test_workflow_only_answers_are_attributed_to_decision_rules(self) -> None:
+        reply = self.ask(None)
+        self.assertEqual(reply["answer_source"], "decision-rules")
+        self.assertIn("No generative AI model", reply["answer_source_label"])
+
+    def test_failed_dispatch_settles_meter_as_ineligible(self) -> None:
+        def failing(system: str, prompt: str) -> str:
+            raise ModelUnavailable("provider-error", calls=1, meter_id="m1", meter_root="root1")
+
+        panel = self.panel(failing)
+        tid = self.store.chat_create_thread(self.user, case_id="ZF-4")["id"]
+        meter = MagicMock()
+        meter.publish_output.return_value = None
+        pub = meter.publish_output
+        with patch.object(self.store.ai, "consumption", meter):
+            reply = panel.ask(self.user, tid, "why is this case blocked?", skill="general")
+        pub.assert_called_once()
+        args, kwargs = pub.call_args
+        self.assertEqual(args[0], "root1")
+        self.assertTrue(args[1].startswith(f"chat:{tid}:"))
+        self.assertIs(kwargs["eligible"], False)
+        self.assertEqual(reply["consumption"]["meter_root"], "root1")
 
 
 if __name__ == "__main__":
