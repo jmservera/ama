@@ -47,6 +47,26 @@
       "decision": "C3 (ec25487e2, src bf90280b7) and fresh main c401e5d56 merged normally (M0 d4f0c92fc, M1 b705b61f1) onto prospective plan 3862d97b3; source frozen at b705b61f1 src tree 6915b96c8ede; no source fix, no 233, no push",
       "status": "recorded; source frozen, validation pending",
       "evidence": "changes record section 'C3 and current main integration'"
+    },
+    {
+      "decision": "Affected-integration checkpoint prepared in the existing cut-over pack on feat/demo-ux-partial-release-0117 from 288b6a37665602718122ed0ab35b9bbdcca963ed (src tree 6915b96c8ededf363b76c8fb4700153eb18ff588 unchanged); provisional metadata record, not a final Review, Pass, finished RPI, independent assessment, publication readiness or hosted acceptance",
+      "status": "recorded; provisional",
+      "evidence": "docs/architecture/cutover-evidence-pack.md section 'Partial independent UX release affected-integration checkpoint'; changes record section 'Affected-integration checkpoint preparation'"
+    },
+    {
+      "decision": "Validation reconciled from actual results: types, forms 74, home 28, roles 21, browser five (88/89/24/47/21 states), synthetic 51, ai 28 plus 11 scripted scenarios and 216 integrated module 12 all passed; three environment-only diagnostics preserved (forms and home Node PATH, programme paging invocation); core 72 REUSED from d790 (three archived inputs equal), not freshly run; SQLite regression covered, actual SQL Server not observed",
+      "status": "recorded; local-observed engineering evidence only",
+      "evidence": "coordinator root results rpi-149-final-*-0104-result.json and rpi-216-integrated-validation-0117-result.json"
+    },
+    {
+      "decision": "Original final Review rpi-149-original-review-0104 cited as provisional actual outcome only (execution Partial; conformant within bounded partial scope; five Low observations); not adopted, copied or coordinator-consumed. d790 Review 0031, early 0045 Partial and C3 three Low limits preserved",
+      "status": "recorded; Review execution and outcome separate from critique state; not accepted",
+      "evidence": "coordinator root rpi-149-original-review-0104-result.json"
+    },
+    {
+      "decision": "Fresh read-only origin/main equals c401e5d56446b5752e8d91af6a45f3f06269c4bd; no merge or rebase. 233 held; five cycles spent; extension unavailable is NO approval; C3 3/5 spent, two left, no renewal. No push, PR, merge, issue, tick, board edit or approval",
+      "status": "recorded",
+      "evidence": "pack section Boundaries, gaps, owners and resume conditions"
     }
   ],
   "blockers": [
@@ -58,12 +78,17 @@
     {
       "id": "validation-pending",
       "summary": "Impact validators (core72 input re-proof, forms74, home/ApiTests 6-method class, role/conformance 21, synthetic51, browsers, lint/types) not run on b705b61f1; old 9085 results historical",
-      "resolution": "Root dispatches fresh impact checks and identity-qualified reuses; original Review, checkpoint, independent exact-head assessment and hosted checks follow"
+      "resolution": "Update 2026-11-13: executed lanes all passed on 288b6a376 and core 72 is REUSED with input equality (see pack checkpoint); remaining are final metadata equivalence, original Review adoption by root, independent exact-head assessment and actual hosted checks"
+    },
+    {
+      "id": "publication-gates-open",
+      "summary": "Original Review not coordinator-consumed; independent exact-head assessment, actual hosted gates, human and owner approvals, Refs-only PR wording (open #83 hazard) and whole-149, A2, epic, manual acceptance, Finance, legal, live and actual SQL Server evidence remain open",
+      "resolution": "Root consumes the Review and routes adoption; later user-selected work and owners clear each gate; none inferred"
     }
   ],
   "next_action": {
     "phase": "Implement",
-    "action": "Stop. Root dispatches fresh impact validators on the frozen head; no checkpoint, final Review or publication before then"
+    "action": "Stop. Root consumes the provisional checkpoint candidate and the actual original Review, then routes final metadata equivalence, independent exact-head assessment and hosted gates; no push or publication here"
   },
   "prioritized_follow_ups": null
 }

@@ -1,7 +1,7 @@
 ---
 title: Source cut-over evidence pack
 description: Dated parity, private SQL and public edge proof with remaining owner gates
-ms.date: 2026-11-12
+ms.date: 2026-11-13
 ms.topic: reference
 ---
 
@@ -7721,3 +7721,105 @@ Adverse and intermediate results, retained: the first import-origin probe used a
 * #107, #157 and #216 acceptance criteria stay unmet or human and live owned (for #216: owner thresholds, independent grader, staff paired trial, cost). No criterion is ticked and no approval is implied.
 * No push, PR or merge was made. A later pull request would use `Refs` only. Hosted CI and human review for the exact head remain required.
 * Original dated RPI evidence is under `.copilot-tracking/` (`ai-parent-integration-2333`): research, plan, details, one independent read-only critique (verdict Revise, five findings, all applied; the worker could not write its file so the coordinator persisted its findings), changes, state and one Review. The model label (Claude Sonnet 5.5) is asserted; no host attestation exists.
+
+## Partial independent UX release affected-integration checkpoint (2026-11-13, Refs #149 #96 #216 #440)
+
+Provisional, local-only, not approved. This is the affected-surface checkpoint of the bounded partial independent UX release of parent 149, prepared as a metadata record on the coherent integration topic `feat/demo-ux-partial-release-0117` (not a sibling pull request). It is not a final Review, not a Pass, not a finished RPI, not an independent exact-head assessment, not publication readiness and not a hosted result. The scope is established by the existing prospective partial plan `3862d97b3` and its executed critiques (the original plan critique and the amendment 0055 critique A55C-01 to A55C-04, all dispositions applied and not repeated). No new plan and no retrospective RPI is created here. Candidate policy stays candidate.
+
+### Trigger, scope and pinned identities
+
+Trigger: all eight actual final validation results for the integrated source at `288b6a376` exist, the original final parent Review has produced an actual result (not yet consumed by the coordinator), and the C3 and main integration changed an affected surface beyond the earlier checkpoints.
+
+| Item | Identity (read 2026-11-13) |
+| --- | --- |
+| Source head | `288b6a37665602718122ed0ab35b9bbdcca963ed`, `src` tree `6915b96c8ededf363b76c8fb4700153eb18ff588`. The source-frozen merge `b705b61f1` (M0 `d4f0c92fc` C3, M1 `b705b61f1` main) precedes the record commit `288b6a376`; this checkpoint adds only the pack section and `.copilot-tracking` records, so the `src` tree is unchanged |
+| Main | `origin/main` `c401e5d56446b5752e8d91af6a45f3f06269c4bd`, fetched read-only at 01:19Z; equals the expected value, so no movement, no merge and no rebase. The only commit after the known `c5bfac6ee` (merged PR 1498) is the rubric score record |
+| Module trees | `src/api` `0786923447a54a5bb2ac4e9ac7dd261f61522dca`, `src/core` `93de8839f422d3d502f7f6197bedaf68e45f12a7`, `src/agents` `ce54d120cc1c22177d7fd9f464cc89d39f92c2cb`, `src/orchestrator` `f29cc12760a42a3be2c3d0f854d42b2ce3ada666`, `src/importer` `887e665146ca1720dbb1074e79065bcd48c89810` |
+| Covered children | UX parent `318465aae` including #82 and the funding correction (1490), 74, 176 (five-home replay), 215, 96 combined (backend `94760af7d` plus UI), C3 role-contract tests (`ec25487e2`, Refs #96), 156 docs, 134 documentation correction (`ca14b1523`), and the 216 law-link regression (test-only, child `e4aac8b72`; it arrives through merged main PR 1495 `e44de171e`, the child commit is not an ancestor and its test blob `65e4e683f800` equals the head blob). Main-borne 1498 AI harness (`c5bfac6ee`, Refs #108) is covered as coexistence only |
+| Exclusions | The entire 233 feature (`aebd381d9` and `837da4fde` are not ancestors; its symbols are absent) is excluded and held, neither admitted nor deferred. Original d790 and its adverse Review 0031 are not regraded. 108 and 203 adoption and the complete A2 cut line are not claimed |
+
+### Documents at this head (blob and status as read)
+
+| Document | Blob | Status as written |
+| --- | --- | --- |
+| `docs/brds/agentic-retrofit-programme-brd.md` | `34d88395de86` | version 0.21.0, `draft` |
+| `docs/prds/zava-forward-retrofit-programme-demonstrator.md` | `c788b917bafa` | version 0.21.0, `in-review`; AC-001, 003, 011, 034, 037, 043, 050, 051, 054 and 066 read Not run |
+| `docs/prds/proper-warm-retrofit-programme-demonstrator.md` | `f7f9b7675e60` | version 0.13.0, `in-review`; no input maps to it |
+| `docs/adrs/0001-azure-architecture.md` | `d42fa5c4615f` | Proposed |
+| `docs/adrs/0002-pilot-readiness-architecture.md` | `cbe21530043f` | Proposed as a whole; owner accepted only the bounded Entra-authoritative staff identity decision on 2026-10-24 |
+| `docs/adrs/0003-journey-derived-capabilities-runtime-fit.md` | `d60645397b20` | Accepted with amendment by the owner on 2026-10-15 (records an existing owner decision, not deployment, DPO or legal acceptance) |
+| `docs/adrs/0004-per-user-agent-chat-and-memory.md` | `9406c2e747ce` | Accepted as written on 2026-10-15 (option C, staged); live personal data not activated |
+| `docs/adrs/0005-regulatory-compliance-assistant.md` | `4d610335a5a1` | Accepted for synthetic development only on 2026-10-16; operational use unapproved |
+| `docs/adrs/0006-src-layout-and-cutover.md` | `956da1a3b804` | Accepted 2026-10-15 |
+| `docs/adrs/0007-contractor-intake-staff-mediated-proposal.md` | `541e0f72dd2c` | Proposed as a whole; synthetic-demonstrator owner direction reported, not formal acceptance |
+
+All blobs equal `origin/main`. No requirement, ADR or BRD item is approved by this record. BRD identifiers below are nearest-by-inspection unless the BRD row itself names the work; none is owner-confirmed.
+
+### Document-qualified traceability
+
+| Input | Documents | Code | Tests, checks and journeys | Class |
+| --- | --- | --- | --- | --- |
+| UX parent incl. #82 funding gate and 1487 stale ordering | PRD FR-008 with AC-011, FR-001 with AC-001; BRD FR-008 (nearest) | core `store.py` `gate_reasons` explicit-True; `taskqueues.py` `MEMBERSHIP_REVISION` 3; strict readers in `home_case.py` and `chat_case_answers.py` | core 72 (REUSED); api `test_mvp.ApiTests` stale-advance and missing-funding cases and `test_home_case_api` (home 28, local-observed) | core REUSED and SQLite only; api local-observed |
+| 74 home case isolation | PRD FR-002 with AC-001, AC-003; NFR-003 (nearest) | none (tests and browser check) | `test_home_case_api` over HTTP, core `HomeCaseTests` (REUSED), `home_case_browser_check` 24 PASS | local-observed, engineering only |
+| 176 five-home cohort replay | no requirement asserted (owner-selected demo cohort); NFR-021 and AC-139 sizing context only | none (tests, runbook, synthetic-data README) | core `test_generated_dataset` five-home table parser and cohort reproduction inside synthetic 51 | local-observed; requirement anchor unknown, route through the #176 owner |
+| 215 Refresh alerts keyboard focus | PRD FR-060 with AC-104 and AC-105 (nearest); ADR 0005 | `web/chat.js` focus restore | `regulatory_ux_check` `check_refresh_focus`, 21 browser states with pinned axe 4.10.3 | local-observed, engineering only; keyboard, AT and staff comprehension unobserved |
+| 216 law-link regression | ADR 0005; no new requirement asserted | none (test-only) | `test_regulatory_chat_api` 12 tests including three link-resolution tests with forgery controls | local-observed on the integrated head, synthetic fixtures |
+| 96 combined Held copy saved-check | PRD FR-042 with AC-050, AC-054; FR-043 with AC-051; BRD NFR-002 and AC-049 (interpretive join) | `server.py` freshness POST; `role-screens.js` saved-copy check | forms 74, role 21, `held_form_download_browser_check` 88 PASS | local-observed; numeric fidelity human decision and Finance review blocked |
+| C3 role-contract tests (Refs #96) | same 96 rows | none (product source unchanged) | `test_role_screens` and `test_role_screens_conformance` 21, `role_screens_browser_check` 47 PASS | local-observed on the C3 head (coordinator assessment) and on this head |
+| 156 IoT-to-UI source trace | PRD FR-050 with AC-066; BRD FR-048; ADR 0003 | none | none (documentation) | implemented-unverified (documentation) |
+| 134 AC-034 to AC-043 correction | PRD AC-034 to AC-043 | none; `journey_acceptance.py` blob `e3466b6eafc0` equals main | register status only: 6 partial, 4 deferred, 0 passed | documentation register; criteria 1, 2 and 5 open |
+| Main 1498 AI harness and core coexistence | none asserted | `ai_eval.py` (+277), `test_ai_eval.py` (+68), README | agents AI lane 28 tests and 11 scripted scenarios | local-observed, scripted offline only |
+
+### Observed commands, environments and results
+
+All lanes ran on a `git archive` export of exact `288b6a376` in a scratch directory outside the worktree (Python 3.12.3, pip only, editable installs of the project packages, no `PYTHONPATH` for source packages, helper test directories only where documented, isolated `HOME` and `ZF_DATA`, no Azure, provider or SQL credentials, no private data, no model or provider calls). The input worktree was clean before and after each lane. Raw results are outside the repository in the coordinator root as `rpi-149-final-{types,forms,home,roles,browser,synthetic,ai,trace}-0104-result.json` and `rpi-216-integrated-validation-0117-result.json`.
+
+| Lane | Command (from the stated project) | Exit | Ran | Skipped | Notes |
+| --- | --- | --- | --- | --- | --- |
+| types | core and api `ruff check .`, `ruff format --check .`, `mypy` (ruff 0.17.1, mypy 2.4.0, configured exclusions and overrides unchanged) | 0 | mypy core 298 and api 236 source files; format 245 and 152 files | 0 | The three role-named api test files are inside the whole-tree scope |
+| forms | `unittest -v test_form_held_download_api.HeldDownload test_form_staging_api.FormApi test_finance_grants_screens.FinanceGrantsScreens test_role_endpoint_inventory.RoleEndpointInventory` (`src/api`) | initial 1, rerun 0 | 74 (initial 53 ok, 21 errors) | 0 | Initial run failed only because the sanitized `PATH` omitted Node (21 `FinanceGrantsScreens` errors); one environment-only rerun with Node 24.21.0 on `PATH` passed 74 of 74 in 41.2 s. Both logs retained. The 35 logged law-store tracebacks are expected fault-path logs, not failures |
+| home | `unittest -v test_home_case_api.HomeCaseApiTests test_programme_screen.ProgrammeScreen test_mvp.ApiTests` (`src/api`) | initial 1, rerun 0 | 28 (6, 16 and 6; initial 16 errors) | 0 | Same Node `PATH` cause, same single environment-only correction, 28 of 28 in 16.2 s. `ApiTests` is the six-method class, not the whole api suite. Stale-advance 400 and missing-funding 409 cases ran once each. Programme baseline only; no 233 feature |
+| roles | `unittest -v tests.test_role_screens.RoleScreens tests.test_role_screens_conformance.RoleScreenConformance` (`src/api`) | 0 | 21 | 0 | Two strict negative-variant tests and three retained positives passed; discrimination inferred from them, no mutation run |
+| browser | five existing checks: held 88 PASS, programme paging 89 PASS (baseline, not the excluded 233 count), home case 24 PASS, regulatory UX 21 states with 21 axe scans and no violations, role screens 47 PASS | 0 each | not applicable | 0 | Programme paging first failed on a runner invocation artefact (`__main__` has no `__file__`); original preserved, one rerun with the documented module invocation passed. Chromium 156 via Playwright 1.64.0, axe 4.10.3 verified by checksum. Engineering evidence, not AT or WCAG acceptance |
+| synthetic | `unittest -v test_generated_dataset.GeneratedDatasetTests test_needs_inventory.NeedsInventoryTests test_scenario_manifest.ScenarioManifestTests test_determinism_audit.DeterminismAuditTests` (`src/core`) | 0 | 51 | 0 | Includes the 176 five-home replay. A negative case shows `all_available_pass` false because the private stock register is unavailable; constructed fictional stock only |
+| ai | `unittest tests.test_ai_eval tests.test_eval_registry` and `python -m zava_forward.agents.ai_eval --json` (`src/agents`); scoped ruff, format check and mypy | 0 | 28 tests; 11 scripted scenarios, 0 critical misses | 0 | Registry 6 exercised scripted, 7 not evaluated of 13; provider scripted, actual model and human not evaluated. Format check 42 files and mypy 48 files with configured exclusions. Whole agents suite and the 28 main-only tests not run |
+| 216 integrated | `unittest -v test_regulatory_chat_api` (`src/api`) | 0 | 12 | 0 | Distinct integrated validator, single pass, no correction, 16.8 s; the same 12-test count as the child original |
+| core 72 | not run | not applicable | 72 (historical) | 0 | REUSED, see below |
+
+Seven executed validation lanes (types, forms, home, roles, browser, synthetic, ai) plus the 216 integrated module all passed. Three diagnostics are environment-only and preserved: the forms and home Node `PATH` omissions and the programme paging invocation. None is a source defect and none consumed a correction allowance. A separate operational credential-handling note is held in private coordinator records; no value or detail is recorded here and it is not a source or test result.
+
+### Core 72: reused observation, not freshly run
+
+The 72 core tests (`test_gates`, `test_home_case`, `test_chat_case_answers`, `test_sqlqueues`, `test_taskqueues`) are labelled REUSED from the d790 observation (`rpi-149-core-validation-0025`: Python 3.12.3, editable core only, exit 0, 72 ok, 0 failures, 0 skips, 54.0 s). Reuse is supported because all three archived inputs of that run are identical at this head: `src/core` tree `93de8839f422`, `src/README.md` blob `b6e13012a836` and `README.md` blob `f47c6be00a06` (`git diff d790b6b45 HEAD` over those paths is empty, while the whole `src` tree differs and is not claimed identical). A static selector proof found all 72 test ids at this head, ten classes holding exactly 72 methods and no skip decorator. The actual SQLite membership regression (`test_non_boolean_funding_refreshes_stale_revision_two_memberships`) is in the 72. Mocked and static SQL Server portability tests are not an actual SQL Server run, which is not observed. No literal `MEMBERSHIP_REVISION == 3` assertion exists (indirect coverage only); that is recorded as an observation, not a claimed test gap.
+
+### Archived-input equivalence per lane
+
+Every lane exported exact `288b6a376`. This checkpoint changes only `docs/architecture/cutover-evidence-pack.md` and `.copilot-tracking`; no lane test or check reads those paths. Non-`src` files actually read by the lane tests are pinned and unchanged:
+
+| Lane | Non-`src` inputs read | Blob or tree at head |
+| --- | --- | --- |
+| roles, browser (role screens) | `docs/reference/research/ux/design-system.md` | `e8b0caa87538` |
+| synthetic | `docs/capstone/demo/runbook.md`; `docs/reference/research/retrofit-synthetic-data/`; the PRD above | `c131e41bd6e2`; tree `302891d728f1`; `c788b917bafa` |
+| forms, home, ai, types, 216 | none found by search of the selected modules; the AI golden file resolves from the exported `src/agents/evals` | `src/agents/evals` tree `cfa3792a2aa5` |
+| core 72 (reused) | `src/README.md`, `README.md` | `b6e13012a836`, `f47c6be00a06` |
+
+The core test `test_live_doc_links` checks relative links in all live Markdown including this pack; it is not in any lane above and was not run. The new section uses no relative Markdown links, and a focused local link and diff review is the only check applied to this change.
+
+### Original and adverse outcomes preserved
+
+* d790 candidate and its original Review 0031: execution Partial, outcome not accepted for publication of affected UX (RV-001 open, mypy api, originating in 233 test code absent from this head). Immutable; not claimed resolved or inherited.
+* Early static trace 0045: Partial, superseded for the final-source subset by trace 0104 (its stale browser set, head and ADR statuses are not copied). The 0104 trace's own stale pending-results statements are reconciled here against the actual completed results. The 134 section pin `43b2187b9` elsewhere in this pack is historical, not current main.
+* C3 original three Low textual-guard limitations (L1 to L3) are retained; the earlier role failures at `9085e85c6` are history. C3 budget is 3 of 5 cycles spent with two left, not renewed by this record; older whole-96 history is unknown, not zero.
+* 233: five correction cycles spent, the extension for a typing-only correction is unavailable and is NO approval. Whole 149, A2, the epic, manual acceptance testing, Finance, legal, live and actual SQL Server remain open and unproven.
+* Original final parent Review `rpi-149-original-review-0104` (provisional, not yet consumed by the coordinator): executed once, execution Partial, outcome conformant within the bounded partial source, test and check scope; no Critical, High or Medium finding; five Low observations (RV-L1 to RV-L5: duplicate status and field-error message, no focus move on the no-file error, 403 copy always names the Retrofit Programme Manager, retained textual-guard limits, bare `assert` in the five-home helper). It states it is not publication approval and accepts no criterion. This record cites it and does not adopt, copy or accept it. The Review predates the 216 integrated result and records `main` as not freshly fetched; both are covered here.
+
+### Boundaries, gaps, owners and resume conditions
+
+* Consent, approval and AI boundaries: all data is constructed or synthetic. No resident consent, named human approval, owner acceptance or legal sign-off is recorded or implied. The AI evidence is a scripted offline harness; actual model behaviour, semantic accuracy and human review are not evaluated, and unavailable-AI paths stay manual.
+* Open and unproven: whole 149, A2, epic closure, manual acceptance testing, Finance review and the numeric-fidelity decision, legal review, live checks, actual SQL Server, assistive technology and WCAG acceptance, and the complete local gate. Owners are the issue and criterion owners; nothing is delegated or ticked here.
+* Unavailable or not run: a fresh core 72 run, whole api, core and agents suites, `test_live_doc_links`, the 233 programme feature checks, hosted CI (an absent, skipped or path-filtered workflow is not success) and the complete local gate.
+* Hazard: historical commit `8307d2580` begins "Closed #83/#85/#90 are historical evidence"; publication needs a `Refs`-only pull request body and merge title and body with no closing keyword (even negated), empty closing references before and after any body edit, and #83 verified open afterwards. No pull request exists.
+* Classification: focused-tier test, source-subset and documentation scope, with no workflow, manifest, Dockerfile, infrastructure, SQL, permission or gate-tool change against main; the Review and independent assessment must reassess it, and doubt takes the full tier.
+* Proposal (not a decision): CONTINUE, bounded, only under the original Review adoption, the remaining validation above, metadata equivalence at the final head, an independent exact-head assessment and actual hosted gates. Affected closures stay held. No new issue, criterion tick, board edit, pivot or requirement relaxation is made.
+* Not done: no push, pull request, merge, rebase, amend or issue action. Hosted CI and human review for the exact head remain required.
+* Original dated RPI evidence is under `.copilot-tracking/` (`issue-149-independent-ux-0042` changes and state, the prospective plan `3862d97b3` and its critiques). The model label (Claude Sonnet 5.5) is asserted; no host attestation exists.

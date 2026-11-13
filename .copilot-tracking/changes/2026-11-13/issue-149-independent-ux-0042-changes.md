@@ -68,3 +68,15 @@ Plan: prospective partial plan `3862d97b390a74dac1d103b5c24bfce8bebda871` with i
 ### Checks run (minimum only)
 
 `git diff --check` against main, a conflict-marker search, `node --check` on every tracked `src` JavaScript file and `compileall` of `src` pass. Not run, by instruction: unit, browser, mypy, ruff, axe, full gate; standalone MSSQL, human, assistive-technology, Finance, live and full-gate coverage are unobserved. Old `9085e85c6` results are historical, not a pass for this head; the role/conformance lane is now 21 tests (not 19) and the six-method ApiTests class is not the whole project suite; core 72 reuse needs exact all-archive-input re-proof, with synthetic, form and browser out-of-`src` reads pinned too. Original Review, checkpoint, independent exact-head assessment, hosted checks and human acceptance remain required before publication.
+
+## Affected-integration checkpoint preparation (2026-11-13, task issue-149-checkpoint-0117, metadata only)
+
+Branch `feat/demo-ux-partial-release-0117`, starting at `288b6a37665602718122ed0ab35b9bbdcca963ed` (`src` tree `6915b96c8ededf363b76c8fb4700153eb18ff588`, unchanged). Same coherent integration topic, not a sibling pull request. Continues the existing Implement evidence finalization; no new loop, no new plan and no new correction authority.
+
+* Changed: `docs/architecture/cutover-evidence-pack.md` (new dated section "Partial independent UX release affected-integration checkpoint", `ms.date` 2026-11-13; all earlier sections untouched) and this record plus the state file. No source, test, manifest, workflow, infrastructure or gate file changed; no new page.
+* Inputs consumed: the C3 integration result, the amendment 0055 result, the C3 root assessment, all eight actual 0104 results (types, forms, home, roles, browser, synthetic, ai, trace) and the actual 216 integrated module result (12 of 12, exit 0, no skips). The trace's stale pending-results statements are reconciled against the completed results. The restricted outer native AI log was not read or copied.
+* Original Review `rpi-149-original-review-0104` (Partial; conformant within the bounded partial scope; five Low observations; no Critical, High or Medium) is cited as a provisional actual outcome only: not adopted, not copied, not coordinator-consumed. d790 and Review 0031, early 0045 Partial and the C3 three Low limits are preserved.
+* Read-only check: `origin/main` fetched `c401e5d56446b5752e8d91af6a45f3f06269c4bd` (equals expected); no merge or rebase.
+* Not run here, by instruction: any test, lint, type, browser or gate; core 72 stays REUSED. A focused diff, ASCII, table and relative-link review of the pack change was applied.
+* Not claimed: final Review or Pass, finished RPI, independent exact-head assessment, publication readiness, hosted acceptance, any criterion tick, human or owner approval. 233 held; whole 149, A2, epic, manual acceptance testing, Finance, legal, live and actual SQL Server open.
+* Proposal only: bounded CONTINUE under original Review adoption, remaining validation, final metadata equivalence, independent exact-head assessment and actual hosted gates.
