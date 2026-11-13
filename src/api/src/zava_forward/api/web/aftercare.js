@@ -43,15 +43,36 @@ function acNumber(value, digits = 1) {
     : "Unknown";
 }
 
+const AC_WINDOW_LABELS = { baseline: "Baseline", early: "Early", late: "Late" };
 const AC_TABLE_CAPTION = "Observed baseline and late means, with concerns and recorded outcomes by home";
 
+const acWhole = (n) => typeof n === "number" && Number.isInteger(n) && n >= 0;
+
 function acFraction(value) {
-  const ok = (n) => typeof n === "number" && Number.isInteger(n) && n >= 0;
-  if (!value || typeof value !== "object" || !ok(value.count) || !ok(value.denominator) || value.count > value.denominator) {
+  if (!value || typeof value !== "object" || !acWhole(value.count) || !acWhole(value.denominator) || value.count > value.denominator) {
     return "Unresolved concerns: Unknown";
   }
   const base = `${value.count} of ${value.denominator} concerns unresolved.`;
   return value.denominator === 0 ? `${base} No proportion is stated.` : base;
+}
+
+function acHouseholds(value) {
+  if (!value || typeof value !== "object" || !acWhole(value.count) || !acWhole(value.denominator) || value.count > value.denominator) {
+    return "Homes with a concern raised: Unknown";
+  }
+  const base = `${value.count} of ${value.denominator} homes raised a concern.`;
+  return value.denominator === 0 ? `${base} No proportion is stated.` : base;
+}
+
+function acRowUnresolved(row) {
+  const total = (row.concerns || []).length;
+  const n = row.unresolved_count;
+  if (!acWhole(n) || n > total) return "Unknown";
+  return `${n} of ${total}`;
+}
+
+function acCountLine(label, n) {
+  return `${label}: ${acWhole(n) ? n : "Unknown"}.`;
 }
 
 function acOwner(owner) {
@@ -191,14 +212,19 @@ function aftercareEvaluatorView(v) {
       h("td", {}, ok ? `${acNumber(cmp.late.temperature_c)} °C` : "Unknown"),
       h("td", {}, String((row.concerns || []).length)),
       h("td", {}, acOutcomes(row.concerns || [])),
-      h("td", {}, String(row.unresolved_count ?? "Unknown")));
+      h("td", {}, acRowUnresolved(row)));
   });
   return h("section", { "aria-labelledby": "ac-eval-title" },
     h("h1", { id: "ac-eval-title", tabindex: "-1" }, "Aftercare view for a synthetic cohort"),
     h("p", {}, acText(v.synthetic_notice)),
     h("p", {}, acText(v.notice)),
     h("p", {}, `${acText(usable.count)} of ${acText(usable.denominator)} homes have a usable comparison. Concerns raised: ${acText(totals.concerns_raised)}.`),
+    h("p", {}, acHouseholds(totals.households_raising_concern)),
     h("p", {}, acFraction(totals.concerns_unresolved)),
+    h("p", {}, acCountLine("Unresolved concerns in homes with a handover or financial closure", totals.unresolved_with_handover_or_financial_closure)),
+    h("p", {}, acCountLine("Concerns outside the stated homes", totals.concerns_outside_stated_scope)),
+    h("h2", {}, "How the baseline is measured"),
+    h("ul", {}, ...Object.entries(v.windows && typeof v.windows === "object" ? v.windows : {}).map(([k, w]) => h("li", {}, `${Object.hasOwn(AC_WINDOW_LABELS, k) ? AC_WINDOW_LABELS[k] : "Other period"}: ${acText(w)}`))),
     rows.length
       ? h("div", { class: "table-scroll", role: "region", tabindex: "0", "aria-label": AC_TABLE_CAPTION },
         h("table", {},
