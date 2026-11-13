@@ -654,7 +654,9 @@ module operationalMonitoring 'modules/operationalMonitoring.bicep' = {
       demoDirectIngress ? 'job-${applicationPrefix}-orch' : 'job-${applicationPrefix}-orchestrator'
       ledgerJobName
       demoDirectIngress ? 'job-${applicationPrefix}-load' : 'job-${applicationPrefix}-import'
-    ], enableEntraTokenStore ? [
+    ], enableRankingArchiveBlob ? [
+      demoDirectIngress ? 'job-${applicationPrefix}-rank' : 'job-${applicationPrefix}-rank-publish'
+    ] : [], enableEntraTokenStore ? [
       demoDirectIngress ? 'job-${applicationPrefix}-auth' : 'job-${applicationPrefix}-auth-renewal'
     ] : []) : []
     monthlyBudget: monthlyBudget
