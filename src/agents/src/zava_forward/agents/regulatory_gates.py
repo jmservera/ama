@@ -262,8 +262,70 @@ def evaluate_rules(rows: Iterable[dict[str, Any]]) -> dict[str, Any]:
     )
 
 
-def comparison(baselines: list[dict[str, Any]]) -> dict[str, Any]:
+GATE_NAMES = ("citation_validity", "refusal_accuracy")
+
+
+def gate_view(result: Any) -> dict[str, Any]:
+    """Project a gate check without altering it; an absent result is not evaluated."""
+    if not isinstance(result, Mapping) or "status" not in result:
+        return dict(status="not_evaluated")
+    threshold = result.get("threshold")
+    return dict(
+        status=result["status"],
+        matched=result.get("matched"),
+        total=result.get("total"),
+        failed_case_ids=result.get("failed_case_ids"),
+        threshold_status=threshold.get("status") if isinstance(threshold, Mapping) else None,
+    )
+
+
+def gate_passed(result: Any) -> bool:
+    """A gate supports chat only when met against an owner-agreed, not provisional, target."""
+    view = gate_view(result)
+    met = view["status"] == "met_provisional_target"
+    return bool(met and view["threshold_status"] == "owner_agreed")
+
+
+def hazard_view(arm: str, result: Any) -> dict[str, Any]:
+    if not isinstance(result, Mapping):
+        return dict(arm=arm, status="not_evaluated")
+    return dict(
+        arm=arm,
+        status=result.get("status"),
+        misses=result.get("misses"),
+        total=result.get("total"),
+        failed_case_ids=result.get("failed_case_ids"),
+        failure_severity=result.get("failure_severity"),
+    )
+
+
+def beside_cost(
+    costs: Mapping[str, Any], checks: Mapping[str, Any] | None, arm: str, hazard: Any
+) -> dict[str, Any]:
+    """AI cost per accepted check beside the gate and hazard results, never estimated."""
+    gates = checks or {}
+    known = costs.get("ai_cost_per_accepted_check") != "Unknown"
+    return dict(
+        ai_cost_per_accepted_check=costs.get("ai_cost_per_accepted_check", "Unknown"),
+        cost=costs.get("cost", "Unknown"),
+        missing_inputs=list(costs.get("missing_inputs", [])),
+        **{
+            key: costs[key]
+            for key in ("currency", "price_source_id", "price_as_of")
+            if known and key in costs
+        },
+        **{name: gate_view(gates.get(name)) for name in GATE_NAMES},
+        hazard_misses=hazard_view(arm, hazard),
+    )
+
+
+def comparison(
+    baselines: list[dict[str, Any]],
+    answers: Mapping[str, Any] | None = None,
+    rules: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     """No staff observations exist in this harness; structure cannot authorize shipment."""
+    costs = economics()
     return dict(
         check="paired_staff_comparison",
         status="not_evaluated",
@@ -284,7 +346,13 @@ def comparison(baselines: list[dict[str, Any]]) -> dict[str, Any]:
         ship_recommendation="cards_only",
         reason="No measured staff value; structural joins do not satisfy the ADR 0005 ship test.",
         approval="Recommendation only; cards retain their own source and approval gates.",
-        economics=economics(),
+        economics=costs,
+        beside_cost=beside_cost(
+            costs,
+            (answers or {}).get("checks"),
+            "deterministic_rule_cards",
+            (rules or {}).get("hazard_misses"),
+        ),
         synthetic_development_lookup="unchanged; explicit synthetic-demo admission only",
     )
 

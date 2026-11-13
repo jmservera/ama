@@ -234,6 +234,38 @@
   "comparison": {
     "approval": "Recommendation only; cards retain their own source and approval gates.",
     "baseline": "same role-scoped deterministic cards with provision links",
+    "beside_cost": {
+      "ai_cost_per_accepted_check": "Unknown",
+      "citation_validity": {
+        "failed_case_ids": [],
+        "matched": 7,
+        "status": "met_provisional_target",
+        "threshold_status": "provisional_not_agreed",
+        "total": 7
+      },
+      "cost": "Unknown",
+      "hazard_misses": {
+        "arm": "deterministic_rule_cards",
+        "failed_case_ids": [],
+        "failure_severity": "critical",
+        "misses": 0,
+        "status": "met_provisional_target",
+        "total": 42000
+      },
+      "missing_inputs": [
+        "Owner-agreed accepted-check definition and human acceptance count",
+        "Dated versioned price source",
+        "Attributable billing and shared-service allocation",
+        "Measured human review effort"
+      ],
+      "refusal_accuracy": {
+        "failed_case_ids": [],
+        "matched": 24,
+        "status": "met_provisional_target",
+        "threshold_status": "provisional_not_agreed",
+        "total": 24
+      }
+    },
     "check": "paired_staff_comparison",
     "economics": {
       "ai_cost_per_accepted_check": "Unknown",
@@ -502,7 +534,7 @@
   "evidence": {
     "as_of": "2026-10-16T12:00:00+00:00",
     "dataset": "regulatory_gates_cases.json",
-    "fixture_sha256": "605a0003761ad649b72eec7b40f214a2e75cd5051fdbe5182f748fd0d1662a6a",
+    "fixture_sha256": "2f34b1fbc326d350f9ae993e71174e20814c8a89e4740ee3750fe82f341cbb55",
     "homes": 60000,
     "provider": "offline-extractive; zero model calls",
     "rule_checks": 120000,

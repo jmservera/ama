@@ -39,6 +39,22 @@ COST: dict[str, Any] = dict(
 )
 
 
+def gate(
+    name: str, *, status: str = "met_provisional_target", agreed: bool = True
+) -> dict[str, Any]:
+    return dict(
+        name=name,
+        status=status,
+        matched=10,
+        total=10,
+        failed_case_ids=[] if status != "failed" else ["case-1"],
+        threshold=dict(status="owner_agreed" if agreed else "provisional_not_agreed"),
+    )
+
+
+GATES: dict[str, Any] = {name: gate(name) for name in ("citation_validity", "refusal_accuracy")}
+
+
 def row(role: str, n: int, arm: str, **over: Any) -> dict[str, Any]:
     base: dict[str, Any] = dict(
         participant=f"{role}-{n}",
@@ -79,7 +95,10 @@ class PairedTrial(unittest.TestCase):
         self.assertIn("no owner-agreed thresholds recorded", out["reasons"])
 
     def test_measured_value_requires_owner_decision_not_shipment(self) -> None:
-        out = evaluate_paired_trial(trial(), thresholds=THRESHOLDS, cost_inputs=COST, now=NOW)
+        out = evaluate_paired_trial(
+            trial(), thresholds=THRESHOLDS, cost_inputs=COST, gates=GATES, now=NOW
+        )
+        self.assertEqual(out["reasons"], [])
         self.assertEqual(out["ship_recommendation"], "chat_value_measured_owner_decision_required")
         self.assertEqual(out["per_role"]["housing"]["completion_gain"], 1.0)
         self.assertAlmostEqual(out["economics"]["cost"], 0.36)
@@ -197,6 +216,97 @@ class PairedTrial(unittest.TestCase):
         self.assertFalse(out["authority_decision"]["allowed"])
         expired = cost_per_accepted_check(3, COST, datetime(2027, 1, 1, tzinfo=UTC))
         self.assertEqual(expired["cost"], "Unknown")
+
+
+class CardsAloneAndBesideCost(unittest.TestCase):
+    def verdict(self, rows: list[dict[str, Any]] | None = None, **over: Any) -> dict[str, Any]:
+        args: dict[str, Any] = dict(thresholds=THRESHOLDS, cost_inputs=COST, gates=GATES)
+        return evaluate_paired_trial(trial() if rows is None else rows, now=NOW, **(args | over))
+
+    def test_cards_that_tie_chat_ship_alone_even_with_zero_gain_thresholds(self) -> None:
+        tied = [r | dict(completed=True, comprehension_correct=True) for r in trial()]
+        zero = THRESHOLDS | dict(min_completion_gain=0, min_comprehension_gain=0)
+        out = self.verdict(tied, thresholds=zero)
+        self.assertEqual(out["ship_recommendation"], "cards_only")
+        self.assertIn("repairs: no measured chat improvement over cards", out["reasons"])
+
+    def test_cards_that_beat_chat_ship_alone(self) -> None:
+        worse = trial(completed=False, comprehension_correct=False)
+        worse = [r | dict(completed=True) if r["arm"] == "cards" else r for r in worse]
+        out = self.verdict(worse)
+        self.assertEqual(out["ship_recommendation"], "cards_only")
+        self.assertIn("housing: completion gain below agreed threshold", out["reasons"])
+
+    def test_measured_cited_value_at_known_dated_cost_is_reported_beside_it(self) -> None:
+        out = self.verdict()
+        beside = out["beside_cost"]
+        self.assertAlmostEqual(beside["ai_cost_per_accepted_check"], 0.06)
+        self.assertEqual(beside["price_as_of"], "2026-11-01")
+        self.assertEqual(beside["citation_validity"]["status"], "met_provisional_target")
+        self.assertEqual(beside["refusal_accuracy"]["status"], "met_provisional_target")
+        self.assertEqual(beside["hazard_misses"]["misses"], 0)
+        self.assertEqual(beside["hazard_misses"]["arm"], "chat")
+        self.assertEqual(out["ship_recommendation"], "chat_value_measured_owner_decision_required")
+
+    def test_missing_cost_inputs_are_unknown_named_and_never_estimated(self) -> None:
+        for name in ("price_source", "usage", "allocation_basis", "authority"):
+            with self.subTest(name=name):
+                inputs = copy.deepcopy(COST)
+                del inputs[name]
+                out = self.verdict(cost_inputs=inputs)
+                beside = out["beside_cost"]
+                self.assertEqual(beside["ai_cost_per_accepted_check"], "Unknown")
+                self.assertEqual(beside["cost"], "Unknown")
+                self.assertIn(f"{name} missing", beside["missing_inputs"])
+                self.assertEqual(out["ship_recommendation"], "cards_only")
+                self.assertIn(
+                    "AI cost per accepted check Unknown; value at cost not measured",
+                    out["reasons"],
+                )
+
+    def test_unknown_cost_beside_gates_when_nothing_is_supplied(self) -> None:
+        beside = evaluate_paired_trial([], now=NOW)["beside_cost"]
+        self.assertEqual(beside["ai_cost_per_accepted_check"], "Unknown")
+        for name in ("citation_validity", "refusal_accuracy"):
+            self.assertEqual(beside[name], dict(status="not_evaluated"))
+        self.assertEqual(beside["hazard_misses"]["status"], "not_evaluated")
+
+    def test_failed_absent_or_unagreed_gates_keep_cards_alone(self) -> None:
+        cases = {
+            "failed": {**GATES, "citation_validity": gate("citation_validity", status="failed")},
+            "unagreed": {**GATES, "refusal_accuracy": gate("refusal_accuracy", agreed=False)},
+            "absent": {"citation_validity": GATES["citation_validity"]},
+            "none": None,
+        }
+        for label, gates in cases.items():
+            with self.subTest(label):
+                out = self.verdict(gates=gates)
+                self.assertEqual(out["ship_recommendation"], "cards_only")
+                self.assertTrue(
+                    any("citation validity" in r or "refusal accuracy" in r for r in out["reasons"])
+                )
+
+    def test_chat_hazard_miss_is_reported_beside_cost_and_blocks(self) -> None:
+        rows = trial()
+        rows[1]["hazard_missed"] = True
+        out = self.verdict(rows)
+        self.assertEqual(out["beside_cost"]["hazard_misses"]["failure_severity"], "critical")
+        self.assertEqual(out["beside_cost"]["hazard_misses"]["misses"], 1)
+        self.assertEqual(out["ship_recommendation"], "cards_only")
+
+    def test_undated_future_or_blank_price_is_unknown(self) -> None:
+        for key, bad in (
+            ("as_of", "last week"),
+            ("as_of", "2026-12-01"),
+            ("id", " "),
+            ("currency", 5),
+        ):
+            with self.subTest(key=key, bad=bad):
+                inputs = copy.deepcopy(COST)
+                inputs["price_source"][key] = bad
+                out = cost_per_accepted_check(3, inputs, NOW)
+                self.assertEqual(out["ai_cost_per_accepted_check"], "Unknown")
+                self.assertTrue(out["missing_inputs"])
 
 
 if __name__ == "__main__":
