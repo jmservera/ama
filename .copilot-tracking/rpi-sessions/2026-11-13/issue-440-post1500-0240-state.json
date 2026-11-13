@@ -6,8 +6,8 @@
     "task_slug": "issue-440-stabilization"
   },
   "mode": "manual",
-  "active_phase": "Implement",
-  "status": "active",
+  "active_phase": "Follow-up",
+  "status": "completed",
   "session_status": "stopped",
   "artifact_paths": {
     "research": ".copilot-tracking/research/2026-11-13/issue-440-post1500-0240-research.md",
@@ -15,7 +15,7 @@
     "details": ".copilot-tracking/details/2026-11-13/issue-440-post1500-0240-details.md",
     "critique": ".copilot-tracking/plans/2026-11-13/issue-440-post1500-0240-critique.md",
     "changes": ".copilot-tracking/changes/2026-11-13/issue-440-post1500-0240-changes.md",
-    "review": null
+    "review": ".copilot-tracking/reviews/2026-11-13/issue-440-post1500-0240-review.md"
   },
   "confirmed_decisions": [
     {
@@ -47,19 +47,24 @@
       "decision": "Root named Implement admission with clarifications A1-A4 recorded before canonical edits; annex and log entry implemented; index unchanged; doc checks pass",
       "status": "done",
       "evidence": ".copilot-tracking/plans/2026-11-13/issue-440-post1500-0240-admission.md; .copilot-tracking/changes/2026-11-13/issue-440-post1500-0240-changes.md"
+    },
+    {
+      "decision": "Original Review executed once at 4bb62408: execution Partial, no Critical/High/Medium, two Low (L1 resolved by review file, L2 push scorer now success to record later); not repeated",
+      "status": "done",
+      "evidence": ".copilot-tracking/reviews/2026-11-13/issue-440-post1500-0240-review.md"
     }
   ],
   "blockers": [],
   "next_action": {
-    "phase": "Review",
-    "action": "Execute one original independent Review of the frozen candidate; return actionable findings, no second Review or correction"
+    "phase": "Follow-up",
+    "action": "STOP; root independent exact-head assessment and separate publication admission before any push or PR"
   },
   "prioritized_follow_ups": [
     {
       "rank": 1,
-      "task": "Implement the docs-only post-1500 provenance annex in the existing pack",
-      "rationale": "Pack is stale on C4, hosted observations and the merge; smallest closing step with no source change",
-      "evidence": "research gaps G1 to G4"
+      "task": "Independent exact-head assessment, then publication admission (Refs-only)",
+      "rationale": "Required gates; record final push scorer result",
+      "evidence": ".copilot-tracking/reviews/2026-11-13/issue-440-post1500-0240-review.md"
     }
   ]
 }
