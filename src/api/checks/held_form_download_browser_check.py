@@ -462,7 +462,7 @@ def saved_copy_checks(
     text, _ = checker.press(write_copy(tmp, "other.json", other))
     check(
         f"{story} another draft's file is refused in plain words: {text}",
-        "Choose the saved Held file for this draft" in text,
+        "choose the saved Held file for this draft" in text,
     )
 
     notes = tmp / "notes.txt"

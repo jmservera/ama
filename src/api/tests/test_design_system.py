@@ -1,4 +1,5 @@
 """Design system foundations: tokens defined and used, state components present, doc inventory matches CSS."""
+
 import re
 import unittest
 from pathlib import Path
@@ -7,8 +8,22 @@ ROOT = Path(__file__).resolve().parents[3]
 CSS = (ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web" / "style.css").read_text()
 APP = (ROOT / "src" / "api" / "src" / "zava_forward" / "api" / "web" / "app.js").read_text()
 DOC = (ROOT / "docs" / "reference" / "research" / "ux" / "design-system.md").read_text()
-TOKEN_GROUPS = {"colour": "--brand", "type": "--font", "spacing": "--sp-1", "focus": "--focus", "motion": "--motion"}
-COMPONENTS = [".empty", ".blocked", ".ai-suggestion", ".ai-label", ".field-error", ".status-line.ok", ".flag.danger"]
+TOKEN_GROUPS = {
+    "colour": "--brand",
+    "type": "--font",
+    "spacing": "--sp-1",
+    "focus": "--focus",
+    "motion": "--motion",
+}
+COMPONENTS = [
+    ".empty",
+    ".blocked",
+    ".ai-suggestion",
+    ".ai-label",
+    ".field-error",
+    ".status-line.ok",
+    ".flag.danger",
+]
 
 
 class DesignSystem(unittest.TestCase):
@@ -35,7 +50,12 @@ class DesignSystem(unittest.TestCase):
         self.assertIn("aria-busy", CSS)
 
     def test_status_signals_have_non_colour_cue(self):
-        for sel in (".flag.danger:before", ".status-line.danger:before", ".status-line.ok:before", ".blocked .blocked-title:before"):
+        for sel in (
+            ".flag.danger:before",
+            ".status-line.danger:before",
+            ".status-line.ok:before",
+            ".blocked .blocked-title:before",
+        ):
             self.assertIn(sel, CSS)
 
     def test_ai_label_and_decision_documented(self):
@@ -85,9 +105,23 @@ class DesignSystem(unittest.TestCase):
             self.assertIn(f'code: "{code}"', APP)
         self.assertIn("Safety: ${p.hazards}", APP)
         self.assertIn('"Selected" : "Select filter"', APP)
-        self.assertIn('keyboard: true', APP)
+        self.assertIn("keyboard: true", APP)
         self.assertIn("forced-colors:active", CSS)
-        self.assertNotIn('html: `<', APP)
+        self.assertNotIn("html: `<", APP)
+
+    def test_owner_device_widths_are_recorded_and_enforced_by_css(self):
+        self.assertRegex(DOC, r"(?m)^## Supported devices and widths")
+        section = DOC.split("## Supported devices and widths", 1)[1].split("\n## ", 1)[0]
+        self.assertIn("2026-11-13", section)
+        for tier in ("Desktop", "Tablet", "Mobile"):
+            self.assertIn(tier, section)
+        for width in ("1280px", "768px", "360px", "320px"):
+            self.assertIn(width, section)
+        self.assertIn("Real-device and assistive-technology acceptance remain manual", section)
+        self.assertIn("360px is not checked by a browser run in this change", section)
+        self.assertRegex(CSS, r"@media\(max-width:900px\)\{\.layout\{grid-template-columns:1fr\}")
+        self.assertIn("@media(max-width:600px)", CSS)
+        self.assertNotRegex(CSS, r"min-width:\s*(?:3[6-9]\d|[4-9]\d\d|\d{4})px")
 
 
 if __name__ == "__main__":

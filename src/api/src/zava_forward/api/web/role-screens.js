@@ -23,13 +23,13 @@ const screenUnknown = (reason, owner, action) => h("div", { class: "blocked" },
 const screenWithheld = (items) => screenPanel("Not shown for this role",
   h("p", {}, "These items exist in the wider case but are not displayed on this screen. They are listed so that their absence is not read as nothing recorded. Withholding is not authorisation: your access is unchanged and no record changes."),
   h("ul", {}, items.map((item) => h("li", {}, item))));
-function screenTable(label, headings, rows, limit = 50) {
+function screenTable(label, headings, rows, limit = 50, cell = (value) => screenValue(value)) {
   return h("div", {},
     rows.length > limit && h("p", { role: "status" }, `Showing the first ${limit} of ${rows.length} records. Open the case workspace to inspect the remaining evidence. This is not a complete readiness check.`),
     rows.length ? h("div", { class: "table-scroll", role: "region", "aria-label": label, tabindex: 0 },
       h("table", {}, h("caption", {}, label),
         h("thead", {}, h("tr", {}, headings.map((title) => h("th", { scope: "col" }, title)))),
-        h("tbody", {}, rows.slice(0, limit).map((row) => h("tr", {}, row.map((value) => h("td", {}, screenValue(value))))))))
+        h("tbody", {}, rows.slice(0, limit).map((row) => h("tr", {}, row.map((value, column) => h("td", {}, cell(value, column))))))))
       : h("p", { class: "empty" }, "No records supplied. This does not establish readiness."));
 }
 function registerRoleScreen(screen) {
@@ -37,6 +37,8 @@ function registerRoleScreen(screen) {
   roleScreens.set(screen.id, screen);
 }
 const screenScopeQuery = () => new URLSearchParams(typeof location === "undefined" ? "" : location.hash.split("?")[1] || "");
+// Rows per sidebar page: must equal the limit and offset factor in roleScreensView below, which a static test pins as literals.
+const screenPageSize = 20;
 function screenHref(id, caseId, page = 0, keepScope = true) {
   const query = new URLSearchParams();
   if (id) query.set("screen", id);
@@ -78,7 +80,7 @@ async function roleScreensView() {
   const data = await api(`/api/cases?view=all&limit=20&offset=${page * 20}`, undefined, signal);
   const c = caseId ? await api(`/api/cases/${encodeURIComponent(caseId)}`, undefined, signal) : null;
   const extra = c && screen.load ? await screen.load(c) : null;
-  const overview = screen.overview ? await screen.overview(signal, data.items, c)
+  const overview = screen.overview ? await screen.overview(signal, data.items, c, page)
     : !c && screen.summarise && data.items.length ? await screen.summarise(data.items, signal) : null;
   signal.throwIfAborted();
   const label = (row) => `${row.id}: ${row.address || "Address unknown"}. ${row.status || row.stage || "State unknown"}`;
@@ -297,16 +299,26 @@ const programmeRow = (row) => {
     work.owner,
     work.handoff ? work.handoff.proposed_receiver : "No handoff proposed",
     work.handoff ? work.handoff.chase_owner : "No handoff recorded",
-    work.resident_update_owner || "Unknown"
+    work.resident_update_owner || "Unknown",
+    row.id
   ];
 };
 const programmeHeadings = ["Home", "Return reason", "Sender", "Current owner",
   "Proposed receiver (not a confirmed owner)", "Chase owner (chases the receiver)",
-  "Resident-update owner (updates the resident)"];
+  "Resident-update owner (updates the resident)", "Connected view"];
+// The link keeps the scope that filtered the rows, so it cannot go stale between Apply and paging.
+// Its page is the sidebar page (screenPageSize rows) holding the row, counted over the unfiltered loaded page.
+const programmeCell = (scope, items, offset) => (value, column) => {
+  if (column !== programmeHeadings.length - 1) return screenValue(value);
+  const position = offset + items.findIndex((row) => row.id === value);
+  const base = screenHref("programme-queue", value, Math.floor(position / screenPageSize), false);
+  return h("a", { href: scope === "default" ? base : `${base}&scope=${encodeURIComponent(scope)}` },
+    `Open connected view for ${value}`);
+};
 const programmePageSize = 50;
-function programmeQueue(first, total, loadPage) {
+function programmeQueue(first, total, loadPage, start = 0) {
   let items = first;
-  let offset = 0;
+  let offset = start;
   const holder = h("div", {});
   const status = h("p", { role: "status", id: "programme-filter-status" });
   const paging = h("p", { class: "empty", role: "status", id: "programme-page-status" });
@@ -316,9 +328,22 @@ function programmeQueue(first, total, loadPage) {
     if (remember) programmeKeepScope(scope);
     const rows = items.filter((row) => programmeIn(row, scope));
     status.textContent = `${rows.length} of ${items.length} records on this page shown. Scope: ${programmeScopes.find(([v]) => v === scope)[1]}. Filtering changes the view only; no record is changed.`;
-    holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow)));
+    holder.replaceChildren(screenTable("Shared queue: returned and handed-off work", programmeHeadings, rows.map(programmeRow), 50, programmeCell(scope, items, offset)));
   };
   const pageText = () => `Showing cases ${total ? offset + 1 : 0} to ${offset + items.length} of ${total} permitted cases. The scope filter applies to this page only; open the other pages to see the rest. Not a portfolio total.`;
+  let prevButton = null;
+  let nextButton = null;
+  // A disabled button loses focus, so focus moves to the page button that stays enabled.
+  const syncPager = () => {
+    if (!prevButton || !nextButton) return;
+    const focused = typeof document === "undefined" ? null : document.activeElement;
+    const prevEnded = offset <= 0;
+    const nextEnded = offset + items.length >= total;
+    prevButton.disabled = prevEnded;
+    nextButton.disabled = nextEnded;
+    if (focused === prevButton && prevEnded && !nextEnded) nextButton.focus();
+    if (focused === nextButton && nextEnded && !prevEnded) prevButton.focus();
+  };
   const go = async (next) => {
     paging.textContent = "Loading page. The current rows stay until it arrives.";
     try {
@@ -327,6 +352,7 @@ function programmeQueue(first, total, loadPage) {
       offset = next;
       apply(select.value || "default", false);
       paging.textContent = pageText();
+      syncPager();
     } catch (error) {
       paging.textContent = "That page could not be loaded. The rows shown are unchanged. Try again, or open a case from the case list.";
     }
@@ -338,11 +364,12 @@ function programmeQueue(first, total, loadPage) {
   paging.textContent = pageText();
   const pager = total > first.length
     ? h("div", { class: "row", role: "group", "aria-label": "Queue pages" },
-      h("button", { class: "btn alt", type: "button", id: "programme-prev",
+      prevButton = h("button", { class: "btn alt", type: "button", id: "programme-prev",
         onclick: () => { if (offset > 0) go(Math.max(0, offset - programmePageSize)); } }, "Previous page"),
-      h("button", { class: "btn alt", type: "button", id: "programme-next",
+      nextButton = h("button", { class: "btn alt", type: "button", id: "programme-next",
         onclick: () => { if (offset + items.length < total) go(offset + programmePageSize); } }, "Next page"))
     : null;
+  syncPager();
   return h("div", {},
     paging,
     pager,
@@ -500,14 +527,16 @@ registerRoleScreen({
   id: "programme-queue",
   title: "Programme queue and connected home view",
   roles: [...screenManagers, "Retrofit Coordinator"],
-  async overview(signal) {
+  async overview(signal, items, c, page = 0) {
     const loadPage = (offset) => api(`/api/cases?view=all&limit=${programmePageSize}&offset=${offset}`, undefined, signal);
-    const page = await loadPage(0);
+    const at = c && items ? items.findIndex((row) => row.id === c.id) : -1;
+    const start = at < 0 ? 0 : Math.floor((page * screenPageSize + at) / programmePageSize) * programmePageSize;
+    const first = await loadPage(start);
     const report = await api("/api/coordinator?view=all", undefined, signal).catch(() => null);
     return h("div", {},
       screenPanel("Evidence boundary",
         h("p", {}, "Read-only view of recorded work. Chase and update responsibility are shown separately. Nothing here sends, assigns or changes a record. Source: desk research, not observed behaviour; validation remains open.")),
-      screenPanel("Shared queue", programmeQueue(page.items || [], page.total, loadPage)),
+      screenPanel("Shared queue", programmeQueue(first.items || [], first.total, loadPage, start)),
       screenPanel("Lifecycle and funnel", programmeFunnel(report)),
       screenWithheld(["Resident contact details and access history (open the case workspace for the safe route reference)",
         "Household and vulnerability details beyond what a queue row needs", "Funding amounts and claim values"]));
@@ -1345,14 +1374,14 @@ const fundingFieldRows = (draft) => Object.entries(draft.fields || {}).map(([id,
 });
 const HELD_CHECK_LIMIT = 8000000;
 const HELD_CHECK_ERRORS = {
-  400: "Choose the saved Held file for this draft (held-form-draft-export.json). Next action: pick the file you downloaded for this draft.",
+  400: "That file is not the saved Held file for this draft, so it could not be checked. Owner: you, the signed-in reviewer. Next action: choose the saved Held file for this draft (held-form-draft-export.json) that you downloaded.",
   403: "Your role cannot run this check. Owner: the Retrofit Programme Manager. Next action: ask them, or compare the version and hash in the file by hand.",
-  404: "This check is not available here. Next action: compare the version and hash in the file by hand.",
-  409: "The form or source changed. Next action: reload the page, then check again.",
-  502: "The document store is unavailable. Nothing was approved or submitted. Next action: reload and try again."
+  404: "This check is not available here. Owner: application support. Next action: compare the version and hash in the file by hand.",
+  409: "The form or source changed. Owner: you, the signed-in reviewer. Next action: reload the page, then check again.",
+  502: "The document store is unavailable. Nothing was approved or submitted. Owner: application support. Next action: reload and try again."
 };
 const HELD_CHECK_NOT_RUN = "The check could not run, so nothing is judged about your file. Nothing was approved or submitted. Owner: application support. Next action: reload and try once more, then contact application support.";
-const HELD_CHECK_UNREADABLE = "We could not read that file as a saved Held draft (JSON). Next action: choose the held-form-draft-export.json file you downloaded for this draft.";
+const HELD_CHECK_UNREADABLE = "We could not read that file as a saved Held draft (JSON). Owner: you, the signed-in reviewer. Next action: choose the held-form-draft-export.json file you downloaded for this draft.";
 const HELD_CHECK_NO_FILE = "Choose the saved Held file first. Next action: pick the held-form-draft-export.json you downloaded for this draft.";
 const heldCheckNames = (value) => Array.isArray(value) && value.every((v) => typeof v === "string") ? value : null;
 function heldCheckResult(data) {

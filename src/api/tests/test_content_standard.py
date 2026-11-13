@@ -167,6 +167,27 @@ class CopyAudit(unittest.TestCase):
             self.assertIn("Owner:", r)
             self.assertIn("Next action:", r)
 
+    def test_saved_check_errors_state_reason_owner_and_next_action(self):
+        js = (WEB / "role-screens.js").read_text()
+        block = re.search(r"const HELD_CHECK_ERRORS = \{(.*?)\n\};", js, re.S).group(1)
+        entries = re.findall(r'^\s*(\d{3}): "(.*)",?$', block, re.M)
+        self.assertEqual([s for s, _ in entries], ["400", "403", "404", "409", "502"])
+        for status, text in entries:
+            reason = text.split("Owner:")[0].split("Next action:")[0].strip()
+            self.assertGreater(len(reason), 20, status)
+            self.assertRegex(text, r"Owner: [^.]+\.", status)
+            self.assertIn("Next action:", text, status)
+            self.assertLess(text.index("Owner:"), text.index("Next action:"), status)
+            self.assertIsNone(BANNED.search(text), status)
+
+    def test_unreadable_saved_file_message_states_reason_owner_and_next_action(self):
+        js = (WEB / "role-screens.js").read_text()
+        text = re.search(r'const HELD_CHECK_UNREADABLE = "(.*)";', js).group(1)
+        self.assertGreater(len(text.split("Owner:")[0].strip()), 20)
+        self.assertRegex(text, r"Owner: [^.]+\.")
+        self.assertLess(text.index("Owner:"), text.index("Next action:"))
+        self.assertIsNone(BANNED.search(text))
+
     def test_standard_documents_glossary_and_review(self):
         for text in (
             "## Glossary",

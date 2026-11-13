@@ -5,7 +5,8 @@ python -m checks.programme_paging_browser_check
 
 The check signs in as the Retrofit Programme Manager, opens the installed programme
 queue over 60 constructed permitted cases and drives Next and Previous by keyboard at
-1280 and 320 px. One paging GET is deliberately aborted by the check itself: that is a
+1280 and 320 px. It then opens a page-2 row's connected-view link by keyboard (GET only).
+One paging GET is deliberately aborted by the check itself: that is a
 constructed transport failure, not an observed network incident and not backend proof.
 It is an engineering check, not assistive-technology or WCAG acceptance (#155); axe is
 not run here.
@@ -201,10 +202,9 @@ def check_width(browser: Browser, base: str, width: int) -> None:
 
         paging_gets.clear()
         page.locator("aside a[data-reset]").focus()
-        press_until(page, "Tab", "programme-prev")
-        page.keyboard.press("Enter")
-        page.wait_for_timeout(300)
-        check(f"{tag} Previous on the first page requests nothing: {paging_gets}", not paging_gets)
+        expect(page.locator("#programme-prev")).to_be_disabled()
+        expect(page.locator("#programme-next")).to_be_enabled()
+        check(f"{tag} Previous on the first page is disabled and requests nothing", not paging_gets)
         press_until(page, "Tab", "programme-next")
         press_until(page, "Tab", "programme-scope")
         page.keyboard.type("All permitted")
@@ -276,9 +276,13 @@ def check_width(browser: Browser, base: str, width: int) -> None:
         no_overflow(page, "second page", width)
 
         requests_at_end = len(paging_gets)
-        page.keyboard.press("Enter")
+        expect(page.locator("#programme-next")).to_be_disabled()
+        check(
+            f"{tag} Next is disabled on the last page and focus moved to Previous",
+            focused(page) == "programme-prev",
+        )
         page.wait_for_timeout(300)
-        check(f"{tag} Next on the last page requests nothing", len(paging_gets) == requests_at_end)
+        check(f"{tag} the last page requests nothing more", len(paging_gets) == requests_at_end)
         press_until(page, "Tab", "Reset to default view", 4)
         page.keyboard.press("Space")
         expect(scope_status).to_contain_text(
@@ -305,6 +309,92 @@ def check_width(browser: Browser, base: str, width: int) -> None:
         no_overflow(page, "returned first page", width)
 
         check(f"{tag} paging GET sequence: {paging_gets}", paging_gets == ["50", "50", "0"])
+
+        expect(page.locator("#programme-prev")).to_be_disabled()
+        check(
+            f"{tag} focus moved to Next when Previous became disabled",
+            focused(page) == "programme-next",
+        )
+        page.keyboard.press("Enter")
+        expect(paging).to_contain_text("Showing cases 51 to 60 of 60 permitted cases.")
+        expect(page.locator("#programme-next")).to_be_disabled()
+        expect(page.locator("#programme-prev")).to_be_enabled()
+        check(
+            f"{tag} focus moved to Previous when Next became disabled",
+            focused(page) == "programme-prev",
+        )
+        page.locator("#programme-scope").select_option("all")
+        page.get_by_role("button", name="Apply filter").click()
+        expect(scope_status).to_contain_text(
+            "10 of 10 records on this page shown. Scope: All permitted"
+        )
+        table = page.get_by_role("table", name=TABLE)
+        names = table.get_by_role("link").evaluate_all("els => els.map(e => e.textContent.trim())")
+        rows_two = row_ids(page)
+        check(
+            f"{tag} each page-2 row has one unique 'Open connected view for' link: {names}",
+            names == [f"Open connected view for {cid}" for cid in rows_two]
+            and len(set(names)) == len(names),
+        )
+        target = rows_two[0]
+        page.get_by_role("region", name=TABLE).focus()
+        page.keyboard.press("Tab")
+        check(
+            f"{tag} Tab from the table region reaches the first row link",
+            focused(page) == f"Open connected view for {target}",
+        )
+        in_view = page.evaluate(
+            """() => {
+                const link = document.activeElement;
+                const box = link.getBoundingClientRect();
+                const region = link.closest('.table-scroll').getBoundingClientRect();
+                return {
+                    inside: box.left >= region.left - 1 && box.right <= region.right + 1,
+                    outline: getComputedStyle(link).outlineStyle,
+                };
+            }"""
+        )
+        check(
+            f"{tag} focused row link is visible inside the scroll region with a focus outline",
+            in_view["inside"] and in_view["outline"] != "none",
+        )
+        page.keyboard.press("Enter")
+        page.get_by_role("region", name=f"Evidence for {target}", exact=True).wait_for()
+        check(f"{tag} Enter opens the connected view address", f"case={target}" in page.url)
+        check(
+            f"{tag} connected view shows the selected home",
+            f"Selected home {target}"
+            in (
+                page.get_by_role("region", name=f"Evidence for {target}", exact=True).text_content()
+                or ""
+            ),
+        )
+        sidebar_row = page.locator("aside a.item[aria-current='true']")
+        expect(paging).to_contain_text("Showing cases 51 to 60 of 60 permitted cases.")
+        expect(scope_status).to_contain_text("Scope: All permitted")
+        expect(sidebar_row).to_contain_text(target)
+        expect(page.locator("aside [role=status]").first).to_contain_text("records on page 3")
+        check(
+            f"{tag} the opened row keeps its queue page, sidebar page and scope in the address",
+            "page=2" in page.url and "scope=all" in page.url and f"case={target}" in page.url,
+        )
+        check(
+            f"{tag} the selected home is the one current sidebar row",
+            sidebar_row.count() == 1
+            and sidebar_row.get_attribute("href")
+            == f"#/screens?screen=programme-queue&case={target}&page=2&scope=all",
+        )
+        no_overflow(page, "opened row from page 2", width)
+
+        page.goto(base + f"/app#/screens?screen=programme-queue&case={target}&page=2")
+        page.get_by_role("region", name=f"Evidence for {target}", exact=True).wait_for()
+        expect(paging).to_contain_text("Showing cases 51 to 60 of 60 permitted cases.")
+        expect(scope_status).to_contain_text("Scope: Returned and handed-off")
+        expect(sidebar_row).to_contain_text(target)
+        page.goto(base + f"/app#/screens?screen=programme-queue&case={SELECTED}")
+        page.get_by_role("region", name=f"Evidence for {SELECTED}", exact=True).wait_for()
+        expect(paging).to_contain_text("Showing cases 1 to 50 of 60 permitted cases.")
+        expect(sidebar_row).to_contain_text(SELECTED)
         after = {cid: get_json(page, base, f"/api/cases/{cid}") for cid in watched}
         check(f"{tag} no case record changed", before == after)
         check(f"{tag} no post-sign-in writes: {writes}", not writes)
