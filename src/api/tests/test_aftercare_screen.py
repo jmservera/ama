@@ -6,6 +6,7 @@ so this runs the file alone in a node vm with stubs. It is not a served-browser 
 """
 
 import json
+import re
 import subprocess
 import tempfile
 import unittest
@@ -14,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from zava_forward.core import aftercare_intake as ai
+from zava_forward.core.aftercare import neutral_text
 from zava_forward.core.synthetic import sensor_scenarios as ss
 
 WEB = Path(__file__).resolve().parents[1] / "src/zava_forward/api/web"
@@ -52,6 +54,11 @@ const adversarial = {...real.receipt, original: {statement: "<img src=x onerror=
     fracScalar: s.evaluatorView(fraction(1)),
     fracMissing: s.evaluatorView(fraction(undefined)),
     fracOver: s.evaluatorView(fraction({count: 3, denominator: 2})),
+    outcomesMixed: s.evaluatorView({...real.evaluator, rows: [
+      {home_ref: "HM-A", comparison: {}, unresolved_count: 0, concerns: [
+        {outcome: "advice_given"}, {outcome: "advice_given"}, {outcome: "no_outcome_yet"},
+        {}, {outcome: "mystery_code"}]},
+      {home_ref: "HM-B", comparison: {}, unresolved_count: 0, concerns: []}]}),
     saved: await send(async () => ({receipt: real.receipt, replayed: false})),
     replayed: await send(async () => ({receipt: real.receipt, replayed: true})),
     invalid: await fail(err(400, {errors: {home_ref: "Bad"}})),
@@ -120,6 +127,16 @@ def run() -> dict[str, Any]:
     assert result.returncode == 0, result.stderr
     parsed: dict[str, Any] = json.loads(result.stdout)
     return parsed
+
+
+JARGON = re.compile(r"\b(gates?|holds?|provenance|traces?|snapshots?|envelopes?)\b", re.I)
+LITERAL = re.compile(r"""(["'`])((?:\\.|(?!\1)[^\\\n])*)\1""")
+
+
+def static_strings(source: str) -> list[str]:
+    source = re.sub(r"^\s*//.*$", "", source, flags=re.M)
+    found = [re.sub(r"\$\{[^}]*\}", "", m.group(2)) for m in LITERAL.finditer(source)]
+    return [t for t in found if re.search(r"[A-Za-z]{3}", t)]
 
 
 def walk(node: object) -> list[dict[str, Any]]:
@@ -207,6 +224,31 @@ class AftercareScreens(unittest.TestCase):
                 self.assertIn("Unresolved concerns: Unknown", text)
                 self.assertNotIn("[object Object]", text)
 
+    def test_evaluator_rows_show_recorded_outcome_counts_in_plain_words(self) -> None:
+        text = self.text("outcomesMixed")
+        self.assertIn("Advice given: 2; No outcome yet: 2; Unknown: 1", text)
+        self.assertIn("No concerns raised", text)
+        self.assertNotIn("mystery_code", text)
+        self.assertNotIn("undefined", text)
+        self.assertIn("No outcome yet: 1", self.text("evaluator"))
+
+    def test_static_web_strings_pass_the_neutral_text_guard(self) -> None:
+        literals = static_strings((WEB / "aftercare.js").read_text(encoding="utf-8"))
+        self.assertGreater(len(literals), 50)
+        for text in literals:
+            with self.subTest(text=text):
+                neutral_text(text)
+                self.assertIsNone(JARGON.search(text))
+        self.assertEqual(
+            static_strings("a('Hold it'); b(\"Hold\"); `Cut ${y} bills`"),
+            ["Hold it", "Hold", "Cut  bills"],
+        )
+        for jargon in ("Hold the line", "hold", "A snapshot"):
+            self.assertIsNotNone(JARGON.search(jargon))
+        for bad in ("You'll save money", "Cut your bills"):
+            with self.assertRaises(ValueError):
+                neutral_text(bad)
+
     def test_evaluator_table_is_named_scoped_and_scrolls_inside_a_region(self) -> None:
         nodes = walk(self.out["evaluator"])
         tables = [n for n in nodes if n["tag"] == "table"]
@@ -224,7 +266,8 @@ class AftercareScreens(unittest.TestCase):
         cells = walk(table)
         self.assertTrue(all(n["attrs"].get("scope") for n in cells if n["tag"] == "th"))
         columns = [n for n in cells if n["tag"] == "th" and n["attrs"]["scope"] == "col"]
-        self.assertEqual(len(columns), 6)
+        self.assertEqual(len(columns), 7)
+        self.assertIn("Outcomes", [visible(c) for c in columns])
         rows = [n for n in cells if n["tag"] == "th" and n["attrs"]["scope"] == "row"]
         self.assertEqual(len(rows), len(real_payloads()["evaluator"]["rows"]))
 

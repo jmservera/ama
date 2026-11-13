@@ -43,7 +43,7 @@ function acNumber(value, digits = 1) {
     : "Unknown";
 }
 
-const AC_TABLE_CAPTION = "Observed baseline and late means, with concerns by home";
+const AC_TABLE_CAPTION = "Observed baseline and late means, with concerns and recorded outcomes by home";
 
 function acFraction(value) {
   const ok = (n) => typeof n === "number" && Number.isInteger(n) && n >= 0;
@@ -167,6 +167,17 @@ function aftercareConcernView(c) {
     h("p", {}, acText(c.sensor_note)));
 }
 
+function acOutcomes(concerns) {
+  if (!concerns.length) return "No concerns raised";
+  const counts = new Map();
+  for (const item of concerns) {
+    const key = item && item.outcome ? item.outcome : "no_outcome_yet";
+    const label = Object.hasOwn(AFTERCARE_LABELS, key) ? AFTERCARE_LABELS[key] : "Unknown";
+    counts.set(label, (counts.get(label) || 0) + 1);
+  }
+  return [...counts].map(([label, n]) => `${label}: ${n}`).join("; ");
+}
+
 function aftercareEvaluatorView(v) {
   const totals = v.totals || {};
   const usable = totals.homes_with_usable_comparison || {};
@@ -179,6 +190,7 @@ function aftercareEvaluatorView(v) {
       h("td", {}, ok ? `${acNumber(cmp.baseline.temperature_c)} °C` : "Unknown"),
       h("td", {}, ok ? `${acNumber(cmp.late.temperature_c)} °C` : "Unknown"),
       h("td", {}, String((row.concerns || []).length)),
+      h("td", {}, acOutcomes(row.concerns || [])),
       h("td", {}, String(row.unresolved_count ?? "Unknown")));
   });
   return h("section", { "aria-labelledby": "ac-eval-title" },
@@ -192,7 +204,7 @@ function aftercareEvaluatorView(v) {
         h("table", {},
         h("caption", {}, AC_TABLE_CAPTION),
         h("thead", {}, h("tr", {},
-          ...["Home", "Comparison", "Baseline mean", "Late mean", "Concerns", "Unresolved"].map((t) => h("th", { scope: "col" }, t)))),
+          ...["Home", "Comparison", "Baseline mean", "Late mean", "Concerns", "Outcomes", "Unresolved"].map((t) => h("th", { scope: "col" }, t)))),
         h("tbody", {}, ...rows)))
       : h("p", {}, "No homes are in the synthetic cohort."),
     h("h2", {}, "What is not known"),

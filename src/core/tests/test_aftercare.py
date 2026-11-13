@@ -168,6 +168,40 @@ class EvaluatorTests(unittest.TestCase):
         view = AftercareRegister().evaluator_view(["H1"], ["H1"])
         self.assertEqual(view["notice"], af.EVALUATOR_NOTICE)
 
+    def test_paraphrased_savings_causation_and_blame_are_rejected(self) -> None:
+        for bad in (
+            "You'll save a lot",
+            "You\u2019ll save a lot",
+            "This will cut your bills",
+            "Your bills will fall",
+            "Expect savings of 20 percent",
+            "The tenant caused the damp",
+            "The resident caused it",
+            "The resident is at fault",
+            "It reflects the occupant's behaviour",
+            "The resident misunderstood the controls",
+            "Residents caused damp",
+            "The tenant has caused damp",
+            "The tenant was at fault",
+            "Resident behaviour",
+            "Unknown, but you'll save money",
+            "No evidence of damp, the tenant caused it",
+            "Unknown whether the tenant caused it and the tenant caused it",
+        ):
+            with self.subTest(bad=bad), self.assertRaises(ValueError):
+                af.neutral_text(bad)
+
+    def test_neutral_factual_and_uncertain_statements_are_accepted(self) -> None:
+        for good in (
+            "Higher bills reported",
+            "Resident reported cold room",
+            "Cannot determine",
+            "Cannot determine whether the resident caused it",
+            "Unknown whether the tenant was at fault",
+            "Unknown whether savings of any size were seen",
+        ):
+            self.assertEqual(af.neutral_text(good), good)
+
 
 class ConcernPackTests(unittest.TestCase):
     def test_pack_exists_without_ai_and_is_unreviewed(self) -> None:

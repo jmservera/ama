@@ -57,6 +57,26 @@ BANNED_PHRASES = (
 )
 
 
+_HOUSEHOLD = r"(?:tenant|resident|household|occupant)"
+PARAPHRASE_PATTERNS = tuple(
+    re.compile(p)
+    for p in (
+        r"\byou'?ll (?:save|pay less)\b",
+        r"\bcut(?:s|ting)? your (?:energy )?bills?\b",
+        r"\bbills? will (?:fall|drop|go down|reduce)\b",
+        r"\bsavings? of\b",
+        rf"\b{_HOUSEHOLD}s? (?:has |have |had )?(?:caused|misunderstood)\b",
+        rf"\b{_HOUSEHOLD}s? (?:is|was|were|are) at fault\b",
+        rf"\b{_HOUSEHOLD}s?'?s? behaviou?r\b",
+    )
+)
+# Only a "whether/if" phrase stating uncertainty is exempt; it ends at a comma, conjunction or stop.
+_UNCERTAIN = re.compile(
+    r"\b(?:cannot determine|can ?not determine|unknown|not known|no evidence)\s+(?:whether|if)\b"
+    r"[^.;,]*?(?=\s(?:and|but|or)\s|[.;,]|$)"
+)
+
+
 def _text(value: object, label: str) -> str:
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{label} is required.")
@@ -69,6 +89,10 @@ def neutral_text(text: str) -> str:
     for phrase in BANNED_PHRASES:
         if phrase in lowered:
             raise ValueError(f"Generated text must not contain '{phrase}'.")
+    folded = _UNCERTAIN.sub(" ", lowered.replace("\u2019", "'"))
+    for pattern in PARAPHRASE_PATTERNS:
+        if pattern.search(folded):
+            raise ValueError("Generated text must not state causation, blame or a savings promise.")
     return text
 
 
