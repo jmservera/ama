@@ -11726,3 +11726,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Integrated the reviewed Wave-1416/1433 RPI evidence packages for the #521 Azure sync preflight, the #133 aftercare acceptance-criteria audit and the #152 aftercare navigation root cause, and updated the [live state check](../../infra/README.md) to record the read-only 2026-11-13 observation that `ca-resident-demo` carries `ZF_DEMO_EXPIRES_AT` `2028-01-01T00:00:00Z`.
 * Documentation only. Live SQL constraint and row verification remains pending; no tick or closure.
+## [2026-11-13] add | Tokenomics presenter Q&A brief (Refs #435)
+
+* Added [tokenomics-qa-brief.md](../capstone/tokenomics-qa-brief.md) and linked it from the [capstone README](../capstone/README.md). It separates the labelled USD 0.44 per home scenario, the live ledger (Unknown until settled and approved) and the authorised, unrun held-out batch (up to USD 5.00; `heldout_batch` module absent in this checkout).
+* Documentation only. No deck, manifest or validation-hashed file changed; no rehearsal, measurement, tick or closure.
