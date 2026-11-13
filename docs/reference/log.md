@@ -11744,3 +11744,7 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added a Demo Routing Decision section to the [monitoring runbooks](../../infra/monitoring-runbooks.md) recording owner decision `keep_console_alerts_for_demo`, AC1 to AC5 file-and-line proof and the deferral of candidate `9c2a59f6` to production, and noted it in the [index](README.md).
 * Local checks only: `infra/tests/test_bicep_policy.py` (61 tests passing) and `az bicep build` of all `infra/*.bicep` and `infra/modules/*.bicep` files. No deployment, cloud read, privacy acceptance or issue closure.
+## [2026-11-13] add | Issue 203 close-out audit of references, links and CI (Refs #203)
+
+* Audit only, no tick or closure. The cut-over audit test passes (9 tests) and the inventory has no unclassified row. A relative-link scan of tracked Markdown found broken targets under `docs/reference/` only in earlier, immutable entries of this log; none in the index, research, regulatory, method or resources files.
+* Criteria 1 and 2 stay pending owner review. Criterion 3 is unproven: the last Source projects CI run on `main` is a green manual dispatch of 2026-11-08, the workflow is path-filtered with no run on the current head, no deployment workflow run exists on `main`, and the `ca-cutover-test-demo-api` status could not be read (Azure authorization denied). Not a failure, not a pass.
