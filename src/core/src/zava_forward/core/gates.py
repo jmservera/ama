@@ -125,6 +125,35 @@ def _norm(value: Any) -> str:
     return value.strip().casefold() if isinstance(value, str) else ""
 
 
+def _reason(value: Any, fallback: str) -> str:
+    """A caller reason only when it is a non-blank string, so a gate result is never blank."""
+    return value if isinstance(value, str) and value.strip() else fallback
+
+
+def _recorders(items: Iterable[Any] | None) -> list[Any] | None:
+    """Recorder identities: strings or None (unknown) from a non-string iterable, else None."""
+    if items is None or isinstance(items, (str, bytes, dict)):
+        return None
+    try:
+        listed = list(items)
+    except TypeError:
+        return None
+    return listed if all(item is None or isinstance(item, str) for item in listed) else None
+
+
+def _text_items(items: Iterable[Any] | None) -> list[str] | None:
+    """Non-blank strings from a non-string iterable; anything else is unreadable (None)."""
+    if items is None or isinstance(items, (str, bytes, dict)):
+        return None
+    try:
+        listed = list(items)
+    except TypeError:
+        return None
+    if not all(isinstance(item, str) and item.strip() for item in listed):
+        return None
+    return listed
+
+
 def safety_release_gate(
     hold: dict[str, Any] | None,
     actor: dict[str, Any],
@@ -135,11 +164,11 @@ def safety_release_gate(
 
     recorders are identities of whoever raised the issue or recorded the repair.
     """
-    owner = (hold or {}).get("accountable_role") or "Building Safety Liaison"
+    role = hold.get("accountable_role") if isinstance(hold, dict) else None
+    owner = role if isinstance(role, str) and role.strip() else "Building Safety Liaison"
     fix = f"Ask the {owner} to record the release decision."
     rule = SAFETY_RELEASE_RULE
-    role = (hold or {}).get("accountable_role")
-    if not hold or not _norm(role):
+    if not isinstance(hold, dict) or not _norm(role):
         return _result(
             rule,
             UNKNOWN,
@@ -149,12 +178,22 @@ def safety_release_gate(
         )
     if _norm(actor.get("role")) != _norm(role):
         return _result(rule, FAIL, f"Only the {role} can restart this stopped work.", owner, fix)
-    me = {_norm(actor.get(k)) for k in ("email", "code", "oid")} - {""}
+    identity = [actor.get(k) for k in ("email", "code", "oid")]
+    others = _recorders(recorders)
+    if others is None or any(v is not None and not isinstance(v, str) for v in identity):
+        return _result(
+            rule,
+            UNKNOWN,
+            "The releasing or recording identity is malformed, so independence is unverified.",
+            owner,
+            fix,
+        )
+    me = {_norm(v) for v in identity} - {""}
     if not me:
         return _result(
             rule, UNKNOWN, "The releasing person's identity is not recorded.", owner, fix
         )
-    if any(_norm(r) in me for r in recorders):
+    if any(_norm(r) in me for r in others):
         return _result(
             rule,
             FAIL,
@@ -222,7 +261,7 @@ def booking_gates(
             on=on,
         )
     )
-    reasons = None if resident_reasons is None else list(resident_reasons)
+    reasons = _text_items(resident_reasons)
     results.append(
         check(
             BOOKING_RULES["resident"],
@@ -238,7 +277,7 @@ def booking_gates(
 
 def evidence_gate(missing: Iterable[str] | None, owner: str, on: str | None = None) -> GateResult:
     """Pass only when the required evidence kinds are all on file; None means not worked out."""
-    kinds = None if missing is None else list(missing)
+    kinds = _text_items(missing)
     result = check(
         BOOKING_RULES["evidence"],
         None if kinds is None else not kinds,
@@ -267,7 +306,7 @@ QUALITY_RULE = GateRule(
 
 def quality_gate(gaps: Iterable[str] | None, owner: str, on: str | None = None) -> GateResult:
     """Pass only when every checklist item has evidence; None means the record is unreadable."""
-    items = None if gaps is None else list(gaps)
+    items = _text_items(gaps)
     result = check(
         QUALITY_RULE,
         None if items is None else not items,
@@ -307,7 +346,13 @@ def capacity_gate(state: bool | None, reason: str, on: str | None = None) -> Gat
             label="Evidenced capacity",
             on=on,
         )
-    return _result(CAPACITY_RULE, UNKNOWN if state is None else FAIL, reason, owner, correction)
+    return _result(
+        CAPACITY_RULE,
+        FAIL if state is False else UNKNOWN,
+        _reason(reason, "Evidenced capacity is not confirmed."),
+        owner,
+        correction,
+    )
 
 
 class CapacityGateError(ValueError):
@@ -347,7 +392,13 @@ def _outcome_gate(
     """True passes only through the rule's effective-date check; False fails, None is unknown."""
     if state is True:
         return check(rule, True, owner=owner, correction=correction, label=label, on=on)
-    return _result(rule, UNKNOWN if state is None else FAIL, reason, owner, correction)
+    return _result(
+        rule,
+        FAIL if state is False else UNKNOWN,
+        _reason(reason, f"{label}: not confirmed, so this cannot pass."),
+        owner,
+        correction,
+    )
 
 
 def eligibility_gate(

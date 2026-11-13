@@ -120,8 +120,15 @@ class BoundaryProbes(GrantFixture, unittest.TestCase):
         while GRANT_FLOW[state]:
             target = GRANT_FLOW[state][0]
             if state != "Not recorded":
+                if target == "Submitted":
+                    self.verify()
                 self.grant(
-                    proposer, "grant_propose", id=gid, to=target, source="SYN " + target, amount=1
+                    proposer,
+                    "grant_propose",
+                    id=gid,
+                    to=target,
+                    source="SYN " + target,
+                    amount=1,
                 )
             before = self.record()
             self.denied(self.plain, "grant_approve", id=gid)
