@@ -24,7 +24,9 @@ awaits owner review, the
 [timing and rehearsal notes](./tokenomics-rehearsal-notes.md) hold the unperformed
 15-minute run sheet, and the
 [offline current-deck assessment and Tokenomics statement audit](./current-deck-assessment-2026-11-12.md)
-records an unscored guide challenge (not a panel score or approval). Edit the
+records an unscored guide challenge (not a panel score or approval); the
+[20-criterion assessment challenge](./capstone-assessment-challenge.md) adds
+evidence per judgement, floors and the Slide 22, B25 and B27 position. Edit the
 [source manifest](../source/slides.json), not these generated notes.
 
 ## Deliberate Audience Sequence

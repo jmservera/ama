@@ -11752,3 +11752,8 @@ The parent topic merged main ecb28815 with a normal merge and no conflict; API, 
 
 * Added a safety issue card row to the component inventory in [design-system.md](research/ux/design-system.md) for the reworked case safety panel: labelled per-action forms, hints, a next-step callout and compact key facts.
 * No backend rule changed. Browser, screen-reader and housing-officer comprehension checks remain unperformed.
+
+## [2026-11-13] add | Issue #435 capstone assessment challenge (Refs #435)
+
+* Added a [20-criterion assessment challenge](../capstone/pitch/capstone-assessment-challenge.md) of the existing 55-slide deck with Slide 22, B25 and B27, covering evidence, gaps, assumptions, section floors and individual floors. Linked from the pitch README.
+* Offline and content-only. No score, floor pass, rehearsal, deck or receipt-hashed file change; held-out batch not run. Criterion 5 stays partial pending owner review.
