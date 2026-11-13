@@ -73,6 +73,11 @@ TENURE_HOLD = (
     "(appointment required). Next action: verify all affected households and obtain a "
     "Legal-reviewed decision route; no measure offer or work release."
 )
+UNSET_TENURE_REASON = (
+    "Tenure and lease interest are not recorded for this home. Owner: Home Ownership data owner. "
+    "Next action: record and verify the tenure and decision route (tenant, shared owner, right to buy "
+    "or leaseholder) before any measure is offered."
+)
 MANAGERS = ("Retrofit Programme Manager", "Programme Support Officer")
 FORMAL_ROUTES = ("Complaint", "Independent review")
 FOLLOWUP_ACTIONS = ("service_open", "service_update", "service_close", "service_reopen", "service_reassign",
@@ -988,7 +993,15 @@ def resident_gate(c, bindings=None):
     """Case advance checks all measures; scoped work checks only explicit bindings."""
     if _inventory_managed(c):
         return [*_inventory_refusal(c), TENURE_HOLD]
+    if not _home_tenure_recorded(c):
+        return [UNSET_TENURE_REASON]
     return _resident_decision_gate(c, bindings)
+
+
+def _home_tenure_recorded(c):
+    home = c.get("home")
+    tenure = home.get("tenure") if isinstance(home, dict) else None
+    return isinstance(tenure, str) and tenure.strip().casefold() not in ("", "unknown")
 
 
 def _resident_decision_gate(c, bindings=None):

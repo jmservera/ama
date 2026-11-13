@@ -3,6 +3,7 @@
 import copy
 import json
 import os
+import re
 import sqlite3
 import tempfile
 import unittest
@@ -772,6 +773,27 @@ class JsonResidentDecisions(unittest.TestCase):
         self.assertEqual(
             view["reasons"], ["No expected-household inventory has been recorded for this case."]
         )
+
+    def test_unset_or_unknown_home_tenure_stops_offer_with_owner_and_next_action(self) -> None:
+        for measure in MEASURES:
+            self.scope(measure)
+            self.answer(measure)
+        banned = ("gate", "hold", "provenance", "trace", "snapshot", "envelope")
+        for value in ("Unknown", "", "  ", None, "MISSING"):
+            with self.subTest(tenure=value):
+                case = copy.deepcopy(self.store._case("ZF-1"))
+                if value == "MISSING":
+                    case["home"].pop("tenure")
+                else:
+                    case["home"]["tenure"] = value
+                reasons = resident_gate(case)
+                self.assertEqual(reasons, [resident_decisions.UNSET_TENURE_REASON])
+                text = reasons[0].casefold()
+                self.assertIn("owner:", text)
+                self.assertIn("next action:", text)
+                self.assertFalse([w for w in banned if re.search(rf"\b{w}s?\b", text)])
+        case["home"]["tenure"] = "Shared ownership"
+        self.assertEqual(resident_gate(case), [])
 
     def test_inventory_malformed_field_fails_closed_without_blocking_manual_answers(self) -> None:
         self.scope()
