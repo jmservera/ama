@@ -18,10 +18,13 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import math
 import os
 import sys
 import tempfile
-from collections.abc import Sequence
+import threading
+from collections.abc import Callable, Sequence
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -149,7 +152,7 @@ def _set(case: dict[str, Any], path: str, value: Any) -> None:
 class Run:
     """One scenario: its own store, user, thread and scripted model."""
 
-    def __init__(self, sc: dict[str, Any], workdir: str) -> None:
+    def __init__(self, sc: dict[str, Any], workdir: str, model: Any = None) -> None:
         self.sc = sc
         role = sc.get("role", "Retrofit Coordinator")
         data = dict(staff=[dict(USER, role=role)], cases=[_case(c) for c in sc["cases"]])
@@ -157,7 +160,7 @@ class Run:
         path.write_text(json.dumps(data))
         self.store = Store(str(path))
         self.iso = ChatIsolation(self.store, env=dict(SYNTHETIC_REFS))
-        self.model = Scripted()
+        self.model = model if model is not None else Scripted()
         self.panel = ChatPanel(self.iso, self.model)
         self.user: dict[str, Any] = dict(USER, role=role)
         self.case_id = sc["cases"][0]["id"]
@@ -519,6 +522,31 @@ def consumption_summary(receipts: Sequence[dict[str, Any]]) -> dict[str, Any]:
     )
 
 
+def _parse_utc(value: Any) -> datetime | None:
+    """Strict ISO-8601 timestamp that carries a zero UTC offset; anything else is None."""
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    offset = parsed.utcoffset()
+    return parsed if offset is not None and offset.total_seconds() == 0 else None
+
+
+def _count(value: Any) -> bool:
+    return isinstance(value, int) and not isinstance(value, bool) and value >= 0
+
+
+def _amount(value: Any) -> bool:
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(value)
+        and value >= 0
+    )
+
+
 def call_authorization(
     auth: dict[str, Any] | None,
     calls: int,
@@ -527,37 +555,120 @@ def call_authorization(
     now: str,
     used_calls: int = 0,
     used_tokens: int = 0,
+    projected_spend: float = 0.0,
+    used_spend: float = 0.0,
 ) -> dict[str, Any]:
     """Allow an actual-model call only inside a finite, named, unexpired owner authorisation.
 
     Nothing here grants spend authority: an allowed result only says the request fits limits an
-    owner already set. Any missing, non-finite, exhausted or expired limit blocks the call.
+    owner already set. Any missing, malformed, non-finite, exhausted or expired limit blocks the
+    call, as does a request, usage or clock value that cannot be read as a valid amount.
     """
     a = auth or {}
     reasons = []
-    if not str(a.get("authorised_by", "")).strip():
+    owner = a.get("authorised_by")
+    if not isinstance(owner, str) or not owner.strip():
         reasons.append("no named owner authorisation")
     for key, need, used in (("max_calls", calls, used_calls), ("max_tokens", tokens, used_tokens)):
         limit = a.get(key)
-        if isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
+        if not _count(need) or not _count(used):
+            reasons.append(f"{key} request or usage is not a non-negative integer")
+        elif isinstance(limit, bool) or not isinstance(limit, int) or limit <= 0:
             reasons.append(f"{key} is not a finite positive limit")
         elif used + need > limit:
             reasons.append(f"{key} would be exceeded ({used + need} > {limit})")
     budget = a.get("max_budget")
-    if isinstance(budget, bool) or not isinstance(budget, (int, float)) or budget <= 0:
+    if (
+        isinstance(budget, bool)
+        or not isinstance(budget, (int, float))
+        or not math.isfinite(budget)
+        or budget <= 0
+    ):
         reasons.append("max_budget is not a finite positive limit")
-    elif not str(a.get("budget_currency", "")).strip():
+    elif not isinstance(a.get("budget_currency"), str) or not a["budget_currency"].strip():
         reasons.append("budget currency is not named")
-    expiry = str(a.get("expires_at", ""))
-    if not expiry:
-        reasons.append("no expiry")
-    elif expiry <= now:
+    elif not _amount(projected_spend) or not _amount(used_spend):
+        reasons.append("projected or accrued spend is not a finite non-negative amount")
+    elif used_spend + projected_spend > budget:
+        reasons.append(f"max_budget would be exceeded ({used_spend + projected_spend} > {budget})")
+    expiry = _parse_utc(a.get("expires_at"))
+    current = _parse_utc(now)
+    if expiry is None:
+        reasons.append("expires_at is missing or not a UTC ISO-8601 timestamp")
+    elif current is None:
+        reasons.append("current time is not a UTC ISO-8601 timestamp")
+    elif expiry <= current:
         reasons.append("authorisation has expired")
     return dict(
         outcome="blocked" if reasons else "within-limit",
         reasons=reasons,
         spend_authority="not implied; this check only compares a request with owner-set limits",
     )
+
+
+class CallLedger:
+    """Running calls, tokens and spend reserved against one authorisation, shared by its users."""
+
+    def __init__(self) -> None:
+        self.calls = 0
+        self.tokens = 0
+        self.spend = 0.0
+        self.lock = threading.Lock()
+
+
+def utc_now() -> str:
+    return datetime.now(UTC).isoformat()
+
+
+class AuthorizedModel:
+    """Fail-closed gate in front of an actual model provider.
+
+    Every dispatch is checked with `call_authorization` first; a blocked call never reaches the
+    provider. The conservative per-call token and spend bounds are reserved before dispatch and
+    kept if the provider fails, because a failed call may still have been billed.
+    """
+
+    def __init__(
+        self,
+        provider: Any,
+        auth: dict[str, Any] | None,
+        *,
+        tokens_per_call: int,
+        spend_per_call: float,
+        ledger: CallLedger | None = None,
+        clock: Callable[[], str] = utc_now,
+    ) -> None:
+        self.provider = provider
+        self.auth = auth
+        self.tokens_per_call = tokens_per_call
+        self.spend_per_call = spend_per_call
+        self.ledger = ledger if ledger is not None else CallLedger()
+        self.clock = clock
+        self.name = str(getattr(provider, "name", "actual-model"))
+        self.prompts: list[str] = []
+        self.script: dict[str, Any] | None = None
+        self.case = ""
+
+    def __call__(self, system: str, prompt: str) -> str:
+        ledger = self.ledger
+        with ledger.lock:
+            verdict = call_authorization(
+                self.auth,
+                1,
+                self.tokens_per_call,
+                now=self.clock(),
+                used_calls=ledger.calls,
+                used_tokens=ledger.tokens,
+                projected_spend=self.spend_per_call,
+                used_spend=ledger.spend,
+            )
+            if verdict["outcome"] != "within-limit":
+                raise ModelUnavailable("call-not-authorised: " + "; ".join(verdict["reasons"]))
+            ledger.calls += 1
+            ledger.tokens += self.tokens_per_call
+            ledger.spend += self.spend_per_call
+        self.prompts.append(prompt)
+        return self.provider(system, prompt)  # type: ignore[no-any-return]
 
 
 GATE_CATEGORIES = ("prompt-injection", "memory-poisoning", "permission", "out-of-scope")
